@@ -6,7 +6,8 @@ import { SegmentedControl } from '../../../../../design-system/primitives/Segmen
 import { ToggleGroup } from '../../../../../design-system/primitives/ToggleGroup';
 import { HudStyleControl } from './HudStyleControl';
 import { AspectRatioControl } from './AspectRatioControl';
-import { aspectRatioValue, parseRatioString } from '@app/lib/game/aspect-ratio';
+import { parseRatioString } from '@app/lib/game/aspect-ratio';
+import { allowedRatio } from '@app/lib/game/ratio-capability';
 import { renderDialogControl, isDialogDisabled } from './hud-dialog-controls';
 import { renderTitleControl, isTitleDisabled } from './hud-title-controls';
 
@@ -25,7 +26,7 @@ const ASPECT_OPTIONS = [
 
 // Disable fixed presets wider than the screen (the HUD clamps to it anyway); Match/Custom stay open.
 const getHudRatioOptions = (settings: GameSettings) => {
-  const screenVal = aspectRatioValue(settings.aspectRatio, settings.customAspectW, settings.customAspectH);
+  const screenVal = allowedRatio(settings);
   return [
     { value: 'match', label: 'Match' },
     ...ASPECT_OPTIONS.map((opt) =>

@@ -17,6 +17,7 @@ const getGameRatio = (aspectRatio: GameSettings['aspectRatio']): number => {
     const { w, h } = detectScreenRatio();
     return w / h;
   }
+  if (aspectRatio === 'original') return 256 / 224;
   return parseRatioString(aspectRatio) || 4 / 3;
 };
 

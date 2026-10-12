@@ -56,13 +56,14 @@ interface GameSettings {
   // Master gate. Off: the engine always runs 4:3 vanilla and no sub-settings appear in the UI.
   // On: the aspect ratio selector and all extended-rendering options become available.
   extendedRendering: boolean;
-  // 'auto' = current app viewport (notch-aware); 'screen' = full device screen; a preset string
-  // ('4:3' through '32:9') = fixed; 'custom' = the W:H below. Re-resolved on every game start.
+  // 'original' = 256-wide game image (224 or 240 lines); 'auto' = current app viewport
+  // (notch-aware); 'screen' = full device screen; a preset string ('4:3' through '32:9')
+  // = fixed; 'custom' = the W:H below. Re-resolved on every game start.
   // Only applied when extendedRendering is true; otherwise the engine always receives 4:3.
-  aspectRatio: 'auto' | 'screen' | '4:3' | '3:2' | '16:9' | '16:10' | '21:9' | '32:9' | '4:5' | '3:4' | 'custom';
+  aspectRatio: 'original' | 'auto' | 'screen' | '4:3' | '3:2' | '16:9' | '16:10' | '21:9' | '32:9' | '4:5' | '3:4' | 'custom';
   customAspectW: number; // ratio width when aspectRatio === 'custom'; 0 = auto-detect from screen
   customAspectH: number; // ratio height; 0 = auto-detect
-  extendY: boolean;
+  extendY: boolean; // Applies only to Original; all other ratios use 240 lines.
   // Extend sprite spawn/despawn ranges so enemies/objects revealed by the wider view behave correctly.
   // Positive opt-in (replaces the old inverted `unchangedSprites`). Default on; only relevant when wide.
   widescreenSprites: boolean;

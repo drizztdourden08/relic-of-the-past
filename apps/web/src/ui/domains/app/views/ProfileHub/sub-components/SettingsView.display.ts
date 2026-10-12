@@ -11,6 +11,7 @@
  */
 import type { GameSettings } from '@shared/types/settings';
 import type { Section, SettingItem } from '../../../compounds/SettingsLayout';
+import { rendersWide } from '@app/lib/game/ratio-capability';
 
 const EXTENDED_TOGGLE: SettingItem = {
   key: 'extendedRendering',
@@ -51,23 +52,23 @@ const buildDisplaySection = (s: GameSettings): Section => {
   });
 
   // 2. Aspect ratio picker, which reflects the capabilities above
-  items.push(
-    {
-      key: 'aspectRatio',
-      label: 'Aspect Ratio',
-      description: 'Screen aspect ratio. Presets unlock as you enable capabilities above.',
-      keywords: 'widescreen 4:3 16:9 16:10 21:9 32:9 tall 3:4 custom auto detect',
-    },
-    {
+  items.push({
+    key: 'aspectRatio',
+    label: 'Aspect Ratio',
+    description: 'Original uses the game width. Wide, Tall, Auto, Screen and Custom use 240 lines.',
+    keywords: 'original widescreen 4:3 16:9 16:10 21:9 32:9 tall 3:4 custom auto detect',
+  });
+  if (s.aspectRatio === 'original') {
+    items.push({
       key: 'extendY',
       label: 'Extend Y',
-      description: 'Show 240 lines instead of 224.',
+      description: 'In Original mode, show 240 lines instead of 224.',
       keywords: 'height resolution vertical 240',
-    },
-  );
+    });
+  }
 
   // ── 3. Sprite / AI behaviour (only relevant past the original picture) ───────
-  const isWide = s.aspectRatio !== '4:3';
+  const isWide = rendersWide(s);
   if (s.extendedRendering) {
     items.push({
       key: 'widescreenVisualFixes',

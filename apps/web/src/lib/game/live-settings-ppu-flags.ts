@@ -1,6 +1,7 @@
 /* @layer bridge-wasm @kind logic */
 /** The PPU render-flag builder for live WASM settings. Values must match ppu.h. */
 import type { GameSettings } from '@shared/types/settings';
+import { effectiveExtendY } from './ratio-capability';
 
 // PPU render flag values: must match ppu.h
 const PPU_FLAGS = {
@@ -25,7 +26,7 @@ const buildPpuFlags = (s: GameSettings): number => {
   // (and never under Vanilla Safe, see serializeToIni). The render-buffer height is baked at init from
   // that INI value; setting the live Height240 flag without it would make the draw loop's botBudget
   // disagree with the allocated texture (ppu.c PpuSetExtraSideSpace).
-  if (!s.vanillaSafe && s.extendedRendering && s.extendY) flags |= PPU_FLAGS.height240;
+  if (!s.vanillaSafe && s.extendedRendering && effectiveExtendY(s)) flags |= PPU_FLAGS.height240;
   if (!s.vanillaSafe && s.noSpriteLimits) flags |= PPU_FLAGS.noSpriteLimits;
   return flags;
 };

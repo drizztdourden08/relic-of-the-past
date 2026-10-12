@@ -8,6 +8,7 @@ import type { GameSettings } from '@shared/types/settings';
 import { BUNDLE_FIXES } from '@shared/features/bundle-fixes.generated';
 import { effectiveFeatureIds } from './live-settings-gate';
 import { offscreenAiMode } from './settings';
+import { rendersWide } from './ratio-capability';
 
 // Hand-authored features2 bits, allocated downward from bit 24; the generated bug-fix catalog
 // (BUNDLE_FIXES) owns features2 upward from bit 0. Values must match features.h.
@@ -30,7 +31,7 @@ const buildFeatureWords = (s: GameSettings): { features1: number; features2: num
     else f1 |= fix.bit;
   }
   // The wide-view condition stays separate because it depends on aspectRatio, not on another feature id.
-  const wide = effective.has('extendedRendering') && s.aspectRatio !== '4:3';
+  const wide = effective.has('extendedRendering') && rendersWide(s);
   if (wide) {
     if (effective.has('widescreenPlayArea')) f2 |= FEATURES2_FLAGS.widescreenPlayArea;
     if (effective.has('offscreenAI') && offscreenAiMode(s) === 'idle') f2 |= FEATURES2_FLAGS.widescreenIdleAI;
