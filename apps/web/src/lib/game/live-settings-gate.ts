@@ -7,6 +7,7 @@
 import type { GameSettings } from '@shared/types/settings';
 import { BUNDLE_FIXES } from '@shared/features/bundle-fixes.generated';
 import { resolveGates } from '@shared/features/resolve-gates';
+import { rendersExtended } from './ratio-capability';
 
 // Registered features0-bit ids whose GameSettings field shares the id's name and is requested
 // unconditionally (any extra condition, e.g. "only when the ratio is actually wide", is applied by the
@@ -27,7 +28,7 @@ const requestedFeatureIds = (s: GameSettings): string[] => {
       fix.bundleOrigin === 'GameChangingBugFixes'
         ? s.gameChangingBugFixes
         : fix.bundleOrigin === 'WidescreenVisualFixes'
-          ? !!s.extendedRendering && s.aspectRatio !== '4:3' && s.widescreenVisualFixes
+          ? rendersExtended(s) && s.widescreenVisualFixes
           : s.miscBugFixes;
     if (s.bugFixToggles?.[fix.id] ?? legacy) ids.push(fix.id);
   }

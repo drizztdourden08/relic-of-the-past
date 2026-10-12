@@ -4,7 +4,7 @@
  */
 
 import type { GameSettings, OffscreenAiMode } from '@shared/types/settings';
-import { effectiveCustomRatio, detectScreenRatio, detectViewportRatio } from './aspect-ratio';
+import { allowedRatio, ratioToString, renderHeight, rendersExtended, effectiveExtendY } from './ratio-capability';
 
 const DEFAULT_SETTINGS: GameSettings = {
   // General
@@ -165,26 +165,17 @@ const serializeToIni = (settings: GameSettings, msuPath?: string, language?: str
   const er = !settings.vanillaSafe && settings.extendedRendering;
   const parts: string[] = [];
   if (er) {
-    if (settings.extendY) parts.push('extend_y');
-    if (settings.aspectRatio === 'auto') {
-      const { w, h } = detectViewportRatio(settings.renderIntoNotch);
-      parts.push(`${w}:${h}`);
-    } else if (settings.aspectRatio === 'screen') {
-      const { w, h } = detectScreenRatio(true);
-      parts.push(`${w}:${h}`);
-    } else if (settings.aspectRatio === 'custom') {
-      const { w, h } = effectiveCustomRatio(settings.customAspectW, settings.customAspectH, settings.renderIntoNotch);
-      parts.push(`${w}:${h}`);
-    } else {
-      parts.push(settings.aspectRatio);
-    }
+    if (effectiveExtendY(settings)) parts.push('extend_y');
+    parts.push(settings.aspectRatio === 'original'
+      ? '4:3'
+      : ratioToString(allowedRatio(settings), renderHeight(settings)));
   } else {
     parts.push('4:3');
   }
   const aspectValue = parts.join(', ');
 
   // Rendering feature flags — mirror buildFeatureFlags (live bridge) so boot config and live push agree.
-  const wide = er && settings.aspectRatio !== '4:3';
+  const wide = rendersExtended(settings) && er;
   const renderFlags = {
     ExtendedRendering: er,
     LinearWorldTilemap: er && !!settings.linearWorldTilemap,
@@ -331,7 +322,7 @@ const mergeSettings = (partial: Partial<GameSettings>): GameSettings => {
   // Migration: new capability gates (default off). Existing profiles that already have a ratio
   // requiring these capabilities get them implicitly enabled so nothing silently regresses.
   if (!('extendedRendering' in raw)) {
-    merged.extendedRendering = merged.aspectRatio !== '4:3';
+    merged.extendedRendering = merged.aspectRatio !== 'original' && merged.aspectRatio !== '4:3';
   }
   if (!('linearWorldTilemap' in raw)) {
     const needsLinear = merged.aspectRatio === '21:9' || merged.aspectRatio === '32:9' ||
