@@ -85,7 +85,7 @@ const DISPLAY_FEATURES: FeatureDef[] = [
     label: 'Aspect ratio',
     description: 'The chosen screen ratio (extended_aspect_ratio[_vertical]); range is bounded by the capabilities above.',
     userMessage:
-      'Pick the screen ratio for the game image. Anything other than 4:3 changes what is on-screen versus the original.',
+      'Pick Original for the game width, or choose a fixed, detected or custom screen ratio.',
     group: 'Display / Aspect',
     kind: 'render-geometry',
     origin: 'relic',
@@ -99,7 +99,7 @@ const DISPLAY_FEATURES: FeatureDef[] = [
     label: 'Extend Y (240 lines)',
     description: 'Renders 240 scanlines instead of the stock 224 (overscan reveal).',
     userMessage:
-      'Shows 240 lines instead of the original 224, revealing a little more at the top and bottom. Off = stock 224.',
+      'In Original mode, shows 240 lines instead of the stock 224. Other ratios always use 240 lines.',
     group: 'Display / Aspect',
     kind: 'ppu-render-flag',
     origin: 'snesrev',

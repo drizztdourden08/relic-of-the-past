@@ -6,7 +6,7 @@
  * part of either preset.
  *
  * Vanilla only pins the two fields default itself does not already give: a
- * 4:3 picture and Vanilla Safe, which forces every non-stock behavior off
+ * Original picture and Vanilla Safe, which forces every non-stock behavior off
  * regardless of what else is stored. Enhanced is every field a reference
  * profile diverges from default on: general/display quality-of-life, every
  * rendering companion, and the HUD/world-item presentation features.
@@ -14,7 +14,7 @@
 import type { GameSettings } from '@shared/types/settings';
 
 const VANILLA_CONFIG_OVERRIDES: Partial<GameSettings> = {
-  aspectRatio: '4:3',
+  aspectRatio: 'original',
   vanillaSafe: true,
 };
 

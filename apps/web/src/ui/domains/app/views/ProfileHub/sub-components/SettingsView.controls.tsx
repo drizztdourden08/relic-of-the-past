@@ -33,9 +33,10 @@ const OFFSCREEN_AI_DESCRIPTIONS: Record<string, string> = {
 };
 
 const ASPECT_DESCRIPTIONS: Record<string, string> = {
+  original: 'Use the original 256-pixel width. Extend Y chooses 224 or 240 lines.',
   auto: 'Matches the window size, adapting to notch, resize and rotation automatically.',
   screen: 'Matches the full physical screen ratio.',
-  wide: 'Choose a standard widescreen preset.',
+  wide: 'Choose a fixed ratio, including true 4:3. Uses 240 lines.',
   tall: 'Choose a tall (portrait-style) preset.',
   custom: 'Set an exact width : height ratio.',
 };
