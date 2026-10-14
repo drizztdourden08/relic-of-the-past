@@ -2,6 +2,7 @@
 import { describe, expect, it } from 'vitest';
 import { layoutHud, placedById, tryLoadLayout, validateLayout } from '@rotp/hud';
 import type { HudContainer, HudLayout, HudNode } from '@rotp/hud';
+import { required } from '../required';
 
 const VIEWS = [{ w: 398, h: 224 }, { w: 256, h: 224 }, { w: 512, h: 448 }, { w: 640, h: 240 }];
 
@@ -19,7 +20,9 @@ const docOf = (root: unknown): Record<string, unknown> => ({
   },
 });
 
-const at = (doc: HudLayout, id: string, view = VIEWS[0]) => placedById(layoutHud(doc, view, {}), id)?.rect;
+const DEFAULT_VIEW = required(VIEWS[0], 'the default view');
+
+const at = (doc: HudLayout, id: string, view = DEFAULT_VIEW) => placedById(layoutHud(doc, view, {}), id)?.rect;
 
 const loaded = (raw: unknown): HudLayout => {
   const result = tryLoadLayout(raw);
@@ -94,7 +97,7 @@ describe('a pre-§57 `gap: n` is REWRITTEN on load, and places to the same pixel
       kind: 'container', id: 'flow', direction: 'row', gap: expr, children,
     }));
     expect((doc.screen.children[0] as HudContainer).gap).toEqual({ x: expr, y: expr });
-    expect(placedById(layoutHud(doc, VIEWS[0], { scope: { half_magic: 1 } }), 'b')?.rect.x).toBe(20);
+    expect(placedById(layoutHud(doc, DEFAULT_VIEW, { scope: { half_magic: 1 } }), 'b')?.rect.x).toBe(20);
   });
 
   it('leaves a grid\'s gap alone, and is a no-op run twice', () => {

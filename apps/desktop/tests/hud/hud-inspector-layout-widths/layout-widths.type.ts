@@ -1,7 +1,7 @@
 /* @layer tests @kind type */
 interface Measured {
   case: string; kind: string; name: string;
-  width: number; height: number; content: number; lines: number; overflow: number; scroll: number;
+  width: number; height: number; top: number; content: number; lines: number; overflow: number; scroll: number;
 }
 
 interface LayoutRig {

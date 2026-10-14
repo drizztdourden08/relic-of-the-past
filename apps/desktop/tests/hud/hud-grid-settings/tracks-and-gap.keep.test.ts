@@ -7,6 +7,7 @@ import { LayoutSection } from '@app/views/HudLayoutEditor/sub-components/LayoutS
 import type { HudContainer, HudNode, Value } from '@rotp/hud';
 import { installLayoutSectionRig } from './install-layout-section-rig';
 import { screenRoot } from './screen-root';
+import { required } from '../../required';
 
 const { mount, mountGrid, pick, header, down, click, bar, field, type, enter } = installLayoutSectionRig();
 
@@ -24,7 +25,7 @@ describe('the tracks are edited on the drawing they belong to', () => {
     expect(patch).toHaveBeenLastCalledWith(expect.objectContaining({
       rows: ['auto', 'fill', 'auto', 'auto'],
     }));
-    expect((patch.mock.calls[1][0].children as HudNode[]).map((c) => c.place))
+    expect((required(patch.mock.calls[1], 'the second patch')[0].children as HudNode[]).map((c) => c.place))
       .toEqual([{ column: 1, row: 1 }, { column: 1, row: 3 }]);
   });
 
@@ -50,7 +51,7 @@ describe('the tracks are edited on the drawing they belong to', () => {
     down(header('column 2'));
     click(bar().querySelector('[data-action="insert-before"]'));
     expect(patch).toHaveBeenCalledTimes(1);
-    expect(patch.mock.calls[0][0].columns).toEqual(['auto', 'auto', 'fill', 'auto']);
+    expect(required(patch.mock.calls[0], 'the first patch')[0].columns).toEqual(['auto', 'auto', 'fill', 'auto']);
   });
 });
 

@@ -73,7 +73,7 @@ const useDisplaySettings = (params: { isGameRunning: boolean }) => {
     let attempts = 0;
     const poll = setInterval(() => {
       attempts++;
-      const canvas = document.querySelector('.game-layer__canvas');
+      const canvas = document.querySelector<HTMLCanvasElement>('.game-layer__canvas');
       if ((canvas && canvas.width > 0 && canvas.height > 0) || attempts >= CANVAS_POLL_ATTEMPTS) {
         clearInterval(poll);
         syncAspectRatioLock(win, vcRef.current, arRef.current, wmRef.current, fsRef.current);

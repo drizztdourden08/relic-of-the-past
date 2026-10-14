@@ -1,7 +1,8 @@
 /* @layer test @kind test */
 import { describe, expect, it } from 'vitest';
 import { aspectOf, containRect, intrinsicSize, layoutHud, measureBox, placedById, validateLayout } from '@rotp/hud';
-import type { HudContainer, HudLayout, HudNode } from '@rotp/hud';
+import type { HudContainer, HudFlexContainer, HudLayout, HudNode } from '@rotp/hud';
+import { required } from '../required';
 
 const VIEW = { w: 400, h: 200 };
 
@@ -9,7 +10,9 @@ const leaf = (id: string, extra: Partial<HudNode> = {}): HudNode => ({
   kind: 'element', id, element: { type: 'slot', index: 1 }, ...extra,
 } as HudNode);
 
-const screenOf = (root: HudContainer, place = { column: 1, row: 1 }, extra: Partial<HudContainer> = {}): HudContainer => ({
+const screenOf = (
+  root: HudContainer, place = { column: 1, row: 1 }, extra: Pick<HudFlexContainer, 'alignSelf'> = {},
+): HudContainer => ({
   kind: 'container',
   id: 'screen',
   layout: 'grid',
@@ -24,7 +27,7 @@ const docOf = (root: HudContainer): HudLayout => ({
   id: 'test', name: 'Test', builtIn: false, screen: screenOf(root),
 });
 
-const row = (children: HudNode[], extra: Partial<HudContainer> = {}): HudContainer => ({
+const row = (children: HudNode[], extra: Partial<HudFlexContainer> = {}): HudFlexContainer => ({
   kind: 'container', id: 'root', direction: 'row', children, ...extra,
 });
 
@@ -109,7 +112,7 @@ describe('boxes, extents and the flow', () => {
       const doc = docOf(row([leaf('a'), leaf('b')], { size: { w: { px: 96 } }, justify: 'evenly' }));
       const parsed = validateLayout(JSON.parse(JSON.stringify(doc)));
       expect(parsed.errors).toEqual([]);
-      expect((parsed.doc?.screen.children[0] as HudContainer).justify).toBe('evenly');
+      expect((parsed.doc?.screen.children[0] as HudFlexContainer).justify).toBe('evenly');
     });
   });
 
@@ -119,7 +122,8 @@ describe('boxes, extents and the flow', () => {
     }));
     expect(rectOf(doc, 'a')).toEqual({ x: 5, y: 0, w: 8, h: 8 });
     expect(rectOf(doc, 'b')?.x).toBe(17);
-    expect(measureBox(docOf(row([leaf('a')], { scale: 0.5 })).screen.children[0])).toEqual({ w: 8, h: 8 });
+    const scaled = docOf(row([leaf('a')], { scale: 0.5 }));
+    expect(measureBox(required(scaled.screen.children[0], 'the scaled row'))).toEqual({ w: 8, h: 8 });
   });
 });
 
@@ -145,7 +149,7 @@ describe('nothing ever stretches', () => {
 
 describe('cells, visibility, opacity and dimming', () => {
   it('each band of the screen pins its child, and margins measure inward from it', () => {
-    const at = (place: { column: number; row: number }, extra: Partial<HudContainer>) => {
+    const at = (place: { column: number; row: number }, extra: Pick<HudFlexContainer, 'alignSelf'>) => {
       const root = row([leaf('a')], { margin: { left: 8, top: 8, right: 8, bottom: 8 } });
       const doc: HudLayout = {
         id: 'a', name: 'a', builtIn: false, screen: screenOf(root, place, extra),

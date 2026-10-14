@@ -4,6 +4,7 @@ import { RAILS, THREE } from './metrics.constants';
 import { measureMetrics } from './measure-metrics';
 import { solveOf } from './solve-of';
 import type { Cells, MetricsRig } from './metrics.type';
+import { required } from '../../required';
 
 vi.mock('@app/stores/hud-editor-view-store', async () => {
   const { ECHO } = await import('./metrics.constants');
@@ -38,11 +39,12 @@ describe('the cells match the real tracks, on both axes', () => {
       const empty = rig.cellAt(rail, 'three', 3, 1);
       expect(`${rail} floor ${empty.width}`).toBe(`${rail} floor 24`);
     }
-    const marked = rig.read[232].heads
+    const heads = required(rig.read[232], 'the read at 232').heads;
+    const marked = heads
       .filter((hd) => hd.case === 'three' && hd.axis === 'columns' && hd.index === 3);
     expect(marked.length).toBe(1);
-    expect(marked[0].empty).toBe(true);
-    expect(rig.read[232].heads
+    expect(required(marked[0], 'the marked header').empty).toBe(true);
+    expect(heads
       .filter((hd) => hd.case === 'three' && hd.axis === 'columns' && hd.index !== 3)
       .every((hd) => hd.empty === false)).toBe(true);
   });
@@ -62,7 +64,7 @@ describe('the cells match the real tracks, on both axes', () => {
 
   it('puts every header exactly over, and beside, what it labels', () => {
     for (const rail of RAILS) {
-      for (const head of rig.read[rail].heads.filter((hd) => hd.case === 'three')) {
+      for (const head of required(rig.read[rail], `the read at ${rail}`).heads.filter((hd) => hd.case === 'three')) {
         const owned = rig.cellsOf(rail, 'three')
           .filter((c) => (head.axis === 'columns' ? c.column : c.row) === head.index);
         for (const c of owned) {

@@ -6,6 +6,7 @@ import { hull } from '@app/views/HudLayoutEditor/sub-components/StageGridEcho';
 import { CTX, ECHO, ECHO_BOX, ECHO_GRID, ECHO_SCALE, EDITOR_DIR, RAILS } from './metrics.constants';
 import { measureMetrics } from './measure-metrics';
 import type { MetricsRig } from './metrics.type';
+import { required } from '../../required';
 
 vi.mock('@app/stores/hud-editor-view-store', async () => {
   const constants = await import('./metrics.constants');
@@ -41,7 +42,7 @@ describe('past the fit it scrolls, and the header strips do not go with it', () 
 
   it('keeps both strips pinned to the viewport while the body moves under them', () => {
     for (const rail of RAILS) {
-      const { before, after } = rig.read[rail].frozen;
+      const { before, after } = required(rig.read[rail], `the read at ${rail}`).frozen;
       expect(`${rail} ${after.sticky}`).toBe(`${rail} sticky`);
       expect(`${rail} row ${Math.abs(after.rowHeadOffset - before.rowHeadOffset) <= 3}`).toBe(`${rail} row true`);
       expect(`${rail} col ${Math.abs(after.colHeadOffset - before.colHeadOffset) <= 3}`).toBe(`${rail} col true`);
@@ -51,7 +52,7 @@ describe('past the fit it scrolls, and the header strips do not go with it', () 
 
 describe('the four cell states are four different paints', () => {
   it('tells empty, occupied, selected and selected-on-occupied apart by computed style', () => {
-    const paint = rig.read[232].paint;
+    const { paint } = required(rig.read[232], 'the read at 232');
     expect(Object.keys(paint).sort()).toEqual(['empty', 'occupied', 'occupied-selected', 'selected']);
     expect(new Set(Object.values(paint)).size).toBe(4);
     expect(paint['occupied-selected']).toContain('repeating-linear-gradient');
@@ -69,7 +70,7 @@ describe('the stage echo is `gridCellRects`\' own answer, to the pixel', () => {
     const g = hull(solved.map((c) => c.rect));
     const want = { x: g.x * ECHO_SCALE, y: g.y * ECHO_SCALE, w: g.w * ECHO_SCALE, h: g.h * ECHO_SCALE };
     for (const rail of RAILS) {
-      const got = rig.read[rail].echo;
+      const got = required(rig.read[rail], `the read at ${rail}`).echo;
       expect(`${rail} echo ${got?.x},${got?.y} ${got?.w}x${got?.h}`)
         .toBe(`${rail} echo ${want.x},${want.y} ${want.w}x${want.h}`);
     }

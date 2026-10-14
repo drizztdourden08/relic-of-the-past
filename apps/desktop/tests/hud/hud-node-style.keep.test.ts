@@ -2,6 +2,7 @@
 import { describe, expect, it } from 'vitest';
 import defaultJson from '../../../../packages/hud/data/layouts/default.json';
 import { tryLoadLayout } from '@rotp/hud';
+import { required } from '../required';
 import { OUTLINE_MAX_WIDTH } from '@app/compounds/HudNodeRenderer/behavior/hud-node-style.constants';
 import { resolveNodeStyle } from '@app/compounds/HudNodeRenderer/behavior/resolve-node-style';
 
@@ -12,7 +13,7 @@ const edited = (change: (doc: Record<string, unknown>) => void): unknown => {
 };
 
 const rootOf = (doc: Record<string, unknown>): Record<string, unknown> =>
-  ((doc.screen as Record<string, unknown>).children as Record<string, unknown>[])[0];
+  required(((doc.screen as Record<string, unknown>).children as Record<string, unknown>[])[0], 'the first band');
 
 const errorsOf = (value: unknown): string[] => {
   const result = tryLoadLayout(value);

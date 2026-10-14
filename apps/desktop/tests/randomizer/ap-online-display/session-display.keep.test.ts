@@ -25,6 +25,54 @@ vi.mock('@app/log-bus', () => {
 vi.mock('@app/game/randomizer-client/online-session', () => ({ createOnlineSession: () => online.next?.session }));
 vi.mock('@app/game/randomizer-client/local-session', () => ({ createLocalSession: () => null }));
 
+const IDLE_NETWORK: OnlineSession['networkStatus'] = {
+  connection: {
+    state: 'idle',
+    configuredUrl: '',
+    url: null,
+    seedName: null,
+    serverVersion: null,
+    generatorVersion: null,
+    slot: null,
+    slotName: '',
+    team: null,
+    uuidShort: null,
+    worldVersion: null,
+    appWorldVersion: '',
+    deathLink: false,
+    passwordUsed: false,
+    connectedAt: null,
+    reconnectAttempt: 0,
+    nextRetryAt: null,
+    retryInFlight: false,
+    error: null,
+  },
+  health: {
+    lastPacketAt: null,
+    packetsIn: 0,
+    packetsOut: 0,
+    pingMs: null,
+    pingMeanMs: null,
+    pingSamples: 0,
+    heldItems: 0,
+    queuedItems: 0,
+    receivedIndex: 0,
+    fileInPlay: false,
+  },
+  players: [],
+  server: {
+    permissions: null,
+    hintCostPercent: null,
+    hintCostPoints: null,
+    hintPoints: null,
+    locationCheckPoints: null,
+    games: [],
+    checksums: [],
+    passwordRequired: null,
+  },
+  progress: { checked: 0, total: 0, itemsReceived: 0, itemsSentToOthers: 0, goalReported: false },
+};
+
 const createFakeOnline = (): FakeOnline => {
   let status: Status = 'idle';
   const statusListeners = new Set<(next: Status) => void>();
@@ -49,8 +97,20 @@ const createFakeOnline = (): FakeOnline => {
       placementListeners.add(listener);
       return () => placementListeners.delete(listener);
     },
-    networkStatus: null,
+    networkStatus: IDLE_NETWORK,
     onNetworkStatus: () => () => undefined,
+    reportCheck: () => undefined,
+    slotData: null,
+    team: null,
+    slot: null,
+    players: [],
+    checkedLocations: new Set<number>(),
+    missingLocations: new Set<number>(),
+    messages: [],
+    onMessages: () => () => undefined,
+    senderNameOf: () => '',
+    say: () => undefined,
+    placement: null,
   } as OnlineSession;
   return {
     session,

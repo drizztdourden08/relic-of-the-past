@@ -7,6 +7,7 @@ import { MinMaxField } from '@app/views/HudLayoutEditor/sub-components/MinMaxFie
 import { SizeBoxSection } from '@app/views/HudLayoutEditor/sub-components/SizeBoxSection';
 import { installPlatformHarness } from './install-platform-harness';
 import { spacerNode as node } from './spacer-node';
+import { required } from '../../required';
 
 const { mount, field, type } = installPlatformHarness();
 
@@ -16,7 +17,7 @@ describe('a limit is cleared by emptying the field', () => {
     mount(h(MinMaxField, { min: { w: 8, h: 4 }, max: undefined, onMin, onMax: () => {}, scope: {} }));
     type('min w', '');
     expect(onMin).toHaveBeenCalledTimes(1);
-    const next = onMin.mock.calls[0][0] as Record<string, unknown>;
+    const next = required(onMin.mock.calls[0], 'the first limit change')[0] as Record<string, unknown>;
     expect(next).toEqual({ h: 4 });
     expect('w' in next).toBe(false);
   });

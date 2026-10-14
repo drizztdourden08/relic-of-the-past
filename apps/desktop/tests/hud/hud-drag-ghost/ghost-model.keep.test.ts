@@ -5,6 +5,8 @@ import {
 } from '@app/hud-layout-editing/drop-ghost';
 import { outlineIntent } from '@app/hud-layout-editing/drop-intent';
 import { DOC } from './ghost-doc.constants';
+import { childrenOf, gridOf } from '../hud-node-guards';
+import { required } from '../../required';
 
 describe('line 1 states the KIND, in §42\'s vocabulary and no other', () => {
   it('says row, column, grid n×m, overlap and screen but never stack', () => {
@@ -16,8 +18,10 @@ describe('line 1 states the KIND, in §42\'s vocabulary and no other', () => {
     expect(kind('badge')).toBe('grid 3×2');
     expect(kind('overlay')).toBe('overlap');
     expect(kind('screen')).toBe('screen');
-    expect(containerKind(DOC.screen.children[0].children[0], false)).toBe('row');
-    const single = { ...DOC.screen.children[1], children: [DOC.screen.children[1].children[0]] };
+    const hearts = required(childrenOf(DOC.screen.children[0], 'the hud column')[0], 'the hearts row');
+    expect(containerKind(hearts, false)).toBe('row');
+    const badge = gridOf(DOC.screen.children[1], 'the badge');
+    const single = { ...badge, children: [required(badge.children[0], 'the first badge child')] };
     expect(containerKind(single, false)).toBe('grid 3×1');
   });
 });

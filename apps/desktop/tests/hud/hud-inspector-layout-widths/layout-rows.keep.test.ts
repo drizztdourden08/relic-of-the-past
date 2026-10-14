@@ -2,6 +2,7 @@
 import { describe, it, expect, beforeAll } from 'vitest';
 import { measureLayout } from './measure-layout';
 import type { LayoutRig } from './layout-widths.type';
+import { required } from '../../required';
 
 const RAILS = [289, 232, 188];
 let rig: LayoutRig;
@@ -52,19 +53,20 @@ describe('every Layout row, at 289 / 232 / 188 px', () => {
 
   it('draws the lattice at the full width of the rail it is in', () => {
     for (const rail of RAILS) {
-      const lattice = rig.at(rail, 'hud-lattice__scroll', 'tracks')[0];
+      const lattice = required(rig.at(rail, 'hud-lattice__scroll', 'tracks')[0], 'the track lattice');
       expect(`${rail} lattice ${lattice.width > rail - 40}`).toBe(`${rail} lattice true`);
     }
   });
 
   it('leaves ColorField room for a whole #rrggbb, down to 188 px', () => {
-    const hex = (rail: number): number => rig.at(rail, 'text-input', 'colour')[0].content;
+    const hex = (rail: number): number =>
+      required(rig.at(rail, 'text-input', 'colour')[0], `the colour input at ${rail}px`).content;
     expect([hex(289), hex(232), hex(188)]).toEqual([241, 184, 140]);
   });
 
   it('keeps the two direction icons on one row', () => {
     for (const rail of RAILS) {
-      const choice = rig.at(rail, 'hud-icon-choice', 'direction')[0];
+      const choice = required(rig.at(rail, 'hud-icon-choice', 'direction')[0], 'the direction choice');
       expect(`${rail} direction ${choice.width}`).toBe(`${rail} direction 58`);
       expect(choice.lines).toBe(1);
     }

@@ -1,8 +1,8 @@
 /* @layer store-site @kind component */
 import { useState } from 'react';
-import { Box, Pressable } from '@drizztdourden08/tessera/primitives';
+import { Box, Icon, Pressable } from '@drizztdourden08/tessera/primitives';
 import type { StarsProps } from './Stars.type';
-import { COUNTS, STAR } from './Stars.constants';
+import { COUNTS, STAR_PATH } from './Stars.constants';
 import './Stars.css';
 
 const Stars = (props: StarsProps) => {
@@ -15,7 +15,7 @@ const Stars = (props: StarsProps) => {
     const label = value === null ? 'not rated' : `${value.toFixed(1)} out of 5`;
     return (
       <Box as="span" className={cls} role="img" aria-label={label}>
-        {COUNTS.map((n) => <Box as="span" key={n} className="stars__star" data-on={n <= filled || undefined}>{STAR}</Box>)}
+        {COUNTS.map((n) => <Box as="span" key={n} className="stars__star" data-on={n <= filled || undefined}><Icon path={STAR_PATH} size="1em" /></Box>)}
       </Box>
     );
   }
@@ -35,7 +35,7 @@ const Stars = (props: StarsProps) => {
           onBlur={() => setHover(null)}
           onClick={() => onChange(n)}
         >
-          {STAR}
+          <Icon path={STAR_PATH} size="1em" />
         </Pressable>
       ))}
     </Box>

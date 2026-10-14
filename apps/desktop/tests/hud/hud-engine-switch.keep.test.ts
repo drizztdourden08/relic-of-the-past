@@ -3,9 +3,10 @@ import { describe, expect, it } from 'vitest';
 import { layoutHud, validateLayout, BUILT_IN_LAYOUTS, engineSwitchPatch, resolveValue } from '@rotp/hud';
 import { nodeById, patchNode } from '@app/hud-layout-editing/node-edits';
 import type { HudContainer, HudLayout, Value } from '@rotp/hud';
+import { required } from '../required';
 
 const VIEW = { w: 398, h: 224 };
-const base = BUILT_IN_LAYOUTS[0];
+const base = required(BUILT_IN_LAYOUTS[0], 'the first built-in layout');
 
 const screenOf = (doc: HudLayout): HudContainer => nodeById(doc, doc.screen.id) as HudContainer;
 

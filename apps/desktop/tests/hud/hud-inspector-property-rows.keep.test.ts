@@ -10,6 +10,7 @@ import { ValueField } from '@app/views/HudLayoutEditor/sub-components/ValueField
 import { Field, SegmentedControl } from '@drizztdourden08/tessera/primitives';
 import { REPO_ROOT } from '../repo-root';
 import { EDITOR_THEME_SHEETS } from './editor-theme-sheets.constants';
+import { required } from '../required';
 
 const ROOT = REPO_ROOT;
 const DS = `${ROOT}/node_modules/@drizztdourden08/tessera/src`;
@@ -43,10 +44,14 @@ const CASES: Record<string, () => unknown> = {
   pair: () => h('div', { className: 'hud-inspect__row' },
     h(ValueField, { label: 'duration (ms)', value: 300, onChange: noop, scope, min: 0 }),
     h(ValueField, { label: 'delay (ms)', value: 0, onChange: noop, scope })),
-  segments: () => h('div', null, ...SEGMENTS.map((options, i) => h(
-    Field, { key: i, size: 'sm', label: `seg${i}` },
-    h(SegmentedControl, { size: 'sm', value: options[0], options: seg(...options), onChange: noop }),
-  ))),
+  segments: () => h('div', null, ...SEGMENTS.map((options, i) => h(Field, {
+    key: i,
+    size: 'sm',
+    label: `seg${i}`,
+    children: h(SegmentedControl, {
+      size: 'sm', value: required(options[0], `the first option of seg${i}`), options: seg(...options), onChange: noop,
+    }),
+  }))),
 };
 
 const document_ = (rail: number): string => {

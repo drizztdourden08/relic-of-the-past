@@ -1,7 +1,7 @@
 /* @layer tests @kind test */
 // @vitest-environment jsdom
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { act, createElement as h, type ReactNode } from 'react';
+import { act, createElement as h, Fragment, type ReactNode } from 'react';
 import { createRoot, type Root } from 'react-dom/client';
 import { ScreenWindow } from '@drizztdourden08/tessera/composites';
 import { useEscapeStack } from '@drizztdourden08/tessera/primitives';
@@ -81,9 +81,13 @@ const scrub = (): HTMLInputElement => {
 const Harness = (props: { onClose: () => void; spanMs?: number }) => {
   const preview = useMotionPreviewState(useReducedMotion());
   return h(MotionPreviewContext.Provider, { value: preview },
-    h(ScreenWindow, { onClose: props.onClose, title: 'HUD Layout Editor' },
-      h('div', { 'data-testid': 'stage', 'data-now': String(preview.nowMs) }),
-      h(MotionTransport, { spanMs: props.spanMs ?? 800 })));
+    h(ScreenWindow, {
+      onClose: props.onClose,
+      title: 'HUD Layout Editor',
+      children: h(Fragment, null,
+        h('div', { 'data-testid': 'stage', 'data-now': String(preview.nowMs) }),
+        h(MotionTransport, { spanMs: props.spanMs ?? 800 })),
+    }));
 };
 
 beforeEach(() => { reduced = false; stubMatchMedia(); });

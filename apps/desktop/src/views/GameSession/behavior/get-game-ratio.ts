@@ -3,7 +3,7 @@ import type { GameSettings } from '@rotp/features';
 import { parseRatioString, detectScreenRatio, detectViewportRatio } from '@rotp/game-core';
 
 const getGameRatio = (aspectRatio: GameSettings['aspectRatio']): number => {
-  const canvas = document.querySelector('.game-layer__canvas');
+  const canvas = document.querySelector<HTMLCanvasElement>('.game-layer__canvas');
   if (canvas && canvas.width > 0 && canvas.height > 0) {
     return canvas.width / canvas.height;
   }

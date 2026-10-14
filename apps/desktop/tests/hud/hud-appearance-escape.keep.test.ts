@@ -72,8 +72,11 @@ const NODE: HudNode = {
 
 const editor = (onClose: () => void): ReactNode => createElement(
   ScreenWindow,
-  { onClose, title: 'HUD layout' },
-  createElement(AppearanceSection, { node: NODE, onPatch: () => {}, scope: {} }),
+  {
+    onClose,
+    title: 'HUD layout',
+    children: createElement(AppearanceSection, { node: NODE, onPatch: () => {}, scope: {} }),
+  },
 );
 
 afterEach(() => {

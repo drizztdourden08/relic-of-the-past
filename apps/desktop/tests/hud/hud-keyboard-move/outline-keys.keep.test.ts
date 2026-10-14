@@ -5,6 +5,7 @@ import { act, createElement as h } from 'react';
 import { OutlinePanel } from '@app/views/HudLayoutEditor/sub-components/OutlinePanel';
 import { DOC } from './keyboard-move.constants';
 import { installPanelHarness } from './install-panel-harness';
+import { required } from '../../required';
 
 const { mount } = installPanelHarness();
 
@@ -105,7 +106,7 @@ describe('the context menu is where the keys are learned', () => {
     const onDrop = vi.fn();
     mountOutline(onDrop);
     open('magic-bar');
-    act(() => { items()[0].click(); });
+    act(() => { required(items()[0], 'the first menu item').click(); });
     expect(onDrop).toHaveBeenCalledWith(['magic-bar'], { kind: 'flex', parentId: 'hud', index: 0 });
     expect(document.querySelector('.dropdown__item')).toBeNull();
   });

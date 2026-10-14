@@ -2,6 +2,7 @@
 import { describe, it, expect, beforeAll } from 'vitest';
 import { measureAppearance } from './measure-appearance';
 import type { AppearanceRig } from './appearance.type';
+import { required } from '../../required';
 
 const RAILS = [289, 232, 188];
 let rig: AppearanceRig;
@@ -34,14 +35,14 @@ describe('the colour row, in every place Appearance draws one', () => {
 describe("Appearance's own new controls", () => {
   it('draws the four border sides as a box, not four checkboxes in a run', () => {
     for (const rail of RAILS) {
-      const box = rig.at(rail, 'hud-sides', 'sides')[0];
+      const box = required(rig.at(rail, 'hud-sides', 'sides')[0], 'the border sides box');
       expect(`${rail} sides ${box.width}x${box.height}`).toBe(`${rail} sides 46x34`);
     }
   });
 
   it('gives the gradient ramp the full row at every rail', () => {
     for (const rail of RAILS) {
-      const track = rig.at(rail, 'hud-ramp__track', 'ramp')[0];
+      const track = required(rig.at(rail, 'hud-ramp__track', 'ramp')[0], 'the gradient ramp track');
       expect(`${rail} ramp ${track.width > rail - 40}`).toBe(`${rail} ramp true`);
       expect(`${rail} ramp height ${track.height}`).toBe(`${rail} ramp height 18`);
     }
@@ -49,12 +50,13 @@ describe("Appearance's own new controls", () => {
 
   it('costs the paint kind three icons instead of a full-width Select', () => {
     for (const rail of RAILS) {
-      expect(`${rail} kinds ${rig.at(rail, 'hud-icon-choice', 'gradient')[0].width}`).toBe(`${rail} kinds 88`);
+      const kinds = required(rig.at(rail, 'hud-icon-choice', 'gradient')[0], 'the paint kind choice');
+      expect(`${rail} kinds ${kinds.width}`).toBe(`${rail} kinds 88`);
     }
   });
 
   it('keeps four slot chips on one row at the default rail', () => {
-    expect(rig.at(289, 'hud-slot-chips', 'chips')[0].lines).toBe(1);
+    expect(required(rig.at(289, 'hud-slot-chips', 'chips')[0], 'the slot chips').lines).toBe(1);
   });
 });
 

@@ -12,6 +12,7 @@ import type { Platform } from '@drizztdourden08/brock-core';
 import { cssIn } from './files-in';
 import { REPO_ROOT } from '../repo-root';
 import { EDITOR_THEME_SHEETS } from './editor-theme-sheets.constants';
+import { required } from '../required';
 
 const ROOT = REPO_ROOT;
 const DS = `${ROOT}/node_modules/@drizztdourden08/tessera/src`;
@@ -102,12 +103,14 @@ const probe = (): Probe => {
         x: Math.round(r.x * 10) / 10, y: Math.round(r.y * 10) / 10, w: Math.round(r.width * 10) / 10, h: Math.round(r.height * 10) / 10,
       };
       const computed = getComputedStyle(el) as unknown as Record<string, string>;
-      style[key] = Object.fromEntries(want.map((k) => [k, computed[k]]));
       const caps = ['::before', '::after'].map((pseudo) => {
         const c = getComputedStyle(el, pseudo);
         return `${c.width}x${c.height}`;
       });
-      style[key].caps = caps.join(' ');
+      style[key] = {
+        ...Object.fromEntries(want.map((k) => [k, computed[k] ?? ''])),
+        caps: caps.join(' '),
+      };
     }
   }
   return { box, style };
@@ -126,43 +129,48 @@ beforeAll(async () => {
 
 afterAll(async () => { await browser?.close(); });
 
+const boxOf = (key: string): Probe['box'][string] => required(read.box[key], `the box of ${key}`);
+
+const styleOf = (key: string, property: string): string =>
+  required(required(read.style[key], `the style of ${key}`)[property], `${property} of ${key}`);
+
 describe('the §45 pan band is DRAWN, and only while a drag is live', () => {
   it('is a 24 px gradient at each end of the scroller, costing no layout', () => {
-    expect(read.box['pan/hud-outline__pan'].h).toBe(0);
-    expect(read.box['pan/hud-outline__pan.is-down'].h).toBe(0);
-    expect(read.style['pan/hud-outline__pan'].caps.split(' ')[0]).toMatch(/x24px$/);
-    expect(read.style['pan/hud-outline__pan'].backgroundImage).toBe('none');
+    expect(boxOf('pan/hud-outline__pan').h).toBe(0);
+    expect(boxOf('pan/hud-outline__pan.is-down').h).toBe(0);
+    expect(styleOf('pan/hud-outline__pan', 'caps').split(' ')[0]).toMatch(/x24px$/);
+    expect(styleOf('pan/hud-outline__pan', 'backgroundImage')).toBe('none');
   });
 
   it('draws nothing at rest, because the scroller only wears it while `is-panning`', () => {
-    expect(read.style['quiet/hud-outline__pan'].caps).toBe('autoxauto autoxauto');
+    expect(styleOf('quiet/hud-outline__pan', 'caps')).toBe('autoxauto autoxauto');
   });
 });
 
 describe('an occupied cell in the inspector is a DESTINATION, and is hatched', () => {
   it('hatches the cell a sibling already holds instead of filling or dimming it', () => {
-    expect(read.style['taken/hud-lattice__cell[occupied-selected]'].backgroundImage)
+    expect(styleOf('taken/hud-lattice__cell[occupied-selected]', 'backgroundImage'))
       .toContain('repeating-linear-gradient');
   });
 
   it('leaves an empty cell unhatched, so the two states are still told apart', () => {
-    expect(read.style['taken/hud-lattice__cell[empty]'].backgroundImage).toBe('none');
+    expect(styleOf('taken/hud-lattice__cell[empty]', 'backgroundImage')).toBe('none');
   });
 
   it('paints the node\'s OWN cell without the hatch, because where it IS comes first', () => {
-    expect(read.style['taken/hud-lattice__cell[selected]'].backgroundImage).toBe('none');
+    expect(styleOf('taken/hud-lattice__cell[selected]', 'backgroundImage')).toBe('none');
   });
 });
 
 describe('the ghost clears the cursor, and flips at the edge', () => {
   it('sits below-right by +14, +18', () => {
-    const card = read.box['ghost/hud-ghost'];
+    const card = boxOf('ghost/hud-ghost');
     expect(card.x).toBe(CURSOR.x + 14);
     expect(card.y).toBe(CURSOR.y + 18);
   });
 
   it('flips to above-left near the viewport corner, without ever covering the cursor', () => {
-    const card = read.box['ghostflip/hud-ghost'];
+    const card = boxOf('ghostflip/hud-ghost');
     expect(card.x + card.w).toBe(CORNER.x - 14);
     expect(card.y + card.h).toBe(CORNER.y - 18);
     expect(card.x + card.w).toBeLessThan(VIEWPORT.w);
@@ -170,7 +178,7 @@ describe('the ghost clears the cursor, and flips at the edge', () => {
   });
 
   it('is one card of three lines, tall enough to read and narrow enough to follow', () => {
-    const card = read.box['ghost/hud-ghost'];
+    const card = boxOf('ghost/hud-ghost');
     expect(card.h).toBeGreaterThan(30);
     expect(card.h).toBeLessThan(90);
     expect(card.w).toBeLessThan(320);

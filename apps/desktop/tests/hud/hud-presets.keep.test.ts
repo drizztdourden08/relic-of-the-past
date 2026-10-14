@@ -2,7 +2,8 @@
 import { describe, expect, it } from 'vitest';
 import { quantiseHeartFill } from '@app/compounds/HudShape';
 import { aspectOf, intrinsicSize, layoutHud, HUD_PRESETS, instantiatePreset, tryLoadLayout } from '@rotp/hud';
-import type { HudLayout, HudNode } from '@rotp/hud';
+import type { HudContainer, HudLayout, HudNode } from '@rotp/hud';
+import { required } from '../required';
 
 const VIEW = { w: 398, h: 224 };
 
@@ -108,11 +109,16 @@ describe('a stored document naming a deleted kind is migrated once, on load', ()
     }],
   });
 
+  const migratedChild = (doc: HudLayout): HudNode => {
+    const root = required(doc.screen.children[0], 'the migrated root') as HudContainer;
+    return required(root.children[0], 'the migrated child');
+  };
+
   it.each(['life', 'magic', 'consumables', 'wallet'])('%s loads as its preset subtree, not a refusal', (type) => {
     const result = tryLoadLayout(legacyDoc(type));
     expect(result.ok, type).toBe(true);
     if (!result.ok) return;
-    const migrated = (result.doc.screen.children[0] as HudContainer).children[0];
+    const migrated = migratedChild(result.doc);
     expect(JSON.stringify(migrated)).not.toContain(`"${type}"`);
   });
 
@@ -120,13 +126,13 @@ describe('a stored document naming a deleted kind is migrated once, on load', ()
     const result = tryLoadLayout(legacyDoc('wallet'));
     expect(result.ok).toBe(true);
     if (!result.ok) return;
-    expect((result.doc.screen.children[0] as HudContainer).children[0].scale).toBe(0.5);
+    expect(migratedChild(result.doc).scale).toBe(0.5);
   });
 
   it('a document with nothing legacy in it is untouched', () => {
     const result = tryLoadLayout(legacyDoc('spacer'));
     expect(result.ok).toBe(true);
     if (!result.ok) return;
-    expect((result.doc.screen.children[0] as HudContainer).children[0].id).toBe('v');
+    expect(migratedChild(result.doc).id).toBe('v');
   });
 });

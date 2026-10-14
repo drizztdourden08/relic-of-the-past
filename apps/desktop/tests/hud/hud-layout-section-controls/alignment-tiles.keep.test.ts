@@ -33,7 +33,7 @@ describe('the alignment tiles offer the values the engine has, and no others', (
     const markup = renderToStaticMarkup(h(PlatformContext.Provider, { value: PLATFORM },
       h(LayoutSection, {
         node: { kind: 'container', id: 'row-1', direction: 'row', children: [] },
-        onPatch: noop, onPatchNode: noop, scope: {},
+        onPatch: noop, scope: {},
       })) as never);
     for (const option of FLEX_JUSTIFY) {
       expect(markup).toContain(`data-align="justify:${option.value}"`);
@@ -51,7 +51,7 @@ describe('the alignment tiles offer the values the engine has, and no others', (
       h(PlatformContext.Provider, { value: PLATFORM },
         h(LayoutSection, {
           node: { kind: 'container', id: 'f', direction, children: [] },
-          onPatch: noop, onPatchNode: noop, scope: {},
+          onPatch: noop, scope: {},
         })) as never,
     );
     expect(render('row')).toContain('flex-direction:row;justify-content:space-between');
@@ -65,7 +65,7 @@ describe('the alignment tiles offer the values the engine has, and no others', (
         node: {
           kind: 'container', id: 'g', layout: 'grid', columns: ['auto'], children: [],
         },
-        onPatch: noop, onPatchNode: noop, scope: {},
+        onPatch: noop, scope: {},
       })) as never);
     expect(markup).toContain('data-align="justifyItems:stretch"');
     expect(markup).toContain('data-align="alignItems:stretch"');

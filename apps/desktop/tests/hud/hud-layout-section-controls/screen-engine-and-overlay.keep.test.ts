@@ -9,6 +9,7 @@ import { PlatformContext } from '@drizztdourden08/brock-react';
 import type { HudFlexContainer, HudGridContainer, PlacedNode } from '@rotp/hud';
 import { ED, GUIDE, PLATFORM } from './section-controls.constants';
 import { boxCell as cell } from './box-cell';
+import { required } from '../../required';
 
 interface ViewSnapshot {
   gridOverlayEnabled: boolean;
@@ -27,7 +28,7 @@ describe('the screen root chooses its engine like any other container (§42)', (
   const render = (direction = 'row'): string => renderToStaticMarkup(
     h(PlatformContext.Provider, { value: PLATFORM }, h(LayoutSection, {
       node: { kind: 'container', id: 'screen', direction, children: [] } as never,
-      onPatch: noop, onPatchNode: noop, scope: {},
+      onPatch: noop, scope: {},
     })) as never,
   );
 
@@ -49,7 +50,7 @@ describe('the screen root chooses its engine like any other container (§42)', (
     const markup = renderToStaticMarkup(h(PlatformContext.Provider, { value: PLATFORM },
       h(LayoutSection, {
         node: { kind: 'container', id: 'screen', direction: 'row', children: [] } as never,
-        onPatch: (patch: unknown) => patches.push(patch), onPatchNode: noop, scope: {},
+        onPatch: (patch: unknown) => patches.push(patch), scope: {},
       })) as never);
     expect(markup).toContain('engine');
     const src = readFileSync(`${ED}/sub-components/LayoutSection.tsx`, 'utf8');
@@ -67,7 +68,10 @@ describe('the guide colour reaches the overlay it names', () => {
     };
     const placed: PlacedNode[] = [
       { id: 'grid', node: container, rect: { x: 0, y: 0, w: 40, h: 10 }, scale: 1, opacity: 1, dimmed: false },
-      { id: 'a', node: container.children[0], rect: { x: 0, y: 0, w: 10, h: 10 }, scale: 1, opacity: 1, dimmed: false },
+      {
+        id: 'a', node: required(container.children[0], 'the first cell'),
+        rect: { x: 0, y: 0, w: 10, h: 10 }, scale: 1, opacity: 1, dimmed: false,
+      },
     ];
     const markup = renderToStaticMarkup(h(ContainerOverlay, {
       container, placed, scale: 2, ctx: {},
@@ -88,8 +92,14 @@ describe('the guide colour reaches the overlay it names', () => {
     };
     const placed: PlacedNode[] = [
       { id: 'row', node: container, rect: { x: 0, y: 0, w: 22, h: 10 }, scale: 1, opacity: 1, dimmed: false },
-      { id: 'a', node: container.children[0], rect: { x: 0, y: 0, w: 10, h: 10 }, scale: 1, opacity: 1, dimmed: false },
-      { id: 'b', node: container.children[1], rect: { x: 12, y: 0, w: 10, h: 10 }, scale: 1, opacity: 1, dimmed: false },
+      {
+        id: 'a', node: required(container.children[0], 'the first slot'),
+        rect: { x: 0, y: 0, w: 10, h: 10 }, scale: 1, opacity: 1, dimmed: false,
+      },
+      {
+        id: 'b', node: required(container.children[1], 'the second slot'),
+        rect: { x: 12, y: 0, w: 10, h: 10 }, scale: 1, opacity: 1, dimmed: false,
+      },
     ];
     const markup = renderToStaticMarkup(h(ContainerOverlay, {
       container, placed, scale: 2, ctx: {},

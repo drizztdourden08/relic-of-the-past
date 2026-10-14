@@ -2,6 +2,7 @@
 import { describe, expect, it } from 'vitest';
 import { layoutHud, measureBox, placedById } from '@rotp/hud';
 import type { HudContainer, HudLayout, HudNode } from '@rotp/hud';
+import { required } from '../required';
 
 const VIEW = { w: 400, h: 200 };
 
@@ -83,7 +84,8 @@ describe('visible, scale and opacity all accept a Value', () => {
   it('a literal Value resolves exactly as a bare number always has (scale)', () => {
     const bound = docOf(row([leaf('a')], { scale: { from: 'data', expr: '0.5' } }));
     const literal = docOf(row([leaf('a')], { scale: 0.5 }));
-    expect(measureBox(bound.screen.children[0])).toEqual(measureBox(literal.screen.children[0]));
+    expect(measureBox(required(bound.screen.children[0], 'the bound row')))
+      .toEqual(measureBox(required(literal.screen.children[0], 'the literal row')));
   });
 
   it('opacity resolves from data and is clamped to 0..1 even when the expression is not', () => {

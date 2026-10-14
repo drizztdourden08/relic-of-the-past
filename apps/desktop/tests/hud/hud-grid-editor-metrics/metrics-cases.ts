@@ -21,7 +21,7 @@ const placed: PlacedNode[] = [{
 const sample = { hearts: CTX.hearts, filledSlots: [], dataScope: {} } as unknown as EditorSampleState;
 
 const editor = (container: HudGridContainer): unknown =>
-  withSolve(container, h(GridEditor, { container, scope: {}, onPatchContainer: noop }));
+  withSolve(container, h(GridEditor, { container, onPatchContainer: noop }));
 
 const metricsCases: Record<string, () => unknown> = {
   three: () => editor(THREE),

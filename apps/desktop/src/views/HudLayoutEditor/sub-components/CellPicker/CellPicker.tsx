@@ -21,7 +21,7 @@ const CellPicker = (props: CellPickerProps) => {
   const os = usePlatform().info.os;
 
   const cellState = (cell: CellRef): LatticeCellState => {
-    const isMine = Boolean(mine) && covers(mine, cell.column, cell.row);
+    const isMine = mine !== undefined && covers(mine, cell.column, cell.row);
     const taken = occupants.some((o) => o.id !== childId && covers(o, cell.column, cell.row));
     if (isMine) return taken ? 'occupied-selected' : 'selected';
     return taken ? 'occupied' : 'empty';

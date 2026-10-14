@@ -32,8 +32,11 @@ const easings = ['linear', 'ease-out'].map((e) => ({ value: e, label: e }));
 
 const transitionsRow = () => h('div', { className: 'hud-inspect__row' },
   h(ValueField, { label: 'duration (ms)', value: 200, onChange: noop, scope, min: 0 }),
-  h(Field, { size: 'sm', label: 'easing' },
-    h(Select, { size: 'sm', value: '', placeholder: 'default', options: easings, onChange: noop })));
+  h(Field, {
+    size: 'sm',
+    label: 'easing',
+    children: h(Select, { size: 'sm', value: '', placeholder: 'default', options: easings, onChange: noop }),
+  }));
 
 const expressionRow = () => h(ValueField, {
   label: 'opacity', value: { from: 'data', expr: 'life_current / 8' }, onChange: noop, scope,

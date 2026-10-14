@@ -3,6 +3,7 @@ import { describe, expect, it } from 'vitest';
 import defaultJson from '../../../../packages/hud/data/layouts/default.json';
 import { BUILT_IN_LAYOUTS, layoutById, loadLayout, tryLoadLayout, layoutHud } from '@rotp/hud';
 import type { HudLayout } from '@rotp/hud';
+import { required } from '../required';
 
 const VIEW = { w: 398, h: 224 };
 
@@ -13,7 +14,9 @@ const edited = (change: (doc: Record<string, unknown>) => void): unknown => {
 };
 
 const bandOf = (doc: Record<string, unknown>, index: number): Record<string, unknown> =>
-  ((doc.screen as { children: Record<string, unknown>[] }).children)[index];
+  required(((doc.screen as { children: Record<string, unknown>[] }).children)[index], `band ${index}`);
+
+const firstOf = <T>(list: readonly T[], what: string): T => required(list[0], what);
 
 const errorsOf = (value: unknown): string[] => {
   const result = tryLoadLayout(value);
@@ -72,7 +75,9 @@ describe('a bad document fails loudly, at the line that is wrong', () => {
   it('refuses a glyph that names both a position and a slot', () => {
     const errors = errorsOf(edited((doc) => {
       const buttons = bandOf(doc, 2) as unknown as { children: { children: { children: { element: unknown }[] }[] }[] };
-      buttons.children[0].children[0].children[0].element = { type: 'glyph', position: 'NORTH', slot: 1 };
+      const group = firstOf(buttons.children, 'the first button group');
+      const cluster = firstOf(group.children, 'the first button cluster');
+      firstOf(cluster.children, 'the first button').element = { type: 'glyph', position: 'NORTH', slot: 1 };
     }));
     expect(errors.some((e) => e.includes('either a position or a slot'))).toBe(true);
   });
@@ -80,7 +85,8 @@ describe('a bad document fails loudly, at the line that is wrong', () => {
   it('refuses an unknown element type, a bad self-alignment and a repeated id', () => {
     expect(errorsOf(edited((doc) => {
       const wallet = bandOf(doc, 1) as unknown as { children: { children: { element: unknown }[] }[] };
-      wallet.children[0].children[0].element = { type: 'hearts' };
+      const group = firstOf(wallet.children, 'the first wallet group');
+      firstOf(group.children, 'the first wallet item').element = { type: 'hearts' };
     })).some((e) => e.includes('unknown element type'))).toBe(true);
 
     expect(errorsOf(edited((doc) => {
@@ -88,7 +94,8 @@ describe('a bad document fails loudly, at the line that is wrong', () => {
     })).some((e) => e.includes('justifySelf'))).toBe(true);
 
     expect(errorsOf(edited((doc) => {
-      (bandOf(doc, 0) as unknown as { children: { id: string }[] }).children[1].id = 'hearts';
+      const children = (bandOf(doc, 0) as unknown as { children: { id: string }[] }).children;
+      required(children[1], 'the second child of the first band').id = 'hearts';
     })).some((e) => e.includes("'hearts' is used more than once"))).toBe(true);
   });
 

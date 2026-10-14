@@ -6,6 +6,7 @@ import { resolveTextContent, snapGameFontSize, textIntrinsicSize, tryLoadLayout 
 import type { HudNode } from '@rotp/hud';
 import { leaf } from './leaf';
 import { row } from './row';
+import { required } from '../../required';
 
 describe('validate-expand-budget - the validator refuses a document that could expand too far', () => {
   const deepRepeat = (count: number): HudNode => ({
@@ -87,7 +88,7 @@ describe('button - bind validation, derived unassigned flag, and the states fall
     expect(result.ok).toBe(true);
     if (result.ok) {
       const root = result.doc.screen.children[0] as { children: { dimWhenEmpty?: number[] }[] };
-      const button = root.children[0];
+      const button = required(root.children[0], 'the button');
       expect(button.dimWhenEmpty).toEqual([5]);
     }
   });

@@ -2,6 +2,7 @@
 import { describe, it, expect, beforeAll } from 'vitest';
 import { measureGeometry } from './measure-geometry';
 import type { GeometryRig, Measured } from './geometry-width.type';
+import { required } from '../../required';
 
 const RAILS = [289, 232, 188];
 let rig: GeometryRig;
@@ -11,6 +12,9 @@ const named = (rail: number, name: string): Measured => {
   if (!hit) throw new Error(`no "${name}" measured at ${rail}px`);
   return hit;
 };
+
+const sizeboxHeight = (rail: number): number =>
+  required(required(rig.heights[rail], `the heights at ${rail}px`).sizebox, `the Size & box height at ${rail}px`);
 
 beforeAll(async () => {
   rig = await measureGeometry(RAILS);
@@ -42,10 +46,10 @@ describe('the box model answers the four-spinner row it replaces', () => {
 describe('the section is half the height it was', () => {
   it('draws the whole of Size & box in under 450 px, at every rail', () => {
     for (const rail of RAILS) {
-      expect(`${rail}px: ${rig.heights[rail].sizebox < 450}`).toBe(`${rail}px: true`);
+      expect(`${rail}px: ${sizeboxHeight(rail) < 450}`).toBe(`${rail}px: true`);
     }
     const hintLine = 20;
-    expect(rig.heights[188].sizebox - rig.heights[289].sizebox).toBeLessThanOrEqual(hintLine);
+    expect(sizeboxHeight(188) - sizeboxHeight(289)).toBeLessThanOrEqual(hintLine);
   });
 });
 

@@ -16,9 +16,11 @@ export default defineConfig({
     // and finish in about two seconds alone; the moment a jsdom suite runs
     // alongside them they cross five and fail for no reason of their own. Both
     // limits are raised so the number is a real hang, not a busy CPU: a hook that
-    // resets modules and imports a view graph cold crosses ten the same way.
+    // resets modules and imports a view graph cold crosses ten the same way. Brock
+    // and Tessera ship TypeScript source, so the first cold import of the shell
+    // transforms thousands of files and takes over a minute beside other workers.
     testTimeout: 20000,
-    hookTimeout: 60000,
+    hookTimeout: 240000,
   },
   esbuild: { jsx: 'automatic' },
   resolve: {

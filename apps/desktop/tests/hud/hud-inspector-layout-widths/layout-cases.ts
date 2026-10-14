@@ -37,12 +37,12 @@ const layoutCases: Record<string, () => unknown> = {
   alignFlexColumn: () => h(AlignmentTiles, { direction: 'column', rows: flexRows }),
   direction: () => h(DirectionControl, { value: 'row', onChange: noop }),
   tracks: () => h(PlatformContext.Provider, { value: platform }, h(GridEditor, {
-    container: grid, scope: {}, onPatchContainer: noop,
+    container: grid, onPatchContainer: noop,
   })),
   trackEditor: () => h('div', { className: 'hud-grid__control' },
     h(ExtentField, { label: 'column 2', value: { px: 16 }, onChange: noop }),
     h('div', { className: 'hud-grid__bar' }, ...['◀', '▶', '+', '✕'].map((glyph, i) => h(
-      IconButton, { key: i, variant: 'ghost', size: 'sm', label: glyph, onClick: noop }, glyph,
+      IconButton, { key: i, variant: 'ghost', size: 'sm', label: glyph, onClick: noop, children: glyph },
     )))),
   colour: () => h(ColorField, {
     label: 'guide', value: guide, onChange: noop, hint: 'Editor only. Never drawn in game.',

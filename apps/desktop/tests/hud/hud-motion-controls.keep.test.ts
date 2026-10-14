@@ -10,7 +10,8 @@ import {
   drivenProperties, mergeTransition, TRANSITION_PROPERTIES,
 } from '@app/hud-layout-editing/transition-edits';
 import { validateTransition, validateAnimations, collectReflowWarnings, easingFn, sampleKeyframes } from '@rotp/hud';
-import type { HudAnimationKeyframe, HudNode } from '@rotp/hud';
+import type { HudAnimationKeyframe, HudFlexContainer, HudNode } from '@rotp/hud';
+import { required } from '../required';
 
 const SCOPE = { life_current: 8 };
 const TWO: HudAnimationKeyframe[] = [{ at: 0, value: 1 }, { at: 1, value: 1.1 }];
@@ -50,7 +51,7 @@ describe('KeyframeTrack: dragging a diamond', () => {
     const moved = moveKey(THREE, 1, 0.3);
     expect(moved[0]).toEqual(THREE[0]);
     expect(moved[2]).toEqual(THREE[2]);
-    expect(moved[1].at).toBe(0.3);
+    expect(required(moved[1], 'the moved key').at).toBe(0.3);
   });
 
   it('adds a key holding whatever the curve already read there, so the shape does not jump', () => {
@@ -110,7 +111,8 @@ describe('EasingPicker: exactly the strings the engine accepts', () => {
   it('draws each thumbnail from the ENGINE\'s own curve, not a hand-drawn one', () => {
     const midY = (name: string): number => {
       const points = curvePath(name).split(/[ML]/).filter(Boolean).map((p) => p.trim().split(' ').map(Number));
-      return points[Math.floor(points.length / 2)][1];
+      const midpoint = required(points[Math.floor(points.length / 2)], 'the midpoint of the curve');
+      return required(midpoint[1], 'the y of the midpoint');
     };
     expect(midY('ease-in')).toBeGreaterThan(midY('linear'));
     expect(midY('ease-out')).toBeLessThan(midY('linear'));
@@ -158,7 +160,7 @@ describe('Transitions and enter/exit', () => {
 
 describe('the reflow warning lands on the property that caused it', () => {
   it('names the animated property, so a card can claim its own warning', () => {
-    const row: HudNode = {
+    const row: HudFlexContainer = {
       id: 'vitals',
       kind: 'container',
       layout: 'flex',
@@ -166,14 +168,14 @@ describe('the reflow warning lands on the property that caused it', () => {
       children: [{
         id: 'heart',
         kind: 'element',
-        element: { type: 'shape', shape: 'rect' },
+        element: { type: 'shape', shape: 'heart', fill: 1 },
         animation: [
           { property: 'width', keyframes: TWO, duration: 300, loop: 'loop' },
           { property: 'scale', keyframes: TWO, duration: 300, loop: 'loop' },
         ],
       }],
-    } as HudNode;
-    const warnings = collectReflowWarnings(row as never);
+    };
+    const warnings = collectReflowWarnings(row);
     const mine = warnings.filter((w) => w.startsWith('heart:'));
     expect(mine).toHaveLength(1);
     expect(mine.find((w) => w.includes("animating 'width'"))).toBeDefined();

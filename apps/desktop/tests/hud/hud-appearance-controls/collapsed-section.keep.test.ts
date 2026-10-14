@@ -2,6 +2,7 @@
 import { describe, it, expect, beforeAll } from 'vitest';
 import { measureAppearance } from './measure-appearance';
 import type { AppearanceRig } from './appearance.type';
+import { required } from '../../required';
 
 const RAILS = [289, 232, 188];
 let rig: AppearanceRig;
@@ -14,7 +15,7 @@ beforeAll(async () => {
 describe('the longest section, collapsed', () => {
   it('fits one screen with every group closed and everything enabled', () => {
     for (const rail of RAILS) {
-      const body = rig.at(rail, 'hud-inspect__group', 'section')[0];
+      const body = required(rig.at(rail, 'hud-inspect__group', 'section')[0], 'the collapsed section group');
       expect(`${rail} collapsed ${body.height < 500}`).toBe(`${rail} collapsed true`);
     }
   });

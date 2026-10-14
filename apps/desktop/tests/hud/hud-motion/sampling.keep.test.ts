@@ -1,7 +1,8 @@
 /* @layer test @kind test */
 import { describe, expect, it } from 'vitest';
 import { cyclePosition, easingFn, expand, sampleAnimation, sampleKeyframes } from '@rotp/hud';
-import type { HudAnimation, HudNode } from '@rotp/hud';
+import type { HudAnimation, HudContainer } from '@rotp/hud';
+import { required } from '../../required';
 
 describe('easing curves', () => {
   it('every named curve starts at 0 and ends at 1', () => {
@@ -95,7 +96,7 @@ describe('staggering a repeat with delay - ten hearts do not pulse in lockstep',
     loop: 'ping-pong',
   });
 
-  const heartRow = (count: number): HudNode => ({
+  const heartRow = (count: number): HudContainer => ({
     kind: 'container',
     id: 'row',
     direction: 'row',
@@ -133,7 +134,9 @@ describe('steps(n) - the sprite-sheet flipbook mechanism', () => {
     const frameAt = (t: number) => sampleKeyframes(keyframes, t, {}, undefined);
     const stepped = (t: number) => {
       const local = easingFn('steps(3)')(t);
-      return keyframes[0].value + (keyframes[1].value - keyframes[0].value) * local;
+      const first = required(keyframes[0], 'the first keyframe');
+      const last = required(keyframes[1], 'the last keyframe');
+      return first.value + (last.value - first.value) * local;
     };
     [0, 0.2, 0.4, 0.6, 0.8, 0.99].forEach((t) => {
       const value = stepped(t);

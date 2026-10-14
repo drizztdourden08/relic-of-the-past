@@ -13,7 +13,7 @@ import type { HudContainer, PlacedNode } from '@rotp/hud';
 import type { EditorStageProps } from './EditorStage.type';
 
 const isContainer = (node: PlacedNode['node'] | undefined): node is HudContainer =>
-  Boolean(node) && node.kind === 'container';
+  node !== undefined && node.kind === 'container';
 
 const overlayTargetFor = (placed: readonly PlacedNode[], selectedId: string | null): HudContainer | null => {
   const selected = placed.find((p) => p.id === selectedId)?.node;

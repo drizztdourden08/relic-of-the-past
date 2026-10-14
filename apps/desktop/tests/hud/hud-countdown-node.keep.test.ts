@@ -13,6 +13,7 @@ import { countdownVariantOf } from '@app/compounds/HudNodeRenderer/behavior/coun
 import { countdownContentOf } from '@app/views/HudLayoutView/behavior/countdown-content';
 import { occupantsOf } from '@app/views/HudLayoutEditor/sub-components/GridLattice';
 import type { PlacedNode, HudLayout, HudNode } from '@rotp/hud';
+import { gridOf } from './hud-node-guards';
 
 const ACTIVE = { countdown_active: 1, countdown_seconds: 18, countdown_frames: 40 };
 const leaf = (id: string): HudNode => ({ kind: 'element', id, element: { type: 'sprite', file: 'x', box: { w: 16, h: 16 } } });
@@ -138,7 +139,7 @@ describe('the live path: a parsed reading to a pie on the shipped layout', () =>
   });
 
   it('is no grid occupant, except in its own cell picker', () => {
-    const screen = (layoutById('default') as HudLayout).screen;
+    const screen = gridOf((layoutById('default') as HudLayout).screen, 'the default screen');
     const ids = (keep?: string) => occupantsOf(screen, keep).map((o) => o.id);
     expect(ids()).not.toContain('countdown');
     expect(ids()).toEqual(screen.children.filter((c) => c.id !== 'countdown').map((c) => c.id));

@@ -43,7 +43,7 @@ const geometryCases: Record<string, () => unknown> = {
     scope,
   }),
   cell: () => h(PlatformContext.Provider, { value: platform }, h(GridEditor, {
-    container: gridParent, scope: {}, onPatchContainer: noop,
+    container: gridParent, onPatchContainer: noop,
   })),
 };
 

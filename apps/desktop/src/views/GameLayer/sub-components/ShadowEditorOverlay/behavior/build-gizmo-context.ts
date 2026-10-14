@@ -47,7 +47,7 @@ const buildGizmoContext = (shapeX: number, shapeY: number, shapeWidth: number, s
     scaleX,
     scaleY,
     vertices,
-    isFreehand: Boolean(points) && points.length > 0,
+    isFreehand: (points?.length ?? 0) > 0,
   };
 };
 

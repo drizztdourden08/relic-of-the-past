@@ -68,6 +68,7 @@ const probe = (): Measured[] => {
         name: textOf(el).replace(/\s+/g, ' '),
         width: Math.round(box.width * 10) / 10,
         height: Math.round(box.height * 10) / 10,
+        top: Math.round((box.top - rail.top) * 10) / 10,
         content: Math.round((box.width - px(el, 'padding-left') - px(el, 'padding-right')
           - px(el, 'border-left-width') - px(el, 'border-right-width')) * 10) / 10,
         lines: Math.max(1, Math.round(box.height / line)),

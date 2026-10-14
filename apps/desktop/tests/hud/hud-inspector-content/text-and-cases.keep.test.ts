@@ -21,7 +21,8 @@ import { caseMatches, matchLabel, winnerIn } from '@app/hud-layout-editing/case-
 import { textOfTextValue, textValueOf } from '@app/hud-layout-editing/value-text';
 import { CaseListEditor } from '@app/views/HudLayoutEditor/sub-components/CaseListEditor';
 import { TextContent } from '@app/views/HudLayoutEditor/sub-components/TextContent';
-import type { HudNode, HudSwitchSpec } from '@rotp/hud';
+import type { HudContainer, HudNode, HudSwitchSpec } from '@rotp/hud';
+import { required } from '../../required';
 import { PACKS, SCOPE } from './content-fixtures.constants';
 import { installDomHarness } from './install-dom-harness';
 
@@ -77,9 +78,10 @@ describe('the live-match marker is the engine own answer', () => {
     for (const item of [0, 3, 4, 7, 8, 20]) {
       const spec: HudSwitchSpec = { type: 'switch', cases, otherwise };
       const node = { kind: 'element', id: 'sw', element: spec } as HudNode;
-      const drawn = expand(node, { scope: { item } });
+      const root: HudContainer = { kind: 'container', id: 'root', direction: 'row', children: [node] };
+      const drawn = required(expand(root, { scope: { item } }).children[0], 'the expanded winner');
       const marked = winnerIn(cases, { item });
-      const expected = marked === -1 ? otherwise.id : cases[marked].node.id;
+      const expected = marked === -1 ? otherwise.id : required(cases[marked], 'the winning case').node.id;
       expect(`item ${item} → ${drawn.id}`).toBe(`item ${item} → ${expected}`);
     }
   });
@@ -101,7 +103,7 @@ describe('the live-match marker is the engine own answer', () => {
     const counted = caseMatches(cases, instances);
     expect(counted.wins).toEqual([12, 4]);
     expect(counted.otherwise).toBe(4);
-    expect(matchLabel(counted.wins[1], counted.total)).toBe('matches 4 of 20');
+    expect(matchLabel(required(counted.wins[1], 'the second case count'), counted.total)).toBe('matches 4 of 20');
     expect(matchLabel(0, 20)).toBeNull();
   });
 });

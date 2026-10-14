@@ -51,7 +51,7 @@ describe('every shortcut does what the legend draws', () => {
     const patch = vi.fn();
     mount(h(GridEditor, {
       container: { ...screenRoot(), columns: ['auto'], children: [] },
-      scope: {}, onPatchContainer: patch,
+      onPatchContainer: patch,
     }));
     down(header('column 1'));
     press('Delete');
@@ -75,8 +75,11 @@ describe('every shortcut does what the legend draws', () => {
 
 describe('Escape clears the selection and leaves the editor standing', () => {
   it('answers with the lattice, not with the layer behind it (§33)', () => {
-    mount(h(ScreenWindow, { onClose: ignore, title: 'HUD Layout Editor' },
-      h(GridEditor, { container: screenRoot(), scope: {}, onPatchContainer: ignore })));
+    mount(h(ScreenWindow, {
+      onClose: ignore,
+      title: 'HUD Layout Editor',
+      children: h(GridEditor, { container: screenRoot(), onPatchContainer: ignore }),
+    }));
     down(cell(2, 2));
     expect(document.querySelectorAll('.hud-lattice__cell[aria-selected="true"]').length).toBe(1);
     act(() => {
@@ -95,7 +98,6 @@ describe('removing an occupied column survives the validator and the engine', ()
 
     mount(h(GridEditor, {
       container: doc.screen as HudGridContainer,
-      scope: {},
       onPatchContainer: (patch) => { doc = patchNode(doc, 'screen', patch); },
     }));
     down(header('column 1'));

@@ -6,6 +6,7 @@ import { LayoutSection } from '@app/views/HudLayoutEditor/sub-components/LayoutS
 import { PlatformContext } from '@drizztdourden08/brock-react';
 import type { Platform } from '@drizztdourden08/brock-core';
 import type { HudContainer, HudGridContainer } from '@rotp/hud';
+import { required } from '../required';
 
 interface ViewSnapshot { gridOverlayEnabled: boolean; toggleGridOverlay: () => void }
 vi.mock('@app/stores/hud-editor-view-store', () => ({
@@ -32,7 +33,8 @@ const sectionOne = (markup: string): string =>
   markup.slice(0, markup.indexOf('class="hud-subsec"', markup.indexOf('class="hud-subsec"') + 1));
 
 const labels = (markup: string): string[] =>
-  Array.from(sectionOne(markup).matchAll(/hud-layout-set__label">([^<]*)</g)).map((m) => m[1]);
+  Array.from(sectionOne(markup).matchAll(/hud-layout-set__label">([^<]*)</g))
+    .map((m) => required(m[1], 'the captured label'));
 
 const barLit = (markup: string): string => markup
   .replace(/aria-pressed="(true|false)"/g, '')

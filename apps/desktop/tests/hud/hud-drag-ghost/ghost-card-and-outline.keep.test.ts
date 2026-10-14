@@ -10,6 +10,7 @@ import { OutlinePanel } from '@app/views/HudLayoutEditor/sub-components/OutlineP
 import { PlatformContext } from '@drizztdourden08/brock-react';
 import type { Platform } from '@drizztdourden08/brock-core';
 import { DOC } from './ghost-doc.constants';
+import { required } from '../../required';
 
 (globalThis as { IS_REACT_ACT_ENVIRONMENT?: boolean }).IS_REACT_ACT_ENVIRONMENT = true;
 
@@ -81,7 +82,7 @@ const rowFor = (id: string): { element: HTMLElement; top: number } => {
   const rows = rowsInOrder();
   const index = rows.findIndex((row) => row.dataset.outlineRow === id);
   if (index < 0) throw new Error(`no row for ${id}`);
-  return { element: rows[index], top: index * ROW };
+  return { element: required(rows[index], `the row for ${id}`), top: index * ROW };
 };
 
 const pointer = (type: string, y: number): MouseEvent =>
