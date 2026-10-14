@@ -55,7 +55,7 @@ Two things about them are worth knowing before editing:
 They drive the built Electron app, so build first:
 
 ```bash
-npx electron-vite build
+pnpm --filter ./apps/desktop build
 ```
 
 ```bash

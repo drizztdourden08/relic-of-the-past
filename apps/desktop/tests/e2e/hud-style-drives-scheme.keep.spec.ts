@@ -1,13 +1,13 @@
 /* @layer tests @kind test */
-import { test, expect, _electron as electron } from '@playwright/test';
+import { test, expect } from '@playwright/test';
 import { join } from 'path';
 import { existsSync, mkdirSync } from 'fs';
-import type { ElectronApplication, Page } from 'playwright';
+import type { Page } from 'playwright';
+import { MAIN_JS, launchApp } from './isolated-app';
+import type { ProfileSeed } from './isolated-app';
 import { REPO_ROOT } from '../repo-root';
 
 const PROJECT_ROOT = REPO_ROOT;
-const MAIN_JS = join(PROJECT_ROOT, 'apps', 'desktop', 'dist', 'electron', 'main.js');
-const USER_DATA = 'C:\\Users\\drizz\\AppData\\Local\\Temp\\rotp-pr';
 const SHOTS = join(PROJECT_ROOT, 'tests', 'screenshots', 'hud-style');
 
 const STYLE_ROW = '[data-setting-key="hudStyle"]';
@@ -15,28 +15,51 @@ const STYLE_SEGMENTS = `${STYLE_ROW} .segmented__btn`;
 const MAP_ROW = '[data-setting-key="mapOnSelect"]';
 const TOGGLE_TRAVEL_MS = 400;
 
+// A profile written the way a player's own profile is: no automation mark, so the hub lists it and the spec opens it.
+const PLAIN_PROFILE: ProfileSeed = { instance: 'hud-style-spec', name: 'visual-test', fixtures: [] };
+
+// The stored shape of a profile saved before the HUD style absorbed the control scheme: the old `extended` style
+// spelling, `controlScheme: 'modern'`, and four assignments on keyboard slots S, D, W and E.
+const MODERN_PROFILE: ProfileSeed = {
+  instance: 'hud-style-spec-mc',
+  name: 'agent/modern-controls',
+  fixtures: [],
+  config: {
+    hudStyle: 'extended',
+    controlScheme: 'modern',
+    mapOnSelect: false,
+    modernScheme: {
+      assignments: {
+        1: { kind: 'sword' },
+        2: { kind: 'action' },
+        3: { kind: 'item', hudItem: 1 },
+        4: { kind: 'item', hudItem: 2 },
+      },
+    },
+  },
+  modernSlots: [
+    { index: 1, code: 'KeyS', label: 'S' },
+    { index: 2, code: 'KeyD', label: 'D' },
+    { index: 3, code: 'KeyW', label: 'W' },
+    { index: 4, code: 'KeyE', label: 'E' },
+  ],
+};
+
 interface Hub {
-  app: ElectronApplication;
+  close: () => Promise<void>;
   page: Page;
   tab: (name: string) => Promise<void>;
   shoot: (name: string, selector: string) => Promise<void>;
 }
 
-const ignoreAlreadyClosed = (): void => undefined;
-
-const openProfile = async (instance: string, profile: string): Promise<Hub> => {
+const openProfile = async (seed: ProfileSeed): Promise<Hub> => {
   mkdirSync(SHOTS, { recursive: true });
-  const app = await electron.launch({
-    args: [MAIN_JS, '--muted', '--no-focus', `--instance=${instance}`, `--user-data=${USER_DATA.replace(/\\/g, '/')}`],
-    env: { ...process.env, NODE_ENV: 'production' },
-  });
-  const page = await app.firstWindow();
-  await page.waitForLoadState('domcontentloaded');
+  const { app, window: page, close } = await launchApp(seed);
   await page.waitForSelector('.window-title-bar', { timeout: 60_000 });
   const cdp = await app.context().newCDPSession(page);
   await cdp.send('Emulation.setDeviceMetricsOverride', { width: 1500, height: 1200, deviceScaleFactor: 1, mobile: false });
   await page.waitForTimeout(1200);
-  await page.locator('.list-item-row__primary', { hasText: profile }).first().click();
+  await page.locator('.list-item-row__primary', { hasText: seed.name ?? seed.instance }).first().click();
   await page.waitForTimeout(500);
   await page.getByText('Open Profile', { exact: true }).first().click();
   await page.waitForTimeout(2500);
@@ -48,7 +71,7 @@ const openProfile = async (instance: string, profile: string): Promise<Hub> => {
   const shoot = async (name: string, selector: string): Promise<void> => {
     await page.locator(selector).first().screenshot({ path: join(SHOTS, `${name}.png`) });
   };
-  return { app, page, tab, shoot };
+  return { close, page, tab, shoot };
 };
 
 const shootSlots = async (page: Page, name: string): Promise<void> => {
@@ -171,8 +194,8 @@ test.describe('HUD style drives the control scheme', () => {
   test.skip(!existsSync(MAIN_JS), 'run `npx electron-vite build` first');
 
   test('Original profile: three live styles, a banner instead of a scheme control', async () => {
-    const hub = await openProfile('hud-style-spec', 'visual-test');
-    const { app } = hub;
+    const hub = await openProfile(PLAIN_PROFILE);
+    const { close } = hub;
     try {
       await checkOriginalStyle(hub);
       await checkMapToggle(hub);
@@ -180,12 +203,12 @@ test.describe('HUD style drives the control scheme', () => {
       await checkEnhancedStyle(hub);
       await checkModernStyle(hub);
     } finally {
-      await app.close().catch(ignoreAlreadyClosed);
+      await close();
     }
   });
 
   test('a stored modern profile migrates to the Modern style with its slots intact', async () => {
-    const { app, page, tab, shoot } = await openProfile('hud-style-spec-mc', 'agent/modern-controls');
+    const { close, page, tab, shoot } = await openProfile(MODERN_PROFILE);
     try {
       await tab('HUD');
       expect(await styleSegments(page)).toEqual([
@@ -204,7 +227,7 @@ test.describe('HUD style drives the control scheme', () => {
       ]);
       await shootSlots(page, '07-migrated-slots');
     } finally {
-      await app.close().catch(ignoreAlreadyClosed);
+      await close();
     }
   });
 });

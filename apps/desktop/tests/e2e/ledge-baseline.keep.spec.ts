@@ -1,13 +1,11 @@
 /* @layer tests @kind test */
 import { test, expect } from '@playwright/test';
-import { _electron as electron } from 'playwright';
 import { join } from 'path';
 import { existsSync, readFileSync, rmSync } from 'fs';
-import { TEST_INSTANCE, ensureTestProfile } from './ensure-test-profile';
+import { E2E_INSTANCE, STATE_SPEC_CONFIG, startApp } from './isolated-app';
 import { REPO_ROOT } from '../repo-root';
 
 const PROJECT_ROOT = REPO_ROOT;
-const MAIN_JS = join(PROJECT_ROOT, 'apps', 'desktop', 'dist', 'electron', 'main.js');
 const DUMP_PATH = join(PROJECT_ROOT, 'debug-output', 'dump-nav.json');
 
 interface Expected {
@@ -17,8 +15,6 @@ interface Expected {
   ledges: number;
   byDir: Record<string, number>;
 }
-
-const ignoreAlreadyExited = (): void => undefined;
 
 const CASES: Expected[] = [
   {
@@ -63,18 +59,20 @@ const directionOf = (l: { startRow: number; startCol: number; endRow: number; en
 };
 
 const dumpFor = async (state: string): Promise<Record<string, unknown>> => {
-  await ensureTestProfile();
   if (existsSync(DUMP_PATH)) rmSync(DUMP_PATH);
-  const app = await electron.launch({
-    args: [MAIN_JS, '--muted', '--no-focus', `--instance=${TEST_INSTANCE}`, `--dump-nav=${state}`],
-    env: { ...process.env, NODE_ENV: 'production' },
+  const { close } = await startApp({
+    instance: E2E_INSTANCE,
+    openByDefault: true,
+    config: STATE_SPEC_CONFIG,
+    fixtures: [state],
+    args: [`--dump-nav=${state}`],
   });
   try {
     for (let i = 0; i < 120 && !existsSync(DUMP_PATH); i++) await new Promise((r) => setTimeout(r, 1000));
     if (!existsSync(DUMP_PATH)) throw new Error(`--dump-nav=${state} wrote no dump`);
     return JSON.parse(readFileSync(DUMP_PATH, 'utf8')) as Record<string, unknown>;
   } finally {
-    await app.close().catch(ignoreAlreadyExited);
+    await close();
   }
 };
 
