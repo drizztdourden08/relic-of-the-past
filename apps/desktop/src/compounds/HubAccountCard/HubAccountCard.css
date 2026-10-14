@@ -16,7 +16,7 @@
 .hub-account__code {
   font-family: var(--font-mono);
   font-size: var(--text-2xl);
-  letter-spacing: var(--tracking-wide);
+  letter-spacing: calc(0.05 * var(--text-2xl));
   color: var(--c-primary);
   user-select: text;
 }

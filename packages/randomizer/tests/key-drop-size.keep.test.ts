@@ -13,7 +13,7 @@ const vanillaIsBigKey = (checkId: CheckId): boolean => {
 };
 
 describe('key drops are armed at their real drop size', () => {
-  const placement = generatePlacement('key-drop-size', buildOptionsSnapshot({ key_drop_shuffle: true }));
+  const placement = generatePlacement({ seed: 'key-drop-size', snapshot: buildOptionsSnapshot({ key_drop_shuffle: true }) });
   const drops = buildPhysicalPlan(placement).entries.filter((entry) => entry.planClass === 'override-drop');
 
   it('arms every key drop location', () => {

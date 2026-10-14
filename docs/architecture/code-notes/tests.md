@@ -35,7 +35,7 @@ state.
 Several suites import `buildSchema` from its own module, never from the `@ds/data` barrel:
 the barrel pulls in the view state binding, which touches `window` at module load. For the
 same reason, suites that render the inspector stub `window` and then import the component
-fresh after `vi.resetModules()`, because the binding reaches `lib/storage` and the log bus.
+fresh after `vi.resetModules()`, because the binding reaches `apps/desktop/src/storage` and the log bus.
 
 ### data-inspector/accept-all-certain.keep.test.ts
 
@@ -125,7 +125,7 @@ no single target kind and each id resolves by its own prefix.
 
 ### data-inspector/tag-consistency.keep.test.ts
 
-The `isTagKey` gate in `create-tag.ts` never runs on a direct edit, so `writeTag` checks that
+The `isTagKey` gate in `apps/desktop/src/data-inspector/record-creators/create-tag-record.ts` never runs on a direct edit, so `writeTag` checks that
 `name` reads `namespace:value` and refuses the save before the write channel.
 
 ## design-system
@@ -327,7 +327,7 @@ copy, erase and name menus. None of them is gameplay, so the main HUD stays hidd
 ## game/recommendations
 
 Several suites build a `contextFor` whose `context.screenId` and `observations.match` name
-the same screen, mirroring `use-screen-observations.ts`, where the two always agree. Probes
+the same screen, mirroring `useScreenObservations.ts`, where the two always agree. Probes
 that read "the screen we are on" read it off `observations.match?.screen.id`.
 
 ### game/recommendations/actor-combat.keep.test.ts and actor-spawns.keep.test.ts
@@ -397,7 +397,7 @@ stale entrance id looks after walking in from another indoor room.
 ## game/data
 
 The writer suites (`dataset-record-writers`, `enumeration-writer`, `item-group-writer`) run in
-a throwaway workspace shaped like `shared/game/data/...`, because the id allocator scans that
+a throwaway workspace shaped like `packages/game-data/src/data/...`, because the id allocator scans that
 shape and the path resolver refuses to leave it.
 
 ### game/data/check-content-tags.keep.test.ts
@@ -409,7 +409,7 @@ seed edit shows as a diff.
 ### game/data/connection-pairing.keep.test.ts
 
 One record is one point on one screen; `toConnectionId` names its partner (see
-`packages/game-data/src/data/connections/derive.ts`). Two invariants do not hold today and stay as
+`packages/game-data/src/data/connections/derive`). Two invariants do not hold today and stay as
 `it.todo` with the violators named.
 
 Same screen pairs: `connection-896` and `connection-1143` both sit on `screen-236`, from the
@@ -468,20 +468,20 @@ tree; here it proves an update or delete finds a record by id wherever it sits. 
 reads a written file back by evaluating its array literal, since the emitter writes plain
 data.
 
-### game/data/enumeration-generated-types.keep.test.ts
+### scripts/tests/enumeration-generated-types.keep.test.ts
 
-`generated-types.ts` is committed, so an edit to `ALL_ENUMERATION` without
+`packages/game-data/src/data/enumeration/enumeration.type.ts` is committed, so an edit to `ALL_ENUMERATION` without
 `npm run generate:enum-types` would go unnoticed; the suite regenerates it in memory and
 compares byte for byte. A category earns a union only when the field it labels stores a
 string; the progress tier labels a numeric field, so it is left out of the code generation.
 
 ### game/data/enumeration-writer.keep.test.ts
 
-The writers also regenerate `generated-types.ts` from the real repo's `ALL_ENUMERATION`
+The writers also regenerate `packages/game-data/src/data/enumeration/enumeration.type.ts` from the real repo's `ALL_ENUMERATION`
 (`generate-enum-types.mjs` reads a fixed path). That is harmless here because the real
 `enumeration.ts` never changes, so the run is a no op.
 
-### game/data/generate-enum-types-root.keep.test.ts
+### scripts/tests/generate-enum-types-root.keep.test.ts
 
 `generateEnumTypes` takes an explicit `root`. Its default guess is relative to the script's
 own file, which is wrong from the bundled `dist/electron/main.js`, so every production launch
@@ -792,7 +792,7 @@ Phase 6 of the HUD drag and drop plan: the keyboard path, last only because it n
 producers final, and not optional. The fixture is a screen column holding `hud` (a column of
 `hearts`, a row of two pips, then `magic-bar`), `vault` (a row holding `coin`) and `loose`.
 
-- The announcement and the ghost say the same thing: `drop-ghost.ts` is a pure function of the
+- The announcement and the ghost say the same thing: `apps/desktop/src/hud-layout-editing/drop-ghost` is a pure function of the
   document and one intent, so the `aria-live` region is its lines flattened, and the test asserts
   against the ghost's own model instead of writing the sentence twice. A refusal names both nodes
   once.
@@ -859,7 +859,7 @@ priority is pressed, held, unassigned, idle.
 Phase 5 of the HUD data binding plan: the eight prebuilt subtrees, the migration that rewrites a
 stored document naming one of the four deleted kinds (life, magic, consumables, wallet), and the
 `shape` leaf they lean on (a heart and the magic bar, which a sprite and tint composition cannot
-draw; see `hud-shape.ts`). Two inserts of the same preset never collide in ids, with each other
+draw; see `packages/hud/src/types/hud-shape`). Two inserts of the same preset never collide in ids, with each other
 or the template. Original mode rounds a heart's fill up to the next quarter as the console does.
 The deleted kind never appears in the migrated document, and a `scale` authored on the old node
 survives onto the replacement subtree's root.
@@ -867,7 +867,7 @@ survives onto the replacement subtree's root.
 ### hud/hud-appearance-controls
 
 Phase 8 of the inspector UX review, Appearance measured at 289 / 232 / 188 px with the stylesheets
-walked (this phase added `theme/hud-layout-editor/appearance.css`).
+walked (this phase added `apps/desktop/src/theme/hud-layout-editor/appearance.css`).
 
 - The claim to prove is height. The case for `SubsectionGroup` is that closed, the redesign is one
   screen tall; the section was about 1800px of flat scroll with everything on. SSR renders the
@@ -920,7 +920,7 @@ it is in its own header. Nothing is written while the pointer travels.
 container's Type and what is true of any container, and pressing Type changed the gap beside it
 (two fields for a grid, one for flex). The model was wrong, not the panel: `place-flow.ts`
 already spent the one number on two gaps, between items along the main axis and between wrapped
-lines (`flow.ts` `linesSize`). So the acceptance test is pixel identity: `{ x: n, y: n }` is what
+lines (`packages/hud/src/engine/flow` `linesSize`). So the acceptance test is pixel identity: `{ x: n, y: n }` is what
 the engine did with `gap: n`, the migration is a rewrite (the built ins keep every number), and a
 legacy document is saved in the new shape. What is new is that the two axes can differ on a flex
 container, pinned at exact positions and turning with `direction`: a row separates items by `x`
@@ -982,13 +982,13 @@ repeat of 8 whose template `tpl` holds `fill`) and `sw` (a switch of `full` and 
   literal, so the worst case is `MAX_REPEAT_COUNT`: 200 passes of 33 nodes is 6,600, over the
   5,000 budget, and the refusal is found during the drag so the ghost never lies.
 - A node leaving the screen grid for a flex parent drops its cell (zero is absent, per
-  `offset.ts`); reordered inside its own parent it keeps it.
+  `apps/desktop/src/hud-layout-editing/offset`); reordered inside its own parent it keeps it.
 - `moveNode` has exactly one caller, the same structural check §37.1 used for `margin.left`.
 
 ### hud/hud-layout-grid.keep.test.ts
 
 Phase 4 of the HUD data binding plan: the grid placement engine beside the flex flow.
-`place-grid.ts` and `grid-cells.ts` own the arithmetic; this proves explicit placement, auto flow
+`packages/hud/src/engine/place-grid` and `packages/hud/src/engine/grid-cells` own the arithmetic; this proves explicit placement, auto flow
 (which starts at 1,1 and ignores a partial column), spans, `fill` tracks and per item alignment.
 Row templates are explicit unless a case is about implicit rows, because a childless cell is 0x0
 and an `auto` row off empty fixtures would collapse to zero and leave the flow. Cells are
@@ -1054,7 +1054,7 @@ the document, so it is proven without a browser (`hud-inspector-collapsed-fields
 widths). A key drag writes `at` rounded to two decimals, so a saved document carries no sub pixel
 noise, and keys cannot cross: a middle key stops a minimum gap short of a neighbour and the outer
 keys answer to the track's ends. Keys stay sorted, so `sampleKeyframes` never sees a swap. The
-easing picker only emits strings `validate-motion.ts` accepts and never `steps(0)`, which the
+easing picker only emits strings `packages/hud/src/layouts/validate-motion` accepts and never `steps(0)`, which the
 validator refuses. Thumbnails sample the engine's own `easingFn`: `ease-in` sits below the
 diagonal at the midpoint and `ease-out` above it (a smaller SVG y). With nothing bound the
 property list is still all six and nothing is driven; `position` is driven by being inside a
@@ -1094,7 +1094,7 @@ it for the reflow warning, but wrong as a name).
 
 Preview, then commit: a drag writes the document once. §37's stage nudge called `onOffset` on
 every pointer move, so a one second drag was dozens of writes and relayouts, and would be dozens
-of undo entries. §43 closed it in `behavior/useDragGesture.ts`. The stage nudge is gone (§47), so
+of undo entries. §43 closed it in `apps/desktop/src/hud-layout-editing/useDragGesture.ts`. The stage nudge is gone (§47), so
 the gesture is driven through the outline's drop, the hook's remaining caller: twelve live frames
 write nothing while the ghost card says what the release would do, and `onDrop` fires exactly
 once, after release. Cancel is free: Escape mid drag leaves the document untouched and reaches
@@ -1134,7 +1134,7 @@ write, the node still selected, and no snap guide, scale handle, drop surface or
 `StageSelection` is mounted with no write prop at all, so a drag would have to grow a prop, which
 is a review. A click is a click: an unselected box, a container and the screen root all select on
 pointer down the first time. The source may contain no other pointer handler and neither drag
-hook; it still names `behavior/offset.ts` in prose, so only the import is forbidden.
+hook; it still names `apps/desktop/src/hud-layout-editing/offset` in prose, so only the import is forbidden.
 
 ### hud/hud-editor-step.keep.test.ts
 
@@ -1154,7 +1154,7 @@ Phase 7 of the inspector UX review: what the Layout section's controls write (wi
 
 - One tile per value the engine has (§56). The 3x3 pad crossed two positions, so `between` and
   `stretch` rode beside it as lone toggles. The set is exactly the engine's: four per grid axis,
-  six on a flex main axis, three on its cross axis, and no flex `stretch` (`hud-node.ts` never
+  six on a flex main axis, three on its cross axis, and no flex `stretch` (`packages/hud/src/types/hud-node` never
   stretches under the flow engine and `place-flow.ts` reads a stray `stretch` as `start`, so a
   tile would do nothing). Flex rows are named main and cross, not by arrows, because a column's
   main axis is vertical, so its diagrams turn with `direction`; a grid's two axes never move.
@@ -1216,7 +1216,7 @@ key's name, hence the platform stub. Behaviour is `hud-grid-settings`, geometry 
   first column's move earlier and the last's move later are disabled in place, not removed, so the
   next button never slides under the cursor, and they carry no run or shortcut. The legend shows a
   key cap per shortcut and a mouse glyph per gesture, with the platform's own modifier on the cap.
-- The keyboard looks each action up by the cap the legend prints (`grid-keys.ts`), so the real
+- The keyboard looks each action up by the cap the legend prints (`apps/desktop/src/views/HudLayoutEditor/sub-components/GridEditor/behavior/grid-keys.constants.ts`), so the real
   presses are asserted: left arrow reorders, Delete removes. Delete on an occupied column works and
   the children follow onto the track that took its index; §48's refusal is gone, checked end to end
   through the validator and engine. The only refusal left is the structural floor of one column.
@@ -1230,7 +1230,7 @@ key's name, hence the platform stub. Behaviour is `hud-grid-settings`, geometry 
 must match their row and column in size, or it does not look like a grid. §48 drew every address
 as a uniform square, so the screen's `[auto, fill, auto]` root (narrow, wide, narrow) drew as three
 equal squares. Now cells carry the engine's solved proportions on both axes, read from the same
-solve the stage uses (`behavior/grid-solve-lookup.ts`).
+solve the stage uses (`apps/desktop/src/hud-layout-editing/grid-solve-lookup.ts`).
 
 - Against a 398x224 view the screen root solves to columns 16, 382, 0 and rows 16, 192, 16: the
   third column holds no child, so its `auto` measures 0. That empty track is drawn at the 24px
@@ -1300,7 +1300,7 @@ an insert, which must mean what the eye saw.
 
 Phase 1 of the inspector UX review covers finding F2, flex rows with no `min-width` collapsing
 fields to zero. The claim is about layout, so declarations prove nothing; the rows render in
-headless Chromium against the real stylesheets (`tokens/index.css` is skipped because it only
+headless Chromium against the real stylesheets (the tokens index is skipped because it only
 lists `@import`s, which `setContent` cannot resolve) and are measured. A control gets the rail
 less 32: 289px at the 320 default, 188px at the 220 minimum. Every threshold was 0 before the fix.
 
@@ -1377,7 +1377,7 @@ the only way past the controlled value cache, because an emptied field deleting 
 about an event handler. Placement mounts the parent's `GridEditor` (§48), whose modifiers ask the
 platform for the primary modifier, so the platform provider is part of the chain.
 
-- A node's position is `margin.left` and `margin.top`, and one function (`behavior/offset.ts`)
+- A node's position is `margin.left` and `margin.top`, and one function (`apps/desktop/src/hud-layout-editing/offset`)
   writes it. Zero means wherever the parent put it, so it deletes instead of writing 0, and a
   round trip back to the origin leaves the document as found. §37 had the stage's nudge and the
   field compose to the same write; §44 moved the stage writer into a gesture hook, §46 back into
@@ -1419,7 +1419,7 @@ limits keep one row per axis, and the lattice's six cells clear 24px on both axe
 ### hud/hud-inspector-layout-widths
 
 Phase 7 of the inspector UX review: the Layout section's controls measured at 289 / 232 / 188 px,
-stylesheets walked (this phase added `theme/hud-layout-editor/layout.css`).
+stylesheets walked (this phase added `apps/desktop/src/theme/hud-layout-editor/layout.css`).
 
 - `AlignmentTiles` at 188 (§56) is the one to prove. The 3x3 pad it replaced was a fixed 82px, so
   the only question was whether it fit; a row of tiles is elastic. Round 10 drew a flex
@@ -1469,7 +1469,7 @@ the collapsed fields harness at 289 / 232 / 188 px.
   68.9. The old 123, fx set (66.3) is gone with the mode switch.
 - Every label stays on one line; `bottom` in a 42px edge column is the tightest. Nothing escapes
   the rail: the min and max row once escaped by 75px because `.field--inline .field__control` had
-  `flex: 1` without `min-width: 0`, fixed in `Field.css`. The four border side checkboxes fit one
+  `flex: 1` without `min-width: 0`, fixed in the field stylesheet. The four border side checkboxes fit one
   row at 188.
 - The margin edges (four spinners, 28.3 / 14.0 / 3.0px of typing surface) moved to
   `BoxModelField`, measured in `hud-inspector-geometry-width`; `EdgesInput` and
@@ -1497,14 +1497,14 @@ Everything but its width (`hud-inspector-value-input-width`), needing no browser
   both agree on whether a formula is broken.
 - `random()` is refused at parse time with a sentence; every other function compiles.
 - The formula menu is a claim about a list: `index`, `count` and `item` are offered only inside a
-  repeat and shown disabled with a reason outside; `delta` only where `validate-motion.ts` passes
+  repeat and shown disabled with a reason outside; `delta` only where `packages/hud/src/layouts/validate-motion` passes
   it; `&&` and `||` appear only in the notes on `and` and `or`, never as entries; and no listed
   function is a dead end (the parser enables `length`, `join`, `map`, `filter`, `fold`, `indexOf`,
   `fac` and `gamma`, but the scope is a flat object of numbers).
 - The worked starting points compile; the `_current` and `_max` fractions are generated from the
   variable table; repeat only shapes appear only inside a repeat.
 - A formula in a repeat produces one value per instance, with scopes shaped like
-  `engine/expand.ts`'s, so the heart formula reads fourteen full and six empty instead of one
+  `packages/hud/src/engine/expand.ts`'s, so the heart formula reads fourteen full and six empty instead of one
   sample.
 
 ### hud/hud-inspector-value-input-width.keep.test.ts
@@ -1521,7 +1521,7 @@ formula's result line makes its field taller). Promotion (§58) is an overlay: t
 height (`--promote-height`) and its control floats over the row, so the sibling never moves. §36
 promoted with `flex: 1 0 100%`, which reflowed the pair and broke the maintainer's rule that
 touching a control may not rearrange what is beside it. The probe applies the class with the
-four numbers `behavior/promote-overlay.ts` measures, mirroring its `boxFor`, since an SSR page
+four numbers the overlay promotion measures, mirroring its `boxFor`, since an SSR page
 cannot focus; the real hook runs in the e2e layout options spec. The promoted width is 233.5 /
 176.5 / 132.5, 4px under §36 for the 2px padding each side that makes it read as a card on the
 row.
@@ -1572,7 +1572,7 @@ at 0.75) solves with its own unit: a 124px authored band is 93 game pixels wide.
 
 Two gate layers must both pass for an in game event to rumble. The C master gate is
 `kFeatures0_Haptics` (bit value 1048576, matching `features.h` and
-`live-settings-flags.ts`), reached through the boot INI `Haptics` key and the live push.
+`packages/game-core/src/live-settings-flags`), reached through the boot INI `Haptics` key and the live push.
 Then seven fine-grained gates in the haptic service, one per event category. Spin attack
 release shares the sword swing toggle, death shares damage taken, and the mirror warp
 polling path shares environmental effects.
@@ -1589,9 +1589,9 @@ its slot, or an item lands one button up without warning.
 
 ## packages/input-mapping/tests/slot-migration.keep.test.ts
 
-`fixtures/spc2-profile.json` and `fixtures/spc2-assignments.json` are a real profile written
+`tests/fixtures/spc2-profile.json` and `tests/fixtures/spc2-assignments.json` are a real profile written
 before slots were numbers: twelve slots keyed by SDL position and eight assignments keyed
-the same way, four of them on shoulders and triggers. `fixtures/sdl-order-profile.json`
+the same way, four of them on shoulders and triggers. `tests/fixtures/sdl-order-profile.json`
 stores its list in SDL device order (SOUTH first). The fixtures sit in the tracked
 `tests/fixtures/` folder so every clone has them.
 
@@ -1616,14 +1616,6 @@ Shaping compensates for how each pad's rumble feels and only touches magnitude, 
 duration. Xbox dual rumble is linear and soft at low magnitudes, so it boosts onto a floor
 (0.3 plus 0.85 times the magnitude, clamped at 1). Switch HD rumble already feels strong, so
 it stays unchanged.
-
-## scripts/parallel/tests/automation-launch.keep.test.ts
-
-The automation predicate decides whether a launch may write the shared configuration
-(default profile, window position). It must answer yes for every automation flag, even a
-run without `--instance`; a false no lets an agent run repoint the user's profile. The two
-shared files are `app.json`, written by `loadProfileForGame` on the `--auto-state` and
-`--screenshot` paths, and `window-state.json`, written on close.
 
 ## scripts/parallel/tests/link-deps.keep.test.ts
 
@@ -1855,7 +1847,7 @@ wallet reading of a prize, the pond's own receipt lines and the item demand.
   three rows and falls back down the list, so the last candidate must fit at every amount the
   ladder can reach: 63 characters, measured at 164px.
 - The fixed schedule tops out at a hundred, and no reachable wallet sits below 599
-  (`capacity/wallet-floor.ts`), so it is never held to the wallet; a 299 wallet reaches it
+  (`packages/randomizer/src/world/capacity/wallet-floor`), so it is never held to the wallet; a 299 wallet reaches it
   too, so no ceiling is written.
 - The item demand names only items the player holds and the core can test, ranks the pool
   early to late, and with nothing eligible falls back to another ticked kind, then to a free
@@ -1897,7 +1889,7 @@ collection's id order must be the order of the reference's four taxonomies, and 
 array order must be its create order.
 
 - Which rows a seed fills is a record question. One rule over kind and scope
-  (`world/seed-locations.ts`) picks 261 spots out of the 594 rows. Nothing states the set
+  (`packages/randomizer/src/world/seed-locations.ts`) picks 261 spots out of the 594 rows. Nothing states the set
   twice, so the suite pins it by count: the whole world (255 with key drops on, which is those
   rows minus the pond pairs; 222 with key drops off, since that option invents 33 spots), 8
   story events each in its own record's region, each dungeon in create order, the shelves the
@@ -1927,7 +1919,7 @@ gives the whole ladder back, which keeps a silent session byte identical. The bo
 the arrow state in its low bit, so 3 is the top rung held. Skips without the wasm, the asset
 blob or the vault fixture.
 
-### randomizer/ap-online-connect.keep.test.ts and ap-online-recovery.keep.test.ts
+### randomizer/ap-online-connect.keep.test.ts and randomizer/ap-online-recovery
 
 A server that is down at the first connect is retried on the backoff with a countdown; a
 refusal is not retried. An item at a negative location is the server's own, even when this
@@ -1992,7 +1984,7 @@ Key is armed large, every other one small.
 
 ### randomizer/location-names-closed.keep.test.ts
 
-Every spot of the world is a check row (`world/seed-locations.ts`), so the world the graph
+Every spot of the world is a check row (`packages/randomizer/src/world/seed-locations.ts`), so the world the graph
 declares is the set every id keyed table must agree with. Most tables reach the rule
 registry, which throws on an unknown target; the tables listed here do not, so a stale id
 would sit there unnoticed. The declared set is the widest any option opens (key drops on,
@@ -2047,7 +2039,7 @@ since a cauldron holding a shuffled item is opt in.
 ### randomizer/rule-parity-harness and rule-node-parity.keep.test.ts
 
 The guard that the rules answer exactly as they did before they became node trees
-(`world/rules/rule-node.type.ts`). The digests were captured from the closure only engine:
+(`packages/randomizer/src/world/rules/rule-node.type.ts`). The digests were captured from the closure only engine:
 every location, story event and exit rule, asked over 5000 seeded random collection states
 per option set (mulberry32, so the states repeat on every run). Half of the states see a
 random fill seam, so rules that read placements answer both ways; `actRecord` attaches a
@@ -2097,7 +2089,7 @@ every save, and `because` is read in review, not by the test.
 
 The current baseline is `story-events-floor`, captured on 2026-09-27 after the Archipelago
 merge. The story events stopped being locations of the world, so their rows read the
-dataset's own record like every other event row (`lib/game/tracker/tracker-statuses.ts`).
+dataset's own record like every other event row (`packages/navigation/src/tracker/tracker-statuses/tracker-statuses.ts`).
 `check-335` (Frog found) now asks for the Titan's Mitt, where the seed engine asked for heavy
 lifting from what the seed's completed locations handed over; seeds only. `check-329`
 (Agahnim 1 beaten) asks for a sword and sight inside the tower, where the engine also asked
@@ -2115,13 +2107,6 @@ The core is armed as the app arms it: gate word 3 gets the tracker query export 
 gate word 5 the default story word. Normal reads through the same engine as a seed, over the
 placement where nothing moved. The event ledger is handed to availability, as every app path
 does; without it an act reads as done the moment its means are in reach.
-
-## search/catalog.coverage.keep.test.ts
-
-The compile time guard for the catalog is `PROFILE_HUB_TABS: Record<ProfileHubTab, ...>`;
-this suite checks the built catalog at runtime. The title bar menu reads
-`window.api.isDev` while the catalog builds, so the suite stubs `window` in the node
-environment.
 
 ## simulation
 

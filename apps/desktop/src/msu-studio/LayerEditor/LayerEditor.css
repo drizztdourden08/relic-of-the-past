@@ -22,14 +22,14 @@
 }
 
 .layer-card__index {
-  min-width: var(--size-20);
+  min-width: calc(1.25 * var(--text-base));
   color: var(--c-text-muted);
   font-variant-numeric: tabular-nums;
 }
 
 .layer-card__name {
   flex: 1;
-  min-width: var(--size-128);
+  min-width: calc(8 * var(--text-base));
 }
 
 .layer-card__modes,
@@ -50,9 +50,9 @@
 }
 
 .layer-card__crossfade-slider {
-  flex: 1 1 var(--size-192);
-  min-width: var(--size-160);
-  max-width: calc(352 * var(--size-1));
+  flex: 1 1 calc(12 * var(--text-base));
+  min-width: calc(10 * var(--text-base));
+  max-width: calc(22 * var(--text-base));
 }
 
 .layer-card__file-name {
@@ -65,8 +65,8 @@
 }
 
 .layer-card__file-select {
-  min-width: var(--size-192);
-  max-width: var(--size-320);
+  min-width: calc(12 * var(--text-base));
+  max-width: calc(20 * var(--text-base));
 }
 
 .layer-card__effects {
@@ -86,7 +86,7 @@
 }
 
 .layer-card__effect-index {
-  min-width: var(--size-20);
+  min-width: calc(1.2 * var(--text-base));
   color: var(--c-text-muted);
   font-variant-numeric: tabular-nums;
   text-align: right;

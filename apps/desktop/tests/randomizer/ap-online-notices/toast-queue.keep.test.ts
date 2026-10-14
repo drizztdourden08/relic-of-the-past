@@ -21,7 +21,7 @@ describe('the toast queue', () => {
   const run = (notices: readonly OnlineNotice[], settings = ONLINE_NOTICE_DEFAULTS, step = 0): readonly NoticeEntry[] => {
     let serial = 0;
     return notices.reduce<readonly NoticeEntry[]>(
-      (entries, notice, index) => queueNotice(entries, notice, settings, index * step, () => `n${serial++}`), [],
+      (entries, notice, index) => queueNotice({ entries, notice, settings, now: index * step, nextId: () => `n${serial++}` }), [],
     );
   };
 

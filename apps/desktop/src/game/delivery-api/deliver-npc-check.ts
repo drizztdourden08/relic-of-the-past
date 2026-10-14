@@ -10,7 +10,7 @@ const deliverNpcCheck = (params: DeliverNpcCheckParams): string | null => {
   const { flagType, flagMask, itemId, spriteType, postGfx, message, source = 'randomizer', messageId } = params;
   if (!isGrantable(itemId) || !isCoreReady()) return null;
   const action: DeliveryAction = { type: 'trigger_npc_check', flagType, flagMask, itemId, spriteType, postGfx, assigned: true, messageId };
-  return enqueue(message ?? itemLabel(itemId), source, action);
+  return enqueue({ message: message ?? itemLabel(itemId), source, action });
 };
 
 export { deliverNpcCheck };

@@ -107,7 +107,7 @@ describe('exported trees answer as the engine does', () => {
 
 describe('generation matches the closure-only engine', () => {
   it('places the same items for 20 seeds', () => {
-    const digests = GENERATION_SEEDS.map((seed) => placementDigest(generateFromSnapshot(seed, snapshotOf({}))));
+    const digests = GENERATION_SEEDS.map((seed) => placementDigest(generateFromSnapshot({ seed, snapshot: snapshotOf({}) })));
     if (PINNED_PLACEMENTS.length === 0) console.log(`PLACEMENTS ${JSON.stringify(digests)}`);
     expect(digests).toEqual(PINNED_PLACEMENTS);
   }, 600_000);

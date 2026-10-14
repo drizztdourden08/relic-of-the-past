@@ -31,6 +31,12 @@ interface DeliverableSets {
   world?: ReadonlySet<LocationKey>;
 }
 
+interface GenerateRequest {
+  seed: string;
+  snapshot: RandomizerOptionsSnapshot;
+  deliverable?: DeliverableSets;
+}
+
 interface SnapshotFillFlags {
   keyDropShuffle: boolean;
   includeNpcChecks: boolean;
@@ -117,6 +123,6 @@ interface DungeonOwnership {
 }
 
 export type {
-  AssumedState, DeliverableLists, DeliverableSets, DungeonOwnership, FillPickers, FillRestrictiveInput,
+  AssumedState, DeliverableLists, DeliverableSets, DungeonOwnership, FillPickers, FillRestrictiveInput, GenerateRequest,
   PlacementAttempt, PlacementSphere, PlacementStatsInput, PlacementSweep, RollInput, SnapshotFillFlags, SwapRun,
 };

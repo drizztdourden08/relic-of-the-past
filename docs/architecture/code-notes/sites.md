@@ -1,7 +1,7 @@
 <!-- @layer docs @kind doc -->
 # Code notes: sites and cloud functions
 
-Facts about the web sites and their cloud functions that the code cannot say by itself. The sites are apps/site-kit, apps/sanctuary and apps/store. The functions are packages/hub-server/src, sanctuary-api, store-api and kill-switch. Each heading names the file the fact belongs to.
+Facts about the web sites and their cloud functions that the code cannot say by itself. The sites are apps/sanctuary and apps/store. The functions are packages/hub-server/src, sanctuary-api, store-api and kill-switch. Each heading names the file the fact belongs to.
 
 ## packages/hub-server/src/route.type.ts
 
@@ -528,7 +528,7 @@ storeApi is one Gen2 HTTP function behind the store site's /api rewrite. The acc
 
 ## apps/store-api/src/window-api.type.ts
 
-shared/platform reads window.api, the app's preload bridge, to tell its host apart. The store's manifest readers reach that file through a type import only, and this function never runs in a window, so the typecheck gets the bridge as unknown.
+The platform detection code reads window.api, the app's preload bridge, to tell its host apart. The store's manifest readers reach that file through a type import only, and this function never runs in a window, so the typecheck gets the bridge as unknown.
 
 ## apps/store-api/src/site.constants.ts
 
@@ -786,7 +786,7 @@ A resubmit cannot come back under a newer approved version. A resubmit starts a 
 
 A withdrawn version goes back to ready and keeps its upload, so the author can send it again.
 
-## apps/site-kit/api/create-api-client.ts
+## packages/hub-client/src/api/create-api-client.ts
 
 Every call is same origin under /api with the session cookie attached (credentials include).
 A non 2xx answer becomes an ApiError carrying the server's `{ error }` message, so a page can show it as is. A body that is not JSON falls back to the status text.
@@ -801,7 +801,7 @@ routeHref is the URL of a GET route the browser must visit itself, such as the O
 
 Replaces the person's manual groups only. Their Discord groups are not the admin's to set.
 
-## apps/site-kit/api/hub-responses.type.ts
+## packages/hub-client/src/api/hub-responses.type.ts
 
 The request bodies come from packages/hub-contracts/src/hub/schemas; a site's own answers live beside its own endpoints.
 MeResponse.rights is the union of the caller's groups on this site.
@@ -820,11 +820,11 @@ The `2026-09-23 14:02` shape sorts as text in the order it reads, so a table col
 `rights` is the union of the user's groups, everything for an admin, and null with no session.
 `loading` stays true until the first GET /me answers. `error` is the last GET /me error, shown when the API is unreachable.
 
-## apps/site-kit/session/useSession.ts
+## packages/design/src/hooks/useSession/useSession.ts
 
 A 401 from GET /me is a signed out visitor, not an error. Any other failure is kept as the error so the page can say the API is down.
 
-## apps/site-kit/site/site-definition.type.ts
+## packages/design/src/site/site-definition.type.ts
 
 The kit's frame, nav, pages and guard read only the site definition, so a second site is a second definition.
 SiteSection.path: the active section is the one whose path the location starts with. SiteSection.permission shows the section only to a caller holding that permission.
@@ -834,19 +834,10 @@ SiteSearch.Results is what the content pane shows while the search is in use.
 MemberData wraps every member page, for the lists and uploads they share.
 rightsEditors holds one editor per site whose rights the admin page sets.
 
-## apps/site-kit/toast/toast-store/toast-state.ts
-
-The toasts are one list for the whole page, outside React, so any hook or handler can show one. The ToastLayer the frame mounts draws them.
-A toast leaves after its duration (the design system Toast times it) or when its close button is pressed.
-
-## apps/site-kit/guard/RouteGuard.tsx
+## packages/design/src/compounds/RouteGuard/RouteGuard.tsx
 
 Every member route renders inside the same Frame element at the same place, so the nav, the search and the shared lists stay mounted while the page beneath them changes.
 A signed out caller on a non public route gets the sign in page with the current path as the return path (none for the root).
-
-## apps/site-kit/router/Link.tsx
-
-The link is a real anchor so middle click and copy link keep working; only a plain left click goes through the history router.
 
 ## packages/hub-client/src/upload/hash-file/hash-file.ts
 
@@ -856,26 +847,26 @@ WebCrypto digests a whole buffer, so a file is hashed only while it fits one par
 
 One tab runs a job at a time: a running job holds a Web Lock named after it, so a second tab of the same site restoring its records leaves that job to the tab already sending it. A browser without Web Locks runs the job unguarded.
 
-## apps/site-kit/upload/put-part.ts
+## packages/hub-client/src/upload/put-part.ts
 
 The PUT uses XMLHttpRequest because fetch does not report upload progress.
 It resolves with the ETag the bucket answered, which complete needs in part order. A missing ETag usually means the bucket CORS rule does not expose it.
 While the browser is offline the PUT waits for the connection, so a dropped network does not spend the part's tries. The signal cancels both the wait and the request.
 
-## apps/site-kit/upload/queue-state.ts
+## packages/hub-client/src/upload/queue-state.ts
 
 The snapshot is immutable and replaced on every change. The tray and the dialog read it through useSyncExternalStore, so a job outlives the page that started it.
 
-## apps/site-kit/upload/restore-jobs.ts
+## packages/hub-client/src/upload/restore-jobs.ts
 
 A restored job with its file copy kept is queued and continues by itself; one without waits for the author to pick the file again. A job another tab is running stays with that tab.
 
-## apps/site-kit/upload/run-job.ts
+## packages/hub-client/src/upload/run-job.ts
 
 A job restored after a reload asks the server which parts it already holds. Errors propagate: the queue decides what a failure or a cancel means.
 IndexedDB runs writes to one store in the order they began, so a later save never lands before the first one. The drop waits for the file copy, which may still be writing.
 
-## apps/site-kit/upload/upload-db.ts
+## packages/hub-client/src/upload/upload-db.ts
 
 One store of job records and one of kept files, both keyed by job id, opened once per page and lazily. A browser without IndexedDB, or one that refuses it, answers null and the queue runs without resume.
 
@@ -885,7 +876,7 @@ One job with a file runs at a time and the others wait as queued; a job made onl
 A failed or cancelled job closes its server record and drops its browser record. A job that failed while completing is left open on the server: the server may have finished it, and the daily job clears an upload that never did.
 `forget` drops a job from this tab only, when another tab holds its lock.
 
-## apps/site-kit/upload/upload-rate.ts
+## packages/hub-client/src/upload/upload-rate.ts
 
 The rate is an exponential average over about SMOOTH_MS: each sample moves it towards the speed since the last sample by a share that grows with the gap. Samples closer than MIN_GAP_MS fold into the next one.
 
@@ -893,7 +884,7 @@ The rate is an exponential average over about SMOOTH_MS: each sample moves it to
 
 The browser keeps its own copy of the file only while the origin's free quota exceeds the file size times KEEP_MARGIN. Every records call swallows storage errors: a browser that cannot keep them loses the resume and nothing else.
 
-## apps/site-kit/upload/upload-runner.type.ts
+## packages/hub-client/src/upload/upload-runner.type.ts
 
 `T` is where a job goes and must survive IndexedDB (plain data and Blobs). `R` is the record the API answers with.
 `bind` gives the record's later steps, and is also how a restored job reaches its record. `stepsOf` must use the ids in FILE_STEP for the file's own steps.
@@ -902,41 +893,25 @@ The browser keeps its own copy of the file only while the origin's free quota ex
 
 Leaving only pauses a job (the next visit continues it), so the browser's own prompt is enough and shows no text of ours. Older browsers show the prompt only when `returnValue` is set, which is why the handler assigns it.
 
-## apps/site-kit/components/Chip/Chip.constants.ts
-
-NEW_TAB is spread onto the Box and not written as attributes, because the Box primitive types anchor attributes loosely.
-
-## apps/site-kit/components/ExternalLink/ExternalLink.constants.ts
-
-NEW_TAB is spread onto the Box and not written as attributes, because the Box primitive types anchor attributes loosely.
-
 ## packages/design/src/compounds/GroupChips/GroupChips.tsx
 
 A group with neither marker (by hand, Discord) is the default group a GitHub collaborator falls back to.
 
-## packages/design/src/compounds/MediaPreview/usePixelArt.ts
+## packages/design/src/hooks/usePixelArt/usePixelArt.ts
 
 An image with neither side above PIXEL_ART_MAX_SIDE pixels counts as pixel art (a sprite, a tile sheet). Pixel art is enlarged to fill its frame and drawn with hard pixel edges. A larger image is only ever shrunk and keeps smooth scaling.
-
-## packages/design/src/compounds/MediaViewer/MediaViewer.css
-
-The media is centred with auto margins so an oversized image still scrolls from its top left corner. Centring with flex alignment would cut off its top and left.
 
 ## packages/design/src/compounds/ProviderButton/ProviderButton.tsx
 
 The button sends the browser to the API start route, which redirects to the provider; nothing is fetched. Without returnTo the API picks the landing page.
 
-## packages/design/src/compounds/ProviderButton/provider-marks.ts
+## packages/design/src/compounds/ProviderButton/behavior/provider-marks.ts
 
 The Discord and GitHub marks are single colour and drawn in the button text colour. The Google mark is its four colour G, which Google's brand guidelines require.
 
 ## packages/design/src/compounds/RoleName/RoleName.tsx
 
 A Discord role colour is RGB as a number, and 0 means no colour; the dot then takes the dim text colour, as Discord draws it. The colour is the role's own data, so it reaches CSS as the --role-color custom property and not as a design token.
-
-## apps/site-kit/components/ToastLayer/ToastLayer.tsx
-
-Toasts sit bottom left so they never cover the uploads tray on the right. The frame mounts the layer once on every page; anything shows a toast with showToast.
 
 ## packages/design/src/compounds/UploadTray/UploadTray.css
 
@@ -980,7 +955,7 @@ Every write reloads the list because member counts are computed by the API. save
 
 ## packages/design/src/views/Admin/sub-components/GroupEditor.constants.ts
 
-GROUP_NAME_MAX_CHARS mirrors MAX_GROUP_NAME_CHARS in packages/hub-contracts/src/hub/schemas/group-schemas.ts, which does not export it.
+GROUP_NAME_MAX_CHARS mirrors MAX_GROUP_NAME_CHARS in packages/hub-contracts/src/hub/schemas/group-schemas, which does not export it.
 
 ## packages/design/src/views/Admin/sub-components/GroupEditor.tsx
 
@@ -998,19 +973,19 @@ A click sends the person's whole manual group list. A group held through a Disco
 
 A linked role the Discord server no longer has stays listed, marked, so an edit never drops it unless the admin picks another.
 
-## apps/site-kit/views/SavedViewsMenu.constants.ts
+## packages/design/src/compounds/SavedViewsMenu/SavedViewsMenu.tsx
 
 PORTALLED_MENU_SELECTOR names the portalled dropdown, so a click inside it does not count as an outside click.
 
-## apps/site-kit/views/create-view-keys.ts
+## packages/design/src/saved-views/create-view-keys.ts
 
 A view key reads `<prefix>:<surface>[.query][~<nonce>]`. One surface has two halves bound to the same server record: the table half (columns, sort, group by) owned by the DataTable, and the query half (filter clauses) owned by the page. The nonce is bumped when a saved view is applied, so both halves reload from the storage cache. currentViewId is the reserved id `current-<surface>`, one per surface, because view ids are global.
 
-## apps/site-kit/views/create-view-storage.ts
+## packages/design/src/saved-views/create-view-storage.ts
 
 Storage runs over GET and PUT /me/views. One record per surface, the reserved `current-<surface>` view, holds the whole snapshot, and each half of a key merges its part into it. A cache per surface answers a reload at once, which lets an applied saved view land in the table without a round trip. A local write made during a read wins: the read only fills an empty cache.
 
-## apps/site-kit/views/useSurfaceView.ts
+## packages/design/src/hooks/useSurfaceView/useSurfaceView.ts
 
 The search text is never saved: old text silently hiding rows reads as data loss. Facets are transient for the same reason; the clause list is the durable filter. The query half stores clauses only, so its table part (QUERY_HALF_TABLE) is empty on purpose.
 
@@ -1086,15 +1061,15 @@ Without the reports right nothing is fetched and the list stays empty.
 
 Above BATCH_ZIP_MAX_BYTES in total a batch download is not zipped in the browser; each file is saved on its own, with BATCH_SAVE_GAP_MS between two saves. SELECTION_TILE_MAX is how many tiles the selection panel draws before it sums up the rest.
 
-## apps/sanctuary/src/pages/Files/behavior/file-scopes/file-scope-tabs.ts
+## apps/sanctuary/src/pages/Files/behavior/file-scope-tabs.ts
 
 Tab counts are computed in the browser from the one GET /files page, since the API has no counts route yet. A type tab is offered only for the types the caller may see. A remembered tab for a type the caller can no longer see falls back to All.
 
-## apps/sanctuary/src/pages/Files/behavior/file-scopes/file-scopes.type.ts
+## apps/sanctuary/src/pages/Files/behavior/file-scopes.type.ts
 
 FileLike holds the two fields a scope decides on, so a predicate runs on a record or on a table row.
 
-## apps/sanctuary/src/pages/Files/behavior/drop-queue/settle.ts
+## apps/sanctuary/src/pages/Files/behavior/settle.ts
 
 Dropped files are taken in drop order. One with no match joins the batch for the upload dialog; one that matches an existing file stops the walk and asks. Once the queue is empty, the batch goes to the upload dialog. A version upload in progress, from the question or from the drop zone of a file's history, holds the walk until it is confirmed or dropped. Closing the question leaves that one file out.
 
@@ -1102,7 +1077,7 @@ Dropped files are taken in drop order. One with no match joins the batch for the
 
 A dropped file whose name matches a file the caller can see is offered as that file's next version. Names compare without case, and without a trailing " (2)" the OS added or a "-v3", "_v3" or " v3" the author added before the extension. The display name and the current version's own name both count. The first match wins, newest first, as the list is kept.
 
-## apps/sanctuary/src/pages/Files/behavior/save-link/save-blob.ts
+## apps/sanctuary/src/pages/Files/behavior/save-blob.ts
 
 A blob link carries the name to save under; a bucket link names itself in its headers. A blob link stays valid for REVOKE_AFTER_MS after the click, so the save can start reading it.
 
@@ -1158,7 +1133,7 @@ This is the one confirmation before a new version uploads. It was named NewVersi
 
 The waiting page shows while no access rule matches a signed-in user (pending) or after an admin revoked them. Linking Discord is the self-serve way in.
 
-## apps/sanctuary/src/pages/Reports/behavior/report-scopes/deadline-of.ts
+## apps/sanctuary/src/pages/Reports/behavior/deadline-of.ts
 
 A report's deadline is the later of expiresAt and extendedUntil. Within EXPIRING_SOON_DAYS of now it counts as expiring soon.
 
@@ -1210,7 +1185,7 @@ UploadMeta is asked by the upload dialog before the first byte moves and is shar
 
 The sign in art sits above the sign in buttons. Its pixel size is a whole number of CSS pixels, which keeps it sharp.
 
-## apps/store/src/routes.tsx
+## apps/store/src/routes.constants.ts
 
 The kit's guard walks the route list in order, so /publications/new stands before /publications/:rowId.
 
@@ -1301,47 +1276,42 @@ A section's path must not start another section's path, since the active section
 
 Both sites list this editor in their rights editors: the Hookshop for its own groups, the Sanctuary because its admin page manages the groups of both sites.
 
-## apps/store/src/lib/format-count/format-count.ts
+## apps/store/src/format-count/format-count.ts
 
 Counts are grouped in threes by a space, as in 4 870.
 
-## apps/store/src/lib/item-color-style.ts
+## apps/store/src/catalog/item-color-style.ts
 
 The colour goes into the --item-color custom property, read by the card border and the placeholder picture.
 No colour leaves the property unset, so the styles fall back to gold.
 
-## apps/store/src/lib/kinds/kinds.constants.ts
+## apps/store/src/kinds/kinds.constants.ts
 
 A kind's section is also its path, /section.
 
-## apps/store/src/lib/picture-crop/crop-at.ts
+## apps/store/src/picture-crop/crop-at.ts
 
 The crop is in the picture's own pixels and always has the target's shape.
 Zoom 1 is the largest such crop that fits the picture; a higher zoom is a smaller crop around the same centre.
 Every crop is held inside the picture. The default centre is the picture's centre.
 
-## apps/store/src/lib/render-markdown.ts
-
-Used for the welcome message and item descriptions. Raw HTML in the source is dropped.
-A link keeps its target only when it is http, https or mailto, so a message cannot run script on the page. Links open in a new tab.
-
-## apps/store/src/lib/resize-image.ts
+## apps/store/src/upload/resize-image.ts
 
 The author's picture becomes the exact webp the store keeps: the chosen crop (the centred, largest one by default) scaled to the target size, then encoded at the best quality that fits the byte cap.
 Everything runs in the browser, so the bucket only ever sees the finished file.
 
-## apps/store/src/lib/start-download.ts
+## apps/store/src/catalog/start-download.ts
 
 Asking the API for the short lived link counts the download.
 The link names the file, so it saves as slug-version.ext.
 
-## apps/store/src/lib/pack-link/range-pack-source/range-pack-source.ts
+## apps/store/src/pack-link/range-pack-source/range-pack-source.ts
 
 Each read is one ranged GET on the signed link, so a large pack is never downloaded whole.
 The bucket answers 206 with the range, or 200 with the whole file when it ignores the Range header; the whole file is then cut to the range asked.
 A read that fails once the link has lapsed, or with a 403, asks renew for a new link and tries once more. Reads that fail together share one renewal.
 
-## apps/store/src/lib/pack-link/usePackLink.ts
+## apps/store/src/pack-link/usePackLink.ts
 
 The link is fetched once per loader. The loader is also how the link is renewed: the range source calls it again when a read fails on a lapsed link.
 A null loader means there is no pack to read, so nothing is fetched. Callers memoize the loader, since a new loader fetches a new link.
@@ -1441,14 +1411,6 @@ The picture's place under the frame is in percent of the frame, so it follows th
 The wheel listener is a native one because React's wheel listener is passive and cannot stop the page scrolling.
 The crop starts from the one in use, or the centred, largest one while none was chosen.
 
-## apps/store/src/components/EmptyState/EmptyState.type.ts
-
-label names the part for screen readers when it has no heading of its own. banner takes the featured banner's shape; row takes the height of a row of cards.
-
-## apps/store/src/components/FeaturedHero/behavior/useRotation.ts
-
-The hero moves on by itself, stops while the pointer or focus is on it, and never moves for a player who asked for reduced motion.
-
 ## apps/store/src/components/InstallButton/InstallButton.tsx
 
 Install opens the item's install link, so the browser asks once to open Relic of the Past and the app installs the item at once.
@@ -1494,10 +1456,6 @@ Expired is a ready version whose file the store removed before it was sent.
 
 CARDS_PER_WIDEST_ROW matches the --shelf-columns custom property. The rest of a shelf is behind See all.
 
-## apps/store/src/components/Stars/Stars.type.ts
-
-value runs from 0 to 5; null draws five empty stars. The fill rounds to the nearest whole star. onChange makes the stars a picker.
-
 ## apps/store/src/components/VersionHistory/VersionHistory.type.ts
 
 versions are the approved versions, newest first. Without onDelete the table has no actions column.
@@ -1506,13 +1464,27 @@ versions are the approved versions, newest first. Without onDelete the table has
 
 A selector written with two classes, such as .shelf .shelf__title, exists so the text primitive's own colour and size never win on load order.
 The 820px media queries in FeaturedHero.css and Shelf.css are the compact breakpoint, --bp-compact. Below it the hero copy stacks under the banner and a shelf shows two cards to a row.
-EmptyState.css masks the stripes with two crossing linear gradients and mask-composite intersect, so they fade out along all four edges while the message stays solid.
 Shelf.css stops each column at the card's widest, so the 16:9 picture never grows with the window; on a wide screen the row ends before the edge.
 ItemPicture.css draws the dark ground under the kind icon as three offset ellipses blurred into one shape, wider than the icon's glow, so the glow and the shadow read as two layers.
 
 ## packages/design/src/site/theme.css
 
 The design system reset locks scrolling and text selection for the game shell; a site scrolls and lets text be copied, so this sheet overrides both for every site. Its tokens size the site kit's own parts.
+
+## packages/design/game-text/font/game-font.css
+
+The dialogue face is a community recreation of the game's font by Patrick H. Lauke, under Creative Commons Attribution 3.0. It is close to the font a language pack carries but not identical. A surface that measures a line reads the pack's width table, which holds the game's own numbers, while it draws with this face. Measured against one pack's table, 67 of the 73 characters checked advance by the same amount. Six differ, in game pixels:
+
+| Character | Pack width | Face width | Difference |
+|-----------|-----------:|-----------:|------------|
+| `I` | 5 | 3 | drawn as a bare stem where the pack has a serifed form |
+| `i` | 5 | 3 | the same bare stem |
+| `Q` | 6 | 7 | one pixel wider |
+| `:` | 3 | 5 | two pixels wider |
+| `"` | 8 | 5 | three pixels narrower |
+| `>` | 8 | 6 | two pixels narrower |
+
+The pack's table stays the source of truth, and every surface keeps billing each character out of it, so the numbers a translator steers by remain the game's. The effect is visual and limited to these six characters: their ink sits up to a game pixel and a half off centre in a cell sized for the real character. A cell centres its ink for that reason. Centring halves the error, while parking the ink at the left edge puts all of it on one side. Closing the gap takes a new asset, a face whose glyphs are the pack's own, and no code change.
 
 ## apps/store/src/theme.css
 
@@ -1580,7 +1552,7 @@ A player may rate an item once they installed it, and never their own. The API a
 
 The page content fills the page body with a min-height of 0, so the table scrolls inside it and the page does not.
 
-## apps/store/src/pages/Publications/behavior/publication-scopes/scope-predicate.ts
+## apps/store/src/pages/Publications/behavior/scope-predicate.ts
 
 Ready, Waiting and Rejected look at every version of an item, and Waiting and Rejected also at its listing edits. Published and Drafts look at the item itself. Ready counts only versions whose file is still kept, since only those can be sent.
 

@@ -11,7 +11,7 @@ describe('pond generation', () => {
         pond_capacity_mode: mode, pond_capacity_items: 6, pond_capacity_throws: 8, pond_capacity_start: '25', pond_capacity_max: '999',
       });
       for (const seed of SEEDS) {
-        const placement = generatePlacement(seed, snapshot, EMPTY, DELIVERABLE, EMPTY);
+        const placement = generatePlacement({ seed, snapshot, deliverable: { npc: EMPTY, capacity: DELIVERABLE, world: EMPTY } });
         expect(placement.stats.pondPrizeCount, seed).toBe(6);
         const prizes = POND_PRIZE_LOCATIONS.slice(0, 6);
         for (const name of prizes) {
@@ -24,14 +24,14 @@ describe('pond generation', () => {
 
   it('zero pool items leaves the pond out of the world entirely', () => {
     const snapshot = snapshotOf({ pond_capacity_mode: 'custom', pond_capacity_items: 0 });
-    const placement = generatePlacement('pond-none', snapshot, EMPTY, DELIVERABLE, EMPTY);
+    const placement = generatePlacement({ seed: 'pond-none', snapshot, deliverable: { npc: EMPTY, capacity: DELIVERABLE, world: EMPTY } });
     expect(placement.stats.pondPrizeCount).toBe(0);
     for (const name of POND_PRIZE_LOCATIONS) expect(placement.locations[name]).toBeUndefined();
   }, 30_000);
 
   it('an unproven pond seam contributes no location at all', () => {
     const snapshot = snapshotOf({ pond_capacity_mode: 'vanilla-cost', pond_capacity_items: 4 });
-    const placement = generatePlacement('pond-unproven', snapshot, EMPTY, EMPTY, EMPTY);
+    const placement = generatePlacement({ seed: 'pond-unproven', snapshot, deliverable: { npc: EMPTY, capacity: EMPTY, world: EMPTY } });
     expect(placement.stats.pondPrizeCount).toBe(0);
   }, 30_000);
 });
@@ -65,7 +65,7 @@ describe('pond generation', () => {
       capacity_wallet_count: 1,
     });
     for (const seed of SEEDS.slice(0, 5)) {
-      const placement = generatePlacement(seed, snapshot, EMPTY, DELIVERABLE, EMPTY);
+      const placement = generatePlacement({ seed, snapshot, deliverable: { npc: EMPTY, capacity: DELIVERABLE, world: EMPTY } });
       expect(placement.stats.pondPrizeCount, seed).toBe(2);
       expect(pondPlanOf(placement.stats.ponds.capacity).throws.map((entry) => entry.price)).toEqual([500, 500]);
     }
@@ -73,7 +73,7 @@ describe('pond generation', () => {
 
   it('a placement re-derives the same schedule the generator planned', () => {
     const snapshot = snapshotOf({ pond_capacity_mode: 'custom', pond_capacity_items: 3, pond_capacity_throws: 5 });
-    const placement = generatePlacement('pond-derive', snapshot, EMPTY, DELIVERABLE, EMPTY);
+    const placement = generatePlacement({ seed: 'pond-derive', snapshot, deliverable: { npc: EMPTY, capacity: DELIVERABLE, world: EMPTY } });
     const plan = pondPlanOf(placement.stats.ponds.capacity);
     expect(plan.locations).toHaveLength(3);
     expect(plan.locations.every((name) => placement.locations[name] !== undefined)).toBe(true);

@@ -15,7 +15,7 @@ const grantVanilla = (check: CheckRecord): void => {
   if (check.kind === 'npc') {
     if (flagType !== undefined && flagMask !== undefined && itemId !== undefined
       && spriteType !== undefined && postGfx !== undefined) {
-      cheatTriggerNpcCheck(flagType, flagMask, itemId, spriteType, postGfx);
+      cheatTriggerNpcCheck({ flagType, flagMask, itemId, spriteType, postGfx });
     }
     return;
   }

@@ -41,7 +41,9 @@ const useFloodRun = (params: FloodRunParams) => {
 
       setDynamicBlockerCount(summary.dynamicBlockerCount);
       const fallHoleSpawns = computeFallHoleLandings(primaryScreenIndex, isIndoors);
-      setData(primaryResult, allConnections, fillResults, fallHoleSpawns, prep.currentRespawnIds);
+      setData({
+        result: primaryResult, connections: allConnections, results: fillResults, fallHoleSpawns, respawnEntIds: prep.currentRespawnIds,
+      });
       setCrossings(collectScreenCrossings({ isIndoors, responses, items: items as TileReq[] }));
       setAnnotations(annotateFlooded({ fillResults, isIndoors, primaryScreenIndex, primaryScreenId: screenId }));
     } catch (e) {

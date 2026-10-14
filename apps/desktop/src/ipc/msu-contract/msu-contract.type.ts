@@ -13,6 +13,8 @@ type MsuResult = {
 
 type MsuFileEntry = { name: string; size: number };
 
+type MsuResumeWrite = { profileId: string; kind: SaveKind; id: string | number; state: MsuResumeState };
+
 interface MsuInvokeContract {
   'msu:import': (packName: string, url: string) => Promise<MsuResult>;
   'msu:importFile': (packName: string, filePath: string) => Promise<MsuResult>;
@@ -36,9 +38,8 @@ interface MsuInvokeContract {
   'msu:optimize:run': (packName: string, fileNames: string[]) => Promise<OptimizeRunResult>;
 
   'msu:readResume': (profileId: string, kind: SaveKind, id: string | number) => Promise<MsuResumeState | null>;
-  'msu:writeResume': (profileId: string, kind: SaveKind, id: string | number,
-    state: MsuResumeState) => Promise<void>;
+  'msu:writeResume': (write: MsuResumeWrite) => Promise<void>;
   'msu:deleteResume': (profileId: string, kind: SaveKind, id: string | number) => Promise<void>;
 }
 
-export type { MsuInvokeContract, MsuResult, MsuFileEntry };
+export type { MsuInvokeContract, MsuResult, MsuFileEntry, MsuResumeWrite };

@@ -12,7 +12,7 @@ describe('pond demands come from the seed, so a preview cannot lie', () => {
   it('what the panel would show is what the placement carries, retries included', () => {
     const retried: string[] = [];
     for (const seed of previewSeeds) {
-      const placement = generatePlacement(seed, snapshot, EMPTY, DELIVERABLE, EMPTY);
+      const placement = generatePlacement({ seed, snapshot, deliverable: { npc: EMPTY, capacity: DELIVERABLE, world: EMPTY } });
       const previewed = pondDemandsOfSnapshot(snapshot, seed, { capacity: DELIVERABLE });
       expect(previewed, seed).toEqual(placement.pondDemands);
       if (placement.stats.attempts > 1) retried.push(seed);

@@ -56,9 +56,8 @@ const { createOnlineClient } = await import('@app/game/randomizer-client/online-
 const { defaultOnlineCore } = await import('@app/game/randomizer-client/online-core');
 const { AP_ONLINE_BIT, AP_DEATH_LINK_BIT } = await import('@app/game/gate-word-5');
 const {
-  probeDeliverableNpcLocations, probeDeliverablePondLocations, probeDeliverableWorldLocations,
-} = await import('../../../../../packages/randomizer/src/client/npc-capability');
-const { resolveLocalItemId } = await import('../../../../../packages/randomizer/src/client/item-lookup');
+  probeDeliverableNpcLocations, probeDeliverablePondLocations, probeDeliverableWorldLocations, resolveLocalItemId,
+} = await import('@rotp/randomizer');
 
 const AP_BITS = AP_ONLINE_BIT | AP_DEATH_LINK_BIT;
 const SETTLE_TICKS = 400;
@@ -115,11 +114,12 @@ interface ParityFacts {
 
 const generatedFor = (snapshot: RandomizerOptionsSnapshot, lists: DeliverableLists | undefined): Placement => {
   if (lists === undefined) {
-    return generateFromSnapshot(SEED, snapshot, probeDeliverableNpcLocations(),
-      probeDeliverablePondLocations(), probeDeliverableWorldLocations());
+    return generateFromSnapshot({
+      seed: SEED, snapshot,
+      deliverable: { npc: probeDeliverableNpcLocations(), capacity: probeDeliverablePondLocations(), world: probeDeliverableWorldLocations() },
+    });
   }
-  const sets = deliverableSetsOf(lists);
-  return generateFromSnapshot(SEED, snapshot, sets.npc, sets.capacity, sets.world);
+  return generateFromSnapshot({ seed: SEED, snapshot, deliverable: deliverableSetsOf(lists) });
 };
 
 const expectForeignSpots = (spots: readonly LocationKey[]): void => {

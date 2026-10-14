@@ -59,7 +59,7 @@ describe('physical plan covers every generated location', () => {
   for (const { name, overrides, npc, world } of OPTION_SETS) {
     it(name, () => {
       const snapshot = buildOptionsSnapshot(overrides);
-      const placement = generatePlacement(`plan-coverage-${name}`, snapshot, npc, undefined, world);
+      const placement = generatePlacement({ seed: `plan-coverage-${name}`, snapshot, deliverable: { npc, world } });
       const plan = buildPhysicalPlan(placement);
 
       const covered = new Set<string>([
@@ -76,7 +76,7 @@ describe('physical plan covers every generated location', () => {
   }
 
   it('places the vanilla prize on every prize slot, reported as locked vanilla', () => {
-    const placement = generatePlacement('prize-vanilla', buildOptionsSnapshot({ dungeon_prize_shuffle: false }));
+    const placement = generatePlacement({ seed: 'prize-vanilla', snapshot: buildOptionsSnapshot({ dungeon_prize_shuffle: false }) });
     const plan = buildPhysicalPlan(placement);
     const byLocation = new Map(plan.entries.map((entry) => [entry.location, entry]));
 

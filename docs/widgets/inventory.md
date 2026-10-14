@@ -11,4 +11,4 @@ A live grid of the items Link currently owns. Items show up as you collect them.
 
 The widget polls the live inventory each frame through the tracker bridge (`WasmGetInventoryState` and
 `WasmGetGameUIState`); see the [Inventory & Progress hooks](../hooks/state-queries-inventory.md). State
-lives in `stores/game-ui-store.ts`.
+lives in `apps/desktop/src/stores/game-ui-store/game-ui-store.constants.ts`.

@@ -11,8 +11,8 @@ import { Core } from '../story-events/core-harness';
 import { CORPUS_SEEDS, ROOT, corpusSaves } from './corpus';
 
 (globalThis as { window?: unknown }).window ??= { addEventListener: () => undefined };
-const { trackerReachableScreens, trackerStatuses } = await import('../../../../packages/navigation/src/tracker/tracker-statuses');
-const { standardCheckName } = await import('../../../../packages/randomizer/src/client/check-names');
+const { trackerReachableScreens, trackerStatuses } = await import('@rotp/navigation');
+const { standardCheckName } = await import('@rotp/randomizer');
 
 const LABEL = process.env.ROTP_NET_LABEL ?? '';
 const JS = resolve(ROOT, 'apps/desktop/public/wasm/zelda3.js');

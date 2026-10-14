@@ -4,7 +4,7 @@ import { isCoreReady } from '@rotp/game-core';
 
 const deliverCustom = (execute: () => void, message: string, source: string): string | null => {
   if (!isCoreReady()) return null;
-  return enqueue(message, source, { type: 'custom', execute });
+  return enqueue({ message, source, action: { type: 'custom', execute } });
 };
 
 export { deliverCustom };

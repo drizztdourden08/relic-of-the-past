@@ -57,7 +57,7 @@
   font-size: var(--text-xs);
   color: var(--c-text-dim);
   text-transform: uppercase;
-  letter-spacing: 0.5px;
+  letter-spacing: calc(0.5 * var(--size-1));
 }
 
 .network-tab__player--self .network-tab__cell {

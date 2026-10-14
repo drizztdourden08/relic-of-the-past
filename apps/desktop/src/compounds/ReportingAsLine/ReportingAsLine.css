@@ -9,7 +9,7 @@
 .reporting-as__label {
   text-transform: uppercase;
   font-size: var(--text-xs);
-  letter-spacing: var(--tracking-wide);
+  letter-spacing: calc(0.05 * var(--text-xs));
 }
 
 .reporting-as__who {

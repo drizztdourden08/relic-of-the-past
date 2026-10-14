@@ -9,5 +9,5 @@
 
 .glyph-popover__cell .glyph-char {
   --glyph-cell-h: var(--text-lg);
-  --glyph-cell-w: calc(var(--text-lg) / 2);
+  --glyph-cell-w: var(--glyph-popover-cell-w);
 }

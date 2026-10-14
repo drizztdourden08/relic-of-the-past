@@ -1,7 +1,7 @@
 <!-- @layer docs @kind doc -->
 # App views B code notes
 
-Notes for four renderer views under `apps/desktop/src/views/`: `ProfileHub/`, `InputTester/`, `GameLayer/` and `Randomizer/`. Each heading names a file or folder relative to that `views/` folder. The code carries no comments, so the facts a reader cannot get from the code live here.
+Notes for four renderer views under `apps/desktop/src/views/`: `ProfileHub/`, `InputTester/`, `GameLayer/` and `Randomizer/`. Each heading names a file or folder relative to that `views/` folder, or gives a full path from the repository root when the code moved out of it. The code carries no comments, so the facts a reader cannot get from the code live here.
 
 ## Randomizer/behavior/activity-feed.ts
 
@@ -9,7 +9,7 @@ The activity feed is one time-ordered list: the app's own log entries and the Ar
 
 ## Randomizer/behavior/is-room-echo.ts
 
-The online session also logs each room message to the log bus, prefixed `[AP]` and a space (see `online-messages.ts` in the randomizer client). The room row stands for that line, so the echo is dropped whenever room lines are present.
+The online session also logs each room message to the log bus, prefixed `[AP]` and a space (see `apps/desktop/src/game/randomizer-client/online-messages` in the randomizer client). The room row stands for that line, so the echo is dropped whenever room lines are present.
 
 ## Randomizer/behavior/classify-entry.ts
 
@@ -41,7 +41,7 @@ How far the run has come, in checks. The tracker counts them whenever a seed is 
 
 ## Randomizer/behavior/useRandomizerSession.ts
 
-A thin subscriber. Session ownership lives in the shared session store (`lib/game/randomizer-client/session-store`); the hook mirrors the store, the game-running gate and the page's activity feed into React state.
+A thin subscriber. Session ownership lives in the shared session store (`apps/desktop/src/game/randomizer-client/session-store`); the hook mirrors the store, the game-running gate and the page's activity feed into React state.
 
 The log panel windows its own rows, so the feed keeps as much history as the bus does (`MAX_LOG_ENTRIES`). A full plan application logs about 500 entries, and a screenful would throw away the arm-time detail. The feed takes the error channel beside the randomizer channel, so a session failure that surfaces as a global error (a bad ccall, an unhandled rejection) shows on the page that caused it.
 
@@ -69,7 +69,7 @@ The profile creation panel drawn read-only from the profile's frozen snapshot, n
 
 ## Randomizer/sub-components/OnlineTab.tsx
 
-The profile's Online settings, the same component the settings screen shows. It reads and writes through the settings bridge the profile's settings screen registers (`search-store.ts`), so a change lands in the same `config.json` and acts at once in both places. The bridge is up whenever a profile is open, game or not.
+The profile's Online settings, the same component the settings screen shows. It reads and writes through the settings bridge the profile's settings screen registers, so a change lands in the same `config.json` and acts at once in both places. The bridge is up whenever a profile is open, game or not.
 
 ## Randomizer/sub-components/ActivityLog.tsx
 
@@ -87,21 +87,21 @@ Tabs replace three stacked blocks: the ponds are set the same way and only one i
 
 ## Randomizer/sub-components/PondInstanceRow.tsx
 
-Every pond setting is held to the wallet top of the capacity family before anything is drawn (`pond-wallet-top.ts`): a range control stops at what the wallet can hold, a stored range past it reads as the reach itself, and every edit leaves already held, so a row shows what the seed is built from. Each clamp is said in the blocking colour under its row. One component per pond gives each derivation its own memo, and switching tabs leaves the copy control empty.
+Every pond setting is held to the wallet top of the capacity family before anything is drawn (`packages/randomizer/src/world/pond/pond-wallet-top`): a range control stops at what the wallet can hold, a stored range past it reads as the reach itself, and every edit leaves already held, so a row shows what the seed is built from. Each clamp is said in the blocking colour under its row. One component per pond gives each derivation its own memo, and switching tabs leaves the copy control empty.
 
 ## Randomizer/sub-components/CapacityUpgradesSection
 
-The capacity upgrades section is fenced: the rows are derived and rendered inside an ErrorBoundary, so a profile the model cannot plan shows an inline notice (with a reset where the panel is editable). The fence retries on every profile change. `sub-components/CapacityUpgradesRows.tsx` holds the derivation, so a throw there reaches the boundary.
+The capacity upgrades section is fenced: the rows are derived and rendered inside an ErrorBoundary, so a profile the model cannot plan shows an inline notice (with a reset where the panel is editable). The fence retries on every profile change. `apps/desktop/src/views/Randomizer/sub-components/CapacityUpgradesSection/sub-components/CapacityUpgradesRows.tsx` holds the derivation, so a throw there reaches the boundary.
 
 ## Randomizer/sub-components/StoryGatesSection
 
-One plain row per story gate, in the order the catalog seeds list them. The rows read and write through the same key mapping the snapshot uses (`story-gate-from-snapshot.ts`), so a row and a stored value cannot disagree. With no handler the section is a read-out, every value as a tag.
+One plain row per story gate, in the order the catalog seeds list them. The rows read and write through the same key mapping the snapshot uses (`packages/randomizer/src/world/story-gates/story-gate-from-snapshot`), so a row and a stored value cannot disagree. With no handler the section is a read-out, every value as a tag.
 
 ## Randomizer/sub-components/DarkRoomsSection
 
 The requirement row, then the four lights as tiles. A light is an item, so its tile carries the item's own sprite and a tick, and the section only speaks again when something is wrong. The requirement shapes the seed logic only: a ticked light lights rooms either way, so the tiles stay editable when it is off.
 
-Two things can be wrong, and they read differently. A tile a sibling setting holds off (`dark-room-forced.ts`) shows off with its reason in the blocking colour, whatever the setting stores, because the seed is built with it off. The stored answer is untouched, so lifting the mask hands the tick back. Unticking every light while a light is required is allowed: the rule then reads unlit rooms as passable and the seed rolls blind, which is a consequence and not an error, so it is a banner.
+Two things can be wrong, and they read differently. A tile a sibling setting holds off (`packages/randomizer/src/world/dark-rooms/dark-room-forced.constants.ts`) shows off with its reason in the blocking colour, whatever the setting stores, because the seed is built with it off. The stored answer is untouched, so lifting the mask hands the tick back. Unticking every light while a light is required is allowed: the rule then reads unlit rooms as passable and the seed rolls blind, which is a consequence and not an error, so it is a banner.
 
 The tiles are rebuilt when the extracted sprite set moves: a set rewritten in place is served under new URLs, so the sprite revision is a memo dependency although nothing reads it. Availability is read for no ROM in particular: the app points the set at a ROM from startup, and the creation form re-points it at the ROM picked. Until then the tiles draw placeholders. The same placeholder stands in for a sprite file that fails to load, so a tile never shows a broken image.
 
@@ -165,13 +165,13 @@ The editor overlay draws only on the overworld and only with preview mode off. H
 
 Escape calls `preventDefault` so the dismiss stack treats the key as consumed and leaves the surface the field sits on alone.
 
-## GameLayer/sub-components/navigation-overlay
+## apps/desktop/src/navigation-overlay
 
 The navigation overlay draws the flood result over the game: reachable dots, the A* path preview, cliff and stair arrows, connections, ways on and off the screen, fall zones, pit stripes, annotations and the player debug boxes. Annotations draw last so locks, triggers and exits sit above the reachability art. The overlay and legend containers take no pointer events, so the overlay never eats a game click; each legend panel turns pointer events back on for its own collapse chevron. Each legend panel collapses on its own and remembers nothing. The chevron is large on purpose: at 9 pixels it vanished against the game art, and it is the only control on these panels.
 
 Controls: hold the left button for a live A* path to the cursor, right click while holding to lock the target, release to clear the lock and the path, Shift and drag to copy a block of tiles to the clipboard. The copied block lists each tile as its hex attribute followed by `+` reachable, `~` traversal or `-` blocked.
 
-## GameLayer/sub-components/navigation-overlay/annotation-style
+## apps/desktop/src/navigation-overlay/annotation-style
 
 One row per annotation kind, exhaustive by type, so a kind without a visual is a compile error. Colours are semantic: amber for a lock or gate, green for a pickup or check, red clay for a trigger, grey for information. Room-wide facts (room tags such as the kill trigger) have no meaningful tile, so they are `panelOnly` and show in the panel. Ways on and off the screen are a separate renderer (`draw-entrances.ts`) and never use this table. The on-screen legend lists only the kinds present, since a full key would dwarf the game view; a kind switched off in the navigation widget shows struck through.
 
@@ -179,47 +179,47 @@ One row per annotation kind, exhaustive by type, so a kind without a visual is a
 
 The ring of a dot says which layer or layers the flood reached the tile on; the fill says what kind of result it was. Arrows have their own legend box because an arrow is an edge between tiles, not a property of one.
 
-## navigation-overlay/draw/draw-context.ts
+## apps/desktop/src/navigation-overlay/draw/draw-context.ts
 
 Every draw function takes the same context. The view origin comes from `viewOrigin`, shared with every other overlay so they cannot drift apart: the camera, less the camera lock shift and the pixels the view adds on the left and on top. Indoors, the occupied room uses the live origin; any other room in the batch has no live position and falls back to `roomOrigin(screenIndex)` (see `room-entrances.ts`). Drawing other rooms at the primary room's origin once put them a full room width off.
 
-## navigation-overlay/draw/draw-dots.ts
+## apps/desktop/src/navigation-overlay/draw/draw-dots.ts
 
 The ring names the same layer the tooltip does. Outdoors is always the ground; a single-layer room takes the layer the flood started on. A dot ringed for both layers means the flood reached the tile on both; keying it off raw attribute content drew tiles that merely have geometry on the other layer as two-state dots.
 
 A dot is judged by the attributes of the layer the tile is stood on. `attrGrid` is the upper layer, so testing it for a ground-only dot checks against the wall or ledge above and blanks every reachable tile beside a raised walkway. Do not collapse this back to a single `attrGrid` read: that regression has happened twice. Ledge traversal states (2 to 9) and stairs get arrows, not dots. Hookshot targets are ordinary dots; the tile tooltip reports hookshot use. The flood start is a black dot with a white outline.
 
-## navigation-overlay/draw/draw-annotations.ts
+## apps/desktop/src/navigation-overlay/draw/draw-annotations.ts
 
 One marker shape for every annotation, differing only by glyph and colour, so the overlay reads at 8 pixel tiles. Open or done markers draw dimmed; a blocked one is struck through so it shows on the canvas and not only in the widget list.
 
 Door-table kinds (`DOOR_KINDS`) are 4 by 4 tile blocks, wide along the wall and shallow through it (north and south doors are wide in columns, east and west wide in rows). The cell lock is not one: it is a keyhole plate (room object 0x18) with no door-table record and a dummy direction (see `getRoomDoors`), so it keeps the 2 by 2 size. Records name the top left tile of a block, so markers are nudged in by `ANCHOR_NUDGE_TILES` along their narrow axis: both axes for a 2 by 2 block, only the through-wall axis for a door. The nudge was measured from screenshots of room 0x71 and the jail cell, not derived; re-check it if the marker size changes.
 
-## navigation-overlay/draw/draw-cliff-arrows.ts
+## apps/desktop/src/navigation-overlay/draw/draw-cliff-arrows.ts
 
 Both ends of a cliff arrow sit on a tile centre. Pulling the tail back half a tile made a jump look like it began a tile early and skewed diagonals away from 45 degrees.
 
-## navigation-overlay/draw/draw-player-debug.ts
+## apps/desktop/src/navigation-overlay/draw/draw-player-debug.ts
 
-Draws Link's 16 pixel box and the tiles under it, and outlines the solid blocker sprites in red: tutorial guards (0x3F), barriers (0x40) and the uncle (0x73) while his `e` value is 0. The same sprites stop the flood (`lib/game/flood/blockers.ts`).
+Draws Link's 16 pixel box and the tiles under it, and outlines the solid blocker sprites in red: tutorial guards (0x3F), barriers (0x40) and the uncle (0x73) while his `e` value is 0. The same sprites stop the flood (`packages/navigation/src/flood/blockers`).
 
-## navigation-overlay/draw/draw-pit-stripes.ts
+## apps/desktop/src/navigation-overlay/draw/draw-pit-stripes.ts
 
 Pit tiles (attribute 0x20) are striped only when they touch a reachable tile.
 
-## GameLayer/sub-components/navigation-overlay/pathfinding
+## apps/desktop/src/navigation-overlay/pathfinding
 
 Link is a 2 by 2 tile body, so the path search works on 2 by 2 positions. Reach states: 0 unreachable, 1 reachable, 2 to 9 a ledge traversal in one direction (`TRAVERSAL_DIR_OFFSET`: south, north, east, west, then the four diagonals), 10 stairs (both ways). A body may only leave a ledge tile in the ledge's direction; stairs allow any direction. Goal finding uses the merged grid, so it can target either layer; routing is layer aware when dual-layer grids exist. On layer 0, stepping onto a ledge in its direction scans forward past the ledge tiles to the landing on layer 1, and the fall costs the tiles crossed. A stair tile on the merged grid lets the body swap layers in place. Link's position is read 8 pixels below `linkY`, at his feet.
 
-## navigation-overlay/tile-inspector-classification.ts
+## apps/desktop/src/navigation-overlay/tile-inspector-classification.ts
 
 One hover's tooltip data: the room context and side tables are resolved once, then `classifyTile` runs per shown layer. Nothing here re-derives a fact `classifyTile` owns. `rawPalaceIndexX2` is the raw `cur_palace_index_x2` (0xFF means none), the shape `resolveRoomContext` expects. Dual mode falls back to a single column when either layer has no content of its own (attribute 0 and no reach). A staircase type of 2 means layer changes are blocked, so the tooltip locks to the start layer.
 
-## GameLayer/sub-components/navigation-overlay/tile-inspector-tooltip
+## apps/desktop/src/navigation-overlay/tile-inspector-tooltip
 
 `computeCanPass` answers whether the current loadout passes an obstacle: `lift.1` always, `lift.2` with the Power Glove, `lift.3` with the Titan's Mitt, `hammer` when inventory slot 11 holds the hammer, and boots or flippers when owned. The tooltip is placed clear of the path line and its requirement label, trying positions around the cursor first and the four corners last.
 
-## navigation-overlay/tooltip
+## apps/desktop/src/navigation-overlay/tooltip
 
 One tooltip layout for single, dual and locked modes: a header, one or two layer blocks, then the extra rows. The modes differ only in how many layer blocks render, and all five classification rows come from one `TileClassification`, each tagged with where its value came from (the grid, the attribute or a live side table). An unreached above-layer tile that is not a wall reads unsupported, not blocked: the tile is open, but nothing carries Link there. Outdoors the one surface is the ground, whatever number the walk's start layer has. Path requirements show only once a layer is reached. A collision row turns green or red only for an obstacle whose answer for the current loadout is known.
 
@@ -243,7 +243,7 @@ The Controller Diagnostics page: the game's own tools on top of the Brock input 
 
 The HID calibration map. A button mapping is a byte and a bit mask; an analog trigger used as a button adds `threshold` (the value above which it counts as pressed) and `restValue` (the byte at rest). An axis mapping carries `idle` once the axis has been read at rest: `drift` is the widest excursion from centre seen while untouched, which is the floor any deadzone must clear. Without `idle`, rest was never measured.
 
-`devicePath` is the raw OS device path (for example from node-hid enumeration). `rawManufacturer`, `rawProduct` and `serialNumber` are the device's own strings, distinct from `name`, which is this app's display name. `platform` uses the same label as the debug-info block. `appVersion` keeps captures from different versions of the wizard's heuristics apart. `guid` is SDL's joystick GUID, the key of a gamecontrollerdb line, so a report without it cannot become one. `sdlMapping` is SDL's own line for that GUID when it has one, `sdlType` is SDL's gamepad family (not a model name), `sdlHasButton` and `sdlHasAxis` are what SDL says the device has by positional index, and `sdlVersion` is the SDL version the capture ran against. A trigger kind is analog (a swept range), digital (a single bit) or unknown until the recording shows which (see `trigger-classify.ts`).
+`devicePath` is the raw OS device path (for example from node-hid enumeration). `rawManufacturer`, `rawProduct` and `serialNumber` are the device's own strings, distinct from `name`, which is this app's display name. `platform` uses the same label as the debug-info block. `appVersion` keeps captures from different versions of the wizard's heuristics apart. `guid` is SDL's joystick GUID, the key of a gamecontrollerdb line, so a report without it cannot become one. `sdlMapping` is SDL's own line for that GUID when it has one, `sdlType` is SDL's gamepad family (not a model name), `sdlHasButton` and `sdlHasAxis` are what SDL says the device has by positional index, and `sdlVersion` is the SDL version the capture ran against. A trigger kind is analog (a swept range), digital (a single bit) or unknown until the recording shows which (see `apps/desktop/src/views/InputTester/sub-components/hid-calibration/trigger-classify`).
 
 ## InputTester/sub-components/hid-calibration/connection-hint.ts
 
@@ -255,7 +255,7 @@ Byte-level analysis of raw HID reports. A changed byte is analog when it moved b
 
 ## InputTester/sub-components/hid-calibration/flaky-byte-detect
 
-Finds bytes still changing while nothing is touched, the most common cause of a bad button capture per the wizard's own instructions. It runs right before button capture so the user can exclude them up front (`hooks/useFlakyByteWarning.ts` turns the result into a dialog). It samples for `FLAKY_SAMPLE_MS`; a wobble below `FLAKY_MIN_RANGE` is ordinary ADC noise. Excluded bytes are skipped, since they are already out of the capture's way.
+Finds bytes still changing while nothing is touched, the most common cause of a bad button capture per the wizard's own instructions. It runs right before button capture so the user can exclude them up front (`apps/desktop/src/views/InputTester/sub-components/hid-calibration/hooks/useFlakyByteWarning.ts` turns the result into a dialog). It samples for `FLAKY_SAMPLE_MS`; a wobble below `FLAKY_MIN_RANGE` is ordinary ADC noise. Excluded bytes are skipped, since they are already out of the capture's way.
 
 ## InputTester/sub-components/hid-calibration/noisy-bytes
 
@@ -544,31 +544,27 @@ The fixed wizard steps, in order. Byte capture shows only for a controller the r
 - `DiagnosticsWizardDialog.css`: the title shares its row with a five-step strip, and the shared header style ellipsises the title when space runs short, which cut it to a single letter. The row wraps and the title keeps its natural width.
 - `DiagnosticsWizardDialog.css`: the layout overlay covers the step instead of replacing it, so the choice stays visible behind the read and the dialog does not change size mid-transition.
 - `InputCalibration.css`: the card shimmer runs continuously, so a stutter means the UI thread is blocked.
-- `theme/input-calibration/hid-inputs.css`: the idle read is a real step, so its prompt carries the same weight as the live-capture readout. The change magnitude mark is drawn on the byte cell's top border so it can sit on top of any cell state, and its width and colour are set inline from the byte's own delta.
+- `apps/desktop/src/theme/input-calibration/hid-inputs.css`: the idle read is a real step, so its prompt carries the same weight as the live-capture readout. The change magnitude mark is drawn on the byte cell's top border so it can sit on top of any cell state, and its width and colour are set inline from the byte's own delta.
 
-## ProfileHub/ProfileHub.constants.ts
+## ProfileHub
 
 - `PROFILE_HUB_TABS` is the single registry of every ProfileHub tab: icons, label, and (when the tab is a SettingsLayout screen) the function that builds its sections from the current settings. It is a `Record<ProfileHubTab, ...>`, so adding a tab to the union without describing it here is a compile error. That keeps it in sync with the hub's nav, its search results and the search palette's catalog with no manual bookkeeping.
 - The GBA tab is a read-only reference catalogue, not a SettingsLayout screen, so it has no sections to index.
 - `PROFILE_HUB_NAV_GROUPS` are the nav's groups in order. Home is not in a group: it is pinned above them.
 
-## ProfileHub/ProfileHub.type.ts
+## ProfileHub
 
 - The `settings` tab is Display: screen geometry and performance. The `online` tab is for Archipelago profiles only.
 - `ProfileHubTabSpec`: `icon` is the emoji for the search palette's rows and `navIcon` the line icon for the hub's nav and page headers. `sections` is omitted for tabs with no SettingsLayout (Home, and the custom binding UI of Controls). `mobileOnly` tabs are listed only on the mobile form factor and `onlineOnly` tabs only for an online (Archipelago) profile.
 
-## ProfileHub/behavior/is-hub-tab-shown.ts
-
-Whether a tab is listed. The NavRail and the search catalog ask the same question.
-
-## ProfileHub/ProfileHub.tsx
+## ProfileHub
 
 - The profile window's body. Its title bar belongs to the host layer, which shows the game controls there off the home tab.
 - The per-profile notch preference is reflected on the html element whenever it changes.
 - Search palette bridge: while this profile's hub is mounted it is the only reader and writer of GameSettings, so it registers them and lets the palette show and flip inline toggles.
 - A pending tab switch (for example from a DisabledOverlay's "Open Settings" action) is consumed before the anchor effect runs, so the scroll happens on the tab it just landed on. A pending search deep link is consumed once the target tab's content is showing.
 
-## ProfileHub/behavior/apply-settings-effects.ts
+## apps/desktop/src/settings-effects/apply-settings-effects.ts
 
 - The side effects of a settings change: persist, parent notifications, HUD sync, live push and toast. A failed save shows a toast so settings never fail to save silently.
 - Changing the player sprite swaps the sheet in the running core so the choice shows without a restart.
@@ -576,25 +572,25 @@ Whether a tab is listed. The NavRail and the search catalog ask the same questio
 - A host-drawn HUD style needs a 16:9 or wider display to have room for the HUD and the menu. If the ratio is narrowed while it is active, it drops back to the original style and says why, since a clipped menu would be worse than losing the style. The correction is queued, because this runs inside the `setSettings` updater and feeding a second change straight back would re-enter it. Shrinking the window can do the same with no settings change; that route raises the same request from GameOverlay, so the drop and its wording live in one place.
 - When the game is running, settings are pushed live, and a change that needs a restart shows the restart toast once.
 
-## ProfileHub/behavior/swap-player-sprite.ts
+## apps/desktop/src/settings-effects/swap-player-sprite.ts
 
 Applies a sprite choice to the running core and stages it again for the next boot. Staging matters even when the live swap succeeds, because the core reads the staged bytes again when the game restarts.
 
-## ProfileHub/behavior/sync-hud-store.ts
+## apps/desktop/src/settings-effects/sync-hud-store.ts
 
 Vanilla Safe brings the native HUD back in the core (its HudOverride bit is masked), so the host overlay has to stand down at the same moment. Locking the setting only greys the control out: the stored value stays enhanced, and the overlay would keep drawing over the native HUD the core just restored, which is the doubled HUD. Original is the stock HUD here. The saved preference is untouched, so it returns when Vanilla Safe goes off.
 
-## ProfileHub/behavior/settings-effects.constants.ts
+## apps/desktop/src/settings-effects/settings-effects.constants.ts
 
 - `HUD_STORE_KEYS` are the keys the HUD render store mirrors. A change to any of them syncs it again.
 - `CONTROL_STORE_KEYS` are the keys the control-scheme store and the per-frame input router are derived from. `syncControlSettings` gets the whole settings object, not a patch: the scheme and the takeover it arms are both derived from the HUD style, and Vanilla Safe strips them.
 - `ASPECT_KEYS` are the keys that can change the display ratio a host-drawn style is measured against.
 
-## ProfileHub/behavior/sync-dialog-store.ts
+## apps/desktop/src/settings-effects/sync-dialog-store.ts
 
 Mirrors the dialog settings into the overlay's store: the message box look, plus the pacing controls the button prompts describe. Vanilla Safe stands the overlay down the way it does the HUD: it masks the override the enhanced box hides the native one through, so the overlay reads original while the saved preference stays put. It masks the pacing gate too, so none of the pacing controls act and none are prompted.
 
-## ProfileHub/behavior/sync-title-store.ts
+## apps/desktop/src/settings-effects/sync-title-store.ts
 
 Mirrors the title screen settings into the overlay's store. Vanilla Safe masks the bit the native title is hidden through, so the overlay reads original while the saved preference stays put.
 
@@ -602,220 +598,103 @@ Mirrors the title screen settings into the overlay's store. Vanilla Safe masks t
 
 Tracks the running game's pause state from the InputManager and toggles it.
 
-## ProfileHub/behavior/useProfileSettings.ts
+## apps/desktop/src/settings-controls/bugfixes/build-bug-fix-section.ts
 
-- Settings load, persist and live push, and the restart toasts, for ProfileHub. Live settings are pushed when the game starts, and the restart toast clears when it stops.
-- `loadedRef` says whether the profile's file has been read. Until then `settings` holds the app defaults, and applying a change would write those defaults over the whole file. So a change that arrives first (the launch's mute, pressed again after a reload) waits and lands on the file once it is loaded, through the latest handler.
-- The change is logged outside `setSettings` to avoid setting state in another component during render.
-- The master volume override comes from the title bar mute toggle.
-- The HUD storage layer is told which profile this screen edits instead of inferring it: the layout editor opens from here, and this component holds the profile. The id is cleared on the way out so the inference chain (running game, pinned launch, last selected) takes over when no settings screen is mounted.
-- On load the control-scheme store is synced too. It and the per-frame router are driven off a game UI store subscription that only ticks while the core runs, so without this the player's slot assignments would not reach them until a game started. The live push on load is a no-op when the module is not running. A failed read keeps the defaults.
-- It listens for external settings change requests, for example from the debug widget.
-- A host-drawn style that lost the width it needs is dropped here, whether a narrowed ratio or the overlay seeing the window shrink asked for it, so the style is dropped once and the notice worded once.
+The Bug Fixes section is generated from the registry (the 42 split bug fixes). It has no JSX, so non-React consumers can import it. The widescreen corrections are not here: they are one switch on the Display tab, which covers the core bit and the fix split from that bundle together.
 
-## ProfileHub/sub-components/audio-settings-sections.constants.ts
-
-The Audio tab is ordered by what a person reaches for: levels first, then the music pack, and the device settings last. Those three are derived from the pack in Auto, so they are the ones a person should rarely need to open.
-
-## ProfileHub/sub-components/haptics-settings-sections.constants.ts
-
-The Haptics tab's keys use a dotted `haptics.*` path, because they live under `settings.haptics` and not at the top level, unlike every other tab.
-
-## ProfileHub/sub-components/developer-settings-sections.constants.ts
-
-`SANCTUARY_ACCOUNT_KEY` is the row DeveloperSettings swaps for the account card. It is not a GameSettings key and maps to no setting.
-
-## ProfileHub/sub-components/gameplay-settings-sections.constants.ts
-
-Save states and turbo share the Game Flow section: both act on the running game from outside its own rules, one moving where you resume, the other how fast it runs. Save states live in Gameplay, not a tab of their own, because they are part of how the game is played, not a property of the host. `GAME_FLOW_SECTION` is exported because its controls are rendered by `gameplay-settings-controls`.
-
-## ProfileHub/sub-components/build-bug-fix-section.ts
-
-The Bug Fixes section is generated from the registry (the 42 split bug fixes). It has no JSX and stays apart from `bugfix-settings-controls.tsx`, which renders the per-fix toggle, so non-React consumers (the search catalog) can import it. The widescreen corrections are not here: they are one switch on the Display tab, which covers the core bit and the fix split from that bundle together.
-
-## ProfileHub/sub-components/legacy-master.ts
+## apps/desktop/src/settings-controls/bugfixes/legacy-master.ts
 
 A fix with no explicit toggle inherits the legacy bundle master it came from.
 
-## ProfileHub/sub-components/bugfix-settings-controls.tsx
-
-Each fix is an opt-in toggle stored in `settings.bugFixToggles`. When a fix has no explicit override it inherits the legacy bundle master it was extracted from, so existing profiles keep their behaviour. This mirrors `buildFeatureWords` in the bridge (`live-settings-flags.ts`).
-
-## ProfileHub/sub-components/build-window-section.ts
-
-Pixel Perfect only has meaning under Letterbox. Fit and Stretch bypass the fit math entirely.
-
-## ProfileHub/sub-components/refresh-advisory.ts
+## apps/desktop/src/settings-controls/display/refresh-advisory.ts
 
 The game advances exactly 60 times a second, so a display running at a whole multiple of 60 shows every frame for the same length of time. One that does not holds some frames longer than others, and no pacing on our side can even that out. The V-Sync description says so and names the rate that would help, so the player is not left wondering why V-Sync did nothing.
-
-## ProfileHub/sub-components/SettingsView.constants.ts
-
-- Shadow Casting (`postProcessingShadows`) is not exposed in the Enhancements section yet, because the subsystem is a work in progress.
-- `REQUIRES_LINEAR` holds the wide presets that need Linear World Tilemap, `REQUIRES_ULTRAWIDE` the ones that also need Ultrawide, and `TALL_PRESET_VALUES` the tall presets shown only when Tall Rendering is on.
-
-## ProfileHub/sub-components/SettingsView.display.ts
-
-Builds the Display section from the current settings. With Extended Rendering on, the order is: capability toggles first (enable a capability, then the picker below reflects it), then the aspect ratio picker showing only the presets those capabilities unlocked, then sprite and enemy behaviour, which only matters past the original picture. Camera is a separate section behind the same Extended Rendering gate, all off by default.
-
-## ProfileHub/sub-components/SettingsView.tsx
-
-- How the game reaches the screen, drawn as three tabs that share one set of controls and cascades: Display (rendering geometry and frame pacing), Camera and Window. `part` says which of the three tabs this view is.
-- `withAspectCascade` resets the ratio when a capability is turned off, so the active ratio stays valid.
-- The synced refresh rate and the target rate picker are on the Brock display module's Display tab (`@drizztdourden08/brock-display`), not here.
-
-## ProfileHub/sub-components/SettingsView.controls.tsx
-
-The per-key control renderer for the Display tab: aspect ratio, window, viewport and off-screen behaviour. The off-screen behaviour description is shown under the control for whichever option is selected, so each option explains itself and the player does not have to guess what Idle does to an enemy they can see that is ignoring them. The `offscreenAI` setting key keeps its name, since it is part of the shared settings type.
-
-## ProfileHub/sub-components/online-settings-sections.constants.ts
-
-- The Online tab is for Archipelago profiles only.
-- The session's switches live on the profile's connection, not in GameSettings, so their keys name no setting: a section reset and the search palette's inline toggle pass them by, and OnlineSettings draws them itself. A switch's `fallback` is the value a profile that never set it runs with.
 
 ## ProfileHub/sub-components/OnlineSettings.tsx
 
 The Online tab: the session's two switches (DeathLink, tracking the other players), then which notices of an Archipelago session show as toasts. The switches belong to the profile's connection, not its settings, so they read and save through the profile (`useProfileConnection`), which reconnects a running session on the new values. The same component is the Online tab of the Randomizer page.
 
-## ProfileHub/sub-components/audio-settings-controls.tsx
-
-- The per-key control renderer for the Audio tab. The pack format, the output rate, the channel count and the buffer are technical values with one correct answer per pack, so in Auto they are shown as derived and locked. Manual unlocks every one of them and adds the warning that says when a combination is wrong.
-- `MSU_OPTIONS` covers every pack shape: the four distributed formats, our layered one, and off.
-- `AUTO_NOTE` is appended to a control whose value Auto chooses, so a locked row explains itself.
-- A locked control shows the resolved value that will be used, not a stale one.
-- Master, Music, Ambience and SFX are plain sliders of one shape, so they render in `audio-volume-sliders.tsx`.
-- Replacement music has no gate-word bit of its own, so Vanilla Safe suppresses it in the playback plan whatever this control says, and the Pack Format control is locked the way a registered feature is.
-
-## ProfileHub/sub-components/audio-settings-disabled.ts
+## apps/desktop/src/settings-controls/audio/is-audio-disabled.ts
 
 - The pack-dependent switches only mean something while a pack plays at all. Only Manual mode's own switch can turn them off: in Auto, whether a pack plays is decided by the pack being assigned, so a stale `enableMSU` from a profile saved before that change must not grey them out.
 - The Music, Ambience and SFX sliders only act once the independent-mix toggle is on.
 
-## ProfileHub/sub-components/audio-volume-sliders.tsx
-
-The volume group sliders: master, music, ambience and SFX. Master always applies. The three group sliders only act once the independent-mix toggle is on, so they render disabled until then. Ambience is app-mixed only: the sound chip cannot split its own ambience out of its mix, so that slider governs the replacement ambient bed a pack plays, never the original audio.
-
-## ProfileHub/sub-components/BugFixesSettings.tsx
-
-The bundle masters plus the 42 split per-fix toggles.
-
-## ProfileHub/sub-components/DeveloperSettings.tsx
-
-The account row is the one item on the Developer tab that is not a toggle.
-
-## ProfileHub/sub-components/gameplay-settings-controls.tsx
-
-Only the keys that need something other than a switch have a renderer. Every plain boolean (including `mapOnSelect`) falls through to SettingsLayout's own toggle, built from the section's label and description. The disabled rule is the one hook a plain boolean still gets.
-
-## ProfileHub/sub-components/gameplay-settings-disabled.ts
+## apps/desktop/src/settings-controls/gameplay/is-gameplay-disabled.ts
 
 Under Modern the map is a core verb of its own, so Open Map with Select has nothing to do. It is greyed and kept in place, like every other gated setting in the app: an option that vanishes when a neighbouring one changes reads as a bug.
 
-## ProfileHub/sub-components/GraphicsSettings.tsx
-
-How the picture is drawn: renderer, quality, post-processing effects and player appearance.
-
-## ProfileHub/sub-components/graphics-settings-disabled.ts
+## apps/desktop/src/settings-controls/graphics/is-graphics-disabled.ts
 
 - Pixel Perfect promises whole, identical source pixels, and bilinear interpolation would break that before anything else runs, so the core is handed Linear Filtering off and the control follows.
-- Enhanced Mode 7 and No Sprite Limit are not registered feature definitions yet, so the DisabledOverlay lock (driven by `feature-registry.ts`) cannot reach them. They are locked by hand under Vanilla Safe, matching how `buildPpuFlags` forces both off. Optimized PPU stays enabled on purpose: it is a pure engine swap, not a divergence from stock rendering.
+- Enhanced Mode 7 and No Sprite Limit are not registered feature definitions yet, so the DisabledOverlay lock (driven by `packages/features/src/feature-registry`) cannot reach them. They are locked by hand under Vanilla Safe, matching how `buildPpuFlags` forces both off. Optimized PPU stays enabled on purpose: it is a pure engine swap, not a divergence from stock rendering.
 
-## ProfileHub/sub-components/haptics-settings-disabled.ts
+## apps/desktop/src/settings-controls/haptics/is-haptics-disabled.ts
 
 Every haptic setting except the master switch is disabled while haptics is off.
 
-## ProfileHub/sub-components/MobileSettings.tsx
-
-Mobile and device-specific display options.
-
-## ProfileHub/sub-components/hud-settings-controls.tsx
-
-- The per-key control renderer for the HUD tab. The Title Screen and Dialog Box sections live in their own renderers to keep this file small.
-- Enhanced and Modern are the host-drawn HUD plus the host-owned menu, so choosing either one also sets the overlay settings it depends on instead of leaving the user to find them. `mergeSettings` applies the same rule to a stored profile.
-
-## ProfileHub/sub-components/hud-ratio-options.ts
+## apps/desktop/src/settings-controls/hud/hud-ratio-options.ts
 
 Fixed HUD ratio presets wider than the screen are disabled, since the HUD clamps to the screen anyway. Match and Custom stay open.
 
-## ProfileHub/sub-components/hud-settings-disabled.ts
+## apps/desktop/src/settings-controls/hud/is-hud-disabled.ts
 
 The Title Screen and Dialog Box sections carry dependent rows. Every other HUD row is always live.
 
-## ProfileHub/sub-components/hud-title-disabled.ts
+## apps/desktop/src/settings-controls/hud/is-title-disabled.ts
 
 Every title row but the switch describes the reimagined title, so the original one idles them.
 
-## ProfileHub/sub-components/hud-dialog-controls.tsx
-
-The Dialog Box section's renderer: the box, text and background rows live here, the border, texture and highlight rows in their own renderers.
-
-## ProfileHub/sub-components/hud-dialog-disabled.ts
+## apps/desktop/src/settings-controls/hud/is-dialog-disabled.ts
 
 `EITHER_BOX_KEYS` act on both boxes, so the original box leaves them live. Every other row describes the enhanced box, so the original box idles them all.
 
-## ProfileHub/sub-components/hud-dialog-border-disabled.ts
+## apps/desktop/src/settings-controls/hud/is-border-disabled.ts
 
 Thickness and colour describe a drawn line, so the game's tiles and no border leave them idle.
 
-## ProfileHub/sub-components/hud-dialog-texture-disabled.ts
+## apps/desktop/src/settings-controls/hud/is-texture-disabled.ts
 
 Only the rows the texture subsection owns get an answer. The Dialog Box section runs every one of its keys through this rule, so claiming a key that belongs to another subsection would idle that row too.
 
-## ProfileHub/sub-components/hud-settings.constants.ts
-
-`DIALOG_TEXTURE_SCALES` are the cell size multipliers the pattern Size slider offers.
-
-## ProfileHub/sub-components/hud-dialog-highlight-controls.tsx
-
-The Highlights subsection. Both boxes draw the highlights.
-
-## ProfileHub/sub-components/TurboSpeedControl.tsx
-
-The turbo rungs are not evenly spaced (1.25x to 10x, widening as they climb), so the range input walks the ladder by index and the label shows the multiplier at that rung.
-
-## ProfileHub/sub-components/dialog-stop-slider.tsx
+## apps/desktop/src/settings-controls/gameplay/DialogStopSlider.tsx
 
 One slider over a ladder of stops. The stops are not evenly spaced (1x, 1.5x, 2x, then instant), so the range input walks the ladder by index and the label shows the stop at that index. An off-ladder stored value snaps to the nearest stop. `formatStop` defaults to the pacing form: Original, Instant, or "1.5x". Shared by the text speed, hold speed and font size rows.
 
-## ProfileHub/sub-components/dialog-hold-row.tsx
+## apps/desktop/src/settings-controls/gameplay/DialogHoldRow.tsx
 
 The hold-to-accelerate row: one setting item with two values. The toggle on the left turns the hold on, and the slider to its right picks the speed the hold plays at, dimmed while the toggle is off.
 
-## ProfileHub/sub-components/dialog-color-control.tsx
-
-A settings row for one hex colour (`#rrggbb`): the label and description on the left, a swatch on the right that opens the colour picker beside it. `original` is the value a fresh profile carries, offered as the picker's reset target.
-
-## ProfileHub/sub-components/AspectRatioControl.tsx
+## apps/desktop/src/settings-controls/AspectRatioControl/AspectRatioControl.tsx
 
 The aspect ratio picker has two modes. Legacy (HUD) passes `presetOptions` and shows a single Preset tab. Split (game) passes `widePresets` and/or `tallPresets` and shows Wide and Tall tabs (omit `tallPresets` when tall rendering is off). The other tabs (Auto, Screen, Custom) are always rendered from `options`. `descriptions` holds per-mode text, and `recommendedNote` appears in gold when the selected mode matches `recommendedValue`. The current value is resolved to the top-level tab it belongs to.
 
-## ProfileHub/sub-components/HudStyleControl.tsx
+## apps/desktop/src/settings-controls/HudStyleControl/HudStyleControl.tsx
 
 - Original, Enhanced and Modern all rebuild the SNES HUD from the active ROM's extracted sprites, so all three are locked when none exist. The two app-drawn styles also need a 16:9 or wider display, because their groups and their host-drawn menu live in the side bands a narrower view does not have. Modern is Enhanced plus the modern control scheme, so it has exactly Enhanced's requirements. When sprites are missing a notice offers a one-click extract that unlocks every style once it succeeds.
 - Availability is checked again on mount, since sprites may have been extracted from the Data Manager.
 - The notice names only the condition the user can act on, one fix at a time: missing sprites is the blocking one (it locks all three styles), and the aspect rule is only raised once the sprites are there. When neither applies there is no notice.
 
-## ProfileHub/sub-components/PlayerSpriteSelector.tsx
+## apps/desktop/src/settings-controls/PlayerSpriteSelector/PlayerSpriteSelector.tsx
 
 A card grid picker for the profile's player sprite. It reads the global player sprite library, and Original is the default. Each card is a `SpriteChoiceCard`.
 
-## ProfileHub/sub-components/MsuDetectedSummary.tsx
+## apps/desktop/src/settings-controls/audio/MsuDetectedSummary.tsx
 
 The read-only Auto mode row of the Audio tab: the format read off the assigned pack, and the audio settings that follow from it. `pack` is null when no pack is assigned. `MODE_LABELS` names the pack formats the way the wider MSU community names them.
 
-## ProfileHub/sub-components/pack-detail.ts
+## apps/desktop/src/settings-controls/audio/pack-detail.ts
 
 What else is true about the pack beyond its format name. A layered pack reports as MSUL, but its track numbering and audio format still matter and would otherwise go unmentioned.
 
-## ProfileHub/sub-components/MsuMismatchCallout.tsx
+## apps/desktop/src/settings-controls/audio/MsuMismatchCallout.tsx
 
 Warns that manual audio settings disagree with the chosen pack format, so music will play at the wrong speed. The old core only ever reported this to stderr.
 
-## ProfileHub/sub-components/useMsuPackProfile.ts
+## apps/desktop/src/settings-controls/audio/useMsuPackProfile.ts
 
 Detects the assigned MSU pack's contents for the Audio tab's Auto mode. It reads the profile fresh from storage instead of trusting the profile object passed down from the app shell, because that object is a snapshot from profile load time and a pack assigned in Data Manager afterwards never reaches it. AudioSettings mounts again on every tab activation, so the read is current whenever the tab opens. The manifest is read too, because it is what makes a pack layered: track names alone cannot tell a layered pack from a classic one.
 
-## ProfileHub/sub-components/SanctuaryAccount.tsx
+## apps/desktop/src/settings-controls/contributing/SanctuaryAccount.tsx
 
 The Sanctuary account row of the Contributor tab: the shared account card, given the Sanctuary's wording and wired to the session store. `window.open` on an external URL is routed to the system browser by the main process.
 
@@ -839,18 +718,6 @@ Filters and groups the GBA difference catalogue for the settings list. Groups co
 
 Whether a Game Boy Advance supplement cartridge has been imported, so the Extra Dungeon toggle knows whether it has anything to gate.
 
-## ProfileHub/sub-components/ProfileHubBody.tsx
-
-- ProfileHub's nav and content pane. The pane shows the active tab as a page. While the search field has focus or holds text, no tab is selected and the pane shows the search: an empty state until something is typed, then every matching setting from every tab. Picking a tab (from the nav or a result), or leaving the field empty, ends the search.
-- A profile switch away from Archipelago drops the Online tab, and its page goes with it.
-- Mobile options have their own tab, shown only on mobile, and the Online tab only for Archipelago.
-- `randomizerFrozenKeys` are the keys the profile's randomizer config pins. SettingsLayout locks those controls.
-- `HEADER_HORIZON` is low because a page header is short, which keeps the castle in view.
-
-## ProfileHub/sub-components/ProfileHubTabContent.tsx
-
-The content of one hub tab, shared by the active page and the search results pane, which draws the same components through SettingsPageContext. The GBA tab is a reference page with its own layout, not a SettingsLayout, so the page draws its header. The Controls binding screen lays out and scrolls its own columns, so its page only draws the header.
-
 ## ProfileHub/sub-components/ControlsSettings.tsx
 
 The full input mapping UI. The layout is a sidebar (profiles), a main column (the tabbed binding editor) and a devices column, plus the rebind listener and the confirm-preset and delete-profile dialogs. The logic lives in `useControlsSettings` and the columns in `controls/`. `useControlsSettings.ts` beside it re-exports the hook from `controls-settings/` so existing imports keep working.
@@ -868,7 +735,7 @@ What the capture modal says it is listening for.
 
 ## ProfileHub/sub-components/controls-settings/controls-settings.constants.ts
 
-`FAMILY_ICON_MAP` holds one brand silhouette per controller family, shared by the required-inputs strip and the per-binding device glyph so both show the same icon for a family. The drag data keys match the ones `controls/device-drag-data.ts` writes.
+`FAMILY_ICON_MAP` holds one brand silhouette per controller family, shared by the required-inputs strip and the per-binding device glyph so both show the same icon for a family. The drag data keys match the ones `apps/desktop/src/views/ProfileHub/sub-components/controls/device-drag-data.ts` writes.
 
 ## ProfileHub/sub-components/controls-settings/family-icon-map.ts
 
@@ -880,9 +747,9 @@ What the capture modal says it is listening for.
 
 ## ProfileHub/sub-components/controls-settings/modern-slots.ts
 
-- Slot list presentation for the controls screen. Identity is a number now (contract section 19) and `slotName` in `@shared/input/scheme` spells it, so the old `slotIdLabel`, which unpicked a position out of a `slot:NORTH` string, is gone with the ids.
+- Slot list presentation for the controls screen. Identity is a number now (contract section 19) and `slotName` in `packages/input-mapping/src/scheme` spells it, so the old `slotIdLabel`, which unpicked a position out of a `slot:NORTH` string, is gone with the ids.
 - What remains is the one thing only this screen can answer: when the player binds a slot to a different control, which picture the slot should now wear. `position` and `icon` are display only, so they have to follow the binding or the row keeps drawing the artwork of a button that no longer does anything. The live control list is the only place that artwork exists.
-- A pad control the device reports brings its own position, artwork and name. A key or a control this pad does not report brings none of the three, on purpose: the glyph chain then draws the binding (a key cap, or the generic button art), which is the control the player presses. Every row still shows a glyph, since `binding-display.ts` has no text-only branch for a bound control.
+- A pad control the device reports brings its own position, artwork and name. A key or a control this pad does not report brings none of the three, on purpose: the glyph chain then draws the binding (a key cap, or the generic button art), which is the control the player presses. Every row still shows a glyph, since `apps/desktop/src/input/binding-display` has no text-only branch for a bound control.
 
 ## ProfileHub/sub-components/controls-settings/profile-controls.ts
 
@@ -922,14 +789,14 @@ Detects and tracks connected input devices. `devices` and `filteredDevices` stay
 
 ## ProfileHub/sub-components/controls-settings/useDragDrop.ts
 
-- Drag over and drop handling, and applying console defaults. A dropped device carries only its sdlType (plus vid and pid), and there is no per-model preset. The keyboard is the one sentinel case (sdlType `keyboard`, see `device-detector.ts`) still resolved from its hand-authored `KEYBOARD_DEFAULT`. Every gamepad's defaults come from the family layer's console defaults through `buildConsoleDefaultMappings`.
+- Drag over and drop handling, and applying console defaults. A dropped device carries only its sdlType (plus vid and pid), and there is no per-model preset. The keyboard is the one sentinel case (sdlType `keyboard`, see `packages/input-mapping/src/runtime/device-detector`) still resolved from its hand-authored `KEYBOARD_DEFAULT`. Every gamepad's defaults come from the family layer's console defaults through `buildConsoleDefaultMappings`.
 - The dragged card carries its own resolved name (`device-drag-data.ts`). Only a legacy drag source without one falls back to the device list.
 - Icons are never stored on a freshly applied binding, since they resolve live from the source vid and pid plus the binding's index, like any other saved binding.
 - Under the modern scheme the same drop also gives the profile its modern bindings, derived from what SDL says the dropped device has. A device with nothing to resolve from yields null and keeps whatever the profile had. The classic console default mappings are written either way: the two live side by side on the profile, so switching schemes back never has to rebuild the other one.
 
 ## ProfileHub/sub-components/controls-settings/useHapticsToggle.ts
 
-The profile-level haptics switch. When on, every controller the profile uses receives rumble. There is no per-device list to curate here: the routing in `lib/input/haptic-bridge.ts` reads the profile's own device set live.
+The profile-level haptics switch. When on, every controller the profile uses receives rumble. There is no per-device list to curate here: the routing in `apps/desktop/src/input/haptic-bridge` reads the profile's own device set live.
 
 ## ProfileHub/sub-components/controls-settings/useModernScheme.ts
 
@@ -940,7 +807,7 @@ The profile-level haptics switch. When on, every controller the profile uses rec
 - The scheme is read, never set. It is derived from the HUD style (`controlSchemeOf`), so there is no setter and no moment at which switching to Modern builds a profile's modern bindings. `coreBindings` falls back to the device's defaults and `effectiveSlots` prefills the list from the device, so a profile that never carried a `modern` block lists its slots the first time it is opened.
 - With no stored core, the core is the device's defaults. A gamepad with no control list resolves to an all-unbound core instead of borrowing the keyboard's, because an empty list means the pad is unknown.
 - A profile written before section 19 still carries `slot:NORTH` ids and an assignment table keyed by them. `migrateScheme` keys both again together, in slot order, and throws instead of dropping anything it cannot read. It is idempotent.
-- `effectiveSlots` is the same function the runtime lens resolves through (`lib/input/resolve-bindings.ts`), so this screen and the HUD cluster read one list.
+- `effectiveSlots` is the same function the runtime lens resolves through (`packages/input-mapping/src/runtime/resolve-bindings`), so this screen and the HUD cluster read one list.
 - An absent assignment sits on a number the current list does not reach. It is kept, never deleted: a layout may still draw slot 7 for a scheme with five.
 - `hasSlotSource` is true once there is anything to build a list from.
 - A core rebind writes only the core. Slots no longer move with it: binding a gameplay verb onto a control a slot also reads leaves both rows on screen, so the clash is visible and removing the slot is one click.
@@ -1008,10 +875,6 @@ The left column: the input profile list, which collapses to an icon strip for qu
 
 The centre column: a banner where the scheme control used to be, plus the tabbed binding editor. The scheme is derived from the HUD style, so under Classic the screen says so once and links to where it is set, and under Modern it says nothing. The two binding tabs gate each other by scheme: the inactive one stays visible and greyed with its reason.
 
-## ProfileHub/sub-components/controls/ControlsTabs.tsx
-
-The tab strip, with disabled tabs. Greyed, not removed, is the agreed behaviour, because a tab that vanishes reads as the screen having lost something. The reason shows under the strip and on the tab's tooltip. The design system TabBar has no disabled state and belongs to another owner, so the strip is built from Button primitives.
-
 ## ProfileHub/sub-components/controls/CoreBindingsGroup.tsx
 
 The ten core verbs, grouped and rebindable, shown in both binding tabs on purpose: the menu verbs drive the pause menu under either scheme, and movement, pause and map are what the modern scheme subtracts from the slot list. `icons` is not decoration: a row given no icon resolves one from the binding's shape alone, which on a pad is the same generic circle for every button. The device's real artwork comes from `useCoreIcons`.
@@ -1054,14 +917,6 @@ The controller assigned to the active profile: connection and activation status,
 
 The saved input profiles, with the active one highlighted, and create, delete, select and rename. A newly created profile opens straight into rename. Escape in the rename field is consumed there, so the dismiss stack leaves the page alone.
 
-## ProfileHub/sub-components/hub-search/HubSearchResults.tsx
-
-The hub's search pane: every setting matching the query, from every tab, with its real control. Each tab draws its own rows in results mode (through SettingsPageContext), grouped under the tab's name with a way to open it.
-
-## ProfileHub/sub-components/hub-search/match-tabs.ts
-
-What a hub search matches, per tab: how many setting rows (by the same filter the settings pages use, so a count always equals the rows drawn), and the tabs whose own name matches even when no row does (Controls has no rows at all). `withRows` is in nav order.
-
 ## ProfileHub/sub-components/home-tab/home-tab.type.ts
 
 - `randomizer` is frozen at profile creation, and its presence marks a randomized playthrough.
@@ -1093,7 +948,7 @@ The home hero's fact rows: the profile row (ROM, dates) and, for a randomized pr
 
 ## ProfileHub/sub-components/home-tab/compute-save-file-checks.ts
 
-The per-save-file checks readout, computed offline from the profile's battery save on disk, with the same taken, available and left counts the Checks widget derives. One row per save file holding a valid game. A seed's saves are rated against its frozen placement and a plain game's against the placement where nothing moved (`normal-placement.ts`), so both go through the same availability snapshot. An online run has no placement on disk, so it shows nothing.
+The per-save-file checks readout, computed offline from the profile's battery save on disk, with the same taken, available and left counts the Checks widget derives. One row per save file holding a valid game. A seed's saves are rated against its frozen placement and a plain game's against the placement where nothing moved (`packages/randomizer/src/normal-placement`), so both go through the same availability snapshot. An online run has no placement on disk, so it shows nothing.
 
 ## ProfileHub/sub-components/home-tab/derive-profile-mode.ts
 
@@ -1106,10 +961,6 @@ All Home tab save and session state, data loading and action handlers. The timer
 ## ProfileHub/sub-components/home-tab/useHomeTabSramImport.ts
 
 Picks, validates and imports a raw SRAM save into the profile's `sram.dat`.
-
-## ProfileHub/sub-components/home-tab/useHomeTabToasts.ts
-
-The Home tab's own toast queue, separate from ProfileHub's so the two features never share mutable state.
 
 ## ProfileHub/sub-components/home-tab/useHomeRandomizerStatus.ts
 
@@ -1129,11 +980,9 @@ The create, overwrite, delete and SRAM import confirmation dialogs for the Home 
 
 ## ProfileHub stylesheets
 
-- `ProfileHub.css`: the gap between the nav and the content leaves room for the nav's round toggle, which straddles its right edge. The `.settings-tab` rules are the generic settings tab layout used by the Audio, Gameplay and Controls tabs, and `.hub-game-controls` is the game controls group rendered in the window title bar.
+- `apps/desktop/src/views/ProfileHub`: the gap between the nav and the content leaves room for the nav's round toggle, which straddles its right edge. The `.settings-tab` rules are the generic settings tab layout used by the Audio, Gameplay and Controls tabs, and `.hub-game-controls` is the game controls group rendered in the window title bar.
 - `BindingListener.css`: the backdrop opts back into pointer events, because the Portal layer is click-through.
 - `SchemeBanner.css`: the banner keeps the box the old scheme notice used. One row, the text taking the slack and the button pinned to the end. It sits directly in the controls column above the tab strip, not as a container inside a container.
 - `ControlsSettings.css`: collapsed columns show only the device icon strip (profiles) or the card icons (devices) and turn the column title vertical. On a short viewport (landscape phones) the bottom Required Inputs summary and the Button Mappings header are dropped to reclaim vertical space. The heading and the haptics toggle share one row, with the toggle at the far end.
-- `dialog-hold-row.css`: the toggle and its speed slider each take half the row, and the slider never collapses.
-- `HomeTab.css`: the hero sits flush with the top of the nav. The folder button sits in the info card row and matches the cards' height, not its own. The columns collapse to one when there is no room for two.
-- `HubSearchResults.css`: the search pane uses the same card as a settings page, so switching between a tab and its search feels like one surface. With nothing typed the empty state fills the card, centred.
-- `RefreshRateControl.css`: detection and the action share a row so the block stays short, and the warning wraps below.
+- `DialogHoldRow.css`: the toggle and its speed slider each take half the row, and the slider never collapses.
+- `HomeTabColumns.css`: the hero sits flush with the top of the nav. The folder button sits in the info card row and matches the cards' height, not its own. The columns collapse to one when there is no room for two.

@@ -5,22 +5,19 @@ import { pondDemandsOfSnapshot } from './pond-demands-of-snapshot';
 import { attemptPlacement } from './attempt-placement';
 import { FillError } from './fill-error';
 import { EMPTY_DELIVERABLE, MAX_PLACEMENT_ATTEMPTS } from './fill.constants';
-import type { RandomizerOptionsSnapshot } from '../options.type';
-import type { LocationKey } from '../location-key';
-import type { DeliverableSets } from './fill.type';
+import type { DeliverableSets, GenerateRequest } from './fill.type';
 import type { Placement } from './placement.type';
 
-const generatePlacement = (
-  seed: string, snapshot: RandomizerOptionsSnapshot, deliverableNpcLocations?: ReadonlySet<LocationKey>,
-  deliverableCapacityLocations?: ReadonlySet<LocationKey>,
-  deliverableWorldLocations?: ReadonlySet<LocationKey>,
-): Placement => {
+const fullDeliverable = (sets: DeliverableSets): Required<DeliverableSets> => ({
+  npc: sets.npc ?? EMPTY_DELIVERABLE,
+  capacity: sets.capacity ?? EMPTY_DELIVERABLE,
+  world: sets.world ?? EMPTY_DELIVERABLE,
+});
+
+const generatePlacement = (request: GenerateRequest): Placement => {
+  const { seed, snapshot, deliverable: sets = {} } = request;
   assertRollableTickSet(progressiveSettingFromSnapshot(snapshot));
-  const deliverable: Required<DeliverableSets> = {
-    npc: deliverableNpcLocations ?? EMPTY_DELIVERABLE,
-    capacity: deliverableCapacityLocations ?? EMPTY_DELIVERABLE,
-    world: deliverableWorldLocations ?? EMPTY_DELIVERABLE,
-  };
+  const deliverable = fullDeliverable(sets);
   const pondDemands = pondDemandsOfSnapshot(snapshot, seed, deliverable);
   let lastMessage = '';
   for (let attempt = 0; attempt < MAX_PLACEMENT_ATTEMPTS; attempt += 1) {

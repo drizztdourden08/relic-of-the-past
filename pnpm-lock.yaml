@@ -644,6 +644,9 @@ importers:
       '@iconify/types':
         specifier: ^2.0.0
         version: 2.0.0
+      '@rotp/workspace':
+        specifier: workspace:*
+        version: link:../..
       '@types/js-yaml':
         specifier: ^4.0.9
         version: 4.0.9

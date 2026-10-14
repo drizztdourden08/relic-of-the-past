@@ -3,6 +3,8 @@
 @import url('@rotp/design/packs.css');
 
 :root {
+  --hud-ref-thumb-size: 2rem;
+  --hud-ref-thumb-size-compact: 1.25rem;
   --c-gold-shade: #8c6a2a;
   --c-gold-deep: #50431f;
   --font-debug-mono: 'JetBrains Mono', monospace;
@@ -53,5 +55,7 @@
   --line-row-h: calc(var(--game-line-h) + var(--space-2xs));
   --line-gutter-w: calc(var(--space-2xl) * 5);
   --line-text-x: calc(var(--line-gutter-w) + var(--space-sm));
-  --msu-file-cols: minmax(var(--size-128), 1fr) var(--size-64) calc(88 * var(--size-1)) calc(72 * var(--size-1)) calc(144 * var(--size-1)) calc(88 * var(--size-1)) minmax(var(--size-96), calc(176 * var(--size-1))) calc(72 * var(--size-1));
+  --glyph-popover-cell-w: calc(var(--text-lg) / 2);
+  --randomizer-log-col-w: 8ch;
+  --msu-file-cols: minmax(calc(8 * var(--text-base)), 1fr) var(--size-56) calc(5.5 * var(--text-base)) calc(4.5 * var(--text-base)) calc(9 * var(--text-base)) calc(5.5 * var(--text-base)) minmax(calc(6 * var(--text-base)), calc(11 * var(--text-base))) calc(4.5 * var(--text-base));
 }

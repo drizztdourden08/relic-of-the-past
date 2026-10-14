@@ -48,15 +48,13 @@ const { setModule } = await import('@rotp/game-core');
 const { installFakeModule } = await import('./ap-fake-module');
 const { armScouted } = await import('@app/game/randomizer-client/online-arm-scouted');
 const { disarmFireReporting, firedLocations } = await import('@app/game/randomizer-client/override-fire-registry');
-const { trackerCheckRecords, trackerStatuses } = await import('@rotp/navigation');
-const { isCountedCheck } = await import('../../../../packages/navigation/src/tracker/tracker-count');
-const { clearCollectedChecks, withCollectedChecks } = await import('../../../../packages/navigation/src/tracker/collected-checks');
-const { markCollected } = await import('@app/game/randomizer-client/online-collected');
-const { virtualCheckIdOf } = await import('../../../../packages/randomizer/src/client/virtual-locations');
-const { parseSlotData } = await import('../../../../packages/randomizer/src/archipelago/parse-slot-data');
 const {
-  probeDeliverableNpcLocations, probeDeliverablePondLocations, probeDeliverableWorldLocations,
-} = await import('../../../../packages/randomizer/src/client/npc-capability');
+  clearCollectedChecks, isCountedCheck, trackerCheckRecords, trackerStatuses, withCollectedChecks,
+} = await import('@rotp/navigation');
+const { markCollected } = await import('@app/game/randomizer-client/online-collected');
+const {
+  parseSlotData, probeDeliverableNpcLocations, probeDeliverablePondLocations, probeDeliverableWorldLocations, virtualCheckIdOf,
+} = await import('@rotp/randomizer');
 
 const SLOT = 1;
 const OTHER_SLOT = 2;
@@ -79,8 +77,10 @@ const CASES: readonly CoverageCase[] = [
 
 const roomOf = (overrides: Record<string, OptionValue>, foreignEvery: number | undefined) => {
   const snapshot = buildOptionsSnapshot(overrides);
-  const placement = generateFromSnapshot('ap-report-coverage', snapshot, probeDeliverableNpcLocations(),
-    probeDeliverablePondLocations(), probeDeliverableWorldLocations());
+  const placement = generateFromSnapshot({
+    seed: 'ap-report-coverage', snapshot,
+    deliverable: { npc: probeDeliverableNpcLocations(), capacity: probeDeliverablePondLocations(), world: probeDeliverableWorldLocations() },
+  });
   const scouts = (Object.entries(placement.locations) as [LocationKey, ItemKey][])
     .filter(([where, item]) => AP_LOCATION_IDS[where] !== undefined && AP_ITEM_IDS[item] !== undefined)
     .map(([where, item], index) => ({

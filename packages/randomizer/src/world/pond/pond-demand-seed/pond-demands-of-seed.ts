@@ -17,9 +17,9 @@ const pondDemandsOfSeed = (input: PondDemandInput): PondDemandView => {
   const rng = createRng(pondDemandStreamOf(seed));
   const demands: Record<string, ShopPrice> = {};
   for (const { pond, setting } of asking) {
-    Object.assign(demands, rollPondDemands(
-      pondPlanOf(setting, pond), askOfSetting(setting), setting.shape, rng, capacity, pool,
-    ));
+    Object.assign(demands, rollPondDemands({
+      plan: pondPlanOf(setting, pond), ask: askOfSetting(setting), shape: setting.shape, rng, capacity, itemPool: pool,
+    }));
   }
   return demands;
 };

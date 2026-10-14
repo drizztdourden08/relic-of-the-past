@@ -52,8 +52,8 @@
 }
 
 .randomizer-log {
-  --log-gutter-w: 8ch;
-  --log-tag-w: 8ch;
+  --log-gutter-w: var(--randomizer-log-col-w);
+  --log-tag-w: var(--randomizer-log-col-w);
 }
 
 .randomizer-log .log-panel__msg--session { font-weight: var(--weight-semi); }
@@ -67,7 +67,7 @@
 }
 
 .spoiler-tracker .checks-tracker__list {
-  border: 1px solid var(--c-hairline);
+  border: var(--border-width-thin) solid var(--c-hairline);
   border-radius: var(--radius-md);
   background: var(--c-sunken);
 }

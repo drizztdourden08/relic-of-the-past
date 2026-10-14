@@ -2,11 +2,11 @@
 
 # Code notes: app views A
 
-Facts about the Data Manager and the HUD layout editor views that the code cannot say by itself. Each heading names a file or folder under `apps/desktop/src/views/`.
+Facts about the Data Manager and the HUD layout editor views that the code cannot say by itself. Each heading names a file or folder under `apps/desktop/src/views/`, or gives a full path from the repository root when the code moved out of it.
 
 ## DataManager
 
-### DataManager/DataManager.css
+### DataManager
 
 `.data-manager` sets `user-select: text` to opt out of the app wide `user-select: none` in the design system reset. A selection can only be cleared by starting another one, so with every surface at `none` a stray selection here could never be dismissed.
 
@@ -116,7 +116,7 @@ The world tab closes on the dark room section, and its light tiles read through 
 
 ### DataManager/sub-components/profile-manager/randomizer-options/ponds-with-edit.ts
 
-While the share switch is on, every pond reads the rows of the capacity pond (`pond-share.ts`). An edit from whichever tab therefore writes to the capacity pond, and the other two keep the rows they hold, which is what gives them back when the switch goes off again.
+While the share switch is on, every pond reads the rows of the capacity pond (`packages/randomizer/src/world/pond/pond-share`). An edit from whichever tab therefore writes to the capacity pond, and the other two keep the rows they hold, which is what gives them back when the switch goes off again.
 
 ### DataManager/sub-components/profile-manager/randomizer-options/CapacityTabBody.tsx
 
@@ -170,29 +170,29 @@ A supplement only reaches the game through a rebuild of the base blob that carri
 
 ## DataManager MSU studio
 
-### msu-studio/behavior/effect-query.ts
+### apps/desktop/src/msu-studio/behavior/effect-query.ts
 
 The effects search is split into which port and what to look for. A port tag such as `sfx2` must mean the port: as plain text it matches nothing and would empty the list. The tag can sit anywhere in the query. `channel` is null when the query names no port and both ports are in play; `text` is what is left to match ids, names and triggers against. A second port named after a first is a contradiction, not a widening, so the later one wins.
 
-### msu-studio/behavior/layer-target/
+### apps/desktop/src/msu-studio/behavior/layer-target/
 
 Where a layer list lives inside a manifest. A music slot and a claimed sound hold the same layer shape in two places, so the editor gets a pair of accessors (`read`, `write`) instead of a slot number: the Strategy pattern. `previewKey` identifies the target in the live report, so a layer card's readout knows it is the one playing. `oneShot` is true on the effect channels, where a looping layer has nothing to end it and would follow the player around.
 
-### msu-studio/behavior/pack-manifest/
+### apps/desktop/src/msu-studio/behavior/pack-manifest/
 
 The studio works against an effective manifest: the pack's own when it has one, otherwise a synthesized single layer view of its numbered files (`effectiveManifest`). Only an explicit save writes one out.
 
 `singleTrackManifest` is what the preview engine is handed: the one track asked for and nothing else to decode. `withTrackLayers` inserts the track when it is new. `bodyLayer` is the default layer for a slot: `single` with one file (it repeats at the file's loop point), `sequential` with several. `withTrackFiles` replaces the files of a track's first layer, which is the assign this file to this slot edit. `withTrackFilesAdded` adds uploaded files to that first layer and keeps what is already there.
 
-### msu-studio/behavior/park-file.ts
+### apps/desktop/src/msu-studio/behavior/park-file.ts
 
 Clearing a slot moves its file out of the numbered range (a `-unused` name) instead of deleting it, so clearing destroys nothing.
 
-### msu-studio/behavior/preview-key/
+### apps/desktop/src/msu-studio/behavior/preview-key/
 
 Keys for the live report. Slot 5 and sound 5 are different auditions, so a bare number will not do.
 
-### msu-studio/behavior/preview-report-store.ts
+### apps/desktop/src/msu-studio/behavior/preview-report-store.ts
 
 A frame rate feed of the preview's live state, kept outside React: pushing it through state would render the whole slot list sixty times a second. Readouts read it through `useSyncExternalStore`. A report's `key` says which audition it is, so a readout can tell nothing from something else; `detail` is a short live note beside the clock, such as how many effects overlap.
 
@@ -200,27 +200,27 @@ A frame that would draw the same as the last is not published. The signature rou
 
 `getSnapshot` returns the same object until the next publish, so a selector reading one layer out of it stays referentially cacheable.
 
-### msu-studio/behavior/save-bytes.ts
+### apps/desktop/src/msu-studio/behavior/save-bytes.ts
 
 A blob download is the one save path both hosts share; there is no save file IPC channel. The desktop shell has no `will-download` handler, so Chromium shows a real save dialog. The object URL is revoked after `REVOKE_AFTER_MS`, because revoking it straight away can race the download starting.
 
-### msu-studio/behavior/sound-channel-kind/
+### apps/desktop/src/msu-studio/behavior/sound-channel-kind/
 
 The channel index and additivity come from the engine (`SOUND_CHANNELS`), so the previewer cannot number a channel differently. `channelIndexOf` is the index `onGameSound` takes: 0 ambient, 1 sfx1, 2 sfx2. The effect channels are additive: each trigger layers over whatever is still sounding.
 
-### msu-studio/behavior/sound-manifest/
+### apps/desktop/src/msu-studio/behavior/sound-manifest/
 
 A manifest is written whole, so every function here touches one channel and copies the rest forward. An empty channel is removed and an empty `sounds` key dropped (set to `undefined`, which serializes away), so claim then unclaim leaves the file as it was found. `withSoundLayers` carries the rest of a sound definition instead of rebuilding it. Only a claimed sound can carry a continuity group (`withSoundGroup`). `withoutSound` unclaims a sound so the sound chip plays it again. `singleSoundManifest` is what the preview engine is handed: the one sound asked for and no music, so only that decodes.
 
-### msu-studio/behavior/sound-subtitle.ts
+### apps/desktop/src/msu-studio/behavior/sound-subtitle.ts
 
 The sentence under a sound channel's title. Effects channels say how much of the range the game raises; the ambient channel says how much is hidden. Each effects port names itself so two lists of the same ids do not read as one. `raisedCount` counts the rows the generated catalogue has a call site for; `reachableCount` (ambient only) the rows the game can reach; `hiddenCount` the rows the reachable trim holds back.
 
-### msu-studio/behavior/track-file-name/
+### apps/desktop/src/msu-studio/behavior/track-file-name/
 
 Filename rules for numbered slots. Without a manifest the number at the end of a filename is the slot, and the prefix must match what the pack already uses: `pack-05.pcm` has prefix `pack-`, number `05` and extension `pcm` (`NUMBERED_RE`). `sanitizeFileName` makes a name the user brought in safe to join onto a pack path. `uniqueFileName` returns the name, or the first variant with a `(2)` style suffix the pack does not hold.
 
-### msu-studio/msu.type.ts
+### apps/desktop/src/msu-studio/msu.type.ts
 
 A pack carrying a `pack.json` is layered; one with only numbered audio files is classic (`PackFormat`). `MatchedTrack.layerCount` is how many layers the manifest gives the slot, 0 for a slot the manifest does not cover. `ActionResult` is the outcome of one storage action, phrased for the status line of the panel.
 
@@ -232,19 +232,19 @@ On a track row, `playingOriginal` is true while the sound chip's own version of 
 
 `SoundPanelController` is one channel's wiring, handed around whole. A list showing two channels keeps one each and picks by row, so `SoundListItemProps.sound` is the controller for that row's channel, not for the list.
 
-### msu-studio/behavior/get-track-number.ts
+### apps/desktop/src/msu-studio/behavior/get-track-number.ts
 
 Delegates to `trackNumberOf` in shared, so the studio and the pack loader can never disagree on the slot number of a file.
 
-### msu-studio/msu.constants.ts
+### apps/desktop/src/msu-studio/msu.constants.ts
 
 `AUDIO_ACCEPT` lists what a drop zone accepts. Nothing is transcoded on the way in; the engine decodes each of these itself. `AMBIENT_ROLE_HINTS` explain each ambient role in the row tooltip, because the labels alone are too terse. `SOUND_FILTER_HINT` and `SOUND_FILTER_PLACEHOLDER` are one spelling of the sound search, so the single channel tab and the merged one read alike.
 
-### msu-studio/sound-labels/
+### apps/desktop/src/msu-studio/sound-labels/
 
 `SOUND_CHANNEL_TAGS` are the row tags for a list holding more than one channel; they must stay legible at the width of the id column. The two effect channels share a tab but are separate id spaces, so every row there is tagged. `STUDIO_TABS` put Music first, since that is what most packs only have, and Files last, since the file pool is not something the game asks for. `listSummary` shows the first `NAMES_SHOWN` names then a count; the full list stays in the row tooltip.
 
-### msu-studio/useMsuManager.ts
+### apps/desktop/src/msu-studio/useMsuManager.ts
 
 Composes the hooks in `behavior/` into one flat surface. Every action's outcome lands in one status line.
 
@@ -254,7 +254,7 @@ A dropped `.msul` carries its own manifest, so it becomes a layered pack, not a 
 
 `loadingFiles` is true only while the first read of a pack is in flight. A reload keeps the studio mounted with its current rows, so an edit never blanks the pane and throws the scroll position away.
 
-### msu-studio/behavior/useAudibleIds.ts
+### apps/desktop/src/msu-studio/behavior/useAudibleIds.ts
 
 Which ids on a channel the sound chip makes a sound for. The list shows every id, since the catalogue cannot see ids picked from a table at runtime, so each is rendered once to tell the dead tail apart. The scan is deferred a tick past mount so the tab paints first; it also warms the core load.
 
@@ -262,7 +262,7 @@ Which ids on a channel the sound chip makes a sound for. The list shows every id
 
 `span` keys the effect on the ends of the id range. The array is rebuilt every render, but its contents are a fixed range per channel, so depending on it directly would rescan continuously.
 
-### msu-studio/behavior/useFileAudition.ts
+### apps/desktop/src/msu-studio/behavior/useFileAudition.ts
 
 Holds only the name of the file playing; one at a time is enforced by the engine underneath. The playhead is not held here, because it would render the list every frame; the player reads it off the handle. Repeat points are learned by playing (`loopOf`: seconds the file repeats from, null when it declares none, undefined until it has played), since reading one costs the whole file.
 
@@ -270,7 +270,7 @@ Only the newest press (`latest`) may publish what is playing; the engine already
 
 A new `files` identity means the disk moved on. Only what is gone is forgotten: renaming one file while listening to another must not cut the listening short or drop other repeat points. Another pack is another pool entirely, even where two share a filename.
 
-### msu-studio/behavior/useFilePanel.ts
+### apps/desktop/src/msu-studio/behavior/useFilePanel.ts
 
 The files tab, wired. Metadata comes from `packFileMetadata`, which opens no file. A repeat point is not read here: it needs the bytes of the file, and a whole list would pull gigabytes through memory. `useFileAudition` learns it on play.
 
@@ -278,91 +278,91 @@ The files tab, wired. Metadata comes from `packFileMetadata`, which opens no fil
 
 `ready` stays false until the metadata has settled for the current pack, so the panel shows nothing instead of a false empty state. The previous metadata stays up during a reread. `formats` counts the files of each format, the biggest group first. `report` lets an action owned by the panel above, such as a bulk removal, land in the same status line.
 
-### msu-studio/behavior/useFileUsage.ts
+### apps/desktop/src/msu-studio/behavior/useFileUsage.ts
 
 Maps a filename to the slots and sounds that name it, in the wording the studio uses elsewhere. It is built once per manifest so rows do not each scan it.
 
-### msu-studio/behavior/useOptimize.ts
+### apps/desktop/src/msu-studio/behavior/useOptimize.ts
 
 Get the tool, measure, show the numbers, convert. Measuring runs on its own once the tool is available, and nothing is written until the numbers are accepted. The `tool` step covers both offering the download and watching it arrive. `open` false tears the flow down, so reopening starts from the tool check again.
 
 The pack is reread the moment a run settles (`onRunSettled`), success or failure, not when the dialog closes: the run rewrites the manifest as it goes, and an edit saved from the stale copy would write the old references back. A failed run may still have converted part of the pack, so the reread is unconditional. Only the candidates a run would touch count (`convertibleNames`); an unreadable file is not one of them. Measuring moves the step on, so the effect that starts it cannot trigger itself again.
 
-### msu-studio/behavior/useOriginalPreview.ts
+### apps/desktop/src/msu-studio/behavior/useOriginalPreview.ts
 
 Auditions the sound chip's own version of a sound or track. It is separate from `useSoundPreview`, which builds a whole pack session; an original is one buffer. The button is never disabled on an availability check: whether the core can render changes when the game boots, with no render here to notice, so pressing always tries and says why if it cannot.
 
 `playing` is the id whose original is sounding, so a row can light its own button. A second press on the one sounding is a stop, the way the pack preview behaves. The button lights straight away, because the first press may wait on a core load and a control that does nothing for a second reads as broken. A failed start clears only the row that call was for, since another press may have superseded it. Switching channel or leaving the view silences it.
 
-### msu-studio/behavior/usePackContents.ts
+### apps/desktop/src/msu-studio/behavior/usePackContents.ts
 
 The files, slots and manifest of the selected pack; `reload` rereads after every edit. Only a pack switch starts from nothing; a reload keeps the contents up, so `loaded` survives it.
 
-### msu-studio/behavior/usePackExport.ts
+### apps/desktop/src/msu-studio/behavior/usePackExport.ts
 
 Exports as `.msul` (whole) or MSU-1 (flattened, playable elsewhere). MSU-1 decodes through an `OfflineAudioContext`, because an ordinary context would hold the sound card open for the whole export. The `.msul` entries are read at export time, not from the studio's copy, so the archive is the folder as it is now.
 
-### msu-studio/behavior/usePackImport.ts
+### apps/desktop/src/msu-studio/behavior/usePackImport.ts
 
 Reads a dropped `.msul` into a pack. The install itself lives in `packages/msu/src/msul/install-msul-pack`, shared with the file association path and the store. A pack that lists more than it holds is named at once, while the archive is to hand.
 
-### msu-studio/behavior/usePackList.ts
+### apps/desktop/src/msu-studio/behavior/usePackList.ts
 
 The pack list, selection and whole pack operations. Manifests are read here so rows need not ask storage. `listMsuPacks` counts only the two MSU extensions, so a layered pack full of wav or flac would report nothing; the audio listing is the one that sees every playable file.
 
-### msu-studio/behavior/usePreviewReport.ts
+### apps/desktop/src/msu-studio/behavior/usePreviewReport.ts
 
 Subscribes one component to the live report, so only it redraws per frame. It checks the key because auditioning one thing while another is expanded is normal.
 
-### msu-studio/behavior/usePreviewSession.ts
+### apps/desktop/src/msu-studio/behavior/usePreviewSession.ts
 
 One AudioContext, one engine, one polling loop. The preview owns its own context, because the editor works with no game running and a shared context could outlive the panel. A second audition or leaving the panel tears the pair down. The engine is polled once per animation frame into the preview report store, and the loop ends itself when there is nothing to poll. The caller supplies the manifest (only what this audition needs, so nothing else in the pack is decoded), the start call and the reader, so slots and sounds share this. One store lives for the whole life of the hook, so a subscriber never has to resubscribe.
 
 The engine plays the literal slot (`isDeluxe: false`), never the extended remap: the row the user clicked is the row to hear. A suspended context would decode and schedule silently, so `start` waits for it to resume, and gives up if it was stopped or superseded meanwhile. `start` resolves true once the audio has started, false when there was nothing to play. `retrigger` fires again into the running session, since additive channels add a sound per press; it returns false with no live session.
 
-### msu-studio/behavior/useSoundPanel.ts
+### apps/desktop/src/msu-studio/behavior/useSoundPanel.ts
 
 One sound channel's tab, wired. The filter and the unreachable toggle are owned by the list, so two channels shown as one list search as one. Replace only opens the editor: an empty claim would silence the chip's version, so the editor's save writes the claim. Unclaiming is a real write. `manifest` is what the rows and the editor show; `saveBase` is what a write goes into, the pack's own manifest when it has one.
 
 One thing sounds at a time, so each start silences the other. `closeLayers` exists for a list drawing on more than one channel: opening a row there has to shut the row open on the other, or two editors sit open at once over one shared save.
 
-### msu-studio/behavior/useSoundPreview.ts
+### apps/desktop/src/msu-studio/behavior/useSoundPreview.ts
 
 Auditions one claimed sound through `onGameSound`, as the game raises it. On an effects channel a repeat press fires into the running session, because rebuilding would turn overlap into a stutter. The ambient channel is stateful, so there a repeat press replaces the bed, as in the game. `playing` is the preview key of the sound the session belongs to, which a row compares against. The overlap count shows only while more than one set is sounding. Leaving the tab or switching packs silences whatever is playing.
 
-### msu-studio/behavior/useSoundRows.ts
+### apps/desktop/src/msu-studio/behavior/useSoundRows.ts
 
 One channel's catalogue crossed with what the pack authors. Replaced rows are lifted to the top with a stable sort, so the catalogue's busiest first order survives inside each group.
 
-Effects channels list every id, not only the named ones: the catalogue reads the game's source and cannot see an id picked from a table at runtime, such as the sword beam by sword level. Such ids are still named (`soundName`), because a documented name is the only description there is. Id 0 means nothing to play, so the range starts at `FIRST_PLAYABLE_ID`. Only the ambient channel has a reachable set (`ambient-reach.ts`); it defaults to the ids the game can reach, the rest stay a toggle away, and a claimed row is always listed, because hiding someone's existing work would leave them no way back to it.
+Effects channels list every id, not only the named ones: the catalogue reads the game's source and cannot see an id picked from a table at runtime, such as the sword beam by sword level. Such ids are still named (`soundName`), because a documented name is the only description there is. Id 0 means nothing to play, so the range starts at `FIRST_PLAYABLE_ID`. Only the ambient channel has a reachable set (`packages/game-data/src/data/ambient-reach`); it defaults to the ids the game can reach, the rest stay a toggle away, and a claimed row is always listed, because hiding someone's existing work would leave them no way back to it.
 
 `raisedCount` is said once at the top instead of on fifty rows. `unreachableCount` counts over the whole range, so the number the toggle offers does not change once it is on.
 
-### msu-studio/behavior/useSoundUpload.ts
+### apps/desktop/src/msu-studio/behavior/useSoundUpload.ts
 
 Drops audio into the pack without claiming a slot: only a safe unused name is needed. It is not the track upload with a flag, because that hook's weight is the slot naming (prefix, number, extension).
 
-### msu-studio/behavior/useSupersededFiles.ts
+### apps/desktop/src/msu-studio/behavior/useSupersededFiles.ts
 
 Originals a converted file has taken over from: the same stem in the target format. There is no record of a past run, and none is needed. Removing them re-points the manifest first, so a reference the conversion did not move cannot leave its slot silent. `saveBase` is null for a classic pack, whose filenames are its wiring. Files are deleted one at a time: a hundred concurrent deletes buy nothing over a directory being rewritten anyway.
 
-### msu-studio/behavior/useTrackAssign.ts
+### apps/desktop/src/msu-studio/behavior/useTrackAssign.ts
 
 Assign this file to slot N, as a change on disk. Classic packs have no manifest, so the filename is the assignment and the file is renamed; in a layered pack the manifest is, so files stay. Occupancy is a question about the number, not the name: `pack-5.pcm` and `pack-5.wav` would both claim slot 5, so an exact name check would leave the pack ambiguous. When both files must move it is a true swap, so neither is lost: the displaced audio takes the name the newly assigned file gave up, which keeps it visible in the pack.
 
-### msu-studio/behavior/useTrackPreview.ts
+### apps/desktop/src/msu-studio/behavior/useTrackPreview.ts
 
 Auditions one music slot as the game would hear it. The session underneath owns the context, the engine and the polling. A failed start clears only the row that call was for. Leaving the panel or switching packs silences it.
 
-### msu-studio/behavior/useTrackRows.ts
+### apps/desktop/src/msu-studio/behavior/useTrackRows.ts
 
 Every vanilla slot is listed, filled or not; extended slots join only for an extended pack. A number the game never asks for is not a slot, so such files show only in the file list as unused. The vanilla range is a property of the format (`VANILLA_TRACK_COUNT`), not of the name dataset, which would otherwise turn a slot with no name into a slot that is not there. Extended slots come from the tables, so an extended pack shows every slot it could fill.
 
-### msu-studio/behavior/useTrackUpload.ts
+### apps/desktop/src/msu-studio/behavior/useTrackUpload.ts
 
 Drops audio straight into a slot. Nothing is transcoded, so the only decisions are the file's name and what to do with the slot's occupant. Progress goes through the shared import bus. In a classic pack the first file has to land on the slot's own name; extra files, and every file of a layered pack, keep their own names and are wired up by the manifest. Any file already numbered for the slot moves aside, whatever its extension.
 
-### msu-studio/FileRow.tsx
+### apps/desktop/src/msu-studio/FileRow.tsx
 
 One file in the pack: what it is, what plays it, and its name. The name is editable here because in a pack without a manifest the name is the wiring, and everywhere else it is the only handle the layer editor offers for picking a file. A rename commits when the field is left, never per keystroke: every commit copies the bytes to the new name and re-points the manifest, which is not something to do once per letter.
 
@@ -372,13 +372,13 @@ Length, rate and channels are known for MSU-1 pcm alone. That format fixes the r
 
 Escape has to be known to the blur that follows it in the same tick, so `cancelled` is a ref, not state. Escape is consumed (`preventDefault`), so abandoning a rename does not also close the page.
 
-### msu-studio/MsuEffectsPanel.tsx
+### apps/desktop/src/msu-studio/MsuEffectsPanel.tsx
 
 Both effect channels as one list with one search box: guessing which of two lists held a sound was the problem. The channels stay separate id spaces (0x12 differs per port), carried by each row leading with its port. Each channel keeps its own controller; this panel hands them one query, picks the right one per row, and keeps them from sounding at once. A port tag in the search box means the port, not text to find, so it narrows the merged list.
 
 The ids interleave in one list: 0x01 on both ports, then 0x02 on both. Grouping by port would put the two lists back, only without the headings that made them navigable. Each channel silences only its own audition, so the list stops the other one itself, and only one row editor is open across the whole list, or two editors would sit open over one shared save. Rows are keyed by channel and id, because the ports share id numbers.
 
-### msu-studio/MsuFilePanel.tsx
+### apps/desktop/src/msu-studio/MsuFilePanel.tsx
 
 The pack as files, not slots. The drop zone and the format conversion live here because the files are one shared pool that every slot and sound draws from. `manifest` is what the rows credit a file to: the pack's own manifest, or the classic view of its files. `saveBase` is null for a classic pack, which stays classic.
 
@@ -386,63 +386,63 @@ The pack as files, not slots. The drop zone and the format conversion live here 
 
 Deleting a file a slot still names leaves that slot silent, so the confirmation names the slots. Superseded originals are normally orphans; one still named by a slot is re-pointed to its converted file first. Nothing renders until the first metadata read settles, because an empty state would claim the pack has no files.
 
-### msu-studio/MsuPackHeader.tsx
+### apps/desktop/src/msu-studio/MsuPackHeader.tsx
 
 Standard or Extended matches the wording of the audio settings; Layered or Classic is whether a manifest exists. An installed pack keeps its name, and it still exports.
 
-### msu-studio/MsuPackToolbar.tsx
+### apps/desktop/src/msu-studio/MsuPackToolbar.tsx
 
 One name field serves both a new empty pack and an import, because two fields invite filling in the wrong one. `nameInstalled` is true when the name is a pack installed from the Hookshop, which nothing may write into.
 
-### msu-studio/MsuSoundPanel.tsx
+### apps/desktop/src/msu-studio/MsuSoundPanel.tsx
 
 One sound channel on its own tab. The filter is owned here, not in the hook, because a list built from more than one channel has to put one query across all of them. `showUnreachable` is off by default: the ids it reveals are ones nothing in the game can raise. `hasHidden` is only true where a reachable set exists to hide anything, which is the ambient channel.
 
-### msu-studio/MsuStudio.tsx
+### apps/desktop/src/msu-studio/MsuStudio.tsx
 
 The selected pack's studio: its origin bar when it came from the Hookshop, then the music, ambient, effects and files tabs. An installed pack is read only in every tab: it plays and exports, and nothing that writes into it is on. `origin` is null for the player's own pack. The tab is owned by the manager, so it holds while another pack loads.
 
 A music audition is owned above the tabs, so leaving the music tab silences it; the sound tabs stop themselves by unmounting. The files tab gets the pack's own manifest as `saveBase` (null for a classic pack), because a rename must not hand a classic pack a manifest.
 
-### msu-studio/MsuTrackPanel.tsx
+### apps/desktop/src/msu-studio/MsuTrackPanel.tsx
 
 The original music of the sound chip is previewed here (`useOriginalPreview('music')`), not passed in, because it needs only the slot number. One thing sounds at a time, so each start silences the other. `reportStore` is the live per layer feed of the preview, read only by the readouts that draw it. `onConfirm` is the app's confirm dialog, for a layer edit that discards files.
 
-### msu-studio/PackSummary.tsx
+### apps/desktop/src/msu-studio/PackSummary.tsx
 
 The format breakdown lives here because it decides whether a pack plays everywhere: only MSU-1 pcm is native to every build. `formats` has one entry per format present, the biggest group first. `unusedCount` counts the files no slot and no sound names. `supersededCount` counts originals a same stem converted file has already taken over from; the remove button appears only once there is something to remove. `optimizeBlockedBecause` says why the conversion is not on offer, null when it is.
 
-### msu-studio/SoundDetail.tsx
+### apps/desktop/src/msu-studio/SoundDetail.tsx
 
 The drop zone adds to the pack's pool, not to this sound; the layer editor below is where a file gets used. The continuity group field is sound level, so it sits beside the editor, and it only shows once the sound is claimed. `unclaimed` is true while nothing claims the sound yet, so the first save is what claims it.
 
-### msu-studio/SoundGroupField.tsx
+### apps/desktop/src/msu-studio/SoundGroupField.tsx
 
 The continuity group is a free text name, not a toggle, because the relation is between sounds. It saves on blur straight into the manifest; it is sound level, so it cannot ride the layer editor's save. The field resyncs when the saved group changes underneath.
 
-### msu-studio/SoundListItem.tsx
+### apps/desktop/src/msu-studio/SoundListItem.tsx
 
 Shared by the ambient list and the merged effects list so the row, readout and editor stay together. The channel's controller arrives whole; a merged list picks one per row.
 
-### msu-studio/SoundRow.tsx
+### apps/desktop/src/msu-studio/SoundRow.tsx
 
 Identity reads name then evidence: the catalogue name on top (a best guess) and the game's own function names beneath (not a guess). An id with no name is named by its functions; the full trigger list stays in the tooltip. Play never becomes stop on an effects channel, because pressing it again is meant to add a sound. With nothing replacing it, play means the chip's own version, which is the sound there.
 
 The role badge says what the id does on its channel, which decides whether a replacement can work. The Never raised badge shows only because the unreachable ids were asked for, so it says why the id was hidden. The Silent badge is only worth showing on an id with nothing on it, since the pack could still put a sound there.
 
-### msu-studio/TrackDetail.tsx
+### apps/desktop/src/msu-studio/TrackDetail.tsx
 
 There is deliberately no drop zone here: files are a pack level pool, and a per slot target implied ownership.
 
-### msu-studio/TrackSection.tsx
+### apps/desktop/src/msu-studio/TrackSection.tsx
 
 One titled band of slots, with the expanded slot's editor spliced in directly beneath its row, and the live readout opening under whichever row is playing.
 
-### msu-studio/LayerEditor/LayerEditor.tsx
+### apps/desktop/src/msu-studio/LayerEditor/LayerEditor.tsx
 
 Edits one slot's layers and writes them to the pack's manifest. Saving a pack that has no manifest yet writes one for the whole pack, not just this slot: the draft is seeded from the synthesized single layer view, so the other slots are kept exactly as they played before. That is the moment a classic pack becomes a layered one, and the subtitle says so before the user commits to it. A loop point applies to a single file layer, so only each layer's first file is consulted for its loop sample.
 
-### msu-studio/LayerEditor/LayerEditor.type.ts
+### apps/desktop/src/msu-studio/LayerEditor/LayerEditor.type.ts
 
 `ConfirmRequest` asks the app's own confirm dialog a yes or no question and runs the callback on a yes. It is the signature the rest of the manager already takes, so an editor nested in it hands the request up instead of standing up a dialog of its own. `onConfirm` is used for the one edit that costs the layer something (see `useModeChange`).
 
@@ -452,7 +452,7 @@ Edits one slot's layers and writes them to the pack's manifest. Saving a pack th
 
 `isLayered` is false while the pack has no `pack.json`; the first save creates one. `reportStore` is the live feed of the preview: each card gets its own readout element, so a saved layer shows what it is doing while it is edited. `readOnly` marks an installed pack: the layers show as they are and every control that changes them is off.
 
-### msu-studio/LayerEditor/behavior/layer-ops.constants.ts and the layer operations
+### apps/desktop/src/msu-studio/LayerEditor/behavior/layer-ops.constants.ts and the layer operations
 
 The pure edits behind the layer editor, kept out of the hook so each can be read on its own.
 
@@ -462,115 +462,115 @@ The optional scheduling fields are held explicitly while editing, since a contro
 
 An absent crossfade is legal and means off; a present one has to be a real duration between 0 and `MAX_CROSSFADE_SECONDS`. `normalizeLayers` also clamps a crossfade a hand edit put out of range. `validateLayers` returns the first reason the layers could not play, phrased for the error line of the editor.
 
-### msu-studio/LayerEditor/behavior/useLayerEditor.ts
+### apps/desktop/src/msu-studio/LayerEditor/behavior/useLayerEditor.ts
 
 Holds the layer list being edited and writes it back to `pack.json`. The draft is seeded once, on mount. The editor is mounted with a key of pack and target, so switching slots or sounds gives a fresh draft and an edit in progress is never overwritten by a background reload of the pack. Reading and writing go through the target, so this hook is the same for a music slot and a claimed sound. `manifest` seeds the draft with the merged view, so a classic slot shows the layer it plays today; `saveBase` is what goes to disk. The layers are normalized on the way out only: the draft keeps the optional fields so the controls have a value to render, while the file gets none it does not need.
 
-### msu-studio/LayerEditor/behavior/useFileLoopSamples.ts
+### apps/desktop/src/msu-studio/LayerEditor/behavior/useFileLoopSamples.ts
 
 The loop point each of these files declares, to show what a slot already does before anyone sets anything. Without it, the Repeat from field opened at 0 on a track that plainly repeats from 13 seconds: the manifest had no loop point, so the field showed the manifest, while the value in force was the one inside the `.pcm` header. Reading it here means the control opens on the effective value, and an author starts from what they can hear. It takes the whole set of names so the editor resolves every layer in one hook, since a component cannot call one hook per layer in a loop. Only `.pcm` costs a read; every other format answers null without being opened. The names arrive as a fresh array each render, so the effect keys on the joined names.
 
-### msu-studio/LayerEditor/LayerEditor.css
+### apps/desktop/src/msu-studio/LayerEditor/LayerEditor.css
 
 The crossfade and wait switch blocks are framed and inset from the controls above them, so neither is mistaken for another volume style slider or for body copy; both were. The number box and the state chip sit beside the crossfade slider, so the slider gets a floor wide enough to stay draggable and a ceiling that leaves room for them. The effect chain uses the same framed inset block for the same reason; each effect is one line with its place in the chain leading, so the order reads top to bottom.
 
-### msu-studio/LayerEditor/sub-components/CrossfadeField/CrossfadeField.tsx
+### apps/desktop/src/msu-studio/LayerEditor/sub-components/CrossfadeField/CrossfadeField.tsx
 
 The crossfade window of a looping layer: a framed block with a number box and a state label, not a bare slider, because a slider at zero draws no fill and was invisible under the Volume slider. Zero means no overlap, a distinct behaviour, so it is named instead of reading as unset. The value is rounded to hundredths: the arrows step by 0.25, and rounding 0.25 or 0.75 to a tenth moved the value just set. `layerId` keeps this control apart from any other on screen.
 
-### msu-studio/LayerEditor/sub-components/IntervalTimes/IntervalTimes.tsx
+### apps/desktop/src/msu-studio/LayerEditor/sub-components/IntervalTimes/IntervalTimes.tsx
 
 The offsets are seconds from the moment the slot started. They are kept sorted and free of duplicates, because two identical offsets would schedule the same sound twice.
 
-### msu-studio/LayerEditor/sub-components/LayerCard/LayerCard.tsx
+### apps/desktop/src/msu-studio/LayerEditor/sub-components/LayerCard/LayerCard.tsx
 
 Presentational: every edit leaves as a patch, so the card never knows whether it is savable. `NO_EFFECTS` is one stable empty chain, so a layer without effects is not handed a fresh array on every render. `single` is the order where one track repeats on itself: the layer holds exactly that file, and only that order ever reaches a file's own end, so the loop point field shows only then. `live` is the readout, supplied ready made so the card stays presentational while it redraws. `fileLoopSample` is the loop point the layer's own file declares, used when the manifest sets none.
 
 The Chance slider is rolled each time the layer starts. Some effects fire on a fixed cycle, which a real recording turns into a metronome; thinning them breaks that up.
 
-### msu-studio/LayerEditor/sub-components/LayerCard/behavior/useModeChange.ts
+### apps/desktop/src/msu-studio/LayerEditor/sub-components/LayerCard/behavior/useModeChange.ts
 
 `single` holds one file, so switching into it drops the rest. The question is asked before the order changes, so a refusal leaves everything as it was, and files and mode go out as one patch, so a save or revert cannot catch the layer half changed. Only the crossing into `single` costs files; being there already, or leaving it, costs none. The confirmation names the surviving file and counts the dropped ones (`singleDiscardMessage`), because the rest are removed needs a number.
 
-### msu-studio/LayerEditor/sub-components/LayerEffectsField/LayerEffectsField.tsx
+### apps/desktop/src/msu-studio/LayerEditor/sub-components/LayerEffectsField/LayerEffectsField.tsx
 
 A preset is a starting point, not a mode: choosing one writes its effects onto the layer. There is no custom entry; the picker derives its value by comparing the chain to each preset (`presetOf`, empty when it matches none, including an empty chain) instead of remembering the choice, so it never claims a state the numbers do not bear out. Effect rows are keyed by index on purpose: an effect has no identity beyond its place in the chain.
 
 `DEFAULT_EFFECT` is where a newly added effect of each kind starts, audible but not drastic. `MIN_HZ` and `MAX_HZ` are the range of the ear, give or take; a cutoff outside it does nothing a listener could hear. `MAX_DB` of 12 covers every tasteful move and most of the others.
 
-### msu-studio/LayerEditor/sub-components/LayerEffectsField/sub-components/EffectRow.tsx
+### apps/desktop/src/msu-studio/LayerEditor/sub-components/LayerEffectsField/sub-components/EffectRow.tsx
 
 Changing the kind resets the effect to that kind's default, because a cutoff in Hz has no meaning as a band gain in dB.
 
-### msu-studio/LayerEditor/sub-components/LayerFileList/LayerFileList.tsx
+### apps/desktop/src/msu-studio/LayerEditor/sub-components/LayerFileList/LayerFileList.tsx
 
 Order matters: sequential loops play top to bottom and the resume snapshot stores an index, so reordering is an explicit move. A pool capped at one file says so in words instead of showing a greyed out picker, since the reason lives two controls further up the card. An empty single file layer still needs its one file, so the cap only closes once the layer is full.
 
-### msu-studio/LayerEditor/sub-components/LoopPointField/LoopPointField.tsx
+### apps/desktop/src/msu-studio/LayerEditor/sub-components/LoopPointField/LoopPointField.tsx
 
 The loop point of a looping layer. MSU-1 stores it in the `.pcm` header as a sample count; other formats have nowhere to put it, so it lives in the manifest and overrides what a `.pcm` declares. It is edited in seconds and stored in whole samples, the only resolution the format stores. The seconds are rounded to the millisecond for display only (a real track gave 13.181768707482993), because a loop a few samples off clicks. The manifest value wins; the file's own point is what the slot does until someone overrides it. `MAX_LOOP_SECONDS` is an hour: past that it is not an intro any more. `layerId` namespaces the input id, so several layer cards on screen do not share one.
 
-### msu-studio/LayerEditor/sub-components/PlayModeFields/PlayModeFields.tsx
+### apps/desktop/src/msu-studio/LayerEditor/sub-components/PlayModeFields/PlayModeFields.tsx
 
 Switching mode replaces the parameters wholesale; edits within a mode spread the current mode, so changing the order does not reset the crossfade. The crossfade and wait switch get framed blocks because both were missed among look alike controls. Repeatable controls take an id from the layer, because the switch otherwise derives its id from its label and two random layers would collide. There is nothing to cross into when one track repeats on itself, so the crossfade is not offered for the single order.
 
 The order hints are read under the control, because the order chosen changes what the layer is. The wait for completion hint is written per state, because what matters is the audible consequence now.
 
-### msu-studio/msu-studio.css and msu-files.css
+### apps/desktop/src/theme/msu-studio/msu-studio.css and msu-files.css
 
 The sound row channel tag has a fixed width so the ids beside it line up, and is monospaced so the tag reads as a port name.
 
 The files tab owns its own scrolling (`.msu-panel--files`), so its header stays put while the list moves under it. One column template (`--msu-file-cols`) serves the whole files list: the header and the cards read it, so they cannot drift apart. The header is a label strip, not a table head: no rules or frame, so what sits under it still reads as cards. Its transparent border matches the card border so the two share one column origin. The card is the entry and the player expands inside it; there is no striping, which would read as a table.
 
-### msu-studio/OptimizeDialog/OptimizeDialog.tsx
+### apps/desktop/src/msu-studio/OptimizeDialog/OptimizeDialog.tsx
 
 Converts and stops: originals stay on disk as the fallback, and removing them is a separate confirmed action. The run cannot be dismissed, because it writes the manifest as it goes. The pack is reread the moment a run settles (`onConverted`), not on the way out; see `useOptimize`. The candidate list can run to a hundred files, so it scrolls inside the dialog instead of pushing the actions off the bottom.
 
-### msu-studio/OptimizeDialog/sub-components/PreviewStep/
+### apps/desktop/src/msu-studio/OptimizeDialog/sub-components/PreviewStep/
 
 Only measured rows are summed (`previewTotals`): folding an unmeasured file in at its current size would present a guess as part of a measured total. Growth counts like saving, so a pack of mp3s shows the total getting bigger instead of a flattering net figure. `convertibleCount` is how many rows a run would convert; excluded rows are not counted. The net label reads as a minus sign for bytes saved and a plus sign when the pack grows.
 
 A file that would grow reads `+` in the danger colour and stays in the run (`CandidateRow`): one format is the point, and an already compressed file pays in bytes, not quality.
 
-### msu-studio/OptimizeDialog/sub-components/RunStep/RunStep.tsx
+### apps/desktop/src/msu-studio/OptimizeDialog/sub-components/RunStep/RunStep.tsx
 
 Repeat points are reported first: a loop position dies with the file's container, so it is written into the manifest before any format changes, and the count makes that verifiable. `progress` is null until the first file reports in; `result` is null while the run is going.
 
-### msu-studio/PreviewReadout/PreviewReadout.tsx
+### apps/desktop/src/msu-studio/PreviewReadout/PreviewReadout.tsx
 
 Subscribes to the report store itself, so a published frame redraws this block alone. It renders nothing while the preview is still decoding or another row is the one playing. The elapsed clock is what `interval` layers are scheduled against; it is labelled because unlabelled seconds next to a position such as 0:15 / 0:50 read as the track's own time. `previewKey` is what the readout belongs to; `label` names it in the heading, such as slot 5 or Ambient 0x05.
 
-### msu-studio/PreviewReadout/PreviewReadout.type.ts
+### apps/desktop/src/msu-studio/PreviewReadout/PreviewReadout.type.ts
 
 A meter row is one audible sound, or the wait before the next one (`LayerMeterKind`), so overlaps are visible. Row ids number voices oldest first. `caption` is the file name shortened to fit; `title` keeps the full name for hover. `fill` is 0 to 1, or null when there is no denominator, and then the label stands alone with no bar. A `FadeMeter` fill reads 1 the instant the fade completes. `introFill` marks the intro a looping file plays once, null when the whole file repeats; it is drawn behind the fill so the loop jump reads as structure, not a glitch. A silent continuous layer still gets a voice row. `showName` is set on the readout under a slot; the one inside a layer card is already named.
 
-### msu-studio/PreviewReadout/behavior/layer-meters.ts
+### apps/desktop/src/msu-studio/PreviewReadout/behavior/layer-meters.ts
 
 One layer's live report as meter rows: one row per audible sound, oldest first, plus the wait before the next one. A sound can outlast its own gap, so folding them into one bar would hide the overlap worth watching. Rows come from the report, except that only gap modes (`GAP_MODES`: random, interval) get a next row: a loop has no next event, and a gap mode keeps its row even without a countdown, because waiting for this sound to end is a state. A countdown fills towards the next sound, with the wait it started from as denominator; a fade fills the same way; a zero length gap has no window to fill but the number still reads. With no countdown chosen yet and wait for completion on, the gap only begins once the sound ends. An MSU-1 loop point is usually not the start, so the label says where it repeats from, which keeps the position dropping back from looking broken. Gap modes carry silence in the countdown row, so only continuous modes need the silent row.
 
-### msu-studio/PreviewReadout/behavior/voice-captions.ts
+### apps/desktop/src/msu-studio/PreviewReadout/behavior/voice-captions.ts
 
 Captions rows by file name, since which file of the pool landed is the point. Names are shortened from the middle (`shortName`), because the tail (variant number, extension) is what differs; the caption column is narrow on purpose (`MAX_CAPTION`). Two rows can name the same file (a loop crossfading against itself, a random pool drawing twice); those are marked by fade direction (`FADE_MARK`) when fading and by order otherwise. The full name is kept as the title whenever the caption is not the whole story.
 
-### msu-studio/PreviewReadout/sub-components/
+### apps/desktop/src/msu-studio/PreviewReadout/sub-components/
 
 `LayerLive` subscribes on its own behalf, so the layer card stays presentational and a frame redraws this line, not the card's inputs. An unsaved layer is not playing yet, which renders nothing, not an error. `LayerMeter` is presentational and has no overlapping marker; two rows are the overlap. `MeterRow` draws the bar only when the row has a denominator, because a bar at zero reads as stuck, not as no measurement; green marks something sounding, gold the thing being waited for. `FadeChip` sits beside the position reading, not in place of it, since the sound still advances while its level moves.
 
-### msu-studio/PreviewReadout/PreviewReadout.css
+### apps/desktop/src/msu-studio/PreviewReadout/PreviewReadout.css
 
 The detail note is pushed against the clock, not centred, so the head reads title, note, clock. Sounding or not is carried by the pulse dot, so the state reads without parsing text. A layer shows a row per audible sound plus its countdown, stacked under the one head line. Each row is named after the file it plays, so stacked rows are never ambiguous. The countdown caption is a word, not a file, so it is styled as a label and never reads as one of the sounds. With no bar drawn, the wording takes the space the bar would have had, so rows stay aligned. A pass fading in takes the sounding colour; one fading out keeps the gold of something waited on, so direction reads without the words. The fade bar is short on purpose: it measures the fade, not the file, and must not rival the position bar.
 
 ## DataManager Language Studio
 
-### language-editor/LanguageEditor.tsx
+### apps/desktop/src/language-editor/LanguageEditor.tsx
 
 The translation editor: one language set, edited a line at a time. The glossary and the menu name table are one Variables tab on purpose: as two lists a translator had to work out which one a piece of text lived in. `id` null renders the empty state; `readOnly` marks an installed set, which opens and previews and changes nothing; `origin` is the origin bar of an installed set, shown above its header. `LOCKED` marks the two tabs whose surfaces are built but not yet connected to the game.
 
-### language-editor/LanguageEditor.css
+### apps/desktop/src/language-editor/LanguageEditor.css
 
 The editor scrolls only on the inside; the header and tabs stay put. Selection is opted back in for the pane and every descendant. The app wide reset resolves `none` down the whole tree, and an element that cannot be selected cannot start a selection either, so a press outside the typing surface left the old highlight painted. Naming the descendants too is what makes it stick, the same fix as the log panel.
 
-### language-editor/language-editor.type.ts
+### apps/desktop/src/language-editor/language-editor.type.ts
 
 The state types of the editor's data layer: what the editor hook hands the UI (the loaded set, save and dirty flags, per entry validation) and what an edit to the name table looks like. `EntryIssueMap` is keyed by the entry's own game index. `NameEdit` is discriminated on the group so every group keeps its own key type: an item record id, a bottle slot number, one of the fixed pause menu label keys.
 
@@ -578,125 +578,125 @@ Every mutation is immutable and marks the set dirty. The structure mode is part 
 
 `dirty` means edits exist that the debounced write has not persisted. `saving` means a write is in flight, which also recompiles the asset blobs. `variables` is the set's one substitution list, projected live from the pair it is stored as, so an edit to a term or a menu name shows without a save first. `terms` is every variable that carries text of its own, in the shape the measurement and validation walks take; it is wider than `set.glossary`, because a menu name may be referenced from a line and a walk given only the glossary would fail on it.
 
-### language-editor/behavior/apply-hardcoded.ts
+### apps/desktop/src/language-editor/behavior/apply-hardcoded.ts
 
 Turns accepted hardcoded name occurrences into new token streams: each accepted run of literal text is replaced by a reference. Only exact matches are applied; a case insensitive near miss would silently recase a line. Cuts inside one token go left to right with a cursor, so an overlapping pair is dropped instead of producing a half eaten phrase. Entries the occurrences do not change are absent from the result.
 
-### language-editor/behavior/hardcoded-report/
+### apps/desktop/src/language-editor/behavior/hardcoded-report/
 
 The hardcoded name scan grouped per variable, not per occurrence: a proper noun appears dozens of times, and the decision is whether every mention becomes a reference. Near misses (case insensitive matches) are counted but never applied, since applying one would recase a deliberate line. Groups are sorted most found first, and a variable with only near misses still appears, so the reader sees why. `label` is the variable's own label or the phrase itself; `exists` is false when the catalog proposed a variable the set does not carry yet; `entryCount` counts distinct entries the exact occurrences sit in.
 
-### language-editor/behavior/language-set-edits/
+### apps/desktop/src/language-editor/behavior/language-set-edits/
 
 Pure immutable transforms on a loaded language set. Every transform shares everything it did not touch: only the edited entry gets a fresh `tokens` array, which lets the validation layer skip the others by array identity. `mapEntry` shares the array when the id matches nothing. `withManyEntryTokens` builds one new set, so the debounced write never sees a half applied snapshot. An emptied note drops back to undefined so it stays out of the written JSON. A set stores only what a translator changed, so clearing a text field drops the key (`withTextValue`); an empty string would read as a translation. `withGlossaryTerm` replaces an existing term with the same key in place.
 
-### language-editor/behavior/load-set-font.ts
+### apps/desktop/src/language-editor/behavior/load-set-font.ts
 
 A set's drawable font, read from the set's stored pair (see `setFontAssets`). It is cached at module scope by set id, holding the pending promise, so two callers in one tick share one read and a remount never reads the same font again. The font is not editable in the studio, so a cached entry cannot go stale under an edit; only a reimport would need it dropped. The base language code prefers one the caller already holds, because reading the set again would pull its whole payload for one field. The result is null when no font pair is stored or the base language is unknown, and callers then draw nothing.
 
-### language-editor/behavior/select-entries.ts
+### apps/desktop/src/language-editor/behavior/select-entries.ts
 
 Narrows the entry list to what a filter asks for, after search. Warnings collects the lines that would fail to encode, which are otherwise invisible until a save refuses them.
 
-### language-editor/behavior/useEntryDraft.ts
+### apps/desktop/src/language-editor/behavior/useEntryDraft.ts
 
 Unsaved edits, one draft per entry. Nothing reaches the stored set until commit, because every write rebakes the asset blobs. A draft stays until its entry is saved or cancelled; switching views, opening another entry or closing the card never touches it, and every view of that entry shows the draft. `open` starts a draft from the stored tokens and does nothing when one exists; `cancel` drops the draft and restores nothing, since the set was never touched.
 
-### language-editor/behavior/useEntryIssues.ts
+### apps/desktop/src/language-editor/behavior/useEntryIssues.ts
 
 Live per entry validation, incremental: edits are immutable, so a cache keyed by entry id and compared by `tokens` identity validates again only the entry that changed. The base language and the reference key set invalidate the whole cache through a cheap signature. The keys come from the whole substitution list, not the glossary alone, since menu names are referenceable. The validator's alphabet comes from the extraction language table through the base code.
 
-### language-editor/behavior/useEntryOpen.ts
+### apps/desktop/src/language-editor/behavior/useEntryOpen.ts
 
 The one place that holds both `useEntryView` (what is open) and `useEntryDraft` (what is unsaved). Entering the editor starts a draft if none exists; leaving it keeps the draft. Commit and cancel drop the entry back to reading. The handlers close over a live ref, so their identity is fixed and the list can memoize its few hundred rows.
 
-### language-editor/behavior/useLanguageEditor.ts
+### apps/desktop/src/language-editor/behavior/useLanguageEditor.ts
 
 The data layer of the translation editor: loads one set, holds it while edited, validates it live, persists on a debounce. Reads and writes go through the renderer languages store, not `window.api`, so the same call works on the desktop host and the browser host, where `window.api` is only a stub. With `readOnly` (an installed set) every edit is refused, so nothing is marked or written. `current` mirrors `set` so an edit can read the current value without depending on it. `apply` runs one immutable transform, then marks the result for a debounced write.
 
 The stored pair is folded into the one list the UI edits, the same way the write path does, so what is shown is what a save persists. The fold is keyed on the three fields, not the set, because a new variable list per keystroke would invalidate the layout cache for the whole set.
 
-### language-editor/behavior/useSetExport.ts
+### apps/desktop/src/language-editor/behavior/useSetExport.ts
 
 Exports the open set as `.rlang` through the platform's save path: a save dialog on desktop, a share sheet on mobile, a download in a browser. A pending edit is written first, so the file holds what the editor shows. A cancelled dialog is an ordinary outcome, not a failure.
 
-### language-editor/behavior/useSetFont.ts
+### apps/desktop/src/language-editor/behavior/useSetFont.ts
 
 One language set's font as React state. The read is memoised in `load-set-font`; the returned object is memoised because consumers feed `sheet` and `metrics` straight into the dependency list of a canvas redraw effect. Passing `base` (the set's base language code) when the set is already loaded saves a second read.
 
-### language-editor/behavior/useSetPersistence.ts
+### apps/desktop/src/language-editor/behavior/useSetPersistence.ts
 
 Debounced whole set persistence. A write is expensive (it recompiles every cached asset blob), so an edit only records a snapshot and the write waits for `SAVE_DEBOUNCE_MS` of quiet. `revision` counts edits and `persisted` holds the revision the last completed write carried, so an edit landing mid write is armed again instead of clobbered. `epoch` does the same for a set swap: a write whose set was swapped out meanwhile drops its result. `runRef` breaks the arm and run cycle: the timer reaches the latest `run` through it. A failed write stays dirty, and the next edit or `saveNow` arms the write again. After unmount no timer fires again, so a newer edit is persisted at once, and unmounting flushes a pending edit so it is never lost. `markEdited` records a snapshot and restarts the quiet period; `reset` takes a freshly loaded set (or none) as the new baseline, dropping pending writes; `saveNow` with a write already in flight returns at once, and that write or its next arm carries the newest snapshot.
 
-### language-editor/behavior/useTextGroups.ts
+### apps/desktop/src/language-editor/behavior/useTextGroups.ts
 
 The text groups the studio shows, and which one is open. The catalog decides which slots exist; storage only holds what a translator wrote. The record dataset is handed to the builder, not imported by it, because the builder is exported again from the language barrel the storage layer uses. The menu and credits text is read from the player's own file, only when a set is open; a set whose ROM is not stored has nothing to show for those two groups. When the stored file is another region's, the slots and sizes are right but the words are not this set's originals, and each row says so. A missing key in `values` means the slot is untranslated.
 
-### language-editor/behavior/useVariablesTab.ts
+### apps/desktop/src/language-editor/behavior/useVariablesTab.ts
 
 The state of the variables tab: filtering, usage counts and the hardcoded name scan. The scan runs only when the dialog opens, because `findHardcoded` walks every text run against every candidate phrase. Applying a report is one edit, so the debounced save sees a single new set.
 
-### language-editor/behavior/variable-edits/
+### apps/desktop/src/language-editor/behavior/variable-edits/
 
-One variable's value written back into the pair the set stores (glossary and name table). The key shapes mirror `variables/from-legacy.ts` exactly (`bottle-<content>`, `label-<section>`, anything else is an item), so a round trip is byte identical. An engine variable has no stored value and is refused (`isEditable`).
+One variable's value written back into the pair the set stores (glossary and name table). The key shapes mirror `packages/languages/src/messages/variables/legacy-from-variables.ts` exactly (`bottle-<content>`, `label-<section>`, anything else is an item), so a round trip is byte identical. An engine variable has no stored value and is refused (`isEditable`).
 
-### language-editor/editor/attrs-to-token/
+### apps/desktop/src/language-editor/editor/attrs-to-token/
 
 The return half of the atom contract: an inline node back to the token it stands for, and a paragraph's children back to one line's content. The walk is flat: text nodes accumulate into one maximal run, and atoms rebuild their original token from the attributes. A run is flushed only when it is not empty, so two adjacent atoms produce no phantom empty text token between them, which is the case a naive walker gets wrong.
 
 Values are read defensively, not trusted: a paste, an older stored document, or a node view that stringified an attribute can put a decimal string where a number belongs, and an out of range row must still resolve to something the model accepts. Rows are the three line start markers; anything else falls back to the first. Anything unrecognisable is dropped instead of becoming an invalid token. Like its counterpart this module imports no editor runtime; it reads plain ProseMirror JSON and needs no DOM.
 
-### language-editor/editor/auto-wrap/
+### apps/desktop/src/language-editor/editor/auto-wrap/
 
 Wrapping while typing: the editor's half of the author never thinking about the row. The engine never wraps: a row drawn past its 168px interior is drawn into the next row's tiles. So after every change the first line wider than the row is cut at the last word boundary that still fits (the model's own `breakLine`), the joining space is dropped the way any wrap drops it, and the remainder becomes the next line with a derived advance. The cut lands on the joining space, so everything in `head` sits before it. The pass repeats until nothing is overlong, so a long paste settles in one transaction; `MAX_CUTS_PER_PASS` is a fuse, since a pass never needs more cuts than a paste has words. Positions are taken fresh from the transaction's own document, so repeated cuts compose.
 
 A single word or variable wider than a whole row has no safe cut, since cutting it would change what it says, so it is left whole for the validator to flag. `breakLine` answering null there is also what keeps the loop finite. The wait travels with the text: wrapping a line that ended its box moves the wait onto the remainder, because the words that moved down still finish the box.
 
-### language-editor/editor/choice-lines.ts
+### apps/desktop/src/language-editor/editor/choice-lines.ts
 
 Choice options are edited where they live: inside the editor, as the lines they are. A choice prompt stores its option text as the last lines of the entry, one option per line, with the prompt code as the stream's final token; that was verified against every prompt in the vanilla corpus. So the options need no second editing surface: this plugin finds the prompt code in the document (`OPTION_COUNTS` says how many option lines each prompt reads), marks the option lines, and the stylesheet dresses them as the selectable rows the player will see. Typing in one is typing in the entry, and every editor behaviour (wrapping, measuring, undo) applies unchanged. The decoration carries the option's 1 based index, which the line gutter and the option tag both read.
 
-### language-editor/editor/delete-merged-pair/
+### apps/desktop/src/language-editor/editor/delete-merged-pair/
 
 Backspace and Delete over a merged picture character: both halves go, or neither does. The picture is one character to the author, so removing the character before the caret has to mean the whole picture. Left to the ordinary delete, one press took away half of it and left the other half standing: a picture the alphabet has an entry for, which encodes and bakes perfectly well and draws as nonsense on screen.
 
 Three ways in, one range: the caret may be after the pair (Backspace, direction -1), before it (Delete, direction 1), or the pair may be selected because a click landed on it. A click always selects one half's node, since that is the object the browser hit, and that selection is widened to the pair here, not at the click. Both commands decline when the gesture is not over a pair, so an ordinary character, an ordinary atom and a line boundary keep their own behaviour.
 
-### language-editor/editor/doc-to-lines.ts
+### apps/desktop/src/language-editor/editor/doc-to-lines.ts
 
 Editor document to lines: the return half of the bridge, and the pivot every consumer reads. There is exactly one view per paragraph, always, which keeps the gutter beside the text honest: row three of the gutter belongs to the third paragraph whatever that paragraph contains, including nothing. A bare paragraph is accepted as a one line document. The token stream falls out of these views through the model's own inverse (`joinLines`), so this file never writes a control code. An entry that was opened and not edited comes back out byte identical: its advance codes were carried through the attributes untouched, and nothing here invents or corrects one.
 
-### language-editor/editor/editor-runtime/
+### apps/desktop/src/language-editor/editor/editor-runtime/
 
 The live context the structure plugins read at dispatch time. A ProseMirror plugin is built once, when the editor is created, but the language's font arrives later and the automation mode can change while the editor is open. Threading either through the extension list would rebuild the editor, and rebuilding is exactly what loses the caret, so the plugins close over this one mutable object instead, and the component keeps it current (`updateEditorRuntime`). A singleton is safe because the editor enforces one open draft at a time: two dialogue editors never accept keystrokes at once. If that rule ever changes, this must become per editor plugin state.
 
-### language-editor/editor/gutter-refresh.ts
+### apps/desktop/src/language-editor/editor/gutter-refresh.ts
 
 Repaints every line's gutter after every transaction, straight from the editor state. The node view repaints its own gutter when its node is redrawn, yet a typed character can be adopted from the DOM without a redraw, and the pack's font can arrive after the lines were first drawn. Driving the repaint from the view's update hook closes both gaps: whatever changed and however, the gutters end the transaction correct.
 
-### language-editor/editor/line-attrs/
+### apps/desktop/src/language-editor/editor/line-attrs/
 
 The attribute contract of one line: everything a paragraph remembers that is not its text. A line's two structural facts are the code that put the pen on its row and whether a wait follows it. Neither is content: the engine only meets them at a line's edges, so carrying them as block attributes is both truer and easier to edit than burying them in the run as inline objects. The document's block type is the paragraph (`DIALOGUE_LINE_TYPE`): one paragraph is one line, and every attribute field is always present.
 
 The advance is stored as a kind plus a row, not as the model's union, because a ProseMirror attribute has to survive a trip through the DOM as a string. A null kind is a real value meaning a null advance: the line carries no code of its own, and it is written back exactly as read, which lets an untouched entry round trip. A stored row may arrive as a decimal string (a DOM attribute) or outside the three markers (a paste); it resolves to the first row, not to nothing, because the line was authored with a code and dropping it would change what the engine draws. For `endsBox`, absent, `false` and `'false'` all mean no wait. The rendered `data-*` attributes are not decoration: the stylesheet groups the lines of one box by looking for the line after a `data-ends-box` one, so the box grouping needs no second source of truth.
 
-### language-editor/editor/line-here.ts
+### apps/desktop/src/language-editor/editor/line-here.ts
 
 Where the caret is, in lines. Every line command needs the same three facts: which paragraph holds the caret, where it starts, and which line number it is. Getting any of them slightly wrong moves an edit onto the wrong row, so one locator serves all of them. `PARAGRAPH_DEPTH` is 1: the document holds only paragraphs and a paragraph only inline content, so there is nothing deeper to walk. `pos` is the position immediately before the paragraph, which is what `setNodeMarkup` takes; `index` is 0 based among the paragraphs; `offset` is the caret offset within the line's content.
 
-### language-editor/editor/line-node-view/
+### apps/desktop/src/language-editor/editor/line-node-view/
 
 How one line is drawn: its row information and its text as one element. The gutter is a child of the same paragraph that holds the text, so the two cannot be laid out apart: there is no second column to drift and nothing to align. It shows the line number, a meter of the row's 168px filled so far, the pixels left, and the character count (atoms count as one, like the caret steps). The meter reads as tight from `TIGHT_FROM` up, matching the fit chips of the list. The gutter is painted from the line's own node every time the node changes, which is every keystroke in that line and nothing else.
 
 The gutter is outside the editable content and outside the document: the caret cannot enter it, a copy cannot carry it, and a mutation inside it is never mistaken for typing (`ignoreMutation`). `paintGutter` is shared with the refresh plugin, which drives every gutter from the editor state after each transaction; the line number comes from that walk, since a node cannot know its own position, so the node view paints with it unknown and the refresh fills it in.
 
-### language-editor/editor/line-paragraph.ts
+### apps/desktop/src/language-editor/editor/line-paragraph.ts
 
 The block a line occupies: an ordinary paragraph that also remembers which code put the pen on its row and whether a wait follows it. The keys are bound as a plain ProseMirror keymap instead of through the framework's shortcut layer: each command builds and dispatches its own transaction, and the framework's wrapper dispatches one of its own around whatever a handler does, which would apply the edit twice. A keymap plugin hands the command the state and dispatcher directly, which is the contract the commands are written to.
 
 The priority is raised (`KEYMAP_PRIORITY`) so this keymap is consulted before the base bindings. Enter must not fall through to the generic block split, which would make a paragraph with default attributes: a line with no advance code in the middle of an entry, which the engine has no way to draw. The two bare arrows are taken for the reverse reason: left to the browser they step by DOM position, and a line has more of those than characters (see `step-caret`). Shift with an arrow, word jumps and the vertical arrows are deliberately not bound. Backspace and Delete try the merged picture first, since it is one character and one press takes both halves; declining falls through to the line merge, then to the base keymap's ordinary delete. Absent attribute fields are left off the element, not written as null. The line draws its own row gutter beside its text through its node view.
 
-### language-editor/editor/line-shape/
+### apps/desktop/src/language-editor/editor/line-shape/
 
 One line as the document stores it, and the two derivations the editor needs from it. Measurement is never stored; it is computed again from the shared layout walk every time, so the gutter can never show a stale width.
 
@@ -706,45 +706,45 @@ A paragraph is numbered here instead of by splitting the token stream again: a p
 
 `advanceAfterLine` is the one place a code is invented, and only for a line an author just asked for. `advanceForNewLine` reads a previous line's row and whether it ends the box, so the view handed to it is structure with its measurements zeroed: they are not read, and measuring would carry a font this far down for nothing.
 
-### language-editor/editor/line-tokens.ts
+### apps/desktop/src/language-editor/editor/line-tokens.ts
 
 A line's content as tokens, read straight off the live document node: text children become text tokens, inline atoms become the token their attributes spell. Shared by everything that measures a line while it is typed.
 
-### language-editor/editor/lines-of-tokens.ts
+### apps/desktop/src/language-editor/editor/lines-of-tokens.ts
 
 A stored token stream as the lines an author edits: the model's own splitter, with the one guard the editor needs. Splitting measures each line, and measuring resolves glossary references, which throws on a key the set no longer carries. Opening an entry that points at a removed term must show the entry, not an error, so the glossary is widened first (`measurableGlossary`). Nothing else changes: the advance codes come back exactly as authored, which is what `joinLines` needs to write them back untouched.
 
-### language-editor/editor/lines-to-doc.ts
+### apps/desktop/src/language-editor/editor/lines-to-doc.ts
 
 Lines to editor document: the forward half of the bridge. One line is one paragraph. That is the whole change from the single run editor this replaced: the engine writes into a three row box and never wraps, so what an author edits is a stack of lines, and a document shaped like that can be guttered and grouped the way a code editor is. A line's advance code and trailing wait become paragraph attributes, not nodes in the run, so neither can sit in the wrong place: a row marker cannot end up mid sentence, and a wait cannot end up anywhere but a line's end. An empty set of lines still yields one empty paragraph (`EMPTY_LINE`), the canonical empty document: the schema requires at least one block, and an author needs a row to type into.
 
-### language-editor/editor/merge-lines/
+### apps/desktop/src/language-editor/editor/merge-lines/
 
 Backspace at the start of a line and Delete at the end of one: both the inverse of Enter. A merge drops a code instead of moving one. The line that disappears is the one whose advance put the pen where it was, and once its text has joined the line above there is nothing left for that code to do; the surviving line keeps its own. This is the only way an authored advance is ever removed, and it removes exactly the one the author deleted.
 
 The wait is the opposite: it belongs to whichever line now ends the run of text, so it survives from either side. If the line merged away closed the box, the combined line closes it instead; otherwise deleting a line break would silently join two boxes and change what the player has to press. The markup is set before the join, because it changes no positions and keeps the join boundary valid. Both commands decline when they do not apply, so the keys keep their ordinary behaviour everywhere except a line boundary.
 
-### language-editor/editor/merged-glyph/
+### apps/desktop/src/language-editor/editor/merged-glyph/
 
 The picture characters spelled as two alphabet entries, and which half a given entry is. A few pictures are too wide for one cell, so the alphabet spells them with a pair of adjacent entries and the engine draws the halves side by side. To an author it is one picture: inserted, read and deleted as one thing. Drawing the halves as two objects gave a caret position in the middle of a picture that the browser could not paint (a zero width rectangle between two uneditable boxes), and a click that could only ever select half of it.
 
 The pairs are not listed here. The sprite manifest already records them: an extraction recipe that names a second glyph produces one sprite covering both entries, and the derived map marks the two entries `first` and `second` of that one file (`buildPairs`). Reading that keeps the two from drifting apart. Names are the bare bracket names (`1HeartL`, not `[1HeartL]`), because that is the form a token carries and the drawing code asks with. Only the base alphabet's pairs are known; a localized alphabet that splits a picture its own way keeps its own entry names, resolves to nothing here, and draws as two cells as it did before. `isMergedSecond` is true for an entry that closes a pair, which draws nothing of its own.
 
-### language-editor/editor/merged-pair/
+### apps/desktop/src/language-editor/editor/merged-pair/
 
 Where the two halves of a merged picture character sit in the document. The model keeps both halves, because they are two alphabet entries and the stored entry must round trip byte for byte. Every gesture still treats them as one character: the caret steps across the pair in one press, and one Backspace takes both away. Everything that needs to know whether a position is in the middle of a picture asks here, so the answer is derived once from the pairing the sprite manifest records. Positions are document positions: each half is an inline leaf of size one, so a pair occupies `from` to `from + 2`, and the position between the halves (`splitsMergedPair`) is the one the browser could never paint a caret at.
 
-### language-editor/editor/renumber/
+### apps/desktop/src/language-editor/editor/renumber/
 
 Row codes follow the lines, so the author never renumbers anything. When a line is opened, wrapped in or removed, every line after it has moved, so its advance code is derived again: rows fill downward, and once the bottom row is taken the box scrolls. A wait is ignored by the derivation on purpose. The engine clears nothing at a wait, so continuing downward (and scrolling from the bottom row) is the one continuation that draws over what is already on screen. That is also the vanilla corpus's own idiom: scrolls outnumber row one returns thirty five to one.
 
 Reach follows the automation mode. Continuous renumbers to the end of the entry; in block stops where the changed line's box ends; off renumbers nothing (a line created by a wrap still gets its own derived code at creation). Lines before the change are never touched, which keeps an untouched entry serialising byte for byte.
 
-### language-editor/editor/schema.ts
+### apps/desktop/src/language-editor/editor/schema.ts
 
 The editor's extension list: the smallest schema that can hold a dialogue entry and nothing else. The document is a stack of lines, `paragraph+`, one paragraph per line. The engine writes into a three row box and never wraps, so the thing being edited is a stack of lines, not one long run with control codes buried in it. Enter makes a line and Backspace at a line's start removes one; both are the line node's own business. There is deliberately no mark in the list: the target format has no bold, italic, heading or list, so the schema must not offer one, and an unknown mark pasted in has no type to parse into and drops to plain text. Undo and redo use the ProseMirror history plugin wired directly (`EditHistory`), because the framework's own history extension is not installed (no starter kit, no marks): same engine, one dependency fewer.
 
-### language-editor/editor/split-line.ts
+### apps/desktop/src/language-editor/editor/split-line.ts
 
 Enter starts a new line. This is the one gesture in the editor that invents a control code, and it asks the model for it (`advanceForNewLine`) instead of deciding: the box fills from the top, so the line after row one is row two, after row two is row three, and once the bottom row is taken the box scrolls to make room. A line opened after a box ending wait starts the next box at row one again.
 
@@ -752,81 +752,81 @@ The wait travels with the text, not the row. Splitting a line that ended its box
 
 The automation mode is a promise about what Enter may restructure: off consumes the key and changes nothing; in block refuses once the caret's box already holds its three rows (`rowsInBoxBefore` counts back to the previous wait).
 
-### language-editor/editor/step-caret/
+### apps/desktop/src/language-editor/editor/step-caret/
 
 Left and right by one character of the line, whatever that character is made of. The browser moves a caret between DOM positions, and a line has more of those than characters. Every character sits in a cell of its own so it can be billed its real advance, and each boundary between two cells is two equivalent DOM positions, since the end of one span is the start of the next. Native motion therefore stopped twice per character and the caret visibly jittered backwards. An inserted token is the same problem from the other side: one character to the author, and the caret has no business landing inside it.
 
 Stepping by document position instead settles both. One press is one position: one typed character, the whole of one atom, or the jump from the end of a line to the start of the next. Nothing else about selection changes; Shift with an arrow, word jumps, the vertical arrows and clicking stay with the editor, which is why only the two bare keys are taken. A non empty selection collapses to its own edge instead of stepping past it, so after clicking an atom the first arrow puts the caret beside it. A merged picture is the one place where one press crosses two positions: the step passes over the position between its halves and lands on the far side.
 
-### language-editor/editor/toggle-wait/
+### apps/desktop/src/language-editor/editor/toggle-wait/
 
 Whether a line ends its box: a per line flag, flipped from the line's end. A wait for button is the one control code a player experiences: the moment the box stops and asks for a press. It can only occur at the end of a line, so it is a property of the line, not something inserted at a caret, and turning it on or off is one gesture. Two ways in, one transaction: `toggleWaitAt` is for the marker drawn at a line's end, which knows the position it was drawn at; `toggleWaitHere` is the keyboard route, acting on the caret's line.
 
-### language-editor/editor/token-attrs/
+### apps/desktop/src/language-editor/editor/token-attrs/
 
 The atom contract: one non text token as an indivisible inline node, and a line's content as the inline children of a paragraph. A row marker and the wait that closes a box are line structure: they only occur at a line's edges, so they live in the block's attributes and never appear in a run. What is left is what sits in the text: a substitution, a glossary reference, a picture character, and any control code that takes effect mid line. `DialogueTokenKind` mirrors `Token['t']` minus text.
 
 This module is free of any editor framework runtime import: it builds plain ProseMirror JSON, which keeps it pure, DOM free and testable alone. It owns the attribute contract (`DialogueTokenAttrs`) that the node extension declares and `attrs-to-token` reads back, so the three stay in step from one definition. In that contract `null` means the field is absent from the token and `undefined` never appears, so a `param` or `slot` of 0 stays distinguishable from no parameter. `tokenToNode` is what a toolbar hands to `editor.commands.insertContent` to drop an atom at the caret. `inlineContent` folds text into the preceding run, so no two text nodes adjoin.
 
-### language-editor/editor/token-node/
+### apps/desktop/src/language-editor/editor/token-node/
 
 The atomic inline node a non text token occupies. Everything that is not plain text and sits in the run is one indivisible character to the caret: a mid line control code, a substitution variable, a glossary reference, a picture character. It can be selected and deleted whole, never typed into and never split; text around it stays ordinary. Line structure is not here: a row marker and a box closing wait are attributes of the line, though the node still knows how to draw one if a paste brings it in, so nothing is lost silently.
 
 How an atom leaves the editor: as HTML (copy and paste inside the editor) it is `span[data-dialogue-token]` with one data attribute per field, so a round trip through the clipboard rebuilds the identical token; the node is a leaf, so its inner label is never parsed again as content. As plain text (copy out, `editor.getText()`) it is the bracket form the stored dialogue format uses, through `serializeTokens`; a glossary reference has no bracket form, so it renders as `{key}`, and plain text is one way. Absent fields are omitted from the DOM, not written as null. The node renders a bare labelled span; chip styling and parameter editing belong to a node view in the UI layer.
 
-### language-editor/editor-ui/char-advance.ts
+### apps/desktop/src/language-editor/editor-ui/char-advance.ts
 
 Gives each typed character its real width from the pack's width table.
 The editor wraps every character in a cell of that width.
 
-### language-editor/editor-ui/char-cells.ts
+### apps/desktop/src/language-editor/editor-ui/char-cells.ts
 
 Builds the per-character cells that the editor draws as decorations.
 
-### language-editor/editor-ui/editor-contract
+### apps/desktop/src/language-editor/editor-ui/editor-contract
 
 This folder is the one place the editor UI imports the `editor/` layer from.
 Every other file in `editor-ui/` goes through it.
 
-### language-editor/editor-ui/editor-ui.type.ts
+### apps/desktop/src/language-editor/editor-ui/editor-ui.type.ts
 
 `GlyphFontHandle` is a live handle.
 It is read when a decoration paints, so a font that loads later still draws.
 
-### language-editor/editor-ui/glyph-names.ts
+### apps/desktop/src/language-editor/editor-ui/glyph-names.ts
 
 Glyph names are stored with brackets, such as `[Up]`.
 `BRACKETED` matches that form.
 
-### language-editor/editor-ui/icon-for-token
+### apps/desktop/src/language-editor/editor-ui/icon-for-token
 
 Icons are picked by code name only.
 The line start markers share one symbol.
 
-### language-editor/editor-ui/icon-svg.ts
+### apps/desktop/src/language-editor/editor-ui/icon-svg.ts
 
 Builds a DOM `svg` for markers that are drawn outside React.
 The icon data is bundled with the app, so writing it with `innerHTML` is safe.
 
-### language-editor/editor-ui/substitution-cells.ts
+### apps/desktop/src/language-editor/editor-ui/substitution-cells.ts
 
 A substitution reserves its worst case width.
 A name reserves six of the widest glyphs, because the player name `PLAYER` has six letters.
 A number reserves one digit.
 Both numbers come from the layout plan.
 
-### language-editor/editor-ui/tokens-signature.ts
+### apps/desktop/src/language-editor/editor-ui/tokens-signature.ts
 
 The signature joins tokens with a NUL character, which no token can contain.
 `serializeTokens` throws on a reference it cannot resolve, so the signature catches that and falls back.
 
-### language-editor/editor-ui/DialogueEditor.tsx
+### apps/desktop/src/language-editor/editor-ui/DialogueEditor.tsx
 
 The font handle is kept in a ref so decorations read the current font.
 The editor extensions are keyed on the contents of the glyph set and on whether the font is ready.
 A change to either rebuilds them.
 
-### language-editor/editor-ui/DialogueEditor.css
+### apps/desktop/src/language-editor/editor-ui/DialogueEditor.css
 
 `position: relative` on the card is the anchor the legend floats against.
 Overflow stays visible, because a clipped card would cut off the legend and a parameter picker.
@@ -845,7 +845,7 @@ The shared lengths sit on the body, the common parent, so gutter row N always si
 A row is one cell tall plus a little leading, because the face's ink is about 3px taller than its 16px cell.
 `--gutter-head-h` pushes the text down by the gutter's heading row, which fixed a 21px misalignment.
 
-### theme/dialogue-editor/lines.css
+### apps/desktop/src/theme/dialogue-editor/lines.css
 
 One paragraph is one line of the box.
 Its height is pinned so a taller glyph cannot pull the line away from its gutter row.
@@ -874,27 +874,27 @@ Otherwise `caretRangeFromPoint` returned the icon and select all painted the sym
 The wait marker is the one marker that is also a control.
 Its off state means no wait yet, and it shows only on the caret's line, faintly.
 
-### language-editor/editor-ui/EditorToolbar.tsx
+### apps/desktop/src/language-editor/editor-ui/EditorToolbar.tsx
 
 Only one card is open at a time, and the row owns which one.
 A press outside closes it, unless a design system dropdown is open, since that list is drawn in a portal.
 
-### language-editor/editor-ui/EditorToolbar.css
+### apps/desktop/src/language-editor/editor-ui/EditorToolbar.css
 
 The toolbar is one row of equal icon buttons and does not wrap.
 A row that reflows moves a button out from under the pointer.
 `overflow: visible` is needed because every card is anchored inside this row.
 A divider between groups is shorter than the row, so it reads as a pause.
 
-### language-editor/editor-ui/ToolbarButton.tsx
+### apps/desktop/src/language-editor/editor-ui/ToolbarButton.tsx
 
 The button swallows `mousedown`, so the caret in the text survives the press.
 
-### language-editor/editor-ui/ToolbarButton.css
+### apps/desktop/src/language-editor/editor-ui/ToolbarButton.css
 
 The card positions against the wrapper, so the wrapper carries `position: relative`, not the button.
 
-### language-editor/editor-ui/TokenAtom.css
+### apps/desktop/src/language-editor/editor-ui/TokenAtom.css
 
 A token chip sits on a row of fixed height, so it must not grow the line.
 It has no wrapping, no vertical padding, and a height of `1em`.
@@ -909,31 +909,27 @@ A substitution chip is as wide as the widest value it can draw, in game pixels.
 It takes the line's own font size and leading, so it cannot grow the row.
 Each stand in character uses two selectors so it beats the text primitive's 13px size, which grew the row past its height.
 
-### language-editor/editor-ui/behavior/useDialogueEditor.ts
+### apps/desktop/src/language-editor/editor-ui/behavior/useDialogueEditor.ts
 
 Callbacks are held in refs so the editor is built once.
 The caret line is not cleared on blur.
 An empty transaction repaints the gutters.
 Glyphs that are spelled as a pair insert both entries.
 
-### language-editor/editor-ui/behavior/useDismissOnOutside.ts
-
-Listens to `mousedown` in the capture phase, so a press is seen before any child handler stops it.
-
-### language-editor/editor-ui/behavior/useTokenSync.ts
+### apps/desktop/src/language-editor/editor-ui/behavior/useTokenSync.ts
 
 The hook remembers the signature of what the editor last sent out.
 When the incoming tokens match it, the editor is not reset, which keeps the caret in place.
 Content is set with `emitUpdate: false` so the reset does not echo back as an edit.
 
-### language-editor/editor-ui/popovers/portal-layer.ts
+### apps/desktop/src/language-editor/editor-ui/popovers/portal-layer.ts
 
 A design system `Select` draws its list through a portal, so the list is not inside the card.
 A press on one of its values looks like a press outside the card.
 Checking whether the portal's popover layer holds anything tells those two cases apart.
 A press that lands elsewhere still closes the list, and the next press closes the card.
 
-### language-editor/editor-ui/popovers/PopoverShell.tsx
+### apps/desktop/src/language-editor/editor-ui/popovers/PopoverShell.tsx
 
 Every toolbar card is drawn in this shell, anchored under its own button.
 It floats over the content, because a toolbar that changes height moves the text away from the pointer.
@@ -942,13 +938,13 @@ A card holding a field must not swallow it, or the field could never be typed in
 The editor restores its stored selection before it places a token, so the insert lands at that selection either way.
 The toolbar owns which card is open and every way of closing it.
 
-### language-editor/editor-ui/popovers/PopoverShell.css
+### apps/desktop/src/language-editor/editor-ui/popovers/PopoverShell.css
 
 The card is absolute, not in a portal, so it stays in its button's stacking context and needs no measuring.
 The width is kept narrow on purpose, because one card does one thing.
 The `end` variant opens leftward so the last buttons in the row stay inside the pane.
 
-### language-editor/editor-ui/popovers/presets
+### apps/desktop/src/language-editor/editor-ui/popovers/encodable-presets.ts
 
 Pause and text speed are the two codes an author still places by hand.
 Both take a raw parameter from 0 to 15.
@@ -957,64 +953,64 @@ Speed is frames of delay per character, and zero draws the whole message at once
 Every preset is filtered through what the language can encode, so nothing offered can fail to compile.
 An encoder that refuses the code leaves an empty list, and its button is disabled.
 
-### language-editor/editor-ui/popovers/PresetPopover.tsx
+### apps/desktop/src/language-editor/editor-ui/popovers/PresetPopover.tsx
 
 One card serves both pause and speed: each is one code with one parameter.
 It holds only buttons, so the caret stays in the text.
 
-### language-editor/editor-ui/popovers/PresetPopover.css
+### apps/desktop/src/language-editor/editor-ui/popovers/PresetPopover.css
 
 The four values read as a scale, so the buttons keep equal weight and none looks like the default.
 
-### language-editor/editor-ui/popovers/GlyphPopover.tsx
+### apps/desktop/src/language-editor/editor-ui/popovers/GlyphPopover.tsx
 
 Picture characters belong to the dialogue alphabet, so they are drawn from the pack's own font.
 Which names are characters comes from the language's alphabet, so each set offers exactly its own.
 
-### language-editor/editor-ui/popovers/GlyphPopover.css
+### apps/desktop/src/language-editor/editor-ui/popovers/GlyphPopover.css
 
 The grid uses auto fill, so it suits an alphabet of six characters or forty.
 A cell takes an icon's size and keeps the glyph's 1 to 2 proportion so the picture does not stretch.
 
-### language-editor/editor-ui/popovers/GlyphChoice.tsx
+### apps/desktop/src/language-editor/editor-ui/popovers/GlyphChoice.tsx
 
 Each choice draws with the game's own pixels, so the button shows exactly what lands in the line.
 A character spelled as a pair inserts both tokens.
 
-### language-editor/editor-ui/popovers/settings-fields.ts
+### apps/desktop/src/language-editor/editor-ui/popovers/settings-fields.ts
 
-`message-settings.ts` names the three settings.
+`apps/desktop/src/language-editor/sub-components/message-settings` names the three settings.
 Labels, descriptions and values come from the control code catalog, narrowed to what the language can encode.
 The `automatic` option means the entry says nothing and the engine default applies.
 
-### language-editor/editor-ui/popovers/SettingsPopover.tsx
+### apps/desktop/src/language-editor/editor-ui/popovers/SettingsPopover.tsx
 
 The three display codes are read in a pre pass, and the last one in the message wins.
 Their place in the text means nothing, so they are shown here, not as chips.
 The structure mode sits beside them because it also applies to the whole entry.
 
-### language-editor/editor-ui/popovers/SettingsPopover.css
+### apps/desktop/src/language-editor/editor-ui/popovers/SettingsPopover.css
 
 Each label sits above its list, because the card is too narrow for two columns.
 
-### language-editor/editor-ui/popovers/structure-modes.constants.ts
+### apps/desktop/src/language-editor/editor-ui/popovers/structure-modes.constants.ts
 
 The modes and what they decide live in the shared layer.
 This file only names them on screen.
 
-### language-editor/editor-ui/popovers/VariablePopover.tsx
+### apps/desktop/src/language-editor/editor-ui/popovers/VariablePopover.tsx
 
 The list is filtered by typing, not split into sections.
 A translator knows the word, not the family it belongs to.
 Enter takes the first row.
 `tokenForVariable` decides which token a row inserts.
 
-### language-editor/editor-ui/popovers/VariableChoice.tsx
+### apps/desktop/src/language-editor/editor-ui/popovers/VariableChoice.tsx
 
 A variable the engine owns still appears, with a small padlock.
 The player's name is the most common insert of all.
 
-### language-editor/sub-components/BundleHeader.tsx
+### apps/desktop/src/language-editor/sub-components/BundleHeader.tsx
 
 The identity card for the set being edited: its name, its origin, its size, and whether the last edit reached disk.
 A translator can have a set from a ROM and a copy open in one session, so the name and origin stay on screen.
@@ -1022,11 +1018,11 @@ A translator can have a set from a ROM and a copy open in one session, so the na
 An installed set is never written, so its save state reads `Read only`.
 `onExport` saves the set as a `.rlang` file, and `exportStatus` says what the last export did.
 
-### language-editor/sub-components/BundleHeader.css
+### apps/desktop/src/language-editor/sub-components/BundleHeader.css
 
 Name and origin come first, the countable facts sit in a quiet mono row, and the save state comes last so it reads as status.
 
-### language-editor/sub-components/DialogueTab.tsx
+### apps/desktop/src/language-editor/sub-components/DialogueTab.tsx
 
 A searchable list of entries, closed by default, any number of which may be open.
 A set has a few hundred entries and the list's job is finding one, so each closed row is a dense line of facts.
@@ -1037,13 +1033,13 @@ A closed row paints no canvas, so measuring the whole set is cheap.
 The layout cache is keyed on each entry's token array, so each entry is walked once for the life of the set.
 An entry with unsaved words is shown with them in every view.
 
-### language-editor/sub-components/DialogueTab.css
+### apps/desktop/src/language-editor/sub-components/DialogueTab.css
 
 Only the card list scrolls, so the search box and filters stay in place.
 The list is the query container for its rows.
 Every row has the same fixed columns, so whether there is room for the line's words depends on the list's width, as `entry-row.css` reads it.
 
-### language-editor/sub-components/EntryEditor.tsx
+### apps/desktop/src/language-editor/sub-components/EntryEditor.tsx
 
 Edit mode for one entry: the editor and the commit pair.
 Line widths live in the editor's gutter, and the entry's identity lives in the panel around it.
@@ -1051,55 +1047,55 @@ Saving is refused while a row is too long.
 The engine keeps writing past the edge of the box and paints over the line below, so an overlong row is a defect nobody sees until the scene is played.
 `tokens` are the draft; the parent holds the committed entry.
 
-### language-editor/sub-components/EntryEditor.css
+### apps/desktop/src/language-editor/sub-components/EntryEditor.css
 
 The commit pair sits at the end of the card so it is always in the same place.
 The refusal message is a whole sentence on purpose, because `too long` alone sounds like the text will be trimmed, and it will not.
 
-### language-editor/sub-components/LockedEntryCard.tsx
+### apps/desktop/src/language-editor/sub-components/LockedEntryCard.tsx
 
 The stand in for an entry a translator must never edit, such as a choice prompt cursor frame or the extraction padding string.
 `structuralEntry` in `packages/languages/src/messages/codes/structural-entries.ts` lists them.
 It uses the same row shape as a closed entry, dashed and dimmed, so the locked rows are not the loudest rows in the list.
 The reason is stated in full as the row's title, calmly, as a fact about what the entry is for.
 
-### language-editor/sub-components/SetCreateForm.tsx
+### apps/desktop/src/language-editor/sub-components/SetCreateForm.tsx
 
 Starts a new set from a base language or as a copy of an existing set.
 It stays collapsed until asked for, so the set list remains the first thing in the pane.
 
-### language-editor/sub-components/StaleGameNotice.tsx
+### apps/desktop/src/language-editor/sub-components/StaleGameNotice.tsx
 
 Shown when the running game plays older text than the set on screen.
 Text reaches the emulator once, when a profile loads and the game boots.
 Nothing reads it again, not a save and not a save state, so an edit saved mid session is invisible until the profile loads again.
 Reloading restarts the game, so the notice says so.
 
-### language-editor/sub-components/StaleGameNotice.css
+### apps/desktop/src/language-editor/sub-components/StaleGameNotice.css
 
 A warning strip, not a card, carried by the warning tone over a light fill.
 
-### language-editor/sub-components/UnbuiltPane.tsx
+### apps/desktop/src/language-editor/sub-components/UnbuiltPane.tsx
 
 A pane whose editing surface exists but does not reach the game yet.
 These tabs read the shipped text, measure it and keep what is typed, but nothing is baked into the assets.
 The pane says so twice: in a notice that stays readable, and in a scrim that also takes the surface out of the tab order.
 The surface stays visible so the shape of the work can be seen while it is decided.
 
-### language-editor/sub-components/UnbuiltPane.css
+### apps/desktop/src/language-editor/sub-components/UnbuiltPane.css
 
 The notice sits outside the covered region, because the scrim blurs what it covers.
 The scrim takes the warning tone, because this lock is unfinished work, not a choice the owner made.
 The scrim message is held at the top and stays sticky, because the covered list can run to a thousand rows.
 
-### language-editor/sub-components/code-params.ts
+### apps/desktop/src/language-editor/sub-components/code-params.ts
 
 The values a picker may offer for one control code.
 What the language can encode comes from `encodableParams`.
 The catalog's documented range narrows it, since the raw encoder accepts all 256 bytes.
 `null` means the code takes no parameter, so the insert is one click.
 
-### language-editor/sub-components/insert-menu-model.ts
+### apps/desktop/src/language-editor/sub-components/insert-menu-model.ts
 
 Builds the insert menu from the control code catalog and the language's alphabet.
 `SECTION_OF_CODE` only says which section a code belongs in; every label, risk and range comes from the catalog.
@@ -1110,12 +1106,12 @@ Codes missing from the table are left out on purpose: choice prompts get their o
 A glossary pick becomes a `ref` token, so retagging the term once updates every entry that points at it.
 Picture characters are found in the alphabet and round trip as `cmd` tokens with no parameter.
 
-### language-editor/sub-components/insert-menu.type.ts
+### apps/desktop/src/language-editor/sub-components/insert-menu.type.ts
 
 The insert menu model is presentation only.
 `make` builds the token to add, and `choice` is null for a row that needs none.
 
-### language-editor/sub-components/message-settings
+### apps/desktop/src/language-editor/sub-components/message-settings
 
 The three display codes: text palette, box frame and box slot.
 The engine reads them in a pre pass, so the last one in the message is the one that applies.
@@ -1125,12 +1121,12 @@ Reading returns `null` when the entry never sets the code, or when the last one 
 Writing rewrites the last occurrence in place and drops earlier duplicates, which could never apply.
 Clearing removes every occurrence, so the engine default applies.
 
-### language-editor/sub-components/overflow-reason.ts
+### apps/desktop/src/language-editor/sub-components/overflow-reason.ts
 
 Names the consequence, because `too long` sounds like the text will be trimmed or wrapped.
 It returns an empty string when every row fits.
 
-### language-editor/sub-components/text-groups
+### apps/desktop/src/language-editor/sub-components/text-groups
 
 The fixed text slots: which ones a translator has written, which ones a search keeps, and how a value fits its room.
 A slot counts as translated only when its override is present, not blank, and not the exact original.
@@ -1139,38 +1135,38 @@ The fit is a plain character count, because these surfaces draw one character pe
 `CAPS_ALPHABET` is what the caps only surface can draw.
 A tally is `known` only when the caller passed that group's overrides; otherwise the rail shows the group's size.
 
-### language-editor/sub-components/text-groups/TextGroupsTab.tsx
+### apps/desktop/src/language-editor/sub-components/text-groups/TextGroupsTab.tsx
 
 The groups on the left and the chosen group's slots as rows.
 The list is capped, not virtualized, and the rest are stated as not drawn; search reaches them.
 The search and the toggle are the tab's own state.
 
-### language-editor/sub-components/text-groups/TextGroupsTab.css
+### apps/desktop/src/language-editor/sub-components/text-groups/TextGroupsTab.css
 
 The rail and the panel head stay in place while only the rows scroll.
 The rail column is narrow because the rows carry the fields a translator types into.
 The capped message sits at the foot of the drawn rows.
 
-### language-editor/sub-components/text-groups/TextGroupRail.tsx
+### apps/desktop/src/language-editor/sub-components/text-groups/TextGroupRail.tsx
 
 Each group shows its own tally, read from the same overrides the rows use.
 
-### language-editor/sub-components/text-groups/TextGroupRail.css
+### apps/desktop/src/language-editor/sub-components/text-groups/TextGroupRail.css
 
 Selection uses the gold border and fill, not weight, because the tally already varies in weight and colour.
 A finished group's tally turns gold.
 
-### language-editor/sub-components/text-groups/TextGroupRailItem.tsx
+### apps/desktop/src/language-editor/sub-components/text-groups/TextGroupRailItem.tsx
 
 A group with no slots is listed with a plain note, so a translator is not left hunting for it.
 
-### language-editor/sub-components/text-groups/TextSlotRow.tsx
+### apps/desktop/src/language-editor/sub-components/text-groups/TextSlotRow.tsx
 
 The original is the field's placeholder and the reference beside it, so an untranslated row shows the words the surface will draw.
 Once words are typed, the original moves below the field.
 The caution states what the surface can draw, not what the translator did wrong.
 
-### language-editor/sub-components/text-groups/TextSlotRow.css
+### apps/desktop/src/language-editor/sub-components/text-groups/TextSlotRow.css
 
 The row is two lines, not four columns.
 The pane is about 500px wide, and four columns left the field 26px wide.
@@ -1179,7 +1175,7 @@ The placeholder uses the dim text colour, because the original must read like a 
 A full slot turns gold and a slot past full turns red.
 The note is italic, so it reads as a standing fact about the slot.
 
-### language-editor/sub-components/variables/FindHardcodedDialog.tsx
+### apps/desktop/src/language-editor/sub-components/variables/FindHardcodedDialog.tsx
 
 Lists every place the set spells a name out where it could reference the variable.
 A reference follows a later rename, literal text does not.
@@ -1187,17 +1183,17 @@ The scan changes nothing; the dialog opens with every row unticked and states it
 Near misses matched only with case ignored, so they are reported and never applied.
 The ticked rows are the only state here, and they are dropped when the dialog closes.
 
-### language-editor/sub-components/variables/FindHardcodedDialog.css
+### apps/desktop/src/language-editor/sub-components/variables/FindHardcodedDialog.css
 
 The tick and the name lead, then the phrase, the counts and the near miss note, in a fixed order.
 The note comes last because it does not change what applying does.
 
-### language-editor/sub-components/variables/HardcodedGroupRow.tsx
+### apps/desktop/src/language-editor/sub-components/variables/HardcodedGroupRow.tsx
 
 The near miss count sits on its own row, because it belongs to that phrase.
 A row with nothing to apply still appears, with its tick disabled.
 
-### language-editor/sub-components/variables/variable-token.ts
+### apps/desktop/src/language-editor/sub-components/variables/variable-token.ts
 
 A variable the engine owns stays a control code, because the game substitutes it at draw time.
 Every other variable is inserted as a reference, which survives a rename and becomes literal text only at bake time.
@@ -1222,7 +1218,7 @@ The motion transport is created here, the only tier allowed to own state the who
 The step strip sits under the preview because it changes how the panel behaves, not what the document says.
 The slot scheme, grid solve and flex slot contexts are provided around the inspector, because they are facts about the session.
 
-### hud-layout-editing/useHudLayoutEditor.ts
+### apps/desktop/src/hud-layout-editing/useHudLayoutEditor.ts
 
 The editor view's data: the draft, edits, glyph packs, schemes, sample state and the placed layout.
 The open layout is captured once, so a save that forks does not reopen the editor on the layout it just left.
@@ -1230,7 +1226,7 @@ A save points the edited scheme at what was saved, because a fork nothing wears 
 One solve feeds both the panel's lattice and the stage's overlay and echo, so a panel cell has the stage cell's shape.
 One placement feeds the flex strip, so each cell is drawn at the size its child was given.
 Deleting the selected glyph pack falls back to Auto, because a deleted pack left selected would silently fall through to the device family.
-The whole document's validator blocks Save: any invalid expression makes `errors` non empty, and `warnings` are the reflow notes from `validate-motion-warnings.ts`, shown on the node's Motion section.
+The whole document's validator blocks Save: any invalid expression makes `errors` non empty, and `warnings` are the reflow notes from `packages/hud/src/layouts/validate-motion-warnings`, shown on the node's Motion section.
 
 ### HudLayoutEditor/HudLayoutEditor.constants.ts
 
@@ -1257,7 +1253,7 @@ The global settings strip sits under the preview, pinned to the column's bottom 
 It is separated by a rule, not a card, the same reasoning as `.hud-subsec`.
 The segmented track there is intrinsically sized so the label does not stretch away from it.
 
-### hud-layout-editing/action-keys
+### apps/desktop/src/hud-layout-editing/action-keys
 
 A key press is looked up by the cap label the legend draws, such as `←`, `Del` or `Esc`.
 Both manipulation components draw the same legend from the same kind of table, so both use this.
@@ -1265,7 +1261,7 @@ Because the pressed key becomes the cap label and is matched against the action 
 A row claims a press only when its caps are exactly that one key.
 A cursor row that names four arrow caps claims none of them.
 
-### hud-layout-editing/align-options
+### apps/desktop/src/hud-layout-editing/align-options
 
 The alignment values each engine supports, one row of tiles per axis.
 A 3x3 pad could not show distribution: nine cells cross two positions, so `between` and `stretch` had no cell.
@@ -1281,7 +1277,7 @@ A flex container's rows are `main` and `cross`, and the diagrams turn with `dire
 `stretch` falls back to `flex-start`, and the bars grow instead.
 `justify` runs along `direction` and `align` crosses it, so a row aligns down and a column aligns across.
 
-### hud-layout-editing/appearance-summary
+### apps/desktop/src/hud-layout-editing/appearance-summary
 
 What a collapsed group says about itself; the part of `SubsectionGroup` that is not a component.
 A closed group must still state its value, such as `2px solid #c8a84e`, or the author has to open every group to find the active one.
@@ -1294,7 +1290,7 @@ A shadow summary uses the CSS shorthand order, so it matches the rendered shadow
 `spread` appears only when it is not zero.
 The list summary shows the count so it is readable with every card shut.
 
-### hud-layout-editing/bound-values
+### apps/desktop/src/hud-layout-editing/bound-values
 
 Every data bound `Value` on one node, in one place.
 It is the reason the Data section exists, and it feeds the bound count badge on every other section's collapsed header.
@@ -1304,27 +1300,27 @@ It does not descend into a nested node (`child`, `node`, `otherwise`, `children`
 A path is classed by its first segment, since each section's fields share one: `style.*` is Appearance and `element.*` is Content.
 The counts per section drive the small `● n` badge.
 
-### hud-layout-editing/case-match
+### apps/desktop/src/hud-layout-editing/case-match
 
 Which case of a `switch` is winning for the data the stage previews.
 In a `switch` the order is the logic, and the reader cannot see it run, so this answers it next to the list of cases.
-It uses the engine's own reading: `gateTruthy` from `engine/motion.ts` is the rule `engine/expand.ts` picks a winner with.
+It uses the engine's own reading: `gateTruthy` from `packages/hud/src/engine/motion` is the rule `packages/hud/src/engine/expand.ts` picks a winner with.
 A `when` that does not compile resolves to 0 and does not match, as in expansion.
 `OTHERWISE` (`-1`) stands for the fallback branch.
 Inside a repeat there is no single answer, so the report is a count of instances each case wins, such as `matches 6 of 20`.
 `matches now` is kept for a single scope.
 An empty scope list means nothing is known, such as no provider or a repeat of 0, and nothing is marked.
 
-### hud-layout-editing/check-expr.ts
+### apps/desktop/src/hud-layout-editing/check-expr.ts
 
 Says whether an expression can be written as it stands, and what the author needs to hear if not.
 The field, the menu and the error line share this one entry point, so they never disagree.
 It restates the name rule of `validate-value.ts` on purpose, because that file formats its findings for a file report.
-`hud-inspector-value-input.keep.test.ts` checks that the two agree over a table of expressions.
+The suites in `apps/desktop/tests/hud/hud-inspector-value-input` check that the two agree over a table of expressions.
 `extraNames` carries `delta`, which is valid only in `transition.when`.
 `reads` is empty while the formula does not compile, because a half parsed name list is a guess.
 
-### hud-layout-editing/drop-ghost
+### apps/desktop/src/hud-layout-editing/drop-ghost
 
 What the drag ghost says: three lines in a fixed order, computed from one intent and nothing else.
 Line 1 states what kind of container the node is dropping into, which the maintainer asked for.
@@ -1332,7 +1328,7 @@ The rest is needed because a gesture that can work three levels deeper than expe
 The kind, not the name, leads, because the boxes on screen do not show which engine will place the node.
 It speaks only the layout vocabulary: `row`, `column`, `grid 3×2`, `overlap`, `screen`. There is no `stack`.
 `overlap` is a UI word and never a document kind.
-It is a grid whose children all name one cell, found by shape with `isOverlay`, the same predicate `validate-motion-warnings.ts` reads.
+It is a grid whose children all name one cell, found by shape with `isOverlay`, the same predicate `packages/hud/src/layouts/validate-motion-warnings` reads.
 It needs two children, because `isOverlay` is trivially true of a grid with one placed child, and a 3x2 grid holding one node is still a grid.
 The grid size uses the same two functions the engine sizes tracks with, so the card matches the layout.
 A refused drop names both nodes, and the whole card turns colour so the state reads in peripheral vision.
@@ -1350,7 +1346,7 @@ The card sits below and right of the cursor; anything closer than about 10px cov
 It flips to the other side within 150px of the viewport edge, the same reflex `usePickerPopover` has.
 The flip is a translation, so the card never needs a layout pass, which would make it lag the cursor by a frame.
 
-### hud-layout-editing/drop-intent/
+### apps/desktop/src/hud-layout-editing/drop-intent/
 
 What a drop would do, never how the pointer said it.
 The outline speaks in rows and zones and the keyboard in directions; both produce a `DropIntent`, and one function consumes it.
@@ -1373,10 +1369,10 @@ A `place` that no longer means anything is deleted on a reparenting drop; a node
 Entering a container without a cell writes no `place`, so it flows in document order.
 The refusal text names nodes by id, because `labelOf` gives the kind and would read `row is already inside row`.
 
-### hud-layout-editing/easing-curves
+### apps/desktop/src/hud-layout-editing/easing-curves
 
 The easings an author may pick, derived from the engine.
-`motion-easing.ts` decides what a curve does and `validate-motion.ts` decides what a document may hold; this offers their overlap: five named curves plus `steps(n)`.
+`packages/hud/src/engine/motion-easing` decides what a curve does and `packages/hud/src/layouts/validate-motion` decides what a document may hold; this offers their overlap: five named curves plus `steps(n)`.
 Each thumbnail is drawn by sampling `easingFn`, so it cannot drift from the curve it names.
 `NAMED_EASINGS` lists no curve, then the one sided curves, then both, the same list the validator accepts.
 `CURVE_BOX` is square, so a linear curve reads as 45 degrees.
@@ -1388,7 +1384,7 @@ The path flips y, because SVG y grows down and an easing's output grows up.
 An unknown name draws as linear, as it does at render time.
 `easingLabel` shows `default` when the field is unset and the animation's own easing applies.
 
-### hud-layout-editing/editor-step
+### apps/desktop/src/hud-layout-editing/editor-step
 
 The editor's step, carried to every number in the panel.
 `ValueInput` has taken a `step` for a long time, so a context lets the step reach about 25 fields without threading it through.
@@ -1396,7 +1392,7 @@ The editor's step, carried to every number in the panel.
 The default is 1, so a field rendered outside the provider, such as a measurement rig, steps by one.
 The View is the only provider, and the only reader of `hud-editor-view-store`.
 
-### hud-layout-editing/expr-errors
+### apps/desktop/src/hud-layout-editing/expr-errors
 
 Parse errors from expr-eval, turned into sentences an author can act on.
 Every message matched here was probed against the shipped parser, with assignment, function definitions, `in`, arrays and concatenation turned off.
@@ -1410,7 +1406,7 @@ An unclosed paren names its call, such as `ceil(`, because that helps in a formu
 `raw` is the parser's message as `compileExpr` returns it, never the file report wrapper from `validate-value.ts`.
 An unknown name is the one error that is not the parser's.
 
-### hud-layout-editing/flex-slots
+### apps/desktop/src/hud-layout-editing/flex-slots
 
 Where a flex container's children landed; it is to the flex editor what `grid-solve` is to the lattice.
 The strip draws the stage's own placement, read from `usePlacedLayout`, so a panel cell has the shape of the cell on the stage.
@@ -1423,7 +1419,7 @@ A repeat's copies share one authored id, so matching on it takes the first insta
 A slot's size is in game pixels and unit free, so the strip may draw it at any size.
 `useFlexSlots` never returns null, so no caller has to branch.
 
-### hud-layout-editing/formula-catalog
+### apps/desktop/src/hud-layout-editing/formula-catalog
 
 What the formula menu offers.
 A name that exists only in some places is listed, disabled, with its reason.
@@ -1436,7 +1432,7 @@ The list functions (`length`, `join`, `map`, `filter`, `fold`, `indexOf`, `fac`,
 `random()` is refused by `compile-expr.ts`.
 Groups show what the field can read first, then what it can do with it.
 
-### hud-layout-editing/formula-scope
+### apps/desktop/src/hud-layout-editing/formula-scope
 
 A formula inside a `repeat` produces `count` values, not one.
 `InstanceStrip` needs the whole set, so it needs the enclosing repeat's count and `item`.
@@ -1444,19 +1440,19 @@ It is carried as a context because `insideRepeat` is already threaded through ab
 The inspector answers once at the root of the panel, and the field reads it where needed.
 The default is nothing known, not outside a repeat.
 A field outside the provider still says it is in a repeat when its own prop says so; it just cannot draw the strip.
-The count is floored and never negative, matching the clamp in `engine/expand.ts`; the strip caps its own drawing separately.
+The count is floored and never negative, matching the clamp in `packages/hud/src/engine/expand.ts`; the strip caps its own drawing separately.
 
-### hud-layout-editing/formula-starters
+### apps/desktop/src/hud-layout-editing/formula-starters
 
 The corpus is ten formulas: across the three built in layouts and six presets there are 44 bound expressions and 10 distinct ones.
 24 of them are a bare variable name and the rest are four shapes.
 They are offered as sentences, with the formula as the subtitle, so each is readable before it is chosen.
-The fraction pairs are generated from the `<thing>_current` and `<thing>_max` convention in `variables.ts`, so a new resource gets its fraction for free.
+The fraction pairs are generated from the `<thing>_current` and `<thing>_max` convention in `packages/hud/src/data/variables`, so a new resource gets its fraction for free.
 `select` is the part left selected after inserting, so the next keystroke replaces what the author still has to decide.
 `CONTAINER_SIZE` is 8 because one heart is eight eighths, so a capacity of 160 is 20 containers.
 A `count` is never offered a comparison and a `when` is never offered a fraction, which is why starters beat a flat palette.
 
-### hud-layout-editing/glyph-art
+### apps/desktop/src/hud-layout-editing/glyph-art
 
 Which picture a glyph position draws, resolved like the live HUD: this pack, then its fallback, then generic.
 It moved out of `GlyphPickerGrid` so `ReferenceField` and `SlotRefField` can show the artwork at rest.
@@ -1464,7 +1460,7 @@ The D pad cross is one picture for every pack, because DPAD is not a real SDL po
 A null pack means Auto, which is whatever generic draws.
 `undefined` is a real answer for a position nothing draws, and `Thumbnail` shows its placeholder.
 
-### hud-layout-editing/grid-solve-lookup.ts
+### apps/desktop/src/hud-layout-editing/grid-solve-lookup.ts
 
 The lookup behind `GridSolveContext`: every grid on the stage, solved once, keyed by container id.
 `solveGrid` gets the container's real placed rectangle and the same `MeasureContext` that `StageGridEcho` and `ContainerOverlay` read, so panel and stage cells match by construction.
@@ -1472,7 +1468,7 @@ The solve's unit is the container's own placed scale, so a grid inside a scaled 
 Track sizes come back in authored pixels, so the panel can draw them as `fr` weights and the stage at the display scale.
 A repeat's copies share one id, and the first one is taken.
 
-### hud-layout-editing/grid-solve
+### apps/desktop/src/hud-layout-editing/grid-solve
 
 The panel's lattice and the stage read one solve.
 An `auto` track's size is its widest child and a `fill` track's is what was left, so only `solveGrid` against a real box can answer.
@@ -1482,7 +1478,7 @@ A prop would pass through `NodeInspector`, `LayoutSection`, `GridTemplateEditor`
 Solved sizes are in game pixels, so the panel can draw them at any scale.
 `useGridSolve` never returns null.
 
-### hud-layout-editing/index-selection
+### apps/desktop/src/hud-layout-editing/index-selection
 
 Picking items out of a strip; the grid's track headers and the flex editor's child cells share this rule.
 A plain press picks one, `Shift` takes the run from the anchor, the primary modifier toggles one in or out, and an empty set is no selection.
@@ -1492,7 +1488,7 @@ Modifiers are taken as a plain shape so a test can press a key without a DOM.
 `held` is the current run only when the press lands on the same strip; a `Shift` across strips has no anchor, so the caller decides.
 `null` means nothing is selected, because the modifier removed the last member.
 
-### hud-layout-editing/keyframe-track
+### apps/desktop/src/hud-layout-editing/keyframe-track
 
 The arithmetic behind `KeyframeTrack`, kept out of the component so its two rules can be tested without a browser.
 Keys cannot cross: `sampleKeyframes` sorts by `at` on every sample, so a swap would make the dragged diamond edit a different point.
@@ -1506,18 +1502,18 @@ Track order relies on a stable sort, which `Array.prototype.sort` has been since
 An unmeasured rail reads as 0, not `NaN`, so nothing bad reaches the document.
 A key can be removed only while more than two remain, the validator's minimum, so the button and the handler agree.
 
-### hud-layout-editing/layout-sides
+### apps/desktop/src/hud-layout-editing/layout-sides
 
 The one place the two engines are translated into the shapes the sections take, so no section branches on the engine.
 Both engines store `gap: { x, y }`, so `gapCellsOf` gives the same two cells for both, and pressing Type leaves section one's shape alone.
 `x` is horizontal and `y` vertical whichever way children flow, so `↔` and `↕` mean the same thing everywhere.
 The cap is what the field shows in its row; the label is what a screen reader says.
 Alignment is the one thing still per engine.
-A grid places items in cells on two fixed axes (`justifyItems`, `alignItems`, both `stretch` by default in `place-grid.ts`).
+A grid places items in cells on two fixed axes (`justifyItems`, `alignItems`, both `stretch` by default in `packages/hud/src/engine/place-grid`).
 A flex container distributes along its flow (`justify`, six values) and positions across it (`align`, three values).
 Flex rows are named `main` and `cross`, and `main` points wherever `direction` points.
 
-### hud-layout-editing/motion-preview
+### apps/desktop/src/hud-layout-editing/motion-preview
 
 The editor's own transport (scrub, play, pause) for the stage's motion clock, so an author sees a heart pulse without reasoning about keyframes.
 It overrides a clock and does not add one.
@@ -1534,7 +1530,7 @@ The state hook is called once, by the View, and its animation frame loop runs on
 The clock wraps at the span, so play repeats one cycle and the scrub head stays meaningful.
 `useMotionPreview` returns null outside a provider, such as a test fixture with no stage.
 
-### hud-layout-editing/new-node
+### apps/desktop/src/hud-layout-editing/new-node
 
 Everything the toolbar can insert, built here and nowhere else.
 Each factory makes a node that is valid on its own: a fresh id and the minimum a validator accepts.
@@ -1550,7 +1546,7 @@ A new countdown has no `variant`, so it follows the profile's own pie until Cont
 `labelOf` shows a container's direction and an element's kind, with the number or button that tells it apart.
 `slotsOf` lists every slot number a node names; it flags an out of range slot in the outline, and the stage selection uses it.
 
-### hud-layout-editing/node-art
+### apps/desktop/src/hud-layout-editing/node-art
 
 What a reference to another node shows: its picture where the editor owns one, a human name, and its kind.
 A switch case and a repeat's child are references to whole subtrees, and used to print an id the author never chose.
@@ -1559,7 +1555,7 @@ The id is not dropped, it is demoted: `ReferenceField` shows the kind as the dim
 `src` is `undefined` when a kind has no artwork, and `placeholder` is what `Thumbnail` draws instead of a broken image.
 Each placeholder is a stand in with a shape, never `?`.
 
-### hud-layout-editing/node-edits
+### apps/desktop/src/hud-layout-editing/node-edits
 
 Editing the tree, as pure functions over a whole document.
 Each operation returns a new layout and mutates nothing, so the draft can be a memento: one value to compare against and one to reset to.
@@ -1579,7 +1575,7 @@ The screen cannot be deleted: a map that drops it, or returns something that is 
 `insertNode` appends when `at` is not given.
 `moveNode` refuses the screen, a target that is not a container, and a target inside the moved node, returning the document untouched.
 
-### hud-layout-editing/offset
+### apps/desktop/src/hud-layout-editing/offset
 
 A node's position is its `margin.left` and `margin.top`, and this is the only place that says so.
 The model has no `offset` property on purpose; a displacement already is a margin, which is how the button cluster's radial offsets are authored.
@@ -1590,7 +1586,7 @@ Zero is absent: an offset of 0 means wherever the parent put it, so committing i
 `EdgesInput` follows the same rule, so a box that was only looked at does not grow four margins.
 An edge set with nothing left in it becomes `undefined`, so a node moved back leaves the document as it was.
 
-### hud-layout-editing/sample-state
+### apps/desktop/src/hud-layout-editing/sample-state
 
 A plausible save to arrange a HUD against when no game is running.
 The editor is reached from settings, where the game is least likely to be up, and an empty save would draw no hearts and no chips.
@@ -1609,7 +1605,7 @@ The choice is fixed per slot number, not random, so a placeholder does not chang
 The second and fourth slots always hold the sword and the contextual action, because a layout must be judged with both and neither wears an item sprite.
 It never touches the player's own assignments.
 
-### hud-layout-editing/slot-scheme
+### apps/desktop/src/hud-layout-editing/slot-scheme
 
 The slot list the preview is drawn for, reachable from a field.
 A slot number is never validated against a device.
@@ -1618,7 +1614,7 @@ It is a context because the scheme is a fact about the editor session, not the s
 The default is an empty list, which means nothing is previewed, not that no slots exist; consumers draw the number they were given either way.
 `slotInScheme` only claims something about the preview, not the HUD.
 
-### hud-layout-editing/stage-cells.ts
+### apps/desktop/src/hud-layout-editing/stage-cells.ts
 
 A placed grid's cells in display pixels; the one door the stage's grid drawings use.
 `gridCellRects(container, box, unit, ctx)` is easy to break: `box` and its result share one coordinate space, and `unit` is that space's pixels per authored pixel.
@@ -1627,17 +1623,17 @@ Fixed tracks looked right, but `fill` tracks stayed in game pixels, so the grid 
 So the solve runs in game pixels at the container's own placed scale, then multiplies by the display scale, and a caller never sees either half.
 `hud-stage-cells.keep.test.ts` checks that no other editor file calls `gridCellRects`.
 
-### hud-layout-editing/stage-slot-rects.ts
+### apps/desktop/src/hud-layout-editing/stage-slot-rects.ts
 
 A flex container's slots: the box each child was placed in, so the space between them reads as a gap.
 There is nothing to solve: a flex child either took part in the flow or left it (`collapsed` in `place-flow.ts`), so where children landed is the arrangement.
 Placed ids are unique after `expand.ts` suffixes repeat copies with `#i`, so matching by id cannot pick up another instance.
 
-### hud-layout-editing/scaled-rect.ts
+### apps/desktop/src/hud-layout-editing/scaled-rect.ts
 
 The one display scale conversion both stage drawings share.
 
-### hud-layout-editing/step-intent
+### apps/desktop/src/hud-layout-editing/step-intent
 
 The keyboard producer: it turns a node and one of four directions into the same `DropIntent` the pointer makes.
 Reparenting is the main structural edit in this editor, and it was pointer only until this existed.
@@ -1652,7 +1648,7 @@ The menu rows follow the wireframe's order.
 A dimmed item that names its precondition teaches the rule, so `Move out of hud` keeps the parent's name even when dead, and `Move into...` stays an ellipsis until there is a sibling to name.
 `STEP_KEYS` is the one map the row handler and the menu's shortcut column read, so a hint never names a key that does something else.
 
-### hud-layout-editing/toolbar-menus
+### apps/desktop/src/hud-layout-editing/toolbar-menus
 
 Everything the toolbar's list style buttons can insert or start from.
 Sprite and Glyph are picked by eye in `SpritePicker` and `GlyphPickerGrid`, and Slot has its own panel (`SlotPickerPanel`), so they are not built here.
@@ -1669,21 +1665,21 @@ Each preset insert is a fresh copy from `instantiatePreset` with every id rekeye
 The start from list is the same list `PresetBar` shows.
 `GLYPH_POSITIONS` is every position a pack is keyed by, plus the synthetic whole D pad cross.
 
-### hud-layout-editing/track-extents
+### apps/desktop/src/hud-layout-editing/track-extents
 
 A grid's track list, as list edits.
 They live outside the component because a track list is the one thing in this section a document can get structurally wrong (`columns` may never be empty), and the edits are testable without rendering.
-`trackWeight` is a gauge, not geometry: the lattice takes its proportions from the engine's solve (`GridLattice/behavior/lattice-geometry`), so this weight sizes nothing a pointer aims at.
+`trackWeight` is a gauge, not geometry: the lattice takes its proportions from the engine's solve (`HudLayoutEditor/sub-components/GridLattice/behavior`), so this weight sizes nothing a pointer aims at.
 `fill` draws wider than `auto`, and the measured modes scale off typed numbers: 16 game pixels and 25% both land on 1.
 The four extent modes live here, because both `ExtentField` and the selected track's header (`TrackHead`) offer them.
-A bare expression is `px` shorthand, as `hud-node.ts` notes.
+A bare expression is `px` shorthand, as `packages/hud/src/types/hud-node` notes.
 A bound extent has no literal to carry across a mode change, so it reads as 0; `ValueField` is where an expression gets a real editor.
 A data bound track's chip shows `ƒx`, the same mark `ValueInput` uses for a formula.
 A range edit applies to every track the header selection named, not just the anchor.
 A new track lands after the one it was added from, where the strip's `+` sits.
 A move out of range is refused, not clamped, so a button that should be disabled cannot swap without notice.
 
-### hud-layout-editing/transition-edits
+### apps/desktop/src/hud-layout-editing/transition-edits
 
 `node.transition` holds two unrelated ideas: value transitions (a bound number changed, ease toward it) and enter and exit.
 Two subsections of Motion write that one field, so the merge lives here, owned by neither.
@@ -1692,20 +1688,20 @@ The object becomes `undefined` only when nothing is left: no properties, no ente
 Which properties something drives is an annotation, not a filter; every property is offered.
 `position` counts as driven only inside a `repeat`, the one case where placement moves without a bound field naming it.
 An explicit `undefined` in the patch means clear the key, so such keys are removed and no `"easing": undefined` reaches the saved JSON.
-The six properties follow the order of `hud-motion.ts`.
+The six properties follow the order of `packages/hud/src/types/hud-motion`.
 
-### hud-layout-editing/tree-context
+### apps/desktop/src/hud-layout-editing/tree-context
 
 Questions the inspector's sections ask about where the selected node sits, which `siteOf` alone cannot answer now that repeat and switch nodes are reachable.
-`realParentOf` finds the real container a node's box is placed under, walking through repeat and switch ancestors as `validate-motion-warnings.ts` does, since they draw no box of their own.
+`realParentOf` finds the real container a node's box is placed under, walking through repeat and switch ancestors as `packages/hud/src/layouts/validate-motion-warnings` does, since they draw no box of their own.
 The Placement section's cell fields and the Layout section's engine both key off it.
 `isInsideRepeat` says whether `index`, `count` and `item` are valid names for `validateValue`.
-`enclosingRepeatOf` gives the nearest repeat's spec, so the editor knows how many values a formula produces and what each `item` reads, the same names `engine/expand.ts` uses.
+`enclosingRepeatOf` gives the nearest repeat's spec, so the editor knows how many values a formula produces and what each `item` reads, the same names `packages/hud/src/engine/expand.ts` uses.
 `breadcrumbOf` gives root to node labels for Identity.
 `ancestorIdsOf` gives the ids between the root and the node, which the outline must expand before it can scroll to a row selected on the stage.
 `rootsOf` stays a function so every walk reads where the document starts from one place; it was a list while regions hung beside the screen.
 
-### hud-layout-editing/use-drag-autoscroll
+### apps/desktop/src/hud-layout-editing/use-drag-autoscroll
 
 The outline's drag reaches past the fold with a ramped animation frame pan on its scroller.
 Only the outline pans, because only it takes a drop; the stage column lost its drop surface, and a scroller that pans under a drag it can never accept moves for no reason.
@@ -1723,12 +1719,12 @@ Reduced motion halves the rate and never disables it, because disabling makes a 
 The setting is read once per drag, because `window.matchMedia` does not exist in every host.
 `scrollerFor` walks up to the nearest ancestor that can scroll, because which element scrolls is a CSS decision; `.hud-outline__rows` was not a scroller at first.
 
-### hud-layout-editing/repeat-move.ts
+### apps/desktop/src/hud-layout-editing/repeat-move.ts
 
 Re-emits the pointer's last position so the gesture re-resolves while the pointer is still.
 Auto scroll needs it: rows slide under a still cursor, and a hit test that only runs on `pointermove` keeps naming the old row.
 
-### hud-layout-editing/useDragGesture.ts
+### apps/desktop/src/hud-layout-editing/useDragGesture.ts
 
 The outline's drop gesture, now its only caller since the stage nudge was removed.
 It uses pointer events, not the HTML5 drag API.
@@ -1744,17 +1740,17 @@ Once the gesture is real, the trailing `click` is swallowed in the capture phase
 It registers only while a drag is live, so a press that never moved owns no key.
 `SLOP` is 2: below it a press is a click that wobbled.
 
-### hud-layout-editing/useOutlineKeys.ts
+### apps/desktop/src/hud-layout-editing/useOutlineKeys.ts
 
 The outline's keyboard path: four shortcuts on a focused row, and the sentence they announce.
 The modifier is `isPrimaryModifier`, not literal `Ctrl`: `metaKey` alone on macOS and iOS, `ctrlKey` alone elsewhere, either where the host cannot say.
-The keys were checked to be free: the global map binds Alt+Enter, Ctrl+Shift+D, the primary modifier with K and `Escape` (`useKeyboardShortcuts.ts`); the search palette owns bare arrows and Enter only while focused; `KeyRail` owns bare Left and Right on a keyframe.
+The keys were checked to be free: the global map binds Alt+Enter, Ctrl+Shift+D, the primary modifier with K and `Escape` (the shell's global shortcut map); the search palette owns bare arrows and Enter only while focused; `KeyRail` owns bare Left and Right on a keyframe.
 Shift and Alt are excluded so a Ctrl+Shift+Arrow text selection is never swallowed.
 It is bound on the row, not on `document`, so there is no second global listener to order.
 One `aria-live` region, written only here, reads `announcementFor`, the ghost's lines flattened, so the announcement and the card share their phrasing.
 Nowhere to go is not a refusal: the row shakes 2px for `SHAKE_MS`, long enough to see and short enough that a held key still repeats.
 
-### hud-layout-editing/useOutlineScroll.ts
+### apps/desktop/src/hud-layout-editing/useOutlineScroll.ts
 
 Scrolls the outline to the selected row only when the selection came from outside the outline.
 `onSelect` is shared by the stage, the inspector and the outline's rows, so the origin is found by comparing with the last id the outline's own rows selected (`markSelf`).
@@ -1763,13 +1759,13 @@ Collapsed ancestors are expanded whatever the origin, because a hidden row must 
 `lastHandled` is separate from `lastSelf`, so an unrelated re-render cannot scroll again for an unchanged selection.
 The scroll waits one frame for the expanded row to exist.
 
-### hud-layout-editing/usePanelResize.ts
+### apps/desktop/src/hud-layout-editing/usePanelResize.ts
 
 The outline and inspector rails' resize wiring, kept out of the editor's view.
 Width comes from the view store, `useResize` drives the drag, and `onPreview` writes each rail's inline style so state only changes on release.
 The inspector's handle is on its own left edge, so `invert` flips the delta.
 
-### hud-layout-editing/useSpringLoad.ts
+### apps/desktop/src/hud-layout-editing/useSpringLoad.ts
 
 Hovering a collapsed row during a drag opens it after 500ms, like Finder and Explorer, at the low end of their 500 to 600ms range.
 Collapse state is `collapsedNodeIds` in the view store, because folding a row is a fact about how someone is looking at the tree.
@@ -1779,7 +1775,7 @@ A drag should not leave the view changed, but closing the row that just received
 A cancel closes every sprung row, since nothing landed.
 The timer resets on leaving the row, and `pending` drives the caret's wait, the only animation in the design.
 
-### hud-layout-editing/useTextValue.ts
+### apps/desktop/src/hud-layout-editing/useTextValue.ts
 
 The draft and commit half of `TextValueField`, applying `useValueInput`'s rules to a string.
 There is no mode switch: one field, one string, and a leading `=` is the only thing that means formula.
@@ -1790,7 +1786,7 @@ A blur with nothing uncommitted writes nothing, so a click that changed nothing 
 The `=` chip appears on focus and does what typing `=` does, keeping the text already there.
 `dirty` is an edit that has not reached the document, which is why a result is withheld.
 
-### hud-layout-editing/useEditorSchemes.ts
+### apps/desktop/src/hud-layout-editing/useEditorSchemes.ts
 
 The control scheme running right now, a quiet background fact and never a control set in this editor.
 Slot numbers are never validated against a device, so this exists for two things only.
@@ -1804,7 +1800,7 @@ Then the profile's own recorded choice, which outranks the input manager, becaus
 The manager is used only when there is no stored choice.
 A change is written to disk and to the running session; re-pushing the active profile rebuilds the bindings, and both the HUD layout store and the control scheme store follow them, so the game sees it at once.
 
-### hud-layout-editing/useGlyphPacks.ts
+### apps/desktop/src/hud-layout-editing/useGlyphPacks.ts
 
 Every glyph pack the editor can offer, and the operations on the player's own packs.
 Custom packs are loaded with the shipped ones and passed to the glyph chain as one list, so a custom pack is consulted first and falls through to the pack it names and then the device family.
@@ -1812,7 +1808,7 @@ Images are primed into the object URL cache as soon as packs are read, because r
 `version` bumps whenever an image is added or removed, because a re-import keeps the same file key and the pack object alone cannot say so.
 `packs` lists shipped packs first, then the player's own, as one stable array so the preview's memo holds.
 
-### hud-layout-editing/useLayoutDraft.ts
+### apps/desktop/src/hud-layout-editing/useLayoutDraft.ts
 
 The working layout, kept as a memento.
 The editor copies the layout in force when it opens (`origin`, never written), edits `draft`, and only Save reaches storage and the layout store.
@@ -1824,21 +1820,21 @@ The toolbar's insert, the outline's drag and the inspector's fields all arrive t
 Start from keeps the draft's own identity when it has one, so it restyles the open layout instead of switching layouts.
 The start from list holds the shipped layouts, then the custom ones.
 
-### hud-layout-editing/useNodeEdits.ts
+### apps/desktop/src/hud-layout-editing/useNodeEdits.ts
 
 Selection, and the things that can be done to the selected node.
 The selection is an id, not a node, because every edit rebuilds the tree and a held node would be stale one keystroke later.
-`drop` is the one door both surfaces' `DropIntent` comes through; `behavior/drop-intent/move-all.ts` is the only module that calls `moveNode`, and a test checks it.
+`drop` is the one door both surfaces' `DropIntent` comes through; `apps/desktop/src/hud-layout-editing/drop-intent/move-all.ts` is the only module that calls `moveNode`, and a test checks it.
 The newly inserted node becomes the selection, because the next step is usually to size or move it.
 
-### hud-layout-editing/insert-site.ts
+### apps/desktop/src/hud-layout-editing/insert-site.ts
 
 Where an insert lands.
 With a container selected it goes into that container.
 With an element selected it goes beside it, in its parent, right after it.
 With nothing selected it goes into the screen, so the toolbar is never inert.
 
-### hud-layout-editing/useSampleState.ts
+### apps/desktop/src/hud-layout-editing/useSampleState.ts
 
 What the editor's preview draws against.
 The vitals prefer the running game, and the slots never do.
@@ -1850,7 +1846,7 @@ The content has the same shape the live HUD passes the renderer, built by the sa
 A save with no heart containers has never been loaded, which is the whole liveness test.
 Bow tier 3 and up is the silver art, as the live HUD reads it, and health is stored in eighths of a heart.
 
-### hud-layout-editing/sample-state.type.ts
+### apps/desktop/src/hud-layout-editing/sample-state.type.ts
 
 `live` is false when nothing is running and the values are made up.
 `filledSlots` lists slot numbers that fire something, for the layout pass's dim rule.
@@ -1858,7 +1854,7 @@ Bow tier 3 and up is the silver art, as the live HUD reads it, and health is sto
 `dataScope` is what every bound value, repeat and switch in the preview reads, built from the same vitals.
 An empty `slots` argument falls back to a plausible eight.
 
-### hud-layout-editing/value-text
+### apps/desktop/src/hud-layout-editing/value-text
 
 The one rule that replaced the `123 | ƒx` switch: what a person types, and what the document keeps.
 The leading `=` is the only thing that marks a formula, and it is never stored.
@@ -1875,7 +1871,7 @@ A `text` element's `value` is the one property that is `Value | string`, and the
 `TextContent` once had an outer `text | ƒx` switch that threw the expression away; there is no switch now, so nothing is lost.
 A stored string that starts with `=` is shown escaped, so what reads back is what was stored.
 A text value never fails to parse: anything not a formula and not a numeral is a string.
-A bare numeral stays a number, because `format.digits` and `format.pad` only apply to numbers (`hud-text.ts`).
+A bare numeral stays a number, because `format.digits` and `format.pad` only apply to numbers (`packages/hud/src/types/hud-text`).
 Typing `=` before `24` keeps the digits as the start of the formula, and deleting the `=` leaves text the field reads back as a numeral if it can.
 
 ### HudLayoutEditor/sub-components/AlignmentTiles.tsx
@@ -1907,7 +1903,7 @@ Out of range is still not an error: a stored `fill: 4` loads, draws and reads ba
 The box model, drawn: padding nests inside margin, with an editable number on every edge and the box's size in the middle.
 Every browser inspector since Firebug in 2006, Figma, Webflow, Unity's RectTransform and Blender's N panel draw it this way, because the nesting says which side is which.
 The old four spinners in a row had 3px of typing surface at the 188px rail.
-Margin left and top are dimmed and read only, because Placement edits them as the node's offset (`behavior/offset`); two editors for one pair of keys would compete.
+Margin left and top are dimmed and read only, because Placement edits them as the node's offset (`apps/desktop/src/hud-layout-editing/offset`); two editors for one pair of keys would compete.
 Only padding gets the link toggle: two of the margin's four edges belong to another section, so linking them would write keys this control does not own.
 The screen root has no margin, because its rectangle is the view.
 `centre` is the authored size shown in the middle cell, such as `80 x auto`.
@@ -1931,7 +1927,7 @@ It also has an `otherwise` row and "+ add case".
 A case's `node` is a whole subtree, so this edits only `when` and the case's place in the list.
 Its content is tuned like any other node: select it in the outline, which lists it, and the rest of the panel takes over.
 The case node is a `ReferenceField` whose button jumps the selection there.
-Which branch is winning is drawn, not deduced: `behavior/case-match` asks the engine's own predicate, so the marker matches the stage.
+Which branch is winning is drawn, not deduced: `apps/desktop/src/hud-layout-editing/case-match` asks the engine's own predicate, so the marker matches the stage.
 Inside a repeat a switch runs once per instance, so the previewed data is the whole set and the marker shows a count, such as `matches 6 of 20`.
 
 ### HudLayoutEditor/sub-components/ColorField.tsx
@@ -1973,7 +1969,7 @@ It is always `contained`, because every caller sits in the scrolling inspector r
 ### HudLayoutEditor/sub-components/DragGhost
 
 The card that follows the cursor while an outline drag is live, in three lines.
-What it says comes from `behavior/drop-ghost`; this is only the drawing, so the wording is testable without a DOM and the outline's `aria-live` region reads the same words.
+What it says comes from `apps/desktop/src/hud-layout-editing/drop-ghost`; this is only the drawing, so the wording is testable without a DOM and the outline's `aria-live` region reads the same words.
 It tracks the cursor itself, because the gesture skips re-renders when two frames resolve to the same drop, and the card must move every frame.
 It renders through `Portal` at the `tooltip` layer, so neither the stage's `overflow: hidden` nor a rail's scroller clips it, and an open picker never draws over it.
 It does not animate, because an eased ghost reads as latency.
@@ -1991,7 +1987,7 @@ The `auto` tile appears only where the field may be unset, such as a keyframe's 
 
 ### HudLayoutEditor/sub-components/EdgesField.tsx
 
-Which sides a border draws on, as `HudBorderSides` (`hud-style.ts`).
+Which sides a border draws on, as `HudBorderSides` (`packages/features/src/hud-style`).
 Absent means every side, so an author who never opens it gets a border on all four.
 It edits four booleans, unlike `EdgesInput`, which edits four numbers, so it stays its own component.
 The first uncheck seeds the other three as explicitly on, and when all four are on again the value becomes absent.
@@ -2041,7 +2037,7 @@ A press outside the bar and any open panel closes it; panels may be portalled, s
 The bar, not each menu, registers at the `menu` dismiss level; a picker it opens registers at `popover` and wins, so Escape over the sprite grid closes only the grid.
 The grid view toggle moved to `LayoutSettings`, beside the guide colour it draws, and is not mirrored here.
 Snapping stays, because it is about the stage and belongs to no rail section.
-The icons are Lucide, from one table in `behavior/toolbar-menus`.
+The icons are Lucide, from one table in `apps/desktop/src/hud-layout-editing/toolbar-menus`.
 `slotNumbers` are a shortcut in the Slot panel, never a cap on what can be typed.
 `targetLabel` names the container where the next insert lands.
 
@@ -2120,7 +2116,7 @@ Only the selected stop takes rows, so any number of stops costs one ramp and two
 Click selects, drag moves, and double click on the ramp adds a stop there.
 Arrow keys nudge the focused stop by 1%, or 10% with Shift, and `at` is also a number field, because dragging is for feel and typing is for exact values.
 Stops are sorted on every write and the selection follows the moved stop, so dragging past another stop does not start editing its neighbour.
-`at` is a bare number in `hud-value.ts`, not a `Value`, so it uses `NumberInput`; a stop position cannot be bound.
+`at` is a bare number in `packages/hud/src/types/hud-value`, not a `Value`, so it uses `NumberInput`; a stop position cannot be bound.
 
 ### HudLayoutEditor/sub-components/GroundPicker.tsx
 
@@ -2191,11 +2187,11 @@ The screen has no parent and no size to argue about, so Placement is hidden for 
 `otherIds` is every id except this node's, which the id field checks duplicates against.
 A formula in a repeat's subtree produces `count` values; the instance scopes are computed once here and passed through `FormulaScopeContext`.
 `onDrop` is the editor's one reorder door: Layout's flex strip moves a child, and only `applyDrop` may call `moveNode`, so the intent travels up.
-`reflowWarnings` are the reflow warnings from `validate-motion-warnings.ts` for the whole document, filtered here to this node.
+`reflowWarnings` are the reflow warnings from `packages/hud/src/layouts/validate-motion-warnings` for the whole document, filtered here to this node.
 
 ### HudLayoutEditor/sub-components/OffsetField.tsx
 
-Where a node is and how to move it: two numbers, negatives allowed, wired to `margin.left` and `margin.top` through `behavior/offset`.
+Where a node is and how to move it: two numbers, negatives allowed, wired to `margin.left` and `margin.top` through `apps/desktop/src/hud-layout-editing/offset`.
 Under a flex or grid parent they displace the node from where the flow put it.
 `PositionInput` is the primitive, with its shell, caps and draft rules (a half typed `-` survives, a commit never emits NaN); this adds only the meaning.
 The label is "offset" with the reference frame in the hint, because "offset" alone would read as an absolute screen position.
@@ -2205,7 +2201,7 @@ The label is "offset" with the reference frame in the hint, because "offset" alo
 
 The document as a tree, screen root, band, container, element, with drag to reparent and reorder.
 It replaced "five handles": a tree cannot be edited by dragging boxes on a stage, because what moves is a node's place among its siblings and its parent.
-The drop is resolved in `behavior/drop-intent`, not here; this file only says which row the pointer is over, the one question only the DOM can answer.
+The drop is resolved in `apps/desktop/src/hud-layout-editing/drop-intent`, not here; this file only says which row the pointer is over, the one question only the DOM can answer.
 The screen is always the first row, at depth 0, and the only root; it is never dragged or removed. Everything below it drags, including the former regions.
 Every row with a subtree can collapse on its own, expanded by default; collapse state lives in the view store, never the document.
 The row list is the scroller, so the label and hint stay put and the two 24px pan bands are sticky children of the list, drawn instead of discovered.
@@ -2213,14 +2209,14 @@ It is reachable without a pointer: four shortcuts on a focused row, a context me
 The spring load is settled from `commit` through a ref, before the drop, so rows the drag opened close again except the one it landed in.
 A refused drop has no row highlight; the ghost card turns and names both nodes instead.
 
-### hud-layout-editing/outline-rows.ts
+### apps/desktop/src/hud-layout-editing/outline-rows.ts
 
 Flattens the tree into outline rows; a collapsed row's descendants are not walked, so this is also the filter.
 A row has a subtree when it is a container with children, a repeat, or a switch.
 A direct child of the screen carries a badge naming its cell in the screen's grid; a child with no `place` flows automatically and has no single cell.
 A repeat's child and a switch's cases are locked rows: selectable and editable, but not draggable, since they sit in no container's `children` array.
 
-### hud-layout-editing/row-under.ts
+### apps/desktop/src/hud-layout-editing/row-under.ts
 
 The row under the pointer, looked up, not received: pointer capture makes every move report on the source row, which is also what lets the drag survive leaving the rail.
 A locked row is not a target.
@@ -2298,12 +2294,12 @@ The open group belongs to the section: `AppearanceSection` holds one `openKey` a
 Which sides a border draws on, drawn as the box it is about.
 It replaced four checkboxes that ran together as one string; the value is a position, and a position is drawn, as in the box model.
 Each edge is a real button with `aria-pressed`, so each bar is its own control; the bars are 7px thick because 3px is not a hit target.
-Absent means every side (`hud-style.ts`), so the first uncheck seeds the other three as on, the rule shared with `EdgesField`, whose side list it reuses.
+Absent means every side (`packages/features/src/hud-style`), so the first uncheck seeds the other three as on, the rule shared with `EdgesField`, whose side list it reuses.
 
 ### HudLayoutEditor/sub-components/SlotChips.tsx
 
 `dimWhenEmpty` is a list of slot numbers, edited as a list.
-It replaced a text box of comma separated numbers that re-parsed on every keystroke and dropped fragments; the value is `number[]` in `hud-node.ts`.
+It replaced a text box of comma separated numbers that re-parsed on every keystroke and dropped fragments; the value is `number[]` in `packages/hud/src/types/hud-node`.
 It is not `TagInput`, which is a string vocabulary with suggestions and validation; only the shape of removable chips with an entry is borrowed.
 The entry is always visible, because the number field is the add button.
 Duplicates and zero are refused and the list is sorted, because it is a set.
@@ -2341,7 +2337,7 @@ Position is edited in Placement's `OffsetField` and scale in Size & Box, both by
 A press selects on the way down, with no slop threshold.
 The screen root is an ordinary pick, since selecting writes nothing; it is how the screen's Layout section is reached.
 A press that finds a box stops propagation, because the stage's own press clears the selection.
-`data-node-id` names each placed rectangle, so `hud-layout-options.keep.spec.ts` can read real positions after a gap or reorder change.
+`data-node-id` names each placed rectangle, so the layout options specs in `apps/desktop/tests/e2e/hud-layout-options` can read real positions after a gap or reorder change.
 
 ### HudLayoutEditor/sub-components/SubSection.tsx
 
@@ -2355,7 +2351,7 @@ The title is printed uppercase by the sheet, so pass it in sentence case.
 
 One level down from `SectionAccordion`, applied inside Appearance, the longest section.
 Border, Outline, Tint and each Shadow were sub editors behind a plain `Toggle` that looked just like a boolean.
-The header states the value, such as `2px solid` beside a colour swatch, so the active group shows without opening; `behavior/appearance-summary` owns the wording.
+The header states the value, such as `2px solid` beside a colour swatch, so the active group shows without opening; `apps/desktop/src/hud-layout-editing/appearance-summary` owns the wording.
 The enable checkbox is a sibling of the trigger, because a checkbox in a button is invalid and unreachable by keyboard.
 Turning a group on opens it in the same gesture; the caller does this, since it enforces one open at a time.
 A group that is off cannot be opened, because there is no value behind it; the trigger is disabled and the summary says `off`.
@@ -2379,7 +2375,7 @@ A number with no `step` moves by the editor's step from `editor-step`, so gaps, 
 Pass a `step` only for numbers that are not pixels: fractions, counts, milliseconds.
 `aria-label` names the field when its visible label is a glyph in the caller's row.
 
-### theme/hud-layout-editor/appearance.css
+### apps/desktop/src/theme/hud-layout-editor/appearance.css
 
 Styles for Appearance's own controls: the collapsible sub group, the border's box diagram, the gradient ramp and the slot chips.
 It is imported by those components, not by the view, so rules arrive with the components that need them.
@@ -2394,7 +2390,7 @@ The ramp's inline background is the gradient being edited.
 A stop is taller than the track and centred on its position, so a stop at 0 or 1 can be grabbed at the edge.
 The slot chip entry is narrow: three digits cover every slot in the game.
 
-### theme/hud-layout-editor/content.css
+### apps/desktop/src/theme/hud-layout-editor/content.css
 
 Styles for the Content section's controls, imported by `ReferenceField`, `SlotRefField`, `BoundedValueField` and `TextValueField`.
 `.hud-ref-field` replaced the sprite only `.hud-sprite-field`, so the row shape lives in one rule.
@@ -2404,14 +2400,14 @@ The kind, or a subtree's id, is demoted but kept, so two sprite children stay di
 A specimen stands in for type, such as `07` drawn in the face being chosen.
 The bounded field tightens the design system `Slider`, whose 16px gap and base size label suit a settings row, not a 188px rail.
 
-### theme/hud-layout-editor/fields.css
+### apps/desktop/src/theme/hud-layout-editor/fields.css
 
 Fixes for flex rows whose fields collapsed to nothing.
 `.text-input` and `.select-trigger` are `width: 100%`, and on a flex item a percentage width is the flex basis, so each claimed the whole row while a `flex: 1` sibling got nothing.
 The colour row, the most rendered row in Appearance, had 13.9px of typing area for a `#rrggbb` value before this.
 The `Select` beside a numeric field stops claiming the whole row.
 
-### theme/hud-layout-editor/drag.css
+### apps/desktop/src/theme/hud-layout-editor/drag.css
 
 The outline's drag only: the ghost, the pan band, the spring load caret and the keyboard path's two signals.
 The stage's drop surface rules were removed when the maintainer dropped that mechanic; there is no `.hud-drop` and no `nudge` tone.
@@ -2429,7 +2425,7 @@ Nowhere to go shakes the row instead of announcing anything.
 Both animations stop under reduced motion.
 The `aria-live` text is clipped, not hidden, so it stays in the accessibility tree and takes no space.
 
-### theme/hud-layout-editor/geometry.css
+### apps/desktop/src/theme/hud-layout-editor/geometry.css
 
 The geometry half of the inspector: Position and placement, and Size and box.
 Every rule is one the primitives cannot express, since a nested box model is a drawing.
@@ -2440,7 +2436,7 @@ Box model edge columns are elastic with a floor: fixed columns would waste the 2
 The offset owned margin edges are dimmed and inert, not hidden, so the ring still shows what a margin is.
 The link chain is padding's alone, because two margin edges belong to another section.
 
-### theme/hud-layout-editor/inspector.css
+### apps/desktop/src/theme/hud-layout-editor/inspector.css
 
 The accordion panel and the controls it is built from.
 A section header's gold rule shows only when open, separating title from body.
@@ -2448,12 +2444,12 @@ A value field is a flex child of `.hud-inspect__row` and must be able to shrink;
 `.hud-expr__live` serves `DataSection`, the one place in the panel that is a report, not a field.
 Most `PaintField` layout moved to `Field size="sm"` and `Flex gap="2xs"`; what remains is a padded card, a border and an anchor's `position`.
 A flex child's overlay slot is dashed and inset by a pixel, so it is never mistaken for, or drawn under, the solid gold selection outline.
-`hud-inspector-property-rows.keep.test.ts` counts the `--space-2xs` uses in this sheet, and `hud-layout-section-controls.keep.test.ts` checks the slot is dashed.
+`hud-inspector-property-rows.keep.test.ts` counts the `--space-2xs` uses in this sheet, and the suites in `apps/desktop/tests/hud/hud-layout-section-controls` check the slot is dashed.
 The button state face rule went when faces became `ReferenceField`s.
 The stage's measured badge remains; the snap guide went with the drag.
 A repeat or switch embedded outline row is muted, since it cannot be dragged.
 
-### theme/hud-layout-editor/layout.css
+### apps/desktop/src/theme/hud-layout-editor/layout.css
 
 The Layout section's own controls: alignment tiles, the direction choice, the colour row and sub-sections.
 It is imported by its components, not the view, so a control can move sections without anyone moving an import.
@@ -2472,7 +2468,7 @@ The colour row's `position: relative` anchors the popover, and a zero basis on t
 Sections are `sm` apart and items inside one `2xs`, so the air between sections is larger than within one.
 A sub-section has no box, only a title over a 1px `--c-gold` rule, one step quieter than the accordion header's 2px rule.
 
-### theme/hud-layout-editor/layout-set.css
+### apps/desktop/src/theme/hud-layout-editor/layout-set.css
 
 Section one's packing and the flow row, split from `layout.css`.
 Every piece is one row, so pieces wrap into as few lines as their widths allow and the gap piece takes the rest.
@@ -2483,7 +2479,7 @@ The two gap cells share a box that a formula being typed floats over; `usePromot
 The flex flow row is icon buttons on the panel background with no border, wrapping at narrow rails, using the same `2xs` and `sm` gaps as section one.
 `.hud-extent--bare` is the grid toolbar's bare extent wrapper.
 
-### theme/hud-layout-editor/motion.css
+### apps/desktop/src/theme/hud-layout-editor/motion.css
 
 Styles for Motion: the keyframe track, the easing tiles, the transport and a transition row.
 The rail is inset by a margin, not padding: a child with `position: absolute` resolves `left: 0%` and `100%` against the padding box, so padding would not keep a diamond inside.
@@ -2493,13 +2489,13 @@ The transport only stops the play button from stretching; the slider fills the r
 An `input[type=range]` has an intrinsic width of about 129px, its automatic minimum on a flex item, and `Slider`'s gap adds 16px.
 Before the slider rules here it overflowed the rail by 14px at 232 and 36px at 188; `Slider` itself is left alone because settings screens have the width it assumes.
 
-### theme/hud-layout-editor/panels.css
+### apps/desktop/src/theme/hud-layout-editor/panels.css
 
 The insert bar, the inspector's rows and the stage's pick boxes.
 A formula being edited in a half width pair sets `flex-basis: 100%` on itself, and `flex-wrap` on `.hud-inspect__row` lets its sibling drop to the next line.
 The extent and edge rules set only flex behaviour; the column and its label gap come from `Field`.
 
-### theme/hud-layout-editor/outline.css
+### apps/desktop/src/theme/hud-layout-editor/outline.css
 
 The outline and inspector panel shells and the outline rows, split from `panels.css`.
 Both rails are bordered, rounded and shadowed so they read as panels floating over the stage.
@@ -2510,7 +2506,7 @@ Rows set `user-select: none`, because the pointer based drag no longer gets that
 A row with no subtree gets a blank the width of the disclosure triangle, so names line up.
 The triangle rotates a quarter turn when open, so the silhouette stays the same and only the state changes.
 
-### theme/hud-layout-editor/pickers.css
+### apps/desktop/src/theme/hud-layout-editor/pickers.css
 
 Icon only toolbar buttons are square, because the label lives in the tooltip.
 Picker panels float over the stage's ground and live art, so they need an opaque surface (`--c-surface`, as `DropdownMenu` uses), plus a border and shadow to read as floating.
@@ -2536,7 +2532,7 @@ Pressing a segment changes only the lit segment, because the hint below is the s
 
 A `glyph` element shows a fixed position, or whatever slot N is bound to now, never both.
 It is picked by sight from the toolbar's Glyph grid, never typed by an SDL name.
-The resting field shows the picture through `behavior/glyph-art`, the same as the picker, instead of the SDL token.
+The resting field shows the picture through `apps/desktop/src/hud-layout-editing/glyph-art`, the same as the picker, instead of the SDL token.
 The slot branch uses `SlotRefField`, which draws the glyph the slot is bound to instead of describing it.
 The two options are single words, because longer phrases overflowed a 188px rail by 32px in the width harness.
 
@@ -2544,7 +2540,7 @@ The two options are single words, because longer phrases overflowed a 188px rail
 
 `repeat` edits its `count`, the `item` expression each pass gets, and its one `child`.
 The child is a whole subtree, edited by selecting it in the outline, so this only jumps there through a `ReferenceField` with the `go` caret.
-`count` is read in the repeat node's own ambient scope (`validate-dynamic-node.ts`: a repeat's child is inside the repeat, its count is not).
+`count` is read in the repeat node's own ambient scope (`packages/hud/src/layouts/validate-dynamic-node`: a repeat's child is inside the repeat, its count is not).
 `item` is always checked as inside the repeat, since it is read per pass.
 
 ### HudLayoutEditor/sub-components/ShapeContent.tsx
@@ -2567,7 +2563,7 @@ The sprite's natural box is not asked for: `intrinsic-size.ts` reads it from the
 ### HudLayoutEditor/sub-components/SwitchContent.tsx
 
 `switch` passes straight through to `CaseListEditor`, which owns the case list.
-A case's `when` is checked under the switch node's ambient `insideRepeat` (`caseAt` in `validate-dynamic-node.ts`), because a top level switch such as the arrow preset's `silver_arrows` gate has no `index`, `count` or `item`.
+A case's `when` is checked under the switch node's ambient `insideRepeat` (`caseAt` in `packages/hud/src/layouts/validate-dynamic-node`), because a top level switch such as the arrow preset's `silver_arrows` gate has no `index`, `count` or `item`.
 
 ### HudLayoutEditor/sub-components/TextContent.tsx
 
@@ -2583,7 +2579,7 @@ Tracking is a number input, not a slider: it is extra letter spacing in SNES pix
 
 A `text` element's value as one field, which also removed a data loss bug.
 Two stacked mode switches once wrote `''` or `{ from: 'data', expr: '0' }` over the value, destroying formulas with no warning.
-It is the same input as `ValueInput` without assuming a literal is a number: a leading `=` means formula and is never stored, `==` escapes a literal `=`, and anything else is a string (`behavior/value-text`).
+It is the same input as `ValueInput` without assuming a literal is a number: a leading `=` means formula and is never stored, `==` escapes a literal `=`, and anything else is a string (`apps/desktop/src/hud-layout-editing/value-text`).
 It is not `ValueInput` itself, because `ValueInput` speaks `Value` and this is the one property typed `Value | string`.
 Both share the rule, `readExpr`'s errors, `FormulaFeedback`'s result line and `FormulaProblem`'s follow ups.
 The result shows the moment the formula compiles.
@@ -2592,7 +2588,7 @@ The result shows the moment the formula compiles.
 
 The first block of Motion: the animations. Each is a clock the document drives for its own sake, gated by an expression.
 Each animation is a `SubsectionGroup`: the property names it, a one line summary such as `300ms · loop · gated` says what it does while closed, and delete is the header's action.
-The reflow warning lands on the card that animates the property named in it (`validate-motion-warnings.ts` writes the property into the string), under that card's property control.
+The reflow warning lands on the card that animates the property named in it (`packages/hud/src/layouts/validate-motion-warnings` writes the property into the string), under that card's property control.
 The generic "width and height can reflow siblings" note covers an animation just switched to `width` that is not saved yet, which the document walk cannot see.
 There is one transport, not one per card, because every animation samples one shared clock; that shared clock is the staggering mechanism.
 `openIndex` and `onOpen` belong to `MotionSection`, so one card is open at a time.
@@ -2607,7 +2603,7 @@ Visible, opacity, radius, clip and dim when empty stay as plain rows, since they
 One group is open at a time, and this file owns that set. `openKey` spans the shadow cards too, which is why `ShadowListEditor` takes it.
 So the section's height with everything on is one screen plus the single open group.
 Enabling a group opens it.
-`MAX_OUTLINE_PX` is 2 because an outline is drawn as stacked filters, cheap at one or two pixels and expensive past that (see `hud-style.ts`).
+`MAX_OUTLINE_PX` is 2 because an outline is drawn as stacked filters, cheap at one or two pixels and expensive past that (see `packages/features/src/hud-style`).
 `CORNERS` follows the CSS `border-radius` order as initials: at the 188px rail each label gets about 88px, and `BOTTOM RIGHT` does not fit on one line once `Field` uppercases it.
 
 ### HudLayoutEditor/sub-components/ContentSection.tsx
@@ -2639,7 +2635,7 @@ Layout holds type, gap on both axes and the overlay, the same for every containe
 Flow is direction and wrap, flex only. It is its own section because direction turns the alignment diagrams, so the tiles are a later section reacting to an earlier one.
 Alignment is the tiles: pressing one writes one key and lights one tile.
 Grid manipulation or Flex manipulation is the container's structure: a grid's tracks, or a flex container's child order.
-This file translates the two engines into one shape: the alignment rows and which manipulation component to mount (`behavior/layout-sides.ts`).
+This file translates the two engines into one shape: the alignment rows and which manipulation component to mount (`apps/desktop/src/hud-layout-editing/layout-sides`).
 It reads the view store for the overlay flag, which is editor state, not document state.
 Switching engine is a conversion through `engineSwitchPatch`; a fresh container through a merging patch left the other engine's keys behind and crashed the layout pass.
 A gap cell writes one axis and leaves the other alone, the same rule a tile follows.
@@ -2652,12 +2648,12 @@ One section for animations, transitions and enter and exit, three shapes of how 
 An animation runs on its own clock, a transition fires when a bound value changes, and enter and exit cover a repeat gaining or losing a child.
 Three subsections, one open at a time, each header stating its own count.
 The open animation card lives here, so switching subsections keeps the card selection.
-`warnings` holds `validate-motion-warnings.ts`'s lines for this node, already filtered.
+`warnings` holds `packages/hud/src/layouts/validate-motion-warnings`'s lines for this node, already filtered.
 
 ### HudLayoutEditor/sub-components/PlacementSection.tsx
 
 Answers where this node is and how to move it.
-Offset comes first, as in other inspectors. It writes `margin.left` and `margin.top` (`behavior/offset.ts`).
+Offset comes first, as in other inspectors. It writes `margin.left` and `margin.top` (`apps/desktop/src/hud-layout-editing/offset`).
 There is no `order` field: the outline's drag reorders siblings.
 There is no nine anchor dropdown; a former region is a child of the screen's grid, so moving it is picking a cell.
 `CellPicker` shows the parent's grid and writes only this child's `place`. It cannot edit a track, and the grid editor cannot edit a child.
@@ -2676,7 +2672,7 @@ The screen's lock is one `DisabledReason` scrim over size and limits, with the m
 The screen's padding, the one thing it authors, stays live outside the scrim. `inert` on the covered subtree takes it out of the tab order.
 `isScreen` marks the whole screen root.
 
-### hud-layout-editing/extent-text.ts
+### apps/desktop/src/hud-layout-editing/extent-text.ts
 
 What the middle of the box model reads: the authored size, not the resolved rectangle.
 The panel does not have the placed rectangle, the stage does, and a number labelled resolved that was not would be worse than none.
@@ -2687,7 +2683,7 @@ The second Motion block: value transitions, which ease instead of snapping when 
 All six properties are offered; the ones nothing drives are annotated on their row instead of being left out.
 The empty state covers this list only, and `EnterExitEditor` is a sibling block that always renders.
 `HudTransition` carries one duration and one easing for the whole list, so they are one pair beneath the rows, labelled as shared.
-Per property timing would change the type, the validator, `bake-motion.ts`, `resolve-node-transition.ts` and every saved document.
+Per property timing would change the type, the validator, `packages/hud/src/engine/bake-values/bake-animation.ts`, `resolve-node-transition.ts` and every saved document.
 
 ### HudLayoutEditor/sub-components/CellPicker/CellPicker.tsx
 
@@ -2744,10 +2740,10 @@ Section four under a flex container is Flex manipulation.
 The grid's manipulation section edits the grid's structure, its tracks, and the children follow. A flex container's structure is the order of its children: each child is its own track along `direction`.
 So this is the same control one dimension down, with the same three bands.
 `SelectionToolbar` holds actions on the selection only. It is sticky, one row, with the same reserved height when nothing is picked, and it is the same component the lattice mounts.
-`FlexStrip` is the drawing: one cell per child, sized by the child's real placed size (`behavior/flex-slots.ts`), drawn along the container's direction and wrapping as it wraps.
+`FlexStrip` is the drawing: one cell per child, sized by the child's real placed size (`apps/desktop/src/hud-layout-editing/flex-slots`), drawn along the container's direction and wrapping as it wraps.
 `SelectionLegend` shows what is selected and what can be pressed now, drawn with `KeyCap` and `MouseGlyph`.
 A press writes nothing: click, `{mod}` click and Shift click all leave the document byte identical, and only choose what the toolbar and the stage echo read.
-The one write goes through the one route. A reorder is a `moveNode`, and `behavior/drop-intent/move-all.ts` is the only module that calls one, which a grep test checks. This component hands a `DropIntent` up and never touches the tree.
+The one write goes through the one route. A reorder is a `moveNode`, and `apps/desktop/src/hud-layout-editing/drop-intent/move-all.ts` is the only module that calls one, which a grep test checks. This component hands a `DropIntent` up and never touches the tree.
 `moveNode` removes and then inserts, so its index is into the list without this child, which is exactly the destination slot in both directions. An earlier `+1` for the forward case sent "move later" to the end.
 The stage echoes what is picked, visually and never as an edit, keyed by the children's ids.
 `onDrop` is the editor's single `applyDrop` route. A harness without the view leaves it out and the strip is a read only drawing.
@@ -2761,7 +2757,7 @@ A selection is context, not an edit. Nothing in `FlexSelection` is ever written.
 `FlexSelection` holds 0 based indices into `container.children`. `none` is the resting state, for which the toolbar prints its hint.
 `FlexEditorEdits` has one write, `move`, because a reorder is a `moveNode` and `applyDrop` is its only caller. `refuse` says in the legend why an action was refused.
 
-### HudLayoutEditor/sub-components/FlexEditor/behavior/flex-actions
+### HudLayoutEditor/sub-components/FlexEditor/behavior/flex-actions.ts
 
 One table, and every row is an action on the selection, the grid's rule kept. The toolbar, legend and keyboard all read these rows, so the legend never promises a shortcut the toolbar lacks.
 Four buttons, always, in reading order: start, earlier, later, end. A move that cannot apply is disabled in place, never removed. When they were dropped, a second press on the same spot undid the first, because the buttons shifted.
@@ -2777,7 +2773,7 @@ The arrows follow the flow: a row's earlier is the left arrow and a column's is 
 ### HudLayoutEditor/sub-components/FlexEditor/behavior/useFlexSelection.ts
 
 The flex strip's selection. A press writes nothing, the lattice's rule: click, `{mod}` click and Shift click change what the toolbar offers and what the stage echoes, never the document.
-The pick rule is `behavior/index-selection.ts`, the same function the grid's track headers call, so the two strips share one Shift behaviour.
+The pick rule is `apps/desktop/src/hud-layout-editing/index-selection`, the same function the grid's track headers call, so the two strips share one Shift behaviour.
 Escape registers on the dismiss stack at `popover`, so it clears the selection and leaves the editor layer standing.
 The selection is dropped when the child count changes, not remapped. A move keeps indices meaningful, but a child arriving or leaving through the outline would re point every index.
 
@@ -2806,7 +2802,7 @@ The cell weight is the child's real placed size in `flex-grow`, over a floor big
 The keyboard cursor is a rim, not a fill, so it shows inside a selection, and only while the strip has focus.
 The label is its own block with the ellipsis rule, centred. As an anonymous flex item a long name clipped at both ends.
 
-### hud-layout-editing/selection-bands.type.ts
+### apps/desktop/src/hud-layout-editing/selection-bands.type.ts
 
 One action table shape for every manipulation component. The grid editor invented it and the flex editor needs the same, so it lives here instead of being copied.
 The toolbar, legend and keyboard all read one table, so a legend cannot promise a shortcut no button runs.
@@ -2852,7 +2848,7 @@ It reuses `.hud-toolbar`, `.hud-toolbar__button` and `.hud-toolbar__sep` from th
 
 The toolbar's buttons, with a separator wherever an action's `group` changes, so grouping is a property of the action table.
 
-### theme/hud-layout-editor/bands.css
+### apps/desktop/src/theme/hud-layout-editor/bands.css
 
 The two bands a manipulation section wears, shared by the grid and flex editors: the contextual strip above the drawing and the legend under it.
 The class names keep their `hud-grid__` prefix on purpose. Several measurement tests pin these blocks by name at three rails, among them `hud-grid-strip`, `layout-bands.probe` and `hud-inspector-layout-widths`.
@@ -2886,7 +2882,7 @@ There is no child manipulation here. A child's cell is set in its own Placement 
 `GridSelection` is one selection made three ways. There is no occupant kind: the grid editor edits the grid only.
 `cells` is a list, not a rectangle, because the primary modifier toggles cells in one at a time. `track` carries the axis so the toolbar knows which extent list it edits.
 A selection is context, not an edit. Nothing in the union is written to the document.
-The action table shape lives in `hud-layout-editing/selection-bands.type.ts`, shared with the flex section. `GridShortcut`, `GridActionKind` and `GridAction` stay as aliases so this folder reads in the grid's own words.
+The action table shape lives in `apps/desktop/src/hud-layout-editing/selection-bands.type.ts`, shared with the flex section. `GridShortcut`, `GridActionKind` and `GridAction` stay as aliases so this folder reads in the grid's own words.
 There is no `control` action kind: a field in the action strip was a property in an action row and made the strip two rows deep at 232px. Size lives on the track header.
 `GridEditorEdits` has two writes, both about the grid. `patchContainer` covers tracks, gap, item alignment and the guide colour. `refuse` explains a refused action in the legend.
 `occupants` is read only, drawn so a track edit's blast radius is visible.
@@ -2907,13 +2903,13 @@ This file re-exports `contextualActions` and `gestureActions` because the HUD te
 
 `GESTURES` are the four pointer gestures shown under every state with a lattice. They write nothing: a click, modifier click, Shift click and drag leave the document byte identical.
 
-### HudLayoutEditor/sub-components/GridEditor/behavior/grid-cell-state
+### apps/desktop/src/views/HudLayoutEditor/sub-components/GridEditor/behavior/cell-state-of.ts
 
 What a cell looks like and the one rectangle the stage echoes.
 Two facts, four states: is the cell in the selection, and is a child standing in it. Occupancy is drawn so a track edit's blast radius shows before the button is pressed.
 `selectionBounds` is contiguous by construction for a track and the hull of the picked cells otherwise. `StageGridEcho` washes this rectangle.
 
-### HudLayoutEditor/sub-components/GridEditor/behavior/grid-icons
+### apps/desktop/src/views/HudLayoutEditor/sub-components/GridEditor/behavior/grid-icons.constants.ts
 
 The grid toolbar's icons. Unicode glyphs were drawn by whatever font the OS picked, unrelated to the icons around them; the project uses Lucide through `@iconify/react`, one stroke weight at 16px.
 Add column and add row use a plain plus on the lattice, so they are not here.
@@ -2922,13 +2918,13 @@ The inserts are drawn here in Lucide's grammar, a track and a plus on the side t
 `START_ICON` and `END_ICON` are arrows into a wall, because "move to the edge" needs a different picture from "move one along"; the flex strip once drew both as the same arrow.
 `EARLIER_KEY` and `LATER_KEY` are the caps the legend prints for the same moves, one source for both bands.
 
-### HudLayoutEditor/sub-components/GridEditor/behavior/grid-keys
+### apps/desktop/src/views/HudLayoutEditor/sub-components/GridEditor/behavior/grid-keys.constants.ts
 
-The keyboard looks its action up by the cap the legend draws, through `behavior/action-keys.ts`, shared with the flex editor.
+The keyboard looks its action up by the cap the legend draws, through `apps/desktop/src/hud-layout-editing/action-keys`, shared with the flex editor.
 What is left here is the lattice's own cursor motion over two axes, grouped in the legend as one arrows row, which writes nothing.
 The primary modifier with an arrow jumps to the edge; Shift extends a cell selection from its anchor.
 
-### HudLayoutEditor/sub-components/GridEditor/behavior/grid-status
+### apps/desktop/src/views/HudLayoutEditor/sub-components/GridEditor/behavior/grid-status.constants.ts
 
 The one line saying what is selected, plus the words the toolbar's leading chip wears.
 The chip names what the toolbar acts on: `COLUMN 2`, `ROW 1`, `3 CELLS`. It comes from the same selection as the status line, so they never disagree.
@@ -2936,13 +2932,13 @@ The status names what a track holds, so a person sees what the next press will m
 On a 3 by 3 grid it also names the anchor, such as bottom left, since the nine anchor dropdown was removed when the screen became a grid.
 The chip is lowercase in the string and uppercased by the sheet, so a screen reader hears "column 2". `null` is nothing selected, and the toolbar prints its own hint.
 
-### HudLayoutEditor/sub-components/GridEditor/behavior/grid-track-actions
+### apps/desktop/src/views/HudLayoutEditor/sub-components/GridEditor/behavior/grid-track-actions.constants.ts
 
 What a selected column or row can have done to it, which is all this editor does beside the container's gap, alignment, guide colour and engine.
-There is no "a child is in the way" refusal: children are kept valid automatically and `editGridTracks` moves them with the edit. The one refusal left is that `columns` may never be empty, `validate-container.ts`'s floor.
+There is no "a child is in the way" refusal: children are kept valid automatically and `editGridTracks` moves them with the edit. The one refusal left is that `columns` may never be empty, `packages/hud/src/layouts/validate-container`'s floor.
 Every row is an action on the selected track, so all live in the sticky strip and none survives a clear.
 Size is not a row: the selected header's label is the menu (`TrackHead`).
-Every track edit goes through `packages/hud/src/layouts/grid-track-edits.ts`, which returns the container with the new track list and the children's remapped `place` together, so the panel never writes one without the other.
+Every track edit goes through `packages/hud/src/layouts/grid-track-edits`, which returns the container with the new track list and the children's remapped `place` together, so the panel never writes one without the other.
 `applyTrackEdit` takes a container, not a selection, so callers that never see a selection can use it. `applyEdit` is the same route reached through a `GridActionContext`.
 `trackExtentOf` returns the declared extent, so an implicit row's size menu opens on `auto` instead of the solved size.
 `removeRun` removes the range back to front, so the indices still name the same tracks after the first goes.
@@ -2955,7 +2951,7 @@ A click writes nothing. A plain click once committed an armed placement and move
 The drag selects and never moves. The release only ends the rectangle.
 Every modifier goes through `isPrimaryModifier`, never a literal `ctrlKey`, so Cmd works on a Mac and the legend matches the key.
 Escape registers on the dismiss stack at `popover`, so it clears the selection and leaves the editor layer standing.
-The track pick rule is shared with the flex editor's cells through `behavior/index-selection.ts`.
+The track pick rule is shared with the flex editor's cells through `apps/desktop/src/hud-layout-editing/index-selection`.
 
 ### HudLayoutEditor/sub-components/GridEditor/GridEditor.css
 
@@ -2990,7 +2986,7 @@ One tab stop: the body takes focus and the cursor is `aria-activedescendant`. A 
 
 An empty `auto` track is drawn at the floor, and the header title says so instead of letting 24px pass for its size.
 
-### HudLayoutEditor/sub-components/GridLattice/behavior/lattice-geometry
+### HudLayoutEditor/sub-components/GridLattice/behavior
 
 The lattice's arithmetic: addresses, rectangles, occupancy and proportions.
 The cells match the real tracks. Track sizes come from the engine's `solveGrid` as `fr` weights with a `minmax(24px, ...)` floor, so a track keeps its share until that would fall below the target size. The whole drawing is one `grid-template` string, which also lets it be rendered and measured in a headless browser.
@@ -3013,7 +3009,7 @@ Occupancy is the engine's own answer (`assignCells`): pure, needing no `MeasureC
 
 The plus at the end of a header strip: just the icon, and where it sits says what it does.
 It is a header cell placed in the lattice's own template one past the last track, so it moves, scrolls and sticks with the strip it extends.
-It is never part of a selection. It carries no `data-on`, stops its `pointerdown` from reaching the lattice's drag, and appends through the same document rule as every track edit (`grid-track-edits.ts` remaps every child's `place`).
+It is never part of a selection. It carries no `data-on`, stops its `pointerdown` from reaching the lattice's drag, and appends through the same document rule as every track edit (`packages/hud/src/layouts/grid-track-edits` remaps every child's `place`).
 `at` is the 1 based grid line it sits on, one past the last track's header.
 
 ### HudLayoutEditor/sub-components/GridLattice/sub-components/TrackHead.tsx
@@ -3045,10 +3041,10 @@ The occupant label is drawn once across its span and never takes the pointer. It
 
 ### HudLayoutEditor/sub-components/ValueInput/ValueInput.tsx
 
-One always typed field in place of the old number or formula mode switch. `24` stays a number; `= life_current / 8` is a formula. The leading `=` says formula and is never stored (`behavior/value-text.ts`).
+One always typed field in place of the old number or formula mode switch. `24` stays a number; `= life_current / 8` is a formula. The leading `=` says formula and is never stored (`apps/desktop/src/hud-layout-editing/value-text`).
 No chip at rest: there is no switch, chip, border colour or hint until focus. The `=` button appears on the focused row only. A resting chip was 19% of a half width field on about thirty rows.
 One `<input>`, never swapped, so focus and caret survive typing `=`. The spinner is drawn here instead of using `NumberInput`, whose `type="number"` cannot hold a formula; the spinner and arrow keys depend on the current text, not on a remembered mode.
-A formula being edited in a half width field floats over its row as an overlay with its own box frozen at its resting height, so nothing beside it moves (`behavior/usePromoteOverlay.ts`). Giving the field `flex: 1 0 100%` once pushed the sibling onto a new line.
+A formula being edited in a half width field floats over its row as an overlay with its own box frozen at its resting height, so nothing beside it moves (`apps/desktop/src/views/HudLayoutEditor/sub-components/ValueInput/behavior/usePromoteOverlay.ts`). Giving the field `flex: 1 0 100%` once pushed the sibling onto a new line.
 The spinner buttons are named after the field, from `aria-label` when the visible label is a glyph in the caller's row, such as the gap cells and `MinMaxField`'s limits.
 The result shows the moment the formula compiles. A half typed `life_current /` does not compile, so `problem` withholds it.
 `rangeNote` warns when a valid result is outside the field's own range.
@@ -3133,7 +3129,7 @@ A gate reads back as 1 or 0, so "true on 3 of 20" is the summary; a measurement 
 ### HudLayoutEditor/sub-components/ValueInput/ValueInput.css
 
 The field mirrors `.number-input`'s geometry: one bordered box with a borderless field and a flush spinner column. It cannot be a `NumberInput`, whose `<input type="number">` cannot hold a formula.
-The five `--ctl-*` values are the compact tier's seam from `TextInput.css`, set here because this control is always `sm`.
+The five `--ctl-*` values are the compact tier's seam from Tessera's TextInput stylesheet, set here because this control is always `sm`.
 A formula is a state of the field, shown by a cool border and mono text, as in After Effects, Blender and Unity.
 The field selector uses two classes because the field is also a `TextInput` with `.text-input`; one class would tie on specificity and depend on bundle order.
 A derived or read only field is dashed and dim but readable.

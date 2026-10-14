@@ -257,14 +257,14 @@ color from the neutral glass token instead of a one-off blue rgb.
 
 ## 8. Token gaps to add (so the rules above are expressible)
 
-These are referenced by the rules but not yet defined. Add them to `tokens/`:
+These are referenced by the rules but not yet defined. Add them to Tessera's token files:
 
 ```css
-/* radius.css */   --radius-pill: 999px;
-/* shadow.css */   --shadow-sm: var(--shadow-overlay);   --shadow-md: var(--shadow-dropdown);
-/* effect.css */   --blur-sm: 4px;  --blur-md: 8px;
-/* color.css  */   --color-scrim: rgb(0 0 0 / .6);  --color-scrim-game: rgb(0 0 0 / .35);
-/* size.css   */   --dialog-w-sm: 400px; --dialog-w-md: 600px;
+/* radius */   --radius-pill: 999px;
+/* shadow */   --shadow-sm: var(--shadow-overlay);   --shadow-md: var(--shadow-dropdown);
+/* effect */   --blur-sm: 4px;  --blur-md: 8px;
+/* color */   --color-scrim: rgb(0 0 0 / .6);  --color-scrim-game: rgb(0 0 0 / .35);
+/* size */   --dialog-w-sm: 400px; --dialog-w-md: 600px;
                    --panel-w-sm: 200px; --panel-w-md: 280px; --panel-w-lg: 380px;
                    --widget-w-min: 240px;
 ```
@@ -309,7 +309,7 @@ Raw colors are gating errors, not conventions. Two blockers:
 |-------|-----|
 | `tokens/**` | The token definitions themselves. |
 | `hud/**` | Replicates the in-game HUD with the exact SNES palette. Game-accurate, not design tokens. |
-| Canvas rendering (`navigation-overlay/draw/*`, shadow `render*`, `gizmo-render`) | `ctx.fillStyle`/`ImageData` need real colour strings; a CSS `var()` can't be used. |
+| Canvas rendering (`apps/desktop/src/navigation-overlay/draw/*`, shadow `render*`, `gizmo-render`) | `ctx.fillStyle`/`ImageData` need real colour strings; a CSS `var()` can't be used. |
 | Categorical data-viz palettes (`EDGE_COLORS`, `DIR_COLORS`, `ReqIcon`, HID byte-roles in `ByteGrid`/`wizard-helpers`, sprite-category hues, driver-type badge, log `CHANNEL_COLORS`) | Fixed distinct hues that **encode categories** (like chart colours), not theme accents. Centralised constants, not scattered literals. |
 | Dynamic frame opacity (`Widget`/`TrackerView` frames) | `rgb(... / calc(α * var(--frame-opacity)))`: per-instance runtime opacity, not a flat token. Opted out per-line with `/* stylelint-disable-line function-disallowed-list */`. |
 | `DebugWidget` | Deliberate retro green-on-black terminal. |

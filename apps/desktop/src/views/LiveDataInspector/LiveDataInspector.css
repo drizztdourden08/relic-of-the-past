@@ -14,7 +14,7 @@
   flex-direction: column;
   gap: var(--space-sm);
   flex: 1;
-  min-height: var(--size-96);
+  min-height: calc(6 * var(--text-base));
 }
 
 .live-data-inspector__tabs {

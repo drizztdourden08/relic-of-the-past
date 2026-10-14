@@ -102,6 +102,7 @@
     "@drizztdourden08/brock-lint-config": "catalog:",
     "@drizztdourden08/brock-thread": "catalog:",
     "@iconify/types": "^2.0.0",
+    "@rotp/workspace": "workspace:*",
     "@types/js-yaml": "^4.0.9",
     "@types/node": "catalog:",
     "@types/pngjs": "^6.0.5",

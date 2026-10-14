@@ -27,7 +27,7 @@
   color: var(--c-primary-bright);
   font-weight: var(--weight-bold);
   text-transform: uppercase;
-  letter-spacing: var(--tracking-caps);
+  letter-spacing: calc(0.54 * var(--size-1));
   font-size: calc(9 * var(--size-1));
 }
 
@@ -76,7 +76,7 @@
 .nav-legend__head {
   color: var(--c-text-muted);
   text-transform: uppercase;
-  letter-spacing: var(--tracking-caps);
+  letter-spacing: calc(0.54 * var(--size-1));
   font-size: calc(9 * var(--size-1));
   margin-top: calc(3 * var(--size-1));
 }

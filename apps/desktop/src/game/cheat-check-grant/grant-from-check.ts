@@ -20,7 +20,7 @@ const grantFromCheck = (check: CheckRecord): CheckGrantPlan => {
   const { itemId, itemLabel, locationName } = plan;
   const { session: grantSession } = getSessionState();
   suppressLocationReport(locationName);
-  deliverItem(itemId, itemLabel, 'cheat', undefined, () => {
+  const onComplete = (): void => {
     if (getSessionState().session !== grantSession) {
       log.randomizer(`[Cheat] "${locationName}" was delivered but not cleared: the session changed `
         + 'under the grant, so the delivery may have been dropped instead of finishing', 'warn');
@@ -28,7 +28,8 @@ const grantFromCheck = (check: CheckRecord): CheckGrantPlan => {
     }
     suppressLocationReport(locationName);
     markCheckCollected(check);
-  });
+  };
+  deliverItem({ itemId, message: itemLabel, source: 'cheat', onComplete });
   return plan;
 };
 

@@ -50,8 +50,8 @@
   flex-wrap: wrap;
 }
 
-.studio-toolbar__name { width: var(--size-224); }
-.studio-toolbar__author { width: var(--size-160); }
+.studio-toolbar__name { width: calc(14 * var(--text-base)); }
+.studio-toolbar__author { width: calc(10 * var(--text-base)); }
 
 .studio-toolbar__hint {
   font-size: var(--text-xs);
@@ -60,7 +60,7 @@
 }
 
 .palette-editor {
-  width: var(--size-224);
+  width: calc(14 * var(--text-base));
   flex: none;
   display: flex;
   flex-direction: column;
@@ -69,7 +69,7 @@
 }
 
 .palette-editor__scroll {
-  max-height: calc(416 * var(--size-1));
+  max-height: calc(26 * var(--text-base));
   overflow-y: auto;
   display: flex;
   flex-direction: column;

@@ -1,9 +1,10 @@
 <!-- @layer docs @kind doc -->
-# Code notes: shared/game
+# Code notes: game logic
 
-Facts about the code in `shared/game` (outside `shared/game/data`) that the code cannot say by
-itself: game mechanics, what a RAM or ROM value means, and why an odd line has to stay. Each
-heading names a file, by its path under `shared/game/`.
+Facts about the game logic (everything outside the dataset in `packages/game-data/src/data/`) that
+the code cannot say by itself: game mechanics, what a RAM or ROM value means, and why an odd line
+has to stay. Each heading names a file or folder, by its path under `packages/game-data/src/`, or
+by its full path from the repository root when it lives in another package.
 
 ## dialog
 
@@ -114,7 +115,7 @@ What one language's message box can draw: its alphabet, plus the extra glyphs
 The sheet holds 128 glyphs (the core has 256 tiles, a top and a bottom tile per glyph). A
 language uses the slots its alphabet and its width table cover; the rest are spare. The
 characters the alphabet lacks take the spare slots in the extra glyphs' priority order, and a
-character with no slot left falls back (`session-dialogue/dialogue-text.ts`). A composed line
+character with no slot left falls back (`packages/game-core/src/session-dialogue/dialogue-text.ts`). A composed line
 writes an extra glyph as a private use token that carries its slot, so the encoder can turn it
 into the core's escape bytes and the wrapper can measure it by its slot like any other glyph.
 
@@ -291,35 +292,7 @@ that never saved a switch reads as the default.
 
 ## language
 
-### language/types
-
-A `LanguageSet` is the fully decoded counterpart of the raw `LanguagePack` in
-`shared/types/language.ts`. Dialogue lines are token streams, and glossary and name data are
-broken out for editing before a bake step compiles them back into the ROM.
-
-- `Token` is one decoded unit of dialogue text. `cmd`, `break` and `var` cover the game's control
-  codes. `ref` defers to a `GlossaryTerm` that expands at bake time.
-- `DialogueEntry.id` is the game's own positional index, 1 to 397, and never changes. `note` is a
-  translator note that is never compiled.
-- `PauseLabelKey` is the fixed set of pause menu section labels a set can retitle.
-- `NameTable` holds the display strings that are not dialogue: inventory item names and pause menu
-  labels. An `items` key is the item record id plus tier, for example `bow-2`.
-- `LanguageSetMeta.id` is a code like `de`, or a custom one like `us-canon`. It becomes the INI
-  `Language` value. `base` is the language code the set inherits its alphabet, dictionary, encoder
-  and font from: a key of `kLanguages` in `packages/asset-extraction/src/text/data/language-data.ts`.
-  `basedOn` is set on a copy of a set installed from the Hookshop and names the original it
-  credits.
-- `SetStructure`: `continuous` treats an entry as flowing text and derives the box breaks, `block`
-  keeps the author's own breaks, and `off` turns the assistance off.
-- `LanguageSet.glossary` and `names` are the projection of `variables` through
-  `legacyFromVariables`, the shape every current reader expects. The storage layer fills all
-  three on read and rebuilds `variables` from the pair on write, so the views cannot drift.
-  `variables` and `structure` are optional in the type only, so a fixture need not carry them;
-  every stored set has both. `text` holds only what was retyped. The catalog (`./text`) decides
-  which slots exist, so an absent field means nothing is translated yet, never that nothing needs
-  translating.
-
-### language/blocks/types
+### packages/languages/src/messages/blocks/types
 
 A block is the level between a line and a whole entry: one run of lines the player reads before
 pressing a button. It is the stretch between two wait for button codes, plus the head and the
@@ -339,7 +312,7 @@ returns to row 1 in the low tens.
 - `Block.inherited` is empty for the first block. `splitBlocks` leaves it empty for every block,
   because measuring needs a language, and `resolveInherited` fills it in.
 
-### language/blocks/split-blocks.ts
+### packages/languages/src/messages/blocks/split-blocks.ts
 
 The cut, and nothing else. A line already knows whether a wait for button follows it
 (`endsBox`), so the boundary is read off the lines and not derived again from tokens: one walk
@@ -351,14 +324,14 @@ Content left after the last wait becomes a final block ending in `message-end`. 
 it and the message then closes on its own. No block is ever empty: every line belongs to exactly
 one, and a stretch between two waits with nothing in it is a single line with no content.
 
-### language/blocks/flatten-blocks.ts
+### packages/languages/src/messages/blocks/flatten-blocks.ts
 
 The exact inverse of `splitBlocks`. Every line comes back in its original order and as the same
 value, so `joinLines(flattenBlocks(splitBlocks(lines)))` equals `joinLines(lines)` and an entry
 that was only grouped still serialises byte for byte. Nothing about a block survives the trip:
 `ends` restates the wait its last line carries, and `inherited` is a derived view of the screen.
 
-### language/blocks/inherited-rows.ts
+### packages/languages/src/messages/blocks/inherited-rows.ts
 
 What is still on screen when each block begins. The pixel buffer is cleared once per message and
 no handler clears it again, so a block inherits the surviving rows of every block before it. Only
@@ -374,7 +347,7 @@ one place this walk cannot use the default pen. `measureRows` runs the pen with
 `blankOnJump: true`, treating the landing row as empty, so a fresh run is sized without an
 earlier run's leftovers charged to it. Its widths are relied on, so that convention stays. A
 faithful screen needs the opposite, and asks the pen for it here with `blankOnJump: false`. Both
-conventions are described under `language/layout/box-pen.ts`.
+conventions are described under `packages/languages/src/messages/layout/box-pen`.
 
 The walk replays each block's own tokens (`joinLines`) through the shared pen, so there is one
 layout engine and the row a line lands on is the engine's answer, not the editor's. The two
@@ -383,7 +356,7 @@ convention, while the engine leaves the pen wherever the previous block left it.
 follow the engine. The inherited rows are read before the block draws anything, and the first
 block inherits a cleared buffer.
 
-### language/choices/types
+### packages/languages/src/messages/choices/types
 
 The decomposed view of a choice prompt: an entry whose final control code turns its last lines
 into a selection menu. `question` is a verbatim slice of the original stream, advance codes and
@@ -393,11 +366,11 @@ authored, so the inverse can rebuild the entry byte for byte. Nothing is normali
 - `ChoiceCode`: `Choose3` takes three options, the other codes take two.
 - `ChoiceOption.tokens` holds content tokens only: no advance code and no prompt code.
 - `ChoiceShape.options` are the trailing lines the cursor moves between, in stream order.
-- `LineSpan` locates one line by token index, the same split as `lines/split-lines`. `start` is
+- `LineSpan` locates one line by token index, the same split as `packages/languages/src/messages/lines/split-lines.ts`. `start` is
   the line's first token (its advance code when it has one), `contentStart` the first content
   token, `end` one past the last content token, and `endsBox` says a wait for button closed it.
 
-### language/choices/choice-shape-of.ts
+### packages/languages/src/messages/choices/choice-shape-of.ts
 
 Detects a choice prompt and takes it apart into question and options. The shape was worked out
 from a stored language set: 397 entries, 43 of them prompts, at ids 2, 3, 7 to 13, 25, 38, 45, 51,
@@ -421,14 +394,14 @@ from a stored language set: 397 entries, 43 of them prompts, at ids 2, 3, 7 to 1
 Detection mirrors those facts and answers null for anything that deviates, so the caller falls
 back to the raw stream editor and never guesses.
 
-### language/choices/tokens-from-choice.ts
+### packages/languages/src/messages/choices/tokens-from-choice.ts
 
 The exact inverse of `choiceShapeOf`. The question slice goes out verbatim, each option adds its
 own advance code and then its content untouched, and the prompt code closes the stream, so
 taking an entry apart and rebuilding it gives a byte identical serialization. Nothing is
 corrected: an option whose advance disagrees with its position goes back out as it came in.
 
-### language/choices/with-added-option.ts
+### packages/languages/src/messages/choices/with-added-option.ts
 
 The prompt code fixes the option count, so growing the list changes the code. A two option shape
 grows only into `Choose3`. Anything past three options has no code, so the grower answers null
@@ -436,13 +409,13 @@ and never produces a stream the engine cannot run. A new option follows the patt
 above it, taking the next row number down or another scroll, and starts with the spaces
 (`CURSOR_COLUMN_SPACES`) that keep its text out of the selection cursor column.
 
-### language/choices/with-removed-option.ts
+### packages/languages/src/messages/choices/with-removed-option.ts
 
 A three option shape shrinks into `Choose2` when its first option sits on row 1 (the layout that
 code is used with in authored data), or into `Choose` otherwise. Removal renumbers only trailing
 row markers so the survivors stay consecutive; scroll advances are left alone.
 
-### language/codes/code-catalog.type.ts
+### packages/languages/src/messages/codes/code-catalog.type.ts
 
 The plain language control code catalog: the layer that turns a bracketed engine code
 (`[Speed 04]`, `[Waitkey]`) into something a translator can read and pick from a menu.
@@ -460,20 +433,20 @@ The plain language control code catalog: the layer that turns a bracketed engine
   at all.
 - `StructuralEntry` names a dialogue entry a translator must never edit.
 
-### language/codes/code-catalog-entries.constants.ts
+### packages/languages/src/messages/codes/code-catalog-entries.constants.ts
 
 One entry per control code the game's languages can emit, checked against the decompiled engine.
 It covers every name in every language's `commandNames`
-(`packages/asset-extraction/src/text/data/language-data.ts`). `EndMessage` (EU only) has no documented
-behaviour of its own: it is absent from `kCmdInfo` in `dialogue-encoder.ts`, which fits it being
+(`packages/asset-extraction/src/text/data/language-data`). `EndMessage` (EU only) has no documented
+behaviour of its own: it is absent from `kCmdInfo` in `packages/asset-extraction/src/text/dialogue-encoder`, which fits it being
 an automatic message terminator and not something a translator places by hand. It is catalogued
 as `structural` on that basis, not from a confirmed engine fact.
 
-### language/codes/encodable-params.ts
+### packages/languages/src/messages/codes/encodable-params.ts
 
 Two notions of range are involved. `CodeInfo.param` is a fixed display hint that does not depend
 on the language. `encodableParams` computes what a specific language can bake, straight from the
-encoders in `dialogue-encoder.ts`.
+encoders in `packages/asset-extraction/src/text/dialogue-encoder`.
 
 - The `org` encoder (`orgEncoder`) writes any parameter byte verbatim once the command occupies a
   two byte slot in the language's own `commandNames` and `commandLengths`. There is no narrower
@@ -482,7 +455,7 @@ encoders in `dialogue-encoder.ts`.
   global `kCmdInfo` table, whose parameter map can map a value to null: present but not
   encodable, like `Window` 0 or `ScrollSpd` 0. Those are filtered out.
 
-### language/codes/glyph.ts
+### packages/languages/src/messages/codes/glyph.ts
 
 Tells a bracketed picture glyph (a button icon, an arrow, `...`) apart from a real control code.
 Both are spelled the same, as a bare `[Name]` bracket run, and `parseTokens` classifies both as
@@ -490,16 +463,16 @@ Both are spelled the same, as a bare `[Name]` bracket run, and `parseTokens` cla
 layer: look the bracket's name up in the language's own `alphabet`, where every glyph is listed
 with its brackets intact (`'[A]'`).
 
-### language/codes/structural-entries.constants.ts
+### packages/languages/src/messages/codes/structural-entries.constants.ts
 
 Dialogue entries a translator must never edit, keyed by `DialogueEntry.id` (1-based, the game's
 own positional index). Ids 2 and 3, 7 to 9, 10 and 11, and 12 and 13 are the two and three option
 choice cursor frames: each holds only control codes, spaces and a `>` cursor, and every choice
 prompt in the game reuses them. Id 5 is `EXTRA_STRING`, the synthetic control string the
 extraction pipeline injects at index 4 to pad a 396 string ROM dump up to the canonical 397
-(`packages/asset-extraction/src/text/build-language-entry.ts`). It never existed as translatable prose.
+(`packages/asset-extraction/src/text/build-language-entry`). It never existed as translatable prose.
 
-### language/compile/compile-set.ts
+### packages/languages/src/messages/compile/compile-set.ts
 
 The bake step. It turns an editable `LanguageSet` into the packed entry the asset blob builder
 takes: it resolves every variable reference, serializes the token streams back to the bracket
@@ -525,7 +498,7 @@ encoding uses the right config, then the result's `code` is set to the set's own
 - A set read through storage carries `variables`. One built in memory may not, so the code falls
   back to projecting the legacy pair and still compiles.
 
-### language/compile/compile-sets.ts
+### packages/languages/src/messages/compile/compile-sets.ts
 
 Bakes a whole collection of language sets into the packed entries the asset blob builder takes
 as extras. Both hosts run this step when they recompile a ROM's asset blob (the main process in
@@ -545,14 +518,14 @@ its content is unreachable. That stays on purpose.
 survives a structured clone hop to a Worker. The Node `Buffer` wrapping `compileSet` wants
 happens here. The function is pure apart from the `onWarn` callback.
 
-### language/glossary/resolve-refs.ts
+### packages/languages/src/messages/glossary/resolve-refs.ts
 
 Replaces every `ref` token with its glossary term's value and merges the adjacent text tokens
 that result. It throws when a ref points at a missing key. Text tokens are always copied, so a
 later merge never appends into a token object the caller owns. Other token kinds pass through
 unchanged.
 
-### language/layout/types
+### packages/languages/src/messages/layout/types
 
 Types for the text box the engine draws. The box interior is fixed at three rows of 21 tiles
 (`ROW_WIDTH_PX` is 21 tiles of 8 pixels, 168). The renderer advances the pen by each glyph's own
@@ -571,13 +544,13 @@ authored text is safe, and every consumer here shares one definition of that mea
   carries whichever rows were rewritten. `index` is 1-based within the message, and
   `waitsForButton` says the screen ends on a button wait and does not run straight on.
 
-### language/layout/glyph-metrics
+### packages/languages/src/messages/layout/glyph-metrics
 
 The measurement primitives every layout step builds on: a language's per glyph advance table, the
 greedy matcher that turns authored text into glyph indices, and the advance lookup.
 
 Matching is greedy longest match over the alphabet, because that is what the encoder does
-(`encodeGreedyFromDict` in `packages/asset-extraction/src/text/dialogue-encoder.ts` checks the whole
+(`encodeGreedyFromDict` in `packages/asset-extraction/src/text/dialogue-encoder` checks the whole
 bracketed run against its alphabet map before it falls through to a single character). Several
 alphabets carry entries of more than one character, such as bracketed picture glyph names for an
 icon or a button face, and the ellipsis run. Each of those is one glyph with one advance. Matching
@@ -605,7 +578,7 @@ width.
   width. A bracketed run is reported whole (`[Unknown]`, not a lone `[`) so the report names
   something the author can find, the same way `validateEntry` reports it.
 
-### language/layout/box-pen
+### packages/languages/src/messages/layout/box-pen
 
 The text box as the renderer drives it: three row buffers and one pen, advanced token by token.
 `measureRows` and `splitScreens` both run this walk, so their verdicts cannot disagree.
@@ -626,7 +599,7 @@ Two conventions exist for a row jump:
   depends on it.
 - `blankOnJump: false` is the engine's real behaviour. The pixel buffer is cleared once per
   message, so a row marker blanks nothing and a shorter rewrite only paints over the left part.
-  Anything showing what is on screen (`blocks/inherited-rows.ts`) must use this mode; anything
+  Anything showing what is on screen (`packages/languages/src/messages/blocks/inherited-rows.ts`) must use this mode; anything
   reporting a width must not.
 
 Details:
@@ -645,11 +618,11 @@ Details:
 - A bracketed name without a parameter is a glyph when the alphabet spells it: several alphabets
   carry bracketed picture glyphs, and the token parser cannot tell those from a control code
   without a language. Anything else is a real control code and moves the pen by nothing.
-  `codes/glyph.ts` answers the same question given a `LanguageConfig`; measurement holds only the
+  `packages/languages/src/messages/codes/glyph.ts` answers the same question given a `LanguageConfig`; measurement holds only the
   metrics and needs the index, so it goes through the matcher.
 - `applyToken` needs refs already resolved.
 
-### language/layout/layout-plan
+### packages/languages/src/messages/layout/layout-plan/layout-plan.ts
 
 What the two runtime substitutions are worth in pixels, decided once before a measurement walk.
 Neither has a fixed width, so a fit prediction has to commit to something.
@@ -664,7 +637,7 @@ Neither has a fixed width, so a fit prediction has to commit to something.
   widest digit in the alphabet, so a safe verdict holds whatever value the game prints.
 - `LayoutPlan.nameUnmatched` is anything in `nameSample` the alphabet could not draw.
 
-### language/layout/measure-line
+### packages/languages/src/messages/layout/measure-line
 
 Row level fit measurement: how wide every run of text in a token stream comes out, and which runs
 the engine would draw past the row's edge.
@@ -679,7 +652,7 @@ zero either. `measureRowsDetailed` returns it beside the rows, and an entry with
 `unmatched` list reads as unmeasurable, not safe. `measureRows` is the thin form for callers that
 already validated their text (`validateEntry`).
 
-### language/layout/split-screens.ts
+### packages/languages/src/messages/layout/split-screens.ts
 
 Cuts a token stream into the boxes a player pages through. A screen ends at a wait for button and
 nowhere else. A scroll is not a cut: it shifts the box up a line and parks the pen on the last
@@ -692,7 +665,7 @@ does a stream that never waits. A stream ending on its wait adds no such screen,
 was drawn after it. For an overflow audit use `measureRows`: it reports every run the pen closed,
 including ones a later run overwrote, while the rows here are the surviving visible state.
 
-### language/lines/types
+### packages/languages/src/messages/lines/types
 
 The line view of one dialogue entry: the editor's model, not a second layout engine. The engine
 writes into a three row box and never wraps, so authored text is a stack of lines. Each one begins
@@ -701,7 +674,7 @@ appears or at a wait for button, which a reader sees as the end of a box. Modell
 gives an editor numbering and a width budget per line, the way a code editor gutters its lines.
 
 These views are derived and read only. Every measurement comes from the shared layout walk
-(`layout/box-pen`), and `advance` holds the code as it was authored so the inverse can put it back
+(`packages/languages/src/messages/layout/box-pen`), and `advance` holds the code as it was authored so the inverse can put it back
 untouched.
 
 - `LineAdvance` is what put the pen on a line's row: an explicit row code (kept as authored even
@@ -715,19 +688,19 @@ untouched.
   when it overruns.
 - `LineDraft` is a line before it is measured or numbered.
 
-### language/lines/advance-codes
+### packages/languages/src/messages/lines/advance-codes
 
 The three codes that shape a line (row marker, scroll and wait), read in one direction and
 written back in the other. Split and join share this module so they cannot drift: whatever is
 recognised as an advance here is exactly what gets written back, which is what makes an
 untouched entry round trip.
 
-A code only counts when it carries no parameter, matching `applyCmd` in `layout/box-pen`: the
+A code only counts when it carries no parameter, matching `applyCmd` in `packages/languages/src/messages/layout/box-pen`: the
 engine's scroll and wait take no argument, so a lookalike with a parameter is an unrelated command
 and stays ordinary content. `advanceOfToken` answers `undefined` for ordinary content, which is
 different from a null advance (a real answer: a line with no code of its own).
 
-### language/lines/advance-for-new-line.ts
+### packages/languages/src/messages/lines/advance-for-new-line.ts
 
 The code for a line being created. Nothing else here derives an advance: `splitLines` keeps what
 it read and `joinLines` writes it back, so the only place a code is invented is the moment an
@@ -735,7 +708,7 @@ author asks for a new line, and the caller says when that is. The box fills from
 then row 2, then row 3, and once the bottom row is taken the box has to scroll to make room. A
 line added after a wait that ends a box starts the next box, so it opens at row 1 again.
 
-### language/lines/join-lines.ts
+### packages/languages/src/messages/lines/join-lines.ts
 
 The exact inverse of `splitLines`. Each line contributes its own advance code, its content, then
 a wait when it ends a box, and nothing else. No code is invented for a line whose `advance` is
@@ -744,7 +717,7 @@ read comes back out identical, so opening it in the editor cannot rewrite a tran
 line that should get a derived code has to be handed one first, through `advanceForNewLine`; only
 the caller knows a line is new.
 
-### language/lines/line-metrics.ts
+### packages/languages/src/messages/lines/line-metrics.ts
 
 How much of a row one line's content spends, in pixels and in characters. The width comes from
 `measureRows`, so a line is sized by the same walk that audits a whole entry and the two cannot
@@ -761,7 +734,7 @@ consumes the whole name; a prefix match means it is a real command.
 Refs are resolved once here, so the measurement walk gets an empty glossary: no ref is left to
 look up, and a missing key is reported by this call.
 
-### language/lines/split-lines.ts
+### packages/languages/src/messages/lines/split-lines.ts
 
 Cuts a token stream into the lines an author edits. A line is closed by whatever comes next: the
 following advance code, a wait for button, or the end of the entry. So a code is always the first
@@ -772,7 +745,7 @@ Nothing is normalised. An advance is stored as it was read, so a row marker that
 where the line sits stays that way, and `joinLines` puts it back untouched. Making up a code for a
 new line is a separate decision (`advanceForNewLine`).
 
-Numbering follows the pen in `layout/box-pen`:
+Numbering follows the pen in `packages/languages/src/messages/layout/box-pen`:
 
 - A row marker parks the pen at that row, so the line's row is the marker's.
 - A scroll parks the pen on the bottom row, so a scrolled line is row 3 whatever came before it,
@@ -785,22 +758,22 @@ Numbering follows the pen in `layout/box-pen`:
 A line is opened lazily: it only exists once something lands on it, so a wait followed by a row
 marker gives one line and not an empty one first.
 
-### language/migrate/set-from-pack.ts
+### packages/languages/src/messages/migrate/set-from-pack.ts
 
-Converts a legacy `LanguagePack` (`shared/types/language.ts`) into an editable `LanguageSet`: the
+Converts a legacy `LanguagePack` (`packages/asset-extraction/src/sets-types/language.type.ts`) into an editable `LanguageSet`: the
 one time conversion a translation studio session runs when it opens a language that was only
 ever extracted. It is pure, with no file I/O and no ROM access; the storage layer reads the pack
 in and writes the set out. The pack's language code becomes both `id` and `base`, so the set
 inherits its own alphabet, encoder and font unchanged until a translator forks it. `name` stays
 the bare code, because the display name lookup lives in the renderer and not in shared code.
 
-### language/migrate/empty-name-table.ts
+### packages/languages/src/messages/migrate/empty-name-table.ts
 
 A name table with no item or bottle names yet and English placeholder pause labels
 (`dungeon-item` becomes `DUNGEON ITEM`). A later migration phase seeds real names from the game's
 data zone; this never hardcodes them.
 
-### language/structure/types
+### packages/languages/src/messages/structure/types
 
 What a structural edit needs beyond the document: where the author is, and which language the
 result has to be measured again in.
@@ -826,7 +799,7 @@ the caret.
 - `WorkLine` is a line in the middle of a reflow, with the box it belongs to and whether its code
   is derived.
 
-### language/structure/modes.ts
+### packages/languages/src/messages/structure/modes.ts
 
 The three ways the editor may restructure an entry, one Strategy object each. Every edit asks
 the policy the same short questions and never tests the mode itself, so a mode is defined in one
@@ -846,7 +819,7 @@ modes. That is the point of the feature, and a flag for it would only invite a m
 author hand types a code the engine then disagrees with. Off means do not restructure, not let
 the codes rot. `STRUCTURE_MODES` lists the modes in the order a chooser should offer them.
 
-### language/structure/locate.ts
+### packages/languages/src/messages/structure/locate.ts
 
 Which box the caret is in, and how much room that box has left. The caret is addressed by line
 across the whole entry, because that is what an editor's gutter counts and what
@@ -854,7 +827,7 @@ across the whole entry, because that is what an editor's gutter counts and what
 box starts, and how many lines it holds. The walk is done once, here, and a caret out of range
 gets null and not a clamped guess.
 
-### language/structure/apply-enter.ts
+### packages/languages/src/messages/structure/apply-enter.ts
 
 What pressing Enter does. The caret's line is cut in two: the part before the caret stays, and
 the part after it becomes a new line directly below. The wait does not move. It belongs after the
@@ -878,7 +851,7 @@ A traceless line has no code, no content and no wait. It leaves no trace in the 
 would be lost on the way back, so the push has to give it a code. That is also what an author
 expects, having just asked for a blank row.
 
-### language/structure/end-block-at.ts
+### packages/languages/src/messages/structure/end-block-at.ts
 
 End here: the wait goes after the caret's line. It lands at the end of that line and not at the
 caret, because a box ends where a row ends; a wait dropped mid row would hold the screen with half
@@ -886,7 +859,7 @@ a sentence on it. Nothing is added or removed: the same lines come back, cut int
 the text is untouched and only the button press is new. When the caret is already on the box's
 last line, the wait this would insert is the one already there.
 
-### language/structure/continue-by-scrolling.ts
+### packages/languages/src/messages/structure/continue-by-scrolling.ts
 
 Keep going: the box gains one more line, reached by a scroll. That is the only choice, because a
 scroll is the only way the engine makes room. The pixel buffer is cleared once per message and the
@@ -896,7 +869,7 @@ offer, and offering one would produce corruption. The new line takes over the bo
 box still ends the way it ended: a box that waited still waits, and one that ran to the end of the
 message still does.
 
-### language/structure/break-line.ts
+### packages/languages/src/messages/structure/break-line.ts
 
 Where a line that has grown past the row has to be cut. The engine never wraps and never checks
 the row bound, so a row authored wider than the interior is drawn straight into the next row's
@@ -915,7 +888,7 @@ or after one. A head only grows as the cut moves right, so the first candidate t
 the search. A cut with an empty head is no cut: that is the over long single word, and answering
 null there leaves it whole and keeps a caller's loop from spinning on a line it cannot shorten.
 
-### language/structure/next-advance.ts
+### packages/languages/src/messages/structure/next-advance.ts
 
 The code a line gets when its position is derived, asked of the one sanctioned place that invents
 codes. `advanceForNewLine` answers the per box question: row 1, then 2, then 3, and a scroll once
@@ -925,12 +898,12 @@ next box opens, so a scroll is what moves the text up, and a return to row 1 wou
 row that still stands. That one difference is expressed by handing `advanceForNewLine` a previous
 line with its wait hidden, so there is still one place where a code is invented.
 
-### language/structure/row-of-advance.ts
+### packages/languages/src/messages/structure/row-of-advance.ts
 
 Where the pen lands once an advance applies, by the same rule `splitLines` numbers its lines with:
 a marker names its row, a scroll parks on the bottom row, and no code means the box's first row.
 
-### language/structure/push-down.ts
+### packages/languages/src/messages/structure/push-down.ts
 
 The push: every line from an edit onward gets the code the engine needs to put it where it now
 sits, and every other line stays as authored. A seed marks a line the author changed or a line
@@ -948,7 +921,7 @@ touched; only `advance` and the `row` it implies can change.
 The cursor carries the row a line ended up on, whether from a derived code or an authored one, so
 numbering resumes from the authored position and not an idealised one.
 
-### language/structure/rebuild.ts
+### packages/languages/src/messages/structure/rebuild.ts
 
 Back to a fully derived document, through the canonical split. Every edit here works on a plain
 list of lines and only sets the three authored fields: `advance`, `tokens` and `endsBox`.
@@ -961,7 +934,7 @@ its content, then its wait, and `splitLines` cuts on exactly those. The one shap
 is a line with no code, no content and no wait, which has nothing to write and so nothing to read
 back. That is why an edit that empties a line gives it a derived code first.
 
-### language/structure/reflow.ts
+### packages/languages/src/messages/structure/reflow.ts
 
 Puts an edited entry back in shape: wraps what the author has overrun, and derives again the codes
 that say where each line sits. Two passes, and the order matters, because a wrap adds lines and
@@ -980,7 +953,7 @@ measuring it and writing it out again cannot rewrite a single byte. That is the 
 folder is built not to break: the line model never invents a code on its own, and this is the
 only pass that may.
 
-### language/text/types
+### packages/languages/src/messages/text/types
 
 The translatable text model: every string the game shows that is not a dialogue line, as a flat
 list of slots the editor can render. The catalog decides which slots exist. It is rebuilt from the
@@ -1007,7 +980,7 @@ keys, so a set whose stored payload is empty cannot be told apart from a fresh o
   dataset import would pull the record loaders into every bundle that touches storage, the
   desktop main process included.
 
-### language/text/group-index.ts
+### packages/languages/src/messages/text/group-index.ts
 
 Assembles the four groups the editor renders, in render order. This is the whole catalog, rebuilt
 from the shipped data on every call and never stored. Two groups come from data this module can
@@ -1016,7 +989,7 @@ nothing here may reach into the extraction pipeline. The record source is handed
 reason in reverse. `decodedNote` is said once for each decoded group when the words came from
 another region's file.
 
-### language/text/catalog/from-decoded.ts
+### packages/languages/src/messages/text/catalog/from-decoded.ts
 
 Turns the decoder's output into catalog slots; this is how the menu and credits groups get their
 contents. The decoded lines arrive as a parameter, not an import: the decoder lives in the asset
@@ -1024,7 +997,7 @@ extraction pipeline, which reads a user ROM and has no business being pulled in 
 this side of the app. Key and limit pass through untouched, since the decoder alone knows what
 the surface measured. Keys read like paths, so the last segment names the line.
 
-### language/text/catalog/pause-names.ts
+### packages/languages/src/messages/text/catalog/pause-names.ts
 
 Slots for the pause menu surfaces: the inventory item names, the bottle contents, the six panel
 headings and the six ability words, 42 slots in all (23 item names, 7 bottle contents, 6 panel
@@ -1044,7 +1017,7 @@ Every one of these surfaces draws from a fixed A to Z ramp, not the set's glyph 
 (8 glyphs) for a heading. `LEVELLED_ABILITY` is the one ability the drawing code suffixes at run
 time with its level.
 
-### language/text/catalog/world-names.ts
+### packages/languages/src/messages/text/catalog/world-names.ts
 
 Slots for every named thing in the record dataset: places, rooms, pickups, chests and the
 structures that hold them. They are read through the dataset facade the caller hands in, the only
@@ -1054,10 +1027,10 @@ absent the registry holds nothing, every lookup returns an empty list, and this 
 sheet and laid out by the dialogue system, not a fixed cell surface, so they carry no length cap
 of their own.
 
-### language/tokens/parse-tokens.ts
+### packages/languages/src/messages/tokens/parse-tokens.ts
 
 Bracket string to token stream: the import half of the adapter between the stored dialogue dump
-format (written by `formatDialogueText` in `packages/asset-extraction/src/text/dialogue-decoder.ts`) and
+format (written by `formatDialogueText` in `packages/asset-extraction/src/text/dialogue-decoder`) and
 the editable language set model. Classification is purely syntactic. No language config is read,
 so one parse serves every entry of `kLanguages`.
 
@@ -1079,7 +1052,7 @@ in the language's own alphabet. `ref` tokens are never produced: a glossary refe
 once a translator tags one by hand. Text runs are maximal, so the result never holds two adjacent
 `text` tokens. Command names never contain whitespace.
 
-### language/tokens/serialize-tokens.ts
+### packages/languages/src/messages/tokens/serialize-tokens.ts
 
 Token stream to bracket string: the export half of the adapter and the exact inverse of
 `parseTokens` for every string the dialogue decoder can write. The output feeds the existing
@@ -1088,7 +1061,7 @@ decimal and padded to at least two digits (`0` to `00`, `15` stays `15`, `255` s
 `ref` token cannot be serialized: `resolveRefs` expands glossary references first, and reaching
 one here means that step was skipped.
 
-### language/validate/validate-entry.ts
+### packages/languages/src/messages/validate/validate-entry.ts
 
 Predicts, without baking, whether an entry's tokens will encode without error: every `text`
 token's characters must resolve against the language's alphabet, and every `ref` token's key must
@@ -1097,12 +1070,12 @@ editor and are not checked. An `EntryIssue` is shown live in the translation edi
 would fail.
 
 The text walk matches the encoder's greedy matcher (`encodeGreedyFromDict` in
-`dialogue-encoder.ts`, alphabet branch): a bracketed run is matched whole against the alphabet,
+`packages/asset-extraction/src/text/dialogue-encoder`, alphabet branch): a bracketed run is matched whole against the alphabet,
 and everything else one character at a time. Dictionary matching is not simulated, because every
 dictionary entry is made of alphabet characters (`encodeDictionary` enforces this), so skipping it
 never turns a success at bake time into a reported failure.
 
-### language/variables/types
+### packages/languages/src/messages/variables/types
 
 One editable substitution list, replacing the two parallel tables a language set used to carry: a
 glossary of reusable phrases, and a name table only the pause menu read. They looked alike and
@@ -1139,7 +1112,7 @@ maps key to variable for the constant time lookups an expansion walk needs.
 - `RunScan.exact` holds start offsets of exact case occurrences, the replaceable ones. `caseMiss`
   holds offsets that match only with case ignored.
 
-### language/variables/builtin
+### packages/languages/src/messages/variables/builtin
 
 The only two substitutions the engine performs at run time, expressed as variables. The message
 renderer injects a save file's name field and one digit of a live counter, and nothing else.
@@ -1155,14 +1128,14 @@ edit the shared definitions. `ENGINE_SAMPLES` are the stand ins a preview shows 
 would substitute: neutral and worst case wide, with the name sample six glyphs wide like the
 field.
 
-### language/variables/variable-index.ts
+### packages/languages/src/messages/variables/variable-index.ts
 
 A key lookup over a variable list, built once per expansion pass. The first entry wins on a
 duplicate key. `variablesFromNameTables` puts the engine's two entries ahead of everything else, so a
 locked entry can never be shadowed by a term that shares its key. The game owns those two, and a
 set cannot define them again.
 
-### language/variables/variables-from-name-tables.ts
+### packages/languages/src/messages/variables/variables-from-name-tables.ts
 
 The bridge between the one variable list and the two tables that came before it.
 `variablesFromNameTables` folds a glossary and a name table into
@@ -1174,7 +1147,7 @@ names.
 The pair round trips without loss in both directions for everything the old model could express:
 a term returns as a term, a menu name returns to the slot it came from. Only the fields the old
 model had no room for (`label`, `locked`, `maxGlyphs`, and a note on a menu name) are generated
-again. A caller that wants to keep an edited label carries it over itself (`./merge-meta`).
+again. A caller that wants to keep an edited label carries it over itself (`./merge-meta.ts`).
 
 Key shapes: an item keeps the key it already had (`<item-record-id>-<tier>`), so nothing that
 references one has to be rewritten. The other two slots had no key shape of their own, so they
@@ -1186,13 +1159,13 @@ therefore counts high, which keeps a fit verdict on the safe side. A picker read
 than the key, so the label is the value, with the key as fallback. `withNote` adds `note` only
 when there is one, so a round trip never grows the shape.
 
-### language/variables/legacy-from-variables.ts
+### packages/languages/src/messages/variables/legacy-from-variables.ts
 
 Projects a variable list back into the glossary and name table pair the current readers expect.
 Engine variables are dropped: they have no literal value, and neither table ever held one. A
 `bottle-7` key maps back to bottle content 7.
 
-### language/variables/merge-meta.ts
+### packages/languages/src/messages/variables/merge-meta.ts
 
 Carries the fields the legacy pair has no room for across a rebuild. A set is still edited
 through its projected glossary and name table, so the variable list is rebuilt from that pair on
@@ -1202,7 +1175,7 @@ back in keeps them. Values, kinds, lock state and widths come from the rebuild, 
 follow the text, and the text is what was just edited. Only presentation is carried over, and only
 for a key that still exists with the same kind.
 
-### language/variables/resolve.ts
+### packages/languages/src/messages/variables/resolve.ts
 
 The one expansion, used by both the editor's preview and the bake step so the two never disagree
 about what a line will say. A reference to a term or a menu name becomes its literal text in both
@@ -1219,7 +1192,7 @@ handle: an engine reference in either mode, and a control code already placed, i
 Anything else passes on untouched, including a reference to a key the set does not have, so the
 missing key failure stays where it has always been.
 
-### language/variables/find-hardcoded.ts
+### packages/languages/src/messages/variables/find-hardcoded.ts
 
 Where a set spells a name out instead of referencing it. A variable only earns its keep once the
 lines that say it point at it: a reference follows a later rename, literal text does not. This is
@@ -1228,11 +1201,11 @@ variable it should be, and changes nothing; applying a report is a separate, del
 
 Only `text` runs are searched, so a phrase broken by a control code, a line break or an existing
 reference is not a match, the same rule the editor's term linking has always followed. Case policy
-and its near miss reporting live in `./scan-run`. The widest match wins inside one run: once a span
+and its near miss reporting live in `./scan-run.ts`. The widest match wins inside one run: once a span
 is claimed, a shorter overlapping phrase is not reported, so a line is never offered two readings
 of the same characters. Results come in reading order.
 
-### language/variables/hardcoded-candidates.ts
+### packages/languages/src/messages/variables/hardcoded-candidates.ts
 
 The search list behind the hardcoded noun scan: every spelling worth looking for, paired with the
 variable a line saying it should reference. The needles are the set's own variables, and only
@@ -1244,7 +1217,7 @@ Longest phrase first, one candidate per spelling. That order lets the scan claim
 a line naming a castle should offer the castle, not the wider region whose name is a prefix of it.
 The first mention of a spelling wins, so an existing variable beats a proposal.
 
-### language/variables/scan-run.ts
+### packages/languages/src/messages/variables/scan-run.ts
 
 Finds a phrase inside one text run, split by the case policy: detect without regard to case,
 offer only an exact match. A reference bakes back as the variable's value verbatim, so swapping a
@@ -1284,7 +1257,7 @@ What the tracker says about one row: taken, in reach, or not yet.
 Whether a dataset requirement is met by what is held and what is done. This is the dataset's own
 small language (an item, an earlier check, `allOf`, `anyOf`, a count over an item group, or
 impossible) and nothing more. It is not a rules engine and never decides where a player can go:
-detection reads a record's `derived` and `fallback` with it (`tracker/derived-checks.ts`), the
+detection reads a record's `derived` and `fallback` with it (`packages/navigation/src/tracker/derived-checks.ts`), the
 simulator reads a boss gate with it, and the rows no world holds a location for are judged with it
 (`logic/record-statuses.ts`).
 
@@ -1292,10 +1265,10 @@ simulator reads a boss gate with it, and the rows no world holds a location for 
 
 The status of a row from the dataset's own record: is its place reached, and is what it asks for
 met. Only the rows no world holds a location for come here, which is every event and the fairy
-rungs no pond sells (`tracker/tracker-statuses.ts`). Where the player can be is handed in,
+rungs no pond sells (`packages/navigation/src/tracker/tracker-statuses/tracker-statuses.ts`). Where the player can be is handed in,
 derived from the one engine's regions (`logic/regions/reachable-screens.ts`), so this carries no
 graph and no rules of its own. `reachableScreens` holds dataset screen ids. `checkOverrides` holds
-rows whose requirement the file's own settings decide (`logic/row-overrides.ts`).
+rows whose requirement the file's own settings decide (`packages/navigation/src/tracker/record-row-inputs/record-row-overrides.ts`).
 
 ### logic/regions/reachable-screens.ts
 
@@ -1401,7 +1374,7 @@ Takes with a blade, each the engine's own button sequence played back with nobod
   claimed, drawn for 11 frames. It has no facing in the atlas, so the facing passed only decides
   where the take leaves the character looking.
 
-### logic/hero-idle/native-timings.ts
+### packages/game-data/src/logic/hero-idle/native-timings.constants.ts
 
 The engine's own animation clocks, transcribed from the decompilation, not chosen: an idle that
 invents its own timings looks like a different character. The engine expresses a hold two ways,
@@ -1625,7 +1598,7 @@ menu.
 
 ## save-state
 
-### save-state/save-state.type.ts
+### packages/game-core/src/save-state/save-state.type.ts
 
 Save state identity: what a build declares about the format it reads, what a `.sav` records
 about the build that wrote it, and the verdicts drawn from comparing them.
@@ -1639,7 +1612,7 @@ about the build that wrote it, and the verdicts drawn from comparing them.
   (`core/game-hooks/dialog_hook_state.c`). It is present only when a message was up and the host
   was allowed to draw it.
 
-### save-state/current-format.constants.ts
+### packages/game-core/src/save-state/current-format.constants.ts
 
 Written by `core/wasm-build/layout-probe.mjs` during the wasm build; never edit it by hand.
 It carries only the `@kind data` header, so this note is where its purpose lives. It holds the save state layout this build produces:
@@ -1647,7 +1620,7 @@ the ordered snapshot region lengths and the id derived from them. It is committe
 lets typecheck and the release gate see the layout without building wasm, and a layout change
 shows up as a diff to review.
 
-### save-state/formats.ts
+### packages/game-core/src/save-state/formats.ts
 
 The record of save state formats this project has shipped. Nothing here decides compatibility;
 that is the generated id's job. This is the written history: which id, from which version, and
@@ -1663,7 +1636,7 @@ frozen: nothing is ever added, because later versions publish their own format.
 `isCurrentFormatRegistered` is the release gate's whole question: does the current build's
 computed id have a row.
 
-### save-state/state-file
+### packages/game-core/src/save-state/state-file
 
 The `.sav` container: the core's header, and the metadata trailer we add to it. A save state is
 an 8 word header, the input log, then the snapshot. Every length comes from the header and
@@ -1684,7 +1657,7 @@ ignore it. The core does ignore it today; stripping means nothing depends on tha
 - A trailer that cannot be parsed counts as no trailer.
 - `appendStamp` replaces an existing stamp, so a buffer saved twice still carries one stamp.
 
-### save-state/compatibility
+### packages/game-core/src/save-state/compatibility
 
 A file on disk is inspected directly, through the stamp this app writes on every save.
 
@@ -1896,21 +1869,7 @@ The one owner of "is this screen filled in enough to be a real record". Every va
 
 ## navigation
 
-### navigation/types
-
-The flood works on one 64 by 64 grid of 8 pixel tiles per screen (`GRID_SIZE`).
-
-- `ReachState` is one tile's flood state. 0 is unreachable. 1 is reachable with the player in full control. 2 to 9 is a tile the player only passes over without control (a ledge hop), and the value names the hop's direction: `TRAVERSAL_DIRS[state - 2]`, so 2 s, 3 n, 4 e, 5 w, 6 se, 7 sw, 8 ne, 9 nw. 10 (`STAIRS_TRAVERSAL_STATE`) is a stair, which has no fixed direction.
-- `FloodFillResult.startPos` is the top left tile of Link's 2 by 2 body where the walk started.
-- `FloodFillResult.items` is the traversal tokens the flood ran with. Anything that judges a tile or an entrance afterwards (can Link use it?) needs the same inventory the walk used, so it travels on the result.
-- `dynamicBlockerCells` are the runtime sprite blockers stamped into this run. `hookTargets` are hookshot targets in range of walked tiles. `variant` is the screen variant at analysis time, absent for the base ROM layout.
-- `tileLayer` says per tile which floor reached it: 0 layer 0 only, 1 layer 1 only, 2 both. It, `reachableByLayer` (layer 0 then layer 1) and `dualLayerGrids` (the raw attribute grid of each layer, for the tooltip) exist only for dual layer indoor rooms.
-- `staircaseType` is `kind_of_in_room_staircase` at walk time. 2 means layer changes are blocked.
-- `startLayer`: 0 is the upper floor (BG2), 1 the lower floor (BG1).
-- `ScreenVariant` is an overworld screen's layout state, set by the progress tier and the screen's event flags; the game patches overlays onto the base tilemap from them. `progressTier` is the progress indicator byte (tiers in `logic/queries/progress-tier.ts`). `eventOverlay` is `save_ow_event_info[screen] & 0x20`, the event overlay being applied. `eventFlags` is that whole byte.
-- `ConnectionInfo.sourceScreen` is set when connections are gathered across screens. `isIntraRoom` marks a scroll between quadrants of one room. `layerToggle` means crossing the edge flips Link's floor (door type 22, `kDoorType_PlayerBgChange`).
-
-### navigation/nav-data.types
+### packages/game-data/src/pathfinding/nav-data.types
 
 These types ride on the dataset as optional `nav` fields: `RegionNavData` on a screen, `ConnectionNavData` on a connection. The analysis pass fills them and the pathfinder reads them. They extend the existing records and never replace them.
 
@@ -1922,7 +1881,7 @@ These types ride on the dataset as optional `nav` fields: `RegionNavData` on a s
 - `ConnectionPointData` is a bundle of tiles that forms one logical way in or out. A cliff that splits a border into two gaps makes two points. Its `id` reads `{world}-{screen:hex}-{type}-{dir}-{index}`, for example `lw-38-edge-e-0`, `lw-29-door-0`, `int-011f-exit-e`. `tiles` are columns on a north or south edge and rows on an east or west edge, always contiguous. `requirements` are what it takes to reach the point from the screen's walkable interior. `position` and `entranceIndex` (the game's own entrance index) are for entrances.
 - `NavObstacle.tileAttr` is the raw ROM tile attribute byte. `gatesPoint` names the connection point it blocks, if any.
 
-### navigation/crossing.type.ts
+### packages/game-core/src/pathfinding/crossing.type.ts
 
 `ScreenCrossing` is one record for every way on or off a screen.
 
@@ -1938,7 +1897,7 @@ These types ride on the dataset as optional `nav` fields: `RegionNavData` on a s
 - `steps` is the walk distance from the flood's start tile, set only when that distance is real. `arrival` says in words how the crossing is taken ("via north edge, tiles 31-32").
 - `ScreenCrossings.screenIndex` is the room index indoors and the overworld screen index outdoors.
 
-### navigation/tile-attrs
+### packages/game-data/src/data/records/native-tables/tile-attrs.ts
 
 One tile attribute map is the single source for collision, item requirements, labels and categories. The tables live in `data/native-tables` (`OVERWORLD_TILE_ATTRS`, `INTERIOR_ATTRS`); this folder derives helpers from them.
 
@@ -1947,14 +1906,14 @@ One tile attribute map is the single source for collision, item requirements, la
 - `isDoorPassageAttr`: a door threshold Link can walk through. Plain passages are 0x80 to 0x8D and the layer toggle shutters 0x90 to 0xAF. Neither is floor, but both are crossable. `isPassableAttr` is floor (0x00) or such a threshold.
 - `HOOKSHOT_TARGET_TILES` are the overworld tiles the hookshot grabs, pulling Link to them from range.
 
-### navigation/core
+### packages/navigation/src/pathfinding/core
 
 - `DIRECTIONS` is north, south, west, east, in that order. The walk visits neighbours in this order, so the order is part of the result.
 - `getAdjacentScreen`: an overworld screen index holds the column in bits 0 to 2 and the row in bits 3 to 5 of an 8 by 8 world, and bit 0x40 marks the dark world. A step off the world's edge gives null.
 - `has2TileClearance`: Link's body is 2 tiles wide, so a move needs a passable tile beside the target on the axis across the move.
 - `PriorityQueue` is a binary min heap, used by the A* and Dijkstra searches.
 
-### navigation/core/bfs-engine.ts
+### packages/navigation/src/pathfinding/core/bfs-engine.ts
 
 The walk moves Link's 2 by 2 body, keyed by its top left tile, on one or two floors. The layer strategy decides each step.
 
@@ -1963,7 +1922,7 @@ The walk moves Link's 2 by 2 body, keyed by its top left tile, on one or two flo
 - An entrance counts as reached when the body's centre (top left plus 1 on each axis) comes within 3 tiles before and 5 tiles after the entrance tile on both axes (`ENTRANCE_REACH`).
 - Extra seeds (from neighbouring screens, or a ledge landing) start on the start layer, each with the requirements its body tiles need.
 
-### navigation/strategies
+### packages/navigation/src/pathfinding/strategies
 
 The BFS engine asks a layer strategy how the body moves. `SingleLayerStrategy` serves the overworld, single floor rooms and rooms whose stairs lock the floor (staircase type 2). `DualLayerStrategy` serves indoor rooms with layer swap stairs and ledges between floors.
 
@@ -1971,7 +1930,7 @@ The BFS engine asks a layer strategy how the body moves. `SingleLayerStrategy` s
 - `enterTiles` checks those tiles and returns the requirement set after the step, or null when the step is blocked. It returns the same set object when nothing was added; the engine relies on that identity to queue the step at the front.
 - A ledge tile can be left only in its jump direction; a diagonal ledge allows either of its two axes.
 
-### navigation/strategies/dual-layer.ts
+### packages/navigation/src/pathfinding/strategies/dual-layer.ts
 
 - Layer 0 is the upper floor, layer 1 the lower floor. Ledges exist only on layer 0 and drop to layer 1.
 - A ledge cross needs the whole 2 wide leading edge on ledge tiles that point the step's way, since a 1 wide ledge cannot carry the 2 by 2 body. Checking the whole body at the entry spot is wrong: it straddles the trigger line and the approach floor, which matches only when the band is 2 or more deep (south fans), and 1 deep north, east and west trigger lines must still fire.
@@ -1980,18 +1939,18 @@ The BFS engine asks a layer strategy how the body moves. `SingleLayerStrategy` s
 - Swap stairs (attributes 0x1E, 0x1F, 0x3E, 0x3F) are checked on both layers. A swap stair blocks a normal same floor step and can be entered only moving north or south. The stair deposits Link at its end; if the body cannot stand within 4 steps of the band, the cross fails. An unbounded scan would carry the flood across sealed regions (room 0x71's locked corridor seam lies about 17 rows away).
 - The door passage bridge: a door threshold belongs to its door's floor, and the game's door transit puts Link on that floor. When a step fails on this floor and every new tile is a door passage on the other floor, the walk continues there. Without it the lower floor doors (the sewers' BG1 corridors, the sanctuary's back door) cannot be reached from an upper floor approach. It is only a fallback: firing it beside a step that already worked claimed the doorway on both floors whenever both stamp the passage attribute. Room 0x62's west door reads 0x85 on both layers, but on the upper floor those tiles are ringed by solid wall, so that copy was a phantom.
 
-### navigation/strategies/dual-layer-build-result.ts
+### packages/navigation/src/pathfinding/strategies/dual-layer-build-result.ts
 
 - Tiles under a swap stair on either layer are left out of the body to tile merge; traversed stair tiles are then marked on the floor the stair leads to, and traversed ledge tiles on layer 0.
 - Where both floors reach a tile, the one with fewer requirements wins.
 
-### navigation/strategies/ledge-crossings.ts
+### packages/navigation/src/pathfinding/strategies/ledge-crossings.ts
 
 The ledge hops a dual layer walk landed, one entry per tile. This is not cliff preprocessing's wall run guess, which only walks layer 0 and cannot see where the drop ends. Nor is it one entry per body position: Link is 2 tiles wide, so an N tile ledge offers N minus 1 places to stand, and recording per body left the last tile of every ledge without an arrow and halved a 2 tile gap to one. A 1 tile gap records nothing, which is right, since the player cannot jump from it. `dr` gives the hop's axis: a vertical hop spans two columns, a horizontal one two rows.
 
-### navigation/tile-classification
+### packages/navigation/src/pathfinding/tile-classification
 
-`classifyTile` joins five facts about one tile, each from its own source and none derived from another: behavior and visual (native tables keyed by attribute and indoors), room context (plain values from the caller), collision (`classifyTileAttr`) and interactable identity (a live side table lookup). `shared/game` never touches WASM, React, the DOM or Node, so live state always arrives as parameters.
+`classifyTile` joins five facts about one tile, each from its own source and none derived from another: behavior and visual (native tables keyed by attribute and indoors), room context (plain values from the caller), collision (`classifyTileAttr`) and interactable identity (a live side table lookup). `packages/game-data` never touches WASM, React, the DOM or Node, so live state always arrives as parameters.
 
 - `RoomContext.indoors` is the only field any tile lookup keys on, and it is the engine's whole tile dispatch context (`core/zelda3/src/tile_detect.c` takes one bool). The rest is descriptive and read only by the tooltip.
 - `palaceIndex` is `cur_palace_index_x2 >> 1`. The game stores the index doubled and uses 0xFF for "not in a dungeon" (`NOT_IN_PALACE_X2`); `resolveRoomContext` is the one place that sentinel becomes null.
@@ -2000,11 +1959,11 @@ The ledge hops a dual layer walk landed, one entry per tile. This is not cliff p
 - A manipulable tile's kind is its `replacement_tile_state` entry masked with 0xF0F0, looked up in `MANIPULABLE_NAMES`. A chest location at or above 0x8000 is a shut chest.
 - `TileClassification.interactable` is absent when no side table resolved the tile, and that absence is a real answer.
 
-### navigation/screen-data/indoor-ledge-dirs.ts
+### packages/navigation/src/pathfinding/screen-data/indoor-ledge-dirs.ts
 
 Indoor straight ledge triggers (0x28 and 0x29 vertical, 0x2A and 0x2B horizontal) have no fixed direction; they jump toward the adjacent wall face. A wall on one side only decides it. Otherwise the walls up to 3 tiles out on each side are counted (`WALL_SEARCH_RANGE`) and the side with more wins; a tie goes east or south. The map is keyed by `row * GRID_SIZE + col` and changes no grid, so a caller can compare neighbours' directions (Link's 2 wide body needs a same direction pair).
 
-### navigation/screen-data/cliff-preprocessing
+### packages/navigation/src/pathfinding/screen-data/cliff-preprocessing
 
 - Straight cliffs: 0x28 to 0x2B are the trigger tiles. Outdoors they jump north, south, west and east in that order. Indoors their direction comes from `indoor-ledge-dirs`, and only 0x2F has a fixed direction (west). Indoors 0x04 counts as wall (it is thick grass outdoors).
 - Indoors a trigger is a real jump only when a neighbour across the jump axis infers the same direction and is standable itself: its approach tile, one step back against the jump, is not wall. Link's body is 2 tiles wide. Outdoors a trigger needs a trigger or wall tile beside it across the axis instead.
@@ -2016,7 +1975,7 @@ Indoor straight ledge triggers (0x28 and 0x29 vertical, 0x2A and 0x2B horizontal
 - The tile does not say which side Link came from, so both are tried. Footing on open ground beats footing that is only more cliff; with equal footing the shorter hop wins, because a hop across a face lands in a step or two and a hop along it travels its whole length.
 - South cliffs: only a south facing border tile (0x10, 0x18) with walkable ground above seeds a south run. Only 0x28 to 0x2F trigger a jump in the game; a cliff face is scenery the arc passes over. Seeding from a diagonal trigger or the west face 0x1A re-emitted tiles the diagonal pass had already claimed as straight drops.
 
-### navigation/flood-fill
+### packages/navigation/src/pathfinding/flood-fill
 
 - `floodFillScreen` runs the dual layer walk only for an indoor room with both layer grids and a staircase type other than 2 (`LAYER_LOCKED_STAIRCASE`, layer changes blocked). A locked room walks only its start layer's grid.
 - Dual layer: boundary connected open tiles (0x00) on each layer are turned into wall first. In a dungeon room 0x00 on a layer is either real ground or structural void that belongs to the other layer. Void touches the grid edge; real ground is enclosed by that layer's walls.
@@ -2029,11 +1988,11 @@ Indoor straight ledge triggers (0x28 and 0x29 vertical, 0x2A and 0x2B horizontal
 - `buildBorders`: a transition on a tile that is only passed over (state 2 or more) is no exit. Door passage tiles at a room's edge count as inter room exits because the walk does not continue past the grid edge.
 - `findStartPosition` defaults to tile 32, 32. It prefers the asked tile and its 8 neighbours, then the free tile nearest the centre of Link's 2 by 2 body.
 
-### navigation/flood-fill/screen-prep/collect-void-seeds.ts
+### packages/navigation/src/pathfinding/flood-fill/screen-prep/collect-void-seeds.ts
 
 Only wide open boundary spans seed the void flood. A walkable exit corridor reaches the grid edge as a narrow gap flanked by wall (standard dungeon doorways are 4 tiles wide; anything up to `DOORWAY_MAX_WIDTH`, 6, counts). Seeding from it would walk up the corridor and wipe the room's real floor, as room 0x72's lower floor did through its open south passage. A run that ends at a grid corner has no flank on that side and is never a doorway.
 
-### navigation/flood-fill/upper-void.ts
+### packages/navigation/src/pathfinding/flood-fill/upper-void.ts
 
 Upper layer 0x00 that is only the lower floor showing through. A raised surface has to be supported: somewhere along it, it sits over lower layer structure. A connected run of upper 0x00 that is open on the lower layer at every tile is no surface; it is the gap beside a walkway. Boundary flooding cannot find these, since the walkway's own edges enclose them.
 
@@ -2041,18 +2000,18 @@ Room 0x62 forced it. A bridge splits its upper layer into three open regions: th
 
 The result is a mask, not a rewritten grid. Stamping the gaps as 0x01 would make them `CLIFF_WALL`, and cliff preprocessing walks wall runs to find a landing, so a gap turned to wall extends the cliff beside it and invents hops dozens of tiles long. A lower layer with no structure at all supports nothing, so the mask stays empty then.
 
-### navigation/flood-fill/connections.ts
+### packages/navigation/src/pathfinding/flood-fill/connections.ts
 
 - An intra room edge is a scroll seam inside one room, between rows 31 and 32 or columns 31 and 32 (`SCROLL_SEAM`). The walk makes no transitions there, so the seam is read straight off the reachable grid. Naming one side of a seam implies the other.
 - Indoor rooms sit on a 16 wide grid of 20 rows (`ROOM_GRID`), so the room north is the index minus 16.
 - Border tiles split into contiguous runs, so a blocked gap gives separate connections. Each run carries every item requirement seen on that border.
 - `usableEntranceTransition`: reaching an entrance is not enough. The tile it sits on may still need an item the player lacks (a staircase under a rock that needs the glove is flooded and visible, but not usable). Every caller that lists entrances (widget, minimaps, overlay) goes through this test so none advertises an entrance the flood considers unusable.
 
-### navigation/link-start-tile.ts
+### packages/navigation/src/pathfinding/link-start-tile.ts
 
 Link's flood start tile is the tile of his 16 by 16 collision hitbox nearest its centre. The hitbox is the lower half of the sprite: the head is skipped and it starts 8 pixels below the sprite's top. This matches the overlay's debug footprint.
 
-### navigation/analysis
+### packages/navigation/src/pathfinding/analysis
 
 The analysis pass that fills the `nav` fields of the dataset.
 
@@ -2067,7 +2026,7 @@ The analysis pass that fills the `nav` fields of the dataset.
 
 ## recommendations
 
-### recommendations/types/recommendation.type.ts
+### packages/navigation/src/recommendations/types/recommendation.type.ts
 
 A recommendation is any finding where the dataset disagrees with the live game. It carries the record the dataset would hold if the finding were applied, never pre-rendered text: a writer cannot check text, a diff cannot align it, and a reviewer cannot accept it in bulk.
 
@@ -2081,7 +2040,7 @@ A recommendation is any finding where the dataset disagrees with the live game. 
 - `DraftRecommendation` is what a detector emits. Identity and lifecycle are not its job: the registry derives the id and the store owns the state and the timestamps.
 - `DraftRecommendation.key` is the part of the identity that `targetId` and `screenId` do not carry (a destination id, a field path). It is required whenever one detector can emit more than one finding for the same screen, which for a `create` is always. Derive it from what the finding is about, never from the proposed record: flood nav data shifts between passes and would mint a new id each time.
 
-### recommendations/id
+### packages/navigation/src/recommendations/id
 
 A recommendation id is derived from what the finding is about. A counter would mint a new id on every pass, so the same finding would pile up as a new row each time the player walked back onto a screen, and a dismissal would be forgotten once the finding was seen again. A content id makes a repeat detection land on the entry the first pass made, and the decision recorded on it still applies.
 
@@ -2092,7 +2051,7 @@ The input is the finding's identity, never its payload. The proposed record is l
 - `key` carries what `targetId` and `screenId` do not: a `create` has no target, so without it every connection proposed from one screen would collide.
 - `recommendationId` has the form `rec-<kind>-<action>-<hash>`. The readable head keeps a persisted file easy to skim.
 
-### recommendations/reconcile
+### packages/navigation/src/recommendations/reconcile
 
 Folds a fresh detection pass into what the store holds. Three rules let it run on every screen change without piling up:
 
@@ -2106,9 +2065,9 @@ A `resolved` entry is not a decision, so it reopens if the finding comes back. O
 - `ReconcileOptions.now` is injectable so a test can check `decidedAt` without freezing the clock.
 - `scopedToPass` is the usual scope: entries owned by this run's detectors, for the screen this run looked at. Any other entry is left as it was.
 
-### recommendations/store
+### packages/navigation/src/recommendations/store
 
-The recommendation collection, and the only place a detection pass is folded in. `shared/game` has no Node and no `window`, so the store does not open files. It takes a storage port and the host supplies the adapter: Electron writes JSON, a test keeps a Map in memory. The logic lives in `reconcile`; the store decides the scope of a pass and persists the result. There is one file per collection, keyed by the content id.
+The recommendation collection, and the only place a detection pass is folded in. `packages/navigation` has no Node and no `window`, so the store does not open files. It takes a storage port and the host supplies the adapter: Electron writes JSON, a test keeps a Map in memory. The logic lives in `reconcile`; the store decides the scope of a pass and persists the result. There is one file per collection, keyed by the content id.
 
 - `recommendationFile` is `Data/recommendations/<kind>.json`, relative to the app's user data root.
 - `memoryStorage` is the in-memory port. It is the default, and what a test uses.
@@ -2116,7 +2075,7 @@ The recommendation collection, and the only place a detection pass is folded in.
 - `applyPass` skips the write when the pass changed nothing. `reconcile` rebuilds an entry it touched and returns the stored object itself for one it did not, so element identity is a sound and cheap test. A sweep covers every collection, most of which a single pass has nothing to say about, and this keeps that coverage from costing a file write each.
 - `decide` records a person's verdict, a state reconcile never moves.
 
-### recommendations/registry
+### packages/navigation/src/recommendations/registry
 
 The detector registry, the same Strategy registry the field kits use: a new way of noticing the dataset is wrong is one registration. The built in detectors register as a side effect of importing the strategy barrels. Nothing here reads the game or the dataset; a detector is handed its observations.
 
@@ -2127,7 +2086,7 @@ The detector registry, the same Strategy registry the field kits use: a new way 
 - The sweep's `detectorIds` is the union across the sweep, because any detector could have contributed to any group. A group's scope must cover everything that ran, or a cross kind finding that stops reproducing stays open forever. This is sound only because every draft lands in its own kind's group.
 - Every kind in `kinds` gets a group, empty or not, and so does any other kind a draft names. A collection with no detectors of its own can still hold a cross kind finding from an earlier pass, and only an empty group lets it resolve. An empty group reconciles to the list already stored, which `applyPass` recognises and does not write.
 
-### recommendations/detection-types/detection.type.ts
+### packages/navigation/src/recommendations/detection-types/detection.type.ts
 
 What a detector may look at. Everything is plain data: no React, no `window`, no module handles, no wasm calls, so a test can call a detector with an object literal. Reading the game is the caller's job. The observation types are declared structurally and not imported from the renderer, so its `RealTransition` and `DetectedConnection` pass straight in and `shared/` never reaches into `@app/*`.
 
@@ -2147,12 +2106,12 @@ For every optional field of `ScreenObservations`, absent means not read, never e
 - `roomTags` are the loaded room's header tag bytes (`wasmGetRoomTagsFor`): scripted room effects such as kill to open a door, switch doors and moving walls. Outdoors there is no room header.
 - `dungeonMapPos` is the room's position on its palace's dungeon map grid. A house, cave or outdoor screen reads as `found: false`.
 - `entranceSpawns` is the entrance id to spawn tile table (`wasmGetEntranceSpawns`): the landing position for every entrance in the game. It is reserved for the connection strategy's fall hole and entrance work.
-- `isDarkWorld` is a native flag (`ui-bridge-parser.ts`), read alongside `isIndoors` and never absent. Every `ScreenRecord` needs a `world`, so a strategy proposing a new record has a provable answer and does not guess `light`.
+- `isDarkWorld` is a native flag (`packages/game-core/src/ui-bridge-parser`), read alongside `isIndoors` and never absent. Every `ScreenRecord` needs a `world`, so a strategy proposing a new record has a provable answer and does not guess `light`.
 - `walkBoundaries` are the room's inter room walk through boundaries (`wasmGetRoomWalkBoundaries`). They are enumerable, so an indoor `kind: 'edge'` connection can be judged for removal against them, unlike an outdoor scroll edge the flood alone can never disprove. Outdoors there is no such table.
 - `doorBoundaries` are the room's door tiles (`wasmGetRoomDoorBoundaryTiles`), the second half of "this room's exits were enumerated" beside `walkBoundaries`.
 - `RecommendationDetector.id` is stable and part of every id the detector mints.
 
-### recommendations/detection-types/observation.type.ts
+### packages/game-core/src/recommendations/detection-types/observation.type.ts
 
 The live evidence shapes carried by `ScreenObservations`.
 
@@ -2167,7 +2126,7 @@ The live evidence shapes carried by `ScreenObservations`.
 - `LiveWalkBoundary` is one boundary from `wasmGetRoomWalkBoundaries`, such as a palace toggle wall between the castle and the sewer. `destRoom === 0` means no boundary on that wall, like the unused slot of every other room addressable table.
 - `LiveDoorBoundaryTile` is one door tile from `wasmGetRoomDoorBoundaryTiles`. It carries no destination. It proves a door exists at a wall and gives its open state, so the indoor edge probe uses it only as a sign that the room's exits were read, never for identity.
 
-### recommendations/diff/changed-paths.ts
+### packages/navigation/src/recommendations/diff/changed-paths.ts
 
 The structural difference between the stored record and the proposed one. A line diff over serialized records answers the wrong question: reordered keys read as a change, and a deep change reads as a change to whichever line holds the brace. Walking both objects reports each differing leaf at its real path, which is what a reviewer wants and what `linesForPaths` needs.
 
@@ -2177,11 +2136,11 @@ The structural difference between the stored record and the proposed one. A line
 - A shape change (an object became a scalar, an array became an object) is reported at its own path and not walked into: the whole subtree changed.
 - An empty result means the records are structurally identical, whatever their serializations look like.
 
-### recommendations/diff/lines-for-paths.ts
+### packages/navigation/src/recommendations/diff/lines-for-paths.ts
 
 Gives the 1-based lines those paths sit on in a serialized record, JSON or the record emitter's TS output. A path the source does not declare falls back to its nearest declared ancestor: a value the proposal removed has no line of its own, so the object that held it is the honest answer. Lines come back sorted and deduplicated, since several changed paths often share one line.
 
-### recommendations/path-lines.ts
+### packages/navigation/src/recommendations/path-lines.ts
 
 Maps every path in a serialized record to the line it is written on, so the comparison view can highlight what the diff found. It is a character scanner and not a set of per line regexes: the record emitter writes unquoted keys, single quotes, trailing commas and several fields per line, JSON writes none of those, and a `{` inside a string is not a container.
 
@@ -2192,15 +2151,15 @@ Maps every path in a serialized record to the line it is written on, so the comp
 - `keyBefore` returns null when nothing key shaped precedes the colon, and that colon is ignored. No segment is made up.
 - `Frame.index` is the next array index to assign; objects do not use it.
 
-### recommendations/strategy-detectors.ts
+### packages/navigation/src/recommendations/strategy-detectors.ts
 
-Turns every registered comparison strategy into a registered detector through `detectorFromStrategy`. Without it a registered strategy never runs. Import it after every `strategies/*` side effect import (see `use-detection-pass.ts`), so `allStrategies()` already holds every strategy for the pass. Running it again is harmless: `registerDetector` keys on id, so a repeat call replaces the same entries with themselves.
+Turns every registered comparison strategy into a registered detector through `detectorFromStrategy`. Without it a registered strategy never runs. Import it after every `strategies/*` side effect import (see `apps/desktop/src/nav-widget/recommendations/strategies/connection/wire-detector.ts`), so `allStrategies()` already holds every strategy for the pass. Running it again is harmless: `registerDetector` keys on id, so a repeat call replaces the same entries with themselves.
 
-### recommendations/compare/probe.type.ts
+### packages/navigation/src/recommendations/compare/probe.type.ts
 
 A probe reads one live value or one live set. A strategy bundles the probes for one entity kind and only declares what to read; `compare-field.ts`, `run-comparison.ts` and `compare-set.ts` own the walk, the classification and the formatting once, for every kind.
 
-- `Probe` with `known: false` means the backing table was not read this pass: silence, never a negative answer. `known(undefined)` is a different thing (see `compare/probe-reading`).
+- `Probe` with `known: false` means the backing table was not read this pass: silence, never a negative answer. `known(undefined)` is a different thing (see `packages/navigation/src/recommendations/compare/probe-reading`).
 - `FieldProbe.read` gets the observations and the record because some fields only make sense given what the record already claims (an entrance only field on a non entrance screen). `applies` gates that.
 - `FieldProbe.path` uses the diff path grammar, such as `gameId.roomIndex` or `tags[2]`. `source` names where the live value came from, such as `native:room-identity`.
 - `SetProbe` compares a whole collection, such as every edge leaving a screen. Live items and dataset records are matched by key, not by position, because nothing orders both sides the same way. Every function receives the current `screenId` so a crossing probe can tell which end of a `ConnectionRecord` is here. `noun` is the singular noun used in a finding's key and reason, such as `edge` or `chest`.
@@ -2208,7 +2167,7 @@ A probe reads one live value or one live set. A strategy bundles the probes for 
 - `SetProbe.removalConfidence` grades an `unbacked-in-dataset` finding when a removal deserves a different grade from an addition. A delete proves an absence, and that proof is only as strong as the enumeration behind it. A probe whose live read can miss a crossing keeps its deletes below `certain`, so a gap in the enumeration is never batch writable.
 - `ComparisonStrategy.sets` types each probe's item as `any`. One strategy holds probes for different collections with different item shapes, and `SetProbe<K, unknown>` makes `liveKey` and `toProposed` uncallable without an unsound cast. The `any` stays contained: nothing in the engine inspects an item beyond passing it to the same probe's own functions.
 
-### recommendations/compare/difference.type.ts
+### packages/navigation/src/recommendations/compare/difference.type.ts
 
 What the engine hands back: the outcome of checking a probe against the live game, before it becomes a recommendation. A probe describes how to look and a difference describes what was found. A strategy author writes probes; only the engine builds differences.
 
@@ -2218,73 +2177,73 @@ What the engine hands back: the outcome of checking a probe against the live gam
 - `unresolvable` (sets only): a live item with no dataset match and no way to propose one, because `toProposed` returned null (a crossing whose destination has no screen of its own). It carries the live `item` so a strategy's `onUnresolvable` mapper can act on it. The connection strategy's mapper reads a crossing's raw destination index from it to propose the missing screen, without parsing one out of `key`.
 - `SubjectComparison` is one record plus everything the game disagrees with about it. `Difference.shown` holds both values already formatted.
 
-### recommendations/compare/probe-reading
+### packages/navigation/src/recommendations/compare/probe-reading
 
 - `known` means the table was read and the value may be absent. `known(undefined)` means "we looked and there is nothing", as authoritative as `known(5)` meaning "we looked and it is 5". A record that claims a value the live read returns `known(undefined)` for is a real `unbacked-in-dataset` finding: the game was checked and disagrees. A record compared against `unread()` gets no finding, because nothing was checked. Mixing the two up either invents findings for a screen whose tables were never read or drops a real one.
 - `known` folds a live `null` to `undefined`, since both mean nothing here.
 - `unread` is silence, not a negative answer.
 
-### recommendations/compare/value-format
+### packages/navigation/src/recommendations/compare/value-format
 
 - `hex2` and `hex4` print `0x` and 2 or 4 uppercase hex digits, or `-` for anything that is not a finite number.
 - `defaultFormat` is the formatter for a probe without its own `format`: `-` for nothing, a primitive as is, JSON for anything structured. It is good enough for a reason string.
 
-### recommendations/compare/deep-equal.ts
+### packages/navigation/src/recommendations/compare/deep-equal.ts
 
 Structural equality between a probe's live value and the record's current value. `undefined`, `null` and a missing key all compare equal: a record that never declared a field, one that set it to `undefined` and one that set it to `null` all mean nothing here, so none reads as a difference against the others.
 
-### recommendations/compare/compare-set.ts
+### packages/navigation/src/recommendations/compare/compare-set.ts
 
 Joins a live collection against its dataset counterpart by key, through one `SetProbe`. An unread live side yields no differences: not read does not mean empty. A live item whose evidence cannot become a valid record (a crossing whose destination has no screen) is reported as `unresolvable` and keeps its item for the strategy's mapper. Only a `removable` probe reports dataset records the live read did not match, because a flood backed set only proves what is reachable, never that a record is gone.
 
-### recommendations/compare/compare-field.ts
+### packages/navigation/src/recommendations/compare/compare-field.ts
 
 Compares one field probe against one record. It stays silent when the probe does not apply, when the table was not read (an unread table proves nothing either way), or when the values agree. `classify` sees presence after `isAbsent` has normalised absent values, so a `false` there means that side has nothing.
 
-### recommendations/compare/run-comparison.ts
+### packages/navigation/src/recommendations/compare/run-comparison.ts
 
 The field half of the engine; `compare-set.ts` is the collection half. For every subject record, each probe stays silent or yields one `Difference`. It never decides what to do about a difference: `detector-from-strategy.ts` turns differences into drafts.
 
-### recommendations/compare/record-path
+### packages/navigation/src/recommendations/compare/record-path
 
 Get and set over the path grammar the diff produces: dotted keys and bracketed array indices (`gameId.roomIndex`, `tags[2]`). Tessera's data engine (`@drizztdourden08/tessera/data`, the schema path helpers) uses a dot numeric grammar (`items.0.name`) and lives where `shared/` may never import from, so this is a small local parser that behaves the same way. `getPath` never throws. `setPath` clones every container along the path and creates missing ones, leaving the input untouched. `SEGMENT_PATTERN` matches one dotted key run or one bracketed index, in path order.
 
-### recommendations/compare/strategy-registry
+### packages/navigation/src/recommendations/compare/strategy-registry
 
 The registry of comparison strategies, shaped like the detector registry: one kind, one strategy. Adding a kind is one registration and no edit in the consumers that walk kinds. Registering a kind again replaces it, so a host can override a built in strategy. `clearStrategies` gives tests a clean registry.
 
 The map holds `ComparisonStrategy<EntityKind>` behind a cast in `registerStrategy`. A `FieldProbe`'s `read` and `applies` take the record in a contravariant position, which makes `K` invariant, so `ComparisonStrategy<'screen'>` is not a subtype of `ComparisonStrategy<EntityKind>` and a direct cast fails the overlap check. Every strategy is checked against its own `K` when registered, so the stored values were sound at that point.
 
-### recommendations/compare/diffs-by-record.ts
+### packages/navigation/src/recommendations/compare/diffs-by-record.ts
 
 Every live field difference across all registered strategies, keyed by record id and then by field path, so a caller with a record id can look its differences up directly. Only field probes feed it. A set difference describes a whole record that is missing or unbacked, so it has no path to key by and no row to bracket. `detector-from-strategy.ts` turns those into their own create and delete recommendations.
 
-### recommendations/compare/detector-from-strategy.ts
+### packages/navigation/src/recommendations/compare/detector-from-strategy.ts
 
 Turns one `ComparisonStrategy` into a `RecommendationDetector`, so the registry never knows a detector was built from a strategy. It emits one draft per differing field path, not one draft for the whole record: a reviewer accepts "fix the room index" apart from "fix the palace index" even when both come from the same stale record, and a batch accept over `certain` findings would otherwise swallow a `likely` one in the same draft.
 
 - A reason is scanned, not read: it states the field and the two sides. The full pair is repeated in the evidence line for the record view.
-- A delete proposes the record itself. Nothing replaces a deletion, and the action is the change. `connection-remove.ts` follows the same convention.
+- A delete proposes the record itself. Nothing replaces a deletion, and the action is the change.
 
-### recommendations/compare/detector-from-strategy.type.ts
+### packages/navigation/src/recommendations/compare/detector-from-strategy.type.ts
 
 A strategy supplies an `UnresolvableMapper` when it wants an `unresolvable` set finding surfaced; by default such a finding is dropped. It returns the bare `DraftRecommendation` union, not `DraftRecommendation<K>`, because the connection strategy's mapper proposes a `screen` record for an uncatalogued crossing destination, a different kind from the `connection` strategy that found it. Crossing that boundary is what the mapper is for.
 
-### recommendations/strategies/actor/actor-strategy.ts
+### packages/navigation/src/recommendations/strategies/actor/actor-strategy.ts
 
 The `actor` comparison strategy. The engine allows one strategy per kind (`strategyFor(kind)` is a single lookup), so combat and spawns share it. An `ActorRecord` is not scoped to the current screen: a sprite type is catalogued once and can spawn anywhere. So `subjects` is the whole catalogue, and the combat probe's `applies` and `read` narrow it to what this pass observed.
 
-### recommendations/strategies/actor/combat-profile.ts
+### packages/navigation/src/recommendations/strategies/actor/combat-profile.ts
 
 Converts a resolved native combat row into the `ActorCombatProfile` shape `ActorRecord.combat` stores. The combat field probe and the spawns set probe (a proposed actor carries a profile when a combat row proves it fights) share it.
 
-### recommendations/strategies/actor/combat-probe.ts
+### packages/navigation/src/recommendations/strategies/actor/combat-probe.ts
 
 Field probe over `ActorRecord.combat`: the health, `flags4` and per class damage facts `kSpriteInit_Health`, `kSpriteInit_Flags4` and the per class damage lookup report for a sprite type. The table is a native, enumerable fact about the sprite type and not inferred from watching a fight, so a disagreement is always `certain`.
 
 `spriteCombat` only carries rows for sprite types observed this pass. A type missing from it was not seen this time and is not proven to lack combat data, so `read` returns `unread()` for it. Returning `known(undefined)` would propose deleting a correct combat profile because this room did not spawn that sprite type.
 
-### recommendations/strategies/actor/actor-spawns-probe.ts
+### packages/navigation/src/recommendations/strategies/actor/actor-spawns-probe.ts
 
 A live sprite spawn with no `ActorRecord` cataloguing its sprite type. The room's spawn table is fully enumerable, so a spawn no record's `gameId.spriteType` names is a proven gap: `certain`. Repeat spawns of one type on one screen collapse into a single live item.
 
@@ -2292,19 +2251,19 @@ The actor's `kind` is not provable from the spawn byte. The proposal is `enemy` 
 
 `removable: false`: the per room table only proves what this room spawns, never that another catalogued actor is wrong to exist.
 
-### recommendations/strategies/check/check-strategy.ts
+### packages/navigation/src/recommendations/strategies/check/check-strategy.ts
 
 The `check` comparison strategy. The chest presence probe covers a chest the room draws that no record catalogues. The correction probes cover an existing record the same chest table proves wrong about its `kind` or `screenId`. `subjects` resolves each of the current room's chests to its own `CheckRecord` through `getCheckByGameId`. A check with no chest match gets no field correction; the presence probe proposes a record for it.
 
-### recommendations/strategies/check/chest-for.ts
+### packages/navigation/src/recommendations/strategies/check/chest-for.ts
 
 Returns the live chest a `CheckRecord`'s own room and chest index name, if the room's chest table was read and draws it. It derives the match from `record.gameId` each time: a field probe's `read` and `applies` only receive the observations and the record, so a value computed while building `subjects` cannot reach them. The scan over a small array is cheap.
 
-### recommendations/strategies/check/room-id-of.ts
+### packages/navigation/src/recommendations/strategies/check/room-id-of.ts
 
 The loaded room's index, or null when there is none to read (outdoors, or the room table was not read).
 
-### recommendations/strategies/check/chest-presence-probe.ts
+### packages/navigation/src/recommendations/strategies/check/chest-presence-probe.ts
 
 A chest the loaded room draws that no `CheckRecord.gameId` covers. The chest table is enumerable (no chest has to be opened for it to report one), so the absence is proven: `certain`.
 
@@ -2315,29 +2274,29 @@ A chest the loaded room draws that no `CheckRecord.gameId` covers. The chest tab
 - `removable: false`: the chest table never proves an existing check wrong to exist, only that a new one is missing.
 - Big and small chests are not told apart: no native read distinguishes them yet, so the probe does not guess.
 
-### recommendations/strategies/check/check-correction-probes.ts
+### packages/navigation/src/recommendations/strategies/check/check-correction-probes.ts
 
 Two corrections the room's chest table proves about an already catalogued check: it is not recorded as a chest though a chest object draws it, or its `screenId` names a screen of a different room. Both read the same enumerable chest table as the presence probe, so both are `certain`.
 
-- The screen probe's live value is the current screen's id, which a field probe has no direct channel for. `observations.match?.screen.id` is the same value `context.screenId` always carries in production (`use-screen-observations.ts` sets `screenId = match?.screen.id ?? null`), so reading it there is not a guess.
+- The screen probe's live value is the current screen's id, which a field probe has no direct channel for. `observations.match?.screen.id` is the same value `context.screenId` always carries in production (`useScreenObservations.ts` sets `screenId = match?.screen.id ?? null`), so reading it there is not a guess.
 - Chest contents are left alone by both probes: the check collection's `vanillaItemIds` is edited per dungeon reward in ways the raw chest byte cannot settle. That belongs to the item strategy.
 - The screen comparison goes through the recorded screen's own `roomIndex` and does not compare screen ids. One room can carry several screen records (a progress variant of the same interior), so a check attached to a variant this pass did not resolve is correct. Only a recorded screen in another room is a real mismatch.
 
-### recommendations/strategies/dungeon/dungeon-strategy.ts
+### packages/navigation/src/recommendations/strategies/dungeon/dungeon-strategy.ts
 
 The `dungeon` comparison strategy: the loaded room resolves to a dungeon whose `roomScreenIds` does not list this screen. `subjects` is at most the one dungeon the loaded room's own palace index names; no other dungeon record has anything to say about this room. The live palace index is already carried on `liveGameId`.
 
-### recommendations/strategies/dungeon/room-screens-probe.ts
+### packages/navigation/src/recommendations/strategies/dungeon/room-screens-probe.ts
 
 `DungeonRecord.roomScreenIds` against the loaded room. The fix is an append, so this is a field probe whose `read` returns the union of the record's list and the current screen, never a smaller set, and an existing member is never dropped. A set probe does not fit an append onto one array field of a record that exists: a `missing-in-dataset` set finding always becomes a `create`.
 
 Room to dungeon membership is a native, enumerable fact about the loaded room (`cur_palace_index_x2` names the dungeon outright), so a missing entry is `certain`. The live value is the current screen's id, read from `observations.match?.screen.id` for the same reason as the check screen probe. With no resolved screen there is nothing provable to append.
 
-### recommendations/strategies/item/item-strategy.ts
+### packages/navigation/src/recommendations/strategies/item/item-strategy.ts
 
 The `item` comparison strategy. The grant probes cover a native item id no record catalogues. The alias probes cover an existing record whose `aliasOf` duplicate swap rule an observed grant contradicts. `subjects` is the whole catalogue: an `ItemRecord` is not scoped to the current screen, so there is no narrower set to hand the alias probes.
 
-### recommendations/strategies/item/grant-probes.ts
+### packages/navigation/src/recommendations/strategies/item/grant-probes.ts
 
 A native item id no `ItemRecord.gameId.receiveItemId` covers, from the three places the game says so. Each is its own set probe because confidence and source are fixed per probe, not per live item, and the three differ in both:
 
@@ -2351,17 +2310,17 @@ One combined probe would give every finding one confidence and one source and ov
 
 The placeholder's `category` and `name` have no native answer and `ItemRecord` requires both, so it uses the dataset's neutral defaults. `origin: 'vanilla'` is provable: anything that reached this join (a chest's static contents or the native receive path) is a real in game item. `removable: false` on all three: none of these tables proves an existing `ItemRecord` wrong to exist.
 
-### recommendations/strategies/item/alias-probes.ts
+### packages/navigation/src/recommendations/strategies/item/alias-probes.ts
 
 An existing record's `aliasOf` claims a duplicate swap rule (`resolveDuplicate`) that an observed grant contradicts: the record's own raw id was granted as is while its own item was already owned, at which point `resolveDuplicate` says the swap should have applied. The check uses only the record's own id and the observation's owned set snapshot.
 
 There are two probes on the same path because confidence is fixed per probe: a direct native tally (`fromInventoryDelta: false`) is `certain`, a tracker inventory delta is only `likely`. The two `applies` gates are exclusive on the same grant's flag, so at most one fires for a record in one pass. `format` shows the dataset side as the alias's display name, the item a reviewer recognises.
 
-### recommendations/strategies/screen/screen-strategy.ts
+### packages/navigation/src/recommendations/strategies/screen/screen-strategy.ts
 
 The `screen` comparison strategy. Every field reads `ScreenObservations` directly. `subjects` is the current screen plus every screen a recorded palace mismatch names, deduped by id. Only the palace probe needs the extra screens, but every probe runs over `subjects`, so the dedup happens here once.
 
-### recommendations/strategies/screen/game-id-probes.ts
+### packages/navigation/src/recommendations/strategies/screen/game-id-probes.ts
 
 Field probes over `ScreenGameId`, the native identifiers a screen record claims. Every value is read off a table fully enumerable for the loaded room, so every probe is `certain` and compares unconditionally: a wrong value is reported, not only a missing one.
 
@@ -2372,17 +2331,17 @@ Field probes over `ScreenGameId`, the native identifiers a screen record claims.
 - RAM $010E names the entrance a room was entered through only when it was entered directly. Walking in from another indoor room leaves it stale, and `entranceRooms[whichEntrance] === roomIndex` is the only way to tell.
 - RAM $010E holds 0 from boot and is not rewritten by loading a save state, so a live 0 cannot be told apart from walking through entrance 0x00. It is not evidence and reads as unread.
 
-### recommendations/strategies/screen/identity-probes.ts
+### packages/navigation/src/recommendations/strategies/screen/identity-probes.ts
 
 The game reports a screen's kind only through `isIndoors`. Outdoors that bit proves `overworld`. Indoors it settles nothing: the record could be `dungeon`, `interior` or `cave`, and no native byte tells them apart, so a guess would be a finding the game never proved. Only the outdoor case is provable, and only for the currently loaded screen: `subjects` can include other screens named by a palace mismatch, and `isIndoors` is a global flag that says nothing about those. There is no probe for `position.floor`; inventing one without an observation would be a guess.
 
-### recommendations/strategies/screen/palace-mismatches.ts
+### packages/navigation/src/recommendations/strategies/screen/palace-mismatches.ts
 
 Every palace mislabel the fallback rescued this session, folded with what the live match just resolved. The live match is folded in so a screen that appears in both yields one finding, not two that share an id. `screen-strategy.ts` uses it to widen `subjects` past the current screen, and the palace probe uses it again to read the value for whichever extra screen it is looking at.
 
-### recommendations/strategies/screen/screen-presence-probe.ts
+### packages/navigation/src/recommendations/strategies/screen/screen-presence-probe.ts
 
-The screen the player stands on has no record cataloguing it. Reaching this needs a pass that runs with a null `context.screenId`, which `use-detection-pass.ts` provides.
+The screen the player stands on has no record cataloguing it. Reaching this needs a pass that runs with a null `context.screenId`, which `apps/desktop/src/nav-widget/recommendations/strategies/connection/wire-detector.ts` provides.
 
 - Both sides hold at most one entry: the screen the player is on, identified by its game id.
 - `datasetKey` does not derive a room and palace key from the matched record's own `gameId`. Several resolution methods of `resolveCurrentScreenDetailed` (`palace-scan`, `cave-single`, `cave-ambiguous`, `variant`) return a record whose `gameId` disagrees with or omits the live values: a palace scan match still carries the stale expected palace index (which `palace-mismatches.ts` corrects), and a cave or interior record has no `palaceIndex` while the live register does. Keying each side off its own `gameId` would make a mapped room fail the join and mint a duplicate `create` beside the correction the field probes already propose. So the live item carries the id `observations.match` resolved (`matchedScreenId`) and `liveKey` prefers it. The join fails, and proposes a `create`, only when `observations.match` is null.
@@ -2393,20 +2352,20 @@ The screen the player stands on has no record cataloguing it. Reaching this need
 - `removable: false`: the lack of a match does not prove a record wrong. It may be a detection bug, an unresolved variant, or a stale palace index the field probes are already correcting.
 - Confidence is `likely`: the game supplies the identity but never the geography a screen record must carry, so the create is never batch safe.
 
-### recommendations/strategies/screen/screen-draft.ts
+### packages/navigation/src/recommendations/strategies/screen/screen-draft.ts
 
 The minimal `ScreenRecord` a `create` proposes for an uncatalogued room or overworld index: everything besides the identity (`gameId`, `kind`) and the label, which differ by caller. The presence probe (the screen the player stands on) and the connection strategy's `onUnresolvable` mapper (a crossing destination) share it. Only the current screen's live registers carry a palace index; a crossing destination never can. Geography has no native answer, so the draft carries the placeholder area and location ids and an unfinished name. `validate-create.ts` refuses to let it reach disk.
 
-### recommendations/strategies/screen/spawns-probe.ts
+### packages/navigation/src/recommendations/strategies/screen/spawns-probe.ts
 
-`screen.spawns` against the live sprite spawn table. It is a field probe despite the file name. `SetProbe` works over whole records and `spawns` is one array field on a record that exists, so a set probe would turn a `missing-in-dataset` difference into a `create` of a second screen record for the same room (`direction-tag.detector.ts` met the same limit). Comparing the path as one array yields an `update`.
+`screen.spawns` against the live sprite spawn table. It is a field probe despite the file name. `SetProbe` works over whole records and `spawns` is one array field on a record that exists, so a set probe would turn a `missing-in-dataset` difference into a `create` of a second screen record for the same room. Comparing the path as one array yields an `update`.
 
 - `read` returns the union of the record's spawns and every live spawn missing from them, never a smaller set. Sprites spawn conditionally and the dataset models that with variant screens, so one pass proves nothing about a spawn being impossible. This is `removable: false` made structural.
 - A spawn's identity is which actor at which tile, independent of order.
 - A sprite type with no `ActorRecord` is skipped; that gap is the actor spawns probe's finding.
 - An empty union becomes `undefined`, not `[]`: an empty array is a real value and would make up a finding against an undefined `record.spawns`.
 
-### recommendations/strategies/screen/screen-geography-detector.ts
+### packages/navigation/src/recommendations/strategies/screen/screen-geography-detector.ts
 
 A screen whose two geography ids contradict each other: it names an area and a location, and the location record names a different area. It is hand written and not a field probe because there is no live signal: the game never reports which area or location a room sits in. This is the dataset disagreeing with itself, which only a detector reading the records can see. `screenBlockers` refuses such a pair at edit time; this detector is the read side of the same rule for records already on disk.
 
@@ -2416,9 +2375,9 @@ A screen whose two geography ids contradict each other: it names an area and a l
 - A placeholder on either side means no place assigned, not a contradiction. A location id no record answers to is a dangling reference, a different fault with a different fix.
 - When nothing is filed under the area there is no value to propose.
 
-### recommendations/strategies/screen/index.ts
+### packages/navigation/src/recommendations/strategies/screen/index.ts
 
-Importing a strategy barrel (`strategies/actor`, `check`, `dungeon`, `item`, `screen`) installs that strategy as a side effect. `strategy-detectors.ts` turns a registered strategy into a runnable detector, so import it after these. The geography detector compares the dataset with itself and is not strategy derived, so this barrel registers it directly. It has its own detector id, so wiring the strategies cannot overwrite it.
+Importing a strategy barrel (`packages/navigation/src/recommendations/strategies/actor`, `check`, `dungeon`, `item`, `screen`) installs that strategy as a side effect. `strategy-detectors.ts` turns a registered strategy into a runnable detector, so import it after these. The geography detector compares the dataset with itself and is not strategy derived, so this barrel registers it directly. It has its own detector id, so wiring the strategies cannot overwrite it.
 
 ## simulation
 
@@ -2447,19 +2406,19 @@ Flag snapshots are raw SRAM copies. The simulator only byte-diffs them and never
 - `TriggerAction` `bombWall` blasts a cracked wall open. Bombs are permanent once obtained, so it needs no count. `pullSwitch.drain` is set when the switch's effect reaches beyond its own room, onto a remote overworld screen's event byte, in place of a local shutter.
 - `FlagDiff` is one changed flag location from pure byte diffing. `index` is the room id for `room`, the screen for `overworld` and the buffer index for `progress`. `setBits` are the newly set bits: `(before ^ after) & after`.
 - `DetectedCheck.matched` is the identified check's record, for display and dungeon attribution, never for detection. `checkId` is absent when the diff matched no check.
-- `DatasetSuggestion.targetFile` is relative to `shared/game/data/`. `targetId` null means insert a new entry. `code` is a code block ready for the writer IPC.
+- `DatasetSuggestion.targetFile` is relative to `packages/game-data/src/data/`. `targetId` null means insert a new entry. `code` is a code block ready for the writer IPC.
 - `SimChest.isBig` is bit 15 of the chest room word; a big chest needs the big key. `posKnown` is false when the C layer reports an unknown position (col and row 0xFF) for a remote room.
 - `SimSprite.outdoor` is true when the sprite came from the overworld spawn table, so `roomId` is a screen index. `kind` cannot answer this (a check giving NPC is `npc` indoors or out), and the screen index says which world the sprite is in (see `NpcCheckConfig.owWorld`). `posKnown` false means the tile is unknown (coarse reach). `carriesKey` means it drops a small key when defeated (the room's die action marker); `carriesBigKey` means it drops the big key (marker 0xe4 or 0xfd).
 - `SimDoor.index` is the slot in the room's door table, which is also the open bit index (slots 0-3). `opened` comes from the room's door open flag bits. `cellLock` marks a jail cell keyhole plate (room object 0x18), not a door table door: `index` is then its chest slot and opening it writes that slot's open bit. `nativeType` is the raw `kDoorType`, which tells apart doors that share a `kind` (throne push wall 0x14, warp room door 0x46). `layer` 0 is upper (BG2) and 1 is lower (BG1), from door position slots 6-11.
 
-### simulation/types/room-section.type.ts
+### packages/game-core/src/simulation/types/room-section.type.ts
 
 A multi screen indoor room can carry more than one scrolling section, each with its own shutters and sprites. The game loads sprites only for the section the player stands in.
 
 - `splitX`: column 32 divides the room into a west and an east section. `splitY`: row 32 divides it into a north and a south section. A destroyed blast wall merges two quadrants back into one.
 - `playerSectionX` is the player's section along the X split (0 west, 1 east). `playerSectionY` is the same along the Y split (0 north, 1 south).
 
-### simulation/traversal-id.type.ts
+### packages/navigation/src/simulation/traversal-id.type.ts
 
 `TraversalId` is the simulator's own identity for a place, and deliberately not a `ScreenId`. The engine keys visited, frontier, route and discovered on the game's own number: `room:<roomIndex>` indoors and `ow:<screenIndex>` outdoors, set by the live port's observe. Seeding it from screen detection put the virtual player in the wrong place when a room index collided across a palace and a cave.
 
@@ -2467,7 +2426,7 @@ A `TraversalId` is not a dataset key. Handing one to a dataset getter returns a 
 
 The static graph fallback (`buildAdjacency`) walks real `ScreenId`s through the same fields, so the id space holds both vocabularies. That is why it is a plain string alias: a template literal union would exclude the ids the fallback puts there.
 
-### simulation/annotations.type.ts
+### packages/navigation/src/simulation/annotations.type.ts
 
 What is on a screen and what state it is in, derived from the simulator's own discovery so the overlay, the minimaps and the widget panel cannot disagree with the run. A kind with no renderer is a test failure (see the renderer registry); an unmapped kind still draws as a neutral marker.
 
@@ -2478,7 +2437,7 @@ What is on a screen and what state it is in, derived from the simulator's own di
 - `ScreenTag` is one decoded room header TAG byte. It is screen wide, so it has no tile.
 - `ScreenAnnotations.screenIndex` is the room id indoors and the overworld screen index outdoors, used for world placement. `checks` is the check progress for the minimap badge. `tags` are the decoded room tags saying what mechanic the room header arms, indoors only.
 
-### simulation/port.type.ts
+### packages/navigation/src/simulation/port.type.ts
 
 `SimulatorPort` is the single seam between the pure engine and the outside world. `LiveGamePort` drives the real game through the wasm bridge; a later `DataWorldPort` would replay the recorded dataset offline. The engine only ever speaks to this interface.
 
@@ -2490,13 +2449,13 @@ What is on a screen and what state it is in, derived from the simulator's own di
 - `snapshotState` and `restoreState` save the pre run state so it can be restored afterwards.
 - `onItemReceived` reports the granted item by dataset id. The tracker resolves the native receive index to a record already, so nothing downstream derives it again.
 
-### simulation/dungeon-key-target
+### packages/navigation/src/simulation/dungeon-key-target
 
 What a key requirement token points at. A `smallkey:` or `bigkey:` token either names the dungeon whose key it wants, by `DungeonId`, or carries the wildcard `ANY_DUNGEON` (`*`). The wildcard is what a connection's `barrier:small-key` or `barrier:big-key` tag turns into, because the tag says a key is needed without saying whose. Keeping the wildcard as its own value (and not a string looked up in a per dungeon map that always misses) is what makes the two cases answerable separately.
 
 `keyTargetOf` returns the target a key token's suffix names, or null when it names nothing real.
 
-### simulation/key-items
+### packages/navigation/src/simulation/key-items
 
 Which received item is a dungeon key, by id. Identity is the native receive index the game delivers through `Link_ReceiveItem`: 0x24 for a small key and 0x32 for the big key, resolved to a record through the facade. These are the same two constants the discovery step uses for a guard's drop.
 
@@ -2504,13 +2463,13 @@ The dataset also holds 26 per dungeon key records (native 0x92-0xad) with no `du
 
 `keyKindOf` resolves the key item ids lazily, per call. A published dataset bundle can replace the records after import, and a snapshot taken at import time would pin the ids from before the bundle.
 
-### simulation/logic-referenced-items.ts
+### packages/navigation/src/simulation/logic-referenced-items.ts
 
 `logicReferencedItems` holds every item referenced anywhere in the check and connection requirement graph (`CheckRecord.requirements` and `ConnectionRecord.requirements`). Receiving one can change whether a gated check becomes triggerable (boss gates, medallion checks, pendant and crystal counts), so picking it up triggers a reach re-flood even when the item carries no direct traversal token. The set is id based, like the requirement graph, so two records can never collapse onto one shared name.
 
-### simulation/requirements-map
+### packages/navigation/src/simulation/requirements-map
 
-Turns what a run holds into the `TraversalRequirement` tokens the nav data gates on, maps connection barrier tags to tokens as a fallback when a connection has no explicit `ConnectionNavData.requirements`, and evaluates an OR of AND `RequirementSet` against a reach context. The item side is `ItemId` throughout; the token table lives in `data/native-tables/traversal-tokens.ts`.
+Turns what a run holds into the `TraversalRequirement` tokens the nav data gates on, maps connection barrier tags to tokens as a fallback when a connection has no explicit `ConnectionNavData.requirements`, and evaluates an OR of AND `RequirementSet` against a reach context. The item side is `ItemId` throughout; the token table lives in `packages/game-data/src/data/records/native-tables/traversal-tokens.ts`.
 
 - `ReachContext.tokens` holds item derived and always available tokens. `keyAvailable` says whether a small key remains for a dungeon, or for any dungeon. `bigKeys` holds the big keys possessed, by dungeon. `events` holds the observed done events.
 - `tokensForItem` returns every token an item grants, including the rungs a progressive token implies.
@@ -2519,11 +2478,11 @@ Turns what a run holds into the `TraversalRequirement` tokens the nav data gates
 - `bigkey:*` is unsatisfiable on purpose, and that is a known defect. The barrier tag says the crossing wants the big key without saying whose, and a wildcard big key means nothing for a per dungeon set. The 12 connections tagged `barrier:big-key` are impassable on the static graph. Unblocking them changes what the simulator can reach and belongs in its own verified change. The engine's own big key door handling is already coarse (`bigKeys.size === 0` in discovery), which shows the mismatch is an oversight.
 - `affectsTraversal`: progress buffer changes (events, Agahnim, the rescue) and overworld event changes gate traversal.
 
-### simulation/room-tags.ts
+### packages/navigation/src/simulation/room-tags.ts
 
 Human names for the room header TAG bytes, indexed like the game's own tag routine dispatch table (`kDungTagroutines`, 0x00-0x3F). A raw `tag 0x26` in the widget says nothing; a name says why a door is shut. Entries the dispatch table sends to an unnamed stub are left out and fall back to the hex value, so the table never claims to know more than it does. Tags 0x01-0x13 are the clear the room family the simulator gates on (`isClearRoomTag`), all named `CLEAR_ROOM_TAG_NAME`.
 
-### simulation/detect/check-matcher
+### packages/navigation/src/simulation/detect/check-matcher
 
 Identifies a raw flag diff as one of the known checks, using the check records' own `gameId`. This is identification only: detection already happened by byte diffing. A diff that matches no known check yields nothing, so the recorder can propose a dataset fix.
 
@@ -2533,18 +2492,18 @@ Every matcher returns the record, so the caller holds the check's id. Matching b
 - A progress check with mask `WHOLE_BYTE_MASK` (0xff) matches any nonzero value.
 - Progression events are threshold reads of the progress buffer, not bitmasks (`sram_progress_indicator` 1 is after the uncle, 2 is the completed rescue). A diff names an event only when it crosses that threshold, and the highest crossed threshold wins. Reaching 2 is the completed rescue, not the started one.
 
-### simulation/detect/flag-snapshot
+### packages/navigation/src/simulation/detect/flag-snapshot
 
 Pure byte diffing of raw SRAM snapshots. This layer never touches check data; it reports which flag bytes changed and which bits were newly set.
 
 - `save_ow_event_info` starts at 0xF280 and the flag tables index up to screen 0x81. Screens 0x80 (the sword pedestal) and 0x81 (the waterfall ledge) alias into the adjacent SRAM word at 0xF300 and 0xF301, so `OW_EVENT_LEN` spans through 0x81.
 - `diffSnapshots` emits one `FlagDiff` per changed byte or word across the three buffers.
 
-### simulation/detect/unidentified.constants.ts
+### packages/navigation/src/simulation/detect/unidentified.constants.ts
 
 `UNIDENTIFIED` is what the log calls a flag change no check accounts for. It is only a display string; the matcher returns nothing for an unmatched diff and never this sentinel.
 
-### simulation/presence/presence.type.ts
+### packages/navigation/src/simulation/presence/presence.type.ts
 
 `PresenceGameState` is the read only snapshot of live game state that `evaluatePresence` reads to decide whether a check giving NPC is spawned. Every field comes from a raw game read; the live port fills it on each observe through `buildPresenceState`. Plain scalars and array-likes keep it cheap to build and trivial to construct in tests.
 
@@ -2553,29 +2512,29 @@ Pure byte diffing of raw SRAM snapshots. This layer never touches check data; it
 - `owEventInfo` holds the `save_ow_event_info` bytes, indexed by overworld screen (base 0xF280). `roomState` holds the `save_dung_info` words, indexed by room id.
 - `status` holds the live facts behind the status pills. It is absent on a snapshot with no live core (the simulator, the offline reader).
 - `StoryStatus` matches `WasmGetStoryStatusBytes` byte for byte (`core/game-hooks/story_status.c`).
-- `PresenceStateInput` is the raw input the live port hands in. `progress` is the buffer from `WasmGetProgressFlags` (byte layout documented in `checks/flags/npc.ts`); the other two buffers are the SRAM copies the simulator already snapshots for flag diffing. `statusBytes` are the `WasmGetStoryStatusBytes` bytes, when a live core is there to read them.
+- `PresenceStateInput` is the raw input the live port hands in. `progress` is the buffer from `WasmGetProgressFlags`; the other two buffers are the SRAM copies the simulator already snapshots for flag diffing. `statusBytes` are the `WasmGetStoryStatusBytes` bytes, when a live core is there to read them.
 
-### simulation/presence/presence.constants.ts
+### packages/navigation/src/simulation/presence/presence.constants.ts
 
 - `BOSS_DEAD_BIT` is the `save_dung_info` bit marking a room's boss defeated or the room cleared.
 - `PROGRESS_INDICATOR_SLOT`, `PROGRESS_FLAGS_SLOT`, `PROGRESS_INDICATOR_3_SLOT` and `FOLLOWER_INDICATOR_SLOT` are byte offsets in the `WasmGetProgressFlags` buffer. The follower indicator sits at index 13; a value of 1 means the follower is tagging along.
 
-### simulation/presence/evaluate
+### packages/navigation/src/simulation/presence/evaluate
 
 Pure evaluation of a declarative `PresenceCondition` against a `PresenceGameState`. This is the simulator's one sanctioned data read: the transcribed spawn conditions live as data on the checks (`CheckRecord.presence`) and this function reads them. An absent condition means "always present". An `itemId` leaf asks the inventory directly.
 
-### simulation/presence/state
+### packages/navigation/src/simulation/presence/state
 
 `emptyPresenceState` is a zeroed snapshot for the idle or no map path, where nothing is discoverable.
 
-### simulation/recording/recorder
+### packages/navigation/src/simulation/recording/recorder
 
 Accumulates what a run observed in game: check positions discovered, screen transitions traversed and door gates seen. `dataset-updates` turns disagreements with the static data into suggestions.
 
 - `ObservedCheck.checkId` is null when the diff matched no check. An unmatched observation is exactly what becomes a dataset suggestion.
 - `recordCheck` dedupes by identity and location, not identity alone: every unmatched observation has a null `checkId`, so an identity only key would collapse all of them into one, and they are the ones worth reporting one by one.
 
-### simulation/recording/dataset-updates.ts
+### packages/navigation/src/simulation/recording/dataset-updates.ts
 
 Turns recorder output into `DatasetSuggestion[]`, the ready to write code blocks for the widget's Apply button. Suggestions arise where what the run observed disagrees with or extends the static screen, connection and check data.
 
@@ -2583,7 +2542,7 @@ Turns recorder output into `DatasetSuggestion[]`, the ready to write code blocks
 - Open work: a connection suggestion's `code` still emits an informal shorthand, not a real point pair literal. A connection point now always needs a minted `toConnectionId` partner, which a suggestion cannot allocate. Once connections live in the vault as JSON, the suggestion has to become a JSON fragment for the vault in place of a TS snippet.
 - `checkSuggestions` takes every observation the matcher could not account for. A null `checkId` is the unmatched case; comparing names once suppressed real suggestions when an unknown thing shared a name with another dungeon's check.
 
-### simulation/sim-run/sim-run.type.ts
+### packages/navigation/src/simulation/sim-run/sim-run.type.ts
 
 Types for the headless sim run automation (`--sim-run`): the config the CLI flag parses into, and the report the run writes for the data correction loop.
 
@@ -2595,15 +2554,15 @@ Types for the headless sim run automation (`--sim-run`): the config the CLI flag
 - `BoundaryEdge` is a dataset edge from a reached screen to a screen the run never reached.
 - `SimRunReport` is written to `debug-output/sim-run.json` for the correction loop to read. `reachedTarget` is true when `target` was reached before the run ended. `reachedScreens` are the logical screens the flood reached. `verifiedChecks` are the real checks triggered and confirmed by flags, by id. `boundaryEdges` show where traversal stopped. `suggestions` are the recorder derived corrections.
 
-### simulation/sim-run/report.ts
+### packages/navigation/src/simulation/sim-run/report.ts
 
 Builds a `SimRunReport` from a finished `EngineState` and `RecorderState`. `boundaryEdges` are the dataset edges that leave the reached set: the places to point `--dump-nav` at when hunting a missing or blocked connection. There is one per exitable point, since a two way crossing already surfaces both orientations as separate records. The report is read by a person, so edges carry tag terms, not ids.
 
-### simulation/trigger/boss-gate
+### packages/navigation/src/simulation/trigger/boss-gate
 
 Bosses are a position plus a prerequisite gate; no combat is simulated. A boss is triggerable when its trigger tile is reachable in the flood fill result and the inventory meets the beatability requirement. `BossSite.beatableWith` defaults to the boss check's own `CheckRecord.requirements`; `bossRequirement` falls back to an always true requirement.
 
-### simulation/trigger/trigger-plans
+### packages/navigation/src/simulation/trigger/trigger-plans
 
 Maps a discovered interactable (chest, NPC sprite, standing or overworld item) to the `TriggerAction` that fires the real check. NPC sprites resolve their flag and item payload from the check records' `gameId` by sprite type.
 
@@ -2613,11 +2572,11 @@ Maps a discovered interactable (chest, NPC sprite, standing or overworld item) t
 - `indoorPickupSlot`: indoors the game records a pickup in the room's own state bits (`HeartUpgrade_CheckIfAlreadyObtained`, `sprite_main.c`): 0x2000 when `sprite_x_hi & 1` is set (a column in the room's right half, from column 32, since a room is 64 columns of 8 pixels), 0x4000 otherwise. Both are room state slots (5 and 6), which the chest action already writes.
 - `checkForStandingItem` derives the check a standing or overworld pickup is from the same facts `planSpriteTrigger` writes, so the two cannot disagree.
 
-### simulation/room-tags.constants.ts
+### packages/navigation/src/simulation/room-tags.constants.ts
 
 The clear room tag name, the log lines and the door suggestion code print `->`, the same arrow the other `ROOM_TAG_NAMES` entries use, so every tag name reads the same way.
 
-### simulation/engine/state
+### packages/navigation/src/simulation/engine/state
 
 Everything the run holds or has done is keyed by dataset id (`ItemId`, `CheckId`, `DungeonId`), never by display name: 11 dungeons each hold a check named "Big Chest". Place identity is the simulator's own `TraversalId`, not a `ScreenId`.
 
@@ -2630,15 +2589,15 @@ Everything the run holds or has done is keyed by dataset id (`ItemId`, `CheckId`
 - `preTrigger` holds the flags captured just before the active trigger, for the verification diff. `progressSinceEpoch` says whether any check completed since the current epoch started.
 - `cloneState` is a shallow structural clone, so a step never mutates its input state.
 
-### simulation/engine/event-log
+### packages/navigation/src/simulation/engine/event-log
 
 The two `SimEvent` constructors live on their own so a module that only logs (the dungeon ledger) never imports the hop and side effect modules. Those pull in the explorer, and a ledger module the explorer calls into cannot import back through that chain.
 
-### simulation/engine/screen-label.ts
+### packages/navigation/src/simulation/engine/screen-label.ts
 
 Builds a label like `screen-183 (Uncle Estate)` for the run's log. It is display only; traversal never consults the dataset. The lookup must be able to answer "nothing", because most ids reaching it are `TraversalId`s (`room:80`) that are not dataset keys, and the dataset getters answer a miss with a stand-in record. It is memoized because it runs several times per engine step and a run's id space is small. The cache holds a label, never an identity, so a replaced dataset bundle can at worst leave a stale string in a log line.
 
-### simulation/engine/goal
+### packages/navigation/src/simulation/engine/goal
 
 Terminal condition evaluation. The `not-completable` verdict (the frontier emptied with no progress since the epoch began) is the softlock signal this tool exists to produce.
 
@@ -2646,11 +2605,11 @@ Terminal condition evaluation. The `not-completable` verdict (the frontier empti
 - `allChecksDone` is true only when a non empty set of checks is fully covered.
 - The screen limit is a bounded testing cap: the run stops once that many distinct screens were visited over the whole run (`everVisited` survives epoch resets; `visited` does not).
 
-### simulation/engine/softlock-report.ts
+### packages/navigation/src/simulation/engine/softlock-report.ts
 
 Builds the `SoftlockReport` from a finished run: the checks completed, the checks left blocked with the requirement sets on every edge into their screen, and the screens never reached. Blocked checks are matched by id; a name join once marked all 11 dungeons' "Big Chest" complete the moment any one of them was.
 
-### simulation/engine/end-summary
+### packages/navigation/src/simulation/engine/end-summary
 
 What the run found versus what it resolved. `not-completable` alone is a verdict, not a report. This counts everything discovery saw and how much of it was dealt with, so a run that stops early can be told apart from one that exhausted its reach, and a blocked chest or an unentered room is visible.
 
@@ -2658,7 +2617,7 @@ What the run found versus what it resolved. `not-completable` alone is a verdict
 - `MAX_LISTED` (40) caps the listed screens, so a run that entered nothing does not print a novel.
 - `formatEndSummary` renders one line per fact for the run log.
 
-### simulation/engine/traversal
+### packages/navigation/src/simulation/engine/traversal
 
 Screen level traversal over the static screen graph (all screens and connections from the data facade). There is no tile walking: a route is a sequence of screen ids. Connection requirements gate every edge: `ConnectionNavData.requirements` when present, else a fallback derived from `barrier:*` tags.
 
@@ -2668,7 +2627,7 @@ Screen level traversal over the static screen graph (all screens and connections
 - `findScreenPath` is a BFS by hop count and returns the crossed edges too. `reachableFrom` returns every screen reachable under the `canPass` predicate.
 - `gameNumberOf` gives the game's own number for a screen on a path, or -1 when the screen has neither index or the registry never held it. It goes through `get`, never a throwing getter. `toRoute` and `toScreenPath` adapt a path to the navigation `Route` and `ScreenPath` stubs (no tile paths).
 
-### simulation/engine/discovered-graph
+### packages/navigation/src/simulation/engine/discovered-graph
 
 The game driven traversal graph, revealed screen by screen: each visited screen's flood contributes the exits it detected (border connections, doors, holes, stairs). There is no requirement gating, because the flood already ran with the current inventory, so every recorded edge is passable now.
 
@@ -2677,7 +2636,7 @@ The game driven traversal graph, revealed screen by screen: each visited screen'
 - `owWorldOf`: overworld screen indices from 0x40 up are the second world. That is a game fact, so it holds for synthetic `ow:N` ids too. It is undefined for interiors, whose world only their palace context knows.
 - A discovered edge that jumps between the worlds without a warp or mirror is always an artefact. Once rooms with no dataset entry gained real geometry they could report other world exits, so the world test sits on the edge, where it holds however the endpoint got its name.
 
-### simulation/engine/regions
+### packages/navigation/src/simulation/engine/regions
 
 Region aware exploration memory. A room can hold several walkable regions that do not connect inside it, so the engine keeps a per screen union of every flood's reached tiles and treats an entry landing outside it as a fresh visit.
 
@@ -2690,7 +2649,7 @@ Region aware exploration memory. A room can hold several walkable regions that d
 - `unexploredRegionJobs` lists visited screens that some discovered exit enters outside their explored region; a room with several regions still owes a visit through that doorway.
 - `takeRegionJob` walks to the job's source screen and then takes its exit, since routing straight to the target screen would enter again through the explored door. It pins the way in, because arriving through the wrong exit would leave the job unsatisfied forever.
 
-### simulation/engine/explorer
+### packages/navigation/src/simulation/engine/explorer
 
 Virtual player bookkeeping: inventory to reach tokens, consumable dungeon keys, events, and the unlock reset epoch rule. Dungeon identity is a `DungeonId`.
 
@@ -2702,7 +2661,7 @@ Virtual player bookkeeping: inventory to reach tokens, consumable dungeon keys, 
 - `resetFrontier` starts a new epoch. Visited screens are cleared because they may expose new tiles and targets after an unlock, and failed triggers get one retry per epoch.
 - `onCheckVerified`: a traversal affecting unlock runs a local refresh and advances the epoch; anything else marks the check done. Key grants with no dungeon go to the matched check's dungeon, or, for an unmatched grant like an enemy's key drop, to the dungeon the run stands in. `events` is optional only for direct call tests; the live engine always passes it, since a reopened dungeon group is only reviewable through the narrative log.
 
-### simulation/engine/dungeon-ledger
+### packages/navigation/src/simulation/engine/dungeon-ledger
 
 Per dungeon group bookkeeping of what a run still owes there. `complete` is permanent: the group is fully cleared and never reopens, and it is set only when `owed` is empty. `exhausted` is provisional: nothing owed can be acted on right now, but an acquisition listed in `reopensOn` can undo it. Keeping the two states distinct is the point: a group can go between exhausted and open again, but never leaves `complete`.
 
@@ -2710,7 +2669,7 @@ Per dungeon group bookkeeping of what a run still owes there. `complete` is perm
 - `upsertOwed` adds or refreshes an entry's blocking reason. A check already struck off (the caller's `done` filter) never enters again through it.
 - `pruneDoneChecks` strikes every entry the run has since taken.
 
-### simulation/engine/dungeon-ledger-scan.ts
+### packages/navigation/src/simulation/engine/dungeon-ledger-scan.ts
 
 Fills a dungeon group's ledger from one observed room. Every chest and key drop guard becomes an owed entry, reachable or not, and anything else the engine turned into a target (a standing item, an NPC check) is recorded the first time it is seen. Gates (doors, cracked walls, switches) are never owed; they only explain why something else is blocked. Which of the two a target is comes from `SimTarget.role`, never from its log noun.
 
@@ -2719,7 +2678,7 @@ Fills a dungeon group's ledger from one observed room. Every chest and key drop 
 - `hasUnblastedWall` looks for any bombable attribute tile still standing, ignoring reach: a wall the flood treats as impassable never shows up as a target without bombs.
 - `guessBlocker` gives a best effort reason from the same gates discovery checks for doors, walls and kills. Outside a dungeon there is no key bucket to be short of, so a locked door there explains nothing.
 
-### simulation/engine/dungeon-ledger-lifecycle
+### packages/navigation/src/simulation/engine/dungeon-ledger-lifecycle
 
 Closes a dungeon group once nothing in it can be acted on, and reopens an exhausted one when the run acquires something on its `reopensOn` list. This is the only path back into a group: it hooks the frontier reset on item gain (`onCheckVerified`) and adds no second reset mechanism.
 
@@ -2727,21 +2686,21 @@ Closes a dungeon group once nothing in it can be acted on, and reopens an exhaus
 - `reopenLedgersFor` reopens every exhausted group whose `reopensOn` includes a token just gained. Marking the group's own screens unvisited is enough, because the discovered graph already has their edges.
 - `inCompletedGroup`: a group settled as complete owes nothing, so the engine keeps its screens out of the frontier for the rest of the run. Without this the run kept walking back through dungeons it had already finished.
 
-### simulation/engine/discover-reach
+### packages/navigation/src/simulation/engine/discover-reach
 
 Neighbour reach against the detect flood's `reached` grid, shared by every interactable whose own tile is solid (a sprite, a door record inside a wall, a cracked wall marker). What matters is whether the player can stand on a tile beside it. A `Reached` of undefined means no grid, so the gate is skipped.
 
 - `SPRITE_TALK_RADIUS` (2): a sprite's own tiles are often solid (a blocking NPC like the uncle stamps a 3x3 footprint into the grid, so the spawn tile never floods). Any reached tile within two tiles counts as able to talk to it.
 - `DOOR_REACH_RADIUS` (10): door records sit several tiles inside walls; internal quadrant doors run up to about 10 tiles from the nearest floor.
 
-### simulation/engine/discover-bombs
+### packages/navigation/src/simulation/engine/discover-bombs
 
 Cracked walls the run can blow open now. The flood models one as an obstacle needing bombs, which only lets the player stand on it while the passage beyond stays shut. So a reachable wall is offered as a target: blast it, mark it floor, and flood again. There is one target per contiguous patch (`BLAST_PATCH_RADIUS` 4), since one blast opens the lot.
 
 - `BOMBABLE_ATTR_MIN` to `BOMBABLE_ATTR_MAX` (0xf0-0xff) are the cracked wall attributes (`TileBehavior_FlaggableDoor`), solid until blasted.
 - `attrGridsOf`: a split level room keeps its floor on the layer grids, and the dual layer flood reads those, so scans read every grid. A scan of the raw grid alone missed every cracked wall in such a room.
 
-### simulation/engine/discover-switches
+### packages/navigation/src/simulation/engine/discover-switches
 
 Pull switches (`Sprite_PullSwitch_bounce`, sprite types 0x04-0x07) and the one remote effect a switch can have.
 
@@ -2749,7 +2708,7 @@ Pull switches (`Sprite_PullSwitch_bounce`, sprite types 0x04-0x07) and the one r
 - `DRAIN_SWITCHES` lists switches whose effect reaches past their room: the tag routine writes an overworld event bit on a remote screen (`save_ow_event_info[screen] |= mask`), lowering water there. The same bit gates the one standing item whose spawn code stays inactive until it is set. The switch offer and the item's presence read this one table so they cannot drift apart.
 - `standingItemPresent`: the one item the game holds back this way is a heart piece type sprite on the drain gated screen, which checks `save_ow_event_info[screen] & mask` and stays dormant otherwise. Every other standing item fails open.
 
-### simulation/engine/discover
+### packages/navigation/src/simulation/engine/discover
 
 Turns interactables found in game on reachable tiles into triggerable targets. Reach comes from the observation's `reached` grid, the same flood exit detection ran (entrances, blockers, correct start layer). Flooding again here with a weaker option set once put split level rooms on the wrong layer. With no grid, everything counts as reachable.
 
@@ -2769,13 +2728,13 @@ Turns interactables found in game on reachable tiles into triggerable targets. R
 - A key carrier enemy drops its key or big key when defeated (the die action marker in the room's sprite data); the generic key receive ids (0x24, 0x32) are its kill item. It needs a sword. The last living killable's death satisfies the room's kill tag, so its kill reopens every shutter, including the ones that slammed behind the player.
 - The clear room target opens kill gated shutters once every gating sprite is confirmed killable (`RoomThreat.clearable`). It anchors on a gating sprite that carries no key where possible, since carriers have their own drop target.
 
-### simulation/engine/engine.constants.ts
+### packages/navigation/src/simulation/engine/engine.constants.ts
 
 - `ROOM_CLEAR_KILL_ITEM` (0xff) is the kill action's item id for a room clear that drops nothing.
 - `SCREEN_CENTER` is where the virtual player lands when a crossing names no entry tile.
 - `TRAP_ENTRY_RADIUS` (8 tiles, Chebyshev) is how close a shutter must sit to the landing tile to count as the door just walked through.
 
-### simulation/engine/enemy-reach
+### packages/navigation/src/simulation/engine/enemy-reach
 
 Decides which sprites gating the current room's clear can be killed with the inventory on hand. A sprite gates the clear unless its flags4 carries the room clear exempt bit 0x40 (`Sprite_CheckIfRoomIsClear`, `sprite.c`). Damage class 0 is a real class resolved through `damageByClass` like any other: a weapon whose class reads 0 is not automatically harmless, and one whose class is nonzero is not automatically lethal. Both are runtime lookups.
 
@@ -2783,14 +2742,14 @@ Decides which sprites gating the current room's clear can be killed with the inv
 - `evaluateRoomThreat`: a missing `combat`, or one with null tables, means combat reasoning is unavailable (the developer tools combat gate is off), and every gating sprite reads as not killable.
 - `inSameSection`: the game's clear test walks its sixteen live sprite slots, while the simulator holds the room's whole static spawn list, and one room can cover several scrolling sections, each with its own shutters and guard. The castle's boomerang room is two: entering the first slams its shutters until its guard dies, then the section to its east does the same. Judging both at once makes each look unclearable, so sprites are counted per section. Inside a section every gating sprite must be killable. A missing split, or a split on neither axis, means one section where everyone gates. `SECTION_SPLIT_LINE` is 32 because every indoor room screen is 32x32 tiles and the game never divides one anywhere else.
 
-### simulation/engine/enemy-reach-geometry
+### packages/navigation/src/simulation/engine/enemy-reach-geometry
 
 Tile geometry for enemy reach: whether the player's 2x2 footprint fits at a tile, and whether a ranged weapon has a clear orthogonal line from a candidate tile to a target. Diagonal firing lines are not modelled for any weapon, including the boomerang's longer diagonal range.
 
 - `MAX_SEARCH_STEPS` (64) bounds a firing line search; the flood grid is 64x64.
 - `findLineOfFirePosition` finds a standable tile along an orthogonal ray from the target, within the weapon's travel, with every tile in between passable for a projectile. A tile blocks when any layer's attribute maps to `PROJECTILE_BLOCKED` (1) in the collision table; a split level room keeps floor on the per layer grids. With no attribute grid the line cannot be verified, so there is no position.
 
-### simulation/engine/enemy-reach-weapons
+### packages/navigation/src/simulation/engine/enemy-reach-weapons
 
 The weapons an inventory can bring to bear against a sprite: each one's ancilla type (null for the sword, which is not an ancilla), its resolved damage class and its reach. Thrown bombs are not modelled because their parabolic travel distance was not pinned down; only the placed (contact) bomb is. Every match is on an `ItemId`; the tracker's sword ladder adds every rung below the one held, so the bare tier 1 sword is always in the set.
 
@@ -2802,7 +2761,7 @@ The weapons an inventory can bring to bear against a sprite: each one's ancilla 
 - `ANCILLA_WEAPONS` lists ancilla weapons by the item that unlocks them. The ancilla type and travel distance come from that item's own `weapon` profile; only the short log label is stated here.
 - `damageByClass` is indexed by damage class, not ancilla type; the ancilla to damage class step is the first half of the game's two step lookup.
 
-### simulation/engine/hop
+### packages/navigation/src/simulation/engine/hop
 
 - `foundMessage` reads "Found chest at 12,20" when the tile is known, else it names the room.
 - `landingTile`: a discovered exit lands on its entry tile, a static edge on its entry point, else the screen centre. A connection point is one sided: `edge.connection` is the point being left, so its partner's `nav.fromPoint` is the point arrived at.
@@ -2810,7 +2769,7 @@ The weapons an inventory can bring to bear against a sprite: each one's ancilla 
 - `emitHop` narrates one screen hop and updates `s.virtual` and `s.area`. It records which way in was used (`arrivals`), so the same screen entered another way still counts as unexplored. It records the boundary too (`crossings`): the same tiles seen from the far side resolve to the same key, so a doorway is never walked twice. The way back is used up once the destination's own exits name it (`markWayBackUsed`).
 - `spendKeysForEdge`: a wildcard token names no dungeon, so there is no bucket to spend from. That is a real leak (the static graph lets a run walk a `barrier:small-key` edge for free), kept because spending would change what the simulator can reach. It is the same family as the unsatisfiable `bigkey:*`; both want the connections dataset to name the dungeon.
 
-### simulation/engine/side-effects
+### packages/navigation/src/simulation/engine/side-effects
 
 Side effect cycles that settle a trigger without naming a check, each ending with `settleTrigger`.
 
@@ -2823,7 +2782,7 @@ Side effect cycles that settle a trigger without naming a check, each ending wit
 - `interceptTrap`: interacting inside a trap section that is still hostile slams every open shutter first. The virtual tile moves to the target, the real target is queued again, and the slam runs as its own trigger and verify cycle. It returns true when it used up the step.
 - `emitTrapClosed`: the slam was verified (the door open bits dropped).
 
-### simulation/engine/verify-step.ts
+### packages/navigation/src/simulation/engine/verify-step.ts
 
 The verifying phase: diff the flag snapshots around the trigger, name the check, fold in the item, and route the side effect cycles for door unlocks, shutter clears and trap slams, each of which floods the room again in place.
 
@@ -2833,7 +2792,7 @@ The verifying phase: diff the flag snapshots around the trigger, name the check,
 - A drop kill that satisfied the room's kill tag (the last living killable) reopens the trap shutters the game closed behind the player.
 - A traversal affecting unlock seeds the frontier again. When the check is the stop target, the run goes straight to planning, because it must end on the verification with no reset, flood or discovery after it.
 
-### simulation/engine/engine.ts
+### packages/navigation/src/simulation/engine/engine.ts
 
 The pure step state machine: observing, planning, traversing, triggering, verifying, then observing again. Steps never mutate their input. Once observations carry flood detected exits, traversal runs on that discovered graph alone.
 

@@ -6,8 +6,7 @@ import type { SchemeRuntime, InputSample } from '@rotp/input-mapping';
 import type { ModernBindings } from '@rotp/game-data';
 import type { InputManager } from '@app/input/input-manager/input-manager';
 
-const classicMask = (m: InputManager): number =>
-  computeBitmask(m.keyStates, m.keyboardMap, m.gamepadButtonMap, m.gamepadAxisMap, m.hidStates, m.allowed);
+const classicMask = (m: InputManager): number => computeBitmask(m);
 
 const sampleOf = (m: InputManager): InputSample =>
   buildInputSample(m.allPressedKeys, m.hidStates, m.allowed);

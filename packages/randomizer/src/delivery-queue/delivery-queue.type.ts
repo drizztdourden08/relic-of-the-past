@@ -34,4 +34,6 @@ interface DeliveryQueueState {
 
 type StateListener = (state: DeliveryQueueState) => void;
 
-export type { DeliveryEntry, DeliveryAction, DeliveryQueueState, StateListener };
+type EnqueueParams = Pick<DeliveryEntry, 'message' | 'source' | 'action' | 'onComplete' | 'onGranted'>;
+
+export type { DeliveryEntry, DeliveryAction, DeliveryQueueState, EnqueueParams, StateListener };

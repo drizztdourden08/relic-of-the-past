@@ -19,7 +19,7 @@ const deliverEntry = (entry: PlanEntry, messageId: number): void => {
       source: 'randomizer',
       messageId: contextual,
     })
-    : deliverItem(entry.targetLocalId, itemKeyName(entry.item), 'randomizer', contextual);
+    : deliverItem({ itemId: entry.targetLocalId, message: itemKeyName(entry.item), source: 'randomizer', messageId: contextual });
   if (queued === null) {
     log.randomizer(`[Local] Delivery refused for "${entry.location}": game not running or module gone`, 'error');
   }

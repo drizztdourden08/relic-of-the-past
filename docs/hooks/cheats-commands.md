@@ -9,7 +9,7 @@ power the delivery queue and randomizer. Most are `void` and take effect on the 
 
 ---
 
-## Game commands (`emscripten_api.c` · `bridge/commands.ts`)
+## Game commands (`emscripten_api.c` · `packages/game-core/src/bridge/commands.ts`)
 
 | Function | Signature | Effect |
 |----------|-----------|--------|
@@ -20,7 +20,7 @@ power the delivery queue and randomizer. Most are `void` and take effect on the 
 | `WasmCheat` | `void(int cmd)` | Runs a built-in `PatchCommand` byte (engine debug cheats). |
 | `WasmSetHideSpaceBeyondWalls` | `void(int enable)` | Records the request; `hide_space_beyond_walls.c` hands the PPU the ceiling tiles on every frame that shows a house, a cave or the sanctuary, and they draw black. |
 
-## Item cheats (`cheats.c` · `cheats.ts`)
+## Item cheats (`cheats.c` · `packages/game-core/src/cheats`)
 
 | Function | Signature | Notes |
 |----------|-----------|-------|

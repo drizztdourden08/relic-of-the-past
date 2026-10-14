@@ -11,19 +11,15 @@ import { demandKindsOf } from './demand-kinds-of';
 import { bottleContentPicker } from './bottle-content-picker';
 import { bracketCountOf } from './bracket-count-of';
 import type { ItemKey } from '../item-ids';
-import type { CapacityProfile, CurveShape } from '../capacity/capacity-profile.type';
-import type { PondAskSetting, PondDemandView } from './pond-ask.type';
-import type { PondPlan } from './pond-profile.type';
-import type { Rng } from '../../rng';
+import type { PondDemandView } from './pond-ask.type';
+import type { PondDemandRoll } from './pond-demand-roll.type';
 import type { ShopPrice } from '../shops/shop-price.type';
 
 const stopForPick = (stops: readonly number[], pick: number | undefined, width: number): number =>
   (pick === undefined ? 0 : stops[Math.floor(pick / width)] ?? 0);
 
-const rollPondDemands = (
-  plan: PondPlan, ask: PondAskSetting, shape: CurveShape, rng: Rng,
-  capacity: CapacityProfile, itemPool: readonly ItemKey[],
-): PondDemandView => {
+const rollPondDemands = (roll: PondDemandRoll): PondDemandView => {
+  const { plan, ask, shape, rng, capacity, itemPool } = roll;
   const rungs = plan.locations
     .map((key, prize) => ({ key, prize }))
     .filter((rung) => POND_LOCATION_SET.has(rung.key));

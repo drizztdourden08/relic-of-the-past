@@ -18,7 +18,7 @@ const useOnlineNoticeToasts = () => {
     const now = Date.now();
     const shownWith = settingsRef.current;
     const nextId = (): string => `online-notice-${serial.current++}`;
-    setEntries((prev) => queueNotice(prev, notice, shownWith, now, nextId));
+    setEntries((prev) => queueNotice({ entries: prev, notice, settings: shownWith, now, nextId }));
   }), []);
 
   const dismiss = useCallback((id: string) => {

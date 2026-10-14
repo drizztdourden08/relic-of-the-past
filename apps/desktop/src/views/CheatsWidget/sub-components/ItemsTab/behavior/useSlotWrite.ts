@@ -6,7 +6,7 @@ import type { SlotWrite } from '../ItemsTab.type';
 
 const useSlotWrite = () => useCallback((write: SlotWrite): void => {
   if (write.op === 'give') {
-    deliverItem(write.receiveItemId, write.label, CHEAT_SOURCE);
+    deliverItem({ itemId: write.receiveItemId, message: write.label, source: CHEAT_SOURCE });
     return;
   }
   cheatSetInventorySlot(write.slot, write.value);

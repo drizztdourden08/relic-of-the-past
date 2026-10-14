@@ -57,7 +57,7 @@
   display: block;
   font-size: var(--text-xs);
   color: var(--c-primary-bright);
-  letter-spacing: var(--tracking-wide);
+  letter-spacing: calc(0.06 * var(--text-xs));
   text-transform: uppercase;
 }
 

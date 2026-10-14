@@ -30,6 +30,6 @@
   grid-auto-rows: min-content;
   align-content: start;
   gap: var(--space-md);
-  height: 26rem;
+  height: calc(26 * var(--text-base));
   padding-right: var(--space-xs);
 }

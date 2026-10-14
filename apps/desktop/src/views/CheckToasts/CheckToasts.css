@@ -45,8 +45,8 @@
 }
 
 .check-toast {
-  min-width: var(--size-256);
-  max-width: calc(352 * var(--size-1));
+  min-width: var(--size-224);
+  max-width: calc(22 * var(--text-base));
 }
 
 .check-toast .tracker-card__sprite,
@@ -60,8 +60,8 @@
 }
 
 .online-notice-toast {
-  min-width: var(--size-256);
-  max-width: calc(352 * var(--size-1));
+  min-width: var(--size-224);
+  max-width: calc(22 * var(--text-base));
   padding: var(--space-xs) var(--space-sm);
 }
 

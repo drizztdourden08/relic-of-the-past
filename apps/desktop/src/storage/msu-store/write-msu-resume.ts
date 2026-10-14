@@ -5,6 +5,6 @@ import { resume } from '@rotp/msu';
 import { platformFiles } from '../platform-files';
 
 const writeMsuResume = (profile: string, kind: SaveKind, id: string | number, state: MsuResumeState) =>
-  resume.writeMsuResume(platformFiles(), profile, kind, id, state);
+  resume.writeMsuResume({ files: platformFiles(), profile, kind, id, state });
 
 export { writeMsuResume };

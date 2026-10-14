@@ -17,8 +17,8 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: calc(22.4 * var(--size-1));
-  height: calc(22.4 * var(--size-1));
+  width: calc(1.4 * var(--text-base));
+  height: calc(1.4 * var(--text-base));
   border-radius: 50%;
   border: var(--border-width-thin) solid var(--c-border);
   font-size: var(--text-xs);

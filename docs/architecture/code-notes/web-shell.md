@@ -1,58 +1,20 @@
 <!-- @layer docs @kind doc -->
 # Web shell code notes
 
-Notes for the renderer shell: `apps/desktop/src/` outside `lib/` and `ui/`. That covers `App/`, `hooks/`, `stores/`, `platform/`, `utils/`, `main.tsx` and `env.d.ts`. Each heading names a file. The code carries no comments, so the facts a reader cannot get from the code live here.
+Notes for the renderer shell: `apps/desktop/src/` outside the folders that hold the renderer library and the views. That covers `hooks/`, `stores/`, `platform/`, `utils/` and `main.tsx`. Each heading names a file or folder, by its path under `apps/desktop/src/`, or by its full path from the repository root. The code carries no comments, so the facts a reader cannot get from the code live here.
 
-## platform/install-api-shim.ts
+## apps/desktop/src/platform/api-shim/install-app-shim.ts
 
 A side-effect module. On every host except Electron it installs the boot-safe `window.api` shim. `main.tsx` imports it first, so it runs before the App import graph reads `window.api`. On Electron the real preload api is already present and the module does nothing.
-
-## platform/usePlatform.ts and platform/useCapability.ts
-
-Renderer access to the platform facade. A component branches on a capability with `useCapability()`. Imperative platform calls go through `usePlatform()`.
-
-## platform/get-platform.ts
-
-A module-level Platform singleton. It resolves once through the same factory map the `PlatformProvider` uses, so hooks (through context) and plain modules (through this accessor) share one instance. Non-React modules reach platform ports, such as files, through it.
-
-## platform/PlatformProvider
-
-Resolves the Platform facade once at mount and provides it through context. The factory map in `get-platform.ts` is the only place hosts are registered. `resolvePlatform` picks one by runtime detection: the Strategy selection, and the composition root.
-
-`usePlatformRootClass` puts `platform-mobile` on the document root. CSS reads it there because portaled modals sit outside the app subtree and still need to branch on the platform, for example for plain full-screen pages on mobile.
 
 ## platform/api-shim
 
 A boot-safe `window.api` stub for hosts with no preload to inject one: Capacitor and the plain browser. It is generated from the IPC channel maps, so every method exists. Events return a no-op unsubscribe, sends do nothing, and invokes resolve to a harmless empty value. Real per-capability implementations replace these stubs as the ports are written.
 
 - `EMPTY_ARRAY_METHODS` lists the invoke methods whose callers expect an array. Every other invoke resolves to `null`.
-- `STUB_RETURNS` covers the invoke methods whose callers read a property of the result straight away, where a bare `null` would throw. They return an empty object shaped like the contract in `apps/desktop/src/ipc/invoke-contract.ts`, so the renderer boots.
+- `STUB_RETURNS` covers the invoke methods whose callers read a property of the result straight away, where a bare `null` would throw. They return an empty object shaped like the contract in `apps/desktop/src/ipc/invoke-contract.type.ts`, so the renderer boots.
 - `SCREEN_EDITOR_STUB`: editing the dataset needs a repo on disk, so every editor channel refuses here instead of reporting a false success. Each channel is spelled out by name and typed against `ScreenEditorApi`, so a channel added to the contract fails to compile until it refuses here too.
 - `readNativeAppVersion`: a native host (Capacitor) reports the real app version, the Android `versionName`, which itself comes from the repo root `package.json`. The plain web has no native App plugin, so `getInfo()` throws and the version falls back to `0.0.0`.
-
-## platform/hosts/electron-factory.ts
-
-The Electron host adapter. It fulfills the platform ports by delegating to the `window.api` that the preload injects.
-
-- The device port stays inert. Desktop handles keeping the screen awake and saving on close through its own window lifecycle, and the controllers carry desktop haptics.
-- There is no display or controller port: the refresh rate comes from the Brock display module and the controllers from the Brock input module, on every host.
-
-## platform/hosts/web-factory.ts
-
-The plain browser host adapter, for a renderer opened over http with neither Electron nor Capacitor. It is also the fallback when host detection finds nothing. No window chrome and no persistent storage.
-
-- The device port is best effort: the wake lock, `navigator.vibrate` and page visibility.
-- `saveFile`: a browser cannot tell whether a download completed, and there is no cancel signal to tell apart. A started download is reported as saved.
-
-## platform/hosts/capacitor-factory.ts
-
-The Capacitor host adapter for Android and iOS. Window controls do nothing, since mobile has no window chrome. Files go through the Filesystem plugin. Controllers come from the Brock input module's `BrockInput` plugin through `inputApi()`, the same API as on desktop, and the refresh rate from the Brock display module's `BrockDisplay` plugin, which asks Android for a rate that divides evenly into 60. Any `window.api` call that has no port yet hits the boot-safe shim in `platform/api-shim`.
-
-## platform/hosts/capacitor/device.ts
-
-The Capacitor `DevicePort`: keep the screen awake during play (`@capacitor-community/keep-awake`), device haptics (`@capacitor/haptics`), and an app-backgrounded hook (`appStateChange` from `@capacitor/app`) used to save when the app goes to the background. Haptics buzz the phone on game events, since most Bluetooth pads expose no rumble through the WebView.
-
-`onBackButton`: `MainActivity` intercepts Back and dispatches a `rotpback` window event carrying the swipe edge (it reads `BackEventCompat.getSwipeEdge`). The `backButton` event of `@capacitor/app` is not used because it cannot tell left from right.
 
 ## platform/hosts/capacitor/file-picker.ts
 
@@ -62,10 +24,6 @@ Saving goes to the device's Documents directory, not through a share sheet. The 
 
 `extToMime` maps picker extensions to MIME types the Android document picker accepts. `.sfc` and `.smc` have no registered type, so they resolve to `application/octet-stream`.
 
-## platform/hosts/capacitor/file-store.ts
-
-The Capacitor `FileStore`, backed by app-private storage through the Filesystem plugin (`Directory.Data`). Paths are the same logical paths used on Electron, relative to the data root. Binary data crosses the bridge as base64. Removing a missing file and creating a folder that already exists both do nothing.
-
 ## platform/hosts/capacitor/storage.ts
 
 The Capacitor `StoragePort`: an app-private location and per-domain usage through the Filesystem plugin. There is no reveal on mobile (`revealDataFolder` is false), so the home page shows the path read-only. A missing folder counts as zero bytes.
@@ -74,10 +32,6 @@ The Capacitor `StoragePort`: an app-private location and per-domain usage throug
 
 Whether the checks tracker widget is on screen right now. The widget reports it while it is mounted, and the check toasts read it to follow their own "also while it is closed" setting. Never persisted: it is a fact about this moment.
 
-## stores/exclusive-insets-store
-
-Broadcasts the room docked widgets take around the game, to the consumers that need it (GameLayer, overlays). Tessera's WidgetManager reports the main view's rectangle through `onMainRect`; AppMain turns that rectangle into the four insets and writes them here, so the store stays out of the Tessera parts.
-
 ## stores/profile-connection-store
 
 The randomizer config each profile was last saved with from a connection edit, by profile id. The app's profile object is a snapshot from when it was loaded, so every screen that shows or edits a connection (the Randomizer page, the profile's Online settings) reads the saved config through here and sees the same values the moment one of them saves. Never persisted: the profile file is the record, and the next load reads it from there.
@@ -85,10 +39,6 @@ The randomizer config each profile was last saved with from a connection edit, b
 ## stores/hud-countdown-store
 
 The HUD countdown as the overlay draws it: the live reading plus the length it started from. It lives in a store so the length outlasts the HUD, which unmounts on the map screens. `advance` feeds one reading, and the track object changes only when the reading moved it.
-
-## stores/boot-progress-store
-
-Broadcasts the background warmup progress of the game core (glue script, then the `.wasm` fetch, then compile) to the BootProgressBar view. The warmup facade (`lib/game/wasm-warmup`) reports here and the bar observes, which keeps warmup logic out of React and the bar presentational. `ratio` runs from 0 to 1 for a determinate bar; `null` draws an indeterminate sweep.
 
 ## stores/store-link
 
@@ -104,7 +54,7 @@ Real-time game UI state, updated every frame by the ui-bridge polling loop. `_se
 
 ## stores/dialog-store
 
-The message box as the core's dialog mirror reports it, updated by the dialog bridge whenever it changes. `stale` is raised on a save-state load that brought no dialog hook state: the mirror cannot see what the loaded WRAM put on screen, so the host box holds back until the next message clears it. A load that put the mirror back (`state-dialog.ts`) lowers it instead through `markRestored`, so the next frame read is the loaded message as it was saved.
+The message box as the core's dialog mirror reports it, updated by the dialog bridge whenever it changes. `stale` is raised on a save-state load that brought no dialog hook state: the mirror cannot see what the loaded WRAM put on screen, so the host box holds back until the next message clears it. A load that put the mirror back (`apps/desktop/src/game/state-dialog`) lowers it instead through `markRestored`, so the next frame read is the loaded message as it was saved.
 
 `staleGeneration` is the mirror generation seen at the load. The mirror is trusted again once it moves on: a box that closes, or a message the engine started after the load, is seen again.
 
@@ -120,16 +70,6 @@ Tracks whether the active ROM has extracted HUD sprites. The enhanced Vanilla HU
 
 `customW` and `customH` are the ratio width and height used when `ratio` is `custom`. A value of 0 means detect it automatically.
 
-## stores/widget-ui-store
-
-The live tier of every widget's content prefs: the tab it is on, the filter it shows, the view mode it is in.
-
-A widget is unmounted the moment any screen opens, which is intended, so nothing a widget wants to keep can live in its own component state. It lives here, where it outlasts the unmount, and is written through to the profile so it also outlasts the app. This is the reasoning of `navigation-overlay-store`, applied to every widget.
-
-- `profileId` is the profile these prefs belong to. Writes are dropped until one is known.
-- `hydrated` stays false until the profile's saved prefs have arrived. A consumer that must apply a pref exactly once (the navigation mode) waits on it, so it applies the saved value and not the fallback before it.
-- `hydrate` replaces everything with what the profile had saved. `setPref` updates one key of one widget and writes the whole set back to the profile.
-
 ## stores/location-notification-store
 
 Screen and transition notification state, fed by a subscription to map changes in `game-ui-store`. A `null` screen or transition means that notification is hidden. `showScreen` and `showTransition` say whether each kind is turned on.
@@ -140,7 +80,7 @@ Who the app is signed in as, on the shared accounts. One store, because two surf
 
 ## bug-report/
 
-The renderer's half of the Sanctuary bug report; the dialog is Brock's and the transport runs in the main process (`electron/sanctuary/bug-report/`). `useReportSnapshotOnOpen` sends the report context, the active profile and a live save state the moment the dialog opens, because only the renderer can read the running game. `useSignedOutIssueFallback` swaps in a transport that opens a prefilled GitHub issue while nobody is signed in, so a signed out player can still report.
+The renderer's half of the Sanctuary bug report; the dialog is Brock's and the transport runs in the main process (`apps/desktop/electron/sanctuary/bug-report/`). `useReportSnapshotOnOpen` sends the report context, the active profile and a live save state the moment the dialog opens, because only the renderer can read the running game. `useSignedOutIssueFallback` swaps in a transport that opens a prefilled GitHub issue while nobody is signed in, so a signed out player can still report.
 
 ## stores/hud-layout-store
 
@@ -168,14 +108,6 @@ It counts bakes instead of comparing files. Every rebuild bumps `bakedGeneration
 The reload is a capability the app shell lends, because the shell owns the profile and the game lifecycle (`registerReload`). It is kept beside the store, like the opener of the data view store, so registering it again costs no subscriber a render. `reload` loads the profile again, which reads the blob again and reboots the core. `runningProfileName` names the profile whose text the running game took, for the warning.
 
 `markAssetsBaked` can be called outside React, so the storage layer bumps the generation after a rebake.
-
-## stores/search-store
-
-The global search palette: its open and query state, a bridge to read and write settings registered by whichever view currently owns `GameSettings` (ProfileHub), and a pending deep-link anchor that the settings screen consumes once after navigation lands. `pendingTab` is a pending ProfileHub tab switch, consumed once the same way, so a deep link can land on another tab before it scrolls to its anchor.
-
-`SETTINGS_TARGETS` gives the tab and anchor for every setting a DisabledOverlay can link to, keyed by the setting's `GameSettings` key, so every overlay (widgets, Controls bindings, locked settings controls) lands on the same spot for a given cause. The two Gameplay toggles share a tab. The HUD style has its own, and the Controls tab's banner links to it because the Modern control scheme is the Modern HUD style.
-
-`openSettingsTarget` queues a ProfileHub tab switch plus the anchor scroll and flash, consumed by the `pendingAnchor` effect in ProfileHub. A caller already on the profile page needs only this; a caller elsewhere switches the app to the profile page first. An id with no entry falls back to the Vanilla Safe target. `openVanillaSafeSettings` is the shortcut for the one setting every SettingsLayout lock can be caused by.
 
 ## stores/dialog-settings-store
 
@@ -211,7 +143,7 @@ The inspector opener is kept beside the store, not in it. It is a capability the
 
 ## stores/debug-capture-store
 
-The debug capture recorder. While it runs, it samples exactly where Link and the game are (the same map slice the Navigation widget reads) plus a screenshot, 4 times a second, so a debug report can attach a timeline instead of one instant. A recording stops itself after `MAX_RECORDING_MS`: the local copy has no size limit, only a time limit. The titlebar button and the rebindable function action (`input-manager-debug-capture.ts`) toggle it, and each of those callers gates it on `GameSettings.allowDebugLogging`.
+The debug capture recorder. While it runs, it samples exactly where Link and the game are (the same map slice the Navigation widget reads) plus a screenshot, 4 times a second, so a debug report can attach a timeline instead of one instant. A recording stops itself after `MAX_RECORDING_MS`: the local copy has no size limit, only a time limit. The titlebar button and the rebindable function action toggle it, and each of those callers gates it on `GameSettings.allowDebugLogging`.
 
 Stopping, by the user or by the time limit, hands the finished session straight to the main process (`finalizeDebugCaptureSession`). The main process writes the raw frames, a local video with no size limit, and a separate video kept within a size budget for shipping in a report, into their own folder under `profiles/<profileId>/debug-captures/`, at once, not when a report gets packaged. The store only ever holds one session's data, the one recording now. Nothing accumulates across sessions, so recording again and again without ever packaging a report cannot grow memory without limit.
 
@@ -348,12 +280,6 @@ What the Hookshop installed on this computer, read from the Brock catalog module
 
 The installed items of one kind, for an editor that locks them. `pack` is the install record of the selected item, or `null` for the player's own, and `packFor` answers the same for any row of the list. It reads `useInstalledPacks`, so the first editor opened loads the record.
 
-## hooks/useWidgetPref.ts
-
-A `useState` drop-in whose value belongs to the profile instead of the component. Point it at a widget id and the value survives the widget being unmounted by an open screen, a profile switch and a restart. Pass `null` and it degrades to plain local state with no store write and no disk read, the same bargain `useViewState` makes for a composite used without a ViewKey.
-
-The value must survive a JSON round trip; see `widget-prefs.ts` for why that is the only constraint. The cast to `T` is the one place the `unknown` storage shape meets a caller's type. A pref written by an older build with another shape lands there; the widget reads it as `T` and the next write corrects it.
-
 ## hooks/useIsNarrow.ts
 
 Whether an element is narrower than a width given in rem. It is measured on the element itself, so a pane squeezed by its neighbours answers the same as a small window. A layout that changes shape when narrow (a side pane becoming a tab) reads it; one that only restyles uses a container query instead. With no ResizeObserver (a test without a DOM) nothing is measured and the answer stays wide. An element of no width has not been laid out yet and says nothing about the window, so it is skipped.
@@ -365,12 +291,6 @@ Subscribes to the main process `import:progress` event and reduces the stream fo
 ## hooks/useInstalledActions.ts
 
 What an editor can do with an installed item: uninstall it, make an editable copy, or update it to the store's live version. Uninstall and update go through the Brock catalog module the Hookshop tab uses, the copy through `store:duplicate`, and each then reloads the module's installed record so every lock follows. Each answers what the editor selects next: the copy's name, the updated item's name, or whether the uninstall went through. A cancelled update wrote nothing, so there is nothing to report.
-
-## hooks/useSafeAreaInsets
-
-The device's safe area insets (notch, display cutout), in CSS px. The Android shell runs edge to edge and consumes the window insets so the WebView fills the whole screen. That zeroes the page's `env(safe-area-inset-*)`, so the native side forwards the cutout sizes as CSS custom properties on `<html>` (`--sai-top`, `--sai-right`, `--sai-bottom`, `--sai-left`) and fires a `rotpinsets` event, which this hook reads. On hosts that do not inject them the values are 0 (no notch).
-
-`applyNotchMode` reflects the notch render mode on `<html>`, so CSS, portaled dialogs included, can branch on it.
 
 ## hooks/useCanvasFit.ts
 
@@ -388,13 +308,13 @@ Everything the checks tracker needs, subscribed live (`useLiveTrackerInputs`): t
 
 One hook serves both surfaces (the Checks widget and the randomizer page's spoiler tab), so the two can never drift apart on what a check contains.
 
-Reachability comes from one engine in both modes. A seed is judged over its own placement. The plain game is judged over the placement where nothing moved (`normal-placement.ts`), so the engine cannot tell the two apart and cannot disagree with itself. Rows the world holds no location for keep being read from the dataset's own requirements, the same way in both modes (`tracker/tracker-statuses.ts`).
+Reachability comes from one engine in both modes. A seed is judged over its own placement. The plain game is judged over the placement where nothing moved (`packages/randomizer/src/normal-placement`), so the engine cannot tell the two apart and cannot disagree with itself. Rows the world holds no location for keep being read from the dataset's own requirements, the same way in both modes (`packages/navigation/src/tracker/tracker-statuses/tracker-statuses.ts`).
 
-An online multiworld has no placement of its own, so it is judged over that same plain game world, the fullest one the app can build. What it does not do is show the plain game's items: the server hands locations over one at a time, so the run says its contents are not known here (`randomizer-client/run-kind.ts`) and every row shows nothing instead.
+An online multiworld has no placement of its own, so it is judged over that same plain game world, the fullest one the app can build. What it does not do is show the plain game's items: the server hands locations over one at a time, so the run says its contents are not known here (`game/randomizer-client/run-kind`) and every row shows nothing instead.
 
 - `prefKey` is the widget id the view settings belong to. With one, everything the user arranged (grouping, view mode, filter, open panels, expanded groups) is remembered by the profile and survives the widget being unmounted by an open screen. Without one (the spoiler tab) it is plain local state.
 - `DEFAULT_GROUPING` is module level, so an unset pref hands back the same array every render and the group tree is not rebuilt on each one.
-- One roster serves every surface that lists rows (`tracker/tracker-roster.ts`): on a seed, the locations it generated plus the events; without a placement, the dataset's own list.
+- One roster serves every surface that lists rows (`packages/navigation/src/tracker/tracker-roster.ts`): on a seed, the locations it generated plus the events; without a placement, the dataset's own list.
 - `mergeStatusOnlyChecks`: a status-only row has no "ever" fact of its own, so its tick is its live status (`story.ts`).
 - The placement the rules answer over is the seed's own, or the one where nothing moved, which is also the fullest world an online session can be judged in.
 - A swap chest reads the stand-in once its item is held (`liveItems`). Only on the plain game: a seed's chests hold what the seed placed, and online knows none of its contents.
@@ -418,7 +338,7 @@ The pool accounting split for the fill bar. The items of the pool minus the capa
 
 ## hooks/randomizer/usePondDemands.ts
 
-What this seed's ponds ask for, memoized per snapshot and seed. The roll is the generator's own (`fill/pond-demands-of-snapshot.ts`), so the preview and the placement carry the same demands, and the deliverable sets come from the capability probes, the same sets generation is given. A snapshot the pool cannot be built from asks for nothing: the panel then shows the plan's rupee prices, which is what it showed before the demands existed.
+What this seed's ponds ask for, memoized per snapshot and seed. The roll is the generator's own (`packages/randomizer/src/world/fill/pond-demands-of-snapshot.ts`), so the preview and the placement carry the same demands, and the deliverable sets come from the capability probes, the same sets generation is given. A snapshot the pool cannot be built from asks for nothing: the panel then shows the plan's rupee prices, which is what it showed before the demands existed.
 
 ## hooks/randomizer/pond-mode-rows
 
@@ -456,7 +376,7 @@ The rule that decides them is the generator's own (`item-power/`), not a copy wr
 
 ## hooks/randomizer/currency-sprites
 
-The extracted PNG that stands for one currency a price may be asked in. The files are the shop block's own symbols (`sprite-manifest/randomizer-sprites.ts`), read through the same sprite query the tracker, the pool listing and the check list already draw from, so every surface shows one set of art and there is no second path to a sprite.
+The extracted PNG that stands for one currency a price may be asked in. The files are the shop block's own symbols (`packages/game-data/src/data/sprite-manifest/randomizer-sprites.ts`), read through the same sprite query the tracker, the pool listing and the check list already draw from, so every surface shows one set of art and there is no second path to a sprite.
 
 A whole price resolves the same way (`priceSpriteOf`): a counted currency to its symbol, a bottle to the symbol of what is in it (drawn as the shop block draws it), and an item to its own drawing (`pool-item-sprite.ts`), which is the one thing that says which item without spelling the name again. An item with no art at all has no sprite.
 
@@ -491,7 +411,7 @@ The In Pool column, live: the real pool accounting of a snapshot and the worded 
 
 ## hooks/randomizer/choices-of-snapshot.ts
 
-A frozen option snapshot read back as the creation form's choices, so the options panel can draw a profile's stored settings through the very same blocks it draws a new profile with. It is the other direction of `randomizer-choices.ts`: every block is read with the snapshot reader the generator itself uses, so what the read-only panel shows is what the seed was rolled from.
+A frozen option snapshot read back as the creation form's choices, so the options panel can draw a profile's stored settings through the very same blocks it draws a new profile with. It is the other direction of `apps/desktop/src/hooks/randomizer/randomizer-choices`: every block is read with the snapshot reader the generator itself uses, so what the read-only panel shows is what the seed was rolled from.
 
 The shop price rows stay empty because the price block reads the snapshot values straight, never the choices. `plainChoicesOf` reads the plain rows off the same key map the snapshot is written through; it casts because the map pairs each key with a field of its own type, while the snapshot holds every value as the catalog's one union. The seed passed in is the profile's own, which a random shop scope drew its shelves from. The lights are read as the generator reads them: masked by the world-item scope.
 
@@ -499,7 +419,7 @@ The shop price rows stay empty because the price block reads the snapshot values
 
 The ask block, derived: one pond's demand setting turned into the rows the panel draws for it. The rows have the shape of the shop's own currency rows, because the same component draws them (CurrencyPriceRow), so a demand and a shelf price read alike wherever they appear.
 
-The rupee row is the odd one. Its two thumbs are the pond's own price ladder, so it carries the ladder's stops and the row state's range, and an edit on it moves the ladder itself. Bombs and arrows carry their own stops and write their own amounts, their stops cut at what this profile's bag and quiver reach (`pond-ceilings.ts`). Only the Custom mode cuts a ladder, so in every other mode the rupee row is a tick with no range beside it.
+The rupee row is the odd one. Its two thumbs are the pond's own price ladder, so it carries the ladder's stops and the row state's range, and an edit on it moves the ladder itself. Bombs and arrows carry their own stops and write their own amounts, their stops cut at what this profile's bag and quiver reach (`packages/randomizer/src/world/pond/pond-ceilings`). Only the Custom mode cuts a ladder, so in every other mode the rupee row is a tick with no range beside it.
 
 The bottle row counts too: how many bottles of the contents under it she may name, over the four slots a file has.
 
@@ -509,7 +429,7 @@ The bottle row counts too: how many bottles of the contents under it she may nam
 
 ## hooks/randomizer/option-tab-model/option-tab-keys.constants.ts
 
-The option keys a tab claims by name, not by catalog section. The reference project files these rows under sections this app does not follow: the traps sit in its item section, the scenery shuffles in its enemy one, and the doorways, the trick knowledge and the two entrance requirements all sit in its single world one. So the tab that owns each subject names its rows here instead of inheriting a section that would scatter them. Every set is read by one rule (`option-tab-model.ts`) and nothing else, so a row changes tab only by moving between these sets.
+The option keys a tab claims by name, not by catalog section. The reference project files these rows under sections this app does not follow: the traps sit in its item section, the scenery shuffles in its enemy one, and the doorways, the trick knowledge and the two entrance requirements all sit in its single world one. So the tab that owns each subject names its rows here instead of inheriting a section that would scatter them. Every set is read by one rule (`apps/desktop/src/hooks/randomizer/option-tab-model`) and nothing else, so a row changes tab only by moving between these sets.
 
 - `POND_KEYS`: everything the wishing pond block owns, its mode row included.
 - `CAPACITY_BLOCK_KEYS`: the two switches the capacity block owns beside the family rows, and the pickup bonus rows drawn on them.
@@ -525,7 +445,7 @@ The option keys a tab claims by name, not by catalog section. The reference proj
 
 The throw prices, as this seed asks for them.
 
-A throw that hands over a prize asks for the demand its rung was rolled with (`pond/pond-demand-seed.ts`), and that is what its chip shows: the currency's own sprite and the amount she wants. A throw that wins nothing still costs its rupee price, so its chip reads as it always did. An item demand carries no amount at all, so its chip is the item's drawing and its name (`chipTextOf`).
+A throw that hands over a prize asks for the demand its rung was rolled with (`packages/randomizer/src/world/pond/pond-demand-seed`), and that is what its chip shows: the currency's own sprite and the amount she wants. A throw that wins nothing still costs its rupee price, so its chip reads as it always did. An item demand carries no amount at all, so its chip is the item's drawing and its name (`chipTextOf`).
 
 The two readouts under the chips follow the same charges. The total (`pondPreviewNote`) counts the rupees the ladder takes, and says how many rungs ask for something else, because a mixed ladder cannot be emptied with rupees alone. The wallet line (`pondWalletNoteOf`) reads the dearest single rupee throw on the way to the last prize, and drops out when no rupee is asked for at all.
 
@@ -533,7 +453,7 @@ Nothing here rolls anything: the demands arrive already settled, so the panel an
 
 A `PondCharge` is what one throw takes, and in what. `demand` is the demand the throw's rung was rolled with, absent while it only costs its price. `rupees` is what the throw takes out of the wallet, 0 while it asks for something else. `other` means she asks for something the wallet cannot pay.
 
-`pondChargesOf` gives one charge per throw: its rung's demand where it has one, its price where it does not. Only a Custom pond asks for a demand at the water (`randomizer-client/pond-demand-rows.ts`), so a pond at its native economy previews the rupees it charges and nothing else.
+`pondChargesOf` gives one charge per throw: its rung's demand where it has one, its price where it does not. Only a Custom pond asks for a demand at the water (`packages/randomizer/src/client/pond-demand-rows.ts`), so a pond at its native economy previews the rupees it charges and nothing else.
 
 ## hooks/randomizer/pond-row-model
 
@@ -541,7 +461,7 @@ The pond row, derived: a setting turned into everything the row draws. Pure, so 
 
 `settingOfState` is the inverse of `stateOfSetting`. Its ask part is left out while it is the rupees-only reading an absent ask already means, so an untouched block stores exactly what it stored before the block existed.
 
-`pondRowModelOf`: `ceilings` is what the wallet, bag and quiver can hold. No range control offers a stop above its own, so no thumb can ask for more than the profile can ever pay. `demands` is what the profile's own seed rolled (`pond/pond-demand-seed.ts`), so the preview shows the throws as they will be asked for; none leaves every throw reading as its rupee price. `walletNote` is the dearest single rupee throw on the way to the last prize: what the wallet must hold.
+`pondRowModelOf`: `ceilings` is what the wallet, bag and quiver can hold. No range control offers a stop above its own, so no thumb can ask for more than the profile can ever pay. `demands` is what the profile's own seed rolled (`packages/randomizer/src/world/pond/pond-demand-seed`), so the preview shows the throws as they will be asked for; none leaves every throw reading as its rupee price. `walletNote` is the dearest single rupee throw on the way to the last prize: what the wallet must hold.
 
 ## hooks/randomizer/capacity-row-state
 
@@ -550,7 +470,7 @@ The row's state model, in both directions with a family setting. The row works i
 - `hiddenPresetsOf`: the wallet has no reference ladder, so the Reference preset is not offered there.
 - `customDefaultOf`: the Custom values a family starts from when its mode switches to Custom: the vanilla rung up to the top of the ladder, so switching modes changes nothing until a thumb moves. The empty rung below stays one drag away.
 - `rowStateOf`: a family without a curve row (the meter) has no dropdown, so there is no preset to name.
-- `settingOfRowState`: the final max may not stop below the family's floor (`capacity/max-floor.ts`: the projectiles must hold the ending's silver shots, and the wallet whatever these settings let the seed charge at once). A thumb dragged under it snaps back onto it, and the start follows if it sat above.
+- `settingOfRowState`: the final max may not stop below the family's floor (`packages/randomizer/src/world/capacity/max-floor-reason-of.ts`: the projectiles must hold the ending's silver shots, and the wallet whatever these settings let the seed charge at once). A thumb dragged under it snaps back onto it, and the start follows if it sat above.
 - `detachedFromReading`: a preset choice is an instruction only when it is new. The row hands back the reading it was given with one part changed, so a preset that already named the current curve and count is that reading, not a pick: the edit is to the range or the count, and it goes through as the plain curve with the count as edited. Only a freshly chosen preset writes its own count.
 - `applyRowChange` applies one row edit to the profile. Switching the curve to free seeds the chips from the jumps the current curve produces, so the editor starts from a valid sequence instead of from nothing.
 
@@ -608,7 +528,7 @@ The fields of `RandomizerOptionChoices`:
 
 ## hooks/randomizer/server-setup/server-setup-draft
 
-The Archipelago server setup as its fields show it: host and port, password and slot. The profile keeps one `host:port` string (`server-address.ts`); a `host:port` typed or pasted into the host field moves its port across. The profile creation form and the Randomizer page's Network tab both edit a connection through this one draft, so they check and save alike.
+The Archipelago server setup as its fields show it: host and port, password and slot. The profile keeps one `host:port` string (`packages/randomizer/src/client/server-address`); a `host:port` typed or pasted into the host field moves its port across. The profile creation form and the Randomizer page's Network tab both edit a connection through this one draft, so they check and save alike.
 
 - `DEFAULT_PORT` is Archipelago's own default port, which a room hosted with default settings listens on. `EMPTY_SERVER_SETUP` is the setup a new profile starts on: no host yet, the default port and slot name.
 - `absorbPort`: a host that carries its own port hands the port to the port field.
@@ -617,46 +537,29 @@ The Archipelago server setup as its fields show it: host and port, password and 
 
 ## hooks/randomizer/server-setup/useServerProbe.ts
 
-The server setup's Test connection: the boot's own pre-flight probe (`online-probe.ts`), run on demand against the address in the fields. It only asks the room for its greeting, so it says whether the server answers and hosts this game; the slot and password are checked when the game connects. A result belongs to the address it tested: edit the address and the result goes. `plainReason` puts the probe's reasons in the words a player reads. A later test, or an edit that started one, owns the result, so only the latest run writes it.
+The server setup's Test connection: the boot's own pre-flight probe (`packages/randomizer/src/client/online-probe`), run on demand against the address in the fields. It only asks the room for its greeting, so it says whether the server answers and hosts this game; the slot and password are checked when the game connects. A result belongs to the address it tested: edit the address and the result goes. `plainReason` puts the probe's reasons in the words a player reads. A later test, or an edit that started one, owns the result, so only the latest run writes it.
 
-## App/App.tsx
-
-A thin tunnel into the renderer. All shell orchestration and layout live in the `app/main` view (`ui/domains/app/views/AppMain`); this entry only mounts it.
-
-## App/types.ts
-
-Re-exports the types of `App.type.ts` under the old path, because views outside the shell still import `@app/App/types`. Code inside `App/` imports `App.type.ts` directly.
-
-## App/PageRouter
-
-`ProfileHub` stays mounted, so it keeps its scroll and state; the other pages render on demand. The hub is hidden while another page shows, instead of unmounted.
-
-`TITLED_PAGES` lists the pages that are one full-screen layer with a title around a view that takes no props. The router looks a page up there, so adding one of these is one entry.
-
-- Creating a profile from the Data Manager only leaves the form on success. A failure keeps it open to show the error.
-- The HUD layout editor brings its own FullScreenLayer (title and close), like the sprite studio, because it wants the whole width for a true-scale stage. SpriteDebug also brings its own layer, so both render directly.
-
-## App/behavior/useDumpNav.ts (`--dump-nav=N`)
+## views/GameSession/behavior/useDumpNav.ts (`--dump-nav=N`)
 
 A debug hook for the `--dump-nav=N` command line flag. It starts the game, loads save state N (a number is a quick slot, a name is a manual save), waits `DUMP_SETTLE_MS`, reads the navigation state from WASM (screen detection, entrances, transitions, exits, stairs), writes it to `debug-output/dump-nav.json`, then closes the window.
 
-`collectNavDump` reads everything in a fixed order. `readNavLocation` reads the UI state buffer at the same offsets `ui-bridge.ts` uses in `parseGameUIBuffer` (`UI_STATE_OFFSETS`, little-endian 16-bit for the indexes). The live dual-layer tables are read before the attribute grid is rebuilt. The rebuild now snapshots and restores WRAM, so the order is no longer load-bearing, but the two describe different things (the live room against the ROM-derived one), and reading the live one first keeps that plain. The toggle floor positions are only populated after `WasmBuildRoomAttrGrid` runs, so they are read after it.
+`collectNavDump` reads everything in a fixed order. `readNavLocation` reads the UI state buffer at the same offsets `apps/desktop/src/game/ui-bridge` uses in `parseGameUIBuffer` (`UI_STATE_OFFSETS`, little-endian 16-bit for the indexes). The live dual-layer tables are read before the attribute grid is rebuilt. The rebuild now snapshots and restores WRAM, so the order is no longer load-bearing, but the two describe different things (the live room against the ROM-derived one), and reading the live one first keeps that plain. The toggle floor positions are only populated after `WasmBuildRoomAttrGrid` runs, so they are read after it.
 
 `floodStartOf`: the flood starts on the sub-screen the player is physically on. For a multi-screen area that is not the area index the game reports (the area head). Anchoring the flood to the head measures the position against the wrong origin, pushes the start tile past 63 where it clamps, and seeds the walk in a sealed pocket. The navigation widget derives the live sub-screen the same way (`useNavigation.ts`), and `apps/desktop/tests/e2e/flood-parity.keep.spec.ts` catches drift.
 
 `buildNavDump` assembles the JSON. Its key order is the file's key order, so it is kept stable for baselines. A door of type 22 (`LAYER_TOGGLE_DOOR_TYPE`) toggles the layer, and an attribute byte from 0x90 to 0x97 is a layer toggle tile. `annotations` carries the mechanics with their reachability: a detected check the flood cannot walk to is flagged `blocked`, so a dump says whether a thing is obtainable.
 
-## App/behavior/run-dump-flood.ts
+## views/GameSession/behavior/run-dump-flood.ts
 
 Runs the `--dump-nav` flood and derives its annotations. It is kept apart from the pure builders because it does touch the game: it goes through the same runner the simulator uses (`floodRoomRun`, `floodOneOverworld`), so a dump and a run can never report different reachability for the same screen. The bug this replaced was a hand-built option set with an empty inventory.
 
 `reachableCount` and `totalTiles` describe the whole connected area (`propagateArea`), the same total the widget shows; everything else in the flood dump still describes this screen alone. Without this, a room that only reaches its full extent through a stitched neighbour under-reports next to the widget. `annotations` hold the mechanics with their reachability, where a check the flood cannot reach is `blocked`.
 
-## App/behavior/dump-flood-items.ts
+## views/GameSession/behavior/dump-flood-items.ts
 
 The player's real traversal tokens, for the `--dump-nav` flood. The dump used to flood with an empty inventory, so it reported fewer reachable tiles than the widget for the very same room (590 against 608 in the Jail Cell), and a baseline captured from it could not be compared with anything. It now floods with what the player carries, from the same tracker the simulator reads. `TILE_REQS` are the traversal tokens the flood understands; other reach tokens do not matter here. `lift.1` is always present: lifting bare-handed needs no item.
 
-## App/behavior/compute-flood-fill.ts and compute-overworld-flood-fill.ts
+## views/GameSession/behavior/compute-flood-fill.ts and compute-overworld-flood-fill.ts
 
 Pure builders for the `--dump-nav` payload: no WASM calls, the data is passed in. The flood itself was already run by the shared runner (`floodRoomRun`).
 
@@ -666,7 +569,7 @@ Pure builders for the `--dump-nav` payload: no WASM calls, the data is passed in
 - `attrRows` holds the raw attribute grids as 64 rows of 2-character hex bytes, for baselines and diagnosis (`encodeAttrRows`); `layer1` only for dual-layer rooms.
 - `scrollBoundary` detects the scroll boundaries of a 2x2, 1x2 or 2x1 room and lists the tiles that cross them.
 
-## App/behavior/useDumpLayers.ts (`--dump-layers=N`, `--hover-tile=col,row`)
+## views/GameSession/behavior/useDumpLayers.ts (`--dump-layers=N`, `--hover-tile=col,row`)
 
 A debug hook for the `--dump-layers=N` flag, with `--hover-tile=col,row` as an option. It runs the whole pass itself and exits, dumping the room index and the dual-layer grids (the same data the overlay uses) as JSON. `--hover-tile` also drives the tooltip over the target tile so the screenshot captures it. Usage:
 
@@ -683,11 +586,11 @@ It waits `STATE_SETTLE_MS` for the state to apply and a few frames to render bef
 
 `logHoverVerdict` reports the hovered tile: attribute 0x1C on either layer means normalization failed; otherwise the tile has a legitimate split, or both layers match.
 
-## App/behavior/find-split-tiles.ts and is-layer1-reachable.ts
+## views/GameSession/behavior/find-split-tiles.ts and is-layer1-reachable.ts
 
 `findSplitTiles` lists every tile where the two collision layers disagree. `isLayer1Reachable` walks breadth-first from a tile through connected `0x00` tiles on layer 1, and returns true when that region does not touch the grid boundary, meaning layer 1 is an enclosed, reachable interior instead of being open to the edge.
 
-## App/behavior/useAutoTest.ts (`--auto-state`, `--screenshot`, `--auto-start`)
+## views/GameSession/behavior/useAutoTest.ts (`--auto-state`, `--screenshot`, `--auto-start`)
 
 Reacts to the command line arguments `--auto-state=N|NAME` and `--screenshot=NAME`. When either is present it:
 
@@ -700,7 +603,7 @@ Reacts to the command line arguments `--auto-state=N|NAME` and `--screenshot=NAM
 
 With a screenshot and no state, it still waits `RENDER_SETTLE_MS`: `running` is reached before the first frame is painted, so a screenshot taken at once catches a black canvas and proves nothing.
 
-## App/behavior/useSimRun.ts (`--sim-run`)
+## views/GameSession/behavior/useSimRun.ts (`--sim-run`)
 
 A debug hook for the `--sim-run` flag. It starts the game, optionally loads a save (`state=` by name, `slot=` by quick slot), forces auto-skip-dialog and developer tools on, drives the gameplay simulator headlessly to its stop condition, writes a SimRunReport to `debug-output/sim-run.json`, then exits. It powers the in-chat data correction loop: run, read the suggestions, apply, run again.
 
@@ -719,15 +622,15 @@ A features word set from here is only wanted until the core latches it on its ne
 
 `runFullSimulation` writes the report. Inventory entries put the id first so each entry is unambiguous and sorts stably, and the name after so a person can read the artifact; the name is resolved there and stored nowhere. `loadout` is what the player holds, read from the save, not tallied from check names: hearts, equipment tiers, and the per-dungeon map, compass and big key state the run does not track.
 
-## App/behavior/useDebugLaunchHooks.ts
+## views/GameSession/behavior/useDebugLaunchHooks.ts
 
 Bundles the launch hooks driven by the command line (auto-test, dump-layers, dump-nav, sim-run) behind one call, so the AppMain view stays lean. Each does nothing unless its flag is present.
 
-## App/behavior/useProfileManagement.ts
+## views/GameSession/behavior/useProfileManagement.ts
 
 `useActivateRomSprites`: every path that changes the active profile lands in `setActiveProfile`, so this is the one place the ROM's sprite set is activated (base URL, availability, extraction). With no profile active a ready ROM stands in (`spriteRomOf`), because the creation form draws item art before any profile exists and would otherwise show placeholders over a set that sits on disk.
 
-## App/behavior/useLoadProfileForGame.ts
+## views/GameSession/behavior/useLoadProfileForGame.ts
 
 - The profile is read again from storage for this boot. The caller's object can be a snapshot from an earlier load, and fields edited in the Data Manager since then (`msuPack`, `language`) must reach the game, not the values the snapshot was taken with.
 - `setActiveProfile` deliberately gets the caller's object, not the one read again. Automation keys an effect on the identity of `activeProfile` (`useAutoTest.ts`), so handing back a fresh object runs that effect again, and its cleanup cancels the launch already in flight: the run then stops before it loads its save state. Nothing needs the fresh object in state, because the settings UI reads the pack from storage itself.
@@ -736,19 +639,19 @@ Bundles the launch hooks driven by the command line (auto-test, dump-layers, dum
 - `resetSession()` clears whatever the previous profile left behind, ahead of the gate that may park new material. Its placement is what the tracker builds its roster from, and nothing used to clear it, so a normal profile loaded after a randomized one went on listing the seed's locations instead of the game in front of the player.
 - The randomizer gate: a randomized profile only boots when its session can start afterwards (a placement on disk, or a server URL).
 
-## App/behavior/ensure-profile-assets.ts
+## views/GameSession/behavior/ensure-profile-assets.ts
 
 Extracts the assets when they are missing, or when the cached blob predates the current bake format, then loads the cached asset blob for a ROM. It returns `null` (after logging) when the blob is missing and extraction fails, and the boot aborts on `null`. A stale blob is softer: it still boots the game, so a failed recompile (for example when the ROM file is gone) logs an error and keeps the old blob instead of blocking the boot.
 
-## App/behavior/load-input-profile.ts
+## views/GameSession/behavior/load-input-profile.ts
 
 `migrateProfilesLoudly` is not a cast: a profile written before slots were numbers is turned into one, and one that cannot be is reported and dropped instead of half loaded. With no saved profiles the InputManager stays on its keyboard default.
 
-## App/behavior/load-player-sprite.ts
+## views/GameSession/behavior/load-player-sprite.ts
 
 Stages the profile's selected player sprite for the next boot; the bridge writes it to MEMFS. It is flattened on the way through, since the core cannot read a sprite pack.
 
-## App/behavior/create-profile-flow.ts
+## views/GameSession/behavior/create-profile-flow.ts
 
 The storage side of profile creation: generate the randomizer placement (local mode), create the profile, pin any frozen settings into its config, save the placement. It is kept apart from `useProfileManagement` so the hook only orchestrates state, and so a generation failure aborts before anything reaches disk: local mode generates before the profile exists, so a failed generation aborts creation instead of leaving a profile with no placement.
 
@@ -756,135 +659,62 @@ The overrides are a creation form preset's config values, then any setting the r
 
 `withDeliverable`: an online profile keeps the probed spots on its config, so the player file written later randomizes the same npc, pond and world spots a local seed of this profile would.
 
-## App/behavior/randomizer-boot-gate.ts
+## views/GameSession/behavior/randomizer-boot-gate.ts
 
 The pre-boot gate for randomized profiles. Local mode needs a placement this build can read, rolled again from the seed when the file is older (`rerollPlacement`, which saves it so the profile boots). Online mode needs a server URL. The live server pre-flight only logs: a server that is down never blocks play, and the session retries it. On success the boot's session material is parked in the pending slot of the session store, where the auto-start hook (`useRandomizerBoot`) consumes it once the game runs. On failure the caller aborts the boot with the returned reason.
 
-## App/behavior/roll-placement.ts
+## views/GameSession/behavior/roll-placement.ts
 
 Rolls a local seed's placement from its seed and frozen options. The ported pipeline consumes the frozen snapshot directly. The capability probes name the npc-scope locations and capacity slots the app can physically deliver; the rest stay locked vanilla, so the plan can never carry errors. The same seed and options always roll the same placement.
 
-## App/behavior/buildChromeProps.ts
-
-Builds the prop bag shared by the desktop TitleBar and the touch MobileChrome: the same actions, two views. Pure wiring, taken out of AppMain so that component stays about composition. `onShowDisplaySettings` deep-links the Display tab, so the incompatible refresh rate tag lands on the setting that explains it instead of the hub's front page.
-
-The file keeps its camelCase name because AppMain, outside the shell, imports it by path. It moves to `build-chrome-props.ts` when that import changes.
-
-## App/behavior/useAppMainEffects.ts
+## views/GameSession/behavior/useAppMainEffects.ts
 
 - The notch mode defaults to filling the notch until a profile loads, which keeps startup windows clear of a cutout.
 - `--auto-flood` opens the navigation widget once, on mount (`window.api.autoFlood`).
 - Game input is suppressed while a menu or an overlay is open: input reaches the game only while it runs and no page is open.
 
-## App/behavior/useAppNavigation.ts
-
-A widget that wants to show a recommendation cannot reach page state from where it lives, so the one call it needs is published to the data view store here, next to the state itself, and withdrawn when the hook goes away.
-
-## App/behavior/useAppOverlays.ts
-
-App-level overlay and dialog state: the update dialog, the bug report dialog and the shadow editor. Sprite Debug is a page, handled in PageRouter and `useKeyboardShortcuts`.
-
-## App/behavior/useAppViewCallbacks.ts
-
-App-level glue for view navigation: the Data Manager and ProfileHub tab state, and the callbacks that switch pages. The optional tab lets a caller deep-link straight to the settings it talks about; the incompatible refresh rate tag uses it to land on Display.
-
-## App/behavior/useAudioSettings.ts
+## views/GameSession/behavior/useAudioSettings.ts
 
 A launch flag is applied by using the mute control, not by working around it. The settings push that runs when the game starts applies the profile's volume again, so anything set before that is undone. So the hook waits for the game to run, then presses the mute button once. Nothing new gates the audio. Both flags are honoured, so the result never depends on the volume the profile happens to hold: `--muted` presses it only if sound is on, `--sound` only if it is off. The current volume is read through the state setter, so a stale render's value is never used.
 
 `initFromSettings` takes the volume as loaded. A `--muted` launch is already zero there, because the flag is applied once in `mergeSettings`, where the setting is born. Two earlier attempts set the engine volume (and the mute override) from here instead, and both lost: `pushLiveSettings` applies `settings.masterVolume` again to the gain node and the WASM mixer when the game starts.
 
-## App/behavior/useDevToolsWidgetGate.ts
-
-The master gate for developer-only UI. It reads the live `developerToolsEnabled` setting (registered on the search store by ProfileHub while it is mounted), and the moment it goes off, closes every `devOnly` widget (`Widget.constants.ts`).
-
-WidgetManager's render filter only hides a devOnly widget while the gate is off. It never clears the widget's saved `visible: true`, so a widget left open would silently come back the next time dev tools are turned on again. The gate also sweeps any devOnly widget left visible by a profile saved before it existed.
-
-Ids forced at startup (the `--widgets=` flag) are exempt, matching WidgetManager's render filter. Without that exemption the sweep undoes the flag a frame after it lands, which took every baseline spec driven from the command line down with it.
-
-## App/behavior/useDisplaySettings.ts
+## views/GameSession/behavior/useDisplaySettings.ts
 
 The aspect ratio lock follows the fullscreen state and syncs whenever a display setting changes while the game runs. When the game starts it syncs once more as soon as the canvas has buffer dimensions, polling every `CANVAS_POLL_MS` for up to `CANVAS_POLL_ATTEMPTS` tries.
 
-## App/behavior/get-game-ratio.ts and sync-aspect-ratio-lock.ts
+## views/GameSession/behavior/get-game-ratio.ts and sync-aspect-ratio-lock.ts
 
 The live canvas reflects the rendered width (custom ratios included), so it is preferred. Before a canvas exists the ratio falls back to the viewport, the screen or the named ratio; only the `fit` window lock uses that fallback, and it syncs again once the canvas exists. `TITLEBAR_HEIGHT` is added to the lock in the default window mode outside fullscreen.
 
-## App/behavior/useGameLifecycle.ts
+## views/GameSession/behavior/useGameLifecycle.ts
 
 `setGameData` marks the assets as booted: the bytes were just read from disk, so this is the generation the game plays.
 
-## App/behavior/useKeyboardShortcuts.ts
-
-- Alt+Enter toggles fullscreen.
-- Ctrl+Shift+D, with developer tools on, toggles Sprite Debug as a full-window page, so it switches and closes by the same logic as every other page.
-- The primary modifier with K toggles the search palette.
-- Escape: every layered surface answers first. A popover, menu, dialog, full-screen page or search palette that is open has registered with the design system's dismiss stack, and the stack's own listener has already closed exactly one of them. This shortcut is the floor beneath all of it and only acts on an Escape that had nothing above it. Two document listeners cannot order themselves, so neither one tries. It then closes the confirm dialog, else closes the open page, else opens the profile hub from the game view.
-
-## App/behavior/useMsulOpen.ts
+## views/GameSession/behavior/useMsulOpen.ts
 
 Imports a music pack the app was opened with, from the desktop file association. Brock reports the path (`useAppOpen`), and this hook takes only `.msul` files. Reading it needs a trip back through IPC because the renderer cannot open an arbitrary path itself. The import is the one the Data Manager performs, so an opened pack and a dropped pack land the same way.
 
-## App/behavior/useRandomizerBoot.ts
+## views/GameSession/behavior/useRandomizerBoot.ts
 
 Auto-start for randomizer sessions tied to a profile. A gated boot parks the session material in the pending slot of the session store. When the game reaches `running` with a pending entry for the current profile, the matching session starts with no user action. When the game leaves `running`, the active session stops with it, so a randomized session never outlives its game. It is safe across restarts: every gated boot parks a pending entry again, and the started flag arms again as soon as the game stops.
 
-## App/behavior/useReloadTarget.ts
+## views/GameSession/behavior/useReloadTarget.ts
 
 Publishes how to bring the running game up to date with the text on disk. The assets blob reaches the emulator once, at boot, and loading the same profile again is what reads it again, so that is what gets registered. The data screens cannot reach it on their own, which is why the notice there can offer a button instead of instructions. It is registered from an effect on the active profile, not from inside the loader, because a closure built in there could not name the callback it sits in.
 
-## App/behavior/useShellReady.ts
-
-Tells the main process the UI may be shown. Firing on first mount was too early: the window was revealed while profiles were still resolving, so the shell visibly assembled itself afterwards. The hook waits for startup to settle and then for two frames (the first commits the settled layout, the second proves it painted). It does nothing off Electron, where there is no window to reveal.
-
-The scheduled signal is deliberately not cancelled on cleanup. StrictMode's double invoke would cancel the only scheduled signal, and the second pass would find the ref already set, leaving the window hidden until the main process watchdog fires.
-
-Entrance animations go back to normal (the `booting` class is dropped) only once the shell is done, so the layer the app booted into never plays one. The class is dropped before the signal, in the same frame, so nothing can animate in the gap between the two.
-
-## App/behavior/useStartup.ts
-
-Startup owns which page the app lands on, so it also owns the moment the shell stops moving; `useShellReady` waits for that before it reveals the window. `settled` is set on every exit path, early returns included, because a boot that failed still has to end with a visible window.
-
-Automation launches (`--fresh`, `--sim-run`, `--dump-*`, `--auto-state`, `--auto-start`, `--screenshot`, `--instance`) start straight in the game view: the game only reaches `running` on the game view, which the sim waits for.
-
-A named instance pins its own profile, matched by id first, then by name. An unknown name stops there instead of falling through to the user's profile: a run that silently used the wrong save data is worse than one that fails.
-
-## App/behavior/useStoreLinks.ts
+## views/GameSession/behavior/useStoreLinks.ts
 
 A store install link the browser opened lands on the Hookshop tab whatever page was open: the Brock catalog module delivers it (`useCatalogLinks`), the link waits in the link store and the tab installs it. It does nothing off Electron.
 
-## App/behavior/useWasmWarmup.ts
-
-Starts the background warmup of the game core once the React shell has mounted, piping its progress into the boot progress store (which BootProgressBar observes). `warmWasmCore` runs once at a time, so StrictMode's double invoke in development is harmless.
-
-## App/behavior/useWidgetDisabledGate.ts
-
-The disabled-state wiring for widgets. It reads the live settings snapshot (registered on the search store by ProfileHub while it is mounted, like `useDevToolsWidgetGate`) and builds the callback WidgetManager's overlay uses to open Settings at whichever setting caused a widget to be covered: Vanilla Safe's `readsGameData` lock, or a widget's own `requiresSetting` gate (`Widget.type.ts`). Unlike a settings page control, a widget can be open while the profile page is not showing, so this switches the app there first.
-
-## App/behavior/useWidgetPrefs.ts
-
-Binds the widget prefs store to the active profile: it loads what that profile had saved, and makes sure whatever is still pending reaches disk before the window goes away. The flush covers the layout too, because both halves share one repository and one debounced write. It listens to both `pagehide` and `beforeunload`, because Electron tears the window down without running a `beforeunload` handler that does not call `preventDefault`.
-
 ## main.tsx
 
-- `installSessionLogTap()` runs on every launch: it streams the log bus (ring-evicted entries included) to `Data/debug/session.log` through the main process (see `lib/diagnostics/session-log`).
+- `installSessionLogTap()` runs on every launch: it streams the log bus (ring-evicted entries included) to `Data/debug/session.log` through the main process, which Brock's session log handles.
 - `window.__trackerBridge` exposes the tracker bridge functions for live integration tests.
 - `window.__deliveryApi` exposes the delivery path the same way, so live tests can drive a real queued delivery and watch it complete instead of poking the core directly. `triggerNpcCheck` replays a giver's vanilla grant through the queue (the cheat trigger), which is how a live test exercises the npc override seam. `deliverNpcCheck` enqueues the assigned-form trigger for a scripted giver, the exact action a session's poller enqueues, so a live test can prove the delivery path without cheats end to end.
-
-## env.d.ts
-
-Declares the WebUSB API types (Chromium and Electron) and the renderer's ambient globals (`Profile`, `RomInfo`, `Window.api` and the rest).
 
 ## index.html
 
 The `booting` class on `<html>` suppresses the entrance animations of whatever the app lands on. They are polish for opening a page mid-session; during boot they would mean the window is revealed partway through a fade and scale, so the screen finishes appearing after the window is already visible. `useShellReady` removes the class.
 
-`#boot-splash` paints at once, with no bundle, JS or WASM needed. React replaces `#root` on first render, so the splash tears itself down for free. Desktop no longer relies on it: it has its own splash window (`splash.html`) and keeps this one invisible until the shell settles. It stays for web and Android, where nothing else covers the gap before React mounts.
-
-## splash.html
-
-The boot splash, in its own window. No bundle, no preload, no imports: every byte paints on the first frame, which is the whole point of the window.
-
-- The page has no `-webkit-app-region: drag` anywhere. A frameless window with no drag region cannot be moved, which is what a splash should be.
-- The status line is out of flow on purpose: the logo and spinner column stays centred exactly where the installer's splash GIF puts it, whatever the status line says. Being anchored to the bottom it grows upwards, so `nowrap` keeps it to one line and the ellipsis absorbs the rest, which keeps the gap below fixed. Its padding is symmetric, so the text stays centred, and wide enough that the longest message can never reach the version stamp in the bottom right.
-- The main process drives the status line through the one global `window.__splashStatus` (see `window/boot/splash-window.ts`). It is kept trivial so a failed call costs a message, never the splash itself.
+`#boot-splash` paints at once, with no bundle, JS or WASM needed. React replaces `#root` on first render, so the splash tears itself down for free. Desktop no longer relies on it: it has its own splash window and keeps this one invisible until the shell settles. It stays for web and Android, where nothing else covers the gap before React mounts.

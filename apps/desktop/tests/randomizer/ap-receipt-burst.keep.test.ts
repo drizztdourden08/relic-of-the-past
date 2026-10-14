@@ -8,7 +8,7 @@ import { ARRIVAL_SLOTS } from '@rotp/game-core';
 import { cancelServerDeliveries, deliverServerItem } from '@app/game/randomizer-client/server-delivery';
 import { installFakeModule } from './ap-fake-module';
 import type { FakeModule } from './ap-fake-module';
-import type { DeliverItemArgs } from './ap-receipt-arrivals/deliver-item-args.type';
+import type { DeliverItemParams } from '@app/game/delivery-api';
 import { required } from '../required';
 
 const bridge = vi.hoisted(() => ({ mod: null }));
@@ -25,7 +25,7 @@ vi.mock('@app/log-bus', () => {
 vi.mock('../../../../packages/game-core/src/wasm-bridge', () => ({ getModule: () => bridge.mod, subscribeGameState: () => () => undefined }));
 vi.mock('../../../../packages/randomizer/src/client/online-items', () => ({ resolveServerItemLocalId: () => 0x0b }));
 vi.mock('@app/game/delivery-api', () => ({
-  deliverItem: (...[, , , messageId, onComplete, onGranted]: DeliverItemArgs) => {
+  deliverItem: ({ messageId, onComplete, onGranted }: DeliverItemParams) => {
     const messageOf = typeof messageId === 'function' ? messageId : () => messageId;
     queue.entries.push({ messageOf, onComplete, onGranted });
     return `dlv_${queue.entries.length}`;

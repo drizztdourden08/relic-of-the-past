@@ -6,7 +6,7 @@ let provisioned: Promise<unknown> | null = null;
 
 const ensureTestProfile = (): Promise<unknown> => {
   provisioned ??= (async () => {
-    const { provisionProfile } = await import('../../../../../scripts/parallel/provision-profile.mjs');
+    const { provisionProfile } = await import('@rotp/workspace/parallel/provision-profile');
     const result = await provisionProfile({ name: TEST_INSTANCE });
     await restoreFixtureSaves();
     return result;

@@ -28,7 +28,7 @@
 
 .pack-tracks__row {
   display: grid;
-  grid-template-columns: var(--size-64) minmax(var(--size-128), var(--size-224)) var(--size-80) minmax(0, 1fr);
+  grid-template-columns: var(--size-56) minmax(calc(8 * var(--text-base)), calc(14 * var(--text-base))) calc(5 * var(--text-base)) minmax(0, 1fr);
   align-items: start;
   gap: var(--space-sm);
   padding: var(--space-xs) var(--space-sm);

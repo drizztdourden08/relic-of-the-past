@@ -39,7 +39,9 @@ describe('pond generation', () => {
       expect(present('custom')).toEqual(POND_RUNGS_BY_ID[pond.id].slice(0, 4));
       expect(present('custom', false)).toEqual(POND_RUNGS_BY_ID[pond.id].slice(0, 4));
       const snapshot = snapshotOf({ [`pond_${pond.id}_mode`]: 'custom', [`pond_${pond.id}_items`]: 4 });
-      const placement = generatePlacement(`closed-${pond.id}`, snapshot, ALL_NPC, ALL_POND_SLOTS, EMPTY);
+      const placement = generatePlacement({
+        seed: `closed-${pond.id}`, snapshot, deliverable: { npc: ALL_NPC, capacity: ALL_POND_SLOTS, world: EMPTY },
+      });
       for (const name of slots) expect(placement.locations[name], name).toBeDefined();
       for (const name of POND_RUNGS_BY_ID[pond.id].slice(4)) {
         expect(placement.locations[name], name).toBeUndefined();
@@ -64,7 +66,10 @@ describe('pond generation', () => {
     expect(on.capacity).toEqual(off.capacity);
     expect(parsePondProfiles(snapshotOf({ ...separate, pond_share: true }).values).stored)
       .toEqual(parsePondProfiles(snapshotOf(separate).values).profiles);
-    const placement = generatePlacement('pond-shared', snapshotOf({ ...separate, pond_share: true }), EMPTY, DELIVERABLE, EMPTY);
+    const placement = generatePlacement({
+      seed: 'pond-shared', snapshot: snapshotOf({ ...separate, pond_share: true }),
+      deliverable: { npc: EMPTY, capacity: DELIVERABLE, world: EMPTY },
+    });
     expect(placement.stats.pondPrizeCount).toBeGreaterThan(0);
   }, 30_000);
 
@@ -75,7 +80,7 @@ describe('pond generation', () => {
     expect(pool.pool.filter((item) => item === ITEM.redBoomerang)).toHaveLength(0);
     expect([lockedVanilla.get('check-268'), lockedVanilla.get('check-021')])
       .toEqual([ITEM.redBoomerang, ITEM.redBoomerang]);
-    const placement = generatePlacement('double-red', snapshot, EMPTY, ALL_POND_SLOTS, EMPTY);
+    const placement = generatePlacement({ seed: 'double-red', snapshot, deliverable: { npc: EMPTY, capacity: ALL_POND_SLOTS, world: EMPTY } });
     expect(Object.values(placement.locations)).toContain(ITEM.blueBoomerang);
   }, 30_000);
 });

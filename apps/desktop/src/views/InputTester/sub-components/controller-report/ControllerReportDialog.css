@@ -3,14 +3,14 @@
   display: flex;
   flex-direction: column;
   width: fit-content;
-  min-width: var(--size-640);
+  min-width: calc(40 * var(--text-base));
   max-width: 92vw;
   max-height: 85vh;
   padding: var(--space-lg);
 }
 
 .controller-report--wide {
-  min-width: calc(960 * var(--size-1));
+  min-width: calc(60 * var(--text-base));
 }
 
 .controller-report__body {
@@ -31,7 +31,7 @@
 
 .controller-report__section-text {
   margin-top: var(--space-sm);
-  max-height: var(--size-224);
+  max-height: calc(14 * var(--text-base));
   overflow: auto;
   font-size: var(--text-xs);
   white-space: pre-wrap;

@@ -22,9 +22,12 @@ const deliverServerItem = (itemName: string, senderName: string | null, onGrante
     arrival = null;
   };
   let entryId: string | null = null;
-  entryId = deliverItem(localId, itemName, 'randomizer', messageOf, freeLine, () => {
-    if (entryId !== null) waitingDeliveries.delete(entryId);
-    onGranted();
+  entryId = deliverItem({
+    itemId: localId, message: itemName, source: 'randomizer', messageId: messageOf, onComplete: freeLine,
+    onGranted: () => {
+      if (entryId !== null) waitingDeliveries.delete(entryId);
+      onGranted();
+    },
   });
   if (entryId === null) {
     freeLine();

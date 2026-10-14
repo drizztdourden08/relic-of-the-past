@@ -1,11 +1,10 @@
 /* @layer shared-storage @kind logic */
-import type { FileStore } from '@drizztdourden08/brock-core';
-import type { MsuResumeState } from '@rotp/game-data';
-import type { SaveKind } from '@rotp/game-core';
 import { resumePath } from './resume-path';
+import type { WriteMsuResumeParams } from './write-msu-resume.type';
 
-const writeMsuResume = (files: FileStore, profile: string, kind: SaveKind, id: string | number,
-  state: MsuResumeState): Promise<void> =>
-  files.writeText(resumePath(profile, kind, id), `${JSON.stringify(state, null, 2)}\n`);
+const writeMsuResume = (params: WriteMsuResumeParams): Promise<void> => {
+  const { files, profile, kind, id, state } = params;
+  return files.writeText(resumePath(profile, kind, id), `${JSON.stringify(state, null, 2)}\n`);
+};
 
 export { writeMsuResume };

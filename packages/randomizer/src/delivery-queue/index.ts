@@ -2,7 +2,7 @@
 export { canReceive } from './can-receive';
 export { clear } from './clear';
 export { DELIVERY_COOLDOWN, DELIVERY_TIMEOUT_FRAMES, REFUSAL_RETRY_COOLDOWN, REFUSAL_WARN_EVERY } from './delivery-queue.constants';
-export type { DeliveryAction, DeliveryEntry, DeliveryQueueState } from './delivery-queue.type';
+export type { DeliveryAction, DeliveryEntry, DeliveryQueueState, EnqueueParams } from './delivery-queue.type';
 export { enqueue } from './enqueue';
 export { fireComplete } from './fire-complete';
 export { getState } from './get-state';

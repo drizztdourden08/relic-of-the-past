@@ -1,11 +1,13 @@
 /* @layer tests @kind test */
 import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
-import { it, expect } from 'vitest';
-import { ALL_ENUMERATION } from '@rotp/game-data';
-import { buildGeneratedTypesSource, CATEGORY_TYPE_NAMES } from '../../../../../scripts/generate-enum-types.mjs';
-import { describeDataset } from '../../dataset-guard';
-import { REPO_ROOT } from '../../repo-root';
+import { fileURLToPath } from 'node:url';
+import { describe, it, expect } from 'vitest';
+import { ALL_ENUMERATION, all } from '@rotp/game-data';
+import { buildGeneratedTypesSource, CATEGORY_TYPE_NAMES } from '../generate-enum-types.mjs';
+
+const REPO_ROOT = resolve(fileURLToPath(import.meta.url), '..', '..', '..');
+const describeDataset = all('screen').length > 0 ? describe : describe.skip;
 
 const GENERATED_FILE = resolve(REPO_ROOT, 'packages/game-data/src/data/enumeration/enumeration.type.ts');
 

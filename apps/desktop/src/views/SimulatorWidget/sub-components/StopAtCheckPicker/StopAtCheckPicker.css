@@ -79,7 +79,7 @@
 }
 
 .stop-picker__row-icon {
-  width: var(--size-16);
+  width: calc(1.4 * var(--text-xl));
   height: var(--size-16);
 }
 

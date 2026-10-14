@@ -42,11 +42,9 @@ const { defaultOnlineCore } = await import('@app/game/randomizer-client/online-c
 const { createOnlineClient } = await import('@app/game/randomizer-client/online-client');
 const { AP_DEATH_LINK_BIT, AP_ONLINE_BIT, gateWord5Now } = await import('@app/game/gate-word-5');
 const {
-  probeDeliverableNpcLocations, probeDeliverablePondLocations, probeDeliverableWorldLocations,
-} = await import('../../../../packages/randomizer/src/client/npc-capability');
-const { executeEntry } = await import('@rotp/randomizer');
-const { withCollectedChecks } = await import('../../../../packages/navigation/src/tracker/collected-checks');
-const { rebaselineEntries } = await import('../../../../packages/randomizer/src/client/poll-rebaseline');
+  executeEntry, probeDeliverableNpcLocations, probeDeliverablePondLocations, probeDeliverableWorldLocations, rebaselineEntries,
+} = await import('@rotp/randomizer');
+const { withCollectedChecks } = await import('@rotp/navigation');
 
 const settle = async (): Promise<void> => {
   for (let i = 0; i < 400; i += 1) await Promise.resolve();
@@ -99,8 +97,10 @@ describe('the real online core', () => {
 describe('the real online core', () => {
   it('arms another player\'s item as its game\'s icon id, saying what it was and who it went to', async () => {
     const snapshot = normalizeRandomizerOptions(buildOptionsSnapshot({}));
-    const placement = generateFromSnapshot('foreign-item', snapshot, probeDeliverableNpcLocations(),
-      probeDeliverablePondLocations(), probeDeliverableWorldLocations());
+    const placement = generateFromSnapshot({
+      seed: 'foreign-item', snapshot,
+      deliverable: { npc: probeDeliverableNpcLocations(), capacity: probeDeliverablePondLocations(), world: probeDeliverableWorldLocations() },
+    });
     const room = soloRoomOf(placement, snapshot);
     const location = required(AP_LOCATION_IDS['check-012'], 'check-012 location id');
     room.placements[location] = { item: 0x52510000, location, player: 2, flags: 0 };

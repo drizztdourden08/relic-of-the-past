@@ -1,10 +1,12 @@
 <!-- @layer docs @kind doc -->
-# Code notes: apps/desktop/src/lib
+# Code notes: renderer library
 
 Facts about the renderer library that the code cannot say on its own. Each heading names
-the source file (or folder) the note belongs to, relative to `apps/desktop/src/lib`.
+the source file (or folder) the note belongs to, by its full path from the repository root.
+The library once sat in one `lib` folder; its modules now live in the game, navigation,
+randomizer and storage folders of the apps and packages.
 
-## assets/public-asset.ts
+## apps/desktop/src/public-asset/public-asset.ts
 
 The packaged renderer loads over `file://`, where a root-absolute path such as
 `/buttons/x.svg` points at the filesystem root and fails. Vite's `BASE_URL` is `/` in dev
@@ -105,12 +107,12 @@ where it comes out, a crossing into another room shows what that room is. Stair 
 the exit door icon in gold, palace toggle walk boundaries use the secret door in purple,
 and a door to a header travel slot uses the portal.
 
-## game/active-rom-file.ts
+## apps/desktop/src/game/active-rom-file.ts
 
 - The ROM of the profile last selected wins. Without one, the first profile that has a ROM answers, so a fresh install with one profile reports its ROM before anything is played.
 - Null when no profile has a ROM or the profile store cannot be read.
 
-## game/active-states.ts
+## packages/game-core/src/active-states/active-states.ts
 
 - Several game states hold at once (a follower, keys in hand), so this is a registry of rules: a new state is one new rule.
 - Every value is read from live game memory (state_queries.c), never from what the simulator recorded, so a hand-loaded save state reports the truth.
@@ -120,20 +122,20 @@ and a door to a header travel slot uses the portal.
 - `link_num_keys` reads 0xFF after leaving a dungeon (overworld.c:429). That means no key count here, not 255 keys.
 - Progress tier 0 is where every save starts, so it is not reported as a state.
 - A follower is gating because it can open a gate (the throne room push wall).
-- What the player is doing (asleep, dashing, swimming) and the named progress bits come from live player state bytes in player-state-rules.ts, merged by `liveGameStates`.
+- What the player is doing (asleep, dashing, swimming) and the named progress bits come from live player state bytes in packages/game-core/src/player-state-rules, merged by `liveGameStates`.
 - `hint` is tooltip-only provenance (a raw flag mask), kept out of the chip so labels stay readable. `detail` is secondary text beside the label.
 
-## game/ap-received-index.ts
+## packages/randomizer/src/ap-received-index
 
 - The multiworld received-item index lives in the save (2 bytes), so it travels with save states and SRAM.
 - A core built before the export existed answers null, and the caller falls back to a value of its own.
 
-## game/ap-room-hash.ts
+## packages/randomizer/src/ap-room-hash
 
 - The multiworld room a file belongs to lives in the save (4 bytes, ap_room_hash.c), so it travels with save states and SRAM.
 - A core built before the export existed reads 0 (no room yet) and ignores a write.
 
-## game/aspect-ratio.ts
+## packages/game-core/src/aspect-ratio
 
 - The bounds mirror core/zelda3, so the render buffer can always supply the columns a ratio needs.
 - PPU_EXTRA_LEFT_RIGHT is kPpuExtraLeftRight. 256 plus 2 times 384 is 1024 px, the full width of a big overworld area (about 4.0:1 at 240 rows, 4.3:1 at 224), which covers 32:9. The linear world fetch renders past the 512 px tilemap with no-wrap clamping; beyond the area the edge mirror fills it.
@@ -147,7 +149,7 @@ and a door to a header travel slot uses the portal.
 - parseRatioString returns 0 for 'match' and malformed values; the caller treats 0 as full width.
 - A readout's `detected` is the measured ratio, uncapped; `used` is what the engine renders; `capped` means detected exceeded the engine limit.
 
-## game/audio-volume.ts
+## packages/game-core/src/audio-volume
 
 - Master volume is a Web Audio GainNode inserted between SDL2's ScriptProcessorNode and the AudioContext destination.
 - Mobile WebViews and browsers create the AudioContext suspended (autoplay policy). The game start tap's user activation has expired by the time the context exists, so the next real interaction resumes it, and the listeners remove themselves once the context runs.
@@ -155,42 +157,36 @@ and a door to a header travel slot uses the portal.
 - lastRequestedVolume is kept so a gain node created on demand starts at the last volume anyone asked for.
 - getMasterAudioTarget creates the master gain when missing instead of handing out the raw destination. A caller connected to the destination stayed connected to it, so replacement audio attached early escaped the master volume slider for the whole session. It is null only while SDL2 has not created its audio context, and the caller retries after boot.
 
-## game/auto-save.ts
+## apps/desktop/src/game/auto-save
 
 - Auto-saves use MEMFS slot 99, a dedicated slot that is never user visible, so they never collide with the user's quick saves.
-- The dialog state is read before the screenshot awaits: the game keeps running, and the message box hook state must be the one from the frame the core saved (state-dialog.ts).
+- The dialog state is read before the screenshot awaits: the game keeps running, and the message box hook state must be the one from the frame the core saved (apps/desktop/src/game/state-dialog).
 - Change listeners are told after the prune, so a list that reloads sees the final set of auto-saves.
 - Removing the MEMFS temp file and pruning old auto-saves are best effort.
 
-## game/boot-files.ts
-
-- Writes every boot input into the Emscripten MEMFS during preRun: game assets, the INI, SRAM and the custom player sprite.
-- `__relicDebug.forceAspect` is a dev and test aid that swaps the W:H token on the ExtendedAspectRatio line. It does nothing normally.
-- The INI's LinkGraphics key names /link_sprite.zspr (serializeToIni to ApplyCustomLinkGraphics).
-
-## game/bridge/announce-music.ts
+## packages/game-core/src/bridge/announce-music.ts
 
 - Asks the core to report again the music and ambient bed it is playing. It mirrors restore-music.
 - The core writes its control port only when the music changes, so an engine that attaches after a selection (behind a boot-time state load, or a late audio context) has missed it and waits in silence for the next one.
 - Call it once the handlers are registered and the gate is armed: the core checks both.
 
-## game/bridge/combat-tables.ts
+## packages/game-core/src/bridge/combat-tables
 
 - Both buffers open with a status byte: 1 when the row that follows was filled, 0 when the developer tools gate is off or the query was out of range. A zero row is a legitimate answer, so that byte is the only thing telling the two apart.
 - Sprite row layout: status, initial health, initial flags4, then 16 damage-by-class entries already reduced through the game's own two-step lookup.
 - Shared tables: ancilla (projectile) type to damage class (57 bytes), then tile attribute to projectile collision behaviour (256 bytes): 0 pass, 1 block, 2 sloped, 3 layer-dependent, 4 priority flip.
 
-## game/bridge/commands.ts
+## packages/game-core/src/bridge/commands.ts
 
 - `wasmSetPaused` pauses or resumes the game at the C level.
 
-## game/bridge/deluxe-entrances.ts
+## packages/game-core/src/bridge/deluxe-entrances.ts
 
 - Tells the core which entrances the extended pack gives a track of their own.
 - The remap tables belong to the renderer and the core keeps no copy. The core only needs to know, per entrance, whether a dedicated track exists, so it can hand the game a selectable indoor song for entrances whose own byte never selects one (a duck, or an overworld song carried indoors).
 - Pushed as a bitmask of 32 entrances per word, every time a session starts. The mask is armed for an extended pack and cleared for any other.
 
-## game/bridge/dialog.ts
+## packages/game-core/src/bridge/dialog
 
 - C side: core/game-hooks/dialog_*.c.
 - The mirror snapshot is null when the module is not running or the HUD override gate is closed.
@@ -202,7 +198,7 @@ and a door to a header travel slot uses the portal.
 - Hook state is copied out of the core's frozen buffer: two length bytes, then the blob. Null with no message up, a stale mirror or a closed gate. It takes the module itself because saves and loads run wherever the core does, not only while the game is running.
 - Restore returns false when the core refused the blob and restored nothing.
 
-## game/bridge/host-gates.ts
+## packages/game-core/src/bridge/host-gates
 
 - Host-only gate control over g_host_gates[0] (core/game-hooks/host_gates.h). These bits gate behaviour the core never observes, so they need no Vanilla Safe handling.
 - The core only exposes a whole-word setter, so the bits are mirrored here and the full word is rewritten on every change.
@@ -215,9 +211,9 @@ and a door to a header travel slot uses the portal.
 - A fresh core starts with every gate clear, so reset drops the mirror to keep it from going stale.
 - Reassert pushes the mirror as it is. A bit set before the module existed (a debugger opened ahead of the game) was mirrored but never delivered, and the dedupe in the bit setter would treat later armings as done. Call it once the module is installed.
 
-## game/bridge/host-menu.ts
+## packages/game-core/src/bridge/host-menu
 
-- The only place in the app that spells the six WasmHost* export names. Everything above goes through `lib/game/host-menu`, which adds the wanted-state and re-assert rules; nothing here holds state.
+- The only place in the app that spells the six WasmHost* export names. Everything above goes through `packages/game-core/src/host-menu`, which adds the wanted-state and re-assert rules; nothing here holds state.
 - Both gates are checked on the C side at every call (core/game-hooks/host_menu.c), so these stay plain fire-and-forget commands. See docs/hooks/host-menu.md.
 - Takeover records the host's standing request; the C side defers it, like WasmSetHudHidden.
 - Close is the "continue" exit and hands the menu state machine back where the vanilla branch does.
@@ -226,13 +222,13 @@ and a door to a header travel slot uses the portal.
 - Is holding answers 1 while the takeover is in force and the gate allows it.
 - Set gear `kind`: 0 blade (tiers 0 to 4), 1 guard (0 to 3), 2 armour (0 to 2), 3 arrow type (0 to 1). It repaints and re-derives in one call; the arrow write keeps the register's ammunition half.
 
-## game/bridge/nav-tables.ts
+## packages/game-core/src/bridge/nav-tables
 
 - Exit screen map: indoor room to overworld screen index.
 - Area heads: the 64-entry table that groups screens into big areas.
 - Entrance spawns carry playerX, playerY and startingBg; the starting layer is the high nibble of the fifth byte.
 
-## game/bridge/player-state.ts
+## packages/game-core/src/bridge/player-state.ts
 
 - Live player-state bytes for the widget's state chips (WasmGetPlayerStateInfo). Byte layout mirrors state_queries.c.
 - Kept apart from the flag snapshot on purpose: the simulator diffs that buffer to detect checks, and these values change every frame, so folding them in would fabricate check events.
@@ -242,13 +238,13 @@ and a door to a header travel slot uses the portal.
 - `progressFlags` is sram_progress_flags, which holds the named story bits.
 - `incapacitated` is nonzero while stunned or recoiling.
 
-## game/bridge/progress.ts
+## packages/game-core/src/bridge/progress
 
-- `progress-tier.ts` says what each progress indicator value means. A tier with no row in the dataset is reported as itself, never renamed here.
+- `packages/game-data/src/logic/queries/progress-tier` says what each progress indicator value means. A tier with no row in the dataset is reported as itself, never renamed here.
 - The progress indicator reads from WRAM and works indoors or outdoors; null only when the game is not running.
 - `screenEventFlags` is save_ow_event_info for the current screen. Bit 0x20 says the event overlay has been applied.
 
-## game/bridge/render.ts
+## apps/desktop/src/views/GameLayer/sub-components/ShadowEditorOverlay/behavior/render.ts
 
 - Viewport info feeds the edge-glow shader. Null when the module is not running or the export does not exist.
 - Main module values: 7 dungeon, 9 overworld, 14 menu, 0 and 1 intro and title. The location module is the physical location, unaffected by text and menu overlays; active gameplay is location module 7 or 9.
@@ -260,14 +256,14 @@ and a door to a header travel slot uses the portal.
 - `inDoorway` is nonzero while the player occupies a doorway (its orientation, not a flag). `doorAnimStep` is 0 when no door animates.
 - The clean frame is rendered without HUD or BG3 into WASM memory as RGBA.
 
-## game/bridge/restore-music.ts
+## packages/game-core/src/bridge/restore-music.ts
 
 - Hands music back to the emulated sound chip.
 - While the host plays music the core keeps its music port paused. Clearing the gate does not undo that: the port is written only when the music changes, and the core has tracked the current track all along, so it thinks its track is already playing and writes nothing. Without this call the chip can stay silent indefinitely.
 - The custom player sprite and the HUD override each have their own restore for the same reason.
 - Call it while the external-music gate is still armed, since the core checks the gate.
 
-## game/bridge/room-doors.ts
+## packages/game-core/src/bridge/room-doors
 
 - The room header stores a staircase destination as one byte, written with `BYTE(dungeon_room_index) = ...` (dungeon.c:4339). The room's high byte carries over, so a staircase never leaves its bank of 256 rooms. Reading the byte as the whole index once sent every 0x1xx cave stair to a dungeon room (0x119 read as 0x19).
 - The stair layer is the attr page the stair tile sits on (0 BG2, 1 BG1); taking the stair lands the player on that layer.
@@ -275,7 +271,7 @@ and a door to a header travel slot uses the portal.
 - Walk boundaries are inter-room walk-throughs (palace toggles such as castle to sewer).
 - Travel destinations are the 5 bytes from the room header. Tag bytes (tag1, tag2) drive scripted room effects.
 
-## game/bridge/room-grids.ts
+## packages/game-core/src/bridge/room-grids
 
 - Indoor collision comes from dung_bg2_attr_table: a 0x2000-byte table, 64 by 64 per layer, BG2 (upper, the main walkable floor) at offset 0 and BG1 (lower) at 0x1000. Live reads return raw data.
 - Attr 0x1C is a filler and stair-detection value. Raw 0x1C on the lower layer marks an upper-floor stair, recorded before normalising; then 0x1C is replaced by the other layer's value.
@@ -289,7 +285,7 @@ and a door to a header travel slot uses the portal.
 - Replacement tile state: 16 slots referenced by attrs 0x70 to 0x7F (low nibble is the slot). `value & 0xf0f0` identifies pot 0x1010, large block 0x2020, bombable floor 0x3030, hammer peg 0x4040. All zero outdoors.
 - Chest locations: 6 slots referenced by attrs 0x58 to 0x5D (slot = attr minus 0x58). A value of 0x8000 or more means locked. All zero outdoors.
 
-## game/bridge/room-layout.ts
+## packages/game-core/src/bridge/room-layout
 
 - Quadrant fullsize X or Y of 0 means that axis is not merged by a blast wall.
 - `intraEdges` lists which edges of the current quadrant are intra-room boundaries, not room-to-room.
@@ -297,13 +293,13 @@ and a door to a header travel slot uses the portal.
 - Floor raw: 0 is 1F, 1 is 2F; negative floors are stored unsigned, 0xFF is B1, 0xFE is B2.
 - Effective width and height are the bounding box in map cells of every cell containing the room.
 
-## game/bridge/second-cartridge.ts
+## packages/game-core/src/bridge/second-cartridge
 
 - C side: core/game-hooks/gba_alttp.c.
 - Two separate questions, deliberately kept apart. Available: the supplement container is in the asset blob. Enabled: the player asked for the extra content.
 - Both must hold before anything appears in the world, so owning the cartridge with the option off still gives an untouched overworld. The core defaults to disabled, so a host that never calls the setter behaves like the base game.
 
-## game/bridge/sim-queries.ts
+## packages/game-core/src/bridge/sim-queries
 
 - Room-addressable interactable queries for the simulator, gated on developer mode (core/game-hooks/sim_queries.c). Null means the gate is closed, distinct from an empty array (nothing in the room).
 - The flag snapshot copies three raw SRAM buffers the simulator diffs (see shared FlagSnapshot): save_dung_info is uint16[320] indexed by room id, save_ow_event_info is uint8[0x82] indexed by overworld screen, g_progress_buf is the progress buffer (state_queries.c). Independent copies, never live views.
@@ -319,13 +315,13 @@ and a door to a header travel slot uses the portal.
 - Close door clears a door's open bit (a trap shutter slamming shut behind the player).
 - Trigger overworld check sets a standing overworld item's event bit and grants its item in game.
 
-## game/bridge/sound-claim.ts
+## packages/msu/src/bridge/sound-claim
 
 - Tells the core which sound ids the app has taken over, per channel. The gate bits (host-gates) say the host handles a channel; these masks say which ids on it. Without a mask an armed gate claims nothing, and without the gate a mask is never consulted.
 - voidCall swallows a missing export, so an older core with no WasmSetSoundClaim never claims anything and the renderer stays up.
 - Clearing every channel is the state a session must leave the core in.
 
-## game/bridge/sound-preview.ts
+## packages/game-core/src/bridge/sound-preview
 
 - Renders what the sound chip would play for one sound id, for A/B against a replacement. The core uses a private second chip (emscripten_sound_preview.c), so nothing disturbs the playing music or a save's state. Needs a core with parsed assets; see preview-core.
 - Music is a preview target but not a SoundChannel; it is written to a port like the rest. Ports match SOUND_CHANNEL_PORTS in the sound catalogue.
@@ -335,13 +331,13 @@ and a door to a header travel slot uses the portal.
 - Samples are interleaved stereo 16-bit signed, copied out because the core reuses the buffer for the next render and a growing heap can detach the view.
 - The bank in the result only matters for diagnosing a silent id.
 
-## game/bridge/sprites-blockers.ts
+## packages/game-core/src/bridge/sprites-blockers
 
 - Uncle blockers are active Uncle sprite blocker coordinates for the indoor early-game variants.
 - Navigation blockers are live dynamic blockers used by the navigation flood fill.
 - Guard spawns are the static overworld tutorial guard spawns (sprite 0x3F and 0x40) for the current area, independent of camera proximity loading.
 
-## game/bridge/title.ts
+## packages/game-core/src/bridge/title
 
 - C side: core/game-hooks/title_mirror.c and title_override.c. The frame decode follows the struct in title_mirror.c field by field.
 - int16 piece_x[3] is aligned to the next even byte after the fade byte, so it starts at 18; piece_y follows at 24.
@@ -350,71 +346,71 @@ and a door to a header travel slot uses the portal.
 - Title frame is null when the game is not running or the gate is closed.
 - Hidden is in force only when the gate is open, the request was made and the title is on screen.
 
-## game/bridge/ui-state.ts
+## packages/game-core/src/bridge/ui-state
 
 - The UI state buffer is returned as the heap and a pointer.
 - The overlay mode bitmask controls native rendering suppression.
 - Menu state: 0 gameplay, 1 opening, 2 open, 3 closing. Used to sync the enhanced HUD overlay with the native pause animation.
 
-## game/bridge/view-origin.ts
+## packages/game-core/src/bridge/view-origin/view-origin.ts
 
 - The rendered frame is not the camera: a wide view draws `extraLeftRight` pixels before the camera column, a tall view draws `extraTopBottom` rows before its first row, and the camera lock shifts the picture so its edge can rest on the map boundary. Anything drawn over the game (navigation overlay, shadow editor, tile tooltip) must start from this origin or it sits off what it marks.
 - Consumers once derived this inline; some carried the lock shift and some did not, and none carried the rows a tall view adds on top.
 - Lines above the picture: a tall view adds the same budget above and below; the 240-line view adds its 16 lines below only, so a surplus of exactly 16 means nothing on top. Anything that marks a spot in the picture (the message box, on a scanline the game names) starts below these lines. Frame furniture (enhanced HUD, pause menu) is placed against the rendered frame and reaches the top in every shape.
 
-## game/bridge/wasm-call.ts
+## packages/game-core/src/bridge/wasm-call
 
 - Shared call helpers: module guard, try and catch, count-prefixed array decode, so each bridge query is a short declaration of its packed layout.
 - `callWhenRunning` runs only when the module is loaded and the game is running; any throw returns the fallback.
 - Table layout: `countBytes` is the count header size (1 is u8, 2 is little-endian u16); `dataStart` is where the first row begins; `maxCount` is a defensive clamp, because several C tables cap their length.
 - Gated tables: byte 0 is a status flag, 0 when the export's gate was closed or the argument out of range, 1 when the count-prefixed table at byte 1 was filled. A closed gate returns null, not an empty array, so "not allowed" and "nothing here" stay distinct. C side: WasmGetRoomChests and friends (sim_queries.c).
 
-## game/canvas-context.ts
+## packages/game-core/src/canvas-context.ts
 
-- A stopped game loses its canvas WebGL context to free the GPU (lifecycle.ts stopGame). The canvas hands that same lost context back on the next getContext, SDL's renderer then fails to initialise on it, falls through to a 2d context the canvas can no longer give, and the core dies on "createImageData of null". So a restart first asks the canvas to restore the context and waits for the restored event (or a timeout).
+- A stopped game loses its canvas WebGL context to free the GPU (apps/desktop/src/game/lifecycle stopGame). The canvas hands that same lost context back on the next getContext, SDL's renderer then fails to initialise on it, falls through to a 2d context the canvas can no longer give, and the core dies on "createImageData of null". So a restart first asks the canvas to restore the context and waits for the restored event (or a timeout).
 
-## game/capacity-bonus.ts
+## apps/desktop/src/game/capacity-bonus
 
 - Arms the per-family bonus table the core's upgrade resolvers read (core/game-hooks/upgrade_bonus.c) and gate word 5 (features.h kFeatures5_CapacityBonus). That bit says a borrowed receipt pays the profile's bonus, not its native goods.
 - CAPACITY_BONUS_BIT must stay in lockstep with kFeatures5_CapacityBonus in features.h.
-- Word 5 is shared with the story gates, so the bit goes through the word's composer (gate-word-5.ts, setCapacityHalf) and never clears the other half.
+- Word 5 is shared with the story gates, so the bit goes through the word's composer (apps/desktop/src/game/gate-word-5, setCapacityHalf) and never clears the other half.
 - Table writes only record. Clearing the table and the bit is a complete disarm: every payout seam is back on its vendored expression, byte for byte.
 
-## game/capacity-fixed-lines.ts
+## packages/randomizer/src/receipt-text/capacity-fixed-lines.ts
 
 - Arms the (family, starting rung, jump) to receipt-line table the core's fixed-jump resolvers read (core/game-hooks/capacity_fixed_lines.c). When a fixed item lands, the core looks up the line pre-rendered for the rung it climbed from and shows it in place of the location's jump-only line.
 - Writes only record, the same contract as the plan and the wallet table. The read side answers to the grant seams and kFeatures3_ReceiptMessages.
 - `messageId` is the pre-rendered line's message id in the session dialogue.
 - The session layer composes the entries from the family plans; this module is the ccall surface only.
 
-## game/capacity-plan.ts
+## apps/desktop/src/game/capacity-plan
 
 - Arms the per-family jump sequence the core's progressive climb reads (core/game-hooks/capacity_progressive.c). Entry k is the k-th pickup's jump in rungs and, when the session pre-rendered one, the message id of its receipt line.
 - NO_MESSAGE (-1) means no pre-rendered line: the core falls back to the family's class message. Missing message ids fall back the same way.
 - The ladder is bounded by the family's rung count, so a longer sequence is refused here instead of being truncated in C.
 - Writes only record. The read side answers to kFeatures3_CapacityProfile inside the gated grant seams.
 
-## game/capacity-profile.constants.ts
+## packages/randomizer/src/capacity-profile/capacity-profile.constants.ts
 
-- The TS half of the capacity profile contract with core/game-hooks/capacity_profile.c and wallet_grants.c. Moved to capacity-profile/capacity-profile.constants.ts.
+- The TS half of the capacity profile contract with core/game-hooks/capacity_profile.c and wallet_grants.c. Moved to packages/randomizer/src/capacity-profile/capacity-profile.constants.ts.
 - CAPACITY_FAMILY_INDEX is the index WasmSetCapacityProfile addresses each family by (the core's enum order).
 - CAPACITY_FAMILY_LAST_TIER is the last rung per family: the eighth pond level, the bat's quarter setting, the wallet ladder top.
-- The ladders and the wallet's virtual id range are owned by the shared model (capacity-ladders.constants.ts, upgrade-receive-id.ts, wallet-jump-table.ts) and only re-exported, so the bridge cannot drift from the pool, the names and the receipt export.
+- The ladders and the wallet's virtual id range are owned by the shared model (capacity-ladders.constants.ts, packages/game-data/src/data/upgrade-receive-id, packages/game-data/src/data/wallet-jump-table) and only re-exported, so the bridge cannot drift from the pool, the names and the receipt export.
 - WALLET_JUMP_SLOTS is sixteen slots, virtual ids 0x67 to 0x76.
-- The unused helpers walletReceiveIdOfSlot (WALLET_VIRT_FIRST plus slot) and walletCapOfIndex (ladder index i gives cap 0, then 100 times i minus 1, clamped) were removed; isWalletReceiveId is still in @shared/game/data.
+- The unused helpers walletReceiveIdOfSlot (WALLET_VIRT_FIRST plus slot) and walletCapOfIndex (ladder index i gives cap 0, then 100 times i minus 1, clamped) were removed; isWalletReceiveId is still in packages/game-data/src/data.
 
-## game/capacity-profile.ts
+## apps/desktop/src/game/capacity-profile
 
 - Arms the in-core capacity profile (capacity_profile.c: starting rungs for a new file, the rung a family may reach, the wallet ladder cap) and the wallet jump table (wallet_grants.c: slot to ladder rungs).
 - Rung 0 is the empty tier below the native grid. The wallet's rungs are its ladder index 0 to 100.
 - `custom` false keeps the family on its native grid (vanilla or vanilla-in-pool); the tiers are then ignored.
 - Same contract as the override bridges: every write only records, the gate bit is requested alongside it, and it stays open only while a profile is armed.
-- openCapacityGate alone changes nothing in the core: every profile seam keeps its native answer until a family is armed, so a session whose families all stay native can still raise it for the hold-up icons (upgrade-icons.ts).
+- openCapacityGate alone changes nothing in the core: every profile seam keeps its native answer until a family is armed, so a session whose families all stay native can still raise it for the hold-up icons (apps/desktop/src/game/upgrade-icons).
 - The gate is requested with the record-only write so it has latched into WRAM (SyncGateWords, next frame) long before a new file or a grant reads it.
 - In the wallet jump table, rungsBySlot[s] is the ladder climb a grant of virtual id 0x67 plus s performs. A rung count past the ladder top is clamped in C.
 - Clearing empties the profile and the table, then closes the gate: the same double lock as the override tables.
 
-## game/capture-frame.ts
+## packages/game-core/src/capture-frame
 
 - Game frame capture for save state screenshots.
 - Reading the game's WebGL canvas asynchronously is unreliable: the backbuffer can be cleared after present, and toBlob on a hidden WebGL canvas returns blank in some WebViews (Android's). So capture piggybacks on the FX render loop: a save requests a capture, and the loop, right after it draws the visible FX canvas, encodes that frame. Reading in the same turn as the draw sidesteps every async, visibility and preserveDrawingBuffer quirk.
@@ -422,11 +418,11 @@ and a door to a header travel slot uses the portal.
 - The frame is copied into a 2D canvas first because toBlob is dependable on a 2D canvas, and drawImage reads the source canvas's freshly rendered contents.
 - A newer capture request supersedes an unfulfilled one, which resolves null. A request with no frame in time (the game is not running) also resolves null.
 
-## game/cheat-check-grant.ts
+## apps/desktop/src/game/cheat-check-grant
 
 - This is what the cheat console's "From Check" button hands over, and how.
 - A check's vanilla contents are right only on a file with no seed. On a randomized file, granting the vanilla item clears the check off the tracker while handing over an item the seed never placed, which puts the run out of logic with no way back short of an old save.
-- So the grant is resolved from the active session's placement and split in two: the item goes through the receipt delivery (the path a real randomized pickup takes), because a placed item is often a virtual id (a progressive family, a counter upgrade, a wallet rung, a dungeon-flavoured key) that only a substitution or receipt seam can resolve; the completion is written when that delivery finishes, by cheat-check-mark.ts.
+- So the grant is resolved from the active session's placement and split in two: the item goes through the receipt delivery (the path a real randomized pickup takes), because a placed item is often a virtual id (a progressive family, a counter upgrade, a wallet rung, a dungeon-flavoured key) that only a substitution or receipt seam can resolve; the completion is written when that delivery finishes, by packages/randomizer/src/cheat-check-mark.
 - Both halves ride one queue entry. A second entry used to carry the completion, which read to the player as two things handed over; the delivery's completion callback gives the same ordering with one notification.
 - The location is taken out of the poller's reporting first: the console already handed the item over, so a poll that saw the flag flip would make the session deliver a second copy.
 - An online session is refused: it holds no placement here, its items are scouted one at a time, and in a multiworld the item at a location may belong to another player.
@@ -435,7 +431,7 @@ and a door to a header travel slot uses the portal.
 - planCheckGrant is pure: the widget calls it to label and enable the button, and grantFromCheck runs the same plan.
 - The completion rides the delivery's own callback, so a refused or still-retrying grant leaves the check standing. The queue also fires that callback for a dropped entry (clear(), on a session stop), so the session is compared with the one the grant started under. The suppression is repeated in the callback because a save state loaded in between re-baselines the poller from live memory, which would put the location back in play.
 
-## game/cheat-check-mark.ts
+## packages/randomizer/src/cheat-check-mark
 
 - Records a check as collected without handing anything over.
 - The write is chosen from the check's own detection, never from its grant coordinates. For several checks these are not even the same byte: a wish pond carries flagType 2 and flagMask 0 for its grant, while the tracker and the poller read its substitution completion bit in the progress buffer. Marking the grant side wrote a zero mask into a byte nothing observes, so the item went out and the check stayed open. Deriving the write from detectionOf, which the tracker reads through, keeps both surfaces on one fact.
@@ -449,7 +445,7 @@ and a door to a header travel slot uses the portal.
 - An npc flag mark writes the giver flag byte and also records the giver's own post-grant state. Only a non-zero mask writes anything, and the flag it names has to be the byte the detection reads.
 - markPlanOf is pure, so the widget can call it to decide whether the Grant button is live. A refusal is the reason the row shows instead of a button that does nothing.
 
-## game/cheat-rules-memory.ts
+## packages/game-core/src/cheat-rules-memory
 
 - The Rules tab's standing choices (walls, lit rooms, damage dealt and taken) are kept between sessions. The core holds them in plain memory that a fresh boot clears, so they are remembered on every change and put back once the game runs.
 - The core refuses a cheat until its gate word has landed, a frame or so after boot, so the restore is tried twice (RESTORE_DELAYS_MS).
@@ -457,7 +453,7 @@ and a door to a header travel slot uses the portal.
 - localStorage is a convenience: a failed write is ignored.
 - onCheatRulesRestored tells a panel that reads the rules by getter to draw them again.
 
-## game/cheats.ts
+## packages/game-core/src/cheats
 
 - `window.__trace(frames)` is a dev console helper that starts a core trace (WasmCheatStartTrace); output is logged with a [TRACE] prefix.
 - BottleContents are the values stored in link_bottle_info[0..3]. None means no bottle in the slot.
@@ -477,11 +473,11 @@ and a door to a header travel slot uses the portal.
 - The rule toggles (no walls, lit rooms, damage dealt and taken) are tracked locally, not read back from WASM: the Cheats widget's toggle and the cheat-ignore-collision keybind agree on the state without polling the module every render, the widget reads them back after a remount, and the core keeps no read export for them. Lit rooms apply on the next frame boundary, not at the call.
 - cheatUnblockLink force-clears a stuck immobilize, handler or submodule state (WasmCheatUnblockLink in cheats.c).
 
-## game/config.ts
+## packages/game-core/src/config.constants.ts
 
 - Moved to config.constants.ts. DEFAULT_ZELDA3_INI is the default INI for WASM builds, used when no profile INI is passed.
 
-## game/core-ready.ts
+## packages/game-core/src/core-ready
 
 - The one honest answer to "can the core take a command right now?": a live module and a running core. Either missing and the ccall goes nowhere.
 - The renderer has a looser "running": the game view has its asset blob (useGameLifecycle's isRunning). The Emscripten module appears roughly two seconds later, and everything gated on the loose flag (the save state overlay, its shortcuts, the Home tab's load buttons) is live for that gap. A command issued in it used to find a null module and be dropped. Anything that reaches into the core orders itself against this check instead.
@@ -489,19 +485,19 @@ and a door to a header travel slot uses the portal.
 - The 30 s default timeout is generous: it covers a boot that has to extract assets first, and nothing should ever reach it.
 - `settle` is assigned synchronously before any listener can run: subscribeGameState replays the current state on a microtask, never during the call.
 
-## game/crossings/availability.ts
+## packages/navigation/src/crossings/availability
 
 - An approach to an entrance asks for what its transition asks plus the gate of its tile.
 - An entrance asks for what its CHEAPEST approach asks. An entrance is usable as soon as ONE of its transitions is (`isEntranceUsable` is a `.some`), so a plain floor approach beside a glove gated one asks for nothing. Taking the union of every approach would demand the player hold all of them at once and report a walkable entrance as blocked.
 - A crossing is available when it is within reach of the flood AND asks for nothing the player lacks. A flood that was never run cannot judge reach, so the crossing reads available on its requirements alone.
 
-## game/crossings/collect-crossings.ts
+## packages/navigation/src/crossings/collect-crossings.ts
 
 - `collectCrossings` is THE producer of every way on or off one screen. Nothing is filtered out for being unusable: a crossing the player cannot take is emitted with `available: false` and the requirements it asks for.
 - A caller holding the widget's own connections passes them. That is the only way intra room scrolls arrive, because deriving them needs the room's scroll boundary, which the flood result does not carry.
 - Crossings are kept one per id: a door read from two tables is still one door.
 
-## game/crossings/crossings.type.ts
+## packages/navigation/src/crossings/crossings.type.ts
 
 - CrossingScope is the screen a caller wants the crossings of. `roomIndex` is used indoors; `owScreenIndex` outdoors, in the unified 0x00 to 0x7F numbering.
 - `connections` are the border connections of `flood`, derived from it when omitted. `items` are the traversal tokens the player holds, taken from the flood when omitted.
@@ -509,18 +505,18 @@ and a door to a header travel slot uses the portal.
 - CrossingParts is what a detector knows about a crossing before the pass fills the rest. `edgeSig` is the simulator's own signature for the crossing, which names the arrival.
 - `screenWide` means the crossing describes the whole screen, not a spot on it: its tile is a placeholder and reachability says nothing about it.
 
-## game/crossings/layer-toggle.ts
+## packages/navigation/src/crossings/layer-toggle.ts
 
 - A TogglePosition is a tile whose door record is kDoorType_PlayerBgChange, in room grid coordinates.
 - The toggle table holds the tiles a room loads for door type 22 (kDoorType_PlayerBgChange), which flip `link_is_on_lower_level` when walked over.
 - A toggle counts for a boundary when it sits against that wall (within EDGE_THRESHOLD tiles) AND lands on the run of tiles the boundary occupies (within POSITION_SPREAD tiles along the wall). Crossing such a boundary flips the floor the player stands on.
 - The run along a wall is measured in columns for north and south, rows for east and west.
 
-## game/crossings/make-crossing.ts
+## packages/navigation/src/crossings/make-crossing.ts
 
 - Assembles one ScreenCrossing from what a detector found plus what the pass knows, so the walk distance, the arrival words and the availability verdict are derived the same way for a door, a stair, a hole and a border scroll.
 
-## game/crossings/place-tile.ts
+## packages/navigation/src/crossings/place-tile
 
 - A Landing's `inward` is tiles toward the room's middle (negative is behind or outside the wall); `lateral` is tiles along the wall, either way. INWARD points toward the room's middle, away from the wall the door sits in.
 - DOOR_REACH_RADIUS (14) is how far from a door record a walkable tile is still that door's landing. It matches `exitDoorAt`, which scans 14 deep, because notch depth and the record's own lateral offset vary that much between rooms.
@@ -530,26 +526,26 @@ and a door to a header travel slot uses the portal.
 - `measuredLanding` ranks the WHOLE radius at once and is null when the flood touched nothing within reach.
 - `matchDoorsToSpawns` scores every pair, then claims closest first, so no door and no spawn is used twice and the order the spawns arrive in cannot change the answer.
 
-## game/crossings/resolve-target.ts
+## packages/navigation/src/crossings/resolve-target
 
 - A room target carries the palace index because two rooms can share a number.
 - An overworld screen index is ALREADY the unified 0x00 to 0x7F numbering: the game tests bit 0x40 of `overworld_screen_index` to decide which world it is in (core/zelda3/src/overworld.c:479) and masks it off only when it wants the position inside one world (:862). So there is no world argument and no offset.
 - `noTarget` is a crossing that leads nowhere the dataset can name, such as a respawn point.
 
-## game/crossings/sources/edges.ts
+## packages/navigation/src/crossings/sources/edges.ts
 
 - A room's internal scroll boundary runs between rows and columns 31 and 32 (INTRA_NEAR, INTRA_FAR).
 - A span is the run of tiles the scroll occupies, and what each of them asks for.
 - An intra room scroll physically sits on the quadrant boundary, not the screen border: `getConnections` derives one from the reachable pair at 31 and 32. Placing it at row 0 or 63 would put the marker about 31 tiles from the scroll the player stands on and read it as out of reach.
 - Toggle floor tiles apply to rooms only; the surface has one floor.
 
-## game/crossings/sources/exit-table.ts
+## packages/navigation/src/crossings/sources/exit-table.ts
 
 - Touched door spots are distinct PHYSICAL doors back outside that the flood TOUCHED. Several entrance ids can share one door, and an id whose transition never fired, or never passed the item gate, is not a way out the room has demonstrated.
 - The exit table's own answer: every room it lists HAS a way back outside, even when the flood never touched a door. Room 0xe2's spawn sits at row 59 and its floor ends at row 55, so nothing else emits its way out and it would read as a dead end.
 - The table names the destination without saying where the door is, so the crossing carries a placeholder tile and is screen wide (exempt from the reach test).
 
-## game/crossings/sources/indoor-doors.ts
+## packages/navigation/src/crossings/sources/indoor-doors
 
 - WARP_DOOR (0x46) is kDoorType_WarpRoomDoor: crossing it teleports to a header travel slot. A west warp door reads slot 3, an east one slot 4.
 - A direction the bridge could not decode arrives as `north`, which no warp door is, so THAT door emits both slots instead of silently none, while the other doors in the room still resolve normally.
@@ -560,7 +556,7 @@ and a door to a header travel slot uses the portal.
 - One doorway per edge per neighbour REGION. Dropping the region qualifier collapses two north doorways into the same room at columns 10 and 50 into one, which is the ledge the sanctuary grounds lose when a wall's separate crossings are treated as interchangeable.
 - Doorway crossings go through the outer walls and are validated against the destination.
 
-## game/crossings/sources/indoor-spawns.ts
+## packages/navigation/src/crossings/sources/indoor-spawns.ts
 
 - A SpawnRow's `layer` is the floor the row puts the player on: 0 upper, 1 lower. `doorArea` is the overworld area the row's door sits on, when it is a door at all; `holeArea` is the area a fall hole drops from, when the row is a hole.
 - Spawn areas are the overworld sub screens each entrance row's door or pit physically stands on. A 2x2 area records its entrances on the HEAD screen, so the raw tables name the head for all four quarters. The enriched list resolves each row to the quarter it sits on, the same read the traversal graph makes, so both name one screen for one door.
@@ -568,38 +564,38 @@ and a door to a header travel slot uses the portal.
 - Exit door records are readable only for the room the game currently holds.
 - Only the door rows compete for an exit door record, so a respawn never takes the door's tile.
 
-## game/crossings/sources/indoor-tables.ts
+## packages/navigation/src/crossings/sources/indoor-tables.ts
 
 - THRONE_DOOR (0x14) is kDoorType_ThroneRoom, whose walk through boundary needs the follower in tow. A room whose door table carries it is gated while no follower is active.
 - FOLLOWER_REQ is a token an ungated crossing never carries, so the gate reads as a need.
 
-## game/crossings/sources/outdoor-entrances.ts
+## packages/navigation/src/crossings/sources/outdoor-entrances.ts
 
 - The doors into interiors and the pits that drop into a room both come off the same enriched table the flood seeds itself with.
 
-## game/currency-symbols.ts
+## apps/desktop/src/game/currency-symbols
 
 - The shop price symbols are a 576 B binary the sprite extraction emits beside the PNGs (currency-symbols.4bpp, one 16x8 strip per currency a shelf may charge, reduced to one sprite palette row).
 - It is handed to the core when a randomizer session arms: written to MEMFS and applied with WasmApplyCurrencySymbolsFile, the quiver picture pattern.
 - The core draws the strip beside a randomized shelf's price under the shop override gate (kFeatures3_ShopOverrides, armed by the session); no gate of its own is flipped here.
 - A sprite set extracted before the binary existed, or no running module, leaves the price as bare digits.
 
-## game/dark-room-lights.ts
+## packages/game-core/src/dark-room-lights.ts
 
 - The dark room lights are the share of gate word 4 (features.h kFeatures4_*) that says which carried items light an unlit room. DARK_ROOM_LIGHT_BIT must stay in lockstep with that enum.
 - Three bits, not four: the lamp lights a room in the unmodified game and is never taken away, so it carries no bit. A seed that unticks it only tells the fill not to count on it; a file that finds one anyway is better off than the rules assumed, which can never make a seed unbeatable. A word of zero leaves the lamp as the only light.
 - Ticking a light is possession and nothing else: the core hooks the game's own "is a light carried" seam, so a ticked item lights a room for free at any meter, exactly as the lamp does (core/game-hooks/dark_room_lights.c). That is why there is no cost, mode or amount to arm, only the set.
 - "Dark rooms need a light" is not read here. It is read by the seed logic alone: it tells the fill whether a dark room needs a light, and turning it off never puts out a ticked light. Only the ticks decide the bits.
-- The word itself is written by item-power.ts, which owns word 4 outright; the two halves are OR'd there so a session makes one write.
+- The word itself is written by apps/desktop/src/game/item-power, which owns word 4 outright; the two halves are OR'd there so a session makes one write.
 
-## game/data-revision.ts
+## packages/game-core/src/data-revision/data-revision.ts
 
 - Counts the dataset record writes landed in this session, as an external store (subscribe plus snapshot) so a consumer can be woken by one.
-- The record registry (`@shared/game/data`) is replaced wholesale on every write and carries no version, so nothing downstream can tell "the same screen" from "the same screen, edited". Anything that memoises or debounces on a content signature folds this counter in.
+- The record registry (`packages/game-data/src/data`) is replaced wholesale on every write and carries no version, so nothing downstream can tell "the same screen" from "the same screen, edited". Anything that memoises or debounces on a content signature folds this counter in.
 - The subscription is the load-bearing half. A bare counter is only sampled during a render, so with the emulator paused an edit would sit unnoticed until something else re-rendered. Waking subscribers directly removes that dependency on game frames.
-- Contract: every landed create, edit and delete bumps it once, at each write family's shared tail: settle-created-record.ts for creates (the connection pair settles once), record-writers.ts `settle` for edits, and delete-record.ts `recordDeleterFor` for removals. Accepting a recommendation goes through those three, so it needs no bump of its own.
+- Contract: every landed create, edit and delete bumps it once, at each write family's shared tail: settle-created-record.ts for creates (the connection pair settles once), apps/desktop/src/data-inspector/record-writers `settle` for edits, and delete-record.ts `recordDeleterFor` for removals. Accepting a recommendation goes through those three, so it needs no bump of its own.
 
-## game/delivery-api.ts
+## apps/desktop/src/game/delivery-api
 
 - The non-cheat entry points for the delivery queue, used by the randomizer, networking and other systems that give items.
 - A virtual upgrade id has no record: its label is the jump it performs (receiptJumpText).
@@ -607,12 +603,12 @@ and a door to a header travel slot uses the portal.
 - `onComplete` runs once the core has finished handing the item over, for work that must follow the pickup without a second visible queue entry. The queue also fires it for an entry it drops (clear() on a session stop), so a caller that must tell the two apart checks something of its own.
 - `onGranted` runs only when the core confirmed the grant, never for a refused attempt or a dropped entry.
 - A `messageId` given as a function is asked for the id when the entry reaches the front of the queue, never at enqueue.
-- Sessions arm the receipt gates at start (receipt-grants.ts). Arming again at enqueue covers grants fired outside a session, and the WRAM latch (next frame) still lands before the queue's readiness poll can execute: the arm-with-the-write pattern.
+- Sessions arm the receipt gates at start (apps/desktop/src/game/receipt-grants). Arming again at enqueue covers grants fired outside a session, and the WRAM latch (next frame) still lands before the queue's readiness poll can execute: the arm-with-the-write pattern.
 - Quiet receipts: a randomizer rupee, bomb or arrow skips its hold-up and message.
 - An npc check delivery is `assigned`: its itemId is the session's final answer for the check, never the giver's vanilla item, so the npc override seam must not substitute it again.
 - The readiness check is isCoreReady (core-ready): a live module and a running core.
 
-## game/delivery-execute.ts
+## packages/randomizer/src/delivery-execute
 
 - The one place a queued delivery reaches the core. It was split from delivery-queue.ts so the execute and refuse contract has a single home.
 - Outcomes: 'done' means the action fired (for a receipt grant, the core confirmed it). 'refused' means the receipt export reported status 0 and nothing was granted (gate not latched yet, or the player cannot receive despite the readiness probe); the queue must retry such an entry, never complete it. 'settled' means granted with nothing left to show (a quiet receipt), so the entry completes at once instead of waiting for a pickup the game never runs.
@@ -625,7 +621,7 @@ and a door to a header travel slot uses the portal.
 - The Assigned npc trigger bypasses the core's npc override seam because the queued item is already the host's final answer. The plain form replays the giver's vanilla grant, which an armed npc override table may substitute.
 - A bad onGranted listener never stalls the queue.
 
-## game/delivery-queue.ts
+## apps/desktop/src/game/delivery-queue/delivery-queue.ts
 
 - Manages item deliveries that must wait until the player can receive them. It polls WasmCanReceiveItem each frame and delivers the next item in FIFO order, firing callbacks so the UI can show pending and delivered state.
 - An in-flight delivery completes only once the game was seen busy (WasmCanReceiveItem false) and then ready again, so an item still incoming cannot resolve on the frame it executed. Resolving there, not at execute time, is what makes the simulator's trigger() wait for the pickup and item-get dialog to finish.
@@ -635,26 +631,26 @@ and a door to a header travel slot uses the portal.
 - A settled entry (quiet rupees) completes at once, since the game never goes busy for it.
 - clear() fires onComplete for every dropped entry, so a dropped delivery cannot leave the simulator's trigger() promise hanging.
 
-## game/delivery-queue.type.ts
+## packages/randomizer/src/delivery-queue/delivery-queue.type.ts
 
-- Moved to delivery-queue/delivery-queue.type.ts.
+- Moved to packages/randomizer/src/delivery-queue/delivery-queue.type.ts.
 - DeliveryEntry: `message` is the human-readable text in the queue indicator; `source` is 'cheat', 'randomizer', a player name and so on; `enqueuedAt` is the enqueue timestamp.
 - `refusals` counts the times the core synchronously refused the entry's receipt grant (status 0 from WasmGrantItemWithReceipt). A refused entry stays at the front and retries; it is never dropped and never completed as delivered.
 - `onComplete` fires once the game has fully consumed the delivery and is ready for the next item (WasmCanReceiveItem went false during the message or pickup, then back true), or on timeout. The simulator awaits it so trigger() paces the runner off real completion, not the synchronous flag write.
 - `onGranted` fires once, the moment the core confirms the grant. Never for a refused attempt and never for an entry removed or cleared before it executed, so it counts exactly the items that reached the player.
-- give_item `receiptExport` true routes the grant through WasmGrantItemWithReceipt (gated by kFeatures3_ReceiptExport), set by the randomizer path (delivery-api.ts). Absent or false keeps WasmCheatGiveItem: the cheats UI and the simulator run under the cheat and sim gates and must not silently move to a gate their sessions never arm.
+- give_item `receiptExport` true routes the grant through WasmGrantItemWithReceipt (gated by kFeatures3_ReceiptExport), set by the randomizer path (apps/desktop/src/game/delivery-api). Absent or false keeps WasmCheatGiveItem: the cheats UI and the simulator run under the cheat and sim gates and must not silently move to a gate their sessions never arm.
 - give_item `messageId` is an optional contextual receipt message id (RANDOMIZER_RECEIPT_MSG, or a raw dialogue message index) armed as a one-shot right before the grant. Omitted, the core derives a class default from the item id. Only meaningful with receiptExport.
-- give_item `messageOf` answers the message id when the entry reaches the front, for a line composed only then (a received item's line, server-delivery.ts). It is asked on every attempt, so a retry after a refusal gets the same id, and it wins over `messageId`.
+- give_item `messageOf` answers the message id when the entry reaches the front, for a line composed only then (a received item's line, apps/desktop/src/game/randomizer-client/server-delivery). It is asked on every attempt, so a retry after a refusal gets the same id, and it wins over `messageId`.
 - quiet_receipt: the rupees, bombs or arrows go straight to the wallet, bag or quiver (WasmGrantQuietReceipt), no hold-up and no message. When the core answers the receipt is not quiet (its option was turned off after queueing), `fallback`, the ordinary receipt, runs instead.
 - trigger_npc_check `assigned` true marks itemId as the host's final answer (the randomizer path), bypassing the npc override seam. Absent or false replays the giver's vanilla grant (the cheats UI passes the dataset's native item), which an armed npc override table may substitute. Its `messageId` has the same contract as give_item's.
 
-## game/dialog
+## packages/game-core/src/dialog
 
 - `active-alphabet`: glyph ids to text for the modern font, in the active language's alphabet,
   read the way the core reads it (the `Language` key of `/zelda3.ini`, `us` by default).
   Picture glyphs keep their bracketed token name so a row renderer can draw them from the glyph
   sheet. Extra glyphs a session wrote into the font's spare slots read as their own characters
-  (`extra-glyphs.ts`).
+  (`packages/game-core/src/session-dialogue/extra-glyphs`).
 - `dialog-bridge`: a per frame read of the dialog mirror from the UI bridge's animation frame
   loop; only a changed frame reaches the store. A closed gate reads as an inactive frame, so the
   host box stands down the moment the override is refused, and stopping the bridge does the same,
@@ -676,21 +672,21 @@ and a door to a header travel slot uses the portal.
   most rows; 16 and 17, 18 and 19 the text layer's signed horizontal and vertical scroll. Then
   3 rows of 40 cells of glyph, x, and width with the highlight span in the high nibble.
 
-## game/drop-overrides.ts
+## apps/desktop/src/game/drop-overrides
 
-- Arms the in-core key drop substitution table (core/game-hooks/drop_overrides.c), with the npc table's contract (npc-grant-overrides.ts): the write only records, the gate bit is requested alongside it, and it stays open only while the table has entries.
+- Arms the in-core key drop substitution table (core/game-hooks/drop_overrides.c), with the npc table's contract (apps/desktop/src/game/npc-grant-overrides): the write only records, the gate bit is requested alongside it, and it stays open only while the table has entries.
 - `messageId` is the pre-rendered contextual receipt line for this grant (session dialogue), or -1 to keep the core's item-class template. `fireId` is the host-assigned completion id reported when the entry substitutes, or -1 for none.
 - The item id indexes the 76-entry native grant tables, so an out-of-range id would corrupt the receipt and is refused, like the other override setters.
 - kFeatures3_DropOverrides is requested alongside the table write. The write itself is ungated (record only), but the gate must be requested then so it has latched into WRAM (SyncGateWords, next frame) by the time a drop applies the table.
 - Clearing empties the table, then closes the gate: the same double lock as clearItemOverrides.
 
-## game/dungeon-item-grants.ts
+## apps/desktop/src/game/dungeon-item-grants
 
 - The targeted dungeon item gate arms the in-core receipt seams (core/game-hooks/dungeon_item_grants.c), which redirect a key, big key, map or compass to the dungeon its assigned id names instead of the one the player stands in.
 - It has no table of its own: the target travels in the receive id, so every substitution table and the delivery export already carry it. The bit only tells the core those ids are live, which licenses the two redirected writes inside the receipt.
 - It is armed at session start and disarmed at stop, like the receipt gates and unlike the plan-scanned prize bit: an online session is handed an assigned item by the server at any moment, with no plan row behind it, so the seam must be open for the whole session.
 
-## game/edge-glow
+## packages/game-core/src/edge-glow
 
 A WebGL post process that fills the black bars around the game: a mirror pass reflects game
 pixels into the bars, progressive Gaussian blur passes soften the reflection, and a composite
@@ -700,13 +696,13 @@ Fullscreen quads are drawn as two triangles (six vertices). Without WebGL a 2D f
 the game canvas each frame and ignores every effect control, so the game still renders. A clean
 frame, when given, is uploaded separately and mirrored with its blue and red channels swapped.
 
-## game/enhanced-fallback.ts
+## packages/game-core/src/enhanced-fallback
 
 - The app-drawn HUD styles (Enhanced and Modern) need a 16:9 or wider display. There are two ways to lose one: narrow the ratio in settings, or narrow the window.
 - The settings screen owns the correction either way, because it alone holds the profile's settings and the toast queue. Both routes ask through this one event instead of each dropping the style and raising its own message: one rule, one wording, one toast id, so a player who trips it twice sees the notice replaced, not stacked.
 - requestEnhancedFallback asks the settings owner to drop back to the Original style and say why.
 
-## game/events
+## packages/game-data/src/events/events.constants.ts
 
 The bridge for `window.__onTransitionSettled` (`GameHook_ModuleFrameEnd` in
 `transition_events.c`). The core fires it once per frame on which a module or dungeon
@@ -718,7 +714,7 @@ cracked walls (4, 5, 9), `stairs` inter or intra room stairs (6, 8, `0x0E`, `0x1
 `entered` the player entering a gameplay module (submodule 0, in or out of a dungeon), and
 `other` any remaining submodule returning to 0.
 
-## game/extract-assets.worker.ts
+## apps/desktop/src/game/extract-assets-worker.ts
 
 - Runs the pure TS extraction pipeline off the UI thread (Buffer, crypto and fs are polyfilled by vite-plugin-node-polyfills). It handles asset compilation and per-language extraction. Inputs and outputs are plain bytes; Buffers are built inside the worker.
 - `failures` lists optional sources that failed. The base is still valid, and the UI surfaces them.
@@ -726,38 +722,38 @@ cracked walls (4, 5, 9), `stairs` inter or intra room stairs (6, 8, `0x0E`, `0x1
 - runMenuText reads the menu, credits and closing captions. The extractor copies these bodies into the blob without decoding them, so the studio reads them straight from the player's own file, off the UI thread because reaching them means parsing a whole ROM.
 - They are decoded through the ROM's own alphabet, never a requested one: reading these glyphs against the wrong language yields nonsense, not nothing. The caller is told which language answered and decides what to do.
 
-## game/flood/annotate-screen.ts
+## packages/navigation/src/flood/annotate-screen.ts
 
 - Derives ScreenAnnotations for one screen from the SAME game reads the simulator's discovery uses, so what the overlay draws is what the run acts on. Nothing here derives game facts again: doors (including cell locks), sprites with their key carrier markers, chests and room tags all arrive from the existing bridge queries.
-- Ways on and off the screen are NOT annotations. Those are crossings (lib/game/crossings), with their own producer and renderer. This file only orchestrates; mapping per family lives in `annotate/`.
-- Room header tags 0x01 to 0x13 are kill gates: the room's doors open when it is cleared (see sim kill triggers). The same range is KILL_GATE_TAG in packages/navigation/src/simulation/engine/discover.ts.
+- Ways on and off the screen are NOT annotations. Those are crossings (packages/navigation/src/crossings), with their own producer and renderer. This file only orchestrates; mapping per family lives in `annotate/`.
+- Room header tags 0x01 to 0x13 are kill gates: the room's doors open when it is cleared (see sim kill triggers). The same range is KILL_GATE_TAG in packages/navigation/src/simulation/engine/discover.
 - A chest is named by what it WILL yield: the vanilla duplicate rule swaps an already owned item for its alternate, so a save that owns the lamp must not be promised a Lamp when the run would deliver 5 Rupees. The item name IS the label, so the detail carries the slot instead (repeating the name renders "Lamp Lamp"); the slot tells two chests with the same item apart.
 - A big chest is its own kind: it is gated on the big key, so it must not read as an ordinary available check.
 - A big area's spawn table lists every screen's sprites, already resolved to their true screen, so one belonging to a neighbour is drawn when THAT screen is annotated.
 - Reachability marking runs last: the flood decides what is touchable, so it must run after every family has contributed.
 - Check progress is read off each annotation's own state. A second test once asked the completed set about the annotation's LABEL, which could never work: a chest's label is the item it yields, not a check's name. Whoever knows the check sets `state` (chests from the room's open bit, NPCs and standing items from the completed set by `checkId`), so the state is the whole answer.
 
-## game/flood/annotate/doors.ts
+## packages/navigation/src/flood/annotate/doors.ts
 
 - One door record gives one annotation, for doors that are a LOCK or a GATE. A door that is a way through to somewhere else is a crossing instead, so it does not come through here.
 - Doors that share a `kind` are told apart by their raw kDoorType (the throne push wall reads as 'normal'), and cell locks are not door table records at all.
 - THRONE_DOOR (0x14) is kDoorType_ThroneRoom, the push wall that needs the follower in tow. `followerReady` means the follower is in tow, so it will open.
 - `killGated` means the room's doors open by clearing it, so shutters there are the trap kind: they close behind the player and only reopen when the room is cleared.
 
-## game/flood/annotate/npc-checks.ts
+## packages/navigation/src/flood/annotate/npc-checks.ts
 
 - Names an NPC sprite as the CHECK it is. `npc 0x73` tells a reader nothing; the check's own name tells them what the run is standing next to. Sprite 0x73 spawns in two rooms and only one is a check, hence the room narrowing.
 - `checkId` is the identity; `name` is for drawing only.
 - It uses the SAME matcher the simulator triggers through. It once had its own copy of the rule, so when the simulator learned that a sprite type is not unique across the two worlds the widget would have gone on labelling the light world flute boy as the dark world stump, showing a check the run rightly refuses to take.
 
-## game/flood/annotate/reachability.ts
+## packages/navigation/src/flood/annotate/reachability
 
 - Marks an annotation `blocked` when the flood cannot walk to it. The Secret Passage forced this: the uncle stands in the corridor, the flood stops at him as it should, but the chest behind him was still listed as an available check.
 - A feature's own tile is often solid (a chest IS a wall tile, a door IS the doorway), so reachability is judged over the tiles AROUND it: if any tile within TOUCH (2) is reachable, the player can interact.
 - Screen wide facts (the kill trigger) carry a placeholder tile (0,0) because they describe the whole room, so reachability says nothing about them. Judging them would label every kill gate room unreachable because tile 0,0 is a wall.
 - PHYSICAL kinds' state means lock or physical position, not check progress. They keep their open or shut state (a shut door being unreachable is already implied) and gain an "unreachable" detail; checks flip to 'blocked' so the tally and the panel agree.
 
-## game/flood/annotate/sprites.ts
+## packages/navigation/src/flood/annotate/sprites.ts
 
 - One sprite gives one annotation. Key carriers come first (a lock's key, not scenery). A pull switch says which shutters it serves; the shutter is the reason the run walks to it.
 - Sprite_PullSwitch_bounce covers sprite types 0x04 to 0x07. PRINCESS_SPRITE (0x76) is the captive princess NPC; the throne gate waits on this follower.
@@ -765,19 +761,13 @@ cracked walls (4, 5, 9), `stairs` inter or intra room stairs (6, 8, `0x0E`, `0x1
 - The source note (overworld or room spawn) is not cosmetic: a sprite type is not unique across the two worlds (0x2e is both the flute boy and the stump), and only the overworld table's index (the screen) settles which it is.
 - A standing item is named by what it hands over, not 'item'; the simulator resolves the same id to decide the pickup, so both agree. A standing item IS a check, resolved from the same flag the pickup writes. Without its id the marker had no identity and always read as available, whatever the run had already collected.
 
-## game/flood/area-landings.ts
-
-- Where a crossing PUTS the player: the two answers `propagateArea` needs to seed the screen on the far side of a crossing. Both are pure lookups with no flood state of their own, kept out of flood-area so the propagation loop stays readable.
-- `roomLandingTile`: the DESTINATION room's own stair or walk boundary record leading back to `fromRoom` gives where the player lands. It mirrors `stairLandingTile` in simulator/room-exits.ts as a separate copy, because that file depends on the flood (through floodRoomRun) and importing it back would make the dependency circular.
-- `crossingLanding`: a border crossing puts the player on the adjacent screen, against its opposite wall, at the same position along the edge.
-
-## game/flood/area-seeds.ts
+## packages/navigation/src/flood/area-seeds.ts
 
 - Seed bookkeeping for a multi screen flood. `propagateArea` used to flood each screen EXACTLY ONCE with whatever seeds it held at that moment, then discard every crossing later discovered into it. A screen whose real way in is only found once a NEIGHBOUR has been flooded therefore kept the small extent of its first, partial seed set. That is why the first castle's four exterior quadrants each stopped at the first wall instead of joining up.
 - Seeds accumulate here instead, deduplicated by tile, so a screen can be run again with everything known about it so far. The caller decides whether a new seed is worth another run (the reachability test in `propagateArea`).
 - `add` returns false when that exact tile was already known. `list` returns every seed the screen has been handed so far, in arrival order.
 
-## game/flood/blockers.ts
+## packages/navigation/src/flood/blockers
 
 - Solid sprite blockers are the sprites that stop the BFS: tutorial guards 0x3F, barriers 0x40, the uncle 0x73, and 0x57. Everything else is walked through. Each stamps a 3x3 footprint so it seals a narrow passage without a diagonal gap.
 - 0x57 is the pair of statues flanking the sealed door in the south west desert. The ground under them reads as plain floor, so without them a sealed dungeon reads as open. Their removal (altar use, needs a later item) is NOT modelled yet, so they block for the whole run; revisit when the altar trigger exists.
@@ -788,7 +778,7 @@ cracked walls (4, 5, 9), `stairs` inter or intra room stairs (6, 8, `0x0E`, `0x1
 - The occupied screen ALSO reads live sprite positions: the spawn table only says where a sprite STARTED, and a patrolling guard blocks where it stands now. This is additive, not a replacement, so a stationary guard is stamped twice (harmless) and the other sub screens of a big area keep their coverage.
 - Indoors the uncle is stamped as wall into EVERY layer (the raw grid aliases layer 0, so a dual layer room would flood through him on layer 1). The loaded room uses his LIVE position (he walks); other rooms use his spawn.
 
-## game/flood/bombed-walls.ts
+## packages/navigation/src/flood/bombed-walls
 
 - Walls the run has blown open. `Bomb_CheckForDestructibles` (dungeon.c:5170) is the ground truth: an interior attr of `0xF0 | j` marks "destructible door slot `j` is here", opened when that slot's type masks to 0x28, 0x2A or 0x2E. The attr appears on BOTH faces of the wall (the village well has 0xF0 at rows 37 to 38 and 0xF8 at rows 27 to 28, eight rows of wall between).
 - A blast radius is the wrong model: it leaves the wall's interior solid. A blast PIERCES a corridor the marker's width straight through to the floor on the far side. The carve is conservative: plain wall and door markers only, one axis, the marker's width, and only if it reaches open floor within MAX_WALL_DEPTH (16); deeper is rock, not a wall, and a tunnel that never surfaces is discarded.
@@ -798,7 +788,7 @@ cracked walls (4, 5, 9), `stairs` inter or intra room stairs (6, 8, `0x0E`, `0x1
 - Blast seeds are kept per room and carved at stamp time, because the carve needs the grids. Opened cells are kept so `isBombed` answers after the fact. Every recorded blast is opened in every layer on the way out of a grid build.
 - The registry is cleared between runs so one run's blasts never leak into the next.
 
-## game/flood/flood-area.ts
+## apps/desktop/src/game/flood/flood-area
 
 - THE flood, for every caller (widget and simulator), so the widget can be trusted to report what the simulator sees. `floodOneScreen` is the single screen unit; `propagateArea` chains it across a big screen's sub screens. The ONLY thing a caller varies is where the walk starts: same grids, same options, same numbers for the same seeds.
 - `floodOneScreen` is null when the screen's grid cannot be built.
@@ -811,27 +801,22 @@ cracked walls (4, 5, 9), `stairs` inter or intra room stairs (6, 8, `0x0E`, `0x1
 - The primary starts at the player's position; every other screen starts on the first crossing that reached it. The REST of the accumulated seeds ride along either way. Only the screen the player stands in can claim the live position.
 - Room stair and walk boundary ids (at or above STAIR_ID_BASE) name a room to grow into; anything below leaves the indoor graph and is reported as an exit, not propagated.
 
-## game/flood/flood-options.ts
+## packages/navigation/src/flood/flood-options.ts
 
 - The one place FloodFillOptions gets assembled. Five call sites used to build it by hand and no two passed the same set. The engine's own flood omitted entrances, the exit screen map, blockers AND the start layer, while the offline dumper hard coded an interior context and an EMPTY inventory. Same core BFS, four different answers.
 - Everything the BFS can use is filled in by default; a caller that wants less must say so in the FloodRequest, which makes an omission a visible decision.
 - FloodRequest fields: `items` are the traversal tokens the player holds (lift.N, boots, flippers, hookshot, hammer). An omitted `startPos` lets the BFS pick a start. `atPlayer` is true when startPos is the player's real position in the loaded screen. `entrances: []` floods geometry only. `extraSeeds` are extra BFS seeds (propagating in from an adjacent screen, ledge landings). `quadrantBounds` restricts the BFS to a sub region (a 2x2 room's quadrant).
 - `grids` must come from getScreenGrids so the blocker stamping and tile context are already correct.
-- Indoor blockers are stamped into the grids themselves (blockers.ts); outdoors they stay dynamic so the overlay can tell them apart.
+- Indoor blockers are stamped into the grids themselves (packages/navigation/src/flood/blockers); outdoors they stay dynamic so the overlay can tell them apart.
 
-## game/flood/grid-convert.ts
-
-- The one converter from a flat buffer to a 64 by 64 grid. The WASM attr table exports hand back a flat row major Uint8Array (GRID_SIZE squared); every consumer needs `number[][]`. Five separate copies of this loop had drifted apart (one sliced, one indexed, one preallocated): import this instead of writing a sixth.
-- The all zero grid is the fallback when an attr table cannot be built.
-
-## game/flood/overworld-entrances.ts
+## packages/navigation/src/flood/overworld-entrances
 
 - THE overworld entrance list: every door and pit on the surface, each on the 64 by 64 tile grid of the sub screen it physically sits on.
 - Merged fall hole ids start at FALL_HOLE_ID_BASE (200), so a hole never collides with a door id.
 - A fall hole's recorded row is offset by minus 8 (FALL_HOLE_ROW_OFFSET), which is added back here.
 - A 2x2 group records its entrances on the HEAD area, in 128 by 128 coordinates; SUB_SCREEN (64) splits those into the four quarters.
 
-## game/flood/room-entrances.ts
+## packages/navigation/src/flood/room-entrances/room-entrances.ts
 
 - THE indoor entrance list: every way into `roomId`, at the tile the player arrives on. The widget and the simulator each built this separately. The widget refined an overworld door entrance's tile to the real door opening but had no follower gate and could only read the LIVE room; the simulator gated on the follower and could address any room but placed those entrances on the raw spawn tile. Both halves live here now, so a seed list is the same list whoever asks.
 - THRONE_DOOR (0x14) is kDoorType_ThroneRoom, whose walk through boundary needs the follower in tow. The throne room's push wall opens only with the follower, so rooms whose door table carries a ThroneRoom record gate their boundaries on the follower.
@@ -842,46 +827,46 @@ cracked walls (4, 5, 9), `stairs` inter or intra room stairs (6, 8, `0x0E`, `0x1
 - Inter room stairs and walk through boundaries can be read for any room: the loaded room reads its live tables, any other room rebuilds its own.
 - When the entrance spawn or room tables are unavailable the whole list is empty.
 
-## game/flood/screen-grids.ts
+## packages/navigation/src/flood/screen-grids.ts
 
 - THE grid source for every flood (widget, simulator, offline dumper). Acquisition varies by LOCATION, not by caller: the occupied room has live tables (runtime door state, staircase kind, tile context); any other room is rebuilt from ROM data by address.
-- Blocker footprints are stamped here into every layer so no consumer can forget them (see blockers.ts).
+- Blocker footprints are stamped here into every layer so no consumer can forget them (see packages/navigation/src/flood/blockers).
 - The occupied room is READ from the live tables. A rebuild throws away runtime state (opened doorway transit tiles, a lifted pot, a pushed block), so the live room must never be rebuilt. Whether the room is live is settled before any read, because it picks where every grid comes from.
 - Remote rooms build BOTH layers by address. Split level rooms (the castle basements) keep their walkable floor on BG1 and would flood as solid otherwise.
 - The dual layer flood reads the layer grids, not rawAttrGrid, so every grid is stamped. Walls the run has already blown open read as floor from then on.
 
-## game/flood/screen-id.ts
+## packages/navigation/src/flood/screen-id.ts
 
 - The canonical screen id for an OVERWORLD screen index, such as `lw-2c` or `dw-2c`.
 - Overworld only, on purpose. An indoor screen id is not derivable from the room number (indoor ids are keyed by `palaceIndex:roomIndex` and look like `hc-0x80`), so a synthesized `room-080` matches nothing in SCREEN_BY_ID, which silently cost the widget every indoor exit. Indoor callers must use the DETECTED screen's own id.
 
-## game/flood/start-layer.ts
+## packages/navigation/src/flood/start-layer.ts
 
 - Which background layer a flood starts on. This was derived in different ways: the widget and dumper trusted the live `wasmGetLinkLayer()`, the simulator ran a stair, door and floor heuristic, and the engine's own flood derived it not at all, silently falling back to layer 0. In a split level room that made the flood gating every chest, door and NPC target start on the wrong layer while the exit flood started on the right one.
 - One rule, most authoritative signal first: (1) the live layer bit, when the flood starts where the player stands in the loaded room; (2) arrival ON an inter room stair, which deposits the player on their own layer; (3) arrival through a door, where position slots 6 to 11 are the lower page and the game keeps the player's level bit across a door transition; (4) only layer 1 has floor near the landing (a BG1 border strip).
 - DOOR_NEAR (8) is how far from the start tile a door still counts as the one the player came through.
 
-## game/flood/world-origin.ts
+## packages/navigation/src/flood/world-origin
 
 - Screen and room world pixel origins. Both formulas were derived again in eight places and disagreed in one: within a single widget run the grid origin came from the player's live position while the entrance origin came from the screen index, so they only matched while the game stood in the screen being flooded. Deriving both from the index makes them agree for remote screens too.
 - The overworld has 8 screens per row, indoor rooms 16 per row, each 512 px square. Tiles are 8 px.
 - A spawn records the player sprite's TOP LEFT, so the tile under his feet is one column right and two rows down (his hitbox is the bottom 2x2 of the 16x24 sprite). The widget applied this offset and the dumper did not, so the same fall hole was reported on two different tiles.
 - `screenOriginFor` is the ONE place that decides "indoors, use the page the player stands on; outdoors, use the screen index". Five call sites used to derive this inline (the dumper, the sim run flag, the observation builder, the overlay draw context and the tile inspector). A drifted origin silently draws every marker on the wrong screen.
 
-## game/follower-state.ts
+## packages/game-core/src/follower-state.ts
 
 - Who follows the player, read from live game state. `follower_indicator` (RAM 0xF3CC) is the game's own tagalong id, mirrored into the flag snapshot's progress buffer (slot 13) by state_queries.c. It is what the game believes now, not a flag the simulator set when it triggered the rescue, so a run resumed from a save state, or a state walked into by hand, reports the truth.
 - Centralised because two places gate on it (the throne room push wall's annotation and its walk-through boundary), and both had the buffer index and the id comparison inline.
 - The game has many tagalong ids (old man, blind maiden, the frog). Only the rescued princess (id 1) gates traversal today, so only she is named. 0 is nobody following.
 - isFollowerActive is true when the princess is in tow right now, which is the throne room gate.
 
-## game/foreign-icons.ts
+## apps/desktop/src/game/foreign-icons
 
 - The multiworld pool icons in the game itself: the binary the sprite extraction emits beside the PNGs (foreign-icons.4bpp, one 4bpp picture per pool icon, then the icons' own palette, which the core keeps in a private bank only the icons read).
 - It is handed to the core when an online session arms its scouted placement, written to MEMFS and applied with WasmApplyForeignIconsFile, the upgrade-icons pattern.
 - The core holds another player's item up with the icon of that player's game under kFeatures5_ApOnline. A set extracted before the binary existed, or a core without the export, leaves the plain sentinel and its jar in place.
 
-## game/foreign-item-id.ts
+## packages/randomizer/src/foreign-items/foreign-item-id.ts
 
 - The core's foreign item sentinel (foreign_item.c) is the id an override arms at a location whose item belongs to another player in a multiworld.
 - The plan carries the mirrored number (foreign-item-sentinel.ts); a setter asks the core itself, so a core that disagrees refuses the arm instead of taking an id it would read as something else. A core built before the export existed answers with the mirrored number.
@@ -889,17 +874,17 @@ cracked walls (4, 5, 9), `stairs` inter or intra room stairs (6, 8, `0x0E`, `0x1
 - An override setter may arm a native grant, the foreign sentinel, or one of its icon ids when the core knows them. The core refuses those itself unless kFeatures5_ApOnline is set, so outside an online session they reach exactly the code they reached before.
 - coreHasForeignIcons is no longer exported (nothing imported it).
 
-## game/foreign-item-sentinel.ts
+## packages/randomizer/src/foreign-items/foreign-item-sentinel.ts
 
 - The foreign item sentinel as the core defines it (foreign_item.c FOREIGN_ITEM_ID), mirrored so a plan can carry it without a running core. apps/desktop/tests/randomizer/ap-online-core.keep.test.ts parses the C source and fails the moment the two disagree.
 - The icon ids are the same item held up with a game icon: id FOREIGN_ICON_FIRST_ID plus n shows picture n of foreign-icons.4bpp (FOREIGN_ICON_FILES order). Mirrored from the core's FOREIGN_ICON_FIRST and FOREIGN_ICON_LAST the same way.
 - isForeignIconId moved to is-foreign-icon-id.ts, so the data file holds data only.
 
-## game/fps.ts
+## packages/game-core/src/fps.ts
 
 - Reads the current frame rate from the running WASM module; 0 when there is none.
 
-## game/gate-word-5.ts
+## apps/desktop/src/game/gate-word-5
 
 - The one writer of gate word 5 (features.h kFeatures5_*). Four owners share the word: the capacity bonus (one bit, armed by a seed), the story fields (armed by the settings, or by a seed's own choices), the online bits (armed by a multiworld session for its lifetime) and the quiet receipt bits (the settings, pushed with the rest of the live settings). Each owner hands its part here and the word is written whole, so none can clear another's bits with a write of its own.
 - AP_ONLINE_BIT is kFeatures5_ApOnline: the foreign item sentinel is a grant id.
@@ -912,17 +897,17 @@ cracked walls (4, 5, 9), `stairs` inter or intra room stairs (6, 8, `0x0E`, `0x1
 - reassertGateWord5 pushes the word again after anything that clobbers WRAM (a save state load).
 - gateWord5Now is what the composer would write now, for tests and the log.
 
-## game/gear-icons.ts
+## apps/desktop/src/game/gear-icons
 
 - The in-game gear pictures: a 1024 B binary the sprite extraction emits beside the PNGs (gear-icons.4bpp, one 4bpp picture per affected receipt id).
 - It is handed to the core when a randomizer session arms, written to MEMFS and applied with WasmApplyGearIconsFile, the upgrade-icons pattern.
 - The core draws those tiles for a substituted world blade or shield under kFeatures3_GearArt, so a shelf shows the item it is selling instead of the gear the player carries. A set extracted before the binary existed, or no running module, leaves the vanilla art in place.
 
-## game/gear-ownership.ts
+## apps/desktop/src/game/gear-ownership
 
 - The highest gear tier ever seen, per profile and per save slot: the pause menu's high-water mark.
 - The gear screen lets the player drop to a weaker blade for a challenge run and climb back, so what is selectable cannot be read off the live equipment (that only says what is worn now). It must be the maximum ever observed, and the save file has nowhere to keep it: every byte already means something, so writing there would corrupt a cartridge save. It lives in host storage beside the profile's other JSON, invisible to the core and lost only by deleting the profile.
-- Observation only raises the record; nothing ever writes a tier back. The observer lives in ui-bridge.ts (the one place the equipment is decoded every frame) and the profile key is set from lifecycle.ts, where a profile is first known and where a teardown drops it. Both are explicit calls, not a module-level subscription: a record that silently depends on some view having imported the module is empty exactly when the menu asks for it.
+- Observation only raises the record; nothing ever writes a tier back. The observer lives in apps/desktop/src/game/ui-bridge (the one place the equipment is decoded every frame) and the profile key is set from apps/desktop/src/game/lifecycle, where a profile is first known and where a teardown drops it. Both are explicit calls, not a module-level subscription: a record that silently depends on some view having imported the module is empty exactly when the menu asks for it.
 - Known limitation: one mark per profile, not per in-game save file. The stored shape is keyed by save file, but the slot is pinned to '0' because the core exports no selected-file index (ui_state.c carries none, and neither does any Wasm* query). So two in-game files in one profile share one mark, and a fresh file beside a finished one can show its gear as already seen. That is a cosmetic over-count in one menu, never a save write, which is why it is accepted instead of guessed at. Lifting it means exporting the file index from the core first; the slot key is then the only line that changes.
 - One mark per ladder. The sword, shield and mail marks keep their own tier; `bow` keeps the highest arrow type seen (0 plain, 1 silver) instead of the raw register, because the register's other half is ammunition on hand, which rises and falls with every shot.
 - The whole UI state is read, not only its equipment block: three marks live there and the fourth is an inventory byte, which keeps the arrow mark on the same clock. It is recorded every frame the state moves, whether or not the pause menu was opened.
@@ -931,7 +916,7 @@ cracked walls (4, 5, 9), `stairs` inter or intra room stairs (6, 8, `0x0E`, `0x1
 - initGearOwnership is re-entrant: a repeated call for the loaded profile does nothing, so the boot path and the observer can both call it. Null (a teardown, or a run with no profile) drops the record, which stops one profile's mark being read or written under the next. A profile swap during the read wins; the stale answer is dropped.
 - Observations that land before the stored record are held, not applied: writing while the record is still the empty placeholder would persist only what is worn this instant and erase a higher mark from an earlier session.
 
-## game/haptic-polling.ts
+## packages/game-core/src/haptic-polling
 
 - Frame-by-frame detection of game state changes for haptics. It runs inside the ui-bridge rAF loop and detects the dash (periodic pulses), state transitions (falling, landing, death), spin attack release, and health decreases as a backup if the C hook misses.
 - PLAYER_STATE values are the player handler states from player.h.
@@ -941,7 +926,7 @@ cracked walls (4, 5, 9), `stairs` inter or intra room stairs (6, 8, `0x0E`, `0x1
 - Main module 18 is game over.
 - The unused write-only `prevIsRunning` field was dropped.
 
-## game/host-menu.ts
+## packages/game-core/src/host-menu
 
 - The app-facing facade over the six WasmHost* exports for the host-owned pause menu.
 - The takeover is wanted state, not a command. Like WasmSetHudHidden, the request outlives the core: a fresh boot starts with it clear, and a save state load can run the C teardown and drop it. So it is remembered and re-asserted on the frame the module starts running, and whenever the core is seen to have let go.
@@ -955,18 +940,18 @@ cracked walls (4, 5, 9), `stairs` inter or intra room stairs (6, 8, `0x0E`, `0x1
 - reconcileHostMenu chases two drifts and no others: the core letting go of a takeover still wanted (a save state load runs the teardown), and the register holding something other than the last write while the takeover is in force.
 - setGear writes one ladder. `tier` is the ladder's own rung: a gear tier for the first three, the arrow type (0 plain, 1 silver) for the bow. The C side reads the launcher register's live value and puts the ammunition half back, the only place that half can be read without racing the frame.
 - resetHostMenu is module private: a fresh core owns nothing, so the mirror is dropped across a profile swap. Only the boot subscription can know a swap happened, so exposing it would only offer a way to desync the mirror.
-- On the frame the module starts running, the subscription does two jobs. A takeover armed from settings before the module existed is swallowed by the bridge's running guard (as an armed host gate once was, see bridge/host-gates.ts reassertHostGates), so the arming is replayed. A boot under a different profile is a different core, settings and save, so the previous profile's mirror is dropped first; otherwise its equipped item would be pushed into a core that never agreed to it. lifecycle sets the profile id before the status, so the id read is already the new one. Nothing re-arms by hand: control-scheme-store.refreshControlSettings calls setTakeover again with the new profile's answer.
+- On the frame the module starts running, the subscription does two jobs. A takeover armed from settings before the module existed is swallowed by the bridge's running guard (as an armed host gate once was, see packages/game-core/src/bridge/host-gates reassertHostGates), so the arming is replayed. A boot under a different profile is a different core, settings and save, so the previous profile's mirror is dropped first; otherwise its equipped item would be pushed into a core that never agreed to it. lifecycle sets the profile id before the status, so the id read is already the new one. Nothing re-arms by hand: control-scheme-store.refreshControlSettings calls setTakeover again with the new profile's answer.
 - initHostMenu is called from lifecycle.startGame and deliberately not run on import. A module that subscribes because something imported it runs at whatever point the bundler evaluates it; through the wasm-bridge re-export cycle that was before subscribeGameState existed ("Cannot access 'subscribeGameState' before initialization", bundled builds only; native ESM in dev ordered the cycle the other way and hid it).
 - It is re-entrant and stays installed for the renderer's life: subscribeGameState replays the current state a microtask later, so a call after the status is already 'running' still sees that boot, and the listener covers every later boot and teardown.
 
-## game/host-subscriptions.ts
+## apps/desktop/src/game/host-subscriptions
 
 - The host-side records and subscriptions a running core feeds, started and stopped with it.
 - Each is an explicit call, never a subscription at import time: host-menu used to subscribe on import, which the bundled build evaluated inside the wasm-bridge re-export cycle and threw on. They start after the module is set and the live flags are re-asserted, and before the UI bridge takes its first reading.
 - Start keys the gear record to the profile (the ui-bridge observer re-checks the id on every reading, but the record must point at the right file before the first lands), installs the host menu's boot watcher (it replays the current state, so it still catches this boot), and attaches the music debugger to the core's sound and music traces.
 - Stop drops the gear record, which is keyed by profile.
 
-## game/hud-countdown-track.ts
+## packages/hud/src/hud-countdown-track
 
 - Follows the game's HUD countdown across frames. The game exports the seconds left and the frames left inside the current second, never the countdown's length, so the first value seen when a countdown starts stands for the whole of it.
 - The game spends 62 frames on one counted second.
@@ -976,21 +961,11 @@ cracked walls (4, 5, 9), `stairs` inter or intra room stairs (6, 8, `0x0E`, `0x1
 - A countdown starts when the value comes on, or when it rises while one is running.
 - CountdownTrack: `total` is the seconds it started from, `totalFrames` the frames it had to run at the start, `remaining` the whole seconds left, `fractionLeft` the share still to run (1 down to 0).
 
-## game/index.ts
+## apps/desktop/src/game/index.ts
 
-- The public API of lib/game, re-exporting from every game module.
+- The public API of apps/desktop/src/game, re-exporting from every game module.
 
-## game/instantiate-wasm.ts
-
-The WASM instantiation override that avoids `WebAssembly.instantiateStreaming`. That path
-crashes the Electron renderer (0xC0000005) while compiling this module, which leaves the game
-black the moment it starts. It was seen both over http (dev) and file (the built app) on recent
-Chromium, so the non-streaming `WebAssembly.instantiate` is always used. The background warmup
-usually has the module fetched and compiled already: when a cached compiled module exists it is
-instantiated straight from it, skipping fetch and compile. Otherwise the bytes are fetched (also
-cached by the warmup) and compiled here.
-
-## game/item-power.ts
+## apps/desktop/src/game/item-power
 
 - Item power arms gate word 4 (features.h kFeatures4_*), the word that says how helpful the items are. ITEM_POWER_BIT must stay in lockstep with that enum.
 - Every bit is a divergence from the unmodified game: an all-clear word is the game as shipped, so clearing the word is a complete disarm.
@@ -998,10 +973,10 @@ cached by the warmup) and compiled here.
 - Nothing else in the app writes word 4, so a session owns it and writes the whole word, never a masked update.
 - The dark-room lights live in the same word and are OR'd in here, because two writers of a whole word would each clear the other's half. Their bits are derived in dark-room-lights.ts; this module only writes.
 - The wish ponds' plan bit (core/game-hooks/wish_pond_plan.c) sits in the same word. It is the only bit that is not a setting, so the last settings word is kept and re-written whenever the latch moves.
-- wish-pond-plan.ts raises and drops the plan bit around its WasmArmWishPondPlan / WasmClearWishPondPlan calls (same contract as the word-3 session gates), so both waters consult a rung table only while one is loaded.
+- apps/desktop/src/game/wish-pond-plan raises and drops the plan bit around its WasmArmWishPondPlan / WasmClearWishPondPlan calls (same contract as the word-3 session gates), so both waters consult a rung table only while one is loaded.
 - The write is guarded like every gate-word write: a core built before word 4 carried bits has no export to call.
 
-## game/lifecycle.ts
+## apps/desktop/src/game/lifecycle
 
 - A custom player sprite (.zspr) is staged for the next boot in MEMFS, where ApplyCustomLinkGraphics reads it.
 - The auto-save config is set before game start and read again at stop (save on quit, pruning).
@@ -1023,19 +998,19 @@ cached by the warmup) and compiled here.
 - Host subscriptions (gear record, host pause menu watcher, music debugger) start before the UI bridge takes its first reading.
 - The WASM crash guard arms 200 ms after boot, and only if no newer start began in the meantime.
 
-## game/live-game-states.ts
+## packages/game-core/src/live-game-states.ts
 
 - Reads the live flag snapshot and hands it to the state registry. It is split from active-states.ts so the rules stay pure (unit-testable with a plain object) while the WASM read lives here.
 - Two sources make one list: SRAM progress (follower, story beats, keys) and live player-state bytes (what the player is doing, named progress bits).
 
-## game/live-settings-dialog.ts
+## apps/desktop/src/game/live-settings-dialog.ts
 
 - The dialog half of a live settings push: pacing values, the native box hide, the two highlight colours of randomizer messages and the quiet receipt bits (gate word 5, which owns its own reassert after a load).
 - All are host-side requests the core reconciles against its gates every frame, so they are pushed at boot, on every settings change and again after a save-state load, like the HUD hides.
 - Each ccall is guarded on its own because a core not rebuilt yet lacks the export, and one missing export must not skip the others.
 - After a state load the core itself keeps the native box up until the next message (WasmDialogMarkStale).
 
-## game/live-settings-feature-words.ts
+## packages/game-core/src/live-settings-feature-words.ts
 
 - Builds the two extra bitmask words (features1/features2): the split bug-fix toggles from the generated registry plus the hand-authored features2 bits. Every id goes through the Vanilla Safe resolver first, so a parity-affecting bit is dropped before it is packed.
 - The hand-authored features2 bits start at bit 24 (kFeatures2_WidescreenPlayArea, kFeatures2_WidescreenIdleAI, kFeatures2_TitleOverride, kFeatures2_HostMenu, kFeatures2_ModernControls, kFeatures2_AllowDiving = bits 24 to 29). The generated bug-fix catalog (BUNDLE_FIXES) owns features2 from bit 0 upward. Values must match features.h; bug-fix bits must match features_bugfixes.h.
@@ -1049,7 +1024,7 @@ cached by the warmup) and compiled here.
 - modernControls implies hostMenu: the host writes hud_cur_item with a new-style item id (1 to 24), and the HostMenu gate is what makes Hud_LookupInventoryItem read the new-style table at all. Granting the bit only permits the takeover; the host still asks for it (WasmHostMenuSetTakeover).
 - The extra dungeon's water room cannot be crossed as designed without the dive, so turning the dungeon on turns diving on. Neither answers to Vanilla Safe: added content is already a departure from the cartridge, and stripping the ability out from under it would leave the room unplayable.
 
-## game/live-settings-flags.ts
+## packages/game-core/src/live-settings-flags
 
 - FEATURE_FLAGS values must match the features.h enum. The PPU render flags live in live-settings-ppu-flags.ts.
 - Bits 2 (SwitchLR), 32768 (SwitchLRLimit) and 134217728 (InventoryReorder) are still defined in the core and left out on purpose: their settings were removed, so nothing can set them again, and listing them would invite a new driver.
@@ -1061,22 +1036,22 @@ cached by the warmup) and compiled here.
 - Vanilla Safe forces every cheat off regardless of cheatsEnabled. Cheats are the textbook divergence from stock behaviour, so they get no exemption.
 - Session gates share one contract: the owning module flips the gate and re-pushes word 3 around its WasmSet*/WasmClear* calls, so the gate is open only while there is something to apply. A stale table from an earlier session can never silently start substituting items again because an unrelated setting changed (see the "leftover override table" note in core/game-hooks/item_overrides.c).
   - itemOverrides: randomizer.ts, around WasmSetChestSlotOverride / WasmClearItemOverrides. No user setting yet; the bit has no other honest driver.
-  - npcOverrides: npc-grant-overrides.ts, around WasmSetNpcGrantOverride / WasmClearNpcGrantOverrides.
-  - dropOverrides: drop-overrides.ts, key-drop substitution, around WasmSetDropOverride / WasmClearDropOverrides.
-  - standingOverrides: standing-overrides.ts, standing-prize substitution.
-  - scriptedGrants: scripted-grant-overrides.ts; the upgrade pond, the cave bat and the prize minigame slots (core/game-hooks/scripted_grants.c).
-  - shopOverrides: shop-overrides.ts, shelf-slot substitution.
+  - npcOverrides: apps/desktop/src/game/npc-grant-overrides, around WasmSetNpcGrantOverride / WasmClearNpcGrantOverrides.
+  - dropOverrides: apps/desktop/src/game/drop-overrides, key-drop substitution, around WasmSetDropOverride / WasmClearDropOverrides.
+  - standingOverrides: apps/desktop/src/game/standing-overrides, standing-prize substitution.
+  - scriptedGrants: apps/desktop/src/game/scripted-grant-overrides; the upgrade pond, the cave bat and the prize minigame slots (core/game-hooks/scripted_grants.c).
+  - shopOverrides: apps/desktop/src/game/shop-overrides, shelf-slot substitution.
   - capacityProfile: starting tiers, tier caps and the wallet ladder (core/game-hooks/capacity_profile.c), open only while a profile is armed.
   - prizeShuffle: armed when the placement shuffles dungeon prizes (core/game-hooks/prize_grants.c), so the boss rooms consult the hook-owned "reward claimed" bit only while such a placement is live; the rising crystal banks an assigned crystal.
   - pondPlan: pond-plan.ts, the rupee pond's prices, throws and shown gems (core/game-hooks/pond_plan.c), around WasmSetPondThrow / WasmClearPondPlan.
   - gearArt: gear-icons.ts, extracted gear pictures (core/game-hooks/gear_icon.c), around WasmApplyGearIconsFile / WasmClearGearIcons, so the world draw seams repaint a blade or shield (in its own colours) only while a file is loaded.
   - dungeonItemGrants: another dungeon's key, big key, map or compass (core/game-hooks/dungeon_item_grants.c). Armed for the whole life of a session, not off the plan alone, because an online session receives an assigned item from the server at any moment with no plan row behind it.
-  - retroBow: retro-bow.ts, the bow fed rupees instead of arrows (core/game-hooks/retro_bow.c), so the shot branch leaves its vendored expression only while costs are armed.
-  - receiptGrants: randomizer sessions flip it on at start and off at stop (armReceiptGates / disarmReceiptGates in receipt-grants.ts), so a native chest-override receipt finds its message gate latched at the first chest. delivery-api.ts also flips it on when it enqueues a receipt-flow grant outside a session. The queue paces off WasmCanReceiveItem, so the gate has latched into WRAM (SyncGateWords, next frame) before the grant fires. The C side refuses every grant the instant Vanilla Safe strips the bit.
+  - retroBow: apps/desktop/src/game/retro-bow, the bow fed rupees instead of arrows (core/game-hooks/retro_bow.c), so the shot branch leaves its vendored expression only while costs are armed.
+  - receiptGrants: randomizer sessions flip it on at start and off at stop (armReceiptGates / disarmReceiptGates in apps/desktop/src/game/receipt-grants), so a native chest-override receipt finds its message gate latched at the first chest. apps/desktop/src/game/delivery-api also flips it on when it enqueues a receipt-flow grant outside a session. The queue paces off WasmCanReceiveItem, so the gate has latched into WRAM (SyncGateWords, next frame) before the grant fires. The C side refuses every grant the instant Vanilla Safe strips the bit.
 - Every substitution gate above is a parity-affecting divergence, stripped under Vanilla Safe here and by the C-side kGateWordParityMask in zelda_rtl.c. The JS strip is kept so this side stays honest instead of relying on the C mask alone.
 - TrackerNotifications' host call never changes emulated state, but its call site (GameHook_NotifyItemReceived, from Link_ReceiveItem) is woven into vendored player.c, so it is in the C parity mask and is stripped here too. The tracker's item log and the simulator's onItemReceived observation depend on it and neither has a setting, so it is on whenever Vanilla Safe allows.
-- The player sprite override follows whether a sprite is configured, the same as the INI's LinkGraphics key (settings.ts serializeToIni).
-- The HUD override follows whether the enhanced overlay hides any native part (live-settings.ts computes the identical hideHud/hidePause conditions for WasmSetHudHidden / WasmSetPauseHidden). Stripping it under Vanilla Safe is what restores the native HUD and pause menu mid-session (HudOverride_Restore in core/game-hooks/hud_override.c, called the instant the bit clears in WRAM). The enhanced message box hides the native one through the same override, in either HUD mode.
+- The player sprite override follows whether a sprite is configured, the same as the INI's LinkGraphics key (packages/game-core/src/settings serializeToIni).
+- The HUD override follows whether the enhanced overlay hides any native part (apps/desktop/src/game/live-settings computes the identical hideHud/hidePause conditions for WasmSetHudHidden / WasmSetPauseHidden). Stripping it under Vanilla Safe is what restores the native HUD and pause menu mid-session (HudOverride_Restore in core/game-hooks/hud_override.c, called the instant the bit clears in WRAM). The enhanced message box hides the native one through the same override, in either HUD mode.
 - One gate (dialogControls) covers speed, hold-A and B-fill; the values ride WasmSetDialogPacing (live-settings-dialog.ts).
 - Host-data gates feed host systems (tracker, navigation, renderer, overlay UI, delivery queue), not the game, so none is a parity concern and none is stripped by Vanilla Safe. They are still gated: a host feature reading emulated state answers to a switch, and an export nobody enabled returns nothing.
 - Navigation data is dev-surface data, so it needs both the developer master and its own toggle. The two conditions resolve here instead of at 30-odd call sites.
@@ -1089,22 +1064,22 @@ cached by the warmup) and compiled here.
 - widescreenSprites and widescreenVisualFixes also need a view past the original picture, wider or taller, which is not part of the requires graph. It is what the view renders: a ratio of "auto" on a 4:3 display is not an extended view.
 - Off-screen enemy behaviour is three-way: the pause bit answers to the 'paused' mode, 'idle' carries its own features2 bit (buildFeatureWords), and 'acting' sets neither.
 - secondaryItemSlots is deliberately never armed. It belongs to the abandoned lane design: with it on, GetCurrentItemButtonIndex (hud.c) reports slot 1 whenever X is held and player.c fires hud_cur_item_x while faking a Y press, so under the modern scheme (whose map button is X) the map button fires an item. The lane-free design drives the single hud_cur_item register through WasmHostSetActiveItem. The C enum entry stays defined because an INI key still parses it.
-- The unregistered quality-of-life flags (the snesrev set, see feature-registry.ts) are not FeatureDefs yet, so the resolver cannot reach them and they are gated inline. The C-side kGateWordParityMask covers every one of them regardless.
+- The unregistered quality-of-life flags (the snesrev set, see packages/features/src/feature-registry) are not FeatureDefs yet, so the resolver cannot reach them and they are gated inline. The C-side kGateWordParityMask covers every one of them regardless.
 - Per-group volume is an explicit opt-in. Off, the DSP mix stays bit-exact to the original and the Music/SFX sliders are inert.
 - Haptics and developer tools are not exempt from Vanilla Safe even though both only observe: the test is whether a feature touches vendored game code at all. Haptics has GameHook_Notify* call sites across ancilla.c, player.c, sprite.c and overworld.c; developer tools has GameHook_ModuleFrameEnd in misc.c. "Purely observational" was tried as the exemption test and left two features wrongly exempt.
 - Bit 31 makes a JS bitwise OR negative, so the features word is handed over as an unsigned value. Word 3 is pushed as the signed result, as before.
 - buildPpuFlags and buildFeatureWords are re-exported here because existing callers import them from this path.
 
-## game/live-settings-gate.ts
+## packages/game-core/src/live-settings-gate
 
-- Vanilla Safe wiring for the live-settings bridge: raw GameSettings booleans map onto registered feature ids (packages/features/src/feature-registry.ts), then resolveGates runs on them, so live-settings-flags only asks whether an id is effective and never re-derives the requires/vanillaSafe logic.
+- Vanilla Safe wiring for the live-settings bridge: raw GameSettings booleans map onto registered feature ids (packages/features/src/feature-registry), then resolveGates runs on them, so live-settings-flags only asks whether an id is effective and never re-derives the requires/vanillaSafe logic.
 - RAW_FEATURE_KEYS are registered ids whose GameSettings field has the same name and is requested unconditionally. Any extra condition (for example "only when the ratio is wide") is applied by the caller on top of effectiveFeatureIds, since the resolver owns only the requires/vanillaSafe cascade.
 - coloredRupees, itemSheen and archeryNeedsBow (world-item presentation and the archery host's refusal) have their bits in features3, not features0. The resolver cares only about ids, so they cascade and strip like the rest.
 - Some ids have no boolean field of the same name: the three-way off-screen mode requests its 'idle' or 'paused' id, and the play-area toggle is optional on GameSettings. Without the derived ids the resolver never sees them and their bits are never sent.
 - The widescreen corrections are one setting: the Display switch, on by default with extended rendering, covers the core bit and every fix split from that bundle. No per-fix override.
 - Any other unset per-fix toggle inherits the bundle master it was split from, the same fallback buildFeatureWords relies on.
 
-## game/live-settings-keys.ts
+## packages/game-core/src/live-settings-keys.ts
 
 - These are the settings keys that apply live while the game runs, without a restart. Anything absent from the set surfaces the restart toast.
 - Feature flags are synced every frame via g_wanted_zelda_features; PPU flags (noSpriteLimits, newRenderer, enhancedMode7) are read every frame.
@@ -1124,14 +1099,14 @@ cached by the warmup) and compiled here.
 - resumeMSU and resetMSUAtTitle are read on every music event, not captured at session start, so a change applies to the very next one.
 - Online notice toast keys are read as each notice arrives. Quiet receipt keys (added in live-settings.constants.ts) drive gate word 5 on every push, and each delivery reads them when queued.
 
-## game/live-settings-ppu-flags.ts
+## packages/game-core/src/live-settings-ppu-flags.ts
 
 - PPU_FLAGS values must match ppu.h.
 - None of the four PPU flags is a registered FeatureDef (they predate the registry and are not part of the snesrev quality-of-life follow-up), so Vanilla Safe cannot reach them through effectiveFeatureIds and each is hand-gated.
 - newRenderer stays on under Vanilla Safe: per its settings copy it is a faster rewritten pixel processing unit, visually identical, a pure engine swap with no rendered-pixel difference. The other three visibly change the picture versus the cartridge (more or taller visible area, no OAM-driven sprite flicker or drop, smoothed Mode 7), so they are forced off like any affectsVanillaParity feature.
 - Height240 (extend_y, 240 lines) must track the INI serializer, which emits it only when extendedRendering is on and never under Vanilla Safe (serializeToIni). The render-buffer height is baked at init from that INI value; setting the live flag without it would make the draw loop's botBudget disagree with the allocated texture (ppu.c PpuSetExtraSideSpace).
 
-## game/live-settings.ts
+## apps/desktop/src/game/live-settings
 
 - Live-pushable: feature flags (g_wanted_zelda_features) and PPU render flags (g_ppu_render_flags). Restart-only: aspect ratio and extend_y (texture size), audio (SDL device opened once), linear filtering and ignore aspect ratio (renderer init).
 - Every pushed value is remembered so it can be re-asserted after a save-state load clobbers WRAM.
@@ -1139,7 +1114,7 @@ cached by the warmup) and compiled here.
 - WASM volumes are on a 0 to 128 scale; the settings are 0 to 100.
 - The last full settings are kept so a live override (the simulator's auto-skip-dialog force, the randomizer arming a table) can recompute and re-push a word without the caller holding the settings object.
 - liveSettingsNow is for long-lived closures that must follow the sliders. A snapshot captured at profile load reads boot-time values forever, which is how the replacement audio's volumes once ignored every slider.
-- The story gates' settings half of word 5 is set before the module check: it is kept even when the core is not up yet, and the reassert after the next load writes it (gate-word-5.ts). It reads the event everywhere, or nothing under Vanilla Safe (story-gates.ts); a running seed's own word takes precedence.
+- The story gates' settings half of word 5 is set before the module check: it is kept even when the core is not up yet, and the reassert after the next load writes it (apps/desktop/src/game/gate-word-5). It reads the event everywhere, or nothing under Vanilla Safe (apps/desktop/src/game/story-gates); a running seed's own word takes precedence.
 - features1/features2 and the word-3 gate are guarded because older WASM lacks those exports. WasmSetFeatures and WasmSetPpuRenderFlags are not guarded: a failure there fails the whole push.
 - Master volume goes both through the Web Audio GainNode and the WASM SDL mixer.
 - Ambient is its own DSP group: the chip's bed voices are allocated by its effects engine, and without the third group they rode the SFX slider while the replacement bed rode the ambience one.
@@ -1156,7 +1131,7 @@ cached by the warmup) and compiled here.
 - reassertFeatureFlags falls back to DEFAULT_SETTINGS when nothing was pushed or primed; buildFeatureFlags ORs the override in regardless.
 - primeLiveSettings seeds the last settings so a live override can recompute and re-push before the user changes a setting. It does not seed the ambient volume.
 
-## game/msu-pack-loader.ts
+## apps/desktop/src/game/msu-pack-loader
 
 - Starts, stops and restarts the replacement-audio session for a profile. It lives in lib, not beside the other profile-load helpers, because it is not app-shell work: it reads storage and drives the engine with no React, and the Data Manager must re-run it when the pack changes on a profile that is already playing.
 - The session owner is the profile the live session belongs to. A pack change for any other profile is a stored edit that applies the next time that profile loads, and must not disturb what is playing.
@@ -1168,13 +1143,13 @@ cached by the warmup) and compiled here.
 - Vanilla Safe already stops the session from starting (resolveMsuPlayback), but the ambient and sfx replacement gates handed to the core are denied a second time anyway.
 - reloadMsuForProfile re-runs the pack for a profile whose assignment just changed so the change is audible now. It is a no-op for any profile that is not the one playing.
 
-## game/msu-save-glue.ts
+## apps/desktop/src/game/msu-save-glue
 
 - Music position for saves of every kind. The core's snapshot layout is fixed (growing it would invalidate every save), so the position rides in a sidecar file beside each save.
 - saveMusicPosition always writes or clears, so an overwritten slot never keeps a stale position. A save must still succeed when only its music position could not be stored.
 - restoreMusicPosition leaves a save with no stored position alone instead of silencing it: loading a snapshot already re-announces the track, and a stop here would load that save into silence.
 
-## game/msu-session.ts
+## apps/desktop/src/game/msu-session
 
 - One replacement-audio session per profile load. It owns lifetime, wiring and host gates only; the engine decides what to play.
 - Replacement effects follow the SFX slider, not the music one. The ambient bed has its own slider, so a storm sits under quiet music without touching either.
@@ -1188,7 +1163,7 @@ cached by the warmup) and compiled here.
 - msuRestore with a null state stops music, matching a save with none.
 - msuChannelReport is one channel's live state for the music debugger's meters, null when silent or with no session.
 
-## game/msu-sound-claims.ts
+## packages/msu/src/msu-sound-claims
 
 - What the core is told about replacement sounds when a session starts and stops.
 - Two things travel together and must never disagree: the gate bit that hands a channel over, and the mask of ids taken over on it. A channel the settings switch off publishes an empty mask and a cleared gate, so the core cannot report it at all: the app never receives those events.
@@ -1196,7 +1171,7 @@ cached by the warmup) and compiled here.
 - SoundReplacement says whether each group of channels may be replaced at all; both are false under Vanilla Safe. ClaimedCounts is how many ids were claimed per channel, for the session's log line.
 - withdrawSoundClaims hands every channel back to the sound chip.
 
-## game/music-debug.ts
+## packages/msu/src/music-debug
 
 - The music debugger's data: every sound event in one ordered feed, with running counts.
 - Three sources: the core's sound trace reports every id the game raises, claimed or not, so the feed shows what the chip plays next to what the pack replaced. The core's music trace does the same for the music-control port, fades included, even when no pack owns music. The engine's debug bus adds what neither can see: chance rolls, where a layer decided not to sound.
@@ -1205,11 +1180,11 @@ cached by the warmup) and compiled here.
 - window.__onSoundTrace is every raise on the three sound ports with its claim verdict; window.__onMusicTrace is every accepted music-control write and who owns music.
 - The core-side trace gate costs host calls while armed, so it is armed only while a debugger watches; the engine's bus is free and stays attached for the whole run.
 - The armed wish is kept here instead of trusting the gate mirror: every game boot starts from a cleared gate word (resetGame wipes the mirror, then the core comes up with nothing set), so an arming made before or across a boot is applied again once the new core is running.
-- initMusicDebug runs from game start, never at import time. A module that subscribes because something imported it runs wherever the bundler orders it, which is how the same registration in host-menu.ts once ran before wasm-bridge had initialised and killed the bundled renderer at load. Nothing here can fire before a core exists, so installing at game start costs no event.
+- initMusicDebug runs from game start, never at import time. A module that subscribes because something imported it runs wherever the bundler orders it, which is how the same registration in packages/game-core/src/host-menu once ran before wasm-bridge had initialised and killed the bundled renderer at load. Nothing here can fire before a core exists, so installing at game start costs no event.
 - Disarming keeps whatever the feed already collected.
 - The events array and counters snapshot stay stable between notifications, so useSyncExternalStore sees one snapshot per change.
 
-## game/npc-grant-overrides.ts
+## apps/desktop/src/game/npc-grant-overrides
 
 - JS-side arming for the in-core scripted-grant substitution table (core/game-hooks/npc_overrides.c). It mirrors the chest table's contract in randomizer.ts: the write only records, the gate bit is requested alongside it, and the gate stays open only while the table has entries.
 - ROOM_ANY (-1) is the room key sent to the core for an entry that matches by item alone.
@@ -1219,7 +1194,7 @@ cached by the warmup) and compiled here.
 - The sprite-keyed entry is for a roomless giver whose vanilla item is shared with other roomless givers, told apart by the sprite executing at the grant seam (certified per sprite type by the decomp audit in npc-override-key.ts).
 - Clearing empties the table, then closes the gate: the same double lock as clearItemOverrides.
 
-## game/oam-ring.ts
+## packages/game-core/src/oam-ring.ts
 
 - The core captures each frame once, after its OAM is complete, into a ring buffer. Reading `oam_buf` live is unsound: the game clears every entry at the top of its loop and draws sprites after, so a read mid loop reports entries that were never missing from a rendered frame. Draining the ring gives every game frame in order, with no sampling race.
 - Needs the developer tools setting on, matching the C gate. The ring head pointer is 0 when it is off, and the reader returns null.
@@ -1230,7 +1205,7 @@ cached by the warmup) and compiled here.
 - `index` is the absolute capture index. The game's own frame counter is 8 bit and wraps, so a caller draining repeatedly keys on `index` to stitch overlapping reads together.
 - `spriteBudgetHits` and `tileBudgetHits` count how often the per line sprite and tile budgets cut evaluation short in that frame.
 
-## game/oam-snapshot.ts
+## packages/game-core/src/oam-snapshot.ts
 
 - Returns the sprite table as the PPU will read it, including the wide and tall side channels that hold the coordinate bits the stock 9 bit X and 8 bit Y cannot. A sprite whose game side position is right can still reach the PPU wrong when those disagree, which a screenshot cannot show and this read can.
 - Needs the developer tools setting on, matching the C gate. The query returns pointer 0 when it is off, and the reader returns null.
@@ -1239,7 +1214,7 @@ cached by the warmup) and compiled here.
 - `hide` records which terms of the player hide condition were true, and which branch ran.
 - `sprites` is the per sprite slot AI gating state, 16 entries, stored after the 128 OAM slots.
 
-## game/observations
+## packages/game-core/src/observations
 
 Every real transition leaving the current screen, taken from the crossings facade so one
 producer serves the navigation widget, the simulator and the recommendations. `usableCrossings`
@@ -1252,7 +1227,7 @@ absence, so it is graded apart (`flood`) and can back no removal. Presence only:
 never consulted, since a crossing gated behind an item is still a crossing the dataset should
 carry, and grading it on the loadout would make findings come and go with the inventory.
 
-## game/original-sound.ts
+## apps/desktop/src/game/original-sound
 
 - Plays the sound chip's own version of a sound, for A/B against a replacement. One buffer, no layers, no schedule, no volume shaping; one plays at a time.
 - Short renders are cached because they are deterministic. Long ones are not: a minute of float32 stereo is about 15 MB per music slot, for a render that takes a tenth of a second. CACHEABLE_SECONDS is that limit.
@@ -1265,18 +1240,18 @@ carry, and grading it on the loadout would make findings come and go with the in
 - PROBE_SECONDS is long enough to tell a sound from silence without paying for the full window; a scan runs it for every id on a channel. Most channels carry unused ids. A cached full render already answers the probe.
 - `probeAudibleIds` returns an empty set when the core cannot render at all, which the caller tells apart with `canPreviewOriginals`.
 
-## game/override-fired.ts
+## packages/game-core/src/override-fired
 
 - The C to JS completion signal for physical overrides. When an in core substitution table (npc, drop, standing) applies an entry, the check that entry stands for is completed at that instant, and the core reports the host assigned fire id the arming call carried (GameHook_NotifyOverrideFired calls window.__onOverrideFired).
 - Sessions use this for their physical rows instead of save flag or possession polling, because several giver checks have no reliable flag, and possession reads false fire when the vanilla item arrives from elsewhere.
 - The core calls the hook synchronously from inside the wasm frame, so the handler is deferred to a microtask and never re enters the module mid execution.
 
-## game/play-quiet.ts
+## apps/desktop/src/game/play-quiet.ts
 
 - Whether a toast may show now. Nothing the player did can happen outside a file in play, so the intro, the title, file select, naming and the attract demo stay quiet.
 - The first moments after the save under the game changes (a file entered from file select, a return to the title, a state load) stay quiet too: what the tracker finds done then was done in that file, not just now.
 
-## game/player-sheet
+## apps/desktop/src/game/player-sheet
 
 - `draw-tiles`: everything the sprite studio draws reduces to a rectangular run of tiles taken
   from the 16 column sheet, looked up through a resolved 16 colour row, optionally flipped. The
@@ -1311,12 +1286,12 @@ carry, and grading it on the loadout would make findings come and go with the in
 - `thumbnail.ts`: the front facing standing pose is the sheet's first 2 by 3 tiles, the one pose
   addressable without the pose atlas, so the library list stays cheap.
 
-## game/player-sprite.ts
+## apps/desktop/src/game/player-sprite
 
 - Live player sprite swapping. The boot path stages a .zspr through the INI (see boot-files), but a sheet can also be swapped while the game runs: write it to the same MEMFS path and let the core read it again, which overwrites the gfx and palette assets and pushes the new palette straight to CGRAM.
 - Both calls return false when no game is running, so callers can fall back to "applies on next boot". Apply also returns false when the bytes are not a ZSPR.
 
-## game/player-state-rules.ts
+## packages/game-core/src/player-state-rules
 
 - State rules driven by live player state bytes: what the player is doing, and the named story bits in `sram_progress_flags`.
 - `player_sleep_in_bed_state` is a step counter that is zero while asleep, so "asleep" comes from the handler state and the counter only says how far into waking the player is.
@@ -1325,7 +1300,7 @@ carry, and grading it on the loadout would make findings come and go with the in
 - Dashing is its own state because the boots change what the player can cross.
 - `playerStates` lists every state the bytes imply, in reading order.
 
-## game/pond-demands.ts
+## packages/randomizer/src/world/rules/pond-demands.ts
 
 - JS side arming for the demand table all three ponds read (core/game-hooks/pond_demands.c). One row per prize rung, keyed by the pond and the rung's place in that pond's prize list, with the three lines the pond speaks for it.
 - The table changes nothing the game computes: the pond plans' own gate bits decide whether a visit reads it (core/game-hooks/pond_demand_visit.c), so there is no bit to request here.
@@ -1334,7 +1309,7 @@ carry, and grading it on the loadout would make findings come and go with the in
 - `nativeId` is the bottle slot value or the item's receive id, 0 for a counted demand.
 - `askMessageId` is the yes/no line naming the demand, `refuseMessageId` the line for a yes that cannot pay, `awardMessageId` the line she rises with. Each is -1 to keep the pond's own contact, refusal or award line.
 
-## game/pond-plan.ts
+## apps/desktop/src/game/pond-plan
 
 - JS side arming for the in core rupee pond plan (core/game-hooks/pond_plan.c): one row per throw (its price, the prize ordinal it hands over or -1, the consolation it pays back, the pre rendered lines announcing the price and the consolation) and one row per prize slot (the assigned item, its receipt line, its completion fire id), plus the lines the pond itself speaks.
 - Same contract as the other override bridges: every write only records, the gate bit is requested alongside it, and it stays open only while a plan is armed. The session layer composes the rows from the placement; this file is the ccall surface only.
@@ -1346,7 +1321,7 @@ carry, and grading it on the loadout would make findings come and go with the in
 - `setPondAwardMessage` sets the two lines a throw carrying a pool item shows in place of the native question asking which capacity family to climb: `more` while the water still holds a prize after this one, `last` for the throw that takes the final one. -1 keeps that question and its two way choice. The native line is one box and so is each of these, so the purchase asks for the same confirmations either way, and an empty seam would drop one.
 - `pondThrowsTaken` reads the throws taken on the live file: what the probes and the tracker read back.
 
-## game/preview-core.ts
+## apps/desktop/src/game/preview-core/preview-core.ts
 
 - A core loaded only to render original sounds when no game is running. The preview chip is already independent of the running game (emscripten_sound_preview.c gives it its own SpcPlayer), but it reads the sound banks out of the parsed assets, and those are parsed only once a core has booted.
 - Auditioning a sound in the pack studio should not require starting the game, so this boots a core that never runs the game: `noInitialRun` skips `main`, so no SDL, no canvas, no frame loop, just the assets in memory and the preview export reading them.
@@ -1357,12 +1332,12 @@ carry, and grading it on the loadout would make findings come and go with the in
 - One boot promise is shared, so several rows asking at the same moment boot once.
 - `previewModuleNow` returns the already resolved module without triggering a boot. `ensurePreviewModule` is null only when there is no ROM with extracted assets.
 
-## game/prize-shuffle.ts
+## apps/desktop/src/game/prize-shuffle
 
 - Dungeon prize shuffle gate: JS side arming for the in core reward seam (core/game-hooks/prize_grants.c), with the same contract as the substitution tables. The gate is requested only while a plan overrides a boss reward, so a boss room only consults the hook owned "reward claimed" save bit inside such a session.
 - There is no table of its own: a reward substitutes through the npc override table like any other scripted grant. This bit only tells the core that the rewards are shuffled, which licenses the claimed bit read in the two boss room tags and the assigned crystal bank in the rising crystal.
 
-## game/progressive-tiers.ts
+## apps/desktop/src/game/progressive-tiers
 
 - JS side arming of which rungs of each tiered family exist in this seed (core/game-hooks/progressive_grants.c). One bit per rung, bit 0 the first. A pickup climbs to the lowest rung still present at or above the tier already held, so an unticked middle rung shortens the ladder instead of leaving a hole in it.
 - Record only writes, the same contract as the capacity plan; the read side sits inside the gated grant seams.
@@ -1371,56 +1346,56 @@ carry, and grading it on the loadout would make findings come and go with the in
 - `isFullLadder` is true while every family is at its default ticks, in order, with nothing to arm. The default is every rung but the ocarina's second: that one exists only as a pool copy, and at the default the pool carries a single ocarina copy, which the unarmed ladder reads as the Flute already.
 - The mask is written for every family whatever the order setting, because it still governs the copies a locked vanilla giver hands over. The order flag is a separate question: with it set, a pickup carrying the tier's own id may arrive at any time and is refused only when it would step the family back down.
 
-## game/quiet-receipts.ts
+## packages/game-data/src/quiet-receipts
 
-- See shared/game/quiet-receipts.ts. With a kind's option on, a rupee, bomb or arrow the randomizer delivers goes straight to the wallet, bag or quiver (the quiet_receipt delivery, WasmGrantQuietReceipt), and a placed one is armed with the silent line, so its pickup shows the game's own nothing.
+- See packages/game-data/src/quiet-receipts. With a kind's option on, a rupee, bomb or arrow the randomizer delivers goes straight to the wallet, bag or quiver (the quiet_receipt delivery, WasmGrantQuietReceipt), and a placed one is armed with the silent line, so its pickup shows the game's own nothing.
 - Each option rides its own gate word 5 bit, so the bit the core reads and the one read here never disagree.
 - Under the retro bow the single arrow is the quiver itself, never ammunition, so arrows are never quiet there.
 - RECEIPT_KIND lists the native receipts of each kind (ancilla.c Ancilla_AddRupees, misc.c AncillaAdd_ItemReceipt).
 - QUIET_RECEIPT_MSG is kReceiptMsg_Silent (game_hooks.h): no dialogue line has this id, and the seam shows no text for it.
 - `quietMessageFor` gives the line a placed grant is armed with: the silent one for a quiet receipt.
 
-## game/quiver-icon.ts
+## apps/desktop/src/game/quiver-icon
 
 - The quiver's in game picture is the 128 B binary the sprite extraction emits beside the PNGs (quiver-icon.4bpp, the drawing reduced to one sprite palette row). It is handed to the core when a randomizer session arms, written to MEMFS and applied with WasmApplyQuiverIconFile, the gear pictures pattern.
-- The core draws it for the single arrow receipt a retro seed hands the quiver over as, on the shelf and in the hold up, under the retro bow's own gate (kFeatures3_RetroBow, armed by retro-bow.ts). No gate of its own is flipped here.
+- The core draws it for the single arrow receipt a retro seed hands the quiver over as, on the shelf and in the hold up, under the retro bow's own gate (kFeatures3_RetroBow, armed by apps/desktop/src/game/retro-bow). No gate of its own is flipped here.
 - A sprite set extracted before the binary existed, or no running module, leaves the arrow in place. `applyQuiverIcon` resolves true when the core took the picture of the active ROM's sprite set.
 
-## game/randomizer-client/active-capacity-profile.ts
+## packages/randomizer/src/client/active-capacity-profile
 
 - Holds the capacity profile the running seed was generated with, set when the session arms and cleared when it disarms.
 - `progressive` says whether upgrades climb the plan in order or each carry a fixed jump.
 - Readers such as the cheat console capacity ladders use it to stay inside what the seed allows: logic reads a family as its start rung plus the collected jumps, so a value no set of upgrades reaches is a value logic never assumed.
 - A listener that throws never breaks the session.
 
-## game/randomizer-client/ap-client-packets.type.ts
+## packages/randomizer/src/client/ap-client-packets.type.ts
 
 - Client to server packets of the Archipelago multiworld protocol.
 - StatusUpdate status 30 is CLIENT_GOAL.
 - Get reads data storage keys. Keys starting with `_read_` belong to the server itself (for example a slot's client status).
 - SetNotify asks the server for a SetReply whenever one of the listed keys changes.
 
-## game/randomizer-client/ap-kill-link.ts
+## packages/randomizer/src/client/ap-kill-link.ts
 
 - The DeathLink kill asks the core to take Link's life when another player in the room died.
 - Guarded like every optional export: a core built before `WasmApKillLink` existed answers 'unsupported' and the death is only logged.
 - The core drops a kill that arrives while its death module runs (death_link.c), so the same test runs here first: 'down' is a kill that did nothing because Link is already dying or at the game over.
 - `MODULE_GAME_OVER` (18) is the core's MODULE_GAME_OVER from game_constants.h, read from the first byte of the UI state buffer.
 
-## game/randomizer-client/ap-link-died.ts
+## packages/randomizer/src/client/ap-link-died
 
 - The core calls `window.__onLinkDied(cause)` when Link dies. One listener at a time, since one online session owns the room.
 - The cause is a number from death_link.c: 1 when the room's kill caused the death, 0 for any other. A string cause is the death's own wording, from a host that has one.
 - `byRoom` true means the room's own kill caused the death, so it is never sent back out. `text` is empty when the core has none.
 - The core calls the handler from inside the wasm frame, so the listener is queued as a microtask and runs after the frame returns.
 
-## game/randomizer-client/ap-names.ts
+## packages/randomizer/src/client/ap-names.ts
 
 - Name tables for a multiworld room: slot to player, and per game the item and location names behind the network ids.
 - An id means nothing without its game, so every lookup goes through the slot that owns it. slot_info tells which game a slot plays.
 - Slot 0 is the server itself (commands, starting inventory), named "Server".
 
-## game/randomizer-client/ap-protocol.type.ts
+## packages/randomizer/src/client/ap-protocol.type.ts
 
 - The typed subset of the Archipelago network protocol the online session speaks: JSON arrays of packets over a WebSocket, each packet discriminated on `cmd`.
 - This file holds the shared shapes; the packets live in ap-server-packets.type.ts and ap-client-packets.type.ts and are re-exported here.
@@ -1428,7 +1403,7 @@ carry, and grading it on the loadout would make findings come and go with the in
 - ApNetworkItem carries network ids, not names. In ReceivedItems `player` is the slot whose world held the item (the sender); in LocationInfo it is the slot that receives it.
 - ApJsonMessagePart is one piece of a PrintJSON message.
 
-## game/randomizer-client/ap-server-packets.type.ts
+## packages/randomizer/src/client/ap-server-packets.type.ts
 
 - Server commands outside this set fall through unhandled as the closed `Unknown` arm.
 - RoomInfo `permissions` holds release, collect and remaining, each a Permission value: 0 disabled, 1 enabled, 2 goal, 6 auto, 7 auto enabled.
@@ -1438,50 +1413,50 @@ carry, and grading it on the loadout would make findings come and go with the in
 - Retrieved answers a Get with every key asked for, null when the server holds nothing under it.
 - SetReply means a watched key (SetNotify) changed.
 
-## game/randomizer-client/ap-socket.type.ts
+## packages/randomizer/src/client/ap-socket.type.ts
 
 - The slice of the browser WebSocket the online client uses, kept narrow so a test can hand in an in-process fake through a `createSocket` factory.
 
-## game/randomizer-client/apply-overrides.ts
+## apps/desktop/src/game/randomizer-client/apply-overrides/apply-overrides.ts
 
 - Plan arming pushes a physical plan's override entries into the in-core substitution tables (chest, npc, drop, standing, shop, scripted), wiring each entry's contextual message and completion fire id.
 - The poll list skips physical override rows: they report from the substitution seam (the fire id), so only chest, deliver and locked rows are polled. Polling them would misfire on possession style detections.
 - A row whose record is a reportable check answers through the tracker's own sweep, which reads modes a plan detection cannot (the event ledger).
 - Message id -1 means the class default receipt line.
-- A placed rupee, bomb or arrow takes the silent line when its kind is quiet (quiet-receipts.ts).
+- A placed rupee, bomb or arrow takes the silent line when its kind is quiet (packages/game-data/src/quiet-receipts).
 - A boss reward substitutes through the npc table like any other scripted grant, but the core must also stop reading the dungeon's own pendant or crystal bit as "reward claimed", so the prize shuffle gate is armed exactly when such a row is armed.
 - A wish pond rung is skipped here because it arms together with every other rung of both waters in one call (wish-pond-session.ts).
 - Armed shop entries are kept for rescanShopCatchUp: arming can run before the profile's SRAM is the active WRAM state (the test harness's --auto-state loads a slot into an already running module after the session armed against whatever booted), so a single check at arm time can read stale sold counters. The tracker bridge's poll loop reruns the scan on an interval, which is correct whenever the real SRAM becomes current.
 - A shelf's Nth purchase already happened when N is below its SRAM sold counter (core/game-hooks/shop_table.c). The counter survives save and reload; a purchase from an earlier session has no live fire id event left, so the persisted counter is read directly.
 - The rescan is safe to repeat: markLocationFired is a no-op on a location already marked.
 
-## game/randomizer-client/baseline-entries.ts
+## packages/randomizer/src/client/baseline-entries.ts
 
 - The armed overrides an online baseline must still look at. Their completion reports come from the substitution seam, so the plan never polls them.
 - A pickup made while no client was connected fired to nobody, and only the save still shows it: the tracker's completed set, which reads an armed giver's real taken bit.
 
-## game/randomizer-client/browser-socket.ts
+## packages/randomizer/src/client/browser-socket.ts
 
 - The default socket factory: the browser's own WebSocket.
 
-## game/randomizer-client/capacity-rung-messages.ts
+## apps/desktop/src/game/randomizer-client/capacity-rung-messages.ts
 
 - The capacity receipt lines of a session as message ids. A local session folds the lines into its plan texts (receipt-plan-messages); an online session has no plan, so it composes them alone here as the session dialogue's opening pool.
 - Either way the result is the lookups the arming hands the core. Under a progressive profile: family to the message ids of each planned rung, in plan order. Undefined means the dialogue could not be composed and the core shows the family's class line.
 - Under a fixed profile: the (family, starting rung, jump) entries the core selects by the live rung.
 
-## game/randomizer-client/capacity-session.ts
+## apps/desktop/src/game/randomizer-client/capacity-session
 
 - Translates the profile a placement was generated with into the exact core writes: one WasmSetCapacityProfile per family (custom flag, start and final tier indices) and the wallet jump table (sorted distinct jumps of the wallet plan, slot = position), plus the host copy of that table the item resolver reads.
 - The translation (capacitySessionOf) is pure so a test can pin it without a module; arming and disarming are the only impure steps.
 - A profile with no Custom family arms nothing: every family stays on its native grid and the gate bit stays down, so a vanilla or reference seed leaves the core exactly as it found it.
-- A progressive session also arms every Custom family's jump sequence (capacity-plan.ts) with the message id of each rung's pre-rendered line, so the core climbs the plan in order and shows the jump it applied. A fixed jump session writes the fixed lines instead.
+- A progressive session also arms every Custom family's jump sequence (apps/desktop/src/game/capacity-plan) with the message id of each rung's pre-rendered line, so the core climbs the plan in order and shows the jump it applied. A fixed jump session writes the fixed lines instead.
 - Plan fields: `families` has one arm per family in the core's family order; `walletTable` is slot to rungs, empty when the wallet stays vanilla; `armed` is true when at least one family is Custom, the only case the core is armed; `ladders` (the Custom families' jump sequences) reach the core only under `progressive`, where pickups climb the plan in order with one progressive item per family; `bonus` is what a pickup hands over beside its ceiling, per family.
 - `bonusArmed` is true when some family hands out upgrade items at all (Custom or in pool), the only case a pickup can pay the bonus. The pickup bonus answers to a virtual grant, which an in-pool family hands out even with no Custom family armed, so it follows the pool, not the profile.
 - primeCapacitySession is host side only: the wallet table the item resolver needs before the plan is built.
 - The hold-up upgrade icons answer to the same capacity gate. A session whose families all stay on the native grid raises the gate for the icons alone: nothing else is armed in the core, so every profile seam keeps its native answer.
 
-## game/randomizer-client/check-detection.ts
+## packages/randomizer/src/client/check-detection
 
 - Derives, from a check record's own gameId, the live memory read that proves the check completed: a persisted room flag bit (chest slot, direct mask, or an NPC's room recorded chest bit), an overworld event bit, or a progress buffer byte (bit mask or threshold).
 - Mirrors the tracker's check-facts read modes so the poller and the tracker agree on what "done" means. A review mark on a record decides nothing here.
@@ -1491,42 +1466,42 @@ carry, and grading it on the loadout would make findings come and go with the in
 - detectionOf returns null for an unknown id or a record with no read.
 - withProgressBaseline rebases a progress threshold on a Custom family's starting rung: rung r is native level r minus 1, so a tier byte that starts above the first native level still means "advanced by one purchase" when compared past that start. From the empty rung the first purchase leaves the tier byte at 0 and clears the family's empty rung flag, so that start reads the flag byte for 0. Every other detection shape is returned untouched.
 
-## game/randomizer-client/check-names.ts
+## packages/randomizer/src/audit/check-names.ts
 
 - Maps a check id to its community standard display name: `<dungeon> - <check>` when the check belongs to a dungeon, else the check's own name, with a small data file override table for sub-areas whose standard prefix differs from their dungeon (the shared check-standard-name).
-- The record form (standardNameOfCheck) takes the CheckRecord itself, so it also answers for a record the registry does not hold: a virtual row the tracker mints for a location with no check of its own (virtual-locations.ts).
+- The record form (standardNameOfCheck) takes the CheckRecord itself, so it also answers for a record the registry does not hold: a virtual row the tracker mints for a location with no check of its own (packages/randomizer/src/client/virtual-locations).
 - completedLocationKeys is the set of locations a run counts as taken: the locations of the completed checks, plus the locations the substitution seam reported, which are the only word on a row no check record covers (a shelf, a pond prize past the reference's two). Two callers need exactly this set: the rules engine's collected state and the receipt lines' found/total.
 
-## game/randomizer-client/client-status.ts
+## packages/randomizer/src/client/client-status
 
 - The server keeps a slot's client status under the read only data storage key `_read_client_status_<team>_<slot>`: 0 unknown, 5 connected, 10 ready, 20 playing, 30 goal.
 - The server sets 5 when the first client of a slot joins and 0 when the last one leaves; goal is never undone.
 - slotOfStatusKey returns the slot only when the key names one on this team.
 - statusImpliesOnline: goal outlives the client (null, says nothing), unknown means offline, any other status means the client is connected.
 
-## game/randomizer-client/client-uuid.ts
+## packages/randomizer/src/client/client-uuid.ts
 
 - The install's client id for Connect, generated once and kept in localStorage so a server sees the same client across sessions. When storage is unavailable the id lives for this page only.
 
-## game/randomizer-client/connection-notices.ts
+## packages/randomizer/src/client/connection-notices.ts
 
 - Turns the network monitor's snapshots into online notices: the slot accepted (at first, or again after a drop), the connection lost, the server not reached at all, and the session ended by an error (a refusal among them).
 - Only a change of state speaks, so a retry that fails again says nothing new. A stop the player asked for is silent.
 - A session started again after a stop (state back to idle) connects for the first time again, so "ever connected" resets on idle.
 - The `[Online]` log prefix is stripped from an error before it is shown.
 
-## game/randomizer-client/data-package-cache.ts
+## packages/randomizer/src/client/data-package-cache
 
 - Data package cache keyed by game and checksum in localStorage, so a reconnect to the same room asks the server only for games whose tables changed.
 - Every storage call is guarded: without storage the cache is empty and every game is fetched. A failed write (storage full or unavailable) means the next connect fetches again.
 
-## game/randomizer-client/death-link-switch.ts
+## apps/desktop/src/game/randomizer-client/death-link-switch.ts
 
 - DeathLink on and off for the session: the core's gate bit and the room link (death-link.ts) together.
 - The profile's flag switches it on at start; the slot data the room hands over on Connected has the last word (slot-death-link.ts).
 - dispose is the session end: the link goes, and the gate bit goes with the core's own disarm.
 
-## game/randomizer-client/death-link-toast-text.ts
+## packages/randomizer/src/client/death-link-toast-text/death-link-toast-text.ts
 
 - The toast line for a DeathLink notice, split so the player's name can be drawn apart from the rest: `name + text` is the whole line. `name` is empty for our own death.
 - The cause is the sending game's own free text, shown as sent, on one line and cut to a length a toast can hold.
@@ -1534,98 +1509,98 @@ carry, and grading it on the loadout would make findings come and go with the in
 - A cause that opens with the name already reads as a sentence about that player, so it follows the name directly.
 - deathLinkToastLine is the whole line, for the toast's accessible label and the log. deathLinkOnlineNotice is the same line as an online notice, with the player's name drawn in the player colour.
 
-## game/randomizer-client/death-link.ts
+## apps/desktop/src/game/randomizer-client/death-link.ts
 
 - DeathLink both ways. Link dying here goes out as a `Bounce` tagged DeathLink; a DeathLink `Bounced` from another player kills Link.
-- The room bounces our own death back to us, and the death a kill causes must not go out again as a new one. The core marks the second itself (ap-link-died.ts), and each direction also guards the other for 5 s.
+- The room bounces our own death back to us, and the death a kill causes must not go out again as a new one. The core marks the second itself (packages/randomizer/src/client/ap-link-died), and each direction also guards the other for 5 s.
 - The core's own word decides first: a death the room's kill caused is never sent back out, however long the death took to commit. The timer stays as the second guard, for a core that reports no cause.
 - The Bounce `time` field is in seconds.
 - Each death that reaches the player is also told through `notify` (the online notices): one from the room, killing Link or finding him already down, and one of ours sent out.
 
-## game/randomizer-client/delivery-ready.ts
+## packages/randomizer/src/client/delivery-ready.ts
 
 - One shot: calls back once the game can take a server item again, meaning the game is running and the delivery queue has drained.
 - The online client asks for the full received list at that moment, since the list stopped where the game last could not take an item.
 
-## game/randomizer-client/file-in-play.ts
+## apps/desktop/src/game/randomizer-client/file-in-play
 
 - In play means the game left the title modules (the intro, file select, copy, erase, naming and the attract demo: UI mode 'title').
 - Choosing a file copies it into the save block before the game leaves them (CopySaveToWRAM), so from then on the bytes the host keeps in the save (the received index, the room hash) are that file's. Before it they are whatever the last file left, or zeros.
 - The save changes on a state load, on entering a file from the title, and on the way back to the title (a save and quit, a reset): each fires onSaveSwap.
 
-## game/randomizer-client/fire-reported-classes.ts
+## packages/randomizer/src/client/fire-reported-classes
 
 - The physical plan classes whose completion arrives from the substitution seam (a fire id is allocated when they are armed, see apply-overrides.ts), never from polling.
 - Shared by live arming and the offline reader's armed check mirror, so the routing can never drift between the two.
 
-## game/randomizer-client/foreign-icon-of-game.ts
+## packages/randomizer/src/client/foreign-icon-of-game.ts
 
-- The icon id another player's item is held up as: the pool icon of that player's game (pool-game-icons.ts), as its place in foreign-icons.4bpp, counted from the first foreign icon id.
+- The icon id another player's item is held up as: the pool icon of that player's game (packages/game-data/src/data/sprite-manifest/pool-game-icons), as its place in foreign-icons.4bpp, counted from the first foreign icon id.
 - A game we hold no drawing for, or an unknown game, gets the Archipelago mark.
 
-## game/randomizer-client/foreign-icon-plan.ts
+## packages/randomizer/src/client/foreign-icon-plan.ts
 
 - The plan with each foreign item armed as its icon id instead of the plain sentinel, so the hold-up shows the icon of the game the item belongs to (core/game-hooks/foreign_icon.c).
 - The plan is classified once, with the sentinel, like any placement; this swaps only the target id of the foreign rows, whatever substitution table they arm in (TARGET_FIELDS has one field per table).
 - With no resolver (a local seed, or pictures the core did not take) the plan is returned as it came. A resolver answer of undefined keeps the sentinel.
 
-## game/randomizer-client/foreign-item-line.ts
+## packages/randomizer/src/client/foreign-item-line.ts
 
 - The receipt line a location shows when its item belongs to another player: what it was and who it went to, `Progressive Scale sent to Zelda!`. One line per such location, composed with the session's other lines, so the pickup says where the item went instead of showing a class template.
 - The line comes as candidates, fullest first (receipt-line.type.ts), and the composer keeps the first that fits the box: the item name loses words from its end, then characters (cuts of 16, 12, 8 tried longest first), and says so with "...", before the line falls back to naming the player alone. The player is never shortened.
 - The item carries the primary highlight and a named player the secondary.
 - ForeignItemOf answers undefined when the room named nothing. ForeignOwners is location to the owning player, as an online session keeps it beside its placement.
 
-## game/randomizer-client/freestanding-key-drops.ts
+## packages/randomizer/src/client/freestanding-key-drops.ts
 
 - Freestanding placed keys that physically cross the drop absorption seam. A key standing in a room is the same absorbable sprite as a released key drop, and the one absorption handler every freestanding pickup crosses is already intercepted by the drop override table (keyed room and size).
 - The table certifies, per check, that its room holds exactly one such placed key (decomp audited), so a (room, small) drop entry substitutes it safely.
 - The only certified entry today, check-135, is the mountain tower's caged key.
 - The lookup calls getCheck so an unknown id throws and the table stays honest with the dataset.
 
-## game/randomizer-client/item-behavior-session.ts
+## apps/desktop/src/game/randomizer-client/item-behavior-session
 
 - The item behaviour arms a session makes beside its placement: which rungs of each tiered family exist, how helpful the items are, which items light an unlit room, and whether the bow is fed rupees. All come off the placement's own stats, so a stored seed is played under exactly the rules it was rolled under.
 - The lights matter more than they look: the fill counts every ticked one as satisfying a dark spot, so a seed may put something needed behind an unlit room and hand the player a rod for it. Arming them is what makes that rod light the room.
-- The item power pair the tier ticks decide is derived here instead of read from the stats, by the same function the logic uses (item-power-rule.ts). A seed with no beam blade needs the hammer to wake the tablets, and one with no blade at all needs the medallion doors to take none. Freezing that pair at generation time would let a stored placement and the running game disagree the day the derivation changes.
+- The item power pair the tier ticks decide is derived here instead of read from the stats, by the same function the logic uses (packages/randomizer/src/world/item-power/item-power-rule). A seed with no beam blade needs the hammer to wake the tablets, and one with no blade at all needs the medallion doors to take none. Freezing that pair at generation time would let a stored placement and the running game disagree the day the derivation changes.
 - Plan fields: `modes` is how each family's copies arrive (in order, or the rungs themselves); `itemPower` is the setting after the tier derived fallbacks, what the core is armed with; `darkRooms` is which items the seed counted as a light; `retroBow` is what a shot costs and whether it costs anything; `storyGates` is which recorded event each story gate reads and what the counts ask for; `vanilla` means the full ladder and the unmodified game.
 - `retroShelves` are the arrow shelves the core restocks in place (the quiver's shelf and the refills). Only a retro seed with vanilla shops has any; a shuffled scope puts the quiver in the item pool instead.
-- Story gates are armed for every seed, altered or not: the seed's own choices replace the settings half of word 5 while it runs (story-gates.ts).
+- Story gates are armed for every seed, altered or not: the seed's own choices replace the settings half of word 5 while it runs (apps/desktop/src/game/story-gates).
 - Only a retro seed arms the bow: with it off the shot branch has to stay the vendored expression, and an armed pair of costs with the gate open would charge for shots the seed never priced. The restocked shelves are armed under the same condition, so an unarmed bow never finds a restocked shelf and a restocked shelf never outlives its bow.
 
-## game/randomizer-client/item-lookup.ts
+## packages/randomizer/src/client/item-lookup
 
 - Resolves a community standard item name to the receive item index the delivery layer feeds to the core, following a duplicate alternate alias one hop when the direct record has no native id.
-- The seven crystals answer first: they share one native id, so each one's grantable id is a reservation the records cannot hold (prize-receive-id.ts). A pendant carries its own id and falls through to the record path.
+- The seven crystals answer first: they share one native id, so each one's grantable id is a reservation the records cannot hold (packages/game-data/src/data/prize-receive-id). A pendant carries its own id and falls through to the record path.
 - Counter upgrades and progressive families carry no native id: they resolve to the reserved virtual ranges every grant seam translates (upgrade-receive-id and progressive-receive-id contracts), so a progressive copy is mapped to its next tier by the core from live inventory, never statically here.
 - A wallet upgrade name resolves to a slot of the session's wallet jump table (session-wallet-table.ts), the table the core climbs by, so the id and the grant never disagree; outside a session it is unresolvable.
-- A dungeon flavoured record answers with the targeted id of the dungeon it belongs to (dungeon-item-receive-id.ts). Its native id credits whichever dungeon the player stands in, which is right only while the family cannot leave its dungeon, so the targeted id is used for every mode, including the baseline, where it lands on the same dungeon the native grant would have.
+- A dungeon flavoured record answers with the targeted id of the dungeon it belongs to (packages/game-data/src/data/dungeon-item-receive-id). Its native id credits whichever dungeon the player stands in, which is right only while the family cannot leave its dungeon, so the targeted id is used for every mode, including the baseline, where it lands on the same dungeon the native grant would have.
 - A flavoured name with no record of its own falls back one hop to the base family item ("Small Key (Ice Palace)" to the small key record).
 - Every native id is range checked: the native grant tables hold 76 entries, so an id outside 0x00 to 0x4B resolves as undefined instead of reaching the core.
 - The retro quiver has no record: it resolves to the single arrow receipt it is granted as (retro-bow.constants.ts).
 - itemIdByStandardName is for display (label, sprite) and skips the native id range check because nothing is granted through it.
 
-## game/randomizer-client/key-drop-size.ts
+## packages/randomizer/src/client/key-drop-size.ts
 
 - A key drop spawns the large drop sprite when the drop's vanilla item is its dungeon's Big Key, the small one otherwise.
 - The core matches a drop override on (room, size), so an entry armed at the wrong size never fires and the vanilla key is granted instead (drop_overrides.c).
 
-## game/randomizer-client/last-network-status.ts
+## packages/randomizer/src/client/last-network-status/last-network-status.ts
 
 - The last network picture of the last online session, kept after the session ends (the game stopped, the socket closed). The Network tab shows it as the last known state while no session runs, and says so, instead of an empty page.
 - Kept for this run of the app only.
 
-## game/randomizer-client/listener-set.ts
+## packages/randomizer/src/client/listener-set.ts
 
 - A set of listeners with an unsubscribe per add, where one listener that throws never stops the rest.
 
-## game/randomizer-client/local-session-items.ts
+## packages/randomizer/src/client/local-session-items
 
 - Resolves an assigned dataset item id to the receive item index the core understands, and to a display name.
 - Progressive families and counter upgrades have no native id: they resolve to the reserved virtual ranges every grant seam translates, so a progressive copy lands on the next tier from live inventory at grant time.
-- A dungeon flavoured record resolves to the targeted id naming its own dungeon (the same reading item-lookup.ts gives the name), because its native id would credit whichever dungeon the player stands in.
+- A dungeon flavoured record resolves to the targeted id naming its own dungeon (the same reading packages/randomizer/src/client/item-lookup gives the name), because its native id would credit whichever dungeon the player stands in.
 
-## game/randomizer-client/local-session.ts
+## apps/desktop/src/game/randomizer-client/local-session.ts
 
 - Plays a generated placement against the live core with no server. start() runs the shared start sequence (session-start.ts: the physical plan, refused loudly on plan errors, then every in-core table) and arms the poller over every detectable planned location.
 - Reports: overrides (chest, npc, drop, standing, scripted, shop) and vanilla locked locations are log only because the game grants the item physically. Deliver entries are the one class the session acts on: they route through the delivery queue, as the NPC trigger when the check's gameId carries one, the plain item grant otherwise.
@@ -1633,10 +1608,10 @@ carry, and grading it on the loadout would make findings come and go with the in
 - Message id -1 means the class default receipt line; only a non negative id is passed as a contextual message.
 - A listener that throws never breaks the session.
 
-## game/randomizer-client/location-poller.ts
+## apps/desktop/src/game/randomizer-client/location-poller
 
 - Watches for newly completed planned checks and reports each one, once, to the active randomizer session. Polls only what the session's plan includes.
-- Two sources, one per row. The plan's own detection stays because it is not always the record's own: a locked capacity family's compare is rebased on its starting rung (withProgressBaseline), and only the plan knows that. A row with no plan detection reads the tracker's own completion sweep (tracker/completed-checks-core.ts over check-facts.ts), which reads every mode a record can carry including the event ledger; without it a row recorded only in the ledger was logged poll blind and never reported.
+- Two sources, one per row. The plan's own detection stays because it is not always the record's own: a locked capacity family's compare is rebased on its starting rung (withProgressBaseline), and only the plan knows that. A row with no plan detection reads the tracker's own completion sweep (packages/navigation/src/tracker/completed-checks-core.ts over packages/navigation/src/tracker/check-facts), which reads every mode a record can carry including the event ledger; without it a row recorded only in the ledger was logged poll blind and never reported.
 - Never both for one row: the sweep also resolves records from other records (derived-checks.ts), and a row that already reads straight from memory must not gain a second, looser way to fire.
 - A PollEntry has the session key it reports under, the record behind it when there is one, and the plan's own read when it carries one. At least one of the two answers, or the plan would not have kept the entry.
 - `baselineOnly` rows are read at a baseline only, from the tracker's completed set: an armed override whose completion the substitution seam reports live. An online baseline reports it when its server lacks it, which is a pickup made while no client was connected.
@@ -1649,18 +1624,18 @@ carry, and grading it on the loadout would make findings come and go with the in
 - pauseLocationPolling stops the ticks but keeps the suppressions: an online reconnect resumes with the same overrides.
 - startLocationPolling: the first tick adopts what is already complete instead of reporting it. The state at start is not news to a local session, and an automation boot loads its state around the connect, so waiting for a load's own request is a race the poller loses. `knownReported` is the online half: given, the first tick (and each one after a state load) reports every complete check it answers false for, instead of adopting it silently.
 
-## game/randomizer-client/message-log.ts
+## packages/randomizer/src/client/message-log.ts
 
 - The room's chat and item messages as a ring buffer (the last 200), with change listeners so a panel can follow along. A listener that throws never breaks the log.
 
-## game/randomizer-client/native-grant-id.ts
+## packages/randomizer/src/client/native-grant-id.ts
 
 - What the game's own script passes to the plain receive seam when a check's vanilla grant fires, per check kind.
 - The npc kind id comes from the record itself. The boss prize always grants the ceremonial heart, receive id 62 (decomp audited: the arena pickup's receive call). World items (standing, dig, bonk) resolve their vanilla item record's receive id.
-- A dungeon reward's falling ancilla carries the id the boss's own script grants. A pendant's record says which id that is; the seven crystals share one id no record holds, so those alone come from the prize table (prize-receive-id.ts).
+- A dungeon reward's falling ancilla carries the id the boss's own script grants. A pendant's record says which id that is; the seven crystals share one id no record holds, so those alone come from the prize table (packages/game-data/src/data/prize-receive-id).
 - The native grant tables hold 76 entries (ids 0 to 75); 0xFF marks "no item" in the records.
 
-## game/randomizer-client/network-facts.ts
+## packages/randomizer/src/client/network-facts
 
 - What the network section needs that the room state does not already hold, read off the packets as they cross: counters, timestamps, the room's advertised settings, and which of this client's reported checks held another player's item. Two observers, one per direction, each a plain update of the facts.
 - `requestedGames` are the games asked for in GetDataPackage: every other game of the room came from the cache by checksum.
@@ -1669,56 +1644,56 @@ carry, and grading it on the loadout would make findings come and go with the in
 - The room's settings come from RoomInfo or the part of them a RoomUpdate (or Connected) changes.
 - When the socket closes, what described the live connection goes with it.
 
-## game/randomizer-client/network-monitor.ts
+## packages/randomizer/src/client/network-monitor.ts
 
 - The online client's network section, an Observer on its traffic: every packet in and out passes through here, and so do the socket's open and close, the reconnect schedule and the error that ends a session. Listeners get a fresh NetworkStatus (network-status.ts) after each.
-- Once the slot is accepted the ping (network-ping.ts) runs, its echoes stopping here, and the roster is asked for (network-roster.ts). When the roster settles the tracker links open, and they close with the connection.
+- Once the slot is accepted the ping (packages/randomizer/src/client/network-ping) runs, its echoes stopping here, and the roster is asked for (create-roster.ts). When the roster settles the tracker links open, and they close with the connection.
 - `send` in the deps goes straight to the socket; the monitor's own `send` counts the packet first.
 - `received` returns true for a ping echo, which goes no further. `changed` means a message was handled and the room state moved, so listeners hear it.
 - `attempting`: the scheduled try started; it stays in flight until the next schedule or the slot is accepted.
 - `stop` is the session end: the ping stops, the facts stay readable, an error among them. `reset` is the session start: nothing of an earlier run is kept.
 - When the connection is gone, what was learned about it (ping, roster, tracker links, presence) goes too.
 
-## game/randomizer-client/network-ping.ts
+## packages/randomizer/src/client/network-ping
 
 - Round trip time to the room. While connected, a Bounce tagged `rotp-ping` goes out every PING_INTERVAL_MS addressed to this slot only, and the server echoes it back as a Bounced.
 - The time is taken from this client's own record of when each id left, never from the echo.
 - PING_WINDOW is how many round trips the mean covers. An echo later than PING_EXPIRY_MS is dropped: the connection it measured is long gone.
 - handleBounced answers true when the packet was one of this client's pings.
 
-## game/randomizer-client/network-players.ts
+## packages/randomizer/src/client/network-players.ts
 
-- The room's players on this slot's team, in slot order. This slot is online while its own connection is; every other one as network-presence.ts has it.
+- The room's players on this slot's team, in slot order. This slot is online while its own connection is; every other one as packages/randomizer/src/client/network-presence has it.
 - The status is the slot's client status, except that one needing a connected client reads unknown while the slot is offline (a tracker holding the slot keeps the server's value alive).
 - This slot's checks come from the room; another slot's from its tracker link (tracker-links.ts), when one is up.
 
-## game/randomizer-client/network-presence.ts
+## packages/randomizer/src/client/network-presence
 
-- Who is connected to the room and what each slot's client status says. Three sources feed it: the client status read at connect (client-status.ts), the `!players` line (players-reply.ts), then the room's Join and Part messages.
+- Who is connected to the room and what each slot's client status says. Three sources feed it: the client status read at connect (packages/randomizer/src/client/client-status), the `!players` line (roster-of-reply.ts), then the room's Join and Part messages.
 - A slot can hold several game clients at once, so each keeps a count and reads online while it is above zero.
 - Trackers and text clients (this app's own tracker links among them) join and part too, but never count: a player is online while a game is.
 - NON_GAME_TAGS are the tags the server calls non game clients (its _non_game_messages). A non game client's Part carries no tags; its text says "has stopped tracking the game" and the like, which NON_GAME_PART matches.
 - onlineOf answers true, false, or null when the room has not said. handlePrint answers true when the message changed a slot's count. setOnline records what `!players` listed for the slot.
 - setStatus with `seed` also decides online while nothing else has. A key the server did not fill (null) says nothing about presence.
 
-## game/randomizer-client/network-roster.ts
+## packages/randomizer/src/client/network-roster/create-roster.ts
 
 - Who is already in the room when the slot is accepted. The server announces joins and parts, never who was there first, so each connection asks twice: a Get of every slot's client status on the team (then SetNotify, so a change arrives as a SetReply), and `!players` once through Say, when there is another player to ask about.
 - The roster settles on the `!players` answer, or after SETTLE_AFTER_MS when none comes. Only then do the tracker links open, because a tracker connected to a slot makes the server list that slot as connected. For the same reason a later listing never decides a slot one of this app's tracker links holds.
 - This slot's own status is shown too, but its presence is the connection's, so its status never seeds presence.
 - query asks once per connection; reset (the connection closed) lets the next one ask again. received answers true when the packet moved a slot's presence or status.
 
-## game/randomizer-client/network-status.ts
+## packages/randomizer/src/client/network-status.ts
 
-- One NetworkStatus snapshot, built from the session's status, the packet facts (network-facts.ts), the room state, the ping, the presence counts, the tracker links' progress and two reads of the game (the received index and whether a file is in play).
+- One NetworkStatus snapshot, built from the session's status, the packet facts (packages/randomizer/src/client/network-facts), the room state, the ping, the presence counts, the tracker links' progress and two reads of the game (the received index and whether a file is in play).
 - A hint's cost in points follows the server's own formula: a percentage of the slot's locations, never under one point (and 0 when the percentage is 0).
 - A game the client did not ask for was served from the cache under the room's checksum, so it counts as matched.
 - Queued items are those handed on and not granted yet: the run in a row, plus the positions handed ahead of it, less the ones among them the game already granted.
 
-## game/randomizer-client/network-status.type.ts
+## packages/randomizer/src/client/network-status.type.ts
 
 - The online session's network picture, one snapshot at a time (network-status.ts builds it). Times are epoch ms, so a reader works out an age or a countdown against its own clock.
-- `configuredUrl` is the address as the profile holds it; `url` is the candidate that opened (server-url.ts), null until one did.
+- `configuredUrl` is the address as the profile holds it; `url` is the candidate that opened (packages/randomizer/src/client/server-url), null until one did.
 - `uuidShort` is the first block of the install's client id.
 - `worldVersion` is the world package version the slot was generated with, null until Connected; `appWorldVersion` is the version this app speaks (AP_WORLD_VERSION).
 - `connectedAt` is when the slot was accepted on the live connection, null while not connected. `reconnectAttempt` counts tries since the last drop, 0 while connected. `nextRetryAt` is when the next try runs while reconnecting and waiting, null while a try is in flight. `retryInFlight` means a try is under way: its socket is opening or its slot is being accepted. `error` says why the session ended in error, or why the server was never reached while retrying.
@@ -1727,7 +1702,7 @@ carry, and grading it on the loadout would make findings come and go with the in
 - A player's `online` is null when the room has not said (neither `!players` nor a join, part or client status). `status` is the slot's client status; a status that needs a client reads unknown while offline. Another slot's `checked` and `total` come from a tracker link, null while none is connected.
 - `hintCostPoints` is a hint's price for this slot, worked out as the server does.
 
-## game/randomizer-client/notice-burst.ts
+## packages/randomizer/src/client/notice-burst
 
 - The toast queue's reducer, which folds a burst into one line. A collect or a release sends a room's worth of items in one message, and a toast per item would bury the game.
 - Notices of one group (a kind, and for items the other player) that arrive within BURST_WINDOW_MS of the last one form a burst: the first BURST_LIMIT show as they are, and the next replaces them with a single summary that counts the whole burst ("136 items received from <player>") and keeps counting while the burst lasts.
@@ -1735,25 +1710,25 @@ carry, and grading it on the loadout would make findings come and go with the in
 - Trimming drops the oldest entries past MAX_VISIBLE. The singles of the burst still forming count as one line, since the next notice may fold them: a burst in progress never pushes out a line of another group that would still fit once it folds.
 - queueNotice leaves the queue unchanged when the profile turned the notice's kind off.
 
-## game/randomizer-client/notice-of-print.ts
+## packages/randomizer/src/client/notice-of-print.ts
 
 - The notice a PrintJSON message raises, or null. Items are told from this player's side: received from someone, sent to someone, found for ourselves, or passed between two other players.
 - A hint keeps the server's own line, its names drawn apart.
 - Joins and parts of trackers and text clients (this app's own tracker links among them) raise nothing, and neither does anything this client said or did itself, except its own goal.
 - PrintSide `slot` is this client's slot, null before Connected.
 
-## game/randomizer-client/npc-capability.ts
+## packages/randomizer/src/client/npc-capability
 
 - Capability probes decide, per capability gated location, whether the app can physically play a shuffled item there.
 - A location is serviceable when it resolves to a check record, its nominal vanilla item resolves to a native receive id, and it has either a physical substitution key (npc, standing, drop or scripted tables, which report completion at the grant seam itself through override fired events, so no polled detection is needed) or a certified live detection for the deliver path.
 - The resulting sets feed generation (only these locations enter the shuffle) and the bridge (the rest classify vanilla locked), so a plan error on a probed location is structurally impossible for fresh seeds.
 - Data driven and stable per build, so each set is cached after the first walk.
-- The pond probe runs the same test over every pond's own pair of slots: the capacity pond's two carry scripted grant keys (its handler's own seam), like the cave bat and the prize minigame, and each wish pond's two carry npc keys (the receive seam, keyed by the water's room). A numbered rung past a pair has no seam of its own, so certifying the pair certifies that pond's whole ladder (pond/pond-spots.ts reads a pond's pair out of the set).
+- The pond probe runs the same test over every pond's own pair of slots: the capacity pond's two carry scripted grant keys (its handler's own seam), like the cave bat and the prize minigame, and each wish pond's two carry npc keys (the receive seam, keyed by the water's room). A numbered rung past a pair has no seam of its own, so certifying the pair certifies that pond's whole ladder (packages/randomizer/src/world/pond/pond-spots reads a pond's pair out of the set).
 - POND_SLOT_LOCATIONS maps every pond's two vanilla slots to the grant its fairy makes there in the unmodified game. The capacity pond's pair is named by the upgrade table, the wish ponds' pairs by the npc scope, because that is where each one's vanilla item is written down.
 - Generation carries one set for every pond, so all six pond slots are certified; the capacity only complement stays over the upgrade table, because that is the only pair a profile locks.
 - The undeliverable sets are complement views: the locations generation must keep vanilla.
 
-## game/randomizer-client/npc-override-key.ts
+## packages/randomizer/src/client/npc-override-key.ts
 
 - Substitution keys for scripted (npc) grants: decides, per check record, how the in-core npc override table identifies the giver's grant at the plain receive seam.
 - Indoor givers key by (room, vanilla item); the boss prize keys by its arena room and the ceremonial heart grant. A giver with no room keys by vanilla item alone, and so does a giver whose grant runs somewhere other than the room its record names (ROOMLESS_GRANT_CHECKS).
@@ -1766,7 +1741,7 @@ carry, and grading it on the loadout would make findings come and go with the in
 - World items (standing, dig, bonk) use this table only when they cross the receive seam and the standing table has no physical claim on the pickup.
 - A null key (no native grant id, or a roomless giver of an ambiguous item) sends the caller to the delivery path.
 
-## game/randomizer-client/online-arm-scouted.ts
+## apps/desktop/src/game/randomizer-client/online-arm-scouted
 
 - The real core's answer to a scout: the scouts become a Placement (scouts-to-placement.ts) and the session arms through the one start sequence a local seed uses (session-start.ts), so a solo room and a local seed with the same options set the game up identically.
 - Each location holding another player's item arms the foreign sentinel, with a receipt line naming the item and who it went to.
@@ -1774,39 +1749,39 @@ carry, and grading it on the loadout would make findings come and go with the in
 - Afterwards the dedup set keeps every location the game grants in world: every class but deliver. A deliver row's own item comes back through the receive path instead.
 - stopScoutedTexts stops following the tracker with the armed lines (session end).
 
-## game/randomizer-client/online-check-reporter.ts
+## apps/desktop/src/game/randomizer-client/online-check-reporter.ts
 
 - A check the poller saw complete, on its way to the room: the goal's own check sends the goal, and a check with a server id is remembered (a reconnect resends it) and sent while connected.
 
-## game/randomizer-client/online-client.ts
+## apps/desktop/src/game/randomizer-client/online-client.ts
 
 - The online session's state machine, with the game and the socket passed in (online-core, a socket factory), so it runs unchanged in node against a fake server. The app builds it through online-session.ts with the real ones.
-- Lifecycle: start arms the core and dials; then RoomInfo, DataPackage, Connect, Connected (online-dispatch.ts handles each packet).
-- A server that cannot be reached, at the first connect or after a drop (down or restarting), is redialed on the backoff of reconnect.ts with the overrides left armed. The try is scheduled before the status says reconnecting. A stop or a refusal ends the session and disarms everything.
+- Lifecycle: start arms the core and dials; then RoomInfo, DataPackage, Connect, Connected (apps/desktop/src/game/randomizer-client/online-dispatch handles each packet).
+- A server that cannot be reached, at the first connect or after a drop (down or restarting), is redialed on the backoff of packages/randomizer/src/client/reconnect with the overrides left armed. The try is scheduled before the status says reconnecting. A stop or a refusal ends the session and disarms everything.
 - A save swap asks again (online-save-swap.ts).
 - Every packet both ways passes the network monitor, which owns the tracker links (online-network.ts).
 
-## game/randomizer-client/online-collected.ts
+## apps/desktop/src/game/randomizer-client/online-collected.ts
 
 - The room holds these locations of this slot as checked (`!collect`, another session of the slot, or this one). The poller takes each out of its reporting for the rest of the session.
 - Each shows completed in the tracker at once: a key with a record joins the collected checks, and a restock or a pond rung, which has no record, joins the taken locations its virtual row reads.
 - Nothing is written to the game: its own completion flags still say what the save did.
 
-## game/randomizer-client/online-config-of-profile.ts
+## apps/desktop/src/game/randomizer-client/online-config-of-profile/online-config-of-profile.ts
 
 - What an online profile's session connects with. The room sets the game up (its slot data and scouts), so only the connection travels.
 
-## game/randomizer-client/online-connected.ts
+## apps/desktop/src/game/randomizer-client/online-connected
 
 - Connected: store the slot's side of the room, resend what the server missed, scout once, then poll.
 - A reconnect finds the scout already answered and the overrides still armed, so it only resumes polling. The poller's first tick reports every locally complete check the server does not hold (poll-rebaseline.ts), which is how a check made offline reaches it.
 - Every location the room already holds as checked shows done in the tracker and is never reported again (markRoomChecked); only the ones this game knows are marked.
-- Before any of it, the save in play is bound to the room, or the session ends when it belongs to another (online-room-identity.ts), so nothing of another room's save reaches this one.
+- Before any of it, the save in play is bound to the room, or the session ends when it belongs to another (packages/randomizer/src/client/online-room-identity), so nothing of another room's save reaches this one.
 - A slot from another world package version is refused (storeSlot returns the refusal message), and the slot data's DeathLink decides over the profile's (slot-death-link.ts).
 - isKnownReported: whether the server already holds this key's check. A key it has no id for never reports, except the goal check, which counts as reported once the goal is reached.
 - First connect scouts the plan, trimmed to locations the slot has. A reconnect whose earlier connection dropped before the answer came asks again, or nothing would ever arm.
 
-## game/randomizer-client/online-context.type.ts
+## packages/randomizer/src/client/online-context.type.ts
 
 - What every per packet handler of the online client shares.
 - `fail` ends the session with an error and no reconnect follows; `logLine` replaces `message` in the log.
@@ -1815,14 +1790,14 @@ carry, and grading it on the loadout would make findings come and go with the in
 - `setPlacement`: the scouts became this placement, shown with who owns each foreign item (the Spoiler tab).
 - `setDeathLink` turns DeathLink on or off for the rest of the session: the gate bit and the room link.
 
-## game/randomizer-client/online-core.ts
+## apps/desktop/src/game/randomizer-client/online-core.ts
 
 - The real game behind the online client's seam (online-core.type.ts): the gate bits a session sets before it connects, the teardown when it ends, scouting and arming the scouted placement, delivery, polling, what the save keeps of the room (the received index and the room hash), the room's collected checks and DeathLink.
 - arm sets the online gate bits before connecting: the foreign sentinel must be a grant id before the first scouted override arms, and a death must report from the first frame. disarm runs on every stop path (a refused connection included), so a failed start leaves neither bit set.
-- The goal's poll row: its event is read from the ledger, which no detection covers, so the row carries none and the poller answers it from the tracker's own sweep (location-poller.ts).
+- The goal's poll row: its event is read from the ledger, which no detection covers, so the row carries none and the poller answers it from the tracker's own sweep (apps/desktop/src/game/randomizer-client/location-poller).
 - startPolling arms the fire channel too: the scouted session armed it with the same reporter, and a reconnect before the scouts were armed still reports every substitution it sees.
 
-## game/randomizer-client/online-core.type.ts
+## packages/randomizer/src/client/online-core.type.ts
 
 - Everything the online client asks of the game, behind one seam. The session speaks the protocol; this is the only way it reaches the core, so a test runs the whole client in node against a fake (apps/desktop/tests/randomizer/ap-protocol.keep.test.ts) and the app passes the real one (online-core.ts).
 - DeliveryOutcome 'not-ready': the game cannot take the item now, so the received index must not move past it.
@@ -1840,49 +1815,49 @@ carry, and grading it on the loadout would make findings come and go with the in
 - setDeathLink sets the DeathLink gate bit when the slot data decides differently from the profile.
 - killLink answers 'armed' when the kill will land, 'down' when Link is already dying, 'unsupported' with no export.
 
-## game/randomizer-client/online-data-package.ts
+## apps/desktop/src/game/randomizer-client/online-data-package
 
 - RoomInfo and DataPackage: learn every game in the room, from the cache when its checksum is already held and from the server otherwise, then ask for the slot.
 - The tables of every game are kept, not only this one's, so a message naming another world's item reads as a name (print-json.ts).
 
-## game/randomizer-client/online-dispatch.ts
+## apps/desktop/src/game/randomizer-client/online-dispatch
 
 - Routes each server packet to its handler. Commands this client has no use for are ignored.
 - A socket message passes the network monitor packet by packet first (network-monitor.ts), then raises one change for the monitor's listeners.
 - A refused scout never answers, and the session is armed from the scouts alone, so nothing could set the game up: the session ends, as a local seed with no plan does.
 
-## game/randomizer-client/online-goal.ts
+## packages/randomizer/src/client/online-goal
 
 - The run's goal goes to the server as `StatusUpdate` with CLIENT_GOAL (30) once the final fight is won.
-- The goal is the ledger's "Ganon beaten" event, check-351 (the location completion.data.ts writes the goal rules for; goal.ts in the simulator names the same row), polled like any other row but never a server location.
+- The goal is the ledger's "Ganon beaten" event, check-351 (the location packages/randomizer/src/client/randomizer-completion-bits.constants.ts writes the goal rules for; packages/navigation/src/simulation/engine/goal in the simulator names the same row), polled like any other row but never a server location.
 - The ledger bit is written the frame Ganon's death finishes, so the goal fires exactly when the run is won.
 - Sent once per connection when it fires locally, and sent again on a reconnect when already reached, since the server may never have seen the first and a repeat changes nothing.
 
-## game/randomizer-client/online-handshake.ts
+## packages/randomizer/src/client/online-handshake
 
 - Pure builders for the client packets the online session sends while connecting, and the parser that turns a raw socket message into typed server packets (a message that is not a JSON array yields no packets).
 - FALLBACK_VERSION (0.6.6) is sent when the server's RoomInfo names no version of its own.
 - The version claimed is the server's own, so a newer server never refuses an older build.
 - items_handling 0b111 (ITEMS_HANDLING_ALL): receive remote items, own world items, and starting inventory.
 
-## game/randomizer-client/online-items.ts
+## packages/randomizer/src/client/online-items.ts
 
 - Resolves a server item name (community standard) to the receive item index the core understands.
 - A progressive family name resolves to its virtual id (progressive-receive-id contract), so the tier a delivery lands at is decided by the core from live inventory at grant time, the same path the local session takes.
 
-## game/randomizer-client/online-messages.ts
+## apps/desktop/src/game/randomizer-client/online-messages
 
 - PrintJSON: a message is rendered with the room's names (print-json.ts), logged under `[AP]`, kept in the session's message log and told as an online notice (notice-of-print.ts).
-- This client's own `!players` echo (sent on each connect, network-roster.ts) is dropped. The answer to it comes on every connect: the room feed keeps it, the log does not.
+- This client's own `!players` echo (sent on each connect, create-roster.ts) is dropped. The answer to it comes on every connect: the room feed keeps it, the log does not.
 - RoomUpdate merges the newly checked locations and the renamed players into what Connected stored; a location checked there (a `!collect` among them) shows done and is never reported again.
 
-## game/randomizer-client/online-network.ts
+## apps/desktop/src/game/randomizer-client/online-network.ts
 
 - The online client's network monitor together with the tracker links it opens once the roster settles.
 - The tracker links dial the URL the main connection opened on, with this install's client id. That URL is null before the main connection opened.
 - The monitor's snapshots also report the connection's changes as online notices.
 
-## game/randomizer-client/online-notices.ts
+## packages/randomizer/src/client/online-notices
 
 - What the online session tells the player, one notice at a time: items both ways, the room's other finds, hints, the connection, players joining and leaving, goals, releases, DeathLink and chat.
 - The session emits every notice. The play area's toast stack (useOnlineNoticeToasts) listens and shows the kinds the profile's settings leave on.
@@ -1890,34 +1865,34 @@ carry, and grading it on the loadout would make findings come and go with the in
 - `counterpart` is the other player an item notice is about, so a burst of them reads as one line.
 - A DeathLink notice is a room death that killed Link or found him already down, or our own death sent out.
 
-## game/randomizer-client/online-overrides.ts
+## apps/desktop/src/game/randomizer-client/online-overrides.ts
 
 - Online scout plumbing: maps every server location of this game to the key it stands for, through the frozen id table (ap-ids.constants.ts). The wire speaks ids, the app keys by location key.
-- What each scouted location arms is decided by the shared start sequence over the placement the scouts become (online-scouted.ts). Server items no in-world pickup covers are delivered by server-delivery.ts.
-- Scout-first dedup: every scouted location id joins `overriddenLocationIds` before the scout is sent. Once the scouts are armed, the set keeps exactly the locations the game grants in-world, so their receive-path delivery is swallowed (online-received.ts).
+- What each scouted location arms is decided by the shared start sequence over the placement the scouts become (online-scouted.ts). Server items no in-world pickup covers are delivered by apps/desktop/src/game/randomizer-client/server-delivery.
+- Scout-first dedup: every scouted location id joins `overriddenLocationIds` before the scout is sent. Once the scouts are armed, the set keeps exactly the locations the game grants in-world, so their receive-path delivery is swallowed (apps/desktop/src/game/randomizer-client/online-received).
 - `pollEntries` is what to poll before the scouts are armed. The armed plan replaces it.
 
-## game/randomizer-client/online-probe.ts
+## packages/randomizer/src/client/online-probe
 
 - Pre-flight probe for an online randomizer boot. It opens a WebSocket, reads the RoomInfo the server greets every socket with, then closes.
 - It never sends Connect, so the room sees no join and no leave. It answers only whether the server is reachable and hosts this game, and reads its version.
 - A wrong slot name or password is the real session's to report, through its own error path.
-- A bare local host:port tries ws:// only. Any other address tries wss:// first and ws:// when the secure socket never opens (server-url.ts).
+- A bare local host:port tries ws:// only. Any other address tries wss:// first and ws:// when the secure socket never opens (packages/randomizer/src/client/server-url).
 - An attempt reports `opened`, which tells the caller whether another scheme is worth a try.
 - `game` is the server-side game key and defaults to this app's own registered name.
 
-## game/randomizer-client/online-received.ts
+## apps/desktop/src/game/randomizer-client/online-received
 
-- ReceivedItems are delivered exactly once per save. The save keeps how many of the server's items it already holds (received-index.ts). That number moves only when the game confirms a grant (received-cursor.ts), never when an item is merely queued.
+- ReceivedItems are delivered exactly once per save. The save keeps how many of the server's items it already holds (packages/randomizer/src/client/received-index). That number moves only when the game confirms a grant (packages/randomizer/src/client/received-cursor), never when an item is merely queued.
 - A packet starting past what the save holds plus what the queue carries is a gap: the client asks for the whole list again (Sync, answered at index 0). A packet starting before it has its known prefix skipped.
 - A list stops where the game could not take an item. Nothing resends the rest on its own, so once the game can take items again the full list is asked for once more.
-- Nothing is delivered while no save file is in play (the title, file select): the index and the room hash in the save block are not a file's yet. Entering a file asks for the list again (online-save-swap.ts). A save bound to another room takes nothing (online-room-identity.ts).
+- Nothing is delivered while no save file is in play (the title, file select): the index and the room hash in the save block are not a file's yet. Entering a file asks for the list again (online-save-swap.ts). A save bound to another room takes nothing (packages/randomizer/src/client/online-room-identity).
 - An item is this slot's own pickup echoed back when its sender is this slot AND its location is one the core grants in-world (an armed override). That item is already in Link's hands, so it only moves the index. The sender check matters as much as the location: another player's item can carry the same location id from their own world.
 - Nothing is decided before the scout answer is in, since only it says which locations the core grants in-world. Packets held until then run in arrival order.
 - The server itself sent an item when its sender is slot 0 (an admin send) or its location is negative. The protocol keeps negative locations for items no location holds: -1 is a cheat command, -2 the starting inventory. `!getitem` names the player who asked as the sender.
 - The saved index moves over every settled list position in a row.
 
-## game/randomizer-client/online-room-identity.ts
+## packages/randomizer/src/client/online-room-identity
 
 - A save belongs to one multiworld room. The save keeps the room's hash (room-hash.ts): zero until the save first meets a room, when that room's hash is written.
 - A save holding another room's hash takes nothing from this one. Its received index counts a different list, so delivering against it would hand out the wrong items.
@@ -1925,7 +1900,7 @@ carry, and grading it on the loadout would make findings come and go with the in
 - A save with no room yet is bound to this one at its first granted item.
 - `bindSaveToRoom` runs on Connected and after every save swap, before any check is reported or item delivered. A save of another room ends the session before it sends that room's checks here. With no file in play there is no save to judge yet; entering one is a save swap.
 
-## game/randomizer-client/online-room.ts
+## packages/randomizer/src/client/online-room
 
 - What the online client knows about its room has two lifetimes. The per-connection half (roomInfo, connected, heldReceived, syncPending, resyncWait) is reset on every new socket. The rest outlives a reconnect, because the overrides armed from the scout answer stay armed while the client redials.
 - `heldReceived`: ReceivedItems held until the scout answer is in.
@@ -1935,21 +1910,21 @@ carry, and grading it on the loadout would make findings come and go with the in
 - `scoutIds`: the locations asked for in the scout, asked again when a drop lost the answer.
 - `scoutArming`: a scout answer is being armed, so a second answer waits for it instead of arming twice.
 - `scouted`: the scout answer has been applied, or nothing needed scouting.
-- `cursor`: where the received list stands between the queue and the save (received-cursor.ts).
+- `cursor`: where the received list stands between the queue and the save (packages/randomizer/src/client/received-cursor).
 - `roomHash`: the room identity a save is bound to (room-hash.ts), null until RoomInfo names a seed.
 
-## game/randomizer-client/online-save-swap.ts
+## apps/desktop/src/game/randomizer-client/online-save-swap.ts
 
 - The save under the game changed: a state load, a file entered from file select, or the way back to the title. Whatever the queue still holds was meant for the save that is gone, so it is withdrawn.
 - The new save is bound to the room first, or ends the session when it belongs to another room. Then the received list is asked for again.
 - The answer is filtered by the index the new save holds, so a state loaded from before three items receives exactly those three again, and a file with none of them receives the whole list.
 
-## game/randomizer-client/online-scouted.ts
+## apps/desktop/src/game/randomizer-client/online-scouted.ts
 
 - LocationInfo is the scout answer. The game arms the session over the placement the scouts become, polling switches to that plan's own entries, and the received items held until now run.
 - A session stopped while it armed disarms again. A placement the plan refuses ends the session the way a local seed with plan errors does.
 
-## game/randomizer-client/online-session-config.type.ts
+## packages/randomizer/src/client/online-session-config.type.ts
 
 - An online session is started with the room and the slot only. Everything the game is set up with comes from the room itself (the slot data and the scouts), as a local seed's comes from its placement.
 - `url` is kept as typed: a bare local host:port tries ws:// only, any other wss:// first, then ws://.
@@ -1958,11 +1933,11 @@ carry, and grading it on the loadout would make findings come and go with the in
 - `deathLink` joins the room's DeathLink: a death here kills the others, and theirs kill Link.
 - `trackOtherPlayers` opens one tracker connection per other player for their checks count (tracker-links.ts). It is on unless false.
 
-## game/randomizer-client/online-session.ts
+## apps/desktop/src/game/randomizer-client/online-session.ts
 
 - The online session is the multiworld client (online-client.ts) wired to the real game (online-core.ts) and the browser's WebSocket. A test passes its own `deps` to run the same client against a fake server.
 
-## game/randomizer-client/online-session.type.ts
+## packages/randomizer/src/client/online-session.type.ts
 
 - The online session's surface is the shared session contract plus what the room told it.
 - `slotData` is the world's slot data, checked by parse-slot-data.ts. It is null until connected or when malformed.
@@ -1971,24 +1946,24 @@ carry, and grading it on the loadout would make findings come and go with the in
 - `placement` is the placement the scouts became, null until they are armed. `onPlacement` also hands the player each foreign item belongs to.
 - `networkStatus` (connection, health, players, server and progress) is built fresh on each read. `onNetworkStatus` fires on every packet in or out, every ping echo and every state change.
 
-## game/randomizer-client/online-socket.ts
+## packages/randomizer/src/client/online-socket.ts
 
-- One connection to the room, over the candidate URLs of server-url.ts in order. A socket that closes without ever opening hands over to the next candidate, so wss:// failing on a server that only speaks ws:// falls back to it. The session hears one close, for the last socket.
+- One connection to the room, over the candidate URLs of packages/randomizer/src/client/server-url in order. A socket that closes without ever opening hands over to the next candidate, so wss:// failing on a server that only speaks ws:// falls back to it. The session hears one close, for the last socket.
 - A socket that fails to construct reports its close in a microtask, so the caller already holds the link when it hears the close.
 - A socket error is ignored: the close that follows decides.
 - A send that throws (not open yet, or already closing) is dropped: the reconnect resends what matters.
 - `onClose(opened)` tells whether any candidate ever opened (a drop, versus nothing answering).
 - `close()` returns false when no socket is left to close, so the caller cleans up itself.
 
-## game/randomizer-client/override-fire-registry.ts
+## apps/desktop/src/game/randomizer-client/override-fire-registry
 
-- The session-side half of the override-fired completion channel. Each armed physical override entry carries a fire id allocated here. When the core reports a substitution (override-fired.ts) the id maps back to its location and the session reports the check, once.
+- The session-side half of the override-fired completion channel. Each armed physical override entry carries a fire id allocated here. When the core reports a substitution (packages/game-core/src/override-fired) the id maps back to its location and the session reports the check, once.
 - Sessions reset the registry when they stop, together with the in-core tables the ids point into.
 - While a check is physically armed (npc, drop or standing substitution), its completion must be read from the real substitution facts, never a possession-proxy detection.
 - `firedLocations` exists because a shelf slot and a pond prize past the reference's two have no check record, so the tracker's completed set never lists them. Anything that counts completed locations (the receipt lines' found/total numbers) reads these alongside it.
 - `markLocationFired` backfills a substitution the core already recorded before this boot (a shelf sold in an earlier session, per its persisted SRAM counter), or a location the multiworld room holds as checked (online-collected.ts). No fire id exists for either, so it bypasses the id ledger and writes straight to the location set the live path also writes.
 
-## game/randomizer-client/physical-plan.type.ts
+## packages/randomizer/src/client/physical-plan.type.ts
 
 - The physical plan is the bridge's answer to "what does this placement mean in the running game". Every planned location falls in exactly one class: an in-core chest override, an in-core scripted-grant (npc) override, a poll-and-deliver grant, or a generation-locked vanilla location (no physical action, still reported).
 - A non-locked location with no physical path is a plan error, never a silent skip, so a session must refuse to start on any.
@@ -1999,11 +1974,11 @@ carry, and grading it on the loadout would make findings come and go with the in
 - standing override: `area` is the overworld screen index (outdoor) or room index (indoor). `sprite` is the standing prize's sprite type. `half` is the indoor room half the prize stands in: 0 left, 1 right, 2 either.
 - shop override: `slotIndex` is the slot's stable id across every shop, which keys its sold counter. `roomId` is the indoor room the shelf stands in. `entrance` identifies the shop when the room is shared, or -1 for any.
 - shop override `owArea` is the overworld area the shop's own door stands in, or -1 when no door of its own reaches it. Several doors share one room AND one entrance value, so this is what tells them apart: the running game keeps the area a visit was entered from for the whole visit (core/game-hooks/shop_table.h).
-- shop override: `subtype` is the shelf sprite's own subtype, which names one shelf inside the shop. `depthIndex` is the purchase order within the slot (the shelf sells depth 0 first). `depth` is how many purchases the slot carries in total, so the core knows when it empties. `currency` is the native currency tag (shop-price-native.ts: rupees, arrows, bombs, hearts, bottle). `amount` is the amount, or the bottle-slot value a bottle price demands.
+- shop override: `subtype` is the shelf sprite's own subtype, which names one shelf inside the shop. `depthIndex` is the purchase order within the slot (the shelf sells depth 0 first). `depth` is how many purchases the slot carries in total, so the core knows when it empties. `currency` is the native currency tag (packages/randomizer/src/world/shops/shop-price-native: rupees, arrows, bombs, hearts, bottle). `amount` is the amount, or the bottle-slot value a bottle price demands.
 - drop override: `roomId` is the drop's indoor room. `big` is true for the large-key drop sprite, false for the small-key drop sprite.
 - `PlanCounts.pollBlind` counts locked locations with no usable detection: reported never, logged once.
 
-## game/randomizer-client/placement-bridge.ts
+## packages/randomizer/src/client/placement-bridge
 
 - The placement to game bridge classifies every planned location of a Placement into the physical plan classes.
 - Chest-kind checks with a resolvable item become in-core chest overrides. Standing world items with a certified pickup seam become in-core standing overrides: the pickup shows and grants the assigned item natively. Checks whose grant crosses the plain receive seam with a usable key (npc gifts, boss prizes, the receive-crossing world items) become in-core npc overrides. Key drops become in-core drop overrides. The boss-prize slots have no seam at all and are reported as locked vanilla, not dropped.
@@ -2018,22 +1993,22 @@ carry, and grading it on the loadout would make findings come and go with the in
 - The persisted placement stats say what generation locked; the same derivation names the rows.
 - Physical override rows report from the substitution seam, so only a locked row without a detection is invisible to the session (poll-blind).
 
-## game/randomizer-client/placement-view.ts
+## packages/randomizer/src/client/placement-view
 
 - Crosswalks a placement into the tracker's own vocabulary, so a check can be shown holding what this run put there instead of its vanilla contents.
-- A placement is keyed by id, so a real check is its record (location-record.ts maps a shelf's first stock back to the shelf's record).
-- The rows the dataset does not model on its own: a slot with no check record takes the virtual id virtual-locations.ts mints for it, so its row shows what this seed placed; an item with no item record is counted and reported instead of silently dropped; another player's item (an online placement) has no record in this game and is shown by name, with its owner's name when the server gave one.
+- A placement is keyed by id, so a real check is its record (packages/randomizer/src/world/location-record maps a shelf's first stock back to the shelf's record).
+- The rows the dataset does not model on its own: a slot with no check record takes the virtual id packages/randomizer/src/client/virtual-locations mints for it, so its row shows what this seed placed; an item with no item record is counted and reported instead of silently dropped; another player's item (an online placement) has no record in this game and is shown by name, with its owner's name when the server gave one.
 - `sphereByCheck` holds the sweep sphere the location was reached in.
 
-## game/randomizer-client/plan-armed-checks.ts
+## packages/randomizer/src/client/plan-armed-checks.ts
 
 - Offline mirror of session arming: the check ids a session would physically arm for this placement. apply-overrides.ts allocates a fire id for exactly the fire-reported plan classes, so classifying the placement the same way names the same checks. An offline read then applies the same real-bit versus possession-proxy routing the live poller uses, without a session ever having started.
 
-## game/randomizer-client/plan-scope-flags.ts
+## packages/randomizer/src/client/plan-scope-flags.ts
 
 - The scope flags of a persisted placement: what generation locked, derived again from the same stats so the bridge and the fill always name the same rows.
 - Option toggles lock whole scope tables. A toggle on locks the capability probe's undeliverable remainder, classified with the same probe so both sides name the same rows.
-- The capacity spots follow the profile the placement was generated with: a present fairy slot not proven deliverable stays vanilla, and a vanilla meter locks the bat explicitly, exactly as fill-world.ts does.
+- The capacity spots follow the profile the placement was generated with: a present fairy slot not proven deliverable stays vanilla, and a vanilla meter locks the bat explicitly, exactly as packages/randomizer/src/world/fill/fill-world does.
 - A Custom family with a locked spot also hands the poller its starting rung (rung 0 is the empty tier and is included), so the pond's "purchased" compare keeps meaning "advanced by one purchase". Other modes are omitted.
 - A wish pond at Vanilla grants locks her own two slots to what her upgrade produces, so no override is armed there and the real upgrade runs. Only a placement that recorded the rule does.
 - A non-legacy pond owns its prize slots outright: they are proven deliverable at generation or they are not locations at all, so nothing of the pond is ever capability-locked.
@@ -2042,34 +2017,34 @@ carry, and grading it on the loadout would make findings come and go with the in
 - A placement that kept the legacy pond carries no prize slots at all: its two pond names stay the capacity families' spots.
 - Each wish pond's numbered rungs are that pond's own, apart from the capacity pond's.
 
-## game/randomizer-client/plan-summary-log.ts
+## apps/desktop/src/game/randomizer-client/plan-summary-log.ts
 
 - Logs the physical plan's one-line summary and every plan error under the session's tag.
 
-## game/randomizer-client/plan-target-id.ts
+## packages/randomizer/src/client/plan-target-id.ts
 
 - The id an override arms for a planned item is the native grant id its name resolves to, or the core's foreign-item sentinel for another player's item (an online placement only). The setters check the sentinel against the core's own WasmForeignItemId before arming it.
 - `planItemLabel` (now plan-item-label.ts) is what a plan error calls the item.
 
-## game/randomizer-client/players-reply.ts
+## packages/randomizer/src/client/players-reply/roster-of-reply.ts
 
 - The server's answer to `!players` is a CommandResult line such as `2 players of 3 connected :: Team #1: Link (Zelda) Ganon :: Team #2: ...`.
 - A name in parentheses has no client connected; a bare one has at least one.
 - Names may hold spaces, so each known name is matched whole, longest first, and taken out of the line once matched.
 - `team` is 0-based while the line numbers teams from 1. A known name the line misses is left out of the roster.
 
-## game/randomizer-client/poll-heap-reads.ts
+## packages/randomizer/src/client/poll-heap-reads
 
 - The live-memory reads behind a check detection, all straight off the core's heap: the persisted room-flag words (with the live room's unsaved bits folded in), the overworld event bytes and the progress buffer.
 - The live room block is two little-endian words: the room id, then its unsaved flags.
 
-## game/randomizer-client/poll-rebaseline.ts
+## packages/randomizer/src/client/poll-rebaseline.ts
 
 - The poller's baseline decision, kept pure so it can be tested without a core. It runs on the first tick and after every state load: whatever reads as complete stops being eligible.
 - A local session adopts it all silently, since nothing outside the save needs telling. An online session passes `isKnownReported`, and every complete entry the server does not already hold is handed back in `toReport`: those are the checks made while no client was connected, and the server learns of them here.
 - Suppressed entries report from the substitution seam, never from polling, so they stay out whatever the state shows.
 
-## game/randomizer-client/pond-demand-messages.ts
+## packages/randomizer/src/client/pond-demand-messages.ts
 
 - The pond demand lines in the session's composed pool: for every rung of a custom pond whose demand the core asks, its ask, refuse and award lines (pond-demand-lines.ts), appended in pond and rung order and looked up by the core's own (pond, rung) keys, `${pond}:${rung}`.
 - A line index of -1 means the rung has no such line.
@@ -2077,7 +2052,7 @@ carry, and grading it on the loadout would make findings come and go with the in
 - The rupee pond's award line says whether the water still holds a prize after this one (a later throw carries a prize), read from the plan's throws exactly as the core reads them.
 - Rungs asking for the same thing speak the same words, so a line already in the pool is reused and the pool stays small however long the ladders are.
 
-## game/randomizer-client/pond-demand-native.ts
+## packages/randomizer/src/client/pond-demand-native.ts
 
 - A rung's rolled demand in the terms the core stores it, at any of the three ponds (core/game-hooks/pond_demands.h): a kind tag, an amount and one native id.
 - The kind tags (POND_DEMAND_KIND) are shared with core/game-hooks/pond_demands.h. They are the shelf's currency tags plus one, so zero is "no demand", and item is the one kind a shelf has no tag for.
@@ -2086,7 +2061,7 @@ carry, and grading it on the loadout would make findings come and go with the in
 - Pure: the item lookup is handed in, so a test pins it with a plain map.
 - An item name with no receive id is refused: it would arm a demand the core could never test, and a demand armed as none would hand the rung over for free once the handler charges it.
 
-## game/randomizer-client/pond-demand-rows.ts
+## packages/randomizer/src/client/pond-demand-rows.ts
 
 - Pond demands for a session, the pure half: the placement's rolled demands in, one row per prize rung of every custom pond out, in the core's own keys.
 - POND_DEMAND_KEY is the core's key for each pond (core/game-hooks/pond_demands.h).
@@ -2096,18 +2071,18 @@ carry, and grading it on the loadout would make findings come and go with the in
 - A pond arms whole or not at all. An item demand whose name has no receive id refuses every row of its pond, and the refusal line names the rung that stopped it.
 - A row keeps the location it came from for the log and the harness.
 
-## game/randomizer-client/pond-demand-session.ts
+## apps/desktop/src/game/randomizer-client/pond-demand-session.ts
 
 - Pond demands for a session, the impure half: hands every custom pond's rows to the core's shared demand table in one call and logs what went in. The disarm half is now disarm-pond-demand-session.ts.
 - Every pond's visit reads the table (core/game-hooks/pond_demand_visit.c): a rung with a row asks for its demand, takes it and throws it in before the gift. A rupee row at the rupee pond is that throw's own price, which the pond's own flow already charges.
 
-## game/randomizer-client/pond-prize-target.ts
+## packages/randomizer/src/client/pond-prize-target.ts
 
 - The scripted-grant slot a pond prize location arms, or null when the location is no pond's prize.
 - Two kinds of pond hand prizes over in order from a table of their own, so both are keyed by position and never by a check record, since most of their slots have none: the capacity pond by the prize ordinal its throw schedule hands over, a wish pond by the water and the rung of its sequence.
 - A wish pond at its native economy is neither: its prizes are its own two fairy slots, which are ordinary npc checks and classify as such.
 
-## game/randomizer-client/pond-session.ts
+## packages/randomizer/src/client/pond-session.ts
 
 - Pond arming for a session turns the pond setting a placement was generated with into the core's throw table. Split into pond-session.ts (pure translation), arm-pond-session.ts and disarm-pond-session.ts.
 - The throw schedule is not stored on the placement: it is derived again from the setting and the placement's own seed (pondPlanOf), so the spoiler, the logic and the running game always read the same prices and the same winning throws.
@@ -2118,16 +2093,16 @@ carry, and grading it on the loadout would make findings come and go with the in
 - Plan fields: `throws` has one row per throw in the order the pond sells them; `prizeCount` is the pond locations of this placement; `awardMoreMessageId` is the line a prize throw shows while the water still holds one; `awardLastMessageId` the line for the throw that takes the last prize; `closedMessageId` the line an emptied pond shows; -1 keeps the native question or refusal.
 - Every pond goes down together, so every stop and refusal site clears the wish ponds and the demands too.
 
-## game/randomizer-client/print-json.ts
+## packages/randomizer/src/client/print-json.ts
 
 - Renders a PrintJSON message to plain text. Id parts become names through the room's tables: a player id is a slot, an item id belongs to the game of the slot in its `player` field (the item's owner), a location id to the game of its finder.
 
-## game/randomizer-client/profile-reconnect.ts
+## apps/desktop/src/game/randomizer-client/profile-reconnect.ts
 
 - A profile's connection changed and the session follows at once. A profile session that is running, retrying or stopped by a refusal is replaced by a fresh one on the new values; a boot still waiting for the game takes them with it.
 - Nothing else runs, so a profile whose game is not up connects at its next boot.
 
-## game/randomizer-client/randomizer-completion-bits.ts
+## packages/randomizer/src/client/randomizer-completion-bits.ts
 
 - TS mirror of the C allocation in core/game-hooks/npc_overrides.c, the single documented source of the byte addresses and bit assignment. Keyed by check id; keep in lockstep with the C table's vanilla-item rows.
 - Several givers gate on possession of their vanilla item and write no completion flag, so their record detections are possession proxies: sound on a normal profile, false-positive the moment a randomizer seed hands the vanilla item out elsewhere. When a session has physically armed such a check, its completion is read from the real bit the substitution seam persists, exposed as progress-buffer bytes 21, 22 and 25 (state_queries.c).
@@ -2137,7 +2112,7 @@ carry, and grading it on the loadout would make findings come and go with the in
 - Byte 22 also holds the wish ponds' four gear upgrades, which have no vanilla completion flag at all: 0x08 check-021 wish pond returning-weapon slot, 0x10 check-022 wish pond guard-gear slot, 0x20 check-266 cursed pond blade slot, 0x40 check-267 cursed pond piercing-shot slot.
 - Byte 25 holds the scripted-grant surfaces with synthetic keys (no vanilla receive id): 0x01 check-273 pond capacity explosives slot, 0x02 check-274 pond capacity projectiles slot, 0x04 check-040 the cave bat's meter upgrade, 0x08 check-078 haunted stump's digging tool. The haunted stump's record flag is the song played to it, not the gift.
 
-## game/randomizer-client/receipt-plan-messages.ts
+## packages/randomizer/src/client/receipt-plan-messages.ts
 
 - Renders one contextual receipt line per planned grant of a physical plan (chest override, scripted-giver override, queue delivery) from the frozen placement and the seed's found/total numbers, and records the baked class-template id each grant falls back to when the session dialogue cannot be composed. Vanilla-locked locations keep their native message and get neither.
 - The capacity lines follow: a progressive placement appends one line per planned rung per Custom family (capacity-rung-lines.ts), a fixed-jump placement one line per (jump, starting rung) (capacity-fixed-lines.ts), so the core can show the climb a pickup applied.
@@ -2148,9 +2123,9 @@ carry, and grading it on the loadout would make findings come and go with the in
 - The fallback class line mirrors the core's own routing. Another player's item says what it was and who it went to.
 - Index fields point into `lines`; -1 means none (native pond, or no wish pond planned). `rungIndexByFamily` is for progressive placements only, `fixedLines` for fixed-jump placements only, `pondLines` for non-legacy ponds only.
 
-## game/randomizer-client/receipt-text-refresh.ts
+## apps/desktop/src/game/randomizer-client/receipt-text-refresh.ts
 
-- Composes a local session's contextual lines and keeps their numbers current. The found/total counts are a tracker fact (receipt-counts.ts), so the lines are rendered from the completed-check set at session start and rendered again on every change of that set (a chest opened, a save state loaded: the tracker derives again from SRAM).
+- Composes a local session's contextual lines and keeps their numbers current. The found/total counts are a tracker fact (packages/randomizer/src/receipt-text/receipt-counts), so the lines are rendered from the completed-check set at session start and rendered again on every change of that set (a chest opened, a save state loaded: the tracker derives again from SRAM).
 - The session dialogue is composed again in place: the pool keeps its size and order, so every message id the overrides hold stays valid. The ids the arming needs (per location, per rung, per fixed line) are read off the first composition.
 - The completed set is the tracker's checks plus the locations whose substitution fired this session: a shelf slot has no check record, so a heart piece bought there would otherwise never count, and the quarter the next piece announces would trail the game's own piece counter by one.
 - Another player's items count toward nothing this seed shows.
@@ -2159,37 +2134,37 @@ carry, and grading it on the loadout would make findings come and go with the in
 - Pond demand lines are keyed by the core's own (pond, rung) keys (pond_demands.h). The wish ponds' two host lines are shared by both waters.
 - `composed` false means the baked class lines are in use. `stop` stops following the tracker at session stop.
 
-## game/randomizer-client/received-batch-order.ts
+## packages/randomizer/src/client/received-batch-order.ts
 
 - The server sorts a collect or a release by item id, which puts every wallet and bag upgrade at the end, after the rupees, bombs and arrows they would have held. Capacity upgrades go first, so the ammunition and rupees of the same batch land in a bag or wallet that can hold them. Within each group, the server's own order stands.
 - `index` is the item's position in the server's received list.
 
-## game/randomizer-client/received-cursor.ts
+## packages/randomizer/src/client/received-cursor
 
-- Where the client is in the server's received list, between the queue and the save. The save keeps how many items it holds (received-index.ts), and that number moves only when the game confirms a grant, in list order.
+- Where the client is in the server's received list, between the queue and the save. The save keeps how many items it holds (packages/randomizer/src/client/received-index), and that number moves only when the game confirms a grant, in list order.
 - Items handed to the queue and not granted yet sit between the saved index and `queued`, so a repeated list does not queue them twice. `queued` is one past the last position handed on in a row, never read below the saved index.
 - A grant can land out of step with the list (an own pickup echo settles at once, a queued item later), so each settled position is kept in `settled` until every one before it has settled too; the saved index then moves over the whole run.
 - A batch is handed on in its own order (received-batch-order.ts), so a position can be handed on before the ones in front of it. Such a position waits in `handed` until the run in front of it is handed on too, and a repeated list skips it meanwhile.
 - A save swap resets the cursor, and `epoch` tells a grant queued before the swap that it no longer counts.
 
-## game/randomizer-client/received-index.ts
+## packages/randomizer/src/client/received-index
 
-- How many server items this save has already been handed. The core keeps it in the save (ap-received-index.ts). An older core without that export falls back to a value held in the page, which lasts only for this page.
+- How many server items this save has already been handed. The core keeps it in the save (packages/randomizer/src/ap-received-index). An older core without that export falls back to a value held in the page, which lasts only for this page.
 
-## game/randomizer-client/reconnect.ts
+## packages/randomizer/src/client/reconnect
 
 - Reconnect timing for a dropped room: 1 s, then doubling, never more than 30 s between tries. A successful connect resets the ladder; a stop cancels the pending try.
 - `backoffDelay(attempt)` is 0-based. The scheduled listener's `attempt` is 1 for the first try after a drop.
 
-## game/randomizer-client/refusal-text.ts
+## packages/randomizer/src/client/refusal-text.ts
 
 - A ConnectionRefused in words: one short sentence per error code the protocol names. The network tab shows the sentence; the log keeps the codes. The server may send no codes at all.
 
-## game/randomizer-client/room-hash.ts
+## packages/randomizer/src/client/room-hash.ts
 
 - The identity a save keeps of its multiworld room is a 32-bit FNV-1a hash of the room's seed name, over its UTF-8 bytes. Zero is what a save with no room holds, so a hash that comes out zero is stored as 1.
 
-## game/randomizer-client/run-kind.ts
+## apps/desktop/src/game/randomizer-client/run-kind
 
 - Which run this is: the plain game, a seed, or an online multiworld. One answer, asked by every surface that behaves differently for one of them.
 - It exists because the app used to ask `placement !== null`, and the boot gate parks an online session with no placement (a server hands locations over one at a time). A multiworld then read as plain play: Normal's placement, the original item at every location, and the wrong roster.
@@ -2197,24 +2172,24 @@ carry, and grading it on the loadout would make findings come and go with the in
 - The live question reads the session, for a surface showing the run in progress. The profile question reads the frozen config, for a surface that answers before a game is running (the home screen's per-save readout). A local randomized profile is a seed even before its placement is loaded.
 - An online session that ended (stopped, or refused with an error) is no run at all. A live online session is online even once its scouts became a placement for the Spoiler tab; an ended one is plain play, never a seed, whatever placement it left.
 
-## game/randomizer-client/scope-lock.ts
+## packages/randomizer/src/client/scope-lock.ts
 
 - Which planned locations the session treats as locked vanilla, and the vanilla item a capability-locked location must still hold (now capability-vanilla-item.ts).
-- Lock sources: an option toggled off locks its whole scope table (key drops, npc gifts, world items); with a toggle on, the capability probe's undeliverable remainder stays locked so generation and the session always name the same locations; the boss-prize slots are locked whenever the placement was generated without the prize shuffle (vanilla-prizes.data.ts).
+- Lock sources: an option toggled off locks its whole scope table (key drops, npc gifts, world items); with a toggle on, the capability probe's undeliverable remainder stays locked so generation and the session always name the same locations; the boss-prize slots are locked whenever the placement was generated without the prize shuffle (packages/game-data/src/data/records/items/prizes.ts).
 - A slot sold as a pond prize is exempt from the npc and world scopes.
 - The pond's own table is checked before the npc remainder, because it names the item she produces. The fairy slots carry their vanilla item in the capacity table; the bat is an npc-scope row.
 - ScopeFlags fields that are absent mean the online flags: nothing capability-locked, nothing capacity-locked, no pond lock, no rung locations, no exemptions.
 - `shufflePrizes` off (or absent) keeps every reward slot locked to its vanilla prize.
 - `npcLockedLocations` (npc option on only) are scope locations generation keeps vanilla because they have no certified physical path (npc-capability). `worldLockedLocations` is the same over the world-item table.
 - `capacityLockedLocations` are the capacity spots generation keeps vanilla under the placement's profile: present fairy slots with no certified physical path, and the bat of a vanilla meter (plan-scope-flags.ts).
-- `pondLockedItems` are a wish pond's vanilla slots locked at Vanilla grants, each to the item her upgrade produces there (pond/pond-vanilla-slots.ts), so no override is armed and the real upgrade runs.
+- `pondLockedItems` are a wish pond's vanilla slots locked at Vanilla grants, each to the item her upgrade produces there (packages/randomizer/src/world/pond/pond-vanilla-slots), so no override is armed and the real upgrade runs.
 - `capacityStartTiers` maps a locked spot of a Custom family to its starting rung (0 is the empty tier), so a polled "purchased" threshold is read past the tier a new file starts at.
 - `shops` is the shelf scope the placement was generated with. A placement from before shops existed carries none, which reads as no slot open, so every shop behaves as with the option off. `shopPrices` empty means every shelf keeps its vanilla price.
 - `pondPrizeLocations` are the pond's prize slots in prize order when the pond is part of the shuffle. Absent (a legacy pond, and the online flags) means the two reference slots are the capacity families' own spots.
 - `wishPondRungs` maps each numbered rung location to its water and place in sequence (wish-pond-rung-keys.ts). Absent when both wish ponds are legacy or at their native economy.
-- `pondPrizeSlots` are a wish pond's own two slots that her Custom mode sells as prize rungs (pond/pond-vanilla-slots.ts). The npc and world scopes no longer decide them, in the fill (fill-world.ts) and here alike: they carry a pool item handed over by the rung table.
+- `pondPrizeSlots` are a wish pond's own two slots that her Custom mode sells as prize rungs (packages/randomizer/src/world/pond/pond-vanilla-slots). The npc and world scopes no longer decide them, in the fill (packages/randomizer/src/world/fill/fill-world) and here alike: they carry a pool item handed over by the rung table.
 
-## game/randomizer-client/scouts-to-placement.ts
+## packages/randomizer/src/client/scouts-to-placement.ts
 
 - Adapter: a server's scout answers and slot data turned into the Placement a local seed with the same options would have produced, so an online session arms through the same start sequence a local one does (session-start.ts).
 - The fill world is built from the slot's options the way the generator builds it, with no fill run: the scouts say what every location holds. Generation-locked rows keep what the fill world pre-places.
@@ -2223,37 +2198,37 @@ carry, and grading it on the loadout would make findings come and go with the in
 - `fallbackSeed` is the room's seed name, used when the slot data names none.
 - Deliverable sets: the caller's, else the ones the slot's world was built with, else the app's probes (a room from before slot data carried them).
 
-## game/randomizer-client/scripted-override-key.ts
+## packages/randomizer/src/client/scripted-override-key.ts
 
 - Substitution keys for the scripted grants that never cross the receive seam: the certified surfaces of core/game-hooks/scripted_grants.c. Each is a singular, decomp-audited grant moment: the upgrade pond's two capacity purchases (its handler's own once-per-level counter bumps), the cave bat's meter write, and the prize minigame's once-only top roll (its own chest routine, outside the native chest table).
 - Keyed by check id so the capability probe, the classifier and the arming switch always agree.
 - Table rows: check-273 the pond's explosives-capacity slot, check-274 the pond's projectiles-capacity slot, check-040 the cave bat's meter upgrade, check-270 the prize minigame's top prize (room 262).
 - getCheck throws on an unknown id, so looking the check up keeps the table honest with the dataset.
 
-## game/randomizer-client/server-address.ts
+## packages/randomizer/src/client/server-address
 
-- A profile's server address as the two fields the connection form edits. The profile keeps one `host:port` string, the shape the connect path reads (server-url.ts); a scheme the address names stays on the host. For example `wss://host:38281` splits to host `wss://host` and port `38281`; no port gives an empty one.
+- A profile's server address as the two fields the connection form edits. The profile keeps one `host:port` string, the shape the connect path reads (packages/randomizer/src/client/server-url); a scheme the address names stays on the host. For example `wss://host:38281` splits to host `wss://host` and port `38281`; no port gives an empty one.
 
-## game/randomizer-client/server-delivery.ts
+## apps/desktop/src/game/randomizer-client/server-delivery
 
-- Hands one server item to the delivery queue. Which items reach here (the received index, the echo of an in-world pickup, the room check) is decided by online-received.ts; this resolves, queues and keeps track of what it queued.
+- Hands one server item to the delivery queue. Which items reach here (the received index, the echo of an in-world pickup, the room check) is decided by apps/desktop/src/game/randomizer-client/online-received; this resolves, queues and keeps track of what it queued.
 - `onGranted` runs when the core confirms the grant, which is the only moment the received index may move.
 - The receipt line takes an arrival slot of the session dialogue only when its delivery reaches the front of the queue, and hands it back when that delivery completes, so a burst of any size holds one slot at a time. A retry after a refusal keeps the slot it already took.
 - Online context beats the core's item-class default: the receipt shows the online line, pre-rendered with who sent it when the session dialogue is live, the class template otherwise. A null sender means the server itself sent the item.
 - An item still waiting in the queue can be withdrawn (cancelServerDeliveries): a save swapped under it will ask for its items again. Granted ones stay granted.
 
-## game/randomizer-client/server-host-locality.ts
+## packages/randomizer/src/client/server-host-locality.ts
 
 - Whether a server address names a machine on this computer or its local network. A local Archipelago server answers plain ws:// only, so a secure attempt there can only fail.
 - Local means a loopback address, a private or link-local IPv4 range, an IPv6 loopback, unique-local or link-local address, a `localhost` or `.local` name, or a bare machine name with no dot in it.
 - An unbracketed address with several colons is a bare IPv6 address with no port.
 - The `IPV4` pattern flagged by no-slop-identifiers was local, renamed DOTTED_QUAD.
 
-## game/randomizer-client/server-url.ts
+## packages/randomizer/src/client/server-url
 
 - The creation form accepts a bare host:port, and the scheme it needs depends on the host: the public servers only answer wss://, a local server only ws://. So a bare address keeps no scheme, and the connect path tries each candidate in turn. A local address (server-host-locality.ts) is tried as ws:// only; any other secure first, plain second. An address that names its scheme is tried as written.
 
-## game/randomizer-client/session-start.ts
+## apps/desktop/src/game/randomizer-client/session-start.ts
 
 - The one start sequence of a randomizer session, whatever produced its placement: a local seed (local-session.ts) or a server's scouts (online-scouted.ts). It classifies the placement into the physical plan, refuses loudly when the plan carries errors, and otherwise arms everything in-core in the order the core needs it. Polling is the caller's: a local session adopts what the save shows, an online one reports what its server lacks.
 - The persisted placement carries the profile it was generated with; its wallet table must exist before the plan resolves the wallet item names.
@@ -2267,59 +2242,59 @@ carry, and grading it on the loadout would make findings come and go with the in
 - Both wish ponds arm after the overrides: a native-economy water pays through their npc entries.
 - Hooks: `reporter` is where a substitution the core reports goes (the session's own reportCheck). `foreignItemOf` (online only) gives each foreign item's name and owner for its receipt line. `foreignIconIdOf` (online only) gives the icon id each foreign item is armed as, for its hold-up picture.
 
-## game/randomizer-client/session-stop.ts
+## apps/desktop/src/game/randomizer-client/session-stop.ts
 
 - The one teardown of a randomizer session: every table, gate and seam session-start.ts can arm, emptied in the order the core needs. Safe to run on a session that armed nothing, which is how a refused or never-connected session ends.
 - The shelf table is cleared too: left armed, the next session (or plain play) inherited every shelf.
 - Still-queued deliveries are dropped with the session, because a stopped session must not leave receipt entries retrying forever (clear() resolves completions safely).
 - The baked dialogue blob is restored, since the session's pre-rendered lines go with it.
 
-## game/randomizer-client/session-store.ts
+## apps/desktop/src/game/randomizer-client/session-store
 
 - Module-level singleton owning the active randomizer session. Every start and stop in the app routes through here, so the one-active-session invariant has a single home; the page hook is only a subscriber.
 - It also holds the pending boot slot: a gated profile boot parks its session material here and the auto-start hook consumes it once the game reports running. The pending placement is loaded by the boot gate for local mode, null for online mode.
 - `foreignOwners` (online only) maps a location to the player whose item it holds; empty for every other run.
 - A bad listener never breaks the store.
-- An online session's placement describes its room, so it goes when the room does: left behind, it would read as a local seed (run-kind.ts). An online error is its end too; the session stays so the page can show the error.
+- An online session's placement describes its room, so it goes when the room does: left behind, it would read as a local seed (apps/desktop/src/game/randomizer-client/run-kind). An online error is its end too; the session stays so the page can show the error.
 - An online session's last network picture outlives it, as the Network tab's last known state. The picture reads the game, which may already be gone; the last one it sent stands then.
 - A session that winds down on its own (socket closed, stop from inside) releases the active slot; every status change reaches subscribers.
 - The scouts become the session's placement once armed, so the Spoiler tab reads it as it reads a local seed's.
 - `resetSession` is what a profile load runs before it gates, so nothing of the previous profile survives. stopActive leaves a local session's placement standing, since a stopped seed should still show its spoiler; without the reset it outlived its own profile and the tracker went on listing a seed's locations for a normal profile.
 
-## game/randomizer-client/session-wallet-table.ts
+## packages/randomizer/src/client/session-wallet-table/session-wallet-table.ts
 
 - The session's wallet jump table, host side: the TS mirror of the sixteen slots wallet_grants.c holds (slot s of virtual id 0x67 + s maps to ladder rungs).
-- Both halves are rebuilt from the same family plan at every session start (capacity-session.ts), so a wallet item name resolves to exactly the slot the core will climb by.
+- Both halves are rebuilt from the same family plan at every session start (apps/desktop/src/game/randomizer-client/capacity-session), so a wallet item name resolves to exactly the slot the core will climb by.
 - Empty outside a session: a wallet name then resolves to nothing, which the plan reports as an unresolvable item instead of granting a blind slot.
 
-## game/randomizer-client/session.type.ts
+## packages/randomizer/src/client/session.type.ts
 
 - The randomizer session contract: the surface a session mode exposes to the location poller and the UI. A local session resolves a reported check from its own placement table; an online session forwards it to the server.
 - `reportCheck` is the poller telling the session a planned location just completed in live memory, keyed by its standard name.
 - 'reconnecting' is online only: the server dropped or was never reached, and the session is retrying.
 - The file had its header on line 2; it is now on line 1.
 
-## game/randomizer-client/shop-override-key.ts
+## packages/randomizer/src/client/shop-override-key.ts
 
 - The in-core substitution key of a shop-slot location comes off the slot's own check record (`gameId.shopSeam`): the shelf's room, the entrance and overworld area that tell apart a room several doors share, and the shelf sprite's own subtype, which is unique inside any one shop. Together those name one shelf in the running game.
 - A restock past the first has no record of its own, because the unmodified game has no such spot; it takes the first one's seam and its own depth index.
 - The depth pair rides along so the core knows which purchase of the slot this entry is, and when the slot runs out.
 - ENTRANCE_ANY and OW_AREA_ANY (-1) are the core's "match anything" values, for a shop the earlier fields already name.
 - A rolled price replaces the shelf's own; with nothing rolled the shelf keeps charging the rupees the unmodified game charges.
-- A price with no native form (shop-price-native.ts) cannot be sent, so the shelf gets no override. Only an item price is shaped that way, and no shelf can roll one, so this is the shape of the refusal, not a case that runs.
+- A price with no native form (packages/randomizer/src/world/shops/shop-price-native) cannot be sent, so the shelf gets no override. Only an item price is shaped that way, and no shelf can roll one, so this is the shape of the refusal, not a case that runs.
 
-## game/randomizer-client/slot-data-values.ts
+## packages/randomizer/src/client/slot-data-values
 
 - The per-seed values a slot's data carries, read into the shapes a local placement keeps: the options snapshot, the two medallion locks, the rolled pond demands and shelf prices, and the deliverable spots the world was built with.
 - A value the slot does not carry, or carries in a shape this game cannot read, is absent, and the caller falls back the way a placement from before that value existed does.
 - A medallion arrives as its key or its name; anything else keeps the vanilla lock.
 
-## game/randomizer-client/slot-death-link.ts
+## packages/randomizer/src/client/slot-death-link.ts
 
 - One DeathLink source: the profile's toggle. It is written into the player file, the world package hands it back as `slot_data.deathLink`, and once Connected that value decides.
 - The Connect packet's tags still come from the profile flag (no slot data exists yet), so when the two disagree the tags are corrected with a ConnectUpdate. The session started with the profile's flag already applied; only a disagreement changes it.
 
-## game/randomizer-client/standing-override-key.ts
+## packages/randomizer/src/client/standing-override-key/standing-override-key.ts
 
 - Substitution keys for standing in-world items: decides, per check record, how the in-core standing table (or the plain grant seam) can identify the pickup. Three certified shapes, all from the decomp audit.
 - The standing prize sprite (the quarter-heart pickup, sprite 0xeb, one touch-grant handler) is keyed by overworld screen outdoors, and by room plus which horizontal half of the room indoors (the same bit its own obtained flag uses).
@@ -2328,32 +2303,32 @@ carry, and grading it on the loadout would make findings come and go with the in
 - The indoor half comes from the detection mask: the obtained bit 1024 is left, 512 is right. A maskless record in a shared room takes the half its roommate leaves free (room 283 takes the right half); a maskless record alone in its room matches either half (2).
 - item-024 is the heart piece and item-037 the dungeon key.
 
-## game/randomizer-client/tracker-availability.ts
+## packages/randomizer/src/client/tracker-availability
 
 - Tracker statuses for a randomized session: availability comes from the ported rule engine evaluated over the frozen placement, never from the hand-authored normal dataset (which models neither the seed nor the standard-mode escape).
 - Completed checks crosswalk to placement locations by their community-standard name. A check whose name is not a location of this placement (event and prize slots, dataset gaps) can never inflate availability, so it reports blocked unless the player completed it.
-- A shelf slot or pond prize past the reference's two has no check record (see override-fire-registry.ts), so its completion never reaches `completedChecks`. firedLocationKeys is the session's separate record of those substitutions, folded in so their items still enter the collected-item state the rule engine evaluates against.
-- `checks` carries both real CheckRecords and the virtual ones virtual-locations.ts synthesizes for every world location none of those cover (shop slots, chiefly). A virtual id is never in the live-polled completedChecks set, so its status reads off completedLocations / available by its own name.
+- A shelf slot or pond prize past the reference's two has no check record (see apps/desktop/src/game/randomizer-client/override-fire-registry), so its completion never reaches `completedChecks`. firedLocationKeys is the session's separate record of those substitutions, folded in so their items still enter the collected-item state the rule engine evaluates against.
+- `checks` carries both real CheckRecords and the virtual ones packages/randomizer/src/client/virtual-locations synthesizes for every world location none of those cover (shop slots, chiefly). A virtual id is never in the live-polled completedChecks set, so its status reads off completedLocations / available by its own name.
 - completedLocations answers for both kinds. A real check whose normal detection cannot fire in this seed would be stuck at reachable forever: the pond's two named slots keep the records the reference's names gave them and poll the capacity counter bytes, and a randomized pond hands over a pool item without writing either one.
 - The completed set carries the event rows too, the record of what the player did. Handing the ids over lets the rules ask about an act instead of guessing it from an item or from the lever being within reach.
 - `heldItemIds` are the dataset item ids the player is holding, which the seed world reads by pool name.
-- `bigKeyDoors` off (the tracker's "Big Key doors" switch) reads every big key door as open by putting the keys in the state's hands: a door whose key is held is open, so no rule needs a second version (world/big-keys.ts). `smallKeyDoors` off does the same with each dungeon's small keys, as many as any rule counts (world/small-keys.ts).
+- `bigKeyDoors` off (the tracker's "Big Key doors" switch) reads every big key door as open by putting the keys in the state's hands: a door whose key is held is open, so no rule needs a second version (packages/randomizer/src/world/big-keys). `smallKeyDoors` off does the same with each dungeon's small keys, as many as any rule counts (packages/randomizer/src/world/small-keys).
 - `reachableScreens` are the dataset screens the engine's regions come out to, for the rows read from the records. computeTrackerSnapshot is for a caller with no use for the screens.
 
-## game/randomizer-client/tracker-link.ts
+## apps/desktop/src/game/randomizer-client/tracker-link.ts
 
 - A read-only connection to another player's slot, the way a tracker makes one: Connect under that slot's name with the Tracker tag and no game, which the server accepts without the slot's game, sends no items to (items_handling 0) and takes no checks from. NoText spares it the room's chat.
 - Its Connected holds the slot's checked and missing locations, and every RoomUpdate after it the newly checked ones: that is the only way the server shares another slot's progress.
-- A drop redials on the backoff of reconnect.ts; a refusal ends the link.
+- A drop redials on the backoff of packages/randomizer/src/client/reconnect; a refusal ends the link.
 - `uuid` is this install's client id plus `-tracker-<slot>`. `progress` is null until the slot was accepted once. `linked` means the slot is accepted on the live socket.
 
-## game/randomizer-client/tracker-links.ts
+## apps/desktop/src/game/randomizer-client/tracker-links.ts
 
-- One tracker link (tracker-link.ts) per other player on this slot's team, opened once the main connection's roster settled (network-roster.ts) and closed with that connection.
+- One tracker link (tracker-link.ts) per other player on this slot's team, opened once the main connection's roster settled (create-roster.ts) and closed with that connection.
 - Off when the profile says not to track the others, since each is a socket of its own.
 - `url` is the URL the main connection opened on, null before it did. `uuid` is this install's client id. `open` makes a link for every other player not linked yet.
 
-## game/randomizer-client/virtual-locations.ts
+## packages/randomizer/src/client/virtual-locations
 
 - Synthesizes tracker-facing CheckRecord-shaped entries for every world location this seed placed an item at that no real CheckRecord backs (shop shelves at every restock depth, chiefly). Built fresh per placement so the widget's total matches what this seed generated, never a smaller fixed dataset that silently drops whole categories.
 - A virtual record carries no gameId: there is nothing to poll, its status comes from the availability engine and the fire-id ledger, both keyed by the raw world location name.
@@ -2361,12 +2336,12 @@ carry, and grading it on the loadout would make findings come and go with the in
 - vanillaItemIds carries the real vanilla item where one exists (a shop shelf, a key-drop pot). Everything here hands over a real item, so isGuaranteedReward is true even with no vanilla precedent (a pond prize rung).
 - A restock rides on the screen its own slot's record names, which is what the world and area grouping reads.
 - The slug keeps underscores, because a shop key uses them (`kakariko-shop-shelf_left-slot_2`). A key is already slug-shaped, so mapping a virtual id back to its location is exact.
-- The virtual id is shared with placement-view.ts so a virtual check's row and its placed-item lookup can never drift onto two ids for the same location. tracker-availability now reads VIRTUAL_PREFIX from here too.
+- The virtual id is shared with packages/randomizer/src/client/placement-view so a virtual check's row and its placed-item lookup can never drift onto two ids for the same location. tracker-availability now reads VIRTUAL_PREFIX from here too.
 - One cache slot: placements do not change mid-session, and this only runs against the active one.
 - placementCheckRecords is every real record this seed's placement names plus a virtual one for every location none cover. A few checks (the intro's story beats such as "Link Wakes Up", "Rescued Zelda") track real vanilla progress but were never world locations, so counting them would inflate the total; they stay in the base checkRecords array for the normal profile.
 - The event records are shown on every profile and are never part of a seed's total. No event is a location of any world, so that list and the placement's never overlap.
 
-## game/randomizer-client/wish-pond-lines.ts
+## packages/randomizer/src/client/wish-pond-lines.ts
 
 - The two lines a planned wish pond speaks for itself. A planned visit takes no throw and asks nothing, so the native lines at those two beats (the question after she rises, the refusal of a spent water) cannot stand.
 - The award: she rises and says this, then the visit's one rung follows on its own receipt. The closing: a water whose ladder is spent, every time she is spoken to.
@@ -2374,13 +2349,13 @@ carry, and grading it on the loadout would make findings come and go with the in
 - Neither line names what she hands over; the receipts say that. Candidates run fullest first, so the composer keeps the longer wording when the box has room (receipt-line.type.ts).
 - Both waters share the wording, so the pool carries one of each, and only when at least one water is planned (runs on a plan).
 
-## game/randomizer-client/wish-pond-rung-keys.ts
+## packages/randomizer/src/client/wish-pond-rung-keys.ts
 
 - The two item-throwing waters as the core counts them, and which of a placement's locations are their numbered rungs. The core reads a water by its place in wish_pond_plan.c's own order (the light world's water first, the dark world's second), so that index is written once here and every other file asks for it by pond id.
 - A rung key is which water and its place in that water's sequence from zero.
 - A rung is a location only while its pond's plan lists it: a legacy pond lists nothing, and a pond at its native economy lists its own two fairy slots, which are ordinary npc checks and never rungs. Pure: a function of the settings alone.
 
-## game/randomizer-client/wish-pond-rungs.ts
+## packages/randomizer/src/client/wish-pond-rungs.ts
 
 - Wish-pond arming for a session, the pure half: the two waters' settings and the classified plan in, one rung row per prize location out, in the order each water hands them over. Nothing here touches a module, so a test pins it with a plain counter standing in for the fire-id ledger.
 - capacity (legacy): no rows; the water keeps its native branch list.
@@ -2391,21 +2366,21 @@ carry, and grading it on the loadout would make findings come and go with the in
 - `assigned` is false for a vanilla slot, which the receive-seam table substitutes and reports. A row keeps its location and item names for the log and the harness. `rungs` of a water plan is empty for a legacy water and for one that refused; `refusal` says why a water with prizes arms nothing. The session plan's `rungs` is every rung of both waters, the single call the core takes.
 - Context: `messageIdOf` gives one location's pre-rendered receipt line or -1; `fireIdOf` allocates the completion id in the session's ledger; `lines` are the two host lines every planned water speaks.
 
-## game/randomizer-client/wish-pond-session.ts
+## apps/desktop/src/game/randomizer-client/wish-pond-session.ts
 
 - Wish-pond arming for a session, the impure half: hands both waters' rungs to the core in the single call it takes (the core empties both tables at once), then each armed water's two host lines, and logs one line per water. The disarm half is now disarm-wish-pond-session.ts.
 - Arm after the plan's own overrides: a water at its native economy pays out through the npc entries those put in the table, and a custom rung's fire id comes from the same ledger they allocate from.
 - A planned water hands over the next rung on each visit, and a spent water only shows its closing line. A rung with no demand takes no throw and asks nothing. A rung with one asks for it first, through the visit every pond shares (pond-demand-session.ts arms the demands and their lines).
 
-## game/randomizer.ts
+## packages/game-data/src/data/records/items/randomizer.ts
 
 - JS side chest item override hooks that talk to the WASM core.
 - `messageId` is the pre rendered contextual receipt line for the grant (session dialogue), or -1 to keep the core's item class template fallback.
 - The chest path bails on high bit ids and the grant tables hold 76 entries, so an out of range override would open as an empty chest. It is refused before the call.
-- kFeatures3_ItemOverrides is armed alongside writing the table. The write itself is ungated (it only records, see item_overrides.c), but the gate must be requested then so it has latched into WRAM (SyncGateWords, next frame) by the time a chest applies the table. It stays open only while the table has entries (itemOverridesActive in live-settings-flags.ts), so no leftover table can reapply outside an active randomizer session.
+- kFeatures3_ItemOverrides is armed alongside writing the table. The write itself is ungated (it only records, see item_overrides.c), but the gate must be requested then so it has latched into WRAM (SyncGateWords, next frame) by the time a chest applies the table. It stays open only while the table has entries (itemOverridesActive in packages/game-core/src/live-settings-flags), so no leftover table can reapply outside an active randomizer session.
 - Clearing empties the table, then closes the gate. Closing the gate keeps it from reopening for stale data if something else fills the table without going through setChestSlotOverride.
 
-## game/ratio-capability.ts
+## packages/game-core/src/ratio-capability
 
 - What ratio a profile may render, given the capabilities it has switched on. The preset picker gates its own entries: the widest need the world tilemap and the ultrawide switch, the tall ones need tall rendering. Auto, Screen and Custom went around that, so a wide monitor on Auto, or a tall Custom ratio, handed the core a shape whose capability bits were never set.
 - Above LINEAR_RATIO a ratio needs the linear world tilemap, because the stock 512 px fetch runs out. Above ULTRAWIDE_RATIO it also needs the ultrawide switch. Below TALL_RATIO (4:3) it is taller than the original picture and needs the tall renderer.
@@ -2413,46 +2388,46 @@ carry, and grading it on the loadout would make findings come and go with the in
 - `rendersExtended` is true when the view shows more than the original picture on any side. The widescreen corrections answer to it: a tall view has the same transitions, effects and sprites drawn for the original screen, so it needs them too.
 - `ratioToString` builds the "W:H" word the core's config parser reads, from the served height (224) so the pair is exact for the shape asked for, and reduced, which is what the ratio pickers hand over too.
 
-## game/receipt-grants.ts
+## apps/desktop/src/game/receipt-grants
 
 - JS side entry points for the native receipt flow exports (core/game-hooks/receipt_grant.c). Item deliveries route through the delivery queue (`give_item` actions run WasmGrantItemWithReceipt); this module carries the direct calls other systems need: capacity upgrades, and pre arming a contextual receipt message.
-- `receiptGrantsActive` drives both kFeatures3_ReceiptExport and kFeatures3_ReceiptMessages in the gate word (live-settings-flags.ts). The setter only records; reassertGateWord3 pushes the word, which latches into WRAM a frame later (SyncGateWords), the same contract the item override arming uses.
+- `receiptGrantsActive` drives both kFeatures3_ReceiptExport and kFeatures3_ReceiptMessages in the gate word (packages/game-core/src/live-settings-flags). The setter only records; reassertGateWord3 pushes the word, which latches into WRAM a frame later (SyncGateWords), the same contract the item override arming uses.
 - Randomizer sessions arm the receipt gates at start, not at first enqueue: a chest override grant runs fully natively (no delivery is ever enqueued), so its contextual message gate must already be open when the first chest opens. The delivery path still arms at enqueue for grants fired outside a session. Disarming happens at session stop, mirroring clearItemOverrides.
 - `grantCapacityUpgrade` grants steps the way the upgrade pond does: kind 0 is bombs, 1 is arrows, each step is one pond level. It arms the receipt gate alongside the call, which latches a frame later, so callers route through the delivery queue (deliverCustom) instead of calling in the same burst that starts a session. The core gates it with kFeatures3_ReceiptExport.
 - `armNextReceiptMessage` arms the one shot contextual message for the next receipt that finishes (RANDOMIZER_RECEIPT_MSG ids). It records unconditionally; the core applies it only while kFeatures3_ReceiptMessages is open. Queue routed deliveries pass `messageId` on the action instead; this direct form is for grants that fire outside the queue.
 
-## game/receipt-jump-text.ts
+## packages/randomizer/src/foreign-items/receipt-jump-text.ts
 
 - The session line for a capacity upgrade addressed by its virtual receive id, the form the delivery labels and grant logs hold, for example "Explosives +2 tiers" or "Wallet +500 rupees".
 - The step families carry the jump in the id; a wallet slot resolves through the session's jump table (the same table the core climbs by), so the text can never disagree with the grant.
 - Never a running total: see capacity-jump-text.ts. A progressive id carries no jump of its own, so its label names the next planned step.
 - Undefined for a non upgrade id or an unarmed wallet slot.
 
-## game/report-wasm-crash.ts
+## apps/desktop/src/game/report-wasm-crash.ts
 
 - Writes a core crash to the log with its stack, and leaves a crash dump behind.
 - The dump is written after the stack lines are logged, so the dump's log buffer carries them too.
 
-## game/retro-bow.ts
+## apps/desktop/src/game/retro-bow
 
 - JS side arming for the in core rupee bow (core/game-hooks/retro_bow.c): the two costs a shot takes out of the wallet, the plain one and the silver one.
 - Same contract as the other override bridges: the write only records, the gate bit is requested alongside it so it has latched into WRAM (SyncGateWords, next frame) by the time a shot is fired, and it stays open only while a retro session is armed, so a stale pair of costs can never start charging for shots again because an unrelated setting changed.
 - Clearing empties the costs, then closes the gate: the same double lock as the tables.
 
-## game/retro-shelf.ts
+## apps/desktop/src/game/retro-shelf
 
 - JS side arming for the in core stock change a retro seed with vanilla shops needs (core/game-hooks/retro_shelf.c). The quiver's shelf sells the quiver until it is owned and a refill after; every other arrow shelf sells the refill, each at its own vanilla price. A shuffled scope puts the quiver in the item pool instead and arms nothing here.
-- The write only records. The gate it answers to is the retro gate, which retro-bow.ts opens alongside the costs, so a shelf can never be stocked without the bow that needs it.
+- The write only records. The gate it answers to is the retro gate, which apps/desktop/src/game/retro-bow opens alongside the costs, so a shelf can never be stocked without the bow that needs it.
 - ENTRANCE_ANY and OW_AREA_ANY are the core's "match anything" values, for a shop the earlier fields already name.
 
-## game/rsp.ts
+## packages/packs/src/rsp
 
-- Writes a Relic Sprite Pack. Reading one lives in shared/storage/link-sprites/parse-rsp.
+- Writes a Relic Sprite Pack. Reading one lives in packages/packs/src/link-sprites/parse-rsp.
 - It is a zip, so the contents stay inspectable with ordinary tools and the format can grow an entry without breaking readers that ignore it.
 - The tiles go in raw, not as a PNG: the sheet is 4bpp indexed data, and a PNG round trip would mean deriving indices from colours again. A PNG is written alongside only so the file previews in an image viewer; it is never read back.
 - `withPreview: false` skips that courtesy PNG. It costs a render, which a boot time flatten does not want.
 
-## game/save-file
+## packages/game-core/src/save-file
 
 - `hook-save-bytes.ts`: the TS mirror of the hook owned save byte registry. The addresses are
   allocated in `core/game-hooks/save_bytes.h`, the single source of truth with compile time
@@ -2468,7 +2443,7 @@ carry, and grading it on the loadout would make findings come and go with the in
   counter order (`wish_pond_plan.c`); the sword level the smiths keep while tempering, as
   `0x80 | level` (`smith_sword.c`); one byte per canonical shop slot, armed steps already bought
   (`shop_table.c`); one bit per event the game never records itself
-  (`events/event_ledger.c`); how many multiworld items this file took, 16 bit little endian
+  (`core/game-hooks/events/event_ledger.c`); how many multiworld items this file took, 16 bit little endian
   (`ap_received_index.c`); the FNV-1a hash of the multiworld room's seed name, 32 bit little
   endian, 0 for no room yet (`ap_room_hash.c`).
 - `sram-slots`: ports the game's file layout and checksum (`SaveGameFile` in `messaging.c`,
@@ -2497,7 +2472,7 @@ carry, and grading it on the loadout would make findings come and go with the in
   1 progress flags, 2 progress indicator 3, 3 swim gear, 4 running gear, 5 catching net, 6
   reflector, 7 third medallion, 8 magic consumption scale, 9 to 11 the low bytes of room `0x109`,
   `0x123` and `0x11E` flag words, 12 the sleep step counter (live WRAM only, no offline source;
-  its check falls back to index 0 through `check-facts.ts`), 13 tagalong id, 14 small key count,
+  its check falls back to index 0 through `packages/navigation/src/tracker/check-facts`), 13 tagalong id, 14 small key count,
   15 big key word low byte, 16 to 18 the high bytes of those three room words, 19 starting point
   id, 20 map marker state, 21, 22 and 25 the substitution completion bytes, 23 and 24 the
   explosives and projectiles tier bytes (the pond's persisted purchase level), 26 the wallet
@@ -2506,10 +2481,10 @@ carry, and grading it on the loadout would make findings come and go with the in
   on a file that never met a plan; the completion fact of its prize slots). Rows from hook owned
   bytes come from `hook-save-bytes.ts`, so the table cannot drift from the registry.
 
-## game/save-states.ts
+## apps/desktop/src/game/save-states
 
 - A save does not wait for the core to boot, unlike a load: what it would capture once the core came up is the boot screen, written over whatever the slot already held.
-- The message box's hook state is read at save time, on the frame the core saved (state-dialog.ts).
+- The message box's hook state is read at save time, on the frame the core saved (apps/desktop/src/game/state-dialog).
 - The music position lives beside the snapshot, not inside it: the core's snapshot layout is fixed and must not grow. It is written unconditionally, so overwriting a slot never leaves the previous save's music position behind.
 - The save screenshot is best effort; a failure there does not fail the save.
 - A load waits for the core. The shortcuts and the overlay arm with the game view, which is up about two seconds before the core is. A request from that window is early, not wrong. Dropping it instead is what made a load right after boot silently do nothing. A named load waits for the same reason.
@@ -2520,16 +2495,16 @@ carry, and grading it on the loadout would make findings come and go with the in
 - `loadNamedState` loads a normal (manual) save by name. Names are stable and quick save never overwrites them, so automation pins to a name. Matching ignores case; the newest save wins if two share a name.
 - `loadStateRef` loads what the CLI asked for: a number is a quick save slot, a string is a manual save's name.
 
-## game/scripted-grant-overrides.ts
+## apps/desktop/src/game/scripted-grant-overrides
 
 - JS side arming for the in core substitution slots covering scripted grants that never cross the receive seam: the upgrade pond's two capacity purchases, the cave bat's meter upgrade, the prize minigame's once only top prize (core/game-hooks/scripted_grants.c).
 - Same contract as the other override bridges: the write only records, the gate bit is requested alongside it, and it stays open only while armed. Clearing empties the slots, then closes the gate.
-- The pond surface is armed through the pond plan's own table (pond-plan.ts) instead of the three slots here, because under a plan the pond hands over a numbered sequence of prizes instead of one purchase per family. It stays the same plan class, so the classifier, the fire registry and the poller keep one path for every scripted grant.
+- The pond surface is armed through the pond plan's own table (apps/desktop/src/game/pond-plan) instead of the three slots here, because under a plan the pond hands over a numbered sequence of prizes instead of one purchase per family. It stays the same plan class, so the classifier, the fire registry and the poller keep one path for every scripted grant.
 - A wish pond rung is the same class again, but it never arms here: the core empties both waters' rung tables at once, so every rung of both is armed in a single call by the session (wish-pond-session.ts).
 - `messageId` is the pre rendered contextual receipt line for the grant, or -1 for the core's item class template fallback. `fireId` is the host assigned completion id reported when the entry substitutes, or -1 for none.
 - kFeatures3_ScriptedGrants is armed alongside the record only write, so the gate has latched into WRAM (SyncGateWords, next frame) by the time a handler applies it. A pond prize rides the pond plan's own gate, armed with the plan itself; the three fixed slots ride the scripted grant gate.
 
-## game/session-dialogue
+## apps/desktop/src/game/session-dialogue
 
 Owns the per-session pool of pre-rendered receipt lines and pushes them into the core's live
 dialogue memory. The composed blob is the active language's baked bytes verbatim (dictionary and
@@ -2563,7 +2538,7 @@ the fallback for any grant without a pre-rendered line.
   through `releaseSessionReceiptMessage` once that delivery completes.
 - `clearSessionDialogue` drops the pool and restores the baked blob (session stop).
 
-### game/session-dialogue/active-dialogue.ts
+### packages/game-core/src/session-dialogue/active-dialogue.ts
 
 Reads the asset blob and INI back from the running module's virtual FS and extracts, at the byte
 level, what the composer needs: the active language code (INI `Language`, default `us`, the same
@@ -2572,7 +2547,7 @@ order, and its per-glyph pixel widths indexed by alphabet position. Reusing byte
 vanilla lines are never encoded again, so the composed blob carries them bit identical to the
 bake. `dialogueIndexOf` is ZeldaSetLanguage's lookup in TS, default index 0.
 
-### game/session-dialogue/arrival-ring
+### packages/game-core/src/session-dialogue/arrival-ring
 
 The received-item lines of a session: a fixed ring of `ARRIVAL_SLOTS` (32) slots at the front of
 the pool. A slot is taken when an online receipt reaches the front of the delivery queue and
@@ -2583,7 +2558,7 @@ id. `next` is where the search for a free slot starts, so a released id is the l
 `takeSlot` returns null while every slot is held. A released slot keeps its line until a later
 arrival takes it.
 
-### game/session-dialogue/choice-message.ts
+### packages/game-core/src/session-dialogue/choice-message.ts
 
 A yes or no question laid out the way the game's own two answer prompts are. The box shows three
 rows and the choose command parks the cursor on the last two (messaging.c
@@ -2599,14 +2574,14 @@ scrolls line up, as the game's long prompt opens its third row. A question past 
 at every break so none of it scrolls unread. The row above the answers is the line's own prompt
 when one fits, else the last row of the question.
 
-### game/session-dialogue/dialogue-text.ts
+### packages/game-core/src/session-dialogue/dialogue-text.ts
 
 Any text as a message box can draw it; every composer runs its words through this. Each
 character resolves to the first rule that applies:
 
-1. Highlight markup passes through untouched (highlight-markup.ts).
+1. Highlight markup passes through untouched (packages/game-core/src/receipt-text/highlight-markup).
 2. A character the language's alphabet draws stays itself.
-3. A character with an extra glyph (dialogue-charset.ts) becomes its slot token.
+3. A character with an extra glyph (packages/game-data/src/dialog/dialogue-charset) becomes its slot token.
 4. Typographic forms become their plain one: dashes a hyphen, curly quotes straight ones, the
    ellipsis three dots, any space a space.
 5. A compatibility or accented form becomes its base (a full width letter the letter, an
@@ -2620,7 +2595,7 @@ character resolves to the first rule that applies:
 Runs of spaces fold into one and the ends are trimmed. `MAX_DEPTH` (2) bounds replacement
 chains: a replacement's own characters resolve once more, no further.
 
-### game/session-dialogue/extra-glyphs
+### packages/game-core/src/session-dialogue/extra-glyphs
 
 Hands the extra glyphs (extra-glyphs.constants.ts) to the core, which writes them into the active
 font's spare slots (core/game-hooks/dialog_extra_glyphs.c). One table entry per glyph,
@@ -2631,9 +2606,9 @@ characters. `loadExtraGlyphs` returns true when the core took every one. `sessio
 charset a session line is composed in: the alphabet and font widths plus the extra glyphs the
 core took (none from a core without them). `clearExtraGlyphs` gives the font its own glyphs back
 at session stop. The slots the core took are kept too (`loadedExtraGlyphs`), for the modern face
-of the enhanced box, which looks a glyph code up as text (game/dialog/active-alphabet).
+of the enhanced box, which looks a glyph code up as text (packages/game-core/src/dialog/active-alphabet/active-alphabet.ts).
 
-### game/session-dialogue/highlight-bytes
+### packages/game-core/src/session-dialogue/highlight-bytes/highlight-bytes.ts
 
 Encodes a prepared line that carries highlight markup or extra glyph tokens. The text between
 them is compressed on its own, so no dictionary word reaches across one, and each becomes the
@@ -2647,7 +2622,7 @@ core's control bytes:
 
 A line with neither encodes exactly as the plain encoder makes it.
 
-### game/session-dialogue/page-message.ts
+### packages/game-core/src/session-dialogue/page-message.ts
 
 A detail page laid out the way the game moves a long line on to its next box. The core shows a
 detail page right after the receipt's own line, in the same box (receipt_pages.c joins the two).
@@ -2657,7 +2632,7 @@ shorter than the box scrolls in empty rows after its own and never shares the bo
 before it. A page past three rows waits for a key again before each further row, as a long line
 does. The page keeps the fullest wording that fits the box on its own.
 
-### game/session-dialogue/wrap-message
+### packages/game-core/src/session-dialogue/wrap-message
 
 Message text layout. A line already made drawable is word wrapped against the real per-glyph
 pixel widths into the box's line commands: `[2]` and `[3]` for rows two and three,
@@ -2679,20 +2654,20 @@ token measures by its slot.
 - `fitReceiptLine` picks the fullest candidate that fits the visible rows, or the last one when
   none does.
 
-## game/session-gate-flags.ts
+## packages/game-core/src/session-gate-flags
 
 - The armed state of every gate a randomizer session opens and closes, one record instead of a dozen module level booleans. `SessionGate` names each gate the way its setter is spelled.
 - They share one contract: the host arms a gate when it has something for the core to apply (a table with entries, a profile, a plan, a live session) and disarms it when that goes away, then pushes features word 3 again so the bit latches into WRAM.
-- Nothing here decides what a gate means. live-settings-flags.ts maps each one to its features.h bit and strips every one of them under Vanilla Safe.
-- Kept out of live-settings-flags.ts because each gate arrived there as its own `let` plus its own setter, and twelve copies of the same two lines pushed that file past its size policy.
+- Nothing here decides what a gate means. packages/game-core/src/live-settings-flags maps each one to its features.h bit and strips every one of them under Vanilla Safe.
+- Kept out of packages/game-core/src/live-settings-flags because each gate arrived there as its own `let` plus its own setter, and twelve copies of the same two lines pushed that file past its size policy.
 
-## game/session-tracker.ts
+## apps/desktop/src/game/session-tracker
 
 - Records play sessions (start, end, duration): the base for later per session stats.
 
-## game/settings.ts
+## packages/game-core/src/settings
 
-- The old file was `@kind data` with code in it. DEFAULT_SETTINGS is now the data file settings/default-settings.ts; the INI writer, the merge and the small helpers moved to logic files beside it.
+- The old file was `@kind data` with code in it. DEFAULT_SETTINGS is now the data file packages/game-core/src/settings/default-settings.ts; the INI writer, the merge and the small helpers moved to logic files beside it.
 - MIN_ENHANCED_ASPECT: the two host drawn HUD styles (Enhanced and Modern) draw the life, magic and consumable groups and the host owned menu out into the side bands, which only exist from 16:9 up. The 0.001 absorbs the rounding in a reduced W:H pair, so a display that is 16:9 is never rejected by a last decimal miss.
 - LEGACY_ENHANCED (`'extended'`) is what the Enhanced style was called on disk before section 59.7. Only `mergeSettings` may read it.
 - Dialog pacing defaults are the stock values, so a fresh profile plays text exactly as the game does.
@@ -2716,7 +2691,7 @@ token measures by its slot.
 - enableAudio is no longer in the UI and is always kept on.
 - The settings key `offscreenAI` and the INI key `PauseOffscreenAI` keep their names: they are persisted or wire names, and "AI" there means enemy behaviour. The reader for that setting is `offscreenEnemyMode`.
 
-## game/shadow-casting
+## packages/game-core/src/shadow-casting
 
 A WebGL pipeline: a single channel heightmap rasterized on the CPU from shape elements, a shadow
 pass that ray marches through it for the sun and point lights, an optional separable blur that
@@ -2732,14 +2707,14 @@ from the game canvas at its position. Lights are capped at 16. With no screen da
 disabled, the canvas is cleared to fully transparent. The default viewport is 512 by 240 SNES
 pixels.
 
-## game/shop-overrides.ts
+## apps/desktop/src/game/shop-overrides
 
 - JS side arming for the in core substitution table that turns a shop shelf into a randomizer location (core/game-hooks/shop_overrides.c). One entry per purchase: a slot stocked to depth N is armed as N entries sharing a shelf key and differing only in their depth index, and the core sells them in that order.
 - Same contract as the other override bridges: the write only records, the gate bit (kFeatures3_ShopOverrides) is requested alongside it so it has latched into WRAM (SyncGateWords, next frame) by the time a shelf applies it, and it stays open only while armed. Clearing empties the table, then closes the gate.
 - ShopSlotTarget: `slotIndex` is the slot's stable id across every shop, which keys its sold counter. `roomId` is the indoor room the shelf stands in. `entrance` identifies the shop when its room is shared, or -1 for any. `owArea` is the overworld area of the shop's own door, telling shared doors apart, or -1 for any. `subtype` is the selling sprite's subtype: one purchasable spot in the shop. `depthIndex` is which purchase of the slot this is, 0 sold first. `depth` is the total purchases the slot carries, so the core knows when it empties. `currency` is the native currency tag (rupees, arrows, bombs, hearts, or a bottle's contents). `amount` is the amount, or the bottle slot value a bottle price demands.
 - `messageId` is the pre rendered contextual receipt line for the purchase, or -1 for the core's item class template fallback. `fireId` is the host assigned completion id reported the moment the purchase substitutes, or -1 for none.
 
-## game/simulator/drive.ts
+## apps/desktop/src/game/simulator/drive
 
 - The headless drive loop for `--sim-run`: it steps the pure engine against a SimulatorPort like the widget runner, but records into a RecorderState with no store or UI.
 - A VisitLog is one OBSERVE, recorded verbatim: where the virtual player stood and what detection handed the engine there. `screenFloods` only samples on a screen change outside traversal, so it skips every route destination and cannot answer "why was this exit never seen". `name` is the dataset display name, for the log only and never for a decision. `index` is the room index indoors and the overworld screen index (0 to 63 is the map cell) outdoors.
@@ -2751,7 +2726,7 @@ pixels.
 - Only the 'idle' and 'observing' phases run `observe`, which is what records exits. 'traversing' means the route has further hops to make, so that screen is passed through and never observed.
 - `target` means physically traversed to (visited), not only reachable by flood.
 
-## game/simulator/exit-order.ts
+## packages/navigation/src/simulator/exit-order
 
 - Walk distance ordering for detected exits: BFS steps from the entry tile, so the simulator tries the CLOSEST way out first.
 - HOP_STEPS (999) is stamped on tiles the flood reached but the walk BFS still cannot, after ledge hops are walked: reachable, distance unknown.
@@ -2765,15 +2740,15 @@ pixels.
 - `sortExitsByDistance` takes one precomputed score per exit (same order); exits on other sub screens of a big area carry the area bias. The score feeds the log; `steps` only ever holds a real distance.
 - `entryFromEdge` is the landing tile on the DESTINATION screen when crossing an edge at a position; `exitFromEdge` is where the exit sits on the SOURCE screen. `reachedGrid` is the engine's region memory format.
 
-## game/simulator/flood-room.ts
+## packages/navigation/src/simulator/flood-room
 
 - Single room indoor flood by address. It feeds floodFillScreen the room's REAL entrances (exit doors at their spawn tiles, plus stairs and walk through boundaries) so an interior always detects its way out (at least one entrance, never 0). The grid arrives with the uncle's blocker footprint already stamped (see screen-grids.ts), remote rooms included.
 - Intra room scroll boundaries (a 2x2 room's internal doorway) come from the live room layout read, which is only available for the loaded room.
 - A room's spawn record can sit outside its walkable floor (the door threshold, not the ground behind it). Seeding there reads as a sealed room, so the flood falls back to the room's own entrance list, which lands on floor.
 
-## game/simulator/flood-screen.ts
+## packages/navigation/src/simulator/flood-screen
 
-- The simulator's view of one overworld screen: the shared flood plus the summary numbers the run and the nav widget both report. The flood itself is `floodOneScreen` (flood/flood-area), run for every caller, so a screen flooded from a given seed answers the same for the widget and for the run.
+- The simulator's view of one overworld screen: the shared flood plus the summary numbers the run and the nav widget both report. The flood itself is `floodOneScreen` (packages/navigation/src/flood/flood-area), run for every caller, so a screen flooded from a given seed answers the same for the widget and for the run.
 - `intraCount` is the intra room scroll boundaries (a 2x2 room's internal doorway crossings).
 - `edgeRows` holds raw attrs and reach for the rows nearest the top and bottom edges (rows 0 to 3 and 60 to 63, columns 14 to 31). It shows whether a border crossing runs over open ground or over a cliff face. Diagnostic only.
 - `sprites` lists what this screen's spawn table reports and whether the flood can stand within 2 tiles of each. For a LARGE (multi screen) area the table is the whole area's and its coordinates are area relative, so they run past 63 and do not index a single screen's grid; `reached` is only meaningful on a small screen.
@@ -2781,7 +2756,7 @@ pixels.
 - A usable entrance transition is one the player can take right now: the BFS reached it without unmet item tiles, and the entrance tile itself is not under an item locked obstacle (for example the stairs west of the uncle's house buried under a rock, where the proximity trigger fires from beside the rock but the way in is sealed).
 - `floodOverworldScreen` floods by address: the game need not be standing on the screen.
 
-## game/simulator/interactables.ts
+## packages/navigation/src/simulator/interactables
 
 - Decodes the raw sim query records into the engine's SimChest, SimSprite and SimDoor value types. Detection stays free of dataset reads: positions, open bits and door kinds all come straight from the game.
 - DOOR_KINDS matches SimDoorKind() in core/game-hooks/sim_queries.c, by index.
@@ -2791,7 +2766,7 @@ pixels.
 - A big overworld area returns the SAME spawn table whichever of its four screens is queried, with every tile relative to the area's head screen. Each spawn is resolved to the screen it sits on before it becomes a SimSprite, so `roomId` always names the screen that owns it and `tile` is always local to that screen.
 - A room's doors include its CELL LOCKS, the keyhole plates that gate a jail cell (room object 0x18). They carry no door table record at all, so they arrive as big key doors flagged `cellLock`, keyed by chest slot.
 
-## game/simulator/live-port.ts
+## apps/desktop/src/game/simulator/live-port.ts
 
 - The SimulatorPort adapter that drives the real game through the wasm bridge and the delivery queue. The pure engine only ever speaks to this seam.
 - Runner contract: the engine's verifying phase compares the flag snapshot AFTER a trigger, so the runner must `await port.trigger(action)` and then allow about 2 frames before stepping the engine with a fresh `observe()`, passing the id from the last `onItemReceived` callback as `obs.itemReceived`. Awaiting trigger() alone only guarantees the delivery executed (flag set and item granted); the extra frames let item receipt and auto skip dialog settle.
@@ -2800,27 +2775,27 @@ pixels.
 - The room section split is valid because the player is standing in whatever room this reads (see WasmGetRoomLayoutInfo).
 - The delivery queue drains on its own rAF loop. It is started when the port is created so trigger() completions fire even if the game was started without it.
 
-## game/simulator/observe.ts
+## apps/desktop/src/game/simulator/observe/observe.ts
 
 - Builds a SimObservation from live game state: the real location from the UI state buffer, the virtual location as a screen id plus tile, the inventory from the tracker, and flags as independent SRAM copies for comparison.
 - The virtual traversal key is the GAME's own number (room index indoors, overworld screen index outdoors), never a dataset entry: a colliding room index used to misplace the virtual player before the first hop. Indoors it is region qualified so the live position keys the same node the exit that led here named (see interiorScreenId).
 - `observe` first refreshes the tracker's inventory and completed check sets from WRAM so the observation reflects the latest state (for example right after a delivered item). It is not forced: it reads again on every call but only logs or notifies on an actual change.
 - The NPC presence snapshot: progress bytes and the follower live in the 16 byte progress buffer; the SRAM copies come from the same flag snapshot.
 - The helpers after `observe` are shared by the widget runner and the headless `--sim-run` driver; keep one copy.
-- TILE_REQS are the traversal tokens tile attributes gate on. `bombs` belongs here: one interior attr is a bombable wall (`req: 'bombs'`, interior-attrs.ts). The overworld tables carry NO bomb requirement, so a cave mouth behind a bombable wall is reachable regardless; that is a revealed secret event flag, not a tile requirement, and is not modelled yet.
+- TILE_REQS are the traversal tokens tile attributes gate on. `bombs` belongs here: one interior attr is a bombable wall (`req: 'bombs'`, packages/game-data/src/data/native-tables/tile-tables.constants.ts). The overworld tables carry NO bomb requirement, so a cave mouth behind a bombable wall is reachable regardless; that is a revealed secret event flag, not a tile requirement, and is not modelled yet.
 - The flood inventory is built from the engine's reach tokens and always includes bare hands lift (lift.1).
 - Detect results (flood plus exits) are cached per screen, epoch and entry REGION (tile shifted right by 4): a room entered again through another door floods a different region.
 - Room queries decode the room tables indexed by dungeon; outdoor screens read the overworld sprite table instead. Overworld chests and doors do not exist as interactables (standing items and secrets come later), so only sprites are supplied outdoors.
 - `waitAfterTrigger` waits two frames so a triggered delivery has landed before the next observation.
 
-## game/simulator/overworld-area.ts
+## packages/navigation/src/simulator/overworld-area.ts
 
 - Resolves an overworld sprite's AREA relative spawn coordinate to the screen it sits on, and its local tile there. A large (2x2) overworld area shares one sprite table across all four screens, and the game reports every spawn's position relative to the area's HEAD screen, so a spawn on the far half carries a row or column past 63 instead of one clipped to a single screen's 64x64 tile grid.
 - SCREEN_TILE_SPAN is the tiles per overworld screen on either axis (the flood grid size). Overworld screens are laid out 8 per row.
 - WORLD_SCREEN_COUNT (64) is the screens in one world. The area head table (`wasmGetAreaHeads`) only covers this many entries and is reused for the other world by masking off a screen index's +64 offset before the lookup, then adding it back.
 - A row or column past 63 belongs to the screen one row down (head + 8) or one column right (head + 1), the only two offsets a 2x2 area can produce. `screenIndex` is whichever of the area's screens the sprite table was queried through.
 
-## game/simulator/probe-room-anchors.ts
+## packages/navigation/src/simulator/probe-room-anchors
 
 - Two diagnostics for telling a room's real interior from the dead space around it, for the `room=` probe. A dungeon supertile is always a full 64x64 grid and a room rarely fills it. The remainder reads as attr 0x00, the same value as plain floor, so a flood seeded there spreads through space the player can never stand in. When a crossing looks wrong these answer the first question: is the flood standing anywhere the game put something, and is the wall it left through a wall at all?
 - Anchors sit on walls and in doorways, so a record can be a tile or two (ANCHOR_SLACK) off the floor the player stands on.
@@ -2828,26 +2803,26 @@ pixels.
 - `edgeOpenCount` counts how much of one outer wall is open on the outermost tile ring. Read it as padding, not as wall: nearly every room answers 64 on every edge because the supertile's outer ring is open all the way round. That ring is what lets a stray flood run a room's whole perimeter, so a low number is the interesting case.
 - Passable attrs for this count: 0x00, 0x80 to 0x8d, 0x90 to 0xaf.
 
-## game/simulator/probe-room-threat.ts
+## packages/navigation/src/simulator/probe-room-threat.ts
 
-- The combat sweep's verdict on a probed room's gating sprites. See enemy-reach.ts for what "gating" and "clearable" mean.
+- The combat sweep's verdict on a probed room's gating sprites. See packages/navigation/src/simulation/engine/enemy-reach for what "gating" and "clearable" mean.
 - `inventory` is the LIVE tracker inventory at probe time (not a simulated run's inventory), so a room probed before picking anything up reads every sprite as `no-weapon` by design.
 - The combat context is built the same way the runner's combatFor does (observe.ts) but straight off the bridge, because the probe runs without a SimulatorPort.
 - The room's section split is only trustworthy when the player is standing in the probed room (the layout read is live only, see WasmGetRoomLayoutInfo). A remote probe gets no split, so every gating sprite counts, the same as a plain single section room.
 
-## game/simulator/probe-room.ts
+## apps/desktop/src/game/simulator/probe-room/probe-room.ts
 
 - The indoor counterpart of the `flood=` diagnostic: everything that decides whether a room has a detectable way out, side by side, so a table disagreement (entrance list, entrance to room map, fall hole table, room to exit screen table) is obvious.
 - RoomProbe fields: `exitScreen` is the overworld screen the exit table says this room comes out on (undefined means no entry). `entranceIds` are entrance ids whose destination is this room, per the entrance to room table; `entranceRows` shows raw against enriched rows for those ids, where the game says the door is. `fallHoleIds` are the ones the fall hole table claims; they are currently dropped as seeds. `seeds` are what the flood ran with (id at or above 1000 is a stair, at or above 2000 a boundary). `transitions` are the entrance transitions the flood emitted and why each was kept or dropped. `exits` is what exit detection produced. `gridBuilt` says whether the rebuild by address produced this room's grid. `chests` says whether the flood can stand next to each chest. `sprites` carry the kind the simulator assigns them. `attrRows` are raw attrs per layer across rows 30 to 52, where the flood stops, showing what it thinks is solid. `entranceTable` is the whole entrance to room table, so an absent room can be told from a short read. `neighbourEntrances` are entrance ids landing in rooms within 8 of this one; these find the door when this room has none. `edgeOpen` mostly reads 64 because the outer ring is the supertile's padding. `anchors` says which of the room's own anchors the flood reached (none means dead space). `scrolls` are the game's own edge scroll records (staircases and walk boundaries that name a destination room) to compare against what the flood claims. `bbox` is the bounding box of the reached region. `threat` is the combat sweep's verdict.
 - Map glyphs: '.' solid, ' ' floor, 'o' obstacle (needs an item), '#' flooded, '*' flooded obstacle, '+' flooded solid. Obstacles are attrs at or above 0xF0 and 0x71.
 - Chests are solid: the run must stand on a NEIGHBOUR, so touchable means a reached tile within 2.
 
-## game/simulator/read-game-state.ts
+## packages/game-core/src/simulator/read-game-state.ts
 
 - Parses the live game UI state buffer into the location read the runner uses (room, screen, entrance and player pixel position), or null when unavailable.
-- Both imports come straight from their own modules, not the lib/game barrel: the bridge reaches this file (bridge/room-doors), so a barrel import here closes a cycle back through live-settings and cheat-rules-memory, whose top level subscribeGameState call then runs before wasm-bridge has defined it and the renderer stops on the boot splash.
+- Both imports come straight from their own modules, not the apps/desktop/src/game barrel: the bridge reaches this file (packages/game-core/src/bridge/room-doors), so a barrel import here closes a cycle back through live-settings and cheat-rules-memory, whose top level subscribeGameState call then runs before wasm-bridge has defined it and the renderer stops on the boot splash.
 
-## game/simulator/read-loadout.ts
+## packages/navigation/src/simulator/read-loadout.ts
 
 - The player's full loadout, read from the game, not tallied by the run. The run's own inventory is a set of check names: it answers "what did the run collect" but not "what does the player have" (no hearts, no equipment tiers, no map, compass or key state per dungeon). Those live in the save and the game already decodes them for the HUD, so this reads the same buffer the HUD does.
 - Tiers stay NUMBERS. The display layer decides what to call a tier 2 sword; naming it in code would put the game's own product names into the repository, which the copyright gate exists to prevent. 0 means not held; higher is a better tier of the same slot.
@@ -2858,7 +2833,7 @@ pixels.
 - Rupees report the GOAL, not the displayed counter. The HUD ticks `link_rupees_actual` up toward `link_rupees_goal` a few per frame (hud.c:389), so a run that ends while the counter is still climbing would report less than the player owns.
 - `grants` is a diagnostic: how many times the game was told to hand over an item, per item id (0 to 255) and per site. Link_ReceiveItem is not idempotent, so a count above the number of checks taken means something was granted twice. Sites: 0 chest, 1 npc, 2 overworld, 3 kill.
 
-## game/simulator/room-crossing-exits.ts
+## apps/desktop/src/game/simulator/room-crossing-exits.ts
 
 - WARP_DOOR (0x46) is kDoorType_WarpRoomDoor; only a west or east one resolves a travel slot.
 - OUTDOOR_LANDING_DEPTH (2) is how many rows below the outdoor door's record its landing tile sits, clamped to row 63.
@@ -2868,7 +2843,7 @@ pixels.
 - The exit table exit is the table's own answer for a room whose door the flood never touched.
 - Respawn points and the holes that drop INTO this room are arrivals, not ways out, so neither becomes an exit.
 
-## game/simulator/room-doorways.ts
+## packages/navigation/src/simulator/room-doorways
 
 - Geometry tests for a doorway through a room's OUTER wall, shared by every detector that decides whether a door table record is a real way through.
 - A candidate is validated against the DESTINATION room's own grids: exit doors back to the overworld share the same door table encoding, so mirroring one into the neighbouring room id fabricates a connection into solid wall (for example the castle's front entrance doors "leading" into the basement jail rooms below).
@@ -2878,7 +2853,7 @@ pixels.
 - Wall strip attrs that mean "crossing here never scrolls to the adjacent room": 0x8E is the exit door trigger (walks OUT of the dungeon), 0xF0 to 0xF7 is a flag gated door, solid until its story flag, as the sanctuary's escape door is. `exitDoorAt` checks the strip at the position (the notches are 2 wide) up to 14 deep, on any layer.
 - `doorwayLandingOpen` is the reality check that kills fabricated connections: the DESTINATION room must have walkable floor (or door passage) behind the doorway, on any layer, against its OPPOSITE wall. A real doorway lines up with its opening: the old 14 deep by 9 wide window accepted any room with floor loosely near that wall, which is how unrelated caves at consecutive room indices "scrolled" into one another. The window is now 3 deep and 3 wide.
 
-## game/simulator/room-exits.ts
+## apps/desktop/src/game/simulator/room-exits.ts
 
 - UNREACHED (0xffff) is the ordering score for an exit whose tile the walk never reached.
 - OUTSIDE_ORIGINS are the origins that leave the dungeon or house entirely instead of moving within it.
@@ -2886,13 +2861,13 @@ pixels.
 - Room counts are what is REAL for a room, for the log's numbers: distinct doors back outside, and every other crossing counted as an edge. The raw flood formulas count spawn markers and door tiles read as borders too many times.
 - `detectRoom` floods an indoor room and turns its crossings into traversal exits: the crossings facade answers what leaves the room, `usableCrossings` keeps the ones the player could walk, and room-crossing-exits speaks them in the engine's SimExit vocabulary.
 
-## game/simulator/scan-sprite.ts
+## packages/navigation/src/simulator/scan-sprite.ts
 
 - Answers where the game puts a given sprite. A check's room index comes from our own data, and when that index is wrong the failure is silent: the room exists, it just holds something else, so the check never fires and nothing says why. Asking every room's spawn table settles it against the game, not the dataset.
 - Indoor room indices run 0x000 to 0x17F (LAST_ROOM).
 - Which overworld screen a room is entered from is what names it; a room index alone cannot be checked against anything.
 
-## game/simulator/screen-exits.ts
+## apps/desktop/src/game/simulator/screen-exits.ts
 
 - A DetectedScreen's `reached` is the flood reached tiles: the engine's region memory for visits after the first. An OverworldExitPass `group` is the sub screens of the big area being visited; a group of one is a plain screen. An OrderedExit records whether taking it leaves the big area being explored.
 - A door or a pit into a room: a pit is one way, because the player drops in and must find another way out, while a doorway can always be walked back through. That is what `twoWay` tells the graph.
@@ -2900,18 +2875,18 @@ pixels.
 - `detectScreenExits` gives a screen's flood numbers plus the game driven exits the run traverses on. It is the ONLY exit source the simulator has, with no static connection data behind it. A synthetic id the dataset does not define still names a real room, so it is detected from its number: real geometry and a coarse name beat a hole in the graph.
 - Location resolution is shared through `locationForScreen` for both vocabularies. A second copy reading the overworld index out of `roomIndex`, which an overworld record does not carry, sent every overworld detection by dataset id to screen 0.
 
-## game/simulator/screen-location.ts
+## packages/navigation/src/simulator/screen-location.ts
 
 - Maps a screen id to the numeric location the room addressable reads need. A synthetic `room:N` or `ow:N` id still carries the GAME's number; returning null for those made the room a hole in the graph, and with two way doors a hole welds together every screen pointing at it (`room:277` joined lw-2e, lw-3a and lw-34). The dataset only supplies the name.
 - The native index lives in DIFFERENT fields by kind: `overworldIndex` outdoors, `roomIndex` indoors. Reading `roomIndex` for both silently resolved every overworld screen to index 0.
 
-## game/simulator/screen-name.ts
+## packages/navigation/src/simulator/screen-name
 
 - Maps a TraversalId to the DISPLAY NAME of the place it leads to, or null when the dataset cannot answer. A traversal id is the game's own number (`ow:19`, `room:112@0,0`), not a dataset key, so the lookup goes through the field that holds it (`overworldIndex` for overworld records, not `roomIndex`). The synthetic room id may carry the region and entrance qualifiers a node key carries.
 - A bare room number is ambiguous (palace or cave), so the asking screen lends its palace (a stair inside a dungeon stays in it). The room keyed index is keyed on `roomIndex:palaceIndex`, so a lookup without a palace only matches a record without one; the candidate scan covers a dungeon room reached from outside any dungeon. If more than one candidate remains, answer null: a visible id beats a confidently wrong name.
 - Names are display only; nothing here feeds traversal. `displayNameFor` is for a field that must hold a string: the raw id stands in for an unnamed place.
 
-## game/simulator/screen-resolve.ts
+## apps/desktop/src/game/simulator/screen-resolve
 
 - Numeric screen and room indices to traversal keys. Room indices collide across the dataset (room 0x55 is BOTH 'dam' and a castle's secret passage).
 - An overworld traversal key is the GAME's number, never a dataset id: identity drives `visited`, the frontier and the graph, and a dataset keyed identity let a wrong or missing `roomIndex` merge two places or drop a room. Names are for logs only. The interior key follows the same rule.
@@ -2920,18 +2895,18 @@ pixels.
 - An entrance's landing tile in its room is its spawn point, which is always walkable.
 - Area info is big multi sub screen membership (castle style groups); undefined means a 1x1 screen.
 
-## game/simulator/sim-log-writer.ts
+## apps/desktop/src/game/simulator/sim-log-writer.ts
 
 - Detailed JSONL sink for a simulator run. `append` is fire and forget: each entry is stringified and pushed to the electron log handler, but writes are serialized through a single promise chain so bursts never interleave lines. `write` is the SimEvent typed alias the runner drives.
 
-## game/simulator/sprite-kinds.ts
+## packages/navigation/src/simulator/sprite-kinds
 
 - Maps a static sprite type to a SimSprite kind. NPCs that hand out a check are 'npc' (the trigger planner then resolves their flag payload from CHECK_NPC_FLAGS by sprite type); everything else falls back to 'other', which cannot be triggered and feeds coarse reachability. The union has no 'enemy' or 'item' member, so 'other' is the neutral default. The map starts small and grows as vanilla runs surface more check giving NPC ids.
 - NPC ids: 0x16 the first sage; 0x1a Blind's Hut hint NPC; 0x1f Sick Kid; 0x28 sets the bombable wall room flag on trigger; 0x2b dwarf at the smithy; 0x2e named villager (progress flag); 0x36 Mad Batter or potion NPC; 0x39 hint or storyteller NPC; 0x3a half magic bat NPC; 0x52 King Zora; 0x73 Link's Uncle (UncleAndPriest); 0x75 Bottle Merchant; 0xad Old Man (Death Mountain); 0xbb shopkeeper dispatch (subtype2 selects the role; the cave gift giver is one).
 - Standing items are collected by walking onto them, not by talking. The pair that matters before the first dungeon: the fungus in the woods and the loose heart pieces (`Sprite_E7_*` and `Sprite_HeartPiece`, sprite_main.c:705): 0xe7 and 0xeb.
-- STANDING_ITEM_IDS is what a standing sprite hands over (the Link_ReceiveItem argument, see id-map.ts): 0xe7 gives 0x29, 0xeb gives 0x17.
+- STANDING_ITEM_IDS is what a standing sprite hands over (the Link_ReceiveItem argument): 0xe7 gives 0x29, 0xeb gives 0x17.
 
-## game/simulator/trigger.ts
+## packages/navigation/src/simulator/trigger.ts
 
 - Maps a TriggerAction onto the delivery queue and resolves once the delivery has FULLY completed (onComplete fires when the game consumed the item, not when the flag was written), so the runner never steps the engine while the item get dialog animates.
 - A door record pair is the records describing one PHYSICAL doorway: the room's own [roomId, index] plus, for an outer wall door, the adjacent room's matching record (opposite direction, same kind, within 4 tiles along the wall, among the first 4 records).
@@ -2942,10 +2917,10 @@ pixels.
 - Kill is virtual: mark the room's drop or cleared bit and grant the drop through the normal receive path. A kill that satisfies the room tag also opens the room's closed shutter doors, as the game does. Door kind 4 is the shutter (SimDoorKind order).
 - Progress steps are scripted rescue progression: pure state writes with no item pickup.
 - Pull switch: the room's tag routine raises its trapdoors when a switch is pulled, so every shut shutter in the room opens (the door out behind the sanctuary). A drain switch writes the same overworld event byte its room's tag routine would, for real: no item (0xFF), just the flag the game itself reads.
-- Bomb wall: a blast turns the cracked patch into floor for the rest of the run. No game write by address exists for this, so the opened state lives in the flood facade and every later grid build stamps it (flood/bombed-walls.ts).
+- Bomb wall: a blast turns the cracked patch into floor for the rest of the run. No game write by address exists for this, so the opened state lives in the flood facade and every later grid build stamps it (packages/navigation/src/flood/bombed-walls).
 - Trap shutters slam shut behind the player: every OPEN shutter record closes.
 
-## game/snes-color.ts
+## packages/game-core/src/snes-color
 
 - SNES colour words, as the palette editor needs them. The hardware stores a colour as BGR555, one little endian word laid out `0bbbbbgg gggrrrrr`, five bits per channel.
 - Only 32 levels per channel exist, so a value a colour picker hands back is quantised before it is believed; otherwise the swatch shows a colour the console cannot produce.
@@ -2953,28 +2928,28 @@ pixels.
 - `bgr555ToRgba` packs little endian RGBA, for writing straight into ImageData.
 - `hexToBgr555` accepts `#rrggbb` or `rrggbb`. `isExactColor` is false when a hex value is off the 5 bit grid, meaning the editor had to snap it.
 
-## game/sram-sync.ts
+## apps/desktop/src/game/sram-sync
 
 - Periodic persistence of SRAM from WASM MEMFS to disk, every 5 seconds, skipped when the bytes did not change.
 - A failed sync is ignored: it can happen during shutdown.
 - `pauseSramSync` stops the periodic flush without the final flush `stopSramSync` performs. The gameplay simulator uses it so a mid run tick never persists half simulated SRAM to the profile's sram.dat. Resume restarts the interval, also without a flush, and does nothing when it is already running.
 
-## game/standing-overrides.ts
+## apps/desktop/src/game/standing-overrides
 
-- JS side arming for the in core standing prize substitution table (core/game-hooks/standing_overrides.c), mirroring the drop table's contract in drop-overrides.ts: the write only records, the gate bit is requested alongside it, and it stays open only while the table has entries.
+- JS side arming for the in core standing prize substitution table (core/game-hooks/standing_overrides.c), mirroring the drop table's contract in apps/desktop/src/game/drop-overrides: the write only records, the gate bit is requested alongside it, and it stays open only while the table has entries.
 - StandingOverrideTarget: `area` is the overworld screen index (outdoor) or room index (indoor). `sprite` is the standing prize's sprite type. `half` is the indoor room half the prize stands in: 0 left, 1 right, 2 either.
 - `messageId` is the pre rendered contextual receipt line (session dialogue), or -1 for the core's item class template fallback. `fireId` is the host assigned completion id reported when the entry substitutes, or -1 for none.
 - The item id indexes the 76 entry native grant tables, so an out of range one would corrupt the receipt; it is refused like in the other override setters.
 - kFeatures3_StandingOverrides is armed alongside the record only write, so it has latched into WRAM (SyncGateWords, next frame) by the time a pickup applies the table. Clearing empties the table, then closes the gate, the same double lock as clearItemOverrides.
 
-## game/state-buffers.ts
+## apps/desktop/src/game/state-buffers
 
-- Save states held in memory, not on disk: capture the live state into a buffer, and push a buffer back into the core. The simulator and the manual and auto save flows work this way; quick slots go through save-states.ts. Views never touch the module directly.
+- Save states held in memory, not on disk: capture the live state into a buffer, and push a buffer back into the core. The simulator and the manual and auto save flows work this way; quick slots go through apps/desktop/src/game/save-states. Views never touch the module directly.
 - SCRATCH_SLOT (98) is the slot for buffers that never touch disk: written, read by the core, then unlinked. A failed unlink is ignored.
 - `loadStateFromBuffer` mirrors loadState for buffers not on disk. It is synchronous, so unlike loadState it cannot wait out a boot: callers reach it through ensureGameRunning() or already hold a live core. A core that is not ready is logged as such, never answered with a quiet false.
 - It runs the same `checkLoadable` guard as loadState. Buffers captured in session carry at most the capture stamp and pass straight through; the check matters for the ones that came off disk.
 
-## game/state-dialog.ts
+## apps/desktop/src/game/state-dialog
 
 - The message box across a save and a load. The enhanced box is drawn from statics in the core's dialog hooks, and a save state holds none of them (core/game-hooks/dialog_hook_state.c). A state saved with a message up would load into a game that waits on a button with no words on screen. So the hook state is read on the frame the core saves, travels in the save file's stamp, and goes back in right after the load.
 - A save with no such state (no message up, a closed gate) loads with the dialog store marked stale, and the host box holds back until the next message.
@@ -2982,34 +2957,34 @@ pixels.
 - A stamp whose dialog text is not base64 counts as no dialog state.
 - `resumeDialogAfterLoad` is called after WasmLoadState and after the live settings are pushed again: the pacing push clears the step credit the restore puts back. Its stamp is the one read off the buffer before it was stripped.
 
-## game/state-load-signal.ts
+## packages/game-core/src/state-load-signal
 
 - When a save state was last loaded. A load swaps the whole game under the app, so whatever the tracker finds done right after it was done in that state, not by the player just now. The check toasts read this to stay quiet; the tracker itself still follows the loaded state.
 - A load is also announced to listeners, for state that lives in the save and must be read again (the online client's received index). A throwing listener never breaks a load. `onStateLoaded` returns the unsubscribe.
 - `wasStateJustLoaded` is true for `windowMs` after a load: long enough for the next sweep and its derived rows to land.
 
-## game/state-stamp.ts
+## apps/desktop/src/game/state-stamp
 
 - Stamps outgoing save state bytes with the version and format that produced them. Applied at the storage boundary, not at each call site, so quick slots, manual saves and auto saves are all covered by one write path. The one thing stamped earlier is what has to be read from the core on the frame it saved (stampAtCapture).
 - Layout drift is caught here too: the bytes the core produced are already in hand, so comparing their snapshot length against the generated constant costs nothing. A C change that moves the layout fires the first time anyone saves, long before a release, without the probe running.
 - Drift is reported once per session: a wrong layout is a standing condition, not a per save event.
 - `stampAtCapture` puts what only the moment of capture knows on the bytes before anything awaits. The game keeps running while a screenshot is taken and the version is looked up, so by the storage boundary the core has moved on. `stampStateBuffer` completes that stamp and keeps what it carries.
 
-## game/stock-player-sheet.ts
+## apps/desktop/src/game/stock-player-sheet
 
 - The sheet the game ships with, for starting a custom sprite from scratch.
 - Both halves come out of a ROM's compiled asset blob, not from the ROM or a running game: the tiles are one named entry, the gear palette another. That keeps "create new" available with no game running and no new extraction, at the cost of needing a ROM whose assets were built once.
 - The gear asset holds five outfits. Only the first four are taken: the fifth is the flash palette used while the player is zapped, which no sheet format carries and which the core leaves on the shared row on purpose.
 - `stockPaletteFrom` pulls the stock palette alone, to stand in for a sheet that ships tiles only. `loadStockSheet` is null when the ROM's assets have not been compiled yet.
 
-## game/story-gates.ts
+## apps/desktop/src/game/story-gates
 
-- Arming the story gates: which half of gate word 5 the settings ask for, and which a seed asks for while it runs. The word itself is derived in the shared module (story-gates/story-gate-word.ts), so both sides fold a setting the same way.
+- Arming the story gates: which half of gate word 5 the settings ask for, and which a seed asks for while it runs. The word itself is derived in the shared module (packages/randomizer/src/world/story-gates/story-gate-word), so both sides fold a setting the same way.
 - The default is the event reading, everywhere. A file with no seed arms every scene gate and the ledger, and leaves the count gates at the original numbers.
 - Vanilla Safe alone forces the whole word to zero, which the core also enforces in its own parity mask.
 - A seed arms exactly its own choices and replaces the settings half while it runs; null hands the word back to the settings half.
 
-## game/tracker/bridge
+## apps/desktop/src/game/tracker/bridge
 
 Connects the core's item and check notifications to the tracker. It installs
 `window.__onItemReceived`, polls the inventory state every 2 seconds (`POLL_INTERVAL_MS`), and
@@ -3030,7 +3005,7 @@ polls room, overworld and progress flags for check completion beside it.
   the current game state at once.
 - `pollEventStatus` reads the live side of the reversible events beside the completed set.
 
-## game/tracker/check-facts
+## packages/navigation/src/tracker/check-facts
 
 Per-record native fact tests: whether a check record's own `gameId` reads as complete from the
 live WASM heap. Each record is tested on its own fields, so a fact shared by two records (a boss
@@ -3054,7 +3029,7 @@ offset), which is what the facade's reverse index stays for.
 - `outOfBedCheckId` resolves the out of bed check from the raw native fact, the one legitimate use
   of the reverse index left in polling.
 
-## game/tracker/collected-checks
+## packages/navigation/src/tracker/collected-checks
 
 Checks the multiworld room holds as done while the save does not: a location collected for this
 slot by `!collect`, or checked in another session of the same slot. The tracker shows them
@@ -3062,10 +3037,10 @@ completed, as the room does. The game's own completion flags are never written: 
 app's view alone, and it goes with the online session. `addCollectedChecks` returns true when any
 id was new. `withCollectedChecks` adds every collected check to the completed set the save shows.
 
-## game/tracker/completed-checks-core.ts
+## packages/navigation/src/tracker/completed-checks-core.ts
 
 The per-check completion sweep, shared by the live poller (flag-polling) and the offline battery
-save reader (save-file/offline-progress.ts). Every check record is tested against whichever of
+save reader (packages/navigation/src/save-file/offline-progress.ts). Every check record is tested against whichever of
 its own gameId fields describe a detection mode. A null reader stands for a source that is not
 available (a gated live query, or the offline path's missing live WRAM byte) and skips its modes
 instead of reading zeros, since zero can satisfy an equality threshold, so a made up read is not a
@@ -3080,7 +3055,7 @@ safe "no".
 - Armed rows answer from their own taken bit alone in the derived pass too: a fallback that reads
   the vanilla item would tick them the moment that item turned up anywhere on the seed.
 
-## game/tracker/derived-checks.ts
+## packages/navigation/src/tracker/derived-checks.ts
 
 The derived pass of the completion sweep: the records that are true because of other records. A
 combined event names the records it is made of (`derived`), a dungeon-wide event names a dungeon
@@ -3089,7 +3064,7 @@ vanilla `fallback`. Records are visited in dataset order, so a combined event on
 that come before it; one pass is enough. `armed` lists the rows a seed has armed: their own taken
 bit is the only answer, never a fallback.
 
-## game/tracker/event-status
+## packages/navigation/src/tracker/event-status
 
 The live side of the reversible events: for every record with a `now` condition, whether it holds
 this poll. Pure over a presence snapshot, the same language the simulator reads NPC presence
@@ -3097,7 +3072,7 @@ with, so a status is one declarative condition on the record and nothing else. I
 the completed set: an event that happened stays ticked, and this only says whether it is true
 right now.
 
-## game/tracker/flag-polling
+## packages/navigation/src/tracker/flag-polling
 
 Reads WASM memory to find which checks are completed. Detection is driven by each check record's
 own `gameId`, never by a name-keyed table: this module only builds the live heap readers (with
@@ -3114,7 +3089,7 @@ the same shape.
 - `PROGRESS_BYTES`, `OW_EVENT_BYTES` and `ROOM_WORDS` are how many progress bytes, overworld event
   bytes and room words the exports expose.
 
-## game/tracker/inventory
+## packages/navigation/src/pathfinding/core/inventory.ts
 
 Reads the 39 byte buffer from WasmGetInventoryState and turns it into a set of item ids. The set
 is keyed by dataset id, never by display name. Names are not unique (two records share several
@@ -3138,7 +3113,7 @@ rejects a display string mistaken for an owned item. The slot to id mapping live
 - The mirror counts at slot value 2; value 1 is the scroll before the upgrade.
 - The top flute value replaces the plain one instead of stacking on it.
 
-## game/tracker/item-ids
+## packages/navigation/src/tracker/item-ids
 
 Raw inventory slot values to dataset item ids, never display names. Two sources only: the game's
 `Link_ReceiveItem` index resolved through the facade (the dataset owns the join), and an explicit
@@ -3166,13 +3141,13 @@ is lazy (per poll) because a published dataset bundle can replace the records.
   bits name it.
 - `addLadder` adds every rung up to `held`, so a tier byte yields its whole progression.
 
-## game/tracker/normal-placement-ref.ts
+## packages/navigation/src/tracker/normal-placement-ref.ts
 
 Normal's placement, built once for the session. Nothing about it varies while the app runs: every
 location holds what the unmodified game puts there, and no rng is drawn. Two tracker surfaces and
 the simulator's picker ask for it, so it is built on the first ask and kept.
 
-## game/tracker/record-row-inputs
+## packages/navigation/src/tracker/record-row-inputs
 
 What the file's own settings hand the rows that are read from the dataset. Two shapes, both off
 the placement, so the plain game and a seed are set the same way:
@@ -3189,18 +3164,18 @@ the placement, so the plain game and a seed are set the same way:
 
 `LAMP` is the one item every unlit room record names, so granting it is what "can see" means to a
 record. `LIGHT_WORLD_CLEARED` is the combined event "All Light World dungeons cleared"
-(records/checks/events/world.ts, n 283). `bigKeyItemIds` is every Big Key the dataset knows.
+(packages/game-data/src/data/records/checks/events/world.ts, n 283). `bigKeyItemIds` is every Big Key the dataset knows.
 Nothing here comes from a second rule table; before this the same four answers came out of a
 resolver that also carried a copy of every location rule.
 
-## game/tracker/tracker-count.ts
+## packages/navigation/src/tracker/tracker-count.ts
 
 Whether a tracker row counts toward the run's check total. The roster also lists rows that are
 not checks: the event records (beating Agahnim, the frog, the smiths among them) and the status
 only rows. Those stay in the list, but a total is its item locations only, which is what an
 Archipelago room counts for the slot.
 
-## game/tracker/tracker-roster.ts
+## packages/navigation/src/tracker/tracker-roster.ts
 
 The rows the app lists for a run, built once and read by every surface that lists them: the
 Checks widget, the randomizer page's spoiler tab and the cheat console's Checks tab. On a seed
@@ -3210,13 +3185,13 @@ seed, so the two lists never share a row. Without a placement it is the dataset'
 which is where the fairy rungs and the intro's story beats live: real rows that were never
 locations of any world.
 
-## game/tracker/tracker-statuses
+## packages/navigation/src/tracker/tracker-statuses/tracker-statuses.ts
 
 Every check's status, from one engine, for the plain game and for a seed alike. Which reading
 answers a row depends on the row, never on the mode:
 
 - A row the world holds a location for is answered by the generator, over the placement handed
-  in. Normal's placement is the one where nothing moved (normal-placement.ts), so the engine
+  in. Normal's placement is the one where nothing moved (packages/randomizer/src/normal-placement), so the engine
   cannot tell the two modes apart.
 - A row it holds no location for is answered from the dataset's own record, against the place
   the row happens at. That is every event, because an event is a thing that happened and no
@@ -3224,23 +3199,23 @@ answers a row depends on the row, never on the mode:
   locations, so the same rule sends them to the engine instead.
 
 The place comes from the engine too: its reachable regions, named as dataset screens
-(logic/regions/reachable-screens.ts), so there is one graph. `fired` holds locations the session
+(packages/game-data/src/logic/regions/reachable-screens.ts), so there is one graph. `fired` holds locations the session
 recorded as taken where no check record could see it. `smallKeyDoors` off reads every small key
-door as open (world/small-keys.ts). `trackerReachableScreens` gives the screens the engine says
+door as open (packages/randomizer/src/world/small-keys). `trackerReachableScreens` gives the screens the engine says
 the player can stand on.
 
-## game/turbo.ts
+## packages/game-core/src/turbo
 
 - The configured speed goes down with the other live settings; the held state goes down on the shortcut's press and release. Both are pacing globals in the core, so a save state load never disturbs them and nothing needs asserting again afterwards.
 - The core is told the ladder percent while turbo is enabled, 100 (real time) otherwise.
 - Both calls are guarded: a core built before turbo existed lacks the exports. Holding is a no op before the module exists and harmless while the speed is 100.
 
-## game/ui-bridge-diff.ts
+## packages/game-core/src/ui-bridge-diff.ts
 
 - Shallow change detection between two GameUIState snapshots, run every frame.
 - The host menu fields are compared because the host menu gates the pause takeover: a frame where only they moved still has to reach the store, since the open and close edge and the clobbered item detection both ride on it.
 
-## game/ui-bridge-parser.ts
+## packages/game-core/src/ui-bridge-parser
 
 - Parses the raw WASM UI state buffer into a typed GameUIState. UI_BUFFER holds the byte offsets of each field; two byte fields are little endian.
 - Module numbers: 0 Intro, 1 FileSelect, 2 CopyFile, 3 EraseFile, 4 NameFile, 0x14 (20) Attract (the intro "video" and legend demo) all read as title. 5, 6, 8, 10, 15, 16 read as loading. 7 and 9 are active gameplay. 0x0E (14) Interface, 0x12 (18) GameOver, 0x17 (23) SaveAndQuit.
@@ -3250,7 +3225,7 @@ the player can stand on.
 - The host menu's active item byte (132) repeats byte 14 on purpose (see HostMenuState). Byte 14 is the HUD's readout of the equipped item; byte 132 is the host's own register read back, so a value the native menu moved (its init walks the 21 entry grid before the hold engages, and replaces any id that grid has no row for) can be detected and written again.
 - The game parks the countdown seconds at 0xFF or 0xFE, sign bit set, while no countdown runs.
 
-## game/ui-bridge.ts
+## apps/desktop/src/game/ui-bridge
 
 - High frequency polling of game UI state from WASM: a requestAnimationFrame loop reads the UI state buffer every frame, parses it into a typed GameUIState (ui-bridge-parser), diffs it (ui-bridge-diff), and pushes changes to the zustand store.
 - Haptic polling runs every frame, even when the UI state did not change. The message box mirror rides the same loop with its own change check.
@@ -3258,12 +3233,12 @@ the player can stand on.
 - The gear high water mark follows the state decoded in this loop instead of a store subscription, so it is recorded whether or not the pause menu was opened this session. A tier earned and then dropped has to stay reversible either way. It takes the whole state, not its equipment block, because the arrow row's mark is an inventory byte.
 - The map used to pause the game when it reached its idle state. That deadlocked: pausing stops ZeldaRunFrame(), which stops input processing, so the player could never close the map. The game's own submodule system handles the map idle state without help, so the hook was removed (the empty `checkMapPause` is gone).
 
-## game/upgrade-icons.ts
+## apps/desktop/src/game/upgrade-icons
 
 - The in game capacity upgrade icons are the 512 B binary the sprite extraction emits beside the PNGs (capacity-icons.4bpp, one 4bpp icon per family). They are handed to the core when a randomizer session arms, written to MEMFS and applied with WasmApplyUpgradeIconsFile, the player sprite pattern.
 - The core shows an icon over a capacity upgrade's hold up receipt under kFeatures3_CapacityProfile. A sprite set extracted before the binary existed, or no running module, leaves the refill art in place. `applyUpgradeIcons` resolves true when the core took the icons of the active ROM's sprite set.
 
-## game/usable-crossings.ts
+## packages/navigation/src/usable-crossings/usable-crossings.ts
 
 - MAX_DOORWAY_SPAN is the widest a room to room crossing can be and still be a doorway. A supertile's outer padding ring is open tiles all the way round, so a flood that gets into it anywhere runs the whole perimeter and reports a crossing spanning most of every edge. A real doorway is a notch a few tiles wide; the first castle's own room to room walks measure 2 to 6.
 - WARP_DOOR is kDoorType_WarpRoomDoor, which teleports. THRONE_DOOR is kDoorType_ThroneRoom, a push wall. Crossing either teleports or is refused, so it never scrolls to the adjacent room; the throne wall stops blocking while a follower is active.
@@ -3278,7 +3253,7 @@ the player can stand on.
 - `usableCrossings` is the one plausibility pass over a collected screen, so the simulator, the recommendations and anything else reading the facade see the same set. The facade emits every crossing the game's tables describe; this decides which of them the player could walk.
 - `takeableCrossing`: a border bundle answers to the filters that built it, never to `available`. One item gated tile anywhere along the run puts that item on the whole bundle's requirements, so judging it that way deletes a crossing whose other tiles are plain floor. Everything else asks for its own cheapest approach and can be judged directly.
 
-## game/wasm-bridge
+## packages/game-core/src/wasm-bridge
 
 The singleton core holding the Emscripten module reference and game state, plus a re-export hub
 for the per-concern bridge facades (bridge). Every other game module imports from here to reach
@@ -3293,14 +3268,14 @@ call them at runtime, so the re-export cycle is safe.
   the transition and hangs: useAutoTest and useSimRun call waitForRunning only once
   loadProfileForGame has resolved, which itself sets the status to `running`.
 - `setInput` pushes a SNES input bitmask to the running module, called by the InputManager each
-  frame. It stays self-contained (no import from bridge/wasm-call) so wasm-bridge has no static
+  frame. It stays self-contained (no import from packages/game-core/src/bridge/wasm-call) so wasm-bridge has no static
   edge into wasm-call. That edge completed a two-way cycle which, combined with lifecycle's
   dynamic import of this module, could be evaluated as a second instance under the Vite dev
   server and desync the startGame re-entry guard.
-- The raw host menu commands are re-exported here, but app code goes through game/host-menu,
+- The raw host menu commands are re-exported here, but app code goes through packages/game-core/src/host-menu,
   which is where the takeover's wanted state and the equipped item re-assert live.
 
-## game/wasm-warmup
+## apps/desktop/src/game/wasm-warmup
 
 Background WASM warmup in three stages: inject the Emscripten glue (defines `window.Zelda3`;
 built with MODULARIZE, so nothing runs until called), fetch the .wasm bytes (streamed over http,
@@ -3309,13 +3284,13 @@ one IPC blob over file), then `WebAssembly.compile` into a cached module that st
 blob from the Brock port kit (`readCore`) with no progress; over http with no length header the
 progress is indeterminate.
 
-## game/webgl/gl-helpers
+## packages/game-core/src/webgl/gl-helpers
 
 Shared WebGL helpers for every fullscreen post process pipeline (shadow casting, edge glow).
 Filter and draw mode are parameters so each pipeline supplies only what differs; `label`
 prefixes compile and link errors.
 
-## game/wish-pond-plan.ts
+## apps/desktop/src/game/wish-pond-plan
 
 - JS side arming for the two item throwing waters (core/game-hooks/wish_pond_plan.c). One row per numbered rung, keyed by the water it belongs to, and two host lines per water: the one she says when she rises, and the one a spent water shows.
 - A planned visit hands over the next rung with no throw and no question, so neither line may be a native one: -1 shows no line at all.
@@ -3326,13 +3301,13 @@ prefixes compile and link errors.
 - `wishPondThrowsTaken` reads the rungs taken at one water on the live file: what the probes and the tracker read back.
 - Clearing empties both tables, then closes the gate: the same double lock as the rupee pond.
 
-## game/zspr-write.ts
+## packages/packs/src/zspr-write/zspr-write.ts
 
 - Serializes a PlayerSheet back to ZSPR, for the studio's export and for the boot path (the core only reads ZSPR). The override layer is folded onto the original: the file carries one palette, so whichever layer the caller asks for is the one that survives. `layer: 'override'` (the default) bakes the edits; `'original'` writes the palette as imported.
 - The display name and the author are NUL terminated UTF-16LE; the third string, a short credit line, is NUL terminated ASCII.
 - The spec's checksum is a 16 bit sum of every byte, followed by `0xFFFF - sum`. The four checksum bytes are summed as the seed value `FF FF 00 00`, not zero, which reproduces other tools' output byte for byte. Nothing here validates it.
 
-## game/zspr.ts
+## packages/packs/src/zspr/parse-zspr.ts
 
 - Reads ZSPR, the community custom sprite container, into a PlayerSheet.
 - Header, 29 bytes: "ZSPR", a version byte, a four byte checksum, then (offset, length) for the tile block and for the palette block, a sprite type word, and six reserved bytes. ZSPR_HEADER names those offsets.
@@ -3340,7 +3315,7 @@ prefixes compile and link errors.
 - The palette block is four outfits of 15 words followed by two glove words. A sheet may ship tiles only; that parses as long as a stock palette is supplied to stand in, which mirrors PlayerSprite_Apply keeping the player on the stock row for a short block.
 - `parseZspr` returns a sheet with an empty override layer, or null when the bytes are not a ZSPR.
 
-## hud/active-profile
+## apps/desktop/src/hud/active-profile
 
 Which profile the HUD stores read and write. The answer is tried in this order:
 
@@ -3354,7 +3329,7 @@ Which profile the HUD stores read and write. The answer is tried in this order:
    Reading that one would load one profile's layouts while the screen edits another's.
 4. The app state's last selected profile.
 
-## hud/custom-glyph-store
+## apps/desktop/src/hud/custom-glyph-store
 
 A custom glyph pack is an override, never a replacement. It holds only the positions the
 player imported and names a built-in `fallbackPack`, so a pack with four face buttons still
@@ -3365,7 +3340,7 @@ bytes are read once into an object URL and cached; `customGlyphUrl` is the synch
 lookup a render pass needs. Files are flat, one per pack and position, so the file name is
 the key.
 
-## hud/layout-document-io
+## apps/desktop/src/hud/layout-document-io
 
 Player layouts use the same document format and the same loader (`loadLayout`) as the
 built-ins in `packages/hud/data/layouts/`. They differ only by the `builtIn` flag. A
@@ -3378,7 +3353,7 @@ upserts by id. A fork gets a new id and records `basedOn`, which the editor's st
 list reads. An unknown id resolves to the shipped default, since a stale id in a settings
 file is far likelier than a request for no interface.
 
-## hud/slot-content.ts
+## apps/desktop/src/hud/slot-content.ts
 
 Three facts meet here and nowhere else: where a control sits (the device's slot list), what
 it fires (the per save assignment table), and whether the save holds that thing (the live
@@ -3398,7 +3373,7 @@ editor (which runs with no game) all need the same answer; an earlier editor cop
 - `signature` changes only when an assignment moves (swapping two items counts) or a
   different pad is plugged in, the two events the on change reveal exists for.
 
-## input/axis-press-threshold
+## packages/input-mapping/src/runtime/axis-press-threshold
 
 The single place where a raw axis reading becomes pressed, shared by live play (the SNES
 bitmask, function hotkeys) and by binding capture (the raw input dispatcher). A trigger axis
@@ -3408,7 +3383,7 @@ threshold the calibration screen shows (`packages/input-mapping/src/family/live-
 standing in for a direction, uses a plain deflection of 0.5. Device keys are `vid:pid` in
 hex; a device whose SDL type was not recorded this session uses the generic threshold.
 
-## input/binding-display
+## apps/desktop/src/input/binding-display
 
 One source of truth for a binding's label and icon, shared by the controls editor rows, the
 save state hints, `InputGlyph` and the controller overlays. A bound control always draws a
@@ -3418,13 +3393,13 @@ picture for that control, and an axis never stored an icon because its glyph dep
 end of the stick is meant. So the generic fallbacks are keyed off the binding's own shape,
 and only `none` draws nothing.
 
-## input/controller-card-info.ts
+## packages/input-mapping/src/runtime/controller-card-info.ts
 
 Name and family come from the SDL driven resolver (`resolve-device.ts`), never from a hand
 written database. `sdlType` is carried for the controls screen's apply console defaults drag
 and drop, which resolves the defaults through the family layer.
 
-## input/controller-device-groups.ts
+## packages/input-mapping/src/runtime/controller-device-groups.ts
 
 Groups the snapshot by vendor and product id, so an adapter that presents one entry per port
 renders as one group with a port list. The Brock input module suffixes `#N` to the device key
@@ -3433,7 +3408,7 @@ Unclaimed listed devices sharing a vid:pid never get a suffix (only SDL claimed 
 key assigned), so arrival order is the fallback. A blank product name falls back to
 the first group member that has one.
 
-## input/controller-family-cache
+## apps/desktop/src/input/controller-family-cache
 
 The SDL gamepad type of every controller seen this session, seeded from the snapshot and kept
 live by the input module's `onDevices` and `onAdded` (`seed-device-cache.ts`). Family display
@@ -3441,7 +3416,7 @@ metadata (icons, labels, console defaults) is keyed by this type, so this is the
 resolve it for a saved binding or a drag payload whose device is unplugged. Recording starts
 once at module load and is never torn down; the cache outlives any screen.
 
-## input/controller-input-store.ts
+## apps/desktop/src/input/controller-input-store.ts
 
 Holds each pad's button and axis state and the diagnostic log the Controller Diagnostics page
 reads. Decoding and calibration storage belong to the Brock input module.
@@ -3456,7 +3431,7 @@ reads. Decoding and calibration storage belong to the Brock input module.
   calibration UI; `rawBytes` are the report bytes for the debug UI.
 - The store is exposed as `window.__controllerInputStore`.
 
-## input/controller-name-cache
+## apps/desktop/src/input/controller-name-cache
 
 Names for every controller seen this session, seeded from the snapshot and kept live by
 the input module's `onAdded`. An event only listener never learns the name of a device connected before
@@ -3466,21 +3441,21 @@ shows as "Unknown Controller". Names are keyed by device key and by vendor and p
 a caller with a raw device list has ids but no device key. Blank names are ignored so a later
 real one is not shadowed. Recording starts at module load and only listens.
 
-## input/device-detector
+## packages/input-mapping/src/runtime/device-detector
 
 SDL3 is the only controller transport on every platform (the Gamepad API path is gone), so a
 device is an SDL entry or the keyboard, and there is no activation step. The keyboard's
 `sdlType` of `keyboard` is not a real SDL type but a stable sentinel, so the apply defaults
 drag can tell it from a gamepad. Mice, trackpads and touchpads are filtered out by name.
 
-## input/device-scoped-map
+## packages/input-mapping/src/runtime/device-scoped-map
 
 A binding lookup keyed by the device that created it, then by the binding key (a button
 index, or `axisIndex:direction`), so a binding recorded on one pad never fires from another
 pad with the same index. A binding with no source device (console default presets never stamp
 one) is filed under `ANY_DEVICE` (`*`) and matches every gamepad.
 
-## input/frame-router.ts
+## apps/desktop/src/input/frame-router.ts
 
 Where one frame of input goes. The first question is whether the host owns the pause menu,
 not which scheme is active: while it does, the native Start branch that would close the menu
@@ -3509,14 +3484,14 @@ The fallback lens is the profile's core verbs alone, which every profile carries
 section 5). Its slots are empty, since under classic a slot is not something the player can
 fire.
 
-## input/function-actions.ts
+## packages/input-mapping/src/runtime/function-actions.ts
 
 Shortcut and cheat bindings fire callbacks on rising edges from keyboard and gamepad. Saved
 mappings are merged with the defaults so a newly added action always has a binding. Gamepad
 maps are scoped by owning device. `clearHeld` releases every held action, so a hold style
 action (turbo) is let go even when its release is lost while input is suppressed mid hold.
 
-## input/haptic-bridge
+## apps/desktop/src/input/haptic-bridge
 
 Connects the game core's haptic events (`window.__onHapticEvent`) to controller vibration.
 Overlapping events are coalesced into one active envelope so the HID worker (a synchronous
@@ -3540,7 +3515,7 @@ About 20 ms is added for the worker's own overhead.
 - In dev builds a once a second console line counts core hooks, events, dispatches and
   merges.
 
-## input/input-manager
+## apps/desktop/src/input/input-manager
 
 The renderer input engine. Its fields are public so the helper files can operate on the
 instance. Lifecycle: create, `start`, `stop`, `start` again.
@@ -3579,7 +3554,7 @@ instance. Lifecycle: create, `start`, `stop`, `start` again.
   turbo explicitly.
 - The manager is exposed as `window.__inputManager`.
 
-## input/item-ownership
+## apps/desktop/src/input/item-ownership
 
 Does the live save hold this item? The scheme layer is pure and has no inventory, and
 assignments are stored per profile, not per save, so a fresh file inherits buttons pointing at
@@ -3591,7 +3566,7 @@ only place holding both the pressed slot and the live state. The UI store publis
 inventory object on most frames, so identity is useless as a memo key; the 24 bytes are
 compared instead and the cells rebuilt only when the inventory moved. Item ids are 1 to 24.
 
-## input/migrate-profiles
+## packages/input-mapping/src/runtime/migrate-profiles/migrate-profiles.ts
 
 The door every stored input profile comes through, and the only place a slot list written
 before contract section 19 (position derived ids such as `slot:NORTH`) becomes numbered
@@ -3601,7 +3576,7 @@ and the profile is dropped from the session, not half loaded, so nothing overwri
 and the assignments can still be recovered. An empty list would look like "never made any",
 which is the silent loss the rule prevents. One unreadable profile does not cost the others.
 
-## input/pause-manager.ts
+## packages/input-mapping/src/runtime/pause-manager.ts
 
 Pause state for a controller disconnect or a manual toggle. It only emits events; audio is
 handled by subscribers. `connectedKeys` is passed in, not read from the device cache, which
@@ -3609,13 +3584,13 @@ lags a disconnect by a refresh cycle. A disconnect pause resumes only once every
 is back, so an unrelated controller cannot dismiss the overlay, and a manual pause is never
 touched by presence checks.
 
-## input/polling-engine.ts
+## packages/input-mapping/src/runtime/polling-engine.ts
 
 Computes the SNES bitmask each frame from keyboard state and HID state. Keyboard keys count
 only when the active profile binds the keyboard, and only devices in the profile's map
 contribute.
 
-## input/process-controller-state.ts
+## apps/desktop/src/input/process-controller-state.ts
 
 SDL3 controller intake. The native addon already decodes and factory calibrates reports into
 normalized values, so the old per device HID parser is bypassed. Trigger calibration applies
@@ -3623,13 +3598,13 @@ here, on the normalized 0 to 1 range of the trigger axes (from `LEFT_TRIGGER` on
 from the input module's `useCalibrationStore` so a calibration saved on the Controllers screen
 applies at once; sticks arrive normalized to -1 to 1.
 
-## input/profile-devices
+## packages/input-mapping/src/runtime/profile-devices/allowed-devices.ts
 
 The whitelist the input engine gates on: a keyboard when the map has keyboard bindings, and
 gamepads whose vid:pid appears in the map or as the assigned device. A connected but
 unmapped controller contributes nothing. Keys are lowercase, four hex digits each.
 
-## input/profile-utils
+## packages/input-mapping/src/runtime/profile-utils
 
 `resolveIconByVidPid` resolves a saved binding's icon through the family layer. The device
 need not be connected, only its SDL type from this session's family cache; a live SDL type
@@ -3639,12 +3614,12 @@ lands on the same slot whatever a live unit has. A trigger axis shows its own gl
 axis shares one base key between X and Y, so the binding's axis and direction pick one of the
 four pushed glyphs.
 
-## input/raw-input-dispatcher.ts
+## packages/input-mapping/src/runtime/raw-input-dispatcher.ts
 
 Rising edge events for any key, button or axis on any device, for the rebinding UI and the
 input tester. Keyboard presses call `emit` directly.
 
-## input/resolve-bindings
+## packages/input-mapping/src/runtime/resolve-bindings
 
 A profile resolved into the two lenses the router reads. The modern lens maps physical
 controls to assignable slots and only the modern scheme uses it; a pad profile whose pad is not
@@ -3657,20 +3632,20 @@ rebind lands), then the modern block's copy, then the device defaults. The slot 
 player's, stored on the profile (contract section 19); `effectiveModernBindings` falls back to
 the device prefill only for a profile never edited.
 
-## input/resolve-device.ts
+## packages/input-mapping/src/runtime/resolve-device.ts
 
 The single resolver both the calibration cards and the controls screen use. SDL's own
 `hasButton`, `hasAxis` and `buttonLabels` decide what exists; the family layer only decides
 labels and icons. No preset and no device database is consulted, so the screens cannot
 disagree. An unavailable entry was never opened by SDL and resolves to an empty control list.
 
-## input/resolved-axis-groups.ts
+## packages/input-mapping/src/runtime/resolved-axis-groups.ts
 
 Pairs stick axes by position name (`LEFT_X` with `LEFT_Y`), not array order, so a device
 reporting one axis of a pair does not misalign the rest. `basePrefix` is the icon key both
 axes share; feed it with the live x and y to `resolveStickDirectionIcon`.
 
-## input/scheme-runtime
+## packages/input-mapping/src/runtime/scheme-runtime
 
 Everything the per frame router needs about the active scheme, in one mutable object. The
 scheme, the bindings and the per save assignments change at different times (profile,
@@ -3698,26 +3673,26 @@ they are pushed here.
 - The input sample includes only allowed devices, like the classic path. The trigger threshold
   is the first allowed pad's, since a mixed pad session shares one reading.
 
-## input/seed-device-cache.ts
+## apps/desktop/src/input/seed-device-cache.ts
 
 Seeds a per device cache from the controller snapshot, then keeps it live with the input
 module's `onDevices` and `onAdded`. Three caches once listened to the added event alone and never recorded a device connected before they subscribed. Snapshot
 entries and added events both satisfy `DeviceSnapshotFields`; `remember` decides whether an
 entry carries enough to record.
 
-## input/snes-button-glyph.ts
+## apps/desktop/src/input/snes-button-glyph.ts
 
 The picture and name of whatever input a SNES button is bound to: keycaps for a keyboard
 profile, the pad's own face buttons for a controller profile, resolved like the Controls
 screen's rows. An unbound button falls back to the SNES button's own picture.
 
-## input/useControllerDevices.ts
+## apps/desktop/src/hooks/useControllerDevices.ts
 
 Device list state for the Controls page and the Controller Diagnostics page, read from the
 input module's `useControllerDevicesStore`, plus RotP's adapter grouping. The module keeps a
 rescan pending until the next snapshot arrives or three seconds pass.
 
-## input/vibration
+## apps/desktop/src/input/vibration
 
 A transport free vibration call through the input module's `vibratePattern`, which sequences
 the segments in main on desktop and in the WebView on Android. Default intensity is 0.7.
@@ -3727,7 +3702,7 @@ the segments in main on desktop and in the WebView on Android. Default intensity
 The renderer's view of the named instance flags (`--instance`, `--profile`), forwarded by the
 preload as `api.instance`. A named instance is an automated launch running beside the user's
 own app: it is marked on screen and boots into its own profile, and it must not write files
-every launch shares (see `setLastProfile` in `storage/profile-store.ts`). Values are read at
+every launch shares (see `setLastProfile` in `apps/desktop/src/storage/profile-store`). Values are read at
 call time, never cached; `window.api` is installed before render. `isAutomationLaunch` is
 true for any automated launch, named or not. Such a run must not change which profile opens
 by default (`app.json`) or where the window sits, and gating on it means a run that forgot
@@ -3739,7 +3714,7 @@ by default (`app.json`) or where the window sits, and gating on it means a run t
   plan application logs about 500 entries).
 - A listener that throws is skipped so it cannot break the bus.
 - Every entry is mirrored to the native console, unconditionally, so the main process file
-  logger (`apps/desktop/electron/lib/dev-file-logger.ts`) captures the channels. It used to
+  logger captures the channels. It used to
   depend on `import.meta.env.DEV`, which is fixed at build time, while the file logger
   attaches on `is.dev` at run time; an unpackaged run of a production bundle then wrote no
   channel lines, the one case a crash log is for.
@@ -3748,7 +3723,7 @@ by default (`app.json`) or where the window sits, and gating on it means a run t
 - `window.__logEntries` and `window.__logSubscribe` are exposed for Playwright and devtools.
   A burst safe capture needs a listener, since the ring drops old entries.
 
-## msu/build-channels
+## packages/msu/src/player/build-channels/build-channels.ts
 
 Turns a pack manifest into the four channels the engine drives. Music comes from `tracks`,
 the other three from `sounds`; a pack with no sounds gets three empty channels. Music and the
@@ -3761,14 +3736,14 @@ diagnostic; the channel's `report()` is how the studio watches them. Music resta
 repeat: the game's own repeats are filtered before they arrive, and the one that does arrive
 follows a fade to zero and is meant to bring the music back.
 
-## msu/channel
+## packages/msu/src/player/channel
 
 One replaceable sound chip channel, in the two behaviours the game needs. Music and the
 ambient bed are stateful (a new id replaces the old and has a position worth resuming); the
 two effect channels are additive (a new id layers over what is sounding, nothing resumes).
 The engine holds four channels and never asks which is which.
 
-## msu/channels/active-layers
+## packages/msu/src/player/channels/active-layers
 
 Builds, reads and tears down the layers of one sounding program: a gain at the layer's
 volume, a scheduler for its play mode, and a voice factory bound to that gain.
@@ -3786,7 +3761,7 @@ volume, a scheduler for its play mode, and a voice factory bound to that gain.
 - A set is finished when nothing is audible and nothing is scheduled. A random or interval
   layer between events reports a countdown, so it is never swept mid cycle.
 
-## msu/channels/additive-channel.ts
+## packages/msu/src/player/channels/additive-channel.ts
 
 Every trigger layers over what is already sounding, as the two effect channels do: each
 trigger gets its own voices and gain path, so ten hits in a row are ten overlapping sounds.
@@ -3804,7 +3779,7 @@ resumable; a save has no half a bonk to return to.
 - Finished sets are swept before counting, so the cap counts what is audible. The report
   describes the newest set, the sound that just landed.
 
-## msu/channels/channel.type.ts
+## packages/msu/src/player/channels/channel.type.ts
 
 - `fadeNode` is the gain the game's own volume transitions act on. Only music is ever sent
   one; the others hold it at full so every channel has the same three stage gain chain.
@@ -3814,7 +3789,7 @@ resumable; a save has no half a bonk to return to.
 - `resumeEnabled` is read per selection, so a mid session toggle applies at once.
 - Programs sharing a `group` hand playback across on a switch (`MsuSoundDef.syncGroup`).
 
-## msu/channels/stateful-channel.ts
+## packages/msu/src/player/channels/stateful-channel.ts
 
 A new id replaces what is playing (music, the ambient bed). A generation guard stops a slow
 decode from resurrecting a superseded id. The position is captured on the way out, so leaving
@@ -3835,7 +3810,7 @@ starts. Id 0, or an unauthored id, means silence.
 - The studio polls `report` so a random scheduler's wait shows as a wait, not an unexplained
   silence.
 
-## msu/channels/trigger-pool.ts
+## packages/msu/src/player/channels/trigger-pool.ts
 
 Which file each layer of an additive channel uses for this trigger. A sword swing authored
 with four recordings should sound like four recordings. The variation belongs to the trigger,
@@ -3845,7 +3820,7 @@ one the layer just used, since the same sample twice reads as broken variation. 
 deliberately unseeded; only the exporter, which must produce the same bytes twice, needs a
 seed.
 
-## msu/debug-bus
+## packages/msu/src/player/debug-bus
 
 The engine's own diagnostic feed for decisions no live report can show. A channel report
 says what is sounding and the core's sound trace says what the game raised; the chance roll
@@ -3854,7 +3829,7 @@ thunder looks like a broken one. It lives outside React and is always on: publis
 nobody costs nothing, and a bad listener never breaks playback. A roll event names the
 channel, the program (track number or sound id), the layer and its odds (1 to 100).
 
-## msu/decode
+## packages/msu/src/player/decode
 
 - `decode-audio-file`: three paths, picked from the file's leading bytes, not its name.
   MSU-1 `.pcm` is raw samples converted here (with a loop point in its header); `.opuz` is
@@ -3904,7 +3879,7 @@ channel, the program (track number or sound id), the layer and its odds (1 to 10
   means the first byte was left out and is `0xFC`) then the packet. `0xFC` is fullband stereo
   in 20 ms frames, which nearly every music packet uses. Audio is always 48 kHz stereo.
 
-## msu/engine.ts
+## packages/msu/src/player/engine.ts
 
 The single entry point for replacement audio; nothing above it touches an audio node. The
 gain chain, innermost first: per layer volume, the game's own fades, the volume group (music
@@ -3926,7 +3901,7 @@ are separate so a fade cannot clobber a user setting and the reverse.
   `ambient` of `undefined` comes from a snapshot taken before beds were resumable and leaves
   the bed alone, while `null` means the save had none.
 
-## msu/export
+## packages/msu/src/player/export
 
 - `dedupe-files.ts`: packs collect byte identical duplicates (a `wind.flac` copied per area, a
   silent stub under a dozen names); storing one copy is free and on a gigabyte pack decides
@@ -4001,21 +3976,21 @@ are separate so a fade cannot clobber a user setting and the reverse.
   Samples are clamped before scaling by 32768, since a hot mix would otherwise wrap into the
   opposite polarity as a click. A loop point past the end is clamped.
 
-## msu/fade
+## packages/msu/src/player/fade
 
 The game asks for volume transitions with three control bytes, not a level: `0xF1` fades out,
 `0xF2` ducks to a low level, `0xF3` returns to full. Each has its own speed, a per frame step
 out of 256 at 60 frames a second, converted to a ramp duration so a fade takes the same wall
 time as on hardware. A starting track returns to full at the fastest step (24).
 
-## msu/layer-effects
+## packages/msu/src/player/layer-effects/build-effect-chain.ts
 
 Every effect is one or more biquad filters, the whole vocabulary the manifest allows, so it
 plays the same everywhere and can be flattened into an export. The three band EQ is a low shelf
 at 250 Hz, a peak at 1 kHz (Q 0.7, about an octave and a half) and a high shelf at 4 kHz. An
 empty chain is no nodes at all.
 
-## msu/schedulers
+## packages/msu/src/player/schedulers
 
 The strategy seam for layer playback: each play mode is one scheduler, and `create-scheduler`
 is the one place modes map to behaviour.
@@ -4038,7 +4013,7 @@ is the one place modes map to behaviour.
 - `LayerContext.loopSeconds` is where each repeat starts, from the manifest or the file, and is
   zero unless the layer has exactly one file, matching the exporter.
 
-## msu/sound-claim
+## packages/msu/src/bridge/sound-claim
 
 Which sound ids a pack claims on a channel, as the 64 bit mask the core wants. The core reports
 only a sound whose bit is set, so the mask decides whether the app replaces an effect or the
@@ -4047,21 +4022,21 @@ carry; bit 31 makes a JS int negative, so each half is converted to uint32. Ids 
 are dropped, never wrapped, so a typo claims nothing. Channels are in the core's index order:
 ambient, sfx1, sfx2. Only sounds that author at least one layer are claimed.
 
-## msu/title-reset
+## packages/msu/src/player/title-reset
 
 Replacement audio goes back to nothing at the title. Resume positions carried across runs would
 start the opening in the middle of itself. The game ends a run by reloading the sound chip's
 song bank, which stops the chip's ambience without raising the no bed id, so a storm would keep
 raining over the title. Reaching a title module is the one unambiguous signal that no run is in
 progress, and save and quit, a game over and a hard reset all arrive there. The modules are the
-core's own dispatch order (`kMainRouting`), the same set `game/ui-bridge-parser.ts` reads as the
+core's own dispatch order (`kMainRouting`), the same set `packages/game-core/src/ui-bridge-parser` reads as the
 title UI mode: intro (0), file select (1), copy file (2), kill file (3), name file (4) and the
 attract demo (20). Music is not silenced: every path to the title fades it out first
 (`Death_Func31` and `FadeMusicAndResetSRAMMirror` write the fade byte the same frame), so a cut
 would replace that fade with a click. Silencing happens once on the way in; forgetting
 positions happens on every title event, since the title loops into its demo and back.
 
-## msu/track-loader.ts
+## packages/msu/src/player/track-loader.ts
 
 Audio is decoded per id, on demand: a real pack is over a gigabyte of PCM and only a few ids
 sound at a time. Decoded audio is cached so re-entering an area or repeating an effect does not
@@ -4069,7 +4044,7 @@ decode twice, capped so a long session cannot grow without bound. One loader per
 busy effect channel cannot evict the music. A layer whose files all failed is dropped rather
 than left to play silence.
 
-## msu/voice.ts
+## packages/msu/src/player/voice.ts
 
 One sounding buffer that can report its position, which Web Audio does not expose; that read is
 what makes resume possible. A voice asked to fade gets its own gain node, so two passes of a
@@ -4087,11 +4062,11 @@ stamp and read back only under that same stamp; a file under any other stamp rea
 absent, so the caller generates a fresh seed. There is no migration and no key map: the
 stamp is bumped whenever the placement's shape or its location keys change.
 
-## sanctuary/github-handle.ts
+## packages/hub-client/src/sanctuary/github-handle.ts
 
 The linked GitHub login is the one identity a filed issue mentions.
 
-## sprites/apply-sprites-for-rom.ts
+## apps/desktop/src/sprites/apply-sprites-for-rom.ts
 
 The enhanced HUD reads sprites from the shared base, so the base must always track the ROM
 in use. A set that was already available and is rewritten moves the revision, because the
@@ -4101,30 +4076,30 @@ extraction cannot let the old ROM's result overwrite the new one. One log line p
 the base, the verdict and the file count, so a listing stuck on placeholders can be
 diagnosed from `session.log`.
 
-## sprites/ensure-sprites-extracted.ts
+## apps/desktop/src/sprites/ensure-sprites-extracted.ts
 
 Extraction runs at most once per ROM per session. Concurrent callers (startup, profile
 select, boot) share the in-flight promise, and a finished run, successful or not, is not
 repeated on the next profile switch. The manual buttons keep their own path.
 
-## sprites/sprite-rom.ts
+## packages/packs/src/sprite-apply/sprite-rom.ts
 
 With no active profile (a first run, a missing pinned profile, the profile creation form), a
 ROM that is ready to play stands in, so views that draw item art do not show placeholders
 over a set that is on disk.
 
-## sprites/useSpriteRevision.ts
+## apps/desktop/src/hooks/useSpriteRevision.ts
 
 Sprite URLs carry the revision. A view that memoizes them recomputes when the revision moves,
 or it keeps serving the URLs that failed while the folder was being written.
 
 ## storage
 
-Each store binds a library in `shared/storage/` to the platform FileStore and mirrors the
+Each store binds a library in `apps/desktop/src/storage/` to the platform FileStore and mirrors the
 old `window.api` method names, so call sites swap one for one and persistence runs per OS
 through the platform layer.
 
-## storage/assets-store
+## apps/desktop/src/storage/assets-store
 
 The `.dat` is checked and loaded over FileStore and extracted in a Web Worker: ROMs and
 language sets are read here, the worker bakes them, and the base blob plus one sidecar per
@@ -4134,29 +4109,29 @@ the core expects a single buffer. The bake pulls in the whole dialogue compressi
 which belongs off the UI thread.
 
 - A missing blob is not stale. The missing file path already recompiles; staleness only
-  concerns a blob that exists but predates the current bake format (`bake-version.ts`).
+  concerns a blob that exists but predates the current bake format (`packages/asset-extraction/src/bake-version`).
 - A supplement whose cartridge is gone must not linger as a stale sidecar.
 - After a bake, anything already running booted with the previous blob and is now behind,
   so the game assets store is told.
 - `recompileAll` rebuilds every ROM that already has a cached `.dat`, after a language set
   changes.
 
-## storage/audio-probe.ts
+## apps/desktop/src/storage/audio-probe.ts
 
 ffprobe is a native process and only runs in the main process. On a host without that IPC
 surface (mobile, browser) the probe resolves null, which callers already treat as nothing
 knowable, so no caller needs a host check.
 
-## storage/extraction-client.ts
+## apps/desktop/src/storage/extraction-client.ts
 
 One Web Worker per job.
 
-## storage/import-progress-bus
+## apps/desktop/src/storage/import-progress-bus
 
 Import runs in the renderer over FileStore, so progress is published on this bus, never as a
 main process IPC event. `useImportProgress` subscribes to it.
 
-## storage/languages-store
+## apps/desktop/src/storage/languages-store
 
 - Saving, creating and duplicating a set all rebake every blob, which is expensive, so
   callers debounce edits.
@@ -4164,13 +4139,13 @@ main process IPC event. `useImportProgress` subscribes to it.
   never rebakes, so a preview can ask freely. `exportLanguageSet` packs the set folder as
   `.rlang` and never rebakes either.
 
-## storage/link-sprites-store
+## apps/desktop/src/storage/link-sprites-store
 
 Validation is per container: a ZSPR by its magic, a sprite pack by being a readable zip with a
 manifest, so a mislabelled file is rejected on import, not at boot. `writeLinkSprite`
 overwrites in place for the studio's save and skips the rename that import applies.
 
-## storage/menu-text-store.ts
+## apps/desktop/src/storage/menu-text-store.ts
 
 The menu, credits and closing caption bodies are decoded on demand from the player's own
 ROM. They are not in a language pack (the extractor copies their bytes undecoded) and are
@@ -4180,7 +4155,7 @@ region's ROM still shows a translator what each slot holds, and the answering la
 travels with the result. A ROM the pipeline cannot read is skipped. No matching ROM is an
 ordinary state, not a failure.
 
-## storage/msu-store
+## apps/desktop/src/storage/msu-store
 
 - `listMsuPackEntries` lists every file in the pack folder except the manifest; this is what
   an export stores.
@@ -4191,7 +4166,7 @@ ordinary state, not a failure.
 - The import result type comes from `msu-contract`, so the renderer cannot fall behind what
   an import reports.
 
-## storage/profile-store
+## apps/desktop/src/storage/profile-store
 
 `app.json` decides which profile opens by default and is shared by every launch. Loading a
 profile for play writes it on each run, so `setLastProfile` does nothing on any automated
@@ -4200,22 +4175,22 @@ automated run's profile. The gate sits at this single seam so no call site can f
 `updateActiveInputProfileId` merges the active input profile id into the config without
 clobbering other settings, for the profile cycle shortcut outside the settings screen.
 
-## storage/roms-store
+## apps/desktop/src/storage/roms-store
 
 Import runs in the renderer (pick or download, unzip or raw, then FileStore) and reports on
 the import progress bus. Every import names its kind. The base cartridge boots the game; a
 supplement only adds to one, is digest checked before it is written, and never replaces a
 file already there.
 
-## storage/saves-store
+## apps/desktop/src/storage/saves-store
 
 Every save state leaves through one of the four writers (quick state, normal save, its
 overwrite, auto save), so the version and format stamp is applied there and not at each call
 site. SRAM is excluded: it is the game's own save file and has nothing to do with snapshot
 layout. Screenshots come back as base64 strings. SRAM and quick slots go through the Brock port
-kit's save store (`port-save-store.ts`); named and auto saves through `packages/game-core/src/saves`.
+kit's save store (`port-save-store.ts`); named and auto saves through `apps/desktop/src/storage/save-files`.
 
-## storage/sprites-store
+## apps/desktop/src/storage/sprites-store
 
 The sprite base URL comes from the platform (`app-sprite://` or `convertFileSrc`). A build
 without sprite definitions extracts nothing and can never call a set stale. The staleness
@@ -4223,10 +4198,10 @@ rule itself lives in the shared store (`sprites.isStale`); this side only suppli
 build emits. The capacity, gear, quiver, pool and shop price symbol reads return the binary
 from the ROM's extracted set, or null before it exists.
 
-## storage/ui-views
+## apps/desktop/src/storage/ui-views
 
 The single boundary for durable view state, keyed and app level, not per profile (see
-`apps/desktop/src/ipc/ui-views-contract.ts`). Nothing else touches `window.api.uiViews`; a composite
+`apps/desktop/src/ipc/ui-views-contract.type.ts`). Nothing else touches `window.api.uiViews`; a composite
 that wants persistence goes through `useViewState`. The whole map loads once and is cached,
 every mutation rewrites the whole map, and writes are fire and forget: a failed write logs and
 is dropped. Rapid saves collapse into one write about 400 ms later. A save before the map has
@@ -4234,37 +4209,16 @@ loaded waits for the load first, because writing early would clobber every other
 collection's saved layout with a file holding only this key. Entries that are not well formed
 snapshots are dropped on load.
 
-## storage/widget-prefs
-
-What a widget's content remembers (tab, filter, view mode), as opposed to its frame. Values
-are `unknown` on purpose: each widget owns its keys and shapes, and the bargain is that a
-value survives a JSON round trip. Prefs come from untrusted JSON, so a wrong shaped file is
-dropped, a version mismatch fails by design (bump the version to discard stale prefs, never
-migrate), and one malformed widget entry is dropped without taking its neighbours. Known
-keys: `tab` (cheats, live data inspector), `viewMode` (checks, inventory), `grouping` and
-`filter` (checks), `mode` (navigation). Widget ids match `WIDGET_DEFINITIONS`.
-
-## storage/widget-state
-
-The single boundary for a profile's widgets: the layout the Widget composite writes and the
-per widget prefs. Both live in `profiles/<id>/tracker.json`, so one cache and one debounced
-write serve both and neither clobbers the other. The blob loads once per profile, every
-mutation rewrites the cached whole, and rapid writes coalesce. `flushWidgetBlob` exists
-because a debounce nobody forces drops whatever the user did just before the window closed.
-Loading a second profile flushes the first one's pending write first. A patch before the file
-is known reads first, or it would write a blob holding only that key. Before this existed a
-drag wrote the whole file on every mouse move and overlapping read modify writes lost data.
-
-## store/hookshop-reads
+## apps/desktop/src/hookshop-reads
 
 The Hookshop's catalogue reads (the home page, every item, one item) through the Brock catalog
 module, typed with the store API's own shapes. Without the module (a host with no main process)
 each read answers `NO_CATALOG`, a failure the tab shows like any other.
 
-## store/store-site
+## packages/hub-client/src/store-site
 
 The Hookshop origin is a placeholder until the store's domain exists. The main process names
-the same origin for the store API in `electron/hub/endpoints.ts`. The media bucket is
+the same origin for the store API in `apps/desktop/electron/hub/endpoints`. The media bucket is
 private: store-api signs every picture it returns and puts the link in `url`, valid for two
 hours. Without one the tab draws the kind's icon.
 

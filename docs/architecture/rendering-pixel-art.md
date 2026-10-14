@@ -23,7 +23,7 @@ Source: `core/wasm-build/emscripten_main.c`, `packages/navigation/src/pathfindin
 | Base tile | **8×8 px**, **4 bits-per-pixel, so 16 colors per palette** (SNES standard) |
 | Map tile ("Map16") | **16×16 px** = a 2×2 block of 8×8 tiles (the unit of overworld & dungeon collision) |
 | Screen / room | **512×512 px** = **64×64** base tiles (`Math.floor(linkX / 512)` selects the screen) |
-| Link's hitbox | ~**16 px wide ≈ 2 tiles** (`pathfinding/core/has-two-tile-clearance.ts`: 2-tile perpendicular clearance for Link's 16px width) |
+| Link's hitbox | ~**16 px wide ≈ 2 tiles** (`packages/navigation/src/pathfinding/core/has-two-tile-clearance.ts`: 2-tile perpendicular clearance for Link's 16px width) |
 | Color | SNES CGRAM, 15-bit BGR (5 bits/channel), expanded to RGBA at extraction |
 
 **Coordinate model for position bugs:** world space is continuous pixels; a

@@ -81,7 +81,7 @@ holding the app version, the format id, and a timestamp. The core reads header-d
 and never reads to EOF, so the trailer is invisible to it; loading strips it anyway rather
 than relying on that.
 
-The stamp is applied at the storage boundary in `saves-store.ts`, so quick slots, manual saves
+The stamp is applied at the storage boundary in `apps/desktop/src/storage/saves-store`, so quick slots, manual saves
 and auto-saves are all covered by one write path. Saves written before this existed have no
 trailer and are treated as the baseline format.
 

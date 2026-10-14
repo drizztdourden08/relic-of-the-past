@@ -56,7 +56,7 @@ describe('generation over representative tier tick sets', () => {
   for (const [name, setting] of ROLLABLE) {
     it(`rolls ${SEEDS} beatable seeds with ${name}`, () => {
       for (let index = 0; index < SEEDS; index += 1) {
-        const placement = generatePlacement(`tier-${name}-${index}`, snapshotOf(setting));
+        const placement = generatePlacement({ seed: `tier-${name}-${index}`, snapshot: snapshotOf(setting) });
         expect(placement.stats.sphereCount, `seed ${index}`).toBeGreaterThan(0);
         expect(placement.stats.progressiveTiers).toEqual(setting);
       }
@@ -65,19 +65,20 @@ describe('generation over representative tier tick sets', () => {
 
   it('rolls beatable seeds with the ticks biting, both scopes shuffled', () => {
     for (let index = 0; index < SEEDS; index += 1) {
-      const placement = generatePlacement(
-        `tier-scoped-${index}`, shuffledScopeSnapshot(NO_GOLD_SWORD), EVERY_SCOPE.npc, undefined, EVERY_SCOPE.world,
-      );
+      const placement = generatePlacement({
+        seed: `tier-scoped-${index}`, snapshot: shuffledScopeSnapshot(NO_GOLD_SWORD),
+        deliverable: { npc: EVERY_SCOPE.npc, world: EVERY_SCOPE.world },
+      });
       expect(placement.stats.sphereCount, `seed ${index}`).toBeGreaterThan(0);
     }
   }, 120_000);
 
   for (const [name, setting, family] of REFUSED) {
     it(`refuses ${name}, naming the rung to tick back on`, () => {
-      expect(() => generatePlacement('tier-refused', snapshotOf(setting)))
+      expect(() => generatePlacement({ seed: 'tier-refused', snapshot: snapshotOf(setting) }))
         .toThrow(ProgressiveTierError);
       try {
-        generatePlacement('tier-refused', snapshotOf(setting));
+        generatePlacement({ seed: 'tier-refused', snapshot: snapshotOf(setting) });
       } catch (error) {
         expect(String((error as Error).message)).toContain(family);
       }

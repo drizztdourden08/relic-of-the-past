@@ -18,7 +18,7 @@ import '../../../nav-widget/recommendations/strategies/connection/wire-detector'
 const runPass = (context: DetectionContext): void => {
   const { detectorIds, draftsByKind } = runDetectionSweep(ENTITY_KINDS, context);
   for (const [kind, drafts] of draftsByKind) {
-    void applyRecommendationPass(kind, context, detectorIds, drafts);
+    void applyRecommendationPass({ kind, context, detectorIds, drafts });
   }
 };
 

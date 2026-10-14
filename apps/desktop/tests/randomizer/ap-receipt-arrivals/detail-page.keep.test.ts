@@ -14,7 +14,7 @@ import type { FakeModule } from '../ap-fake-module';
 import { plannedLines as planned } from './planned-lines';
 import { sessionChunks } from './session-chunks';
 import { required } from '../../required';
-import type { DeliverItemArgs } from './deliver-item-args.type';
+import type { DeliverItemParams } from '@app/game/delivery-api';
 
 const bridge = vi.hoisted(() => ({ mod: null }));
 const queue = vi.hoisted(() => ({
@@ -30,7 +30,7 @@ vi.mock('@app/log-bus', () => {
 vi.mock('../../../../../packages/game-core/src/wasm-bridge', () => ({ getModule: () => bridge.mod, subscribeGameState: () => () => undefined }));
 vi.mock('../../../../../packages/randomizer/src/client/online-items', () => ({ resolveServerItemLocalId: () => 0x0b }));
 vi.mock('@app/game/delivery-api', () => ({
-  deliverItem: (...[, , , messageId, onComplete, onGranted]: DeliverItemArgs) => {
+  deliverItem: ({ messageId, onComplete, onGranted }: DeliverItemParams) => {
     if (!queue.ready) return null;
     const id = `dlv_${queue.entries.length}`;
     const messageOf = typeof messageId === 'function' ? messageId : () => messageId;

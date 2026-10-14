@@ -52,7 +52,7 @@ apps/desktop/src/
 │   └── A  index.ts
 ├── components/compounds/
 │   └── A  SlotCard/SlotCard.tsx    (compound - domain card from Card + primitives)
-└── M  lib/game/save-states.ts      (+ deleteSlot())
+└── M  game/save-states/index.ts    (+ deleteSlot())
 D  apps/desktop/src/widgets/OldSavePanel.tsx
 ```
 
@@ -101,7 +101,7 @@ or a ```mermaid fence in markdown. No MCP server, no hand-drawn boxes.
 ```html
 <pre class="mermaid">
 flowchart LR
-  W["Widget"] --> FA["lib/game/flood<br/>getScreenGrids → buildFloodOptions"]
+  W["Widget"] --> FA["packages/navigation/src/flood<br/>getScreenGrids → buildFloodOptions"]
   S["Simulator"] --> FA
   FA --> F["floodFillScreen"]
 </pre>

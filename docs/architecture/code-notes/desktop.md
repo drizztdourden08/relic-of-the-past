@@ -17,7 +17,7 @@ The main process entry. Its top level runs in a fixed order, and each step depen
 6. The privileged `app-sprite` and `app-debug-capture` schemes.
 7. `disable-features=CalculateNativeWinOcclusion` keeps requestAnimationFrame alive when the window is occluded (for example a `--no-focus` launch behind other windows); otherwise Chromium pauses frames and stalls the headless game loop. Several `--disable-features` values must share one switch, comma separated.
 
-When the app is ready: in dev the HTTP cache is cleared so static asset changes show at once. Paths and data folders are prepared (the installed size registry fix is cosmetic and not awaited), and the previous `session.log` is rotated so the renderer's batches land in a file scoped to this launch. Then every IPC handler registers (`startup/ipc-handlers.constants.ts`; their order does not matter), the main window is created, and the dev file logger mirrors console output to disk in dev. `--boot-timing` logs boot milestones from the first main process timestamp. With `--dump-layers` the renderer console is forwarded to stdout. Opened files and install links reach the app through Brock's `onOpen` (see `documents/open-document.ts`). The application menu carries only the clipboard shortcuts; debug items live in the in app Advanced menu.
+When the app is ready: in dev the HTTP cache is cleared so static asset changes show at once. Paths and data folders are prepared (the installed size registry fix is cosmetic and not awaited), and the previous `session.log` is rotated so the renderer's batches land in a file scoped to this launch. Then every IPC handler registers (`hub/ipc-handlers.constants.ts`; their order does not matter), the main window is created, and the dev file logger mirrors console output to disk in dev. `--boot-timing` logs boot milestones from the first main process timestamp. With `--dump-layers` the renderer console is forwarded to stdout. Opened files and install links reach the app through Brock's `onOpen` (see `documents/open-document.ts`). The application menu carries only the clipboard shortcuts; debug items live in the in app Advanced menu.
 
 On quit, the Brock display module puts back the refresh rate it changed and the Brock input module stops the controllers.
 
@@ -39,106 +39,6 @@ The preload bridge. The flat `window.api` methods are generated from the join ma
 
 Makes Windows show the app's size in Apps and Features. Velopack writes `EstimatedSize` as a `REG_QWORD`; Windows only reads that value as a `REG_DWORD`, so it is ignored and the size column stays blank. The number itself is right, so this rewrites it in the type Windows reads, without working it out again. It runs on every launch because an update rewrites the key with the wrong type; it costs one registry read when there is nothing to do. `reg` prints lines like `EstimatedSize    REG_QWORD    0x529cd`. An absent key means this is not an installed copy, which is not a problem.
 
-### app/portable-mode.ts
-
-Where this copy of the app keeps its user data. A `data` folder at the install root claims everything: profiles, saves, ROMs, extracted assets, MSU packs, sprites, configuration. The folder is found relative to the executable, so a copy that carries one can move to another drive, another machine or a USB key and still find its own files.
-
-The root is the folder holding `Update.exe`, not the folder holding the executable. The packaged layout:
-
-```
-<root>/  .portable     marker written into the portable build
-         <app>.exe     launcher, path stable across updates
-         Update.exe
-         current/      the app, replaced wholesale on every update
-```
-
-`app.getPath('exe')` resolves inside `current/`, so anything stored beside the executable is destroyed by the first update. A dev run has no install root (the executable is Electron itself inside node_modules). A portable copy is self contained from its first launch: the folder is created up front, so a user who unzips onto a USB key gets travelling data without knowing the convention. An installed copy switches only when someone deliberately creates the folder. This must run before anything reads a path.
-
-### app/user-data-arg.ts
-
-`--user-data=<dir>` points this launch's user data at an explicit folder. Everything the app stores derives from Electron's userData path, so redirecting it isolates a launch completely: an automated instance given its own folder can never read or touch the per user data in the normal location. It is the same mechanism as portable mode (`app.setPath` before anything reads a path), and the explicit flag outranks the install folder convention, so it is applied after `applyPortableMode`.
-
-## instance
-
-### instance/automation-launch/
-
-Is this launch automation, not a person playing? An automated launch is read only for the shared configuration, which belongs to the person at the keyboard: `config/window-state.json` (the window's size, position and mode) and `app.json` `lastProfileId` (which profile opens by default next time). This is enforced here, not trusted to callers: an agent that forgets `--instance` still cannot repoint the default profile or move the window. `--no-focus` counts because every automated launch must pass it. A flag matches bare or with `=value`, so `--window-size=1280x800` counts too.
-
-Headless ("no human watching") means every automation flag except `--instance` and `--profile`, which only select an identity. A bare `--instance=NAME` launch (a tagged but human usable window) stays visible; `--instance=NAME --no-focus` still goes headless. `--visible` is the explicit handover override (`--auto-state=... --visible` pins a state for a person to look at) and beats the heuristic; without it every state pinned launch was forced headless and a visible handover produced no window at all.
-
-### instance/instance-config/
-
-Named instance startup flags. `--instance=NAME` marks a named instance: it identifies the window (title, icon, titlebar chip) and selects the game profile of the same name, so parallel launches never share save data. `--profile=NAME` selects a game profile by id or display name and defaults to the instance name. A named instance never writes the two files shared by every launch: `config/window-state.json` (guarded by `isEphemeralLaunch`) and `app.json` `lastProfileId` (guarded in the renderer's profile store). This only sandboxes the game profile; userData is the same folder for every instance, and other Data files are app wide tool state on purpose (Data Inspector view state, review progress, stick calibration). The name becomes a profile folder, so anything but a plain slug is rejected.
-
-### instance/instance-identity.ts
-
-Makes the OS present a named instance as its own app wherever windows are listed; `BrowserWindow.icon` alone is not enough. On Windows, grouping and pinning key off the AppUserModelID, so each instance gets its own id (and with it its own taskbar group and icon); `setAppUserModelId` must come before the taskbar button, so this runs before the first window. On macOS `BrowserWindow.icon` is ignored and the dock icon is set through `app.dock`. On Linux the window icon is what desktop environments show, so nothing extra. A normal launch is untouched.
-
-## window
-
-### window/create-window/
-
-The main window. Automation (`isHeadlessLaunch`) opens it off every monitor: a hidden window gets no requestAnimationFrame, so the emulator never ticks, while off screen keeps it shown (frames run, CDP input routes) without compositing a pixel. The position is derived from the real display layout so Windows cannot clamp it back, and centring is off so it cannot override that position. There is no "show in background" helper: `showInactive()` plus `blur()` plus `SetWindowPos(HWND_BOTTOM)` still dropped a fullscreen game out of exclusive fullscreen and pushed the foreground to the desktop.
-
-- `focusable: false` sets `WS_EX_NOACTIVATE` on Windows, so `SetForegroundWindow` (what `Page.bringToFront` and a Playwright click end up calling) cannot succeed. Undoing focus after the fact was too late: the user's window was already deactivated. CDP input needs no OS focus. On Windows this also implies `skipTaskbar`.
-- `paintWhenInitiallyHidden` paints before and without a visible surface, so an off screen automation run still renders for screenshots. `backgroundThrottling: false` keeps the rAF driven game loop at full speed when unfocused.
-- A named instance carries its name in the title and swaps to the bot icon, so parallel agent launches can be told apart from the taskbar alone. The WASM core's SDL window title (`kWindowTitle` in `emscripten_main.c`) reaches `document.title` and would override the instance name, so the title is held.
-- A normal launch starts transparent and is faded in by `armReveal` once the renderer's shell has settled; automation has no splash, so it stays opaque. Everything that moves the window happens while it is still transparent, so by the time the user sees it, its geometry is final. It uses `show()`, not `showInactive()`: the splash is a child of this window, and a child of a never activated window sinks behind whatever the user had open; activating costs nothing visually at opacity 0.
-- Headless launches apply only the saved size; the saved position (or maximize, fullscreen) would drag the window back onto a display. `keepWindowInBackground` is the backstop.
-- F1 to F12 and Tab pass through to the renderer instead of being taken by Electron menu accelerators.
-- There is no `setAudioMuted` here: it is a webContents kill switch the in app audio state cannot see or undo. `--muted` is forwarded to the renderer and starts the app's own master volume at zero instead.
-
-### window/keep-in-background.ts
-
-Holds an automation window behind whatever the person at the keyboard is doing, for the whole life of the window, not only at launch. Many things raise a window later: Playwright's click path calls `Page.bringToFront()` before every click, DevTools activates its owner, the OS raises windows for its own reasons. Enumerating those has repeatedly missed one, so gaining focus at all is treated as the fault and undone immediately. Input still works: CDP does not need OS focus. It blurs only while the window holds focus: an unconditional `blur()` takes focus off without handing it back, so the foreground falls through to the desktop ("Program Manager"), measured doing exactly that. A single raise can fire several events, so they are coalesced (`BOUNCE_DEBOUNCE_MS`) into one helper process. The first painted frame can bounce the window back up the z order on Windows, hence the `ready-to-show` hook.
-
-### window/send-to-back.ts
-
-Pushes a window to the bottom of the OS z order (behind other apps) without activating it, for `--no-focus` launches. Electron's `showInactive()` only avoids focus; on Windows a newly shown window still lands on top, so Win32 `SetWindowPos(HWND_BOTTOM)` is called on the native handle. `SWP_FLAGS` is `SWP_NOSIZE | SWP_NOMOVE | SWP_NOACTIVATE`, and `HWND_BOTTOM` is 1. The PowerShell script goes through `-EncodedCommand` (UTF-16LE base64), which sidesteps all shell and quote escaping. It does nothing off Windows (macOS and most Linux window managers already honour `showInactive`'s ordering).
-
-### window/startup-config/
-
-Test and automation startup flags. Window size is consumed in the main process; the rest are forwarded to the renderer through `additionalArguments` (read in preload).
-
-| Flag | Effect |
-|---|---|
-| `--window-size[=WxH]` | open at a fixed size (default 1280x800); saved geometry is not applied |
-| `--widgets=a,b,c` | open these widgets docked on their default side, on a clean layout |
-| `--fresh` | ignore the saved widget layout, open nothing (no home menu), and do not persist layout or window changes |
-| `--muted` | start the app's own volume at zero, exactly as the speaker button does; the in app control then owns it |
-| `--sound` | the opposite signal, for a profile that was left muted |
-| `--auto-start` | boot the game with the active profile to its title screen; no state is loaded (that is `--auto-state`) |
-
-Starting the game is a renderer action (it owns the profile and the module). The renderer does not inherit main's argv, so `--instance` and `--profile` are forwarded, and so is the automation verdict, because the renderer owns the `app.json` write. Test and automation launches must not persist window or layout state over the user's (`isEphemeralLaunch`, which delegates to the one automation predicate). The one launch that may is a handover over its own data folder (`--visible` with `--user-data`, without `--window-size` or `--fresh`): its `window-state.json` sits inside that folder, so keeping the size and position the person gave it writes nothing of theirs.
-
-### window/text-interaction.ts
-
-Native text interaction for the main window: a right click menu (Copy, Paste, Select All, shown only where they make sense) and a main process Ctrl or Cmd+C handler. The renderer hosts a live game whose input layer listens to the same key events, so handling the copy chord at the `before-input-event` stage makes a selection always copy, whatever page handlers do with the keystroke.
-
-### window/window-icon.ts
-
-Resolves the window and taskbar icon. A named instance (an agent launch) wears Sentri so it is recognisable from the taskbar. Windows renders a multi resolution `.ico` better than a downscaled PNG, so it gets the `.ico` first and the PNG after; elsewhere only the PNG shows. Every candidate is optional and the logo's PNG is the last resort, so a missing asset never breaks a launch. Dev serves from the source tree; a packaged build serves from the bundled renderer. The files come from `npm run logos` (`apps/desktop/public/logos`).
-
-### window/window-state/
-
-The saved window geometry. The normal bounds are tracked through move and resize, because `getNormalBounds()` is unreliable on Windows with `titleBarStyle: 'hidden'` (it includes the invisible frame). A saved position that no longer falls on a visible display is dropped. The saved state is applied before the window is ever visible: it holds content bounds while the constructor takes window bounds, and the hidden title bar makes the two disagree on Windows, so it cannot go through constructor options.
-
-### window/aspect-ratio.ts
-
-The aspect ratio lock. Setting a lock snaps the window by shrinking it to fit the ratio, never growing it. Resizing is then enforced manually through `will-resize`, which accounts for the title bar offset. A corner drag fits within the proposed bounds and never exceeds either dimension.
-
-### window/boot/
-
-The boot splash gets its own frameless window, so the main window never has to be splash sized and then grow in front of the user. It is a child of the main window, not `alwaysOnTop`: a child floats above its parent only, so a boot while the user is in another app never covers their work. There is no preload and no bundle, only plain markup driven through one small global. The splash is 480x360 exactly because the Setup splash `brock package` draws takes its size from the same `window.splash` setting. It is centred on the display the main window is on, and `movable: false` is a second lock against a window manager that offers its own move handle. A status line message is best effort: a lost one never breaks the boot.
-
-The reveal is the boot mediator, the one place that knows both the splash and the main window exist. The renderer's shell ready signal lands there and drives the swap. It is idempotent because the signal, a watchdog (8 s), and a dead renderer can all trigger it, and a boot that goes wrong must still end with a visible window. The main window is held invisible by opacity, not `show: false`: Chromium does not schedule requestAnimationFrame for a hidden page, so React would mount into a stalled frame loop. A transparent window is still hit testable, so mouse events are ignored until the reveal; otherwise clicks were swallowed while it could not be seen.
-
-`fadeWindow` ramps opacity. `setOpacity` does nothing without a compositing window manager (a bare X11 session), so nothing downstream may depend on the ramp running.
-
-### window/ipc-handlers.ts
-
-`window:shellReady` means the renderer's UI has settled and painted, so the splash hands over to the main window.
-
 ## lib
 
 ### lib/archive/extract-entries-by-basename.ts
@@ -149,37 +49,17 @@ Extracts only the entries whose base name is wanted, straight into the target fo
 
 On an aborted download the partial file is removed. `removePartialFile` waits for the write stream to close first, because Windows keeps the file locked while the handle is open.
 
-### lib/json-store/strip-bom.ts
-
-Editors and shells (Windows PowerShell `Set-Content` and `Out-File`) often write a leading UTF-8 byte order mark. `JSON.parse` rejects it, so `readJson` strips it first.
-
-### lib/main-log-file/
-
-The main process log is `Data/debug/main-console.log`. One module owns its path, its line format and both append paths, so the dev console mirror and the crash forensics write the same file in the same shape.
-
-The file is scoped to one launch: the first write of the process truncates it. A line produced before `initPaths()` has run is held back (the path is relative until then, and a write would land beside the executable). Held lines are flushed ahead of the first line that reaches the disk, so an early failure is not lost. Every write is best effort: a logging failure never surfaces in the app it observes. `appendMainLogSync` exists for handlers that run as the last thing before the process dies.
-
 ### lib/import-source.ts
 
 Resolves an import source (a local path or a URL) to the matching files inside it: a direct file, an archive (.zip, .7z, .rar) or a download, plus a `cleanup()` that removes every temp it made. A URL download is always tried as an archive first. When it is not an archive, the result has no files and the caller may treat `downloadedPath` as a raw file.
 
-### lib/dev-file-logger.ts
-
-Dev only, never wired up in a packaged build. Mirrors main and renderer console output to disk continuously, so a hard crash leaves the last thing that happened on disk. Main output lands in `main-console.log` through `lib/main-log-file`; renderer output arrives through the `console-message` event, so the renderer needs no change. `getUserDataPath()` only resolves after `initPaths()`, so nothing here runs at module load. A failed log write is swallowed: logging never breaks the app it logs.
-
 ### lib/node-file-store.ts
 
-A Node fs `FileStore` for the main process itself, rooted at the same Data folder that `storage/file-handlers.ts` exposes to the renderer over IPC. It is called in process, so a `shared/storage` domain module can run inside a handler with no renderer round trip.
+A Node fs `FileStore` for the main process itself, rooted at the same Data folder that the renderer reaches over IPC. It is called in process, so a domain module from `apps/desktop/src/storage` can run inside a handler with no renderer round trip.
 
-### lib/ipc/bridge/
+### apps/desktop/src/game/tracker/bridge/
 
 The typed preload IPC primitives. `invoke`, `send` and `subscribe` are keyed by channel. `buildInvoke`, `buildSend` and `buildEvents` generate the flat `window.api` methods from the join maps, so no channel literal is written per method. One local cast bridges the untyped `ipcRenderer` surface.
-
-### lib/ipc/handle/
-
-The typed main process IPC primitives. `handle`, `on` and `emit` constrain the channel to a key of the contract and infer arguments and return type from it, so a mistyped channel or a wrong handler signature fails to compile.
-
-`emit` swallows a throwing `webContents.send`. The render frame can be mid disposal during a reload or navigation, and then `send` throws "Render frame was disposed before WebFrameMain could be accessed". These are fire and forget events and the renderer subscribes again on load, so a dropped send in that window is harmless. It also keeps the high frequency HID forwarder from flooding the console.
 
 ## input
 
@@ -234,7 +114,7 @@ A folder without a `meta.json` is an incomplete pack and is skipped. `loadPacked
 
 ### sprites/extraction-state/
 
-The main process half of "are this ROM's sprites complete?". The renderer answers the same question over its FileStore (`shared/storage/sprites.ts`), and that is the path the app takes today. This half backs the `sprites:check` and `sprites:extract` IPC, which is still part of the contract and must not disagree with it. Both read the same receipt file (`extraction.json`), keyed by the same manifest digest, so whichever half extracted a folder, the other recognises it.
+The main process half of "are this ROM's sprites complete?". The renderer answers the same question over its FileStore (`apps/desktop/src/storage/sprites-store/check-sprites-stale.ts`), and that is the path the app takes today. This half backs the `sprites:check` and `sprites:extract` IPC, which is still part of the contract and must not disagree with it. Both read the same receipt file (`extraction.json`), keyed by the same manifest digest, so whichever half extracted a folder, the other recognises it.
 
 A receipt is used, not a bare file name comparison, because a definition the ROM cannot satisfy produces no file; a bare comparison would find that file missing forever and extract again on every launch. A completed run records the manifest it ran against, and a receipt for the current manifest is taken at its word. Change the manifest and the digest changes with it, so a grown manifest still forces a name by name comparison: exactly the one time extraction an older profile needs. An empty or absent folder is never complete, receipt or not.
 
@@ -246,7 +126,7 @@ When the build carries no sprite definitions, extraction fails with a message: s
 
 ### msu/edit-handlers.ts
 
-Pack editing IPC: the `.msul` manifest plus per file create, rename and delete. These are the same operations as `shared/storage/msu-edit`, expressed over Node fs; the manifest format and validation come from that module so the two never drift. Paths and manifest reads and writes come from `pack-fs/`, which also guards every renderer supplied name against traversal before it becomes a path segment, and refuses every write into a pack the Hookshop installed. After a pack is renamed, its manifest is written again so the name inside its settings becomes the new folder name.
+Pack editing IPC: the `.msul` manifest plus per file create, rename and delete. These are the same operations as the renderer side edits, expressed over Node fs; the manifest format and validation come from `packages/hub-contracts/src/manifest` so the two never drift. Paths and manifest reads and writes come from `pack-fs/`, which also guards every renderer supplied name against traversal before it becomes a path segment, and refuses every write into a pack the Hookshop installed. After a pack is renamed, its manifest is written again so the name inside its settings becomes the new folder name.
 
 ### msu/import-selection.ts
 
@@ -266,7 +146,7 @@ IPC for normalising a pack to one audio format: measure first, convert second. T
 
 ### msu/pack-fs/
 
-Where one pack's files are on disk, and its manifest read and written, over Node fs. Pack and file names come from the renderer, so every name that becomes a path segment is checked for traversal before it is joined (`safeName`). The manifest format comes from `shared/storage/msu-edit`, so the Node handlers and the FileStore backed renderer cannot drift on what a `pack.json` is. A pack installed from the Hookshop is read only (`refuseInstalledPack` throws).
+Where one pack's files are on disk, and its manifest read and written, over Node fs. Pack and file names come from the renderer, so every name that becomes a path segment is checked for traversal before it is joined (`safeName`). The manifest format comes from `packages/hub-contracts/src/manifest`, so the Node handlers and the FileStore backed renderer cannot drift on what a `pack.json` is. A pack installed from the Hookshop is read only (`refuseInstalledPack` throws).
 
 A pack's name is its folder; the name inside its settings follows it on read and on write. `readPackManifest` returns null for a classic pack (no manifest) and for one that is unreadable or of an unknown version. The file inventory uses the same rule as the FileStore side (`packages/msu/src/inventory`): regular files, manifest excepted. It is read from the folder at write time; a file that vanishes mid listing is skipped.
 
@@ -357,7 +237,7 @@ The disk adapter behind `RecommendationStorage`: one file per collection at `Dat
 
 ## store (the Hookshop)
 
-The catalogue reads, install jobs with their progress and cancel, the checks a download passes (size cap, https, sha256), uninstall, the installed record and `relic-of-the-past://install` links come from the Brock catalog module (`@drizztdourden08/brock-catalog`). RotP keeps what a pack is and where it lands: the configuration in `hookshop/`, the installers in `shared/store/install`, and duplicating.
+The catalogue reads, install jobs with their progress and cancel, the checks a download passes (size cap, https, sha256), uninstall, the installed record and `relic-of-the-past://install` links come from the Brock catalog module (`@drizztdourden08/brock-catalog`). RotP keeps what a pack is and where it lands: the configuration in `hookshop/`, the installers in `packages/hub-contracts/src/store/install`, and duplicating.
 
 ### store/ipc-handlers.ts
 
@@ -369,7 +249,7 @@ The catalog module's configuration for the store API.
 
 - `endpoint/` sends the device token as a Bearer header. With no token, `hubFetch` answers a 401 itself, and a 401 from the site drops the token, so the tab shows the sign in card either way.
 - `schema/` parses each answer of the store API (an item, a page, the home page, a download grant). A grant without the pack's kind, author or licence is refused, since the install record needs all three.
-- `installers/` wraps each container's installer from `shared/store/install` as a catalog installer over `storeFiles`, and `maxBytes` holds a download to the cap for its kind.
+- `installers/` wraps each container's installer from `packages/hub-contracts/src/store/install` as a catalog installer over `storeFiles`, and `maxBytes` holds a download to the cap for its kind.
 - `hooks/`: before an update or an uninstall removes a copy, `releasePack` points every profile that selected it at the replacement, or back to the default. After a language set is installed or removed, the game assets are baked again.
 - `isInstalling` and `installedPacks` read the module's jobs and installed record for the rest of the main process.
 
@@ -429,7 +309,7 @@ The Sanctuary's own channels. `sanctuary:submitReport` files a report with no at
 
 The transport behind Brock's bug report dialog (`bugReport` in `main.ts`): it files the report on the Sanctuary, whose API also opens the GitHub issue. Signed out, it refuses before anything is built. Otherwise it builds the debug zip with Brock's `collectDebugFiles` and `writeDebugZip`, adding the profile's settings, profile, randomizer and input files, every quick slot, the 5 newest named saves, the 2 newest auto saves, the live state from the snapshot, and the newest unsent capture sessions that fit `CAPTURE_BUDGET_BYTES`. The report is filed first and the zip uploaded after, so a zip that is too large or fails to upload still leaves a filed report, and the receipt says the debug files are missing. Capture sessions are marked sent only once the upload went through. The temporary zip is always removed.
 
-### sanctuary/report-snapshot/
+### apps/desktop/electron/sanctuary/bug-report/report-snapshot-of.ts/
 
 The context, the profile id and a live save state, sent by the renderer when the bug report dialog opens, since the main process cannot read the running game. The transport takes it once. A snapshot older than 30 minutes is ignored, and without one the report falls back to the launch's profile or the last one played.
 
@@ -443,13 +323,13 @@ The calls to the Sanctuary API. `fileReport` is `POST /reports`, which creates t
 
 IPC for the dev screen and connection editor. The renderer sends records, never source text and never an id for something new: this process allocates every id and runs the dataset's own emitter, so a write cannot carry a caller minted id or a shape the record interfaces no longer describe. The six record facade collections register through `record-handlers.ts` (all one shape: workspace root plus a record payload, a thrown error reported as a refusal); a new crossing's pair goes through `connection-pair-writer/`.
 
-`screenEditor:writeCheck` still takes source text: `shared/game/checks/` has not moved onto the record facade, so there is no record shape to emit there. That channel predates the record facade and still has a caller (the simulator's dataset correction loop); nothing new should reach for it, because a text payload cannot be checked against the record shape the way `serializeCheckRecord` is.
+`screenEditor:writeCheck` still takes source text: `packages/game-data/src/data/checks/` has not moved onto the record facade, so there is no record shape to emit there. That channel predates the record facade and still has a caller (the simulator's dataset correction loop); nothing new should reach for it, because a text payload cannot be checked against the record shape the way `serializeCheckRecord` is.
 
 `editSourceFile` does read, transform, write in one place, so every handler treats a writer error the same way and nothing half writes.
 
 ### screen-editor/check-writer/
 
-Creating, rewriting and removing a check record; the record based path, and the only one that should grow. A check is filed with its dungeon when it names one, otherwise with the area of the screen it sits on (`record-file-targets.ts`). Neither is derived from a name, so renaming a check never moves it. A check's destination is read off live dungeon and screen records, so the registry has to be seeded first: the barrel imports `@shared/game/data` for that side effect alone.
+Creating, rewriting and removing a check record; the record based path, and the only one that should grow. A check is filed with its dungeon when it names one, otherwise with the area of the screen it sits on (`packages/game-data/src/data/record-file-targets`). Neither is derived from a name, so renaming a check never moves it. A check's destination is read off live dungeon and screen records, so the registry has to be seeded first: the barrel imports `packages/game-data/src/data` for that side effect alone.
 
 ### screen-editor/actor-writer/, dungeon-writer/, item-writer/
 
@@ -461,11 +341,11 @@ For all three, an existing record is edited or removed where it already sits, fo
 
 ### screen-editor/connection-pair-writer/
 
-Mints both halves of a brand new crossing atomically. Every `toConnectionId` is required (`packages/game-data/src/data/types/connection.ts`), so a crossing with no partner mints two ids on one allocator turn and writes both halves before either id is observable. When both halves land in one file, it is one edit, so a failure mid write cannot leave a dangling partner. The halves usually belong to different screens, so two files: both edits are validated before either file is touched. If the second `writeFile` fails (a full disk), the first half is rolled back best effort, so a dangling `toConnectionId` cannot survive silently; the error says whether the rollback worked.
+Mints both halves of a brand new crossing atomically. Every `toConnectionId` is required (`packages/game-data/src/data/types/connection`), so a crossing with no partner mints two ids on one allocator turn and writes both halves before either id is observable. When both halves land in one file, it is one edit, so a failure mid write cannot leave a dangling partner. The halves usually belong to different screens, so two files: both edits are validated before either file is touched. If the second `writeFile` fails (a full disk), the first half is rolled back best effort, so a dangling `toConnectionId` cannot survive silently; the error says whether the rollback worked.
 
 ### screen-editor/data-files/
 
-Finds the dataset files a kind's records live in. A create knows its destination (`record-file-targets.ts`). An update or delete must not assume one: several collections were split by size (junk items span four files, one dungeon's checks two), so the canonical file may not hold the id, or worse, an edit would land a second copy. An existing record is located by its id across the kind's subtree, and null comes back when no file carries it. Every path `record-file-targets.ts` derives is relative to `records/`, not to the data folder as a whole (`DATA_SEGMENTS`).
+Finds the dataset files a kind's records live in. A create knows its destination (`packages/game-data/src/data/record-file-targets`). An update or delete must not assume one: several collections were split by size (junk items span four files, one dungeon's checks two), so the canonical file may not hold the id, or worse, an edit would land a second copy. An existing record is located by its id across the kind's subtree, and null comes back when no file carries it. Every path `packages/game-data/src/data/record-file-targets` derives is relative to `records/`, not to the data folder as a whole (`DATA_SEGMENTS`).
 
 ### screen-editor/dataset-record-writer/
 
@@ -473,13 +353,13 @@ The create, update and delete engine the record facade collections share. Everyt
 
 ### screen-editor/enumeration-writer/
 
-Creating, relabelling or removing a closed set enumeration entry. No other collection references an entry's id (`reference-usage.ts`), so there is no delete guard half. Every successful write also regenerates `enumeration/enumeration.type.ts`, which the `World`, `ScreenKind` and similar unions come from. Duplicates are keyed on the category and value pair, since two categories may share a value (`check-kind:npc` and `actor-kind:npc`). `category` always precedes `value`, but hand authored rows are one object per line while `literal()` emits one field per line, so the gap is matched as whitespace of any width.
+Creating, relabelling or removing a closed set enumeration entry. No other collection references an entry's id (`apps/desktop/src/data-inspector/reference-usage`), so there is no delete guard half. Every successful write also regenerates `enumeration/enumeration.type.ts`, which the `World`, `ScreenKind` and similar unions come from. Duplicates are keyed on the category and value pair, since two categories may share a value (`check-kind:npc` and `actor-kind:npc`). `category` always precedes `value`, but hand authored rows are one object per line while `literal()` emits one field per line, so the gap is matched as whitespace of any width.
 
 The type regeneration is best effort: the entry write already landed, so a failure is logged, not reported; the next edit or `npm run generate:enum-types` catches it up. `root` must be passed to `generateEnumTypes`: its default guess is relative to its own file, which is wrong from the bundled main and once crashed every production launch on a nonexistent `dist/shared/...` path.
 
 ### screen-editor/geography-writer/
 
-Writing an area or a location record. Creating one is its own channel: the caller supplies a display name and nothing else, because that is all there is to a brand new area or location, and the id comes from the allocator. Rewriting and removing take the whole record, like every other record facade collection, and go through the shared engine. Each collection is one file per world, so the destination comes from the record's own world (`record-file-targets.ts`), and both resolvers always return a path. This process is the allocator, so it is the one place allowed to brand an id. Areas and locations are records, so they sit under the synced record tree.
+Writing an area or a location record. Creating one is its own channel: the caller supplies a display name and nothing else, because that is all there is to a brand new area or location, and the id comes from the allocator. Rewriting and removing take the whole record, like every other record facade collection, and go through the shared engine. Each collection is one file per world, so the destination comes from the record's own world (`packages/game-data/src/data/record-file-targets`), and both resolvers always return a path. This process is the allocator, so it is the one place allowed to brand an id. Areas and locations are records, so they sit under the synced record tree.
 
 ### screen-editor/id-allocator/
 
@@ -493,11 +373,11 @@ Creating, relabelling or removing an item group. `item-groups.ts` writes `id` tw
 
 ### screen-editor/record-file-template/
 
-The empty record file a create starts when the tree holds none for that path yet. The layout files a record by its world, its area, or its dungeon and floor, so a destination can be a file nobody has needed yet: the first interior of an area, or a dungeon, which is one record in one file. The array is named by the same rule every other file of its collection follows (`record-file-targets.ts`), so the loader's glob picks the new file up like any other. The emitted file starts with the `@kind data` header.
+The empty record file a create starts when the tree holds none for that path yet. The layout files a record by its world, its area, or its dungeon and floor, so a destination can be a file nobody has needed yet: the first interior of an area, or a dungeon, which is one record in one file. The array is named by the same rule every other file of its collection follows (`packages/game-data/src/data/record-file-targets`), so the loader's glob picks the new file up like any other. The emitted file starts with the `@kind data` header.
 
 ### screen-editor/resolve-source-file.ts
 
-A traversal safe path resolver for the screen editor's writable source roots. `data` points at the record tree, not `shared/game/data` as a whole: a wider root would let a write land on the schema or the aggregators.
+A traversal safe path resolver for the screen editor's writable source roots. `data` points at the record tree, not `packages/game-data/src/data` as a whole: a wider root would let a write land on the schema or the aggregators.
 
 ### screen-editor/source-writers/
 
@@ -509,27 +389,17 @@ Appends a new vocabulary term to the tag dataset file. The caller supplies a key
 
 ### screen-editor/workspace-root.ts
 
-Locates the repo root the editor writes into by walking up to the ancestor that contains `shared/game/data`. A fixed depth from `__dirname` breaks because dev, the production build and a packaged app all bundle at different depths. It falls back to the working directory (the app is always launched from the repo root) for a bundle outside the source tree, and caches the answer for the life of the process.
+Locates the repo root the editor writes into by walking up to the ancestor that contains `packages/game-data/src/data`. A fixed depth from `__dirname` breaks because dev, the production build and a packaged app all bundle at different depths. It falls back to the working directory (the app is always launched from the repo root) for a bundle outside the source tree, and caches the answer for the life of the process.
 
 ## saves
 
-The main process keeps no save store. The renderer writes saves over the FileStore: SRAM and quick slots through the Brock port kit (`@drizztdourden08/brock-port-kit`), named and auto saves through `packages/game-core/src/saves`.
-
-## profiles
-
-### profiles/ipc-handlers.ts
-
-`profiles:update` whitelists by design, with the rule shared with the renderer's store (`apps/desktop/src/profiles/storage/profile-patch.ts`): an absent field is left alone, null clears it, and of `randomizer` only the connection moves. `updateProfile` in `store/` is a whole profile write; field whitelisting happens in this handler, so `randomizer` stays exactly as loaded and is never patched there.
+The main process keeps no save store. The renderer writes saves over the FileStore: SRAM and quick slots through the Brock port kit (`@drizztdourden08/brock-port-kit`), named and auto saves through `apps/desktop/src/storage/save-files`.
 
 ## roms
 
-The main process has no ROM channel. The Brock port kit creates the roms and assets folders, and the renderer imports ROMs over the FileStore (`lib/storage/roms-store`, on `packages/roms/src/library`).
+The main process has no ROM channel. The Brock port kit creates the roms and assets folders, and the renderer imports ROMs over the FileStore (`apps/desktop/src/storage/roms-store`, on `packages/roms/src/library`).
 
 ## storage
-
-### storage/file-handlers.ts
-
-Generic file store IPC, rooted at the Data folder; it backs the platform `FileStore` port on Electron. Renderer supplied paths are POSIX and relative, and resolution blocks traversal outside the root. Every write, removal and new folder inside an item the Hookshop installed is refused (`installed-guard/`). `file:trash` moves to the Recycle Bin (the Trash on macOS) so a delete can be undone there, and does nothing when the path is missing.
 
 ### storage/installed-guard/
 
@@ -539,10 +409,6 @@ The lock on what the Hookshop installed. An installed music pack, language set o
 - Windows and macOS folders ignore case, so a differently cased path is the same item there (`foldCase`).
 - Roots are compared in one spelling: POSIX, relative, no leading `/` or `./`, no trailing slash (`normalizeRel`).
 - `refuseInstalledRemoval` also refuses removing a folder that holds an installed item.
-
-### storage/ipc-handlers.ts
-
-Storage info IPC: where data lives, revealing it in the OS file manager, and a per domain usage summary (immediate entry count plus recursive byte size). It backs the platform `StoragePort` on Electron. `sanitizeId` strips anything outside `[A-Za-z0-9_-]`, so an id can never contain a path separator, `..` or a drive letter. An unreadable file is skipped in the byte count.
 
 ## shadow-casting
 
@@ -570,10 +436,6 @@ The `--dump-layers=N [--hover-tile=col,row]` automation flag. The renderer loads
 
 The `--dump-nav=N|NAME` automation flag. The renderer loads a save state, dumps the navigation widget state (entrances, screen detection, transitions) to `debug-output/dump-nav.json`, then exits. An all digit value names a quick save slot; anything else names a manual (normal) save.
 
-### debug/session-log-handler/
-
-The always on session log sink. The renderer batches its structured log bus lines (every channel, game core stdout included, see the renderer's session log tap) and sends them over one fire and forget channel per batch; each batch is appended to `Data/debug/session.log`. Appends are chained, so batches land in arrival order even when a flush overlaps a slow disk write; a failed write drops that batch silently. At startup the previous file is rotated to `session-1.log`, so the last two sessions stay readable after the fact. The first launch has nothing to rotate, and that miss is fine. Every write is best effort: logging never surfaces in app code and never blocks startup.
-
 ### debug/sim-log-handler.ts
 
 The simulator run log sink. `sim:appendLog` appends one JSONL line per simulator event to `debug-output/simulator/<runId>.jsonl`; `sim:openLog` reveals that file in the OS file manager. `sanitizeRunId` strips anything outside `[A-Za-z0-9_-]`, so a run id can never contain a path separator, `..` or a drive letter, and never escapes the simulator log folder.
@@ -583,46 +445,6 @@ The simulator run log sink. `sim:appendLog` appends one JSONL line per simulator
 The `--sim-run[=slot=N;target=<screenId>;stop=<checkId>;max=N]` automation flag. It runs the gameplay simulator headlessly to a stop condition, then writes a `SimRunReport` (outcome, reached screens, verified checks, boundary edges, data correction suggestions) to `debug-output/sim-run.json` and exits. It drives the in chat data correction loop. `stop` takes a check id (`check-072`), not a check name: the engine's stop condition compares identities, and 11 dungeons share a "Big Chest". The command line hands over free text, so only a value that looks like a real check id becomes one.
 
 ## diagnostics
-
-### diagnostics/ipc-handlers.ts
-
-Diagnostics IPC: one read only channel returning the host hardware and OS readout that backs the About page's debug info block.
-
-### diagnostics/collect-displays.ts
-
-The per monitor readout. Only the main process can see the whole desktop; the renderer's `window.screen` describes the one display the window sits on, which is exactly the blind spot when a report says "it is wrong on my second monitor". A `displayFrequency` of 0 means the platform did not report one, not a real 0 Hz. With no display server (headless CI) there is no primary display, and every entry reports `primary: false`.
-
-### diagnostics/collect-gpu.ts
-
-The GPU readout. The renderer only sees the ANGLE string WebGL hands it; the main process also knows the PCI ids, the driver version, which adapter is active on a hybrid graphics machine, and which accelerated features Chromium turned on. `getGPUInfo` resolves an untyped bag whose shape varies by platform and driver, so the raw types narrow only the fields reported. It returns nothing under `--disable-gpu`, or when the info process never reported back.
-
-### diagnostics/collect-host/
-
-The OS, CPU and memory side of the host readout. Everything comes from the `os` module or the app itself, so it is cheap and synchronous. `process.getSystemMemoryInfo` is the only source of swap figures and reports kilobytes; it is unavailable in some sandboxes, so swap degrades to null while total and free memory always come from the `os` module.
-
-### diagnostics/crash-forensics/install.ts
-
-Crash forensics turn a silent death into a trace in `Data/debug/main-console.log`. It is installed once, before app ready, because the crash reporter must be running before any child process exists. It only observes: no handler changes what the app does, and nothing leaves the machine (the reporter is local, upload off, no submit URL; minidumps land under `app.getPath('crashDumps')`). Lines written before `initPaths()` are held by the log module and flushed with the first line that reaches the disk, so this can run ahead of main's own ready work.
-
-### diagnostics/crash-forensics/forensics-log/
-
-The one write path for crash forensics lines. The terminal is written directly, not through `console`: the dev file logger wraps `console` to mirror it, so going through it would put every line in `main-console.log` twice. `noteSync` is for handlers that may be the last thing to run before the process dies (the line is on disk before they return). `terminal: false` keeps a periodic line out of the dev terminal while it still reaches the file. A GUI launch may have no terminal at all; the disk line is the one that matters.
-
-### diagnostics/crash-forensics/memory-heartbeat.ts
-
-One compact line every 30 s: the main process's own memory, then every process Electron knows about (browser, GPU, renderer, utilities), so the log leading up to a death shows whether something was growing. File only, not the terminal. `workingSetSize` and `peakWorkingSetSize` are already in kilobytes. The timer is unref'd, so it never keeps the process alive, and a failed metrics read is never the thing that fails.
-
-### diagnostics/crash-forensics/process-gone-hooks.ts
-
-The death notices Electron hands the main process: a renderer or a child process (GPU, utility) going away, and a page that stops answering. All are hooked at the app level, so every window and every webContents is covered without the window layer knowing about it. They are written synchronously: a dying GPU process can take the browser process with it in the same instant.
-
-### diagnostics/crash-forensics/process-hooks.ts
-
-Node level failure hooks for the main process. `uncaughtExceptionMonitor` is used, not `uncaughtException`: the monitor observes without counting as a handler, so Electron's own handling (its error dialog) is left exactly as it was. It also sees an unhandled promise rejection, because Node's default mode escalates one into an uncaught exception, and the monitor's `origin` says which it was. Registering an `unhandledRejection` listener instead would swallow that escalation. Every line is written synchronously because there may be no next tick.
-
-### diagnostics/crash-forensics/quit-hooks.ts
-
-Records how the app was asked to leave, so a log that ends in a quit can be told apart from one that ends in a death. The origin is whichever fired first: `window-all-closed` (the user closed the window), `app.quit` (an explicit call, such as the updater's), `app.exit` (the immediate form). A quit event with no origin recorded came from outside the app's code: the OS ending the session, a signal, or a kill. `app.quit` and `app.exit` are wrapped, never replaced: the original runs unchanged after the mark. Lines are written synchronously; `quit` is the last event before exit.
 
 ### diagnostics/debug-report/capture-frame-budget/
 
@@ -660,32 +482,8 @@ The session listing for the bug report picker: every recorded capture session fo
 
 The Brock port kit serves the WASM core bytes to a renderer loaded over `file://`, where `fetch()` is blocked (`window.api.portKit.readCore`). The main process keeps no core code of its own.
 
-## automation
-
-### automation/arm-game-screenshot-watchdog.ts
-
-A `--game-screenshot` run (a `--screenshot` that waits for the game, see `defer-game-screenshot.ts`) exits with code 1 when the app has not finished booting within 60 s, or when no screenshot was taken within 240 s. A boot that stalls would otherwise leave a headless window running forever with nothing to report. Both timers are unref'd, so they never keep the process alive.
-
-## ui-views
-
-### ui-views/ipc-handlers.ts
-
-Data Inspector and table view state, held as one app level JSON map. It follows the shape and location of `connection-review.json` and `nav-review.json` (under `getUserDataPath`, not under `profiles/`). The renderer debounces before calling, so the handler is a plain read and write.
-
 ## connections
 
 ### connections/ipc-handlers.ts
 
 Connection review data and nav review data (per screen connection point reviews with comments), each one app level JSON file.
-
-## dialogs
-
-### dialogs/ipc-handlers.ts
-
-A cancelled save dialog reports `saved: false` with no error, because declining is not a failure.
-
-## test
-
-### test/ipc-handlers.ts
-
-The test automation channels. `test:getArgs` returns the renderer's view of `--auto-state` and `--screenshot`. `--auto-state=N` (all digits) loads quick save slot N after the game starts; `--auto-state=NAME` loads the manual (normal) save called NAME. Names are stable and quick save can never overwrite them, so automation and regression baselines pin to a name, not a slot index. `--screenshot=NAME` captures the window to `tests/screenshots/{NAME}.png` after the state loads (`test:screenshot`), resolved from the project root in dev and in a packaged build.

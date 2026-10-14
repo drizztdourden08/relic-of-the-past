@@ -77,7 +77,7 @@ If a change would break an invariant, the code is in the wrong zone. Re-place it
 
 | The new code | Goes in | Notes |
 |----------------|---------|-------|
-| Needs Node/OS/fs/native, windows, ROM/profile/save IO | `apps/desktop/electron/<subject>/` behind a handler in `electron/handlers/` | Add the channel to the `apps/desktop/src/ipc/` contract. Use the `electron` skill. |
+| Needs Node/OS/fs/native, windows, ROM/profile/save IO | `apps/desktop/electron/<subject>/` behind a handler in `apps/desktop/electron/handlers/` | Add the channel to the `apps/desktop/src/ipc/` contract. Use the `electron` skill. |
 | Talks to the running game / WASM | `packages/game-core/src/` | A new C function follows `add-wasm-function` (C + bridge; `EMSCRIPTEN_KEEPALIVE` auto-exports, so there is no export list). Glue that reads a renderer store stays in `apps/desktop/src/game/`. |
 | Pure game rule, algorithm or record | `packages/game-data/` (data, logic, events, seed) | Must stay pure and testable. |
 | Pathfinding, flood, simulator, tracker | `packages/navigation/` | |

@@ -7,7 +7,7 @@ import type {
 } from '@app/debug-report';
 import type { EntityKind } from '@rotp/game-data';
 import type { UiViewsMap } from '../ui-views-contract.type';
-import type { DetectionContext, DraftRecommendation, PassResult, Recommendation } from '../recommendation-contract.type';
+import type { PassResult, Recommendation, RecommendationPassRequest } from '../recommendation-contract.type';
 import type { InvokeResult, ReviewMap } from './invoke-result.type';
 
 interface DevToolsInvokeContract {
@@ -24,8 +24,7 @@ interface DevToolsInvokeContract {
   'uiViews:save': (data: UiViewsMap) => Promise<void>;
 
   'recommendations:load': (kind: EntityKind) => Promise<readonly Recommendation[]>;
-  'recommendations:applyPass': (kind: EntityKind, context: DetectionContext,
-    detectorIds: readonly string[], drafts: readonly DraftRecommendation[]) => Promise<PassResult>;
+  'recommendations:applyPass': (pass: RecommendationPassRequest) => Promise<PassResult>;
   'recommendations:decide': (kind: EntityKind, id: string,
     state: 'accepted' | 'dismissed') => Promise<readonly Recommendation[]>;
 

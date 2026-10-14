@@ -8,9 +8,13 @@ import {
 
 const rollPlacement = (config: ProfileRandomizerConfig): Placement => {
   const snapshot = normalizeRandomizerOptions(config.options);
-  return generateFromSnapshot(config.seed, snapshot,
-    probeDeliverableNpcLocations(), probeDeliverablePondLocations(),
-    probeDeliverableWorldLocations());
+  return generateFromSnapshot({
+    seed: config.seed,
+    snapshot,
+    deliverable: {
+      npc: probeDeliverableNpcLocations(), capacity: probeDeliverablePondLocations(), world: probeDeliverableWorldLocations(),
+    },
+  });
 };
 
 export { rollPlacement };

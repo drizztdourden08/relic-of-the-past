@@ -3,7 +3,7 @@ import { mkdtempSync, mkdirSync, writeFileSync, readFileSync, rmSync } from 'nod
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { describe, it, expect, afterEach } from 'vitest';
-import { generateEnumTypes } from '../../../../../scripts/generate-enum-types.mjs';
+import { generateEnumTypes } from '../generate-enum-types.mjs';
 
 const FIXTURE_ENUMERATION = `
 export const ALL_ENUMERATION = [

@@ -4,7 +4,7 @@
 The Extended HUD draws five elements (life, magic, counters, wallet and the button
 cluster) wherever the active layout puts them, over a game that knows nothing about
 any of it. This page is the contributor's view of that system: the placement model,
-how the cluster's geometry is derived, how a glyph resolves, where a player's own
+how a glyph resolves, where a player's own
 layouts and images live, and what it takes to add a sixth element.
 
 For the player-facing description of the same screens, see
@@ -49,13 +49,13 @@ which is the whole reason the model stores distances instead of coordinates.
 A centred axis has no edge to measure from, so it **ignores the offset on that axis**
 instead of drifting by it. `center` ignores both.
 
-All of this is `placeElement` in `packages/hud/src/layouts/place-element.ts`. It is pure and
+All of this is `place` in `packages/hud/src/engine/place`. It is pure and
 total: no clamping, no rounding, no reads of anything but its three arguments. Pixel
 snapping is the renderer's call, not this layer's.
 
 ### Natural sizes
 
-`placeElement` needs a size to place, and `naturalSize(id, ctx)` in `element-sizes.ts`
+`place` needs a size to place, and `naturalSize(id, ctx)` in `packages/hud/src/layouts/element-sizes`
 supplies the size an element draws itself at *before* the placement's scale.
 Three of the five are constants measured off the real sprites. Two are not:
 
@@ -87,74 +87,8 @@ with three hearts leaves the second heart row's space empty instead of having th
 whole block shuffle as containers are collected. `compact` and `bottom-right` map over the default's
 placements, so they inherit that clearance and only widen it.
 
-`useResolvedPlacements` is where a layout becomes rectangles, once per frame: filter
-to `visible`, ask for the natural size, apply `fitScale` to the cluster only, then
-`placeElement`.
-
-## Button-cluster geometry
-
-`layoutCluster(slots, options)` in `cluster-shapes.ts` turns the modern scheme's slot
-list into positioned chips. Its one governing rule:
-
-> **A cluster is one group per assignable category, laid left to right.** With the
-> face cross alone it is 72 × 48; once movement moves to the stick and the d-pad is
-> free, the second cross puts it at 148 × 48. Only those two groups exist, because §15
-> narrowed the assignable set to face and d-pad, so those are the only two widths.
-
-The pieces:
-
-- **A chip is 24 × 24**, made of a 16 × 16 glyph with the assigned item's 16 × 16 sprite
-  offset into it by `buttons.spriteOffset` (default `{ x: 8, y: 8 }`).
-- **A flat row holds two chips**, at x 0 and x 48. Row pitch is **28** (chip 24 plus a
-  4px gap); the last row in a group does not pay for the trailing gap.
-- **Slots are grouped into rows by kind** (`triggers`, `shoulders`, `face`, `dpad`,
-  `sticks`, `paddles`) and the groups are emitted in `buttons.rowOrder`. Any kind the
-  caller's order forgot is appended in the shipped order, and a repeated kind is
-  dropped, so a hand-edited layout can never silently swallow a bound control nor be
-  charged twice for one group's height.
-- **An empty group contributes no row and no gap.** A pad with no paddles is exactly
-  as tall as if the kind did not exist.
-- **`face` and `dpad` draw as a cross at exactly four members**, 64 tall, at up (24,0),
-  left (0,20), right (48,20), down (24,40). The points are chosen by SDL **position**,
-  never by a printed letter: `NORTH`/`WEST`/`EAST`/`SOUTH` for face,
-  `DPAD_UP`/`LEFT`/`RIGHT`/`DOWN` for the d-pad. Anything else, such as a partial group
-  or a pad reporting more than four face buttons, falls back to the flat grid, because a
-  cross missing a point reads as a bug and not as a shape.
-- **Paddles are split out by position name** (`LEFT_PADDLE*` / `RIGHT_PADDLE*`). SDL
-  files them under the `shoulder` category, so the position is the only honest seam.
-- **`'system'` slots get no row at all** because they are never item slots.
-
-Worked heights, so a change here has something to check against:
-
-| Bound controls | Cluster |
-|---|---|
-| 2 shoulders + 4 face | 72 × 92 |
-| 2 triggers, 2 shoulders, 4 face, 2 paddles | 72 × 148 |
-| ...plus the two stick clicks | 72 × 176 |
-| four d-pad slots | adds 68 (a 64-tall cross plus one gap) |
-
-### fitScale shrinks and never reflows
-
-```ts
-const fitScale = (natural: Size, column: Size): number =>
-  (natural.h > 0 ? Math.min(1, column.h / natural.h) : 1);
-```
-
-One factor over the **whole** cluster. A cluster that rearranged itself when the window
-narrowed would be a control map the player has to re-learn mid-game, so the cluster
-gets smaller and keeps its shape. The column it is fitted into is the view height less
-the placement's own `offset.y` at *both* ends, so a shrunk cluster still never touches
-either edge. Only `buttons` is fitted; every other element takes its placement scale
-as-is.
-
-There are exactly two shapes, `'diamond'` and `'grid'`. A third name, `'row'`,
-used to sit in `ClusterShape` and produced byte-identical geometry to `'grid'`:
-a group is at most two chips across, so there is no picture "a row" could draw that
-a two-chip-wide grid does not, and the name was carrying no behaviour. It is gone
-from the type. `normalizeClusterShape(shape)` folds anything that is not
-`'diamond'` into `'grid'`, and both `layoutCluster` and the storage layer's
-`cloneLayout` run stored options through it, so a layout saved on disk under the
-old name keeps rendering exactly as it always did.
+A layout becomes rectangles once per frame: filter to `visible`, ask for the natural
+size, then `place`.
 
 ## Glyph packs
 
@@ -190,7 +124,7 @@ pad. Choosing a pack explicitly is therefore an *override* of the device, not a
 replacement for it, which is what makes a custom pack containing four face buttons
 still draw correct shoulders and triggers.
 
-The family comes from `deviceFamilyOf(slots)` (`HudLayoutView/behavior/device-family.ts`),
+The family comes from `deviceFamilyOf(slots)` (`apps/desktop/src/views/HudLayoutView/behavior/device-family.ts`),
 which reads it back off the icon key the device layer already stamped on each slot
 (`xbox-a`, `ps-cross`) instead of making an IPC round trip from a per-frame render
 path. A keyboard reports no SDL position at all, so it is the one case decided by the
@@ -262,7 +196,7 @@ first and `tsc` will point at every site that has to answer for it.
 5. Add the `case` that renders it to `HudLayoutView.elementFor`.
 6. In `HudLayoutEditor.constants.ts`, add the id to `ELEMENT_ORDER` and a label to
    `ELEMENT_LABELS`, then a `case` in `StageElement` so the editor previews it.
-7. Give it plausible sample data in `hud-layout-editing/sample-state/`, so
+7. Give it plausible sample data in `apps/desktop/src/hud-layout-editing/sample-state/`, so
    the editor still previews with no game running.
 
 Existing saved layouts will not contain a placement for the new id. That is fine

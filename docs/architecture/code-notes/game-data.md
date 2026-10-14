@@ -1,8 +1,8 @@
 <!-- @layer docs @kind doc -->
 # Code notes: game data
 
-Facts about `shared/game/data/` that the code cannot say on its own. Each heading names a file
-under `shared/game/data/`. The records hold the data; this page holds the why.
+Facts about `packages/game-data/src/data/` that the code cannot say on its own. Each heading names
+a file under `packages/game-data/src/data/`. The records hold the data; this page holds the why.
 
 ## Generated files
 
@@ -22,7 +22,7 @@ other file: tables are `*.constants.ts`, unions are `*.type.ts`.
   applies to a screen, by the same script. This is our own vocabulary for sorting screens, not
   a game value. A screen's tags are read through `tags/screen-tag-keys-of.ts`.
 - `taxonomy/connection-tags.constants.ts` and `connection-tags.type.ts`, from every tag record that
-  applies to a connection. Direction is read off `canExit` (`connections/derive.ts`), so the
+  applies to a connection. Direction is read off `canExit` (`packages/game-data/src/data/connections/derive`), so the
   retired `dir:one-way` and `dir:two-way` terms have no replacement here.
 - `taxonomy/check-content-tags.constants.ts` and `check-content-tags.type.ts`, from every tag record
   that applies to a check. A check's content is the one check tag family no other record
@@ -34,14 +34,14 @@ other file: tables are `*.constants.ts`, unions are `*.type.ts`.
 
 `pnpm run generate:check` writes nothing and fails on a file that differs from a fresh run;
 `apps/desktop/tests/game/data/generated-mirrors.keep.test.ts` runs it, and
-`apps/desktop/tests/game/data/enumeration-generated-types.keep.test.ts` does the same for the unions.
+`scripts/tests/enumeration-generated-types.keep.test.ts` does the same for the unions.
 
 The same script splices one C table, `kVanillaPrizeItem` in `core/game-hooks/prize_presentation.c`,
 between a pair of `generated: begin` and `generated: end` block comments, in the file's own line
 ending, and leaves the hand C around it alone. Four tables are not generated, because no record
 holds what they state; each is a record gap first:
 
-- `events/event_areas.h`: 22 of its 56 head rows are the extra area heads a large dark world
+- `core/game-hooks/events/event_areas.h`: 22 of its 56 head rows are the extra area heads a large dark world
   region covers, which no record lists, and 13 of its 19 entrance rows need an `overworldIndex`
   that 56 overworld screens do not carry.
 - `kSubstitutionBits` in `npc_overrides.c`: the (byte, mask) allocation is a save layout fact
@@ -254,7 +254,7 @@ holds what they state; each is a record gap first:
 - `progress-tier` labels the four values of the save's progress indicator byte, which the engine
   branches on for sprite lists, ambient sound, sign text and world access. The field it labels holds
   a number, and an enumeration value is a string, so the category is left out of the generator's
-  `CATEGORY_TYPE_NAMES`. `packages/game-data/src/logic/queries/progress-tier.ts` says what each tier means.
+  `CATEGORY_TYPE_NAMES`. `packages/game-data/src/logic/queries/progress-tier` says what each tier means.
 - `review-status` is the status of a record's own review mark. Every collection carries one and
   nothing gates on it.
 
@@ -279,7 +279,7 @@ holds what they state; each is a record gap first:
   core picks the rung from the live inventory. They still need a record, or a seed that places one
   shows "???" in a virtual slot and the wrong vanilla item in a real check.
 
-## data/msu-track-names.json (package root)
+## packages/game-data/data/msu-track-names.json (package root)
 
 - Tracks 1 to 34 are the vanilla music slots every MSU-1 pack uses. There is no track 35 or 36.
 - Tracks 37 to 58, 110 and 112 come from inverting `OVERWORLD_AREA_TRACKS`: each area index was
@@ -306,7 +306,7 @@ holds what they state; each is a record gap first:
 - sfx1 0x3C is the refusal noise played when an item use is denied.
 - The ambient channel stops at 0x17: the game raises twelve ids there as literals, and its only other
   route to that port is a four bit nibble from the overworld music table.
-- The file has no type import: the loader (`sound-names.ts`) casts it where it is read.
+- The file has no type import: the loader (`packages/game-data/src/data/sound-names`) casts it where it is read.
 
 ## The dataset core (registry, bootstrap, facade, indexes, session-records)
 
@@ -394,7 +394,7 @@ holds what they state; each is a record gap first:
   dungeons get a file per floor, or per pair where the game pairs them. `SPLIT_BY_HALF`: Skull Woods
   files one floor in two halves by which way a room is reached, and nothing on a room says which, so
   a new room there is refused.
-- A screen with no real area, or a `special` interior, files under `interiors/special`. A connection
+- A screen with no real area, or a `special` interior, files under `interiors/special.ts` of its world. A connection
   point files with its own screen, so the connections tree mirrors the screens tree.
 - `dungeonForPalaceIndex` matches the dungeon's own palace index first, then the palace index its
   rooms carry, which resolves the two palace values the first castle reports.
@@ -481,7 +481,7 @@ its loader, because the vault dataset imports it from there.
 - `scope` says which switch makes a row a location of the seed. With the switch off, the row is
   locked with its vanilla item. `key-drop` rows exist only under that option, `capacity` rows only
   while their family is not vanilla, and `fixed` is a real pickup no seed ever fills. A row without
-  a scope is decided by its kind (randomizer/world/seed-locations.ts).
+  a scope is decided by its kind (packages/randomizer/src/world/seed-locations.ts).
 - `isGuaranteedReward` marks a virtual location with no vanilla item that still hands over a real
   one, so an empty `vanillaItemIds` is not read as "no reward".
 - `derived` is a combined event, evaluated after the native sweep in record order, so it may only
@@ -513,7 +513,7 @@ its loader, because the vault dataset imports it from there.
 - `fileStem` names the folder of the dungeon's screen and connection records, so a destination
   path comes from the id and a rename never moves a file.
 - The first castle has no boss; the two tower dungeons have no prize. `bossActorId` is what a
-  defeat rule is looked up by (rules/tables/bosses.data.ts).
+  defeat rule is looked up by (packages/randomizer/src/world/rules/tables/bosses/bosses.constants.ts).
 - The order of `regionIds` matters: it is the order the reference creates the regions in, and the
   fill's prefill pushes the dungeon's restricted items in that order, so reordering moves items.
 
@@ -594,7 +594,7 @@ ranges below, which the core resolves at every substitution and receipt seam.
   tier it hands over the reference randomizer's replacement, twenty rupees. The ocarina came after
   0x62 to 0x66 had filled, so it takes 0x82, the first free id above the crystals.
 - A progressive capacity id carries no jump: the core climbs to the next planned rung from the save
-  bytes, and the plan is armed per session (capacity-session.ts). The family order is explosives,
+  bytes, and the plan is armed per session (apps/desktop/src/game/randomizer-client/capacity-session). The family order is explosives,
   projectiles, meter, wallet.
 - Pendants need nothing special: each has its own native id and a fixed bit. All seven crystals
   share native id 0x20 and the room decides which bit banks, so a crystal placed elsewhere would bank
@@ -768,7 +768,7 @@ What opens each dialogue entry, and for a prompt, where its options lead.
 - `STOCK_GLOVES` is the literal `kGlovesColor` (load_gfx.c), not an extracted asset. A sheet with no
   glove words falls back to it, as `PlayerSprite_Apply` does.
 
-## pause-names/default-names.ts
+## packages/languages/src/data/pause-names/default-names.ts
 
 - The seed name table for the pause menu: the English strings, keyed to item records so a language
   set can retitle them. Item keys are `<item record id>-<tier>`, tier counting from 1 (the base
@@ -784,7 +784,7 @@ path as an absent entry. `hasNativeTables` says whether the tables are there at 
 
 ### Tile behavior and tile visual
 
-- `tile-behavior.ts` and `tile-visual.ts` (with their `-structures.ts` halves) are lists of groups.
+- `tile-behavior.ts` and `tile-visual.ts` (with their structure halves, `tile-behavior-structures.ts` and `tile-visual-structures.ts`) are lists of groups.
   One group is one `case` group of `TileDetect_ExecuteInner` (tile_detect.c, lines 261 to 525), so
   the list can be diffed against the C by eye and no entry claims a distinction the engine does not
   make. `{ from, to }` is a run the engine writes as one long case run. `buildAttrMaps` turns the
@@ -832,7 +832,7 @@ path as an absent entry. `hasNativeTables` says whether the tables are there at 
 
 - `OVERWORLD_TILE_ATTRS` is the navigation map outdoor screens read; `INTERIOR_ATTRS` lays the
   indoor overrides of `TileDetect_ExecuteInner` over it. The accessors live in
-  `navigation/overworld-attrs.ts` and `navigation/interior-attrs.ts`.
+  `packages/navigation/src/pathfinding/overworld-attrs.ts` and `packages/game-data/src/data/native-tables/tile-tables.constants.ts`.
 - `req: 'lift.1'` on bushes, signs and pots is a real requirement and must stay: it gates the flood
   and shows on the overlay.
 - Slopes and cliff edges are impassable, and cliff jumps extend through them. Cliff faces start

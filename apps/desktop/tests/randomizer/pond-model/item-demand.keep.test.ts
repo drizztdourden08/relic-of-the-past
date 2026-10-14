@@ -9,7 +9,7 @@ describe('pond item demand', () => {
   const ITEM_ONLY = { ...pondRupeesOnlyAsk(100, 300), rupees: { enabled: false, min: 100, max: 300 }, item: { enabled: true } };
   const plan = pondPlanOf({ ...CUSTOM, items: 5 }, POND_INSTANCE_BY_ID.wishing);
   const roll = (pool: readonly ItemKey[], ask = ITEM_ONLY, seed = 'demand') =>
-    rollPondDemands(plan, ask, { curve: 'equal' }, createRng(seed), REFERENCE_CAPACITY_PROFILE, pool);
+    rollPondDemands({ plan, ask, shape: { curve: 'equal' }, rng: createRng(seed), capacity: REFERENCE_CAPACITY_PROFILE, itemPool: pool });
 
   it('names only items the player holds and the core can test', () => {
     const held: readonly string[] = [

@@ -49,14 +49,18 @@ describe('computeBitmask device gate', () => {
   it('passes input from a device in the active profile map', () => {
     const allowed = { keyboard: false, gamepadKeys: new Set(['057e:2009']) };
     const hidStates = new Map([['057e:2009', { buttons: [true], axes: [] }]]);
-    const mask = computeBitmask(noKeys, noKeyboardMap, gamepadButtonMap, noAxisMap, hidStates, allowed);
+    const mask = computeBitmask({
+      keyStates: noKeys, keyboardMap: noKeyboardMap, gamepadButtonMap, gamepadAxisMap: noAxisMap, hidStates, allowed,
+    });
     expect(mask).toBe(1 << SNES_BUTTON_BITS.A);
   });
 
   it('drops input from a connected device that is NOT in the map', () => {
     const allowed = { keyboard: false, gamepadKeys: new Set(['045e:02ff']) };
     const hidStates = new Map([['057e:2009', { buttons: [true], axes: [] }]]);
-    const mask = computeBitmask(noKeys, noKeyboardMap, gamepadButtonMap, noAxisMap, hidStates, allowed);
+    const mask = computeBitmask({
+      keyStates: noKeys, keyboardMap: noKeyboardMap, gamepadButtonMap, gamepadAxisMap: noAxisMap, hidStates, allowed,
+    });
     expect(mask).toBe(0);
   });
 
@@ -64,7 +68,9 @@ describe('computeBitmask device gate', () => {
     const allowed = { keyboard: false, gamepadKeys: new Set<string>() };
     const keyStates = new Map([['KeyZ', true]]);
     const keyboardMap = new Map<string, SnesButton>([['KeyZ', 'A']]);
-    const mask = computeBitmask(keyStates, keyboardMap, noButtonMap, noAxisMap, new Map(), allowed);
+    const mask = computeBitmask({
+      keyStates, keyboardMap, gamepadButtonMap: noButtonMap, gamepadAxisMap: noAxisMap, hidStates: new Map(), allowed,
+    });
     expect(mask).toBe(0);
   });
 });

@@ -64,7 +64,7 @@ ship invisible.
 
 | Path | Role |
 |------|------|
-| `apps/desktop/src/views/GameLayer/sub-components/navigation-overlay/` | Canvas overlay: draws reachability, connections, entrances, fall zones, path, player debug; tile inspector tooltips; `annotation-style/`; `pathfinding/` (A* 2×2, layer helpers). |
+| `apps/desktop/src/navigation-overlay/` | Canvas overlay: draws reachability, connections, entrances, fall zones, path, player debug; tile inspector tooltips; `annotation-style/`; `pathfinding/` (A* 2×2, layer helpers). |
 | `apps/desktop/src/widgets/navigation.widget.tsx` · `apps/desktop/src/nav-widget/` | The [Navigation widget](../user-guide/navigation-minimap.md): minimaps, flood controls, connection/screen editors, the Dataset status panel. |
 | `apps/desktop/src/stores/navigation-overlay-store/` | Overlay visibility, flood results, connections, locked target tile, screen annotations, per-kind marker visibility. |
 

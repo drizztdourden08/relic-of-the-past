@@ -23,11 +23,11 @@
 }
 
 .msu-pack-header__name {
-  max-width: var(--size-448);
+  max-width: calc(28 * var(--text-base));
 }
 
 .msu-track-row {
-  min-height: var(--size-32);
+  min-height: var(--size-28);
 }
 
 .msu-track-row--open {
@@ -36,7 +36,7 @@
 
 .msu-track-row__file {
   flex: 0 0 auto;
-  max-width: var(--size-192);
+  max-width: calc(12 * var(--text-base));
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -51,8 +51,8 @@
 
 .msu-track-row__select {
   flex: 0 0 auto;
-  min-width: var(--size-192);
-  max-width: var(--size-288);
+  min-width: calc(12 * var(--text-base));
+  max-width: calc(18 * var(--text-base));
 }
 
 .msu-track-row__actions {
@@ -64,7 +64,7 @@
 
 .msu-sound-row {
   align-items: flex-start;
-  min-height: calc(36 * var(--size-1));
+  min-height: calc(2.25 * var(--text-base));
 }
 
 .msu-sound-row--open {
@@ -96,7 +96,7 @@
 
 .msu-sound-row__channel {
   flex: 0 0 auto;
-  width: calc(44 * var(--size-1));
+  width: calc(2.75 * var(--text-base));
   font-family: var(--font-mono);
   font-size: var(--text-xs);
   color: var(--c-primary);

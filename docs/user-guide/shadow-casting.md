@@ -25,7 +25,7 @@ Opened from the title bar (dev), it lets you author the per-screen data:
 - **Undo/redo:** 20-level history.
 
 Projects are stored per screen and saved through the Electron `shadow-casting` IPC domain; editor
-state lives in `stores/shadow-editor-store.ts`. Runtime loads each screen's heightmap + lighting and
+state lives in `apps/desktop/src/stores/shadow-editor-store`. Runtime loads each screen's heightmap + lighting and
 renders the overlay.
 
 > Heavier than the other enhancements. Leave it off if you want pixel-pure output. See

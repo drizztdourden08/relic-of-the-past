@@ -21,7 +21,8 @@ const registerMsuResumeHandlers = (): void => {
     try { return JSON.parse(text) as MsuResumeState; } catch { return null; }
   });
 
-  handle('msu:writeResume', async (_event, ...[profileId, kind, id, state]) => {
+  handle('msu:writeResume', async (_event, write) => {
+    const { profileId, kind, id, state } = write;
     const path = resumeFile(profileId, kind, id);
     await mkdir(dirname(path), { recursive: true });
     await writeFile(path, `${JSON.stringify(state, null, 2)}\n`, 'utf-8');

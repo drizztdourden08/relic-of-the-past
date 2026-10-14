@@ -94,10 +94,10 @@ describe('quiet receipts on', () => {
   });
 
   it('quiets a local seed\'s delivery, never a cheat grant or another item', () => {
-    deliverItem(BOMBS_3, 'Bombs (3)', 'randomizer', 5);
+    deliverItem({ itemId: BOMBS_3, message: 'Bombs (3)', source: 'randomizer', messageId: 5 });
     step(40);
     expect(callsOf('WasmGrantQuietReceipt')).toEqual([[BOMBS_3]]);
-    deliverItem(RUPEES_20, 'Rupees (20)', 'cheat');
+    deliverItem({ itemId: RUPEES_20, message: 'Rupees (20)', source: 'cheat' });
     deliverServerItem('Bow', 'Zelda', () => undefined);
     expect(deliveryQueue.getState().pending.map((entry) => entry.action.type)).toEqual(['give_item', 'give_item']);
   });

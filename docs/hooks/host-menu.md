@@ -6,7 +6,7 @@ menu module underneath. The native browse state is held in place, so the rendere
 its own screen over it and hand the results back through six exports.
 
 **Source:** `core/game-hooks/host_menu.c`, `core/game-hooks/host_menu_gear.c` ·
-**Bridge:** `lib/game/host-menu.ts`, `lib/game/gear-ownership.ts`
+**Bridge:** `packages/game-core/src/host-menu`, `apps/desktop/src/game/gear-ownership`
 
 ## The two gates
 
@@ -56,9 +56,9 @@ which ammunition is nocked must not do.
 `0` is left alone in both directions: a save holding no launcher is refused (the call returns without
 writing, and without the HUD update the tail would otherwise queue), and no type ever writes a `0`.
 Granting the launcher is a pickup, not a menu row. The host's own ladder has two rungs for the same
-reason (see `packages/game-data/src/logic/pause/gear-tiers.ts`).
+reason (see `packages/game-data/src/logic/pause/gear-tiers.constants.ts`).
 
-Ownership is host-side: `lib/game/gear-ownership.ts` keeps a high-water mark per ladder per profile,
+Ownership is host-side: `apps/desktop/src/game/gear-ownership` keeps a high-water mark per ladder per profile,
 and the arrow row's mark is the highest **type** ever observed, not the raw register, whose other
 half moves with every shot.
 

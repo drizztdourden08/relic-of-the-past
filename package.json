@@ -16,6 +16,11 @@
   "engines": {
     "node": ">=24"
   },
+  "exports": {
+    "./parallel/paths": "./scripts/parallel/paths.mjs",
+    "./parallel/provision-profile": "./scripts/parallel/provision-profile.mjs",
+    "./package.json": "./package.json"
+  },
   "config": {
     "emsdk": "5.0.7"
   },

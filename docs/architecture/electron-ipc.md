@@ -32,9 +32,9 @@ only its own channels.
 - `APP_CHANNELS` (`apps/desktop/src/ipc/contract.constants.ts`, built with Brock's
   `defineChannels`) is the only table linking a friendly `window.api` method name to its
   channel; `APP_INVOKE_MAP`, `APP_SEND_MAP` and `APP_EVENT_MAP` are its three halves.
-  `AppApi` (the `window.api` type, in `apps/desktop/src/ipc/app-api.type.ts`) is derived from
-  Brock's base maps plus these, so a method's signature is never hand-written twice. Renderer
-  code reaches it through `appApi()` (`apps/desktop/src/ipc/app-api.ts`).
+  `RotpNamespaces` (the `window.api` type, in `apps/desktop/src/ipc/namespaces.type.ts`) is
+  derived from these maps with Brock's `ChannelApi`, so a method's signature is never
+  hand-written twice. Renderer code calls `window.api` directly.
 - Typed wrappers cover both sides. Main uses `handle`/`emit` from
   `@drizztdourden08/brock-electron/main`; the preload (`apps/desktop/electron/preload.ts`)
   calls `createPreloadBridge` from `@drizztdourden08/brock-electron/preload` with the composed

@@ -9,5 +9,5 @@ export type {
 export type { HubInvokeContract, HubMe } from './hub-contract.type';
 export type { StoreInvokeContract, StoreResult, StoreDuplicateResult } from './store-contract.type';
 export type {
-  DetectionContext, DraftRecommendation, PassResult, Recommendation,
+  DetectionContext, DraftRecommendation, PassResult, Recommendation, RecommendationPassRequest,
 } from './recommendation-contract.type';

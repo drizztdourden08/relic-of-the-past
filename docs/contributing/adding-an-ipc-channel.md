@@ -38,7 +38,7 @@ and extend `InvokeContract` with it. This is the single source of truth for the 
 
 Add one entry to `APP_CHANNELS`, the only place the link between a method and its channel
 is written. The `invoke<...>()` helper ties the entry to the contract, so a typo'd channel
-does not compile. `AppApi` (the `window.api` type, in `apps/desktop/src/ipc/app-api.type.ts`)
+does not compile. `RotpNamespaces` (the `window.api` type, in `apps/desktop/src/ipc/namespaces.type.ts`)
 and the preload method are derived automatically.
 
 ```ts
@@ -72,7 +72,7 @@ const fooHandlers: HandlerGroup = { id: 'foo', register: () => registerFooHandle
 export { fooHandlers };
 ```
 
-`brock sync` picks up every file in `electron/handlers/` and writes the generated
+`brock sync` picks up every file in `apps/desktop/electron/handlers/` and writes the generated
 `apps/desktop/.brock/handlers.main.ts`. Name the file `foo-handlers.dev.ts` for a dev-only tool.
 
 ### 4. Preload usually needs nothing
@@ -82,7 +82,7 @@ Flat methods are generated from the maps by `createPreloadBridge` in
 are wired by hand in `apps/desktop/electron/preload-namespaces/`, so add there with the
 typed `invoke` if your channel belongs to one.
 
-Call it from the renderer as `appApi().getFoo(id)` (`apps/desktop/src/ipc/app-api.ts`). The
+Call it from the renderer as `window.api.getFoo(id)`. The
 types come through.
 
 ## Events (`emit` / `subscribe`)

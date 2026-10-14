@@ -12,8 +12,8 @@
 
 .hud-ref-field__thumb {
   flex-shrink: 0;
-  width: var(--size-32);
-  height: var(--size-32);
+  width: var(--hud-ref-thumb-size);
+  height: var(--hud-ref-thumb-size);
 }
 
 .hud-ref-field__thumb .image__img {
@@ -22,8 +22,8 @@
 }
 
 .hud-ref-field--compact .hud-ref-field__thumb {
-  width: var(--size-20);
-  height: var(--size-20);
+  width: var(--hud-ref-thumb-size-compact);
+  height: var(--hud-ref-thumb-size-compact);
 }
 
 .hud-ref-field__name {

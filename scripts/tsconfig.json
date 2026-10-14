@@ -1,0 +1,4 @@
+{
+  "extends": "@drizztdourden08/brock-lint-config/tsconfig/node.json",
+  "include": ["tests", "*.d.mts"]
+}

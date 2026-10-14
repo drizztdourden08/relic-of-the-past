@@ -60,27 +60,35 @@ const enqueueAction = (action: QueuedAction, resolve: () => void): void => {
   switch (action.type) {
     case 'chest': {
       const itemId = resolveDuplicate(action.itemId, getCurrentInventory());
-      enqueue(itemLabel(itemId), SOURCE,
-        { type: 'trigger_check', roomId: action.roomId, chestIndex: action.chestIndex, itemId },
-        resolve);
+      enqueue({
+        message: itemLabel(itemId), source: SOURCE,
+        action: { type: 'trigger_check', roomId: action.roomId, chestIndex: action.chestIndex, itemId },
+        onComplete: resolve,
+      });
       return;
     }
     case 'npc':
-      enqueue(itemLabel(action.itemId), SOURCE,
-        { type: 'trigger_npc_check', flagType: action.flagType, flagMask: action.flagMask, itemId: action.itemId, spriteType: NO_SPRITE, postGfx: 0 },
-        resolve);
+      enqueue({
+        message: itemLabel(action.itemId), source: SOURCE,
+        action: { type: 'trigger_npc_check', flagType: action.flagType, flagMask: action.flagMask, itemId: action.itemId, spriteType: NO_SPRITE, postGfx: 0 },
+        onComplete: resolve,
+      });
       return;
     case 'overworld':
-      enqueue(itemLabel(action.itemId), SOURCE,
-        { type: 'custom', execute: () => wasmTriggerOverworldCheck(action.screen, action.mask, action.itemId) },
-        resolve);
+      enqueue({
+        message: itemLabel(action.itemId), source: SOURCE,
+        action: { type: 'custom', execute: () => wasmTriggerOverworldCheck(action.screen, action.mask, action.itemId) },
+        onComplete: resolve,
+      });
       return;
     case 'boss':
-      enqueue(`boss room 0x${action.roomId.toString(16)}`, SOURCE,
-        { type: 'trigger_check', roomId: action.roomId, chestIndex: 0, itemId: action.itemId },
-        action.prizeId ? undefined : resolve);
+      enqueue({
+        message: `boss room 0x${action.roomId.toString(16)}`, source: SOURCE,
+        action: { type: 'trigger_check', roomId: action.roomId, chestIndex: 0, itemId: action.itemId },
+        onComplete: action.prizeId ? undefined : resolve,
+      });
       if (action.prizeId) {
-        enqueue(itemLabel(action.prizeId), SOURCE, { type: 'give_item', itemId: action.prizeId }, resolve);
+        enqueue({ message: itemLabel(action.prizeId), source: SOURCE, action: { type: 'give_item', itemId: action.prizeId }, onComplete: resolve });
       }
   }
 };

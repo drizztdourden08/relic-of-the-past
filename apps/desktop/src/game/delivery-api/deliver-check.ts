@@ -8,7 +8,7 @@ import type { DeliverCheckParams } from './deliver-check.type';
 const deliverCheck = (params: DeliverCheckParams): string | null => {
   const { roomId, chestIndex, itemId, message, source = 'randomizer' } = params;
   if (!isGrantable(itemId) || !isCoreReady()) return null;
-  return enqueue(message ?? itemLabel(itemId), source, { type: 'trigger_check', roomId, chestIndex, itemId });
+  return enqueue({ message: message ?? itemLabel(itemId), source, action: { type: 'trigger_check', roomId, chestIndex, itemId } });
 };
 
 export { deliverCheck };

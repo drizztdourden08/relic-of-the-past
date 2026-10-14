@@ -6,13 +6,13 @@ import type { ScreenAnnotations } from '@rotp/navigation';
 interface PathTile { row: number; col: number; attr: number; }
 interface FallHoleSpawn { gridRow: number; gridCol: number; entranceId: number; }
 type NavMode = 'manual' | 'auto';
-type SetDataArgs = [
-  result: FloodFillResult,
-  connections: ConnectionInfo[],
-  results?: FloodFillResult[],
-  fallHoleSpawns?: FallHoleSpawn[],
-  respawnEntIds?: Set<number>,
-];
+interface SetDataParams {
+  result: FloodFillResult;
+  connections: ConnectionInfo[];
+  results?: FloodFillResult[];
+  fallHoleSpawns?: FallHoleSpawn[];
+  respawnEntIds?: Set<number>;
+}
 
 interface NavigationOverlayState {
   visible: boolean;
@@ -31,7 +31,7 @@ interface NavigationOverlayState {
   setVisible: (visible: boolean) => void;
   setMode: (mode: NavMode) => void;
   setScreenBundle: (bundle: ScreenBundleGrid | null) => void;
-  setData: (...args: SetDataArgs) => void;
+  setData: (params: SetDataParams) => void;
   setAnnotations: (annotations: ScreenAnnotations[]) => void;
   setCrossings: (crossings: ScreenCrossings[]) => void;
   toggleKind: (kind: string) => void;
@@ -40,4 +40,4 @@ interface NavigationOverlayState {
   clear: () => void;
 }
 
-export type { FallHoleSpawn, NavigationOverlayState, NavMode, PathTile, SetDataArgs };
+export type { FallHoleSpawn, NavigationOverlayState, NavMode, PathTile, SetDataParams };

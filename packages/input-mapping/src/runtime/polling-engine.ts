@@ -3,10 +3,9 @@ import type { SnesButton } from '@rotp/game-data';
 import { SNES_BUTTON_BITS } from '@rotp/game-data';
 import { resolveAxisPressThreshold } from './axis-press-threshold';
 import { axisPressed } from './axis-pressed';
-import type { AllowedDevices } from './profile-devices';
 import { scopedEntries } from './device-scoped-map';
 import type { DeviceScopedMap } from './device-scoped-map';
-import type { GamepadMaps, HidDeviceState } from './polling-engine.type';
+import type { BitmaskSources, GamepadMaps, HidDeviceState } from './polling-engine.type';
 
 const buttonMask = (deviceKey: string, buttons: readonly boolean[], map: DeviceScopedMap<number, SnesButton>): number => {
   let mask = 0;
@@ -47,7 +46,8 @@ const keyboardMask = (keyStates: Map<string, boolean>, keyboardMap: Map<string, 
   return mask;
 };
 
-const computeBitmask = (keyStates: Map<string, boolean>, keyboardMap: Map<string, SnesButton>, gamepadButtonMap: DeviceScopedMap<number, SnesButton>, gamepadAxisMap: DeviceScopedMap<string, SnesButton>, hidStates: Map<string, HidDeviceState>, allowed: AllowedDevices): number => {
+const computeBitmask = (sources: BitmaskSources): number => {
+  const { keyStates, keyboardMap, gamepadButtonMap, gamepadAxisMap, hidStates, allowed } = sources;
   let mask = allowed.keyboard ? keyboardMask(keyStates, keyboardMap) : 0;
 
   for (const [deviceKey, state] of hidStates) {
