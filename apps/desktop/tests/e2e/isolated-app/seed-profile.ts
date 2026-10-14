@@ -11,8 +11,6 @@ const writeJson = (path: string, data: unknown): void => {
   writeFileSync(path, `${JSON.stringify(data, null, 2)}\n`, 'utf8');
 };
 
-// Everything the app reads lives under <userData>/Data. The ROM and the asset blob are copied in from the worktree's
-// own provisioned data (or test-roms/); the real %APPDATA% is never read or written.
 const seedProfile = (userData: string, seed: ProfileSeed): { fixtures: number } => {
   const rom = findRom();
   if (!rom) throw new Error('no ROM found in .user-data/Data/roms or test-roms/, so the app has nothing to boot');
@@ -28,7 +26,7 @@ const seedProfile = (userData: string, seed: ProfileSeed): { fixtures: number } 
     copyFileSync(blob, join(data, 'assets', assetBlobName(rom)));
   }
 
-  const keyboard = keyboardInputProfile(now, seed.modernSlots);
+  const keyboard = keyboardInputProfile(now, seed.storedSlots);
   writeJson(join(profileDir, 'profile.json'), {
     id: seed.instance,
     name: seed.name ?? seed.instance,

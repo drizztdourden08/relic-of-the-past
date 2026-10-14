@@ -1,16 +1,16 @@
 /* @layer tests @kind helper */
+// eslint-disable-next-line local/no-cross-package-relative
 import { KEYBOARD_DEFAULT } from '../../../../../packages/input-mapping/src/keyboard-default';
-import type { ModernSlotSeed } from './isolated-app.type';
+import type { StoredSlotSeed } from './isolated-app.type';
 
-const modernSlotOf = ({ index, code, label }: ModernSlotSeed) => ({
+const modernSlotOf = ({ index, code, label }: StoredSlotSeed) => ({
   index,
   binding: { type: 'keyboard', code, label },
   label,
   icon: null,
 });
 
-// Without an input profile the app receives no key events at all, so every seeded profile carries the keyboard default.
-const keyboardInputProfile = (now: number, modernSlots?: readonly ModernSlotSeed[]) => ({
+const keyboardInputProfile = (now: number, storedSlots?: readonly StoredSlotSeed[]) => ({
   id: KEYBOARD_DEFAULT.id,
   name: KEYBOARD_DEFAULT.name,
   deviceType: 'keyboard',
@@ -20,7 +20,7 @@ const keyboardInputProfile = (now: number, modernSlots?: readonly ModernSlotSeed
   assignedDevice: null,
   createdAt: now,
   modifiedAt: now,
-  ...(modernSlots ? { modern: { slots: modernSlots.map(modernSlotOf) } } : {}),
+  ...(storedSlots ? { modern: { slots: storedSlots.map(modernSlotOf) } } : {}),
 });
 
 export { keyboardInputProfile };

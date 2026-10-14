@@ -7,7 +7,6 @@ const isRom = (file: string): boolean => ROM_EXTENSIONS.includes(extname(file).t
 
 const romsIn = (dir: string): string[] => (existsSync(dir) ? readdirSync(dir).filter(isRom).map((file) => join(dir, file)) : []);
 
-// Prefer the "(USA)" image: it is the one the asset extractor validates.
 const byUsaFirst = (a: string, b: string): number => Number(/\(USA\)/i.test(b)) - Number(/\(USA\)/i.test(a));
 
 const findRom = (): string | null => {

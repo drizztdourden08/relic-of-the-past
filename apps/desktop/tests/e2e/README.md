@@ -52,17 +52,20 @@ Two things about them are worth knowing before editing:
 
 ## Running them
 
-They drive the built Electron app, so build first:
+Kept specs run through the rotp CLI and nowhere else. The verb builds the app when the
+build is stale, runs the worktree's own Playwright with the headless rules pinned, and
+prints a one-line summary with the report path:
 
 ```bash
-pnpm --filter ./apps/desktop build
+rotp worktree e2e <name>                    # every kept spec
+rotp worktree e2e <name> flood-parity       # only specs whose path matches
+rotp worktree e2e <name> --list             # list them, launch nothing
 ```
 
-```bash
-npx playwright test apps/desktop/tests/e2e
-```
-
-Each spec launches the app with `--no-focus --muted` so it never steals focus.
+Each spec launches the app with `--no-focus --muted` so it never steals focus. The harness
+refuses to launch without `ROTP_E2E_VIA_CLI=1`, which only the verb sets, so a bare
+`playwright test` stops at the first launch instead of opening a window beside the
+owner's session.
 
 ## Adding one
 

@@ -14,8 +14,6 @@ const readFixtureManifest = (): FixtureEntry[] => {
   return existsSync(manifest) ? JSON.parse(readFileSync(manifest, 'utf8')) as FixtureEntry[] : [];
 };
 
-// Writes the profile's manual saves from the fixtures as id-keyed files. The profile is brand new, so nothing stale
-// exists to skip and the manifest is written whole. A fixture whose .sav is absent (private vault) is left out.
 const seedFixtureSaves = (profileDir: string, only?: readonly string[]): number => {
   const wanted = readFixtureManifest()
     .filter((entry) => !only || only.includes(entry.name))

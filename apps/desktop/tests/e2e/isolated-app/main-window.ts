@@ -6,8 +6,6 @@ const isMainWindow = (page: Page): boolean => !page.isClosed() && page.url() !==
 
 const pause = (ms: number): Promise<void> => new Promise((done) => { setTimeout(done, ms); });
 
-// The app opens a splash window first and closes it when the main window is ready, so `firstWindow()` can hand back a
-// page that is about to disappear. Every spec takes its page from here instead.
 const waitForMainWindow = async (app: ElectronApplication, timeoutMs = MAIN_WINDOW_TIMEOUT_MS): Promise<Page> => {
   const deadline = Date.now() + timeoutMs;
   while (Date.now() < deadline) {

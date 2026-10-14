@@ -4,46 +4,15 @@ import { join } from 'path';
 import { existsSync, mkdirSync } from 'fs';
 import type { Page } from 'playwright';
 import { MAIN_JS, launchApp } from './isolated-app';
+import { MODERN_PROFILE, PLAIN_PROFILE } from './hud-style/hud-style-profiles';
+import { STYLE_ROW, STYLE_SEGMENTS, assignedSlots, labelsWhere, styleSegments } from './hud-style/hud-style-readers';
 import type { ProfileSeed } from './isolated-app';
 import { REPO_ROOT } from '../repo-root';
 
-const PROJECT_ROOT = REPO_ROOT;
-const SHOTS = join(PROJECT_ROOT, 'tests', 'screenshots', 'hud-style');
+const SHOTS = join(REPO_ROOT, 'tests', 'screenshots', 'hud-style');
 
-const STYLE_ROW = '[data-setting-key="hudStyle"]';
-const STYLE_SEGMENTS = `${STYLE_ROW} .segmented__btn`;
 const MAP_ROW = '[data-setting-key="mapOnSelect"]';
 const TOGGLE_TRAVEL_MS = 400;
-
-// A profile written the way a player's own profile is: no automation mark, so the hub lists it and the spec opens it.
-const PLAIN_PROFILE: ProfileSeed = { instance: 'hud-style-spec', name: 'visual-test', fixtures: [] };
-
-// The stored shape of a profile saved before the HUD style absorbed the control scheme: the old `extended` style
-// spelling, `controlScheme: 'modern'`, and four assignments on keyboard slots S, D, W and E.
-const MODERN_PROFILE: ProfileSeed = {
-  instance: 'hud-style-spec-mc',
-  name: 'agent/modern-controls',
-  fixtures: [],
-  config: {
-    hudStyle: 'extended',
-    controlScheme: 'modern',
-    mapOnSelect: false,
-    modernScheme: {
-      assignments: {
-        1: { kind: 'sword' },
-        2: { kind: 'action' },
-        3: { kind: 'item', hudItem: 1 },
-        4: { kind: 'item', hudItem: 2 },
-      },
-    },
-  },
-  modernSlots: [
-    { index: 1, code: 'KeyS', label: 'S' },
-    { index: 2, code: 'KeyD', label: 'D' },
-    { index: 3, code: 'KeyW', label: 'W' },
-    { index: 4, code: 'KeyE', label: 'E' },
-  ],
-};
 
 interface Hub {
   close: () => Promise<void>;
@@ -93,25 +62,6 @@ const shootSlots = async (page: Page, name: string): Promise<void> => {
     },
   });
 };
-
-const styleSegments = (page: Page) => page.$$eval(STYLE_SEGMENTS, (els) => els.map((el) => ({
-  label: el.textContent.trim(),
-  disabled: (el as HTMLButtonElement).disabled,
-  checked: el.getAttribute('aria-checked') === 'true',
-})));
-
-const assignedSlots = (page: Page) => page.$$eval('.slot-row', (rows) => rows
-  .map((row) => ({
-    what: (row.querySelector('.binding-row__snes-label')?.textContent ?? '').trim(),
-    on: (row.querySelector('.binding-row__binding-label')?.textContent ?? '').trim(),
-  }))
-  .filter((slot) => slot.what !== 'Unassigned')
-  .map((slot) => `${slot.what} on ${slot.on}`));
-
-const labelsWhere = (page: Page, selector: string, attribute: string) =>
-  page.$$eval(selector, (els, attr) => els
-    .filter((el) => el.getAttribute(attr) === 'true')
-    .map((el) => el.textContent.trim()), attribute);
 
 const checkOriginalStyle = async ({ page, tab, shoot }: Hub): Promise<void> => {
   await tab('HUD');
