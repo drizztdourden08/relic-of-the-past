@@ -1,6 +1,5 @@
 /* @layer root-config @kind config */
 import { defineWorkspace, electronTarget, brockProfile } from '@drizztdourden08/brock-thread';
-import { plugin as snesPlugin } from '@drizztdourden08/brock-plugin-snes';
 
 export default defineWorkspace({
   name: 'rotp',
@@ -9,7 +8,7 @@ export default defineWorkspace({
     app: electronTarget({ app: 'apps/desktop' }),
   },
   provision: [brockProfile()],
-  plugins: [snesPlugin],
+  plugins: ['@drizztdourden08/brock-plugin-snes'],
   snes: {
     wasm: {
       output: 'apps/desktop/public/wasm',

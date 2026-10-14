@@ -41,16 +41,16 @@
     "@capacitor/filesystem": "catalog:",
     "@capacitor/haptics": "catalog:",
     "@capawesome/capacitor-file-picker": "catalog:",
-    "@drizztdourden08/brock-catalog": "^0.38.0",
-    "@drizztdourden08/brock-core": "^0.38.0",
-    "@drizztdourden08/brock-display": "^0.38.0",
-    "@drizztdourden08/brock-electron": "^0.38.0",
-    "@drizztdourden08/brock-input": "^0.38.0",
-    "@drizztdourden08/brock-port-kit": "^0.38.0",
-    "@drizztdourden08/brock-react": "^0.38.0",
-    "@drizztdourden08/brock-secrets": "^0.38.0",
-    "@drizztdourden08/brock-tools": "^0.38.0",
-    "@drizztdourden08/brock-updater": "^0.38.0",
+    "@drizztdourden08/brock-catalog": "^0.39.0",
+    "@drizztdourden08/brock-core": "^0.39.0",
+    "@drizztdourden08/brock-display": "^0.39.0",
+    "@drizztdourden08/brock-electron": "^0.39.0",
+    "@drizztdourden08/brock-input": "^0.39.0",
+    "@drizztdourden08/brock-port-kit": "^0.39.0",
+    "@drizztdourden08/brock-react": "^0.39.0",
+    "@drizztdourden08/brock-secrets": "^0.39.0",
+    "@drizztdourden08/brock-tools": "^0.39.0",
+    "@drizztdourden08/brock-updater": "^0.39.0",
     "@drizztdourden08/tessera": "catalog:",
     "@electron-toolkit/utils": "catalog:",
     "@iconify-icons/game-icons": "^1.2.1",
@@ -123,8 +123,8 @@
     "vite-plugin-node-polyfills": "^0.28.0"
   },
   "brock": {
-    "version": "0.38.0",
-    "tessera": "0.31.0"
+    "version": "0.39.0",
+    "tessera": "0.32.0"
   },
   "portKit": {
     "wasm": {

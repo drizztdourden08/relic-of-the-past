@@ -5,6 +5,7 @@
       "node",
       "vite/client"
     ],
+    "allowImportingTsExtensions": true,
     "paths": {
       "@app/*": [
         "./src/*"
