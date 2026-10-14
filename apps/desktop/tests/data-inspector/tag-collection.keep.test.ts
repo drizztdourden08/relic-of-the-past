@@ -1,7 +1,7 @@
 /* @layer tests @kind test */
 import { it, expect } from 'vitest';
 import { all } from '@rotp/game-data';
-import { COLLECTION_SOURCES } from '@app/views/DataInspector/behavior/collection-sources';
+import { COLLECTION_SOURCES } from '@app/data-inspector/collection-sources';
 import {
   ENTITY_KINDS, KIND_NAV_ITEMS,
 } from '@app/views/DataInspector/DataInspector.constants';

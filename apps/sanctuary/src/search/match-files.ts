@@ -13,7 +13,7 @@ const searchableText = (file: SanctuaryFile): (string | null)[] => [
 ];
 
 const fileMatches = (file: SanctuaryFile, query: string): boolean =>
-  searchableText(file).some((text) => text !== null && text.toLowerCase().includes(query));
+  searchableText(file).some((text) => text?.toLowerCase().includes(query) === true);
 
 const matchFiles = (files: readonly SanctuaryFile[], query: string): FileMatchGroup[] =>
   FILE_TYPES.flatMap((type) => {

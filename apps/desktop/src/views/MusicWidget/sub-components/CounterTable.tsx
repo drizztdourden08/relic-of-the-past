@@ -18,7 +18,7 @@ const CounterTable = (props: { counters: MusicDebugCounter[] }) => {
   return (
     <Box className="music-widget__rows music-widget__rows--scroll">
       {counters.map((row) => (
-        <StatRow key={row.key} label={`${row.channel} · ${row.label}`} value={splitOf(row)} mono />
+        <StatRow key={row.key} className="music-widget__row" label={`${row.channel} · ${row.label}`} value={splitOf(row)} mono />
       ))}
     </Box>
   );

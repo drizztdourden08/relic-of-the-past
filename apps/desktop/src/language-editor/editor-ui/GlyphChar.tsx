@@ -1,9 +1,9 @@
 /* @layer renderer-components @kind component */
 import { Box, Canvas, Text } from '@drizztdourden08/tessera/primitives';
 import { widthOf } from '@rotp/languages';
-import { isMergedSecond, mergedSecondOf } from '../editor/merged-glyph';
-import { pictureGlyphIndex } from './glyph-index';
-import { CELL_W, useGlyphCanvas } from '@rotp/design/packs';
+import { isMergedSecond } from '../editor/merged-glyph';
+import { useGlyphPair } from './behavior/useGlyphPair';
+import { CELL_W } from '@rotp/design/packs';
 import type { CSSProperties } from 'react';
 import type { GlyphMetrics } from '@rotp/languages';
 import type { GlyphCharProps } from './GlyphChar.type';
@@ -22,13 +22,8 @@ const advanceStyle = (
 };
 
 const GlyphChar = (props: GlyphCharProps) => {
-  const { name, sheet, metrics } = props;
-
-  const second = mergedSecondOf(name);
-  const glyph = pictureGlyphIndex(name, metrics);
-  const secondGlyph = second === null ? null : pictureGlyphIndex(second, metrics);
-  const firstRef = useGlyphCanvas(sheet?.tiles ?? null, glyph);
-  const secondRef = useGlyphCanvas(sheet?.tiles ?? null, secondGlyph);
+  const { name, metrics } = props;
+  const { glyph, secondGlyph, firstRef, secondRef } = useGlyphPair(props);
 
   if (isMergedSecond(name)) return null;
 

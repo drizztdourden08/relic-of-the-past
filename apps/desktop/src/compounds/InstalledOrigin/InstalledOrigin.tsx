@@ -1,16 +1,15 @@
 /* @layer renderer-components @kind component */
 import { useCallback, useState } from 'react';
 import { Icon as IconifyIcon } from '@iconify/react/offline';
-import copyIcon from '@iconify-icons/lucide/copy';
 import externalLinkIcon from '@iconify-icons/lucide/external-link';
-import refreshIcon from '@iconify-icons/lucide/refresh-cw';
-import trashIcon from '@iconify-icons/lucide/trash-2';
 import { Box, Button, Card, Flex, Text } from '@drizztdourden08/tessera/primitives';
 import { Dialog } from '@drizztdourden08/tessera/composites';
 import { licenseById } from '@rotp/hub-contracts';
 import { HookshopChip } from '../HookshopChip';
 import { READ_ONLY_NOTE, uninstallMessage, uninstallTitle } from './InstalledOrigin.constants';
 import type { InstalledOriginProps } from './InstalledOrigin.type';
+import { OriginActions } from './sub-components/OriginActions';
+import { OriginFacts } from './sub-components/OriginFacts';
 import './InstalledOrigin.css';
 
 const InstalledOrigin = (props: InstalledOriginProps) => {
@@ -39,37 +38,16 @@ const InstalledOrigin = (props: InstalledOriginProps) => {
         </Button>
       </Flex>
 
-      <Flex align="center" gap="sm" wrap className="installed-origin__facts">
-        <Text as="span">{`by ${origin.author.displayName}`}</Text>
-        <Text as="span">·</Text>
-        <Text as="span">{`v${semver}`}</Text>
-        <Text as="span">·</Text>
-        <Text as="span">{license}</Text>
-        {updateTo !== null && <Text as="span">·</Text>}
-        {updateTo !== null && <Text as="span" className="installed-origin__update">{`v${updateTo} available`}</Text>}
-      </Flex>
+      <OriginFacts author={origin.author.displayName} semver={semver} license={license} updateTo={updateTo} />
 
-      <Flex align="center" gap="sm" wrap>
-        <Button
-          variant="secondary"
-          size="sm"
-          icon={<IconifyIcon icon={copyIcon} />}
-          disabled={busy || copyRefusal !== null}
-          onClick={onDuplicate}
-        >
-          Duplicate to edit
-        </Button>
-        {copyRefusal !== null && <Text as="span" className="installed-origin__refusal">{copyRefusal}</Text>}
-        {updateTo !== null && (
-          <Button variant="primary" size="sm" icon={<IconifyIcon icon={refreshIcon} />} disabled={busy} onClick={onUpdate}>
-            {`Update to v${updateTo}`}
-          </Button>
-        )}
-        <Box className="installed-origin__spacer" />
-        <Button variant="danger" size="sm" icon={<IconifyIcon icon={trashIcon} />} disabled={busy} onClick={askUninstall}>
-          Uninstall
-        </Button>
-      </Flex>
+      <OriginActions
+        busy={busy}
+        copyRefusal={copyRefusal}
+        updateTo={updateTo}
+        onDuplicate={onDuplicate}
+        onUpdate={onUpdate}
+        onAskUninstall={askUninstall}
+      />
 
       <Text as="p" variant="caption" className="installed-origin__note">{READ_ONLY_NOTE}</Text>
       {error !== null && <Text as="p" className="installed-origin__error">{error}</Text>}

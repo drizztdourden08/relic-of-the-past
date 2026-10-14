@@ -40,22 +40,6 @@
   align-self: stretch;
 }
 
-.featured-hero__dots {
-  margin-left: auto;
-}
-
-.featured-hero .featured-hero__dot {
-  width: var(--hero-dot-d);
-  height: var(--hero-dot-d);
-  padding: 0;
-  border-radius: var(--radius-pill);
-  background: var(--c-text-faint);
-}
-
-.featured-hero .featured-hero__dot[data-on] {
-  background: var(--c-primary);
-}
-
 @media (width <= 820px) {
   .featured-hero {
     grid-template-columns: 1fr;

@@ -2,7 +2,7 @@
 
 
 .cheats-rules {
-  --cheats-rules-tile: calc(var(--space-2xl) * 3);
+  --cheats-rules-tile: var(--size-96);
   --cheats-rules-sprite: var(--space-2xl);
 
   display: flex;
@@ -37,7 +37,7 @@
 .cheats-rules__name {
   font-size: var(--text-xs);
   line-height: var(--leading-tight);
-  letter-spacing: 0.06em;
+  letter-spacing: calc(0.72 * var(--size-1));
   text-transform: uppercase;
   text-align: center;
   color: var(--c-text-dim);
@@ -79,7 +79,7 @@
   padding: var(--space-2xs);
 }
 
-.cheats-rule .cheats-rule__control .checkbox__label {
+.cheats-rule__face {
   display: flex;
   flex-direction: column;
   align-items: center;

@@ -4,7 +4,7 @@ import type { DeviceFamily } from '@rotp/game-data';
 
 const AUTO_PACK_ID = 'auto';
 
-const FAMILY_PACK_IDS: Record<DeviceFamily, string> = {
+const FAMILY_PACK_IDS: Partial<Record<DeviceFamily, string>> = {
   xbox: 'xbox',
   playstation: 'playstation',
   nintendo: 'switch',

@@ -1,4 +1,5 @@
 /* @layer renderer-components @kind types */
+import type { ChangeEvent } from 'react';
 import type { Block, BlockDoc, GlossaryTerm, GlyphMetrics, GlyphSheet, LayoutOptions, RowFit } from '@rotp/languages';
 
 type ChoiceKind = 'Choose' | 'Choose2' | 'Choose3';
@@ -62,6 +63,20 @@ type PreviewViewProps = {
   sheet: GlyphSheet | null;
 };
 
+type PreviewSamplesProps = {
+  nameSample: string;
+  digit: string;
+  onName: (event: ChangeEvent<HTMLInputElement>) => void;
+  onDigit: (event: ChangeEvent<HTMLInputElement>) => void;
+};
+
+type SlotCursorProps = {
+  atCursor: boolean;
+  atOption: boolean;
+  sheet: GlyphSheet | null;
+  metrics: GlyphMetrics | null;
+};
+
 type PreviewControlsParams = {
   atEnd: boolean;
   optionCount: number;
@@ -70,6 +85,6 @@ type PreviewControlsParams = {
 };
 
 export type {
-  ChoiceCursorProps, ChoiceKind, GlyphRowProps, PreviewBoxProps, PreviewChoice, PreviewControlsParams, PreviewPromptProps, PreviewRow, PreviewScreen,
-  PreviewViewProps, ScreenParams,
+  ChoiceCursorProps, ChoiceKind, GlyphRowProps, PreviewBoxProps, PreviewChoice, PreviewControlsParams, PreviewPromptProps, PreviewRow, PreviewSamplesProps, PreviewScreen,
+  PreviewViewProps, ScreenParams, SlotCursorProps,
 };

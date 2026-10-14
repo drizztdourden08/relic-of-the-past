@@ -1,6 +1,7 @@
 /* @layer renderer-components @kind component */
-import { useCallback, useMemo, useState } from 'react';
+import { useCallback, useMemo } from 'react';
 import { Box, Button, EmptyState, SectionHeader, SegmentedControl, TextInput } from '@drizztdourden08/tessera/primitives';
+import { AddTermForm } from './AddTermForm';
 import { VariableRow } from './VariableRow';
 import { countByFilter } from './variable-groups/count-by-filter';
 import { FILTER_ORDER, FILTER_WORDS } from './variables.constants';
@@ -15,35 +16,15 @@ const VariablesTable = (props: VariablesTableProps) => {
     onFilterChange, onQueryChange, onChangeValue, onAddTerm, onRemoveTerm, onFindHardcoded,
   } = props;
 
-  const [draftKey, setDraftKey] = useState('');
-  const [draftValue, setDraftValue] = useState('');
-
   const counts = useMemo(() => countByFilter(variables), [variables]);
   const options = useMemo<SegmentOption<VariableFilter>[]>(
     () => FILTER_ORDER.map((id) => ({ value: id, label: `${FILTER_WORDS[id]} ${counts[id]}` })),
     [counts],
   );
 
-  const canAdd = draftKey.trim().length > 0 && draftValue.trim().length > 0;
-
   const handleQuery = useCallback((event: ChangeEvent<HTMLInputElement>) => {
     onQueryChange(event.currentTarget.value);
   }, [onQueryChange]);
-
-  const handleKey = useCallback((event: ChangeEvent<HTMLInputElement>) => {
-    setDraftKey(event.currentTarget.value);
-  }, []);
-
-  const handleValue = useCallback((event: ChangeEvent<HTMLInputElement>) => {
-    setDraftValue(event.currentTarget.value);
-  }, []);
-
-  const handleAdd = useCallback(() => {
-    if (!canAdd || !onAddTerm) return;
-    onAddTerm({ key: draftKey.trim(), value: draftValue.trim() });
-    setDraftKey('');
-    setDraftValue('');
-  }, [canAdd, draftKey, draftValue, onAddTerm]);
 
   const search = (
     <TextInput value={query} onChange={handleQuery} placeholder="Search variables..." />
@@ -75,23 +56,7 @@ const VariablesTable = (props: VariablesTableProps) => {
         ))}
       </Box>
 
-      {onAddTerm ? (
-        <Box className="variables-table__add">
-          <TextInput
-            className="variables-table__add-key"
-            placeholder="new term key"
-            value={draftKey}
-            onChange={handleKey}
-          />
-          <TextInput
-            className="variables-table__add-value"
-            placeholder="its text"
-            value={draftValue}
-            onChange={handleValue}
-          />
-          <Button variant="secondary" size="sm" disabled={!canAdd} onClick={handleAdd}>Add term</Button>
-        </Box>
-      ) : null}
+      {onAddTerm ? <AddTermForm onAddTerm={onAddTerm} /> : null}
     </Box>
   );
 };

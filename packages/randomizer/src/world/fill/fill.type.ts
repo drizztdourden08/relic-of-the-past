@@ -5,7 +5,7 @@ import type { LocationKey } from '../location-key';
 import type { World } from '../world.type';
 import type { CollectionState } from '../collection-state';
 import type { Rng } from '../../rng';
-import type { OptionValues } from '../options.type';
+import type { OptionValues, RandomizerOptionsSnapshot } from '../options.type';
 import type { AccessibilityMode } from '../accessibility/accessibility.type';
 import type { DungeonItemSetting } from '../dungeon-items/dungeon-item.type';
 import type { CapacityProfile } from '../capacity/capacity-profile.type';
@@ -63,6 +63,15 @@ interface FillRestrictiveInput {
   relaxWhenBeatable?: boolean;
 }
 
+interface SwapRun {
+  world: World;
+  items: ItemKey[];
+  assumedItems: readonly ItemKey[];
+  placedHere: LocationKey[];
+  swapCounts: Map<ItemKey, number>;
+  fits: (state: CollectionState, item: ItemKey, location: LocationKey, checkAccess: boolean) => boolean;
+}
+
 interface AssumedState {
   state: CollectionState;
   collectedLocations: Set<LocationKey>;
@@ -95,6 +104,13 @@ interface RollInput {
   rng: Rng;
 }
 
+interface PlacementAttempt {
+  seed: string;
+  attemptSeed: string;
+  snapshot: RandomizerOptionsSnapshot;
+  attempts: number;
+}
+
 interface DungeonOwnership {
   locationDungeon: Map<LocationKey, string>;
   itemDungeon: Map<ItemKey, string>;
@@ -102,5 +118,5 @@ interface DungeonOwnership {
 
 export type {
   AssumedState, DeliverableLists, DeliverableSets, DungeonOwnership, FillPickers, FillRestrictiveInput,
-  PlacementSphere, PlacementStatsInput, PlacementSweep, RollInput, SnapshotFillFlags,
+  PlacementAttempt, PlacementSphere, PlacementStatsInput, PlacementSweep, RollInput, SnapshotFillFlags, SwapRun,
 };

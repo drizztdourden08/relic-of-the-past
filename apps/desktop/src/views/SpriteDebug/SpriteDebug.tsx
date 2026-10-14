@@ -16,7 +16,7 @@ const SpriteDebug = (props: SpriteDebugProps) => {
   useEffect(() => {
     if (!romFile) { setBaseUrl(''); return; }
     let cancelled = false;
-    getSpritesBaseUrl(romFile).then((u) => { if (!cancelled) setBaseUrl(u); });
+    void getSpritesBaseUrl(romFile).then((u) => { if (!cancelled) setBaseUrl(u); });
     return () => { cancelled = true; };
   }, [romFile]);
 

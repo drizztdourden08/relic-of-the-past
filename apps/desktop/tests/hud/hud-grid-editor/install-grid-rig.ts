@@ -5,8 +5,8 @@ import { createRoot, type Root } from 'react-dom/client';
 import { GridEditor } from '@app/views/HudLayoutEditor/sub-components/GridEditor';
 import { PlatformContext } from '@drizztdourden08/brock-react';
 import type { HudGridContainer } from '@rotp/hud';
-import { PLATFORM } from './grid-editor.constants';
 import { screenRoot } from './screen-root';
+import { WINDOWS_PLATFORM } from '../windows-platform';
 
 const ignore = (): void => {};
 
@@ -20,7 +20,7 @@ const installGridRig = () => {
     const host = document.createElement('div');
     document.body.appendChild(host);
     const root = createRoot(host);
-    act(() => { root.render(h(PlatformContext.Provider, { value: PLATFORM }, node)); });
+    act(() => { root.render(h(PlatformContext.Provider, { value: WINDOWS_PLATFORM }, node)); });
     mounted = { root, host };
   };
 

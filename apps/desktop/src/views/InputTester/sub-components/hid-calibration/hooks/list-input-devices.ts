@@ -2,6 +2,6 @@
 import { inputApi } from '@drizztdourden08/brock-input/renderer';
 import type { DeviceEntry } from '@drizztdourden08/brock-input';
 
-const listInputDevices = (): Promise<DeviceEntry[]> => inputApi()?.list() ?? Promise.resolve([]);
+const listInputDevices = (): Promise<DeviceEntry[]> => inputApi().list();
 
 export { listInputDevices };

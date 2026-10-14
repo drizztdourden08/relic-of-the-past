@@ -1,6 +1,4 @@
 /* @layer renderer-hud @kind types */
-import type { CSSProperties } from 'react';
-
 interface PauseEquipmentPanelProps {
   sword: number;
   shield: number;
@@ -13,7 +11,22 @@ interface PauseEquipmentPanelProps {
   palaceIndex: number;
   scale: number;
   spritesBase: string;
-  style?: CSSProperties;
+  className?: string;
 }
 
-export type { PauseEquipmentPanelProps };
+interface EquipDotsProps {
+  tile: number;
+  spritesBase: string;
+}
+
+interface EquipFooterProps {
+  isInDungeon: boolean;
+  heartPieces: number;
+  hasMap: boolean;
+  hasCompass: boolean;
+  hasBigKey: boolean;
+  scale: number;
+  spritesBase: string;
+}
+
+export type { EquipDotsProps, EquipFooterProps, PauseEquipmentPanelProps };

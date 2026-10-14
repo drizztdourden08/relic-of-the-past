@@ -1,7 +1,8 @@
 /* @layer renderer-components @kind component */
 import { useState } from 'react';
-import { Box, Icon, IconButton, TextInput, NumberInput } from '@drizztdourden08/tessera/primitives';
+import { Box, Icon, IconButton, TextInput } from '@drizztdourden08/tessera/primitives';
 import { useShadowEditorStore } from '../../../../../stores/shadow-editor-store';
+import { HeightLevelRow } from './HeightLevelRow';
 import './HeightLevelEditor.css';
 
 const HeightLevelEditor = () => {
@@ -22,30 +23,7 @@ const HeightLevelEditor = () => {
     <Box className="height-level-editor">
       <Box className="height-level-editor__list">
         {heightLevels.map((level, i) => (
-          <Box key={i} className="height-level-editor__item">
-            <Box
-              className="height-level-editor__swatch"
-              style={{ opacity: level.value }}
-            />
-            <TextInput
-              className="height-level-editor__name"
-              value={level.label}
-              onChange={(e) => updateHeightLevel(i, { label: e.target.value })}
-            />
-            <NumberInput
-              className="height-level-editor__value"
-              value={level.value}
-              min={0}
-              max={1}
-              step={0.05}
-              onChange={(v) => {
-                if (!isNaN(v)) updateHeightLevel(i, { value: Math.min(1, Math.max(0, v)) });
-              }}
-            />
-            <IconButton variant="ghost" tone="danger" size="xs" label="Remove" onClick={() => removeHeightLevel(i)}>
-              <Icon name="x" />
-            </IconButton>
-          </Box>
+          <HeightLevelRow key={i} index={i} label={level.label} value={level.value} onUpdate={updateHeightLevel} onRemove={removeHeightLevel} />
         ))}
       </Box>
       <Box className="height-level-editor__add">

@@ -2,20 +2,16 @@
 import { useEffect, useRef } from 'react';
 import { usePlatform, useProfilesStore, useSettingsStore } from '@drizztdourden08/brock-react';
 import { toast } from '@drizztdourden08/tessera/composites';
-import { DEFAULT_FUNCTION_MAPPINGS } from '@rotp/features';
 import type { GameSettings } from '@rotp/features';
-import { getInputManager, pushLiveSettings, LIVE_SETTINGS } from '@app/game';
-import { ENHANCED_FALLBACK_EVENT, ENHANCED_FALLBACK_MESSAGE, ENHANCED_FALLBACK_TOAST_ID } from '@rotp/game-core';
+import { pushLiveSettings, LIVE_SETTINGS } from '@app/game';
 import { log } from '@app/log-bus';
 import { setHudProfileId } from '@app/hud/active-profile';
-import { syncControlSettings } from '@app/stores/control-scheme-store';
 import { applySettingsSideEffects } from '@app/settings-effects/apply-settings-effects';
 import { RESTART_TOAST_ID } from '@app/settings-effects/settings-effects.constants';
-import { syncHudStore } from '@app/settings-effects/sync-hud-store';
-import { syncDialogStore } from '@app/settings-effects/sync-dialog-store';
-import { syncTitleStore } from '@app/settings-effects/sync-title-store';
 import type { SettingsBridgeDeps } from '@app/settings-effects/settings-effects.type';
 import type { AppSettings } from '@app/settings.type';
+import { pushHydratedSettings } from './push-hydrated-settings';
+import { useSettingsWindowEvents } from './useSettingsWindowEvents';
 
 const announce = (patch: Partial<GameSettings>, isGameRunning: boolean): void => {
   const changedKeys = Object.keys(patch) as (keyof GameSettings)[];
@@ -45,21 +41,7 @@ const useSettingsBridge = (deps: SettingsBridgeDeps): void => {
 
   useEffect(() => {
     if (!hydrated || profileId === null) return;
-    const merged = store.getState().settings;
-    const { callbacks } = depsRef.current;
-    syncHudStore(merged);
-    syncDialogStore(merged);
-    syncTitleStore(merged);
-    syncControlSettings(merged);
-    callbacks.onWindowModeChange?.(merged.windowMode);
-    callbacks.onConstraintSettingsChange?.(merged.viewportConstraint, merged.aspectRatio);
-    callbacks.onMasterVolumeChange?.(merged.masterVolume);
-    callbacks.onDisplayPerfChange?.(merged.displayPerfInTitle);
-    callbacks.onEdgeEffectChange?.(merged.overworldEdgeEffect);
-    callbacks.onShadowCastingChange?.(merged.postProcessingShadows);
-    callbacks.onPixelPerfectChange?.(merged.pixelPerfect);
-    getInputManager().setFunctionMappings(merged.functionMappings ?? DEFAULT_FUNCTION_MAPPINGS);
-    pushLiveSettings(merged);
+    pushHydratedSettings(store.getState().settings, depsRef.current.callbacks);
   }, [hydrated, profileId, store]);
 
   useEffect(() => store.addEffect((patch, next) => {
@@ -90,22 +72,7 @@ const useSettingsBridge = (deps: SettingsBridgeDeps): void => {
     if (masterVolumeOverride != null) store.getState().patch({ masterVolume: masterVolumeOverride.volume });
   }, [masterVolumeOverride?.version, store]);
 
-  useEffect(() => {
-    const onChange = (event: Event) => {
-      const patch = (event as CustomEvent).detail as Partial<AppSettings> | undefined;
-      if (patch) store.getState().patch(patch);
-    };
-    const onFallback = () => {
-      store.getState().patch({ hudStyle: 'vanilla' });
-      toast({ id: ENHANCED_FALLBACK_TOAST_ID, message: ENHANCED_FALLBACK_MESSAGE, variant: 'danger', duration: 0 });
-    };
-    window.addEventListener('settings:change', onChange);
-    window.addEventListener(ENHANCED_FALLBACK_EVENT, onFallback);
-    return () => {
-      window.removeEventListener('settings:change', onChange);
-      window.removeEventListener(ENHANCED_FALLBACK_EVENT, onFallback);
-    };
-  }, [store]);
+  useSettingsWindowEvents(store);
 };
 
 export { useSettingsBridge };

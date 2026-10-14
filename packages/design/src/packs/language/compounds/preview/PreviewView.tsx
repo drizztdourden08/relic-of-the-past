@@ -1,12 +1,12 @@
 /* @layer renderer-components @kind component */
 import { useCallback, useMemo, useState } from 'react';
-import { Box, EmptyState, Text, TextInput } from '@drizztdourden08/tessera/primitives';
-import { MAX_NAME_GLYPHS, ENGINE_SAMPLES, NUMBER_KEY, PLAYER_NAME_KEY } from '@rotp/languages';
+import { Box, EmptyState } from '@drizztdourden08/tessera/primitives';
 import { PreviewBox } from './PreviewBox';
 import { PreviewPrompt } from './PreviewPrompt';
+import { PreviewSamples } from './PreviewSamples';
 import { previewScreens } from './preview-screens';
 import { usePreviewControls } from './behavior/usePreviewControls';
-import type { ChangeEvent } from 'react';
+import { useSampleValues } from './behavior/useSampleValues';
 import { LOADING_MESSAGE, NO_SCREENS_MESSAGE } from './preview.constants';
 import type { PreviewScreen, PreviewViewProps } from './preview.type';
 import './PreviewView.css';
@@ -15,12 +15,6 @@ const cursorRowOf = (screen: PreviewScreen | undefined, selected: number): numbe
   if (!screen?.choice) return null;
   const { rows } = screen.choice;
   return rows[Math.min(selected, rows.length - 1)] ?? null;
-};
-
-const engineSample = (key: string): string => {
-  const sample = ENGINE_SAMPLES[key];
-  if (sample === undefined) throw new Error(`No engine sample for ${key}`);
-  return sample;
 };
 
 const stageLabel = (position: number, total: number, atEnd: boolean, hasChoice: boolean): string => {
@@ -33,10 +27,7 @@ const PreviewView = (props: PreviewViewProps) => {
   const { blocks, terms, metrics, sheet } = props;
 
   const [at, setAt] = useState(0);
-  const [nameSample, setNameSample] = useState<string>(() => engineSample(PLAYER_NAME_KEY));
-  const [digit, setDigit] = useState<string>(() => engineSample(NUMBER_KEY));
-
-  const opts = useMemo(() => ({ nameSample, numberDigit: digit }), [nameSample, digit]);
+  const { opts, nameSample, digit, handleName, handleDigit } = useSampleValues();
 
   const screens = useMemo(
     () => (metrics === null ? [] : previewScreens({ doc: blocks, metrics, terms, opts })),
@@ -54,15 +45,6 @@ const PreviewView = (props: PreviewViewProps) => {
   const { selected, advanceTick, stageRef, handleActivate, handleKeyDown } = usePreviewControls({
     atEnd, optionCount, onAdvance: handleAdvance, onRestart: handleRestart,
   });
-
-  const handleName = useCallback((event: ChangeEvent<HTMLInputElement>) => {
-    setNameSample(event.currentTarget.value.slice(0, MAX_NAME_GLYPHS));
-  }, []);
-
-  const handleDigit = useCallback((event: ChangeEvent<HTMLInputElement>) => {
-    const last = event.currentTarget.value.slice(-1);
-    setDigit(/^\d$/.test(last) ? last : '');
-  }, []);
 
   if (metrics === null) return <EmptyState message={LOADING_MESSAGE} />;
   if (shown === undefined) return <EmptyState message={NO_SCREENS_MESSAGE} />;
@@ -101,25 +83,7 @@ const PreviewView = (props: PreviewViewProps) => {
         />
       </Box>
 
-      <Box className="preview-view__samples">
-        <Text as="span" variant="caption" className="preview-view__samples-title">
-          sample values
-        </Text>
-        <Box className="preview-view__sample">
-          <Text as="span" variant="caption" className="preview-view__sample-label">
-            {`player name (${MAX_NAME_GLYPHS} max)`}
-          </Text>
-          <TextInput value={nameSample} onChange={handleName} />
-        </Box>
-        <Box className="preview-view__sample">
-          <Text as="span" variant="caption" className="preview-view__sample-label">number digit</Text>
-          <TextInput
-            className="preview-view__digit"
-            value={digit}
-            onChange={handleDigit}
-          />
-        </Box>
-      </Box>
+      <PreviewSamples nameSample={nameSample} digit={digit} onName={handleName} onDigit={handleDigit} />
     </Box>
   );
 };

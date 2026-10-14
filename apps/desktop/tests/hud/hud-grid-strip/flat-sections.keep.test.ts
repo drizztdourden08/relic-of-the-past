@@ -54,7 +54,9 @@ describe('three sections, flat on the panel, with nothing boxed', () => {
         .toBe(`${rail} flex lines 2`);
     }
   });
+});
 
+describe('three sections, flat on the panel, with nothing boxed', () => {
   it('leaves no dead space to the right of the gap piece, at any rail', () => {
     for (const rail of RAILS) {
       const m = rig.at(rail, 'sectionGrid');
@@ -100,7 +102,9 @@ describe('three sections, flat on the panel, with nothing boxed', () => {
       }
     }
   });
+});
 
+describe('three sections, flat on the panel, with nothing boxed', () => {
   it('puts the `+` at the very END of each header strip', () => {
     for (const rail of RAILS) {
       const m = rig.at(rail, 'state-none');

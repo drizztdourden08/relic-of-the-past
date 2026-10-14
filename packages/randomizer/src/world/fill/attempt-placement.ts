@@ -10,15 +10,14 @@ import { fillRestrictive } from './fill-restrictive';
 import { placePrizes } from './place-prizes';
 import { sweepPlacementSpheres } from './verify-placement';
 import { verifiedLocationsOf } from './verified-locations-of';
-import type { RandomizerOptionsSnapshot } from '../options.type';
 import type { PondDemandView } from '../pond/pond-ask.type';
-import type { DeliverableSets } from './fill.type';
+import type { DeliverableSets, PlacementAttempt } from './fill.type';
 import type { Placement } from './placement.type';
 
 const attemptPlacement = (
-  seed: string, attemptSeed: string, snapshot: RandomizerOptionsSnapshot, attempts: number,
-  deliverable: Required<DeliverableSets>, pondDemands: PondDemandView,
+  attempt: PlacementAttempt, deliverable: Required<DeliverableSets>, pondDemands: PondDemandView,
 ): Placement => {
+  const { seed, attemptSeed, snapshot, attempts } = attempt;
   const rng = createRng(attemptSeed);
   const fillOptions = fillOptionsFromSnapshot(snapshot, deliverable, {
     pickBottle: (choices) => itemAt(choices, rng.int(choices.length)),

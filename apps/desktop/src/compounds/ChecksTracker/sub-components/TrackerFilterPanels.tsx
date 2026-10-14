@@ -5,6 +5,7 @@ import { GROUP_DIMENSIONS } from '@rotp/game-data';
 import { Box, Button, Card, Icon, IconButton, SegmentedControl, Text, TagPicker } from '@drizztdourden08/tessera/primitives';
 import { CLOSE_PATHS, MAX_DIMENSIONS, TAG_GROUPS, TAG_MODE_OPTIONS } from '../ChecksTracker.constants';
 import type { TrackerFilterPanelsProps } from '../ChecksTracker.type';
+import './TrackerFilterPanels.css';
 
 const TrackerFilterPanels = (props: TrackerFilterPanelsProps) => {
   const {

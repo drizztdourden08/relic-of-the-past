@@ -14,7 +14,7 @@ const choicesAfterRow = (value: RandomizerOptionChoices, key: string, next: Opti
   }
   const field = PLAIN_FIELD_BY_KEY[key];
   if (field === undefined) return value;
-  if (CHOICE_FIELDS.has(field)) return { ...value, [field]: String(next) } as RandomizerOptionChoices;
+  if (CHOICE_FIELDS.has(field)) return { ...value, [field]: String(next) };
   return { ...value, [field]: NUMERIC_FIELDS.has(field) ? Number(next) : Boolean(next) };
 };
 

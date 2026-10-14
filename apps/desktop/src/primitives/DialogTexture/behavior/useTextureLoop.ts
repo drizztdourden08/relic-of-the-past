@@ -16,7 +16,7 @@ const useTextureLoop = (canvasRef: RefObject<HTMLCanvasElement | null>, params: 
     if (!canvas || width <= 0 || height <= 0 || unit <= 0) return;
     const motion: DialogTextureAnimation = reducedMotion() ? 'none' : animation;
     const devicePx = unit * (window.devicePixelRatio || 1);
-    if (startRef.current === null) startRef.current = performance.now();
+    startRef.current ??= performance.now();
     const start = startRef.current;
     const paint = (now: number): void => {
       paintTexture(canvas, {

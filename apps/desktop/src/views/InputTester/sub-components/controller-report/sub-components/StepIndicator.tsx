@@ -2,6 +2,7 @@
 import { Box, Icon, Text } from '@drizztdourden08/tessera/primitives';
 import { stepState } from '../behavior/step-state';
 import type { StepIndicatorProps } from '../controller-report.type';
+import './StepIndicator.css';
 
 const StepIndicator = (props: StepIndicatorProps) => {
   const { labels, current } = props;

@@ -1,6 +1,6 @@
 /* @layer tests @kind test */
 import { it, expect } from 'vitest';
-import { COLLECTION_SOURCES } from '@app/views/DataInspector/behavior/collection-sources';
+import { COLLECTION_SOURCES } from '@app/data-inspector/collection-sources';
 import { ENTITY_KINDS } from '@app/views/DataInspector/DataInspector.constants';
 import { resolveIdRef } from '@app/views/DataInspector/behavior/id-ref-target';
 import { buildSchema, createSchemaIndex } from '@drizztdourden08/tessera/data';

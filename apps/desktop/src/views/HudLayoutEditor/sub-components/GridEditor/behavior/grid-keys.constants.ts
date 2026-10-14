@@ -2,10 +2,10 @@
 import type { ArrowStep } from '../GridEditor.type';
 
 const ARROWS: Readonly<Record<string, ArrowStep>> = {
-  ArrowLeft: { glyph: '←', dx: -1, dy: 0 },
-  ArrowRight: { glyph: '→', dx: 1, dy: 0 },
-  ArrowUp: { glyph: '↑', dx: 0, dy: -1 },
-  ArrowDown: { glyph: '↓', dx: 0, dy: 1 },
+  ArrowLeft: { dx: -1, dy: 0 },
+  ArrowRight: { dx: 1, dy: 0 },
+  ArrowUp: { dx: 0, dy: -1 },
+  ArrowDown: { dx: 0, dy: 1 },
 };
 
 export { ARROWS };

@@ -3,7 +3,8 @@ const generateCircleDataUrl = (): string => {
   const canvas = document.createElement('canvas');
   canvas.width = 32;
   canvas.height = 32;
-  const ctx = canvas.getContext('2d')!;
+  const ctx = canvas.getContext('2d');
+  if (!ctx) return canvas.toDataURL();
   ctx.fillStyle = '#00ff00';
   const cx = 15.5, cy = 15.5;
   const innerR = 11, outerR = 13;
@@ -22,7 +23,7 @@ const generateCircleDataUrl = (): string => {
 let circleDataUrl: string | null = null;
 
 const getCircleDataUrl = (): string => {
-  if (!circleDataUrl) circleDataUrl = generateCircleDataUrl();
+  circleDataUrl ??= generateCircleDataUrl();
   return circleDataUrl;
 };
 

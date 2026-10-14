@@ -5,6 +5,8 @@ type ExecuteOutcome = 'done' | 'refused' | 'settled';
 
 type GiveItemAction = Extract<DeliveryAction, { type: 'give_item' }>;
 
+type QuietReceiptAction = Extract<DeliveryAction, { type: 'quiet_receipt' }>;
+
 type TriggerNpcCheckAction = Extract<DeliveryAction, { type: 'trigger_npc_check' }>;
 
-export type { ExecuteOutcome, GiveItemAction, TriggerNpcCheckAction };
+export type { ExecuteOutcome, GiveItemAction, QuietReceiptAction, TriggerNpcCheckAction };

@@ -52,7 +52,7 @@ const HudStyleControl = ({ value, settings, onChange }: HudStyleControlProps) =>
       />
       {notice && (
         <Box className="hud-style-control__notice">
-          <Text variant="caption">{notice}</Text>
+          <Text variant="caption" tone="dim">{notice}</Text>
           {!available && (
             <Button variant="secondary" size="sm" onClick={handleExtract} disabled={extracting || !romFile}>
               {extracting ? 'Extracting...' : 'Extract sprites'}

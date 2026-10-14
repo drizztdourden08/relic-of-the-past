@@ -7,12 +7,12 @@ import type { PatchGrid } from './layout-sides.type';
 
 const gridAlignRows = (container: HudGridContainer, onPatch: PatchGrid): AlignRowSpec[] => [
   {
-    key: 'justifyItems', cap: '↔', label: 'items across the cell', engine: 'grid', axis: 'main',
+    key: 'justifyItems', cap: 'across', capIcon: 'arrow-left-right', label: 'items across the cell', engine: 'grid', axis: 'main',
     options: GRID_ITEMS, value: container.justifyItems ?? 'stretch',
     onChange: (next: AlignValue) => onPatch({ justifyItems: next as HudGridJustifyItems }),
   },
   {
-    key: 'alignItems', cap: '↕', label: 'items down the cell', engine: 'grid', axis: 'cross',
+    key: 'alignItems', cap: 'down', capIcon: 'arrow-up-down', label: 'items down the cell', engine: 'grid', axis: 'cross',
     options: GRID_ITEMS, value: container.alignItems ?? 'stretch',
     onChange: (next: AlignValue) => onPatch({ alignItems: next as HudGridJustifyItems }),
   },

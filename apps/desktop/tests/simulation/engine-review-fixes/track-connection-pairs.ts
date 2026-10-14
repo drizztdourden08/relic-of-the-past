@@ -2,6 +2,7 @@
 import { afterAll } from 'vitest';
 import type { ConnectionId, ConnectionRecord } from '@rotp/game-data';
 import { registerRecord, unregisterRecord } from '@rotp/game-data';
+import type { FixtureConnection } from '../fixture-connection.type';
 
 const EMPTY_PLACEMENT = { form: 'area' as const, tiles: [], rect: { x: 0, y: 0, w: 0, h: 0 } };
 
@@ -13,8 +14,10 @@ interface ConnectionPair {
   nav?: ConnectionRecord['nav'];
 }
 
-const edgeRecord = (id: ConnectionId, screenId: string, toConnectionId: ConnectionId, nav: ConnectionRecord['nav']): ConnectionRecord =>
-  ({ id, screenId, toConnectionId, kind: 'edge', placement: EMPTY_PLACEMENT, canExit: true, tags: [], nav } as unknown as ConnectionRecord);
+const edgeRecord = (id: ConnectionId, screenId: string, toConnectionId: ConnectionId, nav: ConnectionRecord['nav']): ConnectionRecord => {
+  const fixture: FixtureConnection = { id, screenId, toConnectionId, kind: 'edge', placement: EMPTY_PLACEMENT, canExit: true, tags: [], nav };
+  return fixture as ConnectionRecord;
+};
 
 const trackConnectionPairs = () => {
   const registeredIds: ConnectionId[] = [];

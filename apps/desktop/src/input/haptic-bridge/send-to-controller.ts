@@ -14,9 +14,9 @@ const sendToController = (pattern: VibrationSegment[], gapMs?: number, minDurati
   for (const key of manager.allowed.gamepadKeys) {
     if (!deviceHapticsEnabled(key)) continue;
     const entry = manager.hidDeviceCache.find((d) => d.deviceKey === key);
-    if (!entry || entry.status !== 'ready') continue;
+    if (entry?.status !== 'ready') continue;
     const shaped = shapeForDevice(key, pattern, minDurationExempt);
-    void inputApi()?.vibratePattern(key, shaped, gap);
+    void inputApi().vibratePattern(key, shaped, gap);
   }
 };
 

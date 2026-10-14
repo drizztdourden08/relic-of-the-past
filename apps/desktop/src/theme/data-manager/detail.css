@@ -33,7 +33,7 @@
   font-weight: var(--weight-semi);
   color: var(--c-text-dim);
   text-transform: uppercase;
-  letter-spacing: 0.5px;
+  letter-spacing: calc(0.5 * var(--size-1));
   margin: 0 0 var(--space-sm);
   padding-bottom: var(--space-xs);
   border-bottom: var(--border-width-thin) solid var(--c-border);

@@ -1,14 +1,10 @@
 /* @layer renderer-hud @kind component */
 import { resolveTextContent, textIntrinsicSize } from '@rotp/hud';
-import type { HudTextSpec } from '@rotp/hud';
 import { HudBox } from '../../primitives/HudBox';
+import { JUSTIFY_BY_ALIGN } from './HudText.constants';
 import type { HudTextProps } from './HudText.type';
 import { FontText } from './sub-components/FontText';
 import { SpriteGlyphs } from './sub-components/SpriteGlyphs';
-
-const justifyFor = (align: HudTextSpec['align']): string => (
-  align === 'end' ? 'flex-end' : align === 'center' ? 'center' : 'flex-start'
-);
 
 const HudText = (props: HudTextProps) => {
   const { spec, scope, scale, spritesBase } = props;
@@ -18,7 +14,7 @@ const HudText = (props: HudTextProps) => {
   return (
     <HudBox
       style={{
-        display: 'flex', alignItems: 'center', justifyContent: justifyFor(spec.align),
+        display: 'flex', alignItems: 'center', justifyContent: JUSTIFY_BY_ALIGN[spec.align ?? 'start'],
         width: natural.w * scale, height: natural.h * scale,
       }}
     >

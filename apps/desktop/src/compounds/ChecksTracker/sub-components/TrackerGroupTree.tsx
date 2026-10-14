@@ -7,7 +7,7 @@ import type { GroupNode } from '@rotp/game-data';
 import type { CheckBatch, TrackerGroupTreeProps } from '../ChecksTracker.type';
 import { CheckList } from './CheckList';
 import { GroupCounts } from './GroupCounts';
-import '../ChecksTracker.css';
+import './TrackerGroupTree.css';
 
 const toTreeNode = (node: GroupNode): TreeNode<CheckBatch> => ({
   key: node.key,

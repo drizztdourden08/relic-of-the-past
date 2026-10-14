@@ -82,15 +82,22 @@ interface ShadowEditorStore {
 type ShadowEditorSet = StoreApi<ShadowEditorStore>['setState'];
 type ShadowEditorGet = StoreApi<ShadowEditorStore>['getState'];
 
-type ScreenEditActions = Pick<ShadowEditorStore,
-  | 'addHeightmapElement' | 'updateHeightmapElement' | 'removeHeightmapElement'
-  | 'addLight' | 'updateLight' | 'removeLight' | 'updateLighting'>;
+type HeightmapActions = Pick<ShadowEditorStore,
+  'addHeightmapElement' | 'updateHeightmapElement' | 'removeHeightmapElement'>;
+
+type LightActions = Pick<ShadowEditorStore, 'addLight' | 'updateLight' | 'removeLight' | 'updateLighting'>;
+
+type ScreenEditActions = HeightmapActions & LightActions;
+
+type HeightLevelActions = Pick<ShadowEditorStore, 'addHeightLevel' | 'removeHeightLevel' | 'updateHeightLevel'>;
+
+type SaveAction = Pick<ShadowEditorStore, 'save'>;
 
 type HistoryActions = Pick<ShadowEditorStore, 'undo' | 'redo'>;
 
 type UndoPatch = { undoStack: ScreenShadowData[]; redoStack: ScreenShadowData[] };
 
 export type {
-  EditorTool, HeightPreset, HistoryActions, ScreenEditActions, ShadowEditorGet, ShadowEditorSet,
-  ShadowEditorStore, UndoPatch,
+  EditorTool, HeightLevelActions, HeightmapActions, HeightPreset, HistoryActions, LightActions, SaveAction,
+  ScreenEditActions, ShadowEditorGet, ShadowEditorSet, ShadowEditorStore, UndoPatch,
 };

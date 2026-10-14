@@ -1,6 +1,8 @@
 /* @layer renderer-widgets @kind logic */
 import { tagIdsForKeys, screenBlockers } from '@rotp/game-data';
 import type { ScreenGameId, ScreenPosition } from '@rotp/game-data';
+import { carriedOverOf } from './carried-over-of';
+import { interiorKindOf } from './interior-kind-of';
 import type { DraftResult, ScreenDraft } from './screen-editor.type';
 
 const gameIdFor = (draft: ScreenDraft): ScreenGameId => {
@@ -28,7 +30,7 @@ const buildScreenRecord = (draft: ScreenDraft): DraftResult => {
     id: draft.existing?.id,
     kind: draft.kind,
     world: draft.world,
-    interiorKind: draft.kind === 'interior' ? draft.interiorKind : undefined,
+    interiorKind: interiorKindOf(draft),
     areaId,
     locationId,
     gameId,
@@ -42,17 +44,14 @@ const buildScreenRecord = (draft: ScreenDraft): DraftResult => {
       gameId,
       kind: draft.kind,
       world: draft.world,
-      interiorKind: draft.kind === 'interior' ? draft.interiorKind : undefined,
+      interiorKind: interiorKindOf(draft),
       name: draft.name.trim(),
       areaId,
       locationId,
       position,
       tags: tagIdsForKeys(draft.tags),
       variant: draft.variant,
-      nav: draft.existing?.nav,
-      triggerIds: draft.existing?.triggerIds,
-      spawns: draft.existing?.spawns,
-      review: draft.existing?.review,
+      ...carriedOverOf(draft.existing),
     },
     blockers,
   };

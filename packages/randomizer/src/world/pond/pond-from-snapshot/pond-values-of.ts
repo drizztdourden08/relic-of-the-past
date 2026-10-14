@@ -6,7 +6,18 @@ import { pondAskMaxKeyOf, pondAskMinKeyOf } from '../pond-ask-keys';
 import { pondAskValuesOf } from '../pond-ask-from-snapshot';
 import type { OptionValue } from '../../options.type';
 import type { PondInstance } from '../pond-instance.type';
-import type { PondSetting } from '../pond-profile.type';
+import type { PondCustomSetting, PondSetting } from '../pond-profile.type';
+
+const rupeeValuesOf = (pond: PondInstance, custom: PondCustomSetting | undefined): Record<string, OptionValue> => ({
+  [pondAskMinKeyOf(pond, 'rupees')]: String(custom?.start ?? DEFAULT_POND_CUSTOM.start),
+  [pondAskMaxKeyOf(pond, 'rupees')]: String(custom?.max ?? DEFAULT_POND_CUSTOM.max),
+  [pondKeyOf(pond, 'throws')]: custom?.throws ?? DEFAULT_POND_CUSTOM.throws,
+});
+
+const shapeValuesOf = (pond: PondInstance, custom: PondCustomSetting | undefined): Record<string, OptionValue> => ({
+  [pondKeyOf(pond, 'curve')]: custom?.shape.curve ?? 'equal',
+  [pondKeyOf(pond, 'jumps')]: custom?.shape.curve === 'free' ? custom.shape.jumps.join(',') : '',
+});
 
 const pondValuesOf = (
   setting: PondSetting, pond: PondInstance = CAPACITY_POND,
@@ -16,12 +27,9 @@ const pondValuesOf = (
   return {
     ...pondAskValuesOf(setting, pond),
     [pondKeyOf(pond, 'mode')]: setting.mode,
-    [pondAskMinKeyOf(pond, 'rupees')]: String(custom?.start ?? DEFAULT_POND_CUSTOM.start),
-    [pondAskMaxKeyOf(pond, 'rupees')]: String(custom?.max ?? DEFAULT_POND_CUSTOM.max),
-    [pondKeyOf(pond, 'throws')]: custom?.throws ?? DEFAULT_POND_CUSTOM.throws,
+    ...rupeeValuesOf(pond, custom),
     [pondKeyOf(pond, 'items')]: items,
-    [pondKeyOf(pond, 'curve')]: custom?.shape.curve ?? 'equal',
-    [pondKeyOf(pond, 'jumps')]: custom?.shape.curve === 'free' ? custom.shape.jumps.join(',') : '',
+    ...shapeValuesOf(pond, custom),
   };
 };
 

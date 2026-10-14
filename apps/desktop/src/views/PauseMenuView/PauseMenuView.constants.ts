@@ -1,7 +1,16 @@
 /* @layer renderer-hud @kind constants */
-import type { NameGrid } from './PauseMenuView.type';
+import type { BottlePhase, NameGrid } from './PauseMenuView.type';
 
 const MENU_H = 224;
+
+const BOTTLE_ITEM_SLOT = 15;
+
+const BOTTLE_PHASE_CLASS: Record<BottlePhase, string> = {
+  hidden: '',
+  visible: '',
+  expanding: ' pause-menu__bottle--expanding',
+  collapsing: ' pause-menu__bottle--collapsing',
+};
 
 const GRID_TO_SAVE = [0, 3, 2, 14, 1, 10, 5, 6, 15, 16, 17, 9, 4, 8, 7, 12, 11, 18, 13, 19];
 
@@ -27,4 +36,4 @@ const SPECIAL_FOLDS: Record<string, string> = {
   'ı': 'I', 'İ': 'I', 'Ħ': 'H', 'ħ': 'H',
 };
 
-export { AMPERSAND_COLS, GRID_TO_SAVE, MENU_H, NAME_PANEL_GRID, SEPARATORS, SLOT_RECORD_IDS, SPECIAL_FOLDS };
+export { AMPERSAND_COLS, BOTTLE_ITEM_SLOT, BOTTLE_PHASE_CLASS, GRID_TO_SAVE, MENU_H, NAME_PANEL_GRID, SEPARATORS, SLOT_RECORD_IDS, SPECIAL_FOLDS };

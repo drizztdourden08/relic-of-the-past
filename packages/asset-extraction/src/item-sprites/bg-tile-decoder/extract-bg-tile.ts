@@ -18,7 +18,7 @@ const loadSheet = (rom: RomData, id: number): Buffer =>
 const paletteFor = (rom: RomData, req: BgTileRequest): BgPaletteRows => {
   if (req.paletteSet === 'dungeon') return dungeonBgPalette(rom, req.paletteIndex);
   const [aux1 = 0, aux2 = 0, aux3 = 0] = req.paletteAux;
-  return overworldBgPalette(rom, req.paletteIndex, aux1, aux2, aux3);
+  return overworldBgPalette(rom, { mode: req.paletteIndex, aux1, aux2, aux3 });
 };
 
 const pasteQuadrant = (img: ImageBuffer, quadrant: BgQuadrant): void => {

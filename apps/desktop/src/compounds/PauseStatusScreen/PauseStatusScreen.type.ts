@@ -26,4 +26,32 @@ interface PauseStatusScreenProps {
   onConfirm: () => void;
 }
 
-export type { DungeonItemCell, PauseAction, PauseStatusScreenProps };
+interface StatusLifeProps {
+  healthCurrent: number;
+  healthCapacity: number;
+  heartMode: HeartMode;
+  armor: number;
+  heartPieces: number;
+  scale: number;
+  spritesBase: string;
+}
+
+interface StatusIconRowsProps {
+  pendants: number;
+  crystals: number;
+  dungeonItems: readonly DungeonItemCell[];
+  scale: number;
+  spritesBase: string;
+}
+
+interface StatusActionsProps {
+  cursor: number;
+  scale: number;
+  spritesBase: string;
+  onFocusAction: (cursor: number) => void;
+  onConfirm: () => void;
+}
+
+export type {
+  DungeonItemCell, PauseAction, PauseStatusScreenProps, StatusActionsProps, StatusIconRowsProps, StatusLifeProps,
+};

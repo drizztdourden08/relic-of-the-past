@@ -4,7 +4,7 @@ import { PLACEMENT_SCHEMA } from './randomizer-placement-io.constants';
 
 const isStoredPlacement = (raw: unknown): raw is StoredPlacement => {
   if (!raw || typeof raw !== 'object') return false;
-  const candidate = raw as Partial<StoredPlacement>;
+  const candidate = raw as Record<string, unknown>;
   return candidate.schema === PLACEMENT_SCHEMA
     && typeof candidate.locations === 'object' && candidate.locations !== null
     && typeof candidate.stats === 'object' && candidate.stats !== null

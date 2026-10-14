@@ -1,11 +1,12 @@
 /* @layer renderer-components @kind logic */
 import { SPRITE_TILE_LIMIT, TILE_PX } from './tile-inspector-tooltip.constants';
-import type { Sprites } from './tile-inspector-tooltip.type';
+import type { SpriteInfoParams } from './tile-inspector-tooltip.type';
 
 const hexByte = (v: number) => v.toString(16).padStart(2, '0');
 
-const buildSpriteInfo = (sprites: Sprites, tileRow: number, tileCol: number, screenWorldX: number, screenWorldY: number): string[] =>
-  sprites
+const buildSpriteInfo = (params: SpriteInfoParams): string[] => {
+  const { sprites, tileRow, tileCol, screenWorldX, screenWorldY } = params;
+  return sprites
     .map(s => {
       const c0 = Math.floor((s.x - screenWorldX) / TILE_PX);
       const r0 = Math.floor((s.y - screenWorldY) / TILE_PX);
@@ -20,5 +21,6 @@ const buildSpriteInfo = (sprites: Sprites, tileRow: number, tileCol: number, scr
       const near = dist === 0 ? 'on' : `d${dist}`;
       return `#${s.slot} type 0x${hexByte(s.type)} st 0x${hexByte(s.state)} sub ${s.subtype}/${s.subtype2} e${s.e} @${c0},${r0} ${near}`;
     });
+};
 
 export { buildSpriteInfo };

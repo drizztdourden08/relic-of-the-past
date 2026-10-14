@@ -76,6 +76,37 @@ interface UseHomeTabSramImportParams {
   setDialog: (dialog: DialogState) => void;
 }
 
+interface UseQuickSaveActionsParams {
+  isGameRunning: boolean;
+  onStartGame: () => void;
+  loadQuickSlots: () => Promise<void>;
+}
+
+interface UseNormalSaveActionsParams {
+  profileId: string;
+  isGameRunning: boolean;
+  onStartGame: () => void;
+  setBusyNormal: (id: string | null) => void;
+  setDialog: (dialog: DialogState) => void;
+  loadNormalSaves: () => Promise<void>;
+}
+
+interface UseNormalSaveDialogsParams {
+  profileId: string;
+  dialog: DialogState;
+  setDialog: (dialog: DialogState) => void;
+  normalSaves: NormalSaveInfo[];
+  setBusyNormal: (id: string | null) => void;
+  loadNormalSaves: () => Promise<void>;
+}
+
+interface UseAutoSaveActionsParams {
+  profileId: string;
+  isGameRunning: boolean;
+  onStartGame: () => void;
+  loadAutoSaves: () => Promise<void>;
+}
+
 type HomeTabSaves = ReturnType<typeof useHomeTabSaves>;
 
 interface HomeTabColumnsProps {
@@ -87,8 +118,13 @@ interface HomeTabDialogsProps {
   saves: HomeTabSaves;
 }
 
+interface HomeTabDialogProps extends HomeTabDialogsProps {
+  onClose: () => void;
+}
+
 export type {
-  AutoSavesData, DialogState, HomeRandomizerStatus, HomeTabColumnsProps, HomeTabDialogsProps,
+  AutoSavesData, DialogState, HomeRandomizerStatus, HomeTabColumnsProps, HomeTabDialogProps, HomeTabDialogsProps,
   HomeHeroContentProps, HomeTabSaves, NormalSavesData, ProfileFactsInput, SaveFileChecks, SlotInfo,
-  SummaryFact, UseHomeTabSavesParams, UseHomeTabSramImportParams,
+  SummaryFact, UseAutoSaveActionsParams, UseHomeTabSavesParams, UseHomeTabSramImportParams,
+  UseNormalSaveActionsParams, UseNormalSaveDialogsParams, UseQuickSaveActionsParams,
 };

@@ -11,7 +11,7 @@ const shopOverrideKeyOf = (
   location: LocationKey, shops: ShopScope, prices: ShopPriceView,
 ): ShopKey | null => {
   const row = shopSlotLocationOf(location);
-  if (row === null || row === undefined) return null;
+  if (row === undefined) return null;
   const { slot, depthIndex } = row;
   const price = prices[location] ?? { currency: 'rupees' as const, amount: slot.price };
   const native = nativePriceOf(price);

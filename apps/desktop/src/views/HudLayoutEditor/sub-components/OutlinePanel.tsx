@@ -3,24 +3,18 @@ import { useRef, useState } from 'react';
 import { Box, Text } from '@drizztdourden08/tessera/primitives';
 import { primaryModifierLabel } from '@rotp/input-mapping';
 import { usePlatform } from '@drizztdourden08/brock-react';
-import { useHudEditorViewStore } from '@app/stores/hud-editor-view-store';
 import { DragGhost } from './DragGhost';
+import { OutlineHint } from './OutlineHint';
 import { OutlineRow } from './OutlineRow';
-import { OutlineRowMenu } from './OutlineRowMenu';
+import { OutlineMenuHost } from './OutlineMenuHost';
 import { labelOf, slotsOf } from '@app/hud-layout-editing/new-node';
-import { outlineIntent } from '@app/hud-layout-editing/drop-intent';
-import { ghostFor } from '@app/hud-layout-editing/drop-ghost';
 import { outlineRows } from '@app/hud-layout-editing/outline-rows';
-import { rowUnder } from '@app/hud-layout-editing/row-under';
-import { useDragGesture } from '@app/hud-layout-editing/useDragGesture';
-import { useDragAutoScroll } from '@app/hud-layout-editing/use-drag-autoscroll';
-import { useSpringLoad } from '@app/hud-layout-editing/useSpringLoad';
+import { rowRefFor } from '@app/hud-layout-editing/row-ref-for';
+import { useOutlineCollapse } from '@app/hud-layout-editing/useOutlineCollapse';
+import { useOutlineDrag } from '@app/hud-layout-editing/useOutlineDrag';
 import { useOutlineKeys } from '@app/hud-layout-editing/useOutlineKeys';
 import { useOutlineScroll } from '@app/hud-layout-editing/useOutlineScroll';
-import type { DropPreview, OutlinePanelProps } from './OutlinePanel.type';
-
-const samePreview = (a: DropPreview, b: DropPreview): boolean =>
-  a.rowId === b.rowId && a.zone === b.zone && a.intent.kind === b.intent.kind;
+import type { OutlinePanelProps } from './OutlinePanel.type';
 
 const OutlinePanel = (props: OutlinePanelProps) => {
   const { doc, selectedId, slotNumbers, onSelect, onRemove, onDrop } = props;
@@ -28,32 +22,10 @@ const OutlinePanel = (props: OutlinePanelProps) => {
   const [menuId, setMenuId] = useState<string | null>(null);
   const modifier = primaryModifierLabel(usePlatform().info.os);
   const keys = useOutlineKeys({ doc, onDrop });
-  const settle = useRef<((parentId: string | null) => void) | null>(null);
-  const drag = useDragGesture<DropPreview>({
-    resolve: (event, sourceId) => {
-      const at = rowUnder(doc, event.clientX, event.clientY);
-      return at ? { ...at, intent: outlineIntent(doc, at.rowId, at.zone, [sourceId]) } : null;
-    },
-    commit: (preview, sourceId) => {
-      settle.current?.(preview.intent.kind === 'refused' ? null : preview.intent.parentId);
-      onDrop([sourceId], preview.intent);
-    },
-    same: samePreview,
-  });
-  const dragging = drag.sourceId !== null;
-  const spring = useSpringLoad({ doc, active: dragging, rowId: drag.payload?.rowId ?? null });
-  settle.current = spring.landed;
-  useDragAutoScroll({ active: dragging, anchor: rowsRef });
-  const preview = drag.payload && drag.payload.intent.kind !== 'refused' ? drag.payload : null;
-  const ghost = drag.sourceId && drag.payload ? ghostFor(doc, [drag.sourceId], drag.payload.intent) : null;
-  const have = new Set(slotNumbers);
-  const collapsedNodeIds = useHudEditorViewStore((s) => s.collapsedNodeIds);
-  const toggleNodeCollapsed = useHudEditorViewStore((s) => s.toggleNodeCollapsed);
-  const expandNodeIds = useHudEditorViewStore((s) => s.expandNodeIds);
+  const { drag, spring, dragging, preview, ghost } = useOutlineDrag({ doc, onDrop, rowsRef });
+  const { collapsedNodeIds, toggleNodeCollapsed, expandNodeIds } = useOutlineCollapse();
   const rowElements = useRef(new Map<string, HTMLElement>());
   const scroll = useOutlineScroll({ doc, selectedId, rowElements, expandNodeIds });
-
-  const select = (id: string): void => { scroll.markSelf(id); onSelect(id); };
 
   return (
     <Box className="hud-outline">
@@ -75,14 +47,11 @@ const OutlinePanel = (props: OutlinePanelProps) => {
             selected={row.node.id === selectedId}
             dragging={drag.sourceId === row.node.id}
             dropZone={preview?.rowId === row.node.id ? preview.zone : null}
-            missingSlots={slotsOf(row.node).filter((slot) => !have.has(slot))}
-            rowRef={(el) => {
-              if (el) rowElements.current.set(row.node.id, el);
-              else rowElements.current.delete(row.node.id);
-            }}
+            missingSlots={slotsOf(row.node).filter((slot) => !slotNumbers.includes(slot))}
+            rowRef={rowRefFor(rowElements.current, row.node.id)}
             springing={spring.pending === row.node.id}
             shaking={keys.shaking === row.node.id}
-            onSelect={() => select(row.node.id)}
+            onSelect={() => { scroll.markSelf(row.node.id); onSelect(row.node.id); }}
             onToggleCollapse={() => toggleNodeCollapsed(row.node.id)}
             onRemove={() => onRemove(row.node.id)}
             onDragPointerDown={row.locked || row.isScreen ? undefined : (event) => drag.start(event, row.node.id)}
@@ -92,24 +61,15 @@ const OutlinePanel = (props: OutlinePanelProps) => {
         ))}
         <Box className="hud-outline__pan is-down" aria-hidden />
       </Box>
-      {menuId && (
-        <OutlineRowMenu
-          doc={doc}
-          id={menuId}
-          anchorRef={{ current: rowElements.current.get(menuId) ?? null }}
-          removable
-          onStep={(direction) => keys.step(menuId, direction)}
-          onRemove={() => onRemove(menuId)}
-          onClose={() => setMenuId(null)}
-        />
-      )}
-      <Text className="hud-editor__hint">
-        Drag a row onto the top or bottom edge of another to sit beside it, or onto a
-        container&apos;s middle to put it inside. The upper half goes first in that container,
-        the lower half last. Or move the focused row with {modifier} and the arrow keys, and
-        right-click it for the same four in words. Only the screen itself cannot be moved; it is
-        the box everything else sits in.
-      </Text>
+      <OutlineMenuHost
+        doc={doc}
+        menuId={menuId}
+        anchor={menuId ? rowElements.current.get(menuId) ?? null : null}
+        onStep={keys.step}
+        onRemove={onRemove}
+        onClose={() => setMenuId(null)}
+      />
+      <OutlineHint modifier={modifier} />
       <Text className="hud-outline__live" role="status" aria-live="polite">{keys.message}</Text>
       <DragGhost model={ghost} />
     </Box>

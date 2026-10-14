@@ -1,49 +1,17 @@
 /* @layer renderer-components @kind component */
-import { useState, useEffect, useCallback, useRef, useMemo } from 'react';
-import type { ReviewStatus, ReviewData } from '../SpriteDebug.type';
+import { useState, useMemo } from 'react';
+import type { ReviewStatus } from '../SpriteDebug.type';
 import { Box, Button } from '@drizztdourden08/tessera/primitives';
 import { FilterBtns } from './FilterBtns';
 import { ReviewStats } from './ReviewStats';
 import { ItemAssocCard } from './ItemAssocCard';
 import { ALL_ITEMS } from './ItemReviewPanel.constants';
+import { useReviewData } from '../behavior/useReviewData';
 import { loadSpriteDebug, saveSpriteDebug } from '@app/storage/sprites-store';
 
 const ItemReviewPanel = ({ baseUrl }: { baseUrl: string }) => {
-  const [data, setData] = useState<ReviewData>({});
-  const [loaded, setLoaded] = useState(false);
+  const { data, loaded, setStatus, setComment, reset } = useReviewData({ load: loadSpriteDebug, save: saveSpriteDebug });
   const [filter, setFilter] = useState<'all' | ReviewStatus>('all');
-  const saveTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
-
-  useEffect(() => {
-    loadSpriteDebug().then(d => {
-      setData((d ?? {}) as ReviewData);
-      setLoaded(true);
-    });
-  }, []);
-
-  const persist = useCallback((next: ReviewData) => {
-    if (saveTimer.current) clearTimeout(saveTimer.current);
-    saveTimer.current = setTimeout(() => saveSpriteDebug(next), 300);
-  }, []);
-
-  const setStatus = (key: string, status: ReviewStatus) => {
-    setData(prev => {
-      const entry = prev[key] ?? { status: 'neutral' };
-      const keepComment = status === 'bad' || status === 'yellow';
-      const next = { ...prev, [key]: { ...entry, status, comment: keepComment ? (entry.comment ?? '') : undefined } };
-      persist(next);
-      return next;
-    });
-  };
-
-  const setComment = (key: string, comment: string) => {
-    setData(prev => {
-      const entry = prev[key] ?? { status: 'bad' as ReviewStatus };
-      const next = { ...prev, [key]: { ...entry, comment } };
-      persist(next);
-      return next;
-    });
-  };
 
   const counts = useMemo(() => {
     const c = { good: 0, bad: 0, neutral: 0, yellow: 0 };
@@ -64,7 +32,7 @@ const ItemReviewPanel = ({ baseUrl }: { baseUrl: string }) => {
         <ReviewStats counts={counts} total={ALL_ITEMS.length} />
         <Box className="sprite-debug-header-buttons">
           <FilterBtns filter={filter} setFilter={setFilter} />
-          <Button variant="danger" size="xs" onClick={() => { setData({}); saveSpriteDebug({}); }}>Reset</Button>
+          <Button variant="danger" size="xs" onClick={reset}>Reset</Button>
         </Box>
       </Box>
       <Box className="sprite-debug-grid">

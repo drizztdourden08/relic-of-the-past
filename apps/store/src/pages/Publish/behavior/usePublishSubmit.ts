@@ -25,7 +25,7 @@ const usePublishSubmit = () => {
   const { uploads } = useStoreData();
   const [error, setError] = useState<string | null>(null);
 
-  const submit = useCallback(async (submission: Submission) => {
+  const submit = useCallback((submission: Submission) => {
     setError(null);
     try {
       const target = targetOf(submission);

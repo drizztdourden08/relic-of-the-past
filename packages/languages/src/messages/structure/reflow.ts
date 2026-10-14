@@ -1,10 +1,8 @@
 /* @layer shared-game @kind logic */
 import { flattenBlocks } from '../blocks/flatten-blocks';
 import type { BlockDoc } from '../blocks/types';
-import type { GlyphMetrics } from '../layout/types';
 import { lineMetrics } from '../lines/line-metrics';
 import type { DialogueLineView } from '../lines/types';
-import type { GlossaryTerm } from '../types';
 import { breakLine } from './break-line';
 import { policyFor } from './modes';
 import { pushDown } from './push-down';
@@ -66,13 +64,11 @@ const wrapTouched = (
 
 const reflow = (
   doc: BlockDoc,
-  metrics: GlyphMetrics,
-  glossary: GlossaryTerm[],
+  ctx: StructureContext,
   touched: ReadonlySet<number>,
   mode: StructureMode,
 ): BlockDoc => {
   const policy = policyFor(mode);
-  const ctx: StructureContext = { metrics, glossary };
 
   const work = wrapTouched(doc, touched, policy, ctx);
   const seeds = new Set(work.flatMap(({ seeded }, at) => (seeded ? [at] : [])));

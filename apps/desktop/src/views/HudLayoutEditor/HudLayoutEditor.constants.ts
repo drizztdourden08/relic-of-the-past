@@ -21,12 +21,15 @@ const EDITOR_GROUNDS: readonly EditorGround[] = GROUND_TILE_SPRITE_DEFINITIONS
 
 const GROUND_TILE = 32;
 
+const HUD_BLACK = '#000000';
+const HUD_WHITE = '#ffffff';
+
 const COUNT_STEP = 1;
 const ANGLE_STEP = 15;
 const MS_STEP = 10;
 
 export {
   ANGLE_STEP, COUNT_STEP, EDITOR_GROUNDS, EDITOR_RATIOS, GLYPH_IMAGE_TYPES,
-  GROUND_TILE, MS_STEP, SNES_LINES,
+  GROUND_TILE, HUD_BLACK, HUD_WHITE, MS_STEP, SNES_LINES,
 };
 export type { EditorGround, EditorRatio } from './HudLayoutEditor.type';

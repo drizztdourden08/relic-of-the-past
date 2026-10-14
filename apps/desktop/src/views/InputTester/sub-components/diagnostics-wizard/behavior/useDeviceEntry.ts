@@ -8,7 +8,7 @@ const useDeviceEntry = (deviceKey: string | null): DeviceEntry | null => {
 
   useEffect(() => {
     const api = inputApi();
-    if (!deviceKey || !api) { setEntry(null); return; }
+    if (!deviceKey) { setEntry(null); return; }
     let cancelled = false;
     const findMatch = (list: DeviceEntry[]) => list.find((d) => d.deviceKey === deviceKey) ?? null;
 

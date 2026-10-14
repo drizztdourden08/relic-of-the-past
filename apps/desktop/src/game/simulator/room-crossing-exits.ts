@@ -117,15 +117,15 @@ const borderExit = (crossing: ScreenCrossing, pass: RoomExitPass): SimExit | nul
 
 const roomExitFor = (crossing: ScreenCrossing, pass: RoomExitPass): SimExit | null => {
   if (crossing.class === 'edge') return borderExit(crossing, pass);
-  switch (crossing.origin) {
-    case 'room-stair':
-    case 'room-border': return stairExit(crossing, pass);
-    case 'room-door': return doorExit(crossing, pass);
-    case 'exit-table': return exitTableExit(crossing, pass);
-    case 'warp-slot': return warpExit(crossing, pass);
-    case 'room-doorway': return doorwayExit(crossing, pass);
-    default: return null;
-  }
+  const exitByOrigin: Partial<Record<ScreenCrossing['origin'], (crossing: ScreenCrossing, pass: RoomExitPass) => SimExit | null>> = {
+    'room-stair': stairExit,
+    'room-border': stairExit,
+    'room-door': doorExit,
+    'exit-table': exitTableExit,
+    'warp-slot': warpExit,
+    'room-doorway': doorwayExit,
+  };
+  return exitByOrigin[crossing.origin]?.(crossing, pass) ?? null;
 };
 
 const roomCrossingExits = (crossings: ScreenCrossings, context: RoomExitContext): SimExit[] => {

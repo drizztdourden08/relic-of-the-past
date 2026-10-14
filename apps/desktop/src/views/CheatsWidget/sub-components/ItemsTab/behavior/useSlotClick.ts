@@ -13,7 +13,7 @@ const useSlotClick = ({ onOpen, write }: SlotClickParams) => {
       return;
     }
     const tier = givableTier(spec);
-    if (!tier || tier.receiveItemId === undefined) return;
+    if (tier?.receiveItemId === undefined) return;
     write({ op: 'give', receiveItemId: tier.receiveItemId, label: tier.label });
     setFlash((prev) => ({ slot: spec.slot, n: (prev?.n ?? 0) + 1 }));
   }, [onOpen, write]);

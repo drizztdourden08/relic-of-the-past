@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind style */
 .state-list {
-  width: 13rem;
+  width: calc(var(--size-192) + var(--size-16));
   flex: none;
   display: flex;
   flex-direction: column;
@@ -8,7 +8,7 @@
 }
 
 .state-list__scroll {
-  max-height: 26rem;
+  max-height: calc(var(--size-384) + var(--size-32));
   overflow-y: auto;
   display: flex;
   flex-direction: column;

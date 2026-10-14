@@ -1,10 +1,12 @@
 /* @layer renderer-components @kind component */
-import { useRef, useState } from 'react';
-import { Box, Field, Flex, IconButton, NumberInput, Pressable } from '@drizztdourden08/tessera/primitives';
+import { useState } from 'react';
+import { Field, Flex, IconButton, NumberInput } from '@drizztdourden08/tessera/primitives';
 import { ColorField } from './ColorField';
-import { swatchOf } from '@app/hud-layout-editing/appearance-summary';
-import type { KeyboardEvent as ReactKeyboardEvent, PointerEvent as ReactPointerEvent } from 'react';
+import { RampTrack } from './RampTrack';
+import { HUD_WHITE } from '../HudLayoutEditor.constants';
+import type { KeyboardEvent as ReactKeyboardEvent } from 'react';
 import type { GradientStop } from '@rotp/hud';
+import { NUDGE_FINE, NUDGE_COARSE, NUDGE_KEYS } from './GradientRamp.constants';
 import type { GradientRampProps } from './GradientRamp.type';
 
 const clamp01 = (n: number): number => Math.min(1, Math.max(0, n));
@@ -13,7 +15,6 @@ const round2 = (n: number): number => Math.round(n * 100) / 100;
 const GradientRamp = (props: GradientRampProps) => {
   const { stops, onChange, kind } = props;
   const [selected, setSelected] = useState(0);
-  const rampRef = useRef<HTMLDivElement>(null);
   const index = Math.min(selected, stops.length - 1);
   const stop = stops[index];
 
@@ -29,69 +30,31 @@ const GradientRamp = (props: GradientRampProps) => {
     commit(stops.map((s, i) => (i === index ? moved : s)), moved);
   };
 
-  const atFromEvent = (clientX: number): number => {
-    const box = rampRef.current?.getBoundingClientRect();
-    return box && box.width > 0 ? round2(clamp01((clientX - box.left) / box.width)) : 0;
-  };
-
   const addStop = (at: number): void => {
-    const added: GradientStop = { at, color: stop?.color ?? '#ffffff' };
+    const added: GradientStop = { at, color: stop?.color ?? HUD_WHITE };
     commit([...stops, added], added);
   };
 
-  const drag = (event: ReactPointerEvent<HTMLButtonElement>, i: number): void => {
-    setSelected(i);
-    const target = event.currentTarget;
-    target.setPointerCapture(event.pointerId);
-    const move = (e: PointerEvent): void => {
-      const dragged = stops[i];
-      if (!dragged) return;
-      const moved = { ...dragged, at: atFromEvent(e.clientX) };
-      commit(stops.map((s, n) => (n === i ? moved : s)), moved);
-    };
-    const up = (): void => {
-      target.removeEventListener('pointermove', move);
-      target.removeEventListener('pointerup', up);
-    };
-    target.addEventListener('pointermove', move);
-    target.addEventListener('pointerup', up);
-  };
-
   const nudge = (event: ReactKeyboardEvent<HTMLButtonElement>): void => {
-    const step = event.shiftKey ? 0.1 : 0.01;
-    const delta = event.key === 'ArrowRight' ? step : event.key === 'ArrowLeft' ? -step : 0;
+    const delta = (NUDGE_KEYS[event.key] ?? 0) * (event.shiftKey ? NUDGE_COARSE : NUDGE_FINE);
     if (delta === 0 || !stop) return;
     event.preventDefault();
     setStop({ at: round2(clamp01(stop.at + delta)) });
   };
 
+  const removeSelected = (): void => {
+    const kept = stops.filter((_unused, i) => i !== index);
+    const [first] = kept;
+    if (first) commit(kept, first);
+  };
+
   return (
     <Flex direction="column" gap="2xs" className="hud-ramp">
-      <Box
-        ref={rampRef}
-        className="hud-ramp__track"
-        style={{ background: swatchOf({ gradient: kind, angle: 90, stops: [...stops] }) }}
-        onDoubleClick={(event) => addStop(atFromEvent(event.clientX))}
-      >
-        {stops.map((s, i) => (
-          <Pressable
-            key={i}
-            className="hud-ramp__stop"
-            aria-label={`Stop ${i + 1} at ${s.at}`}
-            aria-pressed={i === index}
-            style={{ left: `${s.at * 100}%`, background: s.color }}
-            onPointerDown={(event) => drag(event, i)}
-            onKeyDown={nudge}
-          />
-        ))}
-      </Box>
+      <RampTrack stops={stops} kind={kind} index={index} onSelect={setSelected} onCommit={commit} onAddAt={addStop} onNudge={nudge} />
 
       <Flex gap="2xs" align="center" className="hud-ramp__tools">
         <IconButton variant="ghost" size="sm" label="Add a stop" onClick={() => addStop(0.5)}>+</IconButton>
-        <IconButton
-          variant="ghost" size="sm" label={`Remove stop ${index + 1}`} disabled={stops.length <= 2}
-          onClick={() => { const kept = stops.filter((_unused, i) => i !== index); const [first] = kept; if (first) commit(kept, first); }}
-        >✕</IconButton>
+        <IconButton variant="ghost" size="sm" label={`Remove stop ${index + 1}`} disabled={stops.length <= 2} onClick={removeSelected}>✕</IconButton>
       </Flex>
 
       {stop && (

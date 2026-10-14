@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind logic */
-import type { HidButtonMapping, InputStatus } from '../hid-calibration.type';
+import type { HidButtonMapping } from '../hid-calibration.type';
 import type { TriggerFinalizeCallbacks, TriggerFinalizeRefs } from './stick-trigger-handlers.type';
 
 const finalizeDigitalTrigger = (mapping: HidButtonMapping, refs: TriggerFinalizeRefs, cb: TriggerFinalizeCallbacks): void => {
@@ -10,7 +10,7 @@ const finalizeDigitalTrigger = (mapping: HidButtonMapping, refs: TriggerFinalize
 
   cb.addLog(`OK ${label} Trigger: ${result}`);
   cb.setItems(prev => prev.map(it =>
-    it.id === axisId ? { ...it, status: 'captured' as InputStatus, result, mapping } : it
+    it.id === axisId ? { ...it, status: 'captured', result, mapping } : it
   ));
 
   cb.setActiveTrigger(null);

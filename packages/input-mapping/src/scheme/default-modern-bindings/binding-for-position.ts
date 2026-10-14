@@ -12,12 +12,12 @@ const isAxisPosition = (position: CorePosition): position is AxisPosition =>
 const bindingForPosition = (position: CorePosition, byPosition: Map<string, ResolvedControl>): InputBinding => {
   if (isAxisPosition(position)) {
     const control = byPosition.get(position.axis);
-    if (!control || control.kind !== 'axis') return UNBOUND;
+    if (control?.kind !== 'axis') return UNBOUND;
     const label = axisEndLabel(control.label, position.direction);
     return { type: 'gamepad-axis', axisIndex: SDL_AXIS[position.axis], direction: position.direction, label };
   }
   const control = byPosition.get(position);
-  if (!control || control.kind !== 'button') return UNBOUND;
+  if (control?.kind !== 'button') return UNBOUND;
   return { type: 'gamepad-button', index: SDL_BUTTON[control.position as keyof typeof SDL_BUTTON], label: control.label };
 };
 

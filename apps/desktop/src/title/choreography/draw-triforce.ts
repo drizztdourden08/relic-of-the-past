@@ -1,12 +1,12 @@
 /* @layer renderer-hud @kind logic */
 import { MIRRORED_PIECE, PIECE_SIZE } from '@rotp/game-data';
 import type { TitlePiece } from '@rotp/game-data';
-import type { TriforcePicture } from './choreography.type';
+import type { FrameOrigin, TriforcePicture } from './choreography.type';
 
-const drawTriforce = (ctx: CanvasRenderingContext2D, picture: TriforcePicture, pieces: readonly TitlePiece[], frameX: number, frameY: number): void => {
+const drawTriforce = (ctx: CanvasRenderingContext2D, picture: TriforcePicture, pieces: readonly TitlePiece[], at: FrameOrigin): void => {
   pieces.forEach((piece, k) => {
-    const x = frameX + piece.x;
-    const y = frameY + piece.y;
+    const x = at.x + piece.x;
+    const y = at.y + piece.y;
     if (k !== MIRRORED_PIECE) {
       ctx.drawImage(picture.canvas, x, y);
       return;

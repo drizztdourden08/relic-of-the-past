@@ -1,6 +1,7 @@
 /* @layer renderer-components @kind component */
 import { Box, Icon, IconButton, Text } from '@drizztdourden08/tessera/primitives';
-import { FAMILY_EMOJI } from './controls.constants';
+import { assignedControllerStatus } from './assigned-controller-status';
+import { FAMILY_ICON_NAME } from './controls.constants';
 import type { AssignedDeviceCardProps } from './controls.type';
 import './AssignedControllerCard.css';
 
@@ -8,19 +9,8 @@ const AssignedDeviceCard = (props: AssignedDeviceCardProps) => {
   const { assigned, liveDevice, onUnassign } = props;
   const isConnected = liveDevice?.connected ?? false;
   const isActivated = liveDevice?.activated ?? false;
-  const emoji = FAMILY_EMOJI[assigned.deviceFamily] ?? '🎮';
-
-  const statusLabel = !isConnected
-    ? 'Disconnected'
-    : isActivated
-      ? 'Connected'
-      : 'Connected. Press a button to activate';
-
-  const statusClass = !isConnected
-    ? 'assigned-controller__status--disconnected'
-    : isActivated
-      ? 'assigned-controller__status--connected'
-      : 'assigned-controller__status--detected';
+  const iconName = FAMILY_ICON_NAME[assigned.deviceFamily] ?? 'gamepad-2';
+  const status = assignedControllerStatus(isConnected, isActivated);
 
   return (
     <Box className={`assigned-controller ${!isConnected ? 'assigned-controller--disconnected' : ''}`}>
@@ -31,17 +21,19 @@ const AssignedDeviceCard = (props: AssignedDeviceCardProps) => {
         </IconButton>
       </Box>
       <Box className="assigned-controller__body">
-        <Box className={`assigned-controller__status-dot ${statusClass}`} />
-        <Text className="assigned-controller__icon">{emoji}</Text>
+        <Box className={`assigned-controller__status-dot ${status.className}`} />
+        <Box className="assigned-controller__icon">
+          <Icon name={iconName} />
+        </Box>
         <Box className="assigned-controller__info">
           <Text className="assigned-controller__name">{assigned.displayName}</Text>
           <Text className="assigned-controller__detail">
-            {assigned.vendorId}:{assigned.productId} · {statusLabel}
+            {assigned.vendorId}:{assigned.productId} · {status.label}
           </Text>
         </Box>
       </Box>
     </Box>
   );
-}
+};
 
 export { AssignedDeviceCard };

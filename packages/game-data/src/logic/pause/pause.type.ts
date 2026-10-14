@@ -21,6 +21,8 @@ type PauseEvent =
   | { type: 'focus'; screen: PauseScreen; section: PauseSection; cursor: number }
   | { type: 'screen'; screen: PauseScreen };
 
+type NavigationEvent = Extract<PauseEvent, { type: 'move' | 'prevScreen' | 'nextScreen' | 'screen' | 'focus' }>;
+
 interface PauseContext {
   owned: readonly boolean[];
   bottles: readonly number[];
@@ -101,6 +103,6 @@ type SlotAssignments = Readonly<Record<SlotIndex, SlotAssignment>>;
 
 export type {
   AssignPlan, AssignTarget, BrowsingState, ConfirmPlan, ConfirmTarget, ConfirmVerb, CursorPos, GearKind,
-  GearLadderKind, GearTierCell, GridPoint, ItemCell, PauseContext, PauseEvent, PauseNameKey, PauseScreen,
+  GearLadderKind, GearTierCell, GridPoint, ItemCell, NavigationEvent, PauseContext, PauseEvent, PauseNameKey, PauseScreen,
   PauseSection, PauseState, RowCell, RowSegment, SlotAssignments,
 };

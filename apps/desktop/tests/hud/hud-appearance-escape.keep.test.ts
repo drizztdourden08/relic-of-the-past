@@ -8,6 +8,7 @@ import { AppearanceSection } from '@app/views/HudLayoutEditor/sub-components/App
 import { useEscapeStack } from '@drizztdourden08/tessera/primitives';
 import type { EscapeStack } from '@drizztdourden08/tessera/primitives';
 import type { HudNode } from '@rotp/hud';
+import { FIXTURE_COLOURS } from './fixture-colours.constants';
 
 (globalThis as { IS_REACT_ACT_ENVIRONMENT?: boolean }).IS_REACT_ACT_ENVIRONMENT = true;
 (window as { CSS?: Pick<typeof CSS, 'supports'> }).CSS ??= { supports: () => false };
@@ -60,14 +61,14 @@ const pickerIsUp = (): boolean => document.querySelector('.color-picker-popover'
 
 const groupTrigger = (title: string): Element | undefined =>
   Array.from(document.querySelectorAll('.hud-subgroup__trigger'))
-    .find((el) => (el.textContent ?? '').includes(title));
+    .find((el) => el.textContent.includes(title));
 
 const swatch = (label: string): Element | null =>
   document.querySelector(`[aria-label="Open the colour picker for ${label}"]`);
 
 const NODE: HudNode = {
   kind: 'container', id: 'panel', direction: 'row', children: [],
-  style: { border: { width: 2, color: '#c8a84e', style: 'solid' } },
+  style: { border: { width: 2, color: FIXTURE_COLOURS.gold, style: 'solid' } },
 };
 
 const editor = (onClose: () => void): ReactNode => createElement(

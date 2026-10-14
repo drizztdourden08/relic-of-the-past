@@ -13,6 +13,7 @@ const partText = (part: ApJsonMessagePart, names: NameTables): string => {
       return Number.isFinite(id) ? names.itemName(id, owner) : text;
     case 'location_id':
       return Number.isFinite(id) ? names.locationName(id, owner) : text;
+    case undefined:
     default:
       return text;
   }

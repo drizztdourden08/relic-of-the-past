@@ -5,17 +5,18 @@ import { act, createElement as h, type ReactNode } from 'react';
 import { createRoot, type Root } from 'react-dom/client';
 import { OutlinePanel } from '@app/views/HudLayoutEditor/sub-components/OutlinePanel';
 import { PlatformContext } from '@drizztdourden08/brock-react';
-import type { Platform } from '@drizztdourden08/brock-core';
 import type { HudLayout, HudNode } from '@rotp/hud';
 import { required } from '../required';
+import { WINDOWS_PLATFORM } from './windows-platform';
 
 (globalThis as { IS_REACT_ACT_ENVIRONMENT?: boolean }).IS_REACT_ACT_ENVIRONMENT = true;
 
-const leaf = (id: string): HudNode => ({ id, kind: 'element', element: { type: 'spacer' } } as unknown as HudNode);
+const leaf = (id: string): HudNode => ({ id, kind: 'element', element: { type: 'spacer' } });
 
-const DOC = {
+const DOC: HudLayout = {
   id: 'l',
   name: 'l',
+  builtIn: false,
   screen: {
     id: 'screen',
     kind: 'container',
@@ -34,10 +35,9 @@ const DOC = {
       },
     ],
   },
-} as unknown as HudLayout;
+};
 
 const ROW = 22;
-const PLATFORM = { info: { os: 'windows' } } as unknown as Platform;
 
 let mounted: { root: Root; host: HTMLElement } | null = null;
 
@@ -82,7 +82,7 @@ const pointer = (type: string, x: number, y: number): MouseEvent =>
   new MouseEvent(type, { bubbles: true, cancelable: true, clientX: x, clientY: y });
 
 const mountOutline = (onDrop: (ids: readonly string[], intent: unknown) => void): void => {
-  mount(h(PlatformContext.Provider, { value: PLATFORM }, h(OutlinePanel, {
+  mount(h(PlatformContext.Provider, { value: WINDOWS_PLATFORM }, h(OutlinePanel, {
     doc: DOC,
     selectedId: null,
     slotNumbers: [],

@@ -2,10 +2,10 @@
 import { Icon as IconifyIcon } from '@iconify/react/offline';
 import { CatalogInstallBar } from '@drizztdourden08/brock-catalog/renderer';
 import { Box, Button, Flex, Image, Stack, Text } from '@drizztdourden08/tessera/primitives';
+import { Rating } from '@drizztdourden08/tessera/composites';
 import { formatBytes } from '@drizztdourden08/brock-core';
 import { storeMediaUrl } from '@rotp/hub-client';
 import { KIND_ICONS, KIND_LABELS } from '../../../compounds/StoreItemCard';
-import { Stars } from '../../../compounds/Stars';
 import type { StoreDetailProps } from '../Store.type';
 import { averageOf } from '../behavior/average-of';
 import { liveVersionOf } from '../behavior/item-facts';
@@ -31,7 +31,7 @@ const StoreDetail = (props: StoreDetailProps) => {
         {pack && <Text as="span" className="store__label">installed</Text>}
         {pack && <Text as="span">{pack.semver}</Text>}
       </Box>
-      <Stars average={averageOf(item.stats)} count={item.stats.ratingCount} />
+      <Rating value={averageOf(item.stats)} count={item.stats.ratingCount} showValue size="sm" />
       {(pack !== null || live !== null) && <CatalogInstallBar {...bar} />}
       <Flex wrap gap="sm">
         <Button variant="secondary" onClick={onOpenSite}>Open on the site</Button>

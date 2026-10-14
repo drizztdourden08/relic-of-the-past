@@ -10,8 +10,7 @@ const MagicOriginal = (props: MagicOriginalProps) => {
 
   return (
     <>
-      <HudImage src={`${spritesBase}hud-magic-tl.png`} width={tile} height={tile}
-        style={{ position: 'absolute', left: 0, top: 0, imageRendering: 'pixelated' }} />
+      <HudImage src={`${spritesBase}hud-magic-tl.png`} width={tile} height={tile} atOrigin pixelated />
       <HudImage src={`${spritesBase}hud-magic-top.png`} width={tile} height={tile}
         style={{ position: 'absolute', left: tile, top: 0, imageRendering: 'pixelated' }} />
       <HudImage src={`${spritesBase}hud-magic-tr.png`} width={tile} height={tile}
@@ -19,8 +18,7 @@ const MagicOriginal = (props: MagicOriginalProps) => {
 
       {fills.map((fill, i) => (
         <HudBox key={i} style={{ position: 'absolute', left: 0, top: tile * (i + 1), width: tile * 3, height: tile }}>
-          <HudImage src={`${spritesBase}hud-magic-left.png`} width={tile} height={tile}
-            style={{ position: 'absolute', left: 0, top: 0, imageRendering: 'pixelated' }} />
+          <HudImage src={`${spritesBase}hud-magic-left.png`} width={tile} height={tile} atOrigin pixelated />
           <HudImage src={`${spritesBase}${fill}.png`} width={tile} height={tile}
             style={{ position: 'absolute', left: tile, top: 0, imageRendering: 'pixelated' }} />
           <HudImage src={`${spritesBase}hud-magic-right.png`} width={tile} height={tile}

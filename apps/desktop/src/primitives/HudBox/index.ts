@@ -1,3 +1,3 @@
 /* @layer renderer-hud @kind barrel */
 export { HudBox } from './HudBox';
-export type { HudBoxProps } from './HudBox.type';
+export type { HudBoxLayout, HudBoxProps } from './HudBox.type';

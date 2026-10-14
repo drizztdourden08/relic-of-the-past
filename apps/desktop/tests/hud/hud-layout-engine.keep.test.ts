@@ -87,6 +87,9 @@ describe('boxes, extents and the flow', () => {
     expect(rectOf(doc, 'a')?.y).toBe(12);
   });
 
+});
+
+describe('boxes, extents and the flow', () => {
   describe('the three space distributions put the ends where they say', () => {
     const three = (justify: 'between' | 'around' | 'evenly'): (number | undefined)[] => {
       const doc = docOf(row([leaf('a'), leaf('b'), leaf('c')], {

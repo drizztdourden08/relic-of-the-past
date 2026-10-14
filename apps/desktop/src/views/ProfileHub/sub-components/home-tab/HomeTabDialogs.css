@@ -13,13 +13,13 @@
 
 .home-tab-dialogs__callout--ok {
   background: var(--c-secondary-dim);
-  border: 1px solid var(--c-secondary);
+  border: var(--border-width-thin) solid var(--c-secondary);
   color: var(--c-secondary-bright);
 }
 
 .home-tab-dialogs__callout--bad {
   background: var(--c-danger-dim);
-  border: 1px solid var(--c-danger);
+  border: var(--border-width-thin) solid var(--c-danger);
   color: var(--c-danger);
 }
 
@@ -47,7 +47,7 @@
   font-family: var(--font-mono);
   background: var(--c-primary-dim);
   color: var(--c-primary-bright);
-  padding: 0.1em 0.5em;
+  padding: calc(1.4 * var(--size-1)) calc(7 * var(--size-1));
   border-radius: var(--radius-sm);
   font-weight: var(--weight-medium);
 }

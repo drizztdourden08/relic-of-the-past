@@ -8,7 +8,7 @@ const useHidListedDevices = (active: boolean): HidListedDevice[] => {
 
   useEffect(() => {
     const api = inputApi();
-    if (!active || !api) return;
+    if (!active) return;
     let cancelled = false;
     api.listHid().then((list) => { if (!cancelled) setDevices(list); }).catch(() => {});
     return () => { cancelled = true; };

@@ -2,6 +2,7 @@
 import type { RomData } from '../rom/rom-types';
 import type { AssetBuilder } from '../asset-builder';
 import type { OverworldContext } from './build-overworld-context.type';
+import type { SpriteRange } from './build-overworld-sprites.type';
 
 const buildOverworldSprites = (rom: RomData, A: AssetBuilder, ctx: OverworldContext): void => {
   const { isAreaHead, awrite } = ctx;
@@ -25,7 +26,8 @@ const buildOverworldSprites = (rom: RomData, A: AssetBuilder, ctx: OverworldCont
         sprData.push(0xff);
       };
 
-  const doSpriteRange = (start: number, end: number, baseAddr: number, stageIdxs: number[], infoStage: number): void => {
+  const doSpriteRange = (range: SpriteRange): void => {
+        const { start, end, baseAddr, stageIdxs, infoStage } = range;
         for (let i = 0; i < 160; i++) {
           if (!isAreaHead(i)) continue;
           if (i < start || i >= end) continue;
@@ -37,10 +39,10 @@ const buildOverworldSprites = (rom: RomData, A: AssetBuilder, ctx: OverworldCont
         }
       };
 
-  doSpriteRange(0, 64, 0x89c881, [0], 0);
-  doSpriteRange(0, 64, 0x89c901, [1], 1);
-  doSpriteRange(0, 64, 0x89ca21, [2], 2);
-  doSpriteRange(64, 144, 0x89ca21, [1, 2], 3);
+  doSpriteRange({ start: 0, end: 64, baseAddr: 0x89c881, stageIdxs: [0], infoStage: 0 });
+  doSpriteRange({ start: 0, end: 64, baseAddr: 0x89c901, stageIdxs: [1], infoStage: 1 });
+  doSpriteRange({ start: 0, end: 64, baseAddr: 0x89ca21, stageIdxs: [2], infoStage: 2 });
+  doSpriteRange({ start: 64, end: 144, baseAddr: 0x89ca21, stageIdxs: [1, 2], infoStage: 3 });
 
   A.addUint16('kOverworldSpriteOffs', sprOffs);
   A.addUint8('kOverworldSprites', sprData);

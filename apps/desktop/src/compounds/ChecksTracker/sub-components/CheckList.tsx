@@ -4,7 +4,7 @@ import { shownItemsOf } from '@rotp/game-data';
 import { CheckCard } from './CheckCard';
 import { TrackerCheckRow } from './TrackerCheckRow';
 import type { CheckListProps } from '../ChecksTracker.type';
-import '../ChecksTracker.css';
+import './CheckList.css';
 
 const CheckList = (props: CheckListProps) => {
   const { checks, statuses, eventStatus, viewMode, run } = props;

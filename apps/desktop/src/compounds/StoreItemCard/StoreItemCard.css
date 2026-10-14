@@ -8,8 +8,8 @@
 }
 
 .store-item-card:focus-visible {
-  outline: 2px solid var(--c-primary);
-  outline-offset: 2px;
+  outline: var(--border-width-thick) solid var(--c-primary);
+  outline-offset: var(--border-width-thick);
 }
 
 .store-item-card--selected {
@@ -36,7 +36,7 @@
   color: var(--c-text-muted);
   font-size: var(--text-xs);
   text-transform: uppercase;
-  letter-spacing: 0.08em;
+  letter-spacing: var(--tracking-caps);
 }
 
 .store-item-card__name {

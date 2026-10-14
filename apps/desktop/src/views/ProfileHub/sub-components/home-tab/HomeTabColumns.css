@@ -7,7 +7,7 @@
 
 .home-tab__columns {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, calc(300 * var(--size-1))), 1fr));
   gap: var(--space-xl);
   min-height: 0;
 }
@@ -43,13 +43,13 @@
   font-weight: var(--weight-semi);
   color: var(--c-text-dim);
   text-transform: uppercase;
-  letter-spacing: 0.5px;
+  letter-spacing: calc(0.5 * var(--size-1));
   margin: 0;
 }
 
 .home-tab__save-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(144px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(calc(144 * var(--size-1)), 1fr));
   gap: var(--space-sm);
 }
 
@@ -57,15 +57,15 @@
   display: flex;
   flex-direction: column;
   background: var(--c-surface);
-  border: 1px solid var(--c-border);
+  border: var(--border-width-thin) solid var(--c-border);
   border-radius: var(--radius-lg);
   overflow: hidden;
-  max-height: 320px;
+  max-height: var(--size-320);
   overflow-y: auto;
 }
 
 .home-tab__save-list > * + * {
-  border-top: 1px solid var(--c-border);
+  border-top: var(--border-width-thin) solid var(--c-border);
 }
 
 .home-tab__save-name-input {
@@ -74,7 +74,7 @@
   font-size: var(--text-sm);
   color: var(--c-text);
   background: var(--c-hover);
-  border: 1px solid var(--c-border);
+  border: var(--border-width-thin) solid var(--c-border);
   border-radius: var(--radius-md);
   outline: none;
   margin-top: var(--space-sm);
@@ -88,15 +88,15 @@
   display: flex;
   flex-direction: column;
   background: var(--c-surface);
-  border: 1px solid var(--c-border);
+  border: var(--border-width-thin) solid var(--c-border);
   border-radius: var(--radius-lg);
   overflow: hidden;
-  max-height: 360px;
+  max-height: calc(360 * var(--size-1));
   overflow-y: auto;
 }
 
 .home-tab__sessions > * + * {
-  border-top: 1px solid var(--c-border);
+  border-top: var(--border-width-thin) solid var(--c-border);
 }
 
 .home-tab__empty {

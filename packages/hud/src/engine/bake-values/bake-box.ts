@@ -24,10 +24,14 @@ const bakeSize = (size: HudBox['size'], scope: Scope): HudBox['size'] => (
   }
 );
 
-const bakeBox = (node: HudNode, scope: Scope): Partial<HudBox> => ({
+const bakeBounds = (node: HudNode, scope: Scope): Partial<HudBox> => ({
   ...(node.size ? { size: bakeSize(node.size, scope) } : {}),
   ...(node.min ? { min: bakeMinMax(node.min, scope) } : {}),
   ...(node.max ? { max: bakeMinMax(node.max, scope) } : {}),
+});
+
+const bakeBox = (node: HudNode, scope: Scope): Partial<HudBox> => ({
+  ...bakeBounds(node, scope),
   ...(node.scale !== undefined ? { scale: bakeValue(node.scale, scope) } : {}),
   ...(node.opacity !== undefined ? { opacity: bakeValue(node.opacity, scope) } : {}),
   ...(node.visible !== undefined

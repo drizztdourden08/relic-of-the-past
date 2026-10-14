@@ -1,18 +1,13 @@
 /* @layer renderer-components @kind component */
-import { useMemo } from 'react';
 import { Box, Text } from '@drizztdourden08/tessera/primitives';
-import { S } from '@app/navigation-overlay/tooltip/styles';
 import type { ClassificationRowProps } from './ClassificationRow.type';
 
-const ClassificationRow = ({ label, value, tag, color }: ClassificationRowProps) => {
-  const valueStyle = useMemo(() => (color ? { color } : S.text), [color]);
-  return (
-    <Box style={S.classRow}>
-      <Text style={S.classLabel}>{label}</Text>
-      <Text style={valueStyle}>{value}</Text>
-      {tag && <Text style={S.classTag}>{tag}</Text>}
-    </Box>
-  );
-};
+const ClassificationRow = ({ label, value, tag, tone }: ClassificationRowProps) => (
+  <Box className="nav-tip__class-row">
+    <Text className="nav-tip__class-label">{label}</Text>
+    <Text className={tone ? undefined : 'nav-tip__text'} data-tone={tone}>{value}</Text>
+    {tag && <Text className="nav-tip__class-tag">{tag}</Text>}
+  </Box>
+);
 
 export { ClassificationRow };

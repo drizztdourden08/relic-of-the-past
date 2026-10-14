@@ -1,8 +1,17 @@
 /* @layer renderer-hud @kind types */
 import type { CSSProperties } from 'react';
-import type { PlacedNode } from '@rotp/hud';
+import type { HudAnimation, HudBoxStyle, PlacedNode } from '@rotp/hud';
 
 type MotionScope = Readonly<Record<string, number>>;
+
+interface NodeAnimationInput {
+  animations: readonly HudAnimation[] | undefined;
+  nowMs: number;
+  scope: MotionScope;
+  reducedMotion: boolean;
+  style: HudBoxStyle | undefined;
+  displayScale: number;
+}
 
 interface SampledProperties {
   scale?: number; x?: number; y?: number; rotate?: number; opacity?: number; tint?: number;
@@ -32,5 +41,6 @@ interface HudNodeMotionResult {
 interface NodeSnapshot { w: number; h: number; x: number; y: number; opacity: number }
 
 export type {
-  EnterExitResult, Ghost, HudNodeMotionResult, MotionScope, NodeAnimationResult, NodeSnapshot, SampledProperties,
+  EnterExitResult, Ghost, HudNodeMotionResult, MotionScope, NodeAnimationInput, NodeAnimationResult, NodeSnapshot,
+  SampledProperties,
 };

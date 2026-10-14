@@ -5,24 +5,18 @@ import { createRoot, type Root } from 'react-dom/client';
 import { OutlinePanel } from '@app/views/HudLayoutEditor/sub-components/OutlinePanel';
 import { useHudEditorViewStore } from '../../../src/stores/hud-editor-view-store';
 import { PlatformContext } from '@drizztdourden08/brock-react';
-import { DOC, PLATFORM, ROW, VIEW } from './drag-timers.constants';
+import { DOC, ROW, VIEW } from './drag-timers.constants';
+import { createFrameQueue } from './frame-queue';
+import { outlineDom } from './outline-dom';
+import { WINDOWS_PLATFORM } from '../windows-platform';
+
+const { rowsInOrder, rect, pointer, rowFor } = outlineDom;
 
 const installOutlineRig = () => {
   (globalThis as { IS_REACT_ACT_ENVIRONMENT?: boolean }).IS_REACT_ACT_ENVIRONMENT = true;
-  let pending = new Map<number, FrameRequestCallback>();
-  let nextFrame = 1;
+  const frames = createFrameQueue();
   let scrolled = 0;
   let mounted: { root: Root; host: HTMLElement } | null = null;
-  const realRaf = globalThis.requestAnimationFrame;
-  const realCaf = globalThis.cancelAnimationFrame;
-
-  const runFrames = (times = 1): void => {
-    for (let i = 0; i < times; i += 1) {
-      const due = [...pending.values()];
-      pending = new Map();
-      act(() => { due.forEach((cb) => cb(0)); });
-    }
-  };
 
   const unmount = (): void => {
     if (!mounted) return;
@@ -33,12 +27,7 @@ const installOutlineRig = () => {
   };
 
   beforeEach(() => {
-    pending = new Map();
-    nextFrame = 1;
-    globalThis.requestAnimationFrame = ((cb: FrameRequestCallback) => {
-      const id = nextFrame; nextFrame += 1; pending.set(id, cb); return id;
-    });
-    globalThis.cancelAnimationFrame = ((id: number) => { pending.delete(id); });
+    frames.install();
     vi.useFakeTimers({ toFake: ['setTimeout', 'clearTimeout'] });
     useHudEditorViewStore.setState({ collapsedNodeIds: new Set() });
   });
@@ -47,16 +36,7 @@ const installOutlineRig = () => {
     unmount();
     document.querySelector('#portal-root')?.remove();
     vi.useRealTimers();
-    globalThis.requestAnimationFrame = realRaf;
-    globalThis.cancelAnimationFrame = realCaf;
-  });
-
-  const rowsInOrder = (): HTMLElement[] =>
-    Array.from(document.querySelectorAll('[data-outline-row]'));
-
-  const rect = (box: typeof VIEW): DOMRect => ({
-    x: box.left, y: box.top, width: box.right - box.left, height: box.bottom - box.top,
-    top: box.top, left: box.left, right: box.right, bottom: box.bottom, toJSON: () => ({}),
+    frames.restore();
   });
 
   const layOut = (canScroll = true): HTMLElement => {
@@ -75,21 +55,12 @@ const installOutlineRig = () => {
     return rows;
   };
 
-  const pointer = (type: string, y: number): MouseEvent =>
-    new MouseEvent(type, { bubbles: true, cancelable: true, clientX: 40, clientY: y });
-
-  const rowFor = (id: string): HTMLElement => {
-    const found = rowsInOrder().find((row) => row.dataset.outlineRow === id);
-    if (!found) throw new Error(`no row for ${id}`);
-    return found;
-  };
-
   const mountOutline = (onDrop: (ids: readonly string[], intent: unknown) => void = () => {}): void => {
     const host = document.createElement('div');
     document.body.appendChild(host);
     const root = createRoot(host);
     act(() => {
-      root.render(h(PlatformContext.Provider, { value: PLATFORM }, h(OutlinePanel, {
+      root.render(h(PlatformContext.Provider, { value: WINDOWS_PLATFORM }, h(OutlinePanel, {
         doc: DOC, selectedId: null, slotNumbers: [], onSelect: () => {}, onRemove: () => {}, onDrop,
       })));
     });
@@ -103,8 +74,8 @@ const installOutlineRig = () => {
   };
 
   return {
-    runFrames, unmount, rowsInOrder, layOut, pointer, rowFor, mountOutline, dragTo,
-    pendingFrames: (): number => pending.size,
+    runFrames: frames.run, unmount, rowsInOrder, layOut, pointer, rowFor, mountOutline, dragTo,
+    pendingFrames: frames.size,
     scrolled: (): number => scrolled,
   };
 };

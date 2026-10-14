@@ -6,7 +6,7 @@ import type { Placement } from '../../world/fill/placement.type';
 import type { PhysicalPlan, PlanEntry, PlanError } from '../physical-plan.type';
 
 const isPlanError = (row: PlanEntry | PlanError): row is PlanError =>
-  (row as PlanError).reason !== undefined;
+  'reason' in row;
 
 const buildPhysicalPlan = (placement: Placement): PhysicalPlan => {
   const flags = { ...scopeFlagsOfStats(placement.stats), shopPrices: placement.shopPrices };

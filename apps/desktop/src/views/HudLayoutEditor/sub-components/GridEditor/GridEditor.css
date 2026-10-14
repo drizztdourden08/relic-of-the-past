@@ -6,9 +6,3 @@
   gap: var(--space-2xs);
   min-width: 0;
 }
-
-.hud-grid-echo {
-  position: absolute;
-  border: var(--border-width-thin) solid;
-  pointer-events: none;
-}

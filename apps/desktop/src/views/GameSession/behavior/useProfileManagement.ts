@@ -3,7 +3,6 @@ import { useState, useCallback, useEffect } from 'react';
 import { useProfiles, useProfilesStore } from '@drizztdourden08/brock-react';
 import type { CreateProfileOptions, CreateProfileResult } from '@app/profiles/types';
 import { runCreateProfileFlow } from './create-profile-flow';
-import { log } from '@app/log-bus';
 import { spriteRomOf } from '@rotp/packs';
 import { useActivateRomSprites } from '@app/hooks/useActivateRomSprites';
 import * as romsStore from '@app/storage/roms-store';
@@ -11,6 +10,7 @@ import { useReloadTarget } from './useReloadTarget';
 import type { ProfileManagementParams } from './useProfileManagement.type';
 import { useLoadProfileForGame } from './useLoadProfileForGame';
 import { useRomActions } from './useRomActions';
+import { useDeleteProfile } from './useDeleteProfile';
 
 const useProfileManagement = (params: ProfileManagementParams) => {
   const { showDialog, dismissDialog, onProfileLoaded, onGameClear } = params;
@@ -50,23 +50,9 @@ const useProfileManagement = (params: ProfileManagementParams) => {
     return result;
   }, [refreshProfilesAndRoms, handleSelectProfile]);
 
-  const handleDeleteProfile = useCallback((id: string) => {
-    const profile = profiles.find((p) => p.id === id);
-    if (!profile) return;
-    showDialog({
-      title: 'Delete Profile',
-      message: `Delete "${profile.name}"? Its save data will be lost. This cannot be undone.`,
-      confirmLabel: 'Delete Profile',
-      variant: 'danger',
-      onConfirm: async () => {
-        dismissDialog();
-        if (activeProfile?.id === id) onGameClear();
-        removeConfirmed(profile);
-        log.app('Profile deleted');
-        await refreshProfilesAndRoms();
-      },
-    });
-  }, [profiles, activeProfile, refreshProfilesAndRoms, showDialog, dismissDialog, onGameClear, removeConfirmed]);
+  const handleDeleteProfile = useDeleteProfile({
+    profiles, activeProfile, refreshProfilesAndRoms, showDialog, dismissDialog, onGameClear, removeConfirmed,
+  });
 
   const { extractionStates, importingRom, handleImportRom, handleExtractAssets, handleDeleteRom } = useRomActions({
     activeProfile, setActiveProfile, refreshProfilesAndRoms, showDialog, dismissDialog, onGameClear,

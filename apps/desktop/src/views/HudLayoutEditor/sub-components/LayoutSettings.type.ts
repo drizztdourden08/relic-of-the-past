@@ -1,5 +1,6 @@
 /* @layer renderer-components @kind types */
 import type { ReactNode } from 'react';
+import type { IconName } from '@drizztdourden08/tessera/primitives';
 import type { Value } from '@rotp/hud';
 
 type GapAxis = 'x' | 'y';
@@ -7,6 +8,7 @@ type GapAxis = 'x' | 'y';
 interface GapCell {
   axis: GapAxis;
   cap: string;
+  capIcon?: IconName;
   label: string;
   value: Value;
 }

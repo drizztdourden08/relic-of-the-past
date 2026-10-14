@@ -1,15 +1,16 @@
 /* @layer shared-input @kind logic */
 import { SDL_AXIS, SDL_BUTTON } from '@rotp/game-data';
 import { RESERVED_CATEGORY } from './derive-slots.constants';
+import { sdlIndexOf } from './sdl-index-of';
 import type { ResolvedControl } from '../../family/family.type';
 import type { InputBinding, ModernSlot } from '@rotp/game-data';
 
 const pressableBinding = (control: ResolvedControl): InputBinding | null => {
   if (control.kind === 'button') {
-    const index = SDL_BUTTON[control.position as keyof typeof SDL_BUTTON];
+    const index = sdlIndexOf(SDL_BUTTON, control.position);
     return index === undefined ? null : { type: 'gamepad-button', index, label: control.label };
   }
-  const axisIndex = SDL_AXIS[control.position as keyof typeof SDL_AXIS];
+  const axisIndex = sdlIndexOf(SDL_AXIS, control.position);
   if (axisIndex === undefined || control.category !== 'trigger') return null;
   return { type: 'gamepad-axis', axisIndex, direction: '+', label: control.label };
 };

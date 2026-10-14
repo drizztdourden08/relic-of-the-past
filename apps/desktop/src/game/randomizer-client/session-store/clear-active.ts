@@ -4,10 +4,12 @@ import { dropOnlinePlacement } from './drop-online-placement';
 import { storeSlots } from './store-slots';
 import type { OnlineSession } from '../online-session';
 
-const keepLastNetworkStatus = (active: OnlineSession): void => {
+const ignoreUnrememberedStatus = (): void => undefined;
+
+const keepLastNetworkStatus =(active: OnlineSession): void => {
   storeSlots.unsubscribeNetwork?.();
   storeSlots.unsubscribeNetwork = null;
-  try { rememberNetworkStatus(active.networkStatus); } catch {  }
+  try { rememberNetworkStatus(active.networkStatus); } catch { ignoreUnrememberedStatus(); }
 };
 
 const clearActive = (): void => {

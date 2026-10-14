@@ -6,6 +6,8 @@ import { SDL_GAMEPAD_TYPES } from '@rotp/game-data';
 import type { DeviceEntry } from '@drizztdourden08/brock-input';
 import type { DeviceFamily } from '@rotp/game-data';
 import type { SelectOption } from '@drizztdourden08/tessera/primitives';
+import { nonEmpty } from '../../diagnostics-wizard/behavior/non-empty';
+import type { UseDeviceAutoDetectParams } from './hid-calibration-hook.type';
 import { listInputDevices } from './list-input-devices';
 
 const toHex4 = (n: number): string => n.toString(16).padStart(4, '0');
@@ -14,11 +16,11 @@ const familyFor = (sdlType: SdlGamepadType): DeviceFamily =>
   (resolveBrandLogoKey(buildDisplayContext({ sdlType })) || 'generic') as DeviceFamily;
 
 const profileFromEntry = (entry: DeviceEntry): DeviceProfile => {
-  const sdlType = (entry.sdlType ?? 'unknown') as SdlGamepadType;
+  const sdlType = entry.sdlType ?? 'unknown';
   const vendorId = toHex4(entry.vendorId);
   const productId = toHex4(entry.productId);
   const ctx = buildDisplayContext({ sdlType, vendorId, productId });
-  const name = resolveDeviceName(ctx, entry.name || entry.product || sdlType);
+  const name = resolveDeviceName(ctx, nonEmpty(entry.name) ?? (entry.product || sdlType));
   return buildDeviceProfile(
     { id: sdlType, name, family: familyFor(sdlType), inputApi: 'hid', vendorId, productId },
     { sdlType, hasButton: entry.hasButton ?? [], hasAxis: entry.hasAxis ?? [], buttonLabels: entry.buttonLabels },
@@ -30,7 +32,8 @@ const profileFromSdlType = (sdlType: SdlGamepadType): DeviceProfile => {
   return buildDeviceProfileFromSdlType({ id: sdlType, name, family: familyFor(sdlType), inputApi: 'hid' }, sdlType);
 };
 
-const useDeviceAutoDetect = (addLog: (msg: string) => void, initialProfileId?: string, initialHasGyro?: boolean, deviceKey?: string, initialProfile?: DeviceProfile | null) => {
+const useDeviceAutoDetect = (params: UseDeviceAutoDetectParams) => {
+  const { addLog, initialProfileId, initialHasGyro, deviceKey, initialProfile } = params;
   const [selectedProfileId, setSelectedProfileId] = useState(initialProfileId ?? '');
   const [selectedSdlVidPid, setSelectedSdlVidPid] = useState('');
   const [hasGyro, setHasGyro] = useState(initialHasGyro ?? true);

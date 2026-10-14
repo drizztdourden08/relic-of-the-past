@@ -3,6 +3,7 @@ import { HudBox } from '../../primitives/HudBox';
 import { HudNumber } from '../../primitives/HudNumber';
 import { HudSprite } from '../../primitives/HudSprite';
 import type { HudCountProps } from './HudCount.type';
+import './HudCount.css';
 
 const HudCount = (props: HudCountProps) => {
   const { icon, iconWidth = 8, value, digits = 2, isMax = false, scale, spritesBase } = props;
@@ -11,7 +12,7 @@ const HudCount = (props: HudCountProps) => {
   const iconH = 8 * scale;
 
   return (
-    <HudBox style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 0 }}>
+    <HudBox className="hud-count">
       <HudSprite
         src={`${spritesBase}${icon}.png`}
         width={iconW}

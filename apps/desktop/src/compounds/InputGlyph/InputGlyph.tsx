@@ -4,6 +4,7 @@ import { getBindingLabel } from '@rotp/input-mapping';
 import { getBindingIconUrl } from '@app/input/binding-display/get-binding-icon-url';
 import { getButtonIconUrl } from '@app/input/button-icons/get-button-icon-url';
 import type { InputGlyphProps } from './InputGlyph.type';
+import { GlyphFallback } from './sub-components/GlyphFallback';
 import './InputGlyph.css';
 
 const resolve = (props: InputGlyphProps): { iconUrl: string | null; label: string } => {
@@ -25,13 +26,9 @@ const InputGlyph = (props: InputGlyphProps) => {
 
   return (
     <Box className={`input-glyph input-glyph--${size} ${className}`}>
-      {iconUrl ? (
-        <Image src={iconUrl} alt={label} className="input-glyph__icon" />
-      ) : fallbackVariant === 'plain' ? (
-        <Text className={`input-glyph__plain ${fallbackClassName}`}>{label}</Text>
-      ) : (
-        <Text as="kbd" className={`input-glyph__key ${fallbackClassName}`}>{label}</Text>
-      )}
+      {iconUrl
+        ? <Image src={iconUrl} alt={label} className="input-glyph__icon" />
+        : <GlyphFallback variant={fallbackVariant} label={label} className={fallbackClassName} />}
       {showLabel && iconUrl && <Text className="input-glyph__label">{label}</Text>}
     </Box>
   );

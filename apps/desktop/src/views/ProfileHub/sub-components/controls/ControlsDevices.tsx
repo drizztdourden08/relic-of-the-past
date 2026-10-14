@@ -2,10 +2,8 @@
 import { useCallback } from 'react';
 import { Box, Icon, IconButton, Text } from '@drizztdourden08/tessera/primitives';
 import { RescanButton } from '../../../../compounds/RescanButton';
-import { controllerCardInfo } from '@rotp/input-mapping';
 import { DeviceCard } from './DeviceCard';
-import { AdapterDeviceCard } from './AdapterDeviceCard';
-import { firstPort } from './first-port';
+import { ControllerGroupCard } from './ControllerGroupCard';
 import type { DeviceAssignInfo } from './DeviceCard.type';
 import type { CtrlProps } from './controls.type';
 
@@ -42,38 +40,14 @@ const ControlsDevices = ({ ctrl }: CtrlProps) => {
           />
         ))}
 
-        {ctrl.controllerGroups.map((group) => {
-          if (group.isAdapter) {
-            return (
-              <AdapterDeviceCard
-                key={`${group.vendorId}:${group.productId}`}
-                group={group}
-                onAssign={handleAssign}
-                onAddMapping={ctrl.addMapping}
-              />
-            );
-          }
-
-          const { entry, deviceKey } = firstPort(group);
-          const info = controllerCardInfo(entry);
-          return (
-            <DeviceCard
-              key={deviceKey}
-              id={deviceKey}
-              displayName={info.displayName}
-              deviceFamily={info.deviceFamily}
-              sdlType={info.sdlType}
-              vendorId={info.vendorId}
-              productId={info.productId}
-              status={entry.status}
-              busType={entry.busType}
-              hasRumble={entry.hasRumble}
-              hasGyro={entry.hasGyro}
-              onAssign={handleAssign}
-              onAddMapping={ctrl.addMapping}
-            />
-          );
-        })}
+        {ctrl.controllerGroups.map((group) => (
+          <ControllerGroupCard
+            key={`${group.vendorId}:${group.productId}`}
+            group={group}
+            onAssign={handleAssign}
+            onAddMapping={ctrl.addMapping}
+          />
+        ))}
 
         {keyboardDevices.length === 0 && ctrl.controllerGroups.length === 0 && (
           <Text as="p" className="controls-settings__no-devices">No devices detected</Text>

@@ -9,9 +9,14 @@ type ExtractRequest =
   | { op: 'sprites'; romBytes: Uint8Array; defs: SpriteDef[] }
   | { op: 'menu-text'; romBytes: Uint8Array };
 
+type ExtractReply<T> =
+  | { ok: true; result: T }
+  | { ok: false; error: string }
+  | { warn: string };
+
 interface WorkerScope {
   onmessage: ((e: MessageEvent<ExtractRequest>) => void) | null;
   postMessage: (msg: unknown) => void;
 }
 
-export type { ExtractRequest, WorkerScope };
+export type { ExtractReply, ExtractRequest, WorkerScope };

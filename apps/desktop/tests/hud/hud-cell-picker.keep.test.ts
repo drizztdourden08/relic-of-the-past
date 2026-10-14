@@ -5,18 +5,16 @@ import { act, createElement as h, type ReactNode } from 'react';
 import { createRoot, type Root } from 'react-dom/client';
 import { CellPicker } from '@app/views/HudLayoutEditor/sub-components/CellPicker';
 import { PlatformContext } from '@drizztdourden08/brock-react';
-import type { Platform } from '@drizztdourden08/brock-core';
-import type { HudGridContainer, HudNode } from '@rotp/hud';
+import type { HudGridContainer, HudNode, HudPlace } from '@rotp/hud';
+import { WINDOWS_PLATFORM } from './windows-platform';
 
 (globalThis as { IS_REACT_ACT_ENVIRONMENT?: boolean }).IS_REACT_ACT_ENVIRONMENT = true;
 const ignore = (): void => {};
 class NoopResizeObserver { observe = ignore; unobserve = ignore; disconnect = ignore; }
 (globalThis as { ResizeObserver?: unknown }).ResizeObserver = NoopResizeObserver;
 
-const PLATFORM = { info: { os: 'windows' } } as unknown as Platform;
-
-const leaf = (id: string, place?: Record<string, number>): HudNode =>
-  ({ id, kind: 'element', element: { type: 'spacer' }, ...(place ? { place } : {}) }) as unknown as HudNode;
+const leaf = (id: string, place?: HudPlace): HudNode =>
+  ({ id, kind: 'element', element: { type: 'spacer' }, ...(place ? { place } : {}) });
 
 const PARENT: HudGridContainer = {
   kind: 'container', id: 'screen', layout: 'grid',
@@ -30,7 +28,7 @@ const mount = (node: ReactNode): void => {
   const host = document.createElement('div');
   document.body.appendChild(host);
   const root = createRoot(host);
-  act(() => { root.render(h(PlatformContext.Provider, { value: PLATFORM }, node)); });
+  act(() => { root.render(h(PlatformContext.Provider, { value: WINDOWS_PLATFORM }, node)); });
   mounted = { root, host };
 };
 
@@ -57,7 +55,7 @@ const up = (el: Element): void => {
   act(() => { el.dispatchEvent(new MouseEvent('pointerup', { bubbles: true, cancelable: true })); });
 };
 
-const picker = (onChange: (place: unknown) => void, place: Record<string, number> = { column: 1, row: 3 }): void => {
+const picker = (onChange: (place: unknown) => void, place: HudPlace = { column: 1, row: 3 }): void => {
   mount(h(CellPicker, { container: PARENT, childId: 'wallet', place, onChange }));
 };
 

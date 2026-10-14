@@ -1,31 +1,28 @@
 /* @layer renderer-components @kind component */
-import { Box, Image, Status, Text } from '@drizztdourden08/tessera/primitives';
-import { getItem, getItemSprite } from '@rotp/game-data';
-import { EVENT_MARK } from '../ChecksTracker.constants';
+import { Box, Image, Text } from '@drizztdourden08/tessera/primitives';
+import { cardSpriteOf } from '../behavior/card-sprite';
+import { displayItemOf } from '../behavior/display-item';
 import type { CheckCardProps } from '../ChecksTracker.type';
 import { CardSpritePlaceholder } from './CardSpritePlaceholder';
+import { NowPill } from './NowPill';
 import { SwapBadge } from './SwapBadge';
-import '../ChecksTracker.css';
+import './CheckCard.css';
 
-const CheckCard = ({ check, status, item: itemId, foreignItem, now }: CheckCardProps) => {
-  const showNow = now !== undefined && (now || status === 'completed');
+const CheckCard = ({ check, status, item, foreignItem, now }: CheckCardProps) => {
   const isEvent = check.kind === 'event';
-  const shownId = foreignItem === undefined ? itemId : undefined;
-  const displayItem = foreignItem ?? (shownId ? getItem(shownId).name : undefined);
-  const sprite = isEvent ? EVENT_MARK : (shownId ? getItemSprite(shownId) : undefined);
+  const { shownId, name } = displayItemOf(item, foreignItem);
+  const sprite = cardSpriteOf(isEvent, shownId);
 
   return (
     <Box className={`tracker-card tracker-card--${status}${isEvent ? ' tracker-card--event' : ''}`}>
       {sprite
-        ? <Image className="tracker-card__sprite" src={sprite} alt={displayItem ?? ''} draggable={false} fallback={<CardSpritePlaceholder />} />
+        ? <Image className="tracker-card__sprite" src={sprite} alt={name ?? ''} draggable={false} fallback={<CardSpritePlaceholder />} />
         : <CardSpritePlaceholder />}
       <Box className="tracker-card__text">
-        <Text className="tracker-card__item-name">{isEvent ? check.name : (displayItem ?? '???')}</Text>
+        <Text className="tracker-card__item-name">{isEvent ? check.name : (name ?? '???')}</Text>
         <Text className="tracker-card__check-name">{isEvent ? 'Event' : check.name}</Text>
       </Box>
-      {showNow && (
-        <Status className="tracker-card__now" tone={now ? 'success' : 'neutral'} variant="pill">{now ? 'now' : 'not now'}</Status>
-      )}
+      <NowPill className="tracker-card__now" now={now} status={status} />
       <SwapBadge check={check} shown={shownId} />
     </Box>
   );

@@ -1,0 +1,40 @@
+/* @layer renderer-components @kind style */
+.controller-report__steps {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-md);
+}
+
+.controller-report__step {
+  display: flex;
+  align-items: center;
+  gap: var(--space-xs);
+  font-size: var(--text-xs);
+  color: var(--c-text-dim);
+}
+
+.controller-report__step-num {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: calc(22.4 * var(--size-1));
+  height: calc(22.4 * var(--size-1));
+  border-radius: 50%;
+  border: var(--border-width-thin) solid var(--c-border);
+  font-size: var(--text-xs);
+}
+
+.controller-report__step--current {
+  color: var(--c-text);
+  font-weight: var(--weight-medium);
+}
+
+.controller-report__step--current .controller-report__step-num {
+  border-color: var(--c-info);
+  color: var(--c-info);
+}
+
+.controller-report__step--done .controller-report__step-num {
+  border-color: var(--c-secondary-bright);
+  color: var(--c-secondary-bright);
+}

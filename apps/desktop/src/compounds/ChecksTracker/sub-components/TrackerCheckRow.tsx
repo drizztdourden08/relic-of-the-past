@@ -1,26 +1,24 @@
 /* @layer renderer-components @kind component */
-import { Box, Status, Text } from '@drizztdourden08/tessera/primitives';
-import { getItem } from '@rotp/game-data';
-import { CheckStatusIcon } from './CheckStatusIcon';
-import { SwapBadge } from './SwapBadge';
+import { Box, Text } from '@drizztdourden08/tessera/primitives';
+import { displayItemOf } from '../behavior/display-item';
 import type { TrackerCheckRowProps } from '../ChecksTracker.type';
-import '../ChecksTracker.css';
+import { CheckStatusIcon } from './CheckStatusIcon';
+import { NowPill } from './NowPill';
+import { SwapBadge } from './SwapBadge';
+import './TrackerCheckRow.css';
 
 const TrackerCheckRow = (props: TrackerCheckRowProps) => {
   const { check, status, detailed, item, foreignItem, now } = props;
-  const itemId = foreignItem === undefined ? item : undefined;
-  const displayItem = foreignItem ?? (itemId ? getItem(itemId).name : undefined);
+  const { shownId, name } = displayItemOf(item, foreignItem);
   return (
     <Box className={`tracker-check tracker-check--${status}`}>
       <CheckStatusIcon status={status} size={11} />
       <Text className="tracker-check__name">{check.name}</Text>
       {detailed && (
-        <Text className="tracker-check__item">{displayItem ?? '-'}</Text>
+        <Text className="tracker-check__item">{name ?? '-'}</Text>
       )}
-      {now !== undefined && (now || status === 'completed') && (
-        <Status tone={now ? 'success' : 'neutral'} variant="pill">{now ? 'now' : 'not now'}</Status>
-      )}
-      <SwapBadge check={check} shown={itemId} />
+      <NowPill now={now} status={status} />
+      <SwapBadge check={check} shown={shownId} />
       <Text className="tracker-check__type">{check.kind}</Text>
     </Box>
   );

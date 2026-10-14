@@ -1,11 +1,11 @@
 /* @layer renderer-components @kind logic */
-import type { HidButtonMapping, StickCandidate } from '../hid-calibration.type';
+import type { StickCandidate } from '../hid-calibration.type';
 import { TRIGGER_RANGE_THRESHOLD, TRIGGER_STABLE_FRAMES } from '../hid-calibration.constants';
 import { classifyTriggerByte } from '../trigger-classify';
 import { extremesCandidate } from './extremes-candidate';
 import { trackExtremes } from './track-extremes';
 import { PROCESS_EVERY_FRAMES, TRIGGER_BUFFER_FRAMES, TRIGGER_CANDIDATE_MIN_RANGE } from './report-processing.constants';
-import type { TriggerRefs } from './report-processing.type';
+import type { TriggerFrameArgs, TriggerRefs } from './report-processing.type';
 
 const topTriggerCandidate = (refs: TriggerRefs, mins: Uint8Array, maxs: Uint8Array, len: number): StickCandidate | null => {
   const candidates: StickCandidate[] = [];
@@ -18,7 +18,8 @@ const topTriggerCandidate = (refs: TriggerRefs, mins: Uint8Array, maxs: Uint8Arr
   return candidates[0] ?? null;
 };
 
-const processTriggerFrame = (bytes: Uint8Array, refs: TriggerRefs, onLiveInfo: (info: string) => void, onFinalize: (c: StickCandidate) => void, onStopRecording: () => void, onFinalizeDigital: (mapping: HidButtonMapping) => void): void => {
+const processTriggerFrame = (args: TriggerFrameArgs): void => {
+  const { bytes, refs, onLiveInfo, onFinalize, onStopRecording, onFinalizeDigital } = args;
   const mins = refs.triggerMinsRef.current;
   const maxs = refs.triggerMaxsRef.current;
   trackExtremes(bytes, mins, maxs);

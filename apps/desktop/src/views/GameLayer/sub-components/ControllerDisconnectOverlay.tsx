@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind component */
 
-import { Box, Text } from '@drizztdourden08/tessera/primitives';
+import { Box, Icon, Text } from '@drizztdourden08/tessera/primitives';
 import { InputGlyph } from '../../../compounds/InputGlyph';
 import { resolveFunctionMappingIcon } from '../../../game';
 import type { FunctionMapping } from '@rotp/features';
@@ -19,7 +19,9 @@ const ControllerDisconnectOverlay = (props: ControllerDisconnectOverlayProps) =>
   return (
     <Box className="controller-disconnect-overlay" onDoubleClick={onResume}>
       <Box className="controller-disconnect-overlay__card">
-        <Box className="controller-disconnect-overlay__icon">🎮</Box>
+        <Box className="controller-disconnect-overlay__icon">
+          <Icon name="gamepad-2" />
+        </Box>
         <Text as="h2" className="controller-disconnect-overlay__title">Controller Disconnected</Text>
         <Text as="p" className="controller-disconnect-overlay__message">
           <Text as="strong">{controllerName}</Text> is not connected.

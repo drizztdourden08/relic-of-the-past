@@ -51,6 +51,12 @@ type MagicLevelBarProps = {
   scale: number;
 };
 
+type MagicRowsProps = {
+  inset: number;
+  held: number;
+  onHoverLevel: (level: number | null) => void;
+};
+
 type NumberCellProps = HudPieceProps & {
   label: string;
   value: number;
@@ -66,5 +72,5 @@ type NumberCellProps = HudPieceProps & {
 
 export type {
   BottleOption, BottleSlot, CounterEditorProps, CounterKind, CounterSpec, HeartButton, HeartWrite, HudPieceProps, MagicLevelBarProps,
-  NumberCellProps, NumberEditParams, OpenBottle,
+  MagicRowsProps, NumberCellProps, NumberEditParams, OpenBottle,
 };

@@ -29,7 +29,7 @@ const probeDisplay = (refreshHz: number | null): DisplayEnvironment => {
     colorDepth: window.screen.colorDepth,
     pixelDepth: window.screen.pixelDepth,
     devicePixelRatio: dpr,
-    orientation: window.screen.orientation?.type ?? null,
+    orientation: window.screen.orientation.type,
     colorScheme: matches('(prefers-color-scheme: dark)') ? 'dark' : 'light',
     colorGamut: firstMatch(['color-gamut: rec2020', 'color-gamut: p3', 'color-gamut: srgb'], 'unknown'),
     hdr: matches('(dynamic-range: high)'),

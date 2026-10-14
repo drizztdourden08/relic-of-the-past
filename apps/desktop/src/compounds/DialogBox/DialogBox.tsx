@@ -1,42 +1,17 @@
 /* @layer renderer-hud @kind component */
 import { useState } from 'react';
-import type { CSSProperties } from 'react';
-import type { DialogCorner } from '@rotp/game-data';
-import { groundShape } from '@rotp/game-data';
 import { HudBox } from '../../primitives/HudBox';
-import { HudImage } from '../../primitives/HudImage';
 import { DialogFrame } from '../../primitives/DialogFrame';
 import { DialogTexture } from '../../primitives/DialogTexture';
+import { dialogLook } from './behavior/dialog-look';
+import { groundFill } from './behavior/ground-fill';
 import type { DialogBoxProps } from './DialogBox.type';
-
-const groundFill = (color: string, opacity: number): string =>
-  `color-mix(in srgb, ${color} ${Math.round(opacity * 100)}%, transparent)`;
-
-const edgeFade = (direction: string, fade: number): string =>
-  `linear-gradient(${direction}, transparent, black ${fade}px, black calc(100% - ${fade}px), transparent)`;
-
-const featherStyle = (fade: number): CSSProperties => {
-  const mask = `${edgeFade('to right', fade)}, ${edgeFade('to bottom', fade)}`;
-  return { maskImage: mask, WebkitMaskImage: mask, maskComposite: 'intersect', WebkitMaskComposite: 'source-in' };
-};
+import { BorderTiles } from './sub-components/BorderTiles';
 
 const DialogBox = (props: DialogBoxProps) => {
   const { rect, bordered, tile, spritesBase, ground, border, texture, feathered: wantsFeather, children } = props;
   const [tilesOk, setTilesOk] = useState(true);
-  const corner = `${spritesBase}dialog-border-corner.png`;
-  const hedge = `${spritesBase}dialog-border-hedge.png`;
-  const vedge = `${spritesBase}dialog-border-vedge.png`;
-  const useTiles = bordered && border.kind === 'original' && tilesOk;
-  const drawn: 'single' | 'double' | null = bordered && !useTiles && border.kind !== 'none'
-    ? (border.kind === 'double' ? 'double' : 'single')
-    : null;
-
-  const cornerStyle: CSSProperties = { position: 'absolute', width: tile, height: tile, imageRendering: 'pixelated' };
-  const edgeStyle: CSSProperties = { position: 'absolute', imageRendering: 'pixelated', backgroundSize: `${tile}px ${tile}px` };
-  const feathered = wantsFeather && !useTiles && !drawn;
-  const inset = useTiles ? Math.round(tile / 2) : (feathered ? -tile : 0);
-  const groundCorner: DialogCorner = useTiles ? 'square' : (bordered ? border.corner : 'rounded');
-  const shape = feathered ? featherStyle(2 * tile) : groundShape(groundCorner, bordered ? tile : Math.round(tile / 2));
+  const { useTiles, drawn, inset, shape } = dialogLook({ bordered, border, tile, wantsFeather, tilesOk });
   const groundW = rect.w - 2 * inset;
   const groundH = rect.h - 2 * inset;
 
@@ -60,16 +35,7 @@ const DialogBox = (props: DialogBoxProps) => {
         />
       )}
       {useTiles && (
-        <HudBox style={{ position: 'absolute', inset: 0, pointerEvents: 'none' }}>
-          <HudImage src={corner} onError={() => setTilesOk(false)} style={{ ...cornerStyle, top: 0, left: 0 }} />
-          <HudImage src={corner} style={{ ...cornerStyle, top: 0, right: 0, transform: 'scaleX(-1)' }} />
-          <HudImage src={corner} style={{ ...cornerStyle, bottom: 0, left: 0, transform: 'scaleY(-1)' }} />
-          <HudImage src={corner} style={{ ...cornerStyle, bottom: 0, right: 0, transform: 'scale(-1,-1)' }} />
-          <HudBox style={{ ...edgeStyle, top: 0, left: tile, width: rect.w - 2 * tile, height: tile, backgroundImage: `url("${hedge}")`, backgroundRepeat: 'repeat-x' }} />
-          <HudBox style={{ ...edgeStyle, bottom: 0, left: tile, width: rect.w - 2 * tile, height: tile, backgroundImage: `url("${hedge}")`, backgroundRepeat: 'repeat-x', transform: 'scaleY(-1)' }} />
-          <HudBox style={{ ...edgeStyle, top: tile, left: 0, width: tile, height: rect.h - 2 * tile, backgroundImage: `url("${vedge}")`, backgroundRepeat: 'repeat-y' }} />
-          <HudBox style={{ ...edgeStyle, top: tile, right: 0, width: tile, height: rect.h - 2 * tile, backgroundImage: `url("${vedge}")`, backgroundRepeat: 'repeat-y', transform: 'scaleX(-1)' }} />
-        </HudBox>
+        <BorderTiles rect={rect} tile={tile} spritesBase={spritesBase} onFail={() => setTilesOk(false)} />
       )}
     </HudBox>
   );

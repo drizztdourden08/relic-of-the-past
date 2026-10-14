@@ -1,5 +1,4 @@
 /* @layer store-site @kind component */
-import { useMemo } from 'react';
 import { Box, Stack, Text } from '@drizztdourden08/tessera/primitives';
 import { FeaturedHero } from '../../../components/FeaturedHero/FeaturedHero';
 import { ItemCard } from '../../../components/ItemCard/ItemCard';
@@ -11,7 +10,6 @@ import type { StorePagePreviewProps } from './StorePagePreview.type';
 const StorePagePreview = (props: StorePagePreviewProps) => {
   const { preview } = props;
   const { item, version, card } = preview;
-  const featured = useMemo(() => [card], [card]);
   return (
     <Stack gap="lg" align="stretch" className="review-item__store">
       <Stack gap="xs" align="stretch">
@@ -23,7 +21,7 @@ const StorePagePreview = (props: StorePagePreviewProps) => {
       {item.banner && (
         <Stack gap="xs" align="stretch">
           <Text as="span" variant="label">Featured</Text>
-          <FeaturedHero items={featured} itemPath={itemPath} />
+          <FeaturedHero item={card} itemPath={itemPath} />
         </Stack>
       )}
       <Stack gap="xs" align="stretch">

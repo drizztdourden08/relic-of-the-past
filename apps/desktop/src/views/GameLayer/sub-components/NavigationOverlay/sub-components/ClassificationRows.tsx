@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind component */
-import { collisionText, collisionColor, interactableText, interactableTag } from '@app/navigation-overlay/classification-format';
+import { collisionText, collisionTone, interactableText, interactableTag } from '@app/navigation-overlay/classification-format';
 import { ClassificationRow } from './ClassificationRow';
 import type { ClassificationRowsProps } from './ClassificationRows.type';
 
@@ -14,7 +14,7 @@ const ClassificationRows = ({ attr, classification, canPass }: ClassificationRow
         label="collision"
         value={collisionText(collision)}
         tag="attr"
-        color={collisionColor(collision, canPass)}
+        tone={collisionTone(collision, canPass)}
       />
       <ClassificationRow
         label="interactable"

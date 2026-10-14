@@ -1,6 +1,7 @@
 /* @layer renderer-components @kind component */
 import { Box, Pressable, Text } from '@drizztdourden08/tessera/primitives';
 import { useShadowEditorStore } from '../../../../../stores/shadow-editor-store';
+import { HeightSwatch } from './HeightSwatch';
 import type { HeightLevelPickerProps } from './HeightLevelPicker.type';
 import './HeightLevelPicker.css';
 
@@ -19,10 +20,7 @@ const HeightLevelPicker = ({ value, onChange }: HeightLevelPickerProps) => {
             onClick={() => onChange(level.value)}
             title={`${level.label} (${level.value})`}
           >
-            <Box
-              className="height-level-picker__swatch"
-              style={{ opacity: level.value }}
-            />
+            <HeightSwatch className="height-level-picker__swatch" level={level.value} />
             <Text className="height-level-picker__label">{level.label}</Text>
           </Pressable>
         );

@@ -13,7 +13,8 @@ const useDumpNav = ({ activeProfile, loadProfileForGame }: DumpNavDeps) => {
 
   useEffect(() => {
     if (!activeProfile || didRun.current) return;
-    let cancelled = false;
+    const abort = new AbortController();
+    const isCancelled = () => abort.signal.aborted;
 
     void (async () => {
       const slot = await requireHostApi().getDumpNavSlot();
@@ -23,8 +24,8 @@ const useDumpNav = ({ activeProfile, loadProfileForGame }: DumpNavDeps) => {
       console.log(`[DumpNav] Starting game for profile: ${activeProfile.name}`);
       await loadProfileForGame(activeProfile);
 
-      await waitForGameRunning(() => cancelled);
-      if (cancelled) return;
+      await waitForGameRunning(isCancelled);
+      if (isCancelled()) return;
 
       const kind = typeof slot === 'number' ? 'quick slot' : 'manual save';
       console.log(`[DumpNav] Game running. Loading ${kind} ${slot}...`);
@@ -37,7 +38,7 @@ const useDumpNav = ({ activeProfile, loadProfileForGame }: DumpNavDeps) => {
         return;
       }
       await new Promise((r) => setTimeout(r, DUMP_SETTLE_MS));
-      if (cancelled) return;
+      if (isCancelled()) return;
 
       const dump = collectNavDump(slot);
 
@@ -49,7 +50,7 @@ const useDumpNav = ({ activeProfile, loadProfileForGame }: DumpNavDeps) => {
       setTimeout(() => window.close(), EXIT_DELAY_MS);
     })();
 
-    return () => { cancelled = true; };
+    return () => abort.abort();
   }, [activeProfile]);
 };
 

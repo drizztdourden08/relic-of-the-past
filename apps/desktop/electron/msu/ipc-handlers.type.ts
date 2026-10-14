@@ -7,4 +7,6 @@ type MsuImportResult = {
   skippedDuplicate?: number;
 };
 
-export type { MsuImportResult };
+type MsuPackSummary = { name: string; fileCount: number; totalSize: number };
+
+export type { MsuImportResult, MsuPackSummary };

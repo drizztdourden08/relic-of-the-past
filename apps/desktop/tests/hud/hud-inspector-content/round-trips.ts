@@ -11,7 +11,7 @@ const documentWith = (node: HudNode): HudLayout => ({
     columns: ['auto'],
     children: [{ kind: 'container', id: 'root', direction: 'row', children: [node] }],
   },
-} as unknown as HudLayout);
+});
 
 const roundTrips = (node: HudNode): string => {
   const doc = documentWith(node);

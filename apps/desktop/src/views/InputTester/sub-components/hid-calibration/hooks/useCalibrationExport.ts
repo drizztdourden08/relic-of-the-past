@@ -1,19 +1,16 @@
 /* @layer renderer-components @kind hook */
 import { requireHostApi } from '@drizztdourden08/brock-react';
 import { useCallback } from 'react';
-import type { HidAxisMapping, HidButtonMapping, HidControllerMap } from '../hid-calibration.type';
+import type { HidControllerMap } from '../hid-calibration.type';
 import type { ActionDeps } from './action-deps.type';
 import { guessConnectionHint } from '../connection-hint';
+import { collectItemMappings } from './collect-item-mappings';
+import { sdlEntryFields } from './sdl-entry-fields';
 
 const useCalibrationExport = (d: ActionDeps) => {
   const buildCalibrationMap = useCallback((): HidControllerMap => {
-    const buttons: Record<string, HidButtonMapping> = {}; const axes: Record<string, HidAxisMapping> = {};
-    for (const item of d.itemsRef.current) {
-      if (item.axisMapping) axes[item.id] = item.axisMapping;
-      else if (item.mapping) buttons[item.id] = item.mapping;
-    }
+    const { buttons, axes } = collectItemMappings(d.itemsRef.current);
     const raw = d.rawInfoRef.current;
-    const entry = d.capturedEntry;
     return {
       name: d.profile?.name ?? 'Unknown', profileId: d.profile?.id ?? 'generic',
       vendorId: d.deviceInfoRef.current.vendorId, productId: d.deviceInfoRef.current.productId,
@@ -24,11 +21,7 @@ const useCalibrationExport = (d: ActionDeps) => {
       devicePath: raw.path, connectionHint: guessConnectionHint(raw.busType),
       rawManufacturer: raw.manufacturer, rawProduct: raw.product, serialNumber: raw.serialNumber,
       platform: d.platform, appVersion: d.appVersion,
-      guid: entry?.guid ?? null,
-      sdlMapping: entry?.mapping ?? null,
-      sdlType: entry?.sdlType ?? null,
-      sdlHasButton: entry?.hasButton ?? null,
-      sdlHasAxis: entry?.hasAxis ?? null,
+      ...sdlEntryFields(d.capturedEntry),
       sdlVersion: d.sdlVersion,
     };
   }, [d.profile, d.idleResults, d.rawInfoRef, d.platform, d.appVersion, d.capturedEntry, d.sdlVersion]);

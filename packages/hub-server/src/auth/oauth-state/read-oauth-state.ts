@@ -5,7 +5,8 @@ import type { Provider } from '@rotp/hub-contracts';
 import { badRequest } from '../../http/http-error';
 import { readSlot, writeSlot } from '../../http/session-jar';
 import { signingKey } from '../signing-key';
-import type { OauthState, SignedOauthState } from './oauth-state.type';
+import { isSignedOauthState } from './is-signed-oauth-state';
+import type { OauthState } from './oauth-state.type';
 
 const readOauthState = async (req: Request, res: Response, provider: Provider): Promise<OauthState> => {
   const jwt = readSlot(req, 'oauth');
@@ -14,9 +15,8 @@ const readOauthState = async (req: Request, res: Response, provider: Provider): 
   if (!jwt || !echoed) throw badRequest('The sign-in flow expired. Start again.');
   try {
     const { payload } = await jwtVerify(jwt, signingKey(), { algorithms: ['HS256'] });
-    const state = payload as unknown as SignedOauthState;
-    if (state.jti !== echoed || state.provider !== provider) throw new Error('mismatch');
-    return { provider: state.provider, intent: state.intent, verifier: state.verifier, returnTo: state.returnTo };
+    if (!isSignedOauthState(payload) || payload.jti !== echoed || payload.provider !== provider) throw new Error('mismatch');
+    return { provider: payload.provider, intent: payload.intent, verifier: payload.verifier, returnTo: payload.returnTo };
   } catch {
     throw badRequest('The sign-in flow did not match. Start again.');
   }

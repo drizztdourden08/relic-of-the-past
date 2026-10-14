@@ -1,47 +1,23 @@
 /* @layer renderer-components @kind component */
 import { useCallback, useState } from 'react';
-import type { CSSProperties } from 'react';
 import { Box, Text } from '@drizztdourden08/tessera/primitives';
 import type { CollapsiblePanelProps } from './CollapsiblePanel.type';
-
-const S: Record<string, CSSProperties> = {
-  panel: {
-    background: 'var(--c-glass)', border: '1px solid var(--c-hairline)',
-    borderRadius: 'var(--radius-sm)', padding: '3px 6px',
-    boxShadow: 'var(--shadow-1)',
-    fontFamily: 'monospace', fontSize: 10, lineHeight: '14px',
-    display: 'flex', flexDirection: 'column', gap: 1,
-    pointerEvents: 'auto',
-  },
-  head: {
-    display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-    gap: 8, cursor: 'pointer', userSelect: 'none',
-  },
-  title: {
-    color: 'var(--c-primary-bright)', fontWeight: 700,
-    textTransform: 'uppercase', letterSpacing: '0.06em', fontSize: 9,
-  },
-  chevron: {
-    color: 'var(--c-primary-bright)', fontSize: 16, lineHeight: '16px',
-    fontWeight: 700, padding: '0 2px',
-  },
-  body: { display: 'flex', flexDirection: 'column', gap: 1, marginTop: 2 },
-};
+import './CollapsiblePanel.css';
 
 const CollapsiblePanel = ({ title, defaultOpen = true, children }: CollapsiblePanelProps) => {
   const [open, setOpen] = useState(defaultOpen);
   const toggle = useCallback(() => setOpen((o) => !o), []);
   return (
-    <Box style={S.panel}>
+    <Box className="nav-panel">
       <Box
-        style={S.head}
+        className="nav-panel__head"
         onClick={toggle}
         title={open ? 'collapse' : 'expand'}
       >
-        <Text style={S.title}>{title}</Text>
-        <Text style={S.chevron}>{open ? '▾' : '▸'}</Text>
+        <Text className="nav-panel__title">{title}</Text>
+        <Text className="nav-panel__chevron">{open ? '▾' : '▸'}</Text>
       </Box>
-      {open && <Box style={S.body}>{children}</Box>}
+      {open && <Box className="nav-panel__body">{children}</Box>}
     </Box>
   );
 };

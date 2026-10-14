@@ -11,11 +11,11 @@
 
 .binding-listener {
   background: var(--c-surface);
-  border: 1px solid var(--c-primary);
+  border: var(--border-width-thin) solid var(--c-primary);
   border-radius: var(--radius-lg);
   padding: var(--space-2xl) var(--space-2xl);
   text-align: center;
-  box-shadow: 0 0 30px var(--c-primary-soft);
+  box-shadow: 0 0 calc(30 * var(--size-1)) var(--c-primary-soft);
   animation: binding-listener-pulse 1.5s ease-in-out infinite;
 }
 

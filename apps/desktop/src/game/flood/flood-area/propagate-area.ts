@@ -2,7 +2,9 @@
 import type { GridPos } from '@rotp/game-core';
 import type { SimLocation, AreaFloodRequest, ScreenFloodResult } from '@rotp/navigation';
 import { computeBigScreenGroup } from '@app/nav-widget/widget-helpers';
-import { STAIR_ID_BASE, createSeedLedger, crossingLanding, roomLandingTile, MAX_INDOOR_ROOMS, MAX_ITERATIONS, floodOneScreen, entrancesForScreen } from '@rotp/navigation';
+import { createSeedLedger, crossingLanding, roomLandingTile, MAX_INDOOR_ROOMS, MAX_ITERATIONS, floodOneScreen, entrancesForScreen } from '@rotp/navigation';
+import { seedOptions } from './seed-options';
+import { stairDestination } from './stair-destination';
 
 const propagateArea = (req: AreaFloodRequest): ScreenFloodResult[] => {
   const { isIndoors, primaryScreenIndex, startPos, ...shared } = req;
@@ -24,16 +26,18 @@ const propagateArea = (req: AreaFloodRequest): ScreenFloodResult[] => {
     dirty.add(screenIndex);
   };
 
+  const offerStairLanding = (screenIndex: number, entranceIdx: number | undefined): void => {
+    const destRoom = stairDestination({ isIndoors, entranceIdx, screenIndex, entrancesFor });
+    if (destRoom === null) return;
+    if (!allowed.has(destRoom) && allowed.size < MAX_INDOOR_ROOMS) allowed.add(destRoom);
+    const landing = roomLandingTile(destRoom, screenIndex);
+    if (landing) offerSeed(destRoom, landing);
+  };
+
   const offerCrossings = (screenIndex: number, entry: ScreenFloodResult): void => {
     for (const t of entry.result.transitions) {
       if (t.edge === 'entrance') {
-        const leavesIndoorGraph = !isIndoors || t.entranceIdx == null || t.entranceIdx < STAIR_ID_BASE;
-        if (leavesIndoorGraph) continue;
-        const destRoom = entrancesFor(screenIndex).find((e) => e.id === t.entranceIdx)?.roomId;
-        if (!destRoom || destRoom === screenIndex) continue;
-        if (!allowed.has(destRoom) && allowed.size < MAX_INDOOR_ROOMS) allowed.add(destRoom);
-        const landing = roomLandingTile(destRoom, screenIndex);
-        if (landing) offerSeed(destRoom, landing);
+        offerStairLanding(screenIndex, t.entranceIdx);
         continue;
       }
       const landing = crossingLanding(screenIndex, t.edge, t);
@@ -46,14 +50,10 @@ const propagateArea = (req: AreaFloodRequest): ScreenFloodResult[] => {
     dirty = new Set();
     for (const screenIndex of batch) {
       const isPrimary = screenIndex === primaryScreenIndex;
-      const known = ledger.list(screenIndex);
-      const start = isPrimary && startPos ? startPos : known[0];
-      const extra = isPrimary && startPos ? known : known.slice(1);
       const entry = floodOneScreen(locationOf(screenIndex), {
         ...shared,
         entrances: entrancesFor(screenIndex),
-        ...(start ? { startPos: start } : {}),
-        ...(extra.length > 0 ? { extraSeeds: extra } : {}),
+        ...seedOptions(ledger.list(screenIndex), isPrimary, startPos),
         atPlayer: isPrimary ? shared.atPlayer : false,
       });
       if (!entry) continue;

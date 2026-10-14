@@ -1,11 +1,11 @@
 /* @layer renderer-components @kind component */
 import { useRef, useState } from 'react';
-import { Box, ColorSwatch, Icon, IconButton, Text } from '@drizztdourden08/tessera/primitives';
+import { Box, ColorSwatch, Icon, IconButton } from '@drizztdourden08/tessera/primitives';
 import { ColorPickerPopover } from '@drizztdourden08/tessera/color-picker-popover';
 import { EngineToggle } from './EngineToggle';
+import { GapCells } from './GapCells';
 import { LayoutSettingsPiece } from './LayoutSettingsPiece';
 import { SubSection } from './SubSection';
-import { ValueField } from './ValueField';
 import { TOOLBAR_ICONS } from '@app/hud-layout-editing/toolbar-menus';
 import { OVERLAY_LABEL } from './LayoutSettings.constants';
 import type { LayoutSettingsProps } from './LayoutSettings.type';
@@ -53,21 +53,7 @@ const LayoutSettings = (props: LayoutSettingsProps) => {
         </LayoutSettingsPiece>
 
         <LayoutSettingsPiece label="Gap" grow>
-          <Box className="hud-layout-set__gaps">
-            {gap.map((cell) => (
-              <Box key={cell.axis} className="hud-layout-set__gap">
-                <Text className="hud-layout-set__cap" aria-hidden>{cell.cap}</Text>
-                <ValueField
-                  aria-label={cell.label}
-                  value={cell.value}
-                  onChange={(next) => onGap(cell.axis, next)}
-                  scope={scope}
-                  insideRepeat={insideRepeat}
-                  min={0}
-                />
-              </Box>
-            ))}
-          </Box>
+          <GapCells gap={gap} onGap={onGap} scope={scope} insideRepeat={insideRepeat} />
         </LayoutSettingsPiece>
       </Box>
     </SubSection>

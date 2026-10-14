@@ -1,0 +1,24 @@
+/* @layer renderer-hud @kind style */
+.pause-menu {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.pause-menu__items {
+  grid-column: 2 / 21;
+  grid-row: 2 / 17;
+}
+
+.pause-menu__name {
+  grid-column: 22 / 32;
+  grid-row: 2 / 8;
+}
+
+.pause-menu__abilities {
+  grid-column: 2 / 21;
+  grid-row: 18 / 27;
+}

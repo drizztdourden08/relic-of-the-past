@@ -6,7 +6,7 @@ import { getCircleDataUrl } from '../../composites/PauseItemSlot';
 import { BOTTLE_SPRITES } from './PauseBottlePanel.constants';
 import type { PauseBottlePanelProps } from './PauseBottlePanel.type';
 
-const PauseBottlePanel = ({ bottles, selectedIndex, scale, spritesBase, style }: PauseBottlePanelProps) => {
+const PauseBottlePanel = ({ bottles, selectedIndex, scale, spritesBase, className }: PauseBottlePanelProps) => {
   const tile = 8 * scale;
   const innerCols = 8;
   const innerRows = 16;
@@ -14,7 +14,7 @@ const PauseBottlePanel = ({ bottles, selectedIndex, scale, spritesBase, style }:
   const circleSize = 4 * tile;
 
   return (
-    <PauseBorderBox color="yellow" cols={innerCols} rows={innerRows} scale={scale} spritesBase={spritesBase} style={style}>
+    <PauseBorderBox color="yellow" cols={innerCols} rows={innerRows} scale={scale} spritesBase={spritesBase} className={className}>
       {bottles.map((content, i) => {
         const sprite = BOTTLE_SPRITES[content];
         return (
@@ -46,7 +46,8 @@ const PauseBottlePanel = ({ bottles, selectedIndex, scale, spritesBase, style }:
                 src={`${spritesBase}${sprite}.png`}
                 width={itemSize}
                 height={itemSize}
-                style={{ display: 'block', imageRendering: 'pixelated' }}
+                block
+                pixelated
               />
             )}
           </HudBox>

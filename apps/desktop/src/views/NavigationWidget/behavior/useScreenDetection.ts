@@ -3,6 +3,7 @@ import { useEffect, useMemo, useRef } from 'react';
 import { useGameUIStore } from '../../../stores/game-ui-store';
 import { describePalaceMismatch, resolveCurrentScreenDetailed } from '@rotp/game-data';
 import type { ScreenMatchResult, VariantGameState } from '@rotp/game-data';
+import { log } from '@app/log-bus';
 import { wasmGetProgressIndicator } from '../../../game';
 import { getCompletedChecks } from '../../../game/tracker';
 
@@ -12,7 +13,7 @@ const useScreenDetection = (debugTick?: number): ScreenMatchResult | null => {
   const progressInfo = wasmGetProgressIndicator();
   const variantState = useMemo<VariantGameState>(() => ({
     completedChecks: getCompletedChecks(),
-    entranceId: whichEntrance ?? undefined,
+    entranceId: whichEntrance,
     progressTier: progressInfo?.tier,
   }), [whichEntrance, progressInfo?.tier, debugTick]);
 
@@ -23,12 +24,13 @@ const useScreenDetection = (debugTick?: number): ScreenMatchResult | null => {
 
   const warned = useRef(new Set<string>());
   useEffect(() => {
-    const mismatch = match?.palaceMismatch;
-    if (!mismatch || !match) return;
+    if (match === null) return;
+    const mismatch = match.palaceMismatch;
+    if (!mismatch) return;
     const key = `${mismatch.actual}:${match.screen.gameId.roomIndex}`;
     if (warned.current.has(key)) return;
     warned.current.add(key);
-    console.warn(describePalaceMismatch({ ...mismatch, room: match.screen.gameId.roomIndex ?? -1, screenId: match.screen.id }));
+    log.app(describePalaceMismatch({ ...mismatch, room: match.screen.gameId.roomIndex ?? -1, screenId: match.screen.id }), 'warn');
   }, [match]);
 
   return match;

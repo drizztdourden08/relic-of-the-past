@@ -1,69 +1,17 @@
 /* @layer renderer-components @kind component */
-import { useCallback, useMemo, useState } from 'react';
-import type { SoundChannel } from '@rotp/game-data';
 import { Box, Button, EmptyState, Field, SectionHeader, Text, TextInput } from '@drizztdourden08/tessera/primitives';
 import { SoundListItem } from './SoundListItem';
-import { parseEffectQuery } from './behavior/effect-query';
-import { useSoundPanel } from './behavior/useSoundPanel';
-import { EFFECT_CHANNELS, soundTitle } from './sound-labels';
+import { useEffectsPanel } from './behavior/useEffectsPanel';
 import { SOUND_FILTER_HINT, SOUND_FILTER_PLACEHOLDER } from './msu.constants';
 import { soundPreviewKey } from './behavior/preview-key';
 import { EFFECTS_SUBTITLE } from './MsuEffectsPanel.constants';
 import type { MsuEffectsPanelProps } from './msu.type';
 
-const [FIRST, SECOND] = EFFECT_CHANNELS;
-
 const MsuEffectsPanel = (props: MsuEffectsPanelProps) => {
   const { pack, manifest, saveBase, files, isLayered, readOnly, onDeleteConfirm, onReload } = props;
-  const [filter, setFilter] = useState('');
-  const query = parseEffectQuery(filter);
-  const shared = {
-    pack, manifest, saveBase, files, filter: query.text, showUnreachable: false, reload: onReload,
-  };
-  const first = useSoundPanel({ ...shared, channel: FIRST });
-  const second = useSoundPanel({ ...shared, channel: SECOND });
+  const panel = useEffectsPanel(props);
+  const { filter, setFilter, first, second, panelOf, rows } = panel;
   const availableFiles = files.map((file) => file.name);
-
-  const panelOf = useCallback(
-    (channel: SoundChannel) => (channel === FIRST ? first : second),
-    [first, second],
-  );
-  const otherOf = useCallback(
-    (channel: SoundChannel) => (channel === FIRST ? second : first),
-    [first, second],
-  );
-
-  const wanted = query.channel;
-  const rows = useMemo(() => [
-    ...(wanted === SECOND ? [] : first.rows.map((row) => ({ channel: FIRST, row }))),
-    ...(wanted === FIRST ? [] : second.rows.map((row) => ({ channel: SECOND, row }))),
-  ].sort((a, b) => a.row.soundId - b.row.soundId || a.channel.localeCompare(b.channel)),
-  [first.rows, second.rows, wanted]);
-
-  const play = useCallback((channel: SoundChannel, soundId: number) => {
-    otherOf(channel).stop();
-    panelOf(channel).play(channel, soundId);
-  }, [otherOf, panelOf]);
-
-  const playOriginal = useCallback((channel: SoundChannel, soundId: number) => {
-    otherOf(channel).stop();
-    panelOf(channel).playOriginal(soundId);
-  }, [otherOf, panelOf]);
-
-  const toggleLayers = useCallback((channel: SoundChannel, soundId: number) => {
-    otherOf(channel).closeLayers();
-    panelOf(channel).toggleLayers(soundId);
-  }, [otherOf, panelOf]);
-
-  const stopAll = useCallback(() => { first.stop(); second.stop(); }, [first, second]);
-
-  const confirmStopReplacing = useCallback((channel: SoundChannel, soundId: number) => {
-    onDeleteConfirm(
-      'Stop Replacing Sound',
-      `Remove this pack's layers for ${soundTitle(channel, soundId)}? It will play from the sound chip again.`,
-      () => { void panelOf(channel).stopReplacing(soundId); },
-    );
-  }, [onDeleteConfirm, panelOf]);
 
   const replaced = first.replacedCount + second.replacedCount;
   const total = first.total + second.total;
@@ -77,7 +25,7 @@ const MsuEffectsPanel = (props: MsuEffectsPanelProps) => {
       <SectionHeader
         title={`Effects · ${replaced} of ${total} replaced`}
         subtitle={EFFECTS_SUBTITLE}
-        action={sounding ? <Button variant="tertiary" size="sm" onClick={stopAll}>Stop preview</Button> : null}
+        action={sounding ? <Button variant="tertiary" size="sm" onClick={panel.stopAll}>Stop preview</Button> : null}
       />
 
       <Field label="Find a sound" hint={`${SOUND_FILTER_HINT} Add SFX1 or SFX2 to narrow to one port.`}>
@@ -110,10 +58,10 @@ const MsuEffectsPanel = (props: MsuEffectsPanelProps) => {
               isLayered={isLayered}
               showChannel
               readOnly={readOnly}
-              onPreview={play}
-              onPlayOriginal={playOriginal}
-              onToggleLayers={toggleLayers}
-              onStopReplacing={(soundId) => confirmStopReplacing(channel, soundId)}
+              onPreview={panel.play}
+              onPlayOriginal={panel.playOriginal}
+              onToggleLayers={panel.toggleLayers}
+              onStopReplacing={(soundId) => panel.confirmStopReplacing(channel, soundId)}
               onConfirm={onDeleteConfirm}
               onReload={onReload}
             />

@@ -20,7 +20,7 @@ const docToLines = (
   return blocksOf(doc).map((block, index) => {
     const endsBox = endsBoxOfAttrs(block.attrs);
     const shape = { advance: advanceOfAttrs(block.attrs), tokens: inlineTokensOf(block), endsBox };
-    const view = viewOfShape(shape, index, box, metrics, glossary);
+    const view = viewOfShape({ shape, index, box, metrics, glossary });
     if (endsBox) box += 1;
     return view;
   });

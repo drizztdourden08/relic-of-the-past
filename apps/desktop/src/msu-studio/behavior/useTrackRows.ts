@@ -11,12 +11,13 @@ import type { MatchedTrack, MsuFile } from '../msu.type';
 
 const describe = (trackNum: number): string => msuTrackName(trackNum) ?? `Track ${trackNum}`;
 
+const fileEntriesOf = (manifest: MsuPackManifest) =>
+  manifest.tracks.flatMap((t) => t.layers.flatMap((l) => l.files.map((f) => ({ trackNum: t.trackNum, ext: extensionOf(f) }))));
+
 const useTrackRows = (manifest: MsuPackManifest, files: MsuFile[]) => {
   const byTrack = useMemo(() => new Map(manifest.tracks.map((t) => [t.trackNum, t])), [manifest]);
 
-  const profile = useMemo(() => detectMsuPackProfile(
-    manifest.tracks.flatMap((t) => t.layers.flatMap((l) => l.files.map((f) => ({ trackNum: t.trackNum, ext: extensionOf(f) })))),
-  ), [manifest]);
+  const profile = useMemo(() => detectMsuPackProfile(fileEntriesOf(manifest)), [manifest]);
 
   const extended = profile.isDeluxe;
 

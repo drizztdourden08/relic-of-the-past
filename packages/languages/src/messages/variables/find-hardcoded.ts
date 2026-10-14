@@ -8,12 +8,11 @@ const overlaps = (claimed: Span[], from: number, to: number): boolean =>
   claimed.some((span) => from < span.to && span.from < to);
 
 const occurrenceAt = (
-  entryId: number, tokenIndex: number, at: number,
-  candidate: Candidate, match: Occurrence['match'],
+  site: { entryId: number; tokenIndex: number; at: number },
+  candidate: Candidate,
+  match: Occurrence['match'],
 ): Occurrence => ({
-  entryId,
-  tokenIndex,
-  at,
+  ...site,
   text: candidate.phrase,
   variableKey: candidate.variableKey,
   exists: candidate.exists,
@@ -33,11 +32,11 @@ const scanTextToken = (
     for (const at of exact) {
       if (overlaps(claimed, at, at + length)) continue;
       claimed.push({ from: at, to: at + length });
-      found.push(occurrenceAt(entryId, tokenIndex, at, candidate, 'exact'));
+      found.push(occurrenceAt({ entryId, tokenIndex, at }, candidate, 'exact'));
     }
     for (const at of caseMiss) {
       if (overlaps(claimed, at, at + length)) continue;
-      found.push(occurrenceAt(entryId, tokenIndex, at, candidate, 'case'));
+      found.push(occurrenceAt({ entryId, tokenIndex, at }, candidate, 'case'));
     }
   }
 

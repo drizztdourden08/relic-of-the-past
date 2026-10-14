@@ -19,7 +19,7 @@ interface ApRoomInfoPacket {
 
 interface ApDataPackagePacket {
   cmd: 'DataPackage';
-  data: { games: Record<string, ApGameData> };
+  data?: { games: Record<string, ApGameData> };
 }
 
 interface ApConnectedPacket {
@@ -42,12 +42,12 @@ interface ApConnectionRefusedPacket {
 interface ApReceivedItemsPacket {
   cmd: 'ReceivedItems';
   index: number;
-  items: ApNetworkItem[];
+  items?: ApNetworkItem[];
 }
 
 interface ApLocationInfoPacket {
   cmd: 'LocationInfo';
-  locations: ApNetworkItem[];
+  locations?: ApNetworkItem[];
 }
 
 interface ApRoomUpdatePacket {
@@ -78,7 +78,7 @@ interface ApBouncedPacket {
   games?: string[];
   slots?: number[];
   tags?: string[];
-  data: Record<string, unknown>;
+  data?: Record<string, unknown>;
 }
 
 interface ApInvalidPacket {
@@ -90,7 +90,7 @@ interface ApInvalidPacket {
 
 interface ApRetrievedPacket {
   cmd: 'Retrieved';
-  keys: Record<string, unknown>;
+  keys?: Record<string, unknown>;
 }
 
 interface ApSetReplyPacket {

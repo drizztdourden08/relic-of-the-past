@@ -1,43 +1,17 @@
 /* @layer renderer-components @kind component */
-import { useCallback, useMemo, useState } from 'react';
 import { Box, Button, ButtonRow, Field, Select, TextInput } from '@drizztdourden08/tessera/primitives';
+import { useSetCreateForm } from '../behavior/useSetCreateForm';
 import type { SetCreateFormProps } from './SetCreateForm.type';
 import './SetCreateForm.css';
 
 const SetCreateForm = (props: SetCreateFormProps) => {
-  const { sets, busy, onCreate, onDuplicate } = props;
-  const [open, setOpen] = useState(false);
-  const [id, setId] = useState('');
-  const [name, setName] = useState('');
-  const [source, setSource] = useState('');
-
-  const options = useMemo(
-    () => sets.map((set) => ({ value: set.id, label: `${set.name} (${set.id})` })),
-    [sets],
-  );
-
-  const reset = useCallback(() => {
-    setId('');
-    setName('');
-    setOpen(false);
-  }, []);
-
-  const handleCreate = useCallback(() => {
-    if (!id || !name || !source) return;
-    onCreate(id, name, source);
-    reset();
-  }, [id, name, source, onCreate, reset]);
-
-  const handleDuplicate = useCallback(() => {
-    if (!id || !name || !source) return;
-    onDuplicate(source, id, name);
-    reset();
-  }, [id, name, source, onDuplicate, reset]);
+  const form = useSetCreateForm(props);
+  const { open, setOpen, id, setId, name, setName, source, setSource, options, reset, blocked } = form;
 
   if (!open) {
     return (
       <Box className="set-create">
-        <Button variant="ghost" size="sm" disabled={sets.length === 0} onClick={() => setOpen(true)}>
+        <Button variant="ghost" size="sm" disabled={props.sets.length === 0} onClick={() => setOpen(true)}>
           New set...
         </Button>
       </Box>
@@ -61,10 +35,10 @@ const SetCreateForm = (props: SetCreateFormProps) => {
         <TextInput value={name} onChange={(e) => setName(e.currentTarget.value)} placeholder="Canon names" />
       </Field>
       <ButtonRow>
-        <Button size="sm" disabled={busy || !id || !name || !source} onClick={handleCreate}>
+        <Button size="sm" disabled={blocked} onClick={form.handleCreate}>
           Create from base
         </Button>
-        <Button variant="ghost" size="sm" disabled={busy || !id || !name || !source} onClick={handleDuplicate}>
+        <Button variant="ghost" size="sm" disabled={blocked} onClick={form.handleDuplicate}>
           Duplicate
         </Button>
         <Button variant="ghost" size="sm" onClick={reset}>Cancel</Button>

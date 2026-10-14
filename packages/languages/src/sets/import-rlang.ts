@@ -71,7 +71,8 @@ const importRlang = async (
   const entries = await readEntries(bytes);
   const header = parseHeader(entries.find((entry) => entry.name === RLANG_HEADER_ENTRY));
   const payload = payloadOf(entries);
-  const id = await pickFreeSetId(files, desiredId || header.id);
+  const wantedId = desiredId === undefined || desiredId === '' ? header.id : desiredId;
+  const id = await pickFreeSetId(files, wantedId);
 
   const total = payload.length + 1;
   for (const [index, entry] of payload.entries()) {

@@ -20,6 +20,8 @@
 }
 
 .stop-picker__trigger-caret {
+  display: flex;
+  align-items: center;
   flex-shrink: 0;
   color: var(--c-text-muted);
 }
@@ -32,14 +34,15 @@
 
 .stop-picker__panel {
   --anchored-gap: var(--space-xs);
+
   display: flex;
   flex-direction: column;
   gap: var(--space-sm);
-  max-width: min(360px, 90vw);
+  max-width: min(calc(360 * var(--size-1)), 90vw);
   max-height: 60vh;
   padding: var(--space-sm);
   background: var(--c-surface);
-  border: 1px solid var(--c-hairline);
+  border: var(--border-width-thin) solid var(--c-hairline);
   border-radius: var(--radius-md);
   box-shadow: var(--shadow-2);
   pointer-events: auto;
@@ -65,7 +68,7 @@
 }
 
 .stop-picker__tags {
-  max-height: 120px;
+  max-height: calc(120 * var(--size-1));
   overflow-y: auto;
 }
 
@@ -76,11 +79,11 @@
 }
 
 .stop-picker__row-icon {
-  width: 1.4em;
-  text-align: center;
+  width: var(--size-16);
+  height: var(--size-16);
 }
 
-.stop-picker__row--blocked .list-item-row__primary {
+.stop-picker__row-name--blocked {
   color: var(--c-text-dim);
 }
 

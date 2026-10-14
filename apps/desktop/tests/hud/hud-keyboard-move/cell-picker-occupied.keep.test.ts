@@ -3,15 +3,15 @@
 import { describe, expect, it, vi } from 'vitest';
 import { act, createElement as h } from 'react';
 import { CellPicker } from '@app/views/HudLayoutEditor/sub-components/CellPicker';
-import type { HudGridContainer, HudNode } from '@rotp/hud';
+import type { HudElement, HudGridContainer, HudNode } from '@rotp/hud';
 import { installPanelHarness } from './install-panel-harness';
 
 const { mount } = installPanelHarness();
 
-const leaf = (id: string): HudNode => ({ id, kind: 'element', element: { type: 'spacer' } } as unknown as HudNode);
+const leaf = (id: string): HudElement => ({ id, kind: 'element', element: { type: 'spacer' } });
 
 describe('the picker: an occupied cell is a destination, not a rejection', () => {
-  const PARENT = {
+  const PARENT: HudGridContainer = {
     id: 'badge',
     kind: 'container',
     layout: 'grid',
@@ -21,7 +21,7 @@ describe('the picker: an occupied cell is a destination, not a rejection', () =>
       { ...leaf('life_pip'), place: { column: 1, row: 1 } },
       { ...leaf('shield'), place: { column: 2, row: 2 } },
     ],
-  } as unknown as HudGridContainer;
+  };
 
   const cell = (column: number, row: number): HTMLElement => {
     const found = document.querySelector<HTMLElement>(`.hud-lattice__cell[data-column="${column}"][data-row="${row}"]`);

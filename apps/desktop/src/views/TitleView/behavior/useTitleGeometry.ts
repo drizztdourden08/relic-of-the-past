@@ -25,7 +25,7 @@ const useTitleGeometry = () => {
     const frameX = Math.round((width - FRAME_W) / 2);
     setGeometry((prev) => {
       const next = { width, height, frameX, frameY, horizonY: frameY + HORIZON_Y };
-      const same = prev && prev.width === next.width && prev.height === next.height && prev.frameX === next.frameX && prev.frameY === next.frameY;
+      const same = prev?.width === next.width && prev.height === next.height && prev.frameX === next.frameX && prev.frameY === next.frameY;
       return same ? prev : next;
     });
   }, []);

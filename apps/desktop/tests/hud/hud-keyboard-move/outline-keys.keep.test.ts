@@ -9,6 +9,8 @@ import { required } from '../../required';
 
 const { mount } = installPanelHarness();
 
+type Dropper = (ids: readonly string[], intent: unknown) => void;
+
 const rowFor = (id: string): HTMLElement => {
   const found = document.querySelector(`[data-outline-row="${id}"]`);
   if (!(found instanceof HTMLElement)) throw new Error(`no row for ${id}`);
@@ -29,7 +31,7 @@ const mountOutline = (onDrop: (ids: readonly string[], intent: unknown) => void 
 
 describe('the shortcuts, on a focused row', () => {
   it('moves the row and announces it, through the ONE door every drop uses', () => {
-    const onDrop = vi.fn();
+    const onDrop = vi.fn<Dropper>();
     mountOutline(onDrop);
     press('magic-bar', 'ArrowUp');
     expect(onDrop).toHaveBeenCalledWith(['magic-bar'], { kind: 'flex', parentId: 'hud', index: 0 });
@@ -37,7 +39,7 @@ describe('the shortcuts, on a focused row', () => {
   });
 
   it('binds all four arrows to the four operations', () => {
-    const onDrop = vi.fn();
+    const onDrop = vi.fn<Dropper>();
     mountOutline(onDrop);
     press('hearts', 'ArrowDown');
     press('hearts', 'ArrowLeft');
@@ -50,7 +52,7 @@ describe('the shortcuts, on a focused row', () => {
   });
 
   it('SHAKES and writes nothing where there is nowhere to go', () => {
-    const onDrop = vi.fn();
+    const onDrop = vi.fn<Dropper>();
     mountOutline(onDrop);
     press('hearts', 'ArrowUp');
     expect(onDrop).not.toHaveBeenCalled();
@@ -59,7 +61,7 @@ describe('the shortcuts, on a focused row', () => {
   });
 
   it('leaves a bare arrow, and a Shift/Alt one, entirely alone', () => {
-    const onDrop = vi.fn();
+    const onDrop = vi.fn<Dropper>();
     mountOutline(onDrop);
     press('magic-bar', 'ArrowUp', {});
     press('magic-bar', 'ArrowUp', { ctrlKey: true, shiftKey: true });
@@ -68,7 +70,7 @@ describe('the shortcuts, on a focused row', () => {
   });
 
   it('arms nothing on the rows that have no array to be spliced out of', () => {
-    const onDrop = vi.fn();
+    const onDrop = vi.fn<Dropper>();
     mountOutline(onDrop);
     press('screen', 'ArrowDown');
     expect(onDrop).not.toHaveBeenCalled();
@@ -103,7 +105,7 @@ describe('the context menu is where the keys are learned', () => {
   });
 
   it('runs the same operation the shortcut does, and closes', () => {
-    const onDrop = vi.fn();
+    const onDrop = vi.fn<Dropper>();
     mountOutline(onDrop);
     open('magic-bar');
     act(() => { required(items()[0], 'the first menu item').click(); });

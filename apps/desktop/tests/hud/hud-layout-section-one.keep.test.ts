@@ -4,9 +4,9 @@ import { createElement as h } from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { LayoutSection } from '@app/views/HudLayoutEditor/sub-components/LayoutSection';
 import { PlatformContext } from '@drizztdourden08/brock-react';
-import type { Platform } from '@drizztdourden08/brock-core';
 import type { HudContainer, HudGridContainer } from '@rotp/hud';
 import { required } from '../required';
+import { WINDOWS_PLATFORM } from './windows-platform';
 
 interface ViewSnapshot { gridOverlayEnabled: boolean; toggleGridOverlay: () => void }
 vi.mock('@app/stores/hud-editor-view-store', () => ({
@@ -16,16 +16,14 @@ vi.mock('@app/stores/hud-editor-view-store', () => ({
 }));
 
 const noop = (): void => {};
-const PLATFORM = { info: { os: 'windows' } } as unknown as Platform;
-
 const GRID: HudGridContainer = {
   kind: 'container', id: 'screen', layout: 'grid',
   columns: ['auto', 'fill'], rows: ['auto'], children: [],
 };
-const FLEX = { kind: 'container', id: 'f', direction: 'row', children: [] } as unknown as HudContainer;
+const FLEX: HudContainer = { kind: 'container', id: 'f', direction: 'row', children: [] };
 
 const render = (node: HudContainer): string => renderToStaticMarkup(
-  h(PlatformContext.Provider, { value: PLATFORM },
+  h(PlatformContext.Provider, { value: WINDOWS_PLATFORM },
     h(LayoutSection, { node, onPatch: noop, scope: {} })) as never,
 );
 

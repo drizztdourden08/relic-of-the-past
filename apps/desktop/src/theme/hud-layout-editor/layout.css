@@ -16,10 +16,10 @@
 
 .hud-align__cap {
   flex: 0 0 auto;
-  width: 26px;
+  width: calc(26 * var(--size-1));
   overflow: hidden;
   font-size: var(--text-xs);
-  line-height: 32px;
+  line-height: var(--size-32);
   color: var(--c-text-muted);
   text-align: right;
   text-overflow: ellipsis;
@@ -29,7 +29,7 @@
 .hud-align__tiles {
   display: grid;
   flex: 1 1 0;
-  grid-template-columns: repeat(var(--hud-align-cols, 4), minmax(0, 72px));
+  grid-template-columns: repeat(var(--hud-align-cols, 4), minmax(0, calc(72 * var(--size-1))));
   gap: var(--space-2xs);
   justify-content: start;
   min-width: 0;
@@ -38,7 +38,7 @@
 .hud-align__tiles > .hud-align__tile {
   width: 100%;
   min-width: 0;
-  height: 32px;
+  height: var(--size-32);
   padding: var(--space-2xs);
 }
 
@@ -53,8 +53,6 @@
 }
 
 .hud-align__bar {
-  --hud-align-bar: 4px;
-
   min-width: 0;
   min-height: 0;
   background: currentcolor;
@@ -62,17 +60,13 @@
   opacity: 0.8;
 }
 
-.hud-align__diagram[data-engine='flex'] > .hud-align__bar {
-  --hud-align-bar: 3px;
-}
-
 .hud-align__diagram[data-engine='grid'] {
   background-image: linear-gradient(
     to right,
-    transparent calc(50% - 0.5px),
-    var(--c-border) calc(50% - 0.5px),
-    var(--c-border) calc(50% + 0.5px),
-    transparent calc(50% + 0.5px)
+    transparent calc(50% - 0.5 * var(--size-1)),
+    var(--c-border) calc(50% - 0.5 * var(--size-1)),
+    var(--c-border) calc(50% + 0.5 * var(--size-1)),
+    transparent calc(50% + 0.5 * var(--size-1))
   );
 }
 
@@ -113,7 +107,7 @@
   font-weight: var(--weight-semi);
   color: var(--c-primary);
   text-transform: uppercase;
-  letter-spacing: 0.08em;
+  letter-spacing: var(--tracking-caps);
 }
 
 .hud-subsec__body {

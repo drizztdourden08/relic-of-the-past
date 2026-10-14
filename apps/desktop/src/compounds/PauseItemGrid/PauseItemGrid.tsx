@@ -6,15 +6,15 @@ import { PauseButtonLabel } from '../../composites/PauseButtonLabel';
 import { PauseLabel } from '../../primitives/PauseLabel';
 import type { PauseItemGridProps } from './PauseItemGrid.type';
 
-const PauseItemGrid = ({ items, selectedIndex, staticSelection, scale, spritesBase, style }: PauseItemGridProps) => {
+const PauseItemGrid = ({ items, selectedIndex, staticSelection, scale, spritesBase, className }: PauseItemGridProps) => {
   const tile = 8 * scale;
   const innerCols = 17;
   const innerRows = 13;
 
   return (
-    <HudBox style={{ position: 'relative', ...style }}>
+    <HudBox layout="relative" className={className}>
     <PauseBorderBox color="green" cols={innerCols} rows={innerRows} scale={scale} spritesBase={spritesBase}>
-      <HudBox style={{ position: 'absolute', top: 0, left: 0 }}>
+      <HudBox layout="at-origin">
         <PauseButtonLabel button="y" scale={scale} spritesBase={spritesBase} />
       </HudBox>
 

@@ -2,7 +2,7 @@
 import { describe, it, expect, vi } from 'vitest';
 import {
   acceptAllCertain, certainOnly,
-} from '@app/views/DataInspector/behavior/recommendations/accept-all-certain';
+} from '@app/data-inspector/recommendations/accept-all-certain';
 import type { Recommendation } from '@rotp/navigation';
 
 const finding = (over: Partial<Recommendation> = {}): Recommendation => ({

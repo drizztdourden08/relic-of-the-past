@@ -1,14 +1,13 @@
 /* @layer renderer-widgets @kind component */
-import { Box, Text } from '@drizztdourden08/tessera/primitives';
-import { ScreenMapWithConnections } from './sub-components/ScreenMapWithConnections';
+import { Box } from '@drizztdourden08/tessera/primitives';
 import { FunctionsPanel } from './sub-components/FunctionsPanel';
 import { GameStatePanel } from './sub-components/GameStatePanel';
+import { LocationSection } from './sub-components/LocationSection';
 import { PlayerStatePanel } from './sub-components/PlayerStatePanel';
 import { ConnectionsPanel } from './sub-components/ConnectionsPanel';
 import { ScreenPanel } from './sub-components/ScreenPanel';
 import { ActiveStates } from './sub-components/ActiveStates';
 import { useNavigation } from './behavior/useNavigation';
-import { worldTag } from './behavior/world-tag';
 import './NavigationWidget.css';
 
 const NavigationWidgetContent = () => {
@@ -18,20 +17,18 @@ const NavigationWidgetContent = () => {
 
   return (
     <Box className="nav-navigation-widget__root">
-      <Box className="nav-section">
-        <Box className="nav-loc-name">
-          {screenBundle ? screenBundle.name : screenName}
-          {screenBundle?.isMulti && <Text className="nav-multi-count">({screenBundle.screens.length} {isIndoors ? 'rooms' : 'screens'})</Text>}
-        </Box>
-        <Box className="nav-meta">
-          {screenId ?? 'unmapped'} · 0x{(isIndoors ? roomIndex : overworldScreenIndex).toString(16).toUpperCase()} · {worldTag(isIndoors, isDarkWorld)}
-          {!isIndoors && ` · R${(overworldScreenIndex >> 3) & 7} C${overworldScreenIndex & 7}`}
-        </Box>
-
-        {screenBundle && (
-          <ScreenMapWithConnections bundle={screenBundle} connections={externalConnections} renderResults={renderResults} playerScreenIndex={playerDebug?.liveScreenIndex ?? null} playerPos={playerDebug ? { screen: playerDebug.liveScreenIndex, row: playerDebug.tileMinRow, col: playerDebug.tileMinCol } : null} />
-        )}
-      </Box>
+      <LocationSection
+        screenBundle={screenBundle}
+        screenName={screenName}
+        screenId={screenId}
+        isIndoors={isIndoors}
+        roomIndex={roomIndex}
+        isDarkWorld={isDarkWorld}
+        overworldScreenIndex={overworldScreenIndex}
+        externalConnections={externalConnections}
+        renderResults={renderResults}
+        playerDebug={playerDebug}
+      />
 
       <FunctionsPanel mode={mode} setMode={setMode} running={running} handleRun={handleRun} handleClear={handleClear} result={result} overworldScreenIndex={overworldScreenIndex} reachableSum={reachableSum} totalTilesSum={totalTilesSum} entranceSum={entranceSum} externalConnections={externalConnections} internalConnections={internalConnections} />
 

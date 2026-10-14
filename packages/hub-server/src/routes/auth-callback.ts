@@ -13,6 +13,7 @@ import { identitiesRepo } from '../db/identities-repo';
 import { usersRepo } from '../db/users-repo';
 import { now } from '../db/firestore';
 import { routeParam } from '../router';
+import { callbackConflict } from './auth-callback-conflict';
 import type { SiteConfig } from '../site-config.type';
 import type { Route, RouteContext } from '../route.type';
 
@@ -53,8 +54,8 @@ const authCallback = (site: SiteConfig): Route => {
       const existing = await identitiesRepo.get(`${provider.name}:${profile.subject}`);
       const current = state.intent === 'link' ? await readSession(req) : null;
 
-      if (state.intent === 'link' && !current) return redirectWithError(ctx, '/', 'session-expired');
-      if (current && existing && existing.userId !== current.userId) return redirectWithError(ctx, state.returnTo, 'already-linked');
+      const conflict = callbackConflict(state, current, existing);
+      if (conflict) return redirectWithError(ctx, conflict.returnTo, conflict.error);
 
       const userId = current?.userId ?? existing?.userId ?? (await usersRepo.create(profile)).id;
       await bindIdentity(userId, provider.name, profile);

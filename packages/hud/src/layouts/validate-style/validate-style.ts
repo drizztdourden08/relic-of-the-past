@@ -5,6 +5,7 @@ import { paintAt } from './paint-at';
 import {
   BORDER_SIDES, BORDER_STYLES, SHADOW_KEYS, STYLE_KEYS, TINT_MODES,
 } from './validate-style.constants';
+import type { StyleParts } from './validate-style.type';
 import type { Issues } from '../validate-box';
 import type {
   HudBorder, HudBorderSides, HudBoxStyle, HudOutline, HudRadius, HudShadow, HudTint,
@@ -28,7 +29,7 @@ const borderAt = (value: unknown, path: string, issues: Issues, insideRepeat = f
   if (!isRecord(value)) { issues.push(`${path}: expected { width, color }`); return undefined; }
   checkKeys(value, ['width', 'color', 'style', 'sides'], path, issues);
   const width = validateValue(value.width, `${path}.width`, issues, { insideRepeat });
-  const color = paintAt(value.color, `${path}.color`, issues, true, insideRepeat);
+  const color = paintAt(value.color, `${path}.color`, issues, { required: true, insideRepeat });
   const style = oneOf(value.style, BORDER_STYLES, `${path}.style`, issues);
   const sides = borderSidesAt(value.sides, `${path}.sides`, issues);
   if (width === undefined || color === undefined) return undefined;
@@ -47,6 +48,11 @@ const radiusAt = (value: unknown, path: string, issues: Issues, insideRepeat = f
   return validateValue(value, path, issues, context);
 };
 
+const insetOf = (value: Record<string, unknown>, path: string, issues: Issues): { inset?: boolean } => {
+  if (value.inset !== undefined && typeof value.inset !== 'boolean') issues.push(`${path}.inset: expected true or false`);
+  return typeof value.inset === 'boolean' ? { inset: value.inset } : {};
+};
+
 const shadowEntryAt = (value: unknown, path: string, issues: Issues, insideRepeat = false): HudShadow | undefined => {
   if (!isRecord(value)) { issues.push(`${path}: expected { x, y, blur, color }`); return undefined; }
   checkKeys(value, SHADOW_KEYS, path, issues);
@@ -54,12 +60,12 @@ const shadowEntryAt = (value: unknown, path: string, issues: Issues, insideRepea
   const x = validateValue(value.x, `${path}.x`, issues, context);
   const y = validateValue(value.y, `${path}.y`, issues, context);
   const blur = validateValue(value.blur, `${path}.blur`, issues, context);
-  const spread = value.spread !== undefined ? validateValue(value.spread, `${path}.spread`, issues, context) : undefined;
-  const color = paintAt(value.color, `${path}.color`, issues, true, insideRepeat);
-  if (value.inset !== undefined && typeof value.inset !== 'boolean') issues.push(`${path}.inset: expected true or false`);
+  const spread = validateValue(value.spread, `${path}.spread`, issues, context);
+  const color = paintAt(value.color, `${path}.color`, issues, { required: true, insideRepeat });
+  const inset = insetOf(value, path, issues);
   if (x === undefined || y === undefined || blur === undefined || color === undefined) return undefined;
   return {
-    x, y, blur, ...(spread !== undefined ? { spread } : {}), color, ...(typeof value.inset === 'boolean' ? { inset: value.inset } : {}),
+    x, y, blur, ...(spread !== undefined ? { spread } : {}), color, ...inset,
   };
 };
 
@@ -76,7 +82,7 @@ const outlineAt = (value: unknown, path: string, issues: Issues, insideRepeat = 
   if (!isRecord(value)) { issues.push(`${path}: expected { width, color }`); return undefined; }
   checkKeys(value, ['width', 'color'], path, issues);
   const width = validateValue(value.width, `${path}.width`, issues, { insideRepeat });
-  const color = paintAt(value.color, `${path}.color`, issues, true, insideRepeat);
+  const color = paintAt(value.color, `${path}.color`, issues, { required: true, insideRepeat });
   if (width === undefined || color === undefined) return undefined;
   return { width, color };
 };
@@ -85,7 +91,7 @@ const tintAt = (value: unknown, path: string, issues: Issues, insideRepeat = fal
   if (value === undefined) return undefined;
   if (!isRecord(value)) { issues.push(`${path}: expected { color }`); return undefined; }
   checkKeys(value, ['color', 'mode', 'amount'], path, issues);
-  const color = paintAt(value.color, `${path}.color`, issues, true, insideRepeat);
+  const color = paintAt(value.color, `${path}.color`, issues, { required: true, insideRepeat });
   const mode = oneOf(value.mode, TINT_MODES, `${path}.mode`, issues);
   const amount = value.amount !== undefined
     ? validateValue(value.amount, `${path}.amount`, issues, { insideRepeat }) : undefined;
@@ -93,17 +99,13 @@ const tintAt = (value: unknown, path: string, issues: Issues, insideRepeat = fal
   return { color, ...(mode ? { mode } : {}), ...(amount !== undefined ? { amount } : {}) };
 };
 
-const validateStyle = (value: unknown, path: string, issues: Issues, insideRepeat = false): HudBoxStyle | undefined => {
-  if (value === undefined) return undefined;
-  if (!isRecord(value)) { issues.push(`${path}: expected an object of style properties`); return undefined; }
-  checkKeys(value, STYLE_KEYS, path, issues);
-  const background = paintAt(value.background, `${path}.background`, issues, false, insideRepeat);
-  const border = borderAt(value.border, `${path}.border`, issues, insideRepeat);
-  const radius = radiusAt(value.radius, `${path}.radius`, issues, insideRepeat);
-  const shadow = shadowAt(value.shadow, `${path}.shadow`, issues, insideRepeat);
-  const outline = outlineAt(value.outline, `${path}.outline`, issues, insideRepeat);
-  const tint = tintAt(value.tint, `${path}.tint`, issues, insideRepeat);
+const clipOf = (value: Record<string, unknown>, path: string, issues: Issues): { clip?: boolean } => {
   if (value.clip !== undefined && typeof value.clip !== 'boolean') issues.push(`${path}.clip: expected true or false`);
+  return typeof value.clip === 'boolean' ? { clip: value.clip } : {};
+};
+
+const styleFragment = (parts: StyleParts): HudBoxStyle => {
+  const { background, border, radius, shadow, outline, tint } = parts;
   return {
     ...(background !== undefined ? { background } : {}),
     ...(border ? { border } : {}),
@@ -111,8 +113,23 @@ const validateStyle = (value: unknown, path: string, issues: Issues, insideRepea
     ...(shadow?.length ? { shadow } : {}),
     ...(outline ? { outline } : {}),
     ...(tint ? { tint } : {}),
-    ...(typeof value.clip === 'boolean' ? { clip: value.clip } : {}),
   };
+};
+
+const validateStyle = (value: unknown, path: string, issues: Issues, insideRepeat = false): HudBoxStyle | undefined => {
+  if (value === undefined) return undefined;
+  if (!isRecord(value)) { issues.push(`${path}: expected an object of style properties`); return undefined; }
+  checkKeys(value, STYLE_KEYS, path, issues);
+  const parts: StyleParts = {
+    background: paintAt(value.background, `${path}.background`, issues, { insideRepeat }),
+    border: borderAt(value.border, `${path}.border`, issues, insideRepeat),
+    radius: radiusAt(value.radius, `${path}.radius`, issues, insideRepeat),
+    shadow: shadowAt(value.shadow, `${path}.shadow`, issues, insideRepeat),
+    outline: outlineAt(value.outline, `${path}.outline`, issues, insideRepeat),
+    tint: tintAt(value.tint, `${path}.tint`, issues, insideRepeat),
+  };
+  const clip = clipOf(value, path, issues);
+  return { ...styleFragment(parts), ...clip };
 };
 
 export { validateStyle };

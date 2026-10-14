@@ -11,4 +11,10 @@ interface ScheduleOptions {
 type PlaySource = (buffer: AudioBuffer, when: number, offsetSeconds?: number,
   fade?: FadeEnvelope) => void;
 
-export type { ScheduleOptions, PlaySource };
+interface SourceTiming {
+  when: number;
+  offsetSeconds?: number;
+  fade?: FadeEnvelope;
+}
+
+export type { ScheduleOptions, PlaySource, SourceTiming };

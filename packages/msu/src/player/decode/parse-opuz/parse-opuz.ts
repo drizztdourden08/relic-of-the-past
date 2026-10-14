@@ -4,6 +4,8 @@ import {
   DROP_MASK, LOOP_BACK_FLAG, LOOP_START_FLAG, OPUZ_CHANNELS, OPUZ_HEADER_BYTES, OPUZ_RANGE_BYTES, OPUZ_SAMPLE_RATE,
 } from './parse-opuz.constants';
 import { hasOpuzMagic } from './has-opuz-magic';
+import { isUsableRange } from './is-usable-range';
+import { rangeEntry } from './range-entry';
 import { readPackets } from './read-packets';
 
 const parseOpuz = (bytes: Uint8Array): OpuzAudio => {
@@ -25,11 +27,10 @@ const parseOpuz = (bytes: Uint8Array): OpuzAudio => {
     }
     seen.set(at, ranges.length);
 
-    const offset = view.getUint32(at, true);
-    const samples = view.getUint32(at + 4, true);
-    const flags = view.getUint16(at + 8, true);
+    const entry = rangeEntry(view, at);
+    const { offset, samples, flags } = entry;
     if ((flags & LOOP_START_FLAG) !== 0) loopBackTo = at;
-    if (samples === 0 || offset < OPUZ_HEADER_BYTES || offset >= bytes.byteLength) break;
+    if (!isUsableRange(entry, bytes.byteLength)) break;
 
     const drop = flags & DROP_MASK;
     ranges.push({ packets: readPackets(bytes, view, offset, drop + samples), drop, samples });

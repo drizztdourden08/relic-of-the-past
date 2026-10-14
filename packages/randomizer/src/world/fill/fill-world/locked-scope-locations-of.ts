@@ -3,16 +3,14 @@ import { NPC_SCOPE_LOCATIONS, WORLD_ITEM_SCOPE_LOCATIONS } from '../../scope-tab
 import { spotOfFamily } from '../../capacity/capacity-spots';
 import { NO_SLOT_RULE } from '../../pond/pond-vanilla-slots';
 import { lockedTableSubset } from './locked-table-subset';
-import type { PondVanillaSlots } from '../../pond/pond-vanilla-slots';
 import type { LocationKey } from '../../location-key';
-import type { CapacityProfile } from '../../capacity/capacity-profile.type';
+import type { LockedScopeInput } from './locked-inputs.type';
 
-const lockedScopeLocationsOf = (
-  includeNpcChecks: boolean, includeWorldItems: boolean, capacity: CapacityProfile,
-  deliverableNpcLocations?: ReadonlySet<LocationKey>,
-  deliverableWorldLocations?: ReadonlySet<LocationKey>,
-  pondSlots: PondVanillaSlots = NO_SLOT_RULE,
-): ReadonlySet<LocationKey> => {
+const lockedScopeLocationsOf = (input: LockedScopeInput): ReadonlySet<LocationKey> => {
+  const {
+    includeNpcChecks, includeWorldItems, capacity, deliverableNpcLocations, deliverableWorldLocations,
+    pondSlots = NO_SLOT_RULE,
+  } = input;
   const locked = new Set<LocationKey>();
   lockedTableSubset(NPC_SCOPE_LOCATIONS, includeNpcChecks, deliverableNpcLocations, locked);
   lockedTableSubset(WORLD_ITEM_SCOPE_LOCATIONS, includeWorldItems, deliverableWorldLocations, locked);

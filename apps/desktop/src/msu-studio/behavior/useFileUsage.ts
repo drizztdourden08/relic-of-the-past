@@ -4,6 +4,12 @@ import type { MsuPackManifest, SoundChannel } from '@rotp/game-data';
 import { soundTitle } from '../sound-labels';
 import type { FileUsageMap } from './file-usage.type';
 
+const noteLayerFiles = (layers: { files: string[] }[], place: string, note: (fileName: string, place: string) => void): void => {
+  for (const layer of layers) {
+    for (const file of layer.files) note(file, place);
+  }
+};
+
 const useFileUsage = (manifest: MsuPackManifest): FileUsageMap => useMemo(() => {
   const usage: FileUsageMap = new Map();
   const note = (fileName: string, place: string): void => {
@@ -12,17 +18,9 @@ const useFileUsage = (manifest: MsuPackManifest): FileUsageMap => useMemo(() => 
     else if (!places.includes(place)) places.push(place);
   };
 
-  for (const track of manifest.tracks) {
-    for (const layer of track.layers) {
-      for (const file of layer.files) note(file, `Slot ${track.trackNum}`);
-    }
-  }
+  for (const track of manifest.tracks) noteLayerFiles(track.layers, `Slot ${track.trackNum}`, note);
   for (const [channel, defs] of Object.entries(manifest.sounds ?? {})) {
-    for (const def of defs) {
-      for (const layer of def.layers) {
-        for (const file of layer.files) note(file, soundTitle(channel as SoundChannel, def.soundId));
-      }
-    }
+    for (const def of defs) noteLayerFiles(def.layers, soundTitle(channel as SoundChannel, def.soundId), note);
   }
   return usage;
 }, [manifest]);

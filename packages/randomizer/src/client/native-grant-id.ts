@@ -8,25 +8,26 @@ const dungeonRewardGrantIdOf = (vanillaItem: string): number | undefined => {
   return record.gameId?.receiveItemId ?? vanillaPrizeGrantIdOfName(record.name);
 };
 
+const npcGrantIdOf = (gameId: CheckRecord['gameId']): number | undefined => {
+  const { flagType, itemId } = gameId;
+  if (flagType === undefined || itemId === undefined) return undefined;
+  return itemId <= MAX_NATIVE_GRANT_ID ? itemId : undefined;
+};
+
+const worldItemGrantIdOf = (vanillaItem: string): number | undefined => {
+  const receiveId = getItem(vanillaItem).gameId?.receiveItemId;
+  if (receiveId === undefined || receiveId > MAX_NATIVE_GRANT_ID) return undefined;
+  return receiveId;
+};
+
 const nativeGrantIdOf = (check: CheckRecord): number | undefined => {
   const { kind, gameId, vanillaItemIds } = check;
-  if (kind === 'npc') {
-    const { flagType, itemId } = gameId;
-    if (flagType === undefined || itemId === undefined) return undefined;
-    return itemId <= MAX_NATIVE_GRANT_ID ? itemId : undefined;
-  }
+  if (kind === 'npc') return npcGrantIdOf(gameId);
   if (kind === 'boss') return BOSS_PRIZE_GRANT_ID;
-  if (kind === 'prize') {
-    const vanillaItem = vanillaItemIds[0];
-    if (vanillaItem === undefined) return undefined;
-    return dungeonRewardGrantIdOf(vanillaItem);
-  }
+  const vanillaItem = vanillaItemIds[0];
+  if (kind === 'prize') return vanillaItem === undefined ? undefined : dungeonRewardGrantIdOf(vanillaItem);
   if (kind === 'standing' || kind === 'dig' || kind === 'bonk') {
-    const vanillaItem = vanillaItemIds[0];
-    if (vanillaItem === undefined) return undefined;
-    const receiveId = getItem(vanillaItem).gameId?.receiveItemId;
-    if (receiveId === undefined || receiveId > MAX_NATIVE_GRANT_ID) return undefined;
-    return receiveId;
+    return vanillaItem === undefined ? undefined : worldItemGrantIdOf(vanillaItem);
   }
   return undefined;
 };

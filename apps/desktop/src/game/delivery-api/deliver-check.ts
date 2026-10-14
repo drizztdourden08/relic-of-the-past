@@ -3,8 +3,10 @@ import { enqueue } from '../delivery-queue';
 import { isCoreReady } from '@rotp/game-core';
 import { isGrantable } from './is-grantable';
 import { itemLabel } from '@rotp/randomizer';
+import type { DeliverCheckParams } from './deliver-check.type';
 
-const deliverCheck = (roomId: number, chestIndex: number, itemId: number, message?: string, source = 'randomizer'): string | null => {
+const deliverCheck = (params: DeliverCheckParams): string | null => {
+  const { roomId, chestIndex, itemId, message, source = 'randomizer' } = params;
   if (!isGrantable(itemId) || !isCoreReady()) return null;
   return enqueue(message ?? itemLabel(itemId), source, { type: 'trigger_check', roomId, chestIndex, itemId });
 };

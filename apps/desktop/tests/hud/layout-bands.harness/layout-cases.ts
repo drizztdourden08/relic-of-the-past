@@ -12,26 +12,25 @@ import { SelectionToolbar } from '@app/views/HudLayoutEditor/sub-components/Sele
 import { LayoutSection } from '@app/views/HudLayoutEditor/sub-components/LayoutSection';
 import { PlatformContext } from '@drizztdourden08/brock-react';
 import type { ReactNode } from 'react';
-import type { Platform } from '@drizztdourden08/brock-core';
-import type { HudContainer, HudGridContainer, HudNode } from '@rotp/hud';
+import type { HudContainer, HudGridContainer, HudNode, HudPlace } from '@rotp/hud';
 import type { GridActionContext, GridSelection } from '@app/views/HudLayoutEditor/sub-components/GridEditor/GridEditor.type';
 import { SELECTIONS } from './layout-bands.constants';
+import { WINDOWS_PLATFORM } from '../windows-platform';
+import { FIXTURE_COLOURS } from '../fixture-colours.constants';
 
 const noop = (): void => {};
-const platform = { info: { os: 'windows' } } as unknown as Platform;
-
-const leaf = (id: string, place: Record<string, number>): HudNode =>
-  ({ id, kind: 'element', element: { type: 'spacer' }, size: { w: { px: 16 }, h: { px: 16 } }, place }) as unknown as HudNode;
+const leaf = (id: string, place: HudPlace): HudNode =>
+  ({ id, kind: 'element', element: { type: 'spacer' }, size: { w: { px: 16 }, h: { px: 16 } }, place });
 
 const screenRoot = (): HudGridContainer => ({
   kind: 'container', id: 'screen', layout: 'grid',
   columns: ['auto', 'fill', 'auto'], rows: ['auto', 'fill', 'auto'],
   justifyItems: 'start', alignItems: 'start',
-  guide: { show: true, color: '#c064c0' },
+  guide: { show: true, color: FIXTURE_COLOURS.guideMagenta },
   children: [leaf('vitals', { column: 1, row: 1 }), leaf('wallet', { column: 1, row: 3 })],
 });
 
-const flexContainer = { kind: 'container', id: 'f', direction: 'row', children: [] } as unknown as HudContainer;
+const flexContainer: HudContainer = { kind: 'container', id: 'f', direction: 'row', children: [] };
 
 const ctxFor = (selection: GridSelection): GridActionContext => {
   const container = screenRoot();
@@ -74,9 +73,9 @@ const block = (selection: GridSelection): ReactNode => {
 };
 
 const layoutCases: Record<string, () => ReactNode> = {
-  sectionGrid: () => h(PlatformContext.Provider, { value: platform },
-    h(LayoutSection, { node: screenRoot() as unknown as HudContainer, onPatch: noop, scope: {} })),
-  sectionFlex: () => h(PlatformContext.Provider, { value: platform },
+  sectionGrid: () => h(PlatformContext.Provider, { value: WINDOWS_PLATFORM },
+    h(LayoutSection, { node: screenRoot(), onPatch: noop, scope: {} })),
+  sectionFlex: () => h(PlatformContext.Provider, { value: WINDOWS_PLATFORM },
     h(LayoutSection, { node: flexContainer, onPatch: noop, scope: {} })),
   ...Object.fromEntries(Object.entries(SELECTIONS).map(([name, sel]) =>
     [`state-${name}`, () => block(sel)])),

@@ -1,6 +1,7 @@
 /* @layer bridge-wasm @kind logic */
 import { log } from '../../../log-bus';
 import { markHanded, nextToQueue, wasHanded, receivedBatchOrder, acceptsRoom } from '@rotp/randomizer';
+import { wireList } from '../wire-list';
 import { deliverOne } from './deliver-one';
 import { requestSync } from './request-sync';
 import type { ApReceivedItemsPacket, OnlineContext } from '@rotp/randomizer';
@@ -28,7 +29,7 @@ const handleReceivedItems = (ctx: OnlineContext, packet: ApReceivedItemsPacket):
   }
   room.syncPending = false;
   const saved = core.readReceivedIndex();
-  const entries = (packet.items ?? []).map((item, offset) => ({ item, index: packet.index + offset }))
+  const entries = wireList(packet.items).map((item, offset) => ({ item, index: packet.index + offset }))
     .filter((entry) => !wasHanded(room.cursor, entry.index, saved));
   for (const { item, index } of receivedBatchOrder(entries, (id) => room.itemNameById.get(id))) {
     if (deliverOne(ctx, item, index) === 'not-ready') {

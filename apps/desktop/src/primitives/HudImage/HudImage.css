@@ -1,0 +1,14 @@
+/* @layer renderer-hud @kind style */
+.hud-image--pixelated {
+  image-rendering: pixelated;
+}
+
+.hud-image--block {
+  display: block;
+}
+
+.hud-image--at-origin {
+  position: absolute;
+  top: 0;
+  left: 0;
+}

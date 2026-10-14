@@ -5,9 +5,7 @@ import { uiBridgeState } from '@rotp/game-core';
 
 const initUIBridge = (updater: (state: GameUIState) => void): void => {
   uiBridgeState.storeUpdater = updater;
-  if (uiBridgeState.rafId === null) {
-    uiBridgeState.rafId = requestAnimationFrame(pollFrame);
-  }
+  uiBridgeState.rafId ??= requestAnimationFrame(pollFrame);
 };
 
 export { initUIBridge };

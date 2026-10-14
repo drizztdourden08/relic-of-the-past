@@ -1,16 +1,12 @@
 /* @layer renderer-widgets @kind component */
-import { Box, Text } from '@drizztdourden08/tessera/primitives';
+import { Box } from '@drizztdourden08/tessera/primitives';
 import { useGameUIStore } from '@app/stores/game-ui-store';
-import { PauseBorderBox, PauseButtonLabel, PauseItemSlot, PauseLabel } from '@app/hud';
-import { getSlotSprite } from '@app/composites/PauseItemSlot';
-import { BOTTLE_SLOT_INDEX, EMPTY_BOTTLE, ITEM_GRID, ITEM_SLOT_COUNT } from '../ItemsTab.constants';
-import { givableTier } from '../behavior/givable-tier';
+import { PauseBorderBox, PauseButtonLabel, PauseLabel } from '@app/hud';
+import { ITEM_GRID, ITEM_SLOT_COUNT } from '../ItemsTab.constants';
+import { shownValueOf } from '../behavior/shown-value-of';
 import { useSlotClick } from '../behavior/useSlotClick';
-import { SlotCell } from './SlotCell';
-import type { ItemGridEditorProps, SlotSpec } from '../ItemsTab.type';
-
-const ghostSpriteOf = (spec: SlotSpec): string | null =>
-  (spec.kind === 'bottle' ? getSlotSprite(BOTTLE_SLOT_INDEX, EMPTY_BOTTLE) : (givableTier(spec)?.sprite ?? null));
+import { ItemGridCell } from './ItemGridCell';
+import type { ItemGridEditorProps } from '../ItemsTab.type';
 
 const ItemGridEditor = (props: ItemGridEditorProps) => {
   const { specs, hovered, scale, spritesBase, onHover, onOpen, write } = props;
@@ -23,33 +19,21 @@ const ItemGridEditor = (props: ItemGridEditorProps) => {
     const spec = specs.get(slot);
     if (!spec) return null;
     const value = items[slot] ?? 0;
-    const owned = value > 0;
-    const shown = slot === BOTTLE_SLOT_INDEX ? (bottles[value - 1] ?? 0) : value;
-    const tierMark = spec.kind !== 'flag' && spec.kind !== 'bottle' && value > 1;
-    const ghost = ghostSpriteOf(spec);
     return (
-      <SlotCell
+      <ItemGridCell
         key={flashKey(slot)}
-        size={tile * 2}
-        owned={owned}
-        menu={owned}
-        ghost={ghost ? `${spritesBase}${ghost}.png` : null}
-        title={spec.tiers.find((tier) => tier.value === value)?.label ?? givableTier(spec)?.label ?? spec.nameKey}
+        slot={slot}
+        spec={spec}
+        value={value}
+        shown={shownValueOf(slot, value, bottles)}
+        selected={hovered === slot}
         flash={isFlashing(slot)}
-        onClick={(e) => click(spec, owned, e)}
-        onOpenList={(e) => onOpen({ spec, anchor: e.currentTarget })}
-        onHover={(active) => onHover(active ? slot : null)}
-      >
-        <PauseItemSlot
-          saveSlotIndex={slot}
-          itemValue={shown}
-          selected={hovered === slot}
-          animate={false}
-          scale={scale}
-          spritesBase={spritesBase}
-        />
-        {tierMark && <Text className="cheats-items__tier">{value}</Text>}
-      </SlotCell>
+        scale={scale}
+        spritesBase={spritesBase}
+        onClick={click}
+        onOpen={onOpen}
+        onHover={onHover}
+      />
     );
   });
 

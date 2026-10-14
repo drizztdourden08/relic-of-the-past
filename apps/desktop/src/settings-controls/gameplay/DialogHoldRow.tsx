@@ -2,7 +2,7 @@
 import { useCallback } from 'react';
 import { DIALOG_HOLD_STOPS } from '@rotp/game-data';
 import type { DialogHoldStop } from '@rotp/game-data';
-import { Flex, Toggle } from '@drizztdourden08/tessera/primitives';
+import { Box, Flex, Toggle } from '@drizztdourden08/tessera/primitives';
 import { DialogStopSlider } from './DialogStopSlider';
 import type { DialogHoldRowProps } from './gameplay.type';
 import './DialogHoldRow.css';
@@ -16,19 +16,23 @@ const DialogHoldRow = (props: DialogHoldRowProps) => {
   );
   return (
     <Flex className="dialog-hold-row" align="center" gap="lg">
-      <Toggle
-        label={label}
-        description={description}
-        checked={enabled}
-        onChange={handleToggle}
-        disabled={disabled}
-      />
-      <DialogStopSlider
-        stops={DIALOG_HOLD_STOPS}
-        value={speed}
-        onChange={handleSpeed}
-        disabled={disabled || !enabled}
-      />
+      <Box className="dialog-hold-row__cell">
+        <Toggle
+          label={label}
+          description={description}
+          checked={enabled}
+          onChange={handleToggle}
+          disabled={disabled}
+        />
+      </Box>
+      <Box className="dialog-hold-row__cell">
+        <DialogStopSlider
+          stops={DIALOG_HOLD_STOPS}
+          value={speed}
+          onChange={handleSpeed}
+          disabled={disabled || !enabled}
+        />
+      </Box>
     </Flex>
   );
 };

@@ -1,9 +1,10 @@
 /* @layer renderer-lib @kind logic */
-import type { FadeEnvelope } from '../fade-envelope';
 import { createFadeNode, hasFade } from '../fade-envelope';
+import type { SourceTiming } from './place-source.type';
 
 const startSource = (ctx: BaseAudioContext, destination: AudioNode, buffer: AudioBuffer,
-  when: number, offsetSeconds = 0, fade?: FadeEnvelope): void => {
+  timing: SourceTiming): void => {
+  const { when, offsetSeconds = 0, fade } = timing;
   const at = Math.max(0, when);
   const source = ctx.createBufferSource();
   source.buffer = buffer;

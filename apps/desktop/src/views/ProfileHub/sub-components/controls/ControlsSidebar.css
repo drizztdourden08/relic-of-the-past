@@ -2,10 +2,10 @@
 .controls-settings__sidebar {
   display: flex;
   flex-direction: column;
-  width: 220px;
+  width: calc(220 * var(--size-1));
   flex-shrink: 0;
   overflow-y: auto;
-  border-right: 1px solid var(--c-border);
+  border-right: var(--border-width-thin) solid var(--c-border);
   padding-right: var(--space-sm);
   transition: width 0.2s ease;
 }

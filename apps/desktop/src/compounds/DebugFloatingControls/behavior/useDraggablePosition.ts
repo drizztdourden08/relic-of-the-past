@@ -1,18 +1,9 @@
 /* @layer renderer-components @kind hook */
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { DEFAULT_OFFSET, STORAGE_KEY } from './useDraggablePosition.constants';
+import { STORAGE_KEY } from './useDraggablePosition.constants';
+import { readStoredOffset } from './stored-offset';
 
-const readStoredOffset = (): { top: number; right: number } => {
-  try {
-    const raw = localStorage.getItem(STORAGE_KEY);
-    if (!raw) return DEFAULT_OFFSET;
-    const parsed = JSON.parse(raw);
-    if (typeof parsed?.top === 'number' && typeof parsed?.right === 'number') return parsed;
-  } catch {
-    return DEFAULT_OFFSET;
-  }
-  return DEFAULT_OFFSET;
-};
+const offsetStorageUnavailable = (): void => undefined;
 
 const useDraggablePosition = () => {
   const [offset, setOffset] = useState(readStoredOffset);
@@ -41,7 +32,7 @@ const useDraggablePosition = () => {
     try {
       localStorage.setItem(STORAGE_KEY, JSON.stringify(offset));
     } catch {
-      
+      offsetStorageUnavailable();
     }
   }, [offset]);
 

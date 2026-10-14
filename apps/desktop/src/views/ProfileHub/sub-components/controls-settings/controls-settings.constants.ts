@@ -1,6 +1,7 @@
 /* @layer renderer-components @kind constants */
 import { BUTTON_INDEX } from '@rotp/input-mapping';
 import { publicAsset } from '@app/public-asset/public-asset';
+import type { InputBinding } from '@rotp/game-data';
 
 const KEYBOARD_ICON = publicAsset('buttons/keyboard/keyboard.svg');
 const GENERIC_CONTROLLER_ICON = publicAsset('buttons/generic/generic_joystick.svg');
@@ -12,6 +13,8 @@ const FAMILY_ICON_MAP: Partial<Record<string, string>> = {
   keyboard: KEYBOARD_ICON,
   generic: GENERIC_CONTROLLER_ICON,
 };
+
+const NO_BINDING: InputBinding = { type: 'none' };
 
 const AXIS_COUNT = 6;
 const ALL_BUTTONS: readonly boolean[] = new Array(Object.keys(BUTTON_INDEX).length).fill(true);
@@ -25,5 +28,5 @@ const DRAG_PID = 'application/x-pid';
 
 export {
   ALL_AXES, ALL_BUTTONS, AXIS_COUNT, DRAG_DEVICE_ID, DRAG_DEVICE_NAME, DRAG_PID, DRAG_SDL_TYPE,
-  DRAG_VID, FAMILY_ICON_MAP, GENERIC_CONTROLLER_ICON, KEYBOARD_ICON,
+  DRAG_VID, FAMILY_ICON_MAP, GENERIC_CONTROLLER_ICON, KEYBOARD_ICON, NO_BINDING,
 };

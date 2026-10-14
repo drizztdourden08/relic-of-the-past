@@ -2,6 +2,7 @@
 import { Icon } from '@drizztdourden08/tessera/primitives';
 import { STATUS_LABELS, STATUS_SHAPES } from '../ChecksTracker.constants';
 import type { CheckStatusIconProps, StatusKey } from '../ChecksTracker.type';
+import './CheckStatusIcon.css';
 
 const CheckStatusIcon = (props: CheckStatusIconProps) => {
   const { status, size = 12 } = props;

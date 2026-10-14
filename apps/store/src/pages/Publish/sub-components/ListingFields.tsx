@@ -1,50 +1,21 @@
 /* @layer store-site @kind component */
-import { Field, Flex, Select, Text, TextInput, Textarea } from '@drizztdourden08/tessera/primitives';
+import { Field, Flex, Select } from '@drizztdourden08/tessera/primitives';
 import { TagInput } from '@drizztdourden08/tessera/composites';
 import { tagsSchema } from '@rotp/hub-contracts';
-import { FIELD_LABELS, FIELD_MESSAGES, LICENSE_OPTIONS } from '../Publish.constants';
-import { LISTING_CAPS } from '../behavior/listing-errors.constants';
+import { FIELD_LABELS, LICENSE_OPTIONS } from '../Publish.constants';
 import { ColorField } from './ColorField';
 import { TAG_HINT } from './ListingFields.constants';
 import type { ListingFieldsProps } from './ListingFields.type';
+import { ListingTextFields } from './ListingTextFields';
 
 const validateTag = (raw: string) => tagsSchema.safeParse([raw]).success || TAG_HINT;
 
 const ListingFields = (props: ListingFieldsProps) => {
   const { listing, errors, onLeave } = props;
-  const { text, set, setSummary, following } = listing;
+  const { text, set } = listing;
   return (
     <>
-      <Field label={FIELD_LABELS.name} htmlFor="publish-name" error={errors.name}>
-        <TextInput
-          id="publish-name"
-          value={text.name}
-          aria-invalid={errors.name ? true : undefined}
-          onChange={(event) => set('name', event.target.value)}
-          onBlur={() => onLeave('name')}
-          placeholder="Orchestral Overworld"
-        />
-      </Field>
-      <Field label={FIELD_LABELS.summary} htmlFor="publish-summary" error={errors.summary} hint={`${text.summary.length} / ${LISTING_CAPS.summary}`}>
-        <TextInput
-          id="publish-summary"
-          value={text.summary}
-          aria-invalid={errors.summary ? true : undefined}
-          onChange={(event) => setSummary(event.target.value)}
-          onBlur={() => onLeave('summary')}
-          placeholder="Every track rescored for strings and brass"
-        />
-      </Field>
-      <Field label={FIELD_LABELS.description} htmlFor="publish-description" error={errors.description} hint={following ? <Text as="span" className="publish__following">{FIELD_MESSAGES.following}</Text> : undefined}>
-        <Textarea
-          id="publish-description"
-          rows={6}
-          value={text.description}
-          aria-invalid={errors.description ? true : undefined}
-          onChange={(event) => set('description', event.target.value)}
-          onBlur={() => onLeave('description')}
-        />
-      </Field>
+      <ListingTextFields listing={listing} errors={errors} onLeave={onLeave} />
       <Flex gap="md" wrap align="start">
         <ColorField value={text.color} onChange={(value) => set('color', value)} />
         <Field label={FIELD_LABELS.license} className="publish__licence" error={errors.license}>

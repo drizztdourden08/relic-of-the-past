@@ -15,6 +15,8 @@ interface DragGesture<T> {
   cancel: () => void;
 }
 
-interface Armed { sourceId: string; x: number; y: number; pointerId: number; target: HTMLElement }
+type CaptureTarget = Partial<Pick<HTMLElement, 'hasPointerCapture' | 'setPointerCapture' | 'releasePointerCapture'>>;
+
+interface Armed { sourceId: string; x: number; y: number; pointerId: number; target: CaptureTarget }
 
 export type { Armed, DragGesture, DragGestureInput };

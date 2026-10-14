@@ -21,43 +21,47 @@ const legacyReplacement = (type: string): HudNode | null => {
   return null;
 };
 
+const presetNodeFor = (value: Record<string, unknown>, type: string): unknown => {
+  if (!LEGACY_TYPES.includes(type)) return undefined;
+  const replacement = legacyReplacement(type);
+  if (!replacement) return undefined;
+  const { kind: _kind, element: _element, ...box } = value;
+  const id = typeof value.id === 'string' && value.id ? value.id : replacement.id;
+  return { ...replacement, ...box, id };
+};
+
+const migrateSwitch = (value: Record<string, unknown>, element: Record<string, unknown>): unknown => {
+  const cases = Array.isArray(element.cases)
+    ? element.cases.map((entry: unknown) => (isRecord(entry) ? { ...entry, node: migrateNode(entry.node) } : entry))
+    : element.cases;
+  return {
+    ...value,
+    element: {
+      ...element,
+      cases,
+      ...(element.otherwise !== undefined ? { otherwise: migrateNode(element.otherwise) } : {}),
+    },
+  };
+};
+
+const migrateElement = (value: Record<string, unknown>, element: Record<string, unknown>): unknown => {
+  const { type } = element;
+  if (typeof type !== 'string') return value;
+  const replaced = presetNodeFor(value, type);
+  if (replaced !== undefined) return replaced;
+  if (type === 'repeat' && isRecord(element.child)) {
+    return { ...value, element: { ...element, child: migrateNode(element.child) } };
+  }
+  if (type === 'switch') return migrateSwitch(value, element);
+  return value;
+};
+
 const migrateNode = (value: unknown): unknown => {
   if (!isRecord(value)) return value;
-
-  if (value.kind === 'element' && isRecord(value.element) && typeof value.element.type === 'string') {
-    const { type } = value.element;
-    if (LEGACY_TYPES.includes(type)) {
-      const replacement = legacyReplacement(type);
-      if (replacement) {
-        const { kind: _kind, element: _element, ...box } = value;
-        const id = typeof value.id === 'string' && value.id ? value.id : replacement.id;
-        return { ...replacement, ...box, id };
-      }
-    }
-    if (value.element.type === 'repeat' && isRecord(value.element.child)) {
-      return { ...value, element: { ...value.element, child: migrateNode(value.element.child) } };
-    }
-    if (value.element.type === 'switch') {
-      const { element } = value;
-      const cases = Array.isArray(element.cases)
-        ? element.cases.map((entry: unknown) => (isRecord(entry) ? { ...entry, node: migrateNode(entry.node) } : entry))
-        : element.cases;
-      return {
-        ...value,
-        element: {
-          ...element,
-          cases,
-          ...(element.otherwise !== undefined ? { otherwise: migrateNode(element.otherwise) } : {}),
-        },
-      };
-    }
-    return value;
-  }
-
+  if (value.kind === 'element') return isRecord(value.element) ? migrateElement(value, value.element) : value;
   if (value.kind === 'container' && Array.isArray(value.children)) {
     return { ...value, children: value.children.map(migrateNode) };
   }
-
   return value;
 };
 

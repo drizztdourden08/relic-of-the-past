@@ -62,10 +62,13 @@ type PartialOptionValues = Readonly<Record<string, OptionValue | undefined>>;
 
 type OptionSeed = Omit<OptionDef, 'description'>;
 
+type OptionHead = Pick<OptionDef, 'key' | 'displayName' | 'group' | 'implementation'>;
+
 type OptionChoiceSpec = [string, number | string] | [string, number | string, string];
 
 export type {
   OptionChoiceSpec,
+  OptionHead,
   OptionSeed,
   OptionValues,
   PartialOptionValues,

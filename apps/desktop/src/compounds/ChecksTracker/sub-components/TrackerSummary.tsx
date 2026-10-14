@@ -3,7 +3,7 @@ import { Box, ProgressBar, Text } from '@drizztdourden08/tessera/primitives';
 import { STATUS_LABELS, SUMMARY_STATS } from '../ChecksTracker.constants';
 import type { StatusKey, TrackerSummaryProps } from '../ChecksTracker.type';
 import { CheckStatusIcon } from './CheckStatusIcon';
-import '../ChecksTracker.css';
+import './TrackerSummary.css';
 
 const TrackerSummary = (props: TrackerSummaryProps) => {
   const { completed, reachable, blocked, total } = props;

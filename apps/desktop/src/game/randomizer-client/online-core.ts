@@ -15,9 +15,10 @@ import type { OnlineCore } from '@rotp/randomizer';
 
 const onlineBitsFor = (deathLink: boolean): number => AP_ONLINE_BIT | (deathLink ? AP_DEATH_LINK_BIT : 0);
 
-const arm: OnlineCore['arm'] = async (config) => {
+const arm: OnlineCore['arm'] = (config) => new Promise<void>((resolve) => {
   setOnlineBits(onlineBitsFor(config.deathLink === true));
-};
+  resolve();
+});
 
 const disarm = (): void => {
   stopScoutedTexts();

@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind logic */
-import type { HidAxisMapping, InputStatus, StickCandidate } from '../hid-calibration.type';
+import type { HidAxisMapping, StickCandidate } from '../hid-calibration.type';
 import type { TriggerFinalizeCallbacks, TriggerFinalizeRefs } from './stick-trigger-handlers.type';
 
 const finalizeTriggerCalibration = (c: StickCandidate, refs: TriggerFinalizeRefs, cb: TriggerFinalizeCallbacks): void => {
@@ -19,7 +19,7 @@ const finalizeTriggerCalibration = (c: StickCandidate, refs: TriggerFinalizeRefs
   cb.setGyroExcluded(new Set(refs.excludedRef.current));
 
   cb.setItems(prev => prev.map(it =>
-    it.id === axisId ? { ...it, status: 'captured' as InputStatus, result, axisMapping: mapping } : it
+    it.id === axisId ? { ...it, status: 'captured', result, axisMapping: mapping } : it
   ));
 
   cb.setActiveTrigger(null);

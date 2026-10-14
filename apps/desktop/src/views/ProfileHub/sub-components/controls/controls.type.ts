@@ -156,6 +156,12 @@ interface AssignedDeviceCardProps {
   onUnassign: () => void;
 }
 
+interface UseProfileEditingArgs {
+  profiles: InputProfile[];
+  initialEditId?: string | null;
+  onRename: (profile: InputProfile, newName: string) => void;
+}
+
 interface AbsentAssignmentsProps {
   entries: AbsentAssignment[];
 }
@@ -166,5 +172,5 @@ export type {
   CoreBindingsGroupProps, CoreVerbGroup,
   CoreVerbRowProps, CtrlProps, DeviceDragInfo, DisplayFunctionMapping, FunctionBindingRowProps,
   HapticsToggleProps, InputProfileItemProps, InputProfileListProps, SchemeBannerProps,
-  SchemeLayoutRowProps, SidebarProfileButtonProps, SlotRowProps, SnesBindingRowProps,
+  SchemeLayoutRowProps, SidebarProfileButtonProps, SlotRowProps, SnesBindingRowProps, UseProfileEditingArgs,
 };

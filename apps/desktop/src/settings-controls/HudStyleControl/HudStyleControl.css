@@ -15,7 +15,3 @@
   border-radius: var(--radius-md);
   background: var(--c-surface);
 }
-
-.hud-style-control__notice .text {
-  color: var(--c-text-dim);
-}

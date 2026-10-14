@@ -11,7 +11,7 @@ const carriedNamesOf = (
 ): readonly string[] => (isRandomOrder(modes, family.id) ? family.tiers : [family.poolItem]);
 
 const applyCopyMultipliers = (
-  pool: string[], modes: ProgressiveModeSetting, copies: CopyMultiplierSetting,
+  pool: string[], modes: ProgressiveModeSetting, copies: Partial<CopyMultiplierSetting>,
 ): number => {
   const added: string[] = [];
   PROGRESSIVE_FAMILIES.forEach((family) => {

@@ -5,11 +5,9 @@ import { isCoreReady } from '@rotp/game-core';
 import { armReceiptGates } from '../receipt-grants';
 import { isQuietReceiptItem, itemLabel } from '@rotp/randomizer';
 import { isGrantable } from './is-grantable';
+import type { DeliverItemArgs } from './deliver-item.type';
 
-const deliverItem = (
-  itemId: number, message?: string, source = 'randomizer', messageId?: number | (() => number),
-  onComplete?: () => void, onGranted?: () => void,
-): string | null => {
+const deliverItem = (...[itemId, message, source = 'randomizer', messageId, onComplete, onGranted]: DeliverItemArgs): string | null => {
   if (!isGrantable(itemId) || !isCoreReady()) return null;
   armReceiptGates();
   const action: DeliveryAction = typeof messageId === 'function'

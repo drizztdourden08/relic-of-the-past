@@ -21,6 +21,8 @@ const rebuildMaps = (m: InputManager): void => {
       case 'gamepad-axis':
         setScoped(m.gamepadAxisMap, deviceKeyFor(mapping.sourceVid, mapping.sourcePid), `${b.axisIndex}:${b.direction}`, mapping.snesButton);
         break;
+      case 'none':
+        break;
     }
   }
 };

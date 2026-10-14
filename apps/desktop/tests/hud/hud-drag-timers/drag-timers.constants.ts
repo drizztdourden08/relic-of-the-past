@@ -1,14 +1,12 @@
 /* @layer tests @kind constants */
-import type { Platform } from '@drizztdourden08/brock-core';
-import type { HudLayout, HudNode } from '@rotp/hud';
+import type { HudElement, HudLayout } from '@rotp/hud';
 
-const leaf = (id: string): HudNode => ({ id, kind: 'element', element: { type: 'spacer' } } as unknown as HudNode);
+const leaf = (id: string): HudElement => ({ id, kind: 'element', element: { type: 'spacer' } });
 
-const PLATFORM = { info: { os: 'windows' } } as unknown as Platform;
-
-const DOC = {
+const DOC: HudLayout = {
   id: 'l',
   name: 'l',
+  builtIn: false,
   screen: {
     id: 'screen',
     kind: 'container',
@@ -18,10 +16,10 @@ const DOC = {
       { id: 'vault', kind: 'container', direction: 'row', children: [leaf('coin'), leaf('gem')] },
     ],
   },
-} as unknown as HudLayout;
+};
 
 const ROW = 22;
 
 const VIEW = { top: 0, bottom: 200, left: 0, right: 200 };
 
-export { DOC, PLATFORM, ROW, VIEW };
+export { DOC, ROW, VIEW };

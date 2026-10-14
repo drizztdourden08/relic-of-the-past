@@ -9,8 +9,9 @@ import type { PlanEntry, PlanError } from '../physical-plan.type';
 
 const lockedVanillaRow = (
   location: LocationKey, item: ItemKey, flags: ScopeFlags,
-  checkId: string | undefined, detection: CheckDetection | null,
+  detected: { checkId: string | undefined; detection: CheckDetection | null },
 ): PlanEntry | PlanError => {
+  const { checkId, detection } = detected;
   const requiredVanilla = capabilityVanillaItemOf(location, flags);
   const placementPredatesLock = requiredVanilla !== undefined && item !== requiredVanilla;
   if (placementPredatesLock) {

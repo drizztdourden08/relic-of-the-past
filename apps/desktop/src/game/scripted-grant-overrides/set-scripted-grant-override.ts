@@ -28,7 +28,7 @@ const setScriptedGrantOverride = (target: ScriptedGrantSurface, newItem: number,
     setScriptedGrantsActive(true);
     reassertGateWord3();
   }
-  armCall(mod, target, newItem, messageId, fireId);
+  armCall({ mod, target, newItem, messageId, fireId });
   log.randomizer(`[Randomizer] Scripted grant override set: ${target.surface} `
     + `-> 0x${newItem.toString(16)} (msg ${messageId})`);
 };

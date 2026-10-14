@@ -34,15 +34,15 @@ const useInputCalibration = () => {
 
   useEffect(() => {
     const api = inputApi();
-    const unsubConnect = api?.onAdded((info) => {
+    const unsubConnect = api.onAdded((info) => {
       setEvents(prev => [...prev.slice(-EVENT_LOG_KEEP), { time: Date.now(), type: 'connect', id: info.name || info.deviceKey }]);
     });
-    const unsubRemoved = api?.onRemoved((deviceKey) => {
+    const unsubRemoved = api.onRemoved((deviceKey) => {
       setEvents(prev => [...prev.slice(-EVENT_LOG_KEEP), { time: Date.now(), type: 'disconnect', id: deviceKey }]);
     });
     return () => {
-      unsubConnect?.();
-      unsubRemoved?.();
+      unsubConnect();
+      unsubRemoved();
     };
   }, []);
 

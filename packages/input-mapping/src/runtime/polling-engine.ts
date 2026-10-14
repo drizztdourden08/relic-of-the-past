@@ -6,14 +6,21 @@ import { axisPressed } from './axis-pressed';
 import type { AllowedDevices } from './profile-devices';
 import { scopedEntries } from './device-scoped-map';
 import type { DeviceScopedMap } from './device-scoped-map';
+import type { GamepadMaps, HidDeviceState } from './polling-engine.type';
 
-const applyDeviceState = (mask: number, deviceKey: string, buttons: readonly boolean[], axes: readonly number[], gamepadButtonMap: DeviceScopedMap<number, SnesButton>, gamepadAxisMap: DeviceScopedMap<string, SnesButton>): number => {
-  for (const [index, snesBtn] of scopedEntries(gamepadButtonMap, deviceKey)) {
+const buttonMask = (deviceKey: string, buttons: readonly boolean[], map: DeviceScopedMap<number, SnesButton>): number => {
+  let mask = 0;
+  for (const [index, snesBtn] of scopedEntries(map, deviceKey)) {
     if (index < buttons.length && buttons[index]) {
       mask |= (1 << SNES_BUTTON_BITS[snesBtn]);
     }
   }
-  for (const [key, snesBtn] of scopedEntries(gamepadAxisMap, deviceKey)) {
+  return mask;
+};
+
+const axisMask = (deviceKey: string, axes: readonly number[], map: DeviceScopedMap<string, SnesButton>): number => {
+  let mask = 0;
+  for (const [key, snesBtn] of scopedEntries(map, deviceKey)) {
     const [axisStr, dir] = key.split(':');
     const axisIndex = parseInt(axisStr ?? '', 10);
     if (axisIndex < axes.length) {
@@ -27,6 +34,9 @@ const applyDeviceState = (mask: number, deviceKey: string, buttons: readonly boo
   return mask;
 };
 
+const deviceMask = (deviceKey: string, state: HidDeviceState, maps: GamepadMaps): number =>
+  buttonMask(deviceKey, state.buttons, maps.gamepadButtonMap) | axisMask(deviceKey, state.axes, maps.gamepadAxisMap);
+
 const keyboardMask = (keyStates: Map<string, boolean>, keyboardMap: Map<string, SnesButton>): number => {
   let mask = 0;
   for (const [code, pressed] of keyStates) {
@@ -37,12 +47,12 @@ const keyboardMask = (keyStates: Map<string, boolean>, keyboardMap: Map<string, 
   return mask;
 };
 
-const computeBitmask = (keyStates: Map<string, boolean>, keyboardMap: Map<string, SnesButton>, gamepadButtonMap: DeviceScopedMap<number, SnesButton>, gamepadAxisMap: DeviceScopedMap<string, SnesButton>, hidStates: Map<string, { buttons: boolean[]; axes: number[] }>, allowed: AllowedDevices): number => {
+const computeBitmask = (keyStates: Map<string, boolean>, keyboardMap: Map<string, SnesButton>, gamepadButtonMap: DeviceScopedMap<number, SnesButton>, gamepadAxisMap: DeviceScopedMap<string, SnesButton>, hidStates: Map<string, HidDeviceState>, allowed: AllowedDevices): number => {
   let mask = allowed.keyboard ? keyboardMask(keyStates, keyboardMap) : 0;
 
   for (const [deviceKey, state] of hidStates) {
     if (!allowed.gamepadKeys.has(deviceKey)) continue;
-    mask = applyDeviceState(mask, deviceKey, state.buttons, state.axes, gamepadButtonMap, gamepadAxisMap);
+    mask |= deviceMask(deviceKey, state, { gamepadButtonMap, gamepadAxisMap });
   }
 
   return mask;

@@ -1,7 +1,7 @@
 /* @layer renderer-app @kind logic */
 import type { IdRefTarget } from '../DataInspector.type';
 import { asEntityKind } from './as-entity-kind';
-import { entityKindFromId, resolveRecordLabel } from './record-links';
+import { entityKindFromId, resolveRecordLabel } from '@app/data-inspector/record-links';
 
 const resolveIdRef = (
   idRef: string | undefined,

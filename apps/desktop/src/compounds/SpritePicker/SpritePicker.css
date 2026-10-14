@@ -6,8 +6,8 @@
   display: flex;
   flex-direction: column;
   gap: var(--space-xs);
-  width: 300px;
-  max-height: 22rem;
+  width: calc(300 * var(--size-1));
+  max-height: calc(352 * var(--size-1));
   padding: var(--space-xs) var(--space-sm) var(--space-xs) var(--space-xs);
   overflow-y: auto;
   scrollbar-gutter: stable;
@@ -23,7 +23,7 @@
 
 .sprite-picker__tiles {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(4.5rem, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(calc(72 * var(--size-1)), 1fr));
   gap: var(--space-2xs);
 }
 
@@ -45,8 +45,8 @@
 }
 
 .sprite-picker__thumb {
-  width: 2.75rem;
-  height: 2.75rem;
+  width: calc(44 * var(--size-1));
+  height: calc(44 * var(--size-1));
 }
 
 .sprite-picker__thumb .image__img {

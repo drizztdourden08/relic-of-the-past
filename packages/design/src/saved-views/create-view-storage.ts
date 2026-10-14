@@ -1,8 +1,8 @@
 /* @layer site-kit @kind logic */
-import { isViewSnapshot } from '@drizztdourden08/tessera/data';
 import type { ViewKey, ViewSnapshot, ViewStorage } from '@drizztdourden08/tessera/data';
-import { listViews, putView } from '@rotp/hub-client';
-import { CURRENT_NAME, DEBOUNCE_MS } from './create-view-storage.constants';
+import { DEBOUNCE_MS } from './create-view-storage.constants';
+import { fetchCurrentView } from './fetch-current-view';
+import { putCurrentView } from './put-current-view';
 import type { ViewHalf, ViewKeys } from './create-view-keys.type';
 
 const mergeHalf = (base: ViewSnapshot, half: ViewHalf, next: ViewSnapshot): ViewSnapshot =>
@@ -15,25 +15,13 @@ const createViewStorage = (keys: ViewKeys) => {
   const loading = new Map<string, Promise<ViewSnapshot | undefined>>();
   const timers = new Map<string, ReturnType<typeof setTimeout>>();
 
-  const fetchCurrent = async (surface: string): Promise<ViewSnapshot | undefined> => {
-    const { views } = await listViews(surface);
-    const hit = views.find((view) => view.id === keys.currentViewId(surface));
-    return hit && isViewSnapshot(hit.snapshot) ? hit.snapshot : undefined;
-  };
-
-  const putCurrent = (surface: string, snapshot: ViewSnapshot) =>
-    putView(keys.currentViewId(surface), { surface, name: CURRENT_NAME, snapshot }).then(
-      () => undefined,
-      (error: unknown) => console.warn(`Saving the ${surface} view failed: ${String(error)}`),
-    );
-
   const scheduleSave = (surface: string) => {
     const timer = timers.get(surface);
     if (timer !== undefined) clearTimeout(timer);
     timers.set(surface, setTimeout(() => {
       timers.delete(surface);
       const snapshot = cache.get(surface);
-      if (snapshot) void putCurrent(surface, snapshot);
+      if (snapshot) void putCurrentView(keys, surface, snapshot);
     }, DEBOUNCE_MS));
   };
 
@@ -49,7 +37,7 @@ const createViewStorage = (keys: ViewKeys) => {
     if (cached) return Promise.resolve(cached);
     let inFlight = loading.get(surface);
     if (!inFlight) {
-      inFlight = fetchCurrent(surface)
+      inFlight = fetchCurrentView(keys, surface)
         .catch(() => undefined)
         .then((loaded) => {
           loading.delete(surface);
@@ -76,7 +64,7 @@ const createViewStorage = (keys: ViewKeys) => {
     if (timer !== undefined) clearTimeout(timer);
     timers.delete(surface);
     cache.set(surface, snapshot);
-    return putCurrent(surface, snapshot);
+    return putCurrentView(keys, surface, snapshot);
   };
 
   const storage: ViewStorage = { load, save };

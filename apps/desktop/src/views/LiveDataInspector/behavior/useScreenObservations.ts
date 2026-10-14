@@ -45,7 +45,7 @@ const useScreenObservations = (): ScreenLiveObservations => {
   );
 
   const screenId = match?.screen.id ?? null;
-  const connStatus = useConnectionStatus(screenId, detectedEntranceScreens, detectedStairs, exitScreen, detectedFallHoleRooms);
+  const connStatus = useConnectionStatus(screenId, { detectedEntranceScreens, detectedStairs, exitScreen, detectedFallHoleRooms });
   const realAvailable = isIndoors ? screenId != null : floodConnections.length > 0;
 
   const liveGameId = useMemo<ScreenGameId>(

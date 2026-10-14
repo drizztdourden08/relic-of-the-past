@@ -20,7 +20,7 @@
   align-items: center;
   gap: var(--space-sm);
   padding: var(--space-sm) var(--space-sm);
-  border-bottom: 1px solid var(--c-border);
+  border-bottom: var(--border-width-thin) solid var(--c-border);
   flex-shrink: 0;
 }
 
@@ -29,7 +29,7 @@
   font-size: var(--text-sm);
   font-weight: var(--weight-bold);
   text-transform: uppercase;
-  letter-spacing: 0.8px;
+  letter-spacing: calc(0.8 * var(--size-1));
   color: var(--c-text-dim);
   white-space: nowrap;
 }
@@ -75,12 +75,12 @@
 
 .controls-settings__devices-column {
   width: fit-content;
-  max-width: 260px;
+  max-width: calc(260 * var(--size-1));
   flex-shrink: 0;
   display: flex;
   flex-direction: column;
   overflow-y: auto;
-  border-left: 1px solid var(--c-border);
+  border-left: var(--border-width-thin) solid var(--c-border);
   padding: var(--space-sm);
   transition: max-width 0.2s ease, padding 0.2s ease;
 }
@@ -107,7 +107,7 @@
   font-size: var(--text-sm);
   font-weight: var(--weight-semi);
   text-transform: uppercase;
-  letter-spacing: 0.5px;
+  letter-spacing: calc(0.5 * var(--size-1));
   color: var(--c-text-dim);
   padding: 0 0 var(--space-sm);
   display: flex;
@@ -139,7 +139,7 @@
   flex: 1;
   display: flex;
   flex-direction: column;
-  border: 1px solid var(--c-border);
+  border: var(--border-width-thin) solid var(--c-border);
   border-radius: var(--radius-lg);
   background: var(--c-surface);
   overflow: hidden;
@@ -175,7 +175,7 @@
 
 .controls-settings__bindings--drag-over {
   border-color: var(--c-primary);
-  box-shadow: 0 0 12px var(--c-primary-soft), inset 0 0 12px var(--c-primary-soft);
+  box-shadow: 0 0 var(--size-12) var(--c-primary-soft), inset 0 0 var(--size-12) var(--c-primary-soft);
 }
 
 .controls-settings__binding-list {

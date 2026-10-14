@@ -1,7 +1,8 @@
 /* @layer renderer-components @kind component */
-import { Box, Button, ButtonRow, EmptyState, SectionHeader, Text } from '@drizztdourden08/tessera/primitives';
+import { Box, Button, EmptyState, SectionHeader, Text } from '@drizztdourden08/tessera/primitives';
 import { useLayerEditor } from './behavior/useLayerEditor';
 import { LayerCard } from './sub-components/LayerCard';
+import { LayerEditorFooter } from './sub-components/LayerEditorFooter';
 import { useFileLoopSamples } from './behavior/useFileLoopSamples';
 import { LayerLive } from '../PreviewReadout';
 import './LayerEditor.css';
@@ -57,13 +58,7 @@ const LayerEditor = (props: LayerEditorProps) => {
 
       {error != null && <Text className="layer-editor__error">{error}</Text>}
 
-      <ButtonRow align="start">
-        <Button variant="primary" size="sm" disabled={locked || !dirty} onClick={() => void save()}>
-          {saving ? 'Saving...' : 'Save layers'}
-        </Button>
-        <Button variant="tertiary" size="sm" disabled={locked || !dirty} onClick={revert}>Revert</Button>
-        {dirty && !saving && <Text variant="caption">Unsaved changes</Text>}
-      </ButtonRow>
+      <LayerEditorFooter locked={locked} dirty={dirty} saving={saving} onSave={() => void save()} onRevert={revert} />
     </Box>
   );
 };

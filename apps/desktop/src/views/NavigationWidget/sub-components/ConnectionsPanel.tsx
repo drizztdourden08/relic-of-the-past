@@ -1,6 +1,6 @@
 /* @layer renderer-widgets @kind component */
 import { landingCrossings, listedCrossings } from '@rotp/navigation';
-import { Box, Text } from '@drizztdourden08/tessera/primitives';
+import { Box, Icon, Text } from '@drizztdourden08/tessera/primitives';
 import { CrossingCard } from './CrossingCard';
 import { EdgeCard } from './EdgeCard';
 import { InternalEdgesSection } from './InternalEdgesSection';
@@ -58,7 +58,7 @@ const ConnectionsPanel = (props: ConnectionsPanelProps) => {
             {landings.map(crossing => (
               <Box key={crossing.id} title={crossing.label} className="nav-card">
                 <Box className="nav-connections-panel__hole-graphic">
-                  <Text className="nav-connections-panel__big-emoji">⬇</Text>
+                  <Icon name="arrow-down" className="nav-connections-panel__big-emoji" />
                 </Box>
                 <Text className="nav-card-title">Landing Zone</Text>
                 <Text className="nav-card-sub">r{crossing.tile.row} c{crossing.tile.col}</Text>

@@ -41,12 +41,12 @@ const glyphFor = (
   return position ? resolveGlyph(pack, position, family, packs) : null;
 };
 
-const textFor = (binding: InputBinding): string => {
-  const raw = binding.type === 'keyboard'
-    ? (binding.label ?? binding.code.replace(/^(Key|Digit|Numpad)/, ''))
-    : (binding.type === 'none' ? '' : (binding.label ?? ''));
-  return raw.toUpperCase().replace(/[^A-Z0-9 &]/g, '');
+const rawTextFor = (binding: InputBinding): string => {
+  if (binding.type === 'keyboard') return binding.label ?? binding.code.replace(/^(Key|Digit|Numpad)/, '');
+  return binding.type === 'none' ? '' : (binding.label ?? '');
 };
+
+const textFor = (binding: InputBinding): string => rawTextFor(binding).toUpperCase().replace(/[^A-Z0-9 &]/g, '');
 
 const dedupe = (glyphs: readonly GlyphSource[]): GlyphSource[] => {
   const seen = new Set<string>();
@@ -70,9 +70,9 @@ const useLegendEntries = (
   const cursorActions = usePauseMenuStore((s) => s.cursorActions);
 
   return useMemo(() => {
-    const core = bindings?.core;
-    if (!core) return [];
-    const family = deviceFamilyOf(bindings?.slots ?? [], declaredDeviceFamily());
+    if (!bindings?.core) return [];
+    const { core, slots } = bindings;
+    const family = deviceFamilyOf(slots, declaredDeviceFamily());
 
     return rowsFor(heldActions(cursorActions, canConfirm)).map((row) => {
       const held = row.verbs.map((verb) => core[verb]);

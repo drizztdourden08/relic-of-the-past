@@ -1,137 +1,32 @@
 /* @layer renderer-components @kind component */
-import { useCallback, useRef, useState } from 'react';
 import { DialogShell } from '@drizztdourden08/tessera/composites';
-import { Button, Box, Text } from '@drizztdourden08/tessera/primitives';
-import type { HidWizardHandle } from '../HidCalibrationWizard';
-import { DiagnosticsFlowBody } from '../diagnostics-wizard/DiagnosticsFlowBody';
-import { DiagnosticsStepActions } from '../diagnostics-wizard/sub-components/DiagnosticsStepActions';
-import { useSummaryExport } from '../diagnostics-wizard/behavior/useSummaryExport';
-import { useFlashStatus } from '../hid-calibration/hooks/useFlashStatus';
+import { Box } from '@drizztdourden08/tessera/primitives';
 import { useControllerReportForm } from './behavior/useControllerReportForm';
+import { useReportDialogControls } from './behavior/useReportDialogControls';
 import { buildReportStepLabels, reportStepIndex } from './report-step-labels';
-import { IntroStep } from './sub-components/IntroStep';
-import { UserInfoStep } from './sub-components/UserInfoStep';
-import { ConfirmStep } from './sub-components/ConfirmStep';
+import { ReportActions } from './sub-components/ReportActions';
+import { ReportBody } from './sub-components/ReportBody';
 import { StepIndicator } from './sub-components/StepIndicator';
 import type { ControllerReportDialogProps } from './ControllerReportDialog.type';
 import './ControllerReportDialog.css';
-import '../diagnostics-wizard/DiagnosticsWizardDialog.css';
 
 const ControllerReportDialog = (props: ControllerReportDialogProps) => {
   const { open, onClose, deviceKey } = props;
   const form = useControllerReportForm(deviceKey);
-  const wizardRef = useRef<HidWizardHandle>(null);
-  const [capturedCount, setCapturedCount] = useState(0);
-  const { handleCopyJson } = useSummaryExport(form.wizard.byteCapture, form.wizard.positionalRecords);
-  const [copyStatus, flashCopy] = useFlashStatus();
-  const filed = form.status === 'done' ? form.filed : null;
-  const showResult = open && filed !== null;
-  const { reset, goToStep, wizard } = form;
-  const { goNext } = wizard;
-
-  const closeForm = useCallback(() => {
-    onClose();
-    reset();
-  }, [onClose, reset]);
-
-  const openAndClose = useCallback((url: string) => {
-    window.open(url, '_blank');
-    closeForm();
-  }, [closeForm]);
-
-  const handleByteCaptureNext = useCallback(() => {
-    wizardRef.current?.finish();
-    goNext();
-  }, [goNext]);
-
-  const handleCopy = useCallback(() => handleCopyJson().then(flashCopy), [handleCopyJson, flashCopy]);
-  const goAbout = useCallback(() => goToStep('about'), [goToStep]);
-  const goUserInfo = useCallback(() => goToStep('user-info'), [goToStep]);
-  const goDiagnostics = useCallback(() => goToStep('diagnostics'), [goToStep]);
-  const sanctuaryUrl = filed?.sanctuaryUrl;
-  const issueUrl = filed?.issueUrl;
-  const openSanctuary = useCallback(() => { if (sanctuaryUrl) openAndClose(sanctuaryUrl); }, [openAndClose, sanctuaryUrl]);
-  const openIssue = useCallback(() => { if (issueUrl) openAndClose(issueUrl); }, [openAndClose, issueUrl]);
-
-  const cancel = <Button variant="danger" onClick={closeForm}>Cancel</Button>;
-
-  const diagnosticsActions = form.wizard.step === 'summary' ? (
-    <>
-      {cancel}
-      <Button variant="secondary" onClick={form.wizard.goBack} disabled={form.wizard.restoreStatus !== 'done'}>Back</Button>
-      <Button variant={copyStatus === 'error' ? 'danger' : 'tertiary'} onClick={handleCopy}>
-        {copyStatus === 'ok' ? 'Copied' : copyStatus === 'error' ? 'Failed' : 'Copy JSON'}
-      </Button>
-      <Button variant="primary" onClick={form.finishDiagnostics} disabled={!form.wizard.byteCapture}>
-        Use this capture
-      </Button>
-    </>
-  ) : (
-    <DiagnosticsStepActions
-      wizard={form.wizard}
-      cancelAction={cancel}
-      introBack={goUserInfo}
-      onByteCaptureNext={handleByteCaptureNext}
-      capturedCount={capturedCount}
-    />
-  );
-
-  const actions = filed ? (
-    <>
-      <Button variant="secondary" onClick={closeForm}>Close</Button>
-      <Button variant="secondary" onClick={openSanctuary}>See it in the Sanctuary</Button>
-      <Button variant="primary" onClick={openIssue}>Open on GitHub</Button>
-    </>
-  ) : form.step === 'about' ? (
-    <>
-      {cancel}
-      <Button variant="primary" onClick={goUserInfo}>Next</Button>
-    </>
-  ) : form.step === 'user-info' ? (
-    <>
-      <Button variant="secondary" onClick={goAbout}>Back</Button>
-      <Button variant="primary" onClick={goDiagnostics} disabled={!form.canLeaveUserInfo}>Next</Button>
-    </>
-  ) : form.step === 'diagnostics' ? diagnosticsActions : (
-    <>
-      <Button variant="secondary" onClick={form.backToDiagnostics}>Back</Button>
-      <Button variant="primary" onClick={form.submit} disabled={!form.canSubmit}>
-        {form.status === 'submitting' ? 'Submitting...' : 'Send report'}
-      </Button>
-    </>
-  );
+  const controls = useReportDialogControls({ form, onClose });
+  const showResult = open && controls.filed !== null;
 
   return (
     <DialogShell
       open={open}
-      onClose={closeForm}
+      onClose={controls.closeForm}
       title={showResult ? 'Report filed' : 'Report a controller as not working'}
       headerExtra={!showResult && <StepIndicator labels={buildReportStepLabels(form.wizard)} current={reportStepIndex(form.step, form.wizard)} />}
       className="controller-report controller-report--wide"
-      actions={actions}
+      actions={<ReportActions form={form} controls={controls} />}
     >
       <Box className="controller-report__body">
-        {showResult ? (
-          <>
-            <Text as="p">Thanks, your report was filed.</Text>
-            <Text as="p" className="controller-report__result-url">{filed?.issueUrl}</Text>
-          </>
-        ) : form.step === 'about' ? (
-          <IntroStep />
-        ) : form.step === 'user-info' ? (
-          <UserInfoStep
-            me={form.me} email={form.email} setEmail={form.setEmail} emailTouched={form.emailTouched} emailValid={form.emailValid}
-            name={form.name} setName={form.setName} additionalInfo={form.additionalInfo} setAdditionalInfo={form.setAdditionalInfo}
-            debugText={form.debugText}
-          />
-        ) : form.step === 'diagnostics' ? (
-          <DiagnosticsFlowBody wizard={form.wizard} wizardRef={wizardRef} onCapturedCountChange={setCapturedCount} />
-        ) : (
-          <ConfirmStep
-            me={form.me} email={form.email} name={form.name} additionalInfo={form.additionalInfo} debugText={form.debugText}
-            detection={form.detection} calibrationMap={form.calibrationMap} diagnosticsReport={form.diagnosticsReport} status={form.status}
-          />
-        )}
+        <ReportBody form={form} controls={controls} />
       </Box>
     </DialogShell>
   );

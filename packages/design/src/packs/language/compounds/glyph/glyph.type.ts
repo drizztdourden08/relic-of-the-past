@@ -14,4 +14,6 @@ type GlyphStore = {
 
 type PaintJob = { canvas: HTMLCanvasElement; tiles: Uint8Array; glyph: number; ratio: number };
 
-export type { GlyphCellProps, GlyphStore, PaintJob };
+type TileJob = { tiles: Uint8Array; tileIndex: number; rowOffset: number };
+
+export type { GlyphCellProps, GlyphStore, PaintJob, TileJob };

@@ -10,6 +10,7 @@ const HapticsToggle = (props: HapticsToggleProps) => {
     <Box className="haptics-toggle">
       <Toggle
         label="Haptics"
+        size="sm"
         checked={enabled}
         onChange={onChange}
       />

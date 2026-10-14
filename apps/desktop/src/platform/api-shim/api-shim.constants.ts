@@ -15,7 +15,7 @@ const STUB_RETURNS: Record<string, () => unknown> = {
   getAppVersion: readNativeAppVersion,
 };
 
-const SCREEN_EDITOR_STUB = {
+const SCREEN_EDITOR_STUB: ScreenEditorApi = {
   writeScreen: refuseEdit, writeConnections: refuseEdit, writeConnectionPair: refuseEdit, writeCheck: refuseEdit,
   allocateGeography: refuseEdit, allocateTag: refuseEdit, writeTag: refuseEdit, deleteTag: refuseEdit,
   allocateItemGroup: refuseEdit, writeItemGroup: refuseEdit, deleteItemGroup: refuseEdit,
@@ -26,6 +26,6 @@ const SCREEN_EDITOR_STUB = {
   allocateActor: refuseEdit, writeActorRecord: refuseEdit, deleteActor: refuseEdit,
   writeAreaRecord: refuseEdit, deleteArea: refuseEdit,
   writeLocationRecord: refuseEdit, deleteLocation: refuseEdit,
-} satisfies Record<keyof ScreenEditorApi, unknown> as unknown as ScreenEditorApi;
+};
 
 export { EMPTY_ARRAY_METHODS, STUB_RETURNS, SCREEN_EDITOR_STUB };

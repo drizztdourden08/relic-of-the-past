@@ -1,8 +1,8 @@
 /* @layer tests @kind helper */
-import type { HudGridContainer, HudNode } from '@rotp/hud';
+import type { HudGridContainer, HudNode, HudPlace } from '@rotp/hud';
 
-const leaf = (id: string, place?: Record<string, number>): HudNode =>
-  ({ id, kind: 'element', element: { type: 'spacer' }, size: { w: { px: 16 }, h: { px: 16 } }, ...(place ? { place } : {}) }) as unknown as HudNode;
+const leaf = (id: string, place?: HudPlace): HudNode =>
+  ({ id, kind: 'element', element: { type: 'spacer' }, size: { w: { px: 16 }, h: { px: 16 } }, ...(place ? { place } : {}) });
 
 const screenRoot = (): HudGridContainer => ({
   kind: 'container', id: 'screen', layout: 'grid',

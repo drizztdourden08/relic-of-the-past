@@ -16,4 +16,15 @@ interface CapacityUpgradesBlockProps {
   onProgressiveChange?: (progressive: boolean) => void;
 }
 
-export type { CapacityUpgradesBlockProps };
+interface CapacityRowsProps {
+  rows: readonly CapacityRowModel[];
+  progressiveOption?: OptionDef;
+  progressive: boolean;
+  frozen: boolean;
+  readOnly: boolean;
+  onChange?: (family: CapacityFamilyId, next: CapacityRowState) => void;
+  onBonusChange?: (family: CapacityFamilyId, next: FamilyBonus) => void;
+  onProgressiveChange?: (progressive: boolean) => void;
+}
+
+export type { CapacityRowsProps, CapacityUpgradesBlockProps };

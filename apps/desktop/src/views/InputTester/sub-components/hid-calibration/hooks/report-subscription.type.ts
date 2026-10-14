@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind types */
-import type { ControllerInputState } from '../../../../../input/controller-input-store';
+import type { ControllerInputState, HidRawReportEvent } from '../../../../../input/controller-input-store';
 import type { AxisSubStep, CaptureState, InputItem } from '../hid-calibration.type';
 import type { useCalibrationRefs } from './useCalibrationRefs';
 
@@ -21,4 +21,11 @@ interface ReportSubscriptionCallbacks {
   doAdvance: () => void;
 }
 
-export type { CalibrationRefs, ReportSubscriptionCallbacks };
+interface DispatchRawReportParams {
+  report: HidRawReportEvent;
+  deviceKey: string | undefined;
+  refs: CalibrationRefs;
+  cb: ReportSubscriptionCallbacks;
+}
+
+export type { CalibrationRefs, DispatchRawReportParams, ReportSubscriptionCallbacks };

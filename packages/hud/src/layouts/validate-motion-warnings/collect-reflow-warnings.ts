@@ -5,7 +5,7 @@ import type { HudContainer, HudNode } from '../../types/hud-node';
 
 const isFlowContainer = (node: HudNode): boolean => (
   node.kind === 'container'
-  && (node.layout === 'grid' ? !isOverlay(node) : node.direction === 'row' || node.direction === 'column')
+  && (node.layout !== 'grid' || !isOverlay(node))
 );
 
 const walk = (node: HudNode, parentId: string | null, parentIsFlow: boolean, warnings: string[]): void => {

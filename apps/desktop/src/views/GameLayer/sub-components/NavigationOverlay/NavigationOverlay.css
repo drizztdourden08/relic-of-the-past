@@ -1,0 +1,75 @@
+/* @layer renderer-components @kind style */
+.nav-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: var(--z-base);
+}
+
+.nav-overlay__controls {
+  position: absolute;
+  top: var(--size-6);
+  left: var(--size-6);
+  z-index: var(--z-base);
+  pointer-events: none;
+}
+
+.nav-overlay__legends {
+  position: absolute;
+  bottom: var(--size-6);
+  right: var(--size-6);
+  z-index: var(--z-base);
+  display: flex;
+  gap: var(--size-6);
+  align-items: flex-end;
+  pointer-events: none;
+}
+
+.nav-overlay__legend-column {
+  display: flex;
+  flex-direction: column;
+  gap: var(--size-6);
+  align-items: stretch;
+}
+
+.nav-overlay__canvas {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+}
+
+.nav-overlay__inspector {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.nav-overlay__inspector--selecting {
+  cursor: crosshair;
+}
+
+.nav-overlay__selection {
+  position: absolute;
+  border: var(--border-width-thick) solid var(--c-primary);
+  background: var(--c-primary-soft);
+  pointer-events: none;
+  z-index: var(--z-base);
+}
+
+.nav-overlay__toast {
+  position: absolute;
+  left: 50%;
+  top: var(--size-8);
+  transform: translateX(-50%);
+  background: var(--c-secondary);
+  color: var(--c-text);
+  padding: var(--space-xs) var(--space-md);
+  border-radius: var(--radius-sm);
+  font-family: var(--font-mono);
+  font-size: var(--size-12);
+  font-weight: bold;
+  pointer-events: none;
+  z-index: var(--z-base);
+}

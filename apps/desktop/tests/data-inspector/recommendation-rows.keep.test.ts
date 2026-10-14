@@ -2,10 +2,10 @@
 import { describe, it, expect } from 'vitest';
 import {
   byConfidenceThenAge, openRecommendations, recommendationRows,
-} from '@app/views/DataInspector/behavior/recommendations/recommendation-rows';
+} from '@app/data-inspector/recommendations/recommendation-rows';
 import {
   RECOMMENDATION_GROUP_BY, RECOMMENDATION_SCHEMA, recommendationSource,
-} from '@app/views/DataInspector/behavior/recommendations/recommendation-source';
+} from '@app/data-inspector/recommendations/recommendation-source';
 import { buildSchema, createSchemaIndex } from '@drizztdourden08/tessera/data';
 import type { Recommendation } from '@rotp/navigation';
 import { required } from '../required';

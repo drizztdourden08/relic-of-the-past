@@ -4,11 +4,11 @@ import { DeleteGuardDialog, RecordEditor } from '@drizztdourden08/tessera/compos
 import { READ_ONLY_NOTE } from '../DataInspector.constants';
 import type { RecordEditorPanelProps } from '../DataInspector.type';
 import { resolveIdRefOptionsFor } from '../behavior/id-ref-options';
-import { numberBoundsResolverFor } from '../behavior/number-bounds';
-import { resolveRecordLabel } from '../behavior/record-links';
+import { numberBoundsResolverFor } from '@app/data-inspector/number-bounds';
+import { resolveRecordLabel } from '@app/data-inspector/record-links';
 import { tagCreatorFor } from '../behavior/tag-creator-for';
-import { tagSuggestionsResolverFor } from '../behavior/tag-suggestions';
-import { useDeleteGuard } from '../behavior/useDeleteGuard';
+import { tagSuggestionsResolverFor } from '@app/data-inspector/tag-suggestions';
+import { useDeleteGuard } from '@app/data-inspector/useDeleteGuard';
 
 const RecordEditorPanel = (props: RecordEditorPanelProps) => {
   const { source, schema, record, onDeleted } = props;

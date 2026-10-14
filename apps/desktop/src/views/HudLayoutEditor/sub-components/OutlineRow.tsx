@@ -1,5 +1,7 @@
 /* @layer renderer-components @kind component */
-import { Box, Icon, IconButton, Pressable, Text } from '@drizztdourden08/tessera/primitives';
+import { Box, Icon, IconButton } from '@drizztdourden08/tessera/primitives';
+import { outlineRowClasses } from '@app/hud-layout-editing/outline-row-classes';
+import { OutlineName } from './OutlineName';
 import { CARET_ICON, DROP_CLASS } from './OutlineRow.constants';
 import type { KeyboardEvent as ReactKeyboardEvent } from 'react';
 import type { OutlineRowProps } from './OutlineRow.type';
@@ -14,15 +16,9 @@ const OutlineRow = (props: OutlineRowProps) => {
     springing, shaking, onRowKeyDown, onOpenMenu,
   } = props;
 
-  const classes = [
-    'hud-outline__row',
-    selected ? 'is-selected' : '',
-    dragging ? 'is-dragging' : '',
-    dropZone ? DROP_CLASS[dropZone] : '',
-    locked ? 'is-locked' : '',
-    isScreen ? 'is-screen' : '',
-    shaking ? 'is-shaking' : '',
-  ].filter(Boolean).join(' ');
+  const classes = outlineRowClasses({
+    selected, dragging, dropClass: dropZone ? DROP_CLASS[dropZone] : '', locked, isScreen, shaking,
+  });
 
   const caret = [
     'hud-outline__caret',
@@ -57,17 +53,7 @@ const OutlineRow = (props: OutlineRowProps) => {
       ) : (
         <Box className="hud-outline__caret-spacer" aria-hidden />
       )}
-      <Pressable className="hud-outline__name" aria-pressed={selected} onClick={onSelect}>
-        <Text className="hud-outline__glyph" aria-hidden>{kind === 'container' ? '▤' : '◦'}</Text>
-        <Text className="hud-outline__text">{label}</Text>
-        {cell && <Text className="hud-outline__badge">{cell}</Text>}
-        {locked && <Text className="hud-outline__badge" title="Edit this from the case list or the repeat's Content section.">{locked}</Text>}
-        {missingSlots.length > 0 && (
-          <Text className="hud-outline__note" title="Out of range for the scheme you are previewing. It still draws, just empty.">
-            slot {missingSlots.join(', ')} out of range
-          </Text>
-        )}
-      </Pressable>
+      <OutlineName kind={kind} label={label} cell={cell} locked={locked} missingSlots={missingSlots} selected={selected} onSelect={onSelect} />
       {!locked && !isScreen && <IconButton variant="ghost" size="sm" label={`Remove ${label}`} onClick={onRemove}>✕</IconButton>}
     </Box>
   );

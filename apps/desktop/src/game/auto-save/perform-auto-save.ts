@@ -8,7 +8,7 @@ import type { AutoSaveTrigger } from '@rotp/game-core';
 
 const captureScreenshot = async (): Promise<ArrayBuffer | undefined> => {
   const blob = await captureGameFrameBlob();
-  return blob ? await blob.arrayBuffer() : undefined;
+  return blob?.arrayBuffer();
 };
 
 const performAutoSave = async (trigger: AutoSaveTrigger): Promise<boolean> => {
@@ -34,7 +34,7 @@ const performAutoSave = async (trigger: AutoSaveTrigger): Promise<boolean> => {
     const screenshot = await captureScreenshot();
 
     const created = await savesStore.createAutoSave(profileId, trigger, ab, screenshot);
-    if (created?.id) await saveMusicPosition(profileId, 'auto', created.id);
+    if (created.id) await saveMusicPosition(profileId, 'auto', created.id);
     log.app(`[AutoSave] ${trigger} auto-save created (${(ab.byteLength / 1024).toFixed(0)} KB)`);
 
     try { mod.FS.unlink(savePath); } catch { return true; }

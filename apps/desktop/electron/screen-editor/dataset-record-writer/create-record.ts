@@ -5,9 +5,10 @@ import { startRecordFile } from '../record-file-template';
 import { withAllocatedIds } from '../id-allocator';
 import { resolveSourceFile } from '../resolve-source-file';
 import { insertBeforeArrayClose } from '../source-writers';
-import { NO_TARGET } from './dataset-record-writer.constants';
+import { NO_ID, NO_TARGET } from './dataset-record-writer.constants';
 import type { RecordWriterSpec } from './dataset-record-writer.type';
 import { editRecordFile } from './edit-record-file';
+import { numberRecord } from './number-record';
 
 const createRecord = async <T extends { id: string }>(
   root: string,
@@ -21,7 +22,8 @@ const createRecord = async <T extends { id: string }>(
   if (started) return { success: false, error: started };
 
   return withAllocatedIds(root, spec.kind, 1, async ([id]) => {
-    const full = { id, ...record } as unknown as T;
+    if (id === undefined) return { success: false, error: NO_ID };
+    const full = numberRecord<T>(id, record);
     const error = await editRecordFile(path, content => insertBeforeArrayClose(content, spec.serialize(full)));
     if (error) return { success: false, error };
     return { success: true, record: full as Allocated<T> };

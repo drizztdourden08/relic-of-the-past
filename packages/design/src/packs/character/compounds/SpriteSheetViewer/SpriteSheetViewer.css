@@ -13,7 +13,7 @@
   flex-wrap: wrap;
 }
 
-.sprite-viewer__slider { width: 12rem; }
+.sprite-viewer__slider { width: var(--size-192); }
 
 .sprite-viewer__body {
   display: flex;

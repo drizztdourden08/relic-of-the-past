@@ -5,7 +5,7 @@ import { renderToStaticMarkup } from 'react-dom/server';
 import { FLEX_ALIGN, FLEX_JUSTIFY, GRID_ITEMS } from '@app/hud-layout-editing/align-options';
 import { LayoutSection } from '@app/views/HudLayoutEditor/sub-components/LayoutSection';
 import { PlatformContext } from '@drizztdourden08/brock-react';
-import { PLATFORM } from './section-controls.constants';
+import { WINDOWS_PLATFORM } from '../windows-platform';
 
 interface ViewSnapshot {
   gridOverlayEnabled: boolean;
@@ -30,7 +30,7 @@ describe('the alignment tiles offer the values the engine has, and no others', (
   });
 
   it('renders one tile per value, each naming what it writes', () => {
-    const markup = renderToStaticMarkup(h(PlatformContext.Provider, { value: PLATFORM },
+    const markup = renderToStaticMarkup(h(PlatformContext.Provider, { value: WINDOWS_PLATFORM },
       h(LayoutSection, {
         node: { kind: 'container', id: 'row-1', direction: 'row', children: [] },
         onPatch: noop, scope: {},
@@ -48,7 +48,7 @@ describe('the alignment tiles offer the values the engine has, and no others', (
 
   it('turns the flex diagrams with `direction`, because the axes turn with it', () => {
     const render = (direction: 'row' | 'column'): string => renderToStaticMarkup(
-      h(PlatformContext.Provider, { value: PLATFORM },
+      h(PlatformContext.Provider, { value: WINDOWS_PLATFORM },
         h(LayoutSection, {
           node: { kind: 'container', id: 'f', direction, children: [] },
           onPatch: noop, scope: {},
@@ -60,7 +60,7 @@ describe('the alignment tiles offer the values the engine has, and no others', (
   });
 
   it('draws a grid\'s two fixed axes instead, with stretch among them', () => {
-    const markup = renderToStaticMarkup(h(PlatformContext.Provider, { value: PLATFORM },
+    const markup = renderToStaticMarkup(h(PlatformContext.Provider, { value: WINDOWS_PLATFORM },
       h(LayoutSection, {
         node: {
           kind: 'container', id: 'g', layout: 'grid', columns: ['auto'], children: [],

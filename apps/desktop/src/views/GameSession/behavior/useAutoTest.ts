@@ -14,13 +14,14 @@ const useAutoTest = ({ activeProfile, loadProfileForGame }: AutoTestDeps) => {
 
   useEffect(() => {
     if (!activeProfile || didRun.current) return;
-    let cancelled = false;
+    const abort = new AbortController();
+    const isCancelled = () => abort.signal.aborted;
 
     void (async () => {
       const args = await requireHostApi().getTestArgs();
       const autoStart = isAutoStart();
       if (args.autoState === null && !autoStart) return;
-      if (cancelled || didRun.current) return;
+      if (isCancelled() || didRun.current) return;
       didRun.current = true;
 
       log.app(`[AutoTest] args: autoState=${args.autoState}, screenshot=${args.screenshot}, autoStart=${autoStart}`);
@@ -28,9 +29,9 @@ const useAutoTest = ({ activeProfile, loadProfileForGame }: AutoTestDeps) => {
       log.app(`[AutoTest] Starting game with profile: ${activeProfile.name}`);
       await loadProfileForGame(activeProfile);
 
-      await waitForGameRunning(() => cancelled);
+      await waitForGameRunning(isCancelled);
 
-      if (cancelled) return;
+      if (isCancelled()) return;
 
       if (args.autoState !== null) {
         const kind = typeof args.autoState === 'number' ? 'quick slot' : 'manual save';
@@ -47,7 +48,7 @@ const useAutoTest = ({ activeProfile, loadProfileForGame }: AutoTestDeps) => {
       }
     })();
 
-    return () => { cancelled = true; };
+    return () => abort.abort();
   }, [activeProfile]);
 };
 

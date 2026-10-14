@@ -15,6 +15,8 @@ type DropIntent =
   | { kind: 'grid'; parentId: string; place: HudPlace; onto: string | null }
   | { kind: 'refused'; reason: Refusal; parentId: string | null; nodeId: string | null };
 
+interface Stop { reason: Refusal; nodeId: string | null }
+
 type DropZone = 'before' | 'inside-start' | 'inside-end' | 'after';
 
-export type { DropIntent, DropZone, Refusal };
+export type { DropIntent, DropZone, Refusal, Stop };

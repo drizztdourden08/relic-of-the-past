@@ -1,5 +1,6 @@
 /* @layer store-site @kind component */
 import { Flex, Status, Text } from '@drizztdourden08/tessera/primitives';
+import { Rating } from '@drizztdourden08/tessera/composites';
 import type { ItemCardView, ItemResponse } from '@rotp/hub-contracts';
 import { KIND_CONTAINER } from '@rotp/hub-contracts';
 import { DetailPane, TagList, AppLink } from '@rotp/design';
@@ -8,11 +9,10 @@ import { formatBytes } from '@rotp/hub-client';
 import { InstallButton } from '../../../components/InstallButton/InstallButton';
 import { ItemPicture } from '../../../components/ItemPicture/ItemPicture';
 import { KindChip } from '../../../components/KindChip/KindChip';
-import { Stars } from '../../../components/Stars/Stars';
 import { authorPath, itemPath } from '../../../catalog/item-paths';
 import { factsLine } from '../../../catalog/facts-line';
 import { liveVersionOf } from '../../../catalog/approved-versions';
-import { formatAverage, formatCount, plural } from '../../../format-count';
+import { formatCount, plural } from '../../../format-count';
 import type { ItemSideCardProps } from './ItemSideCard.type';
 
 const versionLine = (card: ItemCardView, detail: ItemResponse | null): string => {
@@ -32,8 +32,7 @@ const fieldsOf = (card: ItemCardView, detail: ItemResponse | null): DetailField[
     label: 'rating',
     value: (
       <Flex align="center" gap="xs" wrap>
-        <Text as="span">{formatAverage(card.ratingAverage)}</Text>
-        <Stars value={card.ratingAverage} />
+        <Rating value={card.ratingAverage} showValue size="sm" />
         <Text as="span" variant="caption">{plural(card.ratingCount, 'rating', 'ratings')}</Text>
       </Flex>
     ),

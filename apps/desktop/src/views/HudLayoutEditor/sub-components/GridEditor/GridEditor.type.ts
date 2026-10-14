@@ -3,6 +3,7 @@ import type { EditorAction, EditorActionKind, EditorShortcut } from '@app/hud-la
 import type { HudGridContainer } from '@rotp/hud';
 import type { OsKind } from '@drizztdourden08/brock-core';
 import type { CellRef, Occupant, TrackAxis } from '../GridLattice';
+import type { useGridSelection } from './behavior/useGridSelection';
 
 type GridSelection =
   | { kind: 'none' }
@@ -44,7 +45,7 @@ interface GridKeyParams {
   setCursor: (cell: CellRef) => void;
 }
 
-interface ArrowStep { glyph: string; dx: number; dy: number }
+interface ArrowStep { dx: number; dy: number }
 
 interface StatusParams {
   selection: GridSelection;
@@ -53,10 +54,18 @@ interface StatusParams {
   rows: number;
 }
 
+interface GridKeysInput {
+  grid: ReturnType<typeof useGridSelection>;
+  occupants: readonly Occupant[];
+  columns: number;
+  rows: number;
+  actions: readonly GridAction[];
+}
+
 type PatchGrid = (patch: Partial<HudGridContainer>) => void;
 
 export type {
   ArrowStep, GridAction, GridActionContext, GridActionKind, GridEditorEdits, GridEditorProps,
-  GridKeyParams, GridSelection, GridShortcut, PatchGrid, StatusParams,
+  GridKeyParams, GridKeysInput, GridSelection, GridShortcut, PatchGrid, StatusParams,
 };
 export type { CellRef, Occupant, TrackAxis };

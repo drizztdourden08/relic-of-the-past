@@ -1,4 +1,5 @@
 /* @layer renderer-hooks @kind types */
+import type { OptionDef } from '@rotp/randomizer';
 import type { LockedOptionGroup } from '@app/compounds/RandomizerOptionRow';
 import type { LIST_TABS, LOCKED_TABS, OPTION_TAB_IDS } from './option-tab-model.constants';
 
@@ -14,4 +15,6 @@ type LockedGroupsByTab = Readonly<Record<LockedTabId, LockedOptionGroup[]>>;
 
 type ChangedCounts = Readonly<Record<OptionTabId, number>>;
 
-export type { ChangedCounts, ListTabId, LockedGroupsByTab, LockedTabId, OptionTabId, UnlockedGroupsByTab };
+type OptionTabRule = { tab: OptionTabId; matches: (option: OptionDef) => boolean };
+
+export type { ChangedCounts, ListTabId, LockedGroupsByTab, LockedTabId, OptionTabId, OptionTabRule, UnlockedGroupsByTab };

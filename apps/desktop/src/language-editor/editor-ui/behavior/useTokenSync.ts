@@ -12,7 +12,7 @@ const useTokenSync = (params: UseTokenSyncParams): void => {
   latest.current = { tokens, metrics, glossary, onLines };
 
   useEffect(() => {
-    if (!editor || editor.isDestroyed) return;
+    if (editor.isDestroyed) return;
     if (signature === emittedRef.current) return;
     emittedRef.current = signature;
 

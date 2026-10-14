@@ -8,9 +8,10 @@ const trackerReachableScreens = (params: TrackerStatusParams): Set<string> => {
     placement, checks, inventory, completed,
     fired = new Set<LocationKey>(), darkRoomsNeedLight = true, bigKeyDoors = true, smallKeyDoors = true,
   } = params;
-  return trackerReading(
-    placement, completed, checks, fired, darkRoomsNeedLight, inventory, bigKeyDoors, smallKeyDoors,
-  ).reachableScreens;
+  return trackerReading({
+    placement, completedChecks: completed, checks, firedLocationKeys: fired, darkRoomsNeedLight,
+    heldItemIds: inventory, bigKeyDoors, smallKeyDoors,
+  }).reachableScreens;
 };
 
 export { trackerReachableScreens };

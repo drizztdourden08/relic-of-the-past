@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind component */
-import { Box, Text } from '@drizztdourden08/tessera/primitives';
+import { Box, Icon, Text } from '@drizztdourden08/tessera/primitives';
 import { MAX_SAFE_RESULT } from '@rotp/hud';
 import { InstanceStrip } from './InstanceStrip';
 import { CEILING } from './FormulaFeedback.constants';
@@ -20,7 +20,9 @@ const FormulaFeedback = (props: FormulaFeedbackProps) => {
   return (
     <Box className="hud-value-input__feedback">
       <Text className="hud-value-input__result">
-        {result === null ? '... not finished' : `→ ${format(result)}`}
+        {result === null
+          ? '... not finished'
+          : <><Icon name="arrow-right" size={12} aria-hidden /> {format(result)}</>}
       </Text>
       {instances.length > 0 && <InstanceStrip expr={expr} instances={instances} />}
       {reads.length > 0 && (

@@ -1,0 +1,9 @@
+/* @layer renderer-components @kind style */
+.game-overlay {
+  position: absolute;
+  inset: 0;
+  margin: auto;
+  pointer-events: none;
+  z-index: var(--z-sticky);
+  overflow: hidden;
+}

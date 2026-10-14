@@ -13,7 +13,7 @@ const useMotionClock = (active: boolean, override?: number | null): number => {
     }
     let frame = 0;
     const tick = (t: number): void => {
-      if (startRef.current === null) startRef.current = t;
+      startRef.current ??= t;
       setNowMs(t - startRef.current);
       frame = requestAnimationFrame(tick);
     };

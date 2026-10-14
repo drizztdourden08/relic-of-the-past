@@ -29,7 +29,8 @@ const PauseText = (props: PauseTextProps) => {
             src={`${spritesBase}${stem}.png`}
             width={px * columnsOf(char)}
             height={px}
-            style={{ display: 'block', imageRendering: 'pixelated' }}
+            block
+            pixelated
           />
         );
       })}

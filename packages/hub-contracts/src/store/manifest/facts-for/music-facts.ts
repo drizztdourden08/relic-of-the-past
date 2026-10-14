@@ -5,8 +5,10 @@ import { parseManifest } from '../../../edit/parse-manifest';
 import type { KindFacts } from '../../types';
 import type { FirstEntry } from '../read-first-entry';
 
-const soundCountOf = (manifest: MsuPackManifest): number =>
-  Object.values(manifest.sounds ?? {}).reduce((sum, defs) => sum + (defs?.length ?? 0), 0);
+const soundCountOf = (manifest: MsuPackManifest): number => {
+  const sounds: Record<string, readonly unknown[] | undefined> = manifest.sounds ?? {};
+  return Object.values(sounds).reduce((sum, defs) => sum + (defs?.length ?? 0), 0);
+};
 
 const musicFacts = (entry: FirstEntry): KindFacts | null => {
   const manifest = parseManifest(entry.text);

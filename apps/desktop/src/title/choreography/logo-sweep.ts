@@ -1,14 +1,15 @@
 /* @layer renderer-hud @kind logic */
 import { LOGO_AT } from '@rotp/game-data';
 import { seededRandom } from '../scene/seeded-random';
-import type { LogoSweep } from './choreography.type';
+import type { BandSpec, LogoSweep } from './choreography.type';
 import { easeSweep } from './ease-sweep';
 import {
   CORE_ALPHA, CORE_W, FIRST_SWEEP_SECONDS, HALO_ALPHA, HALO_W, REST_SECONDS, STRENGTH, STRIPE_SLANT_PX, SWEEP_SECONDS, SWEEP_SEED_SALT,
 } from './logo-sweep.constants';
 
-const drawBand = (sctx: CanvasRenderingContext2D, x: number, w: number, h: number, a: number): void => {
-  sctx.fillStyle = `rgba(255, 255, 255, ${a})`;
+const drawBand = (sctx: CanvasRenderingContext2D, band: BandSpec): void => {
+  const { x, w, h, alpha } = band;
+  sctx.fillStyle = `rgba(255, 255, 255, ${alpha})`;
   sctx.beginPath();
   sctx.moveTo(x, 0);
   sctx.lineTo(x + w, 0);
@@ -26,7 +27,7 @@ const createLogoSweep = (seed: number): LogoSweep => {
   let strength = 1;
 
   return {
-    draw: (ctx, t, logo, alpha, frameX, frameY) => {
+    draw: ({ ctx, t, logo, alpha, at }) => {
       if (alpha <= 0) return;
       if (start < 0 && t >= nextAt) {
         start = t;
@@ -50,11 +51,11 @@ const createLogoSweep = (seed: number): LogoSweep => {
       sctx.drawImage(logo.img, 0, 0, w, h);
       sctx.globalCompositeOperation = 'source-in';
       const x = Math.round(-HALO_W + easeSweep(u) * (w + HALO_W + STRIPE_SLANT_PX));
-      drawBand(sctx, x, HALO_W, h, HALO_ALPHA * strength);
+      drawBand(sctx, { x, w: HALO_W, h, alpha: HALO_ALPHA * strength });
       sctx.globalCompositeOperation = 'source-atop';
-      drawBand(sctx, x + (HALO_W - CORE_W) / 2, CORE_W, h, CORE_ALPHA * strength);
+      drawBand(sctx, { x: x + (HALO_W - CORE_W) / 2, w: CORE_W, h, alpha: CORE_ALPHA * strength });
       ctx.globalAlpha = alpha;
-      ctx.drawImage(strip, frameX + LOGO_AT.x, frameY + LOGO_AT.y);
+      ctx.drawImage(strip, at.x + LOGO_AT.x, at.y + LOGO_AT.y);
       ctx.globalAlpha = 1;
     },
   };

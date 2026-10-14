@@ -27,7 +27,9 @@ const DetailTabs = (props: DetailTabsProps) => {
 
   return (
     <Box className="data-inspector__detail">
-      <Tabs tabs={DETAIL_TABS} activeTab={tab} onTabChange={handleTabChange} />
+      <Box className="data-inspector__tabs">
+        <Tabs tabs={DETAIL_TABS} activeTab={tab} onTabChange={handleTabChange} />
+      </Box>
       <ScrollArea className="data-inspector__detail-content" onScroll={onScroll} scrollTo={scrollTo}>
         {tab === 'editor'
           ? (editorSlot ?? (

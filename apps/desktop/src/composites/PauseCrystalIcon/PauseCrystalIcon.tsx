@@ -12,7 +12,8 @@ const PauseCrystalIcon = ({ filled, scale, spritesBase }: PauseCrystalIconProps)
       src={src}
       width={width}
       height={height}
-      style={{ display: 'block', imageRendering: 'pixelated' }}
+      block
+      pixelated
     />
   );
 };

@@ -18,8 +18,7 @@ const MagicAccurate = (props: MagicAccurateProps) => {
   return (
     <>
       <HudBox style={{ position: 'absolute', inset: 0, zIndex: 2, filter: outlineFilter(scale) }}>
-        <HudImage src={`${spritesBase}hud-magic-tl.png`} width={tile} height={tile}
-          style={{ position: 'absolute', left: 0, top: 0, imageRendering: 'pixelated' }} />
+        <HudImage src={`${spritesBase}hud-magic-tl.png`} width={tile} height={tile} atOrigin pixelated />
         <HudImage src={`${spritesBase}hud-magic-top.png`} width={tile} height={tile}
           style={{ position: 'absolute', left: tile, top: 0, imageRendering: 'pixelated' }} />
         <HudImage src={`${spritesBase}hud-magic-tr.png`} width={tile} height={tile}

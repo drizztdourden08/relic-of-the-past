@@ -8,7 +8,7 @@ import type { FirstEntryResult } from './read-first-entry.type';
 const entryBytes = async (data: Uint8Array, method: number, size: number): Promise<Uint8Array | null> => {
   if (method === METHOD_STORE) return data.byteLength === size ? data : null;
   const inflated = await inflateRaw(data, STORE_LIMITS.manifestBytes);
-  return inflated && inflated.byteLength === size ? inflated : null;
+  return inflated?.byteLength === size ? inflated : null;
 };
 
 const readFirstEntry = async (head: Uint8Array): Promise<FirstEntryResult> => {

@@ -30,7 +30,6 @@
     [used] 4ch
     [lock] auto
     [remove] auto;
-
   align-items: center;
   gap: var(--space-sm);
   padding: var(--space-2xs) var(--space-xs);

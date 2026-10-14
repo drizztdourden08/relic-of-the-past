@@ -2,23 +2,24 @@
 import { useEffect, useState } from 'react';
 import { BUILT_IN_GLYPH_PACKS } from '@rotp/input-mapping';
 import { allGlyphPacks, primeGlyphUrls } from '@app/hud/custom-glyph-store';
+import { log } from '@app/log-bus';
 import type { GlyphPack } from '@rotp/input-mapping';
 
 const useGlyphPacks = (): readonly GlyphPack[] => {
   const [packs, setPacks] = useState<readonly GlyphPack[]>(BUILT_IN_GLYPH_PACKS);
 
   useEffect(() => {
-    let live = true;
+    const cancel = new AbortController();
     void (async () => {
       try {
         const loaded = await allGlyphPacks();
         await primeGlyphUrls(loaded);
-        if (live) setPacks(loaded);
+        if (!cancel.signal.aborted) setPacks(loaded);
       } catch (e: unknown) {
-        console.error('[hud] failed to load custom glyph packs', e);
+        log.error(`[hud] failed to load custom glyph packs: ${e instanceof Error ? e.message : String(e)}`);
       }
     })();
-    return () => { live = false; };
+    return () => cancel.abort();
   }, []);
 
   return packs;

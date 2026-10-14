@@ -57,29 +57,29 @@ describe('reflow warnings - structured data, not just a comment', () => {
   });
 });
 
+const baseDoc = (animation: unknown): unknown => ({
+  id: 't', name: 't', builtIn: false,
+  screen: {
+    kind: 'container', id: 'root', direction: 'row',
+    children: [{ kind: 'element', id: 'leaf', element: { type: 'spacer' }, animation: [animation] }],
+  },
+});
+
+const baseDocInsideRepeat = (animation: unknown): unknown => ({
+  id: 't', name: 't', builtIn: false,
+  screen: {
+    kind: 'container', id: 'root', direction: 'row',
+    children: [{
+      kind: 'element', id: 'hearts',
+      element: {
+        type: 'repeat', count: 5, item: 'min(max(4 - index, 0), 8)',
+        child: { kind: 'element', id: 'heart', element: { type: 'spacer' }, animation: [animation] },
+      },
+    }],
+  },
+});
+
 describe('validate-motion - the plan\'s own documents parse; `&&` does not', () => {
-  const baseDoc = (animation: unknown): unknown => ({
-    id: 't', name: 't', builtIn: false,
-    screen: {
-      kind: 'container', id: 'root', direction: 'row',
-      children: [{ kind: 'element', id: 'leaf', element: { type: 'spacer' }, animation: [animation] }],
-    },
-  });
-
-  const baseDocInsideRepeat = (animation: unknown): unknown => ({
-    id: 't', name: 't', builtIn: false,
-    screen: {
-      kind: 'container', id: 'root', direction: 'row',
-      children: [{
-        kind: 'element', id: 'hearts',
-        element: {
-          type: 'repeat', count: 5, item: 'min(max(4 - index, 0), 8)',
-          child: { kind: 'element', id: 'heart', element: { type: 'spacer' }, animation: [animation] },
-        },
-      }],
-    },
-  });
-
   it("accepts the plan's own worked example, corrected to 'and' (contract §22.6)", () => {
     const { doc, errors } = validateLayout(baseDocInsideRepeat({
       when: 'index == count - 1 and item < 8 and item > 0',
@@ -111,6 +111,9 @@ describe('validate-motion - the plan\'s own documents parse; `&&` does not', () 
     expect(errors.some((e) => e.includes('unknown variable "index"'))).toBe(true);
   });
 
+});
+
+describe('validate-motion - the plan\'s own documents parse; `&&` does not', () => {
   it('refuses steps(0) and an unknown easing keyword', () => {
     const bad = (easing: string) => validateLayout(baseDoc({
       property: 'scale', keyframes: [{ at: 0, value: 1 }, { at: 1, value: 1.15 }], duration: 700, loop: 'none', easing,

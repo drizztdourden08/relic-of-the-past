@@ -18,16 +18,18 @@ const useHudNodeMotion = (
   const { renderNodes, enterStyle, exitStyle, transitionCss: enterExitTransitionCss } = useEnterExit(nodes);
 
   const styleFor = (placed: PlacedNode): CSSProperties => {
-    const { css } = resolveNodeAnimationStyle(placed.node.animation, nowMs, dataScope, reducedMotion, placed.node.style, displayScale);
+    const { css } = resolveNodeAnimationStyle({
+      animations: placed.node.animation, nowMs, scope: dataScope, reducedMotion, style: placed.node.style, displayScale,
+    });
     const { transform } = { ...enterStyle(placed.id), ...exitStyle(placed.id) };
     const transition = enterExitTransitionCss(placed.id) ?? transitionCss.get(placed.id);
     return { ...css, ...(transform ? { transform } : {}), ...(transition ? { transition } : {}) };
   };
 
   const opacityFor = (placed: PlacedNode): number => {
-    const { opacityMultiplier } = resolveNodeAnimationStyle(
-      placed.node.animation, nowMs, dataScope, reducedMotion, placed.node.style, displayScale,
-    );
+    const { opacityMultiplier } = resolveNodeAnimationStyle({
+      animations: placed.node.animation, nowMs, scope: dataScope, reducedMotion, style: placed.node.style, displayScale,
+    });
     const enterExitOpacity = (enterStyle(placed.id).opacity as number | undefined)
       ?? (exitStyle(placed.id).opacity as number | undefined);
     return placed.opacity * opacityMultiplier * (enterExitOpacity ?? 1);

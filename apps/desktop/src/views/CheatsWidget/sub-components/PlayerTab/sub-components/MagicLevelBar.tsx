@@ -5,10 +5,10 @@ import { useCapacityLadder } from '../../../behavior/useCapacityLadder';
 import { useInPlay } from '../../../behavior/useInPlay';
 import { usePointerHintTarget } from '../../../behavior/usePointerHintTarget';
 import { useWheel } from '../../../behavior/useWheel';
-import { IN_PLAY_REASON } from '../../../CheatsWidget.constants';
 import {
   LEVEL_GAP_PX, MAGIC_FRAME_ROWS, MAGIC_INTERIOR_INSET, MAGIC_LEVEL_HINTS, MAGIC_LEVEL_LABELS, SNES_TILE,
 } from '../PlayerTab.constants';
+import { magicLevelTitle } from '../behavior/magic-level-title';
 import type { MagicLevelBarProps } from '../PlayerTab.type';
 
 const labelOfCap = (cap: number): string => MAGIC_LEVEL_LABELS[cap] ?? `Level ${cap}`;
@@ -42,7 +42,7 @@ const MagicLevelBar = ({ scale }: MagicLevelBarProps) => {
   const gap = LEVEL_GAP_PX * scale;
   const wellH = MAGIC_FRAME_ROWS * tile - 2 * inset;
   const stepH = (wellH - gap * (ladder.length - 1)) / ladder.length;
-  const title = !settable ? 'Magic level: fixed on this file' : inPlay ? undefined : `Magic level: ${IN_PLAY_REASON}`;
+  const title = magicLevelTitle(settable, inPlay);
 
   return (
     <Box

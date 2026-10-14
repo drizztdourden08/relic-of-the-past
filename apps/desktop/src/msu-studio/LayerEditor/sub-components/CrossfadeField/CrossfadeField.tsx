@@ -21,6 +21,7 @@ const CrossfadeField = (props: CrossfadeFieldProps) => {
       <Field label={CROSSFADE_LABEL} hint={CROSSFADE_HINT} htmlFor={inputId}>
         <Flex gap="md" align="center" wrap>
           <Slider
+            className="layer-card__crossfade-slider"
             value={seconds}
             min={0}
             max={MAX_CROSSFADE_SECONDS}

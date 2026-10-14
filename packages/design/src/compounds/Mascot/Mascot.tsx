@@ -28,9 +28,9 @@ const Mascot = (props: MascotProps) => {
   );
 
   return (
-    <Box className={className ? `mascot ${className}` : 'mascot'} aria-hidden="true">
+    <Box className={className ? `hookshop-mascot ${className}` : 'hookshop-mascot'} aria-hidden="true">
       {pieces.map(({ key, src, style }) => (
-        <Image key={key} className="mascot__piece" src={src} style={style} alt="" draggable={false} />
+        <Image key={key} className="hookshop-mascot__piece" src={src} style={style} alt="" draggable={false} />
       ))}
     </Box>
   );

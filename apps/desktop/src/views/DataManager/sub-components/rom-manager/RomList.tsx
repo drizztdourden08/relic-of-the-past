@@ -1,8 +1,9 @@
 /* @layer renderer-components @kind component */
-import { Status, IconButton, EmptyState, Stack } from '@drizztdourden08/tessera/primitives';
+import { Status, Icon, IconButton, EmptyState, Stack } from '@drizztdourden08/tessera/primitives';
 import { ListItemRow } from '@drizztdourden08/tessera/composites';
 import { ROM_KINDS } from '@rotp/roms';
 import { formatBytes } from '@drizztdourden08/brock-core';
+import { ExtractionMeta } from './ExtractionMeta';
 import type { RomListProps } from './RomList.type';
 
 const RomList = (props: RomListProps) => {
@@ -15,22 +16,14 @@ const RomList = (props: RomListProps) => {
       {romStatuses.map((rom) => (
         <ListItemRow
           key={rom.romFile}
-          icon="🎮"
+          icon={<Icon name="gamepad-2" />}
           name={<>{rom.romFile} <Status tone="neutral">{ROM_KINDS['snes-alttp'].label}</Status></>}
           selected={selected === rom.romFile}
           onClick={() => onSelect(rom.romFile)}
-          meta={
-            <>
-              {rom.extractionStatus === 'ready' ? '✓ Assets extracted' :
-               rom.extractionStatus === 'extracting' ? '⟳ Extracting...' :
-               rom.extractionStatus === 'failed' ? '✗ Extraction failed' :
-               'No assets'}
-              {rom.assetSize ? ` · ${formatBytes(rom.assetSize)}` : ''}
-            </>
-          }
+          meta={<ExtractionMeta rom={rom} />}
           action={
             <IconButton variant="ghost" size="sm" label="Delete" onClick={(e) => { e.stopPropagation(); onDelete(rom.romFile); }}>
-              ✕
+              <Icon name="x" />
             </IconButton>
           }
         />
@@ -38,7 +31,7 @@ const RomList = (props: RomListProps) => {
       {supplements.map((supplement) => (
         <ListItemRow
           key={supplement.romFile}
-          icon="🧩"
+          icon={<Icon name="puzzle" />}
           name={<>{supplement.romFile} <Status tone="neutral">{ROM_KINDS[supplement.kind].label}</Status></>}
           selected={selected === supplement.romFile}
           onClick={() => onSelect(supplement.romFile)}
@@ -52,7 +45,7 @@ const RomList = (props: RomListProps) => {
           }
           action={
             <IconButton variant="ghost" size="sm" label="Delete" onClick={(e) => { e.stopPropagation(); onDelete(supplement.romFile); }}>
-              ✕
+              <Icon name="x" />
             </IconButton>
           }
         />

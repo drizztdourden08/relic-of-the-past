@@ -2,7 +2,7 @@
 import type { ItemCardView } from '@rotp/hub-contracts';
 
 type FeaturedHeroProps = {
-  items: readonly ItemCardView[];
+  item: ItemCardView;
   itemPath: (item: ItemCardView) => string;
 };
 

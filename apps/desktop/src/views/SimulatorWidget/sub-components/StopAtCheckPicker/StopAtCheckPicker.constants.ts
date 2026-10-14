@@ -2,22 +2,24 @@
 import type { CheckKind, ItemFilter, StatusFilter } from '@rotp/game-data';
 import { CHECK_FACET_DEFS } from '@rotp/game-data';
 import type { ListItemShape } from '@drizztdourden08/tessera/composites';
-import type { SegmentOption, TagPickerGroup } from '@drizztdourden08/tessera/primitives';
+import type { IconName, SegmentOption, TagPickerGroup } from '@drizztdourden08/tessera/primitives';
 
-const CHECK_TYPE_ICONS: Record<CheckKind, string> = {
-  chest: '🧰',
-  npc: '🧑',
-  standing: '✨',
-  boss: '👹',
-  prize: '🏆',
-  keyDrop: '🗝️',
-  potItem: '🏺',
-  dig: '⛏️',
-  bonk: '🌳',
-  event: '⚑',
-  'shop-slot': '🏪',
-  'pond-slot': '⛲',
+const CHECK_TYPE_ICONS: Record<CheckKind, IconName> = {
+  chest: 'package',
+  npc: 'user',
+  standing: 'sparkles',
+  boss: 'bug',
+  prize: 'trophy',
+  keyDrop: 'key-round',
+  potItem: 'archive',
+  dig: 'wrench',
+  bonk: 'zap',
+  event: 'flag',
+  'shop-slot': 'store',
+  'pond-slot': 'gift',
 };
+
+const NO_STOP_ICON: IconName = 'arrow-right-to-line';
 
 const ITEM_FILTERS: SegmentOption<ItemFilter>[] = [
   { value: 'all', label: 'All' },
@@ -41,4 +43,4 @@ const FACET_GROUPS: TagPickerGroup[] = TAG_CATEGORIES.map((category) => ({
 
 const LIST_SHAPE: ListItemShape = { icon: true, columns: 1, action: false };
 
-export { CHECK_TYPE_ICONS, FACET_GROUPS, ITEM_FILTERS, LIST_SHAPE, STATUS_FILTERS };
+export { CHECK_TYPE_ICONS, FACET_GROUPS, ITEM_FILTERS, LIST_SHAPE, NO_STOP_ICON, STATUS_FILTERS };

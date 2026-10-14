@@ -2,12 +2,12 @@
 import { requireHostApi } from '@drizztdourden08/brock-react';
 import { useRef } from 'react';
 import { wasmGetViewportInfo } from '../../../game';
-import { createShadowRenderer, viewOrigin } from '@rotp/game-core';
+import { createShadowRenderer } from '@rotp/game-core';
 import type { ShadowRenderer } from '@rotp/game-core';
 import { useShadowEditorStore } from '../../../stores/shadow-editor-store';
 import { useCanvasOverlayLoop } from './useCanvasOverlayLoop';
-import { overworldScreenIdOf } from './overworld-screen-id';
-import { OVERWORLD_MODULE } from '../GameLayer.constants';
+import { applyShadowScreen } from './apply-shadow-screen';
+import { overworldShadowScreen } from './overworld-shadow-screen';
 import type { ShadowLoopParams } from './useShadowCastingLoop.type';
 
 const useShadowCastingLoop = (params: ShadowLoopParams): void => {
@@ -36,7 +36,8 @@ const useShadowCastingLoop = (params: ShadowLoopParams): void => {
     },
     createRenderer: (fxCanvas) => createShadowRenderer(fxCanvas),
     onFrame: ({ renderer, gameCanvas, fxCanvas, time }) => {
-      if (!shadowCastingRef.current || !shadowProjectRef.current) {
+      const project = shadowProjectRef.current;
+      if (!shadowCastingRef.current || !project) {
         renderer.setEnabled(false);
         renderer.render(gameCanvas, time);
         return;
@@ -46,23 +47,10 @@ const useShadowCastingLoop = (params: ShadowLoopParams): void => {
         renderer.resize(gameCanvas.width, gameCanvas.height);
       }
 
-      const vp = wasmGetViewportInfo();
-      let screenId = -1;
-      if (vp?.locationModule === OVERWORLD_MODULE) {
-        screenId = overworldScreenIdOf(vp);
-        const { viewLeft, viewTop } = viewOrigin(vp);
-        renderer.setScreenOrigin(viewLeft, viewTop, vp.snesWidth, vp.snesHeight);
-      }
-
+      const screenId = overworldShadowScreen(renderer, wasmGetViewportInfo());
       if (screenId !== prevScreenIdRef.current || useShadowEditorStore.getState().dirty) {
         prevScreenIdRef.current = screenId;
-        const screenData = shadowProjectRef.current.screens[screenId] ?? null;
-        renderer.setScreenData(screenData);
-        if (screenData && (screenData.heightmap.length > 0 || screenData.lights.length > 0)) {
-          renderer.setEnabled(true);
-        } else {
-          renderer.setEnabled(false);
-        }
+        applyShadowScreen(renderer, project, screenId);
       }
 
       renderer.setDebugMode(useShadowEditorStore.getState().debugMode);

@@ -7,7 +7,9 @@ import { buildHeapReads, isEntryComplete, pollerState } from '@rotp/randomizer';
 import { applyRebaseline } from './apply-rebaseline';
 import type { PollEntry, ReportingSession } from '@rotp/randomizer';
 
-const pollOnce = (session: ReportingSession, entries: readonly PollEntry[]): void => {
+const ignorePollFailure = (): void => undefined;
+
+const pollOnce =(session: ReportingSession, entries: readonly PollEntry[]): void => {
   const mod = getModule();
   if (!mod) return;
   try {
@@ -29,7 +31,7 @@ const pollOnce = (session: ReportingSession, entries: readonly PollEntry[]): voi
       }
     }
   } catch {
-    
+    ignorePollFailure();
   }
 };
 

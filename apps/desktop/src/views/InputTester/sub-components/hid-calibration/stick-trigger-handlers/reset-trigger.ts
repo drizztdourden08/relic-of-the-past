@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind logic */
-import type { InputStatus, TriggerSide } from '../hid-calibration.type';
+import type { TriggerSide } from '../hid-calibration.type';
 import type { TriggerResetCallbacks, TriggerResetRefs } from './stick-trigger-handlers.type';
 
 const resetTrigger = (side: TriggerSide, refs: TriggerResetRefs, latestBytesLen: number, cb: TriggerResetCallbacks): void => {
@@ -14,7 +14,7 @@ const resetTrigger = (side: TriggerSide, refs: TriggerResetRefs, latestBytesLen:
   else refs.rightTriggerByteRef.current = null;
   cb.setGyroExcluded(new Set(refs.excludedRef.current));
   cb.setItems(prev => prev.map(it =>
-    it.id === axisId ? { ...it, status: 'pending' as InputStatus, result: undefined, axisMapping: undefined } : it
+    it.id === axisId ? { ...it, status: 'pending', result: undefined, axisMapping: undefined } : it
   ));
   cb.triggerRecordingRef.current = false;
   cb.setTriggerBusy(false);

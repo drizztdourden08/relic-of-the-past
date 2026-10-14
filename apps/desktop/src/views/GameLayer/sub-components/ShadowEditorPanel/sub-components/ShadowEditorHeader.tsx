@@ -1,7 +1,7 @@
 /* @layer renderer-components @kind component */
 import { useCallback } from 'react';
 import { useShadowEditorStore } from '../../../../../stores/shadow-editor-store';
-import { Box, Text, Button, IconButton } from '@drizztdourden08/tessera/primitives';
+import { Box, Text, Button, Icon, IconButton } from '@drizztdourden08/tessera/primitives';
 import type { ShadowEditorHeaderProps } from './ShadowEditorHeader.type';
 
 const ShadowEditorHeader = ({ screenId, dirty }: ShadowEditorHeaderProps) => {
@@ -20,8 +20,8 @@ const ShadowEditorHeader = ({ screenId, dirty }: ShadowEditorHeaderProps) => {
         {dirty && <Text className="shadow-editor-panel__dirty">●</Text>}
       </Text>
       <Box className="shadow-editor-panel__actions">
-        <IconButton label="Preview" onClick={togglePreview} className={previewMode ? 'icon-btn--active' : ''}>👁</IconButton>
-        <IconButton label="Debug" onClick={toggleDebug} className={debugMode ? 'icon-btn--active' : ''}>🔍</IconButton>
+        <IconButton label="Preview" onClick={togglePreview} active={previewMode}><Icon name="eye" /></IconButton>
+        <IconButton label="Debug" onClick={toggleDebug} active={debugMode}><Icon name="search" /></IconButton>
         <IconButton label="Undo" onClick={handleUndo}>↶</IconButton>
         <IconButton label="Redo" onClick={handleRedo}>↷</IconButton>
         <Button size="sm" variant="primary" onClick={handleSave} disabled={!dirty}>Save</Button>

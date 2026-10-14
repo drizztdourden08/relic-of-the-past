@@ -78,7 +78,7 @@
   min-height: 0;
   overflow-y: auto;
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(calc(100 * var(--size-1)), 1fr));
   gap: var(--space-sm);
   align-content: start;
 }

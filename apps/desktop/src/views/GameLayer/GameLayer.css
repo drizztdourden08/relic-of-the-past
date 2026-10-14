@@ -38,7 +38,7 @@
 }
 
 .game-layer__status-text {
-  font: 18px monospace;
+  font: calc(18 * var(--size-1)) monospace;
 }
 
 .game-layer__status-text--loading {
@@ -77,6 +77,10 @@
   mix-blend-mode: multiply;
 }
 
+.game-layer__shadow-canvas--normal-blend {
+  mix-blend-mode: normal;
+}
+
 .game-layer__shadow-canvas--hidden {
   position: absolute;
   visibility: hidden;
@@ -89,7 +93,7 @@
   align-items: center;
   justify-content: center;
   background: var(--c-scrim-game);
-  backdrop-filter: blur(2px);
+  backdrop-filter: blur(var(--size-2));
   z-index: var(--z-panel);
   animation: pause-fade-in 0.25s ease-out;
 }
@@ -105,8 +109,8 @@
 }
 
 .game-layer__pause-bar {
-  width: 36px;
-  height: 120px;
+  width: calc(36 * var(--size-1));
+  height: calc(120 * var(--size-1));
   border-radius: var(--radius-md);
   background: var(--c-border-strong);
 }

@@ -1,8 +1,11 @@
 /* @layer renderer-components @kind hook */
 import { useCallback, useMemo } from 'react';
-import { addSlot, defaultCoreBindings, effectiveSlots, keyboardModernBindings, migrateScheme, remapAssignments, removeSlot, setSlotBinding } from '@rotp/input-mapping';
+import { addSlot, effectiveSlots, migrateScheme, remapAssignments, removeSlot, setSlotBinding } from '@rotp/input-mapping';
 import { controlSchemeOf } from '@rotp/features';
+import { findAbsentAssignments } from './find-absent-assignments';
 import { slotDisplay } from './modern-slots';
+import { profileWithCoreBindings } from './profile-with-core-binding';
+import { resolveCoreBindings } from './resolve-core-bindings';
 import type { CoreBindings, InputBinding, ModernSlot, SlotIndex } from '@rotp/game-data';
 import type { AbsentAssignment, UseModernSchemeArgs } from './controls-settings.type';
 
@@ -11,14 +14,13 @@ const useModernScheme = (args: UseModernSchemeArgs) => {
   const scheme = controlSchemeOf(settings);
   const isKeyboard = activeProfile?.deviceType === 'keyboard';
 
-  const coreBindings: CoreBindings = useMemo(() => {
-    if (activeProfile?.core) return activeProfile.core;
-    if (activeProfile?.modern?.core) return activeProfile.modern.core;
-    return isKeyboard ? keyboardModernBindings().core : defaultCoreBindings(controls);
-  }, [activeProfile, controls, isKeyboard]);
+  const coreBindings: CoreBindings = useMemo(
+    () => resolveCoreBindings({ activeProfile, controls, isKeyboard }),
+    [activeProfile, controls, isKeyboard],
+  );
 
   const migrated = useMemo(
-    () => migrateScheme(activeProfile?.modern?.slots, settings.modernScheme?.assignments),
+    () => migrateScheme(activeProfile?.modern?.slots, settings.modernScheme.assignments),
     [activeProfile?.modern?.slots, settings.modernScheme],
   );
 
@@ -31,24 +33,15 @@ const useModernScheme = (args: UseModernSchemeArgs) => {
 
   const assignments = migrated.assignments;
 
-  const absentAssignments: AbsentAssignment[] = useMemo(() => {
-    const present = new Set(modernSlots.map((slot) => slot.index));
-    return Object.entries(assignments)
-      .map(([key, assignment]) => ({ index: Number(key), assignment }))
-      .filter((entry) => !present.has(entry.index) && entry.assignment.kind !== 'none');
-  }, [assignments, modernSlots]);
+  const absentAssignments: AbsentAssignment[] = useMemo(
+    () => findAbsentAssignments(assignments, modernSlots),
+    [assignments, modernSlots],
+  );
 
   const hasSlotSource = controls.length > 0 || isKeyboard || modernSlots.length > 0;
 
   const applyCoreBinding = useCallback((verb: keyof CoreBindings, binding: InputBinding) => {
-    if (!activeProfile) return;
-    const nextCore: CoreBindings = { ...coreBindings, [verb]: binding };
-    updateActiveProfile({
-      ...activeProfile,
-      core: nextCore,
-      ...(activeProfile.modern ? { modern: { ...activeProfile.modern, core: nextCore } } : {}),
-      modifiedAt: Date.now(),
-    });
+    if (activeProfile) updateActiveProfile(profileWithCoreBindings(activeProfile, { ...coreBindings, [verb]: binding }));
   }, [activeProfile, coreBindings, updateActiveProfile]);
 
   const writeSlots = useCallback((slots: ModernSlot[], renumber?: ReadonlyMap<SlotIndex, SlotIndex>) => {

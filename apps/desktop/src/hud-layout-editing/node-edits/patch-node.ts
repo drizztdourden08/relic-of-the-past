@@ -1,15 +1,16 @@
 /* @layer renderer-components @kind logic */
+import { isHudNode } from './is-hud-node';
 import { mapTree } from './map-tree';
 import type { HudLayout, HudNode } from '@rotp/hud';
 
 const patchNode = (doc: HudLayout, id: string, patch: Partial<HudNode>): HudLayout =>
   mapTree(doc, (node) => {
     if (node.id !== id) return node;
-    const merged = { ...node, ...patch } as Record<string, unknown>;
+    const merged: Record<string, unknown> = { ...node, ...patch };
     for (const key of Object.keys(patch)) {
-      if ((patch as Record<string, unknown>)[key] === undefined) delete merged[key];
+      if (Reflect.get(patch, key) === undefined) Reflect.deleteProperty(merged, key);
     }
-    return merged as unknown as HudNode;
+    return isHudNode(merged) ? merged : node;
   });
 
 export { patchNode };

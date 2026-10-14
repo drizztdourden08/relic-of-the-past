@@ -1,0 +1,35 @@
+/* @layer sanctuary-site @kind style */
+
+.file-media__frame {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: var(--control-h-sm);
+  border-radius: var(--radius-md);
+  background: var(--c-sunken);
+  overflow: hidden;
+}
+
+.file-media .file-media__open {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  cursor: zoom-in;
+}
+
+.file-media__media {
+  display: block;
+  max-width: 100%;
+  max-height: var(--media-preview-maxh);
+  object-fit: contain;
+}
+
+.file-media__media[data-pixel-art] {
+  width: 100%;
+  height: var(--media-preview-maxh);
+  image-rendering: pixelated;
+}
+
+.file-media__media--video {
+  width: 100%;
+}

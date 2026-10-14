@@ -3,8 +3,7 @@ import { EARLIER_ICON, EARLIER_KEY, END_ICON, LATER_ICON, LATER_KEY, START_ICON 
 import { axisOf } from './axis-of';
 import { moveRun } from './move-run';
 import { nameOf } from './name-of';
-import type { ShortcutKey } from '@drizztdourden08/tessera/primitives';
-import type { EditorAction, FlexActionContext } from '../FlexEditor.type';
+import type { EditorAction, FlexActionContext, MoveSpec } from '../FlexEditor.type';
 
 const contextualActions = (ctx: FlexActionContext): EditorAction[] => {
   if (ctx.selection.kind !== 'items') return [];
@@ -15,20 +14,26 @@ const contextualActions = (ctx: FlexActionContext): EditorAction[] => {
   const end = Math.max(...indices);
   const name = indices.length === 1 ? nameOf(ctx, first) : `${indices.length} children`;
 
-  const move = (
-    key: string, group: string, icon: EditorAction['icon'], label: string,
-    can: boolean, from: number, to: number, cap?: ShortcutKey,
-  ): EditorAction => ({
-    key, kind: 'button', icon, group, label: `Move ${name} ${label}`, disabled: !can,
-    ...(cap === undefined ? {} : { shortcut: { keys: [cap] } }),
-    ...(can ? { run: moveRun(ctx, from, to) } : {}),
-  });
+  const move = (spec: MoveSpec): EditorAction => {
+    const { key, icon, label, can, from, to, cap } = spec;
+    return {
+      key, kind: 'button', icon, group: 'order', label: `Move ${name} ${label}`, disabled: !can,
+      ...(cap === undefined ? {} : { shortcut: { keys: [cap] } }),
+      ...(can ? { run: moveRun(ctx, from, to) } : {}),
+    };
+  };
 
   return [
-    move('move-start', 'order', START_ICON[axis], 'to the start', first > 0, first, 0),
-    move('move-earlier', 'order', EARLIER_ICON[axis], 'earlier', first > 0, first, first - 1, EARLIER_KEY[axis]),
-    move('move-later', 'order', LATER_ICON[axis], 'later', end < last, end, end + 1, LATER_KEY[axis]),
-    move('move-end', 'order', END_ICON[axis], 'to the end', end < last, end, last),
+    move({ key: 'move-start', icon: START_ICON[axis], label: 'to the start', can: first > 0, from: first, to: 0 }),
+    move({
+      key: 'move-earlier', icon: EARLIER_ICON[axis], label: 'earlier', can: first > 0,
+      from: first, to: first - 1, cap: EARLIER_KEY[axis],
+    }),
+    move({
+      key: 'move-later', icon: LATER_ICON[axis], label: 'later', can: end < last,
+      from: end, to: end + 1, cap: LATER_KEY[axis],
+    }),
+    move({ key: 'move-end', icon: END_ICON[axis], label: 'to the end', can: end < last, from: end, to: last }),
   ];
 };
 

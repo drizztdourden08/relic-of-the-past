@@ -5,9 +5,12 @@ import { useGameUIStore } from '@app/stores/game-ui-store';
 import { useHudSettingsStore } from '@app/stores/hud-settings-store';
 import { useCapacityLadder } from '../../../behavior/useCapacityLadder';
 import { useInPlay } from '../../../behavior/useInPlay';
-import { IN_PLAY_REASON } from '../../../CheatsWidget.constants';
 import { NumberCell } from './NumberCell';
-import { COUNTER_ICONS, COUNTER_WRITERS, KEYS_MAX, SILVER_BOW, SNES_TILE, WIDE_WALLET } from '../PlayerTab.constants';
+import { COUNTER_WRITERS, KEYS_MAX, SILVER_BOW, SNES_TILE } from '../PlayerTab.constants';
+import { counterIconOf } from '../behavior/counter-icon-of';
+import { counterLocks } from '../behavior/counter-locks';
+import { maxWriterOf } from '../behavior/max-writer-of';
+import { shownDigitsOf } from '../behavior/shown-digits-of';
 import type { CounterEditorProps } from '../PlayerTab.type';
 
 const CounterEditor = ({ spec, scale, spritesBase }: CounterEditorProps) => {
@@ -22,15 +25,12 @@ const CounterEditor = ({ spec, scale, spritesBase }: CounterEditorProps) => {
   const value = hud[kind];
   const max = maxOf[kind];
   const tile = SNES_TILE * scale;
-  const icon = kind === 'arrows' && hasSilverArrows ? 'hud-silver-arrow-icon' : COUNTER_ICONS[kind];
-  const shownDigits = kind === 'rupees' && hud.maxRupees > WIDE_WALLET ? digits + 1 : digits;
+  const icon = counterIconOf(kind, hasSilverArrows);
+  const shownDigits = shownDigitsOf(kind, digits, hud.maxRupees);
 
   const caps = ladder.map((r) => r.cap);
-  const maxWrite = capacity && settable
-    ? (cap: number) => { const hit = ladder.find((r) => r.cap === cap); if (hit) set(hit.rung); }
-    : undefined;
-  const heldLock = kind === 'keys' && !inPlay ? IN_PLAY_REASON : undefined;
-  const maxLock = inPlay ? undefined : IN_PLAY_REASON;
+  const maxWrite = maxWriterOf(ladder, set, capacity !== undefined && settable);
+  const locks = counterLocks(kind, inPlay);
 
   return (
     <Box className="cheats-player__counter" aria-label={label}>
@@ -44,7 +44,7 @@ const CounterEditor = ({ spec, scale, spritesBase }: CounterEditorProps) => {
           isMax={showMaxInYellow && value >= max}
           write={COUNTER_WRITERS[kind]}
           steps={steps}
-          lockedReason={heldLock}
+          lockedReason={locks.held}
           scale={scale}
           spritesBase={spritesBase}
         />
@@ -57,7 +57,7 @@ const CounterEditor = ({ spec, scale, spritesBase }: CounterEditorProps) => {
           digits={shownDigits}
           write={maxWrite}
           ladder={caps}
-          lockedReason={maxWrite ? maxLock : undefined}
+          lockedReason={maxWrite ? locks.max : undefined}
           scale={scale}
           spritesBase={spritesBase}
         />

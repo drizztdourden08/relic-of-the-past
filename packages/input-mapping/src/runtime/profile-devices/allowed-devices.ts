@@ -17,7 +17,7 @@ const allowedDevices = (profile: InputProfile | null): AllowedDevices => {
   }
 
   const assigned = profile.assignedDevice;
-  if (assigned?.vendorId && assigned?.productId) {
+  if (assigned?.vendorId && assigned.productId) {
     gamepadKeys.add(`${padHex(assigned.vendorId)}:${padHex(assigned.productId)}`);
   }
 

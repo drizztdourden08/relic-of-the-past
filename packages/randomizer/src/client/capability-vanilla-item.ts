@@ -6,10 +6,7 @@ import type { ItemKey } from '../world/item-ids';
 import type { LocationKey } from '../world/location-key';
 import type { ScopeFlags } from './scope-lock.type';
 
-const capabilityVanillaItemOf = (location: LocationKey, flags: ScopeFlags): ItemKey | undefined => {
-  if (!flags.shufflePrizes && PRIZE_LOCATIONS.has(location)) return VANILLA_PRIZES.get(location);
-  const pondItem = flags.pondLockedItems?.get(location);
-  if (pondItem !== undefined) return pondItem;
+const lockedTableItemOf = (location: LocationKey, flags: ScopeFlags): ItemKey | undefined => {
   if (flags.npcLockedLocations?.has(location) === true) {
     return NPC_SCOPE_LOCATIONS.get(location);
   }
@@ -20,6 +17,13 @@ const capabilityVanillaItemOf = (location: LocationKey, flags: ScopeFlags): Item
     return CAPACITY_UPGRADE_LOCATIONS.get(location) ?? NPC_SCOPE_LOCATIONS.get(location);
   }
   return undefined;
+};
+
+const capabilityVanillaItemOf = (location: LocationKey, flags: ScopeFlags): ItemKey | undefined => {
+  if (!flags.shufflePrizes && PRIZE_LOCATIONS.has(location)) return VANILLA_PRIZES.get(location);
+  const pondItem = flags.pondLockedItems?.get(location);
+  if (pondItem !== undefined) return pondItem;
+  return lockedTableItemOf(location, flags);
 };
 
 export { capabilityVanillaItemOf };

@@ -17,7 +17,7 @@ const ShortcutsTab = ({ ctrl }: CtrlProps) => {
           <Box className="binding-row__icon-slot" />
           <Text className="binding-row__snes-label" />
           <Box className="binding-row__icon-slot">
-            <Image src={getButtonIconUrl('kb-escape')!} alt="Esc" className="binding-row__icon-img" />
+            <Image src={getButtonIconUrl('kb-escape') ?? undefined} alt="Esc" className="binding-row__icon-img" />
           </Box>
           <Text className="binding-row__binding-label">Esc</Text>
         </Box>

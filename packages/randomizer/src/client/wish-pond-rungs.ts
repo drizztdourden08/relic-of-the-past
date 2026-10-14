@@ -4,7 +4,7 @@ import { getCheck } from '@rotp/game-data';
 import { pondPlanOf } from '../world/pond/pond-plan';
 import { WISH_POND_WATERS } from './wish-pond-rung-keys.constants';
 import type { Placement } from '../world/fill/placement.type';
-import type { PondInstance } from '../world/pond/pond-instance.type';
+import type { WishPondWater } from './wish-pond-rung-keys.type';
 import type { PhysicalPlan, PlanEntry } from './physical-plan.type';
 import type {
   PendingRung, RungGrant, WishPondArmContext, WishPondRungRow, WishPondSessionPlan, WishPondWaterPlan,
@@ -35,9 +35,10 @@ const customGrant = (
 };
 
 const waterPlanOf = (
-  instance: PondInstance, pond: number, placement: Placement,
+  water: WishPondWater, placement: Placement,
   byLocation: ReadonlyMap<string, PlanEntry>, context: WishPondArmContext,
 ): WishPondWaterPlan => {
+  const { instance, pond } = water;
   const { messageIdOf, fireIdOf, lines } = context;
   const setting = placement.stats.ponds[instance.id];
   const base = { id: instance.id, label: instance.label, pond, mode: setting.mode, lines };
@@ -60,8 +61,7 @@ const wishPondSessionOf = (
   placement: Placement, plan: PhysicalPlan, context: WishPondArmContext,
 ): WishPondSessionPlan => {
   const byLocation = new Map(plan.entries.map((entry) => [entry.location, entry]));
-  const waters = WISH_POND_WATERS.map(({ instance, pond }) =>
-    waterPlanOf(instance, pond, placement, byLocation, context));
+  const waters = WISH_POND_WATERS.map((water) => waterPlanOf(water, placement, byLocation, context));
   const rungs = waters.flatMap((water) => water.rungs.map(({ pond, rung, newItem, messageId, fireId, assigned }) =>
     ({ pond, rung, newItem, messageId, fireId, assigned })));
   return { waters, rungs };

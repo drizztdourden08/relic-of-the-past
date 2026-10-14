@@ -22,13 +22,13 @@
 .pack-tracks__heading {
   font-size: var(--text-xs);
   text-transform: uppercase;
-  letter-spacing: 0.08em;
+  letter-spacing: var(--tracking-caps);
   color: var(--c-text-muted);
 }
 
 .pack-tracks__row {
   display: grid;
-  grid-template-columns: 4rem minmax(8rem, 14rem) 5rem minmax(0, 1fr);
+  grid-template-columns: var(--size-64) minmax(var(--size-128), var(--size-224)) var(--size-80) minmax(0, 1fr);
   align-items: start;
   gap: var(--space-sm);
   padding: var(--space-xs) var(--space-sm);
@@ -64,13 +64,13 @@
 .pack-tracks__file {
   display: flex;
   flex-direction: column;
-  border: 1px solid transparent;
+  border: var(--border-width-thin) solid transparent;
   border-radius: var(--radius-sm);
 }
 
 .pack-tracks__file--playing {
   border-color: var(--c-primary);
-  box-shadow: inset 2px 0 0 var(--c-primary);
+  box-shadow: inset var(--border-width-thick) 0 0 var(--c-primary);
 }
 
 .pack-tracks__file-line {

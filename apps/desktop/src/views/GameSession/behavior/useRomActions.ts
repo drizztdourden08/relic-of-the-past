@@ -4,9 +4,10 @@ import { log } from '@app/log-bus';
 import * as romsStore from '@app/storage/roms-store';
 import * as assetsStore from '@app/storage/assets-store';
 import type { RomActionsDeps } from './useProfileManagement.type';
+import { useDeleteRom } from './useDeleteRom';
 
 const useRomActions = (deps: RomActionsDeps) => {
-  const { activeProfile, setActiveProfile, refreshProfilesAndRoms, showDialog, dismissDialog, onGameClear } = deps;
+  const { refreshProfilesAndRoms } = deps;
   const [extractionStates, setExtractionStates] = useState<Record<string, RomExtractionStatus>>({});
   const [importingRom, setImportingRom] = useState(false);
 
@@ -51,29 +52,7 @@ const useRomActions = (deps: RomActionsDeps) => {
     await refreshProfilesAndRoms();
   }, [refreshProfilesAndRoms]);
 
-  const handleDeleteRom = useCallback((romFile: string) => {
-    showDialog({
-      title: 'Delete ROM',
-      message: `This will remove "${romFile}" and all its extracted assets. Profiles using this ROM will also be deleted. This cannot be undone.`,
-      confirmLabel: 'Delete ROM',
-      variant: 'danger',
-      onConfirm: async () => {
-        dismissDialog();
-        await romsStore.deleteRom(romFile);
-        log.app(`Removed ROM: ${romFile}`);
-        setExtractionStates((prev) => {
-          const next = { ...prev };
-          delete next[romFile];
-          return next;
-        });
-        if (activeProfile?.romFile === romFile) {
-          setActiveProfile(null);
-          onGameClear();
-        }
-        await refreshProfilesAndRoms();
-      },
-    });
-  }, [activeProfile, setActiveProfile, refreshProfilesAndRoms, showDialog, dismissDialog, onGameClear]);
+  const handleDeleteRom = useDeleteRom({ ...deps, setExtractionStates });
 
   return { extractionStates, importingRom, handleImportRom, handleExtractAssets, handleDeleteRom };
 };

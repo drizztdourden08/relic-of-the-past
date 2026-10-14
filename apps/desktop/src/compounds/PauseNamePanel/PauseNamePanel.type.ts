@@ -1,13 +1,11 @@
 /* @layer renderer-hud @kind types */
-import type { CSSProperties } from 'react';
-
 interface PauseNamePanelProps {
   itemName: string | string[];
   itemSprite: string | null;
   borderColor?: 'green' | 'blue' | 'gray' | 'yellow' | 'red';
   scale: number;
   spritesBase: string;
-  style?: CSSProperties;
+  className?: string;
 }
 
 interface NameGlyphProps {

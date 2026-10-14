@@ -4,7 +4,6 @@ import { PauseItemsScreen } from '../../../../compounds/PauseItemsScreen';
 import { PauseStatusScreen } from '../../../../compounds/PauseStatusScreen';
 import { GEAR_LABELS } from '../../EnhancedPauseView.constants';
 import type { GearSection } from '../../../../compounds/PauseGearScreen';
-import type { ItemsSection } from '../../../../compounds/PauseItemsScreen';
 import type { PauseScreenHostProps } from './PauseScreenHost.type';
 
 const PauseScreenHost = (props: PauseScreenHostProps) => {

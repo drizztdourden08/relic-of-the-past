@@ -8,12 +8,12 @@
   justify-content: space-between;
   flex-shrink: 0;
   padding: var(--space-sm) var(--space-md);
-  border: 1px solid var(--c-border);
+  border: var(--border-width-thin) solid var(--c-border);
   border-radius: var(--radius-md);
   background: var(--c-surface);
 }
 
-.scheme-banner .text {
-  flex: 1 1 24em;
+.scheme-banner .scheme-banner__text {
+  flex: 1 1 var(--size-288);
   color: var(--c-text-dim);
 }

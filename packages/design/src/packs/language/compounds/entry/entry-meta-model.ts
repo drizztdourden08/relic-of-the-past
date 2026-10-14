@@ -1,4 +1,5 @@
 /* @layer renderer-components @kind logic */
+import { variableKeyOf } from '../../behavior/variable-key-of';
 import { summarizeEntry } from './entry-summary';
 import type { BlockDoc, Token, VariableIndex } from '@rotp/languages';
 import { BLOCK_END_WORDS } from './entry.constants';
@@ -14,7 +15,7 @@ const blockWords = (doc: BlockDoc): string => {
 const variableWords = (tokens: Token[], index: VariableIndex): string => {
   const keys: string[] = [];
   for (const token of tokens) {
-    const key = token.t === 'var' ? token.name : (token.t === 'ref' ? token.key : null);
+    const key = variableKeyOf(token);
     if (key === null || keys.includes(key)) continue;
     keys.push(key);
   }

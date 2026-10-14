@@ -1,13 +1,14 @@
 /* @layer sanctuary-site @kind component */
 import { useState } from 'react';
 import type { SanctuaryFile } from '@rotp/hub-contracts';
-import { Button, Text } from '@drizztdourden08/tessera/primitives';
+import { Text } from '@drizztdourden08/tessera/primitives';
 import { Dialog } from '@drizztdourden08/tessera/composites';
 import { DetailPane, TagList } from '@rotp/design';
 import type { DetailField } from '@rotp/design';
 import { TypeChip } from '../../../components/TypeChip/TypeChip';
 import { formatBytes, formatDateTime, mediaKindOf } from '@rotp/hub-client';
 import { versionLabel } from '../../../files/file-versions';
+import { FileDetailButtons } from './FileDetailButtons';
 import { FileEditForm } from './FileEditForm';
 import { FileMedia } from './FileMedia';
 import { VersionsPanel } from './VersionsPanel';
@@ -34,33 +35,13 @@ const FileDetail = (props: FileDetailProps) => {
   const [confirming, setConfirming] = useState(false);
   const { busy } = actions;
   const kind = mediaKindOf(file.contentType);
-
-  const buttons = (
-    <>
-      <Button variant="primary" size="sm" disabled={busy} onClick={() => void actions.download(file.id)}>
-        Download {versionLabel(file.currentVersion)}
-      </Button>
-      <Button variant="secondary" size="sm" disabled={busy} onClick={() => void actions.copyLink(file.id)}>Copy link</Button>
-      {canEdit && (
-        <Button variant="secondary" size="sm" disabled={busy || editing} onClick={() => setEditing(true)}>Edit</Button>
-      )}
-      <Button
-        variant="danger"
-        size="sm"
-        disabled={busy || !canDelete}
-        title={canDelete ? undefined : 'owner or admin'}
-        onClick={() => setConfirming(true)}
-      >
-        Delete
-      </Button>
-    </>
-  );
+  const controls = { file, actions, canDelete, canEdit, editing };
 
   return (
     <DetailPane
       title={file.name}
       fields={fieldsOf(file)}
-      actions={buttons}
+      actions={<FileDetailButtons {...controls} onEdit={() => setEditing(true)} onDelete={() => setConfirming(true)} />}
       notice={actions.notice}
       onClose={onClose}
       media={kind && <FileMedia file={file} kind={kind} />}

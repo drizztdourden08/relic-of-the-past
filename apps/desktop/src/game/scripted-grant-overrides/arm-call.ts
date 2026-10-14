@@ -1,9 +1,9 @@
 /* @layer bridge-wasm @kind logic */
-import type { LiveModule, SingleArmSurface } from '@rotp/randomizer';
 import { setPondPrize } from '../pond-plan';
+import type { ArmCallParams } from './arm-call.type';
 
-const armCall = (mod: LiveModule, target: SingleArmSurface,
-  newItem: number, messageId: number, fireId: number): void => {
+const armCall = (params: ArmCallParams): void => {
+  const { mod, target, newItem, messageId, fireId } = params;
   if (target.surface === 'pond') {
     setPondPrize({ prize: target.prize, newItem, messageId, fireId });
     return;

@@ -1,83 +1,29 @@
 /* @layer renderer-components @kind component */
-import { useState } from 'react';
-import { Status, Box, Icon, IconButton, Select, Text } from '@drizztdourden08/tessera/primitives';
-import { formatBytes } from '@drizztdourden08/brock-core';
+import { Status, Box, Text } from '@drizztdourden08/tessera/primitives';
+import { TrackActions } from './TrackActions';
+import { TrackFileCell } from './TrackFileCell';
 import type { TrackRowProps } from './msu.type';
 
 const TrackRow = (props: TrackRowProps) => {
-  const {
-    trackNum, description, fileName, fileSize, layerCount, options,
-    playing, busy, expanded, playingOriginal, readOnly,
-    onAssign, onPreview, onStopPreview, onPlayOriginal, onToggleLayers,
-  } = props;
-  const [editing, setEditing] = useState(false);
-  const hasAudio = fileName !== null;
+  const { trackNum, description, fileName, fileSize, layerCount, options, readOnly, expanded, onAssign } = props;
 
   return (
     <Box className={`track-list__item msu-track-row${expanded ? ' msu-track-row--open' : ''}`}>
       <Text className="track-list__num">#{trackNum}</Text>
       <Text className="track-list__name">{description}</Text>
 
-      {editing ? (
-        <Box className="msu-track-row__select">
-          <Select
-            value={fileName ?? ''}
-            onChange={(value) => { onAssign(trackNum, value); setEditing(false); }}
-            options={options}
-            placeholder="Select file..."
-            searchable
-            size="sm"
-          />
-        </Box>
-      ) : (
-        <>
-          <Text
-            className={`msu-track-row__file${hasAudio ? '' : ' msu-track-row__file--empty'}`}
-            title={readOnly ? fileName ?? undefined : fileName ?? 'Click to assign a file'}
-            onClick={readOnly ? undefined : () => setEditing(true)}
-          >
-            {fileName ?? '-'}
-          </Text>
-          {fileSize != null && <Text className="track-list__size">{formatBytes(fileSize)}</Text>}
-        </>
-      )}
+      <TrackFileCell
+        trackNum={trackNum}
+        fileName={fileName}
+        fileSize={fileSize}
+        options={options}
+        readOnly={readOnly}
+        onAssign={onAssign}
+      />
 
       {layerCount > 1 && <Status tone="success">{layerCount} layers</Status>}
 
-      <Box className="msu-track-row__actions">
-        {hasAudio && (
-          <IconButton
-            variant="ghost"
-            size="sm"
-            label={playing ? `Stop slot ${trackNum}` : `Preview slot ${trackNum}`}
-            active={playing}
-            onClick={() => (playing ? onStopPreview() : onPreview(trackNum))}
-          >
-            <Icon name={playing ? 'square' : 'play'} />
-          </IconButton>
-        )}
-        <IconButton
-          variant="ghost"
-          size="sm"
-          label={playingOriginal
-            ? `Stop slot ${trackNum}`
-            : `Play the sound chip's own slot ${trackNum}${hasAudio ? ', to compare' : ''}`}
-          active={playingOriginal}
-          onClick={() => onPlayOriginal(trackNum)}
-        >
-          <Icon name={playingOriginal ? 'square' : 'volume-2'} />
-        </IconButton>
-        <IconButton
-          variant="ghost"
-          size="sm"
-          label={`Layers and audio for slot ${trackNum}`}
-          active={expanded}
-          disabled={busy}
-          onClick={() => onToggleLayers(trackNum)}
-        >
-          <Icon name="layers" />
-        </IconButton>
-      </Box>
+      <TrackActions {...props} />
     </Box>
   );
 };

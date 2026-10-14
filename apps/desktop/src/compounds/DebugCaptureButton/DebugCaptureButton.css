@@ -2,8 +2,8 @@
 
 .debug-capture-glow {
   position: relative;
-  width: 48px;
-  height: 48px;
+  width: var(--size-48);
+  height: var(--size-48);
   border-radius: 50%;
   background: transparent;
 }
@@ -27,11 +27,11 @@
 }
 
 .debug-capture-glow--active .debug-capture-glow__layer--1 {
-  filter: blur(7px);
+  filter: blur(calc(7 * var(--size-1)));
 }
 
 .debug-capture-glow--active .debug-capture-glow__layer--2 {
-  filter: blur(14px);
+  filter: blur(var(--size-14));
 }
 
 .debug-capture-glow--active {

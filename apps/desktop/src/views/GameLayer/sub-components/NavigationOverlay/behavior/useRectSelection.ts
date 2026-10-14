@@ -49,7 +49,7 @@ const useRectSelection = (params: RectSelectionParams) => {
 
     if (!result.attrGrid) return;
 
-    const text = tileBlockText(result, result.attrGrid, r0, r1, c0, c1);
+    const text = tileBlockText({ result, attrGrid: result.attrGrid, r0, r1, c0, c1 });
     void navigator.clipboard.writeText(text).then(() => setCopied(true));
   }, [rectSel, result, mouseToTile]);
 

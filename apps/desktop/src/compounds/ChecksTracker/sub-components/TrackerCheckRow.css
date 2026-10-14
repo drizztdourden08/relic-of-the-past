@@ -1,0 +1,41 @@
+/* @layer renderer-components @kind style */
+
+.tracker-check {
+  display: flex;
+  align-items: center;
+  gap: var(--space-xs);
+  padding: var(--space-xs) var(--space-md) var(--space-xs) var(--space-xl);
+  font-size: var(--text-xs);
+}
+
+.tracker-check__name {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.tracker-check__item {
+  color: var(--c-info);
+  font-size: var(--text-xs);
+  max-width: calc(120 * var(--size-1));
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-style: italic;
+}
+
+.tracker-check__type {
+  color: var(--c-text-dim);
+  font-size: var(--text-xs);
+  text-transform: uppercase;
+}
+
+.tracker-check--completed {
+  color: var(--c-secondary);
+  opacity: 0.6;
+}
+
+.tracker-check--reachable { color: var(--c-warning); }
+.tracker-check--blocked { color: var(--c-text-dim); }

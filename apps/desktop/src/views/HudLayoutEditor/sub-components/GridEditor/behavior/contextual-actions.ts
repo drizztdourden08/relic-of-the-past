@@ -7,7 +7,7 @@ const contextualActions = (ctx: GridActionContext): GridAction[] => {
   switch (ctx.selection.kind) {
     case 'cells': return cellActions(ctx);
     case 'track': return trackActions(ctx);
-    default: return [];
+    case 'none': return [];
   }
 };
 

@@ -3,7 +3,7 @@
 import { describe, expect, it, vi } from 'vitest';
 
 vi.hoisted(() => {
-  const stub = (): unknown => new Proxy(async () => [], { get: (_target, key) => (key === 'then' ? undefined : stub()) });
+  const stub = (): unknown => new Proxy(() => Promise.resolve([]), { get: (_target, key) => (key === 'then' ? undefined : stub()) });
   const anything = stub();
   const global = globalThis as { window?: { api?: unknown }; ResizeObserver?: unknown };
   global.window ??= {};

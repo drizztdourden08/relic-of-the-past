@@ -1,6 +1,6 @@
 /* @layer test @kind test */
 import { describe, expect, it } from 'vitest';
-import expressions from '../../../../tests/fixtures/hud-expressions.json';
+import expressions from './hud-expressions.json';
 import { validateValue } from '@rotp/hud';
 import type { Issues } from '@rotp/hud';
 

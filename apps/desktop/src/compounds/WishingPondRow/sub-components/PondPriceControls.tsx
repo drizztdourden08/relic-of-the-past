@@ -3,7 +3,6 @@ import { Select, Slider } from '@drizztdourden08/tessera/primitives';
 import { JumpChipsEditor } from '../../JumpChipsEditor';
 import { OptionValueTag, choiceLabelOf, stepsLabelOf } from '../../OptionValueTag';
 import { PondOptionLine } from './PondOptionLine';
-import type { SelectOption } from '@drizztdourden08/tessera/primitives';
 import type { PondControlsProps, PondRowState } from '../WishingPondRow.type';
 
 const throwsLabel = (count: number): string => `${count} throw${count === 1 ? '' : 's'}`;

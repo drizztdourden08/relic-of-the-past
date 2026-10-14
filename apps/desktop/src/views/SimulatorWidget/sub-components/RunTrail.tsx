@@ -1,7 +1,6 @@
 /* @layer renderer-widgets @kind component */
 import { Box, Text } from '@drizztdourden08/tessera/primitives';
 import { getScreen } from '@rotp/game-data';
-import type { ScreenId } from '@rotp/game-data';
 import { haulAt } from '../behavior/trail-haul';
 import type { RunTrailProps } from '../SimulatorWidget.type';
 
@@ -13,7 +12,7 @@ const RunTrail = ({ trail, checksDone }: RunTrailProps) => {
       <Text className="simulator__trail-title">Route ({trail.length} stops)</Text>
       {trail.map((stop, i) => {
         const haul = haulAt(trail, i, checksDone);
-        const screen = getScreen(stop.screenId as ScreenId);
+        const screen = getScreen(stop.screenId);
         return (
           <Box key={`${i}-${stop.screenId}`} className="simulator__trail-row">
             <Text className="simulator__trail-index">{i + 1}</Text>

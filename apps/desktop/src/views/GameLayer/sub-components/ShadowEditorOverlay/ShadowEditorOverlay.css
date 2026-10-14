@@ -1,0 +1,45 @@
+/* @layer renderer-components @kind style */
+.shadow-editor-overlay {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+  z-index: var(--z-sticky);
+}
+
+.shadow-editor-overlay--interactive {
+  pointer-events: auto;
+}
+
+.shadow-editor-overlay[data-cursor='crosshair'] {
+  cursor: crosshair;
+}
+
+.shadow-editor-overlay[data-cursor='move'] {
+  cursor: move;
+}
+
+.shadow-editor-overlay[data-cursor='grab'] {
+  cursor: grab;
+}
+
+.shadow-editor-overlay[data-cursor='nwse-resize'] {
+  cursor: nwse-resize;
+}
+
+.shadow-editor-overlay[data-cursor='ew-resize'] {
+  cursor: ew-resize;
+}
+
+.shadow-editor-overlay[data-cursor='ns-resize'] {
+  cursor: ns-resize;
+}
+
+.shadow-editor-overlay[data-cursor='e-resize'] {
+  cursor: e-resize;
+}
+
+.shadow-editor-overlay[data-cursor='n-resize'] {
+  cursor: n-resize;
+}

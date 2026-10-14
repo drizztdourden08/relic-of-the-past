@@ -1,5 +1,5 @@
 /* @layer renderer-widgets @kind component */
-import { Box, Flex, IconButton } from '@drizztdourden08/tessera/primitives';
+import { Box, Flex, Icon, IconButton } from '@drizztdourden08/tessera/primitives';
 import { CompactRecordView } from '@drizztdourden08/tessera/composites';
 import { useDataViewStore } from '@app/stores/data-view-store';
 import type { ReviewMark } from '@rotp/game-data';
@@ -16,7 +16,7 @@ const RecordCard = <T,>(props: RecordCardProps<T>) => {
     <Box className="live-record-card">
       <Flex justify="end" className="live-record-card__actions">
         <IconButton label={EDIT_LABEL} title={EDIT_LABEL} onClick={() => openRecord(kind, id)}>
-          ✏️
+          <Icon name="pencil" />
         </IconButton>
       </Flex>
       <CompactRecordView

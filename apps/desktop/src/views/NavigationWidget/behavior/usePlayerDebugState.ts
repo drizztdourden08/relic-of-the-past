@@ -3,7 +3,7 @@ import { wasmGetViewportInfo, wasmGetLinkLayer, wasmGetRoomCollisionType, wasmGe
 import type { PlayerDebugState } from './hooks.type';
 
 const usePlayerDebugState = (_debugTick: number): PlayerDebugState | null => {
-  const vpDebug = wasmGetViewportInfo?.();
+  const vpDebug = wasmGetViewportInfo();
   if (!vpDebug) return null;
 
   const liveScreenCol = (vpDebug.linkX >> 9) & 7;
@@ -38,9 +38,9 @@ const usePlayerDebugState = (_debugTick: number): PlayerDebugState | null => {
     map16Row,
     map16Col,
     liveScreenIndex,
-    playerLayer: wasmGetLinkLayer?.() ?? null,
-    collisionType: wasmGetRoomCollisionType?.() ?? null,
-    staircaseType: wasmGetStaircaseType?.() ?? null,
+    playerLayer: wasmGetLinkLayer(),
+    collisionType: wasmGetRoomCollisionType(),
+    staircaseType: wasmGetStaircaseType(),
     inDoorway: vpDebug.inDoorway,
     doorAnimStep: vpDebug.doorAnimStep,
   };

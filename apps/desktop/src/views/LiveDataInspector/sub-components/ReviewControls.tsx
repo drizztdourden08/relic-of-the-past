@@ -1,9 +1,8 @@
 /* @layer renderer-widgets @kind component */
 import { useState } from 'react';
 import { Box, Select, Text, Textarea } from '@drizztdourden08/tessera/primitives';
-import { RECORD_WRITERS } from '@app/views/DataInspector/behavior/record-writers';
+import { RECORD_WRITERS } from '@app/data-inspector/record-writers';
 import type { ReviewMark, ReviewStatus } from '@rotp/game-data';
-import type { InspectorRow } from '@app/views/DataInspector/DataInspector.type';
 import { reviewStamp } from '../behavior/review-stamp';
 import { REVIEW_STATUS_OPTIONS, REVIEW_TITLE, REVIEW_UNTOUCHED } from '../LiveDataInspector.constants';
 import type { ReviewControlsProps } from '../LiveDataInspector.type';
@@ -23,7 +22,7 @@ const ReviewControls = (props: ReviewControlsProps) => {
     }
     setError(null);
     try {
-      await writer({ ...record, id: recordId, review: next } as unknown as InspectorRow);
+      await writer({ ...record, id: recordId, review: next });
     } catch (e: unknown) {
       setError(e instanceof Error ? e.message : 'The mark could not be written.');
     }

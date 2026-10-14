@@ -55,6 +55,21 @@ interface LadderControlsProps {
   onChange: (part: Partial<CapacityRowState>) => void;
 }
 
+interface FamilyHeadProps {
+  model: CapacityRowModel;
+  readout: boolean;
+  disabled: boolean;
+  onPick: (mode: CapacityRowState['mode']) => void;
+}
+
+interface FamilyLinesProps {
+  model: CapacityRowModel;
+  inert: boolean;
+  readout: boolean;
+  onChange: (part: Partial<CapacityRowState>) => void;
+  onBonusChange?: (next: FamilyBonus) => void;
+}
+
 interface LadderReadoutProps {
   model: CapacityRowModel;
 }
@@ -75,6 +90,6 @@ interface RowLineProps {
 }
 
 export type {
-  BonusLineProps, CapacityFamilyRowProps, CapacityRowModel, CapacityRowState, CurveChoice, LadderControlsProps,
-  LadderReadoutProps, RowLineProps,
+  BonusLineProps, CapacityFamilyRowProps, CapacityRowModel, CapacityRowState, CurveChoice, FamilyHeadProps,
+  FamilyLinesProps, LadderControlsProps, LadderReadoutProps, RowLineProps,
 };

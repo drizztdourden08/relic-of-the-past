@@ -10,7 +10,7 @@ const processButtonFrame = (bytes: Uint8Array, refs: ButtonRefs, cb: ButtonCallb
   const idx = refs.activeIdxRef.current;
   const item = refs.itemsRef.current[idx];
   if (!item) return;
-  if (item.kind === 'button') { processButtonItem(bytes, item, idx, refs, cb); return; }
+  if (item.kind === 'button') { processButtonItem({ bytes, item, idx, refs, cb }); return; }
   if ((item.status === 'captured' || item.status === 'skipped') && refs.captureStateRef.current !== 'waiting-release') return;
   const bl = refs.baselineRef.current;
   const excl = ignoredForDetection(refs.excludedRef.current, refs.noiseRef.current);

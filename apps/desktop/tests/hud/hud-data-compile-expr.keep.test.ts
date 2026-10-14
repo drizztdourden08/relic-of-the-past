@@ -1,6 +1,6 @@
 /* @layer test @kind test */
 import { describe, expect, it } from 'vitest';
-import expressions from '../../../../tests/fixtures/hud-expressions.json';
+import expressions from './hud-expressions.json';
 import { MAX_EXPR_LENGTH, compileExpr, compileExprCacheSize } from '@rotp/hud';
 
 describe('compileExpr - the worked examples, corrected dialect and all', () => {

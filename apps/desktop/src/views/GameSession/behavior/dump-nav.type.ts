@@ -1,6 +1,7 @@
 /* @layer renderer-appshell @kind types */
 import type { FloodFillResult, ConnectionInfo, GridPos } from '@rotp/game-core';
-import type { ScreenAnnotations } from '@rotp/navigation';
+import type { ScreenAnnotations, floodRoomRun } from '@rotp/navigation';
+import type { TileReq } from '@rotp/game-data';
 
 interface MatchingEntrance {
   id: number;
@@ -89,12 +90,19 @@ interface RunFloodArgs {
   roomLayout: { intraEdges?: Array<'north' | 'south' | 'east' | 'west'>; shape?: string; quadrantFullsizeX?: number; quadrantFullsizeY?: number } | null;
 }
 
+interface AreaTotalsParams {
+  args: RunFloodArgs;
+  items: TileReq[];
+  roomRun: ReturnType<typeof floodRoomRun> | null;
+}
+
 interface RunFloodResult {
   floodFill: FloodFillDump | null;
   annotations: ScreenAnnotations | null;
 }
 
 export type {
+  AreaTotalsParams,
   EdgeName,
   EntranceDataInput,
   FallHoleLanding,

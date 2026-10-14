@@ -2,6 +2,7 @@
 import { Status } from '@drizztdourden08/tessera/primitives';
 import { getItem, chestSwapOf } from '@rotp/game-data';
 import type { SwapBadgeProps } from '../ChecksTracker.type';
+import './SwapBadge.css';
 
 const SwapBadge = ({ check, shown }: SwapBadgeProps) => {
   const swap = chestSwapOf(check);

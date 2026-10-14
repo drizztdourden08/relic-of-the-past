@@ -44,14 +44,12 @@ const preloadApi: unknown = new Proxy({}, { get: () => new Proxy(answerEmpty, { 
 (globalThis as { window?: unknown }).window ??= {
   addEventListener: () => undefined, removeEventListener: () => undefined, api: preloadApi,
 };
-await import('../../../../packages/game-core/src/cheats');
-const { setModule } = await import('../../../../packages/game-core/src/wasm-bridge');
+const { setModule } = await import('@rotp/game-core');
 const { installFakeModule } = await import('./ap-fake-module');
 const { armScouted } = await import('@app/game/randomizer-client/online-arm-scouted');
 const { disarmFireReporting, firedLocations } = await import('@app/game/randomizer-client/override-fire-registry');
-const { trackerCheckRecords } = await import('../../../../packages/navigation/src/tracker/tracker-roster');
+const { trackerCheckRecords, trackerStatuses } = await import('@rotp/navigation');
 const { isCountedCheck } = await import('../../../../packages/navigation/src/tracker/tracker-count');
-const { trackerStatuses } = await import('../../../../packages/navigation/src/tracker/tracker-statuses');
 const { clearCollectedChecks, withCollectedChecks } = await import('../../../../packages/navigation/src/tracker/collected-checks');
 const { markCollected } = await import('@app/game/randomizer-client/online-collected');
 const { virtualCheckIdOf } = await import('../../../../packages/randomizer/src/client/virtual-locations');

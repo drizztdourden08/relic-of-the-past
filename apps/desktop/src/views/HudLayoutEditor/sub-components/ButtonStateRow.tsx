@@ -1,24 +1,12 @@
 /* @layer renderer-components @kind component */
-import { useRef, useState } from 'react';
-import { Flex, SegmentedControl, Text, Toggle } from '@drizztdourden08/tessera/primitives';
-import { SpritePicker } from '@app/compounds/SpritePicker';
-import { CATEGORY_LABELS, CATEGORY_ORDER, SPRITE_MANIFEST } from '@rotp/game-data';
-import { glyphArtUrl } from '@app/hud-layout-editing/glyph-art';
-import { spriteLabel, spriteUrl } from '@app/hud-layout-editing/node-art';
-import { GlyphPickerGrid } from './GlyphPickerGrid';
-import { ReferenceField } from './ReferenceField';
-import { SpriteExtractionNotice } from './SpriteExtractionNotice';
+import { Flex, Text, Toggle } from '@drizztdourden08/tessera/primitives';
+import { faceArtOf } from '@app/hud-layout-editing/node-art';
+import { ButtonFaceBody } from './ButtonFaceBody';
 import type { ButtonStateRowProps } from './ButtonStateRow.type';
 
 const ButtonStateRow = (props: ButtonStateRowProps) => {
   const { state, required, face, glyphPacks, onChange } = props;
-  const [pickerOpen, setPickerOpen] = useState<'sprite' | 'glyph' | null>(null);
-  const anchorRef = useRef<HTMLButtonElement>(null);
-  const from = face?.from ?? 'glyph';
-
-  const art = face === undefined ? null : face.from === 'image'
-    ? { src: face.file ? spriteUrl(face.file) : undefined, name: face.file ? spriteLabel(face.file) : 'choose a sprite...', kind: undefined }
-    : { src: glyphArtUrl(glyphPacks, face.pack, face.glyph), name: face.glyph, kind: face.pack };
+  const art = faceArtOf(face, glyphPacks);
 
   return (
     <Flex direction="column" gap="2xs" className={`hud-button-state${face ? ' is-set' : ''}`}>
@@ -34,42 +22,7 @@ const ButtonStateRow = (props: ButtonStateRowProps) => {
         )}
       </Flex>
       {face && art && (
-        <Flex direction="column" gap="2xs" className="hud-button-state__body">
-          <SegmentedControl
-            size="sm"
-            value={from}
-            options={[{ value: 'glyph', label: 'glyph' }, { value: 'image', label: 'image' }]}
-            onChange={(next) => onChange(next === 'image' ? { from: 'image', file: '' } : { from: 'glyph', pack: 'generic', glyph: 'A' })}
-          />
-          <ReferenceField
-            compact
-            src={art.src}
-            name={art.name}
-            kind={art.kind}
-            onOpen={() => setPickerOpen(face.from === 'image' ? 'sprite' : 'glyph')}
-            anchorRef={anchorRef}
-            aria-label={`${state} face: ${art.name}`}
-          >
-            <SpritePicker
-              open={pickerOpen === 'sprite'}
-              anchorRef={anchorRef}
-              sprites={SPRITE_MANIFEST}
-              categories={CATEGORY_ORDER}
-              categoryLabels={CATEGORY_LABELS}
-              spriteUrl={spriteUrl}
-              onClose={() => setPickerOpen(null)}
-              onPick={(file) => onChange({ from: 'image', file })}
-              notice={<SpriteExtractionNotice />}
-            />
-            <GlyphPickerGrid
-              open={pickerOpen === 'glyph'}
-              anchorRef={anchorRef}
-              packs={glyphPacks}
-              onClose={() => setPickerOpen(null)}
-              onPick={({ position, pack }) => onChange({ from: 'glyph', pack: pack ?? 'generic', glyph: position })}
-            />
-          </ReferenceField>
-        </Flex>
+        <ButtonFaceBody state={state} face={face} art={art} glyphPacks={glyphPacks} onChange={onChange} />
       )}
     </Flex>
   );

@@ -43,9 +43,7 @@ const columnOf = (raw: string): number | undefined => {
   return match ? Number(match[1]) : undefined;
 };
 
-const explainExprError = (source: string, raw: string): ExprProblem => {
-  const column = columnOf(raw);
-
+const plainProblem = (source: string, raw: string): ExprProblem | null => {
   if (raw.startsWith('random()')) return { message: raw };
   if (raw.startsWith('expression is empty')) {
     return { message: 'Nothing to read yet. Type a name, or pick one from the ƒ menu.' };
@@ -54,9 +52,10 @@ const explainExprError = (source: string, raw: string): ExprProblem => {
     return { message: `A HUD formula is capped at ${MAX_EXPR_LENGTH} characters. This one is longer.` };
   }
   if (raw.includes('unexpected TEOF')) return unfinished(source);
-  if (raw.includes('Expected )')) {
-    return { message: `This opens ${openParenCall(source)} and never closes it. Add a ).`, column };
-  }
+  return null;
+};
+
+const wordOperatorProblem = (source: string, raw: string, column?: number): ExprProblem | null => {
   if (raw.includes('Unknown character "&"')) {
     return {
       message: 'This language writes "and" as and, not &&.',
@@ -71,19 +70,37 @@ const explainExprError = (source: string, raw: string): ExprProblem => {
       fix: { label: 'use or', expr: source.replace(/\|\|?/g, 'or') },
     };
   }
+  return null;
+};
+
+const trailingProblem = (source: string, column?: number): ExprProblem => {
+  if (/\bin\b/.test(source)) return { ...disabledFeature('The in operator'), column };
+  const product = withProduct(source);
+  return {
+    message: 'Two values with nothing between them.',
+    column,
+    suggestion: product && `Did you mean ${product}?`,
+    fix: product ? { label: 'multiply', expr: product } : undefined,
+  };
+};
+
+const syntaxProblem = (source: string, raw: string, column?: number): ExprProblem | null => {
+  if (raw.includes('Expected )')) {
+    return { message: `This opens ${openParenCall(source)} and never closes it. Add a ).`, column };
+  }
+  const word = wordOperatorProblem(source, raw, column);
+  if (word) return word;
   if (raw.includes('Unknown character "="')) return { ...disabledFeature('Assignment'), column };
   if (raw.includes('Unknown character "["')) return { ...disabledFeature('A list'), column };
-  if (raw.includes('Expected EOF')) {
-    if (/\bin\b/.test(source)) return { ...disabledFeature('The in operator'), column };
-    const product = withProduct(source);
-    return {
-      message: 'Two values with nothing between them.',
-      column,
-      suggestion: product && `Did you mean ${product}?`,
-      fix: product ? { label: 'multiply', expr: product } : undefined,
-    };
-  }
-  return { message: `The formula parser said: ${raw}`, column };
+  if (raw.includes('Expected EOF')) return trailingProblem(source, column);
+  return null;
+};
+
+const explainExprError = (source: string, raw: string): ExprProblem => {
+  const column = columnOf(raw);
+  return plainProblem(source, raw)
+    ?? syntaxProblem(source, raw, column)
+    ?? { message: `The formula parser said: ${raw}`, column };
 };
 
 export { explainExprError };

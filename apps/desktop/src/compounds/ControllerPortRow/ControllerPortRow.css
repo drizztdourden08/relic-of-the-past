@@ -13,7 +13,7 @@
   font-weight: var(--weight-medium);
   color: var(--c-text);
   flex-shrink: 0;
-  width: 56px;
+  width: var(--size-56);
 }
 
 .controller-port-row__live {

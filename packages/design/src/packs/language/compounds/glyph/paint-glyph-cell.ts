@@ -2,15 +2,10 @@
 import { decode2bppTile } from '@rotp/asset-extraction';
 import { edgeAt, sheetHolds, topTileOf } from './glyph-cell-geometry';
 import { BOTTOM_TILE_STEP, CELL_H, CELL_W, RAMP_FILL, TILE_BYTES, TILE_SIDE } from './glyph.constants';
-import type { GlyphStore } from './glyph.type';
+import type { GlyphStore, TileJob } from './glyph.type';
 
-const paintTile = (
-  ctx: CanvasRenderingContext2D,
-  tiles: Uint8Array,
-  tileIndex: number,
-  rowOffset: number,
-  store: GlyphStore,
-): void => {
+const paintTile = (ctx: CanvasRenderingContext2D, store: GlyphStore, tile: TileJob): void => {
+  const { tiles, tileIndex, rowOffset } = tile;
   const pixels = decode2bppTile(tiles, tileIndex * TILE_BYTES);
 
   for (let y = 0; y < TILE_SIDE; y += 1) {
@@ -45,8 +40,8 @@ const paintGlyphCell = (
 
   ctx.clearRect(0, 0, store.width, store.height);
   const top = topTileOf(glyph);
-  paintTile(ctx, tiles, top, 0, store);
-  paintTile(ctx, tiles, top + BOTTOM_TILE_STEP, TILE_SIDE, store);
+  paintTile(ctx, store, { tiles, tileIndex: top, rowOffset: 0 });
+  paintTile(ctx, store, { tiles, tileIndex: top + BOTTOM_TILE_STEP, rowOffset: TILE_SIDE });
   return true;
 };
 

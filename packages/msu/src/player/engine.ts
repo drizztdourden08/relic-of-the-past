@@ -6,7 +6,11 @@ import type { ChannelReport, MsuChannelName } from './channel';
 import { SOUND_CHANNELS } from './sound-claim';
 import { applyFade, isFadeControl, MUSIC_FADE_OUT, MUSIC_FULL_VOLUME } from './fade';
 import { createTitleReset } from './title-reset';
-import type { MsuEngineOptions, TrackReport } from './engine.type';
+import { createEngineGains } from './engine-parts/create-engine-gains';
+import { reportTrack } from './engine-parts/report-track';
+import { restoreMsu } from './engine-parts/restore-msu';
+import { snapshotMsu } from './engine-parts/snapshot-msu';
+import type { MsuEngineOptions } from './engine.type';
 import { CHIP_ONLY_CONTROL_MASK } from './engine.constants';
 
 const createMsuEngine = (options: MsuEngineOptions) => {
@@ -16,24 +20,15 @@ const createMsuEngine = (options: MsuEngineOptions) => {
     onTrack, onAmbient,
   } = options;
 
-  const readSfxVolume = sfxVolume ?? musicVolume;
-  const readAmbientVolume = ambientVolume ?? musicVolume;
-  const musicGain = ctx.createGain();
-  const ambientGain = ctx.createGain();
-  const sfxGain = ctx.createGain();
-  musicGain.connect(destination);
-  ambientGain.connect(destination);
-  sfxGain.connect(destination);
-  musicGain.gain.value = musicVolume() / 100;
-  ambientGain.gain.value = readAmbientVolume() / 100;
-  sfxGain.gain.value = readSfxVolume() / 100;
+  const gains = createEngineGains(ctx, destination, {
+    music: musicVolume, ambient: ambientVolume ?? musicVolume, sfx: sfxVolume ?? musicVolume,
+  });
 
   const channels = buildChannels({
-    ctx, musicOut: musicGain, ambientOut: ambientGain, sfxOut: sfxGain, manifest, loadBytes,
+    ctx, musicOut: gains.musicGain, ambientOut: gains.ambientGain, sfxOut: gains.sfxGain, manifest, loadBytes,
     resumeEnabled, onError, onTrack, onAmbient,
   });
-  const music = channels.music;
-  const ambient = channels.ambient;
+  const { music, ambient } = channels;
   const all = [music, ambient, channels.sfx1, channels.sfx2];
   const titleReset = createTitleReset(channels, resetAtTitle, onReset);
 
@@ -66,47 +61,27 @@ const createMsuEngine = (options: MsuEngineOptions) => {
     channels[name].trigger(id, pan);
   };
 
-  const syncVolume = (): void => {
-    musicGain.gain.value = musicVolume() / 100;
-    ambientGain.gain.value = readAmbientVolume() / 100;
-    sfxGain.gain.value = readSfxVolume() / 100;
-  };
-
-  const snapshot = (): MsuResumeState | null => {
-    const track = music.snapshot();
-    if (!track) return null;
-    const bed = ambient.snapshot();
-    return {
-      trackNum: track.id,
-      layers: track.layers,
-      ambient: bed ? { soundId: bed.id, layers: bed.layers } : null,
-    };
-  };
-
-  const report = (): TrackReport | null => {
-    const state = music.report();
-    if (!state) return null;
-    return { trackNum: state.id, elapsedSeconds: state.elapsedSeconds, layers: state.layers };
-  };
-
   const reportChannel = (name: MsuChannelName): ChannelReport | null => channels[name].report();
-
-  const restore = (state: MsuResumeState | null): void => {
-    music.restore(state ? { id: state.trackNum, layers: state.layers } : null);
-    const savedBeforeBedsResumed = state?.ambient === undefined;
-    if (savedBeforeBedsResumed) return;
-    ambient.restore(state.ambient ? { id: state.ambient.soundId, layers: state.ambient.layers } : null);
-  };
 
   const stop = (): void => { all.forEach((channel) => channel.stop()); };
 
   const dispose = (): void => {
     all.forEach((channel) => channel.dispose());
-    musicGain.disconnect();
-    sfxGain.disconnect();
+    gains.disconnect();
   };
 
-  return { onMusicCtrl, onGameSound, isPlayingTrack, syncVolume, snapshot, report, reportChannel, restore, stop, dispose };
+  return {
+    onMusicCtrl,
+    onGameSound,
+    isPlayingTrack,
+    syncVolume: gains.sync,
+    snapshot: () => snapshotMsu(music, ambient),
+    report: () => reportTrack(music),
+    reportChannel,
+    restore: (state: MsuResumeState | null) => restoreMsu(music, ambient, state),
+    stop,
+    dispose,
+  };
 };
 
 export { createMsuEngine };

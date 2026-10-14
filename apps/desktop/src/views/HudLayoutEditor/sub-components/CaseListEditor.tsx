@@ -1,12 +1,11 @@
 /* @layer renderer-components @kind component */
 import { Button, Flex, IconButton, Text } from '@drizztdourden08/tessera/primitives';
+import { CaseBranch } from './CaseBranch';
 import { ExpressionInput } from './ExpressionInput';
-import { ReferenceField } from './ReferenceField';
 import { caseMatches, matchLabel } from '@app/hud-layout-editing/case-match';
 import { useInstanceScopes } from '@app/hud-layout-editing/formula-scope';
-import { nodeArtOf } from '@app/hud-layout-editing/node-art';
 import { placeholderChild } from '@app/hud-layout-editing/new-node';
-import type { HudNode, HudSwitchCase } from '@rotp/hud';
+import type { HudSwitchCase } from '@rotp/hud';
 import type { CaseListEditorProps } from './CaseListEditor.type';
 
 const move = <T,>(list: readonly T[], from: number, to: number): T[] => {
@@ -28,22 +27,6 @@ const CaseListEditor = (props: CaseListEditorProps) => {
     onChange({ cases: cases.map((c, at) => (at === i ? { ...c, ...patch } : c)) });
   };
 
-  const branch = (node: HudNode, label: string) => {
-    const art = nodeArtOf(node, glyphPacks);
-    return (
-      <ReferenceField
-        compact
-        action="go"
-        src={art.src}
-        placeholder={art.placeholder}
-        name={art.name}
-        kind={art.kind}
-        onOpen={() => onSelectNode(node.id)}
-        aria-label={`Go to ${label}: ${art.name}`}
-      />
-    );
-  };
-
   return (
     <Flex direction="column" gap="2xs" className="hud-case-list">
       {cases.map((c, i) => {
@@ -60,7 +43,7 @@ const CaseListEditor = (props: CaseListEditorProps) => {
               </Flex>
             </Flex>
             <ExpressionInput value={c.when} onChange={(when) => setCase(i, { when })} scope={scope} insideRepeat={insideRepeat} aria-label={`Case ${i + 1} condition`} />
-            {branch(c.node, `case ${i + 1}`)}
+            <CaseBranch node={c.node} label={`case ${i + 1}`} glyphPacks={glyphPacks} onSelectNode={onSelectNode} />
           </Flex>
         );
       })}
@@ -78,7 +61,7 @@ const CaseListEditor = (props: CaseListEditorProps) => {
         </Flex>
         {otherwise ? (
           <>
-            {branch(otherwise, 'otherwise')}
+            <CaseBranch node={otherwise} label="otherwise" glyphPacks={glyphPacks} onSelectNode={onSelectNode} />
             <Button variant="ghost" size="sm" onClick={() => onChange({ otherwise: undefined })}>remove</Button>
           </>
         ) : (

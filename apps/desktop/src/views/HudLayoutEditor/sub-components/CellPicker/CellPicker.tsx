@@ -5,7 +5,7 @@ import { useGridSolve } from '@app/hud-layout-editing/grid-solve';
 import { GridLattice, covers, occupantsOf, rowCountFor } from '../GridLattice';
 import { shortcutPropsOf } from '../SelectionLegend';
 import { useCellPick } from './behavior/useCellPick';
-import { CELL_PICK_KEYS } from './CellPicker.constants';
+import { CELL_PICK_KEYS, CELL_STEP } from './CellPicker.constants';
 import './CellPicker.css';
 import type { KeyboardEvent } from 'react';
 import type { CellRef, LatticeCellState } from '../GridLattice';
@@ -28,11 +28,7 @@ const CellPicker = (props: CellPickerProps) => {
   };
 
   const onKeyDown = (event: KeyboardEvent): void => {
-    const step: Record<string, CellRef> = {
-      ArrowLeft: { column: -1, row: 0 }, ArrowRight: { column: 1, row: 0 },
-      ArrowUp: { column: 0, row: -1 }, ArrowDown: { column: 0, row: 1 },
-    };
-    const move = step[event.key];
+    const move = CELL_STEP[event.key];
     if (!move) return;
     event.preventDefault();
     const next = {

@@ -5,7 +5,7 @@ import { describe, it, expect, beforeAll, afterAll, vi } from 'vitest';
 vi.hoisted(() => {
   const global = globalThis as { window?: { api?: unknown } };
   global.window ??= {};
-  const stub = (): unknown => new Proxy(async () => [], { get: (_target, key) => (key === 'then' ? undefined : stub()) });
+  const stub = (): unknown => new Proxy(() => Promise.resolve([]), { get: (_target, key) => (key === 'then' ? undefined : stub()) });
   global.window.api ??= stub();
 });
 

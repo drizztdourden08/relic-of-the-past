@@ -1,7 +1,9 @@
 /* @layer renderer-lib @kind logic */
 import type { InputBinding, ButtonIcon } from '@rotp/game-data';
 import { getButtonIconUrl } from '@app/input/button-icons/get-button-icon-url';
-import { keyCodeToIconId, AXIS_FALLBACK } from '@rotp/input-mapping';
+import { AXIS_FALLBACK } from '@rotp/input-mapping';
+import { iconKeyUrl } from './icon-key-url';
+import { keyboardIconUrl } from './keyboard-icon-url';
 
 const fallbackIconId = (binding: InputBinding): string | null => {
   if (binding.type === 'keyboard') return 'kb-any';
@@ -15,15 +17,10 @@ const fallbackIconId = (binding: InputBinding): string | null => {
 const getBindingIconUrl = (binding: InputBinding, icon?: ButtonIcon | null): string | null => {
   if (binding.type === 'none') return null;
   if (icon?.path) return icon.path;
-  if (icon?.key) {
-    const url = getButtonIconUrl(icon.key);
-    if (url) return url;
-  }
-  if (binding.type === 'keyboard') {
-    const iconId = keyCodeToIconId(binding.code);
-    const url = iconId ? getButtonIconUrl(iconId) : null;
-    if (url) return url;
-  }
+  const byKey = iconKeyUrl(icon);
+  if (byKey) return byKey;
+  const byKeyboard = keyboardIconUrl(binding);
+  if (byKeyboard) return byKeyboard;
   const fallback = fallbackIconId(binding);
   return fallback ? getButtonIconUrl(fallback) : null;
 };

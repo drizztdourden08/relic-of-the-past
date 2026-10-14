@@ -1,18 +1,18 @@
 /* @layer store-site @kind hook */
 import { useCallback, useMemo, useState } from 'react';
 import type { StoreItem } from '@rotp/hub-contracts';
-import { STORE_LIMITS, isInFlight } from '@rotp/hub-contracts';
+import { STORE_LIMITS } from '@rotp/hub-contracts';
 import { FIELD_MESSAGES } from '../Publish.constants';
 import type { PublishMode } from '../Publish.type';
 import { formErrors } from './form-errors';
+import { isUnchanged } from './is-unchanged';
 import { needsALook } from './needs-a-look';
+import { noteOf } from './note-of';
 import { useFieldErrors } from './useFieldErrors';
 import { useListingFields } from './useListingFields';
 import { usePack } from './usePack';
 import { usePicture } from './usePicture';
 import { usePublishSubmit } from './usePublishSubmit';
-
-const inFlight = (item: StoreItem) => item.versions.some(isInFlight);
 
 const usePublishForm = (mode: PublishMode, item: StoreItem | null) => {
   const pack = usePack(item?.kind ?? null);
@@ -29,8 +29,8 @@ const usePublishForm = (mode: PublishMode, item: StoreItem | null) => {
   );
   const fields = useFieldErrors(errors);
 
-  const note = mode === 'version' && item && inFlight(item) ? FIELD_MESSAGES.inFlight : null;
-  const unchanged = mode === 'listing' && Object.keys(listing.patch).length === 0 && !card.picture && !banner.picture;
+  const note = noteOf(mode, item);
+  const unchanged = isUnchanged({ mode, patch: listing.patch, card: card.picture, banner: banner.picture });
   const alertLine = useMemo(() => {
     if (fields.attempts === 0) return null;
     if (fields.count > 0) return needsALook(fields.count);
@@ -40,7 +40,7 @@ const usePublishForm = (mode: PublishMode, item: StoreItem | null) => {
   const submit = useCallback(() => {
     fields.attempt();
     if (note || fields.count > 0 || unchanged) return;
-    void sending.submit({
+    sending.submit({
       item,
       kind: item?.kind ?? pack.kind,
       text: listing.text,

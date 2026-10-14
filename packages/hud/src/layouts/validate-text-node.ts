@@ -6,6 +6,7 @@ import { ALIGN, FONT_FAMILIES, PAD, SPRITE_SETS, TEXT_KEYS } from './validate-te
 import type { Issues } from './validate-box';
 import type { HudTextFace, HudTextFormat, HudTextSpec } from '../types/hud-text';
 import type { Paint, Value } from '../types/hud-value';
+import type { TextPaintFragment, TextPaintParts } from './validate-text-node.type';
 
 const formatAt = (value: unknown, path: string, issues: Issues): HudTextFormat | undefined => {
   if (value === undefined) return undefined;
@@ -19,29 +20,33 @@ const formatAt = (value: unknown, path: string, issues: Issues): HudTextFormat |
   return { ...(digits !== undefined ? { digits } : {}), ...(pad ? { pad } : {}) };
 };
 
+const spriteFaceAt = (value: Record<string, unknown>, path: string, issues: Issues): HudTextFace | undefined => {
+  checkKeys(value, ['from', 'set'], path, issues);
+  if (typeof value.set !== 'string' || !(SPRITE_SETS as readonly string[]).includes(value.set)) {
+    issues.push(`${path}.set: expected one of ${SPRITE_SETS.join(', ')}, got ${JSON.stringify(value.set)}`);
+    return undefined;
+  }
+  return { from: 'sprite', set: value.set as 'hud-digits' | 'pause-letters' };
+};
+
+const fontFaceAt = (value: Record<string, unknown>, path: string, issues: Issues): HudTextFace | undefined => {
+  checkKeys(value, ['from', 'family', 'size', 'weight'], path, issues);
+  if (typeof value.family !== 'string' || !(FONT_FAMILIES as readonly string[]).includes(value.family)) {
+    issues.push(`${path}.family: expected one of ${FONT_FAMILIES.join(', ')}, got ${JSON.stringify(value.family)}`);
+    return undefined;
+  }
+  const size = numberAt(value.size, `${path}.size`, issues);
+  if (size === undefined || size <= 0) { issues.push(`${path}.size: must be greater than zero`); return undefined; }
+  const weight = numberAt(value.weight, `${path}.weight`, issues);
+  return {
+    from: 'font', family: value.family as 'game' | 'sans' | 'mono', size, ...(weight !== undefined ? { weight } : {}),
+  };
+};
+
 const faceAt = (value: unknown, path: string, issues: Issues): HudTextFace | undefined => {
   if (!isRecord(value)) { issues.push(`${path}: a text element needs a face`); return undefined; }
-  if (value.from === 'sprite') {
-    checkKeys(value, ['from', 'set'], path, issues);
-    if (typeof value.set !== 'string' || !(SPRITE_SETS as readonly string[]).includes(value.set)) {
-      issues.push(`${path}.set: expected one of ${SPRITE_SETS.join(', ')}, got ${JSON.stringify(value.set)}`);
-      return undefined;
-    }
-    return { from: 'sprite', set: value.set as 'hud-digits' | 'pause-letters' };
-  }
-  if (value.from === 'font') {
-    checkKeys(value, ['from', 'family', 'size', 'weight'], path, issues);
-    if (typeof value.family !== 'string' || !(FONT_FAMILIES as readonly string[]).includes(value.family)) {
-      issues.push(`${path}.family: expected one of ${FONT_FAMILIES.join(', ')}, got ${JSON.stringify(value.family)}`);
-      return undefined;
-    }
-    const size = numberAt(value.size, `${path}.size`, issues);
-    if (size === undefined || size <= 0) { issues.push(`${path}.size: must be greater than zero`); return undefined; }
-    const weight = value.weight !== undefined ? numberAt(value.weight, `${path}.weight`, issues) : undefined;
-    return {
-      from: 'font', family: value.family as 'game' | 'sans' | 'mono', size, ...(weight !== undefined ? { weight } : {}),
-    };
-  }
+  if (value.from === 'sprite') return spriteFaceAt(value, path, issues);
+  if (value.from === 'font') return fontFaceAt(value, path, issues);
   issues.push(`${path}.from: expected 'sprite' or 'font', got ${JSON.stringify(value.from)}`);
   return undefined;
 };
@@ -53,10 +58,17 @@ const strokeAt = (
   if (!isRecord(value)) { issues.push(`${path}: expected { width, color }`); return undefined; }
   checkKeys(value, ['width', 'color'], path, issues);
   const width = validateValue(value.width, `${path}.width`, issues, { insideRepeat });
-  const color = paintAt(value.color, `${path}.color`, issues, true, insideRepeat);
+  const color = paintAt(value.color, `${path}.color`, issues, { required: true, insideRepeat });
   if (width === undefined || color === undefined) return undefined;
   return { width, color };
 };
+
+const paintParts = ({ color, stroke, align, tracking }: TextPaintParts): TextPaintFragment => ({
+  ...(color !== undefined ? { color } : {}),
+  ...(stroke ? { stroke } : {}),
+  ...(align ? { align } : {}),
+  ...(tracking !== undefined ? { tracking } : {}),
+});
 
 const textSpec = (value: Record<string, unknown>, path: string, issues: Issues, insideRepeat = false): HudTextSpec | null => {
   checkKeys(value, TEXT_KEYS, path, issues);
@@ -69,19 +81,16 @@ const textSpec = (value: Record<string, unknown>, path: string, issues: Issues, 
   const format = formatAt(value.format, `${path}.format`, issues);
   const face = faceAt(value.face, `${path}.face`, issues);
   if (!face) return null;
-  const color = paintAt(value.color, `${path}.color`, issues, false, insideRepeat);
+  const color = paintAt(value.color, `${path}.color`, issues, { insideRepeat });
   const stroke = strokeAt(value.stroke, `${path}.stroke`, issues, insideRepeat);
   const align: 'start' | 'center' | 'end' | undefined = oneOf(value.align, ALIGN, `${path}.align`, issues);
-  const tracking = value.tracking !== undefined ? numberAt(value.tracking, `${path}.tracking`, issues) : undefined;
+  const tracking = numberAt(value.tracking, `${path}.tracking`, issues);
   return {
     type: 'text',
     value: textValue,
     ...(format && Object.keys(format).length ? { format } : {}),
     face,
-    ...(color !== undefined ? { color } : {}),
-    ...(stroke ? { stroke } : {}),
-    ...(align ? { align } : {}),
-    ...(tracking !== undefined ? { tracking } : {}),
+    ...paintParts({ color, stroke, align, tracking }),
   };
 };
 

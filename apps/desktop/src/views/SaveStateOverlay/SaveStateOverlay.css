@@ -67,7 +67,7 @@
   flex-direction: column;
   align-items: center;
   flex: 0 0 auto;
-  width: 144px;
+  width: calc(144 * var(--size-1));
 }
 
 .save-overlay__hints {
@@ -88,7 +88,7 @@
   background: var(--c-scrim);
   padding: var(--space-xs) var(--space-sm) var(--space-xs) var(--space-xs);
   border-radius: var(--radius-sm);
-  backdrop-filter: blur(4px);
+  backdrop-filter: blur(var(--size-4));
 }
 
 .save-overlay__hint--holding-save {
@@ -100,14 +100,14 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 22px;
-  height: 22px;
+  width: calc(22 * var(--size-1));
+  height: calc(22 * var(--size-1));
   flex-shrink: 0;
 }
 
 .save-overlay__hint-icon {
-  width: 18px;
-  height: 18px;
+  width: calc(18 * var(--size-1));
+  height: calc(18 * var(--size-1));
   object-fit: contain;
 }
 
@@ -117,7 +117,7 @@
   font-weight: var(--weight-semi);
   color: var(--c-text);
   background: var(--c-border-strong);
-  border: 1px solid var(--c-border-strong);
+  border: var(--border-width-thin) solid var(--c-border-strong);
   border-radius: var(--radius-sm);
   padding: var(--space-xs) var(--space-xs);
   line-height: 1.4;

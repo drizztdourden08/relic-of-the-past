@@ -21,10 +21,13 @@ import { LEGAL_TEXT } from './legal.constants';
 import { product } from './product';
 import type { AppSettings } from './settings.type';
 import './log-bus';
+import './hud/hud.css';
 import './theme/hud-layout-editor/hud-layout-editor.css';
 import './theme/data-manager/data-manager.css';
 import './theme/dialogue-editor/lines.css';
 import './theme/input-calibration/input-calibration.css';
+import './theme/msu-studio/msu-studio.css';
+import './theme/msu-studio/msu-files.css';
 
 installAppShim();
 

@@ -14,4 +14,20 @@ interface InstalledOriginProps {
   onUninstall: () => void;
 }
 
-export type { InstalledOriginProps };
+interface OriginFactsProps {
+  author: string;
+  semver: string;
+  license: string;
+  updateTo: string | null;
+}
+
+interface OriginActionsProps {
+  busy: boolean;
+  copyRefusal: string | null;
+  updateTo: string | null;
+  onDuplicate: () => void;
+  onUpdate: () => void;
+  onAskUninstall: () => void;
+}
+
+export type { InstalledOriginProps, OriginActionsProps, OriginFactsProps };

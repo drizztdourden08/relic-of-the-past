@@ -2,7 +2,7 @@
 import {
   afterEach, beforeEach, describe, expect, it, vi,
 } from 'vitest';
-import { RECORD_WRITERS } from '@app/views/DataInspector/behavior/record-writers';
+import { RECORD_WRITERS } from '@app/data-inspector/record-writers';
 
 const baseTag = {
   id: 'tag-999',

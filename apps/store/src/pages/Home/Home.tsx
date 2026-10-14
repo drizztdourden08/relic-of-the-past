@@ -3,12 +3,12 @@ import { Stack, Text } from '@drizztdourden08/tessera/primitives';
 import type { ItemCardView } from '@rotp/hub-contracts';
 import { SettingsPage } from '@drizztdourden08/tessera/composites';
 import { useSectionHeading, useSessionContext } from '@rotp/design';
-import { FeaturedHero } from '../../components/FeaturedHero/FeaturedHero';
 import { Shelf } from '../../components/Shelf/Shelf';
 import { itemPath } from '../../catalog/item-paths';
 import { formatCount } from '../../format-count';
 import { KIND_PLURALS, KIND_SECTIONS } from '../../kinds';
 import { useHome } from './behavior/useHome';
+import { FeaturedCarousel } from './sub-components/FeaturedCarousel';
 import { PublishAction } from './sub-components/PublishAction';
 import { Welcome } from './sub-components/Welcome';
 import './Home.css';
@@ -27,7 +27,7 @@ const Home = () => {
         {loading && <Text as="p" variant="caption">Loading the Hookshop...</Text>}
         {home && (
           <>
-            <FeaturedHero items={home.featured} itemPath={itemPath} />
+            <FeaturedCarousel items={home.featured} itemPath={itemPath} />
             <Shelf title="Popular this month" lead="by installs in the last 30 days" items={home.popular} itemPath={itemPath} extraOf={monthlyInstalls} seeAll="/browse" />
             <Shelf title="Top rated" lead="weighted by the number of ratings" items={home.topRated} itemPath={itemPath} seeAll="/browse" />
             <Shelf title="New and updated" lead="the latest approved versions" items={home.fresh} itemPath={itemPath} seeAll="/browse" />

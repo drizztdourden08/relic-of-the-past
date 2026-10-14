@@ -13,7 +13,7 @@ const selectionBounds = (
       return selection.axis === 'columns'
         ? { c0: Math.min(...selection.indices) + 1, c1: Math.max(...selection.indices) + 1, r0: 1, r1: rows }
         : { c0: 1, c1: columns, r0: Math.min(...selection.indices) + 1, r1: Math.max(...selection.indices) + 1 };
-    default:
+    case 'none':
       return null;
   }
 };

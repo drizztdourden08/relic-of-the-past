@@ -18,7 +18,7 @@ const useOutlineScroll = (input: UseOutlineScrollInput): OutlineScroll => {
     if (ancestors.length > 0) expandNodeIds(ancestors);
     if (fromOutline) return;
     const raf = requestAnimationFrame(() => {
-      rowElements.current?.get(selectedId)?.scrollIntoView({ block: 'center' });
+      rowElements.current.get(selectedId)?.scrollIntoView({ block: 'center' });
     });
     return () => cancelAnimationFrame(raf);
   }, [doc, expandNodeIds, rowElements, selectedId]);

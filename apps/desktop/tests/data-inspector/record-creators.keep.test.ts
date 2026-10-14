@@ -3,8 +3,8 @@ import {
   afterEach, beforeEach, describe, expect, it, vi,
 } from 'vitest';
 import { all } from '@rotp/game-data';
-import { RECORD_CREATORS } from '@app/views/DataInspector/behavior/record-creators';
-import { COLLECTION_SOURCES } from '@app/views/DataInspector/behavior/collection-sources';
+import { RECORD_CREATORS } from '@app/data-inspector/record-creators';
+import { COLLECTION_SOURCES } from '@app/data-inspector/collection-sources';
 import { resolveIdRefOptionsFor } from '@app/views/DataInspector/behavior/id-ref-options';
 import { required } from '../required';
 

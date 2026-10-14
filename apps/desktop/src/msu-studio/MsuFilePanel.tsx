@@ -1,61 +1,19 @@
 /* @layer renderer-components @kind component */
-import { useCallback, useMemo, useState } from 'react';
-import { Box, Checkbox, DropZone, EmptyState, Field, SectionHeader, Text, TextInput } from '@drizztdourden08/tessera/primitives';
-import { formatBytes } from '@drizztdourden08/brock-core';
-import { FileRow } from './FileRow';
+import { useState } from 'react';
+import { Box, SectionHeader } from '@drizztdourden08/tessera/primitives';
+import { FileControls } from './FileControls';
+import { FileList } from './FileList';
 import { PackSummary } from './PackSummary';
 import { OptimizeDialog } from './OptimizeDialog';
-import { useFileAudition } from './behavior/useFileAudition';
-import { useFilePanel } from './behavior/useFilePanel';
-import { useFileUsage } from './behavior/useFileUsage';
-import { useSupersededFiles } from './behavior/useSupersededFiles';
-import { AUDIO_ACCEPT, AUDIO_ACCEPT_HINT } from './msu.constants';
-import { COLUMNS, EMPTY_PACK, NO_USES } from './MsuFilePanel.constants';
+import { useFilePanelModel } from './behavior/useFilePanelModel';
+import { EMPTY_PACK } from './MsuFilePanel.constants';
 import type { MsuFilePanelProps } from './MsuFilePanel.type';
 
 const MsuFilePanel = (props: MsuFilePanelProps) => {
-  const { pack, manifest, saveBase, files, readOnly, onDeleteConfirm, onReload } = props;
-  const panel = useFilePanel({ pack, files, saveBase, reload: onReload });
-  const audition = useFileAudition(pack, files);
-  const usage = useFileUsage(manifest);
-  const covered = useSupersededFiles({ pack, files, saveBase, reload: onReload });
-  const { metadata, rows, deleteFile, report } = panel;
-  const [supersededOnly, setSupersededOnly] = useState(false);
+  const { pack, readOnly, onReload } = props;
+  const model = useFilePanelModel(props);
+  const { panel, covered, usage, supersededOnly } = model;
   const [optimizing, setOptimizing] = useState(false);
-
-  const unusedCount = useMemo(
-    () => metadata.filter((file) => !usage.has(file.name)).length,
-    [metadata, usage],
-  );
-
-  const shown = useMemo(
-    () => (supersededOnly ? rows.filter((file) => covered.superseded.has(file.name)) : rows),
-    [rows, supersededOnly, covered.superseded],
-  );
-
-  const confirmDelete = useCallback((fileName: string) => {
-    const uses = usage.get(fileName) ?? NO_USES;
-    const played = uses.length > 0 ? ` ${uses.join(', ')} will be left with nothing to play.` : '';
-    onDeleteConfirm(
-      'Delete Audio File',
-      `Delete "${fileName}" from this pack? This cannot be undone.${played}`,
-      () => { deleteFile(fileName); },
-    );
-  }, [usage, onDeleteConfirm, deleteFile]);
-
-  const confirmRemoveSuperseded = useCallback(() => {
-    const doomed = [...covered.superseded];
-    const stillNamed = doomed.filter((name) => (usage.get(name) ?? NO_USES).length > 0);
-    const played = stillNamed.length > 0
-      ? ` ${stillNamed.length} of them ${stillNamed.length === 1 ? 'is' : 'are'} still named by a slot or sound, which will play the converted file instead.`
-      : '';
-    onDeleteConfirm(
-      'Remove Superseded Originals',
-      `Delete ${doomed.length} original file${doomed.length === 1 ? '' : 's'} the pack already holds in the`
-      + ` converted format? This frees ${formatBytes(covered.totalBytes)} and cannot be undone.${played}`,
-      () => { void covered.removeAll().then(report); },
-    );
-  }, [covered, usage, onDeleteConfirm, report]);
 
   return (
     <Box className="msu-panel">
@@ -65,86 +23,39 @@ const MsuFilePanel = (props: MsuFilePanelProps) => {
       />
 
       <PackSummary
-        fileCount={metadata.length}
+        fileCount={panel.metadata.length}
         totalSize={panel.totalSize}
         formats={panel.formats}
-        unusedCount={unusedCount}
+        unusedCount={model.unusedCount}
         supersededCount={covered.count}
         supersededBytes={covered.totalBytes}
-        optimizeBlockedBecause={metadata.length === 0 ? EMPTY_PACK : null}
+        optimizeBlockedBecause={panel.metadata.length === 0 ? EMPTY_PACK : null}
         busy={panel.busy || covered.removing || readOnly}
         onOptimize={() => setOptimizing(true)}
-        onRemoveSuperseded={confirmRemoveSuperseded}
+        onRemoveSuperseded={model.confirmRemoveSuperseded}
       />
 
-      <DropZone
-        accept={AUDIO_ACCEPT}
-        label="Drop audio here to add it to the pack"
-        hint={AUDIO_ACCEPT_HINT}
-        disabled={panel.busy || readOnly}
-        onDrop={panel.handleUpload}
+      <FileControls
+        panel={panel}
+        coveredCount={covered.count}
+        supersededOnly={supersededOnly}
+        readOnly={readOnly}
+        onSupersededOnlyChange={model.setSupersededOnly}
       />
 
-      <Field label="Find a file" hint="Matches the name, or a format on its own.">
-        <TextInput
-          type="text"
-          placeholder="intro, pcm..."
-          value={panel.filter}
-          onChange={(event) => panel.setFilter(event.target.value)}
-        />
-      </Field>
-
-      {covered.count > 0 && (
-        <Checkbox
-          checked={supersededOnly}
-          label={`Superseded originals only (${covered.count})`}
-          onChange={setSupersededOnly}
-        />
-      )}
-
-      {panel.statusMessage != null && (
-        <Text className={`msu-status${panel.statusOk ? '' : ' msu-status--error'}`}>
-          {panel.statusMessage}
-        </Text>
-      )}
-
-      {!panel.ready ? null : shown.length === 0 ? (
-        <EmptyState message={metadata.length === 0
-          ? 'This pack has no audio yet. Drop some in above'
-          : supersededOnly
-            ? 'No superseded original matches this filter'
-            : `No file matches "${panel.filter}"`}
-        />
-      ) : (
-        <Box className="msu-file-grid">
-          <Box className="msu-file-grid__head" aria-hidden>
-            {COLUMNS.map((label, index) => (
-              <Text key={label === '' ? `actions-${index}` : label} className="msu-file-grid__label">
-                {label}
-              </Text>
-            ))}
-          </Box>
-
-          <Box className="msu-file-grid__body">
-            {shown.map((file) => (
-              <FileRow
-                key={file.name}
-                file={file}
-                usedBy={usage.get(file.name) ?? NO_USES}
-                loopSeconds={audition.loopOf(file.name)}
-                playing={audition.playing === file.name}
-                loading={audition.loading === file.name}
-                audition={audition.playing === file.name ? audition.audition : null}
-                busy={panel.busy}
-                readOnly={readOnly}
-                onPlay={audition.toggle}
-                onRename={panel.renameFile}
-                onDelete={confirmDelete}
-              />
-            ))}
-          </Box>
-        </Box>
-      )}
+      <FileList
+        ready={panel.ready}
+        shown={model.shown}
+        fileCount={panel.metadata.length}
+        supersededOnly={supersededOnly}
+        filter={panel.filter}
+        usage={usage}
+        audition={model.audition}
+        busy={panel.busy}
+        readOnly={readOnly}
+        onRename={panel.renameFile}
+        onDelete={model.confirmDelete}
+      />
 
       <OptimizeDialog
         open={optimizing}

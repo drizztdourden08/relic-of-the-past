@@ -14,10 +14,16 @@ interface SpriteDebugProps {
   romFile: string;
 }
 
+interface UseReviewDataParams {
+  load: () => Promise<Record<string, unknown>>;
+  save: (data: ReviewData) => Promise<unknown>;
+}
+
 export type {
   ReviewStatus,
   ReviewMode,
   ReviewEntry,
   ReviewData,
   SpriteDebugProps,
+  UseReviewDataParams,
 };

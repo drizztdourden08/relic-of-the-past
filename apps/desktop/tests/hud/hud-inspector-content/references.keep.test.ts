@@ -3,7 +3,7 @@
 import { describe, expect, it, vi } from 'vitest';
 
 vi.hoisted(() => {
-  const stub = (): unknown => new Proxy(async () => [], { get: (_target, key) => (key === 'then' ? undefined : stub()) });
+  const stub = (): unknown => new Proxy(() => Promise.resolve([]), { get: (_target, key) => (key === 'then' ? undefined : stub()) });
   const anything = stub();
   const global = globalThis as { window?: { api?: unknown }; ResizeObserver?: unknown };
   global.window ??= {};
@@ -16,6 +16,9 @@ vi.hoisted(() => {
 });
 
 import { createElement as h } from 'react';
+import { renderToStaticMarkup } from 'react-dom/server';
+import { Icon } from '@drizztdourden08/tessera/primitives';
+import type { IconName } from '@drizztdourden08/tessera/primitives';
 import { nodeArtOf } from '@app/hud-layout-editing/node-art';
 import { ButtonStateRow } from '@app/views/HudLayoutEditor/sub-components/ButtonStateRow';
 import { GlyphContent } from '@app/views/HudLayoutEditor/sub-components/GlyphContent';
@@ -24,8 +27,15 @@ import type { HudNode } from '@rotp/hud';
 import { PACKS, SCOPE } from './content-fixtures.constants';
 import { installDomHarness } from './install-dom-harness';
 import { roundTrips } from './round-trips';
+import { required } from '../../required';
 
 const { mount, one, click } = installDomHarness();
+
+const iconBody = (name: IconName): string => {
+  const probe = document.createElement('div');
+  probe.innerHTML = renderToStaticMarkup(h(Icon, { name, size: 12 }));
+  return required(probe.querySelector('svg'), `the ${name} icon`).innerHTML;
+};
 
 describe('a reference shows the referent, and picking one round-trips', () => {
   it('draws a glyph as its artwork and writes back what the grid picked', () => {
@@ -76,7 +86,8 @@ describe('a reference shows the referent, and picking one round-trips', () => {
       onChange: () => {}, scope: SCOPE, glyphPacks: PACKS,
       onSelectNode: (id: string) => jumped.push(id),
     } as never));
-    expect(one('.hud-ref-field .hud-ref-field__caret').textContent).toBe('↗');
+    const caret = required(one('.hud-ref-field .hud-ref-field__caret').querySelector('svg'), 'the caret icon');
+    expect(caret.innerHTML).toBe(iconBody('external-link'));
     click('.hud-ref-field');
     expect(jumped).toEqual(['sprite-3f21']);
   });

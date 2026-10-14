@@ -49,8 +49,8 @@
 .hud-outline__caret,
 .hud-outline__caret-spacer {
   flex: none;
-  width: 20px;
-  height: 20px;
+  width: var(--size-20);
+  height: var(--size-20);
 }
 
 .hud-outline__caret {

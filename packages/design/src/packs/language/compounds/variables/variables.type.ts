@@ -10,6 +10,15 @@ type VariableRowProps = {
   onRemove?: (key: string) => void;
 };
 
+type VariableValueProps = {
+  variable: Variable;
+  onChangeValue?: (variable: Variable, value: string) => void;
+};
+
+type AddTermFormProps = {
+  onAddTerm: (term: GlossaryTerm) => void;
+};
+
 type VariablesTableProps = {
   variables: Variable[];
   rows: Variable[];
@@ -24,4 +33,4 @@ type VariablesTableProps = {
   onFindHardcoded?: () => void;
 };
 
-export type { VariableFilter, VariableRowProps, VariablesTableProps };
+export type { AddTermFormProps, VariableFilter, VariableRowProps, VariableValueProps, VariablesTableProps };

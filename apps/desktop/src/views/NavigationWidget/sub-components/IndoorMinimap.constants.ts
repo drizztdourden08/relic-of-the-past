@@ -1,0 +1,18 @@
+/* @layer renderer-widgets @kind constants */
+const EDGE_PAD = 18;
+const AVAIL = 224;
+const MAP_SIZE = AVAIL - EDGE_PAD * 2;
+const BORDER_W = 1;
+const MAP_LEFT = EDGE_PAD;
+const MAP_TOP = EDGE_PAD;
+const FRAME_LEFT = MAP_LEFT - BORDER_W;
+const FRAME_TOP = MAP_TOP - BORDER_W;
+const BADGE = 14;
+const TILE_COUNT = 64;
+const MIN_MARKER = 6;
+const SCROLL_SEAM = 31;
+const MARKER_SIZE = Math.max(MIN_MARKER, MAP_SIZE * 4 / TILE_COUNT);
+
+export {
+  AVAIL, BADGE, BORDER_W, EDGE_PAD, FRAME_LEFT, FRAME_TOP, MAP_LEFT, MAP_SIZE, MAP_TOP, MARKER_SIZE, MIN_MARKER, SCROLL_SEAM, TILE_COUNT,
+};

@@ -6,11 +6,12 @@ import type { ChoiceOption } from '../../ChoicePopover.type';
 import { BOTTLE_NOTICE } from '../ItemsTab.constants';
 import { isRemoval } from '../behavior/is-removal';
 import { slotValueOf } from '../behavior/slot-value-of';
-import type { SlotSpec, SlotWrite, TierListProps, TierOption } from '../ItemsTab.type';
+import type { OptionParams, TierListProps } from '../ItemsTab.type';
 
 const hexOf = (id: number): string => `0x${id.toString(16).padStart(2, '0')}`;
 
-const optionOf = (spec: SlotSpec, tier: TierOption, current: number, spritesBase: string, write: (w: SlotWrite) => void): ChoiceOption => {
+const optionOf = (params: OptionParams): ChoiceOption => {
+  const { spec, tier, current, spritesBase, write } = params;
   const base = {
     key: String(tier.value),
     sprite: tier.sprite ? `${spritesBase}${tier.sprite}.png` : null,
@@ -44,7 +45,7 @@ const TierList = ({ open, spritesBase, write, onClose }: TierListProps) => {
     const held = spec.tiers.find((tier) => tier.value === current) ?? spec.tiers.find((tier) => tier.value > 0);
     return {
       title: held?.label ?? spec.nameKey,
-      options: spec.tiers.map((tier) => optionOf(spec, tier, current, spritesBase, write)),
+      options: spec.tiers.map((tier) => optionOf({ spec, tier, current, spritesBase, write })),
     };
   }, [spec, current, spritesBase, write]);
 

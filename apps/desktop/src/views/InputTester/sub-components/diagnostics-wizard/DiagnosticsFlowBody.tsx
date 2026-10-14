@@ -1,63 +1,18 @@
 /* @layer renderer-components @kind component */
 import { Box } from '@drizztdourden08/tessera/primitives';
 import type { DiagnosticsFlowBodyProps } from './diagnostics-wizard.type';
-import { IntroStep } from './sub-components/IntroStep';
-import { ChooseControllerStep } from './sub-components/ChooseControllerStep';
-import { ByteCaptureStep } from './sub-components/ByteCaptureStep';
-import { PositionalCaptureStep } from './sub-components/PositionalCaptureStep';
-import { SummaryStep } from './sub-components/SummaryStep';
+import { layoutDeviceName } from './behavior/layout-device-name';
+import { FlowStep } from './sub-components/FlowStep';
 import { LayoutCaptureOverlay } from './sub-components/LayoutCaptureOverlay';
+import './DiagnosticsFlowBody.css';
 
 const DiagnosticsFlowBody = (props: DiagnosticsFlowBodyProps) => {
-  const { wizard, wizardRef, onCapturedCountChange } = props;
+  const { wizard } = props;
 
   return (
     <Box className="diagnostics-wizard__body">
-      <LayoutCaptureOverlay
-        stage={wizard.layoutStage}
-        deviceName={wizard.capturedLayout?.resolved.name ?? wizard.selectedChooser?.name ?? wizard.selectedChooser?.product ?? 'controller'}
-      />
-      {wizard.step === 'intro' && <IntroStep releaseStatus={wizard.releaseStatus} />}
-      {wizard.step === 'choose-controller' && (
-        <ChooseControllerStep
-          devices={wizard.chooserDevices}
-          addedNames={wizard.addedNames}
-          selectedDeviceKey={wizard.deviceKey}
-          onSelect={wizard.setDeviceKey}
-          selectedEntry={wizard.selectedChooser}
-          mapping={wizard.mapping}
-          profile={wizard.profile}
-        />
-      )}
-      {wizard.step === 'byte-capture' && (
-        <ByteCaptureStep
-          ref={wizardRef}
-          releaseStatus={wizard.releaseStatus}
-          deviceKey={wizard.deviceKey}
-          initialProfile={wizard.capturedProfile}
-          capturedEntry={wizard.capturedLayout?.entry}
-          initialProfileId={wizard.capturedProfile?.id ?? wizard.profile?.id}
-          initialHasGyro={wizard.hasGyro}
-          onCapturedCountChange={onCapturedCountChange}
-          onComplete={wizard.handleByteCaptureComplete}
-          onCancel={wizard.goBack}
-        />
-      )}
-      {wizard.step === 'positional-capture' && (
-        <PositionalCaptureStep
-          restoreStatus={wizard.restoreStatus}
-          deviceKey={wizard.deviceKey}
-          resolvedDevice={wizard.resolvedDevice}
-          onRecordsChange={wizard.handleRecordsChange}
-        />
-      )}
-      {wizard.step === 'summary' && (
-        <SummaryStep
-          byteCapture={wizard.byteCapture}
-          hasByteCapability={wizard.hasByteCapability}
-          positionalRecords={wizard.positionalRecords}
-        />
-      )}
+      <LayoutCaptureOverlay stage={wizard.layoutStage} deviceName={layoutDeviceName(wizard)} />
+      <FlowStep {...props} />
     </Box>
   );
 };

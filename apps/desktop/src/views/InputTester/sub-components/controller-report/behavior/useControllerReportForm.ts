@@ -6,8 +6,10 @@ import { useReportContext } from '@app/hooks/useReportContext';
 import { useHubSessionStore } from '@app/stores/hub-session';
 import { EMAIL_RE } from '../controller-report.constants';
 import type { FiledControllerReport, ReportStep, SubmitStatus } from '../controller-report.type';
+import { buildReportRequest } from './build-report-request';
 import { useDetectionContext } from './useDetectionContext';
 import { useReportDiagnostics } from './useReportDiagnostics';
+import { useReportFields } from './useReportFields';
 
 const useControllerReportForm = (deviceKey: string) => {
   const me = useHubSessionStore((s) => s.me);
@@ -15,10 +17,7 @@ const useControllerReportForm = (deviceKey: string) => {
   const { subject: subjectPrefix, context } = useReportContext();
 
   const [step, setStep] = useState<ReportStep>('about');
-  const [email, setEmailValue] = useState('');
-  const [emailTouched, setEmailTouched] = useState(false);
-  const [name, setName] = useState('');
-  const [additionalInfo, setAdditionalInfo] = useState('');
+  const { email, setEmail, emailTouched, name, setName, additionalInfo, setAdditionalInfo, resetFields } = useReportFields();
   const [status, setStatus] = useState<SubmitStatus>('idle');
   const [filed, setFiled] = useState<FiledControllerReport | null>(null);
 
@@ -32,11 +31,6 @@ const useControllerReportForm = (deviceKey: string) => {
 
   useEffect(() => { void refreshSession(); }, [refreshSession]);
 
-  const setEmail = useCallback((value: string) => {
-    setEmailValue(value);
-    setEmailTouched(true);
-  }, []);
-
   const emailValid = EMAIL_RE.test(email);
   const identityReady = me !== null || emailValid;
   const canLeaveUserInfo = identityReady;
@@ -47,33 +41,13 @@ const useControllerReportForm = (deviceKey: string) => {
   const backToDiagnostics = useCallback(() => setStep('diagnostics'), []);
 
   const submit = useCallback(async () => {
-    if (!canSubmit || !calibrationMap || debugText === null) return;
+    if (!canSubmit) return;
     setStatus('submitting');
     try {
-      const result = await requireHostApi().submitSanctuaryReport({
-        request: {
-          kind: 'controller',
-          subject: `${subjectPrefix}Controller ${detection.detectedName} (${detection.vendorId}:${detection.productId})`,
-          description: [
-            !me && name.trim() ? `Reported by: ${name.trim()}` : null,
-            additionalInfo.trim() || 'No additional info provided.',
-          ].filter(Boolean).join('\n\n'),
-          debugInfo: debugText,
-          context,
-          contactEmail: me ? null : email.trim(),
-          controllerReport: {
-            detectedName: detection.detectedName,
-            sdlMatch: detection.sdlMatch,
-            inputApi: detection.inputApi,
-            vendorId: detection.vendorId,
-            productId: detection.productId,
-            hidReport: detection.hidReport,
-            calibrationMap: JSON.stringify(calibrationMap, null, 2),
-            ...(positionalRecords.length > 0 && { positionalCapture: JSON.stringify(positionalRecords, null, 2) }),
-            ...(diagnosticsReport && { diagnosticsReport: JSON.stringify(diagnosticsReport, null, 2) }),
-          },
-        },
+      const request = buildReportRequest({
+        subjectPrefix, context, me, name, email, additionalInfo, detection, debugText, calibrationMap, positionalRecords, diagnosticsReport,
       });
+      const result = await requireHostApi().submitSanctuaryReport({ request });
       if (!('reportId' in result)) {
         setStatus('error');
         return;
@@ -87,14 +61,11 @@ const useControllerReportForm = (deviceKey: string) => {
 
   const reset = useCallback(() => {
     setStep('about');
-    setEmailValue('');
-    setEmailTouched(false);
-    setName('');
-    setAdditionalInfo('');
+    resetFields();
     setStatus('idle');
     setFiled(null);
     wizard.restart();
-  }, [wizard]);
+  }, [wizard, resetFields]);
 
   return {
     step, goToStep, finishDiagnostics, backToDiagnostics, wizard,

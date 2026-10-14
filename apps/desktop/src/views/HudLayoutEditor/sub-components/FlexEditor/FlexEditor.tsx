@@ -1,15 +1,17 @@
 /* @layer renderer-components @kind component */
-import { useCallback, useEffect, useMemo } from 'react';
+import { useCallback } from 'react';
 import { Box } from '@drizztdourden08/tessera/primitives';
-import { useHudEditorViewStore } from '@app/stores/hud-editor-view-store';
 import { capOf, runnerFor } from '@app/hud-layout-editing/action-keys';
 import { useFlexSlots } from '@app/hud-layout-editing/flex-slots';
 import { SelectionLegend } from '../SelectionLegend';
 import { SelectionToolbar } from '../SelectionToolbar';
+import { cellsOf } from './behavior/cells-of';
 import { chipOf } from './behavior/chip-of';
 import { contextualActions } from './behavior/contextual-actions';
+import { KEY_STEP } from './behavior/flex-keys.constants';
 import { flexActions } from './behavior/flex-actions';
 import { statusOf } from './behavior/status-of';
+import { useFlexEcho } from './behavior/useFlexEcho';
 import { useFlexSelection } from './behavior/useFlexSelection';
 import { FlexStrip } from './sub-components/FlexStrip';
 import './FlexEditor.css';
@@ -18,10 +20,8 @@ import type { FlexActionContext, FlexEditorProps } from './FlexEditor.type';
 
 const FlexEditor = (props: FlexEditorProps) => {
   const { container, onDrop } = props;
-  const setFlexEcho = useHudEditorViewStore((s) => s.setFlexEcho);
   const slots = useFlexSlots(container);
   const flex = useFlexSelection(container.id, container.children.length);
-  const horizontal = container.direction === 'row';
 
   const move = useCallback((from: number, to: number): void => {
     const id = container.children[from]?.id;
@@ -36,24 +36,7 @@ const FlexEditor = (props: FlexEditorProps) => {
     edits: { move, setSelection: flex.select, refuse: flex.refuse },
   };
   const actions = flexActions(ctx);
-
-  const echo = useMemo(() => {
-    if (flex.selection.kind !== 'items') return null;
-    const ids = flex.selection.indices
-      .map((index) => container.children[index]?.id)
-      .filter((id): id is string => id !== undefined);
-    return ids.length > 0 ? { containerId: container.id, childIds: ids } : null;
-  }, [container, flex.selection]);
-  useEffect(() => {
-    setFlexEcho(echo);
-    return () => setFlexEcho(null);
-  }, [echo, setFlexEcho]);
-
-  const cells = container.children.map((child, index) => ({
-    id: child.id,
-    weight: horizontal ? (slots[index]?.w ?? 0) : (slots[index]?.h ?? 0),
-    selected: flex.selection.kind === 'items' && flex.selection.indices.includes(index),
-  }));
+  useFlexEcho(container, flex.selection);
 
   const onKeyDown = (event: KeyboardEvent): void => {
     const cap = capOf(event);
@@ -64,7 +47,7 @@ const FlexEditor = (props: FlexEditorProps) => {
       event.preventDefault();
       return;
     }
-    const step = cap === 'left' || cap === 'up' ? -1 : (cap === 'right' || cap === 'down' ? 1 : 0);
+    const step = KEY_STEP[cap] ?? 0;
     if (step === 0) return;
     const next = Math.min(Math.max(flex.cursor + step, 0), Math.max(container.children.length - 1, 0));
     flex.setCursor(next);
@@ -80,7 +63,7 @@ const FlexEditor = (props: FlexEditorProps) => {
         hint="select a child to reorder it"
       />
       <FlexStrip
-        cells={cells}
+        cells={cellsOf(container, slots, flex.selection)}
         direction={container.direction}
         wrap={container.wrap === true}
         cursor={flex.cursor}

@@ -11,15 +11,23 @@ const checkKeys = (patch: RandomizerConnectionPatch): void => {
   if (foreign.length > 0) refuse(`${foreign.join(', ')} cannot change after creation`);
 };
 
-const checkValues = (patch: RandomizerConnectionPatch): void => {
+const checkTextValues = (patch: RandomizerConnectionPatch): void => {
   for (const key of TEXT_KEYS) {
     const value = patch[key];
     if (value !== undefined && (typeof value !== 'string' || value.trim() === '')) refuse(`${key} is empty`);
   }
+};
+
+const checkFlagValues = (patch: RandomizerConnectionPatch): void => {
   for (const key of FLAG_KEYS) {
     const value = patch[key];
     if (value !== undefined && typeof value !== 'boolean') refuse(`${key} is not on or off`);
   }
+};
+
+const checkValues = (patch: RandomizerConnectionPatch): void => {
+  checkTextValues(patch);
+  checkFlagValues(patch);
   const { password } = patch;
   if (password !== undefined && password !== null && typeof password !== 'string') refuse('password is not text');
 };

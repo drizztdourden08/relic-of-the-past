@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind style */
 .assigned-controller {
-  border: 1px solid var(--c-border);
+  border: var(--border-width-thin) solid var(--c-border);
   border-radius: var(--radius-md);
   background: var(--c-surface);
   overflow: hidden;
@@ -18,14 +18,14 @@
   justify-content: space-between;
   padding: var(--space-sm) var(--space-md);
   background: var(--c-surface);
-  border-bottom: 1px solid var(--c-border);
+  border-bottom: var(--border-width-thin) solid var(--c-border);
 }
 
 .assigned-controller__label {
   font-size: var(--text-sm);
   font-weight: var(--weight-semi);
   text-transform: uppercase;
-  letter-spacing: 0.5px;
+  letter-spacing: calc(0.5 * var(--size-1));
   color: var(--c-text-dim);
 }
 
@@ -37,26 +37,26 @@
 }
 
 .assigned-controller__status-dot {
-  width: 8px;
-  height: 8px;
+  width: var(--size-8);
+  height: var(--size-8);
   border-radius: 50%;
   flex-shrink: 0;
 }
 
 .assigned-controller__status--connected {
   background: var(--c-secondary-bright);
-  box-shadow: 0 0 6px var(--c-secondary);
+  box-shadow: 0 0 var(--size-6) var(--c-secondary);
 }
 
 .assigned-controller__status--detected {
   background: var(--c-warning);
-  box-shadow: 0 0 6px var(--c-warning);
+  box-shadow: 0 0 var(--size-6) var(--c-warning);
   animation: pulse-assigned 2s ease-in-out infinite;
 }
 
 .assigned-controller__status--disconnected {
   background: var(--c-danger);
-  box-shadow: 0 0 6px var(--c-danger);
+  box-shadow: 0 0 var(--size-6) var(--c-danger);
 }
 
 @keyframes pulse-assigned {
@@ -65,10 +65,12 @@
 }
 
 .assigned-controller__icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
   font-size: var(--text-xl);
   flex-shrink: 0;
-  width: 28px;
-  text-align: center;
+  width: var(--size-28);
 }
 
 .assigned-controller__info {
@@ -90,5 +92,5 @@
 .assigned-controller__detail {
   font-size: var(--text-sm);
   color: var(--c-text-muted);
-  font-family: monospace;
+  font-family: var(--font-mono);
 }

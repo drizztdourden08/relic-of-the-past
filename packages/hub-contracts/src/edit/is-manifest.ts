@@ -1,10 +1,8 @@
 /* @layer shared-storage @kind logic */
 import type { MsuPackManifest } from '@rotp/game-data';
+import { isRecord } from '../validation/is-record';
 
-const isManifest = (value: unknown): value is MsuPackManifest => {
-  if (typeof value !== 'object' || value === null) return false;
-  const m = value as MsuPackManifest;
-  return m.version === 1 && Boolean(m.meta) && Array.isArray(m.tracks);
-};
+const isManifest = (value: unknown): value is MsuPackManifest =>
+  isRecord(value) && value.version === 1 && Boolean(value.meta) && Array.isArray(value.tracks);
 
 export { isManifest };

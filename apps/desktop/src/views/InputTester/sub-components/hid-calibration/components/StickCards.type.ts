@@ -22,4 +22,35 @@ interface StickCardProps extends StickCardsProps {
   side: StickSide;
 }
 
-export type { StickCardProps, StickCardsProps };
+interface StickCardState {
+  label: string;
+  xItem: InputItem | undefined;
+  yItem: InputItem | undefined;
+  needsIdle: boolean;
+  isDone: boolean;
+  isActive: boolean;
+  isPicking: boolean;
+  isRecording: boolean;
+  otherBusy: boolean;
+}
+
+interface StickCardStatusProps {
+  state: StickCardState;
+  stickLiveInfo: string;
+  stickPickedBytes: number[];
+}
+
+interface StickCardActionsProps {
+  state: StickCardState;
+  pickedCount: number;
+  onConfirmPick: () => void;
+  onCancelPick: () => void;
+  onStopCircle: () => void;
+  onReadIdle: () => void;
+  onRedo: () => void;
+  onStart: () => void;
+  onPick: () => void;
+  onSkip: () => void;
+}
+
+export type { StickCardActionsProps, StickCardProps, StickCardState, StickCardStatusProps, StickCardsProps };

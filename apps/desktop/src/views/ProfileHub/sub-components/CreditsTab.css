@@ -30,11 +30,11 @@
   font-size: var(--text-base);
   font-weight: var(--weight-semi);
   text-transform: uppercase;
-  letter-spacing: 0.04em;
+  letter-spacing: var(--tracking-wide);
   color: var(--c-text-dim);
   margin: 0 0 var(--space-md);
   padding-bottom: var(--space-sm);
-  border-bottom: 1px solid var(--c-border);
+  border-bottom: var(--border-width-thin) solid var(--c-border);
 }
 
 .credits-tab__entries {
@@ -45,7 +45,7 @@
 
 .credits-tab__entry {
   background: var(--c-surface);
-  border: 1px solid var(--c-border);
+  border: var(--border-width-thin) solid var(--c-border);
   border-radius: var(--radius-lg);
   padding: var(--space-md) var(--space-lg);
 }
@@ -98,7 +98,7 @@
   padding: var(--space-xs) var(--space-sm);
   border-radius: var(--radius-lg);
   text-transform: uppercase;
-  letter-spacing: 0.03em;
+  letter-spacing: calc(0.36 * var(--size-1));
   white-space: nowrap;
 }
 

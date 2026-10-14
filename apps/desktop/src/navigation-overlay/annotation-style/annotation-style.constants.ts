@@ -8,24 +8,24 @@ const TRIGGER_COLOR = '#c9663f';
 const INFO_COLOR = '#a89e8d';
 
 const ANNOTATION_STYLES: Record<AnnotationKind, AnnotationStyle> = {
-  chest: { glyph: '▣', color: PICKUP_COLOR, legend: 'Chest' },
-  'big-chest': { glyph: '▧', color: PICKUP_COLOR, legend: 'Big chest (needs the big key)' },
-  'npc-check': { glyph: '☻', color: PICKUP_COLOR, legend: 'NPC check' },
-  'standing-item': { glyph: '◈', color: PICKUP_COLOR, legend: 'Standing item' },
+  chest: { glyph: '▣', color: PICKUP_COLOR, tone: 'checks', legend: 'Chest' },
+  'big-chest': { glyph: '▧', color: PICKUP_COLOR, tone: 'checks', legend: 'Big chest (needs the big key)' },
+  'npc-check': { glyph: '☻',color: PICKUP_COLOR, tone: 'checks', legend: 'NPC check' },
+  'standing-item': { glyph: '◈', color: PICKUP_COLOR, tone: 'checks', legend: 'Standing item' },
 
-  'key-door': { glyph: '⚿', color: LOCK_COLOR, legend: 'Small-key door' },
-  'big-key-door': { glyph: '⚿', color: LOCK_COLOR, legend: 'Big-key door' },
-  'cell-lock': { glyph: '⚿', color: LOCK_COLOR, legend: 'Cell lock (big key)' },
-  shutter: { glyph: '▤', color: LOCK_COLOR, legend: 'Shutter door' },
-  bombable: { glyph: '✸', color: LOCK_COLOR, legend: 'Bombable wall' },
-  'follower-gate': { glyph: '◫', color: LOCK_COLOR, legend: 'Gate (needs the follower)' },
+  'key-door': { glyph: '⚿', color: LOCK_COLOR, tone: 'locks', legend: 'Small-key door' },
+  'big-key-door': { glyph: '⚿', color: LOCK_COLOR, tone: 'locks', legend: 'Big-key door' },
+  'cell-lock': { glyph: '⚿',color: LOCK_COLOR, tone: 'locks', legend: 'Cell lock (big key)' },
+  shutter: { glyph: '▤', color: LOCK_COLOR, tone: 'locks', legend: 'Shutter door' },
+  bombable: { glyph: '✸', color: LOCK_COLOR, tone: 'locks', legend: 'Bombable wall' },
+  'follower-gate': { glyph: '◫', color: LOCK_COLOR, tone: 'locks', legend: 'Gate (needs the follower)' },
 
-  'pull-switch': { glyph: '⇵', color: TRIGGER_COLOR, legend: 'Pull switch' },
-  'kill-trigger': { glyph: '✦', color: TRIGGER_COLOR, legend: 'Clear room to open doors', panelOnly: true },
-  'key-carrier': { glyph: '⚔', color: TRIGGER_COLOR, legend: 'Enemy drops a small key' },
-  'big-key-carrier': { glyph: '⚔', color: TRIGGER_COLOR, legend: 'Enemy drops the big key' },
+  'pull-switch': { glyph: '⇵', color: TRIGGER_COLOR, tone: 'triggers', legend: 'Pull switch' },
+  'kill-trigger': { glyph: '✦', color: TRIGGER_COLOR, tone: 'triggers', legend: 'Clear room to open doors', panelOnly: true },
+  'key-carrier': { glyph: '⚔', color: TRIGGER_COLOR, tone: 'triggers', legend: 'Enemy drops a small key' },
+  'big-key-carrier': { glyph: '⚔',color: TRIGGER_COLOR, tone: 'triggers', legend: 'Enemy drops the big key' },
 
-  unknown: { glyph: '?', color: INFO_COLOR, legend: 'Unmapped (the sim found something new)' },
+  unknown: { glyph: '?', color: INFO_COLOR, tone: 'other', legend: 'Unmapped (the sim found something new)' },
 };
 
 const DRAWN_KINDS = (Object.keys(ANNOTATION_STYLES) as AnnotationKind[])

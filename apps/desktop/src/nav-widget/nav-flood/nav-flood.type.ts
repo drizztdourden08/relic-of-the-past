@@ -12,6 +12,12 @@ type Entrance = ReturnType<typeof enrichEntrances>[number];
 
 type FallHoleLanding = { gridRow: number; gridCol: number; entranceId: number };
 
+type RoomShape = NonNullable<ReturnType<typeof wasmGetRoomLayoutInfo>>['shape'];
+
+type GridSize = { cols: number; rows: number };
+
+type EffectiveLayout = { width: number; height: number };
+
 interface AnnotateArgs {
   fillResults: FloodFillResult[];
   isIndoors: boolean;
@@ -73,12 +79,37 @@ interface PropagateCtx {
   intraEdges: EdgeName[];
 }
 
+interface PrepareFloodArgs {
+  isIndoors: boolean;
+  activeScreenIndex: number;
+  overworldScreenIndex: number;
+  equipment: InventoryEquipment;
+  inventoryItems: ArrayLike<number>;
+}
+
+interface FloodPrep {
+  primaryScreenIndex: number;
+  startPos: Cell | undefined;
+  items: string[];
+  allEntrances: Entrance[];
+  currentRespawnIds: Set<number>;
+  roomLayout: ReturnType<typeof wasmGetRoomLayoutInfo>;
+  intraEdges: EdgeName[];
+}
+
+interface FloodSummary {
+  fillResults: FloodFillResult[];
+  primaryResult: FloodFillResult;
+  allConnections: ConnectionInfo[];
+  dynamicBlockerCount: number;
+}
+
 interface EdgeRow {
   crossing: ScreenCrossing;
   sourceScreen: number;
 }
 
 export type {
-  AnnotateArgs, Cell, CollectArgs, CrossingsArgs, EdgeName, EdgeRow, Entrance, FallHoleLanding, IndoorBundleArgs, InventoryEquipment,
-  PropagateCtx, ScreenResponse, StartContext, StartContextArgs,
+  AnnotateArgs, Cell, CollectArgs, CrossingsArgs, EdgeName, EdgeRow, EffectiveLayout, Entrance, FallHoleLanding, FloodPrep, FloodSummary, GridSize,
+  IndoorBundleArgs, InventoryEquipment, PrepareFloodArgs, PropagateCtx, RoomShape, ScreenResponse, StartContext, StartContextArgs,
 };

@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind component */
-import { Card, Box, Flex, Text, Status, Button, IconButton } from '@drizztdourden08/tessera/primitives';
+import { Card, Box, Flex, Text, Status, Button, IconButton, Icon } from '@drizztdourden08/tessera/primitives';
 import { formatRomName } from '../../format/format-rom-name';
 import { formatSize } from './behavior/format-size';
 import './RomCard.css';
@@ -13,15 +13,15 @@ const RomCard = (props: RomCardProps) => {
     <Card variant={isFailed ? 'danger' : 'default'} className="rom-card">
       <Flex direction="column" className="rom-card__main">
         <Text className="rom-card__name">{formatRomName(rom.romFile)}</Text>
-        <Text className="rom-card__file">{rom.romFile}</Text>
+        <Text tone="faint" className="rom-card__file">{rom.romFile}</Text>
       </Flex>
 
       <Box className="rom-card__status">
         {rom.extractionStatus === 'ready' && (
           <Status tone="success">
-            ✓ Ready
+            <Icon name="check" size={12} aria-hidden /> Ready
             {rom.assetSize != null && (
-              <Text className="rom-card__size">{formatSize(rom.assetSize)}</Text>
+              <Text tone="faint" className="rom-card__size">{formatSize(rom.assetSize)}</Text>
             )}
           </Status>
         )}
@@ -30,7 +30,7 @@ const RomCard = (props: RomCardProps) => {
         )}
         {rom.extractionStatus === 'failed' && (
           <Flex direction="column" align="end" gap="xs" className="rom-card__failed-group">
-            <Status tone="danger">✗ Incompatible ROM</Status>
+            <Status tone="danger"><Icon name="x" size={12} aria-hidden /> Incompatible ROM</Status>
             <Button variant="danger" size="sm" onClick={() => onExtract(rom.romFile)}>
               Retry Extract
             </Button>

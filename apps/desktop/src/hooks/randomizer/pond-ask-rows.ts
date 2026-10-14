@@ -1,8 +1,8 @@
 /* @layer renderer-hooks @kind logic */
 import { POND_ASK_BOTTLE_CONTENTS, POND_ASK_ROWS, POND_BOTTLE_ROW } from '@rotp/randomizer';
-import type { PondAskSetting, PondCeilings } from '@rotp/randomizer';
 import { itemAt } from '@app/checked-access';
 import type { PondAskModel, PondAskRowModel } from '@app/compounds/WishingPondRow';
+import type { PondAskModelParams } from './pond-ask-rows.type';
 
 const nearestStop = (stops: readonly number[], amount: number): number =>
   stops.reduce((best, stop, index) =>
@@ -17,11 +17,8 @@ const rangeOnStops = (
   stops: readonly number[], setting: { min: number; max: number },
 ): readonly [number, number] => [nearestStop(stops, setting.min), nearestStop(stops, setting.max)];
 
-const countedRowOf = (
-  row: (typeof POND_ASK_ROWS)[number], ask: PondAskSetting,
-  priceStops: readonly string[], priceRange: readonly [number, number], hasLadder: boolean,
-  ceilings: PondCeilings,
-): PondAskRowModel => {
+const countedRowOf = (row: (typeof POND_ASK_ROWS)[number], params: PondAskModelParams): PondAskRowModel => {
+  const { ask, priceStops, priceRange, hasLadder, ceilings } = params;
   const { currency, label } = row;
   const checked = ask[currency].enabled;
   if (currency === 'rupees') {
@@ -33,18 +30,18 @@ const countedRowOf = (
   return { currency, label, checked, stops: stops.map(String), range: rangeOnStops(stops, ask[currency]) };
 };
 
-const pondAskModelOf = (
-  ask: PondAskSetting, priceStops: readonly string[], priceRange: readonly [number, number], hasLadder: boolean,
-  ceilings: PondCeilings,
-): PondAskModel => ({
-  counted: POND_ASK_ROWS.map((row) => countedRowOf(row, ask, priceStops, priceRange, hasLadder, ceilings)),
-  bottleChecked: ask.bottle.enabled,
-  bottleStops: POND_BOTTLE_ROW.stops.map(String),
-  bottleRange: rangeOnStops(POND_BOTTLE_ROW.stops, ask.bottle),
-  bottleRows: POND_ASK_BOTTLE_CONTENTS.map(({ content, label }) => ({
-    content, label, checked: ask.bottle.contents.includes(content),
-  })),
-  itemChecked: ask.item.enabled,
-});
+const pondAskModelOf = (params: PondAskModelParams): PondAskModel => {
+  const { ask } = params;
+  return {
+    counted: POND_ASK_ROWS.map((row) => countedRowOf(row, params)),
+    bottleChecked: ask.bottle.enabled,
+    bottleStops: POND_BOTTLE_ROW.stops.map(String),
+    bottleRange: rangeOnStops(POND_BOTTLE_ROW.stops, ask.bottle),
+    bottleRows: POND_ASK_BOTTLE_CONTENTS.map(({ content, label }) => ({
+      content, label, checked: ask.bottle.contents.includes(content),
+    })),
+    itemChecked: ask.item.enabled,
+  };
+};
 
 export { pondAskModelOf };

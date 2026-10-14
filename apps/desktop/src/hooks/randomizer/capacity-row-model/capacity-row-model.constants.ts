@@ -25,4 +25,7 @@ const VANILLA_NOTE: Readonly<Record<CapacityFamilyId, string>> = {
 
 const PROGRESSIVE_NOTE = 'pickups climb in this order';
 
-export { FAMILY_LABEL, JUMP_LABEL, PROGRESSIVE_NOTE, VANILLA_NOTE };
+const WALLET_SCALE = { rangeStep: 10, labelEvery: 10 };
+const STEP_SCALE = { rangeStep: 1, labelEvery: 1 };
+
+export { FAMILY_LABEL, JUMP_LABEL, PROGRESSIVE_NOTE, STEP_SCALE, VANILLA_NOTE, WALLET_SCALE };

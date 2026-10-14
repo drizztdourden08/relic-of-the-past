@@ -1,23 +1,24 @@
 /* @layer bridge-wasm @kind logic */
 import { createListenerSet } from './listener-set';
-import { createNetworkFacts, observeClient, observeClose, observeServer } from './network-facts';
+import { createLifecycle } from './network-lifecycle';
+import { createNetworkFacts, observeClient, observeServer } from './network-facts';
 import { createPinger } from './network-ping';
 import { createPresence } from './network-presence';
 import { createRoster } from './network-roster';
 import { buildNetworkStatus } from './network-status';
 import type { ApClientPacket } from './ap-protocol.type';
 import type { NetworkStatus } from './network-status.type';
-import type { NetworkMonitor, NetworkMonitorDeps } from './network-monitor.type';
+import type { MonitorState, NetworkMonitor, NetworkMonitorDeps } from './network-monitor.type';
 
 const createNetworkMonitor = (deps: NetworkMonitorDeps): NetworkMonitor => {
   const { config, room, names, core, trackers, sessionStatus, now = Date.now } = deps;
-  let facts = createNetworkFacts();
+  const state: MonitorState = { facts: createNetworkFacts() };
   const presence = createPresence();
   const listeners = createListenerSet<[NetworkStatus]>();
   let pinging = false;
 
   const build = (): NetworkStatus => buildNetworkStatus({
-    sessionStatus: sessionStatus(), config, facts, room, names, core, ping: pinger, presence, trackers,
+    sessionStatus: sessionStatus(), config, facts: state.facts, room, names, core, ping: pinger, presence, trackers,
   });
   const changed = (): void => {
     if (!pinging && room.connected && room.slot !== null) {
@@ -28,7 +29,7 @@ const createNetworkMonitor = (deps: NetworkMonitorDeps): NetworkMonitor => {
     if (listeners.size > 0) listeners.emit(build());
   };
   const countAndSend = (packet: ApClientPacket): void => {
-    observeClient(facts, packet);
+    observeClient(state.facts, packet);
     deps.send(packet);
   };
   const pinger = createPinger({ send: countAndSend, onSample: changed, now });
@@ -51,7 +52,7 @@ const createNetworkMonitor = (deps: NetworkMonitorDeps): NetworkMonitor => {
     get status() { return build(); },
     onChange: (listener) => listeners.add(listener),
     received(packet) {
-      observeServer(facts, packet, now());
+      observeServer(state.facts, packet, now());
       if (packet.cmd === 'Bounced') return pinger.handleBounced(packet);
       if (packet.cmd === 'PrintJSON') presence.handlePrint(packet, room.team);
       roster.received(packet);
@@ -62,39 +63,7 @@ const createNetworkMonitor = (deps: NetworkMonitorDeps): NetworkMonitor => {
       countAndSend(packet);
       changed();
     },
-    opened(url) {
-      facts.url = url;
-      facts.error = null;
-      changed();
-    },
-    closed() {
-      forgetConnection();
-      observeClose(facts);
-      changed();
-    },
-    retrying(delayMs, attempt) {
-      facts.reconnectAttempt = attempt;
-      facts.nextRetryAt = now() + delayMs;
-      facts.retryInFlight = false;
-      changed();
-    },
-    attempting() {
-      facts.nextRetryAt = null;
-      facts.retryInFlight = true;
-      changed();
-    },
-    failed(message) {
-      facts.error = message.replace(/^\[Online\]\s*/, '');
-      changed();
-    },
-    stop() {
-      forgetConnection();
-      changed();
-    },
-    reset() {
-      forgetConnection();
-      facts = createNetworkFacts();
-    },
+    ...createLifecycle({ state, changed, forgetConnection, now }),
   };
 };
 

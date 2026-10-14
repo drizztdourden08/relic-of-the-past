@@ -12,10 +12,10 @@
 
 .hud-instance-strip__cell {
   flex: 1 1 0;
-  min-width: 2px;
-  height: 8px;
+  min-width: var(--size-2);
+  height: var(--size-8);
   background: var(--c-surface);
-  border: 1px solid var(--c-border);
+  border: var(--size-1) solid var(--c-border);
 }
 
 .hud-instance-strip__cell[data-on='true'] {
@@ -23,7 +23,7 @@
 }
 
 .hud-instance-strip__cell.is-preview {
-  outline: 1px solid var(--c-primary);
+  outline: var(--size-1) solid var(--c-primary);
 }
 
 .hud-instance-strip__read {

@@ -1,5 +1,4 @@
 /* @layer renderer-components @kind component */
-import { useEffect, useRef, useState } from 'react';
 import { Box, Text } from '@drizztdourden08/tessera/primitives';
 import { HudNodeRenderer } from '@app/compounds/HudNodeRenderer';
 import { ContainerOverlay } from './ContainerOverlay';
@@ -7,13 +6,14 @@ import { StageFlexEcho } from './StageFlexEcho';
 import { StageGridEcho } from './StageGridEcho';
 import { StageSelection } from './StageSelection';
 import { useMotionPreview } from '@app/hud-layout-editing/motion-preview';
+import { useStageScale } from '@app/hud-layout-editing/useStageScale';
 import { GROUND_TILE } from '../HudLayoutEditor.constants';
 import { TILE } from './EditorStage.constants';
 import type { HudContainer, PlacedNode } from '@rotp/hud';
 import type { EditorStageProps } from './EditorStage.type';
 
 const isContainer = (node: PlacedNode['node'] | undefined): node is HudContainer =>
-  node !== undefined && node.kind === 'container';
+  node?.kind === 'container';
 
 const overlayTargetFor = (placed: readonly PlacedNode[], selectedId: string | null): HudContainer | null => {
   const selected = placed.find((p) => p.id === selectedId)?.node;
@@ -27,22 +27,8 @@ const EditorStage = (props: EditorStageProps) => {
     placed, sample, ground, selectedId, onSelect,
   } = props;
   const overlayTarget = overlayTargetFor(placed, selectedId);
-  const stageRef = useRef<HTMLDivElement>(null);
-  const [scale, setScale] = useState(1);
+  const { stageRef, scale } = useStageScale(sample.view.w);
   const preview = useMotionPreview();
-
-  useEffect(() => {
-    const element = stageRef.current;
-    if (!element) return;
-    const measure = (): void => {
-      const width = element.clientWidth;
-      if (width > 0) setScale(width / sample.view.w);
-    };
-    measure();
-    const observer = new ResizeObserver(measure);
-    observer.observe(element);
-    return () => observer.disconnect();
-  }, [sample.view.w]);
 
   const tile = GROUND_TILE * scale;
 

@@ -1,5 +1,5 @@
 /* @layer shared-hud @kind logic */
-import { checkKeys, isRecord } from '../validate-box';
+import { checkKeys, isRecord, reportMissing } from '../validate-box';
 import { validateValue } from '../validate-value';
 import { easingAt } from './easing-at';
 import { gateAt } from './gate-at';
@@ -8,10 +8,12 @@ import {
 } from './validate-motion.constants';
 import type { Issues } from '../validate-box';
 import type { HudEnterExitTransition, HudTransition } from '../../types/hud-motion';
+import type { EnumArraySpec, TransitionParts } from './validate-motion.type';
 
 const enumArrayAt = <T extends string>(
-  value: unknown, allowed: readonly T[], path: string, issues: Issues, allowEmpty = false,
+  value: unknown, spec: EnumArraySpec<T>, path: string, issues: Issues,
 ): T[] | undefined => {
+  const { allowed, allowEmpty = false } = spec;
   if (!Array.isArray(value) || (value.length === 0 && !allowEmpty)) {
     issues.push(`${path}: expected a non-empty array of ${allowed.join(', ')}`);
     return undefined;
@@ -27,15 +29,39 @@ const enterExitAt = (
   if (value === undefined) return undefined;
   if (!isRecord(value)) { issues.push(`${path}: expected { properties, duration, easing? }`); return undefined; }
   checkKeys(value, ['properties', 'duration', 'easing'], path, issues);
-  const properties = enumArrayAt(value.properties, ENTER_EXIT_PROPERTIES, `${path}.properties`, issues);
+  const properties = enumArrayAt(value.properties, { allowed: ENTER_EXIT_PROPERTIES }, `${path}.properties`, issues);
   const duration = validateValue(value.duration, `${path}.duration`, issues, { insideRepeat });
   if (properties === undefined || duration === undefined) {
-    if (duration === undefined && value.duration === undefined) issues.push(`${path}.duration: needs a duration`);
+    if (duration === undefined) return reportMissing(value.duration, `${path}.duration: needs a duration`, issues);
     return undefined;
   }
   const easing = easingAt(value.easing, `${path}.easing`, issues);
   return { properties, duration, ...(easing ? { easing } : {}) };
 };
+
+const coreAt = (
+  value: Record<string, unknown>, path: string, issues: Issues, insideRepeat: boolean,
+): Pick<HudTransition, 'properties' | 'duration'> | undefined => {
+  const spec = { allowed: TRANSITION_PROPERTIES, allowEmpty: true };
+  const properties = enumArrayAt(value.properties, spec, `${path}.properties`, issues);
+  const duration = validateValue(value.duration, `${path}.duration`, issues, { insideRepeat });
+  if (properties === undefined || duration === undefined) {
+    if (duration === undefined) return reportMissing(value.duration, `${path}.duration: a transition needs a duration`, issues);
+    return undefined;
+  }
+  return { properties, duration };
+};
+
+const partsAt = (value: Record<string, unknown>, path: string, issues: Issues, insideRepeat: boolean): TransitionParts => ({
+  easing: easingAt(value.easing, `${path}.easing`, issues),
+  when: gateAt(value.when, `${path}.when`, issues, { insideRepeat, extraNames: TRANSITION_ONLY_NAMES }),
+  enter: enterExitAt(value.enter, `${path}.enter`, issues, insideRepeat),
+  exit: enterExitAt(value.exit, `${path}.exit`, issues, insideRepeat),
+});
+
+const optionalParts = ({ easing, when, enter, exit }: TransitionParts): Partial<HudTransition> => ({
+  ...(easing ? { easing } : {}), ...(when ? { when } : {}), ...(enter ? { enter } : {}), ...(exit ? { exit } : {}),
+});
 
 const validateTransition = (
   value: unknown, path: string, issues: Issues, insideRepeat = false,
@@ -43,25 +69,14 @@ const validateTransition = (
   if (value === undefined) return undefined;
   if (!isRecord(value)) { issues.push(`${path}: expected a transition object`); return undefined; }
   checkKeys(value, TRANSITION_KEYS, path, issues);
-  const allowEmptyProperties = true;
-  const properties = enumArrayAt(value.properties, TRANSITION_PROPERTIES, `${path}.properties`, issues, allowEmptyProperties);
-  const duration = validateValue(value.duration, `${path}.duration`, issues, { insideRepeat });
-  if (properties === undefined || duration === undefined) {
-    if (duration === undefined && value.duration === undefined) issues.push(`${path}.duration: a transition needs a duration`);
-    return undefined;
-  }
-  const easing = easingAt(value.easing, `${path}.easing`, issues);
-  const when = gateAt(value.when, `${path}.when`, issues, insideRepeat, TRANSITION_ONLY_NAMES);
-  const enter = enterExitAt(value.enter, `${path}.enter`, issues, insideRepeat);
-  const exit = enterExitAt(value.exit, `${path}.exit`, issues, insideRepeat);
-  if (properties.length === 0 && enter === undefined && exit === undefined) {
+  const core = coreAt(value, path, issues, insideRepeat);
+  if (!core) return undefined;
+  const parts = partsAt(value, path, issues, insideRepeat);
+  if (core.properties.length === 0 && parts.enter === undefined && parts.exit === undefined) {
     issues.push(`${path}: a transition needs at least one property, or an enter or an exit`);
     return undefined;
   }
-  return {
-    properties, duration,
-    ...(easing ? { easing } : {}), ...(when ? { when } : {}), ...(enter ? { enter } : {}), ...(exit ? { exit } : {}),
-  };
+  return { ...core, ...optionalParts(parts) };
 };
 
 export { validateTransition };

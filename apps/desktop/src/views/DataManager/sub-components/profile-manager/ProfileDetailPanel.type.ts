@@ -9,4 +9,15 @@ interface ProfileDetailPanelProps {
   onRefresh: () => void;
 }
 
-export type { ProfileDetailPanelProps };
+interface ProfilePicksProps {
+  profile: Profile;
+  languages: Array<{ code: string }>;
+  msuPacks: Array<{ name: string }>;
+  onRefresh: () => void;
+}
+
+interface ProfileSettingsListProps {
+  settings: Record<string, unknown>;
+}
+
+export type { ProfileDetailPanelProps, ProfilePicksProps, ProfileSettingsListProps };

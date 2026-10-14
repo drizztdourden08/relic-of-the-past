@@ -4,10 +4,9 @@ import { useCallback, useEffect, useState } from 'react';
 import { useTool } from '@drizztdourden08/brock-tools/renderer';
 import type { OptimizeAnalysis, OptimizeProgress, OptimizeRunResult } from '@rotp/msu';
 import { FFMPEG_TOOL_ID } from '@app/ffmpeg-tool';
+import { optimizeMessage } from './optimize-message';
+import { useAutoMeasure } from './useAutoMeasure';
 import type { OptimizeParams, OptimizeStep } from './optimize.type';
-
-const messageOf = (err: unknown, fallback: string): string =>
-  (err instanceof Error && err.message.length > 0 ? err.message : fallback);
 
 const convertibleNames = (analysis: OptimizeAnalysis | null): string[] =>
   (analysis?.candidates ?? []).filter((row) => row.excludedBecause === null).map((row) => row.name);
@@ -33,25 +32,7 @@ const useOptimize = (params: OptimizeParams) => {
 
   useEffect(() => (open ? requireHostApi().onMsuOptimizeProgress(setProgress) : undefined), [open]);
 
-  const measure = useCallback(async (): Promise<void> => {
-    setStep('measuring');
-    setProgress(null);
-    setError(null);
-    try {
-      setAnalysis(await requireHostApi().analyzeMsuOptimize(pack));
-      setStep('preview');
-    } catch (err) {
-      setError(messageOf(err, 'Could not measure this pack.'));
-      setStep('error');
-    }
-  }, [pack]);
-
-  useEffect(() => {
-    if (!open || tool.state === null) return;
-    if (step !== 'checking' && step !== 'tool') return;
-    if (tool.state.status === 'ready') void measure();
-    else if (step === 'checking') setStep('tool');
-  }, [open, step, tool.state, measure]);
+  const measure = useAutoMeasure({ open, pack, step, toolState: tool.state, setStep, setAnalysis, setProgress, setError });
 
   const convert = useCallback(async (): Promise<void> => {
     const names = convertibleNames(analysis);
@@ -63,7 +44,7 @@ const useOptimize = (params: OptimizeParams) => {
       setResult(await requireHostApi().runMsuOptimize(pack, names));
       setStep('result');
     } catch (err) {
-      setError(messageOf(err, 'Could not convert this pack.'));
+      setError(optimizeMessage(err, 'Could not convert this pack.'));
       setStep('error');
     } finally {
       onRunSettled();

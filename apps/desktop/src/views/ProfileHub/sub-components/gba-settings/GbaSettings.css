@@ -30,5 +30,5 @@
 
 .gba-settings__search-field {
   flex: 1;
-  min-width: 220px;
+  min-width: calc(220 * var(--size-1));
 }

@@ -5,6 +5,8 @@ import { getPlatform } from '@drizztdourden08/brock-react';
 const formatEntry = (timestamp: number, channel: string, level: string, message: string): string =>
   `${new Date(timestamp).toISOString()} [${channel}] ${level.toUpperCase().padEnd(5)} ${message}`;
 
+const ignoreUnwritableCrashDump = (): void => undefined;
+
 const writeCrashDump = async (reason: string, stack?: string): Promise<void> => {
   const stamp = new Date().toISOString().replace(/[:.]/g, '-');
   const lines = getEntries().map((entry) => formatEntry(entry.timestamp, entry.channel, entry.level, entry.message));
@@ -19,7 +21,7 @@ const writeCrashDump = async (reason: string, stack?: string): Promise<void> => 
   try {
     await getPlatform().files.writeText(`debug/crash-${stamp}.log`, body);
   } catch {
-    
+    ignoreUnwritableCrashDump();
   }
 };
 

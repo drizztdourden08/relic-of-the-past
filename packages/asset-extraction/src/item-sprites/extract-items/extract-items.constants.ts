@@ -34,20 +34,20 @@ const EXTRACTORS: Partial<Record<string, Extractor>> = {
   'receipt': (def, ctx) =>
     extractReceipt(need(def, 'receiptId'), ctx.rom, ctx.receiptSheets, ctx.spritePalettes),
   'receipt-recolor': (def, ctx) => extractReceiptRecolor(
-    need(def, 'receiptId'), need(def, 'palette'), ctx.rom, ctx.receiptSheets, ctx.spritePalettes,
+    need(def, 'receiptId'), need(def, 'palette'), ctx.receiptSheets, ctx.spritePalettes,
   ),
   'drop-standard': (def, ctx) =>
     extractDropStandard(need(def, 'spriteType'), need(def, 'palette'), ctx.spritePalettes, ctx.dropSheets),
   'drop-numbered': (def, ctx) => extractDropNumbered(
-    need(def, 'spriteType'), need(def, 'palette'), need(def, 'group'), ctx.spritePalettes, ctx.dropSheets,
+    need(def, 'palette'), need(def, 'group'), ctx.spritePalettes, ctx.dropSheets,
   ),
   'drop-rupee': (def, ctx) => extractDropRupee(need(def, 'palette'), ctx.spritePalettes, ctx.dropSheets),
   'drop-bigkey': (def, ctx) => extractDropBigkey(need(def, 'palette'), ctx.spritePalettes, ctx.receiptSheets),
   'drop-shield-fighters': (def, ctx) => extractDropShieldFighters(
-    need(def, 'sheet'), need(def, 'tiles'), need(def, 'palette'), ctx.spritePalettes, ctx.dropSheets,
+    { sheetId: need(def, 'sheet'), tileIds: need(def, 'tiles') }, need(def, 'palette'), ctx.spritePalettes, ctx.dropSheets,
   ),
   'drop-shield-fire': (def, ctx) => extractDropShieldFire(
-    need(def, 'sheet'), need(def, 'tiles'), need(def, 'palette'), ctx.spritePalettes, ctx.dropSheets,
+    { sheetId: need(def, 'sheet'), tileIds: need(def, 'tiles') }, need(def, 'palette'), ctx.spritePalettes, ctx.dropSheets,
   ),
   'follower-bomb': (def, ctx) => extractFollowerBomb(need(def, 'palette'), ctx.rom, ctx.spritePalettes),
   'art': (def) => artImage(need(def, 'art')),

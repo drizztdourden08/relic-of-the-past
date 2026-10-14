@@ -9,7 +9,7 @@ const generateId = (): string => {
 
 const startSession = (profileId: string): void => {
   if (sessionTrackerState.activeSession) {
-    endSession();
+    void endSession();
   }
   const session = {
     id: generateId(),

@@ -32,6 +32,21 @@ interface GizmoContext {
   isFreehand: boolean;
 }
 
+interface GizmoShape {
+  x: number;
+  y: number;
+  width: number;
+  height: number;
+  rotation?: number;
+  points?: GizmoPoint[];
+  sides?: number;
+}
+
+interface GizmoScale {
+  scaleX: number;
+  scaleY: number;
+}
+
 type IsHighlighted = (part: GizmoPart) => boolean;
 
-export type { GizmoPart, GizmoHit, GizmoContext, GizmoPoint, IsHighlighted };
+export type { GizmoPart, GizmoHit, GizmoContext, GizmoPoint, GizmoScale, GizmoShape, IsHighlighted };

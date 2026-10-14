@@ -14,10 +14,10 @@
   flex-direction: column;
   gap: var(--space-sm);
   flex: 1;
-  min-height: 6rem;
+  min-height: var(--size-96);
 }
 
-.live-data-inspector .tabs {
+.live-data-inspector__tabs {
   overflow-x: auto;
   flex-shrink: 0;
 }

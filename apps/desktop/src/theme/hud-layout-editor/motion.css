@@ -46,8 +46,8 @@
 .hud-kftrack__key {
   position: absolute;
   top: 50%;
-  width: 11px;
-  height: 11px;
+  width: calc(11 * var(--size-1));
+  height: calc(11 * var(--size-1));
   padding: 0;
   background: var(--c-info);
   border: var(--border-width-thin) solid var(--c-bg);
@@ -67,15 +67,15 @@
 }
 
 .hud-kftrack__key:focus-visible {
-  outline: 2px solid var(--c-primary);
-  outline-offset: 2px;
+  outline: var(--size-2) solid var(--c-primary);
+  outline-offset: var(--size-2);
 }
 
 .hud-kftrack__head {
   position: absolute;
   top: 0;
   bottom: 0;
-  width: 1px;
+  width: var(--size-1);
   background: var(--c-primary-bright);
   pointer-events: none;
 }
@@ -90,8 +90,8 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 26px;
-  height: 26px;
+  width: calc(26 * var(--size-1));
+  height: calc(26 * var(--size-1));
   padding: var(--space-2xs);
   color: var(--c-text-dim);
   background: var(--c-hover);

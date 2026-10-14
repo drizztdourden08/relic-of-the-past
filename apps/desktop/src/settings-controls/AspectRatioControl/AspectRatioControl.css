@@ -13,21 +13,6 @@
   gap: var(--space-xs);
 }
 
-.aspect-ratio-control__fields {
-  display: flex;
-  align-items: center;
-  gap: var(--space-sm);
-}
-
-.aspect-ratio-control__sep {
-  color: var(--c-text-dim);
-}
-
-.aspect-ratio-control__error {
-  color: var(--c-danger);
-  font-size: var(--text-sm);
-}
-
 .aspect-ratio-control__detected {
   color: var(--c-text-dim);
   font-size: var(--text-sm);

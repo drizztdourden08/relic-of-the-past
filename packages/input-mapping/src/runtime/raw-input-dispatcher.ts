@@ -1,5 +1,6 @@
 /* @layer renderer-lib @kind logic */
 import type { InputBinding } from '@rotp/game-data';
+import { axisDirection } from './axis-direction';
 import { resolveAxisPressThreshold } from './axis-press-threshold';
 import type { AxisDirection, RawInputEvent, RawInputListener } from './raw-input-dispatcher.type';
 
@@ -27,27 +28,35 @@ class RawInputDispatcher {
     }
   }
 
+  private emitButtonEdges(deviceKey: string, buttons: readonly boolean[], vid: string | null, pid: string | null): void {
+    const prev = this.prevHidButtons.get(deviceKey) ?? [];
+    for (let i = 0; i < buttons.length; i++) {
+      if (buttons[i] && !prev[i]) {
+        this.emit({ type: 'gamepad-button', index: i }, deviceKey, vid, pid);
+      }
+    }
+  }
+
+  private emitAxisEdges(deviceKey: string, axes: readonly number[], vid: string | null, pid: string | null): AxisDirection[] {
+    const prevAxes = this.prevHidAxes.get(deviceKey) ?? [];
+    const currAxes: AxisDirection[] = [];
+    for (const [i, val] of axes.entries()) {
+      const dir = axisDirection(val, resolveAxisPressThreshold(i, deviceKey));
+      currAxes[i] = dir;
+      if (dir !== null && dir !== prevAxes[i]) {
+        this.emit({ type: 'gamepad-axis', axisIndex: i, direction: dir }, deviceKey, vid, pid);
+      }
+    }
+    return currAxes;
+  }
+
   emitHidEvents(hidStates: Map<string, { buttons: boolean[]; axes: number[] }>): void {
     for (const [deviceKey, state] of hidStates) {
-      const prev = this.prevHidButtons.get(deviceKey) ?? [];
       const parts = deviceKey.split(':');
       const vid = paddedPart(parts[0]);
       const pid = paddedPart(parts[1]);
-      for (let i = 0; i < state.buttons.length; i++) {
-        if (state.buttons[i] && !prev[i]) {
-          this.emit({ type: 'gamepad-button', index: i }, deviceKey, vid, pid);
-        }
-      }
-      const prevAxes = this.prevHidAxes.get(deviceKey) ?? [];
-      const currAxes: AxisDirection[] = [];
-      for (const [i, val] of state.axes.entries()) {
-        const threshold = resolveAxisPressThreshold(i, deviceKey);
-        const dir: AxisDirection = Math.abs(val) > threshold ? (val > 0 ? '+' : '-') : null;
-        currAxes[i] = dir;
-        if (dir !== null && dir !== prevAxes[i]) {
-          this.emit({ type: 'gamepad-axis', axisIndex: i, direction: dir }, deviceKey, vid, pid);
-        }
-      }
+      this.emitButtonEdges(deviceKey, state.buttons, vid, pid);
+      const currAxes = this.emitAxisEdges(deviceKey, state.axes, vid, pid);
       this.prevHidButtons.set(deviceKey, [...state.buttons]);
       this.prevHidAxes.set(deviceKey, currAxes);
     }

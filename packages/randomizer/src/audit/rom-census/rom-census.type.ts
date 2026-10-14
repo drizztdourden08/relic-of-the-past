@@ -33,4 +33,6 @@ interface CensusFindings {
   vanillaItemDiffs: VanillaItemDiff[];
 }
 
-export type { CensusFindings, ChestMismatch, RomCensus, RomChest, VanillaItemDiff };
+type ChestInspection = { mismatch: ChestMismatch } | { chest: RomChest };
+
+export type { CensusFindings, ChestInspection, ChestMismatch, RomCensus, RomChest, VanillaItemDiff };

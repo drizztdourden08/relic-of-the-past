@@ -30,11 +30,11 @@ const useSimRun = ({ activeProfile, loadProfileForGame }: SimRunDeps) => {
 
       if (config.stateName !== null) {
         const ok = await loadStateRef(config.stateName);
-        console.log(`[SimRun] loadStateRef(${config.stateName}) → ${ok}`);
+        console.log(`[SimRun] loadStateRef(${config.stateName}) -> ${ok}`);
         await new Promise((r) => setTimeout(r, RENDER_SETTLE_MS));
       } else if (config.startSlot !== null) {
         const loaded = await loadState(config.startSlot);
-        console.log(`[SimRun] loadState(${config.startSlot}) → ${loaded}`);
+        console.log(`[SimRun] loadState(${config.startSlot}) -> ${loaded}`);
         if (!loaded) {
           await requireHostApi().writeSimRun({ error: `loadState(${config.startSlot}) failed`, config });
           setTimeout(() => window.close(), EXIT_DELAY_MS);

@@ -1,0 +1,7 @@
+/* @layer renderer-components @kind style */
+
+.hud-grid-echo {
+  position: absolute;
+  border: var(--border-width-thin) solid;
+  pointer-events: none;
+}

@@ -1,0 +1,12 @@
+/* @layer renderer-components @kind style */
+
+.tracker-group__counts {
+  display: inline-flex;
+  align-items: baseline;
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+}
+
+.tracker-group__count--completed { color: var(--c-secondary); }
+.tracker-group__count--reachable { color: var(--c-warning); }
+.tracker-group__count--blocked { color: var(--c-text-dim); }

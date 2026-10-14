@@ -1,5 +1,5 @@
 /* @layer renderer-widgets @kind component */
-import { Box, Button, Text } from '@drizztdourden08/tessera/primitives';
+import { Box, Button, Icon, Text } from '@drizztdourden08/tessera/primitives';
 import { SuggestionCard } from './SuggestionCard';
 import { SoftlockSummary } from './SoftlockSummary';
 import { outcomeBanner } from '../behavior/outcome-banner';
@@ -15,7 +15,7 @@ const ResultsPanel = (props: ResultsPanelProps) => {
     <Box className="simulator__results">
       <Box className="simulator__results-banner">
         <Box className={`simulator__banner simulator__banner--${banner.tone}`}>
-          <Text className="simulator__banner-icon">{banner.icon}</Text>
+          <Icon className="simulator__banner-icon" name={banner.icon} />
           <Box className="simulator__banner-text">
             <Text className="simulator__banner-title">{banner.title}</Text>
             <Text className="simulator__banner-detail">{banner.detail}</Text>

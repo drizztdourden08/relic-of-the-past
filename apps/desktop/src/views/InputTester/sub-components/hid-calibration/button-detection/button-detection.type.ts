@@ -16,7 +16,7 @@ interface ButtonRefs {
   releaseCountRef: React.RefObject<number>;
   detectedBtnRef: React.RefObject<HidButtonMapping | null>;
   confirmCountRef: React.RefObject<number>;
-  axisCapRef: React.RefObject<Record<string, AxisCapture>>;
+  axisCapRef: React.RefObject<Partial<Record<string, AxisCapture>>>;
   advanceTimerRef: React.RefObject<ReturnType<typeof setTimeout> | null>;
   autoAdvanceRef: React.RefObject<boolean>;
   inputPhaseActiveRef: React.RefObject<boolean>;
@@ -47,10 +47,18 @@ interface AxisStepArgs {
   cb: ButtonCallbacks;
 }
 
+interface ButtonItemArgs {
+  bytes: Uint8Array;
+  item: InputItem;
+  idx: number;
+  refs: ButtonRefs;
+  cb: ButtonCallbacks;
+}
+
 interface AxisPick {
   byte: number;
   pos: number;
   neg: number;
 }
 
-export type { AxisCapture, AxisPick, AxisStepArgs, ButtonCallbacks, ButtonRefs };
+export type { AxisCapture, AxisPick, AxisStepArgs, ButtonCallbacks, ButtonItemArgs, ButtonRefs };

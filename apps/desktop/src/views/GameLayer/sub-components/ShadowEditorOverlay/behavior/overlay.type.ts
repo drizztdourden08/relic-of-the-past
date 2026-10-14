@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind types */
-import type { MutableRefObject, RefObject } from 'react';
+import type { RefObject } from 'react';
 import type { ViewportInfo } from '@app/game';
 import type { HeightmapElement, LightSource, ShadowCastingProject } from '@rotp/game-core';
 import type { GizmoPart } from './gizmo.type';
@@ -15,6 +15,25 @@ type UpdateLight = (screenId: number, id: string, patch: Partial<LightSource>) =
 type AddHeightmap = (screenId: number, el: HeightmapElement) => void;
 type AddLight = (screenId: number, light: LightSource) => void;
 type Tool = 'select' | 'polygon' | 'shape-light' | 'point-light' | 'freehand';
+
+interface OverlayView {
+  vp: Vp;
+  width: number;
+  height: number;
+}
+
+interface GizmoParts {
+  hovered: GizmoPart | null;
+  active: GizmoPart | null;
+}
+
+interface DragInfo {
+  vp: Vp;
+  world: Point;
+  dragStart: Point;
+  elementId: string;
+  screenId: number;
+}
 
 interface HeightmapGizmoArgs {
   part: GizmoPart;
@@ -97,15 +116,15 @@ interface PointerContext {
 
 interface OverlayRefs {
   canvasRef: RefObject<HTMLCanvasElement | null>;
-  vpRef: MutableRefObject<Vp | null>;
-  mouseDisplayRef: MutableRefObject<Point | null>;
-  hoveredGizmoRef: MutableRefObject<GizmoPart | null>;
-  activeGizmoRef: MutableRefObject<GizmoPart | null>;
+  vpRef: RefObject<Vp | null>;
+  mouseDisplayRef: RefObject<Point | null>;
+  hoveredGizmoRef: RefObject<GizmoPart | null>;
+  activeGizmoRef: RefObject<GizmoPart | null>;
 }
 
 interface HandlerDeps extends OverlayRefs {
-  gizmoStartRef: MutableRefObject<GizmoStart | null>;
-  dragMovedRef: MutableRefObject<boolean>;
+  gizmoStartRef: RefObject<GizmoStart | null>;
+  dragMovedRef: RefObject<boolean>;
   width: number;
   height: number;
   activeTool: Tool;
@@ -139,7 +158,7 @@ type InteractionDeps = Omit<HandlerDeps, 'setCursor'>;
 interface OverlayKeyboardArgs {
   open: boolean;
   loadProject: (p: ShadowCastingProject) => void;
-  vpRef: MutableRefObject<Vp | null>;
+  vpRef: RefObject<Vp | null>;
 }
 
 interface OverlayRenderArgs extends OverlayRefs {
@@ -157,5 +176,5 @@ interface OverlayRenderArgs extends OverlayRefs {
 export type {
   Vp, Point, ElementType, ScreenData, Hit, UpdateHeightmap, UpdateLight, AddHeightmap, AddLight, Tool,
   HeightmapGizmoArgs, LightGizmoArgs, CreateShapeArgs, FinalizeFreehandArgs, HoverArgs, HoverResult, DrawArgs,
-  PointerContext, HandlerDeps, InteractionDeps, OverlayKeyboardArgs, OverlayRenderArgs,
+  PointerContext, HandlerDeps, InteractionDeps, OverlayKeyboardArgs, OverlayRenderArgs, OverlayView, GizmoParts, DragInfo, OverlayRefs,
 };

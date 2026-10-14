@@ -1,6 +1,7 @@
 /* @layer renderer-widgets @kind component */
 import { Box, Pressable, TextInput } from '@drizztdourden08/tessera/primitives';
 import { HudNumber } from '@app/hud';
+import { numberCellTitle } from '../behavior/number-cell-title';
 import { useNumberEdit } from '../behavior/useNumberEdit';
 import { usePointerHintTarget } from '../../../behavior/usePointerHintTarget';
 import { NumberSetter } from '../../NumberSetter';
@@ -15,8 +16,7 @@ const NumberCell = (props: NumberCellProps) => {
 
   const number = <HudNumber value={value} digits={digits} isMax={isMax} scale={scale} spritesBase={spritesBase} />;
   if (!write || lockedReason) {
-    const title = lockedReason ? `${label}: ${lockedReason}` : `${label}: set by the seed`;
-    return <Box className="cheats-player__number cheats-player__number--fixed" title={title}>{number}</Box>;
+    return <Box className="cheats-player__number cheats-player__number--fixed" title={numberCellTitle(label, lockedReason)}>{number}</Box>;
   }
 
   return (

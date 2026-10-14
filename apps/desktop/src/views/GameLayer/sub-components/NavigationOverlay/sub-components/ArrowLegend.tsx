@@ -1,20 +1,12 @@
 /* @layer renderer-components @kind component */
-import type { CSSProperties } from 'react';
-import { Box, Text } from '@drizztdourden08/tessera/primitives';
+import { Box, Icon, Text } from '@drizztdourden08/tessera/primitives';
 import { CollapsiblePanel } from './CollapsiblePanel';
-
-const S: Record<string, CSSProperties> = {
-  row: { display: 'flex', alignItems: 'center', gap: 5 },
-  dim: { color: 'var(--c-text-dim)' },
-  cliff: { color: 'var(--c-danger)' },
-  stairs: { color: 'var(--c-info)' },
-};
 
 const ArrowLegend = () => {
   return (
     <CollapsiblePanel title="arrows">
-      <Box style={S.row}><Text style={S.cliff}>→</Text><Text style={S.dim}>cliff jump</Text></Box>
-      <Box style={S.row}><Text style={S.stairs}>→</Text><Text style={S.dim}>stairs (bidirectional)</Text></Box>
+      <Box className="nav-legend__row"><Text className="nav-legend__cliff"><Icon name="arrow-right" /></Text><Text className="nav-legend__dim">cliff jump</Text></Box>
+      <Box className="nav-legend__row"><Text className="nav-legend__stairs"><Icon name="arrow-right" /></Text><Text className="nav-legend__dim">stairs (bidirectional)</Text></Box>
     </CollapsiblePanel>
   );
 };

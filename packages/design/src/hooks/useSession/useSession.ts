@@ -11,7 +11,7 @@ const useSession = (): Session => {
   const refresh = useCallback(async () => {
     try {
       const { user, identities, groups, rights } = await getMe();
-      setState({ me: user, identities, groups: groups ?? [], rights: rights ?? null, loading: false, error: null });
+      setState({ me: user, identities, groups, rights, loading: false, error: null });
     } catch (error) {
       if (error instanceof ApiError && error.status === 401) {
         setState(SIGNED_OUT);

@@ -21,7 +21,9 @@ const pondRowModelOf = (
     modeLabel: MODE_LABELS[setting.mode],
     state,
     stops,
-    askModel: pondAskModelOf(state.ask, stops, state.range, setting.mode === 'custom', ceilings),
+    askModel: pondAskModelOf({
+      ask: state.ask, priceStops: stops, priceRange: state.range, hasLadder: setting.mode === 'custom', ceilings,
+    }),
     curveOptions: CURVE_OPTIONS,
     maxThrows: Math.min(POND_MAX_THROWS, POND_PRICE_LADDER.length),
     maxItems: Math.min(POND_MAX_ITEMS, Math.max(1, plan.throws.length || POND_MAX_ITEMS)),

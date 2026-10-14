@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind logic */
-import type { InputStatus, StickSide } from '../hid-calibration.type';
+import type { StickSide } from '../hid-calibration.type';
 import type { StickResetCallbacks, StickResetRefs } from './stick-trigger-handlers.type';
 
 const resetStick = (side: StickSide, refs: StickResetRefs, latestBytesLen: number, cb: StickResetCallbacks): void => {
@@ -14,7 +14,7 @@ const resetStick = (side: StickSide, refs: StickResetRefs, latestBytesLen: numbe
   sideBytes.current = new Set();
   cb.setGyroExcluded(new Set(refs.excludedRef.current));
   cb.setItems(prev => prev.map(it =>
-    (it.id === xId || it.id === yId) ? { ...it, status: 'pending' as InputStatus, result: undefined, axisMapping: undefined } : it
+    (it.id === xId || it.id === yId) ? { ...it, status: 'pending', result: undefined, axisMapping: undefined } : it
   ));
   cb.stickRecordingRef.current = false;
   cb.setStickBusy(false);

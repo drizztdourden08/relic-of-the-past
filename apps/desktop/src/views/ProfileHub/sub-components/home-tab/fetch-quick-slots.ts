@@ -17,7 +17,7 @@ const fetchQuickSlots = async (profileId: string): Promise<SlotInfo[] | null> =>
     const infos = await savesStore.getSlotInfos(profileId);
     const loaded: SlotInfo[] = [];
     for (let i = 0; i < QUICK_SAVE_SLOTS; i++) {
-      const info = infos?.find((s: { slot: number }) => s.slot === i);
+      const info = infos.find((s: { slot: number }) => s.slot === i);
       const screenshot = info?.hasScreenshot ? await readSlotScreenshot(profileId, i) : null;
       loaded.push({ slot: i, timestamp: info?.timestamp ?? null, screenshot });
     }

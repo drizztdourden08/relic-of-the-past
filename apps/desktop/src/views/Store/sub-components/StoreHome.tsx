@@ -1,28 +1,15 @@
 /* @layer renderer-components @kind component */
-import { Button, Flex, Spinner, Stack, Text } from '@drizztdourden08/tessera/primitives';
-import { HookshopHighlight } from '@rotp/design/packs';
+import { Flex, Spinner, Stack, Text } from '@drizztdourden08/tessera/primitives';
 import type { StoreHomeProps } from '../Store.type';
-import { HIGHLIGHT_PIXEL } from '../Store.constants';
-import { updatesLine } from '../behavior/updates-line';
 import { StoreGrid } from './StoreGrid';
+import { StoreHomeWelcome } from './StoreHomeWelcome';
 
 const StoreHome = (props: StoreHomeProps) => {
   const { name, home, loading, error, updateCount, statusFor, onSelect, onShowUpdates } = props;
 
   return (
     <Stack gap="lg" className="store-page">
-      <Flex align="center" gap="lg" className="store-home__welcome">
-        <HookshopHighlight pixelSize={HIGHLIGHT_PIXEL} className="store-home__highlight" />
-        <Stack gap="sm">
-          <Text as="h2" className="store__title">Welcome back, {name}</Text>
-          {home?.welcome && <Text as="p" className="store__lead">{home.welcome}</Text>}
-          {updateCount > 0 && (
-            <Flex>
-              <Button variant="secondary" size="sm" onClick={onShowUpdates}>{updatesLine(updateCount)}</Button>
-            </Flex>
-          )}
-        </Stack>
-      </Flex>
+      <StoreHomeWelcome name={name} welcome={home?.welcome} updateCount={updateCount} onShowUpdates={onShowUpdates} />
       {error && <Text as="p" className="store__error">{error}</Text>}
       {loading && !home && <Spinner size="sm" />}
       {home && home.featured.length > 0 && (

@@ -6,30 +6,38 @@ import { createRoot, type Root } from 'react-dom/client';
 import { readFileSync } from 'fs';
 import { resolve } from 'path';
 import { StageSelection } from '@app/views/HudLayoutEditor/sub-components/StageSelection';
-import type { PlacedNode } from '@rotp/hud';
+import type { HudContainer, HudElement, PlacedNode } from '@rotp/hud';
 import { REPO_ROOT } from '../repo-root';
 
 (globalThis as { IS_REACT_ACT_ENVIRONMENT?: boolean }).IS_REACT_ACT_ENVIRONMENT = true;
 
 const EDITOR = resolve(REPO_ROOT, 'apps/desktop/src/views/HudLayoutEditor');
 
-const SCREEN = {
+const spacer = (id: string): HudElement => ({ id, kind: 'element', element: { type: 'spacer' } });
+
+const SCREEN: HudContainer = {
   id: 'screen',
   kind: 'container',
   direction: 'row',
-  children: [{ id: 'hearts' }, { id: 'wallet' }],
+  children: [spacer('hearts'), spacer('wallet')],
 };
 
-const placed = (id: string, x: number, y: number, w = 20, h = 10): PlacedNode => ({
+type PlacedBox = { id: string; x: number; y: number; w?: number; h?: number };
+
+const placed = ({ id, x, y, w = 20, h = 10 }: PlacedBox): PlacedNode => ({
   id,
-  node: id === 'screen' ? SCREEN : { id, kind: 'element', element: { type: 'spacer' } },
+  node: id === 'screen' ? SCREEN : spacer(id),
   rect: { x, y, w, h },
   scale: 1,
   opacity: 1,
   dimmed: false,
-} as unknown as PlacedNode);
+});
 
-const NODES = [placed('screen', 0, 0, 200, 120), placed('hearts', 8, 6), placed('wallet', 8, 40)];
+const NODES = [
+  placed({ id: 'screen', x: 0, y: 0, w: 200, h: 120 }),
+  placed({ id: 'hearts', x: 8, y: 6 }),
+  placed({ id: 'wallet', x: 8, y: 40 }),
+];
 
 let mounted: { root: Root; host: HTMLElement } | null = null;
 

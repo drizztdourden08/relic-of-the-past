@@ -1,11 +1,13 @@
 /* @layer renderer-components @kind component */
 import { Text } from '@drizztdourden08/tessera/primitives';
+import { describeReportContact } from '../behavior/describe-report-contact';
+import { stringifyOrEmpty } from '../behavior/stringify-or-empty';
 import type { ConfirmStepProps } from '../controller-report-form.type';
 import { ReportSection } from './ReportSection';
 
 const ConfirmStep = (props: ConfirmStepProps) => {
   const { me, email, name, additionalInfo, debugText, detection, calibrationMap, diagnosticsReport, status } = props;
-  const contact = me ? me.user.displayName : `${email}${name.trim() ? ` (${name.trim()})` : ''}`;
+  const contact = describeReportContact({ me, email, name });
 
   return (
     <>
@@ -25,8 +27,8 @@ const ConfirmStep = (props: ConfirmStepProps) => {
       </Text>
 
       <ReportSection label="Full HID read" text={detection.hidReport} />
-      <ReportSection label="Byte-level calibration map (JSON)" text={calibrationMap ? JSON.stringify(calibrationMap, null, 2) : ''} />
-      <ReportSection label="Gamepad diagnostics report (JSON)" text={diagnosticsReport ? JSON.stringify(diagnosticsReport, null, 2) : ''} />
+      <ReportSection label="Byte-level calibration map (JSON)" text={stringifyOrEmpty(calibrationMap)} />
+      <ReportSection label="Gamepad diagnostics report (JSON)" text={stringifyOrEmpty(diagnosticsReport)} />
       <ReportSection label="Debug info (app/OS/hardware)" text={debugText ?? 'Collecting...'} />
 
       <Text as="p" className="controller-report__disclaimer">

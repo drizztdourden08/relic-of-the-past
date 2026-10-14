@@ -23,7 +23,7 @@ const createShine = (seed: number, pixels: ShinePixels): Shine => {
   };
 
   return {
-    draw: (ctx, t, alpha, frameX, frameY, swordPlanted) => {
+    draw: ({ ctx, t, alpha, at, swordPlanted }) => {
       if (alpha <= 0) return;
       if (current && t >= current.end) {
         nextAt = current.end + rng.range(PAUSE_SECONDS.min, PAUSE_SECONDS.max);
@@ -36,10 +36,10 @@ const createShine = (seed: number, pixels: ShinePixels): Shine => {
         current = { ...spot, start: t, step, end: t + step * SPARKLE_RADIUS_PER_STEP.length };
       }
       if (!current) return;
-      const at = Math.min(SPARKLE_RADIUS_PER_STEP.length - 1, Math.floor((t - current.start) / current.step));
-      const radius = itemAt(SPARKLE_RADIUS_PER_STEP, at);
+      const index = Math.min(SPARKLE_RADIUS_PER_STEP.length - 1, Math.floor((t - current.start) / current.step));
+      const radius = itemAt(SPARKLE_RADIUS_PER_STEP, index);
       ctx.globalAlpha = alpha;
-      drawStar(ctx, frameX + current.x, frameY + current.y, radius, radius >= SPARKLE_DIAGONALS_FROM_RADIUS);
+      drawStar(ctx, { x: at.x + current.x, y: at.y + current.y }, radius, radius >= SPARKLE_DIAGONALS_FROM_RADIUS);
       ctx.globalAlpha = 1;
     },
   };

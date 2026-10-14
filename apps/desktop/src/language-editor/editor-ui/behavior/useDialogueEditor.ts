@@ -1,15 +1,15 @@
 /* @layer renderer-components @kind hook */
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useEditor } from '@tiptap/react';
-import { redo, redoDepth, undo, undoDepth } from '@tiptap/pm/history';
+import { redoDepth, undoDepth } from '@tiptap/pm/history';
 import { joinLines } from '@rotp/languages';
 import { updateEditorRuntime } from '../../editor/editor-runtime';
-import { toggleWaitHere } from '../../editor/toggle-wait';
-import { docToLines, linesOfTokens, linesToDoc, tokenToNode } from '../editor-contract';
+import { docToLines, linesOfTokens, linesToDoc } from '../editor-contract';
 import { signatureOf } from '../tokens-signature';
+import { useEditorCommands } from './useEditorCommands';
 import { useTokenSync } from './useTokenSync';
-import type { Editor, JSONContent } from '@tiptap/core';
-import type { DialogueLineView, Token } from '@rotp/languages';
+import type { Editor } from '@tiptap/core';
+import type { DialogueLineView } from '@rotp/languages';
 import type { UseDialogueEditorParams } from './dialogue-editor.type';
 
 const useDialogueEditor = (params: UseDialogueEditorParams) => {
@@ -58,47 +58,21 @@ const useDialogueEditor = (params: UseDialogueEditorParams) => {
 
   useEffect(() => {
     updateEditorRuntime({ metrics, glossary });
-    const view = editor?.view;
-    if (view !== undefined) view.dispatch(view.state.tr);
+    const { view } = editor;
+    view.dispatch(view.state.tr);
   }, [editor, metrics, glossary]);
 
   useTokenSync({ editor, tokens, emittedRef, metrics, glossary, onLines: setLines });
 
   useEffect(() => {
-    if (!editor || editor.isDestroyed) return;
+    if (editor.isDestroyed) return;
     setLines(docToLines(editor.getJSON(), metrics, glossary));
   }, [editor, metrics, glossary]);
 
-  const insertTokens = useCallback((tokens: Token[]) => {
-    if (!editor || editor.isDestroyed) return;
-    const nodes = tokens
-      .map(tokenToNode)
-      .filter((node): node is JSONContent => node !== null);
-    if (nodes.length === 0) return;
-    editor.chain().focus().insertContent(nodes).run();
-  }, [editor]);
-
-  const doUndo = useCallback(() => {
-    if (!editor || editor.isDestroyed) return;
-    undo(editor.state, editor.view.dispatch);
-    editor.view.focus();
-  }, [editor]);
-
-  const doRedo = useCallback(() => {
-    if (!editor || editor.isDestroyed) return;
-    redo(editor.state, editor.view.dispatch);
-    editor.view.focus();
-  }, [editor]);
-
-  const endBoxHere = useCallback(() => {
-    if (!editor || editor.isDestroyed) return;
-    toggleWaitHere(editor.state, editor.view.dispatch);
-    editor.view.focus();
-  }, [editor]);
+  const commands = useEditorCommands(editor);
 
   return {
-    editor, focused, caretLine, insertTokens, lines,
-    doUndo, doRedo, endBoxHere,
+    editor, focused, caretLine, lines, ...commands,
     canUndo: historyDepths.canUndo, canRedo: historyDepths.canRedo,
   };
 };

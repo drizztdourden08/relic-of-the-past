@@ -24,4 +24,34 @@ interface TriggerCardProps extends TriggerCardsProps {
   side: TriggerSide;
 }
 
-export type { TriggerCardProps, TriggerCardsProps };
+interface TriggerCardState {
+  item: InputItem;
+  isDone: boolean;
+  isActive: boolean;
+  isPicking: boolean;
+  isRecording: boolean;
+  otherBusy: boolean;
+}
+
+interface TriggerCardStatusProps {
+  state: TriggerCardState;
+  triggerLiveInfo: string;
+  triggerPickedByte: number | null;
+}
+
+interface TriggerCardActionsProps {
+  state: TriggerCardState;
+  triggerPickedByte: number | null;
+  idleRecording: string | null;
+  hasIdleResult: boolean;
+  onConfirmTriggerPick: () => void;
+  onCancelTriggerPick: () => void;
+  onStopTrigger: () => void;
+  onRedo: () => void;
+  onStart: () => void;
+  onPick: () => void;
+  onSkip: () => void;
+  onRecordIdle: () => void;
+}
+
+export type { TriggerCardActionsProps, TriggerCardProps, TriggerCardState, TriggerCardStatusProps, TriggerCardsProps };

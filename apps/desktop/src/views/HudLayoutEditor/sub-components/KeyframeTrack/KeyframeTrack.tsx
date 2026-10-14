@@ -1,10 +1,11 @@
 /* @layer renderer-components @kind component */
 import { useState } from 'react';
-import { Box, Button, Field, Flex, Slider } from '@drizztdourden08/tessera/primitives';
-import { addKeyAt, canRemoveKey, moveKey, removeKey } from '@app/hud-layout-editing/keyframe-track';
+import { Box, Field, Slider } from '@drizztdourden08/tessera/primitives';
+import { addKeyAt, moveKey } from '@app/hud-layout-editing/keyframe-track';
 import { EasingPicker } from '../EasingPicker';
 import { ValueInput } from '../ValueInput';
 import { KeyRail } from './sub-components/KeyRail';
+import { KeyTools } from './sub-components/KeyTools';
 import type { KeyframeTrackProps } from './KeyframeTrack.type';
 
 const KeyframeTrack = (props: KeyframeTrackProps) => {
@@ -69,19 +70,7 @@ const KeyframeTrack = (props: KeyframeTrackProps) => {
         }))}
       />
 
-      <Flex gap="2xs" align="center">
-        <Button variant="ghost" size="sm" onClick={() => add(key.at < 0.5 ? key.at + 0.25 : key.at - 0.25)}>
-          + key
-        </Button>
-        <Button
-          variant="ghost"
-          size="sm"
-          disabled={!canRemoveKey(keyframes)}
-          onClick={() => { onChange(removeKey(keyframes, selected)); setSelected(0); }}
-        >
-          remove key
-        </Button>
-      </Flex>
+      <KeyTools keyframes={keyframes} selected={selected} at={key.at} onAdd={add} onChange={onChange} onSelect={setSelected} />
     </Box>
   );
 };

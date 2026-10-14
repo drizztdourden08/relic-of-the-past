@@ -1,7 +1,7 @@
 /* @layer tests @kind test */
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import type { Recommendation } from '@rotp/navigation';
-import type { AcceptOutcome } from '@app/views/DataInspector/behavior/recommendations/recommendations.type';
+import type { AcceptOutcome } from '@app/data-inspector/recommendations/recommendations.type';
 
 const mocks = vi.hoisted(() => ({
   create: vi.fn(),
@@ -10,21 +10,21 @@ const mocks = vi.hoisted(() => ({
   decide: vi.fn(),
 }));
 
-vi.mock('@app/views/DataInspector/behavior/record-creators', () => ({
+vi.mock('@app/data-inspector/record-creators', () => ({
   RECORD_CREATORS: { tag: mocks.create },
 }));
-vi.mock('@app/views/DataInspector/behavior/record-writers', () => ({
+vi.mock('@app/data-inspector/record-writers', () => ({
   RECORD_WRITERS: { tag: mocks.write },
 }));
 vi.mock('@app/views/DataInspector/behavior/delete-record', () => ({
   recordDeleterFor: (kind: string) => (kind === 'tag' ? mocks.remove : undefined),
 }));
-vi.mock('@app/views/DataInspector/behavior/recommendations/recommendation-cache', () => ({
+vi.mock('@app/data-inspector/recommendations/recommendation-cache', () => ({
   decideRecommendation: mocks.decide,
 }));
 
 const { acceptRecommendation, dismissRecommendation } = await import(
-  '@app/views/DataInspector/behavior/recommendations/accept-recommendation'
+  '@app/data-inspector/recommendations/accept-recommendation'
 );
 
 const finding = (over: Partial<Recommendation> = {}): Recommendation => ({

@@ -1,10 +1,11 @@
 /* @layer test @kind test */
 import { describe, expect, it } from 'vitest';
-import defaultJson from '../../../../packages/hud/data/layouts/default.json';
+import defaultJson from '@rotp/hud/data/layouts/default.json';
 import { tryLoadLayout } from '@rotp/hud';
 import { required } from '../required';
 import { OUTLINE_MAX_WIDTH } from '@app/compounds/HudNodeRenderer/behavior/hud-node-style.constants';
 import { resolveNodeStyle } from '@app/compounds/HudNodeRenderer/behavior/resolve-node-style';
+import { FIXTURE_COLOURS } from './fixture-colours.constants';
 
 const edited = (change: (doc: Record<string, unknown>) => void): unknown => {
   const copy = JSON.parse(JSON.stringify(defaultJson)) as Record<string, unknown>;
@@ -25,12 +26,12 @@ describe('validating a node\'s style', () => {
   it('accepts background, border, radius, shadow, outline, tint and clip together', () => {
     const doc = edited((d) => {
       rootOf(d).style = {
-        background: '#123456',
-        border: { width: 1, color: '#fff', style: 'dashed', sides: { top: true, bottom: false } },
+        background: FIXTURE_COLOURS.navy,
+        border: { width: 1, color: FIXTURE_COLOURS.shortWhite, style: 'dashed', sides: { top: true, bottom: false } },
         radius: [1, 2, 3, 4],
-        shadow: [{ x: 1, y: 1, blur: 2, color: '#000', inset: true }],
-        outline: { width: 1, color: '#f00' },
-        tint: { color: '#0f0', mode: 'replace', amount: 0.5 },
+        shadow: [{ x: 1, y: 1, blur: 2, color: FIXTURE_COLOURS.shortBlack, inset: true }],
+        outline: { width: 1, color: FIXTURE_COLOURS.shortRed },
+        tint: { color: FIXTURE_COLOURS.shortGreen, mode: 'replace', amount: 0.5 },
         clip: true,
       };
     });
@@ -41,7 +42,7 @@ describe('validating a node\'s style', () => {
   it('accepts a background bound to an expression, and a gradient', () => {
     const doc = edited((d) => {
       rootOf(d).style = {
-        background: { gradient: 'linear', angle: { from: 'data', expr: 'armor * 10' }, stops: [{ at: 0, color: '#000' }, { at: 1, color: '#fff' }] },
+        background: { gradient: 'linear', angle: { from: 'data', expr: 'armor * 10' }, stops: [{ at: 0, color: FIXTURE_COLOURS.shortBlack }, { at: 1, color: FIXTURE_COLOURS.shortWhite }] },
       };
     });
     const result = tryLoadLayout(doc);
@@ -65,7 +66,7 @@ describe('validating a node\'s style', () => {
 
   it('refuses a tint with an unparseable amount, naming the expression', () => {
     const errors = errorsOf(edited((d) => {
-      rootOf(d).style = { tint: { color: '#fff', amount: { from: 'data', expr: '((' } } };
+      rootOf(d).style = { tint: { color: FIXTURE_COLOURS.shortWhite, amount: { from: 'data', expr: '((' } } };
     }));
     expect(errors.some((e) => e.includes('.style.tint.amount'))).toBe(true);
   });
@@ -85,7 +86,7 @@ describe('validating a grid container', () => {
       root.gap = { x: 2, y: 2 };
       root.justifyItems = 'center';
       root.alignItems = 'stretch';
-      root.guide = { show: true, color: '#c064c0' };
+      root.guide = { show: true, color: FIXTURE_COLOURS.guideMagenta };
     });
     const result = tryLoadLayout(doc);
     expect(result.ok, result.ok ? '' : result.errors.join('\n')).toBe(true);
@@ -109,7 +110,7 @@ describe('validating a grid container', () => {
 
 describe('resolveNodeStyle - the CSS half', () => {
   it('a flat colour becomes a plain background', () => {
-    expect(resolveNodeStyle({ background: '#123456' }, {})).toEqual({ background: '#123456' });
+    expect(resolveNodeStyle({ background: FIXTURE_COLOURS.navy }, {})).toEqual({ background: FIXTURE_COLOURS.navy });
   });
 
   it('an absent style resolves to nothing - the render path a document with no style already takes', () => {
@@ -119,8 +120,8 @@ describe('resolveNodeStyle - the CSS half', () => {
   it('radius, border and shadow become real CSS, resolved against the scope', () => {
     const css = resolveNodeStyle({
       radius: { from: 'data', expr: 'armor' },
-      border: { width: 2, color: '#fff' },
-      shadow: [{ x: 1, y: 2, blur: 3, color: '#000' }],
+      border: { width: 2, color: FIXTURE_COLOURS.shortWhite },
+      shadow: [{ x: 1, y: 2, blur: 3, color: FIXTURE_COLOURS.shortBlack }],
     }, { armor: 4 });
     expect(css.borderRadius).toBe('4px');
     expect(css.borderTopWidth).toBe('2px');
@@ -128,13 +129,13 @@ describe('resolveNodeStyle - the CSS half', () => {
   });
 
   it('outline width is CAPPED, even when the bound expression asks for more', () => {
-    const capped = resolveNodeStyle({ outline: { width: 999, color: '#f00' } }, {});
-    const small = resolveNodeStyle({ outline: { width: OUTLINE_MAX_WIDTH, color: '#f00' } }, {});
+    const capped = resolveNodeStyle({ outline: { width: 999, color: FIXTURE_COLOURS.shortRed } }, {});
+    const small = resolveNodeStyle({ outline: { width: OUTLINE_MAX_WIDTH, color: FIXTURE_COLOURS.shortRed } }, {});
     expect(capped.filter).toBe(small.filter);
   });
 
   it('outline and tint combine into ONE filter - CSS allows exactly one', () => {
-    const css = resolveNodeStyle({ outline: { width: 1, color: '#f00' }, tint: { color: '#0f0' } }, {});
+    const css = resolveNodeStyle({ outline: { width: 1, color: FIXTURE_COLOURS.shortRed }, tint: { color: FIXTURE_COLOURS.shortGreen } }, {});
     expect(typeof css.filter).toBe('string');
     expect((css.filter as string).includes('drop-shadow')).toBe(true);
     expect((css.filter as string).includes('data:image/svg+xml')).toBe(true);

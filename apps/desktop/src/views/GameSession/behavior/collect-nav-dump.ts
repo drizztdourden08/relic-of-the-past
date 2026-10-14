@@ -9,13 +9,6 @@ import {
   wasmGetFallHoles,
   wasmGetOverworldEntrances,
   wasmGetProgressIndicator,
-  wasmGetRoomDoorBoundaryTiles,
-  wasmGetRoomLayoutInfo,
-  wasmGetLinkLayer,
-  wasmGetStaircaseType,
-  wasmBuildRoomAttrGrid,
-  wasmGetToggleFloorPositions,
-  wasmGetIndoorDualLayerGrids,
 } from '@app/game';
 import { resolveCurrentScreenDetailed } from '@rotp/game-data';
 import type { VariantGameState } from '@rotp/game-data';
@@ -25,6 +18,7 @@ import { formatStairs } from './format-stairs';
 import { formatTravelDests } from './format-travel-dests';
 import { runDumpFlood } from './run-dump-flood';
 import { readNavLocation } from './read-nav-location';
+import { readIndoorData } from './read-indoor-data';
 import { floodStartOf } from './flood-start-of';
 import { buildNavDump } from './build-nav-dump';
 
@@ -56,13 +50,7 @@ const collectNavDump = (slot: DumpSlot) => {
   const stairInfo = formatStairs(stairs);
   const travelDests = formatTravelDests(wasmGetRoomTravelDestinations());
 
-  const doorBoundaryTiles = isIndoors ? wasmGetRoomDoorBoundaryTiles() : [];
-  const roomLayout = isIndoors ? wasmGetRoomLayoutInfo() : null;
-  const playerLayer = isIndoors ? wasmGetLinkLayer() : null;
-  const staircaseType = isIndoors ? wasmGetStaircaseType() : null;
-  const dualLayerGrids = isIndoors ? wasmGetIndoorDualLayerGrids() : null;
-  const attrGrid = isIndoors ? wasmBuildRoomAttrGrid(roomIndex) : null;
-  const toggleFloorPositions = isIndoors ? wasmGetToggleFloorPositions() : [];
+  const { doorBoundaryTiles, roomLayout, playerLayer, staircaseType, dualLayerGrids, attrGrid, toggleFloorPositions } = readIndoorData(isIndoors, roomIndex);
 
   const { floodScreenIndex, startPos } = floodStartOf(isIndoors, overworldScreenIndex, viewport);
   const { floodFill, annotations } = runDumpFlood({

@@ -38,6 +38,15 @@ interface ViewportInfo {
   isGameplay: boolean;
 }
 
+interface DrawContextParams {
+  ctx: CanvasRenderingContext2D;
+  vp: ViewportInfo;
+  width: number;
+  height: number;
+  result: FloodFillResult;
+  isIndoors: boolean;
+}
+
 interface LiveSprite {
   x: number;
   y: number;
@@ -62,4 +71,4 @@ interface PathPreviewInput {
   setLockedPath: (path: LockedPathTile[] | null) => void;
 }
 
-export type { DrawContext, LiveSprite, LockedPathTile, PathPreviewInput, ScreenOrigin, ViewportInfo };
+export type { DrawContext, DrawContextParams, LiveSprite, LockedPathTile, PathPreviewInput, ScreenOrigin, ViewportInfo };

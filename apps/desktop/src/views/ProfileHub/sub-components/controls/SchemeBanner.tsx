@@ -6,7 +6,7 @@ import './SchemeBanner.css';
 
 const SchemeBanner = ({ onOpenHudStyle }: SchemeBannerProps) => (
   <Box className="scheme-banner">
-    <Text variant="caption">{BANNER_TEXT}</Text>
+    <Text variant="caption" className="scheme-banner__text">{BANNER_TEXT}</Text>
     <Button variant="tertiary" size="sm" onClick={onOpenHudStyle}>{BANNER_ACTION}</Button>
   </Box>
 );

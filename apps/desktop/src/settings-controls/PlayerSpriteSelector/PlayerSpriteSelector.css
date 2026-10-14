@@ -16,7 +16,7 @@
 
 .player-sprite-selector__grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(84px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(calc(84 * var(--size-1)), 1fr));
   gap: var(--space-sm);
   margin-top: var(--space-xs);
 }
@@ -40,7 +40,7 @@
 
 .sprite-choice__preview {
   width: var(--size-40);
-  height: 60px;
+  height: calc(60 * var(--size-1));
   object-fit: contain;
   image-rendering: pixelated;
 }

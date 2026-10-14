@@ -12,7 +12,8 @@ const NameGlyph = ({ char, size, spritesBase }: NameGlyphProps) => {
         src={`${spritesBase}font-symbol-ampersand.png`}
         width={size * AMPERSAND_COLS}
         height={size}
-        style={{ display: 'block', imageRendering: 'pixelated' }}
+        block
+        pixelated
       />
     );
   }
@@ -29,7 +30,8 @@ const NameGlyph = ({ char, size, spritesBase }: NameGlyphProps) => {
       src={`${spritesBase}${prefix}-${suffix}.png`}
       width={size}
       height={size}
-      style={{ display: 'block', imageRendering: 'pixelated' }}
+      block
+      pixelated
     />
   );
 };

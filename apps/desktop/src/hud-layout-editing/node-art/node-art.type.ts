@@ -1,8 +1,16 @@
 /* @layer renderer-components @kind types */
+import type { IconName } from '@drizztdourden08/tessera/primitives';
+
 interface NodeArt {
   src?: string;
-  placeholder: string;
+  icon: IconName;
   name: string;
 }
 
-export type { NodeArt };
+interface FaceArt {
+  src: string | undefined;
+  name: string;
+  kind: string | undefined;
+}
+
+export type { FaceArt, NodeArt };

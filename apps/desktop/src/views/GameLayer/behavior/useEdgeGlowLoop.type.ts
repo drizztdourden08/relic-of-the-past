@@ -8,8 +8,8 @@ interface EdgeGlowLoopParams {
   canvasKey: number;
   canvasRef: React.RefObject<HTMLCanvasElement | null>;
   fxCanvasRef: React.RefObject<HTMLCanvasElement | null>;
-  glowRendererRef: React.MutableRefObject<EdgeGlowRenderer | null>;
-  edgeEffectRef: React.MutableRefObject<boolean>;
+  glowRendererRef: React.RefObject<EdgeGlowRenderer | null>;
+  edgeEffectRef: React.RefObject<boolean>;
   setBufSize: (s: BufferSize) => void;
 }
 

@@ -1,12 +1,12 @@
 /* @layer renderer-components @kind style */
 
-.mascot {
+.hookshop-mascot {
   position: absolute;
   inset: 0;
   pointer-events: none;
 }
 
-.mascot__piece {
+.hookshop-mascot__piece {
   position: absolute;
   left: calc(var(--part-x) * var(--px));
   top: calc(var(--part-y) * var(--px));

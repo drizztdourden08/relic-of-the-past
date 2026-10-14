@@ -1,7 +1,12 @@
 /* @layer renderer-components @kind constants */
-const PLACEHOLDERS: Readonly<Record<string, string>> = {
-  text: 'T', shape: '♥', slot: '▫', spacer: '␣', repeat: '⧉', switch: '⑂', button: '⊙', countdown: '◔',
-  container: '▤',
+import type { IconName } from '@drizztdourden08/tessera/primitives';
+
+const PLACEHOLDERS: Readonly<Record<string, IconName | undefined>> = {
+  text: 'type', shape: 'heart', slot: 'square', spacer: 'arrow-left-right', repeat: 'copy', switch: 'split',
+  button: 'circle-dot', countdown: 'clock', container: 'layout-list',
 };
 
-export { PLACEHOLDERS };
+const UNKNOWN_ART: IconName = 'circle-help';
+const BLANK_ART: IconName = 'circle';
+
+export { BLANK_ART, PLACEHOLDERS, UNKNOWN_ART };

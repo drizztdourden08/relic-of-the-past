@@ -9,7 +9,6 @@ const useLeaveGuard = (jobs: readonly UploadJob[]) => {
     if (!moving) return undefined;
     const ask = (event: BeforeUnloadEvent) => {
       event.preventDefault();
-      event.returnValue = '';
     };
     window.addEventListener('beforeunload', ask);
     return () => window.removeEventListener('beforeunload', ask);

@@ -1,4 +1,5 @@
 /* @layer renderer-components @kind types */
+import type { IconifyIcon } from '@iconify/types';
 import type { ControllerBusType, ControllerConnectionState } from '@drizztdourden08/brock-input';
 
 interface ControllerStatusBarProps {
@@ -9,4 +10,9 @@ interface ControllerStatusBarProps {
   idLabel?: string;
 }
 
-export type { ControllerStatusBarProps };
+interface StatusItemProps {
+  icon: IconifyIcon;
+  label: string;
+}
+
+export type { ControllerStatusBarProps, StatusItemProps };

@@ -4,7 +4,7 @@ import { Box, Pressable, Text } from '@drizztdourden08/tessera/primitives';
 import { atFromPointer } from '@app/hud-layout-editing/keyframe-track';
 import type { PointerEvent as ReactPointerEvent } from 'react';
 import { NUDGE, NUDGE_COARSE } from './KeyRail.constants';
-import type { KeyRailProps } from './KeyRail.type';
+import type { KeyRailProps, RailCapture } from './KeyRail.type';
 
 const pct = (at: number): string => `${Math.min(100, Math.max(0, at * 100))}%`;
 
@@ -22,7 +22,8 @@ const KeyRail = (props: KeyRailProps) => {
     event.stopPropagation();
     draggingRef.current = index;
     onSelect(index);
-    railRef.current?.setPointerCapture?.(event.pointerId);
+    const rail: RailCapture | null = railRef.current;
+    rail?.setPointerCapture?.(event.pointerId);
   };
 
   const drag = (event: ReactPointerEvent<HTMLElement>): void => {

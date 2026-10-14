@@ -1,0 +1,6 @@
+/* @layer renderer-components @kind style */
+
+.tracker-swap-badge {
+  margin-left: auto;
+  flex-shrink: 0;
+}

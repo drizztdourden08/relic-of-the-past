@@ -1,6 +1,7 @@
 /* @layer renderer-appshell @kind types */
 import type { Dispatch, SetStateAction } from 'react';
 import type { GameSettings } from '@rotp/features';
+import type { useProfiles } from '@drizztdourden08/brock-react';
 import type { ConfirmDialog } from '@app/views/GameSession/GameSession.type';
 
 interface ProfileLoadedData {
@@ -32,4 +33,18 @@ interface RomActionsDeps {
   onGameClear: () => void;
 }
 
-export type { LoadProfileForGameDeps, ProfileLoadedData, ProfileManagementParams, RomActionsDeps };
+interface DeleteRomDeps extends RomActionsDeps {
+  setExtractionStates: Dispatch<SetStateAction<Record<string, RomExtractionStatus>>>;
+}
+
+interface DeleteProfileDeps {
+  profiles: Profile[];
+  activeProfile: Profile | null;
+  refreshProfilesAndRoms: () => Promise<unknown>;
+  showDialog: (config: ConfirmDialog) => void;
+  dismissDialog: () => void;
+  onGameClear: () => void;
+  removeConfirmed: ReturnType<typeof useProfiles>['removeConfirmed'];
+}
+
+export type { DeleteProfileDeps, DeleteRomDeps, LoadProfileForGameDeps, ProfileLoadedData, ProfileManagementParams, RomActionsDeps };

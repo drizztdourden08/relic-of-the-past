@@ -36,6 +36,11 @@ interface ComparatorInput {
   nameOf: (check: CheckRecord) => string;
 }
 
+interface ChestLookups {
+  referenceByName: ReadonlyMap<string, ReferenceLocation>;
+  itemById: ReadonlyMap<string, ItemRecord>;
+}
+
 interface VanillaResolution {
   itemId: string | null;
   receiveItemId: number | null;
@@ -57,5 +62,5 @@ interface AnchorCheck {
 }
 
 export type {
-  AnchorCheck, ChestPosition, ChestVerdict, ChestVerdictKind, ComparatorInput, VanillaResolution, VanillaVerdictInput,
+  AnchorCheck, ChestLookups, ChestPosition, ChestVerdict, ChestVerdictKind, ComparatorInput, VanillaResolution, VanillaVerdictInput,
 };

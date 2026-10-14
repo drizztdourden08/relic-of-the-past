@@ -37,15 +37,14 @@ const preloadApi: unknown = new Proxy({}, { get: () => new Proxy(answerEmpty, { 
 (globalThis as { window?: unknown }).window ??= {
   addEventListener: () => undefined, removeEventListener: () => undefined, api: preloadApi,
 };
-await import('../../../../packages/game-core/src/cheats');
-const { setModule } = await import('../../../../packages/game-core/src/wasm-bridge');
+const { setModule } = await import('@rotp/game-core');
 const { defaultOnlineCore } = await import('@app/game/randomizer-client/online-core');
 const { createOnlineClient } = await import('@app/game/randomizer-client/online-client');
 const { AP_DEATH_LINK_BIT, AP_ONLINE_BIT, gateWord5Now } = await import('@app/game/gate-word-5');
 const {
   probeDeliverableNpcLocations, probeDeliverablePondLocations, probeDeliverableWorldLocations,
 } = await import('../../../../packages/randomizer/src/client/npc-capability');
-const { executeEntry } = await import('../../../../packages/randomizer/src/delivery-execute');
+const { executeEntry } = await import('@rotp/randomizer');
 const { withCollectedChecks } = await import('../../../../packages/navigation/src/tracker/collected-checks');
 const { rebaselineEntries } = await import('../../../../packages/randomizer/src/client/poll-rebaseline');
 

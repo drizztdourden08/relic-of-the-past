@@ -31,7 +31,7 @@
 .cheats-section__title {
   font-size: var(--text-xs);
   text-transform: uppercase;
-  letter-spacing: 0.1em;
+  letter-spacing: calc(1.2 * var(--size-1));
   color: var(--c-text-muted);
   margin: var(--space-md) 0 var(--space-xs);
 }
@@ -84,7 +84,7 @@
 .cheats-pointer-hint__title {
   font-size: var(--text-xs);
   font-weight: var(--weight-semi);
-  letter-spacing: 0.06em;
+  letter-spacing: calc(0.72 * var(--size-1));
   text-transform: uppercase;
   color: var(--c-primary);
 }
@@ -103,10 +103,11 @@
 
 .cheats-popover {
   --anchored-gap: var(--space-2xs);
+
   pointer-events: auto;
   display: grid;
   gap: var(--space-2xs);
-  min-width: 160px;
+  min-width: var(--size-160);
   padding: var(--space-xs);
   background: var(--c-surface);
   border: var(--border-width-thin) solid var(--c-primary);
@@ -116,7 +117,7 @@
 
 .cheats-popover__title {
   font-size: var(--text-xs);
-  letter-spacing: 0.1em;
+  letter-spacing: calc(1.2 * var(--size-1));
   text-transform: uppercase;
   color: var(--c-text-muted);
   padding: var(--space-2xs) var(--space-xs) var(--space-xs);
@@ -155,8 +156,8 @@
 }
 
 .cheats-popover__sprite {
-  width: 16px;
-  height: 16px;
+  width: var(--size-16);
+  height: var(--size-16);
   object-fit: contain;
   image-rendering: pixelated;
   flex: 0 0 auto;
@@ -175,7 +176,7 @@
 .cheats-popover__current,
 .cheats-popover__all {
   font-size: var(--text-xs);
-  letter-spacing: 0.06em;
+  letter-spacing: calc(0.72 * var(--size-1));
   color: var(--c-text-muted);
 }
 
@@ -212,8 +213,8 @@
 }
 
 .cheats-setter__rungs {
-  max-width: 280px;
-  max-height: 180px;
+  max-width: calc(280 * var(--size-1));
+  max-height: calc(180 * var(--size-1));
   overflow-y: auto;
 }
 

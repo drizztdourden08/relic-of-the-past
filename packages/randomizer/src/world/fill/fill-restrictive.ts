@@ -3,7 +3,7 @@ import { itemAt } from '../../checked-access';
 import { canFillLocation } from './can-fill-location';
 import { createAssumedState } from './create-assumed-state';
 import { FillError } from './fill-error';
-import { MAX_SWAPS_PER_ITEM } from './fill.constants';
+import { trySwap } from './try-swap';
 import type { ItemKey } from '../item-ids';
 import type { LocationKey } from '../location-key';
 import type { CollectionState } from '../collection-state';
@@ -18,6 +18,7 @@ const fillRestrictive = (input: FillRestrictiveInput): void => {
   ): boolean =>
     (allowedAt === undefined || allowedAt(item, location))
       && canFillLocation(state, location, item, checkAccess);
+  const swapRun = { world, items, assumedItems, placedHere, swapCounts, fits };
   while (items.length > 0) {
     const item = items.pop() as ItemKey;
     const assumed = createAssumedState(world, [...assumedItems, ...items]);
@@ -29,22 +30,7 @@ const fillRestrictive = (input: FillRestrictiveInput): void => {
       placedHere.push(spot);
       continue;
     }
-    let swapped = false;
-    for (const spot of placedHere) {
-      const displaced = world.placedItems.get(spot);
-      if (displaced === undefined || (swapCounts.get(displaced) ?? 0) >= MAX_SWAPS_PER_ITEM) continue;
-      world.placedItems.delete(spot);
-      const swapState = createAssumedState(world, [...assumedItems, ...items]);
-      if (fits(swapState.state, item, spot, checkAccess)) {
-        world.placedItems.set(spot, item);
-        swapCounts.set(displaced, (swapCounts.get(displaced) ?? 0) + 1);
-        items.unshift(displaced);
-        swapped = true;
-        break;
-      }
-      world.placedItems.set(spot, displaced);
-    }
-    if (!swapped) {
+    if (!trySwap(swapRun, item, checkAccess)) {
       throw new FillError(item,
         `${items.length} items left, ${locations.length} open locations, ${placedHere.length} placed`);
     }

@@ -1,6 +1,8 @@
 /* @layer renderer-components @kind types */
 import type React from 'react';
-import type { ByteColorResult, ByteStatus, GyroState } from '../hid-calibration.type';
+import type { ByteColorKey, ByteStatus, GyroState } from '../hid-calibration.type';
+
+type ByteGridItem = { id: string; label: string; status: string };
 
 interface ByteGridProps {
   latestBytes: Uint8Array;
@@ -14,11 +16,38 @@ interface ByteGridProps {
   lastReportId: number;
   baselineRef: React.RefObject<Uint8Array>;
   excludedRef: React.RefObject<Set<number>>;
-  itemsRef: React.RefObject<{ id: string; label: string; status: string }[]>;
+  itemsRef: React.RefObject<ByteGridItem[]>;
   activeIdxRef: React.RefObject<number>;
   inputPhaseActiveRef: React.RefObject<boolean>;
-  getByteColor: (idx: number) => ByteColorResult;
+  getByteColorKey: (idx: number) => ByteColorKey;
   onByteClick: (idx: number) => void;
 }
 
-export type { ByteGridProps };
+type BytePickMode = 'stick' | 'trigger' | 'none';
+
+interface ByteCellTitleParams {
+  index: number;
+  value: number;
+  status: ByteStatus;
+  pickMode: BytePickMode;
+  isPicked: boolean;
+  activeItem: ByteGridItem | undefined;
+}
+
+interface ByteCellState {
+  delta: number;
+  signed: boolean;
+  isPicked: boolean;
+  dimmed: boolean;
+  title: string;
+}
+
+interface ByteCellProps {
+  index: number;
+  value: number;
+  grid: ByteGridProps;
+}
+
+type ByteGridLegendProps = Pick<ByteGridProps, 'gyroState' | 'stickPickMode' | 'triggerPickMode'>;
+
+export type { ByteCellProps, ByteCellState, ByteCellTitleParams, ByteGridItem, ByteGridLegendProps, ByteGridProps, BytePickMode };

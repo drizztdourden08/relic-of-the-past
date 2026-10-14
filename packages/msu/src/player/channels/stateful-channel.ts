@@ -1,22 +1,17 @@
 /* @layer renderer-lib @kind logic */
 import { restoreFull } from '../fade';
-import { createTrackLoader } from '../track-loader';
-import { layerPositions, layerReports, startLayers, stopLayers } from './active-layers';
-import type { ChannelOptions, ChannelReport, ChannelResume, SoundChannelApi } from './channel.type';
+import { layerPositions, stopLayers } from './active-layers';
+import type { ChannelOptions, ChannelResume, SoundChannelApi } from './channel.type';
 import type { ActiveProgram } from './stateful-channel.type';
 import { carriedAcross } from './carried-across';
+import { createChannelCore } from './create-channel-core';
+import { savedResumeOf } from './saved-resume-of';
+import { startProgram } from './start-program';
+import { statefulReport } from './stateful-report';
 
 const createStatefulChannel = (options: ChannelOptions): SoundChannelApi => {
-  const {
-    ctx, destination, name, programs, loadBytes, cacheLimit, resumeEnabled, restartOnRepeat = false,
-    onError, onStart,
-  } = options;
-
-  const fadeGain = ctx.createGain();
-  fadeGain.connect(destination);
-
-  const loader = createTrackLoader(ctx, loadBytes, onError, cacheLimit);
-  const byId = new Map(programs.map((program) => [program.id, program]));
+  const { ctx, name, resumeEnabled, restartOnRepeat = false, onStart } = options;
+  const { fadeGain, loader, byId, teardown } = createChannelCore(options);
   const resumeById = new Map<number, ChannelResume>();
 
   let active: ActiveProgram | null = null;
@@ -40,25 +35,13 @@ const createStatefulChannel = (options: ChannelOptions): SoundChannelApi => {
     const program = byId.get(id);
     if (!program) return;
 
-    const loaded = await loader.load(id, program.layers);
-    const supersededWhileDecoding = mine !== generation;
-    if (supersededWhileDecoding) return;
+    const started = await startProgram({ ctx, name, fadeGain, loader, program, resume, isCurrent: () => mine === generation });
+    if (!started) return;
 
-    const startedAt = ctx.currentTime;
-    const layers = startLayers({
-      ctx,
-      channel: name,
-      destination: fadeGain,
-      program,
-      loaded,
-      elapsedSeconds: () => ctx.currentTime - startedAt,
-      resumeFor: (layer) => resume?.layers[layer.id] ?? null,
-    });
-
-    active = { id, startedAt, layers };
+    active = started;
     pendingId = null;
     restoreFull(fadeGain, ctx.currentTime);
-    onStart?.(id, layers.length, resume !== null);
+    onStart?.(id, started.layers.length, resume !== null);
   };
 
   const trigger = (id: number): void => {
@@ -68,10 +51,8 @@ const createStatefulChannel = (options: ChannelOptions): SoundChannelApi => {
     stopActive();
     pendingId = id === 0 ? null : id;
     if (id === 0) return;
-    void start(id, carried ?? (resumeEnabled?.() ? resumeById.get(id) ?? null : null));
+    void start(id, carried ?? savedResumeOf(resumeEnabled, resumeById, id));
   };
-
-  const forget = (): void => { resumeById.clear(); };
 
   const restore = (state: ChannelResume | null): void => {
     generation += 1;
@@ -82,26 +63,9 @@ const createStatefulChannel = (options: ChannelOptions): SoundChannelApi => {
     void start(state.id, state);
   };
 
-  const report = (): ChannelReport | null => {
-    if (!active) return null;
-    return {
-      channel: name,
-      kind: 'stateful',
-      id: active.id,
-      elapsedSeconds: ctx.currentTime - active.startedAt,
-      layers: layerReports(active.layers),
-      setCount: 1,
-      voiceCap: null,
-    };
-  };
-
   const stop = (): void => { generation += 1; pendingId = null; stopActive(); };
 
-  const dispose = (): void => {
-    stop();
-    loader.clear();
-    fadeGain.disconnect();
-  };
+  const dispose = (): void => { stop(); teardown(); };
 
   return {
     kind: 'stateful',
@@ -110,8 +74,8 @@ const createStatefulChannel = (options: ChannelOptions): SoundChannelApi => {
     activeId: () => active?.id ?? null,
     snapshot,
     restore,
-    forget,
-    report,
+    forget: () => { resumeById.clear(); },
+    report: () => statefulReport(name, ctx, active),
     stop,
     dispose,
   };

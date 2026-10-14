@@ -8,7 +8,7 @@ const markShape = (mark: DialogCornerMark, tile: number) => {
     case 'circle': return <circle r={tile * 0.3} />;
     case 'square': return <rect x={-tile * 0.25} y={-tile * 0.25} width={tile * 0.5} height={tile * 0.5} />;
     case 'triforce': return <path d={triforcePath(tile * 0.9)} />;
-    default: return null;
+    case 'none': return null;
   }
 };
 

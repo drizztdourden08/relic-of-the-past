@@ -85,6 +85,17 @@ describe('the screen root', () => {
   });
 });
 
+const REFUSED_VALUES: Readonly<Record<string, unknown>> = {
+  size: { w: { px: 10 } },
+  min: { w: 10 },
+  max: { w: 10 },
+  margin: { top: 1 },
+  place: { column: 1, row: 1 },
+  alignSelf: 'center',
+  justifySelf: 'center',
+  dimWhenEmpty: [1],
+};
+
 describe('the screen lock', () => {
   const validated = (screen: Record<string, unknown>) => validateLayout({
     id: 'test', name: 'Test', builtIn: false,
@@ -98,13 +109,7 @@ describe('the screen lock', () => {
   it.each(['size', 'min', 'max', 'margin', 'scale', 'place', 'order', 'alignSelf', 'justifySelf', 'dimWhenEmpty'])(
     'refuses %s by name instead of ignoring it',
     (key) => {
-      const value = key === 'size' ? { w: { px: 10 } }
-        : key === 'min' || key === 'max' ? { w: 10 }
-          : key === 'margin' ? { top: 1 }
-            : key === 'place' ? { column: 1, row: 1 }
-              : key === 'alignSelf' || key === 'justifySelf' ? 'center'
-                : key === 'dimWhenEmpty' ? [1] : 2;
-      const { doc, errors } = validated({ [key]: value });
+      const { doc, errors } = validated({ [key]: REFUSED_VALUES[key] ?? 2 });
       expect(doc).toBeNull();
       expect(errors.some((e) => e.startsWith(`layout.screen.${key}:`))).toBe(true);
     },

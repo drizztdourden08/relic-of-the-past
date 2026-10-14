@@ -11,7 +11,7 @@ import type { HudFlexContainer } from '../types/hud-node';
 import type { FlowItem, Insets } from './flow';
 import type { MeasureContext } from './engine.type';
 import type { Rect, Size } from '../layouts/geometry.type';
-import type { ChildBox } from './place-flow.type';
+import type { BoxFrame, ChildBox, FlowPlan, Pen, ShareAxis } from './place-flow.type';
 
 const crossFill = (available: number, margin: Insets, row: boolean): number =>
   Math.max(0, available - crossMargin(margin, row));
@@ -48,11 +48,10 @@ const sizedItems = (
 const shareRemaining = (
   items: FlowItem[],
   fills: readonly boolean[],
-  row: boolean,
-  mainGap: number,
-  available: number,
+  flowAxis: ShareAxis,
   ctx: MeasureContext,
 ): void => {
+  const { row, mainGap, available } = flowAxis;
   const count = fills.filter(Boolean).length;
   if (count === 0) return;
   const axis = row ? 'w' : 'h';
@@ -79,34 +78,30 @@ const alignOffset = (align: HudFlexContainer['align'] | 'stretch', free: number)
 const lineSpacing = (
   justify: HudFlexContainer['justify'], free: number, count: number,
 ): { lead: number; spread: number } => {
-  switch (justify) {
-    case 'between': return count > 1 ? { lead: 0, spread: free / (count - 1) } : { lead: 0, spread: 0 };
-    case 'around': return count > 1 ? { lead: free / (2 * count), spread: free / count } : { lead: 0, spread: 0 };
-    case 'evenly': return count > 1 ? { lead: free / (count + 1), spread: free / (count + 1) } : { lead: 0, spread: 0 };
-    case 'center': return { lead: free / 2, spread: 0 };
-    case 'end': return { lead: free, spread: 0 };
-    default: return { lead: 0, spread: 0 };
-  }
+  if (justify === 'center') return { lead: free / 2, spread: 0 };
+  if (justify === 'end') return { lead: free, spread: 0 };
+  if (count > 1 && justify === 'between') return { lead: 0, spread: free / (count - 1) };
+  if (count > 1 && justify === 'around') return { lead: free / (2 * count), spread: free / count };
+  if (count > 1 && justify === 'evenly') return { lead: free / (count + 1), spread: free / (count + 1) };
+  return { lead: 0, spread: 0 };
 };
 
-const boxOf = (item: FlowItem, main: number, cross: number, area: Rect, unit: number, row: boolean): Rect => ({
-  x: area.x + (row ? main : cross) * unit,
-  y: area.y + (row ? cross : main) * unit,
-  w: item.size.w * unit,
-  h: item.size.h * unit,
-});
+const boxOf = (item: FlowItem, pen: Pen, frame: BoxFrame): Rect => {
+  const { area, unit, row } = frame;
+  return {
+    x: area.x + (row ? pen.main : pen.cross) * unit,
+    y: area.y + (row ? pen.cross : pen.main) * unit,
+    w: item.size.w * unit,
+    h: item.size.h * unit,
+  };
+};
 
-const flowBoxes = (
-  container: HudFlexContainer,
-  items: FlowItem[],
-  area: Rect,
-  available: Size,
-  unit: number,
-  gap: { main: number; cross: number },
-): ChildBox[] => {
+const flowBoxes = (container: HudFlexContainer, items: FlowItem[], plan: FlowPlan): ChildBox[] => {
+  const { area, available, unit, gap } = plan;
   const row = container.direction === 'row';
   const availableMain = mainOf(available, row);
-  const lines = toLines(items, row, gap.main, container.wrap === true, availableMain);
+  const frame: BoxFrame = { area, unit, row };
+  const lines = toLines(items, { row, mainGap: gap.main, wrap: container.wrap === true, available: availableMain });
   const boxes: ChildBox[] = [];
   let crossPen = 0;
   lines.forEach((line) => {
@@ -119,7 +114,7 @@ const flowBoxes = (
       const crossLead = row ? item.margin.top : item.margin.left;
       const align = item.node.alignSelf ?? container.align;
       const cross = crossPen + alignOffset(align, lineCross - outerCross(item, row)) + crossLead;
-      boxes.push({ node: item.node, box: boxOf(item, mainPen + lead, cross, area, unit, row) });
+      boxes.push({ node: item.node, box: boxOf(item, { main: mainPen + lead, cross }, frame) });
       mainPen += outerMain(item, row) + gap.main + spread;
     });
     crossPen += lineCross + gap.cross;
@@ -141,8 +136,8 @@ const childBoxes = (container: HudFlexContainer, box: Rect, unit: number, ctx: M
   const { items, fills } = sizedItems(container, ctx, available);
   const row = container.direction === 'row';
   const gap = flowGaps(resolveGap(container, ctx), row);
-  shareRemaining(items, fills, row, gap.main, mainOf(available, row), ctx);
-  return flowBoxes(container, items.filter((item) => !collapsed(item)), area, available, unit, gap);
+  shareRemaining(items, fills, { row, mainGap: gap.main, available: mainOf(available, row) }, ctx);
+  return flowBoxes(container, items.filter((item) => !collapsed(item)), { area, available, unit, gap });
 };
 
 export { childBoxes };

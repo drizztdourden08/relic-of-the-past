@@ -1,4 +1,5 @@
 /* @layer renderer-components @kind component */
+import './InstanceStrip.css';
 import { Box, Text } from '@drizztdourden08/tessera/primitives';
 import { resolveValue } from '@rotp/hud';
 import { summarise } from '../behavior/summarise';
@@ -21,7 +22,7 @@ const InstanceStrip = (props: InstanceStripProps) => {
             key={index}
             className={`hud-instance-strip__cell${index === previewIndex ? ' is-preview' : ''}`}
             data-on={value > 0 ? 'true' : undefined}
-            title={`#${index + 1} → ${value}`}
+            title={`#${index + 1} -> ${value}`}
           />
         ))}
       </Box>

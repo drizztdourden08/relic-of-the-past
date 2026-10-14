@@ -1,0 +1,10 @@
+/* @layer renderer-hud @kind style */
+.pause-menu__progress {
+  grid-column: 22 / 32;
+  grid-row: 8 / 17;
+}
+
+.pause-menu__equipment {
+  grid-column: 22 / 32;
+  grid-row: 18 / 27;
+}

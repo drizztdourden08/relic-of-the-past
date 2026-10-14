@@ -1,5 +1,6 @@
 /* @layer renderer-components @kind types */
 import type React from 'react';
+import type { HidButtonMapping, StickCandidate } from '../hid-calibration.type';
 import type { GyroReclaimRefs } from '../stick-gyro-reclaim';
 
 interface GyroRefs {
@@ -33,4 +34,22 @@ interface TriggerRefs {
   baselineRef: React.RefObject<Uint8Array>;
 }
 
-export type { GyroRefs, StickRefs, TriggerRefs };
+interface StickFrameArgs {
+  bytes: Uint8Array;
+  refs: StickRefs;
+  onLiveInfo: (info: string) => void;
+  onFinalize: (c1: StickCandidate, c2: StickCandidate | null) => void;
+  onStopRecording: () => void;
+  addLog: (msg: string) => void;
+}
+
+interface TriggerFrameArgs {
+  bytes: Uint8Array;
+  refs: TriggerRefs;
+  onLiveInfo: (info: string) => void;
+  onFinalize: (c: StickCandidate) => void;
+  onStopRecording: () => void;
+  onFinalizeDigital: (mapping: HidButtonMapping) => void;
+}
+
+export type { GyroRefs, StickFrameArgs, StickRefs, TriggerFrameArgs, TriggerRefs };

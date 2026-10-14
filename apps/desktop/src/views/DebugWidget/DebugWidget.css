@@ -25,15 +25,15 @@
   display: flex;
   flex-direction: column;
   background: var(--c-inset);
-  border: 1px solid var(--c-hairline);
+  border: var(--border-width-thin) solid var(--c-hairline);
   border-radius: var(--radius-md);
   overflow: hidden;
 }
 
-.game-state__rows .stat-row {
+.game-state__row {
   padding: var(--space-xs) var(--space-sm);
 }
 
-.game-state__rows .stat-row:nth-child(even) {
+.game-state__row:nth-child(even) {
   background: var(--c-hover);
 }

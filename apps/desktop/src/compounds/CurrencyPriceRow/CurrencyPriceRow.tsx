@@ -1,7 +1,9 @@
 /* @layer renderer-components @kind component */
-import { Box, Checkbox, Slider, Text } from '@drizztdourden08/tessera/primitives';
-import { OptionValueTag, rangeLabelOf } from '../OptionValueTag';
+import { Box } from '@drizztdourden08/tessera/primitives';
+import { hasPriceControl } from './behavior/has-price-control';
 import type { CurrencyPriceRowProps } from './CurrencyPriceRow.type';
+import { PriceControl } from './sub-components/PriceControl';
+import { PriceEnabled } from './sub-components/PriceEnabled';
 import './CurrencyPriceRow.css';
 
 const CurrencyPriceRow = (props: CurrencyPriceRowProps) => {
@@ -10,39 +12,23 @@ const CurrencyPriceRow = (props: CurrencyPriceRowProps) => {
     stops, range, onRangeChange, readout = false, children,
   } = props;
   const readOnly = onEnabledChange === undefined;
-
-  const control = blocked && note !== '' ? (
-    <Text className="currency-price-row__note">{note}</Text>
-  ) : stops !== undefined && range !== undefined && readout ? (
-    <OptionValueTag value={rangeLabelOf(stops, range)} />
-  ) : stops !== undefined && range !== undefined ? (
-    <Slider
-      range
-      stops={stops}
-      value={range}
-      disabled={readOnly || !enabled}
-      labels={`every ${Math.max(1, Math.floor(stops.length / 5))}`}
-      showValue={false}
-      aria-label={`${label} price range`}
-      onChange={(next) => onRangeChange?.(next)}
-    />
-  ) : undefined;
+  const hasControl = hasPriceControl(blocked, note, stops, range);
 
   return (
     <Box
       className={`currency-price-row${enabled ? '' : ' currency-price-row--off'}`}
       data-blocked={blocked ? '' : undefined}
     >
-      {readout ? <OptionValueTag label={label} value={enabled} /> : (
-        <Checkbox
-          checked={enabled}
-          disabled={readOnly || blocked}
-          onChange={(next) => onEnabledChange?.(next)}
-          label={label}
-        />
-      )}
-      {control ?? <Box className="currency-price-row__contents">{children}</Box>}
-      {control !== undefined && children !== undefined && (
+      <PriceEnabled label={label} enabled={enabled} readout={readout} disabled={readOnly || blocked} onChange={onEnabledChange} />
+      {hasControl
+        ? (
+          <PriceControl
+            label={label} enabled={enabled} readOnly={readOnly} blocked={blocked} note={note}
+            stops={stops} range={range} readout={readout} onRangeChange={onRangeChange}
+          />
+        )
+        : <Box className="currency-price-row__contents">{children}</Box>}
+      {hasControl && children !== undefined && (
         <Box className="currency-price-row__contents currency-price-row__contents--below">{children}</Box>
       )}
     </Box>

@@ -9,7 +9,7 @@ import { useLayoutDraft } from './useLayoutDraft';
 import { useNodeEdits } from './useNodeEdits';
 import { useEditorSchemes } from './useEditorSchemes';
 import { useSampleState } from './useSampleState';
-import { nodeById } from './node-edits';
+import { selectedNodeOf } from './node-edits';
 import { slotLookup } from './flex-slots';
 import { solveLookup } from './grid-solve-lookup';
 import { EDITOR_GROUNDS, EDITOR_RATIOS } from '@app/views/HudLayoutEditor/HudLayoutEditor.constants';
@@ -69,7 +69,7 @@ const useHudLayoutEditor = (props: HudLayoutEditorProps) => {
   }, [draft, glyphs, packId]);
 
   const target = edits.targetId(draft.draft);
-  const selected = draft.draft && edits.selectedId ? nodeById(draft.draft, edits.selectedId) : null;
+  const selected = selectedNodeOf(draft.draft, edits.selectedId);
   const validation = useMemo(() => validateLayout(layout), [layout]);
 
   return {

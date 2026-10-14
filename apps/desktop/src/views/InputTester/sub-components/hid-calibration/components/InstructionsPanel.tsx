@@ -16,7 +16,7 @@ const InstructionsPanel = () => {
           every detector skips it.
         </Box>
         <Box as="li">
-          To bind a button: press and hold it, then check which byte actually changed.{' '}
+          To bind a button: press and hold it, then check which byte changed.{' '}
           <Text as="strong" className="hid-cal__instructions-hl--warn">If a second, unrelated byte is also changing
           at the same time, something is conflicting</Text>. Exclude that byte before binding.
         </Box>

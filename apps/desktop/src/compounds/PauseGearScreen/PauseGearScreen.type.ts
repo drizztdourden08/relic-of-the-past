@@ -26,4 +26,12 @@ interface PauseGearScreenProps {
   onConfirm: () => void;
 }
 
-export type { GearLadder, GearSection, PauseGearScreenProps };
+interface GearSideColumnsProps {
+  hintLines: readonly string[];
+  hero: ReactNode;
+  rowCount: number;
+  scale: number;
+  spritesBase: string;
+}
+
+export type { GearLadder, GearSection, GearSideColumnsProps, PauseGearScreenProps };

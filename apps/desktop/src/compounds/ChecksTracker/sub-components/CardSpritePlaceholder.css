@@ -1,0 +1,9 @@
+/* @layer renderer-components @kind style */
+
+.tracker-card__sprite-placeholder {
+  width: var(--size-24);
+  height: var(--size-24);
+  flex-shrink: 0;
+  background: var(--c-hover);
+  border-radius: var(--radius-sm);
+}

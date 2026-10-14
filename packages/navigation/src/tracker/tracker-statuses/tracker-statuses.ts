@@ -13,9 +13,10 @@ const trackerStatuses = (params: TrackerStatusParams): Map<CheckId, CheckStatus>
     fired = new Set<LocationKey>(), darkRoomsNeedLight = true, bigKeyDoors = true, smallKeyDoors = true,
   } = params;
 
-  const { statuses, reachableScreens } = trackerReading(
-    placement, completed, checks, fired, darkRoomsNeedLight, inventory, bigKeyDoors, smallKeyDoors,
-  );
+  const { statuses, reachableScreens } = trackerReading({
+    placement, completedChecks: completed, checks, firedLocationKeys: fired, darkRoomsNeedLight,
+    heldItemIds: inventory, bigKeyDoors, smallKeyDoors,
+  });
   const fromRecords = computeRecordStatuses({
     inventory: grantedInventory({ placement, inventory, darkRoomsNeedLight, bigKeyDoors }),
     completedChecks: completed,

@@ -10,3 +10,4 @@ export {
   SAMPLE_SWORD_TIER,
 } from './sample-state.constants';
 export { sampleSlotAssignments } from './sample-slot-assignments';
+export { sampleVitals } from './sample-vitals';

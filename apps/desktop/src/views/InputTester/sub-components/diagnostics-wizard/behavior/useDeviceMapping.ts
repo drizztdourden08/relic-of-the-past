@@ -7,7 +7,7 @@ const useDeviceMapping = (guid: string | null | undefined): string | null => {
 
   useEffect(() => {
     const api = inputApi();
-    if (!guid || !api) { setMapping(null); return; }
+    if (!guid) { setMapping(null); return; }
     let cancelled = false;
     api.mapping.forGuid(guid).then((line) => { if (!cancelled) setMapping(line); }).catch(() => { if (!cancelled) setMapping(null); });
     return () => { cancelled = true; };

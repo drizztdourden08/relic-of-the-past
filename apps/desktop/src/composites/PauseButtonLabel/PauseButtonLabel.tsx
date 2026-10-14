@@ -11,7 +11,8 @@ const PauseButtonLabel = ({ button, scale, spritesBase }: PauseButtonLabelProps)
       src={src}
       width={tile}
       height={tile * 2}
-      style={{ display: 'block', imageRendering: 'pixelated' }}
+      block
+      pixelated
     />
   );
 };

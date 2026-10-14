@@ -50,16 +50,18 @@ const ambiguousRoomlessIds = (): ReadonlySet<number> => {
   return ambiguousRoomlessCache.ids;
 };
 
+const worldItemKeyOf = (check: CheckRecord, checkId: CheckId): NpcOverrideKey | null => {
+  const standingTableClaimsPickup = standingOverrideKeyOf(checkId) !== null;
+  if (standingTableClaimsPickup) return null;
+  const worldGrant = worldGrantReceiveIdOf(check);
+  if (worldGrant === undefined) return null;
+  if (ambiguousRoomlessIds().has(worldGrant)) return null;
+  return { roomId: null, vanillaItemId: worldGrant };
+};
+
 const npcOverrideKeyOf = (checkId: CheckId): NpcOverrideKey | null => {
   const check = getCheck(checkId);
-  if (check.kind === 'standing' || check.kind === 'dig' || check.kind === 'bonk') {
-    const standingTableClaimsPickup = standingOverrideKeyOf(checkId) !== null;
-    if (standingTableClaimsPickup) return null;
-    const worldGrant = worldGrantReceiveIdOf(check);
-    if (worldGrant === undefined) return null;
-    if (ambiguousRoomlessIds().has(worldGrant)) return null;
-    return { roomId: null, vanillaItemId: worldGrant };
-  }
+  if (check.kind === 'standing' || check.kind === 'dig' || check.kind === 'bonk') return worldItemKeyOf(check, checkId);
   const vanillaItemId = nativeGrantIdOf(check);
   if (vanillaItemId === undefined) return null;
   const roomId = giverRoomOf(check);

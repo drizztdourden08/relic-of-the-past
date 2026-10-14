@@ -1,11 +1,12 @@
 /* @layer renderer-components @kind types */
 import type { ReactNode, RefObject } from 'react';
+import type { IconName } from '@drizztdourden08/tessera/primitives';
 
 interface ReferenceFieldProps {
   label?: string;
   hint?: ReactNode;
   src?: string;
-  placeholder?: string;
+  placeholder?: IconName;
   specimen?: ReactNode;
   name: string;
   kind?: string;

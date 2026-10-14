@@ -1,20 +1,17 @@
 /* @layer renderer-components @kind component */
-import { Box, Text } from '@drizztdourden08/tessera/primitives';
-import { trackText } from '@app/hud-layout-editing/track-extents';
+import { Box } from '@drizztdourden08/tessera/primitives';
 import { AddTrackButton } from './sub-components/AddTrackButton';
-import { TrackHead } from './sub-components/TrackHead';
+import { LatticeHeader } from './sub-components/LatticeHeader';
+import { LatticeOccupants } from './sub-components/LatticeOccupants';
+import { LatticeRow } from './sub-components/LatticeRow';
 import { ADD, GUTTER, HEAD } from './behavior/lattice-geometry.constants';
-import { emptyOn } from './behavior/empty-on';
 import { latticeHeight } from './behavior/lattice-height';
-import { occupantsAt } from './behavior/occupants-at';
+import { series } from './behavior/series';
 import { trackTemplate } from './behavior/track-template';
 import { idOf } from './behavior/cell-id';
-import { headTitle } from './behavior/head-title';
 import './GridLattice.css';
 import type { CSSProperties } from 'react';
 import type { GridLatticeProps } from './GridLattice.type';
-
-const series = (count: number): number[] => Array.from({ length: count }, (_unused, i) => i + 1);
 
 const GridLattice = (props: GridLatticeProps) => {
   const {
@@ -41,95 +38,41 @@ const GridLattice = (props: GridLatticeProps) => {
         style={style}
         onKeyDown={onKeyDown}
       >
-        <Box className="hud-lattice__line" role="row">
-          <Box
-            className="hud-lattice__corner"
-            role="columnheader"
-            aria-label={onCornerDown ? 'Select every cell' : 'Grid'}
-            data-inert={onCornerDown ? undefined : 'true'}
-            onPointerDown={onCornerDown}
-          />
-          {columns.map((track, index) => (
-            <TrackHead
-              key={index}
-              axis="columns"
-              index={index}
-              text={trackText(track)}
-              extent={extentOf?.('columns', index)}
-              selected={trackOn('columns', index)}
-              empty={emptyOn(colSizes, index)}
-              title={headTitle('column', index + 1, trackText(track), emptyOn(colSizes, index))}
-              onPointerDown={onTrackDown ? (event) => onTrackDown('columns', index, event) : undefined}
-              onSize={onSizeTrack ? (extent) => onSizeTrack('columns', index, extent) : undefined}
-            />
-          ))}
-          {onAddTrack && (
-            <AddTrackButton axis="columns" at={columns.length + 2} onAdd={() => onAddTrack('columns')} />
-          )}
-        </Box>
+        <LatticeHeader
+          columns={columns}
+          colSizes={colSizes}
+          trackOn={trackOn}
+          onCornerDown={onCornerDown}
+          onTrackDown={onTrackDown}
+          onSizeTrack={onSizeTrack}
+          onAddTrack={onAddTrack}
+          extentOf={extentOf}
+        />
 
-        {series(rowCount).map((row) => {
-          const track = rows?.[row - 1] ?? 'auto';
-          const empty = emptyOn(rowSizes, row - 1);
-          return (
-            <Box key={row} className="hud-lattice__line" role="row">
-              <TrackHead
-                axis="rows"
-                index={row - 1}
-                text={String(row)}
-                extent={extentOf?.('rows', row - 1)}
-                selected={trackOn('rows', row - 1)}
-                empty={empty}
-                title={headTitle('row', row, trackText(track), empty)}
-                onPointerDown={onTrackDown ? (event) => onTrackDown('rows', row - 1, event) : undefined}
-                onSize={onSizeTrack ? (extent) => onSizeTrack('rows', row - 1, extent) : undefined}
-              />
-              {series(columns.length).map((column) => {
-                const cell = { column, row };
-                const state = cellState(cell);
-                const here = occupantsAt(occupants, column, row).map((o) => o.id);
-                return (
-                  <Box
-                    key={column}
-                    id={idOf(column, row)}
-                    className="hud-lattice__cell"
-                    role="gridcell"
-                    data-state={state}
-                    data-column={column}
-                    data-row={row}
-                    data-cursor={cursor.column === column && cursor.row === row ? 'true' : undefined}
-                    aria-selected={state === 'selected' || state === 'occupied-selected'}
-                    aria-label={here.length > 0
-                      ? `column ${column}, row ${row} with ${here.join(', ')}`
-                      : `column ${column}, row ${row}, empty`}
-                    style={{ gridColumn: column + 1, gridRow: row + 1 }}
-                    onPointerDown={(event) => onCellDown(cell, event)}
-                    onPointerEnter={() => onCellEnter(cell)}
-                  />
-                );
-              })}
-            </Box>
-          );
-        })}
+        {series(rowCount).map((row) => (
+          <LatticeRow
+            key={row}
+            row={row}
+            columns={columns}
+            rows={rows}
+            rowSizes={rowSizes}
+            occupants={occupants}
+            cellState={cellState}
+            trackOn={trackOn}
+            cursor={cursor}
+            extentOf={extentOf}
+            onTrackDown={onTrackDown}
+            onSizeTrack={onSizeTrack}
+            onCellDown={onCellDown}
+            onCellEnter={onCellEnter}
+          />
+        ))}
 
         {onAddTrack && (
           <AddTrackButton axis="rows" at={rowCount + 2} onAdd={() => onAddTrack('rows')} />
         )}
 
-        {occupants.map((occupant) => (
-          <Text
-            key={occupant.id}
-            className="hud-lattice__occupant"
-            aria-hidden="true"
-            data-active={occupant.id === activeChildId ? 'true' : undefined}
-            style={{
-              gridColumn: `${occupant.column + 1} / span ${occupant.colSpan}`,
-              gridRow: `${occupant.row + 1} / span ${occupant.rowSpan}`,
-            }}
-          >
-            {occupant.id}
-          </Text>
-        ))}
+        <LatticeOccupants occupants={occupants} activeChildId={activeChildId} />
       </Box>
     </Box>
   );

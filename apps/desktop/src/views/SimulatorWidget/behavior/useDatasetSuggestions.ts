@@ -1,23 +1,19 @@
 /* @layer renderer-widgets @kind hook */
 import { requireHostApi } from '@drizztdourden08/brock-react';
-import type { ScreenEditorApi } from '@app/ipc';
 import { useCallback, useMemo } from 'react';
 import type { DatasetSuggestion } from '@rotp/navigation';
-import { RECORD_REQUIRED } from '../SimulatorWidget.constants';
-import type { ApplyResult, CheckWriter } from '../SimulatorWidget.type';
+import { CHECK_DISABLED_HINT, RECORD_REQUIRED } from '../SimulatorWidget.constants';
+import type { ApplyResult, EditorWithOptionalCheck } from '../SimulatorWidget.type';
 
 const useDatasetSuggestions = () => {
-  const editor = requireHostApi().screenEditor as ScreenEditorApi & { writeCheck?: CheckWriter };
+  const editor: EditorWithOptionalCheck = requireHostApi().screenEditor;
   const canApplyCheck = useMemo(() => typeof editor.writeCheck === 'function', [editor]);
 
   const apply = useCallback(async (suggestion: DatasetSuggestion): Promise<ApplyResult> => {
     const { kind, targetFile, targetId, code } = suggestion;
     if (kind === 'connection' || kind === 'screen') return { success: false, error: RECORD_REQUIRED };
-    if (kind === 'check') {
-      if (!editor.writeCheck) return { success: false, error: 'Check writing is not available in this build.' };
-      return editor.writeCheck({ filePath: targetFile, code, checkId: targetId });
-    }
-    return { success: false, error: `Unknown suggestion kind: ${kind}` };
+    if (!editor.writeCheck) return { success: false, error: CHECK_DISABLED_HINT };
+    return editor.writeCheck({ filePath: targetFile, code, checkId: targetId });
   }, [editor]);
 
   return { apply, canApplyCheck };

@@ -7,7 +7,7 @@
   overflow-y: auto;
 }
 
-.detail .detail__head .window-header__title {
+.detail__title {
   font-family: var(--font-mono);
   font-size: var(--text-base);
   text-transform: none;
@@ -16,13 +16,13 @@
   overflow-wrap: anywhere;
 }
 
-.detail .detail__field .stat-row__label {
+.detail__label {
   font-size: var(--text-xs);
   letter-spacing: var(--eyebrow-tracking);
   text-transform: uppercase;
 }
 
-.detail .detail__field .stat-row__value {
+.detail__value {
   color: var(--c-text-dim);
   overflow-wrap: anywhere;
 }

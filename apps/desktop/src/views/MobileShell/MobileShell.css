@@ -12,12 +12,12 @@
   align-items: center;
   gap: var(--space-sm);
   padding: var(--space-lg);
-  border-bottom: 1px solid var(--c-border);
+  border-bottom: var(--border-width-thin) solid var(--c-border);
 }
 
 .mobile-menu__logo {
-  width: 32px;
-  height: 32px;
+  width: var(--size-32);
+  height: var(--size-32);
   flex: none;
 }
 
@@ -33,7 +33,7 @@
 
 .mobile-menu__quick {
   padding: var(--space-sm) var(--space-md);
-  border-bottom: 1px solid var(--c-border);
+  border-bottom: var(--border-width-thin) solid var(--c-border);
 }
 
 .mobile-menu__list {

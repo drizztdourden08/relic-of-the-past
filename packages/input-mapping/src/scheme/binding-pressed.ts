@@ -22,7 +22,7 @@ const isBindingDown = (binding: InputBinding, sample: InputSample): boolean => {
       const threshold = thresholdFor(binding.axisIndex, sample);
       return sample.pads.some(pad => axisDown(pad.axes[binding.axisIndex] ?? 0, binding.direction, threshold));
     }
-    default:
+    case 'none':
       return false;
   }
 };

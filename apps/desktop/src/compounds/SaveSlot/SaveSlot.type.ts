@@ -1,5 +1,7 @@
 /* @layer renderer-components @kind types */
-﻿interface SaveSlotProps {
+import type { ArmedAction } from './behavior/useArmedAction.type';
+
+interface SaveSlotProps {
   slot: number;
   screenshotUrl: string | null;
   timestamp: number;
@@ -14,6 +16,34 @@
   onLoad: (slot: number) => void;
 }
 
+interface SlotScreenshotProps {
+  screenshotUrl: string | null;
+  isEmpty: boolean;
+  slotNumber: number;
+}
+
+interface SlotTimeProps {
+  timestamp: number;
+}
+
+interface SlotActionsProps {
+  slot: number;
+  slotNumber: number;
+  shortcutKey?: string;
+  isEmpty: boolean;
+  busy: boolean;
+  disableSave?: boolean;
+  disableLoad?: boolean;
+  armed: ArmedAction | null;
+  press: (action: ArmedAction, perform: () => void) => void;
+  disarm: () => void;
+  onSave: (slot: number) => void;
+  onLoad: (slot: number) => void;
+}
+
 export type {
   SaveSlotProps,
+  SlotActionsProps,
+  SlotScreenshotProps,
+  SlotTimeProps,
 };

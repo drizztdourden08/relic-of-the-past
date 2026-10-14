@@ -9,10 +9,17 @@ const DetailPane = (props: DetailPaneProps) => {
   return (
     <Card className={className ? `detail ${className}` : 'detail'}>
       <Stack as="aside" gap="md" align="stretch">
-        <WindowHeader title={title} onClose={onClose} className="detail__head" />
+        <WindowHeader title={<Text as="span" className="detail__title">{title}</Text>} onClose={onClose} className="detail__head" />
         {media}
         <Stack gap="xs" align="stretch">
-          {fields.map((field) => <StatRow key={field.label} label={field.label} value={field.value} className="detail__field" />)}
+          {fields.map((field) => (
+            <StatRow
+              key={field.label}
+              label={<Text as="span" className="detail__label">{field.label}</Text>}
+              value={<Text as="span" className="detail__value">{field.value}</Text>}
+              className="detail__field"
+            />
+          ))}
         </Stack>
         {children}
         {actions && <Flex gap="sm" align="center" wrap className="detail__actions">{actions}</Flex>}

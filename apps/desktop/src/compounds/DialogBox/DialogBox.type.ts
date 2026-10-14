@@ -46,4 +46,11 @@ interface DialogBoxProps {
   children?: ReactNode;
 }
 
-export type { CssRect, DialogBoxProps, DialogBorderLook, DialogGroundLook, DialogTextureLook };
+interface BorderTilesProps {
+  rect: CssRect;
+  tile: number;
+  spritesBase: string;
+  onFail: () => void;
+}
+
+export type { BorderTilesProps, CssRect, DialogBoxProps, DialogBorderLook, DialogGroundLook, DialogTextureLook };

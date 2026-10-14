@@ -1,23 +1,22 @@
 /* @layer renderer-app @kind hook */
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import { buildSchema, capture, compile, compileTextSearch, useViewState } from '@drizztdourden08/tessera/data';
-import { useDataViewStore } from '@app/stores/data-view-store';
-import type { EntityKind } from '@rotp/game-data';
 import type { DetailTab, FilterClause } from '@drizztdourden08/tessera/data';
 import {
   DEFAULT_KIND, DEFAULT_TAB, NO_COLUMNS, NO_TABLE, RECOMMENDATIONS_KIND,
 } from '../DataInspector.constants';
-import type { IdRefTarget, InspectorKind } from '../DataInspector.type';
-import { COLLECTION_SOURCES } from './collection-sources';
+import type { EditIntent, IdRefTarget, InspectorKind } from '../DataInspector.type';
+import { COLLECTION_SOURCES } from '@app/data-inspector/collection-sources';
 import { isEntityKind } from './is-entity-kind';
 import { queryViewKey } from './query-view-key';
-import { recommendationSource } from './recommendations/recommendation-source';
-import { useRecommendations } from './recommendations/use-recommendations';
+import { recommendationSource } from '@app/data-inspector/recommendations/recommendation-source';
+import { useRecommendations } from '@app/data-inspector/recommendations/use-recommendations';
+import { usePendingOpen } from './usePendingOpen';
 import { useRecordSelection } from './useRecordSelection';
 
 const useDataInspector = () => {
   const [kind, setKind] = useState<InspectorKind>(DEFAULT_KIND);
-  const [editIntent, setEditIntent] = useState<{ kind: EntityKind; id: string } | null>(null);
+  const [editIntent, setEditIntent] = useState<EditIntent | null>(null);
 
   const entries = useRecommendations();
   const source = useMemo(
@@ -76,24 +75,7 @@ const useDataInspector = () => {
     setSnapshot(capture(NO_TABLE, snapshot.filters, snapshot.tab, next));
   }, [setSnapshot, snapshot.filters, snapshot.tab]);
 
-  const pending = useDataViewStore(state => state.pendingRecommendation);
-  const clearPending = useDataViewStore(state => state.clearPendingRecommendation);
-  useEffect(() => {
-    if (!pending) return;
-    setKind(RECOMMENDATIONS_KIND);
-    selectIn(RECOMMENDATIONS_KIND, pending.id);
-    clearPending();
-  }, [pending, selectIn, clearPending]);
-
-  const pendingRecord = useDataViewStore(state => state.pendingRecord);
-  const clearPendingRecord = useDataViewStore(state => state.clearPendingRecord);
-  useEffect(() => {
-    if (!pendingRecord) return;
-    setKind(pendingRecord.kind);
-    selectIn(pendingRecord.kind, pendingRecord.id);
-    setEditIntent(pendingRecord);
-    clearPendingRecord();
-  }, [pendingRecord, selectIn, clearPendingRecord]);
+  usePendingOpen({ setKind, selectIn, setEditIntent });
 
   return {
     kind, showKind, source, schema, rows, entries,

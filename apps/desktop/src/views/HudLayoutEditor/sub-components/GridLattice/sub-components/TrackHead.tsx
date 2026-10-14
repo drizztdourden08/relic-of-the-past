@@ -1,8 +1,8 @@
 /* @layer renderer-components @kind component */
 import { useRef, useState } from 'react';
 import { Box, Pressable, Text } from '@drizztdourden08/tessera/primitives';
-import { DropdownMenu } from '@drizztdourden08/tessera/composites';
-import { EXTENT_MODES, extentFor, modeOf } from '@app/hud-layout-editing/track-extents';
+import { modeOf, modeSuffixOf } from '@app/hud-layout-editing/track-extents';
+import { TrackSizeMenu } from './TrackSizeMenu';
 import type { TrackHeadProps } from './TrackHead.type';
 
 const TrackHead = (props: TrackHeadProps) => {
@@ -11,12 +11,13 @@ const TrackHead = (props: TrackHeadProps) => {
   const [open, setOpen] = useState(false);
   const mode = modeOf(extent);
   const sizing = selected && onSize !== undefined;
+  const isRow = axis === 'rows';
 
   return (
     <Box
       ref={anchor}
-      className={`hud-lattice__head${axis === 'rows' ? ' hud-lattice__head--row' : ''}`}
-      role={axis === 'rows' ? 'rowheader' : 'columnheader'}
+      className={`hud-lattice__head${isRow ? ' hud-lattice__head--row' : ''}`}
+      role={isRow ? 'rowheader' : 'columnheader'}
       aria-selected={selected}
       aria-label={title}
       title={title}
@@ -24,7 +25,7 @@ const TrackHead = (props: TrackHeadProps) => {
       data-empty={empty ? 'true' : undefined}
       data-inert={onPointerDown ? undefined : 'true'}
       data-index={index + 1}
-      style={axis === 'rows'
+      style={isRow
         ? { gridColumn: 1, gridRow: index + 2 }
         : { gridColumn: index + 2, gridRow: 1 }}
       onPointerDown={onPointerDown}
@@ -38,27 +39,13 @@ const TrackHead = (props: TrackHeadProps) => {
           onPointerDown={(event) => event.stopPropagation()}
           onClick={() => setOpen((was) => !was)}
         >
-          {`${EXTENT_MODES.find((entry) => entry.mode === mode)?.suffix ?? 'auto'}▾`}
+          {`${modeSuffixOf(mode)}▾`}
         </Pressable>
       ) : (
         <Text className="hud-lattice__head-text">{text}</Text>
       )}
       {open && (
-        <DropdownMenu
-          anchorRef={anchor}
-          align="start"
-          onClose={() => setOpen(false)}
-          groups={[{
-            id: 'modes',
-            items: EXTENT_MODES.map((entry) => ({
-              id: entry.mode,
-              label: entry.label,
-              kind: 'radio' as const,
-              checked: entry.mode === mode,
-              onSelect: () => { setOpen(false); onSize?.(extentFor(entry.mode, extent)); },
-            })),
-          }]}
-        />
+        <TrackSizeMenu anchorRef={anchor} mode={mode} extent={extent} onSize={onSize} onClose={() => setOpen(false)} />
       )}
     </Box>
   );

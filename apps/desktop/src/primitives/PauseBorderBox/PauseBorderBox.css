@@ -1,0 +1,10 @@
+/* @layer renderer-hud @kind style */
+.pause-panel {
+  position: relative;
+}
+
+.pause-panel--at-origin {
+  position: absolute;
+  top: 0;
+  left: 0;
+}

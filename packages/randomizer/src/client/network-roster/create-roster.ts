@@ -1,9 +1,10 @@
 /* @layer bridge-wasm @kind logic */
-import { clientStatusKey, slotOfStatusKey } from '../client-status';
+import { clientStatusKey } from '../client-status';
 import { isPlayersReply, rosterOfReply } from '../players-reply';
 import type { ApPrintJsonPacket } from '../ap-protocol.type';
-import type { RosterName } from '../players-reply';
+import { applyRosterStatus } from './apply-roster-status';
 import { PLAYERS_COMMAND, SETTLE_AFTER_MS } from './network-roster.constants';
+import { othersOf } from './others-of';
 import type { Roster, RosterDeps } from './network-roster.type';
 
 const textOf = (packet: ApPrintJsonPacket): string =>
@@ -15,10 +16,6 @@ const createRoster = (deps: RosterDeps): Roster => {
   let settled = false;
   let timer: ReturnType<typeof setTimeout> | null = null;
 
-  const others = (): RosterName[] => room.players
-    .filter((player) => player.team === (room.team ?? 0) && player.slot !== room.slot)
-    .map(({ slot, name }) => ({ slot, name }));
-
   const settle = (): void => {
     if (settled || !queried) return;
     settled = true;
@@ -28,18 +25,10 @@ const createRoster = (deps: RosterDeps): Roster => {
   };
 
   const applyReply = (text: string): void => {
-    for (const [slot, online] of rosterOfReply(text, room.team ?? 0, others())) {
+    for (const [slot, online] of rosterOfReply(text, room.team ?? 0, othersOf(room))) {
       if (!isLinked(slot)) presence.setOnline(slot, online);
     }
     settle();
-  };
-
-  const applyStatus = (key: string, value: unknown, seed: boolean): boolean => {
-    const slot = slotOfStatusKey(key, room.team ?? 0);
-    if (slot === null) return false;
-    const presenceIsOwnConnection = slot === room.slot;
-    presence.setStatus(slot, value, seed && !presenceIsOwnConnection && !isLinked(slot));
-    return true;
   };
 
   return {
@@ -52,7 +41,7 @@ const createRoster = (deps: RosterDeps): Roster => {
         send({ cmd: 'Get', keys });
         send({ cmd: 'SetNotify', keys });
       }
-      if (others().length === 0) {
+      if (othersOf(room).length === 0) {
         settle();
         return;
       }
@@ -62,10 +51,10 @@ const createRoster = (deps: RosterDeps): Roster => {
     received(packet) {
       if (packet.cmd === 'Retrieved') {
         let moved = false;
-        for (const [key, value] of Object.entries(packet.keys ?? {})) moved = applyStatus(key, value, true) || moved;
+        for (const [key, value] of Object.entries(packet.keys ?? {})) moved = applyRosterStatus(deps, key, value, true) || moved;
         return moved;
       }
-      if (packet.cmd === 'SetReply') return applyStatus(packet.key, packet.value, false);
+      if (packet.cmd === 'SetReply') return applyRosterStatus(deps, packet.key, packet.value, false);
       if (packet.cmd === 'PrintJSON' && packet.type === 'CommandResult' && isPlayersReply(textOf(packet))) {
         applyReply(textOf(packet));
         return true;

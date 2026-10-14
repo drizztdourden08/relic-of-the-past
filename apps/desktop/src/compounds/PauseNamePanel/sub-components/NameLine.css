@@ -1,0 +1,4 @@
+/* @layer renderer-hud @kind style */
+.pause-name-line {
+  display: flex;
+}

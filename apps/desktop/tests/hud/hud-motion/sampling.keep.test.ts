@@ -110,14 +110,12 @@ describe('staggering a repeat with delay - ten hearts do not pulse in lockstep',
   it("each instance's own animation.delay bakes to a DIFFERENT literal, off the same shared clock", () => {
     const expanded = expand(heartRow(5), {});
     expect(expanded.kind).toBe('container');
-    if (expanded.kind !== 'container') return;
     const delays = expanded.children.map((child) => (child.animation?.[0]?.delay));
     expect(delays).toEqual([0, 80, 160, 240, 320]);
   });
 
   it('at one shared elapsed time, five different delays sample five different points on the track', () => {
     const expanded = expand(heartRow(5), {});
-    if (expanded.kind !== 'container') throw new Error('expected a container');
     const elapsed = 150;
     const samples = expanded.children.map((child) => {
       const animation = child.animation?.[0];

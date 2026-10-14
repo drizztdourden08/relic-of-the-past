@@ -4,7 +4,7 @@
   align-items: center;
   gap: var(--space-sm);
   padding: var(--space-sm) var(--space-md);
-  border-bottom: 1px solid var(--c-border);
+  border-bottom: var(--border-width-thin) solid var(--c-border);
   transition: background 0.12s;
   cursor: pointer;
   user-select: none;
@@ -16,9 +16,9 @@
   font-size: var(--text-sm);
   font-weight: var(--weight-semi);
   text-transform: uppercase;
-  letter-spacing: 0.04em;
+  letter-spacing: var(--tracking-wide);
   color: var(--c-text-muted);
-  border-bottom: 1px solid var(--c-border);
+  border-bottom: var(--border-width-thin) solid var(--c-border);
   padding-bottom: var(--space-xs);
   margin-bottom: var(--space-xs);
 }
@@ -40,12 +40,12 @@
 }
 
 .binding-row:focus-visible {
-  outline: 2px solid var(--c-primary);
-  outline-offset: -2px;
+  outline: var(--border-width-thick) solid var(--c-primary);
+  outline-offset: calc(-2 * var(--size-1));
 }
 
 .binding-row__action-label {
-  width: 90px;
+  width: calc(90 * var(--size-1));
   font-size: var(--text-base);
   font-weight: var(--weight-semi);
   color: var(--c-text);
@@ -53,7 +53,7 @@
 }
 
 .binding-row__snes-label {
-  width: 80px;
+  width: var(--size-80);
   font-size: var(--text-sm);
   font-weight: var(--weight-medium);
   color: var(--c-text-dim);
@@ -61,8 +61,8 @@
 }
 
 .binding-row__icon-slot {
-  width: 28px;
-  height: 28px;
+  width: var(--size-28);
+  height: var(--size-28);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -70,8 +70,8 @@
 }
 
 .binding-row__icon-img {
-  width: 24px;
-  height: 24px;
+  width: var(--size-24);
+  height: var(--size-24);
   object-fit: contain;
 }
 

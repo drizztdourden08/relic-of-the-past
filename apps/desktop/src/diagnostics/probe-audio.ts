@@ -6,11 +6,13 @@ const msOrUnknown = (seconds: number): number | null => (Number.isFinite(seconds
 const outputLatencyMsOf = (seconds: number): number | null =>
   (Number.isFinite(seconds) && seconds > 0 ? seconds * 1000 : null);
 
+const ignoreCloseFailure = (): void => undefined;
+
 const closeQuietly = async (context: AudioContext | null): Promise<void> => {
   try {
     await context?.close();
   } catch {
-    
+    ignoreCloseFailure();
   }
 };
 

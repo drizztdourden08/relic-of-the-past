@@ -2,9 +2,9 @@
 
 .tracker-inventory {
   padding: var(--space-sm) var(--space-md);
-  border-bottom: 1px solid var(--c-border);
+  border-bottom: var(--border-width-thin) solid var(--c-border);
   flex-shrink: 0;
-  max-height: 220px;
+  max-height: calc(220 * var(--size-1));
   overflow-y: auto;
 }
 
@@ -17,7 +17,7 @@
   font-size: var(--text-xs);
   font-weight: var(--weight-semi);
   text-transform: uppercase;
-  letter-spacing: 0.5px;
+  letter-spacing: calc(0.5 * var(--size-1));
   color: var(--c-text-dim);
   margin-bottom: var(--space-xs);
 }
@@ -32,7 +32,7 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  width: 40px;
+  width: var(--size-40);
   padding: var(--space-xs) var(--space-xs);
   border-radius: var(--radius-sm);
   transition: opacity 0.2s;
@@ -48,8 +48,8 @@
 }
 
 .tracker-inventory__sprite {
-  width: 24px;
-  height: 24px;
+  width: var(--size-24);
+  height: var(--size-24);
   image-rendering: pixelated;
 }
 
@@ -59,7 +59,7 @@
   color: var(--c-text-dim);
   line-height: 1.1;
   margin-top: var(--space-xs);
-  max-width: 40px;
+  max-width: var(--size-40);
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -93,7 +93,7 @@
   flex-direction: column;
   gap: var(--space-xs);
   padding-left: var(--space-sm);
-  border-left: 1px solid var(--c-border);
+  border-left: var(--border-width-thin) solid var(--c-border);
 }
 
 .tracker-inventory__ingame-bottom {
@@ -102,7 +102,7 @@
   display: flex;
   gap: var(--space-xs);
   padding-top: var(--space-xs);
-  border-top: 1px solid var(--c-border);
+  border-top: var(--border-width-thin) solid var(--c-border);
 }
 
 .tracker-inventory--compact {
@@ -111,22 +111,22 @@
 
 .tracker-inventory__grid--compact {
   display: grid;
-  grid-template-columns: repeat(auto-fill, 36px);
+  grid-template-columns: repeat(auto-fill, calc(36 * var(--size-1)));
   gap: var(--space-xs);
 }
 
 .tracker-inventory--compact .tracker-inventory__slot {
-  width: 36px;
+  width: calc(36 * var(--size-1));
   padding: var(--space-xs) var(--space-xs);
 }
 
 .tracker-inventory--compact .tracker-inventory__sprite {
-  width: 20px;
-  height: 20px;
+  width: var(--size-20);
+  height: var(--size-20);
 }
 
 .tracker-inventory--compact .tracker-inventory__name {
   font-size: var(--text-xs);
-  max-width: 36px;
+  max-width: calc(36 * var(--size-1));
 }
 

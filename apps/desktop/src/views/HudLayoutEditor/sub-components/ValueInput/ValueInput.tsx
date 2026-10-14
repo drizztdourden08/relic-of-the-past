@@ -1,18 +1,13 @@
 /* @layer renderer-components @kind component */
 import './ValueInput.css';
-import './sub-components/InstanceStrip.css';
-import './sub-components/FormulaMenu.css';
-import { Box, Field, Icon, Pressable, TextInput } from '@drizztdourden08/tessera/primitives';
-import { resolveValue } from '@rotp/hud';
-import { readExpr } from '@app/hud-layout-editing/check-expr';
-import { useInstanceScopes } from '@app/hud-layout-editing/formula-scope';
-import { rangeNote } from './behavior/range-note';
+import { Field } from '@drizztdourden08/tessera/primitives';
+import { readFormula } from './behavior/read-formula';
 import { usePromoteOverlay } from './behavior/usePromoteOverlay';
+import { valueErrorOf } from './behavior/value-error-of';
 import { useValueInput } from './behavior/useValueInput';
-import { FormulaFeedback } from './sub-components/FormulaFeedback';
 import { FormulaMenu } from './sub-components/FormulaMenu';
-import { FormulaProblem } from './sub-components/FormulaProblem';
-import { NOT_A_NUMBER } from './ValueInput.constants';
+import { ValueInputFeedback } from './sub-components/ValueInputFeedback';
+import { ValueInputRow } from './sub-components/ValueInputRow';
 import type { ValueInputProps } from './ValueInput.type';
 
 const ValueInput = (props: ValueInputProps) => {
@@ -23,91 +18,39 @@ const ValueInput = (props: ValueInputProps) => {
   } = props;
 
   const field = useValueInput({ value, onChange, onClear, step, min, max });
-  const named = ariaLabel ?? label ?? 'value';
-  const instances = useInstanceScopes();
-  const anchorRef = field.inputRef;
+  const reading = readFormula({ expr: field.expr, scope, insideRepeat, extraNames });
   const promote = usePromoteOverlay(field.focused, field.formula, field.inputRef);
-
-  const reading = field.expr === null ? null : readExpr(field.expr, { insideRepeat, extraNames });
-  const literalProblem = !field.formula && field.text.trim() !== '' && !field.canStep
-    ? NOT_A_NUMBER : undefined;
-  const problem = reading?.problem ?? null;
-
-  const result = field.expr === null || problem !== null
-    ? null : resolveValue({ from: 'data', expr: field.expr }, scope);
+  const error = valueErrorOf(reading, field);
 
   return (
     <Field
       size="sm"
       label={label}
       hint={hint ?? (readOnly ? derivedFrom : undefined)}
-      error={problem?.message ?? literalProblem}
+      error={error}
       className={`hud-value-field ${className}${promote.className}`}
     >
-      <Box className="hud-value-input hud-value-field__row" data-formula={field.formula ? 'true' : undefined}>
-        <TextInput
-          ref={field.inputRef}
-          size="sm"
-          inputMode={field.canStep ? 'decimal' : 'text'}
-          spellCheck={false}
-          readOnly={readOnly}
-          className={`hud-value-input__field${(problem ?? literalProblem) ? ' is-invalid' : ''}`}
-          aria-label={ariaLabel ?? label ?? 'Value'}
-          placeholder={placeholder ?? 'number, or = formula'}
-          value={field.text}
-          onChange={(event) => field.handleChange(event.target.value, event.target.selectionStart ?? 0)}
-          onFocus={field.handleFocus}
-          onBlur={field.handleBlur}
-          onKeyDown={(event) => field.handleKeyDown(event.key, () => event.preventDefault())}
-        />
-
-        {field.canStep && !readOnly && (
-          <Box className="hud-value-input__spin">
-            <Pressable tabIndex={-1} aria-label={`Increment ${named}`} onClick={() => field.stepBy(1)}>
-              <Icon size={12} name="chevron-up" />
-            </Pressable>
-            <Pressable tabIndex={-1} aria-label={`Decrement ${named}`} onClick={() => field.stepBy(-1)}>
-              <Icon size={12} name="chevron-down" />
-            </Pressable>
-          </Box>
-        )}
-
-        {field.focused && !field.formula && !readOnly && (
-          <Pressable
-            className="hud-value-input__chip"
-            title="Drive this from the game, or type ="
-            aria-label="Write a formula"
-            onMouseDown={(event) => event.preventDefault()}
-            onClick={field.startFormula}
-          >=</Pressable>
-        )}
-
-        {field.formula && !readOnly && (
-          <Pressable
-            className="hud-value-input__fx"
-            aria-label="Insert a name or a formula"
-            onMouseDown={(event) => event.preventDefault()}
-            onClick={field.openMenu}
-          >ƒ ▾</Pressable>
-        )}
-      </Box>
-
-      {field.formula && problem === null && (
-        <FormulaFeedback
-          expr={field.expr ?? ''}
-          reads={reading?.reads ?? []}
-          scope={scope}
-          instances={insideRepeat ? instances : []}
-          result={result}
-          outOfRange={result === null ? undefined : rangeNote(result, min, max)}
-        />
-      )}
-
-      <FormulaProblem problem={problem} onFix={(expr) => onChange({ from: 'data', expr })} />
-
+      <ValueInputRow
+        field={field}
+        label={label}
+        ariaLabel={ariaLabel}
+        placeholder={placeholder}
+        readOnly={readOnly}
+        invalid={error !== undefined}
+      />
+      <ValueInputFeedback
+        formula={field.formula}
+        expr={field.expr}
+        reading={reading}
+        scope={scope}
+        insideRepeat={insideRepeat}
+        min={min}
+        max={max}
+        onChange={onChange}
+      />
       <FormulaMenu
         open={field.menuOpen}
-        anchorRef={anchorRef}
+        anchorRef={field.inputRef}
         filter={field.prefix}
         role={role}
         insideRepeat={insideRepeat}

@@ -8,7 +8,7 @@ import type { IconKeyTable } from './built-in-packs.type';
 const snesPack = (): GlyphPack => {
   const icons: IconKeyTable = {};
   for (const [position, snesButton] of Object.entries(CONSOLE_LAYOUT)) {
-    if (snesButton) icons[position] = SNES_ICON_KEYS[snesButton];
+    icons[position] = SNES_ICON_KEYS[snesButton];
   }
   return {
     id: 'snes', name: 'Console', builtIn: true,

@@ -17,7 +17,7 @@ const UploadRow = (props: UploadRowProps) => {
         <Status variant="pill" map={PHASE_STATUSES} value={job.phase} />
       </Flex>
       {job.bytes > 0 && <ProgressBar value={percentOf(job)} tone={BAR_VARIANTS[job.phase] ?? 'primary'} live />}
-      {(transfer || timeLeft) && (
+      {(transfer ?? timeLeft) && (
         <Flex align="baseline" gap="sm" justify="between">
           <Text as="span" className="upload-row__value">{transfer}</Text>
           {timeLeft && <Text as="span" className="upload-row__value">{timeLeft}</Text>}

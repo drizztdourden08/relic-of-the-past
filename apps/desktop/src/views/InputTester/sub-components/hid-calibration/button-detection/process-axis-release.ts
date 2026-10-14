@@ -8,7 +8,7 @@ import type { AxisStepArgs } from './button-detection.type';
 
 const finalizeAxisCapture = ({ bytes, bl, excl, item, idx, refs, cb }: AxisStepArgs): void => {
   const ac = refs.axisCapRef.current[item.id];
-  if (ac?.posBytes && ac?.negBytes) {
+  if (ac?.posBytes && ac.negBytes) {
     const posD = findAxisBytes(bl, ac.posBytes, excl, AXIS_FINAL_DELTA);
     const negD = findAxisBytes(bl, ac.negBytes, excl, AXIS_FINAL_DELTA);
     const allB = new Set([...posD.map(d => d.byteIndex), ...negD.map(d => d.byteIndex)]);

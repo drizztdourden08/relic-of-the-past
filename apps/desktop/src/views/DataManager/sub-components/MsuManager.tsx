@@ -1,9 +1,10 @@
 /* @layer renderer-components @kind component */
-import { useCallback, useState } from 'react';
+import { useState } from 'react';
 import { ImportForm } from './ImportForm';
+import { MSU_IMPORT_COPY } from './msu-manager/msu-manager.constants';
+import { useMsuPackActions } from './msu-manager/useMsuPackActions';
 import { EmptyState, Text } from '@drizztdourden08/tessera/primitives';
 import { ListDetailLayout } from '@drizztdourden08/tessera/composites';
-import { canTrashMsuPack, deleteMsuPack } from '@app/storage/msu-store';
 import { useInstalledKind } from '@app/hooks/useInstalledKind';
 import { InstalledOriginBar, useConfirmUninstall } from '@app/views/InstalledOriginBar';
 import { useMsuManager } from '../../../msu-studio/useMsuManager';
@@ -22,32 +23,9 @@ const MsuManager = (props: MsuManagerProps) => {
   const { confirmUninstall, uninstallError } = useConfirmUninstall(onDeleteConfirm);
   const nameInstalled = packFor(msu.newPackName.trim()) !== null;
 
-  const isInstalled = useCallback((name: string) => packFor(name) !== null, [packFor]);
-
-  const refreshThenSelect = useCallback((name: string) => {
-    void refresh().then(() => setSelected(name));
-  }, [refresh, setSelected]);
-
-  const forget = useCallback(async (packName: string) => {
-    if (selected === packName) setSelected(null);
-    await refresh();
-  }, [selected, setSelected, refresh]);
-
-  const handleDelete = useCallback((packName: string) => {
-    const owner = packFor(packName);
-    if (owner) {
-      confirmUninstall(owner, () => { void forget(packName); });
-      return;
-    }
-    const outcome = canTrashMsuPack() ? 'It goes to the Recycle Bin.' : 'This cannot be undone.';
-    onDeleteConfirm('Delete Music Pack', `Delete pack "${packName}"? ${outcome}`, () => {
-      void deleteMsuPack(packName).then(() => forget(packName));
-    });
-  }, [packFor, confirmUninstall, forget, onDeleteConfirm]);
-
-  const handleUninstalled = useCallback(() => {
-    if (selected !== null) void forget(selected);
-  }, [selected, forget]);
+  const { isInstalled, refreshThenSelect, handleDelete, handleUninstalled } = useMsuPackActions({
+    selected, setSelected, refresh, packFor, confirmUninstall, onDeleteConfirm,
+  });
 
   const list = (
     <>
@@ -60,10 +38,7 @@ const MsuManager = (props: MsuManagerProps) => {
       />
       <ImportForm
         kind="msu"
-        placeholder="Paste pack download URL..."
-        accept={['.msul', '.zip', '.7z', '.rar']}
-        dropLabel="Drop a pack here"
-        dropHint=".msul, or a .zip / .7z / .rar archive of audio"
+        {...MSU_IMPORT_COPY}
         disabled={nameInstalled}
         onUrlImport={msu.handleUrlImport}
         onFileImport={msu.handleFileImport}

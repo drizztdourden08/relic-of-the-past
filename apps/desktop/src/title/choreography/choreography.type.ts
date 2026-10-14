@@ -31,12 +31,33 @@ interface Sparkle {
   end: number;
 }
 
+interface FrameOrigin {
+  x: number;
+  y: number;
+}
+
+interface ShineDrawInput {
+  ctx: CanvasRenderingContext2D;
+  t: number;
+  alpha: number;
+  at: FrameOrigin;
+  swordPlanted: boolean;
+}
+
 interface Shine {
-  draw: (ctx: CanvasRenderingContext2D, t: number, alpha: number, frameX: number, frameY: number, swordPlanted: boolean) => void;
+  draw: (input: ShineDrawInput) => void;
+}
+
+interface SweepDrawInput {
+  ctx: CanvasRenderingContext2D;
+  t: number;
+  logo: Picture;
+  alpha: number;
+  at: FrameOrigin;
 }
 
 interface LogoSweep {
-  draw: (ctx: CanvasRenderingContext2D, t: number, logo: Picture, alpha: number, frameX: number, frameY: number) => void;
+  draw: (input: SweepDrawInput) => void;
 }
 
 interface TriforcePicture {
@@ -59,4 +80,22 @@ interface TitleFrameInput {
   sweep: LogoSweep;
 }
 
-export type { LogoSweep, Picture, PixelSet, Shine, ShinePixels, Sparkle, TitleFrameInput, TitlePictures, TriforcePicture };
+interface BandSpec {
+  x: number;
+  w: number;
+  h: number;
+  alpha: number;
+}
+
+interface TriforceTileInput {
+  px: Uint8ClampedArray;
+  block: Uint8Array;
+  rgb: readonly (readonly [number, number, number])[];
+  tx: number;
+  ty: number;
+}
+
+export type {
+  BandSpec, FrameOrigin, LogoSweep, Picture, PixelSet, Shine, ShineDrawInput, ShinePixels, Sparkle, SweepDrawInput, TitleFrameInput,
+  TitlePictures, TriforcePicture, TriforceTileInput,
+};

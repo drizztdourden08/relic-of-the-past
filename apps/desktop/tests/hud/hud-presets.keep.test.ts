@@ -48,10 +48,10 @@ describe('the eight presets - every one is a valid, self-contained subtree', () 
   });
 
   it('every preset drops into a region and loads as a real document', () => {
-    HUD_PRESETS.forEach((preset) => {
+    for (const preset of HUD_PRESETS) {
       const node = instantiatePreset(preset.id);
       expect(node, preset.id).not.toBeNull();
-      if (!node) return;
+      if (!node) continue;
       const root: HudNode = node.kind === 'container' ? node : {
         kind: 'container', id: `${preset.id}-wrap`, direction: 'row', children: [node],
       };
@@ -69,7 +69,7 @@ describe('the eight presets - every one is a valid, self-contained subtree', () 
         rupee_max: 999, silver_arrows: 0, slot_count: 8,
       };
       expect(() => layoutHud(doc, VIEW, { scope })).not.toThrow();
-    });
+    }
   });
 });
 

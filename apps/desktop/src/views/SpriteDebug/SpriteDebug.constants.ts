@@ -7,6 +7,10 @@ const MODES = [
   { id: 'items', label: 'Item Association' },
 ];
 
+const SAVE_DELAY_MS = 300;
+
+const REVIEW_STATUSES: readonly ReviewStatus[] = ['neutral', 'good', 'bad', 'yellow'];
+
 const FILTER_OPTIONS: SegmentOption<'all' | ReviewStatus>[] = [
   { value: 'all', label: 'All' },
   { value: 'neutral', label: 'Unchecked' },
@@ -22,4 +26,4 @@ const STATUS_OPTIONS: SegmentOption<ReviewStatus>[] = [
   { value: 'bad', icon: 'x', hint: { label: 'Bad', description: 'The sprite is wrong' } },
 ];
 
-export { FILTER_OPTIONS, MODES, STATUS_OPTIONS };
+export { FILTER_OPTIONS, MODES, REVIEW_STATUSES, SAVE_DELAY_MS, STATUS_OPTIONS };

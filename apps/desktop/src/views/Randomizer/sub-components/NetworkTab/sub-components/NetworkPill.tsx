@@ -3,10 +3,8 @@ import { Button, Text } from '@drizztdourden08/tessera/primitives';
 import { StateChip } from './StateChip';
 import { useNetworkStatus } from '../behavior/useNetworkStatus';
 import { formatMs } from '../behavior/format-ms';
-import { healthChip } from '../behavior/health-chip';
-import { stateChip } from '../behavior/state-chip';
+import { pillChip } from '../behavior/pill-chip';
 import type { NetworkStatus } from '@app/game/randomizer-client';
-import { NOT_CONNECTED_CHIP } from './NetworkPill.constants';
 import type { NetworkPillProps } from './NetworkPill.type';
 
 const summaryOf = (status: NetworkStatus): string => {
@@ -16,9 +14,7 @@ const summaryOf = (status: NetworkStatus): string => {
 
 const NetworkPill = ({ onOpen }: NetworkPillProps) => {
   const { status, now } = useNetworkStatus();
-  const chip = status === null
-    ? NOT_CONNECTED_CHIP
-    : status.connection.state === 'connected' ? healthChip(status, now) : stateChip(status.connection, now);
+  const chip = pillChip(status, now);
 
   return (
     <Button variant="ghost" size="sm" className="network-tab__pill" onClick={onOpen} title="Open the Network tab">

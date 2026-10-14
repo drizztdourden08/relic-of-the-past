@@ -1,7 +1,9 @@
 /* @layer renderer-hud @kind logic */
+import type { FrameOrigin } from './choreography.type';
 import { STAR_ARM, STAR_CORE, STAR_CORE_FROM_RADIUS } from './draw-star.constants';
 
-const drawStar = (ctx: CanvasRenderingContext2D, cx: number, cy: number, r: number, diagonals = false): void => {
+const drawStar = (ctx: CanvasRenderingContext2D, centre: FrameOrigin, r: number, diagonals = false): void => {
+  const { x: cx, y: cy } = centre;
   ctx.fillStyle = STAR_ARM;
   ctx.fillRect(cx - r, cy, r * 2 + 1, 1);
   ctx.fillRect(cx, cy - r, 1, r * 2 + 1);

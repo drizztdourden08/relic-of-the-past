@@ -5,7 +5,7 @@
   flex-direction: column;
   gap: var(--space-sm);
   padding: var(--space-sm) 0;
-  border-top: 1px solid var(--c-border);
+  border-top: var(--border-width-thin) solid var(--c-border);
   min-width: 0;
 }
 
@@ -78,7 +78,7 @@
   font-size: var(--text-xs);
   color: var(--c-text-muted);
   text-transform: uppercase;
-  letter-spacing: 0.5px;
+  letter-spacing: calc(0.5 * var(--size-1));
   line-height: var(--control-h-sm);
 }
 

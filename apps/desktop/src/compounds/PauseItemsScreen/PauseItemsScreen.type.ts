@@ -17,4 +17,12 @@ interface PauseItemsScreenProps {
   onFocusCell: (section: ItemsSection, cursor: number) => void;
 }
 
-export type { ItemsSection, PauseItemsScreenProps };
+interface ItemsSideColumnsProps {
+  nameLines: readonly string[];
+  hintLines: readonly string[];
+  hero: ReactNode;
+  scale: number;
+  spritesBase: string;
+}
+
+export type { ItemsSection, ItemsSideColumnsProps, PauseItemsScreenProps };

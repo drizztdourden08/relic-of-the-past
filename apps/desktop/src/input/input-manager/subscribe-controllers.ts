@@ -7,8 +7,6 @@ import type { ControllerInputState } from '../controller-input-store';
 import type { InputManager } from './input-manager';
 import { connectedGamepadKeys } from './connected-gamepad-keys';
 
-const noUnsubscribe = (): void => undefined;
-
 const subscribeControllers = (m: InputManager): void => {
   m.hidUnsubscribe = controllerInputStore.onInput((state: ControllerInputState) => {
     m.hidStates.set(state.deviceKey, { buttons: state.buttons, axes: state.axes });
@@ -25,15 +23,15 @@ const subscribeControllers = (m: InputManager): void => {
     m.refreshDevices();
   });
   const api = inputApi();
-  m.ipcControllerStateUnsub = api?.onState((deviceKey, buttons, axes) => {
+  m.ipcControllerStateUnsub = api.onState((deviceKey, buttons, axes) => {
     controllerInputStore.handleControllerState(deviceKey, buttons, axes);
-  }) ?? noUnsubscribe;
-  m.controllerRemovedUnsub = api?.onRemoved((deviceKey) => {
+  });
+  m.controllerRemovedUnsub = api.onRemoved((deviceKey) => {
     controllerInputStore.handleControllerRemoved(deviceKey);
-  }) ?? noUnsubscribe;
-  m.controllerRawUnsub = api?.capture.onRaw((report) => {
+  });
+  m.controllerRawUnsub = api.capture.onRaw((report) => {
     controllerInputStore.handleRawReport(report);
-  }) ?? noUnsubscribe;
+  });
   m.controllerNameCacheUnsub = startControllerNameCache();
   m.controllerFamilyCacheUnsub = startControllerFamilyCache();
 };

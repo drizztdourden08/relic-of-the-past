@@ -1,8 +1,7 @@
 /* @layer renderer-components @kind component */
-import { useCallback, useState, useRef, useEffect } from 'react';
-import type { InputProfile } from '@rotp/input-mapping';
 import { Button, Box, Text } from '@drizztdourden08/tessera/primitives';
 import { InputProfileItem } from './InputProfileItem';
+import { useProfileEditing } from './useProfileEditing';
 import type { InputProfileListProps } from './controls.type';
 import './InputProfileList.css';
 
@@ -16,36 +15,8 @@ const InputProfileList = (props: InputProfileListProps) => {
     onRename,
     onCreate,
   } = props;
-  const [editingId, setEditingId] = useState<string | null>(null);
-  const [editValue, setEditValue] = useState('');
-  const consumedInitialRef = useRef<string | null>(null);
-  const inputRef = useRef<HTMLInputElement>(null);
-
-  useEffect(() => {
-    if (editingId) inputRef.current?.focus();
-  }, [editingId]);
-
-  const startEditing = useCallback((profile: InputProfile) => {
-    setEditingId(profile.id);
-    setEditValue(profile.name);
-  }, []);
-
-  useEffect(() => {
-    if (initialEditId && initialEditId !== consumedInitialRef.current) {
-      consumedInitialRef.current = initialEditId;
-      const profile = profiles.find(p => p.id === initialEditId);
-      if (profile) startEditing(profile);
-    }
-  }, [initialEditId, profiles]);
-
-  const commitEdit = useCallback((profile: InputProfile) => {
-    if (editValue.trim()) {
-      onRename(profile, editValue);
-    }
-    setEditingId(null);
-  }, [editValue, onRename]);
-
-  const cancelEdit = useCallback(() => setEditingId(null), []);
+  const { editingId, editValue, inputRef, setEditValue, startEditing, commitEdit, cancelEdit } =
+    useProfileEditing({ profiles, initialEditId, onRename });
 
   return (
     <Box className="input-profile-list">

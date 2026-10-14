@@ -10,18 +10,18 @@ import type { HudContainer, HudNode } from '../../types/hud-node';
 import type { ChildBox } from '../place-flow.type';
 import type { MeasureContext, PlacedNode } from '../engine.type';
 import type { Rect } from '../../layouts/geometry.type';
-import type { PlaceEnv } from './place.type';
+import type { PlaceEnv, PlaceFrame } from './place.type';
 
 const childBoxesOf = (node: HudContainer, box: Rect, unit: number, ctx: MeasureContext): ChildBox[] =>
   (node.layout === 'grid' ? childBoxesGrid(node, box, unit, ctx) : childBoxes(node, box, unit, ctx));
 
 const place = (
   node: HudNode,
-  box: Rect,
-  unit: number,
+  frame: PlaceFrame,
   ctx: MeasureContext,
   env: PlaceEnv = ROOT_ENV,
 ): PlacedNode[] => {
+  const { box, unit } = frame;
   if (!resolveVisible(node, ctx)) return [];
   const opacity = env.opacity * resolveOpacity(node, ctx);
   const dimmed = env.dimmed || isDimmed(node, ctx);
@@ -38,7 +38,7 @@ const place = (
   return [
     { id: node.id, node, rect: { ...box }, scale: inner, opacity, dimmed },
     ...childBoxesOf(node, box, inner, ctx)
-      .flatMap((placed) => place(placed.node, placed.box, inner, ctx, child)),
+      .flatMap((placed) => place(placed.node, { box: placed.box, unit: inner }, ctx, child)),
   ];
 };
 

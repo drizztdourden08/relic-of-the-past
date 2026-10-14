@@ -3,11 +3,13 @@ import { capacityBonusOfValues, capacityEnabledOf, capacityProgressiveOf, parseC
 import { withDarkRoomSetting } from './dark-room-choices';
 import { PLAIN_FIELD_BY_KEY } from './randomizer-choices';
 import type { ChoiceField, RandomizerOptionChoices } from './randomizer-choices';
-import type { RandomizerOptionsSnapshot } from '@rotp/randomizer';
+import type { OptionValue, RandomizerOptionsSnapshot } from '@rotp/randomizer';
 
-const plainChoicesOf = (values: RandomizerOptionsSnapshot['values']): Pick<RandomizerOptionChoices, ChoiceField> =>
-  Object.fromEntries(Object.entries(PLAIN_FIELD_BY_KEY).map(([key, field]) => [field, values[key]])) as
-    unknown as Pick<RandomizerOptionChoices, ChoiceField>;
+const plainChoicesOf = (values: RandomizerOptionsSnapshot['values']): Pick<RandomizerOptionChoices, ChoiceField> => {
+  const plain: Partial<Record<ChoiceField, OptionValue>> =
+    Object.fromEntries(Object.entries(PLAIN_FIELD_BY_KEY).map(([key, field]) => [field, values[key]]));
+  return plain as Pick<RandomizerOptionChoices, ChoiceField>;
+};
 
 const choicesOfSnapshot = (snapshot: RandomizerOptionsSnapshot, seed: string): RandomizerOptionChoices => {
   const { values } = snapshot;

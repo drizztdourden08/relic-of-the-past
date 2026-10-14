@@ -8,7 +8,7 @@ import type { DropSheets } from '../drop-sprite-assembly';
 import type { SpritePalettes } from '../receipt-palettes';
 import { paletteRow } from '../receipt-palettes';
 
-const extractDropNumbered = (_spriteType: number, paletteIdx: number, group: number, spritePalettes: SpritePalettes, dropSheets: DropSheets): ImageBuffer => {
+const extractDropNumbered = (paletteIdx: number, group: number, spritePalettes: SpritePalettes, dropSheets: DropSheets): ImageBuffer => {
   const a = (group - 1) * 3;
   const palette = paletteRow(spritePalettes, paletteIdx);
   const img = new ImageBuffer(16, 16);

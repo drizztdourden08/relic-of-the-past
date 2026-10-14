@@ -3,4 +3,11 @@ import type { RGBA } from '../../graphics/palette';
 
 type BgPaletteRows = RGBA[][];
 
-export type { BgPaletteRows };
+type OverworldBgSelection = {
+  mode: number;
+  aux1: number;
+  aux2: number;
+  aux3: number;
+};
+
+export type { BgPaletteRows, OverworldBgSelection };

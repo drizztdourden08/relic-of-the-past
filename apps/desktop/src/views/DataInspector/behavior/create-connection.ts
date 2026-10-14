@@ -3,8 +3,10 @@ import { requireHostApi } from '@drizztdourden08/brock-react';
 import { pendingPartnerId, pendingPartnerScreenId, registerRecord, connectionRecordFile } from '@rotp/game-data';
 import type { ConnectionKind, ConnectionRecord, ScreenId, PendingConnectionRecord } from '@rotp/game-data';
 import { EMPTY_PLACEMENT, NO_SOURCE_FILE } from '../DataInspector.constants';
+import { draftOf } from './draft-of';
+import { isConnectionId } from './is-connection-id';
 import { registerIdRefOption } from './register-id-ref-option';
-import { resolveRecordLabel } from './record-links';
+import { resolveRecordLabel } from '@app/data-inspector/record-links';
 import { settleCreatedRecord } from './settle-created-record';
 import type { CreateOutcome, RecordCreator } from './record-creators.type';
 
@@ -36,7 +38,8 @@ const insertSingle = async (near: PendingConnectionRecord, filePath: string): Pr
   if (!result.success) return { success: false, error: result.error };
   const [id] = result.ids;
   if (id === undefined) throw new Error('connection insert returned no id');
-  registerCreated({ id, ...near } as unknown as ConnectionRecord);
+  if (!isConnectionId(id)) throw new Error('connection insert returned a malformed id');
+  registerCreated({ id, ...near });
   return settleCreatedRecord('connection', id);
 };
 
@@ -53,13 +56,13 @@ const insertPair = async (
   });
   if (!result.success) return { success: false, error: result.error };
 
-  registerCreated({ id: result.nearId, ...near, toConnectionId: result.farId } as unknown as ConnectionRecord);
-  registerCreated({ id: result.farId, ...far, toConnectionId: result.nearId } as unknown as ConnectionRecord);
+  registerCreated({ id: result.nearId, ...near, toConnectionId: result.farId });
+  registerCreated({ id: result.farId, ...far, toConnectionId: result.nearId });
   return settleCreatedRecord('connection', result.nearId);
 };
 
 const createConnection: RecordCreator = async (draft) => {
-  const near = draft as unknown as PendingConnectionRecord;
+  const near = draftOf<PendingConnectionRecord>(draft);
   const target = connectionRecordFile(near.screenId);
   if (!target.relativePath) return { success: false, error: target.unresolved ?? NO_SOURCE_FILE };
 

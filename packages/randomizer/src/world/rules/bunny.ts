@@ -45,7 +45,7 @@ const addRule = (map: Map<string, Rule>, name: string, rule: Rule): void => {
   map.set(name, existing === undefined ? rule : allOf(existing, rule));
 };
 
-const registerBunnyRules = (world: World): void => {
+const ruleImpassableExits = (world: World): void => {
   for (const id of bunnyImpassableRegionIds()) {
     if (id === REGION.mountainShop) continue;
     const region = world.regions.get(id);
@@ -54,11 +54,17 @@ const registerBunnyRules = (world: World): void => {
     const rule = bunnyRegionRule(world, region);
     for (const exit of region.exits) addRule(world.rules, exit.name, rule);
   }
+};
+
+const ruleMountainShopEntrance = (world: World): void => {
   const shop = world.regions.get(REGION.mountainShop);
   const shopEntrance = shop?.entrances[0];
   if (shop !== undefined && shop.isDarkWorld && shopEntrance !== undefined) {
     addRule(world.rules, shopEntrance.name, bunnyRegionRule(world, shop));
   }
+};
+
+const ruleDarkWorldContents = (world: World): void => {
   for (const region of world.regions.values()) {
     if (!region.isDarkWorld || region.entrances.length === 0) continue;
     if (region.locations.length === 0 && region.events.length === 0) continue;
@@ -72,6 +78,12 @@ const registerBunnyRules = (world: World): void => {
       addRule(world.eventRules, event.key, rule);
     }
   }
+};
+
+const registerBunnyRules = (world: World): void => {
+  ruleImpassableExits(world);
+  ruleMountainShopEntrance(world);
+  ruleDarkWorldContents(world);
 };
 
 export { registerBunnyRules };

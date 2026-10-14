@@ -1,0 +1,44 @@
+/* @layer renderer-components @kind style */
+
+.tracker-filters__panel {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+  padding: var(--space-sm);
+}
+
+.tracker-filters__group-current {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-xs);
+}
+
+.tracker-filters__group-empty {
+  font-size: var(--text-xs);
+  color: var(--c-text-dim);
+  font-style: italic;
+}
+
+.tracker-filters__group-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2xs);
+  padding: var(--space-2xs) var(--space-2xs) var(--space-2xs) var(--space-sm);
+  background: var(--c-primary-soft);
+  border: var(--border-width-thin) solid var(--c-primary);
+  border-radius: var(--radius-sm);
+  font-size: var(--text-xs);
+  color: var(--c-primary-bright);
+}
+
+.tracker-filters__group-remove {
+  width: var(--size-16);
+  height: var(--size-16);
+  color: var(--c-primary-bright);
+}
+
+.tracker-filters__group-add {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-xs);
+}

@@ -26,7 +26,7 @@ const RepeatContent = (props: RepeatContentProps) => {
         label="child"
         action="go"
         src={child.src}
-        placeholder={child.placeholder}
+        placeholder={child.icon}
         name={child.name}
         kind={child.kind}
         onOpen={() => onSelectNode(spec.child.id)}

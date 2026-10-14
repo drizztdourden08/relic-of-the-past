@@ -7,14 +7,14 @@ import { targetsByStem } from './targets-by-stem';
 const withSupersededRepointed = (manifest: MsuPackManifest, names: string[]): MsuPackManifest => {
   const targets = targetsByStem(names);
   if (targets.size === 0) return manifest;
-  let changed = false;
+  const tally = { changed: false };
   const next = mapLayers(manifest, (layer) => {
     const files = repointFiles(layer.files, targets);
     if (files === null) return layer;
-    changed = true;
+    tally.changed = true;
     return { ...layer, files };
   });
-  return changed ? next : manifest;
+  return tally.changed ? next : manifest;
 };
 
 export { withSupersededRepointed };

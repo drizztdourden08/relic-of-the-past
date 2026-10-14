@@ -1,6 +1,5 @@
 /* @layer renderer-components @kind hook */
 import { useCallback, useState } from 'react';
-import * as msuStore from '@app/storage/msu-store';
 import { usePackList } from './behavior/usePackList';
 import { usePackContents } from './behavior/usePackContents';
 import { useTrackRows } from './behavior/useTrackRows';
@@ -8,16 +7,10 @@ import { useTrackAssign } from './behavior/useTrackAssign';
 import { useTrackUpload } from './behavior/useTrackUpload';
 import { useTrackPreview } from './behavior/useTrackPreview';
 import { usePackExport } from './behavior/usePackExport';
-import { usePackImport } from './behavior/usePackImport';
-import { isMsulName } from './behavior/is-msul-name';
+import { useFileDeletion } from './behavior/useFileDeletion';
+import { usePackImports } from './behavior/usePackImports';
+import { managerStatus } from './behavior/manager-status';
 import type { ActionResult, PackFormat } from './msu.type';
-
-const skipNote = (result: { skippedNested?: number; skippedDuplicate?: number }): string => {
-  const parts: string[] = [];
-  if (result.skippedNested) parts.push(`${result.skippedNested} in subfolders (alternates and extras)`);
-  if (result.skippedDuplicate) parts.push(`${result.skippedDuplicate} already claimed by another file`);
-  return parts.length === 0 ? '' : ` (skipped ${parts.join(', ')})`;
-};
 
 const useMsuManager = (onRefresh: () => void) => {
   const { packs, selected, setSelected, refresh, createPack, renamePack } = usePackList(onRefresh);
@@ -34,8 +27,7 @@ const useMsuManager = (onRefresh: () => void) => {
   const { upload, uploading } = useTrackUpload(shared);
   const { playing, previewError, play, stop, reportStore } = useTrackPreview(selected, resolved);
   const { exporting, exportProgress, runExport } = usePackExport(selected, resolved);
-
-  const { importMsul } = usePackImport({ refresh, onImported: setSelected });
+  const { handleUrlImport, handleFileImport } = usePackImports({ newPackName, setNewPackName, refresh, setSelected });
 
   const report = useCallback(async (action: Promise<ActionResult>): Promise<ActionResult> => {
     const result = await action;
@@ -64,60 +56,18 @@ const useMsuManager = (onRefresh: () => void) => {
     if (selected) void report(renamePack(selected, to));
   }, [selected, renamePack, report]);
 
-  const deleteFile = useCallback(async (fileName: string): Promise<ActionResult> => {
-    if (!selected) return { success: false, message: 'No pack selected' };
-    try {
-      await msuStore.deleteMsuTrackFile(selected, fileName);
-      return { success: true, message: `Deleted "${fileName}"` };
-    } catch (err) {
-      return { success: false, message: err instanceof Error ? err.message : 'Could not delete that file' };
-    } finally {
-      reload();
-    }
-  }, [selected, reload]);
-
-  const handleDeleteFile = useCallback((fileName: string) => {
-    void report(deleteFile(fileName));
-  }, [deleteFile, report]);
+  const handleDeleteFile = useFileDeletion(selected, reload, report);
 
   const handleToggleLayers = useCallback((trackNum: number) => {
     setOpenTrack((open) => (open === trackNum ? null : trackNum));
   }, []);
-
-  const handleUrlImport = useCallback(async (url: string): Promise<ActionResult> => {
-    const pack = newPackName.trim() || `pack-${Date.now()}`;
-    const result = await msuStore.importMsu(pack, url);
-    if (!result.success) return { success: false, message: result.error ?? 'Download failed' };
-    await refresh();
-    setSelected(pack);
-    setNewPackName('');
-    return { success: true, message: `Imported ${result.fileCount ?? 0} audio files${skipNote(result)}` };
-  }, [newPackName, refresh, setSelected]);
-
-  const handleFileImport = useCallback(async (dropped: File[]): Promise<ActionResult> => {
-    const [file] = dropped;
-    if (file === undefined) return { success: false, message: 'No file selected' };
-    if (isMsulName(file.name)) {
-      const result = await importMsul(file, newPackName.trim());
-      if (result.success) setNewPackName('');
-      return result;
-    }
-    const pack = newPackName.trim() || `pack-${Date.now()}`;
-    const result = await msuStore.importMsuFile(pack, file);
-    if (!result.success) return { success: false, message: result.error ?? 'Import failed' };
-    await refresh();
-    setSelected(pack);
-    setNewPackName('');
-    return { success: true, message: `Imported ${result.fileCount ?? 0} audio files${skipNote(result)}` };
-  }, [newPackName, refresh, setSelected, importMsul]);
 
   return {
     packs, selected, setSelected, refresh,
     files, trackInfos, manifest, resolved, totalSize, loadingFiles: loading && !loaded, reload, format,
     newPackName, setNewPackName,
     rows, unusedFiles, fileOptions, isDeluxe, hasOpuz,
-    status, statusMessage: previewError ?? exportProgress ?? status?.message ?? null,
-    statusOk: previewError ? false : status?.success !== false,
+    status, ...managerStatus({ previewError, exportProgress, status }),
     busy: assigning || uploading || exporting !== null,
     openTrack, playing, reportStore,
     handleTrackAssign, handleTrackUpload, handleToggleLayers, handleExport, handleDeleteFile,

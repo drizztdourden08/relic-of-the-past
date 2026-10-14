@@ -4,7 +4,7 @@ import type { RandomizerOptionsSnapshot } from '../world/options.type';
 
 const isOptionsSnapshot = (raw: unknown): raw is RandomizerOptionsSnapshot => {
   if (!raw || typeof raw !== 'object') return false;
-  const candidate = raw as Partial<RandomizerOptionsSnapshot>;
+  const candidate = raw as Record<string, unknown>;
   return candidate.schema === OPTIONS_SCHEMA
     && typeof candidate.values === 'object' && candidate.values !== null;
 };

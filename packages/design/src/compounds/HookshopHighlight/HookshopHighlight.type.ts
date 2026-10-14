@@ -23,6 +23,8 @@ type HookshopParts = {
   readonly speedLine: PartSize;
 };
 
+type Rect = { left: number; top: number; width: number; height: number };
+
 type PlacedPart<P extends PartName = PartName> = {
   part: P;
   left: number;
@@ -54,5 +56,5 @@ interface HookshopHighlightProps {
 }
 
 export type {
-  BagEffects, Point, PartName, PartSize, HookshopParts, PlacedPart, HookshopLayout, HookshopHighlightProps, SpriteName,
+  BagEffects, Point, PartName, PartSize, HookshopParts, PlacedPart, Rect, HookshopLayout, HookshopHighlightProps, SpriteName,
 };

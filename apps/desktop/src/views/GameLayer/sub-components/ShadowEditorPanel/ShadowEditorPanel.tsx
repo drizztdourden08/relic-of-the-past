@@ -3,14 +3,11 @@ import { useCallback } from 'react';
 import { useShadowEditorStore } from '../../../../stores/shadow-editor-store';
 import type { EditorTool } from '../../../../stores/shadow-editor-store';
 import { Box, SegmentedControl } from '@drizztdourden08/tessera/primitives';
-import { ShadowShapeInspector } from './sub-components/ShadowShapeInspector';
-import { ShadowLightInspector } from './sub-components/ShadowLightInspector';
-import { ShadowGlobalSettings } from './sub-components/ShadowGlobalSettings';
 import { wasmGetViewportInfo } from '../../../../game';
 import { overworldScreenIdOf } from '../../behavior/overworld-screen-id';
 import { ShadowEditorHeader } from './sub-components/ShadowEditorHeader';
-import { ShapeToolOptions } from './sub-components/ShapeToolOptions';
-import { LightToolOptions } from './sub-components/LightToolOptions';
+import { ShadowInspector } from './sub-components/ShadowInspector';
+import { ShadowToolOptions } from './sub-components/ShadowToolOptions';
 import { TOOL_OPTIONS } from './ShadowEditorPanel.constants';
 import './ShadowEditorPanel.css';
 
@@ -28,9 +25,6 @@ const ShadowEditorPanel = () => {
     selectedType,
     dirty,
     getScreenData,
-    updateHeightmapElement,
-    updateLight,
-    updateLighting,
     removeHeightmapElement,
     removeLight,
   } = useShadowEditorStore();
@@ -40,7 +34,7 @@ const ShadowEditorPanel = () => {
 
   const selectedHm = selectedType === 'heightmap' ? screenData.heightmap.find((e) => e.id === selectedElementId) : null;
   const selectedLight = selectedType === 'light' ? screenData.lights.find((l) => l.id === selectedElementId) : null;
-  const hasSelection = selectedHm ?? selectedLight;
+  const hasSelection = Boolean(selectedHm ?? selectedLight);
 
   const handleDelete = useCallback(() => {
     if (!selectedElementId) return;
@@ -59,19 +53,16 @@ const ShadowEditorPanel = () => {
         <SegmentedControl value={activeTool} options={TOOL_OPTIONS} onChange={handleToolChange} />
       </Box>
 
-      {(activeTool === 'polygon' || activeTool === 'shape-light') && !hasSelection && <ShapeToolOptions />}
-      {(activeTool === 'point-light') && !hasSelection && <LightToolOptions />}
+      <ShadowToolOptions activeTool={activeTool} hasSelection={hasSelection} />
 
       <Box className="shadow-editor-panel__body">
-        {selectedHm && (
-          <ShadowShapeInspector screenId={screenId} selectedHm={selectedHm} updateHeightmapElement={updateHeightmapElement} handleDelete={handleDelete} />
-        )}
-        {selectedLight && (
-          <ShadowLightInspector screenId={screenId} selectedLight={selectedLight} updateLight={updateLight} handleDelete={handleDelete} />
-        )}
-        {!hasSelection && (
-          <ShadowGlobalSettings screenId={screenId} screenData={screenData} updateLighting={updateLighting} />
-        )}
+        <ShadowInspector
+          screenId={screenId}
+          screenData={screenData}
+          selectedHm={selectedHm}
+          selectedLight={selectedLight}
+          handleDelete={handleDelete}
+        />
       </Box>
 
       <Box className="shadow-editor-panel__footer">

@@ -1,22 +1,15 @@
 /* @layer renderer-components @kind component */
 import { Box, Field, Pressable, TextInput } from '@drizztdourden08/tessera/primitives';
-import { resolveValue } from '@rotp/hud';
-import { readExpr } from '@app/hud-layout-editing/check-expr';
-import { useInstanceScopes } from '@app/hud-layout-editing/formula-scope';
 import { useTextValue } from '@app/hud-layout-editing/useTextValue';
-import { FormulaFeedback, FormulaProblem, usePromoteOverlay } from './ValueInput';
+import { ValueInputFeedback, readFormula, usePromoteOverlay } from './ValueInput';
 import type { TextValueFieldProps } from './TextValueField.type';
 
 const TextValueField = (props: TextValueFieldProps) => {
   const { value, onChange, scope, insideRepeat = false } = props;
   const field = useTextValue({ value, onChange });
-  const instances = useInstanceScopes();
   const promote = usePromoteOverlay(field.focused, field.formula, field.inputRef);
-
-  const reading = field.expr === null ? null : readExpr(field.expr, { insideRepeat });
-  const problem = reading?.problem ?? null;
-  const result = field.expr === null || problem !== null
-    ? null : resolveValue({ from: 'data', expr: field.expr }, scope);
+  const reading = readFormula({ expr: field.expr, scope, insideRepeat });
+  const { problem } = reading;
 
   return (
     <Field
@@ -50,16 +43,14 @@ const TextValueField = (props: TextValueFieldProps) => {
         )}
       </Box>
 
-      {field.formula && problem === null && (
-        <FormulaFeedback
-          expr={field.expr ?? ''}
-          reads={reading?.reads ?? []}
-          scope={scope}
-          instances={insideRepeat ? instances : []}
-          result={result}
-        />
-      )}
-      <FormulaProblem problem={problem} onFix={(expr) => onChange({ from: 'data', expr })} />
+      <ValueInputFeedback
+        formula={field.formula}
+        expr={field.expr}
+        reading={reading}
+        scope={scope}
+        insideRepeat={insideRepeat}
+        onChange={onChange}
+      />
     </Field>
   );
 };

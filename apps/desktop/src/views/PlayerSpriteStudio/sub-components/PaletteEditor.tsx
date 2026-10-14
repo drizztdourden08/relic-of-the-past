@@ -1,66 +1,17 @@
 /* @layer renderer-components @kind component */
-import { useState, useMemo, useCallback, useRef } from 'react';
-import { Box, Text, ColorSwatch } from '@drizztdourden08/tessera/primitives';
+import { Box, Text } from '@drizztdourden08/tessera/primitives';
 import { ColorPickerPopover } from '@drizztdourden08/tessera/color-picker-popover';
-import type { SwatchGroup } from '@drizztdourden08/tessera/color-picker';
-import { COLORS_PER_OUTFIT, GLOVES_INDEX, OUTFIT_IDS } from '@rotp/game-data';
-import { bgr555ToHex, hexToBgr555, isExactColor } from '@rotp/game-core';
-import { flattenPalette } from '@rotp/packs';
+import { bgr555ToHex, isExactColor } from '@rotp/game-core';
 import { OUTFIT_LABELS } from '@rotp/design/packs';
-import type { PaletteEditorProps, Slot } from '../PlayerSpriteStudio.type';
-import { colorAt } from '../behavior/color-at';
+import type { PaletteEditorProps } from '../PlayerSpriteStudio.type';
+import { usePaletteSlot } from '../behavior/usePaletteSlot';
+import { OutfitSwatchGrid } from './OutfitSwatchGrid';
+import { GloveSwatchGrid } from './GloveSwatchGrid';
 
 const PaletteEditor = (props: PaletteEditorProps) => {
-  const { sheet, outfit, readOnly = false, onColor, onGloveColor, onReset } = props;
-  const [slot, setSlot] = useState<Slot>(null);
-  const anchorRef = useRef<HTMLElement | null>(null);
-
-  const live = useMemo(() => flattenPalette(sheet), [sheet]);
-  const colors = live.outfits[outfit];
-  const originals = sheet.original.outfits[outfit];
-
-  const openAt = useCallback((el: HTMLElement, s: Exclude<Slot, null>) => {
-    if (readOnly) return;
-    anchorRef.current = el;
-    setSlot((cur) => (cur === s ? null : s));
-  }, [readOnly]);
-
-  const wordOf = useCallback((s: Exclude<Slot, null>): number =>
-    (typeof s === 'number' ? colorAt(colors, s) : live.gloves[s === 'g0' ? 0 : 1]), [colors, live.gloves]);
-
-  const originalOf = useCallback((s: Exclude<Slot, null>): number =>
-    (typeof s === 'number' ? colorAt(originals, s) : sheet.original.gloves[s === 'g0' ? 0 : 1]), [originals, sheet.original.gloves]);
-
-  const change = useCallback((hex: string) => {
-    if (slot === null) return;
-    const word = hexToBgr555(hex);
-    if (typeof slot === 'number') onColor(slot, word);
-    else onGloveColor(slot === 'g0' ? 0 : 1, word);
-  }, [slot, onColor, onGloveColor]);
-
-  const reset = useCallback(() => {
-    if (slot === null) return;
-    if (typeof slot === 'number') onReset(slot);
-    else onGloveColor(slot === 'g0' ? 0 : 1, sheet.original.gloves[slot === 'g0' ? 0 : 1]);
-  }, [slot, onReset, onGloveColor, sheet.original.gloves]);
-
-  const title = slot === null
-    ? ''
-    : typeof slot === 'number'
-      ? `${OUTFIT_LABELS[outfit]} · index ${slot + 1}`
-      : `Gloves · ${slot === 'g0' ? 'power' : 'titan'}`;
-
-  const swatchGroups = useMemo<SwatchGroup[]>(() => {
-    if (slot === null) return [];
-    const currentHex = bgr555ToHex(wordOf(slot));
-    const originalHex = bgr555ToHex(originalOf(slot));
-    const thisColour = currentHex === originalHex ? [currentHex] : [currentHex, originalHex];
-    return [
-      { label: 'This colour', colors: thisColour },
-      ...OUTFIT_IDS.map((id) => ({ label: `${OUTFIT_LABELS[id]} palette`, colors: live.outfits[id].map(bgr555ToHex) })),
-      { label: 'Gloves', colors: live.gloves.map(bgr555ToHex) },
-    ];
-  }, [slot, live, wordOf, originalOf]);
+  const { sheet, outfit, readOnly = false } = props;
+  const palette = usePaletteSlot(props);
+  const { slot, setSlot, anchorRef, live, colors, originals, openAt, wordOf, originalOf, change, reset, swatchGroups, title } = palette;
 
   return (
     <Box className="palette-editor">
@@ -69,34 +20,10 @@ const PaletteEditor = (props: PaletteEditorProps) => {
           {OUTFIT_LABELS[outfit]} palette
           <Text as="span" className="palette-editor__hint">index 0 is transparent and has no entry</Text>
         </Text>
-        <Box className="palette-editor__grid">
-          {Array.from({ length: COLORS_PER_OUTFIT }, (_, i) => (
-            <ColorSwatch
-              key={i}
-              color={bgr555ToHex(colorAt(colors, i))}
-              caption={i + 1}
-              selected={slot === i}
-              edited={colors[i] !== originals[i]}
-              title={`Index ${i + 1}${i + 1 === GLOVES_INDEX ? ' (replaced by the glove colour when gloves are worn)' : ''}`}
-              onClick={(e) => openAt(e.currentTarget, i)}
-            />
-          ))}
-        </Box>
+        <OutfitSwatchGrid colors={colors} originals={originals} slot={slot} onOpen={openAt} />
 
         <Text className="palette-editor__title">Glove colours</Text>
-        <Box className="palette-editor__grid">
-          {([0, 1] as const).map((g) => (
-            <ColorSwatch
-              key={g}
-              color={bgr555ToHex(live.gloves[g])}
-              caption={g === 0 ? 'P' : 'T'}
-              selected={slot === (g === 0 ? 'g0' : 'g1')}
-              edited={live.gloves[g] !== sheet.original.gloves[g]}
-              title={g === 0 ? 'Power gloves' : 'Titan mitts'}
-              onClick={(e) => openAt(e.currentTarget, g === 0 ? 'g0' : 'g1')}
-            />
-          ))}
-        </Box>
+        <GloveSwatchGrid gloves={live.gloves} originalGloves={sheet.original.gloves} slot={slot} onOpen={openAt} />
       </Box>
 
       <ColorPickerPopover

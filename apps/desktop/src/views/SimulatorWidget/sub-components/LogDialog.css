@@ -1,9 +1,9 @@
 /* @layer renderer-widgets @kind style */
 
 .sim-log-dialog {
-  width: min(1100px, 95vw);
+  width: min(calc(1100 * var(--size-1)), 95vw);
   max-width: 95vw;
-  height: min(82vh, 900px);
+  height: min(82vh, calc(900 * var(--size-1)));
   display: flex;
   flex-direction: column;
 }

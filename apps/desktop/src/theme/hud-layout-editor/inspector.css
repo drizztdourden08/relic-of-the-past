@@ -29,7 +29,7 @@
   font-size: var(--text-xs);
   font-weight: var(--weight-semi);
   text-transform: uppercase;
-  letter-spacing: 0.08em;
+  letter-spacing: var(--tracking-caps);
   color: var(--c-primary-bright);
 }
 
@@ -149,11 +149,11 @@
 }
 
 .hud-overlay__line--v {
-  width: 1px;
+  width: var(--size-1);
 }
 
 .hud-overlay__line--h {
-  height: 1px;
+  height: var(--size-1);
 }
 
 .hud-overlay__slot {

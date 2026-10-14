@@ -24,7 +24,7 @@ const compressStrings = (strings: string[], lang = 'us'): Uint8Array[] => {
     const r: number[] = [];
     let i = 0;
     while (i < s.length) {
-      const { bytes, consumed } = encodeGreedyFromDict(s, i, rev, a2i, info);
+      const { bytes, consumed } = encodeGreedyFromDict(s, i, { rev, a2i, info });
       r.push(...bytes);
       i += consumed;
     }

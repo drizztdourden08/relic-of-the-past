@@ -6,9 +6,10 @@ const SubsectionGroup = (props: SubsectionGroupProps) => {
   const { title, summary, swatch, open, onToggle, enabled, onEnabledChange, action, children } = props;
   const togglable = onEnabledChange !== undefined;
   const on = !togglable || enabled === true;
+  const shown = on && open;
 
   return (
-    <Box className={`hud-subgroup${open && on ? ' is-open' : ''}`} data-on={on}>
+    <Box className={`hud-subgroup${shown ? ' is-open' : ''}`} data-on={on}>
       <Box className="hud-subgroup__head">
         {togglable && (
           <Checkbox
@@ -20,7 +21,7 @@ const SubsectionGroup = (props: SubsectionGroupProps) => {
         )}
         <Pressable
           className="hud-subgroup__trigger"
-          aria-expanded={on && open}
+          aria-expanded={shown}
           disabled={!on}
           onClick={onToggle}
         >
@@ -29,7 +30,7 @@ const SubsectionGroup = (props: SubsectionGroupProps) => {
             <Box className="hud-subgroup__swatch" style={{ background: swatch }} aria-hidden />
           )}
           <Text className="hud-subgroup__summary">{summary}</Text>
-          <Text className="hud-subgroup__caret" aria-hidden>{on && open ? '▾' : '▸'}</Text>
+          <Text className="hud-subgroup__caret" aria-hidden>{shown ? '▾' : '▸'}</Text>
         </Pressable>
         {action && (
           <IconButton variant="ghost" size="sm" label={action.label} onClick={action.onClick}>
@@ -37,7 +38,7 @@ const SubsectionGroup = (props: SubsectionGroupProps) => {
           </IconButton>
         )}
       </Box>
-      {on && open && <Box className="hud-subgroup__body">{children}</Box>}
+      {shown && <Box className="hud-subgroup__body">{children}</Box>}
     </Box>
   );
 };

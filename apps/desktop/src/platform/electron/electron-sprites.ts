@@ -3,7 +3,7 @@ import { requireHostApi } from '@drizztdourden08/brock-react';
 import type { SpritesPort } from '../sprites-port.type';
 
 const createElectronSprites = (): SpritesPort => ({
-  baseUrl: async (romFile) => requireHostApi().getSpritesBaseUrl(romFile),
+  baseUrl: (romFile) => new Promise<string>((resolve) => resolve(requireHostApi().getSpritesBaseUrl(romFile))),
 });
 
 export { createElectronSprites };

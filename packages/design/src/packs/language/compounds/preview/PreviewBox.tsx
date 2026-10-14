@@ -1,8 +1,8 @@
 /* @layer renderer-components @kind component */
 import { Box } from '@drizztdourden08/tessera/primitives';
 import { ROWS_PER_BOX } from '@rotp/languages';
-import { ChoiceCursor } from './ChoiceCursor';
 import { GlyphRow } from './GlyphRow';
+import { SlotCursor } from './SlotCursor';
 import { NO_ROWS } from './preview.constants';
 import type { PreviewBoxProps, PreviewRow } from './preview.type';
 import './PreviewBox.css';
@@ -25,11 +25,7 @@ const PreviewBox = (props: PreviewBoxProps) => {
       <Box key={scrollKey} className={rowsClass}>
         {slots.map((row, at) => (
           <Box key={at} className="preview-box__slot">
-            {cursorRow === at + 1
-              ? <ChoiceCursor sheet={sheet} metrics={metrics} />
-              : optionRows.includes(at + 1)
-                ? <Box as="span" className="preview-cursor preview-cursor--blank" aria-hidden="true" />
-                : null}
+            <SlotCursor atCursor={cursorRow === at + 1} atOption={optionRows.includes(at + 1)} sheet={sheet} metrics={metrics} />
             {row === null
               ? <Box className="preview-row preview-row--blank" />
               : <GlyphRow row={row} sheet={sheet} metrics={metrics} />}

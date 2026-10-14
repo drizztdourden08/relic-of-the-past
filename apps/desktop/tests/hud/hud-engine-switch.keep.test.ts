@@ -2,13 +2,20 @@
 import { describe, expect, it } from 'vitest';
 import { layoutHud, validateLayout, BUILT_IN_LAYOUTS, engineSwitchPatch, resolveValue } from '@rotp/hud';
 import { nodeById, patchNode } from '@app/hud-layout-editing/node-edits';
-import type { HudContainer, HudLayout, Value } from '@rotp/hud';
+import type { HudContainer, HudLayout } from '@rotp/hud';
 import { required } from '../required';
+import { FIXTURE_COLOURS } from './fixture-colours.constants';
 
 const VIEW = { w: 398, h: 224 };
+
+type UntrustedResolver = { resolve(value: unknown, scope: Readonly<Record<string, number>>): number };
+
+const untrusted: UntrustedResolver = { resolve: resolveValue };
 const base = required(BUILT_IN_LAYOUTS[0], 'the first built-in layout');
 
 const screenOf = (doc: HudLayout): HudContainer => nodeById(doc, doc.screen.id) as HudContainer;
+
+const recordOf = (value: object): Record<string, unknown> => Object.fromEntries(Object.entries(value));
 
 const switched = (doc: HudLayout, engine: 'flex' | 'grid'): HudLayout => {
   const patch = engineSwitchPatch(screenOf(doc), engine);
@@ -18,7 +25,7 @@ const switched = (doc: HudLayout, engine: 'flex' | 'grid'): HudLayout => {
 describe('grid -> flex, with the gap that used to crash it', () => {
   const withGap = patchNode(base, base.screen.id, { gap: { x: 2, y: 3 } });
   const flex = switched(withGap, 'flex');
-  const node = screenOf(flex) as unknown as Record<string, unknown>;
+  const node = recordOf(screenOf(flex));
 
   it('leaves nothing of the grid behind', () => {
     for (const key of ['columns', 'rows', 'justifyItems', 'alignItems']) {
@@ -33,9 +40,9 @@ describe('grid -> flex, with the gap that used to crash it', () => {
   });
 
   it('carries the guide colour across, because it is not the grid\'s', () => {
-    const withGuide = patchNode(base, base.screen.id, { guide: { show: true, color: '#abcdef' } });
-    const asFlex = screenOf(switched(withGuide, 'flex')) as unknown as Record<string, unknown>;
-    expect(asFlex.guide).toEqual({ show: true, color: '#abcdef' });
+    const withGuide = patchNode(base, base.screen.id, { guide: { show: true, color: FIXTURE_COLOURS.sky } });
+    const asFlex = recordOf(screenOf(switched(withGuide, 'flex')));
+    expect(asFlex.guide).toEqual({ show: true, color: FIXTURE_COLOURS.sky });
     expect(validateLayout(JSON.parse(JSON.stringify(switched(withGuide, 'flex')))).errors).toEqual([]);
   });
 
@@ -51,7 +58,7 @@ describe('grid -> flex, with the gap that used to crash it', () => {
 describe('flex -> grid, and back again', () => {
   const flex = switched(base, 'flex');
   const grid = switched(flex, 'grid');
-  const node = screenOf(grid) as unknown as Record<string, unknown>;
+  const node = recordOf(screenOf(grid));
 
   it('leaves nothing of flex behind', () => {
     for (const key of ['direction', 'justify', 'align', 'wrap']) {
@@ -68,7 +75,7 @@ describe('flex -> grid, and back again', () => {
 
   it('passes a flex gap straight through to the grid (§57)', () => {
     const gapped = patchNode(flex, flex.screen.id, { gap: { x: 4, y: 6 } });
-    expect((screenOf(switched(gapped, 'grid')) as unknown as Record<string, unknown>).gap).toEqual({ x: 4, y: 6 });
+    expect(recordOf(screenOf(switched(gapped, 'grid'))).gap).toEqual({ x: 4, y: 6 });
   });
 
   it('writes nothing when asked for the engine it already has', () => {
@@ -84,7 +91,7 @@ describe('resolveValue keeps its own promise', () => {
     ['a data value with no expr', { from: 'data' }],
     ['a string', '4'],
   ])('folds %s to 0 instead of throwing into the layout pass', (_name, bad) => {
-    expect(() => resolveValue(bad as unknown as Value, {})).not.toThrow();
-    expect(resolveValue(bad as unknown as Value, {})).toBe(0);
+    expect(() => untrusted.resolve(bad, {})).not.toThrow();
+    expect(untrusted.resolve(bad, {})).toBe(0);
   });
 });

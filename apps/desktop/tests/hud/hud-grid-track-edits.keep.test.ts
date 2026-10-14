@@ -4,7 +4,7 @@ import { editGridTracks, validateLayout } from '@rotp/hud';
 import type { TrackEdit, HudGridContainer, HudLayout, HudNode, HudPlace } from '@rotp/hud';
 
 const leaf = (id: string, place?: HudPlace): HudNode =>
-  ({ id, kind: 'element', element: { type: 'spacer' }, ...(place ? { place } : {}) }) as unknown as HudNode;
+  ({ id, kind: 'element', element: { type: 'spacer' }, ...(place ? { place } : {}) });
 
 const gridOf = (columns: number, rows: number, children: HudNode[]): HudGridContainer => ({
   kind: 'container',
@@ -17,6 +17,17 @@ const gridOf = (columns: number, rows: number, children: HudNode[]): HudGridCont
 
 const placeOf = (container: HudGridContainer, id: string): HudPlace | undefined =>
   container.children.find((child) => child.id === id)?.place;
+
+const expectInRange = (child: HudNode, columns: number, rows: number): void => {
+  const { place } = child;
+  if (!place) return;
+  const c0 = place.column ?? 1;
+  const r0 = place.row ?? 1;
+  expect(`${child.id} c ${c0 >= 1 && c0 + (place.colSpan ?? 1) - 1 <= columns}`)
+    .toBe(`${child.id} c true`);
+  expect(`${child.id} r ${r0 >= 1 && r0 + (place.rowSpan ?? 1) - 1 <= rows}`)
+    .toBe(`${child.id} r true`);
+};
 
 describe('removing a track takes its children somewhere real', () => {
   const grid = (): HudGridContainer => gridOf(4, 2, [
@@ -91,10 +102,10 @@ describe('inserting a track pushes what is at or after it away', () => {
   });
 
   it('materialises implicit rows before editing them, so a visible row is real', () => {
-    const implicit = {
+    const implicit: HudGridContainer = {
       kind: 'container', id: 'g', layout: 'grid', columns: ['auto'],
       children: [leaf('low', { column: 1, row: 3 })],
-    } as unknown as HudGridContainer;
+    };
     const next = editGridTracks(implicit, { op: 'insert', axis: 'rows', index: 1 });
     expect(next.rows?.length).toBe(4);
     expect(placeOf(next, 'low')).toEqual({ column: 1, row: 4 });
@@ -168,23 +179,14 @@ describe('the invariant, over a sequence instead of a case', () => {
       const columns = grid.columns.length;
       const rows = grid.rows?.length ?? Infinity;
       expect(columns).toBeGreaterThanOrEqual(1);
-      for (const child of grid.children) {
-        const place = child.place;
-        if (!place) continue;
-        const c0 = place.column ?? 1;
-        const r0 = place.row ?? 1;
-        expect(`${child.id} c ${c0 >= 1 && c0 + (place.colSpan ?? 1) - 1 <= columns}`)
-          .toBe(`${child.id} c true`);
-        expect(`${child.id} r ${r0 >= 1 && r0 + (place.rowSpan ?? 1) - 1 <= rows}`)
-          .toBe(`${child.id} r true`);
-      }
+      for (const child of grid.children) expectInRange(child, columns, rows);
     }
   });
 
   it('hands `validateLayout` something it accepts, after all ten', () => {
     let grid = START();
     for (const edit of EDITS) grid = editGridTracks(grid, edit);
-    const doc = { id: 'g', name: 'g', builtIn: false, screen: grid } as unknown as HudLayout;
+    const doc: HudLayout = { id: 'g', name: 'g', builtIn: false, screen: grid };
     const parsed = validateLayout(JSON.parse(JSON.stringify(doc)) as unknown);
     expect(parsed.errors).toEqual([]);
   });

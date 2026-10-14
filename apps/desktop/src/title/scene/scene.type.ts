@@ -62,6 +62,14 @@ interface RidgeOptions {
   rows?: number;
 }
 
+interface RidgePiece {
+  img: HTMLImageElement;
+  x: number;
+  y: number;
+  flip: boolean;
+  rows: number;
+}
+
 interface Ripple {
   x: number;
   y: number;
@@ -79,5 +87,5 @@ interface SeededRandom {
 }
 
 export type {
-  Drifting, Placed, RidgeOptions, Ripple, Scene, SceneAssets, SceneClock, SceneFiles, SceneGeometry, SceneLayer, SceneLayout, SeededRandom,
+  Drifting, Placed, RidgeOptions, RidgePiece, Ripple, Scene, SceneAssets, SceneClock, SceneFiles, SceneGeometry, SceneLayer, SceneLayout, SeededRandom,
 };

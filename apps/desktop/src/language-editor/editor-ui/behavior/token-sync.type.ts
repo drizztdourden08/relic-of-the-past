@@ -4,7 +4,7 @@ import type { Editor } from '@tiptap/core';
 import type { DialogueLineView, GlossaryTerm, GlyphMetrics, Token } from '@rotp/languages';
 
 type UseTokenSyncParams = {
-  editor: Editor | null;
+  editor: Editor;
   tokens: Token[];
   emittedRef: RefObject<string>;
   metrics: GlyphMetrics;

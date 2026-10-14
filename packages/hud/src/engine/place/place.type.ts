@@ -1,4 +1,8 @@
 /* @layer shared-hud @kind types */
+import type { Rect } from '../../layouts/geometry.type';
+
 interface PlaceEnv { opacity: number; dimmed: boolean }
 
-export type { PlaceEnv };
+interface PlaceFrame { box: Rect; unit: number }
+
+export type { PlaceEnv, PlaceFrame };

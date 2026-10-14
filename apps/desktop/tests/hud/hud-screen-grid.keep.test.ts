@@ -47,12 +47,14 @@ describe('the countdown (§62) joins every built-in without moving a pixel', () 
 
   it.each(['default', 'compact', 'bottom-right'])('%s: every other node is where it was, counting or not', (id) => {
     const doc = layoutById(id) as HudLayout;
-    VIEWS.forEach((view) => [SCOPE, COUNTING].forEach((scope) => {
-      const before = layoutHud(without(doc), view, { scope, hearts: 20 });
-      const after = layoutHud(doc, view, { scope, hearts: 20 }).filter((node) => node.id !== 'countdown');
-      expect(after.map((n) => [n.id, n.rect, n.scale, n.opacity, n.dimmed]))
-        .toEqual(before.map((n) => [n.id, n.rect, n.scale, n.opacity, n.dimmed]));
-    }));
+    for (const view of VIEWS) {
+      for (const scope of [SCOPE, COUNTING]) {
+        const before = layoutHud(without(doc), view, { scope, hearts: 20 });
+        const after = layoutHud(doc, view, { scope, hearts: 20 }).filter((node) => node.id !== 'countdown');
+        expect(after.map((n) => [n.id, n.rect, n.scale, n.opacity, n.dimmed]))
+          .toEqual(before.map((n) => [n.id, n.rect, n.scale, n.opacity, n.dimmed]));
+      }
+    }
   });
 
   it.each(['default', 'compact', 'bottom-right'])('%s: the pie sits where HudView draws it, and only while counting', (id) => {

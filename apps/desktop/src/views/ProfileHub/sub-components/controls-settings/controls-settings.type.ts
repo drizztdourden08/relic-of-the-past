@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind types */
-import type { GameSettings, ControlSchemeId, FunctionAction } from '@rotp/features';
+import type { GameSettings, ControlSchemeId, FunctionAction, FunctionMapping } from '@rotp/features';
 import type { CoreVerb, ResolvedControl, DetectedDevice, InputProfile } from '@rotp/input-mapping';
 import type { DeviceEntry } from '@drizztdourden08/brock-input';
 import type { HudLayout } from '@rotp/hud';
@@ -119,9 +119,92 @@ interface LiveFamilyIconParams {
   devices: DetectedDevice[];
 }
 
+interface BindMappingParams<T extends object> {
+  mapping: T;
+  binding: InputBinding;
+  vid: string | null;
+  pid: string | null;
+}
+
+interface BindSnesButtonParams {
+  profile: InputProfile;
+  button: SnesButton;
+  binding: InputBinding;
+  vid: string | null;
+  pid: string | null;
+}
+
+interface BindFunctionActionParams {
+  mappings: readonly FunctionMapping[];
+  action: FunctionAction;
+  binding: InputBinding;
+  vid: string | null;
+  pid: string | null;
+}
+
+type DisplayFunctionMapping = FunctionMapping & { deviceIconUrl?: string | null };
+
+interface UseDisplayFunctionMappingsArgs {
+  functionMappings: FunctionMapping[];
+  activeProfile: InputProfile | null;
+  devices: DetectedDevice[];
+}
+
+interface UseRebindHandlersArgs {
+  setListeningFor: (target: ListeningTarget | null) => void;
+}
+
+type ProfileMapping = InputProfile['mappings'][number];
+
+interface GamepadDisplayMappingParams {
+  mapping: ProfileMapping;
+  multiController: boolean;
+  devices: DetectedDevice[];
+}
+
+interface ButtonDisplayMappingParams {
+  button: SnesButton;
+  mapping: ProfileMapping | undefined;
+  multiController: boolean;
+  devices: DetectedDevice[];
+}
+
+interface ReadDroppedPresetParams {
+  transfer: DataTransfer;
+  devices: DetectedDevice[];
+}
+
+interface PresetMappingsParams {
+  sdlType: string;
+  vid: string;
+  pid: string;
+}
+
+interface BuildPresetProfileParams {
+  preset: PendingPreset;
+  profile: InputProfile;
+  scheme: ControlSchemeId;
+  entries: DeviceEntry[];
+}
+
+interface ResolveCoreBindingsParams {
+  activeProfile: InputProfile | null;
+  controls: ResolvedControl[];
+  isKeyboard: boolean;
+}
+
+interface UseProfileLoaderArgs {
+  profileId: string;
+  activeInputProfileId: string | null;
+  setProfiles: (profiles: InputProfile[]) => void;
+  setActiveProfile: (profile: InputProfile | null) => void;
+}
+
 export type {
-  AbsentAssignment, ControlsTab, CoreIcons, DeviceIdentity, ListeningTarget, LiveFamilyIconParams,
+  AbsentAssignment, BindFunctionActionParams, BindMappingParams, BindSnesButtonParams, BuildPresetProfileParams, PresetMappingsParams, ReadDroppedPresetParams, ResolveCoreBindingsParams,
+  ButtonDisplayMappingParams, ControlsTab, GamepadDisplayMappingParams, ProfileMapping, CoreIcons, DeviceIdentity, DisplayFunctionMapping, ListeningTarget, LiveFamilyIconParams,
   PendingPreset, RequiredInput, SchemeLayout, SettingsChange, SlotDisplay, UseBindingStateArgs,
-  UseControlsSettingsArgs, UseCoreIconsArgs, UseDisplayMappingsArgs, UseDragDropArgs,
-  UseHapticsToggleArgs, UseModernSchemeArgs, UseProfileActionsArgs, UseSchemeLayoutArgs,
+  UseControlsSettingsArgs, UseCoreIconsArgs, UseDisplayFunctionMappingsArgs, UseDisplayMappingsArgs,
+  UseDragDropArgs, UseHapticsToggleArgs, UseModernSchemeArgs, UseProfileActionsArgs,
+  UseProfileLoaderArgs, UseRebindHandlersArgs, UseSchemeLayoutArgs,
 };

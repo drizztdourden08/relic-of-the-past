@@ -4,9 +4,7 @@ import { CURRENT_STATE_FORMAT, appendStamp, readSnapshotBytes, readStamp, stateS
 import { log } from '../../log-bus';
 
 const appVersion = async (): Promise<string> => {
-  if (stateStampState.cachedVersion === null) {
-    stateStampState.cachedVersion = await requireHostApi().updater.getVersion().catch(() => UNKNOWN_APP_VERSION);
-  }
+  stateStampState.cachedVersion ??= await requireHostApi().updater.getVersion().catch(() => UNKNOWN_APP_VERSION);
   return stateStampState.cachedVersion;
 };
 

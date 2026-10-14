@@ -23,6 +23,19 @@ interface SliceMap {
   hub: Uint8Array;
 }
 
+interface SliceGeometry {
+  count: number;
+  step: number;
+  discRadius: number;
+  sliceRadius: number;
+}
+
+interface SliceCell {
+  cell: number;
+  px: number;
+  py: number;
+}
+
 type PiePalette = readonly string[];
 
 interface StepClock {
@@ -31,4 +44,4 @@ interface StepClock {
   ticks: number;
 }
 
-export type { HudPixelPieProps, PieFrame, PiePalette, SliceMap, StepClock };
+export type { HudPixelPieProps, PieFrame, PiePalette, SliceCell, SliceGeometry, SliceMap, StepClock };

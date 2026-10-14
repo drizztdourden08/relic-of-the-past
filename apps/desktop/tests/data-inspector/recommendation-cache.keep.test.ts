@@ -1,7 +1,7 @@
 /* @layer tests @kind test */
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import type { Mock } from 'vitest';
-import type * as CacheModule from '@app/views/DataInspector/behavior/recommendations/recommendation-cache';
+import type * as CacheModule from '@app/data-inspector/recommendations/recommendation-cache';
 import type { Recommendation } from '@rotp/navigation';
 
 type LoadRecommendations = (kind: string) => Promise<Recommendation[]>;
@@ -43,7 +43,7 @@ beforeEach(async () => {
   loadRecommendations = vi.fn<LoadRecommendations>().mockResolvedValue([]);
   decideRecommendation = vi.fn<DecideRecommendation>().mockResolvedValue([]);
   vi.stubGlobal('window', { api: { loadRecommendations, decideRecommendation } });
-  cache = await import('@app/views/DataInspector/behavior/recommendations/recommendation-cache');
+  cache = await import('@app/data-inspector/recommendations/recommendation-cache');
 });
 
 afterEach(() => {

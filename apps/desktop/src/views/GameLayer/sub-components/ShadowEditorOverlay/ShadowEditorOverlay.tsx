@@ -1,13 +1,15 @@
 /* @layer renderer-components @kind component */
-import { useMemo, useRef } from 'react';
+import { useRef } from 'react';
 import { Canvas } from '@drizztdourden08/tessera/primitives';
 import { useShadowEditorStore } from '../../../../stores/shadow-editor-store';
 import type { GizmoPart } from './behavior/gizmo.type';
 import type { Vp, Point } from './behavior/overlay.type';
 import type { GizmoStart, ShadowEditorOverlayProps } from './ShadowEditorOverlay.type';
+import { interactionDeps } from './behavior/interaction-deps';
 import { useOverlayKeyboard } from './behavior/useOverlayKeyboard';
 import { useOverlayInteractions } from './behavior/useOverlayInteractions';
 import { useOverlayRender } from './behavior/useOverlayRender';
+import './ShadowEditorOverlay.css';
 
 const ShadowEditorOverlay = (props: ShadowEditorOverlayProps) => {
   const { width, height, gameRunning } = props;
@@ -24,33 +26,7 @@ const ShadowEditorOverlay = (props: ShadowEditorOverlayProps) => {
 
   useOverlayKeyboard({ open: s.open, loadProject: s.loadProject, vpRef });
 
-  const interactions = useOverlayInteractions({
-    ...refs,
-    width, height,
-    activeTool: s.activeTool,
-    selectedElementId: s.selectedElementId,
-    isDragging: s.isDragging,
-    dragStartWorld: s.dragStartWorld,
-    isDrawingFreehand: s.isDrawingFreehand,
-    freehandPoints: s.freehandPoints,
-    polygonSides: s.polygonSides,
-    polygonCornerRadius: s.polygonCornerRadius,
-    defaultSmoothing: s.defaultSmoothing,
-    defaultLightIntensity: s.defaultLightIntensity,
-    defaultLightRadius: s.defaultLightRadius,
-    getScreenData: s.getScreenData,
-    addHeightmapElement: s.addHeightmapElement,
-    addLight: s.addLight,
-    setSelectedElement: s.setSelectedElement,
-    updateHeightmapElement: s.updateHeightmapElement,
-    updateLight: s.updateLight,
-    getEffectiveHeight: s.getEffectiveHeight,
-    addFreehandPoint: s.addFreehandPoint,
-    clearFreehandPoints: s.clearFreehandPoints,
-    setIsDrawingFreehand: s.setIsDrawingFreehand,
-    setIsDragging: s.setIsDragging,
-    setDragStartWorld: s.setDragStartWorld,
-  });
+  const interactions = useOverlayInteractions(interactionDeps(s, refs, { width, height }));
 
   useOverlayRender({
     ...refs,
@@ -62,25 +38,13 @@ const ShadowEditorOverlay = (props: ShadowEditorOverlayProps) => {
     getScreenData: s.getScreenData,
   });
 
-  const interactive = !s.previewMode && (s.activeTool === 'select' || s.activeTool === 'polygon' || s.activeTool === 'freehand' || s.activeTool === 'point-light' || s.activeTool === 'shape-light');
-  const { cursor } = interactions;
-  const canvasStyle = useMemo(() => ({
-    position: 'absolute' as const,
-    top: '50%',
-    left: '50%',
-    transform: 'translate(-50%, -50%)',
-    width,
-    height,
-    pointerEvents: interactive ? 'auto' as const : 'none' as const,
-    zIndex: 10,
-    cursor,
-  }), [width, height, interactive, cursor]);
-
   if (!s.open || !gameRunning) return null;
 
   return (
     <Canvas
       ref={canvasRef}
+      className={s.previewMode ? 'shadow-editor-overlay' : 'shadow-editor-overlay shadow-editor-overlay--interactive'}
+      data-cursor={interactions.cursor}
       width={width}
       height={height}
       onMouseDown={interactions.handleMouseDown}
@@ -88,7 +52,6 @@ const ShadowEditorOverlay = (props: ShadowEditorOverlayProps) => {
       onMouseUp={interactions.handleMouseUp}
       onContextMenu={interactions.handleContextMenu}
       onDoubleClick={interactions.handleDoubleClick}
-      style={canvasStyle}
     />
   );
 };

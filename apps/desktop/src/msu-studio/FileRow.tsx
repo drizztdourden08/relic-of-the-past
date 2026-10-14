@@ -1,10 +1,11 @@
 /* @layer renderer-components @kind component */
-import { useEffect, useRef, useState } from 'react';
-import type { KeyboardEvent } from 'react';
-import { Status, Box, Icon, IconButton, Text, TextInput } from '@drizztdourden08/tessera/primitives';
+import { Status, Box, Text } from '@drizztdourden08/tessera/primitives';
 import type { MsuFileMetadata } from '@rotp/msu';
 import { formatBytes } from '@drizztdourden08/brock-core';
 import { FilePlayer, clock } from '@rotp/design/packs';
+import { useFileRename } from './behavior/useFileRename';
+import { FileActions } from './FileActions';
+import { FileNameCell } from './FileNameCell';
 import { listSummary } from './sound-labels';
 import { UNKNOWN } from './FileRow.constants';
 import type { FileRowProps } from './FileRow.type';
@@ -29,51 +30,12 @@ const rateSpec = (file: MsuFileMetadata): string => {
 
 const FileRow = (props: FileRowProps) => {
   const { file, usedBy, loopSeconds, playing, loading, audition, busy, readOnly, onPlay, onRename, onDelete } = props;
-  const [editing, setEditing] = useState(false);
-  const [draft, setDraft] = useState(file.name);
-  const cancelled = useRef(false);
-
-  useEffect(() => { setDraft(file.name); }, [file.name]);
-
-  const handleBlur = (): void => {
-    setEditing(false);
-    if (cancelled.current) { cancelled.current = false; setDraft(file.name); return; }
-    const wanted = draft.trim();
-    if (wanted !== file.name) onRename(file.name, wanted);
-  };
-
-  const handleKeyDown = (event: KeyboardEvent<HTMLInputElement>): void => {
-    if (event.key === 'Enter') event.currentTarget.blur();
-    else if (event.key === 'Escape') { event.preventDefault(); cancelled.current = true; event.currentTarget.blur(); }
-  };
-
-  const loopText = loopTextOf(loopSeconds);
+  const rename = useFileRename({ name: file.name, onRename });
 
   return (
     <Box className={`msu-file-entry${playing ? ' msu-file-entry--playing' : ''}`}>
       <Box className="msu-file-row">
-        {editing ? (
-          <Box className="msu-file-row__edit">
-            <TextInput
-              type="text"
-              value={draft}
-              aria-label={`Name of ${file.name}`}
-              autoFocus
-              disabled={busy}
-              onChange={(event) => setDraft(event.target.value)}
-              onKeyDown={handleKeyDown}
-              onBlur={handleBlur}
-            />
-          </Box>
-        ) : (
-          <Text
-            className="msu-file-row__name"
-            title={readOnly ? file.name : `${file.name} (click to rename)`}
-            onClick={readOnly ? undefined : () => setEditing(true)}
-          >
-            {file.name}
-          </Text>
-        )}
+        <FileNameCell name={file.name} busy={busy} readOnly={readOnly} rename={rename} />
 
         <Box className="msu-file-row__cell"><Status tone="neutral">{file.ext}</Status></Box>
         <Text className="msu-file-row__spec">{formatBytes(file.size)}</Text>
@@ -88,7 +50,7 @@ const FileRow = (props: FileRowProps) => {
           className="msu-file-row__spec"
           title={loopSeconds === undefined ? 'Play the file to read where it repeats from' : 'Repeats from'}
         >
-          {loopText}
+          {loopTextOf(loopSeconds)}
         </Text>
 
         <Box className="msu-file-row__cell">
@@ -99,24 +61,15 @@ const FileRow = (props: FileRowProps) => {
           )}
         </Box>
 
-        <Box className="msu-file-row__actions">
-          <IconButton
-            variant="ghost"
-            size="sm"
-            label={playing ? `Stop ${file.name}` : `Play ${file.name}`}
-            active={playing}
-            disabled={loading}
-            onClick={() => onPlay(file.name)}
-          >
-            <Icon name={playing ? 'square' : 'play'} />
-          </IconButton>
-          <IconButton
-            variant="ghost" size="sm" label={`Delete ${file.name}`} disabled={busy || readOnly}
-            onClick={() => onDelete(file.name)}
-          >
-            ✕
-          </IconButton>
-        </Box>
+        <FileActions
+          name={file.name}
+          playing={playing}
+          loading={loading}
+          busy={busy}
+          readOnly={readOnly}
+          onPlay={onPlay}
+          onDelete={onDelete}
+        />
       </Box>
 
       {playing && audition !== null && <FilePlayer audition={audition} />}

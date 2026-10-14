@@ -16,7 +16,7 @@ const refusalText = (doc: HudLayout, ids: readonly string[], intent: DropIntent)
     case 'source-locked': return `${dragged} is set in Content, not by dragging`;
     case 'target-locked': return `a repeat's child is set in Content`;
     case 'grid-column': return `${other} has no such column`;
-    default: return `would expand past the ${MAX_EXPANDED_NODES}-node cap`;
+    case 'budget': return `would expand past the ${MAX_EXPANDED_NODES}-node cap`;
   }
 };
 

@@ -1,17 +1,17 @@
 /* @layer renderer-components @kind style */
 .shadow-editor-panel {
   position: absolute;
-  top: 8px;
-  right: 8px;
-  bottom: 8px;
-  width: 260px;
+  top: var(--size-8);
+  right: var(--size-8);
+  bottom: var(--size-8);
+  width: calc(260 * var(--size-1));
   z-index: var(--z-panel);
   background: var(--c-surface);
-  border: 1px solid var(--c-border);
+  border: var(--border-width-thin) solid var(--c-border);
   border-radius: var(--radius-lg);
   display: flex;
   flex-direction: column;
-  backdrop-filter: blur(8px);
+  backdrop-filter: blur(var(--size-8));
   overflow: hidden;
 }
 
@@ -20,7 +20,7 @@
   align-items: center;
   gap: var(--space-sm);
   padding: var(--space-sm) var(--space-sm);
-  border-bottom: 1px solid var(--c-border);
+  border-bottom: var(--border-width-thin) solid var(--c-border);
   flex-shrink: 0;
 }
 
@@ -47,13 +47,13 @@
 
 .shadow-editor-panel__toolbar {
   padding: var(--space-sm) var(--space-sm);
-  border-bottom: 1px solid var(--c-border);
+  border-bottom: var(--border-width-thin) solid var(--c-border);
   flex-shrink: 0;
 }
 
 .shadow-editor-panel__tool-opts {
   padding: var(--space-sm) var(--space-sm);
-  border-bottom: 1px solid var(--c-border);
+  border-bottom: var(--border-width-thin) solid var(--c-border);
   display: flex;
   flex-direction: column;
   gap: var(--space-sm);
@@ -69,7 +69,7 @@
 }
 
 .shadow-editor-panel__body::-webkit-scrollbar {
-  width: 4px;
+  width: var(--size-4);
 }
 
 .shadow-editor-panel__body::-webkit-scrollbar-thumb {
@@ -98,7 +98,7 @@
   font-weight: var(--weight-medium);
   color: var(--c-text-dim);
   text-transform: uppercase;
-  letter-spacing: 0.5px;
+  letter-spacing: calc(0.5 * var(--size-1));
 }
 
 .shadow-editor-panel__footer {
@@ -106,11 +106,6 @@
   color: var(--c-text-muted);
   text-align: center;
   padding: var(--space-sm) var(--space-sm);
-  border-top: 1px solid var(--c-border);
+  border-top: var(--border-width-thin) solid var(--c-border);
   flex-shrink: 0;
-}
-
-.icon-btn--active {
-  background: var(--c-info-soft) !important;
-  color: var(--c-primary) !important;
 }

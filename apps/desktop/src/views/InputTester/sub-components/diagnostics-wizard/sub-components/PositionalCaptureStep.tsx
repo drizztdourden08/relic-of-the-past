@@ -33,7 +33,7 @@ const PositionalCaptureStep = (props: PositionalCaptureStepProps) => {
           <Text as="p">
             Each input below is asked for by name, one at a time, using the controller's own
             labels. Provide it on the controller and this records which physical position
-            actually fired.
+            fired.
           </Text>
           <ButtonMapping
             items={capture.items}

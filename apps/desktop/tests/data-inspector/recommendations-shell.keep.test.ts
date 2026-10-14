@@ -10,7 +10,7 @@ import {
 describe('the rail entry', () => {
   it('is always present, last, regardless of the active kind', () => {
     expect(NAV_ITEMS).toHaveLength(KIND_NAV_ITEMS.length + 1);
-    expect(NAV_ITEMS[NAV_ITEMS.length - 1]).toEqual({ id: 'recommendations', icon: '⚠️', label: 'Recommendations' });
+    expect(NAV_ITEMS[NAV_ITEMS.length - 1]).toEqual({ id: 'recommendations', icon: 'triangle-alert', label: 'Recommendations' });
   });
 
   it('never leaves the eleven real collections behind', () => {

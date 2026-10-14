@@ -1,12 +1,13 @@
 /* @layer electron-main @kind logic */
-import { join, dirname } from 'path';
-import { writeFile, readdir, rename, rm, stat, mkdir } from 'fs/promises';
+import { dirname } from 'path';
+import { writeFile, readdir, rename, rm, mkdir } from 'fs/promises';
 import type { MsuPackManifest, MsuPackMeta } from '@rotp/game-data';
 import { isAudioFile, newManifest } from '@rotp/msu';
 import { handle } from '@drizztdourden08/brock-electron/main';
 import {
   packFilePath, packPath, pathExists, readPackManifest, refuseInstalledPack, writePackManifest,
 } from './pack-fs';
+import { statOrNull } from './stat-or-null';
 
 const rewriteManifestUnderNewName = async (pack: string): Promise<void> => {
   const manifest = await readPackManifest(pack);
@@ -19,12 +20,8 @@ const registerMsuEditHandlers = (): void => {
       const dir = packPath(packName);
       const out: { name: string; size: number }[] = [];
       for (const f of (await readdir(dir)).filter(isAudioFile)) {
-        try {
-          const st = await stat(join(dir, f));
-          if (st.isFile()) out.push({ name: f, size: st.size });
-        } catch {
-          continue;
-        }
+        const st = await statOrNull(dir, f);
+        if (st?.isFile()) out.push({ name: f, size: st.size });
       }
       return out;
     } catch { return []; }

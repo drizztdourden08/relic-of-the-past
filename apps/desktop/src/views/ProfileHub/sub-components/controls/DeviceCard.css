@@ -5,7 +5,7 @@
   gap: var(--space-sm);
   padding: var(--space-sm) var(--space-md);
   background: var(--c-surface);
-  border: 1px solid var(--c-border);
+  border: var(--border-width-thin) solid var(--c-border);
   border-radius: var(--radius-md);
   user-select: none;
   transition: border-color 0.15s, background 0.15s;
@@ -41,15 +41,15 @@
   align-items: center;
   gap: var(--space-xs);
   flex-shrink: 0;
-  width: 44px;
+  width: calc(44 * var(--size-1));
 }
 
 .device-card__icon-btn {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 36px;
-  height: 36px;
+  width: calc(36 * var(--size-1));
+  height: calc(36 * var(--size-1));
   padding: var(--space-xs);
   border-radius: var(--radius-md);
   border: none;
@@ -64,7 +64,7 @@
 }
 
 .device-card__icon-btn--active .device-card__icon {
-  filter: drop-shadow(0 0 6px var(--c-secondary)) drop-shadow(0 0 12px var(--c-secondary));
+  filter: drop-shadow(0 0 var(--size-6) var(--c-secondary)) drop-shadow(0 0 var(--size-12) var(--c-secondary));
 }
 
 .device-card__icon-btn--disconnected .device-card__icon {
@@ -72,8 +72,8 @@
 }
 
 .device-card__icon {
-  width: 28px;
-  height: 28px;
+  width: var(--size-28);
+  height: var(--size-28);
   flex-shrink: 0;
   object-fit: contain;
 }

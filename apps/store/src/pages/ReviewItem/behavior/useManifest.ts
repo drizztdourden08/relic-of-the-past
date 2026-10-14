@@ -25,7 +25,7 @@ const useManifest = (source: PackSource | null): ManifestState => {
     return () => { live = false; };
   }, [source]);
 
-  const current = result && result.source === source ? result : null;
+  const current = result?.source === source ? result : null;
   return { entry: current?.entry ?? null, error: current?.error ?? null, loading: source !== null && current === null };
 };
 

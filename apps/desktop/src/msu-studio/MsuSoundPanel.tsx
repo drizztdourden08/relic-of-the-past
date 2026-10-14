@@ -1,11 +1,11 @@
 /* @layer renderer-components @kind component */
 import { useCallback, useState } from 'react';
-import { Box, Button, EmptyState, Field, SectionHeader, Text, TextInput, Toggle } from '@drizztdourden08/tessera/primitives';
-import { SoundListItem } from './SoundListItem';
+import { Box, Button, SectionHeader } from '@drizztdourden08/tessera/primitives';
+import { SoundPanelControls } from './SoundPanelControls';
+import { SoundPanelRows } from './SoundPanelRows';
 import { soundPanelSubtitle } from './behavior/sound-subtitle';
 import { useSoundPanel } from './behavior/useSoundPanel';
 import { SOUND_CHANNEL_LABELS, soundTitle } from './sound-labels';
-import { SOUND_FILTER_HINT, SOUND_FILTER_PLACEHOLDER, UNREACHABLE_DESCRIPTION } from './msu.constants';
 import type { MsuSoundPanelProps } from './MsuSoundPanel.type';
 
 const MsuSoundPanel = (props: MsuSoundPanelProps) => {
@@ -15,9 +15,7 @@ const MsuSoundPanel = (props: MsuSoundPanelProps) => {
   const sound = useSoundPanel({
     pack, channel, manifest, saveBase, files, filter, showUnreachable, reload: onReload,
   });
-  const { rows, replacedCount, total, playing } = sound;
-  const hasHidden = sound.unreachableCount > 0;
-  const availableFiles = files.map((file) => file.name);
+  const { replacedCount, total, playing } = sound;
 
   const { stopReplacing } = sound;
   const confirmStopReplacing = useCallback((soundId: number) => {
@@ -45,56 +43,28 @@ const MsuSoundPanel = (props: MsuSoundPanelProps) => {
           : null}
       />
 
-      <Field label="Find a sound" hint={SOUND_FILTER_HINT}>
-        <TextInput
-          type="text"
-          placeholder={SOUND_FILTER_PLACEHOLDER}
-          value={filter}
-          onChange={(e) => setFilter(e.target.value)}
-        />
-      </Field>
+      <SoundPanelControls
+        sound={sound}
+        filter={filter}
+        showUnreachable={showUnreachable}
+        onFilterChange={setFilter}
+        onShowUnreachableChange={setShowUnreachable}
+      />
 
-      {hasHidden && (
-        <Toggle
-          checked={showUnreachable}
-          onChange={setShowUnreachable}
-          label="Show unreachable ids"
-          description={UNREACHABLE_DESCRIPTION(sound.unreachableCount)}
-        />
-      )}
-
-      {sound.statusMessage != null && (
-        <Text className={`msu-status${sound.statusOk ? '' : ' msu-status--error'}`}>
-          {sound.statusMessage}
-        </Text>
-      )}
-
-      {rows.length === 0 ? (
-        <EmptyState message={`No sound on this channel matches "${filter}"`} />
-      ) : (
-        <Box className="track-list">
-          {rows.map((row) => (
-            <SoundListItem
-              key={row.soundId}
-              pack={pack}
-              channel={channel}
-              row={row}
-              sound={sound}
-              manifest={manifest}
-              saveBase={saveBase}
-              availableFiles={availableFiles}
-              isLayered={isLayered}
-              readOnly={readOnly}
-              onPreview={sound.play}
-              onPlayOriginal={(_channel, soundId) => sound.playOriginal(soundId)}
-              onToggleLayers={(_channel, soundId) => sound.toggleLayers(soundId)}
-              onStopReplacing={confirmStopReplacing}
-              onConfirm={onDeleteConfirm}
-              onReload={onReload}
-            />
-          ))}
-        </Box>
-      )}
+      <SoundPanelRows
+        sound={sound}
+        filter={filter}
+        availableFiles={files.map((file) => file.name)}
+        pack={pack}
+        channel={channel}
+        manifest={manifest}
+        saveBase={saveBase}
+        isLayered={isLayered}
+        readOnly={readOnly}
+        onConfirm={onDeleteConfirm}
+        onReload={onReload}
+        onStopReplacing={confirmStopReplacing}
+      />
     </Box>
   );
 };

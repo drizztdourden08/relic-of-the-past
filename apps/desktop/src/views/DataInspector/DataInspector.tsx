@@ -1,22 +1,13 @@
 /* @layer renderer-app @kind component */
-import { useMemo } from 'react';
 import { Box } from '@drizztdourden08/tessera/primitives';
-import { DataTable, FilterBar, ListDetailLayout, SideNav } from '@drizztdourden08/tessera/composites';
-import {
-  COMPARING_LIST_RATIO, COMPARISON_TITLE, NO_FINDINGS, NOTHING_MATCHES, RECORD_LIST_RATIO,
-} from './DataInspector.constants';
+import { ListDetailLayout, SideNav } from '@drizztdourden08/tessera/composites';
+import { COMPARING_LIST_RATIO, COMPARISON_TITLE, RECORD_LIST_RATIO } from './DataInspector.constants';
 import { DATA_INSPECTOR_NAV } from './behavior/data-inspector-nav.constants';
-import { buildDefaultColumns } from './behavior/default-table-columns';
-import { resolveIdRefDisplayValue, resolveIdRefTargetFields } from './behavior/id-ref-display';
 import { isEntityKind } from './behavior/is-entity-kind';
-import { defaultIdRefDisplay } from './behavior/record-links';
-import { RECOMMENDATION_GROUP_BY } from './behavior/recommendations/recommendation-source';
-import { tableViewKey } from './behavior/table-view-key';
 import { useDataInspector } from './behavior/useDataInspector';
 import { useIdRefNavigation } from './behavior/useIdRefNavigation';
-import { CreateRecordButton } from './sub-components/CreateRecordButton';
-import { DetailTabs } from './sub-components/DetailTabs';
-import { RecommendationDetail } from './sub-components/recommendations/RecommendationDetail';
+import { InspectorDetail } from './sub-components/InspectorDetail';
+import { InspectorList } from './sub-components/InspectorList';
 import './DataInspector.css';
 
 const DataInspector = () => {
@@ -25,68 +16,39 @@ const DataInspector = () => {
     clauses, setClauses, search, setSearch, tab, setTab,
     selectedId, record, selectRecord, selectRecommendation, clearSelection, openIdRef,
     detailCollapsed, setDetailCollapsed,
-  } =useDataInspector();
+  } = useDataInspector();
   const { handleIdRefClickCapture } = useIdRefNavigation(openIdRef);
   const isCollection = isEntityKind(kind);
 
-  const defaultColumns = useMemo(
-    () => (source.config?.defaultColumns ? buildDefaultColumns(source.config.defaultColumns, schema) : undefined),
-    [source, schema],
-  );
-
   const list = (
-    <>
-      <Box className="data-inspector__list-actions">
-        <FilterBar
-          schema={schema}
-          clauses={clauses}
-          onChange={setClauses}
-          search={search}
-          onSearchChange={setSearch}
-          searchPlaceholder="Search records..."
-          searchLabel="Search records"
-        />
-        {isCollection && (
-          <CreateRecordButton kind={kind} label={source.label} schema={schema} onCreated={selectRecord} />
-        )}
-      </Box>
-      <DataTable
-        rows={rows}
-        schema={schema}
-        getRowId={source.getId}
-        viewKey={tableViewKey(kind)}
-        fallbackColumns={defaultColumns}
-        fallbackGroupBy={isCollection ? undefined : RECOMMENDATION_GROUP_BY}
-        selectedId={selectedId}
-        onSelect={selectRecord}
-        emptyMessage={isCollection ? NOTHING_MATCHES : NO_FINDINGS}
-        resolveTargetFields={resolveIdRefTargetFields}
-        resolveIdRefDisplay={resolveIdRefDisplayValue}
-        resolveIdRefDefault={defaultIdRefDisplay}
-      />
-    </>
+    <InspectorList
+      kind={kind}
+      source={source}
+      schema={schema}
+      rows={rows}
+      clauses={clauses}
+      onClausesChange={setClauses}
+      search={search}
+      onSearchChange={setSearch}
+      selectedId={selectedId}
+      onSelect={selectRecord}
+    />
   );
 
-  const detail = isCollection
-    ? (
-      <DetailTabs
-        source={source}
-        schema={schema}
-        record={record}
-        tab={tab}
-        onTabChange={setTab}
-        onDeleted={clearSelection}
-      />
-    )
-    : (
-      <RecommendationDetail
-        entries={entries}
-        selectedId={selectedId}
-        onSelect={selectRecommendation}
-        tab={tab}
-        onTabChange={setTab}
-      />
-    );
+  const detail = (
+    <InspectorDetail
+      kind={kind}
+      source={source}
+      schema={schema}
+      record={record}
+      entries={entries}
+      selectedId={selectedId}
+      tab={tab}
+      onTabChange={setTab}
+      onDeleted={clearSelection}
+      onSelectRecommendation={selectRecommendation}
+    />
+  );
 
   return (
     <Box className="data-inspector">

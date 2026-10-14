@@ -4,7 +4,7 @@ import { INT16_MAX, INT16_MIN, INT16_SCALE, MSU1_MAGIC_BYTES } from './write-pcm
 
 const toInt16 = (sample: number): number => {
   const finite = Number.isFinite(sample) ? sample : 0;
-  const clamped = finite < -1 ? -1 : (finite > 1 ? 1 : finite);
+  const clamped = Math.max(-1, Math.min(1, finite));
   const scaled = Math.round(clamped * INT16_SCALE);
   if (scaled > INT16_MAX) return INT16_MAX;
   return scaled < INT16_MIN ? INT16_MIN : scaled;

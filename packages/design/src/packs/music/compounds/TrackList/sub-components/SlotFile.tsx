@@ -1,4 +1,7 @@
 /* @layer renderer-components @kind component */
+import { Icon as IconifyIcon } from '@iconify/react/offline';
+import playIcon from '@iconify-icons/lucide/play';
+import squareIcon from '@iconify-icons/lucide/square';
 import { Box, IconButton, Text } from '@drizztdourden08/tessera/primitives';
 import { FilePlayer } from '../../FilePlayer/index';
 import type { SlotFileProps } from '../TrackList.type';
@@ -18,7 +21,7 @@ const SlotFile = (props: SlotFileProps) => {
           disabled={loading}
           onClick={() => onPlay(name)}
         >
-          {playing ? '■' : '▶'}
+          <IconifyIcon icon={playing ? squareIcon : playIcon} />
         </IconButton>
       </Box>
       {note ? <Text as="span" variant="caption" className="pack-tracks__note">{note}</Text> : null}

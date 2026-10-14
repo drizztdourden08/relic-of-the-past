@@ -13,7 +13,7 @@
 }
 
 .slot-action--load {
-  border-right: 1px solid var(--c-border-strong);
+  border-right: var(--border-width-thin) solid var(--c-border-strong);
 }
 
 .slot-action--load:hover:not(:disabled),

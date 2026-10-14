@@ -5,7 +5,7 @@ import { CheatSlot } from '@app/game';
 import { getSlotSprite } from '@app/composites/PauseItemSlot';
 import { EQUIP_SPRITES } from '@app/composites/PauseEquipSlot';
 import { BOTTLE_SLOT_INDEX, BOW_RUNG_VALUES, BOW_TOP_VALUE, MIRROR_SLOT_INDEX, RAW_VALUE_LABELS } from '../ItemsTab.constants';
-import type { SlotPlace, SlotSpec, SpriteOf, TierOption } from '../ItemsTab.type';
+import type { FlagSpecParams, LadderSpecParams, SlotSpec, SpriteOf, TierOption } from '../ItemsTab.type';
 
 const gridSprite = (slot: number): SpriteOf => (value) => getSlotSprite(slot, value);
 const equipSprite = (type: string): SpriteOf => (value) => EQUIP_SPRITES[type]?.[value] ?? null;
@@ -24,15 +24,13 @@ const noneTier = (slot: number, sprite: SpriteOf): TierOption => ({
 const tier = (slot: number, value: number, sprite: SpriteOf, receiveItemId?: number): TierOption =>
   ({ value, label: labelOf(slot, value, receiveItemId), sprite: sprite(value), receiveItemId });
 
-const flagSpec = (slot: number, nameKey: string, place: SlotPlace, receiveItemId: number, sprite: SpriteOf): SlotSpec => ({
-  slot, kind: 'flag', nameKey, place,
-  tiers: [noneTier(slot, sprite), tier(slot, 1, sprite, receiveItemId)],
-});
+const flagSpec = (params: FlagSpecParams): SlotSpec => {
+  const { slot, nameKey, place, receiveItemId, sprite } = params;
+  return { slot, kind: 'flag', nameKey, place, tiers: [noneTier(slot, sprite), tier(slot, 1, sprite, receiveItemId)] };
+};
 
-const ladderSpec = (
-  slot: number, nameKey: string, place: SlotPlace, ladder: readonly number[], sprite: SpriteOf,
-  rungValues?: readonly number[], topValue?: number,
-): SlotSpec => {
+const ladderSpec = (params: LadderSpecParams): SlotSpec => {
+  const { slot, nameKey, place, ladder, sprite, rungValues, topValue } = params;
   const tiers: TierOption[] = [noneTier(slot, sprite)];
   const last = topValue ?? ladder.length;
   for (let value = 1; value <= last; value++) {
@@ -51,10 +49,10 @@ const byValueSpec = (slot: number, nameKey: string, table: Readonly<Record<numbe
 });
 
 const gridFlag = (slot: number, nameKey: keyof typeof SIMPLE): SlotSpec =>
-  flagSpec(slot, nameKey, 'grid', SIMPLE[nameKey], gridSprite(slot));
+  flagSpec({ slot, nameKey, place: 'grid', receiveItemId: SIMPLE[nameKey], sprite: gridSprite(slot) });
 
 const abilityFlag = (slot: number, nameKey: keyof typeof SIMPLE, type: string): SlotSpec =>
-  flagSpec(slot, nameKey, 'ability', SIMPLE[nameKey], equipSprite(type));
+  flagSpec({ slot, nameKey, place: 'ability', receiveItemId: SIMPLE[nameKey], sprite: equipSprite(type) });
 
 const mirrorSpec = (): SlotSpec => {
   const sprite = gridSprite(MIRROR_SLOT_INDEX);
@@ -69,7 +67,9 @@ const bottleSpec = (): SlotSpec => ({
 });
 
 const buildSlotSpecs = (): SlotSpec[] => [
-  ladderSpec(0, 'bow', 'grid', LADDERS.bow, gridSprite(0), BOW_RUNG_VALUES, BOW_TOP_VALUE),
+  ladderSpec({
+    slot: 0, nameKey: 'bow', place: 'grid', ladder: LADDERS.bow, sprite: gridSprite(0), rungValues: BOW_RUNG_VALUES, topValue: BOW_TOP_VALUE,
+  }),
   byValueSpec(1, 'boomerang', BY_VALUE.boomerang, gridSprite(1)),
   gridFlag(2, 'hookshot'),
   gridFlag(3, 'bombs'),
@@ -89,13 +89,13 @@ const buildSlotSpecs = (): SlotSpec[] => [
   gridFlag(17, 'byrna'),
   gridFlag(18, 'cape'),
   mirrorSpec(),
-  ladderSpec(CheatSlot.Gloves, 'lift', 'ability', LADDERS.lift, equipSprite('gloves')),
+  ladderSpec({ slot: CheatSlot.Gloves, nameKey: 'lift', place: 'ability', ladder: LADDERS.lift, sprite: equipSprite('gloves') }),
   abilityFlag(CheatSlot.Boots, 'boots', 'boots'),
   abilityFlag(CheatSlot.Flippers, 'flippers', 'flippers'),
   abilityFlag(CheatSlot.MoonPearl, 'moonPearl', 'moonPearl'),
-  ladderSpec(CheatSlot.Sword, 'sword', 'equipment', LADDERS.sword, equipSprite('sword')),
-  ladderSpec(CheatSlot.Shield, 'shield', 'equipment', LADDERS.shield, equipSprite('shield')),
-  ladderSpec(CheatSlot.Armor, 'mail', 'equipment', LADDERS.mail, equipSprite('armor')),
+  ladderSpec({ slot: CheatSlot.Sword, nameKey: 'sword', place: 'equipment', ladder: LADDERS.sword, sprite: equipSprite('sword') }),
+  ladderSpec({ slot: CheatSlot.Shield, nameKey: 'shield', place: 'equipment', ladder: LADDERS.shield, sprite: equipSprite('shield') }),
+  ladderSpec({ slot: CheatSlot.Armor, nameKey: 'mail', place: 'equipment', ladder: LADDERS.mail, sprite: equipSprite('armor') }),
 ];
 
 export { buildSlotSpecs };

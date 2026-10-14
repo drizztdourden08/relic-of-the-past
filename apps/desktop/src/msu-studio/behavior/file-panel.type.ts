@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind types */
 import type { MsuPackManifest } from '@rotp/game-data';
-import type { MsuFile } from '../msu.type';
+import type { ActionResult, MsuFile } from '../msu.type';
 
 interface FilePanelParams {
   pack: string;
@@ -14,4 +14,10 @@ interface FormatCount {
   count: number;
 }
 
-export type { FilePanelParams, FormatCount };
+type FileMutationParams = Pick<FilePanelParams, 'pack' | 'saveBase' | 'reload'> & {
+  taken: Set<string>;
+  setStatus: (result: ActionResult) => void;
+  setWorking: (working: boolean) => void;
+};
+
+export type { FileMutationParams, FilePanelParams, FormatCount };

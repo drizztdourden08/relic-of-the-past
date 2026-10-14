@@ -5,8 +5,7 @@ import type { HeapReads } from './poll-heap-reads.type';
 const thresholdMet = (val: number, compare: 'gte' | 'eq' | 'any-of', value: number | number[] | undefined): boolean => {
   if (compare === 'gte') return val >= (value as number);
   if (compare === 'eq') return val === (value as number);
-  if (compare === 'any-of') return (value as number[]).includes(val);
-  return false;
+  return (value as number[]).includes(val);
 };
 
 const isDetectionMet = (detection: CheckDetection, reads: HeapReads): boolean => {

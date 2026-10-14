@@ -1,5 +1,5 @@
 /* @layer renderer-lib @kind logic */
-import { CAPACITY_ENABLED_KEY, CAPACITY_PROGRESSIVE_KEY, DEFAULT_CAPACITY_BONUS, capacityBonusValuesOf, capacityValuesOf, reconcileCapacityPond, difficultyValuesOf, itemPowerValuesOf, storyGateValuesOf, DEFAULT_STORY_GATES, potionPriceOverrides, progressiveValuesOf, progressiveModeValuesOf, retroBowValuesOf, pondProfileValuesOf, shopScopeValues } from '@rotp/randomizer';
+import { CAPACITY_ENABLED_KEY, CAPACITY_PROGRESSIVE_KEY, capacityBonusValuesOf, capacityValuesOf, reconcileCapacityPond, difficultyValuesOf, itemPowerValuesOf, storyGateValuesOf, potionPriceOverrides, progressiveValuesOf, progressiveModeValuesOf, retroBowValuesOf, pondProfileValuesOf, shopScopeValues } from '@rotp/randomizer';
 import type { OptionValue } from '@rotp/randomizer';
 import type { RandomizerOptionChoices } from './randomizer-choices.type';
 import { PLAIN_FIELD_BY_KEY } from './randomizer-choices.constants';
@@ -20,14 +20,14 @@ const randomizerChoiceOverrides = (
     [CAPACITY_ENABLED_KEY]: enabled,
     ...capacityValuesOf(capacity),
     [CAPACITY_PROGRESSIVE_KEY]: choices.capacityProgressive,
-    ...capacityBonusValuesOf(choices.capacityBonus ?? DEFAULT_CAPACITY_BONUS),
+    ...capacityBonusValuesOf(choices.capacityBonus),
     ...pondProfileValuesOf({ ...choices.ponds, capacity: pond }, choices.pondShare === true),
     ...progressiveValuesOf(choices.progressiveTiers),
     ...progressiveModeValuesOf(choices.progressiveModes),
     ...retroBowValuesOf(choices.retroBow),
     ...itemPowerValuesOf(choices.itemPower),
     ...difficultyValuesOf(choices.difficulty),
-    ...storyGateValuesOf(choices.storyGates ?? DEFAULT_STORY_GATES),
+    ...storyGateValuesOf(choices.storyGates),
   };
 };
 

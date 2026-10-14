@@ -78,8 +78,10 @@ describe('the seven translated errors, fed the parser\'s own words', () => {
     expect(problem.message).toContain('it is not "or"');
     expect(problem.fix).toEqual({ label: 'use or', expr: 'life_current or 0' });
   });
+});
 
-  it('6 · two values with no operator between them', () => {
+describe('the seven translated errors, fed the parser\'s own words', () => {
+  it('6 ·two values with no operator between them', () => {
     expect(raw('life_current 8')).toBe('parse error [1:15]: Expected EOF');
     const problem = explainExprError('life_current 8', raw('life_current 8'));
     expect(problem.message).toBe('Two values with nothing between them.');

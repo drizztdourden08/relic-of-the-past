@@ -46,7 +46,3 @@
   color: var(--c-text-dim);
 }
 
-.entry-editor__setting-pick.select-trigger {
-  width: 11ch;
-  font-variant-numeric: tabular-nums;
-}

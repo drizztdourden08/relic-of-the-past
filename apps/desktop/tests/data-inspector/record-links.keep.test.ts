@@ -3,7 +3,7 @@ import { it, expect } from 'vitest';
 import { all } from '@rotp/game-data';
 import {
   defaultIdRefDisplay, entityKindFromId, resolveRecordLabel,
-} from '@app/views/DataInspector/behavior/record-links';
+} from '@app/data-inspector/record-links';
 import { describeDataset } from '../dataset-guard';
 import { required } from '../required';
 

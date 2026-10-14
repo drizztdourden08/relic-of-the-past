@@ -1,7 +1,6 @@
 /* @layer renderer-components @kind component */
 import { Box, Text } from '@drizztdourden08/tessera/primitives';
 import type { ExtraRowsProps, TooltipData } from '@app/navigation-overlay/tooltip/tooltip.type';
-import { S } from '@app/navigation-overlay/tooltip/styles';
 
 const isAnyLayerReachable = (tooltip: TooltipData): boolean => {
   const { layers } = tooltip;
@@ -13,25 +12,25 @@ const isAnyLayerReachable = (tooltip: TooltipData): boolean => {
 const TooltipExtraRows = ({ tooltip }: ExtraRowsProps) => (
   <>
     {isAnyLayerReachable(tooltip) && (
-      <Box style={S.row}>
-        <Text style={S.dim}>path reqs:</Text>
-        <Text style={tooltip.pathReqs ? S.gold : S.muted}>
+      <Box className="nav-tip__row">
+        <Text className="nav-tip__dim">path reqs:</Text>
+        <Text className={tooltip.pathReqs ? 'nav-tip__gold' : 'nav-tip__muted'}>
           {tooltip.pathReqs || 'none'}
         </Text>
       </Box>
     )}
-    <Box style={S.row}>
-      <Text style={S.dim}>live sprites:</Text>
-      <Text style={S.muted}>{tooltip.spriteInfo.length}</Text>
+    <Box className="nav-tip__row">
+      <Text className="nav-tip__dim">live sprites:</Text>
+      <Text className="nav-tip__muted">{tooltip.spriteInfo.length}</Text>
     </Box>
-    <Box style={S.row}>
-      <Text style={S.dim}>Blocked In Last Flood Fill:</Text>
-      <Text style={tooltip.bfsBlocked ? S.danger : S.muted}>
+    <Box className="nav-tip__row">
+      <Text className="nav-tip__dim">Blocked In Last Flood Fill:</Text>
+      <Text className={tooltip.bfsBlocked ? 'nav-tip__danger' : 'nav-tip__muted'}>
         {tooltip.bfsBlocked ? 'yes' : 'no'}
       </Text>
     </Box>
     {tooltip.spriteInfo.length > 0 && tooltip.spriteInfo.map((line, i) => (
-      <Box key={i} style={S.warning}>{line}</Box>
+      <Box key={i} className="nav-tip__warning">{line}</Box>
     ))}
   </>
 );

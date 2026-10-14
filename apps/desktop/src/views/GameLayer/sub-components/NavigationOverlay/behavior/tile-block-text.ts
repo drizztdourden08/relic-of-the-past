@@ -1,6 +1,7 @@
 /* @layer renderer-components @kind logic */
 import type { FloodFillResult } from '@rotp/game-core';
 import { REACH_BLOCKED, REACH_OPEN } from '@app/navigation-overlay/pathfinding/pathfinding.constants';
+import type { TileBlockTextParams } from './rect-selection.type';
 
 const reachMark = (reach: number | undefined): string => {
   if (reach === REACH_BLOCKED) return '-';
@@ -14,8 +15,8 @@ const cellText = (result: FloodFillResult, attrGrid: number[][], r: number, c: n
   return `${attr.toString(16).padStart(2, '0')}${reachMark(result.reachable[r]?.[c])}`;
 };
 
-const tileBlockText = (result: FloodFillResult, attrGrid: number[][], r0: number, r1: number, c0: number, c1: number): string => {
-  const indoors = result.indoors ?? false;
+const tileBlockText = (params: TileBlockTextParams): string => {
+  const { result, attrGrid, r0, r1, c0, c1 } = params;
   const rows: string[] = [];
   for (let r = r0; r <= r1; r++) {
     const cells: string[] = [];
@@ -25,7 +26,7 @@ const tileBlockText = (result: FloodFillResult, attrGrid: number[][], r0: number
 
   const header = [
     `Tile Selection [${r0},${c0}] to [${r1},${c1}] (${(r1 - r0 + 1)}×${(c1 - c0 + 1)} = ${(r1 - r0 + 1) * (c1 - c0 + 1)} tiles)`,
-    `Context: ${indoors ? 'interior' : 'overworld'} | Screen: 0x${result.screenIndex.toString(16).padStart(2, '0')}`,
+    `Context: ${result.indoors ? 'interior' : 'overworld'} | Screen: 0x${result.screenIndex.toString(16).padStart(2, '0')}`,
     `Format: <hex_attr><+reachable|~traversal|-blocked>`,
     ``,
   ];

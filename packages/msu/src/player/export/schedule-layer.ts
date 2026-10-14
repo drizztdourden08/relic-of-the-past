@@ -55,7 +55,7 @@ const scheduleLayer = (resolved: ResolvedLayer, options: ScheduleOptions): void 
   gain.gain.value = Math.max(0, Math.min(100, resolved.layer.volume)) / 100;
   gain.connect(ctx.destination);
   const play: PlaySource = (buffer, when, offset, fade) =>
-    startSource(ctx, gain, buffer, when, offset, fade);
+    startSource(ctx, gain, buffer, { when, offsetSeconds: offset, fade });
 
   switch (resolved.layer.mode.kind) {
     case 'loop': scheduleLoop(play, resolved, options); break;

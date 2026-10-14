@@ -1,65 +1,21 @@
 /* @layer renderer-components @kind hook */
-import { useRef, useState } from 'react';
-import { exprOf, isFormulaText, stepsAsNumber, textOf, valueOf, withFormulaMarker } from '@app/hud-layout-editing/value-text';
-import { clampToRange } from './clamp-to-range';
-import { prefixAt } from './prefix-at';
+import { exprOf, isFormulaText, stepsAsNumber, withFormulaMarker } from '@app/hud-layout-editing/value-text';
+import { keyIntentOf } from './key-intent-of';
+import { spliceSnippet } from './splice-snippet';
+import { useValueEditing } from './useValueEditing';
 import type { UseValueInputParams } from './useValueInput.type';
 
 const useValueInput = (params: UseValueInputParams) => {
-  const { value, onChange, onClear, step, min, max } = params;
-  const inputRef = useRef<HTMLInputElement>(null);
-  const [draft, setDraft] = useState<string | null>(null);
-  const [focused, setFocused] = useState(false);
-  const [menuOpen, setMenuOpen] = useState(false);
-  const [prefix, setPrefix] = useState('');
-
-  const text = draft ?? textOf(value);
+  const editing = useValueEditing(params);
+  const {
+    inputRef, draft, text, focused, menuOpen, prefix,
+    setDraft, setFocused, setMenuOpen, setPrefix, commit, put, handleChange, stepBy,
+  } = editing;
   const formula = isFormulaText(text);
 
-  const commit = (next: string): void => {
-    if (onClear && next.trim() === '') { setDraft(null); onClear(); return; }
-    const parsed = valueOf(next);
-    if (parsed !== null) {
-      onChange(parsed);
-      setDraft(null);
-      return;
-    }
-    setDraft(next);
-  };
-
-  const put = (next: string, caret?: number): void => {
-    setDraft(next);
-    setPrefix(prefixAt(next, caret ?? next.length));
-    if (stepsAsNumber(next)) { commit(next); setMenuOpen(false); }
-    requestAnimationFrame(() => {
-      const el = inputRef.current;
-      if (el && caret !== undefined) el.setSelectionRange(caret, caret);
-    });
-  };
-
-  const handleChange = (next: string, caret: number): void => {
-    setDraft(next);
-    if (onClear && next.trim() === '') { setDraft(null); setPrefix(''); onClear(); return; }
-    const at = prefixAt(next, caret);
-    setPrefix(at);
-    if (stepsAsNumber(next)) { onChange(Number(next.trim())); setMenuOpen(false); return; }
-    if (isFormulaText(next) && at.length > 0) setMenuOpen(true);
-  };
-
-  const stepBy = (dir: 1 | -1): void => {
-    if (!stepsAsNumber(text)) return;
-    const next = clampToRange(Number((Number(text) + dir * step).toFixed(6)), min, max);
-    put(String(next));
-    onChange(next);
-  };
-
   const insert = (snippet: string, select?: string): void => {
-    const el = inputRef.current;
-    const caret = el?.selectionStart ?? text.length;
-    const head = text.slice(0, caret - prefix.length);
-    const tail = text.slice(caret);
-    const next = withFormulaMarker(`${head}${snippet}${tail}`);
-    const at = next.indexOf(select ?? snippet, Math.max(0, next.length - snippet.length - tail.length - 4));
+    const caret = inputRef.current?.selectionStart ?? text.length;
+    const { next, from, to } = spliceSnippet({ text, caret, prefix, snippet, select });
     setMenuOpen(false);
     setPrefix('');
     setDraft(next);
@@ -67,8 +23,7 @@ const useValueInput = (params: UseValueInputParams) => {
       const target = inputRef.current;
       if (!target) return;
       target.focus();
-      const from = at < 0 ? next.length : at;
-      target.setSelectionRange(from, from + (select ?? snippet).length);
+      target.setSelectionRange(from, to);
     });
   };
 
@@ -79,16 +34,13 @@ const useValueInput = (params: UseValueInputParams) => {
   };
 
   const handleKeyDown = (key: string, prevent: () => void): void => {
-    if (key === 'Escape') {
-      if (menuOpen) return;
-      setDraft(null);
-      setPrefix('');
-      prevent();
-      return;
-    }
-    if (key === 'Enter') { commit(text); setMenuOpen(false); prevent(); return; }
-    if (key !== 'ArrowUp' && key !== 'ArrowDown') return;
-    if (stepsAsNumber(text)) { stepBy(key === 'ArrowUp' ? 1 : -1); prevent(); }
+    const intent = keyIntentOf(key, menuOpen, text);
+    if (intent === 'none') return;
+    if (intent === 'cancel') { setDraft(null); setPrefix(''); }
+    if (intent === 'commit') { commit(text); setMenuOpen(false); }
+    if (intent === 'up') stepBy(1);
+    if (intent === 'down') stepBy(-1);
+    prevent();
   };
 
   const handleBlur = (): void => {

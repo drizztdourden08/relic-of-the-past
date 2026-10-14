@@ -1,78 +1,20 @@
 /* @layer renderer-components @kind hook */
-import { useState, useEffect, useCallback } from 'react';
-import type { GameSettings } from '@rotp/features';
-import { readConfig } from '../../../../storage/profile-store';
-import { listLanguages } from '../../../../storage/languages-store';
-import { listMsuPacks } from '../../../../storage/msu-store';
-import {
-  buildRandomizerConfig, freshRandomizerForm, randomizerFormError, type RandomizerFormState,
-} from './build-randomizer-config';
-import { applyProfilePreset, type ProfilePresetId } from './profile-presets';
+import { useState } from 'react';
+import { useCreateProfile } from './useCreateProfile';
+import { useProfileForm } from './useProfileForm';
+import { useProfileLists } from './useProfileLists';
 import type { UseProfileManagerParams } from './profile-manager.type';
 
 const useProfileManager = ({ profiles, romStatuses, onCreateProfile, onRefresh }: UseProfileManagerParams) => {
   const [selected, setSelected] = useState<string | null>(null);
   const [creating, setCreating] = useState(false);
-  const [formName, setFormName] = useState('');
-  const [formRom, setFormRom] = useState('');
-  const [formLang, setFormLang] = useState('');
-  const [formMsu, setFormMsu] = useState('');
-  const [formRandomizer, setFormRandomizer] = useState<RandomizerFormState>(freshRandomizerForm);
-  const [formPreset, setFormPreset] = useState<ProfilePresetId>('enhanced');
-  const [formConfigOverrides, setFormConfigOverrides] = useState<Partial<GameSettings>>(applyProfilePreset('enhanced'));
-  const [formError, setFormError] = useState<string | null>(null);
-  const [languages, setLanguages] = useState<Array<{ code: string }>>([]);
-  const [msuPacks, setMsuPacks] = useState<Array<{ name: string }>>([]);
-  const [settings, setSettings] = useState<Record<string, unknown> | null>(null);
+  const form = useProfileForm();
+  const { languages, msuPacks, settings } = useProfileLists(creating, selected);
 
   const readyRoms = romStatuses.filter((r) => r.hasAssets || r.extractionStatus === 'ready');
   const selectedProfile = profiles.find((p) => p.id === selected);
 
-  useEffect(() => {
-    void listLanguages().then(setLanguages);
-    void listMsuPacks().then(setMsuPacks);
-  }, [creating]);
-
-  useEffect(() => {
-    if (!selected) { setSettings(null); return; }
-    void readConfig(selected).then(setSettings);
-  }, [selected]);
-
-  const handleCreate = useCallback(async () => {
-    if (!formName.trim() || !formRom) return;
-    const invalid = randomizerFormError(formRandomizer);
-    if (invalid !== undefined) {
-      setFormError(invalid);
-      return;
-    }
-    setFormError(null);
-    const result = await onCreateProfile({
-      name: formName.trim(),
-      romFile: formRom,
-      language: formLang || undefined,
-      msuPack: formMsu || undefined,
-      randomizer: buildRandomizerConfig(formRandomizer),
-      initialConfig: formConfigOverrides,
-    });
-    if (!result.success) {
-      setFormError(result.error);
-      return;
-    }
-    setCreating(false);
-    setFormName('');
-    setFormRom('');
-    setFormLang('');
-    setFormMsu('');
-    setFormRandomizer(freshRandomizerForm());
-    setFormPreset('enhanced');
-    setFormConfigOverrides(applyProfilePreset('enhanced'));
-    onRefresh();
-  }, [formName, formRom, formLang, formMsu, formRandomizer, formConfigOverrides, onCreateProfile, onRefresh]);
-
-  const handlePickPreset = useCallback((id: ProfilePresetId) => {
-    setFormPreset(id);
-    setFormConfigOverrides(applyProfilePreset(id));
-  }, []);
+  const handleCreate = useCreateProfile({ form, onCreateProfile, onRefresh, setCreating });
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === 'Enter') void handleCreate();
@@ -82,21 +24,13 @@ const useProfileManager = ({ profiles, romStatuses, onCreateProfile, onRefresh }
   return {
     selected, setSelected,
     creating, setCreating,
-    formName, setFormName,
-    formRom, setFormRom,
-    formLang, setFormLang,
-    formMsu, setFormMsu,
-    formRandomizer, setFormRandomizer,
-    formPreset,
-    formError, setFormError,
+    form,
     languages, msuPacks,
     settings,
     readyRoms,
     selectedProfile,
     handleCreate,
-    formInvalid: randomizerFormError(formRandomizer) !== undefined,
     handleKeyDown,
-    handlePickPreset,
   };
 };
 

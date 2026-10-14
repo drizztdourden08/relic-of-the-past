@@ -1,9 +1,9 @@
 /* @layer renderer-hud @kind logic */
-import type { RidgeOptions, SceneGeometry, SceneLayer } from '../scene.type';
+import type { RidgeOptions, RidgePiece, SceneGeometry, SceneLayer } from '../scene.type';
 import { itemAt } from '@app/checked-access';
 import { wrapX } from './wrap-x';
 
-const drawPiece = (ctx: CanvasRenderingContext2D, img: HTMLImageElement, x: number, y: number, flip: boolean, rows: number): void => {
+const drawPiece = (ctx: CanvasRenderingContext2D, { img, x, y, flip, rows }: RidgePiece): void => {
   if (!flip) {
     ctx.drawImage(img, 0, 0, img.width, rows, x, y, img.width, rows);
     return;
@@ -23,7 +23,7 @@ const ridgeLayer = ({ pieces, placed, parallax, rows }: RidgeOptions, geometry: 
       for (const p of placed) {
         const img = itemAt(pieces, p.variant);
         const x = Math.round(wrapX(p.x - drift * parallax, span, width));
-        drawPiece(ctx, img, x, p.y, p.flip, rows ?? img.height);
+        drawPiece(ctx, { img, x, y: p.y, flip: p.flip, rows: rows ?? img.height });
       }
     },
   };

@@ -1,7 +1,12 @@
 /* @layer renderer-widgets @kind types */
-import type { DatasetSuggestion, SimEvent, SimOutcome, SoftlockReport } from '@rotp/navigation';
-import type { CheckId } from '@rotp/game-data';
-import type { RunStatus, SimProgress, TrailStop } from '@app/stores/simulator-store';
+import type { RefObject } from 'react';
+import type { createEngine, DatasetSuggestion, EngineState, RecorderState, SimConfig, SimEvent, SimOutcome, SimulatorPort, SoftlockReport, TriggerAction } from '@rotp/navigation';
+import type { CheckId, ItemId } from '@rotp/game-data';
+import type { SimLogWriter } from '@app/game/simulator';
+import type { DetectCache } from '@app/game/simulator/observe';
+import type { ScreenEditorApi } from '@app/ipc';
+import type { IconName } from '@drizztdourden08/tessera/primitives';
+import type { RunStatus, SimProgress, TrailStop, useSimulatorStore } from '@app/stores/simulator-store';
 
 interface RunControl {
   running: boolean;
@@ -14,6 +19,51 @@ interface RunResults {
   softlockReport: SoftlockReport | null;
 }
 
+type SimulatorStoreState = ReturnType<typeof useSimulatorStore.getState>;
+
+interface RunContext {
+  port: SimulatorPort;
+  writer: SimLogWriter;
+  store: SimulatorStoreState;
+  recorder: RecorderState;
+  engine: ReturnType<typeof createEngine>;
+  detectCache: DetectCache;
+  takeItem: () => ItemId | undefined;
+}
+
+interface RunCursor {
+  state: EngineState;
+  sequenceLabel: string | null;
+}
+
+interface RunStepResult {
+  actions: TriggerAction[];
+  events: SimEvent[];
+  nextState: EngineState;
+}
+
+interface DriveParams {
+  port: SimulatorPort;
+  writer: SimLogWriter;
+  config: SimConfig;
+  control: RefObject<RunControl>;
+  takeItem: () => ItemId | undefined;
+}
+
+interface RunRefs {
+  control: RefObject<RunControl>;
+  port: RefObject<SimulatorPort | null>;
+  writer: RefObject<SimLogWriter | null>;
+  snapshot: RefObject<ArrayBuffer | null>;
+  item: RefObject<ItemId | undefined>;
+}
+
+interface StartParams {
+  stopAtCheckId: CheckId | '';
+  screenLimitRef: RefObject<number | null>;
+  onCanRestore: (canRestore: boolean) => void;
+}
+
 interface SimLogSink {
   write: (event: SimEvent) => void;
 }
@@ -21,11 +71,18 @@ interface SimLogSink {
 type ApplyResult = { success: boolean; error?: string };
 type CheckWriter = (args: { filePath: string; code: string; checkId: string | null }) => Promise<ApplyResult>;
 
+type EditorWithOptionalCheck = Omit<ScreenEditorApi, 'writeCheck'> & { writeCheck?: CheckWriter };
+
 type LogKind = 'seq' | 'area' | 'screen' | 'pos' | 'backtrack' | 'flood' | 'reset' | 'check' | 'item' | 'move' | 'unlock' | 'outcome' | 'discover' | 'info' | 'debug';
 
 interface LogStyle {
   kind: LogKind;
   tag: string;
+}
+
+interface LogRule {
+  pattern: RegExp;
+  style: LogStyle;
 }
 
 interface EventLogProps {
@@ -58,7 +115,7 @@ type BannerTone = 'success' | 'danger';
 
 interface OutcomeBanner {
   tone: BannerTone;
-  icon: string;
+  icon: IconName;
   title: string;
   detail: string;
 }
@@ -81,6 +138,8 @@ interface RunControlsProps {
   onRestore: () => void;
 }
 
+type RunButtonsProps = Pick<RunControlsProps, 'status' | 'canRestore' | 'onStart' | 'onPause' | 'onResume' | 'onStop' | 'onRestore'>;
+
 interface RunTrailProps {
   trail: TrailStop[];
   checksDone: number;
@@ -95,6 +154,6 @@ interface SuggestionCardProps {
 type ApplyState = 'idle' | 'applying' | 'applied' | 'error';
 
 export type {
-  ApplyResult, ApplyState, BannerTone, CheckWriter, EventLogProps, LogDialogProps, LogKind, LogStyle, OutcomeBanner, ProgressSummaryProps,
-  ResultsPanelProps, RunControl, RunControlsProps, RunResults, RunTrailProps, SimLogSink, SoftlockSummaryProps, SuggestionCardProps,
+  ApplyResult, ApplyState, BannerTone, CheckWriter, DriveParams, EditorWithOptionalCheck, EventLogProps, LogDialogProps, LogKind, LogRule, LogStyle, OutcomeBanner, ProgressSummaryProps,
+  ResultsPanelProps, RunButtonsProps, RunContext, RunControl, RunControlsProps, RunCursor, RunRefs, RunResults, RunStepResult, RunTrailProps, SimLogSink, SoftlockSummaryProps, StartParams, SuggestionCardProps,
 };

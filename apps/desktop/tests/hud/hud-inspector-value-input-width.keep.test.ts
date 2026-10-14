@@ -51,23 +51,22 @@ const document_ = (rail: number): string => {
 interface Measured { case: string; field: string; content: number; overflow: number; top: number; left: number }
 
 const probe = (promote: boolean): Measured[] => {
-  if (promote) {
-    for (const f of Array.from(document.querySelectorAll('[data-case="promoted"] .hud-value-field'))) {
-      if (!f.querySelector('[data-formula="true"]')) continue;
-      const root = f as HTMLElement;
-      const control = root.querySelector('.field__control');
-      const host = root.closest('.hud-inspect__row') ?? root.parentElement;
-      if (!(control instanceof HTMLElement) || !(host instanceof HTMLElement)) continue;
-      const rr = root.getBoundingClientRect();
-      const hr = host.getBoundingClientRect();
-      const cr = control.getBoundingClientRect();
-      root.style.setProperty('--promote-left', `${Math.round(hr.left - rr.left)}px`);
-      root.style.setProperty('--promote-top', `${Math.round(cr.top - rr.top)}px`);
-      root.style.setProperty('--promote-width', `${Math.round(hr.width)}px`);
-      root.style.setProperty('--promote-height', `${Math.round(rr.height)}px`);
-      root.classList.add('hud-value-field--wide');
-    }
-  }
+  const promoteField = (f: Element): void => {
+    if (!f.querySelector('[data-formula="true"]')) return;
+    const root = f as HTMLElement;
+    const control = root.querySelector('.field__control');
+    const host = root.closest('.hud-inspect__row') ?? root.parentElement;
+    if (!(control instanceof HTMLElement) || !(host instanceof HTMLElement)) return;
+    const rr = root.getBoundingClientRect();
+    const hr = host.getBoundingClientRect();
+    const cr = control.getBoundingClientRect();
+    root.style.setProperty('--promote-left', `${Math.round(hr.left - rr.left)}px`);
+    root.style.setProperty('--promote-top', `${Math.round(cr.top - rr.top)}px`);
+    root.style.setProperty('--promote-width', `${Math.round(hr.width)}px`);
+    root.style.setProperty('--promote-height', `${Math.round(rr.height)}px`);
+    root.classList.add('hud-value-field--wide');
+  };
+  if (promote) Array.from(document.querySelectorAll('[data-case="promoted"] .hud-value-field')).forEach(promoteField);
   const px = (el: Element, side: string): number =>
     parseFloat(getComputedStyle(el).getPropertyValue(side)) || 0;
   const out: Measured[] = [];

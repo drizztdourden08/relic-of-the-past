@@ -1,20 +1,15 @@
 /* @layer renderer-components @kind component */
-import { Status, Box, Button, Icon, IconButton, Text } from '@drizztdourden08/tessera/primitives';
-import { soundChannelPort, soundChannelTag, triggerSummary } from './sound-labels';
-import { AMBIENT_ROLE_HINTS, AMBIENT_ROLE_LABELS } from './msu.constants';
+import { Box, Text } from '@drizztdourden08/tessera/primitives';
+import { SoundActions } from './SoundActions';
+import { SoundBadges } from './SoundBadges';
+import { soundChannelPort, soundChannelTag } from './sound-labels';
+import { soundRowText } from './sound-row-text';
 import type { SoundRowProps } from './msu.type';
 
 const SoundRow = (props: SoundRowProps) => {
-  const {
-    row, channel, showChannel = false, playing, additive, busy, expanded, playingOriginal, chipAudible, readOnly,
-    onPreview, onStopPreview, onPlayOriginal, onToggleLayers, onStopReplacing,
-  } = props;
-  const { soundId, hex, label, triggers, sites, layerCount, unlisted, role, unreachable } = row;
-  const replaced = layerCount > 0;
-  const summary = triggerSummary(triggers);
-  const name = label ?? (summary.length > 0 ? summary : 'Unnamed sound');
-  const under = label !== null ? summary : `${sites} call site${sites === 1 ? '' : 's'}`;
-  const stoppable = playing && !additive;
+  const { row, channel, showChannel = false, expanded, chipAudible } = props;
+  const { hex, triggers, unlisted } = row;
+  const { name, under } = soundRowText(row);
 
   return (
     <Box className={`track-list__item msu-sound-row${expanded ? ' msu-sound-row--open' : ''}`}>
@@ -32,64 +27,8 @@ const SoundRow = (props: SoundRowProps) => {
         )}
       </Box>
 
-      {role !== null && (
-        <Status tone="neutral" title={AMBIENT_ROLE_HINTS[role]}>{AMBIENT_ROLE_LABELS[role]}</Status>
-      )}
-      {unreachable && (
-        <Status tone="warning" title="Nothing in the game writes this id, so a sound put here never plays">
-          Never raised
-        </Status>
-      )}
-
-      <Status tone={replaced ? 'success' : 'neutral'}>{replaced ? 'Replaced' : 'Native'}</Status>
-      {layerCount > 1 && <Status tone="neutral">{layerCount} layers</Status>}
-      {chipAudible === false && !replaced && <Status tone="neutral">Silent</Status>}
-
-      <Box className="msu-track-row__actions">
-        {replaced && (
-          <IconButton
-            variant="ghost"
-            size="sm"
-            label={stoppable ? `Stop ${hex}` : `Play this pack's ${hex}`}
-            active={playing}
-            onClick={() => (stoppable ? onStopPreview() : onPreview(channel, soundId))}
-          >
-            <Icon name={stoppable ? 'square' : 'play'} />
-          </IconButton>
-        )}
-        <IconButton
-          variant="ghost"
-          size="sm"
-          label={playingOriginal
-            ? `Stop ${hex}`
-            : `Play the sound chip's own ${hex}${replaced ? ', to compare' : ''}`}
-          active={playingOriginal}
-          onClick={() => onPlayOriginal(soundId)}
-        >
-          <Icon name={playingOriginal ? 'square' : 'volume-2'} />
-        </IconButton>
-        {replaced && (
-          <IconButton
-            variant="ghost"
-            size="sm"
-            label={`Layers for ${hex}`}
-            active={expanded}
-            disabled={busy}
-            onClick={() => onToggleLayers(soundId)}
-          >
-            <Icon name="layers" />
-          </IconButton>
-        )}
-        {replaced ? (
-          <Button variant="tertiary" size="sm" disabled={busy || readOnly} onClick={() => onStopReplacing(soundId)}>
-            Stop replacing
-          </Button>
-        ) : (
-          <Button variant="secondary" size="sm" disabled={busy || readOnly} onClick={() => onToggleLayers(soundId)}>
-            {expanded ? 'Cancel' : 'Replace'}
-          </Button>
-        )}
-      </Box>
+      <SoundBadges row={row} chipAudible={chipAudible} />
+      <SoundActions {...props} />
     </Box>
   );
 };

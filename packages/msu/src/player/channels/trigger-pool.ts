@@ -10,7 +10,7 @@ const createTriggerPool = () => {
     const previous = last.get(layer.id);
     const skip = previous !== undefined && previous < fileCount;
     let index = Math.floor(Math.random() * (skip ? fileCount - 1 : fileCount));
-    if (skip && previous !== undefined && index >= previous) index += 1;
+    if (skip && index >= previous) index += 1;
 
     last.set(layer.id, index);
     return { fileIndex: index, offsetSeconds: 0, nextEventInSeconds: null };

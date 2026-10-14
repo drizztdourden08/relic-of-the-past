@@ -21,7 +21,7 @@
   padding: var(--space-xs) var(--space-sm);
   border-radius: var(--radius-sm);
   background: var(--c-surface);
-  border: 1px solid var(--c-border);
+  border: var(--border-width-thin) solid var(--c-border);
 }
 
 .input-cal__status--connected {
@@ -41,11 +41,11 @@
   font-size: var(--text-sm);
   font-weight: var(--weight-medium);
   text-transform: uppercase;
-  letter-spacing: 0.5px;
+  letter-spacing: calc(0.5 * var(--size-1));
   color: var(--c-text-dim);
   margin-bottom: var(--space-md);
   padding-bottom: var(--space-xs);
-  border-bottom: 1px solid var(--c-border);
+  border-bottom: var(--border-width-thin) solid var(--c-border);
 }
 
 .input-cal__actions {
@@ -60,7 +60,7 @@
   font-size: var(--text-sm);
   font-weight: var(--weight-medium);
   border-radius: var(--radius-md);
-  border: 1px solid var(--c-border);
+  border: var(--border-width-thin) solid var(--c-border);
   background: var(--c-surface);
   color: var(--c-text);
   cursor: pointer;
@@ -105,13 +105,13 @@
 
 .input-cal__cards {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(440px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(calc(440 * var(--size-1)), 1fr));
   gap: var(--space-lg);
 }
 
 .input-cal__card {
   background: var(--c-surface);
-  border: 1px solid var(--c-border);
+  border: var(--border-width-thin) solid var(--c-border);
   border-radius: var(--radius-lg);
   padding: var(--space-lg);
   transition: border-color var(--transition-fast);
@@ -125,7 +125,7 @@
   top: 0;
   left: -100%;
   width: 50%;
-  height: 2px;
+  height: var(--size-2);
   background: linear-gradient(90deg, transparent, var(--c-info), transparent);
   animation: card-shimmer 2s linear infinite;
 }
@@ -169,7 +169,7 @@
 
 .input-cal__btn-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(44px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(calc(44 * var(--size-1)), 1fr));
   gap: var(--space-xs);
   margin-bottom: var(--space-md);
 }
@@ -182,19 +182,19 @@
   padding: var(--space-xs);
   border-radius: var(--radius-sm);
   background: var(--c-surface);
-  border: 1px solid transparent;
+  border: var(--border-width-thin) solid transparent;
   transition: all 0.05s ease;
 }
 
 .input-cal__btn-cell--pressed {
   background: var(--c-secondary-dim);
   border-color: var(--c-secondary);
-  box-shadow: 0 0 8px var(--c-secondary-soft);
+  box-shadow: 0 0 var(--size-8) var(--c-secondary-soft);
 }
 
 .input-cal__btn-cell img {
-  width: 24px;
-  height: 24px;
+  width: var(--size-24);
+  height: var(--size-24);
   object-fit: contain;
   opacity: 0.7;
   transition: opacity 0.05s;
@@ -227,13 +227,96 @@
 }
 
 .input-cal__rumble-strength-input {
-  width: 64px;
+  width: var(--size-64);
 }
 
 .adapter-controller-card__ports {
   display: flex;
   flex-direction: column;
   gap: var(--space-xs);
-  border-top: 1px solid var(--c-border);
+  border-top: var(--border-width-thin) solid var(--c-border);
   padding-top: var(--space-sm);
+}
+
+.input-cal__hint {
+  font-size: var(--text-sm);
+  opacity: var(--opacity-muted);
+}
+
+.input-cal__meta {
+  font-size: var(--text-xs);
+  color: var(--c-text-muted);
+}
+
+.input-cal__copy-btn {
+  margin-top: var(--space-sm);
+}
+
+.input-cal__title-row {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+}
+
+.input-cal__card-icon {
+  width: var(--size-28);
+  height: var(--size-28);
+  opacity: 0.7;
+  flex-shrink: 0;
+}
+
+.input-cal__btn-fallback {
+  font-size: var(--size-10);
+  color: var(--c-text-dim);
+}
+
+.input-cal__card-actions {
+  margin-top: var(--space-md);
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  flex-wrap: wrap;
+}
+
+.input-cal__debug-state {
+  font-size: var(--size-10);
+  color: var(--c-text-muted);
+  font-family: var(--font-mono);
+}
+
+.input-cal__raw-bytes {
+  margin-top: var(--space-sm);
+}
+
+.input-cal__raw-bytes-summary {
+  font-size: calc(11 * var(--size-1));
+  color: var(--c-text-muted);
+  cursor: pointer;
+  user-select: none;
+}
+
+.input-cal__raw-bytes-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--size-2);
+  margin-top: var(--size-6);
+  font-family: var(--font-mono);
+  font-size: var(--size-10);
+  line-height: 1;
+}
+
+.input-cal__raw-byte {
+  width: calc(22 * var(--size-1));
+  height: calc(18 * var(--size-1));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--c-hover);
+  color: var(--c-text-muted);
+  border-radius: var(--size-2);
+  border: var(--border-width-thin) solid var(--c-border);
+}
+
+.input-cal__raw-byte--set {
+  color: var(--c-text);
 }

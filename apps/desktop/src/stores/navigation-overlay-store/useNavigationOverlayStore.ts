@@ -19,7 +19,7 @@ const useNavigationOverlayStore = create<NavigationOverlayState>((set) => ({
   setVisible: (visible) => set({ visible }),
   setMode: (mode) => set({ mode }),
   setScreenBundle: (screenBundle) => set({ screenBundle }),
-  setData: (result, connections, results, fallHoleSpawns, respawnEntIds) => set({ result, connections, results: results ?? [result], fallHoleSpawns: fallHoleSpawns ?? [], respawnEntIds: respawnEntIds ?? new Set(), visible: true }),
+  setData: (...[result, connections, results, fallHoleSpawns, respawnEntIds]) => set({ result, connections, results: results ?? [result], fallHoleSpawns: fallHoleSpawns ?? [], respawnEntIds: respawnEntIds ?? new Set(), visible: true }),
   setAnnotations: (annotations) => set({ annotations }),
   setCrossings: (crossings) => set({ crossings }),
   toggleKind: (kind) => set((s) => {

@@ -62,7 +62,7 @@
 .hud-box-model__ring {
   position: relative;
   display: grid;
-  grid-template-columns: minmax(22px, 0.3fr) minmax(0, 1fr) minmax(22px, 0.3fr);
+  grid-template-columns: minmax(calc(22 * var(--size-1)), 0.3fr) minmax(0, 1fr) minmax(calc(22 * var(--size-1)), 0.3fr);
   grid-template-areas:
     "tag    top    link"
     "left   mid    right"

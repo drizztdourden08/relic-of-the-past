@@ -17,14 +17,14 @@
 
 .debug-round-button {
   position: relative;
-  width: 40px;
-  height: 40px;
+  width: var(--size-40);
+  height: var(--size-40);
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
   background: var(--c-glass);
-  border: 1px solid var(--c-hairline);
+  border: var(--border-width-thin) solid var(--c-hairline);
   color: var(--c-text-dim);
   backdrop-filter: blur(var(--blur));
   cursor: grab;
@@ -63,5 +63,5 @@
   color: var(--c-primary-bright);
   line-height: 1;
   white-space: nowrap;
-  text-shadow: 0 1px 2px var(--c-bg), 0 0 4px var(--c-bg);
+  text-shadow: 0 var(--size-1) var(--size-2) var(--c-bg), 0 0 var(--size-4) var(--c-bg);
 }

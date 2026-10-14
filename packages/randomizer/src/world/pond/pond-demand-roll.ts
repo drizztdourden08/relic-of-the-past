@@ -37,7 +37,7 @@ const rollPondDemands = (
   const throwAt = new Map(plan.throws.map((entry, index) => [entry.prize, index]));
   const positionOf = (prize: number): number => positions[throwAt.get(prize) ?? 0] ?? 0;
   const assigned = shareOutKinds(
-    kinds, (kind) => bracketCountOf(kind, ask, plan, capacity, candidates), rungs.length, rng,
+    kinds, (kind) => bracketCountOf(kind, { ask, plan, capacity }, candidates), rungs.length, rng,
   );
   const amounts = new Map<number, number>();
   (['bombs', 'arrows', 'bottle'] as const).forEach((kind) => {

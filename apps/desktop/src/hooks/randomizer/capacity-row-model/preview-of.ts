@@ -6,6 +6,12 @@ import { JUMP_LABEL, PROGRESSIVE_NOTE, VANILLA_NOTE } from './capacity-row-model
 import { itemAt } from '@app/checked-access';
 import { stopsOf } from './stops-of';
 
+const noteOf = (setting: FamilySetting, plan: FamilyPlan): string | undefined => {
+  const count = plan.items.length;
+  if (setting.mode === 'vanilla-in-pool') return `${count} upgrade item${count === 1 ? '' : 's'} to find`;
+  return plan.progressive && count > 0 ? PROGRESSIVE_NOTE : undefined;
+};
+
 const previewOf = (capacityFamily: CapacityFamily, setting: FamilySetting, plan: FamilyPlan): LadderPreviewProps => {
   const stops = stopsOf(capacityFamily);
   const chipsOf = (ladder: readonly number[]) => ladder.map((value) => itemAt(stops, capacityFamily.indexOf(value)));
@@ -16,11 +22,7 @@ const previewOf = (capacityFamily: CapacityFamily, setting: FamilySetting, plan:
   }
   const startIndex = setting.mode === 'custom' ? capacityFamily.indexOf(setting.start) : 0;
   const surplus = ladderClamps(capacityFamily.ladder, startIndex, plan.jumps);
-  const count = plan.items.length;
-  const note = setting.mode === 'vanilla-in-pool'
-    ? `${count} upgrade item${count === 1 ? '' : 's'} to find`
-    : plan.progressive && count > 0 ? PROGRESSIVE_NOTE : undefined;
-  return { chips: chipsOf(plan.ladder), jumps: jumpsOf(plan.jumps), surplus, ordered: plan.progressive, note };
+  return { chips: chipsOf(plan.ladder), jumps: jumpsOf(plan.jumps), surplus, ordered: plan.progressive, note: noteOf(setting, plan) };
 };
 
 export { previewOf };

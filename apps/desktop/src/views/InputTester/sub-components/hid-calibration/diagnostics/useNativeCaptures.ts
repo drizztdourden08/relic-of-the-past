@@ -10,7 +10,7 @@ const useNativeCaptures = (deviceEntry: DeviceEntry | null): NativeCaptureStatus
 
   useEffect(() => {
     const api = inputApi();
-    if (!deviceEntry || !api) { setStatus(EMPTY_STATUS); return; }
+    if (!deviceEntry) { setStatus(EMPTY_STATUS); return; }
     let cancelled = false;
 
     const run = async () => {

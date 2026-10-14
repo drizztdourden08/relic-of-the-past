@@ -4,10 +4,12 @@ import { validateValue } from '../validate-value';
 import { checkKeys } from './check-keys';
 import { extentAt } from './extent-at';
 import { isRecord } from './is-record';
+import { nonEmptyText } from './non-empty-text';
 import { numberAt } from './number-at';
 import { oneOf } from './one-of';
 import { ALIGN_SELF, EDGE_KEYS } from './validate-box.constants';
 import type { Edges, HudBox } from '../../types/hud-node';
+import type { ValueContext } from '../validate-value.type';
 import type { Issues } from './validate-box.type';
 
 const edgesAt = (value: unknown, path: string, issues: Issues): Edges | undefined => {
@@ -53,49 +55,78 @@ const slotsAt = (value: unknown, path: string, issues: Issues): number[] | undef
   return slots;
 };
 
-const validateBox = (value: Record<string, unknown>, path: string, issues: Issues, insideRepeat = false): HudBox => {
-  const id = typeof value.id === 'string' && value.id.trim() ? value.id : '';
-  if (!id) issues.push(`${path}.id: every node needs a non-empty id`);
-
-  const context = { insideRepeat };
-  const scale = value.scale !== undefined ? validateValue(value.scale, `${path}.scale`, issues, context) : undefined;
+const scaleAt = (value: Record<string, unknown>, path: string, issues: Issues, context: ValueContext) => {
+  const scale = validateValue(value.scale, `${path}.scale`, issues, context);
   if (typeof scale === 'number' && scale <= 0) issues.push(`${path}.scale: must be greater than zero`);
-  const opacity = value.opacity !== undefined
-    ? validateValue(value.opacity, `${path}.opacity`, issues, context) : undefined;
+  return scale;
+};
+
+const opacityAt = (value: Record<string, unknown>, path: string, issues: Issues, context: ValueContext) => {
+  const opacity = validateValue(value.opacity, `${path}.opacity`, issues, context);
   if (typeof opacity === 'number' && (opacity < 0 || opacity > 1)) {
     issues.push(`${path}.opacity: must be between 0 and 1`);
   }
+  return opacity;
+};
+
+const metricFragment = (
+  value: Record<string, unknown>, path: string, issues: Issues, context: ValueContext,
+): Partial<HudBox> => {
+  const scale = scaleAt(value, path, issues, context);
+  const opacity = opacityAt(value, path, issues, context);
   const visible = typeof value.visible === 'boolean'
     ? value.visible
     : validateValue(value.visible, `${path}.visible`, issues, context);
+  return {
+    ...(scale !== undefined ? { scale } : {}),
+    ...(opacity !== undefined ? { opacity } : {}),
+    ...(visible !== undefined ? { visible } : {}),
+  };
+};
 
+const boundsFragment = (
+  value: Record<string, unknown>, path: string, issues: Issues, insideRepeat: boolean,
+): Partial<HudBox> => {
   const size = sizeAt(value.size, `${path}.size`, issues, insideRepeat);
   const min = minMaxAt(value.min, `${path}.min`, issues, insideRepeat);
   const max = minMaxAt(value.max, `${path}.max`, issues, insideRepeat);
+  return {
+    ...(size && Object.keys(size).length ? { size } : {}),
+    ...(min && Object.keys(min).length ? { min } : {}),
+    ...(max && Object.keys(max).length ? { max } : {}),
+  };
+};
+
+const spacingFragment = (value: Record<string, unknown>, path: string, issues: Issues): Partial<HudBox> => {
   const margin = edgesAt(value.margin, `${path}.margin`, issues);
   const padding = edgesAt(value.padding, `${path}.padding`, issues);
+  return { ...(margin ? { margin } : {}), ...(padding ? { padding } : {}) };
+};
+
+const placementFragment = (value: Record<string, unknown>, path: string, issues: Issues): Partial<HudBox> => {
   const dimWhenEmpty = slotsAt(value.dimWhenEmpty, `${path}.dimWhenEmpty`, issues);
   const place = placeAt(value.place, `${path}.place`, issues);
   const order = numberAt(value.order, `${path}.order`, issues);
   const alignSelf = oneOf(value.alignSelf, ALIGN_SELF, `${path}.alignSelf`, issues);
   const justifySelf = oneOf(value.justifySelf, ALIGN_SELF, `${path}.justifySelf`, issues);
-
   return {
-    id,
-    ...(size && Object.keys(size).length ? { size } : {}),
-    ...(min && Object.keys(min).length ? { min } : {}),
-    ...(max && Object.keys(max).length ? { max } : {}),
-    ...(margin ? { margin } : {}),
-    ...(padding ? { padding } : {}),
-    ...(scale !== undefined ? { scale } : {}),
-    ...(opacity !== undefined ? { opacity } : {}),
-    ...(visible !== undefined ? { visible } : {}),
     ...(dimWhenEmpty?.length ? { dimWhenEmpty } : {}),
     ...(place && Object.keys(place).length ? { place } : {}),
     ...(order !== undefined ? { order } : {}),
     ...(alignSelf ? { alignSelf } : {}),
     ...(justifySelf ? { justifySelf } : {}),
   };
+};
+
+const validateBox = (value: Record<string, unknown>, path: string, issues: Issues, insideRepeat = false): HudBox => {
+  const id = nonEmptyText(value.id);
+  if (!id) issues.push(`${path}.id: every node needs a non-empty id`);
+
+  const metrics = metricFragment(value, path, issues, { insideRepeat });
+  const bounds = boundsFragment(value, path, issues, insideRepeat);
+  const spacing = spacingFragment(value, path, issues);
+  const placement = placementFragment(value, path, issues);
+  return { id, ...bounds, ...spacing, ...metrics, ...placement };
 };
 
 export { validateBox };

@@ -10,7 +10,7 @@ const gestureActions = (ctx: GridActionContext): GridAction[] => {
       { key: 'clear', kind: 'gesture', label: 'clear', shortcut: { keys: ['esc'] } },
     ];
     case 'track': return [{ key: 'clear', kind: 'gesture', label: 'clear', shortcut: { keys: ['esc'] } }];
-    default: return GESTURES;
+    case 'none': return GESTURES;
   }
 };
 

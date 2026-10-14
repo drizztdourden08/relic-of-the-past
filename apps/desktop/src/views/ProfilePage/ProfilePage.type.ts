@@ -8,6 +8,21 @@ interface ProfilePageProps {
   onSwitchProfile: () => void;
 }
 
+interface ProfileDetailsProps {
+  profile: Profile;
+  assetsReady: boolean;
+}
+
+interface ProfileActionsProps {
+  assetsReady: boolean;
+  isGameRunning: boolean;
+  onStartGame: () => void;
+  onDeleteProfile: () => void;
+  onSwitchProfile: () => void;
+}
+
 export type {
+  ProfileActionsProps,
+  ProfileDetailsProps,
   ProfilePageProps,
 };

@@ -1,6 +1,5 @@
 /* @layer renderer-components @kind component */
 import { useCallback, useEffect, useMemo, useState } from 'react';
-import type { CSSProperties } from 'react';
 import { Box } from '@drizztdourden08/tessera/primitives';
 import { shownItemOf } from '@rotp/game-data';
 import type { RunContext } from '@rotp/game-data';
@@ -64,8 +63,9 @@ const CheckToasts = ({ width, height }: CheckToastsProps) => {
   const style = useMemo(() => ({
     width,
     height,
-    ...(settings ? { '--notice-item': settings.hudHighlightPrimary, '--notice-player': settings.hudHighlightSecondary } : {}),
-  }) as CSSProperties, [width, height, settings]);
+    '--notice-item': settings.hudHighlightPrimary,
+    '--notice-player': settings.hudHighlightSecondary,
+  }), [width, height, settings]);
 
   return (
     <Box className="check-toasts" style={style}>

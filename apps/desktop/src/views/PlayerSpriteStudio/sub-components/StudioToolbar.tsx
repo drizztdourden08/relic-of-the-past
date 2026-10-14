@@ -1,6 +1,7 @@
 /* @layer renderer-components @kind component */
-import { Box, Text, Button, Status, TextInput } from '@drizztdourden08/tessera/primitives';
+import { Box, Button, Status, TextInput } from '@drizztdourden08/tessera/primitives';
 import type { StudioToolbarProps } from '../PlayerSpriteStudio.type';
+import { ApplyRow } from './ApplyRow';
 
 const StudioToolbar = (props: StudioToolbarProps) => {
   const { meta, file, dirty, applied, busy, readOnly, onMeta, onSave, onSaveAs, onExport, onRevert, onClose } = props;
@@ -37,18 +38,7 @@ const StudioToolbar = (props: StudioToolbarProps) => {
         <Button variant="ghost" size="sm" disabled={busy} onClick={onClose}>Close</Button>
       </Box>
 
-      {!readOnly && (
-        <Box className="studio-toolbar__row">
-          {applied === true && <Status tone="success">applied to the running game</Status>}
-          {applied === false && <Status tone="warning">saved, applies on next boot</Status>}
-          {applied === null && <Status tone="neutral">not saved yet</Status>}
-          <Text className="studio-toolbar__hint">
-            {applied === false
-              ? 'The running game did not take it: a live apply needs the active profile to have this sprite selected, with Vanilla Safe off.'
-              : 'Saving also pushes the sheet at a running game when the active profile has it selected.'}
-          </Text>
-        </Box>
-      )}
+      {!readOnly && <ApplyRow applied={applied} />}
     </Box>
   );
 };

@@ -6,7 +6,7 @@
   column-gap: var(--space-md);
   align-items: start;
   padding: var(--space-sm) 0;
-  border-top: 1px solid var(--c-border);
+  border-top: var(--border-width-thin) solid var(--c-border);
 }
 
 .rand-opt-row--locked {

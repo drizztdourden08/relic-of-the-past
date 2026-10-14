@@ -6,13 +6,8 @@ const mapEntry = (
   id: number,
   change: (entry: DialogueEntry) => DialogueEntry,
 ): LanguageSet => {
-  let found = false;
-  const dialogue = set.dialogue.map((entry) => {
-    if (entry.id !== id) return entry;
-    found = true;
-    return change(entry);
-  });
-  return found ? { ...set, dialogue } : set;
+  if (!set.dialogue.some((entry) => entry.id === id)) return set;
+  return { ...set, dialogue: set.dialogue.map((entry) => (entry.id === id ? change(entry) : entry)) };
 };
 
 export { mapEntry };

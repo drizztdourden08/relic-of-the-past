@@ -19,8 +19,8 @@
 }
 
 .height-level-editor__swatch {
-  width: 10px;
-  height: 10px;
+  width: var(--size-10);
+  height: var(--size-10);
   border-radius: var(--radius-sm);
   background: var(--c-text);
   flex-shrink: 0;
@@ -32,17 +32,17 @@
   font-size: var(--text-sm);
   color: var(--c-text);
   background: var(--c-inset);
-  border: 1px solid var(--c-border-strong);
+  border: var(--border-width-thin) solid var(--c-border-strong);
   border-radius: var(--radius-sm);
   padding: var(--space-xs) var(--space-xs);
 }
 
 .height-level-editor__value {
-  width: 48px;
+  width: var(--size-48);
   font-size: var(--text-sm);
   color: var(--c-text);
   background: var(--c-inset);
-  border: 1px solid var(--c-border-strong);
+  border: var(--border-width-thin) solid var(--c-border-strong);
   border-radius: var(--radius-sm);
   padding: var(--space-xs) var(--space-xs);
   text-align: center;

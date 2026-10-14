@@ -7,9 +7,9 @@ interface ShadowLoopParams {
   canvasKey: number;
   canvasRef: React.RefObject<HTMLCanvasElement | null>;
   shadowCanvasRef: React.RefObject<HTMLCanvasElement | null>;
-  shadowRendererRef: React.MutableRefObject<ShadowRenderer | null>;
-  shadowProjectRef: React.MutableRefObject<ShadowCastingProject | null>;
-  shadowCastingRef: React.MutableRefObject<boolean>;
+  shadowRendererRef: React.RefObject<ShadowRenderer | null>;
+  shadowProjectRef: React.RefObject<ShadowCastingProject | null>;
+  shadowCastingRef: React.RefObject<boolean>;
 }
 
 export type { ShadowLoopParams };

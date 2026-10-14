@@ -3,7 +3,7 @@ import { requireHostApi } from '@drizztdourden08/brock-react';
 import { unregisterTag } from '@rotp/game-data';
 import type { TagId } from '@rotp/game-data';
 import type { DeleteResult } from '../DataInspector.type';
-import { invalidateTagSuggestions } from './tag-suggestions';
+import { invalidateTagSuggestions } from '@app/data-inspector/tag-suggestions';
 import { unregisterIdRefOption } from './unregister-id-ref-option';
 
 const deleteTagRecord = async (id: string): Promise<DeleteResult> => {

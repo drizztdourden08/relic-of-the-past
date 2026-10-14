@@ -12,6 +12,20 @@ interface RandomizerOptionRowProps {
   readout?: boolean;
 }
 
+interface OptionControlProps {
+  option: OptionDef;
+  value: OptionValue;
+  frozen: boolean;
+  readout: boolean;
+  onChange?: (value: OptionValue) => void;
+}
+
+interface OptionTextProps {
+  option: OptionDef;
+  note?: string;
+  forced: boolean;
+}
+
 interface LockedOptionGroup {
   group: OptionGroup;
   options: OptionDef[];
@@ -23,4 +37,4 @@ interface CatalogByLock {
   lockedGroups: LockedOptionGroup[];
 }
 
-export type { CatalogByLock, LockedOptionGroup, RandomizerOptionRowProps };
+export type { CatalogByLock, LockedOptionGroup, OptionControlProps, OptionTextProps, RandomizerOptionRowProps };

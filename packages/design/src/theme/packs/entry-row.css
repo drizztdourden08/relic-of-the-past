@@ -13,7 +13,6 @@
     [excerpt] minmax(0, 1fr)
     [issues] auto
     [fit] auto;
-
   align-items: center;
   font-size: var(--text-sm);
   gap: var(--space-sm);

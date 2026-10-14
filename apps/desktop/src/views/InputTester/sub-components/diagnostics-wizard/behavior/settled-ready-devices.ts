@@ -10,7 +10,7 @@ const settledReadyDevices = async (isCancelled: () => boolean): Promise<DeviceEn
   let stableFor = 0;
 
   while (Date.now() < deadline && !isCancelled()) {
-    const ready = ((await inputApi()?.list()) ?? []).filter((d) => d.status === 'ready');
+    const ready = (await inputApi().list()).filter((d) => d.status === 'ready');
     if (ready.length > best.length) {
       best = ready;
       stableFor = 0;

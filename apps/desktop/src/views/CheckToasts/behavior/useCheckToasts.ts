@@ -9,6 +9,9 @@ import { firedLocations, onFiredLocation } from '@app/game/randomizer-client';
 import { LOAD_QUIET_MS, MAX_BURST, MAX_VISIBLE, RECEIPT_WINDOW_MS } from '../CheckToasts.constants';
 import type { CheckToastEntry } from '../CheckToasts.type';
 import { recordOfLocation } from './record-of-location';
+import { recordsOfLocations } from './records-of-locations';
+
+const unpaid = (): undefined => undefined;
 
 const useCheckToasts = (enabled: boolean) => {
   const [entries, setEntries] = useState<CheckToastEntry[]>([]);
@@ -58,8 +61,7 @@ const useCheckToasts = (enabled: boolean) => {
       queueMicrotask(() => {
         const names = pendingFired.current;
         pendingFired.current = [];
-        const rows = names.map(recordOfLocation).filter((row): row is CheckRecord => row !== undefined);
-        show(rows, () => undefined);
+        show(recordsOfLocations(names), unpaid);
       });
     });
   }, [show]);

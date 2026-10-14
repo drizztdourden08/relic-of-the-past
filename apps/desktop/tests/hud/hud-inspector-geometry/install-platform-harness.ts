@@ -3,7 +3,7 @@ import { afterEach } from 'vitest';
 import { act, createElement as h, type ReactNode } from 'react';
 import { createRoot, type Root } from 'react-dom/client';
 import { PlatformContext } from '@drizztdourden08/brock-react';
-import { PLATFORM } from './geometry.constants';
+import { WINDOWS_PLATFORM } from '../windows-platform';
 
 const installPlatformHarness = () => {
   (globalThis as { IS_REACT_ACT_ENVIRONMENT?: boolean }).IS_REACT_ACT_ENVIRONMENT = true;
@@ -13,12 +13,12 @@ const installPlatformHarness = () => {
     const host = document.createElement('div');
     document.body.appendChild(host);
     const root = createRoot(host);
-    act(() => { root.render(h(PlatformContext.Provider, { value: PLATFORM }, node)); });
+    act(() => { root.render(h(PlatformContext.Provider, { value: WINDOWS_PLATFORM }, node)); });
     mounted = { root, host };
   };
 
   const rerender = (node: ReactNode): void => {
-    act(() => { mounted?.root.render(h(PlatformContext.Provider, { value: PLATFORM }, node)); });
+    act(() => { mounted?.root.render(h(PlatformContext.Provider, { value: WINDOWS_PLATFORM }, node)); });
   };
 
   afterEach(() => {

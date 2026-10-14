@@ -1,8 +1,8 @@
 /* @layer renderer-components @kind component */
-import { useCallback } from 'react';
-import { Box, Text, Button, Icon, IconButton } from '@drizztdourden08/tessera/primitives';
-import { STICK_IDS, TRIGGER_IDS } from '../hid-calibration.constants';
-import { InputStatusIcon } from './InputStatusIcon';
+import { Box } from '@drizztdourden08/tessera/primitives';
+import { ButtonMappingActions } from './ButtonMappingActions';
+import { ButtonMappingInstruction } from './ButtonMappingInstruction';
+import { ButtonMappingList } from './ButtonMappingList';
 import './ButtonMapping.css';
 import type { ButtonMappingProps } from './ButtonMapping.type';
 
@@ -15,8 +15,6 @@ const ButtonMapping = (props: ButtonMappingProps) => {
     stepTitle = `4. Button & Axis Mapping (${buttonCapturedCount}/${buttonItems.length})`,
     includeStickTriggerIds = false, showAxisSubStep = true,
   } = props;
-  const stopAuto = useCallback(() => setAutoAdvanceWrapped(false), [setAutoAdvanceWrapped]);
-  const pauseInput = useCallback(() => setInputPhaseActiveWrapped(false), [setInputPhaseActiveWrapped]);
 
   if (!prereqsDone) return null;
 
@@ -27,57 +25,35 @@ const ButtonMapping = (props: ButtonMappingProps) => {
       </Box>
 
       {inputPhaseActive && (
-        <Box className="hid-cal__instruction">
-          {instruction}
-          {showAxisSubStep && items[activeIndex]?.kind === 'axis' && captureState === 'waiting-press' && (
-            <Text className="hid-cal__axis-sub">
-              [{axisSubStep === 'pos' ? '1/2 positive' : '2/2 negative'}]
-            </Text>
-          )}
-        </Box>
+        <ButtonMappingInstruction
+          items={items}
+          activeIndex={activeIndex}
+          captureState={captureState}
+          axisSubStep={axisSubStep}
+          instruction={instruction}
+          showAxisSubStep={showAxisSubStep}
+        />
       )}
 
-      <Box className="hid-cal__input-grid">
-        {items.map((item, i) => {
-          if (!includeStickTriggerIds && (STICK_IDS.has(item.id) || TRIGGER_IDS.has(item.id))) return null;
-          const isActive = i === activeIndex && inputPhaseActive;
-          const canClear = item.status === 'captured' || item.status === 'skipped';
-          return (
-            <Box key={item.id}
-              className={`hid-cal__input-item hid-cal__input-item--clickable hid-cal__input-item--${item.status}${isActive ? ' hid-cal__input-item--focus' : ''}`}>
-              <Text className="hid-cal__input-icon" onClick={() => prereqsDone && onClickItem(i)}><InputStatusIcon status={item.status} /></Text>
-              <Text className="hid-cal__input-name" onClick={() => prereqsDone && onClickItem(i)}>{item.label}{item.kind === 'axis' && <> <Icon name="gamepad-2" /></>}</Text>
-              {item.result && <Text className="hid-cal__input-result">{item.result}</Text>}
-              {canClear && (
-                <IconButton variant="ghost" tone="danger" size="xs" className="hid-cal__input-clear" label={`Clear ${item.label}`}
-                  onClick={(e) => { e.stopPropagation(); onClearItem(i); }}><Icon name="x" /></IconButton>
-              )}
-            </Box>
-          );
-        })}
-      </Box>
+      <ButtonMappingList
+        items={items}
+        activeIndex={activeIndex}
+        inputPhaseActive={inputPhaseActive}
+        includeStickTriggerIds={includeStickTriggerIds}
+        onClickItem={onClickItem}
+        onClearItem={onClearItem}
+      />
 
-      <Box className="hid-cal__prereq-actions">
-        {!inputPhaseActive ? (
-          <Button variant="primary" size="sm" onClick={onStartButtons}>
-            Auto-Advance All
-          </Button>
-        ) : autoAdvance ? (
-          <>
-            <Button variant="tertiary" size="sm" onClick={onGoBack} disabled={activeIndex <= 0}>Back</Button>
-            <Button variant="tertiary" size="sm" onClick={onSkip}>Skip</Button>
-            <Button variant="tertiary" size="sm" onClick={stopAuto}>Stop Auto</Button>
-            <Button variant="tertiary" size="sm" onClick={pauseInput}>Pause</Button>
-          </>
-        ) : (
-          <>
-            <Text className="hid-cal__manual-hint">
-              Click a button above to detect, or click a byte in the grid to assign manually.
-            </Text>
-            <Button variant="tertiary" size="sm" onClick={pauseInput}>Deselect</Button>
-          </>
-        )}
-      </Box>
+      <ButtonMappingActions
+        activeIndex={activeIndex}
+        inputPhaseActive={inputPhaseActive}
+        autoAdvance={autoAdvance}
+        onStartButtons={onStartButtons}
+        onSkip={onSkip}
+        onGoBack={onGoBack}
+        setAutoAdvanceWrapped={setAutoAdvanceWrapped}
+        setInputPhaseActiveWrapped={setInputPhaseActiveWrapped}
+      />
     </Box>
   );
 };

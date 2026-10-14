@@ -13,4 +13,10 @@ interface InputGlyphProps {
   className?: string;
 }
 
-export type { InputGlyphProps };
+interface GlyphFallbackProps {
+  variant: 'key' | 'plain';
+  label: string;
+  className: string;
+}
+
+export type { GlyphFallbackProps, InputGlyphProps };

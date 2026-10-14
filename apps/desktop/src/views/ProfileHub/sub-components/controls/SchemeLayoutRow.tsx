@@ -15,7 +15,7 @@ const SchemeLayoutRow = (props: SchemeLayoutRowProps) => {
     <Box className="modern-tab__layout">
       <Field
         label="HUD layout"
-        hint="The arrangement this scheme wears. Switching control profile switches it too. Build your own in Advanced → HUD Layout Editor."
+        hint="The arrangement this scheme wears. Switching control profile switches it too. Build your own in Advanced > HUD Layout Editor."
       >
         <Select
           value={value}

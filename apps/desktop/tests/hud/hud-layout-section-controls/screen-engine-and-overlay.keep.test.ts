@@ -7,9 +7,10 @@ import { ContainerOverlay } from '@app/views/HudLayoutEditor/sub-components/Cont
 import { LayoutSection } from '@app/views/HudLayoutEditor/sub-components/LayoutSection';
 import { PlatformContext } from '@drizztdourden08/brock-react';
 import type { HudFlexContainer, HudGridContainer, PlacedNode } from '@rotp/hud';
-import { ED, GUIDE, PLATFORM } from './section-controls.constants';
+import { ED, GUIDE } from './section-controls.constants';
 import { boxCell as cell } from './box-cell';
 import { required } from '../../required';
+import { WINDOWS_PLATFORM } from '../windows-platform';
 
 interface ViewSnapshot {
   gridOverlayEnabled: boolean;
@@ -26,7 +27,7 @@ const noop = (): void => {};
 
 describe('the screen root chooses its engine like any other container (§42)', () => {
   const render = (direction = 'row'): string => renderToStaticMarkup(
-    h(PlatformContext.Provider, { value: PLATFORM }, h(LayoutSection, {
+    h(PlatformContext.Provider, { value: WINDOWS_PLATFORM }, h(LayoutSection, {
       node: { kind: 'container', id: 'screen', direction, children: [] } as never,
       onPatch: noop, scope: {},
     })) as never,
@@ -41,13 +42,13 @@ describe('the screen root chooses its engine like any other container (§42)', (
   it('has no `isScreen` left to reason about at all', () => {
     const src = readFileSync(`${ED}/sub-components/LayoutSection.tsx`, 'utf8');
     expect(src).not.toContain('isScreen');
-    expect(readFileSync(`${ED}/sub-components/NodeInspector.tsx`, 'utf8'))
+    expect(readFileSync(`${ED}/sub-components/InspectorSections.tsx`, 'utf8'))
       .toMatch(/<SizeBoxSection[\s\S]{0,240}?isScreen=\{isScreen\}/);
   });
 
   it('writes a real engine change through, for the screen like anything else', () => {
     const patches: unknown[] = [];
-    const markup = renderToStaticMarkup(h(PlatformContext.Provider, { value: PLATFORM },
+    const markup = renderToStaticMarkup(h(PlatformContext.Provider, { value: WINDOWS_PLATFORM },
       h(LayoutSection, {
         node: { kind: 'container', id: 'screen', direction: 'row', children: [] } as never,
         onPatch: (patch: unknown) => patches.push(patch), scope: {},

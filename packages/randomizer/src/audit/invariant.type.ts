@@ -1,5 +1,5 @@
 /* @layer shared-game @kind types */
-import type { CheckRecord, DungeonRecord, ItemRecord, ScreenRecord } from '@rotp/game-data';
+import type { CheckGameId, CheckRecord, DungeonRecord, ItemRecord, ScreenRecord } from '@rotp/game-data';
 
 interface InvariantFinding {
   rule: string;
@@ -16,4 +16,6 @@ interface InvariantInput {
   spriteMainText?: string;
 }
 
-export type { InvariantFinding, InvariantInput };
+type KindRule = (check: CheckRecord, g: CheckGameId) => string[];
+
+export type { InvariantFinding, InvariantInput, KindRule };

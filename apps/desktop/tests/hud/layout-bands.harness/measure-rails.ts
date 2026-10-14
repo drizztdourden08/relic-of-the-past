@@ -2,13 +2,14 @@
 import { chromium } from 'playwright';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { readFileSync } from 'fs';
-import type { Browser } from 'playwright';
+import type { Browser, Page } from 'playwright';
 import { DESIGN_SYSTEM_DIR, EDITOR_DIR, RAILS, ROTP_THEME } from './layout-bands.constants';
 import type { Measured, Rig } from './layout-bands.type';
 import { layoutCases } from './layout-cases';
-import { probe } from './probe';
+import { probes } from './probes';
 import { EDITOR_THEME_SHEETS } from '../editor-theme-sheets.constants';
 import { cssIn } from '../files-in';
+import { required } from '../../required';
 
 const sheets = (): string[] => [
   ...cssIn(`${DESIGN_SYSTEM_DIR}/tokens`).filter((f) => !f.endsWith('index.css')),
@@ -32,13 +33,22 @@ const documentAt = (rail: number): string => {
   </style><div class="rail">${body}</div>`;
 };
 
+const readRail = async (page: Page): Promise<Measured[]> => {
+  const geometry = await page.evaluate(probes.geometry);
+  const tracks = await page.evaluate(probes.tracks);
+  const paint = await page.evaluate(probes.paint);
+  return geometry.map((g, i) => ({
+    ...g, ...required(tracks[i], `the tracks of ${g.case}`), ...required(paint[i], `the paint of ${g.case}`),
+  }));
+};
+
 const measureRails = async (): Promise<Rig> => {
   const browser: Browser = await chromium.launch();
   const page = await browser.newPage();
   const measured: Record<number, Record<string, Measured>> = {};
   for (const rail of RAILS) {
     await page.setContent(documentAt(rail));
-    measured[rail] = Object.fromEntries((await page.evaluate(probe)).map((m) => [m.case, m]));
+    measured[rail] = Object.fromEntries((await readRail(page)).map((m) => [m.case, m]));
   }
   return {
     at: (rail, kase) => {

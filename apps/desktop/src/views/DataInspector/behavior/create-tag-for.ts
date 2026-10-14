@@ -5,8 +5,8 @@ import type { TagCreateResult } from '@drizztdourden08/tessera/composites';
 import { TAG_NO_SCOPE, TAG_NOT_CONVENTION } from '../DataInspector.constants';
 import { asEntityKind } from './as-entity-kind';
 import { registerIdRefOption } from './register-id-ref-option';
-import { resolveRecordLabel } from './record-links';
-import { invalidateTagSuggestions } from './tag-suggestions';
+import { resolveRecordLabel } from '@app/data-inspector/record-links';
+import { invalidateTagSuggestions } from '@app/data-inspector/tag-suggestions';
 
 const createTagFor = async (collectionKind: string, key: string): Promise<TagCreateResult> => {
   const scope = asEntityKind(collectionKind);

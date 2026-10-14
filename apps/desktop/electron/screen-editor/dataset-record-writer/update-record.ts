@@ -5,6 +5,7 @@ import { replaceById } from '../source-writers';
 import type { RecordWriterSpec } from './dataset-record-writer.type';
 import { editRecordFile } from './edit-record-file';
 import { homeOf } from './home-of';
+import { numberRecord } from './number-record';
 
 const updateRecord = async <T extends { id: string }>(
   root: string,
@@ -14,7 +15,7 @@ const updateRecord = async <T extends { id: string }>(
 ): Promise<WriteRecordResult> => {
   const home = await homeOf(root, spec.kind, id);
   if ('error' in home) return { success: false, error: home.error };
-  const full = { id, ...record } as unknown as T;
+  const full = numberRecord<T>(id, record);
   const error = await editRecordFile(home.path, content => replaceById(content, id, spec.serialize(full)));
   return error ? { success: false, error } : { success: true, ids: [id] };
 };

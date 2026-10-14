@@ -1,11 +1,11 @@
 /* @layer renderer-components @kind logic */
-import type { FloodFillResult } from '@rotp/game-core';
 import { overworldOrigin, roomOrigin, screenOriginFor } from '@app/game/flood';
 import { viewOrigin } from '@rotp/game-core';
 import { MIN_DOT_RADIUS, TILE_PX } from './draw.constants';
-import type { DrawContext, ViewportInfo } from './draw.type';
+import type { DrawContext, DrawContextParams, ViewportInfo } from './draw.type';
 
-const buildDrawContext = (ctx: CanvasRenderingContext2D, vp: ViewportInfo, width: number, height: number, result: FloodFillResult, isIndoors: boolean): DrawContext => {
+const buildDrawContext = (params: DrawContextParams): DrawContext => {
+  const { ctx, vp, width, height, result, isIndoors } = params;
   const snesW = vp.snesWidth;
   const snesH = vp.snesHeight;
   const { viewLeft, viewTop } = viewOrigin(vp);

@@ -3,10 +3,9 @@ import { useCallback, useState } from 'react';
 import * as msuStore from '@app/storage/msu-store';
 import { publishImportProgress } from '@app/storage/import-progress-bus';
 import { withTrackFilesAdded } from './pack-manifest';
-import { parkFile } from './park-file';
-import { canonicalTrackName, extensionOf, namePrefixOf, sanitizeFileName, uniqueFileName } from './track-file-name';
+import { namePrefixOf } from './track-file-name';
 import { failure } from './failure';
-import { getTrackNumber } from './get-track-number';
+import { writeDroppedFiles } from './write-dropped-files';
 import type { ActionResult } from '../msu.type';
 import type { TrackUploadParams } from './track-upload.type';
 
@@ -25,21 +24,9 @@ const useTrackUpload = (params: TrackUploadParams) => {
     const prefix = namePrefixOf([...taken], pack);
     setBusy(true);
     try {
-      const written: string[] = [];
-      for (const [index, file] of dropped.entries()) {
-        const claimsSlot = index === 0 && format === 'classic';
-        const name = claimsSlot
-          ? canonicalTrackName(prefix, trackNum, extensionOf(file.name))
-          : uniqueFileName(sanitizeFileName(file.name), taken);
-        if (claimsSlot) {
-          const occupant = [...taken].find((n) => n !== name && getTrackNumber(n) === trackNum);
-          if (occupant) await parkFile(pack, occupant, taken);
-        }
-        await msuStore.writeMsuTrackFile(pack, name, await file.arrayBuffer());
-        taken.add(name);
-        written.push(name);
-        emit('copy', index + 1, dropped.length);
-      }
+      const written = await writeDroppedFiles({
+        pack, trackNum, dropped, format, taken, prefix, onCopied: (done, total) => emit('copy', done, total),
+      });
       if (format === 'layered') {
         await msuStore.writeMsuManifest(pack, withTrackFilesAdded(manifest, trackNum, written));
       }

@@ -1,6 +1,7 @@
 /* @layer renderer-components @kind logic */
 import type { DeviceEntry, HidListedDevice } from '@drizztdourden08/brock-input';
 import type { ChooserDevice } from '../diagnostics-wizard.type';
+import { nonEmpty } from './non-empty';
 import { toHex4 } from './to-hex4';
 
 const vidPidKey = (vendorId: number, productId: number): string =>
@@ -26,9 +27,9 @@ const buildChooserDevices = (
     const existing = byKey.get(key);
     byKey.set(key, {
       deviceKey: d.deviceKey, vendorId: d.vendorId, productId: d.productId,
-      name: d.name || existing?.name,
-      mapping: d.mapping || existing?.mapping,
-      product: d.product || existing?.product || '', busType: d.busType,
+      name: nonEmpty(d.name) ?? existing?.name,
+      mapping: nonEmpty(d.mapping) ?? existing?.mapping,
+      product: d.product || (nonEmpty(existing?.product) ?? ''), busType: d.busType,
       hasByteCapability: hidKeys.has(key),
       sdlId: d.sdlId, guid: d.guid, hasGyro: d.hasGyro, hasRumble: d.hasRumble,
     });

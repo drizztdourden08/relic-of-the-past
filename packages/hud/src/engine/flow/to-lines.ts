@@ -2,7 +2,7 @@
 import { outerCross } from './outer-cross';
 import { outerMain } from './outer-main';
 import { EPSILON } from './flow.constants';
-import type { FlowItem, FlowLine } from './flow.type';
+import type { FlowItem, FlowLine, LineFlow } from './flow.type';
 
 const lineOf = (items: FlowItem[], row: boolean, mainGap: number): FlowLine => ({
   items,
@@ -10,13 +10,8 @@ const lineOf = (items: FlowItem[], row: boolean, mainGap: number): FlowLine => (
   cross: items.reduce((tallest, item) => Math.max(tallest, outerCross(item, row)), 0),
 });
 
-const toLines = (
-  items: readonly FlowItem[],
-  row: boolean,
-  mainGap: number,
-  wrap: boolean,
-  available: number,
-): FlowLine[] => {
+const toLines = (items: readonly FlowItem[], flow: LineFlow): FlowLine[] => {
+  const { row, mainGap, wrap, available } = flow;
   if (!wrap || !Number.isFinite(available)) return items.length ? [lineOf([...items], row, mainGap)] : [];
   const lines: FlowLine[] = [];
   let current: FlowItem[] = [];

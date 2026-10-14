@@ -26,7 +26,7 @@ const generatePlacement = (
   for (let attempt = 0; attempt < MAX_PLACEMENT_ATTEMPTS; attempt += 1) {
     const attemptSeed = attempt === 0 ? seed : `${seed}#retry${attempt}`;
     try {
-      return attemptPlacement(seed, attemptSeed, snapshot, attempt + 1, deliverable, pondDemands);
+      return attemptPlacement({ seed, attemptSeed, snapshot, attempts: attempt + 1 }, deliverable, pondDemands);
     } catch (error) {
       if (!(error instanceof FillError)) throw error;
       lastMessage = error.message;

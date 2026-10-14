@@ -45,7 +45,7 @@ const WishingPondRow = (props: WishingPondRowProps) => {
         </Box>
       )}
       <Box className="pond-row__preview">
-        <Text className="pond-row__preview-title">throw prices</Text>
+        <Text tone="faint" className="pond-row__preview-title">throw prices</Text>
         <LadderPreview {...preview} />
       </Box>
       {walletNote !== undefined && <Text className="pond-row__footnote">{walletNote}</Text>}

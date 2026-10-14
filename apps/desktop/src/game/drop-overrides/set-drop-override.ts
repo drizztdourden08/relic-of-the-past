@@ -3,10 +3,10 @@ import { log } from '../../log-bus';
 import { isArmableOverrideId, DROP_NO_FIRE_ID, TEMPLATE_MESSAGE } from '@rotp/randomizer';
 import { getModule, setDropOverridesActive } from '@rotp/game-core';
 import { reassertGateWord3 } from '../live-settings';
+import type { SetDropOverrideParams } from './set-drop-override.type';
 
-const setDropOverride = (
-  roomId: number, big: boolean, newItem: number, messageId = TEMPLATE_MESSAGE, fireId = DROP_NO_FIRE_ID,
-): void => {
+const setDropOverride = (params: SetDropOverrideParams): void => {
+  const { roomId, big, newItem, messageId = TEMPLATE_MESSAGE, fireId = DROP_NO_FIRE_ID } = params;
   if (!isArmableOverrideId(newItem)) {
     log.error(`[Randomizer] Drop override refused: item 0x${newItem.toString(16)} `
       + `is outside the native grant table (room ${roomId})`);

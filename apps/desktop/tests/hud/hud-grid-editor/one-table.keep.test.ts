@@ -12,10 +12,23 @@ import { screenRoot } from './screen-root';
 
 const { cell, header, down, toolbarKeys, legendCaps, mountGrid } = installGridRig();
 
-describe('one table drives the toolbar and the legend', () => {
-  const keysOf = (selection: GridSelection): string[] =>
-    gridActions(ctxFor(selection, screenRoot())).map((a) => `${a.kind}:${a.key}`);
+const keysOf = (selection: GridSelection): string[] =>
+  gridActions(ctxFor(selection, screenRoot())).map((a) => `${a.kind}:${a.key}`);
 
+const inert = (selection: GridSelection, key: string) => {
+  const row = gridActions(ctxFor(selection, screenRoot())).find((a) => a.key === key);
+  return [row?.disabled, row?.run, row?.shortcut];
+};
+
+const checkLegend = (selection: GridSelection): void => {
+  const expected = legendEntries(gridActions(ctxFor(selection, screenRoot())));
+  expect(document.querySelectorAll('.hud-grid__key').length).toBe(expected.length);
+  for (const entry of expected) {
+    expect(document.querySelector(`.hud-grid__key[data-shortcut="${entry.key}"]`)).not.toBeNull();
+  }
+};
+
+describe('one table drives the toolbar and the legend', () => {
   it('offers no action but the pointer gestures when nothing is selected', () => {
     expect(keysOf({ kind: 'none' })).toEqual([
       'gesture:pick', 'gesture:add-to', 'gesture:range', 'gesture:rectangle',
@@ -42,10 +55,6 @@ describe('one table drives the toolbar and the legend', () => {
       'button:move-earlier', 'button:move-later',
       'button:insert-before', 'button:insert-after', 'button:remove', 'gesture:clear',
     ]);
-    const inert = (selection: GridSelection, key: string) => {
-      const row = gridActions(ctxFor(selection, screenRoot())).find((a) => a.key === key);
-      return [row?.disabled, row?.run, row?.shortcut];
-    };
     expect(inert({ kind: 'track', axis: 'columns', indices: [0], anchor: 0 }, 'move-earlier'))
       .toEqual([true, undefined, undefined]);
     expect(inert({ kind: 'track', axis: 'columns', indices: [2], anchor: 2 }, 'move-later'))
@@ -63,18 +72,11 @@ describe('one table drives the toolbar and the legend', () => {
 
   it('draws in the legend every table row that carries a shortcut, and only those', () => {
     mountGrid();
-    const check = (selection: GridSelection): void => {
-      const expected = legendEntries(gridActions(ctxFor(selection, screenRoot())));
-      expect(document.querySelectorAll('.hud-grid__key').length).toBe(expected.length);
-      for (const entry of expected) {
-        expect(document.querySelector(`.hud-grid__key[data-shortcut="${entry.key}"]`)).not.toBeNull();
-      }
-    };
-    check({ kind: 'none' });
+    checkLegend({ kind: 'none' });
     down(header('column 2'));
-    check({ kind: 'track', axis: 'columns', indices: [1], anchor: 1 });
+    checkLegend({ kind: 'track', axis: 'columns', indices: [1], anchor: 1 });
     down(cell(2, 2));
-    check({ kind: 'cells', cells: [{ column: 2, row: 2 }], anchor: { column: 2, row: 2 } });
+    checkLegend({ kind: 'cells', cells: [{ column: 2, row: 2 }], anchor: { column: 2, row: 2 } });
   });
 
   it('draws the keys as CAPS and the pointer as a MOUSE, not as prose', () => {

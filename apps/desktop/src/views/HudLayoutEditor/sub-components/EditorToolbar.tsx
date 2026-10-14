@@ -1,46 +1,21 @@
 /* @layer renderer-components @kind component */
-import { useCallback, useEffect, useRef, useState } from 'react';
-import { useEscapeStack, Box, Icon, IconButton, Text } from '@drizztdourden08/tessera/primitives';
-import { SpritePicker } from '@app/compounds/SpritePicker';
-import { getSpritesBase, CATEGORY_LABELS, CATEGORY_ORDER, SPRITE_MANIFEST } from '@rotp/game-data';
+import { Box, Icon, IconButton, Text } from '@drizztdourden08/tessera/primitives';
 import { ToolbarMenu } from './ToolbarMenu';
-import { GlyphPickerGrid } from './GlyphPickerGrid';
 import { GroundPicker } from './GroundPicker';
+import { InsertMenus } from './InsertMenus';
 import { RatioPicker } from './RatioPicker';
-import { SlotPickerPanel } from './SlotPickerPanel';
-import { SpriteExtractionNotice } from './SpriteExtractionNotice';
-import { TOOLBAR_ICONS, buildToolbarGroups, presetItems, subtreePresetItems } from '@app/hud-layout-editing/toolbar-menus';
-import { newElement } from '@app/hud-layout-editing/new-node';
+import { TOOLBAR_ICONS, buildToolbarGroups, presetItems, subtreePresetItems, useToolbarMenu } from '@app/hud-layout-editing/toolbar-menus';
 import { useHudEditorViewStore } from '@app/stores/hud-editor-view-store';
 import type { EditorToolbarProps } from './EditorToolbar.type';
-
-const spriteUrl = (file: string): string => `${getSpritesBase()}${file}.png`;
 
 const EditorToolbar = (props: EditorToolbarProps) => {
   const {
     insert, layouts, draftId, onStartFrom, slotNumbers, glyphPacks,
     ratio, onRatioChange, ground, onGroundChange, targetLabel,
   } = props;
-  const [openKey, setOpenKey] = useState<string | null>(null);
-  const bar = useRef<HTMLDivElement>(null);
+  const { bar, openKey, close, toggle } = useToolbarMenu();
   const snapping = useHudEditorViewStore((s) => s.snappingEnabled);
   const toggleSnapping = useHudEditorViewStore((s) => s.toggleSnapping);
-
-  useEffect(() => {
-    if (!openKey) return;
-    const dismiss = (event: Event): void => {
-      const target = event.target as HTMLElement | null;
-      if (target?.closest('.dropdown-menu, .hud-picker-grid') || (bar.current && target && bar.current.contains(target))) return;
-      setOpenKey(null);
-    };
-    document.addEventListener('pointerdown', dismiss, true);
-    return () => document.removeEventListener('pointerdown', dismiss, true);
-  }, [openKey]);
-
-  const close = useCallback(() => setOpenKey(null), []);
-
-  useEscapeStack({ active: openKey !== null, level: 'menu', onEscape: close });
-  const toggle = useCallback((key: string) => setOpenKey((current) => (current === key ? null : key)), []);
   const groups = buildToolbarGroups({ insert });
   const groupItems = (key: string) => groups.find((group) => group.key === key)?.items ?? [];
 
@@ -51,41 +26,14 @@ const EditorToolbar = (props: EditorToolbarProps) => {
 
       <Box className="hud-toolbar__sep" />
 
-      <ToolbarMenu icon={TOOLBAR_ICONS.glyph} label="Glyph" open={openKey === 'glyph'} onToggle={() => toggle('glyph')} onClose={close}
-        panel={(anchorRef) => (
-          <GlyphPickerGrid
-            open
-            anchorRef={anchorRef}
-            packs={glyphPacks}
-            onClose={close}
-            onPick={(picked) => insert(newElement({ type: 'glyph', ...picked }))}
-          />
-        )} />
-      <ToolbarMenu icon={TOOLBAR_ICONS.slot} label="Slot" open={openKey === 'slot'} onToggle={() => toggle('slot')} onClose={close}
-        panel={(anchorRef) => (
-          <SlotPickerPanel
-            open
-            anchorRef={anchorRef}
-            slotNumbers={slotNumbers}
-            onClose={close}
-            onPickItem={(index) => insert(newElement({ type: 'slot', index }))}
-            onPickGlyph={(index) => insert(newElement({ type: 'glyph', slot: index }))}
-          />
-        )} />
-      <ToolbarMenu icon={TOOLBAR_ICONS.sprite} label="Sprite" open={openKey === 'sprite'} onToggle={() => toggle('sprite')} onClose={close}
-        panel={(anchorRef) => (
-          <SpritePicker
-            open
-            anchorRef={anchorRef}
-            sprites={SPRITE_MANIFEST}
-            categories={CATEGORY_ORDER}
-            categoryLabels={CATEGORY_LABELS}
-            spriteUrl={spriteUrl}
-            onClose={close}
-            onPick={(file) => insert(newElement({ type: 'sprite', file }))}
-            notice={<SpriteExtractionNotice />}
-          />
-        )} />
+      <InsertMenus
+        insert={insert}
+        slotNumbers={slotNumbers}
+        glyphPacks={glyphPacks}
+        openKey={openKey}
+        onToggle={toggle}
+        onClose={close}
+      />
       <ToolbarMenu icon={TOOLBAR_ICONS.spacer} label="Spacer" items={groupItems('spacer')}
         open={openKey === 'spacer'} onToggle={() => toggle('spacer')} onClose={close} />
 

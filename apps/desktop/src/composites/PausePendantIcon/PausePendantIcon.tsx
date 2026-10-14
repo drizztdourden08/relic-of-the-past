@@ -11,7 +11,8 @@ const PausePendantIcon = ({ variant, scale, spritesBase }: PausePendantIconProps
       src={src}
       width={size}
       height={size}
-      style={{ display: 'block', imageRendering: 'pixelated' }}
+      block
+      pixelated
     />
   );
 };

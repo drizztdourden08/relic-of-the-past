@@ -2,6 +2,12 @@
 import type { CoreBindings, SlotIndex, ItemCell, PauseScreen, PauseSection, PlayerSheet, Wearing } from '@rotp/game-data';
 import type { ResolvedRow } from '@rotp/packs';
 import type { GearLadder, GearRowCell } from '../../compounds/PauseGearScreen';
+import type { HudNodeContent } from '../../compounds/HudNodeRenderer';
+import type { DungeonItemCell } from '../../compounds/PauseStatusScreen';
+import type { NavLegendEntry } from '../../compounds/PauseNavLegend';
+import type { HeartMode } from '../../primitives/HudHeart';
+import type { PlacedLayout } from '../HudLayoutView/HudLayoutView.type';
+import type { StatusVitals } from './sub-components/PauseScreenHost/PauseScreenHost.type';
 
 interface EnhancedPauseViewProps {
   slideTransform?: string;
@@ -53,6 +59,47 @@ interface BrowsingView {
   canConfirm: boolean;
 }
 
+interface PauseVitals {
+  vitals: StatusVitals;
+  spritesBase: string;
+}
+
+interface ButtonCluster {
+  packId: string;
+  placed: PlacedLayout;
+  content: HudNodeContent;
+  dataScope: Readonly<Record<string, number>>;
+  hudSprites: string;
+}
+
+interface PauseNavigation {
+  screen: PauseScreen;
+  section: PauseSection;
+  cursor: number;
+  items: ItemModel;
+  gear: GearModel;
+  dungeonItems: readonly DungeonItemCell[];
+  hintLines: readonly string[];
+  assign: (slot: SlotIndex) => void;
+  move: PauseCursor;
+  legend: NavLegendEntry[];
+}
+
+interface PauseScreenLayerProps {
+  nav: PauseNavigation;
+  vitals: StatusVitals;
+  heartMode: HeartMode;
+  scale: number;
+  spritesBase: string;
+}
+
+interface PauseButtonClusterProps {
+  cluster: ButtonCluster;
+  scale: number;
+  onSlotPress: (slot: SlotIndex) => void;
+}
+
 export type {
-  BrowsingView, EnhancedPauseViewProps, GearModel, HeroWearing, ItemModel, LegendRow, PauseAssign, PauseCursor, ScreenPoint,
+  BrowsingView, ButtonCluster, EnhancedPauseViewProps, GearModel, HeroWearing, ItemModel, LegendRow, PauseAssign,
+  PauseButtonClusterProps, PauseCursor, PauseNavigation, PauseScreenLayerProps, PauseVitals, ScreenPoint,
 };

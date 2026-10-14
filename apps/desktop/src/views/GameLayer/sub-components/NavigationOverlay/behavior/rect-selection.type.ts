@@ -10,7 +10,7 @@ interface RectSelectionParams {
   width: number;
   height: number;
   isIndoors: boolean;
-  vpRef: React.MutableRefObject<ReturnType<typeof wasmGetViewportInfo>>;
+  vpRef: React.RefObject<ReturnType<typeof wasmGetViewportInfo>>;
 }
 
 interface RectSelection {
@@ -21,4 +21,21 @@ interface RectSelection {
   active: boolean;
 }
 
-export type { RectSelection, RectSelectionParams };
+interface SelectionRect {
+  x: number;
+  y: number;
+  w: number;
+  h: number;
+  tileCount: number;
+}
+
+interface TileBlockTextParams {
+  result: FloodFillResult;
+  attrGrid: number[][];
+  r0: number;
+  r1: number;
+  c0: number;
+  c1: number;
+}
+
+export type { RectSelection, RectSelectionParams, SelectionRect, TileBlockTextParams };

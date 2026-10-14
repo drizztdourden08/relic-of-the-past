@@ -3,19 +3,15 @@ import { embeddedOf } from '../node-edits';
 import { childrenOf } from './children-of';
 import type { HudLayout, HudNode } from '@rotp/hud';
 
-const ancestorIdsOf = (doc: HudLayout, id: string): string[] => {
-  const path: string[] = [];
-  let hit = false;
-  const visit = (node: HudNode): void => {
-    if (hit) return;
-    if (node.id === id) { hit = true; return; }
-    path.push(node.id);
-    childrenOf(node).forEach((child) => visit(child));
-    if (!hit) embeddedOf(node).forEach((child) => visit(child));
-    if (!hit) path.pop();
-  };
-  visit(doc.screen);
-  return path;
+const pathTo = (node: HudNode, id: string): string[] | null => {
+  if (node.id === id) return [];
+  for (const child of [...childrenOf(node), ...embeddedOf(node)]) {
+    const below = pathTo(child, id);
+    if (below) return [node.id, ...below];
+  }
+  return null;
 };
+
+const ancestorIdsOf = (doc: HudLayout, id: string): string[] => pathTo(doc.screen, id) ?? [];
 
 export { ancestorIdsOf };

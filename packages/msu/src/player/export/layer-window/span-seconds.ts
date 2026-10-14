@@ -15,7 +15,7 @@ const spanSeconds = (resolved: ResolvedLayer): number => {
     }
     case 'random':
       return Math.max(0, layer.mode.minDelaySeconds) + bufferSeconds.longest(buffers);
-    default:
+    case 'once':
       return buffers[0]?.duration ?? 0;
   }
 };

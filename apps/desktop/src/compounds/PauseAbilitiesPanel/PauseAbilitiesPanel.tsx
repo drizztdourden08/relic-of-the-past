@@ -1,81 +1,31 @@
 /* @layer renderer-hud @kind component */
 import { HudBox } from '../../primitives/HudBox';
-import { HudImage } from '../../primitives/HudImage';
 import { PauseBorderBox } from '../../primitives/PauseBorderBox';
 import { PauseButtonLabel } from '../../composites/PauseButtonLabel';
 import { PauseEquipSlot } from '../../composites/PauseEquipSlot';
 import { PauseLabel } from '../../primitives/PauseLabel';
+import { INNER_COLS, INNER_ROWS } from './PauseAbilitiesPanel.constants';
 import type { PauseAbilitiesPanelProps } from './PauseAbilitiesPanel.type';
+import { AbilityGrid } from './sub-components/AbilityGrid';
 
 const PauseAbilitiesPanel = (props: PauseAbilitiesPanelProps) => {
-  const { gloves, boots, flippers, moonPearl, abilityFlags, scale, spritesBase, style } = props;
+  const { gloves, boots, flippers, moonPearl, abilityFlags, scale, spritesBase, className } = props;
   const tile = 8 * scale;
-  const innerCols = 17;
-  const innerRows = 7;
-
-  const abilityGrid: { label: string; bit: number; col: number; row: number }[] = [
-    { label: 'LIFT', bit: 7, col: 3, row: 1 },
-    { label: 'READ', bit: 6, col: 8, row: 1 },
-    { label: 'TALK', bit: 5, col: 13, row: 1 },
-    { label: 'PULL', bit: 3, col: 3, row: 3 },
-    { label: 'RUN', bit: 2, col: 8, row: 3 },
-    { label: 'SWIM', bit: 1, col: 13, row: 3 },
-  ];
-
-  const liftLevel = gloves + 1;
-
-  const gridLeft = tile * 2;
-  const gridWidth = tile * 14;
 
   return (
-    <HudBox style={{ position: 'relative', ...style }}>
-    <PauseBorderBox color="red" cols={innerCols} rows={innerRows} scale={scale} spritesBase={spritesBase}>
-      <HudBox style={{ position: 'absolute', top: 0, left: 0 }}>
+    <HudBox layout="relative" className={className}>
+    <PauseBorderBox color="red" cols={INNER_COLS} rows={INNER_ROWS} scale={scale} spritesBase={spritesBase}>
+      <HudBox layout="at-origin">
         <PauseButtonLabel button="a" scale={scale} spritesBase={spritesBase} />
       </HudBox>
 
-      <HudBox style={{
-        position: 'absolute',
-        top: tile * 2 / 3,
-        left: gridLeft,
-        width: tile * 16.7,
-        display: 'grid',
-        gridTemplateColumns: 'repeat(3, 1fr)',
-        gridTemplateRows: 'repeat(2, 1fr)',
-        height: tile * 4,
-      }}>
-        {abilityGrid.map(({ label, bit }) => (
-          <HudBox key={label} style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-start' }}>
-            {(abilityFlags & (1 << bit)) ? (
-              <>
-                {label.split('').map((ch, i) => (
-                  <HudImage
-                    key={i}
-                    src={`${spritesBase}font-letter-${ch.toLowerCase()}.png`}
-                    width={tile}
-                    height={tile}
-                    style={{ display: 'block', imageRendering: 'pixelated' }}
-                  />
-                ))}
-                {label === 'LIFT' && (
-                  <HudImage
-                    src={`${spritesBase}font-level-${liftLevel}.png`}
-                    width={tile}
-                    height={tile}
-                    style={{ display: 'block', imageRendering: 'pixelated' }}
-                  />
-                )}
-              </>
-            ) : null}
-          </HudBox>
-        ))}
-      </HudBox>
+      <AbilityGrid abilityFlags={abilityFlags} liftLevel={gloves + 1} tile={tile} spritesBase={spritesBase} />
 
       <HudBox style={{
         position: 'absolute',
         top: tile * 5,
-        left: gridLeft,
-        width: gridWidth,
+        left: tile * 2,
+        width: tile * 14,
         display: 'flex',
         justifyContent: 'space-between',
       }}>

@@ -4,6 +4,7 @@ import { createPack, listPacks, writeManifest, writeTrackFile } from '../../pack
 import { readMsulPack } from '../import-msul';
 import { FALLBACK_PACK_NAME } from './install-msul-pack.constants';
 import type { InstallOptions, InstallResult } from './install-msul-pack.type';
+import { preferredPackName } from './preferred-pack-name';
 import { sanitizePackName } from './sanitize-pack-name';
 import { uniquePackName } from './unique-pack-name';
 
@@ -13,7 +14,7 @@ const installMsulPack = async (
   const { desiredName, onProgress } = options;
   const { manifest, files } = await readMsulPack(bytes);
   const existing = (await listPacks(store)).map((p) => p.name);
-  const ownName = sanitizePackName(desiredName || manifest.meta.name) || FALLBACK_PACK_NAME;
+  const ownName = sanitizePackName(preferredPackName(desiredName, manifest.meta.name)) || FALLBACK_PACK_NAME;
   const pack = uniquePackName(ownName, existing);
   await createPack(store, pack, manifest.meta);
 

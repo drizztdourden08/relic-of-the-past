@@ -34,9 +34,11 @@ interface ExtraRowsProps {
   tooltip: TooltipData;
 }
 
+type TooltipTone = 'ground' | 'above' | 'ok' | 'warn' | 'bad';
+
 interface LayerBlockProps {
   name: string;
-  nameColor: string;
+  nameTone: 'ground' | 'above';
   data: LayerTileData;
   locked?: boolean;
 }
@@ -48,7 +50,7 @@ interface DualLayerPanelsProps {
 
 interface ReachStatus {
   label: string;
-  color: string;
+  tone: TooltipTone;
 }
 
 type LayerDisplayMode = 'single' | 'dual' | 'locked';
@@ -60,5 +62,5 @@ interface LayerReach {
 
 export type {
   DualLayerPanelsProps, ExtraRowsProps, LayerBlockProps, LayerDisplayMode, LayerReach, LayerTileData, ReachStatus,
-  TileTooltipContentProps, TooltipData, TooltipLayers,
+  TileTooltipContentProps, TooltipData, TooltipLayers, TooltipTone,
 };

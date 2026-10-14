@@ -33,7 +33,7 @@ const useFlakyByteWarning = (
   }, [open, flakyBytes, latestBytesRef]);
 
   const checkBeforeStart = useCallback((onProceed: () => void) => {
-    sampleFlakyBytes(latestBytesRef, excludedRef.current).then((found) => {
+    void sampleFlakyBytes(latestBytesRef, excludedRef.current).then((found) => {
       if (found.length === 0) { onProceed(); return; }
       livePeaksRef.current = {};
       setFlakyBytes(found);

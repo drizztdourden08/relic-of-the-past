@@ -3,14 +3,3 @@
 .store-card .store-card__picture {
   border-radius: 0;
 }
-
-.store-card__rating {
-  display: inline-flex;
-  align-items: center;
-  gap: var(--space-xs);
-  font-variant-numeric: tabular-nums;
-}
-
-.store-card .stars {
-  font-size: var(--text-xs);
-}

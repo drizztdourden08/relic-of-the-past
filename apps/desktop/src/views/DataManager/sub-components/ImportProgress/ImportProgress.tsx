@@ -5,7 +5,7 @@ import './ImportProgress.css';
 
 const ImportProgress = (props: ImportProgressProps) => {
   const { state, fallbackLabel } = props;
-  const label = state.label || fallbackLabel || 'Working...';
+  const label = state.label || (fallbackLabel ?? 'Working...');
   const percent = state.percent;
 
   return (

@@ -17,28 +17,28 @@
 
 .music-widget__section--feed {
   flex: 1;
-  min-height: 160px;
+  min-height: var(--size-160);
 }
 
 .music-widget__rows {
   display: flex;
   flex-direction: column;
   background: var(--c-inset);
-  border: 1px solid var(--c-hairline);
+  border: var(--border-width-thin) solid var(--c-hairline);
   border-radius: var(--radius-md);
   overflow: hidden;
 }
 
 .music-widget__rows--scroll {
-  max-height: 200px;
+  max-height: calc(200 * var(--size-1));
   overflow-y: auto;
 }
 
-.music-widget__rows .stat-row {
+.music-widget__row {
   padding: var(--space-xs) var(--space-sm);
 }
 
-.music-widget__rows .stat-row:nth-child(even) {
+.music-widget__row:nth-child(even) {
   background: var(--c-hover);
 }
 
@@ -66,13 +66,12 @@
 }
 
 .music-event__time {
-  color: var(--c-text-faint);
   font-variant-numeric: tabular-nums;
 }
 
 .music-event__channel {
   color: var(--c-text-dim);
-  min-width: 4em;
+  min-width: var(--size-48);
 }
 
 .music-event__detail {

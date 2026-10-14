@@ -2,10 +2,11 @@
 import type { ConnectionRecord } from '@rotp/game-data';
 import { registerRecord, unregisterRecord } from '@rotp/game-data';
 import { EMPTY_PLACEMENT } from './engine-loop.constants';
+import type { FixtureConnection } from '../fixture-connection.type';
 
 const makeConnections = (lockBToC: boolean): ConnectionRecord[] => {
-  const doorReq = lockBToC ? [['hammer']] : [];
-  const records = [
+  const doorReq: NonNullable<ConnectionRecord['nav']>['requirements'] = lockBToC ? [['hammer']] : [];
+  const fixtures: FixtureConnection[] = [
     {
       id: 'connection-t01', screenId: 'A', toConnectionId: 'connection-t01r', kind: 'edge',
       placement: EMPTY_PLACEMENT, canExit: true, tags: ['transit:walk'],
@@ -24,7 +25,8 @@ const makeConnections = (lockBToC: boolean): ConnectionRecord[] => {
       placement: EMPTY_PLACEMENT, canExit: true, tags: ['transit:door'],
       nav: { transitType: 'door', requirements: doorReq, weight: 1 },
     },
-  ] as unknown as ConnectionRecord[];
+  ];
+  const records = fixtures as ConnectionRecord[];
   for (const record of records) {
     if (!registerRecord('connection', record)) {
       unregisterRecord('connection', record.id);

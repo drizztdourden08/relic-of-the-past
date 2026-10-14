@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind component */
 import type { OptimizeCandidate } from '@rotp/msu';
-import { Status, Box, Text } from '@drizztdourden08/tessera/primitives';
+import { Status, Box, Icon, Text } from '@drizztdourden08/tessera/primitives';
 import { formatBytes } from '@drizztdourden08/brock-core';
 import { UNKNOWN } from './CandidateRow.constants';
 import type { CandidateRowProps } from './CandidateRow.type';
@@ -29,7 +29,7 @@ const CandidateRow = (props: CandidateRowProps) => {
 
       {row.excludedBecause === null ? (
         <>
-          <Text className="msu-optimize__cell msu-optimize__cell--faint">→</Text>
+          <Text className="msu-optimize__cell msu-optimize__cell--faint"><Icon name="arrow-right" inline /></Text>
           <Text className="msu-optimize__cell">
             {row.estimatedBytes === null ? UNKNOWN : formatBytes(row.estimatedBytes)}
           </Text>

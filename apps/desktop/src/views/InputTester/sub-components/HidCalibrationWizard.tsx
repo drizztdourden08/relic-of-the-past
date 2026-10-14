@@ -4,10 +4,12 @@ import { Box, Text } from '@drizztdourden08/tessera/primitives';
 import { useHidCalibration } from './hid-calibration/hooks';
 import { useFlashStatus } from './hid-calibration/hooks/useFlashStatus';
 import {
-  InstructionsPanel, LiveParserOutput, PrereqCards, StickTriggerSection,
-  ButtonMapping, ByteGrid, CalibrationLog, FlakyByteWarningDialog, WizardHeaderActions,
+  InstructionsPanel, LiveParserOutput, StickTriggerSection,
+  CalibrationLog, FlakyByteWarningDialog, WizardHeaderActions,
 } from './hid-calibration/components';
-import { RawAvailabilityNotice } from './hid-calibration/components/RawAvailabilityNotice';
+import { WizardByteSection } from './hid-calibration/components/WizardByteSection';
+import { WizardMappingSection } from './hid-calibration/components/WizardMappingSection';
+import { WizardPrereqSection } from './hid-calibration/components/WizardPrereqSection';
 import type { HidCalibrationWizardProps, HidWizardHandle } from './HidCalibrationWizard.type';
 
 const HidCalibrationWizard = forwardRef<HidWizardHandle, HidCalibrationWizardProps>((props, ref) => {
@@ -49,68 +51,11 @@ const HidCalibrationWizard = forwardRef<HidWizardHandle, HidCalibrationWizardPro
       </Box>
 
       <InstructionsPanel />
-
       <LiveParserOutput profile={wiz.profile} state={wiz.liveParsedState} />
-
-      <PrereqCards
-        hasGyro={wiz.hasGyro}
-        gyroState={wiz.gyroState}
-        idleState={wiz.idleState}
-        gyroExcluded={wiz.gyroExcluded}
-        latestBytesLength={wiz.latestBytes.length}
-        onGyroStart={wiz.handleGyroStart}
-        onGyroStop={wiz.handleGyroStop}
-        onGyroRedo={wiz.handleGyroRedo}
-        onGyroSkip={wiz.handleGyroSkip}
-        onIdleCapture={wiz.handleIdleCapture}
-        onIdleRedo={wiz.handleIdleRedo}
-      />
-
+      <WizardPrereqSection wiz={wiz} />
       <StickTriggerSection wiz={wiz} />
-
-      <ButtonMapping
-        items={wiz.items}
-        buttonItems={wiz.buttonItems}
-        buttonCapturedCount={wiz.buttonCapturedCount}
-        activeIndex={wiz.activeIndex}
-        inputPhaseActive={wiz.inputPhaseActive}
-        autoAdvance={wiz.autoAdvance}
-        captureState={wiz.captureState}
-        axisSubStep={wiz.axisSubStep}
-        instruction={wiz.getInstruction()}
-        prereqsDone={wiz.prereqsDone}
-        onStartButtons={wiz.handleStartButtons}
-        onSkip={wiz.handleSkip}
-        onGoBack={wiz.handleGoBack}
-        onClickItem={wiz.handleClickItem}
-        onClearItem={wiz.handleClearItem}
-        setAutoAdvanceWrapped={wiz.setAutoAdvanceWrapped}
-        setInputPhaseActiveWrapped={wiz.setInputPhaseActiveWrapped}
-      />
-
-      {wiz.rawAvailable ? (
-        <ByteGrid
-          latestBytes={wiz.latestBytes}
-          byteStatuses={wiz.byteStatuses}
-          gyroState={wiz.gyroState}
-          stickPickMode={wiz.stickPickMode}
-          stickPickedBytes={wiz.stickPickedBytes}
-          triggerPickMode={wiz.triggerPickMode}
-          triggerPickedByte={wiz.triggerPickedByte}
-          inputPhaseActive={wiz.inputPhaseActive}
-          lastReportId={wiz.lastReportId}
-          baselineRef={wiz.baselineRef}
-          excludedRef={wiz.excludedRef}
-          itemsRef={wiz.itemsRef}
-          activeIdxRef={wiz.activeIdxRef}
-          inputPhaseActiveRef={wiz.inputPhaseActiveRef}
-          getByteColor={wiz.getByteColor}
-          onByteClick={wiz.handleByteClick}
-        />
-      ) : (
-        <RawAvailabilityNotice available={false} reason={wiz.rawUnavailableReason} />
-      )}
-
+      <WizardMappingSection wiz={wiz} />
+      <WizardByteSection wiz={wiz} />
       <CalibrationLog log={wiz.log} logRef={wiz.logRef} />
 
       <FlakyByteWarningDialog

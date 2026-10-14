@@ -1,0 +1,13 @@
+/* @layer renderer-hud @kind style */
+.pause-menu__bottle {
+  grid-column: 22 / 32;
+  grid-row: 8 / 27;
+}
+
+.pause-menu__bottle--expanding {
+  animation: bottle-panel-expand 300ms steps(18) forwards;
+}
+
+.pause-menu__bottle--collapsing {
+  animation: bottle-panel-collapse 300ms steps(18) forwards;
+}

@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind component */
-import { Box, Button, Text, TextInput } from '@drizztdourden08/tessera/primitives';
+import { Box, Button, Icon, Text, TextInput } from '@drizztdourden08/tessera/primitives';
 import { ListItemList, ListItemRow } from '@drizztdourden08/tessera/composites';
 import type { PresetBarProps } from './PresetBar.type';
 
@@ -39,7 +39,7 @@ const PresetBar = (props: PresetBarProps) => {
 
       {invalid && (
         <Text className="hud-inspect__warning" title={errors.join('\n')}>
-          ⚠ {errors.length} issue{errors.length === 1 ? '' : 's'}. First: {errors[0]}
+          <Icon name="triangle-alert" size={14} aria-hidden /> {errors.length} issue{errors.length === 1 ? '' : 's'}. First: {errors[0]}
         </Text>
       )}
 

@@ -4,11 +4,13 @@ import { toQ4, hexToSnes15, isQuietReceipt } from '@rotp/game-data';
 import { getModule } from '@rotp/game-core';
 import { setQuietReceiptBits } from './gate-word-5';
 
+const ignoreMissingCoreExport = (): void => undefined;
+
 const callUnlessCoreIsOlder = (call: () => void): void => {
   try {
     call();
   } catch {
-    
+    ignoreMissingCoreExport();
   }
 };
 

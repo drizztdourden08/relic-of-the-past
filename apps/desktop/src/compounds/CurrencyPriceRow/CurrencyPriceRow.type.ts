@@ -30,6 +30,26 @@ interface CurrencyPriceRowProps {
   children?: ReactNode;
 }
 
+interface PriceControlProps {
+  label: string;
+  enabled: boolean;
+  readOnly: boolean;
+  blocked: boolean;
+  note: string;
+  stops?: readonly string[];
+  range?: readonly [number, number];
+  readout: boolean;
+  onRangeChange?: (next: [number, number]) => void;
+}
+
+interface PriceEnabledProps {
+  label: string;
+  enabled: boolean;
+  readout: boolean;
+  disabled: boolean;
+  onChange?: (enabled: boolean) => void;
+}
+
 interface BottleContentRowProps {
   row: BottleContentRowModel;
   disabled: boolean;
@@ -54,5 +74,5 @@ interface CurrencyRowModel {
 }
 
 export type {
-  BottleContentRowModel, BottleContentRowProps, CurrencyCatalogKeys, CurrencyPriceRowProps, CurrencyRowModel, Values,
+  BottleContentRowModel, BottleContentRowProps, CurrencyCatalogKeys, CurrencyPriceRowProps, CurrencyRowModel, PriceControlProps, PriceEnabledProps, Values,
 };

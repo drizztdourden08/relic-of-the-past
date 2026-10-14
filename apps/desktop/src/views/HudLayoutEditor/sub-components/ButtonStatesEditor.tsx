@@ -4,7 +4,7 @@ import { useSlotScheme } from '@app/hud-layout-editing/slot-scheme';
 import { ButtonStateRow } from './ButtonStateRow';
 import { SlotRefField } from './SlotRefField';
 import { STATES, VERBS } from './ButtonStatesEditor.constants';
-import type { HudButtonBind, HudButtonVerb } from '@rotp/hud';
+import type { HudButtonVerb } from '@rotp/hud';
 import type { ButtonStatesEditorProps } from './ButtonStatesEditor.type';
 
 const ButtonStatesEditor = (props: ButtonStatesEditorProps) => {

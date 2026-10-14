@@ -1,10 +1,8 @@
 /* @layer renderer-components @kind component */
-import { Box, Button, Text } from '@drizztdourden08/tessera/primitives';
 import { DialogShell } from '@drizztdourden08/tessera/composites';
-import { FfmpegInstallStep } from '@app/compounds/FfmpegInstallStep';
 import { useOptimize } from '../behavior/useOptimize';
-import { PreviewStep } from './sub-components/PreviewStep';
-import { RunStep } from './sub-components/RunStep';
+import { OptimizeActions } from './sub-components/OptimizeActions';
+import { OptimizeBody } from './sub-components/OptimizeBody';
 import './OptimizeDialog.css';
 import type { OptimizeDialogProps } from './OptimizeDialog.type';
 
@@ -15,71 +13,32 @@ const OptimizeDialog = (props: OptimizeDialogProps) => {
 
   const handleClose = (): void => { onClose(); };
 
-  const body = (
-    <>
-      {step === 'tool' && (
-        <FfmpegInstallStep
-          state={tool.state}
-          installing={tool.installing}
-          error={tool.error}
-          onInstall={() => { void tool.install(); }}
-        />
-      )}
-      {step === 'checking' && <Text className="msu-optimize__note">Checking for the audio tool...</Text>}
-      {step === 'measuring' && (
-        <Box className="msu-optimize__step">
-          <Text className="msu-optimize__note">
-            {progress === null
-              ? 'Measuring...'
-              : `Measuring ${progress.fileName} (${progress.index} of ${progress.total})`}
-          </Text>
-          <Text className="msu-optimize__note msu-optimize__note--faint">
-            A short slice of every file is encoded, so the estimate is measured, not assumed.
-          </Text>
-        </Box>
-      )}
-      {step === 'preview' && analysis !== null && (
-        <PreviewStep analysis={analysis} convertibleCount={convertibleCount} />
-      )}
-      {(step === 'converting' || step === 'result') && <RunStep progress={progress} result={result} />}
-      {step === 'error' && error !== null && (
-        <Text className="msu-optimize__note msu-optimize__note--bad">{error}</Text>
-      )}
-    </>
-  );
-
-  const actions = (
-    <>
-      {step === 'result' ? (
-        <Button variant="primary" onClick={handleClose}>Done</Button>
-      ) : (
-        <>
-          {step !== 'converting' && (
-            <Button variant="tertiary" onClick={handleClose}>Close</Button>
-          )}
-          {step === 'error' && (
-            <Button variant="primary" onClick={() => { void optimize.retry(); }}>Try again</Button>
-          )}
-          {step === 'preview' && convertibleCount > 0 && (
-            <Button variant="primary" onClick={() => { void optimize.convert(); }}>
-              Convert {convertibleCount} file{convertibleCount === 1 ? '' : 's'}
-            </Button>
-          )}
-        </>
-      )}
-    </>
-  );
-
   return (
     <DialogShell
       open={open}
       onClose={handleClose}
       dismissable={step !== 'converting'}
       title={`Optimize "${pack}"`}
-      actions={actions}
+      actions={(
+        <OptimizeActions
+          step={step}
+          convertibleCount={convertibleCount}
+          convert={optimize.convert}
+          retry={optimize.retry}
+          onClose={handleClose}
+        />
+      )}
       className="msu-optimize"
     >
-      {body}
+      <OptimizeBody
+        step={step}
+        tool={tool}
+        analysis={analysis}
+        progress={progress}
+        result={result}
+        error={error}
+        convertibleCount={convertibleCount}
+      />
     </DialogShell>
   );
 };

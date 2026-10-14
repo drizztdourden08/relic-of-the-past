@@ -7,18 +7,22 @@ import { MinMaxField } from '@app/views/HudLayoutEditor/sub-components/MinMaxFie
 import { OffsetField } from '@app/views/HudLayoutEditor/sub-components/OffsetField';
 import { SizeBoxSection } from '@app/views/HudLayoutEditor/sub-components/SizeBoxSection';
 import { PlatformContext } from '@drizztdourden08/brock-react';
-import type { Platform } from '@drizztdourden08/brock-core';
 import type { HudGridContainer, HudNode } from '@rotp/hud';
+import { WINDOWS_PLATFORM } from '../windows-platform';
 
 const noop = (): void => {};
 const scope = { life_current: 8 };
-const platform = { info: { os: 'windows' } } as unknown as Platform;
-
-const gridParent = {
+const gridParent: HudGridContainer = {
   id: 'g', kind: 'container', layout: 'grid',
   columns: ['auto', 'auto', 'auto'], rows: ['auto', 'auto'],
   children: [{ id: 'pip', kind: 'element', element: { type: 'spacer' }, place: { column: 2, row: 1, colSpan: 2 } }],
-} as unknown as HudGridContainer;
+};
+
+const SIZED_NODE: HudNode = {
+  id: 'n', kind: 'element', element: { type: 'spacer' },
+  size: { w: { px: 80 } }, margin: { left: -12 },
+  padding: { top: 2, right: 2, bottom: 2, left: 2 },
+};
 
 const geometryCases: Record<string, () => unknown> = {
   box: () => h(BoxModelField, {
@@ -34,15 +38,11 @@ const geometryCases: Record<string, () => unknown> = {
     h(ExtentField, { label: 'h', value: undefined, onChange: noop })),
   limits: () => h(MinMaxField, { min: { w: 8 }, max: undefined, onMin: noop, onMax: noop, scope }),
   sizebox: () => h(SizeBoxSection, {
-    node: {
-      id: 'n', kind: 'element', element: { type: 'spacer' },
-      size: { w: { px: 80 } }, margin: { left: -12 },
-      padding: { top: 2, right: 2, bottom: 2, left: 2 },
-    } as unknown as HudNode,
+    node: SIZED_NODE,
     onPatch: noop,
     scope,
   }),
-  cell: () => h(PlatformContext.Provider, { value: platform }, h(GridEditor, {
+  cell: () => h(PlatformContext.Provider, { value: WINDOWS_PLATFORM }, h(GridEditor, {
     container: gridParent, onPatchContainer: noop,
   })),
 };

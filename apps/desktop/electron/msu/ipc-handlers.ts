@@ -2,14 +2,16 @@
 import { join, basename } from 'path';
 import { isAudioFile, trackNumberOf } from '@rotp/msu';
 import { handle, getUserDataPath, toArrayBuffer } from '@drizztdourden08/brock-electron/main';
-import { readFile, readdir, mkdir, copyFile, rm, stat } from 'fs/promises';
+import { readFile, readdir, mkdir, copyFile, rm } from 'fs/promises';
 import { resolveSourceFiles, type ImportSource } from '../lib/import-source';
 import { MSU_EXTENSIONS } from '../lib/extensions';
 import { fail, errMessage } from '../lib/result';
 import { makeImportReporter } from '../lib/import-progress';
 import { selectPackFiles } from './import-selection';
 import { refuseInstalledPack } from './pack-fs';
-import type { MsuImportResult } from './ipc-handlers.type';
+import { packSummary } from './pack-summary';
+import { statOrNull } from './stat-or-null';
+import type { MsuImportResult, MsuPackSummary } from './ipc-handlers.type';
 
 const getMsuDir = (packName: string): string => getUserDataPath('msu', packName);
 
@@ -65,16 +67,9 @@ const registerMsuHandlers = (): void => {
     const msuDir = getUserDataPath('msu');
     try {
       const entries = await readdir(msuDir, { withFileTypes: true });
-      const packs: { name: string; fileCount: number; totalSize: number }[] = [];
+      const packs: MsuPackSummary[] = [];
       for (const entry of entries) {
-        if (!entry.isDirectory()) continue;
-        const packDir = join(msuDir, entry.name);
-        const msuFiles = (await readdir(packDir)).filter(isMsuFile);
-        let totalSize = 0;
-        for (const f of msuFiles) {
-          try { totalSize += (await stat(join(packDir, f))).size; } catch { continue; }
-        }
-        packs.push({ name: entry.name, fileCount: msuFiles.length, totalSize });
+        if (entry.isDirectory()) packs.push(await packSummary(msuDir, entry.name));
       }
       return packs;
     } catch { return []; }
@@ -85,9 +80,8 @@ const registerMsuHandlers = (): void => {
     try {
       const results: { name: string; size: number }[] = [];
       for (const f of (await readdir(packDir)).filter(isMsuFile)) {
-        try {
-          results.push({ name: f, size: (await stat(join(packDir, f))).size });
-        } catch { continue; }
+        const st = await statOrNull(packDir, f);
+        if (st) results.push({ name: f, size: st.size });
       }
       return results;
     } catch { return []; }

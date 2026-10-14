@@ -1,12 +1,9 @@
 /* @layer renderer-hud @kind component */
 import { useId } from 'react';
-import { MAX_RADIUS_SHARE, SHEEN_SHARE } from './HudMeter.constants';
-import type { HudMeterProps, MeterBand } from './HudMeter.type';
-
-const bandRows = (top: number, height: number, count: number, gap: number): MeterBand[] => {
-  const h = (height - gap * (count - 1)) / count;
-  return Array.from({ length: count }, (_unused, i) => ({ y: top + i * (h + gap), h }));
-};
+import { MAX_RADIUS_SHARE } from './HudMeter.constants';
+import type { HudMeterProps } from './HudMeter.type';
+import { bandRows } from './behavior/band-rows';
+import { MeterSheen } from './sub-components/MeterSheen';
 
 const HudMeter = (props: HudMeterProps) => {
   const {
@@ -53,20 +50,14 @@ const HudMeter = (props: HudMeterProps) => {
           />
 
           <g clipPath={`url(#${clipId})`}>
-            {rows.map((band, i) => (
-              <g key={band.y}>
-                <rect
-                  x={frame} y={band.y} width={innerW} height={band.h * SHEEN_SHARE}
-                  fill={sheenColor} opacity={sheenOpacity}
-                />
-                {i < rows.length - 1 && (
-                  <rect
-                    x={frame} y={band.y + band.h} width={innerW} height={frame}
-                    fill={frameColor}
-                  />
-                )}
-              </g>
-            ))}
+            <MeterSheen
+              rows={rows}
+              frame={frame}
+              innerW={innerW}
+              frameColor={frameColor}
+              sheenColor={sheenColor}
+              sheenOpacity={sheenOpacity}
+            />
           </g>
         </>
       )}

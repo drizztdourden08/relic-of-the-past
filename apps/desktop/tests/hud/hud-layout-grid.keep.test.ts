@@ -2,6 +2,7 @@
 import { describe, expect, it } from 'vitest';
 import { gridCellRects, layoutHud, placedById } from '@rotp/hud';
 import type { HudGridContainer, HudLayout, HudNode } from '@rotp/hud';
+import { required } from '../required';
 
 const VIEW = { w: 400, h: 200 };
 const ROWS = [{ px: 20 }, { px: 20 }, { px: 20 }, { px: 20 }];
@@ -147,8 +148,8 @@ describe('a zero-size resolved child leaves the flow, matching the flex engine',
 describe('every cell of a placed grid, empty ones included', () => {
   const cells = (root: HudGridContainer) => {
     const doc = docOf(root);
-    const placed = placedById(layoutHud(doc, VIEW, {}), 'grid');
-    return gridCellRects(placed?.node as HudGridContainer, placed!.rect, placed!.scale, {});
+    const placed = required(placedById(layoutHud(doc, VIEW, {}), 'grid'), 'the placed grid');
+    return gridCellRects(placed.node as HudGridContainer, placed.rect, placed.scale, {});
   };
 
   it('answers a rectangle for a cell no child is in', () => {
@@ -164,8 +165,8 @@ describe('every cell of a placed grid, empty ones included', () => {
     ]);
     const found = cells(root);
     const doc = docOf(root);
-    expect(found.find((c) => c.column === 2 && c.row === 2)?.rect)
-      .toMatchObject({ x: rectOf(doc, 'b')!.x, y: rectOf(doc, 'b')!.y });
+    const b = required(rectOf(doc, 'b'), 'the rect of b');
+    expect(found.find((c) => c.column === 2 && c.row === 2)?.rect).toMatchObject({ x: b.x, y: b.y });
   });
 
   it('offers ONE implicit row past the last and never a fourth column', () => {

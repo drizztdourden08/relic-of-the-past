@@ -5,16 +5,24 @@ import type { ApJsonMessagePart, ApPrintJsonPacket } from './ap-protocol.type';
 import type { NameTables } from './ap-names';
 import type { NoticePart, OnlineNotice } from './online-notices';
 import { TONE_OF_PART } from './notice-of-print.constants';
-import type { PrintSide } from './notice-of-print.type';
+import type { PrintSide, SlotContext } from './notice-of-print.type';
+
+const typedPart = (part: ApJsonMessagePart, names: NameTables, id: number): NoticePart | null => {
+  switch (part.type) {
+    case 'player_id': return playerPart(names.playerName(id));
+    case 'item_id': return itemPart(names.itemName(id, part.player ?? 0));
+    case 'location_id': return { text: names.locationName(id, part.player ?? 0) };
+    case undefined:
+    default: return null;
+  }
+};
 
 const partOf = (part: ApJsonMessagePart, names: NameTables): NoticePart => {
   const text = part.text ?? '';
   const id = Number(text);
-  const known = Number.isFinite(id) && text !== '';
+  const typed = Number.isFinite(id) && text !== '' ? typedPart(part, names, id) : null;
+  if (typed !== null) return typed;
   const tone = TONE_OF_PART[part.type ?? ''];
-  if (part.type === 'player_id' && known) return playerPart(names.playerName(id));
-  if (part.type === 'item_id' && known) return itemPart(names.itemName(id, part.player ?? 0));
-  if (part.type === 'location_id' && known) return { text: names.locationName(id, part.player ?? 0) };
   return tone === undefined ? { text } : { text, tone };
 };
 
@@ -38,27 +46,42 @@ const hintNotice = (packet: ApPrintJsonPacket, side: PrintSide): OnlineNotice | 
   return noticeOf(ours ? 'hintOwn' : 'hintOther', packet.data.map((part) => partOf(part, side.names)));
 };
 
+const joinNotice = (ctx: SlotContext): OnlineNotice | null => {
+  const { packet, side, from, own, who } = ctx;
+  if (own || isNonGameClient(packet)) return null;
+  const game = side.names.gameOf(from);
+  return noticeOf('join', [who, { text: game ? ` joined, playing ${game}` : ' joined' }]);
+};
+
+const partNotice = (ctx: SlotContext): OnlineNotice | null =>
+  (ctx.own || isNonGameClient(ctx.packet) ? null : noticeOf('join', [ctx.who, { text: ' left' }]));
+
+const chatNotice = (ctx: SlotContext): OnlineNotice | null =>
+  (ctx.own || !ctx.packet.message ? null : noticeOf('chat', [ctx.who, { text: `: ${ctx.packet.message}` }]));
+
+const goalNotice = (ctx: SlotContext): OnlineNotice =>
+  noticeOf('goal', ctx.own ? [{ text: 'You completed your goal' }] : [ctx.who, { text: ' completed their goal' }]);
+
+const releaseNotice = (ctx: SlotContext): OnlineNotice | null =>
+  (ctx.own ? null : noticeOf('release', [ctx.who, { text: ' released their remaining items' }]));
+
+const collectNotice = (ctx: SlotContext): OnlineNotice | null =>
+  (ctx.own ? null : noticeOf('release', [ctx.who, { text: ' collected their remaining items' }]));
+
 const slotNotice = (packet: ApPrintJsonPacket, side: PrintSide): OnlineNotice | null => {
   const { slot: from } = packet;
   if (typeof from !== 'number') return null;
   const own = from === side.slot;
   const who = playerPart(side.names.playerName(from));
+  const ctx: SlotContext = { packet, side, from, own, who };
   switch (packet.type) {
-    case 'Goal':
-      return noticeOf('goal', own ? [{ text: 'You completed your goal' }] : [who, { text: ' completed their goal' }]);
-    case 'Release':
-      return own ? null : noticeOf('release', [who, { text: ' released their remaining items' }]);
-    case 'Collect':
-      return own ? null : noticeOf('release', [who, { text: ' collected their remaining items' }]);
-    case 'Join': {
-      if (own || isNonGameClient(packet)) return null;
-      const game = side.names.gameOf(from);
-      return noticeOf('join', [who, { text: game ? ` joined, playing ${game}` : ' joined' }]);
-    }
-    case 'Part':
-      return own || isNonGameClient(packet) ? null : noticeOf('join', [who, { text: ' left' }]);
-    case 'Chat':
-      return own || !packet.message ? null : noticeOf('chat', [who, { text: `: ${packet.message}` }]);
+    case 'Goal': return goalNotice(ctx);
+    case 'Release': return releaseNotice(ctx);
+    case 'Collect': return collectNotice(ctx);
+    case 'Join': return joinNotice(ctx);
+    case 'Part': return partNotice(ctx);
+    case 'Chat': return chatNotice(ctx);
+    case undefined:
     default:
       return null;
   }
@@ -77,6 +100,7 @@ const noticeOfPrint = (packet: ApPrintJsonPacket, side: PrintSide): OnlineNotice
       return hintNotice(packet, side);
     case 'ServerChat':
       return packet.message ? noticeOf('chat', [playerPart('Server'), { text: `: ${packet.message}` }]) : null;
+    case undefined:
     default:
       return slotNotice(packet, side);
   }

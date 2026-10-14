@@ -29,8 +29,8 @@
 }
 
 .sprite-library__thumb {
-  width: 24px;
-  height: 36px;
+  width: var(--size-24);
+  height: calc(36 * var(--size-1));
   object-fit: contain;
   image-rendering: pixelated;
 }
@@ -40,7 +40,7 @@
   flex-direction: column;
   gap: var(--space-sm);
   padding-bottom: var(--space-sm);
-  border-bottom: 1px solid var(--c-border);
+  border-bottom: var(--border-width-thin) solid var(--c-border);
 }
 
 .studio-toolbar__row {
@@ -50,8 +50,8 @@
   flex-wrap: wrap;
 }
 
-.studio-toolbar__name { width: 14rem; }
-.studio-toolbar__author { width: 10rem; }
+.studio-toolbar__name { width: var(--size-224); }
+.studio-toolbar__author { width: var(--size-160); }
 
 .studio-toolbar__hint {
   font-size: var(--text-xs);
@@ -60,16 +60,16 @@
 }
 
 .palette-editor {
-  width: 14rem;
+  width: var(--size-224);
   flex: none;
   display: flex;
   flex-direction: column;
   padding-left: var(--space-md);
-  border-left: 1px solid var(--c-border);
+  border-left: var(--border-width-thin) solid var(--c-border);
 }
 
 .palette-editor__scroll {
-  max-height: 26rem;
+  max-height: calc(416 * var(--size-1));
   overflow-y: auto;
   display: flex;
   flex-direction: column;

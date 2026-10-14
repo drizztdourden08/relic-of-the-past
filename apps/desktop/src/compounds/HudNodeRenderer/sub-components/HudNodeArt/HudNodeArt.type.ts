@@ -1,5 +1,5 @@
 /* @layer renderer-hud @kind types */
-import type { PlacedNode } from '@rotp/hud';
+import type { HudElementSpec, PlacedNode } from '@rotp/hud';
 import type { HudGlyphSpec, HudNodeContent } from '../../HudNodeRenderer.type';
 
 interface HudNodeArtProps {
@@ -17,4 +17,21 @@ interface GlyphArtProps {
   scale: number;
 }
 
-export type { GlyphArtProps, HudNodeArtProps };
+interface SlotArtProps {
+  spec: Extract<HudElementSpec, { type: 'slot' }>;
+  content: HudNodeContent;
+  dimmed: boolean;
+  tile: number;
+  scale: number;
+  spritesBase: string;
+}
+
+interface SpriteArtProps {
+  spec: Extract<HudElementSpec, { type: 'sprite' }>;
+  rect: PlacedNode['rect'];
+  displayScale: number;
+  scale: number;
+  spritesBase: string;
+}
+
+export type { GlyphArtProps, HudNodeArtProps, SlotArtProps, SpriteArtProps };

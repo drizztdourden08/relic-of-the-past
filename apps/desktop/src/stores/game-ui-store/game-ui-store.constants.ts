@@ -1,5 +1,5 @@
 /* @layer renderer-stores @kind constants */
-import type { GameUIState, UIMode } from '@rotp/game-data';
+import type { GameUIState } from '@rotp/game-data';
 
 const INITIAL_GAME_UI_STATE: GameUIState = {
   mode: 'title',
@@ -11,7 +11,7 @@ const INITIAL_GAME_UI_STATE: GameUIState = {
     heartsFiller: 0, magicFiller: 0, bombFiller: 0, arrowFiller: 0,
     maxRupees: 999, maxBombs: 10, maxArrows: 30,
   },
-  inventory: { items: Array(20).fill(0), bottles: [0, 0, 0, 0], order: Array(24).fill(0) },
+  inventory: { items: Array<number>(20).fill(0), bottles: [0, 0, 0, 0], order: Array<number>(24).fill(0) },
   equipment: { sword: 0, shield: 0, armor: 0, gloves: 0, boots: 0, flippers: 0, moonPearl: 0, abilityFlags: 0, heartPieces: 0 },
   dungeonProgress: { pendants: 0, crystals: 0, maps: 0, compasses: 0, bigKeys: 0 },
   text: { messageId: 0, messagingModule: 0, renderPhase: 0, incrementalState: 0, choice: 0, waitTimer: 0, isActive: false },

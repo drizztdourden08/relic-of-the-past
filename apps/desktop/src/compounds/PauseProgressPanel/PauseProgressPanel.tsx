@@ -6,7 +6,7 @@ import { PausePendantIcon } from '../../composites/PausePendantIcon';
 import { PauseCrystalIcon } from '../../composites/PauseCrystalIcon';
 import type { PauseProgressPanelProps } from './PauseProgressPanel.type';
 
-const PauseProgressPanel = ({ pendants, crystals, showCrystals, scale, spritesBase, style }: PauseProgressPanelProps) => {
+const PauseProgressPanel = ({ pendants, crystals, showCrystals, scale, spritesBase, className }: PauseProgressPanelProps) => {
   const tile = 8 * scale;
   const innerCols = 8;
   const innerRows = 7;
@@ -19,7 +19,7 @@ const PauseProgressPanel = ({ pendants, crystals, showCrystals, scale, spritesBa
     ];
 
     return (
-      <PauseBorderBox color="yellow" cols={innerCols} rows={innerRows} scale={scale} spritesBase={spritesBase} style={style}>
+      <PauseBorderBox color="yellow" cols={innerCols} rows={innerRows} scale={scale} spritesBase={spritesBase} className={className}>
         <PauseLabel name="crystals" tiles={5} scale={scale} spritesBase={spritesBase} />
 
         {crystalPositions.map((pos, idx) => (
@@ -40,7 +40,7 @@ const PauseProgressPanel = ({ pendants, crystals, showCrystals, scale, spritesBa
   }
 
   return (
-    <PauseBorderBox color="yellow" cols={innerCols} rows={innerRows} scale={scale} spritesBase={spritesBase} style={style}>
+    <PauseBorderBox color="yellow" cols={innerCols} rows={innerRows} scale={scale} spritesBase={spritesBase} className={className}>
       <PauseLabel name="pendants" tiles={5} scale={scale} spritesBase={spritesBase} />
 
       <HudBox style={{ position: 'absolute', left: 3 * tile, top: 2 * tile }}>
@@ -51,7 +51,7 @@ const PauseProgressPanel = ({ pendants, crystals, showCrystals, scale, spritesBa
         />
       </HudBox>
 
-      <HudBox style={{ position: 'absolute', left: 1 * tile, top: 5 * tile }}>
+      <HudBox style={{ position: 'absolute', left: tile, top: 5 * tile }}>
         <PausePendantIcon
           variant={(pendants & 2) ? 'blue' : 'empty'}
           scale={scale}

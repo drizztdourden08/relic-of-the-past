@@ -12,7 +12,7 @@ import {
   flexAlignRows, gapCellsOf, gridAlignRows,
 } from '@app/hud-layout-editing/layout-sides';
 import { engineSwitchPatch } from '@rotp/hud';
-import type { HudContainer, HudFlexContainer, HudGridContainer } from '@rotp/hud';
+import type { HudFlexContainer, HudGridContainer } from '@rotp/hud';
 import type { LayoutSectionProps } from './LayoutSection.type';
 
 const LayoutSection = (props: LayoutSectionProps) => {

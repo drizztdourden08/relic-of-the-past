@@ -3,6 +3,7 @@ import { useCallback, useRef, useState } from 'react';
 import { createMsuEngine } from '@rotp/msu';
 import type { MsuEngine } from '@rotp/msu';
 import { readMsuTrackFile } from '@app/storage/msu-store';
+import { isCurrentSession } from './is-current-session';
 import { createPreviewReportStore } from './preview-report-store';
 import type { PreviewRun, PreviewSession } from './preview-session.type';
 
@@ -55,8 +56,7 @@ const usePreviewSession = (pack: string | null) => {
     });
     sessionRef.current = { ctx, engine, read: run.read };
     if (ctx.state === 'suspended') await ctx.resume();
-    const stillCurrent = sessionRef.current?.ctx === ctx;
-    if (!stillCurrent) return false;
+    if (!isCurrentSession(sessionRef, ctx)) return false;
     run.begin(engine);
     startPolling();
     return true;

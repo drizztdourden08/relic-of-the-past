@@ -2,10 +2,9 @@
 import { isPrimaryModifier } from '@rotp/input-mapping';
 import { rectCells } from '../../GridLattice';
 import { ARROWS } from './grid-keys.constants';
+import { stepAxis } from './step-axis';
 import type { KeyboardEvent as ReactKeyboardEvent } from 'react';
 import type { CellRef, GridKeyParams } from '../GridEditor.type';
-
-const clamp = (value: number, max: number): number => Math.min(Math.max(value, 1), Math.max(1, max));
 
 const moveCursor = (params: GridKeyParams, event: ReactKeyboardEvent): boolean => {
   const arrow = ARROWS[event.key];
@@ -13,8 +12,8 @@ const moveCursor = (params: GridKeyParams, event: ReactKeyboardEvent): boolean =
   const { cursor, columns, rows, selection, select, setCursor } = params;
   const jump = isPrimaryModifier(event, params.os);
   const next: CellRef = {
-    column: jump && arrow.dx !== 0 ? (arrow.dx < 0 ? 1 : columns) : clamp(cursor.column + arrow.dx, columns),
-    row: jump && arrow.dy !== 0 ? (arrow.dy < 0 ? 1 : rows) : clamp(cursor.row + arrow.dy, rows),
+    column: stepAxis(cursor.column, arrow.dx, jump, columns),
+    row: stepAxis(cursor.row, arrow.dy, jump, rows),
   };
   setCursor(next);
   if (selection.kind === 'cells' && event.shiftKey) {

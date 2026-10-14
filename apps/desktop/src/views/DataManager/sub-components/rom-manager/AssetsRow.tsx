@@ -1,14 +1,13 @@
 /* @layer renderer-components @kind component */
-import { Text, Button } from '@drizztdourden08/tessera/primitives';
+import { Text, Button, Icon } from '@drizztdourden08/tessera/primitives';
 import { formatBytes } from '@drizztdourden08/brock-core';
-import { IL } from './RomDetailPanel.constants';
 import type { AssetsRowProps } from './RomDetailPanel.type';
 
 const AssetsRow = ({ base, onExtractAssets }: AssetsRowProps) => {
   if (base.extractionStatus === 'ready') {
-    return <Text style={IL.green}>✓ Extracted{base.assetSize ? ` (${formatBytes(base.assetSize)})` : ''}</Text>;
+    return <Text tone="secondary"><Icon name="check" inline /> Extracted{base.assetSize ? ` (${formatBytes(base.assetSize)})` : ''}</Text>;
   }
-  if (base.extractionStatus === 'extracting') return <Text style={IL.gold}>⟳ Extracting...</Text>;
+  if (base.extractionStatus === 'extracting') return <Text tone="primary"><Icon name="refresh-cw" inline /> Extracting...</Text>;
   return (
     <Button variant="primary" size="sm" onClick={() => onExtractAssets(base.romFile)}>
       Extract Assets

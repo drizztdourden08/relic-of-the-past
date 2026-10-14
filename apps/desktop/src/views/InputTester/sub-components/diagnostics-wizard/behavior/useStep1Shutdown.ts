@@ -18,12 +18,12 @@ const useStep1Shutdown = (active: boolean, runGeneration = 0) => {
     const run = async () => {
       try {
         const ready = await settledReadyDevices(isCancelled);
-        if (cancelled) return;
+        if (isCancelled()) return;
         setPreReleaseReady(ready);
         const ok = await releaseHold();
-        if (!cancelled) setReleaseStatus(ok ? 'done' : 'error');
+        if (!isCancelled()) setReleaseStatus(ok ? 'done' : 'error');
       } catch {
-        if (!cancelled) setReleaseStatus('error');
+        if (!isCancelled()) setReleaseStatus('error');
       }
     };
     void run();

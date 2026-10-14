@@ -14,7 +14,7 @@ const MappingPasteBox = (props: MappingPasteBoxProps) => {
     const mapping = value.trim();
     if (!mapping) return;
     setStatus('submitting');
-    onSubmit(mapping).then((ok) => {
+    void onSubmit(mapping).then((ok) => {
       setStatus(ok ? 'success' : 'error');
       if (ok) setValue('');
     });

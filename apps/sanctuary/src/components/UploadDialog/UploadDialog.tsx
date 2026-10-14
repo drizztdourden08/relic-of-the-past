@@ -1,11 +1,12 @@
 /* @layer sanctuary-site @kind component */
-import { useEffect, useMemo, useState } from 'react';
+import { useMemo } from 'react';
 import { FILE_TYPES, FILE_TYPE_LABELS, LIMITS } from '@rotp/hub-contracts';
 import type { FileType } from '@rotp/hub-contracts';
 import { Button, Stack, Field, Select, TextInput, Textarea, Text } from '@drizztdourden08/tessera/primitives';
 import { DialogShell, TagInput } from '@drizztdourden08/tessera/composites';
 import { formatBytes } from '@rotp/hub-client';
 import { validateTag } from '../../files/validate-tag';
+import { useUploadForm } from './behavior/useUploadForm';
 import type { UploadDialogProps } from './UploadDialog.type';
 import './UploadDialog.css';
 
@@ -16,26 +17,7 @@ const UploadDialog = (props: UploadDialogProps) => {
     () => FILE_TYPES.filter((t) => types.includes(t)).map((t) => ({ value: t, label: FILE_TYPE_LABELS[t] })),
     [types],
   );
-  const [type, setType] = useState<FileType>(defaultType);
-  const [tags, setTags] = useState<readonly string[]>([]);
-  const [version, setVersion] = useState('');
-  const [note, setNote] = useState('');
-
-  useEffect(() => {
-    if (!open) return;
-    setType(defaultType);
-    setTags([]);
-    setVersion('');
-    setNote('');
-  }, [open, defaultType]);
-
-  const confirm = () => onConfirm({
-    type,
-    tags: [...tags],
-    version: version.trim() || null,
-    note: note.trim(),
-  });
-
+  const { type, setType, tags, setTags, version, setVersion, note, setNote, confirm } = useUploadForm(open, defaultType, onConfirm);
   const total = files.reduce((sum, file) => sum + file.size, 0);
   const actions = (
     <>

@@ -2,7 +2,7 @@
 import type { GameSettings } from '@rotp/features';
 import { updateHapticBridgeSettings, updateHapticsProfileEnabled } from '@rotp/input-mapping';
 import { log } from '../../log-bus';
-import { buildFeatureFlags, buildFeatureWord3, buildFeatureWords, buildPpuFlags, DEFAULT_SETTINGS, getModule, callIfExported, FEATURES3_GATE_WORD, liveSettingsState, pushDisplaySwitches } from '@rotp/game-core';
+import { buildFeatureFlags, buildFeatureWord3, buildFeatureWords, buildPpuFlags, getModule, callIfExported, FEATURES3_GATE_WORD, liveSettingsState, pushDisplaySwitches } from '@rotp/game-core';
 import { pushDialogLive } from '../live-settings-dialog';
 import { setSettingsStoryGates } from '../story-gates';
 import type { EmscriptenModule } from '@rotp/game-core';
@@ -29,8 +29,8 @@ const applyLiveSettings = (settings: GameSettings): void => {
   pushVolumes(mod, settings);
   pushDisplaySwitches(mod, settings);
   pushDialogLive(settings);
-  updateHapticBridgeSettings(settings.haptics ?? DEFAULT_SETTINGS.haptics);
-  updateHapticsProfileEnabled(settings.hapticsEnabled ?? DEFAULT_SETTINGS.hapticsEnabled);
+  updateHapticBridgeSettings(settings.haptics);
+  updateHapticsProfileEnabled(settings.hapticsEnabled);
   log.app(`Live settings pushed: features 0x${features.toString(16)}, ppu 0x${ppuFlags.toString(16)}`);
 };
 

@@ -1,12 +1,13 @@
 /* @layer renderer-widgets @kind component */
 import { useCallback, useRef, useState } from 'react';
-import { Anchored, Box, Button, Portal, Text, useEscapeStack } from '@drizztdourden08/tessera/primitives';
+import { Anchored, Box, Button, Icon, Portal, Text, useEscapeStack } from '@drizztdourden08/tessera/primitives';
 import { getCheck } from '@rotp/game-data';
 import type { CheckId } from '@rotp/game-data';
 import { useStopAtChecks } from '../../behavior/useStopAtChecks';
 import { StopAtCheckFilters } from './sub-components/StopAtCheckFilters';
 import { StopAtCheckList } from './sub-components/StopAtCheckList';
 import { checkTypeIcon } from './behavior/check-type-icon';
+import { NO_STOP_ICON } from './StopAtCheckPicker.constants';
 import type { StopAtCheckPickerProps } from './StopAtCheckPicker.type';
 import './StopAtCheckPicker.css';
 
@@ -25,7 +26,7 @@ const StopAtCheckPicker = (props: StopAtCheckPickerProps) => {
   }, [onStopAtChange]);
 
   const selected = stopAtCheckId ? getCheck(stopAtCheckId) : undefined;
-  const triggerIcon = selected ? checkTypeIcon(selected.kind) : '∞';
+  const triggerIcon = selected ? checkTypeIcon(selected.kind) : NO_STOP_ICON;
   const triggerLabel = selected?.name ?? 'No stop (full run)';
 
   return (
@@ -37,12 +38,14 @@ const StopAtCheckPicker = (props: StopAtCheckPickerProps) => {
         fullWidth
         disabled={disabled}
         className="stop-picker__trigger"
+        icon={<Icon className="stop-picker__trigger-icon" name={triggerIcon} />}
         aria-expanded={shown}
         onClick={() => setOpen((v) => !v)}
       >
-        <Text className="stop-picker__trigger-icon">{triggerIcon}</Text>
         <Text className="stop-picker__trigger-label">{triggerLabel}</Text>
-        <Text className="stop-picker__trigger-caret">{open ? '▴' : '▾'}</Text>
+        <Box as="span" className="stop-picker__trigger-caret" aria-hidden="true">
+          <Icon name={open ? 'chevron-up' : 'chevron-down'} />
+        </Box>
       </Button>
 
       {shown && (

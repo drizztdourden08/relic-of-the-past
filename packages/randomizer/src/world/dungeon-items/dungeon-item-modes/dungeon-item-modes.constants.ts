@@ -30,7 +30,7 @@ const REFUSED_MODES: Readonly<Record<string, string>> = {
 const FAMILY_BY_ITEM: ReadonlyMap<ItemKey, DungeonItemFamily> = new Map(
   all('dungeon').flatMap((dungeon) => DUNGEON_ITEM_FAMILIES.flatMap((family) => {
     const item = dungeon.items[family];
-    return item === null || item === undefined ? [] : [[item, family] as [ItemKey, DungeonItemFamily]];
+    return item === null ? [] : [[item, family] as [ItemKey, DungeonItemFamily]];
   })),
 );
 

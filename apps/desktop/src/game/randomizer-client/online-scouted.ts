@@ -1,6 +1,6 @@
 /* @layer bridge-wasm @kind logic */
-import { isKnownReported, withGoal } from './online-connected';
-import { releaseHeldReceived } from './online-received';
+import { applyScoutOutcome } from './apply-scout-outcome';
+import { wireList } from './wire-list';
 import type { ApLocationInfoPacket, OnlineContext } from '@rotp/randomizer';
 
 const handleLocationInfo = async (ctx: OnlineContext, packet: ApLocationInfoPacket): Promise<void> => {
@@ -8,7 +8,7 @@ const handleLocationInfo = async (ctx: OnlineContext, packet: ApLocationInfoPack
   if (room.scouted || room.scoutArming) return;
   room.scoutArming = true;
   const outcome = await core.armScouted({
-    scouts: packet.locations ?? [],
+    scouts: wireList(packet.locations),
     maps,
     slot: room.slot ?? 0,
     slotData: room.slotData,
@@ -18,20 +18,7 @@ const handleLocationInfo = async (ctx: OnlineContext, packet: ApLocationInfoPack
     gameOf: (slot) => names.gameOf(slot),
     reporter,
   }).finally(() => { room.scoutArming = false; });
-  if (!ctx.isLive()) {
-    core.disarm();
-    return;
-  }
-  if (!outcome.ok) {
-    ctx.fail(`[Online] Session refused: ${outcome.reason}`);
-    return;
-  }
-  if (outcome.placement !== null) ctx.setPlacement(outcome.placement, outcome.foreignOwners);
-  if (outcome.pollEntries !== null) {
-    room.pollEntries = withGoal(outcome.pollEntries, core.goalEntry());
-    if (room.connected) core.startPolling(reporter, room.pollEntries, (key) => isKnownReported(ctx, key));
-  }
-  releaseHeldReceived(ctx);
+  applyScoutOutcome(ctx, outcome);
 };
 
 export { handleLocationInfo };

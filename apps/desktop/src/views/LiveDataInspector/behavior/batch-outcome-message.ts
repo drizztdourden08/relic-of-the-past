@@ -1,5 +1,5 @@
 /* @layer renderer-widgets @kind logic */
-import type { BatchResult } from '@app/views/DataInspector/behavior/recommendations/accept-all-certain';
+import type { BatchResult } from '@app/data-inspector/recommendations/accept-all-certain';
 
 const batchOutcomeMessage = (result: BatchResult): string | null => {
   const left = result.skipped.length + result.failures.length;

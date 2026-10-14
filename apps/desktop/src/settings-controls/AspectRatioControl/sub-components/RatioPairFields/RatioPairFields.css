@@ -1,0 +1,23 @@
+/* @layer renderer-components @kind style */
+.ratio-pair-fields {
+  display: flex;
+  flex-direction: column;
+  align-self: flex-end;
+  align-items: flex-end;
+  gap: var(--space-xs);
+}
+
+.ratio-pair-fields__row {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+}
+
+.ratio-pair-fields__sep {
+  color: var(--c-text-dim);
+}
+
+.ratio-pair-fields__error {
+  color: var(--c-danger);
+  font-size: var(--text-sm);
+}

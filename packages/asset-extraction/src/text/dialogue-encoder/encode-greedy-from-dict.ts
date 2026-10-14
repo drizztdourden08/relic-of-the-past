@@ -1,6 +1,6 @@
 /* @layer shared-asset-extraction @kind logic */
 import type { LanguageConfig } from '../data/language-data';
-import type { AlphabetLookup, DictionaryLookup, EncodedToken } from './dialogue-encoder.type';
+import type { AlphabetLookup, EncodeLookups, EncodedToken } from './dialogue-encoder.type';
 import { newEncoder } from './new-encoder';
 import { orgEncoder } from './org-encoder';
 
@@ -28,13 +28,8 @@ const encodeCommand = (a: string, a2i: AlphabetLookup, info: LanguageConfig): En
   return { bytes: encoder(cmd, param), consumed: cmdLen + 2 };
 };
 
-const encodeGreedyFromDict = (
-  s: string,
-  i: number,
-  rev: DictionaryLookup,
-  a2i: AlphabetLookup,
-  info: LanguageConfig,
-): EncodedToken => {
+const encodeGreedyFromDict = (s: string, i: number, lookups: EncodeLookups): EncodedToken => {
+  const { rev, a2i, info } = lookups;
   const a = s.slice(i);
 
   const first = a.charAt(0);

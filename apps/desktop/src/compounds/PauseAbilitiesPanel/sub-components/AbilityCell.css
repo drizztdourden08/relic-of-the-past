@@ -1,0 +1,6 @@
+/* @layer renderer-hud @kind style */
+.pause-ability-cell {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+}

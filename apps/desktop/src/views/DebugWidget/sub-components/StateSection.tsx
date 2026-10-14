@@ -9,7 +9,7 @@ const StateSection = (props: StateSectionData) => {
       <SectionHeader title={title} />
       <Box className="game-state__rows">
         {rows.map((r) => (
-          <StatRow key={r.label} label={r.label} value={r.value} mono={r.mono} />
+          <StatRow key={r.label} className="game-state__row" label={r.label} value={r.value} mono={r.mono} />
         ))}
       </Box>
     </Box>

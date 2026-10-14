@@ -14,7 +14,7 @@ const entryData = async (source: RangeReader, entry: ZipEntry, maxBytes?: number
   if (entry.method === 'store') return readExact(source, start, wanted);
 
   const inflated = await inflateRaw(await readExact(source, start, entry.compressedBytes), entry.bytes);
-  if (!inflated || inflated.byteLength !== entry.bytes) {
+  if (inflated?.byteLength !== entry.bytes) {
     throw new Error(`The pack entry "${entry.name}" could not be inflated. The file may be damaged.`);
   }
   return wanted === entry.bytes ? inflated : inflated.subarray(0, wanted);

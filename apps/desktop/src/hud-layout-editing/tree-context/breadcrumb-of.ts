@@ -5,19 +5,21 @@ import { childrenOf } from './children-of';
 import { rootsOf } from './roots-of';
 import type { HudLayout, HudNode } from '@rotp/hud';
 
+const crumbsTo = (node: HudNode, id: string): string[] | null => {
+  if (node.id === id) return [labelOf(node)];
+  for (const child of [...childrenOf(node), ...embeddedOf(node)]) {
+    const below = crumbsTo(child, id);
+    if (below) return [labelOf(node), ...below];
+  }
+  return null;
+};
+
 const breadcrumbOf = (doc: HudLayout, id: string): string[] => {
-  const path: string[] = [];
-  let hit = false;
-  const visit = (node: HudNode): void => {
-    if (hit) return;
-    path.push(labelOf(node));
-    if (node.id === id) { hit = true; return; }
-    childrenOf(node).forEach((child) => visit(child));
-    if (!hit) embeddedOf(node).forEach((child) => visit(child));
-    if (!hit) path.pop();
-  };
-  rootsOf(doc).forEach((root) => { if (!hit) visit(root); });
-  return path;
+  for (const root of rootsOf(doc)) {
+    const crumbs = crumbsTo(root, id);
+    if (crumbs) return crumbs;
+  }
+  return [];
 };
 
 export { breadcrumbOf };

@@ -14,4 +14,10 @@ interface OpuzAudio {
   channels: number;
 }
 
-export type { OpuzAudio, OpuzRange };
+interface RangeEntry {
+  offset: number;
+  samples: number;
+  flags: number;
+}
+
+export type { OpuzAudio, OpuzRange, RangeEntry };

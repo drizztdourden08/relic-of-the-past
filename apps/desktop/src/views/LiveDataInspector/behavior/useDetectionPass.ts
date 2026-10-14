@@ -1,6 +1,6 @@
 /* @layer renderer-widgets @kind hook */
 import { useEffect, useRef } from 'react';
-import { applyRecommendationPass } from '@app/views/DataInspector/behavior/recommendations/recommendation-cache';
+import { applyRecommendationPass } from '@app/data-inspector/recommendations/recommendation-cache';
 import { ENTITY_KINDS } from '@app/views/DataInspector/DataInspector.constants';
 import { runDetectionSweep } from '@rotp/navigation';
 import type { DetectionContext } from '@rotp/navigation';

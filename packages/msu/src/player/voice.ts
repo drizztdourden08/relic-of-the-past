@@ -1,6 +1,11 @@
 /* @layer renderer-lib @kind logic */
 import type { DecodedAudio } from './decode/decode-audio-file';
-import type { Voice, VoiceFade, VoiceOptions } from './voice.type';
+import type { Voice, VoiceOptions } from './voice.type';
+import { createFadePlan } from './voice-parts/create-fade-plan';
+import { fadeAt } from './voice-parts/fade-at';
+import { loopStartOf } from './voice-parts/loop-start-of';
+import { playbackOffset } from './voice-parts/playback-offset';
+import { wireSource } from './voice-parts/wire-source';
 
 const scheduleEnvelope = (gain: AudioParam, startedAt: number, options: VoiceOptions): void => {
   const { fadeInSeconds = 0, fadeOutAfterSeconds, fadeOutSeconds = 0 } = options;
@@ -22,18 +27,12 @@ const stopIfPlaying = (source: AudioBufferSourceNode): void => {
 };
 
 const createVoice = (ctx: BaseAudioContext, destination: AudioNode, decoded: DecodedAudio, options: VoiceOptions): Voice => {
-  const {
-    loop, offsetSeconds: startOffset = 0, onEnded,
-    fadeInSeconds = 0, fadeOutAfterSeconds, fadeOutSeconds = 0, loopSecondsOverride,
-  } = options;
-  const { buffer, loopSample } = decoded;
+  const { loop, offsetSeconds: startOffset = 0, onEnded, loopSecondsOverride } = options;
+  const { buffer } = decoded;
 
   const source = ctx.createBufferSource();
   source.buffer = buffer;
-  const loopStart = Math.min(
-    loopSecondsOverride ?? (loopSample > 0 ? loopSample / buffer.sampleRate : 0),
-    buffer.duration,
-  );
+  const loopStart = loopStartOf(decoded, loopSecondsOverride);
 
   if (loop) {
     source.loop = true;
@@ -42,14 +41,7 @@ const createVoice = (ctx: BaseAudioContext, destination: AudioNode, decoded: Dec
   }
   if (onEnded) source.onended = onEnded;
 
-  const fades = fadeInSeconds > 0 || (fadeOutAfterSeconds !== undefined && fadeOutSeconds > 0);
-  const envelope = fades ? ctx.createGain() : null;
-  if (envelope) {
-    envelope.connect(destination);
-    source.connect(envelope);
-  } else {
-    source.connect(destination);
-  }
+  const envelope = wireSource(ctx, source, destination, options);
 
   const startedAt = ctx.currentTime;
   if (envelope) scheduleEnvelope(envelope.gain, startedAt, options);
@@ -58,29 +50,11 @@ const createVoice = (ctx: BaseAudioContext, destination: AudioNode, decoded: Dec
 
   let stopped = false;
 
-  const offsetSeconds = (): number => {
-    const elapsed = startOffset + (ctx.currentTime - startedAt);
-    if (!loop || elapsed < buffer.duration) return Math.min(elapsed, buffer.duration);
-    const loopLength = buffer.duration - loopStart;
-    if (loopLength <= 0) return loopStart;
-    return loopStart + ((elapsed - buffer.duration) % loopLength);
-  };
+  const offsetSeconds = (): number =>
+    playbackOffset(startOffset + (ctx.currentTime - startedAt), loop, { duration: buffer.duration, loopStart });
 
-  const fadeOutStart = fadeOutAfterSeconds === undefined
-    ? null
-    : startedAt + Math.max(fadeInSeconds, fadeOutAfterSeconds);
-
-  const fade = (): VoiceFade | null => {
-    if (stopped) return null;
-    const now = ctx.currentTime;
-    if (fadeInSeconds > 0 && now < startedAt + fadeInSeconds) {
-      return { kind: 'in', remainingSeconds: startedAt + fadeInSeconds - now, totalSeconds: fadeInSeconds };
-    }
-    if (fadeOutStart !== null && fadeOutSeconds > 0 && now >= fadeOutStart && now < fadeOutStart + fadeOutSeconds) {
-      return { kind: 'out', remainingSeconds: fadeOutStart + fadeOutSeconds - now, totalSeconds: fadeOutSeconds };
-    }
-    return null;
-  };
+  const plan = createFadePlan(startedAt, options);
+  const fade = () => (stopped ? null : fadeAt(plan, ctx.currentTime));
 
   const stop = (): void => {
     if (stopped) return;

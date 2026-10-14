@@ -1,7 +1,7 @@
 /* @layer renderer-components @kind component */
-import { Box, IconButton, Text } from '@drizztdourden08/tessera/primitives';
+import { Box, Icon, IconButton, Text } from '@drizztdourden08/tessera/primitives';
 import { CSS_POSITION } from '@app/hud-layout-editing/align-options';
-import { BARS, FOLD_ABOVE } from './AlignmentTiles.constants';
+import { BAR_THICKNESS, BARS, FOLD_ABOVE } from './AlignmentTiles.constants';
 import type { AlignValue, FlowDirection } from '@app/hud-layout-editing/align-options';
 import type { CSSProperties } from 'react';
 import type { AlignRowSpec, AlignmentTilesProps } from './AlignmentTiles.type';
@@ -29,14 +29,15 @@ const barStyle = (
   row: AlignRowSpec, value: AlignValue, direction: FlowDirection,
 ): CSSProperties => {
   const fill = value === 'stretch';
+  const thick = BAR_THICKNESS[row.engine];
   if (row.engine === 'grid') {
     return row.axis === 'main'
-      ? { width: fill ? 'auto' : 'var(--hud-align-bar)', height: '70%' }
-      : { width: '70%', height: fill ? 'auto' : 'var(--hud-align-bar)' };
+      ? { width: fill ? 'auto' : thick, height: '70%' }
+      : { width: '70%', height: fill ? 'auto' : thick };
   }
   return direction === 'row'
-    ? { width: 'var(--hud-align-bar)', height: '65%' }
-    : { width: '65%', height: 'var(--hud-align-bar)' };
+    ? { width: thick, height: '65%' }
+    : { width: '65%', height: thick };
 };
 
 const AlignmentTiles = (props: AlignmentTilesProps) => {
@@ -49,7 +50,9 @@ const AlignmentTiles = (props: AlignmentTilesProps) => {
     <Box className="hud-align" style={{ '--hud-align-cols': columns } as CSSProperties}>
       {rows.map((row) => (
         <Box key={row.key} className="hud-align__row" role="group" aria-label={row.label}>
-          <Text className="hud-align__cap" title={row.label}>{row.cap}</Text>
+          <Text className="hud-align__cap" title={row.label}>
+            {row.capIcon ? <Icon name={row.capIcon} size={14} aria-hidden /> : row.cap}
+          </Text>
           <Box className="hud-align__tiles">
             {row.options.map((option) => (
               <IconButton

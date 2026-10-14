@@ -1,134 +1,63 @@
 /* @layer renderer-widgets @kind component */
 import { Icon } from '@iconify/react/offline';
-import type { ConnectionInfo } from '@rotp/game-core';
 import { markerCrossings, crossingIcon } from '@rotp/navigation';
 import { Box } from '@drizztdourden08/tessera/primitives';
 import { useNavigationOverlayStore } from '../../../stores/navigation-overlay-store';
-import { getScreenDisplayName } from '../../../nav-widget/widget-helpers';
-import { ReachabilityCanvas } from './ReachabilityCanvas';
-import { AnnotationLayer } from './AnnotationLayer';
-import { EdgeBadge } from './EdgeBadge';
-import { groupByEdge } from '../behavior/group-by-edge';
-import { positionSpan } from '../behavior/position-span';
-import { markerTone } from '../behavior/marker-tone';
 import { cellTone } from '../behavior/cell-tone';
-import { cellLabel } from '../behavior/cell-label';
+import { groupByEdge } from '../behavior/group-by-edge';
+import { markerTone } from '../behavior/marker-tone';
+import { overworldCellOrigin } from '../behavior/overworld-cell-origin';
+import { overworldGridOf } from '../behavior/overworld-grid-of';
+import { CellBody } from './CellBody';
+import { OverworldAnnotations } from './OverworldAnnotations';
+import { OverworldEdgeBadges } from './OverworldEdgeBadges';
+import { MIN_MARKER, TILE_COUNT } from './OverworldMinimap.constants';
 import type { MinimapProps } from './IndoorMinimap.type';
 import './OverworldMinimap.css';
 
 const OverworldMinimap = ({ bundle, connections, renderResults, playerScreenIndex, playerPos }: MinimapProps) => {
-  const EDGE_PAD = 18;
-  const GAP = 2;
-  const AVAIL = 224;
-
-  const gridCols = bundle.cols;
-  const gridRows = bundle.rows;
-
-  const cellW = Math.floor((AVAIL - EDGE_PAD * 2 - (gridCols - 1) * GAP) / gridCols);
-  const cellH = cellW;
-  const gridW = gridCols * cellW + (gridCols - 1) * GAP;
-  const gridH = gridRows * cellH + (gridRows - 1) * GAP;
-  const totalW = gridW + EDGE_PAD * 2;
-  const totalH = gridH + EDGE_PAD * 2;
-
-  const externalConns = connections.filter(c => !c.isIntraRoom);
+  const grid = overworldGridOf(bundle);
   const crossings = useNavigationOverlayStore(s => s.crossings);
   const annotations = useNavigationOverlayStore(s => s.annotations);
-
-  const byEdge = groupByEdge(externalConns);
-
-  const screenSlot = (c: ConnectionInfo): number => (c.sourceScreen === undefined ? -1 : bundle.screens.indexOf(c.sourceScreen));
-
-  const renderHorizEdge = (list: ConnectionInfo[], prefix: string, top: number) => list.map((c, i) => {
-    const scrIdx = screenSlot(c);
-    const col = scrIdx >= 0 ? scrIdx % bundle.cols : 0;
-    const colStart = EDGE_PAD + col * (cellW + GAP);
-    const { first: p0, last: p1 } = positionSpan(c.positions);
-    const x0 = (p0 / 64) * cellW;
-    const spanW = Math.max(14, ((p1 - p0 + 1) / 64) * cellW);
-    const box = { top, left: colStart + x0, width: spanW, height: 14 };
-    return <EdgeBadge key={`${prefix}${i}`} connection={c} box={box} title={`${getScreenDisplayName(c.targetScreen)} c${p0}-${p1} (${c.positions.length})`} />;
-  });
-
-  const renderVertEdge = (list: ConnectionInfo[], prefix: string, left: number) => list.map((c, i) => {
-    const scrIdx = screenSlot(c);
-    const row = scrIdx >= 0 ? Math.floor(scrIdx / bundle.cols) : 0;
-    const rowStart = EDGE_PAD + row * (cellH + GAP);
-    const { first: p0, last: p1 } = positionSpan(c.positions);
-    const y0 = (p0 / 64) * cellH;
-    const spanH = Math.max(14, ((p1 - p0 + 1) / 64) * cellH);
-    const box = { top: rowStart + y0, left, width: 14, height: spanH };
-    return <EdgeBadge key={`${prefix}${i}`} connection={c} box={box} title={`${getScreenDisplayName(c.targetScreen)} r${p0}-${p1} (${c.positions.length})`} />;
-  });
+  const byEdge = groupByEdge(connections.filter(c => !c.isIntraRoom));
+  const markerSize = Math.max(MIN_MARKER, grid.cellW * 4 / TILE_COUNT);
+  const playerSlot = playerPos ? bundle.screens.indexOf(playerPos.screen) : -1;
+  const playerOrigin = overworldCellOrigin(grid, playerSlot);
 
   return (
-    <Box style={{ maxWidth: totalW, height: totalH }} className="nav-overworld-minimap__root">
+    <Box style={{ maxWidth: grid.totalW, height: grid.totalH }} className="nav-overworld-minimap__root">
       {bundle.screens.map((scr, idx) => {
-        const col = idx % bundle.cols;
-        const row = Math.floor(idx / bundle.cols);
-        const isActive = playerScreenIndex === scr;
-        const analyzed = renderResults.some(r => r.screenIndex === scr);
         const scrResult = renderResults.find(r => r.screenIndex === scr);
+        const { left, top } = overworldCellOrigin(grid, idx);
         return (
-          <Box key={scr} style={{ left: EDGE_PAD + col * (cellW + GAP), top: EDGE_PAD + row * (cellH + GAP), width: cellW, height: cellH }} className={`nav-overworld-minimap__cell nav-overworld-minimap__cell--${cellTone(isActive, analyzed)}`}>
-            {scrResult && <ReachabilityCanvas reachable={scrResult.reachable} size={cellW} tileLayer={scrResult.tileLayer} />}
-            <Box className="nav-overworld-minimap__cell-name">{cellLabel(bundle, scr)}</Box>
-            <Box className="nav-overworld-minimap__cell-hex">0x{scr.toString(16).toUpperCase()}</Box>
-            {scrResult && <Box className="nav-overworld-minimap__cell-count">{scrResult.reachableCount}/{scrResult.totalTiles}</Box>}
+          <Box key={scr} style={{ left, top, width: grid.cellW, height: grid.cellH }} className={`nav-overworld-minimap__cell nav-overworld-minimap__cell--${cellTone(playerScreenIndex === scr, scrResult !== undefined)}`}>
+            <CellBody bundle={bundle} screen={scr} size={grid.cellW} result={scrResult} />
           </Box>
         );
       })}
 
       {crossings.flatMap(screen => markerCrossings(screen, false).map(crossing => {
-        const scrIdx = bundle.screens.indexOf(screen.screenIndex);
-        if (scrIdx < 0) return null;
-        const cellCol = scrIdx % bundle.cols;
-        const cellRow = Math.floor(scrIdx / bundle.cols);
-        const cellLeft = EDGE_PAD + cellCol * (cellW + GAP);
-        const cellTop = EDGE_PAD + cellRow * (cellH + GAP);
-        const localX = (crossing.tile.col / 64) * cellW;
-        const localY = (crossing.tile.row / 64) * cellH;
-        const sz = Math.max(6, cellW * 4 / 64);
-        const { icon: markerIcon } = crossingIcon(crossing);
+        const slot = bundle.screens.indexOf(screen.screenIndex);
+        if (slot < 0) return null;
+        const { left, top } = overworldCellOrigin(grid, slot);
+        const x = left + (crossing.tile.col / TILE_COUNT) * grid.cellW - markerSize / 2;
+        const y = top + (crossing.tile.row / TILE_COUNT) * grid.cellH - markerSize / 2;
         return (
-          <Box key={`ent-${screen.screenIndex}-${crossing.id}`} style={{ left: cellLeft + localX - sz / 2, top: cellTop + localY - sz / 2, width: sz, height: sz }} title={crossing.label} className="nav-overworld-minimap__marker">
-            <Icon icon={markerIcon} width={sz} height={sz} className="nav-marker-icon nav-marker-icon--shadowed" data-tone={markerTone(crossing)} />
+          <Box key={`ent-${screen.screenIndex}-${crossing.id}`} style={{ left: x, top: y, width: markerSize, height: markerSize }} title={crossing.label} className="nav-overworld-minimap__marker">
+            <Icon icon={crossingIcon(crossing).icon} width={markerSize} height={markerSize} className="nav-marker-icon nav-marker-icon--shadowed" data-tone={markerTone(crossing)} />
           </Box>
         );
       }))}
 
-      {playerPos && bundle.screens.includes(playerPos.screen) && (() => {
-        const scrIdx = bundle.screens.indexOf(playerPos.screen);
-        const col = scrIdx % bundle.cols;
-        const row = Math.floor(scrIdx / bundle.cols);
-        const cellLeft = EDGE_PAD + col * (cellW + GAP);
-        const cellTop = EDGE_PAD + row * (cellH + GAP);
-        const x = (playerPos.col / 64) * cellW;
-        const y = (playerPos.row / 64) * cellH;
-        return <Box style={{ left: cellLeft + x - 3, top: cellTop + y - 3 }} className="nav-overworld-minimap__player-dot" />;
-      })()}
+      {playerPos && playerSlot >= 0 && (
+        <Box
+          style={{ left: playerOrigin.left + (playerPos.col / TILE_COUNT) * grid.cellW - 3, top: playerOrigin.top + (playerPos.row / TILE_COUNT) * grid.cellH - 3 }}
+          className="nav-overworld-minimap__player-dot"
+        />
+      )}
 
-      {annotations.map((set) => {
-        const scrIdx = bundle.screens.indexOf(set.screenIndex);
-        if (scrIdx < 0) return null;
-        const cellLeft = EDGE_PAD + (scrIdx % bundle.cols) * (cellW + GAP);
-        const cellTop = EDGE_PAD + Math.floor(scrIdx / bundle.cols) * (cellH + GAP);
-        return (
-          <AnnotationLayer
-            key={`anno-set-${set.screenIndex}`}
-            annotations={set}
-            cellLeft={cellLeft}
-            cellTop={cellTop}
-            cellW={cellW}
-            cellH={cellH}
-          />
-        );
-      })}
-
-      {renderHorizEdge(byEdge.north, 'n', EDGE_PAD - 15)}
-      {renderHorizEdge(byEdge.south, 's', EDGE_PAD + gridH + 1)}
-      {renderVertEdge(byEdge.west, 'w', EDGE_PAD - 15)}
-      {renderVertEdge(byEdge.east, 'e', EDGE_PAD + gridW + 1)}
+      <OverworldAnnotations bundle={bundle} grid={grid} annotations={annotations} />
+      <OverworldEdgeBadges bundle={bundle} grid={grid} byEdge={byEdge} />
     </Box>
   );
 };

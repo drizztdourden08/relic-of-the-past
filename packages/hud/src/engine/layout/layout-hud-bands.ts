@@ -10,7 +10,7 @@ const layoutHudBands = (
 ): { screen: PlacedNode[]; bands: PlacedNode[][] } => {
   const root = expand(doc.screen, ctx);
   const full: Rect = { x: 0, y: 0, w: view.w, h: view.h };
-  const placed = place(root, full, 1, ctx);
+  const placed = place(root, { box: full, unit: 1 }, ctx);
   const starts = new Set(root.children.map((child) => child.id));
   const screen: PlacedNode[] = [];
   const bands: PlacedNode[][] = [];

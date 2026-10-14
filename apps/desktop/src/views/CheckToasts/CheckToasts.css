@@ -22,7 +22,7 @@
   align-items: center;
   gap: var(--space-xs);
   padding: var(--space-xs);
-  border: 1px solid var(--c-border);
+  border: var(--border-width-thin) solid var(--c-border);
   border-radius: var(--radius-md);
   background: var(--c-surface);
   color: var(--c-text-dim);
@@ -45,14 +45,14 @@
 }
 
 .check-toast {
-  min-width: 16rem;
-  max-width: 22rem;
+  min-width: var(--size-256);
+  max-width: calc(352 * var(--size-1));
 }
 
 .check-toast .tracker-card__sprite,
 .check-toast .tracker-card__sprite-placeholder {
-  width: 32px;
-  height: 32px;
+  width: var(--size-32);
+  height: var(--size-32);
 }
 
 .check-toast .tracker-card__item-name {
@@ -60,8 +60,8 @@
 }
 
 .online-notice-toast {
-  min-width: 16rem;
-  max-width: 22rem;
+  min-width: var(--size-256);
+  max-width: calc(352 * var(--size-1));
   padding: var(--space-xs) var(--space-sm);
 }
 

@@ -1,9 +1,9 @@
 /* @layer renderer-components @kind component */
 import { Box, Text } from '@drizztdourden08/tessera/primitives';
-import { CapacityFamilyRow } from '../CapacityFamilyRow';
 import { RandomizerOptionGroup } from '../RandomizerOptionGroup';
 import { RandomizerOptionRow } from '../RandomizerOptionRow';
 import type { CapacityUpgradesBlockProps } from './CapacityUpgradesBlock.type';
+import { CapacityRows } from './sub-components/CapacityRows';
 import './CapacityUpgradesBlock.css';
 
 const CapacityUpgradesBlock = (props: CapacityUpgradesBlockProps) => {
@@ -25,25 +25,16 @@ const CapacityUpgradesBlock = (props: CapacityUpgradesBlockProps) => {
         />
       )}
       <Box className={`capacity-block__body${enabled ? '' : ' capacity-block__body--off'}`}>
-        {progressiveOption !== undefined && (
-          <RandomizerOptionRow
-            option={progressiveOption}
-            value={progressive}
-            disabled={frozen}
-            readout={readOnly}
-            onChange={frozen || onProgressiveChange === undefined ? undefined : (next) => onProgressiveChange(Boolean(next))}
-          />
-        )}
-        {rows.map((row) => (
-          <CapacityFamilyRow
-            key={row.id}
-            model={row}
-            readOnly={frozen}
-            readout={readOnly}
-            onChange={frozen || onChange === undefined ? undefined : (next) => onChange(row.id, next)}
-            onBonusChange={frozen || onBonusChange === undefined ? undefined : (next) => onBonusChange(row.id, next)}
-          />
-        ))}
+        <CapacityRows
+          rows={rows}
+          progressiveOption={progressiveOption}
+          progressive={progressive}
+          frozen={frozen}
+          readOnly={readOnly}
+          onChange={onChange}
+          onBonusChange={onBonusChange}
+          onProgressiveChange={onProgressiveChange}
+        />
       </Box>
       {notes.map((note) => (
         <Text key={note} className="capacity-block__note">{note}</Text>

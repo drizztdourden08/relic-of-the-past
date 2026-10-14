@@ -3,7 +3,7 @@ import { describe, it, expect, beforeAll, vi } from 'vitest';
 import { RAILS, THREE } from './metrics.constants';
 import { measureMetrics } from './measure-metrics';
 import { solveOf } from './solve-of';
-import type { Cells, MetricsRig } from './metrics.type';
+import type { Cells, Heads, MetricsRig } from './metrics.type';
 import { required } from '../../required';
 
 vi.mock('@app/stores/hud-editor-view-store', async () => {
@@ -15,6 +15,16 @@ vi.mock('@app/stores/hud-editor-view-store', async () => {
 });
 
 let rig: MetricsRig;
+
+const expectHeaderOver = (rail: number, head: Heads, c: Cells): void => {
+  if (head.axis === 'columns') {
+    expect(`${rail} col${head.index} x ${head.x} ${c.x}`).toBe(`${rail} col${head.index} x ${c.x} ${c.x}`);
+    expect(`${rail} col${head.index} w ${head.width}`).toBe(`${rail} col${head.index} w ${c.width}`);
+  } else {
+    expect(`${rail} row${head.index} y ${head.y} ${c.y}`).toBe(`${rail} row${head.index} y ${c.y} ${c.y}`);
+    expect(`${rail} row${head.index} h ${head.height}`).toBe(`${rail} row${head.index} h ${c.height}`);
+  }
+};
 
 beforeAll(async () => {
   rig = await measureMetrics();
@@ -67,15 +77,7 @@ describe('the cells match the real tracks, on both axes', () => {
       for (const head of required(rig.read[rail], `the read at ${rail}`).heads.filter((hd) => hd.case === 'three')) {
         const owned = rig.cellsOf(rail, 'three')
           .filter((c) => (head.axis === 'columns' ? c.column : c.row) === head.index);
-        for (const c of owned) {
-          if (head.axis === 'columns') {
-            expect(`${rail} col${head.index} x ${head.x} ${c.x}`).toBe(`${rail} col${head.index} x ${c.x} ${c.x}`);
-            expect(`${rail} col${head.index} w ${head.width}`).toBe(`${rail} col${head.index} w ${c.width}`);
-          } else {
-            expect(`${rail} row${head.index} y ${head.y} ${c.y}`).toBe(`${rail} row${head.index} y ${c.y} ${c.y}`);
-            expect(`${rail} row${head.index} h ${head.height}`).toBe(`${rail} row${head.index} h ${c.height}`);
-          }
-        }
+        for (const c of owned) expectHeaderOver(rail, head, c);
       }
     }
   });

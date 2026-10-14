@@ -21,7 +21,6 @@
 
 .rom-card__file {
   font-size: var(--text-xs);
-  color: var(--c-text-faint);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -34,5 +33,4 @@
 
 .rom-card__size {
   font-size: var(--text-xs);
-  color: var(--c-text-faint);
 }

@@ -1,60 +1,23 @@
 /* @layer renderer-components @kind component */
-import { Box, Select, Text } from '@drizztdourden08/tessera/primitives';
-import { LadderPreview } from '../LadderPreview';
-import { OptionDescription } from '../OptionDescription';
-import { OptionValueTag, choiceLabelOf } from '../OptionValueTag';
-import { PoolImpactCell } from '../PoolImpactCell';
-import { BonusLine } from './sub-components/BonusLine';
-import { LadderControls } from './sub-components/LadderControls';
-import { RowLine } from './sub-components/RowLine';
-import { MODE_OPTIONS, WALLET_MODE_OPTIONS } from './CapacityFamilyRow.constants';
+import { Box, Text } from '@drizztdourden08/tessera/primitives';
+import { FamilyHead } from './sub-components/FamilyHead';
+import { FamilyLines } from './sub-components/FamilyLines';
 import type { CapacityFamilyRowProps, CapacityRowState } from './CapacityFamilyRow.type';
-import type { SelectOption } from '@drizztdourden08/tessera/primitives';
 import './CapacityFamilyRow.css';
 
 const CapacityFamilyRow = (props: CapacityFamilyRowProps) => {
   const { model, readOnly = false, readout = false, onChange, onBonusChange } = props;
-  const { label, caption, offersInPool, state, preview, impact, footnote, forced, bonus, bonusCaption } = model;
+  const { state, footnote, forced } = model;
   const inert = readOnly || forced !== undefined;
 
   const patch = (part: Partial<CapacityRowState>) => onChange?.({ ...state, ...part });
+  const pickMode = (mode: CapacityRowState['mode']) => patch({ mode });
 
   return (
     <Box className={`capacity-row${forced !== undefined ? ' capacity-row--forced' : ''}`}>
-      <Box className="capacity-row__head">
-        <Box className="capacity-row__text">
-          <Text className="capacity-row__label">{label}</Text>
-          {caption !== undefined && <OptionDescription className="capacity-row__caption" description={caption} />}
-        </Box>
-        <Box className="capacity-row__mode">
-          {readout ? <OptionValueTag value={choiceLabelOf(MODE_OPTIONS, state.mode)} /> : (
-            <Select
-              size="sm"
-              value={state.mode}
-              options={(offersInPool ? MODE_OPTIONS : WALLET_MODE_OPTIONS)}
-              onChange={(mode) => patch({ mode: mode as CapacityRowState['mode'] })}
-              disabled={inert}
-            />
-          )}
-        </Box>
-        <PoolImpactCell cell={impact} />
-      </Box>
+      <FamilyHead model={model} readout={readout} disabled={inert} onPick={pickMode} />
       {forced !== undefined && <Text className="capacity-row__forced">{forced}</Text>}
-      <Box className="capacity-row__lines">
-        {state.mode === 'custom' && <LadderControls model={model} readOnly={inert} readout={readout} onChange={patch} />}
-        {bonus !== undefined && (
-          <BonusLine
-            bonus={bonus}
-            caption={bonusCaption}
-            readOnly={inert}
-            readout={readout}
-            onChange={inert ? undefined : onBonusChange}
-          />
-        )}
-        <RowLine label="ladder" className="capacity-row__ladder">
-          <LadderPreview {...preview} />
-        </RowLine>
-      </Box>
+      <FamilyLines model={model} inert={inert} readout={readout} onChange={patch} onBonusChange={onBonusChange} />
       {footnote !== undefined && <Text className="capacity-row__footnote">{footnote}</Text>}
     </Box>
   );

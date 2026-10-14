@@ -7,13 +7,14 @@ import { buildDebugText } from '../diagnostics/format/debug-text';
 import { collectRendererDiagnostics } from '../diagnostics/collect-renderer';
 import type { SystemDiagnostics } from '@app/diagnostics-types';
 import type { DebugTextBuilder } from './debug-text-builder.type';
-import { HOST_LABEL, OS_LABEL } from './debug-text-builder.constants';
+import { OS_LABEL } from './debug-text-builder.constants';
+import { runtimeLabel } from './runtime-label';
 
 const capacitorVersion = (): string | null => capacitorCorePackage.version || null;
 
 const fetchSystem = async (): Promise<SystemDiagnostics | null> => {
   try {
-    return (await hostApi()?.getSystemDiagnostics?.()) ?? null;
+    return (await hostApi()?.getSystemDiagnostics()) ?? null;
   } catch {
     return null;
   }
@@ -26,10 +27,7 @@ const useDebugTextBuilder = (): DebugTextBuilder => {
   const electron = navigator.userAgent.match(/Electron\/([\d.]+)/)?.[1];
   const chromium = navigator.userAgent.match(/Chrome\/([\d.]+)/)?.[1];
   const cap = capacitorVersion();
-  const runtime =
-    info.host === 'electron' && electron ? `Electron ${electron}`
-    : info.host === 'capacitor' ? `Capacitor${cap ? ` ${cap}` : ''}`
-    : HOST_LABEL[info.host];
+  const runtime = runtimeLabel(info.host, electron, cap);
   const engine = chromium ? `Chromium ${chromium}` : '-';
   const osLabel = OS_LABEL[info.os];
 

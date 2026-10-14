@@ -15,4 +15,11 @@ interface PrereqCardsProps {
   onIdleRedo: () => void;
 }
 
-export type { PrereqCardsProps };
+type GyroPrereqCardProps = Pick<
+  PrereqCardsProps,
+  'gyroState' | 'gyroExcluded' | 'latestBytesLength' | 'onGyroStart' | 'onGyroStop' | 'onGyroRedo' | 'onGyroSkip'
+>;
+
+type IdlePrereqCardProps = Pick<PrereqCardsProps, 'idleState' | 'latestBytesLength' | 'onIdleCapture' | 'onIdleRedo'>;
+
+export type { GyroPrereqCardProps, IdlePrereqCardProps, PrereqCardsProps };

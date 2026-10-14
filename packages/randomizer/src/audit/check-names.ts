@@ -2,12 +2,14 @@
 import { NO_DUNGEON_SCOPE } from './invariant.constants';
 import type { InvariantFinding, InvariantInput } from './invariant.type';
 
+const isBlank = (name: string | undefined): boolean => name === undefined || name.trim() === '';
+
 const checkNames = ({ checks }: InvariantInput): InvariantFinding[] => {
   const findings: InvariantFinding[] = [];
   const byScopedName = new Map<string, string>();
 
   for (const check of checks) {
-    if (check.name === undefined || check.name.trim() === '') {
+    if (isBlank(check.name)) {
       findings.push({
         rule: 'A6-name', checkId: check.id, field: 'name',
         detail: 'name is empty',

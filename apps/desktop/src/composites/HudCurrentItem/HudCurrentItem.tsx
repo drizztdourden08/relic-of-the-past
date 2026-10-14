@@ -28,8 +28,7 @@ const HudCurrentItem = (props: HudCurrentItemProps) => {
         background: 'black',
       }} />
 
-      <HudImage src={`${spritesBase}hud-itembox-tl.png`} width={tile} height={tile}
-        style={{ position: 'absolute', left: 0, top: 0, imageRendering: 'pixelated' }} />
+      <HudImage src={`${spritesBase}hud-itembox-tl.png`} width={tile} height={tile} atOrigin pixelated />
       <HudImage src={`${spritesBase}hud-itembox-top.png`} width={tile} height={tile}
         style={{ position: 'absolute', left: tile, top: 0, imageRendering: 'pixelated' }} />
       <HudImage src={`${spritesBase}hud-itembox-top.png`} width={tile} height={tile}

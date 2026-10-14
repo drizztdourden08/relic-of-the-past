@@ -1,12 +1,11 @@
 /* @layer store-site @kind component */
 import { Flex, Stack, Text } from '@drizztdourden08/tessera/primitives';
-import { Hero } from '@drizztdourden08/tessera/composites';
+import { Hero, Rating } from '@drizztdourden08/tessera/composites';
 import { AppLink } from '@rotp/design';
 import { authorPath } from '../../catalog/item-paths/author-path';
 import { KIND_PLURALS } from '../../kinds/kinds.constants';
 import { averageOf } from '../../format-count/average-of';
 import { ItemPicture } from '../ItemPicture/ItemPicture';
-import { Stars } from '../Stars/Stars';
 import { itemHeroFacts } from './behavior/item-hero-facts';
 import type { ItemHeroProps } from './ItemHero.type';
 import './ItemHero.css';
@@ -21,7 +20,7 @@ const ItemHero = (props: ItemHeroProps) => {
       <Text as="p" className="item-hero__summary">{item.summary}</Text>
       <Flex align="center" gap="sm" wrap className="item-hero__byline">
         <Text as="span">by <AppLink to={authorPath(item.author.userId)}>{item.author.displayName}</AppLink></Text>
-        <Stars value={averageOf(item.stats.ratingSum, item.stats.ratingCount)} />
+        <Rating value={averageOf(item.stats.ratingSum, item.stats.ratingCount)} size="sm" />
       </Flex>
     </Stack>
   );

@@ -2,8 +2,10 @@
 export { checkKeys } from './check-keys';
 export { extentAt } from './extent-at';
 export { isRecord } from './is-record';
+export { nonEmptyText } from './non-empty-text';
 export { numberAt } from './number-at';
 export { oneOf } from './one-of';
+export { reportMissing } from './report-missing';
 export { validateBox } from './validate-box';
 export { BOX_KEYS, COMMENT_KEY } from './validate-box.constants';
-export type { Issues } from './validate-box.type';
+export type { Issues, ValueSite } from './validate-box.type';

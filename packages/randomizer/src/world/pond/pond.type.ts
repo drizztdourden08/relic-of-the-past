@@ -3,9 +3,9 @@ import type { ItemId } from '@rotp/game-data';
 import type { ItemKey } from '../item-ids';
 import type { LocationKey } from '../location-key';
 import type { CapacityProfile } from '../capacity/capacity-profile.type';
-import type { PondAskAmountKind, PondAskCurrency } from './pond-ask.type';
+import type { PondAskAmountKind, PondAskCurrency, PondAskSetting } from './pond-ask.type';
 import type { PondInstance, PondSlot, PondSlotLock } from './pond-instance.type';
-import type { PondCustomSetting, PondSetting } from './pond-profile.type';
+import type { PondCustomSetting, PondPlan, PondSetting } from './pond-profile.type';
 import type { PondProfiles } from './pond-profiles.type';
 
 type PondCeilings = Readonly<Record<PondAskCurrency, number>>;
@@ -84,6 +84,12 @@ interface PondDemandInput {
 
 type DemandKind = PondAskAmountKind | 'item';
 
+interface DemandContext {
+  ask: PondAskSetting;
+  plan: PondPlan;
+  capacity: CapacityProfile;
+}
+
 type PondField = 'mode' | 'throws' | 'items' | 'curve' | 'jumps';
 
 type ActivePondSetting = Exclude<PondSetting, { mode: 'capacity' }>;
@@ -94,7 +100,7 @@ interface PondSchedule {
 }
 
 export type {
-  ActivePondSetting, AskingPond, AskRange, DemandKind, GrantingSlot, HeldPondSetting, ParsedPondProfiles,
+  ActivePondSetting, AskingPond, AskRange, DemandContext, DemandKind, GrantingSlot, HeldPondSetting, ParsedPondProfiles,
   ParsedPondSetting, PondAskRange, PondAskRow, PondCeilings, PondCurrencyRow, PondDemandInput,
   PondField, PondSchedule, PondSlotModel, PondVanillaSlots, RupeeDenomination, RupeeEnds,
 };

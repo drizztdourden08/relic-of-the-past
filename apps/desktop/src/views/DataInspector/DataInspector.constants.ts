@@ -15,7 +15,7 @@ import alertIcon from '@iconify-icons/lucide/alert-triangle';
 import type { ConnectionPlacement, EntityKind } from '@rotp/game-data';
 import type { DetailTab, FieldDescriptor, TableColumn, TableState } from '@drizztdourden08/tessera/data';
 import type { IdRefTargetField, IdRefOption, NumberBounds } from '@drizztdourden08/tessera/composites';
-import type { TabItem } from '@drizztdourden08/tessera/primitives';
+import type { IconName, TabItem } from '@drizztdourden08/tessera/primitives';
 import type { DeleteGuardDialogState } from './DataInspector.type';
 
 const ENTITY_KINDS: readonly EntityKind[] = [
@@ -25,23 +25,25 @@ const ENTITY_KINDS: readonly EntityKind[] = [
 
 const RECOMMENDATIONS_KIND = 'recommendations';
 
-const KIND_NAV_ITEMS: { id: EntityKind; icon: string; label: string }[] = [
-  { id: 'screen', icon: '🗺️', label: 'Screens' },
-  { id: 'connection', icon: '🔗', label: 'Connections' },
-  { id: 'check', icon: '📍', label: 'Checks' },
-  { id: 'item', icon: '🎒', label: 'Items' },
-  { id: 'dungeon', icon: '🏰', label: 'Dungeons' },
-  { id: 'area', icon: '🌍', label: 'Areas' },
-  { id: 'location', icon: '📌', label: 'Locations' },
-  { id: 'actor', icon: '👾', label: 'Actors' },
-  { id: 'tag', icon: '🏷️', label: 'Tags' },
-  { id: 'item-group', icon: '📦', label: 'Item Groups' },
-  { id: 'enumeration', icon: '🔤', label: 'Enumerations' },
+const KIND_NAV_ITEMS: { id: EntityKind; icon: IconName; label: string }[] = [
+  { id: 'screen', icon: 'map', label: 'Screens' },
+  { id: 'connection', icon: 'link', label: 'Connections' },
+  { id: 'check', icon: 'pin', label: 'Checks' },
+  { id: 'item', icon: 'package', label: 'Items' },
+  { id: 'dungeon', icon: 'house', label: 'Dungeons' },
+  { id: 'area', icon: 'globe', label: 'Areas' },
+  { id: 'location', icon: 'flag', label: 'Locations' },
+  { id: 'actor', icon: 'bug', label: 'Actors' },
+  { id: 'tag', icon: 'tag', label: 'Tags' },
+  { id: 'item-group', icon: 'archive', label: 'Item Groups' },
+  { id: 'enumeration', icon: 'type', label: 'Enumerations' },
 ];
 
-const RECOMMENDATIONS_NAV_ITEM = { id: RECOMMENDATIONS_KIND, icon: '⚠️', label: 'Recommendations' };
+const RECOMMENDATIONS_NAV_ITEM: { id: string; icon: IconName; label: string } = {
+  id: RECOMMENDATIONS_KIND, icon: 'triangle-alert', label: 'Recommendations',
+};
 
-const NAV_ITEMS: { id: string; icon: string; label: string }[] = [...KIND_NAV_ITEMS, RECOMMENDATIONS_NAV_ITEM];
+const NAV_ITEMS: { id: string; icon: IconName; label: string }[] = [...KIND_NAV_ITEMS, RECOMMENDATIONS_NAV_ITEM];
 
 const NAV_ICONS: Record<string, IconData> = {
   screen: mapIcon,
@@ -61,6 +63,7 @@ const NAV_ICONS: Record<string, IconData> = {
 const FALLBACK_NAV_ICON: IconData = typeIcon;
 
 const NO_SOURCE_FILE = 'No source file could be derived for this record.';
+const NOT_A_RECORD = 'This row is not a saved record: it has no id.';
 const TAG_NAME_MISMATCH = "A tag's name must read namespace:value, matching its own namespace and value.";
 const TAG_NOT_CONVENTION = 'Tags must be in the form namespace:value.';
 const TAG_NO_SCOPE = 'This collection has no tag vocabulary to file a new term under.';
@@ -140,7 +143,7 @@ export {
   DEFAULT_KIND, DEFAULT_TAB, DETAIL_TABS, EMIT_FAILED, EMPTY_PLACEMENT, ENTITY_KINDS,
   FALLBACK_NAV_ICON, ID_REF_SELECTOR, IDENTITY_PATH, KIND_NAV_ITEMS, NAME_FIELD_BY_KIND, NARROWED_KIND, NAV_ICONS, NAV_ITEMS,
   NO_COLUMNS, NO_FINDINGS, NO_OPTIONS, NO_SERIALIZER, NO_SOURCE_FILE, NO_TABLE, NO_TAG_SUGGESTIONS,
-  NO_TARGET_FIELDS, NOTHING_MATCHES, NOTHING_SELECTED, OVERWORLD_GRID, OVERWORLD_KIND, READ_ONLY_NOTE,
+  NO_TARGET_FIELDS, NOT_A_RECORD, NOTHING_MATCHES, NOTHING_SELECTED, OVERWORLD_GRID, OVERWORLD_KIND, READ_ONLY_NOTE,
   RECOMMENDATIONS_KIND, RECOMMENDATIONS_NAV_ITEM, RECORD_LIST_RATIO, ROOM_GRID, SCREEN_FLOOR, SCREEN_TILE,
   TAG_NAME_MISMATCH, TAG_NO_SCOPE, TAG_NOT_CONVENTION,
 };

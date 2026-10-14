@@ -9,7 +9,7 @@
   justify-content: center;
   border-radius: var(--radius-md);
   background: var(--c-sunken);
-  border: 1px solid var(--c-border);
+  border: var(--border-width-thin) solid var(--c-border);
   padding: var(--space-sm);
   box-sizing: border-box;
 }
@@ -25,7 +25,7 @@
   font-family: var(--font-mono);
   font-size: var(--text-base);
   font-weight: var(--weight-semi);
-  letter-spacing: 0.5px;
+  letter-spacing: calc(0.5 * var(--size-1));
   user-select: none;
 }
 

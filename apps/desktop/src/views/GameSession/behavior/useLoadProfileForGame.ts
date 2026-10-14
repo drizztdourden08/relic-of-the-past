@@ -1,6 +1,5 @@
 /* @layer renderer-appshell @kind hook */
 import { useCallback } from 'react';
-import type { GameSettings } from '@rotp/features';
 import { log } from '@app/log-bus';
 import { resetGame, setAutoSaveConfig } from '@app/game';
 import { serializeToIni, mergeSettings } from '@rotp/game-core';

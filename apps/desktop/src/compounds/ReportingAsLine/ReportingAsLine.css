@@ -7,10 +7,9 @@
 }
 
 .reporting-as__label {
-  color: var(--c-text-faint);
   text-transform: uppercase;
   font-size: var(--text-xs);
-  letter-spacing: 0.05em;
+  letter-spacing: var(--tracking-wide);
 }
 
 .reporting-as__who {

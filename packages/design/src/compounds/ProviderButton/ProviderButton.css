@@ -4,23 +4,22 @@
   --provider-bg: var(--c-surface);
   --provider-bg-hover: var(--c-hover);
   --provider-ink: var(--c-text);
-  --provider-edge: transparent;
 
   justify-content: center;
   gap: var(--space-sm);
   background: var(--provider-bg);
   color: var(--provider-ink);
-  border: var(--border-width-thin) solid var(--provider-edge);
+  border: var(--border-width-thin) solid var(--provider-edge, transparent);
   font-weight: var(--weight-medium);
 }
 
 .provider-btn:hover:not(:disabled) {
   background: var(--provider-bg-hover);
   color: var(--provider-ink);
-  border-color: var(--provider-edge);
+  border-color: var(--provider-edge, transparent);
 }
 
-.provider-btn .btn__icon {
+.provider-btn__icon {
   font-size: var(--text-lg);
 }
 

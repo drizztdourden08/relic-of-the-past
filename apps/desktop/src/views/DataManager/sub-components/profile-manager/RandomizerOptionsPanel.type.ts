@@ -3,6 +3,7 @@ import type { OptionTabId } from '@app/hooks/randomizer/option-tab-model';
 import type { RandomizerOptionsSnapshot } from '@rotp/randomizer';
 import type { RandomizerOptionChoices } from '@app/hooks/randomizer/randomizer-choices';
 import type { POOL_TAB } from './RandomizerOptionsPanel.constants';
+import type { usePanelModel } from './randomizer-options/usePanelModel';
 
 interface RandomizerOptionsPanelProps {
   romFile: string;
@@ -14,4 +15,14 @@ interface RandomizerOptionsPanelProps {
 
 type PanelTab = OptionTabId | typeof POOL_TAB;
 
-export type { RandomizerOptionsPanelProps, PanelTab };
+type PanelModel = ReturnType<typeof usePanelModel>;
+
+interface PanelBodyProps {
+  tab: PanelTab;
+  model: PanelModel;
+  choices: RandomizerOptionChoices;
+  seed: string;
+  onChange?: (next: RandomizerOptionChoices) => void;
+}
+
+export type { RandomizerOptionsPanelProps, PanelTab, PanelModel, PanelBodyProps };

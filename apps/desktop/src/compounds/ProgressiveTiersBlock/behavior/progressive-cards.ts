@@ -7,7 +7,7 @@ const countTextOf = (ticked: number, total: number): string =>
   (ticked === 0 ? 'none in the pool' : `${ticked} of ${total} in the pool`);
 
 const progressiveCardsOf = (
-  setting: ProgressiveSetting, modes: ProgressiveModeSetting,
+  setting: ProgressiveSetting, modes: Partial<ProgressiveModeSetting>,
 ): ProgressiveCardModel[] =>
   PROGRESSIVE_FAMILIES.map((family) => {
     const tiers = family.tierLabels.map((_neutral, index) => ({

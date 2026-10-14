@@ -1,16 +1,16 @@
 /* @layer renderer-components @kind logic */
-import type { InputItem } from '../hid-calibration.type';
 import { buildButtonMapping, describeButtonMapping, findButtonBits, pickBestButtonDiff } from '../hid-analysis';
 import { ignoredForDetection } from '../noisy-bytes';
 import { DETECT_LOG_INTERVAL_MS } from './button-detection.constants';
 import { scheduleAdvance } from './schedule-advance';
-import type { ButtonCallbacks, ButtonRefs } from './button-detection.type';
+import type { ButtonItemArgs } from './button-detection.type';
 
 const diffKey = (d: { byteIndex: number; bitMask: number }): string => `${d.byteIndex}:${d.bitMask}`;
 
 const sortedList = (values: Iterable<number>): string => [...values].sort((a, b) => a - b).join(',');
 
-const processButtonItem = (bytes: Uint8Array, item: InputItem, idx: number, refs: ButtonRefs, cb: ButtonCallbacks): void => {
+const processButtonItem = (args: ButtonItemArgs): void => {
+  const { bytes, item, idx, refs, cb } = args;
   if (item.status === 'captured' || item.status === 'skipped') return;
   const bl = refs.baselineRef.current;
   const excl = ignoredForDetection(refs.excludedRef.current, refs.noiseRef.current);

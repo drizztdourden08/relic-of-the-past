@@ -1,5 +1,5 @@
 /* @layer site-kit @kind style */
-.dialog.upload-dialog {
+.upload-dialog {
   max-width: var(--upload-dialog-w);
 }
 

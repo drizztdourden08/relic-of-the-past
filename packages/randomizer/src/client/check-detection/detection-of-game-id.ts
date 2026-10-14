@@ -3,8 +3,8 @@ import type { CheckGameId } from '@rotp/game-data';
 import { CHEST_MASK_BASE } from './check-detection.constants';
 import type { CheckDetection } from './check-detection.type';
 
-const detectionOfGameId = (gameId: CheckGameId): CheckDetection | null => {
-  const { roomId, chestIndex, mask, owScreen, bufferIndex, compare, value, roomFlag } = gameId;
+const mapDetectionOf = (gameId: CheckGameId): CheckDetection | null => {
+  const { roomId, chestIndex, mask, owScreen } = gameId;
   if (roomId !== undefined && chestIndex !== undefined) {
     return { mode: 'room-mask', roomId, mask: CHEST_MASK_BASE << chestIndex };
   }
@@ -14,6 +14,11 @@ const detectionOfGameId = (gameId: CheckGameId): CheckDetection | null => {
   if (owScreen !== undefined && mask !== undefined) {
     return { mode: 'ow-mask', owScreen, mask };
   }
+  return null;
+};
+
+const progressDetectionOf = (gameId: CheckGameId): CheckDetection | null => {
+  const { mask, bufferIndex, compare, value, roomFlag } = gameId;
   if (bufferIndex !== undefined && mask !== undefined) {
     return { mode: 'progress', bufferIndex, mask };
   }
@@ -25,5 +30,8 @@ const detectionOfGameId = (gameId: CheckGameId): CheckDetection | null => {
   }
   return null;
 };
+
+const detectionOfGameId = (gameId: CheckGameId): CheckDetection | null =>
+  mapDetectionOf(gameId) ?? progressDetectionOf(gameId);
 
 export { detectionOfGameId };

@@ -1,6 +1,7 @@
 /* @layer tests @kind test */
 import { describe, it, expect } from 'vitest';
 import { tagIdsForKeys } from '@rotp/game-data';
+import type { ScreenRecord } from '@rotp/game-data';
 import { buildScreenRecord } from '@app/nav-widget/screen-editor/build-screen-record';
 import type { ScreenDraft } from '@app/nav-widget/screen-editor/build-screen-record';
 
@@ -23,6 +24,9 @@ const draft = (over: Partial<ScreenDraft>): ScreenDraft => ({
   existing: null,
   ...over,
 });
+
+const isStoredTags = (value: unknown): value is ScreenDraft['tags'] =>
+  Array.isArray(value) && value.every((term) => typeof term === 'string');
 
 describe('buildScreenRecord and the native id the record carries', () => {
   it('a dungeon room is addressed by room index plus palace index', () => {
@@ -68,8 +72,9 @@ describe('buildScreenRecord position and defaults', () => {
   });
 
   it('drops a term the vocabulary does not hold instead of writing it raw', () => {
-    const tags = ['nonsense:not-a-real-term'] as unknown as ScreenDraft['tags'];
-    expect(buildScreenRecord(draft({ tags })).record?.tags).toEqual([]);
+    const stored: unknown = JSON.parse('["nonsense:not-a-real-term"]');
+    if (!isStoredTags(stored)) throw new Error('the stored draft tags are not a list of strings');
+    expect(buildScreenRecord(draft({ tags: stored })).record?.tags).toEqual([]);
   });
 });
 
@@ -102,13 +107,20 @@ describe('buildScreenRecord and what it refuses to invent', () => {
 
 describe('buildScreenRecord on fields the form does not own', () => {
   it('carries them across from the record being edited instead of dropping them', () => {
-    const existing = {
+    const existing: ScreenRecord = {
       id: 'screen-183',
+      gameId: { roomIndex: 0x80, palaceIndex: 2 },
+      kind: 'dungeon',
+      world: 'light',
+      name: 'Edited Room',
+      areaId: 'area-009',
+      locationId: 'location-011',
+      tags: [],
       review: { status: 'accepted', source: 'person', at: '2026-01-01' },
-      nav: { edges: [] },
-      triggerIds: ['trigger-001'],
-      spawns: [{ id: 'spawn-1' }],
-    } as unknown as NonNullable<ScreenDraft['existing']>;
+      nav: { totalTiles: 0, freeTileCount: 0, maxReachableTileCount: 0, connectionPointIds: [], obstacles: [], features: [] },
+      triggerIds: ['actor-001'],
+      spawns: [{ actorId: 'actor-001', tile: { x: 0, y: 0 } }],
+    };
     const { record } = buildScreenRecord(draft({ existing }));
     expect(record?.review).toBe(existing.review);
     expect(record?.nav).toBe(existing.nav);

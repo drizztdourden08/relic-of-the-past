@@ -6,7 +6,7 @@
   gap: var(--space-sm);
   padding: var(--space-sm);
   border-radius: var(--radius-sm);
-  border: 1px solid var(--c-border);
+  border: var(--border-width-thin) solid var(--c-border);
   background: var(--c-hover);
 }
 

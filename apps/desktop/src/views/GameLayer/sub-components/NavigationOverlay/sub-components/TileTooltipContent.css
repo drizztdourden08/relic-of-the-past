@@ -1,0 +1,132 @@
+/* @layer renderer-components @kind style */
+.nav-tip {
+  position: absolute;
+  background: var(--c-glass);
+  border: var(--border-width-thin) solid var(--c-border-strong);
+  border-radius: var(--radius-sm);
+  padding: calc(5 * var(--size-1)) var(--size-8);
+  box-shadow: var(--shadow-2);
+  pointer-events: none;
+  white-space: normal;
+  max-width: calc(760 * var(--size-1));
+  font-family: var(--font-mono);
+  font-size: calc(11 * var(--size-1));
+  line-height: var(--size-16);
+  display: flex;
+  flex-direction: column;
+  gap: var(--size-2);
+}
+
+.nav-tip__header {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--size-12);
+}
+
+.nav-tip__row {
+  display: flex;
+  gap: var(--size-8);
+  align-items: baseline;
+}
+
+.nav-tip__dual {
+  display: flex;
+  gap: 0;
+}
+
+.nav-tip__dual-left {
+  flex: 1;
+  border-right: var(--border-width-thin) solid var(--c-border);
+  padding-right: var(--size-6);
+  display: flex;
+  flex-direction: column;
+  gap: var(--size-1);
+}
+
+.nav-tip__dual-right {
+  flex: 1;
+  padding-left: var(--size-6);
+  display: flex;
+  flex-direction: column;
+  gap: var(--size-1);
+}
+
+.nav-tip__col {
+  display: flex;
+  flex-direction: column;
+  gap: var(--size-1);
+}
+
+.nav-tip__layer-head {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--size-8);
+  font-weight: bold;
+  font-size: var(--size-10);
+}
+
+.nav-tip__locked-tag {
+  color: var(--c-danger);
+  font-size: calc(9 * var(--size-1));
+}
+
+.nav-tip__class-row {
+  display: flex;
+  gap: var(--size-6);
+  align-items: baseline;
+}
+
+.nav-tip__class-label {
+  color: var(--c-text-dim);
+  min-width: calc(62 * var(--size-1));
+}
+
+.nav-tip__class-tag {
+  color: var(--c-text-muted);
+  font-size: calc(9 * var(--size-1));
+  margin-left: auto;
+}
+
+.nav-tip__muted {
+  color: var(--c-text-muted);
+}
+
+.nav-tip__dim {
+  color: var(--c-text-dim);
+}
+
+.nav-tip__text {
+  color: var(--c-text);
+}
+
+.nav-tip__warning {
+  color: var(--c-warning);
+}
+
+.nav-tip__gold {
+  color: var(--c-primary);
+}
+
+.nav-tip__danger {
+  color: var(--c-danger);
+}
+
+.nav-tip [data-tone='ground'] {
+  color: var(--c-info);
+}
+
+.nav-tip [data-tone='above'] {
+  color: var(--c-primary);
+}
+
+.nav-tip [data-tone='ok'] {
+  color: var(--c-secondary-bright);
+}
+
+.nav-tip [data-tone='warn'] {
+  color: var(--c-warning);
+}
+
+.nav-tip [data-tone='bad'] {
+  color: var(--c-danger);
+}

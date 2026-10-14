@@ -11,7 +11,7 @@ const ChannelLive = (props: { channel: LiveChannel }) => {
   if (report === null) {
     return (
       <Box className="music-widget__rows">
-        <StatRow label={channel.title} value={<Status tone="neutral">silent</Status>} />
+        <StatRow className="music-widget__row" label={channel.title} value={<Status tone="neutral">silent</Status>} />
       </Box>
     );
   }

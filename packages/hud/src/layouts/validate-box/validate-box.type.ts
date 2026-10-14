@@ -1,4 +1,12 @@
 /* @layer shared-hud @kind types */
+import type { ValueContext } from '../validate-value.type';
+
 type Issues = string[];
 
-export type { Issues };
+interface ValueSite {
+  path: string;
+  issues: Issues;
+  context: ValueContext;
+}
+
+export type { ValueSite, Issues };

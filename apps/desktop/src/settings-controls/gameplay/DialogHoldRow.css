@@ -1,7 +1,6 @@
 /* @layer renderer-components @kind style */
 
-.dialog-hold-row > .toggle,
-.dialog-hold-row > .slider {
+.dialog-hold-row__cell {
   flex: 1 1 0;
   min-width: 0;
 }

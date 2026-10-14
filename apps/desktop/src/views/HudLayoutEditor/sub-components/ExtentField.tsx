@@ -3,32 +3,24 @@ import { useRef, useState } from 'react';
 import { Box, Field, Pressable, Text } from '@drizztdourden08/tessera/primitives';
 import { DropdownMenu } from '@drizztdourden08/tessera/composites';
 import { NumberCell } from './NumberCell';
-import { EXTENT_MODES as MODES, modeOf } from '@app/hud-layout-editing/track-extents';
+import { EXTENT_MODES as MODES, extentFromNumber, extentNumberOf, modeOf, modeSuffixOf } from '@app/hud-layout-editing/track-extents';
 import type { ExtentMode } from '@app/hud-layout-editing/track-extents';
-import type { Extent } from '@rotp/hud';
 import type { ExtentFieldProps } from './ExtentField.type';
-
-const numberOf = (value: Extent | undefined): number | '' => {
-  if (typeof value !== 'object') return '';
-  const raw = 'pct' in value ? value.pct : 'px' in value ? value.px : undefined;
-  return typeof raw === 'number' ? raw : '';
-};
 
 const ExtentField = (props: ExtentFieldProps) => {
   const { label, value, onChange, bare = false } = props;
   const anchor = useRef<HTMLDivElement>(null);
   const [open, setOpen] = useState(false);
   const mode = modeOf(value);
-  const current = numberOf(value);
-  const suffix = MODES.find((entry) => entry.mode === mode)?.suffix ?? 'px';
+  const current = extentNumberOf(value);
+  const suffix = modeSuffixOf(mode);
   const hasNumber = mode === 'px' || mode === 'pct';
 
   const setMode = (next: ExtentMode): void => {
     setOpen(false);
-    const n = typeof current === 'number' ? current : 0;
     if (next === 'auto') onChange(undefined);
     else if (next === 'fill') onChange('fill');
-    else onChange(next === 'px' ? { px: n } : { pct: n });
+    else onChange(extentFromNumber(next, current ?? 0));
   };
 
   const body = (
@@ -39,8 +31,8 @@ const ExtentField = (props: ExtentFieldProps) => {
             className="hud-extent__field"
             label={`${label} value`}
             placeholder="auto"
-            value={typeof current === 'number' ? current : undefined}
-            onChange={(next) => onChange(next === undefined ? undefined : mode === 'pct' ? { pct: next } : { px: next })}
+            value={current}
+            onChange={(next) => onChange(extentFromNumber(mode, next))}
           />
         ) : (
           <Text className="hud-extent__mode">{suffix}</Text>

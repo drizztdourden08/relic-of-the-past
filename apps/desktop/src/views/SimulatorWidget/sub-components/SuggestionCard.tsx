@@ -1,6 +1,7 @@
 /* @layer renderer-widgets @kind component */
 import { useState } from 'react';
 import { Box, Status, Button, Text, Tooltip } from '@drizztdourden08/tessera/primitives';
+import { applyLabel } from '../behavior/apply-label';
 import { CHECK_DISABLED_HINT } from '../SimulatorWidget.constants';
 import type { ApplyState, SuggestionCardProps } from '../SimulatorWidget.type';
 
@@ -26,7 +27,7 @@ const SuggestionCard = (props: SuggestionCardProps) => {
 
   const button = (
     <Button size="sm" variant="secondary" onClick={handleApply} disabled={disabled}>
-      {state === 'applied' ? 'Applied' : state === 'applying' ? 'Applying...' : 'Apply'}
+      {applyLabel(state)}
     </Button>
   );
 

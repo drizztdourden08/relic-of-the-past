@@ -1,5 +1,7 @@
 /* @layer design @kind barrel */
 export { HookshopHighlight } from '../compounds/HookshopHighlight';
+export { Hookshot } from '../compounds/Hookshot';
+export { Mascot } from '../compounds/Mascot';
 export { OUTFIT_LABELS, useWearing } from './character/behavior/useWearing';
 export { PoseCanvas } from './character/compounds/PoseCanvas';
 export { SpriteSheetViewer } from './character/compounds/SpriteSheetViewer';

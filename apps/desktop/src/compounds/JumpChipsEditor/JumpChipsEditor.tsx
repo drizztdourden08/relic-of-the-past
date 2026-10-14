@@ -1,5 +1,6 @@
 /* @layer renderer-components @kind component */
 import { Box, Button, IconButton, NumberInput, Text } from '@drizztdourden08/tessera/primitives';
+import { clampJump } from './behavior/clamp-jump';
 import type { JumpChipsEditorProps } from './JumpChipsEditor.type';
 import './JumpChipsEditor.css';
 
@@ -10,7 +11,7 @@ const JumpChipsEditor = (props: JumpChipsEditorProps) => {
   const canAdd = !disabled && jumps.length < span;
 
   const setJump = (index: number, next: number) =>
-    onChange(jumps.map((jump, at) => (at === index ? (Number.isFinite(next) ? Math.min(chipMax, next) : 0) : jump)));
+    onChange(jumps.map((jump, at) => (at === index ? clampJump(next, chipMax) : jump)));
   const removeJump = (index: number) => onChange(jumps.filter((_, at) => at !== index));
   const addJump = () => onChange([...jumps, Math.min(chipMax, Math.max(1, span - sum))]);
 

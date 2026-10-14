@@ -23,4 +23,16 @@ interface Voice {
   fade: () => VoiceFade | null;
 }
 
-export type { Voice, VoiceOptions, VoiceFade };
+interface FadePlan {
+  startedAt: number;
+  fadeInSeconds: number;
+  fadeOutSeconds: number;
+  fadeOutStart: number | null;
+}
+
+interface PlaybackSpan {
+  duration: number;
+  loopStart: number;
+}
+
+export type { FadePlan, PlaybackSpan, Voice, VoiceOptions, VoiceFade };

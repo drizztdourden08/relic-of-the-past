@@ -6,7 +6,7 @@ const capacityPondOf = (choices: RandomizerOptionChoices): CapacityPondSelection
   enabled: choices.capacityEnabled,
   capacity: choices.capacity,
   pond: choices.ponds.capacity,
-  retroBow: choices.retroBow?.enabled === true,
+  retroBow: choices.retroBow.enabled,
 });
 
 export { capacityPondOf };

@@ -3,14 +3,9 @@ import { DITHER, EXIT_STEPS, INK, PULSE_LEVELS } from '../HudPixelPie.constants'
 import type { PieFrame, SliceMap } from '../HudPixelPie.type';
 import { buildSliceMap } from './build-slice-map';
 import { cellAt, itemAt } from '@app/checked-access';
+import { fillGrid } from './fill-grid';
+import { inkOf } from './ink-of';
 import { pushOffset } from './push-offset';
-
-const rimOf = (body: number): number => Math.max(INK.shade, body - 1);
-
-const inkOf = (body: number, map: SliceMap, cell: number): number => {
-  if (map.hub[cell] === 1) return INK.deep;
-  return map.rim[cell] === 1 ? rimOf(body) : body;
-};
 
 const quartersKept = (step: number): number => EXIT_STEPS + 1 - step;
 
@@ -38,12 +33,7 @@ const rasterizePie = (frame: PieFrame, sliceMap?: SliceMap): Uint8Array => {
   const nextBody = itemAt(PULSE_LEVELS, ((pulseStep % PULSE_LEVELS.length) + PULSE_LEVELS.length) % PULSE_LEVELS.length);
   const grid = new Uint8Array(gridSize * gridSize);
 
-  for (let cell = 0; cell < grid.length; cell += 1) {
-    const index = itemAt(map.owner, cell);
-    if (map.outline[cell] === 1) grid[cell] = INK.outline;
-    else if (map.backing[cell] === 1 || (index >= 0 && index < gone)) grid[cell] = INK.backing;
-    else if (index >= 0) grid[cell] = inkOf(index === gone ? nextBody : INK.lit, map, cell);
-  }
+  fillGrid(grid, map, gone, nextBody);
 
   const step = Math.floor(leavingStep);
   if (gone > 0 && step >= 1 && step <= EXIT_STEPS) drawLeaving(grid, map, gone - 1, step);

@@ -1,7 +1,7 @@
 /* @layer renderer-widgets @kind component */
 import { useState } from 'react';
 import { Button, Disclosure, ScrollArea, Text } from '@drizztdourden08/tessera/primitives';
-import { certainOnly } from '@app/views/DataInspector/behavior/recommendations/accept-all-certain';
+import { certainOnly } from '@app/data-inspector/recommendations/accept-all-certain';
 import { useWidgetPref } from '@drizztdourden08/brock-react';
 import { acceptAllCertainHere } from '../behavior/accept-all-certain-here';
 import { batchOutcomeMessage } from '../behavior/batch-outcome-message';

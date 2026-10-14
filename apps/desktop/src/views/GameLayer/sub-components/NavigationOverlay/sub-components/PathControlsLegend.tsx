@@ -1,20 +1,14 @@
 /* @layer renderer-components @kind component */
-import type { CSSProperties } from 'react';
 import { Text } from '@drizztdourden08/tessera/primitives';
 import { CollapsiblePanel } from './CollapsiblePanel';
-
-const S: Record<string, CSSProperties> = {
-  dim: { color: 'var(--c-text-dim)' },
-  gold: { color: 'var(--c-primary)' },
-};
 
 const PathControlsLegend = () => {
   return (
     <CollapsiblePanel title="controls">
-      <Text style={S.dim}>LMB hold: live A* path to cursor</Text>
-      <Text style={S.dim}>RMB while holding: lock target</Text>
-      <Text style={S.dim}>Release LMB: clear lock/path</Text>
-      <Text style={S.gold}>Shift+drag: select tiles → clipboard</Text>
+      <Text className="nav-legend__dim">LMB hold: live A* path to cursor</Text>
+      <Text className="nav-legend__dim">RMB while holding: lock target</Text>
+      <Text className="nav-legend__dim">Release LMB: clear lock/path</Text>
+      <Text className="nav-legend__gold">Shift+drag: copy the selected tiles to the clipboard</Text>
     </CollapsiblePanel>
   );
 };

@@ -6,8 +6,8 @@
 }
 
 .normal-save-card__thumb {
-  width: 64px;
-  height: 44px;
+  width: var(--size-64);
+  height: calc(44 * var(--size-1));
 }
 
 .normal-save-card__name {

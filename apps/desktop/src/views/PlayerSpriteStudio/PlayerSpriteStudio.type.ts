@@ -1,6 +1,12 @@
 /* @layer renderer-components @kind types */
 import type { OutfitId, PlayerSheet, SheetMeta } from '@rotp/game-data';
+import type { InstalledPack } from '@rotp/hub-contracts';
+import type { useWearing } from '@rotp/design/packs';
 import type { RomDisplayInfo } from '@app/views/GameSession/GameSession.type';
+import type { ConfirmRequest } from '../InstalledOriginBar/InstalledOriginBar.type';
+import type { useSpriteDraft } from './behavior/useSpriteDraft';
+import type { useSpriteLibrary } from './behavior/useSpriteLibrary';
+import type { useSpriteExport } from './behavior/useSpriteExport';
 
 interface PlayerSpriteStudioProps {
   romStatuses: RomDisplayInfo[];
@@ -59,7 +65,56 @@ interface StudioToolbarProps {
   onClose: () => void;
 }
 
+type SpriteDraftModel = ReturnType<typeof useSpriteDraft>;
+type SpriteLibraryModel = ReturnType<typeof useSpriteLibrary>;
+type SpriteExportModel = ReturnType<typeof useSpriteExport>;
+type WearingModel = ReturnType<typeof useWearing>;
+
+interface StudioActionsParams {
+  openFile: string | null;
+  packFor: (name: string) => InstalledPack | null;
+  confirmUninstall: (pack: InstalledPack, onDone: () => void) => void;
+  onDeleteConfirm: ConfirmRequest;
+  run: (task: () => Promise<unknown>) => Promise<void>;
+  library: SpriteLibraryModel;
+  draft: SpriteDraftModel;
+}
+
+interface StudioDetailProps {
+  sheet: PlayerSheet;
+  openFile: string | null;
+  installed: InstalledPack | null;
+  busy: boolean;
+  status: string | null;
+  draft: SpriteDraftModel;
+  library: SpriteLibraryModel;
+  exporter: SpriteExportModel;
+  wearing: WearingModel;
+  run: (task: () => Promise<unknown>) => Promise<void>;
+  onOpenAfter: (name: string) => void;
+  onUninstalled: () => void;
+}
+
+interface ApplyRowProps {
+  applied: boolean | null;
+}
+
+interface OutfitSwatchGridProps {
+  colors: readonly number[];
+  originals: readonly number[];
+  slot: Slot;
+  onOpen: (el: HTMLElement, slot: number) => void;
+}
+
+interface GloveSwatchGridProps {
+  gloves: readonly number[];
+  originalGloves: readonly number[];
+  slot: Slot;
+  onOpen: (el: HTMLElement, slot: 'g0' | 'g1') => void;
+}
+
 export type {
-  Container, LibraryEntry, OpenDraft, PaletteEditorProps, PlayerSpriteStudioProps, Slot, SpriteLibraryListProps,
-  StudioToolbarProps,
+  ApplyRowProps, Container, GloveSwatchGridProps, LibraryEntry, OpenDraft, OutfitSwatchGridProps, PaletteEditorProps,
+  PlayerSpriteStudioProps, Slot, SpriteLibraryListProps, SpriteDraftModel, SpriteExportModel, SpriteLibraryModel, StudioActionsParams, StudioDetailProps, StudioToolbarProps,
+  WearingModel,
 };

@@ -26,7 +26,7 @@ const useArmedAction = ({ timeoutMs, resetKey }: UseArmedActionParams) => {
     }, timeoutMs);
   }, [clearTimer, resetKey, timeoutMs]);
 
-  const armed = state != null && state.key === resetKey ? state.action : null;
+  const armed = state?.key === resetKey ? state.action : null;
 
   const press = useCallback((action: ArmedAction, perform: () => void) => {
     if (armed === action) {

@@ -32,11 +32,11 @@
   display: flex;
   flex-direction: column;
   gap: var(--space-xs);
-  max-height: 180px;
+  max-height: calc(180 * var(--size-1));
   overflow-y: auto;
   padding: var(--space-xs) var(--space-sm);
   background: var(--c-inset);
-  border: 1px solid var(--c-hairline);
+  border: var(--border-width-thin) solid var(--c-hairline);
   border-radius: var(--radius-md);
 }
 
@@ -44,7 +44,7 @@
   color: var(--c-text-dim);
   font-size: var(--text-xs);
   text-transform: uppercase;
-  letter-spacing: 1px;
+  letter-spacing: var(--size-1);
 }
 
 .simulator__trail-row {
@@ -56,7 +56,7 @@
 }
 
 .simulator__trail-index {
-  min-width: 1.5em;
+  min-width: calc(18 * var(--size-1));
   color: var(--c-text-muted);
   text-align: right;
 }
@@ -91,7 +91,7 @@
   display: flex;
   flex-direction: column;
   gap: var(--space-md);
-  border-top: 1px solid var(--c-hairline);
+  border-top: var(--border-width-thin) solid var(--c-hairline);
   padding-top: var(--space-md);
 }
 
@@ -109,7 +109,7 @@
   flex: 1;
   min-width: 0;
   padding: var(--space-sm) var(--space-md);
-  border: 1px solid var(--c-hairline);
+  border: var(--border-width-thin) solid var(--c-hairline);
   border-radius: var(--radius-md);
 }
 
@@ -170,7 +170,7 @@
   flex-direction: column;
   gap: var(--space-xs);
   background: var(--c-inset);
-  border: 1px solid var(--c-hairline);
+  border: var(--border-width-thin) solid var(--c-hairline);
   border-radius: var(--radius-md);
   padding: var(--space-sm);
 }

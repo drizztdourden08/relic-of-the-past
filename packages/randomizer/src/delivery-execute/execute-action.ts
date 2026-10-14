@@ -2,7 +2,7 @@
 import { getModule } from '@rotp/game-core';
 import type { EmscriptenModule } from '@rotp/game-core';
 import type { DeliveryAction } from '../delivery-queue/delivery-queue.type';
-import type { ExecuteOutcome, GiveItemAction, TriggerNpcCheckAction } from './delivery-execute.type';
+import type { ExecuteOutcome, GiveItemAction, QuietReceiptAction, TriggerNpcCheckAction } from './delivery-execute.type';
 import {
   HEART_PIECE_ID, QUIET_RECEIPT_GRANTED, QUIET_RECEIPT_NOT_QUIET, RECEIPT_REFUSED,
 } from './delivery-execute.constants';
@@ -31,16 +31,19 @@ const triggerNpcCheck = (mod: EmscriptenModule, action: TriggerNpcCheckAction): 
   return 'done';
 };
 
+const quietReceipt = (mod: EmscriptenModule, action: QuietReceiptAction): ExecuteOutcome => {
+  const status = mod.ccall('WasmGrantQuietReceipt', 'number', ['number'], [action.itemId]);
+  if (status === QUIET_RECEIPT_NOT_QUIET) return executeAction(action.fallback);
+  return status === QUIET_RECEIPT_GRANTED ? 'settled' : 'refused';
+};
+
 const executeAction = (action: DeliveryAction): ExecuteOutcome => {
   const mod = getModule();
   if (!mod) return isReceiptGrant(action) || action.type === 'quiet_receipt' ? 'refused' : 'done';
 
   switch (action.type) {
-    case 'quiet_receipt': {
-      const status = mod.ccall('WasmGrantQuietReceipt', 'number', ['number'], [action.itemId]);
-      if (status === QUIET_RECEIPT_NOT_QUIET) return executeAction(action.fallback);
-      return status === QUIET_RECEIPT_GRANTED ? 'settled' : 'refused';
-    }
+    case 'quiet_receipt':
+      return quietReceipt(mod, action);
     case 'give_item':
       return giveItem(mod, action);
     case 'trigger_check':

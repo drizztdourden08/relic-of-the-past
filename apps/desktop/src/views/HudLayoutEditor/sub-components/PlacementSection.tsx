@@ -3,16 +3,22 @@ import { Box, Field, Select } from '@drizztdourden08/tessera/primitives';
 import { CellPicker } from './CellPicker';
 import { DisabledReason } from './DisabledReason';
 import { OffsetField } from './OffsetField';
-import type { HudAlignSelf, HudContainer, HudGridContainer } from '@rotp/hud';
+import type { HudAlignSelf, HudContainer } from '@rotp/hud';
 import { FLEX_STANDIN, OPTIONS } from './PlacementSection.constants';
 import type { PlacementSectionProps } from './PlacementSection.type';
 
 const engineOf = (parent: HudContainer): string =>
   (parent.layout === 'grid' ? 'grid' : `flex ${parent.direction}`);
 
+const reasonOf = (parent: HudContainer | null): string =>
+  (parent
+    ? `This parent is a ${engineOf(parent)}. Switch it to grid to place by cell.`
+    : 'The screen is the whole view; it sits in nothing.');
+
 const PlacementSection = (props: PlacementSectionProps) => {
   const { node, parent, onSelectNode, onPatch } = props;
   const isGrid = parent?.layout === 'grid';
+  const openParent = parent && onSelectNode ? () => onSelectNode(parent.id) : undefined;
 
   return (
     <Box className="hud-inspect__group">
@@ -24,11 +30,9 @@ const PlacementSection = (props: PlacementSectionProps) => {
 
       <DisabledReason
         active={!isGrid}
-        reason={parent
-          ? `This parent is a ${engineOf(parent)}. Switch it to grid to place by cell.`
-          : 'The screen is the whole view; it sits in nothing.'}
-        actionLabel={parent && onSelectNode ? "Open the parent's Layout" : undefined}
-        onAction={parent && onSelectNode ? () => onSelectNode(parent.id) : undefined}
+        reason={reasonOf(parent)}
+        actionLabel={openParent ? "Open the parent's Layout" : undefined}
+        onAction={openParent}
       >
         <CellPicker
           container={isGrid ? (parent) : FLEX_STANDIN}

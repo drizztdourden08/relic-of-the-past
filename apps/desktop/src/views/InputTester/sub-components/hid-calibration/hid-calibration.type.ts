@@ -117,15 +117,11 @@ interface ByteCandidateSource {
   fallbackCenter: number;
 }
 
-interface ByteColorResult {
-  bg: string;
-  border: string;
-  text: string;
-}
+type ByteColorKey = 'unknown' | 'excluded' | 'stick' | 'trigger' | 'button' | 'gyro';
 
 export type {
   AxisIdleReading,
-  ByteColorResult,
+  ByteColorKey,
   AxisSubStep,
   ButtonDiff,
   ByteStatus,

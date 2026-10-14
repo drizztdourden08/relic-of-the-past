@@ -9,4 +9,14 @@ interface EdgeCardProps {
   playerLayer: number | null | undefined;
 }
 
-export type { EdgeCardProps };
+interface EdgeCardHeaderProps {
+  row: EdgeRow;
+  screenBundle: ScreenBundleGrid | null;
+}
+
+interface EdgeLayerRowProps {
+  toggles: boolean;
+  playerLayer: number | null | undefined;
+}
+
+export type { EdgeCardHeaderProps, EdgeCardProps, EdgeLayerRowProps };

@@ -1,8 +1,13 @@
 /* @layer renderer-hud @kind hook */
 import { useEffect, useRef, useState } from 'react';
 import type { PlacedNode } from '@rotp/hud';
+import { addGhosts } from './add-ghosts';
+import { enterExitCss } from './enter-exit-css';
+import { hasTransition } from './has-transition';
 import { POST_EXIT, PRE_ENTER } from './hud-node-motion.constants';
 import type { EnterExitResult, Ghost } from './hud-node-motion.type';
+import { scheduleGhostRemoval } from './schedule-ghost-removal';
+import { withoutIds } from './without-ids';
 
 const useEnterExit = (nodes: readonly PlacedNode[]): EnterExitResult => {
   const seenRef = useRef<Set<string>>(new Set());
@@ -11,25 +16,17 @@ const useEnterExit = (nodes: readonly PlacedNode[]): EnterExitResult => {
   const prevByIdRef = useRef<ReadonlyMap<string, PlacedNode>>(new Map());
 
   const currentIds = new Set(nodes.map((p) => p.id));
-  const arrivals = nodes.filter((p) => !seenRef.current.has(p.id) && p.node.kind === 'element' && p.node.transition?.enter);
-  const departures = [...prevByIdRef.current.values()].filter(
-    (p) => !currentIds.has(p.id) && p.node.kind === 'element' && p.node.transition?.exit,
-  );
+  const arrivals = nodes.filter((p) => !seenRef.current.has(p.id) && hasTransition(p, 'enter'));
+  const departures = [...prevByIdRef.current.values()].filter((p) => !currentIds.has(p.id) && hasTransition(p, 'exit'));
 
   useEffect(() => {
     nodes.forEach((p) => seenRef.current.add(p.id));
-    const nextByid = new Map(nodes.map((p) => [p.id, p] as const));
-    prevByIdRef.current = nextByid;
+    prevByIdRef.current = new Map(nodes.map((p) => [p.id, p] as const));
 
     if (arrivals.length) {
-      setEnteringIds((prev) => new Set([...prev, ...arrivals.map((p) => p.id)]));
-      const raf = requestAnimationFrame(() => {
-        setEnteringIds((prev) => {
-          const next = new Set(prev);
-          arrivals.forEach((p) => next.delete(p.id));
-          return next;
-        });
-      });
+      const arrivalIds = arrivals.map((p) => p.id);
+      setEnteringIds((prev) => new Set([...prev, ...arrivalIds]));
+      const raf = requestAnimationFrame(() => setEnteringIds((prev) => withoutIds(prev, arrivalIds)));
       return () => cancelAnimationFrame(raf);
     }
     return undefined;
@@ -37,18 +34,8 @@ const useEnterExit = (nodes: readonly PlacedNode[]): EnterExitResult => {
 
   useEffect(() => {
     if (!departures.length) return undefined;
-    const now = performance.now();
-    setGhosts((prev) => [
-      ...prev.filter((g) => !departures.some((d) => d.id === g.placed.id)),
-      ...departures.map((placed) => ({
-        placed,
-        removeAt: now + (typeof placed.node.transition?.exit?.duration === 'number' ? placed.node.transition.exit.duration : 0),
-      })),
-    ]);
-    const timers = departures.map((placed) => {
-      const ms = typeof placed.node.transition?.exit?.duration === 'number' ? placed.node.transition.exit.duration : 0;
-      return setTimeout(() => setGhosts((prev) => prev.filter((g) => g.placed.id !== placed.id)), ms);
-    });
+    setGhosts((prev) => addGhosts(prev, departures, performance.now()));
+    const timers = departures.map((placed) => scheduleGhostRemoval(placed, setGhosts));
     return () => timers.forEach(clearTimeout);
   }, [nodes]);
 
@@ -59,15 +46,7 @@ const useEnterExit = (nodes: readonly PlacedNode[]): EnterExitResult => {
     renderNodes: [...nodes, ...ghostNodes.filter((g) => !currentIds.has(g.id))],
     enterStyle: (id) => (enteringIds.has(id) ? PRE_ENTER : {}),
     exitStyle: (id) => (exitingIds.has(id) ? POST_EXIT : {}),
-    transitionCss: (id) => {
-      const placed = nodes.find((p) => p.id === id) ?? ghosts.find((g) => g.placed.id === id)?.placed;
-      const isEntering = enteringIds.has(id) || exitingIds.has(id);
-      if (!isEntering || placed?.node.kind !== 'element') return undefined;
-      const spec = enteringIds.has(id) ? placed.node.transition?.enter : placed.node.transition?.exit;
-      if (!spec) return undefined;
-      const duration = typeof spec.duration === 'number' ? spec.duration : 0;
-      return `opacity ${duration}ms ${spec.easing ?? 'ease-out'}, transform ${duration}ms ${spec.easing ?? 'ease-out'}`;
-    },
+    transitionCss: (id) => enterExitCss({ id, nodes, ghosts, enteringIds, exitingIds }),
   };
 };
 

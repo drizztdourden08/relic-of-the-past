@@ -1,12 +1,9 @@
 /* @layer store-site @kind component */
-import { Box, Text } from '@drizztdourden08/tessera/primitives';
-import { ItemCard as CatalogCard } from '@drizztdourden08/tessera/composites';
+import { ItemCard as CatalogCard, Rating } from '@drizztdourden08/tessera/composites';
 import { navigate } from '@rotp/design';
 import type { ItemCardView } from '@rotp/hub-contracts';
-import { formatAverage } from '../../format-count/format-average';
 import { ItemPicture } from '../ItemPicture/ItemPicture';
 import { KindChip } from '../KindChip/KindChip';
-import { Stars } from '../Stars/Stars';
 import type { ItemCardProps } from './ItemCard.type';
 import { OWNED_STATUS } from './ItemCard.constants';
 import './ItemCard.css';
@@ -15,12 +12,7 @@ const byline = (item: ItemCardView) => (item.semver ? `${item.author.displayName
 
 const ItemCard = (props: ItemCardProps) => {
   const { item, to, selected = false, owned = null, extra } = props;
-  const rating = (
-    <Box as="span" className="store-card__rating">
-      <Stars value={item.ratingAverage} />
-      <Text as="span">{formatAverage(item.ratingAverage)}</Text>
-    </Box>
-  );
+  const rating = <Rating value={item.ratingAverage} showValue size="sm" />;
   return (
     <CatalogCard
       title={item.name}

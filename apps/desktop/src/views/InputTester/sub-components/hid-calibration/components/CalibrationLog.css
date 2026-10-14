@@ -1,0 +1,14 @@
+/* @layer renderer-components @kind style */
+.hid-cal__log-title {
+  display: flex;
+  gap: var(--space-sm);
+  align-items: center;
+}
+
+.input-cal__log.hid-cal__log-box {
+  max-height: calc(150 * var(--size-1));
+}
+
+.input-cal__log-entry.hid-cal__log-line {
+  white-space: pre-wrap;
+}

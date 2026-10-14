@@ -14,7 +14,7 @@ const shopPricePlanOf = (values: OptionValues): ShopPricePlan => {
   const refused = new Set(blockedCurrenciesOfValues(values));
   const byCurrency = Object.fromEntries(
     CURRENCY_ROWS.map((row) =>
-      [row.currency, shopCurrencySettingOf(values, row.currency, row.max, modifier, refused.has(row.currency))]),
+      [row.currency, shopCurrencySettingOf(values, row, modifier, refused.has(row.currency))]),
   ) as Record<ShopCountedCurrency, ShopCurrencySetting>;
   const unbuyable = new Set(blockedContentsOfValues(values));
   return {

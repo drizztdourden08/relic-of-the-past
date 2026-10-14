@@ -7,7 +7,7 @@ import { sleep } from './sleep';
 const awaitClaimedEntry = async (deviceKey: string): Promise<DeviceEntry | null> => {
   const deadline = Date.now() + CLAIM_TIMEOUT_MS;
   while (Date.now() < deadline) {
-    const entries = (await inputApi()?.list()) ?? [];
+    const entries = await inputApi().list();
     const match = entries.find((d) => d.deviceKey === deviceKey && d.status === 'ready' && d.hasButton?.length);
     if (match) return match;
     await sleep(LAYOUT_POLL_MS);

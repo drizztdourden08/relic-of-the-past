@@ -11,7 +11,7 @@ const keyboardPack = (): GlyphPack => {
   const byConsoleButton = new Map(KEYBOARD_DEFAULT.defaultMappings.map(mapping => [mapping.snesButton, mapping.binding]));
   const glyphs: GlyphTable = {};
   for (const [position, snesButton] of Object.entries(CONSOLE_LAYOUT)) {
-    const binding = snesButton ? byConsoleButton.get(snesButton) : undefined;
+    const binding = byConsoleButton.get(snesButton);
     if (binding?.type !== 'keyboard') continue;
     const assetPath = keyboardGlyphPath(binding.code);
     if (assetPath) glyphs[position as SdlButtonName] = builtInGlyphSource(assetPath);

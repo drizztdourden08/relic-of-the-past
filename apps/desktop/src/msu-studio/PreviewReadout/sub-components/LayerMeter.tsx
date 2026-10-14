@@ -3,6 +3,7 @@ import { Box, Text } from '@drizztdourden08/tessera/primitives';
 import { layerMeters } from '../behavior/layer-meters';
 import { MeterRow } from './MeterRow';
 import type { LayerMeterProps } from '../PreviewReadout.type';
+import './LayerMeter.css';
 
 const LayerMeter = (props: LayerMeterProps) => {
   const { report, showName = false } = props;

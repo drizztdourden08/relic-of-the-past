@@ -15,7 +15,7 @@
   font-size: var(--text-xs);
   color: var(--c-text-muted);
   text-transform: uppercase;
-  letter-spacing: 0.5px;
+  letter-spacing: calc(0.5 * var(--size-1));
 }
 
 .pond-status__line {

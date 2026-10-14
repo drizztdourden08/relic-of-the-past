@@ -1,7 +1,6 @@
 /* @layer renderer-components @kind component */
 import { useCallback } from 'react';
 import { Box, Button } from '@drizztdourden08/tessera/primitives';
-import { TITLE_ROW } from './DiagnosticsLog.constants';
 import type { DiagnosticsLogProps } from './DiagnosticsLog.type';
 
 const DiagnosticsLog = (props: DiagnosticsLogProps) => {
@@ -11,12 +10,12 @@ const DiagnosticsLog = (props: DiagnosticsLogProps) => {
       ...events.map(ev => `[${new Date(ev.time).toLocaleTimeString()}] ${ev.type.toUpperCase()} ${ev.id}`),
       ...controllerDiag,
     ];
-    navigator.clipboard.writeText(lines.join('\n'));
+    void navigator.clipboard.writeText(lines.join('\n'));
   }, [events, controllerDiag]);
 
   return (
     <Box className="input-cal__section">
-      <Box className="input-cal__section-title" style={TITLE_ROW}>
+      <Box className="input-cal__section-title input-cal__title-row">
         Diagnostics
         <Button
           variant="tertiary"

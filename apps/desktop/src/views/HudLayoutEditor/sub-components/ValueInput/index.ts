@@ -6,4 +6,6 @@ export { FormulaMenu } from './sub-components/FormulaMenu';
 export { FormulaProblem } from './sub-components/FormulaProblem';
 export { InstanceStrip } from './sub-components/InstanceStrip';
 export { MAX_CELLS } from './sub-components/InstanceStrip.constants';
+export { ValueInputFeedback } from './sub-components/ValueInputFeedback';
+export { readFormula } from './behavior/read-formula';
 export { usePromoteOverlay } from './behavior/usePromoteOverlay';

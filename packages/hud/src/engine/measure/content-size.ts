@@ -18,7 +18,7 @@ const contentSize = (node: HudNode, ctx: MeasureContext): Size => {
     const items = flowItems(node, ctx);
     const row = node.direction === 'row';
     const gap = flowGaps(resolveGap(node, ctx), row);
-    inner = linesSize(toLines(items, row, gap.main, false, Number.POSITIVE_INFINITY), row, gap.cross);
+    inner = linesSize(toLines(items, { row, mainGap: gap.main, wrap: false, available: Number.POSITIVE_INFINITY }), row, gap.cross);
   }
   return { w: inner.w + pad.left + pad.right, h: inner.h + pad.top + pad.bottom };
 };

@@ -1,6 +1,6 @@
 /* @layer renderer-hooks @kind logic */
 import { POND_PRICE_LADDER, asksOnlyRupees } from '@rotp/randomizer';
-import type { CurveId, PondSetting } from '@rotp/randomizer';
+import type { PondSetting } from '@rotp/randomizer';
 import { itemAt } from '@app/checked-access';
 import type { PondRowState } from '@app/compounds/WishingPondRow';
 

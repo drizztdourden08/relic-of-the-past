@@ -1,9 +1,10 @@
 /* @layer renderer-app @kind types */
 import type { ReactNode } from 'react';
 import type { EntityKind } from '@rotp/game-data';
-import type { CollectionSource, DetailTab, FieldDescriptor } from '@drizztdourden08/tessera/data';
+import type { CollectionSource, DetailTab, FieldDescriptor, FilterClause } from '@drizztdourden08/tessera/data';
 import type { NumberBounds, ReferencedByHit } from '@drizztdourden08/tessera/composites';
 import type { ScrollPosition } from '@drizztdourden08/tessera/primitives';
+import type { Recommendation } from '@rotp/navigation';
 
 type InspectorRow = Record<string, unknown>;
 
@@ -70,6 +71,43 @@ interface DetailTabsProps {
   scrollTo?: Partial<ScrollPosition>;
 }
 
+interface EditIntent {
+  kind: EntityKind;
+  id: string;
+}
+
+interface PendingOpenParams {
+  setKind: (kind: InspectorKind) => void;
+  selectIn: (kind: InspectorKind, id: string | null) => void;
+  setEditIntent: (intent: EditIntent) => void;
+}
+
+interface InspectorListProps {
+  kind: InspectorKind;
+  source: InspectorSource;
+  schema: readonly FieldDescriptor[];
+  rows: readonly InspectorRow[];
+  clauses: readonly FilterClause[];
+  onClausesChange: (next: readonly FilterClause[]) => void;
+  search: string;
+  onSearchChange: (next: string) => void;
+  selectedId: string | null;
+  onSelect: (id: string) => void;
+}
+
+interface InspectorDetailProps {
+  kind: InspectorKind;
+  source: InspectorSource;
+  schema: readonly FieldDescriptor[];
+  record?: InspectorRow;
+  entries: readonly Recommendation[];
+  selectedId: string | null;
+  tab: DetailTab;
+  onTabChange: (tab: DetailTab) => void;
+  onDeleted: () => void;
+  onSelectRecommendation: (id: string | null) => void;
+}
+
 interface RecordEditorPanelProps {
   source: InspectorSource;
   schema: readonly FieldDescriptor[];
@@ -84,11 +122,15 @@ export type {
   DeleteResult,
   DeleteRoute,
   DetailTabsProps,
+  EditIntent,
   IdRefTarget,
+  InspectorDetailProps,
   InspectorKind,
+  InspectorListProps,
   InspectorRow,
   InspectorSource,
   NamedRecord,
+  PendingOpenParams,
   RecordDeleter,
   RecordEditorPanelProps,
   RecordSelection,

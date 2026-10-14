@@ -31,7 +31,8 @@ const applyToPlace = (place: AxisPlace, edit: TrackEdit): AxisPlace => {
     case 'remove': return removeAt(place, edit.index);
     case 'insert': return insertAt(place, edit.index);
     case 'move': return moveAt(place, edit.from, edit.to);
-    default: return place;
+    case 'size':
+    case 'append': return place;
   }
 };
 

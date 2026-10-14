@@ -62,10 +62,7 @@
 }
 
 .dialogue-editor__body {
-  --line-row-h: calc(var(--game-line-h) + var(--space-2xs));
   --gutter-head-h: var(--space-2xl);
-  --line-gutter-w: calc(var(--space-2xl) * 5);
-  --line-text-x: calc(var(--line-gutter-w) + var(--space-sm));
 
   display: flex;
   align-items: stretch;

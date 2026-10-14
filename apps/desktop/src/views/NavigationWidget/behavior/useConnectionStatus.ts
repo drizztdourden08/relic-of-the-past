@@ -2,11 +2,11 @@
 import { useMemo } from 'react';
 import { find, pairLinksScreens, toScreenIdOf } from '@rotp/game-data';
 import type { ScreenId } from '@rotp/game-data';
-import type { RoomStairInfo } from '../../../game';
 import { detectConnections, detectionTargetId } from '../../../nav-widget/detect-connections';
-import type { ConnectionStatus, ConnectionStatusResult } from '../NavigationWidget.type';
+import type { ConnectionStatus, ConnectionStatusResult, DetectionInput } from '../NavigationWidget.type';
 
-const useConnectionStatus = (screenId: ScreenId | null, detectedEntranceScreens: number[], detectedStairs: RoomStairInfo[], exitScreen: number | null, detectedFallHoleRooms: number[]): ConnectionStatusResult => {
+const useConnectionStatus = (screenId: ScreenId | null, detection: DetectionInput): ConnectionStatusResult => {
+  const { detectedEntranceScreens, detectedStairs, exitScreen, detectedFallHoleRooms } = detection;
   return useMemo(() => {
     if (!screenId) {
       return { status: 'none', missingCount: 0, existingConnections: [], detectedConnections: [], unmatched: [] };

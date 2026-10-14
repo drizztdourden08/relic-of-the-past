@@ -2,14 +2,14 @@
 
 .hud-toolbar__button {
   justify-content: center;
-  width: 30px;
-  height: 26px;
+  width: calc(30 * var(--size-1));
+  height: calc(26 * var(--size-1));
   padding: 0;
 }
 
 .hud-toolbar__sep {
-  width: 1px;
-  height: 20px;
+  width: var(--size-1);
+  height: var(--size-20);
   margin: 0 var(--space-2xs);
   background: var(--c-border);
 }
@@ -21,8 +21,8 @@
   display: flex;
   flex-direction: column;
   gap: var(--space-xs);
-  width: 300px;
-  max-height: 22rem;
+  width: calc(300 * var(--size-1));
+  max-height: calc(22 * var(--text-base));
   padding: var(--space-xs) var(--space-sm) var(--space-xs) var(--space-xs);
   overflow-y: auto;
   scrollbar-gutter: stable;
@@ -38,7 +38,7 @@
 
 .hud-picker-grid__tiles {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(4.5rem, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(calc(4.5 * var(--text-base)), 1fr));
   gap: var(--space-2xs);
 }
 
@@ -60,8 +60,8 @@
 }
 
 .hud-picker-grid__thumb {
-  width: 2.75rem;
-  height: 2.75rem;
+  width: calc(2.75 * var(--text-base));
+  height: calc(2.75 * var(--text-base));
 }
 
 .hud-picker-grid__thumb .image__img {

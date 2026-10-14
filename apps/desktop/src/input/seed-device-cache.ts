@@ -4,7 +4,6 @@ import type { DeviceSnapshotFields } from '@rotp/input-mapping';
 
 const seedPerDeviceCache = (remember: (fields: DeviceSnapshotFields) => void): (() => void) => {
   const api = inputApi();
-  if (!api) return () => undefined;
   api.list().then((entries) => entries.forEach(remember)).catch(() => undefined);
   const unsubSnapshot = api.onDevices((entries) => entries.forEach(remember));
   const unsubAdded = api.onAdded(remember);

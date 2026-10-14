@@ -6,6 +6,6 @@
 }
 
 .auto-save-card__thumb {
-  width: 56px;
-  height: 38px;
+  width: var(--size-56);
+  height: calc(38 * var(--size-1));
 }

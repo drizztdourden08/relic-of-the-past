@@ -4,6 +4,7 @@ import type { SavedView } from '@rotp/hub-contracts';
 import { emptySnapshot, isViewSnapshot } from '@drizztdourden08/tessera/data';
 import { listViews, putView, deleteView, errorMessage } from '@rotp/hub-client';
 import type { UseSavedViewsParams } from './saved-views.type';
+import { withoutView } from './without-view';
 
 const useSavedViews = (params: UseSavedViewsParams) => {
   const { views: siteViews, surface, onApplied } = params;
@@ -56,7 +57,7 @@ const useSavedViews = (params: UseSavedViewsParams) => {
 
   const remove = useCallback((id: string) => run(async () => {
     await deleteView(id);
-    setViews((rows) => rows.filter((row) => row.id !== id));
+    setViews((rows) => withoutView(rows, id));
     setActiveId((active) => (active === id ? null : active));
   }), [run]);
 

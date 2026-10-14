@@ -7,10 +7,11 @@ import { StepIndicator } from '../controller-report/sub-components/StepIndicator
 import { useDiagnosticsWizardState } from './behavior/useDiagnosticsWizardState';
 import { useSummaryExport } from './behavior/useSummaryExport';
 import { useFlashStatus } from '../hid-calibration/hooks/useFlashStatus';
+import { COPY_LABELS, SAVE_LABELS } from './diagnostics-wizard.constants';
 import { DiagnosticsFlowBody } from './DiagnosticsFlowBody';
 import { DiagnosticsStepActions } from './sub-components/DiagnosticsStepActions';
+import { FlashButton } from './sub-components/FlashButton';
 import type { DiagnosticsWizardDialogProps } from './DiagnosticsWizardDialog.type';
-import '../controller-report/ControllerReportDialog.css';
 import './DiagnosticsWizardDialog.css';
 
 const DiagnosticsWizardDialog = (props: DiagnosticsWizardDialogProps) => {
@@ -38,12 +39,8 @@ const DiagnosticsWizardDialog = (props: DiagnosticsWizardDialogProps) => {
   const actions = wizard.step === 'summary' ? (
     <>
       <Button variant="secondary" onClick={wizard.restart}>Restart on another controller</Button>
-      <Button variant={saveStatus === 'error' ? 'danger' : 'tertiary'} onClick={handleSave}>
-        {saveStatus === 'ok' ? 'Saved' : saveStatus === 'error' ? 'Failed' : 'Write to disk'}
-      </Button>
-      <Button variant={copyStatus === 'error' ? 'danger' : 'tertiary'} onClick={handleCopy}>
-        {copyStatus === 'ok' ? 'Copied' : copyStatus === 'error' ? 'Failed' : 'Copy JSON'}
-      </Button>
+      <FlashButton status={saveStatus} onClick={handleSave} labels={SAVE_LABELS} />
+      <FlashButton status={copyStatus} onClick={handleCopy} labels={COPY_LABELS} />
       <Button variant="primary" onClick={handleClose}>Close</Button>
     </>
   ) : (

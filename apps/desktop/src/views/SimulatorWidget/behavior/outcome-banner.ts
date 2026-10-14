@@ -10,11 +10,11 @@ const resolveStopName = (stopAtCheckId: CheckId | ''): string =>
 const outcomeBanner = (outcome: SimOutcome, stopAtCheckId: CheckId | ''): OutcomeBanner => {
   switch (outcome) {
     case 'stopped-at-check':
-      return { tone: 'success', icon: '✓', title: 'Success', detail: `Reached ${resolveStopName(stopAtCheckId)}` };
+      return { tone: 'success', icon: 'check', title: 'Success', detail: `Reached ${resolveStopName(stopAtCheckId)}` };
     case 'completed':
-      return { tone: 'success', icon: '✓', title: 'Success', detail: 'All checks complete and the goal reached' };
+      return { tone: 'success', icon: 'check', title: 'Success', detail: 'All checks complete and the goal reached' };
     case 'not-completable':
-      return { tone: 'danger', icon: '✕', title: 'Not completable', detail: 'The frontier exhausted with checks still blocked' };
+      return { tone: 'danger', icon: 'x', title: 'Not completable', detail: 'The frontier exhausted with checks still blocked' };
   }
 };
 

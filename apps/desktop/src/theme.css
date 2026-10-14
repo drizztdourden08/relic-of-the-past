@@ -50,4 +50,8 @@
   --input-cal-log-max: calc(240 * var(--size-1));
   --input-cal-alert-rule: calc(3 * var(--size-1));
   --input-cal-step-tracking: calc(0.5 * var(--size-1));
+  --line-row-h: calc(var(--game-line-h) + var(--space-2xs));
+  --line-gutter-w: calc(var(--space-2xl) * 5);
+  --line-text-x: calc(var(--line-gutter-w) + var(--space-sm));
+  --msu-file-cols: minmax(var(--size-128), 1fr) var(--size-64) calc(88 * var(--size-1)) calc(72 * var(--size-1)) calc(144 * var(--size-1)) calc(88 * var(--size-1)) minmax(var(--size-96), calc(176 * var(--size-1))) calc(72 * var(--size-1));
 }

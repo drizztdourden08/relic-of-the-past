@@ -9,6 +9,7 @@ import { SubsectionGroup } from '@app/views/HudLayoutEditor/sub-components/Subse
 import { ValueField } from '@app/views/HudLayoutEditor/sub-components/ValueField';
 import type { HudNode } from '@rotp/hud';
 import { required } from '../../required';
+import { FIXTURE_COLOURS } from '../fixture-colours.constants';
 
 const noop = (): void => {};
 const scope = { life_current: 8 };
@@ -17,12 +18,12 @@ const loaded: HudNode = {
   kind: 'container', id: 'panel', direction: 'row', children: [], opacity: 0.8,
   dimWhenEmpty: [5, 6, 7, 8],
   style: {
-    background: '#101010',
-    border: { width: 2, color: '#c8a84e', style: 'solid', sides: { top: true, right: true, bottom: true, left: false } },
+    background: FIXTURE_COLOURS.ink,
+    border: { width: 2, color: FIXTURE_COLOURS.gold, style: 'solid', sides: { top: true, right: true, bottom: true, left: false } },
     radius: 4,
-    outline: { width: 1, color: '#f4f4f4' },
-    tint: { color: '#ff8080', mode: 'multiply', amount: 1 },
-    shadow: [{ x: 0, y: 2, blur: 4, color: '#000000' }, { x: 0, y: 0, blur: 8, color: '#c8a84e', inset: true }],
+    outline: { width: 1, color: FIXTURE_COLOURS.pale },
+    tint: { color: FIXTURE_COLOURS.blush, mode: 'multiply', amount: 1 },
+    shadow: [{ x: 0, y: 2, blur: 4, color: FIXTURE_COLOURS.black }, { x: 0, y: 0, blur: 8, color: FIXTURE_COLOURS.gold, inset: true }],
     clip: true,
   },
 };
@@ -72,11 +73,11 @@ const appearanceCases: Record<string, () => unknown> = {
   }),
   gradient: () => h(PaintField, {
     label: 'background', kinds: true, onChange: noop, scope,
-    value: { gradient: 'linear', angle: 0, stops: [{ at: 0, color: '#ffffff' }, { at: 1, color: '#000000' }] },
+    value: { gradient: 'linear', angle: 0, stops: [{ at: 0, color: FIXTURE_COLOURS.white }, { at: 1, color: FIXTURE_COLOURS.black }] },
   }),
   ramp: () => h(GradientRamp, {
     kind: 'linear', onChange: noop,
-    stops: [{ at: 0, color: '#ffffff' }, { at: 0.5, color: '#c8a84e' }, { at: 1, color: '#000000' }],
+    stops: [{ at: 0, color: FIXTURE_COLOURS.white }, { at: 0.5, color: FIXTURE_COLOURS.gold }, { at: 1, color: FIXTURE_COLOURS.black }],
   }),
   chips: () => h(SlotChips, { label: 'dim when empty', value: [5, 6, 7, 8], onChange: noop }),
   sides: () => h(SidesField, { label: 'sides', value: undefined, onChange: noop }),

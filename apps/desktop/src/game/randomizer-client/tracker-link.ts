@@ -1,6 +1,8 @@
 /* @layer bridge-wasm @kind logic */
 import { log } from '../../log-bus';
 import { parseServerPackets, versionOf, openSocketLink, createReconnector, NO_ITEMS_HANDLING, TRACKER_TAGS } from '@rotp/randomizer';
+import { blankToNull } from './blank-to-null';
+import { wireList } from './wire-list';
 import type { ApConnectPacket, ApServerPacket, SocketLink, TrackerLink, TrackerLinkConfig } from '@rotp/randomizer';
 
 const createTrackerLink = (config: TrackerLinkConfig): TrackerLink => {
@@ -12,7 +14,7 @@ const createTrackerLink = (config: TrackerLinkConfig): TrackerLink => {
   let link: SocketLink | null = null;
 
   const connectPacket = (packet: Extract<ApServerPacket, { cmd: 'RoomInfo' }>): ApConnectPacket => ({
-    cmd: 'Connect', game: '', name, password: password || null, uuid, version: versionOf(packet),
+    cmd: 'Connect', game: '', name, password: blankToNull(password), uuid, version: versionOf(packet),
     items_handling: NO_ITEMS_HANDLING, tags: [...TRACKER_TAGS], slot_data: false,
   });
 
@@ -21,16 +23,16 @@ const createTrackerLink = (config: TrackerLinkConfig): TrackerLink => {
       link?.send(JSON.stringify([connectPacket(packet)]));
     } else if (packet.cmd === 'Connected') {
       checked.clear();
-      for (const id of packet.checked_locations ?? []) checked.add(id);
-      total = checked.size + (packet.missing_locations ?? []).length;
+      for (const id of wireList(packet.checked_locations)) checked.add(id);
+      total = checked.size + wireList(packet.missing_locations).length;
       linked = true;
       reconnector.reset();
       log.randomizer(`[Online] Tracking ${name} (slot ${slot}): ${checked.size} / ${total} checks`);
     } else if (packet.cmd === 'RoomUpdate') {
-      for (const id of packet.checked_locations ?? []) checked.add(id);
+      for (const id of wireList(packet.checked_locations)) checked.add(id);
     } else if (packet.cmd === 'ConnectionRefused') {
       ended = true;
-      log.randomizer(`[Online] Tracking ${name} refused: ${(packet.errors ?? []).join(', ')}`, 'warn');
+      log.randomizer(`[Online] Tracking ${name} refused: ${wireList(packet.errors).join(', ')}`, 'warn');
       link?.close();
     }
   };

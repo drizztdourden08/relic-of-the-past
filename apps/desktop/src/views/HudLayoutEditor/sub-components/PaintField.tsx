@@ -1,10 +1,8 @@
 /* @layer renderer-components @kind component */
-import { Box, Field, Flex, IconButton, Select, TextInput } from '@drizztdourden08/tessera/primitives';
-import { ColorField } from './ColorField';
-import { GradientRamp } from './GradientRamp';
-import { ValueField } from './ValueField';
-import type { Paint, Value } from '@rotp/hud';
-import { ANGLE_STEP } from '../HudLayoutEditor.constants';
+import { Box, Field, Flex, Icon, IconButton } from '@drizztdourden08/tessera/primitives';
+import { PaintBody } from './PaintBody';
+import type { Paint } from '@rotp/hud';
+import { HUD_BLACK } from '../HudLayoutEditor.constants';
 import { HEX_RE, KINDS } from './PaintField.constants';
 import type { PaintFieldProps, PaintMode } from './PaintField.type';
 
@@ -13,16 +11,18 @@ const modeOf = (paint: Paint): PaintMode => {
   return 'gradient' in paint ? 'gradient' : 'image';
 };
 
+const hexOf = (paint: Paint): string => (typeof paint === 'string' && HEX_RE.test(paint) ? paint : HUD_BLACK);
+
 const PaintField = (props: PaintFieldProps) => {
   const { label, value, onChange, scope, insideRepeat, kinds } = props;
   const mode = modeOf(value);
   const showKinds = kinds === true || typeof value !== 'string';
-  const hex = typeof value === 'string' && HEX_RE.test(value) ? value : '#000000';
+  const hex = hexOf(value);
 
   const setMode = (next: PaintMode): void => {
     if (next === mode) return;
     if (next === 'color') onChange(typeof value === 'string' ? value : hex);
-    else if (next === 'gradient') onChange({ gradient: 'linear', angle: 0, stops: [{ at: 0, color: hex }, { at: 1, color: '#000000' }] });
+    else if (next === 'gradient') onChange({ gradient: 'linear', angle: 0, stops: [{ at: 0, color: hex }, { at: 1, color: HUD_BLACK }] });
     else onChange({ image: '', size: 'contain' });
   };
 
@@ -35,36 +35,12 @@ const PaintField = (props: PaintFieldProps) => {
               <IconButton
                 key={kind.value} variant="ghost" size="sm" title={kind.label} label={kind.label}
                 active={mode === kind.value} onClick={() => setMode(kind.value)}
-              >{kind.icon}</IconButton>
+              ><Icon name={kind.icon} size={16} aria-hidden /></IconButton>
             ))}
           </Box>
         </Field>
       )}
-
-      {mode === 'color' && (
-        <ColorField label={label ?? 'colour'} value={typeof value === 'string' ? value : hex} onChange={onChange} />
-      )}
-
-      {mode === 'gradient' && typeof value !== 'string' && 'gradient' in value && (
-        <>
-          <GradientRamp kind={value.gradient} stops={value.stops} onChange={(stops) => onChange({ ...value, stops })} />
-          <ValueField label="angle" value={(value.angle ?? 0)} onChange={(angle) => onChange({ ...value, angle })} scope={scope} insideRepeat={insideRepeat} step={ANGLE_STEP} />
-        </>
-      )}
-
-      {mode === 'image' && typeof value !== 'string' && 'image' in value && (
-        <>
-          <Field size="sm" label="file">
-            <TextInput size="sm" aria-label="Image file" value={value.image} placeholder="file.png" onChange={(event) => onChange({ ...value, image: event.target.value })} />
-          </Field>
-          <Field size="sm" label="size">
-            <Select size="sm" value={value.size ?? 'contain'} options={[{ value: 'contain', label: 'contain' }, { value: 'cover', label: 'cover' }, { value: 'tile', label: 'tile' }]} onChange={(size) => onChange({ ...value, size: size as 'contain' | 'cover' | 'tile' })} />
-          </Field>
-          <Field size="sm" label="repeat">
-            <Select size="sm" value={value.repeat ?? 'none'} options={[{ value: 'none', label: 'no repeat' }, { value: 'repeat', label: 'repeat' }, { value: 'repeat-x', label: 'repeat-x' }, { value: 'repeat-y', label: 'repeat-y' }]} onChange={(repeat) => onChange({ ...value, repeat: repeat as 'none' | 'repeat' | 'repeat-x' | 'repeat-y' })} />
-          </Field>
-        </>
-      )}
+      <PaintBody label={label} value={value} onChange={onChange} scope={scope} insideRepeat={insideRepeat} />
     </Flex>
   );
 };

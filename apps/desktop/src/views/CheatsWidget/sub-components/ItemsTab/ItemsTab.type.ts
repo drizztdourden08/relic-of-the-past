@@ -21,6 +21,24 @@ type SlotSpec = {
   tiers: TierOption[];
 };
 
+type FlagSpecParams = {
+  slot: number;
+  nameKey: string;
+  place: SlotPlace;
+  receiveItemId: number;
+  sprite: SpriteOf;
+};
+
+type LadderSpecParams = {
+  slot: number;
+  nameKey: string;
+  place: SlotPlace;
+  ladder: readonly number[];
+  sprite: SpriteOf;
+  rungValues?: readonly number[];
+  topValue?: number;
+};
+
 type SlotWrite =
   | { op: 'give'; receiveItemId: number; label: string }
   | { op: 'set'; slot: number; value: number };
@@ -69,6 +87,20 @@ type ItemGridEditorProps = AbilitiesEditorProps & {
   hovered: number | null;
 };
 
+type ItemGridCellProps = {
+  slot: number;
+  spec: SlotSpec;
+  value: number;
+  shown: number;
+  selected: boolean;
+  flash: boolean;
+  scale: number;
+  spritesBase: string;
+  onClick: (spec: SlotSpec, owned: boolean, e: MouseEvent<HTMLButtonElement>) => void;
+  onOpen: (open: OpenSlot) => void;
+  onHover: (slot: number | null) => void;
+};
+
 type DungeonItem = { kind: DungeonItemKind; type: string; col: number; label: string };
 
 type GearSlot = { slot: number; type: string; col: number };
@@ -95,6 +127,14 @@ type SlotCellProps = {
   children?: ReactNode;
 };
 
+type OptionParams = {
+  spec: SlotSpec;
+  tier: TierOption;
+  current: number;
+  spritesBase: string;
+  write: (write: SlotWrite) => void;
+};
+
 type TierListProps = {
   open: OpenSlot;
   spritesBase: string;
@@ -103,6 +143,6 @@ type TierListProps = {
 };
 
 export type {
-  AbilitiesEditorProps, DungeonItem, EquipmentBytes, Flash, GearSlot, ItemGridEditorProps, ItemNamePanelProps, OpenSlot, PanelProps, ProgressView,
+  AbilitiesEditorProps, DungeonItem, EquipmentBytes, FlagSpecParams, Flash, GearSlot, ItemGridCellProps, ItemGridEditorProps, ItemNamePanelProps, LadderSpecParams, OpenSlot, OptionParams, PanelProps, ProgressView,
   SlotCellProps, SlotClickParams, SlotKind, SlotName, SlotPanelProps, SlotPlace, SlotSpec, SlotWrite, SpriteOf, TierListProps, TierOption,
 };

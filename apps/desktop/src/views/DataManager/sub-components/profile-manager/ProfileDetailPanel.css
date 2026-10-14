@@ -1,0 +1,22 @@
+/* @layer renderer-components @kind style */
+.profile-detail {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.profile-detail__spaced {
+  margin-bottom: var(--space-md);
+}
+
+.profile-detail__actions {
+  display: flex;
+  gap: var(--space-sm);
+  margin-bottom: var(--space-md);
+}
+
+.profile-detail__settings {
+  flex: 1;
+  overflow: auto;
+  margin-top: var(--space-xs);
+}

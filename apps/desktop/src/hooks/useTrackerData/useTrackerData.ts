@@ -1,17 +1,16 @@
 /* @layer renderer-lib @kind hook */
 import { useCallback, useMemo } from 'react';
-import { normalPlacement, trackerCheckRecords, trackerStatuses } from '@rotp/navigation';
-import { liveChestItems, find, buildGroupTree, filterChecks, smallKeyDoorsOf } from '@rotp/game-data';
-import type { FilterState, GroupDimension, RunContext } from '@rotp/game-data';
-import { buildPlacementView, runKindOfSession } from '../../game/randomizer-client';
-import type { PlacementView } from '../../game/randomizer-client';
+import { buildGroupTree, filterChecks } from '@rotp/game-data';
+import type { FilterState, GroupDimension } from '@rotp/game-data';
+import { runKindOfSession } from '../../game/randomizer-client';
 import type { ViewMode, TrackerPanels } from '../../compounds/ChecksTracker';
 import { CLOSED_PANELS } from '../../compounds/ChecksTracker';
 import { useWidgetPref } from '@drizztdourden08/brock-react';
 import type { TrackerDataOptions } from './use-tracker-data.type';
 import { DEFAULT_GROUPING, EMPTY_FILTER, NO_GROUPS } from './use-tracker-data.constants';
 import { useLiveTrackerInputs } from './useLiveTrackerInputs';
-import { mergeStatusOnlyChecks } from './merge-status-only-checks';
+import { useTrackerRun } from './useTrackerRun';
+import { useTrackerStatuses } from './useTrackerStatuses';
 import { countTrackerStats } from './count-tracker-stats';
 
 const useTrackerData = (options: TrackerDataOptions = {}) => {
@@ -33,51 +32,12 @@ const useTrackerData = (options: TrackerDataOptions = {}) => {
   const { placement, foreignOwners } = sessionState;
   const runKind = runKindOfSession(sessionState);
 
-  const checkRecords = useMemo(() => find('check', () => true), []);
-  const effectiveCheckRecords = useMemo(
-    () => trackerCheckRecords(checkRecords, placement),
-    [checkRecords, placement],
-  );
-  const bigKeyDoors = filter.bigKeyDoors ?? true;
-  const smallKeyDoors = smallKeyDoorsOf(filter, { kind: runKind });
-  const darkRoomsNeedLight = filter.darkRoomsNeedLight ?? true;
-
-  const effectiveCompleted = useMemo(
-    () => mergeStatusOnlyChecks(completedChecks, checkRecords, eventStatus),
-    [completedChecks, checkRecords, eventStatus],
-  );
-
-  const logicPlacement = placement ?? normalPlacement();
-  const snapshot = useMemo(
-    () => trackerStatuses({
-      placement: logicPlacement,
-      checks: effectiveCheckRecords,
-      inventory,
-      completed: effectiveCompleted,
-      fired,
-      darkRoomsNeedLight,
-      bigKeyDoors,
-      smallKeyDoors,
-    }),
-    [logicPlacement, effectiveCheckRecords, inventory, effectiveCompleted, fired, darkRoomsNeedLight, bigKeyDoors, smallKeyDoors],
-  );
-
-  const placementView: PlacementView = useMemo(
-    () => buildPlacementView(placement, foreignOwners), [placement, foreignOwners],
-  );
-  const liveItems = useMemo(
-    () => (runKind === 'normal' ? liveChestItems(checkRecords, inventory, effectiveCompleted) : undefined),
-    [runKind, checkRecords, inventory, effectiveCompleted],
-  );
-  const run: RunContext = useMemo(
-    () => (placement
-      ? {
-        kind: runKind, placedItems: placementView.itemByCheck,
-        foreignItems: placementView.foreignByCheck, spheres: placementView.sphereByCheck,
-      }
-      : { kind: runKind, liveItems }),
-    [placement, runKind, placementView, liveItems],
-  );
+  const { checkRecords, effectiveCheckRecords, effectiveCompleted, snapshot } = useTrackerStatuses({
+    placement, runKind, filter, inventory, completedChecks, eventStatus, fired,
+  });
+  const { placementView, run } = useTrackerRun({
+    placement, foreignOwners, runKind, checkRecords, inventory, effectiveCompleted,
+  });
 
   const stats = useMemo(
     () => countTrackerStats(effectiveCheckRecords, filter, run, snapshot),

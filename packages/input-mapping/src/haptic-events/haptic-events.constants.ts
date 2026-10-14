@@ -1,4 +1,6 @@
 /* @layer shared-input @kind constants */
+import type { HapticPatternId } from '../data/haptics';
+
 const HapticEventType = {
   SWORD_SWING: 0,
   SWORD_HIT_ENEMY: 1,
@@ -45,7 +47,23 @@ const HapticItemId = {
   SHOVEL: 21,
 } as const;
 
+const ITEM_PATTERN_IDS: Partial<Record<number, HapticPatternId>> = {
+  [HapticItemId.BOMBS]: 'itemBomb',
+  [HapticItemId.BOW]: 'itemBow',
+  [HapticItemId.HAMMER]: 'itemHammer',
+  [HapticItemId.FIRE_ROD]: 'itemFireRod',
+  [HapticItemId.ICE_ROD]: 'itemIceRod',
+  [HapticItemId.HOOKSHOT]: 'itemHookshot',
+  [HapticItemId.BOMBOS]: 'itemBombos',
+  [HapticItemId.ETHER]: 'itemEther',
+  [HapticItemId.QUAKE]: 'itemQuake',
+  [HapticItemId.CANE_SOMARIA]: 'itemCaneSomaria',
+  [HapticItemId.CANE_BYRNA]: 'itemCaneSomaria',
+  [HapticItemId.CAPE]: 'itemCape',
+  [HapticItemId.SHOVEL]: 'itemShovel',
+};
+
 const DAMAGE_HIGH_THRESHOLD = 40;
 const DAMAGE_MEDIUM_THRESHOLD = 24;
 
-export { DAMAGE_HIGH_THRESHOLD, DAMAGE_MEDIUM_THRESHOLD, EnvironmentalEvent, HapticEventType, HapticItemId };
+export { DAMAGE_HIGH_THRESHOLD, DAMAGE_MEDIUM_THRESHOLD, EnvironmentalEvent, HapticEventType, HapticItemId, ITEM_PATTERN_IDS };

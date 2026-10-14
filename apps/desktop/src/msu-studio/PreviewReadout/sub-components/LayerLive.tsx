@@ -1,7 +1,6 @@
 /* @layer renderer-components @kind component */
 import { usePreviewReport } from '../../behavior/usePreviewReport';
 import { LayerMeter } from './LayerMeter';
-import '../PreviewReadout.css';
 import type { LayerLiveProps } from '../PreviewReadout.type';
 
 const LayerLive = (props: LayerLiveProps) => {

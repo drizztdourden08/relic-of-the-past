@@ -22,14 +22,14 @@
 }
 
 .layer-card__index {
-  min-width: 1.25rem;
-  color: var(--c-text-faint);
+  min-width: var(--size-20);
+  color: var(--c-text-muted);
   font-variant-numeric: tabular-nums;
 }
 
 .layer-card__name {
   flex: 1;
-  min-width: 8rem;
+  min-width: var(--size-128);
 }
 
 .layer-card__modes,
@@ -49,10 +49,10 @@
   border-radius: var(--radius-md);
 }
 
-.layer-card__crossfade .slider {
-  flex: 1 1 12rem;
-  min-width: 10rem;
-  max-width: 22rem;
+.layer-card__crossfade-slider {
+  flex: 1 1 var(--size-192);
+  min-width: var(--size-160);
+  max-width: calc(352 * var(--size-1));
 }
 
 .layer-card__file-name {
@@ -65,8 +65,8 @@
 }
 
 .layer-card__file-select {
-  min-width: 12rem;
-  max-width: 20rem;
+  min-width: var(--size-192);
+  max-width: var(--size-320);
 }
 
 .layer-card__effects {
@@ -86,8 +86,8 @@
 }
 
 .layer-card__effect-index {
-  min-width: 1.2rem;
-  color: var(--c-text-faint);
+  min-width: var(--size-20);
+  color: var(--c-text-muted);
   font-variant-numeric: tabular-nums;
   text-align: right;
 }

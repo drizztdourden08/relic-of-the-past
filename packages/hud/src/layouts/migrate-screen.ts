@@ -15,25 +15,19 @@ const alignmentFor = (band: BandPair): Raw => {
   };
 };
 
-const migrateNode = (value: unknown): unknown => {
-  if (!isRecord(value)) return value;
+const migrateElement = (value: Raw): unknown => {
+  const element = isRecord(value.element) ? value.element : undefined;
+  if (!element) return value;
+  if (element.type === 'repeat') return { ...value, element: { ...element, child: migrateNode(element.child) } };
+  if (element.type !== 'switch') return value;
+  const cases = Array.isArray(element.cases)
+    ? element.cases.map((c: unknown) => (isRecord(c) ? { ...c, node: migrateNode(c.node) } : c))
+    : element.cases;
+  const otherwise = element.otherwise === undefined ? {} : { otherwise: migrateNode(element.otherwise) };
+  return { ...value, element: { ...element, cases, ...otherwise } };
+};
 
-  if (value.kind === 'element') {
-    const element = isRecord(value.element) ? value.element : undefined;
-    if (!element) return value;
-    if (element.type === 'repeat') return { ...value, element: { ...element, child: migrateNode(element.child) } };
-    if (element.type !== 'switch') return value;
-    const cases = Array.isArray(element.cases)
-      ? element.cases.map((c: unknown) => (isRecord(c) ? { ...c, node: migrateNode(c.node) } : c))
-      : element.cases;
-    const otherwise = element.otherwise === undefined ? {} : { otherwise: migrateNode(element.otherwise) };
-    return { ...value, element: { ...element, cases, ...otherwise } };
-  }
-
-  if (value.kind !== 'container') return value;
-  const children = (Array.isArray(value.children) ? value.children : []).map(migrateNode);
-  if (value.direction !== 'stack') return { ...value, ...gapPatch(value), children };
-
+const stackToGrid = (value: Raw, children: unknown[]): Raw => {
   const { direction: _d, justify, align, gap: _g, wrap: _w, ...box } = value;
   return {
     ...box,
@@ -50,6 +44,19 @@ const migrateNode = (value: unknown): unknown => {
       }
       : child)),
   };
+};
+
+const migrateContainer = (value: Raw): unknown => {
+  const children = (Array.isArray(value.children) ? value.children : []).map(migrateNode);
+  if (value.direction !== 'stack') return { ...value, ...gapPatch(value), children };
+  return stackToGrid(value, children);
+};
+
+const migrateNode = (value: unknown): unknown => {
+  if (!isRecord(value)) return value;
+  if (value.kind === 'element') return migrateElement(value);
+  if (value.kind !== 'container') return value;
+  return migrateContainer(value);
 };
 
 const cellFor = (band: BandPair): Raw => ({

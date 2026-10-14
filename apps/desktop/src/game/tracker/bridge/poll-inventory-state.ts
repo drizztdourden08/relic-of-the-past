@@ -3,17 +3,19 @@ import { getItem } from '@rotp/game-data';
 import { getModule } from '@rotp/game-core';
 import { log } from '../../../log-bus';
 import { inventoryToItemSet, parseInventoryBuffer, setsEqual, trackerState } from '@rotp/navigation';
+import { heapOf } from './heap-of';
+import { notifyListeners } from './notify-listeners';
 import { pollRoomFlags } from './poll-room-flags';
 import type { EmscriptenModule } from '@rotp/game-core';
+
+const ignoreRoomFlagFailure = (): void => undefined;
 
 const readInventory = (heap: Uint8Array, ptr: number, force: boolean): void => {
   const newInventory = inventoryToItemSet(parseInventoryBuffer(heap, ptr));
   if (!force && setsEqual(trackerState.currentInventory, newInventory)) return;
   log.app(`[Tracker] Inventory changed: ${[...newInventory].map((id) => getItem(id).name).join(', ') || '(empty)'}`);
   trackerState.currentInventory = newInventory;
-  for (const fn of trackerState.inventoryListeners) {
-    try { fn(newInventory); } catch { continue; }
-  }
+  notifyListeners(trackerState.inventoryListeners, newInventory);
 };
 
 const pollInventory = (mod: EmscriptenModule, heap: Uint8Array, force: boolean): boolean => {
@@ -31,7 +33,7 @@ const pollInventoryState = (force = false): void => {
   const mod = getModule();
   if (!mod) return;
 
-  const heap: Uint8Array | undefined = mod.HEAPU8;
+  const heap = heapOf(mod);
   if (!heap) return;
 
   if (!pollInventory(mod, heap, force)) return;
@@ -39,7 +41,7 @@ const pollInventoryState = (force = false): void => {
   try {
     pollRoomFlags(force);
   } catch {
-    
+    ignoreRoomFlagFailure();
   }
 };
 

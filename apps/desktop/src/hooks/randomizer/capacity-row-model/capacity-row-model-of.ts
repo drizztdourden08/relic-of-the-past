@@ -1,14 +1,18 @@
 /* @layer renderer-lib @kind logic */
-import { NO_WALLET_FLOOR, capacityFieldsOf, defaultFamilyBonus, freeSequenceProblem, minCountFor, planOf } from '@rotp/randomizer';
+import { NO_WALLET_FLOOR, capacityFieldsOf, minCountFor, planOf } from '@rotp/randomizer';
 import type { CapacityRowModel } from '@app/compounds/CapacityFamilyRow';
 import { rowStateOf } from '../capacity-row-state';
 import { familyImpactCell } from '../family-impact-cell';
 import type { CapacityRowInput } from './capacity-row-model.type';
-import { FAMILY_LABEL } from './capacity-row-model.constants';
+import { FAMILY_LABEL, STEP_SCALE, WALLET_SCALE } from './capacity-row-model.constants';
+import { bonusOf } from './bonus-of';
 import { captionOf } from './caption-of';
 import { curveOptionsOf } from './curve-options-of';
 import { floorNoteOf } from './floor-note-of';
+import { footnoteOf } from './footnote-of';
+import { headroomOf } from './headroom-of';
 import { previewOf } from './preview-of';
+import { problemOf } from './problem-of';
 import { stopsOf } from './stops-of';
 
 const capacityRowModelOf = (input: CapacityRowInput): CapacityRowModel => {
@@ -19,7 +23,7 @@ const capacityRowModelOf = (input: CapacityRowInput): CapacityRowModel => {
   const span = state.range[1] - state.range[0];
   const minCount = Math.max(1, minCountFor(span, maxJump));
   const inPool = plan.items.length;
-  const headroom = id === 'wallet' && fillerHeadroom !== null ? inPool + fillerHeadroom : span;
+  const headroom = headroomOf(id, fillerHeadroom, inPool, span);
   const isWallet = id === 'wallet';
   return {
     id,
@@ -28,8 +32,7 @@ const capacityRowModelOf = (input: CapacityRowInput): CapacityRowModel => {
     stops: stopsOf(capacityFamily),
     offersInPool: !isWallet,
     hasCurve: capacityFieldsOf(id).includes('curve'),
-    rangeStep: isWallet ? 10 : 1,
-    labelEvery: isWallet ? 10 : 1,
+    ...(isWallet ? WALLET_SCALE : STEP_SCALE),
     state,
     span,
     minCount,
@@ -38,12 +41,10 @@ const capacityRowModelOf = (input: CapacityRowInput): CapacityRowModel => {
     curveOptions: curveOptionsOf(capacityFamily),
     preview: previewOf(capacityFamily, setting, plan),
     impact: familyImpactCell(plan.spotIsCheck, inPool),
-    problem: setting.mode === 'custom' && setting.shape.curve === 'free'
-      ? freeSequenceProblem(setting.shape.jumps, span, maxJump)
-      : undefined,
-    footnote: isWallet && setting.mode === 'custom' ? 'turns "Carry more rupees" on for this profile' : undefined,
+    problem: problemOf(setting, span, maxJump),
+    footnote: footnoteOf(id, setting),
     floorNote: floorNoteOf(capacityFamily, setting, walletFloor),
-    bonus: setting.mode === 'vanilla' ? undefined : input.bonus ?? defaultFamilyBonus(id),
+    bonus: bonusOf(id, setting, input.bonus),
     bonusCaption: captionOf.bonus(id),
     forced,
   };

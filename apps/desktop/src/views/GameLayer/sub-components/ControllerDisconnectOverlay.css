@@ -17,12 +17,12 @@
 
 .controller-disconnect-overlay__card {
   background: var(--c-surface);
-  border: 2px solid var(--c-danger);
+  border: var(--border-width-thick) solid var(--c-danger);
   border-radius: var(--radius-lg);
   padding: var(--space-2xl) var(--space-2xl);
   text-align: center;
-  max-width: 400px;
-  box-shadow: 0 0 40px var(--c-danger);
+  max-width: calc(400 * var(--size-1));
+  box-shadow: 0 0 var(--size-40) var(--c-danger);
 }
 
 .controller-disconnect-overlay__icon {

@@ -7,6 +7,8 @@ interface PauseBorderBoxProps {
   rows: number;
   scale: number;
   spritesBase: string;
+  atOrigin?: boolean;
+  className?: string;
   style?: CSSProperties;
   children?: ReactNode;
 }

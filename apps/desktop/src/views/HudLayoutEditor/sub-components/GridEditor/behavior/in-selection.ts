@@ -7,7 +7,7 @@ const inSelection = (selection: GridSelection, cell: CellRef): boolean => {
       return selection.cells.some((c) => c.column === cell.column && c.row === cell.row);
     case 'track':
       return selection.indices.includes((selection.axis === 'columns' ? cell.column : cell.row) - 1);
-    default:
+    case 'none':
       return false;
   }
 };

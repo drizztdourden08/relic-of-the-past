@@ -2,6 +2,8 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { useEscapeStack } from '@drizztdourden08/tessera/primitives';
 import { SLOP } from './drag-gesture.constants';
+import { releaseCapture } from './release-capture';
+import { swallowNextClick } from './swallow-next-click';
 import type { PointerEvent as ReactPointerEvent } from 'react';
 import type { Armed, DragGesture, DragGestureInput } from './drag-gesture.type';
 
@@ -15,8 +17,7 @@ const useDragGesture = <T,>(input: DragGestureInput<T>): DragGesture<T> => {
   api.current = { resolve, commit, same };
 
   const reset = useCallback(() => {
-    const held = armed.current;
-    if (held?.target.hasPointerCapture?.(held.pointerId)) held.target.releasePointerCapture(held.pointerId);
+    releaseCapture(armed.current);
     armed.current = null;
     live.current = null;
     setSourceId(null);
@@ -45,9 +46,7 @@ const useDragGesture = <T,>(input: DragGestureInput<T>): DragGesture<T> => {
       const settled = running?.payload ?? null;
       reset();
       if (!running) return;
-      const swallow = (event: MouseEvent): void => { event.stopPropagation(); event.preventDefault(); };
-      window.addEventListener('click', swallow, { capture: true, once: true });
-      setTimeout(() => window.removeEventListener('click', swallow, { capture: true }), 0);
+      swallowNextClick();
       if (settled !== null && source) api.current.commit(settled, source);
     };
     window.addEventListener('pointermove', onMove);
@@ -67,7 +66,7 @@ const useDragGesture = <T,>(input: DragGestureInput<T>): DragGesture<T> => {
   const start = useCallback((event: ReactPointerEvent, id: string) => {
     if (event.button !== 0) return;
     armed.current = {
-      sourceId: id, x: event.clientX, y: event.clientY, pointerId: event.pointerId, target: event.currentTarget as HTMLElement,
+      sourceId: id, x: event.clientX, y: event.clientY, pointerId: event.pointerId, target: event.currentTarget,
     };
   }, []);
 

@@ -1,11 +1,10 @@
 /* @layer tests @kind constants */
 import { resolve } from 'path';
-import type { Platform } from '@drizztdourden08/brock-core';
-import type { Extent, HudGridContainer, HudNode, MeasureContext } from '@rotp/hud';
+import type { Extent, HudGridContainer, HudNode, HudPlace, MeasureContext } from '@rotp/hud';
 import { REPO_ROOT } from '../../repo-root';
 
-const leaf = (id: string, place?: Record<string, number>): HudNode =>
-  ({ id, kind: 'element', element: { type: 'spacer' }, size: { w: { px: 16 }, h: { px: 16 } }, ...(place ? { place } : {}) }) as unknown as HudNode;
+const leaf = (id: string, place?: HudPlace): HudNode =>
+  ({ id, kind: 'element', element: { type: 'spacer' }, size: { w: { px: 16 }, h: { px: 16 } }, ...(place ? { place } : {}) });
 
 const gridOf = (columns: Extent[], rows: Extent[], children: HudNode[], id = 'g'): HudGridContainer =>
   ({ kind: 'container', id, layout: 'grid', columns, rows, children });
@@ -14,8 +13,7 @@ const many = (count: number): Extent[] => Array.from({ length: count }, () => 'a
 
 const EDITOR_DIR = resolve(REPO_ROOT, 'apps/desktop/src/views/HudLayoutEditor/sub-components');
 const ECHO = { containerId: 'echo-grid', c0: 2, c1: 3, r0: 1, r1: 1 };
-const PLATFORM = { info: { os: 'windows' } } as unknown as Platform;
-const CTX: MeasureContext = { hearts: { max: 3, current: 3 }, filledSlots: [], scope: {} } as unknown as MeasureContext;
+const CTX: MeasureContext = { hearts: 3, filledSlots: [], scope: {} };
 const VIEW = { x: 0, y: 0, w: 398, h: 224 };
 const RAILS = [188, 232, 320];
 
@@ -35,5 +33,5 @@ const ECHO_BOX = { x: 8, y: 6, w: 120, h: 40 };
 const ECHO_SCALE = 2;
 
 export {
-  CTX, ECHO, ECHO_BOX, ECHO_GRID, ECHO_SCALE, EDITOR_DIR, PLATFORM, RAILS, STATES, THREE, TWELVE, VIEW,
+  CTX, ECHO, ECHO_BOX, ECHO_GRID, ECHO_SCALE, EDITOR_DIR, RAILS, STATES, THREE, TWELVE, VIEW,
 };

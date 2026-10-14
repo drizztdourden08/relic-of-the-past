@@ -3,7 +3,6 @@ import { Box, Text } from '@drizztdourden08/tessera/primitives';
 import { formatBytes } from '@drizztdourden08/brock-core';
 import { AssetsRow } from './AssetsRow';
 import { SupplementRow } from './SupplementRow';
-import { IL } from './RomDetailPanel.constants';
 import type { RomDetailPanelProps } from './RomDetailPanel.type';
 
 const RomDetailPanel = (props: RomDetailPanelProps) => {
@@ -21,7 +20,7 @@ const RomDetailPanel = (props: RomDetailPanelProps) => {
         <Text className="detail-panel__value">{formatBytes(detail.size)}</Text>
 
         <Text className="detail-panel__label">Hash</Text>
-        <Text className="detail-panel__value" style={IL.mono}>{detail.hash}</Text>
+        <Text className="detail-panel__value" mono>{detail.hash}</Text>
 
         <Text className="detail-panel__label">Added</Text>
         <Text className="detail-panel__value">{new Date(detail.created).toLocaleDateString()}</Text>

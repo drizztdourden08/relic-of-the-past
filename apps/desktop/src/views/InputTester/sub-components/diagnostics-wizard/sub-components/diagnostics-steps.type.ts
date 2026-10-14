@@ -3,6 +3,7 @@ import type { ReactNode } from 'react';
 import type { DeviceProfile, ResolvedDevice } from '@rotp/input-mapping';
 import type { DeviceEntry } from '@drizztdourden08/brock-input';
 import type { HidControllerMap } from '../../HidCalibrationWizard';
+import type { FlashStatus } from '../../hid-calibration/hooks/flash-status.type';
 import type { PositionalCaptureRecord } from '../positional-capture/positional-capture.type';
 import type {
   ChooserDevice, DiagnosticsWizardState, HoldTransitionStatus, LayoutStage, NameLookupParams,
@@ -20,6 +21,8 @@ interface ByteCaptureStepProps {
   onCancel: () => void;
 }
 
+type ByteCaptureSummaryProps = Pick<SummaryStepProps, 'byteCapture' | 'hasByteCapability'>;
+
 interface ChooseControllerStepProps {
   devices: ChooserDevice[];
   addedNames: (params: NameLookupParams) => string | null;
@@ -36,6 +39,12 @@ interface DiagnosticsStepActionsProps {
   introBack?: () => void;
   onByteCaptureNext: () => void;
   capturedCount: number;
+}
+
+interface FlashButtonProps {
+  status: FlashStatus;
+  onClick: () => void;
+  labels: { idle: string; ok: string; error: string };
 }
 
 interface HoldStatusLineProps {
@@ -75,7 +84,7 @@ interface SummaryStepProps {
 }
 
 export type {
-  ByteCaptureStepProps, ChooseControllerStepProps, DiagnosticsStepActionsProps,
+  ByteCaptureStepProps, ByteCaptureSummaryProps, ChooseControllerStepProps, DiagnosticsStepActionsProps, FlashButtonProps,
   HoldStatusLineProps, IntroStepProps, LayoutCaptureOverlayProps, MatchedEntryPanelProps,
   PositionalCaptureStepProps, SummaryStepProps,
 };

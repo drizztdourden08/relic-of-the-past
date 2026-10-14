@@ -15,8 +15,8 @@ const copyRoomLayer = (rom: RomData, addr: number, out: number[]): void => {
 };
 
 const buildDefaultAndOverlayRooms = (rom: RomData, A: AssetBuilder): void => {
-  buildEntranceData(rom, A, 0, 133, 'kEntranceData_');
-  buildEntranceData(rom, A, 1, 7, 'kStartingPoint_');
+  buildEntranceData(rom, A, { set: 0, count: 133, prefix: 'kEntranceData_' });
+  buildEntranceData(rom, A, { set: 1, count: 7, prefix: 'kStartingPoint_' });
 
   const defaultData: number[] = [];
   const defaultOffs = new Array<number>(8).fill(0);

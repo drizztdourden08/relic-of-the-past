@@ -1,7 +1,7 @@
 /* @layer renderer-components @kind style */
 
 .msu-optimize {
-  width: min(44rem, 92vw);
+  width: min(calc(704 * var(--size-1)), 92vw);
 }
 
 .msu-optimize__step {
@@ -27,7 +27,7 @@
 .msu-optimize__rows {
   display: flex;
   flex-direction: column;
-  max-height: 18rem;
+  max-height: var(--size-288);
   overflow-y: auto;
   border: var(--border-width-thin) solid var(--c-border);
   border-radius: var(--radius-md);
@@ -47,7 +47,7 @@
 
 .msu-optimize__row-name {
   flex: 1 1 auto;
-  min-width: 6rem;
+  min-width: var(--size-96);
   overflow: hidden;
   color: var(--c-text);
   font-size: var(--text-xs);

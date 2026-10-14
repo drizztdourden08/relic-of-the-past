@@ -64,7 +64,7 @@
 .hud-toolbar__field-label {
   font-size: var(--text-xs);
   text-transform: uppercase;
-  letter-spacing: 0.08em;
+  letter-spacing: var(--tracking-caps);
   color: var(--c-text-muted);
 }
 

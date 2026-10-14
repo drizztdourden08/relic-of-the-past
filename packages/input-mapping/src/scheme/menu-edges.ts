@@ -10,6 +10,16 @@ const roseBit = (now: number, prev: number, bit: number): boolean => {
   return (now & bit) !== 0 && (prev & bit) === 0;
 };
 
+const slotEdges = (now: FunctionMask, prev: FunctionMask, shadowed: ReadonlySet<SlotIndex>): PauseEvent[] => {
+  const held = new Set(prev.slots);
+  const events: PauseEvent[] = [];
+  for (const slot of now.slots) {
+    if (shadowed.has(slot)) continue;
+    if (!held.has(slot)) events.push({ type: 'slot', slot });
+  }
+  return events;
+};
+
 const menuEdges = (
   now: FunctionMask,
   prev: FunctionMask,
@@ -26,13 +36,7 @@ const menuEdges = (
   if (rose(now.menu.nextScreen, prev.menu.nextScreen)) events.push({ type: 'nextScreen' });
   if (rose(now.pause, prev.pause)) events.push({ type: 'pause' });
 
-  const held = new Set(prev.slots);
-  for (const slot of now.slots) {
-    if (shadowed.has(slot)) continue;
-    if (!held.has(slot)) events.push({ type: 'slot', slot });
-  }
-
-  return events;
+  return [...events, ...slotEdges(now, prev, shadowed)];
 };
 
 export { menuEdges };

@@ -1,11 +1,12 @@
 /* @layer tests @kind constants */
-import type { HudLayout, HudNode } from '@rotp/hud';
+import type { HudElement, HudLayout } from '@rotp/hud';
 
-const leaf = (id: string): HudNode => ({ id, kind: 'element', element: { type: 'spacer' } } as unknown as HudNode);
+const leaf = (id: string): HudElement => ({ id, kind: 'element', element: { type: 'spacer' } });
 
-const DOC = {
+const DOC: HudLayout = {
   id: 'l',
   name: 'l',
+  builtIn: false,
   screen: {
     id: 'screen',
     kind: 'container',
@@ -54,6 +55,6 @@ const DOC = {
       },
     ],
   },
-} as unknown as HudLayout;
+};
 
 export { DOC };

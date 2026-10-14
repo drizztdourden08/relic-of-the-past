@@ -3,10 +3,10 @@ import { Button } from '@drizztdourden08/tessera/primitives';
 import { CreateRecordDialog } from '@drizztdourden08/tessera/composites';
 import type { CreateRecordButtonProps } from '../DataInspector.type';
 import { resolveIdRefOptionsFor } from '../behavior/id-ref-options';
-import { numberBoundsResolverFor } from '../behavior/number-bounds';
+import { numberBoundsResolverFor } from '@app/data-inspector/number-bounds';
 import { singularLabel } from '../behavior/singular-label';
 import { tagCreatorFor } from '../behavior/tag-creator-for';
-import { tagSuggestionsResolverFor } from '../behavior/tag-suggestions';
+import { tagSuggestionsResolverFor } from '@app/data-inspector/tag-suggestions';
 import { useCreateRecordDialog } from '../behavior/useCreateRecordDialog';
 
 const CreateRecordButton = (props: CreateRecordButtonProps) => {

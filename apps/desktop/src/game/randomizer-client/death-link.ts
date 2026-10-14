@@ -1,6 +1,7 @@
 /* @layer bridge-wasm @kind logic */
 import { log } from '../../log-bus';
 import { DEATH_LINK_TAG, emitOnlineNotice, deathLinkOnlineNotice, DEATH_LINK_GUARD_MS, KILL_LOG_NOTE, MS_PER_SECOND } from '@rotp/randomizer';
+import { describeBounce } from './describe-bounce';
 import type { DeathLinkNotice, DeathLink, DeathLinkDeps } from '@rotp/randomizer';
 
 const emitDeathLinkNotice = (notice: DeathLinkNotice): void => emitOnlineNotice(deathLinkOnlineNotice(notice));
@@ -26,12 +27,10 @@ const createDeathLink = (deps: DeathLinkDeps): DeathLink => {
   return {
     handleBounced(packet) {
       if (!Array.isArray(packet.tags) || !packet.tags.includes(DEATH_LINK_TAG)) return;
-      const { source, cause } = packet.data ?? {};
+      const { source, name, why } = describeBounce(packet.data);
       if (source === slotName || isGuarded(lastSentAt)) return;
       lastKilledAt = now();
       const outcome = core.killLink();
-      const name = typeof source === 'string' && source ? source : 'Someone';
-      const why = typeof cause === 'string' ? cause : '';
       log.randomizer(`[Online] DeathLink: ${why || `${name} died`}${KILL_LOG_NOTE[outcome]}`);
       if (outcome === 'unsupported') return;
       notify({ kind: outcome === 'armed' ? 'received' : 'dropped', source: name, cause: why });

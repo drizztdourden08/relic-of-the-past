@@ -1,5 +1,5 @@
 /* @layer renderer-widgets @kind component */
-import { Box, Text } from '@drizztdourden08/tessera/primitives';
+import { Box, Icon, Text } from '@drizztdourden08/tessera/primitives';
 import { useNavigationOverlayStore } from '../../../stores/navigation-overlay-store';
 import { ANNOTATION_STYLES } from '@app/navigation-overlay/annotation-style';
 import type { AnnotationLayerProps } from './AnnotationLayer.type';
@@ -14,7 +14,7 @@ const AnnotationLayer = ({ annotations, cellLeft, cellTop, cellW, cellH }: Annot
   return (
     <>
       {annotations.items.map((item, i) => {
-        const style = ANNOTATION_STYLES[item.kind] ?? ANNOTATION_STYLES.unknown;
+        const style = ANNOTATION_STYLES[item.kind];
         if (style.panelOnly || hiddenKinds.has(item.kind)) return null;
         const settled = item.state === 'open' || item.state === 'done';
         return (
@@ -28,8 +28,8 @@ const AnnotationLayer = ({ annotations, cellLeft, cellTop, cellW, cellH }: Annot
 
       {(done > 0 || available > 0) && (
         <Box style={{ left: cellLeft + 2, top: cellTop + 2 }} className="nav-annotation-layer__badge">
-          {done > 0 && <Text className="nav-annotation-layer__done">{done}✓</Text>}
-          {available > 0 && <Text className="nav-annotation-layer__avail">{available}◦</Text>}
+          {done > 0 && <Text className="nav-annotation-layer__done">{done}<Icon name="check" inline /></Text>}
+          {available > 0 && <Text className="nav-annotation-layer__avail">{available}<Icon name="circle" inline /></Text>}
         </Box>
       )}
     </>

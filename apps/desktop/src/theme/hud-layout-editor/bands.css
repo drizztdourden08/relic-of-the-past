@@ -17,7 +17,7 @@
   display: flex;
   flex: 0 0 auto;
   align-items: center;
-  min-height: 26px;
+  min-height: calc(26 * var(--size-1));
   font-size: var(--text-xs);
   white-space: nowrap;
 }
@@ -36,7 +36,7 @@
 }
 
 .hud-grid__bar .hud-toolbar__button {
-  width: 26px;
+  width: calc(26 * var(--size-1));
 }
 
 .hud-grid__bar .hud-toolbar__button:disabled {
@@ -68,7 +68,7 @@
   flex-wrap: wrap;
   gap: var(--space-2xs) var(--space-xs);
   min-width: 0;
-  min-height: 20px;
+  min-height: var(--size-20);
 }
 
 .hud-grid__key {

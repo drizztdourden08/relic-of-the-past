@@ -5,6 +5,14 @@ import type { GridPos } from '../navigation-overlay.type';
 
 type Sprites = ReturnType<typeof wasmGetLiveSprites>;
 
+interface SpriteInfoParams {
+  sprites: Sprites;
+  tileRow: number;
+  tileCol: number;
+  screenWorldX: number;
+  screenWorldY: number;
+}
+
 interface PathTipParams {
   activeTarget: GridPos;
   vp: ViewportInfo;
@@ -33,4 +41,4 @@ interface PassEquipment {
   flippers: unknown;
 }
 
-export type { PassEquipment, PathTipParams, Sprites, TooltipPosition };
+export type { PassEquipment, PathTipParams, SpriteInfoParams, Sprites, TooltipPosition };

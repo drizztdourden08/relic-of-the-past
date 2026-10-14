@@ -11,4 +11,6 @@ interface KeyRailProps {
   endLabel: string;
 }
 
-export type { KeyRailProps };
+type RailCapture = Partial<Pick<HTMLElement, 'setPointerCapture'>>;
+
+export type { KeyRailProps, RailCapture };

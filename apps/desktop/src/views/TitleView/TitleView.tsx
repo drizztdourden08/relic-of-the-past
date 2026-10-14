@@ -9,8 +9,8 @@ import { useTitleAssets } from './behavior/useTitleAssets';
 import { useTitleProgress } from './behavior/useTitleProgress';
 import { useTitleLoop } from './behavior/useTitleLoop';
 import { TitlePrompts } from './sub-components/TitlePrompts';
-import { CANVAS, FULL } from './TitleView.constants';
 import type { TitleViewProps } from './TitleView.type';
+import './TitleView.css';
 
 const TitleView = ({ profileId }: TitleViewProps) => {
   const { motion, followsProgress, sword, dimFlashes } = useTitleSettingsStore();
@@ -24,8 +24,8 @@ const TitleView = ({ profileId }: TitleViewProps) => {
   useTitleLoop(canvasRef, { assets, geometry, moving: motion === 'drifting', dimFlashes, onResting });
 
   return (
-    <HudBox ref={containerRef} style={FULL} data-testid="title-view">
-      <Canvas ref={canvasRef} style={CANVAS} />
+    <HudBox ref={containerRef} layout="overlay" data-testid="title-view">
+      <Canvas ref={canvasRef} className="title-view__canvas" />
       {resting && geometry && <TitlePrompts geometry={geometry} scale={scale} />}
     </HudBox>
   );

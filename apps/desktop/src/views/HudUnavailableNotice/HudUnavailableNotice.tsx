@@ -7,7 +7,7 @@ const HudUnavailableNotice = () => (
   <Box className="hud-unavailable">
     <Box className="hud-unavailable__box">
       <Text variant="label">{HEADLINE}</Text>
-      <Text variant="caption">{CAPTION}</Text>
+      <Text variant="caption" tone="dim">{CAPTION}</Text>
     </Box>
   </Box>
 );

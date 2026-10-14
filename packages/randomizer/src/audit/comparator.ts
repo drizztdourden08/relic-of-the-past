@@ -2,9 +2,9 @@
 import { chestAddressToTableIndex } from './chest-address-to-table-index';
 import { joinCrosswalk } from './join-crosswalk';
 import { vanillaVerdict } from './comparator-vanilla';
-import type { CheckRecord, ItemRecord } from '@rotp/game-data';
+import type { CheckRecord } from '@rotp/game-data';
 import type { ReferenceLocation } from './reference-source.type';
-import type { ChestVerdict, ComparatorInput } from './comparator.type';
+import type { ChestLookups, ChestPosition, ChestVerdict, ComparatorInput } from './comparator.type';
 import type { RomCensus, RomChest } from './rom-census/rom-census.type';
 
 const chestAt = (
@@ -27,48 +27,61 @@ const referencePositionOf = (
   return tableIndex === null ? null : joinCrosswalk(tableIndex, flatTable);
 };
 
+const phantomVerdict = (
+  check: CheckRecord, standardName: string, census: RomCensus,
+): ChestVerdict | null => {
+  const { roomId, chestIndex } = check.gameId;
+  if (chestAt(census, roomId, chestIndex) !== undefined) return null;
+  return {
+    checkId: check.id,
+    standardName,
+    verdict: 'phantom-chest',
+    actual: { roomId, chestIndex },
+    note: 'no native chest-table entry at the dataset (roomId, chestIndex)',
+  };
+};
+
+const missingReferenceVerdict = (
+  check: CheckRecord, standardName: string, referenceByName: ReadonlyMap<string, ReferenceLocation>,
+): ChestVerdict => ({
+  checkId: check.id,
+  standardName,
+  verdict: 'no-reference-address',
+  note: referenceByName.has(standardName)
+    ? 'reference location exists but its address is outside the chest-table range'
+    : 'no reference location with this standard name',
+});
+
+const mismatchVerdict = (
+  check: CheckRecord, standardName: string, expected: ChestPosition, actual: ChestPosition,
+): ChestVerdict => ({
+  checkId: check.id,
+  standardName,
+  verdict: 'position-mismatch',
+  expected,
+  actual,
+});
+
 const verdictsForChest = (
   check: CheckRecord,
   standardName: string,
   input: ComparatorInput,
-  referenceByName: ReadonlyMap<string, ReferenceLocation>,
-  itemById: ReadonlyMap<string, ItemRecord>,
+  lookups: ChestLookups,
 ): ChestVerdict[] => {
   const { census, flatTable, items } = input;
   const out: ChestVerdict[] = [];
   const { roomId, chestIndex } = check.gameId;
 
-  const datasetChest = chestAt(census, roomId, chestIndex);
-  if (datasetChest === undefined) {
-    out.push({
-      checkId: check.id,
-      standardName,
-      verdict: 'phantom-chest',
-      actual: { roomId, chestIndex },
-      note: 'no native chest-table entry at the dataset (roomId, chestIndex)',
-    });
-  }
+  const phantom = phantomVerdict(check, standardName, census);
+  if (phantom !== null) out.push(phantom);
 
-  const referencePosition = referencePositionOf(standardName, referenceByName, flatTable);
+  const referencePosition = referencePositionOf(standardName, lookups.referenceByName, flatTable);
   const positionMismatch =
     referencePosition !== null && (referencePosition.roomId !== roomId || referencePosition.chestIndex !== chestIndex);
   if (referencePosition === null) {
-    out.push({
-      checkId: check.id,
-      standardName,
-      verdict: 'no-reference-address',
-      note: referenceByName.has(standardName)
-        ? 'reference location exists but its address is outside the chest-table range'
-        : 'no reference location with this standard name',
-    });
+    out.push(missingReferenceVerdict(check, standardName, lookups.referenceByName));
   } else if (positionMismatch) {
-    out.push({
-      checkId: check.id,
-      standardName,
-      verdict: 'position-mismatch',
-      expected: referencePosition,
-      actual: { roomId, chestIndex },
-    });
+    out.push(mismatchVerdict(check, standardName, referencePosition, { roomId, chestIndex }));
   }
 
   const finalPosition = positionMismatch ? referencePosition : { roomId, chestIndex };
@@ -80,7 +93,7 @@ const verdictsForChest = (
       censusByte: finalChest.itemByte,
       vanillaItemIds: check.vanillaItemIds,
       items,
-      itemById,
+      itemById: lookups.itemById,
     });
     if (verdict !== null) out.push(verdict);
   }
@@ -115,7 +128,7 @@ const compareChestChecks = (input: ComparatorInput): ChestVerdict[] => {
       continue;
     }
     if (check.kind !== 'chest') continue;
-    verdicts.push(...verdictsForChest(check, nameOf(check), input, referenceByName, itemById));
+    verdicts.push(...verdictsForChest(check, nameOf(check), input, { referenceByName, itemById }));
   }
   return verdicts;
 };

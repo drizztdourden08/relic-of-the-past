@@ -1,6 +1,7 @@
 /* @layer renderer-components @kind types */
 import type { GameSettings } from '@rotp/features';
 import type { SegmentOption } from '@drizztdourden08/tessera/primitives';
+import type { PRESET_GROUP_IDS } from './AspectRatioControl.constants';
 
 interface AspectRatioControlProps {
   label: string;
@@ -22,4 +23,8 @@ interface AspectRatioControlProps {
   onChange: (patch: Partial<GameSettings>) => void;
 }
 
-export type { AspectRatioControlProps };
+type PresetGroupId = (typeof PRESET_GROUP_IDS)[number];
+
+type PresetGroups = Readonly<Record<PresetGroupId, SegmentOption[] | undefined>>;
+
+export type { AspectRatioControlProps, PresetGroupId, PresetGroups };

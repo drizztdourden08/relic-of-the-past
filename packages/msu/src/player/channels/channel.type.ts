@@ -2,7 +2,7 @@
 import type { LayerResume, MsuLayer, SoundChannel } from '@rotp/game-data';
 import type { EffectChain } from '../layer-effects';
 import type { LayerActivity, LayerScheduler } from '../schedulers/scheduler.type';
-import type { LoadBytes } from '../track-loader';
+import type { createTrackLoader, LoadBytes } from '../track-loader';
 
 type MsuChannelName = 'music' | SoundChannel;
 
@@ -71,7 +71,14 @@ interface SoundChannelApi {
   dispose: () => void;
 }
 
+interface ChannelCore {
+  fadeGain: GainNode;
+  loader: ReturnType<typeof createTrackLoader>;
+  byId: Map<number, SoundProgram>;
+  teardown: () => void;
+}
+
 export type {
   MsuChannelName, ChannelKind, SoundProgram, ActiveLayer, LayerReport,
-  ChannelResume, ChannelReport, ChannelOptions, SoundChannelApi,
+  ChannelResume, ChannelReport, ChannelOptions, ChannelCore, SoundChannelApi,
 };

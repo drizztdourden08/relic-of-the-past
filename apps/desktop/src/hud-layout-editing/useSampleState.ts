@@ -8,8 +8,9 @@ import { useHudSettingsStore } from '@app/stores/hud-settings-store';
 import { deviceFamilyOf } from '@app/views/HudLayoutView/behavior/device-family';
 import {
   SAMPLE_BOTTLES, SAMPLE_COUNTDOWN, SAMPLE_HUD, SAMPLE_ITEMS, SAMPLE_SLOTS, SAMPLE_SWORD_TIER, sampleSlotAssignments,
+  sampleVitals,
 } from './sample-state';
-import { HEALTH_PER_HEART, SILVER_ARROW_TIER } from './sample-state.constants';
+import { HEALTH_PER_HEART } from './sample-state.constants';
 import type { EditorSampleState, SampleStateArgs } from './sample-state.type';
 
 const useSampleState = (args: SampleStateArgs): EditorSampleState => {
@@ -35,23 +36,7 @@ const useSampleState = (args: SampleStateArgs): EditorSampleState => {
       family: deviceFamilyOf(slots),
     });
 
-    const vitals = {
-      healthCurrent: counters.healthCurrent,
-      healthCapacity: counters.healthCapacity,
-      heartMode,
-      armor: live ? armor : 0,
-      magic: counters.magicPower,
-      halfMagic: counters.halfMagic,
-      bombs: counters.bombs,
-      maxBombs: counters.maxBombs,
-      arrows: counters.arrows,
-      maxArrows: counters.maxArrows,
-      keys: counters.keys,
-      hasSilverArrows: (live ? items[0] ?? 0 : SAMPLE_ITEMS[0]) >= SILVER_ARROW_TIER,
-      rupees: counters.rupees,
-      maxRupees: counters.maxRupees,
-      showMaxInYellow,
-    };
+    const vitals = sampleVitals({ counters, live, armor, items, heartMode, showMaxInYellow });
 
     return {
       live,

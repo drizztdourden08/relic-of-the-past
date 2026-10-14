@@ -1,4 +1,6 @@
 /* @layer renderer-components @kind constants */
+import type { ByteColorKey, ByteStatus } from './hid-calibration.type';
+
 const STICK_IDS = new Set(['leftX', 'leftY', 'rightX', 'rightY']);
 const TRIGGER_IDS = new Set(['leftTrigger', 'rightTrigger']);
 
@@ -18,10 +20,21 @@ const AXIS_LABELS: Record<string, { pos: string; neg: string }> = {
 const TRIGGER_RANGE_THRESHOLD = 40;
 const TRIGGER_STABLE_FRAMES = 6;
 
+const BYTE_COLOR_KEY_BY_STATUS: Record<ByteStatus, ByteColorKey> = {
+  unknown: 'unknown',
+  idle: 'unknown',
+  counter: 'unknown',
+  excluded: 'excluded',
+  stick: 'stick',
+  trigger: 'trigger',
+  button: 'button',
+};
+
 const BYTE_MAX = 255;
 const BYTE_MID = 128;
 
 export {
+  BYTE_COLOR_KEY_BY_STATUS,
   BYTE_MAX,
   BYTE_MID,
   ANALOG_THRESHOLD_DELTA,

@@ -12,8 +12,8 @@
 
 .hud-ref-field__thumb {
   flex-shrink: 0;
-  width: 2rem;
-  height: 2rem;
+  width: var(--size-32);
+  height: var(--size-32);
 }
 
 .hud-ref-field__thumb .image__img {
@@ -22,8 +22,8 @@
 }
 
 .hud-ref-field--compact .hud-ref-field__thumb {
-  width: 1.25rem;
-  height: 1.25rem;
+  width: var(--size-20);
+  height: var(--size-20);
 }
 
 .hud-ref-field__name {
@@ -55,8 +55,8 @@
   flex-shrink: 0;
   align-items: center;
   justify-content: center;
-  min-width: 2rem;
-  height: 2rem;
+  min-width: calc(2 * var(--text-base));
+  height: calc(2 * var(--text-base));
   padding: 0 var(--space-2xs);
   background: var(--c-hover);
   border-radius: var(--radius-sm);
@@ -86,7 +86,7 @@
 }
 
 .hud-bounded__slider .slider__value {
-  min-width: 2.25rem;
+  min-width: calc(2.25 * var(--text-base));
   font-size: var(--text-xs);
   text-align: right;
 }

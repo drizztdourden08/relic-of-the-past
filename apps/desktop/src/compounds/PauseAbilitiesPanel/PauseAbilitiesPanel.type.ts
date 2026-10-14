@@ -1,6 +1,4 @@
 /* @layer renderer-hud @kind types */
-import type { CSSProperties } from 'react';
-
 interface PauseAbilitiesPanelProps {
   gloves: number;
   boots: number;
@@ -9,7 +7,22 @@ interface PauseAbilitiesPanelProps {
   abilityFlags: number;
   scale: number;
   spritesBase: string;
-  style?: CSSProperties;
+  className?: string;
 }
 
-export type { PauseAbilitiesPanelProps };
+interface AbilityCellProps {
+  label: string;
+  owned: boolean;
+  liftLevel: number;
+  tile: number;
+  spritesBase: string;
+}
+
+interface AbilityGridProps {
+  abilityFlags: number;
+  liftLevel: number;
+  tile: number;
+  spritesBase: string;
+}
+
+export type { AbilityCellProps, AbilityGridProps, PauseAbilitiesPanelProps };

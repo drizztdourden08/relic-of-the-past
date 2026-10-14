@@ -112,4 +112,10 @@ interface ActionDeps {
   onComplete: (map: HidControllerMap) => void;
 }
 
-export type { ActionDeps };
+interface ByteClickParams {
+  handleStickBytePicked: (idx: number) => void;
+  handleTriggerBytePicked: (idx: number) => void;
+  handleManualByteAssign: (byteIdx: number) => void;
+}
+
+export type { ActionDeps, ByteClickParams };

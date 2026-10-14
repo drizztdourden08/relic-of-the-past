@@ -9,7 +9,7 @@ const HeroProgress = (props: { files: HeroProgressFile[] }) => {
   return (
     <Box className="hero-progress">
       <Box className="hero-progress__head">
-        <Text className="hero__eyebrow">Progress</Text>
+        <Text className="hero__eyebrow hero-progress__eyebrow">Progress</Text>
         <Box className="hero-progress__legend" aria-hidden="true">
           <Text as="span" className="hero-progress__key hero-progress__key--taken">Taken</Text>
           <Text as="span" className="hero-progress__key hero-progress__key--available">Available</Text>

@@ -8,11 +8,11 @@ import { GhostCard } from '@app/views/HudLayoutEditor/sub-components/DragGhost';
 import { CellPicker } from '@app/views/HudLayoutEditor/sub-components/CellPicker';
 import { PlatformContext } from '@drizztdourden08/brock-react';
 import { ghostPosition } from '@app/hud-layout-editing/drop-ghost';
-import type { Platform } from '@drizztdourden08/brock-core';
 import { cssIn } from './files-in';
 import { REPO_ROOT } from '../repo-root';
 import { EDITOR_THEME_SHEETS } from './editor-theme-sheets.constants';
 import { required } from '../required';
+import { WINDOWS_PLATFORM } from './windows-platform';
 
 const ROOT = REPO_ROOT;
 const DS = `${ROOT}/node_modules/@drizztdourden08/tessera/src`;
@@ -36,8 +36,6 @@ const VIEWPORT = { w: 900, h: 600 };
 const CURSOR = { x: 300, y: 200 };
 const CORNER = { x: 860, y: 560 };
 
-const PLATFORM = { info: { os: 'windows' } } as unknown as Platform;
-
 const GRID_PARENT = {
   id: 'badge',
   kind: 'container',
@@ -57,7 +55,7 @@ const CASES: Record<string, () => unknown> = {
     h('div', { key: 'down', className: 'hud-outline__pan is-down' }),
   ]),
   quiet: () => h('div', { className: 'hud-outline__rows' }, h('div', { className: 'hud-outline__pan is-up' })),
-  taken: () => h(PlatformContext.Provider, { value: PLATFORM }, h(CellPicker, {
+  taken: () => h(PlatformContext.Provider, { value: WINDOWS_PLATFORM }, h(CellPicker, {
     container: GRID_PARENT, childId: 'shield',
     place: { column: 1, row: 1, colSpan: 2 }, onChange: () => {},
   })),
@@ -95,20 +93,20 @@ const probe = (): Probe => {
       if (!cls) continue;
       const marks = ['is-taken', 'is-down']
         .filter((mark) => el.classList.contains(mark)).map((mark) => `.${mark}`).join('');
-      const state = (el as HTMLElement).dataset?.state;
+      const state = (el as HTMLElement).dataset.state;
       const key = `${name}/${cls}${marks}${state ? `[${state}]` : ''}`;
       if (box[key]) continue;
       const r = el.getBoundingClientRect();
       box[key] = {
         x: Math.round(r.x * 10) / 10, y: Math.round(r.y * 10) / 10, w: Math.round(r.width * 10) / 10, h: Math.round(r.height * 10) / 10,
       };
-      const computed = getComputedStyle(el) as unknown as Record<string, string>;
+      const computed = getComputedStyle(el);
       const caps = ['::before', '::after'].map((pseudo) => {
         const c = getComputedStyle(el, pseudo);
         return `${c.width}x${c.height}`;
       });
       style[key] = {
-        ...Object.fromEntries(want.map((k) => [k, computed[k] ?? ''])),
+        ...Object.fromEntries(want.map((k) => [k, computed.getPropertyValue(k.replace(/[A-Z]/g, (c) => `-${c.toLowerCase()}`))])),
         caps: caps.join(' '),
       };
     }

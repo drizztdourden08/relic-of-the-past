@@ -4,7 +4,7 @@ import type { EntityKind } from '@rotp/game-data';
 import type { FieldDescriptor } from '@drizztdourden08/tessera/data';
 import { blankRecordFor } from './blank-record';
 import { createSchemaFor } from './create-schema';
-import { RECORD_CREATORS } from './record-creators';
+import { RECORD_CREATORS } from '@app/data-inspector/record-creators';
 import { requiredPaths } from './required-fields';
 
 const useCreateRecordDialog = (

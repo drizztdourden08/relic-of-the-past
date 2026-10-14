@@ -47,6 +47,7 @@ const row = (id: string, children: HudNode[]): HudNode =>
 const doc = (): HudLayout => ({
   id: 'l',
   name: 'L',
+  builtIn: false,
   screen: {
     id: 'screen',
     kind: 'container',
@@ -64,7 +65,7 @@ const doc = (): HudLayout => ({
       },
     ],
   },
-}) as unknown as HudLayout;
+});
 
 const childIds = (d: HudLayout, id: string): string[] => {
   const node = siteOf(d, id)?.node;
@@ -200,7 +201,8 @@ describe('single ownership, and the new dismiss level', () => {
   it('routes the outline through `applyDrop`, not through the tree', () => {
     const reads = (f: string): string => readFileSync(join(EDITOR, f), 'utf8');
     expect(readFileSync(join(EDITING, 'useNodeEdits.ts'), 'utf8')).toContain("from './drop-intent'");
-    expect(reads('sub-components/OutlinePanel.tsx')).toContain("from '@app/hud-layout-editing/drop-intent'");
+    expect(reads('sub-components/OutlinePanel.tsx')).toContain("from '@app/hud-layout-editing/useOutlineDrag'");
+    expect(readFileSync(join(EDITING, 'useOutlineDrag.ts'), 'utf8')).toContain("from './drop-intent'");
   });
 
   it('puts `drag` above `popover`, so Escape mid-drag cancels the drag', () => {

@@ -1,25 +1,17 @@
 /* @layer renderer-components @kind logic */
-import type React from 'react';
 import { GRID_SIZE } from '@rotp/navigation';
-import type { FloodFillResult } from '@rotp/game-core';
-import type { wasmGetViewportInfo } from '@app/game';
-import type { GridPos } from './navigation-overlay.type';
 import { screenOriginFor } from '@app/game/flood';
 import { viewOrigin } from '@rotp/game-core';
+import type { GridPos } from './navigation-overlay.type';
+import type { MouseEventToTileParams } from './tile-inspector-coords.type';
 import { TILE_PX } from './pathfinding/pathfinding.constants';
 
-const mouseEventToTile = (
-  e: React.MouseEvent<HTMLDivElement>,
-  vp: ReturnType<typeof wasmGetViewportInfo>,
-  result: FloodFillResult,
-  width: number,
-  height: number,
-  isIndoors: boolean,
-): GridPos | null => {
+const mouseEventToTile = (params: MouseEventToTileParams): GridPos | null => {
+  const { event, vp, result, width, height, isIndoors } = params;
   if (!vp || !result.attrGrid) return null;
-  const rect = e.currentTarget.getBoundingClientRect();
-  const mx = e.clientX - rect.left;
-  const my = e.clientY - rect.top;
+  const rect = event.currentTarget.getBoundingClientRect();
+  const mx = event.clientX - rect.left;
+  const my = event.clientY - rect.top;
   const scaleX = width / vp.snesWidth;
   const scaleY = height / vp.snesHeight;
   const snesX = mx / scaleX;

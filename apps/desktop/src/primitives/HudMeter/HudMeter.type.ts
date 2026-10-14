@@ -18,4 +18,13 @@ interface MeterBand {
   h: number;
 }
 
-export type { HudMeterProps, MeterBand };
+interface MeterSheenProps {
+  rows: readonly MeterBand[];
+  frame: number;
+  innerW: number;
+  frameColor: string;
+  sheenColor: string;
+  sheenOpacity: number;
+}
+
+export type { HudMeterProps, MeterBand, MeterSheenProps };

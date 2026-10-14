@@ -1,4 +1,5 @@
 /* @layer renderer-components @kind component */
+import './FormulaMenu.css';
 import { Anchored, Box, Pressable, Text, TextInput } from '@drizztdourden08/tessera/primitives';
 import { formulaGroups } from '@app/hud-layout-editing/formula-catalog';
 import { formulaStarters } from '@app/hud-layout-editing/formula-starters';

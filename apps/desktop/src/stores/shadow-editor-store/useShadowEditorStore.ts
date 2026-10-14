@@ -1,11 +1,13 @@
 /* @layer renderer-stores @kind logic */
-import { requireHostApi } from '@drizztdourden08/brock-react';
 import { create } from 'zustand';
 import { EMPTY_SHADOW_PROJECT } from '@rotp/game-core';
 import type { ShadowEditorStore } from './shadow-editor-store.type';
 import { ensureScreenData } from './ensure-screen-data';
 import { screenEditActions } from './screen-edit-actions';
+import { heightLevelActions } from './height-level-actions';
 import { historyActions } from './history-actions';
+import { saveAction } from './save-action';
+import { DEFAULT_HEIGHT_LEVELS } from './shadow-editor-store.constants';
 
 const useShadowEditorStore = create<ShadowEditorStore>((set, get) => ({
   open: false,
@@ -27,12 +29,7 @@ const useShadowEditorStore = create<ShadowEditorStore>((set, get) => ({
   defaultSmoothing: 2,
   defaultLightIntensity: 0.8,
   defaultLightRadius: 64,
-  heightLevels: [
-    { label: 'Low', value: 0.25 },
-    { label: 'Mid', value: 0.5 },
-    { label: 'High', value: 0.75 },
-    { label: 'Wall', value: 1.0 },
-  ],
+  heightLevels: DEFAULT_HEIGHT_LEVELS.map((level) => ({ ...level })),
   freehandPoints: [],
   isDrawingFreehand: false,
   isDragging: false,
@@ -60,11 +57,7 @@ const useShadowEditorStore = create<ShadowEditorStore>((set, get) => ({
   setDefaultLightIntensity: (intensity) => set({ defaultLightIntensity: intensity }),
   setDefaultLightRadius: (radius) => set({ defaultLightRadius: radius }),
 
-  addHeightLevel: (label, value) => set((s) => ({ heightLevels: [...s.heightLevels, { label, value }] })),
-  removeHeightLevel: (index) => set((s) => ({ heightLevels: s.heightLevels.filter((_, i) => i !== index) })),
-  updateHeightLevel: (index, patch) => set((s) => ({
-    heightLevels: s.heightLevels.map((l, i) => i === index ? { ...l, ...patch } : l),
-  })),
+  ...heightLevelActions(set),
 
   ...screenEditActions(set, get),
 
@@ -79,16 +72,7 @@ const useShadowEditorStore = create<ShadowEditorStore>((set, get) => ({
 
   markClean: () => set({ dirty: false }),
 
-  save: async () => {
-    const state = get();
-    if (!state.dirty) return;
-    try {
-      await requireHostApi().shadowCasting.save(state.project);
-      set({ dirty: false });
-    } catch (err) {
-      console.error('[ShadowEditor] Save failed:', err);
-    }
-  },
+  ...saveAction(set, get),
 
   getScreenData: (screenId) => ensureScreenData(get().project, screenId),
 }));

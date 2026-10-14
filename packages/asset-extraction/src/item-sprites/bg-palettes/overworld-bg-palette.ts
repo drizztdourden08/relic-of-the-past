@@ -6,13 +6,12 @@ import { emptyRows } from './empty-rows';
 import { readColors } from './read-colors';
 import { writeInto } from './write-into';
 import type { RomData } from '../../rom/rom-types';
-import type { BgPaletteRows } from './bg-palettes.type';
+import type { BgPaletteRows, OverworldBgSelection } from './bg-palettes.type';
 
 const auxIndexFor = (row: number, aux1: number, aux2: number): number => (row <= 4 ? aux1 : aux2);
 
-const overworldBgPalette = (
-  rom: RomData, mode: number, aux1: number, aux2: number, aux3: number,
-): BgPaletteRows => {
+const overworldBgPalette = (rom: RomData, selection: OverworldBgSelection): BgPaletteRows => {
+  const { mode, aux1, aux2, aux3 } = selection;
   const rows = emptyRows();
   const rowAt = (row: number): RGBA[] => itemAt(rows, row, 'BG palette row');
   for (let row = 2; row <= 6; row += 1) {

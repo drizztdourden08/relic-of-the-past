@@ -18,7 +18,7 @@ const ProviderButton = (props: ProviderButtonProps) => {
     <Button
       className={`provider-btn provider-btn--${provider}`}
       fullWidth={fullWidth}
-      icon={<IconifyIcon icon={PROVIDER_MARKS[provider]} />}
+      icon={<IconifyIcon icon={PROVIDER_MARKS[provider]} className="provider-btn__icon" />}
       onClick={handleClick}
     >
       {VERB[intent]} {PROVIDER_LABELS[provider]}

@@ -1,13 +1,10 @@
 /* @layer renderer-hud @kind component */
 import { PauseBorderBox } from '../../primitives/PauseBorderBox';
 import { HudBox } from '../../primitives/HudBox';
-import { PauseText } from '../../composites/PauseText';
 import { PauseGearRow } from './sub-components/PauseGearRow';
-import {
-  GEAR_BOX_COLS, HERO_COLUMN_W, HERO_X, HERO_Y, HINT_GLYPH, PASSIVE_SECTION, ROW_PITCH,
-} from './PauseGearScreen.constants';
+import { GearSideColumns } from './sub-components/GearSideColumns';
+import { GEAR_BOX_COLS, PASSIVE_SECTION, ROW_PITCH } from './PauseGearScreen.constants';
 import { gearBoxRows } from './behavior/gear-box-rows';
-import { hintY } from './behavior/hint-y';
 import type { GearSection, PauseGearScreenProps } from './PauseGearScreen.type';
 
 const PauseGearScreen = (props: PauseGearScreenProps) => {
@@ -25,14 +22,14 @@ const PauseGearScreen = (props: PauseGearScreenProps) => {
   };
 
   return (
-    <HudBox style={{ position: 'relative' }}>
+    <HudBox layout="relative">
       <PauseBorderBox
         color="yellow"
         cols={GEAR_BOX_COLS}
         rows={gearBoxRows(rowCount)}
         scale={scale}
         spritesBase={spritesBase}
-        style={{ position: 'absolute', left: 0, top: 0 }}
+        atOrigin
       >
         {ladders.map((ladder, row) => (
           <HudBox key={ladder.kind} style={{ position: 'absolute', left: 0, top: px(row * ROW_PITCH) }}>
@@ -59,30 +56,7 @@ const PauseGearScreen = (props: PauseGearScreenProps) => {
         </HudBox>
       </PauseBorderBox>
 
-      <HudBox style={{
-        position: 'absolute',
-        left: px(HERO_X),
-        top: px(HERO_Y),
-        width: px(HERO_COLUMN_W),
-        display: 'flex',
-        justifyContent: 'center',
-      }}>
-        {hero}
-      </HudBox>
-
-      <HudBox style={{
-        position: 'absolute',
-        left: px(HERO_X),
-        top: px(hintY(rowCount)),
-        width: px(HERO_COLUMN_W),
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-      }}>
-        {hintLines.map((line, index) => (
-          <PauseText key={index} text={line} scale={scale} size={HINT_GLYPH} dim spritesBase={spritesBase} />
-        ))}
-      </HudBox>
+      <GearSideColumns hintLines={hintLines} hero={hero} rowCount={rowCount} scale={scale} spritesBase={spritesBase} />
     </HudBox>
   );
 };

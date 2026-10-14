@@ -1,7 +1,7 @@
 /* @layer renderer-components @kind style */
 .hookshop-chip {
   padding: 0 var(--space-xs);
-  border: 1px solid var(--c-primary);
+  border: var(--border-width-thin) solid var(--c-primary);
   background: var(--c-primary-soft);
   color: var(--c-primary-bright);
   font-size: var(--text-xs);

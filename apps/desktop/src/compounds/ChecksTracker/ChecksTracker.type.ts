@@ -26,7 +26,7 @@ interface ChecksTrackerProps {
   viewMode: ViewMode;
   onViewModeChange: (mode: ViewMode) => void;
   groupTree: GroupNode;
-  statuses: Map<string, CheckStatus>;
+  statuses: ReadonlyMap<string, CheckStatus>;
   eventStatus?: ReadonlyMap<string, boolean>;
   run?: RunContext;
   dimensions?: readonly GroupDimensionDef[];
@@ -78,7 +78,7 @@ interface CheckCardProps {
 
 interface CheckListProps {
   checks: readonly CheckRecord[];
-  statuses: Map<string, CheckStatus>;
+  statuses: ReadonlyMap<string, CheckStatus>;
   eventStatus?: ReadonlyMap<string, boolean>;
   viewMode: ViewMode;
   run?: RunContext;
@@ -105,9 +105,34 @@ interface TrackerCheckRowProps {
   now?: boolean;
 }
 
+interface NowPillProps {
+  now?: boolean;
+  status: CheckStatus;
+  className?: string;
+}
+
+interface FilterSearchProps {
+  filter: FilterState;
+  onFilterChange: (filter: FilterState) => void;
+  activeCount: number;
+  filtersOpen: boolean;
+  onToggleFilters: () => void;
+}
+
+interface FilterControlsProps {
+  filter: FilterState;
+  onFilterChange: (filter: FilterState) => void;
+  grouping: GroupDimension[];
+  viewMode: ViewMode;
+  onViewModeChange: (mode: ViewMode) => void;
+  run?: RunContext;
+  onToggleTags: () => void;
+  onToggleGroupConfig: () => void;
+}
+
 interface TrackerGroupTreeProps {
   node: GroupNode;
-  statuses: Map<string, CheckStatus>;
+  statuses: ReadonlyMap<string, CheckStatus>;
   eventStatus?: ReadonlyMap<string, boolean>;
   viewMode: ViewMode;
   run?: RunContext;
@@ -128,7 +153,7 @@ interface TrackerSummaryProps {
 }
 
 export type {
-  CheckBatch, CheckCardProps, CheckListProps, CheckStatusIconProps, ChecksTrackerProps, StatusKey, SwapBadgeProps,
-  TrackerCheckRowProps, TrackerFilterPanelsProps, TrackerFiltersProps, TrackerGroupTreeProps,
+  CheckBatch, CheckCardProps, CheckListProps, CheckStatusIconProps, ChecksTrackerProps, FilterControlsProps,
+  FilterSearchProps, NowPillProps, StatusKey, SwapBadgeProps, TrackerCheckRowProps, TrackerFilterPanelsProps, TrackerFiltersProps, TrackerGroupTreeProps,
   TrackerLogicTogglesProps, TrackerPanels, TrackerStats, TrackerSummaryProps, ViewMode,
 };

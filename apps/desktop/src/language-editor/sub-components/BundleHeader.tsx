@@ -1,17 +1,16 @@
 /* @layer renderer-components @kind component */
 import { useMemo } from 'react';
-import { Box, Text, Status, Button } from '@drizztdourden08/tessera/primitives';
+import { Box, Text, Status } from '@drizztdourden08/tessera/primitives';
 import { LANGUAGE_NAMES } from '../../views/DataManager/sub-components/language-names.constants';
+import { BundleActions } from './BundleActions';
 import type { BundleHeaderProps } from './BundleHeader.type';
+import { SaveStatusBadge } from './SaveStatusBadge';
 import './BundleHeader.css';
 
 const baseLabel = (base: string): string => LANGUAGE_NAMES[base] ?? base;
 
 const BundleHeader = (props: BundleHeaderProps) => {
-  const {
-    set, warnings, dirty, saving, saveError, readOnly = false,
-    onDuplicate, onSaveNow, onExport, exporting = false, exportStatus,
-  } = props;
+  const { set, warnings, dirty, saving, saveError, readOnly = false, exporting = false, ...actions } = props;
 
   const facts = useMemo(() => [
     `id: ${set.id}`,
@@ -35,21 +34,8 @@ const BundleHeader = (props: BundleHeaderProps) => {
       </Box>
 
       <Box className="bundle-header__state">
-        {saveError && <Status tone="danger">{saveError}</Status>}
-        {!saveError && readOnly && <Status tone="neutral">Read only</Status>}
-        {!saveError && !readOnly && saving && <Status tone="neutral">Saving...</Status>}
-        {!saveError && !readOnly && !saving && dirty && <Status tone="warning">Not saved yet</Status>}
-        {!saveError && !readOnly && !saving && !dirty && <Status tone="success">Saved</Status>}
-        {onSaveNow && !readOnly && (
-          <Button variant="ghost" size="sm" disabled={!dirty || saving} onClick={onSaveNow}>Save now</Button>
-        )}
-        {onDuplicate && <Button variant="ghost" size="sm" onClick={onDuplicate}>Duplicate</Button>}
-        {onExport && (
-          <Button variant="ghost" size="sm" disabled={saving || exporting} onClick={onExport}>
-            {exporting ? 'Exporting...' : 'Export .rlang'}
-          </Button>
-        )}
-        {exportStatus && <Text variant="caption">{exportStatus}</Text>}
+        <SaveStatusBadge saveError={saveError} readOnly={readOnly} saving={saving} dirty={dirty} />
+        <BundleActions dirty={dirty} saving={saving} readOnly={readOnly} exporting={exporting} {...actions} />
       </Box>
     </Box>
   );

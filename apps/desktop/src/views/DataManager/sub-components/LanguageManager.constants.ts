@@ -1,8 +1,12 @@
 /* @layer renderer-components @kind constants */
-import type { CSSProperties } from 'react';
+import { LANGUAGE_NAMES } from './language-names.constants';
 
-const IL: Record<string, CSSProperties> = {
-  importForm: { marginBottom: 0, paddingBottom: 'var(--space-xs)' },
-};
+const LANGUAGE_OPTIONS = [
+  { value: '', label: 'Select language...' },
+  ...Object.entries(LANGUAGE_NAMES).map(([code, name]) => ({
+    value: code,
+    label: `${name} (${code})`,
+  })),
+];
 
-export { IL };
+export { LANGUAGE_OPTIONS };

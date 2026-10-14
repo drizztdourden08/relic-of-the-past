@@ -12,7 +12,7 @@ const deleteSprite = async (name: string): Promise<string[]> => {
   const cleared: string[] = [];
   for (const profile of profiles) {
     const config = await readConfig(profile.id);
-    if (!config || config.linkSprite !== name) continue;
+    if (config?.linkSprite !== name) continue;
     await writeConfig(profile.id, { ...config, linkSprite: null });
     cleared.push(profile.id);
   }

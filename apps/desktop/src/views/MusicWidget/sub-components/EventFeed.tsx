@@ -24,7 +24,7 @@ const EventFeed = (props: { events: MusicDebugEvent[] }) => {
     <ScrollArea className="music-widget__rows music-widget__feed">
       {events.map((event) => (
         <Box key={event.id} className="music-event">
-          <Text className="music-event__time">{timeOf(event.at)}</Text>
+          <Text tone="faint" className="music-event__time">{timeOf(event.at)}</Text>
           <Status tone={OWNER_VARIANTS[event.owner]}>{OWNER_LABELS[event.owner]}</Status>
           <Text className="music-event__channel">{event.channel}</Text>
           <Text className="music-event__detail">{event.detail}</Text>

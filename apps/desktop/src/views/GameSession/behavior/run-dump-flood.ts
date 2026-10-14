@@ -1,14 +1,15 @@
 /* @layer renderer-appshell @kind logic */
-import { annotateScreen, propagateArea } from '@app/game/flood';
-import { floodRoomRun, floodOneOverworld, enrichEntrances } from '@rotp/navigation';
+import { floodRoomRun, floodOneOverworld } from '@rotp/navigation';
 import { wasmBuildOverworldAttrGrid } from '@app/game';
 import { computeFloodFill } from './compute-flood-fill';
 import { computeOverworldFloodFill } from './compute-overworld-flood-fill';
 import { dumpFloodItems } from './dump-flood-items';
+import { applyAreaTotals } from './apply-area-totals';
+import { annotateDump } from './annotate-dump';
 import type { RunFloodArgs, RunFloodResult } from './dump-nav.type';
 
 const runDumpFlood = (args: RunFloodArgs): RunFloodResult => {
-  const { isIndoors, roomIndex, overworldScreenIndex, startPos, screenId } = args;
+  const { isIndoors, roomIndex, overworldScreenIndex, startPos } = args;
   const { attrGrid, dualLayerGrids, playerLayer, staircaseType, roomLayout } = args;
 
   const items = dumpFloodItems();
@@ -19,29 +20,9 @@ const runDumpFlood = (args: RunFloodArgs): RunFloodResult => {
     ? computeFloodFill({ roomIndex, run, attrGrid, dualLayerGrids, playerLayer, staircaseType, roomLayout, startPos })
     : computeOverworldFloodFill(run, wasmBuildOverworldAttrGrid(overworldScreenIndex));
 
-  if (floodFill && run) {
-    const areaResults = propagateArea({
-      isIndoors,
-      primaryScreenIndex: isIndoors ? roomIndex : overworldScreenIndex,
-      items,
-      startPos,
-      atPlayer: true,
-      entrances: roomRun ? roomRun.entrances : enrichEntrances(),
-      ...(isIndoors ? { intraEdges: roomLayout?.intraEdges ?? [] } : {}),
-    });
-    floodFill.reachableCount = areaResults.reduce((sum, r) => sum + r.result.reachableCount, 0);
-    floodFill.totalTiles = areaResults.reduce((sum, r) => sum + r.result.totalTiles, 0);
-  }
+  if (floodFill && run) applyAreaTotals(floodFill, { args, items, roomRun });
 
-  const annotations = screenId && run
-    ? annotateScreen(
-      screenId,
-      { isIndoors, roomId: isIndoors ? roomIndex : 0, owScreenIndex: isIndoors ? 0 : overworldScreenIndex },
-      run.result.reachable,
-    )
-    : null;
-
-  return { floodFill, annotations };
+  return { floodFill, annotations: annotateDump(args, run) };
 };
 
 export { runDumpFlood };

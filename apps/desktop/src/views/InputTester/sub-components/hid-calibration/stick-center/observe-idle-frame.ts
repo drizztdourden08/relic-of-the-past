@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind logic */
 import { IDLE_SAMPLE_MS } from './stick-center.constants';
-import type { IdleAxisResult, IdleFrameOutcome, IdleSampler } from './stick-center.type';
+import type { IdleAxisResult, IdleFrameOutcome, IdleResult, IdleSampler } from './stick-center.type';
 
 const median = (values: number[]): number => {
   const sorted = [...values].sort((a, b) => a - b);
@@ -23,23 +23,27 @@ const summarise = (values: number[]): IdleAxisResult => {
   };
 };
 
-const observeIdleFrame = (sampler: IdleSampler, bytes: Uint8Array, now: number): IdleFrameOutcome => {
+const recordIdleSample = (sampler: IdleSampler, bytes: Uint8Array): void => {
   const [xRun, yRun] = sampler.runs;
   xRun.push(bytes[sampler.x.idx] ?? 0);
   if (sampler.y && yRun) yRun.push(bytes[sampler.y.idx] ?? 0);
+};
 
-  const progress = Math.min(1, (now - sampler.startedAt) / IDLE_SAMPLE_MS);
-  if (progress < 1 || sampler.runs.some((run) => run.length === 0)) return { done: null, progress };
-
+const buildIdleResult = (sampler: IdleSampler): IdleResult => {
+  const [xRun, yRun] = sampler.runs;
   const xIdle = summarise(xRun);
   const yIdle = sampler.y && yRun ? summarise(yRun) : null;
   return {
-    done: {
-      x: { ...sampler.x, center: xIdle.center, idle: xIdle },
-      y: sampler.y && yIdle ? { ...sampler.y, center: yIdle.center, idle: yIdle } : null,
-    },
-    progress: 1,
+    x: { ...sampler.x, center: xIdle.center, idle: xIdle },
+    y: sampler.y && yIdle ? { ...sampler.y, center: yIdle.center, idle: yIdle } : null,
   };
+};
+
+const observeIdleFrame = (sampler: IdleSampler, bytes: Uint8Array, now: number): IdleFrameOutcome => {
+  recordIdleSample(sampler, bytes);
+  const progress = Math.min(1, (now - sampler.startedAt) / IDLE_SAMPLE_MS);
+  if (progress < 1 || sampler.runs.some((run) => run.length === 0)) return { done: null, progress };
+  return { done: buildIdleResult(sampler), progress: 1 };
 };
 
 export { observeIdleFrame };

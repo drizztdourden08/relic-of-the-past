@@ -18,17 +18,17 @@ const useLayoutDraft = (layoutId: string, onCommitted?: (layout: HudLayout) => v
   const [busy, setBusy] = useState(true);
 
   useEffect(() => {
-    let cancelled = false;
+    const abort = new AbortController();
     setBusy(true);
     void (async () => {
       const [opened, all] = await Promise.all([resolveStoredLayout(layoutId), listLayouts()]);
-      if (cancelled) return;
+      if (abort.signal.aborted) return;
       setOrigin(opened);
       setDraft(structuredClone(opened));
       setLayouts(all);
       setBusy(false);
     })();
-    return () => { cancelled = true; };
+    return () => { abort.abort(); };
   }, [layoutId]);
 
   const apply = useCallback((change: (doc: HudLayout) => HudLayout) => {

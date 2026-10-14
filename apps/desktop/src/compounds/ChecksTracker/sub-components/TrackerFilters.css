@@ -1,48 +1,11 @@
 /* @layer renderer-components @kind style */
 
-.tracker-summary {
-  container-type: inline-size;
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-xs);
-  padding: var(--space-sm) var(--space-md);
-  border-bottom: 1px solid var(--c-border);
-  flex-shrink: 0;
-}
-
-.tracker-summary__stats {
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--space-xs) var(--space-md);
-  font-size: var(--text-xs);
-}
-
-.tracker-summary__stat {
-  display: inline-flex;
-  align-items: center;
-  gap: var(--space-2xs);
-  white-space: nowrap;
-  color: var(--c-text-dim);
-}
-
-.tracker-summary__stat-value {
-  color: var(--c-text);
-  font-variant-numeric: tabular-nums;
-}
-
-.tracker-summary__stat--completed .tracker-summary__stat-value { color: var(--c-secondary); }
-.tracker-summary__stat--reachable .tracker-summary__stat-value { color: var(--c-warning); }
-
-@container (max-width: 320px) {
-  .tracker-summary__stat-label { display: none; }
-}
-
 .tracker-filters {
   display: flex;
   flex-direction: column;
   gap: var(--space-sm);
   padding: var(--space-sm) var(--space-md);
-  border-bottom: 1px solid var(--c-border);
+  border-bottom: var(--border-width-thin) solid var(--c-border);
   flex-shrink: 0;
 }
 
@@ -76,48 +39,5 @@
   align-items: center;
   justify-content: center;
   padding: var(--space-2xs) var(--space-sm);
-  min-height: 20px;
-}
-
-.tracker-filters__panel {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-sm);
-  padding: var(--space-sm);
-}
-
-.tracker-filters__group-current {
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--space-xs);
-}
-
-.tracker-filters__group-empty {
-  font-size: var(--text-xs);
-  color: var(--c-text-dim);
-  font-style: italic;
-}
-
-.tracker-filters__group-chip {
-  display: inline-flex;
-  align-items: center;
-  gap: var(--space-2xs);
-  padding: var(--space-2xs) var(--space-2xs) var(--space-2xs) var(--space-sm);
-  background: var(--c-primary-soft);
-  border: 1px solid var(--c-primary);
-  border-radius: var(--radius-sm);
-  font-size: var(--text-xs);
-  color: var(--c-primary-bright);
-}
-
-.tracker-filters__group-remove {
-  width: 16px;
-  height: 16px;
-  color: var(--c-primary-bright);
-}
-
-.tracker-filters__group-add {
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--space-xs);
+  min-height: var(--size-20);
 }

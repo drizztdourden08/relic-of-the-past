@@ -15,7 +15,7 @@ interface CanvasOverlayLoopConfig<R extends Disposable> {
   canvasKey: number;
   gameCanvasRef: React.RefObject<HTMLCanvasElement | null>;
   fxCanvasRef: React.RefObject<HTMLCanvasElement | null>;
-  rendererRef: React.MutableRefObject<R | null>;
+  rendererRef: React.RefObject<R | null>;
   setup?: (ctx: OverlayLoopContext) => Promise<(() => void) | void> | (() => void) | void;
   createRenderer: (fxCanvas: HTMLCanvasElement) => R | null;
   onFrame: (ctx: OverlayLoopContext & { renderer: R; time: number }) => void;

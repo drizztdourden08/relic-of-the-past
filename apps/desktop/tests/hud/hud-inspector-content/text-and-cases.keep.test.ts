@@ -3,7 +3,7 @@
 import { describe, expect, it, vi } from 'vitest';
 
 vi.hoisted(() => {
-  const stub = (): unknown => new Proxy(async () => [], { get: (_target, key) => (key === 'then' ? undefined : stub()) });
+  const stub = (): unknown => new Proxy(() => Promise.resolve([]), { get: (_target, key) => (key === 'then' ? undefined : stub()) });
   const anything = stub();
   const global = globalThis as { window?: { api?: unknown }; ResizeObserver?: unknown };
   global.window ??= {};
@@ -82,7 +82,7 @@ describe('the live-match marker is the engine own answer', () => {
       const drawn = required(expand(root, { scope: { item } }).children[0], 'the expanded winner');
       const marked = winnerIn(cases, { item });
       const expected = marked === -1 ? otherwise.id : required(cases[marked], 'the winning case').node.id;
-      expect(`item ${item} → ${drawn.id}`).toBe(`item ${item} → ${expected}`);
+      expect(`item ${item} -> ${drawn.id}`).toBe(`item ${item} -> ${expected}`);
     }
   });
 

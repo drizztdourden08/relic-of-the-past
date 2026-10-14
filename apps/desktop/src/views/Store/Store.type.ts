@@ -82,6 +82,13 @@ interface StoreHomeProps {
   onShowUpdates: () => void;
 }
 
+interface StoreHomeWelcomeProps {
+  name: string;
+  welcome: string | undefined;
+  updateCount: number;
+  onShowUpdates: () => void;
+}
+
 interface StoreInstalledListProps {
   title: string;
   rows: InstalledRow[];
@@ -118,6 +125,7 @@ export type {
   StoreDetailProps,
   StoreGridProps,
   StoreHomeProps,
+  StoreHomeWelcomeProps,
   StoreInstalledListProps,
   StoreInstalledRowProps,
   StoreModel,

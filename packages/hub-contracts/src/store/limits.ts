@@ -21,11 +21,11 @@ const FILES_KEPT: Record<StoreKind, number> = {
 const STORE_LIMITS = {
   packBytes: PACK_BYTES,
   card: { width: 1280, height: 720, bytes: 500 * KiB },
-  banner: { width: 1920, height: 640, bytes: 1 * MiB },
+  banner: { width: 1920, height: 640, bytes: MiB },
   downloadsPerDay: 40,
   downloadBytesPerDay: 8 * GiB,
   packPreviewsPerDay: 60,
-  manifestHeadBytes: 1 * MiB,
+  manifestHeadBytes: MiB,
   manifestBytes: 8 * MiB,
   itemsPageSize: 200,
   featuredMax: 12,

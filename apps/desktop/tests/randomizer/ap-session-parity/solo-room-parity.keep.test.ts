@@ -50,8 +50,7 @@ const preloadApi: unknown = new Proxy({}, { get: () => new Proxy(answerEmpty, { 
 (globalThis as { window?: unknown }).window ??= {
   addEventListener: () => undefined, removeEventListener: () => undefined, api: preloadApi,
 };
-await import('../../../../../packages/game-core/src/cheats');
-const { setModule } = await import('../../../../../packages/game-core/src/wasm-bridge');
+const { setModule } = await import('@rotp/game-core');
 const { createLocalSession } = await import('@app/game/randomizer-client/local-session');
 const { createOnlineClient } = await import('@app/game/randomizer-client/online-client');
 const { defaultOnlineCore } = await import('@app/game/randomizer-client/online-core');
@@ -176,8 +175,8 @@ const armOnline = async (core: FakeModule, room: FakeRoom): Promise<{ onlineSet:
 
 const expectParity = ({ localSet, onlineSet, online, placement, foreign }: ParityFacts): void => {
   expect(localSet.rest.length).toBeGreaterThan(100);
+  if (foreign) expect(onlineSet.rest).toContainEqual(expect.stringContaining(' sent to Zelda!"'));
   const unnamed = onlineSet.rest.map((call) => call.replace(NAMED_FOREIGN_LINE, '"Sent to another player!"'));
-  if (foreign) expect(onlineSet.rest.some((call) => call.includes(' sent to Zelda!"'))).toBe(true);
   expect(unnamed.sort()).toEqual(localSet.rest);
   expect(onlineSet.word5.every((word) => (word & AP_ONLINE_BIT) !== 0)).toBe(true);
   expect(onlineSet.word5.map((word) => word & ~AP_BITS)).toEqual(localSet.word5);

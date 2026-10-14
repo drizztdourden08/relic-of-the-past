@@ -18,7 +18,6 @@ const firePattern = (patternId: HapticPatternId): void => {
   if (!vibrateFn || !hapticState.settings.enabled) return;
 
   const entry: HapticPatternEntry = HAPTIC_PATTERNS[patternId];
-  if (!entry) return;
 
   if (entry.cooldownMs && !checkCooldown(patternId, entry.cooldownMs)) return;
 

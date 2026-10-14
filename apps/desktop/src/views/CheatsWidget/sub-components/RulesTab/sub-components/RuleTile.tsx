@@ -24,10 +24,10 @@ const RuleTile = (props: RuleTileProps) => {
         disabled={disabled}
         onChange={onChange}
         label={(
-          <>
+          <Box className="cheats-rule__face">
             <Image className="cheats-rules__sprite" src={spriteUrlOf(sprite)} alt="" draggable={false} fallback={<SpritePlaceholder />} />
             <Text className="cheats-rules__name">{name}</Text>
-          </>
+          </Box>
         )}
       />
     </Box>

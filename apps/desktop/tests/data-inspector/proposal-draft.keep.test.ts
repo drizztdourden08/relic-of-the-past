@@ -2,7 +2,7 @@
 import { describe, it, expect } from 'vitest';
 import {
   NO_DRAFT, editedDraft, isAmended, proposalOf, revertedDraft,
-} from '@app/views/DataInspector/behavior/recommendations/proposal-draft';
+} from '@app/data-inspector/recommendations/proposal-draft';
 import type { Recommendation } from '@rotp/navigation';
 import type { TagId, TagRecord } from '@rotp/game-data';
 

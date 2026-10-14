@@ -22,7 +22,7 @@ const useBackdropGeometry = (horizon: number, scaleOverride?: number) => {
     const height = Math.ceil(h / scale);
     const horizonY = Math.round(height * horizon);
     const geometry: SceneGeometry = { width, height, frameX: Math.round((width - FRAME_W) / 2), frameY: horizonY - HORIZON_Y, horizonY };
-    setMeasured((prev) => (prev && prev.scale === scale && sameGeometry(prev.geometry, geometry) ? prev : { geometry, scale }));
+    setMeasured((prev) => (prev?.scale === scale && sameGeometry(prev.geometry, geometry) ? prev : { geometry, scale }));
   }, [horizon, scaleOverride]);
 
   useEffect(() => {

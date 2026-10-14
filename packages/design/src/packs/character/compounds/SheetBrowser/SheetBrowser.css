@@ -14,5 +14,5 @@
 .sheet-browser__canvas {
   image-rendering: pixelated;
   background: var(--c-sunken);
-  border: 1px solid var(--c-border);
+  border: var(--border-width-thin) solid var(--c-border);
 }

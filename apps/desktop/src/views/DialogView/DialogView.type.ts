@@ -1,6 +1,8 @@
 /* @layer renderer-hud @kind types */
-import type { BoxPlacement, DialogFrame } from '@rotp/game-data';
+import type { BoxPlacement, DialogBorder, DialogFrame } from '@rotp/game-data';
+import type { activeAlphabet, getGlyphAtlas } from '@rotp/game-core';
 import type { CssRect } from '../../compounds/DialogBox';
+import type { ResolvedPrompt } from '../../compounds/DialogPrompts';
 
 interface DialogGeometry {
   frame: CssRect;
@@ -44,4 +46,32 @@ interface HighlightLook {
   inks: readonly string[];
 }
 
-export type { DialogGeometry, DialogScale, FadePresence, GeometryOptions, HighlightLook, HighlightLookParams };
+interface ShownFrame {
+  frame: DialogFrame;
+  fade: FadePresence;
+}
+
+interface DialogChrome {
+  openingMessage: number;
+  spawnPicker: boolean;
+  borderKind: DialogBorder;
+  padX: number;
+  padY: number;
+  native: boolean;
+}
+
+interface Grounding {
+  grounded: boolean;
+  feathered: boolean;
+}
+
+interface DialogContent {
+  atlas: ReturnType<typeof getGlyphAtlas>;
+  alphabet: ReturnType<typeof activeAlphabet>;
+  highlight: HighlightLook;
+  spritesBase: string;
+  prompts: ResolvedPrompt[];
+  itemSprite: string | null;
+}
+
+export type { DialogChrome, DialogContent, DialogGeometry, DialogScale, Grounding, ShownFrame, FadePresence, GeometryOptions, HighlightLook, HighlightLookParams };

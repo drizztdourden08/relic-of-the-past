@@ -1,7 +1,7 @@
 /* @layer renderer-app @kind logic */
 import type { EntityKind } from '@rotp/game-data';
 import type { IdRefOption } from '@drizztdourden08/tessera/composites';
-import { COLLECTION_SOURCES } from './collection-sources';
+import { COLLECTION_SOURCES } from '@app/data-inspector/collection-sources';
 import { optionLabel } from './option-label';
 
 const buildOptions = (kind: EntityKind): readonly IdRefOption[] => {

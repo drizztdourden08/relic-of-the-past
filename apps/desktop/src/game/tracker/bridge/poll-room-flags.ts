@@ -2,6 +2,9 @@
 import { getModule } from '@rotp/game-core';
 import { log } from '../../../log-bus';
 import { readCompletedChecks, setsEqual, pollEventStatus, trackerState } from '@rotp/navigation';
+import { notifyListeners } from './notify-listeners';
+
+const ignoreRoomFlagReadFailure = (): void => undefined;
 
 const pollRoomFlags = (force = false): void => {
   const mod = getModule();
@@ -15,12 +18,10 @@ const pollRoomFlags = (force = false): void => {
     if (force || !setsEqual(trackerState.currentCompletedChecks, newCompleted)) {
       log.app(`[Tracker] Completed checks: ${newCompleted.size} (was ${trackerState.currentCompletedChecks.size})`);
       trackerState.currentCompletedChecks = newCompleted;
-      for (const fn of trackerState.completedChecksListeners) {
-        try { fn(newCompleted); } catch { continue; }
-      }
+      notifyListeners(trackerState.completedChecksListeners, newCompleted);
     }
   } catch {
-    
+    ignoreRoomFlagReadFailure();
   }
 };
 

@@ -3,6 +3,7 @@ import { describe, expect, it } from 'vitest';
 import { layoutHud, placedById, tryLoadLayout, validateLayout } from '@rotp/hud';
 import type { HudContainer, HudLayout, HudNode } from '@rotp/hud';
 import { required } from '../required';
+import { FIXTURE_COLOURS } from './fixture-colours.constants';
 
 const VIEWS = [{ w: 398, h: 224 }, { w: 256, h: 224 }, { w: 512, h: 448 }, { w: 640, h: 240 }];
 
@@ -128,9 +129,9 @@ describe('the validator knows one gap shape and one guide, for both engines', ()
   });
 
   it('accepts a guide on a FLEX container, because the overlay draws one', () => {
-    const result = flexWith({ guide: { show: true, color: '#12ab34' } });
+    const result = flexWith({ guide: { show: true, color: FIXTURE_COLOURS.guideGreen } });
     expect(result.errors).toEqual([]);
     expect((result.doc?.screen.children[0] as HudContainer).guide)
-      .toEqual({ show: true, color: '#12ab34' });
+      .toEqual({ show: true, color: FIXTURE_COLOURS.guideGreen });
   });
 });

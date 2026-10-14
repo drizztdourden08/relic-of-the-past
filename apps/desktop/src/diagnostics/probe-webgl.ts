@@ -12,7 +12,7 @@ const createContext = (): { gl: AnyGl; version: 1 | 2 } | null => {
 
 const unmasked = (gl: AnyGl, masked: number, unmaskedName: 'UNMASKED_VENDOR_WEBGL' | 'UNMASKED_RENDERER_WEBGL'): string => {
   const ext = gl.getExtension('WEBGL_debug_renderer_info');
-  const value = ext ? gl.getParameter(ext[unmaskedName]) : null;
+  const value: unknown = ext ? gl.getParameter(ext[unmaskedName]) : null;
   return String(value ?? gl.getParameter(masked) ?? '-');
 };
 

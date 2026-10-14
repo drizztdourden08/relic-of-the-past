@@ -1,12 +1,12 @@
 /* @layer renderer-components @kind logic */
 import { worldToDisplay } from './world-to-display';
-import type { ScreenData, Vp } from './overlay.type';
+import type { OverlayView, ScreenData } from './overlay.type';
 
-const drawLights = (ctx: CanvasRenderingContext2D, vp: Vp, width: number, height: number, screenData: ScreenData, selectedElementId: string | null): void => {
-  const scaleX = width / vp.snesWidth;
+const drawLights = (ctx: CanvasRenderingContext2D, view: OverlayView, screenData: ScreenData, selectedElementId: string | null): void => {
+  const scaleX = view.width / view.vp.snesWidth;
   ctx.globalAlpha = 0.8;
   for (const light of screenData.lights) {
-    const dp = worldToDisplay(vp, width, height, light.x, light.y);
+    const dp = worldToDisplay(view, light.x, light.y);
     const isSelected = light.id === selectedElementId;
     ctx.beginPath();
     ctx.arc(dp.x, dp.y, light.radius * scaleX, 0, Math.PI * 2);

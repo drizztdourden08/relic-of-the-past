@@ -56,6 +56,19 @@ interface UseWizardNavigationProps {
   setStep: (step: WizardStep) => void;
 }
 
+interface UseChooserSelectionParams {
+  open: boolean;
+  step: WizardStep;
+  chooserDevices: readonly ChooserDevice[];
+  initialDeviceKey?: string | null;
+}
+
+interface UseWizardProfilesParams {
+  selectedChooser: ChooserDevice | null;
+  liveDeviceEntry: DeviceEntry | null;
+  capturedLayout: CapturedLayout | null;
+}
+
 interface UseDiagnosticsWizardStateProps {
   open: boolean;
   onComplete?: (map: HidControllerMap) => void;
@@ -73,5 +86,6 @@ interface DiagnosticsFlowBodyProps {
 export type {
   CapturedLayout, ChooserDevice, DiagnosticsFlowBodyProps, DiagnosticsWizardState,
   HoldTransitionStatus, LayoutStage, NameLookupParams, SummaryPayload,
-  UseDiagnosticsWizardStateProps, UseWizardNavigationProps, WizardStep, WizardStepInfo,
+  UseChooserSelectionParams, UseDiagnosticsWizardStateProps, UseWizardNavigationProps, UseWizardProfilesParams,
+  WizardStep, WizardStepInfo,
 };

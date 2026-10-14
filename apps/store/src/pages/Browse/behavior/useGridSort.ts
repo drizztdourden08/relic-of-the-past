@@ -17,8 +17,10 @@ const compareRows = (path: keyof ItemRow, dir: 'asc' | 'desc') => (a: ItemRow, b
 
 const useGridSort = (tableKey: ViewKey, schema: SchemaLike, storage: ViewStorage) => {
   const { snapshot, setSnapshot } = useViewState({ key: tableKey, schema, fallbackColumns: NO_COLUMNS, storage });
-  const stored = snapshot.sort[0];
-  const active = ITEM_SORTS.find((sort) => sort.entry.path === stored?.path && sort.entry.dir === stored?.dir) ?? DEFAULT_SORT;
+  const stored = snapshot.sort.at(0);
+  const storedPath = stored?.path;
+  const storedDir = stored?.dir;
+  const active = ITEM_SORTS.find((sort) => sort.entry.path === storedPath && sort.entry.dir === storedDir) ?? DEFAULT_SORT;
 
   const setSortId = useCallback((id: string) => {
     const next = ITEM_SORTS.find((sort) => sort.id === id) ?? DEFAULT_SORT;

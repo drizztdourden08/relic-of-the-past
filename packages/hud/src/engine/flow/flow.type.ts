@@ -8,4 +8,6 @@ interface FlowItem { node: HudNode; size: Size; margin: Insets }
 
 interface FlowLine { items: FlowItem[]; main: number; cross: number }
 
-export type { FlowItem, FlowLine, Insets };
+interface LineFlow { row: boolean; mainGap: number; wrap: boolean; available: number }
+
+export type { FlowItem, FlowLine, Insets, LineFlow };

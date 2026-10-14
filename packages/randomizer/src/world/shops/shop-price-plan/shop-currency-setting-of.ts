@@ -1,7 +1,8 @@
 /* @layer shared-game @kind logic */
 import { currencyKeyOf, currencyMaxKeyOf, currencyMinKeyOf } from '../shop-price-options';
 import type { OptionValues } from '../../options.type';
-import type { ShopCountedCurrency, ShopCurrencySetting } from '../shop-price.type';
+import type { ShopCurrencySetting } from '../shop-price.type';
+import type { CurrencyRow } from './shop-price-plan.type';
 
 const numberAt = (values: OptionValues, key: string, fallback: number): number => {
   const value = values[key];
@@ -11,8 +12,9 @@ const numberAt = (values: OptionValues, key: string, fallback: number): number =
 const scaledBy = (amount: number, modifier: number): number => Math.floor((amount * modifier) / 100);
 
 const shopCurrencySettingOf = (
-  values: OptionValues, currency: ShopCountedCurrency, max: number, modifier: number, refused: boolean,
+  values: OptionValues, row: CurrencyRow, modifier: number, refused: boolean,
 ): ShopCurrencySetting => {
+  const { currency, max } = row;
   const low = numberAt(values, currencyMinKeyOf(currency), 0);
   const high = numberAt(values, currencyMaxKeyOf(currency), max);
   return {

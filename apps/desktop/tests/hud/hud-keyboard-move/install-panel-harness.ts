@@ -4,7 +4,7 @@ import { act, createElement as h, type ReactNode } from 'react';
 import { createRoot, type Root } from 'react-dom/client';
 import { useHudEditorViewStore } from '../../../src/stores/hud-editor-view-store';
 import { PlatformContext } from '@drizztdourden08/brock-react';
-import { PLATFORM } from './keyboard-move.constants';
+import { WINDOWS_PLATFORM } from '../windows-platform';
 
 const installPanelHarness = () => {
   (globalThis as { IS_REACT_ACT_ENVIRONMENT?: boolean }).IS_REACT_ACT_ENVIRONMENT = true;
@@ -16,7 +16,7 @@ const installPanelHarness = () => {
     const host = document.createElement('div');
     document.body.appendChild(host);
     const root = createRoot(host);
-    act(() => { root.render(h(PlatformContext.Provider, { value: PLATFORM }, node)); });
+    act(() => { root.render(h(PlatformContext.Provider, { value: WINDOWS_PLATFORM }, node)); });
     mounted = { root, host };
   };
 

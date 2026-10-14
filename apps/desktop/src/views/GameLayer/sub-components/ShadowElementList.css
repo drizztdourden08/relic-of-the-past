@@ -1,18 +1,18 @@
 /* @layer renderer-components @kind style */
 .shadow-element-list {
   position: absolute;
-  top: 8px;
-  left: 8px;
-  bottom: 8px;
-  width: 180px;
+  top: var(--size-8);
+  left: var(--size-8);
+  bottom: var(--size-8);
+  width: calc(180 * var(--size-1));
   z-index: var(--z-panel);
   background: var(--c-surface);
-  border: 1px solid var(--c-border);
+  border: var(--border-width-thin) solid var(--c-border);
   border-radius: var(--radius-lg);
   display: flex;
   flex-direction: column;
   overflow: hidden;
-  backdrop-filter: blur(8px);
+  backdrop-filter: blur(var(--size-8));
   padding: var(--space-sm) 0;
   gap: var(--space-xs);
   overflow-y: auto;
@@ -21,7 +21,7 @@
 }
 
 .shadow-element-list::-webkit-scrollbar {
-  width: 4px;
+  width: var(--size-4);
 }
 
 .shadow-element-list::-webkit-scrollbar-thumb {

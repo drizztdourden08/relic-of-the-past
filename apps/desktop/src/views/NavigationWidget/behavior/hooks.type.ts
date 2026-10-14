@@ -1,4 +1,10 @@
 /* @layer renderer-widgets @kind types */
+import type { RefObject } from 'react';
+import type { ScreenId } from '@rotp/game-data';
+import type { NavMode } from '../../../stores/navigation-overlay-store';
+import type { NavigationOverlayState } from '../../../stores/navigation-overlay-store/navigation-overlay-store.type';
+import type { InventoryEquipment } from '../../../nav-widget/nav-flood/nav-flood.type';
+
 interface FloodOnTransitionOptions {
   enabled: boolean;
   isIndoors: boolean;
@@ -26,4 +32,39 @@ interface PlayerDebugState {
   doorAnimStep: number;
 }
 
-export type { FloodOnTransitionOptions, PlayerDebugState };
+type RunHandler = () => void;
+
+interface FloodRunParams {
+  isIndoors: boolean;
+  activeScreenIndex: number;
+  overworldScreenIndex: number;
+  screenName: string;
+  screenId: ScreenId | null;
+  equipment: InventoryEquipment;
+  inventoryItems: ArrayLike<number>;
+  actions: Pick<NavigationOverlayState, 'setScreenBundle' | 'setData' | 'setCrossings' | 'setAnnotations'>;
+}
+
+interface AutoFloodParams {
+  autoRun: boolean;
+  running: boolean;
+  isIndoors: boolean;
+  playerX: number;
+  playerY: number;
+  activeScreenIndex: number;
+  equipment: InventoryEquipment & { sword: number };
+  inventoryItems: ArrayLike<number>;
+  runRef: RefObject<RunHandler | null>;
+  setOverlayMode: (mode: NavMode) => void;
+}
+
+interface NavModeParams {
+  mode: NavMode;
+  running: boolean;
+  runRef: RefObject<RunHandler | null>;
+  setOverlayMode: (mode: NavMode) => void;
+}
+
+export type {
+  AutoFloodParams, FloodOnTransitionOptions, FloodRunParams, NavModeParams, PlayerDebugState, RunHandler,
+};

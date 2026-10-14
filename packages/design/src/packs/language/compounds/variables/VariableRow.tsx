@@ -1,16 +1,12 @@
 /* @layer renderer-components @kind component */
 import { useCallback } from 'react';
-import { Status, Box, IconButton, Text, TextInput } from '@drizztdourden08/tessera/primitives';
+import { Status, Box, IconButton, Text } from '@drizztdourden08/tessera/primitives';
+import { VariableValue } from './VariableValue';
 import { KIND_WORDS } from './variables.constants';
-import type { ChangeEvent } from 'react';
 import type { VariableRowProps } from './variables.type';
 
 const VariableRow = (props: VariableRowProps) => {
   const { variable, used, onChangeValue, onRemove } = props;
-
-  const handleValue = useCallback((event: ChangeEvent<HTMLInputElement>) => {
-    onChangeValue?.(variable, event.currentTarget.value);
-  }, [variable, onChangeValue]);
 
   const handleRemove = useCallback(() => onRemove?.(variable.key), [variable.key, onRemove]);
 
@@ -19,19 +15,7 @@ const VariableRow = (props: VariableRowProps) => {
       <Text as="span" className="variable-row__key">{variable.key}</Text>
       <Status tone="neutral" className="variable-row__kind">{KIND_WORDS[variable.kind]}</Status>
 
-      {variable.locked ? (
-        <Text as="span" className="variable-row__note">
-          {variable.note ?? 'the running game supplies this value'}
-        </Text>
-      ) : !onChangeValue ? (
-        <Text as="span" className="variable-row__value">{variable.value ?? ''}</Text>
-      ) : (
-        <TextInput
-          className="variable-row__value"
-          value={variable.value ?? ''}
-          onChange={handleValue}
-        />
-      )}
+      <VariableValue variable={variable} onChangeValue={onChangeValue} />
 
       <Text as="span" className="variable-row__used" title={`${used} entries reference this`}>
         {`${used}×`}

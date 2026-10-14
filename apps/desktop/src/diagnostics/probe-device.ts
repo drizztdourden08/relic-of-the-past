@@ -16,12 +16,12 @@ const readJsHeap = (): DeviceEnvironment['jsHeap'] => {
 
 const readHidDevices = async (): Promise<string[]> => {
   try {
-    const entries = (await inputApi()?.list()) ?? [];
+    const entries = await inputApi().list();
     return entries
       .filter((d) => d.status === 'ready')
       .map((d) => {
         const name = recallControllerName({ vendorId: d.vendorId, productId: d.productId });
-        return `${name ?? d.name ?? d.product ?? 'Unrecognized HID device'} (${d.deviceKey})`;
+        return `${name ?? d.name ?? d.product} (${d.deviceKey})`;
       });
   } catch {
     return [];
@@ -32,8 +32,8 @@ const probeDevice = async (): Promise<DeviceEnvironment> => ({
   logicalCores: navigator.hardwareConcurrency || null,
   deviceMemoryGb: (navigator as ChromiumNavigator).deviceMemory ?? null,
   jsHeap: readJsHeap(),
-  maxTouchPoints: navigator.maxTouchPoints ?? 0,
-  languages: Array.from(navigator.languages ?? [navigator.language]).filter(Boolean),
+  maxTouchPoints: navigator.maxTouchPoints,
+  languages: Array.from(navigator.languages).filter(Boolean),
   timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone,
   online: navigator.onLine,
   hidDevices: await readHidDevices(),

@@ -5,8 +5,9 @@ import { PauseBorderBox } from '../../primitives/PauseBorderBox';
 import { AMPERSAND_COLS } from './PauseNamePanel.constants';
 import type { PauseNamePanelProps } from './PauseNamePanel.type';
 import { NameLine } from './sub-components/NameLine';
+import './PauseNamePanel.css';
 
-const PauseNamePanel = ({ itemName, itemSprite, borderColor = 'green', scale, spritesBase, style }: PauseNamePanelProps) => {
+const PauseNamePanel = ({ itemName, itemSprite, borderColor = 'green', scale, spritesBase, className }: PauseNamePanelProps) => {
   const tile = 8 * scale;
   const innerCols = 8;
   const innerRows = 4;
@@ -17,7 +18,7 @@ const PauseNamePanel = ({ itemName, itemSprite, borderColor = 'green', scale, sp
   const glyphSize = longestLine > innerCols ? (tile * innerCols) / longestLine : tile;
 
   return (
-    <PauseBorderBox color={borderColor} cols={innerCols} rows={innerRows} scale={scale} spritesBase={spritesBase} style={style}>
+    <PauseBorderBox color={borderColor} cols={innerCols} rows={innerRows} scale={scale} spritesBase={spritesBase} className={className}>
       <HudBox style={{
         display: 'flex',
         flexDirection: 'column',
@@ -29,7 +30,9 @@ const PauseNamePanel = ({ itemName, itemSprite, borderColor = 'green', scale, sp
             src={`${spritesBase}${itemSprite}.png`}
             width={tile * 2}
             height={tile * 2}
-            style={{ display: 'block', imageRendering: 'pixelated', alignSelf: 'center' }}
+            className="pause-name-panel__sprite"
+            block
+            pixelated
           />
         )}
 

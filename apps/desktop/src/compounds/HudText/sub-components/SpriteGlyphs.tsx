@@ -19,7 +19,7 @@ const SpriteGlyphs = (props: SpriteGlyphsProps) => {
             src={`${spritesBase}${stem}.png`}
             width={width}
             height={tile}
-            style={{ imageRendering: 'pixelated' }}
+            pixelated
           />
         );
       })}

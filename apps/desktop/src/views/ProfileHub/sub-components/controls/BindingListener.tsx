@@ -1,10 +1,9 @@
 /* @layer renderer-components @kind component */
 import { useCallback, useEffect, useState } from 'react';
 import type { MouseEvent } from 'react';
-import type { InputBinding } from '@rotp/game-data';
-import { getInputManager } from '@app/input/input-manager/get-input-manager';
 import { Portal, Box } from '@drizztdourden08/tessera/primitives';
-import { CANCEL_ARM_DELAY_MS, LISTEN_ARM_DELAY_MS, MODIFIER_CODES } from './controls.constants';
+import { CANCEL_ARM_DELAY_MS } from './controls.constants';
+import { useListenForBinding } from './useListenForBinding';
 import type { BindingListenerProps } from './controls.type';
 import './BindingListener.css';
 
@@ -19,59 +18,7 @@ const BindingListener = (props: BindingListenerProps) => {
     return () => clearTimeout(timeout);
   }, []);
 
-  useEffect(() => {
-    let cancelled = false;
-    let captured = false;
-    let unsub: (() => void) | null = null;
-
-    const handleKey = (e: KeyboardEvent) => {
-      if (cancelled) return;
-      e.preventDefault();
-      e.stopPropagation();
-      if (e.code === 'Escape') {
-        onCancel();
-        return;
-      }
-      if (e.code === 'Delete' || e.code === 'Backspace') {
-        if (captured) return;
-        captured = true;
-        onCapture({ type: 'none' }, 'keyboard');
-        return;
-      }
-      if (MODIFIER_CODES.has(e.code)) return;
-      if (captured) return;
-      captured = true;
-
-      const modifiers: { shift?: boolean; ctrl?: boolean; alt?: boolean } = {};
-      if (e.shiftKey) modifiers.shift = true;
-      if (e.ctrlKey) modifiers.ctrl = true;
-      if (e.altKey) modifiers.alt = true;
-
-      const binding: InputBinding = {
-        type: 'keyboard',
-        code: e.code,
-        ...(Object.keys(modifiers).length > 0 ? { modifiers } : {}),
-      };
-      onCapture(binding, 'keyboard');
-    };
-
-    const timeout = setTimeout(() => {
-      if (cancelled) return;
-      window.addEventListener('keydown', handleKey, true);
-      unsub = getInputManager().onRawInput((event) => {
-        if (cancelled || captured) return;
-        captured = true;
-        onCapture(event.binding, event.sourceDeviceKey, event.vendorId, event.productId);
-      });
-    }, LISTEN_ARM_DELAY_MS);
-
-    return () => {
-      cancelled = true;
-      clearTimeout(timeout);
-      window.removeEventListener('keydown', handleKey, true);
-      if (unsub) unsub();
-    };
-  }, [onCapture, onCancel]);
+  useListenForBinding({ onCapture, onCancel });
 
   const handleBackdropClick = useCallback(() => { if (canCancel) onCancel(); }, [canCancel, onCancel]);
 
