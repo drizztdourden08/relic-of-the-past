@@ -3,6 +3,7 @@ import { test, expect } from '@playwright/test';
 import { _electron as electron } from 'playwright';
 import { join } from 'path';
 import { existsSync, readFileSync, rmSync } from 'fs';
+import { appWindow } from './app-window';
 import { TEST_INSTANCE, ensureTestProfile } from './ensure-test-profile';
 import { REPO_ROOT } from '../repo-root';
 
@@ -19,8 +20,7 @@ const widgetReachable = async (state: string): Promise<number> => {
     env: { ...process.env, NODE_ENV: 'production' },
   });
   try {
-    const window = await app.firstWindow();
-    await window.waitForLoadState('domcontentloaded');
+    const window = await appWindow(app);
     await window.waitForTimeout(16_000);
     await window.getByRole('button', { name: /Flood Fill/ }).dispatchEvent('click');
     await window.waitForTimeout(3500);
