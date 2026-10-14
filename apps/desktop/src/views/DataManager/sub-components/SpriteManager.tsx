@@ -48,7 +48,7 @@ const SpriteManager = (props: SpriteManagerProps) => {
   return (
     <ListDetailLayout
       list={list}
-      detail={selectedRom ? <SpriteGrid baseUrl={spriteBaseUrl} /> : null}
+      detail={selectedRom && spriteBaseUrl ? <SpriteGrid baseUrl={spriteBaseUrl} /> : null}
       emptyDetail={<EmptyState message="Select an imported ROM to view its sprites" />}
     />
   );
