@@ -1,414 +1,164 @@
 name: Release
-run-name: Release ${{ inputs.version }}${{ inputs.set_latest == true && ' (latest)' || ' (draft)' }}
+run-name: Release ${{ inputs.version }}${{ inputs.prerelease && ' (pre-release)' || (inputs.set_latest && ' (latest)' || ' (draft)') }}
 
-# One way in: trigger this workflow with a version (e.g. 0.9.0), either from the
-# GitHub UI (Run workflow) or locally with `pnpm release 0.9.0 [--latest]`.
-# Both routes pass the SAME params. If release-notes/v0.9.0.md exists and the tag
-# does not, this bumps package.json, commits "release: v0.9.0" to master, tags it,
-# and runs the full build, as a draft or published-as-latest when set_latest is on.
+# Managed by brock sync from the targets in brock.config.ts. Change the targets, then run brock sync.
+# Run it from the Actions tab or with `<repo> release <version> [--latest | --prerelease]`.
+# release-notes/v<version>.md must be on the default branch first and pass `brock release-notes check`:
+# it is the release body, and the updater shows it. Tags are v<version>.
+# Every build runs from the commit prepare checked; the release job commits the version, tags it
+# and publishes only once every build succeeded, so a failed build leaves no tag and the same
+# version can run again. The builds fetch the previous release for the Velopack delta before
+# this one exists.
 on:
   workflow_dispatch:
     inputs:
       version:
-        description: 'New version to release, e.g. 0.9.0 (or v0.9.0). release-notes/<tag>.md must already exist on master and the tag must not exist yet.'
+        description: 'Version to release, e.g. 0.9.0, 0.9.0-beta.1 or v0.9.0. The tag v<version> must not exist yet.'
         required: true
         type: string
-      full_installer:
-        description: 'Rebuild the installer and portable downloads (adds ~280 MB to the release). Off = update package only.'
+      full:
+        description: 'Rebuild the Windows installer payload and directory zip that the small installer fetches. On by itself while no latest release exists.'
         type: boolean
         default: false
       prerelease:
-        description: 'Publish as a pre-release. Visible to anyone opted into pre-releases, and never becomes the latest download.'
+        description: 'Publish as a pre-release: downloadable at once, never the latest, offered only to users who turned pre-releases on.'
         type: boolean
         default: false
       set_latest:
-        description: 'Publish immediately and mark as the latest release (instead of a draft).'
-        required: false
-        default: false
+        description: 'Publish at once as the latest release. Off, and not a pre-release, leaves a draft.'
         type: boolean
+        default: false
 
 concurrency:
   group: release
-  cancel-in-progress: true
+  cancel-in-progress: false
 
 permissions:
   contents: write
+  packages: read
+
+env:
+  APP_DIR: apps/desktop
 
 jobs:
   prepare:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     outputs:
       tag: ${{ steps.resolve.outputs.tag }}
+      version: ${{ steps.resolve.outputs.version }}
+      full: ${{ steps.resolve.outputs.full }}
+      sha: ${{ github.sha }}
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
         with:
-          # The branch the run was started on: master, or a hotfix branch cut from a tag.
-          ref: ${{ github.ref_name }}
           fetch-depth: 0
 
-      - name: Resolve & validate target version
+      - name: Check the inputs, the notes and the tag
         id: resolve
+        shell: bash
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           RAW="${{ inputs.version }}"
-          TAG="v${RAW#v}"            # accept 0.9.0 or v0.9.0, both become v0.9.0
-          if [ ! -f "release-notes/$TAG.md" ]; then
-            echo "::error::Missing release-notes/$TAG.md on ${{ github.ref_name }}. Commit the notes first, since the release body comes from them."
+          VERSION="${RAW#v}"
+          TAG="v$VERSION"
+          NOTES="release-notes/v$VERSION.md"
+          if [ "${{ inputs.prerelease }}" = "true" ] && [ "${{ inputs.set_latest }}" = "true" ]; then
+            echo "::error::prerelease and set_latest exclude each other: a pre-release never becomes the latest release."
             exit 1
           fi
+          test -f "$NOTES" || { echo "::error::$NOTES is missing. Commit the notes first."; exit 1; }
           if git ls-remote --exit-code --tags origin "refs/tags/$TAG" >/dev/null 2>&1; then
-            echo "::error::Tag $TAG already exists. Pick a new version."
+            echo "::error::Tag $TAG already exists."
             exit 1
+          fi
+          FULL="${{ inputs.full }}"
+          if ! gh api "repos/${{ github.repository }}/releases/latest" >/dev/null 2>&1; then
+            echo "::notice::No latest release yet, so $TAG is a full release: the small installer needs a payload to fetch."
+            FULL=true
           fi
           echo "tag=$TAG" >> "$GITHUB_OUTPUT"
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+          echo "full=$FULL" >> "$GITHUB_OUTPUT"
 
-      # No version input: the action reads packageManager from package.json.
-      - uses: pnpm/action-setup@v4
-
-      - uses: actions/setup-node@v6
+      - uses: pnpm/action-setup@v6
+      - uses: actions/setup-node@v7
         with:
           node-version: 24
           cache: pnpm
+          registry-url: https://npm.pkg.github.com
+          scope: '@drizztdourden08'
 
-      - name: Install dependencies
+      - name: Install
         run: pnpm install --frozen-lockfile
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.PACKAGES_TOKEN || secrets.GITHUB_TOKEN }}
 
-      - name: Quality gate (lint, typecheck, analyze, WASM export-drift)
-        run: pnpm run ci
+      - name: Release note
+        run: pnpm --dir "$APP_DIR" exec brock release-notes check "${{ steps.resolve.outputs.version }}"
 
-      - name: Check required files exist
-        run: |
-          echo "Checking critical files..."
-          test -f package.json || { echo "Missing package.json"; exit 1; }
-          test -f pnpm-lock.yaml || { echo "Missing pnpm-lock.yaml"; exit 1; }
-          test -f scripts/build/electron-builder.config.js || { echo "Missing electron-builder config"; exit 1; }
-          test -f apps/desktop/electron.vite.config.ts || { echo "Missing apps/desktop/electron.vite.config.ts"; exit 1; }
-          test -d core/wasm-build || { echo "Missing core/wasm-build"; exit 1; }
-          test -f core/wasm-build/Makefile || { echo "Missing WASM Makefile"; exit 1; }
-          echo "All preflight checks passed."
+      - name: Lint
+        run: pnpm lint
 
-      - name: Cut release commit & tag
-        # The gate above has passed, so it is safe to bump, commit, and tag now.
-        run: |
-          TAG="${{ steps.resolve.outputs.tag }}"
-          pnpm version "${TAG#v}" --no-git-tag-version --allow-same-version
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add package.json
-          # Re-releasing a version that's already bumped (e.g. recovering a failed
-          # run) leaves nothing to commit. That's fine: skip the commit and just tag.
-          if git diff --cached --quiet; then
-            echo "package.json is already at $TAG, so there is nothing to commit."
-          else
-            git commit -m "release: $TAG"
-            git push origin "HEAD:${{ github.ref_name }}"
-          fi
-          git tag "$TAG"
-          git push origin "$TAG"
-
-  build:
+  build-windows:
     needs: prepare
-    strategy:
-      # One platform failing must not cancel the others. They fail for their own
-      # reasons, and cancelling hides the next one behind the first, turning a
-      # single broken release into one round trip per platform.
-      fail-fast: false
-      matrix:
-        include:
-          - os: windows-latest
-            platform: win
-            args: --win --dir
-            addonPlatform: win32
-            addonArch: x64
-          - os: macos-latest
-            platform: mac
-            args: --mac
-            addonPlatform: darwin
-            addonArch: arm64
-          - os: ubuntu-latest
-            platform: linux
-            args: --linux dir deb
-            addonPlatform: linux
-            addonArch: x64
-
-    runs-on: ${{ matrix.os }}
-
+    runs-on: windows-latest
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
         with:
-          ref: ${{ needs.prepare.outputs.tag }}
+          ref: ${{ needs.prepare.outputs.sha }}
 
-      # No version input: the action reads packageManager from package.json.
-      - uses: pnpm/action-setup@v4
+      # The tag and the version commit wait for every build: the release job makes them.
+      - name: Set the release version
+        shell: bash
+        run: node -e "const f=process.argv[1];const p=JSON.parse(require('fs').readFileSync(f,'utf8'));p.version=process.argv[2];require('fs').writeFileSync(f,JSON.stringify(p,null,2)+'\n')" "$APP_DIR/package.json" "${{ needs.prepare.outputs.version }}"
 
-      - uses: actions/setup-node@v6
+      # pnpm/action-setup takes the version from packageManager in the root package.json.
+      # Naming a version here as well fails the step.
+      - uses: pnpm/action-setup@v6
+      - uses: actions/setup-node@v7
         with:
           node-version: 24
           cache: pnpm
+          registry-url: https://npm.pkg.github.com
+          scope: '@drizztdourden08'
 
-      - name: Setup Emscripten
-        uses: emscripten-core/setup-emsdk@v16
-        with:
-          version: 3.1.51
-
-      # Emscripten's SDL2 port downloader does `import requests`, which emsdk's bundled
-      # Python lacks. Only a cold ports cache hits it, hence the intermittent Windows
-      # failure. Best effort: without pip the build still runs and fails loudly.
-      - name: Give Emscripten's Python its port downloader
-        shell: bash
-        run: |
-          "$EMSDK_PYTHON" -m ensurepip --default-pip || true
-          if ! "$EMSDK_PYTHON" -m pip install --disable-pip-version-check requests; then
-            echo "::warning::no pip in emsdk python; a cold ports cache will fail"
-          fi
-
-      - name: Build WASM
-        # Shared build script (single source of truth) writes straight into
-        # apps/desktop/public/wasm, the same output the desktop package consumes. It also
-        # re-runs the save state layout probe, so the format id is this build's own.
-        run: node core/wasm-build/build.mjs
-        shell: bash
-
-      - name: Check the save state format is registered
-        # Stops the release if the layout moved without a KNOWN_FORMATS row explaining it.
-        # Nothing to remember here: the id is computed, this only insists it be described.
-        run: node scripts/build/check-state-format.mjs
-        shell: bash
-
-      # Before pnpm install, not after: its postinstall builds SDL, and SDL only
-      # compiles its libusb backend if libusb is already present. Installed
-      # afterwards, that first build silently produced an SDL with no libusb
-      # support at all, which is what shipped on Linux in 0.15.1.
-      - name: Install libusb + pkg-config (Linux)
-        if: runner.os == 'Linux'
-        run: sudo apt-get update && sudo apt-get install -y libusb-1.0-0-dev pkg-config
-
-      - name: Install libusb + pkg-config (macOS)
-        if: runner.os == 'macOS'
-        run: brew install libusb pkg-config
-
-      - name: Install dependencies
+      - name: Install
         run: pnpm install --frozen-lockfile
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.PACKAGES_TOKEN || secrets.GITHUB_TOKEN }}
 
-      - name: Build the input addon from source
-        # --force so the release ships an addon built from THIS commit. Without
-        # it the postinstall would fetch the previous release's prebuilt and
-        # every release would republish the one before it, unchanged forever.
-        # SDL3 is built from source here with libusb on (installed above), the
-        # only configuration that can drive the newer first-party controllers.
-        run: node scripts/ensure-sdl3.mjs --force
-
-      - name: Verify the addon built
-        shell: bash
-        run: test -f "apps/desktop/electron/input/native/sdl3/prebuilds/${{ matrix.addonPlatform }}-${{ matrix.addonArch }}/sdl3_input.node" || { echo "::error::sdl3_input.node missing after build"; exit 1; }
-
-      # The addon existing is not enough: an SDL built before its dependencies
-      # were installed compiles out its libusb backend and still produces a
-      # perfectly healthy .node, which is how 0.15.1 shipped a Linux build that
-      # could not drive the controllers needing libusb. Asserting the runtime
-      # library ships turns that silent gap into a failed release.
-      - name: Verify libusb ships with the addon
-        shell: bash
-        run: |
-          DIR="apps/desktop/electron/input/native/sdl3/prebuilds/${{ matrix.addonPlatform }}-${{ matrix.addonArch }}"
-          case "${{ matrix.addonPlatform }}" in
-            win32)  LIB="libusb-1.0.dll" ;;
-            linux)  LIB="libusb-1.0.so.0" ;;
-            darwin) LIB="libusb-1.0.0.dylib" ;;
-            *) echo "::error::No libusb filename known for ${{ matrix.addonPlatform }}"; exit 1 ;;
-          esac
-          test -f "$DIR/$LIB" || { echo "::error::$LIB missing from $DIR, so SDL was built without libusb support"; ls -la "$DIR"; exit 1; }
-          echo "$LIB present alongside the addon."
-
-      # vpk (the Velopack CLI) is a .NET global tool, and it is what turns the built
-      # app tree into Setup.exe plus the update packages. Pinned to the same version
-      # as the `velopack` npm package: Velopack checks that they agree.
-      - name: Set up .NET (Velopack packaging)
-        if: matrix.platform == 'win' || matrix.platform == 'linux'
-        uses: actions/setup-dotnet@v5
+      - name: Set up .NET for vpk
+        uses: actions/setup-dotnet@v6
         with:
           dotnet-version: '8.0.x'
 
+      # vpk and the velopack package the app loads must be the same version.
       - name: Install vpk
-        if: matrix.platform == 'win' || matrix.platform == 'linux'
-        run: dotnet tool install -g vpk --version 1.2.110-ge826545
-
-      # The record dataset lives in the private companion repo, not this one, so a
-      # plain checkout builds an app with an EMPTY dataset: no sprite definitions,
-      # no screens, no checks. Every consumer reads it through a Vite glob that
-      # falls back to empty. That is right for a clone and wrong for a release, and
-      # v0.17.0 through v0.18.0 shipped that way, green, with sprite extraction
-      # silently writing zero files.
-      #
-      # After pnpm install on purpose: postinstall runs the two-way vault sync, and
-      # it must not find a vault to write back to. By here it has already run and
-      # skipped, so this pull is the only direction that happens.
-      - name: Fetch the private dataset
         shell: bash
-        env:
-          VAULT_TOKEN: ${{ secrets.VAULT_TOKEN }}
         run: |
-          git clone --depth 1 \
-            "https://x-access-token:${VAULT_TOKEN}@github.com/drizztdourden08/rotp-vault.git" \
-            ../rotp-vault
-          node scripts/vault/sync.mjs --force-pull
+          VPK=$(cd "$APP_DIR" && node -p "require('velopack/package.json').version" 2>/dev/null || true)
+          if [ -n "$VPK" ]; then dotnet tool install -g vpk --version "$VPK"; else dotnet tool install -g vpk; fi
 
-      # The one place an empty dataset is an error, not a normal state.
-      # Without it, a lapsed token ships another hollow release instead of failing.
-      - name: Verify the dataset landed
-        shell: bash
-        run: node scripts/vault/check-dataset.mjs
-
-      # The .msul document icon is generated from the committed logo, not checked in,
-      # and the package prebuild hooks that generate it are not on this path, because the release
-      # calls electron-vite and electron-builder directly. Without it the macOS build
-      # fails outright looking for msul.icns, and Windows silently ships a pack file
-      # with no document icon, which is the worse of the two.
-      - name: Generate the document icon
-        shell: bash
-        run: node scripts/build/make-msul-icon.mjs
-
-      - name: Build & Package
-        shell: bash
-        env:
-          CSC_IDENTITY_AUTO_DISCOVERY: 'false'
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          pnpm --filter ./apps/desktop build
-          pnpm exec electron-builder ${{ matrix.args }} --publish never --projectDir apps/desktop --config ../../scripts/build/electron-builder.config.js -c.directories.output=../../release/${{ matrix.platform }}
-
-      # Downloading the previous release first is what lets vpk build a delta against
-      # it and list every version in the release index. There is nothing to fetch for
-      # the first Velopack release, which is not an error.
-      # Linux needs no signing of any kind, so this is the same three steps as Windows.
-      # Velopack replaces the AppImage in place on update, asking for sudo through
-      # pkexec only when it lives somewhere privileged.
-      - name: Pack the Linux release with Velopack
-        if: matrix.platform == 'linux'
+      # The previous release lets vpk build a delta and list every version in the feed.
+      - name: Fetch the previous release
         shell: bash
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           vpk download github --repoUrl "https://github.com/${{ github.repository }}" \
-            --outputDir release/linux --token "$GH_TOKEN" || echo "no previous release to delta against"
-          node scripts/build/pack-velopack.mjs --linux \
-            --pack-dir release/linux/linux-unpacked --out release/linux
+            --outputDir "$APP_DIR/release/velopack" --token "$GH_TOKEN" || echo "no previous release to delta against"
 
-      - name: Pack the Windows release with Velopack
-        if: matrix.platform == 'win'
+      - name: "Read the pinned Emscripten version"
         shell: bash
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          vpk download github --repoUrl "https://github.com/${{ github.repository }}" --outputDir release/win --token "$GH_TOKEN" || echo "no previous release to delta against"
+        run: "echo \"EMSDK_VERSION=$(node -p \"require('./package.json').config.emsdk\")\" >> \"$GITHUB_ENV\""
 
-          # A full release also builds the setup and portable downloads, each another
-          # whole copy of the payload. Updates need neither: the app reads the release
-          # index and pulls a delta.
-          FULL=""
-          if [ "${{ inputs.full_installer }}" = "true" ]; then FULL="--full"; fi
-          node scripts/build/pack-velopack.mjs --pack-dir release/win/win-unpacked --out release/win $FULL
-
-      # The download people run: ~600 KB, fetches the payload above and
-      # installs it. Built every release, full or not, so the permanent
-      # releases/latest/download link always resolves to the current stub. It needs
-      # MSVC, which windows-latest already has.
-      - name: Build the downloader stub
-        if: matrix.platform == 'win'
-        shell: bash
-        run: |
-          node installer-stub/build.mjs
-          test -f installer-stub/out/relic-setup.exe || { echo "::error::stub missing after build"; exit 1; }
-          cp installer-stub/out/relic-setup.exe release/win/rotp-windows-setup.exe
-          ls -l release/win/rotp-windows-setup.exe
-
-      # After the stub exists, so the manifest can record it. Carries forward the
-      # previous release's URLs for anything this one does not rebuild.
-      - name: Write the install manifest
-        if: matrix.platform == 'win'
-        shell: bash
-        run: node scripts/build/make-install-manifest.mjs --dir release/win --tag "${{ needs.prepare.outputs.tag }}"
-
-      # One platform only: the format is a property of the core, not of the installer, and
-      # a release carries a single copy. Windows is the one that always runs.
-      # Lands in the folder the upload glob below already collects, so it becomes a release
-      # asset with no new upload step. Its FILENAME carries the id, which is how an
-      # older build answers the compatibility question from the release listing alone.
-      - name: Publish the save state format
-        if: matrix.platform == 'win'
-        shell: bash
-        run: node scripts/build/check-state-format.mjs --emit release/win
-
-      - name: Clean build artifacts
-        shell: bash
-        run: |
-          rm -rf release/${{ matrix.platform }}/*-unpacked
-          rm -rf release/${{ matrix.platform }}/.icon-ico
-          rm -f release/${{ matrix.platform }}/builder-debug.yml
-          rm -f release/${{ matrix.platform }}/builder-effective-config.yaml
-
-      - name: Package the input addon
-        # Lands in the same folder the upload glob below already collects, so
-        # the addon rides along as one more asset on the release. Fetched back
-        # by scripts/build/fetch-addon-prebuilt.mjs on a fresh clone, which is
-        # what spares most machines a C/C++ toolchain.
-        shell: bash
-        run: |
-          PKG=./apps/desktop/electron/input/native/sdl3/package.json
-          VERSION=$(node -p "require('$PKG').version")
-          # Must match buildKeyOf() in scripts/ensure-sdl3.mjs, which is what
-          # the fetch side reconstructs to find this asset.
-          KEY=$(node -p "const p=require('$PKG');require('crypto').createHash('sha256').update([p.version,p.sdl3,p.libusb].join('|')).digest('hex').slice(0,8)")
-          NAME="sdl3-input-${VERSION}-${KEY}-${{ matrix.addonPlatform }}-${{ matrix.addonArch }}"
-          tar czf "release/${{ matrix.platform }}/${NAME}.tar.gz" -C "apps/desktop/electron/input/native/sdl3/prebuilds/${{ matrix.addonPlatform }}-${{ matrix.addonArch }}" .
-          node -e "console.log(require('crypto').createHash('sha256').update(require('fs').readFileSync(process.argv[1])).digest('hex') + '  ' + require('path').basename(process.argv[1]))" "release/${{ matrix.platform }}/${NAME}.tar.gz" | tee "release/${{ matrix.platform }}/${NAME}.tar.gz.sha256"
-
-      - name: Upload artifacts
-        uses: actions/upload-artifact@v7
-        with:
-          name: release-${{ matrix.platform }}
-          path: release/${{ matrix.platform }}/*
-
-  build-android:
-    # The signed Android APK is part of the SAME release run as the desktop builds,
-    # so every release path (UI "Run workflow" or `pnpm release`) ships it
-    # alongside win/mac/linux. Signing secrets: see android-release.yml header.
-    needs: prepare
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v6
-        with:
-          ref: ${{ needs.prepare.outputs.tag }}
-
-      # No version input: the action reads packageManager from package.json.
-      - uses: pnpm/action-setup@v4
-
-      - uses: actions/setup-node@v6
-        with:
-          node-version: 24
-          cache: pnpm
-
-      - name: Set up JDK 21
-        uses: actions/setup-java@v4
-        with:
-          distribution: temurin
-          java-version: '21'
-
-      - name: Set up Android SDK
-        uses: android-actions/setup-android@v3
-        with:
-          # Google removed the legacy "tools" package from the SDK repository, and the
-          # action asks for it by default. The Gradle build fetches what it needs.
-          packages: platform-tools
-
-      - name: Setup Emscripten
+      - name: "Set up Emscripten"
         uses: emscripten-core/setup-emsdk@v16
         with:
-          version: 3.1.51
+          version: "${{ env.EMSDK_VERSION }}"
 
-      # Emscripten's SDL2 port downloader does `import requests`, which emsdk's bundled
-      # Python lacks. Only a cold ports cache hits it, hence the intermittent Windows
-      # failure. Best effort: without pip the build still runs and fails loudly.
-      - name: Give Emscripten's Python its port downloader
+      - name: "Give Emscripten's Python its port downloader"
         shell: bash
         run: |
           "$EMSDK_PYTHON" -m ensurepip --default-pip || true
@@ -416,117 +166,511 @@ jobs:
             echo "::warning::no pip in emsdk python; a cold ports cache will fail"
           fi
 
-      - name: Build WASM
-        run: node core/wasm-build/build.mjs
+      - name: "Build the wasm core"
+        shell: bash
+        run: "pnpm run ensure-wasm"
 
-      - name: Install dependencies
-        run: pnpm install --frozen-lockfile
+      - name: "Check the save state format is registered"
+        shell: bash
+        run: "node scripts/build/check-state-format.mjs"
 
-      # The Android plugin compiles SDL from the same pinned source tree the
-      # desktop addon uses, and nothing else here puts it on disk: pnpm install
-      # only fetches it while building the addon from source, which it skips
-      # entirely once a prebuilt exists for the pinned versions. Asking for it
-      # directly keeps the Android build independent of that.
-      - name: Fetch the pinned SDL3 source
-        run: node scripts/build/fetch-sdl3.mjs
-
-      # Same reasoning as the desktop job above: without this the APK ships an
-      # empty dataset. See the comment there.
-      - name: Fetch the private dataset
+      - name: "Fetch the private dataset"
+        shell: bash
         env:
           VAULT_TOKEN: ${{ secrets.VAULT_TOKEN }}
         run: |
-          git clone --depth 1 \
-            "https://x-access-token:${VAULT_TOKEN}@github.com/drizztdourden08/rotp-vault.git" \
-            ../rotp-vault
+          git clone --depth 1 "https://x-access-token:$VAULT_TOKEN@github.com/drizztdourden08/rotp-vault.git" ../rotp-vault
           node scripts/vault/sync.mjs --force-pull
 
-      - name: Verify the dataset landed
-        run: node scripts/vault/check-dataset.mjs
+      - name: "Verify the dataset landed"
+        shell: bash
+        run: "node scripts/vault/check-dataset.mjs"
 
-      - name: Decode signing keystore
-        run: echo "${{ secrets.ANDROID_KEYSTORE_B64 }}" | base64 -d > "$RUNNER_TEMP/relic-release.jks"
-
-      # Web build, Capacitor sync into apps/desktop/mobile/android, then the signed Gradle build.
-      - name: Build signed release APK
+      - name: Package
+        shell: bash
         env:
-          BROCK_KEYSTORE_FILE: ${{ runner.temp }}/relic-release.jks
+          CSC_IDENTITY_AUTO_DISCOVERY: 'false'
+        run: |
+          FULL=""
+          if [ "${{ needs.prepare.outputs.full }}" = "true" ]; then FULL="--full"; fi
+          pnpm --dir "$APP_DIR" exec brock package $FULL
+
+      - name: Collect the release files
+        shell: bash
+        run: |
+          mkdir -p upload
+          cp "$APP_DIR"/release/velopack/* upload/
+          ls -l upload
+
+      - name: "Publish the save state format"
+        shell: bash
+        run: "node scripts/build/check-state-format.mjs --emit upload"
+
+      - uses: actions/upload-artifact@v7
+        with:
+          name: release-windows
+          path: upload/*
+
+  build-macos:
+    needs: prepare
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          ref: ${{ needs.prepare.outputs.sha }}
+
+      # The tag and the version commit wait for every build: the release job makes them.
+      - name: Set the release version
+        shell: bash
+        run: node -e "const f=process.argv[1];const p=JSON.parse(require('fs').readFileSync(f,'utf8'));p.version=process.argv[2];require('fs').writeFileSync(f,JSON.stringify(p,null,2)+'\n')" "$APP_DIR/package.json" "${{ needs.prepare.outputs.version }}"
+
+      - name: "Install libusb and pkg-config (macOS)"
+        run: "brew install libusb pkg-config"
+
+      # pnpm/action-setup takes the version from packageManager in the root package.json.
+      # Naming a version here as well fails the step.
+      - uses: pnpm/action-setup@v6
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 24
+          cache: pnpm
+          registry-url: https://npm.pkg.github.com
+          scope: '@drizztdourden08'
+
+      - name: Install
+        run: pnpm install --frozen-lockfile
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.PACKAGES_TOKEN || secrets.GITHUB_TOKEN }}
+
+      - name: "Read the pinned Emscripten version"
+        shell: bash
+        run: "echo \"EMSDK_VERSION=$(node -p \"require('./package.json').config.emsdk\")\" >> \"$GITHUB_ENV\""
+
+      - name: "Set up Emscripten"
+        uses: emscripten-core/setup-emsdk@v16
+        with:
+          version: "${{ env.EMSDK_VERSION }}"
+
+      - name: "Give Emscripten's Python its port downloader"
+        shell: bash
+        run: |
+          "$EMSDK_PYTHON" -m ensurepip --default-pip || true
+          if ! "$EMSDK_PYTHON" -m pip install --disable-pip-version-check requests; then
+            echo "::warning::no pip in emsdk python; a cold ports cache will fail"
+          fi
+
+      - name: "Build the wasm core"
+        shell: bash
+        run: "pnpm run ensure-wasm"
+
+      - name: "Check the save state format is registered"
+        shell: bash
+        run: "node scripts/build/check-state-format.mjs"
+
+      - name: "Fetch the private dataset"
+        shell: bash
+        env:
+          VAULT_TOKEN: ${{ secrets.VAULT_TOKEN }}
+        run: |
+          git clone --depth 1 "https://x-access-token:$VAULT_TOKEN@github.com/drizztdourden08/rotp-vault.git" ../rotp-vault
+          node scripts/vault/sync.mjs --force-pull
+
+      - name: "Verify the dataset landed"
+        shell: bash
+        run: "node scripts/vault/check-dataset.mjs"
+
+      - name: Package
+        shell: bash
+        env:
+          CSC_IDENTITY_AUTO_DISCOVERY: 'false'
+        run: |
+          FULL=""
+          if [ "${{ needs.prepare.outputs.full }}" = "true" ]; then FULL="--full"; fi
+          pnpm --dir "$APP_DIR" exec brock package $FULL
+
+      - name: Collect the release files
+        shell: bash
+        run: |
+          mkdir -p upload
+          cp "$APP_DIR"/release/*.dmg upload/
+          cp "$APP_DIR"/release/*.zip upload/
+          ls -l upload
+
+      - uses: actions/upload-artifact@v7
+        with:
+          name: release-macos
+          path: upload/*
+
+  build-linux:
+    needs: prepare
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          ref: ${{ needs.prepare.outputs.sha }}
+
+      # The tag and the version commit wait for every build: the release job makes them.
+      - name: Set the release version
+        shell: bash
+        run: node -e "const f=process.argv[1];const p=JSON.parse(require('fs').readFileSync(f,'utf8'));p.version=process.argv[2];require('fs').writeFileSync(f,JSON.stringify(p,null,2)+'\n')" "$APP_DIR/package.json" "${{ needs.prepare.outputs.version }}"
+
+      - name: "Install libusb and pkg-config (Linux)"
+        run: "sudo apt-get update && sudo apt-get install -y libusb-1.0-0-dev pkg-config"
+
+      # pnpm/action-setup takes the version from packageManager in the root package.json.
+      # Naming a version here as well fails the step.
+      - uses: pnpm/action-setup@v6
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 24
+          cache: pnpm
+          registry-url: https://npm.pkg.github.com
+          scope: '@drizztdourden08'
+
+      - name: Install
+        run: pnpm install --frozen-lockfile
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.PACKAGES_TOKEN || secrets.GITHUB_TOKEN }}
+
+      - name: Set up .NET for vpk
+        uses: actions/setup-dotnet@v6
+        with:
+          dotnet-version: '8.0.x'
+
+      # vpk and the velopack package the app loads must be the same version.
+      - name: Install vpk
+        shell: bash
+        run: |
+          VPK=$(cd "$APP_DIR" && node -p "require('velopack/package.json').version" 2>/dev/null || true)
+          if [ -n "$VPK" ]; then dotnet tool install -g vpk --version "$VPK"; else dotnet tool install -g vpk; fi
+
+      # The previous release lets vpk build a delta and list every version in the feed.
+      - name: Fetch the previous release
+        shell: bash
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          vpk download github --repoUrl "https://github.com/${{ github.repository }}" \
+            --outputDir "$APP_DIR/release/velopack" --token "$GH_TOKEN" || echo "no previous release to delta against"
+
+      - name: "Read the pinned Emscripten version"
+        shell: bash
+        run: "echo \"EMSDK_VERSION=$(node -p \"require('./package.json').config.emsdk\")\" >> \"$GITHUB_ENV\""
+
+      - name: "Set up Emscripten"
+        uses: emscripten-core/setup-emsdk@v16
+        with:
+          version: "${{ env.EMSDK_VERSION }}"
+
+      - name: "Give Emscripten's Python its port downloader"
+        shell: bash
+        run: |
+          "$EMSDK_PYTHON" -m ensurepip --default-pip || true
+          if ! "$EMSDK_PYTHON" -m pip install --disable-pip-version-check requests; then
+            echo "::warning::no pip in emsdk python; a cold ports cache will fail"
+          fi
+
+      - name: "Build the wasm core"
+        shell: bash
+        run: "pnpm run ensure-wasm"
+
+      - name: "Check the save state format is registered"
+        shell: bash
+        run: "node scripts/build/check-state-format.mjs"
+
+      - name: "Fetch the private dataset"
+        shell: bash
+        env:
+          VAULT_TOKEN: ${{ secrets.VAULT_TOKEN }}
+        run: |
+          git clone --depth 1 "https://x-access-token:$VAULT_TOKEN@github.com/drizztdourden08/rotp-vault.git" ../rotp-vault
+          node scripts/vault/sync.mjs --force-pull
+
+      - name: "Verify the dataset landed"
+        shell: bash
+        run: "node scripts/vault/check-dataset.mjs"
+
+      - name: Package
+        shell: bash
+        env:
+          CSC_IDENTITY_AUTO_DISCOVERY: 'false'
+        run: |
+          FULL=""
+          if [ "${{ needs.prepare.outputs.full }}" = "true" ]; then FULL="--full"; fi
+          pnpm --dir "$APP_DIR" exec brock package $FULL
+
+      - name: Collect the release files
+        shell: bash
+        run: |
+          mkdir -p upload
+          cp "$APP_DIR"/release/velopack/* upload/
+          cp "$APP_DIR"/release/*.deb upload/
+          ls -l upload
+
+      - uses: actions/upload-artifact@v7
+        with:
+          name: release-linux
+          path: upload/*
+
+  build-android:
+    needs: prepare
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          ref: ${{ needs.prepare.outputs.sha }}
+
+      # The tag and the version commit wait for every build: the release job makes them.
+      - name: Set the release version
+        shell: bash
+        run: node -e "const f=process.argv[1];const p=JSON.parse(require('fs').readFileSync(f,'utf8'));p.version=process.argv[2];require('fs').writeFileSync(f,JSON.stringify(p,null,2)+'\n')" "$APP_DIR/package.json" "${{ needs.prepare.outputs.version }}"
+
+      - name: "Install libusb and pkg-config (Linux)"
+        run: "sudo apt-get update && sudo apt-get install -y libusb-1.0-0-dev pkg-config"
+
+      # pnpm/action-setup takes the version from packageManager in the root package.json.
+      # Naming a version here as well fails the step.
+      - uses: pnpm/action-setup@v6
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 24
+          cache: pnpm
+          registry-url: https://npm.pkg.github.com
+          scope: '@drizztdourden08'
+
+      - name: Install
+        run: pnpm install --frozen-lockfile
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.PACKAGES_TOKEN || secrets.GITHUB_TOKEN }}
+
+      - name: Set up JDK 21
+        uses: actions/setup-java@v6
+        with:
+          distribution: temurin
+          java-version: '21'
+
+      # The action asks for the retired "tools" package by default; Gradle fetches the rest.
+      - name: Set up the Android SDK
+        uses: android-actions/setup-android@v4
+        with:
+          packages: platform-tools
+
+      - name: Decode the signing keystore
+        shell: bash
+        run: echo "${{ secrets.ANDROID_KEYSTORE_B64 }}" | base64 -d > "$RUNNER_TEMP/release.jks"
+
+      - name: "Read the pinned Emscripten version"
+        shell: bash
+        run: "echo \"EMSDK_VERSION=$(node -p \"require('./package.json').config.emsdk\")\" >> \"$GITHUB_ENV\""
+
+      - name: "Set up Emscripten"
+        uses: emscripten-core/setup-emsdk@v16
+        with:
+          version: "${{ env.EMSDK_VERSION }}"
+
+      - name: "Give Emscripten's Python its port downloader"
+        shell: bash
+        run: |
+          "$EMSDK_PYTHON" -m ensurepip --default-pip || true
+          if ! "$EMSDK_PYTHON" -m pip install --disable-pip-version-check requests; then
+            echo "::warning::no pip in emsdk python; a cold ports cache will fail"
+          fi
+
+      - name: "Build the wasm core"
+        shell: bash
+        run: "pnpm run ensure-wasm"
+
+      - name: "Check the save state format is registered"
+        shell: bash
+        run: "node scripts/build/check-state-format.mjs"
+
+      - name: "Fetch the private dataset"
+        shell: bash
+        env:
+          VAULT_TOKEN: ${{ secrets.VAULT_TOKEN }}
+        run: |
+          git clone --depth 1 "https://x-access-token:$VAULT_TOKEN@github.com/drizztdourden08/rotp-vault.git" ../rotp-vault
+          node scripts/vault/sync.mjs --force-pull
+
+      - name: "Verify the dataset landed"
+        shell: bash
+        run: "node scripts/vault/check-dataset.mjs"
+
+      - name: Build the signed APK
+        shell: bash
+        env:
+          BROCK_KEYSTORE_FILE: ${{ runner.temp }}/release.jks
           BROCK_KEYSTORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
           BROCK_KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
         run: |
-          chmod +x apps/desktop/mobile/android/gradlew
-          pnpm --dir apps/desktop exec brock mobile build --release --out "$GITHUB_WORKSPACE/rotp-android.apk"
+          mkdir -p upload
+          pnpm --dir "$APP_DIR" exec brock mobile build --release --out "$GITHUB_WORKSPACE/upload/rotp-android.apk"
 
-      - name: Upload artifacts
-        uses: actions/upload-artifact@v7
+      - uses: actions/upload-artifact@v7
         with:
           name: release-android
-          path: rotp-android.apk
+          path: upload/*
+
+  build-web:
+    needs: prepare
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          ref: ${{ needs.prepare.outputs.sha }}
+
+      # The tag and the version commit wait for every build: the release job makes them.
+      - name: Set the release version
+        shell: bash
+        run: node -e "const f=process.argv[1];const p=JSON.parse(require('fs').readFileSync(f,'utf8'));p.version=process.argv[2];require('fs').writeFileSync(f,JSON.stringify(p,null,2)+'\n')" "$APP_DIR/package.json" "${{ needs.prepare.outputs.version }}"
+
+      - name: "Install libusb and pkg-config (Linux)"
+        run: "sudo apt-get update && sudo apt-get install -y libusb-1.0-0-dev pkg-config"
+
+      # pnpm/action-setup takes the version from packageManager in the root package.json.
+      # Naming a version here as well fails the step.
+      - uses: pnpm/action-setup@v6
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 24
+          cache: pnpm
+          registry-url: https://npm.pkg.github.com
+          scope: '@drizztdourden08'
+
+      - name: Install
+        run: pnpm install --frozen-lockfile
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.PACKAGES_TOKEN || secrets.GITHUB_TOKEN }}
+
+      - name: "Read the pinned Emscripten version"
+        shell: bash
+        run: "echo \"EMSDK_VERSION=$(node -p \"require('./package.json').config.emsdk\")\" >> \"$GITHUB_ENV\""
+
+      - name: "Set up Emscripten"
+        uses: emscripten-core/setup-emsdk@v16
+        with:
+          version: "${{ env.EMSDK_VERSION }}"
+
+      - name: "Give Emscripten's Python its port downloader"
+        shell: bash
+        run: |
+          "$EMSDK_PYTHON" -m ensurepip --default-pip || true
+          if ! "$EMSDK_PYTHON" -m pip install --disable-pip-version-check requests; then
+            echo "::warning::no pip in emsdk python; a cold ports cache will fail"
+          fi
+
+      - name: "Build the wasm core"
+        shell: bash
+        run: "pnpm run ensure-wasm"
+
+      - name: "Check the save state format is registered"
+        shell: bash
+        run: "node scripts/build/check-state-format.mjs"
+
+      - name: "Fetch the private dataset"
+        shell: bash
+        env:
+          VAULT_TOKEN: ${{ secrets.VAULT_TOKEN }}
+        run: |
+          git clone --depth 1 "https://x-access-token:$VAULT_TOKEN@github.com/drizztdourden08/rotp-vault.git" ../rotp-vault
+          node scripts/vault/sync.mjs --force-pull
+
+      - name: "Verify the dataset landed"
+        shell: bash
+        run: "node scripts/vault/check-dataset.mjs"
+
+      - name: Build the web app
+        run: pnpm --dir "$APP_DIR" exec brock web build
+
+      - name: Zip the static files
+        shell: bash
+        run: |
+          mkdir -p upload
+          (cd "$APP_DIR/dist/web" && zip -qr "$GITHUB_WORKSPACE/upload/rotp-web.zip" .)
+
+      - uses: actions/upload-artifact@v7
+        with:
+          name: release-web
+          path: upload/*
 
   release:
-    needs: [prepare, build, build-android]
-    runs-on: ubuntu-latest
-
+    needs: [prepare, build-windows, build-macos, build-linux, build-android, build-web]
+    runs-on: ubuntu-24.04
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
         with:
-          ref: ${{ needs.prepare.outputs.tag }}
+          ref: ${{ needs.prepare.outputs.sha }}
+          fetch-depth: 0
 
-      - name: Download all artifacts
-        uses: actions/download-artifact@v8
+      - uses: actions/download-artifact@v8
         with:
           path: artifacts
-          merge-multiple: false
 
-      - name: Generate release body
+      - name: Write the release body
+        id: body
+        shell: bash
+        env:
+          PRERELEASE: ${{ inputs.prerelease }}
         run: |
           TAG="${{ needs.prepare.outputs.tag }}"
-          BASE="https://github.com/drizztdourden08/relic-of-the-past/releases/download/${TAG}"
-          NOTES="release-notes/${TAG}.md"
+          NOTES="release-notes/v${{ needs.prepare.outputs.version }}.md"
+          BASE="https://github.com/${{ github.repository }}/releases/download/${TAG}"
+          LATEST="https://github.com/${{ github.repository }}/releases/latest/download"
+          link() { for f in $1; do if [ -f "$f" ]; then echo "- [$2]($BASE/$(basename "$f"))"; fi; done; }
+          stub() {
+            for f in $1; do
+              [ -f "$f" ] || continue
+              if [ "$PRERELEASE" != "true" ]; then echo "- [$2]($LATEST/$(basename "$f"))"; continue; fi
+              shown=""
+              for p in $3; do if [ -f "$p" ]; then echo "- [$4]($BASE/$(basename "$p"))"; shown=1; fi; done
+              if [ -z "$shown" ]; then echo "- [$2]($LATEST/$(basename "$f")), which installs the latest stable release; turn on pre-releases in the app's updater to move to this one"; fi
+            done
+          }
           {
-            # Per-version notes (the source of truth in release-notes/) lead, when present.
-            if [ -f "$NOTES" ]; then
-              cat "$NOTES"
-              echo ""
-              echo ""
-            fi
+            grep -v -E '^\s*<!--.*-->\s*$' "$NOTES"
+            echo ""
             echo "## Downloads"
             echo ""
-            echo "**Windows**"
-            # The stub is small and ships on every release, so this permanent link
-            # always resolves to the current one. It fetches the app itself, which is
-            # why there is nothing else to choose from here.
-            LATEST="https://github.com/${{ github.repository }}/releases/latest/download"
-            echo "- [Installer (.exe)](${LATEST}/rotp-windows-setup.exe) - small download, installs and updates itself"
-            echo ""
-            echo "**macOS**"
-            echo "- [Disk Image (.dmg)](${BASE}/rotp-macos.dmg)"
-            echo ""
-            echo "**Linux**"
-            echo "- [AppImage](${BASE}/rotp-linux.AppImage) - universal, updates itself"
-            echo "- [Debian Package (.deb)](${BASE}/rotp-linux.deb)"
-            echo ""
-            echo "**Android**"
-            echo "- [APK](${BASE}/rotp-android.apk) - sideload (self-signed, allow unknown sources)"
+            stub "artifacts/release-windows/*-windows-setup.exe" "Windows installer (.exe), a small download that installs and updates itself" "artifacts/release-windows/*-windows-payload.exe" "Windows setup (.exe) of this pre-release, which updates itself"
+            link "artifacts/release-macos/*.dmg" "macOS disk image (.dmg)"
+            link "artifacts/release-linux/*.AppImage" "Linux AppImage, updates itself"
+            link "artifacts/release-linux/*.deb" "Debian package (.deb)"
+            link "artifacts/release-android/*.apk" "Android APK, to sideload (allow installs from this source)"
+            link "artifacts/release-web/*.zip" "Web build (.zip), static files to host on any web server"
           } > release-body.md
+          echo "title=$(grep -m 1 '^# ' "$NOTES" | sed 's/^# //')" >> "$GITHUB_OUTPUT"
+          cat release-body.md
 
-      - name: Create GitHub Release
-        uses: softprops/action-gh-release@v3
+      # Every build succeeded: commit the version on the commit they built, tag it, then move the
+      # default branch to it. When the branch moved meanwhile, the bump goes on top of it instead.
+      - name: Commit the version and tag it
+        shell: bash
+        env:
+          BRANCH: agent/grand-merge
+        run: |
+          TAG="${{ needs.prepare.outputs.tag }}"
+          node -e "const f=process.argv[1];const p=JSON.parse(require('fs').readFileSync(f,'utf8'));p.version=process.argv[2];require('fs').writeFileSync(f,JSON.stringify(p,null,2)+'\n')" "$APP_DIR/package.json" "${{ needs.prepare.outputs.version }}"
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add "$APP_DIR/package.json"
+          BUMPED=""
+          if ! git diff --cached --quiet; then git commit -m "release: $TAG"; BUMPED=1; fi
+          git tag "$TAG"
+          git push origin "$TAG"
+          if [ -n "$BUMPED" ] && ! git push origin "HEAD:$BRANCH"; then
+            git fetch origin "$BRANCH"
+            git checkout -B release-bump "origin/$BRANCH"
+            { git cherry-pick "$TAG" && git push origin "HEAD:$BRANCH"; } || echo "::warning::$TAG is tagged, but the version bump could not reach $BRANCH. Commit $APP_DIR/package.json at ${{ needs.prepare.outputs.version }} by hand."
+          fi
+
+      - uses: softprops/action-gh-release@v3
         with:
           tag_name: ${{ needs.prepare.outputs.tag }}
-          # Default (tag push) stays a draft. A manual run with set_latest=true
-          # publishes immediately and marks it the latest release.
-          # A draft's assets cannot be downloaded, so a pre-release is published
-          # instead of drafted. It never becomes the latest download.
+          name: ${{ steps.body.outputs.title }}
           draft: ${{ inputs.set_latest != true && inputs.prerelease != true }}
           prerelease: ${{ inputs.prerelease == true }}
-          make_latest: ${{ inputs.set_latest == true }}
-          generate_release_notes: false
+          make_latest: ${{ inputs.set_latest == true && inputs.prerelease != true }}
           body_path: release-body.md
-          files: |
-            artifacts/release-win/*
-            artifacts/release-mac/*
-            artifacts/release-linux/*
-            artifacts/release-android/*
+          files: artifacts/release-*/*
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

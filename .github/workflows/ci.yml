@@ -1,31 +1,207 @@
 name: CI
+run-name: CI ${{ github.head_ref || github.ref_name }}
 
-# Runs on demand (manual "Run workflow") and on contributor PRs only.
-# Direct pushes to master do NOT auto-run. Ask for a release or a verify run.
+# Managed by brock sync from the targets in brock.config.ts. Change the targets, then run brock sync.
+# Runs on pull requests, on a push to agent/grand-merge (releases and release notes land there straight)
+# and from the Actions tab. The review job launches the built app headless under xvfb and fails
+# the run when a check in its report fails.
 on:
-  workflow_dispatch:
   pull_request:
+  push:
+    branches: [agent/grand-merge]
+  workflow_dispatch:
 
 concurrency:
   group: ci-${{ github.ref }}
-  cancel-in-progress: true
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+permissions:
+  contents: read
+  packages: read
+
+env:
+  APP_DIR: apps/desktop
 
 jobs:
   quality:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
 
-      # No version input: the action reads packageManager from package.json.
-      - uses: pnpm/action-setup@v4
+      - name: "Install libusb and pkg-config (Linux)"
+        run: "sudo apt-get update && sudo apt-get install -y libusb-1.0-0-dev pkg-config"
 
-      - uses: actions/setup-node@v6
+      # pnpm/action-setup takes the version from packageManager in the root package.json.
+      # Naming a version here as well fails the step.
+      - uses: pnpm/action-setup@v6
+      - uses: actions/setup-node@v7
         with:
           node-version: 24
           cache: pnpm
+          registry-url: https://npm.pkg.github.com
+          scope: '@drizztdourden08'
 
-      - name: Install dependencies
+      - name: Install
         run: pnpm install --frozen-lockfile
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.PACKAGES_TOKEN || secrets.GITHUB_TOKEN }}
 
-      - name: Lint, typecheck, analyze, and WASM export-drift check
-        run: pnpm run ci
+      - name: "Read the pinned Emscripten version"
+        shell: bash
+        run: "echo \"EMSDK_VERSION=$(node -p \"require('./package.json').config.emsdk\")\" >> \"$GITHUB_ENV\""
+
+      - name: "Set up Emscripten"
+        uses: emscripten-core/setup-emsdk@v16
+        with:
+          version: "${{ env.EMSDK_VERSION }}"
+
+      - name: "Give Emscripten's Python its port downloader"
+        shell: bash
+        run: |
+          "$EMSDK_PYTHON" -m ensurepip --default-pip || true
+          if ! "$EMSDK_PYTHON" -m pip install --disable-pip-version-check requests; then
+            echo "::warning::no pip in emsdk python; a cold ports cache will fail"
+          fi
+
+      - name: "Build the wasm core"
+        shell: bash
+        run: "pnpm run ensure-wasm"
+
+      - name: Build
+        run: pnpm --dir "$APP_DIR" exec brock build
+
+      - name: "Analyze every file type"
+        run: "node scripts/analyze/analyze.mjs --ci"
+
+      - name: Release note
+        run: pnpm --dir "$APP_DIR" exec brock release-notes check
+
+      - name: App gate steps
+        run: pnpm --dir "$APP_DIR" exec brock gate
+
+      - name: Managed files match brock sync
+        run: pnpm exec brock check
+
+      - name: Lint and typecheck
+        run: pnpm run lint
+
+      - name: Markdown
+        run: pnpm run --if-present lint:md
+
+      - name: Structure
+        run: pnpm exec brock structure --check
+
+      - name: Tests
+        run: pnpm run --if-present test
+  # The review job is pinned to one image, never ubuntu-latest: the apparmor step below and the
+  # linux screenshot baselines both depend on the image, so a new Ubuntu moves only with Brock.
+  review:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: "Install libusb and pkg-config (Linux)"
+        run: "sudo apt-get update && sudo apt-get install -y libusb-1.0-0-dev pkg-config"
+
+      # pnpm/action-setup takes the version from packageManager in the root package.json.
+      # Naming a version here as well fails the step.
+      - uses: pnpm/action-setup@v6
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 24
+          cache: pnpm
+          registry-url: https://npm.pkg.github.com
+          scope: '@drizztdourden08'
+
+      - name: Install
+        run: pnpm install --frozen-lockfile
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.PACKAGES_TOKEN || secrets.GITHUB_TOKEN }}
+
+      - name: "Read the pinned Emscripten version"
+        shell: bash
+        run: "echo \"EMSDK_VERSION=$(node -p \"require('./package.json').config.emsdk\")\" >> \"$GITHUB_ENV\""
+
+      - name: "Set up Emscripten"
+        uses: emscripten-core/setup-emsdk@v16
+        with:
+          version: "${{ env.EMSDK_VERSION }}"
+
+      - name: "Give Emscripten's Python its port downloader"
+        shell: bash
+        run: |
+          "$EMSDK_PYTHON" -m ensurepip --default-pip || true
+          if ! "$EMSDK_PYTHON" -m pip install --disable-pip-version-check requests; then
+            echo "::warning::no pip in emsdk python; a cold ports cache will fail"
+          fi
+
+      - name: "Build the wasm core"
+        shell: bash
+        run: "pnpm run ensure-wasm"
+
+      - name: Build
+        run: pnpm --dir "$APP_DIR" exec brock build
+
+      - name: Let Electron start its sandbox
+        run: sudo sysctl -w kernel.apparmor_restrict_unprivileged_userns=0
+
+      - name: Install xvfb
+        run: command -v xvfb-run || { sudo apt-get update && sudo apt-get install -y xvfb; }
+
+      - name: Headless review
+        run: xvfb-run -a pnpm --dir "$APP_DIR" exec brock launch main none --prod --review
+
+      - name: Keep the review report
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: review
+          path: .user-data/Data/review/
+          if-no-files-found: ignore
+
+  web:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: "Install libusb and pkg-config (Linux)"
+        run: "sudo apt-get update && sudo apt-get install -y libusb-1.0-0-dev pkg-config"
+
+      # pnpm/action-setup takes the version from packageManager in the root package.json.
+      # Naming a version here as well fails the step.
+      - uses: pnpm/action-setup@v6
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 24
+          cache: pnpm
+          registry-url: https://npm.pkg.github.com
+          scope: '@drizztdourden08'
+
+      - name: Install
+        run: pnpm install --frozen-lockfile
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.PACKAGES_TOKEN || secrets.GITHUB_TOKEN }}
+
+      - name: "Read the pinned Emscripten version"
+        shell: bash
+        run: "echo \"EMSDK_VERSION=$(node -p \"require('./package.json').config.emsdk\")\" >> \"$GITHUB_ENV\""
+
+      - name: "Set up Emscripten"
+        uses: emscripten-core/setup-emsdk@v16
+        with:
+          version: "${{ env.EMSDK_VERSION }}"
+
+      - name: "Give Emscripten's Python its port downloader"
+        shell: bash
+        run: |
+          "$EMSDK_PYTHON" -m ensurepip --default-pip || true
+          if ! "$EMSDK_PYTHON" -m pip install --disable-pip-version-check requests; then
+            echo "::warning::no pip in emsdk python; a cold ports cache will fail"
+          fi
+
+      - name: "Build the wasm core"
+        shell: bash
+        run: "pnpm run ensure-wasm"
+
+      - name: Build the web app
+        run: pnpm --dir "$APP_DIR" exec brock web build

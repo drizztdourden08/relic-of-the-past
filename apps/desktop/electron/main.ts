@@ -10,6 +10,7 @@ import { deferGameScreenshot } from './automation/defer-game-screenshot';
 import { armGameScreenshotWatchdog } from './automation/arm-game-screenshot-watchdog';
 import { rotpRendererFlags } from './automation/rotp-renderer-flags';
 import { ROTP_DATA_DOMAINS } from './storage/data-domains.constants';
+import { installedFileGuard } from './storage/installed-file-guard';
 import { sanctuaryBugReport } from './sanctuary/bug-report';
 import { onReady } from './lifecycle/on-ready';
 import { onWindow } from './lifecycle/on-window';
@@ -23,6 +24,7 @@ bootstrapApp(product, {
   handlers: mainHandlers,
   automationFlags: ROTP_AUTOMATION_FLAGS,
   dataDomains: ROTP_DATA_DOMAINS,
+  fileGuard: installedFileGuard,
   profileHooks: rotpProfileHooks,
   rendererFlags: rotpRendererFlags,
   bugReport: sanctuaryBugReport,

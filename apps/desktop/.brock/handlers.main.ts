@@ -7,7 +7,6 @@ import { debugReportHandlers } from '../electron/handlers/debug-report-handlers'
 import { dialogHandlers } from '../electron/handlers/dialog-handlers';
 import { documentsHandlers } from '../electron/handlers/documents-handlers';
 import { ffmpegHandlers } from '../electron/handlers/ffmpeg-handlers';
-import { fileTrashHandlers } from '../electron/handlers/file-trash-handlers';
 import { hubHandlers } from '../electron/handlers/hub-handlers';
 import { inputHandlers } from '../electron/handlers/input-handlers';
 import { languagesHandlers } from '../electron/handlers/languages-handlers';
@@ -19,8 +18,7 @@ import { spritesHandlers } from '../electron/handlers/sprites-handlers';
 import { storeHandlers } from '../electron/handlers/store-handlers';
 import { testHandlers } from '../electron/handlers/test-handlers';
 import { trackerHandlers } from '../electron/handlers/tracker-handlers';
-import { windowAudioHandlers } from '../electron/handlers/window-audio-handlers';
 
-const mainHandlers: HandlerGroup[] = [connectionsHandlers, debugHandlers, debugReportHandlers, dialogHandlers, documentsHandlers, ffmpegHandlers, fileTrashHandlers, hubHandlers, inputHandlers, languagesHandlers, msuHandlers, recommendationsHandlers, sanctuaryHandlers, shadowCastingHandlers, spritesHandlers, storeHandlers, testHandlers, trackerHandlers, windowAudioHandlers, ...devHandlers];
+const mainHandlers: HandlerGroup[] = [connectionsHandlers, debugHandlers, debugReportHandlers, dialogHandlers, documentsHandlers, ffmpegHandlers, hubHandlers, inputHandlers, languagesHandlers, msuHandlers, recommendationsHandlers, sanctuaryHandlers, shadowCastingHandlers, spritesHandlers, storeHandlers, testHandlers, trackerHandlers, ...devHandlers];
 
 export { mainHandlers };
