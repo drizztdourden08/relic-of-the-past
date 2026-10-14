@@ -1,7 +1,7 @@
 /* @layer renderer-lib @kind logic */
-import { roms } from '@rotp/roms';
+import { deleteRomFile } from '../rom-files';
 import { platformFiles } from '../platform-files';
 
-const deleteRom = (romFile: string) => roms.deleteRom(platformFiles(), romFile);
+const deleteRom = (romFile: string): Promise<void> => deleteRomFile(platformFiles(), romFile);
 
 export { deleteRom };

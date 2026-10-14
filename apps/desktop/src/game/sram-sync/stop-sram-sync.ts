@@ -1,10 +1,10 @@
 /* @layer bridge-wasm @kind logic */
-import { pauseSramSync } from '@rotp/game-core';
-import { syncSramToDisk } from './sync-sram-to-disk';
+import { sramSyncHolder } from './sram-sync-holder';
 
 const stopSramSync = (): void => {
-  pauseSramSync();
-  syncSramToDisk();
+  const sync = sramSyncHolder.current;
+  sramSyncHolder.current = null;
+  void sync?.stop();
 };
 
 export { stopSramSync };

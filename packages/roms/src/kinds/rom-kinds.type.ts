@@ -9,7 +9,8 @@ interface RomKindSpec {
   pattern: RegExp;
   pickExtensions: readonly string[];
   maxBytes: number;
-  accepts: readonly string[];
+  sha1: readonly string[];
+  acceptUnknown: boolean;
   role: 'base' | 'supplement';
   sourceId?: AssetSourceId;
 }

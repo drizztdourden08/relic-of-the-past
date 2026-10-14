@@ -80,7 +80,7 @@ const MsuManager = (props: MsuManagerProps) => {
   );
 
   const origin = installed === null ? null : (
-    <InstalledOriginBar pack={installed} onDuplicated={refreshThenSelect} onUpdated={refreshThenSelect} onUninstalled={handleUninstalled} />
+    <InstalledOriginBar pack={installed} onDuplicated={refreshThenSelect} onUpdateInstalled={refreshThenSelect} onUninstalled={handleUninstalled} />
   );
 
   const studio = msu.loadingFiles || selected === null ? <Text>Loading...</Text> : (

@@ -6,7 +6,7 @@ import type { PoolFillBarProps, PoolFillTotals } from './PoolFillBar.type';
 import './PoolFillBar.css';
 
 const segmentsOf = (totals: PoolFillTotals): StackedBarSegment[] =>
-  SEGMENTS.map(({ key, label, color }) => ({ id: key, label, color, value: totals[key] }));
+  SEGMENTS.map(({ key, label, description, color }) => ({ id: key, label, description, color, value: totals[key] }));
 
 const PoolFillBar = (props: PoolFillBarProps) => {
   const { totals, error, className = '' } = props;

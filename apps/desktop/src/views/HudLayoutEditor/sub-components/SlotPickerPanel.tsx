@@ -1,15 +1,12 @@
 /* @layer renderer-components @kind component */
-import { useRef, useState } from 'react';
+import { useState } from 'react';
 import { Anchored, Box, EmptyState, NumberInput, Pressable, Text } from '@drizztdourden08/tessera/primitives';
-import { usePickerDismiss } from '@app/compounds/SpritePicker';
 import { SlotPickActions } from './SlotPickActions';
 import type { SlotPickerPanelProps } from './SlotPickerPanel.type';
 
 const SlotPickerPanel = (props: SlotPickerPanelProps) => {
   const { open, anchorRef, slotNumbers, onClose, onPickItem, onPickGlyph, onPickNumber } = props;
   const [manual, setManual] = useState(1);
-  const panelRef = useRef<HTMLDivElement>(null);
-  usePickerDismiss({ open, anchorRef, panelRef, onClose });
 
   if (!open) return null;
 
@@ -22,7 +19,7 @@ const SlotPickerPanel = (props: SlotPickerPanelProps) => {
   };
 
   return (
-    <Anchored ref={panelRef} anchorRef={anchorRef} placement="bottom-start" layer="popover" className="hud-picker-grid">
+    <Anchored anchorRef={anchorRef} placement="bottom-start" layer="popover" className="hud-picker-grid" onDismiss={onClose}>
       <Box className="hud-slot-picker__manual">
         <Text className="hud-slot-picker__label">Any slot</Text>
         <NumberInput size="sm" min={1} value={manual} onChange={setManual} />

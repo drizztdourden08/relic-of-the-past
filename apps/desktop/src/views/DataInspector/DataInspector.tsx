@@ -2,7 +2,9 @@
 import { useMemo } from 'react';
 import { Box } from '@drizztdourden08/tessera/primitives';
 import { DataTable, FilterBar, ListDetailLayout, SideNav } from '@drizztdourden08/tessera/composites';
-import { COMPARISON_TITLE, NO_FINDINGS, NOTHING_MATCHES } from './DataInspector.constants';
+import {
+  COMPARING_LIST_RATIO, COMPARISON_TITLE, NO_FINDINGS, NOTHING_MATCHES, RECORD_LIST_RATIO,
+} from './DataInspector.constants';
 import { DATA_INSPECTOR_NAV } from './behavior/data-inspector-nav.constants';
 import { buildDefaultColumns } from './behavior/default-table-columns';
 import { resolveIdRefDisplayValue, resolveIdRefTargetFields } from './behavior/id-ref-display';
@@ -12,7 +14,6 @@ import { RECOMMENDATION_GROUP_BY } from './behavior/recommendations/recommendati
 import { tableViewKey } from './behavior/table-view-key';
 import { useDataInspector } from './behavior/useDataInspector';
 import { useIdRefNavigation } from './behavior/useIdRefNavigation';
-import { CollapsibleDetail } from './sub-components/CollapsibleDetail';
 import { CreateRecordButton } from './sub-components/CreateRecordButton';
 import { DetailTabs } from './sub-components/DetailTabs';
 import { RecommendationDetail } from './sub-components/recommendations/RecommendationDetail';
@@ -23,8 +24,8 @@ const DataInspector = () => {
     kind, showKind, source, schema, rows, entries,
     clauses, setClauses, search, setSearch, tab, setTab,
     selectedId, record, selectRecord, selectRecommendation, clearSelection, openIdRef,
-    detailCollapsed, toggleDetail,
-  } = useDataInspector();
+    detailCollapsed, setDetailCollapsed,
+  } =useDataInspector();
   const { handleIdRefClickCapture } = useIdRefNavigation(openIdRef);
   const isCollection = isEntityKind(kind);
 
@@ -66,44 +67,43 @@ const DataInspector = () => {
     </>
   );
 
-  const detail = (
-    <CollapsibleDetail title={isCollection ? source.label : COMPARISON_TITLE} collapsed={detailCollapsed} onToggle={toggleDetail}>
-      {isCollection
-        ? (
-          <DetailTabs
-            source={source}
-            schema={schema}
-            record={record}
-            tab={tab}
-            onTabChange={setTab}
-            onDeleted={clearSelection}
-          />
-        )
-        : (
-          <RecommendationDetail
-            entries={entries}
-            selectedId={selectedId}
-            onSelect={selectRecommendation}
-            tab={tab}
-            onTabChange={setTab}
-          />
-        )}
-    </CollapsibleDetail>
-  );
-
-  const folded = detailCollapsed;
-  const comparing = !isCollection && !detailCollapsed;
+  const detail = isCollection
+    ? (
+      <DetailTabs
+        source={source}
+        schema={schema}
+        record={record}
+        tab={tab}
+        onTabChange={setTab}
+        onDeleted={clearSelection}
+      />
+    )
+    : (
+      <RecommendationDetail
+        entries={entries}
+        selectedId={selectedId}
+        onSelect={selectRecommendation}
+        tab={tab}
+        onTabChange={setTab}
+      />
+    );
 
   return (
     <Box className="data-inspector">
       <SideNav config={DATA_INSPECTOR_NAV} activeId={kind} onSelect={showKind} />
       <Box className="data-inspector__panes" onClickCapture={handleIdRefClickCapture}>
         <ListDetailLayout
-          className={`data-inspector__master-detail${folded ? ' data-inspector__master-detail--folded' : ''}${comparing ? ' data-inspector__master-detail--comparing' : ''}`}
           list={list}
           detail={detail}
+          listRatio={isCollection ? RECORD_LIST_RATIO : COMPARING_LIST_RATIO}
           resizable={false}
           collapsible={false}
+          detailCollapsible
+          detailCollapsed={detailCollapsed}
+          onDetailCollapsedChange={setDetailCollapsed}
+          detailLabel={isCollection ? source.label : COMPARISON_TITLE}
+          listScroll={false}
+          detailScroll={false}
         />
       </Box>
     </Box>

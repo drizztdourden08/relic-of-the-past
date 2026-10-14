@@ -1,11 +1,6 @@
 /* @layer bridge-wasm @kind logic */
-import { armInterval } from './arm-interval';
-import { sramSyncState } from '@rotp/game-core';
+import { sramSyncHolder } from './sram-sync-holder';
 
-const resumeSramSync = (): void => {
-  const alreadyRunning = Boolean(sramSyncState.interval);
-  if (alreadyRunning) return;
-  armInterval();
-};
+const resumeSramSync = (): void => sramSyncHolder.current?.resume();
 
 export { resumeSramSync };

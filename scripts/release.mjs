@@ -107,7 +107,7 @@ const run = () => {
       '-f', `version=${tag}`,
       '-f', `set_latest=${setLatest}`,
       '-f', `prerelease=${prerelease}`,
-      '-f', `full_installer=${fullInstaller}`,
+      '-f', `full=${fullInstaller}`,
     ],
     { stdio: 'inherit' },
   );

@@ -125,9 +125,9 @@ const checkControlsBanner = async ({ page, tab, shoot }: Hub): Promise<void> => 
   await expect(page.locator('.scheme-banner')).toContainText('Modern controls are part of the Modern HUD style.');
   await expect(page.locator('.scheme-control')).toHaveCount(0);
   await expect(page.locator('[role="radiogroup"][aria-label="Control Scheme"]')).toHaveCount(0);
-  const modernTab = page.locator('.controls-tabs__tab', { hasText: 'Modern Controls' });
-  await expect(modernTab).toBeDisabled();
-  await expect(page.locator('.controls-tabs__reason')).toContainText('Modern HUD style');
+  const modernTab = page.getByRole('tab', { name: 'Modern Controls' });
+  await expect(modernTab).toHaveAttribute('aria-disabled', 'true');
+  await expect(modernTab).toHaveAttribute('aria-description', /Modern HUD style/);
   await shoot('02-controls-banner', '.controls-settings__main');
 
   await page.locator('.scheme-banner button').click();
@@ -156,7 +156,7 @@ const checkModernStyle = async ({ page, tab, shoot }: Hub): Promise<void> => {
   await page.waitForTimeout(1200);
   await tab('Controls');
   await expect(page.locator('.scheme-banner')).toHaveCount(0);
-  await expect(page.locator('.controls-tabs__tab', { hasText: 'Modern Controls' }))
+  await expect(page.getByRole('tab', { name: 'Modern Controls' }))
     .toHaveAttribute('aria-selected', 'true');
   expect((await page.locator('.slot-row').count())).toBeGreaterThan(0);
   await shoot('04-controls-modern', '.controls-settings__main');
@@ -197,7 +197,7 @@ test.describe('HUD style drives the control scheme', () => {
 
       await tab('Controls');
       await expect(page.locator('.scheme-banner')).toHaveCount(0);
-      await expect(page.locator('.controls-tabs__tab', { hasText: 'Modern Controls' }))
+      await expect(page.getByRole('tab', { name: 'Modern Controls' }))
         .toHaveAttribute('aria-selected', 'true');
       expect(await assignedSlots(page)).toEqual([
         'Sword on S', 'Action on D', 'Item on W', 'Item on E',

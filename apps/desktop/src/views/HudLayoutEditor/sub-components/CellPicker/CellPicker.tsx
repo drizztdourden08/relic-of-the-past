@@ -1,9 +1,9 @@
 /* @layer renderer-components @kind component */
-import { Box, Text } from '@drizztdourden08/tessera/primitives';
+import { Box, Shortcut, Text } from '@drizztdourden08/tessera/primitives';
 import { usePlatform } from '@drizztdourden08/brock-react';
 import { useGridSolve } from '@app/hud-layout-editing/grid-solve';
 import { GridLattice, covers, occupantsOf, rowCountFor } from '../GridLattice';
-import { PointerCaps } from '../SelectionLegend';
+import { shortcutPropsOf } from '../SelectionLegend';
 import { useCellPick } from './behavior/useCellPick';
 import { CELL_PICK_KEYS } from './CellPicker.constants';
 import './CellPicker.css';
@@ -66,7 +66,7 @@ const CellPicker = (props: CellPickerProps) => {
       <Box className="hud-cellpick__legend">
         {CELL_PICK_KEYS.map((entry) => (
           <Box key={entry.key} className="hud-grid__key">
-            <PointerCaps shortcut={entry.shortcut} os={os} />
+            <Shortcut size="xs" {...shortcutPropsOf(entry.shortcut, os)} />
             <Text className="hud-grid__key-text">{entry.label}</Text>
           </Box>
         ))}

@@ -154,7 +154,7 @@ const LanguageManager = (props: LanguageManagerProps) => {
   );
 
   const origin = installed === null ? null : (
-    <InstalledOriginBar pack={installed} onDuplicated={refreshThenSelect} onUpdated={refreshThenSelect} onUninstalled={handleUninstalled} />
+    <InstalledOriginBar pack={installed} onDuplicated={refreshThenSelect} onUpdateInstalled={refreshThenSelect} onUninstalled={handleUninstalled} />
   );
   const detail = selected ? <LanguageEditor id={selected} readOnly={installed !== null} origin={origin} /> : null;
 

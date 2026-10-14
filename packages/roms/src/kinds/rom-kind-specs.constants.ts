@@ -1,7 +1,7 @@
 /* @layer shared-storage @kind data */
 import type { RomKind, RomKindSpec } from './rom-kinds.type';
 
-const ALTTP_GBA_US_SHA256 = 'f328f8f07d736288a00c80d31cc1630f3aa02aaf20efdcba73d31dae832b5d76';
+const ALTTP_GBA_US_SHA1 = 'A272055ABBBF6C26B0CD54C87395D01699589161';
 
 const ROM_KINDS: Record<RomKind, RomKindSpec> = {
   'snes-alttp': {
@@ -10,7 +10,8 @@ const ROM_KINDS: Record<RomKind, RomKindSpec> = {
     pattern: /\.(sfc|smc)$/i,
     pickExtensions: ['sfc', 'smc', 'zip'],
     maxBytes: 8 * 1024 * 1024,
-    accepts: [],
+    sha1: [],
+    acceptUnknown: true,
     role: 'base',
   },
   'gba-alttp': {
@@ -19,10 +20,11 @@ const ROM_KINDS: Record<RomKind, RomKindSpec> = {
     pattern: /\.gba$/i,
     pickExtensions: ['gba', 'zip'],
     maxBytes: 32 * 1024 * 1024,
-    accepts: [ALTTP_GBA_US_SHA256],
+    sha1: [ALTTP_GBA_US_SHA1],
+    acceptUnknown: false,
     role: 'supplement',
     sourceId: 'gba-alttp',
   },
 };
 
-export { ALTTP_GBA_US_SHA256, ROM_KINDS };
+export { ROM_KINDS };

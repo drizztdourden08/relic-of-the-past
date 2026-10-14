@@ -49,13 +49,6 @@ type DeleteRoute =
   | { kind: 'immediate' }
   | { kind: 'confirm'; hits: readonly ReferencedByHit[] };
 
-interface CollapsibleDetailProps {
-  title: string;
-  collapsed: boolean;
-  onToggle: () => void;
-  children: ReactNode;
-}
-
 interface CreateRecordButtonProps {
   kind: EntityKind;
   label: string;
@@ -86,7 +79,6 @@ interface RecordEditorPanelProps {
 
 export type {
   BoundsRule,
-  CollapsibleDetailProps,
   CreateRecordButtonProps,
   DeleteGuardDialogState,
   DeleteResult,

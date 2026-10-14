@@ -72,7 +72,7 @@ prebuilt, so a normal build does **not** need the Emscripten SDK.
 ```bash
 pnpm install        # install dependencies
 pnpm run dev        # run the app in development
-pnpm run build:win  # produce a packaged build (see package.json for mac/linux)
+pnpm run build      # produce a packaged build for this OS (brock package)
 ```
 
 Quality checks (run by CI on every push/PR):

@@ -72,9 +72,9 @@ const useDataInspector = () => {
     setKind(target.kind);
   }, [selectIn]);
 
-  const toggleDetail = useCallback(() => {
-    setSnapshot(capture(NO_TABLE, snapshot.filters, snapshot.tab, !detailCollapsed));
-  }, [setSnapshot, snapshot.filters, snapshot.tab, detailCollapsed]);
+  const setDetailCollapsed = useCallback((next: boolean) => {
+    setSnapshot(capture(NO_TABLE, snapshot.filters, snapshot.tab, next));
+  }, [setSnapshot, snapshot.filters, snapshot.tab]);
 
   const pending = useDataViewStore(state => state.pendingRecommendation);
   const clearPending = useDataViewStore(state => state.clearPendingRecommendation);
@@ -99,7 +99,7 @@ const useDataInspector = () => {
     kind, showKind, source, schema, rows, entries,
     clauses, setClauses, search, setSearch, tab, setTab,
     selectedId, record, selectRecord, selectRecommendation, clearSelection, openIdRef,
-    detailCollapsed, toggleDetail,
+    detailCollapsed, setDetailCollapsed,
   };
 };
 

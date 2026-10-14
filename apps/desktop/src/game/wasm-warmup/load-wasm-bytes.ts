@@ -1,7 +1,8 @@
 /* @layer bridge-wasm @kind logic */
 import { portKitApi } from '@drizztdourden08/brock-port-kit/renderer';
-import { warmupState, CORE_WASM_FILE } from '@rotp/game-core';
+import { warmupState } from '@rotp/game-core';
 import type { ByteProgress as Progress } from '@rotp/game-core';
+import { ROTP_CORE } from '../port/rotp-port.constants';
 
 const isHttpRenderer = (): boolean =>
   window.location.protocol === 'http:' || window.location.protocol === 'https:';
@@ -17,8 +18,8 @@ const joinChunks = (chunks: readonly Uint8Array[], received: number): ArrayBuffe
 };
 
 const readBundledCore = async (onProgress?: Progress): Promise<ArrayBuffer> => {
-  const bytes = await portKitApi()?.readCore(CORE_WASM_FILE);
-  if (!bytes) throw new Error(`The core ${CORE_WASM_FILE} is not in the app bundle.`);
+  const bytes = await portKitApi()?.readCore(ROTP_CORE.wasm);
+  if (!bytes) throw new Error(`The core ${ROTP_CORE.wasm} is not in the app bundle.`);
   onProgress?.(1);
   return bytes;
 };
@@ -38,7 +39,7 @@ const streamBody = async (body: ReadableStream<Uint8Array>, total: number, onPro
 };
 
 const fetchCore = async (onProgress?: Progress): Promise<ArrayBuffer> => {
-  const res = await fetch(new URL(CORE_WASM_FILE, window.location.href).href);
+  const res = await fetch(new URL(ROTP_CORE.wasm, window.location.href).href);
   const total = Number(res.headers.get('Content-Length')) || 0;
   if (res.body && total) return streamBody(res.body, total, onProgress);
   const bytes = await res.arrayBuffer();

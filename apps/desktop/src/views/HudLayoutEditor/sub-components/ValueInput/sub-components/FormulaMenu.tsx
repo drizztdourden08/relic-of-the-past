@@ -1,7 +1,5 @@
 /* @layer renderer-components @kind component */
-import { useRef } from 'react';
 import { Anchored, Box, Pressable, Text, TextInput } from '@drizztdourden08/tessera/primitives';
-import { usePickerDismiss } from '@app/compounds/SpritePicker';
 import { formulaGroups } from '@app/hud-layout-editing/formula-catalog';
 import { formulaStarters } from '@app/hud-layout-editing/formula-starters';
 import type { FormulaMenuProps } from './FormulaMenu.type';
@@ -14,8 +12,6 @@ const reading = (name: string, scope: Readonly<Record<string, number>>): string 
 
 const FormulaMenu = (props: FormulaMenuProps) => {
   const { open, anchorRef, filter, role, insideRepeat, extraNames, scope, onClose, onInsert } = props;
-  const panelRef = useRef<HTMLDivElement>(null);
-  usePickerDismiss({ open, anchorRef, panelRef, onClose });
 
   if (!open) return null;
 
@@ -25,7 +21,7 @@ const FormulaMenu = (props: FormulaMenuProps) => {
     .filter((group) => group.items.length > 0);
 
   return (
-    <Anchored ref={panelRef} anchorRef={anchorRef} placement="bottom-start" layer="popover" className="hud-formula-menu">
+    <Anchored anchorRef={anchorRef} placement="bottom-start" layer="popover" className="hud-formula-menu" onDismiss={onClose}>
         {filter.length > 0 && (
           <Box className="hud-formula-menu__filter">
             <TextInput size="sm" value={filter} readOnly aria-label="Filtering formula names" />

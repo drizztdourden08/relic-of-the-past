@@ -17,9 +17,8 @@
 ```bash
 pnpm install          # install deps; auto-fetches the Electron binary (ensure-electron)
 pnpm run dev          # brock dev in apps/desktop: dev server + Electron (auto-builds WASM if missing/stale)
-pnpm run build        # packaged Windows build (brock build in apps/desktop, then electron-builder), auto-builds WASM too
+pnpm run build        # packaged build for this OS (brock package in apps/desktop), auto-builds WASM too
 pnpm run build:web    # brock web build in apps/desktop: the renderer alone, into apps/desktop/dist/web
-pnpm run build:win    # packaged build (see package.json for :mac / :linux)
 ```
 
 `pnpm install` runs `ensure-electron` (re-fetches Electron's native binary if a bare `node_modules`

@@ -13,5 +13,4 @@ export { pictureGlyphIndex } from './glyph-index';
 export { buildGlyphItems } from './toolbar-model';
 export { iconForCodeName, iconForToken } from './icon-for-token';
 export { withTokenNodeView } from './with-token-node-view';
-export { useDismissOnOutside } from './behavior/useDismissOnOutside';
 export type { GlyphFont, ToolbarGroup, ToolbarItem } from './editor-ui.type';

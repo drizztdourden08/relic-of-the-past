@@ -2,10 +2,10 @@
 import { describe, it, expect } from 'vitest';
 import { createElement } from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
+import { ListDetailLayout } from '@drizztdourden08/tessera/composites';
 import {
-  KIND_NAV_ITEMS, NAV_ITEMS, RECOMMENDATIONS_KIND, isEntityKind, queryViewKey, tableViewKey,
+  KIND_NAV_ITEMS, NAV_ITEMS, RECOMMENDATIONS_KIND, RECORD_LIST_RATIO, isEntityKind, queryViewKey, tableViewKey,
 } from '@app/views/DataInspector/DataInspector.constants';
-import { CollapsibleDetail } from '@app/views/DataInspector/sub-components/CollapsibleDetail';
 
 describe('the rail entry', () => {
   it('is always present, last, regardless of the active kind', () => {
@@ -33,22 +33,34 @@ describe('the pseudo-kind stays out of the real collections', () => {
 
 describe('the foldable detail column', () => {
   const render = (title: string, collapsed: boolean): string => renderToStaticMarkup(createElement(
-    CollapsibleDetail,
-    { title, collapsed, onToggle: () => {}, children: 'the panes' },
+    ListDetailLayout,
+    {
+      list: 'the list',
+      detail: 'the panes',
+      listRatio: RECORD_LIST_RATIO,
+      resizable: false,
+      collapsible: false,
+      detailCollapsible: true,
+      detailCollapsed: collapsed,
+      onDetailCollapsedChange: () => {},
+      detailLabel: title,
+      listScroll: false,
+      detailScroll: false,
+    },
   ));
 
   it('shows the content and the fold-away glyph when open', () => {
     const html = render('Comparison', false);
     expect(html).toContain('the panes');
-    expect(html).toContain('aria-label="Collapse"');
-    expect(html).not.toContain('collapsible-detail--collapsed');
+    expect(html).toContain('aria-label="Hide Comparison"');
+    expect(html).not.toContain('list-detail-layout--detail-collapsed');
   });
 
   it('names what is behind the strip when folded', () => {
     const html = render('Comparison', true);
-    expect(html).toContain('collapsible-detail--collapsed');
+    expect(html).toContain('list-detail-layout--detail-collapsed');
     expect(html).toContain('Comparison');
-    expect(html).toContain('aria-label="Expand"');
+    expect(html).toContain('aria-label="Show Comparison"');
   });
 
   it('keeps the panes mounted while folded', () => {
@@ -57,7 +69,7 @@ describe('the foldable detail column', () => {
 
   it('works the same for a plain collection\'s title as for the comparison\'s', () => {
     const html = render('Screens', true);
-    expect(html).toContain('collapsible-detail--collapsed');
+    expect(html).toContain('list-detail-layout--detail-collapsed');
     expect(html).toContain('Screens');
     expect(html).not.toContain('Comparison');
   });

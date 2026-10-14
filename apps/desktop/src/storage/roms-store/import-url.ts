@@ -1,7 +1,7 @@
 /* @layer renderer-lib @kind logic */
 import type { RomImportResult, RomKind } from '@rotp/roms';
-import { roms } from '@rotp/roms';
 import { fetchToBytes } from '@app/download/download';
+import { importRomBytes } from '../rom-files';
 import { platformFiles } from '../platform-files';
 import { emitRomProgress } from './emit-rom-progress';
 import { finalizeRomImport } from './finalize-rom-import';
@@ -14,7 +14,7 @@ const nameFromUrl = (url: string, kind: RomKind): string => {
 
 const importUrl = async (url: string, kind: RomKind = 'snes-alttp'): Promise<RomImportResult> => {
   const bytes = await fetchToBytes(url, (loaded, total) => emitRomProgress('download', loaded, total ?? undefined));
-  return finalizeRomImport(await roms.importBytes(platformFiles(), { fileName: nameFromUrl(url, kind), bytes }, kind, (phase) => emitRomProgress(phase)));
+  return finalizeRomImport(await importRomBytes(platformFiles(), { fileName: nameFromUrl(url, kind), bytes }, kind, (phase) => emitRomProgress(phase)));
 };
 
 export { importUrl };

@@ -1,8 +1,6 @@
 /* @layer renderer-widgets @kind component */
-import { useRef } from 'react';
 import { Anchored, Box, Image, Pressable, Text } from '@drizztdourden08/tessera/primitives';
 import { useAnchorRef } from '../behavior/useAnchorRef';
-import { useDismiss } from '../behavior/useDismiss';
 import type { ChoiceOption, ChoicePopoverProps } from './ChoicePopover.type';
 
 const toneClass = (option: ChoiceOption): string =>
@@ -10,12 +8,10 @@ const toneClass = (option: ChoiceOption): string =>
 
 const ChoicePopover = (props: ChoicePopoverProps) => {
   const { title, options, anchor, onClose, allLabel } = props;
-  const ref = useRef<HTMLDivElement>(null);
   const anchorRef = useAnchorRef(anchor);
-  useDismiss(ref, anchor, onClose);
 
   return (
-    <Anchored ref={ref} anchorRef={anchorRef} placement="bottom-start" layer="popover" className="cheats-popover" role="menu" aria-label={title}>
+    <Anchored anchorRef={anchorRef} placement="bottom-start" layer="popover" className="cheats-popover" role="menu" aria-label={title} onDismiss={onClose}>
       <Text className="cheats-popover__title">{title}</Text>
       {options.map((option) => (
         <Pressable

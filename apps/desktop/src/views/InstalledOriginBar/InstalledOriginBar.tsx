@@ -8,7 +8,7 @@ import { useUpdateTo } from './behavior/useUpdateTo';
 import type { InstalledOriginBarProps } from './InstalledOriginBar.type';
 
 const InstalledOriginBar = (props: InstalledOriginBarProps) => {
-  const { pack, onDuplicated, onUpdated, onUninstalled } = props;
+  const { pack, onDuplicated, onUpdateInstalled, onUninstalled } = props;
   const { busy, error, uninstall, duplicate, update } = useInstalledActions();
   const updateTo = useUpdateTo(pack);
 
@@ -17,8 +17,8 @@ const InstalledOriginBar = (props: InstalledOriginBarProps) => {
   }, [duplicate, pack, onDuplicated]);
 
   const handleUpdate = useCallback(() => {
-    void update(pack).then((name) => { if (name !== null) onUpdated(name); });
-  }, [update, pack, onUpdated]);
+    void update(pack).then((name) => { if (name !== null) onUpdateInstalled(name); });
+  }, [update, pack, onUpdateInstalled]);
 
   const handleUninstall = useCallback(() => {
     void uninstall(pack).then((done) => { if (done) onUninstalled(); });

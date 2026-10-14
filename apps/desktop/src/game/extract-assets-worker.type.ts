@@ -1,8 +1,7 @@
 /* @layer bridge-wasm @kind types */
 import type { SetBakeInput } from '@rotp/languages';
-import type { SpriteDef, AssetSourceId } from '@rotp/asset-extraction';
-
-type SupplementRoms = Partial<Record<AssetSourceId, Uint8Array>>;
+import type { SpriteDef } from '@rotp/asset-extraction';
+import type { SupplementRoms } from '../storage/asset-files';
 
 type ExtractRequest =
   | { op: 'assets'; romBytes: Uint8Array; supplementRoms?: SupplementRoms; languages: SetBakeInput[] }
@@ -10,15 +9,9 @@ type ExtractRequest =
   | { op: 'sprites'; romBytes: Uint8Array; defs: SpriteDef[] }
   | { op: 'menu-text'; romBytes: Uint8Array };
 
-interface AssetsResult {
-  base: Uint8Array;
-  sidecars: { id: AssetSourceId; bytes: Uint8Array }[];
-  failures: { id: AssetSourceId; reason: string }[];
-}
-
 interface WorkerScope {
   onmessage: ((e: MessageEvent<ExtractRequest>) => void) | null;
   postMessage: (msg: unknown) => void;
 }
 
-export type { SupplementRoms, ExtractRequest, AssetsResult, WorkerScope };
+export type { ExtractRequest, WorkerScope };

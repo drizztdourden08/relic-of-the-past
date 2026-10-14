@@ -5,7 +5,7 @@ import { join, resolve } from 'node:path';
 const root = resolve(import.meta.dirname, '..', '..');
 const generatedPath = join(root, 'packages', 'game-core', 'src', 'save-state', 'current-format.constants.ts');
 const formatsPath = join(root, 'packages', 'game-core', 'src', 'save-state', 'formats.ts');
-const pkgPath = join(root, 'package.json');
+const pkgPath = join(root, 'apps', 'desktop', 'package.json');
 
 const readGenerated = () => {
   if (!existsSync(generatedPath)) {

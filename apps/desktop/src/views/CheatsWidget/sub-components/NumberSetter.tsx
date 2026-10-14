@@ -1,9 +1,8 @@
 /* @layer renderer-widgets @kind component */
-import { useCallback, useRef, useState } from 'react';
+import { useCallback, useState } from 'react';
 import type { KeyboardEvent } from 'react';
 import { Anchored, Box, Button, Pressable, Text, TextInput } from '@drizztdourden08/tessera/primitives';
 import { useAnchorRef } from '../behavior/useAnchorRef';
-import { useDismiss } from '../behavior/useDismiss';
 import { nudgeTarget } from '../behavior/nudge-target';
 import { NO_STEPS } from './NumberSetter.constants';
 import type { NumberSetterProps } from './NumberSetter.type';
@@ -14,9 +13,7 @@ const digits = (n: number): string => String(n);
 
 const NumberSetter = (props: NumberSetterProps) => {
   const { title, value, min, max, steps: stepList = NO_STEPS, ladder, format = digits, anchor, onCommit, onClose } = props;
-  const ref = useRef<HTMLDivElement>(null);
   const anchorRef = useAnchorRef(anchor);
-  useDismiss(ref, anchor, onClose);
   const [draft, setDraft] = useState(String(value));
   const commit = useCallback((next: number) => {
     const clamped = clampTo(min, max, next);
@@ -33,7 +30,7 @@ const NumberSetter = (props: NumberSetterProps) => {
   const byStep = (amount: number) => commit(value + amount);
   const nudge = (dir: 1 | -1) => { const next = nudgeTarget({ ladder, steps: stepList, value, dir }); if (next !== null) commit(next); };
   return (
-    <Anchored ref={ref} anchorRef={anchorRef} placement="bottom-start" layer="popover" className="cheats-popover cheats-setter" role="dialog" aria-label={title}>
+    <Anchored anchorRef={anchorRef} placement="bottom-start" layer="popover" className="cheats-popover cheats-setter" role="dialog" aria-label={title} onDismiss={onClose}>
       <Text className="cheats-popover__title">{title}</Text>
       <Box className="cheats-setter__row">
         <Button variant="tertiary" size="sm" aria-label="Down" onClick={() => nudge(-1)}>-</Button>

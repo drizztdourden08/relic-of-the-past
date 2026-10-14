@@ -82,6 +82,6 @@ describe('one table drives the toolbar and the legend', () => {
     expect(document.querySelectorAll('.hud-grid__key .shortcut__cap').length).toBeGreaterThan(0);
     expect(document.querySelectorAll('.hud-grid__key .shortcut__mouse').length).toBe(4);
     expect(legendCaps().join(' ')).toContain('Ctrl');
-    expect(document.querySelector('.hud-grid__key .hud-grid__drag')).not.toBeNull();
+    expect(document.querySelector('.hud-grid__key .shortcut__mouse--drag')).not.toBeNull();
   });
 });

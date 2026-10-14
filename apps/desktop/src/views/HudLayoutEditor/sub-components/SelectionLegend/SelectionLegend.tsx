@@ -1,7 +1,7 @@
 /* @layer renderer-components @kind component */
-import { Box, Text } from '@drizztdourden08/tessera/primitives';
+import { Box, Shortcut, Text } from '@drizztdourden08/tessera/primitives';
 import { legendEntries } from './behavior/legend-entries';
-import { PointerCaps } from './sub-components/PointerCaps';
+import { shortcutPropsOf } from './behavior/shortcut-props-of';
 import type { SelectionLegendProps } from './SelectionLegend.type';
 
 const SelectionLegend = (props: SelectionLegendProps) => {
@@ -12,7 +12,7 @@ const SelectionLegend = (props: SelectionLegendProps) => {
       <Box className="hud-grid__keys">
         {legendEntries(actions).map((entry) => (
           <Box key={entry.key} className="hud-grid__key" data-shortcut={entry.key}>
-            <PointerCaps shortcut={entry.shortcut} os={os} />
+            <Shortcut size="xs" {...shortcutPropsOf(entry.shortcut, os)} />
             <Text className="hud-grid__key-text">{entry.label}</Text>
           </Box>
         ))}

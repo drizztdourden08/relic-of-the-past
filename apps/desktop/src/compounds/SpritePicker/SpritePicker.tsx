@@ -1,7 +1,6 @@
 /* @layer renderer-components @kind component */
-import { useRef, useState } from 'react';
+import { useState } from 'react';
 import { Anchored, Box, EmptyState, Image, Pressable, Tabs, Text } from '@drizztdourden08/tessera/primitives';
-import { usePickerDismiss } from './behavior/usePickerDismiss';
 import './SpritePicker.css';
 import type { SpritePickerProps } from './SpritePicker.type';
 
@@ -9,8 +8,6 @@ const SpritePicker = (props: SpritePickerProps) => {
   const { open, anchorRef, sprites, categories, categoryLabels, spriteUrl, onPick, onClose, notice } = props;
   const present = categories.filter((category) => sprites.some((sprite) => sprite.category === category));
   const [category, setCategory] = useState(present[0] ?? '');
-  const panelRef = useRef<HTMLDivElement>(null);
-  usePickerDismiss({ open, anchorRef, panelRef, onClose });
 
   if (!open) return null;
 
@@ -18,7 +15,7 @@ const SpritePicker = (props: SpritePickerProps) => {
   const tiles = sprites.filter((sprite) => sprite.category === activeCategory);
 
   return (
-    <Anchored ref={panelRef} anchorRef={anchorRef} placement="bottom-start" layer="popover" className="sprite-picker">
+    <Anchored anchorRef={anchorRef} placement="bottom-start" layer="popover" className="sprite-picker" onDismiss={onClose}>
       {present.length === 0 ? (
         <EmptyState message="No sprite definitions in this checkout." />
       ) : (

@@ -4,11 +4,10 @@ import listEndIcon from '@iconify-icons/lucide/list-end';
 import redoIcon from '@iconify-icons/lucide/redo-2';
 import settingsIcon from '@iconify-icons/lucide/sliders-horizontal';
 import undoIcon from '@iconify-icons/lucide/undo-2';
-import { Box, Divider } from '@drizztdourden08/tessera/primitives';
+import { Box, Divider, useDismissListeners } from '@drizztdourden08/tessera/primitives';
 import { ToolbarButton } from './ToolbarButton';
 import { ToolbarInserts } from './ToolbarInserts';
 import { hasOpenDropdown, SettingsPopover } from './popovers';
-import { useDismissOnOutside } from './behavior/useDismissOnOutside';
 import type { KeyboardEvent } from 'react';
 import type { Token } from '@rotp/languages';
 import { END_BOX, REDO, SETTINGS, SETTINGS_LABEL, UNDO } from './EditorToolbar.constants';
@@ -28,7 +27,7 @@ const EditorToolbar = (props: EditorToolbarProps) => {
     if (hasOpenDropdown()) return;
     setOpen(null);
   }, []);
-  useDismissOnOutside(rootRef, open !== null, handleDismiss);
+  useDismissListeners({ open: open !== null, onClose: handleDismiss, contentRef: rootRef, triggerRef: rootRef, escape: false });
 
   const handlePress = useCallback((id: string) => {
     if (id === UNDO) return onUndo();

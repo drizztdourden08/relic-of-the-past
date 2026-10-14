@@ -93,7 +93,7 @@ const PlayerSpriteStudio = (props: PlayerSpriteStudioProps) => {
   const detail = !sheet ? null : (
     <Box className="sprite-studio">
       {installed && (
-        <InstalledOriginBar pack={installed} onDuplicated={openAfter} onUpdated={openAfter} onUninstalled={handleUninstalled} />
+        <InstalledOriginBar pack={installed} onDuplicated={openAfter} onUpdateInstalled={openAfter} onUninstalled={handleUninstalled} />
       )}
       <StudioToolbar
         meta={sheet.meta}

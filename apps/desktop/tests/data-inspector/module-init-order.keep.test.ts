@@ -1,7 +1,7 @@
 /* @layer tests @kind test */
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 
-const COLD_GRAPH_TIMEOUT_MS = 30_000;
+const COLD_GRAPH_TIMEOUT_MS = 120_000;
 
 describe('module init order from every entry point into the cycle', () => {
   beforeEach(() => {

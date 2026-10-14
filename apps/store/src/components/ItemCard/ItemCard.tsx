@@ -1,6 +1,7 @@
 /* @layer store-site @kind component */
 import { Box, Text } from '@drizztdourden08/tessera/primitives';
 import { ItemCard as CatalogCard } from '@drizztdourden08/tessera/composites';
+import { navigate } from '@rotp/design';
 import type { ItemCardView } from '@rotp/hub-contracts';
 import { formatAverage } from '../../format-count/format-average';
 import { ItemPicture } from '../ItemPicture/ItemPicture';
@@ -24,9 +25,11 @@ const ItemCard = (props: ItemCardProps) => {
     <CatalogCard
       title={item.name}
       href={to}
+      navigate={navigate}
       selected={selected}
       media={<ItemPicture picture={item.card} kind={item.kind} color={item.color} className="store-card__picture" />}
       mediaTone="neutral"
+      mediaHeight="auto"
       status={owned ? OWNED_STATUS[owned] : undefined}
       tags={[<KindChip key="kind" kind={item.kind} />]}
       details={extra ? [byline(item), rating, extra] : [byline(item), rating]}

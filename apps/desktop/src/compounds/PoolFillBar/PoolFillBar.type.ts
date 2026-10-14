@@ -20,6 +20,7 @@ type Segment = keyof PoolFillTotals;
 interface SegmentEntry {
   key: Segment;
   label: string;
+  description: string;
   color: StackedBarColor;
 }
 

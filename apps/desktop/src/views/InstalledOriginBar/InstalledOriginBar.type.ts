@@ -4,7 +4,7 @@ import type { InstalledPack } from '@rotp/hub-contracts';
 interface InstalledOriginBarProps {
   pack: InstalledPack;
   onDuplicated: (name: string) => void;
-  onUpdated: (name: string) => void;
+  onUpdateInstalled: (name: string) => void;
   onUninstalled: () => void;
 }
 

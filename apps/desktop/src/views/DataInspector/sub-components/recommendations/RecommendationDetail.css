@@ -6,7 +6,6 @@
   gap: var(--space-md);
   min-height: 0;
   flex: 1;
-  padding-top: var(--space-md);
 }
 
 .rec-summary {
@@ -91,4 +90,5 @@
 .rec-pane > .data-inspector__detail {
   flex: 1;
   min-height: 0;
+  padding: 0 var(--space-lg) var(--space-lg);
 }

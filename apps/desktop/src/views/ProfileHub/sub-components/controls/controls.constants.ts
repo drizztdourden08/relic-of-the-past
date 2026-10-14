@@ -1,6 +1,7 @@
 /* @layer renderer-components @kind constants */
 import type { CoreVerb } from '@rotp/input-mapping';
 import { publicAsset } from '@app/public-asset/public-asset';
+import type { ControlsTab } from '../controls-settings/controls-settings.type';
 import type { CoreVerbGroup } from './controls.type';
 
 const CORE_VERB_LABELS: Record<CoreVerb, string> = {
@@ -47,6 +48,8 @@ const LISTEN_ARM_DELAY_MS = 200;
 const CLASSIC_ONLY = 'Per-button mapping belongs to the Classic scheme; Modern binds the ten core verbs and derives the rest as slots.';
 const MODERN_ONLY = 'Slots come with the Modern HUD style; this profile is on another style, so there are none to edit.';
 
+const CONTROLS_TAB_IDS: readonly ControlsTab[] = ['controls', 'modern', 'shortcuts', 'cheats'];
+
 const DEVICE_FAMILY_ICON: Record<string, string> = {
   xbox: publicAsset('buttons/xbox/controller_xboxseries.svg'),
   playstation: publicAsset('buttons/generic/generic_joystick.svg'),
@@ -84,6 +87,6 @@ const BANNER_ACTION = 'Enable in HUD settings';
 
 export {
   ADAPTER_FAMILY_ICON, BANNER_ACTION, BANNER_TEXT, CANCEL_ARM_DELAY_MS, CLASSIC_ONLY,
-  CORE_VERB_GROUPS, CORE_VERB_LABELS, DEVICE_FAMILY_ICON, EMPTY_HINT, FAMILY_EMOJI,
+  CONTROLS_TAB_IDS, CORE_VERB_GROUPS, CORE_VERB_LABELS, DEVICE_FAMILY_ICON, EMPTY_HINT, FAMILY_EMOJI,
   LISTEN_ARM_DELAY_MS, MODERN_ONLY, MODIFIER_CODES, SDL_TYPE_ICON,
 };

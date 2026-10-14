@@ -1,30 +1,13 @@
 /* @layer bridge-wasm @kind logic */
 import { decodeCredits, decodeEndingCaptions, decodeMenuText, extractLangEntry, extractSpriteBuffers } from '@rotp/asset-extraction';
-import { loadRomFromBuffer, loadGbaAlttpRomFromBuffer, compileAlttpAssetSet } from '@rotp/asset-extraction/node';
-import { compileSets } from '@rotp/languages';
-import type { SetBakeInput } from '@rotp/languages';
+import { loadRomFromBuffer } from '@rotp/asset-extraction/node';
 import type { SpriteDef } from '@rotp/asset-extraction';
-import type { AssetsResult, SupplementRoms, WorkerScope } from './extract-assets-worker.type';
+import { bakeAssetSet } from '../storage/asset-files/bake-asset-set';
+import type { WorkerScope } from './extract-assets-worker.type';
 
-const ctx = self as unknown as WorkerScope;
+const ctx: WorkerScope = self;
 
-const runAssets = async (
-  romBytes: Uint8Array, supplementRoms: SupplementRoms, languages: SetBakeInput[],
-): Promise<AssetsResult> => {
-  const extraLanguages = compileSets(languages, (message) => console.warn(`[assets] ${message}`));
-  const gbaBytes = supplementRoms['gba-alttp'];
-  const gbaRom = gbaBytes ? loadGbaAlttpRomFromBuffer(Buffer.from(gbaBytes)) : undefined;
-  const set = await compileAlttpAssetSet({
-    snes: loadRomFromBuffer(Buffer.from(romBytes)),
-    gbaAlttp: gbaRom,
-  }, { extraLanguages });
-
-  return {
-    base: new Uint8Array(set.base),
-    sidecars: set.supplements.flatMap((s) => (s.ok ? [{ id: s.id, bytes: new Uint8Array(s.container) }] : [])),
-    failures: set.supplements.flatMap((s) => (s.ok ? [] : [{ id: s.id, reason: s.reason }])),
-  };
-};
+const warnAssets = (message: string): void => console.warn(`[assets] ${message}`);
 
 const runLanguage = (romBytes: Uint8Array, code: string) => {
   const rom = loadRomFromBuffer(Buffer.from(romBytes), true);
@@ -61,7 +44,7 @@ const runMenuText = (romBytes: Uint8Array) => {
 ctx.onmessage = (e) => {
   const respond = async (): Promise<unknown> => {
     const req = e.data;
-    if (req.op === 'assets') return runAssets(req.romBytes, req.supplementRoms ?? {}, req.languages);
+    if (req.op === 'assets') return bakeAssetSet({ romBytes: req.romBytes, supplementRoms: req.supplementRoms ?? {}, languages: req.languages }, warnAssets);
     if (req.op === 'language') return runLanguage(req.romBytes, req.code);
     if (req.op === 'menu-text') return runMenuText(req.romBytes);
     return runSprites(req.romBytes, req.defs);

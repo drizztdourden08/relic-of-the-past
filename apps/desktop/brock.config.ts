@@ -1,5 +1,43 @@
 /* @layer root-config @kind config */
 import { defineBrockConfig } from '@drizztdourden08/brock-build/config';
+import type { WorkflowStep } from '@drizztdourden08/brock-build/config';
+
+const wasmCoreSteps: WorkflowStep[] = [
+  {
+    name: 'Read the pinned Emscripten version',
+    shell: 'bash',
+    run: `echo "EMSDK_VERSION=$(node -p "require('./package.json').config.emsdk")" >> "$GITHUB_ENV"`,
+  },
+  { name: 'Set up Emscripten', uses: 'emscripten-core/setup-emsdk@v16', with: { version: '${{ env.EMSDK_VERSION }}' } },
+  {
+    name: "Give Emscripten's Python its port downloader",
+    shell: 'bash',
+    run: `"$EMSDK_PYTHON" -m ensurepip --default-pip || true
+if ! "$EMSDK_PYTHON" -m pip install --disable-pip-version-check requests; then
+  echo "::warning::no pip in emsdk python; a cold ports cache will fail"
+fi`,
+  },
+  { name: 'Build the wasm core', shell: 'bash', run: 'pnpm run ensure-wasm' },
+];
+
+const releaseInputSteps: WorkflowStep[] = [
+  { name: 'Check the save state format is registered', shell: 'bash', run: 'node scripts/build/check-state-format.mjs' },
+  {
+    name: 'Fetch the private dataset',
+    shell: 'bash',
+    secrets: ['VAULT_TOKEN'],
+    run: `git clone --depth 1 "https://x-access-token:$VAULT_TOKEN@github.com/drizztdourden08/rotp-vault.git" ../rotp-vault
+node scripts/vault/sync.mjs --force-pull`,
+  },
+  { name: 'Verify the dataset landed', shell: 'bash', run: 'node scripts/vault/check-dataset.mjs' },
+];
+
+const publishStateFormat: WorkflowStep = {
+  name: 'Publish the save state format',
+  platforms: ['windows'],
+  shell: 'bash',
+  run: 'node scripts/build/check-state-format.mjs --emit upload',
+};
 
 export default defineBrockConfig({
   product: {
@@ -26,5 +64,26 @@ export default defineBrockConfig({
   build: {
     nodePolyfills: { globals: { Buffer: true, process: true } },
   },
+  packaging: {
+    afterPack: '../../scripts/build/after-pack.mjs',
+    fileAssociations: {
+      msul: { role: 'Editor' },
+      rsp: { role: 'Editor' },
+      rlang: { role: 'Editor' },
+    },
+    velopackIcons: { windows: 'build/icons/icon.ico', linux: 'build/icons/png/icon-256.png' },
+  },
   gate: { scripts: ['generate:check', 'state-format', 'generate:gba-asset-index:check'], clangFormat: ['core/game-hooks'] },
+  workflows: {
+    steps: {
+      ci: {
+        beforeBuild: wasmCoreSteps,
+        beforeTest: [{ name: 'Analyze every file type', run: 'node scripts/analyze/analyze.mjs --ci' }],
+      },
+      release: {
+        beforePackage: [...wasmCoreSteps, ...releaseInputSteps],
+        afterPackage: [publishStateFormat],
+      },
+    },
+  },
 });

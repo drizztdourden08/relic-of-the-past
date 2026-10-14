@@ -4,7 +4,7 @@ import type { CoreVerb, AssignedDevice, DetectedDevice, InputProfile, Controller
 import type { HudLayout } from '@rotp/hud';
 import type { ButtonIcon, CoreBindings, InputBinding, ModernSlot, SlotAssignment, SnesButton } from '@rotp/game-data';
 import type { FunctionAction, FunctionMapping } from '@rotp/features';
-import type { AbsentAssignment, ControlsTab } from '../controls-settings/controls-settings.type';
+import type { AbsentAssignment } from '../controls-settings/controls-settings.type';
 import type { useControlsSettings } from '../controls-settings';
 import type { DeviceAssignInfo } from './DeviceCard.type';
 
@@ -21,25 +21,6 @@ interface CheatBindingsTabProps extends CtrlProps {
 
 interface ControlsMainProps extends CheatBindingsTabProps {
   onOpenHudStyle: () => void;
-}
-
-interface ControlsTabItem {
-  id: ControlsTab;
-  label: string;
-  disabled?: boolean;
-  reason?: string;
-}
-
-interface ControlsTabsProps {
-  tabs: readonly ControlsTabItem[];
-  activeTab: ControlsTab;
-  onTabChange: (tab: ControlsTab) => void;
-}
-
-interface ControlsTabButtonProps {
-  tab: ControlsTabItem;
-  active: boolean;
-  onTabChange: (tab: ControlsTab) => void;
 }
 
 interface CoreVerbGroup {
@@ -182,7 +163,7 @@ interface AbsentAssignmentsProps {
 export type {
   AbsentAssignmentsProps, AdapterDeviceCardProps, AssignedDeviceCardProps, BindingListenerProps,
   BindingListHeaderProps, BindingRowProps, CheatBindingsTabProps, ControlsCtrl, ControlsMainProps,
-  ControlsTabButtonProps, ControlsTabItem, ControlsTabsProps, CoreBindingsGroupProps, CoreVerbGroup,
+  CoreBindingsGroupProps, CoreVerbGroup,
   CoreVerbRowProps, CtrlProps, DeviceDragInfo, DisplayFunctionMapping, FunctionBindingRowProps,
   HapticsToggleProps, InputProfileItemProps, InputProfileListProps, SchemeBannerProps,
   SchemeLayoutRowProps, SidebarProfileButtonProps, SlotRowProps, SnesBindingRowProps,

@@ -1,16 +1,18 @@
 /* @layer bridge-wasm @kind logic */
+import type { CoreLog } from '@drizztdourden08/brock-port-kit/renderer';
 import type { EmscriptenModule } from '@rotp/game-core';
+import { previewCoreState } from '@rotp/game-core';
 import { log } from '../../log-bus';
 import * as assetsStore from '../../storage/assets-store';
 import { activeRomFile } from '../active-rom-file';
-import { writeBootFiles } from '../boot-files';
-import { createInstantiateWasm } from '../instantiate-wasm';
+import { coreConfigIni } from '../core-config-ini';
+import { isGameModule } from '../lifecycle/is-game-module';
 import { loadGlueScript } from '../wasm-warmup';
-import { previewCoreState } from '@rotp/game-core';
+import { previewCore } from './preview-core';
 
-declare const Zelda3: (config: Record<string, unknown>) => Promise<EmscriptenModule>;
-
-const ignoreCoreChatter = (): void => undefined;
+const errorsOnly: CoreLog = (text, level) => {
+  if (level === 'error') log.core(text, 'error');
+};
 
 const bootStandalone = async (): Promise<EmscriptenModule | null> => {
   const romFile = await activeRomFile();
@@ -23,16 +25,10 @@ const bootStandalone = async (): Promise<EmscriptenModule | null> => {
       return null;
     }
     await loadGlueScript();
-    const module = await Zelda3({
-      noInitialRun: true,
-      instantiateWasm: createInstantiateWasm(),
-      preRun: [(mod: EmscriptenModule) => {
-        writeBootFiles(mod, { assetData: new Uint8Array(buffer), linkSprite: null });
-      }],
-      print: ignoreCoreChatter,
-      printErr: (text: string) => log.core(text, 'error'),
-    });
-    module.ccall('WasmInitHeadless', null, [], []);
+    await previewCore.initHeadless({ assets: new Uint8Array(buffer), config: coreConfigIni(undefined), log: errorsOnly });
+    const module = previewCore.module();
+    const { status, error } = previewCore.state();
+    if (status !== 'running' || !isGameModule(module)) throw new Error(error ?? 'The core did not start.');
     previewCoreState.standaloneRom = romFile;
     log.app('Sound preview: core loaded for auditioning original sounds');
     return module;
