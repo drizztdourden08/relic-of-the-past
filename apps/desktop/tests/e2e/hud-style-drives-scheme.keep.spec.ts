@@ -4,6 +4,7 @@ import { join } from 'path';
 import { existsSync, mkdirSync } from 'fs';
 import type { ElectronApplication, Page } from 'playwright';
 import { REPO_ROOT } from '../repo-root';
+import { appWindow } from './app-window';
 
 const PROJECT_ROOT = REPO_ROOT;
 const MAIN_JS = join(PROJECT_ROOT, 'apps', 'desktop', 'dist', 'electron', 'main.js');
@@ -30,8 +31,7 @@ const openProfile = async (instance: string, profile: string): Promise<Hub> => {
     args: [MAIN_JS, '--muted', '--no-focus', `--instance=${instance}`, `--user-data=${USER_DATA.replace(/\\/g, '/')}`],
     env: { ...process.env, NODE_ENV: 'production' },
   });
-  const page = await app.firstWindow();
-  await page.waitForLoadState('domcontentloaded');
+  const page = await appWindow(app);
   await page.waitForSelector('.window-title-bar', { timeout: 60_000 });
   const cdp = await app.context().newCDPSession(page);
   await cdp.send('Emulation.setDeviceMetricsOverride', { width: 1500, height: 1200, deviceScaleFactor: 1, mobile: false });

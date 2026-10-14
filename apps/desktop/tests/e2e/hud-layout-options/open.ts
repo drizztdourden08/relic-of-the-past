@@ -2,6 +2,7 @@
 import { _electron as electron } from 'playwright';
 import { join } from 'path';
 import { mkdirSync } from 'fs';
+import { appWindow } from '../app-window';
 import { MAIN_JS, SETTLE_MS, SHOTS, USER_DATA } from './hud-layout-options.constants';
 import type { Rig } from './hud-layout-options.type';
 import { readLattice } from './read-lattice';
@@ -18,8 +19,7 @@ const open = async (): Promise<Rig> => {
     args: [MAIN_JS, '--muted', '--no-focus', '--instance=layout-options', `--user-data=${USER_DATA}`],
     env: { ...process.env, NODE_ENV: 'production' },
   });
-  const window = await app.firstWindow();
-  await window.waitForLoadState('domcontentloaded');
+  const window = await appWindow(app);
   await window.waitForSelector('.window-title-bar', { timeout: 60_000 });
   const cdp = await app.context().newCDPSession(window);
   await cdp.send('Emulation.setDeviceMetricsOverride', TALL_VIEWPORT);

@@ -3,6 +3,7 @@ import { test } from '@playwright/test';
 import { _electron as electron } from 'playwright';
 import { existsSync } from 'fs';
 import type { ElectronApplication } from 'playwright';
+import { appWindow } from '../app-window';
 import { TEST_INSTANCE, ensureTestProfile } from '../ensure-test-profile';
 import { MAIN_JS, SETTLE_MS } from './state-harness.constants';
 import type { StateReader } from './state-harness.type';
@@ -20,8 +21,7 @@ const withState = async (name: string, body: (r: StateReader) => Promise<void>):
     env: { ...process.env, NODE_ENV: 'production' },
   });
   try {
-    const window = await app.firstWindow();
-    await window.waitForLoadState('domcontentloaded');
+    const window = await appWindow(app);
     await window.waitForTimeout(SETTLE_MS);
     await body(buildReader(window));
   } finally {
