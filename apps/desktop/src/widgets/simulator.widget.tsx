@@ -1,7 +1,6 @@
 /* @layer renderer-widgets @kind component */
 import type { WidgetMeta } from '@drizztdourden08/brock-react';
 import { SimulatorWidgetContent, SimulatorWidgetSettings } from '@app/views/SimulatorWidget';
-import { WidgetGate } from '@app/views/WidgetGate';
 
 const meta: WidgetMeta = {
   label: 'Simulator',
@@ -15,7 +14,7 @@ const meta: WidgetMeta = {
   settings: SimulatorWidgetSettings,
 };
 
-const SimulatorWidget = () => <WidgetGate id="simulator"><SimulatorWidgetContent /></WidgetGate>;
+const SimulatorWidget = () => <SimulatorWidgetContent />;
 
 export default SimulatorWidget;
 export { meta };

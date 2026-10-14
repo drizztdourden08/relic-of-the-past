@@ -1,10 +1,10 @@
 /* @layer renderer-stores @kind logic */
+import type { IpcApi } from '@drizztdourden08/brock-core';
+import { hostApi } from '@drizztdourden08/brock-react';
 import type { HubMe } from '@app/ipc';
-import { appApi } from '@app/ipc/app-api';
-import type { AppApi } from '@app/ipc/app-api.type';
 
 const fetchHubMe = async (): Promise<HubMe | null> => {
-  const api = appApi() as Partial<AppApi> | undefined;
+  const api: Partial<IpcApi> | null = hostApi();
   return api?.hubMe ? api.hubMe() : null;
 };
 

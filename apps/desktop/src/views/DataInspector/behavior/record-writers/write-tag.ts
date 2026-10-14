@@ -1,5 +1,5 @@
 /* @layer renderer-app @kind logic */
-import { appApi } from '@app/ipc/app-api';
+import { requireHostApi } from '@drizztdourden08/brock-react';
 import { isTagKey, replaceTagRecord } from '@rotp/game-data';
 import type { TagRecord, PendingTagRecord } from '@rotp/game-data';
 import { TAG_NAME_MISMATCH } from '../../DataInspector.constants';
@@ -13,7 +13,7 @@ const writeTag: RecordWriter = async (row) => {
   const { id, ...rest } = record;
   const expectedName = `${record.namespace}:${record.value}`;
   if (!isTagKey(record.name) || record.name !== expectedName) throw new Error(TAG_NAME_MISMATCH);
-  settleWrite(await appApi().screenEditor.writeTag({ tagId: id, record: rest as PendingTagRecord }));
+  settleWrite(await requireHostApi().screenEditor.writeTag({ tagId: id, record: rest as PendingTagRecord }));
   replaceTagRecord(record);
   invalidateTagSuggestions();
   updateIdRefOption('tag', id);

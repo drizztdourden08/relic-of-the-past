@@ -1,5 +1,5 @@
 /* @layer renderer-stores @kind logic */
-import { appApi } from '@app/ipc/app-api';
+import { requireHostApi } from '@drizztdourden08/brock-react';
 import { create } from 'zustand';
 import { EMPTY_SHADOW_PROJECT } from '@rotp/game-core';
 import type { ShadowEditorStore } from './shadow-editor-store.type';
@@ -83,7 +83,7 @@ const useShadowEditorStore = create<ShadowEditorStore>((set, get) => ({
     const state = get();
     if (!state.dirty) return;
     try {
-      await appApi().shadowCasting.save(state.project);
+      await requireHostApi().shadowCasting.save(state.project);
       set({ dirty: false });
     } catch (err) {
       console.error('[ShadowEditor] Save failed:', err);

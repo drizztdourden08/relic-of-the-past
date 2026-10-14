@@ -1,7 +1,7 @@
 /* @layer renderer-app @kind config */
 import type { ScreenMeta, Section } from '@drizztdourden08/brock-react';
 
-const meta: ScreenMeta = { title: 'Mobile', icon: 'maximize-2', order: 6, keywords: ['mobile', 'phone', 'tablet', 'notch', 'cutout'] };
+const meta: ScreenMeta = { title: 'Mobile', icon: 'maximize-2', order: 6, hosts: ['capacitor'], keywords: ['mobile', 'phone', 'tablet', 'notch', 'cutout'] };
 
 const mobile: Section[] = [
   {

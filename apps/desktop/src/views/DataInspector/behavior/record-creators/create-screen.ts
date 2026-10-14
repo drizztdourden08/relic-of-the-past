@@ -1,5 +1,5 @@
 /* @layer renderer-app @kind logic */
-import { appApi } from '@app/ipc/app-api';
+import { requireHostApi } from '@drizztdourden08/brock-react';
 import { registerRecord, screenRecordFile } from '@rotp/game-data';
 import type { ScreenRecord, ScreenHome, PendingScreenRecord } from '@rotp/game-data';
 import { NO_SOURCE_FILE } from '../../DataInspector.constants';
@@ -13,7 +13,7 @@ const createScreen: RecordCreator = async (draft) => {
   if (covered) return { success: false, error: alreadyCoveredMessage(covered.id), needsReview: true };
   const target = screenRecordFile(draft as unknown as ScreenHome);
   if (!target.relativePath) return { success: false, error: target.unresolved ?? NO_SOURCE_FILE };
-  const result = await appApi().screenEditor.writeScreen({
+  const result = await requireHostApi().screenEditor.writeScreen({
     filePath: target.relativePath,
     record: draft as unknown as PendingScreenRecord,
     replaceId: null,

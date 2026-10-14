@@ -1,8 +1,7 @@
 /* @layer renderer-lib @kind hook */
-import { appApi } from '@app/ipc/app-api';
 import { useCallback } from 'react';
 import capacitorCorePackage from '@capacitor/core/package.json';
-import { usePlatform } from '@drizztdourden08/brock-react';
+import { hostApi, usePlatform } from '@drizztdourden08/brock-react';
 import { useAppVersion } from '@app/hooks/useAppVersion';
 import { buildDebugText } from '../diagnostics/format/debug-text';
 import { collectRendererDiagnostics } from '../diagnostics/collect-renderer';
@@ -14,7 +13,7 @@ const capacitorVersion = (): string | null => capacitorCorePackage.version || nu
 
 const fetchSystem = async (): Promise<SystemDiagnostics | null> => {
   try {
-    return (await appApi()?.getSystemDiagnostics?.()) ?? null;
+    return (await hostApi()?.getSystemDiagnostics?.()) ?? null;
   } catch {
     return null;
   }

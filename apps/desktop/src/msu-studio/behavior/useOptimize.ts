@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind hook */
-import { appApi } from '@app/ipc/app-api';
+import { requireHostApi } from '@drizztdourden08/brock-react';
 import { useCallback, useEffect, useState } from 'react';
 import { useTool } from '@drizztdourden08/brock-tools/renderer';
 import type { OptimizeAnalysis, OptimizeProgress, OptimizeRunResult } from '@rotp/msu';
@@ -31,14 +31,14 @@ const useOptimize = (params: OptimizeParams) => {
     setError(null);
   }, [open, refresh]);
 
-  useEffect(() => (open ? appApi().onMsuOptimizeProgress(setProgress) : undefined), [open]);
+  useEffect(() => (open ? requireHostApi().onMsuOptimizeProgress(setProgress) : undefined), [open]);
 
   const measure = useCallback(async (): Promise<void> => {
     setStep('measuring');
     setProgress(null);
     setError(null);
     try {
-      setAnalysis(await appApi().analyzeMsuOptimize(pack));
+      setAnalysis(await requireHostApi().analyzeMsuOptimize(pack));
       setStep('preview');
     } catch (err) {
       setError(messageOf(err, 'Could not measure this pack.'));
@@ -60,7 +60,7 @@ const useOptimize = (params: OptimizeParams) => {
     setProgress(null);
     setError(null);
     try {
-      setResult(await appApi().runMsuOptimize(pack, names));
+      setResult(await requireHostApi().runMsuOptimize(pack, names));
       setStep('result');
     } catch (err) {
       setError(messageOf(err, 'Could not convert this pack.'));

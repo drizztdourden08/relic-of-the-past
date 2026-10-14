@@ -1,5 +1,5 @@
 /* @layer renderer-appshell @kind hook */
-import { appApi } from '@app/ipc/app-api';
+import { requireHostApi } from '@drizztdourden08/brock-react';
 import { useEffect, useRef } from 'react';
 import { loadState, wasmGetIndoorDualLayerGrids, wasmGetLinkLayer, wasmGetViewportInfo } from '@app/game';
 import type { DumpLayersDeps } from './useDumpLayers.type';
@@ -21,8 +21,8 @@ const useDumpLayers = ({ activeProfile, loadProfileForGame, openNavWidget }: Dum
     let cancelled = false;
 
     void (async () => {
-      const slot = await appApi().getDumpLayersSlot();
-      const hoverTile = await appApi().getHoverTile();
+      const slot = await requireHostApi().getDumpLayersSlot();
+      const hoverTile = await requireHostApi().getHoverTile();
       console.log(`[DumpLayers] hook fired. slot=${slot}, hoverTile=${JSON.stringify(hoverTile)}, profile=${activeProfile.name}`);
       if (slot === null) return;
 
@@ -41,7 +41,7 @@ const useDumpLayers = ({ activeProfile, loadProfileForGame, openNavWidget }: Dum
       if (cancelled) return;
 
       console.log('[DumpLayers] Taking screenshot...');
-      const screenshotPath = await appApi().takeScreenshot(`dump-layers-state${slot}`);
+      const screenshotPath = await requireHostApi().takeScreenshot(`dump-layers-state${slot}`);
       console.log(`[DumpLayers] Screenshot: ${screenshotPath}`);
 
       const roomIndex = readRoomIndex();
@@ -99,7 +99,7 @@ const useDumpLayers = ({ activeProfile, loadProfileForGame, openNavWidget }: Dum
 
       if (hoverVerification && hoverTile) logHoverVerdict(hoverTile, hoverVerification);
 
-      const path = await appApi().writeDumpLayers(output);
+      const path = await requireHostApi().writeDumpLayers(output);
       console.log(`[DumpLayers] Output written to: ${path}`);
 
       setTimeout(() => window.close(), EXIT_DELAY_MS);

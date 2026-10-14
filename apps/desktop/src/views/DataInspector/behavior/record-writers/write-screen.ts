@@ -1,5 +1,5 @@
 /* @layer renderer-app @kind logic */
-import { appApi } from '@app/ipc/app-api';
+import { requireHostApi } from '@drizztdourden08/brock-react';
 import { screenRecordFile, variantBlockers } from '@rotp/game-data';
 import type { ScreenRecord, PendingScreenRecord } from '@rotp/game-data';
 import type { RecordWriter } from '../../DataInspector.type';
@@ -11,7 +11,7 @@ const writeScreen: RecordWriter = async (row) => {
   const variantIssue = variantBlockers(rest)[0];
   if (variantIssue) throw new Error(`This screen needs ${variantIssue}.`);
   const filePath = pathOf(screenRecordFile({ id, ...rest }));
-  settleWrite(await appApi().screenEditor.writeScreen({
+  settleWrite(await requireHostApi().screenEditor.writeScreen({
     filePath,
     record: rest as PendingScreenRecord,
     replaceId: id,

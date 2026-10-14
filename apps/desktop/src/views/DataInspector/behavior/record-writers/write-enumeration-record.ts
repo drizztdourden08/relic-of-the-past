@@ -1,5 +1,5 @@
 /* @layer renderer-app @kind logic */
-import { appApi } from '@app/ipc/app-api';
+import { requireHostApi } from '@drizztdourden08/brock-react';
 import { replaceEnumerationRecord } from '@rotp/game-data';
 import type { EnumerationEntry, PendingEnumerationRecord } from '@rotp/game-data';
 import type { RecordWriter } from '../../DataInspector.type';
@@ -9,7 +9,7 @@ import { settleWrite } from './settle-write';
 const writeEnumerationRecord: RecordWriter = async (row) => {
   const record = row as unknown as EnumerationEntry;
   const { id, ...rest } = record;
-  settleWrite(await appApi().screenEditor.writeEnumeration({ enumerationId: id, record: rest as PendingEnumerationRecord }));
+  settleWrite(await requireHostApi().screenEditor.writeEnumeration({ enumerationId: id, record: rest as PendingEnumerationRecord }));
   replaceEnumerationRecord(record);
   updateIdRefOption('enumeration', id);
 };

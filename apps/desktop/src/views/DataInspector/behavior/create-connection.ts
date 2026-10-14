@@ -1,5 +1,5 @@
 /* @layer renderer-app @kind logic */
-import { appApi } from '@app/ipc/app-api';
+import { requireHostApi } from '@drizztdourden08/brock-react';
 import { pendingPartnerId, pendingPartnerScreenId, registerRecord, connectionRecordFile } from '@rotp/game-data';
 import type { ConnectionKind, ConnectionRecord, ScreenId, PendingConnectionRecord } from '@rotp/game-data';
 import { EMPTY_PLACEMENT, NO_SOURCE_FILE } from '../DataInspector.constants';
@@ -32,7 +32,7 @@ const registerCreated = (record: ConnectionRecord): void => {
 };
 
 const insertSingle = async (near: PendingConnectionRecord, filePath: string): Promise<CreateOutcome> => {
-  const result = await appApi().screenEditor.writeConnections({ mode: 'insert', filePath, records: [near] });
+  const result = await requireHostApi().screenEditor.writeConnections({ mode: 'insert', filePath, records: [near] });
   if (!result.success) return { success: false, error: result.error };
   const [id] = result.ids;
   if (id === undefined) throw new Error('connection insert returned no id');
@@ -47,7 +47,7 @@ const insertPair = async (
   if (!farTarget.relativePath) return { success: false, error: farTarget.unresolved ?? NO_SOURCE_FILE };
   const far = buildFarHalf(near, farScreenId);
 
-  const result = await appApi().screenEditor.writeConnectionPair({
+  const result = await requireHostApi().screenEditor.writeConnectionPair({
     near: { filePath: nearPath, record: near },
     far: { filePath: farTarget.relativePath, record: far },
   });

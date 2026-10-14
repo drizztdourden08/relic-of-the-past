@@ -1,8 +1,7 @@
 /* @layer renderer-appshell @kind hook */
 import { useCallback } from 'react';
 import type { OpenRequest } from '@drizztdourden08/brock-core';
-import { useAppOpen } from '@drizztdourden08/brock-react';
-import { appApi } from '@app/ipc/app-api';
+import { requireHostApi, useAppOpen } from '@drizztdourden08/brock-react';
 import { installMsulFile } from '@app/storage/msu-store';
 import { log } from '@app/log-bus';
 
@@ -12,7 +11,7 @@ const stemOf = (filePath: string): string =>
 const importPack = async (filePath: string): Promise<void> => {
   log.app(`[MSU] Opening pack file ${filePath}`);
   try {
-    const buffer = await appApi().readMsulFile(filePath);
+    const buffer = await requireHostApi().readMsulFile(filePath);
     const result = await installMsulFile(new Uint8Array(buffer), stemOf(filePath));
     log.app(`[MSU] Imported "${result.pack}" with ${result.fileCount} files and ${result.trackCount} slots`);
   } catch (err) {

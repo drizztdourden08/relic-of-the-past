@@ -1,6 +1,6 @@
 /* @layer renderer-other @kind logic */
-import { detectHost } from '@drizztdourden08/brock-core';
+import { getPlatform } from '@drizztdourden08/brock-react';
 
-const isMobileHost = (): boolean => detectHost() === 'capacitor';
+const isMobileHost = (): boolean => getPlatform().info.formFactor === 'mobile';
 
 export { isMobileHost };

@@ -1,5 +1,5 @@
 /* @layer renderer-widgets @kind hook */
-import { appApi } from '@app/ipc/app-api';
+import { requireHostApi } from '@drizztdourden08/brock-react';
 import type { ScreenEditorApi } from '@app/ipc';
 import { useCallback, useMemo } from 'react';
 import type { DatasetSuggestion } from '@rotp/navigation';
@@ -7,7 +7,7 @@ import { RECORD_REQUIRED } from '../SimulatorWidget.constants';
 import type { ApplyResult, CheckWriter } from '../SimulatorWidget.type';
 
 const useDatasetSuggestions = () => {
-  const editor = appApi().screenEditor as ScreenEditorApi & { writeCheck?: CheckWriter };
+  const editor = requireHostApi().screenEditor as ScreenEditorApi & { writeCheck?: CheckWriter };
   const canApplyCheck = useMemo(() => typeof editor.writeCheck === 'function', [editor]);
 
   const apply = useCallback(async (suggestion: DatasetSuggestion): Promise<ApplyResult> => {

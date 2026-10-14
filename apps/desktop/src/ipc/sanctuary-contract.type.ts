@@ -17,7 +17,6 @@ type SanctuaryReportSnapshot = {
 
 interface SanctuaryInvokeContract {
   'sanctuary:submitReport': (input: SanctuarySubmitInput) => Promise<SanctuarySubmitResult>;
-  'sanctuary:reportSnapshot': (snapshot: SanctuaryReportSnapshot) => Promise<void>;
 }
 
 export type { SanctuaryInvokeContract, SanctuarySubmitInput, SanctuarySubmitResult, SanctuaryReportSnapshot };

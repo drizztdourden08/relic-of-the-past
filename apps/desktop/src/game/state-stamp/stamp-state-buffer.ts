@@ -1,11 +1,11 @@
 /* @layer renderer-lib @kind logic */
-import { appApi } from '@app/ipc/app-api';
+import { requireHostApi } from '@drizztdourden08/brock-react';
 import { CURRENT_STATE_FORMAT, appendStamp, readSnapshotBytes, readStamp, stateStampState, STAMP_VERSION, UNKNOWN_APP_VERSION } from '@rotp/game-core';
 import { log } from '../../log-bus';
 
 const appVersion = async (): Promise<string> => {
   if (stateStampState.cachedVersion === null) {
-    stateStampState.cachedVersion = await appApi().updater.getVersion().catch(() => UNKNOWN_APP_VERSION);
+    stateStampState.cachedVersion = await requireHostApi().updater.getVersion().catch(() => UNKNOWN_APP_VERSION);
   }
   return stateStampState.cachedVersion;
 };

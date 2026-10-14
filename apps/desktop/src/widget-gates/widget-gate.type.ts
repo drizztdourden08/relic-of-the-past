@@ -6,9 +6,4 @@ interface WidgetGate {
   requiresSetting?: keyof GameSettings;
 }
 
-interface WidgetDisabledState {
-  message: string;
-  settingId: string;
-}
-
-export type { WidgetDisabledState, WidgetGate };
+export type { WidgetGate };

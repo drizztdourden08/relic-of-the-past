@@ -15,7 +15,7 @@ const reportRequest = (payload: BugReportPayload, snapshot: SanctuaryReportSnaps
   description: payload.description.trim(),
   debugInfo: (payload.diagnostics?.text ?? '').slice(0, MAX_DEBUG_INFO_CHARS),
   context: contextOf(snapshot),
-  contactEmail: null,
+  contactEmail: payload.contact ?? null,
   attachment,
 });
 

@@ -1,5 +1,5 @@
 /* @layer renderer-appshell @kind hook */
-import { appApi } from '@app/ipc/app-api';
+import { requireHostApi } from '@drizztdourden08/brock-react';
 import { useEffect, useRef } from 'react';
 import { loadState, loadStateRef } from '@app/game';
 import { createLiveGamePort } from '@app/game/simulator';
@@ -20,7 +20,7 @@ const useSimRun = ({ activeProfile, loadProfileForGame }: SimRunDeps) => {
     if (!activeProfile || didRun.current) return;
 
     void (async () => {
-      const config = await appApi().getSimRunConfig();
+      const config = await requireHostApi().getSimRunConfig();
       if (config === null) return;
       didRun.current = true;
 
@@ -36,7 +36,7 @@ const useSimRun = ({ activeProfile, loadProfileForGame }: SimRunDeps) => {
         const loaded = await loadState(config.startSlot);
         console.log(`[SimRun] loadState(${config.startSlot}) → ${loaded}`);
         if (!loaded) {
-          await appApi().writeSimRun({ error: `loadState(${config.startSlot}) failed`, config });
+          await requireHostApi().writeSimRun({ error: `loadState(${config.startSlot}) failed`, config });
           setTimeout(() => window.close(), EXIT_DELAY_MS);
           return;
         }
@@ -52,7 +52,7 @@ const useSimRun = ({ activeProfile, loadProfileForGame }: SimRunDeps) => {
       try {
         const diagnostic = runSimDiagnostic(config);
         if (diagnostic !== null) {
-          await appApi().writeSimRun(diagnostic);
+          await requireHostApi().writeSimRun(diagnostic);
           setTimeout(() => window.close(), EXIT_DELAY_MS);
           return;
         }

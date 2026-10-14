@@ -1,5 +1,5 @@
 /* @layer renderer-appshell @kind logic */
-import { appApi } from '@app/ipc/app-api';
+import { requireHostApi } from '@drizztdourden08/brock-react';
 import type { SimRunConfig, SimulatorPort } from '@rotp/navigation';
 import { buildSimRunReport, formatEndSummary, readLoadout } from '@rotp/navigation';
 import { getDungeon, getItem } from '@rotp/game-data';
@@ -17,7 +17,7 @@ const runFullSimulation = async (port: SimulatorPort, config: SimRunConfig): Pro
     events: [...state.events].sort(),
     loadout: readLoadout(),
   };
-  const outPath = await appApi().writeSimRun({ ...report, screenFloods, visits, path, checks, log, inventory, tally, endSummary });
+  const outPath = await requireHostApi().writeSimRun({ ...report, screenFloods, visits, path, checks, log, inventory, tally, endSummary });
   console.log(`[SimRun] Written to: ${outPath}`);
 };
 

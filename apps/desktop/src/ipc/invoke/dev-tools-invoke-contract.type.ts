@@ -30,7 +30,6 @@ interface DevToolsInvokeContract {
     state: 'accepted' | 'dismissed') => Promise<readonly Recommendation[]>;
 
   'test:getArgs': () => Promise<{ autoState: number | string | null; screenshot: string | null }>;
-  'test:finish': (screenshot: string) => Promise<string>;
   'test:screenshot': (name: string) => Promise<string>;
 
   'debug:getDumpLayersSlot': () => Promise<number | null>;

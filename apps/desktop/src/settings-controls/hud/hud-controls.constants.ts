@@ -7,11 +7,6 @@ const ASPECT_OPTIONS = [
   { value: 'custom', label: 'Custom' },
 ];
 
-const ENHANCED_PARTS_OPTIONS = [
-  { value: 'main', label: 'Main' },
-  { value: 'pause', label: 'Pause' },
-];
-
 const TITLE_SETTING_KEYS = new Set(['titleScreen', 'titleMotion', 'titleFollowsProgress', 'titleSword']);
 
 const MODERN_ONLY_KEYS = new Set(['dialogFontScale', 'dialogInkColor', 'dialogStrokeColor', 'dialogStrokeWidth']);
@@ -25,5 +20,5 @@ const COLOR_KEYS = [
 ] as const;
 
 export {
-  ASPECT_OPTIONS, COLOR_KEYS, DIALOG_TEXTURE_SCALES, EITHER_BOX_KEYS, ENHANCED_PARTS_OPTIONS, MODERN_ONLY_KEYS, TITLE_SETTING_KEYS,
+  ASPECT_OPTIONS, COLOR_KEYS, DIALOG_TEXTURE_SCALES, EITHER_BOX_KEYS, MODERN_ONLY_KEYS, TITLE_SETTING_KEYS,
 };

@@ -20,15 +20,12 @@ interface HostInvokeContract {
   'file:writeText': (path: string, data: string) => Promise<void>;
   'file:list': (dir: string) => Promise<string[]>;
   'file:remove': (path: string) => Promise<void>;
-  'file:trash': (path: string) => Promise<void>;
   'file:exists': (path: string) => Promise<boolean>;
   'file:mkdir': (dir: string) => Promise<void>;
   'file:stat': (path: string) => Promise<FileStat | null>;
 
   'window:isMaximized': () => Promise<boolean>;
   'window:setAlwaysOnTop': (value: boolean) => Promise<boolean>;
-  'window:setAudioMuted': (value: boolean) => Promise<boolean>;
-  'window:isAudioMuted': () => Promise<boolean>;
   'window:isFullscreen': () => Promise<boolean>;
 
   'dialog:openRom': () => Promise<string | null>;

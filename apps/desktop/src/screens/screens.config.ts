@@ -1,5 +1,6 @@
 /* @layer renderer-app @kind config */
 import { defineScreens } from '@drizztdourden08/brock-react';
+import { isRandomizerProfile } from '../shell/show-rules';
 
 export default defineScreens({
   buckets: [
@@ -14,7 +15,7 @@ export default defineScreens({
         { id: 'extras', label: 'Extras' },
       ],
     },
-    { id: 'randomizer', title: 'Randomizer', icon: 'sparkles', menu: 'entry' },
+    { id: 'randomizer', title: 'Randomizer', icon: 'sparkles', menu: 'entry', when: isRandomizerProfile },
     {
       id: 'data',
       title: 'Data',

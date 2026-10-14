@@ -1,9 +1,9 @@
 /* @layer renderer-other @kind logic */
-import { appApi } from '@app/ipc/app-api';
+import { requireHostApi } from '@drizztdourden08/brock-react';
 import type { SpritesPort } from '../sprites-port.type';
 
 const createElectronSprites = (): SpritesPort => ({
-  baseUrl: async (romFile) => appApi().getSpritesBaseUrl(romFile),
+  baseUrl: async (romFile) => requireHostApi().getSpritesBaseUrl(romFile),
 });
 
 export { createElectronSprites };

@@ -2,15 +2,13 @@
 import { createElement } from 'react';
 import type { ReactNode } from 'react';
 import { DIALOG_FONT_SCALES, DIALOG_STROKE_WIDTHS } from '@rotp/game-data';
-import { hostDrawnHud } from '@rotp/features';
 import type { GameSettings } from '@rotp/features';
 import { HudStyleControl } from '../HudStyleControl';
 import { stopSliderRow } from '../IndexSliderRow';
-import { KeyedControlRow } from '../KeyedControlRow';
 import { HudRatioRow } from './HudRatioRow';
 import { TitleSwordRow } from './TitleSwordRow';
 import { colorRow } from './color-row';
-import { COLOR_KEYS, DIALOG_TEXTURE_SCALES, ENHANCED_PARTS_OPTIONS } from './hud-controls.constants';
+import { COLOR_KEYS, DIALOG_TEXTURE_SCALES } from './hud-controls.constants';
 import type { ControlContext } from '../settings-controls.type';
 import type { ColorKey } from './hud.type';
 
@@ -21,19 +19,7 @@ const isColorKey = (key: string): key is ColorKey => (COLOR_KEYS as readonly str
 const styleRow = (ctx: ControlContext): ReactNode => createElement(HudStyleControl, {
   value: ctx.settings.hudStyle,
   settings: ctx.settings,
-  onChange: (hudStyle: GameSettings['hudStyle']) =>
-    ctx.onChange(hostDrawnHud(hudStyle) ? { hudStyle, hudMode: 'enhanced', hudEnhancedParts: ['main', 'pause'] } : { hudStyle }),
-});
-
-const partsRow = (ctx: ControlContext): ReactNode => createElement(KeyedControlRow, {
-  settingKey: 'hudEnhancedParts',
-  input: {
-    kind: 'multi',
-    value: ctx.settings.hudEnhancedParts,
-    options: ENHANCED_PARTS_OPTIONS,
-    onChange: (parts: readonly string[]) => ctx.onChange({ hudEnhancedParts: [...parts] as GameSettings['hudEnhancedParts'] }),
-  },
-  disabled: ctx.disabled,
+  onChange: (hudStyle: GameSettings['hudStyle']) => ctx.onChange({ hudStyle }),
 });
 
 const sliderRow = (key: string, ctx: ControlContext): ReactNode | null => {
@@ -55,7 +41,6 @@ const renderHudControl = (key: string, ctx: ControlContext): ReactNode | null =>
   switch (key) {
     case 'hudStyle': return styleRow(ctx);
     case 'hudRatio': return createElement(HudRatioRow, ctx);
-    case 'hudEnhancedParts': return partsRow(ctx);
     case 'titleSword': return createElement(TitleSwordRow, ctx);
     default: return sliderRow(key, ctx);
   }

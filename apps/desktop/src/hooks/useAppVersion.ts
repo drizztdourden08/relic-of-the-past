@@ -1,12 +1,12 @@
 /* @layer renderer-other @kind hook */
-import { appApi } from '@app/ipc/app-api';
+import { requireHostApi } from '@drizztdourden08/brock-react';
 import { useEffect, useState } from 'react';
 
 const useAppVersion = (): string => {
   const [version, setVersion] = useState('');
 
   useEffect(() => {
-    void appApi().getAppVersion().then(setVersion);
+    void requireHostApi().getAppVersion().then(setVersion);
   }, []);
 
   return version;

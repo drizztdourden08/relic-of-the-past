@@ -15,6 +15,7 @@ import { appTours } from '../.brock/tours';
 import { installAppShim } from './platform/api-shim';
 import { rotpShellModule } from './shell/rotp-shell-module';
 import { rotpProfileHooks } from './profiles/rotp-profile-hooks';
+import { useWidgetDisabled } from './widget-gates/useWidgetDisabled';
 import { SETTINGS } from './main.constants';
 import { LEGAL_TEXT } from './legal.constants';
 import { product } from './product';
@@ -42,6 +43,7 @@ createRoot(root).render(
       bootTasks={rendererBootTasks}
       widgets={appWidgets}
       widgetLayout={appWidgetLayout}
+      widgetDisabled={useWidgetDisabled}
       review={appReview}
       titleBar={appTitleBar}
       tours={appTours}

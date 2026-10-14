@@ -1,5 +1,5 @@
 /* @layer renderer-lib @kind barrel */
-import './install-global-handlers';
+import './expose-log-globals';
 
 export { log } from './log';
 export { subscribe } from './subscribe';

@@ -1,5 +1,5 @@
 /* @layer renderer-appshell @kind logic */
-import { appApi } from '@app/ipc/app-api';
+import { requireHostApi } from '@drizztdourden08/brock-react';
 import type { DebugHoverWindow, HoverTile } from './dump-layers.type';
 import {
   DEBUG_HOOK_TICK_MS, FLOOD_BUTTON_TIMEOUT_MS, TILE_INSPECTOR_TIMEOUT_MS, TOOLTIP_RENDER_MS,
@@ -38,7 +38,7 @@ const captureHoverTooltip = async (hoverTile: HoverTile, openNavWidget: () => vo
 
   await new Promise((r) => setTimeout(r, TOOLTIP_RENDER_MS));
 
-  const hoverScreenshot = await appApi().takeScreenshot(`dump-layers-hover-${hoverTile.col}-${hoverTile.row}`);
+  const hoverScreenshot = await requireHostApi().takeScreenshot(`dump-layers-hover-${hoverTile.col}-${hoverTile.row}`);
   console.log(`[DumpLayers] Hover screenshot: ${hoverScreenshot}`);
   return hoverScreenshot;
 };

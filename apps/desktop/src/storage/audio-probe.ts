@@ -1,8 +1,8 @@
 /* @layer renderer-lib @kind logic */
-import { appApi } from '@app/ipc/app-api';
+import { hostApi } from '@drizztdourden08/brock-react';
 import type { AudioProbe } from '@rotp/msu';
 
 const probeAudioFile: AudioProbe = (dataPath) =>
-  appApi()?.probeAudioFile?.(dataPath) ?? Promise.resolve(null);
+  hostApi()?.probeAudioFile?.(dataPath) ?? Promise.resolve(null);
 
 export { probeAudioFile };

@@ -1,5 +1,5 @@
 /* @layer renderer-appshell @kind hook */
-import { appApi } from '@app/ipc/app-api';
+import { requireHostApi } from '@drizztdourden08/brock-react';
 import { useEffect, useRef } from 'react';
 import { loadStateRef } from '@app/game';
 import { log } from '@app/log-bus';
@@ -7,6 +7,7 @@ import type { AutoTestDeps } from './useAutoTest.type';
 import { RENDER_SETTLE_MS } from './auto-launch.constants';
 import { waitForGameRunning } from './wait-for-game-running';
 import { isAutoStart } from '@app/startup/is-auto-start';
+import { screenshotHold } from '@app/boot/screenshot-hold';
 
 const useAutoTest = ({ activeProfile, loadProfileForGame }: AutoTestDeps) => {
   const didRun = useRef(false);
@@ -16,9 +17,9 @@ const useAutoTest = ({ activeProfile, loadProfileForGame }: AutoTestDeps) => {
     let cancelled = false;
 
     void (async () => {
-      const args = await appApi().getTestArgs();
+      const args = await requireHostApi().getTestArgs();
       const autoStart = isAutoStart();
-      if (args.autoState === null && !args.screenshot && !autoStart) return;
+      if (args.autoState === null && !autoStart) return;
       if (cancelled || didRun.current) return;
       didRun.current = true;
 
@@ -41,9 +42,8 @@ const useAutoTest = ({ activeProfile, loadProfileForGame }: AutoTestDeps) => {
       }
 
       if (args.screenshot) {
-        log.app(`[AutoTest] Taking screenshot "${args.screenshot}"...`);
-        const path = await appApi().finishAutomation(args.screenshot);
-        log.app(`[AutoTest] Screenshot saved: ${path}`);
+        log.app(`[AutoTest] Game frame drawn, releasing screenshot "${args.screenshot}"`);
+        screenshotHold.release();
       }
     })();
 

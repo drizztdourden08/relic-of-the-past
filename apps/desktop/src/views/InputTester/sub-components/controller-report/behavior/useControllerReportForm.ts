@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind hook */
-import { appApi } from '@app/ipc/app-api';
+import { requireHostApi } from '@drizztdourden08/brock-react';
 import { useCallback, useEffect, useState } from 'react';
 import { useDebugTextBuilder, useDebugText } from '@app/diagnostics';
 import { useReportContext } from '@app/hooks/useReportContext';
@@ -50,7 +50,7 @@ const useControllerReportForm = (deviceKey: string) => {
     if (!canSubmit || !calibrationMap || debugText === null) return;
     setStatus('submitting');
     try {
-      const result = await appApi().submitSanctuaryReport({
+      const result = await requireHostApi().submitSanctuaryReport({
         request: {
           kind: 'controller',
           subject: `${subjectPrefix}Controller ${detection.detectedName} (${detection.vendorId}:${detection.productId})`,

@@ -3,9 +3,6 @@ import { defineChannels, event, invoke } from '@drizztdourden08/brock-core';
 import type { EventContract as RotpEvent, InvokeContract as RotpInvoke } from '@app/ipc';
 
 const APP_CHANNELS = defineChannels({
-  fileTrash: invoke<RotpInvoke['file:trash']>()('file:trash'),
-  setAudioMuted: invoke<RotpInvoke['window:setAudioMuted']>()('window:setAudioMuted'),
-  isAudioMuted: invoke<RotpInvoke['window:isAudioMuted']>()('window:isAudioMuted'),
   openRomDialog: invoke<RotpInvoke['dialog:openRom']>()('dialog:openRom'),
   importMsu: invoke<RotpInvoke['msu:import']>()('msu:import'),
   importMsuFile: invoke<RotpInvoke['msu:importFile']>()('msu:importFile'),
@@ -61,7 +58,6 @@ const APP_CHANNELS = defineChannels({
   applyRecommendationPass: invoke<RotpInvoke['recommendations:applyPass']>()('recommendations:applyPass'),
   decideRecommendation: invoke<RotpInvoke['recommendations:decide']>()('recommendations:decide'),
   getTestArgs: invoke<RotpInvoke['test:getArgs']>()('test:getArgs'),
-  finishAutomation: invoke<RotpInvoke['test:finish']>()('test:finish'),
   getDumpLayersSlot: invoke<RotpInvoke['debug:getDumpLayersSlot']>()('debug:getDumpLayersSlot'),
   getHoverTile: invoke<RotpInvoke['debug:getHoverTile']>()('debug:getHoverTile'),
   writeDumpLayers: invoke<RotpInvoke['debug:dumpLayers']>()('debug:dumpLayers'),
@@ -77,7 +73,6 @@ const APP_CHANNELS = defineChannels({
   hubSignOut: invoke<RotpInvoke['hub:signOut']>()('hub:signOut'),
   hubMe: invoke<RotpInvoke['hub:me']>()('hub:me'),
   submitSanctuaryReport: invoke<RotpInvoke['sanctuary:submitReport']>()('sanctuary:submitReport'),
-  setReportSnapshot: invoke<RotpInvoke['sanctuary:reportSnapshot']>()('sanctuary:reportSnapshot'),
   storeDuplicate: invoke<RotpInvoke['store:duplicate']>()('store:duplicate'),
   onMsuOptimizeProgress: event<RotpEvent['msu:optimize:progress']>()('msu:optimize:progress'),
 });

@@ -2,21 +2,14 @@
 import { mkdtemp, rm } from 'fs/promises';
 import { tmpdir } from 'os';
 import { join } from 'path';
-import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { createRecommendationStore } from '@rotp/navigation';
-import { initPaths } from '../../node_modules/@drizztdourden08/brock-electron/src/main/paths/init-paths';
+import { initPaths } from '@drizztdourden08/brock-electron/node';
 import {
   loadRecommendationFile, queued, recommendationFilePath, recommendationStorage,
 } from '../../electron/recommendations/recommendation-files';
 import type { Recommendation } from '@rotp/navigation';
 import { required } from '../required';
-
-vi.mock('../../node_modules/@drizztdourden08/brock-electron/src/main/index.ts', async () => ({
-  ...(await import('../../node_modules/@drizztdourden08/brock-electron/src/main/paths/get-user-data-path')),
-  ...(await import('../../node_modules/@drizztdourden08/brock-electron/src/main/files/read-json-file')),
-  ...(await import('../../node_modules/@drizztdourden08/brock-electron/src/main/files/write-json-file')),
-  handle: vi.fn(),
-}));
 
 let root = '';
 

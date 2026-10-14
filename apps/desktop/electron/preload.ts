@@ -4,7 +4,7 @@ import { BASE_EVENT_MAP, BASE_INVOKE_MAP, BASE_SEND_MAP, composeMaps } from '@dr
 import { createPreloadBridge } from '@drizztdourden08/brock-electron/preload';
 import { preloadNamespaces } from '../.brock/modules.preload';
 import { APP_EVENT_MAP, APP_INVOKE_MAP, APP_SEND_MAP } from '../src/ipc/contract.constants';
-import type { SpritesUrlApi } from '../src/ipc/app-api.type';
+import type { SpritesUrlApi } from '../src/ipc/sprites-url-api.type';
 import { shadowCastingNamespace } from './preload-namespaces/shadow-casting-namespace';
 import { screenEditorNamespace } from './preload-namespaces/screen-editor-namespace';
 

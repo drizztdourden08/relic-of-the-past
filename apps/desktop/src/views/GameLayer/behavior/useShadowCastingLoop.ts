@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind hook */
-import { appApi } from '@app/ipc/app-api';
+import { requireHostApi } from '@drizztdourden08/brock-react';
 import { useRef } from 'react';
 import { wasmGetViewportInfo } from '../../../game';
 import { createShadowRenderer, viewOrigin } from '@rotp/game-core';
@@ -23,7 +23,7 @@ const useShadowCastingLoop = (params: ShadowLoopParams): void => {
     setup: async () => {
       prevScreenIdRef.current = -1;
       try {
-        shadowProjectRef.current = await appApi().shadowCasting.load();
+        shadowProjectRef.current = await requireHostApi().shadowCasting.load();
       } catch {
         shadowProjectRef.current = null;
       }

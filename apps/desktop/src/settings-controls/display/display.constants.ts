@@ -16,8 +16,6 @@ const ASPECT_DESCRIPTIONS: Record<string, string> = {
   custom: 'Set an exact width : height ratio.',
 };
 
-const CASCADE_KEYS = new Set(['linearWorldTilemap', 'ultrawideRendering', 'tallRendering']);
-
 const EXTENDED_ONLY_KEYS = new Set([
   'linearWorldTilemap', 'ultrawideRendering', 'tallRendering', 'aspectRatio', 'extendY', 'widescreenVisualFixes',
   'widescreenSprites', 'widescreenPlayArea', 'offscreenAI', 'cameraLockToViewport', 'smoothTransitions',
@@ -26,5 +24,5 @@ const EXTENDED_ONLY_KEYS = new Set([
 const ASPECT_LOCKED_MESSAGE = 'Turn on Extended Rendering to pick a ratio other than 4:3.';
 
 export {
-  ASPECT_DESCRIPTIONS, ASPECT_LOCKED_MESSAGE, CASCADE_KEYS, EXTENDED_ONLY_KEYS, REQUIRES_LINEAR, REQUIRES_ULTRAWIDE, TALL_PRESETS, TALL_PRESET_VALUES,
+  ASPECT_DESCRIPTIONS, ASPECT_LOCKED_MESSAGE, EXTENDED_ONLY_KEYS, REQUIRES_LINEAR, REQUIRES_ULTRAWIDE, TALL_PRESETS, TALL_PRESET_VALUES,
 };

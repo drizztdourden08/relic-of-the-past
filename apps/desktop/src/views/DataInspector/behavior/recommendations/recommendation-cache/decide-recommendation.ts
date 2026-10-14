@@ -1,5 +1,5 @@
 /* @layer renderer-app @kind logic */
-import { appApi } from '@app/ipc/app-api';
+import { requireHostApi } from '@drizztdourden08/brock-react';
 import type { EntityKind } from '@rotp/game-data';
 import { storeRecommendations } from './store-recommendations';
 
@@ -8,7 +8,7 @@ const decideRecommendation = async (
   id: string,
   state: 'accepted' | 'dismissed',
 ): Promise<void> => {
-  storeRecommendations(kind, await appApi().decideRecommendation(kind, id, state));
+  storeRecommendations(kind, await requireHostApi().decideRecommendation(kind, id, state));
 };
 
 export { decideRecommendation };

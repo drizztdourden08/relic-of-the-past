@@ -1,7 +1,6 @@
 /* @layer renderer-widgets @kind component */
 import type { WidgetMeta } from '@drizztdourden08/brock-react';
 import { InventoryWidgetContent, InventoryWidgetSettings } from '@app/views/InventoryWidget';
-import { WidgetGate } from '@app/views/WidgetGate';
 
 const meta: WidgetMeta = {
   label: 'Inventory',
@@ -14,7 +13,7 @@ const meta: WidgetMeta = {
   settings: InventoryWidgetSettings,
 };
 
-const InventoryWidget = () => <WidgetGate id="inventory"><InventoryWidgetContent /></WidgetGate>;
+const InventoryWidget = () => <InventoryWidgetContent />;
 
 export default InventoryWidget;
 export { meta };

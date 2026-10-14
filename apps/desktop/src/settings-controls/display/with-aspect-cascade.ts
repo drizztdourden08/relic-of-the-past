@@ -10,13 +10,13 @@ const linearOffCascade = (current: GameSettings): Partial<GameSettings> => {
   return { ...(wide ? { aspectRatio: '16:9' } : {}), ultrawideRendering: false, tallRendering: false };
 };
 
-const withAspectCascade = (patch: Partial<GameSettings>, current: GameSettings): Partial<GameSettings> => {
+const withAspectCascade = <P extends Partial<GameSettings>>(patch: P, current: GameSettings): P => {
   const ratio = current.aspectRatio;
   return {
-    ...patch,
     ...(turnedOff(patch, 'linearWorldTilemap') ? linearOffCascade(current) : {}),
     ...(turnedOff(patch, 'ultrawideRendering') && REQUIRES_ULTRAWIDE.has(ratio) ? { aspectRatio: '21:9' } : {}),
     ...(turnedOff(patch, 'tallRendering') && TALL_PRESET_VALUES.has(ratio) ? { aspectRatio: '4:3' } : {}),
+    ...patch,
   };
 };
 

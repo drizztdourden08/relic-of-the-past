@@ -1,5 +1,5 @@
 /* @layer renderer-appshell @kind hook */
-import { appApi } from '@app/ipc/app-api';
+import { requireHostApi } from '@drizztdourden08/brock-react';
 import { useEffect, useRef } from 'react';
 import { loadStateRef } from '@app/game';
 import type { DumpNavDeps } from './useDumpNav.type';
@@ -16,7 +16,7 @@ const useDumpNav = ({ activeProfile, loadProfileForGame }: DumpNavDeps) => {
     let cancelled = false;
 
     void (async () => {
-      const slot = await appApi().getDumpNavSlot();
+      const slot = await requireHostApi().getDumpNavSlot();
       if (slot === null) return;
       didRun.current = true;
 
@@ -32,7 +32,7 @@ const useDumpNav = ({ activeProfile, loadProfileForGame }: DumpNavDeps) => {
       console.log(`[DumpNav] load ${kind} ${slot} returned: ${loadResult}`);
       if (!loadResult) {
         const dump = { slot, error: `loading ${kind} "${slot}" returned false. The state was not found, or the module is not ready.` };
-        await appApi().writeDumpNav(dump);
+        await requireHostApi().writeDumpNav(dump);
         setTimeout(() => window.close(), EXIT_DELAY_MS);
         return;
       }
@@ -43,7 +43,7 @@ const useDumpNav = ({ activeProfile, loadProfileForGame }: DumpNavDeps) => {
 
       console.log(`[DumpNav] Dumping navigation data...`);
       console.log(JSON.stringify(dump, null, 2));
-      const path = await appApi().writeDumpNav(dump);
+      const path = await requireHostApi().writeDumpNav(dump);
       console.log(`[DumpNav] Written to: ${path}`);
 
       setTimeout(() => window.close(), EXIT_DELAY_MS);

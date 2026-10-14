@@ -10,7 +10,7 @@ const dirBytes = async (dir: string): Promise<number> => {
     const { files } = await Filesystem.readdir({ path: dir, directory: DIR });
     for (const f of files) {
       if (f.type === 'directory') total += await dirBytes(`${dir}/${f.name}`);
-      else total += f.size ?? 0;
+      else total += f.size;
     }
   } catch {
     return total;
@@ -35,7 +35,7 @@ const getLocation = async (): Promise<DataLocation> => ({
 const createCapacitorStorage = (): StoragePort => ({
   getLocation,
   reveal: async () => {},
-  revealProfile: async () => false,
+  revealProfile: () => Promise.resolve(false),
   spritesBaseUrl: async (romFile) => {
     const stem = romFile.replace(/\.(sfc|smc)$/i, '');
     try {

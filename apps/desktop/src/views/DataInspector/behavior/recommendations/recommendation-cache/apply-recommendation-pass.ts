@@ -1,5 +1,5 @@
 /* @layer renderer-app @kind logic */
-import { appApi } from '@app/ipc/app-api';
+import { requireHostApi } from '@drizztdourden08/brock-react';
 import type { EntityKind } from '@rotp/game-data';
 import type { DetectionContext, DraftRecommendation } from '@rotp/navigation';
 import { storeRecommendations } from './store-recommendations';
@@ -10,7 +10,7 @@ const applyRecommendationPass = async (
   detectorIds: readonly string[],
   drafts: readonly DraftRecommendation[],
 ): Promise<void> => {
-  const result = await appApi().applyRecommendationPass(kind, context, detectorIds, drafts);
+  const result = await requireHostApi().applyRecommendationPass(kind, context, detectorIds, drafts);
   storeRecommendations(kind, result.entries);
 };
 

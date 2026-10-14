@@ -1,7 +1,6 @@
 /* @layer renderer-widgets @kind component */
 import type { WidgetMeta } from '@drizztdourden08/brock-react';
 import { LiveDataInspectorContent } from '@app/views/NavigationWidget';
-import { WidgetGate } from '@app/views/WidgetGate';
 
 const meta: WidgetMeta = {
   label: 'Live Data Inspector',
@@ -14,7 +13,7 @@ const meta: WidgetMeta = {
   devOnly: true,
 };
 
-const LiveDataInspector = () => <WidgetGate id="dataset"><LiveDataInspectorContent /></WidgetGate>;
+const LiveDataInspector = () => <LiveDataInspectorContent />;
 
 export default LiveDataInspector;
 export { meta };

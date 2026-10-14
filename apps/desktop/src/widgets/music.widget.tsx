@@ -1,7 +1,6 @@
 /* @layer renderer-widgets @kind component */
 import type { WidgetMeta } from '@drizztdourden08/brock-react';
 import { MusicWidgetContent } from '@app/views/MusicWidget';
-import { WidgetGate } from '@app/views/WidgetGate';
 
 const meta: WidgetMeta = {
   label: 'Music Debugger',
@@ -14,7 +13,7 @@ const meta: WidgetMeta = {
   devOnly: true,
 };
 
-const MusicWidget = () => <WidgetGate id="music"><MusicWidgetContent /></WidgetGate>;
+const MusicWidget = () => <MusicWidgetContent />;
 
 export default MusicWidget;
 export { meta };

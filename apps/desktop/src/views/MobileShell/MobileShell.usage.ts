@@ -3,7 +3,7 @@ import type { ComponentUsage } from '@drizztdourden08/tessera';
 
 const usage = {
   job: 'The Android options drawer: the app menu, the widgets and mute, opened by the back gesture from the right edge.',
-  useWhen: ['Once on Android, where Brock draws no title bar.'],
+  useWhen: ['Once on Android, where a back swipe from the right edge opens it.'],
   avoidWhen: [{ case: 'The title bar of a desktop window.', use: 'WindowTitleBar' }],
   rules: ['Render it only when isMobileHost() is true.'],
   a11y: ['The drawer is a dialog with its own title; the back gesture closes it first.'],

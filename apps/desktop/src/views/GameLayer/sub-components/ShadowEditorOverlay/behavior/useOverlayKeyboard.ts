@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind hook */
-import { appApi } from '@app/ipc/app-api';
+import { requireHostApi } from '@drizztdourden08/brock-react';
 import { useEffect } from 'react';
 import { useShadowEditorStore } from '@app/stores/shadow-editor-store';
 import { EMPTY_SHADOW_PROJECT } from '@rotp/game-core';
@@ -13,7 +13,7 @@ const useOverlayKeyboard = (a: OverlayKeyboardArgs): void => {
     if (!open) return;
     void (async () => {
       try {
-        const project = await appApi().shadowCasting.load();
+        const project = await requireHostApi().shadowCasting.load();
         loadProject(project ?? { ...EMPTY_SHADOW_PROJECT });
       } catch {
         loadProject({ ...EMPTY_SHADOW_PROJECT });

@@ -6,17 +6,12 @@ import { mainHandlers } from '../.brock/handlers.main';
 import { product } from '../src/product';
 import { rotpProfileHooks } from '../src/profiles/rotp-profile-hooks';
 import { ROTP_AUTOMATION_FLAGS } from './automation/automation-flags.constants';
-import { deferGameScreenshot } from './automation/defer-game-screenshot';
-import { armGameScreenshotWatchdog } from './automation/arm-game-screenshot-watchdog';
 import { rotpRendererFlags } from './automation/rotp-renderer-flags';
 import { ROTP_DATA_DOMAINS } from './storage/data-domains.constants';
 import { installedFileGuard } from './storage/installed-file-guard';
 import { sanctuaryBugReport } from './sanctuary/bug-report';
 import { onReady } from './lifecycle/on-ready';
 import { onWindow } from './lifecycle/on-window';
-
-deferGameScreenshot(process.argv);
-armGameScreenshotWatchdog(process.argv);
 
 bootstrapApp(product, {
   modules: mainModules,

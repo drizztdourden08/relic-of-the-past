@@ -1,7 +1,6 @@
 /* @layer renderer-widgets @kind component */
 import type { WidgetMeta } from '@drizztdourden08/brock-react';
 import { CheatsWidgetContent } from '@app/views/CheatsWidget';
-import { WidgetGate } from '@app/views/WidgetGate';
 
 const meta: WidgetMeta = {
   label: 'Cheats',
@@ -13,7 +12,7 @@ const meta: WidgetMeta = {
   context: 'game',
 };
 
-const CheatsWidget = () => <WidgetGate id="cheats"><CheatsWidgetContent /></WidgetGate>;
+const CheatsWidget = () => <CheatsWidgetContent />;
 
 export default CheatsWidget;
 export { meta };

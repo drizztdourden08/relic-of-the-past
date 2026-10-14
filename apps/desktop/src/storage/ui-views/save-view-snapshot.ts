@@ -1,21 +1,12 @@
 /* @layer renderer-lib @kind logic */
+import { uiViews } from '@drizztdourden08/brock-react';
 import type { ViewKey, ViewSnapshot } from '@drizztdourden08/tessera/data';
-import { loadAllViews } from './load-all-views';
-import { scheduleViewSave } from './schedule-view-save';
-import { viewCache } from './view-cache';
-
-const applyMutation = (key: ViewKey, snapshot: ViewSnapshot): void => {
-  if (!viewCache.map) viewCache.map = {};
-  viewCache.map[key] = snapshot;
-  scheduleViewSave();
-};
+import { log } from '../../log-bus';
 
 const saveViewSnapshot = (key: ViewKey, snapshot: ViewSnapshot): void => {
-  if (viewCache.map) {
-    applyMutation(key, snapshot);
-    return;
-  }
-  void loadAllViews().then(() => applyMutation(key, snapshot));
+  void uiViews.write(key, snapshot).catch((error: unknown) => {
+    log.ipc(`Failed to save the ${key} view: ${String(error)}`, 'error');
+  });
 };
 
 export { saveViewSnapshot };

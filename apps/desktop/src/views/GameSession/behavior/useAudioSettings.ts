@@ -1,5 +1,5 @@
 /* @layer renderer-appshell @kind hook */
-import { appApi } from '@app/ipc/app-api';
+import { hostApi } from '@drizztdourden08/brock-react';
 import { useState, useCallback, useEffect, useRef } from 'react';
 import { setMasterVolume, subscribeGameState } from '@app/game';
 
@@ -30,7 +30,7 @@ const useAudioSettings = () => {
   }, [masterVolume]);
 
   useEffect(() => {
-    const startup = appApi()?.startup;
+    const startup = hostApi()?.startup;
     if (!startup?.muted && !startup?.sound) return;
     let fired = false;
     const unsub = subscribeGameState((state) => {

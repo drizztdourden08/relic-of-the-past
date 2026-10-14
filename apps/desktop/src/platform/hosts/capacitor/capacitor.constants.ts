@@ -14,4 +14,6 @@ const DOMAINS: { domain: DataDomain; label: string; dir: string }[] = [
   { domain: 'assets', label: 'Assets', dir: 'assets' },
 ];
 
-export { DIR, DOMAINS };
+const BACK_EVENT = 'rotpback';
+
+export { BACK_EVENT, DIR, DOMAINS };

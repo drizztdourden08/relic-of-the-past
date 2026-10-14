@@ -1,6 +1,6 @@
 /* @layer renderer-lib @kind logic */
-import { appApi } from '@app/ipc/app-api';
+import { requireHostApi } from '@drizztdourden08/brock-react';
 
-const startupFlag = (name: string): string | true | undefined => appApi().startup.flags[name];
+const startupFlag = (name: string): string | true | undefined => requireHostApi().startup.flags[name];
 
 export { startupFlag };

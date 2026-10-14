@@ -5,7 +5,7 @@ import { toast } from '@drizztdourden08/tessera/composites';
 import { DEFAULT_FUNCTION_MAPPINGS } from '@rotp/features';
 import type { GameSettings } from '@rotp/features';
 import { getInputManager, pushLiveSettings, LIVE_SETTINGS } from '@app/game';
-import { mergeSettings, ENHANCED_FALLBACK_EVENT, ENHANCED_FALLBACK_MESSAGE, ENHANCED_FALLBACK_TOAST_ID } from '@rotp/game-core';
+import { ENHANCED_FALLBACK_EVENT, ENHANCED_FALLBACK_MESSAGE, ENHANCED_FALLBACK_TOAST_ID } from '@rotp/game-core';
 import { log } from '@app/log-bus';
 import { setHudProfileId } from '@app/hud/active-profile';
 import { syncControlSettings } from '@app/stores/control-scheme-store';
@@ -16,13 +16,6 @@ import { syncDialogStore } from '@app/settings-effects/sync-dialog-store';
 import { syncTitleStore } from '@app/settings-effects/sync-title-store';
 import type { SettingsBridgeDeps } from '@app/settings-effects/settings-effects.type';
 import type { AppSettings } from '@app/settings.type';
-
-const normalisationPatch = (current: AppSettings): Partial<AppSettings> => {
-  const merged = mergeSettings(current);
-  return Object.fromEntries(
-    Object.entries(merged).filter(([key, value]) => JSON.stringify(value) !== JSON.stringify(Reflect.get(current, key))),
-  );
-};
 
 const announce = (patch: Partial<GameSettings>, isGameRunning: boolean): void => {
   const changedKeys = Object.keys(patch) as (keyof GameSettings)[];
@@ -52,8 +45,6 @@ const useSettingsBridge = (deps: SettingsBridgeDeps): void => {
 
   useEffect(() => {
     if (!hydrated || profileId === null) return;
-    const fix = normalisationPatch(store.getState().settings);
-    if (Object.keys(fix).length > 0) store.getState().patch(fix);
     const merged = store.getState().settings;
     const { callbacks } = depsRef.current;
     syncHudStore(merged);

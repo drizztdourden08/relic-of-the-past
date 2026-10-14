@@ -1,5 +1,5 @@
 /* @layer renderer-app @kind logic */
-import { appApi } from '@app/ipc/app-api';
+import { requireHostApi } from '@drizztdourden08/brock-react';
 import { isTagKey, registerTag } from '@rotp/game-data';
 import type { TagCreateResult } from '@drizztdourden08/tessera/composites';
 import { TAG_NO_SCOPE, TAG_NOT_CONVENTION } from '../DataInspector.constants';
@@ -13,7 +13,7 @@ const createTagFor = async (collectionKind: string, key: string): Promise<TagCre
   if (!scope) return { success: false, error: TAG_NO_SCOPE };
   if (!isTagKey(key)) return { success: false, error: TAG_NOT_CONVENTION };
 
-  const result = await appApi().screenEditor.allocateTag({ key, appliesTo: [scope] });
+  const result = await requireHostApi().screenEditor.allocateTag({ key, appliesTo: [scope] });
   if (!result.success) return { success: false, error: result.error };
 
   const { record } = result;

@@ -1,7 +1,8 @@
 /* @layer renderer-app @kind config */
 import type { ScreenMeta, Section } from '@drizztdourden08/brock-react';
+import { isRandomizerProfile } from '@app/shell/show-rules';
 
-const meta: ScreenMeta = { title: 'Online', icon: 'globe', order: 3, keywords: ['online', 'archipelago', 'multiworld', 'deathlink', 'notifications'] };
+const meta: ScreenMeta = { title: 'Online', icon: 'globe', order: 3, when: isRandomizerProfile, keywords: ['online', 'archipelago', 'multiworld', 'deathlink', 'notifications'] };
 
 const noticeHint = 'On, a notice pops up when this happens during an online session.';
 const noticeWords = 'notification toast online archipelago';

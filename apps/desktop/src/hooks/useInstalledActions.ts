@@ -1,5 +1,5 @@
 /* @layer renderer-other @kind hook */
-import { appApi } from '@app/ipc/app-api';
+import { requireHostApi } from '@drizztdourden08/brock-react';
 import { useCallback, useState } from 'react';
 import { catalogApi, useCatalogInstalled } from '@drizztdourden08/brock-catalog/renderer';
 import type { InstalledPack } from '@rotp/hub-contracts';
@@ -31,7 +31,7 @@ const useInstalledActions = () => {
 
   const duplicate = useCallback(async (pack: InstalledPack): Promise<string | null> => {
     begin();
-    const result = await appApi().storeDuplicate(pack.itemId);
+    const result = await requireHostApi().storeDuplicate(pack.itemId);
     await finish(result.ok ? null : result.error);
     return result.ok ? result.data.name : null;
   }, [begin, finish]);

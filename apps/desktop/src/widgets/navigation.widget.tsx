@@ -1,7 +1,6 @@
 /* @layer renderer-widgets @kind component */
 import type { WidgetMeta } from '@drizztdourden08/brock-react';
 import { NavigationWidgetContent, NavigationWidgetSettings } from '@app/views/NavigationWidget';
-import { WidgetGate } from '@app/views/WidgetGate';
 
 const meta: WidgetMeta = {
   label: 'Location & Navigation',
@@ -15,7 +14,7 @@ const meta: WidgetMeta = {
   settings: NavigationWidgetSettings,
 };
 
-const NavigationWidget = () => <WidgetGate id="navigation"><NavigationWidgetContent /></WidgetGate>;
+const NavigationWidget = () => <NavigationWidgetContent />;
 
 export default NavigationWidget;
 export { meta };

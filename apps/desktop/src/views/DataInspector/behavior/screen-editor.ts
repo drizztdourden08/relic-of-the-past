@@ -1,6 +1,6 @@
 /* @layer renderer-app @kind logic */
-import { appApi } from '@app/ipc/app-api';
+import { requireHostApi } from '@drizztdourden08/brock-react';
 import type { ScreenEditorApi } from '@app/ipc';
-const screenEditor = (): ScreenEditorApi => appApi().screenEditor;
+const screenEditor = (): ScreenEditorApi => requireHostApi().screenEditor;
 
 export { screenEditor };

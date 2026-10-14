@@ -1,7 +1,6 @@
 /* @layer renderer-widgets @kind component */
 import type { WidgetMeta } from '@drizztdourden08/brock-react';
 import { ChecksWidgetContent, ChecksWidgetSettings } from '@app/views/ChecksWidget';
-import { WidgetGate } from '@app/views/WidgetGate';
 
 const meta: WidgetMeta = {
   label: 'Checks',
@@ -14,7 +13,7 @@ const meta: WidgetMeta = {
   settings: ChecksWidgetSettings,
 };
 
-const ChecksWidget = () => <WidgetGate id="checks"><ChecksWidgetContent /></WidgetGate>;
+const ChecksWidget = () => <ChecksWidgetContent />;
 
 export default ChecksWidget;
 export { meta };

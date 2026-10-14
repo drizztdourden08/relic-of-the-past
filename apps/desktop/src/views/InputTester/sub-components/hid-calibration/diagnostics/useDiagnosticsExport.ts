@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind hook */
-import { appApi } from '@app/ipc/app-api';
+import { requireHostApi } from '@drizztdourden08/brock-react';
 import { useCallback } from 'react';
 import type { GamepadDiagnosticsReport } from './diagnostics.type';
 
@@ -17,7 +17,7 @@ const useDiagnosticsExport = (report: GamepadDiagnosticsReport, addLog: (msg: st
 
   const handleSaveDebugFile = useCallback(async (): Promise<boolean> => {
     try {
-      const filePath = await appApi().writeHidDebugFile(report.name || report.deviceKey, report);
+      const filePath = await requireHostApi().writeHidDebugFile(report.name || report.deviceKey, report);
       addLog(`Saved the diagnostics report to ${filePath}`);
       return true;
     } catch (err) {

@@ -8,7 +8,7 @@ const useMobileBack = () => {
   const openRef = useRef(open);
   openRef.current = open;
 
-  useEffect(() => getPlatform().device.onBackButton((edge) => {
+  useEffect(() => getPlatform().backEdge?.onBackButton((edge) => {
     if (openRef.current) { setOpen(false); return; }
     if (edge === 'left') {
       if (useNavigationStore.getState().active !== null) nav.escape();

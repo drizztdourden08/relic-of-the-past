@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind hook */
-import { appApi } from '@app/ipc/app-api';
+import { requireHostApi } from '@drizztdourden08/brock-react';
 import { useCallback } from 'react';
 import type { HidControllerMap } from '../../HidCalibrationWizard';
 import type { PositionalCaptureRecord } from '../positional-capture/positional-capture.type';
@@ -24,7 +24,7 @@ const useSummaryExport = (byteCapture: HidControllerMap | null, positionalRecord
   const handleSaveToDisk = useCallback(async (): Promise<boolean> => {
     try {
       const payload = buildPayload();
-      await appApi().writeHidDebugFile(payload.byteCapture?.name ?? 'diagnostics-wizard', payload);
+      await requireHostApi().writeHidDebugFile(payload.byteCapture?.name ?? 'diagnostics-wizard', payload);
       return true;
     } catch {
       return false;
