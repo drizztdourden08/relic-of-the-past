@@ -3,14 +3,17 @@ run-name: CI sanctuary ${{ github.head_ref || github.ref_name }}
 
 # Managed by brock sync for the site in apps/sanctuary. A pull request checks and builds the site
 # only when it touches the site's files, a workspace package it depends on, or a file outside
-# every package. Brock deploys nothing: hosting the dist folder is the app's own workflow.
+# every package; a push to agent/grand-merge and a manual run always check it. Brock deploys nothing:
+# hosting the dist folder is the app's own workflow.
 on:
   pull_request:
+  push:
+    branches: [agent/grand-merge]
   workflow_dispatch:
 
 concurrency:
   group: ci-sanctuary-${{ github.ref }}
-  cancel-in-progress: true
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
 permissions:
   contents: read
@@ -25,14 +28,14 @@ jobs:
     outputs:
       changed: ${{ steps.changed.outputs.changed }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
         with:
           fetch-depth: 0
 
-      - uses: pnpm/action-setup@v4
-        with:
-          version: 10
-      - uses: actions/setup-node@v4
+      # pnpm/action-setup takes the version from packageManager in the root package.json.
+      # Naming a version here as well fails the step.
+      - uses: pnpm/action-setup@v6
+      - uses: actions/setup-node@v7
         with:
           node-version: 24
           cache: pnpm
@@ -45,7 +48,7 @@ jobs:
           NODE_AUTH_TOKEN: ${{ secrets.PACKAGES_TOKEN || secrets.GITHUB_TOKEN }}
 
       # A pull request builds and reviews only the apps it touches: their own files, a workspace
-      # package they depend on, or a file outside every package. A manual run builds the app.
+      # package they depend on, or a file outside every package. A push or a manual run builds the app.
       - name: Does this change touch the app
         id: changed
         shell: bash
@@ -58,12 +61,12 @@ jobs:
     if: needs.changes.outputs.changed == 'true'
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
-      - uses: pnpm/action-setup@v4
-        with:
-          version: 10
-      - uses: actions/setup-node@v4
+      # pnpm/action-setup takes the version from packageManager in the root package.json.
+      # Naming a version here as well fails the step.
+      - uses: pnpm/action-setup@v6
+      - uses: actions/setup-node@v7
         with:
           node-version: 24
           cache: pnpm
@@ -81,7 +84,7 @@ jobs:
       - name: Build the site
         run: pnpm --dir "$APP_DIR" exec brock site build
 
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         with:
           name: site-sanctuary
           path: ${{ env.APP_DIR }}/dist/
