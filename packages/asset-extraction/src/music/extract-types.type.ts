@@ -87,9 +87,7 @@ export type {
   MusicEntityType,
   MusicExtractionResult,
   Pattern,
-  PatternLine,
   Phrase,
-  PhraseLoop,
   Song,
   SongList,
 };

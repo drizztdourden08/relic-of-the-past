@@ -46,4 +46,3 @@ const useOutlineKeys = (input: OutlineKeysInput): OutlineKeys => {
 };
 
 export { useOutlineKeys };
-export type { OutlineKeys, OutlineKeysInput } from './outline-keys.type';

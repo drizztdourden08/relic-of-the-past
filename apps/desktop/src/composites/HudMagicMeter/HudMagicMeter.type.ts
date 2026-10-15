@@ -22,4 +22,4 @@ interface MagicAccurateProps {
   value: number;
 }
 
-export type { HudMagicMeterProps, MagicAccurateProps, MagicMeterMode, MagicOriginalProps };
+export type { HudMagicMeterProps, MagicAccurateProps, MagicOriginalProps };

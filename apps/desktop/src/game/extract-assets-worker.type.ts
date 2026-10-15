@@ -19,4 +19,4 @@ interface WorkerScope {
   postMessage: (msg: unknown) => void;
 }
 
-export type { ExtractReply, ExtractRequest, WorkerScope };
+export type { ExtractReply, WorkerScope };

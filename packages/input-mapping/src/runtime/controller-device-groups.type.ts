@@ -16,4 +16,4 @@ interface ControllerDeviceGroup {
   ports: ControllerPort[];
 }
 
-export type { ControllerDeviceGroup, ControllerPort };
+export type { ControllerDeviceGroup };

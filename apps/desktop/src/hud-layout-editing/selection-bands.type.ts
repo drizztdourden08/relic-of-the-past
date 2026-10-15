@@ -26,4 +26,4 @@ interface EditorAction {
 
 interface LegendEntry { key: string; label: string; shortcut: EditorShortcut }
 
-export type { EditorAction, EditorActionKind, EditorKey, EditorPointer, EditorShortcut, LegendEntry };
+export type { EditorAction, EditorActionKind, EditorKey, EditorShortcut, LegendEntry };

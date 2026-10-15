@@ -14,4 +14,3 @@ const useSetVariables = (set: LanguageSet): SetVariables => {
 };
 
 export { useSetVariables };
-export type { SetVariables } from './language-behavior.type';

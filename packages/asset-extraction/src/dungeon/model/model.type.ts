@@ -77,7 +77,6 @@ interface DungeonInteractionCell {
 }
 
 export type {
-  DungeonDestination,
   DungeonEntityRecord,
   DungeonRoomHeader,
   DungeonInteractionCell,

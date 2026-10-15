@@ -1,14 +1,3 @@
 /* @layer renderer-components @kind barrel */
 export { findNearest2x2Goal } from './find-nearest-2x2-goal';
-export { findPath2x2AStar } from './find-path-2x2-astar';
-export { findPath2x2LayerAware } from './find-path-2x2-layer-aware';
 export { findPath2x2FromPlayer } from './find-path-2x2-from-player';
-export { manhattan } from './manhattan';
-export { keyOf } from './key-of';
-export { rectsOverlap } from './rects-overlap';
-export { segmentOverlapsRect } from './segment-overlaps-rect';
-export { isValid2x2 } from './is-valid-2x2';
-export { isTraversalDirCompatible } from './is-traversal-dir-compatible';
-export { isValidMove2x2 } from './is-valid-move-2x2';
-export { canLeave2x2 } from './can-leave-2x2';
-export { PATH_DIRS } from './pathfinding.constants';

@@ -6,6 +6,5 @@ export { createProfile } from './create-profile';
 export { updateProfile } from './update-profile';
 export { deleteProfile } from './delete-profile';
 export { setLastProfile } from './set-last-profile';
-export { updateLastPlayed } from './update-last-played';
 export { readConfig } from './read-config';
 export { writeConfig } from './write-config';

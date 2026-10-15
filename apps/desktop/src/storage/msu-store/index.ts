@@ -1,6 +1,5 @@
 /* @layer renderer-lib @kind barrel */
 export { listMsuPacks } from './list-msu-packs';
-export { getMsuPackFiles } from './get-msu-pack-files';
 export { getMsuTrackList } from './get-msu-track-list';
 export { listMsuAudioFiles } from './list-msu-audio-files';
 export { listMsuPackEntries } from './list-msu-pack-entries';

@@ -2,4 +2,3 @@
 export { compactEdges } from './compact-edges';
 export { offsetOf } from './offset-of';
 export { withOffset } from './with-offset';
-export type { Offset } from './offset.type';

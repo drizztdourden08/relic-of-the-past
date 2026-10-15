@@ -32,4 +32,3 @@ const buildSoftlockReport = (state: EngineState, deps: ReportDeps = {}): Softloc
 };
 
 export { buildSoftlockReport };
-export type { ReportDeps } from './softlock-report.type';

@@ -45,4 +45,4 @@ interface PoseCanvasSize {
   originY: number;
 }
 
-export type { Facing, PoseAtlas, PoseBounds, PoseCanvasSize, PoseFrame, PoseQuad, PoseState };
+export type { Facing, PoseAtlas, PoseCanvasSize, PoseFrame, PoseState };

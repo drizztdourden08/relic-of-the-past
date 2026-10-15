@@ -11,4 +11,4 @@ interface ExprProblem {
   fix?: ExprFix;
 }
 
-export type { ExprFix, ExprProblem };
+export type { ExprProblem };

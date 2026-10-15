@@ -14,4 +14,4 @@ type RouteEntry = {
 
 type ResolvedRoute = { entry: RouteEntry; params: RouteParams };
 
-export type { RouteAccess, RouteEntry, ResolvedRoute };
+export type { RouteEntry, ResolvedRoute };

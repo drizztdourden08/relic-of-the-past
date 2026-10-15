@@ -1,13 +1,10 @@
 /* @layer shared-storage @kind barrel */
-export { SET_FILES } from '@rotp/hub-contracts';
 export { setDir } from './set-dir';
 export { setFilePath } from './set-file-path';
 export { setMetaPath } from './set-meta-path';
 export { dialoguePath } from './dialogue-path';
 export { textPath } from './text-path';
 export { variablesPath } from './variables-path';
-export { glossaryPath } from './glossary-path';
-export { namesPath } from './names-path';
 export { fontPath } from './font-path';
 export { fontWidthPath } from './font-width-path';
 export { legacyDialoguePath } from './legacy-dialogue-path';

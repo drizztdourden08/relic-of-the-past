@@ -101,4 +101,3 @@ const detectorFromStrategy = <K extends EntityKind>(
 });
 
 export { detectorFromStrategy };
-export type { UnresolvableMapper } from './detector-from-strategy.type';

@@ -5,4 +5,4 @@ type GroupCacheEntry = { groups: Group[]; at: number };
 
 type GroupCache = { entry: GroupCacheEntry | null };
 
-export type { GroupCacheEntry, GroupCache };
+export type { GroupCache };

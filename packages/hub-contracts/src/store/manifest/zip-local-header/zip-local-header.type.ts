@@ -13,4 +13,4 @@ type HeaderResult =
   | { ok: true; header: LocalHeader }
   | { ok: false; reason: HeaderFailure; needBytes?: number };
 
-export type { LocalHeader, HeaderFailure, HeaderResult };
+export type { HeaderFailure, HeaderResult };

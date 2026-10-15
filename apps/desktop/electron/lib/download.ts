@@ -42,4 +42,3 @@ const downloadToTempFile = async (
 };
 
 export { downloadToTempFile };
-export type { DownloadProgress };

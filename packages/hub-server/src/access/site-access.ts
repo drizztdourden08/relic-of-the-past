@@ -21,4 +21,3 @@ const siteAccess = async (site: SiteConfig, user: HubUser, fresh: FreshToken | n
 };
 
 export { siteAccess };
-export type { SiteAccessResult } from './site-access.type';

@@ -13,4 +13,4 @@ type ViewKeys = {
   isCurrentViewId: (id: string) => boolean;
 };
 
-export type { ViewKeys, ViewHalf, ParsedViewKey };
+export type { ViewKeys, ViewHalf };

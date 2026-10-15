@@ -11,4 +11,4 @@ const resolveRoute = (routes: readonly RouteEntry[], path: string): ResolvedRout
 };
 
 export { resolveRoute };
-export type { RouteAccess, RouteEntry, ResolvedRoute } from './route-table.type';
+export type { RouteEntry } from './route-table.type';

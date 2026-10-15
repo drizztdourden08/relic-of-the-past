@@ -22,4 +22,4 @@ const zipEntries = async (entries: ZipEntry[], options?: ZipOptions): Promise<Ui
 };
 
 export { zipEntries };
-export type { ZipEntry, ZipOptions };
+export type { ZipEntry };

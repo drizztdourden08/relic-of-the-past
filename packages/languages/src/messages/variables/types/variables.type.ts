@@ -51,6 +51,13 @@ type RunScan = {
 };
 
 export type {
-  Candidate, LegacyNameData, Occurrence, ResolveMode, ResolveOptions, RunScan, Span, Variable, VariableIndex,
+  Candidate,
+  LegacyNameData,
+  Occurrence,
+  ResolveOptions,
+  RunScan,
+  Span,
+  Variable,
+  VariableIndex,
   VariableKind,
 };

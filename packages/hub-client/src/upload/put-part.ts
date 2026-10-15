@@ -62,4 +62,3 @@ const putPart = async (params: PutPartParams): Promise<string> => {
 };
 
 export { putPart };
-export type { PutPartParams } from './put-part.type';

@@ -22,11 +22,4 @@ interface AutoSaveInfo {
   hasScreenshot: boolean;
 }
 
-interface AutoSaveSettings {
-  autoSaveEnabled: boolean;
-  autoSaveIntervalSeconds: number;
-  autoSaveMaxEntries: number;
-  saveOnQuit: boolean;
-}
-
-export type { AutoSaveInfo, AutoSaveSettings, NormalSaveInfo, QuickSaveSlotInfo };
+export type { AutoSaveInfo, NormalSaveInfo, QuickSaveSlotInfo };

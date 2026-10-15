@@ -7,4 +7,3 @@ const section = (title: string, lines: Line[]): DebugSection => ({
 });
 
 export { section };
-export type { DebugSection, Line };

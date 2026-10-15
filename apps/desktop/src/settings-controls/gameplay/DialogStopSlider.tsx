@@ -28,4 +28,3 @@ const DialogStopSlider = (props: DialogStopSliderProps) => {
 };
 
 export { DialogStopSlider };
-export type { DialogStopSliderProps };

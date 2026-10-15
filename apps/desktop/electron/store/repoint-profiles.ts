@@ -46,4 +46,3 @@ const repointProfiles = async (pack: SelectedPack, replacement: string | null): 
 };
 
 export { repointProfiles };
-export type { SelectedPack };

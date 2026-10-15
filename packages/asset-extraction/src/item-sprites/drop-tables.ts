@@ -37,7 +37,6 @@ const kTab2Sprite = [
 ];
 
 const kAbsTab1 = [0, 1, 1, 1, 2, 2, 2, 0, 1, 1, 2, 2, 1, 2, 2];
-const kAbsTab2 = [0, 0, 0, 0, 1, 2, 3, 0, 0, 4, 5, 0, 0, 0, 0, 2, 4, 6, 2];
 
 const kNumChar = [0x6e, 0x6e, 0x68, 0x6e, 0x6e, 0x78, 0x6e, 0x6e, 0x79,
   0x63, 0x73, 0x69, 0x63, 0x73, 0x6a, 0x63, 0x73, 0x73];
@@ -56,8 +55,12 @@ const kDecodeTab = [
 ];
 
 export {
-  kTab1Sprite, kTab2Sprite,
-  kAbsTab1, kAbsTab2,
-  kNumChar, kNumExt, kNumX, kNumY,
+  kTab1Sprite,
+  kTab2Sprite,
+  kAbsTab1,
+  kNumChar,
+  kNumExt,
+  kNumX,
+  kNumY,
   kDecodeTab,
 };

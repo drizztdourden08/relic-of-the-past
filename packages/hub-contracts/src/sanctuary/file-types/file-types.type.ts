@@ -48,4 +48,4 @@ type SanctuaryFile = {
   createdAt: number;
 };
 
-export type { FileType, FileStatus, FileOwner, FileUpload, FileVersion, SanctuaryFile };
+export type { FileType, FileOwner, FileUpload, FileVersion, SanctuaryFile };

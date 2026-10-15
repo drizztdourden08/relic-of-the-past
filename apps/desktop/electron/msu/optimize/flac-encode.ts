@@ -18,4 +18,3 @@ const encodeToTarget = async (tools: ToolsMain, request: EncodeRequest): Promise
 };
 
 export { encodeToTarget };
-export type { EncodeRequest };

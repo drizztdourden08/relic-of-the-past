@@ -13,4 +13,4 @@ interface DungeonLedger {
   reopensOn: string[];
 }
 
-export type { OwedCheck, DungeonLedger };
+export type { DungeonLedger };

@@ -71,4 +71,3 @@ const useCanvasFit = (params: CanvasFitParams): FitSize => {
 };
 
 export { useCanvasFit };
-export type { CanvasFitParams, FitSize };

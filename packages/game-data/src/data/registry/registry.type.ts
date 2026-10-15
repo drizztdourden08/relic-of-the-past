@@ -9,4 +9,4 @@ interface RegistryState {
   store: Store;
 }
 
-export type { RecordModule, RegistryState, Store };
+export type { RecordModule, RegistryState };

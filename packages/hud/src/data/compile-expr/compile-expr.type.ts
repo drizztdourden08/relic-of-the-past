@@ -21,4 +21,4 @@ interface CompileOk {
 
 type CompileResult = CompileOk | CompileError;
 
-export type { CompiledExpr, CompileError, CompileOk, CompileResult, HardenedOperators };
+export type { CompileResult, HardenedOperators };

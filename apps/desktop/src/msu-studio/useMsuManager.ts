@@ -78,4 +78,3 @@ const useMsuManager = (onRefresh: () => void) => {
 };
 
 export { useMsuManager };
-export type { MsuManagerModel } from './msu-manager.type';

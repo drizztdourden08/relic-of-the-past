@@ -125,7 +125,17 @@ interface SoundListItemProps {
 }
 
 export type {
-  PackFormat, MsuPack, MsuPackRow, MsuFile, TrackInfo, MatchedTrack, ActionResult,
-  MsuManagerProps, MsuEffectsPanelProps, TrackRowProps, SoundRowData, SoundRowProps,
-  SoundPanelController, SoundListItemProps,
+  PackFormat,
+  MsuPackRow,
+  MsuFile,
+  TrackInfo,
+  MatchedTrack,
+  ActionResult,
+  MsuManagerProps,
+  MsuEffectsPanelProps,
+  TrackRowProps,
+  SoundRowData,
+  SoundRowProps,
+  SoundPanelController,
+  SoundListItemProps,
 };

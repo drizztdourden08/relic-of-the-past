@@ -20,4 +20,4 @@ const createViewKeys = (prefix: string, surfaces: readonly string[]): ViewKeys =
 };
 
 export { createViewKeys };
-export type { ViewKeys, ViewHalf, ParsedViewKey } from './create-view-keys.type';
+export type { ViewKeys } from './create-view-keys.type';

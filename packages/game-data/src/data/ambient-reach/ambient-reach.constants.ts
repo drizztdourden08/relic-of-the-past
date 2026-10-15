@@ -16,10 +16,8 @@ const AMBIENT_REACH: readonly AmbientReachEntry[] = [
   { id: 0x17, role: 'cue' },
 ];
 
-const AMBIENT_REACH_MAX = 0x17;
-
 const AMBIENT_ROLES: ReadonlyMap<number, AmbientRole> = new Map<number, AmbientRole>(
   AMBIENT_REACH.map((entry) => [entry.id, entry.role]),
 );
 
-export { AMBIENT_REACH, AMBIENT_REACH_MAX, AMBIENT_ROLES };
+export { AMBIENT_ROLES };

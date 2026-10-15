@@ -7,4 +7,4 @@ const DEFAULT_PORT = String(ARCHIPELAGO_DEFAULT_PORT);
 
 const EMPTY_SERVER_SETUP: ServerSetupDraft = { host: '', port: DEFAULT_PORT, password: '', slotName: DEFAULT_SLOT_NAME };
 
-export { DEFAULT_PORT, EMPTY_SERVER_SETUP };
+export { EMPTY_SERVER_SETUP };

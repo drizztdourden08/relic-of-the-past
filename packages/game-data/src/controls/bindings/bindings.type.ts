@@ -59,10 +59,7 @@ export type {
   ButtonIcon,
   ButtonMapping,
   DeviceFamily,
-  GamepadAxisBinding,
-  GamepadButtonBinding,
   InputApi,
   InputBinding,
   KeyboardBinding,
-  NoneBinding,
 };

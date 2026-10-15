@@ -30,4 +30,4 @@ interface BoxContent {
   rows: number;
 }
 
-export type { BoxContent, BoxLayout, BoxPlacement, BoxSizeMode, GameRect, LayoutOptions };
+export type { BoxContent, BoxLayout, BoxPlacement, GameRect, LayoutOptions };

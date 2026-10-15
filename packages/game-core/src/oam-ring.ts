@@ -82,4 +82,3 @@ const readOamRing = (): RingFrame[] | null => {
 };
 
 export { readOamRing };
-export type { RingFrame, RingSlot } from './oam-ring.type';

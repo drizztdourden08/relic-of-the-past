@@ -59,6 +59,14 @@ interface VoiceCaption {
 }
 
 export type {
-  ReportedVoice, LayerMeterKind, FadeMeter, LayerMeterRow, LayerMeters,
-  MeterRowProps, FadeChipProps, LayerMeterProps, PreviewReadoutProps, LayerLiveProps, VoiceCaption,
+  ReportedVoice,
+  FadeMeter,
+  LayerMeterRow,
+  LayerMeters,
+  MeterRowProps,
+  FadeChipProps,
+  LayerMeterProps,
+  PreviewReadoutProps,
+  LayerLiveProps,
+  VoiceCaption,
 };

@@ -31,4 +31,3 @@ const decompressGbaLz77 = (rom: BinaryReader, offset: number): GbaLz77Result => 
 };
 
 export { decompressGbaLz77 };
-export type { GbaLz77Result };

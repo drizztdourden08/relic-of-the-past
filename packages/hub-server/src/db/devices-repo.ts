@@ -58,4 +58,3 @@ const remove = async (id: string): Promise<void> => {
 const devicesRepo = { create, get, byUserCode, byTokenHash, confirm, deliverToken, touch, listForUser, revoke, remove };
 
 export { devicesRepo };
-export type { DeviceDoc, DeviceCode, CodeStatus } from './devices-repo.type';

@@ -47,4 +47,3 @@ const useSpringLoad = (input: SpringLoadInput): SpringLoad => {
 };
 
 export { useSpringLoad };
-export type { SpringLoad, SpringLoadInput } from './spring-load.type';

@@ -10,4 +10,3 @@ const reachStatusFor = (reach: ReachState, collision: TilePassability, isAboveLa
 };
 
 export { reachStatusFor };
-export type { ReachStatus };

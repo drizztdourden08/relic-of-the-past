@@ -31,4 +31,3 @@ const SANCTUARY_ROUTES = {
 } as const satisfies Record<string, RouteDef>;
 
 export { SANCTUARY_ROUTES };
-export type { SanctuaryRoute } from './api-contract.type';

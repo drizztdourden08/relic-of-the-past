@@ -47,4 +47,4 @@ const ORIGIN_ICONS: Partial<Record<CrossingOrigin, { icon: IconData; color: stri
   'exit-table': { icon: ENTRANCE_ICONS.overworld, color: ENTRANCE_COLOR },
 };
 
-export { ORIGIN_ICONS, ENTRANCE_ICONS, STAIR_ICON, WALK_BOUNDARY_ICON, WARP_ICON, ENTRANCE_COLOR, WALK_BOUNDARY_COLOR };
+export { ORIGIN_ICONS, ENTRANCE_ICONS, ENTRANCE_COLOR };

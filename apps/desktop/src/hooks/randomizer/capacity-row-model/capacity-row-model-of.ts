@@ -51,4 +51,3 @@ const capacityRowModelOf = (input: CapacityRowInput): CapacityRowModel => {
 };
 
 export { capacityRowModelOf };
-export type { CapacityRowInput };

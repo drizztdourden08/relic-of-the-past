@@ -1,5 +1,5 @@
 /* @layer shared-types @kind barrel */
-export { DEFAULT_LIGHTING_CONFIG, EMPTY_SHADOW_PROJECT } from './shadow-casting.constants';
+export { EMPTY_SHADOW_PROJECT } from './shadow-casting.constants';
 export type {
   HeightmapElement,
   LightSource,

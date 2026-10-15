@@ -72,7 +72,6 @@ interface ReviewParams {
 export type {
   AcceptOutcome,
   AcceptRefused,
-  AcceptWritten,
   BatchResult,
   ComparisonScroll,
   Lead,

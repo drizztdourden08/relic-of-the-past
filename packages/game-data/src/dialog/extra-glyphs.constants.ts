@@ -555,4 +555,3 @@ const EXTRA_GLYPHS: readonly ExtraGlyph[] = [
 ];
 
 export { EXTRA_GLYPHS };
-export type { ExtraGlyph } from './extra-glyph.type';

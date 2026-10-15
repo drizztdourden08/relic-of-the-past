@@ -8,4 +8,4 @@ export { mainOf } from './main-of';
 export { outerCross } from './outer-cross';
 export { outerMain } from './outer-main';
 export { toLines } from './to-lines';
-export type { FlowItem, FlowLine, Insets, LineFlow } from './flow.type';
+export type { FlowItem, Insets } from './flow.type';

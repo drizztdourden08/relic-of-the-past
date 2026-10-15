@@ -30,4 +30,4 @@ interface DungeonRecord {
   review?: ReviewMark;
 }
 
-export type { DungeonGameId, DungeonItems, DungeonRecord };
+export type { DungeonGameId, DungeonRecord };

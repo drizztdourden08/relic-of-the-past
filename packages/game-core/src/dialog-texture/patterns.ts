@@ -7,4 +7,3 @@ const patternOf = (texture: DialogTexture): PatternSpec | null =>
   texture === 'none' ? null : PATTERNS[texture];
 
 export { patternOf };
-export type { PatternSpec };

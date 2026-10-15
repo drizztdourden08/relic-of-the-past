@@ -17,4 +17,3 @@ const usePanelResize = (): PanelResize => {
 };
 
 export { usePanelResize };
-export type { PanelResize } from './panel-resize.type';

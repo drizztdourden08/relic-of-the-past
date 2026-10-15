@@ -1,5 +1,4 @@
 /* @layer shared-asset-extraction @kind barrel */
-export { decodeHudTile } from './decode-hud-tile';
 export { extractHudSingle } from './extract-hud-single';
 export { extractHudSpecial } from './extract-hud-special';
 export { extractHudStandard } from './extract-hud-standard';

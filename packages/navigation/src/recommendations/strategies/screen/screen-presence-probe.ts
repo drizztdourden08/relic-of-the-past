@@ -63,4 +63,3 @@ const screenPresenceProbe: SetProbe<'screen', CurrentScreenIdentity> = {
 };
 
 export { screenPresenceProbe };
-export type { CurrentScreenIdentity } from './current-screen-identity.type';

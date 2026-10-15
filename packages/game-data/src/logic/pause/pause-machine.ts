@@ -11,4 +11,3 @@ const reducePause = (state: PauseState, event: PauseEvent, ctx: PauseContext): P
 };
 
 export { reducePause };
-export type { AssignTarget, PauseContext, PauseEvent, PauseScreen, PauseSection, PauseState } from './pause.type';
