@@ -24,11 +24,6 @@ node_modules/
 # Build output
 dist/
 out/
-# electron-builder reads `build/` as buildResources, so it holds packaging SOURCES
-# (the installer splash) and output. The pattern has to match the contents
-# instead of the directory, or git never descends far enough to see the exception.
-/build/*
-!/build/installer-splash.gif
 __pycache__/
 *.tsbuildinfo
 
@@ -49,7 +44,7 @@ __pycache__/
 # WASM build artifacts
 core/wasm-build/output/
 
-# Downloaded native build dependencies (the Emscripten SDK, SDL3 sources), never committed.
+# Downloaded native build dependencies (the Emscripten SDK), never committed.
 third_party/
 
 apps/desktop/public/wasm/

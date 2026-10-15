@@ -142,6 +142,6 @@ const rotpExtension = {
 
 export default brockEslint({
   presets: ['react-app'],
-  ignores: ['**/.brock/**', 'core/zelda3/**'],
+  ignores: ['**/.brock/**', 'core/zelda3/**', 'tooling/sync-check/**', 'tooling/lint-changed/**'],
   extensions: [rotpExtension],
 });

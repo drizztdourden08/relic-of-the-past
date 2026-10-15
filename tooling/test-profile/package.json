@@ -5,8 +5,14 @@
   "description": "Provisions the named profile the end to end specs run against: ROM, config, input profile and the save state fixtures",
   "type": "module",
   "exports": {
-    ".": "./provision-profile.mjs",
-    "./paths": "./paths.mjs"
+    ".": {
+      "types": "./provision-profile.d.mts",
+      "default": "./provision-profile.mjs"
+    },
+    "./paths": {
+      "types": "./paths.d.mts",
+      "default": "./paths.mjs"
+    }
   },
   "dependencies": {
     "@rotp/vault": "workspace:*"
