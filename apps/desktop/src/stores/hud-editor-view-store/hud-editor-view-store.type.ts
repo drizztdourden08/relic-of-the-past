@@ -36,4 +36,4 @@ interface HudEditorViewStore extends HudEditorViewState {
   setEditorStep: (step: number) => void;
 }
 
-export type { FlexEcho, GridEcho, HudEditorViewState, HudEditorViewStore };
+export type { FlexEcho, GridEcho, HudEditorViewStore };

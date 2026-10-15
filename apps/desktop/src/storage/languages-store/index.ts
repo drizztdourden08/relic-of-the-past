@@ -1,7 +1,5 @@
 /* @layer renderer-lib @kind barrel */
 export { listLanguages } from './list-languages';
-export { getLanguage } from './get-language';
-export { extractLanguage } from './extract-language';
 export { extractLanguageFromFile } from './extract-language-from-file';
 export { extractLanguageFromUrl } from './extract-language-from-url';
 export { deleteLanguage } from './delete-language';

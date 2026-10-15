@@ -17,4 +17,4 @@ type CodeInfo = {
 
 type StructuralEntry = { id: number; reason: string };
 
-export type { CodeInfo, CodeParamRange, CodeRisk, CodeScope, StructuralEntry };
+export type { CodeInfo, StructuralEntry };

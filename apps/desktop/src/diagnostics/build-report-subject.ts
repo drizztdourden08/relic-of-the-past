@@ -6,4 +6,3 @@ const buildReportSubject = ({ version, gameId }: SubjectContext): string =>
   gameId ? `v${version} · ${gameIdLabel(gameId)}: ` : `v${version}: `;
 
 export { buildReportSubject };
-export type { SubjectContext };

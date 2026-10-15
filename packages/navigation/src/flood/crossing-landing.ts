@@ -18,4 +18,3 @@ const crossingLanding = (
 };
 
 export { crossingLanding };
-export type { EdgeName } from './crossing-landing.type';

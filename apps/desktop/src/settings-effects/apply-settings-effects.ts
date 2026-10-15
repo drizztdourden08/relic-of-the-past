@@ -24,4 +24,3 @@ const applySettingsSideEffects = (patch: Partial<GameSettings>, next: GameSettin
 };
 
 export { applySettingsSideEffects };
-export type { SettingsEffectDeps };

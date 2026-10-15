@@ -2,7 +2,6 @@
 export { checkSpritesExtracted } from './check-sprites-extracted';
 export { checkSpritesStale } from './check-sprites-stale';
 export { deleteSprites } from './delete-sprites';
-export { expectedSpriteFiles } from './expected-sprite-files';
 export { expectedSpritesVersion } from './expected-sprites-version';
 export { getSpritesBaseUrl } from './get-sprites-base-url';
 export { extractSprites } from './extract-sprites';

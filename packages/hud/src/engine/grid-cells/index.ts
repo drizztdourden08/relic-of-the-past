@@ -7,4 +7,3 @@ export { rowCountOf } from './row-count-of';
 export { sizeTracks } from './size-tracks';
 export { spanSize } from './span-size';
 export { tracksOf } from './tracks-of';
-export type { GridCell } from './grid-cells.type';

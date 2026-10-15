@@ -4,7 +4,6 @@ import { useCallback, useState } from 'react';
 import { catalogApi, useCatalogInstalled } from '@drizztdourden08/brock-catalog/renderer';
 import type { InstalledPack } from '@rotp/hub-contracts';
 import { NO_CATALOG } from '@app/hookshop-reads';
-import type { InstalledActions } from './use-installed-actions.type';
 
 const useInstalledActions = () => {
   const reload = useCatalogInstalled((state) => state.reload);
@@ -48,4 +47,3 @@ const useInstalledActions = () => {
 };
 
 export { useInstalledActions };
-export type { InstalledActions };

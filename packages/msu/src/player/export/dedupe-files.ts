@@ -26,4 +26,4 @@ const dedupeByContent = async (names: string[], loadBytes: LoadBytes): Promise<D
 };
 
 export { dedupeByContent };
-export type { DedupedFiles, LoadBytes };
+export type { LoadBytes };

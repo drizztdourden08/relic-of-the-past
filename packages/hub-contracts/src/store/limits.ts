@@ -38,4 +38,3 @@ const STORE_LIMITS = {
 } as const;
 
 export { STORE_LIMITS };
-export type { StoreLimits } from './limits.type';

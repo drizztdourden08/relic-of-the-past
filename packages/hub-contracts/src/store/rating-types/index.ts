@@ -1,2 +1,2 @@
 /* @layer shared-store @kind barrel */
-export type { Stars, Rating, Install } from './rating-types.type';
+export type { Stars } from './rating-types.type';

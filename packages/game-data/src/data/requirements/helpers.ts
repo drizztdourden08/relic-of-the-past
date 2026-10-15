@@ -94,7 +94,6 @@ const canKillMostThings: Requirement = {
   ],
 };
 
-const hasMiseryMireMedallion: Requirement = { itemId: ETHER };
 const hasTurtleRockMedallion: Requirement = { itemId: QUAKE };
 
 export {
@@ -111,8 +110,6 @@ export {
   hasBeamSword,
   hasFireSource,
   hasMeleeWeapon,
-  hasMiseryMireMedallion,
   hasSword,
   hasTurtleRockMedallion,
 };
-export { hasCrystals } from './has-crystals';

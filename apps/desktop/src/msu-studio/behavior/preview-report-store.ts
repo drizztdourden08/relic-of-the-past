@@ -57,4 +57,4 @@ const createPreviewReportStore = () => {
 };
 
 export { createPreviewReportStore };
-export type { PreviewReport, PreviewReportStore } from './preview-report-store.type';
+export type { PreviewReportStore } from './preview-report-store.type';

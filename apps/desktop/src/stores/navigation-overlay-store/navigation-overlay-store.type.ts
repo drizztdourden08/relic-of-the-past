@@ -40,4 +40,4 @@ interface NavigationOverlayState {
   clear: () => void;
 }
 
-export type { FallHoleSpawn, NavigationOverlayState, NavMode, PathTile, SetDataParams };
+export type { FallHoleSpawn, NavigationOverlayState, NavMode };

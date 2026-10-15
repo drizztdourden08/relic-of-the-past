@@ -5,4 +5,3 @@ const refusal = (e: unknown): Refusal =>
   ({ success: false, error: e instanceof Error ? e.message : 'Unknown error' });
 
 export { refusal };
-export type { Refusal };

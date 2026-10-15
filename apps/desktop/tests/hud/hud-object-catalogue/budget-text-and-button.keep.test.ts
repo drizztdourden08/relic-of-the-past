@@ -8,6 +8,10 @@ import { leaf } from './leaf';
 import { row } from './row';
 import { required } from '../../required';
 
+const screenWith = (root: unknown) => ({
+  kind: 'container', id: 'screen', layout: 'grid', columns: ['auto'], children: [root],
+});
+
 describe('validate-expand-budget - the validator refuses a document that could expand too far', () => {
   const deepRepeat = (count: number): HudNode => ({
     kind: 'element',
@@ -22,13 +26,13 @@ describe('validate-expand-budget - the validator refuses a document that could e
   });
 
   it('a plausible single repeat (well under budget) loads fine', () => {
-    const doc = { id: 'ok', name: 'OK', builtIn: false, regions: [{ anchor: 'top-left', root: row([deepRepeat(1)]) }] };
+    const doc = { id: 'ok', name: 'OK', builtIn: false, screen: screenWith(row([deepRepeat(1)])) };
     const result = tryLoadLayout(doc);
     expect(result.ok).toBe(true);
   });
 
   it('two nested repeats at 200 each (40,000 worst-case nodes) are refused, loudly, naming the budget', () => {
-    const doc = { id: 'bad', name: 'Bad', builtIn: false, regions: [{ anchor: 'top-left', root: row([deepRepeat(200)]) }] };
+    const doc = { id: 'bad', name: 'Bad', builtIn: false, screen: screenWith(row([deepRepeat(200)])) };
     const result = tryLoadLayout(doc);
     expect(result.ok).toBe(false);
     if (!result.ok) expect(result.errors.some((e) => e.includes('worst-case expansion'))).toBe(true);
@@ -68,15 +72,12 @@ describe('text - content resolution and the pixel-face size snap', () => {
 describe('button - bind validation, derived unassigned flag, and the states fallback', () => {
   const buttonDoc = (bind: unknown) => ({
     id: 'btn', name: 'Btn', builtIn: false,
-    regions: [{
-      anchor: 'top-left',
-      root: {
-        kind: 'container', id: 'root', direction: 'row',
-        children: [{
-          kind: 'element', id: 'b', element: { type: 'button', bind, states: { idle: { from: 'image', file: 'a.png' } } },
-        }],
-      },
-    }],
+    screen: screenWith({
+      kind: 'container', id: 'root', direction: 'row',
+      children: [{
+        kind: 'element', id: 'b', element: { type: 'button', bind, states: { idle: { from: 'image', file: 'a.png' } } },
+      }],
+    }),
   });
 
   it('a verb bind is accepted', () => {

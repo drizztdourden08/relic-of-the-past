@@ -11,7 +11,7 @@ const hasOriginAndVersion = (header: Record<string, unknown>): boolean =>
   (header.origin === 'rom' || header.origin === 'custom') && typeof header.version === 'number';
 
 const hasSupportedFormat = (header: Record<string, unknown>): boolean =>
-  header.format === undefined || (typeof header.format === 'number' && header.format <= SET_FORMAT);
+  header.format === SET_FORMAT;
 
 const isSetHeader = (value: unknown): value is SetHeader => {
   if (typeof value !== 'object' || value === null || Array.isArray(value)) return false;

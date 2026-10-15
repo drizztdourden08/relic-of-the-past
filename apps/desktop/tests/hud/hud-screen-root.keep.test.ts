@@ -1,6 +1,6 @@
 /* @layer test @kind test */
 import { describe, expect, it } from 'vitest';
-import { layoutHud, tryLoadLayout, validateLayout } from '@rotp/hud';
+import { layoutHud, validateLayout } from '@rotp/hud';
 import type { HudContainer, HudLayout } from '@rotp/hud';
 
 const VIEW = { w: 398, h: 224 };
@@ -137,44 +137,5 @@ describe('the screen lock', () => {
     });
     expect(doc).toBeNull();
     expect(errors.length).toBeGreaterThan(0);
-  });
-});
-
-describe('a pre-§42 document opens, and opens in the new shape', () => {
-  const stored = {
-    id: 'stored',
-    name: 'Stored',
-    builtIn: false,
-    screen: { id: 'screen', kind: 'container', direction: 'stack', children: [] },
-    regions: [
-      { anchor: 'top-left', root: { ...marker, id: 'tl' } },
-      { anchor: 'bottom-right', root: { ...marker, id: 'br' } },
-      { anchor: 'center', root: { ...marker, id: 'mid' } },
-    ],
-  };
-
-  it('folds every region into the screen, at the cell its anchor named', () => {
-    const result = tryLoadLayout(stored);
-    expect(result.ok).toBe(true);
-    if (!result.ok) return;
-    expect(result.doc.screen.children.map((child) => child.id)).toEqual(['tl', 'br', 'mid']);
-    expect(result.doc.screen.children.map((child) => child.place))
-      .toEqual([
-        { column: 1, row: 1 },
-        { column: 3, row: 3 },
-        { column: 1, row: 1, colSpan: 3, rowSpan: 3 },
-      ]);
-    expect(JSON.stringify(result.doc)).not.toContain('regions');
-    expect(JSON.stringify(result.doc)).not.toContain('stack');
-  });
-
-  it('draws each of the nine exactly where its anchor drew it', () => {
-    const result = tryLoadLayout(stored);
-    if (!result.ok) throw new Error(result.errors.join('\n'));
-    const placed = layoutHud(result.doc, VIEW, {});
-    const rect = (id: string) => placed.find((node) => node.id === id)?.rect;
-    expect(rect('tl')).toMatchObject({ x: 0, y: 0 });
-    expect(rect('br')).toMatchObject({ x: 388, y: 214 });
-    expect(rect('mid')).toMatchObject({ x: 194, y: 107 });
   });
 });

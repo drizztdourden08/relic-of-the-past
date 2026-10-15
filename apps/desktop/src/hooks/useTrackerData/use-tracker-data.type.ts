@@ -46,6 +46,10 @@ type TrackerRunInputs = Pick<LiveInputs['sessionState'], 'foreignOwners'> & Pick
 type TrackerRun = { placementView: PlacementView; run: RunContext };
 
 export type {
-  LiveInputs, RunKind, TrackerDataOptions, TrackerPlacement, TrackerRun, TrackerRunInputs, TrackerStats,
-  TrackerStatusInputs, TrackerStatuses,
+  TrackerDataOptions,
+  TrackerRun,
+  TrackerRunInputs,
+  TrackerStats,
+  TrackerStatusInputs,
+  TrackerStatuses,
 };

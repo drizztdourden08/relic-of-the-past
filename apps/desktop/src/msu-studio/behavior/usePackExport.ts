@@ -58,4 +58,3 @@ const usePackExport = (pack: string | null, manifest: MsuPackManifest) => {
 };
 
 export { usePackExport };
-export type { ExportFormat } from './pack-export.type';

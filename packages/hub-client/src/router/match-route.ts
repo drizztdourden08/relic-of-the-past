@@ -21,4 +21,3 @@ const matchRoute = (pattern: string, path: string): RouteParams | null => {
 };
 
 export { matchRoute };
-export type { RouteParams } from './match-route.type';

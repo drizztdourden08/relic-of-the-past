@@ -24,10 +24,4 @@ type ToolbarItem = {
   make: (choice: string | null) => Token[];
 };
 
-type ToolbarGroup = {
-  id: string;
-  heading: string;
-  items: ToolbarItem[];
-};
-
-export type { GlyphFont, GlyphFontHandle, ToolbarGroup, ToolbarItem };
+export type { GlyphFont, GlyphFontHandle, ToolbarItem };

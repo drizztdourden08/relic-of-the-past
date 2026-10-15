@@ -1,6 +1,6 @@
 /* @layer renderer-lib @kind logic */
 import type { DeviceEntry } from '@drizztdourden08/brock-input';
-import type { ControllerDeviceGroup, ControllerPort } from './controller-device-groups.type';
+import type { ControllerDeviceGroup } from './controller-device-groups.type';
 
 const portSuffixOf = (deviceKey: string): number | null => {
   const match = /#(\d+)$/.exec(deviceKey);
@@ -43,4 +43,4 @@ const groupControllerDevices = (entries: readonly DeviceEntry[]): ControllerDevi
 };
 
 export { groupControllerDevices };
-export type { ControllerDeviceGroup, ControllerPort };
+export type { ControllerDeviceGroup };

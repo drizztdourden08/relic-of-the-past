@@ -10,4 +10,4 @@ interface HudCountdownSpec {
   variant?: HudCountdownVariantChoice;
 }
 
-export type { HudCountdownSpec, HudCountdownVariantChoice, HudCountdownVariantId };
+export type { HudCountdownSpec, HudCountdownVariantChoice };

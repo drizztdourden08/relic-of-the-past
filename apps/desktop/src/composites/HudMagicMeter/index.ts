@@ -1,3 +1,2 @@
 /* @layer renderer-hud @kind barrel */
 export { HudMagicMeter } from './HudMagicMeter';
-export type { HudMagicMeterProps, MagicMeterMode } from './HudMagicMeter.type';

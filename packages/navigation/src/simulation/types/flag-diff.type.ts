@@ -20,4 +20,4 @@ interface DetectedCheck {
   at: VirtualPlayer;
 }
 
-export type { FlagBufferKind, FlagDiff, DetectedCheck };
+export type { FlagDiff, DetectedCheck };

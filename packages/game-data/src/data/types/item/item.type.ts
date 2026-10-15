@@ -27,4 +27,4 @@ interface ItemRecord {
   review?: ReviewMark;
 }
 
-export type { ItemGameId, ItemOrigin, ItemRecord };
+export type { ItemGameId, ItemRecord };

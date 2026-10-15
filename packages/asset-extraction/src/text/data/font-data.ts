@@ -21,5 +21,4 @@ const kFontTypes: Record<string, FontSource> = {
   sv: { tileAddr: 0x8e8000, widthAddr: 0x8ecadf, widthCount: 99 },
 };
 
-export { FONT_TILE_BYTES, FONT_TILE_COUNT, kFontTypes };
-export type { FontSource } from './font-data.type';
+export { FONT_TILE_BYTES, kFontTypes };

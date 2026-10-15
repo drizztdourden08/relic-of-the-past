@@ -53,4 +53,3 @@ const spriteAnnotation = (sprite: SimSprite, ctx: SpriteContext): ScreenAnnotati
 };
 
 export { spriteAnnotation };
-export type { SpriteContext } from './sprites.type';

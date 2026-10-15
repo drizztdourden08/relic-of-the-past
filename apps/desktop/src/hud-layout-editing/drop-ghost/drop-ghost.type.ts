@@ -10,4 +10,4 @@ interface GhostModel {
   warn: boolean;
 }
 
-export type { GhostModel, GhostTone };
+export type { GhostModel };

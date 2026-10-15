@@ -132,7 +132,6 @@ const rotpExtension = {
         'packages/game-core/src/webgl/gl-helpers/{create-shader,create-program}.ts',
         'packages/game-core/src/{shadow-casting,edge-glow}/renderer.ts',
         'packages/input-mapping/src/runtime/haptic-bridge/start-debug-log.ts',
-        'packages/input-mapping/src/runtime/migrate-profiles/migrate-profiles-loudly.ts',
         'packages/input-mapping/src/runtime/scheme-runtime/rebuild-scheme-bindings.ts',
       ],
     },

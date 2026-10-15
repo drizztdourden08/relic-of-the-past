@@ -43,4 +43,3 @@ const probeRoomThreat = (roomId: number, run: RoomFloodRun | null): RoomThreatPr
 };
 
 export { probeRoomThreat };
-export type { RoomThreatProbe } from './probe-room-threat.type';

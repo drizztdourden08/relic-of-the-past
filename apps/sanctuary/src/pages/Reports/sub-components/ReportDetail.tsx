@@ -35,7 +35,6 @@ const fieldsOf = (report: ReportView): DetailField[] => [
   { label: 'size', value: report.zip ? formatBytes(report.zip.bytes) : '-' },
   { label: 'filed', value: formatDateTime(report.createdAt) },
   { label: 'expires', value: expiryLine(report) },
-  ...(report.legacy ? [{ label: 'legacy', value: 'migrated from the old bucket' }] : []),
 ];
 
 const ReportDetail = (props: ReportDetailProps) => {

@@ -6,9 +6,9 @@ const BUG_FIXES_FEATURES: FeatureDef[] = [
     id: 'miscBugFixes',
     label: 'Misc bug fixes',
     description:
-      'Legacy bundle of miscellaneous bug fixes. The individual fixes have moved to features1/2 split gates; this entry is kept for backward compatibility.',
+      'Master switch for the miscellaneous bug fixes. Each fix has its own features1/2 gate, and a per-fix toggle overrides this one.',
     userMessage:
-      'Enables a bundle of miscellaneous bug fixes. This is now split into individual toggles; this entry is kept for backward compatibility.',
+      'Turns on every miscellaneous bug fix at once. Individual toggles override it.',
     group: 'Bug fixes',
     kind: 'features0-bit',
     origin: 'snesrev',
@@ -23,9 +23,9 @@ const BUG_FIXES_FEATURES: FeatureDef[] = [
     id: 'gameChangingBugFixes',
     label: 'Gameplay-altering bug fixes',
     description:
-      'Legacy bundle of bug fixes that change gameplay behavior. The individual fixes have moved to features1/2 split gates, so this entry only exists for backward compatibility.',
+      'Master switch for the bug fixes that change gameplay behavior. Each fix has its own features1/2 gate, and a per-fix toggle overrides this one.',
     userMessage:
-      'Enables a bundle of bug fixes that change how the game plays. It is now split into individual toggles and kept only for backward compatibility.',
+      'Turns on every bug fix that changes how the game plays. Individual toggles override it.',
     group: 'Bug fixes',
     kind: 'features0-bit',
     origin: 'snesrev',

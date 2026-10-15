@@ -34,5 +34,7 @@ type LanguageEditorState = LanguageEditorActions & {
 };
 
 export type {
-  EntryIssueMap, LanguageEditorActions, LanguageEditorState, NameEdit,
+  EntryIssueMap,
+  LanguageEditorState,
+  NameEdit,
 };

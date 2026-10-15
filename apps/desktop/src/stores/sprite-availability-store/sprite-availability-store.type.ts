@@ -10,4 +10,4 @@ interface SpriteAvailabilityStore extends SpriteAvailabilityState {
   noteSpritesRewritten: () => void;
 }
 
-export type { SpriteAvailabilityState, SpriteAvailabilityStore };
+export type { SpriteAvailabilityStore };

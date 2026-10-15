@@ -26,4 +26,4 @@ type RunMultipartParams<P, R> = {
   signal?: AbortSignal;
 };
 
-export type { SignedParts, BegunMultipart, Sliceable, PutPart, RunMultipartParams };
+export type { SignedParts, BegunMultipart, RunMultipartParams };

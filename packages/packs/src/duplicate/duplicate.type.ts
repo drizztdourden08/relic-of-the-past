@@ -6,4 +6,4 @@ type DuplicateOutcome = { name: string };
 
 type DuplicateInstalled = (files: FileStore, installedName: string, basedOn: BasedOn) => Promise<DuplicateOutcome>;
 
-export type { DuplicateInstalled, DuplicateOutcome };
+export type { DuplicateInstalled };

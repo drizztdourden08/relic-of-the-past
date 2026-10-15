@@ -15,4 +15,4 @@ interface StartLayersParams {
   resumeFor: ResumeFor;
 }
 
-export type { ResumeFor, StartLayersParams };
+export type { StartLayersParams };

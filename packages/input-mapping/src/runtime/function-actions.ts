@@ -158,4 +158,3 @@ class FunctionActionEngine {
 }
 
 export { FunctionActionEngine };
-export type { FunctionKeyUpListener };

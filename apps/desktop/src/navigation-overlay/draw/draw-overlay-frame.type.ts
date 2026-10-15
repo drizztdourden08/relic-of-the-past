@@ -25,4 +25,4 @@ interface OverlayFrameInput {
   overlay: OverlayDrawData;
 }
 
-export type { OverlayDrawData, OverlayFrameInput };
+export type { OverlayFrameInput };

@@ -38,4 +38,3 @@ const DialogHoldRow = (props: DialogHoldRowProps) => {
 };
 
 export { DialogHoldRow };
-export type { DialogHoldRowProps };

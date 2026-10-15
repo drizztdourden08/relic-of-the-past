@@ -9,6 +9,5 @@ export { newOverlap } from './new-overlap';
 export { newRepeat } from './new-repeat';
 export { newSwitch } from './new-switch';
 export { newText } from './new-text';
-export { nodeId } from './node-id';
 export { placeholderChild } from './placeholder-child';
 export { slotsOf } from './slots-of';

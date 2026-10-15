@@ -21,4 +21,3 @@ const controllerCardInfo = (entry: DeviceEntry): ControllerCardInfo => {
 };
 
 export { controllerCardInfo };
-export type { ControllerCardInfo };

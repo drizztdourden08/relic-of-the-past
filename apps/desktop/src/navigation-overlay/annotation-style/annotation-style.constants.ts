@@ -31,4 +31,4 @@ const ANNOTATION_STYLES: Record<AnnotationKind, AnnotationStyle> = {
 const DRAWN_KINDS = (Object.keys(ANNOTATION_STYLES) as AnnotationKind[])
   .filter((k) => !ANNOTATION_STYLES[k].panelOnly);
 
-export { LOCK_COLOR, PICKUP_COLOR, TRIGGER_COLOR, INFO_COLOR, ANNOTATION_STYLES, DRAWN_KINDS };
+export { ANNOTATION_STYLES, DRAWN_KINDS };

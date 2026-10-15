@@ -3,7 +3,6 @@ export { list, getSet, getSetFont } from './read';
 export { saveSet, writeSetFont, remove } from './write';
 export { createSet, duplicateSet } from './create';
 export { writePack } from './extract';
-export { migrateLegacySet } from './migrate';
 export { DEFAULT_STRUCTURE, SET_FORMAT } from './format-2';
 export { assertValidSetId } from './set-id';
 export { exportRlang } from './export-rlang';

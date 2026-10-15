@@ -4,4 +4,3 @@ export { editedDraft } from './edited-draft';
 export { isAmended } from './is-amended';
 export { proposalOf } from './proposal-of';
 export { revertedDraft } from './reverted-draft';
-export type { ProposalDraft } from '../recommendations.type';

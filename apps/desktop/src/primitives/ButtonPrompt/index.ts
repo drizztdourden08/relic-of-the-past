@@ -1,3 +1,3 @@
 /* @layer renderer-hud @kind barrel */
 export { ButtonPrompt } from './ButtonPrompt';
-export type { ButtonPromptProps, PromptGlyph } from './ButtonPrompt.type';
+export type { PromptGlyph } from './ButtonPrompt.type';

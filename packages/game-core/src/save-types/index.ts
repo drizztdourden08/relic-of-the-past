@@ -1,2 +1,2 @@
 /* @layer shared-types @kind barrel */
-export type { AutoSaveInfo, AutoSaveSettings, NormalSaveInfo, QuickSaveSlotInfo } from './saves.type';
+export type { AutoSaveInfo, NormalSaveInfo, QuickSaveSlotInfo } from './saves.type';

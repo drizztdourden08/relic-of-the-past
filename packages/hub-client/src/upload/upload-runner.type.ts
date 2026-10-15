@@ -31,4 +31,4 @@ type UploadRunner<T, R> = {
   followUp?: FollowUp<T, R>;
 };
 
-export type { PrepareContext, FollowUp, UploadRunner };
+export type { PrepareContext, UploadRunner };

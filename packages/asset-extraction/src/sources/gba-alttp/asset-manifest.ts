@@ -36,4 +36,3 @@ const GBA_ALTTP_ASSET_MANIFEST: readonly GbaAlttpAssetManifestEntry[] = [
 ];
 
 export { GBA_ALTTP_ASSET_MANIFEST };
-export type { GbaAlttpAssetManifestEntry } from './asset-manifest.type';

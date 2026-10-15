@@ -20,4 +20,4 @@ const FIXED_SIZES: Readonly<Record<FixedSizeType, Size>> = {
   switch: EMPTY_SIZE,
 };
 
-export { EMPTY_SIZE, FIXED_SIZES, HEART_SHAPE_SIZE, TILE, TILE_SIZE };
+export { FIXED_SIZES, HEART_SHAPE_SIZE, TILE, TILE_SIZE };

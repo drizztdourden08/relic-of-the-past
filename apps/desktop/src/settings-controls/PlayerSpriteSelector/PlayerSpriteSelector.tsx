@@ -40,4 +40,3 @@ const PlayerSpriteSelector = (props: PlayerSpriteSelectorProps) => {
 };
 
 export { PlayerSpriteSelector };
-export type { PlayerSpriteSelectorProps };

@@ -1,9 +1,8 @@
 /* @layer test @kind test */
 import { describe, expect, it } from 'vitest';
 import { quantiseHeartFill } from '@app/compounds/HudShape';
-import { aspectOf, intrinsicSize, layoutHud, HUD_PRESETS, instantiatePreset, tryLoadLayout } from '@rotp/hud';
-import type { HudContainer, HudLayout, HudNode } from '@rotp/hud';
-import { required } from '../required';
+import { aspectOf, intrinsicSize, layoutHud, HUD_PRESETS, instantiatePreset } from '@rotp/hud';
+import type { HudLayout, HudNode } from '@rotp/hud';
 
 const VIEW = { w: 398, h: 224 };
 
@@ -94,45 +93,5 @@ describe('a sprite may declare its own natural box', () => {
     expect(intrinsicSize({ type: 'sprite', file: 'x' })).toEqual({ w: 16, h: 16 });
     expect(intrinsicSize({ type: 'sprite', file: 'x', box: { w: 16, h: 8 } })).toEqual({ w: 16, h: 8 });
     expect(aspectOf({ type: 'sprite', file: 'x', box: { w: 8, h: 8 } })).toBe(1);
-  });
-});
-
-describe('a stored document naming a deleted kind is migrated once, on load', () => {
-  const legacyDoc = (elementType: string): unknown => ({
-    id: 'legacy', name: 'Legacy', builtIn: false,
-    regions: [{
-      anchor: 'top-left',
-      root: {
-        kind: 'container', id: 'root', direction: 'row',
-        children: [{ kind: 'element', id: 'v', scale: 0.5, element: { type: elementType } }],
-      },
-    }],
-  });
-
-  const migratedChild = (doc: HudLayout): HudNode => {
-    const root = required(doc.screen.children[0], 'the migrated root') as HudContainer;
-    return required(root.children[0], 'the migrated child');
-  };
-
-  it.each(['life', 'magic', 'consumables', 'wallet'])('%s loads as its preset subtree, not a refusal', (type) => {
-    const result = tryLoadLayout(legacyDoc(type));
-    expect(result.ok, type).toBe(true);
-    if (!result.ok) return;
-    const migrated = migratedChild(result.doc);
-    expect(JSON.stringify(migrated)).not.toContain(`"${type}"`);
-  });
-
-  it("keeps the node's own box properties across the swap", () => {
-    const result = tryLoadLayout(legacyDoc('wallet'));
-    expect(result.ok).toBe(true);
-    if (!result.ok) return;
-    expect(migratedChild(result.doc).scale).toBe(0.5);
-  });
-
-  it('a document with nothing legacy in it is untouched', () => {
-    const result = tryLoadLayout(legacyDoc('spacer'));
-    expect(result.ok).toBe(true);
-    if (!result.ok) return;
-    expect(migratedChild(result.doc).id).toBe('v');
   });
 });

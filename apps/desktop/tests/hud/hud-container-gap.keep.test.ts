@@ -65,50 +65,23 @@ describe('the two axes are independent, and `x` is always horizontal', () => {
   });
 });
 
-describe('a pre-§57 `gap: n` is REWRITTEN on load, and places to the same pixel', () => {
+describe('gap placement and the grid gap', () => {
   const children = ['a', 'b', 'c'].map(box);
-  const legacy = docOf({ kind: 'container', id: 'flow', direction: 'row', gap: 4, children });
-  const rewritten = docOf({
-    kind: 'container', id: 'flow', direction: 'row', gap: { x: 4, y: 4 }, children,
-  });
 
-  it('turns the one number into both axes, and keeps no alias', () => {
-    const flow = loaded(legacy).screen.children[0] as HudContainer;
-    expect(flow.gap).toEqual({ x: 4, y: 4 });
-    expect(JSON.stringify(loaded(legacy))).toBe(JSON.stringify(loaded(rewritten)));
-  });
-
-  it('places identically to the document written the new way, at every view', () => {
-    for (const view of VIEWS) {
-      const before = layoutHud(loaded(legacy), view, {});
-      const after = layoutHud(loaded(rewritten), view, {});
-      expect(before.map((p) => [p.id, p.rect])).toEqual(after.map((p) => [p.id, p.rect]));
-    }
-  });
-
-  it('places exactly where the single-gap flow always did', () => {
-    const doc = loaded(legacy);
-    expect(at(doc, 'b')?.x).toBe(14);
-    expect(at(doc, 'c')?.x).toBe(28);
-  });
-
-  it('migrates a BOUND gap onto both axes too', () => {
+  it('places a flow by its pair gap, a bound gap included', () => {
     const expr = { from: 'data', expr: 'half_magic * 10' };
     const doc = loaded(docOf({
-      kind: 'container', id: 'flow', direction: 'row', gap: expr, children,
+      kind: 'container', id: 'flow', direction: 'row', gap: { x: expr, y: expr }, children,
     }));
-    expect((doc.screen.children[0] as HudContainer).gap).toEqual({ x: expr, y: expr });
     expect(placedById(layoutHud(doc, DEFAULT_VIEW, { scope: { half_magic: 1 } }), 'b')?.rect.x).toBe(20);
   });
 
-  it('leaves a grid\'s gap alone, and is a no-op run twice', () => {
+  it('keeps a grid\'s gap as written', () => {
     const grid = docOf({
       kind: 'container', id: 'flow', layout: 'grid', columns: ['auto', 'auto'],
       gap: { x: 3, y: 9 }, children,
     });
     expect((loaded(grid).screen.children[0] as HudContainer).gap).toEqual({ x: 3, y: 9 });
-    const once = loaded(legacy);
-    expect(loaded(JSON.parse(JSON.stringify(once)))).toEqual(once);
   });
 });
 

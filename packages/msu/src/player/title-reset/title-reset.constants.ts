@@ -20,6 +20,6 @@ const TITLE_MODULES: ReadonlySet<number> = new Set([
 const SILENCED: readonly MsuChannelName[] = ['ambient', 'sfx1', 'sfx2'];
 
 export {
-  MODULE_INTRO, MODULE_FILE_SELECT, MODULE_COPY_FILE, MODULE_KILL_FILE, MODULE_NAME_FILE, MODULE_ATTRACT,
-  TITLE_MODULES, SILENCED,
+  TITLE_MODULES,
+  SILENCED,
 };

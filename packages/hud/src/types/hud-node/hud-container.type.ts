@@ -38,5 +38,10 @@ interface HudGridContainer extends HudContainerBase {
 type HudContainer = HudFlexContainer | HudGridContainer;
 
 export type {
-  HudContainer, HudContainerBase, HudFlexContainer, HudGap, HudGridContainer, HudGridJustifyItems, HudGuide,
+  HudContainer,
+  HudFlexContainer,
+  HudGap,
+  HudGridContainer,
+  HudGridJustifyItems,
+  HudGuide,
 };

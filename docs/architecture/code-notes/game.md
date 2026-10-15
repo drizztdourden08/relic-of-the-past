@@ -496,7 +496,7 @@ encoding uses the right config, then the result's `code` is set to the set's own
 - `SetFont` is the persisted font a set carries beside its dialogue: the raw 2bpp glyph sheet and
   its per glyph width table, the same pair `buildPackedEntry` takes from a ROM extraction.
 - A set read through storage carries `variables`. One built in memory may not, so the code falls
-  back to projecting the legacy pair and still compiles.
+  back to projecting the glossary and name table pair and still compiles.
 
 ### packages/languages/src/messages/compile/compile-sets.ts
 
@@ -758,16 +758,16 @@ Numbering follows the pen in `packages/languages/src/messages/layout/box-pen`:
 A line is opened lazily: it only exists once something lands on it, so a wait followed by a row
 marker gives one line and not an empty one first.
 
-### packages/languages/src/messages/migrate/set-from-pack.ts
+### packages/languages/src/messages/pack-set/set-from-pack.ts
 
-Converts a legacy `LanguagePack` (`packages/asset-extraction/src/sets-types/language.type.ts`) into an editable `LanguageSet`: the
+Converts an extracted `LanguagePack` (`packages/asset-extraction/src/sets-types/language.type.ts`) into an editable `LanguageSet`: the
 one time conversion a translation studio session runs when it opens a language that was only
 ever extracted. It is pure, with no file I/O and no ROM access; the storage layer reads the pack
 in and writes the set out. The pack's language code becomes both `id` and `base`, so the set
 inherits its own alphabet, encoder and font unchanged until a translator forks it. `name` stays
 the bare code, because the display name lookup lives in the renderer and not in shared code.
 
-### packages/languages/src/messages/migrate/empty-name-table.ts
+### packages/languages/src/messages/pack-set/empty-name-table.ts
 
 A name table with no item or bottle names yet and English placeholder pause labels
 (`dungeon-item` becomes `DUNGEON ITEM`). A later migration phase seeds real names from the game's
@@ -1105,7 +1105,7 @@ maps key to variable for the constant time lookups an expansion walk needs.
   judge and never rewritten).
 - `Candidate` is one spelling to search for and the variable it should become. `exists` is always
   true: every needle comes from a variable the set holds.
-- `LegacyNameData` is the pair the old model persisted, and still the shape every current reader
+- `NameTableData` is the glossary and name table pair that every current reader
   expects. It is produced from a variable list and not stored beside it.
 - `ResolveOptions.samples` are preview stand ins for the engine variables, keyed by variable key.
   A missing key falls back to the neutral worst case samples.
@@ -1139,7 +1139,7 @@ set cannot define them again.
 
 The bridge between the one variable list and the two tables that came before it.
 `variablesFromNameTables` folds a glossary and a name table into
-one list; `legacyFromVariables` projects a list back into the pair, so the pause menu, the bake
+one list; `nameTablesFromVariables` projects a list back into the pair, so the pause menu, the bake
 step and the editor's tables keep reading what they always read. The result order is the engine's
 two first (locked, so they always win a key clash), then the translator's terms, then the menu
 names.
@@ -1159,7 +1159,7 @@ therefore counts high, which keeps a fit verdict on the safe side. A picker read
 than the key, so the label is the value, with the key as fallback. `withNote` adds `note` only
 when there is one, so a round trip never grows the shape.
 
-### packages/languages/src/messages/variables/legacy-from-variables.ts
+### packages/languages/src/messages/variables/name-tables-from-variables.ts
 
 Projects a variable list back into the glossary and name table pair the current readers expect.
 Engine variables are dropped: they have no literal value, and neither table ever held one. A
@@ -1167,7 +1167,7 @@ Engine variables are dropped: they have no literal value, and neither table ever
 
 ### packages/languages/src/messages/variables/merge-meta.ts
 
-Carries the fields the legacy pair has no room for across a rebuild. A set is still edited
+Carries the fields the glossary and name table pair has no room for across a rebuild. A set is still edited
 through its projected glossary and name table, so the variable list is rebuilt from that pair on
 every save. That rebuild makes `label` from the value and cannot know about a note the
 translator attached to a menu name, so both would be lost on every save; merging the previous list

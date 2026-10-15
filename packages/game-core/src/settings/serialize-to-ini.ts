@@ -48,20 +48,15 @@ const serializeToIni = (settings: GameSettings, msuPath?: string, language?: str
   const linkGraphicsIni = !settings.vanillaSafe && settings.linkSprite ? LINK_GRAPHICS_LINE : '';
 
   return `[General]
-${optionalLine('Language', language)}Autosave = ${boolToIni(settings.autosave)}
-DisplayPerfInTitle = ${boolToIni(settings.displayPerfInTitle)}
-DisableFrameDelay = ${boolToIni(settings.disableFrameDelay)}
+${optionalLine('Language', language)}DisplayPerfInTitle = ${boolToIni(settings.displayPerfInTitle)}
 ExtendedAspectRatio = ${aspectValue}
 
 [Graphics]
 WindowSize = Auto
-Fullscreen = ${settings.fullscreen}
-WindowScale = ${settings.windowScale}
 NewRenderer = ${boolToIni(settings.newRenderer)}
 EnhancedMode7 = ${boolToIni(settings.enhancedMode7)}
 NoSpriteLimits = ${boolToIni(settings.noSpriteLimits)}
 LinearFiltering = ${boolToIni(settings.linearFiltering && !settings.pixelPerfect)}
-OutputMethod = ${settings.outputMethod}
 DimFlashes = ${boolToIni(settings.dimFlashes)}
 ${linkGraphicsIni}
 

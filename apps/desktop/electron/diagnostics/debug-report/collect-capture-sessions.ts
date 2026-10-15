@@ -26,4 +26,3 @@ const collectCaptureSessions = async (profileId: string, sessionKeys: string[]):
 };
 
 export { collectCaptureSessions };
-export type { FinalizedCaptureSession, CaptureSessionFile };

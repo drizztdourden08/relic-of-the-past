@@ -21,4 +21,4 @@ interface SchemeRuntime {
 
 type SchemeBindingsListener = (bindings: ModernBindings | null) => void;
 
-export type { MenuSink, SchemeBindingsListener, SchemeRuntime };
+export type { SchemeBindingsListener, SchemeRuntime };

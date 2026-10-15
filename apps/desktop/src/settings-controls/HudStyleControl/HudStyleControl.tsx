@@ -65,4 +65,3 @@ const HudStyleControl = ({ value, settings, onChange }: HudStyleControlProps) =>
 };
 
 export { HudStyleControl };
-export type { HudStyleControlProps };

@@ -42,4 +42,4 @@ interface ShadowFrame {
   time: number;
 }
 
-export type { ShadowFrame, ShadowPrograms, ShadowUniforms, ShadowPipeline, ShadowState };
+export type { ShadowFrame, ShadowPrograms, ShadowPipeline, ShadowState };

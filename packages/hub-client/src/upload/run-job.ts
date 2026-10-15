@@ -70,4 +70,3 @@ const runJob = async <T, R>(params: RunJobParams<T, R>): Promise<void> => {
 };
 
 export { runJob };
-export type { RunJobParams } from './run-job.type';

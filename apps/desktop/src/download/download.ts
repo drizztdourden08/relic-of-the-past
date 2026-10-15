@@ -24,4 +24,3 @@ const fetchToBytes = async (url: string, onProgress?: DownloadProgress): Promise
 };
 
 export { fetchToBytes };
-export type { DownloadProgress };

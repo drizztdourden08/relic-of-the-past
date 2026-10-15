@@ -24,4 +24,3 @@ const buildDebugText = ({ header, system, renderer, userAgent }: DebugTextInput)
 };
 
 export { buildDebugText };
-export type { DebugTextInput };

@@ -106,7 +106,6 @@ export type {
   DungeonContext,
   DungeonScreen,
   InteriorContext,
-  InteriorKind,
   InteriorScreen,
   OverworldContext,
   OverworldScreen,
@@ -115,7 +114,4 @@ export type {
   ScreenConnection,
   ScreenDefinition,
   ScreenType,
-  ScreenVariantInfo,
-  VariantCondition,
-  World,
 };

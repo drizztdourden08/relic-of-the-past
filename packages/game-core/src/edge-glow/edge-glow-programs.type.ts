@@ -56,5 +56,8 @@ interface EdgeGlowState {
 type CleanFrame = { data: Uint8Array; width: number; height: number };
 
 export type {
-  EdgeGlowPrograms, EdgeGlowUniforms, EdgeGlowBounds, EdgeGlowSettings, EdgeGlowPipeline, EdgeGlowState, CleanFrame,
+  EdgeGlowPrograms,
+  EdgeGlowPipeline,
+  EdgeGlowState,
+  CleanFrame,
 };

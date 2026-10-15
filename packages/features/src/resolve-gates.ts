@@ -12,4 +12,3 @@ const resolveGates = (requested: Iterable<string>, { vanillaSafe }: ResolveGates
 }
 
 export { resolveGates }
-export type { ResolveGatesOptions }

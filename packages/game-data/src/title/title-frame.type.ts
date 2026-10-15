@@ -36,4 +36,4 @@ interface TitleProgress {
   fromSlot: number | null;
 }
 
-export type { SwordTier, TitleFrame, TitlePhase, TitlePiece, TitleProgress, TitleWorld };
+export type { SwordTier, TitleFrame, TitlePhase, TitlePiece, TitleProgress };

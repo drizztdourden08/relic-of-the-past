@@ -22,4 +22,3 @@ const readExpr = (source: string, context: ExprContext): ExprReading => {
 };
 
 export { readExpr };
-export type { ExprContext, ExprReading } from './check-expr.type';

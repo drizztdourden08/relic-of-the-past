@@ -29,4 +29,4 @@ type EntranceSpec = {
   prefix: string;
 };
 
-export type { EntranceAdder, EntranceAsset, EntranceColumn, EntranceColumnKey, EntranceSpec, EntranceTable, EntranceValueKind };
+export type { EntranceAsset, EntranceColumn, EntranceSpec, EntranceTable, EntranceValueKind };

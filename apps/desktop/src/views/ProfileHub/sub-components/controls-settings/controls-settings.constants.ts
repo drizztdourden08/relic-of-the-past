@@ -21,12 +21,11 @@ const ALL_BUTTONS: readonly boolean[] = new Array(Object.keys(BUTTON_INDEX).leng
 const ALL_AXES: readonly boolean[] = new Array(AXIS_COUNT).fill(true);
 
 const DRAG_SDL_TYPE = 'application/x-sdl-type';
-const DRAG_DEVICE_ID = 'application/x-device-id';
 const DRAG_DEVICE_NAME = 'application/x-device-name';
 const DRAG_VID = 'application/x-vid';
 const DRAG_PID = 'application/x-pid';
 
 export {
-  ALL_AXES, ALL_BUTTONS, DRAG_DEVICE_ID, DRAG_DEVICE_NAME, DRAG_PID, DRAG_SDL_TYPE,
+  ALL_AXES, ALL_BUTTONS, DRAG_DEVICE_NAME, DRAG_PID, DRAG_SDL_TYPE,
   DRAG_VID, FAMILY_ICON_MAP, GENERIC_CONTROLLER_ICON, KEYBOARD_ICON, NO_BINDING,
 };

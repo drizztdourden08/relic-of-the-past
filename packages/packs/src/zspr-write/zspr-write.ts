@@ -77,4 +77,3 @@ const toZsprBytes = (sheet: PlayerSheet, options: ZsprOptions = {}): Uint8Array 
 };
 
 export { toZsprBytes };
-export type { ZsprOptions } from './zspr-write.type';

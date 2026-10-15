@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind constants */
 import { sampleSlot } from './sample-slot';
-import type { ModernSlot, SlotAssignment, SlotIndex } from '@rotp/game-data';
+import type { ModernSlot } from '@rotp/game-data';
 
 const SAMPLE_HEALTH_CAPACITY = 20 * 8;
 const SAMPLE_HEALTH_CURRENT = 14 * 8;
@@ -37,19 +37,9 @@ const SAMPLE_SLOTS: readonly ModernSlot[] = [
   sampleSlot(8, 'DPAD_DOWN', 'Down'),
 ];
 
-const SAMPLE_ASSIGNMENTS: Readonly<Record<SlotIndex, SlotAssignment>> = {
-  2: { kind: 'sword' },
-  4: { kind: 'action' },
-  1: { kind: 'item', hudItem: 3 },
-  3: { kind: 'item', hudItem: 4 },
-  5: { kind: 'item', hudItem: 1 },
-  6: { kind: 'none' },
-};
-
 const SAMPLE_ITEM_POOL: readonly number[] = [1, 2, 3, 4, 5, 6, 8, 9, 11, 13, 15, 17, 18, 21];
 
 export {
-  SAMPLE_ASSIGNMENTS,
   SAMPLE_BOTTLES,
   SAMPLE_COUNTDOWN,
   SAMPLE_HUD,

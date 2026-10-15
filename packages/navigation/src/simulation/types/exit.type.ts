@@ -24,4 +24,4 @@ interface SimExit {
   area?: SimArea;
 }
 
-export type { SimArea, SimExitOrigin, SimExit };
+export type { SimArea, SimExit };

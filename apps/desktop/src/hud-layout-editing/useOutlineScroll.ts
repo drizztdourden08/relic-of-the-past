@@ -27,4 +27,3 @@ const useOutlineScroll = (input: UseOutlineScrollInput): OutlineScroll => {
 };
 
 export { useOutlineScroll };
-export type { OutlineScroll, UseOutlineScrollInput } from './outline-scroll.type';

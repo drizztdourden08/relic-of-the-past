@@ -10,4 +10,4 @@ type RecommendationPassRequest = {
 };
 
 export type { RecommendationPassRequest };
-export type { DetectionContext, PassResult, DraftRecommendation, Recommendation } from '@rotp/navigation';
+export type { PassResult, Recommendation } from '@rotp/navigation';

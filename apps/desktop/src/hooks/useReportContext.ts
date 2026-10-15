@@ -36,4 +36,3 @@ const useReportContext = (): ReportContextResult => {
 };
 
 export { useReportContext };
-export type { ReportContextResult };

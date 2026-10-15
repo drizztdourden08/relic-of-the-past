@@ -47,4 +47,3 @@ const probeRoom = (roomId: number, entryTile?: { row: number; col: number }, ite
 };
 
 export { probeRoom };
-export type { RoomProbe } from '@rotp/navigation';

@@ -55,12 +55,15 @@ interface ReachStatus {
 
 type LayerDisplayMode = 'single' | 'dual' | 'locked';
 
-interface LayerReach {
-  layer0Reach?: boolean;
-  layer1Reach?: boolean;
-}
-
 export type {
-  DualLayerPanelsProps, ExtraRowsProps, LayerBlockProps, LayerDisplayMode, LayerReach, LayerTileData, ReachStatus,
-  TileTooltipContentProps, TooltipData, TooltipLayers, TooltipTone,
+  DualLayerPanelsProps,
+  ExtraRowsProps,
+  LayerBlockProps,
+  LayerDisplayMode,
+  LayerTileData,
+  ReachStatus,
+  TileTooltipContentProps,
+  TooltipData,
+  TooltipLayers,
+  TooltipTone,
 };

@@ -1,9 +1,5 @@
 /* @layer shared-hud @kind barrel */
 export { cyclePosition } from './cycle-position';
-export { enterExitProgress } from './enter-exit-progress';
 export { gateTruthy } from './gate-truthy';
-export { REFLOW_ANIMATABLE_PROPERTIES } from './motion.constants';
 export { sampleAnimation } from './sample-animation';
 export { sampleKeyframes } from './sample-keyframes';
-export { sampleTransition } from './sample-transition';
-export { transitionProgress } from './transition-progress';

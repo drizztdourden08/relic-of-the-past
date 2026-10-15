@@ -1,5 +1,9 @@
 /* @layer shared-game @kind barrel */
 export type {
-  Confidence, DraftRecommendation, EntityIdOf, Evidence, ProposedRecord,
-  Recommendation, RecommendationAction, RecommendationOrigin, RecommendationState,
+  Confidence,
+  DraftRecommendation,
+  ProposedRecord,
+  Recommendation,
+  RecommendationAction,
+  RecommendationOrigin,
 } from './recommendation.type';

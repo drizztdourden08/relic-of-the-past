@@ -129,7 +129,6 @@ interface MusicInfo {
 export type {
   CompiledPattern,
   CompiledPhrase,
-  CompiledPhraseLoop,
   CompiledSfxList,
   CompiledSfxPattern,
   CompiledSong,
@@ -139,11 +138,9 @@ export type {
   EntityByType,
   EntityFactories,
   EntityType,
-  InstrumentInfo,
   MusicCompileInput,
   MusicInfo,
   PatternLine,
   SectionParser,
-  SfxInstrumentInfo,
   SfxLineBytes,
 };

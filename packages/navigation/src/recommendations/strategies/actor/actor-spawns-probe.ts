@@ -52,4 +52,3 @@ const actorSpawnsProbe: SetProbe<'actor', UncataloguedSpawn> = {
 };
 
 export { actorSpawnsProbe };
-export type { UncataloguedSpawn } from './uncatalogued-spawn.type';

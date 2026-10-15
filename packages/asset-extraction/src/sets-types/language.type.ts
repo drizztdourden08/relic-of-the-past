@@ -30,4 +30,4 @@ interface LanguageSummary {
   lineCount: number;
 }
 
-export type { LanguageMeta, DialogueLine, LanguageFont, LanguagePack, LanguageSummary };
+export type { LanguageMeta, DialogueLine, LanguagePack, LanguageSummary };

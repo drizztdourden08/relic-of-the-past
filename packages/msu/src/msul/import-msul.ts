@@ -56,4 +56,3 @@ const readMsulPack = async (bytes: Uint8Array): Promise<MsulPack> => {
 };
 
 export { readMsulPack };
-export type { MsulPack };

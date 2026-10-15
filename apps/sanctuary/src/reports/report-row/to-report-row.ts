@@ -22,7 +22,6 @@ const toReportRow = (report: ReportView): ReportRow => ({
   zip: report.zip ? { bytes: report.zip.bytes } : null,
   size: report.zip ? formatBytes(report.zip.bytes) : '-',
   contents: contentsLine(report.zip?.contents),
-  legacy: report.legacy,
   createdAt: formatDateTime(report.createdAt),
   expiresAt: dateOrNull(report.expiresAt),
   extendedUntil: dateOrNull(report.extendedUntil),

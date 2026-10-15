@@ -58,4 +58,3 @@ const buildOggOpus = (packets: OpusPacket[], options: OggOpusOptions): Uint8Arra
 };
 
 export { buildOggOpus };
-export type { OggOpusOptions };

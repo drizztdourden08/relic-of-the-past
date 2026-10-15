@@ -28,4 +28,3 @@ const createSeedLedger = (): SeedLedger => {
 };
 
 export { createSeedLedger };
-export type { SeedLedger } from './area-seeds.type';

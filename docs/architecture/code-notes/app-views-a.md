@@ -638,7 +638,7 @@ The state of the variables tab: filtering, usage counts and the hardcoded name s
 
 ### apps/desktop/src/language-editor/behavior/variable-edits/
 
-One variable's value written back into the pair the set stores (glossary and name table). The key shapes mirror `packages/languages/src/messages/variables/legacy-from-variables.ts` exactly (`bottle-<content>`, `label-<section>`, anything else is an item), so a round trip is byte identical. An engine variable has no stored value and is refused (`isEditable`).
+One variable's value written back into the pair the set stores (glossary and name table). The key shapes mirror `packages/languages/src/messages/variables/name-tables-from-variables.ts` exactly (`bottle-<content>`, `label-<section>`, anything else is an item), so a round trip is byte identical. An engine variable has no stored value and is refused (`isEditable`).
 
 ### apps/desktop/src/language-editor/editor/attrs-to-token/
 
@@ -1792,7 +1792,7 @@ The control scheme running right now, a quiet background fact and never a contro
 Slot numbers are never validated against a device, so this exists for two things only.
 It sizes the preview's slot list realistically, so a pad layout previews with pad shaped content and a keyboard layout with keyboard shaped content.
 It writes the scheme's half of the layout and scheme link on save, so a saved copy still points at a scheme that wears it.
-The list comes from the profile's input profiles through the same migration every reader uses, so old slot lists show their real numbers.
+The list comes from the profile's input profiles.
 Only schemes with a modern block are offered, because a classic profile has no slots.
 The scheme in force is found in three steps, because none is always right.
 The live settings come first, when a profile is loaded for play.

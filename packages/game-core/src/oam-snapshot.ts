@@ -112,4 +112,3 @@ const readOamSnapshot = (): OamSnapshot | null => {
 };
 
 export { readOamSnapshot };
-export type { OamSnapshot, OamSlot, SpriteSlot } from './oam-snapshot.type';

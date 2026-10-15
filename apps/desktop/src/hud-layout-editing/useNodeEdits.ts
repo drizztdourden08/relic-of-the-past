@@ -40,4 +40,3 @@ const useNodeEdits = (apply: (change: (doc: HudLayout) => HudLayout) => void): N
 };
 
 export { useNodeEdits };
-export type { NodeEdits } from './node-edits.type';

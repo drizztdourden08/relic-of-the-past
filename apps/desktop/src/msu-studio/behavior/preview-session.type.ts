@@ -17,4 +17,4 @@ interface PreviewSession {
   read: ReadReport;
 }
 
-export type { ReadReport, PreviewRun, PreviewSession };
+export type { PreviewRun, PreviewSession };
