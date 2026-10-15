@@ -57,7 +57,7 @@ const CASES: Record<string, () => unknown> = {
 const document_ = (rail: number): string => {
   const body = Object.entries(CASES)
     .map(([id, node]) => `<section data-case="${id}"><div class="hud-section__body">${
-      renderToStaticMarkup(h(DensityScope, { density: 'compact' }, node() as never))}</div></section>`)
+      renderToStaticMarkup(h(DensityScope, { density: 'compact', children: node() as never }))}</div></section>`)
     .join('');
   const css = SHEETS.map((f) => readFileSync(f, 'utf8')).join('\n');
   return `<!doctype html><meta charset="utf-8"><style>

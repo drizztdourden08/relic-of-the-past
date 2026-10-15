@@ -157,9 +157,9 @@ the real `%APPDATA%` can be present, and the folder is deleted on close (set
 breaks `app-sprite://`.
 
 The app opens a splash window before the main one and closes it, so `firstWindow()` can
-return a page that is about to vanish. `launchApp` goes through Brock's `launchAppForTest`
-(`@drizztdourden08/brock-build/testing`), which waits with `waitForAppPage` until no splash
-window is open and takes the first window that is neither the splash nor a widget window.
+return a page that is about to vanish. `launchApp` waits with Brock's `waitForAppPage`
+(`@drizztdourden08/brock-build/testing`) until no splash window is open, then takes the first
+window that is neither the splash nor a widget window.
 Every spec reads its page from there.
 
 A spec seeds the profile it needs through `ProfileSeed`: the id (also `--instance`), the
