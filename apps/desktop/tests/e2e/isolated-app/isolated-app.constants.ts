@@ -2,7 +2,8 @@
 import { join, resolve } from 'path';
 import { REPO_ROOT } from '../../repo-root';
 
-const MAIN_JS = join(REPO_ROOT, 'apps', 'desktop', 'dist', 'electron', 'main.js');
+const APP_DIR = join(REPO_ROOT, 'apps', 'desktop');
+const MAIN_JS = join(APP_DIR, 'dist', 'electron', 'main.js');
 const FIXTURES = join(REPO_ROOT, 'tests', 'fixtures', 'save-states');
 
 const MAIN_CHECKOUT = resolve(REPO_ROOT, '..', '..', '..');
@@ -19,6 +20,6 @@ const E2E_INSTANCE = 'e2e-tests';
 const STATE_SPEC_CONFIG = { cheatsEnabled: true, developerToolsEnabled: true };
 
 export {
-  DATA_SOURCES, E2E_INSTANCE, FIXTURES, KEEP_USER_DATA_ENV, MAIN_CHECKOUT, MAIN_JS, ROM_DIRS, ROM_EXTENSIONS, STATE_SPEC_CONFIG,
+  APP_DIR, DATA_SOURCES, E2E_INSTANCE, FIXTURES, KEEP_USER_DATA_ENV, MAIN_CHECKOUT, MAIN_JS, ROM_DIRS, ROM_EXTENSIONS, STATE_SPEC_CONFIG,
   USER_DATA_PREFIX,
 };

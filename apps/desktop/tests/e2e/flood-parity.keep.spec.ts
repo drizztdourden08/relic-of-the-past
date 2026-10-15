@@ -2,7 +2,7 @@
 import { test, expect } from '@playwright/test';
 import { join } from 'path';
 import { existsSync, readFileSync, rmSync } from 'fs';
-import { E2E_INSTANCE, STATE_SPEC_CONFIG, launchApp, startApp } from './isolated-app';
+import { E2E_INSTANCE, STATE_SPEC_CONFIG, launchApp } from './isolated-app';
 import { REPO_ROOT } from '../repo-root';
 
 const PROJECT_ROOT = REPO_ROOT;
@@ -32,7 +32,7 @@ const widgetReachable = async (state: string): Promise<number> => {
 
 const dumpReachable = async (state: string): Promise<number> => {
   if (existsSync(DUMP_PATH)) rmSync(DUMP_PATH);
-  const { close } = await startApp({
+  const { close } = await launchApp({
     instance: E2E_INSTANCE,
     openByDefault: true,
     config: STATE_SPEC_CONFIG,

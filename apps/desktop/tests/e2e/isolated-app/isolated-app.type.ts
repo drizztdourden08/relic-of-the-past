@@ -21,14 +21,11 @@ interface LaunchOptions extends ProfileSeed {
   args?: readonly string[];
 }
 
-interface StartedApp {
+interface LaunchedApp {
   app: ElectronApplication;
+  window: Page;
   userData: string;
   close: () => Promise<void>;
 }
 
-interface LaunchedApp extends StartedApp {
-  window: Page;
-}
-
-export type { LaunchOptions, LaunchedApp, StoredSlotSeed, ProfileSeed, StartedApp };
+export type { LaunchOptions, LaunchedApp, StoredSlotSeed, ProfileSeed };

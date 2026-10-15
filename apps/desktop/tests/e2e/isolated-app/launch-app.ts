@@ -1,43 +1,30 @@
 /* @layer tests @kind helper */
-import { waitForAppPage } from '@drizztdourden08/brock-build/testing';
-import { _electron as electron } from 'playwright';
-import { MAIN_JS } from './isolated-app.constants';
+import { launchAppForTest } from '@drizztdourden08/brock-build/testing';
+import { APP_DIR } from './isolated-app.constants';
 import { makeUserData, removeUserData } from './make-user-data';
 import { assertLaunchedViaCli } from './require-cli';
-import type { LaunchOptions, LaunchedApp, StartedApp } from './isolated-app.type';
-
-const ignoreAlreadyClosed = (): void => undefined;
-
-const startApp = async (options: LaunchOptions): Promise<StartedApp> => {
-  assertLaunchedViaCli();
-  const { args = [], ...seed } = options;
-  const userData = makeUserData(seed);
-  try {
-    const app = await electron.launch({
-      args: [MAIN_JS, '--muted', '--no-focus', `--instance=${seed.instance}`, `--user-data=${userData}`, ...args],
-      env: { ...process.env, NODE_ENV: 'production' },
-    });
-    const close = async (): Promise<void> => {
-      await app.close().catch(ignoreAlreadyClosed);
-      removeUserData(userData);
-    };
-    return { app, userData, close };
-  } catch (error) {
-    removeUserData(userData);
-    throw error;
-  }
-};
+import type { LaunchOptions, LaunchedApp } from './isolated-app.type';
 
 const launchApp = async (options: LaunchOptions): Promise<LaunchedApp> => {
-  const started = await startApp(options);
+  assertLaunchedViaCli();
+  const { args = [], ...seed } = options;
+  const profile = makeUserData(seed);
   try {
-    const window = await waitForAppPage(started.app);
-    await window.waitForLoadState('domcontentloaded');
-    return { ...started, window };
+    const { app, page, close } = await launchAppForTest({
+      appDir: APP_DIR,
+      userData: profile,
+      args: [`--instance=${seed.instance}`, ...args],
+      env: { NODE_ENV: 'production' },
+    });
+    const closeAndClean = async (): Promise<void> => {
+      await close().catch(() => undefined);
+      removeUserData(profile);
+    };
+    return { app, window: page, userData: profile, close: closeAndClean };
   } catch (error) {
-    await started.close();
+    removeUserData(profile);
     throw error;
   }
 };
 
-export { launchApp, startApp };
+export { launchApp };

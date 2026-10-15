@@ -147,8 +147,8 @@ which raises the window on Windows and steals focus.
 
 ### e2e/isolated-app
 
-Every permanent spec launches through `launchApp` (or `startApp` for a launch that ends by
-itself, like `--dump-nav`). Each launch gets its own fresh `--user-data` folder under the OS
+Every permanent spec launches through `launchApp`, which wraps Brock's `launchAppForTest`
+(`@drizztdourden08/brock-build/testing`). Each launch gets its own fresh `--user-data` folder under the OS
 temp directory, seeded from nothing but the checkout: the ROM and asset blob come from the
 worktree's `.user-data/Data` or `test-roms/`, the profile files are written whole, and the
 fixture save states are copied in with a fresh manifest. Nothing from an earlier run or from
@@ -157,9 +157,8 @@ the real `%APPDATA%` can be present, and the folder is deleted on close (set
 breaks `app-sprite://`.
 
 The app opens a splash window before the main one and closes it, so `firstWindow()` can
-return a page that is about to vanish. `launchApp` waits with Brock's `waitForAppPage`
-(`@drizztdourden08/brock-build/testing`) until no splash window is open, then takes the first
-window that is neither the splash nor a widget window.
+return a page that is about to vanish. `launchAppForTest` waits until no splash window is
+open, then takes the first window that is neither the splash nor a widget window.
 Every spec reads its page from there.
 
 A spec seeds the profile it needs through `ProfileSeed`: the id (also `--instance`), the
