@@ -87,7 +87,7 @@ const measureAppearance = async (rails: readonly number[]): Promise<AppearanceRi
       (measured[rail] ?? []).filter((m) => m.kind === kind && (kase === undefined || m.case === kase)),
     hex: (rail, kase, label) => {
       const hit = (measured[rail] ?? [])
-        .find((m) => m.case === kase && m.kind === 'text-input' && m.name === `${label} hex`);
+        .find((m) => m.case === kase && m.kind === 'hud-color-field__hex' && m.name === `${label} hex`);
       if (!hit) throw new Error(`no ColorField "${label}" in ${kase} at ${rail}px`);
       return hit.content;
     },

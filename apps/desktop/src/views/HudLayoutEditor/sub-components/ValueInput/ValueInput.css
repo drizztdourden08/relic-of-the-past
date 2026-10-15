@@ -132,7 +132,7 @@
   min-height: var(--promote-height, auto);
 }
 
-.hud-value-field--wide > .hud-value-field__control {
+.hud-value-field--wide .hud-value-field__control {
   position: absolute;
   z-index: var(--z-sticky);
   top: var(--promote-top, 0);

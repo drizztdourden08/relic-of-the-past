@@ -54,7 +54,7 @@ const probe = (promote: boolean): Measured[] => {
   const promoteField = (f: Element): void => {
     if (!f.querySelector('[data-formula="true"]')) return;
     const root = f as HTMLElement;
-    const control = root.querySelector('.field__control');
+    const control = root.querySelector('.hud-value-field__control');
     const host = root.closest('.hud-inspect__row') ?? root.parentElement;
     if (!(control instanceof HTMLElement) || !(host instanceof HTMLElement)) return;
     const rr = root.getBoundingClientRect();
