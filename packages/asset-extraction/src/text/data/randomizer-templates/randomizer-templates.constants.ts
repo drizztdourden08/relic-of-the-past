@@ -1,4 +1,4 @@
-/* @layer shared-asset-extraction @kind data */
+/* @layer shared-asset-extraction @kind verbatim @source the randomizer's own receipt and shop messages, written in the game's dialogue format */
 const RANDOMIZER_MSG_BASE = 397;
 
 const RANDOMIZER_DIALOGUE_TEMPLATES: readonly string[] = [

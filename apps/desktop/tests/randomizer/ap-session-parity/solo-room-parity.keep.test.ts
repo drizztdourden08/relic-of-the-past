@@ -10,6 +10,7 @@ import type { FakeRoom } from '../ap-fake-server';
 import { soloRoomOf } from '../ap-solo-room';
 import { CASES, FOREIGN_ARMS, NAMED_FOREIGN_LINE, QUIVER_RECEIPT, SEED, WORD_5 } from './parity-cases.data';
 import type { ParityCase } from './parity-cases.data';
+import { FOREIGN_LINE_TEXT } from './foreign-line.fixture';
 import { foreignSpotsOf } from './foreign-spots-of';
 import { handAway } from './hand-away';
 
@@ -176,7 +177,7 @@ const armOnline = async (core: FakeModule, room: FakeRoom): Promise<{ onlineSet:
 const expectParity = ({ localSet, onlineSet, online, placement, foreign }: ParityFacts): void => {
   expect(localSet.rest.length).toBeGreaterThan(100);
   if (foreign) expect(onlineSet.rest).toContainEqual(expect.stringContaining(' sent to Zelda!"'));
-  const unnamed = onlineSet.rest.map((call) => call.replace(NAMED_FOREIGN_LINE, '"Sent to another player!"'));
+  const unnamed = onlineSet.rest.map((call) => call.replace(NAMED_FOREIGN_LINE, `"${FOREIGN_LINE_TEXT}"`));
   expect(unnamed.sort()).toEqual(localSet.rest);
   expect(onlineSet.word5.every((word) => (word & AP_ONLINE_BIT) !== 0)).toBe(true);
   expect(onlineSet.word5.map((word) => word & ~AP_BITS)).toEqual(localSet.word5);

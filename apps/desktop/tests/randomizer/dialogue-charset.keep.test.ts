@@ -6,12 +6,13 @@ import { primary, secondary } from '@rotp/randomizer';
 import { stripHighlight, toDialogueText, compressMarkedStrings } from '@rotp/game-core';
 import type { DialogueCharset } from '@rotp/game-data';
 import { required } from '../required';
+import { ICE_TRAP_NAME } from './dialogue-charset.fixture';
 
 type Glyph = (typeof EXTRA_GLYPHS)[number];
 
 const REQUIRED = "_-.,'()!?&+/:#%*\";=<>[]~@^`";
 const PRINTABLE_ASCII = Array.from({ length: 95 }, (_, i) => String.fromCharCode(32 + i)).join('');
-const SAMPLES = ['Drizztdourden_', 'Bottle (Fairy)', "Kokiri's Emerald", 'Buy Deku Stick (1)', 'Rupees (100)', 'Ice Trap!', 'A&B'];
+const SAMPLES = ['Drizztdourden_', 'Bottle (Fairy)', "Kokiri's Emerald", 'Buy Deku Stick (1)', 'Rupees (100)', ICE_TRAP_NAME, 'A&B'];
 const NEIGHBOURS: readonly (readonly [number, number])[] = [[-1, 0], [1, 0], [0, -1], [0, 1]];
 
 const alphabetOf = (code: string): string[] => required(kLanguages[code], `language ${code}`).alphabet;

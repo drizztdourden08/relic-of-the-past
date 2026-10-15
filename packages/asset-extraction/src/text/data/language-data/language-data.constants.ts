@@ -1,4 +1,4 @@
-/* @layer shared-asset-extraction @kind data */
+/* @layer shared-asset-extraction @kind verbatim @source the game's ROM text dictionaries and alphabets, as in upstream text_compression.py */
 import type { EuLanguageBase, LanguageConfig } from './language-data.type';
 
 const kTextAlphabet_US: string[] = [

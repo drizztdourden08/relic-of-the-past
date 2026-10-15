@@ -1,8 +1,8 @@
 /* @layer tests @kind helper */
+import { launchAppForTest } from '@drizztdourden08/brock-build/testing';
 import { _electron as electron } from 'playwright';
-import { MAIN_JS } from './isolated-app.constants';
+import { APP_DIR, MAIN_JS } from './isolated-app.constants';
 import { makeUserData, removeUserData } from './make-user-data';
-import { waitForMainWindow } from './main-window';
 import { assertLaunchedViaCli } from './require-cli';
 import type { LaunchOptions, LaunchedApp, StartedApp } from './isolated-app.type';
 
@@ -30,11 +30,22 @@ const startApp = async (options: LaunchOptions): Promise<StartedApp> => {
 
 const launchApp = async (options: LaunchOptions): Promise<LaunchedApp> => {
   assertLaunchedViaCli();
-  const started = await startApp(options);
+  const { args = [], ...seed } = options;
+  const userData = makeUserData(seed);
   try {
-    return { ...started, window: await waitForMainWindow(started.app) };
+    const launched = await launchAppForTest({
+      appDir: APP_DIR,
+      userData,
+      args: [`--instance=${seed.instance}`, ...args],
+      env: { NODE_ENV: 'production' },
+    });
+    const close = async (): Promise<void> => {
+      await launched.close().catch(ignoreAlreadyClosed);
+      removeUserData(userData);
+    };
+    return { app: launched.app, window: launched.page, userData, close };
   } catch (error) {
-    await started.close();
+    removeUserData(userData);
     throw error;
   }
 };
