@@ -2,6 +2,6 @@
 import { SET_FILES } from '@rotp/hub-contracts';
 import { setFilePath } from './set-file-path';
 
-const legacyMetaPath = (id: string): string => setFilePath(id, SET_FILES.legacyMeta);
+const payloadMetaPath = (id: string): string => setFilePath(id, SET_FILES.payloadMeta);
 
-export { legacyMetaPath };
+export { payloadMetaPath };

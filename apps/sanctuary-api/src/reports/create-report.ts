@@ -35,7 +35,6 @@ const createReport = async (caller: Caller | null, ip: string, body: SubmitRepor
     screenId: body.context.screenId,
     issue: { number: issue.number, url: issue.html_url, state: 'open', closedAt: null },
     zip: null,
-    legacy: false,
     createdAt: now(),
     expiresAt: null,
     extendedUntil: null,

@@ -52,7 +52,6 @@ interface RequiredInput {
 }
 
 interface UseDragDropArgs {
-  devices: DetectedDevice[];
   entries: DeviceEntry[];
   scheme: ControlSchemeId;
   activeProfile: InputProfile | null;
@@ -171,7 +170,6 @@ interface ButtonDisplayMappingParams {
 
 interface ReadDroppedPresetParams {
   transfer: DataTransfer;
-  devices: DetectedDevice[];
 }
 
 interface PresetMappingsParams {

@@ -9,8 +9,7 @@ const MODERN_PROFILE: ProfileSeed = {
   openByDefault: true,
   fixtures: [],
   config: {
-    hudStyle: 'extended',
-    controlScheme: 'modern',
+    hudStyle: 'modern',
     mapOnSelect: false,
     modernScheme: {
       assignments: {

@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind hook */
 import { useCallback, useMemo } from 'react';
-import { addSlot, effectiveSlots, migrateScheme, remapAssignments, removeSlot, setSlotBinding } from '@rotp/input-mapping';
+import { addSlot, effectiveSlots, remapAssignments, removeSlot, setSlotBinding } from '@rotp/input-mapping';
 import { controlSchemeOf } from '@rotp/features';
 import { findAbsentAssignments } from './find-absent-assignments';
 import { slotDisplay } from './modern-slots';
@@ -19,19 +19,16 @@ const useModernScheme = (args: UseModernSchemeArgs) => {
     [activeProfile, controls, isKeyboard],
   );
 
-  const migrated = useMemo(
-    () => migrateScheme(activeProfile?.modern?.slots, settings.modernScheme.assignments),
-    [activeProfile?.modern?.slots, settings.modernScheme],
-  );
+  const storedSlots = activeProfile?.modern?.slots;
 
   const modernSlots: ModernSlot[] = useMemo(() => effectiveSlots({
     core: coreBindings,
     controls,
     keyboard: isKeyboard,
-    stored: migrated.slots,
-  }), [controls, coreBindings, isKeyboard, migrated.slots]);
+    stored: storedSlots,
+  }), [controls, coreBindings, isKeyboard, storedSlots]);
 
-  const assignments = migrated.assignments;
+  const assignments = settings.modernScheme.assignments;
 
   const absentAssignments: AbsentAssignment[] = useMemo(
     () => findAbsentAssignments(assignments, modernSlots),

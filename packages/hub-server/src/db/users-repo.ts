@@ -7,20 +7,12 @@ import type { SignUpProfile, StoredUser, UserSummary } from './users-repo.type';
 
 const users = () => collection('users');
 
-const sitesOf = ({ sites, access, createdAt }: StoredUser): HubUser['sites'] => {
-  if (sites?.sanctuary || !access) return sites ?? {};
-  return { ...sites, sanctuary: { ...access, firstSeenAt: createdAt } };
-};
-
-const withDefaults = (stored: StoredUser): HubUser => {
-  const { access: _legacy, ...user } = stored;
-  return {
-    ...user,
-    sites: sitesOf(stored),
-    groupIds: stored.groupIds ?? [],
-    roleGroupIds: stored.roleGroupIds ?? [],
-  };
-};
+const withDefaults = (stored: StoredUser): HubUser => ({
+  ...stored,
+  sites: stored.sites ?? {},
+  groupIds: stored.groupIds ?? [],
+  roleGroupIds: stored.roleGroupIds ?? [],
+});
 
 const create = async ({ handle, avatarUrl }: SignUpProfile): Promise<HubUser> => {
   const ref = users().doc();

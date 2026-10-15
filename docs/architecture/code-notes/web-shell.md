@@ -173,8 +173,6 @@ The two halves are deliberately different things. The bindings say where a slot 
 
 `enhancedPauseDrawn` answers whether `EnhancedPauseView` will be on screen. It mirrors the render condition of GameOverlay term for term, and it has to: the takeover parks the native pause menu (no input handling, no cursor, no redraw), so arming it while nothing is drawn on top hands the player a blank, frozen screen. Both host-drawn styles (Enhanced and Modern) render it. The Original style does not, and there the native menu is left to draw and close itself.
 
-`migratedAssignments` returns the settings' assignment table keyed by slot number. A table written before contract section 19 is keyed by ids derived from position (`slot:NORTH`), and turning those into numbers needs the slot list, which lives on the input profile, not in settings. So the fast path comes first: a table that is already all numbers needs no list and no work, which is every table after the first save. Only an old one waits for bindings, and it is read again the moment they arrive (see `syncControlBindings`). `migrateScheme` throws on a key it cannot read instead of dropping it, so a table that cannot be migrated fails loudly instead of silently losing rows.
-
 `syncControlSettings` carries the settings to everything downstream in one call: the store, the per-frame runtime, and the core's standing takeover request. Vanilla Safe strips the gates in the core, so the request is dropped here too instead of left standing against a gate that will refuse it.
 
 `refreshControlSettings` pulls the settings the live settings layer last pushed, when they are not the ones already applied (`controlSettingsMemo`). Comparing identity is enough, because that layer replaces the whole object on every push and never mutates it. Pulling instead of waiting for a push is deliberate. The settings screen tells the input engine about the two fields it knows belong to input, but the takeover also depends on the HUD style and on Vanilla Safe, which belong to other screens entirely. Reading the whole object here means no caller has to remember the full list.
@@ -645,7 +643,7 @@ Extracts the assets when they are missing, or when the cached blob predates the 
 
 ## views/GameSession/behavior/load-input-profile.ts
 
-`migrateProfilesLoudly` is not a cast: a profile written before slots were numbers is turned into one, and one that cannot be is reported and dropped instead of half loaded. With no saved profiles the InputManager stays on its keyboard default.
+The stored input profiles are read as written. With no saved profiles the InputManager stays on its keyboard default.
 
 ## views/GameSession/behavior/load-player-sprite.ts
 

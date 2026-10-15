@@ -163,8 +163,8 @@ window is open, then takes the first window that is neither the splash nor a wid
 
 A spec seeds the profile it needs through `ProfileSeed`: the id (also `--instance`), the
 display name, the settings written to `config.json`, stored modern slots, whether the profile
-opens on launch, and which fixtures to copy. The migrated-controls profile in
-`hud-style-drives-scheme` is written in its stored pre-rename shape on purpose.
+opens on launch, and which fixtures to copy. The modern-controls profile in
+`hud-style-drives-scheme` is seeded with `hudStyle: 'modern'` and four stored slots.
 
 ### e2e/state-harness and e2e/state-readers
 
@@ -223,9 +223,9 @@ gap field's formula promotion floats the control and must not reflow its row.
 
 The hub's side navigation shows labels only while open, so a tab is picked by its accessible
 name. The slot list sits inside the column's own scroller, so the shot scrolls the last row
-into view and clips to the visible rows. The migrated profile is stored as
-`hudStyle: 'extended'` with `controlScheme: 'modern'` and four assignments keyed by the old
-`slot:kb:*` ids; the value rename, the style collapse and the slot renumbering must all land.
+into view and clips to the visible rows. The modern profile is stored as
+`hudStyle: 'modern'` with four assignments keyed by slot number, and the Style row and the
+slot list must show exactly that.
 Original is pressed first so a rerun never depends on how the last run ended, and every
 setting changed is changed back.
 
@@ -289,11 +289,9 @@ in the Vanilla Safe mask, and they are asserted by name so a removed entry fails
 
 ## packages/features/tests/hud-style-scheme.keep.test.ts
 
-The HUD style is the one choice and the control scheme follows from it. A stored profile
-from before the rename carries the two old keys, `controlScheme` and `hudStyle`. The
-migration runs on every profile read, so it must be idempotent and exact: a profile must
-never lose the modern scheme it was saved with. A profile written after the rename has no
-`controlScheme`, so one carrying `enhanced` is never promoted again.
+The HUD style is the one choice and the control scheme follows from it. Each style is kept as
+stored, the two host drawn styles force the overlay on, and a fresh profile is Original and so
+Classic.
 
 ## packages/features/tests/resolve-features.keep.test.ts
 
@@ -867,13 +865,10 @@ priority is pressed, held, unassigned, idle.
 
 ### hud/hud-presets.keep.test.ts
 
-Phase 5 of the HUD data binding plan: the eight prebuilt subtrees, the migration that rewrites a
-stored document naming one of the four deleted kinds (life, magic, consumables, wallet), and the
+Phase 5 of the HUD data binding plan: the eight prebuilt subtrees and the
 `shape` leaf they lean on (a heart and the magic bar, which a sprite and tint composition cannot
 draw; see `packages/hud/src/types/hud-shape`). Two inserts of the same preset never collide in ids, with each other
 or the template. Original mode rounds a heart's fill up to the next quarter as the console does.
-The deleted kind never appears in the migrated document, and a `scale` authored on the old node
-survives onto the replacement subtree's root.
 
 ### hud/hud-appearance-controls
 
@@ -931,9 +926,7 @@ it is in its own header. Nothing is written while the pointer travels.
 container's Type and what is true of any container, and pressing Type changed the gap beside it
 (two fields for a grid, one for flex). The model was wrong, not the panel: `place-flow.ts`
 already spent the one number on two gaps, between items along the main axis and between wrapped
-lines (`packages/hud/src/engine/flow` `linesSize`). So the acceptance test is pixel identity: `{ x: n, y: n }` is what
-the engine did with `gap: n`, the migration is a rewrite (the built ins keep every number), and a
-legacy document is saved in the new shape. What is new is that the two axes can differ on a flex
+lines (`packages/hud/src/engine/flow` `linesSize`). What is new is that the two axes can differ on a flex
 container, pinned at exact positions and turning with `direction`: a row separates items by `x`
 and lines by `y`, a column the reverse. A row that does not wrap has no second line, so only the
 item gap is spent.
@@ -1539,12 +1532,10 @@ row.
 
 ### hud/hud-screen-grid.keep.test.ts
 
-§42: two engines, not three, and a screen root that is a real grid. The bar is pixel identity: a
-migration rewriting `regions` into `screen.children` and every `stack` into a one cell grid must
-draw the shipped HUD unchanged, so the real numbers off the shipped document are pinned: the
+§42: two engines, not three, and a screen root that is a real grid. The bar is pixel identity: the shipped HUD must not move, so the real numbers off the shipped document are pinned: the
 three bands' corners (top left, bottom left, top right), the face button diamond (four satellites
 round a centre, each sprite on its glyph, which a `stack` read as a column would have split), and
-the d pad cross. They were measured before the change; if one moves, the migration is wrong. The
+the d pad cross. If one moves, the layout engine changed. The
 old overlay `stack` (children moved by their own margins, a negative one hanging outside) is now
 an `auto` track sized off its items' outer size. The rules the collapse rests on: an explicit
 cell is never refused for being taken and auto flow walks past one; two screen children may
@@ -1562,9 +1553,7 @@ like any box; the test uses a token so the inline style lint rule never has to t
 apart from real inline styles. The screen has no size to author, and a document that tries is
 refused by name, since a silently dropped key is how a hand edited file starts lying. Its engine
 is not locked (§42, reversing §38.4): it is a grid whose `[auto, fill, auto]` template is the nine
-anchors. A pre §42 document (`regions` beside a `stack` screen, as every stored layout is until
-its first save) opens in the new shape with no alias left; a centred band spans its whole axis
-from track 1, so it centres in the view as `center` did instead of in the middle track.
+anchors.
 
 ### hud/hud-stage-cells.keep.test.ts
 
@@ -1597,22 +1586,6 @@ not debounce timing.
 Slot numbers are contiguous, so removing slot 2 makes the old slot 3 the new slot 2. The
 assignment table is keyed by number, so `remapAssignments` must move each assignment with
 its slot, or an item lands one button up without warning.
-
-## packages/input-mapping/tests/slot-migration.keep.test.ts
-
-`tests/fixtures/spc2-profile.json` and `tests/fixtures/spc2-assignments.json` are a real profile written
-before slots were numbers: twelve slots keyed by SDL position and eight assignments keyed
-the same way, four of them on shoulders and triggers. `tests/fixtures/sdl-order-profile.json`
-stores its list in SDL device order (SOUTH first). The fixtures sit in the tracked
-`tests/fixtures/` folder so every clone has them.
-
-Position is display only; the slot number is the identity. A binding and a position need
-not describe the same device (slot 1 is drawn as NORTH and driven by the W key). The slot
-list is migrated when the profile is read and the assignment table when the settings are,
-so the second call sees a list whose old ids are gone; old ids are rebuilt from `position`
-and from a key binding. The boot path runs the migration more than once, so it must be
-idempotent. A list that already carries numbers is the player's own order and is never
-sorted again.
 
 ## packages/input-mapping/tests/slot-prefill-order.keep.test.ts
 
@@ -1849,8 +1822,8 @@ wallet reading of a prize, the pond's own receipt lines and the item demand.
 - 999 is three gold, one violet, then two red, one blue and four green; the small values
   share a decoded sheet, so it flies in three volleys. A volley never holds more than the
   pond's ten slots.
-- A snapshot with no pond row reads as the baseline pond, and a mode the model no longer
-  offers reads as the legacy pond with a note.
+- A snapshot with no pond row reads as the baseline pond, and an unknown mode
+  reads as the capacity pond with a note.
 - The receipt lines (the price of a toss, a prize award, an emptied pond) quote the plan's
   real amounts, because every vanilla line they replace names an amount no plan charges or
   asks a question no plan puts. Vanilla cost charges the same hundred fourteen times and never
