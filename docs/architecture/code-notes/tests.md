@@ -248,9 +248,8 @@ running along the face.
   check outside it, already done; the two behind the lock are what the state guards.
 - `state-links-house`: a follower in tow is what makes this the intro and not a later visit.
 - `state-sanctuary-grounds`: the single screen outdoor case, on purpose.
-- `state-secret-passage`: room 0x55 is claimed by two screen records (a dam room and a
-  castle passage). Neither carries an entrance id or variant, so resolution returns
-  `screen-170`, not `screen-171`; the spec asserts what the widget renders today.
+- `state-secret-passage`: room 0x55 is the Secret Passage, `screen-171` (roomIndex 85). The Dam
+  is its own record, `screen-170` (roomIndex 267), so the two no longer collide.
 - `state-tag-room`: the flood derives the annotations, so it runs first; the tag must decode,
   not show raw 0x08.
 - `state-throne-room`: the state is saved without a follower, so the push wall

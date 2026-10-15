@@ -1,8 +1,8 @@
 /* @layer tests @kind helper */
 import type { ElectronApplication, Page } from 'playwright';
-import { MAIN_WINDOW_TIMEOUT_MS, SPLASH_PAGE, WIDGET_QUERY_KEY, WINDOW_POLL_MS } from './isolated-app.constants';
+import { MAIN_WINDOW_TIMEOUT_MS, SPLASH_PAGE, WINDOW_POLL_MS } from './isolated-app.constants';
 
-type PageKind = 'splash' | 'widget' | 'main' | null;
+type PageKind = 'splash' | 'main' | null;
 
 const kindOf = (page: Page): PageKind => {
   if (page.isClosed()) return null;
@@ -14,7 +14,7 @@ const kindOf = (page: Page): PageKind => {
   }
   if (url.protocol === 'about:') return null;
   if (url.pathname.endsWith(`/${SPLASH_PAGE}`)) return 'splash';
-  return url.searchParams.has(WIDGET_QUERY_KEY) ? 'widget' : 'main';
+  return 'main';
 };
 
 const pause = (ms: number): Promise<void> => new Promise((done) => { setTimeout(done, ms); });
