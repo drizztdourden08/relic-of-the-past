@@ -1,11 +1,10 @@
 /* @layer renderer-components @kind logic */
 import {
-  DRAG_DEVICE_ID, DRAG_DEVICE_NAME, DRAG_PID, DRAG_SDL_TYPE, DRAG_VID,
+  DRAG_DEVICE_NAME, DRAG_PID, DRAG_SDL_TYPE, DRAG_VID,
 } from '../controls-settings/controls-settings.constants';
 import type { DeviceDragInfo } from './controls.type';
 
 const setDeviceDragData = (e: React.DragEvent, info: DeviceDragInfo): void => {
-  e.dataTransfer.setData(DRAG_DEVICE_ID, info.id);
   e.dataTransfer.setData(DRAG_DEVICE_NAME, info.displayName);
   e.dataTransfer.setData(DRAG_SDL_TYPE, info.sdlType ?? '');
   e.dataTransfer.setData(DRAG_VID, info.vendorId ?? '');

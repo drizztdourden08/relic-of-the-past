@@ -1,5 +1,4 @@
 /* @layer renderer-components @kind logic */
-import { migrateProfilesLoudly } from '@rotp/input-mapping';
 import { readInputProfiles, writeInputProfiles } from '@app/storage/profile-data-store';
 import { activeProfileId } from '@app/hud/active-profile';
 import { getInputManager } from '@app/input/input-manager/get-input-manager';
@@ -12,7 +11,7 @@ const patchSchemeProfiles = async (
 ): Promise<InputProfile[] | null> => {
   const profileId = await activeProfileId();
   if (!profileId) return null;
-  const loaded = migrateProfilesLoudly(await readInputProfiles(profileId));
+  const loaded = await readInputProfiles(profileId);
   const next = loaded.map((profile) => (profile.id === schemeId && profile.modern
     ? { ...profile, modern: change(profile.modern), modifiedAt: Date.now() }
     : profile));

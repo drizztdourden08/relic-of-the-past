@@ -72,16 +72,6 @@ const childIds = (d: HudLayout, id: string): string[] => {
   return node?.kind === 'container' ? node.children.map((c) => c.id) : [];
 };
 
-const legacyResolveDrop = (d: HudLayout, target: { id: string; where: 'before' | 'inside' | 'after' }) => {
-  const site = siteOf(d, target.id);
-  if (!site) return null;
-  if (target.where === 'inside') {
-    return site.node.kind === 'container' ? { parentId: site.node.id, at: site.node.children.length } : null;
-  }
-  if (!site.parent) return null;
-  return { parentId: site.parent.id, at: site.index + (target.where === 'after' ? 1 : 0) };
-};
-
 describe('the outline zones', () => {
   it('splits a container row four ways and a leaf row two', () => {
     const container = { isContainer: true, hasSiblings: true };
@@ -98,16 +88,14 @@ describe('the outline zones', () => {
     const screenRow = { isContainer: true, hasSiblings: false };
     expect(zoneIn(0.1, screenRow)).toBe('inside-start');
     expect(zoneIn(0.9, screenRow)).toBe('inside-end');
-    expect(legacyResolveDrop(doc(), { id: 'screen', where: 'before' })).toBeNull();
   });
 });
 
 describe('inserting at the front of a container', () => {
-  it('is what the old resolver could not express', () => {
+  it('can target either end of a container', () => {
     const d = doc();
     expect(outlineIntent(d, 'hud', 'inside-start', ['wallet'])).toEqual({ kind: 'flex', parentId: 'hud', index: 0 });
     expect(outlineIntent(d, 'hud', 'inside-end', ['wallet'])).toEqual({ kind: 'flex', parentId: 'hud', index: 2 });
-    expect(legacyResolveDrop(d, { id: 'hud', where: 'inside' })).toEqual({ parentId: 'hud', at: 2 });
   });
 
   it('lands the node first, and on the SCREEN that is the paint order (§42.8)', () => {

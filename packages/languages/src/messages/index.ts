@@ -4,8 +4,8 @@ export type {
   SetStructure, Token,
 } from './types';
 export { resolveRefs } from './glossary/resolve-refs';
-export { emptyNameTable } from './migrate/empty-name-table';
-export { setFromPack } from './migrate/set-from-pack';
+export { emptyNameTable } from './pack-set/empty-name-table';
+export { setFromPack } from './pack-set/set-from-pack';
 export { parseTokens } from './tokens/parse-tokens';
 export { serializeTokens } from './tokens/serialize-tokens';
 export { validateEntry } from './validate/validate-entry';
@@ -35,11 +35,11 @@ export type { ChoiceCode, ChoiceOption, ChoiceShape } from './choices';
 export { CODE_CATALOG, codeInfoFor, encodableParams, isGlyphName, structuralEntry, STRUCTURAL_IDS } from './codes';
 export type { CodeInfo, CodeParamRange, CodeRisk, CodeScope, StructuralEntry } from './codes';
 export {
-  buildVariableIndex, builtinVariables, findHardcoded, legacyFromVariables, mergeVariableMeta,
+  buildVariableIndex, builtinVariables, findHardcoded, nameTablesFromVariables, mergeVariableMeta,
   resolve, scanRun, variablesFromNameTables,
 } from './variables';
 export type {
-  LegacyNameData, Occurrence, ResolveOptions, Variable, VariableIndex, VariableKind,
+  NameTableData, Occurrence, ResolveOptions, Variable, VariableIndex, VariableKind,
 } from './variables';
 export {
   applyEnter, continueByScrolling, endBlockAt, locateCaret, policyFor, reflow, STRUCTURE_MODES,

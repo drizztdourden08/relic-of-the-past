@@ -877,7 +877,7 @@ The HUD style is the one choice the player makes. Everything the control scheme 
 - `enhanced` has the app draw the HUD and own the pause menu.
 - `modern` is everything Enhanced does, plus the modern control scheme.
 
-The values are the words shown on screen. `enhanced` was once stored as `extended`; `mergeSettings` migrates that old spelling on every read and is the only place that knows about it.
+The values are the words shown on screen.
 
 `hostDrawnHud` answers whether the app draws the HUD and owns the pause menu, which is true for every style but the original. `controlSchemeOf` is all that the old `GameSettings.controlScheme` setting used to store: the scheme is never stored, it is what the Modern style means.
 
@@ -1288,26 +1288,7 @@ A track edit is a document rule (§50): adding, inserting, removing or moving a 
 
 ### packages/hud/src/layouts/load-layout/try-load-layout.ts
 
-One reader for built-in and custom layouts; nothing downstream can tell them apart except the `builtIn` label. Every value is migrated before validation, in this order: `migrate-screen` folds a pre-§42 `regions[]` into the screen, turns every `stack` into a one cell grid and splits a pre-§57 flex `gap: n` into `{ x: n, y: n }`; then `migrate-legacy-vitals` replaces the four deleted opaque kinds with their preset subtrees. `loadLayout` throws; `tryLoadLayout` returns the errors for the two callers that can do better (the editor shows them, the profile store falls back to the default).
-
-### packages/hud/src/layouts/migrate-gap.ts
-
-The §57 rewrite: a flex container's single `gap` becomes the `{ x, y }` pair a grid always had. It runs once on load on the raw value; no alias survives, so a stored document opens as it was laid out and is saved in the new shape. It is pixel identical because the flow engine already spent the one number on both the main axis and the wrapped line gap. A bound gap copies the same expression to both axes. A grid, or a gap that already names `x` or `y`, is untouched, so re-running it is a no op and it can run on every load with no version flag. A bound `Value` is a record too, which is why only a record naming `x` or `y` counts as a pair.
-
-### packages/hud/src/layouts/migrate-legacy-vitals.ts
-
-Replaces the four opaque element kinds phase 5 deleted (`life`, `magic`, `consumables`, `wallet`) with their preset subtrees, once, before validation. No alias survives, so there are never two ways to draw a heart. The node's own box properties (a player's `scale` or `margin`) are carried onto the replacement root; its `element` is not. `consumables` was three counters (bomb, arrow, key) in a column with no gap, the same way the built-ins assemble those presets. It runs on the raw value and leaves malformed neighbours for the validator. It runs after `migrate-screen`, so there is one tree to walk.
-
-### packages/hud/src/layouts/migrate-screen.ts
-
-The §42 rewrite, run once on load before validation. No alias survives for `regions` or `direction: 'stack'`.
-
-- A `stack` becomes a one cell grid with every child at (1,1). `justify` and `align` become `justifyItems` and `alignItems`; a `between` justify becomes `start` because nothing distributes at one origin. A stack ignored `place`, so children are pinned to (1,1) outright, and a `stretch` alignSelf (read as start by a stack, as fill by a grid) is rewritten to `start`. A stack drops its gap.
-- `regions[]` becomes `screen.children`. The nine anchors were a 3 by 3 grid, so the screen gets `SCREEN_GRID` with `[auto, fill, auto]` tracks each way: the middle track takes the free space and the outer bands hug the edges. Every shipped screen was a stack, so the template replaces that placeholder wholesale.
-- Alignment is written per child because the root default (`start`) can only say one thing and the nine anchors need three per axis: `alignSelf` when the block band is not `start`, and `justifySelf` when the inline band then disagrees.
-- A centred band spans all three tracks on that axis, which makes the migration exact: `anchorRect` centred a region in the whole view, and a child centred in the middle track alone would drift by half the difference between the outer bands. A spanning child adds nothing to an `auto` track's size, so the outer bands still hug their content. A span starts at track 1, because `column: 2, colSpan: 3` would run off a three track template.
-- A child the screen already held flowed in the whole screen box, so it spans all nine cells, and regions are appended after it so a backdrop still draws underneath, the order `layoutHud` used before.
-- The flex `gap` split from `migrate-gap` rides along on the same walk.
+One reader for built-in and custom layouts; nothing downstream can tell them apart except the `builtIn` label. The value goes straight to validation. `loadLayout` throws; `tryLoadLayout` returns the errors for the two callers that can do better (the editor shows them, the profile store falls back to the default).
 
 ### packages/hud/src/layouts/validate-box/extent-at.ts
 
@@ -1331,7 +1312,7 @@ A gap axis is a `Value` and never negative. `x` is always horizontal and `y` alw
 
 ### packages/hud/src/layouts/validate-container/validate-flex-container.ts
 
-There are two flex directions, not three: `stack` is rewritten into a one cell grid on load (`migrate-screen`), so it never reaches the validator. Since §57 `gap` and `guide` belong to any container: both engines take `gap: { x?, y? }` (a pre-§57 `gap: 4` is rewritten on load) and both take a `guide` because the editor draws either engine's arrangement over the preview.
+There are two flex directions, not three: a container is `row` or `column`, and `stack` does not exist. `gap` and `guide` belong to any container: both engines take `gap: { x?, y? }` and both take a `guide` because the editor draws either engine's arrangement over the preview.
 
 ### packages/hud/src/layouts/validate-countdown-node.ts
 
@@ -1682,26 +1663,10 @@ The eight prebuilt subtrees a HUD document can start from. Each is an ordinary `
 - The shadowed set depends on the bindings, not the frame; a FunctionMask cannot tell that confirm and slot 4 are one key.
 - Shadowing verbs are every verb the open menu consumes: the four directions, pause and the four menu verbs. Map is excluded because nothing in the menu reads it.
 
-### packages/input-mapping/src/scheme/migrate-slots/index.ts
-
-- A pre-numbering profile stores slots by SDL position ids (`slot:NORTH`, `slot:DPAD_UP`, `slot:kb:KeyF`) and an assignment table keyed by those ids. This converts both to numbers once, on read.
-- A pre-numbering list was written in device order (SDL reports SOUTH first), so it is sorted into the prefill order first, which puts NORTH on slot 1 as shipped layouts expect. A list that already carries numbers is the player's and is never re-sorted, which keeps the migration idempotent.
-- An assignment whose slot is missing from the list gets a slot rebuilt from its old id, recovering assignments that an older cap left stranded on shoulders, triggers, paddles and stick clicks.
-- Unreadable stored shapes throw SlotMigrationError with the offending value, because silently dropping assignments is the one outcome the player cannot detect or undo. The caller decides whether that is a bad file or a bad build.
-
-### packages/input-mapping/src/scheme/migrate-slots/old-ids-of.ts
-
-- Old ids are rebuilt from position and keyboard code, and also read from the slot. The slot list and the assignment table live in two files migrated at different times, so the table must still match after the list has dropped its ids. This keeps migrateScheme idempotent and order-free.
-- When two slots claim the same id, the first in list order keeps it.
-
 ### packages/input-mapping/src/scheme/prefill-order/in-prefill-order.ts
 
 - The canonical slot order: north, west, east, south face buttons, then d-pad up, left, right, down. Layouts and schemes join only by slot number, so any other order draws the right shape with the wrong letters.
-- Used by the prefill (driver report order is not guaranteed) and by the migration of pre-numbering lists. Unranked positions keep their reported order after the ranked ones.
-
-### packages/input-mapping/src/scheme/prefill-order/is-legacy-slot-list.ts
-
-- A list is pre-numbering when no entry carries a positive integer `index`.
+- Used by the prefill, because driver report order is not guaranteed. Unranked positions keep their reported order after the ranked ones.
 
 ### packages/input-mapping/src/scheme/remap-classic.ts
 
@@ -1922,7 +1887,7 @@ Where the app's data lives on this platform, a per domain usage summary, and (de
 - `Report.id` is the app's 12 character id, kept unchanged so old issue bodies still resolve.
 - `Report.reporter` is null for an anonymous report. `contactEmail` is set on anonymous reports only and is visible to admins only.
 - `Report.screenId` is the game screen id at submit time, when the game was running.
-- `Report.zip` is null until the upload completes, or when nothing was attached. `legacy` marks reports migrated from the old bucket.
+- `Report.zip` is null until the upload completes, or when nothing was attached.
 - `Report.expiresAt` is set by the sweep once the issue closes. `extendedUntil` is moved by the Extend button: 30 days per click, at most a year past the close. The sweep honours the later of the two.
 - `SubmitReportRequest.contactEmail` is required by the API when no caller identity is present.
 - `SubmitReportResult.uploadUrl` is a presigned PUT for the zip, present when an attachment was declared.
@@ -2016,15 +1981,14 @@ Where the app's data lives on this platform, a per domain usage summary, and (de
 
 ### packages/languages/src/sets/extract.ts
 
-- Extraction itself runs in the worker. This lands its result on disk: the raw legacy payload (dialogue dump, font pair, extraction meta) plus the set files derived from it.
+- Extraction itself runs in the worker. This lands its result on disk: the raw extraction payload (dialogue dump, font pair, extraction meta) plus the set files derived from it.
 - A re-extract of the same code resets the set on purpose. That is the start-over-from-the-ROM action.
 
 ### packages/languages/src/sets/format-2/index.ts
 
-- Format 2 of a stored set: one `variables.json` plus a `structure` choice, with a `format` number in the header. A folder without `variables.json` reads as no variables; an older format is a clean break.
+- Format 2 of a stored set: one `variables.json` plus a `structure` choice, with a `format` number in the header. Format 2 is the only format: a header with any other `format` is refused, never converted.
 - Rebuild on write: the set is still edited through its projected glossary and name table, so the variable list is rebuilt from that pair on every save, with the previous list merged back for the fields the pair cannot carry. A read, write, read cycle produces byte-identical files.
 - Unknown header fields survive: the known keys are laid over the header read back from disk, so a field written by a newer build is kept.
-- A header with no `format` is format 1.
 - An unrecognised or absent `structure` falls back to the default instead of failing the read.
 
 ### packages/languages/src/sets/import-rlang.ts
@@ -2037,34 +2001,26 @@ Where the app's data lives on this platform, a per domain usage summary, and (de
 
 ### packages/languages/src/sets/index.ts
 
-- `listPacks` and `getLanguage` are the legacy extraction payload view: the extracted-language list, and the renderer store's `getLanguage`.
-
-### packages/languages/src/sets/migrate.ts
-
-- Upgrade on read: a folder holding only the legacy extraction payload (`dialogue.txt`, no `set.json`) is converted to a set the first time it is listed or opened.
-- The new files are written beside the old ones and nothing is deleted, so a rollback keeps working and the asset recompile still finds what it reads.
-- Idempotent: the presence of `set.json` ends it, so a second pass is one `exists` check and never overwrites edited content.
-- Returns true when the folder holds a set after the call, migrated or already one.
+- `listPacks` and `getLanguage` are the extraction payload view: the extracted-language list, and the renderer store's `getLanguage`.
 
 ### packages/languages/src/sets/pack/index.ts
 
-- The legacy `LanguagePack` view of a folder is the raw extraction payload (`dialogue.txt`, `meta.json`, `font.bin`). Two things still need it: the read-only inspector UI, and the asset recompile, which reads those same files. An extraction keeps writing them next to the set files.
+- The `LanguagePack` view of a folder is the raw extraction payload (`dialogue.txt`, `meta.json`, `font.bin`). Two things still need it: the read-only inspector UI, and the asset recompile, which reads those same files. An extraction keeps writing them next to the set files.
 
 ### packages/languages/src/sets/paths/index.ts
 
-- Layout of one set under `languages/<id>/`: `set.json` (identity, provenance, format, structure), `dialogue.json`, `text.json`, `variables.json` (format 2 onward), `glossary.json` and `names.json` (format 1 only), `font.bin` (raw 2bpp glyph sheet), `font-width.bin` (per-glyph width table).
+- Layout of one set under `languages/<id>/`: `set.json` (identity, provenance, format, structure), `dialogue.json`, `text.json`, `variables.json`, `font.bin` (raw 2bpp glyph sheet), `font-width.bin` (per-glyph width table).
 - `text.json` holds the non-dialogue strings a translator retyped, overrides only, so a folder without it reads as nothing translated.
-- The format 1 payloads are read when `set.json` carries no `format`, and never written or deleted after that. The header's `format` is the only discriminator.
-- The two legacy files a ROM extraction leaves (`dialogue.txt`, `meta.json`) are named here for the migration and the compatibility reader.
+- The two extraction files a ROM import leaves (`dialogue.txt`, `meta.json`) are named here for the payload reader.
 
 ### packages/languages/src/sets/read-rlang-bytes.ts
 
-- Runs the ordinary import into a throwaway in-memory store and reads the set back through the ordinary readers, so the archive is checked and upgraded exactly as an install would do it.
+- Runs the ordinary import into a throwaway in-memory store and reads the set back through the ordinary readers, so the archive is checked exactly as an install would check it.
 - `font` is null when the archive carries no font.
 
 ### packages/languages/src/sets/read/index.ts
 
-- Every entry point migrates a legacy folder first, so a caller never sees the old layout, and the content half is upgraded to the current set format on the way past.
+- A folder with no `set.json` is not a set, so every entry point answers null for it.
 - The set meta is picked field by field, so the format bookkeeping the header also carries stays in the storage layer.
 - A folder written before `text.json` existed reads as an empty object, which is exactly nothing translated yet. The catalog, not this payload, decides which slots the editor shows.
 
@@ -2568,7 +2524,7 @@ Where the app's data lives on this platform, a per domain usage summary, and (de
 - `basedOn` is the layout this one was forked from, for the editor's start from list.
 - `glyphPack` is which pack every glyph in the layout draws from, or `auto` to follow the device family (default `auto`); a glyph element's own `pack` wins over it. It cannot live only on nodes because the pause menu's nav legend draws glyphs that belong to no node, from the same pack the button map uses.
 - `inGameplay` defaults to `always`.
-- `screen` is required: a layout with no screen has nowhere to draw, and `migrate-screen.ts` gives one to every document written before section 42, including those that only had `regions[]`.
+- `screen` is required: a layout with no screen has nowhere to draw.
 
 ### packages/hud/src/types/hud-motion/hud-motion.type.ts
 
@@ -2799,22 +2755,19 @@ Where the app's data lives on this platform, a per domain usage summary, and (de
 - `autoSkipDialog` renders dialog instantly and auto advances message box waits; choice prompts stay interactive. Non vanilla.
 - `prefillFileName` names a new file Link with the naming strip parked on End. Non vanilla.
 - `allowDiving` lets B while swimming duck under for a moment, as the handheld port allows. Non vanilla. The extra dungeon forces it on, because its water room is built around it.
-- `miscBugFixes` and `gameChangingBugFixes` are legacy bundle masters that enable all split fixes of the MiscBugFixes and GameChangingBugFixes origin unless overridden.
-- `bugFixToggles` holds per-fix overrides for the 42 split bug fixes, keyed by feature id (see packages/features/src). Unset inherits the legacy bundle master; an explicit true or false overrides it.
+- `miscBugFixes` and `gameChangingBugFixes` are bundle masters that enable all split fixes of the MiscBugFixes and GameChangingBugFixes origin unless overridden.
+- `bugFixToggles` holds per-fix overrides for the 42 split bug fixes, keyed by feature id (see packages/features/src). Unset inherits the bundle master; an explicit true or false overrides it.
 - `archeryNeedsBow` lets the archery host refuse the fee when the shots it buys could not be fired.
 - `extraDungeon` says whether the optional extra dungeon carried by the second cartridge is offered. It is separate from whether its data is present: owning the cartridge and leaving this off must give an untouched overworld. Off by default, so a profile that never sets it behaves like the base game.
 
 ### packages/features/src/settings/general-settings.type.ts
 
-- `autosave` is the legacy C level autosave (slot 0 save and restore), kept for INI compatibility.
 - `autoSaveIntervalSeconds` ranges 60 to 1800, default 300. `autoSaveMaxEntries` ranges 1 to 20, default 5.
-- `disableFrameDelay` is legacy: only the native SDL main loop reads it (not the WASM build). It is kept so existing profiles and the INI round trip unchanged. `vsync` supersedes it.
 - `vsync` drives the core's frame loop from the display's vertical blank (requestAnimationFrame) and gates the game step on a 60.0988 Hz accumulator, so the speed stays right on any refresh rate. Off is the timer pacing the app always used. It can be toggled live.
 - `turboEnabled` runs the game faster than real time while the Turbo shortcut is held. Off means the core never leaves real time. It can be toggled live. `turboSpeed` is the multiplier, one of the rungs in packages/game-core/src/turbo-speed.
 
 ### packages/features/src/settings/graphics-settings.type.ts
 
-- `windowScale` (1 to 5), `fullscreen` and `outputMethod` are legacy INI fields, unused in Electron.
 - `linkSprite` is the id or filename of a custom Link sprite in the global sprite library (under %AppData%), or null for the original. At game start the bridge writes the `.zspr` to MEMFS and sets the LinkGraphics key.
 - `windowMode`, `startFullscreen`, `viewportConstraint` and `pixelPerfect` are managed by Electron.
 - `displayMonitor`, `syncedRateInFullscreen` and `syncedRateTargetHz` are the Brock display module's keys, read and written by its Display tab: the screen to use, whether to switch to a whole multiple of 60 while in fullscreen, and the target rate (0 for the highest the display offers).
@@ -2830,7 +2783,7 @@ Where the app's data lives on this platform, a per domain usage summary, and (de
 ### packages/features/src/settings/hud-settings.type.ts
 
 - `hudStyle`: `vanilla` rebuilds the original look from extracted sprites; `enhanced` is the same sprite set driven by the host (host owned pause menu, free HUD layout) and needs a 16:9 or wider display; `modern` is Enhanced plus the modern control scheme.
-- The stored value and the label are the same word on purpose (section 59.7): `enhanced` was stored as `extended` until the label was corrected. `mergeSettings` migrates the old spelling on every read. There is no separate control scheme key; the scheme is derived from this field (see packages/features/src/hud-style).
+- The stored value and the label are the same word on purpose. There is no separate control scheme key; the scheme is derived from this field (see packages/features/src/hud-style).
 - `customHudAspectW` and `customHudAspectH` apply when `hudRatio` is `custom`; 0 means auto detect from the screen.
 - Title screen fields are on the HUD tab: the host draws the title over the hidden native one. `titleMotion: 'drifting'` adds a slow parallax and drifting clouds while the title idles. `titleFollowsProgress` takes the world, and the sword when it is set to progress, from the most advanced save. `titleSword` is the sword planted in the title, or the save's own.
 

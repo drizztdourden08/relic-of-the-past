@@ -1,7 +1,7 @@
 /* @layer shared-game @kind logic */
 import type { GlossaryTerm, NameTable, PauseLabelKey } from '../types';
-import { emptyNameTable } from '../migrate/empty-name-table';
-import type { LegacyNameData, Variable } from './types';
+import { emptyNameTable } from '../pack-set/empty-name-table';
+import type { NameTableData, Variable } from './types';
 import { BOTTLE_PREFIX, LABEL_PREFIX } from './variables.constants';
 import { withNote } from './with-note';
 
@@ -25,7 +25,7 @@ const applyMenuName = (names: NameTable, variable: Variable): void => {
   names.items[variable.key] = value;
 };
 
-const legacyFromVariables = (variables: Variable[]): LegacyNameData => {
+const nameTablesFromVariables = (variables: Variable[]): NameTableData => {
   const glossary: GlossaryTerm[] = [];
   const names = emptyNameTable();
 
@@ -40,4 +40,4 @@ const legacyFromVariables = (variables: Variable[]): LegacyNameData => {
   return { glossary, names };
 };
 
-export { legacyFromVariables };
+export { nameTablesFromVariables };

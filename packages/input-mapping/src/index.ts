@@ -65,7 +65,6 @@ export { DEVICE_POLL_MS, FULL_HEALTH } from './runtime/input-manager/input-manag
 export type { ActiveProfileListener, DeviceChangeListener, InputStateListener } from './runtime/input-manager/input-manager.type';
 export { isTextInput } from './runtime/input-manager/is-text-input';
 export { notifyQuietly } from './runtime/input-manager/notify-quietly';
-export { migrateProfilesLoudly } from './runtime/migrate-profiles/migrate-profiles-loudly';
 export { PauseManager } from './runtime/pause-manager';
 export type { PauseListener } from './runtime/pause-manager';
 export { computeBitmask } from './runtime/polling-engine';
@@ -105,9 +104,6 @@ export { effectiveSlots } from './scheme/effective-slots/effective-slots';
 export { readFunctionMask } from './scheme/function-mask/read-function-mask';
 export { menuEdges } from './scheme/menu-edges';
 export { menuShadowedSlots } from './scheme/menu-shadowed-slots';
-export { migrateScheme } from './scheme/migrate-slots/migrate-scheme';
-export { migrateSlotList } from './scheme/migrate-slots/migrate-slot-list';
-export { SlotMigrationError } from './scheme/migrate-slots/slot-migration-error';
 export { remapForScheme } from './scheme/remap-for-scheme';
 export { addSlot } from './scheme/slot-list/add-slot';
 export { remapAssignments } from './scheme/slot-list/remap-assignments';

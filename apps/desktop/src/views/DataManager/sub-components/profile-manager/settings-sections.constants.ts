@@ -8,7 +8,6 @@ const SETTINGS_SECTIONS: SettingsSection[] = [
   {
     title: 'General',
     keys: [
-      { key: 'autosave', label: 'Autosave' },
       { key: 'displayPerfInTitle', label: 'FPS Counter' },
       { key: 'vsync', label: 'V-Sync' },
       { key: 'syncedRateInFullscreen', label: 'Synced Refresh Rate (fullscreen)' },

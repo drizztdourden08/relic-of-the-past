@@ -157,7 +157,7 @@ test.describe('HUD style drives the control scheme', () => {
     }
   });
 
-  test('a stored modern profile migrates to the Modern style with its slots intact', async () => {
+  test('a Modern profile opens on the Modern style with its slots intact', async () => {
     const { close, page, tab, shoot } = await openProfile(MODERN_PROFILE);
     try {
       await tab('HUD');
@@ -166,7 +166,7 @@ test.describe('HUD style drives the control scheme', () => {
         { label: 'Enhanced', disabled: false, checked: false },
         { label: 'Modern', disabled: false, checked: true },
       ]);
-      await shoot('06-migrated-style-modern', STYLE_ROW);
+      await shoot('06-style-modern', STYLE_ROW);
 
       await tab('Controls');
       await expect(page.locator('.scheme-banner')).toHaveCount(0);
@@ -175,7 +175,7 @@ test.describe('HUD style drives the control scheme', () => {
       expect(await assignedSlots(page)).toEqual([
         'Sword on S', 'Action on D', 'Item on W', 'Item on E',
       ]);
-      await shootSlots(page, '07-migrated-slots');
+      await shootSlots(page, '07-modern-slots');
     } finally {
       await close();
     }

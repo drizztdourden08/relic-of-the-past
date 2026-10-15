@@ -8,8 +8,7 @@ const MODERN_PROFILE: ProfileSeed = {
   name: 'agent/modern-controls',
   fixtures: [],
   config: {
-    hudStyle: 'extended',
-    controlScheme: 'modern',
+    hudStyle: 'modern',
     mapOnSelect: false,
     modernScheme: {
       assignments: {

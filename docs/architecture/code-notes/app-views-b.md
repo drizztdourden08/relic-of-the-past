@@ -602,9 +602,9 @@ Tracks the running game's pause state from the InputManager and toggles it.
 
 The Bug Fixes section is generated from the registry (the 42 split bug fixes). It has no JSX, so non-React consumers can import it. The widescreen corrections are not here: they are one switch on the Display tab, which covers the core bit and the fix split from that bundle together.
 
-## apps/desktop/src/settings-controls/bugfixes/legacy-master.ts
+## apps/desktop/src/settings-controls/bugfixes/bundle-master.ts
 
-A fix with no explicit toggle inherits the legacy bundle master it came from.
+A fix with no explicit toggle inherits the bundle master it belongs to.
 
 ## apps/desktop/src/settings-controls/display/refresh-advisory.ts
 
@@ -790,7 +790,7 @@ Detects and tracks connected input devices. `devices` and `filteredDevices` stay
 ## ProfileHub/sub-components/controls-settings/useDragDrop.ts
 
 - Drag over and drop handling, and applying console defaults. A dropped device carries only its sdlType (plus vid and pid), and there is no per-model preset. The keyboard is the one sentinel case (sdlType `keyboard`, see `packages/input-mapping/src/runtime/device-detector`) still resolved from its hand-authored `KEYBOARD_DEFAULT`. Every gamepad's defaults come from the family layer's console defaults through `buildConsoleDefaultMappings`.
-- The dragged card carries its own resolved name (`device-drag-data.ts`). Only a legacy drag source without one falls back to the device list.
+- The dragged card carries its own resolved name, vendor id and product id (`device-drag-data.ts`), and the drop reads them from the drag.
 - Icons are never stored on a freshly applied binding, since they resolve live from the source vid and pid plus the binding's index, like any other saved binding.
 - Under the modern scheme the same drop also gives the profile its modern bindings, derived from what SDL says the dropped device has. A device with nothing to resolve from yields null and keeps whatever the profile had. The classic console default mappings are written either way: the two live side by side on the profile, so switching schemes back never has to rebuild the other one.
 
@@ -806,7 +806,6 @@ The profile-level haptics switch. When on, every controller the profile uses rec
 - What a slot fires lives in settings (`modernScheme.assignments`), keyed by slot number, and is never pruned here. Removing a slot closes the gap, so the assignments below it move up with the numbering. `remapAssignments` is that move, which is why a removal writes both halves in one call, so the items can never end up one button out of step.
 - The scheme is read, never set. It is derived from the HUD style (`controlSchemeOf`), so there is no setter and no moment at which switching to Modern builds a profile's modern bindings. `coreBindings` falls back to the device's defaults and `effectiveSlots` prefills the list from the device, so a profile that never carried a `modern` block lists its slots the first time it is opened.
 - With no stored core, the core is the device's defaults. A gamepad with no control list resolves to an all-unbound core instead of borrowing the keyboard's, because an empty list means the pad is unknown.
-- A profile written before section 19 still carries `slot:NORTH` ids and an assignment table keyed by them. `migrateScheme` keys both again together, in slot order, and throws instead of dropping anything it cannot read. It is idempotent.
 - `effectiveSlots` is the same function the runtime lens resolves through (`packages/input-mapping/src/runtime/resolve-bindings`), so this screen and the HUD cluster read one list.
 - An absent assignment sits on a number the current list does not reach. It is kept, never deleted: a layout may still draw slot 7 for a scheme with five.
 - `hasSlotSource` is true once there is anything to build a list from.
@@ -815,13 +814,13 @@ The profile-level haptics switch. When on, every controller the profile uses rec
 
 ## ProfileHub/sub-components/controls-settings/useProfileActions.ts
 
-Input profile loading, create, rename, delete, selection and persistence. Loading migrates to numbered slots, or logs a loud console error and leaves that profile out (see `migrate-profiles.ts`), never a silent half load. The profile cycle shortcut (PageUp and PageDown) is reflected into the UI and the settings.
+Input profile loading, create, rename, delete, selection and persistence. The profile cycle shortcut (PageUp and PageDown) is reflected into the UI and the settings.
 
 ## ProfileHub/sub-components/controls-settings/useSchemeLayout.ts
 
 - The HUD layout this control scheme wears, and the list of layouts to choose from (shipped first, then the player's own). It lives on the input profile beside the slot list, not in a global HUD setting, because it is a property of the scheme: switching the active control profile from the keyboard to a pad swaps the slot list, the assignments and the HUD arrangement in one step.
 - Two schemes may name the same layout. Editing it edits it for both, and "save a copy" in the editor is how one of them forks. The id is the only join, as the slot number is on the other half of the screen.
-- A profile that names nothing reads as the shipped default, so nothing on disk needs migrating.
+- A profile that names nothing reads as the shipped default.
 - The layout is written to the profile, so it travels with the control profile. The live HUD follows because the layout store subscribes to the resolved bindings. A profile with no modern block yet is left alone: the scheme is built in `build-modern-bindings`, and a layout without a slot list would be a scheme that draws nothing.
 
 ## ProfileHub/sub-components/controls/controls.constants.ts

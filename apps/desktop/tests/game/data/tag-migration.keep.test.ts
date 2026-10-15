@@ -9,7 +9,7 @@ const TAGGED: readonly EntityKind[] = ['screen', 'connection'];
 const storedTags = (kind: EntityKind): readonly string[] =>
   (all(kind) as readonly { tags: readonly string[] }[]).flatMap(row => [...row.tags]);
 
-describeDataset('every migrated tag is a real reference', () => {
+describeDataset('every tag is a real reference', () => {
   for (const kind of TAGGED) {
     it(`${kind}: holds ids, never terms`, () => {
       const stored = storedTags(kind);
@@ -32,8 +32,8 @@ describeDataset('every migrated tag is a real reference', () => {
   }
 });
 
-describeDataset('nothing was lost on the way', () => {
-  it('still uses the same set of terms the taxonomy defines', () => {
+describeDataset('the tag taxonomy and the stored references agree', () => {
+  it('uses only terms the taxonomy defines', () => {
     const used = new Set<string>();
     for (const kind of TAGGED) for (const key of tagKeysOf(storedTags(kind))) used.add(key);
     const defined = new Set<string>([

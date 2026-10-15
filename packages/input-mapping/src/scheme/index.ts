@@ -13,15 +13,13 @@ export {
 } from './default-modern-bindings';
 export type { CoreVerb } from './default-modern-bindings';
 export { defaultSlotList, deviceSlots } from './derive-slots';
-export { PREFILL_ORDER, inPrefillOrder, isLegacySlotList } from './prefill-order';
+export { PREFILL_ORDER, inPrefillOrder } from './prefill-order';
 export { effectiveModernBindings, effectiveSlots } from './effective-slots';
 export type { SlotSource } from './effective-slots';
 export {
   FIRST_SLOT, addSlot, remapAssignments, removeSlot, renumberSlots, setSlotBinding, slotName,
 } from './slot-list';
 export type { SlotListEdit, SlotSeed } from './slot-list';
-export { SlotMigrationError, migrateScheme, migrateSlotList } from './migrate-slots';
-export type { MigratedScheme } from './migrate-slots';
 export { DIRECTION_BIT, emptyFunctionMask, readFunctionMask } from './function-mask';
 export type { FunctionMask, MenuMask } from './function-mask';
 export { menuEdges } from './menu-edges';

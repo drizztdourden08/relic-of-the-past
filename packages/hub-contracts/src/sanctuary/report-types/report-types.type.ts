@@ -27,7 +27,6 @@ type Report = {
   screenId: string | null;
   issue: ReportIssue;
   zip: ReportZip | null;
-  legacy: boolean;
   createdAt: number;
   expiresAt: number | null;
   extendedUntil: number | null;
