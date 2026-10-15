@@ -897,10 +897,6 @@ Leaving only pauses a job (the next visit continues it), so the browser's own pr
 
 A group with neither marker (by hand, Discord) is the default group a GitHub collaborator falls back to.
 
-## packages/design/src/hooks/usePixelArt/usePixelArt.ts
-
-An image with neither side above PIXEL_ART_MAX_SIDE pixels counts as pixel art (a sprite, a tile sheet). Pixel art is enlarged to fill its frame and drawn with hard pixel edges. A larger image is only ever shrunk and keeps smooth scaling.
-
 ## packages/design/src/compounds/ProviderButton/ProviderButton.tsx
 
 The button sends the browser to the API start route, which redirects to the provider; nothing is fetched. Without returnTo the API picks the landing page.

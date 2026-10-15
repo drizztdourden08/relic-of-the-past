@@ -1,19 +1,5 @@
 /* @layer renderer-components @kind style */
 
-.hud-offset .dynamic-input {
-  width: 100%;
-}
-
-.hud-disabled-reason .disabled-overlay__scrim {
-  gap: var(--space-2xs);
-  padding: var(--space-xs);
-}
-
-.hud-disabled-reason .disabled-overlay__message {
-  font-size: var(--text-xs);
-  font-weight: var(--weight-normal);
-}
-
 .hud-extent {
   display: flex;
   gap: var(--space-2xs);
@@ -38,12 +24,6 @@
   font-family: var(--font-mono);
   font-size: var(--text-xs);
   color: var(--c-text-muted);
-}
-
-.hud-minmax > .field__control {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-2xs);
 }
 
 .hud-minmax__row {
@@ -127,4 +107,8 @@
 
 .hud-box-model__ring .hud-box-model__link.is-on {
   color: var(--c-primary-bright);
+}
+
+.hud-offset__input {
+  width: 100%;
 }

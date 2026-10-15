@@ -14,13 +14,15 @@ const FilterControls = (props: FilterControlsProps) => {
 
   return (
     <Box className="tracker-filters__controls">
-      <SegmentedControl value={viewMode} options={VIEW_MODE_OPTIONS} onChange={onViewModeChange} />
+      <SegmentedControl size="sm" value={viewMode} options={VIEW_MODE_OPTIONS} onChange={onViewModeChange} />
       <SegmentedControl
+        size="sm"
         value={statusFilter}
         options={STATUS_OPTIONS}
         onChange={(value) => onFilterChange({ ...filter, statusFilter: value })}
       />
       <SegmentedControl
+        size="sm"
         value={itemFilter}
         options={ITEM_FILTER_OPTIONS}
         onChange={(value) => onFilterChange({ ...filter, itemFilter: value })}

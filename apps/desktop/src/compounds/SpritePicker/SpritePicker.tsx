@@ -36,7 +36,7 @@ const SpritePicker = (props: SpritePickerProps) => {
                 title={sprite.label}
                 onClick={() => { onPick(sprite.file); onClose(); }}
               >
-                <Image frame src={spriteUrl(sprite.file)} alt={sprite.label} fallback="?" className="sprite-picker__thumb" />
+                <Image frame fit="contain" pixelated src={spriteUrl(sprite.file)} alt={sprite.label} fallback="?" className="sprite-picker__thumb" />
                 <Text className="sprite-picker__label">{sprite.label}</Text>
               </Pressable>
             ))}

@@ -54,9 +54,8 @@
   border-top: var(--border-width-thin) solid var(--c-border);
 }
 
-.hud-editor__globals > .segmented {
+.hud-editor__step {
   flex: 0 0 auto;
-  gap: var(--space-xs);
 }
 
 .hud-editor__label {

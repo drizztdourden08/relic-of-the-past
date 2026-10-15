@@ -40,7 +40,7 @@ const GlyphPickerGrid = (props: GlyphPickerGridProps) => {
               onClose();
             }}
           >
-            <Image frame src={glyphUrlOf(tile.source)} alt={tile.position} className="hud-picker-grid__thumb" />
+            <Image frame fit="contain" src={glyphUrlOf(tile.source)} alt={tile.position} className="hud-picker-grid__thumb" />
             <Text className="hud-picker-grid__label">{tile.position}</Text>
           </Pressable>
         ))}

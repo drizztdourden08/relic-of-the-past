@@ -21,13 +21,6 @@
   display: block;
   max-width: 100%;
   max-height: var(--media-preview-maxh);
-  object-fit: contain;
-}
-
-.file-media__media[data-pixel-art] {
-  width: 100%;
-  height: var(--media-preview-maxh);
-  image-rendering: pixelated;
 }
 
 .file-media__media--video {

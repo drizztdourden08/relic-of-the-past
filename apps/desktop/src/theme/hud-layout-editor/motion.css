@@ -131,29 +131,13 @@
   min-width: 0;
 }
 
-.hud-transport > .slider {
+.hud-transport__slider {
   flex: 1;
   min-width: 0;
-  gap: var(--space-2xs);
 }
 
 .hud-transition-row {
   display: flex;
   flex-direction: column;
   gap: var(--space-2xs);
-}
-
-.hud-kftrack__group .slider,
-.hud-transport .slider {
-  gap: var(--space-2xs);
-}
-
-.hud-kftrack__group .slider__input,
-.hud-transport .slider__input {
-  min-width: 0;
-}
-
-.hud-kftrack__group .slider__value,
-.hud-transport .slider__value {
-  font-size: var(--text-xs);
 }

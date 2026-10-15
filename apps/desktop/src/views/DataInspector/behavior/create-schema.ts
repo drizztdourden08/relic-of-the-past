@@ -1,7 +1,8 @@
 /* @layer renderer-app @kind logic */
 import type { EntityKind } from '@rotp/game-data';
+import { IDENTITY_PATH } from '@drizztdourden08/tessera/data';
 import type { FieldDescriptor } from '@drizztdourden08/tessera/data';
-import { CREATE_ONLY_EXCLUDED, IDENTITY_PATH } from '../DataInspector.constants';
+import { CREATE_ONLY_EXCLUDED } from '../DataInspector.constants';
 
 const createSchemaFor = (kind: EntityKind, schema: readonly FieldDescriptor[]): readonly FieldDescriptor[] => {
   const excluded = new Set<string>([IDENTITY_PATH, ...(CREATE_ONLY_EXCLUDED[kind] ?? [])]);

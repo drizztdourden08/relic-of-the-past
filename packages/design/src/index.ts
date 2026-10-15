@@ -22,7 +22,6 @@ export { UploadProgressDialog } from './compounds/UploadProgressDialog';
 export { UploadRow } from './compounds/UploadRow';
 export { UploadTray } from './compounds/UploadTray';
 export { navigate } from './hooks/useLocation';
-export { usePixelArt } from './hooks/usePixelArt/usePixelArt';
 export { useSectionHeading } from './hooks/useSectionHeading/useSectionHeading';
 export { useSurfaceView } from './hooks/useSurfaceView/useSurfaceView';
 export { routeAnchorClick } from './router/route-anchor-click';

@@ -42,7 +42,7 @@
   padding: var(--space-2xs);
 }
 
-.hud-align__tiles > .hud-align__tile:not(.icon-btn--active) {
+.hud-align__tiles > .hud-align__tile:not([aria-pressed='true']) {
   border-color: var(--c-border);
 }
 
@@ -84,7 +84,7 @@
   min-width: 0;
 }
 
-.hud-color-field > .text-input {
+.hud-color-field__hex {
   flex: 1 1 0;
   min-width: 0;
 }

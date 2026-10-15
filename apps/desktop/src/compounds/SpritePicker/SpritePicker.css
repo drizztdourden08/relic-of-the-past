@@ -49,11 +49,6 @@
   height: calc(2.75 * var(--text-base));
 }
 
-.sprite-picker__thumb .image__img {
-  object-fit: contain;
-  image-rendering: pixelated;
-}
-
 .sprite-picker__label {
   overflow: hidden;
   max-width: 100%;
@@ -61,19 +56,4 @@
   color: var(--c-text-muted);
   white-space: nowrap;
   text-overflow: ellipsis;
-}
-
-.sprite-picker__notice {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: var(--space-sm);
-  padding: var(--space-2xs) var(--space-xs);
-  border: var(--border-width-thin) solid var(--c-border);
-  border-radius: var(--radius-sm);
-  background: var(--c-hover);
-}
-
-.sprite-picker__notice .text {
-  color: var(--c-text-dim);
 }

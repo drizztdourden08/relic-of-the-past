@@ -9,7 +9,7 @@ const DetailPane = (props: DetailPaneProps) => {
   return (
     <Card className={className ? `detail ${className}` : 'detail'}>
       <Stack as="aside" gap="md" align="stretch">
-        <WindowHeader title={<Text as="span" className="detail__title">{title}</Text>} onClose={onClose} className="detail__head" />
+        <WindowHeader title={<Text as="span" className="detail__title">{title}</Text>} titleWrap onClose={onClose} className="detail__head" />
         {media}
         <Stack gap="xs" align="stretch">
           {fields.map((field) => (

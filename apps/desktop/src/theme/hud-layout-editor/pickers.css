@@ -64,10 +64,6 @@
   height: calc(2.75 * var(--text-base));
 }
 
-.hud-picker-grid__thumb .image__img {
-  object-fit: contain;
-}
-
 .hud-picker-grid__label {
   overflow: hidden;
   max-width: 100%;
@@ -85,7 +81,7 @@
   border-bottom: var(--border-width-thin) solid var(--c-border);
 }
 
-.hud-slot-picker__manual .number-input {
+.hud-slot-picker__number {
   flex: 1;
 }
 

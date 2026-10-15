@@ -38,6 +38,7 @@ const ProgressiveTierCard = (props: ProgressiveTierCardProps) => {
             key={tier.key}
             className="progressive-tier-card__tier"
             label={tier.label}
+            labelSize="sm"
             checked={tier.checked}
             disabled={disabled || onTierChange === undefined}
             onChange={(next) => onTierChange?.(tier.index, next)}

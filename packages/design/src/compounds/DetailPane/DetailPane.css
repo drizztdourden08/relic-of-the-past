@@ -12,8 +12,6 @@
   font-size: var(--text-base);
   text-transform: none;
   letter-spacing: 0;
-  white-space: normal;
-  overflow-wrap: anywhere;
 }
 
 .detail__label {

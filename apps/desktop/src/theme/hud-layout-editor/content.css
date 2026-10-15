@@ -16,11 +16,6 @@
   height: var(--hud-ref-thumb-size);
 }
 
-.hud-ref-field__thumb .image__img {
-  object-fit: contain;
-  image-rendering: pixelated;
-}
-
 .hud-ref-field--compact .hud-ref-field__thumb {
   width: var(--hud-ref-thumb-size-compact);
   height: var(--hud-ref-thumb-size-compact);
@@ -71,24 +66,6 @@
 
 .hud-bounded__slider {
   padding: 0 var(--space-2xs);
-}
-
-.hud-bounded__slider .slider {
-  gap: var(--space-xs);
-}
-
-.hud-bounded__slider .slider__track {
-  gap: var(--space-xs);
-}
-
-.hud-bounded__slider .slider__input {
-  height: var(--space-xs);
-}
-
-.hud-bounded__slider .slider__value {
-  min-width: calc(2.25 * var(--text-base));
-  font-size: var(--text-xs);
-  text-align: right;
 }
 
 .hud-case-list__live {

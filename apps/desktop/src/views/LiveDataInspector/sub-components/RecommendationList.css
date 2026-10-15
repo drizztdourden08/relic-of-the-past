@@ -5,7 +5,7 @@
   min-height: 0;
 }
 
-.live-rec-list > .disclosure__body {
+.live-rec-list__content {
   display: flex;
   flex-direction: column;
   gap: var(--space-xs);

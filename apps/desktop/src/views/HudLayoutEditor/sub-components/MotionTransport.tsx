@@ -36,6 +36,7 @@ const MotionTransport = (props: MotionTransportProps) => {
 <Icon name={preview.playing ? 'pause' : 'play'} size={14} />
       </IconButton>
       <Slider
+        className="hud-transport__slider"
         value={preview.nowMs ?? 0}
         min={0}
         max={Math.max(1, spanMs)}

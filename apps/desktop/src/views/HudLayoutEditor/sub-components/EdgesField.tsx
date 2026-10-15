@@ -15,7 +15,7 @@ const EdgesField = (props: EdgesFieldProps) => {
   };
 
   return (
-    <Field size="sm" label={label} className="hud-edges-field">
+    <Field size="sm" label={label}>
       <Flex gap="2xs" align="center" className="hud-edges-field__row">
         {SIDES.map((side) => (
           <Checkbox
