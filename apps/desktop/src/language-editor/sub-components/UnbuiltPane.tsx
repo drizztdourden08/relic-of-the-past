@@ -15,7 +15,7 @@ const UnbuiltPane = (props: UnbuiltPaneProps) => {
         <Text as="span" variant="caption" className="unbuilt-pane__summary">{summary}</Text>
       </Box>
 
-      <DisabledOverlay active contained message={SCRIM} className="unbuilt-pane__body">
+      <DisabledOverlay active contained tone="warning" placement="top" message={SCRIM} className="unbuilt-pane__body">
         {children}
       </DisabledOverlay>
     </Box>

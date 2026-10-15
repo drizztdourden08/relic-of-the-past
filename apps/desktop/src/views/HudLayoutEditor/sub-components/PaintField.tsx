@@ -46,4 +46,3 @@ const PaintField = (props: PaintFieldProps) => {
 };
 
 export { PaintField };
-export type { PaintFieldProps } from './PaintField.type';

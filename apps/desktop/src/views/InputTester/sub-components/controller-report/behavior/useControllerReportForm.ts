@@ -77,4 +77,3 @@ const useControllerReportForm = (deviceKey: string) => {
 };
 
 export { useControllerReportForm };
-export type { FiledControllerReport };

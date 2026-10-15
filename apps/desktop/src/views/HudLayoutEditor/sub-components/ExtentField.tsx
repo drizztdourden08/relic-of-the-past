@@ -71,4 +71,3 @@ const ExtentField = (props: ExtentFieldProps) => {
 };
 
 export { ExtentField };
-export type { ExtentFieldProps } from './ExtentField.type';

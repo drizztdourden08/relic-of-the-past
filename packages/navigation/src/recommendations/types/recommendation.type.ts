@@ -42,6 +42,10 @@ type DraftRecommendation<K extends EntityKind = EntityKind> =
   };
 
 export type {
-  Confidence, DraftRecommendation, EntityIdOf, Evidence, ProposedRecord,
-  Recommendation, RecommendationAction, RecommendationOrigin, RecommendationState,
+  Confidence,
+  DraftRecommendation,
+  ProposedRecord,
+  Recommendation,
+  RecommendationAction,
+  RecommendationOrigin,
 };

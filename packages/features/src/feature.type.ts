@@ -40,4 +40,4 @@ interface FeatureDef {
   live: boolean;
 }
 
-export type { FeatureDef, FeatureKind, FeatureGroup, FeatureOrigin };
+export type { FeatureDef };

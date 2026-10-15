@@ -63,4 +63,3 @@ const AppearanceSection = (props: AppearanceSectionProps) => {
 };
 
 export { AppearanceSection };
-export type { AppearanceSectionProps } from './AppearanceSection.type';

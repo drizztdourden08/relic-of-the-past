@@ -34,4 +34,3 @@ const dialogueExtensions = (options?: DialogueSchemaOptions): Extensions => [
 ];
 
 export { dialogueExtensions };
-export type { DialogueSchemaOptions } from './schema.type';

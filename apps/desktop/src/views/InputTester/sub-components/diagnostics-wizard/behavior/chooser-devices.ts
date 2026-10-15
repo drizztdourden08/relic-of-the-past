@@ -39,4 +39,3 @@ const buildChooserDevices = (
 };
 
 export { buildChooserDevices };
-export type { ChooserDevice };

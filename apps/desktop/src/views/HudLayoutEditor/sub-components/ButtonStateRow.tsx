@@ -29,4 +29,3 @@ const ButtonStateRow = (props: ButtonStateRowProps) => {
 };
 
 export { ButtonStateRow };
-export type { ButtonStateRowProps } from './ButtonStateRow.type';

@@ -29,4 +29,3 @@ const GroundPicker = (props: GroundPickerProps) => {
 };
 
 export { GroundPicker };
-export type { GroundPickerProps } from './GroundPicker.type';

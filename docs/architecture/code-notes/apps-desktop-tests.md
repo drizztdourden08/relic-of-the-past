@@ -134,22 +134,33 @@ which raises the window on Windows and steals focus.
   check outside it, already done; the two behind the lock are what the state guards.
 - `state-links-house`: a follower in tow is what makes this the intro and not a later visit.
 - `state-sanctuary-grounds`: the single screen outdoor case, on purpose.
-- `state-secret-passage`: room 0x55 is claimed by two screen records (a dam room and a
-  castle passage). Neither carries an entrance id or variant, so resolution returns
-  `screen-170`, not `screen-171`; the spec asserts what the widget renders today.
+- `state-secret-passage`: room 0x55 is the Secret Passage, `screen-171` (roomIndex 85). The Dam
+  is its own record, `screen-170` (roomIndex 267), so the two no longer collide.
 - `state-tag-room`: the flood derives the annotations, so it runs first; the tag must decode,
   not show raw 0x08.
 - `state-throne-room`: the state is saved without a follower, so the push wall
   (`nativeType 0x14`) must read shut.
 
-## apps/desktop/tests/e2e/ensure-test-profile/
+## apps/desktop/tests/e2e/isolated-app/
 
-Every permanent spec launches into one automation profile, `e2e-tests`; no automated launch
-touches the profile that opens by default. `provisionProfile` (the same call `rotp worktree create` uses)
-is an idempotent create or repair seeded from the maintainer's named manual saves, so this
-also copies every checked in save state fixture into the profile's manual saves, skipping
-ids already there. The `.mjs` tooling is loaded with a dynamic `import()`, because Playwright
-compiles the file to CommonJS and a static import of an `.mjs` with `import.meta` breaks.
+Every permanent spec launches through `launchApp`, which wraps Brock's `launchAppForTest`
+(`@drizztdourden08/brock-build/testing`). Each launch gets its own fresh `--user-data` folder under the OS
+temp directory, seeded from nothing but the checkout: the ROM and asset blob come from the
+worktree's `.user-data/Data` or `test-roms/`, the profile files are written whole, and the
+fixture save states are copied in with a fresh manifest. Nothing from an earlier run or from
+the real `%APPDATA%` can be present, and the folder is deleted on close (set
+`ROTP_E2E_KEEP_USER_DATA` to keep it). The folder name is short on purpose: a long path
+breaks `app-sprite://`.
+
+The app opens a splash window before the main one and closes it, so `firstWindow()` can
+return a page that is about to vanish. `launchAppForTest` waits until no splash window is
+open, then takes the first window that is neither the splash nor a widget window.
+Every spec reads its page from there.
+
+A spec seeds the profile it needs through `ProfileSeed`: the id (also `--instance`), the
+display name, the settings written to `config.json`, stored modern slots, whether the profile
+opens on launch, and which fixtures to copy. The modern-controls profile in
+`hud-style-drives-scheme` is seeded with `hudStyle: 'modern'` and four stored slots.
 
 ## apps/desktop/tests/e2e/flood-parity.keep.spec.ts
 
@@ -192,9 +203,9 @@ gap field's formula promotion floats the control and must not reflow its row.
 
 The hub's side navigation shows labels only while open, so a tab is picked by its accessible
 name. The slot list sits inside the column's own scroller, so the shot scrolls the last row
-into view and clips to the visible rows. The migrated profile is stored as
-`hudStyle: 'extended'` with `controlScheme: 'modern'` and four assignments keyed by the old
-`slot:kb:*` ids; the value rename, the style collapse and the slot renumbering must all land.
+into view and clips to the visible rows. The modern profile is stored as
+`hudStyle: 'modern'` with four assignments keyed by slot number, and the Style row and the
+slot list must show exactly that.
 Original is pressed first so a rerun never depends on how the last run ended, and every
 setting changed is changed back.
 
@@ -626,9 +637,7 @@ it is in its own header. Nothing is written while the pointer travels.
 container's Type and what is true of any container, and pressing Type changed the gap beside it
 (two fields for a grid, one for flex). The model was wrong, not the panel: `place-flow.ts`
 already spent the one number on two gaps, between items along the main axis and between wrapped
-lines (`packages/hud/src/engine/flow` `linesSize`). So the acceptance test is pixel identity: `{ x: n, y: n }` is what
-the engine did with `gap: n`, the migration is a rewrite (the built ins keep every number), and a
-legacy document is saved in the new shape. What is new is that the two axes can differ on a flex
+lines (`packages/hud/src/engine/flow` `linesSize`). What is new is that the two axes can differ on a flex
 container, pinned at exact positions and turning with `direction`: a row separates items by `x`
 and lines by `y`, a column the reverse. A row that does not wrap has no second line, so only the
 item gap is spent.
@@ -1396,22 +1405,17 @@ priority is pressed, held, unassigned, idle.
 
 ## apps/desktop/tests/hud/hud-presets.keep.test.ts
 
-Phase 5 of the HUD data binding plan: the eight prebuilt subtrees, the migration that rewrites a
-stored document naming one of the four deleted kinds (life, magic, consumables, wallet), and the
+Phase 5 of the HUD data binding plan: the eight prebuilt subtrees and the
 `shape` leaf they lean on (a heart and the magic bar, which a sprite and tint composition cannot
 draw; see `packages/hud/src/types/hud-shape`). Two inserts of the same preset never collide in ids, with each other
 or the template. Original mode rounds a heart's fill up to the next quarter as the console does.
-The deleted kind never appears in the migrated document, and a `scale` authored on the old node
-survives onto the replacement subtree's root.
 
 ## apps/desktop/tests/hud/hud-screen-grid.keep.test.ts
 
-§42: two engines, not three, and a screen root that is a real grid. The bar is pixel identity: a
-migration rewriting `regions` into `screen.children` and every `stack` into a one cell grid must
-draw the shipped HUD unchanged, so the real numbers off the shipped document are pinned: the
+§42: two engines, not three, and a screen root that is a real grid. The bar is pixel identity: the shipped HUD must not move, so the real numbers off the shipped document are pinned: the
 three bands' corners (top left, bottom left, top right), the face button diamond (four satellites
 round a centre, each sprite on its glyph, which a `stack` read as a column would have split), and
-the d pad cross. They were measured before the change; if one moves, the migration is wrong. The
+the d pad cross. If one moves, the layout engine changed. The
 old overlay `stack` (children moved by their own margins, a negative one hanging outside) is now
 an `auto` track sized off its items' outer size. The rules the collapse rests on: an explicit
 cell is never refused for being taken and auto flow walks past one; two screen children may
@@ -1429,9 +1433,7 @@ like any box; the test uses a token so the inline style lint rule never has to t
 apart from real inline styles. The screen has no size to author, and a document that tries is
 refused by name, since a silently dropped key is how a hand edited file starts lying. Its engine
 is not locked (§42, reversing §38.4): it is a grid whose `[auto, fill, auto]` template is the nine
-anchors. A pre §42 document (`regions` beside a `stack` screen, as every stored layout is until
-its first save) opens in the new shape with no alias left; a centred band spans its whole axis
-from track 1, so it centres in the view as `center` did instead of in the middle track.
+anchors.
 
 ## apps/desktop/tests/hud/hud-stage-cells.keep.test.ts
 
@@ -1749,8 +1751,8 @@ wallet reading of a prize, the pond's own receipt lines and the item demand.
 - 999 is three gold, one violet, then two red, one blue and four green; the small values
   share a decoded sheet, so it flies in three volleys. A volley never holds more than the
   pond's ten slots.
-- A snapshot with no pond row reads as the baseline pond, and a mode the model no longer
-  offers reads as the legacy pond with a note.
+- A snapshot with no pond row reads as the baseline pond, and an unknown mode
+  reads as the capacity pond with a note.
 - The receipt lines (the price of a toss, a prize award, an emptied pond) quote the plan's
   real amounts, because every vanilla line they replace names an amount no plan charges or
   asks a question no plan puts. Vanilla cost charges the same hundred fourteen times and never

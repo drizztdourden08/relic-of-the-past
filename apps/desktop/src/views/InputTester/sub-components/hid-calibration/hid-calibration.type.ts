@@ -120,7 +120,7 @@ interface ByteCandidateSource {
 type ByteColorKey = 'unknown' | 'excluded' | 'stick' | 'trigger' | 'button' | 'gyro';
 
 export type {
-  AxisIdleReading,
+
   ByteColorKey,
   AxisSubStep,
   ButtonDiff,

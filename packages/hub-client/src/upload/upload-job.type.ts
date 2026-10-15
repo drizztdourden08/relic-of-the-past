@@ -37,4 +37,4 @@ type UploadJob = {
   createdAt: number;
 };
 
-export type { UploadPhase, StepState, UploadStep, UploadResume, FollowUpState, UploadJob };
+export type { UploadPhase, StepState, UploadStep, UploadResume, UploadJob };

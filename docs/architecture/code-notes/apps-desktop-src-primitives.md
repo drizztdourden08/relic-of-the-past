@@ -76,10 +76,6 @@ A bordered box from eight tiled elements: four corner images and four edge strip
 
 A multi tile label strip in condensed HUD text. Labels are pre composed sprites where each 8 by 8 tile holds about two characters.
 
-## apps/desktop/src/primitives/PauseTile/
-
-A single 8 by 8 HUD tile with optional horizontal and vertical flip, the base of all pause menu sprite drawing.
-
 ## apps/desktop/src/primitives/TypefaceRow/
 
 One row in the app's dialogue font, the modern face of the dialogue font setting. Every glyph sits at the pen x the engine gave it, in its own width, so the face keeps the game's layout and only the letterforms change. Picture glyphs have no face in the font and come from the glyph atlas. The face is drawn for a 16 px em box; the outline is the chosen thickness in game pixels (`strokeWidth`, 0 draws none) and at least one screen pixel. A highlighted cell takes its span's ink (`highlightInks` lists the primary then the secondary highlight); every other cell takes the row's own. `unit` is CSS pixels per game pixel with magnification included.

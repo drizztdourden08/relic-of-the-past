@@ -58,6 +58,7 @@ const DiagnosticsWizardDialog = (props: DiagnosticsWizardDialogProps) => {
       onClose={handleClose}
       dismissable={false}
       title="Gamepad diagnostics"
+      titleWrap
       headerExtra={<StepIndicator labels={wizard.stepLabels} current={wizard.stepIndex} />}
       className="diagnostics-wizard"
       actions={actions}

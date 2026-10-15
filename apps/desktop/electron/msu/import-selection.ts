@@ -26,4 +26,3 @@ const selectPackFiles = (files: string[]): PackSelection => {
 };
 
 export { selectPackFiles };
-export type { PackSelection };

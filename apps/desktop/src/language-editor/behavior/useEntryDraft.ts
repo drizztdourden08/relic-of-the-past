@@ -55,4 +55,3 @@ const useEntryDraft = (onCommit: (id: number, tokens: Token[]) => void): EntryDr
 };
 
 export { useEntryDraft };
-export type { EntryDraftState } from './entry-draft.type';

@@ -71,4 +71,3 @@ const FormulaMenu = (props: FormulaMenuProps) => {
 };
 
 export { FormulaMenu };
-export type { FormulaMenuProps } from './FormulaMenu.type';

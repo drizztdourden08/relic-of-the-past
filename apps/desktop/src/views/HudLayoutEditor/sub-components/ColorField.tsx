@@ -20,6 +20,7 @@ const ColorField = (props: ColorFieldProps) => {
       />
       <TextInput
         size="sm"
+        className="hud-color-field__hex"
         aria-label={`${label} hex`}
         value={value}
         disabled={disabled}
@@ -39,4 +40,3 @@ const ColorField = (props: ColorFieldProps) => {
 };
 
 export { ColorField };
-export type { ColorFieldProps } from './ColorField.type';

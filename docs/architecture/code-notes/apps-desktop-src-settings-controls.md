@@ -32,9 +32,9 @@ Detects the assigned MSU pack's contents for the Audio tab's Auto mode. It reads
 
 The Bug Fixes section is generated from the registry (the 42 split bug fixes). It has no JSX, so non-React consumers can import it. The widescreen corrections are not here: they are one switch on the Display tab, which covers the core bit and the fix split from that bundle together.
 
-## apps/desktop/src/settings-controls/bugfixes/legacy-master.ts
+## apps/desktop/src/settings-controls/bugfixes/bundle-master.ts
 
-A fix with no explicit toggle inherits the legacy bundle master it came from.
+A fix with no explicit toggle inherits the bundle master it belongs to.
 
 ## apps/desktop/src/settings-controls/contributing/SanctuaryAccount.tsx
 

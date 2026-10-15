@@ -48,7 +48,7 @@ describe('all-off == vanilla (bridge boundary)', () => {
     expect(buildPpuFlags({ ...allOff, extendY: true, extendedRendering: true }) & HEIGHT240).toBe(HEIGHT240);
   });
 
-  it('the legacy miscBugFixes master enables exactly the MiscBugFixes-origin fixes', () => {
+  it('the miscBugFixes master enables exactly the MiscBugFixes-origin fixes', () => {
     const { features1, features2 } = buildFeatureWords({ ...allOff, miscBugFixes: true });
     let e1 = 0;
     let e2 = 0;
@@ -61,7 +61,7 @@ describe('all-off == vanilla (bridge boundary)', () => {
     expect(features2).toBe(e2);
   });
 
-  it('a per-fix toggle overrides its legacy master (off-by-default override)', () => {
+  it('a per-fix toggle overrides its master (off-by-default override)', () => {
     const first = required(BUNDLE_FIXES.find((f) => f.bundleOrigin === 'MiscBugFixes' && f.word === 1), 'a word-1 MiscBugFixes fix');
     const s = { ...allOff, miscBugFixes: true, bugFixToggles: { [first.id]: false } } as GameSettings;
     const { features1 } = buildFeatureWords(s);

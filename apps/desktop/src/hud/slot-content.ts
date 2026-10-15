@@ -58,4 +58,4 @@ const buildSlotContent = (input: SlotContentInput): SlotContent => {
 };
 
 export { buildSlotContent };
-export type { SlotContent, SlotContentInput };
+export type { SlotContent };

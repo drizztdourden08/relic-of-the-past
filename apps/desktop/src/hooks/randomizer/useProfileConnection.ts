@@ -29,4 +29,3 @@ const useProfileConnection = (profile: Profile | null): ProfileConnection => {
 };
 
 export { useProfileConnection };
-export type { ProfileConnection };

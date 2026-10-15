@@ -39,13 +39,11 @@ const StopAtCheckPicker = (props: StopAtCheckPickerProps) => {
         disabled={disabled}
         className="stop-picker__trigger"
         icon={<Icon className="stop-picker__trigger-icon" name={triggerIcon} />}
+        iconEnd={<Icon name={open ? 'chevron-up' : 'chevron-down'} />}
         aria-expanded={shown}
         onClick={() => setOpen((v) => !v)}
       >
         <Text className="stop-picker__trigger-label">{triggerLabel}</Text>
-        <Box as="span" className="stop-picker__trigger-caret" aria-hidden="true">
-          <Icon name={open ? 'chevron-up' : 'chevron-down'} />
-        </Box>
       </Button>
 
       {shown && (

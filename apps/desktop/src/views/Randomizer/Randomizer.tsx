@@ -50,4 +50,3 @@ const Randomizer = (props: RandomizerProps) => {
 };
 
 export { Randomizer };
-export type { RandomizerProps };

@@ -17,4 +17,3 @@ const NetworkSection = ({ placement, title, chip, rows = [], empty, children }: 
 );
 
 export { NetworkSection };
-export type { NetworkSectionProps };

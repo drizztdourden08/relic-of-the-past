@@ -54,4 +54,3 @@ const ButtonStatesEditor = (props: ButtonStatesEditorProps) => {
 };
 
 export { ButtonStatesEditor };
-export type { ButtonStatesEditorProps } from './ButtonStatesEditor.type';

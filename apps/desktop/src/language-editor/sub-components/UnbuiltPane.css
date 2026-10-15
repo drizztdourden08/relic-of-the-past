@@ -33,15 +33,3 @@
   flex: 1;
   min-height: 0;
 }
-
-.unbuilt-pane__body .disabled-overlay__scrim {
-  justify-content: flex-start;
-  background: var(--c-warning-soft);
-  border-color: var(--c-warning);
-}
-
-.unbuilt-pane__body .disabled-overlay__message {
-  position: sticky;
-  top: 0;
-  color: var(--c-warning);
-}

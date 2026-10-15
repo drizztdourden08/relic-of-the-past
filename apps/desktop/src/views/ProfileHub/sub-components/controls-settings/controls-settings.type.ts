@@ -52,7 +52,6 @@ interface RequiredInput {
 }
 
 interface UseDragDropArgs {
-  devices: DetectedDevice[];
   entries: DeviceEntry[];
   scheme: ControlSchemeId;
   activeProfile: InputProfile | null;
@@ -171,7 +170,6 @@ interface ButtonDisplayMappingParams {
 
 interface ReadDroppedPresetParams {
   transfer: DataTransfer;
-  devices: DetectedDevice[];
 }
 
 interface PresetMappingsParams {
@@ -202,8 +200,8 @@ interface UseProfileLoaderArgs {
 
 export type {
   AbsentAssignment, BindFunctionActionParams, BindMappingParams, BindSnesButtonParams, BuildPresetProfileParams, PresetMappingsParams, ReadDroppedPresetParams, ResolveCoreBindingsParams,
-  ButtonDisplayMappingParams, ControlsTab, GamepadDisplayMappingParams, ProfileMapping, CoreIcons, DeviceIdentity, DisplayFunctionMapping, ListeningTarget, LiveFamilyIconParams,
-  PendingPreset, RequiredInput, SchemeLayout, SettingsChange, SlotDisplay, UseBindingStateArgs,
+  ButtonDisplayMappingParams, ControlsTab, GamepadDisplayMappingParams, CoreIcons, DeviceIdentity, DisplayFunctionMapping, ListeningTarget, LiveFamilyIconParams,
+  PendingPreset, RequiredInput, SchemeLayout, SlotDisplay, UseBindingStateArgs,
   UseControlsSettingsArgs, UseCoreIconsArgs, UseDisplayFunctionMappingsArgs, UseDisplayMappingsArgs,
   UseDragDropArgs, UseHapticsToggleArgs, UseModernSchemeArgs, UseProfileActionsArgs,
   UseProfileLoaderArgs, UseRebindHandlersArgs, UseSchemeLayoutArgs,

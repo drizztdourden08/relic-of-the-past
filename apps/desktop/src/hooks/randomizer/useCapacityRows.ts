@@ -18,4 +18,3 @@ const useCapacityRows = (input: CapacityRowsInput): readonly CapacityRowModel[] 
 };
 
 export { useCapacityRows };
-export type { CapacityRowsInput };

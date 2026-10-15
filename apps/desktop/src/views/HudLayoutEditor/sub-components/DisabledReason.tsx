@@ -12,7 +12,6 @@ const DisabledReason = (props: DisabledReasonProps) => {
       message={reason}
       actionLabel={actionLabel}
       onOpenSettings={actionLabel !== undefined ? onAction : undefined}
-      className="hud-disabled-reason"
     >
       {children}
     </DisabledOverlay>
@@ -20,4 +19,3 @@ const DisabledReason = (props: DisabledReasonProps) => {
 };
 
 export { DisabledReason };
-export type { DisabledReasonProps } from './DisabledReason.type';

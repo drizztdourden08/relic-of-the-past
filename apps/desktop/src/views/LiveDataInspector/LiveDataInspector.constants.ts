@@ -8,8 +8,6 @@ import type { LiveRecord, RecommendationFilter } from './LiveDataInspector.type'
 
 const DEFAULT_KIND: EntityKind = 'screen';
 
-const JOINABLE_KINDS: readonly EntityKind[] = ['screen', 'connection', 'check', 'actor', 'item', 'dungeon'];
-
 const NO_RECORDS_MESSAGE = 'No record for this screen in this collection.';
 const SPAWNS_PATH = 'spawns';
 
@@ -45,7 +43,7 @@ const SPAWNS_NONE = 'No spawns recorded.';
 const SPAWN_LIVE_ONLY_TITLE = 'Reported by the live game, not yet in this record.';
 
 export {
-  ACTION_LABEL, COLLECTION_TABS, DEFAULT_KIND, EDIT_LABEL, FILTER_LABELS, FILTER_ORDER, JOINABLE_KINDS, MIN_BATCH, MISSING_PART, NO_LIVE_RECORDS,
+  ACTION_LABEL, COLLECTION_TABS, DEFAULT_KIND, EDIT_LABEL, FILTER_LABELS, FILTER_ORDER, MIN_BATCH, MISSING_PART, NO_LIVE_RECORDS,
   NO_RECORDS_MESSAGE, PASS_DEBOUNCE_MS, REVIEW_NEVER, REVIEW_STATUS_OPTIONS, REVIEW_TITLE, REVIEW_UNTOUCHED, SPAWN_LIVE_ONLY_TITLE,
   SPAWNS_NONE, SPAWNS_PATH, SPAWNS_TITLE,
 };

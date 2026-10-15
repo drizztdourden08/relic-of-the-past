@@ -15,4 +15,3 @@ const useFlashStatus = (): [FlashStatus, (ok: boolean) => void] => {
 };
 
 export { useFlashStatus };
-export type { FlashStatus };

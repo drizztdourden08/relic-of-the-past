@@ -11,4 +11,4 @@ const createStorage = (readConfig: () => StorageConfig) => {
 };
 
 export { createStorage };
-export type { Storage, StorageConfig } from './create-storage.type';
+export type { Storage } from './create-storage.type';

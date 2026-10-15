@@ -17,10 +17,10 @@ const OffsetField = (props: OffsetFieldProps) => {
       size="sm"
       label="offset"
       hint={`from ${from}. Dragging on the stage writes the same two numbers`}
-      className="hud-offset"
     >
       <DynamicInput
         size="sm"
+        className="hud-offset__input"
         aria-label="offset"
         pattern={OFFSET_PATTERN}
         value={slots}
@@ -31,4 +31,3 @@ const OffsetField = (props: OffsetFieldProps) => {
 };
 
 export { OffsetField };
-export type { OffsetFieldProps } from './OffsetField.type';

@@ -1,16 +1,12 @@
 /* @layer bridge-wasm @kind constants */
 const DEFAULT_ZELDA3_INI = `[General]
-Autosave = 0
 ExtendedAspectRatio = 4:3
 
 [Graphics]
 WindowSize = Auto
-Fullscreen = 0
-WindowScale = 2
 NewRenderer = 1
 EnhancedMode7 = 1
 NoSpriteLimits = 1
-OutputMethod = SDL
 LinearFiltering = 0
 
 [Sound]

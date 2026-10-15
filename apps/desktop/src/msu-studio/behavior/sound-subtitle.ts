@@ -26,4 +26,3 @@ const soundPanelSubtitle = (counts: SubtitleCounts): string =>
   `${channelBlurb(counts.channel)} ${reachSentence(counts)}`;
 
 export { soundPanelSubtitle };
-export type { SubtitleCounts } from './sound-subtitle.type';

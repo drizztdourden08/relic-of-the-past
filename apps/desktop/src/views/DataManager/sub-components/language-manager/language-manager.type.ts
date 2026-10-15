@@ -41,5 +41,5 @@ interface ExtractLanguagePickerProps {
 
 export type {
   ExtractLanguagePickerProps, LanguageCreationParams, LanguageDeleteParams, LanguageExtractionParams,
-  LanguageOutcome, SelectSet, SettleExtractionParams,
+  LanguageOutcome, SettleExtractionParams,
 };

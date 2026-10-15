@@ -2,4 +2,3 @@
 export { initGearOwnership } from './init-gear-ownership';
 export { observeGear } from './observe-gear';
 export { ownedMax } from '@rotp/game-core';
-export type { GearTiers } from '@rotp/game-core';

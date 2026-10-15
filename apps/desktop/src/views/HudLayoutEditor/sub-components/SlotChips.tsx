@@ -50,4 +50,3 @@ const SlotChips = (props: SlotChipsProps) => {
 };
 
 export { SlotChips };
-export type { SlotChipsProps } from './SlotChips.type';

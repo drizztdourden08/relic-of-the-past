@@ -33,4 +33,4 @@ const analyzePack = async (request: AnalyzeRequest): Promise<OptimizeAnalysis> =
 };
 
 export { analyzePack };
-export type { AnalyzeRequest, ProgressReporter };
+export type { ProgressReporter };

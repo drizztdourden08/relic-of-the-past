@@ -48,4 +48,3 @@ const readActiveDialogue = (mod: EmscriptenModule): ActiveDialogue | null => {
 };
 
 export { readActiveDialogue };
-export type { ActiveDialogue } from './active-dialogue.type';

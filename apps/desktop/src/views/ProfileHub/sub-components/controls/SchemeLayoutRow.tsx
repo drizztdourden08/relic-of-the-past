@@ -35,4 +35,3 @@ const SchemeLayoutRow = (props: SchemeLayoutRowProps) => {
 };
 
 export { SchemeLayoutRow };
-export type { SchemeLayoutRowProps };

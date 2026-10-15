@@ -263,10 +263,6 @@ jobs:
         shell: bash
         run: "pnpm run ensure-wasm"
 
-      - name: "Check the save state format is registered"
-        shell: bash
-        run: "node tooling/state-format/check-state-format.mjs"
-
       - name: "Fetch the private dataset"
         shell: bash
         env:
@@ -374,10 +370,6 @@ jobs:
         shell: bash
         run: "pnpm run ensure-wasm"
 
-      - name: "Check the save state format is registered"
-        shell: bash
-        run: "node tooling/state-format/check-state-format.mjs"
-
       - name: "Fetch the private dataset"
         shell: bash
         env:
@@ -480,10 +472,6 @@ jobs:
         shell: bash
         run: "pnpm run ensure-wasm"
 
-      - name: "Check the save state format is registered"
-        shell: bash
-        run: "node tooling/state-format/check-state-format.mjs"
-
       - name: "Fetch the private dataset"
         shell: bash
         env:
@@ -562,10 +550,6 @@ jobs:
       - name: "Build the wasm core"
         shell: bash
         run: "pnpm run ensure-wasm"
-
-      - name: "Check the save state format is registered"
-        shell: bash
-        run: "node tooling/state-format/check-state-format.mjs"
 
       - name: "Fetch the private dataset"
         shell: bash

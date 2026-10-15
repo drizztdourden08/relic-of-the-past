@@ -40,4 +40,3 @@ const StageSelection = (props: StageSelectionProps) => {
 };
 
 export { StageSelection };
-export type { StageSelectionProps } from './StageSelection.type';

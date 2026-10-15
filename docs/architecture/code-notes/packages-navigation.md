@@ -1073,10 +1073,6 @@ A `TraversalId` is not a dataset key. Handing one to a dataset getter returns a 
 
 The static graph fallback (`buildAdjacency`) walks real `ScreenId`s through the same fields, so the id space holds both vocabularies. That is why it is a plain string alias: a template literal union would exclude the ids the fallback puts there.
 
-## packages/navigation/src/simulation/trigger/boss-gate/
-
-Bosses are a position plus a prerequisite gate; no combat is simulated. A boss is triggerable when its trigger tile is reachable in the flood fill result and the inventory meets the beatability requirement. `BossSite.beatableWith` defaults to the boss check's own `CheckRecord.requirements`; `bossRequirement` falls back to an always true requirement.
-
 ## packages/navigation/src/simulation/trigger/trigger-plans/
 
 Maps a discovered interactable (chest, NPC sprite, standing or overworld item) to the `TriggerAction` that fires the real check. NPC sprites resolve their flag and item payload from the check records' `gameId` by sprite type.

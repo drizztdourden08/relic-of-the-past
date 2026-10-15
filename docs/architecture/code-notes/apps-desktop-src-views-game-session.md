@@ -39,7 +39,7 @@ The live canvas reflects the rendered width (custom ratios included), so it is p
 
 ## apps/desktop/src/views/GameSession/behavior/load-input-profile.ts
 
-`migrateProfilesLoudly` is not a cast: a profile written before slots were numbers is turned into one, and one that cannot be is reported and dropped instead of half loaded. With no saved profiles the InputManager stays on its keyboard default.
+The stored input profiles are read as written. With no saved profiles the InputManager stays on its keyboard default.
 
 ## apps/desktop/src/views/GameSession/behavior/load-player-sprite.ts
 

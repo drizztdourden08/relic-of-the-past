@@ -155,10 +155,6 @@ The Portal overlay layer is click-through; the tray sets pointer-events back to 
 
 Leaving only pauses a job (the next visit continues it), so the browser's own prompt is enough and shows no text of ours. Older browsers show the prompt only when `returnValue` is set, which is why the handler assigns it.
 
-## packages/design/src/hooks/usePixelArt/usePixelArt.ts
-
-An image with neither side above PIXEL_ART_MAX_SIDE pixels counts as pixel art (a sprite, a tile sheet). Pixel art is enlarged to fill its frame and drawn with hard pixel edges. A larger image is only ever shrunk and keeps smooth scaling.
-
 ## packages/design/src/hooks/useSession/useSession.ts
 
 A 401 from GET /me is a signed out visitor, not an error. Any other failure is kept as the error so the page can say the API is down.

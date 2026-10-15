@@ -23,4 +23,3 @@ const StepIndicator = (props: StepIndicatorProps) => {
 };
 
 export { StepIndicator };
-export type { StepIndicatorProps };

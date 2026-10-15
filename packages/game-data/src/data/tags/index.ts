@@ -1,5 +1,5 @@
 /* @layer shared-game @kind barrel */
-export { ALL_TAGS, SEPARATOR } from './tags.constants';
+export { ALL_TAGS } from './tags.constants';
 export { checkTagKeysOf } from './check-tag-keys-of';
 export { connectionTagKeysOf } from './connection-tag-keys-of';
 export { hasTagKey } from './has-tag-key';

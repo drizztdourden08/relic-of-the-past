@@ -1,6 +1,4 @@
 /* @layer shared-storage @kind barrel */
-export { manifestPath } from './manifest-path';
-export { parseManifest } from '@rotp/hub-contracts';
 export { serializeManifest } from './serialize-manifest';
 export { newManifest } from './new-manifest';
 export { readManifest } from './read-manifest';

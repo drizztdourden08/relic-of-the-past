@@ -4,6 +4,7 @@ import * as savesStore from '@app/storage/saves-store';
 import { log } from '../../../../log-bus';
 import { validSramSlots } from '@rotp/game-core';
 import { toast } from '@drizztdourden08/tessera/composites';
+import { isMobileHost } from '@app/platform/is-mobile-host';
 import { SRAM_BYTES, SRAM_EXTENSIONS, TOAST_DURATION_MS } from './home-tab.constants';
 import type { UseHomeTabSramImportParams } from './home-tab.type';
 
@@ -12,7 +13,7 @@ const useHomeTabSramImport = (params: UseHomeTabSramImportParams) => {
   const [importConfirmText, setImportConfirmText] = useState('');
 
   const handleImportSram = useCallback(async () => {
-    const picked = await filePicker.pickFile({ extensions: SRAM_EXTENSIONS });
+    const picked = await filePicker.pickFile({ extensions: SRAM_EXTENSIONS, anyType: isMobileHost() });
     if (!picked) return;
 
     if (picked.bytes.byteLength !== SRAM_BYTES) {

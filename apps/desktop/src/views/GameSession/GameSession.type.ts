@@ -1,6 +1,5 @@
 /* @layer renderer-appshell @kind types */
 import type { ReactNode } from 'react';
-import type { GameSettings } from '@rotp/features';
 import type { useAudioSettings } from './behavior/useAudioSettings';
 import type { useConfirmDialog } from './behavior/useConfirmDialog';
 import type { useDisplaySettings } from './behavior/useDisplaySettings';
@@ -20,20 +19,6 @@ interface ConfirmDialog {
 
 interface RomDisplayInfo extends RomInfo {
   extractionStatus: RomExtractionStatus | 'idle';
-}
-
-interface DisplaySettings {
-  windowMode: GameSettings['windowMode'];
-  isFullscreen: boolean;
-  viewportConstraint: GameSettings['viewportConstraint'];
-  aspectRatio: GameSettings['aspectRatio'];
-  showFps: boolean;
-  overworldEdgeEffect: boolean;
-}
-
-interface AudioSettings {
-  masterVolume: number;
-  isMuted: boolean;
 }
 
 type LoadedProfile = ProfileLoadedData;
@@ -58,5 +43,5 @@ interface GameSessionProps {
 }
 
 export type {
-  AudioSettings, ConfirmDialog, DisplaySettings, GameSessionProps, GameSessionValue, LoadedProfile, LoadedProfileTargets, RomDisplayInfo,
+  ConfirmDialog, GameSessionProps, GameSessionValue, LoadedProfile, LoadedProfileTargets, RomDisplayInfo,
 };

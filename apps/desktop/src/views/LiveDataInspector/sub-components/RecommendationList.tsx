@@ -33,7 +33,7 @@ const RecommendationList = (props: RecommendationListProps) => {
   );
 
   return (
-    <Disclosure className="live-rec-list" summary={summary} defaultOpen={!collapsed} onOpenChange={(open) => setCollapsed(!open)}>
+    <Disclosure className="live-rec-list" bodyClassName="live-rec-list__content" summary={summary} defaultOpen={!collapsed} onOpenChange={(open) => setCollapsed(!open)}>
       <RecommendationTabs tabs={tabs} selected={filter} onSelect={setFilter} />
       {certainCount >= MIN_BATCH && (
         <Button

@@ -12,8 +12,6 @@ const BOTTLE_PHASE_CLASS: Record<BottlePhase, string> = {
   collapsing: ' pause-menu__bottle--collapsing',
 };
 
-const GRID_TO_SAVE = [0, 3, 2, 14, 1, 10, 5, 6, 15, 16, 17, 9, 4, 8, 7, 12, 11, 18, 13, 19];
-
 const SLOT_RECORD_IDS = [
   'item-012', 'item-013', 'item-011', 'item-041', 'item-042',
   'item-008', 'item-009', 'item-016', 'item-017', 'item-018',
@@ -36,4 +34,4 @@ const SPECIAL_FOLDS: Record<string, string> = {
   'ı': 'I', 'İ': 'I', 'Ħ': 'H', 'ħ': 'H',
 };
 
-export { AMPERSAND_COLS, BOTTLE_ITEM_SLOT, BOTTLE_PHASE_CLASS, GRID_TO_SAVE, MENU_H, NAME_PANEL_GRID, SEPARATORS, SLOT_RECORD_IDS, SPECIAL_FOLDS };
+export { AMPERSAND_COLS, BOTTLE_ITEM_SLOT, BOTTLE_PHASE_CLASS, MENU_H, NAME_PANEL_GRID, SEPARATORS, SLOT_RECORD_IDS, SPECIAL_FOLDS };

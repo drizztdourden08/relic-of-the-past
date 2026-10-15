@@ -18,4 +18,3 @@ const KIND_ICONS: Record<StoreKind, KindIcon> = {
 };
 
 export { KIND_LABELS, KIND_ICONS };
-export type { KindIcon };

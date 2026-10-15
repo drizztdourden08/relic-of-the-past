@@ -15,4 +15,3 @@ const callerRights = async (user: HubUser, site: SiteConfig): Promise<CallerRigh
 };
 
 export { callerRights };
-export type { CallerRights } from './caller-rights.type';

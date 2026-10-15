@@ -63,7 +63,7 @@ The state of the variables tab: filtering, usage counts and the hardcoded name s
 
 ## apps/desktop/src/language-editor/behavior/variable-edits/
 
-One variable's value written back into the pair the set stores (glossary and name table). The key shapes mirror `packages/languages/src/messages/variables/legacy-from-variables.ts` exactly (`bottle-<content>`, `label-<section>`, anything else is an item), so a round trip is byte identical. An engine variable has no stored value and is refused (`isEditable`).
+One variable's value written back into the pair the set stores (glossary and name table). The key shapes mirror `packages/languages/src/messages/variables/name-tables-from-variables.ts` exactly (`bottle-<content>`, `label-<section>`, anything else is an item), so a round trip is byte identical. An engine variable has no stored value and is refused (`isEditable`).
 
 ## apps/desktop/src/language-editor/editor-ui/behavior/useDialogueEditor.ts
 

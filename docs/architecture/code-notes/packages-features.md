@@ -72,7 +72,7 @@ The HUD style is the one choice the player makes. Everything the control scheme 
 - `enhanced` has the app draw the HUD and own the pause menu.
 - `modern` is everything Enhanced does, plus the modern control scheme.
 
-The values are the words shown on screen. `enhanced` was once stored as `extended`; `mergeSettings` migrates that old spelling on every read and is the only place that knows about it.
+The values are the words shown on screen.
 
 `hostDrawnHud` answers whether the app draws the HUD and owns the pause menu, which is true for every style but the original. `controlSchemeOf` is all that the old `GameSettings.controlScheme` setting used to store: the scheme is never stored, it is what the Modern style means.
 
@@ -172,22 +172,19 @@ This is the TS settings pipeline. The C side mirror that cannot be bypassed is `
 - `autoSkipDialog` renders dialog instantly and auto advances message box waits; choice prompts stay interactive. Non vanilla.
 - `prefillFileName` names a new file Link with the naming strip parked on End. Non vanilla.
 - `allowDiving` lets B while swimming duck under for a moment, as the handheld port allows. Non vanilla. The extra dungeon forces it on, because its water room is built around it.
-- `miscBugFixes` and `gameChangingBugFixes` are legacy bundle masters that enable all split fixes of the MiscBugFixes and GameChangingBugFixes origin unless overridden.
-- `bugFixToggles` holds per-fix overrides for the 42 split bug fixes, keyed by feature id (see packages/features/src). Unset inherits the legacy bundle master; an explicit true or false overrides it.
+- `miscBugFixes` and `gameChangingBugFixes` are bundle masters that enable all split fixes of the MiscBugFixes and GameChangingBugFixes origin unless overridden.
+- `bugFixToggles` holds per-fix overrides for the 42 split bug fixes, keyed by feature id (see packages/features/src). Unset inherits the bundle master; an explicit true or false overrides it.
 - `archeryNeedsBow` lets the archery host refuse the fee when the shots it buys could not be fired.
 - `extraDungeon` says whether the optional extra dungeon carried by the second cartridge is offered. It is separate from whether its data is present: owning the cartridge and leaving this off must give an untouched overworld. Off by default, so a profile that never sets it behaves like the base game.
 
 ## packages/features/src/settings/general-settings.type.ts
 
-- `autosave` is the legacy C level autosave (slot 0 save and restore), kept for INI compatibility.
 - `autoSaveIntervalSeconds` ranges 60 to 1800, default 300. `autoSaveMaxEntries` ranges 1 to 20, default 5.
-- `disableFrameDelay` is legacy: only the native SDL main loop reads it (not the WASM build). It is kept so existing profiles and the INI round trip unchanged. `vsync` supersedes it.
 - `vsync` drives the core's frame loop from the display's vertical blank (requestAnimationFrame) and gates the game step on a 60.0988 Hz accumulator, so the speed stays right on any refresh rate. Off is the timer pacing the app always used. It can be toggled live.
 - `turboEnabled` runs the game faster than real time while the Turbo shortcut is held. Off means the core never leaves real time. It can be toggled live. `turboSpeed` is the multiplier, one of the rungs in packages/game-core/src/turbo-speed.
 
 ## packages/features/src/settings/graphics-settings.type.ts
 
-- `windowScale` (1 to 5), `fullscreen` and `outputMethod` are legacy INI fields, unused in Electron.
 - `linkSprite` is the id or filename of a custom Link sprite in the global sprite library (under %AppData%), or null for the original. At game start the bridge writes the `.zspr` to MEMFS and sets the LinkGraphics key.
 - `windowMode`, `startFullscreen`, `viewportConstraint` and `pixelPerfect` are managed by Electron.
 - `displayMonitor`, `syncedRateInFullscreen` and `syncedRateTargetHz` are the Brock display module's keys, read and written by its Display tab: the screen to use, whether to switch to a whole multiple of 60 while in fullscreen, and the target rate (0 for the highest the display offers).
@@ -203,7 +200,7 @@ This is the TS settings pipeline. The C side mirror that cannot be bypassed is `
 ## packages/features/src/settings/hud-settings.type.ts
 
 - `hudStyle`: `vanilla` rebuilds the original look from extracted sprites; `enhanced` is the same sprite set driven by the host (host owned pause menu, free HUD layout) and needs a 16:9 or wider display; `modern` is Enhanced plus the modern control scheme.
-- The stored value and the label are the same word on purpose (section 59.7): `enhanced` was stored as `extended` until the label was corrected. `mergeSettings` migrates the old spelling on every read. There is no separate control scheme key; the scheme is derived from this field (see packages/features/src/hud-style).
+- The stored value and the label are the same word on purpose. There is no separate control scheme key; the scheme is derived from this field (see packages/features/src/hud-style).
 - `customHudAspectW` and `customHudAspectH` apply when `hudRatio` is `custom`; 0 means auto detect from the screen.
 - Title screen fields are on the HUD tab: the host draws the title over the hidden native one. `titleMotion: 'drifting'` adds a slow parallax and drifting clouds while the title idles. `titleFollowsProgress` takes the world, and the sword when it is set to progress, from the most advanced save. `titleSword` is the sword planted in the title, or the save's own.
 
@@ -259,11 +256,9 @@ in the Vanilla Safe mask, and they are asserted by name so a removed entry fails
 
 ## packages/features/tests/hud-style-scheme.keep.test.ts
 
-The HUD style is the one choice and the control scheme follows from it. A stored profile
-from before the rename carries the two old keys, `controlScheme` and `hudStyle`. The
-migration runs on every profile read, so it must be idempotent and exact: a profile must
-never lose the modern scheme it was saved with. A profile written after the rename has no
-`controlScheme`, so one carrying `enhanced` is never promoted again.
+The HUD style is the one choice and the control scheme follows from it. Each style is kept as
+stored, the two host drawn styles force the overlay on, and a fresh profile is Original and so
+Classic.
 
 ## packages/features/tests/resolve-features.keep.test.ts
 

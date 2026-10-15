@@ -72,10 +72,6 @@ The Game State info panel. The viewport size is the base room shape expanded by 
 
 The indoor and dungeon minimap: a single full size rectangle.
 
-## apps/desktop/src/views/NavigationWidget/sub-components/InternalEdgeDiamond.tsx
-
-A four slot diamond layout of internal edge connection cards around a room.
-
 ## apps/desktop/src/views/NavigationWidget/sub-components/InternalEdgesSection.tsx
 
 Intra room boundary pairs plus inter screen internals. Intra room connections are grouped into boundary pairs (south with north, east with west): each contiguous run on one side matches the run on the opposite side that starts at the same position, and south and east are the side a card is drawn from. Overworld inter screen internals are kept as they are and shown unpaired.

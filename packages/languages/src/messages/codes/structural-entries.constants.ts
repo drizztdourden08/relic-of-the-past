@@ -18,6 +18,4 @@ const STRUCTURAL_ENTRIES: StructuralEntry[] = [
 
 const STRUCTURAL_BY_ID = new Map(STRUCTURAL_ENTRIES.map((entry) => [entry.id, entry]));
 
-const STRUCTURAL_IDS: ReadonlySet<number> = new Set(STRUCTURAL_BY_ID.keys());
-
-export { STRUCTURAL_BY_ID, STRUCTURAL_ENTRIES, STRUCTURAL_IDS };
+export { STRUCTURAL_BY_ID };

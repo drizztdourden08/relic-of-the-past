@@ -10,6 +10,8 @@ const ReferenceThumb = (props: ReferenceThumbProps) => {
   return (
     <Image
       frame
+      fit="contain"
+      pixelated
       src={src}
       alt=""
       fallback={<Icon name={placeholder} size={THUMB_ICON_SIZE} aria-hidden />}

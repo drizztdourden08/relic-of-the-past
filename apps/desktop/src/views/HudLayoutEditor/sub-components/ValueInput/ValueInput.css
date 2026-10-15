@@ -65,7 +65,7 @@
   border-left: var(--size-1) solid var(--c-border);
 }
 
-.hud-value-input__spin > .pressable {
+.hud-value-input__step {
   flex: 1;
   display: flex;
   align-items: center;
@@ -74,7 +74,7 @@
   color: var(--c-text-dim);
 }
 
-.hud-value-input__spin > .pressable:hover {
+.hud-value-input__step:hover {
   color: var(--c-text);
   background: var(--c-hover);
 }
@@ -132,7 +132,7 @@
   min-height: var(--promote-height, auto);
 }
 
-.hud-value-field--wide > .field__control {
+.hud-value-field--wide .hud-value-field__control {
   position: absolute;
   z-index: var(--z-sticky);
   top: var(--promote-top, 0);

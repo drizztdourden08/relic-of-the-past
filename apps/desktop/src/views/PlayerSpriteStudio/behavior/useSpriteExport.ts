@@ -20,4 +20,3 @@ const useSpriteExport = () => {
 };
 
 export { useSpriteExport };
-export type { Container };

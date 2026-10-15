@@ -15,7 +15,6 @@ const SAMPLE_ROWS: readonly ReportRow[] = [
     zip: { bytes: 0 },
     size: '0 B',
     contents: 'no attachment',
-    legacy: false,
     createdAt: '0000-00-00 00:00',
     expiresAt: null,
     extendedUntil: null,
@@ -32,7 +31,6 @@ const SAMPLE_ROWS: readonly ReportRow[] = [
     zip: null,
     size: '-',
     contents: 'no attachment',
-    legacy: true,
     createdAt: '0000-00-00 00:00',
     expiresAt: '0000-00-00 00:00',
     extendedUntil: '0000-00-00 00:00',
@@ -42,7 +40,7 @@ const SAMPLE_ROWS: readonly ReportRow[] = [
 const REPORT_SCHEMA_CONFIG: SchemaConfig = {
   order: [
     'subject', 'kind', 'reporter', 'issue', 'appVersion', 'platform', 'screenId', 'contents', 'size', 'zip',
-    'createdAt', 'expiresAt', 'extendedUntil', 'legacy',
+    'createdAt', 'expiresAt', 'extendedUntil',
   ],
   labels: {
     subject: 'Subject',
@@ -61,7 +59,6 @@ const REPORT_SCHEMA_CONFIG: SchemaConfig = {
     createdAt: 'Filed',
     expiresAt: 'Expires',
     extendedUntil: 'Extended until',
-    legacy: 'Legacy',
   },
   hidden: ['id', 'issue.url', 'issue.closedAt'],
   kinds: {

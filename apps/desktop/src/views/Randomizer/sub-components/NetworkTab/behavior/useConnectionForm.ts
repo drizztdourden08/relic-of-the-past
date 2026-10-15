@@ -50,4 +50,3 @@ const useConnectionForm = ({ config, onSave }: ConnectionFormParams): Connection
 };
 
 export { useConnectionForm };
-export type { ConnectionForm, ConnectionFormParams };

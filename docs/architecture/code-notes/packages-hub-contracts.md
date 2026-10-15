@@ -164,7 +164,7 @@ The two sites name their offsets in `brock.site.ts` (`ports.offset` and `api.por
 - `Report.id` is the app's 12 character id, kept unchanged so old issue bodies still resolve.
 - `Report.reporter` is null for an anonymous report. `contactEmail` is set on anonymous reports only and is visible to admins only.
 - `Report.screenId` is the game screen id at submit time, when the game was running.
-- `Report.zip` is null until the upload completes, or when nothing was attached. `legacy` marks reports migrated from the old bucket.
+- `Report.zip` is null until the upload completes, or when nothing was attached.
 - `Report.expiresAt` is set by the sweep once the issue closes. `extendedUntil` is moved by the Extend button: 30 days per click, at most a year past the close. The sweep honours the later of the two.
 - `SubmitReportRequest.contactEmail` is required by the API when no caller identity is present.
 - `SubmitReportResult.uploadUrl` is a presigned PUT for the zip, present when an attachment was declared.
@@ -177,19 +177,6 @@ The two sites name their offsets in `brock.site.ts` (`ports.offset` and `api.por
 ## packages/hub-contracts/src/sanctuary/sanctuary-rights/visible-file-types.ts
 
 - The file types the caller sees and uploads to, in the rail's order. An admin sees every type.
-
-## packages/hub-contracts/src/sanctuary/schemas/file-schemas/index.ts
-
-- Request bodies of the file routes. `createFileSchema` parses POST /files. `signPartsSchema` parses POST /files/:id/parts and POST /files/:id/versions/:n/parts. `completeFileSchema` parses POST /files/:id/complete. `patchFileSchema` parses PATCH /files/:id, where every field is optional and at least one must be present. `beginVersionSchema` parses POST /files/:id/versions.
-- Sizes and counts come from `LIMITS`, so the API rejects what the upload loop would never send.
-- A version upload declares the same facts as a new file (name, size, hash, content type) plus what changed.
-- `partsDone` in a sign parts body is how many parts the uploader already has up.
-
-## packages/hub-contracts/src/sanctuary/schemas/report-schemas/index.ts
-
-- `submitReportSchema` parses POST /reports and mirrors `SubmitReportRequest` field for field.
-- `controllerReportSchema` keeps the shape of `ControllerReportPayload`. Every field is preformatted text from the app.
-- `extendReportSchema` parses POST /reports/:id/extend, which carries no fields because the id is in the path.
 
 ## packages/hub-contracts/src/sanctuary/view-surfaces.ts
 
@@ -326,14 +313,6 @@ The two sites name their offsets in `brock.site.ts` (`ports.offset` and `api.por
 - A listing edit waits, then is approved or rejected, or withdrawn when a newer edit replaces it.
 - `Review.submittedAt` is when the author sent it for review, null while it has not been sent. `by` is the reviewer who decided. `note` is the reviewer's note to the author and is required to reject.
 - `ReviewDecision` is what a reviewer can decide on a waiting version or listing edit.
-
-## packages/hub-contracts/src/store/schemas/index.ts
-
-- One schema per POST, PUT or PATCH in `STORE_ROUTES`. store-api parses every body through them, and the site can check a form with the same schema before sending it. Caps come from `STORE_LIMITS` and `HUB_LIMITS`, so the API refuses what the forms would never send.
-- Route per schema: `itemCreateSchema` POST /items. `mediaUploadSchema` POST /items/:id/media, with the size held to the cap of the picture's role. `listingPatchSchema` POST /items/:id/listing, every field optional and at least one present. `versionBeginSchema` POST /items/:id/versions. `signPartsSchema` POST /items/:id/versions/:n/parts. `versionCompleteSchema` POST /items/:id/versions/:n/complete. `downloadSchema` POST /items/:id/download. `ratingSchema` PUT /items/:id/rating. `reviewDecideSchema` POST /review/:itemId/:target. `featuredSchema` PUT /home/featured. `welcomeSchema` PUT /home/welcome.
-- `mediaRefSchema` is a picture the author uploaded through POST /items/:id/media; the API checks it is there.
-- In a version begin body the size is held to the item's kind by the API, which also numbers the version. In a sign parts body `partsDone` is how many parts the uploader already has up.
-- A download body with no version means the live one. A rejection says why in its note. The featured row is ordered first to last. The welcome is markdown.
 
 ## packages/hub-contracts/src/store/store-permissions/store-permissions.constants.ts
 

@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind types */
 import type { ShortcutKey } from '@drizztdourden08/tessera/primitives';
-import type { EditorAction, EditorShortcut } from '@app/hud-layout-editing/selection-bands.type';
+import type { EditorAction } from '@app/hud-layout-editing/selection-bands.type';
 import type { IndexRun } from '@app/hud-layout-editing/index-selection';
 import type { DropIntent } from '@app/hud-layout-editing/drop-intent';
 import type { HudFlexContainer } from '@rotp/hud';
@@ -34,4 +34,4 @@ interface MoveSpec {
   cap?: ShortcutKey;
 }
 
-export type { EditorAction, EditorShortcut, FlexActionContext, FlexEditorEdits, FlexEditorProps, FlexSelection, MoveSpec };
+export type { EditorAction, FlexActionContext, FlexEditorProps, FlexSelection, MoveSpec };

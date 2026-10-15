@@ -74,4 +74,3 @@ const paintTexture = (canvas: HTMLCanvasElement, frame: TextureFrame): void => {
 };
 
 export { paintTexture };
-export type { TextureFrame };

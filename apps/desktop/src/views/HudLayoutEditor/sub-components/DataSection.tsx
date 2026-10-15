@@ -32,4 +32,3 @@ const DataSection = (props: DataSectionProps) => {
 };
 
 export { DataSection };
-export type { DataSectionProps } from './DataSection.type';

@@ -8,15 +8,15 @@ const CHECK_TYPE_ICONS: Record<CheckKind, IconName> = {
   chest: 'package',
   npc: 'user',
   standing: 'sparkles',
-  boss: 'bug',
+  boss: 'skull',
   prize: 'trophy',
   keyDrop: 'key-round',
   potItem: 'archive',
-  dig: 'wrench',
-  bonk: 'zap',
+  dig: 'shovel',
+  bonk: 'tree',
   event: 'flag',
   'shop-slot': 'store',
-  'pond-slot': 'gift',
+  'pond-slot': 'water',
 };
 
 const NO_STOP_ICON: IconName = 'arrow-right-to-line';

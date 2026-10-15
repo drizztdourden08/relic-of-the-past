@@ -71,4 +71,3 @@ const InspectorRail = (props: InspectorRailProps) => {
 };
 
 export { InspectorRail };
-export type { InspectorRailProps } from './InspectorRail.type';

@@ -37,4 +37,3 @@ const RepeatContent = (props: RepeatContentProps) => {
 };
 
 export { RepeatContent };
-export type { RepeatContentProps } from './RepeatContent.type';

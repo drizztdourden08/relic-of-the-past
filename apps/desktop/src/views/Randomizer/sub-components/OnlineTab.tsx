@@ -15,4 +15,3 @@ const OnlineTab = ({ profile }: OnlineTabProps) => {
 };
 
 export { OnlineTab };
-export type { OnlineTabProps };

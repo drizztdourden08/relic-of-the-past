@@ -34,7 +34,7 @@ describe('retro bow pins the projectiles family', () => {
     expect(settled.forcedFamilies.size).toBe(0);
   });
 
-  it('reads an old snapshot with both on as vanilla projectiles', () => {
+  it('reads a snapshot with retro bow and an in-pool projectiles family as vanilla projectiles', () => {
     const snapshot = buildOptionsSnapshot(randomizerChoiceOverrides({
       ...BASE_CHOICES, capacityEnabled: true, capacity: pair.capacity,
       ponds: { ...LEGACY_POND_PROFILES, capacity: pair.pond }, retroBow: defaultRetroBow(),
@@ -44,8 +44,8 @@ describe('retro bow pins the projectiles family', () => {
   });
 });
 
-describe('a snapshot written before the master switch existed', () => {
-  it('reads as the feature being on, so its placement keeps its meaning', () => {
+describe('a snapshot with no master switch value', () => {
+  it('reads as the feature being on', () => {
     expect(capacityEnabledOf({})).toBe(true);
     expect(capacityEnabledOf({ capacity_upgrades_enabled: true })).toBe(true);
     expect(capacityEnabledOf({ capacity_upgrades_enabled: false })).toBe(false);

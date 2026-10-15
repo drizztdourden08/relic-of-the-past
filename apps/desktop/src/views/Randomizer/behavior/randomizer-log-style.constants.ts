@@ -16,7 +16,7 @@ const ACTIVITY_RULES: readonly [RegExp, ActivityKind, string][] = [
 ];
 
 const ACTIVITY_KINDS: LogKindDef[] = [
-  { id: 'session', label: 'Session', tone: 'primary', toneMessage: true },
+  { id: 'session', label: 'Session', tone: 'primary', toneMessage: true, strong: true },
   { id: 'plan', label: 'Plan', tone: 'info', toneMessage: true },
   { id: 'override', label: 'Overrides', tone: 'dim', toneMessage: true },
   { id: 'deliver', label: 'Deliveries', tone: 'primary', toneMessage: true },

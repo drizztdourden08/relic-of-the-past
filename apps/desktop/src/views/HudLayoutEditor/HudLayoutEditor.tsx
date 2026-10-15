@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind component */
-import { Box, Icon } from '@drizztdourden08/tessera/primitives';
+import { Box, DensityScope, Icon } from '@drizztdourden08/tessera/primitives';
 import { ScreenWindow, ResizeHandle } from '@drizztdourden08/tessera/composites';
 import type { ScreenWindowHeader } from '@drizztdourden08/tessera/composites';
 import { useReducedMotion } from '@app/compounds/HudNodeRenderer';
@@ -28,44 +28,46 @@ const HudLayoutEditor = (props: HudLayoutEditorProps) => {
     <MotionPreviewContext.Provider value={motionPreview}>
       <Box className="hud-editor-portal">
         <ScreenWindow onClose={onClose} title="HUD Layout Editor" header={pageHeader}>
-          <Box className="hud-editor">
-            <EditorToolbar
-              insert={edits.insert}
-              layouts={draft.layouts}
-              draftId={layout.id}
-              onStartFrom={draft.startFrom}
-              slotNumbers={slots.map((slot) => slot.index)}
-              glyphPacks={glyphs.packs}
-              ratio={ratio}
-              onRatioChange={setRatioId}
-              ground={EDITOR_GROUNDS.find((entry) => entry.file === ground) ?? null}
-              onGroundChange={setGround}
-              targetLabel={target ?? 'nothing'}
-            />
+          <DensityScope density="compact">
+            <Box className="hud-editor">
+              <EditorToolbar
+                insert={edits.insert}
+                layouts={draft.layouts}
+                draftId={layout.id}
+                onStartFrom={draft.startFrom}
+                slotNumbers={slots.map((slot) => slot.index)}
+                glyphPacks={glyphs.packs}
+                ratio={ratio}
+                onRatioChange={setRatioId}
+                ground={EDITOR_GROUNDS.find((entry) => entry.file === ground) ?? null}
+                onGroundChange={setGround}
+                targetLabel={target ?? 'nothing'}
+              />
 
-            <Box className="hud-editor__body">
-              <Box id="hud-editor-outline" className="hud-editor__rail" style={{ width: panels.outlineWidth }}>
-                <OutlinePanel
-                  doc={layout}
-                  selectedId={edits.selectedId}
-                  slotNumbers={slots.map((slot) => slot.index)}
-                  onSelect={edits.select}
-                  onRemove={edits.remove}
-                  onDrop={edits.drop}
-                />
-              </Box>
+              <Box className="hud-editor__body">
+                <Box id="hud-editor-outline" className="hud-editor__rail" style={{ width: panels.outlineWidth }}>
+                  <OutlinePanel
+                    doc={layout}
+                    selectedId={edits.selectedId}
+                    slotNumbers={slots.map((slot) => slot.index)}
+                    onSelect={edits.select}
+                    onRemove={edits.remove}
+                    onDrop={edits.drop}
+                  />
+                </Box>
 
-              <ResizeHandle label="Resize outline panel" controls="hud-editor-outline" {...panels.outlineResize} />
+                <ResizeHandle label="Resize outline panel" controls="hud-editor-outline" {...panels.outlineResize} />
 
-              <StageColumn editor={editor} />
+                <StageColumn editor={editor} />
 
-              <ResizeHandle label="Resize inspector panel" controls="hud-editor-inspector" edge="end" {...panels.inspectorResize} />
+                <ResizeHandle label="Resize inspector panel" controls="hud-editor-inspector" edge="end" {...panels.inspectorResize} />
 
-              <Box id="hud-editor-inspector" className="hud-editor__rail" style={{ width: panels.inspectorWidth }}>
-                <InspectorRail editor={editor} />
+                <Box id="hud-editor-inspector" className="hud-editor__rail" style={{ width: panels.inspectorWidth }}>
+                  <InspectorRail editor={editor} />
+                </Box>
               </Box>
             </Box>
-          </Box>
+          </DensityScope>
         </ScreenWindow>
       </Box>
     </MotionPreviewContext.Provider>

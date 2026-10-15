@@ -145,26 +145,11 @@ A boot-safe `window.api` stub for hosts with no preload to inject one: Capacitor
 
 A side-effect module. On every host except Electron it installs the boot-safe `window.api` shim. `main.tsx` imports it first, so it runs before the App import graph reads `window.api`. On Electron the real preload api is already present and the module does nothing.
 
-## apps/desktop/src/platform/hosts/capacitor/file-picker.ts
+## apps/desktop/src/platform/hosts/capacitor/sprites.ts
 
-The Capacitor file picker, through `@capawesome/capacitor-file-picker`, which reads bytes as base64.
+The Capacitor sprites port: the base URL of a ROM's extracted sprites, `Capacitor.convertFileSrc` over the app's Data directory, ending with `/` and empty when the folder cannot be resolved.
 
-Saving goes to the device's Documents directory, not through a share sheet. The project does not depend on `@capacitor/share`, and a file written where the user's own file manager can reach it needs no extra plugin.
-
-`extToMime` maps picker extensions to MIME types the Android document picker accepts. `.sfc` and `.smc` have no registered type, so they resolve to `application/octet-stream`.
-
-## apps/desktop/src/platform/hosts/capacitor/storage.ts
-
-The Capacitor `StoragePort`: an app-private location and per-domain usage through the Filesystem plugin. There is no reveal on mobile (`revealDataFolder` is false), so the home page shows the path read-only. A missing folder counts as zero bytes.
-
-## apps/desktop/src/platform/rotp-platform/ports/storage.type.ts
-
-Where the app's data lives on this platform, a per domain usage summary, and (desktop only) revealing the folder in the OS file manager. Backed by IPC on Electron and the Filesystem plugin on Capacitor.
-
-- `path`: the absolute Data root on this platform. `osLabel` reads like "Windows (AppData)". `canReveal` mirrors the `revealDataFolder` capability.
-- `count`: entries in the domain (profiles, ROMs, packs, sprite sets, languages). `bytes`: disk usage.
-- `reveal` does nothing when the host cannot reveal. `revealProfile` resolves false when the host cannot reveal or the folder could not be opened, so a caller can tell the player.
-- `spritesBaseUrl`: the base URL for a ROM's extracted sprites (`app-sprite://` on Electron, `Capacitor.convertFileSrc` on mobile). It ends with `/`, and is empty when unavailable.
+The rest of the phone host is Brock's: the file picker (the ROM and SRAM pickers pass `anyType` on a phone, because Android's picker greys out `.sfc` and `.srm` files it has no type for), the Back gesture (`MainActivity` dispatches `brock:back` with the swipe edge and `useMobileBack` listens through `device.onBackButton`) and the Storage page (`<BrockApp dataDomains>` takes `ROTP_DATA_DOMAINS`, the same list the main process uses).
 
 ## apps/desktop/src/profiles/connection-patch/randomizer-connection-patch.ts
 
@@ -253,8 +238,3 @@ diagnosed from `session.log`.
 Extraction runs at most once per ROM per session. Concurrent callers (startup, profile
 select, boot) share the in-flight promise, and a finished run, successful or not, is not
 repeated on the next profile switch. The manual buttons keep their own path.
-
-## apps/desktop/src/tracker-state-io/
-
-Typed wrapper around the per profile tracker state IPC, so presentational tiers never touch
-`window.api` directly.

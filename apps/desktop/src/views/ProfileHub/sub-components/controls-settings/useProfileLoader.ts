@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind hook */
 import { useEffect, useRef } from 'react';
-import { KEYBOARD_DEFAULT, profileFromPreset, migrateProfilesLoudly } from '@rotp/input-mapping';
+import { KEYBOARD_DEFAULT, profileFromPreset } from '@rotp/input-mapping';
 import { getInputManager } from '@app/input/input-manager/get-input-manager';
 import { readInputProfiles, writeInputProfiles } from '@app/storage/profile-data-store';
 import { firstProfile } from './first-profile';
@@ -15,8 +15,7 @@ const useProfileLoader = ({ profileId, activeInputProfileId, setProfiles, setAct
     loadedRef.current = true;
 
     void (async () => {
-      const raw = await readInputProfiles(profileId);
-      let loaded: InputProfile[] = migrateProfilesLoudly(raw);
+      let loaded: InputProfile[] = await readInputProfiles(profileId);
 
       if (loaded.length === 0) {
         const defaultProfile = profileFromPreset(KEYBOARD_DEFAULT);

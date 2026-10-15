@@ -141,10 +141,6 @@ Easing is evaluated in JS because `motion` samples a keyframe value at an arbitr
 
 `none` clamps at the end, `loop` wraps, `ping-pong` reflects. Before the delay has elapsed the position is 0 (the rest pose), so an animation whose gate just turned true does not flash to a mid track value.
 
-## packages/hud/src/engine/motion/motion.constants.ts
-
-`width` and `height` can reflow a sibling under a flex or grid parent. The renderer applies every sampled value as a transform or filter on the already placed box and never re-measures, so the other six properties cannot move a sibling. `packages/hud/src/layouts/validate-motion-warnings` warns an author who animates width or height.
-
 ## packages/hud/src/engine/motion/sample-animation.ts
 
 Motion is a pure function of a clock the caller owns (`HudNodeMotion` in the renderer). `elapsedMs` is one shared clock since the surface mounted; each animation reads its own position through `delay`, which is the whole staggering mechanism. Gating with `when` never resets an animation; it samples wherever the shared clock is. `undefined` means the gate is false and the caller draws the unanimated value.
@@ -285,26 +281,7 @@ A track edit is a document rule (§50): adding, inserting, removing or moving a 
 
 ## packages/hud/src/layouts/load-layout/try-load-layout.ts
 
-One reader for built-in and custom layouts; nothing downstream can tell them apart except the `builtIn` label. Every value is migrated before validation, in this order: `migrate-screen` folds a pre-§42 `regions[]` into the screen, turns every `stack` into a one cell grid and splits a pre-§57 flex `gap: n` into `{ x: n, y: n }`; then `migrate-legacy-vitals` replaces the four deleted opaque kinds with their preset subtrees. `loadLayout` throws; `tryLoadLayout` returns the errors for the two callers that can do better (the editor shows them, the profile store falls back to the default).
-
-## packages/hud/src/layouts/migrate-gap.ts
-
-The §57 rewrite: a flex container's single `gap` becomes the `{ x, y }` pair a grid always had. It runs once on load on the raw value; no alias survives, so a stored document opens as it was laid out and is saved in the new shape. It is pixel identical because the flow engine already spent the one number on both the main axis and the wrapped line gap. A bound gap copies the same expression to both axes. A grid, or a gap that already names `x` or `y`, is untouched, so re-running it is a no op and it can run on every load with no version flag. A bound `Value` is a record too, which is why only a record naming `x` or `y` counts as a pair.
-
-## packages/hud/src/layouts/migrate-legacy-vitals.ts
-
-Replaces the four opaque element kinds phase 5 deleted (`life`, `magic`, `consumables`, `wallet`) with their preset subtrees, once, before validation. No alias survives, so there are never two ways to draw a heart. The node's own box properties (a player's `scale` or `margin`) are carried onto the replacement root; its `element` is not. `consumables` was three counters (bomb, arrow, key) in a column with no gap, the same way the built-ins assemble those presets. It runs on the raw value and leaves malformed neighbours for the validator. It runs after `migrate-screen`, so there is one tree to walk.
-
-## packages/hud/src/layouts/migrate-screen.ts
-
-The §42 rewrite, run once on load before validation. No alias survives for `regions` or `direction: 'stack'`.
-
-- A `stack` becomes a one cell grid with every child at (1,1). `justify` and `align` become `justifyItems` and `alignItems`; a `between` justify becomes `start` because nothing distributes at one origin. A stack ignored `place`, so children are pinned to (1,1) outright, and a `stretch` alignSelf (read as start by a stack, as fill by a grid) is rewritten to `start`. A stack drops its gap.
-- `regions[]` becomes `screen.children`. The nine anchors were a 3 by 3 grid, so the screen gets `SCREEN_GRID` with `[auto, fill, auto]` tracks each way: the middle track takes the free space and the outer bands hug the edges. Every shipped screen was a stack, so the template replaces that placeholder wholesale.
-- Alignment is written per child because the root default (`start`) can only say one thing and the nine anchors need three per axis: `alignSelf` when the block band is not `start`, and `justifySelf` when the inline band then disagrees.
-- A centred band spans all three tracks on that axis, which makes the migration exact: `anchorRect` centred a region in the whole view, and a child centred in the middle track alone would drift by half the difference between the outer bands. A spanning child adds nothing to an `auto` track's size, so the outer bands still hug their content. A span starts at track 1, because `column: 2, colSpan: 3` would run off a three track template.
-- A child the screen already held flowed in the whole screen box, so it spans all nine cells, and regions are appended after it so a backdrop still draws underneath, the order `layoutHud` used before.
-- The flex `gap` split from `migrate-gap` rides along on the same walk.
+One reader for built-in and custom layouts; nothing downstream can tell them apart except the `builtIn` label. The value goes straight to validation. `loadLayout` throws; `tryLoadLayout` returns the errors for the two callers that can do better (the editor shows them, the profile store falls back to the default).
 
 ## packages/hud/src/layouts/validate-box/extent-at.ts
 
@@ -328,7 +305,7 @@ A gap axis is a `Value` and never negative. `x` is always horizontal and `y` alw
 
 ## packages/hud/src/layouts/validate-container/validate-flex-container.ts
 
-There are two flex directions, not three: `stack` is rewritten into a one cell grid on load (`migrate-screen`), so it never reaches the validator. Since §57 `gap` and `guide` belong to any container: both engines take `gap: { x?, y? }` (a pre-§57 `gap: 4` is rewritten on load) and both take a `guide` because the editor draws either engine's arrangement over the preview.
+There are two flex directions, not three: a container is `row` or `column`, and `stack` does not exist. `gap` and `guide` belong to any container: both engines take `gap: { x?, y? }` and both take a `guide` because the editor draws either engine's arrangement over the preview.
 
 ## packages/hud/src/layouts/validate-countdown-node.ts
 
@@ -444,7 +421,7 @@ The eight prebuilt subtrees a HUD document can start from. Each is an ordinary `
 - `basedOn` is the layout this one was forked from, for the editor's start from list.
 - `glyphPack` is which pack every glyph in the layout draws from, or `auto` to follow the device family (default `auto`); a glyph element's own `pack` wins over it. It cannot live only on nodes because the pause menu's nav legend draws glyphs that belong to no node, from the same pack the button map uses.
 - `inGameplay` defaults to `always`.
-- `screen` is required: a layout with no screen has nowhere to draw, and `migrate-screen.ts` gives one to every document written before section 42, including those that only had `regions[]`.
+- `screen` is required: a layout with no screen has nowhere to draw.
 
 ## packages/hud/src/types/hud-motion/hud-motion.type.ts
 

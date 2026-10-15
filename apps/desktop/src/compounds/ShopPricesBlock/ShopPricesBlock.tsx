@@ -71,4 +71,3 @@ const ShopPricesBlock = (props: ShopPricesBlockProps) => {
 };
 
 export { ShopPricesBlock };
-export type { ShopPricesBlockProps };

@@ -10,6 +10,7 @@ const EditorStepStrip = (props: EditorStepStripProps) => {
     <Box className="hud-editor__globals" role="group" aria-label="Editor settings" title={STEP_HINT}>
       <SegmentedControl
         size="sm"
+        className="hud-editor__step"
         label="step"
         value={String(step)}
         options={EDITOR_STEPS.map((n) => ({ value: String(n), label: String(n) }))}
@@ -20,4 +21,3 @@ const EditorStepStrip = (props: EditorStepStripProps) => {
 };
 
 export { EditorStepStrip };
-export type { EditorStepStripProps } from './EditorStepStrip.type';

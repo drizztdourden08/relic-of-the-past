@@ -23,4 +23,3 @@ const RandomizerOptionRow = (props: RandomizerOptionRowProps) => {
 };
 
 export { RandomizerOptionRow };
-export type { RandomizerOptionRowProps };

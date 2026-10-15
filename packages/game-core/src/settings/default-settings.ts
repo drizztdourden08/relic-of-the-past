@@ -6,13 +6,11 @@ import { ONLINE_NOTICE_DEFAULTS } from '../archipelago/online-notice-settings';
 import { QUIET_RECEIPT_DEFAULTS } from '@rotp/game-data';
 
 const DEFAULT_SETTINGS: GameSettings = {
-  autosave: false,
   autoSaveEnabled: false,
   autoSaveIntervalSeconds: 300,
   autoSaveMaxEntries: 5,
   saveOnQuit: true,
   displayPerfInTitle: false,
-  disableFrameDelay: false,
   vsync: false,
   turboEnabled: false,
   turboSpeed: DEFAULT_TURBO_SPEED,
@@ -32,15 +30,12 @@ const DEFAULT_SETTINGS: GameSettings = {
   widescreenPlayArea: false,
   offscreenAI: 'idle',
 
-  windowScale: 2,
-  fullscreen: 0,
   newRenderer: true,
   enhancedMode7: true,
   noSpriteLimits: true,
   linearFiltering: false,
   dimFlashes: false,
   linkSprite: null,
-  outputMethod: 'SDL',
 
   ...DEFAULT_DISPLAY_SETTINGS,
   startFullscreen: false,

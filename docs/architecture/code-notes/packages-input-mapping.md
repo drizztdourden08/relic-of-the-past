@@ -202,7 +202,7 @@ Facts about `packages/input-mapping` that the code cannot say on its own. Each h
 ## packages/input-mapping/src/keyboard-default.ts
 
 - SDL never enumerates a keyboard, so the keyboard default is hand-authored and is not derived from the family layer.
-- `tooling/test-profile/provision-profile.mjs` loads this file by its exact path through Node type stripping and a data URL, so it must keep its path and hold no runtime import.
+- `apps/desktop/tests/e2e/isolated-app/keyboard-input-profile.ts` seeds the end to end profile from this file, so it must stay free of runtime imports.
 
 ## packages/input-mapping/src/primary-modifier/is-primary-modifier.ts
 
@@ -262,16 +262,6 @@ mappings are merged with the defaults so a newly added action always has a bindi
 maps are scoped by owning device. `clearHeld` releases every held action, so a hold style
 action (turbo) is let go even when its release is lost while input is suppressed mid hold.
 
-## packages/input-mapping/src/runtime/migrate-profiles/migrate-profiles.ts
-
-The door every stored input profile comes through, and the only place a slot list written
-before contract section 19 (position derived ids such as `slot:NORTH`) becomes numbered
-slots. Profiles are read as `unknown` and cast; without the migration a stale list would pass
-as the new shape with every `index` undefined. It fails loudly: a shape it cannot read throws,
-and the profile is dropped from the session, not half loaded, so nothing overwrites the file
-and the assignments can still be recovered. An empty list would look like "never made any",
-which is the silent loss the rule prevents. One unreadable profile does not cost the others.
-
 ## packages/input-mapping/src/runtime/pause-manager.ts
 
 Pause state for a controller disconnect or a manual toggle. It only emits events; audio is
@@ -326,12 +316,6 @@ The single resolver both the calibration cards and the controls screen use. SDL'
 `hasButton`, `hasAxis` and `buttonLabels` decide what exists; the family layer only decides
 labels and icons. No preset and no device database is consulted, so the screens cannot
 disagree. An unavailable entry was never opened by SDL and resolves to an empty control list.
-
-## packages/input-mapping/src/runtime/resolved-axis-groups.ts
-
-Pairs stick axes by position name (`LEFT_X` with `LEFT_Y`), not array order, so a device
-reporting one axis of a pair does not misalign the rest. `basePrefix` is the icon key both
-axes share; feed it with the live x and y to `resolveStickDirectionIcon`.
 
 ## packages/input-mapping/src/runtime/scheme-runtime/
 
@@ -429,26 +413,10 @@ they are pushed here.
 - The shadowed set depends on the bindings, not the frame; a FunctionMask cannot tell that confirm and slot 4 are one key.
 - Shadowing verbs are every verb the open menu consumes: the four directions, pause and the four menu verbs. Map is excluded because nothing in the menu reads it.
 
-## packages/input-mapping/src/scheme/migrate-slots/index.ts
-
-- A pre-numbering profile stores slots by SDL position ids (`slot:NORTH`, `slot:DPAD_UP`, `slot:kb:KeyF`) and an assignment table keyed by those ids. This converts both to numbers once, on read.
-- A pre-numbering list was written in device order (SDL reports SOUTH first), so it is sorted into the prefill order first, which puts NORTH on slot 1 as shipped layouts expect. A list that already carries numbers is the player's and is never re-sorted, which keeps the migration idempotent.
-- An assignment whose slot is missing from the list gets a slot rebuilt from its old id, recovering assignments that an older cap left stranded on shoulders, triggers, paddles and stick clicks.
-- Unreadable stored shapes throw SlotMigrationError with the offending value, because silently dropping assignments is the one outcome the player cannot detect or undo. The caller decides whether that is a bad file or a bad build.
-
-## packages/input-mapping/src/scheme/migrate-slots/old-ids-of.ts
-
-- Old ids are rebuilt from position and keyboard code, and also read from the slot. The slot list and the assignment table live in two files migrated at different times, so the table must still match after the list has dropped its ids. This keeps migrateScheme idempotent and order-free.
-- When two slots claim the same id, the first in list order keeps it.
-
 ## packages/input-mapping/src/scheme/prefill-order/in-prefill-order.ts
 
 - The canonical slot order: north, west, east, south face buttons, then d-pad up, left, right, down. Layouts and schemes join only by slot number, so any other order draws the right shape with the wrong letters.
-- Used by the prefill (driver report order is not guaranteed) and by the migration of pre-numbering lists. Unranked positions keep their reported order after the ranked ones.
-
-## packages/input-mapping/src/scheme/prefill-order/is-legacy-slot-list.ts
-
-- A list is pre-numbering when no entry carries a positive integer `index`.
+- Used by the prefill, because driver report order is not guaranteed. Unranked positions keep their reported order after the ranked ones.
 
 ## packages/input-mapping/src/scheme/remap-classic.ts
 
@@ -513,22 +481,6 @@ Ctrl would break Safari on a Mac.
 Slot numbers are contiguous, so removing slot 2 makes the old slot 3 the new slot 2. The
 assignment table is keyed by number, so `remapAssignments` must move each assignment with
 its slot, or an item lands one button up without warning.
-
-## packages/input-mapping/tests/slot-migration.keep.test.ts
-
-`tests/fixtures/spc2-profile.json` and `tests/fixtures/spc2-assignments.json` are a real profile written
-before slots were numbers: twelve slots keyed by SDL position and eight assignments keyed
-the same way, four of them on shoulders and triggers. `tests/fixtures/sdl-order-profile.json`
-stores its list in SDL device order (SOUTH first). The fixtures sit in the tracked
-`tests/fixtures/` folder so every clone has them.
-
-Position is display only; the slot number is the identity. A binding and a position need
-not describe the same device (slot 1 is drawn as NORTH and driven by the W key). The slot
-list is migrated when the profile is read and the assignment table when the settings are,
-so the second call sees a list whose old ids are gone; old ids are rebuilt from `position`
-and from a key binding. The boot path runs the migration more than once, so it must be
-idempotent. A list that already carries numbers is the player's own order and is never
-sorted again.
 
 ## packages/input-mapping/tests/slot-prefill-order.keep.test.ts
 

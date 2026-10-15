@@ -85,5 +85,5 @@ const createMsuEngine = (options: MsuEngineOptions) => {
 };
 
 export { createMsuEngine };
-export type { MsuEngine, MsuEngineOptions, TrackReport } from './engine.type';
+export type { MsuEngine } from './engine.type';
 export type { LayerReport, ChannelReport, MsuChannelName } from './channel';

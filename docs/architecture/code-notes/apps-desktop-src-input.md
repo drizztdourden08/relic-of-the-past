@@ -170,8 +170,3 @@ entry carries enough to record.
 The picture and name of whatever input a SNES button is bound to: keycaps for a keyboard
 profile, the pad's own face buttons for a controller profile, resolved like the Controls
 screen's rows. An unbound button falls back to the SNES button's own picture.
-
-## apps/desktop/src/input/vibration/
-
-A transport free vibration call through the input module's `vibratePattern`, which sequences
-the segments in main on desktop and in the WebView on Android. Default intensity is 0.7.

@@ -35,4 +35,3 @@ const SummaryStep = (props: SummaryStepProps) => {
 };
 
 export { SummaryStep };
-export type { SummaryStepProps };

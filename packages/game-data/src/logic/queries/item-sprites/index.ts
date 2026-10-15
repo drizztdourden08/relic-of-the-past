@@ -1,10 +1,2 @@
 /* @layer shared-game @kind barrel */
-export { getCapacityUpgradeSprite } from './get-capacity-upgrade-sprite';
-export { getItemSprite } from './get-item-sprite';
-export { getPoolGameSprite } from './get-pool-game-sprite';
-export { getSpritesBase } from './get-sprites-base';
-export { resolveItemSprite } from './resolve-item-sprite';
-export { setSpritesBase } from './set-sprites-base';
-export { setSpritesRevision } from './set-sprites-revision';
 export { spriteFilename } from './sprite-filename';
-export { spriteUrlOf } from './sprite-url-of';

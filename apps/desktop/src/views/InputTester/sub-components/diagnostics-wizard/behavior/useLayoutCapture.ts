@@ -36,4 +36,3 @@ const useLayoutCapture = () => {
 };
 
 export { useLayoutCapture };
-export type { CapturedLayout, LayoutStage };

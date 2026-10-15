@@ -54,4 +54,3 @@ const useGlyphPacks = (): GlyphPacks => {
 };
 
 export { useGlyphPacks };
-export type { GlyphPacks } from './glyph-packs.type';

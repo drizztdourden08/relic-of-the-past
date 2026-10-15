@@ -1,44 +1,35 @@
 /* @layer tests @kind test */
-import { test, expect, _electron as electron } from '@playwright/test';
+import { test, expect } from '@playwright/test';
 import { join } from 'path';
 import { existsSync, mkdirSync } from 'fs';
-import type { ElectronApplication, Page } from 'playwright';
+import type { Page } from 'playwright';
+import { MAIN_JS, launchApp } from './isolated-app';
+import { MODERN_PROFILE, PLAIN_PROFILE } from './hud-style/hud-style-profiles';
+import { STYLE_ROW, STYLE_SEGMENTS, assignedSlots, labelsWhere, styleSegments } from './hud-style/hud-style-readers';
+import type { ProfileSeed } from './isolated-app';
 import { REPO_ROOT } from '../repo-root';
 
-const PROJECT_ROOT = REPO_ROOT;
-const MAIN_JS = join(PROJECT_ROOT, 'apps', 'desktop', 'dist', 'electron', 'main.js');
-const USER_DATA = 'C:\\Users\\drizz\\AppData\\Local\\Temp\\rotp-pr';
-const SHOTS = join(PROJECT_ROOT, 'tests', 'screenshots', 'hud-style');
+const SHOTS = join(REPO_ROOT, 'tests', 'screenshots', 'hud-style');
 
-const STYLE_ROW = '[data-setting-key="hudStyle"]';
-const STYLE_SEGMENTS = `${STYLE_ROW} .segmented__btn`;
 const MAP_ROW = '[data-setting-key="mapOnSelect"]';
 const TOGGLE_TRAVEL_MS = 400;
 
 interface Hub {
-  app: ElectronApplication;
+  close: () => Promise<void>;
   page: Page;
   tab: (name: string) => Promise<void>;
   shoot: (name: string, selector: string) => Promise<void>;
 }
 
-const ignoreAlreadyClosed = (): void => undefined;
-
-const openProfile = async (instance: string, profile: string): Promise<Hub> => {
+const openProfile = async (seed: ProfileSeed): Promise<Hub> => {
   mkdirSync(SHOTS, { recursive: true });
-  const app = await electron.launch({
-    args: [MAIN_JS, '--muted', '--no-focus', `--instance=${instance}`, `--user-data=${USER_DATA.replace(/\\/g, '/')}`],
-    env: { ...process.env, NODE_ENV: 'production' },
-  });
-  const page = await app.firstWindow();
-  await page.waitForLoadState('domcontentloaded');
+  const { app, window: page, close } = await launchApp(seed);
   await page.waitForSelector('.window-title-bar', { timeout: 60_000 });
   const cdp = await app.context().newCDPSession(page);
   await cdp.send('Emulation.setDeviceMetricsOverride', { width: 1500, height: 1200, deviceScaleFactor: 1, mobile: false });
   await page.waitForTimeout(1200);
-  await page.locator('.list-item-row__primary', { hasText: profile }).first().click();
-  await page.waitForTimeout(500);
-  await page.getByText('Open Profile', { exact: true }).first().click();
+  await page.click('[aria-label="Menu"]');
+  await page.getByRole('menuitem', { name: 'Settings', exact: true }).click();
   await page.waitForTimeout(2500);
 
   const tab = async (name: string): Promise<void> => {
@@ -48,7 +39,7 @@ const openProfile = async (instance: string, profile: string): Promise<Hub> => {
   const shoot = async (name: string, selector: string): Promise<void> => {
     await page.locator(selector).first().screenshot({ path: join(SHOTS, `${name}.png`) });
   };
-  return { app, page, tab, shoot };
+  return { close, page, tab, shoot };
 };
 
 const shootSlots = async (page: Page, name: string): Promise<void> => {
@@ -70,25 +61,6 @@ const shootSlots = async (page: Page, name: string): Promise<void> => {
     },
   });
 };
-
-const styleSegments = (page: Page) => page.$$eval(STYLE_SEGMENTS, (els) => els.map((el) => ({
-  label: el.textContent.trim(),
-  disabled: (el as HTMLButtonElement).disabled,
-  checked: el.getAttribute('aria-checked') === 'true',
-})));
-
-const assignedSlots = (page: Page) => page.$$eval('.slot-row', (rows) => rows
-  .map((row) => ({
-    what: (row.querySelector('.binding-row__snes-label')?.textContent ?? '').trim(),
-    on: (row.querySelector('.binding-row__binding-label')?.textContent ?? '').trim(),
-  }))
-  .filter((slot) => slot.what !== 'Unassigned')
-  .map((slot) => `${slot.what} on ${slot.on}`));
-
-const labelsWhere = (page: Page, selector: string, attribute: string) =>
-  page.$$eval(selector, (els, attr) => els
-    .filter((el) => el.getAttribute(attr) === 'true')
-    .map((el) => el.textContent.trim()), attribute);
 
 const checkOriginalStyle = async ({ page, tab, shoot }: Hub): Promise<void> => {
   await tab('HUD');
@@ -146,8 +118,8 @@ const checkEnhancedStyle = async ({ page, shoot }: Hub): Promise<void> => {
     { label: 'Modern', disabled: false, checked: false },
   ]);
   await expect(page.locator('.hud-style-control__notice')).toHaveCount(0);
-  expect(await labelsWhere(page, '[data-setting-key="hudMode"] .segmented__btn', 'aria-checked')).toEqual(['Enhanced']);
-  expect(await labelsWhere(page, '[data-setting-key="hudEnhancedParts"] button', 'aria-pressed')).toEqual(['Main', 'Pause']);
+  expect(await labelsWhere(page, '[data-setting-key="hudMode"] .segmented__btn:not(.fit-probe *)', 'aria-checked')).toEqual(['Enhanced']);
+  expect(await labelsWhere(page, '[data-setting-key="hudEnhancedParts"] button:not(.fit-probe *)', 'aria-pressed')).toEqual(['Main', 'Pause']);
   await shoot('08-enhanced-picked', '.settings-section__group');
 };
 
@@ -171,8 +143,8 @@ test.describe('HUD style drives the control scheme', () => {
   test.skip(!existsSync(MAIN_JS), 'run `npx electron-vite build` first');
 
   test('Original profile: three live styles, a banner instead of a scheme control', async () => {
-    const hub = await openProfile('hud-style-spec', 'visual-test');
-    const { app } = hub;
+    const hub = await openProfile(PLAIN_PROFILE);
+    const { close } = hub;
     try {
       await checkOriginalStyle(hub);
       await checkMapToggle(hub);
@@ -180,12 +152,12 @@ test.describe('HUD style drives the control scheme', () => {
       await checkEnhancedStyle(hub);
       await checkModernStyle(hub);
     } finally {
-      await app.close().catch(ignoreAlreadyClosed);
+      await close();
     }
   });
 
-  test('a stored modern profile migrates to the Modern style with its slots intact', async () => {
-    const { app, page, tab, shoot } = await openProfile('hud-style-spec-mc', 'agent/modern-controls');
+  test('a Modern profile opens on the Modern style with its slots intact', async () => {
+    const { close, page, tab, shoot } = await openProfile(MODERN_PROFILE);
     try {
       await tab('HUD');
       expect(await styleSegments(page)).toEqual([
@@ -193,7 +165,7 @@ test.describe('HUD style drives the control scheme', () => {
         { label: 'Enhanced', disabled: false, checked: false },
         { label: 'Modern', disabled: false, checked: true },
       ]);
-      await shoot('06-migrated-style-modern', STYLE_ROW);
+      await shoot('06-style-modern', STYLE_ROW);
 
       await tab('Controls');
       await expect(page.locator('.scheme-banner')).toHaveCount(0);
@@ -202,9 +174,9 @@ test.describe('HUD style drives the control scheme', () => {
       expect(await assignedSlots(page)).toEqual([
         'Sword on S', 'Action on D', 'Item on W', 'Item on E',
       ]);
-      await shootSlots(page, '07-migrated-slots');
+      await shootSlots(page, '07-modern-slots');
     } finally {
-      await app.close().catch(ignoreAlreadyClosed);
+      await close();
     }
   });
 });

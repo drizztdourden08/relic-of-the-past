@@ -19,4 +19,3 @@ const networkViewOf = (
 };
 
 export { networkViewOf };
-export type { NetworkView };

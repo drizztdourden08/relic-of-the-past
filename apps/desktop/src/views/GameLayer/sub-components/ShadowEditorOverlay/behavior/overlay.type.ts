@@ -174,7 +174,7 @@ interface OverlayRenderArgs extends OverlayRefs {
 }
 
 export type {
-  Vp, Point, ElementType, ScreenData, Hit, UpdateHeightmap, UpdateLight, AddHeightmap, AddLight, Tool,
+  Vp, Point, ElementType, ScreenData, Hit, Tool,
   HeightmapGizmoArgs, LightGizmoArgs, CreateShapeArgs, FinalizeFreehandArgs, HoverArgs, HoverResult, DrawArgs,
   PointerContext, HandlerDeps, InteractionDeps, OverlayKeyboardArgs, OverlayRenderArgs, OverlayView, GizmoParts, DragInfo, OverlayRefs,
 };

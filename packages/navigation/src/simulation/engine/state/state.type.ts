@@ -62,4 +62,4 @@ interface EngineState {
   config: SimConfig;
 }
 
-export type { SimTargetRole, SimTarget, EngineState };
+export type { SimTarget, EngineState };

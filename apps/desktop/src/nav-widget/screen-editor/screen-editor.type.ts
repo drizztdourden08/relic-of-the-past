@@ -1,11 +1,5 @@
 /* @layer renderer-widgets @kind types */
-import type { PendingScreenRecord, AreaId, AreaRecord, DungeonId, LocationId, LocationRecord, ScreenRecord, ScreenTag, ScreenWorld } from '@rotp/game-data';
-import type { Allocated } from '@app/ipc/screen-editor-contract';
-
-type AllocatedArea = Allocated<AreaRecord>;
-type AllocatedLocation = Allocated<LocationRecord>;
-
-type Allocation<T> = { record: T } | { error: string };
+import type { PendingScreenRecord, ScreenRecord, ScreenTag } from '@rotp/game-data';
 
 interface ScreenDraft {
   kind: ScreenRecord['kind'];
@@ -31,12 +25,4 @@ interface DraftResult {
   blockers: string[];
 }
 
-interface DungeonGeography {
-  dungeonId: DungeonId;
-  name: string;
-  areaId: AreaId;
-  locationId: LocationId;
-  world: ScreenWorld;
-}
-
-export type { AllocatedArea, AllocatedLocation, Allocation, DraftResult, DungeonGeography, ScreenDraft };
+export type { DraftResult, ScreenDraft };

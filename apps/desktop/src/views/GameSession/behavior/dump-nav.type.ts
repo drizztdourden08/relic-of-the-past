@@ -103,7 +103,7 @@ interface RunFloodResult {
 
 export type {
   AreaTotalsParams,
-  EdgeName,
+
   EntranceDataInput,
   FallHoleLanding,
   FloodFillDump,
@@ -112,7 +112,7 @@ export type {
   MatchingEntrance,
   RunFloodArgs,
   RunFloodResult,
-  Spawn,
+
   StairInfo,
   TravelDest,
 };

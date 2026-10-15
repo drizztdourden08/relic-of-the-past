@@ -11,4 +11,3 @@ const PoolTotals = ({ totals, error }: PoolTotalsProps) => (
 );
 
 export { PoolTotals };
-export type { PoolTotalsProps };

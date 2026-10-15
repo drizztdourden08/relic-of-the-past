@@ -49,23 +49,6 @@ pond rule forces). With the master switch off everything below it greys out and 
 because the families are not the player's to set while the feature is out. The read-only
 Options page passes `readOnly`, which draws the switches, modes and bonuses as tags.
 
-## apps/desktop/src/compounds/CaptureSessionPicker/behavior/useCyclingFrame.ts
-
-Without ffmpeg a session has only its packaged PNG frames. The hook steps through them on a
-timer so the preview reads as a video and does not freeze on the first frame.
-
-## apps/desktop/src/compounds/CaptureSessionPicker/CaptureSessionPicker.css
-
-The list has a fixed height, not a max height, so the pane scrolls as soon as a third row of
-cards is needed. `grid-auto-rows: min-content` is required with it: a grid of definite height
-otherwise divides its rows evenly to fill that height, and `align-content: start` alone does
-not stop that.
-
-## apps/desktop/src/compounds/CaptureSessionPicker/sub-components/CaptureSessionRow.tsx
-
-`NO_PREVIEW_FRAMES` is one shared empty array. A fresh `[]` on each render would restart the
-frame timer in `useCyclingFrame`, which depends on the array identity.
-
 ## apps/desktop/src/compounds/ChecksTracker/ChecksTracker.constants.ts
 
 The tracker once drew its states and view modes with text glyphs, which inherited the body font

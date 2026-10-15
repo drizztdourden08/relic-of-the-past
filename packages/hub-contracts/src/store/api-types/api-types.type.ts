@@ -2,7 +2,6 @@
 import type { Container, ItemStats, Person, StoreItem, StoreKind } from '../types';
 import type { HomeSettings, HomeView, ItemCardView } from '../home-types';
 import type { Stars } from '../rating-types';
-import type { ReviewDecision } from '../review-types';
 
 type HomeResponse = HomeView;
 
@@ -63,8 +62,6 @@ type ReviewQueueResponse = { entries: ReviewEntry[] };
 
 type UnsubmittedResponse = { entries: ReviewEntry[] };
 
-type ReviewDecideRequest = { decision: ReviewDecision; note: string };
-
 type PackLinkResponse = {
   url: string;
   bytes: number;
@@ -108,7 +105,6 @@ export type {
   ReviewEntry,
   ReviewQueueResponse,
   UnsubmittedResponse,
-  ReviewDecideRequest,
   PackLinkResponse,
   ItemChangeResponse,
   FeaturedResponse,

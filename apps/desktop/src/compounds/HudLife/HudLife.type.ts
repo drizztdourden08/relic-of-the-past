@@ -19,4 +19,4 @@ interface LifeCaptionProps {
   spritesBase: string;
 }
 
-export type { HeartArt, HudLifeProps, LifeCaptionProps };
+export type { HudLifeProps, LifeCaptionProps };

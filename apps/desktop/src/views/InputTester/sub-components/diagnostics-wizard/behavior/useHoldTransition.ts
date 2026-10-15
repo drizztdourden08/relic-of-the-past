@@ -19,4 +19,3 @@ const useHoldTransition = (run: () => Promise<boolean>, active: boolean) => {
 };
 
 export { useHoldTransition };
-export type { HoldTransitionStatus };

@@ -37,5 +37,5 @@ interface ProfileRowsProps {
 }
 
 export type {
-  ProfileCreateFormProps, ProfileFormState, ProfileRowsProps, UseCreateProfileParams, UseProfileManagerParams,
+  ProfileCreateFormProps, ProfileRowsProps, UseCreateProfileParams, UseProfileManagerParams,
 };

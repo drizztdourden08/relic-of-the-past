@@ -61,7 +61,6 @@ interface CheckFacetDef {
 }
 
 export type {
-  CheckFacetCategory,
   CheckFacetDef,
   FilterState,
   RunContext,

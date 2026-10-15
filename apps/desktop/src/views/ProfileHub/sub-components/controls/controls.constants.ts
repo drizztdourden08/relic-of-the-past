@@ -1,6 +1,5 @@
 /* @layer renderer-components @kind constants */
 import type { CoreVerb } from '@rotp/input-mapping';
-import type { IconName } from '@drizztdourden08/tessera/primitives';
 import { publicAsset } from '@app/public-asset/public-asset';
 import type { ControlsTab } from '../controls-settings/controls-settings.type';
 import type { CoreVerbGroup } from './controls.type';
@@ -72,28 +71,13 @@ const SDL_TYPE_ICON: Record<string, string> = {
   gamecube: publicAsset('buttons/gc/controller_gamecube.svg'),
 };
 
-const FAMILY_ICON_NAME: Record<string, IconName> = {
-  xbox: 'gamepad-2',
-  playstation: 'gamepad-2',
-  nintendo: 'gamepad-2',
-  '8bitdo': 'gamepad-2',
-  keyboard: 'keyboard',
-  generic: 'gamepad-2',
-};
-
-const ASSIGNED_STATUS = {
-  disconnected: { label: 'Disconnected', className: 'assigned-controller__status--disconnected' },
-  connected: { label: 'Connected', className: 'assigned-controller__status--connected' },
-  detected: { label: 'Connected. Press a button to activate', className: 'assigned-controller__status--detected' },
-} as const;
-
 const EMPTY_HINT = 'Assign a controller to this profile to see its slots. Drop one from the Devices column.';
 
 const BANNER_TEXT = 'Modern controls are part of the Modern HUD style.';
 const BANNER_ACTION = 'Enable in HUD settings';
 
 export {
-  ADAPTER_FAMILY_ICON, ASSIGNED_STATUS, BANNER_ACTION, BANNER_TEXT, CANCEL_ARM_DELAY_MS, CLASSIC_ONLY,
-  CONTROLS_TAB_IDS, CORE_VERB_GROUPS, CORE_VERB_LABELS, DEVICE_FAMILY_ICON, EMPTY_HINT, FAMILY_ICON_NAME,
+  ADAPTER_FAMILY_ICON, BANNER_ACTION, BANNER_TEXT, CANCEL_ARM_DELAY_MS, CLASSIC_ONLY,
+  CONTROLS_TAB_IDS, CORE_VERB_GROUPS, CORE_VERB_LABELS, DEVICE_FAMILY_ICON, EMPTY_HINT,
   LISTEN_ARM_DELAY_MS, MODERN_ONLY, MODIFIER_CODES, SDL_TYPE_ICON,
 };

@@ -7,10 +7,10 @@ const ValueSpin = (props: ValueSpinProps) => {
 
   return (
     <Box className="hud-value-input__spin">
-      <Pressable tabIndex={-1} aria-label={`Increment ${named}`} onClick={() => stepBy(1)}>
+      <Pressable className="hud-value-input__step" tabIndex={-1} aria-label={`Increment ${named}`} onClick={() => stepBy(1)}>
         <Icon size={12} name="chevron-up" />
       </Pressable>
-      <Pressable tabIndex={-1} aria-label={`Decrement ${named}`} onClick={() => stepBy(-1)}>
+      <Pressable className="hud-value-input__step" tabIndex={-1} aria-label={`Decrement ${named}`} onClick={() => stepBy(-1)}>
         <Icon size={12} name="chevron-down" />
       </Pressable>
     </Box>

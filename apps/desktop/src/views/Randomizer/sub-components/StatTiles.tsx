@@ -20,4 +20,3 @@ const StatTiles = ({ tiles }: StatTilesProps) => (
 );
 
 export { StatTiles };
-export type { StatTilesProps };

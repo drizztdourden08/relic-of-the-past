@@ -34,4 +34,3 @@ const SidesField = (props: SidesFieldProps) => {
 };
 
 export { SidesField };
-export type { SidesFieldProps } from './SidesField.type';

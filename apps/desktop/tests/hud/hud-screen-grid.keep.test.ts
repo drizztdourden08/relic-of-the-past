@@ -1,7 +1,7 @@
 /* @layer test @kind test */
 import { describe, expect, it } from 'vitest';
-import { layoutHud, placedById, layoutById, tryLoadLayout, validateLayout } from '@rotp/hud';
-import type { HudContainer, HudLayout, HudNode } from '@rotp/hud';
+import { layoutHud, placedById, layoutById, validateLayout } from '@rotp/hud';
+import type { HudLayout, HudNode } from '@rotp/hud';
 
 const VIEW = { w: 398, h: 224 };
 const SCOPE = {
@@ -64,50 +64,6 @@ describe('the countdown (§62) joins every built-in without moving a pixel', () 
     expect(placedById(layoutHud(doc, { w: 512, h: 448 }, { scope: COUNTING }), 'countdown')?.rect)
       .toEqual({ x: 234, y: 392, w: 44, h: 44 });
     expect(placedById(layoutHud(doc, VIEW, { scope: SCOPE }), 'countdown')).toBeUndefined();
-  });
-});
-
-describe('a pre-§42 stack document migrates and draws identically', () => {
-  const leaf = (id: string, extra: Partial<HudNode> = {}): HudNode =>
-    ({ kind: 'element', id, element: { type: 'slot', index: 1 }, ...extra }) as HudNode;
-
-  const stored = {
-    id: 'stored',
-    name: 'Stored',
-    builtIn: false,
-    regions: [{
-      anchor: 'top-left',
-      root: {
-        kind: 'container',
-        id: 'overlay',
-        direction: 'stack',
-        children: [leaf('glyph'), leaf('sprite', { margin: { left: -4, top: 10 } })],
-      },
-    }],
-  };
-
-  it('rewrites the stack into a one-cell grid, with no alias left behind', () => {
-    const result = tryLoadLayout(stored);
-    expect(result.ok).toBe(true);
-    if (!result.ok) return;
-    const overlay = result.doc.screen.children[0] as HudContainer;
-    expect(overlay).toMatchObject({
-      layout: 'grid', columns: ['auto'], rows: ['auto'], justifyItems: 'start', alignItems: 'start',
-    });
-    expect(overlay.children.map((child) => child.place))
-      .toEqual([{ column: 1, row: 1 }, { column: 1, row: 1 }]);
-    expect(JSON.stringify(result.doc)).not.toContain('stack');
-    expect(JSON.stringify(result.doc)).not.toContain('direction');
-  });
-
-  it('draws every child exactly where the stack put it, box included', () => {
-    const result = tryLoadLayout(stored);
-    if (!result.ok) throw new Error(result.errors.join('\n'));
-    const placed = layoutHud(result.doc, VIEW, {});
-    const rect = (id: string) => placedById(placed, id)?.rect;
-    expect(rect('glyph')).toEqual({ x: 0, y: 0, w: 16, h: 16 });
-    expect(rect('sprite')).toEqual({ x: -4, y: 10, w: 16, h: 16 });
-    expect(rect('overlay')).toEqual({ x: 0, y: 0, w: 16, h: 26 });
   });
 });
 

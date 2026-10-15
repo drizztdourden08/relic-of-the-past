@@ -63,12 +63,10 @@ type TriggerSourceRow = TriggerSource & {
 
 export type {
   DialogueTrigger,
-  ChoiceOutcome,
   DialogueChoice,
   DialogueContext,
   ContextTableGroup,
   ContextSiteGroup,
   DialogueChoiceRecord,
-  TriggerSource,
   TriggerSourceRow,
 };

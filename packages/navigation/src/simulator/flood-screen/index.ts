@@ -2,4 +2,4 @@
 export { floodOneOverworld } from './flood-one-overworld';
 export { floodOverworldScreen } from './flood-overworld-screen';
 export { summarizeRun } from './summarize-run';
-export type { ScreenFlood, ScreenFloodRun } from './flood-screen.type';
+export type { ScreenFlood } from './flood-screen.type';

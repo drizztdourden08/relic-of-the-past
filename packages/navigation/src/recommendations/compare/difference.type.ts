@@ -15,8 +15,6 @@ interface Difference {
   confidence: Confidence;
 }
 
-type SetDifferenceStatus = 'missing-in-dataset' | 'unbacked-in-dataset' | 'unresolvable';
-
 type SetDifference<K extends EntityKind, Item = unknown> =
   | { status: 'missing-in-dataset'; noun: string; key: string; proposed: ProposedRecord<K> }
   | { status: 'unbacked-in-dataset'; noun: string; key: string; record: EntityRecordMap[K] }
@@ -27,4 +25,4 @@ interface SubjectComparison<K extends EntityKind> {
   differences: readonly Difference[];
 }
 
-export type { Difference, DifferenceStatus, SetDifference, SetDifferenceStatus, SubjectComparison };
+export type { Difference, DifferenceStatus, SetDifference, SubjectComparison };

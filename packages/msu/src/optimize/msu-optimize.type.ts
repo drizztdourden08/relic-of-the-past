@@ -39,6 +39,9 @@ interface OptimizeRunResult {
 }
 
 export type {
-  OptimizeAnalysis, OptimizeCandidate, OptimizeConversion, OptimizeExclusion, OptimizePhase,
-  OptimizeProgress, OptimizeRunResult,
+  OptimizeAnalysis,
+  OptimizeCandidate,
+  OptimizeConversion,
+  OptimizeProgress,
+  OptimizeRunResult,
 };

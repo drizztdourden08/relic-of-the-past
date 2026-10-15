@@ -356,10 +356,6 @@ frame, when given, is uploaded separately and mirrored with its blue and red cha
 
 - Reads the current frame rate from the running WASM module; 0 when there is none.
 
-## packages/game-core/src/game-event/game-event.type.ts
-
-- `GameEvent` is an event emitted by the game core.
-
 ## packages/game-core/src/haptic-polling/
 
 - Frame-by-frame detection of game state changes for haptics. It runs inside the ui-bridge rAF loop and detects the dash (periodic pulses), state transitions (falling, landing, death), spin attack release, and health decreases as a backup if the C hook misses.
@@ -398,7 +394,7 @@ frame, when given, is uploaded separately and mirrored with its blue and red cha
 - Builds the two extra bitmask words (features1/features2): the split bug-fix toggles from the generated registry plus the hand-authored features2 bits. Every id goes through the Vanilla Safe resolver first, so a parity-affecting bit is dropped before it is packed.
 - The hand-authored features2 bits start at bit 24 (kFeatures2_WidescreenPlayArea, kFeatures2_WidescreenIdleAI, kFeatures2_TitleOverride, kFeatures2_HostMenu, kFeatures2_ModernControls, kFeatures2_AllowDiving = bits 24 to 29). The generated bug-fix catalog (BUNDLE_FIXES) owns features2 from bit 0 upward. Values must match features.h; bug-fix bits must match features_bugfixes.h.
 - The JS key widescreenIdleEnemies is kFeatures2_WidescreenIdleAI in C ("AI" there means enemy behaviour).
-- Each bug fix is on when its own toggle is set, falling back to the legacy bundle setting it was split from, so existing profiles keep their behaviour.
+- Each bug fix is on when its own toggle is set, falling back to the bundle master it was split from.
 - The wide-view bits stay separate because they depend on aspectRatio, not on another feature id.
 - The title hide is registered, so Vanilla Safe strips it through the same resolver.
 - The modern control scheme may drive the item register. It IS the Modern HUD style, which is also the HUD that can show the bindings, so this is one condition and never two that disagree.
@@ -583,10 +579,6 @@ The live evidence shapes carried by `ScreenObservations`.
 - `LiveDungeonMapPosition` comes from `wasmGetDungeonMapPosition`. `found` is the table's own answer: the native call reports false for a house, a cave or outdoors, a resolved negative like `known(undefined)`. Not read is `ScreenObservations.dungeonMapPos` being absent. `floorRaw` is the raw floor byte: 0 is 1F, 1 is 2F, 0xFF is B1, 0xFE is B2, the same encoding as the bridge's `DungeonMapPosition.floorRaw`.
 - `LiveWalkBoundary` is one boundary from `wasmGetRoomWalkBoundaries`, such as a palace toggle wall between the castle and the sewer. `destRoom === 0` means no boundary on that wall, like the unused slot of every other room addressable table.
 - `LiveDoorBoundaryTile` is one door tile from `wasmGetRoomDoorBoundaryTiles`. It carries no destination. It proves a door exists at a wall and gives its open state, so the indoor edge probe uses it only as a sign that the room's exits were read, never for identity.
-
-## packages/game-core/src/refresh-rate/
-
-`GAME_HZ` is the frame rate the core runs at (NTSC, 60.0988). The refresh rate arithmetic (whether a display rate is a whole multiple of 60, the synced rate options, which reading to trust) comes from the Brock display module (`@drizztdourden08/brock-display`).
 
 ## packages/game-core/src/save-file/
 
@@ -845,7 +837,6 @@ token measures by its slot.
 
 - The old file was `@kind data` with code in it. DEFAULT_SETTINGS is now the data file packages/game-core/src/settings/default-settings.ts; the INI writer, the merge and the small helpers moved to logic files beside it.
 - MIN_ENHANCED_ASPECT: the two host drawn HUD styles (Enhanced and Modern) draw the life, magic and consumable groups and the host owned menu out into the side bands, which only exist from 16:9 up. The 0.001 absorbs the rounding in a reduced W:H pair, so a display that is 16:9 is never rejected by a last decimal miss.
-- LEGACY_ENHANCED (`'extended'`) is what the Enhanced style was called on disk before section 59.7. Only `mergeSettings` may read it.
 - Dialog pacing defaults are the stock values, so a fresh profile plays text exactly as the game does.
 - The enhanced dialog box is what the app ships with, so a fresh profile gets the chamfered single line frame over a dark ground with drifting triforces. Vanilla Safe masks the HudOverride bit these all ride on, which keeps a stock profile stock.
 - hudHighlightPrimary and hudHighlightSecondary are the app's own accent gold and ok green, snapped to the game's 15 bit colours when pushed.
@@ -857,13 +848,9 @@ token measures by its slot.
 - The INI render flags mirror buildFeatureFlags (the live bridge) so the boot config and the live push agree. Widescreen sprites and visual fixes follow what the profile renders, not what its ratio word says: Auto on a 4:3 display is 4:3, and a ratio the capabilities do not cover is pulled back to one they do. Wider or taller both count.
 - Custom MSU music has no gate word bit (an Electron, renderer and config.c toggle the emulated CPU never reads), so Vanilla Safe forces it off at the INI boundary.
 - A custom player sprite has no gate word bit until config.features3 reflects it (ApplyConfiguredPlayerSprite in emscripten_main.c). The boot path treats the LinkGraphics key's presence as "override on", so it is not written under Vanilla Safe.
-- `mergeSettings` reads the profile as stored (`partial`) for the style migration, because a default filled in for a missing key is not a choice.
 - Tall rendering forces the enhanced HUD: the native HUD is a fixed 4:3 tile strip, wrong under tall. Forcing it in the merge (not in the settings UI) covers every consumer at once: INI, live push and the HUD gate word all read the merged value.
-- The style was spelled `'extended'` before it was called Enhanced. The value is internal, so it was renamed with the label. Every profile on disk still carries the old spelling, so the migration reads LEGACY_ENHANCED, never `'enhanced'`. The scheme collapse is asked first, because a profile that picked Modern controls is not an Enhanced profile.
-- The control scheme is no longer stored; it is derived from the style (controlSchemeOf). Modern controls were picked on top of the app drawn HUD, and that pairing is what the Modern style now is, so the two old fields collapse into one value. Anything else (Modern controls on the Original style was never reachable; Classic on Enhanced) keeps its style and loses the key.
-- Both migrations are idempotent: a migrated profile carries `'enhanced'` and no `controlScheme`, which neither condition matches.
+- The control scheme is not stored; it is derived from the style (controlSchemeOf). Modern controls are the app drawn HUD plus the Modern style, so one value carries both.
 - Both host drawn styles are the host drawn HUD plus the host owned pause menu, with no meaning while the native rendering stays, so they force the overlay on for both parts, in the merge for the same reason as tall.
-- REMOVED_SETTING_KEYS: the four item selection toggles (L/R cycling and its limit, inventory reorder, secondary X/L/R slots), the two dead pause overlay keys, and the control scheme now that the HUD style derives it. The secondary slot behaviour is armed internally by the modern control scheme; the rest are gone. They are stripped so they stop round tripping through saved profiles.
 - enableAudio is no longer in the UI and is always kept on.
 - The settings key `offscreenAI` and the INI key `PauseOffscreenAI` keep their names: they are persisted or wire names, and "AI" there means enemy behaviour. The reader for that setting is `offscreenEnemyMode`.
 

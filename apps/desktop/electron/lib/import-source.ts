@@ -47,4 +47,4 @@ const resolveSourceFiles = async (source: ImportSource, matchExtensions: Set<str
 };
 
 export { resolveSourceFiles };
-export type { ImportSource, ResolvedSource, SourceProgress };
+export type { ImportSource };

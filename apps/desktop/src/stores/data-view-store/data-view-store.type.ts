@@ -32,4 +32,4 @@ interface DataViewStoreState {
   registerInspectorOpener: (open: (() => void) | null) => void;
 }
 
-export type { DataViewStoreState, PendingRecord, SessionView };
+export type { DataViewStoreState, SessionView };

@@ -1,5 +1,5 @@
 /* @layer renderer-hud @kind barrel */
 export { PauseStatusScreen } from './PauseStatusScreen';
 export type {
-  DungeonItemCell, PauseAction, PauseStatusScreenProps,
+  DungeonItemCell,
 } from './PauseStatusScreen.type';

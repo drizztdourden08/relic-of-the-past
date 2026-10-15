@@ -24,4 +24,3 @@ const DebugReportFloatingButton = (props: DebugReportFloatingButtonProps) => {
 };
 
 export { DebugReportFloatingButton };
-export type { DebugReportFloatingButtonProps };

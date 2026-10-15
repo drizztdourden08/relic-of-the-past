@@ -14,4 +14,3 @@ const seedPerDeviceCache = (remember: (fields: DeviceSnapshotFields) => void): (
 };
 
 export { seedPerDeviceCache };
-export type { DeviceSnapshotFields };

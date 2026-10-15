@@ -107,19 +107,6 @@ Facts about `packages/asset-extraction` that the code cannot say on its own. Eac
 - Commands: `0x00` copies N literal bytes from the stream; `0x20` repeats one byte N times; `0x40` alternates 2 bytes for N bytes; `0x60` starts at a byte and adds 1 for each copy; `0x80`, `0xA0` and `0xC0` copy N bytes from earlier in the output, at an offset read from the stream (big-endian by default).
 - The reader crosses SNES banks the same way as the Python `Reader` class. With the return-length overload the result is `[data, compressedLength]`.
 
-## packages/asset-extraction/src/dat-container/index.ts
-
-- A read-only view over a serialized `zelda3_assets.dat` blob, the exact inverse of `AssetBuilder.serialize()`. It uses plain `Uint8Array` and no `Buffer`, so it runs in the renderer and in Node.
-- Layout: a 48-byte signature, 32 reserved bytes, a u32 asset count, a u32 name block length, then `count * 4` asset sizes, the NUL-separated name list, and each asset's bytes aligned to 4.
-- `datAssetNames` returns null when the blob is not an assets file. `findDatAsset` returns a subarray view into the blob.
-- `dat-reader` reads the same format; the two overlap.
-
-## packages/asset-extraction/src/dat-reader/index.ts
-
-- Reads one named entry out of a compiled assets blob, the inverse of `AssetBuilder.serialize()`.
-- Layout: a 16-byte signature and a 32-byte key hash, 32 bytes of padding, then the entry count and the length of the name block (`COUNT_AT` is byte 80, `HEADER_BYTES` is 88). After that come the entry sizes as u32s, the NUL-separated names, and the payloads in the same order, each aligned to the next 4-byte boundary of the file.
-- A caller can pull one asset without re-running extraction from a ROM. The studio needs the stock player tiles and gear palette, and the blob is already cached.
-
 ## packages/asset-extraction/src/data/constants.ts
 
 Named ROM addresses used by asset extraction, which replace magic numbers from the Python code.
@@ -509,11 +496,6 @@ Named ROM addresses used by asset extraction, which replace magic numbers from t
 ## packages/asset-extraction/src/music/spc-command-tables.constants.ts
 
 - The SPC command tables shared by extraction and compilation. Command `0xe0 + n` is effect `n`, which takes `kEffectByteLength[n]` argument bytes. Notes 72 and 73 are `-+-` and `---`.
-
-## packages/asset-extraction/src/packed-bytes/index.ts
-
-- A `Buffer`-free reader and writer for the packed-array format the core parses with `FindIndexInMemblk` (`util.c`): count minus 1 offsets relative to the end of the offset table, the concatenated parts, then a u16 trailer holding count minus 1 (16-bit offsets) or 8192 plus count minus 1 (32-bit offsets).
-- `packPackedBytes` matches `packArrays` in `asset-builder` byte for byte, with the same width rule: 16-bit while every offset fits and the count allows. `unpackPackedBytes` is its inverse.
 
 ## packages/asset-extraction/src/rom/load-rom-file.ts
 

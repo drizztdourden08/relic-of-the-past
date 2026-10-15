@@ -1,4 +1,5 @@
 /* @layer shared-types @kind barrel */
 export type {
-  CoreBindings, ModernBindings, ModernScheme, ModernSlot, SlotAssignment, SlotIndex,
+  SlotAssignment,
+  SlotIndex,
 } from './scheme.type';

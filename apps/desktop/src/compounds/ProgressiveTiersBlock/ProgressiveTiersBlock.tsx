@@ -58,4 +58,3 @@ const ProgressiveTiersBlock = (props: ProgressiveTiersBlockProps) => {
 };
 
 export { ProgressiveTiersBlock };
-export type { ProgressiveTiersBlockProps };

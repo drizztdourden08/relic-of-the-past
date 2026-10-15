@@ -536,7 +536,7 @@ The control scheme running right now, a quiet background fact and never a contro
 Slot numbers are never validated against a device, so this exists for two things only.
 It sizes the preview's slot list realistically, so a pad layout previews with pad shaped content and a keyboard layout with keyboard shaped content.
 It writes the scheme's half of the layout and scheme link on save, so a saved copy still points at a scheme that wears it.
-The list comes from the profile's input profiles through the same migration every reader uses, so old slot lists show their real numbers.
+The list comes from the profile's input profiles.
 Only schemes with a modern block are offered, because a classic profile has no slots.
 The scheme in force is found in three steps, because none is always right.
 The live settings come first, when a profile is loaded for play.

@@ -33,7 +33,7 @@ type Candidate = {
   exists: boolean;
 };
 
-type LegacyNameData = {
+type NameTableData = {
   glossary: GlossaryTerm[];
   names: NameTable;
 };
@@ -51,6 +51,13 @@ type RunScan = {
 };
 
 export type {
-  Candidate, LegacyNameData, Occurrence, ResolveMode, ResolveOptions, RunScan, Span, Variable, VariableIndex,
+  Candidate,
+  NameTableData,
+  Occurrence,
+  ResolveOptions,
+  RunScan,
+  Span,
+  Variable,
+  VariableIndex,
   VariableKind,
 };

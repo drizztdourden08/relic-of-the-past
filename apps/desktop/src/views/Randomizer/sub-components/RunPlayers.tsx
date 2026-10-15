@@ -23,4 +23,3 @@ const RunPlayers = ({ placement, players }: RunPlayersProps) => {
 };
 
 export { RunPlayers };
-export type { RunPlayersProps };

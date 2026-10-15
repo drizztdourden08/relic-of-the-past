@@ -78,4 +78,3 @@ const ControllerCard = ({ deviceKey, state, resolvedDevice, busType, hasRumble, 
 };
 
 export { ControllerCard };
-export type { ControllerCardProps };

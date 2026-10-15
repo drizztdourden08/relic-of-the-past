@@ -56,4 +56,3 @@ const useSpriteLibrary = () => {
 };
 
 export { useSpriteLibrary };
-export type { LibraryEntry };

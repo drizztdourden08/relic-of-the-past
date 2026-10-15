@@ -12,4 +12,4 @@ interface StateSectionData {
   rows: StateRow[];
 }
 
-export type { HudPart, StateRow, StateSectionData };
+export type { HudPart, StateSectionData };

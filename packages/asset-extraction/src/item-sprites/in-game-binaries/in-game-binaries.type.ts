@@ -18,4 +18,4 @@ interface BinaryBuffers {
   errors: string[];
 }
 
-export type { BinaryBuffers, Builder, InGameBinary, PaletteRows, Pictures };
+export type { BinaryBuffers, InGameBinary, PaletteRows, Pictures };

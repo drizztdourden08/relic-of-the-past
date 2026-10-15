@@ -18,4 +18,3 @@ const DiagnosticsFlowBody = (props: DiagnosticsFlowBodyProps) => {
 };
 
 export { DiagnosticsFlowBody };
-export type { DiagnosticsFlowBodyProps };

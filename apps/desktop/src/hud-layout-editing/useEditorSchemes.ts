@@ -1,6 +1,5 @@
 /* @layer renderer-components @kind hook */
 import { useCallback, useEffect, useState } from 'react';
-import { migrateProfilesLoudly } from '@rotp/input-mapping';
 import { readInputProfiles } from '@app/storage/profile-data-store';
 import { activeProfileId } from '@app/hud/active-profile';
 import { patchSchemeProfiles } from './patch-scheme-profiles';
@@ -18,7 +17,7 @@ const useEditorSchemes = (): EditorSchemes => {
     void (async () => {
       const profileId = await activeProfileId();
       if (!profileId || isStale()) return;
-      const loaded = migrateProfilesLoudly(await readInputProfiles(profileId));
+      const loaded = await readInputProfiles(profileId);
       const list = loaded.flatMap(schemesOfProfile);
       if (isStale()) return;
       setSchemes(list);
@@ -40,4 +39,3 @@ const useEditorSchemes = (): EditorSchemes => {
 };
 
 export { useEditorSchemes };
-export type { EditorScheme, EditorSchemes } from './editor-schemes.type';

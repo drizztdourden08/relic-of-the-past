@@ -27,4 +27,3 @@ const propagateScreens = (ctx: PropagateCtx): { responses: ScreenResponse[]; ove
 };
 
 export { propagateScreens };
-export type { ScreenResponse } from './nav-flood.type';

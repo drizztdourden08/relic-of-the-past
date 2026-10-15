@@ -8,14 +8,3 @@
   max-height: 85vh;
   padding: var(--space-lg);
 }
-
-.diagnostics-wizard .dialog__header {
-  flex-wrap: wrap;
-  row-gap: var(--space-sm);
-}
-
-.diagnostics-wizard .window-header__title {
-  flex: 0 0 auto;
-  overflow: visible;
-  text-overflow: clip;
-}

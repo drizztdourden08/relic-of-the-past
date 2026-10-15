@@ -27,4 +27,3 @@ const importOpenedDocument = (path: string, container: OpenedContainer): void =>
 };
 
 export { importOpenedDocument };
-export type { OpenedContainer };

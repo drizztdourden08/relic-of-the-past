@@ -21,16 +21,6 @@
   background: var(--c-sunken);
 }
 
-.randomizer-page__seed-row {
-  display: flex;
-  align-items: center;
-  gap: var(--space-sm);
-}
-
-.randomizer-page__seed-row .text-input {
-  flex: 1;
-}
-
 .randomizer-page__summary {
   font-size: var(--text-sm);
   font-family: var(--font-mono);
@@ -55,8 +45,6 @@
   --log-gutter-w: var(--randomizer-log-col-w);
   --log-tag-w: var(--randomizer-log-col-w);
 }
-
-.randomizer-log .log-panel__msg--session { font-weight: var(--weight-semi); }
 
 .spoiler-tracker {
   flex: 1;

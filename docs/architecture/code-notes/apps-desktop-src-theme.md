@@ -93,13 +93,6 @@ Nowhere to go shakes the row instead of announcing anything.
 Both animations stop under reduced motion.
 The `aria-live` text is clipped, not hidden, so it stays in the accessibility tree and takes no space.
 
-## apps/desktop/src/theme/hud-layout-editor/fields.css
-
-Fixes for flex rows whose fields collapsed to nothing.
-`.text-input` and `.select-trigger` are `width: 100%`, and on a flex item a percentage width is the flex basis, so each claimed the whole row while a `flex: 1` sibling got nothing.
-The colour row, the most rendered row in Appearance, had 13.9px of typing area for a `#rrggbb` value before this.
-The `Select` beside a numeric field stops claiming the whole row.
-
 ## apps/desktop/src/theme/hud-layout-editor/geometry.css
 
 The geometry half of the inspector: Position and placement, and Size and box.

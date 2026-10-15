@@ -60,7 +60,8 @@ public class MainActivity extends BridgeActivity {
         }
         applyImmersive();
 
-        // Route Back per predictive-back swipe edge; the JS chrome decides (left =
+        // Route Back per predictive-back swipe edge as the brock:back event (Brock hands it to
+        // device.onBackButton); the JS chrome decides (left =
         // home/close, right = options menu). Added after super.onCreate so it sits
         // above Capacitor's own callback (the dispatcher is LIFO).
         getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
@@ -121,6 +122,6 @@ public class MainActivity extends BridgeActivity {
         final WebView webView = getBridge().getWebView();
         if (webView == null) return;
         webView.evaluateJavascript(
-            "window.dispatchEvent(new CustomEvent('rotpback',{detail:'" + edge + "'}))", null);
+            "window.dispatchEvent(new CustomEvent('brock:back',{detail:'" + edge + "'}))", null);
     }
 }

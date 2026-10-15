@@ -29,4 +29,3 @@ const computeLightUniforms = (lights: LightSource[], gameCanvas: HTMLCanvasEleme
 };
 
 export { computeLightUniforms };
-export type { LightUniforms } from './light-calculator.type';

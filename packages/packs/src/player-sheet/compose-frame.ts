@@ -24,4 +24,3 @@ const composeFrame = (args: ComposeArgs): void => {
 };
 
 export { composeFrame };
-export type { ComposeArgs };

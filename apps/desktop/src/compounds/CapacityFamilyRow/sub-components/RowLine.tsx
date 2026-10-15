@@ -16,4 +16,3 @@ const RowLine = (props: RowLineProps) => {
 };
 
 export { RowLine };
-export type { RowLineProps };

@@ -54,4 +54,3 @@ const TrackerLogicToggles = ({ filter, onFilterChange, run }: TrackerLogicToggle
 };
 
 export { TrackerLogicToggles };
-export type { TrackerLogicTogglesProps };

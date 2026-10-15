@@ -1,6 +1,5 @@
 /* @layer shared-asset-extraction @kind barrel */
 export type {
-  DungeonDestination,
   DungeonEntityRecord,
   DungeonRoomHeader,
   DungeonInteractionCell,

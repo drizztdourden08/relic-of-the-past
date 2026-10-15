@@ -52,4 +52,3 @@ const TrackHead = (props: TrackHeadProps) => {
 };
 
 export { TrackHead };
-export type { TrackHeadProps } from './TrackHead.type';

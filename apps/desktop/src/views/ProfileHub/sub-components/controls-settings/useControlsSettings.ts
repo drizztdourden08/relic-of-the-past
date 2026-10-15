@@ -25,7 +25,7 @@ const useControlsSettings = ({ settings, onChange, profileId }: UseControlsSetti
   const { scheme, coreBindings, applyCoreBinding, applySlotBinding } = modernScheme;
 
   const bindingState = useBindingState({ settings, onChange, activeProfile, updateActiveProfile, devices, applyCoreBinding, applySlotBinding });
-  const dragDrop = useDragDrop({ devices, entries, scheme, activeProfile, updateActiveProfile });
+  const dragDrop = useDragDrop({ entries, scheme, activeProfile, updateActiveProfile });
   const displayMappings = useDisplayMappings({ activeProfile, devices });
   const schemeLayout = useSchemeLayout({ activeProfile, updateActiveProfile });
   const coreIcons = useCoreIcons({ activeProfile, devices, core: coreBindings });

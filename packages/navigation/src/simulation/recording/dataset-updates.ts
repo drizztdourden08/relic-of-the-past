@@ -60,4 +60,3 @@ const buildDatasetSuggestions = (rec: RecorderState, deps: UpdateDeps = {}): Dat
 };
 
 export { buildDatasetSuggestions };
-export type { UpdateDeps } from './dataset-updates.type';

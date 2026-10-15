@@ -1,12 +1,8 @@
 /* @layer renderer-components @kind barrel */
 export { InstructionsPanel } from './InstructionsPanel';
 export { LiveParserOutput } from './LiveParserOutput';
-export { PrereqCards } from './PrereqCards';
-export { StickCards } from './StickCards';
-export { TriggerCards } from './TriggerCards';
 export { StickTriggerSection } from './StickTriggerSection';
 export { ButtonMapping } from './ButtonMapping';
-export { ByteGrid } from './ByteGrid';
 export { CalibrationLog } from './CalibrationLog';
 export { FlakyByteWarningDialog } from './FlakyByteWarningDialog';
 export { WizardHeaderActions } from './WizardHeaderActions';

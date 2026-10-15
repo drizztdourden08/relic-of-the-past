@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind component */
 import './ValueInput.css';
-import { Field } from '@drizztdourden08/tessera/primitives';
+import { Box, Field } from '@drizztdourden08/tessera/primitives';
 import { readFormula } from './behavior/read-formula';
 import { usePromoteOverlay } from './behavior/usePromoteOverlay';
 import { valueErrorOf } from './behavior/value-error-of';
@@ -30,35 +30,37 @@ const ValueInput = (props: ValueInputProps) => {
       error={error}
       className={`hud-value-field ${className}${promote.className}`}
     >
-      <ValueInputRow
-        field={field}
-        label={label}
-        ariaLabel={ariaLabel}
-        placeholder={placeholder}
-        readOnly={readOnly}
-        invalid={error !== undefined}
-      />
-      <ValueInputFeedback
-        formula={field.formula}
-        expr={field.expr}
-        reading={reading}
-        scope={scope}
-        insideRepeat={insideRepeat}
-        min={min}
-        max={max}
-        onChange={onChange}
-      />
-      <FormulaMenu
-        open={field.menuOpen}
-        anchorRef={field.inputRef}
-        filter={field.prefix}
-        role={role}
-        insideRepeat={insideRepeat}
-        extraNames={extraNames}
-        scope={scope}
-        onClose={field.closeMenu}
-        onInsert={field.insert}
-      />
+      <Box className="hud-value-field__control">
+        <ValueInputRow
+          field={field}
+          label={label}
+          ariaLabel={ariaLabel}
+          placeholder={placeholder}
+          readOnly={readOnly}
+          invalid={error !== undefined}
+        />
+        <ValueInputFeedback
+          formula={field.formula}
+          expr={field.expr}
+          reading={reading}
+          scope={scope}
+          insideRepeat={insideRepeat}
+          min={min}
+          max={max}
+          onChange={onChange}
+        />
+        <FormulaMenu
+          open={field.menuOpen}
+          anchorRef={field.inputRef}
+          filter={field.prefix}
+          role={role}
+          insideRepeat={insideRepeat}
+          extraNames={extraNames}
+          scope={scope}
+          onClose={field.closeMenu}
+          onInsert={field.insert}
+        />
+      </Box>
     </Field>
   );
 };

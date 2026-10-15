@@ -154,10 +154,6 @@ Language pack persistence. A pack lives in `userData/Data/languages/<code>/` and
 
 A folder without a `meta.json` is an incomplete pack and is skipped. `loadPackedLanguages` returns the pre packed entries for every extracted language, ready to bake into an asset blob.
 
-## apps/desktop/electron/lib/archive/extract-entries-by-basename.ts
-
-Extracts only the entries whose base name is wanted, straight into the target folder. The rest of the archive is never inflated. Tool archives carry a few hundred MB of docs and extra executables beside the two binaries kept. The list of written paths lets a caller tell a partial archive from a complete one.
-
 ## apps/desktop/electron/lib/download.ts
 
 On an aborted download the partial file is removed. `removePartialFile` waits for the write stream to close first, because Windows keeps the file locked while the handle is open.

@@ -1,5 +1,6 @@
 /* @layer root-config @kind config */
 import { defineWorkspace, electronTarget, brockProfile } from '@drizztdourden08/brock-thread';
+import { plugin as snesPlugin } from '@drizztdourden08/brock-plugin-snes';
 
 export default defineWorkspace({
   name: 'rotp',
@@ -8,13 +9,12 @@ export default defineWorkspace({
     app: electronTarget({ app: 'apps/desktop' }),
   },
   provision: [brockProfile()],
-  plugins: ['@drizztdourden08/brock-plugin-snes'],
+  plugins: [snesPlugin],
   snes: {
     wasm: {
       output: 'apps/desktop/public/wasm',
       sourceDirs: ['core/zelda3/src', 'core/zelda3/snes', 'core/game-hooks', 'core/wasm-build'],
       sourceExtensions: ['.c', '.h', '.mjs'],
-      buildScript: 'tooling/wasm-core/build-wasm-core.mjs',
     },
     roms: {
       sha1: {

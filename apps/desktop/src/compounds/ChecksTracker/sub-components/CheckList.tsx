@@ -47,4 +47,3 @@ const CheckList = (props: CheckListProps) => {
 };
 
 export { CheckList };
-export type { CheckListProps };

@@ -103,6 +103,6 @@ interface SpawnRowProps {
 
 export type {
   CollectionTabsProps, FilterTab, GrantedItemsState, LiveRecord, RecommendationCardProps, RecommendationFilter, RecommendationListProps,
-  RecommendationTabsProps, RecordCardProps, Reviewable, ReviewControlsProps, ScreenLiveObservations, SpawnRowProps, SpawnsSectionProps,
+  RecommendationTabsProps, RecordCardProps, ReviewControlsProps, ScreenLiveObservations, SpawnRowProps, SpawnsSectionProps,
   SpriteLiveObservations, UseRecommendationFilterResult,
 };

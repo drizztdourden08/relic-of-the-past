@@ -79,6 +79,13 @@ interface ChannelCore {
 }
 
 export type {
-  MsuChannelName, ChannelKind, SoundProgram, ActiveLayer, LayerReport,
-  ChannelResume, ChannelReport, ChannelOptions, ChannelCore, SoundChannelApi,
+  MsuChannelName,
+  SoundProgram,
+  ActiveLayer,
+  LayerReport,
+  ChannelResume,
+  ChannelReport,
+  ChannelOptions,
+  ChannelCore,
+  SoundChannelApi,
 };

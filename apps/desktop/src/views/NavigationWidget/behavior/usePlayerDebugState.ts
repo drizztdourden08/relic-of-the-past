@@ -47,4 +47,3 @@ const usePlayerDebugState = (_debugTick: number): PlayerDebugState | null => {
 };
 
 export { usePlayerDebugState };
-export type { PlayerDebugState } from './hooks.type';

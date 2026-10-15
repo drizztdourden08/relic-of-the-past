@@ -42,4 +42,3 @@ const ChooseControllerStep = (props: ChooseControllerStepProps) => {
 };
 
 export { ChooseControllerStep };
-export type { ChooseControllerStepProps };

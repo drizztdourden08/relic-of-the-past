@@ -56,6 +56,6 @@ interface SampleParams {
 }
 
 export type {
-  AxisRanges, PositionalAnswer, PositionalCaptureRecord, PositionalRefs, PositionalSession, PositionalTarget,
+  AxisRanges, PositionalCaptureRecord, PositionalRefs, PositionalSession, PositionalTarget,
   SampleParams, UsePositionalOneByOneProps,
 };

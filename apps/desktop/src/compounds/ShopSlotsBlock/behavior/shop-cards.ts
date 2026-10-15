@@ -41,4 +41,3 @@ const shopCardsOf = (scope: ShopScope): readonly ShopCardModel[] => {
 };
 
 export { shopCardsOf };
-export type { ShopCardModel, ShopSlotToggleModel };

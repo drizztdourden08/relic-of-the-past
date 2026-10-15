@@ -12,4 +12,4 @@ interface MsuRollEvent {
 type MsuDebugEvent = MsuRollEvent;
 type MsuDebugListener = (event: MsuDebugEvent) => void;
 
-export type { MsuDebugEvent, MsuDebugListener, MsuRollEvent };
+export type { MsuDebugEvent, MsuDebugListener };

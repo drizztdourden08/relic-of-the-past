@@ -1,6 +1,5 @@
 /* @layer shared-types @kind types */
-import type { DataLocation, StorageSummary } from '@app/platform/rotp-platform/ports/storage.type';
-import type { FileStat } from '@drizztdourden08/brock-core';
+import type { DataLocation, FileStat, StorageSummary } from '@drizztdourden08/brock-core';
 import type { SystemDiagnostics } from '@app/diagnostics-types';
 import type { InvokeResult } from './invoke-result.type';
 

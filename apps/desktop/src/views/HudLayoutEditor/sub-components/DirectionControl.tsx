@@ -29,4 +29,3 @@ const DirectionControl = (props: DirectionControlProps) => {
 };
 
 export { DirectionControl };
-export type { DirectionControlProps } from './DirectionControl.type';

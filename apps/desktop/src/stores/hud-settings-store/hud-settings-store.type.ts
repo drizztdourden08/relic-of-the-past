@@ -17,4 +17,4 @@ interface HudSettingsStore extends HudSettings {
   setHudSettings: (patch: Partial<HudSettings>) => void;
 }
 
-export type { HudSettings, HudSettingsStore };
+export type { HudSettingsStore };

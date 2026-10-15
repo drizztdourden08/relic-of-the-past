@@ -4,4 +4,3 @@ import { connectionStrategy } from './connection-strategy';
 
 registerStrategy(connectionStrategy);
 
-export { connectionStrategy } from './connection-strategy';

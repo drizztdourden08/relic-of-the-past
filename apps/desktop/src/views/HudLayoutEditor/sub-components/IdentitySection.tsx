@@ -52,4 +52,3 @@ const IdentitySection = (props: IdentitySectionProps) => {
 };
 
 export { IdentitySection };
-export type { IdentitySectionProps } from './IdentitySection.type';

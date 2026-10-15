@@ -7,6 +7,7 @@ import { handleCoreCrash } from './handle-core-crash';
 const rotpCore = createGameCore(rotpPort, {
   precompiled: precompiledCore,
   crashArmDelayMs: CRASH_ARM_DELAY_MS,
+  watchCrashFrom: 'start',
   onCrash: handleCoreCrash,
 });
 

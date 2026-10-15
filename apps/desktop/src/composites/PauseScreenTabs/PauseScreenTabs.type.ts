@@ -14,4 +14,4 @@ interface PauseScreenTabsProps {
   onSelect: (screen: PauseScreen) => void;
 }
 
-export type { PauseScreenTabsProps, ScreenTab };
+export type { PauseScreenTabsProps };

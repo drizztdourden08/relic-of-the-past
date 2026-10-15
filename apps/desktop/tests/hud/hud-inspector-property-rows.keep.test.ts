@@ -7,7 +7,7 @@ import { existsSync, readFileSync } from 'fs';
 import { filesIn as filesMatching } from './files-in';
 import { EdgesField } from '@app/views/HudLayoutEditor/sub-components/EdgesField';
 import { ValueField } from '@app/views/HudLayoutEditor/sub-components/ValueField';
-import { Field, SegmentedControl } from '@drizztdourden08/tessera/primitives';
+import { DensityScope, Field, SegmentedControl } from '@drizztdourden08/tessera/primitives';
 import { REPO_ROOT } from '../repo-root';
 import { EDITOR_THEME_SHEETS } from './editor-theme-sheets.constants';
 import { required } from '../required';
@@ -57,7 +57,7 @@ const CASES: Record<string, () => unknown> = {
 const document_ = (rail: number): string => {
   const body = Object.entries(CASES)
     .map(([id, node]) => `<section data-case="${id}"><div class="hud-section__body">${
-      renderToStaticMarkup(node() as never)}</div></section>`)
+      renderToStaticMarkup(h(DensityScope, { density: 'compact', children: node() as never }))}</div></section>`)
     .join('');
   const css = SHEETS.map((f) => readFileSync(f, 'utf8')).join('\n');
   return `<!doctype html><meta charset="utf-8"><style>

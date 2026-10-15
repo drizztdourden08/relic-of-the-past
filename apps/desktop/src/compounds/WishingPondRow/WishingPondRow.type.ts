@@ -77,6 +77,6 @@ interface PondOptionLineProps {
 }
 
 export type {
-  PondAskModel, PondAskRowModel, PondBottleRowModel, PondControlsProps, PondCurveOption, PondOptionLineProps,
+  PondAskModel, PondAskRowModel, PondControlsProps, PondOptionLineProps,
   PondRowModel, PondRowState, WishingPondRowProps,
 };

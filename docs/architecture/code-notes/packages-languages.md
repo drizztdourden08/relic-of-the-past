@@ -218,7 +218,7 @@ encoding uses the right config, then the result's `code` is set to the set's own
 - `SetFont` is the persisted font a set carries beside its dialogue: the raw 2bpp glyph sheet and
   its per glyph width table, the same pair `buildPackedEntry` takes from a ROM extraction.
 - A set read through storage carries `variables`. One built in memory may not, so the code falls
-  back to projecting the legacy pair and still compiles.
+  back to projecting the glossary and name table pair and still compiles.
 
 ## packages/languages/src/messages/compile/compile-sets.ts
 
@@ -480,15 +480,15 @@ untouched.
   when it overruns.
 - `LineDraft` is a line before it is measured or numbered.
 
-## packages/languages/src/messages/migrate/empty-name-table.ts
+## packages/languages/src/messages/pack-set/empty-name-table.ts
 
 A name table with no item or bottle names yet and English placeholder pause labels
 (`dungeon-item` becomes `DUNGEON ITEM`). A later migration phase seeds real names from the game's
 data zone; this never hardcodes them.
 
-## packages/languages/src/messages/migrate/set-from-pack.ts
+## packages/languages/src/messages/pack-set/set-from-pack.ts
 
-Converts a legacy `LanguagePack` (`packages/asset-extraction/src/sets-types/language.type.ts`) into an editable `LanguageSet`: the
+Converts an extracted `LanguagePack` (`packages/asset-extraction/src/sets-types/language.type.ts`) into an editable `LanguageSet`: the
 one time conversion a translation studio session runs when it opens a language that was only
 ever extracted. It is pure, with no file I/O and no ROM access; the storage layer reads the pack
 in and writes the set out. The pack's language code becomes both `id` and `base`, so the set
@@ -838,7 +838,7 @@ Longest phrase first, one candidate per spelling. That order lets the scan claim
 a line naming a castle should offer the castle, not the wider region whose name is a prefix of it.
 The first mention of a spelling wins, so an existing variable beats a proposal.
 
-## packages/languages/src/messages/variables/legacy-from-variables.ts
+## packages/languages/src/messages/variables/name-tables-from-variables.ts
 
 Projects a variable list back into the glossary and name table pair the current readers expect.
 Engine variables are dropped: they have no literal value, and neither table ever held one. A
@@ -846,7 +846,7 @@ Engine variables are dropped: they have no literal value, and neither table ever
 
 ## packages/languages/src/messages/variables/merge-meta.ts
 
-Carries the fields the legacy pair has no room for across a rebuild. A set is still edited
+Carries the fields the glossary and name table pair has no room for across a rebuild. A set is still edited
 through its projected glossary and name table, so the variable list is rebuilt from that pair on
 every save. That rebuild makes `label` from the value and cannot know about a note the
 translator attached to a menu name, so both would be lost on every save; merging the previous list
@@ -922,7 +922,7 @@ maps key to variable for the constant time lookups an expansion walk needs.
   judge and never rewritten).
 - `Candidate` is one spelling to search for and the variable it should become. `exists` is always
   true: every needle comes from a variable the set holds.
-- `LegacyNameData` is the pair the old model persisted, and still the shape every current reader
+- `NameTableData` is the glossary and name table pair that every current reader
   expects. It is produced from a variable list and not stored beside it.
 - `ResolveOptions.samples` are preview stand ins for the engine variables, keyed by variable key.
   A missing key falls back to the neutral worst case samples.
@@ -940,7 +940,7 @@ set cannot define them again.
 
 The bridge between the one variable list and the two tables that came before it.
 `variablesFromNameTables` folds a glossary and a name table into
-one list; `legacyFromVariables` projects a list back into the pair, so the pause menu, the bake
+one list; `nameTablesFromVariables` projects a list back into the pair, so the pause menu, the bake
 step and the editor's tables keep reading what they always read. The result order is the engine's
 two first (locked, so they always win a key clash), then the translator's terms, then the menu
 names.
@@ -974,15 +974,14 @@ when there is one, so a round trip never grows the shape.
 
 ## packages/languages/src/sets/extract.ts
 
-- Extraction itself runs in the worker. This lands its result on disk: the raw legacy payload (dialogue dump, font pair, extraction meta) plus the set files derived from it.
+- Extraction itself runs in the worker. This lands its result on disk: the raw extraction payload (dialogue dump, font pair, extraction meta) plus the set files derived from it.
 - A re-extract of the same code resets the set on purpose. That is the start-over-from-the-ROM action.
 
 ## packages/languages/src/sets/format-2/index.ts
 
-- Format 2 of a stored set: one `variables.json` plus a `structure` choice, with a `format` number in the header. A folder without `variables.json` reads as no variables; an older format is a clean break.
+- Format 2 of a stored set: one `variables.json` plus a `structure` choice, with a `format` number in the header. Format 2 is the only format: a header with any other `format` is refused, never converted.
 - Rebuild on write: the set is still edited through its projected glossary and name table, so the variable list is rebuilt from that pair on every save, with the previous list merged back for the fields the pair cannot carry. A read, write, read cycle produces byte-identical files.
 - Unknown header fields survive: the known keys are laid over the header read back from disk, so a field written by a newer build is kept.
-- A header with no `format` is format 1.
 - An unrecognised or absent `structure` falls back to the default instead of failing the read.
 
 ## packages/languages/src/sets/import-rlang.ts
@@ -995,34 +994,26 @@ when there is one, so a round trip never grows the shape.
 
 ## packages/languages/src/sets/index.ts
 
-- `listPacks` and `getLanguage` are the legacy extraction payload view: the extracted-language list, and the renderer store's `getLanguage`.
-
-## packages/languages/src/sets/migrate.ts
-
-- Upgrade on read: a folder holding only the legacy extraction payload (`dialogue.txt`, no `set.json`) is converted to a set the first time it is listed or opened.
-- The new files are written beside the old ones and nothing is deleted, so a rollback keeps working and the asset recompile still finds what it reads.
-- Idempotent: the presence of `set.json` ends it, so a second pass is one `exists` check and never overwrites edited content.
-- Returns true when the folder holds a set after the call, migrated or already one.
+- `listPacks` and `getLanguage` are the extraction payload view: the extracted-language list, and the renderer store's `getLanguage`.
 
 ## packages/languages/src/sets/pack/index.ts
 
-- The legacy `LanguagePack` view of a folder is the raw extraction payload (`dialogue.txt`, `meta.json`, `font.bin`). Two things still need it: the read-only inspector UI, and the asset recompile, which reads those same files. An extraction keeps writing them next to the set files.
+- The `LanguagePack` view of a folder is the raw extraction payload (`dialogue.txt`, `meta.json`, `font.bin`). Two things still need it: the read-only inspector UI, and the asset recompile, which reads those same files. An extraction keeps writing them next to the set files.
 
 ## packages/languages/src/sets/paths/index.ts
 
-- Layout of one set under `languages/<id>/`: `set.json` (identity, provenance, format, structure), `dialogue.json`, `text.json`, `variables.json` (format 2 onward), `glossary.json` and `names.json` (format 1 only), `font.bin` (raw 2bpp glyph sheet), `font-width.bin` (per-glyph width table).
+- Layout of one set under `languages/<id>/`: `set.json` (identity, provenance, format, structure), `dialogue.json`, `text.json`, `variables.json`, `font.bin` (raw 2bpp glyph sheet), `font-width.bin` (per-glyph width table).
 - `text.json` holds the non-dialogue strings a translator retyped, overrides only, so a folder without it reads as nothing translated.
-- The format 1 payloads are read when `set.json` carries no `format`, and never written or deleted after that. The header's `format` is the only discriminator.
-- The two legacy files a ROM extraction leaves (`dialogue.txt`, `meta.json`) are named here for the migration and the compatibility reader.
+- The two extraction files a ROM import leaves (`dialogue.txt`, `meta.json`) are named here for the payload reader.
 
 ## packages/languages/src/sets/read-rlang-bytes.ts
 
-- Runs the ordinary import into a throwaway in-memory store and reads the set back through the ordinary readers, so the archive is checked and upgraded exactly as an install would do it.
+- Runs the ordinary import into a throwaway in-memory store and reads the set back through the ordinary readers, so the archive is checked exactly as an install would check it.
 - `font` is null when the archive carries no font.
 
 ## packages/languages/src/sets/read/index.ts
 
-- Every entry point migrates a legacy folder first, so a caller never sees the old layout, and the content half is upgraded to the current set format on the way past.
+- A folder with no `set.json` is not a set, so every entry point answers null for it.
 - The set meta is picked field by field, so the format bookkeeping the header also carries stays in the storage layer.
 - A folder written before `text.json` existed reads as an empty object, which is exactly nothing translated yet. The catalog, not this payload, decides which slots the editor shows.
 

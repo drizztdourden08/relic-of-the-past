@@ -42,4 +42,3 @@ const FormulaFeedback = (props: FormulaFeedbackProps) => {
 };
 
 export { FormulaFeedback };
-export type { FormulaFeedbackProps } from './FormulaFeedback.type';

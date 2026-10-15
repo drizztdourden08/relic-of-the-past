@@ -12,8 +12,6 @@ interface ControlContext {
   disabled: boolean;
 }
 
-type ControlRenderer = (key: string, ctx: ControlContext) => ReactNode | null;
-
 interface SettingsControls {
   renderControl: RenderControl<AppSettings>;
   isDisabled: (key: string, settings: AppSettings) => boolean;
@@ -21,4 +19,4 @@ interface SettingsControls {
   lockOverlay: (props: LockOverlayProps) => ReactNode;
 }
 
-export type { ControlContext, ControlRenderer, SettingsControls, SettingsPatch };
+export type { ControlContext, SettingsControls, SettingsPatch };

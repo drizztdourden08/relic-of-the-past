@@ -39,4 +39,3 @@ const useHomeTabSaves = (params: UseHomeTabSavesParams) => {
 };
 
 export { useHomeTabSaves };
-export type { HomeTabSaves } from './home-tab.type';

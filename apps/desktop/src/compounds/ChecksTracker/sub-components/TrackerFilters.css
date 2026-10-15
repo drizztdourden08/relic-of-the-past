@@ -33,11 +33,3 @@
   align-items: center;
   gap: var(--space-sm);
 }
-
-.tracker-filters__controls .segmented__btn {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: var(--space-2xs) var(--space-sm);
-  min-height: var(--size-20);
-}

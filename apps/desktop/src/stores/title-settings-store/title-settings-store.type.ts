@@ -13,4 +13,4 @@ interface TitleSettingsStore extends TitleSettings {
   setTitleSettings: (patch: Partial<TitleSettings>) => void;
 }
 
-export type { TitleSettings, TitleSettingsStore };
+export type { TitleSettingsStore };

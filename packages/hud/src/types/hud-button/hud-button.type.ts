@@ -20,4 +20,4 @@ interface HudButtonSpec {
   states: HudButtonStates;
 }
 
-export type { HudButtonBind, HudButtonFace, HudButtonSpec, HudButtonState, HudButtonStates, HudButtonVerb };
+export type { HudButtonBind, HudButtonFace, HudButtonSpec, HudButtonState, HudButtonVerb };

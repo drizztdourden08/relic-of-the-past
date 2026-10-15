@@ -77,4 +77,3 @@ const OutlinePanel = (props: OutlinePanelProps) => {
 };
 
 export { OutlinePanel };
-export type { OutlinePanelProps } from './OutlinePanel.type';

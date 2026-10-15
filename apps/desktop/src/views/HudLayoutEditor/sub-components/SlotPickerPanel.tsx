@@ -22,7 +22,7 @@ const SlotPickerPanel = (props: SlotPickerPanelProps) => {
     <Anchored anchorRef={anchorRef} placement="bottom-start" layer="popover" className="hud-picker-grid" onDismiss={onClose}>
       <Box className="hud-slot-picker__manual">
         <Text className="hud-slot-picker__label">Any slot</Text>
-        <NumberInput size="sm" min={1} value={manual} onChange={setManual} />
+        <NumberInput size="sm" className="hud-slot-picker__number" min={1} value={manual} onChange={setManual} />
         <SlotPickActions
           disabled={!manualValid}
           onPickNumber={onPickNumber && (() => pick(onPickNumber, manual))}
@@ -57,4 +57,3 @@ const SlotPickerPanel = (props: SlotPickerPanelProps) => {
 };
 
 export { SlotPickerPanel };
-export type { SlotPickerPanelProps } from './SlotPickerPanel.type';

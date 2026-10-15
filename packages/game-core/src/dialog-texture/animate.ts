@@ -32,4 +32,3 @@ const animationState = (animation: DialogTextureAnimation, speed: DialogTextureS
 };
 
 export { animationState };
-export type { AnimationState };
