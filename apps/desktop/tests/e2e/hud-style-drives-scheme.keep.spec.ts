@@ -28,9 +28,8 @@ const openProfile = async (seed: ProfileSeed): Promise<Hub> => {
   const cdp = await app.context().newCDPSession(page);
   await cdp.send('Emulation.setDeviceMetricsOverride', { width: 1500, height: 1200, deviceScaleFactor: 1, mobile: false });
   await page.waitForTimeout(1200);
-  await page.locator('.list-item-row__primary', { hasText: seed.name ?? seed.instance }).first().click();
-  await page.waitForTimeout(500);
-  await page.getByText('Open Profile', { exact: true }).first().click();
+  await page.click('[aria-label="Menu"]');
+  await page.getByRole('menuitem', { name: 'Settings', exact: true }).click();
   await page.waitForTimeout(2500);
 
   const tab = async (name: string): Promise<void> => {
@@ -119,8 +118,8 @@ const checkEnhancedStyle = async ({ page, shoot }: Hub): Promise<void> => {
     { label: 'Modern', disabled: false, checked: false },
   ]);
   await expect(page.locator('.hud-style-control__notice')).toHaveCount(0);
-  expect(await labelsWhere(page, '[data-setting-key="hudMode"] .segmented__btn', 'aria-checked')).toEqual(['Enhanced']);
-  expect(await labelsWhere(page, '[data-setting-key="hudEnhancedParts"] button', 'aria-pressed')).toEqual(['Main', 'Pause']);
+  expect(await labelsWhere(page, '[data-setting-key="hudMode"] .segmented__btn:not(.fit-probe *)', 'aria-checked')).toEqual(['Enhanced']);
+  expect(await labelsWhere(page, '[data-setting-key="hudEnhancedParts"] button:not(.fit-probe *)', 'aria-pressed')).toEqual(['Main', 'Pause']);
   await shoot('08-enhanced-picked', '.settings-section__group');
 };
 

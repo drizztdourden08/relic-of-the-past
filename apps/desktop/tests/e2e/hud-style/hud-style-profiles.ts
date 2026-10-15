@@ -1,11 +1,12 @@
 /* @layer tests @kind constants */
 import type { ProfileSeed } from '../isolated-app';
 
-const PLAIN_PROFILE: ProfileSeed = { instance: 'hud-style-spec', name: 'visual-test', fixtures: [] };
+const PLAIN_PROFILE: ProfileSeed = { instance: 'hud-style-spec', name: 'visual-test', openByDefault: true, fixtures: [] };
 
 const MODERN_PROFILE: ProfileSeed = {
   instance: 'hud-style-spec-mc',
   name: 'agent/modern-controls',
+  openByDefault: true,
   fixtures: [],
   config: {
     hudStyle: 'extended',
