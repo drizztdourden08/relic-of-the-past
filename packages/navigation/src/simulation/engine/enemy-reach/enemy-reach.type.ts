@@ -38,4 +38,4 @@ interface RoomThreatParams {
   split?: RoomSectionSplit;
 }
 
-export type { ReachKind, Weapon, EnemyReach, RoomThreat, RoomThreatParams };
+export type { Weapon, EnemyReach, RoomThreat, RoomThreatParams };

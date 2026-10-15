@@ -9,6 +9,4 @@ const KNOWN_FORMATS: readonly KnownFormat[] = [
   },
 ] as const;
 
-const BASELINE = { upToVersion: '0.17.1', id: '6895039d1993' } as const;
-
-export { BASELINE, KNOWN_FORMATS };
+export { KNOWN_FORMATS };

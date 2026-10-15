@@ -97,4 +97,3 @@ const detectScreenExits = (screenId: string, opts?: { entryTile?: GridPos; items
 };
 
 export { detectScreenExits };
-export type { DetectedScreen } from '@rotp/navigation';

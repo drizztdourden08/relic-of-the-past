@@ -7,4 +7,3 @@ export { extractDropShieldFire } from './extract-drop-shield-fire';
 export { extractDropStandard } from './extract-drop-standard';
 export { extractFollowerBomb } from './extract-follower-bomb';
 export { loadDropSheets } from '../drop-sprite-assembly';
-export type { DropSheets } from '../drop-sprite-assembly';

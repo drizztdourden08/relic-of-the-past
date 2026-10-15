@@ -7,4 +7,4 @@ type DialogueLineAttrs = {
   endsBox: boolean;
 };
 
-export type { DialogueLineAttrs, LineAdvanceKind };
+export type { DialogueLineAttrs };

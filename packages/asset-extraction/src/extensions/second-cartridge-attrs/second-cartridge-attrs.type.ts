@@ -9,4 +9,4 @@ type CellColumnRow = readonly [number, number];
 
 type RoomCellPairs = Readonly<Record<number, readonly CellColumnRow[]>>;
 
-export type { AttrOverlayCell, CellColumnRow, RoomCellPairs };
+export type { AttrOverlayCell, RoomCellPairs };

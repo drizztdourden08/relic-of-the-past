@@ -43,4 +43,3 @@ const createQueueState = () => {
 };
 
 export { createQueueState };
-export type { QueueState, JobChange } from './queue-state.type';

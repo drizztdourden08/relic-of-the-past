@@ -1,2 +1,2 @@
 /* @layer shared-game @kind barrel */
-export type { DungeonGameId, DungeonItems, DungeonRecord } from './dungeon.type';
+export type { DungeonGameId, DungeonRecord } from './dungeon.type';

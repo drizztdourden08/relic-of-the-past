@@ -4,4 +4,4 @@ export { outlineIntent } from './outline-intent';
 export { refusalFor } from './refusal-for';
 export { refusalText } from './refusal-text';
 export { zoneIn } from './zone-in';
-export type { DropIntent, DropZone, Refusal, Stop } from './drop-intent.type';
+export type { DropIntent, DropZone } from './drop-intent.type';

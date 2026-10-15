@@ -42,4 +42,3 @@ const evaluateAccess = async (user: HubUser, fresh: FreshToken | null, site: Sit
 };
 
 export { evaluateAccess };
-export type { AccessResult } from './evaluate-access.type';

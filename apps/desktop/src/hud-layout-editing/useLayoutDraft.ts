@@ -81,4 +81,3 @@ const useLayoutDraft = (layoutId: string, onCommitted?: (layout: HudLayout) => v
 };
 
 export { useLayoutDraft };
-export type { LayoutDraft } from './layout-draft.type';

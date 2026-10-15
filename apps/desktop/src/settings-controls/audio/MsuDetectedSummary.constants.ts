@@ -10,6 +10,4 @@ const MODE_LABELS: Record<GameSettings['enableMSU'], string> = {
   msul: 'MSUL',
 };
 
-const MSU_ARCHIVE_TYPES = ['.zip', '.7z', '.rar'];
-
-export { MODE_LABELS, MSU_ARCHIVE_TYPES };
+export { MODE_LABELS };

@@ -53,4 +53,3 @@ const useTextValue = (params: UseTextValueParams) => {
 };
 
 export { useTextValue };
-export type { UseTextValueParams } from './text-value.type';

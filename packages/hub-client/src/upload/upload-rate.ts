@@ -33,4 +33,3 @@ const createRate = () => {
 };
 
 export { createRate };
-export type { RateEstimate, UploadRate } from './upload-rate.type';

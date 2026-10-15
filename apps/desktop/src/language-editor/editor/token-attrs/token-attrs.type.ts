@@ -10,4 +10,4 @@ type DialogueTokenAttrs = {
   key: string | null;
 };
 
-export type { DialogueTokenAttrs, DialogueTokenKind };
+export type { DialogueTokenAttrs };

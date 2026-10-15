@@ -30,4 +30,3 @@ const devicePoll: Route = {
 };
 
 export { devicePoll };
-export type { PollStatus } from './device-poll.type';

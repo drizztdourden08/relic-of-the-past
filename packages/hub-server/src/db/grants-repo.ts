@@ -16,4 +16,3 @@ const set = async (doc: GrantDoc): Promise<void> => {
 const grantsRepo = { get, set };
 
 export { grantsRepo };
-export type { GrantDoc } from './grants-repo.type';

@@ -21,4 +21,4 @@ type TranslationSearchState = {
   pending: boolean;
 };
 
-export type { NameGroup, SearchField, SearchHit, SearchHitKind, TranslationSearchState };
+export type { SearchHit, TranslationSearchState };

@@ -15,4 +15,4 @@ interface ExportMsu1Params {
   seed?: number;
 }
 
-export type { ExportMsu1Params, Msu1ExportProgress };
+export type { ExportMsu1Params };

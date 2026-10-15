@@ -39,4 +39,3 @@ const useEditorSchemes = (): EditorSchemes => {
 };
 
 export { useEditorSchemes };
-export type { EditorScheme, EditorSchemes } from './editor-schemes.type';

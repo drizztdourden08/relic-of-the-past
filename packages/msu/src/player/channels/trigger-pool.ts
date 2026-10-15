@@ -20,4 +20,3 @@ const createTriggerPool = () => {
 };
 
 export { createTriggerPool };
-export type { TriggerPool } from './trigger-pool.type';

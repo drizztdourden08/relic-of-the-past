@@ -17,4 +17,3 @@ const forcedItemPowerRows = (
 };
 
 export { forcedItemPowerRows };
-export type { ForcedItemPowerRows };

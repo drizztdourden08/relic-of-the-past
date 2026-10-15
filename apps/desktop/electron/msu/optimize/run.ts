@@ -91,4 +91,3 @@ const convertPack = async (request: RunRequest): Promise<OptimizeRunResult> => {
 };
 
 export { convertPack };
-export type { RunRequest };

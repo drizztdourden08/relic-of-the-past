@@ -1,5 +1,5 @@
 /* @layer shared-game @kind barrel */
-export { actorByGameId, actorsByGameSpriteType } from './actor';
+export { actorByGameId } from './actor';
 export { checkByGameId } from './check';
 export { dungeonByGameId } from './dungeon';
 export { itemByGameId } from './item';

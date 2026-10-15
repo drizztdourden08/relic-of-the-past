@@ -93,4 +93,4 @@ if (typeof window !== 'undefined') {
 }
 
 export { controllerInputStore };
-export type { ControllerDiagListener, ControllerDisconnectListener, ControllerInputState, ControllerStateListener, HidRawReportEvent, HidRawReportListener } from '@rotp/input-mapping';
+export type { ControllerInputState, HidRawReportEvent } from '@rotp/input-mapping';

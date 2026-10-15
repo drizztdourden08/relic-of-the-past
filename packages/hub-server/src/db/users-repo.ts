@@ -89,4 +89,3 @@ const usersRepo = {
 };
 
 export { usersRepo };
-export type { SignUpProfile, UserSummary } from './users-repo.type';

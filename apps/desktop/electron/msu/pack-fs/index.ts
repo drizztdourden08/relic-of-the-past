@@ -1,10 +1,7 @@
 /* @layer electron-main @kind barrel */
-export { manifestPath } from './manifest-path';
 export { packFilePath } from './pack-file-path';
 export { packPath } from './pack-path';
 export { pathExists } from './path-exists';
 export { readPackManifest } from './read-pack-manifest';
-export { readPackText } from './read-pack-text';
 export { refuseInstalledPack } from './refuse-installed-pack';
-export { safeName } from './safe-name';
 export { writePackManifest } from './write-pack-manifest';

@@ -23,4 +23,4 @@ interface HapticPatternEntry extends HapticPatternTiming {
 
 type HapticPatternId = keyof typeof HAPTIC_PATTERN_RECIPES;
 
-export type { HapticPatternEntry, HapticPatternId, HapticPatternRecipe, HapticPatternTiming, VibrationShape };
+export type { HapticPatternEntry, HapticPatternId, HapticPatternRecipe, VibrationShape };

@@ -20,4 +20,4 @@ interface AssetsResult {
 
 type ExtractResult = { success: boolean; error?: string; failures?: AssetFailure[] };
 
-export type { AssetFailure, AssetsResult, BakeInputs, ExtractResult, SupplementRoms };
+export type { AssetsResult, BakeInputs, ExtractResult, SupplementRoms };

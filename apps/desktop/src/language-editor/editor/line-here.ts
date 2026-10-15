@@ -15,4 +15,3 @@ const lineHere = (state: EditorState): LineHere | null => {
 };
 
 export { lineHere };
-export type { LineHere } from './line-here.type';

@@ -96,6 +96,16 @@ interface TriforceTileInput {
 }
 
 export type {
-  BandSpec, FrameOrigin, LogoSweep, Picture, PixelSet, Shine, ShineDrawInput, ShinePixels, Sparkle, SweepDrawInput, TitleFrameInput,
-  TitlePictures, TriforcePicture, TriforceTileInput,
+  BandSpec,
+  FrameOrigin,
+  LogoSweep,
+  Picture,
+  PixelSet,
+  Shine,
+  ShinePixels,
+  Sparkle,
+  TitleFrameInput,
+  TitlePictures,
+  TriforcePicture,
+  TriforceTileInput,
 };

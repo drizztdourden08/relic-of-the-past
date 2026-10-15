@@ -23,4 +23,3 @@ const togglesLayer = (
     && positions.some((pos) => Math.abs(pos - alongWall(side, toggle)) <= POSITION_SPREAD));
 
 export { togglesLayer };
-export type { TogglePosition } from './layer-toggle.type';

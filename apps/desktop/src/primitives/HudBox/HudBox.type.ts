@@ -10,4 +10,4 @@ interface HudBoxProps extends HTMLAttributes<HTMLElement> {
   children?: ReactNode;
 }
 
-export type { HudBoxLayout, HudBoxProps };
+export type { HudBoxProps };

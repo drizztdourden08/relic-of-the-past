@@ -34,4 +34,3 @@ const usePoolImpacts = (snapshot: RandomizerOptionsSnapshot, seed = ''): PoolImp
 }, [snapshot, seed]);
 
 export { usePoolImpacts };
-export type { PoolImpacts };

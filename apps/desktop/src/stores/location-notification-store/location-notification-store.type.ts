@@ -24,4 +24,4 @@ interface LocationNotificationStore {
   setSettings: (showScreen: boolean, showTransition: boolean) => void;
 }
 
-export type { LocationNotification, LocationNotificationStore, TransitionNotification };
+export type { LocationNotificationStore };

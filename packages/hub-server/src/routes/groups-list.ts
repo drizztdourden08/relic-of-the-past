@@ -25,4 +25,3 @@ const groupsList = (site: SiteConfig): Route => ({
 });
 
 export { groupsList };
-export type { GroupWithCounts } from './groups-list.type';

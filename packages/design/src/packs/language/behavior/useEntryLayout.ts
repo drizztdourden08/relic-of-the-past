@@ -39,4 +39,4 @@ const useEntryLayout = (metrics: GlyphMetrics | null, glossary: GlossaryTerm[]):
 };
 
 export { useEntryLayout };
-export type { EntryLayout, LayoutLookup } from './language-behavior.type';
+export type { LayoutLookup } from './language-behavior.type';

@@ -69,4 +69,4 @@ class RawInputDispatcher {
 }
 
 export { RawInputDispatcher };
-export type { RawInputEvent, RawInputListener };
+export type { RawInputListener };

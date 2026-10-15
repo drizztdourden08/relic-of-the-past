@@ -42,4 +42,4 @@ interface MsuInvokeContract {
   'msu:deleteResume': (profileId: string, kind: SaveKind, id: string | number) => Promise<void>;
 }
 
-export type { MsuInvokeContract, MsuResult, MsuFileEntry, MsuResumeWrite };
+export type { MsuInvokeContract, MsuResult };

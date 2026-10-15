@@ -35,4 +35,3 @@ const createEngine = ({ adjacency = buildAdjacency(), totalChecks }: EngineDeps 
 };
 
 export { createEngine };
-export type { EngineDeps, StepResult } from './engine.type';

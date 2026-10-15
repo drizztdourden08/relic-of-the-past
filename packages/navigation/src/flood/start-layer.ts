@@ -44,4 +44,3 @@ const deriveStartLayer = (args: StartLayerArgs): 0 | 1 | undefined => {
 };
 
 export { deriveStartLayer };
-export type { StartLayerArgs } from './start-layer.type';

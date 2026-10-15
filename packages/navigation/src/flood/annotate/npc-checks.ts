@@ -15,4 +15,3 @@ const npcCheckFor = (
 };
 
 export { npcCheckFor };
-export type { NpcCheck } from './npc-checks.type';

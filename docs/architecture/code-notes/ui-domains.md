@@ -691,10 +691,6 @@ A connection point always needs a real `toConnectionId` partner (`packages/game-
 
 The kind follows a priority order: a fall through is a hole wherever it leads; a warp or portal is a teleport; an overworld to non overworld crossing is an entrance (the `ctx:entrance`, `ctx:exit` and `ctx:dungeon-enter` tags say the same); otherwise the physical mechanism names it (stairs, door); everything left is a scroll across a boundary. Approach tags (grave, bomb, bonk, rock, push, hookshot, ledge, waterfall) never name a kind.
 
-### apps/desktop/src/nav-widget/build-connection-record/rewrite-connection-record.ts
-
-The record an existing dataset connection would be rewritten as. Fields the editor does not own are carried across untouched.
-
 ### apps/desktop/src/nav-widget/connection-issues/connection-issues.ts
 
 Per connection warnings, so a reviewer sees what a connection is missing instead of an editor that renders nothing. `tileDesc` is the already resolved crossing description (persisted nav, else the live flood). The messages are named constants because the shape detector matches on them and turns the fixable ones into record edits. Direction is not a tag to check: it is `canExit`, a required field the types already guarantee.
@@ -707,25 +703,13 @@ Where a connection crosses: the persisted `nav` first (overlap tiles or entry po
 
 Every detection carries the screen id it resolves to, so no consumer recovers identity from the label; the old "Exit" label prefix is now the `isExit` flag. The label is display text only. Entrances lead into this room from an overworld screen, stairs lead to their destination room, the exit screen is where this room exits back onto, and each fall hole on an overworld screen drops into a room.
 
-### apps/desktop/src/nav-widget/screen-data-status.ts
-
-Screen data completeness as a plain function of the detection, so the recommendation detector can read exactly the same verdict outside React and both agree on what "incomplete" means. Each correction is one field the live game can settle that the record gets wrong or leaves blank.
-
 ### apps/desktop/src/views/NavigationWidget/behavior/useConnectionStatus.ts
 
 A detection is matched when a stored pair already links this screen and the resolved target, whichever side the stored point sits on: the question `pairLinksScreens` answers for the connection audit, so the badge and the audit cannot disagree. Which side of a pair can be taken is `canExit`, a separate fact.
 
-### apps/desktop/src/nav-widget/screen-editor/allocate-geography/allocate-area.ts
-
-The renderer's only source of a new area or location id. Nothing here derives an id: the request carries a display name and the main process answers with an `Allocated<...>` record it numbered itself. The brand is nominal, so a record assembled locally (from a slugified name, a hex index or anything else) is not assignable where these are expected.
-
 ### apps/desktop/src/nav-widget/screen-editor/build-screen-record.ts
 
 Form state to a `ScreenRecord` minus its id. The return type is the record shape itself, so a field a migration adds is either filled here or fails to compile. Fields the form does not edit (`nav`, `triggerIds`, `spawns`, `review`) are carried across from the record being edited. Anything missing comes back as a blocker, never a fabricated value. Only the two rules a form alone can break are judged here (a name, and a grid position under a floor); whether the screen is real belongs to `screenBlockers`, so the editor cannot accept a screen a query then fails to resolve. The form picks tag terms and the record stores references to them.
-
-### apps/desktop/src/nav-widget/screen-editor/dungeon-geography.ts
-
-`DungeonRecord` carries no area or location of its own, so a dungeon's geography comes from the rooms it lists: every room of a dungeon shares one `areaId`, one `locationId` and one world. This replaced a name keyed table whose lookup silently returned nothing once a dungeon was renamed.
 
 ### apps/desktop/src/nav-widget/recommendations/strategies/connection/connection-strategy.ts
 

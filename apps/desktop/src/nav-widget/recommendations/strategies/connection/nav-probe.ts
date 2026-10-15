@@ -13,4 +13,3 @@ const NAV_PROBE: FieldProbe<'connection'> = {
 };
 
 export { NAV_PROBE };
-export { endpointsResolvable } from './nav/endpoints-resolvable';

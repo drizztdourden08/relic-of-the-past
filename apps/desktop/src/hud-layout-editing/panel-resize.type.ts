@@ -10,4 +10,4 @@ interface PanelResize {
   inspectorResize: PanelResizeBinding;
 }
 
-export type { PanelResize, PanelResizeBinding };
+export type { PanelResize };

@@ -15,4 +15,4 @@ interface ExportMsulParams {
   onProgress?: (progress: MsulExportProgress) => void;
 }
 
-export type { ExportMsulParams, MsulExportProgress };
+export type { ExportMsulParams };

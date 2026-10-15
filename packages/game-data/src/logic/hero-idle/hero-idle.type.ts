@@ -47,6 +47,10 @@ interface HeroPose {
 type HeroRng = () => number;
 
 export type {
-  FacingRule, HeroBeat, HeroIdleState, HeroPose, HeroRng, HeroSequenceDef,
-  HeroSequenceId, HeroSequenceKind, HeroTake,
+  HeroBeat,
+  HeroIdleState,
+  HeroPose,
+  HeroRng,
+  HeroSequenceDef,
+  HeroTake,
 };

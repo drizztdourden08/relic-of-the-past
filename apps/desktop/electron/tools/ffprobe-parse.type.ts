@@ -12,4 +12,4 @@ interface ProbeReport {
   format?: { duration?: string; bit_rate?: string };
 }
 
-export type { ProbeReport, ProbeStream };
+export type { ProbeReport };

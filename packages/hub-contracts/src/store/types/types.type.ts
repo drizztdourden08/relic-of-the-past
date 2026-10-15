@@ -77,6 +77,16 @@ type StoreItem = Listing & {
 };
 
 export type {
-  StoreKind, Container, Person, MediaRef, MusicFacts, CharacterFacts, LanguageFacts, KindFacts,
-  RemovalReason, FileRemoval, StoreVersion, Listing, ListingEdit, ItemStats, ItemStatus, StoreItem,
+  StoreKind,
+  Container,
+  Person,
+  MediaRef,
+  KindFacts,
+  RemovalReason,
+  FileRemoval,
+  StoreVersion,
+  ListingEdit,
+  ItemStats,
+  ItemStatus,
+  StoreItem,
 };

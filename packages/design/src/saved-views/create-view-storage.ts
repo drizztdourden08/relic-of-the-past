@@ -72,4 +72,3 @@ const createViewStorage = (keys: ViewKeys) => {
 };
 
 export { createViewStorage };
-export type { SiteViews } from './create-view-storage.type';

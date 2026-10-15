@@ -1,5 +1,6 @@
 /* @layer shared-game @kind barrel */
 export type {
-  ConnectionNavData, ConnectionPointData, ConnectionTransitType, NavFeature, NavObstacle, NavVariant,
-  RegionNavData, RequirementSet, TraversalRequirement,
+  ConnectionNavData,
+  RegionNavData,
+  TraversalRequirement,
 } from './nav-data.type';

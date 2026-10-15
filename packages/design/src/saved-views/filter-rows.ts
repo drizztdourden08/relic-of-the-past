@@ -10,4 +10,3 @@ const filterRows = <T>(params: FilterRowsParams<T>): readonly T[] => {
 };
 
 export { filterRows };
-export type { FilterRowsParams } from './filter-rows.type';

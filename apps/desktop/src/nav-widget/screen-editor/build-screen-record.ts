@@ -58,4 +58,4 @@ const buildScreenRecord = (draft: ScreenDraft): DraftResult => {
 };
 
 export { buildScreenRecord };
-export type { DraftResult, ScreenDraft } from './screen-editor.type';
+export type { ScreenDraft } from './screen-editor.type';

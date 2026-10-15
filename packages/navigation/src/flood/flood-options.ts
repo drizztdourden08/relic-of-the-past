@@ -33,4 +33,3 @@ const buildFloodOptions = (req: FloodRequest, grids: ScreenGridBundle): FloodFil
 };
 
 export { buildFloodOptions };
-export type { FloodRequest } from './flood-options.type';

@@ -49,6 +49,14 @@ type BuildGroupsParams = {
 };
 
 export type {
-  BuildGroupsParams, DecodedLine, DecodedSlotOptions, NamedKind, NamedRecord, RecordSource, TextGroup, TextGroupId,
-  TextLimit, TextOverrides, TextSlot,
+  BuildGroupsParams,
+  DecodedLine,
+  DecodedSlotOptions,
+  NamedKind,
+  RecordSource,
+  TextGroup,
+  TextGroupId,
+  TextLimit,
+  TextOverrides,
+  TextSlot,
 };

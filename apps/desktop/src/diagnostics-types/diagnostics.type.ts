@@ -87,13 +87,8 @@ interface SystemDiagnostics {
 }
 
 export type {
-  DiagnosticsRect,
   DisplayDiagnostics,
-  CpuDiagnostics,
-  MemoryDiagnostics,
   GpuDevice,
   GpuDiagnostics,
-  OsDiagnostics,
-  RuntimeVersions,
   SystemDiagnostics,
 };

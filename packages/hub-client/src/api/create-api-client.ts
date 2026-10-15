@@ -50,4 +50,3 @@ const createApiClient = <Routes extends Record<string, RouteDef>>(routes: Routes
 };
 
 export { createApiClient };
-export type { ApiClient, RequestOptions, QueryParams } from './create-api-client.type';

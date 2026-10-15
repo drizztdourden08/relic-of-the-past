@@ -9,4 +9,4 @@ interface AnnotationStyle {
   panelOnly?: boolean;
 }
 
-export type { AnnotationStyle, AnnotationTone };
+export type { AnnotationStyle };

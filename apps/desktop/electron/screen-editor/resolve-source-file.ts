@@ -14,4 +14,3 @@ const resolveSourceFile = (root: string, relPath: string, sourceRoot: SourceRoot
 };
 
 export { resolveSourceFile };
-export type { SourceRoot };

@@ -109,19 +109,6 @@ Facts about the shared packages under `packages/` (outside the game data, game l
 - Commands: `0x00` copies N literal bytes from the stream; `0x20` repeats one byte N times; `0x40` alternates 2 bytes for N bytes; `0x60` starts at a byte and adds 1 for each copy; `0x80`, `0xA0` and `0xC0` copy N bytes from earlier in the output, at an offset read from the stream (big-endian by default).
 - The reader crosses SNES banks the same way as the Python `Reader` class. With the return-length overload the result is `[data, compressedLength]`.
 
-### packages/asset-extraction/src/dat-container/index.ts
-
-- A read-only view over a serialized `zelda3_assets.dat` blob, the exact inverse of `AssetBuilder.serialize()`. It uses plain `Uint8Array` and no `Buffer`, so it runs in the renderer and in Node.
-- Layout: a 48-byte signature, 32 reserved bytes, a u32 asset count, a u32 name block length, then `count * 4` asset sizes, the NUL-separated name list, and each asset's bytes aligned to 4.
-- `datAssetNames` returns null when the blob is not an assets file. `findDatAsset` returns a subarray view into the blob.
-- `dat-reader` reads the same format; the two overlap.
-
-### packages/asset-extraction/src/dat-reader/index.ts
-
-- Reads one named entry out of a compiled assets blob, the inverse of `AssetBuilder.serialize()`.
-- Layout: a 16-byte signature and a 32-byte key hash, 32 bytes of padding, then the entry count and the length of the name block (`COUNT_AT` is byte 80, `HEADER_BYTES` is 88). After that come the entry sizes as u32s, the NUL-separated names, and the payloads in the same order, each aligned to the next 4-byte boundary of the file.
-- A caller can pull one asset without re-running extraction from a ROM. The studio needs the stock player tiles and gear palette, and the blob is already cached.
-
 ### packages/asset-extraction/src/data/constants.ts
 
 Named ROM addresses used by asset extraction, which replace magic numbers from the Python code.
@@ -511,11 +498,6 @@ Named ROM addresses used by asset extraction, which replace magic numbers from t
 ### packages/asset-extraction/src/music/spc-command-tables.constants.ts
 
 - The SPC command tables shared by extraction and compilation. Command `0xe0 + n` is effect `n`, which takes `kEffectByteLength[n]` argument bytes. Notes 72 and 73 are `-+-` and `---`.
-
-### packages/asset-extraction/src/packed-bytes/index.ts
-
-- A `Buffer`-free reader and writer for the packed-array format the core parses with `FindIndexInMemblk` (`util.c`): count minus 1 offsets relative to the end of the offset table, the concatenated parts, then a u16 trailer holding count minus 1 (16-bit offsets) or 8192 plus count minus 1 (32-bit offsets).
-- `packPackedBytes` matches `packArrays` in `asset-builder` byte for byte, with the same width rule: 16-bit while every offset fits and the count allows. `unpackPackedBytes` is its inverse.
 
 ### packages/asset-extraction/src/rom/load-rom-file.ts
 
@@ -1153,10 +1135,6 @@ Easing is evaluated in JS because `motion` samples a keyframe value at an arbitr
 ### packages/hud/src/engine/motion/cycle-position.ts
 
 `none` clamps at the end, `loop` wraps, `ping-pong` reflects. Before the delay has elapsed the position is 0 (the rest pose), so an animation whose gate just turned true does not flash to a mid track value.
-
-### packages/hud/src/engine/motion/motion.constants.ts
-
-`width` and `height` can reflow a sibling under a flex or grid parent. The renderer applies every sampled value as a transform or filter on the already placed box and never re-measures, so the other six properties cannot move a sibling. `packages/hud/src/layouts/validate-motion-warnings` warns an author who animates width or height.
 
 ### packages/hud/src/engine/motion/sample-animation.ts
 
@@ -1901,19 +1879,6 @@ Where the app's data lives on this platform, a per domain usage summary, and (de
 
 - The file types the caller sees and uploads to, in the rail's order. An admin sees every type.
 
-### packages/hub-contracts/src/sanctuary/schemas/file-schemas/index.ts
-
-- Request bodies of the file routes. `createFileSchema` parses POST /files. `signPartsSchema` parses POST /files/:id/parts and POST /files/:id/versions/:n/parts. `completeFileSchema` parses POST /files/:id/complete. `patchFileSchema` parses PATCH /files/:id, where every field is optional and at least one must be present. `beginVersionSchema` parses POST /files/:id/versions.
-- Sizes and counts come from `LIMITS`, so the API rejects what the upload loop would never send.
-- A version upload declares the same facts as a new file (name, size, hash, content type) plus what changed.
-- `partsDone` in a sign parts body is how many parts the uploader already has up.
-
-### packages/hub-contracts/src/sanctuary/schemas/report-schemas/index.ts
-
-- `submitReportSchema` parses POST /reports and mirrors `SubmitReportRequest` field for field.
-- `controllerReportSchema` keeps the shape of `ControllerReportPayload`. Every field is preformatted text from the app.
-- `extendReportSchema` parses POST /reports/:id/extend, which carries no fields because the id is in the path.
-
 ### packages/hub-contracts/src/sanctuary/view-surfaces.ts
 
 - The Sanctuary keeps one saved view surface per list page. The API refuses any surface name outside this list.
@@ -2365,14 +2330,6 @@ Where the app's data lives on this platform, a per domain usage summary, and (de
 - `Review.submittedAt` is when the author sent it for review, null while it has not been sent. `by` is the reviewer who decided. `note` is the reviewer's note to the author and is required to reject.
 - `ReviewDecision` is what a reviewer can decide on a waiting version or listing edit.
 
-### packages/hub-contracts/src/store/schemas/index.ts
-
-- One schema per POST, PUT or PATCH in `STORE_ROUTES`. store-api parses every body through them, and the site can check a form with the same schema before sending it. Caps come from `STORE_LIMITS` and `HUB_LIMITS`, so the API refuses what the forms would never send.
-- Route per schema: `itemCreateSchema` POST /items. `mediaUploadSchema` POST /items/:id/media, with the size held to the cap of the picture's role. `listingPatchSchema` POST /items/:id/listing, every field optional and at least one present. `versionBeginSchema` POST /items/:id/versions. `signPartsSchema` POST /items/:id/versions/:n/parts. `versionCompleteSchema` POST /items/:id/versions/:n/complete. `downloadSchema` POST /items/:id/download. `ratingSchema` PUT /items/:id/rating. `reviewDecideSchema` POST /review/:itemId/:target. `featuredSchema` PUT /home/featured. `welcomeSchema` PUT /home/welcome.
-- `mediaRefSchema` is a picture the author uploaded through POST /items/:id/media; the API checks it is there.
-- In a version begin body the size is held to the item's kind by the API, which also numbers the version. In a sign parts body `partsDone` is how many parts the uploader already has up.
-- A download body with no version means the live one. A rejection says why in its note. The featured row is ordered first to last. The welcome is markdown.
-
 ### packages/hub-contracts/src/store/store-permissions/store-permissions.constants.ts
 
 - What a group can be granted on the store. Admins hold both permissions.
@@ -2480,10 +2437,6 @@ Where the app's data lives on this platform, a per domain usage summary, and (de
 ### apps/desktop/src/ffmpeg-tool/ffmpeg-tool.constants.ts
 
 - `FFMPEG_TOOL_ID` is the id ffmpeg is registered under in the Brock tools module, shared so the main process and the renderer name the same tool. ffmpeg is not bundled: it is fetched on request into the app's data root, so a user who never asks never downloads 140 MB.
-
-### packages/game-core/src/game-event/game-event.type.ts
-
-- `GameEvent` is an event emitted by the game core.
 
 ### packages/hub-contracts/src/github-issue/github-issue.type.ts
 

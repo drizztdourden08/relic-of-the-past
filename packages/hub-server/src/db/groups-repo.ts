@@ -52,4 +52,3 @@ const remove = async (id: string): Promise<void> => {
 const groupsRepo = { all, get, create, update, remove };
 
 export { groupsRepo };
-export type { GroupPatch } from './groups-repo.type';

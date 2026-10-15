@@ -57,4 +57,3 @@ const readLoadout = (): Loadout | null => {
 };
 
 export { readLoadout };
-export type { Loadout, DungeonItems } from './read-loadout.type';

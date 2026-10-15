@@ -7,5 +7,4 @@ import { screenStrategy } from './screen-strategy';
 registerStrategy(screenStrategy);
 registerDetector(screenGeographyDetector);
 
-export { screenGeographyDetector } from './screen-geography-detector';
 export { screenStrategy } from './screen-strategy';

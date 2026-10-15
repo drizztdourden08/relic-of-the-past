@@ -27,4 +27,4 @@ interface SettingsBridgeDeps {
   masterVolumeOverride: { volume: number; version: number } | null;
 }
 
-export type { ParentCallbacks, SettingsBridgeDeps, SettingsEffectDeps };
+export type { SettingsBridgeDeps, SettingsEffectDeps };

@@ -39,4 +39,3 @@ const withStore = async <T>(
 };
 
 export { withStore };
-export type { StoreName } from './upload-db.type';

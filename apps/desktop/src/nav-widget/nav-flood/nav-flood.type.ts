@@ -110,6 +110,22 @@ interface EdgeRow {
 }
 
 export type {
-  AnnotateArgs, Cell, CollectArgs, CrossingsArgs, EdgeName, EdgeRow, EffectiveLayout, Entrance, FallHoleLanding, FloodPrep, FloodSummary, GridSize,
-  IndoorBundleArgs, InventoryEquipment, PrepareFloodArgs, PropagateCtx, RoomShape, ScreenResponse, StartContext, StartContextArgs,
+  AnnotateArgs,
+  CollectArgs,
+  CrossingsArgs,
+  EdgeRow,
+  EffectiveLayout,
+  Entrance,
+  FallHoleLanding,
+  FloodPrep,
+  FloodSummary,
+  GridSize,
+  IndoorBundleArgs,
+  InventoryEquipment,
+  PrepareFloodArgs,
+  PropagateCtx,
+  RoomShape,
+  ScreenResponse,
+  StartContext,
+  StartContextArgs,
 };

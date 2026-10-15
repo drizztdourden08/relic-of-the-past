@@ -6,4 +6,4 @@ interface AssetEntry {
   data: Buffer;
 }
 
-export type { AssetEntry, AssetType };
+export type { AssetEntry };

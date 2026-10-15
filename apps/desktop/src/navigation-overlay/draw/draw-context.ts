@@ -2,7 +2,7 @@
 import { overworldOrigin, roomOrigin, screenOriginFor } from '@app/game/flood';
 import { viewOrigin } from '@rotp/game-core';
 import { MIN_DOT_RADIUS, TILE_PX } from './draw.constants';
-import type { DrawContext, DrawContextParams, ViewportInfo } from './draw.type';
+import type { DrawContext, DrawContextParams } from './draw.type';
 
 const buildDrawContext = (params: DrawContextParams): DrawContext => {
   const { ctx, vp, width, height, result, isIndoors } = params;
@@ -33,4 +33,3 @@ const buildDrawContext = (params: DrawContextParams): DrawContext => {
 };
 
 export { buildDrawContext };
-export type { DrawContext, ViewportInfo };

@@ -18,4 +18,4 @@ const EMPTY_SHADOW_PROJECT: ShadowCastingProject = {
   globalDefaults: { ...DEFAULT_LIGHTING_CONFIG },
 };
 
-export { DEFAULT_LIGHTING_CONFIG, EMPTY_SHADOW_PROJECT };
+export { EMPTY_SHADOW_PROJECT };

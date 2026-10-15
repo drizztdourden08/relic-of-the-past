@@ -15,4 +15,4 @@ interface HubSessionStore {
   signOut: () => Promise<void>;
 }
 
-export type { HubSessionState, HubSessionStore };
+export type { HubSessionStore };

@@ -24,5 +24,5 @@ interface RspManifest {
   source?: RspSource;
 }
 
-export { RSP_VERSION, MANIFEST_ENTRY, SHEET_ENTRY, PREVIEW_ENTRY } from './rsp.constants';
+export { MANIFEST_ENTRY } from './rsp.constants';
 export type { RspSource, RspExtras, RspManifest };

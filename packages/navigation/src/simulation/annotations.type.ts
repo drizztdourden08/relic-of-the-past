@@ -39,4 +39,4 @@ interface ScreenAnnotations {
   tags?: readonly ScreenTag[];
 }
 
-export type { AnnotationKind, AnnotationState, ScreenAnnotation, ScreenAnnotations, ScreenTag };
+export type { AnnotationKind, ScreenAnnotation, ScreenAnnotations, ScreenTag };

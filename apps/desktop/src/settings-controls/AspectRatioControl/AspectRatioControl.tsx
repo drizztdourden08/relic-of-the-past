@@ -81,4 +81,3 @@ const AspectRatioControl = (props: AspectRatioControlProps) => {
 };
 
 export { AspectRatioControl };
-export type { AspectRatioControlProps };

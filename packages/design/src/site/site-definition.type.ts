@@ -60,9 +60,6 @@ export type {
   SiteDefinition,
   SiteSection,
   SiteNavGroup,
-  SiteBrand,
-  SiteFooter,
-  SiteSearch,
   RightsEditorProps,
   RightsEditorSlot,
 };

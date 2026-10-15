@@ -30,4 +30,3 @@ const doorAnnotation = (door: SimDoor, ctx: DoorContext): ScreenAnnotation | nul
 };
 
 export { doorAnnotation };
-export type { DoorContext } from './doors.type';

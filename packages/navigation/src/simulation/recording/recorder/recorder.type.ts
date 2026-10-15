@@ -29,4 +29,4 @@ interface RecorderState {
   doorGates: ObservedDoorGate[];
 }
 
-export type { ObservedCheck, ObservedTransition, ObservedDoorGate, RecorderState };
+export type { ObservedCheck, ObservedDoorGate, RecorderState };

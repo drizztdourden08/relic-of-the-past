@@ -45,4 +45,3 @@ const useFilePanel = (params: FilePanelParams) => {
 };
 
 export { useFilePanel };
-export type { FilePanelParams, FormatCount } from './file-panel.type';

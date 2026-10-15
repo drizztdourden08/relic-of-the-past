@@ -3624,12 +3624,6 @@ The single resolver both the calibration cards and the controls screen use. SDL'
 labels and icons. No preset and no device database is consulted, so the screens cannot
 disagree. An unavailable entry was never opened by SDL and resolves to an empty control list.
 
-## packages/input-mapping/src/runtime/resolved-axis-groups.ts
-
-Pairs stick axes by position name (`LEFT_X` with `LEFT_Y`), not array order, so a device
-reporting one axis of a pair does not misalign the rest. `basePrefix` is the icon key both
-axes share; feed it with the live x and y to `resolveStickDirectionIcon`.
-
 ## packages/input-mapping/src/runtime/scheme-runtime
 
 Everything the per frame router needs about the active scheme, in one mutable object. The

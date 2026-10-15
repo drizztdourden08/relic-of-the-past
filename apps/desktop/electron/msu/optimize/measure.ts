@@ -46,4 +46,3 @@ const measureCandidate = async (request: MeasureRequest): Promise<OptimizeCandid
 };
 
 export { measureCandidate };
-export type { MeasureRequest };

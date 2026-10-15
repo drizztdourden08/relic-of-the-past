@@ -32,4 +32,3 @@ const processControllerState = (host: ControllerStateHost, deviceKey: string, bu
 };
 
 export { processControllerState };
-export type { ControllerStateHost };

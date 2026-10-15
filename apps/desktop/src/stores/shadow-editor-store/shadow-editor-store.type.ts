@@ -98,6 +98,15 @@ type HistoryActions = Pick<ShadowEditorStore, 'undo' | 'redo'>;
 type UndoPatch = { undoStack: ScreenShadowData[]; redoStack: ScreenShadowData[] };
 
 export type {
-  EditorTool, HeightLevelActions, HeightmapActions, HeightPreset, HistoryActions, LightActions, SaveAction,
-  ScreenEditActions, ShadowEditorGet, ShadowEditorSet, ShadowEditorStore, UndoPatch,
+  EditorTool,
+  HeightLevelActions,
+  HeightmapActions,
+  HistoryActions,
+  LightActions,
+  SaveAction,
+  ScreenEditActions,
+  ShadowEditorGet,
+  ShadowEditorSet,
+  ShadowEditorStore,
+  UndoPatch,
 };

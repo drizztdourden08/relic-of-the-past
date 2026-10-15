@@ -142,4 +142,3 @@ const roomCrossingExits = (crossings: ScreenCrossings, context: RoomExitContext)
 };
 
 export { roomCrossingExits };
-export type { RoomExitContext } from '@rotp/navigation';

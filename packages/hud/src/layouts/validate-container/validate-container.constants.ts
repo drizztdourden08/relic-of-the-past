@@ -12,5 +12,10 @@ const FLEX_KEYS = [...CONTAINER_KEYS, 'direction', 'justify', 'align', 'wrap'] a
 const GRID_KEYS = [...CONTAINER_KEYS, 'columns', 'rows', 'justifyItems', 'alignItems'] as const;
 
 export {
-  ALIGN, CONTAINER_KEYS, DIRECTIONS, FLEX_KEYS, GRID_JUSTIFY_ITEMS, GRID_KEYS, JUSTIFY,
+  ALIGN,
+  DIRECTIONS,
+  FLEX_KEYS,
+  GRID_JUSTIFY_ITEMS,
+  GRID_KEYS,
+  JUSTIFY,
 };

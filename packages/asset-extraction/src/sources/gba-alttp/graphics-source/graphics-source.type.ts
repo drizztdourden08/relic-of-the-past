@@ -33,5 +33,8 @@ interface PalaceSpritePalette {
 }
 
 export type {
-  DungeonSpriteGraphics, DungeonSpriteGraphicsSet, PalaceSpritePalette, SheetSource, SpritePaletteSource, SpriteSheet,
+  DungeonSpriteGraphicsSet,
+  PalaceSpritePalette,
+  SheetSource,
+  SpritePaletteSource,
 };

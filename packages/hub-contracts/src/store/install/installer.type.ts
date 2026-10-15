@@ -18,4 +18,4 @@ type PackInstaller = {
   settleName?: (installedName: string, ownName: string, files: FileStore) => Promise<string>;
 };
 
-export type { InstallPhase, InstallProgress, InstallOutcome, PackInstaller };
+export type { InstallProgress, PackInstaller };

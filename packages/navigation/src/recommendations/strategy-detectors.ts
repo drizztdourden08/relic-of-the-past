@@ -8,4 +8,3 @@ const wireStrategyDetectors = (): void => {
 
 wireStrategyDetectors();
 
-export { wireStrategyDetectors };

@@ -26,4 +26,4 @@ interface SimulatorPort {
   onItemReceived: (cb: (itemId: ItemId) => void) => () => void;
 }
 
-export type { SimulatorPort, SimLocation, ScreenGridBundle };
+export type { SimulatorPort };

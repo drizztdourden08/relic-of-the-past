@@ -74,4 +74,3 @@ const useDragGesture = <T,>(input: DragGestureInput<T>): DragGesture<T> => {
 };
 
 export { useDragGesture };
-export type { DragGesture, DragGestureInput } from './drag-gesture.type';
