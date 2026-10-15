@@ -36,4 +36,3 @@ const CurrencyPriceRow = (props: CurrencyPriceRowProps) => {
 };
 
 export { CurrencyPriceRow };
-export type { CurrencyPriceRowProps };

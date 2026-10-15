@@ -61,4 +61,3 @@ const MotionSection = (props: MotionSectionProps) => {
 };
 
 export { MotionSection };
-export type { MotionSectionProps } from './MotionSection.type';

@@ -26,4 +26,3 @@ const MatchedEntryPanel = (props: MatchedEntryPanelProps) => {
 };
 
 export { MatchedEntryPanel };
-export type { MatchedEntryPanelProps };

@@ -44,4 +44,3 @@ const BonusLine = (props: BonusLineProps) => {
 };
 
 export { BonusLine };
-export type { BonusLineProps };

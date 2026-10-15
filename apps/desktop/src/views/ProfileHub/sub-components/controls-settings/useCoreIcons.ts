@@ -26,4 +26,3 @@ const useCoreIcons = ({ activeProfile, devices, core }: UseCoreIconsArgs): CoreI
 };
 
 export { useCoreIcons };
-export type { CoreIcons };

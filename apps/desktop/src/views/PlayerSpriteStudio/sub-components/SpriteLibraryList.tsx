@@ -60,4 +60,3 @@ const SpriteLibraryList = (props: SpriteLibraryListProps) => {
 };
 
 export { SpriteLibraryList };
-export type { SpriteLibraryListProps };

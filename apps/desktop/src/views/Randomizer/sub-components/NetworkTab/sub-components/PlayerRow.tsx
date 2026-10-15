@@ -22,4 +22,3 @@ const PlayerRow = ({ player, compact = false }: PlayerRowProps) => {
 };
 
 export { PlayerRow };
-export type { PlayerRowProps };

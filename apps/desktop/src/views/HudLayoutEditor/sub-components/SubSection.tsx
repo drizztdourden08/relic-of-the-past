@@ -13,4 +13,3 @@ const SubSection = (props: SubSectionProps) => {
 };
 
 export { SubSection };
-export type { SubSectionProps } from './SubSection.type';

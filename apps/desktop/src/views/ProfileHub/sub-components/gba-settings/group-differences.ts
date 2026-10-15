@@ -20,4 +20,3 @@ const groupFilteredDifferences = (query: string, evidenceFilter: EvidenceFilter)
 };
 
 export { groupFilteredDifferences };
-export type { EvidenceFilter, GbaGroupRows };

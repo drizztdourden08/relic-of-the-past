@@ -19,4 +19,4 @@ interface SubsectionGroupProps {
   children: ReactNode;
 }
 
-export type { SubsectionAction, SubsectionGroupProps };
+export type { SubsectionGroupProps };

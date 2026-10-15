@@ -909,10 +909,6 @@ A detected input device. The controller icon on the left is the status light and
 
 One card for a device that presents one entry per port (for example a 4-port wired adapter). Assigning applies to the adapter as a whole, since every port shares one vendor:product id, so the drag and click live on the card and the port rows are informational. Its stylesheet is `DeviceCard.css`, loaded by DeviceCard, which ControlsDevices imports first.
 
-## ProfileHub/sub-components/controls/AssignedControllerCard.tsx
-
-The controller assigned to the active profile: connection and activation status, controller info and an unassign button.
-
 ## ProfileHub/sub-components/controls/InputProfileList.tsx
 
 The saved input profiles, with the active one highlighted, and create, delete, select and rename. A newly created profile opens straight into rename. Escape in the rename field is consumed there, so the dismiss stack leaves the page alone.

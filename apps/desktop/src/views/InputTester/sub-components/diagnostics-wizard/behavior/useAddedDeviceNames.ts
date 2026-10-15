@@ -8,4 +8,3 @@ const useAddedDeviceNames = (): ((params: NameLookupParams) => string | null) =>
 };
 
 export { useAddedDeviceNames };
-export type { NameLookupParams };

@@ -73,4 +73,3 @@ const EnterExitEditor = (props: EnterExitEditorProps) => {
 };
 
 export { EnterExitEditor };
-export type { EnterExitEditorProps } from './EnterExitEditor.type';

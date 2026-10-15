@@ -154,6 +154,6 @@ interface SuggestionCardProps {
 type ApplyState = 'idle' | 'applying' | 'applied' | 'error';
 
 export type {
-  ApplyResult, ApplyState, BannerTone, CheckWriter, DriveParams, EditorWithOptionalCheck, EventLogProps, LogDialogProps, LogKind, LogRule, LogStyle, OutcomeBanner, ProgressSummaryProps,
+  ApplyResult, ApplyState, DriveParams, EditorWithOptionalCheck, EventLogProps, LogDialogProps, LogKind, LogRule, LogStyle, OutcomeBanner, ProgressSummaryProps,
   ResultsPanelProps, RunButtonsProps, RunContext, RunControl, RunControlsProps, RunCursor, RunRefs, RunResults, RunStepResult, RunTrailProps, SimLogSink, SoftlockSummaryProps, StartParams, SuggestionCardProps,
 };

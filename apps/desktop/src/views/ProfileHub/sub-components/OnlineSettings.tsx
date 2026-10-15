@@ -27,4 +27,3 @@ const OnlineSettings = (props: OnlineSettingsProps) => {
 };
 
 export { OnlineSettings };
-export type { OnlineSettingsProps };

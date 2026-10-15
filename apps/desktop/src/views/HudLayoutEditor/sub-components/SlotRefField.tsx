@@ -44,4 +44,3 @@ const SlotRefField = (props: SlotRefFieldProps) => {
 };
 
 export { SlotRefField };
-export type { SlotRefFieldProps } from './SlotRefField.type';

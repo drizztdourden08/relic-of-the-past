@@ -14,4 +14,3 @@ const ReportSection = (props: ReportSectionProps) => {
 };
 
 export { ReportSection };
-export type { ReportSectionProps };

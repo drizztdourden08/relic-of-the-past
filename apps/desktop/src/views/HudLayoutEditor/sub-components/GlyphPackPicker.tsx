@@ -46,4 +46,3 @@ const GlyphPackPicker = (props: GlyphPackPickerProps) => {
 };
 
 export { GlyphPackPicker };
-export type { GlyphPackPickerProps } from './GlyphPackPicker.type';

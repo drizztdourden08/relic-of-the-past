@@ -72,4 +72,3 @@ const BoxModelField = (props: BoxModelFieldProps) => {
 };
 
 export { BoxModelField };
-export type { BoxModelFieldProps } from './BoxModelField.type';

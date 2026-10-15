@@ -44,4 +44,3 @@ const CapacityUpgradesBlock = (props: CapacityUpgradesBlockProps) => {
 };
 
 export { CapacityUpgradesBlock };
-export type { CapacityUpgradesBlockProps };

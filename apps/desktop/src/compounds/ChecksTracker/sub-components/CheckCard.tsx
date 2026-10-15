@@ -29,4 +29,3 @@ const CheckCard = ({ check, status, item, foreignItem, now }: CheckCardProps) =>
 };
 
 export { CheckCard };
-export type { CheckCardProps };

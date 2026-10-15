@@ -10,4 +10,4 @@ interface GlyphContentProps {
   glyphPacks: readonly GlyphPack[];
 }
 
-export type { GlyphContentProps, GlyphSpec };
+export type { GlyphContentProps };

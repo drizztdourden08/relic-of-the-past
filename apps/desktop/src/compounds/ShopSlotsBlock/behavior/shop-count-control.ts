@@ -1,8 +1,6 @@
 /* @layer renderer-components @kind logic */
 import { SLOT_COUNT_FOLLOWS_TICKS, SLOT_COUNT_INERT } from '../ShopSlotsBlock.constants';
-import type {
-  ShopCountControl, ShopCountReadout, ShopCountSlider, ShopScopeSummary,
-} from '../ShopSlotsBlock.type';
+import type { ShopCountControl, ShopScopeSummary } from '../ShopSlotsBlock.type';
 import { slotCountCeiling } from './slot-count-ceiling';
 
 const shopCountControlOf = (summary: ShopScopeSummary): ShopCountControl => {
@@ -18,4 +16,3 @@ const shopCountControlOf = (summary: ShopScopeSummary): ShopCountControl => {
 };
 
 export { shopCountControlOf };
-export type { ShopCountControl, ShopCountReadout, ShopCountSlider };

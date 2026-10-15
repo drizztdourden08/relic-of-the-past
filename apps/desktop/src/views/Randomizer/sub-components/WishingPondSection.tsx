@@ -65,4 +65,3 @@ const WishingPondSection = (props: WishingPondSectionProps) => {
 };
 
 export { WishingPondSection };
-export type { WishingPondSectionProps };

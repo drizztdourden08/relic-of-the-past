@@ -17,4 +17,3 @@ const shopSectionsOf = (scope: ShopScope): readonly ShopSectionModel[] => {
 };
 
 export { shopSectionsOf };
-export type { ShopSectionModel };

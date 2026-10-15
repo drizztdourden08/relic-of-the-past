@@ -1,7 +1,7 @@
 /* @layer renderer-components @kind logic */
 import { PROGRESSIVE_FAMILIES, progressiveFamilyName, progressiveTierName, progressiveTierKeyOf } from '@rotp/randomizer';
 import type { ProgressiveModeSetting, ProgressiveSetting } from '@rotp/randomizer';
-import type { ProgressiveCardModel, ProgressiveTierToggleModel } from '../ProgressiveTiersBlock.type';
+import type { ProgressiveCardModel } from '../ProgressiveTiersBlock.type';
 
 const countTextOf = (ticked: number, total: number): string =>
   (ticked === 0 ? 'none in the pool' : `${ticked} of ${total} in the pool`);
@@ -28,4 +28,3 @@ const progressiveCardsOf = (
   });
 
 export { progressiveCardsOf };
-export type { ProgressiveCardModel, ProgressiveTierToggleModel };

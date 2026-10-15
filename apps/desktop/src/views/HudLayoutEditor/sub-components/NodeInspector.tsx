@@ -40,4 +40,3 @@ const NodeInspector = (props: NodeInspectorProps) => {
 };
 
 export { NodeInspector };
-export type { NodeInspectorProps } from './NodeInspector.type';

@@ -20,4 +20,3 @@ const EditorStepStrip = (props: EditorStepStripProps) => {
 };
 
 export { EditorStepStrip };
-export type { EditorStepStripProps } from './EditorStepStrip.type';

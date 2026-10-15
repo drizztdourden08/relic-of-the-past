@@ -43,4 +43,3 @@ const NumberCell = (props: NumberCellProps) => {
 };
 
 export { NumberCell };
-export type { NumberCellProps } from './NumberCell.type';

@@ -19,4 +19,4 @@ interface SpritePickerProps {
   notice?: ReactNode;
 }
 
-export type { SpritePickerProps, SpritePickerTile };
+export type { SpritePickerProps };

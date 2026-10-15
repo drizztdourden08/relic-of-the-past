@@ -18,4 +18,3 @@ const PlayersTable = ({ players, compact = false }: PlayersTableProps) => (
 );
 
 export { PlayersTable };
-export type { PlayersTableProps };

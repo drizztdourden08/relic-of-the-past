@@ -25,4 +25,4 @@ interface PanelBodyProps {
   onChange?: (next: RandomizerOptionChoices) => void;
 }
 
-export type { RandomizerOptionsPanelProps, PanelTab, PanelModel, PanelBodyProps };
+export type { RandomizerOptionsPanelProps, PanelTab, PanelBodyProps };

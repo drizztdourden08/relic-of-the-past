@@ -65,4 +65,3 @@ const SizeBoxSection = (props: SizeBoxSectionProps) => {
 };
 
 export { SizeBoxSection };
-export type { SizeBoxSectionProps } from './SizeBoxSection.type';

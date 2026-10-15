@@ -45,4 +45,3 @@ const PaletteEditor = (props: PaletteEditorProps) => {
 };
 
 export { PaletteEditor };
-export type { PaletteEditorProps };

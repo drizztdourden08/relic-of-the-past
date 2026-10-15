@@ -28,4 +28,3 @@ const RandomizerPageContent = (props: RandomizerPageContentProps) => {
 };
 
 export { RandomizerPageContent };
-export type { RandomizerPageContentProps };

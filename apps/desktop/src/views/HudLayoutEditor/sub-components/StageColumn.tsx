@@ -31,4 +31,3 @@ const StageColumn = (props: StageColumnProps) => {
 };
 
 export { StageColumn };
-export type { StageColumnProps } from './StageColumn.type';

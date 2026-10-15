@@ -24,4 +24,3 @@ const BottleContentRow = (props: BottleContentRowProps) => {
 };
 
 export { BottleContentRow };
-export type { BottleContentRowProps };

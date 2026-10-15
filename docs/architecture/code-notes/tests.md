@@ -145,14 +145,26 @@ copy of `.user-data` at a short path where one is used (a long path breaks `app-
 `dispatchEvent('click')`, never `click()`: Playwright's click calls `Page.bringToFront()`,
 which raises the window on Windows and steals focus.
 
-### e2e/ensure-test-profile
+### e2e/isolated-app
 
-Every permanent spec launches into one automation profile, `e2e-tests`; no automated launch
-touches the profile that opens by default. `provisionProfile` (the same call `wt new` uses)
-is an idempotent create or repair seeded from the maintainer's named manual saves, so this
-also copies every checked in save state fixture into the profile's manual saves, skipping
-ids already there. The `.mjs` tooling is loaded with a dynamic `import()`, because Playwright
-compiles the file to CommonJS and a static import of an `.mjs` with `import.meta` breaks.
+Every permanent spec launches through `launchApp` (or `startApp` for a launch that ends by
+itself, like `--dump-nav`). Each launch gets its own fresh `--user-data` folder under the OS
+temp directory, seeded from nothing but the checkout: the ROM and asset blob come from the
+worktree's `.user-data/Data` or `test-roms/`, the profile files are written whole, and the
+fixture save states are copied in with a fresh manifest. Nothing from an earlier run or from
+the real `%APPDATA%` can be present, and the folder is deleted on close (set
+`ROTP_E2E_KEEP_USER_DATA` to keep it). The folder name is short on purpose: a long path
+breaks `app-sprite://`.
+
+The app opens a splash window before the main one and closes it, so `firstWindow()` can
+return a page that is about to vanish. `waitForMainWindow` waits until no `splash.html`
+window is open, then takes the first window that is neither the splash nor a widget window
+(`?widget=` in the URL). Every spec reads its page from there.
+
+A spec seeds the profile it needs through `ProfileSeed`: the id (also `--instance`), the
+display name, the settings written to `config.json`, stored modern slots, whether the profile
+opens on launch, and which fixtures to copy. The migrated-controls profile in
+`hud-style-drives-scheme` is written in its stored pre-rename shape on purpose.
 
 ### e2e/state-harness and e2e/state-readers
 
@@ -236,9 +248,8 @@ running along the face.
   check outside it, already done; the two behind the lock are what the state guards.
 - `state-links-house`: a follower in tow is what makes this the intro and not a later visit.
 - `state-sanctuary-grounds`: the single screen outdoor case, on purpose.
-- `state-secret-passage`: room 0x55 is claimed by two screen records (a dam room and a
-  castle passage). Neither carries an entrance id or variant, so resolution returns
-  `screen-170`, not `screen-171`; the spec asserts what the widget renders today.
+- `state-secret-passage`: room 0x55 is the Secret Passage, `screen-171` (roomIndex 85). The Dam
+  is its own record, `screen-170` (roomIndex 267), so the two no longer collide.
 - `state-tag-room`: the flood derives the annotations, so it runs first; the tag must decode,
   not show raw 0x08.
 - `state-throne-room`: the state is saved without a follower, so the push wall

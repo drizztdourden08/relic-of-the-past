@@ -35,4 +35,3 @@ const DebugFloatingControls = (props: DebugFloatingControlsProps) => {
 };
 
 export { DebugFloatingControls };
-export type { DebugFloatingControlsProps };

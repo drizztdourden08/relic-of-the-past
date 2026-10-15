@@ -55,4 +55,3 @@ const RunTab = (props: RunTabProps) => {
 };
 
 export { RunTab };
-export type { RunTabProps };

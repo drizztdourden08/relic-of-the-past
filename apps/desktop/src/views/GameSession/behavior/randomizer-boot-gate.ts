@@ -34,4 +34,3 @@ const gateRandomizerBoot = async (profileId: string, config: ProfileRandomizerCo
 };
 
 export { gateRandomizerBoot };
-export type { GateResult };

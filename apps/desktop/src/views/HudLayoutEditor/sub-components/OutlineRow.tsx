@@ -60,4 +60,3 @@ const OutlineRow = (props: OutlineRowProps) => {
 };
 
 export { OutlineRow };
-export type { OutlineRowProps } from './OutlineRow.type';

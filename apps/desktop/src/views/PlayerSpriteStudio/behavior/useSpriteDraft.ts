@@ -66,4 +66,3 @@ const useSpriteDraft = (romFile: string | null, stockPalette?: SheetPalette) => 
 };
 
 export { useSpriteDraft };
-export type { OpenDraft };

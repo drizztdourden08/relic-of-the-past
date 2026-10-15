@@ -36,4 +36,3 @@ const ConnectionEditor = ({ config, sessionError, onSave }: ConnectionEditorProp
 };
 
 export { ConnectionEditor };
-export type { ConnectionEditorProps };

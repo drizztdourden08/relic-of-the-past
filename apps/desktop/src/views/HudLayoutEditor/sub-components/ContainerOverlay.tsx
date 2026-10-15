@@ -49,4 +49,3 @@ const ContainerOverlay = (props: ContainerOverlayProps) => {
 };
 
 export { ContainerOverlay };
-export type { ContainerOverlayProps } from './ContainerOverlay.type';

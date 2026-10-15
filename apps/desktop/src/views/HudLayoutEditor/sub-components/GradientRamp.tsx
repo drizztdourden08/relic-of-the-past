@@ -74,4 +74,3 @@ const GradientRamp = (props: GradientRampProps) => {
 };
 
 export { GradientRamp };
-export type { GradientRampProps } from './GradientRamp.type';

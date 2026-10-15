@@ -80,4 +80,3 @@ const useInputCalibration = () => {
 };
 
 export { useInputCalibration };
-export type { EventEntry };

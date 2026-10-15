@@ -44,4 +44,3 @@ const StudioToolbar = (props: StudioToolbarProps) => {
 };
 
 export { StudioToolbar };
-export type { StudioToolbarProps };

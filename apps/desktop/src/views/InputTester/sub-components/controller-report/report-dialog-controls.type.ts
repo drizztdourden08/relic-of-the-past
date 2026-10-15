@@ -14,4 +14,4 @@ interface ReportDialogPartProps {
   controls: ReportDialogControls;
 }
 
-export type { ReportDialogControls, ReportDialogPartProps, UseReportDialogControlsParams };
+export type { ReportDialogPartProps, UseReportDialogControlsParams };

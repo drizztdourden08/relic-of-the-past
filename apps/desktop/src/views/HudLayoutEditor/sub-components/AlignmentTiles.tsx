@@ -90,4 +90,4 @@ const AlignmentTiles = (props: AlignmentTilesProps) => {
 };
 
 export { AlignmentTiles };
-export type { AlignRowSpec, AlignmentTilesProps } from './AlignmentTiles.type';
+export type { AlignRowSpec } from './AlignmentTiles.type';

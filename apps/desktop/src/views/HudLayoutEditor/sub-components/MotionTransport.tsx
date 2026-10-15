@@ -48,4 +48,3 @@ const MotionTransport = (props: MotionTransportProps) => {
 };
 
 export { MotionTransport };
-export type { MotionTransportProps } from './MotionTransport.type';

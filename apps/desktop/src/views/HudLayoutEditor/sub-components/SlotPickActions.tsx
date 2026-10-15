@@ -28,4 +28,3 @@ const SlotPickActions = (props: SlotPickActionsProps) => {
 };
 
 export { SlotPickActions };
-export type { SlotPickActionsProps } from './SlotPickActions.type';

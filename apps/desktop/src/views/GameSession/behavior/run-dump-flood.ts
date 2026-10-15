@@ -26,4 +26,3 @@ const runDumpFlood = (args: RunFloodArgs): RunFloodResult => {
 };
 
 export { runDumpFlood };
-export type { RunFloodArgs, RunFloodResult };

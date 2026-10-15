@@ -27,4 +27,3 @@ const NetworkPill = ({ onOpen }: NetworkPillProps) => {
 };
 
 export { NetworkPill };
-export type { NetworkPillProps };

@@ -47,7 +47,7 @@ IPC (`appApi()`), the game layer, or navigation. Only Views are wired to data an
 |------|-----------|---------------|-------------|----------|---------------|
 | **Primitive** | Generic UI atom | no | no | Tessera `primitives` | Button, Select, Toggle, TextInput, Status, Slider, Tabs |
 | **Composite** | Generic structural unit built from primitives | no | no | Tessera `composites` | Card, Dialog, DropdownMenu, WindowTitleBar, Widget, DataTable |
-| **Compound** | Domain-specific presentational unit | yes, a concept | no (data via props) | `apps/desktop/src/compounds/` | RomCard, SaveSlot, SpritePicker |
+| **Compound** | Domain-specific presentational unit | yes, a concept | no (data via props) | `apps/desktop/src/compounds/` | SaveSlot, SpritePicker, ChecksTracker |
 | **View** | Page/feature with business logic + data | yes | stores, IPC, game | `apps/desktop/src/views/`, `widgets/` | ProfileHub, GameLayer, DataManager |
 
 **Compound:** a domain-specific presentational component for a concrete concept,

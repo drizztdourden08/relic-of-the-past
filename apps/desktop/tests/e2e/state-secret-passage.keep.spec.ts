@@ -5,7 +5,7 @@ import { withState } from './state-harness';
 test('test-secret-passage keeps the blocked chest and the substituted item', async () => {
   test.setTimeout(300_000);
   await withState('test-secret-passage', async (r) => {
-    expect(await r.screenId(), 'room 0x055 resolves to screen-170 today (a known collision, not screen-171)').toMatch(/^screen-170 · 0x55 · INDOOR/);
+    expect(await r.screenId(), 'room 0x055 is the Secret Passage (screen-171), not the Dam (screen-170)').toMatch(/^screen-171 · 0x55 · INDOOR/);
 
     const flood = await r.flood();
     expect(flood, 'the flood must stop at the uncle').toEqual({ reachable: 152, total: 4096 });

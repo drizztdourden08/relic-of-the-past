@@ -887,10 +887,6 @@ The indoor and dungeon minimap: a single full size rectangle.
 
 The overworld minimap: a grid with one cell per 512 by 512 screen. Every annotated screen draws in its own cell, because a multi screen area has mechanics on sub screens the player is not standing on.
 
-### apps/desktop/src/views/NavigationWidget/sub-components/InternalEdgeDiamond.tsx
-
-A four slot diamond layout of internal edge connection cards around a room.
-
 ### apps/desktop/src/views/NavigationWidget/sub-components/InternalEdgeSvg.tsx
 
 A two square connector glyph showing an internal room edge transition. `SQ` is the square size and `LINE_OVERFLOW` is how far the separator line runs past the squares.

@@ -16,4 +16,3 @@ const ChecksCell = ({ checked, total }: ChecksCellProps) => {
 };
 
 export { ChecksCell };
-export type { ChecksCellProps };

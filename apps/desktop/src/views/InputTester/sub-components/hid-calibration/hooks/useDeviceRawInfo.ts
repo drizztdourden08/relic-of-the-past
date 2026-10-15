@@ -26,4 +26,3 @@ const useDeviceRawInfo = (deviceKey?: string): React.RefObject<RawHidInfo> => {
 };
 
 export { useDeviceRawInfo };
-export type { RawHidInfo };

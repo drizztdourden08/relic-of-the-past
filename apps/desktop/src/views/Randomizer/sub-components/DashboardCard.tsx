@@ -13,4 +13,3 @@ const DashboardCard = (props: DashboardCardProps) => {
 };
 
 export { DashboardCard };
-export type { DashboardCardProps };
