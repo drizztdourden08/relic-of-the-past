@@ -12,4 +12,3 @@ const SchemeBanner = ({ onOpenHudStyle }: SchemeBannerProps) => (
 );
 
 export { SchemeBanner };
-export type { SchemeBannerProps };

@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind types */
 import type { RefObject } from 'react';
-import type { CoreVerb, AssignedDevice, DetectedDevice, InputProfile, ControllerDeviceGroup } from '@rotp/input-mapping';
+import type { CoreVerb, InputProfile, ControllerDeviceGroup } from '@rotp/input-mapping';
 import type { HudLayout } from '@rotp/hud';
 import type { ButtonIcon, CoreBindings, InputBinding, ModernSlot, SlotAssignment, SnesButton } from '@rotp/game-data';
 import type { FunctionAction, FunctionMapping } from '@rotp/features';
@@ -150,12 +150,6 @@ interface AdapterDeviceCardProps {
   onAddMapping?: (mapping: string) => Promise<boolean>;
 }
 
-interface AssignedDeviceCardProps {
-  assigned: AssignedDevice;
-  liveDevice: DetectedDevice | null;
-  onUnassign: () => void;
-}
-
 interface UseProfileEditingArgs {
   profiles: InputProfile[];
   initialEditId?: string | null;
@@ -167,10 +161,10 @@ interface AbsentAssignmentsProps {
 }
 
 export type {
-  AbsentAssignmentsProps, AdapterDeviceCardProps, AssignedDeviceCardProps, BindingListenerProps,
+  AbsentAssignmentsProps, AdapterDeviceCardProps, BindingListenerProps,
   BindingListHeaderProps, BindingRowProps, CheatBindingsTabProps, ControlsCtrl, ControlsMainProps,
   CoreBindingsGroupProps, CoreVerbGroup,
-  CoreVerbRowProps, CtrlProps, DeviceDragInfo, DisplayFunctionMapping, FunctionBindingRowProps,
+  CoreVerbRowProps, CtrlProps, DeviceDragInfo, FunctionBindingRowProps,
   HapticsToggleProps, InputProfileItemProps, InputProfileListProps, SchemeBannerProps,
   SchemeLayoutRowProps, SidebarProfileButtonProps, SlotRowProps, SnesBindingRowProps, UseProfileEditingArgs,
 };

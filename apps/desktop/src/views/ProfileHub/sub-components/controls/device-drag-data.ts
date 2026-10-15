@@ -14,4 +14,3 @@ const setDeviceDragData = (e: React.DragEvent, info: DeviceDragInfo): void => {
 };
 
 export { setDeviceDragData };
-export type { DeviceDragInfo };

@@ -8,4 +8,3 @@ const ButtonContent = (props: ButtonContentProps) => {
 };
 
 export { ButtonContent };
-export type { ButtonContentProps } from './ButtonContent.type';

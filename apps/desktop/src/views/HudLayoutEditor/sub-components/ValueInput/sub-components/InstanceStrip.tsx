@@ -34,4 +34,3 @@ const InstanceStrip = (props: InstanceStripProps) => {
 };
 
 export { InstanceStrip };
-export type { InstanceStripProps } from './InstanceStrip.type';

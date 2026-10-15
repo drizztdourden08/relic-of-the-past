@@ -39,4 +39,3 @@ const currencyRowsOf = (
 };
 
 export { currencyRowsOf };
-export type { CurrencyRowModel };

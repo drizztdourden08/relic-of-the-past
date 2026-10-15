@@ -31,4 +31,3 @@ const ReferenceField = (props: ReferenceFieldProps) => {
 };
 
 export { ReferenceField };
-export type { ReferenceFieldProps } from './ReferenceField.type';

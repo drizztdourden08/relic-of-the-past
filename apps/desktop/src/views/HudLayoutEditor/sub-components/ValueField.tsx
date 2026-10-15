@@ -9,4 +9,3 @@ const ValueField = (props: ValueFieldProps) => {
 };
 
 export { ValueField };
-export type { ValueFieldProps } from './ValueField.type';

@@ -4,4 +4,3 @@ export { resetStick } from './reset-stick';
 export { finalizeTriggerCalibration } from './finalize-trigger-calibration';
 export { finalizeDigitalTrigger } from './finalize-digital-trigger';
 export { resetTrigger } from './reset-trigger';
-export type { StickFinalizeRefs, StickFinalizeCallbacks, TriggerFinalizeRefs, TriggerFinalizeCallbacks } from './stick-trigger-handlers.type';

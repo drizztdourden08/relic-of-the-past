@@ -49,4 +49,3 @@ const EasingPicker = (props: EasingPickerProps) => {
 };
 
 export { EasingPicker };
-export type { EasingPickerProps } from './EasingPicker.type';

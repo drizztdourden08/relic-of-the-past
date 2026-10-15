@@ -22,4 +22,4 @@ interface DialogRowsProps {
   itemSprite: string | null;
 }
 
-export type { DialogHighlight, DialogRowsProps };
+export type { DialogRowsProps };

@@ -13,4 +13,4 @@ interface ReachabilityCanvasProps {
   tileLayer?: (0 | 1 | 2)[][];
 }
 
-export type { ReachabilityCanvasProps, ReachBounds };
+export type { ReachabilityCanvasProps };

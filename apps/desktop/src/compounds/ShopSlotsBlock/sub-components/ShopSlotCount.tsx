@@ -32,4 +32,3 @@ const ShopSlotCount = (props: ShopSlotCountProps) => {
 };
 
 export { ShopSlotCount };
-export type { ShopSlotCountProps };

@@ -48,4 +48,3 @@ const PondInstanceRow = (props: PondInstanceRowProps) => {
 };
 
 export { PondInstanceRow };
-export type { PondInstanceRowProps };

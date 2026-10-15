@@ -21,4 +21,3 @@ const darkRoomLightTilesOf = (
 });
 
 export { darkRoomLightTilesOf };
-export type { DarkRoomLightTileModel };

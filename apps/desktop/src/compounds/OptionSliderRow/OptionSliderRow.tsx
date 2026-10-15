@@ -37,4 +37,3 @@ const OptionSliderRow = (props: OptionSliderRowProps) => {
 };
 
 export { OptionSliderRow };
-export type { OptionSliderRowProps };

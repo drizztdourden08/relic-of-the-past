@@ -57,4 +57,3 @@ const SlotPickerPanel = (props: SlotPickerPanelProps) => {
 };
 
 export { SlotPickerPanel };
-export type { SlotPickerPanelProps } from './SlotPickerPanel.type';

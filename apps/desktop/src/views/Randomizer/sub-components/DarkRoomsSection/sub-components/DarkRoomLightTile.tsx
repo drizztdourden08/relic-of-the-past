@@ -40,4 +40,3 @@ const DarkRoomLightTile = (props: DarkRoomLightTileProps) => {
 };
 
 export { DarkRoomLightTile };
-export type { DarkRoomLightTileProps };

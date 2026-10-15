@@ -45,4 +45,3 @@ const LiveParserOutput = (props: LiveParserOutputProps) => {
 };
 
 export { LiveParserOutput };
-export type { LiveParserOutputProps };

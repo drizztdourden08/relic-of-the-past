@@ -37,4 +37,3 @@ const HealthSection = ({ placement, view, now }: HealthSectionProps) => {
 };
 
 export { HealthSection };
-export type { HealthSectionProps };

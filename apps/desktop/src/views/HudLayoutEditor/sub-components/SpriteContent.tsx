@@ -39,4 +39,3 @@ const SpriteContent = (props: SpriteContentProps) => {
 };
 
 export { SpriteContent };
-export type { SpriteContentProps } from './SpriteContent.type';

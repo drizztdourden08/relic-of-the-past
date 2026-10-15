@@ -60,4 +60,3 @@ const AnimationSection = (props: AnimationSectionProps) => {
 };
 
 export { AnimationSection };
-export type { AnimationSectionProps } from './AnimationSection.type';

@@ -45,4 +45,3 @@ const ServerSection = ({ placement, view }: ServerSectionProps) => (
 );
 
 export { ServerSection };
-export type { ServerSectionProps };

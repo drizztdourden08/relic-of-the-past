@@ -37,4 +37,3 @@ const useLiveChannels = () => {
 };
 
 export { useLiveChannels };
-export type { LiveChannel } from '../MusicWidget.type';

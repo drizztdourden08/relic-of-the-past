@@ -17,4 +17,3 @@ const useHomeRandomizerStatus = (): HomeRandomizerStatus => {
 };
 
 export { useHomeRandomizerStatus };
-export type { HomeRandomizerStatus };

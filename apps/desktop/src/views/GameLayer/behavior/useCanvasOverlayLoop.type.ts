@@ -21,4 +21,4 @@ interface CanvasOverlayLoopConfig<R extends Disposable> {
   onFrame: (ctx: OverlayLoopContext & { renderer: R; time: number }) => void;
 }
 
-export type { CanvasOverlayLoopConfig, Disposable, OverlayLoopContext };
+export type { CanvasOverlayLoopConfig, Disposable };

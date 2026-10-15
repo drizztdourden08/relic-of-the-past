@@ -24,4 +24,4 @@ interface SegmentEntry {
   color: StackedBarColor;
 }
 
-export type { PoolFillBarProps, PoolFillTotals, Segment, SegmentEntry };
+export type { PoolFillBarProps, PoolFillTotals, SegmentEntry };

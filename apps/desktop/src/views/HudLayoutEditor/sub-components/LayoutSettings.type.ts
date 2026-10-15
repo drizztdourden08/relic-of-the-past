@@ -32,4 +32,4 @@ interface LayoutSettingsProps {
 
 interface LayoutSettingsPieceProps { label: string; grow?: boolean; children: ReactNode }
 
-export type { GapAxis, GapCell, LayoutSettingsPieceProps, LayoutSettingsProps, OverlaySide };
+export type { GapAxis, GapCell, LayoutSettingsPieceProps, LayoutSettingsProps };

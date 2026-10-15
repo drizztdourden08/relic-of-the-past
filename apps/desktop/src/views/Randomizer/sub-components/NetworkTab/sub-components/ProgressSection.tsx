@@ -32,4 +32,3 @@ const ProgressSection = ({ placement, view }: ProgressSectionProps) => {
 };
 
 export { ProgressSection };
-export type { ProgressSectionProps };

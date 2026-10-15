@@ -24,4 +24,3 @@ const OptionsSummary = (props: OptionsSummaryProps) => {
 };
 
 export { OptionsSummary };
-export type { OptionsSummaryProps };

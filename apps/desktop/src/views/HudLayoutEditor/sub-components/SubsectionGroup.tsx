@@ -44,4 +44,3 @@ const SubsectionGroup = (props: SubsectionGroupProps) => {
 };
 
 export { SubsectionGroup };
-export type { SubsectionAction, SubsectionGroupProps } from './SubsectionGroup.type';

@@ -34,4 +34,3 @@ const ToolbarMenu = (props: ToolbarMenuProps) => {
 };
 
 export { ToolbarMenu };
-export type { ToolbarMenuProps } from './ToolbarMenu.type';

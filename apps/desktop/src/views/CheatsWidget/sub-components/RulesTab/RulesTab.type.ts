@@ -50,4 +50,4 @@ type RungTileProps = {
   onChange: (value: number) => void;
 };
 
-export type { ActionTileProps, ActionTileSpec, Rung, RuleTileProps, RuleTileSpec, RungTileProps, RungTileSpec, TileSpec, TileState };
+export type { ActionTileProps, ActionTileSpec, RuleTileProps, RuleTileSpec, RungTileProps, RungTileSpec, TileState };

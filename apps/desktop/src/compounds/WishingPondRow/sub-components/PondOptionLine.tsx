@@ -14,4 +14,3 @@ const PondOptionLine = (props: PondOptionLineProps) => {
 };
 
 export { PondOptionLine };
-export type { PondOptionLineProps };

@@ -27,4 +27,3 @@ const SelectionToolbar = (props: SelectionToolbarProps) => {
 };
 
 export { SelectionToolbar };
-export type { SelectionToolbarProps } from './SelectionToolbar.type';

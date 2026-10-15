@@ -79,4 +79,3 @@ const GbaSettings = ({ settings, onChange }: GbaSettingsProps) => {
 };
 
 export { GbaSettings };
-export type { GbaSettingsProps };

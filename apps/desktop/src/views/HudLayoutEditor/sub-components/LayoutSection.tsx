@@ -74,4 +74,3 @@ const LayoutSection = (props: LayoutSectionProps) => {
 };
 
 export { LayoutSection };
-export type { LayoutSectionProps } from './LayoutSection.type';

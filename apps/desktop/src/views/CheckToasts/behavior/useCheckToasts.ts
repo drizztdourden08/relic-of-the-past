@@ -74,4 +74,3 @@ const useCheckToasts = (enabled: boolean) => {
 };
 
 export { useCheckToasts };
-export type { CheckToastEntry };

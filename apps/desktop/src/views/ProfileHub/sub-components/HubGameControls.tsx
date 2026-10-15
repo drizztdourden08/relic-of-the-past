@@ -29,4 +29,3 @@ const HubGameControls = (props: HubGameControlsProps) => {
 };
 
 export { HubGameControls };
-export type { HubGameControlsProps };

@@ -15,4 +15,4 @@ interface NumberFieldScrubParams extends NumberFieldRange {
   editing: boolean;
 }
 
-export type { NumberFieldEditingParams, NumberFieldRange, NumberFieldScrubParams };
+export type { NumberFieldEditingParams, NumberFieldScrubParams };

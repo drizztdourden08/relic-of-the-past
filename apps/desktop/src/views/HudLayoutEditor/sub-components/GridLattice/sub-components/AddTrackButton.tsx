@@ -22,4 +22,3 @@ const AddTrackButton = (props: AddTrackButtonProps) => {
 };
 
 export { AddTrackButton };
-export type { AddTrackButtonProps } from './AddTrackButton.type';

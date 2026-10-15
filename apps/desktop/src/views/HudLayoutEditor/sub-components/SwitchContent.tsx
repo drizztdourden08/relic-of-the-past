@@ -18,4 +18,3 @@ const SwitchContent = (props: SwitchContentProps) => {
 };
 
 export { SwitchContent };
-export type { SwitchContentProps } from './SwitchContent.type';

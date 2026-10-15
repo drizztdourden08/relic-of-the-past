@@ -27,4 +27,3 @@ const useSchemeLayout = (args: UseSchemeLayoutArgs): SchemeLayout => {
 };
 
 export { useSchemeLayout };
-export type { SchemeLayout, UseSchemeLayoutArgs };

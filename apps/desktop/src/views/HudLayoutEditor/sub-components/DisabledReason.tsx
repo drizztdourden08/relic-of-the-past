@@ -20,4 +20,3 @@ const DisabledReason = (props: DisabledReasonProps) => {
 };
 
 export { DisabledReason };
-export type { DisabledReasonProps } from './DisabledReason.type';

@@ -39,4 +39,3 @@ const ColorField = (props: ColorFieldProps) => {
 };
 
 export { ColorField };
-export type { ColorFieldProps } from './ColorField.type';

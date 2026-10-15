@@ -30,6 +30,5 @@ const MS_STEP = 10;
 
 export {
   ANGLE_STEP, COUNT_STEP, EDITOR_GROUNDS, EDITOR_RATIOS, GLYPH_IMAGE_TYPES,
-  GROUND_TILE, HUD_BLACK, HUD_WHITE, MS_STEP, SNES_LINES,
+  GROUND_TILE, HUD_BLACK, HUD_WHITE, MS_STEP,
 };
-export type { EditorGround, EditorRatio } from './HudLayoutEditor.type';

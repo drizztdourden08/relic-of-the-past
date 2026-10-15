@@ -53,4 +53,3 @@ const PresetBar = (props: PresetBarProps) => {
 };
 
 export { PresetBar };
-export type { PresetBarProps } from './PresetBar.type';

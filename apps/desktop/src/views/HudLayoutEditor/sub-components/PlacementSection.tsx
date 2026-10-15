@@ -69,4 +69,3 @@ const PlacementSection = (props: PlacementSectionProps) => {
 };
 
 export { PlacementSection };
-export type { PlacementSectionProps } from './PlacementSection.type';

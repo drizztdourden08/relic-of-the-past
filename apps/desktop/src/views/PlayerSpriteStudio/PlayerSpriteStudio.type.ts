@@ -115,6 +115,6 @@ interface GloveSwatchGridProps {
 
 export type {
   ApplyRowProps, Container, GloveSwatchGridProps, LibraryEntry, OpenDraft, OutfitSwatchGridProps, PaletteEditorProps,
-  PlayerSpriteStudioProps, Slot, SpriteLibraryListProps, SpriteDraftModel, SpriteExportModel, SpriteLibraryModel, StudioActionsParams, StudioDetailProps, StudioToolbarProps,
-  WearingModel,
+  PlayerSpriteStudioProps, Slot, SpriteLibraryListProps, StudioActionsParams, StudioDetailProps, StudioToolbarProps,
+
 };

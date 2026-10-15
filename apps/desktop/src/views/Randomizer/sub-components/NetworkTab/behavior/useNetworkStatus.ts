@@ -36,4 +36,3 @@ const useNetworkStatus = (): NetworkStatusView => {
 };
 
 export { useNetworkStatus };
-export type { NetworkStatusView };

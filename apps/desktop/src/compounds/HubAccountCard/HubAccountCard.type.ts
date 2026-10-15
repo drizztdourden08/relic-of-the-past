@@ -43,7 +43,7 @@ interface SignedInStateProps {
 }
 
 export type {
-  HubAccountState,
+
   HubAccountCopy,
   HubAccountCardProps,
   SignedOutStateProps,

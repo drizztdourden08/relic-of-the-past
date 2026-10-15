@@ -76,4 +76,3 @@ const KeyRail = (props: KeyRailProps) => {
 };
 
 export { KeyRail };
-export type { KeyRailProps } from './KeyRail.type';

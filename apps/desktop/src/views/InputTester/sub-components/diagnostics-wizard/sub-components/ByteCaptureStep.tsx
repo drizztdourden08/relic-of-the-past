@@ -37,4 +37,3 @@ const ByteCaptureStep = forwardRef<HidWizardHandle, ByteCaptureStepProps>((props
 ByteCaptureStep.displayName = 'ByteCaptureStep';
 
 export { ByteCaptureStep };
-export type { ByteCaptureStepProps };

@@ -50,4 +50,3 @@ const RunProgress = ({ placement, room }: RunProgressProps) => {
 };
 
 export { RunProgress };
-export type { RunProgressProps };

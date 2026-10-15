@@ -48,4 +48,3 @@ const FlexStrip = (props: FlexStripProps) => {
 };
 
 export { FlexStrip };
-export type { FlexCell, FlexStripProps } from './FlexStrip.type';

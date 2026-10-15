@@ -24,4 +24,3 @@ const PlayersSection = ({ placement, view }: PlayersSectionProps) => {
 };
 
 export { PlayersSection };
-export type { PlayersSectionProps };

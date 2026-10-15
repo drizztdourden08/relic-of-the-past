@@ -20,4 +20,3 @@ const CountdownContent = (props: CountdownContentProps) => {
 };
 
 export { CountdownContent };
-export type { CountdownContentProps } from './CountdownContent.type';

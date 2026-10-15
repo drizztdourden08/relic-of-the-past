@@ -53,4 +53,4 @@ interface BorderTilesProps {
   onFail: () => void;
 }
 
-export type { BorderTilesProps, CssRect, DialogBoxProps, DialogBorderLook, DialogGroundLook, DialogTextureLook };
+export type { BorderTilesProps, CssRect, DialogBoxProps, DialogBorderLook };

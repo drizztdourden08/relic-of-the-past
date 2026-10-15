@@ -58,4 +58,3 @@ const TransitionsSection = (props: TransitionsSectionProps) => {
 };
 
 export { TransitionsSection };
-export type { TransitionsSectionProps } from './TransitionsSection.type';

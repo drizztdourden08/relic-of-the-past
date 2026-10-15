@@ -1,3 +1,3 @@
 /* @layer renderer-components @kind barrel */
 export { PoolFillBar } from './PoolFillBar';
-export type { PoolFillBarProps, PoolFillTotals } from './PoolFillBar.type';
+export type { PoolFillTotals } from './PoolFillBar.type';

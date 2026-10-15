@@ -49,4 +49,3 @@ const ShadowListEditor = (props: ShadowListEditorProps) => {
 };
 
 export { ShadowListEditor };
-export type { ShadowListEditorProps } from './ShadowListEditor.type';

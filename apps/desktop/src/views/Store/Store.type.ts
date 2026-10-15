@@ -119,7 +119,7 @@ export type {
   InstallBarParams,
   InstalledRow,
   OpenInstallParams,
-  StoreAccount,
+
   StoreBrowseProps,
   StoreDetailPanelProps,
   StoreDetailProps,

@@ -17,4 +17,3 @@ const HoldStatusLine = (props: HoldStatusLineProps) => {
 };
 
 export { HoldStatusLine };
-export type { HoldStatusLineProps };

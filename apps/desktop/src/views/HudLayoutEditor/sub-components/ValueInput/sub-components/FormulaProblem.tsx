@@ -20,4 +20,3 @@ const FormulaProblem = (props: FormulaProblemProps) => {
 };
 
 export { FormulaProblem };
-export type { FormulaProblemProps } from './FormulaProblem.type';

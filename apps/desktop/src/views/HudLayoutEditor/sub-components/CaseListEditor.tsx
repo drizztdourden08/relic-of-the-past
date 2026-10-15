@@ -74,4 +74,3 @@ const CaseListEditor = (props: CaseListEditorProps) => {
 };
 
 export { CaseListEditor };
-export type { CaseListEditorProps } from './CaseListEditor.type';

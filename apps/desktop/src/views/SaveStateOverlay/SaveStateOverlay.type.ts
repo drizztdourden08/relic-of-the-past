@@ -90,7 +90,7 @@ interface SlotTrack {
 
 export type {
   BindingInfo,
-  Cell,
+
   HintAction,
   HoldState,
   InputManager,

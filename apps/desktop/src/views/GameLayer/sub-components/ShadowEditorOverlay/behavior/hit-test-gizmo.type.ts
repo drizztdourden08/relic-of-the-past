@@ -8,4 +8,4 @@ interface LocalPoint {
 
 type GizmoCheck = (p: LocalPoint, ctx: GizmoContext) => GizmoHit | null;
 
-export type { GizmoCheck, LocalPoint };
+export type { GizmoCheck };

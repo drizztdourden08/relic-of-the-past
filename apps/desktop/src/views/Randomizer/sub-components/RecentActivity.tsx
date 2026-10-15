@@ -23,4 +23,3 @@ const RecentActivity = (props: RecentActivityProps) => {
 };
 
 export { RecentActivity };
-export type { RecentActivityProps };

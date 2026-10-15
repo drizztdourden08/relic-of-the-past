@@ -15,4 +15,3 @@ const RatioPicker = (props: RatioPickerProps) => {
 };
 
 export { RatioPicker };
-export type { RatioPickerProps } from './RatioPicker.type';

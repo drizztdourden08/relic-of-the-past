@@ -22,4 +22,3 @@ const SlotContent = (props: SlotContentProps) => {
 };
 
 export { SlotContent };
-export type { SlotContentProps } from './SlotContent.type';

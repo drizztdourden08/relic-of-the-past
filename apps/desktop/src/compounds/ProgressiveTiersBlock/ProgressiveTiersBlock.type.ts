@@ -24,4 +24,4 @@ interface ProgressiveCardModel {
   mode: ProgressiveFamilyMode;
 }
 
-export type { ProgressiveCardModel, ProgressiveTierToggleModel, ProgressiveTiersBlockProps };
+export type { ProgressiveCardModel, ProgressiveTiersBlockProps };

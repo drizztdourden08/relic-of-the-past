@@ -84,7 +84,7 @@ interface ShopSlotSectionProps {
 }
 
 export type {
-  RetroShelfNote, ShopCardModel, ShopCountControl, ShopCountReadout, ShopCountSlider, ShopScopeSummary,
+  RetroShelfNote, ShopCardModel, ShopCountControl, ShopScopeSummary,
   ShopSectionModel, ShopSlotCardProps, ShopSlotCountProps, ShopSlotSectionProps, ShopSlotToggleModel,
   ShopSlotsBlockProps,
 };

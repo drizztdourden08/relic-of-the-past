@@ -38,4 +38,3 @@ const TextContent = (props: TextContentProps) => {
 };
 
 export { TextContent };
-export type { TextContentProps } from './TextContent.type';

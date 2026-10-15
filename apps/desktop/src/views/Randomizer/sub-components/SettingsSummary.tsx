@@ -17,4 +17,3 @@ const SettingsSummary = (props: SettingsSummaryProps) => {
 };
 
 export { SettingsSummary };
-export type { SettingsSummaryProps };

@@ -10,4 +10,4 @@ interface ShapeContentProps {
   insideRepeat?: boolean;
 }
 
-export type { ShapeContentProps, ShapeSpec };
+export type { ShapeContentProps };

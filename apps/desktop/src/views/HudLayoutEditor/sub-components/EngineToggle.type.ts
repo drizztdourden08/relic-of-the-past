@@ -10,4 +10,4 @@ interface EngineToggleProps {
   onChange: (next: string) => void;
 }
 
-export type { EngineOption, EngineToggleProps, LayoutEngine };
+export type { EngineOption, EngineToggleProps };
