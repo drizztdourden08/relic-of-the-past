@@ -703,10 +703,6 @@ Where a connection crosses: the persisted `nav` first (overlap tiles or entry po
 
 Every detection carries the screen id it resolves to, so no consumer recovers identity from the label; the old "Exit" label prefix is now the `isExit` flag. The label is display text only. Entrances lead into this room from an overworld screen, stairs lead to their destination room, the exit screen is where this room exits back onto, and each fall hole on an overworld screen drops into a room.
 
-### apps/desktop/src/nav-widget/screen-data-status.ts
-
-Screen data completeness as a plain function of the detection, so the recommendation detector can read exactly the same verdict outside React and both agree on what "incomplete" means. Each correction is one field the live game can settle that the record gets wrong or leaves blank.
-
 ### apps/desktop/src/views/NavigationWidget/behavior/useConnectionStatus.ts
 
 A detection is matched when a stored pair already links this screen and the resolved target, whichever side the stored point sits on: the question `pairLinksScreens` answers for the connection audit, so the badge and the audit cannot disagree. Which side of a pair can be taken is `canExit`, a separate fact.
