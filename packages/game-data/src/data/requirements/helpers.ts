@@ -12,7 +12,6 @@ const HOOKSHOT = 'item-011';
 const BOW = 'item-012';
 const BLUE_BOOMERANG = 'item-013';
 const BOMBOS = 'item-016';
-const ETHER = 'item-017';
 const QUAKE = 'item-018';
 const LAMP = 'item-019';
 const CANE_OF_SOMARIA = 'item-022';

@@ -53,7 +53,8 @@ never gating, because it's an upstream project we don't fully own.
 ## Checks (Adapter pattern in `tooling/analyze/adapters/`)
 
 `line-policy` (the cap per kind, all languages) and `dead-css-var` (a CSS variable
-that is used but never defined). Type checks, eslint, stylelint, markdownlint, prose and
+that is used but never defined; it counts the variables the repo defines and the ones the
+Tessera package's own CSS defines, found by resolving the package). Type checks, eslint, stylelint, markdownlint, prose and
 clang-format run through their own commands and are not part of this harness.
 
 ## Commands

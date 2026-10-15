@@ -129,6 +129,10 @@ The two sites name their offsets in `brock.site.ts` (`ports.offset` and `api.por
 
 `portFor` (`packages/hub-contracts/src/ports/port-for.ts`) turns a role and a slot into the port. `packages/hub-server/dev/serve-function.mjs` runs as plain Node, so it loads `portFor` through tsx's `require` (`tsx/cjs/api`), which resolves its extensionless sibling imports the way the bundler does. It takes the slot from Brock's `portSlotOf`, the same reader the site's dev proxy uses, so a site and its API always land in one slot.
 
+## packages/hub-contracts/src/public-api/
+
+Each folder is one concept of the package's public surface, and the package `index.ts` only star re-exports them. The split exists to keep the entry barrel under the barrel line cap, so a name moves between folders without changing what the package exports. Add a new export to the folder of its concept, and add a folder when a concept has none. The folders are `hub`, `sanctuary` and `store`.
+
 ## packages/hub-contracts/src/sanctuary/api-contract.ts
 
 - The Sanctuary's own routes: files, their versions, reports and the report sweep. The account routes it also serves are `HUB_ROUTES` in `packages/hub-contracts/src/hub/api-contract`.

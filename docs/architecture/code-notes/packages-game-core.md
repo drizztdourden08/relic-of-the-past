@@ -557,6 +557,10 @@ carry, and grading it on the loadout would make findings come and go with the in
 
 - Paths and format match the Electron handlers: `profiles/<id>/{sessions,tracker,randomizer,input-profiles}.json`.
 
+## packages/game-core/src/public-api/
+
+Each folder is one concept of the package's public surface, and the package `index.ts` only star re-exports them. The split exists to keep the entry barrel under the barrel line cap, so a name moves between folders without changing what the package exports. Add a new export to the folder of its concept, and add a folder when a concept has none. The folders are `gameplay`, `items`, `saves`, `session`, `settings` and `ui-bridge`.
+
 ## packages/game-core/src/ratio-capability/
 
 - What ratio a profile may render, given the capabilities it has switched on. The preset picker gates its own entries: the widest need the world tilemap and the ultrawide switch, the tall ones need tall rendering. Auto, Screen and Custom went around that, so a wide monitor on Auto, or a tall Custom ratio, handed the core a shape whose capability bits were never set.

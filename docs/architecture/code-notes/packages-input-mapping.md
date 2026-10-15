@@ -216,6 +216,10 @@ Not for game input. The input code, `BindingListener` and the shadow editor over
 
 `ModifierFlags` is structural (a `KeyboardEvent`, `PointerEvent`, `MouseEvent` or a React wrapper of one), so nothing has to import a DOM lib type. `USES_META` lists the Apple platforms, where `Cmd` is primary and `Ctrl` means something else (historically a right click). `primaryModifierLabel` makes the same decision for the printed label, so a hint never disagrees with the key that works.
 
+## packages/input-mapping/src/public-api/
+
+Each folder is one concept of the package's public surface, and the package `index.ts` only star re-exports them. The split exists to keep the entry barrel under the barrel line cap, so a name moves between folders without changing what the package exports. Add a new export to the folder of its concept, and add a folder when a concept has none. The folders are `devices`, `glyphs`, `haptics`, `input-runtime` and `scheme`.
+
 ## packages/input-mapping/src/runtime/axis-press-threshold/
 
 The single place where a raw axis reading becomes pressed, shared by live play (the SNES

@@ -247,9 +247,8 @@ Which shipped layout a freshly dropped device starts wearing. A control scheme n
 Natural (unscaled) sizes in SNES pixels, measured off what the renderer's compound draws, never off the sprite the element is named after. These are the data behind `packages/hud/src/engine/intrinsic-size`.
 
 - The life block is hearts only. It used to include 9 px for the console's LIFE caption; the enhanced style has no caption, `HudLife` draws it only for the vanilla top bar and the pause status panel, and neither is placed from here.
-- `LIFE_SIZE` reserves two heart rows, the usual twenty containers and the tallest the block gets. `lifeSize` gives one row per ten containers.
+- `HEART_SIZE` is one heart tile. `DEFAULT_HEARTS` is the usual twenty containers, the default `vitals-reserve` sizes for.
 - `MAGIC_SIZE` is 80 by 16: a 5:1 bar in a 1 px frame, exactly as wide as a full heart row so the two share a left edge. It is the meter at full, not a function of current magic, so neighbouring elements never shuffle when a spell is cast. `HudMagicBar` draws a shorter bar inside the same box.
-- `CONSUMABLES_SIZE` is three icon plus digits rows: a 12 px icon gutter, a 2 px gap and two digit tiles across, three 8 px rows down. The key row is reserved even when the game hides the counter.
 - `COUNTDOWN_SIZE` is 44 by 44, the pixel pie's own grid (`HudPixelPie` `GRID_SIZE`), one cell per game pixel. The smooth pie draws about 44.4 (`countdownSize(1)`); the renderer centres it across this box and keeps its top edge so both discs share a centre and bottom line. `apps/desktop/tests/hud/hud-countdown-node.keep.test.ts` pins the two numbers against each other because `packages/` cannot import them.
 - What life, magic and consumables occupy together is derived in `vitals-reserve`, never written down here.
 

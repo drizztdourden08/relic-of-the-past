@@ -366,6 +366,10 @@ The ledge hops a dual layer walk landed, one entry per tile. This is not cliff p
 - A manipulable tile's kind is its `replacement_tile_state` entry masked with 0xF0F0, looked up in `MANIPULABLE_NAMES`. A chest location at or above 0x8000 is a shut chest.
 - `TileClassification.interactable` is absent when no side table resolved the tile, and that absence is a real answer.
 
+## packages/navigation/src/public-api/
+
+Each folder is one concept of the package's public surface, and the package `index.ts` only star re-exports them. The split exists to keep the entry barrel under the barrel line cap, so a name moves between folders without changing what the package exports. Add a new export to the folder of its concept, and add a folder when a concept has none. The folders are `recommendations`, `routing`, `simulation` and `tracking`. `recommendations` also holds the side effect imports that register the recommendation strategies, so importing the package still registers every strategy.
+
 ## packages/navigation/src/recommendations/compare/compare-field.ts
 
 Compares one field probe against one record. It stays silent when the probe does not apply, when the table was not read (an unread table proves nothing either way), or when the values agree. `classify` sees presence after `isAbsent` has normalised absent values, so a `false` there means that side has nothing.

@@ -1,4 +1,7 @@
 {
   "extends": "@drizztdourden08/brock-lint-config/tsconfig/node.json",
+  "compilerOptions": {
+    "types": ["node", "vite/client"]
+  },
   "include": ["tests", "*.d.mts"]
 }

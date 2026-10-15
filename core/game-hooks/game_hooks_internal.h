@@ -121,6 +121,10 @@ static inline bool TriggerGrantAllowed(void) {
   return false;
 }
 
+// Hands over one heart piece the way the sprite does, for the check triggers (check_triggers.c,
+// check_triggers_world.c). Returns 1 when the fourth piece wrapped into a container.
+int SimGiveHeartPiece(void);
+
 // The virtual receive ids (upgrade_grants.c, progressive_grants.c) own no gate of their own: they
 // are reachable only from inside the already-gated substitution/receipt seams. Their resolvers still
 // refuse any side effect unless at least one of those seams is open, so a stray call with every gate

@@ -1,6 +1,7 @@
 /* @layer tooling-scripts @kind logic */
 import fs from 'fs';
 import path from 'path';
+import { createRequire } from 'module';
 import { walkFiles } from '../walk.mjs';
 
 const VAR_REF = /var\(\s*(--[\w-]+)/g;
@@ -8,11 +9,34 @@ const CSS_DEF = /(--[\w-]+)\s*:/g;
 const TS_OBJ_DEF = /['"`](--[\w-]+)['"`]\s*:/g;
 const SET_PROP = /setProperty\(\s*['"`](--[\w-]+)['"`]/g;
 
+const DEPENDENCY_CSS_PACKAGES = ['@drizztdourden08/tessera'];
+
+const resolvePackageRoot = (root, name) => {
+  try {
+    const manifest = createRequire(path.join(root, 'package.json')).resolve(`${name}/package.json`);
+    return path.dirname(manifest);
+  } catch {
+    return null;
+  }
+};
+
+const collectCssDefinitions = (dir, defined) => {
+  for (const rel of walkFiles(dir)) {
+    if (!rel.endsWith('.css')) continue;
+    const content = fs.readFileSync(path.join(dir, rel), 'utf8');
+    for (const m of content.matchAll(CSS_DEF)) defined.add(m[1]);
+  }
+};
+
 let definedCache = null;
 
 const buildDefined = (root) => {
   if (definedCache) return definedCache;
   const defined = new Set();
+  for (const name of DEPENDENCY_CSS_PACKAGES) {
+    const packageRoot = resolvePackageRoot(root, name);
+    if (packageRoot) collectCssDefinitions(packageRoot, defined);
+  }
   for (const rel of walkFiles(root)) {
     if (!/\.(css|ts|tsx|html)$/.test(rel)) continue;
     const content = fs.readFileSync(path.join(root, rel), 'utf8');

@@ -12,18 +12,18 @@ Add a note to the page of the package or area that holds the file, under a headi
 | [packages/asset-extraction](packages-asset-extraction.md) | 125 |
 | [packages/design](packages-design.md) | 101 |
 | [packages/features](packages-features.md) | 26 |
-| [packages/game-core](packages-game-core.md) | 90 |
+| [packages/game-core](packages-game-core.md) | 91 |
 | [packages/game-data](packages-game-data.md) | 102 |
 | [packages/hub-client](packages-hub-client.md) | 18 |
-| [packages/hub-contracts](packages-hub-contracts.md) | 51 |
+| [packages/hub-contracts](packages-hub-contracts.md) | 52 |
 | [packages/hub-server](packages-hub-server.md) | 72 |
 | [packages/hud](packages-hud.md) | 92 |
-| [packages/input-mapping](packages-input-mapping.md) | 79 |
+| [packages/input-mapping](packages-input-mapping.md) | 80 |
 | [packages/languages](packages-languages.md) | 79 |
 | [packages/msu](packages-msu.md) | 39 |
-| [packages/navigation](packages-navigation.md) | 166 |
+| [packages/navigation](packages-navigation.md) | 167 |
 | [packages/packs](packages-packs.md) | 14 |
-| [packages/randomizer](packages-randomizer.md) | 402 |
+| [packages/randomizer](packages-randomizer.md) | 405 |
 | [packages/roms](packages-roms.md) | 7 |
 
 ## Desktop app

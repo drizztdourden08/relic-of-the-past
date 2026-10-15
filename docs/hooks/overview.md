@@ -65,7 +65,7 @@ Full procedure: the `add-wasm-function` skill and [Adding a WASM Function](../co
 | [State Queries for Rooms & Collision](state-queries-rooms.md) | 15 | `state_queries.c`, `state_queries_grids.c`, `state_queries_rooms.c`, `state_queries_room_exits.c` |
 | [State Queries for Navigation Tables](state-queries-navigation.md) | 6 | `state_queries_tables.c` |
 | [State Queries for Sprites](state-queries-sprites.md) | 4 | `state_queries_sprites.c`, `state_queries_grids.c` |
-| [Cheats & Commands](cheats-commands.md) | 21 | `cheats.c`, `check_triggers.c`, `emscripten_api.c` |
+| [Cheats & Commands](cheats-commands.md) | 21 | `cheats.c`, `check_triggers.c`, `check_triggers_world.c`, `emscripten_api.c` |
 | [Rendering & Settings](rendering-settings.md) | 12 | `emscripten_api.c` |
 | [Audio](audio.md) | 3 | `emscripten_api.c` |
 | [Save / Load / I-O](save-load-io.md) | 7 | `emscripten_io.c` |

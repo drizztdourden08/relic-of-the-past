@@ -2,9 +2,7 @@
 import type { Size } from '../geometry.type';
 
 const HEART_SIZE = 8;
-const HEARTS_PER_ROW = 10;
 const DEFAULT_HEARTS = 20;
-const RESERVED_HEART_ROWS = 2;
 
 const MAGIC_SIZE: Size = { w: 80, h: 16 };
 

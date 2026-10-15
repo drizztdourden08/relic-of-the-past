@@ -28,8 +28,8 @@ const hookSrcs = [
   'state_queries_room_grid', 'state_queries_progress',
   'state_queries_tables', 'state_queries_rooms', 'state_queries_room_exits',
   'state_queries_room_objects', 'attr_grid_state', 'gated_empty', 'receive_counters',
-  'sim_queries', 'sim_triggers', 'item_overrides', 'check_triggers', 'ui_state', 'cheats', 'haptic_events',
-  'receipt_grant', 'receipt_messages', 'receipt_pages', 'receipt_gfx_guard', 'receipt_tile_decode', 'npc_overrides', 'stumpy_gift', 'smith_sword', 'drop_overrides',
+  'sim_queries', 'sim_queries_overworld', 'sim_triggers', 'item_overrides', 'check_triggers', 'check_triggers_world', 'ui_state', 'cheats', 'haptic_events',
+  'receipt_grant', 'receipt_messages', 'receipt_pages', 'receipt_gfx_guard', 'receipt_tile_decode', 'npc_overrides', 'npc_substitution_taken', 'stumpy_gift', 'smith_sword', 'drop_overrides',
   'standing_overrides', 'shop_overrides', 'shop_table', 'shop_payment', 'shop_refusal', 'shop_draw', 'world_item_draws', 'receipt_sprite_draw', 'receipt_ancilla_draws',
   'sprite_art_slots', 'shop_symbols',
   'rupee_gem_draw', 'rupee_holdup_draw', 'item_sheen', 'item_sheen_holdup', 'session_dialogue',
@@ -49,7 +49,7 @@ const hookSrcs = [
   'title_override', 'title_mirror', 'title_skip',
   'host_menu', 'host_menu_gear',
   'gba_alttp', 'gba_dungeon_room', 'gba_dungeon_gfx', 'gba_pyramid_entrance', 'gba_save_bank', 'gba_camera_bounds', 'gba_baked_room',
-  'gba_torches', 'gba_dive_tint', 'gba_water_room',
+  'gba_teleport_arrival', 'gba_torches', 'gba_dive_tint', 'gba_water_room',
   'ap_received_index', 'ap_room_hash', 'foreign_item', 'foreign_icon', 'foreign_icon_bank', 'death_link',
 ].map((f) => h(`${f}.c`));
 

@@ -784,7 +784,7 @@ One tile attribute map is the single source for collision, item requirements, la
   tracker's resolver swaps this exact object for the lights the file accepts, or for nothing when
   dark rooms are not asked to be lit, so it must stay one shared object. Read on its own it is the
   lamp.
-- The medallion rules are the vanilla ones: Misery Mire wants Ether, Turtle Rock wants Quake.
+- The Turtle Rock medallion rule is the vanilla one: it wants Quake.
 
 ## packages/game-data/src/data/sprite-manifest/
 

@@ -194,7 +194,7 @@ A 512-byte copier header is stripped when present, which is when the file size i
 - A check whose completion cannot be written honestly is refused, never approximated. That covers every threshold detection (key counts, capacity tiers, pond throws): those are counters the game reads for more than this one check, and faking one corrupts the file.
 - NO_ITEM_SENTINEL (0xFF) is the core's "no item" argument for a trigger export: record the flag, hand nothing over.
 - SUBSTITUTION_BUFFER_INDEXES are the progress buffer bytes [21], [22] and [25] that hold the substitution completion bits (state_queries_progress.c; npc_overrides.c allocates them). A check detected through one of them is recorded by its substitution key, the vanilla receive id its giver's own script grants.
-- BUFFER_INDEX_OF_FLAG_TYPE maps the npc trigger's flagType to its progress buffer index. The numberings disagree (check_triggers.c takes flagType 0 as sram_progress_flags, which the buffer publishes at [1]), so a mark that assumed they matched would write the wrong byte.
+- BUFFER_INDEX_OF_FLAG_TYPE maps the npc trigger's flagType to its progress buffer index. The numberings disagree (check_triggers_world.c takes flagType 0 as sram_progress_flags, which the buffer publishes at [1]), so a mark that assumed they matched would write the wrong byte.
 - A chest mark writes the room word plus, in the loaded room, the open chest tile, through the chest trigger.
 - A substitution mark sets the one bit that says a possession-gated giver's check was taken.
 - An overworld mark goes through the trigger export that already honours the no-item sentinel.
@@ -727,6 +727,10 @@ A 512-byte copier header is stripped when present, which is when the file size i
 
 - Renders a PrintJSON message to plain text. Id parts become names through the room's tables: a player id is a slot, an item id belongs to the game of the slot in its `player` field (the item's owner), a location id to the game of its finder.
 
+## packages/randomizer/src/client/public-api/
+
+Each folder is one concept of the package's public surface, and the package `index.ts` only star re-exports them. The split exists to keep the entry barrel under the barrel line cap, so a name moves between folders without changing what the package exports. Add a new export to the folder of its concept, and add a folder when a concept has none. The folders are `death-link`, `online`, `overrides`, `protocol`, `session` and `tracking`.
+
 ## packages/randomizer/src/client/randomizer-completion-bits.ts
 
 - TS mirror of the C allocation in core/game-hooks/npc_overrides.c, the single documented source of the byte addresses and bit assignment. Keyed by check id; keep in lockstep with the C table's vanilla-item rows.
@@ -992,6 +996,10 @@ The world is rebuilt from the placement's own frozen record and the locations ar
 `sweepAutoGrantedSlots` is a fixpoint over the prize locations and the story events: an in-logic slot's content, or an event within reach, joins the inventory, which can open more. Locations already in the state's hands are skipped, because sweeping one again would count its item twice. With a record of what the player did attached, the record alone answers: a crystal or pendant is held once its boss is beaten, and one merely within reach is not held yet (counting it once opened Ganon's Tower). A story event is the same.
 
 `heldItems` is what the player holds. A gift from another world, a cheat grant, or a pickup whose location was never detected all put an item in hand that no completed location accounts for. Each item is a floor over what the completed locations gave, never an addition: a crystal in hand is the same crystal its finished dungeon handed over (adding them once read four crystals as eight). Listed twice means at least two are held, which is how a counted item such as a small key is handed over. `completedCheckIds` lets the acts among the completed checks be read as acts (`events/`); absent means no record is attached and every act falls back to the capability that would perform it. `computePlacementAvailability` is the availability half alone.
+
+## packages/randomizer/src/public-api/
+
+Each folder is one concept of the package's public surface, and the package `index.ts` only star re-exports them. The split exists to keep the entry barrel under the barrel line cap, so a name moves between folders without changing what the package exports. Add a new export to the folder of its concept, and add a folder when a concept has none. The folders are `delivery`, `overrides`, `placement`, `world-model`, `world-options` and `world-progression`; the three `world-` folders re-export the world model.
 
 ## packages/randomizer/src/receipt-text/capacity-fixed-lines.ts
 
@@ -1947,6 +1955,10 @@ What a tick set changes about the world, one line at a time. Unticking sword run
 ## packages/randomizer/src/world/progressive/tick-set-check/
 
 Whether a tick set can be rolled at all, checked before any fill runs. Two rungs are load-bearing under the transcribed rules, and unticking one leaves a seed with no ending. The fill would find out on its own twenty attempts later, and only as "the goal is not reachable", so it is said here once, naming the rung to tick back on. The list is short and shrinks as stand-ins land. The sword rung was listed once and no longer is: the two places that asked for a beam sword (the seal outside the tower and the last fight) take the hammer whenever no beam sword is reachable, and a hanging cloth door can be pulled down instead of cut. Those stand-ins are armed from the tick set itself (`item-power-rule`), so a file with no sword rung still reaches the ending; the hammer is a progression item every pool carries. Everything else a tick set closes off is ordinary difficulty the fill places around. `assertRollableTickSet` throws with every reason at once.
+
+## packages/randomizer/src/world/public-api/
+
+Each folder is one concept of the package's public surface, and the package `index.ts` only star re-exports them. The split exists to keep the entry barrel under the barrel line cap, so a name moves between folders without changing what the package exports. Add a new export to the folder of its concept, and add a folder when a concept has none. The folders are `placement` and `reachability`.
 
 ## packages/randomizer/src/world/region-ids.constants.ts
 
