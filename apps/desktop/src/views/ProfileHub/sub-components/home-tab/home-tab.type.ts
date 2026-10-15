@@ -124,7 +124,7 @@ interface HomeTabDialogProps extends HomeTabDialogsProps {
 
 export type {
   AutoSavesData, DialogState, HomeRandomizerStatus, HomeTabColumnsProps, HomeTabDialogProps, HomeTabDialogsProps,
-  HomeHeroContentProps, HomeTabSaves, NormalSavesData, ProfileFactsInput, SaveFileChecks, SlotInfo,
+  HomeHeroContentProps, NormalSavesData, ProfileFactsInput, SaveFileChecks, SlotInfo,
   SummaryFact, UseAutoSaveActionsParams, UseHomeTabSavesParams, UseHomeTabSramImportParams,
   UseNormalSaveActionsParams, UseNormalSaveDialogsParams, UseQuickSaveActionsParams,
 };

@@ -25,4 +25,3 @@ const useGbaAvailability = (): GbaAvailability => {
 };
 
 export { useGbaAvailability };
-export type { GbaAvailability };

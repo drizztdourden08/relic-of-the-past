@@ -28,4 +28,3 @@ const ActivityLog = ({ entries, roomLines }: ActivityLogProps) => {
 };
 
 export { ActivityLog };
-export type { ActivityLogProps };

@@ -77,4 +77,3 @@ const FlexEditor = (props: FlexEditorProps) => {
 };
 
 export { FlexEditor };
-export type { FlexEditorProps } from './FlexEditor.type';

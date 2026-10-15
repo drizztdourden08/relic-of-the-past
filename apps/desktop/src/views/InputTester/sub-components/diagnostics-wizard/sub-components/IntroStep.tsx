@@ -25,4 +25,3 @@ const IntroStep = (props: IntroStepProps) => {
 };
 
 export { IntroStep };
-export type { IntroStepProps };

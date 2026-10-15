@@ -23,4 +23,3 @@ const ShapeContent = (props: ShapeContentProps) => {
 };
 
 export { ShapeContent };
-export type { ShapeContentProps } from './ShapeContent.type';

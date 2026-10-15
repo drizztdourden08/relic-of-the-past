@@ -1,7 +1,7 @@
 /* @layer renderer-components @kind component */
 import { Icon } from '@drizztdourden08/tessera/primitives';
 import { STATUS_LABELS, STATUS_SHAPES } from '../ChecksTracker.constants';
-import type { CheckStatusIconProps, StatusKey } from '../ChecksTracker.type';
+import type { CheckStatusIconProps } from '../ChecksTracker.type';
 import './CheckStatusIcon.css';
 
 const CheckStatusIcon = (props: CheckStatusIconProps) => {
@@ -18,4 +18,3 @@ const CheckStatusIcon = (props: CheckStatusIconProps) => {
 };
 
 export { CheckStatusIcon };
-export type { CheckStatusIconProps, StatusKey };

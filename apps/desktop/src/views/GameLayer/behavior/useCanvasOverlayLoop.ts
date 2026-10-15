@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind hook */
 import { useEffect } from 'react';
-import type { CanvasOverlayLoopConfig, Disposable, OverlayLoopContext } from './useCanvasOverlayLoop.type';
+import type { CanvasOverlayLoopConfig, Disposable } from './useCanvasOverlayLoop.type';
 
 const useCanvasOverlayLoop = <R extends Disposable>(config: CanvasOverlayLoopConfig<R>): void => {
   const { status, canvasKey, gameCanvasRef, fxCanvasRef, rendererRef, setup, createRenderer, onFrame } = config;
@@ -49,4 +49,3 @@ const useCanvasOverlayLoop = <R extends Disposable>(config: CanvasOverlayLoopCon
 };
 
 export { useCanvasOverlayLoop };
-export type { CanvasOverlayLoopConfig, OverlayLoopContext };

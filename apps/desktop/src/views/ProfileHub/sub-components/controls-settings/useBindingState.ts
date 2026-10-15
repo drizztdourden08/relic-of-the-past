@@ -63,4 +63,3 @@ const useBindingState = (args: UseBindingStateArgs) => {
 };
 
 export { useBindingState };
-export type { ListeningTarget };

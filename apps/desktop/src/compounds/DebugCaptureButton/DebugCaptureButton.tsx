@@ -53,4 +53,3 @@ const DebugCaptureButton = ({ profileId, onPointerDown, onPointerMove, onPointer
 };
 
 export { DebugCaptureButton };
-export type { DebugCaptureButtonProps };

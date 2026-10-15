@@ -82,4 +82,3 @@ const EditorStage = (props: EditorStageProps) => {
 };
 
 export { EditorStage };
-export type { EditorStageProps } from './EditorStage.type';

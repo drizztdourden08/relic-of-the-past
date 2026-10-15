@@ -56,4 +56,3 @@ const TextValueField = (props: TextValueFieldProps) => {
 };
 
 export { TextValueField };
-export type { TextValueFieldProps } from './TextValueField.type';

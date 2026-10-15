@@ -26,4 +26,3 @@ const EngineToggle = (props: EngineToggleProps) => {
 };
 
 export { EngineToggle };
-export type { EngineToggleProps, LayoutEngine } from './EngineToggle.type';

@@ -33,4 +33,3 @@ const EdgesField = (props: EdgesFieldProps) => {
 };
 
 export { EdgesField };
-export type { EdgesFieldProps } from './EdgesField.type';

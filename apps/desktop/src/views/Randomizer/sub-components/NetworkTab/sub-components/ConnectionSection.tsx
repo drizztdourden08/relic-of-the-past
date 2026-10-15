@@ -53,4 +53,3 @@ const ConnectionSection = ({ placement, view, now }: ConnectionSectionProps) => 
 };
 
 export { ConnectionSection };
-export type { ConnectionSectionProps };

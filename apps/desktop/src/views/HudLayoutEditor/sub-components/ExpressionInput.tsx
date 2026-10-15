@@ -15,4 +15,3 @@ const ExpressionInput = (props: ExpressionInputProps) => {
 };
 
 export { ExpressionInput };
-export type { ExpressionInputProps } from './ExpressionInput.type';

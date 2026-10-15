@@ -37,4 +37,3 @@ const controlsForDevice = (identity: DeviceIdentity, entries: readonly DeviceEnt
 };
 
 export { controlsForDevice };
-export type { DeviceIdentity };

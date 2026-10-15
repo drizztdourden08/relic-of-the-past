@@ -26,4 +26,3 @@ const ShopSlotSection = (props: ShopSlotSectionProps) => {
 };
 
 export { ShopSlotSection };
-export type { ShopSlotSectionProps };

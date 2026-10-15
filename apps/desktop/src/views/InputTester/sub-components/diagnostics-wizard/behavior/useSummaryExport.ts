@@ -35,4 +35,3 @@ const useSummaryExport = (byteCapture: HidControllerMap | null, positionalRecord
 };
 
 export { useSummaryExport };
-export type { SummaryPayload };

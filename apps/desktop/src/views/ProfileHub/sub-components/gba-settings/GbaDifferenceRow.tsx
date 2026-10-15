@@ -23,4 +23,3 @@ const GbaDifferenceRow = (props: GbaDifferenceRowProps) => {
 };
 
 export { GbaDifferenceRow };
-export type { GbaDifferenceRowProps };

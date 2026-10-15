@@ -14,4 +14,4 @@ interface RunTile {
   meter?: TileMeter;
 }
 
-export type { RunTile, TileMeter };
+export type { RunTile };

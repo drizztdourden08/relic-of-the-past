@@ -36,4 +36,3 @@ const useDetectionContext = (deviceKey: string): DetectionContext => {
 };
 
 export { useDetectionContext };
-export type { DetectionContext };

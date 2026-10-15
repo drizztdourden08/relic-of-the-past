@@ -28,4 +28,3 @@ const ShopPriceModifierRow = (props: ShopPriceModifierRowProps) => {
 };
 
 export { ShopPriceModifierRow };
-export type { ShopPriceModifierRowProps };

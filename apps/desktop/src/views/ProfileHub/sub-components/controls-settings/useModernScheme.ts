@@ -82,4 +82,3 @@ const useModernScheme = (args: UseModernSchemeArgs) => {
 };
 
 export { useModernScheme };
-export type { AbsentAssignment };

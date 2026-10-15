@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind types */
-import type { EditorAction, EditorActionKind, EditorShortcut } from '@app/hud-layout-editing/selection-bands.type';
+import type { EditorAction } from '@app/hud-layout-editing/selection-bands.type';
 import type { HudGridContainer } from '@rotp/hud';
 import type { OsKind } from '@drizztdourden08/brock-core';
 import type { CellRef, Occupant, TrackAxis } from '../GridLattice';
@@ -10,8 +10,6 @@ type GridSelection =
   | { kind: 'cells'; cells: readonly CellRef[]; anchor: CellRef }
   | { kind: 'track'; axis: TrackAxis; indices: readonly number[]; anchor: number };
 
-type GridShortcut = EditorShortcut;
-type GridActionKind = EditorActionKind;
 type GridAction = EditorAction;
 
 interface GridEditorEdits {
@@ -65,7 +63,7 @@ interface GridKeysInput {
 type PatchGrid = (patch: Partial<HudGridContainer>) => void;
 
 export type {
-  ArrowStep, GridAction, GridActionContext, GridActionKind, GridEditorEdits, GridEditorProps,
-  GridKeyParams, GridKeysInput, GridSelection, GridShortcut, PatchGrid, StatusParams,
+  ArrowStep, GridAction, GridActionContext, GridEditorProps,
+  GridKeyParams, GridKeysInput, GridSelection, PatchGrid, StatusParams,
 };
 export type { CellRef, Occupant, TrackAxis };

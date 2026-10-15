@@ -65,4 +65,3 @@ const TrackerFilters = (props: TrackerFiltersProps) => {
 };
 
 export { TrackerFilters };
-export type { TrackerPanels };

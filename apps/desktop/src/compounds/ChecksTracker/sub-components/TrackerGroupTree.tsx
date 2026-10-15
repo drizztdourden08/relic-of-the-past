@@ -52,4 +52,3 @@ const TrackerGroupTree = (props: TrackerGroupTreeProps) => {
 };
 
 export { TrackerGroupTree };
-export type { TrackerGroupTreeProps };

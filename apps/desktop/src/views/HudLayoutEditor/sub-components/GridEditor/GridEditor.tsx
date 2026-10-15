@@ -77,4 +77,3 @@ const GridEditor = (props: GridEditorProps) => {
 };
 
 export { GridEditor };
-export type { GridEditorProps } from './GridEditor.type';

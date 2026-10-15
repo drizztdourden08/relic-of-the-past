@@ -49,4 +49,3 @@ const MinMaxField = (props: MinMaxFieldProps) => {
 };
 
 export { MinMaxField };
-export type { MinMaxFieldProps } from './MinMaxField.type';

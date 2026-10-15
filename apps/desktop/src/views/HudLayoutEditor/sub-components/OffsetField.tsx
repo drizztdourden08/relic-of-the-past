@@ -31,4 +31,3 @@ const OffsetField = (props: OffsetFieldProps) => {
 };
 
 export { OffsetField };
-export type { OffsetFieldProps } from './OffsetField.type';

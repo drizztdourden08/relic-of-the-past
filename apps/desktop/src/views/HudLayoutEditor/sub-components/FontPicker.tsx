@@ -50,4 +50,3 @@ const FontPicker = (props: FontPickerProps) => {
 };
 
 export { FontPicker };
-export type { FontPickerProps } from './FontPicker.type';

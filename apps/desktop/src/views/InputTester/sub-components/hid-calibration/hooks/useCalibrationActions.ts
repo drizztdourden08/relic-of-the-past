@@ -44,4 +44,3 @@ const useCalibrationActions = (d: ActionDeps) => {
 };
 
 export { useCalibrationActions };
-export type { ActionDeps };

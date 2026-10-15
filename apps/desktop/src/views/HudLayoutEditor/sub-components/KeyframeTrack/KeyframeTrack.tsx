@@ -76,4 +76,3 @@ const KeyframeTrack = (props: KeyframeTrackProps) => {
 };
 
 export { KeyframeTrack };
-export type { KeyframeTrackProps } from './KeyframeTrack.type';

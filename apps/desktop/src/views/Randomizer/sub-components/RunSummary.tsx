@@ -27,4 +27,3 @@ const RunSummary = (props: RunSummaryProps) => {
 };
 
 export { RunSummary };
-export type { RunSummaryProps };

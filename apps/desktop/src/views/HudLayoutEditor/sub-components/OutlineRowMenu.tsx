@@ -23,4 +23,3 @@ const OutlineRowMenu = (props: OutlineRowMenuProps) => {
 };
 
 export { OutlineRowMenu };
-export type { OutlineRowMenuProps } from './OutlineRowMenu.type';

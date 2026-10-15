@@ -57,4 +57,3 @@ const GlyphContent = (props: GlyphContentProps) => {
 };
 
 export { GlyphContent };
-export type { GlyphContentProps } from './GlyphContent.type';

@@ -79,4 +79,3 @@ const useEnhancedSaveSlot = (
 };
 
 export { useEnhancedSaveSlot };
-export type { HintAction, SlotHint } from '../SaveStateOverlay.type';

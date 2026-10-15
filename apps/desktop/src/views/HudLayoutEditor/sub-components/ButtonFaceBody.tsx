@@ -55,4 +55,3 @@ const ButtonFaceBody = (props: ButtonFaceBodyProps) => {
 };
 
 export { ButtonFaceBody };
-export type { ButtonFaceBodyProps } from './ButtonFaceBody.type';

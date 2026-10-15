@@ -23,4 +23,3 @@ const OptionsTab = (props: OptionsTabProps) => {
 };
 
 export { OptionsTab };
-export type { OptionsTabProps };

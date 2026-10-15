@@ -35,4 +35,3 @@ const InputGlyph = (props: InputGlyphProps) => {
 };
 
 export { InputGlyph };
-export type { InputGlyphProps };

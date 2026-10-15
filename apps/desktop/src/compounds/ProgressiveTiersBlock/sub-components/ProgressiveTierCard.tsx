@@ -59,4 +59,3 @@ const ProgressiveTierCard = (props: ProgressiveTierCardProps) => {
 };
 
 export { ProgressiveTierCard };
-export type { ProgressiveTierCardProps };

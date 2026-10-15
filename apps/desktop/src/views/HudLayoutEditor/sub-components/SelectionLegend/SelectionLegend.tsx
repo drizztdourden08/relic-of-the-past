@@ -22,4 +22,3 @@ const SelectionLegend = (props: SelectionLegendProps) => {
 };
 
 export { SelectionLegend };
-export type { SelectionLegendProps } from './SelectionLegend.type';

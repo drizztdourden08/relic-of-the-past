@@ -53,4 +53,3 @@ const DiagnosticsStepActions = (props: DiagnosticsStepActionsProps) => {
 };
 
 export { DiagnosticsStepActions };
-export type { DiagnosticsStepActionsProps };

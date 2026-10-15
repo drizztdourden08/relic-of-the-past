@@ -50,4 +50,3 @@ const GlyphPickerGrid = (props: GlyphPickerGridProps) => {
 };
 
 export { GlyphPickerGrid };
-export type { GlyphPickerGridProps } from './GlyphPickerGrid.type';

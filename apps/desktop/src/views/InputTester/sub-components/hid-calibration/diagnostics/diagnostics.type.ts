@@ -33,6 +33,6 @@ interface GamepadDiagnosticsReport {
 
 export type {
   GamepadDiagnosticsReport,
-  JoystickCounts,
-  ResolvedPreset,
+
+
 };

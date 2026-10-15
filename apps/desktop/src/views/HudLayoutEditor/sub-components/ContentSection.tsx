@@ -45,4 +45,3 @@ const ContentSection = (props: ContentSectionProps) => {
 };
 
 export { ContentSection };
-export type { ContentSectionProps } from './ContentSection.type';

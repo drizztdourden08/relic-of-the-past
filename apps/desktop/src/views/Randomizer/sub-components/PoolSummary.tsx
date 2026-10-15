@@ -28,4 +28,3 @@ const PoolSummary = (props: PoolSummaryProps) => {
 };
 
 export { PoolSummary };
-export type { PoolSummaryProps };

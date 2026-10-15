@@ -78,4 +78,3 @@ const ShopSlotsBlock = (props: ShopSlotsBlockProps) => {
 };
 
 export { ShopSlotsBlock };
-export type { ShopSlotsBlockProps };

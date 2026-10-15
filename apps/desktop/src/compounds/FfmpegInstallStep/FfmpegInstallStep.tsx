@@ -45,4 +45,3 @@ const FfmpegInstallStep = (props: FfmpegInstallStepProps) => {
 };
 
 export { FfmpegInstallStep };
-export type { FfmpegInstallStepProps };

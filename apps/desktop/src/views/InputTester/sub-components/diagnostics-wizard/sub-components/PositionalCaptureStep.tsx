@@ -64,4 +64,3 @@ const PositionalCaptureStep = (props: PositionalCaptureStepProps) => {
 };
 
 export { PositionalCaptureStep };
-export type { PositionalCaptureStepProps };

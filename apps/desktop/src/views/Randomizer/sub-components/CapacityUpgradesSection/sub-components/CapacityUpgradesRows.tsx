@@ -28,4 +28,3 @@ const CapacityUpgradesRows = (props: CapacityUpgradesRowsProps) => {
 };
 
 export { CapacityUpgradesRows };
-export type { CapacityUpgradesRowsProps };

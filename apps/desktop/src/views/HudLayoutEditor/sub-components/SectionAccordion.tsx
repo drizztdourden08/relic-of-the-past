@@ -23,4 +23,3 @@ const SectionAccordion = (props: SectionAccordionProps) => {
 };
 
 export { SectionAccordion };
-export type { SectionAccordionProps } from './SectionAccordion.type';

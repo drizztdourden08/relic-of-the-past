@@ -75,4 +75,3 @@ const EditorToolbar = (props: EditorToolbarProps) => {
 };
 
 export { EditorToolbar };
-export type { EditorToolbarProps } from './EditorToolbar.type';

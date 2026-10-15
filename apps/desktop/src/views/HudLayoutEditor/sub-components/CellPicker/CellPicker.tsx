@@ -75,4 +75,3 @@ const CellPicker = (props: CellPickerProps) => {
 };
 
 export { CellPicker };
-export type { CellPickerProps } from './CellPicker.type';

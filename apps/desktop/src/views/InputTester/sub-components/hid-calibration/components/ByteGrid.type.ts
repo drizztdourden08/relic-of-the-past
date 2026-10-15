@@ -50,4 +50,4 @@ interface ByteCellProps {
 
 type ByteGridLegendProps = Pick<ByteGridProps, 'gyroState' | 'stickPickMode' | 'triggerPickMode'>;
 
-export type { ByteCellProps, ByteCellState, ByteCellTitleParams, ByteGridItem, ByteGridLegendProps, ByteGridProps, BytePickMode };
+export type { ByteCellProps, ByteCellState, ByteCellTitleParams, ByteGridLegendProps, ByteGridProps, BytePickMode };

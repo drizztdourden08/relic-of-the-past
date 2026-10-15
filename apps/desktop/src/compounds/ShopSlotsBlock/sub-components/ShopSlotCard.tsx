@@ -52,4 +52,3 @@ const ShopSlotCard = (props: ShopSlotCardProps) => {
 };
 
 export { ShopSlotCard };
-export type { ShopSlotCardProps };

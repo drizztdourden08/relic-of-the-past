@@ -23,4 +23,3 @@ const slotDisplay = (binding: InputBinding, controls: readonly ResolvedControl[]
 };
 
 export { slotDisplay };
-export type { SlotDisplay };

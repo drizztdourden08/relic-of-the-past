@@ -65,4 +65,3 @@ const FlakyByteWarningDialog = (props: FlakyByteWarningDialogProps) => {
 };
 
 export { FlakyByteWarningDialog };
-export type { FlakyByteWarningDialogProps };

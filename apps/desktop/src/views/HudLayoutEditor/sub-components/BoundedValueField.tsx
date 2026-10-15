@@ -38,4 +38,3 @@ const BoundedValueField = (props: BoundedValueFieldProps) => {
 };
 
 export { BoundedValueField };
-export type { BoundedValueFieldProps } from './BoundedValueField.type';

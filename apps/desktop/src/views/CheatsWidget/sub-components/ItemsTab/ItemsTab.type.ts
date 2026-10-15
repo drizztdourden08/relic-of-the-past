@@ -144,5 +144,5 @@ type TierListProps = {
 
 export type {
   AbilitiesEditorProps, DungeonItem, EquipmentBytes, FlagSpecParams, Flash, GearSlot, ItemGridCellProps, ItemGridEditorProps, ItemNamePanelProps, LadderSpecParams, OpenSlot, OptionParams, PanelProps, ProgressView,
-  SlotCellProps, SlotClickParams, SlotKind, SlotName, SlotPanelProps, SlotPlace, SlotSpec, SlotWrite, SpriteOf, TierListProps, TierOption,
+  SlotCellProps, SlotClickParams, SlotName, SlotPanelProps, SlotSpec, SlotWrite, SpriteOf, TierListProps, TierOption,
 };

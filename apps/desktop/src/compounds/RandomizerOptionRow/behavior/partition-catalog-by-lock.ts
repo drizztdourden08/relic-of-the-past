@@ -16,4 +16,3 @@ const partitionCatalogByLock = (
 };
 
 export { partitionCatalogByLock };
-export type { CatalogByLock, LockedOptionGroup };

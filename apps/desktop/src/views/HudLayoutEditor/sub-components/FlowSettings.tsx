@@ -35,4 +35,3 @@ const FlowSettings = (props: FlowSettingsProps) => {
 };
 
 export { FlowSettings };
-export type { FlowSettingsProps } from './FlowSettings.type';
