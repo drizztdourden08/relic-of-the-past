@@ -1,4 +1,4 @@
-/* @layer electron-main @kind constants */
+/* @layer renderer-app @kind constants */
 import type { DataDomainDef } from '@drizztdourden08/brock-core';
 
 const ROTP_DATA_DOMAINS: DataDomainDef[] = [

@@ -1819,15 +1819,6 @@ Not for game input. The input code, `BindingListener` and the shadow editor over
 
 A `FileStore` held in memory, with bytes, text and a modification time. Tests use it as a disk, and the pack viewers use it to run a file bound reader over bytes that never touch one.
 
-### apps/desktop/src/platform/rotp-platform/ports/storage.type.ts
-
-Where the app's data lives on this platform, a per domain usage summary, and (desktop only) revealing the folder in the OS file manager. Backed by IPC on Electron and the Filesystem plugin on Capacitor.
-
-- `path`: the absolute Data root on this platform. `osLabel` reads like "Windows (AppData)". `canReveal` mirrors the `revealDataFolder` capability.
-- `count`: entries in the domain (profiles, ROMs, packs, sprite sets, languages). `bytes`: disk usage.
-- `reveal` does nothing when the host cannot reveal. `revealProfile` resolves false when the host cannot reveal or the folder could not be opened, so a caller can tell the player.
-- `spritesBaseUrl`: the base URL for a ROM's extracted sprites (`app-sprite://` on Electron, `Capacitor.convertFileSrc` on mobile). It ends with `/`, and is empty when unavailable.
-
 ## Sanctuary
 
 ### packages/hub-contracts/src/sanctuary/api-contract.ts

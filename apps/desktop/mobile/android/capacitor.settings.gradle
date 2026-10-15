@@ -14,11 +14,8 @@ project(':capacitor-filesystem').projectDir = new File('../../../../node_modules
 include ':capacitor-haptics'
 project(':capacitor-haptics').projectDir = new File('../../../../node_modules/.pnpm/@capacitor+haptics@8.0.2_@capacitor+core@8.4.0/node_modules/@capacitor/haptics/android')
 
-include ':capawesome-capacitor-file-picker'
-project(':capawesome-capacitor-file-picker').projectDir = new File('../../../../node_modules/.pnpm/@capawesome+capacitor-file-_9ee728012f062070fc9ddb6c704260ee/node_modules/@capawesome/capacitor-file-picker/android')
-
 include ':drizztdourden08-brock-display'
-project(':drizztdourden08-brock-display').projectDir = new File('../../../../node_modules/.pnpm/@drizztdourden08+brock-disp_355807f585507f15fb4c16aa253f385d/node_modules/@drizztdourden08/brock-display/android')
+project(':drizztdourden08-brock-display').projectDir = new File('../../../../node_modules/.pnpm/@drizztdourden08+brock-disp_2aac1d1baa3c199d5ef12b21fd92aac9/node_modules/@drizztdourden08/brock-display/android')
 
 include ':drizztdourden08-brock-input'
-project(':drizztdourden08-brock-input').projectDir = new File('../../../../node_modules/.pnpm/@drizztdourden08+brock-inpu_78a820c4527e625a0ee4ffbef0720257/node_modules/@drizztdourden08/brock-input/android')
+project(':drizztdourden08-brock-input').projectDir = new File('../../../../node_modules/.pnpm/@drizztdourden08+brock-inpu_b0828070f98b5dfe8d331985ff6c2361/node_modules/@drizztdourden08/brock-input/android')

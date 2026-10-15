@@ -12,7 +12,6 @@ catalog:
   '@capacitor/core': ^8.4.0
   '@capacitor/filesystem': ^8.1.2
   '@capacitor/haptics': ^8.0.2
-  '@capawesome/capacitor-file-picker': ^8.0.2
   '@drizztdourden08/brock-build': ^0.45.0
   '@drizztdourden08/brock-lint-config': ^0.45.0
   '@drizztdourden08/brock-plugin-snes': ^0.45.0
@@ -42,7 +41,6 @@ catalog:
   node-addon-api: ^8.9.1
   playwright: ^1.60.0
   pngjs: ^7.0.0
-  rcedit: ^5.0.2
   react: ^19.2.6
   react-dom: ^19.2.6
   stylelint: ^17.13.0

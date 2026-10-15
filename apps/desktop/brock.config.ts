@@ -21,7 +21,7 @@ fi`,
 ];
 
 const releaseInputSteps: WorkflowStep[] = [
-  { name: 'Check the save state format is registered', shell: 'bash', run: 'node scripts/build/check-state-format.mjs' },
+  { name: 'Check the save state format is registered', jobs: 'build-windows', shell: 'bash', run: 'node scripts/build/check-state-format.mjs' },
   {
     name: 'Fetch the private dataset',
     shell: 'bash',
@@ -47,13 +47,16 @@ export default defineBrockConfig({
     ports: { base: 1991 },
     description: 'A desktop port of A Link to the Past, built on a decompiled C core in WebAssembly.',
     author: { name: 'drizztdourden_', email: 'drizztdourden08@users.noreply.github.com' },
+    copyright: 'Copyright (c) 2026 drizztdourden_',
+    linuxCategory: 'Game',
+    window: { titleBar: { mobile: false } },
     repo: { owner: 'drizztdourden08', name: 'relic-of-the-past' },
     artifactPrefix: 'rotp-',
     protocols: [{ scheme: 'relic-of-the-past', name: 'Relic of the Past' }],
     fileAssociations: [
-      { ext: 'msul', name: 'Music Pack', progId: 'RelicOfThePast.MusicPack', mimeType: 'application/x-msul', icon: 'msul' },
-      { ext: 'rsp', name: 'Character Sprite', progId: 'RelicOfThePast.SpritePack', mimeType: 'application/x-rsp' },
-      { ext: 'rlang', name: 'Language Set', progId: 'RelicOfThePast.LanguageSet', mimeType: 'application/x-rlang' },
+      { ext: 'msul', name: 'Music Pack', description: 'Relic of the Past music pack', progId: 'RelicOfThePast.MusicPack', mimeType: 'application/x-msul', icon: 'msul' },
+      { ext: 'rsp', name: 'Character Sprite', description: 'Relic of the Past character sprite', progId: 'RelicOfThePast.SpritePack', mimeType: 'application/x-rsp' },
+      { ext: 'rlang', name: 'Language Set', description: 'Relic of the Past language set', progId: 'RelicOfThePast.LanguageSet', mimeType: 'application/x-rlang' },
     ],
     icons: { brand: 'rotp' },
     dataDirs: ['assets', 'roms', 'profiles', 'config', 'msu', 'languages', 'sprites', 'link-sprites'],
@@ -65,7 +68,6 @@ export default defineBrockConfig({
     nodePolyfills: { globals: { Buffer: true, process: true } },
   },
   packaging: {
-    afterPack: '../../scripts/build/after-pack.mjs',
     fileAssociations: {
       msul: { role: 'Editor' },
       rsp: { role: 'Editor' },
@@ -78,7 +80,7 @@ export default defineBrockConfig({
     steps: {
       ci: {
         beforeBuild: wasmCoreSteps,
-        beforeTest: [{ name: 'Analyze every file type', run: 'node scripts/analyze/analyze.mjs --ci' }],
+        beforeTest: [{ name: 'Analyze every file type', jobs: 'quality', run: 'node scripts/analyze/analyze.mjs --ci' }],
       },
       release: {
         beforePackage: [...wasmCoreSteps, ...releaseInputSteps],

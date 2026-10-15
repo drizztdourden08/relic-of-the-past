@@ -16,17 +16,11 @@ A boot-safe `window.api` stub for hosts with no preload to inject one: Capacitor
 - `SCREEN_EDITOR_STUB`: editing the dataset needs a repo on disk, so every editor channel refuses here instead of reporting a false success. Each channel is spelled out by name and typed against `ScreenEditorApi`, so a channel added to the contract fails to compile until it refuses here too.
 - `readNativeAppVersion`: a native host (Capacitor) reports the real app version, the Android `versionName`, which itself comes from the repo root `package.json`. The plain web has no native App plugin, so `getInfo()` throws and the version falls back to `0.0.0`.
 
-## platform/hosts/capacitor/file-picker.ts
+## platform/hosts/capacitor/sprites.ts
 
-The Capacitor file picker, through `@capawesome/capacitor-file-picker`, which reads bytes as base64.
+The Capacitor sprites port: the base URL of a ROM's extracted sprites, `Capacitor.convertFileSrc` over the app's Data directory, ending with `/` and empty when the folder cannot be resolved.
 
-Saving goes to the device's Documents directory, not through a share sheet. The project does not depend on `@capacitor/share`, and a file written where the user's own file manager can reach it needs no extra plugin.
-
-`extToMime` maps picker extensions to MIME types the Android document picker accepts. `.sfc` and `.smc` have no registered type, so they resolve to `application/octet-stream`.
-
-## platform/hosts/capacitor/storage.ts
-
-The Capacitor `StoragePort`: an app-private location and per-domain usage through the Filesystem plugin. There is no reveal on mobile (`revealDataFolder` is false), so the home page shows the path read-only. A missing folder counts as zero bytes.
+The rest of the phone host is Brock's: the file picker (the ROM and SRAM pickers pass `anyType` on a phone, because Android's picker greys out `.sfc` and `.srm` files it has no type for), the Back gesture (`MainActivity` dispatches `brock:back` with the swipe edge and `useMobileBack` listens through `device.onBackButton`) and the Storage page (`<BrockApp dataDomains>` takes `ROTP_DATA_DOMAINS`, the same list the main process uses).
 
 ## stores/tracker-presence-store
 

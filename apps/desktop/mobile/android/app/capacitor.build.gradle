@@ -13,7 +13,6 @@ dependencies {
     implementation project(':capacitor-app')
     implementation project(':capacitor-filesystem')
     implementation project(':capacitor-haptics')
-    implementation project(':capawesome-capacitor-file-picker')
     implementation project(':drizztdourden08-brock-display')
     implementation project(':drizztdourden08-brock-input')
 

@@ -7,7 +7,7 @@ import { product } from '../src/product';
 import { rotpProfileHooks } from '../src/profiles/rotp-profile-hooks';
 import { ROTP_AUTOMATION_FLAGS } from './automation/automation-flags.constants';
 import { rotpRendererFlags } from './automation/rotp-renderer-flags';
-import { ROTP_DATA_DOMAINS } from './storage/data-domains.constants';
+import { ROTP_DATA_DOMAINS } from '../src/storage/data-domains.constants';
 import { installedFileGuard } from './storage/installed-file-guard';
 import { sanctuaryBugReport } from './sanctuary/bug-report';
 import { onReady } from './lifecycle/on-ready';

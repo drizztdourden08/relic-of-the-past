@@ -40,7 +40,6 @@
     "@capacitor/core": "catalog:",
     "@capacitor/filesystem": "catalog:",
     "@capacitor/haptics": "catalog:",
-    "@capawesome/capacitor-file-picker": "catalog:",
     "@drizztdourden08/brock-catalog": "^0.45.0",
     "@drizztdourden08/brock-core": "^0.45.0",
     "@drizztdourden08/brock-display": "^0.45.0",
@@ -141,7 +140,7 @@
         ".h",
         ".mjs"
       ],
-      "buildScript": "../../scripts/build-wasm-core.mjs",
+      "buildScript": "../../core/wasm-build/build.mjs",
       "output": "public/wasm",
       "outputExtensions": [
         ".wasm",

@@ -18,6 +18,7 @@ import { rotpProfileHooks } from './profiles/rotp-profile-hooks';
 import { useWidgetDisabled } from './widget-gates/useWidgetDisabled';
 import { SETTINGS } from './main.constants';
 import { LEGAL_TEXT } from './legal.constants';
+import { ROTP_DATA_DOMAINS } from './storage/data-domains.constants';
 import { product } from './product';
 import type { AppSettings } from './settings.type';
 import './log-bus';
@@ -51,6 +52,7 @@ createRoot(root).render(
       titleBar={appTitleBar}
       tours={appTours}
       profileHooks={rotpProfileHooks}
+      dataDomains={ROTP_DATA_DOMAINS}
       legalText={LEGAL_TEXT}
     />
   </StrictMode>,
