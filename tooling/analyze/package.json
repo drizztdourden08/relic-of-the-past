@@ -1,0 +1,13 @@
+{
+  "name": "@rotp/analyze",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Classifies and tags every file by layer and kind, then checks the line cap per kind and the CSS variables that are used but never defined",
+  "type": "module",
+  "bin": {
+    "rotp-analyze": "./analyze.mjs"
+  },
+  "dependencies": {
+    "@rotp/tool-paths": "workspace:*"
+  }
+}

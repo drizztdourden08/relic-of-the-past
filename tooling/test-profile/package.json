@@ -1,0 +1,14 @@
+{
+  "name": "@rotp/test-profile",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Provisions the named profile the end to end specs run against: ROM, config, input profile and the save state fixtures",
+  "type": "module",
+  "exports": {
+    ".": "./provision-profile.mjs",
+    "./paths": "./paths.mjs"
+  },
+  "dependencies": {
+    "@rotp/vault": "workspace:*"
+  }
+}

@@ -1,0 +1,17 @@
+{
+  "name": "@rotp/vault",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Syncs the private rotp-vault checkout (save state fixtures) into the repo, with a snapshot before every overwrite",
+  "type": "module",
+  "bin": {
+    "rotp-vault": "./sync.mjs",
+    "rotp-vault-check-dataset": "./check-dataset.mjs"
+  },
+  "exports": {
+    "./locate": "./locate.mjs"
+  },
+  "dependencies": {
+    "@rotp/safety": "workspace:*"
+  }
+}

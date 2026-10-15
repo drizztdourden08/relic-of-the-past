@@ -7,7 +7,7 @@ export default defineConfig({
     include: [
       'apps/desktop/tests/**/*.test.{ts,tsx}',
       'packages/*/tests/**/*.test.{ts,tsx}',
-      'scripts/**/tests/**/*.test.{ts,tsx}',
+      'tooling/**/tests/**/*.test.{ts,tsx}',
     ],
     exclude: ['**/node_modules/**', '**/dist/**'],
     globals: true,

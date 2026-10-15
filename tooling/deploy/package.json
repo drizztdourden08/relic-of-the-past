@@ -1,0 +1,11 @@
+{
+  "name": "@rotp/deploy",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Builds the app in a Linux VM or WSL and pushes the Android build to an emulator",
+  "type": "module",
+  "bin": {
+    "rotp-push-linux": "./push-linux.mjs",
+    "rotp-push-android": "./push-android.mjs"
+  }
+}

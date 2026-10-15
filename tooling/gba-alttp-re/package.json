@@ -1,0 +1,23 @@
+{
+  "name": "@rotp/gba-alttp-re",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Reverse engineering tools for the GBA cartridge: ROM checks, dungeon extractors and the Ghidra and mGBA setup",
+  "type": "module",
+  "bin": {
+    "rotp-gba-validate-rom": "./validate-rom.mjs",
+    "rotp-gba-correlate-snes": "./correlate-snes.mjs",
+    "rotp-gba-trace-diff": "./trace-diff.mjs",
+    "rotp-gba-snapshot-diff": "./snapshot-diff.mjs",
+    "rotp-gba-extract-dungeon-room": "./extract-dungeon-room.mjs",
+    "rotp-gba-extract-dungeon-layers": "./extract-dungeon-layers.mjs",
+    "rotp-gba-extract-dungeon-secrets": "./extract-dungeon-secrets.mjs",
+    "rotp-gba-extract-dungeon-sprites": "./extract-dungeon-sprites.mjs",
+    "rotp-gba-extract-palace-entrance": "./extract-palace-entrance.mjs",
+    "rotp-gba-render-dungeon-capture": "./render-dungeon-capture.mjs"
+  },
+  "dependencies": {
+    "@rotp/asset-extraction": "workspace:*",
+    "pngjs": "catalog:"
+  }
+}

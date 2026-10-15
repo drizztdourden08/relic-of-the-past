@@ -24,7 +24,7 @@ sudo udevadm control --reload-rules
 sudo udevadm trigger
 ```
 
-The rules file ships in the repo at `scripts/build/linux/99-relic-controllers.rules`
+The rules file ships in the repo at `tooling/deploy/99-relic-controllers.rules`
 (or copy it from the app resources). Then unplug/replug the controller (Bluetooth:
 re-pair) so the new permissions apply.
 

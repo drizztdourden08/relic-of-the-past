@@ -71,7 +71,7 @@ jobs:
         run: pnpm --dir "$APP_DIR" exec brock build
 
       - name: "Analyze every file type"
-        run: "node scripts/analyze/analyze.mjs --ci"
+        run: "node tooling/analyze/analyze.mjs --ci"
 
       - name: Release note
         run: pnpm --dir "$APP_DIR" exec brock release-notes check

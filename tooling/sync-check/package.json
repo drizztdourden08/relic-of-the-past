@@ -1,0 +1,13 @@
+{
+  "name": "@rotp/sync-check",
+  "version": "0.0.0",
+  "private": true,
+  "description": "The commit-msg check that the local tooling config and the vault copies are in step before a commit",
+  "type": "module",
+  "bin": {
+    "rotp-sync-check": "./index.mjs"
+  },
+  "dependencies": {
+    "@rotp/vault": "workspace:*"
+  }
+}

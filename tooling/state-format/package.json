@@ -1,0 +1,10 @@
+{
+  "name": "@rotp/state-format",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Checks that the save state format is registered and emits it for the release",
+  "type": "module",
+  "bin": {
+    "rotp-state-format": "./check-state-format.mjs"
+  }
+}

@@ -1,5 +1,5 @@
 packages/design/game-text/font/LICENSE.txt  the game font's licence, travels unchanged
 packages/design/game-text/font/README.txt  the game font author's notes, travel unchanged
 packages/design/game-text/font/CHANGES.txt  the game font author's change log, travels unchanged
-scripts/tool-paths.json  the tool folder and file names the worktree, safety and analyze scripts must match on disk
+tooling/tool-paths/tool-paths.json  the tool folder and file names the safety and analyze tools must match on disk
 packages/game-data/data/msu-track-names.json  the game's own MSU track titles, kept verbatim

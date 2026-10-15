@@ -1,0 +1,10 @@
+{
+  "name": "@rotp/generate-gba-asset-index",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Writes the C enum of the GBA supplement assets from the asset manifest",
+  "type": "module",
+  "bin": {
+    "rotp-generate-gba-asset-index": "./generate-gba-asset-index-cli.mjs"
+  }
+}

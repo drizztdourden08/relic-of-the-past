@@ -38,7 +38,7 @@ jobs:
       # flatten it to root-level slugs and rewrite intra-doc links before
       # publishing. Source docs/ is untouched; the flat copy is .wiki-build/.
       - name: Build flat wiki pages from docs/
-        run: node scripts/build-wiki.mjs
+        run: node tooling/wiki/build-wiki.mjs
       - name: Publish to the wiki
         uses: Andrew-Chen-Wang/github-wiki-action@v4
         with:

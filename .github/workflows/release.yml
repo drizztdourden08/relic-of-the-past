@@ -172,7 +172,7 @@ jobs:
 
       - name: "Check the save state format is registered"
         shell: bash
-        run: "node scripts/build/check-state-format.mjs"
+        run: "node tooling/state-format/check-state-format.mjs"
 
       - name: "Fetch the private dataset"
         shell: bash
@@ -180,11 +180,11 @@ jobs:
           VAULT_TOKEN: ${{ secrets.VAULT_TOKEN }}
         run: |
           git clone --depth 1 "https://x-access-token:$VAULT_TOKEN@github.com/drizztdourden08/rotp-vault.git" ../rotp-vault
-          node scripts/vault/sync.mjs --force-pull
+          node tooling/vault/sync.mjs --force-pull
 
       - name: "Verify the dataset landed"
         shell: bash
-        run: "node scripts/vault/check-dataset.mjs"
+        run: "node tooling/vault/check-dataset.mjs"
 
       - name: Package
         shell: bash
@@ -204,7 +204,7 @@ jobs:
 
       - name: "Publish the save state format"
         shell: bash
-        run: "node scripts/build/check-state-format.mjs --emit upload"
+        run: "node tooling/state-format/check-state-format.mjs --emit upload"
 
       - uses: actions/upload-artifact@v7
         with:
@@ -265,7 +265,7 @@ jobs:
 
       - name: "Check the save state format is registered"
         shell: bash
-        run: "node scripts/build/check-state-format.mjs"
+        run: "node tooling/state-format/check-state-format.mjs"
 
       - name: "Fetch the private dataset"
         shell: bash
@@ -273,11 +273,11 @@ jobs:
           VAULT_TOKEN: ${{ secrets.VAULT_TOKEN }}
         run: |
           git clone --depth 1 "https://x-access-token:$VAULT_TOKEN@github.com/drizztdourden08/rotp-vault.git" ../rotp-vault
-          node scripts/vault/sync.mjs --force-pull
+          node tooling/vault/sync.mjs --force-pull
 
       - name: "Verify the dataset landed"
         shell: bash
-        run: "node scripts/vault/check-dataset.mjs"
+        run: "node tooling/vault/check-dataset.mjs"
 
       - name: Package
         shell: bash
@@ -376,7 +376,7 @@ jobs:
 
       - name: "Check the save state format is registered"
         shell: bash
-        run: "node scripts/build/check-state-format.mjs"
+        run: "node tooling/state-format/check-state-format.mjs"
 
       - name: "Fetch the private dataset"
         shell: bash
@@ -384,11 +384,11 @@ jobs:
           VAULT_TOKEN: ${{ secrets.VAULT_TOKEN }}
         run: |
           git clone --depth 1 "https://x-access-token:$VAULT_TOKEN@github.com/drizztdourden08/rotp-vault.git" ../rotp-vault
-          node scripts/vault/sync.mjs --force-pull
+          node tooling/vault/sync.mjs --force-pull
 
       - name: "Verify the dataset landed"
         shell: bash
-        run: "node scripts/vault/check-dataset.mjs"
+        run: "node tooling/vault/check-dataset.mjs"
 
       - name: Package
         shell: bash
@@ -482,7 +482,7 @@ jobs:
 
       - name: "Check the save state format is registered"
         shell: bash
-        run: "node scripts/build/check-state-format.mjs"
+        run: "node tooling/state-format/check-state-format.mjs"
 
       - name: "Fetch the private dataset"
         shell: bash
@@ -490,11 +490,11 @@ jobs:
           VAULT_TOKEN: ${{ secrets.VAULT_TOKEN }}
         run: |
           git clone --depth 1 "https://x-access-token:$VAULT_TOKEN@github.com/drizztdourden08/rotp-vault.git" ../rotp-vault
-          node scripts/vault/sync.mjs --force-pull
+          node tooling/vault/sync.mjs --force-pull
 
       - name: "Verify the dataset landed"
         shell: bash
-        run: "node scripts/vault/check-dataset.mjs"
+        run: "node tooling/vault/check-dataset.mjs"
 
       - name: Build the signed APK
         shell: bash
@@ -565,7 +565,7 @@ jobs:
 
       - name: "Check the save state format is registered"
         shell: bash
-        run: "node scripts/build/check-state-format.mjs"
+        run: "node tooling/state-format/check-state-format.mjs"
 
       - name: "Fetch the private dataset"
         shell: bash
@@ -573,11 +573,11 @@ jobs:
           VAULT_TOKEN: ${{ secrets.VAULT_TOKEN }}
         run: |
           git clone --depth 1 "https://x-access-token:$VAULT_TOKEN@github.com/drizztdourden08/rotp-vault.git" ../rotp-vault
-          node scripts/vault/sync.mjs --force-pull
+          node tooling/vault/sync.mjs --force-pull
 
       - name: "Verify the dataset landed"
         shell: bash
-        run: "node scripts/vault/check-dataset.mjs"
+        run: "node tooling/vault/check-dataset.mjs"
 
       - name: Build the web app
         run: pnpm --dir "$APP_DIR" exec brock web build

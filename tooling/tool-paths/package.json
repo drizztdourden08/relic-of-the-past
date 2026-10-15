@@ -1,0 +1,10 @@
+{
+  "name": "@rotp/tool-paths",
+  "version": "0.0.0",
+  "private": true,
+  "description": "The folder and file names the AI tooling keeps on disk, read by the safety and analyze tools",
+  "type": "module",
+  "exports": {
+    ".": "./tool-paths.mjs"
+  }
+}

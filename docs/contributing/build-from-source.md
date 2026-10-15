@@ -15,14 +15,13 @@
 ## Run & build
 
 ```bash
-pnpm install          # install deps; auto-fetches the Electron binary (ensure-electron)
+pnpm install          # install deps; brock dev, build and start fetch the Electron binary when it is missing
 pnpm run dev          # brock dev in apps/desktop: dev server + Electron (auto-builds WASM if missing/stale)
 pnpm run build        # packaged build for this OS (brock package in apps/desktop), auto-builds WASM too
 pnpm run build:web    # brock web build in apps/desktop: the renderer alone, into apps/desktop/dist/web
 ```
 
-`pnpm install` runs `ensure-electron` (re-fetches Electron's native binary if a bare `node_modules`
-left it out), and `dev`/`build` run `ensure-wasm` first. That is a fast mtime check, and it rebuilds the
+`dev` and `build` run `ensure-wasm` first. That is a fast mtime check, and it rebuilds the
 WASM core only when it's missing or a C source changed. Force a WASM rebuild with `pnpm run ensure-wasm`.
 
 For testing, always launch so the app never steals focus or makes noise:
@@ -62,8 +61,8 @@ already in use stops them with an error instead of moving them somewhere unexpec
 
 ```bash
 pnpm run lint     # tsc --noEmit && eslint .
-pnpm run analyze  # classify + lint ALL file types (analyze:diff / :ci / :tag variants)
-pnpm run ci       # tsc + eslint + repo analysis (what CI runs)
+pnpm run analyze  # tag and size check of every file type (analyze:diff / :ci / :tag variants)
+pnpm run ci       # tsc + eslint + state format check + repo analysis
 ```
 
 A PostToolUse lint hook flags coding-standard violations on every edit, and a Stop hook gates changed
@@ -85,7 +84,7 @@ app extracts what it needs locally. See [Quick Start](../getting-started/quick-s
 | `apps/desktop/src/` | React renderer (`game/`, `stores/`, `views/`, `widgets/`, `hud/`). |
 | `apps/desktop/electron/` | Main process + preload ([Electron & IPC](../architecture/electron-ipc.md)). |
 | `packages/` | Workspace packages shared by renderer + electron, imported as `@rotp/*`: `game-core` (the WASM bridge), [asset-extraction](../architecture/asset-extraction.md), [navigation](../architecture/navigation.md), `game-data`, and more. |
-| `tests/` · `scripts/` · `docs/` | Test fixtures and the coverage registry (each package and app keeps its tests in its own `tests/` folder), build helpers, documentation. |
+| `tests/` · `tooling/` · `docs/` | Test fixtures and the coverage registry (each package and app keeps its tests in its own `tests/` folder), one package per repo tool under `tooling/<tool>/`, documentation. |
 
 The path alias `@app/*` points at `apps/desktop/src/`. See the
 [Architecture overview](../architecture/overview.md) for zones and dependency invariants.

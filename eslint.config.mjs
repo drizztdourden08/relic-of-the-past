@@ -119,7 +119,7 @@ const rotpExtension = {
         why: 'The HUD preset picker shows each preset by its game symbol (heart, diamond, key, coin), held as glyph data.',
       }],
       consoleGlobs: [
-        '**/bin/**', '**/scripts/**', '**/tooling/**', '**/*.test.{ts,tsx,js,mjs}',
+        '**/bin/**', '**/tooling/**', '**/*.test.{ts,tsx,js,mjs}',
         'core/wasm-build/*.mjs', 'apps/desktop/public/logos/**/*.mjs',
         'packages/design/src/saved-views/put-current-view.ts',
         'apps/sanctuary-api/dev-server.mjs', 'apps/sanctuary-api/src/**', 'apps/store-api/src/**',
@@ -142,6 +142,6 @@ const rotpExtension = {
 
 export default brockEslint({
   presets: ['react-app'],
-  ignores: ['**/.brock/**', 'core/zelda3/**', 'scripts/hooks/**'],
+  ignores: ['**/.brock/**', 'core/zelda3/**'],
   extensions: [rotpExtension],
 });

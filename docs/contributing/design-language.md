@@ -251,7 +251,7 @@ color from the neutral glass token instead of a one-off blue rgb.
 - [ ] `z-index` is a **token** (§3.5).
 - [ ] Selected = **gold**; the one CTA = **green**; destructive = **danger**; info = **blue (text only)**.
 - [ ] Widths come from the **dialog/panel/widget width tokens** (§5).
-- [ ] `pnpm run report` comes back with stylelint, structure and raw-html all clean.
+- [ ] `pnpm run lint` comes back with stylelint, structure and raw-html all clean.
 
 ---
 

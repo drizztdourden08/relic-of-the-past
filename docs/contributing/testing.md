@@ -9,7 +9,7 @@ Logic is covered by Vitest. Run the file you're working on, not the whole suite:
 pnpm exec vitest run apps/desktop/tests/<file>
 ```
 
-Tests live in the package they test, under `packages/<name>/tests/`. Tests that drive the app, or several packages at once, live under `apps/desktop/tests/`, and the tests of the worktree scripts under `scripts/parallel/tests/`. The save-state fixtures stay in `tests/fixtures/`.
+Tests live in the package they test, under `packages/<name>/tests/`. Tests that drive the app, or several packages at once, live under `apps/desktop/tests/`, and the tests of a repo tool under `tooling/<tool>/tests/`. The save-state fixtures stay in `tests/fixtures/`.
 
 Vitest tests are **throwaway by default**, the same rule as Playwright specs below: write it, run it, delete it once it's done its job. A test becomes permanent only when the maintainer asks for it, and a permanent one carries a `.keep.test.ts` suffix instead of `.test.ts`, no matter which `tests/` folder it lives in (Vitest tests aren't segregated into a scratch vs. permanent folder the way Playwright specs are, since they're organized by subject, not by lifespan). `.gitignore` enforces the default: `*.test.ts` under each of those `tests/` folders is ignored, `*.keep.test.ts` is excepted, so an un-kept test naturally never reaches a commit.
 
@@ -51,7 +51,7 @@ Launch test runs with `--no-focus --muted` so the window doesn't grab focus whil
 > relied on for their own testing, so an automated run must leave them exactly as it found
 > them.
 
-An `--instance=NAME` launch gets its own profile (created by `pnpm wt new NAME`,
+An `--instance=NAME` launch gets its own profile (created by `rotp worktree create NAME`,
 pre-loaded with a copy of the named save states) and identifies itself on screen and on the
 taskbar, so it is never mistaken for the real app. See
 [parallel-worktrees.md](parallel-worktrees.md).

@@ -7,7 +7,7 @@ type FixtureEntry = { id: string; name: string; timestamp: number };
 const restoreFixtureSaves = async (): Promise<void> => {
   const { existsSync, mkdirSync, readFileSync, writeFileSync, copyFileSync } = await import('node:fs');
   const { join } = await import('node:path');
-  const { gameDataPath } = await import('@rotp/workspace/parallel/paths');
+  const { gameDataPath } = await import('@rotp/test-profile/paths');
 
   const fixturesDir = join(REPO_ROOT, 'tests', 'fixtures', 'save-states');
   const manifestPath = join(fixturesDir, 'manifest.json');

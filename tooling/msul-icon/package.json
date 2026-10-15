@@ -1,0 +1,14 @@
+{
+  "name": "@rotp/msul-icon",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Draws the file type icon of the .msul music pack from the app logo",
+  "type": "module",
+  "bin": {
+    "rotp-msul-icon": "./make-msul-icon.mjs"
+  },
+  "dependencies": {
+    "sharp": "^0.34.5",
+    "png-to-ico": "^3.0.1"
+  }
+}

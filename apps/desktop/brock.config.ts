@@ -21,22 +21,22 @@ fi`,
 ];
 
 const releaseInputSteps: WorkflowStep[] = [
-  { name: 'Check the save state format is registered', shell: 'bash', run: 'node scripts/build/check-state-format.mjs' },
+  { name: 'Check the save state format is registered', shell: 'bash', run: 'node tooling/state-format/check-state-format.mjs' },
   {
     name: 'Fetch the private dataset',
     shell: 'bash',
     secrets: ['VAULT_TOKEN'],
     run: `git clone --depth 1 "https://x-access-token:$VAULT_TOKEN@github.com/drizztdourden08/rotp-vault.git" ../rotp-vault
-node scripts/vault/sync.mjs --force-pull`,
+node tooling/vault/sync.mjs --force-pull`,
   },
-  { name: 'Verify the dataset landed', shell: 'bash', run: 'node scripts/vault/check-dataset.mjs' },
+  { name: 'Verify the dataset landed', shell: 'bash', run: 'node tooling/vault/check-dataset.mjs' },
 ];
 
 const publishStateFormat: WorkflowStep = {
   name: 'Publish the save state format',
   platforms: ['windows'],
   shell: 'bash',
-  run: 'node scripts/build/check-state-format.mjs --emit upload',
+  run: 'node tooling/state-format/check-state-format.mjs --emit upload',
 };
 
 export default defineBrockConfig({
@@ -65,7 +65,7 @@ export default defineBrockConfig({
     nodePolyfills: { globals: { Buffer: true, process: true } },
   },
   packaging: {
-    afterPack: '../../scripts/build/after-pack.mjs',
+    afterPack: '../../tooling/after-pack/after-pack.mjs',
     fileAssociations: {
       msul: { role: 'Editor' },
       rsp: { role: 'Editor' },
@@ -78,7 +78,7 @@ export default defineBrockConfig({
     steps: {
       ci: {
         beforeBuild: wasmCoreSteps,
-        beforeTest: [{ name: 'Analyze every file type', run: 'node scripts/analyze/analyze.mjs --ci' }],
+        beforeTest: [{ name: 'Analyze every file type', run: 'node tooling/analyze/analyze.mjs --ci' }],
       },
       release: {
         beforePackage: [...wasmCoreSteps, ...releaseInputSteps],

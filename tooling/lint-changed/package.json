@@ -1,0 +1,13 @@
+{
+  "name": "@rotp/lint-changed",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Lints the one file an assistant just edited and feeds the violations back",
+  "type": "module",
+  "bin": {
+    "rotp-lint-changed": "./lint-changed.mjs"
+  },
+  "dependencies": {
+    "eslint": "catalog:"
+  }
+}

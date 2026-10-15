@@ -1,7 +1,7 @@
 /* @layer core-game-hooks @kind generated */
 /**
  * GENERATED: do not hand-edit. Regenerate with `npm run generate:gba-asset-index`
- * (scripts/generate-gba-asset-index.mjs), which reads
+ * (tooling/generate-gba-asset-index/generate-gba-asset-index.mjs), which reads
  * packages/asset-extraction/src/sources/gba-alttp/asset-manifest.ts and emits one
  * enum member per GBA ALttP supplement asset, in manifest order.
  */

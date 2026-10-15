@@ -2,7 +2,7 @@
 # Testing on a Linux VM & Android emulator
 
 Push a testing build of the app to a Linux VM and an Android emulator from a
-Windows dev box. The tooling lives in `scripts/deploy/`.
+Windows dev box. The tooling lives in `tooling/deploy/`.
 
 ## Commands
 
@@ -34,7 +34,7 @@ Put ROMs in `./test-roms` (gitignored; created automatically). On each deploy:
 5. Install the VirtualBox Guest Additions, then reboot.
 6. In the VM, run `setup-vm-runtime.sh`, then `vm-harden.sh`. This sets up sshd, DNS,
    the Host-Only static IP `192.168.56.50`, and auto-mounts `~/test-roms`.
-7. On Windows, copy `scripts/deploy/vm.example.json` to `vm.json` and set `vmName`,
+7. On Windows, copy `tooling/deploy/vm.example.json` to `vm.json` and set `vmName`,
    plus `host` (`192.168.56.50`), `user`, and `identityFile` (an SSH key authorized
    on the VM).
 

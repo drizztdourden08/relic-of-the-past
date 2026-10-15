@@ -7,7 +7,7 @@ import { hasDataset } from '../../dataset-guard';
 import { REPO_ROOT } from '../../repo-root';
 
 const ROOT = REPO_ROOT;
-const SCRIPT = join('scripts', 'generate-from-records.mjs');
+const SCRIPT = join('tooling', 'generate-from-records', 'generate-from-records.mjs');
 
 const GENERATED = [
   'packages/game-data/src/data/records/checks/events/event-bits.constants.ts',

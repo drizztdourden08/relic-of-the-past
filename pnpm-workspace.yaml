@@ -1,6 +1,7 @@
 packages:
   - 'apps/*'
   - 'packages/*'
+  - 'tooling/*'
 
 catalog:
   '@aws-sdk/client-s3': ^3.1139.0
@@ -26,7 +27,6 @@ catalog:
   '@types/react-dom': ^19.2.3
   '@vitejs/plugin-react': ^5.2.0
   arctic: ^3.7.0
-  cmake-js: ^8.0.0
   electron: ^42.2.0
   electron-builder: ^26.8.1
   electron-vite: ^5.0.0
@@ -37,7 +37,6 @@ catalog:
   jscpd: ^4.0.5
   knip: ^5.65.0
   markdownlint-cli2: ^0.22.1
-  node-addon-api: ^8.9.1
   pngjs: ^7.0.0
   rcedit: ^5.0.2
   react: ^19.2.6

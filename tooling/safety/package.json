@@ -1,0 +1,17 @@
+{
+  "name": "@rotp/safety",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Git snapshots of the protected folders before a destructive step, with retention and restore",
+  "type": "module",
+  "bin": {
+    "rotp-safety": "./cli.mjs"
+  },
+  "exports": {
+    "./snapshot": "./snapshot.mjs",
+    "./retention": "./retention.mjs"
+  },
+  "dependencies": {
+    "@rotp/tool-paths": "workspace:*"
+  }
+}

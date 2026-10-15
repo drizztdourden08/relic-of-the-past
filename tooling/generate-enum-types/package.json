@@ -1,0 +1,16 @@
+{
+  "name": "@rotp/generate-enum-types",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Writes the enumeration union types from the enumeration records",
+  "type": "module",
+  "bin": {
+    "rotp-generate-enum-types": "./generate-enum-types-cli.mjs"
+  },
+  "dependencies": {
+    "@rotp/game-data": "workspace:*"
+  },
+  "devDependencies": {
+    "vitest": "catalog:"
+  }
+}

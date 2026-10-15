@@ -1,9 +1,9 @@
 <!-- @layer docs @kind doc -->
 # File tagging & whole-project analysis
 
-Every file in the repo is tagged and analyzed by one harness: **`pnpm run analyze`**
-(`scripts/analyze/analyze.mjs`). This is the single source of truth for project
-health across **all** languages, including the ones eslint cannot read.
+Every file in the repo is tagged and checked for size by one harness: **`pnpm run analyze`**
+(`tooling/analyze/analyze.mjs`). It reads every language, including the ones eslint cannot read.
+Linting itself lives in `pnpm run lint`, `pnpm run lint:md`, `brock prose` and `brock gate`.
 
 ## Tags
 
@@ -24,47 +24,46 @@ Each file carries two tags:
    ```
 
    (CSS/C use `/* */`, Markdown `<!-- -->`, shell/yaml `#`.)
-2. **Manifest:** `scripts/analyze/file-tags.jsonc`, for files that *can't* hold a
+2. **Manifest:** `tooling/analyze/file-tags.jsonc`, for files that *can't* hold a
    comment (JSON, binaries, asm) and to bulk-tag trees we must not edit (vendored
    `core/zelda3/**`). Manifest entries are authoritative.
 
 Add/refresh headers automatically: **`pnpm run analyze:tag`** (idempotent, so it skips
 files already tagged). New comment-less or vendored files get a manifest glob.
 
-## Per-kind policy (`scripts/analyze/policy.mjs`)
+## Per-kind policy (`tooling/analyze/policy.mjs`)
 
 Baseline cap is **200 code lines**; documented variances:
 
-| kind | cap | linters |
-|---|---|---|
-| logic / component / hook / types / constants | 200 | eslint + tsc |
-| native *(our C: game-hooks, wasm-build)* | 200 | clang-format* |
-| barrel | 80 | eslint + tsc |
-| style (CSS) | 300 | stylelint |
-| test | 300 | eslint + tsc |
-| **data / generated / asset / doc / config** | **exempt** | (tsc for data) |
+| kind | cap |
+|---|---|
+| logic / component / hook / types / constants | 200 |
+| native *(our C: game-hooks, wasm-build)* | 200 |
+| barrel | 80 |
+| style (CSS) | 300 |
+| test | 300 |
+| **data / generated / asset / doc / config** | **exempt** |
 
 *Data is the deliberate exception:* large tables are organized by **category under
-`data/` folders** (or named `*.data.ts`) instead of being held to the logic cap. The
-details are in eslint's data override and the P2 reorg.
+`data/` folders** (or named `*.data.ts`) instead of being held to the logic cap.
 
 **Vendored** `core/zelda3/**` is analyzed but its findings are **hints (info)**,
 never gating, because it's an upstream project we don't fully own.
 
-## Tools (Adapter pattern in `scripts/analyze/adapters/`)
+## Checks (Adapter pattern in `tooling/analyze/adapters/`)
 
-`line-policy` (universal, all languages) · `eslint` (TS/JS) · `tsc` · `stylelint`
-(CSS) · `markdownlint` (docs, warn-only) · `clang-format` (our C, *enabled once a
-`.clang-format` exists*). Nothing breaks if a tool is not installed.
+`line-policy` (the cap per kind, all languages) and `dead-css-var` (a CSS variable
+that is used but never defined). Type checks, eslint, stylelint, markdownlint, prose and
+clang-format run through their own commands and are not part of this harness.
 
 ## Commands
 
 | command | purpose |
 |---|---|
-| `pnpm run analyze` | full report over every file (+ `report.json`) |
+| `pnpm run analyze` | full report over every file (+ `tooling/analyze/report.json`) |
 | `pnpm run analyze:diff` | only files changed vs HEAD |
 | `pnpm run analyze:ci` | diff + **exit 1 on gating violations** (the gate) |
 | `pnpm run analyze:tag` | insert missing `@layer/@kind` headers |
 
-The **Stop hook** runs `analyze:ci` on changed files after every turn, so size /
-quality regressions are caught on exactly the files you touched.
+The **Stop hook** runs `analyze:ci` on changed files after every turn, so size
+regressions are caught on exactly the files you touched.

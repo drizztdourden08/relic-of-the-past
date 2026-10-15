@@ -1,0 +1,13 @@
+{
+  "name": "@rotp/generate-from-records",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Writes the event bit map, the screen, connection and check tag types and the C tables from the dataset records",
+  "type": "module",
+  "bin": {
+    "rotp-generate-from-records": "./generate-from-records.mjs"
+  },
+  "dependencies": {
+    "vite": "catalog:"
+  }
+}
