@@ -1,6 +1,7 @@
-/* @layer renderer-components @kind component */
-import { Box, Image, Status } from '@drizztdourden08/tessera/primitives';
+/* @layer renderer-components @kind logic */
+import { createElement } from 'react';
 import type { SettingsSectionRow } from '@drizztdourden08/tessera/composites';
+import { RequiredInputState } from './RequiredInputState';
 import type { RequiredInput } from '../controls-settings/controls-settings.type';
 
 const requiredInputRows = (inputs: readonly RequiredInput[]): SettingsSectionRow[] =>
@@ -9,15 +10,7 @@ const requiredInputRows = (inputs: readonly RequiredInput[]): SettingsSectionRow
     title: input.label,
     noDescription: true,
     hint: input.connected ? `${input.label} is connected.` : `${input.label} is not connected.`,
-    input: {
-      kind: 'custom',
-      control: (
-        <Box className="controls-options__input">
-          <Image src={input.iconSrc} alt="" className="controls-options__icon" />
-          <Status tone={input.connected ? 'success' : 'danger'} dot>{input.connected ? 'Connected' : 'Not connected'}</Status>
-        </Box>
-      ),
-    },
+    input: { kind: 'custom', control: createElement(RequiredInputState, { input }) },
   }));
 
 export { requiredInputRows };

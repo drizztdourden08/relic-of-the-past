@@ -4,7 +4,7 @@ import type { CoreVerb, InputProfile, ControllerDeviceGroup } from '@rotp/input-
 import type { HudLayout } from '@rotp/hud';
 import type { ButtonIcon, CoreBindings, InputBinding, ModernSlot, SlotAssignment, SnesButton } from '@rotp/game-data';
 import type { FunctionAction, FunctionMapping } from '@rotp/features';
-import type { AbsentAssignment } from '../controls-settings/controls-settings.type';
+import type { AbsentAssignment, RequiredInput } from '../controls-settings/controls-settings.type';
 import type { useControlsSettings } from '../controls-settings';
 import type { DeviceAssignInfo } from './DeviceCard.type';
 
@@ -78,6 +78,10 @@ interface SidebarProfileButtonProps {
   profile: InputProfile;
   active: boolean;
   onSelect: (profile: InputProfile) => void;
+}
+
+interface RequiredInputStateProps {
+  input: RequiredInput;
 }
 
 interface SchemeLayoutRowProps {
@@ -155,5 +159,5 @@ export type {
   CoreBindingsGroupProps, CoreVerbGroup,
   CoreVerbRowProps, CtrlProps, DeviceDragInfo, FunctionBindingRowProps,
   InputProfileItemProps, InputProfileListProps,
-  SchemeLayoutRowProps, SidebarProfileButtonProps, SlotRowProps, SnesBindingRowProps, UseProfileEditingArgs,
+  RequiredInputStateProps, SchemeLayoutRowProps, SidebarProfileButtonProps, SlotRowProps, SnesBindingRowProps, UseProfileEditingArgs,
 };
