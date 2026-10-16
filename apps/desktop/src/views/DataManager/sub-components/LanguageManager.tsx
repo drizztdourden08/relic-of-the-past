@@ -1,6 +1,7 @@
 /* @layer renderer-components @kind component */
 import { useCallback, useMemo } from 'react';
 import type { LanguageSetSummary } from '@rotp/languages';
+import { StudioWell } from '@app/compounds/StudioFrame';
 import { ImportForm } from './ImportForm';
 import { LANGUAGE_NAMES } from './language-names.constants';
 import { useLanguageCreation } from './language-manager/useLanguageCreation';
@@ -13,12 +14,11 @@ import { SetCreateForm } from '../../../language-editor/sub-components/SetCreate
 import { useInstalledKind } from '@app/hooks/useInstalledKind';
 import { InstalledOriginBar, useConfirmUninstall } from '@app/views/InstalledOriginBar';
 import { LanguageSetList } from './LanguageSetList';
-import { Text, EmptyState } from '@drizztdourden08/tessera/primitives';
-import { ListDetailLayout } from '@drizztdourden08/tessera/composites';
+import { Text } from '@drizztdourden08/tessera/primitives';
 
 const LanguageManager = (props: LanguageManagerProps) => {
   const { onDeleteConfirm } = props;
-  const { languages, selected, setSelected, refresh, refreshThenSelect } = useLanguageSets();
+  const { languages, loading, selected, setSelected, refresh, refreshThenSelect } = useLanguageSets();
   const { handleUrlImport, handleFileImport } = useLanguageExtraction({ refresh, setSelected });
   const { busy, handleCreate, handleDuplicate } = useLanguageCreation({ refresh, setSelected });
   const { pack: installed, packFor } = useInstalledKind('language', selected);
@@ -36,6 +36,20 @@ const LanguageManager = (props: LanguageManagerProps) => {
 
   const list = (
     <>
+      {uninstallError !== null && <Text className="import-form__status import-form__status--error">{uninstallError}</Text>}
+      <StudioWell>
+        <LanguageSetList
+          sets={languages}
+          loading={loading}
+          selected={selected}
+          labelOf={setLabel}
+          isInstalled={isInstalled}
+          onSelect={setSelected}
+          onDelete={handleDelete}
+        />
+      </StudioWell>
+
+      <Text variant="overline" tone="muted">Extract from a ROM</Text>
       <ImportForm
         kind="language"
         placeholder="Paste ROM download URL..."
@@ -46,21 +60,12 @@ const LanguageManager = (props: LanguageManagerProps) => {
         onFileImport={handleFileImport}
       />
 
+      <Text variant="overline" tone="muted">New set</Text>
       <SetCreateForm
         sets={ownSets}
         busy={busy}
         onCreate={handleCreate}
         onDuplicate={handleDuplicate}
-      />
-
-      {uninstallError !== null && <Text className="import-form__status import-form__status--error">{uninstallError}</Text>}
-      <LanguageSetList
-        sets={languages}
-        selected={selected}
-        labelOf={setLabel}
-        isInstalled={isInstalled}
-        onSelect={setSelected}
-        onDelete={handleDelete}
       />
     </>
   );
@@ -68,9 +73,8 @@ const LanguageManager = (props: LanguageManagerProps) => {
   const origin = installed === null ? null : (
     <InstalledOriginBar pack={installed} onDuplicated={refreshThenSelect} onUpdateInstalled={refreshThenSelect} onUninstalled={handleUninstalled} />
   );
-  const detail = selected ? <LanguageEditor id={selected} readOnly={installed !== null} origin={origin} /> : null;
 
-  return <ListDetailLayout list={list} detail={detail} emptyDetail={<EmptyState message="Select a language set to edit" />} />;
+  return <LanguageEditor id={selected} readOnly={installed !== null} origin={origin} list={list} />;
 };
 
 export { LanguageManager };

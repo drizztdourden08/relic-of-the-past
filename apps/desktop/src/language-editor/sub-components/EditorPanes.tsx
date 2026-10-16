@@ -1,5 +1,4 @@
 /* @layer renderer-components @kind component */
-import { Box } from '@drizztdourden08/tessera/primitives';
 import { DialogueTab } from './DialogueTab';
 import { TextPane } from './TextPane';
 import { VariablesPane } from './VariablesPane';
@@ -13,24 +12,18 @@ const EditorPanes = (props: EditorPanesProps) => {
   }
   if (tab === 'variables') {
     return (
-      <Box className="language-editor__pane">
-        <VariablesPane
-          variables={editor.variables}
-          tab={variablesTab}
-          readOnly={readOnly}
-          setVariableValue={editor.setVariableValue}
-          upsertGlossaryTerm={editor.upsertGlossaryTerm}
-          removeGlossaryTerm={editor.removeGlossaryTerm}
-        />
-      </Box>
+      <VariablesPane
+        variables={editor.variables}
+        tab={variablesTab}
+        readOnly={readOnly}
+        setVariableValue={editor.setVariableValue}
+        upsertGlossaryTerm={editor.upsertGlossaryTerm}
+        removeGlossaryTerm={editor.removeGlossaryTerm}
+      />
     );
   }
   if (tab === 'text') {
-    return (
-      <Box className="language-editor__pane">
-        <TextPane text={text} readOnly={readOnly} />
-      </Box>
-    );
+    return <TextPane text={text} readOnly={readOnly} />;
   }
   return null;
 };

@@ -1,37 +1,17 @@
 /* @layer renderer-components @kind component */
-import { useCallback } from 'react';
-import { Box, Text, TextInput, EmptyState, SectionHeader, SegmentedControl } from '@drizztdourden08/tessera/primitives';
+import { Box, Text, EmptyState, SectionHeader } from '@drizztdourden08/tessera/primitives';
 import { DialogueEntryRow } from './DialogueEntryRow';
-import { FILTER_OPTIONS } from './DialogueTab.constants';
-import type { ChangeEvent } from 'react';
-import type { DialogueTabProps, EntryFilter } from './DialogueTab.type';
+import type { DialogueTabProps } from './DialogueTab.type';
 import './DialogueTab.css';
 
 const DialogueTab = (props: DialogueTabProps) => {
-  const { entries, total, query, filter, onQueryChange, onFilterChange, ...rowProps } = props;
-
-  const handleQuery = useCallback((event: ChangeEvent<HTMLInputElement>) => {
-    onQueryChange(event.currentTarget.value);
-  }, [onQueryChange]);
-
-  const handleFilter = useCallback((value: string) => {
-    onFilterChange(value as EntryFilter);
-  }, [onFilterChange]);
+  const { entries, total, query, filter, ...rowProps } = props;
 
   const searching = query.trim().length > 0 || filter !== 'all';
-  const search = (
-    <TextInput value={query} onChange={handleQuery} placeholder="Search all text..." />
-  );
 
   return (
     <Box className="dialogue-tab">
-      <SectionHeader
-        title={searching ? `${entries.length} of ${total} lines` : `${total} lines`}
-        action={search}
-      />
-      <Box className="dialogue-tab__filters">
-        <SegmentedControl options={FILTER_OPTIONS} value={filter} onChange={handleFilter} />
-      </Box>
+      <SectionHeader title={searching ? `${entries.length} of ${total} lines` : `${total} lines`} />
 
       <Box className="dialogue-tab__scroll">
         {entries.length === 0 && (

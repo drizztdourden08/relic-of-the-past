@@ -416,23 +416,11 @@ Every mutation is immutable and marks the set dirty. The structure mode is part 
 
 ## apps/desktop/src/language-editor/LanguageEditor.css
 
-The editor scrolls only on the inside; the header and tabs stay put. Selection is opted back in for the pane and every descendant. The app wide reset resolves `none` down the whole tree, and an element that cannot be selected cannot start a selection either, so a press outside the typing surface left the old highlight painted. Naming the descendants too is what makes it stick, the same fix as the log panel.
+The work surface of the frame scrolls, so the top bar, the toolbar and both side panels stay put. Selection is opted back in for the pane and every descendant. The app wide reset resolves `none` down the whole tree, and an element that cannot be selected cannot start a selection either, so a press outside the typing surface left the old highlight painted. Naming the descendants too is what makes it stick, the same fix as the log panel.
 
 ## apps/desktop/src/language-editor/LanguageEditor.tsx
 
-The translation editor: one language set, edited a line at a time. The glossary and the menu name table are one Variables tab on purpose: as two lists a translator had to work out which one a piece of text lived in. `id` null renders the empty state; `readOnly` marks an installed set, which opens and previews and changes nothing; `origin` is the origin bar of an installed set, shown above its header. `LOCKED` marks the two tabs whose surfaces are built but not yet connected to the game.
-
-## apps/desktop/src/language-editor/sub-components/BundleHeader.css
-
-Name and origin come first, the countable facts sit in a quiet mono row, and the save state comes last so it reads as status.
-
-## apps/desktop/src/language-editor/sub-components/BundleHeader.tsx
-
-The identity card for the set being edited: its name, its origin, its size, and whether the last edit reached disk.
-A translator can have a set from a ROM and a copy open in one session, so the name and origin stay on screen.
-`warnings` counts entries with a validation issue across the whole set.
-An installed set is never written, so its save state reads `Read only`.
-`onExport` saves the set as a `.rlang` file, and `exportStatus` says what the last export did.
+The translation editor: one language set, edited a line at a time. The glossary and the menu name table are one Variables tab on purpose: as two lists a translator had to work out which one a piece of text lived in. `id` null renders the empty state; `readOnly` marks an installed set, which opens and previews and changes nothing; `origin` is the origin bar of an installed set, shown as the banner under the top bar. `list` is the left panel: the studio sits inside `StudioFrame`, so the list of sets and the editor share one state and the top bar can show the open set's save state. `LOCKED` marks the two tabs whose surfaces are built but not yet connected to the game.
 
 ## apps/desktop/src/language-editor/sub-components/code-params.ts
 
@@ -441,9 +429,21 @@ What the language can encode comes from `encodableParams`.
 The catalog's documented range narrows it, since the raw encoder accepts all 256 bytes.
 `null` means the code takes no parameter, so the insert is one click.
 
+## apps/desktop/src/language-editor/behavior/studio-frame/useStudioActions.ts
+
+Save and Export are separate groups because they end in different places: Save keeps the set in this app, Export makes a file. Save is off for an installed set, which is never written, and while nothing changed. Export saves first (`useSetExport`), so it is off only while a save or an export runs.
+
+## apps/desktop/src/language-editor/behavior/studio-frame/useStudioToolbar.ts
+
+The Find and Show groups exist only on the Dialogue section, because the other sections have no list to search or filter.
+
+## apps/desktop/src/language-editor/sub-components/studio-frame/EditorBody.tsx
+
+Four states, in order: no set picked, loading, a read error, and the editor. An empty state shows only when nothing is picked or the read failed, never while the set loads.
+
 ## apps/desktop/src/language-editor/sub-components/DialogueTab.css
 
-Only the card list scrolls, so the search box and filters stay in place.
+The frame's surface scrolls, so the list takes its natural height. The search box and the filter sit in the frame toolbar, not here.
 The list is the query container for its rows.
 Every row has the same fixed columns, so whether there is room for the line's words depends on the list's width, as `entry-row.css` reads it.
 

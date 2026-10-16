@@ -32,10 +32,11 @@ const useDialogueView = (params: DialogueViewParams) => {
 
   return {
     dialogue,
+    find: { query, filter, setQuery, setFilter },
     tabProps: {
       entries, total: dialogue.length, issues, query, filter, cfg, glossary: terms, variables, variableIndex,
       metrics, sheet, layout, draft, view, structureMode: set?.structure ?? 'continuous',
-      onQueryChange: setQuery, onFilterChange: setFilter, onOpen: open, onClose: close, onModeChange: setMode,
+      onOpen: open, onClose: close, onModeChange: setMode,
     },
   };
 };

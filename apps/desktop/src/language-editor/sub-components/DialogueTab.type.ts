@@ -24,8 +24,6 @@ type DialogueTabProps = {
   view: EntryViewState;
   structureMode: SetStructure;
   readOnly: boolean;
-  onQueryChange: (query: string) => void;
-  onFilterChange: (filter: EntryFilter) => void;
   onOpen: (id: number) => void;
   onClose: (id: number) => void;
   onModeChange: (id: number, mode: EntryViewMode) => void;

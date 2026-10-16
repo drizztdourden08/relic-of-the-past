@@ -2,20 +2,11 @@
 .dialogue-tab {
   display: flex;
   flex-direction: column;
-  min-height: 0;
-  flex: 1;
   gap: var(--space-2xs);
-}
-
-.dialogue-tab__filters {
-  padding: 0 var(--space-2xs) var(--space-2xs);
 }
 
 .dialogue-tab__scroll {
   container: entry-list / inline-size;
-  flex: 1;
-  min-height: 0;
-  overflow: auto;
   display: flex;
   flex-direction: column;
   gap: var(--space-xs);

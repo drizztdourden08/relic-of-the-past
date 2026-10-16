@@ -1,7 +1,10 @@
 /* @layer renderer-components @kind types */
-import type { BundleHeaderProps } from './BundleHeader.type';
-
-type SaveStatusBadgeProps = Pick<BundleHeaderProps, 'saveError' | 'readOnly' | 'saving' | 'dirty'>;
+type SaveStatusBadgeProps = {
+  saveError: string | null;
+  readOnly: boolean;
+  saving: boolean;
+  dirty: boolean;
+};
 
 type SaveStatus = { tone: 'danger' | 'neutral' | 'warning' | 'success'; text: string };
 
