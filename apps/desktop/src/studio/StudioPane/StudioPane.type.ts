@@ -7,6 +7,7 @@ interface StudioPaneProps {
   actions: readonly StudioActionGroup[];
   status?: ReactNode;
   banner?: ReactNode;
+  className?: string;
   children: ReactNode;
 }
 

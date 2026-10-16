@@ -34,7 +34,7 @@ const EntryPanel = (props: EntryPanelProps) => {
         </Box>
       </Box>
 
-      <EntryMetaPanel rows={metaRows} issues={issues} />
+      {metaRows !== null && <EntryMetaPanel rows={metaRows} issues={issues} />}
 
       <Box className="entry-panel__view">{children}</Box>
     </Card>

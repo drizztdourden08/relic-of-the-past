@@ -11,6 +11,8 @@ The gap on `.data-manager__body` leaves room for the round toggle of the side na
 
 ## apps/desktop/src/views/DataManager/sub-components/LanguageManager.tsx
 
+The Language Studio: a `ListDetailLayout` like every other list screen, with ROM extraction, the new set form and the set list on the left (kept under `language-studio.list`) and the open set's editor as the detail. The editor is keyed by the set, so switching sets flushes the old one's pending write and starts the new one with nothing selected.
+
 Creating or duplicating a set rebakes the asset blobs, so `busy` locks the list while one runs.
 
 Deleting a set installed from the Hookshop uninstalls it the way the Hookshop tab does, so its install record goes too.

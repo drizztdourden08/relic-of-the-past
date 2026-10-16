@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind hook */
-import { useCallback, useMemo, useRef } from 'react';
+import { useCallback, useMemo, useRef, useState } from 'react';
 import { useEntryDraft } from './useEntryDraft';
 import { useEntryView } from '@rotp/design/packs';
 import type { DialogueEntry, Token } from '@rotp/languages';
@@ -13,16 +13,19 @@ const useEntryOpen = (
 ): EntryOpenState => {
   const view = useEntryView();
   const draft = useEntryDraft(onCommit);
+  const [selected, setSelected] = useState<number | null>(null);
 
   const live = useRef({ entries, view, draft });
   live.current = { entries, view, draft };
 
   const open = useCallback((id: number) => {
     live.current.view.open(id);
+    setSelected(id);
   }, []);
 
   const close = useCallback((id: number) => {
     live.current.view.close(id);
+    setSelected((current) => (current === id ? null : current));
   }, []);
 
   const setMode = useCallback((id: number, mode: EntryViewMode) => {
@@ -32,6 +35,7 @@ const useEntryOpen = (
       if (entry !== undefined) current.open(entry);
     }
     shown.setMode(id, mode);
+    setSelected(id);
   }, []);
 
   const commit = useCallback((id: number) => {
@@ -50,8 +54,8 @@ const useEntryOpen = (
   );
 
   return useMemo(
-    () => ({ view, draft: wrapped, open, close, setMode }),
-    [view, wrapped, open, close, setMode],
+    () => ({ view, draft: wrapped, selected, open, close, setMode }),
+    [view, wrapped, selected, open, close, setMode],
   );
 };
 

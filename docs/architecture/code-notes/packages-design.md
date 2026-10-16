@@ -239,7 +239,7 @@ A set holds a few hundred entries, so the list is for finding one. Every cell is
 
 ## packages/design/src/packs/language/compounds/entry/EntryListItem.tsx
 
-Memoised: the list holds a few hundred items and re-renders on every mode or draft change. A closed row's props are stable (models come from the shared layout cache, handlers are identity fixed), so only the row whose facts changed renders again. Measurements come from the shared layout cache, and only for rows near the viewport.
+Memoised: the list holds a few hundred items and re-renders on every mode or draft change. A closed row's props are stable (models come from the shared layout cache, handlers are identity fixed), so only the row whose facts changed renders again. Measurements come from the shared layout cache, and only for rows near the viewport. `showFacts={false}` leaves the facts out of an open entry, for a host that shows them beside the list with `EntryFacts`, as the app's Language Studio does in its properties panel.
 
 ## packages/design/src/packs/language/compounds/entry/EntryMetaPanel.css
 
@@ -247,7 +247,7 @@ Auto fill columns, never a fixed count, because the panel sits in a pane the use
 
 ## packages/design/src/packs/language/compounds/entry/EntryPanel.tsx
 
-The open entry keeps the same frame whatever view is active: the metadata is true of the entry, not of a way of looking at it. The panel is marked at its left edge so an open entry never looks like the rows around it, and the view switch sits at the far end so it lands in one place on every panel.
+The open entry keeps the same frame whatever view is active: the metadata is true of the entry, not of a way of looking at it. `metaRows` null drops the metadata from the frame when the host shows it elsewhere. The panel is marked at its left edge so an open entry never looks like the rows around it, and the view switch sits at the far end so it lands in one place on every panel.
 
 ## packages/design/src/packs/language/compounds/entry/facts-for-entry.ts
 

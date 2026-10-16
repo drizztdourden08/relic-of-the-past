@@ -33,7 +33,7 @@ Live per entry validation, incremental: edits are immutable, so a cache keyed by
 
 ## apps/desktop/src/language-editor/behavior/useEntryOpen.ts
 
-The one place that holds both `useEntryView` (what is open) and `useEntryDraft` (what is unsaved). Entering the editor starts a draft if none exists; leaving it keeps the draft. Commit and cancel drop the entry back to reading. The handlers close over a live ref, so their identity is fixed and the list can memoize its few hundred rows.
+The one place that holds both `useEntryView` (what is open) and `useEntryDraft` (what is unsaved). Entering the editor starts a draft if none exists; leaving it keeps the draft. Commit and cancel drop the entry back to reading. The handlers close over a live ref, so their identity is fixed and the list can memoize its few hundred rows. `selected` is the line the properties panel describes: the last one opened or switched to another view, cleared when that line closes.
 
 ## apps/desktop/src/language-editor/behavior/useLanguageEditor.ts
 
@@ -416,11 +416,11 @@ Every mutation is immutable and marks the set dirty. The structure mode is part 
 
 ## apps/desktop/src/language-editor/LanguageEditor.css
 
-The work surface of the frame scrolls, so the top bar, the toolbar and both side panels stay put. Selection is opted back in for the pane and every descendant. The app wide reset resolves `none` down the whole tree, and an element that cannot be selected cannot start a selection either, so a press outside the typing surface left the old highlight painted. Naming the descendants too is what makes it stick, the same fix as the log panel.
+The editor's body is the one scroll, so the action row, the toolbar and the properties panel stay put. Selection is opted back in for the work area and every descendant. The app wide reset resolves `none` down the whole tree, and an element that cannot be selected cannot start a selection either, so a press outside the typing surface left the old highlight painted. Naming the descendants too is what makes it stick, the same fix as the log panel.
 
 ## apps/desktop/src/language-editor/LanguageEditor.tsx
 
-The translation editor: one language set, edited a line at a time. The glossary and the menu name table are one Variables tab on purpose: as two lists a translator had to work out which one a piece of text lived in. `id` null renders the empty state; `readOnly` marks an installed set, which opens and previews and changes nothing; `origin` is the origin bar of an installed set, shown as the banner under the top bar. `list` is the start panel: the studio sits inside Tessera's `StudioLayout` (panel widths kept under `language-studio.sets` and `language-studio.properties`), so the list of sets and the editor share one state and the top bar can show the open set's save state. `LOCKED` marks the two tabs whose surfaces are built but not yet connected to the game.
+The translation editor: one language set, edited a line at a time. The glossary and the menu name table are one Variables tab on purpose: as two lists a translator had to work out which one a piece of text lived in. It is the detail of the set list, built from the shared studio parts: one action row (Save, Export) with the save state at its end, the editor with its section toolbar (the tabs, and on Dialogue the search and the filter), and the properties panel, kept under `language-studio.properties`. `readOnly` marks an installed set, which opens and previews and changes nothing; `origin` is the origin bar of an installed set, shown above the action row. A spinner shows while the set loads and an empty state only when the read failed. The properties panel shows the selected line on Dialogue (its facts and its translator note) above the set's own facts; the facts are not repeated inside the open line, so an open line costs only its text. `LOCKED` marks the two tabs whose surfaces are built but not yet connected to the game.
 
 ## apps/desktop/src/language-editor/sub-components/code-params.ts
 
@@ -433,13 +433,9 @@ The catalog's documented range narrows it, since the raw encoder accepts all 256
 
 Save and Export are separate groups because they end in different places: Save keeps the set in this app, Export makes a file. Save is off for an installed set, which is never written, and while nothing changed. Export saves first (`useSetExport`), so it is off only while a save or an export runs.
 
-## apps/desktop/src/language-editor/behavior/studio-frame/useStudioToolbar.ts
+## apps/desktop/src/language-editor/sub-components/studio-frame/SectionToolbar.tsx
 
-The Find and Show groups exist only on the Dialogue section, because the other sections have no list to search or filter.
-
-## apps/desktop/src/language-editor/sub-components/studio-frame/EditorBody.tsx
-
-Four states, in order: no set picked, loading, a read error, and the editor. An empty state shows only when nothing is picked or the read failed, never while the set loads.
+The search and the filter exist only on the Dialogue section, because the other sections have no list to search or filter.
 
 ## apps/desktop/src/language-editor/sub-components/DialogueTab.css
 

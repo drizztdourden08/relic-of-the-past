@@ -1,20 +1,18 @@
 /* @layer renderer-components @kind component */
 import { memo, useCallback, useMemo } from 'react';
-import { contextFor } from '@rotp/game-data';
 import { EntryCardCollapsed } from './EntryCardCollapsed';
 import { EntryPanel } from './EntryPanel';
 import { ReadView } from './ReadView';
-import { entryMetaRows } from './entry-meta-model';
 import { issueWords } from './issue-words';
 import { entryRowModel } from './entry-row-model';
 import { proseOf } from './entry-prose';
-import { factsForEntry } from './facts-for-entry';
+import { metaRowsForEntry } from './meta-rows-for-entry';
 import type { EntryViewMode } from '../../behavior/language-behavior.type';
 import type { EntryListItemProps } from './entry.type';
 
 const EntryListItem = memo((props: EntryListItemProps) => {
   const {
-    entry, layout, variables, issues, open, mode, modes,
+    entry, layout, variables, issues, open, mode, modes, showFacts = true,
     editor, preview, onOpen, onClose, onModeChange,
   } = props;
 
@@ -32,20 +30,11 @@ const EntryListItem = memo((props: EntryListItemProps) => {
     return <EntryCardCollapsed model={model} rows={layout.rows} onOpen={onOpen} />;
   }
 
-  const metaRows = entryMetaRows({
-    tokens: entry.tokens,
-    facts: factsForEntry(entry.id),
-    context: contextFor(entry.id) ?? null,
-    blocks: layout.blocks,
-    lineCount: layout.lines.length,
-    variables,
-  });
-
   return (
     <EntryPanel
       idLabel={model.idLabel}
       who={model.who}
-      metaRows={metaRows}
+      metaRows={showFacts ? metaRowsForEntry(entry, layout, variables) : null}
       issues={(issues ?? []).map(issueWords)}
       mode={mode}
       modes={modes}

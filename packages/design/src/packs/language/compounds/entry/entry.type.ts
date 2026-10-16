@@ -78,6 +78,7 @@ type EntryListItemProps = {
   open: boolean;
   mode: EntryViewMode;
   modes?: readonly EntryViewMode[];
+  showFacts?: boolean;
   editor?: ReactNode;
   preview?: ReactNode;
   onOpen: (id: number) => void;
@@ -93,7 +94,7 @@ type EntryMetaPanelProps = {
 type EntryPanelProps = {
   idLabel: string;
   who: string;
-  metaRows: MetaRow[];
+  metaRows: MetaRow[] | null;
   issues: string[];
   mode: EntryViewMode;
   modes?: readonly EntryViewMode[];
@@ -113,7 +114,14 @@ type ViewModeSwitchProps = {
   onChange: (mode: EntryViewMode) => void;
 };
 
+type EntryFactsProps = {
+  entry: DialogueEntry;
+  layout: EntryLayout;
+  variables: VariableIndex;
+  issues?: EntryIssue[];
+};
+
 export type {
-  EntryCardCollapsedProps, EntryListItemProps, EntryMetaPanelProps, EntryPanelProps, EntryRowModel, EntryRowParams, EntryTally, FitChip, MetaParams,
+  EntryCardCollapsedProps, EntryFactsProps, EntryListItemProps, EntryMetaPanelProps, EntryPanelProps, EntryRowModel, EntryRowParams, EntryTally, FitChip, MetaParams,
   MetaRow, ReadViewProps, TriggerFacts, ViewModeSwitchProps,
 };
