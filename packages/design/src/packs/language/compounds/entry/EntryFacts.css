@@ -1,0 +1,20 @@
+/* @layer renderer-components @kind style */
+
+.entry-facts__head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: var(--space-xs);
+  min-width: 0;
+}
+
+.entry-facts__id {
+  color: var(--c-primary);
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+}
+
+.entry-facts__who {
+  color: var(--c-text);
+  font-weight: var(--weight-medium);
+}

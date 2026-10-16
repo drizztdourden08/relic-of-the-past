@@ -1,0 +1,5 @@
+/* @layer renderer-components @kind style */
+.studio-search {
+  flex: 0 1 calc(18 * var(--text-base));
+  min-inline-size: calc(10 * var(--text-base));
+}

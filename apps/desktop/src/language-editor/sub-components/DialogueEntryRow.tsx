@@ -28,6 +28,7 @@ const DialogueEntryRow = (props: DialogueEntryRowProps) => {
       issues={issues[entry.id]}
       open={open}
       mode={mode}
+      showFacts={false}
       editor={editing ? (
         <EntryEditor
           tokens={drafted}

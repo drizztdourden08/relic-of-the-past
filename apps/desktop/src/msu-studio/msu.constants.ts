@@ -18,9 +18,5 @@ const AMBIENT_ROLE_HINTS: Record<AmbientRole, string> = {
 const SOUND_FILTER_HINT = 'Matches the id, its name, or the game function that raises it.';
 const SOUND_FILTER_PLACEHOLDER = '0x0C, explosion, AncillaAdd_Bomb...';
 
-const UNREACHABLE_DESCRIPTION = (count: number): string =>
-  `${count} ids the channel can carry that nothing in the game raises. A pack can still put a sound`
-  + ' on one, but it will never play.';
-
 export {
-  SOUND_FILTER_HINT, SOUND_FILTER_PLACEHOLDER, UNREACHABLE_DESCRIPTION, AMBIENT_ROLE_HINTS, AMBIENT_ROLE_LABELS, AUDIO_ACCEPT, AUDIO_ACCEPT_HINT };
+  SOUND_FILTER_HINT, SOUND_FILTER_PLACEHOLDER, AMBIENT_ROLE_HINTS, AMBIENT_ROLE_LABELS, AUDIO_ACCEPT, AUDIO_ACCEPT_HINT };

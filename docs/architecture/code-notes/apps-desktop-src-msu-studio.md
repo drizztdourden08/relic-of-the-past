@@ -51,7 +51,7 @@ A manifest is written whole, so every function here touches one channel and copi
 
 ## apps/desktop/src/msu-studio/behavior/sound-subtitle.ts
 
-The sentence under a sound channel's title. Effects channels say how much of the range the game raises; the ambient channel says how much is hidden. Each effects port names itself so two lists of the same ids do not read as one. `raisedCount` counts the rows the generated catalogue has a call site for; `reachableCount` (ambient only) the rows the game can reach; `hiddenCount` the rows the reachable trim holds back.
+The note about a sound channel, shown in the details panel while no sound is open. Effects channels say how much of the range the game raises; the ambient channel says how much is hidden. Each effects port names itself so two lists of the same ids do not read as one. `raisedCount` counts the rows the generated catalogue has a call site for; `reachableCount` (ambient only) the rows the game can reach; `hiddenCount` the rows the reachable trim holds back.
 
 ## apps/desktop/src/msu-studio/behavior/studio-frame/useStudioActions.ts
 
@@ -259,7 +259,7 @@ The order hints are read under the control, because the order chosen changes wha
 
 ## apps/desktop/src/msu-studio/msu.constants.ts
 
-`AUDIO_ACCEPT` lists what a drop zone accepts. Nothing is transcoded on the way in; the engine decodes each of these itself. `AMBIENT_ROLE_HINTS` explain each ambient role in the row tooltip, because the labels alone are too terse. `SOUND_FILTER_HINT` and `SOUND_FILTER_PLACEHOLDER` are one spelling of the sound search, so the single channel tab and the merged one read alike.
+`AUDIO_ACCEPT` lists what a drop zone accepts. Nothing is transcoded on the way in; the engine decodes each of these itself. `AMBIENT_ROLE_HINTS` explain each ambient role in the row tooltip, because the labels alone are too terse. `SOUND_FILTER_HINT` and `SOUND_FILTER_PLACEHOLDER` are one spelling of the sound search, so the single channel tab and the merged one read alike; the hint sits in the channel note of the details panel, the placeholder in the toolbar's search box.
 
 ## apps/desktop/src/msu-studio/msu.type.ts
 
@@ -267,7 +267,7 @@ A pack carrying a `pack.json` is layered; one with only numbered audio files is 
 
 `MsuEffectsPanelProps.manifest` is what the rows and editors show; `saveBase` is what a save writes into. `readOnly` marks an installed pack: sounds play, nothing changes.
 
-On a track row, `playingOriginal` is true while the sound chip's own version of the slot is the one sounding. On a sound row, `label` exists only for unambiguous ids and `triggers` describes the rest; `hex` is the id as the studio shows it (`0x0C`); `sites` is how many places raise it, roughly how often it is heard; `layerCount` is 0 while the pack leaves the sound to the sound chip; `unlisted` marks an id the pack claims that the catalogue does not list; `role` is what the id does on the ambient channel, null on the effects channels, which have no roles; `unreachable` marks an id nothing in the game can raise, shown only on request.
+`TrackPreviewControls` is the music tab's preview wiring, shared by the rows and the details panel: `playing` is the slot the pack is auditioning, `playingOriginal` the slot whose sound chip version is sounding, and starting either also selects the slot, so the readout in the details panel is the one that plays. On a sound row, `label` exists only for unambiguous ids and `triggers` describes the rest; `hex` is the id as the studio shows it (`0x0C`); `sites` is how many places raise it, roughly how often it is heard; `layerCount` is 0 while the pack leaves the sound to the sound chip; `unlisted` marks an id the pack claims that the catalogue does not list; `role` is what the id does on the ambient channel, null on the effects channels, which have no roles; `unreachable` marks an id nothing in the game can raise, shown only on request.
 
 `showChannel` tags a row with its channel wherever one list holds more than one, because the channels do not share id spaces. `additive` is set on an effects channel, where every press adds a sound, so play never becomes stop. `chipAudible` is null while the channel is still being scanned and false once known to make no sound.
 
@@ -277,7 +277,7 @@ On a track row, `playingOriginal` is true while the sound chip's own version of 
 
 Both effect channels as one list with one search box: guessing which of two lists held a sound was the problem. The channels stay separate id spaces (0x12 differs per port), carried by each row leading with its port. Each channel keeps its own controller; this panel hands them one query, picks the right one per row, and keeps them from sounding at once. A port tag in the search box means the port, not text to find, so it narrows the merged list.
 
-The ids interleave in one list: 0x01 on both ports, then 0x02 on both. Grouping by port would put the two lists back, only without the headings that made them navigable. Each channel silences only its own audition, so the list stops the other one itself, and only one row editor is open across the whole list, or two editors would sit open over one shared save. Rows are keyed by channel and id, because the ports share id numbers.
+The ids interleave in one list: 0x01 on both ports, then 0x02 on both. Grouping by port would put the two lists back, only without the headings that made them navigable. Each channel silences only its own audition, so the list stops the other one itself, and only one sound is open in the details panel across the whole list, or two editors would compete for one shared save. Rows are keyed by channel and id, because the ports share id numbers.
 
 ## apps/desktop/src/msu-studio/MsuFilePanel.tsx
 
@@ -297,13 +297,13 @@ One sound channel on its own tab. The filter is owned here, not in the hook, bec
 
 ## apps/desktop/src/msu-studio/MsuStudio.tsx
 
-The studio body, on Tessera's `StudioLayout`: the pack name and its format in the bar, the export group, the pack list in the start panel, the tabs on the editor toolbar, and the pack properties in the end panel. Both panels resize and keep their width and fold under `msu-studio.packs` and `msu-studio.properties`. An installed pack is read only in every tab: it plays and exports, and nothing that writes into it is on. `origin` is null for the player's own pack. The tab is owned by the manager, so it holds while another pack loads.
+The detail of the pack list, built from the shared studio parts: one action row (Export) with the last outcome at its end, then the tab's own body. Each tab draws its body itself (`StudioBody`): the tabs and the tab's search on the toolbar, a dense list that takes the height, and the details panel, kept under `msu-studio.details` for every tab. The panel shows the selected slot or sound, and the pack's properties when nothing is selected. A spinner shows until the pack has loaded. An installed pack is read only in every tab: it plays and exports, and nothing that writes into it is on. `origin` is null for the player's own pack. The tab is owned by the manager, so it holds while another pack loads.
 
-There is no save group: every edit writes to the pack as it is made, so the idle hint says so instead. A music audition is owned above the tabs, so leaving the music tab silences it; the sound tabs stop themselves by unmounting. The files tab gets the pack's own manifest as `saveBase` (null for a classic pack), because a rename must not hand a classic pack a manifest.
+There is no save group: every edit writes to the pack as it is made. A music audition is owned above the tabs, so leaving the music tab silences it; the sound tabs stop themselves by unmounting. The files tab gets the pack's own manifest as `saveBase` (null for a classic pack), because a rename must not hand a classic pack a manifest.
 
-## apps/desktop/src/msu-studio/MsuTrackPanel.tsx
+## apps/desktop/src/msu-studio/MsuMusicTab.tsx
 
-The original music of the sound chip is previewed here (`useOriginalPreview('music')`), not passed in, because it needs only the slot number. One thing sounds at a time, so each start silences the other. `reportStore` is the live per layer feed of the preview, read only by the readouts that draw it. `onConfirm` is the app's confirm dialog, for a layer edit that discards files.
+The original music of the sound chip is previewed here (`useOriginalPreview('music')`), not passed in, because it needs only the slot number. One thing sounds at a time, so each start silences the other. The tab owns the preview wiring, so the slot rows and the details panel press the same buttons and light the same state. Clicking a row opens it in the details panel and clicking it again closes it.
 
 ## apps/desktop/src/msu-studio/OptimizeDialog/OptimizeDialog.tsx
 
@@ -353,7 +353,7 @@ A meter row is one audible sound, or the wait before the next one (`LayerMeterKi
 
 ## apps/desktop/src/msu-studio/SoundDetail.tsx
 
-The drop zone adds to the pack's pool, not to this sound; the layer editor below is where a file gets used. The continuity group field is sound level, so it sits beside the editor, and it only shows once the sound is claimed. `unclaimed` is true while nothing claims the sound yet, so the first save is what claims it.
+The open sound in the details panel: its title, badges, preview buttons and Stop replacing, the live readout while it plays, then its audio section and the layer editor. The drop zone adds to the pack's pool, not to this sound; the layer editor below is where a file gets used. The continuity group field is sound level, so it sits beside the editor, and it only shows once the sound is claimed. A sound nothing claims yet is still sounding from the chip, so the first save is what claims it.
 
 ## apps/desktop/src/msu-studio/SoundGroupField.tsx
 
@@ -361,33 +361,29 @@ The continuity group is a free text name, not a toggle, because the relation is 
 
 ## apps/desktop/src/msu-studio/SoundListItem.tsx
 
-Shared by the ambient list and the merged effects list so the row, readout and editor stay together. The channel's controller arrives whole; a merged list picks one per row.
+Shared by the ambient list and the merged effects list, so a row reads its state from its own channel's controller the same way in both. The controller arrives whole; a merged list picks one per row.
 
 ## apps/desktop/src/msu-studio/SoundRow.tsx
 
-Identity reads name then evidence: the catalogue name on top (a best guess) and the game's own function names beneath (not a guess). An id with no name is named by its functions; the full trigger list stays in the tooltip. Play never becomes stop on an effects channel, because pressing it again is meant to add a sound. With nothing replacing it, play means the chip's own version, which is the sound there.
+Identity reads name then evidence: the catalogue name on top (a best guess) and the game's own function names beneath (not a guess). An id with no name is named by its functions; the full trigger list stays in the tooltip. The row selects the sound for the details panel, and a preview selects it too. Play never becomes stop on an effects channel, because pressing it again is meant to add a sound. With nothing replacing it, play means the chip's own version, which is the sound there.
 
 The role badge says what the id does on its channel, which decides whether a replacement can work. The Never raised badge shows only because the unreachable ids were asked for, so it says why the id was hidden. The Silent badge is only worth showing on an id with nothing on it, since the pack could still put a sound there.
 
-## apps/desktop/src/msu-studio/studio-frame/EditorBody.tsx
-
-Three states, in order: no pack picked, the pack loading, and the editor. The empty state shows only when nothing is picked, never while a pack loads.
-
 ## apps/desktop/src/msu-studio/studio-frame/PackProperties.tsx
 
-The right panel: the pack name with its rename, and the facts of the pack. Slots filled counts the slots that name a file. Rename is off for an installed pack, which keeps its name.
+The details panel while nothing is selected: the pack name with its rename, and the facts of the pack. Slots filled counts the slots that name a file. Rename is off for an installed pack, which keeps its name.
 
 ## apps/desktop/src/msu-studio/TrackDetail.tsx
 
-There is deliberately no drop zone here: files are a pack level pool, and a per slot target implied ownership.
+The selected slot in the details panel: its preview buttons and live readout, the file it plays, then the layer editor. There is deliberately no drop zone here: files are a pack level pool, and a per slot target implied ownership.
 
 ## apps/desktop/src/msu-studio/TrackSection.tsx
 
-One titled band of slots, with the expanded slot's editor spliced in directly beneath its row, and the live readout opening under whichever row is playing.
+One titled band of slots, one dense line each. The open slot's editor and the live readout are in the details panel, so the list keeps its height whatever is open.
 
 ## apps/desktop/src/msu-studio/useMsuManager.ts
 
-Composes the hooks in `behavior/` into one flat surface. Every action's outcome lands in one status line.
+Composes the hooks in `behavior/` into one flat surface. Every action's outcome lands in one status line. `openTrack` is the slot in the details panel; it clears when another pack is picked, since slot numbers mean nothing across packs.
 
 `skipNote` names both kinds of skipped file on an import (files in subfolders, files whose slot another file already claimed). Both are normal for a pack that ships extras, but silence would read as everything came in.
 

@@ -2,8 +2,7 @@
 import type { ReactNode } from 'react';
 
 type LanguageEditorProps = {
-  id: string | null;
-  list: ReactNode;
+  id: string;
   readOnly?: boolean;
   origin?: ReactNode;
 };

@@ -2,6 +2,7 @@
 import type { OutfitId, PlayerSheet } from '@rotp/game-data';
 import type { InstalledPack } from '@rotp/hub-contracts';
 import type { SpriteViewerModel, useWearing } from '@rotp/design/packs';
+import type { StatusTone } from '@drizztdourden08/tessera/primitives';
 import type { RomDisplayInfo } from '@app/views/GameSession/GameSession.type';
 import type { ConfirmRequest } from '../InstalledOriginBar/InstalledOriginBar.type';
 import type { useSpriteDraft } from './behavior/useSpriteDraft';
@@ -42,8 +43,12 @@ interface SpriteLibraryListProps {
   entries: LibraryEntry[];
   loading: boolean;
   selected: string | null;
+  canCreate: boolean;
+  busy: boolean;
+  error: string | null;
   isInstalled: (name: string) => boolean;
   onSelect: (name: string) => void;
+  onCreate: () => void;
   onDelete: (name: string) => void;
   onUrlImport: (url: string) => Promise<{ success: boolean; message: string }>;
   onFileImport: (files: File[]) => Promise<{ success: boolean; message: string }>;
@@ -53,20 +58,20 @@ type SpriteDraftModel = ReturnType<typeof useSpriteDraft>;
 type SpriteLibraryModel = ReturnType<typeof useSpriteLibrary>;
 type SpriteExportModel = ReturnType<typeof useSpriteExport>;
 type WearingModel = ReturnType<typeof useWearing>;
+type StudioTaskRunner = (task: () => Promise<unknown>) => Promise<void>;
 
 interface StudioActionsParams {
   openFile: string | null;
   packFor: (name: string) => InstalledPack | null;
   confirmUninstall: (pack: InstalledPack, onDone: () => void) => void;
   onDeleteConfirm: ConfirmRequest;
-  run: (task: () => Promise<unknown>) => Promise<void>;
+  run: StudioTaskRunner;
   library: SpriteLibraryModel;
   draft: SpriteDraftModel;
 }
 
 interface StudioGroupsParams {
-  sheet: PlayerSheet | null;
-  canCreate: boolean;
+  sheet: PlayerSheet;
   busy: boolean;
   readOnly: boolean;
   dirty: boolean;
@@ -74,38 +79,43 @@ interface StudioGroupsParams {
   draft: SpriteDraftModel;
   library: SpriteLibraryModel;
   exporter: SpriteExportModel;
-  run: (task: () => Promise<unknown>) => Promise<void>;
+  run: StudioTaskRunner;
 }
 
-interface ViewerToolbarParams {
-  open: boolean;
+interface SpriteWorkAreaProps {
+  sheet: PlayerSheet;
+  installed: InstalledPack | null;
+  busy: boolean;
+  error: string | null;
+  draft: SpriteDraftModel;
+  library: SpriteLibraryModel;
+  exporter: SpriteExportModel;
+  run: StudioTaskRunner;
+  onOpenAfter: (name: string) => void;
+  onUninstalled: () => void;
+}
+
+interface ViewerToolbarProps {
   wearing: WearingModel;
   viewer: SpriteViewerModel;
 }
 
 interface SpriteStatusProps {
-  open: boolean;
-  file: string | null;
+  isNew: boolean;
   dirty: boolean;
-  applied: boolean | null;
-  readOnly: boolean;
-}
-
-interface SpriteNoticesProps {
   applied: boolean | null;
   readOnly: boolean;
   exportStatus: string;
   error: string | null;
 }
 
-interface SpriteWorkspaceProps {
-  sheet: PlayerSheet | null;
-  wearing: WearingModel;
-  viewer: SpriteViewerModel;
+interface SpriteStatusLine {
+  tone: StatusTone;
+  text: string;
 }
 
-interface SpriteDetailsPanelProps {
-  sheet: PlayerSheet | null;
+interface SpritePropertiesProps {
+  sheet: PlayerSheet;
   outfit: OutfitId;
   readOnly: boolean;
   draft: SpriteDraftModel;
@@ -127,6 +137,6 @@ interface GloveSwatchGridProps {
 
 export type {
   Container, GloveSwatchGridProps, LibraryEntry, OpenDraft, OutfitSwatchGridProps, PaletteEditorProps,
-  PlayerSpriteStudioProps, Slot, SpriteDetailsPanelProps, SpriteLibraryListProps, SpriteNoticesProps, SpriteStatusProps,
-  SpriteWorkspaceProps, StudioActionsParams, StudioGroupsParams, ViewerToolbarParams,
+  PlayerSpriteStudioProps, Slot, SpriteLibraryListProps, SpritePropertiesProps, SpriteStatusLine, SpriteStatusProps,
+  SpriteWorkAreaProps, StudioActionsParams, StudioGroupsParams, ViewerToolbarProps,
 };

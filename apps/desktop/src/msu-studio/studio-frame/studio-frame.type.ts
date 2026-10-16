@@ -4,11 +4,6 @@ import type { MsuManagerModel } from '../msu-manager.type';
 import type { PackFormat } from '../msu.type';
 import type { StudioTab } from '../sound-labels';
 
-type StudioStatusProps = {
-  format: PackFormat;
-  readOnly: boolean;
-};
-
 type StudioNoticesProps = {
   message: string | null;
   ok: boolean;
@@ -27,10 +22,9 @@ type PackPropertiesProps = {
   onRename: (name: string) => void;
 };
 
-type EditorBodyProps = {
-  hasPack: boolean;
-  loading: boolean;
-  children: ReactNode;
+type SectionTabsProps = {
+  tab: StudioTab;
+  onTabChange: (tab: StudioTab) => void;
 };
 
 type TabPanelsProps = {
@@ -38,7 +32,9 @@ type TabPanelsProps = {
   pack: string;
   readOnly: boolean;
   tab: StudioTab;
+  tabs: ReactNode;
+  packPanel: ReactNode;
   onDeleteConfirm: (title: string, message: string, onConfirm: () => void) => void;
 };
 
-export type { EditorBodyProps, PackPropertiesProps, StudioNoticesProps, StudioStatusProps, TabPanelsProps };
+export type { PackPropertiesProps, SectionTabsProps, StudioNoticesProps, TabPanelsProps };

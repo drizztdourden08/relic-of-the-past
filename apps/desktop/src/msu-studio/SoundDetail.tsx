@@ -1,56 +1,32 @@
 /* @layer renderer-components @kind component */
-import { Box, DropZone, Text } from '@drizztdourden08/tessera/primitives';
 import { LayerEditor } from './LayerEditor';
-import { SoundGroupField } from './SoundGroupField';
-import { AUDIO_ACCEPT, AUDIO_ACCEPT_HINT } from './msu.constants';
+import { SoundAudioSection } from './SoundAudioSection';
+import { SoundDetailHead } from './SoundDetailHead';
+import { soundTarget } from './behavior/layer-target';
 import type { SoundDetailProps } from './SoundDetail.type';
 
 const SoundDetail = (props: SoundDetailProps) => {
-  const {
-    pack, target, manifest, saveBase, availableFiles, isLayered, reportStore,
-    channel, soundId, syncGroup, unclaimed, uploading, onUpload, onConfirm, onSaved, readOnly = false,
-  } = props;
+  const { pack, channel, row, sound, manifest, saveBase, files, isLayered, readOnly, onConfirm, onReload } = props;
+  const target = soundTarget(channel, row.soundId);
 
   return (
-    <Box className="msu-track-detail">
-      {unclaimed && !readOnly && (
-        <Text variant="caption">
-          This sound still plays from the sound chip. Add a layer with audio and save to hand it
-          over to the pack.
-        </Text>
-      )}
-      <DropZone
-        accept={AUDIO_ACCEPT}
-        label={uploading ? 'Adding audio...' : 'Drop audio into this pack'}
-        hint={AUDIO_ACCEPT_HINT}
-        disabled={uploading || readOnly}
-        onDrop={onUpload}
-      />
-      {!unclaimed && (
-        <SoundGroupField
-          pack={pack}
-          channel={channel}
-          soundId={soundId}
-          group={syncGroup}
-          saveBase={saveBase}
-          disabled={readOnly}
-          onSaved={onSaved}
-        />
-      )}
+    <>
+      <SoundDetailHead {...props} />
+      <SoundAudioSection pack={pack} channel={channel} row={row} sound={sound} manifest={manifest} saveBase={saveBase} readOnly={readOnly} onReload={onReload} />
       <LayerEditor
         key={`${pack}:${target.previewKey}`}
         pack={pack}
         target={target}
         manifest={manifest}
         saveBase={saveBase}
-        availableFiles={availableFiles}
+        availableFiles={files.map((file) => file.name)}
         isLayered={isLayered}
-        reportStore={reportStore}
+        reportStore={sound.reportStore}
         onConfirm={onConfirm}
-        onSaved={onSaved}
+        onSaved={onReload}
         readOnly={readOnly}
       />
-    </Box>
+    </>
   );
 };
 

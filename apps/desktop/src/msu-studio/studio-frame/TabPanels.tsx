@@ -6,7 +6,7 @@ import { MsuSoundPanel } from '../MsuSoundPanel';
 import type { TabPanelsProps } from './studio-frame.type';
 
 const TabPanels = (props: TabPanelsProps) => {
-  const { msu, pack, readOnly, tab, onDeleteConfirm } = props;
+  const { msu, pack, readOnly, tab, tabs, packPanel, onDeleteConfirm } = props;
 
   const soundProps = {
     pack,
@@ -15,28 +15,30 @@ const TabPanels = (props: TabPanelsProps) => {
     files: msu.files,
     isLayered: msu.format === 'layered',
     readOnly,
+    tabs,
+    packPanel,
     onDeleteConfirm,
     onReload: msu.reload,
   };
 
-  return (
-    <>
-      {tab === 'ambient' && <MsuSoundPanel channel="ambient" {...soundProps} />}
-      {tab === 'effects' && <MsuEffectsPanel {...soundProps} />}
-      {tab === 'files' && (
-        <MsuFilePanel
-          pack={pack}
-          manifest={msu.resolved}
-          saveBase={msu.manifest}
-          files={msu.files}
-          readOnly={readOnly}
-          onDeleteConfirm={onDeleteConfirm}
-          onReload={msu.reload}
-        />
-      )}
-      {tab === 'music' && <MsuMusicTab msu={msu} pack={pack} readOnly={readOnly} onDeleteConfirm={onDeleteConfirm} />}
-    </>
-  );
+  if (tab === 'ambient') return <MsuSoundPanel channel="ambient" {...soundProps} />;
+  if (tab === 'effects') return <MsuEffectsPanel {...soundProps} />;
+  if (tab === 'files') {
+    return (
+      <MsuFilePanel
+        pack={pack}
+        manifest={msu.resolved}
+        saveBase={msu.manifest}
+        files={msu.files}
+        readOnly={readOnly}
+        tabs={tabs}
+        packPanel={packPanel}
+        onDeleteConfirm={onDeleteConfirm}
+        onReload={msu.reload}
+      />
+    );
+  }
+  return <MsuMusicTab msu={msu} pack={pack} readOnly={readOnly} tabs={tabs} packPanel={packPanel} onDeleteConfirm={onDeleteConfirm} />;
 };
 
 export { TabPanels };

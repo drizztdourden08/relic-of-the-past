@@ -1,8 +1,15 @@
 /* @layer renderer-components @kind types */
-import type { LayerEditorProps } from './LayerEditor';
+import type { MsuManagerModel } from './msu-manager.type';
+import type { MatchedTrack, TrackPreviewControls } from './msu.type';
 
-interface TrackDetailProps extends LayerEditorProps {
-  trackNum: number;
+interface TrackDetailProps {
+  msu: MsuManagerModel;
+  pack: string;
+  row: MatchedTrack;
+  readOnly: boolean;
+  controls: TrackPreviewControls;
+  onClose: () => void;
+  onConfirm: (title: string, message: string, onConfirm: () => void) => void;
 }
 
 export type { TrackDetailProps };

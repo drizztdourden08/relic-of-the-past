@@ -1,7 +1,8 @@
 /* @layer renderer-components @kind component */
 import { useCallback, useMemo } from 'react';
 import type { LanguageSetSummary } from '@rotp/languages';
-import { SunkenWell } from '@app/compounds/SunkenWell';
+import { EmptyState, Text } from '@drizztdourden08/tessera/primitives';
+import { ListDetailLayout } from '@drizztdourden08/tessera/composites';
 import { ImportForm } from './ImportForm';
 import { LANGUAGE_NAMES } from './language-names.constants';
 import { useLanguageCreation } from './language-manager/useLanguageCreation';
@@ -10,11 +11,11 @@ import { useLanguageExtraction } from './language-manager/useLanguageExtraction'
 import { useLanguageSets } from './language-manager/useLanguageSets';
 import type { LanguageManagerProps } from './LanguageManager.type';
 import { LanguageEditor } from '../../../language-editor';
+import { NO_SET_MESSAGE } from '../../../language-editor/sub-components/studio-frame/studio-frame.constants';
 import { SetCreateForm } from '../../../language-editor/sub-components/SetCreateForm';
 import { useInstalledKind } from '@app/hooks/useInstalledKind';
 import { InstalledOriginBar, useConfirmUninstall } from '@app/views/InstalledOriginBar';
 import { LanguageSetList } from './LanguageSetList';
-import { Text } from '@drizztdourden08/tessera/primitives';
 
 const LanguageManager = (props: LanguageManagerProps) => {
   const { onDeleteConfirm } = props;
@@ -36,19 +37,6 @@ const LanguageManager = (props: LanguageManagerProps) => {
 
   const list = (
     <>
-      {uninstallError !== null && <Text className="import-form__status import-form__status--error">{uninstallError}</Text>}
-      <SunkenWell>
-        <LanguageSetList
-          sets={languages}
-          loading={loading}
-          selected={selected}
-          labelOf={setLabel}
-          isInstalled={isInstalled}
-          onSelect={setSelected}
-          onDelete={handleDelete}
-        />
-      </SunkenWell>
-
       <Text variant="overline" tone="muted">Extract from a ROM</Text>
       <ImportForm
         kind="language"
@@ -61,11 +49,17 @@ const LanguageManager = (props: LanguageManagerProps) => {
       />
 
       <Text variant="overline" tone="muted">New set</Text>
-      <SetCreateForm
-        sets={ownSets}
-        busy={busy}
-        onCreate={handleCreate}
-        onDuplicate={handleDuplicate}
+      <SetCreateForm sets={ownSets} busy={busy} onCreate={handleCreate} onDuplicate={handleDuplicate} />
+
+      {uninstallError !== null && <Text variant="caption" tone="danger" role="alert">{uninstallError}</Text>}
+      <LanguageSetList
+        sets={languages}
+        loading={loading}
+        selected={selected}
+        labelOf={setLabel}
+        isInstalled={isInstalled}
+        onSelect={setSelected}
+        onDelete={handleDelete}
       />
     </>
   );
@@ -74,7 +68,17 @@ const LanguageManager = (props: LanguageManagerProps) => {
     <InstalledOriginBar pack={installed} onDuplicated={refreshThenSelect} onUpdateInstalled={refreshThenSelect} onUninstalled={handleUninstalled} />
   );
 
-  return <LanguageEditor id={selected} readOnly={installed !== null} origin={origin} list={list} />;
+  return (
+    <ListDetailLayout
+      list={list}
+      detail={selected && <LanguageEditor key={selected} id={selected} readOnly={installed !== null} origin={origin} />}
+      emptyDetail={<EmptyState message={NO_SET_MESSAGE} />}
+      detailScroll={false}
+      storageKey="language-studio.list"
+      listLabel="language sets"
+      detailLabel="language editor"
+    />
+  );
 };
 
 export { LanguageManager };

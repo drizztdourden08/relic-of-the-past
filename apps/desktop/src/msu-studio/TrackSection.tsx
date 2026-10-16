@@ -1,15 +1,10 @@
 /* @layer renderer-components @kind component */
 import { Box, Text } from '@drizztdourden08/tessera/primitives';
 import { TrackRow } from './TrackRow';
-import { PreviewReadout } from './PreviewReadout';
-import { trackPreviewKey } from './behavior/preview-key';
 import type { TrackSectionProps } from './TrackSection.type';
 
 const TrackSection = (props: TrackSectionProps) => {
-  const {
-    title, rows, files, fileOptions, playing, playingOriginal, reportStore, openTrack, busy, readOnly,
-    onAssign, onPreview, onStopPreview, onPlayOriginal, onToggleLayers, renderDetail,
-  } = props;
+  const { title, rows, files, selected, controls, onSelect } = props;
 
   if (rows.length === 0) return null;
 
@@ -18,34 +13,14 @@ const TrackSection = (props: TrackSectionProps) => {
       <Text as="h4" className="detail-panel__section-title">{title}</Text>
       <Box className="track-list">
         {rows.map((row) => (
-          <Box key={row.trackNum}>
-            <TrackRow
-              trackNum={row.trackNum}
-              description={row.description}
-              fileName={row.fileName}
-              fileSize={files.find((f) => f.name === row.fileName)?.size}
-              layerCount={row.layerCount}
-              options={fileOptions}
-              playing={playing === row.trackNum}
-              busy={busy}
-              expanded={openTrack === row.trackNum}
-              playingOriginal={playingOriginal === row.trackNum}
-              readOnly={readOnly}
-              onAssign={onAssign}
-              onPreview={onPreview}
-              onStopPreview={onStopPreview}
-              onPlayOriginal={onPlayOriginal}
-              onToggleLayers={onToggleLayers}
-            />
-            {playing === row.trackNum && (
-              <PreviewReadout
-                store={reportStore}
-                previewKey={trackPreviewKey(row.trackNum)}
-                label={`slot ${row.trackNum}`}
-              />
-            )}
-            {openTrack === row.trackNum && renderDetail(row.trackNum)}
-          </Box>
+          <TrackRow
+            key={row.trackNum}
+            row={row}
+            fileSize={files.find((f) => f.name === row.fileName)?.size}
+            selected={selected === row.trackNum}
+            controls={controls}
+            onSelect={onSelect}
+          />
         ))}
       </Box>
     </Box>

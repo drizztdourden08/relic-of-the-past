@@ -1,10 +1,10 @@
 /* @layer renderer-components @kind types */
-import type { TrackRowProps } from './msu.type';
+import type { TrackPreviewControls } from './msu.type';
 
-type TrackActionsProps = Pick<
-  TrackRowProps,
-  | 'trackNum' | 'fileName' | 'playing' | 'busy' | 'expanded' | 'playingOriginal'
-  | 'onPreview' | 'onStopPreview' | 'onPlayOriginal' | 'onToggleLayers'
->;
+type TrackActionsProps = {
+  trackNum: number;
+  hasAudio: boolean;
+  controls: TrackPreviewControls;
+};
 
 export type { TrackActionsProps };

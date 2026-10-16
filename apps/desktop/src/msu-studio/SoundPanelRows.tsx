@@ -4,7 +4,7 @@ import { SoundListItem } from './SoundListItem';
 import type { SoundPanelRowsProps } from './SoundPanelRows.type';
 
 const SoundPanelRows = (props: SoundPanelRowsProps) => {
-  const { sound, filter, availableFiles, pack, channel, manifest, saveBase, isLayered, readOnly, onConfirm, onReload, onStopReplacing } = props;
+  const { channel, sound, filter, onSelect, onPreview, onPlayOriginal } = props;
 
   if (sound.rows.length === 0) return <EmptyState message={`No sound on this channel matches "${filter}"`} />;
 
@@ -13,21 +13,12 @@ const SoundPanelRows = (props: SoundPanelRowsProps) => {
       {sound.rows.map((row) => (
         <SoundListItem
           key={row.soundId}
-          pack={pack}
           channel={channel}
           row={row}
           sound={sound}
-          manifest={manifest}
-          saveBase={saveBase}
-          availableFiles={availableFiles}
-          isLayered={isLayered}
-          readOnly={readOnly}
-          onPreview={sound.play}
-          onPlayOriginal={(_channel, soundId) => sound.playOriginal(soundId)}
-          onToggleLayers={(_channel, soundId) => sound.toggleLayers(soundId)}
-          onStopReplacing={onStopReplacing}
-          onConfirm={onConfirm}
-          onReload={onReload}
+          onSelect={onSelect}
+          onPreview={onPreview}
+          onPlayOriginal={onPlayOriginal}
         />
       ))}
     </Box>

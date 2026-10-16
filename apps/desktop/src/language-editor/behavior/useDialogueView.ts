@@ -7,6 +7,7 @@ import type { EntryFilter } from '../sub-components/DialogueTab.type';
 import { NO_ENTRIES } from '../LanguageEditor.constants';
 import type { DialogueViewParams } from './dialogue-view.type';
 import { selectEntries } from './select-entries';
+import { selectionOf } from './selection-of';
 import { useEntryOpen } from './useEntryOpen';
 import { useSetFont } from './useSetFont';
 
@@ -19,7 +20,7 @@ const useDialogueView = (params: DialogueViewParams) => {
   const search = useTranslationSearch(set, query);
   const { metrics, sheet } = useSetFont(id, set?.base);
   const layout = useEntryLayout(metrics, terms);
-  const { view, draft, open, close, setMode } = useEntryOpen(dialogue, setEntryTokens);
+  const { view, draft, selected, open, close, setMode } = useEntryOpen(dialogue, setEntryTokens);
 
   const cfg = useMemo(() => (set ? kLanguages[set.base] ?? null : null), [set]);
   const variableIndex = useMemo(() => buildVariableIndex(variables), [variables]);
@@ -30,8 +31,14 @@ const useDialogueView = (params: DialogueViewParams) => {
     issues,
   }), [dialogue, search.hits, search.applied, filter, issues]);
 
+  const selection = useMemo(
+    () => selectionOf({ dialogue, selected, layout, draft, variables: variableIndex, issues }),
+    [dialogue, selected, layout, draft, variableIndex, issues],
+  );
+
   return {
     dialogue,
+    selection,
     find: { query, filter, setQuery, setFilter },
     tabProps: {
       entries, total: dialogue.length, issues, query, filter, cfg, glossary: terms, variables, variableIndex,

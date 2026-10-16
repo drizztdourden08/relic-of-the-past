@@ -4,6 +4,7 @@ import type { SoundChannel } from '@rotp/game-data';
 import { EFFECT_CHANNELS, soundTitle } from '../sound-labels';
 import type { MsuEffectsPanelProps } from '../msu.type';
 import { parseEffectQuery } from './effect-query';
+import { openEffectOf } from './open-effect-of';
 import type { EffectRow } from './effects-panel.type';
 import { useSoundPanel } from './useSoundPanel';
 
@@ -31,11 +32,13 @@ const useEffectsPanel = (props: MsuEffectsPanelProps) => {
 
   const play = useCallback((channel: SoundChannel, soundId: number) => {
     otherOf(channel).stop();
+    otherOf(channel).closeLayers();
     panelOf(channel).play(channel, soundId);
   }, [otherOf, panelOf]);
 
   const playOriginal = useCallback((channel: SoundChannel, soundId: number) => {
     otherOf(channel).stop();
+    otherOf(channel).closeLayers();
     panelOf(channel).playOriginal(soundId);
   }, [otherOf, panelOf]);
 
@@ -46,6 +49,8 @@ const useEffectsPanel = (props: MsuEffectsPanelProps) => {
 
   const stopAll = useCallback(() => { first.stop(); second.stop(); }, [first, second]);
 
+  const open = openEffectOf(first, second);
+
   const confirmStopReplacing = useCallback((channel: SoundChannel, soundId: number) => {
     onDeleteConfirm(
       'Stop Replacing Sound',
@@ -54,7 +59,9 @@ const useEffectsPanel = (props: MsuEffectsPanelProps) => {
     );
   }, [onDeleteConfirm, panelOf]);
 
-  return { filter, setFilter, first, second, panelOf, rows, play, playOriginal, toggleLayers, stopAll, confirmStopReplacing };
+  return {
+    filter, setFilter, first, second, panelOf, rows, open, play, playOriginal, toggleLayers, stopAll, confirmStopReplacing,
+  };
 };
 
 export { useEffectsPanel };

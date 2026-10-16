@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind style */
-.language-editor,
-.language-editor * {
+.language-studio,
+.language-studio * {
   user-select: text;
 }

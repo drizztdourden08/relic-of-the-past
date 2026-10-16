@@ -1,71 +1,72 @@
 /* @layer renderer-components @kind component */
-import { useCallback, useState } from 'react';
-import { Box, Button, SectionHeader } from '@drizztdourden08/tessera/primitives';
+import { useState } from 'react';
+import { Box } from '@drizztdourden08/tessera/primitives';
+import { StudioBody } from '@app/studio';
+import { SoundListHeader } from './SoundListHeader';
 import { SoundPanelControls } from './SoundPanelControls';
 import { SoundPanelRows } from './SoundPanelRows';
+import { SoundSide } from './SoundSide';
 import { soundPanelSubtitle } from './behavior/sound-subtitle';
 import { useSoundPanel } from './behavior/useSoundPanel';
-import { SOUND_CHANNEL_LABELS, soundTitle } from './sound-labels';
+import { useSoundTabActions } from './behavior/useSoundTabActions';
+import { SOUND_FILTER_HINT } from './msu.constants';
+import { SOUND_CHANNEL_LABELS } from './sound-labels';
+import { DETAILS_PANEL, EDITOR_LABELS } from './studio-frame/studio-frame.constants';
 import type { MsuSoundPanelProps } from './MsuSoundPanel.type';
 
 const MsuSoundPanel = (props: MsuSoundPanelProps) => {
-  const { pack, channel, manifest, saveBase, files, isLayered, readOnly, onDeleteConfirm, onReload } = props;
+  const { pack, channel, manifest, saveBase, files, isLayered, readOnly, tabs, packPanel, onDeleteConfirm, onReload } = props;
   const [filter, setFilter] = useState('');
   const [showUnreachable, setShowUnreachable] = useState(false);
-  const sound = useSoundPanel({
-    pack, channel, manifest, saveBase, files, filter, showUnreachable, reload: onReload,
-  });
-  const { replacedCount, total, playing } = sound;
+  const sound = useSoundPanel({ pack, channel, manifest, saveBase, files, filter, showUnreachable, reload: onReload });
+  const { confirmStopReplacing, select, original } = useSoundTabActions({ sound, onDeleteConfirm });
 
-  const { stopReplacing } = sound;
-  const confirmStopReplacing = useCallback((soundId: number) => {
-    onDeleteConfirm(
-      'Stop Replacing Sound',
-      `Remove this pack's layers for ${soundTitle(channel, soundId)}? It will play from the sound chip again.`,
-      () => { void stopReplacing(soundId); },
-    );
-  }, [channel, onDeleteConfirm, stopReplacing]);
+  const openRow = sound.rows.find((row) => row.soundId === sound.openSound);
+  const detail = (
+    <SoundSide
+      open={openRow === undefined ? null : { channel, row: openRow, sound }}
+      noteTitle={SOUND_CHANNEL_LABELS[channel]}
+      note={`${soundPanelSubtitle({ ...sound, channel, showUnreachable })} ${SOUND_FILTER_HINT}`}
+      packPanel={packPanel}
+      pack={pack}
+      manifest={manifest}
+      saveBase={saveBase}
+      files={files}
+      isLayered={isLayered}
+      readOnly={readOnly}
+      onPreview={sound.play}
+      onPlayOriginal={original}
+      onStopReplacing={confirmStopReplacing}
+      onClose={sound.closeLayers}
+      onConfirm={onDeleteConfirm}
+      onReload={onReload}
+    />
+  );
+
+  const toolbar = (
+    <SoundPanelControls
+      tabs={tabs}
+      unreachableCount={sound.unreachableCount}
+      filter={filter}
+      showUnreachable={showUnreachable}
+      onFilterChange={setFilter}
+      onShowUnreachableChange={setShowUnreachable}
+    />
+  );
 
   return (
-    <Box className="msu-panel">
-      <SectionHeader
-        title={`${SOUND_CHANNEL_LABELS[channel]} · ${replacedCount} of ${total} replaced`}
-        subtitle={soundPanelSubtitle({
-          channel,
-          total,
-          raisedCount: sound.raisedCount,
-          reachableCount: sound.reachableCount,
-          hiddenCount: sound.hiddenCount,
-          showUnreachable,
-        })}
-        action={playing !== null || sound.playingOriginal !== null
-          ? <Button variant="tertiary" size="sm" onClick={sound.stop}>Stop preview</Button>
-          : null}
-      />
-
-      <SoundPanelControls
-        sound={sound}
-        filter={filter}
-        showUnreachable={showUnreachable}
-        onFilterChange={setFilter}
-        onShowUnreachableChange={setShowUnreachable}
-      />
-
-      <SoundPanelRows
-        sound={sound}
-        filter={filter}
-        availableFiles={files.map((file) => file.name)}
-        pack={pack}
-        channel={channel}
-        manifest={manifest}
-        saveBase={saveBase}
-        isLayered={isLayered}
-        readOnly={readOnly}
-        onConfirm={onDeleteConfirm}
-        onReload={onReload}
-        onStopReplacing={confirmStopReplacing}
-      />
-    </Box>
+    <StudioBody editorLabel={EDITOR_LABELS.ambient} toolbar={toolbar} end={{ ...DETAILS_PANEL, content: detail }}>
+      <Box className="msu-panel">
+        <SoundListHeader
+          title={`${SOUND_CHANNEL_LABELS[channel]} · ${sound.replacedCount} of ${sound.total} replaced`}
+          sounding={sound.playing !== null || sound.playingOriginal !== null}
+          status={sound.statusMessage}
+          statusOk={sound.statusOk}
+          onStop={sound.stop}
+        />
+        <SoundPanelRows channel={channel} sound={sound} filter={filter} onSelect={select} onPreview={sound.play} onPlayOriginal={original} />
+      </Box>
+    </StudioBody>
   );
 };
 

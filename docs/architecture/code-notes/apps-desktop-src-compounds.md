@@ -886,10 +886,6 @@ pane narrower than one card.
 Cards are uploaded at 16:9, so the picture frame keeps that shape at any column width. A missing
 picture draws the kind's icon in its place.
 
-## apps/desktop/src/compounds/SunkenWell/SunkenWell.tsx
-
-A sunken Box that goes inside a raised side panel of a studio, for lists and text areas. The surface comes from Tessera; the compound adds the column layout, the gap and the padding. The three studios draw their frame with Tessera's `StudioLayout` (bar, banner, start and end panels, editor toolbar), so RotP has no frame of its own.
-
 ## apps/desktop/src/compounds/TrackerInventory/TrackerInventory.tsx
 
 Three views of the same inventory: the default view grouped by category, the in game view laid

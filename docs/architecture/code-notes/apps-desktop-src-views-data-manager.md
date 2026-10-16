@@ -11,6 +11,8 @@ The gap on `.data-manager__body` leaves room for the round toggle of the side na
 
 ## apps/desktop/src/views/DataManager/sub-components/LanguageManager.tsx
 
+The Language Studio: a `ListDetailLayout` like every other list screen, with ROM extraction, the new set form and the set list on the left (kept under `language-studio.list`) and the open set's editor as the detail. The editor is keyed by the set, so switching sets flushes the old one's pending write and starts the new one with nothing selected.
+
 Creating or duplicating a set rebakes the asset blobs, so `busy` locks the list while one runs.
 
 Deleting a set installed from the Hookshop uninstalls it the way the Hookshop tab does, so its install record goes too.
@@ -24,6 +26,8 @@ The duplicate source list leaves installed sets out. An installed set is copied 
 The language is read from the ROM, never picked. `loadRomFromBuffer` hashes the ROM (SHA-1, after the copier header is stripped) and looks it up in `ZELDA3_SHA1` in `packages/asset-extraction/src/rom/rom-loader/rom-loader.constants.ts`, which names the release and its language code. A hash that is not in the table is refused with a message and there is no manual choice: the font and the text encoder come from the release, so extraction cannot run without a known hash.
 
 ## apps/desktop/src/views/DataManager/sub-components/MsuManager.tsx
+
+The MSU Studio: a `ListDetailLayout` like every other list screen, with the new pack form, the import form and the pack list on the left (`MsuListPane`, kept under `msu-studio.list`) and the open pack's studio as the detail.
 
 A pack installed from the Hookshop is read only: its row carries the lock, its studio opens under the origin bar, and Delete uninstalls it the way the Hookshop tab does.
 

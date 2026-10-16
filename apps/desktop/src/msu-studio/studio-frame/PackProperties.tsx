@@ -4,7 +4,7 @@ import { Button, Field, Flex, TextInput } from '@drizztdourden08/tessera/primiti
 import { FactsPanel } from '@drizztdourden08/tessera/composites';
 import type { FactsPanelGroup } from '@drizztdourden08/tessera/composites';
 import { formatBytes } from '@drizztdourden08/brock-core';
-import { SunkenWell } from '@app/compounds/SunkenWell';
+import { StudioSection } from '@app/studio';
 import type { PackPropertiesProps } from './studio-frame.type';
 
 const PackProperties = (props: PackPropertiesProps) => {
@@ -15,18 +15,18 @@ const PackProperties = (props: PackPropertiesProps) => {
   const renameReady = !readOnly && draftName.trim().length > 0 && draftName.trim() !== pack;
 
   const groups = useMemo<FactsPanelGroup[]>(() => [[
+    { label: 'Format', value: format === 'layered' ? 'Layered' : 'Classic' },
+    { label: 'Slots', value: isDeluxe ? 'Extended' : 'Standard' },
     { label: 'Slots filled', value: slotCount, mono: true },
     { label: 'Files', value: fileCount, mono: true },
     { label: 'Size', value: formatBytes(totalSize), mono: true },
-    { label: 'Slots', value: isDeluxe ? 'Extended' : 'Standard' },
-    { label: 'Format', value: format === 'layered' ? 'Layered' : 'Classic' },
     ...(hasOpuz ? [{ label: 'Audio', value: 'Needs conversion' }] : []),
   ]], [slotCount, fileCount, totalSize, isDeluxe, format, hasOpuz]);
 
   return (
-    <>
-      <Field label="Pack name">
-        <Flex gap="sm" align="center" wrap>
+    <StudioSection title="Pack">
+      <Field label="Name">
+        <Flex gap="xs" align="center">
           <TextInput
             type="text"
             value={draftName}
@@ -40,10 +40,8 @@ const PackProperties = (props: PackPropertiesProps) => {
           </Button>
         </Flex>
       </Field>
-      <SunkenWell>
-        <FactsPanel groups={groups} layout="rows" label="Music pack properties" />
-      </SunkenWell>
-    </>
+      <FactsPanel groups={groups} layout="rows" label="Music pack properties" />
+    </StudioSection>
   );
 };
 

@@ -6,9 +6,9 @@ import { saveGroup } from './save-group';
 import { spriteGroup } from './sprite-group';
 
 const buildStudioGroups = (params: StudioGroupsParams): StudioActionGroup[] => [
-  spriteGroup(params),
   saveGroup(params),
   exportGroup(params),
+  spriteGroup(params),
 ];
 
 export { buildStudioGroups };

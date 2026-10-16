@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind types */
+import type { ReactNode } from 'react';
 import type { MsuPackManifest, SoundChannel, AmbientRole } from '@rotp/game-data';
-import type { SelectOption } from '@drizztdourden08/tessera/primitives';
 import type { useSoundPanel } from './behavior/useSoundPanel';
 
 type PackFormat = 'layered' | 'classic';
@@ -50,27 +50,26 @@ interface MsuEffectsPanelProps {
   files: MsuFile[];
   isLayered: boolean;
   readOnly: boolean;
+  tabs: ReactNode;
+  packPanel: ReactNode;
   onDeleteConfirm: (title: string, message: string, onConfirm: () => void) => void;
   onReload: () => void;
 }
 
-interface TrackRowProps {
-  trackNum: number;
-  description: string;
-  fileName: string | null;
-  fileSize?: number;
-  layerCount: number;
-  options: SelectOption[];
-  playing: boolean;
-  busy: boolean;
-  expanded: boolean;
-  playingOriginal: boolean;
-  readOnly: boolean;
-  onAssign: (trackNum: number, fileName: string) => void;
+interface TrackPreviewControls {
+  playing: number | null;
+  playingOriginal: number | null;
   onPreview: (trackNum: number) => void;
   onStopPreview: () => void;
   onPlayOriginal: (trackNum: number) => void;
-  onToggleLayers: (trackNum: number) => void;
+}
+
+interface TrackRowProps {
+  row: MatchedTrack;
+  fileSize?: number;
+  selected: boolean;
+  controls: TrackPreviewControls;
+  onSelect: (trackNum: number) => void;
 }
 
 interface SoundRowData {
@@ -89,39 +88,27 @@ interface SoundRowProps {
   row: SoundRowData;
   channel: SoundChannel;
   showChannel?: boolean;
+  selected: boolean;
   playing: boolean;
   additive: boolean;
-  busy: boolean;
-  expanded: boolean;
   playingOriginal: boolean;
   chipAudible: boolean | null;
-  readOnly: boolean;
+  onSelect: (soundId: number) => void;
   onPreview: (channel: SoundChannel, soundId: number) => void;
   onStopPreview: () => void;
   onPlayOriginal: (soundId: number) => void;
-  onToggleLayers: (soundId: number) => void;
-  onStopReplacing: (soundId: number) => void;
 }
 
 type SoundPanelController = ReturnType<typeof useSoundPanel>;
 
 interface SoundListItemProps {
-  pack: string;
   channel: SoundChannel;
   row: SoundRowData;
   sound: SoundPanelController;
-  manifest: MsuPackManifest;
-  saveBase: MsuPackManifest;
-  availableFiles: string[];
-  isLayered: boolean;
   showChannel?: boolean;
-  readOnly: boolean;
+  onSelect: (channel: SoundChannel, soundId: number) => void;
   onPreview: (channel: SoundChannel, soundId: number) => void;
   onPlayOriginal: (channel: SoundChannel, soundId: number) => void;
-  onToggleLayers: (channel: SoundChannel, soundId: number) => void;
-  onStopReplacing: (soundId: number) => void;
-  onConfirm: (title: string, message: string, onConfirm: () => void) => void;
-  onReload: () => void;
 }
 
 export type {
@@ -133,6 +120,7 @@ export type {
   ActionResult,
   MsuManagerProps,
   MsuEffectsPanelProps,
+  TrackPreviewControls,
   TrackRowProps,
   SoundRowData,
   SoundRowProps,
