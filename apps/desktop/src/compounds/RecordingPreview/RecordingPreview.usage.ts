@@ -13,7 +13,7 @@ import { RecordingPreview } from '@app/compounds/RecordingPreview';
 
 const Mounted = (props: ComponentProps<typeof RecordingPreview>) => <RecordingPreview {...props} />;
 `,
-  propsHash: '0000000000000000',
+  propsHash: '817a7c2a9bd3c997',
 } satisfies ComponentUsage;
 
 export { usage };

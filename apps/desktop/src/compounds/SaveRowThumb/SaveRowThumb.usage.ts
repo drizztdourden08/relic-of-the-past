@@ -12,7 +12,7 @@ const usage = {
 
 const Mounted = () => <SaveRowThumb src={null} />;
 `,
-  propsHash: '0000000000000000',
+  propsHash: '9007251afa76057d',
 } satisfies ComponentUsage;
 
 export { usage };

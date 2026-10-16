@@ -1,4 +1,5 @@
-/* @layer renderer-components @kind component */
+/* @layer renderer-components @kind logic */
+import { createElement } from 'react';
 import { Checkbox, SearchInput } from '@drizztdourden08/tessera/primitives';
 import type { ToolGroup } from '@drizztdourden08/tessera/primitives';
 import { SOUND_FILTER_PLACEHOLDER } from './msu.constants';
@@ -12,7 +13,9 @@ const soundToolGroups = (props: SoundToolGroupsProps): ToolGroup[] => {
     {
       id: 'find',
       label: 'Find',
-      content: <SearchInput grow={false} value={filter} onChange={onFilterChange} placeholder={SOUND_FILTER_PLACEHOLDER} aria-label="Find a sound" />,
+      content: createElement(SearchInput, {
+        grow: false, value: filter, onChange: onFilterChange, placeholder: SOUND_FILTER_PLACEHOLDER, 'aria-label': 'Find a sound',
+      }),
     },
   ];
   if (unreachableCount === 0) return groups;
@@ -22,7 +25,9 @@ const soundToolGroups = (props: SoundToolGroupsProps): ToolGroup[] => {
     {
       id: 'show',
       label: 'Show',
-      content: <Checkbox checked={showUnreachable} onChange={onShowUnreachableChange} label={`Show ${unreachableCount} unreachable ids`} />,
+      content: createElement(Checkbox, {
+        checked: showUnreachable, onChange: onShowUnreachableChange, label: `Show ${unreachableCount} unreachable ids`,
+      }),
     },
   ];
 };

@@ -9,7 +9,7 @@ import { PROPERTIES_PANEL, STATES_PANEL } from '../PlayerSpriteStudio.constants'
 import type { SpriteWorkAreaProps } from '../PlayerSpriteStudio.type';
 import { SpriteProperties } from './SpriteProperties';
 import { SpriteStatus } from './SpriteStatus';
-import { viewerToolGroups } from './viewer-tool-groups';
+import { viewerToolGroups } from '../behavior/viewer-tool-groups';
 
 const SpriteWorkArea = (props: SpriteWorkAreaProps) => {
   const { sheet, installed, busy, error, draft, library, exporter, run, onOpenAfter, onUninstalled } = props;

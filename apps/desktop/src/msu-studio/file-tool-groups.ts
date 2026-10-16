@@ -1,4 +1,5 @@
-/* @layer renderer-components @kind component */
+/* @layer renderer-components @kind logic */
+import { createElement } from 'react';
 import { Checkbox, SearchInput } from '@drizztdourden08/tessera/primitives';
 import type { ToolGroup } from '@drizztdourden08/tessera/primitives';
 import { sectionGroup } from './studio-frame/section-group';
@@ -11,7 +12,9 @@ const fileToolGroups = (props: FileToolGroupsProps): ToolGroup[] => {
     {
       id: 'find',
       label: 'Find',
-      content: <SearchInput grow={false} value={filter} onChange={onFilterChange} placeholder="intro, pcm..." aria-label="Find a file" />,
+      content: createElement(SearchInput, {
+        grow: false, value: filter, onChange: onFilterChange, placeholder: 'intro, pcm...', 'aria-label': 'Find a file',
+      }),
     },
   ];
   if (coveredCount === 0) return groups;
@@ -21,7 +24,9 @@ const fileToolGroups = (props: FileToolGroupsProps): ToolGroup[] => {
     {
       id: 'show',
       label: 'Show',
-      content: <Checkbox checked={supersededOnly} label={`Superseded originals only (${coveredCount})`} onChange={onSupersededOnlyChange} />,
+      content: createElement(Checkbox, {
+        checked: supersededOnly, label: `Superseded originals only (${coveredCount})`, onChange: onSupersededOnlyChange,
+      }),
     },
   ];
 };
