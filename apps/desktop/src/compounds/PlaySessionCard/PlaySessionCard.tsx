@@ -1,7 +1,6 @@
 /* @layer renderer-components @kind component */
 import { Badge } from '@drizztdourden08/tessera/primitives';
-import { ListItemRow } from '@drizztdourden08/tessera/composites';
-import { formatSessionDate } from './behavior/format-session-date';
+import { DateText, ListItemRow } from '@drizztdourden08/tessera/composites';
 import { formatDuration } from './behavior/format-duration';
 import { type PlaySessionCardProps } from './PlaySessionCard.type';
 
@@ -14,7 +13,7 @@ const PlaySessionCard = (props: PlaySessionCardProps) => {
   return (
     <ListItemRow
       icon={<Badge variant="dot" color="primary" />}
-      name={formatSessionDate(session.startedAt)}
+      name={<DateText value={session.startedAt} format="calendar" />}
       meta={session.endedAt ? endTimeOf(session.endedAt) : undefined}
       columns={[{ primary: formatDuration(session.durationMs), align: 'end' }]}
     />
