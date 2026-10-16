@@ -192,6 +192,14 @@ being off is a setting the player can undo on the spot; a blocked content is a c
 shop scope above (its cauldron went to the shuffle). Only the second carries a note, takes the
 whole line and wears the danger marker.
 
+## apps/desktop/src/compounds/DataSections/DataSections.tsx
+
+The cards of a home page. The page above owns the level 2 heading, so a group label is level 3 and a card title level 4, which keeps the outline in order for a screen reader. The icon sits in a neutral media block so a card reads as a link to a page, not as a status.
+
+## apps/desktop/src/compounds/DataStorageDetails/DataStorageDetails.tsx
+
+Shows what the Storage page shows, without its actions: the data folder with its host label and the count and size of each data folder. The Storage page is the place to clean, export or import; this part only reports. The tiles used to sit in the hero panel of the data home and moved here with the folder path, so the hero keeps three numbers.
+
 ## apps/desktop/src/compounds/DebugCaptureButton/behavior/useDebugCapture.ts
 
 Starting a recording checks for ffmpeg first, because a recording is encoded into a video the
