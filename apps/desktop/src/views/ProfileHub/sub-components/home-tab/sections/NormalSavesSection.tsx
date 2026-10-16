@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind component */
 import { Box, Button, Icon, Text } from '@drizztdourden08/tessera/primitives';
-import { NormalSaveCard } from '../../../../../compounds/NormalSaveCard';
+import { SaveListRow } from '../../../../../compounds/SaveListRow';
 import type { HomeTabColumnsProps } from '../home-tab.type';
 
 const NormalSavesSection = ({ saves, isGameRunning }: HomeTabColumnsProps) => {
@@ -26,9 +26,9 @@ const NormalSavesSection = ({ saves, isGameRunning }: HomeTabColumnsProps) => {
       {normalSaves.length === 0 ? (
         <Text as="p" className="home-tab__empty">No saves yet</Text>
       ) : (
-        <Box className="home-tab__save-list">
+        <Box className="home-tab__save-list" role="list" aria-label="Saves">
           {normalSaves.map((s) => (
-            <NormalSaveCard
+            <SaveListRow
               key={s.id}
               id={s.id}
               name={s.name}

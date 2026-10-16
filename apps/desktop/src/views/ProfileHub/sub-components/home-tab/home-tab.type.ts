@@ -38,7 +38,7 @@ interface SlotInfo {
 }
 
 interface DialogState {
-  type: 'overwrite' | 'delete' | 'create' | 'import-sram' | 'import-sram-invalid' | null;
+  type: 'load' | 'overwrite' | 'delete' | 'create' | 'import-sram' | 'import-sram-invalid' | null;
   targetId?: string;
   targetName?: string;
   pendingBytes?: Uint8Array;
@@ -96,6 +96,7 @@ interface UseNormalSaveDialogsParams {
   dialog: DialogState;
   setDialog: (dialog: DialogState) => void;
   normalSaves: NormalSaveInfo[];
+  loadNormal: (id: string) => Promise<void>;
   setBusyNormal: (id: string | null) => void;
   loadNormalSaves: () => Promise<void>;
 }

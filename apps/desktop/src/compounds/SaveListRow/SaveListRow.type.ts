@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind types */
-interface NormalSaveCardProps {
+interface SaveListRowProps {
   id: string;
   name: string;
   timestamp: number;
@@ -12,4 +12,4 @@ interface NormalSaveCardProps {
   onRename: (id: string, newName: string) => void;
 }
 
-export type { NormalSaveCardProps };
+export type { SaveListRowProps };

@@ -1,17 +1,9 @@
 /* @layer renderer-components @kind constants */
+import { GBA_DIFFERENCES } from '@rotp/features';
 import type { GbaGroup } from '@rotp/features';
-import type { StatusMap } from '@drizztdourden08/tessera/primitives';
-import type { EvidenceFilter, GbaAvailability } from './gba-settings.type';
-
-const EVIDENCE_OPTIONS: { value: EvidenceFilter; label: string }[] = [
-  { value: 'all', label: 'All' },
-  { value: 'in-progress', label: 'In progress only' },
-];
-
-const EVIDENCE_STATUS = {
-  'in-progress': { label: 'In progress', tone: 'info' },
-  documented: { label: 'Documented', tone: 'neutral' },
-} as const satisfies StatusMap;
+import { buildSchema } from '@drizztdourden08/tessera/data';
+import type { SchemaConfig, TableColumn } from '@drizztdourden08/tessera/data';
+import type { GbaAvailability } from './gba-settings.type';
 
 const EXPERIMENTAL_NOTICE = 'Experimental and unfinished. Expect missing pieces and bugs.';
 
@@ -32,6 +24,36 @@ const GBA_GROUP_ORDER: GbaGroup[] = [
   'Removed',
 ];
 
+const GBA_SCHEMA_CONFIG: SchemaConfig = {
+  order: ['label', 'group', 'evidence', 'detail'],
+  labels: { label: 'Feature', group: 'Group', evidence: 'Status', detail: 'Notes' },
+  hidden: ['id'],
+  kinds: { label: 'string', detail: 'string' },
+  options: {
+    group: GBA_GROUP_ORDER,
+    evidence: [
+      { value: 'in-progress', label: 'In progress' },
+      { value: 'documented', label: 'Documented' },
+    ],
+  },
+};
+
+const GBA_SCHEMA = buildSchema(GBA_DIFFERENCES, GBA_SCHEMA_CONFIG);
+
+const GBA_TABLE_COLUMNS: readonly TableColumn[] = [
+  { path: 'label', fit: true },
+  { path: 'group', fit: true },
+  { path: 'evidence', fit: true },
+  { path: 'detail', grow: true },
+];
+
+const GBA_COUNT_LABEL = ['difference', 'differences'] as const;
+
+const GBA_SEARCH_PLACEHOLDER = 'Search differences...';
+
 const NO_SUPPLEMENT: GbaAvailability = { hasSupplement: false, supplementFile: null };
 
-export { EVIDENCE_OPTIONS, EVIDENCE_STATUS, EXPERIMENTAL_NOTICE, EXTRA_DUNGEON_DESCRIPTION, GBA_GROUP_ORDER, NO_SUPPLEMENT, TRACKER_NOTE };
+export {
+  EXPERIMENTAL_NOTICE, EXTRA_DUNGEON_DESCRIPTION, GBA_COUNT_LABEL, GBA_GROUP_ORDER, GBA_SCHEMA, GBA_SCHEMA_CONFIG,
+  GBA_SEARCH_PLACEHOLDER, GBA_TABLE_COLUMNS, NO_SUPPLEMENT, TRACKER_NOTE,
+};

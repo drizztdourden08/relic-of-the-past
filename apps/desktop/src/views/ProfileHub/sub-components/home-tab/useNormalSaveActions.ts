@@ -32,7 +32,7 @@ const useNormalSaveActions = (params: UseNormalSaveActionsParams) => {
     setBusyNormal(null);
   }, [profileId, newSaveName, setDialog, setBusyNormal, loadNormalSaves]);
 
-  const handleLoadNormal = useCallback(async (id: string) => {
+  const loadNormal = useCallback(async (id: string) => {
     setBusyNormal(id);
     log.app(`Loading normal save: ${id}`);
     const ready = await ensureGameRunning(isGameRunning, onStartGame);
@@ -49,7 +49,7 @@ const useNormalSaveActions = (params: UseNormalSaveActionsParams) => {
     await loadNormalSaves();
   }, [profileId, loadNormalSaves]);
 
-  return { newSaveName, setNewSaveName, handleCreateNormalSave, handleConfirmCreate, handleLoadNormal, handleRenameNormal };
+  return { newSaveName, setNewSaveName, handleCreateNormalSave, handleConfirmCreate, loadNormal, handleRenameNormal };
 };
 
 export { useNormalSaveActions };

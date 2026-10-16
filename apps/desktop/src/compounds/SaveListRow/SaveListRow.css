@@ -1,0 +1,49 @@
+/* @layer renderer-components @kind style */
+.save-list-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-sm) var(--space-md);
+  padding: var(--space-md);
+}
+
+.save-list-row:hover {
+  background: var(--c-hover);
+}
+
+.save-list-row--busy {
+  opacity: 0.6;
+  pointer-events: none;
+}
+
+.save-list-row__thumb {
+  flex: none;
+  width: var(--size-64);
+  height: calc(44 * var(--size-1));
+}
+
+.save-list-row__info {
+  display: flex;
+  flex: 1 1 calc(120 * var(--size-1));
+  flex-direction: column;
+  gap: var(--space-2xs);
+  min-width: 0;
+}
+
+.save-list-row__info .save-list-row__name-tip {
+  display: flex;
+  min-width: 0;
+}
+
+.save-list-row__name {
+  overflow: hidden;
+  font-weight: var(--weight-medium);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  cursor: default;
+}
+
+.save-list-row__actions {
+  flex: none;
+  margin-inline-start: auto;
+}
