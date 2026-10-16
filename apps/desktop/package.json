@@ -125,7 +125,7 @@
   },
   "brock": {
     "version": "0.57.0",
-    "tessera": "0.40.0"
+    "tessera": "0.40.1"
   },
   "portKit": {
     "wasm": {
