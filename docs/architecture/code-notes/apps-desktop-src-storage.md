@@ -34,12 +34,11 @@ knowable, so no caller needs a host check.
 
 ## apps/desktop/src/storage/extraction-client.ts
 
-One Brock Web Worker job per call (`runExtractStep` over `runAssetWebWorkerJob`), each with its own worker and a numbered job id, because Brock refuses to start a job while one of the same id runs.
+One Brock Web Worker job per call (`runExtractStep` over `runAssetWebWorkerJob`), each with its own worker. The job id is `<step>:<subject>`, and `STEP_JOB_OPTIONS` says what a second call for the same id does: assets queue (a later bake carries newer inputs and must store last), language packs run in parallel (each decodes its own ROM bytes), menu text and sprites join the running job (the same ROM always gives the same result). Menu text is a quiet job (`visible: false`), and the assets bake forwards its log (`forwardLog`), which holds the language compile warnings, to the app log. The port kit's asset job takes only a title and `cancellable`, so the step's options ride in on the `start` function `runAssetWebWorkerJob` accepts.
 
-## apps/desktop/src/storage/import-progress-bus/
+## apps/desktop/src/storage/import-job/
 
-Import runs in the renderer over FileStore, so progress is published on this bus, never as a
-main process IPC event. `useImportProgress` subscribes to it.
+Import runs in the renderer over FileStore, and each import is one quiet Brock job (`runImportJob`, `visible: false`, id `import:<kind>`, a second import of the same kind waits). The work reports its phase and its counted progress (bytes of a download, files of a copy) through the `ImportReport` it is handed, and `useImportProgress` reads the job back with `useJob`. A result that says it failed without throwing (`failureOf`) fails the job, and a throw fails it by itself. The heavier jobs an import starts, such as the asset bake, stay visible in the title bar.
 
 ## apps/desktop/src/storage/languages-store/
 
@@ -98,8 +97,8 @@ clobbering other settings, for the profile cycle shortcut outside the settings s
 
 ## apps/desktop/src/storage/roms-store/
 
-Import runs in the renderer (pick or download, unzip or raw, then FileStore) and reports on
-the import progress bus. Every import names its kind. The base cartridge boots the game; a
+Import runs in the renderer (pick or download, unzip or raw, then FileStore) as an import job
+(`importRomJob`). Every import names its kind. The base cartridge boots the game; a
 supplement only adds to one, is digest checked before it is written, and never replaces a
 file already there.
 

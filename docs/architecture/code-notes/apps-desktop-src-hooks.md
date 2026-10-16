@@ -250,7 +250,7 @@ rescan pending until the next snapshot arrives or three seconds pass.
 
 ## apps/desktop/src/hooks/useImportProgress.ts
 
-Subscribes to the main process `import:progress` event and reduces the stream for one import kind (rom, msu, language, sprite) to a simple state a spinner or progress bar can draw. The state is determinate (`percent`) when `loaded` and `total` are both present, and indeterminate otherwise.
+Reads the import job of one kind (rom, msu, language, sprite, link sprite) with `useJob` and reduces it to a simple state a spinner or progress bar can draw. The state is active while the job runs, determinate (`percent`) once it has counted some progress, and indeterminate before that.
 
 ## apps/desktop/src/hooks/useInstalledActions.ts
 

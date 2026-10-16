@@ -1,18 +1,14 @@
 /* @layer renderer-lib @kind logic */
 import { fetchToBytes } from '@app/download/download';
 import type { LanguageResult } from './languages-store.type';
-import { emitLanguageProgress } from './emit-language-progress';
-import { extractFromBytes } from './extract-from-bytes';
-import { languageFailure } from './language-failure';
+import { extractPack } from './extract-pack';
+import { languageImportJob } from './language-import-job';
 import { resolveRomBytes } from './resolve-rom-bytes';
 
-const extractLanguageFromUrl = async (url: string): Promise<LanguageResult> => {
-  try {
-    const bytes = await fetchToBytes(url, (loaded, total) => emitLanguageProgress('download', loaded, total ?? undefined));
-    return await extractFromBytes(await resolveRomBytes(bytes));
-  } catch (err) {
-    return languageFailure(err);
-  }
-};
+const extractLanguageFromUrl = (url: string): Promise<LanguageResult> =>
+  languageImportJob(async (report) => {
+    const bytes = await fetchToBytes(url, (loaded, total) => report.count('download', loaded, total ?? undefined));
+    return extractPack(await resolveRomBytes(bytes), report);
+  });
 
 export { extractLanguageFromUrl };

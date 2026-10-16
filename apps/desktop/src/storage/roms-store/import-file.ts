@@ -1,13 +1,8 @@
 /* @layer renderer-lib @kind logic */
 import type { RomImportResult, RomKind } from '@rotp/roms';
-import { importRomBytes } from '../rom-files';
-import { platformFiles } from '../platform-files';
-import { emitRomProgress } from './emit-rom-progress';
-import { finalizeRomImport } from './finalize-rom-import';
+import { importRomJob } from './import-rom-job';
 
-const importFile = async (file: File, kind: RomKind = 'snes-alttp'): Promise<RomImportResult> => {
-  const bytes = new Uint8Array(await file.arrayBuffer());
-  return finalizeRomImport(await importRomBytes(platformFiles(), { fileName: file.name, bytes }, kind, (phase) => emitRomProgress(phase)));
-};
+const importFile = (file: File, kind: RomKind = 'snes-alttp'): Promise<RomImportResult> =>
+  importRomJob(kind, async () => ({ fileName: file.name, bytes: new Uint8Array(await file.arrayBuffer()) }));
 
 export { importFile };

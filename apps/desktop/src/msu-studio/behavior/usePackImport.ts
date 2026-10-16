@@ -1,7 +1,6 @@
 /* @layer renderer-components @kind hook */
 import { useCallback } from 'react';
 import { installMsulFile } from '@app/storage/msu-store';
-import { publishImportProgress } from '@app/storage/import-progress-bus';
 import { stemOf } from './track-file-name';
 import { failure } from './failure';
 import { isMsulName } from './is-msul-name';
@@ -22,9 +21,7 @@ const usePackImport = (params: PackImportParams) => {
         : '';
       return { success: true, message: `Imported "${result.pack}" with ${result.fileCount} files and ${result.trackCount} slots${missing}` };
     } catch (err) {
-      const outcome = failure(err, 'Could not read that pack');
-      publishImportProgress({ kind: 'msu', id: 'msu', phase: 'error', message: outcome.message });
-      return outcome;
+      return failure(err, 'Could not read that pack');
     }
   }, [refresh, onImported]);
 

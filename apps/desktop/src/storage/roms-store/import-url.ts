@@ -1,19 +1,17 @@
 /* @layer renderer-lib @kind logic */
 import type { RomImportResult, RomKind } from '@rotp/roms';
 import { fetchToBytes } from '@app/download/download';
-import { importRomBytes } from '../rom-files';
 import { lastPathSegment } from '../last-path-segment';
-import { platformFiles } from '../platform-files';
-import { emitRomProgress } from './emit-rom-progress';
-import { finalizeRomImport } from './finalize-rom-import';
+import { importRomJob } from './import-rom-job';
 
 const fallbackName = (kind: RomKind): string => (kind === 'gba-alttp' ? 'rom.gba' : 'rom.sfc');
 
 const nameFromUrl = (url: string, kind: RomKind): string => lastPathSegment(url) || fallbackName(kind);
 
-const importUrl = async (url: string, kind: RomKind = 'snes-alttp'): Promise<RomImportResult> => {
-  const bytes = await fetchToBytes(url, (loaded, total) => emitRomProgress('download', loaded, total ?? undefined));
-  return finalizeRomImport(await importRomBytes(platformFiles(), { fileName: nameFromUrl(url, kind), bytes }, kind, (phase) => emitRomProgress(phase)));
-};
+const importUrl = (url: string, kind: RomKind = 'snes-alttp'): Promise<RomImportResult> =>
+  importRomJob(kind, async (report) => ({
+    fileName: nameFromUrl(url, kind),
+    bytes: await fetchToBytes(url, (loaded, total) => report.count('download', loaded, total ?? undefined)),
+  }));
 
 export { importUrl };
