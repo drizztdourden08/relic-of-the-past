@@ -1,5 +1,5 @@
 /* @layer electron-main @kind logic */
-import { createRecommendationStore } from '@rotp/navigation';
+import { createRecommendationStore } from '@rotp/navigation/recommendations';
 import { handle } from '@drizztdourden08/brock-electron/main';
 import { loadRecommendationFile, queued, recommendationStorage } from './recommendation-files';
 
