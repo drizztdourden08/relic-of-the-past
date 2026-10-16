@@ -13,6 +13,8 @@
   ],
   "exports": {
     ".": "./src/index.ts",
+    "./save-paths": "./src/save-paths/index.ts",
+    "./shadow-casting-types": "./src/shadow-casting-types/index.ts",
     "./package.json": "./package.json"
   },
   "dependencies": {
