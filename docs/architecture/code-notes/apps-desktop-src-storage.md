@@ -34,7 +34,7 @@ knowable, so no caller needs a host check.
 
 ## apps/desktop/src/storage/extraction-client.ts
 
-One Web Worker per job.
+One Brock Web Worker job per call (`runExtractStep` over `runAssetWebWorkerJob`), each with its own worker and a numbered job id, because Brock refuses to start a job while one of the same id runs.
 
 ## apps/desktop/src/storage/import-progress-bus/
 
