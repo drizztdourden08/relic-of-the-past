@@ -66,6 +66,7 @@ export default defineBrockConfig({
   modules: ['updater', 'secrets', 'display', 'tools', 'catalog', 'port-kit', 'input'],
   build: {
     nodePolyfills: { globals: { Buffer: true, process: true } },
+    optimizeDeps: { worker: ['fs', 'crypto', 'path', 'js-yaml'] },
   },
   packaging: {
     fileAssociations: {
