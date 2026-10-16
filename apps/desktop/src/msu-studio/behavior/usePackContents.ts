@@ -10,18 +10,14 @@ const usePackContents = (pack: string | null) => {
   const [files, setFiles] = useState<MsuFile[]>([]);
   const [trackInfos, setTrackInfos] = useState<TrackInfo[]>([]);
   const [manifest, setManifest] = useState<MsuPackManifest | null>(null);
-  const [loading, setLoading] = useState(false);
-  const [loaded, setLoaded] = useState(false);
+  const [loadedPack, setLoadedPack] = useState<string | null>(null);
   const [generation, setGeneration] = useState(0);
 
   const reload = useCallback(() => { setGeneration((n) => n + 1); }, []);
 
-  useEffect(() => { setLoaded(false); }, [pack]);
-
   useEffect(() => {
-    if (!pack) { setFiles([]); setTrackInfos([]); setManifest(null); return; }
+    if (!pack) { setFiles([]); setTrackInfos([]); setManifest(null); setLoadedPack(null); return; }
     let live = true;
-    setLoading(true);
     Promise.all([
       msuStore.listMsuAudioFiles(pack),
       msuStore.getMsuTrackList(pack),
@@ -31,9 +27,12 @@ const usePackContents = (pack: string | null) => {
       setFiles([...audio].sort((a, b) => (getTrackNumber(a.name) ?? 999) - (getTrackNumber(b.name) ?? 999)));
       setTrackInfos([...tracks].sort((a, b) => a.trackNum - b.trackNum));
       setManifest(packManifest);
-      setLoading(false);
-      setLoaded(true);
-    }).catch(() => { if (live) { setLoading(false); setLoaded(true); } });
+      setLoadedPack(pack);
+    }).catch(() => {
+      if (!live) return;
+      setFiles([]); setTrackInfos([]); setManifest(null);
+      setLoadedPack(pack);
+    });
     return () => { live = false; };
   }, [pack, generation]);
 
@@ -44,7 +43,7 @@ const usePackContents = (pack: string | null) => {
 
   const totalSize = useMemo(() => files.reduce((sum, f) => sum + f.size, 0), [files]);
 
-  return { files, trackInfos, manifest, resolved, totalSize, loading, loaded, reload };
+  return { files, trackInfos, manifest, resolved, totalSize, loaded: pack === null || loadedPack === pack, reload };
 };
 
 export { usePackContents };

@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { ImportForm } from './ImportForm';
 import { MSU_IMPORT_COPY } from './msu-manager/msu-manager.constants';
 import { useMsuPackActions } from './msu-manager/useMsuPackActions';
-import { EmptyState, Text } from '@drizztdourden08/tessera/primitives';
+import { Center, EmptyState, Spinner, Text } from '@drizztdourden08/tessera/primitives';
 import { ListDetailLayout } from '@drizztdourden08/tessera/composites';
 import { useInstalledKind } from '@app/hooks/useInstalledKind';
 import { InstalledOriginBar, useConfirmUninstall } from '@app/views/InstalledOriginBar';
@@ -45,6 +45,7 @@ const MsuManager = (props: MsuManagerProps) => {
       />
       {uninstallError !== null && <Text className="import-form__status import-form__status--error">{uninstallError}</Text>}
       <MsuPackList
+        loading={msu.loadingPacks}
         packs={msu.packs}
         selected={selected}
         isInstalled={isInstalled}
@@ -58,7 +59,7 @@ const MsuManager = (props: MsuManagerProps) => {
     <InstalledOriginBar pack={installed} onDuplicated={refreshThenSelect} onUpdateInstalled={refreshThenSelect} onUninstalled={handleUninstalled} />
   );
 
-  const studio = msu.loadingFiles || selected === null ? <Text>Loading...</Text> : (
+  const studio = msu.loadingFiles || selected === null ? <Center><Spinner /></Center> : (
     <MsuStudio
       msu={msu}
       pack={selected}
