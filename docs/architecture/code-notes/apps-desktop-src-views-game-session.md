@@ -23,7 +23,7 @@ The overrides are a creation form preset's config values, then any setting the r
 
 ## apps/desktop/src/views/GameSession/behavior/delete-profile-flow.ts
 
-Deleting the active profile first stops the game and then makes the most recently played other profile active, and only then removes the profile. The shell has no Home while no profile is active (the game hub requires one), and the shell opens Data > Profiles (`product.profilesRoute`) when the active profile is removed, so removing it first left Escape and the menu with nowhere to go. The game is stopped before the folder goes so the exit save and the session end land in a folder that still exists. Deleting the only profile still ends with no active profile, which is the shell's own empty state.
+Deleting the active profile stops the game first, as a guard that `useDeleteProfile` registers with `profileRemoval.add` from brock-react. The game stop lives in `GameSession` state, which `main.tsx` cannot reach, so the guard cannot go on `<BrockApp profiles={{ onBeforeRemove }}>`. The guard runs after the delete confirm and before the folder goes, so the exit save and the session end land in a folder that still exists. Brock does the rest: it makes the most recently used remaining profile active, and opens `product.profilesRoute` (Data > Profiles) when the last one goes.
 
 ## apps/desktop/src/views/GameSession/behavior/dump-flood-items.ts
 

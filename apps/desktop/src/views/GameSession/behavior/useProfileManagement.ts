@@ -51,7 +51,7 @@ const useProfileManagement = (params: ProfileManagementParams) => {
   }, [refreshProfilesAndRoms, handleSelectProfile]);
 
   const handleDeleteProfile = useDeleteProfile({
-    profiles, activeProfile, refreshProfilesAndRoms, showDialog, dismissDialog, stopGame: onGameStop, selectProfile: handleSelectProfile, removeConfirmed,
+    profiles, refreshProfilesAndRoms, showDialog, dismissDialog, stopGame: onGameStop, removeConfirmed,
   });
 
   const { extractionStates, importingRom, handleImportRom, handleExtractAssets, handleDeleteRom } = useRomActions({

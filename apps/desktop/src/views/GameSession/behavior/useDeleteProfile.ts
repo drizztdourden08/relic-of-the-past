@@ -1,19 +1,21 @@
 /* @layer renderer-appshell @kind hook */
-import { useCallback } from 'react';
+import { useCallback, useEffect } from 'react';
+import { profileRemoval } from '@drizztdourden08/brock-react';
 import { log } from '@app/log-bus';
-import { runDeleteProfile } from './delete-profile-flow';
+import { stopGameBeforeRemove } from './delete-profile-flow';
 import type { DeleteProfileDeps } from './useProfileManagement.type';
 
 const useDeleteProfile = (deps: DeleteProfileDeps) => {
-  const { profiles, activeProfile, refreshProfilesAndRoms, showDialog, dismissDialog, stopGame, selectProfile, removeConfirmed } = deps;
+  const { profiles, refreshProfilesAndRoms, showDialog, dismissDialog, stopGame, removeConfirmed } = deps;
+
+  useEffect(() => profileRemoval.add(stopGameBeforeRemove(stopGame)), [stopGame]);
 
   return useCallback((id: string) => {
     const profile = profiles.find((p) => p.id === id);
     if (!profile) return;
     const confirmed = async () => {
       dismissDialog();
-      await runDeleteProfile(profile, { profiles, activeProfile, stopGame, selectProfile, removeConfirmed });
-      log.app('Profile deleted');
+      if (await removeConfirmed(profile)) log.app('Profile deleted');
       await refreshProfilesAndRoms();
     };
     showDialog({
@@ -23,7 +25,7 @@ const useDeleteProfile = (deps: DeleteProfileDeps) => {
       variant: 'danger',
       onConfirm: () => { void confirmed(); },
     });
-  }, [profiles, activeProfile, refreshProfilesAndRoms, showDialog, dismissDialog, stopGame, selectProfile, removeConfirmed]);
+  }, [profiles, refreshProfilesAndRoms, showDialog, dismissDialog, removeConfirmed]);
 };
 
 export { useDeleteProfile };
