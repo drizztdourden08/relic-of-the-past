@@ -1,0 +1,6 @@
+/* @layer renderer-components @kind style */
+.shadow-element-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+}

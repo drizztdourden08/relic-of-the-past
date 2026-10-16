@@ -68,6 +68,10 @@ The reload is a capability the app shell lends, because the shell owns the profi
 
 `markAssetsBaked` can be called outside React, so the storage layer bumps the generation after a rebake.
 
+## apps/desktop/src/stores/game-fit-store/
+
+The size in pixels of the game picture on screen, written by `GameLayer` after it fits the canvas to its box. A kit overlay is drawn without props, so it reads the size here to cover the picture.
+
 ## apps/desktop/src/stores/game-ui-store/
 
 Real-time game UI state, updated every frame by the ui-bridge polling loop. `_setState` replaces the whole state, and ui-bridge calls it on a change.
@@ -208,6 +212,8 @@ The randomizer config each profile was last saved with from a connection edit, b
 ## apps/desktop/src/stores/shadow-editor-store/
 
 The undo history keeps the last `UNDO_DEPTH` screen states before the current one.
+
+`loaded` is set by the first `loadProject` of the run. The game's shadow renderer follows the store's project from then on, so edits show in the game while the Developer tools kit is open and stay in effect after it closes until the app restarts.
 
 ## apps/desktop/src/stores/simulator-store/
 

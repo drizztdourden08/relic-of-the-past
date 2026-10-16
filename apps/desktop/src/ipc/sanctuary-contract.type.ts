@@ -16,8 +16,10 @@ type SanctuaryReportSnapshot = {
   attachDebugFiles: boolean;
 };
 
+type SanctuaryReportExtras = SanctuaryReportSnapshot & { captureSessions: string[] };
+
 interface SanctuaryInvokeContract {
   'sanctuary:submitReport': (input: SanctuarySubmitInput) => Promise<SanctuarySubmitResult>;
 }
 
-export type { SanctuaryInvokeContract, SanctuarySubmitInput, SanctuarySubmitResult, SanctuaryReportSnapshot };
+export type { SanctuaryInvokeContract, SanctuarySubmitInput, SanctuarySubmitResult, SanctuaryReportSnapshot, SanctuaryReportExtras };

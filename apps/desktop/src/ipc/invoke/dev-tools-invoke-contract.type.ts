@@ -1,7 +1,9 @@
 /* @layer shared-types @kind types */
 import type { ShadowCastingProject, ScreenShadowData } from '@rotp/game-core';
 import type { SimRunConfig } from '@rotp/navigation';
-import type { DebugCaptureFinalizeInput, DebugCaptureFinalizeResult } from '@app/debug-report';
+import type {
+  DebugCaptureDeleteSessionResult, DebugCaptureFinalizeInput, DebugCaptureFinalizeResult, DebugCaptureSessionSummary,
+} from '@app/debug-report';
 import type { EntityKind } from '@rotp/game-data';
 import type { PassResult, Recommendation, RecommendationPassRequest } from '../recommendation-contract.type';
 import type { InvokeResult } from './invoke-result.type';
@@ -30,6 +32,8 @@ interface DevToolsInvokeContract {
   'shadow-casting:get-screen': (screenId: number) => Promise<ScreenShadowData | null>;
 
   'debug-capture:finalizeSession': (input: DebugCaptureFinalizeInput) => Promise<DebugCaptureFinalizeResult>;
+  'debug-capture:listSessions': (input: { profileId: string }) => Promise<DebugCaptureSessionSummary[]>;
+  'debug-capture:deleteSession': (input: { profileId: string; sessionKey: string }) => Promise<DebugCaptureDeleteSessionResult>;
 }
 
 export type { DevToolsInvokeContract };

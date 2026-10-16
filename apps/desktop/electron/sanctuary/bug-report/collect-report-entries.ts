@@ -5,11 +5,13 @@ import { collectProfileFiles } from './collect-profile-files';
 import { collectReportCaptures } from './collect-report-captures';
 import { collectReportSaves } from './collect-report-saves';
 
-const collectReportEntries = async (files: FileStore, profileId: string, liveState: ArrayBuffer | null): Promise<ReportEntries> => {
+const collectReportEntries = async (
+  files: FileStore, profileId: string, liveState: ArrayBuffer | null, captureSessions: string[],
+): Promise<ReportEntries> => {
   const [profileFiles, saved, captures] = await Promise.all([
     collectProfileFiles(files, profileId),
     collectReportSaves(files, profileId, liveState),
-    collectReportCaptures(profileId),
+    collectReportCaptures(profileId, captureSessions),
   ]);
   const manifest = { createdAt: Date.now(), profileId, saves: saved.saves, captureSessions: captures.sessionKeys };
   return {

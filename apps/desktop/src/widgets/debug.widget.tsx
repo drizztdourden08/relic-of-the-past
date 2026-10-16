@@ -9,8 +9,7 @@ const meta: WidgetMeta = {
   defaultSide: 'right',
   defaultDockedSize: 320,
   defaultFloatingSize: { width: 340, height: 500 },
-  context: 'game',
-  devOnly: true,
+  kit: 'dev-tools',
 };
 
 const DebugWidget = () => <DebugWidgetContent />;

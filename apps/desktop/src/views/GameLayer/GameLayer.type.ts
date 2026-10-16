@@ -7,7 +7,6 @@ interface GameLayerProps {
   pixelPerfect?: boolean;
   edgeEffect?: boolean;
   shadowCasting?: boolean;
-  developerToolsEnabled?: boolean;
 }
 
 interface BufferSize {

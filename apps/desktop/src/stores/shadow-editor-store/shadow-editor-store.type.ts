@@ -6,14 +6,13 @@ type EditorTool = 'select' | 'polygon' | 'freehand' | 'point-light' | 'shape-lig
 type HeightPreset = '0.25' | '0.5' | '0.75' | '1.0' | 'custom';
 
 interface ShadowEditorStore {
-  open: boolean;
-  setOpen: (open: boolean) => void;
   previewMode: boolean;
   setPreviewMode: (preview: boolean) => void;
   debugMode: boolean;
   setDebugMode: (debug: boolean) => void;
 
   project: ShadowCastingProject;
+  loaded: boolean;
   dirty: boolean;
 
   activeTool: EditorTool;

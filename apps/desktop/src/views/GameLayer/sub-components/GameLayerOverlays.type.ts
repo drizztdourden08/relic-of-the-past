@@ -4,7 +4,6 @@ interface GameLayerOverlaysProps {
   width: number;
   height: number;
   profileId?: string;
-  developerToolsEnabled: boolean;
 }
 
 export type { GameLayerOverlaysProps };

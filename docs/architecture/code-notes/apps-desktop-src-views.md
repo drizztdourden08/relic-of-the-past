@@ -3,6 +3,10 @@
 
 Facts about `apps/desktop/src/views/` that the code cannot say on its own. Each heading names a file or folder by its path from the repository root.
 
+## apps/desktop/src/views/BugReportRecordings/
+
+The recordings section of Brock's bug report dialog (`rotpBugReport.section`). It draws nothing unless debug logging is on, a profile is active and a game session has registered the report snapshot, since the main process attaches recordings only in that case. Recordings not yet sent start ticked, and the ticked keys go to the transport as `captureSessions` in the report's extras. Only the recordings on screen count, so one ticked and then hidden by turning off Show sent is not sent. Deleting a recording removes it from disk (`debug-capture:deleteSession`).
+
 ## apps/desktop/src/views/ChecksWidget/behavior/useStickyHeader.ts
 
 The pinned header is a per profile widget pref, so the settings panel and the tracker read the same value with no event plumbing, and it survives the widget unmounting and the app closing.
@@ -96,10 +100,6 @@ The menu wording is uppercase A to Z only, because the menu draws text from the 
 `PauseHeroLayer` draws the character where they stand, at the live player's screen position from `useHeroAnchor`, never a constant; the camera keeps them near the middle, which looks like a layout choice but moves with them. The game's sprite is suppressed underneath while the layer is up (`HostMenu_HidePlayerOam`, `host_menu.c`), and the character draws at native size so it registers with the world. It is a sub component because it re renders about fifteen times a second and the view does not. Its outer box is mounted whether or not the menu is open and carries `counterTransform`, the exact inverse of the menu's slide with the same transition, so the character stays on their spot during the animation; it must exist before the slide starts or the cancellation would be a frame late. The idle clock runs only while the menu is open.
 `PauseScreenHost` picks which of the three panels is on, which keeps the view about stores, and lets the screens be exercised with every value as a prop. No screen draws the portrait any more; the columns stay reserved because the name and the hint are laid out against that width. The status vitals carry the armour tier so the panel's hearts match the main HUD. The hint lines are chosen and wrapped by the view, and `onConfirm` fires the cell the cursor is on, one door for every screen.
 
-## apps/desktop/src/views/GameLayer/behavior/overworld-screen-id.ts
-
-The overworld is an 8 by 8 grid of 512 pixel screens. The screen under the camera is found from the camera position plus half the view (128 by 112), divided by 512 and wrapped to the grid.
-
 ## apps/desktop/src/views/GameLayer/behavior/useCanvasOverlayLoop.ts
 
 The shared requestAnimationFrame lifecycle for a WebGL overlay driven off the game canvas (edge glow, shadow casting). Each feature supplies its async setup, its per-frame body and an optional teardown. The loop waits one frame before it starts, so SDL has set the canvas size, then matches the overlay buffer to the game buffer. Bumping `canvasKey` tears the loop down and starts it again.
@@ -133,30 +133,6 @@ A fresh canvas element (a new `canvasKey`) is made when the game returns to idle
 ## apps/desktop/src/views/GameLayer/sub-components/NavigationOverlay/sub-components/DotLegend.tsx
 
 The ring of a dot says which layer or layers the flood reached the tile on; the fill says what kind of result it was. Arrows have their own legend box because an arrow is an edge between tiles, not a property of one.
-
-## apps/desktop/src/views/GameLayer/sub-components/ShadowEditorOverlay/
-
-The editor overlay draws only on the overworld and only with preview mode off. Hit testing works in world space: lights first (a small radius), then heightmap shapes, last drawn first. A freehand shape is hit inside its polygon or near an edge. Dragging a vertex of a regular polygon turns it into a freehand shape with those vertices. A right click during a drag puts the element back where the drag started. Keyboard shortcuts while the editor is open: Ctrl+Z undo, Ctrl+Y or Ctrl+Shift+Z redo, Delete or Backspace removes the selection, Ctrl+S saves, Escape returns to the select tool.
-
-## apps/desktop/src/views/GameLayer/sub-components/ShadowEditorOverlay/behavior/ (the gizmo files)
-
-The transform gizmo of the shadow editor, in display pixels around the shape's center. The Y axis arrow points up. The uniform resize handle sits on the upper left diagonal. Vertex points are stored in the same local, unrotated space the hit test turns the mouse into. Shape rotation is stored in degrees and the gizmo works in radians.
-
-## apps/desktop/src/views/GameLayer/sub-components/ShadowEditorOverlay/behavior/render.ts
-
-- Viewport info feeds the edge-glow shader. Null when the module is not running or the export does not exist.
-- Main module values: 7 dungeon, 9 overworld, 14 menu, 0 and 1 intro and title. The location module is the physical location, unaffected by text and menu overlays; active gameplay is location module 7 or 9.
-- Location type: 0 overworld or other, 1 house or cave, 2 dungeon.
-- `extraLeftRight` is the most extra pixels per side the config allows; the left, right and current extras are uint16 because very wide ratios exceed 255.
-- The current extras are valid map content beyond the base 256 width or 224 height. Black edge = budget minus actual extra.
-- `extraTopBottom` is the tall budget per side, 0 when the view is not tall. Without it the legacy extend_y mode adds 16 lines at the bottom only (a 240-line picture).
-- Camera X and Y are the BG2 scroll. The camera lock shift is signed: the rendered view sits at camera minus shift; 0 means no lock.
-- `inDoorway` is nonzero while the player occupies a doorway (its orientation, not a flag). `doorAnimStep` is 0 when no door animates.
-- The clean frame is rendered without HUD or BG3 into WASM memory as RGBA.
-
-## apps/desktop/src/views/GameLayer/sub-components/ShadowEditorPanel/sub-components/NumberField.tsx
-
-Escape calls `preventDefault` so the dismiss stack treats the key as consumed and leaves the surface the field sits on alone.
 
 ## apps/desktop/src/views/GameOverlay/behavior/useEnhancedAspectWatch.ts
 
@@ -434,6 +410,34 @@ The tiles decode once for the whole app. A failed load forgets the attempt so th
 ## apps/desktop/src/views/SceneBackdrop/SceneBackdrop.tsx
 
 The title's lake scene drawn once and still, as the background of a box, at a whole number pixel scale. `horizon` places the water line as a fraction of the box's height. Without `scale`, the smallest whole scale that lets the 224 row frame cover the box's height is used. The same `seed` always draws the same scene.
+
+## apps/desktop/src/views/ShadowEditorOverlay/
+
+The editor overlay is the Shadow drawing overlay of the Developer tools kit (`src/widgets/shadow-drawing.overlay.tsx`). It takes its size from the game fit store, which `GameLayer` fills, so it covers exactly the game picture. It draws only on the overworld and only with preview mode off. Hit testing works in world space: lights first (a small radius), then heightmap shapes, last drawn first. A freehand shape is hit inside its polygon or near an edge. Dragging a vertex of a regular polygon turns it into a freehand shape with those vertices. A right click during a drag puts the element back where the drag started. Keyboard shortcuts while the overlay is shown: Ctrl+Z undo, Ctrl+Y or Ctrl+Shift+Z redo, Delete or Backspace removes the selection, Ctrl+S saves, Escape returns to the select tool.
+
+## apps/desktop/src/views/ShadowEditorOverlay/behavior/ (the gizmo files)
+
+The transform gizmo of the shadow editor, in display pixels around the shape's center. The Y axis arrow points up. The uniform resize handle sits on the upper left diagonal. Vertex points are stored in the same local, unrotated space the hit test turns the mouse into. Shape rotation is stored in degrees and the gizmo works in radians.
+
+## apps/desktop/src/views/ShadowEditorOverlay/behavior/render.ts
+
+- Viewport info feeds the edge-glow shader. Null when the module is not running or the export does not exist.
+- Main module values: 7 dungeon, 9 overworld, 14 menu, 0 and 1 intro and title. The location module is the physical location, unaffected by text and menu overlays; active gameplay is location module 7 or 9.
+- Location type: 0 overworld or other, 1 house or cave, 2 dungeon.
+- `extraLeftRight` is the most extra pixels per side the config allows; the left, right and current extras are uint16 because very wide ratios exceed 255.
+- The current extras are valid map content beyond the base 256 width or 224 height. Black edge = budget minus actual extra.
+- `extraTopBottom` is the tall budget per side, 0 when the view is not tall. Without it the legacy extend_y mode adds 16 lines at the bottom only (a 240-line picture).
+- Camera X and Y are the BG2 scroll. The camera lock shift is signed: the rendered view sits at camera minus shift; 0 means no lock.
+- `inDoorway` is nonzero while the player occupies a doorway (its orientation, not a flag). `doorAnimStep` is 0 when no door animates.
+- The clean frame is rendered without HUD or BG3 into WASM memory as RGBA.
+
+## apps/desktop/src/views/ShadowEditorPanel/
+
+The Shadow Editor is the Developer tools kit's first widgets: the panel (`shadow-editor.widget.tsx`, with its Preview, Debug, Undo, Redo and Save buttons in the widget title strip through `ShadowEditorTools`), the element list (`shadow-elements.widget.tsx`) and the drawing overlay. The project loads once per run, by whichever of the three mounts first (`shadow-editor/ensure-shadow-project.ts`), so closing and reopening the kit keeps unsaved edits. The screen shown is the overworld screen under the camera, read from the game when the game UI store reports a new screen.
+
+## apps/desktop/src/views/ShadowEditorPanel/sub-components/NumberField.tsx
+
+Escape calls `preventDefault` so the dismiss stack treats the key as consumed and leaves the surface the field sits on alone.
 
 ## apps/desktop/src/views/SimulatorWidget/behavior/classify-event.ts
 

@@ -1,5 +1,6 @@
 /* @layer shared-types @kind barrel */
 export type {
+  DebugCaptureDeleteSessionResult,
   DebugCaptureFinalizeInput,
   DebugCaptureFinalizeResult,
   DebugCaptureScreenshot,

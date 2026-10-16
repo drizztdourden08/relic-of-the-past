@@ -7,6 +7,8 @@ import { meta as debugWidgetMeta } from '../src/widgets/debug.widget';
 import { meta as inventoryWidgetMeta } from '../src/widgets/inventory.widget';
 import { meta as musicWidgetMeta } from '../src/widgets/music.widget';
 import { meta as navigationWidgetMeta } from '../src/widgets/navigation.widget';
+import { meta as shadowEditorWidgetMeta } from '../src/widgets/shadow-editor.widget';
+import { meta as shadowElementsWidgetMeta } from '../src/widgets/shadow-elements.widget';
 import { meta as simulatorWidgetMeta } from '../src/widgets/simulator.widget';
 
 const appWidgets = widgetsFromFiles([
@@ -17,6 +19,8 @@ const appWidgets = widgetsFromFiles([
   { id: 'inventory', component: lazyComponent(() => import('../src/widgets/inventory.widget')), meta: inventoryWidgetMeta },
   { id: 'music', component: lazyComponent(() => import('../src/widgets/music.widget')), meta: musicWidgetMeta },
   { id: 'navigation', component: lazyComponent(() => import('../src/widgets/navigation.widget')), meta: navigationWidgetMeta },
+  { id: 'shadow-editor', component: lazyComponent(() => import('../src/widgets/shadow-editor.widget')), meta: shadowEditorWidgetMeta },
+  { id: 'shadow-elements', component: lazyComponent(() => import('../src/widgets/shadow-elements.widget')), meta: shadowElementsWidgetMeta },
   { id: 'simulator', component: lazyComponent(() => import('../src/widgets/simulator.widget')), meta: simulatorWidgetMeta },
 ]);
 const appWidgetLayout = undefined;

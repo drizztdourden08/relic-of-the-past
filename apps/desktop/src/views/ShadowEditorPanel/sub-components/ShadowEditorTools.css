@@ -1,0 +1,11 @@
+/* @layer renderer-components @kind style */
+.shadow-editor-tools {
+  display: flex;
+  gap: var(--space-xs);
+  align-items: center;
+}
+
+.shadow-editor-tools__dirty {
+  color: var(--c-warning);
+  font-size: var(--text-base);
+}

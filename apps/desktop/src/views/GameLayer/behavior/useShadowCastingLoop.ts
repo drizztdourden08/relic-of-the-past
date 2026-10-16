@@ -28,9 +28,7 @@ const useShadowCastingLoop = (params: ShadowLoopParams): void => {
         shadowProjectRef.current = null;
       }
       const unsubscribeLiveEdits = useShadowEditorStore.subscribe((state) => {
-        if (state.dirty || state.open) {
-          shadowProjectRef.current = state.project;
-        }
+        if (state.loaded) shadowProjectRef.current = state.project;
       });
       return unsubscribeLiveEdits;
     },

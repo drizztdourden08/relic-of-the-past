@@ -9,6 +9,7 @@ import { useCanvasDisplaySize } from './behavior/useCanvasDisplaySize';
 import { useCanvasBufferSize } from './behavior/useCanvasBufferSize';
 import { useEdgeGlowLoop } from './behavior/useEdgeGlowLoop';
 import { useGameBoot } from './behavior/useGameBoot';
+import { usePublishFitSize } from './behavior/usePublishFitSize';
 import { useShadowCastingLoop } from './behavior/useShadowCastingLoop';
 import { GameLayerCanvases } from './sub-components/GameLayerCanvases';
 import { GameLayerOverlays } from './sub-components/GameLayerOverlays';
@@ -16,7 +17,7 @@ import './GameLayer.css';
 import type { GameLayerProps } from './GameLayer.type';
 
 const GameLayer = (props: GameLayerProps) => {
-  const { assetData, configIni, profileId, stretch, pixelPerfect = false, edgeEffect = true, shadowCasting = false, developerToolsEnabled = false } = props;
+  const { assetData, configIni, profileId, stretch, pixelPerfect = false, edgeEffect = true, shadowCasting = false } = props;
   const containerRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const fxCanvasRef = useRef<HTMLCanvasElement>(null);
@@ -37,6 +38,7 @@ const GameLayer = (props: GameLayerProps) => {
   const fitSize = useCanvasFit({ containerRef, bufW: bufSize.w, bufH: bufSize.h, stretch, pixelPerfect });
 
   useCanvasDisplaySize([canvasRef, fxCanvasRef, shadowCanvasRef], fitSize, status);
+  usePublishFitSize(fitSize);
 
   useEdgeGlowLoop({ status, canvasKey, canvasRef, fxCanvasRef, glowRendererRef, edgeEffectRef, setBufSize });
   useShadowCastingLoop({ status, canvasKey, canvasRef, shadowCanvasRef, shadowRendererRef, shadowProjectRef, shadowCastingRef });
@@ -62,7 +64,6 @@ const GameLayer = (props: GameLayerProps) => {
         width={fitSize.width}
         height={fitSize.height}
         profileId={profileId}
-        developerToolsEnabled={developerToolsEnabled}
       />
     </Box>
   );
