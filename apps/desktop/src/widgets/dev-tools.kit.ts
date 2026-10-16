@@ -9,7 +9,7 @@ const kit: WidgetKitMeta = {
   devOnly: true,
   requires: { context: 'game', reason: 'Start a game to use the developer tools.' },
   layout: defineLayoutPreset({
-    rows: [[['shadow-elements', 'dataset', 'navigation'], 'main', ['shadow-editor', 'debug', 'music', 'simulator']]],
+    rows: [[['navigation', 'shadow-elements', 'dataset'], 'main', ['shadow-editor', 'debug', 'music', 'simulator']]],
     widths: [[0.22, 0.5, 0.28]],
   }),
 };
