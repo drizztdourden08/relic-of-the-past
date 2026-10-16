@@ -301,6 +301,10 @@ All Home tab save and session state, data loading and action handlers. The timer
 
 Picks, validates and imports a raw SRAM save into the profile's `sram.dat`.
 
+## apps/desktop/src/views/ProfileHub/sub-components/home-tab/useNormalSaveDialogs.ts
+
+The ask half of Load, Overwrite and Delete on a manual save. Each handler only opens its confirm dialog, and the matching `handleConfirm*` runs the action on yes. Load runs `loadNormal` from `useNormalSaveActions`, which is also what the hero Continue button calls directly, so Continue skips the dialog.
+
 ## apps/desktop/src/views/ProfileHub/sub-components/HubGameControls.tsx
 
 The game controls: Play when stopped, otherwise Pause, Stop and Reset. On the home tab they sit in the hero under the mode, and on every other tab in the window's title bar (title bar buttons are small, the hero's are the regular size). Stop is slow (save on quit, then teardown), so it shows progress and ignores repeat clicks until the game has stopped.

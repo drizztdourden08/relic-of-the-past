@@ -8,7 +8,18 @@ import { captureCanvasScreenshot } from './capture-canvas-screenshot';
 import type { UseNormalSaveDialogsParams } from './home-tab.type';
 
 const useNormalSaveDialogs = (params: UseNormalSaveDialogsParams) => {
-  const { profileId, dialog, setDialog, normalSaves, setBusyNormal, loadNormalSaves } = params;
+  const { profileId, dialog, setDialog, normalSaves, loadNormal, setBusyNormal, loadNormalSaves } = params;
+
+  const handleLoadNormal = useCallback((id: string) => {
+    const save = normalSaves.find((s) => s.id === id);
+    setDialog({ type: 'load', targetId: id, targetName: save?.name ?? 'this save' });
+  }, [normalSaves, setDialog]);
+
+  const handleConfirmLoad = useCallback(async () => {
+    const id = dialog.targetId;
+    setDialog({ type: null });
+    if (id) await loadNormal(id);
+  }, [dialog, setDialog, loadNormal]);
 
   const handleOverwriteNormal = useCallback((id: string) => {
     const save = normalSaves.find((s) => s.id === id);
@@ -45,7 +56,7 @@ const useNormalSaveDialogs = (params: UseNormalSaveDialogsParams) => {
     setBusyNormal(null);
   }, [profileId, dialog, setDialog, setBusyNormal, loadNormalSaves]);
 
-  return { handleOverwriteNormal, handleConfirmOverwrite, handleDeleteNormal, handleConfirmDelete };
+  return { handleLoadNormal, handleConfirmLoad, handleOverwriteNormal, handleConfirmOverwrite, handleDeleteNormal, handleConfirmDelete };
 };
 
 export { useNormalSaveDialogs };

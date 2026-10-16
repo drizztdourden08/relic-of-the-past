@@ -28,7 +28,7 @@ const HomeHeroContent = (props: HomeHeroContentProps) => {
   const { Eyebrow, Title, Backdrop, Art, Actions, Tools, Facts, Aside, Panel } = slots;
   const { id: profileId, romFile, lastPlayed, created, randomizer } = profile;
   const saves = useHomeTabSaves({ profileId, isGameRunning, onStartGame });
-  const { heroSave, normalScreenshots, busyNormal, handleLoadNormal, handleImportSram } = saves;
+  const { heroSave, normalScreenshots, busyNormal, loadNormal, handleImportSram } = saves;
   const { storage, capabilities } = usePlatform();
   const randomizerStatus = useHomeRandomizerStatus();
   const mode = deriveProfileMode(randomizer, vanillaSafe);
@@ -53,8 +53,8 @@ const HomeHeroContent = (props: HomeHeroContentProps) => {
     timestamp: heroSave.timestamp,
     screenshotUrl: normalScreenshots[heroSave.id] ?? null,
     busy: busyNormal === heroSave.id,
-    onLoad: () => handleLoadNormal(heroSave.id),
-  } : null), [heroSave, normalScreenshots, busyNormal, handleLoadNormal]);
+    onLoad: () => loadNormal(heroSave.id),
+  } : null), [heroSave, normalScreenshots, busyNormal, loadNormal]);
 
   return (
     <>

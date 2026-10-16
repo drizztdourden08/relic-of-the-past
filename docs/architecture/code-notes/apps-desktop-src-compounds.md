@@ -418,11 +418,6 @@ until a file exists, so dropping a PNG in swaps the monogram chip for the image 
 change. The image and the chip share the same square footprint, so nothing shifts when the art
 arrives, and the chip's per mode tint gives way to the art's own colour.
 
-## apps/desktop/src/compounds/NormalSaveCard/NormalSaveCard.tsx
-
-Escape in the rename field is consumed (`preventDefault`), so the dismiss stack leaves the page
-around the card alone.
-
 ## apps/desktop/src/compounds/OptionDescription/OptionDescription.tsx
 
 A setting's words come in whichever shape the catalog wrote them: one sentence, or a list of lines
@@ -679,6 +674,14 @@ the bow family is the plain bow (`PLAIN_BOW_RUNG`); while it is unticked the fir
 already fires silver, so the plain cost goes inert with the reason on it. Cost steps are 5
 rupees: round numbers a game of this age would ask. An absent `onChange` renders the read-only
 Options page.
+
+## apps/desktop/src/compounds/SaveListRow/behavior/useRename.ts
+
+Escape in the rename field is consumed (`preventDefault`), so the dismiss stack leaves the page around the row alone.
+
+## apps/desktop/src/compounds/SaveListRow/SaveListRow.tsx
+
+A save row is thumbnail, name over date, then the actions. The row wraps, so in a narrow column the actions drop under the name instead of squeezing it. The full name is in a tooltip because the name truncates, and a double click on it renames the save. Load is the one primary action, Overwrite is secondary and Delete is a danger icon button with a tooltip. The callbacks only ask for the action: the home tab shows a confirm dialog and runs it on yes.
 
 ## apps/desktop/src/compounds/SaveSlot/behavior/useArmedAction.ts
 

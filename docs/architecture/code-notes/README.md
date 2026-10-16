@@ -38,7 +38,7 @@ Add a note to the page of the package or area that holds the file, under a headi
 | Page | Notes |
 |---|---|
 | [apps/desktop/src/composites](apps-desktop-src-composites.md) | 11 |
-| [apps/desktop/src/compounds](apps-desktop-src-compounds.md) | 123 |
+| [apps/desktop/src/compounds](apps-desktop-src-compounds.md) | 126 |
 | [apps/desktop/src/data-inspector](apps-desktop-src-data-inspector.md) | 21 |
 | [apps/desktop/src/game](apps-desktop-src-game.md) | 104 |
 | [apps/desktop/src/hooks](apps-desktop-src-hooks.md) | 40 |
@@ -64,7 +64,7 @@ Add a note to the page of the package or area that holds the file, under a headi
 | [apps/desktop/src/views/HudLayoutEditor](apps-desktop-src-views-hud-layout-editor.md) | 130 |
 | [apps/desktop/src/views/InputTester](apps-desktop-src-views-input-tester.md) | 61 |
 | [apps/desktop/src/views/NavigationWidget](apps-desktop-src-views-navigation-widget.md) | 27 |
-| [apps/desktop/src/views/ProfileHub](apps-desktop-src-views-profile-hub.md) | 62 |
+| [apps/desktop/src/views/ProfileHub](apps-desktop-src-views-profile-hub.md) | 63 |
 | [apps/desktop/src/views/Randomizer](apps-desktop-src-views-randomizer.md) | 23 |
 | [apps/desktop/src/views/Store](apps-desktop-src-views-store.md) | 25 |
 | [apps/desktop/src/views](apps-desktop-src-views.md) | 88 |
