@@ -7,7 +7,7 @@
 }
 
 .debug-floating-controls__stack {
-  position: fixed;
+  position: absolute;
   z-index: var(--z-floating);
   display: flex;
   flex-direction: column;
@@ -49,19 +49,4 @@
 .debug-round-button.debug-capture-button--active,
 .debug-round-button.debug-report-floating-button--busy:disabled {
   opacity: 1;
-}
-
-.debug-floating-controls__status-label {
-  position: absolute;
-  top: 50%;
-  right: 100%;
-  margin-right: var(--space-sm);
-  transform: translateY(-50%);
-  font-family: var(--font-mono);
-  font-size: var(--text-xs);
-  font-variant-numeric: tabular-nums;
-  color: var(--c-primary-bright);
-  line-height: 1;
-  white-space: nowrap;
-  text-shadow: 0 var(--size-1) var(--size-2) var(--c-bg), 0 0 var(--size-4) var(--c-bg);
 }

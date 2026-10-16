@@ -13,6 +13,7 @@ type SanctuaryReportSnapshot = {
   context: ReportContext;
   profileId: string | null;
   liveState: ArrayBuffer | null;
+  attachDebugFiles: boolean;
 };
 
 interface SanctuaryInvokeContract {

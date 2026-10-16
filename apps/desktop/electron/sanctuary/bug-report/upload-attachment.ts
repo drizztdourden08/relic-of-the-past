@@ -10,7 +10,7 @@ const uploadAttachment = async (filed: SubmitReportResult, built: BuiltReportZip
   if (!filed.uploadUrl) return NO_UPLOAD_URL_ERROR;
   try {
     await uploadReportZip(filed.reportId, filed.uploadUrl, await readFile(built.path));
-    await markSessionsSent(built.profileId, built.sessionKeys, Date.now());
+    if (built.profileId) await markSessionsSent(built.profileId, built.sessionKeys, Date.now());
     return null;
   } catch (err) {
     return messageOf(err, 'Could not upload the debug report.');
