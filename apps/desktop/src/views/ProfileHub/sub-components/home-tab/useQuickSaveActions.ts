@@ -3,14 +3,15 @@ import { useState, useCallback } from 'react';
 import { saveState, loadState } from '@app/game';
 import { log } from '@app/log-bus';
 import * as savesStore from '@app/storage/saves-store';
-import { undoKey } from './undo/undo-key';
+import { offerUndo } from './undo/offer-undo';
 import { useUndoableLoad } from './undo/useUndoableLoad';
+import { REPLACED_TOAST_ID } from './home-tab.constants';
 import type { UseQuickSaveActionsParams } from './home-tab.type';
 
 const useQuickSaveActions = (params: UseQuickSaveActionsParams) => {
-  const { profileId, isGameRunning, onStartGame, loadQuickSlots, undo } = params;
+  const { profileId, isGameRunning, onStartGame, loadQuickSlots } = params;
   const [busySlot, setBusySlot] = useState<number | null>(null);
-  const loadWithUndo = useUndoableLoad({ isGameRunning, onStartGame, undo });
+  const loadWithUndo = useUndoableLoad({ isGameRunning, onStartGame });
 
   const handleQuickSave = useCallback(async (slot: number) => {
     setBusySlot(slot);
@@ -21,20 +22,20 @@ const useQuickSaveActions = (params: UseQuickSaveActionsParams) => {
     await loadQuickSlots();
     setBusySlot(null);
     if (!saved) return;
-    undo.offer({
-      key: undoKey('quick', slot),
-      kind: 'saved',
+    offerUndo({
+      id: REPLACED_TOAST_ID,
+      message: `Slot ${slot + 1} saved`,
       undo: async () => {
         await savesStore.writeSlotContents(profileId, ref, previous);
         await loadQuickSlots();
       },
     });
-  }, [profileId, loadQuickSlots, undo]);
+  }, [profileId, loadQuickSlots]);
 
   const handleQuickLoad = useCallback(async (slot: number) => {
     setBusySlot(slot);
     log.app(`Loading state from slot ${slot + 1}`);
-    await loadWithUndo(undoKey('quick', slot), () => loadState(slot));
+    await loadWithUndo(`Slot ${slot + 1} loaded`, () => loadState(slot));
     setBusySlot(null);
   }, [loadWithUndo]);
 

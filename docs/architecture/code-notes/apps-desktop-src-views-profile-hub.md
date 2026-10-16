@@ -299,7 +299,7 @@ The per-save-file checks readout for the home hero, computed offline from the ba
 
 ## apps/desktop/src/views/ProfileHub/sub-components/home-tab/useHomeTabSaves.ts
 
-All Home tab save and session state, data loading and action handlers. The timer writes auto saves while the tab is open, so the hook follows it and the newest one is listed the moment it exists. The hero's last save skips a save whose delete is pending.
+All Home tab save and session state, data loading and action handlers. The timer writes auto saves while the tab is open, so the hook follows it and the newest one is listed the moment it exists. The hero's last save is the newest save in the list; a save waiting out its Undo still counts until it is deleted.
 
 ## apps/desktop/src/views/ProfileHub/sub-components/home-tab/useHomeTabSramImport.ts
 
@@ -307,17 +307,14 @@ Picks, validates and imports a raw SRAM save into the profile's `sram.dat`.
 
 ## apps/desktop/src/views/ProfileHub/sub-components/home-tab/sections/NormalSavesSection.tsx
 
-New save opens a name field at the top of the list, filled with the dated default and selected, so Enter keeps it and typing replaces it. A rename goes through F2 or the pencil and ends on Enter, Escape or blur. The rows of a pending delete leave the keyboard order but stay drawn, so Undo is where the save was.
+The three save lists (Saves, Auto-saves, Quick saves) are Tessera ItemLists. A click, Enter or Space on a row loads it, so there is no Load button. New save opens a name field at the top of the list, filled with the dated default and selected, and is offered only while a game runs. Rename is F2 or the pencil, and Delete is the Delete key or the trash button. A delete runs at once: the row fades and offers Undo for `UNDO_WINDOW_MS`, and the file goes when the time is up or the page closes (`onDelete` is the delete for good). Ctrl+Z undoes the latest delete.
 
-## apps/desktop/src/views/ProfileHub/sub-components/home-tab/undo/useUndoWindow.ts
+## apps/desktop/src/views/ProfileHub/sub-components/home-tab/undo/offer-undo.ts
 
-How the Home tab protects saves without asking. Every action runs at once and leaves an offer open for `UNDO_WINDOW_MS`, keyed by list and id (`undo-key.ts`):
+How the Home tab protects saves without asking. Every action runs at once and, for the actions that are not a delete, raises a toast with Undo for `UNDO_WINDOW_MS`; a newer toast of the same kind replaces the older one.
 
-- Delete is held back: the row shows as removed and the file goes when the window ends. Undo only clears the notice.
 - Save over and a quick save read the slot's old contents first (`readSlotContents`) and write them back on Undo.
 - Load captures the running game first (`game-snapshot.ts`, stamped so it passes the load check) and loads it back on Undo. Only one load offer is open at a time, since undoing an older one after a newer load would land somewhere the player never was. With no game running there is nothing to lose, so no offer.
-
-Leaving the tab finishes every open offer, which makes the pending deletes final. A second offer on the same key finishes the first.
 
 ## apps/desktop/src/views/ProfileHub/sub-components/HubGameControls.tsx
 

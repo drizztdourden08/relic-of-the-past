@@ -1,0 +1,6 @@
+/* @layer renderer-components @kind style */
+.save-row-thumb {
+  width: var(--size-48);
+  aspect-ratio: 8 / 7;
+  border-radius: var(--radius-sm);
+}
