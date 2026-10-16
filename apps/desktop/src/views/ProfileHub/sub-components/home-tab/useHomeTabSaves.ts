@@ -2,39 +2,38 @@
 import { useState } from 'react';
 import { usePlatform } from '@drizztdourden08/brock-react';
 import type { DialogState, UseHomeTabSavesParams } from './home-tab.type';
+import { undoKey } from './undo/undo-key';
+import { useUndoWindow } from './undo/useUndoWindow';
 import { useAutoSaveActions } from './useAutoSaveActions';
 import { useHomeTabLists } from './useHomeTabLists';
 import { useHomeTabSramImport } from './useHomeTabSramImport';
 import { useNormalSaveActions } from './useNormalSaveActions';
-import { useNormalSaveDialogs } from './useNormalSaveDialogs';
 import { useQuickSaveActions } from './useQuickSaveActions';
 
 const useHomeTabSaves = (params: UseHomeTabSavesParams) => {
   const { profileId, isGameRunning, onStartGame } = params;
   const { filePicker } = usePlatform();
-  const [busyNormal, setBusyNormal] = useState<string | null>(null);
   const [dialog, setDialog] = useState<DialogState>({ type: null });
+  const undo = useUndoWindow();
+  const base = { profileId, isGameRunning, onStartGame, undo };
 
   const { loadQuickSlots, loadNormalSaves, loadAutoSaves, ...lists } = useHomeTabLists(profileId);
-  const quick = useQuickSaveActions({ isGameRunning, onStartGame, loadQuickSlots });
-  const normal = useNormalSaveActions({ profileId, isGameRunning, onStartGame, setBusyNormal, setDialog, loadNormalSaves });
-  const normalDialogs = useNormalSaveDialogs({
-    profileId, dialog, setDialog, normalSaves: lists.normalSaves, loadNormal: normal.loadNormal, setBusyNormal, loadNormalSaves,
-  });
-  const auto = useAutoSaveActions({ profileId, isGameRunning, onStartGame, loadAutoSaves });
+  const quick = useQuickSaveActions({ ...base, loadQuickSlots });
+  const normal = useNormalSaveActions({ ...base, loadNormalSaves });
+  const auto = useAutoSaveActions({ ...base, loadAutoSaves });
   const sramImport = useHomeTabSramImport({ profileId, filePicker, dialog, setDialog });
+  const heroSave = lists.normalSaves.find((save) => undo.notices[undoKey('normal', save.id)] !== 'deleted') ?? null;
 
   return {
     ...lists,
     ...quick,
     ...normal,
-    ...normalDialogs,
     ...auto,
     ...sramImport,
-    busyNormal,
+    undo,
     dialog,
     setDialog,
-    heroSave: lists.normalSaves[0] ?? null,
+    heroSave,
   };
 };
 

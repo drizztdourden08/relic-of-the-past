@@ -1,7 +1,9 @@
 /* @layer renderer-components @kind types */
 import type { HeroSlots } from '@drizztdourden08/brock-react';
 import type { Profile, FilePickerPort } from '@drizztdourden08/brock-core';
+import type { ReactNode } from 'react';
 import type { AutoSaveInfo, NormalSaveInfo } from '@rotp/game-core';
+import type { UndoWindow } from './undo/undo.type';
 import type { useHomeTabSaves } from './useHomeTabSaves';
 
 interface HomeHeroContentProps {
@@ -38,8 +40,7 @@ interface SlotInfo {
 }
 
 interface DialogState {
-  type: 'load' | 'overwrite' | 'delete' | 'create' | 'import-sram' | 'import-sram-invalid' | null;
-  targetId?: string;
+  type: 'import-sram' | 'import-sram-invalid' | null;
   targetName?: string;
   pendingBytes?: Uint8Array;
   detail?: string;
@@ -76,35 +77,22 @@ interface UseHomeTabSramImportParams {
   setDialog: (dialog: DialogState) => void;
 }
 
-interface UseQuickSaveActionsParams {
+interface SaveActionsBase {
+  profileId: string;
   isGameRunning: boolean;
   onStartGame: () => void;
+  undo: UndoWindow;
+}
+
+interface UseQuickSaveActionsParams extends SaveActionsBase {
   loadQuickSlots: () => Promise<void>;
 }
 
-interface UseNormalSaveActionsParams {
-  profileId: string;
-  isGameRunning: boolean;
-  onStartGame: () => void;
-  setBusyNormal: (id: string | null) => void;
-  setDialog: (dialog: DialogState) => void;
+interface UseNormalSaveActionsParams extends SaveActionsBase {
   loadNormalSaves: () => Promise<void>;
 }
 
-interface UseNormalSaveDialogsParams {
-  profileId: string;
-  dialog: DialogState;
-  setDialog: (dialog: DialogState) => void;
-  normalSaves: NormalSaveInfo[];
-  loadNormal: (id: string) => Promise<void>;
-  setBusyNormal: (id: string | null) => void;
-  loadNormalSaves: () => Promise<void>;
-}
-
-interface UseAutoSaveActionsParams {
-  profileId: string;
-  isGameRunning: boolean;
-  onStartGame: () => void;
+interface UseAutoSaveActionsParams extends SaveActionsBase {
   loadAutoSaves: () => Promise<void>;
 }
 
@@ -123,9 +111,44 @@ interface HomeTabDialogProps extends HomeTabDialogsProps {
   onClose: () => void;
 }
 
+interface RowSelection {
+  selectedId: string | null;
+  select: (id: string) => void;
+  tabIndexOf: (id: string) => number;
+}
+
+interface NormalSaveRowProps extends HomeTabColumnsProps {
+  save: NormalSaveInfo;
+  selection: RowSelection;
+  renaming: boolean;
+  onStartRename: (id: string) => void;
+  onRenameEnd: (id: string, name: string | null) => void;
+}
+
+interface QuickSlotRowProps extends HomeTabColumnsProps {
+  info: SlotInfo;
+  selection: RowSelection;
+}
+
+interface AutoSaveRowProps extends HomeTabColumnsProps {
+  save: AutoSaveInfo;
+  selection: RowSelection;
+}
+
+interface CreateSaveFormProps {
+  onCreate: (name: string) => void;
+  onCancel: () => void;
+}
+
+interface SectionHeadProps {
+  title: string;
+  action?: ReactNode;
+}
+
 export type {
-  AutoSavesData, DialogState, HomeRandomizerStatus, HomeTabColumnsProps, HomeTabDialogProps, HomeTabDialogsProps,
-  HomeHeroContentProps, NormalSavesData, ProfileFactsInput, SaveFileChecks, SlotInfo,
-  SummaryFact, UseAutoSaveActionsParams, UseHomeTabSavesParams, UseHomeTabSramImportParams,
-  UseNormalSaveActionsParams, UseNormalSaveDialogsParams, UseQuickSaveActionsParams,
+  AutoSaveRowProps, AutoSavesData, CreateSaveFormProps, DialogState, HomeRandomizerStatus, HomeTabColumnsProps,
+  HomeTabDialogProps, HomeTabDialogsProps, HomeHeroContentProps, NormalSaveRowProps, NormalSavesData, ProfileFactsInput,
+  QuickSlotRowProps, RowSelection,
+  SaveFileChecks, SectionHeadProps, SlotInfo, SummaryFact, UseAutoSaveActionsParams, UseHomeTabSavesParams,
+  UseHomeTabSramImportParams, UseNormalSaveActionsParams, UseQuickSaveActionsParams,
 };

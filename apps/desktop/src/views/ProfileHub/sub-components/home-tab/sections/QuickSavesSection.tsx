@@ -1,28 +1,24 @@
 /* @layer renderer-components @kind component */
-import { Box, Text } from '@drizztdourden08/tessera/primitives';
-import { SaveSlot } from '../../../../../compounds/SaveSlot';
+import { useMemo } from 'react';
+import { Box } from '@drizztdourden08/tessera/primitives';
+import { SaveList } from '@app/compounds/SaveList';
+import { useRowSelection } from '../useRowSelection';
 import type { HomeTabColumnsProps } from '../home-tab.type';
+import { QuickSlotRow } from './QuickSlotRow';
+import { SectionHead } from './SectionHead';
 
-const QuickSavesSection = ({ saves, isGameRunning }: HomeTabColumnsProps) => {
-  const { slots, busySlot, handleQuickSave, handleQuickLoad } = saves;
+const QuickSavesSection = (props: HomeTabColumnsProps) => {
+  const { saves } = props;
+  const { slots, undo } = saves;
+  const ids = useMemo(() => slots.map(({ slot }) => String(slot)), [slots]);
+  const selection = useRowSelection(ids);
+
   return (
     <Box as="section" className="home-tab__section">
-      <Text as="h3" className="home-tab__section-title">Quick Saves</Text>
-      <Box className="home-tab__save-grid">
-        {slots.map((s) => (
-          <SaveSlot
-            key={s.slot}
-            slot={s.slot}
-            screenshotUrl={s.screenshot}
-            timestamp={s.timestamp ?? 0}
-            isEmpty={!s.timestamp}
-            busy={busySlot === s.slot}
-            disableSave={!isGameRunning}
-            onSave={handleQuickSave}
-            onLoad={handleQuickLoad}
-          />
-        ))}
-      </Box>
+      <SectionHead title="Quick Saves" />
+      <SaveList label="Quick saves" ids={ids} onSelect={selection.select} onUndo={undo.undoLatest}>
+        {slots.map((info) => <QuickSlotRow key={info.slot} {...props} info={info} selection={selection} />)}
+      </SaveList>
     </Box>
   );
 };

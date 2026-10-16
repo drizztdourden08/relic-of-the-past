@@ -1,48 +1,72 @@
 /* @layer renderer-components @kind component */
+import { useCallback, useMemo, useState } from 'react';
 import { Box, Button, Icon, Text } from '@drizztdourden08/tessera/primitives';
-import { SaveListRow } from '../../../../../compounds/SaveListRow';
+import { SaveList } from '@app/compounds/SaveList';
+import { NO_GAME_REASON } from '../home-tab.constants';
+import { undoKey } from '../undo/undo-key';
+import { useRowSelection } from '../useRowSelection';
 import type { HomeTabColumnsProps } from '../home-tab.type';
+import { CreateSaveForm } from './CreateSaveForm';
+import { NormalSaveRow } from './NormalSaveRow';
+import { SectionHead } from './SectionHead';
 
-const NormalSavesSection = ({ saves, isGameRunning }: HomeTabColumnsProps) => {
-  const {
-    normalSaves, normalScreenshots, busyNormal, handleCreateNormalSave, handleLoadNormal,
-    handleOverwriteNormal, handleDeleteNormal, handleRenameNormal,
-  } = saves;
+const NormalSavesSection = (props: HomeTabColumnsProps) => {
+  const { saves, isGameRunning } = props;
+  const { normalSaves, undo, handleCreateNormalSave, handleDeleteNormal, handleRenameNormal } = saves;
+  const [creating, setCreating] = useState(false);
+  const [renamingId, setRenamingId] = useState<string | null>(null);
+  const ids = useMemo(
+    () => normalSaves.filter((save) => undo.notices[undoKey('normal', save.id)] !== 'deleted').map((save) => save.id),
+    [normalSaves, undo.notices],
+  );
+  const selection = useRowSelection(ids);
+
+  const handleCreate = useCallback((name: string) => {
+    setCreating(false);
+    void handleCreateNormalSave(name).then((id) => { if (id) selection.select(id); });
+  }, [handleCreateNormalSave, selection]);
+
+  const handleRenameEnd = useCallback((id: string, name: string | null) => {
+    setRenamingId(null);
+    if (name !== null) void handleRenameNormal(id, name);
+  }, [handleRenameNormal]);
+
+  const handleOpenCreate = useCallback(() => setCreating(true), []);
+  const handleCloseCreate = useCallback(() => setCreating(false), []);
+
+  const createButton = (
+    <Button
+      variant="ghost"
+      size="xs"
+      icon={<Icon name="plus" />}
+      onClick={handleOpenCreate}
+      disabled={!isGameRunning || creating}
+      title={isGameRunning ? undefined : NO_GAME_REASON}
+    >
+      New save
+    </Button>
+  );
+
   return (
     <Box as="section" className="home-tab__section">
-      <Box className="home-tab__section-header">
-        <Text as="h3" className="home-tab__section-title">Saves</Text>
-        <Button
-          variant="secondary"
-          size="xs"
-          icon={<Icon name="plus" />}
-          onClick={handleCreateNormalSave}
-          disabled={!isGameRunning}
-          title={isGameRunning ? 'Create a new save' : 'Start game to save'}
-        >
-          New Save
-        </Button>
-      </Box>
+      <SectionHead title="Saves" action={createButton} />
+      {creating && isGameRunning && <CreateSaveForm onCreate={handleCreate} onCancel={handleCloseCreate} />}
       {normalSaves.length === 0 ? (
         <Text as="p" className="home-tab__empty">No saves yet</Text>
       ) : (
-        <Box className="home-tab__save-list" role="list" aria-label="Saves">
-          {normalSaves.map((s) => (
-            <SaveListRow
-              key={s.id}
-              id={s.id}
-              name={s.name}
-              timestamp={s.timestamp}
-              screenshotUrl={normalScreenshots[s.id] ?? null}
-              busy={busyNormal === s.id}
-              isGameRunning={isGameRunning}
-              onLoad={handleLoadNormal}
-              onOverwrite={handleOverwriteNormal}
-              onDelete={handleDeleteNormal}
-              onRename={handleRenameNormal}
+        <SaveList label="Saves" ids={ids} onSelect={selection.select} onDelete={handleDeleteNormal} onRename={setRenamingId} onUndo={undo.undoLatest}>
+          {normalSaves.map((save) => (
+            <NormalSaveRow
+              key={save.id}
+              {...props}
+              save={save}
+              selection={selection}
+              renaming={renamingId === save.id}
+              onStartRename={setRenamingId}
+              onRenameEnd={handleRenameEnd}
             />
           ))}
-        </Box>
+        </SaveList>
       )}
     </Box>
   );

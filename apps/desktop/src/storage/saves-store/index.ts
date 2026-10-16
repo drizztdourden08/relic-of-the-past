@@ -18,3 +18,6 @@ export { loadAutoSave } from './load-auto-save';
 export { loadAutoScreenshot } from './load-auto-screenshot';
 export { deleteAutoSave } from './delete-auto-save';
 export { pruneAutoSaves } from './prune-auto-saves';
+export { readSlotContents } from './read-slot-contents';
+export { writeSlotContents } from './write-slot-contents';
+export type { SlotContents } from './slot-contents.type';

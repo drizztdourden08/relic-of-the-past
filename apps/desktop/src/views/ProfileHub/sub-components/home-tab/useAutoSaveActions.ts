@@ -1,33 +1,32 @@
 /* @layer renderer-components @kind hook */
 import { useState, useCallback } from 'react';
-import { loadStateFromBuffer } from '../../../../game';
-import { restoreMusicPosition } from '../../../../game/msu-save-glue';
-import { log } from '../../../../log-bus';
 import * as savesStore from '@app/storage/saves-store';
-import { ensureGameRunning } from './ensure-game-running';
+import { loadStoredSave } from './load-stored-save';
+import { undoKey } from './undo/undo-key';
+import { useUndoableLoad } from './undo/useUndoableLoad';
 import type { UseAutoSaveActionsParams } from './home-tab.type';
 
-const useAutoSaveActions = ({ profileId, isGameRunning, onStartGame, loadAutoSaves }: UseAutoSaveActionsParams) => {
+const useAutoSaveActions = (params: UseAutoSaveActionsParams) => {
+  const { profileId, isGameRunning, onStartGame, loadAutoSaves, undo } = params;
   const [busyAuto, setBusyAuto] = useState<string | null>(null);
+  const loadWithUndo = useUndoableLoad({ isGameRunning, onStartGame, undo });
 
   const handleLoadAuto = useCallback(async (id: string) => {
     setBusyAuto(id);
-    log.app(`Loading auto-save: ${id}`);
-    const ready = await ensureGameRunning(isGameRunning, onStartGame);
-    const buffer = ready ? await savesStore.loadAutoSave(profileId, id) : null;
-    if (buffer) {
-      loadStateFromBuffer(buffer);
-      await restoreMusicPosition(profileId, 'auto', id);
-    }
+    await loadWithUndo(undoKey('auto', id), () => loadStoredSave(profileId, 'auto', id));
     setBusyAuto(null);
-  }, [profileId, isGameRunning, onStartGame]);
+  }, [profileId, loadWithUndo]);
 
-  const handleDeleteAuto = useCallback(async (id: string) => {
-    setBusyAuto(id);
-    await savesStore.deleteAutoSave(profileId, id);
-    await loadAutoSaves();
-    setBusyAuto(null);
-  }, [profileId, loadAutoSaves]);
+  const handleDeleteAuto = useCallback((id: string) => {
+    undo.offer({
+      key: undoKey('auto', id),
+      kind: 'deleted',
+      commit: async () => {
+        await savesStore.deleteAutoSave(profileId, id);
+        await loadAutoSaves();
+      },
+    });
+  }, [profileId, loadAutoSaves, undo]);
 
   return { busyAuto, handleLoadAuto, handleDeleteAuto };
 };

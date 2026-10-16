@@ -675,13 +675,21 @@ already fires silver, so the plain cost goes inert with the reason on it. Cost s
 rupees: round numbers a game of this age would ask. An absent `onChange` renders the read-only
 Options page.
 
-## apps/desktop/src/compounds/SaveListRow/behavior/useRename.ts
+## apps/desktop/src/compounds/SaveList/behavior/useSaveListKeys.ts
 
-Escape in the rename field is consumed (`preventDefault`), so the dismiss stack leaves the page around the row alone.
+The keys are read on the list, from the row the event came from (`data-save-row`), so a row needs no handler of its own. Keys typed in a text field are left to the field, except that Enter and Escape there hand focus back to the row once the rename ends. Delete moves the selection to the next live row first, so pressing it again deletes the next save and focus never falls to the page.
 
-## apps/desktop/src/compounds/SaveListRow/SaveListRow.tsx
+## apps/desktop/src/compounds/SaveList/SaveList.tsx
 
-A save row is thumbnail, name over date, then the actions. The row wraps, so in a narrow column the actions drop under the name instead of squeezing it. The full name is in a tooltip because the name truncates, and a double click on it renames the save. Load is the one primary action, Overwrite is secondary and Delete is a danger icon button with a tooltip. The callbacks only ask for the action: the home tab shows a confirm dialog and runs it on yes.
+The rows read their shape from the list (`ROW_SHAPE`), because the children are SaveRows and not Tessera rows, so the list cannot read the thumbnail and action columns off their props.
+
+## apps/desktop/src/compounds/SaveRow/behavior/useRename.ts
+
+Escape in the rename field is consumed (`preventDefault`), so the dismiss stack leaves the page around the row alone. The rename ends once: Enter unmounts the field, and the blur that follows does not end it a second time.
+
+## apps/desktop/src/compounds/SaveRow/SaveRow.tsx
+
+A save row is thumbnail, name over how long ago, then a few small icon actions that show on hover, focus or selection. The whole row is the load, so there is no Load button. Nothing on the row asks before it acts: the view runs the action at once and passes a notice, and the row shows what happened with Undo in place of its actions for a few seconds. A deleted notice draws the row as removed until the delete is final. A row being renamed or busy is not a button, because a text field cannot sit inside one.
 
 ## apps/desktop/src/compounds/SaveSlot/behavior/useArmedAction.ts
 
