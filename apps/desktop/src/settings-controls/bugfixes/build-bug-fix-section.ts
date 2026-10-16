@@ -1,7 +1,7 @@
 /* @layer renderer-app @kind logic */
 import type { Section } from '@drizztdourden08/brock-react';
 import { BUNDLE_FIXES } from '@rotp/features';
-import { BUNDLE_GROUPS, FIX_HINT } from './bugfixes.constants';
+import { BUNDLE_GROUPS } from './bugfixes.constants';
 
 const buildBugFixSection = (): Section => {
   const groups = BUNDLE_GROUPS.map((g) => ({
@@ -11,7 +11,7 @@ const buildBugFixSection = (): Section => {
       key: f.id,
       label: f.label,
       description: f.userMessage,
-      hint: FIX_HINT,
+      hint: '',
       keywords: `bug fix ${f.bundleOrigin ?? ''} ${f.id}`,
     })),
   })).filter((sub) => sub.items.length > 0);
