@@ -30,7 +30,6 @@ import GameVideoWindowSettings, { meta as gameVideoWindowSettingsMeta } from '..
 import GameViewBase, { meta as gameViewBaseMeta } from '../src/screens/game-view.base';
 import HudLayoutLayer, { meta as hudLayoutLayerMeta } from '../src/screens/hud-layout.layer';
 import InputCalibrationCard, { meta as inputCalibrationCardMeta } from '../src/screens/input-calibration.card';
-import ProfilesCard, { meta as profilesCardMeta } from '../src/screens/profiles.card';
 import RandomizerArchipelagoNetworkPage, { meta as randomizerArchipelagoNetworkPageMeta } from '../src/screens/randomizer/archipelago/network.page';
 import RandomizerArchipelagoOnlinePage, { meta as randomizerArchipelagoOnlinePageMeta } from '../src/screens/randomizer/archipelago/online.page';
 import RandomizerLogsPage, { meta as randomizerLogsPageMeta } from '../src/screens/randomizer/logs.page';
@@ -67,7 +66,6 @@ const screenTree = buildScreenTree(config, [
   { kind: 'base', id: 'game-view', component: GameViewBase, meta: gameViewBaseMeta },
   { kind: 'layer', id: 'hud-layout', component: HudLayoutLayer, meta: hudLayoutLayerMeta },
   { kind: 'card', id: 'input-calibration', component: InputCalibrationCard, meta: inputCalibrationCardMeta },
-  { kind: 'card', id: 'profiles', component: ProfilesCard, meta: profilesCardMeta },
   { kind: 'page', bucket: 'randomizer', group: 'archipelago', id: 'network', component: RandomizerArchipelagoNetworkPage, meta: randomizerArchipelagoNetworkPageMeta },
   { kind: 'page', bucket: 'randomizer', group: 'archipelago', id: 'online', component: RandomizerArchipelagoOnlinePage, meta: randomizerArchipelagoOnlinePageMeta },
   { kind: 'page', bucket: 'randomizer', id: 'logs', component: RandomizerLogsPage, meta: randomizerLogsPageMeta },

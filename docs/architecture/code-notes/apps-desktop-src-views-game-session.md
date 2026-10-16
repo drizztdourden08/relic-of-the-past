@@ -23,7 +23,7 @@ The overrides are a creation form preset's config values, then any setting the r
 
 ## apps/desktop/src/views/GameSession/behavior/delete-profile-flow.ts
 
-Deleting the active profile first stops the game and then makes the most recently played other profile active, and only then removes the profile. The shell has no Home while no profile is active (the game hub requires one), and the shell opens the profiles screen when the active profile is removed, so removing it first left Escape and the menu with nowhere to go. The game is stopped before the folder goes so the exit save and the session end land in a folder that still exists. Deleting the only profile still ends with no active profile, which is the shell's own empty state.
+Deleting the active profile first stops the game and then makes the most recently played other profile active, and only then removes the profile. The shell has no Home while no profile is active (the game hub requires one), and the shell opens Data > Profiles (`product.profilesRoute`) when the active profile is removed, so removing it first left Escape and the menu with nowhere to go. The game is stopped before the folder goes so the exit save and the session end land in a folder that still exists. Deleting the only profile still ends with no active profile, which is the shell's own empty state.
 
 ## apps/desktop/src/views/GameSession/behavior/dump-flood-items.ts
 

@@ -31,7 +31,6 @@ const searchIndex = buildSearchIndex(config, [
   {"kind":"base","id":"game-view","title":"Game view","icon":"gamepad-2"},
   {"kind":"layer","id":"hud-layout","title":"HUD Layout Editor","icon":"layout-list","keywords":["hud","layout","editor","glyphs","slots"]},
   {"kind":"card","id":"input-calibration","title":"Controller Diagnostics","icon":"gamepad-2","keywords":["controller","gamepad","hid","rumble","diagnostics","report","raw","bytes"]},
-  {"kind":"card","id":"profiles","title":"Profiles","icon":"users","keywords":["profile","switch","create","rename","delete","rom"]},
   {"kind":"page","id":"network","bucket":"randomizer","group":"archipelago","title":"Network","icon":"server","keywords":["archipelago","server","connection","health","players"]},
   {"kind":"page","id":"online","bucket":"randomizer","group":"archipelago","title":"Online","icon":"globe","keywords":["archipelago","death","link","track","other","players"]},
   {"kind":"page","id":"logs","bucket":"randomizer","title":"Logs","icon":"file-text","keywords":["log","activity","room","messages"]},
