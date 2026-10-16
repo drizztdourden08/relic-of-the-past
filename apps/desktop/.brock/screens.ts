@@ -60,6 +60,7 @@ const screenTree = buildScreenTree(config, [
   { kind: 'settings', bucket: 'game', group: 'extras', id: 'haptics', sections: GameExtrasHapticsSettings, meta: gameExtrasHapticsSettingsMeta },
   { kind: 'settings', bucket: 'game', group: 'extras', id: 'mobile', sections: GameExtrasMobileSettings, meta: gameExtrasMobileSettingsMeta },
   { kind: 'settings', bucket: 'game', group: 'extras', id: 'online', sections: GameExtrasOnlineSettings, meta: gameExtrasOnlineSettingsMeta },
+  { kind: 'backdrop', bucket: 'game', id: 'game', component: lazyComponent(() => import('../src/screens/game/game.backdrop')) },
   { kind: 'settings', bucket: 'game', group: 'gameplay', id: 'audio', sections: GameGameplayAudioSettings, meta: gameGameplayAudioSettingsMeta },
   { kind: 'custom', bucket: 'game', group: 'gameplay', id: 'controls', component: lazyComponent(() => import('../src/screens/game/gameplay/controls.custom')), meta: gameGameplayControlsCustomMeta },
   { kind: 'settings', bucket: 'game', group: 'gameplay', id: 'gameplay', sections: GameGameplayGameplaySettings, meta: gameGameplayGameplaySettingsMeta },

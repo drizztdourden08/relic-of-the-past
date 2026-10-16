@@ -6,7 +6,12 @@ import { Button, Icon } from '@drizztdourden08/tessera/primitives';
 import { DataHome, dataHomeFacts } from '@app/views/DataHome';
 import { useStorageSummary } from '@app/views/DataManager/sub-components/data-overview/useStorageSummary';
 
-const meta: ScreenMeta = { title: 'Home', icon: 'house', keywords: ['data', 'overview', 'disk', 'folder', 'total', 'library'] };
+const meta: ScreenMeta = {
+  title: 'Home',
+  icon: 'house',
+  keywords: ['data', 'overview', 'disk', 'folder', 'total', 'library'],
+  hero: { size: 'compact' },
+};
 
 const DataHomeHero = (props: HeroProps) => {
   const { slots, open } = props;

@@ -203,7 +203,11 @@ The Data bucket has `requiresProfile: false`, and `brock.config.ts` sets `produc
 
 ## apps/desktop/src/screens/data/home.hero.tsx
 
-The hero holds the highlights only: the eyebrow, the title, three facts (space on disk, profiles, ROMs), Open data folder and Refresh. Open data folder shows only where the host can reveal a folder (`capabilities.revealDataFolder`), so the phone layout has no such button. Everything else is JSX under the hero in the same file's return, which Brock draws below the hero in the page: the cards for each page of the data area and the storage details. The folder path and the per-folder tiles are not facts of the hero because they overflowed it.
+The hero is `compact` (`meta.hero.size`), a short band for a page that is mostly the cards below it. The hero holds the highlights only: the eyebrow, the title, three facts (space on disk, profiles, ROMs), Open data folder and Refresh. Open data folder shows only where the host can reveal a folder (`capabilities.revealDataFolder`), so the phone layout has no such button. Everything else is JSX under the hero in the same file's return, which Brock draws below the hero in the page: the cards for each page of the data area and the storage details. The folder path and the per-folder tiles are not facts of the hero because they overflowed it.
+
+## apps/desktop/src/screens/game/game.backdrop.tsx
+
+The Game bucket's header backdrop: the title scene, drawn still by `SceneBackdrop` behind the header of every Game page. Brock loads it with the bucket's screens, before the header draws, and puts it in the header's backdrop layer. `HEADER_HORIZON` (in `game.backdrop.constants.ts`) sits the water line low, because a page header is short and the castle must stay in view. The Game home is a hero page and draws its own full height scene through the hero's `Backdrop` slot. The other buckets have no backdrop.
 
 ## apps/desktop/src/screens/store/
 
