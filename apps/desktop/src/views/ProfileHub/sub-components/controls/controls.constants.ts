@@ -71,10 +71,12 @@ const SDL_TYPE_ICON: Record<string, string> = {
   gamecube: publicAsset('buttons/gc/controller_gamecube.svg'),
 };
 
+const REQUIRED_INPUTS_DESCRIPTION = 'The devices the bindings of this profile use.';
+
 const EMPTY_HINT = 'Assign a controller to this profile to see its slots. Drop one from the Devices column.';
 
 export {
   ADAPTER_FAMILY_ICON, CANCEL_ARM_DELAY_MS, CONTROLS_TAB_IDS, CORE_VERB_GROUPS,
   CORE_VERB_LABELS, DEVICE_FAMILY_ICON, EMPTY_HINT, LISTEN_ARM_DELAY_MS, MODERN_ONLY,
-  MODIFIER_CODES, SDL_TYPE_ICON, VANILLA_ONLY,
+  MODIFIER_CODES, REQUIRED_INPUTS_DESCRIPTION, SDL_TYPE_ICON, VANILLA_ONLY,
 };

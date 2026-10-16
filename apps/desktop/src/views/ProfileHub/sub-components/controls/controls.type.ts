@@ -4,7 +4,7 @@ import type { CoreVerb, InputProfile, ControllerDeviceGroup } from '@rotp/input-
 import type { HudLayout } from '@rotp/hud';
 import type { ButtonIcon, CoreBindings, InputBinding, ModernSlot, SlotAssignment, SnesButton } from '@rotp/game-data';
 import type { FunctionAction, FunctionMapping } from '@rotp/features';
-import type { AbsentAssignment, RequiredInput } from '../controls-settings/controls-settings.type';
+import type { AbsentAssignment } from '../controls-settings/controls-settings.type';
 import type { useControlsSettings } from '../controls-settings';
 import type { DeviceAssignInfo } from './DeviceCard.type';
 
@@ -50,11 +50,6 @@ interface DeviceDragInfo {
   productId: string | null;
 }
 
-interface HapticsToggleProps {
-  enabled: boolean;
-  onChange: (enabled: boolean) => void;
-}
-
 interface InputProfileListProps {
   profiles: InputProfile[];
   activeId: string | null;
@@ -83,10 +78,6 @@ interface SidebarProfileButtonProps {
   profile: InputProfile;
   active: boolean;
   onSelect: (profile: InputProfile) => void;
-}
-
-interface RequiredInputsProps {
-  inputs: readonly RequiredInput[];
 }
 
 interface SchemeLayoutRowProps {
@@ -163,6 +154,6 @@ export type {
   BindingListHeaderProps, BindingRowProps, CheatBindingsTabProps, ControlsCtrl, ControlsMainProps,
   CoreBindingsGroupProps, CoreVerbGroup,
   CoreVerbRowProps, CtrlProps, DeviceDragInfo, FunctionBindingRowProps,
-  HapticsToggleProps, InputProfileItemProps, InputProfileListProps,
-  RequiredInputsProps, SchemeLayoutRowProps, SidebarProfileButtonProps, SlotRowProps, SnesBindingRowProps, UseProfileEditingArgs,
+  InputProfileItemProps, InputProfileListProps,
+  SchemeLayoutRowProps, SidebarProfileButtonProps, SlotRowProps, SnesBindingRowProps, UseProfileEditingArgs,
 };

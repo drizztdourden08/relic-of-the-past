@@ -64,7 +64,7 @@ Add a note to the page of the package or area that holds the file, under a headi
 | [apps/desktop/src/views/HudLayoutEditor](apps-desktop-src-views-hud-layout-editor.md) | 130 |
 | [apps/desktop/src/views/InputTester](apps-desktop-src-views-input-tester.md) | 61 |
 | [apps/desktop/src/views/NavigationWidget](apps-desktop-src-views-navigation-widget.md) | 27 |
-| [apps/desktop/src/views/ProfileHub](apps-desktop-src-views-profile-hub.md) | 63 |
+| [apps/desktop/src/views/ProfileHub](apps-desktop-src-views-profile-hub.md) | 64 |
 | [apps/desktop/src/views/Randomizer](apps-desktop-src-views-randomizer.md) | 23 |
 | [apps/desktop/src/views/Store](apps-desktop-src-views-store.md) | 26 |
 | [apps/desktop/src/views](apps-desktop-src-views.md) | 88 |
