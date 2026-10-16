@@ -1,11 +1,12 @@
 /* @layer renderer-components @kind component */
 import { useState } from 'react';
 import { Box } from '@drizztdourden08/tessera/primitives';
-import { StudioBody } from '@app/studio';
+import { StudioLayout } from '@drizztdourden08/tessera/composites';
+import { STUDIO_EDITOR_MIN_WIDTH, StudioPanelContent } from '@app/studio';
 import { SoundListHeader } from './SoundListHeader';
-import { SoundPanelControls } from './SoundPanelControls';
 import { SoundPanelRows } from './SoundPanelRows';
 import { SoundSide } from './SoundSide';
+import { soundToolGroups } from './sound-tool-groups';
 import { soundPanelSubtitle } from './behavior/sound-subtitle';
 import { useSoundPanel } from './behavior/useSoundPanel';
 import { useSoundTabActions } from './behavior/useSoundTabActions';
@@ -43,19 +44,23 @@ const MsuSoundPanel = (props: MsuSoundPanelProps) => {
     />
   );
 
-  const toolbar = (
-    <SoundPanelControls
-      tabs={tabs}
-      unreachableCount={sound.unreachableCount}
-      filter={filter}
-      showUnreachable={showUnreachable}
-      onFilterChange={setFilter}
-      onShowUnreachableChange={setShowUnreachable}
-    />
-  );
+  const toolbar = soundToolGroups({
+    tabs,
+    unreachableCount: sound.unreachableCount,
+    filter,
+    showUnreachable,
+    onFilterChange: setFilter,
+    onShowUnreachableChange: setShowUnreachable,
+  });
 
   return (
-    <StudioBody editorLabel={EDITOR_LABELS.ambient} toolbar={toolbar} end={{ ...DETAILS_PANEL, content: detail }}>
+    <StudioLayout
+      editorLabel={EDITOR_LABELS.ambient}
+      compactToolbar
+      editorMinWidth={STUDIO_EDITOR_MIN_WIDTH}
+      toolbar={toolbar}
+      end={{ ...DETAILS_PANEL, content: <StudioPanelContent>{detail}</StudioPanelContent> }}
+    >
       <Box className="msu-panel">
         <SoundListHeader
           title={`${SOUND_CHANNEL_LABELS[channel]} · ${sound.replacedCount} of ${sound.total} replaced`}
@@ -66,7 +71,7 @@ const MsuSoundPanel = (props: MsuSoundPanelProps) => {
         />
         <SoundPanelRows channel={channel} sound={sound} filter={filter} onSelect={select} onPreview={sound.play} onPlayOriginal={original} />
       </Box>
-    </StudioBody>
+    </StudioLayout>
   );
 };
 

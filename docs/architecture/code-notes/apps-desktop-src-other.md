@@ -101,13 +101,14 @@ failed dump never makes a crash worse, and the in-app log still has everything.
 
 ## apps/desktop/src/studio/
 
-What the three studios (character, language, music) share. Each studio is a `ListDetailLayout`, the same as every other list screen: the item list on the left, folding to the dark rail, and the work area as the detail. The work area is built from three parts here, composed from Tessera's `ToolGroups`, `ToolFrame` and `SidePanel`.
+What the three studios (character, language, music) share. Each studio is a `ListDetailLayout`, the same as every other list screen: the item list on the left, folding to the dark rail, and the work area as the detail. The work area is Tessera's `StudioLayout` inside a `StudioPane`.
 
-- `StudioPane` is the work area's column: an optional banner (an origin bar or a notice), then one row of labelled action groups with a small status at its end, then the body. A studio builds its actions as `StudioActionGroup` data, and each action becomes one small Button. There is no title row and no hint line, so the body keeps the height.
-- `StudioBody` is the body's row: an optional start panel, the editor in a `ToolFrame` with a compact toolbar on its top edge, and an optional end panel. The editor's body is the one scroll; lists inside it are not boxed in a scroll of their own. Both panels are compact (`DensityScope`), fold with the standard fold button and keep their width and fold under their `storageKey`.
+- `StudioPane` is the work area's column: an optional banner (an origin bar or a notice), then one compact row of action groups with a small status at its end, then the body. A studio builds its actions as `StudioActionGroup` data, and each action becomes one small Button. The group names are read by a screen reader and not drawn. There is no title row and no hint line, so the body keeps the height.
+- The body is `StudioLayout` with `compactToolbar` and `editorMinWidth={STUDIO_EDITOR_MIN_WIDTH}`: an optional start panel, the editor in a `ToolFrame` with one compact toolbar row on its top edge, and an optional end panel. It stacks its columns only when the open panels, the folded rails and the editor's minimum width do not fit. A studio passes its toolbar as `ToolGroup` data (`viewerToolGroups`, `sectionToolGroups`, `fileToolGroups`, `soundToolGroups`).
+- `StudioPanelContent` makes the content of a side panel compact (`DensityScope`).
 - `StudioSection` is one titled section of a side panel, with a rule between sections.
 
-Tessera's `StudioLayout` is not used. Since 0.39 it stacks only when its columns do not fit (`editorMinWidth`), but its toolbar takes `ToolGroups` groups, and every group draws a label over its tools. The studios keep one unlabelled compact row, so `StudioBody` stays until a group can go without a label. A toolbar search box is a plain `<SearchInput grow={false} size="sm" />`.
+A toolbar search box is a plain `<SearchInput grow={false} />`.
 
 ## apps/desktop/src/hookshop-reads/
 

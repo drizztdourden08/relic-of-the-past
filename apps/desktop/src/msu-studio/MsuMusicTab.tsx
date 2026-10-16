@@ -1,6 +1,8 @@
 /* @layer renderer-components @kind component */
 import { useCallback, useMemo } from 'react';
-import { StudioBody } from '@app/studio';
+import { StudioLayout } from '@drizztdourden08/tessera/composites';
+import { STUDIO_EDITOR_MIN_WIDTH, StudioPanelContent } from '@app/studio';
+import { sectionGroup } from './studio-frame/section-group';
 import { MsuTrackPanel } from './MsuTrackPanel';
 import { TrackDetail } from './TrackDetail';
 import { useTrackPreviewSwitch } from './behavior/useTrackPreviewSwitch';
@@ -41,7 +43,13 @@ const MsuMusicTab = (props: MsuMusicTabProps) => {
   );
 
   return (
-    <StudioBody editorLabel={EDITOR_LABELS.music} toolbar={tabs} end={{ ...DETAILS_PANEL, content: detail }}>
+    <StudioLayout
+      editorLabel={EDITOR_LABELS.music}
+      compactToolbar
+      editorMinWidth={STUDIO_EDITOR_MIN_WIDTH}
+      toolbar={[sectionGroup(tabs)]}
+      end={{ ...DETAILS_PANEL, content: <StudioPanelContent>{detail}</StudioPanelContent> }}
+    >
       <MsuTrackPanel
         rows={msu.rows}
         files={msu.files}
@@ -54,7 +62,7 @@ const MsuMusicTab = (props: MsuMusicTabProps) => {
         onSelect={msu.handleToggleTrack}
         onDeleteFile={confirmDeleteFile}
       />
-    </StudioBody>
+    </StudioLayout>
   );
 };
 

@@ -95,7 +95,7 @@ interface SpriteWorkAreaProps {
   onUninstalled: () => void;
 }
 
-interface ViewerToolbarProps {
+interface ViewerToolGroupsProps {
   wearing: WearingModel;
   viewer: SpriteViewerModel;
 }
@@ -138,5 +138,5 @@ interface GloveSwatchGridProps {
 export type {
   Container, GloveSwatchGridProps, LibraryEntry, OpenDraft, OutfitSwatchGridProps, PaletteEditorProps,
   PlayerSpriteStudioProps, Slot, SpriteLibraryListProps, SpritePropertiesProps, SpriteStatusLine, SpriteStatusProps,
-  SpriteWorkAreaProps, StudioActionsParams, StudioGroupsParams, ViewerToolbarProps,
+  SpriteWorkAreaProps, StudioActionsParams, StudioGroupsParams, ViewerToolGroupsProps,
 };

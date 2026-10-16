@@ -1,7 +1,8 @@
 /* @layer renderer-components @kind component */
 import { useMemo, useState } from 'react';
 import { Center, EmptyState, Spinner } from '@drizztdourden08/tessera/primitives';
-import { StudioBody, StudioPane } from '@app/studio';
+import { StudioLayout } from '@drizztdourden08/tessera/composites';
+import { STUDIO_EDITOR_MIN_WIDTH, StudioPane, StudioPanelContent } from '@app/studio';
 import { useLanguageEditor } from './behavior/useLanguageEditor';
 import { useDialogueView } from './behavior/useDialogueView';
 import { useEditorTabs } from './behavior/useEditorTabs';
@@ -12,7 +13,7 @@ import { useStudioActions } from './behavior/studio-frame/useStudioActions';
 import { EditorPanes } from './sub-components/EditorPanes';
 import { StaleGameNotice } from './sub-components/StaleGameNotice';
 import { LanguageProperties } from './sub-components/studio-frame/LanguageProperties';
-import { SectionToolbar } from './sub-components/studio-frame/SectionToolbar';
+import { sectionToolGroups } from './sub-components/studio-frame/section-tool-groups';
 import { StudioStatus } from './sub-components/studio-frame/StudioStatus';
 import { EDITOR_LABEL, PROPERTIES_PANEL, STUDIO_LABEL, UNREADABLE_SET } from './sub-components/studio-frame/studio-frame.constants';
 import { FindHardcodedDialog } from './sub-components/variables';
@@ -54,23 +55,23 @@ const LanguageEditor = (props: LanguageEditorProps) => {
       banner={<><StaleGameNotice />{origin}</>}
       className="language-studio"
     >
-      <StudioBody
+      <StudioLayout
         editorLabel={EDITOR_LABEL}
-        toolbar={(
-          <SectionToolbar
-            tabs={tabs}
-            tab={tab}
-            query={find.query}
-            filter={find.filter}
-            onTabChange={setTab}
-            onQueryChange={find.setQuery}
-            onFilterChange={find.setFilter}
-          />
-        )}
-        end={{ ...PROPERTIES_PANEL, content: properties }}
+        compactToolbar
+        editorMinWidth={STUDIO_EDITOR_MIN_WIDTH}
+        toolbar={sectionToolGroups({
+          tabs,
+          tab,
+          query: find.query,
+          filter: find.filter,
+          onTabChange: setTab,
+          onQueryChange: find.setQuery,
+          onFilterChange: find.setFilter,
+        })}
+        end={{ ...PROPERTIES_PANEL, content: <StudioPanelContent>{properties}</StudioPanelContent> }}
       >
         <EditorPanes tab={tab} readOnly={readOnly} editor={editor} dialogue={tabProps} variablesTab={variablesTab} text={text} />
-      </StudioBody>
+      </StudioLayout>
 
       <FindHardcodedDialog
         open={variablesTab.scanOpen}

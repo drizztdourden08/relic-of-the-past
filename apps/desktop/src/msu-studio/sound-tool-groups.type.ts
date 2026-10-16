@@ -1,7 +1,7 @@
 /* @layer renderer-components @kind types */
 import type { ReactNode } from 'react';
 
-type SoundPanelControlsProps = {
+type SoundToolGroupsProps = {
   tabs: ReactNode;
   unreachableCount: number;
   filter: string;
@@ -10,4 +10,4 @@ type SoundPanelControlsProps = {
   onShowUnreachableChange: (show: boolean) => void;
 };
 
-export type { SoundPanelControlsProps };
+export type { SoundToolGroupsProps };

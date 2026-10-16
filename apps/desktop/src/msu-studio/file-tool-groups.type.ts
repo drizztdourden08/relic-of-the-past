@@ -1,5 +1,8 @@
 /* @layer renderer-components @kind types */
-type FileControlsProps = {
+import type { ReactNode } from 'react';
+
+type FileToolGroupsProps = {
+  tabs: ReactNode;
   filter: string;
   coveredCount: number;
   supersededOnly: boolean;
@@ -7,4 +10,4 @@ type FileControlsProps = {
   onSupersededOnlyChange: (checked: boolean) => void;
 };
 
-export type { FileControlsProps };
+export type { FileToolGroupsProps };

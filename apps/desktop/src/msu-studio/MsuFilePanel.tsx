@@ -1,8 +1,9 @@
 /* @layer renderer-components @kind component */
 import { useState } from 'react';
 import { Box, DropZone, Text } from '@drizztdourden08/tessera/primitives';
-import { StudioBody } from '@app/studio';
-import { FileControls } from './FileControls';
+import { StudioLayout } from '@drizztdourden08/tessera/composites';
+import { STUDIO_EDITOR_MIN_WIDTH, StudioPanelContent } from '@app/studio';
+import { fileToolGroups } from './file-tool-groups';
 import { FileList } from './FileList';
 import { FilesSummary } from './FilesSummary';
 import { OptimizeDialog } from './OptimizeDialog';
@@ -17,23 +18,25 @@ const MsuFilePanel = (props: MsuFilePanelProps) => {
   const { panel, covered, usage, supersededOnly } = model;
   const [optimizing, setOptimizing] = useState(false);
 
-  const toolbar = (
-    <>
-      {tabs}
-      <FileControls
-        filter={panel.filter}
-        coveredCount={covered.count}
-        supersededOnly={supersededOnly}
-        onFilterChange={panel.setFilter}
-        onSupersededOnlyChange={model.setSupersededOnly}
-      />
-    </>
-  );
+  const toolbar = fileToolGroups({
+    tabs,
+    filter: panel.filter,
+    coveredCount: covered.count,
+    supersededOnly,
+    onFilterChange: panel.setFilter,
+    onSupersededOnlyChange: model.setSupersededOnly,
+  });
 
   const detail = <><FilesSummary model={model} readOnly={readOnly} onOptimize={() => setOptimizing(true)} />{packPanel}</>;
 
   return (
-    <StudioBody editorLabel={EDITOR_LABELS.files} toolbar={toolbar} end={{ ...DETAILS_PANEL, content: detail }}>
+    <StudioLayout
+      editorLabel={EDITOR_LABELS.files}
+      compactToolbar
+      editorMinWidth={STUDIO_EDITOR_MIN_WIDTH}
+      toolbar={toolbar}
+      end={{ ...DETAILS_PANEL, content: <StudioPanelContent>{detail}</StudioPanelContent> }}
+    >
       <Box className="msu-panel">
         <DropZone
           accept={AUDIO_ACCEPT}
@@ -60,7 +63,7 @@ const MsuFilePanel = (props: MsuFilePanelProps) => {
         />
       </Box>
       <OptimizeDialog open={optimizing} pack={pack} onClose={() => setOptimizing(false)} onConverted={onReload} />
-    </StudioBody>
+    </StudioLayout>
   );
 };
 

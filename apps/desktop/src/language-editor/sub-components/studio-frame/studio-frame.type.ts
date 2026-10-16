@@ -26,7 +26,7 @@ type LanguagePropertiesProps = SetPropertiesProps & {
   onNote: (id: number, note: string) => void;
 };
 
-type SectionToolbarProps = {
+type SectionToolGroupsProps = {
   tabs: TabItem[];
   tab: string;
   query: string;
@@ -37,5 +37,5 @@ type SectionToolbarProps = {
 };
 
 export type {
-  EntryPropertiesProps, LanguagePropertiesProps, SectionToolbarProps, SetPropertiesProps, StudioStatusProps,
+  EntryPropertiesProps, LanguagePropertiesProps, SectionToolGroupsProps, SetPropertiesProps, StudioStatusProps,
 };
