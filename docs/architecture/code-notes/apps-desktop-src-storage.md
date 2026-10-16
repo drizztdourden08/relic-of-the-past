@@ -110,6 +110,10 @@ site. SRAM is excluded: it is the game's own save file and has nothing to do wit
 layout. Screenshots come back as base64 strings. SRAM and quick slots go through the Brock port
 kit's save store (`port-save-store.ts`); named and auto saves through `apps/desktop/src/storage/save-files`.
 
+## apps/desktop/src/storage/saves-store/read-slot-contents.ts
+
+The bytes, screenshot and music position of one slot, raw, read before a save is written over so the Home tab can put it back. `write-slot-contents.ts` writes them back without a new stamp, because the bytes already carry the stamp they were made with. Writing a slot drops its music sidecar, so the music position is written after the bytes. No contents means the slot was empty, and putting it back removes the slot. A named save keeps the time of the save that replaced it: the port kit's named store stamps `savedAt` on every write and has no way to set it.
+
 ## apps/desktop/src/storage/sprites-store/
 
 The sprite base URL comes from the platform (`app-sprite://` or `convertFileSrc`). A build

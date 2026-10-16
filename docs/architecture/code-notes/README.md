@@ -38,7 +38,7 @@ Add a note to the page of the package or area that holds the file, under a headi
 | Page | Notes |
 |---|---|
 | [apps/desktop/src/composites](apps-desktop-src-composites.md) | 11 |
-| [apps/desktop/src/compounds](apps-desktop-src-compounds.md) | 127 |
+| [apps/desktop/src/compounds](apps-desktop-src-compounds.md) | 129 |
 | [apps/desktop/src/data-inspector](apps-desktop-src-data-inspector.md) | 21 |
 | [apps/desktop/src/game](apps-desktop-src-game.md) | 104 |
 | [apps/desktop/src/hooks](apps-desktop-src-hooks.md) | 40 |
@@ -53,7 +53,7 @@ Add a note to the page of the package or area that holds the file, under a headi
 | [apps/desktop/src (smaller areas)](apps-desktop-src-other.md) | 32 |
 | [apps/desktop/src/primitives](apps-desktop-src-primitives.md) | 16 |
 | [apps/desktop/src/settings-controls](apps-desktop-src-settings-controls.md) | 24 |
-| [apps/desktop/src/storage](apps-desktop-src-storage.md) | 15 |
+| [apps/desktop/src/storage](apps-desktop-src-storage.md) | 16 |
 | [apps/desktop/src/stores](apps-desktop-src-stores.md) | 23 |
 | [apps/desktop/src/theme](apps-desktop-src-theme.md) | 15 |
 | [apps/desktop/src/title](apps-desktop-src-title.md) | 17 |

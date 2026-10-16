@@ -47,43 +47,6 @@
   margin: 0;
 }
 
-.home-tab__save-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(calc(144 * var(--size-1)), 1fr));
-  gap: var(--space-sm);
-}
-
-.home-tab__save-list {
-  display: flex;
-  flex-direction: column;
-  background: var(--c-surface);
-  border: var(--border-width-thin) solid var(--c-border);
-  border-radius: var(--radius-lg);
-  overflow: hidden;
-  max-height: var(--size-320);
-  overflow-y: auto;
-}
-
-.home-tab__save-list > * + * {
-  border-top: var(--border-width-thin) solid var(--c-border);
-}
-
-.home-tab__save-name-input {
-  width: 100%;
-  padding: var(--space-sm) var(--space-md);
-  font-size: var(--text-sm);
-  color: var(--c-text);
-  background: var(--c-hover);
-  border: var(--border-width-thin) solid var(--c-border);
-  border-radius: var(--radius-md);
-  outline: none;
-  margin-top: var(--space-sm);
-}
-
-.home-tab__save-name-input:focus {
-  border-color: var(--c-primary);
-}
-
 .home-tab__sessions {
   display: flex;
   flex-direction: column;

@@ -6,11 +6,11 @@
 
 | Verdict | Areas | % |
 |---|---|---|
-| covered | 105 | 63% |
+| covered | 105 | 62% |
 | partial | 25 | 15% |
-| none | 37 | 22% |
+| none | 38 | 23% |
 
-167 areas counted (one row per table row above, not weighted by file count). 2 rows excluded from the count: presentational primitives (n/a, not a real gap) and shadow-casting (unclear, needs a follow-up pass, covered in the Electron section).
+168 areas counted (one row per table row above, not weighted by file count). 2 rows excluded from the count: presentational primitives (n/a, not a real gap) and shadow-casting (unclear, needs a follow-up pass, covered in the Electron section).
 
 ## UI views (`apps/desktop/src/views/`)
 
@@ -23,6 +23,7 @@
 | ProfileHub (the settings screens: HUD Style, Controls, Gameplay) | apps/desktop/tests/e2e/hud-style-drives-scheme.keep.spec.ts | partial. §59's one rule is driven in the built app on two real profiles: the Style row offers Original / Enhanced / Modern with every segment live and NO notice under them, the Controls screen opens on Vanilla Controls (the twelve SNES rows, no core verbs, no banner, no scheme control) with the Modern Controls tab greyed, the Options tab holds the Haptics toggle and Required Inputs, pressing Modern lights Modern Controls with its slots and greys Vanilla Controls, `Open Map with Select` flips and survives leaving the tab, and a stored `hudStyle: 'modern'` profile opens as Modern with its four slot assignments intact. Screenshots in `tests/screenshots/hud-style/`. Every other ProfileHub tab is still untested, and nothing here asserts how any of it looks |
 | GameLayer + shadow-editor-overlay | none directly | partial. See the shadow-casting row below |
 | SaveStateOverlay | apps/desktop/tests/e2e/state-*.keep.spec.ts (baseline parity only) | partial |
+| Home tab saves (`SaveRow`, `SaveList` and its keys, the undo window in `apps/desktop/src/views/ProfileHub/sub-components/home-tab/undo/`, `readSlotContents` / `writeSlotContents`) | none | none. Delete held back until the window ends, Save over and Load put back on Undo, and the list keys are untested; the e2e specs load their saves through `--auto-state`, never through these rows |
 | BootProgressBar / boot-progress-store | none | none |
 | MobileChrome | none | none |
 | BugReport (+ electron github report-issue/ipc-handlers) | none | none |
