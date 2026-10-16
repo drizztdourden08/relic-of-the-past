@@ -143,7 +143,21 @@ While the creation form has the randomizer enabled, the option catalog takes ove
 
 The randomizer form state is the option choices plus the connection fields, so it goes to `RandomizerOptionsPanel` whole. Listing the option fields again there would be a second list that forgets a row the catalog gained.
 
+## apps/desktop/src/views/DataManager/sub-components/rom-manager/extract-sprites-if-missing.ts
+
+The sprite step of a ROM extraction is the Sprites page's own call (`extractSprites` in the sprites store), so both pages share one extraction. It skips a ROM that already has sprites, which is also what the Sprites page offers: only ROMs without sprites appear in its picker. That keeps the supplement rebuild fan-out from re-extracting sprites for every base.
+
+## apps/desktop/src/views/DataManager/sub-components/rom-manager/ExtractionOptions.tsx
+
+The Extract sprites too checkbox, the one-line description of what extraction does, and the sprite progress and error for the extraction that just ran. The checkbox governs every extraction started from the ROMs page: an import, and the Extract Assets button.
+
+## apps/desktop/src/views/DataManager/sub-components/rom-manager/useRomExtraction.ts
+
+Wraps the asset extraction so the sprite step runs only after the assets succeed. A sprite failure is kept as its own message and never turns a finished asset extraction into a failed one.
+
 ## apps/desktop/src/views/DataManager/sub-components/rom-manager/RomDetailPanel.tsx
+
+The lane descriptions (`description` in `import-lane-config.constants.ts`) are shown as the hint of the kind tabs. The second cartridge is described by what the app does with it: it adds the extra post-game dungeon.
 
 A base cartridge keeps its extract assets action (`AssetsRow`). A supplement has none, because there is nothing to extract from it on its own, so it shows which bases currently carry its sidecar (`SupplementRow`).
 
