@@ -8,7 +8,6 @@ interface ProfileManagerProps {
   onCreateProfile: (opts: CreateProfileOptions) => Promise<CreateProfileResult>;
   onDeleteProfile: (id: string) => void;
   onRefresh: () => void;
-  isGameRunning: boolean;
   loadingProfile?: string | null;
 }
 

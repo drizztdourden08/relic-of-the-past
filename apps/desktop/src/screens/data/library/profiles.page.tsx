@@ -9,7 +9,7 @@ const meta: ScreenMeta = { title: 'Profiles', icon: 'users', order: 1, fill: tru
 
 const ProfilesPage = (props: PageProps) => {
   const { open } = props;
-  const { profileMgmt, isGameRunning, refresh } = useDataLibrary();
+  const { profileMgmt, refresh } = useDataLibrary();
   const { profiles, romDisplayInfos, loadingProfile, handleSelectProfile, handleCreateProfile, handleDeleteProfile } = profileMgmt;
 
   const selectProfile = useCallback((profile: Profile) => {
@@ -30,7 +30,6 @@ const ProfilesPage = (props: PageProps) => {
       onCreateProfile={createProfile}
       onDeleteProfile={handleDeleteProfile}
       onRefresh={refresh}
-      isGameRunning={isGameRunning}
       loadingProfile={loadingProfile}
     />
   );

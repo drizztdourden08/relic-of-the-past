@@ -41,15 +41,27 @@ A Custom wallet pins `carryMoreRupees` on the profile (`frozenSettings`), becaus
 
 An Archipelago profile needs a server it can boot against, so `randomizerFormError` also checks the server draft in online mode.
 
+## apps/desktop/src/views/DataManager/sub-components/profile-manager/profile-detail/load-profile-data.ts
+
+Each read falls back to an empty value on its own, so a store that cannot be read leaves its rows at zero and the other rows still show.
+
+## apps/desktop/src/views/DataManager/sub-components/profile-manager/profile-detail/ProfileConnectionSection.tsx
+
+The editor is the Randomizer view's own `ConnectionEditor`, and saving goes through `useProfileConnection`. A save reconnects the live online session when this profile is the one playing and leaves every other session alone. Only an online profile has this section.
+
+## apps/desktop/src/views/DataManager/sub-components/profile-manager/profile-detail/ProfilePackFields.tsx
+
+Changing the MSU pack calls `reloadMsuForProfile`, so the new pack is audible now and not at the next boot. That call does nothing unless this profile is the one playing.
+
+## apps/desktop/src/views/DataManager/sub-components/profile-manager/profile-detail/ProfileSettingsTab.tsx
+
+The settings are the profile's `config.json`, read only. A key the file does not hold shows Default, or the value its format falls back to. Editing stays in the game's Settings.
+
 ## apps/desktop/src/views/DataManager/sub-components/profile-manager/profile-presets/
 
 The two presets of the creation form seed a profile with config overrides on top of the app's own `DEFAULT_SETTINGS`. A preset only touches the profile's own config; the randomizer is a separate choice on the same form and is never part of either preset.
 
 Vanilla only pins the two fields the default does not already give: a 4:3 picture and Vanilla Safe, which forces every non stock behaviour off whatever else is stored. Enhanced is every field a reference profile diverges from the default on: general and display comfort settings, every rendering companion, and the HUD and world item presentation features.
-
-## apps/desktop/src/views/DataManager/sub-components/profile-manager/ProfileDetailPanel.tsx
-
-Changing the MSU pack calls `reloadMsuForProfile`, so the new pack is audible now and not at the next boot. That call does nothing unless this profile is the one playing.
 
 ## apps/desktop/src/views/DataManager/sub-components/profile-manager/randomizer-options/CapacityTabBody.tsx
 
