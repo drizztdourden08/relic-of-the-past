@@ -1,16 +1,11 @@
 /* @layer renderer-components @kind types */
-import type { MsuSoundPanelProps } from './MsuSoundPanel.type';
-import type { SoundPanelController } from './msu.type';
+import type { SoundChannel } from '@rotp/game-data';
+import type { SoundListItemProps, SoundPanelController } from './msu.type';
 
-type SoundPanelRowsProps = Pick<
-  MsuSoundPanelProps,
-  'pack' | 'channel' | 'manifest' | 'saveBase' | 'isLayered' | 'readOnly' | 'onReload'
-> & {
+type SoundPanelRowsProps = Pick<SoundListItemProps, 'onSelect' | 'onPreview' | 'onPlayOriginal'> & {
+  channel: SoundChannel;
   sound: SoundPanelController;
   filter: string;
-  availableFiles: string[];
-  onConfirm: MsuSoundPanelProps['onDeleteConfirm'];
-  onStopReplacing: (soundId: number) => void;
 };
 
 export type { SoundPanelRowsProps };

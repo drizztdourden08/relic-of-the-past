@@ -187,13 +187,9 @@ The slot picker is a numeric entry above a list, never a fixed grid.
 
 ## apps/desktop/src/theme/msu-studio/msu-studio.css and apps/desktop/src/theme/msu-studio/msu-files.css
 
-The sound row channel tag has a fixed width so the ids beside it line up, and is monospaced so the tag reads as a port name.
+The sound row channel tag has a fixed width so the ids beside it line up, and is monospaced so the tag reads as a port name. A slot or sound row is one dense line: the whole row selects it and only the preview buttons sit outside the press target. The selected row is tinted and marked at its left edge, two classes deep so it beats the striping.
 
-The files tab owns its own scrolling (`.msu-panel--files`), so its header stays put while the list moves under it. One column template (`--msu-file-cols`) serves the whole files list: the header and the cards read it, so they cannot drift apart. The header is a label strip, not a table head: no rules or frame, so what sits under it still reads as cards. Its transparent border matches the card border so the two share one column origin. The card is the entry and the player expands inside it; there is no striping, which would read as a table.
-
-## apps/desktop/src/theme/studio/studio-host.css
-
-`StudioLayout` sets no padding and no page fill, so the screen that holds a studio gives it the `studio-host` class for its outer space.
+The files list scrolls with the editor's body, and its header is sticky on the body's sunken ground, so it stays put while the list moves under it. One column template (`--msu-file-cols`) serves the whole files list: the header and the cards read it, so they cannot drift apart. The header is a label strip, not a table head: no rules or frame, so what sits under it still reads as cards. Its transparent border matches the card border so the two share one column origin. The card is the entry and the player expands inside it; there is no striping, which would read as a table.
 
 ## apps/desktop/src/theme/store/store.css
 

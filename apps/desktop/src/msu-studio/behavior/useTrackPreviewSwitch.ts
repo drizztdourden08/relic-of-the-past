@@ -1,15 +1,15 @@
 /* @layer renderer-components @kind hook */
 import { useCallback } from 'react';
-import type { MsuTrackPanelProps } from '../MsuTrackPanel.type';
 import { useOriginalPreview } from './useOriginalPreview';
+import type { TrackPreviewSwitchParams } from './track-preview-switch.type';
 
-const useTrackPreviewSwitch = (props: Pick<MsuTrackPanelProps, 'onPreview' | 'onStopPreview'>) => {
-  const { onPreview, onStopPreview } = props;
+const useTrackPreviewSwitch = (params: TrackPreviewSwitchParams) => {
+  const { onPreview, onStopPreview } = params;
   const original = useOriginalPreview('music');
 
   const previewTrack = useCallback((trackNum: number) => {
     original.stop();
-    onPreview(trackNum);
+    void onPreview(trackNum);
   }, [original, onPreview]);
 
   const playOriginal = useCallback((trackNum: number) => {

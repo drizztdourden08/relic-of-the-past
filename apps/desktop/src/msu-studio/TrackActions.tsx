@@ -3,11 +3,10 @@ import { Box, Icon, IconButton } from '@drizztdourden08/tessera/primitives';
 import type { TrackActionsProps } from './TrackActions.type';
 
 const TrackActions = (props: TrackActionsProps) => {
-  const {
-    trackNum, fileName, playing, busy, expanded, playingOriginal,
-    onPreview, onStopPreview, onPlayOriginal, onToggleLayers,
-  } = props;
-  const hasAudio = fileName !== null;
+  const { trackNum, hasAudio, controls } = props;
+  const { onPreview, onStopPreview, onPlayOriginal } = controls;
+  const playing = controls.playing === trackNum;
+  const playingOriginal = controls.playingOriginal === trackNum;
 
   return (
     <Box className="msu-track-row__actions">
@@ -32,16 +31,6 @@ const TrackActions = (props: TrackActionsProps) => {
         onClick={() => onPlayOriginal(trackNum)}
       >
         <Icon name={playingOriginal ? 'square' : 'volume-2'} />
-      </IconButton>
-      <IconButton
-        variant="ghost"
-        size="sm"
-        label={`Layers and audio for slot ${trackNum}`}
-        active={expanded}
-        disabled={busy}
-        onClick={() => onToggleLayers(trackNum)}
-      >
-        <Icon name="layers" />
       </IconButton>
     </Box>
   );

@@ -28,6 +28,7 @@ const useSoundPanel = (params: SoundPanelParams) => {
 
   const play = useCallback((soundChannel: SoundChannel, soundId: number) => {
     original.stop();
+    setOpenSound(soundId);
     void playPack(soundChannel, soundId);
   }, [original, playPack]);
 
@@ -38,6 +39,7 @@ const useSoundPanel = (params: SoundPanelParams) => {
 
   const playOriginal = useCallback((soundId: number) => {
     stopPack();
+    setOpenSound(soundId);
     original.play(soundId);
   }, [original, stopPack]);
 

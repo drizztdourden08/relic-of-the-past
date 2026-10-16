@@ -5,10 +5,9 @@ import type { MsuManagerModel } from './msu-manager.type';
 
 interface MsuStudioProps {
   msu: MsuManagerModel;
-  pack: string | null;
+  pack: string;
   readOnly: boolean;
   origin: ReactNode;
-  list: ReactNode;
   tab: StudioTab;
   onTabChange: (tab: StudioTab) => void;
   onDeleteConfirm: (title: string, message: string, onConfirm: () => void) => void;

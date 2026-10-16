@@ -27,6 +27,8 @@ The language is read from the ROM, never picked. `loadRomFromBuffer` hashes the 
 
 ## apps/desktop/src/views/DataManager/sub-components/MsuManager.tsx
 
+The MSU Studio: a `ListDetailLayout` like every other list screen, with the new pack form, the import form and the pack list on the left (`MsuListPane`, kept under `msu-studio.list`) and the open pack's studio as the detail.
+
 A pack installed from the Hookshop is read only: its row carries the lock, its studio opens under the origin bar, and Delete uninstalls it the way the Hookshop tab does.
 
 ## apps/desktop/src/views/DataManager/sub-components/profile-manager/ArchipelagoFields.tsx

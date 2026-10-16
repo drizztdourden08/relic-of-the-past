@@ -19,9 +19,7 @@ const PackSummary = (props: PackSummaryProps) => {
         <Text className="detail-panel__value">{breakdown.length > 0 ? breakdown : '-'}</Text>
         <Text className="detail-panel__label">Unused</Text>
         <Text className="detail-panel__value">
-          {unusedCount === 0
-            ? 'None, because every file is played by something'
-            : `${unusedCount} file${unusedCount === 1 ? '' : 's'} nothing plays`}
+          {unusedCount === 0 ? 'None' : `${unusedCount} file${unusedCount === 1 ? '' : 's'} nothing plays`}
         </Text>
         {supersededCount > 0 && (
           <>
@@ -35,27 +33,16 @@ const PackSummary = (props: PackSummaryProps) => {
       </Box>
 
       <Box className="msu-file-summary__actions">
-        <Button
-          variant="secondary"
-          size="sm"
-          disabled={busy || optimizeBlockedBecause !== null}
-          title={optimizeBlockedBecause ?? 'Convert every file to one format, with a measured preview first'}
-          onClick={onOptimize}
-        >
+        <Button variant="secondary" size="sm" disabled={busy || optimizeBlockedBecause !== null} onClick={onOptimize}>
           Optimize...
         </Button>
         {supersededCount > 0 && (
-          <Button
-            variant="danger"
-            size="sm"
-            disabled={busy}
-            title="Delete the originals a converted file has taken over from"
-            onClick={onRemoveSuperseded}
-          >
+          <Button variant="danger" size="sm" disabled={busy} onClick={onRemoveSuperseded}>
             Remove {supersededCount} superseded
           </Button>
         )}
       </Box>
+      {optimizeBlockedBecause !== null && <Text variant="caption" tone="muted">{optimizeBlockedBecause}</Text>}
     </Box>
   );
 };

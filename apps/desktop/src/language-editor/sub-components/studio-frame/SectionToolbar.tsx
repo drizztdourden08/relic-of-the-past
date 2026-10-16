@@ -1,5 +1,6 @@
 /* @layer renderer-components @kind component */
-import { SearchInput, SegmentedControl, Tabs } from '@drizztdourden08/tessera/primitives';
+import { SegmentedControl, Tabs } from '@drizztdourden08/tessera/primitives';
+import { StudioSearch } from '@app/studio';
 import { FILTER_OPTIONS } from '../DialogueTab.constants';
 import type { EntryFilter } from '../DialogueTab.type';
 import type { SectionToolbarProps } from './studio-frame.type';
@@ -12,7 +13,7 @@ const SectionToolbar = (props: SectionToolbarProps) => {
       <Tabs tabs={tabs} activeTab={tab} onTabChange={onTabChange} />
       {tab === 'dialogue' && (
         <>
-          <SearchInput value={query} onChange={onQueryChange} placeholder="Search all text..." aria-label="Search all text" />
+          <StudioSearch value={query} onChange={onQueryChange} placeholder="Search all text..." label="Search all text" />
           <SegmentedControl<EntryFilter> options={FILTER_OPTIONS} value={filter} aria-label="Show lines" onChange={onFilterChange} />
         </>
       )}

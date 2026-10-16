@@ -1,17 +1,9 @@
 /* @layer renderer-components @kind types */
-import type { MsuPackManifest, SoundChannel } from '@rotp/game-data';
-import type { MsuFile } from './msu.type';
+import type { SoundChannel } from '@rotp/game-data';
+import type { MsuEffectsPanelProps } from './msu.type';
 
-interface MsuSoundPanelProps {
-  pack: string;
+interface MsuSoundPanelProps extends MsuEffectsPanelProps {
   channel: SoundChannel;
-  manifest: MsuPackManifest;
-  saveBase: MsuPackManifest;
-  files: MsuFile[];
-  isLayered: boolean;
-  readOnly: boolean;
-  onDeleteConfirm: (title: string, message: string, onConfirm: () => void) => void;
-  onReload: () => void;
 }
 
 export type { MsuSoundPanelProps };

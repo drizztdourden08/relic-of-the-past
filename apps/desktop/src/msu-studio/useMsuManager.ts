@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind hook */
-import { useCallback, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { usePackList } from './behavior/usePackList';
 import { usePackContents } from './behavior/usePackContents';
 import { useTrackRows } from './behavior/useTrackRows';
@@ -58,9 +58,11 @@ const useMsuManager = (onRefresh: () => void) => {
 
   const handleDeleteFile = useFileDeletion(selected, reload, report);
 
-  const handleToggleLayers = useCallback((trackNum: number) => {
+  const handleToggleTrack = useCallback((trackNum: number) => {
     setOpenTrack((open) => (open === trackNum ? null : trackNum));
   }, []);
+
+  useEffect(() => { setOpenTrack(null); }, [selected]);
 
   return {
     packs, loadingPacks, selected, setSelected, refresh,
@@ -70,7 +72,7 @@ const useMsuManager = (onRefresh: () => void) => {
     status, ...managerStatus({ previewError, exportProgress, status }),
     busy: assigning || uploading || exporting !== null,
     openTrack, playing, reportStore,
-    handleTrackAssign, handleTrackUpload, handleToggleLayers, handleExport, handleDeleteFile,
+    handleTrackAssign, handleTrackUpload, handleToggleTrack, selectTrack: setOpenTrack, handleExport, handleDeleteFile,
     handleCreatePack, handleRenamePack, handleUrlImport, handleFileImport,
     onPreview: play, onStopPreview: stop,
     exporting,

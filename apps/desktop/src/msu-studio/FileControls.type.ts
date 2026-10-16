@@ -1,12 +1,9 @@
 /* @layer renderer-components @kind types */
-import type { useFilePanel } from './behavior/useFilePanel';
-import type { useSupersededFiles } from './behavior/useSupersededFiles';
-
 type FileControlsProps = {
-  panel: ReturnType<typeof useFilePanel>;
-  coveredCount: ReturnType<typeof useSupersededFiles>['count'];
+  filter: string;
+  coveredCount: number;
   supersededOnly: boolean;
-  readOnly: boolean;
+  onFilterChange: (filter: string) => void;
   onSupersededOnlyChange: (checked: boolean) => void;
 };
 

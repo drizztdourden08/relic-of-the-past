@@ -29,7 +29,6 @@ import './theme/data-manager/data-manager.css';
 import './theme/dialogue-editor/lines.css';
 import './theme/input-calibration/input-calibration.css';
 import './theme/msu-studio/msu-studio.css';
-import './theme/studio/studio-host.css';
 import './theme/msu-studio/msu-files.css';
 import './theme/store/store.css';
 

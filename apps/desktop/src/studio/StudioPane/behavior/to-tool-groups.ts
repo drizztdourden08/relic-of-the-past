@@ -9,7 +9,6 @@ const toButton = (action: StudioAction) => createElement(Button, {
   size: 'sm',
   variant: action.variant ?? 'secondary',
   disabled: action.disabled,
-  hint: action.hint,
   onClick: () => { void action.onSelect(); },
 }, action.label);
 

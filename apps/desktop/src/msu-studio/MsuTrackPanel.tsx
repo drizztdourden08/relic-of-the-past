@@ -3,31 +3,15 @@ import { DELUXE_TRACK_THRESHOLD } from '@rotp/hub-contracts';
 import { Box, Text } from '@drizztdourden08/tessera/primitives';
 import { TrackSection } from './TrackSection';
 import { UnusedAudio } from './UnusedAudio';
-import { useTrackPreviewSwitch } from './behavior/useTrackPreviewSwitch';
-import { useTrackDetailRenderer } from './behavior/useTrackDetailRenderer';
 import type { MsuTrackPanelProps } from './MsuTrackPanel.type';
 
 const MsuTrackPanel = (props: MsuTrackPanelProps) => {
-  const {
-    files, rows, unusedFiles, fileOptions,
-    playing, reportStore, openTrack, busy, readOnly,
-    onTrackAssign, onToggleLayers, onPreview, onStopPreview, onDeleteFile,
-  } = props;
-
-  const { original, previewTrack, playOriginal } = useTrackPreviewSwitch({ onPreview, onStopPreview });
-
-  const renderDetail = useTrackDetailRenderer(props);
-
-  const sectionProps = {
-    files, fileOptions, playing, reportStore, openTrack, busy, readOnly,
-    playingOriginal: original.playing,
-    onAssign: onTrackAssign, onPreview: previewTrack, onStopPreview, onPlayOriginal: playOriginal,
-    onToggleLayers, renderDetail,
-  };
+  const { rows, files, unusedFiles, busy, readOnly, selected, note, controls, onSelect, onDeleteFile } = props;
+  const sectionProps = { files, selected, controls, onSelect };
 
   return (
     <Box className="msu-panel">
-      {original.note !== null && <Text className="msu-status msu-status--error">{original.note}</Text>}
+      {note !== null && <Text className="msu-status msu-status--error">{note}</Text>}
 
       <TrackSection
         title="Standard Slots"

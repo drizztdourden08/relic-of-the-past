@@ -3,36 +3,40 @@
   display: flex;
   flex-direction: column;
   gap: var(--space-sm);
-  height: 100%;
 }
 
 .msu-track-row {
   min-height: var(--size-28);
 }
 
-.msu-track-row--open {
-  background: var(--c-inset);
+.msu-track-row__main,
+.msu-sound-row__main {
+  display: flex;
+  flex: 1;
+  align-items: center;
+  gap: var(--space-sm);
+  min-width: 0;
+  text-align: start;
+}
+
+.track-list > .msu-track-row--selected.track-list__item,
+.track-list > .msu-sound-row--selected.track-list__item {
+  background: var(--c-selected);
+  box-shadow: inset var(--border-width-thick) 0 0 var(--c-primary);
 }
 
 .msu-track-row__file {
-  flex: 0 0 auto;
-  max-width: calc(12 * var(--text-base));
+  flex: 0 1 auto;
+  max-width: calc(14 * var(--text-base));
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
   font-size: var(--text-xs);
   color: var(--c-text-dim);
-  cursor: pointer;
 }
 
 .msu-track-row__file--empty {
   color: var(--c-text-muted);
-}
-
-.msu-track-row__select {
-  flex: 0 0 auto;
-  min-width: calc(12 * var(--text-base));
-  max-width: calc(18 * var(--text-base));
 }
 
 .msu-track-row__actions {
@@ -43,12 +47,7 @@
 }
 
 .msu-sound-row {
-  align-items: flex-start;
   min-height: calc(2.25 * var(--text-base));
-}
-
-.msu-sound-row--open {
-  background: var(--c-inset);
 }
 
 .msu-sound-row__ident {
@@ -83,19 +82,12 @@
   letter-spacing: var(--tracking-wide);
 }
 
-.msu-track-detail {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-md);
-  margin: var(--space-xs) 0 var(--space-md);
-  padding: var(--space-md);
-  background: var(--c-inset);
-  border: var(--border-width-thin) solid var(--c-border);
-  border-radius: var(--radius-lg);
+.studio-section + .layer-editor {
+  padding-block-start: var(--space-md);
+  border-block-start: var(--border-width-thin) solid var(--c-border);
 }
 
 .msu-status {
-  margin-top: var(--space-sm);
   font-size: var(--text-xs);
   color: var(--c-text-muted);
 }
@@ -108,8 +100,6 @@
   display: flex;
   flex-direction: column;
   gap: var(--space-sm);
-  padding-bottom: var(--space-sm);
-  border-bottom: var(--border-width-thin) solid var(--c-border);
 }
 
 .msu-file-summary__actions {

@@ -1,9 +1,9 @@
 /* @layer renderer-components @kind types */
 import type { ReactNode } from 'react';
 
-interface SunkenWellProps {
+type SectionNoteProps = {
+  title: string;
   children: ReactNode;
-  className?: string;
-}
+};
 
-export type { SunkenWellProps };
+export type { SectionNoteProps };

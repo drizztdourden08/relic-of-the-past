@@ -1,10 +1,4 @@
 /* @layer renderer-components @kind style */
-.msu-panel--files {
-  flex: 1 1 auto;
-  height: auto;
-  min-height: 0;
-}
-
 .msu-file-grid {
   display: flex;
   flex-direction: column;
@@ -24,7 +18,7 @@
   top: 0;
   z-index: var(--z-sticky);
   padding-bottom: var(--space-2xs);
-  background: var(--c-bg);
+  background: var(--c-sunken);
   border: var(--border-width-thin) solid transparent;
   border-bottom: none;
 }

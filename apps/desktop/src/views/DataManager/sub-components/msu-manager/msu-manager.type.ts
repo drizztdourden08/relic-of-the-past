@@ -1,5 +1,6 @@
 /* @layer renderer-components @kind types */
 import type { InstalledPack } from '@rotp/hub-contracts';
+import type { MsuManagerModel } from '../../../../msu-studio/msu-manager.type';
 
 interface MsuPackActionsParams {
   selected: string | null;
@@ -10,4 +11,12 @@ interface MsuPackActionsParams {
   onDeleteConfirm: (title: string, message: string, onConfirm: () => void) => void;
 }
 
-export type { MsuPackActionsParams };
+interface MsuListPaneProps {
+  msu: MsuManagerModel;
+  nameInstalled: boolean;
+  error: string | null;
+  isInstalled: (name: string) => boolean;
+  onDelete: (name: string) => void;
+}
+
+export type { MsuListPaneProps, MsuPackActionsParams };

@@ -4,4 +4,14 @@ import type { SoundPanelController } from '../msu.type';
 
 type EffectRow = { channel: SoundChannel; row: SoundPanelController['rows'][number] };
 
-export type { EffectRow };
+type OpenEffect = { channel: SoundChannel; soundId: number };
+
+type EffectsSummary = {
+  replaced: number;
+  total: number;
+  sounding: boolean;
+  status: string | null;
+  statusOk: boolean;
+};
+
+export type { EffectRow, EffectsSummary, OpenEffect };

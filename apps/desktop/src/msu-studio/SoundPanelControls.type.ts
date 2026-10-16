@@ -1,8 +1,9 @@
 /* @layer renderer-components @kind types */
-import type { SoundPanelController } from './msu.type';
+import type { ReactNode } from 'react';
 
 type SoundPanelControlsProps = {
-  sound: SoundPanelController;
+  tabs: ReactNode;
+  unreachableCount: number;
   filter: string;
   showUnreachable: boolean;
   onFilterChange: (filter: string) => void;

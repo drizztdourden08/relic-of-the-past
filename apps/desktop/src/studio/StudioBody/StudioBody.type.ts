@@ -20,4 +20,4 @@ interface StudioSidePanelProps {
   panel: StudioSide;
 }
 
-export type { StudioBodyProps, StudioSide, StudioSidePanelProps };
+export type { StudioBodyProps, StudioSidePanelProps };
