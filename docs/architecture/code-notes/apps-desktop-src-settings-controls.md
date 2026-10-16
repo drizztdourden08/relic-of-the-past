@@ -40,6 +40,10 @@ A fix with no explicit toggle inherits the bundle master it belongs to.
 
 The Sanctuary account row of the Contributor tab: the shared account card, given the Sanctuary's wording and wired to the session store. `window.open` on an external URL is routed to the system browser by the main process.
 
+## apps/desktop/src/settings-controls/display/is-display-disabled.ts
+
+Extend Y only applies to Original, because every other ratio is served at 240 lines, so the row idles for the rest. Widescreen Sprites and Extend Play Area idle until the view is wider than the base picture (`rendersWide`), which is also true for a fixed 4:3 at 240 lines.
+
 ## apps/desktop/src/settings-controls/display/refresh-advisory.ts
 
 The game advances exactly 60 times a second, so a display running at a whole multiple of 60 shows every frame for the same length of time. One that does not holds some frames longer than others, and no pacing on our side can even that out. The V-Sync description says so and names the rate that would help, so the player is not left wondering why V-Sync did nothing.
@@ -67,7 +71,7 @@ Every haptic setting except the master switch is disabled while haptics is off.
 
 ## apps/desktop/src/settings-controls/hud/hud-ratio-options.ts
 
-Fixed HUD ratio presets wider than the screen are disabled, since the HUD clamps to the screen anyway. Match and Custom stay open.
+Fixed HUD ratio presets wider than the screen are disabled, since the HUD clamps to the screen anyway. The screen ratio is the one the profile renders (`allowedRatio`), so Original and ratios the capabilities pull back are measured at their real shape. Match and Custom stay open.
 
 ## apps/desktop/src/settings-controls/hud/is-border-disabled.ts
 

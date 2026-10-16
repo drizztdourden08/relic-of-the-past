@@ -1,7 +1,7 @@
 /* @layer renderer-appshell @kind hook */
 import { useEffect, useRef } from 'react';
+import { getGameState, subscribeGameState } from '@rotp/game-core';
 import { syncAspectRatioLock } from './sync-aspect-ratio-lock';
-import { CANVAS_POLL_ATTEMPTS, CANVAS_POLL_MS } from './useDisplaySettings.constants';
 import type { AspectLockParams } from './useDisplaySettings.type';
 
 const useAspectRatioLock = (params: AspectLockParams) => {
@@ -9,6 +9,7 @@ const useAspectRatioLock = (params: AspectLockParams) => {
 
   useEffect(() => {
     if (!isGameRunning) return;
+    if (viewportConstraint === 'fit' && getGameState().status !== 'running') return;
     syncAspectRatioLock({ win, viewportConstraint, aspectRatio, windowMode, isFullscreen });
   }, [win, isGameRunning, viewportConstraint, aspectRatio, windowMode, isFullscreen]);
 
@@ -23,16 +24,9 @@ const useAspectRatioLock = (params: AspectLockParams) => {
       return;
     }
     if (latest.current.viewportConstraint !== 'fit') return;
-    let attempts = 0;
-    const poll = setInterval(() => {
-      attempts++;
-      const canvas = document.querySelector<HTMLCanvasElement>('.game-layer__canvas');
-      if ((canvas && canvas.width > 0 && canvas.height > 0) || attempts >= CANVAS_POLL_ATTEMPTS) {
-        clearInterval(poll);
-        syncAspectRatioLock(latest.current);
-      }
-    }, CANVAS_POLL_MS);
-    return () => clearInterval(poll);
+    return subscribeGameState((state) => {
+      if (state.status === 'running') syncAspectRatioLock(latest.current);
+    });
   }, [win, isGameRunning]);
 };
 

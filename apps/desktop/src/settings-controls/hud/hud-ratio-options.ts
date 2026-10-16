@@ -1,10 +1,10 @@
 /* @layer renderer-components @kind logic */
 import type { GameSettings } from '@rotp/features';
-import { aspectRatioValue, parseRatioString } from '@rotp/game-core';
+import { allowedRatio, parseRatioString } from '@rotp/game-core';
 import { ASPECT_OPTIONS } from './hud-controls.constants';
 
 const hudRatioOptions = (settings: GameSettings) => {
-  const screenVal = aspectRatioValue(settings.aspectRatio, settings.customAspectW, settings.customAspectH);
+  const screenVal = allowedRatio(settings);
   return [
     { value: 'match', label: 'Match' },
     ...ASPECT_OPTIONS.map((opt) =>

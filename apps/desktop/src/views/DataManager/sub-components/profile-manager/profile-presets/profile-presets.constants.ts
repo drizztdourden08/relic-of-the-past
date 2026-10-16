@@ -2,7 +2,7 @@
 import type { GameSettings } from '@rotp/features';
 
 const VANILLA_CONFIG_OVERRIDES: Partial<GameSettings> = {
-  aspectRatio: '4:3',
+  aspectRatio: 'original',
   vanillaSafe: true,
 };
 

@@ -45,7 +45,7 @@ An Archipelago profile needs a server it can boot against, so `randomizerFormErr
 
 The two presets of the creation form seed a profile with config overrides on top of the app's own `DEFAULT_SETTINGS`. A preset only touches the profile's own config; the randomizer is a separate choice on the same form and is never part of either preset.
 
-Vanilla only pins the two fields the default does not already give: a 4:3 picture and Vanilla Safe, which forces every non stock behaviour off whatever else is stored. Enhanced is every field a reference profile diverges from the default on: general and display comfort settings, every rendering companion, and the HUD and world item presentation features.
+Vanilla only pins the two fields the default does not already give: an Original picture and Vanilla Safe, which forces every non stock behaviour off whatever else is stored. Enhanced is every field a reference profile diverges from the default on: general and display comfort settings, every rendering companion, and the HUD and world item presentation features.
 
 ## apps/desktop/src/views/DataManager/sub-components/profile-manager/ProfileDetailPanel.tsx
 
