@@ -10,7 +10,7 @@
     "./package.json": "./package.json"
   },
   "dependencies": {
-    "@drizztdourden08/brock-core": "^0.45.1",
+    "@drizztdourden08/brock-core": "^0.46.0",
     "@rotp/asset-extraction": "workspace:*",
     "@rotp/game-core": "workspace:*",
     "@rotp/game-data": "workspace:*",
