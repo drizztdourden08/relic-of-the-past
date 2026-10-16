@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind hook */
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useCreateProfile } from './useCreateProfile';
 import { useProfileForm } from './useProfileForm';
 import { useProfileLists } from './useProfileLists';
@@ -13,6 +13,10 @@ const useProfileManager = ({ profiles, romStatuses, onCreateProfile, onRefresh }
 
   const readyRoms = romStatuses.filter((r) => r.hasAssets || r.extractionStatus === 'ready');
   const selectedProfile = profiles.find((p) => p.id === selected);
+
+  useEffect(() => {
+    if (selected !== null && selectedProfile === undefined) setSelected(null);
+  }, [selected, selectedProfile]);
 
   const handleCreate = useCreateProfile({ form, onCreateProfile, onRefresh, setCreating });
 
