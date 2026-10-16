@@ -15,16 +15,14 @@ const PaletteEditor = (props: PaletteEditorProps) => {
 
   return (
     <Box className="palette-editor">
-      <Box className="palette-editor__scroll">
-        <Text className="palette-editor__title">
-          {OUTFIT_LABELS[outfit]} palette
-          <Text as="span" className="palette-editor__hint">index 0 is transparent and has no entry</Text>
-        </Text>
-        <OutfitSwatchGrid colors={colors} originals={originals} slot={slot} onOpen={openAt} />
+      <Text className="palette-editor__title">
+        {OUTFIT_LABELS[outfit]} palette
+        <Text as="span" className="palette-editor__hint">index 0 is transparent and has no entry</Text>
+      </Text>
+      <OutfitSwatchGrid colors={colors} originals={originals} slot={slot} onOpen={openAt} />
 
-        <Text className="palette-editor__title">Glove colours</Text>
-        <GloveSwatchGrid gloves={live.gloves} originalGloves={sheet.original.gloves} slot={slot} onOpen={openAt} />
-      </Box>
+      <Text className="palette-editor__title">Glove colours</Text>
+      <GloveSwatchGrid gloves={live.gloves} originalGloves={sheet.original.gloves} slot={slot} onOpen={openAt} />
 
       <ColorPickerPopover
         open={slot !== null && !readOnly}

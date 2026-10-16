@@ -6,6 +6,7 @@ interface WearingBarProps {
   gloves: GloveLevel;
   onOutfit: (outfit: OutfitId) => void;
   onGloves: (gloves: GloveLevel) => void;
+  flat?: boolean;
 }
 
 export type { WearingBarProps };

@@ -8,7 +8,7 @@ interface StudioAction {
   hint: Hint;
   variant?: ButtonVariant;
   disabled?: boolean;
-  onSelect: () => void;
+  onSelect: () => void | Promise<void>;
 }
 
 interface StudioActionGroup {
