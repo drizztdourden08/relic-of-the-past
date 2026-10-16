@@ -1,12 +1,13 @@
 /* @layer renderer-lib @kind logic */
 import type { PlayerSheet, Wearing } from '@rotp/game-data';
+import { composeFrame } from './compose-frame';
 import { resolvePalette } from './resolve-palette';
-import { blitTiles, TILE } from './draw-tiles';
-import { DEFAULT_WEARING, STANDING_COLS, STANDING_ROWS } from './thumbnail.constants';
+import { frameBounds } from './thumbnail-bounds';
+import { DEFAULT_WEARING, REST_FRAME } from './thumbnail.constants';
 
 const renderThumbnail = (sheet: PlayerSheet, wearing: Wearing = DEFAULT_WEARING): string | null => {
-  const width = STANDING_COLS * TILE;
-  const height = STANDING_ROWS * TILE;
+  if (!REST_FRAME) return null;
+  const { width, height, originX, originY } = frameBounds(REST_FRAME);
   const canvas = document.createElement('canvas');
   canvas.width = width;
   canvas.height = height;
@@ -14,18 +15,15 @@ const renderThumbnail = (sheet: PlayerSheet, wearing: Wearing = DEFAULT_WEARING)
   if (!ctx) return null;
 
   const image = ctx.createImageData(width, height);
-  const dest = new Uint32Array(image.data.buffer);
-  blitTiles({
-    dest,
+  composeFrame({
+    dest: new Uint32Array(image.data.buffer),
     destWidth: width,
     destHeight: height,
-    pixels: sheet.pixels,
+    sheet,
     row: resolvePalette(sheet, wearing),
-    offset: 0,
-    cols: STANDING_COLS,
-    rows: STANDING_ROWS,
-    x: 0,
-    y: 0,
+    frame: REST_FRAME,
+    originX,
+    originY,
   });
   ctx.putImageData(image, 0, 0);
   return canvas.toDataURL('image/png');

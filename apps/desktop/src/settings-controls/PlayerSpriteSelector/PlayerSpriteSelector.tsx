@@ -8,21 +8,21 @@ import './PlayerSpriteSelector.css';
 
 const PlayerSpriteSelector = (props: PlayerSpriteSelectorProps) => {
   const { value, onChange } = props;
-  const { entries, loading } = useSpriteLibrary();
+  const { entries, stockPreview, loading } = useSpriteLibrary();
 
   const choices = useMemo<SpriteChoice[]>(
     () => [
-      { name: null, label: 'Original', preview: null },
+      { name: null, label: 'Original', preview: stockPreview },
       ...entries.map((e) => ({ name: e.name, label: e.label, preview: e.preview })),
     ],
-    [entries],
+    [entries, stockPreview],
   );
 
   return (
     <Box className="player-sprite-selector">
       <Text className="player-sprite-selector__title">Player Sprite</Text>
       <Text className="player-sprite-selector__hint">
-        Manage sprites in Data Manager › Character Studio. Applies right away.
+        Manage sprites in Data &gt; Character Studio. Applies right away.
       </Text>
       <Box className="player-sprite-selector__grid">
         {choices.map((c) => (
