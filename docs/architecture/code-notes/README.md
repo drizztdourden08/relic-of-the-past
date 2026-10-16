@@ -59,7 +59,7 @@ Add a note to the page of the package or area that holds the file, under a headi
 | [apps/desktop/src/title](apps-desktop-src-title.md) | 17 |
 | [apps/desktop/src/views/CheatsWidget](apps-desktop-src-views-cheats-widget.md) | 38 |
 | [apps/desktop/src/views/DataInspector](apps-desktop-src-views-data-inspector.md) | 34 |
-| [apps/desktop/src/views/DataManager](apps-desktop-src-views-data-manager.md) | 28 |
+| [apps/desktop/src/views/DataManager](apps-desktop-src-views-data-manager.md) | 31 |
 | [apps/desktop/src/views/GameSession](apps-desktop-src-views-game-session.md) | 26 |
 | [apps/desktop/src/views/HudLayoutEditor](apps-desktop-src-views-hud-layout-editor.md) | 130 |
 | [apps/desktop/src/views/InputTester](apps-desktop-src-views-input-tester.md) | 61 |

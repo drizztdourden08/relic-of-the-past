@@ -1,0 +1,19 @@
+/* @layer renderer-components @kind style */
+.profile-detail {
+  min-width: 0;
+}
+
+.profile-detail__heading {
+  min-width: 0;
+}
+
+.profile-detail__section {
+  min-width: 0;
+}
+
+.profile-detail__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, var(--size-288)), 1fr));
+  gap: var(--space-lg);
+  align-items: start;
+}
