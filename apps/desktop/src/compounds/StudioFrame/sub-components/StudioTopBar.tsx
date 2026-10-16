@@ -8,7 +8,7 @@ const StudioTopBar = (props: StudioTopBarProps) => {
   const { caption, title, status, groups, idleHint, notices } = props;
 
   return (
-    <Box as="header" className="studio-frame__bar">
+    <Box as="header" surface="raised" className="studio-frame__bar">
       <Box className="studio-frame__bar-head">
         <Box className="studio-frame__bar-title">
           <Text variant="overline" tone="muted">{caption}</Text>

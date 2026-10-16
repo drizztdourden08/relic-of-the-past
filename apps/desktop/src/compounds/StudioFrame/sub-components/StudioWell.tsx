@@ -5,7 +5,7 @@ import type { StudioWellProps } from '../StudioFrame.type';
 const StudioWell = (props: StudioWellProps) => {
   const { children, className } = props;
 
-  return <Box className={`studio-frame__well${className ? ` ${className}` : ''}`}>{children}</Box>;
+  return <Box surface="sunken" className={`studio-frame__well${className ? ` ${className}` : ''}`}>{children}</Box>;
 };
 
 export { StudioWell };

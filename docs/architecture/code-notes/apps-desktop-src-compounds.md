@@ -860,11 +860,11 @@ picture draws the kind's icon in its place.
 
 ## apps/desktop/src/compounds/StudioFrame/StudioFrame.css
 
-Four levels of depth, from the page down. The page ground is `--c-bg`. The top bar and the side panels are raised: `--c-surface`, a strong border and `--shadow-1`. The editor frame holds its toolbar on the raised surface, attached to the top edge, and its work surface below it is sunken (`--c-sunken`). `StudioWell` is the one sunken box that goes inside a raised panel, for lists and text areas. Tessera has no sunken surface part, so these are its surface tokens used directly. Below 48rem of frame width the three columns stack in reading order: left panel, editor, right panel.
+Four levels of depth, from the page down. The page ground is `--c-bg`. The top bar and the side panels are Box `surface="raised"`. The editor frame is Box `surface="sunken"` with the larger corner of the panels, and its toolbar sits on the raised fill, attached to the top edge. `StudioWell` is a sunken Box that goes inside a raised panel, for lists and text areas. The surfaces come from Tessera, so this file keeps only layout, the editor corner and the toolbar edge. Below 48rem of frame width the three columns stack in reading order: left panel, editor, right panel.
 
 ## apps/desktop/src/compounds/StudioFrame/StudioFrame.tsx
 
-The shared frame of the data studios. It owns one `HintScope`, so the hint line in the top bar shows the hint of whichever action or tool is hovered or focused, and falls back to `idleHint`. That line is where a studio tells save from export in plain words. Each action reports its hint through a wrapper around the button, because a disabled button does not raise pointer events and its hint should still show, such as why New is not available. Panel collapse state lives in the panel, so a studio does not manage it, and a collapsed panel keeps its title as a vertical rail.
+The shared frame of the data studios. It owns one `HintScope`, so the hint line in the top bar shows the hint of whichever action or tool is hovered or focused, and falls back to `idleHint`. That line is where a studio tells save from export in plain words. Each action passes its hint to the Button, which reports it to the scope, so a disabled action still shows why it is off, such as why New is not available. Panel collapse state lives in the panel, so a studio does not manage it, and a collapsed panel keeps its title as a vertical rail.
 
 ## apps/desktop/src/compounds/TrackerInventory/TrackerInventory.tsx
 
