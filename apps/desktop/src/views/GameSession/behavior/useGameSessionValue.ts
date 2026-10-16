@@ -33,6 +33,7 @@ const useGameSessionValue = (): GameSessionValue => {
     dismissDialog: dialogs.dismissDialog,
     onProfileLoaded: (data) => applyLoadedProfile(data, { game, display, audio, saveState }),
     onGameClear: () => game.clearGame(),
+    onGameStop: () => game.stop(),
   });
   const saveOverlay = useSaveOverlay(saveState, game.isRunning);
   const screenOpen = useNavigationStore((s) => s.active !== null);

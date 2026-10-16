@@ -21,6 +21,10 @@ The overrides are a creation form preset's config values, then any setting the r
 
 `withDeliverable`: an online profile keeps the probed spots on its config, so the player file written later randomizes the same npc, pond and world spots a local seed of this profile would.
 
+## apps/desktop/src/views/GameSession/behavior/delete-profile-flow.ts
+
+Deleting the active profile first stops the game and then makes the most recently played other profile active, and only then removes the profile. The shell has no Home while no profile is active (the game hub requires one), and the shell opens the profiles screen when the active profile is removed, so removing it first left Escape and the menu with nowhere to go. The game is stopped before the folder goes so the exit save and the session end land in a folder that still exists. Deleting the only profile still ends with no active profile, which is the shell's own empty state.
+
 ## apps/desktop/src/views/GameSession/behavior/dump-flood-items.ts
 
 The player's real traversal tokens, for the `--dump-nav` flood. The dump used to flood with an empty inventory, so it reported fewer reachable tiles than the widget for the very same room (590 against 608 in the Jail Cell), and a baseline captured from it could not be compared with anything. It now floods with what the player carries, from the same tracker the simulator reads. `TILE_REQS` are the traversal tokens the flood understands; other reach tokens do not matter here. `lift.1` is always present: lifting bare-handed needs no item.

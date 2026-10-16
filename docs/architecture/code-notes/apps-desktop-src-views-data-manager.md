@@ -153,6 +153,8 @@ The same panel shows the stored options of a profile read only. Given a `frozen`
 
 Escape is consumed (`preventDefault`) when it closes the new profile row, so abandoning the row does not also close the page.
 
+The selection clears when its profile leaves the list, so a deleted profile never keeps its detail pane or its settings read.
+
 ## apps/desktop/src/views/DataManager/sub-components/ProfileManager.tsx
 
 While the creation form has the randomizer enabled, the option catalog takes over the whole detail pane. The form keeps the fixed width list column and the options get the remaining side with their own scroll.

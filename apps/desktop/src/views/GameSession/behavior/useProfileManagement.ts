@@ -13,7 +13,7 @@ import { useRomActions } from './useRomActions';
 import { useDeleteProfile } from './useDeleteProfile';
 
 const useProfileManagement = (params: ProfileManagementParams) => {
-  const { showDialog, dismissDialog, onProfileLoaded, onGameClear } = params;
+  const { showDialog, dismissDialog, onProfileLoaded, onGameClear, onGameStop } = params;
   const { profiles, active: activeProfile, select, refresh, removeConfirmed } = useProfiles();
 
   const [romStatuses, setRomStatuses] = useState<RomInfo[]>([]);
@@ -51,7 +51,7 @@ const useProfileManagement = (params: ProfileManagementParams) => {
   }, [refreshProfilesAndRoms, handleSelectProfile]);
 
   const handleDeleteProfile = useDeleteProfile({
-    profiles, activeProfile, refreshProfilesAndRoms, showDialog, dismissDialog, onGameClear, removeConfirmed,
+    profiles, activeProfile, refreshProfilesAndRoms, showDialog, dismissDialog, stopGame: onGameStop, selectProfile: handleSelectProfile, removeConfirmed,
   });
 
   const { extractionStates, importingRom, handleImportRom, handleExtractAssets, handleDeleteRom } = useRomActions({

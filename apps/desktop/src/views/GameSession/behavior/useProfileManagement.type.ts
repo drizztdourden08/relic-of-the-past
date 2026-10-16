@@ -15,6 +15,7 @@ interface ProfileManagementParams {
   dismissDialog: () => void;
   onProfileLoaded: (data: ProfileLoadedData) => void;
   onGameClear: () => void;
+  onGameStop: () => Promise<void>;
 }
 
 interface LoadProfileForGameDeps {
@@ -37,14 +38,18 @@ interface DeleteRomDeps extends RomActionsDeps {
   setExtractionStates: Dispatch<SetStateAction<Record<string, RomExtractionStatus>>>;
 }
 
-interface DeleteProfileDeps {
+interface DeleteProfileFlowDeps {
   profiles: Profile[];
   activeProfile: Profile | null;
-  refreshProfilesAndRoms: () => Promise<unknown>;
-  showDialog: (config: ConfirmDialog) => void;
-  dismissDialog: () => void;
-  onGameClear: () => void;
+  stopGame: () => Promise<void>;
+  selectProfile: (profile: Profile) => Promise<void>;
   removeConfirmed: ReturnType<typeof useProfiles>['removeConfirmed'];
 }
 
-export type { DeleteProfileDeps, DeleteRomDeps, LoadProfileForGameDeps, ProfileLoadedData, ProfileManagementParams, RomActionsDeps };
+interface DeleteProfileDeps extends DeleteProfileFlowDeps {
+  refreshProfilesAndRoms: () => Promise<unknown>;
+  showDialog: (config: ConfirmDialog) => void;
+  dismissDialog: () => void;
+}
+
+export type { DeleteProfileDeps, DeleteProfileFlowDeps, DeleteRomDeps, LoadProfileForGameDeps, ProfileLoadedData, ProfileManagementParams, RomActionsDeps };
