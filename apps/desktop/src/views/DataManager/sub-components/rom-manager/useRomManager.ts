@@ -34,10 +34,10 @@ const useRomManager = (params: UseRomManagerParams) => {
 
   const triggerRebuild = useCallback((kind: RomKind, romFile: string) => {
     if (kind === 'snes-alttp') {
-      onExtractAssets(romFile);
+      void onExtractAssets(romFile);
       return;
     }
-    romStatuses.filter((base) => base.hasAssets).forEach((base) => onExtractAssets(base.romFile));
+    romStatuses.filter((base) => base.hasAssets).forEach((base) => { void onExtractAssets(base.romFile); });
   }, [romStatuses, onExtractAssets]);
 
   const handleUrlImport = useCallback(async (url: string) => {

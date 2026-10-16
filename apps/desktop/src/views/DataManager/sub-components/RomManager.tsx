@@ -4,20 +4,23 @@ import { RomKindTabs } from './RomKindTabs';
 import { RomList } from './rom-manager/RomList';
 import { RomDetailPanel } from './rom-manager/RomDetailPanel';
 import { useRomManager } from './rom-manager/useRomManager';
-import { EmptyState } from '@drizztdourden08/tessera/primitives';
+import { useRomExtraction } from './rom-manager/useRomExtraction';
+import { ExtractionOptions } from './rom-manager/ExtractionOptions';
+import { EmptyState, Field } from '@drizztdourden08/tessera/primitives';
 import { ListDetailLayout } from '@drizztdourden08/tessera/composites';
 import { IMPORT_LANE_CONFIG } from './rom-manager/import-lane-config.constants';
 import type { RomManagerProps } from './RomManager.type';
 
 const RomManager = (props: RomManagerProps) => {
   const { romStatuses, onExtractAssets, onDeleteRom, onRefresh } = props;
+  const { withSprites, setWithSprites, spriteError, spriteProgress, extract } = useRomExtraction({ onExtractAssets });
   const {
     activeKind, setActiveKind,
     supplements,
     selected, setSelected,
     detail, loadingDetail,
     handleUrlImport, handleFileImport,
-  } = useRomManager({ romStatuses, onRefresh, onExtractAssets });
+  } = useRomManager({ romStatuses, onRefresh, onExtractAssets: extract });
 
   const laneConfig = IMPORT_LANE_CONFIG[activeKind];
   const selectedBase = romStatuses.find((rom) => rom.romFile === selected);
@@ -25,7 +28,9 @@ const RomManager = (props: RomManagerProps) => {
 
   const list = (
     <>
-      <RomKindTabs value={activeKind} onChange={setActiveKind} />
+      <Field hint={laneConfig.description} width="full">
+        <RomKindTabs value={activeKind} onChange={setActiveKind} />
+      </Field>
       <ImportForm
         kind="rom"
         placeholder={laneConfig.placeholder}
@@ -34,6 +39,12 @@ const RomManager = (props: RomManagerProps) => {
         dropHint={laneConfig.dropHint}
         onUrlImport={handleUrlImport}
         onFileImport={handleFileImport}
+      />
+      <ExtractionOptions
+        withSprites={withSprites}
+        onWithSpritesChange={setWithSprites}
+        spriteProgress={spriteProgress}
+        spriteError={spriteError}
       />
 
       <RomList
@@ -53,7 +64,7 @@ const RomManager = (props: RomManagerProps) => {
       detail={detail}
       selectedBase={selectedBase}
       selectedSupplement={selectedSupplement}
-      onExtractAssets={onExtractAssets}
+      onExtractAssets={extract}
     />
   );
 

@@ -9,7 +9,7 @@ const AssetsRow = ({ base, onExtractAssets }: AssetsRowProps) => {
   }
   if (base.extractionStatus === 'extracting') return <Text tone="primary"><Icon name="refresh-cw" inline /> Extracting...</Text>;
   return (
-    <Button variant="primary" size="sm" onClick={() => onExtractAssets(base.romFile)}>
+    <Button variant="primary" size="sm" onClick={() => { void onExtractAssets(base.romFile); }}>
       Extract Assets
     </Button>
   );
