@@ -9,7 +9,7 @@ type GbaDifference = {
   group: GbaGroup;
   label: string;
   detail: string;
-  evidence: 'extracted' | 'documented';
+  evidence: 'documented' | 'in-progress';
 };
 
 export type { GbaDifference, GbaGroup };

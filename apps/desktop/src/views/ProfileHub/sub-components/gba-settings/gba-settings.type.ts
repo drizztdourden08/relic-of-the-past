@@ -1,7 +1,7 @@
 /* @layer renderer-components @kind types */
 import type { GameSettings, GbaDifference, GbaGroup } from '@rotp/features';
 
-type EvidenceFilter = 'all' | 'extracted';
+type EvidenceFilter = 'all' | 'in-progress';
 
 interface GbaGroupRows {
   group: GbaGroup;
