@@ -398,14 +398,7 @@ pointed at it, so no profile names a sprite that no longer exists.
 
 ## apps/desktop/src/views/PlayerSpriteStudio/PlayerSpriteStudio.tsx
 
-The library, and the open sheet with its toolbar and palette. A sprite installed from the Hookshop
-opens under its origin bar, read only: it previews and exports, its palette and names stay as
-published, and Delete uninstalls it. An installed sprite is read only in the main process too, so
-a refused write lands in the status line. After a duplicate or an update the library refreshes
-before opening the result, because the new file may be one it has not read yet. The palette sits in
-a right hand sidebar level with the stage, so it never scrolls out of view under a tall zoomed in
-state or contact sheet; its labels stack over their hints because the sidebar is too narrow to set
-them side by side without both wrapping mid phrase.
+The studio is one `StudioFrame`. The top bar holds the file actions in three labelled groups: Sprite (new, close), Save to this app and Export a file. Save keeps a sprite in the app library; export writes a file to share. The bar's hint line says so when nothing is hovered, and shows each action's own hint when one is. The library is the left panel, the details (name, author and palette) the right one, and the viewer controls sit on the editor toolbar. A sprite installed from the Hookshop opens under its origin bar, read only: it previews and exports, its palette and names stay as published, and Delete uninstalls it. An installed sprite is read only in the main process too, so a refused write lands in the notice lines. After a duplicate or an update the library refreshes before opening the result, because the new file may be one it has not read yet. The palette is in the right panel, level with the stage, so it never scrolls out of view under a tall zoomed in state or contact sheet.
 
 ## apps/desktop/src/views/PlayerSpriteStudio/sub-components/PaletteEditor.tsx
 

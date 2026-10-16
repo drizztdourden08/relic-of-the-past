@@ -1,25 +1,17 @@
 /* @layer renderer-components @kind component */
-import { Box, Text, Button, Icon, Image, IconButton, EmptyState, Status, Stack } from '@drizztdourden08/tessera/primitives';
+import { Icon, Image, IconButton, EmptyState, Status, Spinner, Text } from '@drizztdourden08/tessera/primitives';
 import { ListItemRow } from '@drizztdourden08/tessera/composites';
 import { HookshopChip } from '../../../compounds/HookshopChip';
+import { StudioWell } from '../../../compounds/StudioFrame';
 import { ImportForm } from '../../DataManager/sub-components/ImportForm';
 import type { SpriteLibraryListProps } from '../PlayerSpriteStudio.type';
 
 const SpriteLibraryList = (props: SpriteLibraryListProps) => {
-  const { entries, selected, canCreate, isInstalled, onSelect, onCreate, onDelete, onUrlImport, onFileImport } = props;
+  const { entries, loading, selected, isInstalled, onSelect, onDelete, onUrlImport, onFileImport } = props;
 
   return (
     <>
-      <Box className="sprite-library__create">
-        <Button variant="secondary" size="sm" disabled={!canCreate} onClick={onCreate}>
-          Create new sprite
-        </Button>
-        {!canCreate && (
-          <Text className="sprite-library__hint">
-            Needs a ROM with compiled assets, because the stock sheet is read from it.
-          </Text>
-        )}
-      </Box>
+      <Text variant="overline" tone="muted">Add a sprite</Text>
       <ImportForm
         kind="linkSprite"
         accept={['.zspr', '.rsp']}
@@ -29,9 +21,11 @@ const SpriteLibraryList = (props: SpriteLibraryListProps) => {
         onUrlImport={onUrlImport}
         onFileImport={onFileImport}
       />
-      <Stack gap="xs">
-        {entries.length === 0 && <EmptyState message="No player sprites yet" />}
-        {entries.map((entry) => (
+      <Text variant="overline" tone="muted">In this app</Text>
+      <StudioWell>
+        {loading && <Spinner size="sm" label="Loading sprites" />}
+        {!loading && entries.length === 0 && <EmptyState size="sm" message="No player sprites yet" />}
+        {!loading && entries.map((entry) => (
           <ListItemRow
             key={entry.name}
             icon={entry.preview
@@ -54,7 +48,7 @@ const SpriteLibraryList = (props: SpriteLibraryListProps) => {
             }
           />
         ))}
-      </Stack>
+      </StudioWell>
     </>
   );
 };

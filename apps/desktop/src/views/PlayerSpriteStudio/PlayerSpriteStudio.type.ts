@@ -1,7 +1,7 @@
 /* @layer renderer-components @kind types */
-import type { OutfitId, PlayerSheet, SheetMeta } from '@rotp/game-data';
+import type { OutfitId, PlayerSheet } from '@rotp/game-data';
 import type { InstalledPack } from '@rotp/hub-contracts';
-import type { useWearing } from '@rotp/design/packs';
+import type { SpriteViewerModel, useWearing } from '@rotp/design/packs';
 import type { RomDisplayInfo } from '@app/views/GameSession/GameSession.type';
 import type { ConfirmRequest } from '../InstalledOriginBar/InstalledOriginBar.type';
 import type { useSpriteDraft } from './behavior/useSpriteDraft';
@@ -40,29 +40,13 @@ type Slot = number | 'g0' | 'g1' | null;
 
 interface SpriteLibraryListProps {
   entries: LibraryEntry[];
+  loading: boolean;
   selected: string | null;
-  canCreate: boolean;
   isInstalled: (name: string) => boolean;
   onSelect: (name: string) => void;
-  onCreate: () => void;
   onDelete: (name: string) => void;
   onUrlImport: (url: string) => Promise<{ success: boolean; message: string }>;
   onFileImport: (files: File[]) => Promise<{ success: boolean; message: string }>;
-}
-
-interface StudioToolbarProps {
-  meta: SheetMeta;
-  file: string | null;
-  dirty: boolean;
-  applied: boolean | null;
-  busy: boolean;
-  readOnly: boolean;
-  onMeta: (meta: SheetMeta) => void;
-  onSave: () => void;
-  onSaveAs: (container: 'zspr' | 'rsp') => void;
-  onExport: (container: 'zspr' | 'rsp') => void;
-  onRevert: () => void;
-  onClose: () => void;
 }
 
 type SpriteDraftModel = ReturnType<typeof useSpriteDraft>;
@@ -80,23 +64,51 @@ interface StudioActionsParams {
   draft: SpriteDraftModel;
 }
 
-interface StudioDetailProps {
-  sheet: PlayerSheet;
-  openFile: string | null;
-  installed: InstalledPack | null;
+interface StudioGroupsParams {
+  sheet: PlayerSheet | null;
+  canCreate: boolean;
   busy: boolean;
-  status: string | null;
+  readOnly: boolean;
+  dirty: boolean;
+  isNew: boolean;
   draft: SpriteDraftModel;
   library: SpriteLibraryModel;
   exporter: SpriteExportModel;
-  wearing: WearingModel;
   run: (task: () => Promise<unknown>) => Promise<void>;
-  onOpenAfter: (name: string) => void;
-  onUninstalled: () => void;
 }
 
-interface ApplyRowProps {
+interface ViewerToolbarParams {
+  open: boolean;
+  wearing: WearingModel;
+  viewer: SpriteViewerModel;
+}
+
+interface SpriteStatusProps {
+  open: boolean;
+  file: string | null;
+  dirty: boolean;
   applied: boolean | null;
+  readOnly: boolean;
+}
+
+interface SpriteNoticesProps {
+  applied: boolean | null;
+  readOnly: boolean;
+  exportStatus: string;
+  error: string | null;
+}
+
+interface SpriteWorkspaceProps {
+  sheet: PlayerSheet | null;
+  wearing: WearingModel;
+  viewer: SpriteViewerModel;
+}
+
+interface SpriteDetailsPanelProps {
+  sheet: PlayerSheet | null;
+  outfit: OutfitId;
+  readOnly: boolean;
+  draft: SpriteDraftModel;
 }
 
 interface OutfitSwatchGridProps {
@@ -114,7 +126,7 @@ interface GloveSwatchGridProps {
 }
 
 export type {
-  ApplyRowProps, Container, GloveSwatchGridProps, LibraryEntry, OpenDraft, OutfitSwatchGridProps, PaletteEditorProps,
-  PlayerSpriteStudioProps, Slot, SpriteLibraryListProps, StudioActionsParams, StudioDetailProps, StudioToolbarProps,
-
+  Container, GloveSwatchGridProps, LibraryEntry, OpenDraft, OutfitSwatchGridProps, PaletteEditorProps,
+  PlayerSpriteStudioProps, Slot, SpriteDetailsPanelProps, SpriteLibraryListProps, SpriteNoticesProps, SpriteStatusProps,
+  SpriteWorkspaceProps, StudioActionsParams, StudioGroupsParams, ViewerToolbarParams,
 };

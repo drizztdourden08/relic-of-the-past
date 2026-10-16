@@ -6,10 +6,10 @@ import type { WearingBarProps } from './WearingBar.type';
 import './WearingBar.css';
 
 const WearingBar = (props: WearingBarProps) => {
-  const { outfit, gloves, onOutfit, onGloves } = props;
+  const { outfit, gloves, onOutfit, onGloves, flat = false } = props;
 
   return (
-    <Box className="wearing-bar">
+    <Box className={`wearing-bar${flat ? ' wearing-bar--flat' : ''}`}>
       <Text className="wearing-bar__label">Wearing</Text>
       <SegmentedControl
         value={outfit}

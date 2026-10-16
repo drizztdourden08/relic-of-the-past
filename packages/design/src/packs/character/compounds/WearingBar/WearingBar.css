@@ -10,6 +10,12 @@
   border-radius: var(--radius-md);
 }
 
+.wearing-bar--flat {
+  padding: 0;
+  border: none;
+  background: none;
+}
+
 .wearing-bar__label {
   font-size: var(--text-sm);
   color: var(--c-text-dim);

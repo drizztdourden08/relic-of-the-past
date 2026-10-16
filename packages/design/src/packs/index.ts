@@ -4,7 +4,12 @@ export { Hookshot } from '../compounds/Hookshot';
 export { Mascot } from '../compounds/Mascot';
 export { OUTFIT_LABELS, useWearing } from './character/behavior/useWearing';
 export { PoseCanvas } from './character/compounds/PoseCanvas';
-export { SpriteSheetViewer } from './character/compounds/SpriteSheetViewer';
+export {
+  PlaybackControls, SpriteSheetViewer, ViewSwitch, ViewerStage, ZoomControl, useSpriteViewer,
+} from './character/compounds/SpriteSheetViewer';
+export type { SpriteViewerModel } from './character/compounds/SpriteSheetViewer';
+export { StateList } from './character/compounds/StateList';
+export { WearingBar } from './character/compounds/WearingBar';
 export { countVariableUses, filterEntriesByHits } from './language/behavior/entry-selectors';
 export { setFontAssets } from './language/behavior/set-font-assets';
 export type { SetFontAssets } from './language/behavior/set-font-assets';
