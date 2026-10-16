@@ -7,6 +7,7 @@ import type { ActionResult, MsuPackRow } from '../msu.type';
 const usePackList = (onRefresh: () => void) => {
   const [packs, setPacks] = useState<MsuPackRow[]>([]);
   const [selected, setSelected] = useState<string | null>(null);
+  const [loadingPacks, setLoadingPacks] = useState(true);
 
   const refresh = useCallback(async () => {
     const list = await msuStore.listMsuPacks();
@@ -23,7 +24,9 @@ const usePackList = (onRefresh: () => void) => {
     onRefresh();
   }, [onRefresh]);
 
-  useEffect(() => { void refresh(); }, [refresh]);
+  useEffect(() => {
+    void refresh().catch(() => undefined).finally(() => { setLoadingPacks(false); });
+  }, [refresh]);
 
   const createPack = useCallback(async (name: string): Promise<ActionResult> => {
     const trimmed = name.trim();
@@ -48,7 +51,7 @@ const usePackList = (onRefresh: () => void) => {
     } catch (err) { return failure(err, 'Could not rename the pack'); }
   }, [refresh]);
 
-  return { packs, selected, setSelected, refresh, createPack, renamePack };
+  return { packs, loadingPacks, selected, setSelected, refresh, createPack, renamePack };
 };
 
 export { usePackList };

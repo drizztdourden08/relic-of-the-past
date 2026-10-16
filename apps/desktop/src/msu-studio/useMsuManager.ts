@@ -13,8 +13,8 @@ import { managerStatus } from './behavior/manager-status';
 import type { ActionResult, PackFormat } from './msu.type';
 
 const useMsuManager = (onRefresh: () => void) => {
-  const { packs, selected, setSelected, refresh, createPack, renamePack } = usePackList(onRefresh);
-  const { files, trackInfos, manifest, resolved, totalSize, loading, loaded, reload } = usePackContents(selected);
+  const { packs, loadingPacks, selected, setSelected, refresh, createPack, renamePack } = usePackList(onRefresh);
+  const { files, trackInfos, manifest, resolved, totalSize, loaded, reload } = usePackContents(selected);
   const format: PackFormat = manifest ? 'layered' : 'classic';
 
   const [newPackName, setNewPackName] = useState('');
@@ -63,8 +63,8 @@ const useMsuManager = (onRefresh: () => void) => {
   }, []);
 
   return {
-    packs, selected, setSelected, refresh,
-    files, trackInfos, manifest, resolved, totalSize, loadingFiles: loading && !loaded, reload, format,
+    packs, loadingPacks, selected, setSelected, refresh,
+    files, trackInfos, manifest, resolved, totalSize, loadingFiles: !loaded, reload, format,
     newPackName, setNewPackName,
     rows, unusedFiles, fileOptions, isDeluxe, hasOpuz,
     status, ...managerStatus({ previewError, exportProgress, status }),

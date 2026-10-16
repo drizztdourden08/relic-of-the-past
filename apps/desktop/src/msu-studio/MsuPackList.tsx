@@ -1,18 +1,20 @@
 /* @layer renderer-components @kind component */
 import { useCallback } from 'react';
-import { Icon, Status, IconButton, EmptyState, Stack } from '@drizztdourden08/tessera/primitives';
+import { Center, Icon, Status, IconButton, EmptyState, Spinner, Stack } from '@drizztdourden08/tessera/primitives';
 import { ListItemRow } from '@drizztdourden08/tessera/composites';
 import { formatBytes } from '@drizztdourden08/brock-core';
 import { HookshopChip } from '@app/compounds/HookshopChip';
 import type { MsuPackListProps } from './MsuPackList.type';
 
 const MsuPackList = (props: MsuPackListProps) => {
-  const { packs, selected, isInstalled, onSelect, onDelete } = props;
+  const { loading, packs, selected, isInstalled, onSelect, onDelete } = props;
 
   const handleDeleteClick = useCallback((e: React.MouseEvent, name: string) => {
     e.stopPropagation();
     onDelete(name);
   }, [onDelete]);
+
+  if (loading) return <Center><Spinner /></Center>;
 
   if (packs.length === 0) {
     return (
