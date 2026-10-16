@@ -178,7 +178,7 @@ The grid's column minimum follows the sprite's rendered width at the current zoo
 ## packages/design/src/packs/character/compounds/SpriteSheetViewer/SpriteSheetViewer.tsx
 
 The bunny state (action 0x21) has no palette of its own. Picking it moves the outfit to the bunny too, since bunny art in another outfit's palette reads as a bug.
-The store draws a pack's sheet through this viewer whole. The app's sprite studio takes the same pieces apart (`useSpriteViewer`, the view, playback and zoom controls, `ViewerStage`, `StateList`, `WearingBar`) and places them in its own frame: the controls on the editor toolbar and the stage on the work surface. The viewer state lives in `useSpriteViewer`, so the controls and the stage read one view, state and zoom wherever they are drawn.
+The store draws a pack's sheet through this viewer whole. The app's sprite studio takes the same pieces apart (`useSpriteViewer`, the view, playback and zoom controls, `ViewerStage`, `StateList`, `WearingBar`) and places them in its own frame: the controls on the editor toolbar, the stage on the work surface and the state list in a side panel. `StateList` takes `fill` there, so the list grows with the panel and scrolls with it; without `fill` it keeps its own width and height cap for the store's viewer. The viewer state lives in `useSpriteViewer`, so the controls and the stage read one view, state and zoom wherever they are drawn.
 
 ## packages/design/src/packs/language/behavior/entry-selectors/count-variable-uses.ts
 

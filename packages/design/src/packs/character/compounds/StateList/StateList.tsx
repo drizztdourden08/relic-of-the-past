@@ -8,7 +8,7 @@ import type { StateListProps } from './StateList.type';
 import './StateList.css';
 
 const StateList = (props: StateListProps) => {
-  const { selected, onSelect } = props;
+  const { selected, onSelect, fill = false } = props;
   const [filter, setFilter] = useState('');
 
   const grouped = useMemo(() => {
@@ -22,7 +22,7 @@ const StateList = (props: StateListProps) => {
   }, [filter]);
 
   return (
-    <Box className="state-list">
+    <Box className={fill ? 'state-list state-list--fill' : 'state-list'}>
       <SearchInput
         value={filter}
         onChange={setFilter}

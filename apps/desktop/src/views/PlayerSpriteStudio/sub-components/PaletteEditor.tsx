@@ -1,8 +1,9 @@
 /* @layer renderer-components @kind component */
-import { Box, Text } from '@drizztdourden08/tessera/primitives';
+import { Text } from '@drizztdourden08/tessera/primitives';
 import { ColorPickerPopover } from '@drizztdourden08/tessera/color-picker-popover';
 import { bgr555ToHex, isExactColor } from '@rotp/game-core';
 import { OUTFIT_LABELS } from '@rotp/design/packs';
+import { StudioSection } from '@app/studio';
 import type { PaletteEditorProps } from '../PlayerSpriteStudio.type';
 import { usePaletteSlot } from '../behavior/usePaletteSlot';
 import { OutfitSwatchGrid } from './OutfitSwatchGrid';
@@ -14,15 +15,15 @@ const PaletteEditor = (props: PaletteEditorProps) => {
   const { slot, setSlot, anchorRef, live, colors, originals, openAt, wordOf, originalOf, change, reset, swatchGroups, title } = palette;
 
   return (
-    <Box className="palette-editor">
-      <Text className="palette-editor__title">
-        {OUTFIT_LABELS[outfit]} palette
-        <Text as="span" className="palette-editor__hint">index 0 is transparent and has no entry</Text>
-      </Text>
-      <OutfitSwatchGrid colors={colors} originals={originals} slot={slot} onOpen={openAt} />
+    <>
+      <StudioSection title={`${OUTFIT_LABELS[outfit]} palette`}>
+        <OutfitSwatchGrid colors={colors} originals={originals} slot={slot} onOpen={openAt} />
+        <Text variant="caption" tone="muted">Index 0 is transparent and has no swatch.</Text>
+      </StudioSection>
 
-      <Text className="palette-editor__title">Glove colours</Text>
-      <GloveSwatchGrid gloves={live.gloves} originalGloves={sheet.original.gloves} slot={slot} onOpen={openAt} />
+      <StudioSection title="Gloves">
+        <GloveSwatchGrid gloves={live.gloves} originalGloves={sheet.original.gloves} slot={slot} onOpen={openAt} />
+      </StudioSection>
 
       <ColorPickerPopover
         open={slot !== null && !readOnly}
@@ -38,7 +39,7 @@ const PaletteEditor = (props: PaletteEditorProps) => {
         onClose={() => setSlot(null)}
         swatchGroups={swatchGroups}
       />
-    </Box>
+    </>
   );
 };
 

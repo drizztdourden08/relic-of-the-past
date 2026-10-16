@@ -6,38 +6,6 @@
   image-rendering: pixelated;
 }
 
-.sprite-workspace {
-  display: flex;
-  gap: var(--space-md);
-  align-items: flex-start;
-  min-width: 0;
-}
-
-.sprite-workspace__stage {
-  flex: 1;
-  min-width: 0;
-  overflow-x: auto;
-}
-
-.palette-editor {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-sm);
-}
-
-.palette-editor__title {
-  font-size: var(--text-sm);
-  color: var(--c-text-dim);
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-2xs);
-}
-
-.palette-editor__hint {
-  font-size: var(--text-xs);
-  color: var(--c-text-muted);
-}
-
 .palette-editor__grid {
   display: flex;
   gap: var(--space-xs);

@@ -14,3 +14,14 @@
   flex-direction: column;
   gap: var(--space-sm);
 }
+
+.state-list--fill {
+  width: auto;
+  flex: 1;
+  min-height: 0;
+}
+
+.state-list--fill .state-list__scroll {
+  max-height: none;
+  overflow-y: visible;
+}
