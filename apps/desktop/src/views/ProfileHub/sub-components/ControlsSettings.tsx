@@ -2,11 +2,11 @@
 import { useCallback } from 'react';
 import { openSetting } from '@app/settings-nav/open-setting';
 import { BindingListener } from './controls/BindingListener';
-import { ControlsSidebar } from './controls/ControlsSidebar';
+import { ControlsProfiles } from './controls/ControlsProfiles';
 import { ControlsMain } from './controls/ControlsMain';
 import { ControlsDevices } from './controls/ControlsDevices';
 import { Dialog } from '@drizztdourden08/tessera/composites';
-import { Box, DensityScope } from '@drizztdourden08/tessera/primitives';
+import { DensityScope, Flex } from '@drizztdourden08/tessera/primitives';
 import { SearchAnchor } from '@drizztdourden08/brock-react';
 import { useControlsSettings } from './controls-settings';
 import { listeningLabel } from './controls-settings/listening-label';
@@ -24,10 +24,10 @@ const ControlsSettings = (props: ControlsSettingsProps) => {
   const cancelDelete = useCallback(() => setDeleteTarget(null), [setDeleteTarget]);
 
   return (
-    <Box className="controls-settings">
+    <Flex gap="2xs" align="stretch" className="controls-settings">
       <DensityScope density="compact">
         <SearchAnchor anchor="input-profiles" className="controls-settings__anchor">
-          <ControlsSidebar ctrl={ctrl} />
+          <ControlsProfiles ctrl={ctrl} />
         </SearchAnchor>
         <SearchAnchor anchor="bindings" className="controls-settings__anchor controls-settings__anchor--main">
           <ControlsMain
@@ -69,7 +69,7 @@ const ControlsSettings = (props: ControlsSettingsProps) => {
         onConfirm={ctrl.handleDeleteConfirm}
         onCancel={cancelDelete}
       />
-    </Box>
+    </Flex>
   );
 };
 

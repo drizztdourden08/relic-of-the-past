@@ -3,20 +3,6 @@
   display: flex;
   flex-direction: column;
   height: 100%;
-  border-right: var(--border-width-thin) solid var(--c-border);
-}
-
-.input-profile-list__header {
-  padding: var(--space-sm) var(--space-md);
-  border-bottom: var(--border-width-thin) solid var(--c-border);
-}
-
-.input-profile-list__title {
-  font-size: var(--text-sm);
-  font-weight: var(--weight-semi);
-  text-transform: uppercase;
-  letter-spacing: calc(0.5 * var(--size-1));
-  color: var(--c-text-dim);
 }
 
 .input-profile-list__items {
@@ -116,9 +102,4 @@
 
 .input-profile-list__item-delete:hover {
   color: var(--c-danger);
-}
-
-.input-profile-list__footer {
-  padding: var(--space-sm) var(--space-md);
-  border-top: var(--border-width-thin) solid var(--c-border);
 }

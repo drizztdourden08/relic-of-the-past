@@ -15,51 +15,6 @@
   flex: 1;
 }
 
-.controls-settings__col-header {
-  display: flex;
-  align-items: center;
-  gap: var(--space-sm);
-  padding: var(--space-xs) var(--space-sm);
-  border-bottom: var(--border-width-thin) solid var(--c-border);
-  flex-shrink: 0;
-}
-
-.controls-settings__col-title {
-  flex: 1;
-  font-size: var(--text-sm);
-  font-weight: var(--weight-bold);
-  text-transform: uppercase;
-  letter-spacing: calc(0.8 * var(--size-1));
-  color: var(--c-text-dim);
-  white-space: nowrap;
-}
-
-.controls-settings__sidebar--collapsed .controls-settings__col-header,
-.controls-settings__devices-column--collapsed .controls-settings__col-header {
-  flex-direction: column;
-  border-bottom: none;
-  padding: var(--space-sm) var(--space-xs);
-}
-
-.controls-settings__sidebar--collapsed .controls-settings__col-title,
-.controls-settings__devices-column--collapsed .controls-settings__col-title {
-  flex: initial;
-  writing-mode: vertical-rl;
-  text-orientation: mixed;
-  font-size: var(--text-sm);
-  margin-top: var(--space-sm);
-}
-
-.controls-settings__main {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  overflow: hidden;
-  padding: var(--space-sm);
-  gap: var(--space-xs);
-  min-width: 0;
-}
-
 .controls-settings__placeholder {
   flex: 1;
   display: flex;
@@ -71,36 +26,6 @@
   font-size: var(--text-base);
   color: var(--c-text-muted);
   font-style: italic;
-}
-
-.controls-settings__devices-column {
-  width: fit-content;
-  max-width: calc(260 * var(--size-1));
-  flex-shrink: 0;
-  display: flex;
-  flex-direction: column;
-  overflow-y: auto;
-  border-left: var(--border-width-thin) solid var(--c-border);
-  padding: var(--space-xs);
-  transition: max-width 0.2s ease, padding 0.2s ease;
-}
-
-.controls-settings__devices-column--collapsed {
-  max-width: none;
-  padding: var(--space-sm);
-}
-
-.controls-settings__devices-column--collapsed .device-card__info {
-  display: none;
-}
-
-.controls-settings__devices-column--collapsed .device-card {
-  padding: var(--space-sm);
-  gap: 0;
-}
-
-.controls-settings__devices-column--collapsed .controls-settings__devices-column-expanded {
-  display: none;
 }
 
 .controls-settings__section-header {
