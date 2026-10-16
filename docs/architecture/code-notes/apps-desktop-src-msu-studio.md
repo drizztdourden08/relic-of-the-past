@@ -147,7 +147,7 @@ Effects channels list every id, not only the named ones: the catalogue reads the
 
 ## apps/desktop/src/msu-studio/behavior/useSoundUpload.ts
 
-Drops audio into the pack without claiming a slot: only a safe unused name is needed. It is not the track upload with a flag, because that hook's weight is the slot naming (prefix, number, extension).
+Drops audio into the pack without claiming a slot: only a safe unused name is needed.
 
 ## apps/desktop/src/msu-studio/behavior/useSupersededFiles.ts
 
