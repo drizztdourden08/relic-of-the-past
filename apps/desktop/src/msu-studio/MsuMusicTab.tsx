@@ -20,9 +20,6 @@ const MsuMusicTab = (props: MsuMusicTabProps) => {
       manifest={msu.resolved}
       saveBase={msu.manifest ?? msu.resolved}
       format={msu.format}
-      totalSize={msu.totalSize}
-      isDeluxe={msu.isDeluxe}
-      hasOpuz={msu.hasOpuz}
       rows={msu.rows}
       unusedFiles={msu.unusedFiles}
       fileOptions={msu.fileOptions}
@@ -31,16 +28,11 @@ const MsuMusicTab = (props: MsuMusicTabProps) => {
       openTrack={msu.openTrack}
       busy={msu.busy}
       readOnly={readOnly}
-      exporting={msu.exporting}
-      statusMessage={msu.statusMessage}
-      statusOk={msu.statusOk}
       onTrackAssign={msu.handleTrackAssign}
       onTrackUpload={msu.handleTrackUpload}
       onToggleLayers={msu.handleToggleLayers}
       onPreview={msu.onPreview}
       onStopPreview={msu.onStopPreview}
-      onRename={msu.handleRenamePack}
-      onExport={msu.handleExport}
       onDeleteFile={confirmDeleteFile}
       onConfirm={onDeleteConfirm}
       onReload={msu.reload}

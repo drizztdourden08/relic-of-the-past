@@ -3,8 +3,8 @@ import { useState } from 'react';
 import { ImportForm } from './ImportForm';
 import { MSU_IMPORT_COPY } from './msu-manager/msu-manager.constants';
 import { useMsuPackActions } from './msu-manager/useMsuPackActions';
-import { Center, EmptyState, Spinner, Text } from '@drizztdourden08/tessera/primitives';
-import { ListDetailLayout } from '@drizztdourden08/tessera/composites';
+import { Text } from '@drizztdourden08/tessera/primitives';
+import { StudioWell } from '@app/compounds/StudioFrame';
 import { useInstalledKind } from '@app/hooks/useInstalledKind';
 import { InstalledOriginBar, useConfirmUninstall } from '@app/views/InstalledOriginBar';
 import { useMsuManager } from '../../../msu-studio/useMsuManager';
@@ -29,6 +29,19 @@ const MsuManager = (props: MsuManagerProps) => {
 
   const list = (
     <>
+      {uninstallError !== null && <Text className="import-form__status import-form__status--error">{uninstallError}</Text>}
+      <StudioWell>
+        <MsuPackList
+          loading={msu.loadingPacks}
+          packs={msu.packs}
+          selected={selected}
+          isInstalled={isInstalled}
+          onSelect={setSelected}
+          onDelete={handleDelete}
+        />
+      </StudioWell>
+
+      <Text variant="overline" tone="muted">New pack</Text>
       <MsuPackToolbar
         name={msu.newPackName}
         busy={msu.busy}
@@ -36,21 +49,14 @@ const MsuManager = (props: MsuManagerProps) => {
         onNameChange={msu.setNewPackName}
         onCreate={msu.handleCreatePack}
       />
+
+      <Text variant="overline" tone="muted">Import a pack</Text>
       <ImportForm
         kind="msu"
         {...MSU_IMPORT_COPY}
         disabled={nameInstalled}
         onUrlImport={msu.handleUrlImport}
         onFileImport={msu.handleFileImport}
-      />
-      {uninstallError !== null && <Text className="import-form__status import-form__status--error">{uninstallError}</Text>}
-      <MsuPackList
-        loading={msu.loadingPacks}
-        packs={msu.packs}
-        selected={selected}
-        isInstalled={isInstalled}
-        onSelect={setSelected}
-        onDelete={handleDelete}
       />
     </>
   );
@@ -59,23 +65,16 @@ const MsuManager = (props: MsuManagerProps) => {
     <InstalledOriginBar pack={installed} onDuplicated={refreshThenSelect} onUpdateInstalled={refreshThenSelect} onUninstalled={handleUninstalled} />
   );
 
-  const studio = msu.loadingFiles || selected === null ? <Center><Spinner /></Center> : (
+  return (
     <MsuStudio
       msu={msu}
       pack={selected}
       readOnly={installed !== null}
       origin={origin}
+      list={list}
       tab={tab}
       onTabChange={setTab}
       onDeleteConfirm={onDeleteConfirm}
-    />
-  );
-
-  return (
-    <ListDetailLayout
-      list={list}
-      detail={selected === null ? null : studio}
-      emptyDetail={<EmptyState message="Select a music pack to edit its slots, layers and sounds" />}
     />
   );
 };

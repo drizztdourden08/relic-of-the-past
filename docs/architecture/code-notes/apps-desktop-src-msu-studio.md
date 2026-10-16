@@ -53,6 +53,10 @@ A manifest is written whole, so every function here touches one channel and copi
 
 The sentence under a sound channel's title. Effects channels say how much of the range the game raises; the ambient channel says how much is hidden. Each effects port names itself so two lists of the same ids do not read as one. `raisedCount` counts the rows the generated catalogue has a call site for; `reachableCount` (ambient only) the rows the game can reach; `hiddenCount` the rows the reachable trim holds back.
 
+## apps/desktop/src/msu-studio/behavior/studio-frame/useStudioActions.ts
+
+Only an export group, with no save group beside it: a pack is written on every edit, so there is nothing to save. Both exports are off while any pack action or export runs.
+
 ## apps/desktop/src/msu-studio/behavior/track-file-name/
 
 Filename rules for numbered slots. Without a manifest the number at the end of a filename is the slot, and the prefix must match what the pack already uses: `pack-05.pcm` has prefix `pack-`, number `05` and extension `pcm` (`NUMBERED_RE`). `sanitizeFileName` makes a name the user brought in safe to join onto a pack path. `uniqueFileName` returns the name, or the first variant with a `(2)` style suffix the pack does not hold.
@@ -99,7 +103,7 @@ Auditions the sound chip's own version of a sound or track. It is separate from 
 
 ## apps/desktop/src/msu-studio/behavior/usePackContents.ts
 
-The files, slots and manifest of the selected pack; `reload` rereads after every edit. Only a pack switch starts from nothing; a reload keeps the contents up, so `loaded` survives it.
+The files, slots and manifest of the selected pack; `reload` rereads after every edit. Only a pack switch starts from nothing; a reload keeps the contents up, so `loaded` survives it. `loaded` is the name of the pack whose contents arrived, so a switch never shows the previous pack's files for a frame.
 
 ## apps/desktop/src/msu-studio/behavior/usePackExport.ts
 
@@ -281,11 +285,7 @@ The pack as files, not slots. The drop zone and the format conversion live here 
 
 `EMPTY_PACK` blocks the conversion, since there is nothing to convert in a pack with no audio. `NO_USES` is one stable empty list, so a row with no uses is not handed a fresh array on every render. `COLUMNS` are the headings in grid order and must stay in step with the CSS template that sizes them; the last one is the row's buttons, which need the width but not a heading.
 
-Deleting a file a slot still names leaves that slot silent, so the confirmation names the slots. Superseded originals are normally orphans; one still named by a slot is re-pointed to its converted file first. Nothing renders until the first metadata read settles, because an empty state would claim the pack has no files.
-
-## apps/desktop/src/msu-studio/MsuPackHeader.tsx
-
-Standard or Extended matches the wording of the audio settings; Layered or Classic is whether a manifest exists. An installed pack keeps its name, and it still exports.
+Deleting a file a slot still names leaves that slot silent, so the confirmation names the slots. Superseded originals are normally orphans; one still named by a slot is re-pointed to its converted file first. A spinner shows until the first metadata read settles, because an empty state would claim the pack has no files.
 
 ## apps/desktop/src/msu-studio/MsuPackToolbar.tsx
 
@@ -297,9 +297,9 @@ One sound channel on its own tab. The filter is owned here, not in the hook, bec
 
 ## apps/desktop/src/msu-studio/MsuStudio.tsx
 
-The selected pack's studio: its origin bar when it came from the Hookshop, then the music, ambient, effects and files tabs. An installed pack is read only in every tab: it plays and exports, and nothing that writes into it is on. `origin` is null for the player's own pack. The tab is owned by the manager, so it holds while another pack loads.
+The studio body, on `StudioFrame`: the pack name and its format in the top bar, the export group, the pack list in the left panel, the tabs on the editor toolbar, and the pack properties in the right panel. An installed pack is read only in every tab: it plays and exports, and nothing that writes into it is on. `origin` is null for the player's own pack. The tab is owned by the manager, so it holds while another pack loads.
 
-A music audition is owned above the tabs, so leaving the music tab silences it; the sound tabs stop themselves by unmounting. The files tab gets the pack's own manifest as `saveBase` (null for a classic pack), because a rename must not hand a classic pack a manifest.
+There is no save group: every edit writes to the pack as it is made, so the idle hint says so instead. A music audition is owned above the tabs, so leaving the music tab silences it; the sound tabs stop themselves by unmounting. The files tab gets the pack's own manifest as `saveBase` (null for a classic pack), because a rename must not hand a classic pack a manifest.
 
 ## apps/desktop/src/msu-studio/MsuTrackPanel.tsx
 
@@ -368,6 +368,14 @@ Shared by the ambient list and the merged effects list so the row, readout and e
 Identity reads name then evidence: the catalogue name on top (a best guess) and the game's own function names beneath (not a guess). An id with no name is named by its functions; the full trigger list stays in the tooltip. Play never becomes stop on an effects channel, because pressing it again is meant to add a sound. With nothing replacing it, play means the chip's own version, which is the sound there.
 
 The role badge says what the id does on its channel, which decides whether a replacement can work. The Never raised badge shows only because the unreachable ids were asked for, so it says why the id was hidden. The Silent badge is only worth showing on an id with nothing on it, since the pack could still put a sound there.
+
+## apps/desktop/src/msu-studio/studio-frame/EditorBody.tsx
+
+Three states, in order: no pack picked, the pack loading, and the editor. The empty state shows only when nothing is picked, never while a pack loads.
+
+## apps/desktop/src/msu-studio/studio-frame/PackProperties.tsx
+
+The right panel: the pack name with its rename, and the facts of the pack. Slots filled counts the slots that name a file. Rename is off for an installed pack, which keeps its name.
 
 ## apps/desktop/src/msu-studio/TrackDetail.tsx
 

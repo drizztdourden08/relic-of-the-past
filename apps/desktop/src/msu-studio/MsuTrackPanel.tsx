@@ -1,7 +1,6 @@
 /* @layer renderer-components @kind component */
 import { DELUXE_TRACK_THRESHOLD } from '@rotp/hub-contracts';
 import { Box, Text } from '@drizztdourden08/tessera/primitives';
-import { MsuPackHeader } from './MsuPackHeader';
 import { TrackSection } from './TrackSection';
 import { UnusedAudio } from './UnusedAudio';
 import { useTrackPreviewSwitch } from './behavior/useTrackPreviewSwitch';
@@ -10,12 +9,11 @@ import type { MsuTrackPanelProps } from './MsuTrackPanel.type';
 
 const MsuTrackPanel = (props: MsuTrackPanelProps) => {
   const {
-    selected, files, format, totalSize, isDeluxe, hasOpuz, rows, unusedFiles, fileOptions,
-    playing, reportStore, openTrack, busy, readOnly, exporting, statusMessage, statusOk,
-    onTrackAssign, onToggleLayers, onPreview, onStopPreview, onRename, onExport, onDeleteFile,
+    files, rows, unusedFiles, fileOptions,
+    playing, reportStore, openTrack, busy, readOnly,
+    onTrackAssign, onToggleLayers, onPreview, onStopPreview, onDeleteFile,
   } = props;
 
-  const filled = rows.filter((r) => r.fileName !== null).length;
   const { original, previewTrack, playOriginal } = useTrackPreviewSwitch({ onPreview, onStopPreview });
 
   const renderDetail = useTrackDetailRenderer(props);
@@ -29,26 +27,7 @@ const MsuTrackPanel = (props: MsuTrackPanelProps) => {
 
   return (
     <Box className="msu-panel">
-      <MsuPackHeader
-        pack={selected}
-        format={format}
-        slotCount={filled}
-        fileCount={files.length}
-        totalSize={totalSize}
-        isDeluxe={isDeluxe}
-        hasOpuz={hasOpuz}
-        busy={busy}
-        readOnly={readOnly}
-        exporting={exporting}
-        onRename={onRename}
-        onExport={onExport}
-      />
-
-      {(original.note ?? statusMessage) != null && (
-        <Text className={`msu-status${original.note === null && statusOk ? '' : ' msu-status--error'}`}>
-          {original.note ?? statusMessage}
-        </Text>
-      )}
+      {original.note !== null && <Text className="msu-status msu-status--error">{original.note}</Text>}
 
       <TrackSection
         title="Standard Slots"

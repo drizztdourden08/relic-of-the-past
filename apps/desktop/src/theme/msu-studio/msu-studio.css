@@ -1,29 +1,9 @@
 /* @layer renderer-components @kind style */
-.msu-studio {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-sm);
-  height: 100%;
-  min-height: 0;
-}
-
 .msu-panel {
   display: flex;
   flex-direction: column;
   gap: var(--space-sm);
   height: 100%;
-}
-
-.msu-pack-header {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-md);
-  padding-bottom: var(--space-md);
-  border-bottom: var(--border-width-thin) solid var(--c-border);
-}
-
-.msu-pack-header__name {
-  max-width: calc(28 * var(--text-base));
 }
 
 .msu-track-row {
