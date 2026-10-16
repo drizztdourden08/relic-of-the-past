@@ -1,11 +1,6 @@
 /* @layer renderer-app @kind style */
 
 .data-inspector {
-  /* stylelint-disable-next-line brock/no-token-override -- the stock rail is two tokens narrower than one collapsed item, which pushes every icon off the centre line */
-  --side-nav-w: calc(
-    var(--side-nav-item-h) + 2 * (var(--space-sm) + 2 * var(--border-width-thin))
-  );
-
   height: 100%;
   display: flex;
   min-height: 0;
