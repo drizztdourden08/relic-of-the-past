@@ -2,6 +2,7 @@
 import type { MsuPackRow } from './msu.type';
 
 interface MsuPackListProps {
+  loading: boolean;
   packs: MsuPackRow[];
   selected: string | null;
   isInstalled: (name: string) => boolean;

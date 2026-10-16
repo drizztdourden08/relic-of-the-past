@@ -2,7 +2,7 @@
 interface UseRomManagerParams {
   romStatuses: RomDisplayInfo[];
   onRefresh: () => void;
-  onExtractAssets: (romFile: string) => void;
+  onExtractAssets: (romFile: string) => Promise<boolean>;
 }
 
 export type { UseRomManagerParams };

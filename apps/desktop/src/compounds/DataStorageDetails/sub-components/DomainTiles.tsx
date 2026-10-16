@@ -2,7 +2,7 @@
 import { Grid, Icon } from '@drizztdourden08/tessera/primitives';
 import { StatTile } from '@drizztdourden08/tessera/composites';
 import { formatBytes } from '@drizztdourden08/brock-core';
-import { DOMAIN_ICONS } from './data-overview.constants';
+import { DOMAIN_ICONS } from './DomainTiles.constants';
 import type { DomainTilesProps } from './DomainTiles.type';
 
 const DomainTiles = (props: DomainTilesProps) => {

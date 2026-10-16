@@ -193,6 +193,10 @@ stamp and read back only under that same stamp; a file under any other stamp rea
 absent, so the caller generates a fresh seed. There is no migration and no key map: the
 stamp is bumped whenever the placement's shape or its location keys change.
 
+## apps/desktop/src/screens/data/home.hero.tsx
+
+The hero holds the highlights only: the eyebrow, the title, three facts (space on disk, profiles, ROMs), Open data folder and Refresh. Open data folder shows only where the host can reveal a folder (`capabilities.revealDataFolder`), so the phone layout has no such button. Everything else is JSX under the hero in the same file's return, which Brock draws below the hero in the page: the cards for each page of the data area and the storage details. The folder path and the per-folder tiles are not facts of the hero because they overflowed it.
+
 ## apps/desktop/src/settings-effects/apply-settings-effects.ts
 
 - The side effects of a settings change: persist, parent notifications, HUD sync, live push and toast. A failed save shows a toast so settings never fail to save silently.

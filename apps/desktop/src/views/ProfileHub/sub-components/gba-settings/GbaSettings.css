@@ -15,12 +15,6 @@
   gap: var(--space-lg);
 }
 
-.gba-settings__note {
-  font-size: var(--text-sm);
-  color: var(--c-text-muted);
-  margin: 0;
-}
-
 .gba-settings__filters {
   display: flex;
   align-items: flex-end;

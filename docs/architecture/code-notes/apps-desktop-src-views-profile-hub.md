@@ -230,11 +230,11 @@ Whether a Game Boy Advance supplement cartridge has been imported, so the Extra 
 
 ## apps/desktop/src/views/ProfileHub/sub-components/gba-settings/GbaDifferenceRow.tsx
 
-One read-only row of the difference catalogue: label, detail text and an evidence badge. Presentational only, with no data fetching and no state.
+One read-only row of the advancement tracker: label, detail text and a status badge at the end (In progress or Documented). Presentational only, with no data fetching and no state.
 
 ## apps/desktop/src/views/ProfileHub/sub-components/gba-settings/GbaSettings.tsx
 
-The Game Boy Advance tab: everything the second cartridge changes. Every difference row is read-only reference material. The only interactive control is the Extra Dungeon toggle at the top, which is gated on the supplement being imported.
+The GBA page. A danger callout marks it experimental, the Enable section at the top holds the toggles (today the Extra Dungeon toggle, gated on the supplement being imported), and the advancement tracker below lists everything the second cartridge changes as read-only rows with a status at the end.
 
 ## apps/desktop/src/views/ProfileHub/sub-components/gba-settings/group-differences.ts
 

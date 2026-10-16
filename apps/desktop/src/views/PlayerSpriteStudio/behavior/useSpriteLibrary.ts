@@ -4,17 +4,23 @@ import { listLinkSprites, importLinkSprite } from '@app/storage/link-sprites-sto
 import { spriteStem, renderThumbnail, isRspName } from '@rotp/packs';
 import { deleteSprite } from '@app/game/player-sheet/delete-sprite';
 import { loadSheet } from '@app/game/player-sheet/load-sheet';
+import { loadStockSheet } from '@app/game/stock-player-sheet';
+import { useSpriteAvailabilityStore } from '@app/stores/sprite-availability-store';
 import type { LibraryEntry } from '../PlayerSpriteStudio.type';
 
 const useSpriteLibrary = () => {
   const [entries, setEntries] = useState<LibraryEntry[]>([]);
+  const [stockPreview, setStockPreview] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
+  const romFile = useSpriteAvailabilityStore((s) => s.romFile);
 
   const refresh = useCallback(async () => {
     setLoading(true);
+    const stock = romFile ? await loadStockSheet(romFile) : null;
+    setStockPreview(stock ? renderThumbnail(stock) : null);
     const names = await listLinkSprites();
     const loaded = await Promise.all(names.map(async (name) => {
-      const sheet = await loadSheet(name);
+      const sheet = await loadSheet(name, stock?.original);
       return {
         name,
         label: spriteStem(name),
@@ -24,7 +30,7 @@ const useSpriteLibrary = () => {
     }));
     setEntries(loaded);
     setLoading(false);
-  }, []);
+  }, [romFile]);
 
   useEffect(() => { void refresh(); }, [refresh]);
 
@@ -52,7 +58,7 @@ const useSpriteLibrary = () => {
     await refresh();
   }, [refresh]);
 
-  return { entries, loading, refresh, importFiles, importBytes, remove };
+  return { entries, stockPreview, loading, refresh, importFiles, importBytes, remove };
 };
 
 export { useSpriteLibrary };

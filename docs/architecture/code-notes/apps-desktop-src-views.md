@@ -50,6 +50,12 @@ online session's notices (items both ways, the connection, DeathLink and the res
 toggled in the Online settings) join the same stack, one line each, with item and player names in
 the highlight colours the profile chose (gold and green when none is set).
 
+## apps/desktop/src/views/DataHome/DataHome.constants.ts
+
+The card copy of the data home, one entry per page of the data area. Each item id is the page id (`data/<id>`), and each icon and title repeats the `meta` of that page. The page files are not imported here: a screen module loads on its own when its page opens, and the home must not pull every manager into its chunk. When a page is added, renamed or given another icon, change its entry here too. The groups follow the navigation groups, and Storage has no group in the navigation, so it sits under Data folder.
+
+Descriptions say what the page holds and what you do there, from what the page renders.
+
 ## apps/desktop/src/views/DebugWidget/DebugWidget.tsx
 
 A live view of every state value the game hooks sync (mode, HUD, equipment, inventory, dungeon progress, text, map). The two toolbar buttons flip the main HUD and the pause screen between the enhanced and the original drawing, through the `hudEnhancedParts` setting.

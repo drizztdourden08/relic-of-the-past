@@ -4,6 +4,6 @@ const BUNDLE_GROUPS = [
   { origin: 'GameChangingBugFixes', id: 'bugfixes-gamechanging', title: 'Gameplay-altering bug fixes' },
 ] as const;
 
-const FIX_HINT = 'On, the game uses the fixed behaviour. Off, it keeps the original bug.';
+const FIX_STATE_HINTS = { on: 'the game uses the fixed behaviour.', off: 'it keeps the original bug.' } as const;
 
-export { BUNDLE_GROUPS, FIX_HINT };
+export { BUNDLE_GROUPS, FIX_STATE_HINTS };

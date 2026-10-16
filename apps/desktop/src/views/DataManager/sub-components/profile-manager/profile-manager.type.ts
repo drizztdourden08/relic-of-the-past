@@ -1,6 +1,7 @@
 /* @layer renderer-components @kind types */
 import type { CreateProfileOptions, CreateProfileResult } from '@app/profiles/types';
 import type { useProfileForm } from './useProfileForm';
+import type { useProfileManager } from './useProfileManager';
 
 interface UseProfileManagerParams {
   profiles: Profile[];
@@ -28,6 +29,16 @@ interface ProfileCreateFormProps {
   onCreate: () => void;
 }
 
+type ProfileManagerState = ReturnType<typeof useProfileManager>;
+
+interface ProfileListPaneProps {
+  manager: ProfileManagerState;
+  profiles: Profile[];
+  loadingProfile?: string | null;
+  onOpen: (profile: Profile) => void;
+  onDelete: (id: string) => void;
+}
+
 interface ProfileRowsProps {
   profiles: Profile[];
   selected: string | null;
@@ -37,5 +48,5 @@ interface ProfileRowsProps {
 }
 
 export type {
-  ProfileCreateFormProps, ProfileRowsProps, UseCreateProfileParams, UseProfileManagerParams,
+  ProfileCreateFormProps, ProfileListPaneProps, ProfileRowsProps, UseCreateProfileParams, UseProfileManagerParams,
 };

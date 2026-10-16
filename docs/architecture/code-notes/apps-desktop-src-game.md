@@ -324,8 +324,12 @@ Facts about `apps/desktop/src/game/` that the code cannot say on its own. Each h
 - `sheet-png`: the whole sheet as one PNG (16 by 56 tiles, 128 by 448 pixels), for the tile
   sheet view and the preview inside a pack. It is drawn in the green outfit, the one the game
   starts in.
-- `thumbnail.ts`: the front facing standing pose is the sheet's first 2 by 3 tiles, the one pose
-  addressable without the pose atlas, so the library list stays cheap.
+- `thumbnail.ts`: the front facing standing pose is composed through the pose atlas, the same
+  frame the pause hero rests on. The sheet's first 2 by 3 tiles are not that pose: the head and
+  body halves sit at separate sheet offsets, and a raw block of tiles drew them apart. The canvas
+  is cropped to the frame's own quads (`thumbnail-bounds.ts`), so the card shows the sprite and
+  no empty margin. The stock sheet read from the ROM's compiled assets is drawn the same way for
+  the Original card, and its palette stands in for a ZSPR that ships tiles only.
 
 ## apps/desktop/src/game/player-sprite/
 

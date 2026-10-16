@@ -35,7 +35,7 @@ Extracts the assets when they are missing, or when the cached blob predates the 
 
 ## apps/desktop/src/views/GameSession/behavior/get-game-ratio.ts and apps/desktop/src/views/GameSession/behavior/sync-aspect-ratio-lock.ts
 
-The live canvas reflects the rendered width (custom ratios included), so it is preferred. Before a canvas exists the ratio falls back to the viewport, the screen or the named ratio; only the `fit` window lock uses that fallback, and it syncs again once the canvas exists. `TITLEBAR_HEIGHT` is added to the lock in the default window mode outside fullscreen.
+The live canvas reflects the rendered width (custom ratios included), so it is preferred. Before a canvas exists the ratio falls back to the viewport, the screen, the 256 by 224 original picture or the named ratio; only the `fit` window lock uses that fallback, and it syncs again once the canvas exists. `TITLEBAR_HEIGHT` is added to the lock in the default window mode outside fullscreen.
 
 ## apps/desktop/src/views/GameSession/behavior/load-input-profile.ts
 
@@ -90,7 +90,7 @@ Bundles the launch hooks driven by the command line (auto-test, dump-layers, dum
 
 ## apps/desktop/src/views/GameSession/behavior/useDisplaySettings.ts
 
-The aspect ratio lock follows the fullscreen state and syncs whenever a display setting changes while the game runs. When the game starts it syncs once more as soon as the canvas has buffer dimensions, polling every `CANVAS_POLL_MS` for up to `CANVAS_POLL_ATTEMPTS` tries.
+The aspect ratio lock follows the fullscreen state and syncs whenever a display setting changes while the game runs. Under the `fit` constraint nothing is locked until the core reports `running`, because the canvas has no buffer dimensions before that. The lock then syncs once from the game state subscription, which replays the current state, so a game that is already running syncs at once.
 
 ## apps/desktop/src/views/GameSession/behavior/useDumpLayers.ts (`--dump-layers=N`, `--hover-tile=col,row`)
 

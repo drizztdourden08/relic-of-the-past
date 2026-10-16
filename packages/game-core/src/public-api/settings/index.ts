@@ -28,7 +28,7 @@ export { reassertVolumes } from '../../live-settings/reassert-volumes';
 export { reassertVsync } from '../../live-settings/reassert-vsync';
 export { toWasmVolume } from '../../live-settings/to-wasm-volume';
 export { tryVoidCcall } from '../../live-settings/try-void-ccall';
-export { rendersExtended } from '../../ratio-capability';
+export { allowedRatio, rendersExtended, rendersWide } from '../../ratio-capability';
 export { clearRetroBow } from '../../retro-bow/clear-retro-bow';
 export { clearRetroShelves } from '../../retro-shelf/clear-retro-shelves';
 export { ENTRANCE_ANY, OW_AREA_ANY, RETRO_SHELF_ARG_COUNT } from '../../retro-shelf/retro-shelf.constants';

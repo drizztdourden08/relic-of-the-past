@@ -1,16 +1,19 @@
 /* @layer bridge-wasm @kind logic */
 import type { GameSettings } from '@rotp/features';
+import { baseRatio } from './base-ratio';
+import { renderHeight } from './render-height';
 import { requestedRatio } from './requested-ratio';
-import { LINEAR_RATIO, TALL_RATIO, ULTRAWIDE_RATIO } from './ratio-capability.constants';
+import { BASE_HEIGHT, BASE_WIDTH, STOCK_TILEMAP_WIDTH, ULTRAWIDE_RATIO } from './ratio-capability.constants';
 
 const allowedRatio = (s: GameSettings): number => {
   const wanted = requestedRatio(s);
-  if (!s.extendedRendering || wanted <= 0) return TALL_RATIO;
-  if (wanted < TALL_RATIO) return s.tallRendering ? wanted : TALL_RATIO;
-  if (wanted > ULTRAWIDE_RATIO && !s.ultrawideRendering) {
-    return s.linearWorldTilemap ? ULTRAWIDE_RATIO : LINEAR_RATIO;
-  }
-  if (wanted > LINEAR_RATIO && !s.linearWorldTilemap) return LINEAR_RATIO;
+  if (!s.extendedRendering || wanted <= 0) return BASE_WIDTH / BASE_HEIGHT;
+  if (s.aspectRatio === 'original') return wanted;
+  const base = baseRatio(s);
+  if (wanted < base) return s.tallRendering ? wanted : base;
+  const linearLimit = STOCK_TILEMAP_WIDTH / renderHeight(s);
+  if (!s.linearWorldTilemap && wanted > linearLimit) return linearLimit;
+  if (!s.ultrawideRendering && wanted > ULTRAWIDE_RATIO) return ULTRAWIDE_RATIO;
   return wanted;
 };
 

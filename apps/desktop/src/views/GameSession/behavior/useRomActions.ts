@@ -50,6 +50,7 @@ const useRomActions = (deps: RomActionsDeps) => {
       setExtractionStates((prev) => ({ ...prev, [romFile]: 'ready' }));
     }
     await refreshProfilesAndRoms();
+    return result.success;
   }, [refreshProfilesAndRoms]);
 
   const handleDeleteRom = useDeleteRom({ ...deps, setExtractionStates });

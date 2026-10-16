@@ -3,6 +3,8 @@
   display: flex;
   flex-direction: column;
   gap: var(--space-xs);
+  width: calc(var(--size-256) * 2);
+  max-width: 100%;
 }
 
 .player-sprite-selector__title {
@@ -12,6 +14,9 @@
 .player-sprite-selector__hint {
   font-size: var(--text-sm);
   color: var(--c-text-dim);
+  white-space: normal;
+  overflow-wrap: anywhere;
+  text-align: start;
 }
 
 .player-sprite-selector__grid {

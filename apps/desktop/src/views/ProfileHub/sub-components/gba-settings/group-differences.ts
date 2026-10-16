@@ -10,7 +10,7 @@ const matchesQuery = (row: GbaDifference, query: string): boolean =>
 const groupFilteredDifferences = (query: string, evidenceFilter: EvidenceFilter): GbaGroupRows[] => {
   const q = query.trim().toLowerCase();
   const filtered = GBA_DIFFERENCES.filter((row) => {
-    if (evidenceFilter === 'extracted' && row.evidence !== 'extracted') return false;
+    if (evidenceFilter === 'in-progress' && row.evidence !== 'in-progress') return false;
     return !q || matchesQuery(row, q);
   });
 

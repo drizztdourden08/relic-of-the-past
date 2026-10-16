@@ -15,6 +15,7 @@
   ],
   "exports": {
     ".": "./src/index.ts",
+    "./recommendations": "./src/recommendations/index.ts",
     "./package.json": "./package.json"
   },
   "dependencies": {

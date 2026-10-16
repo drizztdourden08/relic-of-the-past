@@ -2,7 +2,7 @@
 import { createSaveStore } from '@drizztdourden08/brock-port-kit';
 import type { SaveSlotRef, SaveStore } from '@drizztdourden08/brock-port-kit';
 import type { FileStore } from '@drizztdourden08/brock-core';
-import { kindDir, msuSidecarPath, saveStem } from '@rotp/game-core';
+import { kindDir, msuSidecarPath, saveStem } from '@rotp/game-core/save-paths';
 import { manifestCodecFiles } from './manifest-codec/manifest-codec-files';
 
 const msuSidecarOf = (profileId: string, ref: SaveSlotRef): string[] =>

@@ -8,12 +8,12 @@ interface RomDetailPanelProps {
   detail: RomDetail | null;
   selectedBase: RomDisplayInfo | undefined;
   selectedSupplement: SupplementStatus | undefined;
-  onExtractAssets: (romFile: string) => void;
+  onExtractAssets: (romFile: string) => Promise<boolean>;
 }
 
 interface AssetsRowProps {
   base: RomDisplayInfo;
-  onExtractAssets: (romFile: string) => void;
+  onExtractAssets: (romFile: string) => Promise<boolean>;
 }
 
 interface SupplementRowProps {

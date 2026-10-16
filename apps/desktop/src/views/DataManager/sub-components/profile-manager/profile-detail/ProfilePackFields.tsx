@@ -1,17 +1,16 @@
 /* @layer renderer-components @kind component */
-import { Box, Text, Select } from '@drizztdourden08/tessera/primitives';
-import { updateProfile } from '../../../../storage/profile-store';
+import { Field, Select } from '@drizztdourden08/tessera/primitives';
 import { reloadMsuForProfile } from '@app/game/msu-pack-loader';
-import { languageLabel } from '../language-label';
-import type { ProfilePicksProps } from './ProfileDetailPanel.type';
+import { updateProfile } from '@app/storage/profile-store';
+import { languageLabel } from '../../language-label';
+import type { ProfileEditSectionProps } from './profile-detail.type';
 
-const ProfilePicks = (props: ProfilePicksProps) => {
+const ProfilePackFields = (props: ProfileEditSectionProps) => {
   const { profile, languages, msuPacks, onRefresh } = props;
 
   return (
-    <Box className="profile-form profile-detail__spaced">
-      <Box className="profile-form__field">
-        <Text className="profile-form__label">Language</Text>
+    <>
+      <Field label="Language" hint="The text the game shows.">
         <Select
           value={profile.language ?? ''}
           onChange={async (val) => {
@@ -24,9 +23,8 @@ const ProfilePicks = (props: ProfilePicksProps) => {
           ]}
           placeholder="Default (English)"
         />
-      </Box>
-      <Box className="profile-form__field">
-        <Text className="profile-form__label">MSU Pack</Text>
+      </Field>
+      <Field label="MSU pack" hint="Plays at once when this profile is running.">
         <Select
           value={profile.msuPack ?? ''}
           onChange={async (val) => {
@@ -40,9 +38,9 @@ const ProfilePicks = (props: ProfilePicksProps) => {
           ]}
           placeholder="None"
         />
-      </Box>
-    </Box>
+      </Field>
+    </>
   );
 };
 
-export { ProfilePicks };
+export { ProfilePackFields };

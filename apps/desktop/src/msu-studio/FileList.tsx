@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind component */
-import { Box, EmptyState, Text } from '@drizztdourden08/tessera/primitives';
+import { Box, Center, EmptyState, Spinner, Text } from '@drizztdourden08/tessera/primitives';
 import { emptyFilesMessage } from './empty-files-message';
 import { FileRow } from './FileRow';
 import { COLUMNS, NO_USES } from './MsuFilePanel.constants';
@@ -8,7 +8,7 @@ import type { FileListProps } from './FileList.type';
 const FileList = (props: FileListProps) => {
   const { ready, shown, fileCount, supersededOnly, filter, usage, audition, busy, readOnly, onRename, onDelete } = props;
 
-  if (!ready) return null;
+  if (!ready) return <Center><Spinner /></Center>;
   if (shown.length === 0) return <EmptyState message={emptyFilesMessage(fileCount, supersededOnly, filter)} />;
 
   return (
