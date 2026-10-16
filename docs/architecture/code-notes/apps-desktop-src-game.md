@@ -99,10 +99,15 @@ Facts about `apps/desktop/src/game/` that the code cannot say on its own. Each h
 
 ## apps/desktop/src/game/extract-assets-worker.ts
 
-- Runs the pure TS extraction pipeline off the UI thread (Buffer, crypto and fs are polyfilled by vite-plugin-node-polyfills). It handles asset compilation and per-language extraction. Inputs and outputs are plain bytes; Buffers are built inside the worker.
+- The Web Worker entry. It only serves the four steps of `extract-steps/` with Brock's `serveAssetSteps`; the message protocol, progress and result transfer are Brock's.
+
+## apps/desktop/src/game/extract-steps/
+
+- The pure TS extraction pipeline, run off the UI thread (Buffer, crypto and fs are polyfilled by vite-plugin-node-polyfills). One step per operation: `assets`, `language`, `menu-text` and `sprites`. The ROM bytes arrive once as the job's `workerData`; the rest of a step's inputs arrive as its `input`. Inputs and outputs are plain bytes; Buffers are built inside the worker.
+- Each run is a Brock renderer job (`runAssetWebWorkerJob`), so the job dialog and the title bar show it on desktop, Android and web.
 - `failures` lists optional sources that failed. The base is still valid, and the UI surfaces them.
-- runAssets is the renderer's compile, and the only one that builds the second cartridge's supplement. The Electron main process also rebuilds the base blob after a language or store change; that path writes only the base file, so the supplement beside it survives the rebuild.
-- runMenuText reads the menu, credits and closing captions. The extractor copies these bodies into the blob without decoding them, so the studio reads them straight from the player's own file, off the UI thread because reaching them means parsing a whole ROM.
+- The `assets` step is the renderer's compile, and the only one that builds the second cartridge's supplement. The Electron main process also rebuilds the base blob after a language or store change; that path writes only the base file, so the supplement beside it survives the rebuild. Language compile warnings land in the job's log.
+- The `menu-text` step reads the menu, credits and closing captions. The extractor copies these bodies into the blob without decoding them, so the studio reads them straight from the player's own file, off the UI thread because reaching them means parsing a whole ROM.
 - They are decoded through the ROM's own alphabet, never a requested one: reading these glyphs against the wrong language yields nonsense, not nothing. The caller is told which language answered and decides what to do.
 
 ## apps/desktop/src/game/flood/flood-area/

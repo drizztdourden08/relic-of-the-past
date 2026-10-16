@@ -1,15 +1,17 @@
 /* @layer renderer-lib @kind logic */
 import { assets } from '@rotp/roms';
 import { listRomsWithStatus } from './roms-store';
-import { runOnWorker } from './extraction-client';
+import { runExtractStep } from './extraction-client';
 import { platformFiles } from './platform-files';
 import type { DecodedText } from './menu-text-store.type';
 
 const cache = new Map<string, DecodedText>();
 
-const decodeRom = async (romBytes: Uint8Array): Promise<DecodedText | null> => {
+const decodeRom = async (romFile: string, romBytes: Uint8Array): Promise<DecodedText | null> => {
   try {
-    return await runOnWorker<DecodedText>({ op: 'menu-text', romBytes });
+    return await runExtractStep<'menu-text', DecodedText>({
+      step: 'menu-text', title: 'Reading the menu text', subject: romFile, romBytes, input: undefined,
+    });
   } catch {
     return null;
   }
@@ -21,7 +23,7 @@ const decodeFromRoms = async (langCode: string): Promise<DecodedText | null> => 
   for (const { romFile } of await listRomsWithStatus()) {
     const romBytes = await assets.readRomBytes(platformFiles(), romFile);
     if (romBytes === null) continue;
-    const decoded = await decodeRom(romBytes);
+    const decoded = await decodeRom(romFile, romBytes);
     if (decoded === null) continue;
     if (decoded.language === langCode) return decoded;
     fallback ??= decoded;

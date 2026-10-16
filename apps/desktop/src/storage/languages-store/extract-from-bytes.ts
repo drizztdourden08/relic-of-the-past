@@ -1,7 +1,7 @@
 /* @layer renderer-lib @kind logic */
 import { languages } from '@rotp/languages';
 import type { ExtractedPack } from '@rotp/languages';
-import { runOnWorker } from '../extraction-client';
+import { runExtractStep } from '../extraction-client';
 import { recompileAll } from '../assets-store';
 import { platformFiles } from '../platform-files';
 import type { LanguageResult } from './languages-store.type';
@@ -11,7 +11,9 @@ import { languageFailure } from './language-failure';
 const extractFromBytes = async (romBytes: Uint8Array): Promise<LanguageResult> => {
   try {
     emitLanguageProgress('decode', undefined, undefined, 'Decoding dialogue...');
-    const pack = await runOnWorker<ExtractedPack>({ op: 'language', romBytes });
+    const pack = await runExtractStep<'language', ExtractedPack>({
+      step: 'language', title: 'Extracting the dialogue', subject: 'rom', romBytes, input: undefined,
+    });
     await languages.writePack(platformFiles(), pack);
     emitLanguageProgress('extract', undefined, undefined, 'Baking into assets...');
     await recompileAll();
