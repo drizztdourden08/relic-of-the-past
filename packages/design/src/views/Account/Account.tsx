@@ -2,7 +2,7 @@
 import { PROVIDERS } from '@rotp/hub-contracts';
 import { Box, Stack, Flex, Button, Text } from '@drizztdourden08/tessera/primitives';
 import { ListItemList, ListItemRow, SettingsPage, SettingsSection } from '@drizztdourden08/tessera/composites';
-import { useSectionHeading } from '../../hooks/useSectionHeading/useSectionHeading';
+import { useSectionHeading } from '../../hooks/useSectionHeading';
 import { AccessChip } from '../../compounds/AccessChip/AccessChip';
 import { GroupChips } from '../../compounds/GroupChips/GroupChips';
 import { IdentityRow } from '../../compounds/IdentityRow/IdentityRow';

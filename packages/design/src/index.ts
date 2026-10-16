@@ -22,7 +22,7 @@ export { UploadProgressDialog } from './compounds/UploadProgressDialog';
 export { UploadRow } from './compounds/UploadRow';
 export { UploadTray } from './compounds/UploadTray';
 export { navigate } from './hooks/useLocation';
-export { useSectionHeading } from './hooks/useSectionHeading/useSectionHeading';
+export { useSectionHeading } from './hooks/useSectionHeading';
 export { useSurfaceView } from './hooks/useSurfaceView/useSurfaceView';
 export { routeAnchorClick } from './router/route-anchor-click';
 export type { RouteEntry } from './router/route-table';
