@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind hook */
 import { useEffect, useState } from 'react';
-import { CYCLE_MS } from '../RecordingCard.constants';
+import { CYCLE_MS } from '../RecordingPreview.constants';
 
 const useCyclingFrame = (frameUrls: string[]): string | null => {
   const [index, setIndex] = useState(0);

@@ -659,9 +659,9 @@ it. A `readout` row draws the value as a tag in the control's track. The frozen 
 no handler, so a range shows the recorded value without offering a drag that could not be saved.
 The In Pool cell sits on the title's baseline, not the description's.
 
-## apps/desktop/src/compounds/RecordingCard/RecordingCard.tsx
+## apps/desktop/src/compounds/RecordingPreview/RecordingPreview.tsx
 
-One debug recording in the bug report dialog. A recording with a video previews as a muted loop; one without ffmpeg has only PNG frames, so the card steps through them on a timer (`useCyclingFrame`) to read as a video. The card only asks: ticking and deleting go back up by callback, and the view confirms a delete.
+The preview of one debug recording, for the icon of a row. A recording with a video previews as a muted loop; one without ffmpeg has only PNG frames, so the preview steps through them on a timer (`useCyclingFrame`) to read as a video.
 
 ## apps/desktop/src/compounds/ReportingAsLine/ReportingAsLine.tsx
 

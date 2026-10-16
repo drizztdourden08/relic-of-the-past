@@ -7,10 +7,10 @@ const NONE_NEW_MESSAGE = 'No new recordings. Show sent to see earlier ones.';
 
 const NONE_MESSAGE = 'No recordings yet.';
 
-const DELETE_TITLE = 'Delete this recording?';
+const SENT_LABEL = 'Sent';
 
-const DELETE_MESSAGE = 'This removes its frames and video from disk for good. It will not be in any report.';
+const UNDO_MS = 8000;
 
-const DELETE_LABEL = 'Delete';
+const TIME_FORMAT: Intl.DateTimeFormatOptions = { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' };
 
-export { TITLE, SHOW_SENT_LABEL, NONE_NEW_MESSAGE, NONE_MESSAGE, DELETE_TITLE, DELETE_MESSAGE, DELETE_LABEL };
+export { TITLE, SHOW_SENT_LABEL, NONE_NEW_MESSAGE, NONE_MESSAGE, SENT_LABEL, TIME_FORMAT, UNDO_MS };
