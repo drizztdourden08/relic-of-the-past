@@ -5,7 +5,7 @@ import type { SupplementRoms } from '../storage/asset-files';
 
 type ExtractRequest =
   | { op: 'assets'; romBytes: Uint8Array; supplementRoms?: SupplementRoms; languages: SetBakeInput[] }
-  | { op: 'language'; romBytes: Uint8Array; code: string }
+  | { op: 'language'; romBytes: Uint8Array }
   | { op: 'sprites'; romBytes: Uint8Array; defs: SpriteDef[] }
   | { op: 'menu-text'; romBytes: Uint8Array };
 

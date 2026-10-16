@@ -1,8 +1,7 @@
 /* @layer renderer-components @kind logic */
-import type { BundleHeaderProps } from './BundleHeader.type';
-import type { SaveStatus } from './SaveStatusBadge.type';
+import type { SaveStatus, SaveStatusBadgeProps } from './SaveStatusBadge.type';
 
-const saveStatusOf = (props: Pick<BundleHeaderProps, 'saveError' | 'readOnly' | 'saving' | 'dirty'>): SaveStatus => {
+const saveStatusOf = (props: SaveStatusBadgeProps): SaveStatus => {
   const { saveError, readOnly, saving, dirty } = props;
   if (saveError) return { tone: 'danger', text: saveError };
   if (readOnly) return { tone: 'neutral', text: 'Read only' };

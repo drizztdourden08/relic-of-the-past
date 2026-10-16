@@ -2,7 +2,7 @@
 import type { DialogueEntry } from '@rotp/languages';
 import type { DialogueTabProps } from './DialogueTab.type';
 
-type DialogueEntryRowProps = Omit<DialogueTabProps, 'entries' | 'total' | 'query' | 'filter' | 'onQueryChange' | 'onFilterChange'> & {
+type DialogueEntryRowProps = Omit<DialogueTabProps, 'entries' | 'total' | 'query' | 'filter'> & {
   entry: DialogueEntry;
 };
 

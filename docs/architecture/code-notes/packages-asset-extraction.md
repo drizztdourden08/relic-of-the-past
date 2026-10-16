@@ -22,6 +22,10 @@ Facts about `packages/asset-extraction` that the code cannot say on its own. Eac
   - v3: eight more after that, a shelf's refusal per non-rupee currency (`packages/asset-extraction/src/text/data/randomizer-templates`, shown by `core/game-hooks/shop_refusal.c`).
   - v4: one more after those, a shelf's thanks over a purchase's hold-up (`packages/asset-extraction/src/text/data/randomizer-templates`, shown by `core/game-hooks/shop_overrides.c`).
 
+## packages/asset-extraction/src/buffer/index.ts
+
+- Every export here takes bytes, never a path, and nothing in its import graph reaches `fs`. The renderer and the extraction Worker import this entry. `@rotp/asset-extraction/node` holds the path and file-writing readers only, so a Vite dev build (which does not tree-shake) never evaluates an `fs` import in the browser, where the polyfilled `fs` is `null`.
+
 ## packages/asset-extraction/src/compile-alttp-asset-set.ts
 
 - The SNES ROM is the authoritative base and compiles the same as it always did, so nothing here changes its bytes.

@@ -8,15 +8,15 @@ import type { LanguageResult } from './languages-store.type';
 import { emitLanguageProgress } from './emit-language-progress';
 import { languageFailure } from './language-failure';
 
-const extractFromBytes = async (romBytes: Uint8Array, code: string): Promise<LanguageResult> => {
+const extractFromBytes = async (romBytes: Uint8Array): Promise<LanguageResult> => {
   try {
     emitLanguageProgress('decode', undefined, undefined, 'Decoding dialogue...');
-    const pack = await runOnWorker<ExtractedPack>({ op: 'language', romBytes, code });
+    const pack = await runOnWorker<ExtractedPack>({ op: 'language', romBytes });
     await languages.writePack(platformFiles(), pack);
     emitLanguageProgress('extract', undefined, undefined, 'Baking into assets...');
     await recompileAll();
     emitLanguageProgress('done');
-    return { success: true };
+    return { success: true, code: pack.code };
   } catch (err) {
     return languageFailure(err);
   }

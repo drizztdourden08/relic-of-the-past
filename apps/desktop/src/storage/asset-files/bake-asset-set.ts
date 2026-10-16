@@ -1,5 +1,5 @@
 /* @layer renderer-lib @kind logic */
-import { compileAlttpAssetSet, loadGbaAlttpRomFromBuffer, loadRomFromBuffer } from '@rotp/asset-extraction/node';
+import { compileAlttpAssetSet, loadGbaAlttpRomFromBuffer, loadRomFromBuffer } from '@rotp/asset-extraction/buffer';
 import { compileSets } from '@rotp/languages';
 import type { AssetsResult, BakeInputs } from './asset-files.type';
 

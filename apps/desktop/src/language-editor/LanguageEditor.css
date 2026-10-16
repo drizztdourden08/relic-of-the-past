@@ -1,32 +1,5 @@
 /* @layer renderer-components @kind style */
-.language-editor {
-  display: flex;
-  flex-direction: column;
-  min-height: 0;
-  height: 100%;
-  gap: var(--space-xs);
-}
-
 .language-editor,
 .language-editor * {
   user-select: text;
-}
-
-.language-editor__head {
-  display: flex;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: var(--space-xs);
-}
-
-.language-editor__meta {
-  font-family: var(--font-mono);
-  color: var(--c-text-dim);
-  margin-right: auto;
-}
-
-.language-editor__pane {
-  flex: 1;
-  min-height: 0;
-  overflow-y: auto;
 }

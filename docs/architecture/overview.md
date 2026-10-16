@@ -42,7 +42,7 @@ flowchart TD
 ```
 
 Packages are imported by name, through their barrel (`@rotp/<subject>`) or one of the
-few subpaths a package exports (`@rotp/asset-extraction/node`, `@rotp/hub-contracts/node`,
+few subpaths a package exports (`@rotp/asset-extraction/buffer`, `@rotp/asset-extraction/node`, `@rotp/hub-contracts/node`,
 `@rotp/design/packs`). Inside the desktop app, `@app/*` points at `apps/desktop/src/`.
 
 ## Dependency invariants

@@ -19,6 +19,10 @@ The duplicate source list leaves installed sets out. An installed set is copied 
 
 `refreshThenSelect` rereads the list first, because after a duplicate or an update the set to show may be one the list has not read yet.
 
+## apps/desktop/src/views/DataManager/sub-components/language-manager/useLanguageExtraction.ts
+
+The language is read from the ROM, never picked. `loadRomFromBuffer` hashes the ROM (SHA-1, after the copier header is stripped) and looks it up in `ZELDA3_SHA1` in `packages/asset-extraction/src/rom/rom-loader/rom-loader.constants.ts`, which names the release and its language code. A hash that is not in the table is refused with a message and there is no manual choice: the font and the text encoder come from the release, so extraction cannot run without a known hash.
+
 ## apps/desktop/src/views/DataManager/sub-components/MsuManager.tsx
 
 A pack installed from the Hookshop is read only: its row carries the lock, its studio opens under the origin bar, and Delete uninstalls it the way the Hookshop tab does.
