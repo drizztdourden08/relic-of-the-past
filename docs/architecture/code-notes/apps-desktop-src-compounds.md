@@ -308,7 +308,7 @@ item the same way.
 The shared account row has three states: signed out with a sign in button, waiting with the
 code to confirm in the browser, and signed in with who and from which device. `userCode` stays
 null until the API has minted the code. `siteHost` is the host the browser opens while the code
-waits.
+waits. The waiting state sits in its own card, with Cancel under the code and its text, so it reads apart from the page text above it.
 
 ## apps/desktop/src/compounds/HudButton/
 
