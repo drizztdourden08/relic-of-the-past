@@ -3,8 +3,8 @@ import { createElement } from 'react';
 import type { ReactNode } from 'react';
 import type { Review, ListingEdit, StoreItem, StoreVersion } from '@rotp/hub-contracts';
 import type { DetailField } from '@rotp/design';
-import { formatBytes, formatDateTime } from '@rotp/hub-client';
-import { Status, Tag } from '@drizztdourden08/tessera/primitives';
+import { formatBytes } from '@rotp/hub-client';
+import { Status, Tag, formatDate } from '@drizztdourden08/tessera/primitives';
 import { ReviewChip } from '../../../components/ReviewChip/ReviewChip';
 import type { ReviewChipState } from '../../../components/ReviewChip/ReviewChip';
 import { factsLine } from '../../../catalog/facts-line';
@@ -15,9 +15,9 @@ import { SHA_EDGE } from './publication-detail.constants';
 
 const reviewFields = (state: ReviewChipState, review: Review<string>): DetailField[] => [
   { label: 'state', value: createElement(ReviewChip, { state }) },
-  { label: 'submitted', value: review.submittedAt ? formatDateTime(review.submittedAt) : '-' },
+  { label: 'submitted', value: review.submittedAt ? formatDate(review.submittedAt, 'iso') : '-' },
   { label: 'reviewed by', value: review.by?.displayName ?? 'not yet' },
-  { label: 'reviewed at', value: review.decidedAt ? formatDateTime(review.decidedAt) : '-' },
+  { label: 'reviewed at', value: review.decidedAt ? formatDate(review.decidedAt, 'iso') : '-' },
 ];
 
 const versionFields = (item: StoreItem, v: StoreVersion, now: number): DetailField[] => [

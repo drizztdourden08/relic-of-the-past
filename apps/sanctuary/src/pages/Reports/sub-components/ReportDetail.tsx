@@ -1,14 +1,14 @@
 /* @layer sanctuary-site @kind component */
 import { useState } from 'react';
 import { LIMITS } from '@rotp/hub-contracts';
-import { Button, Link } from '@drizztdourden08/tessera/primitives';
+import { Button, Link, formatDate } from '@drizztdourden08/tessera/primitives';
 import { Dialog } from '@drizztdourden08/tessera/composites';
 import { DetailPane } from '@rotp/design';
 import type { DetailField } from '@rotp/design';
 import { IssueStateChip } from '../../../components/IssueStateChip/IssueStateChip';
 import type { ReportView } from '../../../endpoints/api-responses.type';
 import { ANONYMOUS, contentsLine } from '../../../reports/report-row';
-import { formatBytes, formatDateTime } from '@rotp/hub-client';
+import { formatBytes } from '@rotp/hub-client';
 import { deadlineOf } from '../behavior/deadline-of';
 import { KIND_LABELS } from './ReportDetail.constants';
 import type { ReportDetailProps } from './ReportDetail.type';
@@ -21,7 +21,7 @@ const reporterLine = (report: ReportView): string => {
 
 const expiryLine = (report: ReportView): string => {
   const deadline = deadlineOf(report);
-  if (deadline !== null) return formatDateTime(deadline);
+  if (deadline !== null) return formatDate(deadline, 'iso');
   return report.issue.state === 'open' ? 'after the issue closes' : 'not set';
 };
 
@@ -33,7 +33,7 @@ const fieldsOf = (report: ReportView): DetailField[] => [
   { label: 'screen', value: report.screenId ?? '-' },
   { label: 'contents', value: contentsLine(report.zip?.contents) },
   { label: 'size', value: report.zip ? formatBytes(report.zip.bytes) : '-' },
-  { label: 'filed', value: formatDateTime(report.createdAt) },
+  { label: 'filed', value: formatDate(report.createdAt, 'iso') },
   { label: 'expires', value: expiryLine(report) },
 ];
 

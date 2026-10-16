@@ -1,7 +1,7 @@
 /* @layer renderer-components @kind logic */
+import { formatDate } from '@drizztdourden08/tessera/primitives';
 import { DASH } from './network-format.constants';
-import { wholeSeconds } from './whole-seconds';
 
-const formatAge = (at: number | null, now: number): string => (at === null ? DASH : `${wholeSeconds(now - at)} s ago`);
+const formatAge = (at: number | null, now: number): string => (at === null ? DASH : formatDate(at, 'relative', { now }));
 
 export { formatAge };

@@ -1,11 +1,11 @@
 /* @layer renderer-components @kind component */
-import { Badge } from '@drizztdourden08/tessera/primitives';
+import { Badge, formatDate } from '@drizztdourden08/tessera/primitives';
 import { DateText, ListItemRow } from '@drizztdourden08/tessera/composites';
 import { formatDuration } from './behavior/format-duration';
 import { type PlaySessionCardProps } from './PlaySessionCard.type';
 
 const endTimeOf = (endedAt: number): string =>
-  `to ${new Date(endedAt).toLocaleTimeString(undefined, { hour: '2-digit', minute: '2-digit' })}`;
+  `to ${formatDate(endedAt, 'time')}`;
 
 const PlaySessionCard = (props: PlaySessionCardProps) => {
   const { session } = props;

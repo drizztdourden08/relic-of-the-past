@@ -26,10 +26,6 @@ GroupView.manualCount counts the members an admin added by hand.
 DiscordRolesResponse.available is false when the API has no bot.
 AdminQueueResponse lists everyone holding a record on this site.
 
-## packages/hub-client/src/format/format-date/format-date-time.ts
-
-The `2026-09-23 14:02` shape sorts as text in the order it reads, so a table column can hold it.
-
 ## packages/hub-client/src/sanctuary/github-handle.ts
 
 The linked GitHub login is the one identity a filed issue mentions.

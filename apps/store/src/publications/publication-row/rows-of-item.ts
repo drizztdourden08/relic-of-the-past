@@ -1,6 +1,6 @@
 /* @layer store-site @kind logic */
+import { formatDate } from '@drizztdourden08/tessera/primitives';
 import type { ListingEdit, StoreItem, StoreVersion } from '@rotp/hub-contracts';
-import { formatDateTime } from '@rotp/hub-client';
 import { formatCount } from '../../format-count/format-count';
 import { chipStateOf } from '../version-file/chip-state-of';
 import { fileLineOf } from '../version-file/file-line-of';
@@ -8,7 +8,7 @@ import type { PublicationRow } from './publication-row.type';
 import { DASH } from './publication-row.constants';
 import { rowId } from './row-id';
 
-const dateOr = (ms: number | null) => (ms === null ? DASH : formatDateTime(ms));
+const dateOr = (ms: number | null) => (ms === null ? DASH : formatDate(ms, 'iso'));
 
 const itemFields = (item: StoreItem) => ({ itemId: item.id, item: item.name, kind: item.kind });
 

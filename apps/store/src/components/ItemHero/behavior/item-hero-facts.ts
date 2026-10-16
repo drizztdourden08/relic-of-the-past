@@ -1,7 +1,7 @@
 /* @layer store-site @kind logic */
+import { formatDate } from '@drizztdourden08/tessera/primitives';
 import type { FactsPanelFact } from '@drizztdourden08/tessera/composites';
 import type { StoreItem, StoreVersion } from '@rotp/hub-contracts';
-import { formatDay } from '@rotp/hub-client';
 import { factsLine } from '../../../catalog/facts-line';
 import { formatAverage, formatCount } from '../../../format-count';
 
@@ -19,7 +19,7 @@ const itemHeroFacts = (item: StoreItem, version: StoreVersion | null): FactsPane
     { label: 'Installs', value: formatCount(item.stats.installs) },
     { label: 'Rating', value: ratingValue(item) },
     { label: 'Licence', value: item.license || '-' },
-    { label: 'Updated', value: formatDay(item.updatedAt) },
+    { label: 'Updated', value: formatDate(item.updatedAt, 'iso', { length: 'short' }) },
   ];
 };
 

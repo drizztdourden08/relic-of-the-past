@@ -1,13 +1,12 @@
 /* @layer site-kit @kind component */
 import { PROVIDERS } from '@rotp/hub-contracts';
-import { Box, Stack, Flex, Button, Text } from '@drizztdourden08/tessera/primitives';
+import { Box, Stack, Flex, Button, Text, formatDate } from '@drizztdourden08/tessera/primitives';
 import { ListItemList, ListItemRow, SettingsPage, SettingsSection } from '@drizztdourden08/tessera/composites';
 import { useSectionHeading } from '../../hooks/useSectionHeading';
 import { AccessChip } from '../../compounds/AccessChip/AccessChip';
 import { GroupChips } from '../../compounds/GroupChips/GroupChips';
 import { IdentityRow } from '../../compounds/IdentityRow/IdentityRow';
 import { useSessionContext } from '../../session/session-context';
-import { formatDay } from '@rotp/hub-client';
 import { useAccountActions } from './behavior/useAccountActions';
 import { DevicesSection } from './sub-components/DevicesSection';
 import { ANCHORS, SOURCE_LABELS } from './Account.constants';
@@ -19,7 +18,7 @@ const Account = () => {
   const heading = useSectionHeading('account');
   if (!me || !access) return null;
 
-  const accessValue = `${SOURCE_LABELS[access.source]} · checked ${formatDay(access.checkedAt)}`;
+  const accessValue = `${SOURCE_LABELS[access.source]} · checked ${formatDate(access.checkedAt, 'iso', { length: 'short' })}`;
   const recheckButton = <Button variant="ghost" size="sm" disabled={actions.busy} onClick={() => void actions.recheck()}>Re-check</Button>;
 
   return (

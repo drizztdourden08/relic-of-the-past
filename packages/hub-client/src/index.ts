@@ -7,7 +7,6 @@ export type { AuthIntent } from './api/hub-endpoints';
 export type { AdminUser, GroupView } from './api/hub-responses.type';
 export { deleteView, listViews, putView } from './api/views-endpoints';
 export { formatBytes } from './format/format-bytes';
-export { formatAgo, formatDateTime, formatDay } from './format/format-date';
 export { mediaKindOf } from './media/media-kind';
 export type { MediaKind } from './media/media-kind';
 export { matchRoute } from './router/match-route';

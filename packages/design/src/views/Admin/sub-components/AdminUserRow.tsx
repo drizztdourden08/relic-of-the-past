@@ -1,8 +1,8 @@
 /* @layer site-kit @kind component */
+import { formatDate } from '@drizztdourden08/tessera/primitives';
 import { PROVIDER_LABELS } from '@rotp/hub-contracts';
 import { ListItemRow } from '@drizztdourden08/tessera/composites';
 import { GroupChips } from '../../../compounds/GroupChips/GroupChips';
-import { formatDay } from '@rotp/hub-client';
 import type { AdminUserRowProps } from './AdminUserRow.type';
 
 const AdminUserRow = (props: AdminUserRowProps) => {
@@ -14,7 +14,7 @@ const AdminUserRow = (props: AdminUserRowProps) => {
   return (
     <ListItemRow
       name={user.displayName}
-      meta={`${methods || 'no identity'} · since ${formatDay(user.createdAt)}`}
+      meta={`${methods || 'no identity'} · since ${formatDate(user.createdAt, 'iso', { length: 'short' })}`}
       columns={[{ primary: groupChips }]}
       action={action}
       actionVisibility="always"
