@@ -30,6 +30,8 @@ const rotpExtension = {
   description: 'Relic of the Past: the dataset facade, the primitives tiers and the HUD inline styles',
   eslint: {
     options: {
+      fileKinds: { titleBarAction: '(^|\\/)src\\/title-bar\\/[a-z][a-z0-9-]*\\.action\\.ts$' },
+      oneExportExempt: ['titleBarAction'],
       primitivesGlobs: ['apps/desktop/src/primitives/**/*.tsx'],
       inlineStyle: [{
         files: [
