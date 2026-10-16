@@ -148,3 +148,9 @@ tests/fixtures/save-states/
 
 # Merge base for the two-sided sync. It is local state and never shared.
 .vault-state.json
+
+# AI config — managed in the private ai-config repo, never committed here
+.claude/
+.claude/settings.json
+.ai/
+.codex/config.toml
