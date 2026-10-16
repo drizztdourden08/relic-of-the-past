@@ -99,6 +99,10 @@ failed dump never makes a crash worse, and the in-app log still has everything.
 
 - `FFMPEG_TOOL_ID` is the id ffmpeg is registered under in the Brock tools module, shared so the main process and the renderer name the same tool. ffmpeg is not bundled: it is fetched on request into the app's data root, so a user who never asks never downloads 140 MB.
 
+## apps/desktop/src/studio/
+
+What the three studios (character, language, music) share on top of Tessera's `StudioLayout`. A studio builds its save and export actions as `StudioActionGroup` data in a hook, and `toToolGroups` turns each group into the `{ id, label, content }` shape of the bar, with one small Button per action. Each Button passes its hint, so the bar's hint line shows it. The studio panels are resizable and keep their width and fold under a `storageKey` of their own.
+
 ## apps/desktop/src/hookshop-reads/
 
 The Hookshop's catalogue reads (the home page, every item, one item) through the Brock catalog

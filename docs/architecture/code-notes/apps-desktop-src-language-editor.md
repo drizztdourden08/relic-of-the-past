@@ -420,7 +420,7 @@ The work surface of the frame scrolls, so the top bar, the toolbar and both side
 
 ## apps/desktop/src/language-editor/LanguageEditor.tsx
 
-The translation editor: one language set, edited a line at a time. The glossary and the menu name table are one Variables tab on purpose: as two lists a translator had to work out which one a piece of text lived in. `id` null renders the empty state; `readOnly` marks an installed set, which opens and previews and changes nothing; `origin` is the origin bar of an installed set, shown as the banner under the top bar. `list` is the left panel: the studio sits inside `StudioFrame`, so the list of sets and the editor share one state and the top bar can show the open set's save state. `LOCKED` marks the two tabs whose surfaces are built but not yet connected to the game.
+The translation editor: one language set, edited a line at a time. The glossary and the menu name table are one Variables tab on purpose: as two lists a translator had to work out which one a piece of text lived in. `id` null renders the empty state; `readOnly` marks an installed set, which opens and previews and changes nothing; `origin` is the origin bar of an installed set, shown as the banner under the top bar. `list` is the start panel: the studio sits inside Tessera's `StudioLayout` (panel widths kept under `language-studio.sets` and `language-studio.properties`), so the list of sets and the editor share one state and the top bar can show the open set's save state. `LOCKED` marks the two tabs whose surfaces are built but not yet connected to the game.
 
 ## apps/desktop/src/language-editor/sub-components/code-params.ts
 

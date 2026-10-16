@@ -2,7 +2,7 @@
 import { Icon, Image, IconButton, EmptyState, Status, Spinner, Text } from '@drizztdourden08/tessera/primitives';
 import { ListItemRow } from '@drizztdourden08/tessera/composites';
 import { HookshopChip } from '../../../compounds/HookshopChip';
-import { StudioWell } from '../../../compounds/StudioFrame';
+import { SunkenWell } from '@app/compounds/SunkenWell';
 import { ImportForm } from '../../DataManager/sub-components/ImportForm';
 import type { SpriteLibraryListProps } from '../PlayerSpriteStudio.type';
 
@@ -22,7 +22,7 @@ const SpriteLibraryList = (props: SpriteLibraryListProps) => {
         onFileImport={onFileImport}
       />
       <Text variant="overline" tone="muted">In this app</Text>
-      <StudioWell>
+      <SunkenWell>
         {loading && <Spinner size="sm" label="Loading sprites" />}
         {!loading && entries.length === 0 && <EmptyState size="sm" message="No player sprites yet" />}
         {!loading && entries.map((entry) => (
@@ -48,7 +48,7 @@ const SpriteLibraryList = (props: SpriteLibraryListProps) => {
             }
           />
         ))}
-      </StudioWell>
+      </SunkenWell>
     </>
   );
 };

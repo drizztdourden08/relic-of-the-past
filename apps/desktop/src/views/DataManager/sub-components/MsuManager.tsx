@@ -4,7 +4,7 @@ import { ImportForm } from './ImportForm';
 import { MSU_IMPORT_COPY } from './msu-manager/msu-manager.constants';
 import { useMsuPackActions } from './msu-manager/useMsuPackActions';
 import { Text } from '@drizztdourden08/tessera/primitives';
-import { StudioWell } from '@app/compounds/StudioFrame';
+import { SunkenWell } from '@app/compounds/SunkenWell';
 import { useInstalledKind } from '@app/hooks/useInstalledKind';
 import { InstalledOriginBar, useConfirmUninstall } from '@app/views/InstalledOriginBar';
 import { useMsuManager } from '../../../msu-studio/useMsuManager';
@@ -30,7 +30,7 @@ const MsuManager = (props: MsuManagerProps) => {
   const list = (
     <>
       {uninstallError !== null && <Text className="import-form__status import-form__status--error">{uninstallError}</Text>}
-      <StudioWell>
+      <SunkenWell>
         <MsuPackList
           loading={msu.loadingPacks}
           packs={msu.packs}
@@ -39,7 +39,7 @@ const MsuManager = (props: MsuManagerProps) => {
           onSelect={setSelected}
           onDelete={handleDelete}
         />
-      </StudioWell>
+      </SunkenWell>
 
       <Text variant="overline" tone="muted">New pack</Text>
       <MsuPackToolbar

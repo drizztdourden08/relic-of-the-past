@@ -1,6 +1,7 @@
 /* @layer renderer-components @kind component */
 import { useEffect } from 'react';
-import { StudioFrame } from '@app/compounds/StudioFrame';
+import { StudioLayout } from '@drizztdourden08/tessera/composites';
+import { toToolGroups } from '@app/studio';
 import { useStudioActions } from './behavior/studio-frame/useStudioActions';
 import { useStudioToolbar } from './behavior/studio-frame/useStudioToolbar';
 import { EditorBody } from './studio-frame/EditorBody';
@@ -27,17 +28,20 @@ const MsuStudio = (props: MsuStudioProps) => {
   const toolbar = useStudioToolbar({ tab, onTabChange });
 
   return (
-    <StudioFrame
-      caption={STUDIO_CAPTION}
-      title={pack ?? NO_PACK_TITLE}
-      status={open && <StudioStatus format={msu.format} readOnly={readOnly} />}
-      groups={actions}
-      idleHint={IDLE_HINT}
-      notices={<StudioNotices message={msu.statusMessage} ok={msu.statusOk} />}
+    <StudioLayout
+      bar={{
+        caption: STUDIO_CAPTION,
+        title: pack ?? NO_PACK_TITLE,
+        status: open && <StudioStatus format={msu.format} readOnly={readOnly} />,
+        groups: toToolGroups(actions),
+        idleHint: IDLE_HINT,
+        notices: <StudioNotices message={msu.statusMessage} ok={msu.statusOk} />,
+      }}
       banner={origin}
-      left={{ title: PACKS_PANEL_TITLE, content: list }}
-      right={openPack !== null ? {
+      start={{ title: PACKS_PANEL_TITLE, content: list, storageKey: 'msu-studio.packs' }}
+      end={openPack !== null ? {
         title: PROPERTIES_PANEL_TITLE,
+        storageKey: 'msu-studio.properties',
         content: (
           <PackProperties
             pack={openPack}
@@ -55,12 +59,12 @@ const MsuStudio = (props: MsuStudioProps) => {
       } : undefined}
       editorLabel={EDITOR_LABEL}
       toolbar={open ? toolbar : undefined}
-      className="msu-studio"
+      className="studio-host msu-studio"
     >
       <EditorBody hasPack={pack !== null} loading={loadingFiles}>
         {openPack !== null && <TabPanels msu={msu} pack={openPack} readOnly={readOnly} tab={tab} onDeleteConfirm={onDeleteConfirm} />}
       </EditorBody>
-    </StudioFrame>
+    </StudioLayout>
   );
 };
 

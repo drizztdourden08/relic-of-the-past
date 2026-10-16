@@ -1,7 +1,7 @@
 /* @layer renderer-components @kind component */
 import { useCallback, useMemo } from 'react';
 import type { LanguageSetSummary } from '@rotp/languages';
-import { StudioWell } from '@app/compounds/StudioFrame';
+import { SunkenWell } from '@app/compounds/SunkenWell';
 import { ImportForm } from './ImportForm';
 import { LANGUAGE_NAMES } from './language-names.constants';
 import { useLanguageCreation } from './language-manager/useLanguageCreation';
@@ -37,7 +37,7 @@ const LanguageManager = (props: LanguageManagerProps) => {
   const list = (
     <>
       {uninstallError !== null && <Text className="import-form__status import-form__status--error">{uninstallError}</Text>}
-      <StudioWell>
+      <SunkenWell>
         <LanguageSetList
           sets={languages}
           loading={loading}
@@ -47,7 +47,7 @@ const LanguageManager = (props: LanguageManagerProps) => {
           onSelect={setSelected}
           onDelete={handleDelete}
         />
-      </StudioWell>
+      </SunkenWell>
 
       <Text variant="overline" tone="muted">Extract from a ROM</Text>
       <ImportForm

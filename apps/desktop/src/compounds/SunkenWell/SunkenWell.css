@@ -1,0 +1,7 @@
+/* @layer renderer-components @kind style */
+.sunken-well {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+  padding: var(--space-sm);
+}

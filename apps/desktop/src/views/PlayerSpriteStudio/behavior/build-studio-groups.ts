@@ -1,5 +1,5 @@
 /* @layer renderer-hooks @kind logic */
-import type { StudioActionGroup } from '../../../compounds/StudioFrame';
+import type { StudioActionGroup } from '@app/studio';
 import type { StudioGroupsParams } from '../PlayerSpriteStudio.type';
 import { exportGroup } from './export-group';
 import { saveGroup } from './save-group';

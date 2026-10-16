@@ -1,10 +1,10 @@
 /* @layer renderer-hooks @kind logic */
 import { createElement } from 'react';
 import { PlaybackControls, ViewSwitch, WearingBar, ZoomControl } from '@rotp/design/packs';
-import type { StudioToolGroup } from '../../../compounds/StudioFrame';
+import type { ToolGroup } from '@drizztdourden08/tessera/primitives';
 import type { ViewerToolbarParams } from '../PlayerSpriteStudio.type';
 
-const viewerToolbar = (params: ViewerToolbarParams): StudioToolGroup[] => {
+const viewerToolbar = (params: ViewerToolbarParams): ToolGroup[] => {
   const { open, wearing, viewer } = params;
   if (!open) return [];
 

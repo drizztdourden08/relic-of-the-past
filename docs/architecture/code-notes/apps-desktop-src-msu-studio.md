@@ -297,7 +297,7 @@ One sound channel on its own tab. The filter is owned here, not in the hook, bec
 
 ## apps/desktop/src/msu-studio/MsuStudio.tsx
 
-The studio body, on `StudioFrame`: the pack name and its format in the top bar, the export group, the pack list in the left panel, the tabs on the editor toolbar, and the pack properties in the right panel. An installed pack is read only in every tab: it plays and exports, and nothing that writes into it is on. `origin` is null for the player's own pack. The tab is owned by the manager, so it holds while another pack loads.
+The studio body, on Tessera's `StudioLayout`: the pack name and its format in the bar, the export group, the pack list in the start panel, the tabs on the editor toolbar, and the pack properties in the end panel. Both panels resize and keep their width and fold under `msu-studio.packs` and `msu-studio.properties`. An installed pack is read only in every tab: it plays and exports, and nothing that writes into it is on. `origin` is null for the player's own pack. The tab is owned by the manager, so it holds while another pack loads.
 
 There is no save group: every edit writes to the pack as it is made, so the idle hint says so instead. A music audition is owned above the tabs, so leaving the music tab silences it; the sound tabs stop themselves by unmounting. The files tab gets the pack's own manifest as `saveBase` (null for a classic pack), because a rename must not hand a classic pack a manifest.
 

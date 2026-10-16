@@ -1,0 +1,4 @@
+/* @layer renderer-components @kind style */
+.studio-host {
+  padding: var(--space-md);
+}

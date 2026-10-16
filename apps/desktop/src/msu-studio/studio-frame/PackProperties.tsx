@@ -4,7 +4,7 @@ import { Button, Field, Flex, TextInput } from '@drizztdourden08/tessera/primiti
 import { FactsPanel } from '@drizztdourden08/tessera/composites';
 import type { FactsPanelGroup } from '@drizztdourden08/tessera/composites';
 import { formatBytes } from '@drizztdourden08/brock-core';
-import { StudioWell } from '@app/compounds/StudioFrame';
+import { SunkenWell } from '@app/compounds/SunkenWell';
 import type { PackPropertiesProps } from './studio-frame.type';
 
 const PackProperties = (props: PackPropertiesProps) => {
@@ -40,9 +40,9 @@ const PackProperties = (props: PackPropertiesProps) => {
           </Button>
         </Flex>
       </Field>
-      <StudioWell>
+      <SunkenWell>
         <FactsPanel groups={groups} layout="rows" label="Music pack properties" />
-      </StudioWell>
+      </SunkenWell>
     </>
   );
 };

@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind component */
 import { EmptyState, Field, Text, TextInput } from '@drizztdourden08/tessera/primitives';
-import { StudioWell } from '../../../compounds/StudioFrame';
+import { SunkenWell } from '@app/compounds/SunkenWell';
 import type { SpriteDetailsPanelProps } from '../PlayerSpriteStudio.type';
 import { PaletteEditor } from './PaletteEditor';
 
@@ -30,7 +30,7 @@ const SpriteDetailsPanel = (props: SpriteDetailsPanelProps) => {
           onChange={(e) => draft.patch({ meta: { ...meta, author: e.target.value, authorShort: e.target.value } })}
         />
       </Field>
-      <StudioWell>
+      <SunkenWell>
         <PaletteEditor
           sheet={sheet}
           outfit={outfit}
@@ -39,7 +39,7 @@ const SpriteDetailsPanel = (props: SpriteDetailsPanelProps) => {
           onGloveColor={draft.setGloveColor}
           onReset={(index) => draft.resetColor(outfit, index)}
         />
-      </StudioWell>
+      </SunkenWell>
     </>
   );
 };

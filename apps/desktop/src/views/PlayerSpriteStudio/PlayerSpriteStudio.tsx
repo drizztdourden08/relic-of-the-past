@@ -2,7 +2,8 @@
 import { useMemo } from 'react';
 import { useSpriteViewer, useWearing } from '@rotp/design/packs';
 import { useInstalledKind } from '@app/hooks/useInstalledKind';
-import { StudioFrame } from '../../compounds/StudioFrame';
+import { StudioLayout } from '@drizztdourden08/tessera/composites';
+import { toToolGroups } from '@app/studio';
 import { InstalledOriginBar, useConfirmUninstall } from '../InstalledOriginBar';
 import { useSpriteLibrary } from './behavior/useSpriteLibrary';
 import { useSpriteDraft } from './behavior/useSpriteDraft';
@@ -44,18 +45,22 @@ const PlayerSpriteStudio = (props: PlayerSpriteStudioProps) => {
   });
 
   return (
-    <StudioFrame
-      caption="Character Studio"
-      title={titleOf(sheet)}
-      status={<SpriteStatus open={sheet !== null} file={openFile} dirty={draft.dirty} applied={draft.applied} readOnly={readOnly} />}
-      groups={groups}
-      idleHint={IDLE_HINT}
-      notices={<SpriteNotices applied={draft.applied} readOnly={readOnly} exportStatus={exporter.status} error={error ?? uninstallError} />}
+    <StudioLayout
+      className="studio-host"
+      bar={{
+        caption: 'Character Studio',
+        title: titleOf(sheet),
+        status: <SpriteStatus open={sheet !== null} file={openFile} dirty={draft.dirty} applied={draft.applied} readOnly={readOnly} />,
+        groups: toToolGroups(groups),
+        idleHint: IDLE_HINT,
+        notices: <SpriteNotices applied={draft.applied} readOnly={readOnly} exportStatus={exporter.status} error={error ?? uninstallError} />,
+      }}
       banner={installed && (
         <InstalledOriginBar pack={installed} onDuplicated={actions.openAfter} onUpdateInstalled={actions.openAfter} onUninstalled={actions.handleUninstalled} />
       )}
-      left={{
+      start={{
         title: 'Sprites',
+        storageKey: 'sprite-studio.library',
         content: (
           <SpriteLibraryList
             entries={library.entries}
@@ -69,12 +74,12 @@ const PlayerSpriteStudio = (props: PlayerSpriteStudioProps) => {
           />
         ),
       }}
-      right={{ title: 'Details', content: <SpriteDetailsPanel sheet={sheet} outfit={wearing.outfit} readOnly={readOnly} draft={draft} /> }}
+      end={{ title: 'Details', storageKey: 'sprite-studio.details', content: <SpriteDetailsPanel sheet={sheet} outfit={wearing.outfit} readOnly={readOnly} draft={draft} /> }}
       editorLabel="Sprite editor"
       toolbar={viewerToolbar({ open: sheet !== null, wearing, viewer })}
     >
       <SpriteWorkspace sheet={sheet} wearing={wearing} viewer={viewer} />
-    </StudioFrame>
+    </StudioLayout>
   );
 };
 

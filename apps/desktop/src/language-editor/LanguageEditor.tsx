@@ -1,6 +1,7 @@
 /* @layer renderer-components @kind component */
 import { useMemo, useState } from 'react';
-import { StudioFrame } from '@app/compounds/StudioFrame';
+import { StudioLayout } from '@drizztdourden08/tessera/composites';
+import { toToolGroups } from '@app/studio';
 import { useLanguageEditor } from './behavior/useLanguageEditor';
 import { useDialogueView } from './behavior/useDialogueView';
 import { useEditorTabs } from './behavior/useEditorTabs';
@@ -44,19 +45,21 @@ const LanguageEditor = (props: LanguageEditorProps) => {
   });
 
   return (
-    <StudioFrame
-      caption={STUDIO_CAPTION}
-      title={set?.name ?? NO_SET_TITLE}
-      status={set && <StudioStatus origin={set.origin} warnings={warnings} saveError={saveError} readOnly={readOnly} saving={saving} dirty={dirty} />}
-      groups={actions}
-      idleHint={IDLE_HINT}
-      notices={<StudioNotices exportStatus={exportStatus} />}
+    <StudioLayout
+      bar={{
+        caption: STUDIO_CAPTION,
+        title: set?.name ?? NO_SET_TITLE,
+        status: set && <StudioStatus origin={set.origin} warnings={warnings} saveError={saveError} readOnly={readOnly} saving={saving} dirty={dirty} />,
+        groups: toToolGroups(actions),
+        idleHint: IDLE_HINT,
+        notices: <StudioNotices exportStatus={exportStatus} />,
+      }}
       banner={<><StaleGameNotice />{origin}</>}
-      left={{ title: SETS_PANEL_TITLE, content: list }}
-      right={set ? { title: PROPERTIES_PANEL_TITLE, content: <SetProperties set={set} warnings={warnings} /> } : undefined}
+      start={{ title: SETS_PANEL_TITLE, content: list, storageKey: 'language-studio.sets' }}
+      end={set ? { title: PROPERTIES_PANEL_TITLE, content: <SetProperties set={set} warnings={warnings} />, storageKey: 'language-studio.properties' } : undefined}
       editorLabel={EDITOR_LABEL}
       toolbar={set ? toolbar : undefined}
-      className="language-editor"
+      className="studio-host language-editor"
     >
       <EditorBody id={id} loading={loading} error={error} ready={set !== null}>
         <EditorPanes tab={tab} readOnly={readOnly} editor={editor} dialogue={tabProps} variablesTab={variablesTab} text={text} />
@@ -68,7 +71,7 @@ const LanguageEditor = (props: LanguageEditorProps) => {
         onApply={variablesTab.applyScan}
         onClose={variablesTab.closeScan}
       />
-    </StudioFrame>
+    </StudioLayout>
   );
 };
 

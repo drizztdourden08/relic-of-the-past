@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind hook */
 import { useMemo } from 'react';
-import type { StudioActionGroup } from '@app/compounds/StudioFrame';
+import type { StudioActionGroup } from '@app/studio';
 import {
   EXPORT_GROUP_LABEL, EXPORT_HINT, SAVE_GROUP_LABEL, SAVE_HINT,
 } from '../../sub-components/studio-frame/studio-frame.constants';

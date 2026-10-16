@@ -1,16 +1,16 @@
 /* @layer renderer-components @kind hook */
 import { createElement, useMemo } from 'react';
 import { SearchInput, SegmentedControl, Tabs } from '@drizztdourden08/tessera/primitives';
-import type { StudioToolGroup } from '@app/compounds/StudioFrame';
+import type { ToolGroup } from '@drizztdourden08/tessera/primitives';
 import { FILTER_OPTIONS } from '../../sub-components/DialogueTab.constants';
 import type { EntryFilter } from '../../sub-components/DialogueTab.type';
 import type { StudioToolbarParams } from './studio-frame.type';
 
-const useStudioToolbar = (params: StudioToolbarParams): StudioToolGroup[] => {
+const useStudioToolbar = (params: StudioToolbarParams): ToolGroup[] => {
   const { tabs, tab, query, filter, onTabChange, onQueryChange, onFilterChange } = params;
 
-  return useMemo<StudioToolGroup[]>(() => {
-    const section: StudioToolGroup = {
+  return useMemo<ToolGroup[]>(() => {
+    const section: ToolGroup = {
       id: 'section',
       label: 'Section',
       content: createElement(Tabs, { tabs, activeTab: tab, onTabChange }),

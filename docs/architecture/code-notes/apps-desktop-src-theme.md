@@ -191,6 +191,10 @@ The sound row channel tag has a fixed width so the ids beside it line up, and is
 
 The files tab owns its own scrolling (`.msu-panel--files`), so its header stays put while the list moves under it. One column template (`--msu-file-cols`) serves the whole files list: the header and the cards read it, so they cannot drift apart. The header is a label strip, not a table head: no rules or frame, so what sits under it still reads as cards. Its transparent border matches the card border so the two share one column origin. The card is the entry and the player expands inside it; there is no striping, which would read as a table.
 
+## apps/desktop/src/theme/studio/studio-host.css
+
+`StudioLayout` sets no padding and no page fill, so the screen that holds a studio gives it the `studio-host` class for its outer space.
+
 ## apps/desktop/src/theme/store/store.css
 
 The Hookshop pages share one sheet, because each page is its own view and a component imports only its own stylesheet. The frame fills the hub page and each part scrolls inside it.
