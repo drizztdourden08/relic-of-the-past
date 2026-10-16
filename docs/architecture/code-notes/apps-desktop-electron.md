@@ -75,7 +75,7 @@ Two videos come out, because the local copy and the one a report ships follow di
 
 ## apps/desktop/electron/diagnostics/debug-report/list-sessions.ts
 
-The session listing for the bug report picker, served over `debug-capture:listSessions` (and `debug-capture:deleteSession`, which removes a session folder and its manifest entry; both channels check the key is `session-<digits>`): every recorded capture session for a profile, with a small preview and its sent state. Unlike `collect-capture-sessions.ts`, it is not filtered to eligible sessions, since the player picks what ships. Without ffmpeg, `packaged/` holds the evenly spread PNG subset instead of a video, and every one of those frames goes to the picker so it can cycle through them as a stand in video.
+The session listing for the bug report picker, served over `debug-capture:listSessions` (and `debug-capture:deleteSession`, which removes a session folder and its manifest entry; both channels accept only a `session-<digits>` key): every recorded capture session for a profile, with a small preview and its sent state. Unlike `collect-capture-sessions.ts`, it is not filtered to eligible sessions, since the player picks what ships. Without ffmpeg, `packaged/` holds the evenly spread PNG subset instead of a video, and every one of those frames goes to the picker so it can cycle through them as a stand in video.
 
 ## apps/desktop/electron/documents/import-document.ts
 
