@@ -228,17 +228,17 @@ The full input mapping UI. The layout is a sidebar (profiles), a main column (th
 
 Whether a Game Boy Advance supplement cartridge has been imported, so the Extra Dungeon toggle knows whether it has anything to gate.
 
-## apps/desktop/src/views/ProfileHub/sub-components/gba-settings/GbaDifferenceRow.tsx
+## apps/desktop/src/views/ProfileHub/sub-components/gba-settings/behavior/useGbaDifferenceFilter.ts
 
-One read-only row of the advancement tracker: label, detail text and a status badge at the end (In progress or Documented). Presentational only, with no data fetching and no state.
+Holds the filter clauses and search text for the tracker table and returns the rows that pass both. The catalogue is a constant, so the schema is built once in the constants file.
+
+## apps/desktop/src/views/ProfileHub/sub-components/gba-settings/GbaDifferenceTable.tsx
+
+The advancement tracker table: a filter bar (search plus per-column filters on Group and Status) over a data table with the columns Feature, Group, Status and Notes. Rows are read-only, and the filter and column state live only for the visit.
 
 ## apps/desktop/src/views/ProfileHub/sub-components/gba-settings/GbaSettings.tsx
 
-The GBA page. A danger callout marks it experimental, the Enable section at the top holds the toggles (today the Extra Dungeon toggle, gated on the supplement being imported), and the advancement tracker below lists everything the second cartridge changes as read-only rows with a status at the end.
-
-## apps/desktop/src/views/ProfileHub/sub-components/gba-settings/group-differences.ts
-
-Filters and groups the GBA difference catalogue for the settings list. Groups come out in the order `GBA_GROUP_ORDER` declares, so the list reads the same every time whichever rows survive the filter.
+The GBA page. A danger callout marks it experimental, the Enable section at the top holds the toggles (today the Extra Dungeon toggle, gated on the supplement being imported), and the advancement tracker below is one table of everything the second cartridge changes.
 
 ## apps/desktop/src/views/ProfileHub/sub-components/home-tab/build-summary-facts.ts
 

@@ -8,21 +8,3 @@
   flex: 1;
   min-height: 0;
 }
-
-.gba-settings__catalogue {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-lg);
-}
-
-.gba-settings__filters {
-  display: flex;
-  align-items: flex-end;
-  gap: var(--space-md);
-  flex-wrap: wrap;
-}
-
-.gba-settings__search-field {
-  flex: 1;
-  min-width: calc(220 * var(--size-1));
-}

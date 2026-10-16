@@ -1,28 +1,21 @@
 /* @layer renderer-components @kind component */
-import { useCallback, useMemo, useState } from 'react';
-import type { ChangeEvent } from 'react';
-import { Box, Callout, Toggle, Field, TextInput, SegmentedControl, EmptyState } from '@drizztdourden08/tessera/primitives';
+import { useCallback } from 'react';
+import { Box, Callout, Toggle } from '@drizztdourden08/tessera/primitives';
 import { SettingsSection } from '@drizztdourden08/tessera/composites';
 import { SearchAnchor } from '@drizztdourden08/brock-react';
-import { GbaDifferenceRow } from './GbaDifferenceRow';
+import { GbaDifferenceTable } from './GbaDifferenceTable';
 import { useGbaAvailability } from './behavior/useGbaAvailability';
-import { groupFilteredDifferences } from './group-differences';
-import { EVIDENCE_OPTIONS, EXPERIMENTAL_NOTICE, EXTRA_DUNGEON_DESCRIPTION, TRACKER_NOTE } from './gba-settings.constants';
-import type { EvidenceFilter, GbaSettingsProps } from './gba-settings.type';
+import { EXPERIMENTAL_NOTICE, EXTRA_DUNGEON_DESCRIPTION, TRACKER_NOTE } from './gba-settings.constants';
+import type { GbaSettingsProps } from './gba-settings.type';
 import './GbaSettings.css';
 
 const GbaSettings = ({ settings, onChange }: GbaSettingsProps) => {
   const { hasSupplement } = useGbaAvailability();
-  const [query, setQuery] = useState('');
-  const [evidenceFilter, setEvidenceFilter] = useState<EvidenceFilter>('all');
 
   const handleExtraDungeonChange = useCallback(
     (extraDungeon: boolean) => onChange({ extraDungeon }),
     [onChange],
   );
-  const handleQueryChange = useCallback((e: ChangeEvent<HTMLInputElement>) => setQuery(e.target.value), []);
-
-  const groups = useMemo(() => groupFilteredDifferences(query, evidenceFilter), [query, evidenceFilter]);
 
   const extraDungeonDescription = hasSupplement
     ? EXTRA_DUNGEON_DESCRIPTION
@@ -44,36 +37,10 @@ const GbaSettings = ({ settings, onChange }: GbaSettingsProps) => {
         </SearchAnchor>
       </SettingsSection>
 
-      <SearchAnchor anchor="gba-differences" className="gba-settings__catalogue">
+      <SearchAnchor anchor="gba-differences">
         <SettingsSection title="Advancement tracker" description={TRACKER_NOTE}>
-          <Box className="gba-settings__filters">
-            <Field label="Search" htmlFor="gba-settings-search" className="gba-settings__search-field">
-              <TextInput
-                id="gba-settings-search"
-                type="text"
-                placeholder="Search differences..."
-                value={query}
-                onChange={handleQueryChange}
-              />
-            </Field>
-            <SegmentedControl
-              value={evidenceFilter}
-              options={EVIDENCE_OPTIONS}
-              onChange={setEvidenceFilter}
-              label="Evidence"
-            />
-          </Box>
+          <GbaDifferenceTable />
         </SettingsSection>
-
-        {groups.length === 0 && <EmptyState message={`No differences match "${query}"`} />}
-
-        {groups.map(({ group, rows }) => (
-          <SettingsSection key={group} title={group}>
-            {rows.map((row) => (
-              <GbaDifferenceRow key={row.id} difference={row} />
-            ))}
-          </SettingsSection>
-        ))}
       </SearchAnchor>
     </Box>
   );
