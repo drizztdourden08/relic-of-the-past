@@ -21,8 +21,6 @@ The one controller channel that is RotP's own: `controller:write-debug-capture` 
 
 Event channels, main to renderer: `webContents.send` paired with `ipcRenderer.on`. Each value is the listener signature; the `onX(cb)` subscribers and the main process `emit` derive from it.
 
-`ImportProgress` reports a data import (ROM, MSU, language, sprites). `id` is the correlation key: the pack name, the language code or the ROM stem. `loaded` is bytes downloaded, or the item index while copying or extracting; `total` is the content length or the item count. `message` is a readable label or the error text.
-
 - `msu:optimize:progress` sends one report per file, for the measuring pass and the converting pass alike. While a file converts it also carries `fileFraction`, read from the encoder's own progress lines.
 
 Opened files and install links, the sign in's user code, Hookshop install progress and every controller event come from Brock and its modules (`onOpen`, the secrets, catalog and input modules), not from this contract.
@@ -41,32 +39,21 @@ The shared account channels: sign out and the signed in identity. One device tok
 
 ## apps/desktop/src/ipc/invoke-contract.type.ts
 
-Request and response channels: `ipcRenderer.invoke` paired with `ipcMain.handle`. `InvokeContract` is the one source of truth for every invoke channel's signature; the preload and the main process handlers are checked against it. It joins one interface per domain (host, profile data, dev tools, screen editor, controller, language, MSU, ffmpeg, Sanctuary, account, Hookshop), each split out to keep files short.
+Request and response channels: `ipcRenderer.invoke` paired with `ipcMain.handle`. `InvokeContract` is the one source of truth for every invoke channel's signature; the preload and the main process handlers are checked against it. It joins one interface per domain (dev tools, screen editor, controller, MSU, ffmpeg, Sanctuary, account, Hookshop), each split out to keep files short.
 
 ## apps/desktop/src/ipc/invoke/
 
-- `host-invoke-contract.type.ts`: the user data path, the host hardware and OS readout for the About page, the Data location with reveal and per domain usage, the generic file store (POSIX paths relative to the Data root), window queries and dialogs. The WASM core bytes come from the Brock port kit and the refresh rate from the Brock display module.
-- `profile-data-invoke-contract.type.ts`: profiles, per profile config, sessions and the tracker, input profiles, sprites. ROMs, assets and saves are read and written over the file store, and calibration belongs to the Brock input module.
-- `dev-tools-invoke-contract.type.ts`: review data, the Data Inspector view state, the recommendation store, test automation, debug dumps, the simulator run log (a detailed JSONL sink), shadow casting, and the debug capture sessions.
-  - The view state (`uiViews:*`) is one whole file at app level, not per profile, and the renderer repo debounces it.
+- `dev-tools-invoke-contract.type.ts`: the recommendation store, test automation, debug dumps, the simulator run log (a detailed JSONL sink), shadow casting, and the debug capture finalize.
   - The recommendation store keeps one file per collection (`Data/recommendations/<kind>.json`). The collection lives in the main process: folding a pass and recording a verdict are read, modify, write over a whole file, and an IPC round trip in between would let two callers interleave.
-  - A debug capture recording finalizes the moment it stops: raw frames, the position timeline and an ffmpeg encoded video land in their own folder under `debug-captures/<profileId>/` at once, never deferred to packaging. `debug-capture:listSessions` lists every recorded session for the picker (`BugReportDialog`) and never changes anything on disk; `debug-capture:deleteSession` deletes one. The report zip itself is built by the bug report transport in the main process (`apps/desktop/electron/sanctuary/bug-report/`), with no channel of its own.
+  - A debug capture recording finalizes the moment it stops: raw frames, the position timeline and an ffmpeg encoded video land in their own folder under `debug-captures/<profileId>/` at once, never deferred to packaging. The report zip is built by the bug report transport in the main process (`apps/desktop/electron/sanctuary/bug-report/`), with no channel of its own.
 - `screen-editor-invoke-contract.type.ts`: the dev only screen editor. Record payloads carry no id and no source text: the main process allocates the id and serializes with the dataset's own emitter. The six collections added after the record facade share one generic payload trio. `writeCheckRecord` has its suffix because the older text based `writeCheck` still has callers. Area and location already mint through `allocateGeography` (a display name, not a whole record), so they only gain write and delete.
-
-## apps/desktop/src/ipc/language-contract.type.ts
-
-Channels for translation data. Two generations coexist on purpose. The legacy channels (`languages:list` through `languages:getLanguage`) read the extracted payload a ROM import writes, for the read only inspector. The set channels read and write the editable model in `apps/desktop/src/storage/languages-store`, for the editor and the asset bake; every set write starts an asset recompile so the change reaches the blob the core reads at boot.
 
 ## apps/desktop/src/ipc/msu-contract/
 
-The MSU channels: import, pack listing, pack editing (the `.msul` manifest and per file operations), normalising a pack to one audio format, and the per save music resume sidecars (`{save}.msu.json`, beside the save).
+The MSU channels: reading an opened `.msul` and normalising a pack to one audio format. Pack import, listing and editing, and the per save music resume sidecars (`{save}.msu.json`), run in the renderer over the file store.
 
-- `MsuResult.skippedNested`: audio the archive kept below the pack's own level, meaning alternates and extras, not tracks. `skippedDuplicate`: audio dropped because an earlier file already claimed its track number.
-- `MsuFileEntry` is one audio file in a pack, and also the shape of `msu:getPackFiles`.
+- `MsuResult.skippedNested`: audio the archive kept below the pack's own level, meaning alternates and extras, not tracks. `skippedDuplicate`: audio dropped because an earlier file already claimed its track number. The renderer's pack install returns it.
 - `msu:readMsulFile` reads a `.msul` the app was opened with and rejects any other extension.
-- `msu:listAudioFiles` lists every audio file in the pack whatever its name. A layered pack's files are named freely, so `msu:getTrackList` (numbered MSU tracks only) cannot see them.
-- `msu:readManifest` is null for a classic pack (no manifest) and for a manifest version this build cannot read.
-- `msu:createPack` rejects when the pack already exists, never merging into it.
 - `msu:optimize:analyze` measures every candidate by encoding a slice of it, so nothing is written yet. One encoder run per file, reported on `msu:optimize:progress`.
 - `msu:optimize:run` moves repeat points into the manifest first, then encodes and points the manifest at the new names. Originals are kept; removing them is a separate action.
 
@@ -104,7 +91,3 @@ The one Hookshop channel of RotP's own. The catalogue, installs, updates, uninst
 - `StoreResult`: the call answers with its data or why not. `signedOut` is set when no device token is held or the API refused it, so the view can show the sign in card.
 - `StoreDuplicateResult`: the editable copy's kind and its pack folder, sprite file name or set id.
 - `store:duplicate` copies an installed item to a free new name the player can edit, crediting the original in the copy's `basedOn`. It is refused, with the reason, when the licence does not allow copies.
-
-## apps/desktop/src/ipc/ui-views-contract.type.ts
-
-The durable view state store's wire payload: one whole file map keyed by `ViewKey` (`surface:collection`), loaded and saved as one unit. The main process treats every entry as opaque JSON and never reshapes it, because the real shape (`ViewSnapshot`) belongs to the renderer's design system data layer and `packages/` never depends on renderer code. The renderer's `apps/desktop/src/storage/ui-views` validates each entry against `ViewSnapshot` before trusting it.

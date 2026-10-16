@@ -1,6 +1,6 @@
 /* @layer shared-types @kind barrel */
 export type { InvokeContract } from './invoke-contract.type';
-export type { EventContract, ImportProgress } from './event-contract.type';
+export type { EventContract } from './event-contract.type';
 export type { ShadowCastingApi, ScreenEditorApi } from './api.type';
 export type {
   SanctuarySubmitInput,

@@ -34,7 +34,7 @@ knowable, so no caller needs a host check.
 
 ## apps/desktop/src/storage/extraction-client.ts
 
-One Brock Web Worker job per call (`runExtractStep` over `runAssetWebWorkerJob`), each with its own worker. The job id is `<step>:<subject>`, and `STEP_JOB_OPTIONS` says what a second call for the same id does: assets queue (a later bake carries newer inputs and must store last), language packs run in parallel (each decodes its own ROM bytes), menu text and sprites join the running job (the same ROM always gives the same result). Menu text is a quiet job (`visible: false`), and the assets bake forwards its log (`forwardLog`), which holds the language compile warnings, to the app log. The port kit's asset job takes only a title and `cancellable`, so the step's options ride in on the `start` function `runAssetWebWorkerJob` accepts.
+One Brock Web Worker job per call (`runExtractStep` over `runAssetWebWorkerJob`), each with its own worker. The job id is `<step>:<subject>`, and `STEP_JOB_OPTIONS` says what a second call for the same id does: assets queue (a later bake carries newer inputs and must store last), language packs run in parallel (each decodes its own ROM bytes), menu text and sprites join the running job (the same ROM always gives the same result). Menu text is a quiet job (`visible: false`), and the assets bake forwards its log (`forwardLog`), which holds the language compile warnings, to the app log. The options go straight into `runAssetWebWorkerJob`, which takes `visible`, `forwardLog` and `onDuplicate` itself.
 
 ## apps/desktop/src/storage/import-job/
 
@@ -120,8 +120,7 @@ from the ROM's extracted set, or null before it exists.
 
 ## apps/desktop/src/storage/ui-views/
 
-The single boundary for durable view state, keyed and app level, not per profile (see
-`apps/desktop/src/ipc/ui-views-contract.type.ts`). Nothing else touches `window.api.uiViews`; a composite
+The single boundary for durable view state, keyed and app level, not per profile (read and written through the Brock `uiViews` store). A composite
 that wants persistence goes through `useViewState`. The whole map loads once and is cached,
 every mutation rewrites the whole map, and writes are fire and forget: a failed write logs and
 is dropped. Rapid saves collapse into one write about 400 ms later. A save before the map has

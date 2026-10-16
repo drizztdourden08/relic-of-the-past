@@ -5,7 +5,7 @@ import { refuseEdit } from './refuse-edit';
 
 const EMPTY_ARRAY_METHODS = new Set<string>([
   'listProfiles', 'listRoms', 'listRomsWithStatus', 'listStates', 'listSessions',
-  'listMsuPacks', 'getMsuTrackList', 'listMsuAudioFiles', 'listLanguages', 'listNormalSaves',
+  'listNormalSaves',
   'listAutoSaves', 'getSlotInfos',
 ]);
 

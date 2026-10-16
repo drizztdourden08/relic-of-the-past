@@ -19,7 +19,7 @@ three sites (handler, preload, renderer) in sync without relying on convention. 
 | Renderer to main, fire-and-forget | `SendContract` | `on` | `send` |
 | Main to renderer event | `EventContract` | `emit` | `subscribe` |
 
-Channels are named **`domain:action`** (e.g. `msu:listPacks`, `msu:optimize:run`).
+Channels are named **`domain:action`** (e.g. `store:duplicate`, `msu:optimize:run`).
 
 ## Steps (invoke example: `foo:get`)
 

@@ -29,7 +29,7 @@ Makes Windows show the app's size in Apps and Features. Velopack writes `Estimat
 
 ## apps/desktop/electron/assets/compile-rom-assets/
 
-Compiles a ROM's `zelda3_assets.dat`, baking in every stored language set so the core can switch language at run time through the INI. `recompileAllAssets` recompiles every ROM that already has a cached blob, used when the stored sets change (extract, edit, delete).
+Compiles a ROM's `zelda3_assets.dat`, baking in every stored language set so the core can switch language at run time through the INI. `recompileAllAssets` recompiles every ROM that already has a cached blob, used when the stored sets change (a language set imported, installed or duplicated).
 
 ## apps/desktop/electron/assets/load-compiled-languages.ts
 
@@ -38,10 +38,6 @@ The language extras one asset blob compile bakes in, on the desktop host: every 
 ## apps/desktop/electron/boot/ffmpeg.task.ts
 
 Declares the optional ffmpeg tool to the Brock tools module at boot. From then on the module finds it, installs it as the `tool:ffmpeg` job (download, checksum, unpack, all shown in the job dialog) and runs it with an argument array. The copy lives in `Data/tools/ffmpeg/<version>/`, under the app's own data root, so an isolated `--user-data` launch gets its own copy.
-
-## apps/desktop/electron/connections/ipc-handlers.ts
-
-Connection review data and nav review data (per screen connection point reviews with comments), each one app level JSON file.
 
 ## apps/desktop/electron/debug/dump-layers-handler.ts
 
@@ -70,10 +66,6 @@ Tracks which capture sessions have been uploaded in a report, per profile, at `d
 ## apps/desktop/electron/diagnostics/debug-report/collect-capture-sessions.ts
 
 Reads what a report ships for each capture session the picker checked: the position timeline plus whatever `finalize-capture-session/` put in `packaged/` (a size budgeted video, or a PNG fallback). Never the unlimited local frames or full video, which stay on disk for review whether or not a report is sent. Which sessions ship is the caller's choice (`sessionKeys`; the bug report transport picks the newest unsent ones within its budget, see `sanctuary/bug-report/`); nothing here decides eligibility or changes disk state. A session is marked sent only once the report uploads (`capture-manifest/`).
-
-## apps/desktop/electron/diagnostics/debug-report/delete-session.ts
-
-Deletes one capture session outright: frames, both videos, `snapshots.jsonl` and `packaged/`, everything under `debug-captures/<sessionKey>/`. The picker's own delete action confirms in the renderer first; this performs the removal with no further checks.
 
 ## apps/desktop/electron/diagnostics/debug-report/finalize-capture-session/
 
@@ -125,42 +117,13 @@ The device token, kept as the `hub-token` secret of the Brock secrets module, wh
 
 SDL3 controllers, hotplug, the mapping database, calibration, rumble and the raw capture channels come from the Brock input module (`@drizztdourden08/brock-input`, channels `input:*`). This folder keeps only what is the game's own.
 
-## apps/desktop/electron/input/profile-store/
-
-Input bindings, stored per game profile in `profiles/<id>/input-profiles.json`.
-
 ## apps/desktop/electron/input/register-device-permissions.ts
 
 The WebHID and WebUSB choosers on the main window session. The USB device chooser prefers a Nintendo device (vendor `0x057E`).
 
 ## apps/desktop/electron/input/register-input-handlers.ts
 
-The `inputProfiles:*` channels and `controller:write-debug-capture`, which writes a diagnostics or byte-capture report under `<userData>/debug/`. `sanitizeFileStem` strips anything outside `[A-Za-z0-9_-]`, so a device supplied name can never contain a path separator, `..` or a drive letter.
-
-## apps/desktop/electron/languages/ipc-handlers.ts
-
-A language set installed from the Hookshop is read only: every write into its folder is refused (`refuseInstalledSet`). The picked language code must match the ROM's region, or the font and encoder configs would not line up. `extractFromSource` resolves a source to exactly one ROM, extracts its dialogue, then cleans up the temps.
-
-## apps/desktop/electron/languages/language-pack/
-
-Language pack persistence. A pack lives in `userData/Data/languages/<code>/` and holds everything needed to bake the language into an asset blob and show it in the inspector UI, without the source ROM:
-
-| File | Holds |
-|---|---|
-| `dialogue.txt` | decoded strings (`N: text`), the source for compression and the UI |
-| `font.bin` | raw 2bpp glyph sheet (256 tiles x 16 bytes) |
-| `font-width.bin` | per glyph width table |
-| `meta.json` | `LanguageMeta` (glyph and line counts, encoder, flags, source ROM) |
-
-A folder without a `meta.json` is an incomplete pack and is skipped. `loadPackedLanguages` returns the pre packed entries for every extracted language, ready to bake into an asset blob.
-
-## apps/desktop/electron/lib/download.ts
-
-On an aborted download the partial file is removed. `removePartialFile` waits for the write stream to close first, because Windows keeps the file locked while the handle is open.
-
-## apps/desktop/electron/lib/import-source.ts
-
-Resolves an import source (a local path or a URL) to the matching files inside it: a direct file, an archive (.zip, .7z, .rar) or a download, plus a `cleanup()` that removes every temp it made. A URL download is always tried as an archive first. When it is not an archive, the result has no files and the caller may treat `downloadedPath` as a raw file.
+The `controller:write-debug-capture` channel, which writes a diagnostics or byte-capture report under `<userData>/debug/`. `sanitizeFileStem` strips anything outside `[A-Za-z0-9_-]`, so a device supplied name can never contain a path separator, `..` or a drive letter.
 
 ## apps/desktop/electron/lib/node-file-store.ts
 
@@ -181,22 +144,6 @@ The main process entry. Its top level runs in a fixed order, and each step depen
 When the app is ready: in dev the HTTP cache is cleared so static asset changes show at once. Paths and data folders are prepared (the installed size registry fix is cosmetic and not awaited), and the previous `session.log` is rotated so the renderer's batches land in a file scoped to this launch. Then every IPC handler registers (`hub/ipc-handlers.constants.ts`; their order does not matter), the main window is created, and the dev file logger mirrors console output to disk in dev. `--boot-timing` logs boot milestones from the first main process timestamp. With `--dump-layers` the renderer console is forwarded to stdout. Opened files and install links reach the app through Brock's `onOpen` (see `documents/open-document.ts`). The application menu carries only the clipboard shortcuts; debug items live in the in app Advanced menu.
 
 On quit, the Brock display module puts back the refresh rate it changed and the Brock input module stops the controllers.
-
-## apps/desktop/electron/msu/edit-handlers.ts
-
-Pack editing IPC: the `.msul` manifest plus per file create, rename and delete. These are the same operations as the renderer side edits, expressed over Node fs; the manifest format and validation come from `packages/hub-contracts/src/manifest` so the two never drift. Paths and manifest reads and writes come from `pack-fs/`, which also guards every renderer supplied name against traversal before it becomes a path segment, and refuses every write into a pack the Hookshop installed. After a pack is renamed, its manifest is written again so the name inside its settings becomes the new folder name.
-
-## apps/desktop/electron/msu/import-selection.ts
-
-Which of an archive's audio files belong to the pack. An MSU pack is flat: the file name carries the track number. Anything in a subfolder is an extra (usually alternate takes), and a recursive walk copying by base name would put two files on one slot. So the rule is depth: keep the shallowest level that has audio. That reads a pack at the archive root and one nested a folder down alike. `nested` lists the files left below the pack's own level.
-
-Track numbers are then made unique as a backstop: two files at the same level can still claim one slot, and which one plays must not depend on directory order. The files are sorted by name first, so the same archive imports the same way twice; `duplicates` lists the files whose track number was already claimed.
-
-## apps/desktop/electron/msu/ipc-handlers.ts
-
-`isMsuFile` uses the shared audio extension set, so a format the pack can hold is a format the pack is counted by. A private `(pcm|opuz|msu)` pattern here once made a converted pack list as empty. An import resolves a source to its tracks and copies them into the pack folder; extras in subfolders are not tracks, and two files cannot share a slot (see `import-selection.ts`). `skippedNested` and `skippedDuplicate` report the files left out for each reason.
-
-`msu:readMsulFile` only reads `.msul` files: it reads a path outside the app's own storage, so it must not become a general purpose file reader for the renderer.
 
 ## apps/desktop/electron/msu/optimize-handlers.ts
 
@@ -245,9 +192,9 @@ Where one pack's files are on disk, and its manifest read and written, over Node
 
 A pack's name is its folder; the name inside its settings follows it on read and on write. `readPackManifest` returns null for a classic pack (no manifest) and for one that is unreadable or of an unknown version. The file inventory uses the same rule as the FileStore side (`packages/msu/src/inventory`): regular files, manifest excepted. It is read from the folder at write time; a file that vanishes mid listing is skipped.
 
-## apps/desktop/electron/msu/resume-handlers.ts
+## apps/desktop/electron/msu/read-msul-handler.ts
 
-Per save music resume sidecars over Node fs. Each `{save}.msu.json` is written beside the save it belongs to. Quick slots carry no manifest, so a sidecar is the one mechanism that fits all three save kinds. The naming comes from `packages/game-core/src/save-paths`, so the renderer's FileStore path and this one address the same file.
+`msu:readMsulFile` only reads `.msul` files: it reads a path outside the app's own storage, so it must not become a general purpose file reader for the renderer.
 
 ## apps/desktop/electron/preload.ts
 
@@ -361,19 +308,9 @@ Locates the repo root the editor writes into by walking up to the ancestor that 
 
 Shadow data is a committed source asset (not per user state), so it lives under `public/data`, not userData. Writes are dev only (`shadow-casting:save` refuses otherwise); in dev, `__dirname` resolves into the build output beside the bundled public folder. The project is cached after the first read.
 
-## apps/desktop/electron/sprites/extraction-state/
-
-The main process half of "are this ROM's sprites complete?". The renderer answers the same question over its FileStore (`apps/desktop/src/storage/sprites-store/check-sprites-stale.ts`), and that is the path the app takes today. This half backs the `sprites:check` and `sprites:extract` IPC, which is still part of the contract and must not disagree with it. Both read the same receipt file (`extraction.json`), keyed by the same manifest digest, so whichever half extracted a folder, the other recognises it.
-
-A receipt is used, not a bare file name comparison, because a definition the ROM cannot satisfy produces no file; a bare comparison would find that file missing forever and extract again on every launch. A completed run records the manifest it ran against, and a receipt for the current manifest is taken at its word. Change the manifest and the digest changes with it, so a grown manifest still forces a name by name comparison: exactly the one time extraction an older profile needs. An empty or absent folder is never complete, receipt or not.
-
-## apps/desktop/electron/sprites/ipc-handlers.ts
-
-When the build carries no sprite definitions, extraction fails with a message: success for zero files would read as "this ROM has no sprites", not "this build cannot do it". Extraction is synchronous and fast, so its "decode" phase is indeterminate. The receipt is written after the files, never before. `sprites:check` answers "complete against the current manifest", not "has any files at all" (see `extraction-state/`).
-
 ## apps/desktop/electron/storage/installed-guard/
 
-The lock on what the Hookshop installed. An installed music pack, language set or sprite file stays as its author published it, so every write a renderer can ask for (the file store IPC, the music pack and language channels) asks here first and is refused inside one. The store's own install, update and uninstall write through their in process file store and never pass through here, which makes them the only writers.
+The lock on what the Hookshop installed. An installed music pack, language set or sprite file stays as its author published it, so every write a renderer can ask for (the file store IPC and the music pack optimiser) asks here first and is refused inside one. The store's own install, update and uninstall write through their in process file store and never pass through here, which makes them the only writers.
 
 - `INSTALLED_ROOTS` is the Data path an installed item occupies, by kind. Only paths under `GUARDED_TOP` can hold an installed item, so other paths skip the registry read.
 - Windows and macOS folders ignore case, so a differently cased path is the same item there (`foldCase`).

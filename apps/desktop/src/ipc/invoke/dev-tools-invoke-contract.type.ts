@@ -1,35 +1,18 @@
 /* @layer shared-types @kind types */
 import type { ShadowCastingProject, ScreenShadowData } from '@rotp/game-core';
 import type { SimRunConfig } from '@rotp/navigation';
-import type {
-  DebugCaptureFinalizeInput, DebugCaptureFinalizeResult,
-  DebugCaptureSessionSummary, DebugCaptureDeleteSessionResult,
-} from '@app/debug-report';
+import type { DebugCaptureFinalizeInput, DebugCaptureFinalizeResult } from '@app/debug-report';
 import type { EntityKind } from '@rotp/game-data';
-import type { UiViewsMap } from '../ui-views-contract.type';
 import type { PassResult, Recommendation, RecommendationPassRequest } from '../recommendation-contract.type';
-import type { InvokeResult, ReviewMap } from './invoke-result.type';
+import type { InvokeResult } from './invoke-result.type';
 
 interface DevToolsInvokeContract {
-  'spriteDebug:load': () => Promise<ReviewMap>;
-  'spriteDebug:save': (data: ReviewMap) => Promise<void>;
-  'spriteReview:load': () => Promise<ReviewMap>;
-  'spriteReview:save': (data: ReviewMap) => Promise<void>;
-  'connectionReview:load': () => Promise<unknown>;
-  'connectionReview:save': (data: unknown) => Promise<void>;
-  'navReview:load': () => Promise<unknown>;
-  'navReview:save': (data: unknown) => Promise<void>;
-
-  'uiViews:load': () => Promise<UiViewsMap>;
-  'uiViews:save': (data: UiViewsMap) => Promise<void>;
-
   'recommendations:load': (kind: EntityKind) => Promise<readonly Recommendation[]>;
   'recommendations:applyPass': (pass: RecommendationPassRequest) => Promise<PassResult>;
   'recommendations:decide': (kind: EntityKind, id: string,
     state: 'accepted' | 'dismissed') => Promise<readonly Recommendation[]>;
 
   'test:getArgs': () => Promise<{ autoState: number | string | null; screenshot: string | null }>;
-  'test:screenshot': (name: string) => Promise<string>;
 
   'debug:getDumpLayersSlot': () => Promise<number | null>;
   'debug:getHoverTile': () => Promise<{ col: number; row: number } | null>;
@@ -47,7 +30,6 @@ interface DevToolsInvokeContract {
   'shadow-casting:get-screen': (screenId: number) => Promise<ScreenShadowData | null>;
 
   'debug-capture:finalizeSession': (input: DebugCaptureFinalizeInput) => Promise<DebugCaptureFinalizeResult>;
-  'debug-capture:listSessions': (input: { profileId: string }) => Promise<DebugCaptureSessionSummary[]>;
-  'debug-capture:deleteSession': (input: { profileId: string; sessionKey: string }) => Promise<DebugCaptureDeleteSessionResult>;}
+}
 
 export type { DevToolsInvokeContract };

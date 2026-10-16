@@ -1,8 +1,8 @@
 /* @layer renderer-lib @kind constants */
-import type { JobOptions } from '@drizztdourden08/brock-core/types';
+import type { AssetWebWorkerJobOptions } from '@drizztdourden08/brock-port-kit/renderer';
 import type { ExtractStepId } from '@app/game/extract-steps';
 
-const STEP_JOB_OPTIONS: Record<ExtractStepId, JobOptions> = {
+const STEP_JOB_OPTIONS: Record<ExtractStepId, Pick<AssetWebWorkerJobOptions, 'visible' | 'forwardLog' | 'onDuplicate'>> = {
   assets: { onDuplicate: 'queue', forwardLog: true },
   language: { onDuplicate: 'parallel' },
   'menu-text': { onDuplicate: 'join', visible: false },
