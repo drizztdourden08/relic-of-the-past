@@ -6,10 +6,10 @@ import { extractFromBytes } from './extract-from-bytes';
 import { languageFailure } from './language-failure';
 import { resolveRomBytes } from './resolve-rom-bytes';
 
-const extractLanguageFromUrl = async (url: string, code: string): Promise<LanguageResult> => {
+const extractLanguageFromUrl = async (url: string): Promise<LanguageResult> => {
   try {
     const bytes = await fetchToBytes(url, (loaded, total) => emitLanguageProgress('download', loaded, total ?? undefined));
-    return await extractFromBytes(await resolveRomBytes(bytes), code);
+    return await extractFromBytes(await resolveRomBytes(bytes));
   } catch (err) {
     return languageFailure(err);
   }

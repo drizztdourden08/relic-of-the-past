@@ -1,5 +1,6 @@
 /* @layer renderer-components @kind types */
 import type { InstalledPack } from '@rotp/hub-contracts';
+import type { LanguageResult } from '@app/storage/languages-store/languages-store.type';
 
 type SelectSet = (code: string | null) => void;
 
@@ -19,8 +20,7 @@ interface LanguageExtractionParams {
 }
 
 interface SettleExtractionParams {
-  result: { success: boolean; error?: string };
-  code: string;
+  result: LanguageResult;
   refresh: () => Promise<void>;
   setSelected: SelectSet;
 }
@@ -34,12 +34,7 @@ interface LanguageDeleteParams {
   onDeleteConfirm: (title: string, message: string, onConfirm: () => void) => void;
 }
 
-interface ExtractLanguagePickerProps {
-  value: string;
-  onChange: (code: string) => void;
-}
-
 export type {
-  ExtractLanguagePickerProps, LanguageCreationParams, LanguageDeleteParams, LanguageExtractionParams,
+  LanguageCreationParams, LanguageDeleteParams, LanguageExtractionParams,
   LanguageOutcome, SettleExtractionParams,
 };

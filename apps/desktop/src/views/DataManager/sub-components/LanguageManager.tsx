@@ -3,7 +3,6 @@ import { useCallback, useMemo } from 'react';
 import type { LanguageSetSummary } from '@rotp/languages';
 import { ImportForm } from './ImportForm';
 import { LANGUAGE_NAMES } from './language-names.constants';
-import { ExtractLanguagePicker } from './language-manager/ExtractLanguagePicker';
 import { useLanguageCreation } from './language-manager/useLanguageCreation';
 import { useLanguageDelete } from './language-manager/useLanguageDelete';
 import { useLanguageExtraction } from './language-manager/useLanguageExtraction';
@@ -20,7 +19,7 @@ import { ListDetailLayout } from '@drizztdourden08/tessera/composites';
 const LanguageManager = (props: LanguageManagerProps) => {
   const { onDeleteConfirm } = props;
   const { languages, selected, setSelected, refresh, refreshThenSelect } = useLanguageSets();
-  const { extractLang, setExtractLang, handleUrlImport, handleFileImport } = useLanguageExtraction({ refresh, setSelected });
+  const { handleUrlImport, handleFileImport } = useLanguageExtraction({ refresh, setSelected });
   const { busy, handleCreate, handleDuplicate } = useLanguageCreation({ refresh, setSelected });
   const { pack: installed, packFor } = useInstalledKind('language', selected);
   const { confirmUninstall, uninstallError } = useConfirmUninstall(onDeleteConfirm);
@@ -37,14 +36,12 @@ const LanguageManager = (props: LanguageManagerProps) => {
 
   const list = (
     <>
-      <ExtractLanguagePicker value={extractLang} onChange={setExtractLang} />
       <ImportForm
         kind="language"
         placeholder="Paste ROM download URL..."
         accept={['.sfc', '.smc', '.zip', '.7z', '.rar']}
-        dropLabel="Drop a ROM file to extract language"
-        dropHint="The ROM is used temporarily and not saved"
-        disabled={!extractLang}
+        dropLabel="Drop a ROM file to extract its language"
+        dropHint="The language is detected from the ROM. The ROM is used temporarily and not saved"
         onUrlImport={handleUrlImport}
         onFileImport={handleFileImport}
       />

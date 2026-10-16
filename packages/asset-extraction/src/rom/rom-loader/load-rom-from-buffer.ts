@@ -19,7 +19,7 @@ const loadRomFromBuffer = (buffer: Buffer, supportMultilanguage = false): RomDat
 
   if (!entry) {
     throw new Error(supportMultilanguage
-      ? `ROM with hash ${hash} not supported.`
+      ? `This is not a known release of A Link to the Past (SHA-1 ${hash}).`
       : `ROM with hash ${hash} not supported. Expected US ROM.`);
   }
   if (!supportMultilanguage && entry.language !== 'us') {

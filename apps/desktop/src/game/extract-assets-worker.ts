@@ -9,11 +9,8 @@ const ctx: WorkerScope = self;
 
 const warnAssets = (message: string): void => ctx.postMessage({ warn: `[assets] ${message}` });
 
-const runLanguage = (romBytes: Uint8Array, code: string) => {
+const runLanguage = (romBytes: Uint8Array) => {
   const rom = loadRomFromBuffer(Buffer.from(romBytes), true);
-  if (rom.language !== code) {
-    throw new Error(`Selected '${code}' but this ROM is '${rom.language}' (${rom.description}). Pick the matching language.`);
-  }
   const entry = extractLangEntry(rom, rom.language, 1);
   return {
     code: rom.language,
@@ -45,7 +42,7 @@ ctx.onmessage = (e) => {
   const respond = async (): Promise<unknown> => {
     const req = e.data;
     if (req.op === 'assets') return bakeAssetSet({ romBytes: req.romBytes, supplementRoms: req.supplementRoms ?? {}, languages: req.languages }, warnAssets);
-    if (req.op === 'language') return runLanguage(req.romBytes, req.code);
+    if (req.op === 'language') return runLanguage(req.romBytes);
     if (req.op === 'menu-text') return runMenuText(req.romBytes);
     return runSprites(req.romBytes, req.defs);
   };

@@ -1,6 +1,0 @@
-/* @layer renderer-components @kind style */
-
-.import-form.language-extract-picker {
-  margin-bottom: 0;
-  padding-bottom: var(--space-xs);
-}
