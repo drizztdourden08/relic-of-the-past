@@ -1,34 +1,23 @@
 /* @layer renderer-components @kind hook */
-import { useCallback, useEffect, useState } from 'react';
-import type { CatalogResult } from '@drizztdourden08/brock-catalog/renderer';
-import { hookshopReads } from '@app/hookshop-reads';
-import type { CatalogState } from '../Store.type';
-import { EMPTY_CATALOG } from '../Store.constants';
-
-const failureOf = <T>(result: CatalogResult<T>) => (result.ok ? null : result);
+import { useEffect } from 'react';
+import { useHookshopCatalogStore } from '@app/stores/hookshop-catalog';
 
 const useCatalog = (signedIn: boolean, onSignedOut: () => void) => {
-  const [state, setState] = useState<CatalogState>(EMPTY_CATALOG);
-
-  const reload = useCallback(async () => {
-    setState((current) => ({ ...current, loading: true, error: null }));
-    const [home, items] = await Promise.all([hookshopReads.home(), hookshopReads.items()]);
-    const failed = failureOf(home) ?? failureOf(items);
-    if (failed?.signedOut) onSignedOut();
-    setState({
-      home: home.ok ? home.data : null,
-      items: items.ok ? items.data : [],
-      loading: false,
-      error: failed ? failed.error : null,
-    });
-  }, [onSignedOut]);
+  const home = useHookshopCatalogStore((s) => s.home);
+  const items = useHookshopCatalogStore((s) => s.items);
+  const loading = useHookshopCatalogStore((s) => s.loading);
+  const error = useHookshopCatalogStore((s) => s.error);
 
   useEffect(() => {
-    if (signedIn) void reload();
-    else setState(EMPTY_CATALOG);
-  }, [signedIn, reload]);
+    const store = useHookshopCatalogStore.getState();
+    if (!signedIn) {
+      if (store.loaded || store.loading) store.clear();
+      return;
+    }
+    if (!store.loaded && !store.loading) void store.load(onSignedOut);
+  }, [signedIn, onSignedOut]);
 
-  return { ...state, reload };
+  return { home, items, loading, error };
 };
 
 export { useCatalog };

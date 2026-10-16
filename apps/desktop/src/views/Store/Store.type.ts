@@ -1,33 +1,23 @@
 /* @layer renderer-components @kind types */
 import type { CatalogInstallBarProps, CatalogLink } from '@drizztdourden08/brock-catalog/renderer';
-import type { InstalledPack, HomeResponse, ItemResponse, ItemCardView } from '@rotp/hub-contracts';
+import type { InstalledPack, HomeResponse, ItemResponse, ItemCardView, StoreKind } from '@rotp/hub-contracts';
 import type { StoreItemStatus } from '../../compounds/StoreItemCard';
 import type { useStore } from './behavior/useStore';
 import type { useStoreAccount } from './behavior/useStoreAccount';
-
-type StoreSection = 'home' | 'browse' | 'music' | 'character' | 'language' | 'installed' | 'updates';
 
 type DeleteConfirm = (title: string, message: string, onConfirm: () => void) => void;
 
 type ConfirmUninstall = (name: string, run: () => Promise<void>) => void;
 
-interface StoreProps {
-  onLibraryChanged: () => unknown;
-  onDeleteConfirm: DeleteConfirm;
-  section?: StoreSection;
+interface StoreParams {
+  kind: StoreKind | null;
+  item?: string;
 }
 
 interface InstalledRow {
   pack: InstalledPack;
   item: ItemCardView | null;
   hasUpdate: boolean;
-}
-
-interface CatalogState {
-  home: HomeResponse | null;
-  items: ItemCardView[];
-  loading: boolean;
-  error: string | null;
 }
 
 type OpenInstallParams = {
@@ -49,7 +39,6 @@ type StoreModel = ReturnType<typeof useStore>;
 type StoreAccount = ReturnType<typeof useStoreAccount>;
 
 interface StoreBrowseProps {
-  title: string;
   store: StoreModel;
 }
 
@@ -90,7 +79,6 @@ interface StoreHomeWelcomeProps {
 }
 
 interface StoreInstalledListProps {
-  title: string;
   rows: InstalledRow[];
   emptyText: string;
   store: StoreModel;
@@ -103,8 +91,8 @@ interface StoreInstalledRowProps {
   onConfirmUninstall: ConfirmUninstall;
 }
 
-interface StoreSectionContentProps {
-  store: StoreModel;
+interface StoreInstalledViewProps {
+  mode: 'installed' | 'updates';
 }
 
 interface StoreSignInProps {
@@ -113,7 +101,6 @@ interface StoreSignInProps {
 }
 
 export type {
-  CatalogState,
   ConfirmUninstall,
   DeleteConfirm,
   InstallBarParams,
@@ -128,9 +115,8 @@ export type {
   StoreHomeWelcomeProps,
   StoreInstalledListProps,
   StoreInstalledRowProps,
+  StoreInstalledViewProps,
   StoreModel,
-  StoreProps,
-  StoreSection,
-  StoreSectionContentProps,
+  StoreParams,
   StoreSignInProps,
 };

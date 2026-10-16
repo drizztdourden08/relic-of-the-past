@@ -50,6 +50,7 @@ export default defineBrockConfig({
     copyright: 'Copyright (c) 2026 drizztdourden_',
     linuxCategory: 'Game',
     window: { titleBar: { mobile: false } },
+    profilesRoute: 'data/profiles',
     repo: { owner: 'drizztdourden08', name: 'relic-of-the-past' },
     artifactPrefix: 'rotp-',
     protocols: [{ scheme: 'relic-of-the-past', name: 'Relic of the Past' }],

@@ -2,7 +2,7 @@
 import type { MenuEntry } from '@drizztdourden08/brock-react';
 
 const MOBILE_EXTRA_ENTRIES: MenuEntry[] = [
-  { key: 'profiles', label: 'Profiles', screen: 'profiles' },
+  { key: 'profiles', label: 'Profiles', screen: 'data/profiles' },
   { key: 'about', label: 'About', screen: 'about' },
 ];
 

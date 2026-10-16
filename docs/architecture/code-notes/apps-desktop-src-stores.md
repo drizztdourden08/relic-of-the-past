@@ -75,6 +75,11 @@ Real-time game UI state, updated every frame by the ui-bridge polling loop. `_se
 ## apps/desktop/src/stores/hub-session/
 
 Who the app is signed in as, on the shared accounts. One store, because two surfaces read it at once: the account card (sign in, the code, sign out) and the bug report forms (the reporter line, and whether an email is asked). `refresh` runs at boot and after every sign-in or sign-out. A token the site revoked reads as signed out on the next refresh. `userCode` is the code to type on the site while waiting, `null` otherwise. `signIn` opens the confirm page on the given site, or on the Sanctuary when none is given. The sign in itself runs on the Brock secrets module's sign-in store (`useSignInStore`); this store adds the account the site answers with.
+`useHubShowFlags` turns it into the app's one show flag, `signedIn`, for `<BrockApp showFlags>`, and refreshes the session once at start so the flag is right before the Hookshop opens. `signedIn` means the state is signed in and the account is known; while a sign in waits on the browser it is false.
+
+## apps/desktop/src/stores/hookshop-catalog/
+
+The Hookshop's home page and its whole catalogue, loaded together once signed in. It is a store because every Hookshop page reads it and only one page is mounted at a time, so a state kept in a page would load again on each move between pages. `loaded` says the answer is in, and a page asks for a load only when it is neither loaded nor loading. `clear` runs when the account signs out and bumps `generation`, so an answer that arrives after the sign out is dropped.
 
 ## apps/desktop/src/stores/hud-countdown-store/
 
@@ -222,7 +227,7 @@ Tracks whether the active ROM has extracted HUD sprites. The enhanced Vanilla HU
 
 ## apps/desktop/src/stores/store-link/
 
-A store install link waiting for the Hookshop tab. The shell puts it here and opens the tab. The tab takes it once, selects the item and starts the install. It is a store because the link can arrive while any page is open, before the tab is mounted. `take` returns the pending link and clears it, so it installs once.
+A store install link waiting for the Hookshop. The shell puts it here and opens the Hookshop home page. The home page takes it once, opens the item on the Browse page and starts the install. It is a store because the link can arrive while any page is open, before the tab is mounted. `take` returns the pending link and clears it, so it installs once.
 
 ## apps/desktop/src/stores/title-settings-store/
 

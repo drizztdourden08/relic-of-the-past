@@ -193,9 +193,20 @@ stamp and read back only under that same stamp; a file under any other stamp rea
 absent, so the caller generates a fresh seed. There is no migration and no key map: the
 stamp is bumped whenever the placement's shape or its location keys change.
 
+## apps/desktop/src/screens/screens.config.ts
+
+The Data bucket has `requiresProfile: false`, and `brock.config.ts` sets `product.profilesRoute` to `data/profiles`. Together they make Data > Profiles the one profiles screen: the Profiles menu entry, the boot step that finds no profile to start, and the step after the active profile is deleted all land there, and a first run can create a profile there because the Data hub opens with none active. The Data pages are library tools (ROMs, sprites, languages, profiles) and none reads the active profile.
+
 ## apps/desktop/src/screens/data/home.hero.tsx
 
 The hero holds the highlights only: the eyebrow, the title, three facts (space on disk, profiles, ROMs), Open data folder and Refresh. Open data folder shows only where the host can reveal a folder (`capabilities.revealDataFolder`), so the phone layout has no such button. Everything else is JSX under the hero in the same file's return, which Brock draws below the hero in the page: the cards for each page of the data area and the storage details. The folder path and the per-folder tiles are not facts of the hero because they overflowed it.
+
+## apps/desktop/src/screens/store/
+
+The Hookshop is one hub with a page for each section: Home, then Browse, Music packs, Characters and Languages under Catalogue, then Installed and Updates under On this computer. Every page but Home carries `when: isSignedIn`, so a signed out Hookshop shows Home alone, with no side nav, and the sign in is the whole screen. Once signed in the nav appears with the pages beside it. Signing out while on one of them falls back to Home.
+Home shows the sign in while signed out and the store home once signed in. It also takes a waiting install link: signed in, it opens the item on Browse and starts the install; signed out, it says the install waits for the sign in.
+The Browse pages take the item to select as the `item` route parameter (`nav.open('store/browse', { item })`), which is how Home and the install link open an item.
+Installed lists the packs of this computer, so it needs the account like the rest: it is hidden while signed out, and a pack can still be removed from the Data studios.
 
 ## apps/desktop/src/settings-effects/apply-settings-effects.ts
 
@@ -226,6 +237,10 @@ Vanilla Safe brings the native HUD back in the core (its HudOverride bit is mask
 ## apps/desktop/src/settings-effects/sync-title-store.ts
 
 Mirrors the title screen settings into the overlay's store. Vanilla Safe masks the bit the native title is hidden through, so the overlay reads original while the saved preference stays put.
+
+## apps/desktop/src/shell/show-rules/
+
+Show rules for pages, buckets and menu entries. `isRandomizerProfile` reads the active profile. `isSignedIn` reads the `signedIn` show flag, which `main.tsx` passes to `<BrockApp showFlags>` from the hub session store (`useHubShowFlags`). `show-flags.type.ts` declares the flag on Brock's `ShowFlags`, so `ctx.flags.signedIn` is typed.
 
 ## apps/desktop/src/sprites/apply-sprites-for-rom.ts
 

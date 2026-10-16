@@ -30,14 +30,19 @@ import GameVideoWindowSettings, { meta as gameVideoWindowSettingsMeta } from '..
 import GameViewBase, { meta as gameViewBaseMeta } from '../src/screens/game-view.base';
 import HudLayoutLayer, { meta as hudLayoutLayerMeta } from '../src/screens/hud-layout.layer';
 import InputCalibrationCard, { meta as inputCalibrationCardMeta } from '../src/screens/input-calibration.card';
-import ProfilesCard, { meta as profilesCardMeta } from '../src/screens/profiles.card';
 import RandomizerArchipelagoNetworkPage, { meta as randomizerArchipelagoNetworkPageMeta } from '../src/screens/randomizer/archipelago/network.page';
 import RandomizerArchipelagoOnlinePage, { meta as randomizerArchipelagoOnlinePageMeta } from '../src/screens/randomizer/archipelago/online.page';
 import RandomizerLogsPage, { meta as randomizerLogsPageMeta } from '../src/screens/randomizer/logs.page';
 import RandomizerOptionsPage, { meta as randomizerOptionsPageMeta } from '../src/screens/randomizer/options.page';
 import RandomizerRunPage, { meta as randomizerRunPageMeta } from '../src/screens/randomizer/run.page';
 import RandomizerSpoilerPage, { meta as randomizerSpoilerPageMeta } from '../src/screens/randomizer/spoiler.page';
-import StoreHookshopCustom, { meta as storeHookshopCustomMeta } from '../src/screens/store/hookshop.custom';
+import StoreCatalogueBrowsePage, { meta as storeCatalogueBrowsePageMeta } from '../src/screens/store/catalogue/browse.page';
+import StoreCatalogueCharacterPage, { meta as storeCatalogueCharacterPageMeta } from '../src/screens/store/catalogue/character.page';
+import StoreCatalogueLanguagePage, { meta as storeCatalogueLanguagePageMeta } from '../src/screens/store/catalogue/language.page';
+import StoreCatalogueMusicPage, { meta as storeCatalogueMusicPageMeta } from '../src/screens/store/catalogue/music.page';
+import StoreHomePage, { meta as storeHomePageMeta } from '../src/screens/store/home.page';
+import StoreMineInstalledPage, { meta as storeMineInstalledPageMeta } from '../src/screens/store/mine/installed.page';
+import StoreMineUpdatesPage, { meta as storeMineUpdatesPageMeta } from '../src/screens/store/mine/updates.page';
 
 const screenTree = buildScreenTree(config, [
   { kind: 'card', id: 'credits', component: CreditsCard, meta: creditsCardMeta },
@@ -67,14 +72,19 @@ const screenTree = buildScreenTree(config, [
   { kind: 'base', id: 'game-view', component: GameViewBase, meta: gameViewBaseMeta },
   { kind: 'layer', id: 'hud-layout', component: HudLayoutLayer, meta: hudLayoutLayerMeta },
   { kind: 'card', id: 'input-calibration', component: InputCalibrationCard, meta: inputCalibrationCardMeta },
-  { kind: 'card', id: 'profiles', component: ProfilesCard, meta: profilesCardMeta },
   { kind: 'page', bucket: 'randomizer', group: 'archipelago', id: 'network', component: RandomizerArchipelagoNetworkPage, meta: randomizerArchipelagoNetworkPageMeta },
   { kind: 'page', bucket: 'randomizer', group: 'archipelago', id: 'online', component: RandomizerArchipelagoOnlinePage, meta: randomizerArchipelagoOnlinePageMeta },
   { kind: 'page', bucket: 'randomizer', id: 'logs', component: RandomizerLogsPage, meta: randomizerLogsPageMeta },
   { kind: 'page', bucket: 'randomizer', id: 'options', component: RandomizerOptionsPage, meta: randomizerOptionsPageMeta },
   { kind: 'page', bucket: 'randomizer', id: 'run', component: RandomizerRunPage, meta: randomizerRunPageMeta },
   { kind: 'page', bucket: 'randomizer', id: 'spoiler', component: RandomizerSpoilerPage, meta: randomizerSpoilerPageMeta },
-  { kind: 'custom', bucket: 'store', id: 'hookshop', component: StoreHookshopCustom, meta: storeHookshopCustomMeta },
+  { kind: 'page', bucket: 'store', group: 'catalogue', id: 'browse', component: StoreCatalogueBrowsePage, meta: storeCatalogueBrowsePageMeta },
+  { kind: 'page', bucket: 'store', group: 'catalogue', id: 'character', component: StoreCatalogueCharacterPage, meta: storeCatalogueCharacterPageMeta },
+  { kind: 'page', bucket: 'store', group: 'catalogue', id: 'language', component: StoreCatalogueLanguagePage, meta: storeCatalogueLanguagePageMeta },
+  { kind: 'page', bucket: 'store', group: 'catalogue', id: 'music', component: StoreCatalogueMusicPage, meta: storeCatalogueMusicPageMeta },
+  { kind: 'page', bucket: 'store', id: 'home', component: StoreHomePage, meta: storeHomePageMeta },
+  { kind: 'page', bucket: 'store', group: 'mine', id: 'installed', component: StoreMineInstalledPage, meta: storeMineInstalledPageMeta },
+  { kind: 'page', bucket: 'store', group: 'mine', id: 'updates', component: StoreMineUpdatesPage, meta: storeMineUpdatesPageMeta },
   ...devScreens,
 ], searchIndex);
 
