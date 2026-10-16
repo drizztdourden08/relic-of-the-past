@@ -4,6 +4,7 @@ import JSZip from 'jszip';
 import { roms } from '@rotp/roms';
 import * as profiles from '@app/profiles/storage';
 import { deleteRomFile, importRomBytes } from '@app/storage/rom-files';
+import { listRomInfos } from '@app/game/port';
 import { createMemFileStore } from './mem-file-store';
 
 describe('roms store (over FileStore)', () => {
@@ -12,7 +13,7 @@ describe('roms store (over FileStore)', () => {
     const r = await importRomBytes(f, { fileName: 'game.sfc', bytes: new Uint8Array(1024) });
     expect(r).toMatchObject({ success: true, romFile: 'game.sfc', alreadyExists: false });
     expect(await roms.listRoms(f)).toEqual(['game.sfc']);
-    expect((await roms.listWithStatus(f))[0]).toMatchObject({ romFile: 'game.sfc', hasAssets: false });
+    expect((await listRomInfos(f))[0]).toMatchObject({ romFile: 'game.sfc', hasAssets: false });
   });
 
   it('detects a duplicate import', async () => {

@@ -7,7 +7,7 @@ const StudioEditor = (props: StudioEditorProps) => {
   const { label, toolbar, children } = props;
 
   return (
-    <Box as="section" aria-label={label} className="studio-frame__editor">
+    <Box as="section" surface="sunken" aria-label={label} className="studio-frame__editor">
       {toolbar && toolbar.length > 0 && (
         <Box role="toolbar" aria-label={label} className="studio-frame__toolbar">
           {toolbar.map((group, index) => (

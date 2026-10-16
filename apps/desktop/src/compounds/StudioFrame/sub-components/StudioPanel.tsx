@@ -11,7 +11,7 @@ const StudioPanel = (props: StudioPanelProps) => {
   const classes = ['studio-frame__panel', `studio-frame__panel--${side}`, collapsed && 'studio-frame__panel--collapsed'];
 
   return (
-    <Box as="aside" aria-label={title} className={classes.filter(Boolean).join(' ')}>
+    <Box as="aside" surface="raised" aria-label={title} className={classes.filter(Boolean).join(' ')}>
       <Box className="studio-frame__panel-head">
         <Text as="h2" variant="overline" className="studio-frame__panel-title">{title}</Text>
         <IconButton

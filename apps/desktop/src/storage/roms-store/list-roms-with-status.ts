@@ -1,7 +1,7 @@
 /* @layer renderer-lib @kind logic */
-import { roms } from '@rotp/roms';
+import { listRomInfos } from '@app/game/port';
 import { platformFiles } from '../platform-files';
 
-const listRomsWithStatus = () => roms.listWithStatus(platformFiles());
+const listRomsWithStatus = () => listRomInfos(platformFiles());
 
 export { listRomsWithStatus };

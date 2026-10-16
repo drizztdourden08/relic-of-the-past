@@ -1,8 +1,6 @@
 /* @layer renderer-components @kind style */
 .credits-tab {
   padding: 0;
-  overflow-y: auto;
-  max-height: 100%;
 }
 
 .credits-tab__header {

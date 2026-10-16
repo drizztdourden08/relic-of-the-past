@@ -4,8 +4,7 @@ export { getInfo } from './get-info';
 export { listEntries } from './list-entries';
 export { listRoms } from './list-roms';
 export { listSupplements } from './list-supplements';
-export { listWithStatus } from './list-with-status';
 export { pickExtensionsFor } from './pick-extensions-for';
 export type {
-  ImportPhase, RomBytes, RomEntry, RomImportResult, RomStatus, SupplementStatus,
+  ImportPhase, RomBytes, RomEntry, RomImportResult, SupplementStatus,
 } from './roms.type';

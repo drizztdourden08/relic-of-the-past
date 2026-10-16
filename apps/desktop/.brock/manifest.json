@@ -1,41 +1,41 @@
 {
-  "brock": "0.45.1",
-  "generatedAt": "2026-10-15T04:50:05.721Z",
+  "brock": "0.46.0",
+  "generatedAt": "2026-10-16T04:42:28.311Z",
   "modules": [
     {
       "id": "updater",
       "package": "@drizztdourden08/brock-updater",
-      "version": "0.45.1"
+      "version": "0.46.0"
     },
     {
       "id": "secrets",
       "package": "@drizztdourden08/brock-secrets",
-      "version": "0.45.1"
+      "version": "0.46.0"
     },
     {
       "id": "display",
       "package": "@drizztdourden08/brock-display",
-      "version": "0.45.1"
+      "version": "0.46.0"
     },
     {
       "id": "tools",
       "package": "@drizztdourden08/brock-tools",
-      "version": "0.45.1"
+      "version": "0.46.0"
     },
     {
       "id": "catalog",
       "package": "@drizztdourden08/brock-catalog",
-      "version": "0.45.1"
+      "version": "0.46.0"
     },
     {
       "id": "port-kit",
       "package": "@drizztdourden08/brock-port-kit",
-      "version": "0.45.1"
+      "version": "0.46.0"
     },
     {
       "id": "input",
       "package": "@drizztdourden08/brock-input",
-      "version": "0.45.1"
+      "version": "0.46.0"
     }
   ]
 }
