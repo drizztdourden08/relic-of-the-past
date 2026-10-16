@@ -3,6 +3,10 @@
 
 Facts about `apps/desktop/src/views/` that the code cannot say on its own. Each heading names a file or folder by its path from the repository root.
 
+## apps/desktop/src/views/BugReportRecordings/
+
+The recordings section of Brock's bug report dialog (`rotpBugReport.section`). It draws nothing unless debug logging is on, a profile is active and a game session has registered the report snapshot, since the main process attaches recordings only in that case. Recordings not yet sent start ticked, and the ticked keys go to the transport as `captureSessions` in the report's extras. Only the recordings on screen count, so one ticked and then hidden by turning off Show sent is not sent. Deleting a recording removes it from disk (`debug-capture:deleteSession`).
+
 ## apps/desktop/src/views/ChecksWidget/behavior/useStickyHeader.ts
 
 The pinned header is a per profile widget pref, so the settings panel and the tracker read the same value with no event plumbing, and it survives the widget unmounting and the app closing.

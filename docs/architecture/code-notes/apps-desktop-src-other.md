@@ -5,7 +5,7 @@ Facts about the smaller areas of `apps/desktop/src/` that the code cannot say on
 
 ## apps/desktop/src/bug-report/
 
-The renderer's half of the Sanctuary bug report; the dialog is Brock's and the transport runs in the main process (`apps/desktop/electron/sanctuary/bug-report/`). `useReportSnapshotOnOpen` sends the report context, the active profile and a live save state the moment the dialog opens, because only the renderer can read the running game. `useSignedOutIssueFallback` swaps in a transport that opens a prefilled GitHub issue while nobody is signed in, so a signed out player can still report.
+The renderer's half of the Sanctuary bug report; the dialog is Brock's and the transport runs in the main process (`apps/desktop/electron/sanctuary/bug-report/`). `useReportSnapshotOnOpen` sends the report context, the active profile and a live save state the moment the dialog opens, because only the renderer can read the running game. `useSignedOutIssueFallback` swaps in a transport that opens a prefilled GitHub issue while nobody is signed in, so a signed out player can still report; it puts `rotpBugReport` (the recordings section) back when it lets go. `useDefaultReportTitle` fills the title with the app version and the current screen each time the dialog opens. The dialog's recordings section is `views/BugReportRecordings`, shown only while debug logging is on and a game session has set the snapshot.
 
 ## apps/desktop/src/credits/
 

@@ -22,6 +22,8 @@ const APP_CHANNELS = defineChannels({
   appendSimLog: invoke<RotpInvoke['sim:appendLog']>()('sim:appendLog'),
   openSimLog: invoke<RotpInvoke['sim:openLog']>()('sim:openLog'),
   finalizeDebugCaptureSession: invoke<RotpInvoke['debug-capture:finalizeSession']>()('debug-capture:finalizeSession'),
+  listDebugCaptureSessions: invoke<RotpInvoke['debug-capture:listSessions']>()('debug-capture:listSessions'),
+  deleteDebugCaptureSession: invoke<RotpInvoke['debug-capture:deleteSession']>()('debug-capture:deleteSession'),
   hubSignOut: invoke<RotpInvoke['hub:signOut']>()('hub:signOut'),
   hubMe: invoke<RotpInvoke['hub:me']>()('hub:me'),
   submitSanctuaryReport: invoke<RotpInvoke['sanctuary:submitReport']>()('sanctuary:submitReport'),

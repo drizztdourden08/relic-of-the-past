@@ -43,7 +43,7 @@ Request and response channels: `ipcRenderer.invoke` paired with `ipcMain.handle`
 
 ## apps/desktop/src/ipc/invoke/
 
-- `dev-tools-invoke-contract.type.ts`: the recommendation store, test automation, debug dumps, the simulator run log (a detailed JSONL sink), shadow casting, and the debug capture finalize.
+- `dev-tools-invoke-contract.type.ts`: the recommendation store, test automation, debug dumps, the simulator run log (a detailed JSONL sink), shadow casting, and the debug capture finalize, list and delete.
   - The recommendation store keeps one file per collection (`Data/recommendations/<kind>.json`). The collection lives in the main process: folding a pass and recording a verdict are read, modify, write over a whole file, and an IPC round trip in between would let two callers interleave.
   - A debug capture recording finalizes the moment it stops: raw frames, the position timeline and an ffmpeg encoded video land in their own folder under `debug-captures/<profileId>/` at once, never deferred to packaging. The report zip is built by the bug report transport in the main process (`apps/desktop/electron/sanctuary/bug-report/`), with no channel of its own.
 - `screen-editor-invoke-contract.type.ts`: the dev only screen editor. Record payloads carry no id and no source text: the main process allocates the id and serializes with the dataset's own emitter. The six collections added after the record facade share one generic payload trio. `writeCheckRecord` has its suffix because the older text based `writeCheck` still has callers. Area and location already mint through `allocateGeography` (a display name, not a whole record), so they only gain write and delete.
@@ -65,7 +65,7 @@ Wire types for the recommendation store's three channels. The engine's own shape
 
 The Sanctuary channels. Signing in belongs to the shared account (`hub-contract.type.ts`), and a report with its debug zip is sent by the main process transport behind Brock's bug report dialog, not over a channel here.
 
-`SanctuarySubmitInput` files a report with no attachment; a report that could not be filed answers with `error` alone. `SanctuaryReportSnapshot` is what the renderer sends when the bug report dialog opens: the report context, the active profile and a live save state, which only the renderer can read.
+`SanctuarySubmitInput` files a report with no attachment; a report that could not be filed answers with `error` alone. `SanctuaryReportSnapshot` is what the renderer sends when the bug report dialog opens: the report context, the active profile and a live save state, which only the renderer can read. `SanctuaryReportExtras` is the same plus `captureSessions`, the recordings the player ticked, as the main process reads them from the report.
 
 ## apps/desktop/src/ipc/screen-editor-contract/
 

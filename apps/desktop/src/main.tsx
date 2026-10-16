@@ -13,6 +13,7 @@ import { appReview } from '../.brock/review';
 import { appTitleBar } from '../.brock/title-bar';
 import { appTours } from '../.brock/tours';
 import { appWidgetKits } from '../.brock/widget-kits';
+import { rotpBugReport } from './bug-report/rotp-bug-report';
 import { installAppShim } from './platform/api-shim';
 import { rotpShellModule } from './shell/rotp-shell-module';
 import { rotpProfileHooks } from './profiles/rotp-profile-hooks';
@@ -61,6 +62,7 @@ const App = () => {
       legalText={LEGAL_TEXT}
       showFlags={showFlags}
       widgetKits={appWidgetKits}
+      bugReport={rotpBugReport}
     />
   );
 };

@@ -3,10 +3,10 @@ import { useProfilesStore } from '@drizztdourden08/brock-react';
 import type { ReportContext } from '@rotp/hub-contracts';
 import type { SanctuaryReportSnapshot } from '@app/ipc';
 import { captureStateBuffer } from '@app/game/state-buffers';
-import { liveSettingsNow } from '@app/game/live-settings';
+import { debugLoggingOn } from './debug-logging-on';
 
 const reportSnapshotOf = (context: ReportContext): SanctuaryReportSnapshot => {
-  const attachDebugFiles = liveSettingsNow()?.allowDebugLogging === true;
+  const attachDebugFiles = debugLoggingOn();
   return {
     context,
     profileId: useProfilesStore.getState().active?.id ?? null,

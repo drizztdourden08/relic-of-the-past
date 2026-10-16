@@ -40,7 +40,12 @@ interface DebugCaptureSessionSummary {
   sentAt: number | null;
 }
 
+type DebugCaptureDeleteSessionResult =
+  | { ok: true }
+  | { error: string };
+
 export type {
+  DebugCaptureDeleteSessionResult,
   DebugCaptureSnapshot,
   DebugCaptureScreenshot,
   DebugCaptureFinalizeInput,

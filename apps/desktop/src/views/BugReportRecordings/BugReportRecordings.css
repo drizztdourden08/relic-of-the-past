@@ -1,0 +1,5 @@
+/* @layer renderer-app @kind style */
+.bug-report-recordings__list {
+  height: calc(26 * var(--size-16));
+  padding-right: var(--space-xs);
+}
