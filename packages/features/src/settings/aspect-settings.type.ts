@@ -3,7 +3,7 @@ type OffscreenEnemyMode = 'idle' | 'vanilla' | 'paused';
 
 interface AspectSettings {
   extendedRendering: boolean;
-  aspectRatio: 'auto' | 'screen' | '4:3' | '3:2' | '16:9' | '16:10' | '21:9' | '32:9' | '4:5' | '3:4' | 'custom';
+  aspectRatio: 'original' | 'auto' | 'screen' | '4:3' | '3:2' | '16:9' | '16:10' | '21:9' | '32:9' | '4:5' | '3:4' | 'custom';
   customAspectW: number;
   customAspectH: number;
   extendY: boolean;

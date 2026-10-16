@@ -52,7 +52,7 @@ Add a note to the page of the package or area that holds the file, under a headi
 | [apps/desktop/src/navigation-overlay](apps-desktop-src-navigation-overlay.md) | 12 |
 | [apps/desktop/src (smaller areas)](apps-desktop-src-other.md) | 29 |
 | [apps/desktop/src/primitives](apps-desktop-src-primitives.md) | 16 |
-| [apps/desktop/src/settings-controls](apps-desktop-src-settings-controls.md) | 23 |
+| [apps/desktop/src/settings-controls](apps-desktop-src-settings-controls.md) | 24 |
 | [apps/desktop/src/storage](apps-desktop-src-storage.md) | 15 |
 | [apps/desktop/src/stores](apps-desktop-src-stores.md) | 22 |
 | [apps/desktop/src/theme](apps-desktop-src-theme.md) | 14 |

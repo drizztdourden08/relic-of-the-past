@@ -1,6 +1,6 @@
 /* @layer bridge-wasm @kind logic */
 import type { GameSettings } from '@rotp/features';
-import { allowedRatio, ratioToString, rendersExtended } from '../ratio-capability';
+import { allowedRatio, effectiveExtendY, ratioToString, renderHeight, rendersExtended } from '../ratio-capability';
 import { boolToIni } from './bool-to-ini';
 import { offscreenEnemyMode } from './offscreen-enemy-mode';
 import { LINK_GRAPHICS_LINE } from './settings.constants';
@@ -8,8 +8,8 @@ import { LINK_GRAPHICS_LINE } from './settings.constants';
 const aspectRatioIni = (settings: GameSettings, extendedRendering: boolean): string => {
   const parts: string[] = [];
   if (extendedRendering) {
-    if (settings.extendY) parts.push('extend_y');
-    parts.push(ratioToString(allowedRatio(settings)));
+    if (effectiveExtendY(settings)) parts.push('extend_y');
+    parts.push(settings.aspectRatio === 'original' ? '4:3' : ratioToString(allowedRatio(settings), renderHeight(settings)));
   } else {
     parts.push('4:3');
   }

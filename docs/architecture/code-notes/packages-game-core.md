@@ -395,7 +395,7 @@ frame, when given, is uploaded separately and mirrored with its blue and red cha
 - The hand-authored features2 bits start at bit 24 (kFeatures2_WidescreenPlayArea, kFeatures2_WidescreenIdleAI, kFeatures2_TitleOverride, kFeatures2_HostMenu, kFeatures2_ModernControls, kFeatures2_AllowDiving = bits 24 to 29). The generated bug-fix catalog (BUNDLE_FIXES) owns features2 from bit 0 upward. Values must match features.h; bug-fix bits must match features_bugfixes.h.
 - The JS key widescreenIdleEnemies is kFeatures2_WidescreenIdleAI in C ("AI" there means enemy behaviour).
 - Each bug fix is on when its own toggle is set, falling back to the bundle master it was split from.
-- The wide-view bits stay separate because they depend on aspectRatio, not on another feature id.
+- The wide-view bits stay separate because they depend on the rendered shape (`rendersWide`), not on another feature id.
 - The title hide is registered, so Vanilla Safe strips it through the same resolver.
 - The modern control scheme may drive the item register. It IS the Modern HUD style, which is also the HUD that can show the bindings, so this is one condition and never two that disagree.
 - The host may own the pause menu: both host-drawn HUD styles ask for it.
@@ -483,7 +483,7 @@ frame, when given, is uploaded separately and mirrored with its blue and red cha
 - PPU_FLAGS values must match ppu.h.
 - None of the four PPU flags is a registered FeatureDef (they predate the registry and are not part of the snesrev quality-of-life follow-up), so Vanilla Safe cannot reach them through effectiveFeatureIds and each is hand-gated.
 - newRenderer stays on under Vanilla Safe: per its settings copy it is a faster rewritten pixel processing unit, visually identical, a pure engine swap with no rendered-pixel difference. The other three visibly change the picture versus the cartridge (more or taller visible area, no OAM-driven sprite flicker or drop, smoothed Mode 7), so they are forced off like any affectsVanillaParity feature.
-- Height240 (extend_y, 240 lines) must track the INI serializer, which emits it only when extendedRendering is on and never under Vanilla Safe (serializeToIni). The render-buffer height is baked at init from that INI value; setting the live flag without it would make the draw loop's botBudget disagree with the allocated texture (ppu.c PpuSetExtraSideSpace).
+- Height240 (extend_y, 240 lines) follows `effectiveExtendY`, which is true for every ratio but Original, and must track the INI serializer, which emits it only when extendedRendering is on and never under Vanilla Safe (serializeToIni). The render-buffer height is baked at init from that INI value; setting the live flag without it would make the draw loop's botBudget disagree with the allocated texture (ppu.c PpuSetExtraSideSpace).
 
 ## packages/game-core/src/mem-file-store/mem-file-store.ts
 
@@ -564,10 +564,12 @@ Each folder is one concept of the package's public surface, and the package `ind
 ## packages/game-core/src/ratio-capability/
 
 - What ratio a profile may render, given the capabilities it has switched on. The preset picker gates its own entries: the widest need the world tilemap and the ultrawide switch, the tall ones need tall rendering. Auto, Screen and Custom went around that, so a wide monitor on Auto, or a tall Custom ratio, handed the core a shape whose capability bits were never set.
-- Above LINEAR_RATIO a ratio needs the linear world tilemap, because the stock 512 px fetch runs out. Above ULTRAWIDE_RATIO it also needs the ultrawide switch. Below TALL_RATIO (4:3) it is taller than the original picture and needs the tall renderer.
-- `requestedRatio` is the ratio the settings ask for, before any capability is considered. `allowedRatio` pulls it back to what the switched on capabilities support; a profile with everything off renders 4:3, which the core would do anyway.
-- `rendersExtended` is true when the view shows more than the original picture on any side. The widescreen corrections answer to it: a tall view has the same transitions, effects and sprites drawn for the original screen, so it needs them too.
-- `ratioToString` builds the "W:H" word the core's config parser reads, from the served height (224) so the pair is exact for the shape asked for, and reduced, which is what the ratio pickers hand over too.
+- Original is the 256 pixel wide game picture, 224 lines or 240 with Extend Y. Every other ratio is served at 240 lines, so `effectiveExtendY` is true for them whatever the stored Extend Y says, and `renderHeight` follows it. `baseRatio` is 256 over that height.
+- The linear limit is 512 over the render height: past it a ratio needs the linear world tilemap, because the stock 512 px fetch runs out. Above ULTRAWIDE_RATIO (21:9) it also needs the ultrawide switch. Below the base ratio it is taller than the base picture and needs the tall renderer.
+- A true 4:3 is 320 by 240, wider than the 256 pixel base, so it counts as a wide view. Only Original stays at the base width.
+- `requestedRatio` is the ratio the settings ask for, before any capability is considered. `allowedRatio` pulls it back to what the switched on capabilities support; with Extended Rendering off, or on Original, the picture is the base one.
+- `rendersWide` is true when the view is wider than the base picture and drives the wide-view feature words. `rendersExtended` is true when the view shows more than the base picture on any side. The widescreen corrections answer to it: a tall view has the same transitions, effects and sprites drawn for the original screen, so it needs them too. Both are false on Original.
+- `ratioToString` builds the "W:H" word the core's config parser reads from the rendered pixel size, unreduced: 320:240 reduced to 4:3 would select the core's legacy 4:3 branch, which adds no columns. The core adds columns in pairs, so the width is rounded to the nearest even number it can render. Original is written as plain 4:3, with extend_y when the 240 lines are wanted.
 
 ## packages/game-core/src/recommendations/detection-types/observation.type.ts
 
@@ -848,6 +850,7 @@ token measures by its slot.
 - An unset offscreen enemy mode is the 'idle' default.
 - ExtendedAspectRatio carries only the ratio value (plus extend_y); every rendering companion is its own [Features] key. With extendedRendering off the engine gets vanilla 4:3 and no flags.
 - aspectRatio and extendY are baked at boot from the INI, not carried in the gate words, so the C side parity mask cannot reach them: Vanilla Safe must force extended rendering off in the INI, which collapses every dependent render flag with it.
+- Original writes a plain 4:3 word, and extend_y follows `effectiveExtendY`, so every other ratio writes extend_y and a pixel size such as 426:240 (see ratio-capability).
 - The ratio written is the one the capabilities cover. Auto, Screen and Custom skip the picker's own gates; without this, a wide monitor on Auto asked the core for a shape its feature bits were never set for.
 - The INI render flags mirror buildFeatureFlags (the live bridge) so the boot config and the live push agree. Widescreen sprites and visual fixes follow what the profile renders, not what its ratio word says: Auto on a 4:3 display is 4:3, and a ratio the capabilities do not cover is pulled back to one they do. Wider or taller both count.
 - Custom MSU music has no gate word bit (an Electron, renderer and config.c toggle the emulated CPU never reads), so Vanilla Safe forces it off at the INI boundary.

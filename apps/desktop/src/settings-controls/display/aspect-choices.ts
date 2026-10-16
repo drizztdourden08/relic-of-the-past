@@ -12,6 +12,7 @@ const widePresetsOf = (s: GameSettings) => [
 ];
 
 const optionsOf = (s: GameSettings) => [
+  { value: 'original', label: 'Original' },
   { value: 'auto', label: 'Auto' },
   { value: 'screen', label: 'Screen' },
   { value: 'wide', label: 'Wide' },

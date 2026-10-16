@@ -2,6 +2,7 @@
 import type { GameSettings } from '@rotp/features';
 import { BUNDLE_FIXES, controlSchemeOf, hostDrawnHud } from '@rotp/features';
 import { effectiveFeatureIds } from './live-settings-gate';
+import { rendersWide } from './ratio-capability';
 import { offscreenEnemyMode } from './settings';
 import { BUG_FIX_WORD_FEATURES2, FEATURES2_FLAGS } from './live-settings-feature-words.constants';
 
@@ -23,7 +24,7 @@ const bugFixWords = (effective: Set<string>): { features1: number; features2: nu
 };
 
 const wideViewBits = (s: GameSettings, effective: Set<string>): number => {
-  const wideView = effective.has('extendedRendering') && s.aspectRatio !== '4:3';
+  const wideView = effective.has('extendedRendering') && rendersWide(s);
   if (!wideView) return 0;
   let bits = 0;
   if (effective.has('widescreenPlayArea')) bits |= FEATURES2_FLAGS.widescreenPlayArea;
