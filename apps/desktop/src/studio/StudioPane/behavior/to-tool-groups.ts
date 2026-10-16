@@ -2,7 +2,7 @@
 import { createElement } from 'react';
 import { Button } from '@drizztdourden08/tessera/primitives';
 import type { ToolGroup } from '@drizztdourden08/tessera/primitives';
-import type { StudioAction, StudioActionGroup } from './studio-action.type';
+import type { StudioAction, StudioActionGroup } from '../../studio-action.type';
 
 const toButton = (action: StudioAction) => createElement(Button, {
   key: action.id,

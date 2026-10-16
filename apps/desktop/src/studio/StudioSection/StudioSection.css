@@ -1,0 +1,12 @@
+/* @layer renderer-components @kind style */
+.studio-section {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+  min-inline-size: 0;
+}
+
+.studio-section + .studio-section {
+  padding-block-start: var(--space-md);
+  border-block-start: var(--border-width-thin) solid var(--c-border);
+}

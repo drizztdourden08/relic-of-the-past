@@ -4,7 +4,7 @@ import type { ButtonVariant, Hint } from '@drizztdourden08/tessera/primitives';
 interface StudioAction {
   id: string;
   label: string;
-  hint: Hint;
+  hint?: Hint;
   variant?: ButtonVariant;
   disabled?: boolean;
   onSelect: () => void | Promise<void>;

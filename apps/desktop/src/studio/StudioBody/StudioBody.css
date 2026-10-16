@@ -1,0 +1,20 @@
+/* @layer renderer-components @kind style */
+.studio-body {
+  display: flex;
+  flex: 1;
+  gap: var(--space-2xs);
+  min-block-size: 0;
+  min-inline-size: 0;
+}
+
+.studio-body__editor {
+  flex: 1;
+}
+
+.studio-body__toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-sm) var(--space-md);
+  min-inline-size: 0;
+}

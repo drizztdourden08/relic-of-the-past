@@ -101,7 +101,13 @@ failed dump never makes a crash worse, and the in-app log still has everything.
 
 ## apps/desktop/src/studio/
 
-What the three studios (character, language, music) share on top of Tessera's `StudioLayout`. A studio builds its save and export actions as `StudioActionGroup` data in a hook, and `toToolGroups` turns each group into the `{ id, label, content }` shape of the bar, with one small Button per action. Each Button passes its hint, so the bar's hint line shows it. The studio panels are resizable and keep their width and fold under a `storageKey` of their own.
+What the three studios (character, language, music) share. Each studio is a `ListDetailLayout`, the same as every other list screen: the item list on the left, folding to the dark rail, and the work area as the detail. The work area is built from three parts here, composed from Tessera's `ToolGroups`, `ToolFrame` and `SidePanel`.
+
+- `StudioPane` is the work area's column: an optional banner (an origin bar or a notice), then one row of labelled action groups with a small status at its end, then the body. A studio builds its actions as `StudioActionGroup` data, and each action becomes one small Button. There is no title row and no hint line, so the body keeps the height.
+- `StudioBody` is the body's row: an optional start panel, the editor in a `ToolFrame` with a compact toolbar on its top edge, and an optional end panel. The editor's body is the one scroll; lists inside it are not boxed in a scroll of their own. Both panels are compact (`DensityScope`), fold with the standard fold button and keep their width and fold under their `storageKey`.
+- `StudioSection` is one titled section of a side panel, with a rule between sections.
+
+Tessera's `StudioLayout` is not used: its 768 px breakpoint stacks the panels as soon as the list sits beside it, which takes the editor's height away on an ordinary window.
 
 ## apps/desktop/src/hookshop-reads/
 
