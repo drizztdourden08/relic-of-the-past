@@ -2,11 +2,19 @@
 .controls-options {
   display: flex;
   flex-direction: column;
-  gap: var(--space-sm);
-  align-self: flex-start;
+  gap: var(--space-lg);
   min-width: 0;
-  padding: var(--space-sm) var(--space-md);
-  border: var(--border-width-thin) solid var(--c-border);
-  border-radius: var(--radius-lg);
-  background: var(--c-surface);
+}
+
+.controls-options__input {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+}
+
+.controls-options__icon {
+  width: calc(18 * var(--size-1));
+  height: calc(18 * var(--size-1));
+  object-fit: contain;
+  opacity: 0.8;
 }

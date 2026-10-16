@@ -17,7 +17,7 @@ const SpriteManager = (props: SpriteManagerProps) => {
   const [toExtract, setToExtract] = useState('');
   const progress = useImportProgress('sprite');
   const library = useSpriteLibrary(romStatuses);
-  const { extractedMap, selectedRom, setSelectedRom, romsWithAssets, importedRoms, availableRoms, refreshExtracted } = library;
+  const { extractedMap, selectedRom, setSelectedRom, romsWithAssets, importedRoms, refreshExtracted } = library;
   const spriteBaseUrl = useSpriteBaseUrl(selectedRom);
   const { busy, message, handleExtract, handleDelete } = useSpriteActions({
     toExtract, setToExtract, setSelectedRom, refreshExtracted,
@@ -26,8 +26,8 @@ const SpriteManager = (props: SpriteManagerProps) => {
   const list = (
     <>
       <SpriteExtractPanel
-        availableRoms={availableRoms}
-        hasAnyRom={romsWithAssets.length > 0}
+        roms={romsWithAssets}
+        extractedMap={extractedMap}
         toExtract={toExtract}
         onToExtractChange={setToExtract}
         busy={busy}

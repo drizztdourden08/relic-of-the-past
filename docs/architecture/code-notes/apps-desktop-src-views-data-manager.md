@@ -163,11 +163,11 @@ The randomizer form state is the option choices plus the connection fields, so i
 
 ## apps/desktop/src/views/DataManager/sub-components/rom-manager/extract-sprites-if-missing.ts
 
-The sprite step of a ROM extraction is the Sprites page's own call (`extractSprites` in the sprites store), so both pages share one extraction. It skips a ROM that already has sprites, which is also what the Sprites page offers: only ROMs without sprites appear in its picker. That keeps the supplement rebuild fan-out from re-extracting sprites for every base.
+The sprite step of a ROM extraction is the Sprites page's own call (`extractSprites` in the sprites store), so both pages share one extraction. It skips a ROM that already has sprites, which keeps the supplement rebuild fan-out from re-extracting sprites for every base. The Sprites page does not skip: its picker lists every ROM with assets, so a set can be extracted again from there.
 
 ## apps/desktop/src/views/DataManager/sub-components/rom-manager/ExtractionOptions.tsx
 
-The Extract sprites too checkbox, the one-line description of what extraction does, and the sprite progress and error for the extraction that just ran. The checkbox governs every extraction started from the ROMs page: an import, and the Extract Assets button.
+The Extract sprites too checkbox with a help icon that carries the description of what extraction does, and the sprite progress and error for the extraction that just ran. It renders inside the import form (the form's children slot), so the checkbox sits in the same container as the drop zone. The checkbox governs every extraction started from the ROMs page: an import, and the Extract Assets button.
 
 ## apps/desktop/src/views/DataManager/sub-components/rom-manager/useRomExtraction.ts
 
@@ -195,4 +195,4 @@ The tab labels come from the ROM kind spec, never from a hardcoded or commercial
 
 ## apps/desktop/src/views/DataManager/sub-components/SpriteManager.tsx
 
-The extracted list is reread when the background extraction for the active ROM lands (`spritesAvailable`), so a set that appeared on its own moves from available to imported without a remount.
+The extracted list is reread when the background extraction for the active ROM lands (`spritesAvailable`), so a set that appeared on its own shows in the imported list without a remount. The picker above it keeps every ROM with assets (a ROM that has sprites is marked), because with the ROM page extracting sprites by default a picker of only the ROMs without sprites would be empty and the extract action would be gone.

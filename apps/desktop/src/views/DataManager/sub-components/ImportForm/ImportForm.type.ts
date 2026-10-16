@@ -1,4 +1,5 @@
 /* @layer renderer-components @kind types */
+import type { ReactNode } from 'react';
 import type { ImportKind, ImportProgressState } from '@app/hooks/useImportProgress';
 
 interface ImportResult {
@@ -13,11 +14,12 @@ interface ImportFormProps {
   dropLabel?: string;
   dropHint?: string;
   disabled?: boolean;
+  children?: ReactNode;
   onUrlImport: (url: string) => Promise<ImportResult>;
   onFileImport: (files: File[]) => Promise<ImportResult>;
 }
 
-type ImportFormSettings = Required<Omit<ImportFormProps, 'dropHint'>> & Pick<ImportFormProps, 'dropHint'>;
+type ImportFormSettings = Required<Omit<ImportFormProps, 'dropHint' | 'children'>> & Pick<ImportFormProps, 'dropHint' | 'children'>;
 
 interface ImportStatus {
   message: string;

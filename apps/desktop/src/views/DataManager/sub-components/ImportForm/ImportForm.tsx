@@ -6,7 +6,7 @@ import { ImportStatusLine } from './sub-components/ImportStatusLine';
 import type { ImportFormProps } from './ImportForm.type';
 
 const ImportForm = (props: ImportFormProps) => {
-  const { kind, placeholder, accept, dropLabel, dropHint, disabled, onUrlImport, onFileImport } = withImportDefaults(props);
+  const { kind, placeholder, accept, dropLabel, dropHint, disabled, children, onUrlImport, onFileImport } = withImportDefaults(props);
   const form = useImportForm({ kind, disabled, onUrlImport, onFileImport });
   const { url, setUrl, status, busy, progress, isDisabled, handleDownload, handleDrop, handleKeyDown } = form;
 
@@ -40,6 +40,7 @@ const ImportForm = (props: ImportFormProps) => {
         disabled={isDisabled}
         onDrop={handleDrop}
       />
+      {children}
       <ImportStatusLine busy={busy} progress={progress} status={status} />
     </Box>
   );

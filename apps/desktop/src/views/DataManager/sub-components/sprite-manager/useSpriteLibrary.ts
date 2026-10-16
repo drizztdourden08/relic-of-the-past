@@ -24,10 +24,6 @@ const useSpriteLibrary = (romStatuses: RomDisplayInfo[]) => {
     () => romsWithAssets.filter(r => extractedMap[r.romFile]?.extracted),
     [romsWithAssets, extractedMap]
   );
-  const availableRoms = useMemo(
-    () => romsWithAssets.filter(r => !extractedMap[r.romFile]?.extracted),
-    [romsWithAssets, extractedMap]
-  );
 
   useEffect(() => {
     const [firstRom] = importedRoms;
@@ -36,7 +32,7 @@ const useSpriteLibrary = (romStatuses: RomDisplayInfo[]) => {
   }, [importedRoms, selectedRom]);
 
   return {
-    extractedMap, selectedRom, setSelectedRom, romsWithAssets, importedRoms, availableRoms, refreshExtracted,
+    extractedMap, selectedRom, setSelectedRom, romsWithAssets, importedRoms, refreshExtracted,
   };
 };
 

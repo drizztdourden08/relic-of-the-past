@@ -21,7 +21,7 @@ Facts about `apps/desktop/src/views/ProfileHub/` that the code cannot say on its
 
 - `apps/desktop/src/views/ProfileHub`: the gap between the nav and the content leaves room for the nav's round toggle, which straddles its right edge. The `.settings-tab` rules are the generic settings tab layout used by the Audio, Gameplay and Controls tabs, and `.hub-game-controls` is the game controls group rendered in the window title bar.
 - `BindingListener.css`: the backdrop opts back into pointer events, because the Portal layer is click-through.
-- `OptionsTab.css`: the Haptics toggle and the Required Inputs strip share one card that is only as wide as its content.
+- `OptionsTab.css`: the two settings sections of the Options tab stack with the page section gap, and a required input row draws its device icon beside its connected state.
 - `ControlsSettings.css`: collapsed columns show only the device icon strip (profiles) or the card icons (devices) and turn the column title vertical. On a short viewport (landscape phones) the tab card headers are dropped to reclaim vertical space. The screen runs in a compact `DensityScope` and uses the small spacing steps, because vertical room is scarce here.
 - `DialogHoldRow.css`: the toggle and its speed slider each take half the row, and the slider never collapses.
 - `HomeTabColumns.css`: the hero sits flush with the top of the nav. The folder button sits in the info card row and matches the cards' height, not its own. The columns collapse to one when there is no room for two.
@@ -190,9 +190,13 @@ A detected input device. The controller icon on the left is the status light and
 
 The classic per-button mapping list. It carries the core verbs too, because the menu verbs drive the pause menu under the classic scheme as well.
 
-## apps/desktop/src/views/ProfileHub/sub-components/controls/HapticsToggle.tsx
+## apps/desktop/src/views/ProfileHub/sub-components/controls/haptics-rows.ts
 
-One switch for the profile's rumble: when on, every controller assigned to the profile receives it. It sits top right of the mapping heading row because it is a property of the profile's mapping, not of one device. State lives in `useHapticsToggle`.
+One switch for the profile's rumble: when on, every controller assigned to the profile receives it. It is a property of the profile's mapping, not of one device, so it sits in the Options tab as a settings row. State lives in `useHapticsToggle`.
+
+## apps/desktop/src/views/ProfileHub/sub-components/controls/OptionsTab.tsx
+
+The Options tab is built from the same settings sections and rows as the Game settings pages. The two sections keep the class names `haptics-toggle` and `controls-settings__used-inputs` because the HUD style spec counts them.
 
 ## apps/desktop/src/views/ProfileHub/sub-components/controls/InputProfileList.tsx
 

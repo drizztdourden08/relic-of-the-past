@@ -1,6 +1,4 @@
 /* @layer electron-main @kind constants */
-const SANCTUARY_LABEL = 'Send to the Sanctuary';
-
 const SIGNED_OUT_ERROR = 'Sign in to the Sanctuary in Settings, Contributing, to send a report from the app.';
 
 const FILE_FAILED_ERROR = 'Could not file the report.';
@@ -22,6 +20,6 @@ const CAPTURE_BUDGET_BYTES = 30 * 1024 * 1024;
 const ZIP_PREFIX = 'rotp-report-';
 
 export {
-  SANCTUARY_LABEL, SIGNED_OUT_ERROR, FILE_FAILED_ERROR, BAD_CONTACT_ERROR, NO_UPLOAD_URL_ERROR, TOO_LARGE_ERROR,
+  SIGNED_OUT_ERROR, FILE_FAILED_ERROR, BAD_CONTACT_ERROR, NO_UPLOAD_URL_ERROR, TOO_LARGE_ERROR,
   MAX_DEBUG_INFO_CHARS, NORMAL_SAVES_IN_REPORT, AUTO_SAVES_IN_REPORT, CAPTURE_BUDGET_BYTES, ZIP_PREFIX,
 };

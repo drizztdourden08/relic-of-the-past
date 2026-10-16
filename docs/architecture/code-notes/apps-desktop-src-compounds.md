@@ -302,6 +302,10 @@ A one shot gate in front of an ffmpeg action that has a fallback. Skipping is al
 because the caller degrades on its own: debug capture falls back to plain screenshots. `onClose`
 fires once, when the tool becomes ready or when the player skips, never both.
 
+## apps/desktop/src/compounds/HelpTip/HelpTip.tsx
+
+A stand in. Tessera has no help icon part (0.37), so this is a ghost icon button inside a Tooltip. The tip opens on hover and on focus, which a click also gives, and closes on Escape or a click elsewhere. Swap the body for Tessera's own part when 0.38 ships one; callers pass only a label and the text.
+
 ## apps/desktop/src/compounds/HookshopChip/HookshopChip.tsx
 
 The gold lock mark of an item installed from the Hookshop: "Hookshop" on a list row, "From the
@@ -313,7 +317,7 @@ item the same way.
 The shared account row has three states: signed out with a sign in button, waiting with the
 code to confirm in the browser, and signed in with who and from which device. `userCode` stays
 null until the API has minted the code. `siteHost` is the host the browser opens while the code
-waits.
+waits. The waiting state sits in its own card, with Cancel under the code and its text, so it reads apart from the page text above it.
 
 ## apps/desktop/src/compounds/HudButton/
 
