@@ -307,11 +307,11 @@ Picks, validates and imports a raw SRAM save into the profile's `sram.dat`.
 
 ## apps/desktop/src/views/ProfileHub/sub-components/home-tab/sections/NormalSavesSection.tsx
 
-The three save lists (Saves, Auto-saves, Quick saves) are Tessera ItemLists. A click, Enter or Space on a row loads it, so there is no Load button. New save opens a name field at the top of the list, filled with the dated default and selected, and is offered only while a game runs. Rename is F2 or the pencil, and Delete is the Delete key or the trash button. A delete runs at once: the row fades and offers Undo for `UNDO_WINDOW_MS`, and the file goes when the time is up or the page closes (`onDelete` is the delete for good). Ctrl+Z undoes the latest delete.
+The three save lists (Saves, Auto-saves, Quick saves) are Tessera ItemLists. A click, Enter or Space on a row loads it, so there is no Load button. New save opens a name field at the top of the list, filled with the dated default and selected, and stays on screen without a game, greyed out with the reason (`NO_GAME_REASON`) as its hint (`newDisabled`). Rename is F2 or the pencil, and Delete is the Delete key or the trash button. A delete runs at once: the row fades and offers Undo for `UNDO_WINDOW_MS`, and the file goes when the time is up or the page closes (`onDelete` is the delete for good). Ctrl+Z undoes the latest step of the one undo stack, whether a delete or the Undo of a Load or Save over toast.
 
-## apps/desktop/src/views/ProfileHub/sub-components/home-tab/undo/offer-undo.ts
+## apps/desktop/src/views/ProfileHub/sub-components/home-tab/undo/useUndoableLoad.ts
 
-How the Home tab protects saves without asking. Every action runs at once and, for the actions that are not a delete, raises a toast with Undo for `UNDO_WINDOW_MS`; a newer toast of the same kind replaces the older one.
+How the Home tab protects saves without asking. Every action runs at once and, for the actions that are not a delete, raises a toast with Undo for `UNDO_WINDOW_MS` (`toast({ undo })`, which also puts the step on the Ctrl+Z stack while the toast shows); a newer toast of the same kind replaces the older one.
 
 - Save over and a quick save read the slot's old contents first (`readSlotContents`) and write them back on Undo.
 - Load captures the running game first (`game-snapshot.ts`, stamped so it passes the load check) and loads it back on Undo. Only one load offer is open at a time, since undoing an older one after a newer load would land somewhere the player never was. With no game running there is nothing to lose, so no offer.

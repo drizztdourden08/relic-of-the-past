@@ -1,5 +1,6 @@
 /* @layer renderer-components @kind hook */
 import { useState, useCallback } from 'react';
+import { toast } from '@drizztdourden08/tessera/composites';
 import { captureStateBuffer } from '@app/game';
 import { saveMusicPosition } from '@app/game/msu-save-glue';
 import { log } from '@app/log-bus';
@@ -7,9 +8,9 @@ import * as savesStore from '@app/storage/saves-store';
 import { captureCanvasScreenshot } from './capture-canvas-screenshot';
 import { defaultSaveName } from './default-save-name';
 import { loadStoredSave } from './load-stored-save';
-import { offerUndo } from './undo/offer-undo';
+import { runQuietly } from './undo/run-quietly';
 import { useUndoableLoad } from './undo/useUndoableLoad';
-import { REPLACED_TOAST_ID } from './home-tab.constants';
+import { REPLACED_TOAST_ID, UNDO_WINDOW_MS } from './home-tab.constants';
 import type { UseNormalSaveActionsParams } from './home-tab.type';
 
 const useNormalSaveActions = (params: UseNormalSaveActionsParams) => {
@@ -46,13 +47,14 @@ const useNormalSaveActions = (params: UseNormalSaveActionsParams) => {
     await loadNormalSaves();
     setBusyNormal(null);
     if (!previous) return;
-    offerUndo({
+    toast({
       id: REPLACED_TOAST_ID,
       message: 'Save replaced',
-      undo: async () => {
+      duration: UNDO_WINDOW_MS,
+      undo: () => void runQuietly(async () => {
         await savesStore.writeSlotContents(profileId, ref, previous);
         await loadNormalSaves();
-      },
+      }, 'undo the change'),
     });
   }, [profileId, loadNormalSaves]);
 
