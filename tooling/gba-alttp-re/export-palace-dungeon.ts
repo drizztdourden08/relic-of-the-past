@@ -3,7 +3,7 @@
 import { createHash } from 'node:crypto';
 import { existsSync, mkdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 import { dirname, resolve } from 'node:path';
-import { compileGbaAlttpSupplement, loadGbaAlttpRomFromBuffer, loadRomFromBuffer, GbaAlttpDungeonSource, extractDungeonSpriteGraphics, extractPalaceSnes4bppTiles } from '@rotp/asset-extraction/node';
+import { compileGbaAlttpSupplement, loadGbaAlttpRomFromBuffer, loadRomFromBuffer, GbaAlttpDungeonSource, extractDungeonSpriteGraphics, extractPalaceSnes4bppTiles } from '@rotp/asset-extraction/buffer';
 import { GBA_NEW_ENTITY_HANDLERS, PALACE_AUDIO_REFERENCES, PALACE_BEHAVIOR_SPECS, PALACE_ROOM_IDS, PALACE_BOSS_ROOMS, PALACE_ENTITY_TYPES, PALACE_PROGRESSION_ANCHORS, PALACE_ROOM_TAGS, extractDungeonPalette, extractEntityHandlerTable, extractRoomTagHandlerTable, extractGbaAlttpText, extractPalaceSpritePalettes, decodeGbaAlttpSaveProgression } from '@rotp/asset-extraction';
 import { parseArguments } from './lib/export-arguments';
 import { entityBytes } from './lib/entity-bytes';

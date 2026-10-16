@@ -3,7 +3,7 @@ import { existsSync, readFileSync, readdirSync } from 'fs';
 import { resolve } from 'path';
 import { describe, expect, it } from 'vitest';
 import { decode4bppTile, convertGbaMapWordToSnes, convertGbaSheetToSnes4bpp, decodeGbaPacked4bppTile, PALACE_ROOM_IDS, decodeGbaAlttpSaveProgression, extractEntityHandlerTable, extractRoomTagHandlerTable, extractGbaAlttpText } from '@rotp/asset-extraction';
-import { compileGbaAlttpSupplement, loadGbaAlttpRomFromBuffer, loadRomFromBuffer, GbaAlttpDungeonSource, extractDungeonSpriteGraphics } from '@rotp/asset-extraction/node';
+import { compileGbaAlttpSupplement, loadGbaAlttpRomFromBuffer, loadRomFromBuffer, GbaAlttpDungeonSource, extractDungeonSpriteGraphics } from '@rotp/asset-extraction/buffer';
 import { required } from './required';
 
 describe('GBA to SNES native translation', () => {

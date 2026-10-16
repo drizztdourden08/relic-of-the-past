@@ -2,7 +2,7 @@
 import { existsSync, readFileSync } from 'fs';
 import { resolve } from 'path';
 import { describe, expect, it } from 'vitest';
-import { compileAlttpAssetSet, compileResources, loadGbaAlttpRomFromBuffer, loadRomFromBuffer } from '@rotp/asset-extraction/node';
+import { compileAlttpAssetSet, compileResources, loadGbaAlttpRomFromBuffer, loadRomFromBuffer } from '@rotp/asset-extraction/buffer';
 import { required } from './required';
 
 const snesPath = resolve('test-roms', 'Legend of Zelda, The - A Link to the Past (USA).sfc');

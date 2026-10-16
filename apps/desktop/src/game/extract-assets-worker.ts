@@ -1,6 +1,6 @@
 /* @layer bridge-wasm @kind logic */
 import { decodeCredits, decodeEndingCaptions, decodeMenuText, extractLangEntry, extractSpriteBuffers } from '@rotp/asset-extraction';
-import { loadRomFromBuffer } from '@rotp/asset-extraction/node';
+import { loadRomFromBuffer } from '@rotp/asset-extraction/buffer';
 import type { SpriteDef } from '@rotp/asset-extraction';
 import { bakeAssetSet } from '../storage/asset-files/bake-asset-set';
 import type { WorkerScope } from './extract-assets-worker.type';

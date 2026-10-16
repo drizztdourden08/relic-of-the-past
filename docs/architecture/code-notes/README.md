@@ -9,7 +9,7 @@ Add a note to the page of the package or area that holds the file, under a headi
 
 | Page | Notes |
 |---|---|
-| [packages/asset-extraction](packages-asset-extraction.md) | 125 |
+| [packages/asset-extraction](packages-asset-extraction.md) | 126 |
 | [packages/design](packages-design.md) | 101 |
 | [packages/features](packages-features.md) | 26 |
 | [packages/game-core](packages-game-core.md) | 91 |
