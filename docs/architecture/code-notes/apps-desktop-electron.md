@@ -154,6 +154,10 @@ Language pack persistence. A pack lives in `userData/Data/languages/<code>/` and
 
 A folder without a `meta.json` is an incomplete pack and is skipped. `loadPackedLanguages` returns the pre packed entries for every extracted language, ready to bake into an asset blob.
 
+## apps/desktop/electron/lifecycle/block-stray-navigation.ts
+
+- A file dropped anywhere that is not an enabled drop zone is not cancelled by the page, so Chromium navigates the window to that file and the app appears to reload or crash. This handler cancels any navigation that leaves the current page. A change of hash or query on the same page still passes.
+
 ## apps/desktop/electron/lib/download.ts
 
 On an aborted download the partial file is removed. `removePartialFile` waits for the write stream to close first, because Windows keeps the file locked while the handle is open.

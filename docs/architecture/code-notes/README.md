@@ -30,7 +30,7 @@ Add a note to the page of the package or area that holds the file, under a headi
 
 | Page | Notes |
 |---|---|
-| [apps/desktop/electron](apps-desktop-electron.md) | 92 |
+| [apps/desktop/electron](apps-desktop-electron.md) | 93 |
 | [apps/desktop/tests](apps-desktop-tests.md) | 173 |
 
 ## Desktop renderer
