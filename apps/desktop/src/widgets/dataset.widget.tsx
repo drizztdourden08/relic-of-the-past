@@ -10,6 +10,7 @@ const meta: WidgetMeta = {
   defaultDockedSize: 300,
   defaultFloatingSize: { width: 320, height: 400 },
   kit: 'dev-tools',
+  chrome: 'compact',
 };
 
 const LiveDataInspector = () => <LiveDataInspectorContent />;

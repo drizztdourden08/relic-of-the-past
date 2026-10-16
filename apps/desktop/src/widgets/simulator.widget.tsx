@@ -9,8 +9,8 @@ const meta: WidgetMeta = {
   defaultSide: 'right',
   defaultDockedSize: 360,
   defaultFloatingSize: { width: 380, height: 560 },
-  context: 'game',
-  devOnly: true,
+  kit: 'dev-tools',
+  chrome: 'compact',
   settings: SimulatorWidgetSettings,
 };
 

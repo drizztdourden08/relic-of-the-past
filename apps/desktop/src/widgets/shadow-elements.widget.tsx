@@ -6,6 +6,7 @@ const meta: WidgetMeta = {
   label: 'Shadow Elements',
   icon: 'layers',
   kit: 'dev-tools',
+  chrome: 'compact',
   order: 2,
   defaultSide: 'left',
   defaultDockedSize: 200,

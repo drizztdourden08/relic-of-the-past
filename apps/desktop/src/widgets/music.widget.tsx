@@ -10,6 +10,7 @@ const meta: WidgetMeta = {
   defaultDockedSize: 360,
   defaultFloatingSize: { width: 380, height: 560 },
   kit: 'dev-tools',
+  chrome: 'compact',
 };
 
 const MusicWidget = () => <MusicWidgetContent />;
