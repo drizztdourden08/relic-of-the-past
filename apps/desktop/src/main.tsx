@@ -12,6 +12,7 @@ import { appWidgetLayout, appWidgets } from '../.brock/widgets';
 import { appReview } from '../.brock/review';
 import { appTitleBar } from '../.brock/title-bar';
 import { appTours } from '../.brock/tours';
+import { appWidgetKits } from '../.brock/widget-kits';
 import { installAppShim } from './platform/api-shim';
 import { rotpShellModule } from './shell/rotp-shell-module';
 import { rotpProfileHooks } from './profiles/rotp-profile-hooks';
@@ -59,6 +60,7 @@ const App = () => {
       dataDomains={ROTP_DATA_DOMAINS}
       legalText={LEGAL_TEXT}
       showFlags={showFlags}
+      widgetKits={appWidgetKits}
     />
   );
 };
