@@ -13,7 +13,8 @@ import type { RomManagerProps } from './RomManager.type';
 
 const RomManager = (props: RomManagerProps) => {
   const { romStatuses, onExtractAssets, onDeleteRom, onRefresh } = props;
-  const { withSprites, setWithSprites, spriteError, spriteProgress, extract } = useRomExtraction({ onExtractAssets });
+  const extraction = useRomExtraction({ onExtractAssets });
+  const { extract } = extraction;
   const {
     activeKind, setActiveKind,
     supplements,
@@ -39,13 +40,9 @@ const RomManager = (props: RomManagerProps) => {
         dropHint={laneConfig.dropHint}
         onUrlImport={handleUrlImport}
         onFileImport={handleFileImport}
-      />
-      <ExtractionOptions
-        withSprites={withSprites}
-        onWithSpritesChange={setWithSprites}
-        spriteProgress={spriteProgress}
-        spriteError={spriteError}
-      />
+      >
+        <ExtractionOptions extraction={extraction} />
+      </ImportForm>
 
       <RomList
         romStatuses={romStatuses}

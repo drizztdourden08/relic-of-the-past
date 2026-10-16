@@ -167,7 +167,7 @@ The sprite step of a ROM extraction is the Sprites page's own call (`extractSpri
 
 ## apps/desktop/src/views/DataManager/sub-components/rom-manager/ExtractionOptions.tsx
 
-The Extract sprites too checkbox, the one-line description of what extraction does, and the sprite progress and error for the extraction that just ran. The checkbox governs every extraction started from the ROMs page: an import, and the Extract Assets button.
+The Extract sprites too checkbox with a help icon that carries the description of what extraction does, and the sprite progress and error for the extraction that just ran. It renders inside the import form (the form's children slot), so the checkbox sits in the same container as the drop zone. The checkbox governs every extraction started from the ROMs page: an import, and the Extract Assets button.
 
 ## apps/desktop/src/views/DataManager/sub-components/rom-manager/useRomExtraction.ts
 

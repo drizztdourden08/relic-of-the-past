@@ -1,5 +1,7 @@
 /* @layer renderer-components @kind types */
-import type { ImportProgressState } from '@app/hooks/useImportProgress';
+import type { useRomExtraction } from './useRomExtraction';
+
+type RomExtraction = ReturnType<typeof useRomExtraction>;
 
 type ExtractRom = (romFile: string) => Promise<boolean>;
 
@@ -8,10 +10,7 @@ interface UseRomExtractionParams {
 }
 
 interface ExtractionOptionsProps {
-  withSprites: boolean;
-  onWithSpritesChange: (next: boolean) => void;
-  spriteProgress: ImportProgressState;
-  spriteError: string | null;
+  extraction: RomExtraction;
 }
 
-export type { ExtractionOptionsProps, ExtractRom, UseRomExtractionParams };
+export type { ExtractionOptionsProps, ExtractRom, RomExtraction, UseRomExtractionParams };

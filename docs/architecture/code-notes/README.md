@@ -38,7 +38,7 @@ Add a note to the page of the package or area that holds the file, under a headi
 | Page | Notes |
 |---|---|
 | [apps/desktop/src/composites](apps-desktop-src-composites.md) | 11 |
-| [apps/desktop/src/compounds](apps-desktop-src-compounds.md) | 126 |
+| [apps/desktop/src/compounds](apps-desktop-src-compounds.md) | 127 |
 | [apps/desktop/src/data-inspector](apps-desktop-src-data-inspector.md) | 21 |
 | [apps/desktop/src/game](apps-desktop-src-game.md) | 104 |
 | [apps/desktop/src/hooks](apps-desktop-src-hooks.md) | 40 |
