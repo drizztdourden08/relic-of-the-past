@@ -217,6 +217,14 @@ At rest the outer circle is transparent, so nothing shows past the 40px button. 
 only 20 degrees each way so the glow floats between green and gold and never reaches blue or
 purple.
 
+## apps/desktop/src/compounds/DebugCaptureButton/sub-components/RecordingTimer.tsx
+
+The elapsed time of a running recording, drawn as a pill with its own glass ground, a border and a
+blinking red dot. It used to be a bare 10 px label with only a text shadow, over the game picture,
+which made it hard to read on a bright scene. The time is the primary bright colour at the base
+text size, and the selector is two classes deep so it beats the Text primitive's own colour and
+size without an override.
+
 ## apps/desktop/src/compounds/DebugCaptureButton/DebugCaptureButton.tsx
 
 The recorder toggle is also bound through the rebindable function actions in the Controls
@@ -236,21 +244,22 @@ wins the pointer hit test where the two overlap, so hovering a widget never coun
 the game, and the stack's higher z-index is not trapped in a losing stacking context. That trap
 once hid the buttons behind any docked widget. The icon colour never changes with state; only
 opacity and the capture glow carry state. The busy selector includes `:disabled` so it beats the
-Button primitive's `.btn:disabled` opacity whatever the CSS load order. The status label carries
-a dark text shadow so it stays legible over a bright game background.
+Button primitive's `.btn:disabled` opacity whatever the CSS load order. The stack is absolute
+inside the hover zone, which fills the game view; it was fixed to the viewport after the move to
+Brock, which ignored the dock and put the buttons over a docked widget.
 
 ## apps/desktop/src/compounds/DebugFloatingControls/DebugFloatingControls.tsx
 
-The stack is placed against the game render rectangle (the exclusive insets GameLayer shrinks
-against for a docked widget), not the wider `.app__content` box, so it stays inside the gameplay
-area and moves as a widget docks or undocks. Both buttons idle at reduced opacity and turn fully
+The stack is placed inside the game view, which Brock's dock layout shrinks for a docked widget,
+so it stays inside the gameplay area and moves as a widget docks or undocks. There is no insets
+store any more; the dock does that work. Both buttons idle at reduced opacity and turn fully
 opaque while the pointer is over that area or while a button is busy. The component checks
 `allowDebugLogging` itself so the caller can mount it unconditionally.
 
 ## apps/desktop/src/compounds/DebugReportFloatingButton/DebugReportFloatingButton.tsx
 
-The button only opens the bug report dialog. The session picker and the save states are packaged
-into a debug report at submit time, in `useBugReportForm`. Its round look is
+The button only opens Brock's bug report dialog. The save states and the recordings are packaged
+into a debug report when it is sent, by the Sanctuary transport in main. Its round look is
 `.debug-round-button` in DebugFloatingControls.css, shared with the capture button.
 
 ## apps/desktop/src/compounds/DialogBox/

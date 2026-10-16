@@ -12,8 +12,13 @@ const liveStateOf = (value: unknown): ArrayBuffer | null => {
 const reportSnapshotOf = ({ extras }: BugReportPayload): SanctuaryReportSnapshot | null => {
   const context = submitReportSchema.shape.context.safeParse(extras?.context);
   if (!extras || !context.success) return null;
-  const { profileId, liveState } = extras;
-  return { context: context.data, profileId: typeof profileId === 'string' ? profileId : null, liveState: liveStateOf(liveState) };
+  const { profileId, liveState, attachDebugFiles } = extras;
+  return {
+    context: context.data,
+    profileId: typeof profileId === 'string' ? profileId : null,
+    liveState: liveStateOf(liveState),
+    attachDebugFiles: attachDebugFiles === true,
+  };
 };
 
 export { reportSnapshotOf };

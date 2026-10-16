@@ -33,7 +33,7 @@ interface ReportEntries {
 interface BuiltReportZip {
   path: string;
   zip: ReportZip;
-  profileId: string;
+  profileId: string | null;
   sessionKeys: string[];
 }
 

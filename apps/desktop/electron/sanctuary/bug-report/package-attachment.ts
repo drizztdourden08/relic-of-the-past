@@ -12,7 +12,8 @@ import { reportProfileId } from './report-profile-id';
 
 const packageAttachment = async (ctx: MainContext, payload: BugReportPayload, snapshot: SanctuaryReportSnapshot | null): Promise<PackagedAttachment> => {
   const profileId = await reportProfileId(ctx, snapshot);
-  if (!profileId) return { built: null, error: null };
+  const hasUserFiles = (payload.attachments?.length ?? 0) > 0;
+  if (!profileId && !hasUserFiles) return { built: null, error: null };
   try {
     const built = await buildReportZip(ctx, payload, profileId, snapshot?.liveState ?? null);
     if (built.zip.bytes <= LIMITS.reportBytes) return { built, error: null };

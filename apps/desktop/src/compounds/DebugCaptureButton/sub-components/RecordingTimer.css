@@ -1,0 +1,42 @@
+/* @layer renderer-components @kind style */
+
+.recording-timer {
+  position: absolute;
+  top: 50%;
+  right: 100%;
+  margin-right: var(--space-sm);
+  transform: translateY(-50%);
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  padding: var(--space-xs) var(--space-md);
+  border-radius: var(--radius-pill);
+  background: var(--c-glass);
+  border: var(--border-width-thin) solid var(--c-border-strong);
+  box-shadow: var(--shadow-1);
+  white-space: nowrap;
+}
+
+.recording-timer__dot {
+  width: var(--size-8);
+  height: var(--size-8);
+  border-radius: var(--radius-round);
+  background: var(--c-danger);
+  animation: recording-timer-blink var(--duration-status-breathe) ease-in-out infinite;
+}
+
+.recording-timer .recording-timer__time {
+  color: var(--c-primary-bright);
+  font-size: var(--text-base);
+  font-weight: var(--weight-semi);
+  line-height: 1;
+}
+
+@keyframes recording-timer-blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.35; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .recording-timer__dot { animation: none; }
+}
