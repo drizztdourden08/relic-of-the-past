@@ -50,12 +50,12 @@ Add a note to the page of the package or area that holds the file, under a headi
 | [apps/desktop/src/msu-studio](apps-desktop-src-msu-studio.md) | 78 |
 | [apps/desktop/src/nav-widget](apps-desktop-src-nav-widget.md) | 27 |
 | [apps/desktop/src/navigation-overlay](apps-desktop-src-navigation-overlay.md) | 12 |
-| [apps/desktop/src (smaller areas)](apps-desktop-src-other.md) | 29 |
+| [apps/desktop/src (smaller areas)](apps-desktop-src-other.md) | 32 |
 | [apps/desktop/src/primitives](apps-desktop-src-primitives.md) | 16 |
 | [apps/desktop/src/settings-controls](apps-desktop-src-settings-controls.md) | 24 |
 | [apps/desktop/src/storage](apps-desktop-src-storage.md) | 15 |
-| [apps/desktop/src/stores](apps-desktop-src-stores.md) | 22 |
-| [apps/desktop/src/theme](apps-desktop-src-theme.md) | 14 |
+| [apps/desktop/src/stores](apps-desktop-src-stores.md) | 23 |
+| [apps/desktop/src/theme](apps-desktop-src-theme.md) | 15 |
 | [apps/desktop/src/title](apps-desktop-src-title.md) | 17 |
 | [apps/desktop/src/views/CheatsWidget](apps-desktop-src-views-cheats-widget.md) | 38 |
 | [apps/desktop/src/views/DataInspector](apps-desktop-src-views-data-inspector.md) | 34 |
@@ -66,7 +66,7 @@ Add a note to the page of the package or area that holds the file, under a headi
 | [apps/desktop/src/views/NavigationWidget](apps-desktop-src-views-navigation-widget.md) | 27 |
 | [apps/desktop/src/views/ProfileHub](apps-desktop-src-views-profile-hub.md) | 63 |
 | [apps/desktop/src/views/Randomizer](apps-desktop-src-views-randomizer.md) | 23 |
-| [apps/desktop/src/views/Store](apps-desktop-src-views-store.md) | 25 |
+| [apps/desktop/src/views/Store](apps-desktop-src-views-store.md) | 26 |
 | [apps/desktop/src/views](apps-desktop-src-views.md) | 88 |
 
 ## Sites and functions

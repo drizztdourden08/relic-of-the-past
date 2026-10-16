@@ -4,12 +4,11 @@ import type { StoreInstalledListProps } from '../Store.type';
 import { StoreInstalledRow } from './StoreInstalledRow';
 
 const StoreInstalledList = (props: StoreInstalledListProps) => {
-  const { title, rows, emptyText, store } = props;
+  const { rows, emptyText, store } = props;
   const { account, confirmUninstall } = store;
 
   return (
     <Stack gap="md" className="store-page store-installed">
-      <Text as="h2" className="store__title">{title}</Text>
       {rows.length === 0 && <EmptyState message={emptyText} />}
       {rows.map((row) => (
         <StoreInstalledRow

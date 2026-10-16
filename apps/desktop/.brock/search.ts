@@ -37,7 +37,13 @@ const searchIndex = buildSearchIndex(config, [
   {"kind":"page","id":"options","bucket":"randomizer","title":"Options","icon":"sliders-horizontal","keywords":["seed","settings","pool","logic"]},
   {"kind":"page","id":"run","bucket":"randomizer","title":"Run","icon":"play","keywords":["seed","session","progress","summary","activity","players"]},
   {"kind":"page","id":"spoiler","bucket":"randomizer","title":"Spoiler","icon":"list","keywords":["placement","checks","locations","spheres"]},
-  {"kind":"custom","id":"hookshop","bucket":"store","title":"Hookshop","icon":"package","keywords":["store","shop","packs","install","download"],"entries":[{"label":"Browse packs","keywords":["catalogue","store"],"id":"browse","description":"Every pack in the Hookshop","params":{"section":"browse"}},{"label":"Music packs","keywords":["msu","soundtrack"],"id":"music","params":{"section":"music"}},{"label":"Character packs","keywords":["sprites","player","sprite"],"id":"character","params":{"section":"character"}},{"label":"Language packs","keywords":["translation"],"id":"language","params":{"section":"language"}},{"label":"Installed packs","keywords":["uninstall","library"],"id":"installed","params":{"section":"installed"}},{"label":"Pack updates","keywords":["update","new","version"],"id":"updates","params":{"section":"updates"}}]},
+  {"kind":"page","id":"browse","bucket":"store","group":"catalogue","title":"Browse","icon":"layout-grid","keywords":["catalogue","store","every","pack","all","packs"]},
+  {"kind":"page","id":"character","bucket":"store","group":"catalogue","title":"Characters","icon":"person-standing","keywords":["sprites","player","sprite","skins"]},
+  {"kind":"page","id":"language","bucket":"store","group":"catalogue","title":"Languages","icon":"languages","keywords":["translation","text"]},
+  {"kind":"page","id":"music","bucket":"store","group":"catalogue","title":"Music packs","icon":"music","keywords":["msu","soundtrack","songs"]},
+  {"kind":"page","id":"home","bucket":"store","title":"Home","icon":"house","keywords":["hookshop","store","shop","packs","install","download","sign","in","account"]},
+  {"kind":"page","id":"installed","bucket":"store","group":"mine","title":"Installed","icon":"hard-drive","keywords":["uninstall","library","packs","on","this","computer"]},
+  {"kind":"page","id":"updates","bucket":"store","group":"mine","title":"Updates","icon":"refresh-cw","keywords":["update","new","version","outdated"]},
   ...devSearchSeeds,
 ]);
 

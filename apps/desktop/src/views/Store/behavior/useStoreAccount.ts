@@ -1,11 +1,12 @@
 /* @layer renderer-components @kind hook */
 import { useCallback, useEffect } from 'react';
-import { useHubSessionStore } from '@app/stores/hub-session';
+import { selectSignedIn, useHubSessionStore } from '@app/stores/hub-session';
 import { STORE_SITE_URL } from '@rotp/hub-client';
 
 const useStoreAccount = () => {
   const me = useHubSessionStore((s) => s.me);
   const state = useHubSessionStore((s) => s.state);
+  const signedIn = useHubSessionStore(selectSignedIn);
   const userCode = useHubSessionStore((s) => s.userCode);
   const lastError = useHubSessionStore((s) => s.lastError);
   const refresh = useHubSessionStore((s) => s.refresh);
@@ -26,7 +27,7 @@ const useStoreAccount = () => {
     state,
     userCode,
     lastError,
-    signedIn: state === 'signed-in' && me !== null,
+    signedIn,
     onSignIn,
     onCancel,
     onSignOut,

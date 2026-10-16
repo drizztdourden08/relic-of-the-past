@@ -36,7 +36,13 @@ import RandomizerLogsPage, { meta as randomizerLogsPageMeta } from '../src/scree
 import RandomizerOptionsPage, { meta as randomizerOptionsPageMeta } from '../src/screens/randomizer/options.page';
 import RandomizerRunPage, { meta as randomizerRunPageMeta } from '../src/screens/randomizer/run.page';
 import RandomizerSpoilerPage, { meta as randomizerSpoilerPageMeta } from '../src/screens/randomizer/spoiler.page';
-import StoreHookshopCustom, { meta as storeHookshopCustomMeta } from '../src/screens/store/hookshop.custom';
+import StoreCatalogueBrowsePage, { meta as storeCatalogueBrowsePageMeta } from '../src/screens/store/catalogue/browse.page';
+import StoreCatalogueCharacterPage, { meta as storeCatalogueCharacterPageMeta } from '../src/screens/store/catalogue/character.page';
+import StoreCatalogueLanguagePage, { meta as storeCatalogueLanguagePageMeta } from '../src/screens/store/catalogue/language.page';
+import StoreCatalogueMusicPage, { meta as storeCatalogueMusicPageMeta } from '../src/screens/store/catalogue/music.page';
+import StoreHomePage, { meta as storeHomePageMeta } from '../src/screens/store/home.page';
+import StoreMineInstalledPage, { meta as storeMineInstalledPageMeta } from '../src/screens/store/mine/installed.page';
+import StoreMineUpdatesPage, { meta as storeMineUpdatesPageMeta } from '../src/screens/store/mine/updates.page';
 
 const screenTree = buildScreenTree(config, [
   { kind: 'card', id: 'credits', component: CreditsCard, meta: creditsCardMeta },
@@ -72,7 +78,13 @@ const screenTree = buildScreenTree(config, [
   { kind: 'page', bucket: 'randomizer', id: 'options', component: RandomizerOptionsPage, meta: randomizerOptionsPageMeta },
   { kind: 'page', bucket: 'randomizer', id: 'run', component: RandomizerRunPage, meta: randomizerRunPageMeta },
   { kind: 'page', bucket: 'randomizer', id: 'spoiler', component: RandomizerSpoilerPage, meta: randomizerSpoilerPageMeta },
-  { kind: 'custom', bucket: 'store', id: 'hookshop', component: StoreHookshopCustom, meta: storeHookshopCustomMeta },
+  { kind: 'page', bucket: 'store', group: 'catalogue', id: 'browse', component: StoreCatalogueBrowsePage, meta: storeCatalogueBrowsePageMeta },
+  { kind: 'page', bucket: 'store', group: 'catalogue', id: 'character', component: StoreCatalogueCharacterPage, meta: storeCatalogueCharacterPageMeta },
+  { kind: 'page', bucket: 'store', group: 'catalogue', id: 'language', component: StoreCatalogueLanguagePage, meta: storeCatalogueLanguagePageMeta },
+  { kind: 'page', bucket: 'store', group: 'catalogue', id: 'music', component: StoreCatalogueMusicPage, meta: storeCatalogueMusicPageMeta },
+  { kind: 'page', bucket: 'store', id: 'home', component: StoreHomePage, meta: storeHomePageMeta },
+  { kind: 'page', bucket: 'store', group: 'mine', id: 'installed', component: StoreMineInstalledPage, meta: storeMineInstalledPageMeta },
+  { kind: 'page', bucket: 'store', group: 'mine', id: 'updates', component: StoreMineUpdatesPage, meta: storeMineUpdatesPageMeta },
   ...devScreens,
 ], searchIndex);
 

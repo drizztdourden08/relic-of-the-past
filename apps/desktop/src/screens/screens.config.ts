@@ -26,7 +26,16 @@ export default defineScreens({
         { id: 'studios', label: 'Studios' },
       ],
     },
-    { id: 'store', title: 'Hookshop', icon: 'package', menu: 'entry' },
+    {
+      id: 'store',
+      title: 'Hookshop',
+      icon: 'package',
+      menu: 'entry',
+      groups: [
+        { id: 'catalogue', label: 'Catalogue' },
+        { id: 'mine', label: 'On this computer' },
+      ],
+    },
   ],
   home: 'game',
   settings: { bucket: 'game', page: 'picture' },

@@ -20,6 +20,7 @@ import { SETTINGS } from './main.constants';
 import { LEGAL_TEXT } from './legal.constants';
 import { ROTP_DATA_DOMAINS } from './storage/data-domains.constants';
 import { product } from './product';
+import { useHubShowFlags } from './stores/hub-session';
 import type { AppSettings } from './settings.type';
 import './log-bus';
 import './hud/hud.css';
@@ -29,6 +30,7 @@ import './theme/dialogue-editor/lines.css';
 import './theme/input-calibration/input-calibration.css';
 import './theme/msu-studio/msu-studio.css';
 import './theme/msu-studio/msu-files.css';
+import './theme/store/store.css';
 
 installAppShim();
 
@@ -37,8 +39,9 @@ const modules = [...rendererModules, rotpShellModule];
 const root = document.getElementById('root');
 if (!root) throw new Error('index.html has no #root element');
 
-createRoot(root).render(
-  <StrictMode>
+const App = () => {
+  const showFlags = useHubShowFlags();
+  return (
     <BrockApp<AppSettings>
       product={product}
       settings={SETTINGS}
@@ -54,6 +57,13 @@ createRoot(root).render(
       profileHooks={rotpProfileHooks}
       dataDomains={ROTP_DATA_DOMAINS}
       legalText={LEGAL_TEXT}
+      showFlags={showFlags}
     />
+  );
+};
+
+createRoot(root).render(
+  <StrictMode>
+    <App />
   </StrictMode>,
 );

@@ -9,11 +9,11 @@ const useOpenInstall = (params: OpenInstallParams) => {
   const take = useStoreLinkStore((s) => s.take);
 
   useEffect(() => {
-    if (!pending) return;
-    onOpen(pending.itemId);
-    if (!signedIn) return;
+    if (!pending || !signedIn) return;
     const link = take();
-    if (link) install(link.itemId, link.version);
+    if (!link) return;
+    onOpen(link.itemId);
+    install(link.itemId, link.version);
   }, [pending, signedIn, onOpen, install, take]);
 
   return { waitingLink: signedIn ? null : pending };
