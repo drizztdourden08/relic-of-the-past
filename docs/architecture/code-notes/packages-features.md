@@ -62,7 +62,7 @@ Field meanings:
 
 A read only catalogue of everything the Game Boy Advance release changes. It is `@kind data`, which is why the game's own proper names are allowed in it while code, labels and comments elsewhere stay neutral.
 
-`evidence` records how far the project got: `extracted` means the project's own tooling pulled it from the cartridge and can cite an address or a table; `documented` means it is well attested but not yet reproduced locally.
+`evidence` records how far the project got: `in-progress` means the project's own tooling pulled it from the cartridge and can cite an address or a table; `documented` means it is well attested but not yet reproduced locally.
 
 ## packages/features/src/hud-style/
 

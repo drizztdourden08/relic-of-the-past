@@ -1,13 +1,13 @@
 /* @layer renderer-components @kind component */
 import { useCallback, useMemo, useState } from 'react';
 import type { ChangeEvent } from 'react';
-import { Box, Text, Toggle, Field, TextInput, SegmentedControl, EmptyState } from '@drizztdourden08/tessera/primitives';
+import { Box, Callout, Toggle, Field, TextInput, SegmentedControl, EmptyState } from '@drizztdourden08/tessera/primitives';
 import { SettingsSection } from '@drizztdourden08/tessera/composites';
 import { SearchAnchor } from '@drizztdourden08/brock-react';
 import { GbaDifferenceRow } from './GbaDifferenceRow';
 import { useGbaAvailability } from './behavior/useGbaAvailability';
 import { groupFilteredDifferences } from './group-differences';
-import { EVIDENCE_OPTIONS, EXTRA_DUNGEON_DESCRIPTION } from './gba-settings.constants';
+import { EVIDENCE_OPTIONS, EXPERIMENTAL_NOTICE, EXTRA_DUNGEON_DESCRIPTION, TRACKER_NOTE } from './gba-settings.constants';
 import type { EvidenceFilter, GbaSettingsProps } from './gba-settings.type';
 import './GbaSettings.css';
 
@@ -30,39 +30,40 @@ const GbaSettings = ({ settings, onChange }: GbaSettingsProps) => {
 
   return (
     <Box className="gba-settings">
-      <SearchAnchor anchor="extraDungeon">
-        <Toggle
-          label="Extra Dungeon"
-          description={extraDungeonDescription}
-          checked={settings.extraDungeon}
-          onChange={handleExtraDungeonChange}
-          disabled={!hasSupplement}
-        />
-      </SearchAnchor>
+      <Callout tone="danger">{EXPERIMENTAL_NOTICE}</Callout>
+
+      <SettingsSection title="Enable">
+        <SearchAnchor anchor="extraDungeon">
+          <Toggle
+            label="Extra Dungeon"
+            description={extraDungeonDescription}
+            checked={settings.extraDungeon}
+            onChange={handleExtraDungeonChange}
+            disabled={!hasSupplement}
+          />
+        </SearchAnchor>
+      </SettingsSection>
 
       <SearchAnchor anchor="gba-differences" className="gba-settings__catalogue">
-        <Text as="p" className="gba-settings__note">
-          Everything below is documented for reference. None of these differences
-          can be switched on or off yet.
-        </Text>
-
-        <Box className="gba-settings__filters">
-          <Field label="Search" htmlFor="gba-settings-search" className="gba-settings__search-field">
-            <TextInput
-              id="gba-settings-search"
-              type="text"
-              placeholder="Search differences..."
-              value={query}
-              onChange={handleQueryChange}
+        <SettingsSection title="Advancement tracker" description={TRACKER_NOTE}>
+          <Box className="gba-settings__filters">
+            <Field label="Search" htmlFor="gba-settings-search" className="gba-settings__search-field">
+              <TextInput
+                id="gba-settings-search"
+                type="text"
+                placeholder="Search differences..."
+                value={query}
+                onChange={handleQueryChange}
+              />
+            </Field>
+            <SegmentedControl
+              value={evidenceFilter}
+              options={EVIDENCE_OPTIONS}
+              onChange={setEvidenceFilter}
+              label="Evidence"
             />
-          </Field>
-          <SegmentedControl
-            value={evidenceFilter}
-            options={EVIDENCE_OPTIONS}
-            onChange={setEvidenceFilter}
-            label="Evidence"
-          />
-        </Box>
+          </Box>
+        </SettingsSection>
 
         {groups.length === 0 && <EmptyState message={`No differences match "${query}"`} />}
 
