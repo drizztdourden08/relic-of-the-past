@@ -45,10 +45,10 @@ const MODIFIER_CODES = new Set([
 const CANCEL_ARM_DELAY_MS = 150;
 const LISTEN_ARM_DELAY_MS = 200;
 
-const CLASSIC_ONLY = 'Per-button mapping belongs to the Classic scheme; Modern binds the ten core verbs and derives the rest as slots.';
-const MODERN_ONLY = 'Slots come with the Modern HUD style; this profile is on another style, so there are none to edit.';
+const VANILLA_ONLY = 'The Modern HUD style replaces the original buttons with core verbs and slots. See Modern Controls.';
+const MODERN_ONLY = 'Modern controls come with the Modern HUD style. Without it, the original buttons apply.';
 
-const CONTROLS_TAB_IDS: readonly ControlsTab[] = ['controls', 'modern', 'shortcuts', 'cheats'];
+const CONTROLS_TAB_IDS: readonly ControlsTab[] = ['controls', 'modern', 'shortcuts', 'cheats', 'options'];
 
 const DEVICE_FAMILY_ICON: Record<string, string> = {
   xbox: publicAsset('buttons/xbox/controller_xboxseries.svg'),
@@ -73,11 +73,8 @@ const SDL_TYPE_ICON: Record<string, string> = {
 
 const EMPTY_HINT = 'Assign a controller to this profile to see its slots. Drop one from the Devices column.';
 
-const BANNER_TEXT = 'Modern controls are part of the Modern HUD style.';
-const BANNER_ACTION = 'Enable in HUD settings';
-
 export {
-  ADAPTER_FAMILY_ICON, BANNER_ACTION, BANNER_TEXT, CANCEL_ARM_DELAY_MS, CLASSIC_ONLY,
-  CONTROLS_TAB_IDS, CORE_VERB_GROUPS, CORE_VERB_LABELS, DEVICE_FAMILY_ICON, EMPTY_HINT,
-  LISTEN_ARM_DELAY_MS, MODERN_ONLY, MODIFIER_CODES, SDL_TYPE_ICON,
+  ADAPTER_FAMILY_ICON, CANCEL_ARM_DELAY_MS, CONTROLS_TAB_IDS, CORE_VERB_GROUPS,
+  CORE_VERB_LABELS, DEVICE_FAMILY_ICON, EMPTY_HINT, LISTEN_ARM_DELAY_MS, MODERN_ONLY,
+  MODIFIER_CODES, SDL_TYPE_ICON, VANILLA_ONLY,
 };

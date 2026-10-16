@@ -91,25 +91,29 @@ const checkMapToggle = async ({ page, tab, shoot }: Hub): Promise<void> => {
   await expect(page.locator(`${MAP_ROW} input`)).not.toBeChecked();
 };
 
-const checkControlsBanner = async ({ page, tab, shoot }: Hub): Promise<void> => {
+const checkVanillaControls = async ({ page, tab, shoot }: Hub): Promise<void> => {
   await tab('Controls');
-  await expect(page.locator('.scheme-banner')).toHaveCount(1);
-  await expect(page.locator('.scheme-banner')).toContainText('Modern controls are part of the Modern HUD style.');
+  await expect(page.locator('.scheme-banner')).toHaveCount(0);
   await expect(page.locator('.scheme-control')).toHaveCount(0);
   await expect(page.locator('[role="radiogroup"][aria-label="Control Scheme"]')).toHaveCount(0);
+  const vanillaTab = page.getByRole('tab', { name: 'Vanilla Controls' });
+  await expect(vanillaTab).toHaveAttribute('aria-selected', 'true');
   const modernTab = page.getByRole('tab', { name: 'Modern Controls' });
   await expect(modernTab).toHaveAttribute('aria-disabled', 'true');
   await expect(modernTab).toHaveAttribute('aria-description', /Modern HUD style/);
-  await shoot('02-controls-banner', '.controls-settings__main');
+  await expect(page.locator('.binding-row:not(.binding-row--header)')).toHaveCount(12);
+  await expect(page.locator('.core-bindings')).toHaveCount(0);
+  await expect(page.locator('.controls-settings__main')).not.toContainText('Next Screen');
+  await shoot('02-controls-vanilla', '.controls-settings__main');
 
-  await page.locator('.scheme-banner button').click();
-  await page.waitForTimeout(1200);
-  await expect(page.locator(STYLE_ROW)).toBeVisible();
-  await expect(page.locator(STYLE_ROW)).toBeInViewport();
-  await shoot('03-deep-link-to-style', STYLE_ROW);
+  await page.getByRole('tab', { name: 'Options' }).click();
+  await expect(page.locator('.haptics-toggle')).toHaveCount(1);
+  await expect(page.locator('.controls-settings__used-inputs')).toHaveCount(1);
+  await shoot('03-controls-options', '.controls-settings__main');
 };
 
-const checkEnhancedStyle = async ({ page, shoot }: Hub): Promise<void> => {
+const checkEnhancedStyle = async ({ page, tab, shoot }: Hub): Promise<void> => {
+  await tab('HUD');
   await page.locator(STYLE_SEGMENTS, { hasText: 'Enhanced' }).click();
   await page.waitForTimeout(1000);
   expect(await styleSegments(page)).toEqual([
@@ -130,6 +134,9 @@ const checkModernStyle = async ({ page, tab, shoot }: Hub): Promise<void> => {
   await expect(page.locator('.scheme-banner')).toHaveCount(0);
   await expect(page.getByRole('tab', { name: 'Modern Controls' }))
     .toHaveAttribute('aria-selected', 'true');
+  const vanillaTab = page.getByRole('tab', { name: 'Vanilla Controls' });
+  await expect(vanillaTab).toHaveAttribute('aria-disabled', 'true');
+  await expect(vanillaTab).toHaveAttribute('aria-description', /Modern/);
   expect((await page.locator('.slot-row').count())).toBeGreaterThan(0);
   await shoot('04-controls-modern', '.controls-settings__main');
   await shootSlots(page, '04b-controls-modern-slots');
@@ -142,13 +149,13 @@ const checkModernStyle = async ({ page, tab, shoot }: Hub): Promise<void> => {
 test.describe('HUD style drives the control scheme', () => {
   test.skip(!existsSync(MAIN_JS), 'run `npx electron-vite build` first');
 
-  test('Original profile: three live styles, a banner instead of a scheme control', async () => {
+  test('Original profile: three live styles, Vanilla Controls with Modern greyed', async () => {
     const hub = await openProfile(PLAIN_PROFILE);
     const { close } = hub;
     try {
       await checkOriginalStyle(hub);
       await checkMapToggle(hub);
-      await checkControlsBanner(hub);
+      await checkVanillaControls(hub);
       await checkEnhancedStyle(hub);
       await checkModernStyle(hub);
     } finally {
@@ -171,6 +178,8 @@ test.describe('HUD style drives the control scheme', () => {
       await expect(page.locator('.scheme-banner')).toHaveCount(0);
       await expect(page.getByRole('tab', { name: 'Modern Controls' }))
         .toHaveAttribute('aria-selected', 'true');
+      await expect(page.getByRole('tab', { name: 'Vanilla Controls' }))
+        .toHaveAttribute('aria-disabled', 'true');
       expect(await assignedSlots(page)).toEqual([
         'Sword on S', 'Action on D', 'Item on W', 'Item on E',
       ]);

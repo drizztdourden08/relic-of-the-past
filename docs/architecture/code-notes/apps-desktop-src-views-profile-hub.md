@@ -21,8 +21,8 @@ Facts about `apps/desktop/src/views/ProfileHub/` that the code cannot say on its
 
 - `apps/desktop/src/views/ProfileHub`: the gap between the nav and the content leaves room for the nav's round toggle, which straddles its right edge. The `.settings-tab` rules are the generic settings tab layout used by the Audio, Gameplay and Controls tabs, and `.hub-game-controls` is the game controls group rendered in the window title bar.
 - `BindingListener.css`: the backdrop opts back into pointer events, because the Portal layer is click-through.
-- `SchemeBanner.css`: the banner keeps the box the old scheme notice used. One row, the text taking the slack and the button pinned to the end. It sits directly in the controls column above the tab strip, not as a container inside a container.
-- `ControlsSettings.css`: collapsed columns show only the device icon strip (profiles) or the card icons (devices) and turn the column title vertical. On a short viewport (landscape phones) the bottom Required Inputs summary and the Button Mappings header are dropped to reclaim vertical space. The heading and the haptics toggle share one row, with the toggle at the far end.
+- `OptionsTab.css`: the Haptics toggle and the Required Inputs strip share one card that is only as wide as its content.
+- `ControlsSettings.css`: collapsed columns show only the device icon strip (profiles) or the card icons (devices) and turn the column title vertical. On a short viewport (landscape phones) the tab card headers are dropped to reclaim vertical space. The screen runs in a compact `DensityScope` and uses the small spacing steps, because vertical room is scarce here.
 - `DialogHoldRow.css`: the toggle and its speed slider each take half the row, and the slider never collapses.
 - `HomeTabColumns.css`: the hero sits flush with the top of the nav. The folder button sits in the info card row and matches the cards' height, not its own. The columns collapse to one when there is no room for two.
 
