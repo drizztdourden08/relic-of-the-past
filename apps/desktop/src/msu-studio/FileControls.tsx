@@ -1,6 +1,5 @@
 /* @layer renderer-components @kind component */
-import { Checkbox } from '@drizztdourden08/tessera/primitives';
-import { StudioSearch } from '@app/studio';
+import { Checkbox, SearchInput } from '@drizztdourden08/tessera/primitives';
 import type { FileControlsProps } from './FileControls.type';
 
 const FileControls = (props: FileControlsProps) => {
@@ -8,7 +7,7 @@ const FileControls = (props: FileControlsProps) => {
 
   return (
     <>
-      <StudioSearch value={filter} onChange={onFilterChange} placeholder="intro, pcm..." label="Find a file" />
+      <SearchInput grow={false} size="sm" value={filter} onChange={onFilterChange} placeholder="intro, pcm..." aria-label="Find a file" />
       {coveredCount > 0 && (
         <Checkbox
           checked={supersededOnly}

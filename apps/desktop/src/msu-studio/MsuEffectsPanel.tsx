@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind component */
-import { Box } from '@drizztdourden08/tessera/primitives';
-import { StudioBody, StudioSearch } from '@app/studio';
+import { Box, SearchInput } from '@drizztdourden08/tessera/primitives';
+import { StudioBody } from '@app/studio';
 import { EffectRows } from './EffectRows';
 import { SoundListHeader } from './SoundListHeader';
 import { SoundSide } from './SoundSide';
@@ -42,7 +42,7 @@ const MsuEffectsPanel = (props: MsuEffectsPanelProps) => {
   const toolbar = (
     <>
       {tabs}
-      <StudioSearch value={filter} onChange={setFilter} placeholder={SOUND_FILTER_PLACEHOLDER} label="Find a sound" />
+      <SearchInput grow={false} size="sm" value={filter} onChange={setFilter} placeholder={SOUND_FILTER_PLACEHOLDER} aria-label="Find a sound" />
     </>
   );
 

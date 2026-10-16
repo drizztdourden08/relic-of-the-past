@@ -106,9 +106,8 @@ What the three studios (character, language, music) share. Each studio is a `Lis
 - `StudioPane` is the work area's column: an optional banner (an origin bar or a notice), then one row of labelled action groups with a small status at its end, then the body. A studio builds its actions as `StudioActionGroup` data, and each action becomes one small Button. There is no title row and no hint line, so the body keeps the height.
 - `StudioBody` is the body's row: an optional start panel, the editor in a `ToolFrame` with a compact toolbar on its top edge, and an optional end panel. The editor's body is the one scroll; lists inside it are not boxed in a scroll of their own. Both panels are compact (`DensityScope`), fold with the standard fold button and keep their width and fold under their `storageKey`.
 - `StudioSection` is one titled section of a side panel, with a rule between sections.
-- `StudioSearch` is a search box sized for the toolbar row. A bare `SearchInput` takes the full width of its row, which would push the rest of the toolbar onto a line of its own.
 
-Tessera's `StudioLayout` is not used: its 768 px breakpoint stacks the panels as soon as the list sits beside it, which takes the editor's height away on an ordinary window.
+Tessera's `StudioLayout` is not used. Since 0.39 it stacks only when its columns do not fit (`editorMinWidth`), but its toolbar takes `ToolGroups` groups, and every group draws a label over its tools. The studios keep one unlabelled compact row, so `StudioBody` stays until a group can go without a label. A toolbar search box is a plain `<SearchInput grow={false} size="sm" />`.
 
 ## apps/desktop/src/hookshop-reads/
 
