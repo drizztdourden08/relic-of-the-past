@@ -62,6 +62,23 @@ The narrowed cache is keyed by the area and the kind, because two records open o
 `id-ref-kit` publishes `data-id-ref` and `data-target-kind` on the cell and stops there. Turning them back into a collection and a display name is this screen's job. It takes only the attribute values, no DOM.
 The published target kind wins when it names a real collection, and the id's prefix is the fallback.
 
+## apps/desktop/src/views/DataInspector/behavior/kind-data.ts
+
+A collection's rows and its derived schema, built together on demand and kept.
+The cache is keyed by the source object, so `refreshCollectionSource` retires an entry without any bookkeeping here. A fresh source is a miss, and the schema is derived again from the new rows.
+`peekKindData` never builds anything. It answers whether a collection is ready to draw, which lets a screen paint its loading state first and do the work afterwards.
+
+## apps/desktop/src/views/DataInspector/behavior/observe-view-storage.ts
+
+A view storage that reports what passes through it for one key.
+The table keeps its sort and grouping in its own private state and persists them through the storage. The list needs the same two answers to cut a page from the right end of the ordering, and this is the only place they are visible from outside.
+A load that lands after the first save is ignored, because the save is newer than whatever the disk held.
+
+## apps/desktop/src/views/DataInspector/behavior/pending-source.ts
+
+The stand in source for a collection that is still loading: no rows, and the collection's own label.
+It exists so every consumer of `source` keeps a real object to read while the data is on its way. It is kept per collection so its identity does not change between renders.
+
 ## apps/desktop/src/views/DataInspector/behavior/record-creators.type.ts
 
 The shapes live in their own file so `create-connection.ts` can share them without a value import cycle.
@@ -78,6 +95,12 @@ The list is built first if nothing has asked for it yet, so the append can never
 Which paths a record must hold before it can be created. `optional` is exact because derivation samples every row.
 Only plain objects are walked. An array's or union's completeness depends on its value, not a shape the schema can name in advance.
 
+## apps/desktop/src/views/DataInspector/behavior/schedule-after-paint.ts
+
+Runs a task after the browser has painted at least once: a frame to flush the loading state, then a timer to leave the frame's own work.
+Doing the work in the same turn as the state change would block the very paint the loading state exists for.
+The returned function cancels both steps.
+
 ## apps/desktop/src/views/DataInspector/behavior/settle-created-record.ts
 
 The shared tail every record creator ends with: publish the new id as a pickable option and rebuild the collection source so the table shows the row without a reload. `create-connection.ts` shares it and settles two ids.
@@ -85,6 +108,12 @@ The shared tail every record creator ends with: publish the new id as a pickable
 ## apps/desktop/src/views/DataInspector/behavior/singular-label.ts
 
 Every current collection label is a plain plural, so trimming the trailing `s` reads naturally.
+
+## apps/desktop/src/views/DataInspector/behavior/table-order.ts
+
+The sort and grouping of a saved table view, read off a snapshot.
+The two are the only parts of the view that decide which rows come first, so they are all the page cutter needs. A missing snapshot is the unsorted, ungrouped order.
+`sameOrder` keeps an unchanged order from producing a new state object, so saving a column width does not recompute the page.
 
 ## apps/desktop/src/views/DataInspector/behavior/table-view-key.ts
 
@@ -115,6 +144,8 @@ All of the screen's state, so the component stays a layout. Rows are filtered by
 The durable half lives under the query key only. The recommendations pseudo collection has no `COLLECTION_SOURCES` entry, so the source is chosen, not looked up.
 `editIntent` is the record `openRecord` last asked for. It forces the editor tab open for that record and stops applying once the kind or the selection moves on.
 A real collection's source is stable until the kind changes. The pseudo collection's is rebuilt whenever a pass or a verdict lands.
+A collection is prepared only when it is selected, after a first paint of the loading state. The durable query view stays unloaded until the collection is ready, because loading it against an empty schema would prune every saved clause.
+Findings load from the main process only while the recommendations collection is open, and the list shows a loading state until every collection has answered.
 The free text query stays transient while the clauses are durable. A search is a moment's question, and reopening the screen to old query text that silently hides rows would read as data loss.
 The selected record is looked up in the whole collection, not in the filtered rows, so following a reference opens the record it points at even when the active filter hides it.
 A hand picked tab retires a pending edit intent, or the override would force the editor tab straight back open.
@@ -127,10 +158,36 @@ A finding or a record requested elsewhere (`openRecommendation` and `openRecord`
 One delegated listener for every id reference on the screen, so the generic composites stay unaware of navigation: they publish an attribute and this reads it.
 It runs in the capture phase on purpose. A click on a reference must open its target, not select the row, so this runs first and stops the event.
 
+## apps/desktop/src/views/DataInspector/behavior/useKindData.ts
+
+The data of one collection, or undefined while it is being prepared.
+A collection prepared before answers in the same render. A new one is prepared after a paint, so the rail and the loading state show at once and the main thread is free while the schema is derived.
+`null` is the recommendations pseudo collection, which has no collection data and never schedules anything.
+A late result for a collection the user already left is dropped by the id check.
+
 ## apps/desktop/src/views/DataInspector/behavior/useRecordSelection.ts
 
 Which record is open, per collection, for the session only. Switching collections and back lands where you were, but yesterday's selection is not worth restoring.
 It writes through the store, not `useViewState`, because following an id reference must select a record in a collection that is not active yet, and a hook bound to the current key would need a render in between.
+
+## apps/desktop/src/views/DataInspector/behavior/useTableOrder.ts
+
+The sort and grouping the table currently holds, for the list to order the whole collection before it cuts a page.
+The state remembers which collection it was read for, so switching collections never applies the previous one's ordering.
+The storage handed back is the one the table must be given, since it is what reports the ordering.
+
+## apps/desktop/src/views/DataInspector/behavior/useWindowedRows.ts
+
+Shows a page of the filtered rows and grows on request. The table has no row virtualization, and drawing every connection row costs far more than anyone scrolls through.
+The rows are put in the table's order first and cut second, so the first page of a sorted view is the top of the whole collection and not a sorted slice of whichever rows came first.
+The page size resets whenever the filtered rows change, so a new search starts at the top. The window always reaches the selected row, so following a reference never selects something that is not drawn.
+Small collections and the recommendations list are not cut.
+
+## apps/desktop/src/views/DataInspector/behavior/windowed-rows.ts
+
+The two pure steps behind the row window: put the rows in the table's order, and say how many rows are needed to reach the selected one.
+Ordering is the table's own `deriveRows`, so a page and the table beneath it never disagree about order. An empty ordering returns the rows untouched.
+`reachFor` is 0 for no selection and the 1 indexed position otherwise, which is the size of the shortest page that draws the row.
 
 ## apps/desktop/src/views/DataInspector/DataInspector.constants.ts
 
@@ -150,6 +207,7 @@ The create schema drops a tag's `name`, because the allocator takes the combined
 
 The screen gap leaves room for the nav's round toggle, which straddles its right edge.
 The shared two pane layout sizes its list column for a list of rows. A table needs the greater share of the width and scrolls itself, with a sticky header inside its own scroller, so the list column must not scroll around it.
+The rail width token is set here. Tessera sizes a collapsed item as the item height token plus a transparent border, inside gutters of the small space on each side and the panel's own border, and its default rail is two tokens narrower than that, which pushes every icon right of the centre line. Widening the rail to the sum centres them without touching the nav's selectors.
 A folded detail column gives its width back to the list.
 The shared detail pane normally scrolls as one block. Here the tab strip stays put and only the record content scrolls, so the scrolling moves down to `.data-inspector__detail-content` and the pane only clips.
 The overflow itself lives on `ScrollArea`, which sits alongside the content class. The class only sizes and pads the region.
@@ -189,6 +247,11 @@ It wires the same resolvers as `RecordEditorPanel`, so fields behave the same wh
 Three readings of one record: JSON, the dataset's own emitter output, and the schema derived form.
 It is fully controlled, so two can run side by side in the comparison view off one tab state and one scroll offset. The optional slots (changed lines, scroll binding, a caller supplied editor) exist for that pairing.
 
+## apps/desktop/src/views/DataInspector/sub-components/ListLoading.tsx
+
+The loading state of the list column: a spinner and the collection's name.
+It replaces the table, so a switch never shows the previous collection's rows under the new title.
+
 ## apps/desktop/src/views/DataInspector/sub-components/RecommendationDetail/RecommendationDetail.tsx
 
 The comparison view: current on the left, proposed on the right, the same tabs on both, scrolled together.
@@ -220,3 +283,8 @@ The claim, the confidence and the evidence, above the two panes. Evidence is sho
 
 The editor tab. `RecordEditor` renders read only with no save function, and the note says why, since a form that silently refuses to save looks broken.
 The dataset lookups are injected here, each bound to the collection once, so the form's binding is not rebuilt every render.
+
+## apps/desktop/src/views/DataInspector/sub-components/RowWindowBar.tsx
+
+The line under the table that says how much of the collection is drawn, with the two ways to draw more.
+It renders nothing once every row is shown. The next page is announced with its real size, so the last click does not promise a full page.

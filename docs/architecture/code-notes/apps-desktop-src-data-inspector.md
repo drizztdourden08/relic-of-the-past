@@ -10,6 +10,7 @@ Rows are read once per collection, on first use, and kept. Writes go to the sour
 The serializers are the same emitters the write path uses, so the source tab shows exactly what a save would produce.
 `COLLECTION_SOURCES` is built lazily on first read, not at module scope. The record writers, the id reference options and the collection sources form an import cycle. Building at module scope ran while `RECORD_WRITERS` was still undefined, and every collection silently lost its write path. See `apps/desktop/tests/data-inspector/module-init-order.keep.test.ts`.
 `refreshCollectionSource` drops a cached source so the next read sees a newly minted record. `rows` is a snapshot, so anything that grows a collection must call it.
+`peekCollectionSource` answers whether a source is built without building one, so a screen can tell a prepared collection from a cold one.
 
 ## apps/desktop/src/data-inspector/id-ref-display/
 
@@ -69,6 +70,7 @@ The flattened list is rebuilt only on change. `useSyncExternalStore` compares it
 `decideRecommendation` records a verdict and adopts what the main process wrote back. `accepted` is stamped only after the dataset write has landed.
 `applyRecommendationPass` folds one detection pass into the main process store and adopts what it returns, so every viewer reads the same result.
 `clearRecommendationCache` drops every cached collection, for a test or a profile switch.
+`recommendationsReady` is true once every collection has answered, including with nothing. A failed load is stored as empty, so it still counts, and the list never waits on a collection that cannot load.
 
 ## apps/desktop/src/data-inspector/recommendations/recommendation-rows/recommendation-rows.ts
 
@@ -96,6 +98,7 @@ The follower's programmatic scroll fires a native event, which the `ScrollArea` 
 
 The React binding over the recommendation cache: it subscribes to every collection's findings at once.
 The cache is client only, so the same getter serves the server snapshot, which is what the third argument is for.
+`useRecommendations` and `useRecommendationsReady` take an `enabled` switch. Disabled, they neither subscribe nor start the background load, so a screen that only sometimes shows findings pays nothing for them.
 `openInPassOrder` lists open findings in pass order. The table and next open finding share it, so they never disagree.
 
 ## apps/desktop/src/data-inspector/recommendations/useRecommendationReview.ts

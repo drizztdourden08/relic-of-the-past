@@ -1,7 +1,7 @@
 /* @layer renderer-app @kind types */
 import type { ReactNode } from 'react';
 import type { EntityKind } from '@rotp/game-data';
-import type { CollectionSource, DetailTab, FieldDescriptor, FilterClause } from '@drizztdourden08/tessera/data';
+import type { CollectionSource, DetailTab, FieldDescriptor, FilterClause, SortEntry } from '@drizztdourden08/tessera/data';
 import type { NumberBounds, ReferencedByHit } from '@drizztdourden08/tessera/composites';
 import type { ScrollPosition } from '@drizztdourden08/tessera/primitives';
 import type { Recommendation } from '@rotp/navigation';
@@ -11,6 +11,23 @@ type InspectorRow = Record<string, unknown>;
 type InspectorSource = CollectionSource<InspectorRow>;
 
 type InspectorKind = EntityKind | 'recommendations';
+
+interface TableOrder {
+  sort: readonly SortEntry[];
+  groupBy: readonly string[];
+}
+
+interface RowWindow {
+  shown: readonly InspectorRow[];
+  total: number;
+  showMore: () => void;
+  showAll: () => void;
+}
+
+interface KindData {
+  source: InspectorSource;
+  schema: readonly FieldDescriptor[];
+}
 
 interface IdRefTarget {
   kind: EntityKind;
@@ -84,6 +101,7 @@ interface PendingOpenParams {
 
 interface InspectorListProps {
   kind: InspectorKind;
+  loading: boolean;
   source: InspectorSource;
   schema: readonly FieldDescriptor[];
   rows: readonly InspectorRow[];
@@ -129,11 +147,14 @@ export type {
   InspectorListProps,
   InspectorRow,
   InspectorSource,
+  KindData,
   NamedRecord,
   PendingOpenParams,
   RecordDeleter,
   RecordEditorPanelProps,
   RecordSelection,
   RecordWriter,
+  RowWindow,
   Serializer,
+  TableOrder,
 };

@@ -16,7 +16,7 @@ import type { ConnectionPlacement, EntityKind } from '@rotp/game-data';
 import type { DetailTab, FieldDescriptor, TableColumn, TableState } from '@drizztdourden08/tessera/data';
 import type { IdRefTargetField, IdRefOption, NumberBounds } from '@drizztdourden08/tessera/composites';
 import type { IconName, TabItem } from '@drizztdourden08/tessera/primitives';
-import type { DeleteGuardDialogState } from './DataInspector.type';
+import type { DeleteGuardDialogState, TableOrder } from './DataInspector.type';
 
 const ENTITY_KINDS: readonly EntityKind[] = [
   'screen', 'connection', 'check', 'item', 'dungeon', 'area', 'location', 'actor', 'tag',
@@ -109,6 +109,10 @@ const EMIT_FAILED = 'could not be emitted';
 const DEFAULT_KIND: EntityKind = 'screen';
 const DEFAULT_TAB: DetailTab = 'json';
 const NO_COLUMNS: readonly TableColumn[] = [];
+const NO_SCHEMA: readonly FieldDescriptor[] = [];
+const NO_ROWS: readonly Record<string, unknown>[] = [];
+const NO_ORDER: TableOrder = { sort: [], groupBy: [] };
+const ROW_PAGE_SIZE = 100;
 const NO_TABLE: TableState = { columns: [], sort: [], groupBy: [] };
 
 const CLOSED_DELETE_DIALOG: DeleteGuardDialogState = { open: false, hits: [] };
@@ -140,8 +144,8 @@ export {
   AREA_FIELD, CLOSED_DELETE_DIALOG, COMPARING_LIST_RATIO, COMPARISON_TITLE, CONTAINER_KINDS, CREATE_ONLY_EXCLUDED,
   DEFAULT_KIND, DEFAULT_TAB, DETAIL_TABS, EMIT_FAILED, EMPTY_PLACEMENT, ENTITY_KINDS,
   FALLBACK_NAV_ICON, ID_REF_SELECTOR, KIND_NAV_ITEMS, NAME_FIELD_BY_KIND, NARROWED_KIND, NAV_ICONS, NAV_ITEMS,
-  NO_COLUMNS, NO_FINDINGS, NO_OPTIONS, NO_SERIALIZER, NO_SOURCE_FILE, NO_TABLE, NO_TAG_SUGGESTIONS,
+  NO_COLUMNS, NO_FINDINGS, NO_OPTIONS, NO_ORDER, NO_ROWS, NO_SCHEMA, NO_SERIALIZER, NO_SOURCE_FILE, NO_TABLE, NO_TAG_SUGGESTIONS,
   NO_TARGET_FIELDS, NOT_A_RECORD, NOTHING_MATCHES, NOTHING_SELECTED, OVERWORLD_GRID, OVERWORLD_KIND, READ_ONLY_NOTE,
-  RECOMMENDATIONS_KIND, RECOMMENDATIONS_NAV_ITEM, RECORD_LIST_RATIO, ROOM_GRID, SCREEN_FLOOR, SCREEN_TILE,
+  RECOMMENDATIONS_KIND, RECOMMENDATIONS_NAV_ITEM, RECORD_LIST_RATIO, ROOM_GRID, ROW_PAGE_SIZE, SCREEN_FLOOR, SCREEN_TILE,
   TAG_NAME_MISMATCH, TAG_NO_SCOPE, TAG_NOT_CONVENTION,
 };

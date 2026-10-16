@@ -12,7 +12,7 @@ import './DataInspector.css';
 
 const DataInspector = () => {
   const {
-    kind, showKind, source, schema, rows, entries,
+    kind, showKind, loading, source, schema, rows, entries,
     clauses, setClauses, search, setSearch, tab, setTab,
     selectedId, record, selectRecord, selectRecommendation, clearSelection, openIdRef,
     detailCollapsed, setDetailCollapsed,
@@ -23,6 +23,7 @@ const DataInspector = () => {
   const list = (
     <InspectorList
       kind={kind}
+      loading={loading}
       source={source}
       schema={schema}
       rows={rows}
