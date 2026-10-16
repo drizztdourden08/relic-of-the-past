@@ -7,14 +7,15 @@ import * as savesStore from '@app/storage/saves-store';
 import { captureCanvasScreenshot } from './capture-canvas-screenshot';
 import { defaultSaveName } from './default-save-name';
 import { loadStoredSave } from './load-stored-save';
-import { undoKey } from './undo/undo-key';
+import { offerUndo } from './undo/offer-undo';
 import { useUndoableLoad } from './undo/useUndoableLoad';
+import { REPLACED_TOAST_ID } from './home-tab.constants';
 import type { UseNormalSaveActionsParams } from './home-tab.type';
 
 const useNormalSaveActions = (params: UseNormalSaveActionsParams) => {
-  const { profileId, isGameRunning, onStartGame, loadNormalSaves, undo } = params;
+  const { profileId, isGameRunning, onStartGame, loadNormalSaves } = params;
   const [busyNormal, setBusyNormal] = useState<string | null>(null);
-  const loadWithUndo = useUndoableLoad({ isGameRunning, onStartGame, undo });
+  const loadWithUndo = useUndoableLoad({ isGameRunning, onStartGame });
 
   const handleCreateNormalSave = useCallback(async (typed: string): Promise<string | null> => {
     const state = captureStateBuffer();
@@ -29,7 +30,7 @@ const useNormalSaveActions = (params: UseNormalSaveActionsParams) => {
 
   const handleLoadNormal = useCallback(async (id: string) => {
     setBusyNormal(id);
-    await loadWithUndo(undoKey('normal', id), () => loadStoredSave(profileId, 'normal', id));
+    await loadWithUndo('Save loaded', () => loadStoredSave(profileId, 'normal', id));
     setBusyNormal(null);
   }, [profileId, loadWithUndo]);
 
@@ -45,26 +46,20 @@ const useNormalSaveActions = (params: UseNormalSaveActionsParams) => {
     await loadNormalSaves();
     setBusyNormal(null);
     if (!previous) return;
-    undo.offer({
-      key: undoKey('normal', id),
-      kind: 'saved',
+    offerUndo({
+      id: REPLACED_TOAST_ID,
+      message: 'Save replaced',
       undo: async () => {
         await savesStore.writeSlotContents(profileId, ref, previous);
         await loadNormalSaves();
       },
     });
-  }, [profileId, loadNormalSaves, undo]);
+  }, [profileId, loadNormalSaves]);
 
-  const handleDeleteNormal = useCallback((id: string) => {
-    undo.offer({
-      key: undoKey('normal', id),
-      kind: 'deleted',
-      commit: async () => {
-        await savesStore.deleteNormalSave(profileId, id);
-        await loadNormalSaves();
-      },
-    });
-  }, [profileId, loadNormalSaves, undo]);
+  const handleDeleteNormal = useCallback(async (id: string) => {
+    await savesStore.deleteNormalSave(profileId, id);
+    await loadNormalSaves();
+  }, [profileId, loadNormalSaves]);
 
   const handleRenameNormal = useCallback(async (id: string, newName: string) => {
     await savesStore.renameNormalSave(profileId, id, newName);

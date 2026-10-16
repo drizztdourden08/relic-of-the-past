@@ -1,6 +1,7 @@
 /* @layer renderer-components @kind component */
 import { useCallback } from 'react';
-import { Box, Icon, IconButton, Text } from '@drizztdourden08/tessera/primitives';
+import { Box, Text } from '@drizztdourden08/tessera/primitives';
+import { SidePanel } from '@drizztdourden08/tessera/composites';
 import { RescanButton } from '../../../../compounds/RescanButton';
 import { DeviceCard } from './DeviceCard';
 import { ControllerGroupCard } from './ControllerGroupCard';
@@ -9,22 +10,16 @@ import type { CtrlProps } from './controls.type';
 
 const ControlsDevices = ({ ctrl }: CtrlProps) => {
   const keyboardDevices = ctrl.filteredDevices.filter((d) => d.type === 'keyboard');
-  const { setDevicesCollapsed, devicesCollapsed, setConfirmPreset } = ctrl;
-  const toggleCollapsed = useCallback(() => setDevicesCollapsed(!devicesCollapsed), [setDevicesCollapsed, devicesCollapsed]);
+  const { setConfirmPreset } = ctrl;
   const handleAssign = useCallback((d: DeviceAssignInfo) => {
     if (!d.sdlType) return;
     setConfirmPreset({ sdlType: d.sdlType, deviceName: d.displayName, vid: d.vendorId ?? '', pid: d.productId ?? '' });
   }, [setConfirmPreset]);
 
+  const rescan = <RescanButton isPending={ctrl.isRescanPending} onRescan={ctrl.handleRescan} />;
+
   return (
-    <Box className={`controls-settings__devices-column ${ctrl.devicesCollapsed ? 'controls-settings__devices-column--collapsed' : ''}`}>
-      <Box className="controls-settings__col-header">
-        <IconButton variant="ghost" size="xs" onClick={toggleCollapsed} label={ctrl.devicesCollapsed ? 'Expand' : 'Collapse'}>
-          <Icon name={ctrl.devicesCollapsed ? 'chevron-left' : 'chevron-right'} />
-        </IconButton>
-        <Text className="controls-settings__col-title">Devices</Text>
-        <RescanButton isPending={ctrl.isRescanPending} onRescan={ctrl.handleRescan} />
-      </Box>
+    <SidePanel side="end" title="Devices" storageKey="controls.devices" actions={rescan}>
       <Box className="controls-settings__device-list">
         {keyboardDevices.map((device) => (
           <DeviceCard
@@ -52,11 +47,12 @@ const ControlsDevices = ({ ctrl }: CtrlProps) => {
         {keyboardDevices.length === 0 && ctrl.controllerGroups.length === 0 && (
           <Text as="p" className="controls-settings__no-devices">No devices detected</Text>
         )}
+
+        <Text as="p" className="controls-settings__device-hint">
+          Click controller icon or drag onto bindings to assign.
+        </Text>
       </Box>
-      <Text as="p" className="controls-settings__devices-column-expanded controls-settings__device-hint">
-        Click controller icon or drag onto bindings to assign.
-      </Text>
-    </Box>
+    </SidePanel>
   );
 };
 

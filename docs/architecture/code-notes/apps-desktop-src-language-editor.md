@@ -433,7 +433,7 @@ The catalog's documented range narrows it, since the raw encoder accepts all 256
 
 Save and Export are separate groups because they end in different places: Save keeps the set in this app, Export makes a file. Save is off for an installed set, which is never written, and while nothing changed. Export saves first (`useSetExport`), so it is off only while a save or an export runs.
 
-## apps/desktop/src/language-editor/sub-components/studio-frame/SectionToolbar.tsx
+## apps/desktop/src/language-editor/sub-components/studio-frame/section-tool-groups.tsx
 
 The search and the filter exist only on the Dialogue section, because the other sections have no list to search or filter.
 

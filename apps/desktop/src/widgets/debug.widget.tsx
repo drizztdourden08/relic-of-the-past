@@ -10,6 +10,7 @@ const meta: WidgetMeta = {
   defaultDockedSize: 320,
   defaultFloatingSize: { width: 340, height: 500 },
   kit: 'dev-tools',
+  chrome: 'compact',
 };
 
 const DebugWidget = () => <DebugWidgetContent />;

@@ -6,6 +6,7 @@ const meta: WidgetMeta = {
   label: 'Shadow Editor',
   icon: 'sun',
   kit: 'dev-tools',
+  chrome: 'compact',
   order: 1,
   defaultSide: 'right',
   defaultDockedSize: 280,

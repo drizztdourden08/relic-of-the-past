@@ -1,14 +1,15 @@
 /* @layer renderer-components @kind component */
 import { useCallback } from 'react';
 import { StateList, ViewerStage, useSpriteViewer, useWearing } from '@rotp/design/packs';
-import { StudioBody, StudioPane } from '@app/studio';
+import { StudioLayout } from '@drizztdourden08/tessera/composites';
+import { STUDIO_EDITOR_MIN_WIDTH, StudioPane, StudioPanelContent } from '@app/studio';
 import { InstalledOriginBar } from '../../InstalledOriginBar';
 import { buildStudioGroups } from '../behavior/build-studio-groups';
 import { PROPERTIES_PANEL, STATES_PANEL } from '../PlayerSpriteStudio.constants';
 import type { SpriteWorkAreaProps } from '../PlayerSpriteStudio.type';
 import { SpriteProperties } from './SpriteProperties';
 import { SpriteStatus } from './SpriteStatus';
-import { ViewerToolbar } from './ViewerToolbar';
+import { viewerToolGroups } from '../behavior/viewer-tool-groups';
 
 const SpriteWorkArea = (props: SpriteWorkAreaProps) => {
   const { sheet, installed, busy, error, draft, library, exporter, run, onOpenAfter, onUninstalled } = props;
@@ -36,14 +37,23 @@ const SpriteWorkArea = (props: SpriteWorkAreaProps) => {
         <InstalledOriginBar pack={installed} onDuplicated={onOpenAfter} onUpdateInstalled={onOpenAfter} onUninstalled={onUninstalled} />
       )}
     >
-      <StudioBody
+      <StudioLayout
         editorLabel="Sprite preview"
-        toolbar={<ViewerToolbar wearing={wearing} viewer={viewer} />}
-        start={{ ...STATES_PANEL, content: <StateList fill selected={viewer.action} onSelect={selectState} /> }}
-        end={{ ...PROPERTIES_PANEL, content: <SpriteProperties sheet={sheet} outfit={wearing.outfit} readOnly={readOnly} draft={draft} /> }}
+        compactToolbar
+        editorMinWidth={STUDIO_EDITOR_MIN_WIDTH}
+        toolbar={viewerToolGroups({ wearing, viewer })}
+        start={{ ...STATES_PANEL, content: <StudioPanelContent><StateList fill selected={viewer.action} onSelect={selectState} /></StudioPanelContent> }}
+        end={{
+          ...PROPERTIES_PANEL,
+          content: (
+            <StudioPanelContent>
+              <SpriteProperties sheet={sheet} outfit={wearing.outfit} readOnly={readOnly} draft={draft} />
+            </StudioPanelContent>
+          ),
+        }}
       >
         <ViewerStage sheet={sheet} wearing={wearing} viewer={viewer} />
-      </StudioBody>
+      </StudioLayout>
     </StudioPane>
   );
 };

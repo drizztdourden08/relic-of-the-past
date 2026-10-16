@@ -302,10 +302,6 @@ A one shot gate in front of an ffmpeg action that has a fallback. Skipping is al
 because the caller degrades on its own: debug capture falls back to plain screenshots. `onClose`
 fires once, when the tool becomes ready or when the player skips, never both.
 
-## apps/desktop/src/compounds/HelpTip/HelpTip.tsx
-
-A stand in. Tessera has no help icon part (0.37), so this is a ghost icon button inside a Tooltip. The tip opens on hover and on focus, which a click also gives, and closes on Escape or a click elsewhere. Swap the body for Tessera's own part when 0.38 ships one; callers pass only a label and the text.
-
 ## apps/desktop/src/compounds/HookshopChip/HookshopChip.tsx
 
 The gold lock mark of an item installed from the Hookshop: "Hookshop" on a list row, "From the
@@ -663,9 +659,9 @@ it. A `readout` row draws the value as a tag in the control's track. The frozen 
 no handler, so a range shows the recorded value without offering a drag that could not be saved.
 The In Pool cell sits on the title's baseline, not the description's.
 
-## apps/desktop/src/compounds/RecordingCard/RecordingCard.tsx
+## apps/desktop/src/compounds/RecordingPreview/RecordingPreview.tsx
 
-One debug recording in the bug report dialog. A recording with a video previews as a muted loop; one without ffmpeg has only PNG frames, so the card steps through them on a timer (`useCyclingFrame`) to read as a video. The card only asks: ticking and deleting go back up by callback, and the view confirms a delete.
+The preview of one debug recording, for the icon of a row. A recording with a video previews as a muted loop; one without ffmpeg has only PNG frames, so the preview steps through them on a timer (`useCyclingFrame`) to read as a video.
 
 ## apps/desktop/src/compounds/ReportingAsLine/ReportingAsLine.tsx
 
@@ -692,21 +688,9 @@ already fires silver, so the plain cost goes inert with the reason on it. Cost s
 rupees: round numbers a game of this age would ask. An absent `onChange` renders the read-only
 Options page.
 
-## apps/desktop/src/compounds/SaveList/behavior/useSaveListKeys.ts
+## apps/desktop/src/compounds/SaveRowThumb/SaveRowThumb.tsx
 
-The keys are read on the list, from the row the event came from (`data-save-row`), so a row needs no handler of its own. Keys typed in a text field are left to the field, except that Enter and Escape there hand focus back to the row once the rename ends. Delete moves the selection to the next live row first, so pressing it again deletes the next save and focus never falls to the page.
-
-## apps/desktop/src/compounds/SaveList/SaveList.tsx
-
-The rows read their shape from the list (`ROW_SHAPE`), because the children are SaveRows and not Tessera rows, so the list cannot read the thumbnail and action columns off their props.
-
-## apps/desktop/src/compounds/SaveRow/behavior/useRename.ts
-
-Escape in the rename field is consumed (`preventDefault`), so the dismiss stack leaves the page around the row alone. The rename ends once: Enter unmounts the field, and the blur that follows does not end it a second time.
-
-## apps/desktop/src/compounds/SaveRow/SaveRow.tsx
-
-A save row is thumbnail, name over how long ago, then a few small icon actions that show on hover, focus or selection. The whole row is the load, so there is no Load button. Nothing on the row asks before it acts: the view runs the action at once and passes a notice, and the row shows what happened with Undo in place of its actions for a few seconds. A deleted notice draws the row as removed until the delete is final. A row being renamed or busy is not a button, because a text field cannot sit inside one.
+The screenshot of a save in the icon of a row. The frame keeps the 8 by 7 shape of the picture and the pixels sharp. A save with no screenshot shows an empty frame.
 
 ## apps/desktop/src/compounds/SaveSlot/behavior/useArmedAction.ts
 

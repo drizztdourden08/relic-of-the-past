@@ -4,7 +4,6 @@ import { usePackList } from './behavior/usePackList';
 import { usePackContents } from './behavior/usePackContents';
 import { useTrackRows } from './behavior/useTrackRows';
 import { useTrackAssign } from './behavior/useTrackAssign';
-import { useTrackUpload } from './behavior/useTrackUpload';
 import { useTrackPreview } from './behavior/useTrackPreview';
 import { usePackExport } from './behavior/usePackExport';
 import { useFileDeletion } from './behavior/useFileDeletion';
@@ -24,7 +23,6 @@ const useMsuManager = (onRefresh: () => void) => {
   const { rows, unusedFiles, fileOptions, isDeluxe, hasOpuz } = useTrackRows(resolved, files);
   const shared = { pack: selected, format, manifest: resolved, files, reload };
   const { assign, assigning } = useTrackAssign(shared);
-  const { upload, uploading } = useTrackUpload(shared);
   const { playing, previewError, play, stop, reportStore } = useTrackPreview(selected, resolved);
   const { exporting, exportProgress, runExport } = usePackExport(selected, resolved);
   const { handleUrlImport, handleFileImport } = usePackImports({ newPackName, setNewPackName, refresh, setSelected });
@@ -38,10 +36,6 @@ const useMsuManager = (onRefresh: () => void) => {
   const handleTrackAssign = useCallback((trackNum: number, fileName: string) => {
     void report(assign(trackNum, fileName));
   }, [assign, report]);
-
-  const handleTrackUpload = useCallback((trackNum: number, dropped: File[]) => {
-    void report(upload(trackNum, dropped));
-  }, [upload, report]);
 
   const handleExport = useCallback((target: 'msul' | 'msu1') => {
     void report(runExport(target));
@@ -70,9 +64,9 @@ const useMsuManager = (onRefresh: () => void) => {
     newPackName, setNewPackName,
     rows, unusedFiles, fileOptions, isDeluxe, hasOpuz,
     status, ...managerStatus({ previewError, exportProgress, status }),
-    busy: assigning || uploading || exporting !== null,
+    busy: assigning || exporting !== null,
     openTrack, playing, reportStore,
-    handleTrackAssign, handleTrackUpload, handleToggleTrack, selectTrack: setOpenTrack, handleExport, handleDeleteFile,
+    handleTrackAssign, handleToggleTrack, selectTrack: setOpenTrack, handleExport, handleDeleteFile,
     handleCreatePack, handleRenamePack, handleUrlImport, handleFileImport,
     onPreview: play, onStopPreview: stop,
     exporting,

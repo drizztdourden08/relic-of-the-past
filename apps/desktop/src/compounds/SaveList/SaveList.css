@@ -1,6 +1,0 @@
-/* @layer renderer-components @kind style */
-.save-list {
-  max-height: var(--size-320);
-  overflow-y: auto;
-  padding: var(--space-2xs);
-}

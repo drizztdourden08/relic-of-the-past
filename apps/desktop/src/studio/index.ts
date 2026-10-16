@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind barrel */
-export { StudioBody } from './StudioBody';
 export { StudioPane } from './StudioPane';
-export { StudioSearch } from './StudioSearch';
+export { StudioPanelContent } from './StudioPanelContent';
 export { StudioSection } from './StudioSection';
+export { STUDIO_EDITOR_MIN_WIDTH } from './studio.constants';
 export type { StudioActionGroup } from './studio-action.type';

@@ -1,58 +1,60 @@
 /* @layer renderer-app @kind component */
-import { useState } from 'react';
-import { Callout, EmptyState, Grid, Inline, ScrollArea, Stack, Text, Toggle } from '@drizztdourden08/tessera/primitives';
-import { Dialog } from '@drizztdourden08/tessera/composites';
-import { RecordingCard } from '@app/compounds/RecordingCard';
+import { useCallback } from 'react';
+import { Callout, Inline, ScrollArea, Stack, Tag, Toggle } from '@drizztdourden08/tessera/primitives';
+import { ItemList } from '@drizztdourden08/tessera/composites';
+import type { ItemListRowState } from '@drizztdourden08/tessera/composites';
+import type { DebugCaptureSessionSummary } from '@app/debug-report';
+import { RecordingPreview } from '@app/compounds/RecordingPreview';
+import { recordingId } from '../behavior/recording-id';
+import { recordingName } from '../behavior/recording-name';
 import { useRecordings } from '../behavior/useRecordings';
-import {
-  DELETE_LABEL, DELETE_MESSAGE, DELETE_TITLE, NONE_MESSAGE, NONE_NEW_MESSAGE, SHOW_SENT_LABEL, TITLE,
-} from '../BugReportRecordings.constants';
+import { NONE_MESSAGE, NONE_NEW_MESSAGE, SENT_LABEL, SHOW_SENT_LABEL, TITLE, UNDO_MS } from '../BugReportRecordings.constants';
+import { IncludeButton } from './IncludeButton';
 import type { RecordingsPickerProps } from './RecordingsPicker.type';
 
 const RecordingsPicker = (props: RecordingsPickerProps) => {
   const { profileId, setExtras, disabled } = props;
   const { sessions, loading, selected, showSent, error, toggleSession, toggleShowSent, deleteSession } = useRecordings(profileId, setExtras);
-  const [pending, setPending] = useState<string | null>(null);
 
-  const confirmDelete = (): void => {
-    if (pending !== null) deleteSession(pending);
-    setPending(null);
-  };
+  const render = useCallback((session: DebugCaptureSessionSummary) => ({
+    icon: <RecordingPreview session={session} label={recordingName(session)} />,
+    meta: session.sentAt === null ? undefined : <Tag>{SENT_LABEL}</Tag>,
+  }), []);
+
+  const rowActions = useCallback((session: DebugCaptureSessionSummary, row: ItemListRowState) => (
+    <IncludeButton
+      included={selected.has(session.sessionKey)}
+      name={recordingName(session)}
+      disabled={disabled}
+      tabIndex={row.tabIndex}
+      onToggle={() => toggleSession(session.sessionKey)}
+    />
+  ), [selected, disabled, toggleSession]);
 
   return (
     <Stack gap="sm" className="bug-report-recordings">
-      <Inline justify="between" align="center">
-        <Text variant="label">{TITLE}</Text>
+      <Inline justify="end" align="center">
         <Toggle checked={showSent} onChange={toggleShowSent} label={SHOW_SENT_LABEL} disabled={disabled} />
       </Inline>
       {error !== null && <Callout tone="danger">{error}</Callout>}
-      {sessions.length === 0 && !loading ? (
-        <EmptyState message={showSent ? NONE_MESSAGE : NONE_NEW_MESSAGE} />
-      ) : (
-        <ScrollArea className="bug-report-recordings__list">
-          <Grid columns={2} gap="md">
-            {sessions.map((session) => (
-              <RecordingCard
-                key={session.sessionKey}
-                session={session}
-                checked={selected.has(session.sessionKey)}
-                disabled={disabled}
-                onToggle={toggleSession}
-                onDelete={setPending}
-              />
-            ))}
-          </Grid>
-        </ScrollArea>
-      )}
-      <Dialog
-        open={pending !== null}
-        title={DELETE_TITLE}
-        message={DELETE_MESSAGE}
-        confirmLabel={DELETE_LABEL}
-        variant="danger"
-        onConfirm={confirmDelete}
-        onCancel={() => setPending(null)}
-      />
+      <ScrollArea className="bug-report-recordings__list">
+        <ItemList
+          title={TITLE}
+          items={sessions}
+          getId={recordingId}
+          getName={recordingName}
+          render={render}
+          rowActions={rowActions}
+          actionVisibility="always"
+          onActivate={toggleSession}
+          onDelete={deleteSession}
+          undoDelete={UNDO_MS}
+          deleteKey
+          filter={false}
+          loading={loading}
+          empty={showSent ? NONE_MESSAGE : NONE_NEW_MESSAGE}
+        />
+      </ScrollArea>
     </Stack>
   );
 };

@@ -1,6 +1,8 @@
 /* @layer renderer-components @kind component */
-import { Box } from '@drizztdourden08/tessera/primitives';
-import { StudioBody, StudioSearch } from '@app/studio';
+import { Box, SearchInput } from '@drizztdourden08/tessera/primitives';
+import { StudioLayout } from '@drizztdourden08/tessera/composites';
+import { STUDIO_EDITOR_MIN_WIDTH, StudioPanelContent } from '@app/studio';
+import { sectionGroup } from './studio-frame/section-group';
 import { EffectRows } from './EffectRows';
 import { SoundListHeader } from './SoundListHeader';
 import { SoundSide } from './SoundSide';
@@ -39,15 +41,23 @@ const MsuEffectsPanel = (props: MsuEffectsPanelProps) => {
     />
   );
 
-  const toolbar = (
-    <>
-      {tabs}
-      <StudioSearch value={filter} onChange={setFilter} placeholder={SOUND_FILTER_PLACEHOLDER} label="Find a sound" />
-    </>
-  );
+  const toolbar = [
+    sectionGroup(tabs),
+    {
+      id: 'find',
+      label: 'Find',
+      content: <SearchInput grow={false} value={filter} onChange={setFilter} placeholder={SOUND_FILTER_PLACEHOLDER} aria-label="Find a sound" />,
+    },
+  ];
 
   return (
-    <StudioBody editorLabel={EDITOR_LABELS.effects} toolbar={toolbar} end={{ ...DETAILS_PANEL, content: detail }}>
+    <StudioLayout
+      editorLabel={EDITOR_LABELS.effects}
+      compactToolbar
+      editorMinWidth={STUDIO_EDITOR_MIN_WIDTH}
+      toolbar={toolbar}
+      end={{ ...DETAILS_PANEL, content: <StudioPanelContent>{detail}</StudioPanelContent> }}
+    >
       <Box className="msu-panel">
         <SoundListHeader
           title={`Effects · ${summary.replaced} of ${summary.total} replaced`}
@@ -58,7 +68,7 @@ const MsuEffectsPanel = (props: MsuEffectsPanelProps) => {
         />
         <EffectRows panel={panel} />
       </Box>
-    </StudioBody>
+    </StudioLayout>
   );
 };
 

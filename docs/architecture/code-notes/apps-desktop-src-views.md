@@ -5,7 +5,7 @@ Facts about `apps/desktop/src/views/` that the code cannot say on its own. Each 
 
 ## apps/desktop/src/views/BugReportRecordings/
 
-The recordings section of Brock's bug report dialog (`rotpBugReport.section`). It draws nothing unless debug logging is on, a profile is active and a game session has registered the report snapshot, since the main process attaches recordings only in that case. Recordings not yet sent start ticked, and the ticked keys go to the transport as `captureSessions` in the report's extras. Only the recordings on screen count, so one ticked and then hidden by turning off Show sent is not sent. Deleting a recording removes it from disk (`debug-capture:deleteSession`).
+The recordings section of Brock's bug report dialog (`rotpBugReport.section`). It draws nothing unless debug logging is on, a profile is active and a game session has registered the report snapshot, since the main process attaches recordings only in that case. Recordings not yet sent start ticked, and the ticked keys go to the transport as `captureSessions` in the report's extras. Only the recordings on screen count, so one ticked and then hidden by turning off Show sent is not sent. The recordings are an ItemList: a click on a row, or its check button, includes or leaves out the recording. Delete runs at once with an 8 s Undo and no question, and removes the recording from disk (`debug-capture:deleteSession`) when the time is up or the dialog closes. A recording waiting out its Undo stays in the ticked set until then.
 
 ## apps/desktop/src/views/ChecksWidget/behavior/useStickyHeader.ts
 

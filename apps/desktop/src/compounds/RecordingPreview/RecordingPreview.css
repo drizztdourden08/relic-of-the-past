@@ -1,0 +1,15 @@
+/* @layer renderer-components @kind style */
+.recording-preview {
+  width: var(--size-96);
+  aspect-ratio: 16 / 9;
+  overflow: hidden;
+  border-radius: var(--radius-sm);
+  background: var(--c-bg);
+}
+
+.recording-preview__media {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}

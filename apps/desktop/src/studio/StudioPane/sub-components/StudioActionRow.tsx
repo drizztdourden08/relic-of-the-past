@@ -10,7 +10,7 @@ const StudioActionRow = (props: StudioActionRowProps) => {
 
   return (
     <Box className="studio-pane__actions">
-      <ToolGroups groups={groups} label={label} />
+      <ToolGroups compact groups={groups} label={label} />
       {status && <Box className="studio-pane__status" role="status">{status}</Box>}
     </Box>
   );

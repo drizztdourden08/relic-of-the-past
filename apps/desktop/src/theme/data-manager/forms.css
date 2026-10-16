@@ -26,12 +26,6 @@
   letter-spacing: var(--size-1);
 }
 
-.import-form__option {
-  display: flex;
-  align-items: center;
-  gap: var(--space-xs);
-}
-
 .import-form__status {
   font-size: var(--text-xs);
   padding: var(--space-xs) var(--space-sm);

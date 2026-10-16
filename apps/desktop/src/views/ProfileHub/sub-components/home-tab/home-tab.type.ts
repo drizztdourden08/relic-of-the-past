@@ -3,7 +3,6 @@ import type { HeroSlots } from '@drizztdourden08/brock-react';
 import type { Profile, FilePickerPort } from '@drizztdourden08/brock-core';
 import type { ReactNode } from 'react';
 import type { AutoSaveInfo, NormalSaveInfo } from '@rotp/game-core';
-import type { UndoWindow } from './undo/undo.type';
 import type { useHomeTabSaves } from './useHomeTabSaves';
 
 interface HomeHeroContentProps {
@@ -81,7 +80,6 @@ interface SaveActionsBase {
   profileId: string;
   isGameRunning: boolean;
   onStartGame: () => void;
-  undo: UndoWindow;
 }
 
 interface UseQuickSaveActionsParams extends SaveActionsBase {
@@ -111,33 +109,22 @@ interface HomeTabDialogProps extends HomeTabDialogsProps {
   onClose: () => void;
 }
 
-interface RowSelection {
-  selectedId: string | null;
-  select: (id: string) => void;
-  tabIndexOf: (id: string) => number;
-}
-
-interface NormalSaveRowProps extends HomeTabColumnsProps {
-  save: NormalSaveInfo;
-  selection: RowSelection;
-  renaming: boolean;
-  onStartRename: (id: string) => void;
-  onRenameEnd: (id: string, name: string | null) => void;
-}
-
-interface QuickSlotRowProps extends HomeTabColumnsProps {
-  info: SlotInfo;
-  selection: RowSelection;
-}
-
-interface AutoSaveRowProps extends HomeTabColumnsProps {
-  save: AutoSaveInfo;
-  selection: RowSelection;
-}
-
 interface CreateSaveFormProps {
   onCreate: (name: string) => void;
   onCancel: () => void;
+}
+
+interface SaveRowPartsInput {
+  screenshotUrl: string | null;
+  timestamp: number | null;
+  busy: boolean;
+}
+
+interface SaveOverButtonProps {
+  label: string;
+  disabledReason?: string;
+  tabIndex?: number;
+  onSave: () => void;
 }
 
 interface SectionHeadProps {
@@ -146,9 +133,8 @@ interface SectionHeadProps {
 }
 
 export type {
-  AutoSaveRowProps, AutoSavesData, CreateSaveFormProps, DialogState, HomeRandomizerStatus, HomeTabColumnsProps,
-  HomeTabDialogProps, HomeTabDialogsProps, HomeHeroContentProps, NormalSaveRowProps, NormalSavesData, ProfileFactsInput,
-  QuickSlotRowProps, RowSelection,
-  SaveFileChecks, SectionHeadProps, SlotInfo, SummaryFact, UseAutoSaveActionsParams, UseHomeTabSavesParams,
-  UseHomeTabSramImportParams, UseNormalSaveActionsParams, UseQuickSaveActionsParams,
+  AutoSavesData, CreateSaveFormProps, DialogState, HomeRandomizerStatus, HomeTabColumnsProps,
+  HomeTabDialogProps, HomeTabDialogsProps, HomeHeroContentProps, NormalSavesData, ProfileFactsInput,
+  SaveFileChecks, SaveOverButtonProps, SaveRowPartsInput, SectionHeadProps, SlotInfo, SummaryFact, UseAutoSaveActionsParams,
+  UseHomeTabSavesParams, UseHomeTabSramImportParams, UseNormalSaveActionsParams, UseQuickSaveActionsParams,
 };

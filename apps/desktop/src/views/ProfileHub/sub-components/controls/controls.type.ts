@@ -57,7 +57,6 @@ interface InputProfileListProps {
   onSelect: (profile: InputProfile) => void;
   onDelete: (profile: InputProfile) => void;
   onRename: (profile: InputProfile, newName: string) => void;
-  onCreate: () => void;
 }
 
 interface InputProfileItemProps {

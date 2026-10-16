@@ -101,14 +101,14 @@ failed dump never makes a crash worse, and the in-app log still has everything.
 
 ## apps/desktop/src/studio/
 
-What the three studios (character, language, music) share. Each studio is a `ListDetailLayout`, the same as every other list screen: the item list on the left, folding to the dark rail, and the work area as the detail. The work area is built from three parts here, composed from Tessera's `ToolGroups`, `ToolFrame` and `SidePanel`.
+What the three studios (character, language, music) share. Each studio is a `ListDetailLayout`, the same as every other list screen: the item list on the left, folding to the dark rail, and the work area as the detail. The work area is Tessera's `StudioLayout` inside a `StudioPane`.
 
-- `StudioPane` is the work area's column: an optional banner (an origin bar or a notice), then one row of labelled action groups with a small status at its end, then the body. A studio builds its actions as `StudioActionGroup` data, and each action becomes one small Button. There is no title row and no hint line, so the body keeps the height.
-- `StudioBody` is the body's row: an optional start panel, the editor in a `ToolFrame` with a compact toolbar on its top edge, and an optional end panel. The editor's body is the one scroll; lists inside it are not boxed in a scroll of their own. Both panels are compact (`DensityScope`), fold with the standard fold button and keep their width and fold under their `storageKey`.
+- `StudioPane` is the work area's column: an optional banner (an origin bar or a notice), then one compact row of action groups with a small status at its end, then the body. A studio builds its actions as `StudioActionGroup` data, and each action becomes one small Button. The group names are read by a screen reader and not drawn. There is no title row and no hint line, so the body keeps the height.
+- The body is `StudioLayout` with `compactToolbar` and `editorMinWidth={STUDIO_EDITOR_MIN_WIDTH}`: an optional start panel, the editor in a `ToolFrame` with one compact toolbar row on its top edge, and an optional end panel. It stacks its columns only when the open panels, the folded rails and the editor's minimum width do not fit. A studio passes its toolbar as `ToolGroup` data (`viewerToolGroups`, `sectionToolGroups`, `fileToolGroups`, `soundToolGroups`).
+- `StudioPanelContent` makes the content of a side panel compact (`DensityScope`).
 - `StudioSection` is one titled section of a side panel, with a rule between sections.
-- `StudioSearch` is a search box sized for the toolbar row. A bare `SearchInput` takes the full width of its row, which would push the rest of the toolbar onto a line of its own.
 
-Tessera's `StudioLayout` is not used: its 768 px breakpoint stacks the panels as soon as the list sits beside it, which takes the editor's height away on an ordinary window.
+A toolbar search box is a plain `<SearchInput grow={false} />`.
 
 ## apps/desktop/src/hookshop-reads/
 
@@ -275,4 +275,4 @@ repeated on the next profile switch. The manual buttons keep their own path.
 
 ## apps/desktop/src/widgets/dev-tools.kit.ts
 
-The Developer tools widget kit: the dev panels that need a running game and work docked around it. It is dev only and gated on the `game` context, so without a game it opens on its reason card. Members: Shadow Editor, Shadow Elements, Live Data Inspector, Game State and Music Debugger, plus the Shadow drawing overlay. Location & Navigation and Simulator stay normal dev widgets because the `--widgets=` flag and the dump and sim automation open them with `widgets.open`, which does not reach a kit widget. The data inspector screen and Sprite Debug do not need the game and stay screens.
+The Developer tools widget kit: the dev panels that need a running game and work docked around it. It is dev only and gated on the `game` context, so without a game it opens on its reason card. Members: Shadow Editor, Shadow Elements, Live Data Inspector, Game State, Music Debugger, Location & Navigation and Simulator, plus the Shadow drawing overlay. `widgets.open` reaches a kit widget, so the `--widgets=` flag and the dump and sim automation open Navigation and Simulator by id, which opens the kit. Only one kit is open at a time. Every member uses the `compact` chrome, a 21 px title strip. Location & Navigation is the first tab of the left pane, so it is the one drawn when the kit opens: a tab that is not shown is not mounted, and the kept e2e specs read the navigation widget's text. The data inspector screen and Sprite Debug do not need the game and stay screens.

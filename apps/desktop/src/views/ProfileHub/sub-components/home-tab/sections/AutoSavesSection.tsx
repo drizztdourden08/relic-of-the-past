@@ -1,33 +1,41 @@
 /* @layer renderer-components @kind component */
-import { useMemo } from 'react';
-import { Box, Text } from '@drizztdourden08/tessera/primitives';
-import { SaveList } from '@app/compounds/SaveList';
-import { undoKey } from '../undo/undo-key';
-import { useRowSelection } from '../useRowSelection';
+import { useCallback } from 'react';
+import { ItemList } from '@drizztdourden08/tessera/composites';
+import type { AutoSaveInfo } from '@rotp/game-core';
+import { AUTO_TRIGGER_LABELS, UNDO_WINDOW_MS } from '../home-tab.constants';
 import type { HomeTabColumnsProps } from '../home-tab.type';
-import { AutoSaveRow } from './AutoSaveRow';
-import { SectionHead } from './SectionHead';
+import { saveRowParts } from './save-row-parts';
+
+const idOf = (save: AutoSaveInfo) => save.id;
+const nameOf = (save: AutoSaveInfo) => AUTO_TRIGGER_LABELS[save.trigger];
 
 const AutoSavesSection = (props: HomeTabColumnsProps) => {
   const { saves } = props;
-  const { autoSaves, undo, handleDeleteAuto } = saves;
-  const ids = useMemo(
-    () => autoSaves.filter((save) => undo.notices[undoKey('auto', save.id)] !== 'deleted').map((save) => save.id),
-    [autoSaves, undo.notices],
-  );
-  const selection = useRowSelection(ids);
+  const { autoSaves, autoScreenshots, busyAuto, handleLoadAuto, handleDeleteAuto } = saves;
+
+  const render = useCallback((save: AutoSaveInfo) => saveRowParts({
+    screenshotUrl: autoScreenshots[save.id] ?? null,
+    timestamp: save.timestamp,
+    busy: busyAuto === save.id,
+  }), [autoScreenshots, busyAuto]);
+
+  const handleActivate = useCallback((id: string) => {
+    if (busyAuto === null) void handleLoadAuto(id);
+  }, [busyAuto, handleLoadAuto]);
 
   return (
-    <Box as="section" className="home-tab__section">
-      <SectionHead title="Auto-Saves" />
-      {autoSaves.length === 0 ? (
-        <Text as="p" className="home-tab__empty">No auto-saves yet</Text>
-      ) : (
-        <SaveList label="Auto-saves" ids={ids} onSelect={selection.select} onDelete={handleDeleteAuto} onUndo={undo.undoLatest}>
-          {autoSaves.map((save) => <AutoSaveRow key={save.id} {...props} save={save} selection={selection} />)}
-        </SaveList>
-      )}
-    </Box>
+    <ItemList
+      title="Auto-saves"
+      items={autoSaves}
+      getId={idOf}
+      getName={nameOf}
+      render={render}
+      onActivate={handleActivate}
+      onDelete={handleDeleteAuto}
+      undoDelete={UNDO_WINDOW_MS}
+      deleteKey
+      empty="No auto-saves yet"
+    />
   );
 };
 

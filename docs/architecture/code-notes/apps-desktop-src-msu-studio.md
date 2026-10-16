@@ -19,7 +19,7 @@ Where a layer list lives inside a manifest. A music slot and a claimed sound hol
 
 The studio works against an effective manifest: the pack's own when it has one, otherwise a synthesized single layer view of its numbered files (`effectiveManifest`). Only an explicit save writes one out.
 
-`singleTrackManifest` is what the preview engine is handed: the one track asked for and nothing else to decode. `withTrackLayers` inserts the track when it is new. `bodyLayer` is the default layer for a slot: `single` with one file (it repeats at the file's loop point), `sequential` with several. `withTrackFiles` replaces the files of a track's first layer, which is the assign this file to this slot edit. `withTrackFilesAdded` adds uploaded files to that first layer and keeps what is already there.
+`singleTrackManifest` is what the preview engine is handed: the one track asked for and nothing else to decode. `withTrackLayers` inserts the track when it is new. `bodyLayer` is the default layer for a slot: `single` with one file (it repeats at the file's loop point), `sequential` with several. `withTrackFiles` replaces the files of a track's first layer, which is the assign this file to this slot edit.
 
 ## apps/desktop/src/msu-studio/behavior/park-file.ts
 
@@ -147,7 +147,7 @@ Effects channels list every id, not only the named ones: the catalogue reads the
 
 ## apps/desktop/src/msu-studio/behavior/useSoundUpload.ts
 
-Drops audio into the pack without claiming a slot: only a safe unused name is needed. It is not the track upload with a flag, because that hook's weight is the slot naming (prefix, number, extension).
+Drops audio into the pack without claiming a slot: only a safe unused name is needed.
 
 ## apps/desktop/src/msu-studio/behavior/useSupersededFiles.ts
 
@@ -164,10 +164,6 @@ Auditions one music slot as the game would hear it. The session underneath owns 
 ## apps/desktop/src/msu-studio/behavior/useTrackRows.ts
 
 Every vanilla slot is listed, filled or not; extended slots join only for an extended pack. A number the game never asks for is not a slot, so such files show only in the file list as unused. The vanilla range is a property of the format (`VANILLA_TRACK_COUNT`), not of the name dataset, which would otherwise turn a slot with no name into a slot that is not there. Extended slots come from the tables, so an extended pack shows every slot it could fill.
-
-## apps/desktop/src/msu-studio/behavior/useTrackUpload.ts
-
-Drops audio straight into a slot. Nothing is transcoded, so the only decisions are the file's name and what to do with the slot's occupant. Progress goes through the shared import bus. In a classic pack the first file has to land on the slot's own name; extra files, and every file of a layered pack, keep their own names and are wired up by the manifest. Any file already numbered for the slot moves aside, whatever its extension.
 
 ## apps/desktop/src/msu-studio/FileRow.tsx
 
@@ -297,7 +293,7 @@ One sound channel on its own tab. The filter is owned here, not in the hook, bec
 
 ## apps/desktop/src/msu-studio/MsuStudio.tsx
 
-The detail of the pack list, built from the shared studio parts: one action row (Export) with the last outcome at its end, then the tab's own body. Each tab draws its body itself (`StudioBody`): the tabs and the tab's search on the toolbar, a dense list that takes the height, and the details panel, kept under `msu-studio.details` for every tab. The panel shows the selected slot or sound, and the pack's properties when nothing is selected. A spinner shows until the pack has loaded. An installed pack is read only in every tab: it plays and exports, and nothing that writes into it is on. `origin` is null for the player's own pack. The tab is owned by the manager, so it holds while another pack loads.
+The detail of the pack list, built from the shared studio parts: one action row (Export) with the last outcome at its end, then the tab's own body. Each tab draws its body itself (Tessera's `StudioLayout`): the tabs and the tab's search as toolbar groups, a dense list that takes the height, and the details panel, kept under `msu-studio.details` for every tab. The panel shows the selected slot or sound, and the pack's properties when nothing is selected. A spinner shows until the pack has loaded. An installed pack is read only in every tab: it plays and exports, and nothing that writes into it is on. `origin` is null for the player's own pack. The tab is owned by the manager, so it holds while another pack loads.
 
 There is no save group: every edit writes to the pack as it is made. A music audition is owned above the tabs, so leaving the music tab silences it; the sound tabs stop themselves by unmounting. The files tab gets the pack's own manifest as `saveBase` (null for a classic pack), because a rename must not hand a classic pack a manifest.
 

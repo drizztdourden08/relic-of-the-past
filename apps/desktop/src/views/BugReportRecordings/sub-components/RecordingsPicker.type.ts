@@ -5,4 +5,12 @@ interface RecordingsPickerProps extends BugReportSectionProps {
   profileId: string;
 }
 
-export type { RecordingsPickerProps };
+interface IncludeButtonProps {
+  included: boolean;
+  name: string;
+  disabled?: boolean;
+  tabIndex?: number;
+  onToggle: () => void;
+}
+
+export type { IncludeButtonProps, RecordingsPickerProps };
