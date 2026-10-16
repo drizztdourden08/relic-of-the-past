@@ -1,8 +1,8 @@
 /* @layer store-site @kind component */
 import { SettingsSection } from '@drizztdourden08/tessera/composites';
-import { StatRow } from '@drizztdourden08/tessera/primitives';
+import { StatRow, formatDate } from '@drizztdourden08/tessera/primitives';
 import type { KindFacts } from '@rotp/hub-contracts';
-import { formatBytes, formatDateTime } from '@rotp/hub-client';
+import { formatBytes } from '@rotp/hub-client';
 import { ReviewChip } from '../../../components/ReviewChip/ReviewChip';
 import type { FactRow, VersionDetailsProps } from './VersionDetails.type';
 
@@ -42,10 +42,10 @@ const VersionDetails = (props: VersionDetailsProps) => {
       <StatRow label="container" value={version.container} mono />
       <StatRow label="content type" value={version.contentType || '-'} mono />
       <StatRow label="uploaded by" value={version.by.displayName} />
-      <StatRow label="created" value={formatDateTime(version.createdAt)} mono />
-      <StatRow label="submitted" value={review.submittedAt ? formatDateTime(review.submittedAt) : 'not yet'} mono />
-      {review.decidedAt && <StatRow label="decided" value={formatDateTime(review.decidedAt)} mono />}
-      {version.removed && <StatRow label="file removed" value={`${formatDateTime(version.removed.at)} · ${version.removed.reason}`} />}
+      <StatRow label="created" value={formatDate(version.createdAt, 'iso')} mono />
+      <StatRow label="submitted" value={review.submittedAt ? formatDate(review.submittedAt, 'iso') : 'not yet'} mono />
+      {review.decidedAt && <StatRow label="decided" value={formatDate(review.decidedAt, 'iso')} mono />}
+      {version.removed && <StatRow label="file removed" value={`${formatDate(version.removed.at, 'iso')} · ${version.removed.reason}`} />}
       {version.facts
         ? factRows(version.facts).map((row) => <StatRow key={row.label} label={row.label} value={row.value} />)
         : <StatRow label="manifest" value="could not be read at upload" />}

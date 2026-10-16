@@ -1,11 +1,12 @@
 /* @layer renderer-components @kind hook */
 import { useState, useCallback } from 'react';
+import { toast } from '@drizztdourden08/tessera/composites';
 import { saveState, loadState } from '@app/game';
 import { log } from '@app/log-bus';
 import * as savesStore from '@app/storage/saves-store';
-import { offerUndo } from './undo/offer-undo';
+import { runQuietly } from './undo/run-quietly';
 import { useUndoableLoad } from './undo/useUndoableLoad';
-import { REPLACED_TOAST_ID } from './home-tab.constants';
+import { REPLACED_TOAST_ID, UNDO_WINDOW_MS } from './home-tab.constants';
 import type { UseQuickSaveActionsParams } from './home-tab.type';
 
 const useQuickSaveActions = (params: UseQuickSaveActionsParams) => {
@@ -22,13 +23,14 @@ const useQuickSaveActions = (params: UseQuickSaveActionsParams) => {
     await loadQuickSlots();
     setBusySlot(null);
     if (!saved) return;
-    offerUndo({
+    toast({
       id: REPLACED_TOAST_ID,
       message: `Slot ${slot + 1} saved`,
-      undo: async () => {
+      duration: UNDO_WINDOW_MS,
+      undo: () => void runQuietly(async () => {
         await savesStore.writeSlotContents(profileId, ref, previous);
         await loadQuickSlots();
-      },
+      }, 'undo the change'),
     });
   }, [profileId, loadQuickSlots]);
 

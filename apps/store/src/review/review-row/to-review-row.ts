@@ -1,6 +1,7 @@
 /* @layer store-site @kind logic */
+import { formatDate } from '@drizztdourden08/tessera/primitives';
 import type { ReviewEntry } from '@rotp/hub-contracts';
-import { formatBytes, formatDateTime } from '@rotp/hub-client';
+import { formatBytes } from '@rotp/hub-client';
 import type { ReviewRow } from './review-row.type';
 import { changeOf } from './change-of';
 import { entryId } from './entry-id';
@@ -17,7 +18,7 @@ const toReviewRow = (entry: ReviewEntry): ReviewRow => {
     change: changeOf(entry),
     author: item.author.displayName,
     size: version ? formatBytes(version.bytes) : '-',
-    submitted: formatDateTime(entry.submittedAt),
+    submitted: formatDate(entry.submittedAt, 'iso'),
   };
 };
 

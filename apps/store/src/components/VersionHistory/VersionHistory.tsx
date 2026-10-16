@@ -1,6 +1,6 @@
 /* @layer store-site @kind component */
-import { Box, Button, Status, Text } from '@drizztdourden08/tessera/primitives';
-import { formatBytes, formatDay } from '@rotp/hub-client';
+import { Box, Button, Status, Text, formatDate } from '@drizztdourden08/tessera/primitives';
+import { formatBytes } from '@rotp/hub-client';
 import { approvedAtOf } from '../../catalog/approved-versions/approved-at-of';
 import type { VersionHistoryProps } from './VersionHistory.type';
 import './VersionHistory.css';
@@ -23,7 +23,7 @@ const VersionHistory = (props: VersionHistoryProps) => {
           <Text as="span" role="cell" className="version-history__semver">
             {version.semver} {version.n === liveVersion && <Status variant="pill" tone="success">live</Status>}
           </Text>
-          <Text as="span" role="cell" className="version-history__num">{formatDay(approvedAtOf(version))}</Text>
+          <Text as="span" role="cell" className="version-history__num">{formatDate(approvedAtOf(version), 'iso', { length: 'short' })}</Text>
           <Text as="span" role="cell" className="version-history__changes">{version.changelog || '-'}</Text>
           <Text as="span" role="cell" className="version-history__num">
             {version.removed ? <Status variant="pill" tone="neutral">file removed</Status> : formatBytes(version.bytes)}

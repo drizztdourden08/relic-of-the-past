@@ -1,13 +1,15 @@
 /* @layer renderer-components @kind component */
 import { useCallback } from 'react';
-import { Box, Button } from '@drizztdourden08/tessera/primitives';
+import { Box, Button, formatDate } from '@drizztdourden08/tessera/primitives';
 import type { DiagnosticsLogProps } from './DiagnosticsLog.type';
+
+const clockOf = (time: number): string => formatDate(time, 'time', { length: 'medium' });
 
 const DiagnosticsLog = (props: DiagnosticsLogProps) => {
   const { events, controllerDiag, logRef } = props;
   const copyLog = useCallback(() => {
     const lines = [
-      ...events.map(ev => `[${new Date(ev.time).toLocaleTimeString()}] ${ev.type.toUpperCase()} ${ev.id}`),
+      ...events.map(ev => `[${clockOf(ev.time)}] ${ev.type.toUpperCase()} ${ev.id}`),
       ...controllerDiag,
     ];
     void navigator.clipboard.writeText(lines.join('\n'));
@@ -28,7 +30,7 @@ const DiagnosticsLog = (props: DiagnosticsLogProps) => {
       <Box className="input-cal__log" ref={logRef}>
         {events.map((ev, i) => (
           <Box key={`ev-${i}`} className={`input-cal__log-entry input-cal__log-entry--${ev.type}`}>
-            [{new Date(ev.time).toLocaleTimeString()}] {ev.type.toUpperCase()} {ev.id}
+            [{clockOf(ev.time)}] {ev.type.toUpperCase()} {ev.id}
           </Box>
         ))}
         {controllerDiag.map((entry, i) => (

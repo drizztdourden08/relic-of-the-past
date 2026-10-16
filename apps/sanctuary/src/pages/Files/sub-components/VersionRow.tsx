@@ -1,13 +1,12 @@
 /* @layer sanctuary-site @kind component */
 import type { FileVersion } from '@rotp/hub-contracts';
-import { Button, Flex, Status, Tag, Text } from '@drizztdourden08/tessera/primitives';
+import { Button, Flex, Status, Tag, Text, formatDate } from '@drizztdourden08/tessera/primitives';
 import { ListItemRow } from '@drizztdourden08/tessera/composites';
-import { formatAgo } from '@rotp/hub-client';
 import { versionLabel } from '../../../files/file-versions';
 import type { VersionRowProps } from './VersionRow.type';
 
 const detailOf = (version: FileVersion) => {
-  const parts = [version.by.displayName, formatAgo(version.createdAt)];
+  const parts = [version.by.displayName, formatDate(version.createdAt, 'relative')];
   if (version.note) parts.push(`"${version.note}"`);
   return parts.join(' · ');
 };

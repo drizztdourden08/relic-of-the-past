@@ -1,12 +1,12 @@
 /* @layer sanctuary-site @kind component */
 import { useState } from 'react';
 import type { SanctuaryFile } from '@rotp/hub-contracts';
-import { Text } from '@drizztdourden08/tessera/primitives';
+import { Text, formatDate } from '@drizztdourden08/tessera/primitives';
 import { Dialog } from '@drizztdourden08/tessera/composites';
 import { DetailPane, TagList } from '@rotp/design';
 import type { DetailField } from '@rotp/design';
 import { TypeChip } from '../../../components/TypeChip/TypeChip';
-import { formatBytes, formatDateTime, mediaKindOf } from '@rotp/hub-client';
+import { formatBytes, mediaKindOf } from '@rotp/hub-client';
 import { versionLabel } from '../../../files/file-versions';
 import { FileDetailButtons } from './FileDetailButtons';
 import { FileEditForm } from './FileEditForm';
@@ -25,8 +25,8 @@ const fieldsOf = (file: SanctuaryFile): DetailField[] => [
   { label: 'owner', value: file.owner.displayName },
   { label: 'sha256', value: shortSha(file.sha256) },
   { label: 'downloads', value: String(file.stats.downloads) },
-  { label: 'uploaded', value: formatDateTime(file.createdAt) },
-  ...(file.expiresAt === null ? [] : [{ label: 'expires', value: formatDateTime(file.expiresAt) }]),
+  { label: 'uploaded', value: formatDate(file.createdAt, 'iso') },
+  ...(file.expiresAt === null ? [] : [{ label: 'expires', value: formatDate(file.expiresAt, 'iso') }]),
 ];
 
 const FileDetail = (props: FileDetailProps) => {

@@ -1,5 +1,6 @@
 /* @layer renderer-components @kind logic */
-const formatTime = (timestamp: number): string =>
-  new Date(timestamp).toLocaleTimeString(undefined, { hour12: false });
+import { formatDate } from '@drizztdourden08/tessera/primitives';
+
+const formatTime = (timestamp: number): string => formatDate(timestamp, 'time', { length: 'medium' });
 
 export { formatTime };

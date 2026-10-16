@@ -1,14 +1,9 @@
 /* @layer renderer-widgets @kind component */
 import { useEffect, useRef } from 'react';
 import { Status, Box, EmptyState, ScrollArea, Text } from '@drizztdourden08/tessera/primitives';
+import { DateText } from '@drizztdourden08/tessera/composites';
 import type { MusicDebugEvent } from '@rotp/msu';
 import { OWNER_LABELS, OWNER_VARIANTS } from '../MusicWidget.constants';
-
-const timeOf = (at: number): string => {
-  const date = new Date(at);
-  const pad = (value: number): string => String(value).padStart(2, '0');
-  return `${pad(date.getMinutes())}:${pad(date.getSeconds())}`;
-};
 
 const EventFeed = (props: { events: MusicDebugEvent[] }) => {
   const { events } = props;
@@ -24,7 +19,7 @@ const EventFeed = (props: { events: MusicDebugEvent[] }) => {
     <ScrollArea className="music-widget__rows music-widget__feed">
       {events.map((event) => (
         <Box key={event.id} className="music-event">
-          <Text tone="faint" className="music-event__time">{timeOf(event.at)}</Text>
+          <Text tone="faint" className="music-event__time"><DateText value={event.at} format="time" length="medium" /></Text>
           <Status tone={OWNER_VARIANTS[event.owner]}>{OWNER_LABELS[event.owner]}</Status>
           <Text className="music-event__channel">{event.channel}</Text>
           <Text className="music-event__detail">{event.detail}</Text>

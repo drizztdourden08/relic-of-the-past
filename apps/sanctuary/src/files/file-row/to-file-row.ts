@@ -1,6 +1,7 @@
 /* @layer sanctuary-site @kind logic */
+import { formatDate } from '@drizztdourden08/tessera/primitives';
 import type { SanctuaryFile } from '@rotp/hub-contracts';
-import { formatBytes, formatDateTime } from '@rotp/hub-client';
+import { formatBytes } from '@rotp/hub-client';
 import { versionLabel } from '../file-versions';
 import type { FileRow } from './file-row.type';
 
@@ -16,8 +17,8 @@ const toFileRow = (file: SanctuaryFile): FileRow => ({
   size: formatBytes(file.bytes),
   note: file.note,
   stats: file.stats,
-  createdAt: formatDateTime(file.createdAt),
-  expiresAt: file.expiresAt === null ? null : formatDateTime(file.expiresAt),
+  createdAt: formatDate(file.createdAt, 'iso'),
+  expiresAt: file.expiresAt === null ? null : formatDate(file.expiresAt, 'iso'),
 });
 
 export { toFileRow };

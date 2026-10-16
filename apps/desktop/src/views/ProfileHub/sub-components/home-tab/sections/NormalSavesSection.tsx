@@ -57,7 +57,8 @@ const NormalSavesSection = (props: HomeTabColumnsProps) => {
       getName={nameOf}
       render={render}
       rowActions={rowActions}
-      create={isGameRunning ? create : undefined}
+      create={create}
+      newDisabled={isGameRunning ? false : NO_GAME_REASON}
       createLabel="New save"
       selectedId={selectedId}
       onSelect={setSelectedId}

@@ -1,4 +1,5 @@
 /* @layer renderer-lib @kind logic */
+import { formatDate } from '@drizztdourden08/tessera/primitives';
 import { processControllerState } from './process-controller-state';
 import type { ControllerRawReport } from '@drizztdourden08/brock-input';
 import type { ControllerDiagListener, ControllerDisconnectListener, ControllerInputState, ControllerStateListener, HidRawReportEvent, HidRawReportListener } from '@rotp/input-mapping';
@@ -20,7 +21,7 @@ class ControllerInputStore {
   private disconnectListeners = new Set<ControllerDisconnectListener>();
 
   log(msg: string): void {
-    const entry = `[${new Date().toLocaleTimeString()}] ${msg}`;
+    const entry = `[${formatDate(Date.now(), 'time', { length: 'medium' })}] ${msg}`;
     this.diagLog.push(entry);
     if (this.diagLog.length > DIAG_LOG_MAX) this.diagLog.shift();
     for (const cb of this.diagListeners) cb(entry);

@@ -1,8 +1,6 @@
 /* @layer renderer-components @kind logic */
-const defaultSaveName = (): string => {
-  return `Save - ${new Date().toLocaleString(undefined, {
-    month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit',
-  })}`;
-};
+import { formatDate } from '@drizztdourden08/tessera/primitives';
+
+const defaultSaveName = (): string => `Save - ${formatDate(Date.now(), 'datetime')}`;
 
 export { defaultSaveName };

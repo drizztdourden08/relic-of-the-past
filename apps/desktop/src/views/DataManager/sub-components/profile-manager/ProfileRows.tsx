@@ -1,7 +1,6 @@
 /* @layer renderer-components @kind component */
 import { Status, IconButton, EmptyState, Stack, Icon } from '@drizztdourden08/tessera/primitives';
-import { ListItemRow } from '@drizztdourden08/tessera/composites';
-import { formatRelativeTime } from '@drizztdourden08/brock-core';
+import { DateText, ListItemRow } from '@drizztdourden08/tessera/composites';
 import type { ProfileRowsProps } from './profile-manager.type';
 
 const ProfileRows = (props: ProfileRowsProps) => {
@@ -20,7 +19,12 @@ const ProfileRows = (props: ProfileRowsProps) => {
               {profile.automation && <Status tone="neutral">Agent</Status>}
             </>
           }
-          meta={`${profile.romFile.replace(/\.(sfc|smc)$/i, '')} · ${formatRelativeTime(profile.lastPlayed)}`}
+          meta={
+            <>
+              {profile.romFile.replace(/\.(sfc|smc)$/i, '')} ·{' '}
+              {profile.lastPlayed ? <DateText value={profile.lastPlayed} format="relative" /> : 'Never'}
+            </>
+          }
           selected={selected === profile.id}
           onClick={() => onSelect(profile.id)}
           onDoubleClick={() => onOpen(profile)}

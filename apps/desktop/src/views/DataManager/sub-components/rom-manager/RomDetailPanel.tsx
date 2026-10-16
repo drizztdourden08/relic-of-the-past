@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind component */
-import { Box, Text } from '@drizztdourden08/tessera/primitives';
+import { Box, Text, formatDate } from '@drizztdourden08/tessera/primitives';
 import { formatBytes } from '@drizztdourden08/brock-core';
 import { AssetsRow } from './AssetsRow';
 import { SupplementRow } from './SupplementRow';
@@ -23,10 +23,10 @@ const RomDetailPanel = (props: RomDetailPanelProps) => {
         <Text className="detail-panel__value" mono>{detail.hash}</Text>
 
         <Text className="detail-panel__label">Added</Text>
-        <Text className="detail-panel__value">{new Date(detail.created).toLocaleDateString()}</Text>
+        <Text className="detail-panel__value">{formatDate(detail.created, 'date')}</Text>
 
         <Text className="detail-panel__label">Modified</Text>
-        <Text className="detail-panel__value">{new Date(detail.modified).toLocaleDateString()}</Text>
+        <Text className="detail-panel__value">{formatDate(detail.modified, 'date')}</Text>
 
         <Text className="detail-panel__label">{selectedSupplement ? 'Attached' : 'Assets'}</Text>
         <Text className="detail-panel__value">

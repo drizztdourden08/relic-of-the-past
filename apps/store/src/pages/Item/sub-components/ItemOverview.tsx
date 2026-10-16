@@ -1,9 +1,8 @@
 /* @layer store-site @kind component */
 import { Markdown, SettingsSection } from '@drizztdourden08/tessera/composites';
-import { Stack, StatRow, Text } from '@drizztdourden08/tessera/primitives';
+import { Stack, StatRow, Text, formatDate } from '@drizztdourden08/tessera/primitives';
 import type { StoreItem } from '@rotp/hub-contracts';
 import { TagList } from '@rotp/design';
-import { formatDay } from '@rotp/hub-client';
 import { KindChip } from '../../../components/KindChip/KindChip';
 import { factsLine } from '../../../catalog/facts-line';
 import { liveVersionOf } from '../../../catalog/approved-versions';
@@ -14,8 +13,8 @@ import type { ItemOverviewProps } from './ItemOverview.type';
 const shortHash = (sha: string | null) => (sha ? `${sha.slice(0, SHA_EDGE)}...${sha.slice(-SHA_EDGE)}` : '-');
 
 const datesLine = (item: StoreItem) => {
-  const published = item.publishedAt ? `published ${formatDay(item.publishedAt)}` : 'not published yet';
-  return `${published} · updated ${formatDay(item.updatedAt)}`;
+  const published = item.publishedAt ? `published ${formatDate(item.publishedAt, 'iso', { length: 'short' })}` : 'not published yet';
+  return `${published} · updated ${formatDate(item.updatedAt, 'iso', { length: 'short' })}`;
 };
 
 const ItemOverview = (props: ItemOverviewProps) => {
