@@ -20,7 +20,7 @@ const SpriteChoiceCard = ({ choice, selected, onChange }: SpriteChoiceCardProps)
     >
       {preview
         ? <Image className="sprite-choice__preview" src={preview} alt={label} draggable={false} />
-        : <Box className="sprite-choice__preview sprite-choice__preview--none">{name ? <Text>?</Text> : <Icon name="circle" />}</Box>}
+        : <Box className="sprite-choice__preview sprite-choice__preview--none">{name ? <Text>?</Text> : <Icon name="user" />}</Box>}
       <Text className="sprite-choice__label">{label}</Text>
     </Box>
   );

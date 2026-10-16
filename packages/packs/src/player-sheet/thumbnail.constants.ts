@@ -1,8 +1,14 @@
 /* @layer renderer-lib @kind constants */
-import type { Wearing } from '@rotp/game-data';
+import { framesOf, stateFor } from '@rotp/game-data';
+import type { PoseFrame, Wearing } from '@rotp/game-data';
 
-const STANDING_COLS = 2;
-const STANDING_ROWS = 3;
+const REST_ACTION = 0x00;
+const REST_FACING = 1;
 const DEFAULT_WEARING: Wearing = { outfit: 'green', gloves: 0 };
 
-export { STANDING_COLS, STANDING_ROWS, DEFAULT_WEARING };
+const REST_FRAME: PoseFrame | null = (() => {
+  const state = stateFor(REST_ACTION);
+  return state ? (framesOf(state, REST_FACING)[0] ?? null) : null;
+})();
+
+export { DEFAULT_WEARING, REST_FRAME };
