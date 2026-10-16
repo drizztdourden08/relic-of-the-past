@@ -38,7 +38,7 @@ Add a note to the page of the package or area that holds the file, under a headi
 | Page | Notes |
 |---|---|
 | [apps/desktop/src/composites](apps-desktop-src-composites.md) | 11 |
-| [apps/desktop/src/compounds](apps-desktop-src-compounds.md) | 121 |
+| [apps/desktop/src/compounds](apps-desktop-src-compounds.md) | 123 |
 | [apps/desktop/src/data-inspector](apps-desktop-src-data-inspector.md) | 21 |
 | [apps/desktop/src/game](apps-desktop-src-game.md) | 104 |
 | [apps/desktop/src/hooks](apps-desktop-src-hooks.md) | 40 |
@@ -50,7 +50,7 @@ Add a note to the page of the package or area that holds the file, under a headi
 | [apps/desktop/src/msu-studio](apps-desktop-src-msu-studio.md) | 76 |
 | [apps/desktop/src/nav-widget](apps-desktop-src-nav-widget.md) | 27 |
 | [apps/desktop/src/navigation-overlay](apps-desktop-src-navigation-overlay.md) | 12 |
-| [apps/desktop/src (smaller areas)](apps-desktop-src-other.md) | 28 |
+| [apps/desktop/src (smaller areas)](apps-desktop-src-other.md) | 29 |
 | [apps/desktop/src/primitives](apps-desktop-src-primitives.md) | 16 |
 | [apps/desktop/src/settings-controls](apps-desktop-src-settings-controls.md) | 23 |
 | [apps/desktop/src/storage](apps-desktop-src-storage.md) | 15 |
@@ -67,7 +67,7 @@ Add a note to the page of the package or area that holds the file, under a headi
 | [apps/desktop/src/views/ProfileHub](apps-desktop-src-views-profile-hub.md) | 62 |
 | [apps/desktop/src/views/Randomizer](apps-desktop-src-views-randomizer.md) | 23 |
 | [apps/desktop/src/views/Store](apps-desktop-src-views-store.md) | 25 |
-| [apps/desktop/src/views](apps-desktop-src-views.md) | 87 |
+| [apps/desktop/src/views](apps-desktop-src-views.md) | 88 |
 
 ## Sites and functions
 
