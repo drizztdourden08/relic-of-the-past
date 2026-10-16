@@ -292,6 +292,10 @@ Facts about `apps/desktop/src/game/` that the code cannot say on its own. Each h
 - PROBE_SECONDS is long enough to tell a sound from silence without paying for the full window; a scan runs it for every id on a channel. Most channels carry unused ids. A cached full render already answers the probe.
 - `probeAudibleIds` returns an empty set when the core cannot render at all, which the caller tells apart with `canPreviewOriginals`.
 
+## apps/desktop/src/game/overworld-screen/overworld-screen-id.ts
+
+The overworld is an 8 by 8 grid of 512 pixel screens. The screen under the camera is found from the camera position plus half the view (128 by 112), divided by 512 and wrapped to the grid.
+
 ## apps/desktop/src/game/play-quiet.ts
 
 - Whether a toast may show now. Nothing the player did can happen outside a file in play, so the intro, the title, file select, naming and the attract demo stay quiet.

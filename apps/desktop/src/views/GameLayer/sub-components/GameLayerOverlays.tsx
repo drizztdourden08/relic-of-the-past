@@ -2,14 +2,13 @@
 import { useProfileSwitcher } from '../behavior/useProfileSwitcher';
 import { CheckToasts } from '../../CheckToasts';
 import { GameOverlay } from '../../GameOverlay';
-import { DeveloperToolsLayer } from './DeveloperToolsLayer';
 import type { GameLayerOverlaysProps } from './GameLayerOverlays.type';
 import { NavigationOverlay } from './NavigationOverlay';
 import { PauseLayer } from './PauseLayer';
 import { ProfileSwitcherOverlay } from './ProfileSwitcherOverlay';
 
 const GameLayerOverlays = (props: GameLayerOverlaysProps) => {
-  const { status, width, height, profileId, developerToolsEnabled } = props;
+  const { status, width, height, profileId } = props;
   const running = status === 'running';
   const profileSwitcher = useProfileSwitcher(running);
 
@@ -26,7 +25,6 @@ const GameLayerOverlays = (props: GameLayerOverlaysProps) => {
         />
       )}
       {running && <NavigationOverlay width={width} height={height} gameRunning={running} />}
-      {running && developerToolsEnabled && <DeveloperToolsLayer width={width} height={height} />}
       {running && <GameOverlay width={width} height={height} profileId={profileId} />}
       {running && <CheckToasts width={width} height={height} />}
     </>

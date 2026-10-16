@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind logic */
-import type { ViewportInfo } from '../../../game';
-import { OVERWORLD_MODULE } from '../GameLayer.constants';
+import { OVERWORLD_MODULE } from '@app/game';
+import type { ViewportInfo } from '@app/game';
 import type { GlowViewportFlags } from './glow-viewport-flags.type';
 import { TALL_SNES_HEIGHT } from './useEdgeGlowLoop.constants';
 

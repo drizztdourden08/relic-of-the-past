@@ -1,9 +1,8 @@
 /* @layer renderer-components @kind logic */
 import { viewOrigin } from '@rotp/game-core';
 import type { ShadowRenderer } from '@rotp/game-core';
-import type { ViewportInfo } from '../../../game';
-import { OVERWORLD_MODULE } from '../GameLayer.constants';
-import { overworldScreenIdOf } from './overworld-screen-id';
+import { OVERWORLD_MODULE, overworldScreenIdOf } from '@app/game';
+import type { ViewportInfo } from '@app/game';
 
 const overworldShadowScreen = (renderer: ShadowRenderer, vp: ViewportInfo | null): number => {
   if (vp?.locationModule !== OVERWORLD_MODULE) return -1;

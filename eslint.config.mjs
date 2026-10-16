@@ -66,7 +66,7 @@ const rotpExtension = {
       }, {
         files: [
           'apps/desktop/src/views/GameLayer/sub-components/NavigationOverlay/sub-components/{TileInspector,RectSelectionView,TileTooltipContent,LegendSwatch}.tsx',
-          'apps/desktop/src/views/GameLayer/sub-components/ShadowEditorPanel/sub-components/HeightSwatch.tsx',
+          'apps/desktop/src/views/ShadowEditorPanel/sub-components/HeightSwatch.tsx',
         ],
         why: 'The navigation overlay sits on the live game picture: the inspector takes its size, the selection box sits at tile coordinates times the live scale, the tooltip follows the pointer, a legend swatch shows the exact colour the canvas draws and a height swatch takes its opacity from the height level.',
       }, {

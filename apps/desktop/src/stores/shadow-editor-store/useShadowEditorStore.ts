@@ -10,14 +10,13 @@ import { saveAction } from './save-action';
 import { DEFAULT_HEIGHT_LEVELS } from './shadow-editor-store.constants';
 
 const useShadowEditorStore = create<ShadowEditorStore>((set, get) => ({
-  open: false,
-  setOpen: (open) => set({ open }),
   previewMode: false,
   setPreviewMode: (previewMode) => set({ previewMode }),
   debugMode: false,
   setDebugMode: (debugMode) => set({ debugMode }),
 
   project: { ...EMPTY_SHADOW_PROJECT },
+  loaded: false,
   dirty: false,
   activeTool: 'select',
   selectedElementId: null,
@@ -37,7 +36,7 @@ const useShadowEditorStore = create<ShadowEditorStore>((set, get) => ({
   undoStack: [],
   redoStack: [],
 
-  loadProject: (project) => set({ project, dirty: false, undoStack: [], redoStack: [] }),
+  loadProject: (project) => set({ project, loaded: true, dirty: false, undoStack: [], redoStack: [] }),
 
   setActiveTool: (tool) => set({ activeTool: tool, selectedElementId: null, selectedType: null, freehandPoints: [], isDrawingFreehand: false }),
 

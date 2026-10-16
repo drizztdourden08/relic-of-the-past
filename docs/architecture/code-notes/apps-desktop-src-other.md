@@ -265,3 +265,7 @@ diagnosed from `session.log`.
 Extraction runs at most once per ROM per session. Concurrent callers (startup, profile
 select, boot) share the in-flight promise, and a finished run, successful or not, is not
 repeated on the next profile switch. The manual buttons keep their own path.
+
+## apps/desktop/src/widgets/dev-tools.kit.ts
+
+The Developer tools widget kit: the dev panels that need a running game and work docked around it. It is dev only and gated on the `game` context, so without a game it opens on its reason card. Members: Shadow Editor, Shadow Elements, Live Data Inspector, Game State and Music Debugger, plus the Shadow drawing overlay. Location & Navigation and Simulator stay normal dev widgets because the `--widgets=` flag and the dump and sim automation open them with `widgets.open`, which does not reach a kit widget. The data inspector screen and Sprite Debug do not need the game and stay screens.

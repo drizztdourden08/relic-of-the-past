@@ -21,3 +21,4 @@ export {
 } from './tracker';
 export { deliveryQueue } from './delivery-queue';
 export { deliverItem } from './delivery-api';
+export { overworldScreenIdOf, OVERWORLD_MODULE } from './overworld-screen';
