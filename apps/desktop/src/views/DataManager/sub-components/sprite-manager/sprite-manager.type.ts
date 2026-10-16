@@ -15,8 +15,8 @@ interface SpriteActionsParams {
 }
 
 interface SpriteExtractPanelProps {
-  availableRoms: readonly RomDisplayInfo[];
-  hasAnyRom: boolean;
+  roms: readonly RomDisplayInfo[];
+  extractedMap: Record<string, ExtractedStatus>;
   toExtract: string;
   onToExtractChange: (romFile: string) => void;
   busy: boolean;
