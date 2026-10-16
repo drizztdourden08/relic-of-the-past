@@ -13,7 +13,7 @@ interface UseControlsSettingsArgs {
   profileId: string;
 }
 
-type ControlsTab = 'controls' | 'modern' | 'shortcuts' | 'cheats';
+type ControlsTab = 'controls' | 'modern' | 'shortcuts' | 'cheats' | 'options';
 
 type ListeningTarget =
   | { type: 'snes'; button: SnesButton }

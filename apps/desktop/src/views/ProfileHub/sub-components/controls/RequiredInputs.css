@@ -1,10 +1,8 @@
 /* @layer renderer-components @kind style */
 .controls-settings__used-inputs {
-  flex-shrink: 0;
-  border: var(--border-width-thin) solid var(--c-border);
-  border-radius: var(--radius-lg);
-  background: var(--c-surface);
-  padding: var(--space-sm) var(--space-md);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
 }
 
 .controls-settings__used-inputs-header {
@@ -13,18 +11,18 @@
   text-transform: uppercase;
   letter-spacing: calc(0.5 * var(--size-1));
   color: var(--c-text-dim);
-  margin-bottom: var(--space-sm);
 }
 
 .controls-settings__used-inputs-list {
   display: flex;
-  gap: var(--space-md);
+  flex-wrap: wrap;
+  gap: var(--space-xs) var(--space-md);
 }
 
 .controls-settings__used-input {
   display: flex;
   align-items: center;
-  gap: var(--space-sm);
+  gap: var(--space-xs);
   font-size: var(--text-sm);
   color: var(--c-text);
 }
@@ -55,10 +53,4 @@
 
 .controls-settings__used-input-label--dim {
   color: var(--c-text-muted);
-}
-
-@media (height <= 520px) {
-  .controls-settings__used-inputs {
-    display: none;
-  }
 }

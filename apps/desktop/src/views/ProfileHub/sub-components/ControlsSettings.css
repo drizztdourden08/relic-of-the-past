@@ -19,7 +19,7 @@
   display: flex;
   align-items: center;
   gap: var(--space-sm);
-  padding: var(--space-sm) var(--space-sm);
+  padding: var(--space-xs) var(--space-sm);
   border-bottom: var(--border-width-thin) solid var(--c-border);
   flex-shrink: 0;
 }
@@ -55,8 +55,8 @@
   display: flex;
   flex-direction: column;
   overflow: hidden;
-  padding: var(--space-lg);
-  gap: var(--space-lg);
+  padding: var(--space-sm);
+  gap: var(--space-xs);
   min-width: 0;
 }
 
@@ -81,7 +81,7 @@
   flex-direction: column;
   overflow-y: auto;
   border-left: var(--border-width-thin) solid var(--c-border);
-  padding: var(--space-sm);
+  padding: var(--space-xs);
   transition: max-width 0.2s ease, padding 0.2s ease;
 }
 
@@ -109,7 +109,7 @@
   text-transform: uppercase;
   letter-spacing: calc(0.5 * var(--size-1));
   color: var(--c-text-dim);
-  padding: 0 0 var(--space-sm);
+  padding: 0 0 var(--space-xs);
   display: flex;
   align-items: center;
   gap: var(--space-sm);
@@ -148,29 +148,14 @@
 }
 
 .controls-settings__bindings .controls-settings__section-header {
-  padding: var(--space-md) var(--space-md) var(--space-sm);
-}
-
-.controls-settings__section-header-row {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: var(--space-sm);
-}
-
-.controls-settings__bindings .controls-settings__section-header-row {
-  padding: var(--space-md) var(--space-md) var(--space-sm);
-}
-
-.controls-settings__bindings .controls-settings__section-header-row .controls-settings__section-header {
-  padding: 0;
+  padding: var(--space-sm) var(--space-md) var(--space-xs);
 }
 
 .controls-settings__shortcut-options {
   display: flex;
   flex-direction: column;
-  gap: var(--space-md);
-  padding: var(--space-sm) var(--space-md) var(--space-md);
+  gap: var(--space-sm);
+  padding: var(--space-xs) var(--space-md) var(--space-sm);
 }
 
 .controls-settings__bindings--drag-over {
@@ -185,10 +170,6 @@
 
 @media (height <= 520px) {
   .controls-settings__bindings .controls-settings__section-header {
-    display: none;
-  }
-
-  .controls-settings__bindings .controls-settings__section-header-row {
     display: none;
   }
 }

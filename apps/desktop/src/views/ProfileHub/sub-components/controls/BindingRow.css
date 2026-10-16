@@ -3,7 +3,7 @@
   display: flex;
   align-items: center;
   gap: var(--space-sm);
-  padding: var(--space-sm) var(--space-md);
+  padding: var(--space-xs) var(--space-md);
   border-bottom: var(--border-width-thin) solid var(--c-border);
   transition: background 0.12s;
   cursor: pointer;
@@ -19,8 +19,8 @@
   letter-spacing: var(--tracking-wide);
   color: var(--c-text-muted);
   border-bottom: var(--border-width-thin) solid var(--c-border);
-  padding-bottom: var(--space-xs);
-  margin-bottom: var(--space-xs);
+  padding-bottom: var(--space-2xs);
+  margin-bottom: var(--space-2xs);
 }
 
 .binding-row--header:hover {

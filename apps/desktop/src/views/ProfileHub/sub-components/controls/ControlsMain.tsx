@@ -2,22 +2,23 @@
 import { useCallback, useMemo } from 'react';
 import { Box, Tabs } from '@drizztdourden08/tessera/primitives';
 import type { TabItem } from '@drizztdourden08/tessera/primitives';
-import { SchemeBanner } from './SchemeBanner';
 import { GameControlsTab } from './GameControlsTab';
 import { ModernControlsTab } from './ModernControlsTab';
 import { ShortcutsTab } from './ShortcutsTab';
 import { CheatBindingsTab } from './CheatBindingsTab';
-import { CLASSIC_ONLY, CONTROLS_TAB_IDS, MODERN_ONLY } from './controls.constants';
+import { OptionsTab } from './OptionsTab';
+import { CONTROLS_TAB_IDS, MODERN_ONLY, VANILLA_ONLY } from './controls.constants';
 import type { ControlsCtrl, ControlsMainProps } from './controls.type';
 
 const buildTabs = (scheme: ControlsCtrl['scheme']): TabItem[] => [
-  { id: 'controls', label: 'Game Controls', disabled: scheme === 'modern', disabledReason: CLASSIC_ONLY },
+  { id: 'controls', label: 'Vanilla Controls', disabled: scheme === 'modern', disabledReason: VANILLA_ONLY },
   { id: 'modern', label: 'Modern Controls', disabled: scheme === 'classic', disabledReason: MODERN_ONLY },
   { id: 'shortcuts', label: 'Shortcuts & Functions' },
   { id: 'cheats', label: 'Cheats' },
+  { id: 'options', label: 'Options' },
 ];
 
-const ControlsMain = ({ ctrl, cheatsEnabled, onOpenCheatsSettings, onOpenHudStyle }: ControlsMainProps) => {
+const ControlsMain = ({ ctrl, cheatsEnabled, onOpenCheatsSettings }: ControlsMainProps) => {
   const { setActiveTab } = ctrl;
   const tabs = useMemo(() => buildTabs(ctrl.scheme), [ctrl.scheme]);
   const handleTabChange = useCallback((id: string) => {
@@ -27,8 +28,6 @@ const ControlsMain = ({ ctrl, cheatsEnabled, onOpenCheatsSettings, onOpenHudStyl
 
   return (
     <Box className="controls-settings__main">
-      {ctrl.scheme === 'classic' && <SchemeBanner onOpenHudStyle={onOpenHudStyle} />}
-
       <Tabs tabs={tabs} activeTab={ctrl.activeTab} onTabChange={handleTabChange} />
 
       {ctrl.activeTab === 'controls' && <GameControlsTab ctrl={ctrl} />}
@@ -37,6 +36,7 @@ const ControlsMain = ({ ctrl, cheatsEnabled, onOpenCheatsSettings, onOpenHudStyl
       {ctrl.activeTab === 'cheats' && (
         <CheatBindingsTab ctrl={ctrl} cheatsEnabled={cheatsEnabled} onOpenCheatsSettings={onOpenCheatsSettings} />
       )}
+      {ctrl.activeTab === 'options' && <OptionsTab ctrl={ctrl} />}
     </Box>
   );
 };

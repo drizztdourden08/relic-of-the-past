@@ -6,7 +6,7 @@ import { ControlsSidebar } from './controls/ControlsSidebar';
 import { ControlsMain } from './controls/ControlsMain';
 import { ControlsDevices } from './controls/ControlsDevices';
 import { Dialog } from '@drizztdourden08/tessera/composites';
-import { Box } from '@drizztdourden08/tessera/primitives';
+import { Box, DensityScope } from '@drizztdourden08/tessera/primitives';
 import { SearchAnchor } from '@drizztdourden08/brock-react';
 import { useControlsSettings } from './controls-settings';
 import { listeningLabel } from './controls-settings/listening-label';
@@ -14,7 +14,6 @@ import type { ControlsSettingsProps } from './ControlsSettings.type';
 import './ControlsSettings.css';
 
 const openCheatsSettings = () => openSetting('cheatsEnabled');
-const openHudStyle = () => openSetting('hudStyle');
 
 const ControlsSettings = (props: ControlsSettingsProps) => {
   const { settings, onChange, profileId } = props;
@@ -26,20 +25,21 @@ const ControlsSettings = (props: ControlsSettingsProps) => {
 
   return (
     <Box className="controls-settings">
-      <SearchAnchor anchor="input-profiles" className="controls-settings__anchor">
-        <ControlsSidebar ctrl={ctrl} />
-      </SearchAnchor>
-      <SearchAnchor anchor="bindings" className="controls-settings__anchor controls-settings__anchor--main">
-        <ControlsMain
-          ctrl={ctrl}
-          cheatsEnabled={settings.cheatsEnabled}
-          onOpenCheatsSettings={openCheatsSettings}
-          onOpenHudStyle={openHudStyle}
-        />
-      </SearchAnchor>
-      <SearchAnchor anchor="devices" className="controls-settings__anchor">
-        <ControlsDevices ctrl={ctrl} />
-      </SearchAnchor>
+      <DensityScope density="compact">
+        <SearchAnchor anchor="input-profiles" className="controls-settings__anchor">
+          <ControlsSidebar ctrl={ctrl} />
+        </SearchAnchor>
+        <SearchAnchor anchor="bindings" className="controls-settings__anchor controls-settings__anchor--main">
+          <ControlsMain
+            ctrl={ctrl}
+            cheatsEnabled={settings.cheatsEnabled}
+            onOpenCheatsSettings={openCheatsSettings}
+          />
+        </SearchAnchor>
+        <SearchAnchor anchor="devices" className="controls-settings__anchor">
+          <ControlsDevices ctrl={ctrl} />
+        </SearchAnchor>
+      </DensityScope>
 
       {ctrl.listeningFor && (
         <BindingListener

@@ -7,7 +7,7 @@
 }
 
 .input-profile-list__header {
-  padding: var(--space-md) var(--space-lg);
+  padding: var(--space-sm) var(--space-md);
   border-bottom: var(--border-width-thin) solid var(--c-border);
 }
 
@@ -37,7 +37,7 @@
   align-items: center;
   gap: var(--space-sm);
   width: 100%;
-  padding: var(--space-sm) var(--space-lg);
+  padding: var(--space-xs) var(--space-md);
   background: none;
   border: none;
   color: var(--c-text);
@@ -119,6 +119,6 @@
 }
 
 .input-profile-list__footer {
-  padding: var(--space-md) var(--space-lg);
+  padding: var(--space-sm) var(--space-md);
   border-top: var(--border-width-thin) solid var(--c-border);
 }
