@@ -5,7 +5,7 @@ Facts about the smaller areas of `apps/desktop/src/` that the code cannot say on
 
 ## apps/desktop/src/bug-report/
 
-The renderer's half of the Sanctuary bug report; the dialog is Brock's and the transport runs in the main process (`apps/desktop/electron/sanctuary/bug-report/`). `useReportSnapshotOnOpen` sends the report context, the active profile and a live save state the moment the dialog opens, because only the renderer can read the running game. `useSignedOutIssueFallback` swaps in a transport that opens a prefilled GitHub issue while nobody is signed in, so a signed out player can still report; it puts `rotpBugReport` (the recordings section) back when it lets go. `useDefaultReportTitle` fills the title with the app version and the current screen each time the dialog opens. The dialog's recordings section is `views/BugReportRecordings`, shown only while debug logging is on and a game session has set the snapshot.
+The renderer's half of the Sanctuary bug report; the dialog is Brock's and the transport runs in the main process (`apps/desktop/electron/sanctuary/bug-report/`). `useReportSnapshotOnOpen` sends the report context, the active profile and a live save state the moment the dialog opens, because only the renderer can read the running game. `useSignedOutIssueFallback` swaps in a transport that opens a prefilled GitHub issue while nobody is signed in, so a signed out player can still report; it puts `rotpBugReport` (the recordings section) back when it lets go. `useDefaultReportTitle` fills the title with the app version and the current screen each time the dialog opens, unless the caller passed its own title to `bugReport.open`. The dialog's recordings section is `views/BugReportRecordings`, shown only while debug logging is on and a game session has set the snapshot.
 
 ## apps/desktop/src/credits/
 
@@ -272,10 +272,6 @@ diagnosed from `session.log`.
 Extraction runs at most once per ROM per session. Concurrent callers (startup, profile
 select, boot) share the in-flight promise, and a finished run, successful or not, is not
 repeated on the next profile switch. The manual buttons keep their own path.
-
-## apps/desktop/src/boot/screenshot-hold.ts
-
-A `--screenshot` launch holds the picture until every lazy screen and widget body has loaded (`lazyLoads.idle`) and then waits one more paint, so a docked widget is never captured as its loading spinner. The widget bodies are lazy, so releasing at the first drawn game frame photographs spinners.
 
 ## apps/desktop/src/widgets/
 
