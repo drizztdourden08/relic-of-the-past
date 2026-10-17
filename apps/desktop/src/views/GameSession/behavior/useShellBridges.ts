@@ -21,7 +21,8 @@ const useShellBridges = (isGameRunning: boolean): void => {
   useEffect(() => {
     if (!ready || opened.current) return;
     opened.current = true;
-    for (const id of startupWidgets()) widgets.open(id);
+    const ids = startupWidgets();
+    if (ids.length > 0) widgets.force(ids);
   }, [ready]);
 };
 
