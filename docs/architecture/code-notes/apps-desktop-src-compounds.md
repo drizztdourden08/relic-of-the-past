@@ -5,7 +5,8 @@ Facts about `apps/desktop/src/compounds/` that the code cannot say on its own. E
 
 ## apps/desktop/src/compounds/ArmedActionButton/ArmedActionButton.tsx
 
-The one press twice confirm of the app, shared by the quick save slots and the save rows. No
+The press twice button of the quick save slots. The save rows draw `SaveRowActionButton` over the
+same `useArmedAction`. No
 colour, filter or mask reaches the glyph: the emoji keeps its own palette, and only the half
 behind it tints on hover, focus and arming. The glyph is its own stacking context so the armed
 halo sits behind the emoji and above the button's tint. While armed the emoji bobs and a green and
@@ -717,18 +718,25 @@ already fires silver, so the plain cost goes inert with the reason on it. Cost s
 rupees: round numbers a game of this age would ask. An absent `onChange` renders the read-only
 Options page.
 
+## apps/desktop/src/compounds/SaveRowActionButton/SaveRowActionButton.tsx
+
+A Tessera ghost icon button with no text. It draws the idle icon of its pair, or the armed one
+while armed, which is the one slot an armed animation replaces; until then the armed icon is the
+idle icon in the ghost button's active tone. Blur and Escape disarm, as on a quick save slot.
+
 ## apps/desktop/src/compounds/SaveRowActions/SaveRowActions.tsx
 
-Load, Overwrite and Delete of one save row, stacked down the row's right edge, each armed by a
-first press and run by a second, with the same look and timeout as a quick save slot. An
-auto-save leaves out Overwrite. Overwrite stays on screen without a game, greyed out with the
-reason as its hint.
+Load and Overwrite side by side over Delete, at the row's end, each armed by a first press and
+run by a second through `useArmedAction`, the timeout of a quick save slot. The icon pair of each
+action is in `SAVE_ROW_ICONS`. `onArmedChange` tells the row which action is armed, so the row can
+ask for the second press in place of the date. An auto-save leaves out Overwrite. Overwrite stays
+on screen without a game, greyed out with the reason as its hint.
 
 ## apps/desktop/src/compounds/SaveRowThumb/SaveRowThumb.tsx
 
-The screenshot of a save in the icon of a row, as tall as the row and in the SNES frame's shape
-(256 by 224), the proportion of a quick save card, so the picture is readable. The pixels stay
-sharp. A save with no screenshot shows an empty frame.
+The screenshot of a save in the icon of a row, as tall as the two rows of actions beside it, so it
+never makes the row taller, and in the SNES frame's shape (256 by 224). The pixels stay sharp. A
+save with no screenshot shows an empty frame.
 
 ## apps/desktop/src/compounds/SaveSlot/SaveSlot.css
 

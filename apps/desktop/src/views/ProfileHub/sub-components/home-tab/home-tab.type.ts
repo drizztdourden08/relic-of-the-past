@@ -2,6 +2,7 @@
 import type { HeroSlots } from '@drizztdourden08/brock-react';
 import type { Profile, FilePickerPort } from '@drizztdourden08/brock-core';
 import type { AutoSaveInfo, NormalSaveInfo } from '@rotp/game-core';
+import type { ArmedAction } from '@app/compounds/ArmedActionButton';
 import type { useHomeTabSaves } from './useHomeTabSaves';
 
 interface HomeHeroContentProps {
@@ -119,10 +120,16 @@ interface SaveRowPartsInput {
   screenshotUrl: string | null;
   timestamp: number;
   busy: boolean;
+  armed: ArmedAction | null;
+}
+
+interface ArmedRow {
+  id: string;
+  action: ArmedAction;
 }
 
 export type {
-  AutoSavesData, CreateSaveFormProps, DialogState, HomeRandomizerStatus, HomeTabColumnsProps,
+  ArmedRow, AutoSavesData, CreateSaveFormProps, DialogState, HomeRandomizerStatus, HomeTabColumnsProps,
   HomeTabDialogProps, HomeTabDialogsProps, HomeHeroContentProps, NormalSavesData, ProfileFactsInput,
   SaveFileChecks, SaveRowPartsInput, SlotInfo, SummaryFact, UseAutoSaveActionsParams,
   UseHomeTabSavesParams, UseHomeTabSramImportParams, UseNormalSaveActionsParams, UseQuickSaveActionsParams,

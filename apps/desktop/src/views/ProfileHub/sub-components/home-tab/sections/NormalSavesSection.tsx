@@ -6,6 +6,7 @@ import type { NormalSaveInfo } from '@rotp/game-core';
 import { SaveRowActions } from '@app/compounds/SaveRowActions';
 import { NO_GAME_REASON } from '../home-tab.constants';
 import type { HomeTabColumnsProps } from '../home-tab.type';
+import { useArmedRow } from '../useArmedRow';
 import { CreateSaveForm } from './CreateSaveForm';
 import { saveRowParts } from './save-row-parts';
 
@@ -17,12 +18,14 @@ const NormalSavesSection = (props: HomeTabColumnsProps) => {
   const { normalSaves, normalScreenshots, busyNormal } = saves;
   const { handleCreateNormalSave, handleLoadNormal, handleOverwriteNormal, handleDeleteNormal, handleRenameNormal } = saves;
   const [selectedId, setSelectedId] = useState<string | null>(null);
+  const { armedOf, reportArmed } = useArmedRow();
 
   const render = useCallback((save: NormalSaveInfo) => saveRowParts({
     screenshotUrl: normalScreenshots[save.id] ?? null,
     timestamp: save.timestamp,
     busy: busyNormal === save.id,
-  }), [normalScreenshots, busyNormal]);
+    armed: armedOf(save.id),
+  }), [normalScreenshots, busyNormal, armedOf]);
 
   const rowActions = useCallback((save: NormalSaveInfo, row: ItemListRowState) => (
     <SaveRowActions
@@ -34,8 +37,9 @@ const NormalSavesSection = (props: HomeTabColumnsProps) => {
       onLoad={() => void handleLoadNormal(save.id)}
       onOverwrite={() => void handleOverwriteNormal(save.id)}
       onDelete={() => void handleDeleteNormal(save.id)}
+      onArmedChange={(armed) => reportArmed(save.id, armed)}
     />
-  ), [busyNormal, isGameRunning, handleLoadNormal, handleOverwriteNormal, handleDeleteNormal]);
+  ), [busyNormal, isGameRunning, handleLoadNormal, handleOverwriteNormal, handleDeleteNormal, reportArmed]);
 
   const create = useCallback<ItemListCreate>((close) => {
     const handleCreate = (name: string) => {

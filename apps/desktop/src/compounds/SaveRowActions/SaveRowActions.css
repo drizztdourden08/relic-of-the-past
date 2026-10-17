@@ -1,6 +1,16 @@
 /* @layer renderer-components @kind style */
 .save-row-actions {
-  display: flex;
-  flex-direction: column;
+  display: grid;
+  grid-template-columns: repeat(2, auto);
   gap: var(--space-2xs);
+}
+
+.save-row-actions--single {
+  grid-template-columns: auto;
+}
+
+.save-row-actions__delete {
+  display: flex;
+  grid-column: 1 / -1;
+  justify-content: center;
 }
