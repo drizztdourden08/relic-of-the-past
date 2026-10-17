@@ -273,6 +273,14 @@ Extraction runs at most once per ROM per session. Concurrent callers (startup, p
 select, boot) share the in-flight promise, and a finished run, successful or not, is not
 repeated on the next profile switch. The manual buttons keep their own path.
 
+## apps/desktop/src/boot/screenshot-hold.ts
+
+A `--screenshot` launch holds the picture until every lazy screen and widget body has loaded (`lazyLoads.idle`) and then waits one more paint, so a docked widget is never captured as its loading spinner. The widget bodies are lazy, so releasing at the first drawn game frame photographs spinners.
+
+## apps/desktop/src/widgets/
+
+Every app widget sets `padding: 'none'`. The widget body default adds its own padding around views that already pad themselves, which narrowed the content by about 20 px and truncated rows that fit before.
+
 ## apps/desktop/src/widgets/shadow-editor.kit.ts
 
 The Shadow Editor widget kit: the editor for the shadow casting data, docked around a running game. It is dev only and gated on the `game` context, so without a game it opens on its reason card ("Start a game to use the Shadow Editor."). Members: Shadow Editor (right pane) and Shadow Elements (left pane), plus the Shadow drawing overlay. Both widgets use the `compact` chrome, a 21 px title strip, and the editor carries its Preview, Debug, Undo, Redo and Save buttons there. Only one kit is open at a time. The other developer panels (Live Data Inspector, Game State, Music Debugger, Location & Navigation and Simulator) are standalone widgets with `context: 'game'` and `devOnly: true`, so `widgets.open('navigation')`, the `--widgets=` flag and the dump and sim automation open them directly, in the normal layout. Brock 0.57 lists a kit as a submenu of Widgets after the widgets, and has no developer submenu: the developer widgets are plain entries that show while developer tools are on, so the Shadow Editor submenu cannot nest inside one.

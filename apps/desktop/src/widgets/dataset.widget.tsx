@@ -4,6 +4,7 @@ import { LiveDataInspectorContent } from '@app/views/NavigationWidget';
 
 const meta: WidgetMeta = {
   label: 'Live Data Inspector',
+  padding: 'none',
   icon: 'layers',
   order: 6,
   defaultSide: 'left',

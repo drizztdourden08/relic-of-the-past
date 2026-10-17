@@ -4,6 +4,7 @@ import { CheatsWidgetContent } from '@app/views/CheatsWidget';
 
 const meta: WidgetMeta = {
   label: 'Cheats',
+  padding: 'none',
   icon: 'zap',
   order: 3,
   defaultSide: 'right',

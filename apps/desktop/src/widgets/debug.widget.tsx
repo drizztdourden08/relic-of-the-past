@@ -4,6 +4,7 @@ import { DebugWidgetContent } from '@app/views/DebugWidget';
 
 const meta: WidgetMeta = {
   label: 'Game State',
+  padding: 'none',
   icon: 'radio',
   order: 4,
   defaultSide: 'right',

@@ -4,6 +4,7 @@ import { InventoryWidgetContent, InventoryWidgetSettings } from '@app/views/Inve
 
 const meta: WidgetMeta = {
   label: 'Inventory',
+  padding: 'none',
   icon: 'package',
   order: 1,
   defaultSide: 'right',

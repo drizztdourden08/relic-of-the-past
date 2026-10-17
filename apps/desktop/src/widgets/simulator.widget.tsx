@@ -4,6 +4,7 @@ import { SimulatorWidgetContent, SimulatorWidgetSettings } from '@app/views/Simu
 
 const meta: WidgetMeta = {
   label: 'Simulator',
+  padding: 'none',
   icon: 'play',
   order: 7,
   defaultSide: 'right',

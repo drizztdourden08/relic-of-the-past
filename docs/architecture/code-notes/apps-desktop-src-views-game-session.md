@@ -174,3 +174,7 @@ A features word set from here is only wanted until the core latches it on its ne
 ## apps/desktop/src/views/GameSession/behavior/useStoreLinks.ts
 
 A store install link the browser opened lands on the Hookshop tab whatever page was open: the Brock catalog module delivers it (`useCatalogLinks`), the link waits in the link store and the tab installs it. It does nothing off Electron.
+
+## apps/desktop/src/views/GameSession/behavior/useNavigationOverlayFollowsWidget.ts
+
+The navigation overlay on the game belongs to the navigation widget: removing the widget from the layout clears the flood and everything drawn from it. A page opening over the game (Home) only hides the widget, the layout still holds it, and the overlay is kept for the way back.
