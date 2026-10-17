@@ -3,10 +3,10 @@ import { useCallback, useState } from 'react';
 import { ItemList } from '@drizztdourden08/tessera/composites';
 import type { ItemListCreate, ItemListRowState } from '@drizztdourden08/tessera/composites';
 import type { NormalSaveInfo } from '@rotp/game-core';
-import { NO_GAME_REASON, UNDO_WINDOW_MS } from '../home-tab.constants';
+import { SaveRowActions } from '@app/compounds/SaveRowActions';
+import { NO_GAME_REASON } from '../home-tab.constants';
 import type { HomeTabColumnsProps } from '../home-tab.type';
 import { CreateSaveForm } from './CreateSaveForm';
-import { SaveOverButton } from './SaveOverButton';
 import { saveRowParts } from './save-row-parts';
 
 const idOf = (save: NormalSaveInfo) => save.id;
@@ -25,13 +25,17 @@ const NormalSavesSection = (props: HomeTabColumnsProps) => {
   }), [normalScreenshots, busyNormal]);
 
   const rowActions = useCallback((save: NormalSaveInfo, row: ItemListRowState) => (
-    <SaveOverButton
-      label="Save over"
-      disabledReason={isGameRunning ? undefined : NO_GAME_REASON}
+    <SaveRowActions
+      name={save.name}
+      resetKey={`${save.id}|${save.timestamp}|${busyNormal === save.id}`}
+      busy={busyNormal !== null}
       tabIndex={row.tabIndex}
-      onSave={() => void handleOverwriteNormal(save.id)}
+      overwriteDisabledReason={isGameRunning ? undefined : NO_GAME_REASON}
+      onLoad={() => void handleLoadNormal(save.id)}
+      onOverwrite={() => void handleOverwriteNormal(save.id)}
+      onDelete={() => void handleDeleteNormal(save.id)}
     />
-  ), [isGameRunning, handleOverwriteNormal]);
+  ), [busyNormal, isGameRunning, handleLoadNormal, handleOverwriteNormal, handleDeleteNormal]);
 
   const create = useCallback<ItemListCreate>((close) => {
     const handleCreate = (name: string) => {
@@ -43,10 +47,6 @@ const NormalSavesSection = (props: HomeTabColumnsProps) => {
     return <CreateSaveForm onCreate={handleCreate} onCancel={close} />;
   }, [handleCreateNormalSave]);
 
-  const handleActivate = useCallback((id: string) => {
-    if (busyNormal === null) void handleLoadNormal(id);
-  }, [busyNormal, handleLoadNormal]);
-
   const handleRename = useCallback((id: string, name: string) => void handleRenameNormal(id, name), [handleRenameNormal]);
 
   return (
@@ -57,16 +57,13 @@ const NormalSavesSection = (props: HomeTabColumnsProps) => {
       getName={nameOf}
       render={render}
       rowActions={rowActions}
+      actionVisibility="always"
       create={create}
       newDisabled={isGameRunning ? false : NO_GAME_REASON}
       createLabel="New save"
       selectedId={selectedId}
       onSelect={setSelectedId}
-      onActivate={handleActivate}
       onRename={handleRename}
-      onDelete={handleDeleteNormal}
-      undoDelete={UNDO_WINDOW_MS}
-      deleteKey
       empty="No saves yet"
     />
   );

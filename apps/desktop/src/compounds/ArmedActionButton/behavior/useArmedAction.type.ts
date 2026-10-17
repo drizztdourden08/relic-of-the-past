@@ -1,10 +1,9 @@
 /* @layer renderer-components @kind types */
-type ArmedAction = 'load' | 'save';
+type ArmedAction = 'load' | 'save' | 'delete';
 
 type ArmedState = { action: ArmedAction; key: string };
 
 type UseArmedActionParams = {
-  timeoutMs: number;
   resetKey: string;
 };
 

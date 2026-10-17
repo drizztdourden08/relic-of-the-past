@@ -1,22 +1,18 @@
 /* @layer renderer-components @kind hook */
 import { useState, useCallback } from 'react';
-import { toast } from '@drizztdourden08/tessera/composites';
 import { captureStateBuffer } from '@app/game';
 import { saveMusicPosition } from '@app/game/msu-save-glue';
 import { log } from '@app/log-bus';
 import * as savesStore from '@app/storage/saves-store';
 import { captureCanvasScreenshot } from './capture-canvas-screenshot';
 import { defaultSaveName } from './default-save-name';
+import { ensureGameRunning } from './ensure-game-running';
 import { loadStoredSave } from './load-stored-save';
-import { runQuietly } from './undo/run-quietly';
-import { useUndoableLoad } from './undo/useUndoableLoad';
-import { REPLACED_TOAST_ID, UNDO_WINDOW_MS } from './home-tab.constants';
 import type { UseNormalSaveActionsParams } from './home-tab.type';
 
 const useNormalSaveActions = (params: UseNormalSaveActionsParams) => {
   const { profileId, isGameRunning, onStartGame, loadNormalSaves } = params;
   const [busyNormal, setBusyNormal] = useState<string | null>(null);
-  const loadWithUndo = useUndoableLoad({ isGameRunning, onStartGame });
 
   const handleCreateNormalSave = useCallback(async (typed: string): Promise<string | null> => {
     const state = captureStateBuffer();
@@ -31,36 +27,26 @@ const useNormalSaveActions = (params: UseNormalSaveActionsParams) => {
 
   const handleLoadNormal = useCallback(async (id: string) => {
     setBusyNormal(id);
-    await loadWithUndo('Save loaded', () => loadStoredSave(profileId, 'normal', id));
+    if (await ensureGameRunning(isGameRunning, onStartGame)) await loadStoredSave(profileId, 'normal', id);
     setBusyNormal(null);
-  }, [profileId, loadWithUndo]);
+  }, [profileId, isGameRunning, onStartGame]);
 
   const handleOverwriteNormal = useCallback(async (id: string) => {
     const state = captureStateBuffer();
     if (!state) return;
     setBusyNormal(id);
     log.app(`Overwriting normal save: ${id}`);
-    const ref = { kind: 'normal', id } as const;
-    const previous = await savesStore.readSlotContents(profileId, ref);
     await savesStore.overwriteNormalSave(profileId, id, state, await captureCanvasScreenshot());
     await saveMusicPosition(profileId, 'normal', id);
     await loadNormalSaves();
     setBusyNormal(null);
-    if (!previous) return;
-    toast({
-      id: REPLACED_TOAST_ID,
-      message: 'Save replaced',
-      duration: UNDO_WINDOW_MS,
-      undo: () => void runQuietly(async () => {
-        await savesStore.writeSlotContents(profileId, ref, previous);
-        await loadNormalSaves();
-      }, 'undo the change'),
-    });
   }, [profileId, loadNormalSaves]);
 
   const handleDeleteNormal = useCallback(async (id: string) => {
+    setBusyNormal(id);
     await savesStore.deleteNormalSave(profileId, id);
     await loadNormalSaves();
+    setBusyNormal(null);
   }, [profileId, loadNormalSaves]);
 
   const handleRenameNormal = useCallback(async (id: string, newName: string) => {

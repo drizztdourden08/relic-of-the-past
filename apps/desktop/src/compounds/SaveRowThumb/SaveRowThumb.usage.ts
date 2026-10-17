@@ -2,7 +2,7 @@
 import type { ComponentUsage } from '@drizztdourden08/tessera';
 
 const usage = {
-  job: 'The screenshot of a save, framed, with pixels kept sharp; empty when there is none.',
+  job: 'The screenshot of a save at the full height of its row, framed in the SNES shape, with pixels kept sharp; empty when there is none.',
   useWhen: ['In the icon of a save row.'],
   avoidWhen: [{ case: 'A picture that is not a save screenshot.', use: 'Image' }],
   rules: ['Pass the screenshot URL, or null when the save has none.'],

@@ -1,50 +1,29 @@
 /* @layer renderer-components @kind component */
-import { useCallback } from 'react';
-import { ItemList } from '@drizztdourden08/tessera/composites';
-import type { ItemListRowState } from '@drizztdourden08/tessera/composites';
-import { NO_GAME_REASON } from '../home-tab.constants';
-import type { HomeTabColumnsProps, SlotInfo } from '../home-tab.type';
-import { SaveOverButton } from './SaveOverButton';
-import { saveRowParts } from './save-row-parts';
+import { Box, Text } from '@drizztdourden08/tessera/primitives';
+import { SaveSlot } from '../../../../../compounds/SaveSlot';
+import type { HomeTabColumnsProps } from '../home-tab.type';
 
-const idOf = (info: SlotInfo) => String(info.slot);
-const nameOf = (info: SlotInfo) => `Slot ${info.slot + 1}`;
-
-const QuickSavesSection = (props: HomeTabColumnsProps) => {
-  const { saves, isGameRunning } = props;
+const QuickSavesSection = ({ saves, isGameRunning }: HomeTabColumnsProps) => {
   const { slots, busySlot, handleQuickSave, handleQuickLoad } = saves;
-
-  const render = useCallback((info: SlotInfo) => saveRowParts({
-    screenshotUrl: info.screenshot,
-    timestamp: info.timestamp,
-    busy: busySlot === info.slot,
-  }), [busySlot]);
-
-  const rowActions = useCallback((info: SlotInfo, row: ItemListRowState) => (
-    <SaveOverButton
-      label={info.timestamp === null ? 'Save here' : 'Save over'}
-      disabledReason={isGameRunning ? undefined : NO_GAME_REASON}
-      tabIndex={row.tabIndex}
-      onSave={() => void handleQuickSave(info.slot)}
-    />
-  ), [isGameRunning, handleQuickSave]);
-
-  const handleActivate = useCallback((id: string) => {
-    const info = slots.find((slot) => idOf(slot) === id);
-    if (info !== undefined && info.timestamp !== null && busySlot === null) void handleQuickLoad(info.slot);
-  }, [slots, busySlot, handleQuickLoad]);
-
   return (
-    <ItemList
-      title="Quick saves"
-      items={slots}
-      getId={idOf}
-      getName={nameOf}
-      render={render}
-      rowActions={rowActions}
-      onActivate={handleActivate}
-      filter={false}
-    />
+    <Box as="section" className="home-tab__section">
+      <Text as="h3" className="home-tab__section-title">Quick Saves</Text>
+      <Box className="home-tab__save-grid">
+        {slots.map((s) => (
+          <SaveSlot
+            key={s.slot}
+            slot={s.slot}
+            screenshotUrl={s.screenshot}
+            timestamp={s.timestamp ?? 0}
+            isEmpty={!s.timestamp}
+            busy={busySlot === s.slot}
+            disableSave={!isGameRunning}
+            onSave={handleQuickSave}
+            onLoad={handleQuickLoad}
+          />
+        ))}
+      </Box>
+    </Box>
   );
 };
 

@@ -1,8 +1,9 @@
 /* @layer renderer-components @kind hook */
 import { useCallback, useEffect, useRef, useState } from 'react';
+import { ARM_TIMEOUT_MS } from '../ArmedActionButton.constants';
 import type { ArmedAction, ArmedState, UseArmedActionParams } from './useArmedAction.type';
 
-const useArmedAction = ({ timeoutMs, resetKey }: UseArmedActionParams) => {
+const useArmedAction = ({ resetKey }: UseArmedActionParams) => {
   const [state, setState] = useState<ArmedState | null>(null);
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
@@ -23,8 +24,8 @@ const useArmedAction = ({ timeoutMs, resetKey }: UseArmedActionParams) => {
     timerRef.current = setTimeout(() => {
       timerRef.current = null;
       setState(null);
-    }, timeoutMs);
-  }, [clearTimer, resetKey, timeoutMs]);
+    }, ARM_TIMEOUT_MS);
+  }, [clearTimer, resetKey]);
 
   const armed = state?.key === resetKey ? state.action : null;
 

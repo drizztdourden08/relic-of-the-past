@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind style */
 
-.slot-action {
+.armed-action {
   flex: 1;
   display: flex;
   align-items: center;
@@ -12,48 +12,68 @@
   transition: background var(--transition-fast), color var(--transition-fast);
 }
 
-.slot-action--load {
+.armed-action--load {
   border-right: var(--border-width-thin) solid var(--c-border-strong);
 }
 
-.slot-action--load:hover:not(:disabled),
-.slot-action--load:focus-visible {
+.armed-action--load:hover:not(:disabled),
+.armed-action--load:focus-visible {
   background: var(--c-info-soft);
   color: var(--c-info);
 }
 
-.slot-action--save:hover:not(:disabled),
-.slot-action--save:focus-visible {
+.armed-action--save:hover:not(:disabled),
+.armed-action--save:focus-visible {
   background: var(--c-secondary-soft);
   color: var(--c-secondary-bright);
 }
 
-.slot-action:focus-visible {
+.armed-action--delete:hover:not(:disabled),
+.armed-action--delete:focus-visible {
+  background: var(--c-danger-soft);
+  color: var(--c-danger-bright);
+}
+
+.armed-action--captioned {
+  flex: none;
+  justify-content: flex-start;
+  gap: var(--space-sm);
+  padding: var(--space-xs) var(--space-sm);
+  border: var(--border-width-thin) solid var(--c-border);
+  border-radius: var(--radius-md);
+}
+
+.armed-action__caption {
+  font-size: var(--text-sm);
+  white-space: nowrap;
+}
+
+.armed-action:focus-visible {
   outline: none;
 }
 
-.slot-action:disabled {
+.armed-action:disabled {
   opacity: 0.3;
   cursor: not-allowed;
 }
 
-.slot-action__glyph {
+.armed-action__glyph {
   position: relative;
   display: inline-flex;
   isolation: isolate;
   line-height: 1;
 }
 
-.slot-action--armed,
-.slot-action--armed:hover:not(:disabled) {
+.armed-action--armed,
+.armed-action--armed:hover:not(:disabled) {
   background: var(--c-primary-soft);
 }
 
-.slot-action--armed .slot-action__emoji {
-  animation: slot-action-float var(--duration-float) var(--ease-standard) infinite alternate;
+.armed-action--armed .armed-action__emoji {
+  animation: armed-action-float var(--duration-float) var(--ease-standard) infinite alternate;
 }
 
-.slot-action--armed .slot-action__glyph::before {
+.armed-action--armed .armed-action__glyph::before {
   content: "";
   position: absolute;
   inset: -40%;
@@ -67,15 +87,15 @@
   );
   opacity: var(--opacity-glow);
   filter: blur(var(--blur-glow));
-  animation: slot-action-glow-drift var(--duration-glow-drift) var(--ease-standard) infinite alternate;
+  animation: armed-action-glow-drift var(--duration-glow-drift) var(--ease-standard) infinite alternate;
 }
 
-@keyframes slot-action-float {
+@keyframes armed-action-float {
   from { transform: translateY(6%); }
   to { transform: translateY(-14%); }
 }
 
-@keyframes slot-action-glow-drift {
+@keyframes armed-action-glow-drift {
   from {
     transform: translate(-8%, -6%) scale(0.95);
     filter: blur(var(--blur-glow)) hue-rotate(-12deg);
@@ -88,8 +108,8 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .slot-action--armed .slot-action__emoji,
-  .slot-action--armed .slot-action__glyph::before {
+  .armed-action--armed .armed-action__emoji,
+  .armed-action--armed .armed-action__glyph::before {
     animation: none;
   }
 }

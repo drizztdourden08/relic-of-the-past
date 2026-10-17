@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind style */
 .save-row-thumb {
-  width: var(--size-48);
-  aspect-ratio: 8 / 7;
+  inline-size: calc(var(--size-128) * 256 / 224);
+  block-size: var(--size-128);
   border-radius: var(--radius-sm);
 }

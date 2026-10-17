@@ -1,0 +1,6 @@
+/* @layer renderer-components @kind style */
+.save-row-actions {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2xs);
+}

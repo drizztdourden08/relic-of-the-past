@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind types */
-import type { ArmedAction } from './behavior/useArmedAction.type';
+import type { ArmedAction } from '../ArmedActionButton';
 
 interface SaveSlotProps {
   slot: number;

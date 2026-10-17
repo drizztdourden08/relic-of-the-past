@@ -3,6 +3,24 @@
 
 Facts about `apps/desktop/src/compounds/` that the code cannot say on its own. Each heading names a file or folder by its path from the repository root.
 
+## apps/desktop/src/compounds/ArmedActionButton/ArmedActionButton.tsx
+
+The one press twice confirm of the app, shared by the quick save slots and the save rows. No
+colour, filter or mask reaches the glyph: the emoji keeps its own palette, and only the half
+behind it tints on hover, focus and arming. The glyph is its own stacking context so the armed
+halo sits behind the emoji and above the button's tint. While armed the emoji bobs and a green and
+gold halo wanders behind it. A button with a caption shows its action as text and asks it as a
+question while armed (Load becomes Load?); a quick save slot passes none and stays glyph only.
+Blur and Escape disarm.
+
+## apps/desktop/src/compounds/ArmedActionButton/behavior/useArmedAction.ts
+
+Two click confirmation: the first press arms one action and a second press on the same action
+performs it. Arming another action, waiting past `ARM_TIMEOUT_MS`, or showing new data all
+disarm. `resetKey` is a digest of the data the slot or row shows, so any change disarms without
+a render round trip. One hook serves every button of a slot or a row, so only one of them is
+armed at a time.
+
 ## apps/desktop/src/compounds/CapacityFamilyRow/CapacityFamilyRow.css
 
 Every line's label sits in one fixed narrow track so the family reads as a list, not a stack of
@@ -688,16 +706,18 @@ already fires silver, so the plain cost goes inert with the reason on it. Cost s
 rupees: round numbers a game of this age would ask. An absent `onChange` renders the read-only
 Options page.
 
+## apps/desktop/src/compounds/SaveRowActions/SaveRowActions.tsx
+
+Load, Overwrite and Delete of one save row, stacked down the row's right edge, each armed by a
+first press and run by a second, with the same look and timeout as a quick save slot. An
+auto-save leaves out Overwrite. Overwrite stays on screen without a game, greyed out with the
+reason as its hint.
+
 ## apps/desktop/src/compounds/SaveRowThumb/SaveRowThumb.tsx
 
-The screenshot of a save in the icon of a row. The frame keeps the 8 by 7 shape of the picture and the pixels sharp. A save with no screenshot shows an empty frame.
-
-## apps/desktop/src/compounds/SaveSlot/behavior/useArmedAction.ts
-
-Two click confirmation: the first press arms one action and a second press on the same action
-performs it. Arming the other action, waiting past the timeout, or showing new slot data all
-disarm. `resetKey` is a digest of the data the slot shows, so any change disarms without a render
-round trip.
+The screenshot of a save in the icon of a row, as tall as the row and in the SNES frame's shape
+(256 by 224), the proportion of a quick save card, so the picture is readable. The pixels stay
+sharp. A save with no screenshot shows an empty frame.
 
 ## apps/desktop/src/compounds/SaveSlot/SaveSlot.css
 
@@ -718,15 +738,8 @@ bare. The placeholder mascot uses a relative `src`, because the packaged rendere
 `file://`, where a leading slash resolves to the filesystem root; the title bar and the About view
 load these logos the same way. The action bar is the bottom slice of the card, blackened to stay
 legible over the shot, with Load on the left and Save on the right in DOM order too, so the tab
-order matches what is drawn. Each action takes one click to arm and a second to confirm. The
+order matches what is drawn. Each action takes one click to arm and a second to confirm (`ArmedActionButton`). The
 busy spinner covers the card with a scrim while the screenshot is captured and the slots reload.
-
-## apps/desktop/src/compounds/SaveSlot/sub-components/SlotActionButton/SlotActionButton.tsx
-
-No colour, filter or mask reaches the glyph: the emoji keeps its own palette, and only the half
-behind it tints on hover, focus and arming. The glyph is its own stacking context so the armed
-halo sits behind the emoji and above the button's tint. While armed the emoji bobs and a green and
-gold halo wanders behind it.
 
 ## apps/desktop/src/compounds/ServerSetup/ServerSetup.tsx
 
