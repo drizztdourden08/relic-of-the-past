@@ -1,7 +1,6 @@
 /* @layer renderer-components @kind types */
 import type { HeroSlots } from '@drizztdourden08/brock-react';
 import type { Profile, FilePickerPort } from '@drizztdourden08/brock-core';
-import type { ReactNode } from 'react';
 import type { AutoSaveInfo, NormalSaveInfo } from '@rotp/game-core';
 import type { useHomeTabSaves } from './useHomeTabSaves';
 
@@ -82,7 +81,9 @@ interface SaveActionsBase {
   onStartGame: () => void;
 }
 
-interface UseQuickSaveActionsParams extends SaveActionsBase {
+interface UseQuickSaveActionsParams {
+  isGameRunning: boolean;
+  onStartGame: () => void;
   loadQuickSlots: () => Promise<void>;
 }
 
@@ -116,25 +117,13 @@ interface CreateSaveFormProps {
 
 interface SaveRowPartsInput {
   screenshotUrl: string | null;
-  timestamp: number | null;
+  timestamp: number;
   busy: boolean;
-}
-
-interface SaveOverButtonProps {
-  label: string;
-  disabledReason?: string;
-  tabIndex?: number;
-  onSave: () => void;
-}
-
-interface SectionHeadProps {
-  title: string;
-  action?: ReactNode;
 }
 
 export type {
   AutoSavesData, CreateSaveFormProps, DialogState, HomeRandomizerStatus, HomeTabColumnsProps,
   HomeTabDialogProps, HomeTabDialogsProps, HomeHeroContentProps, NormalSavesData, ProfileFactsInput,
-  SaveFileChecks, SaveOverButtonProps, SaveRowPartsInput, SectionHeadProps, SlotInfo, SummaryFact, UseAutoSaveActionsParams,
+  SaveFileChecks, SaveRowPartsInput, SlotInfo, SummaryFact, UseAutoSaveActionsParams,
   UseHomeTabSavesParams, UseHomeTabSramImportParams, UseNormalSaveActionsParams, UseQuickSaveActionsParams,
 };

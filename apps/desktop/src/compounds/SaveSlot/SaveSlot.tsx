@@ -1,8 +1,7 @@
 /* @layer renderer-components @kind component */
 import { Box, Text, Spinner } from '@drizztdourden08/tessera/primitives';
 import './SaveSlot.css';
-import { ARM_TIMEOUT_MS } from './SaveSlot.constants';
-import { useArmedAction } from './behavior/useArmedAction';
+import { useArmedAction } from '../ArmedActionButton';
 import { SlotActions } from './sub-components/SlotActions';
 import { SlotScreenshot } from './sub-components/SlotScreenshot';
 import { SlotTime } from './sub-components/SlotTime';
@@ -26,7 +25,7 @@ const SaveSlot = (props: SaveSlotProps) => {
 
   const slotNumber = slot + 1;
   const resetKey = `${screenshotUrl ?? ''}|${timestamp}|${isEmpty}|${busy}`;
-  const { armed, press, disarm } = useArmedAction({ timeoutMs: ARM_TIMEOUT_MS, resetKey });
+  const { armed, press, disarm } = useArmedAction({ resetKey });
 
   const cardClass = [
     'save-slot__card',
