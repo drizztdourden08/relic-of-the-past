@@ -83,7 +83,8 @@ Facts about `packages/game-core` that the code cannot say on its own. Each headi
 - Both effect channels share one bit: a pack claims ids per channel, so the two are never armed separately and the claim masks decide which sounds the host takes.
 - Sound trace is diagnostics only: it reports every sound the game raises, claimed or not, and never moves a sound off the chip. Never on in normal play.
 - A fresh core starts with every gate clear, so reset drops the mirror to keep it from going stale.
-- Reassert pushes the mirror as it is. A bit set before the module existed (a debugger opened ahead of the game) was mirrored but never delivered, and the dedupe in the bit setter would treat later armings as done. Call it once the module is installed.
+- A push only reaches the core while it is running. The mirror remembers whether its last push was delivered, and the bit setter skips an unchanged word only when it was, so a bit set while the core was loading is pushed again by the next call.
+- Reassert pushes the whole mirror. The game start calls it right after the state reaches running, which delivers every bit set before the core existed (a debugger opened ahead of the game).
 
 ## packages/game-core/src/bridge/host-menu/
 

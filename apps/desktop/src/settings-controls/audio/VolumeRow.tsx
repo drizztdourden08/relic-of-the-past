@@ -6,11 +6,6 @@ import type { VolumeRowProps } from './audio.type';
 const VolumeRow = (props: VolumeRowProps) => {
   const { settingKey, settings, onChange, disabled } = props;
   const { label, description, mutedKey } = VOLUME_ROWS[settingKey];
-  const muting = mutedKey === null ? {} : {
-    muted: settings[mutedKey],
-    onMutedChange: (muted: boolean) => onChange({ [mutedKey]: muted }),
-    disabled,
-  };
   return (
     <VolumeControl
       label={label}
@@ -19,7 +14,9 @@ const VolumeRow = (props: VolumeRowProps) => {
       step={5}
       showValue
       onChange={(value) => onChange({ [settingKey]: value })}
-      {...muting}
+      muted={settings[mutedKey]}
+      onMutedChange={(muted: boolean) => onChange({ [mutedKey]: muted })}
+      disabled={disabled}
     />
   );
 };

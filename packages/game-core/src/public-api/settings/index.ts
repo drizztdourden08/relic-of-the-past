@@ -26,6 +26,7 @@ export { reassertHudHidden } from '../../live-settings/reassert-hud-hidden';
 export { reassertPauseHidden } from '../../live-settings/reassert-pause-hidden';
 export { reassertVolumes } from '../../live-settings/reassert-volumes';
 export { reassertVsync } from '../../live-settings/reassert-vsync';
+export { toMasterVolume } from '../../live-settings/to-master-volume';
 export { toWasmVolume } from '../../live-settings/to-wasm-volume';
 export { tryVoidCcall } from '../../live-settings/try-void-ccall';
 export { allowedRatio, rendersExtended, rendersWide } from '../../ratio-capability';

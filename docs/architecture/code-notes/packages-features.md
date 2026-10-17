@@ -130,6 +130,7 @@ This is the TS settings pipeline. The C side mirror that cannot be bypassed is `
 ## packages/features/src/settings/audio-settings.type.ts
 
 - `masterVolume`, `musicVolume`, `sfxVolume` and `ambientVolume` range 0 to 100.
+- `masterMuted` silences the whole mix without touching `masterVolume`, so unmuting returns to the chosen level. The title bar volume control and the Audio page both write it.
 - `perGroupVolume` is the explicit opt in for the per group (music and SFX) DSP mix. Off gives the bit identical stock audio mix and the Music and SFX sliders are inert; on makes them take effect. Master volume is unaffected either way.
 - `ambientVolume` and `ambientMuted` govern the replacement ambient bed only. The sound chip cannot split its ambience out of its mix, so they govern replacement audio, which is where a bed loud enough to fight the music comes from.
 - `msuConfigMode`: `auto` (default) derives `enableMSU`, `audioFreq` and `audioChannels` from the assigned pack's contents (packages/features/src/msu-auto-config), not user edited. `manual` leaves the three free form.

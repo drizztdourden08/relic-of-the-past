@@ -10,7 +10,6 @@ const SETTINGS_NOTIFIERS: readonly SettingsNotifier[] = [
     keys: ['viewportConstraint', 'aspectRatio'],
     run: (next, deps) => deps.onConstraintSettingsChange?.(next.viewportConstraint, next.aspectRatio),
   },
-  { keys: ['masterVolume'], run: (next, deps) => deps.onMasterVolumeChange?.(next.masterVolume) },
   { keys: ['displayPerfInTitle'], run: (next, deps) => deps.onDisplayPerfChange?.(next.displayPerfInTitle) },
   {
     keys: ['functionMappings'],

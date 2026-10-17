@@ -4,7 +4,7 @@ import { pushHostGateWord } from './push-host-gate-word';
 
 const setHostGateBit = (bit: number, on: boolean): void => {
   const next = on ? hostGateMirror.word | bit : hostGateMirror.word & ~bit;
-  if (next === hostGateMirror.word) return;
+  if (next === hostGateMirror.word && hostGateMirror.delivered) return;
   hostGateMirror.word = next;
   pushHostGateWord();
 };

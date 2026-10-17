@@ -4,7 +4,7 @@ import { applyNotchMode } from '@drizztdourden08/brock-react';
 import type { LoadedProfile, LoadedProfileTargets } from '../GameSession.type';
 
 const applyLoadedProfile = (data: LoadedProfile, targets: LoadedProfileTargets): void => {
-  const { game, display, audio, saveState } = targets;
+  const { game, display, saveState } = targets;
   primeLiveSettings(data.settings);
   applyNotchMode(data.settings.renderIntoNotch);
   game.setGameData(data.assetData, data.configIni);
@@ -18,7 +18,6 @@ const applyLoadedProfile = (data: LoadedProfile, targets: LoadedProfileTargets):
     startFullscreen: data.settings.startFullscreen,
     pixelPerfect: data.settings.pixelPerfect,
   });
-  audio.initFromSettings(data.settings.masterVolume);
   saveState.initFromSettings(data.settings.enhancedSaveSlotShortcut, data.settings.saveHoldDuration);
 };
 

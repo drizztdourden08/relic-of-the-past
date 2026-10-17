@@ -25,13 +25,9 @@ const FilterSearch = ({ filter, onFilterChange, activeCount, filtersOpen, onTogg
         onChange={(searchQuery) => onFilterChange({ ...filter, searchQuery })}
         aria-label="Search checks"
       />
-      {activeCount > 0 ? (
-        <Badge value={activeCount} color="warning" label={`${activeCount} filters active`}>
-          {toggle}
-        </Badge>
-      ) : (
-        toggle
-      )}
+      <Badge value={activeCount} hideZero color="warning" label={`${activeCount} filters active`}>
+        {toggle}
+      </Badge>
     </Box>
   );
 };

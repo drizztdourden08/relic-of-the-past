@@ -5,7 +5,6 @@ import type { GameSettings } from '@rotp/features';
 interface ParentCallbacks {
   onWindowModeChange?: (mode: GameSettings['windowMode']) => void;
   onConstraintSettingsChange?: (constraint: GameSettings['viewportConstraint'], aspectRatio: GameSettings['aspectRatio']) => void;
-  onMasterVolumeChange?: (volume: number) => void;
   onDisplayPerfChange?: (enabled: boolean) => void;
   onSaveSlotSettingsChange?: (enhanced: boolean, holdDuration: number) => void;
   onEdgeEffectChange?: (enabled: boolean) => void;
@@ -24,7 +23,6 @@ interface SettingsEffectDeps extends ParentCallbacks {
 interface SettingsBridgeDeps {
   isGameRunning: boolean;
   callbacks: ParentCallbacks;
-  masterVolumeOverride: { volume: number; version: number } | null;
 }
 
 export type { SettingsBridgeDeps, SettingsEffectDeps };

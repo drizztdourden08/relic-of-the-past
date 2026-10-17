@@ -83,6 +83,7 @@ const LIVE_SETTING_KEYS = [
   'turboEnabled',
   'turboSpeed',
   'masterVolume',
+  'masterMuted',
   'musicVolume',
   'musicMuted',
   'sfxVolume',

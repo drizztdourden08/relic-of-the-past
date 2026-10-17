@@ -1,4 +1,5 @@
 /* @layer renderer-app @kind constants */
+import { volumeFromSettings } from '@drizztdourden08/brock-react';
 import type { BrockAppSettings } from '@drizztdourden08/brock-react';
 import { SETTINGS_CONTROLS } from './settings-controls/settings-controls.constants';
 import { normaliseSettings } from './settings-effects/normalise-settings';
@@ -13,4 +14,6 @@ const SETTINGS: BrockAppSettings<AppSettings> = {
   ...SETTINGS_CONTROLS,
 };
 
-export { SETTINGS };
+const VOLUME = volumeFromSettings({ value: 'masterVolume', muted: 'masterMuted', max: 100 });
+
+export { SETTINGS, VOLUME };

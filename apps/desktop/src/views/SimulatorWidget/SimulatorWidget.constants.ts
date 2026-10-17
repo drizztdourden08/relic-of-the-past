@@ -40,7 +40,25 @@ const KIND_LABEL: Record<LogKind, string> = {
   debug: 'Debug',
 };
 
-const LOG_KINDS: LogKindDef[] = ALL_KINDS.map((kind) => ({ id: kind, label: KIND_LABEL[kind] }));
+const KIND_LOOK: Record<LogKind, Omit<LogKindDef, 'id' | 'label'>> = {
+  seq: { tone: 'primary', toneMessage: true, strong: true, uppercase: true },
+  area: { tone: 'info', toneMessage: true, strong: true },
+  screen: { strong: true },
+  pos: { tone: 'muted', toneMessage: 'dim' },
+  backtrack: { tone: 'muted', toneMessage: true },
+  flood: { tone: 'info', toneMessage: true },
+  reset: { tone: 'primary', toneMessage: true },
+  check: { tone: 'success', toneMessage: true },
+  item: { tone: 'primary', toneMessage: true },
+  discover: { tone: 'info' },
+  move: { tone: 'muted', toneMessage: 'dim' },
+  unlock: { tone: 'primary', toneMessage: true },
+  outcome: { tone: 'success', toneMessage: true },
+  info: { tone: 'muted' },
+  debug: { tone: 'muted', toneMessage: true },
+};
+
+const LOG_KINDS: LogKindDef[] = ALL_KINDS.map((kind) => ({ id: kind, label: KIND_LABEL[kind], ...KIND_LOOK[kind] }));
 
 export {
   CHECK_DISABLED_HINT, EMPTY_FILTER, FEATURES_LATCH_WAIT_MS, LOG_KINDS, PAUSED_POLL_MS, RECORD_REQUIRED, SAFETY_CAP,

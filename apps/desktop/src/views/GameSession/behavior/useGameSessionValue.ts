@@ -5,7 +5,6 @@ import { subscribeGameState } from '@rotp/game-core';
 import type { GameSessionValue } from '../GameSession.type';
 import { applyLoadedProfile } from './apply-loaded-profile';
 import { useAppMainEffects } from './useAppMainEffects';
-import { useAudioSettings } from './useAudioSettings';
 import { useConfirmDialog } from './useConfirmDialog';
 import { useDebugLaunchHooks } from './useDebugLaunchHooks';
 import { useDisplaySettings } from './useDisplaySettings';
@@ -18,6 +17,7 @@ import { useSaveOverlay } from './useSaveOverlay';
 import { useSaveStateSettings } from './useSaveStateSettings';
 import { useSettingsBridge } from './useSettingsBridge';
 import { useShellBridges } from './useShellBridges';
+import { useStartupVolume } from './useStartupVolume';
 import { useStoreLinks } from './useStoreLinks';
 
 const openNavWidget = (): void => widgets.open('navigation');
@@ -25,13 +25,12 @@ const openNavWidget = (): void => widgets.open('navigation');
 const useGameSessionValue = (): GameSessionValue => {
   const dialogs = useConfirmDialog();
   const game = useGameLifecycle();
-  const audio = useAudioSettings();
   const saveState = useSaveStateSettings();
   const display = useDisplaySettings({ isGameRunning: game.isRunning });
   const profileMgmt = useProfileManagement({
     showDialog: dialogs.showDialog,
     dismissDialog: dialogs.dismissDialog,
-    onProfileLoaded: (data) => applyLoadedProfile(data, { game, display, audio, saveState }),
+    onProfileLoaded: (data) => applyLoadedProfile(data, { game, display, saveState }),
     onGameClear: () => game.clearGame(),
     onGameStop: () => game.stop(),
   });
@@ -41,11 +40,9 @@ const useGameSessionValue = (): GameSessionValue => {
 
   useSettingsBridge({
     isGameRunning: game.isRunning,
-    masterVolumeOverride: audio.muteOverride,
     callbacks: {
       onWindowModeChange: display.handleWindowModeChange,
       onConstraintSettingsChange: display.handleConstraintSettingsChange,
-      onMasterVolumeChange: audio.handleMasterVolumeChange,
       onDisplayPerfChange: display.handleDisplayPerfChange,
       onSaveSlotSettingsChange: saveState.handleSaveSlotSettingsChange,
       onEdgeEffectChange: display.handleEdgeEffectChange,
@@ -59,6 +56,7 @@ const useGameSessionValue = (): GameSessionValue => {
   useStoreLinks();
   useOpenHubOnStart(profileId);
   useShellBridges(game.isRunning);
+  useStartupVolume();
   useAppMainEffects({ isGameRunning: game.isRunning, screenOpen, openNavWidget });
   useEffect(() => subscribeGameState((state) => {
     if (state.status === 'error') widgets.open('logs');
@@ -78,8 +76,8 @@ const useGameSessionValue = (): GameSessionValue => {
   }, [activeProfile, stop, loadProfileForGame]);
 
   return useMemo(
-    () => ({ dialogs, game, audio, display, saveState, saveOverlay, profileMgmt, startGame, resetGame }),
-    [dialogs, game, audio, display, saveState, saveOverlay, profileMgmt, startGame, resetGame],
+    () => ({ dialogs, game, display, saveState, saveOverlay, profileMgmt, startGame, resetGame }),
+    [dialogs, game, display, saveState, saveOverlay, profileMgmt, startGame, resetGame],
   );
 };
 
