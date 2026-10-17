@@ -1,7 +1,7 @@
 /* @layer bridge-wasm @kind logic */
 import type { MsuDebugEvent } from '../player/debug-bus';
 import { SOUND_CHANNELS } from '../player/sound-claim';
-import { setSoundTrace } from '@rotp/game-core';
+import { reassertHostGates, setSoundTrace } from '@rotp/game-core';
 import type { GameState } from '@rotp/game-core';
 import { MUSIC_CODES } from './music-debug.constants';
 import { musicDebugState } from './music-debug-state';
@@ -34,7 +34,9 @@ const onMsuDebug = (event: MsuDebugEvent): void => {
 };
 
 const onGameState = (state: GameState): void => {
-  if (state.status === 'running' && musicDebugState.armed) setSoundTrace(true);
+  if (state.status !== 'running' || !musicDebugState.armed) return;
+  setSoundTrace(true);
+  reassertHostGates();
 };
 
 const traceHandlers = { onSoundTrace, onMusicTrace, onMsuDebug, onGameState };
