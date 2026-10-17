@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind style */
 .save-row-thumb {
-  inline-size: calc(var(--size-128) * 256 / 224);
-  block-size: var(--size-128);
+  block-size: calc(2 * var(--control-h-sm) + var(--space-2xs));
+  inline-size: calc((2 * var(--control-h-sm) + var(--space-2xs)) * 256 / 224);
   border-radius: var(--radius-sm);
 }

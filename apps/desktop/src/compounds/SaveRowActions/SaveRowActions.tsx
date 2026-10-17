@@ -1,19 +1,23 @@
 /* @layer renderer-components @kind component */
+import { useEffect } from 'react';
 import { Box } from '@drizztdourden08/tessera/primitives';
-import { ArmedActionButton, useArmedAction } from '../ArmedActionButton';
+import { useArmedAction } from '../ArmedActionButton';
+import { SaveRowActionButton } from '../SaveRowActionButton';
+import { SAVE_ROW_ICONS } from './SaveRowActions.constants';
 import type { SaveRowActionsProps } from './SaveRowActions.type';
 import './SaveRowActions.css';
 
 const SaveRowActions = (props: SaveRowActionsProps) => {
-  const { name, resetKey, busy, tabIndex, overwriteDisabledReason, onLoad, onOverwrite, onDelete } = props;
+  const { name, resetKey, busy, tabIndex, overwriteDisabledReason, onLoad, onOverwrite, onDelete, onArmedChange } = props;
   const { armed, press, disarm } = useArmedAction({ resetKey });
 
+  useEffect(() => onArmedChange?.(armed), [armed, onArmedChange]);
+
   return (
-    <Box className="save-row-actions">
-      <ArmedActionButton
-        action="load"
+    <Box className={onOverwrite ? 'save-row-actions' : 'save-row-actions save-row-actions--single'}>
+      <SaveRowActionButton
         label={`Load ${name}`}
-        caption="Load"
+        icons={SAVE_ROW_ICONS.load}
         disabled={busy}
         armed={armed === 'load'}
         tabIndex={tabIndex}
@@ -21,10 +25,9 @@ const SaveRowActions = (props: SaveRowActionsProps) => {
         onDisarm={disarm}
       />
       {onOverwrite && (
-        <ArmedActionButton
-          action="save"
+        <SaveRowActionButton
           label={`Overwrite ${name}`}
-          caption="Overwrite"
+          icons={SAVE_ROW_ICONS.save}
           disabled={busy || overwriteDisabledReason !== undefined}
           disabledReason={overwriteDisabledReason}
           armed={armed === 'save'}
@@ -33,16 +36,17 @@ const SaveRowActions = (props: SaveRowActionsProps) => {
           onDisarm={disarm}
         />
       )}
-      <ArmedActionButton
-        action="delete"
-        label={`Delete ${name}`}
-        caption="Delete"
-        disabled={busy}
-        armed={armed === 'delete'}
-        tabIndex={tabIndex}
-        onPress={() => press('delete', onDelete)}
-        onDisarm={disarm}
-      />
+      <Box className="save-row-actions__delete">
+        <SaveRowActionButton
+          label={`Delete ${name}`}
+          icons={SAVE_ROW_ICONS.delete}
+          disabled={busy}
+          armed={armed === 'delete'}
+          tabIndex={tabIndex}
+          onPress={() => press('delete', onDelete)}
+          onDisarm={disarm}
+        />
+      </Box>
     </Box>
   );
 };
