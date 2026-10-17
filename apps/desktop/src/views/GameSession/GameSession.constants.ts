@@ -10,6 +10,8 @@ const GAME_CONTEXT = 'game';
 
 const DATA_INSPECTOR_SCREEN = 'data-inspector';
 
+const NAVIGATION_WIDGET_ID = 'navigation';
+
 const DATA_VIEW_STORAGE: ViewStorage = { load: loadViewSnapshot, save: saveViewSnapshot };
 
-export { DATA_INSPECTOR_SCREEN, DATA_VIEW_STORAGE, GAME_CONTEXT, HOME_HUB, TITLEBAR_HEIGHT };
+export { DATA_INSPECTOR_SCREEN, DATA_VIEW_STORAGE, GAME_CONTEXT, HOME_HUB, NAVIGATION_WIDGET_ID, TITLEBAR_HEIGHT };

@@ -60,7 +60,7 @@ Add a note to the page of the package or area that holds the file, under a headi
 | [apps/desktop/src/views/CheatsWidget](apps-desktop-src-views-cheats-widget.md) | 38 |
 | [apps/desktop/src/views/DataInspector](apps-desktop-src-views-data-inspector.md) | 45 |
 | [apps/desktop/src/views/DataManager](apps-desktop-src-views-data-manager.md) | 35 |
-| [apps/desktop/src/views/GameSession](apps-desktop-src-views-game-session.md) | 27 |
+| [apps/desktop/src/views/GameSession](apps-desktop-src-views-game-session.md) | 28 |
 | [apps/desktop/src/views/HudLayoutEditor](apps-desktop-src-views-hud-layout-editor.md) | 130 |
 | [apps/desktop/src/views/InputTester](apps-desktop-src-views-input-tester.md) | 61 |
 | [apps/desktop/src/views/NavigationWidget](apps-desktop-src-views-navigation-widget.md) | 27 |

@@ -4,9 +4,11 @@ import { nav, useBootStore, useSetAppContext, widgets } from '@drizztdourden08/b
 import { useDataViewStore } from '@app/stores/data-view-store';
 import { startupWidgets } from '@app/startup/startup-widgets';
 import { GAME_CONTEXT, DATA_INSPECTOR_SCREEN } from '../GameSession.constants';
+import { useNavigationOverlayFollowsWidget } from './useNavigationOverlayFollowsWidget';
 
 const useShellBridges = (isGameRunning: boolean): void => {
   useSetAppContext(GAME_CONTEXT, isGameRunning);
+  useNavigationOverlayFollowsWidget();
   const registerInspectorOpener = useDataViewStore((state) => state.registerInspectorOpener);
   const ready = useBootStore((s) => s.phase === 'ready');
   const opened = useRef(false);
