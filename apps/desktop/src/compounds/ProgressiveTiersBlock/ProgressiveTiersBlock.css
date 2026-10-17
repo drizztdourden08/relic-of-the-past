@@ -13,7 +13,7 @@
   padding-top: var(--space-md);
 }
 
-.progressive-tiers-block__cards {
+.progressive-tiers-block__ladders {
   display: flex;
   flex-wrap: wrap;
   gap: var(--space-md);
@@ -39,7 +39,7 @@
   padding: var(--space-sm);
   border-left: var(--border-width-thick) solid var(--c-danger);
   border-radius: var(--radius-sm);
-  background: var(--c-surface);
+  background: var(--c-sunken);
 }
 
 .progressive-tiers-block__blocked-lead {

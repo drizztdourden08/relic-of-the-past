@@ -16,6 +16,7 @@ const ShopSlotCard = (props: ShopSlotCardProps) => {
 
   return (
     <Box
+      surface="sunken"
       className="shop-slot-card"
       data-state={stateOf(disabled, noneOn)}
       data-empty={noneOn ? '' : undefined}

@@ -8,4 +8,8 @@ const MODE_OPTIONS: SegmentOption<ProgressiveFamilyMode>[] = PROGRESSIVE_MODES.m
   label: PROGRESSIVE_MODE_LABELS[mode],
 }));
 
-export { MODE_OPTIONS };
+const IN_SEED = 'in the seed';
+
+const OUT_OF_SEED = 'out of the seed';
+
+export { IN_SEED, MODE_OPTIONS, OUT_OF_SEED };

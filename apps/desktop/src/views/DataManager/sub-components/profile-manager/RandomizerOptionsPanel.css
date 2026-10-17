@@ -34,7 +34,6 @@
 .randomizer-options__header {
   display: flex;
   flex-direction: column;
-  gap: var(--space-xs);
 }
 
 .randomizer-options__title {

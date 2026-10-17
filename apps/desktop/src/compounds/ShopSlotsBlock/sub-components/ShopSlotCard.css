@@ -6,17 +6,10 @@
   gap: var(--space-sm);
   min-width: 0;
   padding: var(--space-md);
-  background: var(--c-surface);
-  border: var(--border-width-thin) solid var(--c-border);
-  border-radius: var(--radius-lg);
 }
 
 .shop-slot-card[data-state='off'] {
   opacity: var(--opacity-muted);
-}
-
-.shop-slot-card[data-state='disabled'] {
-  background: var(--c-bg);
 }
 
 .shop-slot-card[data-empty] {
