@@ -20,10 +20,10 @@ const startGame = async (canvas: HTMLCanvasElement, assetData: Uint8Array, confi
     const module = await bootGameModule(canvas, assetData, configIni, sramData);
     if (!module) return;
     setModule(module);
-    reassertHostGates();
     setProfileId(profileId ?? null);
     exposeDebugHandles(module);
     setState({ status: 'running', error: null });
+    reassertHostGates();
     log.wasm('WASM module running');
     canvas.focus();
     startSessionServices(profileId ?? null);

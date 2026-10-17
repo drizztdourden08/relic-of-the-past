@@ -91,7 +91,7 @@ ambient, sfx1, sfx2. Only sounds that author at least one layer are claimed.
 - window.__onSoundTrace is every raise on the three sound ports with its claim verdict; window.__onMusicTrace is every accepted music-control write and who owns music.
 - The core-side trace gate costs host calls while armed, so it is armed only while a debugger watches; the engine's bus is free and stays attached for the whole run.
 - The armed wish is kept here instead of trusting the gate mirror: every game boot starts from a cleared gate word (resetGame wipes the mirror, then the core comes up with nothing set), so an arming made before or across a boot is applied again once the new core is running.
-- initMusicDebug applies the current game state at once, and the game state subscriber re-pushes the whole gate mirror when the core reaches running, because a gate bit set while the core was still loading was mirrored but its push was dropped, and setGateBit skips a bit the mirror already holds.
+- A gate bit set while the core was still loading is delivered by the host gates themselves when the core reaches running (see packages/game-core/src/bridge/host-gates), so nothing here pushes the mirror.
 - initMusicDebug runs from game start, never at import time. A module that subscribes because something imported it runs wherever the bundler orders it, which is how the same registration in packages/game-core/src/host-menu once ran before wasm-bridge had initialised and killed the bundled renderer at load. Nothing here can fire before a core exists, so installing at game start costs no event.
 - Disarming keeps whatever the feed already collected.
 - The events array and counters snapshot stay stable between notifications, so useSyncExternalStore sees one snapshot per change.
