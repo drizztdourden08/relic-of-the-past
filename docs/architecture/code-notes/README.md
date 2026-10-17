@@ -50,7 +50,7 @@ Add a note to the page of the package or area that holds the file, under a headi
 | [apps/desktop/src/msu-studio](apps-desktop-src-msu-studio.md) | 77 |
 | [apps/desktop/src/nav-widget](apps-desktop-src-nav-widget.md) | 27 |
 | [apps/desktop/src/navigation-overlay](apps-desktop-src-navigation-overlay.md) | 12 |
-| [apps/desktop/src (smaller areas)](apps-desktop-src-other.md) | 35 |
+| [apps/desktop/src (smaller areas)](apps-desktop-src-other.md) | 36 |
 | [apps/desktop/src/primitives](apps-desktop-src-primitives.md) | 16 |
 | [apps/desktop/src/settings-controls](apps-desktop-src-settings-controls.md) | 24 |
 | [apps/desktop/src/storage](apps-desktop-src-storage.md) | 16 |
