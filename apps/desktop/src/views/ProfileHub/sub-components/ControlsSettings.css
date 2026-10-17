@@ -1,7 +1,9 @@
 /* @layer renderer-components @kind style */
 .controls-settings {
-  display: flex;
+  container: list-panel-row / inline-size;
+  position: relative;
   height: 100%;
+  min-height: 0;
   overflow: hidden;
 }
 
@@ -15,17 +17,19 @@
   flex: 1;
 }
 
-.controls-settings__placeholder {
-  flex: 1;
+.controls-settings__main {
   display: flex;
-  align-items: center;
-  justify-content: center;
+  flex: 1;
+  flex-direction: column;
+  min-width: 0;
+  min-height: 0;
 }
 
-.controls-settings__placeholder-text {
-  font-size: var(--text-base);
-  color: var(--c-text-muted);
-  font-style: italic;
+.controls-settings__body {
+  flex: 1;
+  min-height: 0;
+  padding-block-start: var(--space-xl);
+  padding-inline-end: var(--space-sm);
 }
 
 .controls-settings__section-header {
@@ -41,27 +45,7 @@
   flex-shrink: 0;
 }
 
-.controls-settings__device-list {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-sm);
-}
-
-.controls-settings__no-devices {
-  font-size: var(--text-base);
-  color: var(--c-text-muted);
-  padding: var(--space-sm) 0;
-}
-
-.controls-settings__device-hint {
-  font-size: var(--text-sm);
-  color: var(--c-text-muted);
-  margin-top: var(--space-md);
-  line-height: 1.4;
-}
-
 .controls-settings__bindings {
-  flex: 1;
   display: flex;
   flex-direction: column;
   border: var(--border-width-thin) solid var(--c-border);
@@ -69,32 +53,13 @@
   background: var(--c-surface);
   overflow: hidden;
   transition: border-color 0.2s, box-shadow 0.2s;
-  min-height: 0;
 }
 
 .controls-settings__bindings .controls-settings__section-header {
   padding: var(--space-sm) var(--space-md) var(--space-xs);
 }
 
-.controls-settings__shortcut-options {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-sm);
-  padding: var(--space-xs) var(--space-md) var(--space-sm);
-}
-
 .controls-settings__bindings--drag-over {
   border-color: var(--c-primary);
   box-shadow: 0 0 var(--size-12) var(--c-primary-soft), inset 0 0 var(--size-12) var(--c-primary-soft);
-}
-
-.controls-settings__binding-list {
-  flex: 1;
-  overflow-y: auto;
-}
-
-@media (height <= 520px) {
-  .controls-settings__bindings .controls-settings__section-header {
-    display: none;
-  }
 }

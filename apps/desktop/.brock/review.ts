@@ -3,7 +3,9 @@ import type { AppReview } from '@drizztdourden08/brock-react';
 
 const appReview: AppReview = {
   seed: null,
-  steps: [],
+  steps: [
+    { id: 'controls', load: () => import('../src/review/controls.step') },
+  ],
   fixtures: [],
 };
 

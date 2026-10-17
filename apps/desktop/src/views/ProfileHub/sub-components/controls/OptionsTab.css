@@ -1,11 +1,4 @@
 /* @layer renderer-components @kind style */
-.controls-options {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-lg);
-  min-width: 0;
-}
-
 .controls-options__input {
   display: flex;
   align-items: center;

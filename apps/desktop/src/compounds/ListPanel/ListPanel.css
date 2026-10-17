@@ -1,0 +1,89 @@
+/* @layer renderer-components @kind style */
+.list-panel {
+  --list-panel-head-h: var(--size-28);
+
+  position: relative;
+  display: flex;
+  flex: none;
+  flex-direction: column;
+  gap: var(--space-md);
+  inline-size: var(--size-192);
+  min-block-size: 0;
+  padding: var(--space-md);
+  border-radius: var(--radius-lg);
+}
+
+.list-panel--start {
+  margin-inline-end: calc(var(--collapse-toggle-d) / 2);
+}
+
+.list-panel--end {
+  margin-inline-start: calc(var(--collapse-toggle-d) / 2);
+}
+
+.list-panel--collapsed {
+  inline-size: var(--side-nav-w);
+  padding-inline: var(--space-2xs);
+}
+
+.list-panel__toggle {
+  position: absolute;
+  top: calc(var(--space-md) + (var(--list-panel-head-h) - var(--collapse-toggle-d)) / 2);
+  z-index: var(--z-base);
+}
+
+.list-panel--start .list-panel__toggle {
+  inset-inline-end: calc(var(--collapse-toggle-d) / -2);
+}
+
+.list-panel--end .list-panel__toggle {
+  inset-inline-start: calc(var(--collapse-toggle-d) / -2);
+}
+
+.list-panel__head {
+  display: flex;
+  flex: none;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-sm);
+  min-block-size: var(--list-panel-head-h);
+}
+
+.list-panel--start .list-panel__head {
+  padding-inline-end: calc(var(--collapse-toggle-d) / 2);
+}
+
+.list-panel--end .list-panel__head {
+  padding-inline-start: calc(var(--collapse-toggle-d) / 2);
+}
+
+.list-panel__body {
+  flex: 1;
+  min-block-size: 0;
+}
+
+.list-panel__rail {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-xs);
+  min-block-size: 0;
+  overflow-y: auto;
+}
+
+@container list-panel-row (width < 640px) {
+  .list-panel:not(.list-panel--collapsed) {
+    position: absolute;
+    inset-block: 0;
+    z-index: var(--z-panel);
+    box-shadow: var(--shadow-overlay);
+  }
+
+  .list-panel--start:not(.list-panel--collapsed) {
+    inset-inline-start: 0;
+  }
+
+  .list-panel--end:not(.list-panel--collapsed) {
+    inset-inline-end: 0;
+  }
+}

@@ -1,0 +1,16 @@
+/* @layer renderer-components @kind style */
+.device-icon {
+  flex-shrink: 0;
+  inline-size: var(--size-28);
+  block-size: var(--size-28);
+  object-fit: contain;
+}
+
+.device-icon--ready {
+  filter: drop-shadow(0 0 var(--size-6) var(--c-secondary)) drop-shadow(0 0 var(--size-12) var(--c-secondary));
+}
+
+.device-icon--unavailable {
+  filter: grayscale(1) opacity(0.5);
+}
+

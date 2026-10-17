@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind component */
 import { useCallback, useMemo } from 'react';
-import { Box, Tabs } from '@drizztdourden08/tessera/primitives';
+import { Box, ScrollArea, Tabs } from '@drizztdourden08/tessera/primitives';
 import type { TabItem } from '@drizztdourden08/tessera/primitives';
 import { GameControlsTab } from './GameControlsTab';
 import { ModernControlsTab } from './ModernControlsTab';
@@ -29,14 +29,15 @@ const ControlsMain = ({ ctrl, cheatsEnabled, onOpenCheatsSettings }: ControlsMai
   return (
     <Box className="controls-settings__main">
       <Tabs tabs={tabs} activeTab={ctrl.activeTab} onTabChange={handleTabChange} />
-
-      {ctrl.activeTab === 'controls' && <GameControlsTab ctrl={ctrl} />}
-      {ctrl.activeTab === 'modern' && <ModernControlsTab ctrl={ctrl} />}
-      {ctrl.activeTab === 'shortcuts' && <ShortcutsTab ctrl={ctrl} />}
-      {ctrl.activeTab === 'cheats' && (
-        <CheatBindingsTab ctrl={ctrl} cheatsEnabled={cheatsEnabled} onOpenCheatsSettings={onOpenCheatsSettings} />
-      )}
-      {ctrl.activeTab === 'options' && <OptionsTab ctrl={ctrl} />}
+      <ScrollArea className="controls-settings__body">
+        {ctrl.activeTab === 'controls' && <GameControlsTab ctrl={ctrl} />}
+        {ctrl.activeTab === 'modern' && <ModernControlsTab ctrl={ctrl} />}
+        {ctrl.activeTab === 'shortcuts' && <ShortcutsTab ctrl={ctrl} />}
+        {ctrl.activeTab === 'cheats' && (
+          <CheatBindingsTab ctrl={ctrl} cheatsEnabled={cheatsEnabled} onOpenCheatsSettings={onOpenCheatsSettings} />
+        )}
+        {ctrl.activeTab === 'options' && <OptionsTab ctrl={ctrl} />}
+      </ScrollArea>
     </Box>
   );
 };

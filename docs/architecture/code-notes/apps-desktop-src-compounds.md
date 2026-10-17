@@ -411,6 +411,15 @@ chip is flagged when its jump ran past the top of the ladder. An ordered ladder 
 sprite of the currency its value is asked in: the picture names the currency and the number the
 amount, so a demand with no amount (one item, held up and handed back) is the icon alone.
 
+## apps/desktop/src/compounds/ListPanel/ListPanel.tsx
+
+The compact side list of the Controls page, modelled on the list pane of Data > Sprites: a sunken
+pane with its title and one button at the top, then ListItemRow rows. Folded, it is a rail as wide
+as the hub nav rail, and the top button stays first on it. The fold is held by the caller through
+`useStoredFold`, so that button can open the panel before it acts. It lives in the app, not in
+Tessera, because only this page needs it. Under 640 px of its `list-panel-row` container an open
+panel lies over the work area, since two open panels there would leave the middle no room.
+
 ## apps/desktop/src/compounds/MappingPasteBox/MappingPasteBox.tsx
 
 Lets a player paste an SDL mapping line for a controller that is not recognized, as an

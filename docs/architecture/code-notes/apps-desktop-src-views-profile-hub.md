@@ -21,8 +21,8 @@ Facts about `apps/desktop/src/views/ProfileHub/` that the code cannot say on its
 
 - `apps/desktop/src/views/ProfileHub`: the gap between the nav and the content leaves room for the nav's round toggle, which straddles its right edge. The `.settings-tab` rules are the generic settings tab layout used by the Audio, Gameplay and Controls tabs, and `.hub-game-controls` is the game controls group rendered in the window title bar.
 - `BindingListener.css`: the backdrop opts back into pointer events, because the Portal layer is click-through.
-- `OptionsTab.css`: the two settings sections of the Options tab stack with the page section gap, and a required input row draws its device icon beside its connected state.
-- `ControlsSettings.css`: collapsed columns show only the device icon strip (profiles) or the card icons (devices) and turn the column title vertical. On a short viewport (landscape phones) the tab card headers are dropped to reclaim vertical space. The screen runs in a compact `DensityScope` and uses the small spacing steps, because vertical room is scarce here.
+- `OptionsTab.css`: a required input row draws its device icon beside its connected state. The two sections need no wrapper, so they take the same section gap as the Game settings pages.
+- `ControlsSettings.css`: the row is the `list-panel-row` container the two ListPanels read, so under 640 px an open panel lies over the bindings instead of squeezing them. The middle takes the rest of the width, and the tab content scrolls in one area under the tab row with the same top padding as a settings page body, so the binding tables keep their rounded corners.
 - `DialogHoldRow.css`: the toggle and its speed slider each take half the row, and the slider never collapses.
 - `HomeTabColumns.css`: the hero sits flush with the top of the nav. The folder button sits in the info card row and matches the cards' height, not its own. The columns collapse to one when there is no room for two.
 
@@ -135,10 +135,6 @@ Input profile loading, create, rename, delete, selection and persistence. The pr
 
 Lists assignments on a slot number the list does not reach. A number can outrun the list: remove slots until there are four and an assignment on slot seven has nowhere to sit. It is kept anyway, and adding three slots back reattaches it, because assignment and slot are joined by the number alone (contract section 19). They are shown, muted, not hidden: an assignment that exists but does nothing is the kind of state a settings screen should not keep secret.
 
-## apps/desktop/src/views/ProfileHub/sub-components/controls/AdapterDeviceCard.tsx
-
-One card for a device that presents one entry per port (for example a 4-port wired adapter). Assigning applies to the adapter as a whole, since every port shares one vendor:product id, so the drag and click live on the card and the port rows are informational. Its stylesheet is `DeviceCard.css`, loaded by DeviceCard, which ControlsDevices imports first.
-
 ## apps/desktop/src/views/ProfileHub/sub-components/controls/BindingListener.tsx
 
 - A modal that captures the next key or gamepad button press through the InputManager's raw input events, so every source (keyboard, Web Gamepad API, SDL3 controllers) works the same everywhere. Escape cancels, Delete or Backspace clears the binding, and a bare modifier press waits for the real key.
@@ -164,15 +160,15 @@ The cheat bindings, scrimmed while the master cheats toggle is off, since they d
 
 ## apps/desktop/src/views/ProfileHub/sub-components/controls/ControlsDevices.tsx
 
-The right column: detected input devices, draggable or clickable to assign. Gamepads render from the SDL3 controller snapshot (ready or unavailable, adapter grouping), and the keyboard entry still comes from the InputManager's device list.
+The right ListPanel: one row per detected device, with Rescan at its top. Gamepads come from the SDL3 controller snapshot (ready or unavailable, adapter grouping), and the keyboard entry still comes from the InputManager's device list. Both become one `DeviceEntry` (`keyboard-entry`, `controller-group-entry`), so a row and its folded rail button read the same data. An adapter is one row for the whole device, since every port shares one vendor:product id, and its subtitle counts the ready ports.
 
 ## apps/desktop/src/views/ProfileHub/sub-components/controls/ControlsMain.tsx
 
 The centre column: a banner where the scheme control used to be, plus the tabbed binding editor. The scheme is derived from the HUD style, so under Classic the screen says so once and links to where it is set, and under Modern it says nothing. The two binding tabs gate each other by scheme: the inactive one stays visible and greyed with its reason.
 
-## apps/desktop/src/views/ProfileHub/sub-components/controls/ControlsSidebar.tsx
+## apps/desktop/src/views/ProfileHub/sub-components/controls/ControlsProfiles.tsx
 
-The left column: the input profile list, which collapses to an icon strip for quick selection.
+The left ListPanel: the input profiles, folded by default to a rail of their icons. New profile sits at the top of both the panel and the rail; pressed on the rail it opens the panel first, so the new profile shows in its rename field.
 
 ## apps/desktop/src/views/ProfileHub/sub-components/controls/CoreBindingsGroup.tsx
 
@@ -180,11 +176,11 @@ The ten core verbs, grouped and rebindable, shown in both binding tabs on purpos
 
 ## apps/desktop/src/views/ProfileHub/sub-components/controls/device-drag-data.ts
 
-Sets the drag payload a device card uses to hand itself to the binding editor. `useDragDrop` reads the same keys back, and both take them from `controls-settings.constants.ts`, so DeviceCard and AdapterDeviceCard agree on the wire format.
+Sets the drag payload a device row or rail button uses to hand itself to the binding editor. `useDragDrop` reads the same keys back, and both take them from `controls-settings.constants.ts`, so every device agrees on the wire format.
 
-## apps/desktop/src/views/ProfileHub/sub-components/controls/DeviceCard.tsx
+## apps/desktop/src/views/ProfileHub/sub-components/controls/DeviceRow.tsx
 
-A detected input device. The controller icon on the left is the status light and the assign button, the label and capabilities are on the right. An unavailable gamepad shows the same explain and remedy notice as the Input Calibration page and cannot be dragged or assigned: SDL3 never opened it.
+A detected input device as a list row: its controller icon glows while it is ready, and a click or a drag onto the bindings assigns it. An unavailable gamepad shows the same explain and remedy notice as the Input Calibration page under its row and cannot be dragged or assigned: SDL3 never opened it.
 
 ## apps/desktop/src/views/ProfileHub/sub-components/controls/GameControlsTab.tsx
 

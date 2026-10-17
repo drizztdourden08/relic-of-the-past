@@ -1,5 +1,6 @@
 /* @layer renderer-components @kind constants */
 import type { CoreVerb } from '@rotp/input-mapping';
+import type { ControllerBusType } from '@drizztdourden08/brock-input';
 import { publicAsset } from '@app/public-asset/public-asset';
 import type { ControlsTab } from '../controls-settings/controls-settings.type';
 import type { CoreVerbGroup } from './controls.type';
@@ -50,6 +51,8 @@ const MODERN_ONLY = 'Modern controls come with the Modern HUD style. Without it,
 
 const CONTROLS_TAB_IDS: readonly ControlsTab[] = ['controls', 'modern', 'shortcuts', 'cheats', 'options'];
 
+const GENERIC_DEVICE_ICON = publicAsset('buttons/generic/generic_joystick.svg');
+
 const DEVICE_FAMILY_ICON: Record<string, string> = {
   xbox: publicAsset('buttons/xbox/controller_xboxseries.svg'),
   playstation: publicAsset('buttons/generic/generic_joystick.svg'),
@@ -73,10 +76,15 @@ const SDL_TYPE_ICON: Record<string, string> = {
 
 const REQUIRED_INPUTS_DESCRIPTION = 'The devices the bindings of this profile use.';
 
+const BUS_NAME: Record<ControllerBusType, string | null> = { usb: 'USB', bluetooth: 'Bluetooth', unknown: null };
+
+const PROFILES_FOLD_KEY = 'controls.profiles.collapsed';
+const DEVICES_FOLD_KEY = 'controls.devices.collapsed';
+
 const EMPTY_HINT = 'Assign a controller to this profile to see its slots. Drop one from the Devices column.';
 
 export {
-  ADAPTER_FAMILY_ICON, CANCEL_ARM_DELAY_MS, CONTROLS_TAB_IDS, CORE_VERB_GROUPS,
-  CORE_VERB_LABELS, DEVICE_FAMILY_ICON, EMPTY_HINT, LISTEN_ARM_DELAY_MS, MODERN_ONLY,
-  MODIFIER_CODES, REQUIRED_INPUTS_DESCRIPTION, SDL_TYPE_ICON, VANILLA_ONLY,
+  ADAPTER_FAMILY_ICON, BUS_NAME, CANCEL_ARM_DELAY_MS, CONTROLS_TAB_IDS, CORE_VERB_GROUPS,
+  CORE_VERB_LABELS, DEVICE_FAMILY_ICON, DEVICES_FOLD_KEY, EMPTY_HINT, GENERIC_DEVICE_ICON, LISTEN_ARM_DELAY_MS, MODERN_ONLY,
+  MODIFIER_CODES, PROFILES_FOLD_KEY, REQUIRED_INPUTS_DESCRIPTION, SDL_TYPE_ICON, VANILLA_ONLY,
 };

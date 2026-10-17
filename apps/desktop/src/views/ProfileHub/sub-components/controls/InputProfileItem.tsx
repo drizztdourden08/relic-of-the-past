@@ -1,10 +1,10 @@
 /* @layer renderer-components @kind component */
 import { useCallback } from 'react';
 import type { ChangeEvent, KeyboardEvent, MouseEvent } from 'react';
-import { Icon, Pressable, Status, TextInput, Text } from '@drizztdourden08/tessera/primitives';
+import { Icon, IconButton, TextInput } from '@drizztdourden08/tessera/primitives';
+import { ListItemRow } from '@drizztdourden08/tessera/composites';
+import { profileSubtitle } from './profile-subtitle';
 import type { InputProfileItemProps } from './controls.type';
-
-const stopPropagation = (e: MouseEvent) => e.stopPropagation();
 
 const InputProfileItem = (props: InputProfileItemProps) => {
   const {
@@ -22,49 +22,40 @@ const InputProfileItem = (props: InputProfileItemProps) => {
   }, [onCommitEdit, onCancelEdit, profile]);
   const handleEditClick = useCallback((e: MouseEvent) => { e.stopPropagation(); onStartEditing(profile); }, [onStartEditing, profile]);
   const handleDeleteClick = useCallback((e: MouseEvent) => { e.stopPropagation(); onDelete(profile); }, [onDelete, profile]);
+  const icon = <Icon name={profile.deviceType === 'keyboard' ? 'keyboard' : 'gamepad-2'} />;
+
+  if (editing) {
+    const field = (
+      <TextInput ref={inputRef} value={editValue} onChange={handleChange} onBlur={handleCommit} onKeyDown={handleKeyDown} aria-label="Profile name" />
+    );
+    return <ListItemRow icon={icon} name={field} selected={active} />;
+  }
+
+  const actions = (
+    <>
+      <IconButton variant="ghost" size="xs" label="Rename profile" onClick={handleEditClick}>
+        <Icon name="pencil" />
+      </IconButton>
+      {!profile.isDefault && (
+        <IconButton variant="ghost" size="xs" label="Delete profile" onClick={handleDeleteClick}>
+          <Icon name="x" />
+        </IconButton>
+      )}
+    </>
+  );
 
   return (
-    <Pressable
-      className={`input-profile-list__item ${active ? 'input-profile-list__item--active' : ''}`}
+    <ListItemRow
+      icon={icon}
+      name={profile.name}
+      meta={profileSubtitle(profile)}
+      selected={active}
       onClick={handleSelect}
       onDoubleClick={handleStartEditing}
-    >
-      <Icon className="input-profile-list__item-icon" name={profile.deviceType === 'keyboard' ? 'keyboard' : 'gamepad-2'} />
-      {editing ? (
-        <TextInput
-          ref={inputRef}
-          className="input-profile-list__item-input"
-          value={editValue}
-          onChange={handleChange}
-          onBlur={handleCommit}
-          onKeyDown={handleKeyDown}
-          onClick={stopPropagation}
-        />
-      ) : (
-        <Text className="input-profile-list__item-name">{profile.name}</Text>
-      )}
-      {active && !editing && (
-        <Status tone="primary" variant="pill" title="Active, drives the game">Active</Status>
-      )}
-      {!editing && (
-        <Text
-          className="input-profile-list__item-edit"
-          title="Rename profile"
-          onClick={handleEditClick}
-        >
-          <Icon name="pencil" />
-        </Text>
-      )}
-      {!profile.isDefault && !editing && (
-        <Text
-          className="input-profile-list__item-delete"
-          title="Delete profile"
-          onClick={handleDeleteClick}
-        >
-          <Icon name="x" />
-        </Text>
-      )}
-    </Pressable>
+      action={actions}
+      actionVisibility="hover"
+      data={{ 'data-profile-id': profile.id }}
+    />
   );
 };
 
