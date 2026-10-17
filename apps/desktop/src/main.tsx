@@ -18,7 +18,7 @@ import { installAppShim } from './platform/api-shim';
 import { rotpShellModule } from './shell/rotp-shell-module';
 import { rotpProfileHooks } from './profiles/rotp-profile-hooks';
 import { useWidgetDisabled } from './widget-gates/useWidgetDisabled';
-import { SETTINGS } from './main.constants';
+import { SETTINGS, VOLUME } from './main.constants';
 import { LEGAL_TEXT } from './legal.constants';
 import { ROTP_DATA_DOMAINS } from './storage/data-domains.constants';
 import { product } from './product';
@@ -47,6 +47,7 @@ const App = () => {
     <BrockApp<AppSettings>
       product={product}
       settings={SETTINGS}
+      volume={VOLUME}
       screenTree={screenTree}
       modules={modules}
       bootTasks={rendererBootTasks}

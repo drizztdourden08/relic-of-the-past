@@ -1,6 +1,6 @@
 /* @layer renderer-app @kind component */
 import { useCallback, useMemo } from 'react';
-import { useBrock, useWidgetMenuEntries } from '@drizztdourden08/brock-react';
+import { useBrock, useVolumeStore, useWidgetMenuEntries } from '@drizztdourden08/brock-react';
 import type { MenuEntry } from '@drizztdourden08/brock-react';
 import { Drawer } from '@drizztdourden08/tessera/composites';
 import { useFpsReadout } from '@app/hooks/useFpsReadout';
@@ -14,7 +14,8 @@ import './MobileShell.css';
 const MobileShell = () => {
   const { menu } = useBrock();
   const widgetEntries = useWidgetMenuEntries();
-  const { game, display, audio } = useGameSession();
+  const { game, display } = useGameSession();
+  const { value, muted, toggleMute } = useVolumeStore();
   const { open, close } = useMobileBack();
   const { fps } = useFpsReadout(open && display.showFps, game.isRunning);
   const entries = useMemo(
@@ -28,7 +29,7 @@ const MobileShell = () => {
 
   return (
     <Drawer open={open} onClose={close} side="right" label="Options">
-      <MobileMenuDrawer entries={entries} fps={fps} isMuted={audio.isMuted} onToggleMute={audio.handleToggleMute} onPick={pick} />
+      <MobileMenuDrawer entries={entries} fps={fps} isMuted={muted || value <= 0} onToggleMute={toggleMute} onPick={pick} />
     </Drawer>
   );
 };

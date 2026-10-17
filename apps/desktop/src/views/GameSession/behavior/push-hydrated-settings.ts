@@ -15,7 +15,6 @@ const pushHydratedSettings = (merged: AppSettings, callbacks: SettingsBridgeDeps
   syncControlSettings(merged);
   callbacks.onWindowModeChange?.(merged.windowMode);
   callbacks.onConstraintSettingsChange?.(merged.viewportConstraint, merged.aspectRatio);
-  callbacks.onMasterVolumeChange?.(merged.masterVolume);
   callbacks.onDisplayPerfChange?.(merged.displayPerfInTitle);
   callbacks.onEdgeEffectChange?.(merged.overworldEdgeEffect);
   callbacks.onShadowCastingChange?.(merged.postProcessingShadows);

@@ -2,6 +2,7 @@
 interface AudioSettings {
   enableAudio: boolean;
   masterVolume: number;
+  masterMuted: boolean;
   perGroupVolume: boolean;
   musicVolume: number;
   musicMuted: boolean;

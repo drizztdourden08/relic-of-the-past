@@ -24,7 +24,7 @@ const announce = (patch: Partial<GameSettings>, isGameRunning: boolean): void =>
 };
 
 const useSettingsBridge = (deps: SettingsBridgeDeps): void => {
-  const { isGameRunning, masterVolumeOverride } = deps;
+  const { isGameRunning } = deps;
   const store = useSettingsStore<AppSettings>();
   const hydrated = store((s) => s.hydrated);
   const profileId = useProfilesStore((s) => s.active?.id ?? null);
@@ -67,10 +67,6 @@ const useSettingsBridge = (deps: SettingsBridgeDeps): void => {
     }
     wasRunningRef.current = isGameRunning;
   }, [isGameRunning, store]);
-
-  useEffect(() => {
-    if (masterVolumeOverride != null) store.getState().patch({ masterVolume: masterVolumeOverride.volume });
-  }, [masterVolumeOverride?.version, store]);
 
   useSettingsWindowEvents(store);
 };

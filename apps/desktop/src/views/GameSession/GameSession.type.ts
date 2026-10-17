@@ -1,6 +1,5 @@
 /* @layer renderer-appshell @kind types */
 import type { ReactNode } from 'react';
-import type { useAudioSettings } from './behavior/useAudioSettings';
 import type { useConfirmDialog } from './behavior/useConfirmDialog';
 import type { useDisplaySettings } from './behavior/useDisplaySettings';
 import type { useGameLifecycle } from './behavior/useGameLifecycle';
@@ -26,7 +25,6 @@ type LoadedProfile = ProfileLoadedData;
 interface LoadedProfileTargets {
   game: ReturnType<typeof useGameLifecycle>;
   display: ReturnType<typeof useDisplaySettings>;
-  audio: ReturnType<typeof useAudioSettings>;
   saveState: ReturnType<typeof useSaveStateSettings>;
 }
 

@@ -63,6 +63,7 @@ const DEFAULT_SETTINGS: GameSettings = {
 
   enableAudio: true,
   masterVolume: 100,
+  masterMuted: false,
   perGroupVolume: false,
   musicVolume: 100,
   musicMuted: false,

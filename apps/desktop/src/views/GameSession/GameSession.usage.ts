@@ -2,7 +2,7 @@
 import type { ComponentUsage } from '@drizztdourden08/tessera';
 
 const usage = {
-  job: 'Holds the running game, its profile, audio, display and save state, and shares them with every screen through useGameSession.',
+  job: 'Holds the running game, its profile, display and save state, and shares them with every screen through useGameSession.',
   useWhen: ['Once, as the Provider of the app shell module, so the base screen, the hubs and the title bar items read one session.'],
   avoidWhen: [{ case: 'A full screen frame with navigation.', use: 'SideNavLayout' }],
   rules: ['Render it around the whole shell; a popped widget window gets the data view storage only.'],

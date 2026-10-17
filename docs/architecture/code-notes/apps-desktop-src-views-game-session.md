@@ -69,11 +69,11 @@ Runs the `--dump-nav` flood and derives its annotations. It is kept apart from t
 - `--auto-flood` opens the navigation widget once, on mount (`window.api.autoFlood`).
 - Game input is suppressed while a menu or an overlay is open: input reaches the game only while it runs and no page is open.
 
-## apps/desktop/src/views/GameSession/behavior/useAudioSettings.ts
+## apps/desktop/src/views/GameSession/behavior/useStartupVolume.ts
 
-A launch flag is applied by using the mute control, not by working around it. The settings push that runs when the game starts applies the profile's volume again, so anything set before that is undone. So the hook waits for the game to run, then presses the mute button once. Nothing new gates the audio. Both flags are honoured, so the result never depends on the volume the profile happens to hold: `--muted` presses it only if sound is on, `--sound` only if it is off. The current volume is read through the state setter, so a stale render's value is never used.
+A launch flag is applied by using the mute control, not by working around it. The settings push that runs when the game starts applies the profile's volume again, so anything set before that is undone. So the hook waits for the game to run, then drives Brock's volume store, which writes `masterMuted` and `masterVolume` through the binding. `--muted` mutes only when sound is on, `--sound` unmutes only when it is muted or at zero, so the result never depends on the volume the profile happens to hold.
 
-`initFromSettings` takes the volume as loaded. A `--muted` launch is already zero there, because the flag is applied once in `mergeSettings`, where the setting is born. Two earlier attempts set the engine volume (and the mute override) from here instead, and both lost: `pushLiveSettings` applies `settings.masterVolume` again to the gain node and the WASM mixer when the game starts.
+The title bar volume control, the Audio settings page and this hook share one state: the `volume` binding in `main.constants.ts` is `volumeFromSettings({ value: 'masterVolume', muted: 'masterMuted', max: 100 })`. `masterVolume` is stored 0 to 100. The engine plays `toMasterVolume(settings)`, which is 0 while `masterMuted` is set, so the volume the player chose survives a mute.
 
 ## apps/desktop/src/views/GameSession/behavior/useAutoTest.ts (`--auto-state`, `--screenshot`, `--auto-start`)
 

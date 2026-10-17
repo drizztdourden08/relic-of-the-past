@@ -48,7 +48,7 @@ const GROUP_VOLUME_KEYS = ['musicVolume', 'ambientVolume', 'sfxVolume'];
 const DEVICE_KEYS = ['audioFreq', 'audioChannels', 'audioSamples'];
 
 const VOLUME_ROWS = {
-  masterVolume: { label: 'Master Volume', description: 'Controls the overall game volume, so it affects all audio output', mutedKey: null },
+  masterVolume: { label: 'Master Volume', description: 'Controls the overall game volume, so it affects all audio output', mutedKey: 'masterMuted' },
   musicVolume: {
     label: 'Music Volume',
     description: 'Sets the music level for the original soundtrack and any music pack alike, since a pack plays in place of it, not alongside it',
