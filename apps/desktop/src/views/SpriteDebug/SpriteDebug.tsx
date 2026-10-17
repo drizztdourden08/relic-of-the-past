@@ -1,13 +1,16 @@
 /* @layer renderer-components @kind component */
 import { useState, useEffect } from 'react';
-import { Text, Tabs } from '@drizztdourden08/tessera/primitives';
+import { Text, Tabs, Icon } from '@drizztdourden08/tessera/primitives';
 import { ScreenWindow } from '@drizztdourden08/tessera/composites';
+import type { ScreenWindowHeader } from '@drizztdourden08/tessera/composites';
 import type { SpriteDebugProps, ReviewMode } from './SpriteDebug.type';
 import { SpriteReviewPanel } from './sub-components/SpriteReviewPanel';
 import { ItemReviewPanel } from './sub-components/ItemReviewPanel';
 import { MODES } from './SpriteDebug.constants';
 import { getSpritesBaseUrl } from '@app/storage/sprites-store';
 import './SpriteDebug.css';
+
+const pageHeader: ScreenWindowHeader = { icon: <Icon name="bug" /> };
 
 const SpriteDebug = (props: SpriteDebugProps) => {
   const { onClose, romFile } = props;
@@ -21,7 +24,7 @@ const SpriteDebug = (props: SpriteDebugProps) => {
   }, [romFile]);
 
   return (
-    <ScreenWindow onClose={onClose} title="Sprite Debug">
+    <ScreenWindow onClose={onClose} title="Sprite Debug" header={pageHeader}>
       <Tabs tabs={MODES} activeTab={mode} onTabChange={(id) => setMode(id as ReviewMode)} />
       <Text className="sprite-debug-mode-hint">
         {mode === 'sprites'

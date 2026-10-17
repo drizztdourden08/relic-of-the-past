@@ -8,7 +8,7 @@ const useDefaultReportTitle = (subject: string): void => {
   latest.current = subject;
 
   useEffect(() => {
-    if (open) bugReport.setDefaultTitle(latest.current);
+    if (open && useBugReportStore.getState().prefill === null) bugReport.setDefaultTitle(latest.current);
   }, [open]);
 };
 
