@@ -15,7 +15,7 @@ frame, giving overworld scenes depth and ambient lighting.
 
 ## The Shadow Editor (dev tool)
 
-Open it from Widgets, Developer tools, Open kit (developer tools on, a game running). The kit docks the Shadow Editor panel and the Shadow Elements list around the game and draws the shapes over the picture. It lets you author the per-screen data:
+Open it from Widgets, Shadow Editor, Open kit (developer tools on, a game running). The kit docks the Shadow Editor panel and the Shadow Elements list around the game and draws the shapes over the picture. It lets you author the per-screen data:
 
 - **Tools:** select, heightmap, and light editing.
 - **Heightmap elements:** rectangles, polygons, freehand shapes; per-element height (presets

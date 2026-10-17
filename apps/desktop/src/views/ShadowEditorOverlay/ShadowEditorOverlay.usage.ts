@@ -3,7 +3,7 @@ import type { ComponentUsage } from '@drizztdourden08/tessera';
 
 const usage = {
   job: 'The canvas over the game picture where shadow shapes and lights are drawn, picked and dragged.',
-  useWhen: ['As the Shadow drawing overlay of the Developer tools kit.'],
+  useWhen: ['As the Shadow drawing overlay of the Shadow Editor kit.'],
   avoidWhen: [{ case: 'A drawing that is not the shadow layer.', use: 'Canvas' }],
   rules: [
     'It matches the size of the game picture, read from the game fit store.',

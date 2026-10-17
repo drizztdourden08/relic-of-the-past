@@ -5,7 +5,7 @@ import { ShadowElementList } from '@app/views/ShadowElementList';
 const meta: WidgetMeta = {
   label: 'Shadow Elements',
   icon: 'layers',
-  kit: 'dev-tools',
+  kit: 'shadow-editor',
   chrome: 'compact',
   order: 2,
   defaultSide: 'left',

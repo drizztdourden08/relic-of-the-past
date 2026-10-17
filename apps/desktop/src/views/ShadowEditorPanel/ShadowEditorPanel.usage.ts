@@ -3,7 +3,7 @@ import type { ComponentUsage } from '@drizztdourden08/tessera';
 
 const usage = {
   job: 'The Shadow Editor panel: the tool choice, the tool options and the inspector of the shape or light picked on the screen.',
-  useWhen: ['As the body of the Shadow Editor widget in the Developer tools kit.'],
+  useWhen: ['As the body of the Shadow Editor widget in the Shadow Editor kit.'],
   avoidWhen: [{ case: 'A list of rows to pick from.', use: 'ListItemList' }],
   rules: [
     'It holds no title or buttons. The widget title strip draws ShadowEditorTools.',

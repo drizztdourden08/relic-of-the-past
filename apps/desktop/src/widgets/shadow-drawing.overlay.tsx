@@ -2,7 +2,7 @@
 import type { KitOverlayMeta } from '@drizztdourden08/brock-react';
 import { ShadowEditorOverlay } from '@app/views/ShadowEditorOverlay';
 
-const meta: KitOverlayMeta = { kit: 'dev-tools', label: 'Shadow drawing' };
+const meta: KitOverlayMeta = { kit: 'shadow-editor', label: 'Shadow drawing' };
 
 const ShadowDrawingOverlay = () => <ShadowEditorOverlay />;
 

@@ -9,8 +9,8 @@ const meta: WidgetMeta = {
   defaultSide: 'left',
   defaultDockedSize: 320,
   defaultFloatingSize: { width: 340, height: 460 },
-  kit: 'dev-tools',
-  chrome: 'compact',
+  context: 'game',
+  devOnly: true,
   settings: NavigationWidgetSettings,
 };
 
