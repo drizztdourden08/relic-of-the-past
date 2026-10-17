@@ -30,7 +30,7 @@ const RandomizerOptionsPanel = (props: RandomizerOptionsPanelProps) => {
         <Text className="randomizer-options__title">randomizer options</Text>
         <Text variant="caption">{onChange === undefined ? FROZEN_CAPTION : CAPTION}</Text>
       </Box>
-      <Tabs tabs={tabs} activeTab={tab} onTabChange={(id) => setTab(id as PanelTab)} />
+      <Tabs tabs={tabs} activeTab={tab} onTabChange={(id) => setTab(id as PanelTab)} hideZero />
       <PanelBody tab={tab} model={model} choices={value} seed={seed} onChange={onChange} />
       <PoolTotals totals={totals} error={error} />
     </Box>
