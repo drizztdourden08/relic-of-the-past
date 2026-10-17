@@ -15,13 +15,14 @@ const meta: ScreenMeta = {
 
 const DataHomeHero = (props: HeroProps) => {
   const { slots, open } = props;
-  const { Eyebrow, Title, Actions, Tools, Facts } = slots;
+  const { Art, Eyebrow, Title, Actions, Tools, Facts } = slots;
   const { storage, capabilities } = usePlatform();
   const { summary, loading, refresh } = useStorageSummary(storage);
   const facts = useMemo(() => dataHomeFacts(summary), [summary]);
 
   return (
     <>
+      <Art kind="none" />
       <Eyebrow>Data</Eyebrow>
       <Title>Your library</Title>
       {capabilities.revealDataFolder && (
