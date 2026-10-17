@@ -6,7 +6,7 @@ import { ControlsProfiles } from './controls/ControlsProfiles';
 import { ControlsMain } from './controls/ControlsMain';
 import { ControlsDevices } from './controls/ControlsDevices';
 import { Dialog } from '@drizztdourden08/tessera/composites';
-import { DensityScope, Flex } from '@drizztdourden08/tessera/primitives';
+import { Flex } from '@drizztdourden08/tessera/primitives';
 import { SearchAnchor } from '@drizztdourden08/brock-react';
 import { useControlsSettings } from './controls-settings';
 import { listeningLabel } from './controls-settings/listening-label';
@@ -24,22 +24,20 @@ const ControlsSettings = (props: ControlsSettingsProps) => {
   const cancelDelete = useCallback(() => setDeleteTarget(null), [setDeleteTarget]);
 
   return (
-    <Flex gap="2xs" align="stretch" className="controls-settings">
-      <DensityScope density="compact">
-        <SearchAnchor anchor="input-profiles" className="controls-settings__anchor">
-          <ControlsProfiles ctrl={ctrl} />
-        </SearchAnchor>
-        <SearchAnchor anchor="bindings" className="controls-settings__anchor controls-settings__anchor--main">
-          <ControlsMain
-            ctrl={ctrl}
-            cheatsEnabled={settings.cheatsEnabled}
-            onOpenCheatsSettings={openCheatsSettings}
-          />
-        </SearchAnchor>
-        <SearchAnchor anchor="devices" className="controls-settings__anchor">
-          <ControlsDevices ctrl={ctrl} />
-        </SearchAnchor>
-      </DensityScope>
+    <Flex gap="md" align="stretch" className="controls-settings">
+      <SearchAnchor anchor="input-profiles" className="controls-settings__anchor">
+        <ControlsProfiles ctrl={ctrl} />
+      </SearchAnchor>
+      <SearchAnchor anchor="bindings" className="controls-settings__anchor controls-settings__anchor--main">
+        <ControlsMain
+          ctrl={ctrl}
+          cheatsEnabled={settings.cheatsEnabled}
+          onOpenCheatsSettings={openCheatsSettings}
+        />
+      </SearchAnchor>
+      <SearchAnchor anchor="devices" className="controls-settings__anchor">
+        <ControlsDevices ctrl={ctrl} />
+      </SearchAnchor>
 
       {ctrl.listeningFor && (
         <BindingListener

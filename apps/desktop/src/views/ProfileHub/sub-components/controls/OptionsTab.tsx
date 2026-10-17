@@ -1,5 +1,4 @@
 /* @layer renderer-components @kind component */
-import { Box } from '@drizztdourden08/tessera/primitives';
 import { SettingsSection } from '@drizztdourden08/tessera/composites';
 import { hapticsRows } from './haptics-rows';
 import { requiredInputRows } from './required-input-rows';
@@ -8,7 +7,7 @@ import type { CtrlProps } from './controls.type';
 import './OptionsTab.css';
 
 const OptionsTab = ({ ctrl }: CtrlProps) => (
-  <Box className="controls-options">
+  <>
     <SettingsSection
       id="controls-haptics"
       title="Haptics"
@@ -22,7 +21,7 @@ const OptionsTab = ({ ctrl }: CtrlProps) => (
       className="controls-settings__used-inputs"
       rows={requiredInputRows(ctrl.requiredInputs)}
     />
-  </Box>
+  </>
 );
 
 export { OptionsTab };

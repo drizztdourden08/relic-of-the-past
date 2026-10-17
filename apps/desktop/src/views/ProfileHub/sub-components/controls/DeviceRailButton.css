@@ -1,0 +1,8 @@
+/* @layer renderer-components @kind style */
+.device-rail-button[draggable='true'] {
+  cursor: grab;
+}
+
+.device-rail-button[draggable='true']:active {
+  cursor: grabbing;
+}

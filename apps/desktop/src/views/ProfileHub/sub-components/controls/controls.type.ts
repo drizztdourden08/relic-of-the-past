@@ -1,12 +1,11 @@
 /* @layer renderer-components @kind types */
 import type { RefObject } from 'react';
-import type { CoreVerb, InputProfile, ControllerDeviceGroup } from '@rotp/input-mapping';
+import type { CoreVerb, InputProfile } from '@rotp/input-mapping';
 import type { HudLayout } from '@rotp/hud';
 import type { ButtonIcon, CoreBindings, InputBinding, ModernSlot, SlotAssignment, SnesButton } from '@rotp/game-data';
 import type { FunctionAction, FunctionMapping } from '@rotp/features';
 import type { AbsentAssignment, RequiredInput } from '../controls-settings/controls-settings.type';
 import type { useControlsSettings } from '../controls-settings';
-import type { DeviceAssignInfo } from './DeviceCard.type';
 
 type ControlsCtrl = ReturnType<typeof useControlsSettings>;
 
@@ -136,12 +135,6 @@ interface BindingListenerProps {
   onCancel: () => void;
 }
 
-interface AdapterDeviceCardProps {
-  group: ControllerDeviceGroup;
-  onAssign?: (device: DeviceAssignInfo) => void;
-  onAddMapping?: (mapping: string) => Promise<boolean>;
-}
-
 interface UseProfileEditingArgs {
   profiles: InputProfile[];
   initialEditId?: string | null;
@@ -153,7 +146,7 @@ interface AbsentAssignmentsProps {
 }
 
 export type {
-  AbsentAssignmentsProps, AdapterDeviceCardProps, BindingListenerProps,
+  AbsentAssignmentsProps, BindingListenerProps,
   BindingListHeaderProps, BindingRowProps, CheatBindingsTabProps, ControlsCtrl, ControlsMainProps,
   CoreBindingsGroupProps, CoreVerbGroup,
   CoreVerbRowProps, CtrlProps, DeviceDragInfo, FunctionBindingRowProps,

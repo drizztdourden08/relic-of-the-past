@@ -1,0 +1,14 @@
+/* @layer renderer-components @kind style */
+.device-row {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+}
+
+.device-row[draggable='true'] {
+  cursor: grab;
+}
+
+.device-row[draggable='true']:active {
+  cursor: grabbing;
+}
