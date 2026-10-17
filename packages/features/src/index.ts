@@ -6,7 +6,7 @@ export { CHEAT_ACTIONS, DEFAULT_FUNCTION_MAPPINGS, FUNCTION_ACTION_LABELS, SHORT
 export type { FunctionAction, FunctionMapping } from './controls/functions/functions.type';
 export { FEATURES_BY_ID } from './feature-registry/feature-registry.constants';
 export { FEATURES } from './feature-registry/features.constants';
-export type { GbaDifference, GbaGroup } from './gba-difference.type';
+export type { GbaDifference, GbaGroup, GbaStatus } from './gba-difference.type';
 export { GBA_DIFFERENCES } from './gba-differences.constants';
 export { controlSchemeOf } from './hud-style/control-scheme-of';
 export { hostDrawnHud } from './hud-style/host-drawn-hud';

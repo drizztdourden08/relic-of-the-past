@@ -4,12 +4,14 @@ type GbaGroup =
   | 'Enemies & bosses' | 'Presentation' | 'Audio & voice'
   | 'Text & naming' | 'Save & meta' | 'Fixes' | 'Removed';
 
+type GbaStatus = 'in-progress' | 'not-started' | 'excluded';
+
 type GbaDifference = {
   id: string;
   group: GbaGroup;
   label: string;
   detail: string;
-  evidence: 'documented' | 'in-progress';
+  status: GbaStatus;
 };
 
-export type { GbaDifference, GbaGroup };
+export type { GbaDifference, GbaGroup, GbaStatus };

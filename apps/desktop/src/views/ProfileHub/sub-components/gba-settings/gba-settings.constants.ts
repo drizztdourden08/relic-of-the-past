@@ -25,15 +25,16 @@ const GBA_GROUP_ORDER: GbaGroup[] = [
 ];
 
 const GBA_SCHEMA_CONFIG: SchemaConfig = {
-  order: ['label', 'group', 'evidence', 'detail'],
-  labels: { label: 'Feature', group: 'Group', evidence: 'Status', detail: 'Notes' },
+  order: ['label', 'group', 'status', 'detail'],
+  labels: { label: 'Feature', group: 'Group', status: 'Status', detail: 'Notes' },
   hidden: ['id'],
   kinds: { label: 'string', detail: 'string' },
   options: {
     group: GBA_GROUP_ORDER,
-    evidence: [
+    status: [
       { value: 'in-progress', label: 'In progress' },
-      { value: 'documented', label: 'Documented' },
+      { value: 'not-started', label: 'Not started' },
+      { value: 'excluded', label: 'Excluded' },
     ],
   },
 };
@@ -43,7 +44,7 @@ const GBA_SCHEMA = buildSchema(GBA_DIFFERENCES, GBA_SCHEMA_CONFIG);
 const GBA_TABLE_COLUMNS: readonly TableColumn[] = [
   { path: 'label', fit: true },
   { path: 'group', fit: true },
-  { path: 'evidence', fit: true },
+  { path: 'status', fit: true },
   { path: 'detail', grow: true },
 ];
 

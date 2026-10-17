@@ -12,8 +12,8 @@ import { meta as dataStoragePageMeta } from '../src/screens/data/storage.page';
 import { meta as dataStudiosCharactersPageMeta } from '../src/screens/data/studios/characters.page';
 import { meta as dataStudiosLanguagesPageMeta } from '../src/screens/data/studios/languages.page';
 import { meta as dataStudiosMsuPageMeta } from '../src/screens/data/studios/msu.page';
+import GameAppContributingSettings, { meta as gameAppContributingSettingsMeta } from '../src/screens/game/app/contributing.settings';
 import GameExtrasBugfixesSettings, { meta as gameExtrasBugfixesSettingsMeta } from '../src/screens/game/extras/bugfixes.settings';
-import GameExtrasContributingSettings, { meta as gameExtrasContributingSettingsMeta } from '../src/screens/game/extras/contributing.settings';
 import { meta as gameExtrasGbaCustomMeta } from '../src/screens/game/extras/gba.custom';
 import GameExtrasHapticsSettings, { meta as gameExtrasHapticsSettingsMeta } from '../src/screens/game/extras/haptics.settings';
 import GameExtrasMobileSettings, { meta as gameExtrasMobileSettingsMeta } from '../src/screens/game/extras/mobile.settings';
@@ -54,8 +54,8 @@ const screenTree = buildScreenTree(config, [
   { kind: 'page', bucket: 'data', group: 'studios', id: 'characters', component: lazyComponent(() => import('../src/screens/data/studios/characters.page')), meta: dataStudiosCharactersPageMeta },
   { kind: 'page', bucket: 'data', group: 'studios', id: 'languages', component: lazyComponent(() => import('../src/screens/data/studios/languages.page')), meta: dataStudiosLanguagesPageMeta },
   { kind: 'page', bucket: 'data', group: 'studios', id: 'msu', component: lazyComponent(() => import('../src/screens/data/studios/msu.page')), meta: dataStudiosMsuPageMeta },
+  { kind: 'settings', bucket: 'game', group: 'app', id: 'contributing', sections: GameAppContributingSettings, meta: gameAppContributingSettingsMeta },
   { kind: 'settings', bucket: 'game', group: 'extras', id: 'bugfixes', sections: GameExtrasBugfixesSettings, meta: gameExtrasBugfixesSettingsMeta },
-  { kind: 'settings', bucket: 'game', group: 'extras', id: 'contributing', sections: GameExtrasContributingSettings, meta: gameExtrasContributingSettingsMeta },
   { kind: 'custom', bucket: 'game', group: 'extras', id: 'gba', component: lazyComponent(() => import('../src/screens/game/extras/gba.custom')), meta: gameExtrasGbaCustomMeta },
   { kind: 'settings', bucket: 'game', group: 'extras', id: 'haptics', sections: GameExtrasHapticsSettings, meta: gameExtrasHapticsSettingsMeta },
   { kind: 'settings', bucket: 'game', group: 'extras', id: 'mobile', sections: GameExtrasMobileSettings, meta: gameExtrasMobileSettingsMeta },

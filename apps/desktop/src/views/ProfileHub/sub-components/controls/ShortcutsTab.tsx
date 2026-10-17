@@ -14,12 +14,14 @@ const ShortcutsTab = ({ ctrl }: CtrlProps) => {
         <BindingListHeader />
         <Box className="binding-row binding-row--reserved" title="Reserved, cannot be rebound">
           <Text className="binding-row__action-label">Open Menu</Text>
-          <Box className="binding-row__icon-slot" />
-          <Text className="binding-row__snes-label" />
-          <Box className="binding-row__icon-slot">
-            <Image src={getButtonIconUrl('kb-escape') ?? undefined} alt="Esc" className="binding-row__icon-img" />
+          <Box className="binding-row__rest">
+            <Box className="binding-row__icon-slot" />
+            <Text className="binding-row__snes-label" />
+            <Box className="binding-row__icon-slot">
+              <Image src={getButtonIconUrl('kb-escape') ?? undefined} alt="Esc" className="binding-row__icon-img" />
+            </Box>
+            <Text className="binding-row__binding-label">Esc</Text>
           </Box>
-          <Text className="binding-row__binding-label">Esc</Text>
         </Box>
         {ctrl.displayFunctionMappings
           .filter((m) => (SHORTCUT_ACTIONS as readonly string[]).includes(m.action))
