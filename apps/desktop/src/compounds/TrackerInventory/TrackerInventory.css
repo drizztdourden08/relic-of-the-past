@@ -2,10 +2,6 @@
 
 .tracker-inventory {
   padding: var(--space-sm) var(--space-md);
-  border-bottom: var(--border-width-thin) solid var(--c-border);
-  flex-shrink: 0;
-  max-height: calc(220 * var(--size-1));
-  overflow-y: auto;
 }
 
 .tracker-inventory__category {

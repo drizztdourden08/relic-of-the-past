@@ -83,7 +83,7 @@
 | LiveDataInspector use-current-records | apps/desktop/tests/widgets/live-data-inspector-records.keep.test.ts | partial. use-detection-pass, use-chest/screen/sprite-observations, use-live-context and granted-items-store are untested |
 | Screen-editor draft builder, and `screenBlockers` (packages/game-data/src/logic/queries/screen-validity) as the one owner of "is this screen real enough to store", which the builder and the create validator both delegate to | apps/desktop/tests/widgets/screen-record-draft.keep.test.ts | covered for the builder. The tier-agreement and file-home rules inside `screenBlockers` are reached through it, not asserted directly |
 | SimulatorWidget orchestration (run-results, runner-loop, useDatasetSuggestions, useLogWindow, useSimulatorRun, useStopAtChecks) | none directly (the engine itself is covered in the simulation row) | none |
-| ChecksWidget / DebugWidget / InventoryWidget / LogsWidget / CheatsWidget | none | none |
+| ChecksWidget / DebugWidget / InventoryWidget / LogsWidget / CheatsWidget | none | none. Layout parity (widget padding, the checks leaf grid, the inventory height) was judged from `--widgets=<id> --screenshot` captures, which assert nothing |
 | **Widget composite (drag/resize/dock chrome shared by all 7 widgets)** | none | **none. The single biggest gap in the UI layer** |
 
 ## Design system (Tessera, `@drizztdourden08/tessera`)

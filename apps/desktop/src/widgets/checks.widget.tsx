@@ -4,6 +4,7 @@ import { ChecksWidgetContent, ChecksWidgetSettings } from '@app/views/ChecksWidg
 
 const meta: WidgetMeta = {
   label: 'Checks',
+  padding: 'none',
   icon: 'map',
   order: 2,
   defaultSide: 'right',

@@ -91,6 +91,8 @@ name of another player's item placed here online.
 
 ## apps/desktop/src/compounds/ChecksTracker/sub-components/CheckList.tsx
 
+The tree draws a leaf inside a flex row, so the list boxes take the row's width (`flex: 1`, `min-width: 0`). Without it the card grid is sized to its content and `auto-fill` collapses to one column.
+
 The leaves of the check tree in the three view modes (compact rows, rows with items, item cards).
 A check with several vanilla items expands to one entry per item in the modes that show the item,
 but only without a run: once a seed has placed something there, the check holds exactly one thing
@@ -874,7 +876,7 @@ picture draws the kind's icon in its place.
 
 Three views of the same inventory: the default view grouped by category, the in game view laid
 out like the SNES pause screen, and the compact view as one flat grid with the upgrades broken
-down.
+down. The Inventory widget is its only user, so it has no height cap of its own: it fills the widget and the widget scrolls.
 
 ## apps/desktop/src/compounds/UnavailableControllerNotice/UnavailableControllerNotice.tsx
 

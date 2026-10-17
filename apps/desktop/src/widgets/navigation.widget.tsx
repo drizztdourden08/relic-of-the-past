@@ -4,6 +4,7 @@ import { NavigationWidgetContent, NavigationWidgetSettings } from '@app/views/Na
 
 const meta: WidgetMeta = {
   label: 'Location & Navigation',
+  padding: 'none',
   icon: 'compass',
   order: 5,
   defaultSide: 'left',

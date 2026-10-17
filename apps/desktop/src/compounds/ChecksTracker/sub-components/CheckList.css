@@ -1,5 +1,11 @@
 /* @layer renderer-components @kind style */
 
+.tracker-checks--list,
+.tracker-checks--visual {
+  flex: 1;
+  min-width: 0;
+}
+
 .tracker-checks--list {
   padding-left: var(--space-sm);
 }
@@ -8,5 +14,6 @@
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(calc(140 * var(--size-1)), 1fr));
   gap: var(--space-xs);
-  padding: var(--space-sm) var(--space-md);
+  padding: var(--space-xs) var(--space-sm);
+  white-space: normal;
 }

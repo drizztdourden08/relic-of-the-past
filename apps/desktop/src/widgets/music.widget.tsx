@@ -4,6 +4,7 @@ import { MusicWidgetContent } from '@app/views/MusicWidget';
 
 const meta: WidgetMeta = {
   label: 'Music Debugger',
+  padding: 'none',
   icon: 'headphones',
   order: 8,
   defaultSide: 'right',
