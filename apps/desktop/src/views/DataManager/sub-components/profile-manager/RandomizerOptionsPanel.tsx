@@ -3,13 +3,12 @@ import { useRef, useState } from 'react';
 import { Box, Tabs, Text } from '@drizztdourden08/tessera/primitives';
 import { SplitPane } from '@drizztdourden08/tessera/composites';
 import { PoolListing } from '@app/compounds/PoolListing';
-import { PoolTotals } from '@app/compounds/PoolTotals';
 import { useIsNarrow } from '@app/hooks/useIsNarrow';
 import { FIRST_OPTION_TAB } from './randomizer-options/option-tabs.constants';
 import { PanelBody } from './randomizer-options/PanelBody';
 import { poolEndLabel } from './randomizer-options/pool-end-label';
 import { usePanelModel } from './randomizer-options/usePanelModel';
-import { CAPTION, FROZEN_CAPTION, OPTIONS_SHARE, POOL_TAB, SPLIT_MIN_REM } from './RandomizerOptionsPanel.constants';
+import { OPTIONS_SHARE, POOL_TAB, SPLIT_MIN_REM } from './RandomizerOptionsPanel.constants';
 import type { PanelTab, RandomizerOptionsPanelProps } from './RandomizerOptionsPanel.type';
 import './RandomizerOptionsPanel.css';
 
@@ -28,11 +27,9 @@ const RandomizerOptionsPanel = (props: RandomizerOptionsPanelProps) => {
     <Box className="randomizer-options">
       <Box className="randomizer-options__header">
         <Text className="randomizer-options__title">randomizer options</Text>
-        <Text variant="caption">{onChange === undefined ? FROZEN_CAPTION : CAPTION}</Text>
+        <Tabs tabs={tabs} activeTab={tab} onTabChange={(id) => setTab(id as PanelTab)} hideZero />
       </Box>
-      <Tabs tabs={tabs} activeTab={tab} onTabChange={(id) => setTab(id as PanelTab)} hideZero />
       <PanelBody tab={tab} model={model} choices={value} seed={seed} onChange={onChange} />
-      <PoolTotals totals={totals} error={error} />
     </Box>
   );
 

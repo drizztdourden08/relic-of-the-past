@@ -5,10 +5,14 @@ import { ProgressiveTiersBlock } from '@app/compounds/ProgressiveTiersBlock';
 import { RetroBowBlock } from '@app/compounds/RetroBowBlock';
 import { PondStatusNote } from '@app/compounds/PondStatusNote';
 import { pondStatusOf } from '@rotp/randomizer';
+import { useSpriteAvailability } from '@app/hooks/useSpriteAvailability';
+import { useSpriteRevision } from '@app/hooks/useSpriteRevision';
 import type { TabBlocksProps } from './OptionTabBody.type';
 
 const TabLeadBlocks = ({ tab, context }: TabBlocksProps) => {
   const { choices, seed, edit, capacity, rule, heldPond } = context;
+  const spritesAvailable = useSpriteAvailability(null);
+  useSpriteRevision();
 
   return (
     <>
@@ -25,6 +29,7 @@ const TabLeadBlocks = ({ tab, context }: TabBlocksProps) => {
           <ProgressiveTiersBlock
             setting={choices.progressiveTiers}
             modes={choices.progressiveModes}
+            spritesAvailable={spritesAvailable}
             onChange={edit((progressiveTiers) => ({ ...choices, progressiveTiers }))}
             onModesChange={edit((progressiveModes) => ({ ...choices, progressiveModes }))}
           />

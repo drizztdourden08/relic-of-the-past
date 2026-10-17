@@ -2,19 +2,19 @@
 import { Box, Text } from '@drizztdourden08/tessera/primitives';
 import { progressiveTickConsequences, unrollableTickSetReasons } from '@rotp/randomizer';
 import { OptionDescription } from '../OptionDescription';
+import { ProgressiveLadder } from '../ProgressiveLadder';
 import { RandomizerOptionGroup } from '../RandomizerOptionGroup';
-import { progressiveCardsOf } from './behavior/progressive-cards';
+import { progressiveLaddersOf } from './behavior/progressive-ladders';
 import { withFamilyMode } from './behavior/with-family-mode';
 import { withTierTicked } from './behavior/with-tier-ticked';
-import { ProgressiveTierCard } from './sub-components/ProgressiveTierCard';
 import { BLOCKED_LEAD, TIERS_CAPTION, TIERS_TITLE } from './ProgressiveTiersBlock.constants';
 import type { ProgressiveTiersBlockProps } from './ProgressiveTiersBlock.type';
 import './ProgressiveTiersBlock.css';
 
 const ProgressiveTiersBlock = (props: ProgressiveTiersBlockProps) => {
-  const { setting, modes, onChange, onModesChange } = props;
+  const { setting, modes, spritesAvailable = false, onChange, onModesChange } = props;
   const readOnly = onChange === undefined;
-  const cards = progressiveCardsOf(setting, modes);
+  const ladders = progressiveLaddersOf(setting, modes, spritesAvailable);
   const consequences = progressiveTickConsequences(setting);
   const blocked = unrollableTickSetReasons(setting);
 
@@ -22,19 +22,19 @@ const ProgressiveTiersBlock = (props: ProgressiveTiersBlockProps) => {
     <Box className="progressive-tiers-block">
       <RandomizerOptionGroup title={TIERS_TITLE} live className="progressive-tiers-block__group">
         <Text className="progressive-tiers-block__caption">{TIERS_CAPTION}</Text>
-        <Box className="progressive-tiers-block__cards">
-          {cards.map((card) => (
-            <ProgressiveTierCard
-              key={card.id}
-              card={card}
+        <Box className="progressive-tiers-block__ladders">
+          {ladders.map((ladder) => (
+            <ProgressiveLadder
+              key={ladder.id}
+              ladder={ladder}
               disabled={readOnly}
               readout={readOnly}
-              onTierChange={readOnly
+              onRungChange={readOnly
                 ? undefined
-                : (index, checked) => onChange(withTierTicked(setting, card.id, index, checked))}
+                : (index, checked) => onChange(withTierTicked(setting, ladder.id, index, checked))}
               onModeChange={onModesChange === undefined
                 ? undefined
-                : (mode) => onModesChange(withFamilyMode(modes, card.id, mode))}
+                : (mode) => onModesChange(withFamilyMode(modes, ladder.id, mode))}
             />
           ))}
         </Box>

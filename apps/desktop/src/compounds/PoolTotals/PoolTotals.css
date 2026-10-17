@@ -1,6 +1,0 @@
-/* @layer renderer-components @kind style */
-
-.pool-totals {
-  padding: var(--space-sm) 0;
-  border-top: var(--border-width-thin) solid var(--c-border);
-}

@@ -13,7 +13,7 @@ import { ProgressiveTiersBlock } from '@app/compounds/ProgressiveTiersBlock';
 
 const Mounted = (props: ComponentProps<typeof ProgressiveTiersBlock>) => <ProgressiveTiersBlock {...props} />;
 `,
-  propsHash: 'b0b735b992afcf4c',
+  propsHash: '31d536a64696a978',
 } satisfies ComponentUsage;
 
 export { usage };
