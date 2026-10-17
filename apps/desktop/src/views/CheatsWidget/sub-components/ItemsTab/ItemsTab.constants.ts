@@ -10,6 +10,7 @@ const RAW_VALUE_LABELS: Record<number, Record<number, string>> = {
   12: { 3: 'Flute (active)' },
   19: { 1: 'Magic Scroll' },
   [CheatSlot.Armor]: { 0: 'Green Mail' },
+  [CheatSlot.Shield]: { 1: 'Fighters Shield', 2: 'Fire Shield' },
 };
 
 const BOW_RUNG_VALUES = [1, 3];
