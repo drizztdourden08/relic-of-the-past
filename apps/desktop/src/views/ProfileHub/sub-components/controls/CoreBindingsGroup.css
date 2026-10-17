@@ -1,10 +1,14 @@
 /* @layer renderer-components @kind style */
-.core-bindings {
-  display: flex;
-  flex-direction: column;
+.core-bindings,
+.core-bindings__group {
+  display: grid;
+  grid-template-columns: subgrid;
 }
 
+.core-bindings__group { grid-column: 1 / -1; }
+
 .core-bindings__group-head {
+  grid-column: 1 / -1;
   display: flex;
   align-items: baseline;
   gap: var(--space-sm);

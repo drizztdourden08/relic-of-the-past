@@ -1,8 +1,16 @@
 /* @layer renderer-components @kind style */
+.controls-settings__binding-list {
+  display: grid;
+  grid-template-columns: max-content minmax(0, 1fr) auto;
+}
+
+.controls-settings__binding-list > * { grid-column: 1 / -1; }
+
 .binding-row {
-  display: flex;
+  display: grid;
+  grid-template-columns: subgrid;
   align-items: center;
-  gap: var(--space-sm);
+  column-gap: var(--space-sm);
   padding: var(--space-xs) var(--space-md);
   border-bottom: var(--border-width-thin) solid var(--c-border);
   transition: background 0.12s;
@@ -45,11 +53,18 @@
 }
 
 .binding-row__action-label {
-  width: calc(90 * var(--size-1));
   font-size: var(--text-base);
   font-weight: var(--weight-semi);
   color: var(--c-text);
-  flex-shrink: 0;
+  white-space: nowrap;
+}
+
+.binding-row__rest {
+  grid-column: 2 / -1;
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  min-width: 0;
 }
 
 .binding-row__snes-label {

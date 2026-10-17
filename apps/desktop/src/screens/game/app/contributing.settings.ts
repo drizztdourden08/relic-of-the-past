@@ -1,7 +1,7 @@
 /* @layer renderer-app @kind config */
 import type { ScreenMeta, Section } from '@drizztdourden08/brock-react';
 
-const meta: ScreenMeta = { title: 'Contributing', icon: 'braces', order: 4, keywords: ['developer', 'debug', 'logs', 'sanctuary', 'account', 'contributor'] };
+const meta: ScreenMeta = { title: 'Contributing', icon: 'braces', order: 1, keywords: ['developer', 'debug', 'logs', 'sanctuary', 'account', 'contributor'] };
 
 const sections: Section[] = [
   {

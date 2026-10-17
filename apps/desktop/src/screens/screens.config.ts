@@ -12,6 +12,7 @@ export default defineScreens({
         { id: 'video', label: 'Video' },
         { id: 'gameplay', label: 'Gameplay' },
         { id: 'extras', label: 'Extras' },
+        { id: 'app', label: 'App' },
       ],
     },
     { id: 'randomizer', title: 'Randomizer', icon: 'sparkles', menu: 'entry', when: ({ profile }) => profile?.randomizer !== undefined },

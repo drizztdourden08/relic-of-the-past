@@ -29,33 +29,35 @@ const BindingRow = (props: BindingRowProps) => {
     >
       <Text className="binding-row__action-label">{actionLabel}</Text>
 
-      <Box className="binding-row__icon-slot">
-        {middleIconUrl ? (
-          <Image src={middleIconUrl} alt={middleLabel ?? ''} className="binding-row__icon-img" />
-        ) : null}
-      </Box>
-
-      <Text className="binding-row__snes-label">{middleLabel ?? ''}</Text>
-
-      <Box className="binding-row__icon-slot">
-        {bindingIconSrc ? (
-          <Image src={bindingIconSrc} alt={bindingLabel} className="binding-row__icon-img" />
-        ) : null}
-      </Box>
-
-      {deviceIconUrl && (
-        <Box className="binding-row__device-icon-slot">
-          <Image src={deviceIconUrl} alt="" className="binding-row__device-icon-img" />
+      <Box className="binding-row__rest">
+        <Box className="binding-row__icon-slot">
+          {middleIconUrl ? (
+            <Image src={middleIconUrl} alt={middleLabel ?? ''} className="binding-row__icon-img" />
+          ) : null}
         </Box>
-      )}
 
-      <Text className={`binding-row__binding-label ${isNone ? 'binding-row__binding-label--none' : ''}`}>{bindingLabel}</Text>
+        <Text className="binding-row__snes-label">{middleLabel ?? ''}</Text>
 
-      {onClear && !isNone && (
-        <IconButton variant="ghost" tone="danger" size="xs" className="binding-row__clear" label="Clear binding" onClick={handleClear}>
-          <Icon name="x" />
-        </IconButton>
-      )}
+        <Box className="binding-row__icon-slot">
+          {bindingIconSrc ? (
+            <Image src={bindingIconSrc} alt={bindingLabel} className="binding-row__icon-img" />
+          ) : null}
+        </Box>
+
+        {deviceIconUrl && (
+          <Box className="binding-row__device-icon-slot">
+            <Image src={deviceIconUrl} alt="" className="binding-row__device-icon-img" />
+          </Box>
+        )}
+
+        <Text className={`binding-row__binding-label ${isNone ? 'binding-row__binding-label--none' : ''}`}>{bindingLabel}</Text>
+
+        {onClear && !isNone && (
+          <IconButton variant="ghost" tone="danger" size="xs" className="binding-row__clear" label="Clear binding" onClick={handleClear}>
+            <Icon name="x" />
+          </IconButton>
+        )}
+      </Box>
     </Box>
   );
 };

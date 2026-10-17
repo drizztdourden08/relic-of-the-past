@@ -6,10 +6,12 @@ const BindingListHeader = ({ middleLabel = '', actionLabel = 'Action' }: Binding
   return (
     <Box className="binding-row binding-row--header">
       <Text className="binding-row__action-label">{actionLabel}</Text>
-      <Box className="binding-row__icon-slot" />
-      <Text className="binding-row__snes-label">{middleLabel}</Text>
-      <Box className="binding-row__icon-slot" />
-      <Text className="binding-row__binding-label">Binding</Text>
+      <Box className="binding-row__rest">
+        <Box className="binding-row__icon-slot" />
+        <Text className="binding-row__snes-label">{middleLabel}</Text>
+        <Box className="binding-row__icon-slot" />
+        <Text className="binding-row__binding-label">Binding</Text>
+      </Box>
     </Box>
   );
 };
