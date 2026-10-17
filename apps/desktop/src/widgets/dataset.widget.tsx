@@ -9,8 +9,8 @@ const meta: WidgetMeta = {
   defaultSide: 'left',
   defaultDockedSize: 300,
   defaultFloatingSize: { width: 320, height: 400 },
-  kit: 'dev-tools',
-  chrome: 'compact',
+  context: 'game',
+  devOnly: true,
 };
 
 const LiveDataInspector = () => <LiveDataInspectorContent />;

@@ -413,7 +413,7 @@ The title's lake scene drawn once and still, as the background of a box, at a wh
 
 ## apps/desktop/src/views/ShadowEditorOverlay/
 
-The editor overlay is the Shadow drawing overlay of the Developer tools kit (`src/widgets/shadow-drawing.overlay.tsx`). It takes its size from the game fit store, which `GameLayer` fills, so it covers exactly the game picture. It draws only on the overworld and only with preview mode off. Hit testing works in world space: lights first (a small radius), then heightmap shapes, last drawn first. A freehand shape is hit inside its polygon or near an edge. Dragging a vertex of a regular polygon turns it into a freehand shape with those vertices. A right click during a drag puts the element back where the drag started. Keyboard shortcuts while the overlay is shown: Ctrl+Z undo, Ctrl+Y or Ctrl+Shift+Z redo, Delete or Backspace removes the selection, Ctrl+S saves, Escape returns to the select tool.
+The editor overlay is the Shadow drawing overlay of the Shadow Editor kit (`src/widgets/shadow-drawing.overlay.tsx`). It takes its size from the game fit store, which `GameLayer` fills, so it covers exactly the game picture. It draws only on the overworld and only with preview mode off. Hit testing works in world space: lights first (a small radius), then heightmap shapes, last drawn first. A freehand shape is hit inside its polygon or near an edge. Dragging a vertex of a regular polygon turns it into a freehand shape with those vertices. A right click during a drag puts the element back where the drag started. Keyboard shortcuts while the overlay is shown: Ctrl+Z undo, Ctrl+Y or Ctrl+Shift+Z redo, Delete or Backspace removes the selection, Ctrl+S saves, Escape returns to the select tool.
 
 ## apps/desktop/src/views/ShadowEditorOverlay/behavior/ (the gizmo files)
 
@@ -433,7 +433,7 @@ The transform gizmo of the shadow editor, in display pixels around the shape's c
 
 ## apps/desktop/src/views/ShadowEditorPanel/
 
-The Shadow Editor is the Developer tools kit's first widgets: the panel (`shadow-editor.widget.tsx`, with its Preview, Debug, Undo, Redo and Save buttons in the widget title strip through `ShadowEditorTools`), the element list (`shadow-elements.widget.tsx`) and the drawing overlay. The project loads once per run, by whichever of the three mounts first (`shadow-editor/ensure-shadow-project.ts`), so closing and reopening the kit keeps unsaved edits. The screen shown is the overworld screen under the camera, read from the game when the game UI store reports a new screen.
+The Shadow Editor kit holds the editor's widgets: the panel (`shadow-editor.widget.tsx`, with its Preview, Debug, Undo, Redo and Save buttons in the widget title strip through `ShadowEditorTools`), the element list (`shadow-elements.widget.tsx`) and the drawing overlay. The project loads once per run, by whichever of the three mounts first (`shadow-editor/ensure-shadow-project.ts`), so closing and reopening the kit keeps unsaved edits. The screen shown is the overworld screen under the camera, read from the game when the game UI store reports a new screen.
 
 ## apps/desktop/src/views/ShadowEditorPanel/sub-components/NumberField.tsx
 

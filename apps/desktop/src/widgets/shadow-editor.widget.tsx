@@ -5,7 +5,7 @@ import { ShadowEditorPanel, ShadowEditorTools } from '@app/views/ShadowEditorPan
 const meta: WidgetMeta = {
   label: 'Shadow Editor',
   icon: 'sun',
-  kit: 'dev-tools',
+  kit: 'shadow-editor',
   chrome: 'compact',
   order: 1,
   defaultSide: 'right',

@@ -213,7 +213,7 @@ The randomizer config each profile was last saved with from a connection edit, b
 
 The undo history keeps the last `UNDO_DEPTH` screen states before the current one.
 
-`loaded` is set by the first `loadProject` of the run. The game's shadow renderer follows the store's project from then on, so edits show in the game while the Developer tools kit is open and stay in effect after it closes until the app restarts.
+`loaded` is set by the first `loadProject` of the run. The game's shadow renderer follows the store's project from then on, so edits show in the game while the Shadow Editor kit is open and stay in effect after it closes until the app restarts.
 
 ## apps/desktop/src/stores/simulator-store/
 
