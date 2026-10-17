@@ -58,6 +58,7 @@ catalogs:
     typescript: ^5.9.3
 
 onlyBuiltDependencies:
+  - '@drizztdourden08/brock-input'
   - electron
   - esbuild
   - koffi
