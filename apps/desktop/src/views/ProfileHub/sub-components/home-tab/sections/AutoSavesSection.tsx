@@ -45,6 +45,7 @@ const AutoSavesSection = (props: HomeTabColumnsProps) => {
       render={render}
       rowActions={rowActions}
       actionVisibility="always"
+      maxRows={6}
       selectedId={selectedId}
       onSelect={setSelectedId}
       empty="No auto-saves yet"
