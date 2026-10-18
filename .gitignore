@@ -55,6 +55,9 @@ apps/desktop/public/sprites/
 # Electron
 release/
 
+# Pre-Brock native controller output (current addon lives in node_modules)
+/apps/desktop/electron/input/native/sdl3/prebuilds/
+
 # Capacitor / Android build artifacts (native project is committed; output is not)
 apps/desktop/mobile/android/build/
 apps/desktop/mobile/android/app/build/
@@ -79,11 +82,27 @@ Desktop.ini
 .env
 .env.local
 .env.*.local
+.env.*
+!.env.example
+!.env.sample
+
+# Local signing material
+*.pem
+*.key
+*.p12
+*.pfx
+*.jks
+*.keystore
 
 # Per-machine deploy target config (VM SSH details), never committed
 tooling/deploy/vm.json
 # Local push SSH public key (per machine, never committed)
 tooling/deploy/*.pub
+
+# Leftovers from the pre-Brock tooling layout
+/scripts/analyze/report.json
+/scripts/deploy/vm.json
+/scripts/deploy/*.pub
 
 # Logs
 *.log
