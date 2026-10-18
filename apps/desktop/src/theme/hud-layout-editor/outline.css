@@ -6,11 +6,6 @@
   flex-direction: column;
   gap: var(--space-xs);
   min-width: 0;
-  padding: var(--space-sm);
-  background: var(--c-surface);
-  border: var(--border-width-thin) solid var(--c-border);
-  border-radius: var(--radius-md);
-  box-shadow: var(--shadow-lg);
 }
 
 .hud-outline__rows {

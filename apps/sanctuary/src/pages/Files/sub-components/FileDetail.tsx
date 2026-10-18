@@ -45,7 +45,7 @@ const FileDetail = (props: FileDetailProps) => {
       notice={actions.notice}
       onClose={onClose}
       media={kind && <FileMedia file={file} kind={kind} />}
-      className="side-panel"
+      className="files__side"
     >
       {editing
         ? (

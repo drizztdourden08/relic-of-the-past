@@ -28,7 +28,6 @@ const AutoSavesSection = (props: HomeTabColumnsProps) => {
   const rowActions = useCallback((save: AutoSaveInfo, row: ItemListRowState) => (
     <SaveRowActions
       name={`auto-save ${nameOf(save).toLowerCase()}`}
-      resetKey={`${save.id}|${save.timestamp}|${busyAuto === save.id}`}
       busy={busyAuto !== null}
       tabIndex={row.tabIndex}
       onLoad={() => void handleLoadAuto(save.id)}

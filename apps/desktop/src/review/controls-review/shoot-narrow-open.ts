@@ -1,11 +1,11 @@
 /* @layer renderer-app @kind logic */
 import type { AppReviewTour } from '@drizztdourden08/brock-react';
-import type { ListPanelSide } from '@app/compounds/ListPanel';
+import type { SidePanelSide } from '@drizztdourden08/tessera/composites';
 import { CONTROLS_SELECTORS } from './controls-review.constants';
 import { setFold } from './set-fold';
 
-const shootNarrowOpen = async (tour: AppReviewTour, side: ListPanelSide): Promise<void> => {
-  const other: ListPanelSide = side === 'start' ? 'end' : 'start';
+const shootNarrowOpen = async (tour: AppReviewTour, side: SidePanelSide): Promise<void> => {
+  const other: SidePanelSide = side === 'start' ? 'end' : 'start';
   await setFold(tour, other, true);
   await setFold(tour, side, false);
   const panel = tour.find(CONTROLS_SELECTORS.panel(side));

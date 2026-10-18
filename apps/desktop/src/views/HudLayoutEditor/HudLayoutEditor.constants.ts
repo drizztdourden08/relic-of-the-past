@@ -24,11 +24,15 @@ const GROUND_TILE = 32;
 const HUD_BLACK = '#000000';
 const HUD_WHITE = '#ffffff';
 
+const OUTLINE_PANEL = { title: 'Outline', storageKey: 'hud-editor.outline', width: 320, minWidth: 220, maxWidth: 480 };
+
+const INSPECTOR_PANEL = { title: 'Inspector', storageKey: 'hud-editor.inspector', width: 320, minWidth: 220, maxWidth: 480 };
+
 const COUNT_STEP = 1;
 const ANGLE_STEP = 15;
 const MS_STEP = 10;
 
 export {
   ANGLE_STEP, COUNT_STEP, EDITOR_GROUNDS, EDITOR_RATIOS, GLYPH_IMAGE_TYPES,
-  GROUND_TILE, HUD_BLACK, HUD_WHITE, MS_STEP,
+  GROUND_TILE, HUD_BLACK, HUD_WHITE, INSPECTOR_PANEL, MS_STEP, OUTLINE_PANEL,
 };

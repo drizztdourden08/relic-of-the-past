@@ -3,7 +3,6 @@ import type { ArmedAction } from '../ArmedActionButton';
 
 interface SaveRowActionsProps {
   name: string;
-  resetKey: string;
   busy: boolean;
   tabIndex?: number;
   overwriteDisabledReason?: string;

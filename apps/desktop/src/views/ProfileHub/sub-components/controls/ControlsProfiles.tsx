@@ -1,10 +1,12 @@
 /* @layer renderer-components @kind component */
 import { useCallback } from 'react';
-import { Icon, IconButton } from '@drizztdourden08/tessera/primitives';
-import { ListPanel, useStoredFold } from '../../../../compounds/ListPanel';
+import { Box, Icon, IconButton } from '@drizztdourden08/tessera/primitives';
+import { SidePanel } from '@drizztdourden08/tessera/composites';
+import { useStoredFold } from '../../../../hooks/useStoredFold';
 import { InputProfileList } from './InputProfileList';
 import { SidebarProfileButton } from './SidebarProfileButton';
-import { PROFILES_FOLD_KEY } from './controls.constants';
+import { PROFILES_FOLD_KEY, SIDE_PANEL_WIDTH_PX } from './controls.constants';
+import { sideSlotClass } from './side-slot-class';
 import type { CtrlProps } from './controls.type';
 
 const ControlsProfiles = ({ ctrl }: CtrlProps) => {
@@ -27,16 +29,18 @@ const ControlsProfiles = ({ ctrl }: CtrlProps) => {
   ));
 
   return (
-    <ListPanel title="Profiles" action={add} rail={rail} collapsed={collapsed} onToggle={toggle}>
-      <InputProfileList
-        profiles={profiles}
-        activeId={activeId}
-        initialEditId={newlyCreatedId}
-        onSelect={selectProfile}
-        onDelete={setDeleteTarget}
-        onRename={handleRename}
-      />
-    </ListPanel>
+    <Box className={sideSlotClass('start', collapsed)}>
+      <SidePanel title="Profiles" resizable={false} width={SIDE_PANEL_WIDTH_PX} actions={add} rail={rail} collapsed={collapsed} onCollapsedChange={toggle}>
+        <InputProfileList
+          profiles={profiles}
+          activeId={activeId}
+          initialEditId={newlyCreatedId}
+          onSelect={selectProfile}
+          onDelete={setDeleteTarget}
+          onRename={handleRename}
+        />
+      </SidePanel>
+    </Box>
   );
 };
 

@@ -30,7 +30,6 @@ const NormalSavesSection = (props: HomeTabColumnsProps) => {
   const rowActions = useCallback((save: NormalSaveInfo, row: ItemListRowState) => (
     <SaveRowActions
       name={save.name}
-      resetKey={`${save.id}|${save.timestamp}|${busyNormal === save.id}`}
       busy={busyNormal !== null}
       tabIndex={row.tabIndex}
       overwriteDisabledReason={isGameRunning ? undefined : NO_GAME_REASON}
@@ -68,6 +67,7 @@ const NormalSavesSection = (props: HomeTabColumnsProps) => {
       selectedId={selectedId}
       onSelect={setSelectedId}
       onRename={handleRename}
+      renameInline
       empty="No saves yet"
     />
   );
