@@ -1,5 +1,5 @@
 /* @layer renderer-app @kind constants */
-import type { ListPanelSide } from '@app/compounds/ListPanel';
+import type { SidePanelSide } from '@drizztdourden08/tessera/composites';
 
 const CONTROLS_HUB = 'game';
 const CONTROLS_SECTION = 'controls';
@@ -24,8 +24,8 @@ const CONTROLS_SELECTORS = {
   tabs: '.controls-settings__main .tabs',
   body: '.controls-settings__body',
   tab: '.controls-settings__main [role="tab"]',
-  panel: (side: ListPanelSide) => `.controls-settings .list-panel--${side}`,
-  toggle: '.list-panel__toggle',
+  panel: (side: SidePanelSide) => `.controls-settings .controls-panel--${side}`,
+  toggle: 'button[aria-expanded]',
   newProfile: 'button[aria-label="New profile"]',
   renameField: 'input[aria-label="Profile name"]',
   deleteProfile: '.list-item-row--selected button[aria-label="Delete profile"]',

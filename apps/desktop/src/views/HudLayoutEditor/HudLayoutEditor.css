@@ -17,21 +17,10 @@
 
 .hud-editor__body {
   display: flex;
-  gap: var(--space-md);
+  gap: var(--space-2xs);
   align-items: stretch;
   flex: 1;
   min-height: 0;
-}
-
-.hud-editor__rail {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-sm);
-  flex: none;
-  min-height: 0;
-  padding: 0 var(--space-xs);
-  overflow-y: auto;
-  scrollbar-gutter: stable;
 }
 
 .hud-editor__stage-column {
@@ -132,7 +121,6 @@
     align-content: flex-start;
   }
 
-  .hud-editor__rail,
   .hud-editor__stage-column {
     flex: 1 1 100%;
     max-width: 100%;

@@ -1,12 +1,11 @@
 /* @layer renderer-components @kind component */
 import { Box, DensityScope, Icon } from '@drizztdourden08/tessera/primitives';
-import { ScreenWindow, ResizeHandle } from '@drizztdourden08/tessera/composites';
+import { ScreenWindow, SidePanel } from '@drizztdourden08/tessera/composites';
 import type { ScreenWindowHeader } from '@drizztdourden08/tessera/composites';
 import { useReducedMotion } from '@app/compounds/HudNodeRenderer';
 import { MotionPreviewContext, useMotionPreviewState } from '@app/hud-layout-editing/motion-preview';
-import { usePanelResize } from '@app/hud-layout-editing/usePanelResize';
 import { useHudLayoutEditor } from '@app/hud-layout-editing/useHudLayoutEditor';
-import { EDITOR_GROUNDS } from './HudLayoutEditor.constants';
+import { EDITOR_GROUNDS, INSPECTOR_PANEL, OUTLINE_PANEL } from './HudLayoutEditor.constants';
 import { EditorToolbar } from './sub-components/EditorToolbar';
 import { InspectorRail } from './sub-components/InspectorRail';
 import { OutlinePanel } from './sub-components/OutlinePanel';
@@ -21,7 +20,6 @@ const HudLayoutEditor = (props: HudLayoutEditorProps) => {
   const editor = useHudLayoutEditor(props);
   const { glyphs, draft, edits, setRatioId, ground, setGround, layout, ratio, slots, target } = editor;
 
-  const panels = usePanelResize();
   const motionPreview = useMotionPreviewState(useReducedMotion());
 
   return (
@@ -45,7 +43,7 @@ const HudLayoutEditor = (props: HudLayoutEditorProps) => {
               />
 
               <Box className="hud-editor__body">
-                <Box id="hud-editor-outline" className="hud-editor__rail" style={{ width: panels.outlineWidth }}>
+                <SidePanel {...OUTLINE_PANEL}>
                   <OutlinePanel
                     doc={layout}
                     selectedId={edits.selectedId}
@@ -54,17 +52,13 @@ const HudLayoutEditor = (props: HudLayoutEditorProps) => {
                     onRemove={edits.remove}
                     onDrop={edits.drop}
                   />
-                </Box>
-
-                <ResizeHandle label="Resize outline panel" controls="hud-editor-outline" {...panels.outlineResize} />
+                </SidePanel>
 
                 <StageColumn editor={editor} />
 
-                <ResizeHandle label="Resize inspector panel" controls="hud-editor-inspector" edge="end" {...panels.inspectorResize} />
-
-                <Box id="hud-editor-inspector" className="hud-editor__rail" style={{ width: panels.inspectorWidth }}>
+                <SidePanel side="end" {...INSPECTOR_PANEL}>
                   <InspectorRail editor={editor} />
-                </Box>
+                </SidePanel>
               </Box>
             </Box>
           </DensityScope>

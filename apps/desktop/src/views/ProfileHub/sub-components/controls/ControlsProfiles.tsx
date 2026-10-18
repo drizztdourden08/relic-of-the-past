@@ -1,10 +1,11 @@
 /* @layer renderer-components @kind component */
 import { useCallback } from 'react';
 import { Icon, IconButton } from '@drizztdourden08/tessera/primitives';
-import { ListPanel, useStoredFold } from '../../../../compounds/ListPanel';
+import { SidePanel } from '@drizztdourden08/tessera/composites';
+import { useStoredFold } from './behavior/useStoredFold';
 import { InputProfileList } from './InputProfileList';
 import { SidebarProfileButton } from './SidebarProfileButton';
-import { PROFILES_FOLD_KEY } from './controls.constants';
+import { CONTROLS_PANEL_WIDTH, PROFILES_FOLD_KEY } from './controls.constants';
 import type { CtrlProps } from './controls.type';
 
 const ControlsProfiles = ({ ctrl }: CtrlProps) => {
@@ -27,7 +28,16 @@ const ControlsProfiles = ({ ctrl }: CtrlProps) => {
   ));
 
   return (
-    <ListPanel title="Profiles" action={add} rail={rail} collapsed={collapsed} onToggle={toggle}>
+    <SidePanel
+      title="Profiles"
+      className="controls-panel--start"
+      resizable={false}
+      width={CONTROLS_PANEL_WIDTH}
+      actions={add}
+      rail={rail}
+      collapsed={collapsed}
+      onCollapsedChange={toggle}
+    >
       <InputProfileList
         profiles={profiles}
         activeId={activeId}
@@ -36,7 +46,7 @@ const ControlsProfiles = ({ ctrl }: CtrlProps) => {
         onDelete={setDeleteTarget}
         onRename={handleRename}
       />
-    </ListPanel>
+    </SidePanel>
   );
 };
 

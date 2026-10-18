@@ -29,7 +29,6 @@ const OutlinePanel = (props: OutlinePanelProps) => {
 
   return (
     <Box className="hud-outline">
-      <Text className="hud-editor__label">Outline</Text>
       <Box ref={rowsRef} className={`hud-outline__rows${dragging ? ' is-panning' : ''}`}>
         <Box className="hud-outline__pan is-up" aria-hidden />
         {outlineRows(doc, collapsedNodeIds).map((row) => (

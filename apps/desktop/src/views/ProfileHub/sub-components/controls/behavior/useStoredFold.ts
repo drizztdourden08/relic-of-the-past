@@ -2,7 +2,7 @@
 import { useCallback, useState } from 'react';
 import { readFold } from './read-fold';
 import { writeFold } from './write-fold';
-import type { StoredFold } from '../ListPanel.type';
+import type { StoredFold } from './stored-fold.type';
 
 const useStoredFold = (storageKey: string, defaultCollapsed: boolean): StoredFold => {
   const [collapsed, setCollapsed] = useState(() => readFold(storageKey) ?? defaultCollapsed);

@@ -21,7 +21,6 @@ const NodeInspector = (props: NodeInspectorProps) => {
   return (
     <FormulaScopeContext.Provider value={context.instances}>
       <Box className="hud-inspect">
-        <Text className="hud-editor__label">Inspector</Text>
         <Box className="hud-inspect__head">
           <Text className="hud-inspect__name">{labelOf(node)}</Text>
           <Text className="hud-inspect__id">{node.id}</Text>

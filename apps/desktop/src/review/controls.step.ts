@@ -10,7 +10,6 @@ import { openControls } from './controls-review/open-controls';
 import { openTab } from './controls-review/open-tab';
 import { setBothFolds } from './controls-review/set-both-folds';
 import { setFold } from './controls-review/set-fold';
-import { shootNarrowOpen } from './controls-review/shoot-narrow-open';
 import { withNarrowWindow } from './controls-review/with-narrow-window';
 
 const shootTabs = async (tour: AppReviewTour, prefix: string, ids: readonly string[]): Promise<void> => {
@@ -41,9 +40,6 @@ const run = async (tour: AppReviewTour): Promise<void> => {
   await withNarrowWindow(tour, async () => {
     await setBothFolds(tour, true);
     await shootTabs(tour, 'narrow-folded', ['vanilla', 'options']);
-    await openTab(tour, CONTROLS_TABS[0].label);
-    await shootNarrowOpen(tour, 'start');
-    await shootNarrowOpen(tour, 'end');
   });
 
   await openTab(tour, CONTROLS_TABS[0].label);
