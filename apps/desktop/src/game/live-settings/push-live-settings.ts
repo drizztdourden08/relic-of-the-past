@@ -11,9 +11,7 @@ const liveSettings = createLiveSettings<GameSettings>({ calls: currentCoreCalls,
 const pushLiveSettings = (settings: GameSettings): boolean => {
   setSettingsStoryGates(settings.vanillaSafe);
   try {
-    const pushed = liveSettings.push(settings);
-    if (!pushed) log.app('Live settings: no WASM module available', 'warn');
-    return pushed;
+    return liveSettings.push(settings);
   } catch (e) {
     log.app(`Live settings push failed: ${e}`, 'error');
     return false;

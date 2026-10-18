@@ -42,7 +42,8 @@ const serializeToIni = (settings: GameSettings, msuPath?: string, language?: str
   const aspectValue = aspectRatioIni(settings, er);
   const renderFlags = renderFlagsIni(settings, er);
 
-  const msuEnabledIni = settings.vanillaSafe ? 'false' : settings.enableMSU;
+  const nativeMsuMode = settings.enableMSU === 'msul' ? 'false' : settings.enableMSU;
+  const msuEnabledIni = settings.vanillaSafe ? 'false' : nativeMsuMode;
   const msuPathIni = settings.vanillaSafe ? undefined : msuPath;
 
   const linkGraphicsIni = !settings.vanillaSafe && settings.linkSprite ? LINK_GRAPHICS_LINE : '';
