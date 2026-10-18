@@ -5,7 +5,7 @@ import { SidePanel } from '@drizztdourden08/tessera/composites';
 import { useStoredFold } from '../../../../hooks/useStoredFold';
 import { InputProfileList } from './InputProfileList';
 import { SidebarProfileButton } from './SidebarProfileButton';
-import { PROFILES_FOLD_KEY, SIDE_PANEL_WIDTH_PX } from './controls.constants';
+import { PROFILES_FOLD_KEY, SIDE_PANEL_SIZE } from './controls.constants';
 import { sideSlotClass } from './side-slot-class';
 import type { CtrlProps } from './controls.type';
 
@@ -30,7 +30,7 @@ const ControlsProfiles = ({ ctrl }: CtrlProps) => {
 
   return (
     <Box className={sideSlotClass('start', collapsed)}>
-      <SidePanel title="Profiles" resizable={false} width={SIDE_PANEL_WIDTH_PX} actions={add} rail={rail} collapsed={collapsed} onCollapsedChange={toggle}>
+      <SidePanel title="Profiles" {...SIDE_PANEL_SIZE} storageKey="controls:profiles-width" actions={add} rail={rail} collapsed={collapsed} onCollapsedChange={toggle}>
         <InputProfileList
           profiles={profiles}
           activeId={activeId}

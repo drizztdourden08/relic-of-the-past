@@ -8,7 +8,7 @@ import { DeviceRow } from './DeviceRow';
 import { DeviceRailButton } from './DeviceRailButton';
 import { keyboardEntry } from './keyboard-entry';
 import { controllerGroupEntry } from './controller-group-entry';
-import { DEVICES_FOLD_KEY, SIDE_PANEL_WIDTH_PX } from './controls.constants';
+import { DEVICES_FOLD_KEY, SIDE_PANEL_SIZE } from './controls.constants';
 import { sideSlotClass } from './side-slot-class';
 import type { DeviceAssignInfo } from './DeviceRow.type';
 import type { CtrlProps } from './controls.type';
@@ -31,7 +31,7 @@ const ControlsDevices = ({ ctrl }: CtrlProps) => {
 
   return (
     <Box className={sideSlotClass('end', collapsed)}>
-      <SidePanel side="end" title="Devices" resizable={false} width={SIDE_PANEL_WIDTH_PX} actions={rescan} rail={rail} collapsed={collapsed} onCollapsedChange={toggle}>
+      <SidePanel side="end" title="Devices" {...SIDE_PANEL_SIZE} storageKey="controls:devices-width" actions={rescan} rail={rail} collapsed={collapsed} onCollapsedChange={toggle}>
         {entries.map((entry) => (
           <DeviceRow key={entry.key} entry={entry} onAssign={handleAssign} onAddMapping={addMapping} />
         ))}
