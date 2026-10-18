@@ -1,7 +1,7 @@
 packages:
-  - 'apps/*'
-  - 'packages/*'
-  - 'tooling/*'
+  - apps/*
+  - packages/*
+  - tooling/*
 
 catalog:
   '@aws-sdk/client-s3': ^3.1139.0
@@ -34,8 +34,8 @@ catalog:
   eslint: ^10.4.0
   eslint-plugin-react-hooks: ^7.1.1
   jose: ^6.2.12
-  jsdom: ^29.1.1
   jscpd: ^4.0.5
+  jsdom: ^29.1.1
   knip: ^5.65.0
   markdownlint-cli2: ^0.22.1
   node-addon-api: ^8.9.1
@@ -57,6 +57,10 @@ catalogs:
   functions:
     typescript: ^5.9.3
 
+ignoredBuiltDependencies:
+  - electron-winstaller
+  - protobufjs
+
 onlyBuiltDependencies:
   - '@drizztdourden08/brock-input'
   - electron
@@ -64,6 +68,5 @@ onlyBuiltDependencies:
   - koffi
   - sharp
 
-ignoredBuiltDependencies:
-  - electron-winstaller
-  - protobufjs
+patchedDependencies:
+  '@drizztdourden08/brock-react@0.66.0': patches/@drizztdourden08__brock-react@0.66.0.patch

@@ -46,7 +46,7 @@ interface DialogState {
 }
 
 interface ProfileFactsInput {
-  romFile: string;
+  romFile?: string;
   lastPlayed?: number;
   created?: number;
 }

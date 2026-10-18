@@ -66,7 +66,6 @@ export default defineBrockConfig({
       { ext: 'rlang', name: 'Language Set', description: 'Relic of the Past language set', progId: 'RelicOfThePast.LanguageSet', mimeType: 'application/x-rlang' },
     ],
     icons: { brand: 'rotp', wordmark: { src: './logos/wordmark.svg', rendering: 'pixelated' } },
-    menu: { entries: { 'widget-logs': { parent: 'widgets-developer' } } },
     dataDirs: ['assets', 'roms', 'profiles', 'config', 'msu', 'languages', 'sprites', 'link-sprites'],
     schemes: [{ scheme: 'app-sprite', dir: 'sprites' }, { scheme: 'app-debug-capture', stream: true }],
   },
