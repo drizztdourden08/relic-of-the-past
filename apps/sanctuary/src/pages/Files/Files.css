@@ -60,6 +60,12 @@
   white-space: pre-wrap;
 }
 
+.files__side {
+  display: flex;
+  gap: var(--space-2xs);
+  min-block-size: 0;
+}
+
 .selection-panel {
   min-width: 0;
   min-height: 0;

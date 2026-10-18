@@ -30,7 +30,7 @@ const SelectionPanel = (props: SelectionPanelProps) => {
   const clear = <Button variant="ghost" size="sm" onClick={onClear}>Clear</Button>;
 
   return (
-    <Card className="side-panel selection-panel">
+    <Card className="files__side selection-panel">
       <Stack as="section" gap="md" align="stretch" aria-label="Selected files">
         <WindowHeader title={`${files.length} files selected`} extra={clear} className="selection-panel__head" />
         <SelectionGrid files={files} />
