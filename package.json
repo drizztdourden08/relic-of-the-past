@@ -164,7 +164,7 @@
   },
   "brock": {
     "version": "0.63.0",
-    "tessera": "0.42.0"
+    "tessera": "0.43.0"
   },
   "bin": {
     "rotp": "./bin/rotp.mjs"
