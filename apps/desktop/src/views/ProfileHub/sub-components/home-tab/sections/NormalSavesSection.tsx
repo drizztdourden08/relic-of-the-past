@@ -61,6 +61,7 @@ const NormalSavesSection = (props: HomeTabColumnsProps) => {
       render={render}
       rowActions={rowActions}
       actionVisibility="always"
+      maxRows={6}
       create={create}
       newDisabled={isGameRunning ? false : NO_GAME_REASON}
       createLabel="New save"
