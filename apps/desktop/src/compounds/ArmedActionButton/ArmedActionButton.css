@@ -69,10 +69,6 @@
   background: var(--c-primary-soft);
 }
 
-.armed-action--armed .armed-action__emoji {
-  animation: armed-action-float var(--duration-float) var(--ease-standard) infinite alternate;
-}
-
 .armed-action--armed .armed-action__glyph::before {
   content: "";
   position: absolute;
@@ -90,11 +86,6 @@
   animation: armed-action-glow-drift var(--duration-glow-drift) var(--ease-standard) infinite alternate;
 }
 
-@keyframes armed-action-float {
-  from { transform: translateY(6%); }
-  to { transform: translateY(-14%); }
-}
-
 @keyframes armed-action-glow-drift {
   from {
     transform: translate(-8%, -6%) scale(0.95);
@@ -108,7 +99,6 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .armed-action--armed .armed-action__emoji,
   .armed-action--armed .armed-action__glyph::before {
     animation: none;
   }

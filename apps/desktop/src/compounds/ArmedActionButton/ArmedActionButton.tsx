@@ -1,8 +1,8 @@
 /* @layer renderer-components @kind component */
 import type { KeyboardEvent } from 'react';
-import { Pressable, Text, EmojiIcon } from '@drizztdourden08/tessera/primitives';
+import { ArmedIcon, Pressable, Text } from '@drizztdourden08/tessera/primitives';
 import './ArmedActionButton.css';
-import { ARMED_GLYPHS } from './ArmedActionButton.constants';
+import { ARMED_ICON_SIZE_PX, ARMED_ICONS } from './ArmedActionButton.constants';
 import type { ArmedActionButtonProps } from './ArmedActionButton.type';
 
 const ArmedActionButton = (props: ArmedActionButtonProps) => {
@@ -35,7 +35,7 @@ const ArmedActionButton = (props: ArmedActionButtonProps) => {
       aria-pressed={armed}
     >
       <Text className="armed-action__glyph">
-        <EmojiIcon glyph={ARMED_GLYPHS[action]} size="lg" className="armed-action__emoji" />
+        <ArmedIcon name={ARMED_ICONS[action]} armed={armed} size={ARMED_ICON_SIZE_PX} />
       </Text>
       {caption && <Text className="armed-action__caption">{armed ? `${caption}?` : caption}</Text>}
     </Pressable>

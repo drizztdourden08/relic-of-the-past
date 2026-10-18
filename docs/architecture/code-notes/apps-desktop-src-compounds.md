@@ -5,12 +5,12 @@ Facts about `apps/desktop/src/compounds/` that the code cannot say on its own. E
 
 ## apps/desktop/src/compounds/ArmedActionButton/ArmedActionButton.tsx
 
-The press twice button of the quick save slots. No
-colour, filter or mask reaches the glyph: the emoji keeps its own palette, and only the half
-behind it tints on hover, focus and arming. The glyph is its own stacking context so the armed
-halo sits behind the emoji and above the button's tint. While armed the emoji bobs and a green and
-gold halo wanders behind it. A button with a caption shows its action as text and asks it as a
-question while armed (Load becomes Load?); a quick save slot passes none and stays glyph only.
+The press twice button of the quick save slots. Its icon is Tessera's ArmedIcon (load-state,
+save-state, trash-2) in the button's colour: while armed the icon morphs into its armed pose and
+loops, and a green and gold halo wanders behind it. The glyph is its own stacking context so the
+halo sits behind the icon and above the button's tint. A button with a caption shows its action
+as text and asks it as a question while armed (Load becomes Load?); a quick save slot passes none
+and stays icon only.
 Blur and Escape disarm.
 
 ## apps/desktop/src/compounds/ArmedActionButton/behavior/useArmedAction.ts
