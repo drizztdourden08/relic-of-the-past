@@ -5,8 +5,7 @@ Facts about `apps/desktop/src/compounds/` that the code cannot say on its own. E
 
 ## apps/desktop/src/compounds/ArmedActionButton/ArmedActionButton.tsx
 
-The press twice button of the quick save slots. The save rows draw `SaveRowActionButton` over the
-same `useArmedAction`. No
+The press twice button of the quick save slots. No
 colour, filter or mask reaches the glyph: the emoji keeps its own palette, and only the half
 behind it tints on hover, focus and arming. The glyph is its own stacking context so the armed
 halo sits behind the emoji and above the button's tint. While armed the emoji bobs and a green and
@@ -709,25 +708,14 @@ already fires silver, so the plain cost goes inert with the reason on it. Cost s
 rupees: round numbers a game of this age would ask. An absent `onChange` renders the read-only
 Options page.
 
-## apps/desktop/src/compounds/SaveRowActionButton/SaveRowActionButton.tsx
-
-A Tessera ghost icon button with no text. It draws the idle icon of its pair, or the armed one
-while armed, which is the one slot an armed animation replaces; until then the armed icon is the
-idle icon in the ghost button's active tone. Blur and Escape disarm, as on a quick save slot.
-
 ## apps/desktop/src/compounds/SaveRowActions/SaveRowActions.tsx
 
-Load and Overwrite side by side over Delete, at the row's end, each armed by a first press and
-run by a second through `useArmedAction`, the timeout of a quick save slot. The icon pair of each
-action is in `SAVE_ROW_ICONS`. `onArmedChange` tells the row which action is armed, so the row can
-ask for the second press in place of the date. An auto-save leaves out Overwrite. Overwrite stays
-on screen without a game, greyed out with the reason as its hint.
-
-## apps/desktop/src/compounds/SaveRowThumb/SaveRowThumb.tsx
-
-The screenshot of a save in the icon of a row, as tall as the two rows of actions beside it, so it
-never makes the row taller, and in the SNES frame's shape (256 by 224). The pixels stay sharp. A
-save with no screenshot shows an empty frame.
+Load and Overwrite side by side over Delete, at the row's end, as Tessera ArmedIconButtons with
+the load-state, save-state and trash-2 icons in the info, warning and danger tones. The first
+press morphs the icon and loops it, the second runs the action; the timeout, blur and Escape are
+Tessera's. `onArmedChange` tells the row which action is armed, so the row can ask for the second
+press in place of the date. An auto-save leaves out Overwrite. Overwrite stays on screen without a
+game, greyed out, and its name reads the reason.
 
 ## apps/desktop/src/compounds/SaveSlot/SaveSlot.css
 

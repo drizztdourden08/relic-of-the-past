@@ -15,6 +15,8 @@ const AUTO_TRIGGER_LABELS = { timer: 'On timer', quit: 'On quit' } as const;
 
 const NO_GAME_REASON = 'Start the game to save';
 
+const SAVE_SHOT_ASPECT = 256 / 224;
+
 const ARMED_PROMPTS: Readonly<Record<ArmedAction, string>> = {
   load: 'Click again to load',
   save: 'Click again to overwrite',
@@ -37,6 +39,6 @@ const RUN_OF_MODE: Readonly<Record<ProfileModeId, RunKind | null>> = {
 };
 
 export {
-  ARMED_PROMPTS, AUTO_TRIGGER_LABELS, BOOT_WAIT_MS, IMPORT_CONFIRM_WORD, NO_GAME_REASON, QUICK_SAVE_SLOTS, RUN_OF_MODE,
+  ARMED_PROMPTS, AUTO_TRIGGER_LABELS, BOOT_WAIT_MS, IMPORT_CONFIRM_WORD, NO_GAME_REASON, QUICK_SAVE_SLOTS, RUN_OF_MODE, SAVE_SHOT_ASPECT,
   SESSION_LIST_LIMIT, SRAM_BYTES, SRAM_EXTENSIONS, STATUS_LABELS, TOAST_DURATION_MS,
 };

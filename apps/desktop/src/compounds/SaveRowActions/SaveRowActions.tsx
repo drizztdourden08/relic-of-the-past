@@ -1,51 +1,34 @@
 /* @layer renderer-components @kind component */
-import { useEffect } from 'react';
+import { ArmedIconButton } from '@drizztdourden08/tessera/composites';
 import { Box } from '@drizztdourden08/tessera/primitives';
-import { useArmedAction } from '../ArmedActionButton';
-import { SaveRowActionButton } from '../SaveRowActionButton';
-import { SAVE_ROW_ICONS } from './SaveRowActions.constants';
+import type { ArmedAction } from '../ArmedActionButton';
 import type { SaveRowActionsProps } from './SaveRowActions.type';
 import './SaveRowActions.css';
 
 const SaveRowActions = (props: SaveRowActionsProps) => {
-  const { name, resetKey, busy, tabIndex, overwriteDisabledReason, onLoad, onOverwrite, onDelete, onArmedChange } = props;
-  const { armed, press, disarm } = useArmedAction({ resetKey });
-
-  useEffect(() => onArmedChange?.(armed), [armed, onArmedChange]);
+  const { name, busy, tabIndex, overwriteDisabledReason, onLoad, onOverwrite, onDelete, onArmedChange } = props;
+  const report = (action: ArmedAction) => ({ onArm: () => onArmedChange?.(action), onCancel: () => onArmedChange?.(null) });
+  const confirm = (run: () => void) => () => {
+    onArmedChange?.(null);
+    run();
+  };
 
   return (
     <Box className={onOverwrite ? 'save-row-actions' : 'save-row-actions save-row-actions--single'}>
-      <SaveRowActionButton
-        label={`Load ${name}`}
-        icons={SAVE_ROW_ICONS.load}
-        disabled={busy}
-        armed={armed === 'load'}
-        tabIndex={tabIndex}
-        onPress={() => press('load', onLoad)}
-        onDisarm={disarm}
-      />
+      <ArmedIconButton icon="load-state" tone="info" label={`Load ${name}`} disabled={busy} tabIndex={tabIndex} onConfirm={confirm(onLoad)} {...report('load')} />
       {onOverwrite && (
-        <SaveRowActionButton
-          label={`Overwrite ${name}`}
-          icons={SAVE_ROW_ICONS.save}
+        <ArmedIconButton
+          icon="save-state"
+          tone="warning"
+          label={overwriteDisabledReason ?? `Overwrite ${name}`}
           disabled={busy || overwriteDisabledReason !== undefined}
-          disabledReason={overwriteDisabledReason}
-          armed={armed === 'save'}
           tabIndex={tabIndex}
-          onPress={() => press('save', onOverwrite)}
-          onDisarm={disarm}
+          onConfirm={confirm(onOverwrite)}
+          {...report('save')}
         />
       )}
       <Box className="save-row-actions__delete">
-        <SaveRowActionButton
-          label={`Delete ${name}`}
-          icons={SAVE_ROW_ICONS.delete}
-          disabled={busy}
-          armed={armed === 'delete'}
-          tabIndex={tabIndex}
-          onPress={() => press('delete', onDelete)}
-          onDisarm={disarm}
-        />
+        <ArmedIconButton icon="trash-2" tone="danger" label={`Delete ${name}`} disabled={busy} tabIndex={tabIndex} onConfirm={confirm(onDelete)} {...report('delete')} />
       </Box>
     </Box>
   );
