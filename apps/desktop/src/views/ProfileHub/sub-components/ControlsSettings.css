@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind style */
 .controls-settings {
-  container: list-panel-row / inline-size;
+  container: controls-row / inline-size;
   position: relative;
   height: 100%;
   min-height: 0;
@@ -62,4 +62,27 @@
 .controls-settings__bindings--drag-over {
   border-color: var(--c-primary);
   box-shadow: 0 0 var(--size-12) var(--c-primary-soft), inset 0 0 var(--size-12) var(--c-primary-soft);
+}
+
+.controls-settings__side {
+  display: flex;
+  min-height: 0;
+}
+
+@container controls-row (width < 640px) {
+  .controls-settings__side--open {
+    position: absolute;
+    inset-block: 0;
+    z-index: var(--z-panel);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-overlay);
+  }
+
+  .controls-settings__side--start.controls-settings__side--open {
+    inset-inline-start: 0;
+  }
+
+  .controls-settings__side--end.controls-settings__side--open {
+    inset-inline-end: 0;
+  }
 }

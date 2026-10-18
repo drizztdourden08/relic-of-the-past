@@ -22,7 +22,7 @@ Facts about `apps/desktop/src/views/ProfileHub/` that the code cannot say on its
 - `apps/desktop/src/views/ProfileHub`: the gap between the nav and the content leaves room for the nav's round toggle, which straddles its right edge. The `.settings-tab` rules are the generic settings tab layout used by the Audio, Gameplay and Controls tabs, and `.hub-game-controls` is the game controls group rendered in the window title bar.
 - `BindingListener.css`: the backdrop opts back into pointer events, because the Portal layer is click-through.
 - `OptionsTab.css`: a required input row draws its device icon beside its connected state. The two sections need no wrapper, so they take the same section gap as the Game settings pages.
-- `ControlsSettings.css`: the row is the `list-panel-row` container the two ListPanels read, so under 640 px an open panel lies over the bindings instead of squeezing them. The middle takes the rest of the width, and the tab content scrolls in one area under the tab row with the same top padding as a settings page body, so the binding tables keep their rounded corners.
+- `ControlsSettings.css`: the row is the `controls-row` container, and under 640 px of it an open SidePanel lies over the bindings instead of squeezing them. The middle takes the rest of the width, and the tab content scrolls in one area under the tab row with the same top padding as a settings page body, so the binding tables keep their rounded corners.
 - `DialogHoldRow.css`: the toggle and its speed slider each take half the row, and the slider never collapses.
 - `HomeTabColumns.css`: the hero sits flush with the top of the nav. The folder button sits in the info card row and matches the cards' height, not its own. The columns collapse to one when there is no room for two.
 
@@ -160,7 +160,7 @@ The cheat bindings, scrimmed while the master cheats toggle is off, since they d
 
 ## apps/desktop/src/views/ProfileHub/sub-components/controls/ControlsDevices.tsx
 
-The right ListPanel: one row per detected device, with Rescan at its top. Gamepads come from the SDL3 controller snapshot (ready or unavailable, adapter grouping), and the keyboard entry still comes from the InputManager's device list. Both become one `DeviceEntry` (`keyboard-entry`, `controller-group-entry`), so a row and its folded rail button read the same data. An adapter is one row for the whole device, since every port shares one vendor:product id, and its subtitle counts the ready ports.
+The right SidePanel (not resizable, 192 px, fold kept by `useStoredFold`): one row per detected device, with Rescan at its top. Gamepads come from the SDL3 controller snapshot (ready or unavailable, adapter grouping), and the keyboard entry still comes from the InputManager's device list. Both become one `DeviceEntry` (`keyboard-entry`, `controller-group-entry`), so a row and its folded rail button read the same data. An adapter is one row for the whole device, since every port shares one vendor:product id, and its subtitle counts the ready ports.
 
 ## apps/desktop/src/views/ProfileHub/sub-components/controls/ControlsMain.tsx
 
@@ -168,7 +168,7 @@ The centre column: a banner where the scheme control used to be, plus the tabbed
 
 ## apps/desktop/src/views/ProfileHub/sub-components/controls/ControlsProfiles.tsx
 
-The left ListPanel: the input profiles, folded by default to a rail of their icons. New profile sits at the top of both the panel and the rail; pressed on the rail it opens the panel first, so the new profile shows in its rename field.
+The left SidePanel: the input profiles, folded by default to a rail of their icons. New profile sits at the top of both the panel and the rail; pressed on the rail it opens the panel first, so the new profile shows in its rename field.
 
 ## apps/desktop/src/views/ProfileHub/sub-components/controls/CoreBindingsGroup.tsx
 

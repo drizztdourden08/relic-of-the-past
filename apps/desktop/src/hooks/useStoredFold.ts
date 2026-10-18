@@ -1,8 +1,8 @@
 /* @layer renderer-components @kind hook */
 import { useCallback, useState } from 'react';
-import { readFold } from './read-fold';
-import { writeFold } from './write-fold';
-import type { StoredFold } from '../ListPanel.type';
+import { readFold } from './stored-fold/read-fold';
+import { writeFold } from './stored-fold/write-fold';
+import type { StoredFold } from './stored-fold/stored-fold.type';
 
 const useStoredFold = (storageKey: string, defaultCollapsed: boolean): StoredFold => {
   const [collapsed, setCollapsed] = useState(() => readFold(storageKey) ?? defaultCollapsed);
