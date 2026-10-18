@@ -7,7 +7,7 @@ const WIDE_RAIL = 320;
 const NARROW_RAIL = 232;
 
 const dragRailTo = async (rig: Rig, rail: number): Promise<void> => {
-  const handle = rig.window.locator('[aria-label="Resize inspector panel"]');
+  const handle = rig.window.locator('[aria-label="Resize Inspector"]');
   const box = await handle.boundingBox();
   if (!box) return;
   await rig.window.mouse.move(box.x + box.width / 2, box.y + box.height / 2);
