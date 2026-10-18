@@ -18,7 +18,7 @@ const Mounted = () => (
   <SaveRowActions name="Save 1" busy={false} onLoad={() => undefined} onOverwrite={() => undefined} onDelete={() => undefined} />
 );
 `,
-  propsHash: 'd6ebdd6e82f6802f',
+  propsHash: 'c3a71b8f83b8eea5',
 } satisfies ComponentUsage;
 
 export { usage };
