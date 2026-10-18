@@ -88,7 +88,8 @@ export default defineBrockConfig({
   workflows: {
     steps: {
       ci: {
-        beforeBuild: [...wasmCoreSteps, { name: linuxSdl3Soname.name, jobs: 'review', run: linuxSdl3Soname.run }],
+        beforeBuild: wasmCoreSteps,
+        afterBuild: [{ name: linuxSdl3Soname.name, jobs: 'review', run: linuxSdl3Soname.run }],
         beforeTest: [{ name: 'Analyze every file type', jobs: 'quality', run: 'node tooling/analyze/analyze.mjs --ci' }],
       },
       release: {

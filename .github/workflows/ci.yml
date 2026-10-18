@@ -139,11 +139,11 @@ jobs:
         shell: bash
         run: "pnpm run ensure-wasm"
 
-      - name: "Make the Linux SDL3 runtime loadable"
-        run: "node tooling/ensure-linux-sdl3-soname.mjs"
-
       - name: Build
         run: pnpm --dir "$APP_DIR" exec brock build
+
+      - name: "Make the Linux SDL3 runtime loadable"
+        run: "node tooling/ensure-linux-sdl3-soname.mjs"
 
       - name: Let Electron start its sandbox
         run: sudo sysctl -w kernel.apparmor_restrict_unprivileged_userns=0
