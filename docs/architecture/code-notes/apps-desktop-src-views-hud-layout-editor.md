@@ -16,7 +16,7 @@ The grounds come from the extraction definitions, not a second list, and from th
 
 The editor is a full page reached from the Advanced menu, so it fills its layer.
 The toolbar runs across the top with the outline, stage and inspector columns below; rails are fixed and the stage takes the rest, so the stage being judged does not jump when a panel grows.
-Rail width is set inline from the view store; the drag previews onto `style.width` and commits on release.
+The outline and the inspector are Tessera SidePanels: sunken, resizable, folding to a rail, each keeping its width and fold under its own `storageKey`.
 `scrollbar-gutter: stable` reserves the scrollbar's width, so content does not shift as a panel's height changes.
 The stage column scrolls, because the stage keeps its aspect and can be taller than a short window; otherwise an element past the fold could not be clicked, which once stranded the wallet.
 The global settings strip sits under the preview, pinned to the column's bottom with `margin-top: auto`, as the maintainer asked.
@@ -34,7 +34,7 @@ An inspector on the right is the selected node's box, plus what a container does
 A slot number is never validated against a device; the running scheme only sizes the preview's slot list and notes, never blocks, a slot past its range.
 Nothing is written until Save; the draft is a memento, so walking away leaves the live HUD as it was.
 This view is the only tier that touches data: the layout store, saved layouts, input profiles and glyph packs. Everything below takes props.
-Both rails keep their width in the view store, never the document, because a panel width is a fact about the editor.
+Both panels keep their width and fold in the browser's storage under their `storageKey`, never the document, because a panel width is a fact about the editor.
 The editor's step is read here and provided as a context, which keeps stepped inputs reusable and measurable.
 The motion transport is created here, the only tier allowed to own state the whole editor reads, and passed as a context; under reduced motion it reports itself disabled.
 The step strip sits under the preview because it changes how the panel behaves, not what the document says.

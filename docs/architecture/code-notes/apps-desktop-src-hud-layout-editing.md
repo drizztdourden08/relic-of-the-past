@@ -600,12 +600,6 @@ Collapsed ancestors are expanded whatever the origin, because a hidden row must 
 `lastHandled` is separate from `lastSelf`, so an unrelated re-render cannot scroll again for an unchanged selection.
 The scroll waits one frame for the expanded row to exist.
 
-## apps/desktop/src/hud-layout-editing/usePanelResize.ts
-
-The outline and inspector rails' resize wiring, kept out of the editor's view.
-Width comes from the view store, `useResize` drives the drag, and `onPreview` writes each rail's inline style so state only changes on release.
-The inspector's handle is on its own left edge, so `invert` flips the delta.
-
 ## apps/desktop/src/hud-layout-editing/useSampleState.ts
 
 What the editor's preview draws against.

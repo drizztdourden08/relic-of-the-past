@@ -15,8 +15,6 @@ interface FlexEcho {
 interface HudEditorViewState {
   gridOverlayEnabled: boolean;
   snappingEnabled: boolean;
-  outlineWidth: number;
-  inspectorWidth: number;
   collapsedNodeIds: ReadonlySet<string>;
   gridEcho: GridEcho | null;
   flexEcho: FlexEcho | null;
@@ -26,8 +24,6 @@ interface HudEditorViewState {
 interface HudEditorViewStore extends HudEditorViewState {
   toggleGridOverlay: () => void;
   toggleSnapping: () => void;
-  setOutlineWidth: (px: number) => void;
-  setInspectorWidth: (px: number) => void;
   toggleNodeCollapsed: (id: string) => void;
   expandNodeIds: (ids: readonly string[]) => void;
   collapseNodeIds: (ids: readonly string[]) => void;
