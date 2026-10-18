@@ -1,23 +1,10 @@
 /* @layer renderer-app @kind hook */
 import { useCallback, useMemo, useState } from 'react';
-import type { FieldDescriptor } from '@drizztdourden08/tessera/data';
 import { ROW_PAGE_SIZE } from '../DataInspector.constants';
-import type { InspectorRow, RowWindow, TableOrder } from '../DataInspector.type';
-import { orderedRows, reachFor } from './windowed-rows';
-
-interface WindowedRowsParams {
-  rows: readonly InspectorRow[];
-  schema: readonly FieldDescriptor[];
-  order: TableOrder;
-  selectedId: string | null;
-  getId: (row: InspectorRow) => string;
-  enabled: boolean;
-}
-
-interface LimitState {
-  rows: readonly InspectorRow[];
-  limit: number;
-}
+import type { RowWindow } from '../DataInspector.type';
+import { reachFor } from './reach-for';
+import { orderedRows } from './windowed-rows';
+import type { LimitState, WindowedRowsParams } from './useWindowedRows.type';
 
 const useWindowedRows = (params: WindowedRowsParams): RowWindow => {
   const { rows, schema, order, selectedId, getId, enabled } = params;

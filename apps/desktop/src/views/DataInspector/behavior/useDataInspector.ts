@@ -1,17 +1,14 @@
 /* @layer renderer-app @kind hook */
 import { useCallback, useMemo, useState } from 'react';
-import { buildSchema, capture, compile, compileTextSearch, useViewState } from '@drizztdourden08/tessera/data';
+import { capture, compile, compileTextSearch, useViewState } from '@drizztdourden08/tessera/data';
 import type { DetailTab, FilterClause } from '@drizztdourden08/tessera/data';
 import {
-  DEFAULT_KIND, DEFAULT_TAB, NO_COLUMNS, NO_ROWS, NO_SCHEMA, NO_TABLE, RECOMMENDATIONS_KIND,
+  DEFAULT_KIND, NO_COLUMNS, NO_ROWS, NO_TABLE, RECOMMENDATIONS_KIND,
 } from '../DataInspector.constants';
 import type { EditIntent, IdRefTarget, InspectorKind } from '../DataInspector.type';
-import { isEntityKind } from './is-entity-kind';
-import { pendingSource } from './pending-source';
+import { inspectorTab } from './inspector-tab';
 import { queryViewKey } from './query-view-key';
-import { recommendationSource } from '@app/data-inspector/recommendations/recommendation-source';
-import { useRecommendations, useRecommendationsReady } from '@app/data-inspector/recommendations/use-recommendations';
-import { useKindData } from './useKindData';
+import { useInspectorSource } from './useInspectorSource';
 import { usePendingOpen } from './usePendingOpen';
 import { useRecordSelection } from './useRecordSelection';
 
@@ -19,20 +16,7 @@ const useDataInspector = () => {
   const [kind, setKind] = useState<InspectorKind>(DEFAULT_KIND);
   const [editIntent, setEditIntent] = useState<EditIntent | null>(null);
 
-  const entityKind = isEntityKind(kind) ? kind : null;
-  const reviewing = entityKind === null;
-  const kindData = useKindData(entityKind);
-  const entries = useRecommendations(reviewing);
-  const reviewReady = useRecommendationsReady(reviewing);
-
-  const reviewSource = useMemo(() => recommendationSource(entries), [entries]);
-  const reviewSchema = useMemo(
-    () => (reviewing ? buildSchema(reviewSource.rows, reviewSource.config) : NO_SCHEMA),
-    [reviewing, reviewSource],
-  );
-  const source = entityKind ? (kindData?.source ?? pendingSource(entityKind)) : reviewSource;
-  const schema = entityKind ? (kindData?.schema ?? NO_SCHEMA) : reviewSchema;
-  const loading = entityKind ? !kindData : !reviewReady;
+  const { source, schema, loading, entries } = useInspectorSource(kind);
 
   const { snapshot, setSnapshot } = useViewState({
     key: loading ? undefined : queryViewKey(kind),
@@ -42,9 +26,7 @@ const useDataInspector = () => {
   const { selectedId, selectIn } = useRecordSelection(kind);
 
   const clauses = snapshot.filters;
-  const tab = (editIntent && isEntityKind(kind) && editIntent.kind === kind && editIntent.id === selectedId)
-    ? 'editor'
-    : snapshot.tab ?? DEFAULT_TAB;
+  const tab = inspectorTab(editIntent, kind, selectedId, snapshot.tab);
   const detailCollapsed = snapshot.collapsed ?? false;
 
   const [search, setSearch] = useState('');

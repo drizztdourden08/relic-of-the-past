@@ -1,6 +1,7 @@
 /* @layer tooling-scripts @kind logic */
 import fs from 'fs';
 import path from 'path';
+import { execFileSync } from 'node:child_process';
 import { walkFiles } from './walk.mjs';
 import { loadManifest } from './manifest.mjs';
 import { classifyFile } from './classify.mjs';
@@ -25,7 +26,9 @@ const gitChanged = () => {
 const classifyAll = (rels, manifest) => rels.map((rel) => classifyFile(ROOT, rel, manifest));
 
 const selectFiles = (mode) => {
-  const rels = walkFiles(ROOT);
+  const visible = new Set(execFileSync('git', ['ls-files', '--cached', '--others', '--exclude-standard', '-z'], { cwd: ROOT })
+    .toString('utf8').split('\0').filter(Boolean).map((rel) => rel.replace(/\\/g, '/')));
+  const rels = walkFiles(ROOT).filter((rel) => visible.has(rel));
   if (mode !== 'diff') return rels;
   const changed = gitChanged();
   return rels.filter((r) => changed.has(r));

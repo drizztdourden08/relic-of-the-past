@@ -10,7 +10,9 @@ import type * as SourcesModule from '@app/data-inspector/collection-sources';
 import type * as SchemaModule from '@drizztdourden08/tessera/data';
 import type * as ListModule from '@app/views/DataInspector/sub-components/InspectorList';
 import type * as KindDataModule from '@app/views/DataInspector/behavior/kind-data';
+import type * as PeekKindDataModule from '@app/views/DataInspector/behavior/peek-kind-data';
 import type * as WindowedModule from '@app/views/DataInspector/behavior/windowed-rows';
+import type * as ReachForModule from '@app/views/DataInspector/behavior/reach-for';
 import type { DetailTab } from '@drizztdourden08/tessera/data';
 import { describeDataset } from '../dataset-guard';
 import { required } from '../required';
@@ -24,9 +26,9 @@ let COLLECTION_SOURCES: typeof SourcesModule.COLLECTION_SOURCES;
 let buildSchema: typeof SchemaModule.buildSchema;
 let InspectorList: typeof ListModule.InspectorList;
 let loadKindData: typeof KindDataModule.loadKindData;
-let peekKindData: typeof KindDataModule.peekKindData;
+let peekKindData: typeof PeekKindDataModule.peekKindData;
 let orderedRows: typeof WindowedModule.orderedRows;
-let reachFor: typeof WindowedModule.reachFor;
+let reachFor: typeof ReachForModule.reachFor;
 
 beforeEach(async () => {
   vi.resetModules();
@@ -45,8 +47,10 @@ beforeEach(async () => {
   ));
   ({ buildSchema } = await import('@drizztdourden08/tessera/data'));
   ({ InspectorList } = await import('@app/views/DataInspector/sub-components/InspectorList'));
-  ({ loadKindData, peekKindData } = await import('@app/views/DataInspector/behavior/kind-data'));
-  ({ orderedRows, reachFor } = await import('@app/views/DataInspector/behavior/windowed-rows'));
+  ({ loadKindData } = await import('@app/views/DataInspector/behavior/kind-data'));
+  ({ peekKindData } = await import('@app/views/DataInspector/behavior/peek-kind-data'));
+  ({ orderedRows } = await import('@app/views/DataInspector/behavior/windowed-rows'));
+  ({ reachFor } = await import('@app/views/DataInspector/behavior/reach-for'));
 });
 
 afterEach(() => {

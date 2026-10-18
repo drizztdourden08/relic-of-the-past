@@ -39,6 +39,12 @@ const publishStateFormat: WorkflowStep = {
   run: 'node tooling/state-format/check-state-format.mjs --emit upload',
 };
 
+const linuxSdl3Soname: WorkflowStep = {
+  name: 'Make the Linux SDL3 runtime loadable',
+  platforms: ['linux'],
+  run: 'node tooling/sdl3/ensure-linux-soname.mjs',
+};
+
 export default defineBrockConfig({
   product: {
     id: 'relic-of-the-past',
@@ -82,11 +88,15 @@ export default defineBrockConfig({
   workflows: {
     steps: {
       ci: {
-        beforeBuild: wasmCoreSteps,
+        beforeBuild: [...wasmCoreSteps, { name: linuxSdl3Soname.name, jobs: 'review', run: linuxSdl3Soname.run }],
         beforeTest: [{ name: 'Analyze every file type', jobs: 'quality', run: 'node tooling/analyze/analyze.mjs --ci' }],
       },
       release: {
-        beforePackage: [...wasmCoreSteps, ...releaseInputSteps],
+        prepare: [
+          { name: 'Check the save state format', run: 'node tooling/state-format/check-state-format.mjs' },
+          { name: 'Analyze every file type', run: 'node tooling/analyze/analyze.mjs --ci' },
+        ],
+        beforePackage: [...wasmCoreSteps, linuxSdl3Soname, ...releaseInputSteps],
         afterPackage: [publishStateFormat],
       },
     },

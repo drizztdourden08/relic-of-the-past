@@ -2,7 +2,8 @@
 import { useEffect, useState } from 'react';
 import type { EntityKind } from '@rotp/game-data';
 import type { KindData } from '../DataInspector.type';
-import { loadKindData, peekKindData } from './kind-data';
+import { loadKindData } from './kind-data';
+import { peekKindData } from './peek-kind-data';
 import { scheduleAfterPaint } from './schedule-after-paint';
 
 const useKindData = (kind: EntityKind | null): KindData | undefined => {
@@ -14,7 +15,7 @@ const useKindData = (kind: EntityKind | null): KindData | undefined => {
     return scheduleAfterPaint(() => setLoaded(loadKindData(kind)));
   }, [kind]);
 
-  return ready ?? (loaded && loaded.source.id === kind ? loaded : undefined);
+  return ready ?? (loaded?.source.id === kind ? loaded : undefined);
 };
 
 export { useKindData };

@@ -5,13 +5,10 @@ import type { ViewStorage } from '@drizztdourden08/tessera/data';
 import { NO_ORDER } from '../DataInspector.constants';
 import type { InspectorKind, TableOrder } from '../DataInspector.type';
 import { observeViewStorage } from './observe-view-storage';
-import { orderOf, sameOrder } from './table-order';
+import { sameOrder } from './same-order';
+import { orderOf } from './table-order';
 import { tableViewKey } from './table-view-key';
-
-interface OrderState {
-  kind: InspectorKind;
-  order: TableOrder;
-}
+import type { OrderState } from './useTableOrder.type';
 
 const useTableOrder = (kind: InspectorKind): { order: TableOrder; storage: ViewStorage } => {
   const base = useViewStorage();

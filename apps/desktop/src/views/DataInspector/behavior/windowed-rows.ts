@@ -12,14 +12,4 @@ const orderedRows = (
   return deriveRows({ rows, schema: createSchemaIndex(schema), sort: order.sort, groupBy: order.groupBy }).sortedRows;
 };
 
-const reachFor = (
-  ordered: readonly InspectorRow[],
-  selectedId: string | null,
-  getId: (row: InspectorRow) => string,
-): number => {
-  if (!selectedId) return 0;
-  const at = ordered.findIndex(row => getId(row) === selectedId);
-  return at + 1;
-};
-
-export { orderedRows, reachFor };
+export { orderedRows };

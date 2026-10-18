@@ -1,9 +1,6 @@
 /* @layer renderer-app @kind component */
 import { EmptyState, Spinner } from '@drizztdourden08/tessera/primitives';
-
-interface ListLoadingProps {
-  label: string;
-}
+import type { ListLoadingProps } from './ListLoading.type';
 
 const ListLoading = (props: ListLoadingProps) => {
   const { label } = props;

@@ -45,7 +45,7 @@
     "push:android": "node tooling/deploy/push-android.mjs",
     "emulator:start": "node tooling/deploy/push-android.mjs --emulator-only",
     "prepare": "git config core.hooksPath .githooks || true",
-    "lint": "tsc --noEmit && eslint .",
+    "lint": "tsc --noEmit && node tooling/lint-all.mjs",
     "sync:check": "node tooling/sync-check/index.mjs",
     "state-format": "node tooling/state-format/check-state-format.mjs",
     "ci": "pnpm run lint && pnpm run state-format && node tooling/analyze/analyze.mjs --ci",

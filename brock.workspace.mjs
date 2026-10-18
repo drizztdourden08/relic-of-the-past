@@ -4,7 +4,7 @@ import { plugin as snesPlugin } from '@drizztdourden08/brock-plugin-snes';
 
 export default defineWorkspace({
   name: 'rotp',
-  base: 'agent/grand-merge',
+  base: 'master',
   targets: {
     app: electronTarget({ app: 'apps/desktop' }),
   },

@@ -2,13 +2,13 @@ name: CI
 run-name: CI ${{ github.head_ref || github.ref_name }}
 
 # Managed by brock sync from the targets in brock.config.ts. Change the targets, then run brock sync.
-# Runs on pull requests, on a push to agent/grand-merge (releases and release notes land there straight)
+# Runs on pull requests, on a push to master (releases and release notes land there straight)
 # and from the Actions tab. The review job launches the built app headless under xvfb and fails
 # the run when a check in its report fails.
 on:
   pull_request:
   push:
-    branches: [agent/grand-merge]
+    branches: [master]
   workflow_dispatch:
 
 concurrency:
@@ -138,6 +138,9 @@ jobs:
       - name: "Build the wasm core"
         shell: bash
         run: "pnpm run ensure-wasm"
+
+      - name: "Make the Linux SDL3 runtime loadable"
+        run: "node tooling/sdl3/ensure-linux-soname.mjs"
 
       - name: Build
         run: pnpm --dir "$APP_DIR" exec brock build

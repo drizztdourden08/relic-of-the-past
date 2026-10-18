@@ -94,6 +94,12 @@ jobs:
         env:
           NODE_AUTH_TOKEN: ${{ secrets.PACKAGES_TOKEN || secrets.GITHUB_TOKEN }}
 
+      - name: "Check the save state format"
+        run: "node tooling/state-format/check-state-format.mjs"
+
+      - name: "Analyze every file type"
+        run: "node tooling/analyze/analyze.mjs --ci"
+
       - name: Release note
         run: pnpm --dir "$APP_DIR" exec brock release-notes check "${{ steps.resolve.outputs.version }}"
 
@@ -370,6 +376,9 @@ jobs:
         shell: bash
         run: "pnpm run ensure-wasm"
 
+      - name: "Make the Linux SDL3 runtime loadable"
+        run: "node tooling/sdl3/ensure-linux-soname.mjs"
+
       - name: "Fetch the private dataset"
         shell: bash
         env:
@@ -630,7 +639,7 @@ jobs:
       - name: Commit the version and tag it
         shell: bash
         env:
-          BRANCH: agent/grand-merge
+          BRANCH: master
         run: |
           TAG="${{ needs.prepare.outputs.tag }}"
           node -e "const f=process.argv[1];const p=JSON.parse(require('fs').readFileSync(f,'utf8'));p.version=process.argv[2];require('fs').writeFileSync(f,JSON.stringify(p,null,2)+'\n')" "$APP_DIR/package.json" "${{ needs.prepare.outputs.version }}"

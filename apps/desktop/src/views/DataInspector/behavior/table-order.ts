@@ -6,7 +6,4 @@ import type { TableOrder } from '../DataInspector.type';
 const orderOf = (snapshot: ViewSnapshot | undefined): TableOrder =>
   snapshot ? { sort: snapshot.sort, groupBy: snapshot.groupBy } : NO_ORDER;
 
-const sameOrder = (a: TableOrder, b: TableOrder): boolean =>
-  JSON.stringify([a.sort, a.groupBy]) === JSON.stringify([b.sort, b.groupBy]);
-
-export { orderOf, sameOrder };
+export { orderOf };

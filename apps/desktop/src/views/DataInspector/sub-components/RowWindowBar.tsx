@@ -1,13 +1,7 @@
 /* @layer renderer-app @kind component */
 import { Box, Button, Text } from '@drizztdourden08/tessera/primitives';
 import { ROW_PAGE_SIZE } from '../DataInspector.constants';
-
-interface RowWindowBarProps {
-  shown: number;
-  total: number;
-  onShowMore: () => void;
-  onShowAll: () => void;
-}
+import type { RowWindowBarProps } from './RowWindowBar.type';
 
 const RowWindowBar = (props: RowWindowBarProps) => {
   const { shown, total, onShowMore, onShowAll } = props;

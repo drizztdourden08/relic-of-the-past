@@ -3,12 +3,12 @@ run-name: CI sanctuary ${{ github.head_ref || github.ref_name }}
 
 # Managed by brock sync for the site in apps/sanctuary. A pull request checks and builds the site
 # only when it touches the site's files, a workspace package it depends on, or a file outside
-# every package; a push to agent/grand-merge and a manual run always check it. Brock deploys nothing:
+# every package; a push to master and a manual run always check it. Brock deploys nothing:
 # hosting the dist folder is the app's own workflow.
 on:
   pull_request:
   push:
-    branches: [agent/grand-merge]
+    branches: [master]
   workflow_dispatch:
 
 concurrency:
