@@ -59,7 +59,6 @@ const DataInspector = () => {
           list={list}
           detail={detail}
           listRatio={isCollection ? RECORD_LIST_RATIO : COMPARING_LIST_RATIO}
-          resizable={false}
           collapsible={false}
           detailCollapsible
           detailCollapsed={detailCollapsed}

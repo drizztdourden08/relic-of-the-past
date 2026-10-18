@@ -1,6 +1,6 @@
 /* @layer renderer-appshell @kind hook */
 import { useEffect, useRef } from 'react';
-import { isAutomationLaunch, nav, useBootStore, useNavigationStore } from '@drizztdourden08/brock-react';
+import { nav, useBootStore, useNavigationStore } from '@drizztdourden08/brock-react';
 import { screenshotHold } from '@app/boot/screenshot-hold';
 import { startupFlag } from '@app/startup/startup-flag';
 import { HOME_HUB } from '../GameSession.constants';
@@ -11,16 +11,11 @@ const useOpenHubOnStart = (profileId: string | null): void => {
   const done = useRef(false);
 
   useEffect(() => {
-    if (done.current || !ready || profileId === null) return;
+    if (done.current || !ready || profileId === null || startupFlag('screenshot') !== 'hub') return;
     done.current = true;
     const idle = useNavigationStore.getState().active === null;
-    if (startupFlag('screenshot') === 'hub') {
-      if (idle) nav.home(HOME_HUB);
-      setTimeout(screenshotHold.release, RENDER_SETTLE_MS);
-      return;
-    }
-    if (isAutomationLaunch() || !idle) return;
-    nav.home(HOME_HUB);
+    if (idle) nav.home(HOME_HUB);
+    setTimeout(screenshotHold.release, RENDER_SETTLE_MS);
   }, [ready, profileId]);
 };
 

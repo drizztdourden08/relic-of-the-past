@@ -46,6 +46,7 @@ const App = () => {
   return (
     <BrockApp<AppSettings>
       product={product}
+      restoreNavigation={false}
       settings={SETTINGS}
       volume={VOLUME}
       developerTools={DEVELOPER_TOOLS}
