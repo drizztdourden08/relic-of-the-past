@@ -6,15 +6,19 @@ import { absorbPort, serverUrlOf } from '@app/hooks/randomizer/server-setup/serv
 import { randomSeed } from './random-seed';
 import type { RandomizerFormState } from './build-randomizer-config.type';
 
-const buildRandomizerConfig = (form: RandomizerFormState): ProfileRandomizerConfig | undefined => {
+const allowedMode = (mode: RandomizerFormState['mode'], experimental: boolean): RandomizerFormState['mode'] =>
+  (experimental ? mode : 'local');
+
+const buildRandomizerConfig = (form: RandomizerFormState, experimental: boolean): ProfileRandomizerConfig | undefined => {
   if (!form.enabled) return undefined;
+  const mode = allowedMode(form.mode, experimental);
   const config: ProfileRandomizerConfig = {
-    mode: form.mode,
+    mode,
     seed: form.seed.trim() || randomSeed(),
     options: buildOptionsSnapshot(randomizerChoiceOverrides(form)),
   };
   if (form.capacity.wallet.mode === 'custom') config.frozenSettings = { carryMoreRupees: true };
-  if (form.mode === 'online') {
+  if (mode === 'online') {
     const server = absorbPort(form.server);
     if (server.host.trim() !== '') config.serverUrl = serverUrlOf(server);
     if (server.slotName.trim() !== '') config.slotName = server.slotName.trim();

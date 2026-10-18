@@ -1,6 +1,7 @@
 /* @layer renderer-components @kind component */
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import type { GameSettings } from '@rotp/features';
+import { experimentalFeaturesEnabled } from '@rotp/features';
 import { SegmentedControl, Button, Box, Text } from '@drizztdourden08/tessera/primitives';
 import { useSpriteAvailabilityStore } from '@app/stores/sprite-availability-store';
 import { enhancedAspectAllowed } from '@rotp/game-core';
@@ -13,6 +14,7 @@ const HudStyleControl = ({ value, settings, onChange }: HudStyleControlProps) =>
   const { available, romFile, setAvailability } = useSpriteAvailabilityStore();
   const [extracting, setExtracting] = useState(false);
   const wideEnough = enhancedAspectAllowed(settings);
+  const experimental = experimentalFeaturesEnabled(settings);
 
   useEffect(() => {
     if (!romFile) return;
@@ -22,8 +24,8 @@ const HudStyleControl = ({ value, settings, onChange }: HudStyleControlProps) =>
   const options = useMemo(() => [
     { value: 'vanilla' as const, label: 'Original', disabled: !available },
     { value: 'enhanced' as const, label: 'Enhanced', disabled: !available || !wideEnough },
-    { value: 'modern' as const, label: 'Modern', disabled: !available || !wideEnough },
-  ], [available, wideEnough]);
+    { value: 'modern' as const, label: 'Modern', disabled: !available || !wideEnough || !experimental },
+  ], [available, wideEnough, experimental]);
 
   const tooNarrow = wideEnough ? null : TOO_NARROW;
   const notice = available ? tooNarrow : NO_SPRITES;

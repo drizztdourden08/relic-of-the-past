@@ -1,5 +1,8 @@
 /* @layer renderer-components @kind hook */
 import { useState, useCallback } from 'react';
+import { useSettings } from '@drizztdourden08/brock-react';
+import { experimentalFeaturesEnabled } from '@rotp/features';
+import type { AppSettings } from '@app/settings.type';
 import type { GameSettings } from '@rotp/features';
 import {
   freshRandomizerForm, randomizerFormError, type RandomizerFormState,
@@ -7,6 +10,7 @@ import {
 import { applyProfilePreset, type ProfilePresetId } from './profile-presets';
 
 const useProfileForm = () => {
+  const { settings } = useSettings<AppSettings>();
   const [formName, setFormName] = useState('');
   const [formRom, setFormRom] = useState('');
   const [formLang, setFormLang] = useState('');
@@ -40,7 +44,7 @@ const useProfileForm = () => {
     formPreset,
     formConfigOverrides,
     formError, setFormError,
-    formInvalid: randomizerFormError(formRandomizer) !== undefined,
+    formInvalid: randomizerFormError(formRandomizer, experimentalFeaturesEnabled(settings)) !== undefined,
     handlePickPreset,
     resetForm,
   };

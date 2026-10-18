@@ -1,8 +1,9 @@
 /* @layer renderer-app @kind component */
 import type { PageProps, ScreenMeta } from '@drizztdourden08/brock-react';
 import { Randomizer } from '@app/views/Randomizer';
+import { isOnlineExperimental } from '@app/shell/show-rules';
 
-const meta: ScreenMeta = { title: 'Network', icon: 'server', order: 1, keywords: ['archipelago', 'server', 'connection', 'health', 'players'] };
+const meta: ScreenMeta = { title: 'Network', icon: 'server', order: 1, when: isOnlineExperimental, keywords: ['archipelago', 'server', 'connection', 'health', 'players'] };
 
 const RandomizerNetworkPage = (props: PageProps) => {
   const { open } = props;

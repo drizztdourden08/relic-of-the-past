@@ -19,6 +19,12 @@ const forceOverlayForHostDrawnStyle = (merged: GameSettings): void => {
 const mergeSettings = (partial: Partial<GameSettings>): GameSettings => {
   const merged = { ...DEFAULT_SETTINGS, ...partial };
 
+  if (!merged.developerToolsEnabled) merged.experimentalFeaturesEnabled = false;
+  if (!merged.experimentalFeaturesEnabled) {
+    if (merged.hudStyle === 'modern') merged.hudStyle = 'enhanced';
+    merged.extraDungeon = false;
+  }
+
   forceEnhancedHudUnderTall(merged);
   forceOverlayForHostDrawnStyle(merged);
 

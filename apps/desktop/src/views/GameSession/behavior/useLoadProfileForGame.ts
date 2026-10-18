@@ -3,6 +3,7 @@ import { useCallback } from 'react';
 import { log } from '@app/log-bus';
 import { resetGame, setAutoSaveConfig } from '@app/game';
 import { serializeToIni, mergeSettings } from '@rotp/game-core';
+import { experimentalFeaturesEnabled } from '@rotp/features';
 import * as profileStore from '@app/storage/profile-store';
 import { loadMsuPack } from '@app/game/msu-pack-loader';
 import { resetSession } from '@app/game/randomizer-client';
@@ -49,7 +50,7 @@ const useLoadProfileForGame = ({ onGameClear, onProfileLoaded, setActiveProfile,
     resetSession();
 
     if (profile.randomizer) {
-      const gate = await gateRandomizerBoot(profile.id, profile.randomizer);
+      const gate = await gateRandomizerBoot(profile.id, profile.randomizer, experimentalFeaturesEnabled(settings));
       if (!gate.ok) {
         log.error(gate.reason);
         setLoadingProfile(null);

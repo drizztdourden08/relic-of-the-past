@@ -8,6 +8,7 @@ import { ControlsDevices } from './controls/ControlsDevices';
 import { Dialog } from '@drizztdourden08/tessera/composites';
 import { Flex } from '@drizztdourden08/tessera/primitives';
 import { SearchAnchor } from '@drizztdourden08/brock-react';
+import { experimentalFeaturesEnabled } from '@rotp/features';
 import { useControlsSettings } from './controls-settings';
 import { listeningLabel } from './controls-settings/listening-label';
 import type { ControlsSettingsProps } from './ControlsSettings.type';
@@ -31,6 +32,7 @@ const ControlsSettings = (props: ControlsSettingsProps) => {
       <SearchAnchor anchor="bindings" className="controls-settings__anchor controls-settings__anchor--main">
         <ControlsMain
           ctrl={ctrl}
+          experimental={experimentalFeaturesEnabled(settings)}
           cheatsEnabled={settings.cheatsEnabled}
           onOpenCheatsSettings={openCheatsSettings}
         />

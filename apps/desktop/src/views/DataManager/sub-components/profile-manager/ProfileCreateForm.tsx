@@ -1,9 +1,13 @@
 /* @layer renderer-components @kind component */
 import { Box, Text, Button, Select, TextInput, Field, ButtonRow, SegmentedControl } from '@drizztdourden08/tessera/primitives';
+import { useSettings } from '@drizztdourden08/brock-react';
+import { experimentalFeaturesEnabled } from '@rotp/features';
+import type { AppSettings } from '@app/settings.type';
 import { RandomizerFields } from './RandomizerFields';
 import type { ProfileCreateFormProps } from './profile-manager.type';
 
 const ProfileCreateForm = (props: ProfileCreateFormProps) => {
+  const { settings } = useSettings<AppSettings>();
   const { form, readyRoms, languages, msuPacks, onKeyDown, onCancel, onCreate } = props;
   const {
     formName, setFormName, formRom, setFormRom, formLang, setFormLang, formMsu, setFormMsu,
@@ -54,7 +58,7 @@ const ProfileCreateForm = (props: ProfileCreateFormProps) => {
           placeholder="None"
         />
       </Field>
-      <RandomizerFields value={formRandomizer} onChange={setFormRandomizer} />
+      <RandomizerFields value={formRandomizer} onChange={setFormRandomizer} experimental={experimentalFeaturesEnabled(settings)} />
       {formError && <Text variant="caption" className="profile-form__error">{formError}</Text>}
       <ButtonRow>
         <Button variant="ghost" size="sm" onClick={onCancel}>Cancel</Button>

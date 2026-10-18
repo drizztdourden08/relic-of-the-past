@@ -18,7 +18,9 @@ interface CheatBindingsTabProps extends CtrlProps {
   onOpenCheatsSettings: () => void;
 }
 
-type ControlsMainProps = CheatBindingsTabProps;
+interface ControlsMainProps extends CheatBindingsTabProps {
+  experimental: boolean;
+}
 
 interface CoreVerbGroup {
   id: string;

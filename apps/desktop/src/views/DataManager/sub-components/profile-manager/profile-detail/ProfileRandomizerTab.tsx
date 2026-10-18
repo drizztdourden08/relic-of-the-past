@@ -1,5 +1,8 @@
 /* @layer renderer-components @kind component */
 import { Box, Stack, Text } from '@drizztdourden08/tessera/primitives';
+import { useSettings } from '@drizztdourden08/brock-react';
+import { experimentalFeaturesEnabled } from '@rotp/features';
+import type { AppSettings } from '@app/settings.type';
 import { buildOptionFactGroups } from './build-option-facts';
 import { changedOptions } from './changed-options';
 import { buildRunFacts } from './build-run-facts';
@@ -8,12 +11,13 @@ import { ProfileConnectionSection } from './ProfileConnectionSection';
 import type { ProfileRandomizerTabProps } from './profile-detail.type';
 
 const ProfileRandomizerTab = ({ profile, randomizer }: ProfileRandomizerTabProps) => {
+  const { settings } = useSettings<AppSettings>();
   const groups = buildOptionFactGroups(randomizer.options);
   const changed = changedOptions(randomizer.options).length;
 
   return (
     <Stack gap="lg">
-      {randomizer.mode === 'online' && <ProfileConnectionSection profile={profile} randomizer={randomizer} />}
+      {randomizer.mode === 'online' && experimentalFeaturesEnabled(settings) && <ProfileConnectionSection profile={profile} randomizer={randomizer} />}
       <FactsSection
         title="Run"
         hint="The seed and options are fixed once the profile exists."

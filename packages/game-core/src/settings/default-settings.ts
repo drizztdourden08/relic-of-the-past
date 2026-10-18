@@ -167,6 +167,7 @@ const DEFAULT_SETTINGS: GameSettings = {
   extraDungeon: false,
 
   developerToolsEnabled: false,
+  experimentalFeaturesEnabled: false,
   devNavigationData: true,
   allowDebugLogging: false,
 

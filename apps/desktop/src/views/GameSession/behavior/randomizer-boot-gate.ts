@@ -8,7 +8,7 @@ import type { ProfileRandomizerConfig } from '@app/profiles/types';
 import type { GateResult } from './randomizer-boot-gate.type';
 import { rerollPlacement } from './reroll-placement';
 
-const gateRandomizerBoot = async (profileId: string, config: ProfileRandomizerConfig): Promise<GateResult> => {
+const gateRandomizerBoot = async (profileId: string, config: ProfileRandomizerConfig, experimental: boolean): Promise<GateResult> => {
   if (config.mode === 'local') {
     const placement = await loadRandomizerPlacement(profileId) ?? await rerollPlacement(profileId, config);
     if (!placement) {
@@ -19,6 +19,7 @@ const gateRandomizerBoot = async (profileId: string, config: ProfileRandomizerCo
     return { ok: true };
   }
 
+  if (!experimental) return { ok: false, reason: 'Archipelago requires Experimental Features in Contributing settings' };
   const url = normalizeServerUrl(config.serverUrl ?? '');
   if (!url) {
     return { ok: false, reason: 'Randomizer boot blocked: this online profile has no server URL' };

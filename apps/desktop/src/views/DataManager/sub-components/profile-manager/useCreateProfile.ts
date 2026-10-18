@@ -1,15 +1,20 @@
 /* @layer renderer-components @kind hook */
 import { useCallback } from 'react';
+import { useSettings } from '@drizztdourden08/brock-react';
+import { experimentalFeaturesEnabled } from '@rotp/features';
+import type { AppSettings } from '@app/settings.type';
 import { buildRandomizerConfig, randomizerFormError } from './build-randomizer-config';
 import type { UseCreateProfileParams } from './profile-manager.type';
 
 const useCreateProfile = (params: UseCreateProfileParams) => {
+  const { settings } = useSettings<AppSettings>();
+  const experimental = experimentalFeaturesEnabled(settings);
   const { form, onCreateProfile, onRefresh, setCreating } = params;
   const { formName, formRom, formLang, formMsu, formRandomizer, formConfigOverrides, setFormError, resetForm } = form;
 
   return useCallback(async () => {
     if (!formName.trim() || !formRom) return;
-    const invalid = randomizerFormError(formRandomizer);
+    const invalid = randomizerFormError(formRandomizer, experimental);
     if (invalid !== undefined) {
       setFormError(invalid);
       return;
@@ -20,8 +25,10 @@ const useCreateProfile = (params: UseCreateProfileParams) => {
       romFile: formRom,
       language: formLang || undefined,
       msuPack: formMsu || undefined,
-      randomizer: buildRandomizerConfig(formRandomizer),
-      initialConfig: formConfigOverrides,
+      randomizer: buildRandomizerConfig(formRandomizer, experimental),
+      initialConfig: experimental
+        ? { ...formConfigOverrides, developerToolsEnabled: true, experimentalFeaturesEnabled: true }
+        : formConfigOverrides,
     });
     if (!result.success) {
       setFormError(result.error);
@@ -32,7 +39,7 @@ const useCreateProfile = (params: UseCreateProfileParams) => {
     onRefresh();
   }, [
     formName, formRom, formLang, formMsu, formRandomizer, formConfigOverrides,
-    setFormError, resetForm, setCreating, onCreateProfile, onRefresh,
+    setFormError, resetForm, setCreating, onCreateProfile, onRefresh, experimental,
   ]);
 };
 
