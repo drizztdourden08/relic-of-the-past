@@ -140,7 +140,7 @@ jobs:
         run: "pnpm run ensure-wasm"
 
       - name: "Make the Linux SDL3 runtime loadable"
-        run: "node tooling/sdl3/ensure-linux-soname.mjs"
+        run: "node tooling/ensure-linux-sdl3-soname.mjs"
 
       - name: Build
         run: pnpm --dir "$APP_DIR" exec brock build

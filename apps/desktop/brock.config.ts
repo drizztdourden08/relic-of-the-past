@@ -42,7 +42,7 @@ const publishStateFormat: WorkflowStep = {
 const linuxSdl3Soname: WorkflowStep = {
   name: 'Make the Linux SDL3 runtime loadable',
   platforms: ['linux'],
-  run: 'node tooling/sdl3/ensure-linux-soname.mjs',
+  run: 'node tooling/ensure-linux-sdl3-soname.mjs',
 };
 
 export default defineBrockConfig({
