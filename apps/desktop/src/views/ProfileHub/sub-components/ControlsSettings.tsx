@@ -10,6 +10,7 @@ import { Flex } from '@drizztdourden08/tessera/primitives';
 import { SearchAnchor } from '@drizztdourden08/brock-react';
 import { experimentalFeaturesEnabled } from '@rotp/features';
 import { useControlsSettings } from './controls-settings';
+import { useControlsNarrow } from './controls/behavior/useControlsNarrow';
 import { listeningLabel } from './controls-settings/listening-label';
 import type { ControlsSettingsProps } from './ControlsSettings.type';
 import './ControlsSettings.css';
@@ -18,6 +19,7 @@ const openCheatsSettings = () => openSetting('cheatsEnabled');
 
 const ControlsSettings = (props: ControlsSettingsProps) => {
   const { settings, onChange, profileId } = props;
+  const narrow = useControlsNarrow();
   const ctrl = useControlsSettings({ settings, onChange, profileId });
   const { setListeningFor, setConfirmPreset, setDeleteTarget } = ctrl;
   const cancelListening = useCallback(() => setListeningFor(null), [setListeningFor]);
@@ -27,7 +29,7 @@ const ControlsSettings = (props: ControlsSettingsProps) => {
   return (
     <Flex gap="md" align="stretch" className="controls-settings">
       <SearchAnchor anchor="input-profiles" className="controls-settings__anchor">
-        <ControlsProfiles ctrl={ctrl} />
+        <ControlsProfiles ctrl={ctrl} narrow={narrow} />
       </SearchAnchor>
       <SearchAnchor anchor="bindings" className="controls-settings__anchor controls-settings__anchor--main">
         <ControlsMain
@@ -38,7 +40,7 @@ const ControlsSettings = (props: ControlsSettingsProps) => {
         />
       </SearchAnchor>
       <SearchAnchor anchor="devices" className="controls-settings__anchor">
-        <ControlsDevices ctrl={ctrl} />
+        <ControlsDevices ctrl={ctrl} narrow={narrow} />
       </SearchAnchor>
 
       {ctrl.listeningFor && (

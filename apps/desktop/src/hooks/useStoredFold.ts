@@ -14,8 +14,9 @@ const useStoredFold = (storageKey: string, defaultCollapsed: boolean): StoredFol
 
   const toggle = useCallback(() => apply(!collapsed), [apply, collapsed]);
   const expand = useCallback(() => apply(false), [apply]);
+  const collapse = useCallback(() => apply(true), [apply]);
 
-  return { collapsed, toggle, expand };
+  return { collapsed, toggle, expand, collapse };
 };
 
 export { useStoredFold };

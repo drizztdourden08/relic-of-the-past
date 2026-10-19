@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind component */
-import { useCallback, useMemo } from 'react';
+import { useCallback, useLayoutEffect, useMemo } from 'react';
 import { Box, EmptyState, Text } from '@drizztdourden08/tessera/primitives';
 import { SidePanel } from '@drizztdourden08/tessera/composites';
 import { useStoredFold } from '../../../../hooks/useStoredFold';
@@ -11,11 +11,14 @@ import { controllerGroupEntry } from './controller-group-entry';
 import { DEVICES_FOLD_KEY, SIDE_PANEL_SIZE } from './controls.constants';
 import { sideSlotClass } from './side-slot-class';
 import type { DeviceAssignInfo } from './DeviceRow.type';
-import type { CtrlProps } from './controls.type';
+import type { ControlsSideProps } from './controls.type';
 
-const ControlsDevices = ({ ctrl }: CtrlProps) => {
+const ControlsDevices = ({ ctrl, narrow }: ControlsSideProps) => {
   const { filteredDevices, controllerGroups, setConfirmPreset, addMapping } = ctrl;
-  const { collapsed, toggle } = useStoredFold(DEVICES_FOLD_KEY, false);
+  const { collapsed, toggle, collapse } = useStoredFold(DEVICES_FOLD_KEY, false);
+  useLayoutEffect(() => {
+    if (narrow) collapse();
+  }, [narrow, collapse]);
   const entries = useMemo(() => [
     ...filteredDevices.filter((d) => d.type === 'keyboard').map(keyboardEntry),
     ...controllerGroups.map(controllerGroupEntry),

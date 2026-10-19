@@ -13,6 +13,10 @@ interface CtrlProps {
   ctrl: ControlsCtrl;
 }
 
+interface ControlsSideProps extends CtrlProps {
+  narrow: boolean;
+}
+
 interface CheatBindingsTabProps extends CtrlProps {
   cheatsEnabled: boolean;
   onOpenCheatsSettings: () => void;
@@ -150,7 +154,7 @@ interface AbsentAssignmentsProps {
 export type {
   AbsentAssignmentsProps, BindingListenerProps,
   BindingListHeaderProps, BindingRowProps, CheatBindingsTabProps, ControlsCtrl, ControlsMainProps,
-  CoreBindingsGroupProps, CoreVerbGroup,
+  ControlsSideProps, CoreBindingsGroupProps, CoreVerbGroup,
   CoreVerbRowProps, CtrlProps, DeviceDragInfo, FunctionBindingRowProps,
   InputProfileItemProps, InputProfileListProps,
   RequiredInputStateProps, SchemeLayoutRowProps, SidebarProfileButtonProps, SlotRowProps, SnesBindingRowProps, UseProfileEditingArgs,

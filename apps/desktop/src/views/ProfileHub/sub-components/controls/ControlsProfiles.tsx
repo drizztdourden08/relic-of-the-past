@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind component */
-import { useCallback } from 'react';
+import { useCallback, useLayoutEffect } from 'react';
 import { Box, Icon, IconButton } from '@drizztdourden08/tessera/primitives';
 import { SidePanel } from '@drizztdourden08/tessera/composites';
 import { useStoredFold } from '../../../../hooks/useStoredFold';
@@ -7,11 +7,14 @@ import { InputProfileList } from './InputProfileList';
 import { SidebarProfileButton } from './SidebarProfileButton';
 import { PROFILES_FOLD_KEY, SIDE_PANEL_SIZE } from './controls.constants';
 import { sideSlotClass } from './side-slot-class';
-import type { CtrlProps } from './controls.type';
+import type { ControlsSideProps } from './controls.type';
 
-const ControlsProfiles = ({ ctrl }: CtrlProps) => {
+const ControlsProfiles = ({ ctrl, narrow }: ControlsSideProps) => {
   const { profiles, activeProfile, newlyCreatedId, selectProfile, setDeleteTarget, handleRename, handleCreate } = ctrl;
-  const { collapsed, toggle, expand } = useStoredFold(PROFILES_FOLD_KEY, true);
+  const { collapsed, toggle, expand, collapse } = useStoredFold(PROFILES_FOLD_KEY, true);
+  useLayoutEffect(() => {
+    if (narrow) collapse();
+  }, [narrow, collapse]);
   const activeId = activeProfile?.id ?? null;
 
   const handleAdd = useCallback(() => {
