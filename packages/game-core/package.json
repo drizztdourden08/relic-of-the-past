@@ -18,8 +18,8 @@
     "./package.json": "./package.json"
   },
   "dependencies": {
-    "@drizztdourden08/brock-core": "^0.68.1",
-    "@drizztdourden08/brock-display": "^0.68.1",
+    "@drizztdourden08/brock-core": "^0.68.2",
+    "@drizztdourden08/brock-display": "^0.68.2",
     "@rotp/asset-extraction": "workspace:*",
     "@rotp/features": "workspace:*",
     "@rotp/game-data": "workspace:*",
