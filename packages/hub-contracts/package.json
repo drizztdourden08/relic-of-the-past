@@ -11,7 +11,7 @@
     "./package.json": "./package.json"
   },
   "dependencies": {
-    "@drizztdourden08/brock-core": "^0.68.2",
+    "@drizztdourden08/brock-core": "^0.68.3",
     "@rotp/game-data": "workspace:*",
     "zod": "catalog:"
   }
