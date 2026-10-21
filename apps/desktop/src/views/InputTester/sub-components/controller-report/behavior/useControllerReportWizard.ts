@@ -24,41 +24,26 @@ const currentStepId = ({ form }: ReportDialogPartProps) => {
 };
 
 const captureInvalidMessage = (wizard: DiagnosticsWizardState, capturedCount: number): string | null => {
-  switch (wizard.step) {
-    case 'intro':
-      return wizard.releaseStatus !== 'done' ? 'Wait for controller input to resume.' : null;
-    case 'choose-controller':
-      return wizard.deviceKey === null || ['starting', 'fetching', 'stopping'].includes(wizard.layoutStage)
-        ? 'Choose a controller and wait for its layout capture.' : null;
-    case 'byte-capture':
-      return capturedCount === 0 ? 'Record at least one input before continuing.' : null;
-    default:
-      return null;
+  if (wizard.step === 'intro') return wizard.releaseStatus !== 'done' ? 'Wait for controller input to resume.' : null;
+  if (wizard.step === 'choose-controller') {
+    return wizard.deviceKey === null || ['starting', 'fetching', 'stopping'].includes(wizard.layoutStage)
+      ? 'Choose a controller and wait for its layout capture.' : null;
   }
+  if (wizard.step === 'byte-capture') return capturedCount === 0 ? 'Record at least one input before continuing.' : null;
+  return null;
 };
 
 const completionInvalidMessage = (wizard: DiagnosticsWizardState): string | null => {
-  switch (wizard.step) {
-    case 'positional-capture':
-      return wizard.restoreStatus !== 'done' ? 'Wait for controller input to resume.' : null;
-    case 'summary':
-      return !wizard.byteCapture ? 'Complete the byte capture before continuing.' : null;
-    default:
-      return null;
-  }
+  if (wizard.step === 'positional-capture') return wizard.restoreStatus !== 'done' ? 'Wait for controller input to resume.' : null;
+  if (wizard.step === 'summary') return !wizard.byteCapture ? 'Complete the byte capture before continuing.' : null;
+  return null;
 };
 
 const invalidMessage = ({ form, controls }: ReportDialogPartProps): string | null => {
-  switch (form.step) {
-    case 'user-info':
-      return !form.canLeaveUserInfo ? 'Sign in or enter a valid email address before continuing.' : null;
-    case 'diagnostics':
-      return captureInvalidMessage(form.wizard, controls.capturedCount) ?? completionInvalidMessage(form.wizard);
-    case 'confirm':
-      return !form.canSubmit && form.status !== 'submitting' ? 'Complete the required report details before sending.' : null;
-    default:
-      return null;
-  }
+  if (form.step === 'user-info') return !form.canLeaveUserInfo ? 'Sign in or enter a valid email address before continuing.' : null;
+  if (form.step === 'diagnostics') return captureInvalidMessage(form.wizard, controls.capturedCount) ?? completionInvalidMessage(form.wizard);
+  if (form.step === 'confirm') return !form.canSubmit && form.status !== 'submitting' ? 'Complete the required report details before sending.' : null;
+  return null;
 };
 
 const useControllerReportWizard = (props: ReportDialogPartProps): WizardApi<WizardValues> | null => {
