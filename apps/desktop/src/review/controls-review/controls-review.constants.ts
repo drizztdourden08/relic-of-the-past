@@ -25,7 +25,7 @@ const CONTROLS_SELECTORS = {
   body: '.controls-settings__body',
   tab: '.controls-settings__main [role="tab"]',
   panel: (side: SidePanelSide) => `.controls-settings__side--${side}`,
-  toggle: '.side-panel__toggle',
+  toggle: '.pane-edge__toggle',
   newProfile: 'button[aria-label="New profile"]',
   renameField: 'input[aria-label="Profile name"]',
   deleteProfile: '.list-item-row--selected button[aria-label="Delete profile"]',

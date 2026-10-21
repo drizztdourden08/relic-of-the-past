@@ -35,48 +35,55 @@ const LanguageManager = (props: LanguageManagerProps) => {
   const isInstalled = useCallback((code: string) => packFor(code) !== null, [packFor]);
   const ownSets = useMemo(() => languages.filter((set) => !isInstalled(set.id)), [languages, isInstalled]);
 
-  const list = (
-    <>
-      <Text variant="overline" tone="muted">Extract from a ROM</Text>
-      <ImportForm
-        kind="language"
-        placeholder="Paste ROM download URL..."
-        accept={['.sfc', '.smc', '.zip', '.7z', '.rar']}
-        dropLabel="Drop a ROM file to extract its language"
-        dropHint="The language is detected from the ROM. The ROM is used temporarily and not saved"
-        onUrlImport={handleUrlImport}
-        onFileImport={handleFileImport}
-      />
-
-      <Text variant="overline" tone="muted">New set</Text>
-      <SetCreateForm sets={ownSets} busy={busy} onCreate={handleCreate} onDuplicate={handleDuplicate} />
-
-      {uninstallError !== null && <Text variant="caption" tone="danger" role="alert">{uninstallError}</Text>}
-      <LanguageSetList
-        sets={languages}
-        loading={loading}
-        selected={selected}
-        labelOf={setLabel}
-        isInstalled={isInstalled}
-        onSelect={setSelected}
-        onDelete={handleDelete}
-      />
-    </>
-  );
-
   const origin = installed === null ? null : (
     <InstalledOriginBar pack={installed} onDuplicated={refreshThenSelect} onUpdateInstalled={refreshThenSelect} onUninstalled={handleUninstalled} />
   );
 
   return (
     <ListDetailLayout
-      list={list}
+      listContainers={[
+        {
+          title: 'Extract from a ROM',
+          content: (
+            <ImportForm
+              kind="language"
+              placeholder="Paste ROM download URL..."
+              accept={['.sfc', '.smc', '.zip', '.7z', '.rar']}
+              dropLabel="Drop a ROM file to extract its language"
+              dropHint="The language is detected from the ROM. The ROM is used temporarily and not saved"
+              onUrlImport={handleUrlImport}
+              onFileImport={handleFileImport}
+            />
+          ),
+        },
+        {
+          title: 'New set',
+          content: <SetCreateForm sets={ownSets} busy={busy} onCreate={handleCreate} onDuplicate={handleDuplicate} />,
+        },
+        {
+          title: 'Language sets',
+          content: (
+            <>
+              {uninstallError !== null && <Text variant="caption" tone="danger" role="alert">{uninstallError}</Text>}
+              <LanguageSetList
+                sets={languages}
+                loading={loading}
+                selected={selected}
+                labelOf={setLabel}
+                isInstalled={isInstalled}
+                onSelect={setSelected}
+                onDelete={handleDelete}
+              />
+            </>
+          ),
+        },
+      ]}
       detail={selected && <LanguageEditor key={selected} id={selected} readOnly={installed !== null} origin={origin} />}
       emptyDetail={<EmptyState message={NO_SET_MESSAGE} />}
       detailScroll={false}
       storageKey="language-studio.list"
-      listLabel="language sets"
-      detailLabel="language editor"
+      listLabel="Language studio"
+      detailLabel="Language editor"
     />
   );
 };

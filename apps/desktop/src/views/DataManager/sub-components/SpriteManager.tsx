@@ -23,31 +23,38 @@ const SpriteManager = (props: SpriteManagerProps) => {
     toExtract, setToExtract, setSelectedRom, refreshExtracted,
   });
 
-  const list = (
-    <>
-      <SpriteExtractPanel
-        roms={romsWithAssets}
-        extractedMap={extractedMap}
-        toExtract={toExtract}
-        onToExtractChange={setToExtract}
-        busy={busy}
-        message={message}
-        progress={progress}
-        onExtract={handleExtract}
-      />
-      <ImportedSpriteList
-        importedRoms={importedRoms}
-        extractedMap={extractedMap}
-        selectedRom={selectedRom}
-        onSelect={setSelectedRom}
-        onDelete={handleDelete}
-      />
-    </>
-  );
-
   return (
     <ListDetailLayout
-      list={list}
+      listContainers={[
+        {
+          title: 'Extract from a ROM',
+          content: (
+            <SpriteExtractPanel
+              roms={romsWithAssets}
+              extractedMap={extractedMap}
+              toExtract={toExtract}
+              onToExtractChange={setToExtract}
+              busy={busy}
+              message={message}
+              progress={progress}
+              onExtract={handleExtract}
+            />
+          ),
+        },
+        {
+          title: 'Extracted sprites',
+          content: (
+            <ImportedSpriteList
+              importedRoms={importedRoms}
+              extractedMap={extractedMap}
+              selectedRom={selectedRom}
+              onSelect={setSelectedRom}
+              onDelete={handleDelete}
+            />
+          ),
+        },
+      ]}
+      listLabel="Sprite manager"
       detail={selectedRom && spriteBaseUrl ? <SpriteGrid baseUrl={spriteBaseUrl} /> : null}
       emptyDetail={<EmptyState message="Select an imported ROM to view its sprites" />}
     />

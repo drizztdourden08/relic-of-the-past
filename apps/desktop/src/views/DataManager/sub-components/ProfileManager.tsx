@@ -46,7 +46,8 @@ const ProfileManager = (props: ProfileManagerProps) => {
 
   return (
     <ListDetailLayout
-      list={list}
+      listContainers={[{ title: 'Profiles', content: list }]}
+      listLabel="Profile manager"
       detail={detail}
       emptyDetail={<EmptyState message="Select a profile to view details · Double-click to open" />}
     />

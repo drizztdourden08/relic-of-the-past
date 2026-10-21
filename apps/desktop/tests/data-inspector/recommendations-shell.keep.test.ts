@@ -35,8 +35,9 @@ describe('the foldable detail column', () => {
   const render = (title: string, collapsed: boolean): string => renderToStaticMarkup(createElement(
     ListDetailLayout,
     {
-      list: 'the list',
+      listContainers: [{ title: 'Records', content: 'the list' }],
       detail: 'the panes',
+      listLabel: 'Data inspector',
       listRatio: RECORD_LIST_RATIO,
       resizable: false,
       collapsible: false,

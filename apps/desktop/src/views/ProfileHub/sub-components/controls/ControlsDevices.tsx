@@ -34,13 +34,28 @@ const ControlsDevices = ({ ctrl, narrow }: ControlsSideProps) => {
 
   return (
     <Box className={sideSlotClass('end', collapsed)}>
-      <SidePanel side="end" title="Devices" {...SIDE_PANEL_SIZE} storageKey="controls:devices-width" actions={rescan} rail={rail} collapsed={collapsed} onCollapsedChange={toggle}>
-        {entries.map((entry) => (
-          <DeviceRow key={entry.key} entry={entry} onAssign={handleAssign} onAddMapping={addMapping} />
-        ))}
-        {entries.length === 0 && <EmptyState message="No devices detected" />}
-        <Text variant="caption" tone="muted">Click a device or drag it onto the bindings to assign it.</Text>
-      </SidePanel>
+      <SidePanel
+        side="end"
+        title="Devices"
+        {...SIDE_PANEL_SIZE}
+        storageKey="controls:devices-width"
+        action={rescan}
+        railItems={rail}
+        collapsed={collapsed}
+        onCollapsedChange={toggle}
+        containers={[{
+          title: 'Connected devices',
+          content: (
+            <>
+              {entries.map((entry) => (
+                <DeviceRow key={entry.key} entry={entry} onAssign={handleAssign} onAddMapping={addMapping} />
+              ))}
+              {entries.length === 0 && <EmptyState message="No devices detected" />}
+              <Text variant="caption" tone="muted">Click a device or drag it onto the bindings to assign it.</Text>
+            </>
+          ),
+        }]}
+      />
     </Box>
   );
 };

@@ -43,22 +43,33 @@ const HudLayoutEditor = (props: HudLayoutEditorProps) => {
               />
 
               <Box className="hud-editor__body">
-                <SidePanel {...OUTLINE_PANEL}>
-                  <OutlinePanel
-                    doc={layout}
-                    selectedId={edits.selectedId}
-                    slotNumbers={slots.map((slot) => slot.index)}
-                    onSelect={edits.select}
-                    onRemove={edits.remove}
-                    onDrop={edits.drop}
-                  />
-                </SidePanel>
+                <SidePanel
+                  {...OUTLINE_PANEL}
+                  containers={[{
+                    title: 'Layers and slots',
+                    content: (
+                      <OutlinePanel
+                        doc={layout}
+                        selectedId={edits.selectedId}
+                        slotNumbers={slots.map((slot) => slot.index)}
+                        onSelect={edits.select}
+                        onRemove={edits.remove}
+                        onDrop={edits.drop}
+                      />
+                    ),
+                  }]}
+                />
 
                 <StageColumn editor={editor} />
 
-                <SidePanel side="end" {...INSPECTOR_PANEL}>
-                  <InspectorRail editor={editor} />
-                </SidePanel>
+                <SidePanel
+                  side="end"
+                  {...INSPECTOR_PANEL}
+                  containers={[{
+                    title: 'Selected item',
+                    content: <InspectorRail editor={editor} />,
+                  }]}
+                />
               </Box>
             </Box>
           </DensityScope>

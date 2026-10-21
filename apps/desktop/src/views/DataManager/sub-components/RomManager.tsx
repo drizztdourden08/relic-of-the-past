@@ -27,33 +27,6 @@ const RomManager = (props: RomManagerProps) => {
   const selectedBase = romStatuses.find((rom) => rom.romFile === selected);
   const selectedSupplement = supplements.find((s) => s.romFile === selected);
 
-  const list = (
-    <>
-      <Field hint={laneConfig.description} width="full">
-        <RomKindTabs value={activeKind} onChange={setActiveKind} />
-      </Field>
-      <ImportForm
-        kind="rom"
-        placeholder={laneConfig.placeholder}
-        accept={laneConfig.accept}
-        dropLabel={laneConfig.dropLabel}
-        dropHint={laneConfig.dropHint}
-        onUrlImport={handleUrlImport}
-        onFileImport={handleFileImport}
-      >
-        <ExtractionOptions extraction={extraction} />
-      </ImportForm>
-
-      <RomList
-        romStatuses={romStatuses}
-        supplements={supplements}
-        selected={selected}
-        onSelect={setSelected}
-        onDelete={onDeleteRom}
-      />
-    </>
-  );
-
   const detailContent = (
     <RomDetailPanel
       selected={selected}
@@ -67,7 +40,42 @@ const RomManager = (props: RomManagerProps) => {
 
   return (
     <ListDetailLayout
-      list={list}
+      listContainers={[
+        {
+          title: 'Import ROMs',
+          content: (
+            <>
+              <Field hint={laneConfig.description} width="full">
+                <RomKindTabs value={activeKind} onChange={setActiveKind} />
+              </Field>
+              <ImportForm
+                kind="rom"
+                placeholder={laneConfig.placeholder}
+                accept={laneConfig.accept}
+                dropLabel={laneConfig.dropLabel}
+                dropHint={laneConfig.dropHint}
+                onUrlImport={handleUrlImport}
+                onFileImport={handleFileImport}
+              >
+                <ExtractionOptions extraction={extraction} />
+              </ImportForm>
+            </>
+          ),
+        },
+        {
+          title: 'Imported ROMs and supplements',
+          content: (
+            <RomList
+              romStatuses={romStatuses}
+              supplements={supplements}
+              selected={selected}
+              onSelect={setSelected}
+              onDelete={onDeleteRom}
+            />
+          ),
+        },
+      ]}
+      listLabel="ROM manager"
       detail={selected ? detailContent : null}
       emptyDetail={<EmptyState message="Select a ROM to view details" />}
     />

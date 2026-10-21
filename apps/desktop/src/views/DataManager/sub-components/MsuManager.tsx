@@ -42,21 +42,53 @@ const MsuManager = (props: MsuManagerProps) => {
 
   return (
     <ListDetailLayout
-      list={(
-        <MsuListPane
-          msu={msu}
-          nameInstalled={packFor(msu.newPackName.trim()) !== null}
-          error={uninstallError}
-          isInstalled={isInstalled}
-          onDelete={handleDelete}
-        />
-      )}
+      listContainers={[
+        {
+          title: 'New pack',
+          content: (
+            <MsuListPane
+              section="create"
+              msu={msu}
+              nameInstalled={packFor(msu.newPackName.trim()) !== null}
+              error={uninstallError}
+              isInstalled={isInstalled}
+              onDelete={handleDelete}
+            />
+          ),
+        },
+        {
+          title: 'Import a pack',
+          content: (
+            <MsuListPane
+              section="import"
+              msu={msu}
+              nameInstalled={packFor(msu.newPackName.trim()) !== null}
+              error={uninstallError}
+              isInstalled={isInstalled}
+              onDelete={handleDelete}
+            />
+          ),
+        },
+        {
+          title: 'Music packs',
+          content: (
+            <MsuListPane
+              section="packs"
+              msu={msu}
+              nameInstalled={packFor(msu.newPackName.trim()) !== null}
+              error={uninstallError}
+              isInstalled={isInstalled}
+              onDelete={handleDelete}
+            />
+          ),
+        },
+      ]}
       detail={studio}
       emptyDetail={<EmptyState message={NO_PACK_MESSAGE} />}
       detailScroll={false}
       storageKey="msu-studio.list"
-      listLabel="music packs"
-      detailLabel="music editor"
+      listLabel="MSU studio"
+      detailLabel="Music editor"
     />
   );
 };

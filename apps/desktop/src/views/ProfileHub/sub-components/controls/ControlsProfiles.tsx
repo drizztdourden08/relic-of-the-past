@@ -33,16 +33,28 @@ const ControlsProfiles = ({ ctrl, narrow }: ControlsSideProps) => {
 
   return (
     <Box className={sideSlotClass('start', collapsed)}>
-      <SidePanel title="Profiles" {...SIDE_PANEL_SIZE} storageKey="controls:profiles-width" actions={add} rail={rail} collapsed={collapsed} onCollapsedChange={toggle}>
-        <InputProfileList
-          profiles={profiles}
-          activeId={activeId}
-          initialEditId={newlyCreatedId}
-          onSelect={selectProfile}
-          onDelete={setDeleteTarget}
-          onRename={handleRename}
-        />
-      </SidePanel>
+      <SidePanel
+        title="Profiles"
+        {...SIDE_PANEL_SIZE}
+        storageKey="controls:profiles-width"
+        action={add}
+        railItems={rail}
+        collapsed={collapsed}
+        onCollapsedChange={toggle}
+        containers={[{
+          title: 'Profile list',
+          content: (
+            <InputProfileList
+              profiles={profiles}
+              activeId={activeId}
+              initialEditId={newlyCreatedId}
+              onSelect={selectProfile}
+              onDelete={setDeleteTarget}
+              onRename={handleRename}
+            />
+          ),
+        }]}
+      />
     </Box>
   );
 };

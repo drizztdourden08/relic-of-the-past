@@ -12,6 +12,7 @@ interface MsuPackActionsParams {
 }
 
 interface MsuListPaneProps {
+  section: 'create' | 'import' | 'packs';
   msu: MsuManagerModel;
   nameInstalled: boolean;
   error: string | null;

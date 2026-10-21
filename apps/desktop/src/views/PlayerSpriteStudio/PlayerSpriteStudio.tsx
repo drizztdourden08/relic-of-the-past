@@ -65,12 +65,12 @@ const PlayerSpriteStudio = (props: PlayerSpriteStudioProps) => {
 
   return (
     <ListDetailLayout
-      list={list}
+      listContainers={[{ title: 'Sprite library', content: list }]}
       detail={detail}
       emptyDetail={<EmptyState message={EMPTY_EDITOR} />}
       detailScroll={false}
       storageKey="sprite-studio.list"
-      listLabel="sprites"
+      listLabel="Sprite Studio"
       detailLabel="sprite editor"
     />
   );
