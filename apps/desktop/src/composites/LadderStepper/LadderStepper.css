@@ -1,0 +1,176 @@
+/* @layer renderer-components @kind style */
+
+.ladder-stepper {
+  display: flex;
+  flex: 1 1 var(--ladder-card-w-min);
+  flex-direction: column;
+  gap: var(--space-md);
+  min-width: 0;
+  max-width: 100%;
+  padding: var(--space-md);
+}
+
+.ladder-stepper[data-empty] { border-style: dashed; }
+.ladder-stepper[data-empty] .ladder-stepper__title { color: var(--c-text-muted); }
+
+.ladder-stepper__head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--space-xs) var(--space-sm);
+  min-width: 0;
+}
+
+.ladder-stepper__heading {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2xs);
+  min-width: 0;
+}
+
+.ladder-stepper__title {
+  color: var(--c-text);
+  font-size: var(--text-sm);
+  font-weight: var(--weight-medium);
+  line-height: var(--leading-tight);
+  overflow-wrap: anywhere;
+}
+
+.ladder-stepper__count {
+  color: var(--c-text-dim);
+  font-size: var(--text-xs);
+  font-variant-numeric: tabular-nums;
+}
+
+.ladder-stepper__mode {
+  flex: none;
+}
+
+.ladder-stepper__scroll {
+  --ladder-name-h: calc(2 * var(--text-sm) * var(--leading-tight));
+  --ladder-head-h: calc(var(--ladder-name-h) + var(--ladder-sprite-d) + 2 * var(--space-sm));
+
+  min-width: 0;
+  padding-bottom: var(--space-xs);
+  overflow-x: auto;
+  overflow-y: hidden;
+}
+
+.ladder-stepper__rungs.stepper {
+  --stepper-step-w: var(--ladder-step-w);
+  --stepper-line: var(--border-width-thick);
+
+  min-inline-size: calc(var(--ladder-count) * var(--stepper-step-w) + (var(--ladder-count) - 1) * var(--size-16));
+}
+
+.ladder-stepper__rungs .stepper__item:last-child {
+  flex: none;
+}
+
+.ladder-stepper__rungs .stepper__text {
+  order: 0;
+  justify-content: flex-end;
+  block-size: var(--ladder-name-h);
+  overflow: hidden;
+}
+
+.ladder-stepper__rungs .stepper__step::before {
+  content: '';
+  order: 1;
+  flex: none;
+  inline-size: var(--ladder-sprite-d);
+  block-size: var(--ladder-sprite-d);
+  background: var(--ladder-sprite, none) center / contain no-repeat;
+  background-color: var(--ladder-sprite-fill, transparent);
+  border-radius: var(--radius-sm);
+  image-rendering: pixelated;
+}
+
+.ladder-stepper__rungs .stepper-dot {
+  order: 2;
+}
+
+.ladder-stepper__rungs .stepper__gap {
+  margin-block-start: var(--ladder-head-h);
+}
+
+.ladder-stepper__rungs .stepper-dot__fill {
+  fill: transparent;
+}
+
+.ladder-stepper__rungs .stepper__item[data-status='done'] .stepper-dot__card {
+  color: var(--stepper-tone);
+}
+
+.ladder-stepper__rungs .stepper__item[data-status='done'] .stepper__label {
+  color: var(--c-primary-bright);
+  font-weight: var(--weight-semi);
+}
+
+.ladder-stepper__rungs .stepper__item[data-tone='tertiary'] {
+  --stepper-tone: var(--c-text-muted);
+}
+
+.ladder-stepper__rungs .stepper__item[data-tone='tertiary'] .stepper__label {
+  color: var(--c-text-muted);
+  font-weight: var(--weight-normal);
+}
+
+.ladder-stepper__rungs .stepper__item[data-tone='tertiary'] .stepper__label-text {
+  text-decoration: line-through;
+}
+
+.ladder-stepper__rungs .stepper__item[data-tone='tertiary'] .stepper__step::before {
+  opacity: var(--opacity-muted);
+  filter: grayscale(100%);
+}
+
+.ladder-stepper__rungs .stepper__item:has(+ .stepper__item[data-tone='tertiary']) .stepper__line::after {
+  background: transparent;
+  box-shadow: none;
+}
+
+.ladder-stepper:not([data-ordered]) .stepper__line {
+  mask: repeating-linear-gradient(90deg, #000 0 var(--space-xs), transparent var(--space-xs) var(--space-sm));
+}
+
+.ladder-stepper__rungs .stepper__item:nth-child(1) {
+  --ladder-sprite: var(--ladder-sprite-1);
+  --ladder-sprite-fill: var(--ladder-sprite-fill-1);
+}
+
+.ladder-stepper__rungs .stepper__item:nth-child(2) {
+  --ladder-sprite: var(--ladder-sprite-2);
+  --ladder-sprite-fill: var(--ladder-sprite-fill-2);
+}
+
+.ladder-stepper__rungs .stepper__item:nth-child(3) {
+  --ladder-sprite: var(--ladder-sprite-3);
+  --ladder-sprite-fill: var(--ladder-sprite-fill-3);
+}
+
+.ladder-stepper__rungs .stepper__item:nth-child(4) {
+  --ladder-sprite: var(--ladder-sprite-4);
+  --ladder-sprite-fill: var(--ladder-sprite-fill-4);
+}
+
+.ladder-stepper__rungs .stepper__item:nth-child(5) {
+  --ladder-sprite: var(--ladder-sprite-5);
+  --ladder-sprite-fill: var(--ladder-sprite-fill-5);
+}
+
+.ladder-stepper__rungs .stepper__item:nth-child(6) {
+  --ladder-sprite: var(--ladder-sprite-6);
+  --ladder-sprite-fill: var(--ladder-sprite-fill-6);
+}
+
+.ladder-stepper__rungs .stepper__item:nth-child(7) {
+  --ladder-sprite: var(--ladder-sprite-7);
+  --ladder-sprite-fill: var(--ladder-sprite-fill-7);
+}
+
+.ladder-stepper__rungs .stepper__item:nth-child(8) {
+  --ladder-sprite: var(--ladder-sprite-8);
+  --ladder-sprite-fill: var(--ladder-sprite-fill-8);
+}

@@ -6,12 +6,12 @@ import type { PoolListingProps } from './PoolListing.type';
 import './PoolListing.css';
 
 const PoolListing = (props: PoolListingProps) => {
-  const { groups, totals, error, className = '' } = props;
+  const { groups, totals, error, titled = true, className = '' } = props;
 
   return (
     <Box className={`pool-listing${className ? ` ${className}` : ''}`}>
       <Box className="pool-listing__header">
-        <Text className="pool-listing__title">Item pool</Text>
+        {titled && <Text className="pool-listing__title">Item pool</Text>}
         <PoolFillBar totals={totals} error={error} />
       </Box>
       <ScrollArea className="pool-listing__body">

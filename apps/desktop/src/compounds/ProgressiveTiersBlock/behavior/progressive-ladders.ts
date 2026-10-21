@@ -1,9 +1,13 @@
 /* @layer renderer-components @kind logic */
 import { getItemSprite } from '@rotp/game-data';
 import { PROGRESSIVE_FAMILIES, progressiveFamilyName, progressiveTierName, progressiveTierKeyOf } from '@rotp/randomizer';
-import type { ProgressiveModeSetting, ProgressiveSetting } from '@rotp/randomizer';
+import type { ProgressiveFamilyId, ProgressiveModeSetting, ProgressiveSetting } from '@rotp/randomizer';
 import type { ItemId } from '@rotp/game-data';
-import type { ProgressiveLadderModel } from '../../ProgressiveLadder';
+import type { LadderStepperModel } from '@app/composites/LadderStepper';
+
+interface ProgressiveLadder extends LadderStepperModel {
+  id: ProgressiveFamilyId;
+}
 
 const countTextOf = (ticked: number, total: number): string =>
   (ticked === 0 ? 'none in the pool' : `${ticked} of ${total} in the pool`);
@@ -13,7 +17,7 @@ const spriteOf = (item: ItemId | undefined, spritesAvailable: boolean): string |
 
 const progressiveLaddersOf = (
   setting: ProgressiveSetting, modes: Partial<ProgressiveModeSetting>, spritesAvailable: boolean,
-): ProgressiveLadderModel[] =>
+): ProgressiveLadder[] =>
   PROGRESSIVE_FAMILIES.map((family) => {
     const rungs = family.tierLabels.map((_neutral, index) => {
       const sprite = spriteOf(family.tiers[index], spritesAvailable);
@@ -36,4 +40,5 @@ const progressiveLaddersOf = (
     };
   });
 
+export type { ProgressiveLadder };
 export { progressiveLaddersOf };

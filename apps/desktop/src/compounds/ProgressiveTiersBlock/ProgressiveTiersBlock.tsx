@@ -1,13 +1,14 @@
 /* @layer renderer-components @kind component */
 import { Box, Text } from '@drizztdourden08/tessera/primitives';
-import { progressiveTickConsequences, unrollableTickSetReasons } from '@rotp/randomizer';
+import { PROGRESSIVE_MODE_LABELS, progressiveTickConsequences, unrollableTickSetReasons } from '@rotp/randomizer';
 import { OptionDescription } from '../OptionDescription';
-import { ProgressiveLadder } from '../ProgressiveLadder';
+import { LadderStepper } from '@app/composites/LadderStepper';
 import { RandomizerOptionGroup } from '../RandomizerOptionGroup';
+import { modeOf } from './behavior/mode-of';
 import { progressiveLaddersOf } from './behavior/progressive-ladders';
 import { withFamilyMode } from './behavior/with-family-mode';
 import { withTierTicked } from './behavior/with-tier-ticked';
-import { BLOCKED_LEAD, TIERS_CAPTION, TIERS_TITLE } from './ProgressiveTiersBlock.constants';
+import { BLOCKED_LEAD, MODE_OPTIONS, ORDERED_MODE, TIERS_CAPTION, TIERS_TITLE } from './ProgressiveTiersBlock.constants';
 import type { ProgressiveTiersBlockProps } from './ProgressiveTiersBlock.type';
 import './ProgressiveTiersBlock.css';
 
@@ -24,9 +25,12 @@ const ProgressiveTiersBlock = (props: ProgressiveTiersBlockProps) => {
         <Text className="progressive-tiers-block__caption">{TIERS_CAPTION}</Text>
         <Box className="progressive-tiers-block__ladders">
           {ladders.map((ladder) => (
-            <ProgressiveLadder
+            <LadderStepper
               key={ladder.id}
               ladder={ladder}
+              modeOptions={MODE_OPTIONS}
+              modeLabel={PROGRESSIVE_MODE_LABELS[modeOf(ladder.mode) ?? ORDERED_MODE]}
+              ordered={ladder.mode === ORDERED_MODE}
               disabled={readOnly}
               readout={readOnly}
               onRungChange={readOnly
@@ -34,7 +38,10 @@ const ProgressiveTiersBlock = (props: ProgressiveTiersBlockProps) => {
                 : (index, checked) => onChange(withTierTicked(setting, ladder.id, index, checked))}
               onModeChange={onModesChange === undefined
                 ? undefined
-                : (mode) => onModesChange(withFamilyMode(modes, ladder.id, mode))}
+                : (mode) => {
+                  const next = modeOf(mode);
+                  if (next !== undefined) onModesChange(withFamilyMode(modes, ladder.id, next));
+                }}
             />
           ))}
         </Box>
