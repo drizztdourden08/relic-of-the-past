@@ -43,7 +43,9 @@ const rendererModulesWithRotpControllers: RendererModule[] = rendererModules.map
     ? {
         ...module,
         screens: [],
-        menu: module.menu?.map((item) => ({ ...item, screen: 'input-calibration' })),
+        menu: module.menu?.map((item) =>
+          item === 'separator' ? item : { ...item, screen: 'input-calibration' },
+        ),
       }
     : module,
 );
