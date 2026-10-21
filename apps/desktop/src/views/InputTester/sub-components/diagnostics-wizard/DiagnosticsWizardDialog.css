@@ -1,10 +1,13 @@
 /* @layer renderer-components @kind style */
-.diagnostics-wizard {
+.wizard.diagnostics-wizard {
+  max-inline-size: 100%;
+  min-inline-size: 0;
+}
+
+.diagnostics-wizard__summary-actions {
   display: flex;
-  flex-direction: column;
-  width: fit-content;
-  min-width: calc(46 * var(--text-base));
-  max-width: 92vw;
-  max-height: 85vh;
-  padding: var(--space-lg);
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: var(--space-sm);
+  margin-block-start: var(--space-lg);
 }

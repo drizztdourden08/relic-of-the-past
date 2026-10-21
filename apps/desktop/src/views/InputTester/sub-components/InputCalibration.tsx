@@ -36,7 +36,7 @@ const InputCalibration = () => {
 
       <Box className="input-cal__actions">
         <Text className="input-cal__hint">
-          Live state, stick and trigger calibration, rumble tests and mapping lines are on the Controllers page.
+          Live input, stick and trigger calibration, rumble tests and diagnostics are together here.
         </Text>
         <Button
           variant="tertiary"

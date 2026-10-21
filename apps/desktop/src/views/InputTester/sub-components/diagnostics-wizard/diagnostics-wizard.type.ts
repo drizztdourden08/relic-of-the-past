@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind types */
-import type { RefObject } from 'react';
+import type { ReactNode, RefObject } from 'react';
 import type { DeviceEntry } from '@drizztdourden08/brock-input';
 import type { ResolvedDevice } from '@rotp/input-mapping';
 import type { HidControllerMap, HidWizardHandle } from '../HidCalibrationWizard';
@@ -81,6 +81,7 @@ interface DiagnosticsFlowBodyProps {
   wizard: DiagnosticsWizardState;
   wizardRef: RefObject<HidWizardHandle | null>;
   onCapturedCountChange: (count: number) => void;
+  summaryActions?: ReactNode;
 }
 
 export type {

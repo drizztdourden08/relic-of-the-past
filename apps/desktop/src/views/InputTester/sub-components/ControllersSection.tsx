@@ -8,7 +8,7 @@ const ControllersSection = (props: ControllersSectionProps) => {
 
   return (
     <Box className="input-cal__section">
-      <Box className="input-cal__section-title">Controllers</Box>
+      <Box className="input-cal__section-title">Connected devices</Box>
 
       {connectedCount === 0 && (
         <Box className="input-cal__empty">

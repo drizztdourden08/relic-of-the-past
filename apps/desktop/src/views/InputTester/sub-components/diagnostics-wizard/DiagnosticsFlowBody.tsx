@@ -7,12 +7,13 @@ import { LayoutCaptureOverlay } from './sub-components/LayoutCaptureOverlay';
 import './DiagnosticsFlowBody.css';
 
 const DiagnosticsFlowBody = (props: DiagnosticsFlowBodyProps) => {
-  const { wizard } = props;
+  const { wizard, summaryActions } = props;
 
   return (
     <Box className="diagnostics-wizard__body">
       <LayoutCaptureOverlay stage={wizard.layoutStage} deviceName={layoutDeviceName(wizard)} />
       <FlowStep {...props} />
+      {wizard.step === 'summary' && summaryActions}
     </Box>
   );
 };

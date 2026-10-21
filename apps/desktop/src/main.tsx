@@ -5,6 +5,7 @@ import './theme.css';
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 import { BrockApp } from '@drizztdourden08/brock-react';
+import type { RendererModule } from '@drizztdourden08/brock-react';
 import { rendererModules } from '../.brock/modules.renderer';
 import { rendererBootTasks } from '../.brock/boot.renderer';
 import { screenTree } from '../.brock/screens';
@@ -37,7 +38,17 @@ import './theme/store/store.css';
 
 installAppShim();
 
-const modules = [...rendererModules, rotpShellModule];
+const rendererModulesWithRotpControllers: RendererModule[] = rendererModules.map((module) =>
+  module.id === 'input'
+    ? {
+        ...module,
+        screens: [],
+        menu: module.menu?.map((item) => ({ ...item, screen: 'input-calibration' })),
+      }
+    : module,
+);
+
+const modules = [...rendererModulesWithRotpControllers, rotpShellModule];
 
 const root = document.getElementById('root');
 if (!root) throw new Error('index.html has no #root element');
