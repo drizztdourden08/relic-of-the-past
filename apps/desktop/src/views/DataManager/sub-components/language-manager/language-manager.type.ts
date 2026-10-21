@@ -1,5 +1,6 @@
 /* @layer renderer-components @kind types */
 import type { InstalledPack } from '@rotp/hub-contracts';
+import type { LanguageSetSummary } from '@rotp/languages';
 import type { LanguageResult } from '@app/storage/languages-store/languages-store.type';
 
 type SelectSet = (code: string | null) => void;
@@ -34,7 +35,12 @@ interface LanguageDeleteParams {
   onDeleteConfirm: (title: string, message: string, onConfirm: () => void) => void;
 }
 
+interface LanguageManagerDisplayParams {
+  languages: LanguageSetSummary[];
+  packFor: (code: string) => InstalledPack | null;
+}
+
 export type {
   LanguageCreationParams, LanguageDeleteParams, LanguageExtractionParams,
-  LanguageOutcome, SettleExtractionParams,
+  LanguageManagerDisplayParams, LanguageOutcome, SettleExtractionParams,
 };

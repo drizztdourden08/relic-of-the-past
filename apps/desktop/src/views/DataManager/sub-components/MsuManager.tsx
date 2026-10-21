@@ -12,6 +12,12 @@ import { NO_PACK_MESSAGE } from '../../../msu-studio/studio-frame/studio-frame.c
 import type { StudioTab } from '../../../msu-studio/sound-labels';
 import type { MsuManagerProps } from '../../../msu-studio/msu.type';
 
+const PACK_SECTIONS = [
+  { section: 'create', title: 'New pack' },
+  { section: 'import', title: 'Import a pack' },
+  { section: 'packs', title: 'Music packs' },
+] as const;
+
 const MsuManager = (props: MsuManagerProps) => {
   const { onDeleteConfirm, onRefresh } = props;
   const msu = useMsuManager(onRefresh);
@@ -42,47 +48,19 @@ const MsuManager = (props: MsuManagerProps) => {
 
   return (
     <ListDetailLayout
-      listContainers={[
-        {
-          title: 'New pack',
-          content: (
-            <MsuListPane
-              section="create"
-              msu={msu}
-              nameInstalled={packFor(msu.newPackName.trim()) !== null}
-              error={uninstallError}
-              isInstalled={isInstalled}
-              onDelete={handleDelete}
-            />
-          ),
-        },
-        {
-          title: 'Import a pack',
-          content: (
-            <MsuListPane
-              section="import"
-              msu={msu}
-              nameInstalled={packFor(msu.newPackName.trim()) !== null}
-              error={uninstallError}
-              isInstalled={isInstalled}
-              onDelete={handleDelete}
-            />
-          ),
-        },
-        {
-          title: 'Music packs',
-          content: (
-            <MsuListPane
-              section="packs"
-              msu={msu}
-              nameInstalled={packFor(msu.newPackName.trim()) !== null}
-              error={uninstallError}
-              isInstalled={isInstalled}
-              onDelete={handleDelete}
-            />
-          ),
-        },
-      ]}
+      listContainers={PACK_SECTIONS.map(({ section, title }) => ({
+        title,
+        content: (
+          <MsuListPane
+            section={section}
+            msu={msu}
+            nameInstalled={packFor(msu.newPackName.trim()) !== null}
+            error={uninstallError}
+            isInstalled={isInstalled}
+            onDelete={handleDelete}
+          />
+        ),
+      }))}
       detail={studio}
       emptyDetail={<EmptyState message={NO_PACK_MESSAGE} />}
       detailScroll={false}

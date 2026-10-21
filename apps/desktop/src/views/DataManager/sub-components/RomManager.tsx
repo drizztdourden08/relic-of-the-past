@@ -24,19 +24,10 @@ const RomManager = (props: RomManagerProps) => {
   } = useRomManager({ romStatuses, onRefresh, onExtractAssets: extract });
 
   const laneConfig = IMPORT_LANE_CONFIG[activeKind];
-  const selectedBase = romStatuses.find((rom) => rom.romFile === selected);
-  const selectedSupplement = supplements.find((s) => s.romFile === selected);
-
-  const detailContent = (
-    <RomDetailPanel
-      selected={selected}
-      loadingDetail={loadingDetail}
-      detail={detail}
-      selectedBase={selectedBase}
-      selectedSupplement={selectedSupplement}
-      onExtractAssets={extract}
-    />
-  );
+  const selectedDetails = {
+    selectedBase: romStatuses.find((rom) => rom.romFile === selected),
+    selectedSupplement: supplements.find((s) => s.romFile === selected),
+  };
 
   return (
     <ListDetailLayout
@@ -76,7 +67,7 @@ const RomManager = (props: RomManagerProps) => {
         },
       ]}
       listLabel="ROM manager"
-      detail={selected ? detailContent : null}
+      detail={selected ? <RomDetailPanel selected={selected} loadingDetail={loadingDetail} detail={detail} {...selectedDetails} onExtractAssets={extract} /> : null}
       emptyDetail={<EmptyState message="Select a ROM to view details" />}
     />
   );

@@ -1,13 +1,11 @@
 /* @layer renderer-components @kind component */
-import { useCallback, useMemo } from 'react';
-import type { LanguageSetSummary } from '@rotp/languages';
 import { EmptyState, Text } from '@drizztdourden08/tessera/primitives';
 import { ListDetailLayout } from '@drizztdourden08/tessera/composites';
 import { ImportForm } from './ImportForm';
-import { LANGUAGE_NAMES } from './language-names.constants';
 import { useLanguageCreation } from './language-manager/useLanguageCreation';
 import { useLanguageDelete } from './language-manager/useLanguageDelete';
 import { useLanguageExtraction } from './language-manager/useLanguageExtraction';
+import { useLanguageManagerDisplay } from './language-manager/useLanguageManagerDisplay';
 import { useLanguageSets } from './language-manager/useLanguageSets';
 import type { LanguageManagerProps } from './LanguageManager.type';
 import { LanguageEditor } from '../../../language-editor';
@@ -28,16 +26,9 @@ const LanguageManager = (props: LanguageManagerProps) => {
     selected, setSelected, refresh, packFor, confirmUninstall, onDeleteConfirm,
   });
 
-  const setLabel = useCallback(
-    (set: LanguageSetSummary) => (set.origin === 'rom' ? LANGUAGE_NAMES[set.id] ?? set.name : set.name),
-    [],
-  );
-  const isInstalled = useCallback((code: string) => packFor(code) !== null, [packFor]);
-  const ownSets = useMemo(() => languages.filter((set) => !isInstalled(set.id)), [languages, isInstalled]);
+  const { setLabel, isInstalled, ownSets } = useLanguageManagerDisplay({ languages, packFor });
 
-  const origin = installed === null ? null : (
-    <InstalledOriginBar pack={installed} onDuplicated={refreshThenSelect} onUpdateInstalled={refreshThenSelect} onUninstalled={handleUninstalled} />
-  );
+  const origin = installed === null ? null : <InstalledOriginBar pack={installed} onDuplicated={refreshThenSelect} onUpdateInstalled={refreshThenSelect} onUninstalled={handleUninstalled} />;
 
   return (
     <ListDetailLayout

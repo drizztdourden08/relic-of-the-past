@@ -1,15 +1,10 @@
 /* @layer renderer-components @kind component */
-import type { ReactNode } from 'react';
 import { Text } from '@drizztdourden08/tessera/primitives';
 import { DiagnosticsFlowBody } from '../../diagnostics-wizard/DiagnosticsFlowBody';
-import type { ReportDialogPartProps } from '../report-dialog-controls.type';
+import type { ReportBodyProps } from './ReportBody.type';
 import { ConfirmStep } from './ConfirmStep';
 import { IntroStep } from './IntroStep';
 import { UserInfoStep } from './UserInfoStep';
-
-interface ReportBodyProps extends ReportDialogPartProps {
-  summaryActions?: ReactNode;
-}
 
 const ReportBody = (props: ReportBodyProps) => {
   const { form, controls } = props;
