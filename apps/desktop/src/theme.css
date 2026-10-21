@@ -41,7 +41,7 @@
   --shop-card-w-min: calc(260 * var(--size-1));
   --shop-slot-box-h: calc(34 * var(--size-1));
   --ladder-card-w-min: calc(280 * var(--size-1));
-  --ladder-tile-d: calc(44 * var(--size-1));
+  --ladder-step-w: calc(96 * var(--size-1));
   --ladder-sprite-d: calc(32 * var(--size-1));
   --dark-room-tile-d: calc(64 * var(--size-1));
   --dark-room-sprite-d: calc(32 * var(--size-1));
