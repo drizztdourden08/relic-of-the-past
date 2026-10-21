@@ -5,6 +5,7 @@ import { checkAddFromRail } from './controls-review/add-from-rail';
 import { checkFullWidth } from './controls-review/check-full-width';
 import { checkLayout } from './controls-review/check-layout';
 import { ALL_TAB_IDS, CONTROLS_TABS } from './controls-review/controls-review.constants';
+import { controlsReviewDiagnostic } from './controls-review/diagnostic-snapshot';
 import { isCollapsed } from './controls-review/is-collapsed';
 import { openControls } from './controls-review/open-controls';
 import { openTab } from './controls-review/open-tab';
@@ -17,7 +18,9 @@ const shootTabs = async (tour: AppReviewTour, prefix: string, ids: readonly stri
     await openTab(tour, tab.label);
     const name = `${prefix}-${tab.id}`;
     checkLayout(tour, name);
+    if (prefix === 'narrow-folded') controlsReviewDiagnostic(tour, `${name}.before-capture`);
     await tour.capture(name);
+    if (prefix === 'narrow-folded') controlsReviewDiagnostic(tour, `${name}.after-capture`);
   }
 };
 
