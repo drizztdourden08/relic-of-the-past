@@ -10,7 +10,27 @@ const useProfileEditing = ({ profiles, initialEditId, onRename }: UseProfileEdit
   const inputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
-    if (editingId) inputRef.current?.focus();
+    if (!editingId) return;
+
+    let frame = 0;
+    let attempts = 0;
+    const deadline = performance.now() + 3000;
+    const focusWhenReady = () => {
+      const input = inputRef.current;
+      if (input && input.isConnected && !input.closest('[inert], [aria-hidden="true"]') &&
+          input.getClientRects().length > 0 && getComputedStyle(input).visibility === 'visible') {
+        input.focus();
+        if (document.activeElement === input) {
+          input.select();
+          return;
+        }
+      }
+      if (++attempts < 180 && performance.now() < deadline) {
+        frame = requestAnimationFrame(focusWhenReady);
+      }
+    };
+    focusWhenReady();
+    return () => cancelAnimationFrame(frame);
   }, [editingId]);
 
   const startEditing = useCallback((profile: InputProfile) => {

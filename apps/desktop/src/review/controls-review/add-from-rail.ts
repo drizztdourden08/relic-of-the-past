@@ -22,12 +22,19 @@ const checkAddFromRail = async (tour: AppReviewTour): Promise<void> => {
     return;
   }
   tour.click(add);
-  const field = await tour.waitFor(() => tour.find(CONTROLS_SELECTORS.renameField));
+  const field = await tour.waitFor(() => {
+    const input = tour.find(CONTROLS_SELECTORS.renameField);
+    return input && input.getClientRects().length > 0 &&
+      getComputedStyle(input).visibility === 'visible' &&
+      !input.closest('[inert], [aria-hidden="true"]') && document.activeElement === input ? input : null;
+  });
   const naming = !isCollapsed(tour, 'start') && field !== null && document.activeElement === field;
   tour.check('add-from-rail', naming, 'New profile on the folded rail opens the panel and starts naming the new profile', 'New profile on the folded rail did not open the panel on the name of the new profile');
   await tour.capture('add-from-rail');
-  tour.press({ key: 'Escape' });
-  await tour.settle();
+  if (field) {
+    tour.press({ key: 'Escape' });
+    await tour.settle();
+  }
   await removeNewProfile(tour);
 };
 
