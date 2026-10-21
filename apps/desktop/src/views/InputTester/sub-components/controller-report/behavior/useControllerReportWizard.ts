@@ -2,6 +2,7 @@
 import { useCallback, useMemo } from 'react';
 import type { WizardApi, WizardStepDef } from '@drizztdourden08/tessera/composites';
 import { visibleSteps } from '../../diagnostics-wizard/behavior/wizard-steps';
+import type { DiagnosticsWizardState } from '../../diagnostics-wizard/diagnostics-wizard.type';
 import type { ReportDialogPartProps } from '../report-dialog-controls.type';
 import type { WizardValues } from '../ControllerReportDialog.type';
 
@@ -22,17 +23,42 @@ const currentStepId = ({ form }: ReportDialogPartProps) => {
   return form.step;
 };
 
+const captureInvalidMessage = (wizard: DiagnosticsWizardState, capturedCount: number): string | null => {
+  switch (wizard.step) {
+    case 'intro':
+      return wizard.releaseStatus !== 'done' ? 'Wait for controller input to resume.' : null;
+    case 'choose-controller':
+      return wizard.deviceKey === null || ['starting', 'fetching', 'stopping'].includes(wizard.layoutStage)
+        ? 'Choose a controller and wait for its layout capture.' : null;
+    case 'byte-capture':
+      return capturedCount === 0 ? 'Record at least one input before continuing.' : null;
+    default:
+      return null;
+  }
+};
+
+const completionInvalidMessage = (wizard: DiagnosticsWizardState): string | null => {
+  switch (wizard.step) {
+    case 'positional-capture':
+      return wizard.restoreStatus !== 'done' ? 'Wait for controller input to resume.' : null;
+    case 'summary':
+      return !wizard.byteCapture ? 'Complete the byte capture before continuing.' : null;
+    default:
+      return null;
+  }
+};
+
 const invalidMessage = ({ form, controls }: ReportDialogPartProps): string | null => {
-  if (form.step === 'user-info' && !form.canLeaveUserInfo) return 'Sign in or enter a valid email address before continuing.';
-  if (form.step === 'diagnostics' && form.wizard.step === 'intro' && form.wizard.releaseStatus !== 'done') return 'Wait for controller input to resume.';
-  if (form.step === 'diagnostics' && form.wizard.step === 'choose-controller' && (
-    form.wizard.deviceKey === null || ['starting', 'fetching', 'stopping'].includes(form.wizard.layoutStage)
-  )) return 'Choose a controller and wait for its layout capture.';
-  if (form.step === 'diagnostics' && form.wizard.step === 'byte-capture' && controls.capturedCount === 0) return 'Record at least one input before continuing.';
-  if (form.step === 'diagnostics' && form.wizard.step === 'positional-capture' && form.wizard.restoreStatus !== 'done') return 'Wait for controller input to resume.';
-  if (form.step === 'diagnostics' && form.wizard.step === 'summary' && !form.wizard.byteCapture) return 'Complete the byte capture before continuing.';
-  if (form.step === 'confirm' && !form.canSubmit && form.status !== 'submitting') return 'Complete the required report details before sending.';
-  return null;
+  switch (form.step) {
+    case 'user-info':
+      return !form.canLeaveUserInfo ? 'Sign in or enter a valid email address before continuing.' : null;
+    case 'diagnostics':
+      return captureInvalidMessage(form.wizard, controls.capturedCount) ?? completionInvalidMessage(form.wizard);
+    case 'confirm':
+      return !form.canSubmit && form.status !== 'submitting' ? 'Complete the required report details before sending.' : null;
+    default:
+      return null;
+  }
 };
 
 const useControllerReportWizard = (props: ReportDialogPartProps): WizardApi<WizardValues> | null => {

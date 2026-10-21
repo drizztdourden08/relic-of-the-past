@@ -4,6 +4,7 @@ import { EmptyState } from '@drizztdourden08/tessera/primitives';
 import { ListDetailLayout } from '@drizztdourden08/tessera/composites';
 import { MsuListPane } from './msu-manager/MsuListPane';
 import { useMsuPackActions } from './msu-manager/useMsuPackActions';
+import { PACK_SECTIONS } from './MsuManager.constants';
 import { useInstalledKind } from '@app/hooks/useInstalledKind';
 import { InstalledOriginBar, useConfirmUninstall } from '@app/views/InstalledOriginBar';
 import { useMsuManager } from '../../../msu-studio/useMsuManager';
@@ -11,12 +12,6 @@ import { MsuStudio } from '../../../msu-studio/MsuStudio';
 import { NO_PACK_MESSAGE } from '../../../msu-studio/studio-frame/studio-frame.constants';
 import type { StudioTab } from '../../../msu-studio/sound-labels';
 import type { MsuManagerProps } from '../../../msu-studio/msu.type';
-
-const PACK_SECTIONS = [
-  { section: 'create', title: 'New pack' },
-  { section: 'import', title: 'Import a pack' },
-  { section: 'packs', title: 'Music packs' },
-] as const;
 
 const MsuManager = (props: MsuManagerProps) => {
   const { onDeleteConfirm, onRefresh } = props;
