@@ -1,0 +1,20 @@
+/* @layer renderer-design-system @kind style */
+
+.dialog.update-dialog {
+  display: flex;
+  flex-direction: column;
+  max-block-size: calc(100vh - var(--space-2xl) * 2);
+  max-block-size: calc(100dvh - var(--space-2xl) * 2);
+}
+
+.update-dialog > .dialog__header,
+.update-dialog > .dialog__actions {
+  flex: 0 0 auto;
+}
+
+.update-dialog__body {
+  flex: 1 1 auto;
+  min-block-size: 0;
+  overflow-y: auto;
+  overscroll-behavior-y: contain;
+}
