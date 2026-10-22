@@ -18,12 +18,12 @@ const ControllerSilhouette = ({ deviceKey, controls, family, label }: Controller
     const url = getButtonIconUrl(iconId);
     return url === null ? undefined : <Image src={url} alt="" draggable={false} fit="contain" />;
   }, []);
-  const { slots, extras } = useMemo(
+  const slots = useMemo(
     () => buildControllerSlots(pad, layout, positions, glyphOf),
     [pad, layout, positions, glyphOf],
   );
 
-  return <ControllerLayout variant={layout.variant} slots={slots} extras={extras} label={label} />;
+  return <ControllerLayout variant={layout.variant} slots={slots} extras={pad.extras} label={label} />;
 };
 
 export { ControllerSilhouette };

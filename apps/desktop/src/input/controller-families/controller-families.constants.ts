@@ -1,13 +1,6 @@
 /* @layer renderer-lib @kind data */
 import type { ControllerSlotId } from '@drizztdourden08/tessera/composites';
-import type { ExtraSlotId, FamilyLayout, LayoutFamily } from './controller-families.type';
-
-const COMMON_EXTRAS: FamilyLayout['extras'] = {
-  'extra.misc2': 'Misc 2', 'extra.misc3': 'Misc 3', 'extra.misc4': 'Misc 4', 'extra.misc5': 'Misc 5', 'extra.misc6': 'Misc 6',
-  'extra.paddle.right1': 'Upper right paddle', 'extra.paddle.left1': 'Upper left paddle',
-  'extra.paddle.right2': 'Lower right paddle', 'extra.paddle.left2': 'Lower left paddle',
-  'extra.touchpad': 'Touchpad',
-};
+import type { FamilyLayout, LayoutFamily } from './controller-families.type';
 
 const XBOX_LAYOUT: FamilyLayout = {
   variant: 'offset',
@@ -18,7 +11,6 @@ const XBOX_LAYOUT: FamilyLayout = {
     'meta.view': 'View', 'meta.menu': 'Menu', 'meta.guide': 'Xbox', 'meta.capture': 'Share',
   },
   glyphs: {},
-  extras: COMMON_EXTRAS,
 };
 
 const PLAYSTATION_LAYOUT: FamilyLayout = {
@@ -32,7 +24,6 @@ const PLAYSTATION_LAYOUT: FamilyLayout = {
   glyphs: {
     'face.south': 'ps-cross', 'face.east': 'ps-circle', 'face.west': 'ps-square', 'face.north': 'ps-triangle',
   },
-  extras: COMMON_EXTRAS,
 };
 
 const NINTENDO_LAYOUT: FamilyLayout = {
@@ -44,7 +35,6 @@ const NINTENDO_LAYOUT: FamilyLayout = {
     'meta.view': 'Minus', 'meta.menu': 'Plus', 'meta.guide': 'Home', 'meta.capture': 'Capture',
   },
   glyphs: {},
-  extras: { ...COMMON_EXTRAS, 'extra.paddle.right1': 'GR', 'extra.paddle.left1': 'GL' },
 };
 
 const GENERIC_LAYOUT: FamilyLayout = {
@@ -56,7 +46,6 @@ const GENERIC_LAYOUT: FamilyLayout = {
     'meta.view': 'Back', 'meta.menu': 'Start', 'meta.guide': 'Guide', 'meta.capture': 'Extra 1',
   },
   glyphs: {},
-  extras: COMMON_EXTRAS,
 };
 
 const SNES_LAYOUT: FamilyLayout = {
@@ -67,7 +56,6 @@ const SNES_LAYOUT: FamilyLayout = {
     'meta.view': 'Select', 'meta.menu': 'Start',
   },
   glyphs: {},
-  extras: COMMON_EXTRAS,
 };
 
 const FAMILY_LAYOUTS: Record<LayoutFamily, FamilyLayout> = {
@@ -88,13 +76,6 @@ const SLOT_POSITIONS: Partial<Record<ControllerSlotId, readonly string[]>> = {
   'meta.view': ['BACK'], 'meta.menu': ['START'], 'meta.guide': ['GUIDE'], 'meta.capture': ['MISC1'],
 };
 
-const EXTRA_POSITIONS: Record<ExtraSlotId, string> = {
-  'extra.misc2': 'MISC2', 'extra.misc3': 'MISC3', 'extra.misc4': 'MISC4', 'extra.misc5': 'MISC5', 'extra.misc6': 'MISC6',
-  'extra.paddle.right1': 'RIGHT_PADDLE1', 'extra.paddle.left1': 'LEFT_PADDLE1',
-  'extra.paddle.right2': 'RIGHT_PADDLE2', 'extra.paddle.left2': 'LEFT_PADDLE2',
-  'extra.touchpad': 'TOUCHPAD',
-};
-
 const ANALOG_POSITIONS: readonly string[] = ['LEFT_X', 'RIGHT_X', 'LEFT_TRIGGER', 'RIGHT_TRIGGER'];
 
-export { ANALOG_POSITIONS, EXTRA_POSITIONS, FAMILY_LAYOUTS, SLOT_POSITIONS };
+export { ANALOG_POSITIONS, FAMILY_LAYOUTS, SLOT_POSITIONS };
