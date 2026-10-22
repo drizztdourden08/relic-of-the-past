@@ -1,9 +1,21 @@
 /* @layer renderer-components @kind types */
 import type { ProgressiveFamilyId } from '@rotp/randomizer';
-import type { LadderStepperModel } from '@app/composites/LadderStepper';
 
-interface ProgressiveLadder extends LadderStepperModel {
-  id: ProgressiveFamilyId;
+interface ProgressiveRung {
+  key: string;
+  label: string;
+  index: number;
+  checked: boolean;
+  sprite?: string;
 }
 
-export type { ProgressiveLadder };
+interface ProgressiveLadder {
+  id: ProgressiveFamilyId;
+  name: string;
+  countText: string;
+  rungs: readonly ProgressiveRung[];
+  noneOn: boolean;
+  mode: string;
+}
+
+export type { ProgressiveLadder, ProgressiveRung };

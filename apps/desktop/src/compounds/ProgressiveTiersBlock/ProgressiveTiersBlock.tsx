@@ -2,7 +2,7 @@
 import { Box, Text } from '@drizztdourden08/tessera/primitives';
 import { PROGRESSIVE_MODE_LABELS, progressiveTickConsequences, unrollableTickSetReasons } from '@rotp/randomizer';
 import { OptionDescription } from '../OptionDescription';
-import { LadderStepper } from '@app/composites/LadderStepper';
+import { ProgressiveLadderCard } from './sub-components/ProgressiveLadderCard';
 import { RandomizerOptionGroup } from '../RandomizerOptionGroup';
 import { modeOf } from './behavior/mode-of';
 import { progressiveLaddersOf } from './behavior/progressive-ladders';
@@ -25,7 +25,7 @@ const ProgressiveTiersBlock = (props: ProgressiveTiersBlockProps) => {
         <Text className="progressive-tiers-block__caption">{TIERS_CAPTION}</Text>
         <Box className="progressive-tiers-block__ladders">
           {ladders.map((ladder) => (
-            <LadderStepper
+            <ProgressiveLadderCard
               key={ladder.id}
               ladder={ladder}
               modeOptions={MODE_OPTIONS}

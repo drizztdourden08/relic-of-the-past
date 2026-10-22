@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind barrel */
 export { WishingPondRow } from './WishingPondRow';
 export type {
-  PondAskModel, PondAskRowModel, PondRowModel, PondRowState,
+  PondAskModel, PondAskRowModel, PondPreviewModel, PondRowModel, PondRowState,
 
 } from './WishingPondRow.type';
