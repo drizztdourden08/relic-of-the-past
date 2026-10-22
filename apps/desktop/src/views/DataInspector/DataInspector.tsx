@@ -1,6 +1,6 @@
 /* @layer renderer-app @kind component */
 import { Box } from '@drizztdourden08/tessera/primitives';
-import { ListDetailLayout, SideNav } from '@drizztdourden08/tessera/composites';
+import { ListDetailLayout, SideNavLayout } from '@drizztdourden08/tessera/composites';
 import { COMPARING_LIST_RATIO, COMPARISON_TITLE, RECORD_LIST_RATIO } from './DataInspector.constants';
 import { DATA_INSPECTOR_NAV } from './behavior/data-inspector-nav.constants';
 import { isEntityKind } from './behavior/is-entity-kind';
@@ -52,13 +52,13 @@ const DataInspector = () => {
   );
 
   return (
-    <Box className="data-inspector">
-      <SideNav config={DATA_INSPECTOR_NAV} activeId={kind} onSelect={showKind} />
+    <SideNavLayout nav={{ config: DATA_INSPECTOR_NAV, activeId: kind, onSelect: showKind }} paneScroll="none" className="data-inspector">
       <Box className="data-inspector__panes" onClickCapture={handleIdRefClickCapture}>
         <ListDetailLayout
           listContainers={[{ title: isCollection ? source.label : 'Recommendations', content: list }]}
           detail={detail}
           listLabel="Data inspector"
+          listShowTitle={false}
           listRatio={isCollection ? RECORD_LIST_RATIO : COMPARING_LIST_RATIO}
           collapsible={false}
           detailCollapsible
@@ -69,7 +69,7 @@ const DataInspector = () => {
           detailScroll={false}
         />
       </Box>
-    </Box>
+    </SideNavLayout>
   );
 };
 

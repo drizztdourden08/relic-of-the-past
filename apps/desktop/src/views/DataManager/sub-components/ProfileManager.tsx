@@ -46,6 +46,7 @@ const ProfileManager = (props: ProfileManagerProps) => {
 
   return (
     <ListDetailLayout
+      listShowTitle={false}
       listContainers={[{ title: 'Profiles', content: list }]}
       listLabel="Profile manager"
       detail={detail}

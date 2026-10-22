@@ -25,6 +25,7 @@ const SpriteManager = (props: SpriteManagerProps) => {
 
   return (
     <ListDetailLayout
+      listShowTitle={false}
       listContainers={[
         {
           title: 'Extract from a ROM',
