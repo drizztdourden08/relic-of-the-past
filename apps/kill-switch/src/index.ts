@@ -14,15 +14,25 @@ const unlinkBilling = async (): Promise<void> => {
   const client = await auth.getClient();
   const token = await client.getAccessToken();
   const hostProjectId = await auth.getProjectId();
-  await fetch(`https://cloudbilling.googleapis.com/v1/projects/${hostProjectId}/billingInfo`, {
-    method: 'PUT',
-    headers: { Authorization: `Bearer ${token.token}`, 'Content-Type': 'application/json' },
-    body: JSON.stringify({ billingAccountName: '' }),
-  });
+  const response = await fetch(
+    `https://cloudbilling.googleapis.com/v1/projects/${hostProjectId}/billingInfo`,
+    {
+      method: 'PUT',
+      headers: { Authorization: `Bearer ${token.token}`, 'Content-Type': 'application/json' },
+      body: JSON.stringify({ billingAccountName: '' }),
+    },
+  );
+  if (!response.ok) {
+    throw new Error(`billing unlink failed ${response.status}: ${await response.text()}`);
+  }
 };
 
 cloudEvent('killSwitch', async (event: unknown) => {
   const notification = decodeMessage(event as PubsubCloudEvent);
+  console.log(
+    `budget notification: cost=${notification.costAmount ?? 0} ` +
+      `budget=${notification.budgetAmount ?? 0} currency=${notification.currencyCode ?? 'unknown'}`,
+  );
   if ((notification.costAmount ?? 0) > 0) {
     await unlinkBilling();
   }
