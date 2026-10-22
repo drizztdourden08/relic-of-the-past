@@ -29,9 +29,9 @@ const unlinkBilling = async (): Promise<void> => {
 
 cloudEvent('killSwitch', async (event: unknown) => {
   const notification = decodeMessage(event as PubsubCloudEvent);
-  console.log(
+  process.stdout.write(
     `budget notification: cost=${notification.costAmount ?? 0} ` +
-      `budget=${notification.budgetAmount ?? 0} currency=${notification.currencyCode ?? 'unknown'}`,
+      `budget=${notification.budgetAmount ?? 0} currency=${notification.currencyCode ?? 'unknown'}\n`,
   );
   if ((notification.costAmount ?? 0) > 0) {
     await unlinkBilling();
