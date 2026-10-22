@@ -9,7 +9,7 @@ const TIERS_CAPTION = 'Click a rung to take it out of the seed.';
 
 const BLOCKED_LEAD = 'This set cannot be rolled:';
 
-const MODE_OPTIONS: SegmentOption<string>[] = PROGRESSIVE_MODES.map((mode) => ({
+const MODE_OPTIONS: SegmentOption[] = PROGRESSIVE_MODES.map((mode) => ({
   value: mode,
   label: PROGRESSIVE_MODE_LABELS[mode],
 }));

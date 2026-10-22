@@ -19,9 +19,8 @@ interface LadderStepperModel {
 
 interface LadderStepperProps {
   ladder: LadderStepperModel;
-  modeOptions: readonly SegmentOption<string>[];
+  modeOptions: readonly SegmentOption[];
   modeLabel: string;
-  ordered: boolean;
   disabled: boolean;
   readout?: boolean;
   onRungChange?: (index: number, checked: boolean) => void;
