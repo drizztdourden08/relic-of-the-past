@@ -2,7 +2,6 @@
 
 .data-inspector {
   height: 100%;
-  padding: var(--space-md);
 }
 
 .data-inspector__panes {

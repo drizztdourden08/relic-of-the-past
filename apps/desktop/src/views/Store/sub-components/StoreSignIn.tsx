@@ -15,7 +15,6 @@ const StoreSignIn = (props: StoreSignInProps) => {
   return (
     <Stack gap="lg" align="center" className="store-sign-in">
       <HookshopHighlight pixelSize={HIGHLIGHT_PIXEL} className="store-sign-in__art" />
-      <Text as="h2" className="store-sign-in__title">Hookshop</Text>
       {waitingLink
         ? <Box className="store-sign-in__callout"><Text as="p">{WAITING_LINK}</Text></Box>
         : <Text as="p" className="store-sign-in__lead">{SIGN_IN_LEAD}</Text>}

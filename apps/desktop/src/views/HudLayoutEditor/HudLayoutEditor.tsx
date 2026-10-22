@@ -1,7 +1,6 @@
 /* @layer renderer-components @kind component */
-import { Box, DensityScope, Icon } from '@drizztdourden08/tessera/primitives';
-import { ScreenWindow, SidePanel } from '@drizztdourden08/tessera/composites';
-import type { ScreenWindowHeader } from '@drizztdourden08/tessera/composites';
+import { Box, DensityScope } from '@drizztdourden08/tessera/primitives';
+import { SidePanel } from '@drizztdourden08/tessera/composites';
 import { useReducedMotion } from '@app/compounds/HudNodeRenderer';
 import { MotionPreviewContext, useMotionPreviewState } from '@app/hud-layout-editing/motion-preview';
 import { useHudLayoutEditor } from '@app/hud-layout-editing/useHudLayoutEditor';
@@ -13,10 +12,7 @@ import { StageColumn } from './sub-components/StageColumn';
 import './HudLayoutEditor.css';
 import type { HudLayoutEditorProps } from './HudLayoutEditor.type';
 
-const pageHeader: ScreenWindowHeader = { icon: <Icon name="layout-list" /> };
-
 const HudLayoutEditor = (props: HudLayoutEditorProps) => {
-  const { onClose } = props;
   const editor = useHudLayoutEditor(props);
   const { glyphs, draft, edits, setRatioId, ground, setGround, layout, ratio, slots, target } = editor;
 
@@ -25,8 +21,7 @@ const HudLayoutEditor = (props: HudLayoutEditorProps) => {
   return (
     <MotionPreviewContext.Provider value={motionPreview}>
       <Box className="hud-editor-portal">
-        <ScreenWindow onClose={onClose} title="HUD Layout Editor" header={pageHeader}>
-          <DensityScope density="compact">
+        <DensityScope density="compact">
             <Box className="hud-editor">
               <EditorToolbar
                 insert={edits.insert}
@@ -72,8 +67,7 @@ const HudLayoutEditor = (props: HudLayoutEditorProps) => {
                 />
               </Box>
             </Box>
-          </DensityScope>
-        </ScreenWindow>
+        </DensityScope>
       </Box>
     </MotionPreviewContext.Provider>
   );

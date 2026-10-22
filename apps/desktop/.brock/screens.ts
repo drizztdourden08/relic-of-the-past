@@ -3,7 +3,7 @@ import { buildScreenTree, lazyComponent } from '@drizztdourden08/brock-react';
 import config from '../src/screens/screens.config';
 import { searchIndex } from './search';
 import { devScreens } from './screens.dev';
-import { meta as creditsCardMeta } from '../src/screens/credits.card';
+import { meta as creditsLayerMeta } from '../src/screens/credits.layer';
 import { meta as dataHomeHeroMeta } from '../src/screens/data/home.hero';
 import { meta as dataLibraryProfilesPageMeta } from '../src/screens/data/library/profiles.page';
 import { meta as dataLibraryRomsPageMeta } from '../src/screens/data/library/roms.page';
@@ -29,7 +29,7 @@ import GameVideoPictureSettings, { meta as gameVideoPictureSettingsMeta } from '
 import GameVideoWindowSettings, { meta as gameVideoWindowSettingsMeta } from '../src/screens/game/video/window.settings';
 import { meta as gameViewBaseMeta } from '../src/screens/game-view.base';
 import { meta as hudLayoutLayerMeta } from '../src/screens/hud-layout.layer';
-import { meta as inputCalibrationCardMeta } from '../src/screens/input-calibration.card';
+import { meta as inputCalibrationLayerMeta } from '../src/screens/input-calibration.layer';
 import { meta as randomizerArchipelagoNetworkPageMeta } from '../src/screens/randomizer/archipelago/network.page';
 import { meta as randomizerArchipelagoOnlinePageMeta } from '../src/screens/randomizer/archipelago/online.page';
 import { meta as randomizerLogsPageMeta } from '../src/screens/randomizer/logs.page';
@@ -40,12 +40,12 @@ import { meta as storeCatalogueBrowsePageMeta } from '../src/screens/store/catal
 import { meta as storeCatalogueCharacterPageMeta } from '../src/screens/store/catalogue/character.page';
 import { meta as storeCatalogueLanguagePageMeta } from '../src/screens/store/catalogue/language.page';
 import { meta as storeCatalogueMusicPageMeta } from '../src/screens/store/catalogue/music.page';
-import { meta as storeHomePageMeta } from '../src/screens/store/home.page';
+import { meta as storeHomeHeroMeta } from '../src/screens/store/home.hero';
 import { meta as storeMineInstalledPageMeta } from '../src/screens/store/mine/installed.page';
 import { meta as storeMineUpdatesPageMeta } from '../src/screens/store/mine/updates.page';
 
 const screenTree = buildScreenTree(config, [
-  { kind: 'card', id: 'credits', component: lazyComponent(() => import('../src/screens/credits.card')), meta: creditsCardMeta },
+  { kind: 'layer', id: 'credits', component: lazyComponent(() => import('../src/screens/credits.layer')), meta: creditsLayerMeta },
   { kind: 'hero', bucket: 'data', id: 'home', component: lazyComponent(() => import('../src/screens/data/home.hero')), meta: dataHomeHeroMeta },
   { kind: 'page', bucket: 'data', group: 'library', id: 'profiles', component: lazyComponent(() => import('../src/screens/data/library/profiles.page')), meta: dataLibraryProfilesPageMeta },
   { kind: 'page', bucket: 'data', group: 'library', id: 'roms', component: lazyComponent(() => import('../src/screens/data/library/roms.page')), meta: dataLibraryRomsPageMeta },
@@ -72,7 +72,7 @@ const screenTree = buildScreenTree(config, [
   { kind: 'settings', bucket: 'game', group: 'video', id: 'window', sections: GameVideoWindowSettings, meta: gameVideoWindowSettingsMeta },
   { kind: 'base', id: 'game-view', component: lazyComponent(() => import('../src/screens/game-view.base')), meta: gameViewBaseMeta },
   { kind: 'layer', id: 'hud-layout', component: lazyComponent(() => import('../src/screens/hud-layout.layer')), meta: hudLayoutLayerMeta },
-  { kind: 'card', id: 'input-calibration', component: lazyComponent(() => import('../src/screens/input-calibration.card')), meta: inputCalibrationCardMeta },
+  { kind: 'layer', id: 'input-calibration', component: lazyComponent(() => import('../src/screens/input-calibration.layer')), meta: inputCalibrationLayerMeta },
   { kind: 'page', bucket: 'randomizer', group: 'archipelago', id: 'network', component: lazyComponent(() => import('../src/screens/randomizer/archipelago/network.page')), meta: randomizerArchipelagoNetworkPageMeta },
   { kind: 'page', bucket: 'randomizer', group: 'archipelago', id: 'online', component: lazyComponent(() => import('../src/screens/randomizer/archipelago/online.page')), meta: randomizerArchipelagoOnlinePageMeta },
   { kind: 'page', bucket: 'randomizer', id: 'logs', component: lazyComponent(() => import('../src/screens/randomizer/logs.page')), meta: randomizerLogsPageMeta },
@@ -83,7 +83,7 @@ const screenTree = buildScreenTree(config, [
   { kind: 'page', bucket: 'store', group: 'catalogue', id: 'character', component: lazyComponent(() => import('../src/screens/store/catalogue/character.page')), meta: storeCatalogueCharacterPageMeta },
   { kind: 'page', bucket: 'store', group: 'catalogue', id: 'language', component: lazyComponent(() => import('../src/screens/store/catalogue/language.page')), meta: storeCatalogueLanguagePageMeta },
   { kind: 'page', bucket: 'store', group: 'catalogue', id: 'music', component: lazyComponent(() => import('../src/screens/store/catalogue/music.page')), meta: storeCatalogueMusicPageMeta },
-  { kind: 'page', bucket: 'store', id: 'home', component: lazyComponent(() => import('../src/screens/store/home.page')), meta: storeHomePageMeta },
+  { kind: 'hero', bucket: 'store', id: 'home', component: lazyComponent(() => import('../src/screens/store/home.hero')), meta: storeHomeHeroMeta },
   { kind: 'page', bucket: 'store', group: 'mine', id: 'installed', component: lazyComponent(() => import('../src/screens/store/mine/installed.page')), meta: storeMineInstalledPageMeta },
   { kind: 'page', bucket: 'store', group: 'mine', id: 'updates', component: lazyComponent(() => import('../src/screens/store/mine/updates.page')), meta: storeMineUpdatesPageMeta },
   ...devScreens,
