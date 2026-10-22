@@ -4,7 +4,7 @@ import config from '../src/screens/screens.config';
 import { devSearchSeeds } from './screens.dev';
 
 const searchIndex = buildSearchIndex(config, [
-  {"kind":"card","id":"credits","title":"Credits","icon":"trophy","keywords":["thanks","contributors","authors","licence"]},
+  {"kind":"layer","id":"credits","title":"Credits","icon":"trophy","keywords":["thanks","contributors","authors","licence"]},
   {"kind":"hero","id":"home","bucket":"data","title":"Home","icon":"house","keywords":["data","overview","disk","folder","total","library"]},
   {"kind":"page","id":"profiles","bucket":"data","group":"library","title":"Profiles","icon":"users","keywords":["profile","create","delete","preset","language","msu","randomizer","archipelago"]},
   {"kind":"page","id":"roms","bucket":"data","group":"library","title":"ROMs","icon":"gamepad-2","keywords":["rom","import","extract","assets","sfc","cartridge"]},
@@ -30,7 +30,7 @@ const searchIndex = buildSearchIndex(config, [
   {"kind":"settings","id":"window","bucket":"game","group":"video","title":"Window","icon":"app-window","keywords":["window","fullscreen","viewport","pixel","perfect"],"sections":[{"id":"window","title":"Window","rows":[{"key":"startFullscreen","label":"Start in Fullscreen","description":"Automatically enter fullscreen when the game starts","hint":"On, starting the game puts the window in fullscreen.","keywords":["fullscreen","launch","start"]},{"key":"viewportConstraint","label":"Viewport","description":"Controls how the game canvas relates to the window","hint":"Pick how the game picture fills the window.","keywords":["ratio","lock","constrain","aspect","black","bars","stretch","fill","fit","viewport"]},{"key":"pixelPerfect","label":"Pixel Perfect","description":"Scale the picture by whole source pixels only, so every pixel is exactly the same size. Removes the shimmer on fences, walls and other straight edges while scrolling, at the cost of slightly wider black borders. Turns Linear Filtering off while active.","hint":"On, every game pixel is drawn at the same size, with wider black borders. Needs the Letterbox viewport.","keywords":["pixel","perfect","integer","scale","scaling","sharp","crisp","shimmer","wobble","ripple","tearing","nearest"]}]}]},
   {"kind":"base","id":"game-view","title":"Game view","icon":"gamepad-2"},
   {"kind":"layer","id":"hud-layout","title":"HUD Layout Editor","icon":"layout-list","keywords":["hud","layout","editor","glyphs","slots"]},
-  {"kind":"card","id":"input-calibration","title":"Controllers","icon":"gamepad-2","keywords":["controller","gamepad","hid","rumble","diagnostics","report","raw","bytes"]},
+  {"kind":"layer","id":"input-calibration","title":"Controllers","icon":"gamepad-2","keywords":["controller","gamepad","hid","rumble","diagnostics","report","raw","bytes"]},
   {"kind":"page","id":"network","bucket":"randomizer","group":"archipelago","title":"Network","icon":"server","keywords":["archipelago","server","connection","health","players"]},
   {"kind":"page","id":"online","bucket":"randomizer","group":"archipelago","title":"Online","icon":"globe","keywords":["archipelago","death","link","track","other","players"]},
   {"kind":"page","id":"logs","bucket":"randomizer","title":"Logs","icon":"file-text","keywords":["log","activity","room","messages"]},

@@ -1,0 +1,5 @@
+/* @layer renderer-app @kind style */
+.free-window__scroll {
+  flex: 1;
+  min-height: 0;
+}
