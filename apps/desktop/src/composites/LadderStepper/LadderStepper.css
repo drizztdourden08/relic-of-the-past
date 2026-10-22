@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind style */
 
-.progressive-ladder {
+.ladder-stepper {
   display: flex;
   flex: 1 1 var(--ladder-card-w-min);
   flex-direction: column;
@@ -10,10 +10,10 @@
   padding: var(--space-md);
 }
 
-.progressive-ladder[data-empty] { border-style: dashed; }
-.progressive-ladder[data-empty] .progressive-ladder__title { color: var(--c-text-muted); }
+.ladder-stepper[data-empty] { border-style: dashed; }
+.ladder-stepper[data-empty] .ladder-stepper__title { color: var(--c-text-muted); }
 
-.progressive-ladder__head {
+.ladder-stepper__head {
   display: flex;
   flex-wrap: wrap;
   align-items: flex-start;
@@ -22,14 +22,14 @@
   min-width: 0;
 }
 
-.progressive-ladder__heading {
+.ladder-stepper__heading {
   display: flex;
   flex-direction: column;
   gap: var(--space-2xs);
   min-width: 0;
 }
 
-.progressive-ladder__title {
+.ladder-stepper__title {
   color: var(--c-text);
   font-size: var(--text-sm);
   font-weight: var(--weight-medium);
@@ -37,20 +37,16 @@
   overflow-wrap: anywhere;
 }
 
-.progressive-ladder__count {
+.ladder-stepper__count {
   color: var(--c-text-dim);
   font-size: var(--text-xs);
   font-variant-numeric: tabular-nums;
 }
 
-.progressive-ladder__mode {
+.ladder-stepper__mode {
   flex: none;
 }
 
-.progressive-ladder__rungs {
-  display: grid;
-  grid-auto-columns: minmax(0, 1fr);
-  grid-auto-flow: column;
-  align-items: start;
-  min-width: 0;
+.ladder-stepper__sprite {
+  inline-size: var(--size-32);
 }

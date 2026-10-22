@@ -42,3 +42,11 @@
   text-transform: uppercase;
   letter-spacing: calc(0.5 * var(--size-1));
 }
+
+.randomizer-options__main {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  min-height: 0;
+  min-width: 0;
+}
