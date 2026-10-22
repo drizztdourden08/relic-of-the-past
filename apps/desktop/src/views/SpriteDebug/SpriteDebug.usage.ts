@@ -9,7 +9,7 @@ const usage = {
   a11y: ['Every status button is a labelled control and the grid follows the reading order.'],
   tree: { path: ['a full screen view', 'one big custom surface, such as calibration'], rule: 'The sprite debug review.' },
   example: `import { SpriteDebug } from '@app/views/SpriteDebug';\n\nconst Layer = () => <SpriteDebug romFile="alttp.sfc" />;\n`,
-  propsHash: '3499d0717e0b87e9',
+  propsHash: '521add397fda3e1a',
 } satisfies ComponentUsage;
 
 export { usage };

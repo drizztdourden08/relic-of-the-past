@@ -15,4 +15,8 @@ interface LadderStepperProps {
   className?: string;
 }
 
-export type { LadderStep, LadderStepperProps };
+interface LadderStepMediaProps {
+  step: LadderStep;
+}
+
+export type { LadderStep, LadderStepMediaProps, LadderStepperProps };

@@ -9,7 +9,7 @@ const usage = {
   a11y: ['The outline and the grid answer the arrow keys, and Escape backs out one level at a time.'],
   tree: { path: ['a full screen view', 'one big custom surface, such as calibration'], rule: 'The HUD layout editor.' },
   example: `import { HudLayoutEditor } from '@app/views/HudLayoutEditor';\n\nconst Layer = () => <HudLayoutEditor />;\n`,
-  propsHash: '7a32241a8cac3085',
+  propsHash: '5ea1d3e88e4d3a53',
 } satisfies ComponentUsage;
 
 export { usage };

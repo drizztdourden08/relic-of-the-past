@@ -1,18 +1,12 @@
 /* @layer renderer-components @kind logic */
-import { Box, Image, Text } from '@drizztdourden08/tessera/primitives';
+import { createElement } from 'react';
 import type { StepperStep } from '@drizztdourden08/tessera/primitives';
+import { LadderStepMedia } from '../sub-components/LadderStepMedia';
 import type { LadderStep } from '../LadderStepper.type';
 
 const mediaOf = (step: LadderStep) => {
   if (step.sprite === undefined && step.value === undefined) return undefined;
-  return (
-    <Box className="ladder-stepper__media">
-      {step.sprite !== undefined && (
-        <Image className="ladder-stepper__sprite" src={step.sprite} alt="" fit="contain" pixelated aspectRatio={1} draggable={false} />
-      )}
-      {step.value !== undefined && <Text className="ladder-stepper__value">{step.value}</Text>}
-    </Box>
-  );
+  return createElement(LadderStepMedia, { step });
 };
 
 const stepsOf = (steps: readonly LadderStep[]): StepperStep[] =>

@@ -5,8 +5,7 @@ import type { PondPreviewModel } from '@app/compounds/WishingPondRow';
 import type { PondCharge } from './pond-preview.type';
 import { itemAt } from '@app/checked-access';
 import { pondPreviewNote } from './pond-preview-note';
-
-const NO_PRIZE_LABEL = 'no prize';
+import { NO_PRIZE_LABEL } from './pond-preview.constants';
 
 const chipTextOf = (charge: PondCharge, price: number): string => {
   const { demand } = charge;
