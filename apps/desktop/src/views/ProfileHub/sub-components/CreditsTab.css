@@ -7,13 +7,6 @@
   margin-bottom: var(--space-xl);
 }
 
-.credits-tab__title {
-  font-size: var(--text-xl);
-  font-weight: var(--weight-semi);
-  margin: 0 0 var(--space-sm);
-  color: var(--c-text);
-}
-
 .credits-tab__subtitle {
   margin: 0;
   font-size: var(--text-base);

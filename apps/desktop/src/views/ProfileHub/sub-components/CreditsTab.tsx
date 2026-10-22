@@ -8,7 +8,6 @@ const CreditsPage = () => {
   return (
     <Box className="credits-tab">
       <Box className="credits-tab__header">
-        <Text as="h2" className="credits-tab__title">Credits & Attributions</Text>
         <Text as="p" className="credits-tab__subtitle">
           This project is built on the work of many talented people and communities.
         </Text>
