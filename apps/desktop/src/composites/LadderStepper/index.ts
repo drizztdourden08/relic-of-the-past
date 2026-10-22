@@ -1,3 +1,3 @@
 /* @layer renderer-components @kind barrel */
 export { LadderStepper } from './LadderStepper';
-export type { LadderStep, LadderStepperProps } from './LadderStepper.type';
+export type { LadderMediaPlacement, LadderSize, LadderStep, LadderStepperProps } from './LadderStepper.type';

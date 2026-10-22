@@ -9,9 +9,16 @@ interface LadderStep {
   onToggle?: (() => void) | undefined;
 }
 
+type LadderSize = 'default' | 'compact';
+
+type LadderMediaPlacement = 'above' | 'below';
+
 interface LadderStepperProps {
   label: string;
   steps: readonly LadderStep[];
+  size?: LadderSize;
+  mediaPlacement?: LadderMediaPlacement;
+  showLabels?: boolean;
   className?: string;
 }
 
@@ -19,4 +26,8 @@ interface LadderStepMediaProps {
   step: LadderStep;
 }
 
-export type { LadderStep, LadderStepMediaProps, LadderStepperProps };
+interface LadderMediaRowProps {
+  steps: readonly LadderStep[];
+}
+
+export type { LadderMediaPlacement, LadderMediaRowProps, LadderSize, LadderStep, LadderStepMediaProps, LadderStepperProps };

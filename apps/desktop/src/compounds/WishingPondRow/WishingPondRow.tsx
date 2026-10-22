@@ -46,7 +46,7 @@ const WishingPondRow = (props: WishingPondRowProps) => {
       )}
       <Box className="pond-row__preview">
         <Text tone="faint" className="pond-row__preview-title">throw prices</Text>
-        <LadderStepper label="throw prices" steps={preview.steps} />
+        <LadderStepper label="throw prices" steps={preview.steps} size="compact" mediaPlacement="below" showLabels={false} />
         <Text className="pond-row__preview-note">{preview.note}</Text>
       </Box>
       {walletNote !== undefined && <Text className="pond-row__footnote">{walletNote}</Text>}
