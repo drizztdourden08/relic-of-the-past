@@ -5,6 +5,4 @@ interface ControllerReportDialogProps {
   deviceKey: string;
 }
 
-type WizardValues = Record<string, never>;
-
-export type { ControllerReportDialogProps, WizardValues };
+export type { ControllerReportDialogProps };

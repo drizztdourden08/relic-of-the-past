@@ -1,0 +1,57 @@
+/* @layer renderer-components @kind style */
+
+.input-cal__axis-col {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--size-4);
+}
+
+.input-cal__axis-row {
+  display: flex;
+  gap: var(--size-4);
+  align-items: center;
+}
+
+.input-cal__stick-svg {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+.input-cal__stick-dir-icon {
+  width: var(--size-32);
+  height: var(--size-32);
+  margin-top: var(--size-2);
+  opacity: 0.85;
+}
+
+.input-cal__trigger-track {
+  width: var(--size-24);
+  height: calc(60 * var(--size-1));
+  border-radius: var(--size-4);
+  border: var(--border-width-thin) solid var(--c-border);
+  background: var(--c-surface);
+  position: relative;
+  overflow: hidden;
+}
+
+.input-cal__trigger-track.input-cal__trigger--pressed {
+  border-color: var(--c-secondary-bright);
+  box-shadow: 0 0 0 var(--size-1) var(--c-secondary-bright);
+}
+
+.input-cal__trigger-fill {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: calc(var(--trigger-fill, 0) * 100%);
+  background: var(--c-primary-bright);
+  border-radius: 0 0 calc(3 * var(--size-1)) calc(3 * var(--size-1));
+  transition: height 0.05s linear;
+}
+
+.input-cal__trigger-fill.input-cal__trigger--pressed {
+  background: var(--c-secondary-bright);
+}

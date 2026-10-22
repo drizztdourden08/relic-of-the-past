@@ -1,12 +1,12 @@
 /* @layer renderer-components @kind component */
 import { Text } from '@drizztdourden08/tessera/primitives';
 import { DiagnosticsFlowBody } from '../../diagnostics-wizard/DiagnosticsFlowBody';
-import type { ReportBodyProps } from './ReportBody.type';
+import type { ReportDialogPartProps } from '../report-dialog-controls.type';
 import { ConfirmStep } from './ConfirmStep';
 import { IntroStep } from './IntroStep';
 import { UserInfoStep } from './UserInfoStep';
 
-const ReportBody = (props: ReportBodyProps) => {
+const ReportBody = (props: ReportDialogPartProps) => {
   const { form, controls } = props;
   const { filed, wizardRef, setCapturedCount } = controls;
 
@@ -32,7 +32,7 @@ const ReportBody = (props: ReportBodyProps) => {
   }
 
   if (form.step === 'diagnostics') {
-    return <DiagnosticsFlowBody wizard={form.wizard} wizardRef={wizardRef} onCapturedCountChange={setCapturedCount} summaryActions={props.summaryActions} />;
+    return <DiagnosticsFlowBody wizard={form.wizard} wizardRef={wizardRef} onCapturedCountChange={setCapturedCount} />;
   }
 
   return (
