@@ -25,4 +25,4 @@ interface LadderStepMediaProps {
   step: LadderStep;
 }
 
-export type { LadderMediaPlacement, LadderSize, LadderStep, LadderStepMediaProps, LadderStepperProps };
+export type { LadderStep, LadderStepMediaProps, LadderStepperProps };
