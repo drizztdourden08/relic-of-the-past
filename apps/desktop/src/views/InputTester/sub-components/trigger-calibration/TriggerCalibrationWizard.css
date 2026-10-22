@@ -1,0 +1,92 @@
+/* @layer renderer-components @kind style */
+
+.trigger-cal {
+  max-width: calc(360 * var(--size-1));
+}
+
+.trigger-cal__bar-row {
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+  gap: var(--size-16);
+  margin-top: var(--size-16);
+}
+
+.trigger-cal__bar-row-center {
+  display: flex;
+  justify-content: center;
+  margin-top: var(--size-8);
+}
+
+.trigger-cal__bar-pair {
+  display: flex;
+  gap: var(--size-24);
+  justify-content: center;
+}
+
+.trigger-cal__mono {
+  font-size: var(--size-10);
+  font-family: var(--font-mono);
+  color: var(--c-text-muted);
+}
+
+.trigger-cal__dz-box {
+  margin-bottom: var(--size-16);
+  padding: var(--size-8);
+  background: var(--c-sunken);
+  border-radius: var(--size-6);
+}
+
+.trigger-cal__bar-col {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--size-4);
+}
+
+.trigger-cal__bar-label {
+  font-size: calc(11 * var(--size-1));
+  color: var(--c-text-dim);
+  font-weight: var(--weight-semi);
+}
+
+.trigger-cal__bar-values {
+  font-size: var(--size-10);
+  font-family: var(--font-mono);
+  color: var(--c-text-muted);
+}
+
+.trigger-cal__track {
+  width: var(--size-32);
+  height: calc(120 * var(--size-1));
+  border-radius: var(--size-4);
+  background: var(--c-sunken);
+  border: var(--border-width-thin) solid var(--c-border);
+  position: relative;
+  overflow: hidden;
+}
+
+.trigger-cal__fill {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: calc(var(--trigger-fill, 0) * 100%);
+  background: var(--c-primary);
+  border-radius: 0 0 calc(3 * var(--size-1)) calc(3 * var(--size-1));
+  transition: height 0.05s;
+}
+
+.trigger-cal__fill--full {
+  background: var(--c-primary-bright);
+}
+
+.trigger-cal__deadzone {
+  position: absolute;
+  bottom: calc(var(--trigger-deadzone, 0) * 100%);
+  left: 0;
+  right: 0;
+  height: var(--size-1);
+  background: var(--c-danger);
+  opacity: 0.6;
+}

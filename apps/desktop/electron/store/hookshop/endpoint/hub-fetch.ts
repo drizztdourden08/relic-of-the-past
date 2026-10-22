@@ -1,4 +1,5 @@
 /* @layer electron-main @kind logic */
+import { reachHub } from '../../../hub/client';
 import { SIGNED_OUT_MESSAGE, SITE_SIGNED_OUT_MESSAGE, UNAUTHORIZED } from '../hookshop.constants';
 
 const signedOut = (message: string): Response =>
@@ -6,7 +7,7 @@ const signedOut = (message: string): Response =>
 
 const hubFetch = async (input: string | URL | Request, init?: RequestInit): Promise<Response> => {
   if (!new Headers(init?.headers).has('authorization')) return signedOut(SIGNED_OUT_MESSAGE);
-  const response = await fetch(input, init);
+  const response = await reachHub(input, init);
   return response.status === UNAUTHORIZED ? signedOut(SITE_SIGNED_OUT_MESSAGE) : response;
 };
 

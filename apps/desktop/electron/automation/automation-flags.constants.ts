@@ -1,5 +1,5 @@
 /* @layer electron-main @kind constants */
-const ROTP_AUTOMATION_FLAGS = ['--auto-state', '--auto-start', '--dump-layers', '--dump-nav', '--sim-run'];
+const ROTP_AUTOMATION_FLAGS = ['--auto-state', '--auto-start', '--auto-flood', '--dump-layers', '--dump-nav', '--sim-run'];
 
 const GAME_LAUNCH_FLAGS = ['--auto-state', '--auto-start'];
 

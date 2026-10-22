@@ -1,0 +1,99 @@
+/* @layer renderer-components @kind style */
+
+.stick-cal {
+  max-width: calc(520 * var(--size-1));
+}
+
+.stick-cal__circles {
+  display: flex;
+  gap: var(--size-20);
+  justify-content: center;
+}
+
+.stick-cal__circles--top {
+  margin-top: var(--size-16);
+}
+
+.stick-cal__raw-row {
+  display: flex;
+  gap: var(--size-40);
+  justify-content: center;
+  margin-top: var(--size-4);
+  font-size: var(--size-10);
+  font-family: var(--font-mono);
+  color: var(--c-text-muted);
+}
+
+.stick-cal__stick-head {
+  font-weight: var(--weight-semi);
+  margin-bottom: var(--size-4);
+}
+
+.stick-cal__dz-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--size-16);
+  margin-bottom: var(--size-16);
+  padding: var(--size-8);
+  background: var(--c-sunken);
+  border-radius: var(--size-6);
+}
+
+.stick-cal__values {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--size-8);
+  font-family: var(--font-mono);
+  font-size: var(--size-12);
+  margin-bottom: var(--size-12);
+  padding: var(--size-8);
+  background: var(--c-sunken);
+  border-radius: var(--size-6);
+}
+
+.stick-cal__values--pair {
+  grid-template-columns: 1fr 1fr;
+}
+
+.stick-cal__values--range {
+  font-size: calc(11 * var(--size-1));
+}
+
+.stick-cal__circle-col {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--size-4);
+}
+
+.stick-cal__circle-label {
+  font-size: calc(11 * var(--size-1));
+  color: var(--c-text-dim);
+  font-weight: var(--weight-semi);
+}
+
+.stick-cal__ring {
+  width: calc(100 * var(--size-1));
+  height: calc(100 * var(--size-1));
+  border-radius: 50%;
+  background: var(--c-sunken);
+  border: var(--border-width-thin) solid var(--c-border);
+  position: relative;
+}
+
+.stick-cal__ring--large {
+  width: calc(120 * var(--size-1));
+  height: calc(120 * var(--size-1));
+}
+
+.stick-cal__svg {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+.stick-cal__circle-values {
+  font-size: var(--size-10);
+  font-family: var(--font-mono);
+  color: var(--c-text-muted);
+}

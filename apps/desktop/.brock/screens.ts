@@ -28,7 +28,7 @@ import GameVideoGraphicsSettings, { meta as gameVideoGraphicsSettingsMeta } from
 import GameVideoPictureSettings, { meta as gameVideoPictureSettingsMeta } from '../src/screens/game/video/picture.settings';
 import GameVideoWindowSettings, { meta as gameVideoWindowSettingsMeta } from '../src/screens/game/video/window.settings';
 import { meta as gameViewBaseMeta } from '../src/screens/game-view.base';
-import { meta as hudLayoutLayerMeta } from '../src/screens/hud-layout.layer';
+import { meta as hudLayoutCardMeta } from '../src/screens/hud-layout.card';
 import { meta as inputCalibrationCardMeta } from '../src/screens/input-calibration.card';
 import { meta as randomizerArchipelagoNetworkPageMeta } from '../src/screens/randomizer/archipelago/network.page';
 import { meta as randomizerArchipelagoOnlinePageMeta } from '../src/screens/randomizer/archipelago/online.page';
@@ -40,7 +40,7 @@ import { meta as storeCatalogueBrowsePageMeta } from '../src/screens/store/catal
 import { meta as storeCatalogueCharacterPageMeta } from '../src/screens/store/catalogue/character.page';
 import { meta as storeCatalogueLanguagePageMeta } from '../src/screens/store/catalogue/language.page';
 import { meta as storeCatalogueMusicPageMeta } from '../src/screens/store/catalogue/music.page';
-import { meta as storeHomePageMeta } from '../src/screens/store/home.page';
+import { meta as storeHomeHeroMeta } from '../src/screens/store/home.hero';
 import { meta as storeMineInstalledPageMeta } from '../src/screens/store/mine/installed.page';
 import { meta as storeMineUpdatesPageMeta } from '../src/screens/store/mine/updates.page';
 
@@ -71,7 +71,7 @@ const screenTree = buildScreenTree(config, [
   { kind: 'settings', bucket: 'game', group: 'video', id: 'picture', sections: GameVideoPictureSettings, meta: gameVideoPictureSettingsMeta },
   { kind: 'settings', bucket: 'game', group: 'video', id: 'window', sections: GameVideoWindowSettings, meta: gameVideoWindowSettingsMeta },
   { kind: 'base', id: 'game-view', component: lazyComponent(() => import('../src/screens/game-view.base')), meta: gameViewBaseMeta },
-  { kind: 'layer', id: 'hud-layout', component: lazyComponent(() => import('../src/screens/hud-layout.layer')), meta: hudLayoutLayerMeta },
+  { kind: 'card', id: 'hud-layout', component: lazyComponent(() => import('../src/screens/hud-layout.card')), meta: hudLayoutCardMeta },
   { kind: 'card', id: 'input-calibration', component: lazyComponent(() => import('../src/screens/input-calibration.card')), meta: inputCalibrationCardMeta },
   { kind: 'page', bucket: 'randomizer', group: 'archipelago', id: 'network', component: lazyComponent(() => import('../src/screens/randomizer/archipelago/network.page')), meta: randomizerArchipelagoNetworkPageMeta },
   { kind: 'page', bucket: 'randomizer', group: 'archipelago', id: 'online', component: lazyComponent(() => import('../src/screens/randomizer/archipelago/online.page')), meta: randomizerArchipelagoOnlinePageMeta },
@@ -83,7 +83,7 @@ const screenTree = buildScreenTree(config, [
   { kind: 'page', bucket: 'store', group: 'catalogue', id: 'character', component: lazyComponent(() => import('../src/screens/store/catalogue/character.page')), meta: storeCatalogueCharacterPageMeta },
   { kind: 'page', bucket: 'store', group: 'catalogue', id: 'language', component: lazyComponent(() => import('../src/screens/store/catalogue/language.page')), meta: storeCatalogueLanguagePageMeta },
   { kind: 'page', bucket: 'store', group: 'catalogue', id: 'music', component: lazyComponent(() => import('../src/screens/store/catalogue/music.page')), meta: storeCatalogueMusicPageMeta },
-  { kind: 'page', bucket: 'store', id: 'home', component: lazyComponent(() => import('../src/screens/store/home.page')), meta: storeHomePageMeta },
+  { kind: 'hero', bucket: 'store', id: 'home', component: lazyComponent(() => import('../src/screens/store/home.hero')), meta: storeHomeHeroMeta },
   { kind: 'page', bucket: 'store', group: 'mine', id: 'installed', component: lazyComponent(() => import('../src/screens/store/mine/installed.page')), meta: storeMineInstalledPageMeta },
   { kind: 'page', bucket: 'store', group: 'mine', id: 'updates', component: lazyComponent(() => import('../src/screens/store/mine/updates.page')), meta: storeMineUpdatesPageMeta },
   ...devScreens,

@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind component */
 import { Box, Slider, Text } from '@drizztdourden08/tessera/primitives';
-import { LadderPreview } from '../LadderPreview';
+import { LadderStepper } from '@app/composites/LadderStepper';
 import { OptionValueTag } from '../OptionValueTag';
 import { OptionDescription } from '../OptionDescription';
 import { PondAskControls } from './sub-components/PondAskControls';
@@ -46,7 +46,8 @@ const WishingPondRow = (props: WishingPondRowProps) => {
       )}
       <Box className="pond-row__preview">
         <Text tone="faint" className="pond-row__preview-title">throw prices</Text>
-        <LadderPreview {...preview} />
+        <LadderStepper label="throw prices" steps={preview.steps} size="compact" mediaPlacement="below" showLabels={false} />
+        <Text className="pond-row__preview-note">{preview.note}</Text>
       </Box>
       {walletNote !== undefined && <Text className="pond-row__footnote">{walletNote}</Text>}
     </Box>

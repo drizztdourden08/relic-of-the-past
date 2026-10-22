@@ -2,6 +2,7 @@
 interface BudgetNotification {
   costAmount?: number;
   budgetAmount?: number;
+  currencyCode?: string;
   alertThresholdExceeded?: number;
 }
 

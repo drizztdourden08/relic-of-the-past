@@ -10,8 +10,8 @@
     "./package.json": "./package.json"
   },
   "dependencies": {
-    "@drizztdourden08/brock-core": "^0.68.6",
-    "@drizztdourden08/brock-input": "^0.68.6",
+    "@drizztdourden08/brock-core": "^0.71.0",
+    "@drizztdourden08/brock-input": "^0.71.0",
     "@rotp/features": "workspace:*",
     "@rotp/game-data": "workspace:*"
   }

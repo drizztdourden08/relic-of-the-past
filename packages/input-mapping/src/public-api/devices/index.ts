@@ -12,6 +12,7 @@ export { buildDisplayContext } from '../../family/resolve-display/build-display-
 export { resolveBrandLogoKey } from '../../family/resolve-display/resolve-brand-logo-key';
 export { resolveDeviceName } from '../../family/resolve-display/resolve-device-name';
 export { resolveShapeVibration } from '../../family/resolve-display/resolve-shape-vibration';
+export { resolveStickDirectionIcon } from '../../family/stick-direction-icon';
 export { BUTTON_INDEX } from '../../family/sdl-capabilities.constants';
 export { resolveDeviceControls } from '../../family/sdl-capabilities';
 export { controllerCardInfo } from '../../runtime/controller-card-info';

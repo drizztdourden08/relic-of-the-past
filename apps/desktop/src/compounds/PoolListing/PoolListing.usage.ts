@@ -13,7 +13,7 @@ import { PoolListing } from '@app/compounds/PoolListing';
 
 const Mounted = (props: ComponentProps<typeof PoolListing>) => <PoolListing {...props} />;
 `,
-  propsHash: '0bdbe238621a746b',
+  propsHash: '3de663b862999767',
 } satisfies ComponentUsage;
 
 export { usage };

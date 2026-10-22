@@ -1,0 +1,70 @@
+/* @layer renderer-components @kind style */
+
+.ladder-stepper {
+  --ladder-step-w: var(--size-80);
+
+  max-width: 100%;
+  min-width: 0;
+}
+
+.ladder-stepper--compact {
+  --ladder-step-w: var(--size-48);
+}
+
+.ladder-stepper--compact.ladder-stepper--compact {
+  --stepper-dot: var(--size-28);
+  --stepper-step-w: var(--ladder-step-w);
+}
+
+.ladder-stepper--below {
+  overflow-x: auto;
+  padding: var(--space-xs);
+}
+
+.ladder-stepper__row {
+  display: flex;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.ladder-stepper__cell {
+  display: flex;
+  flex: 1 1 0;
+  min-inline-size: calc(var(--ladder-step-w) + var(--size-16));
+}
+
+.ladder-stepper__cell:last-child {
+  flex: none;
+  min-inline-size: 0;
+}
+
+.ladder-stepper__cell-media {
+  display: flex;
+  flex: none;
+  justify-content: center;
+  inline-size: var(--ladder-step-w);
+}
+
+.ladder-stepper__media {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-2xs);
+}
+
+.ladder-stepper__sprite {
+  inline-size: var(--size-32);
+}
+
+.ladder-stepper--compact .ladder-stepper__sprite {
+  inline-size: var(--size-16);
+}
+
+.ladder-stepper__value {
+  color: var(--c-text);
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}

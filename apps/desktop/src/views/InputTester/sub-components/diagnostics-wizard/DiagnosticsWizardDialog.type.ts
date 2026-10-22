@@ -7,6 +7,4 @@ interface DiagnosticsWizardDialogProps {
   onComplete?: (map: HidControllerMap) => void;
 }
 
-type WizardValues = Record<string, never>;
-
-export type { DiagnosticsWizardDialogProps, WizardValues };
+export type { DiagnosticsWizardDialogProps };

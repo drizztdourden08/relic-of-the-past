@@ -2,16 +2,16 @@
 import { lazyComponent } from '@drizztdourden08/brock-react';
 import type { ScreenEntry, SearchFileSeed } from '@drizztdourden08/brock-react';
 import { meta as dataInspectorCardMeta } from '../src/screens/data-inspector.card.dev';
-import { meta as spriteDebugLayerMeta } from '../src/screens/sprite-debug.layer.dev';
+import { meta as spriteDebugCardMeta } from '../src/screens/sprite-debug.card.dev';
 
 const devScreens: ScreenEntry[] = [
   { kind: 'card', id: 'data-inspector', component: lazyComponent(() => import('../src/screens/data-inspector.card.dev')), meta: dataInspectorCardMeta },
-  { kind: 'layer', id: 'sprite-debug', component: lazyComponent(() => import('../src/screens/sprite-debug.layer.dev')), meta: spriteDebugLayerMeta },
+  { kind: 'card', id: 'sprite-debug', component: lazyComponent(() => import('../src/screens/sprite-debug.card.dev')), meta: spriteDebugCardMeta },
 ];
 
 const devSearchSeeds: SearchFileSeed[] = [
   {"kind":"card","id":"data-inspector","title":"Data Inspector","icon":"search","keywords":["dataset","records","checks","screens","actors","inspector"]},
-  {"kind":"layer","id":"sprite-debug","title":"Sprite Debug","icon":"bug","keywords":["sprite","review","items","debug"],"devOnly":true},
+  {"kind":"card","id":"sprite-debug","title":"Sprite Debug","icon":"bug","keywords":["sprite","review","items","debug"],"devOnly":true},
 ];
 
 export { devScreens, devSearchSeeds };

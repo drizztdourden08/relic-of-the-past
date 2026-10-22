@@ -10,7 +10,6 @@ interface ReviewEntry {
 type ReviewData = Record<string, ReviewEntry>;
 
 interface SpriteDebugProps {
-  onClose: () => void;
   romFile: string;
 }
 

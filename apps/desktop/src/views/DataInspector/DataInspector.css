@@ -2,10 +2,6 @@
 
 .data-inspector {
   height: 100%;
-  display: flex;
-  min-height: 0;
-  gap: var(--space-xl);
-  padding: var(--space-md);
 }
 
 .data-inspector__panes {

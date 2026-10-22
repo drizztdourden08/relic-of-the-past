@@ -1,16 +1,15 @@
 /* @layer renderer-components @kind hook */
 import { useState, useEffect, useMemo, useRef } from 'react';
-import { inputApi } from '@drizztdourden08/brock-input/renderer';
 import { controllerInputStore } from '../../../input/controller-input-store';
 import type { ControllerInputState } from '../../../input/controller-input-store';
 import { getInputManager } from '@app/input/input-manager/get-input-manager';
 import type { HidControllerMap } from './HidCalibrationWizard';
 import { useControllerDevices } from '../../../hooks/useControllerDevices';
-import { EVENT_LOG_KEEP } from './input-calibration.constants';
-import type { EventEntry } from './input-calibration.type';
+import { useControllerEventLog } from './useControllerEventLog';
+import { useStickTriggerCalibrations } from './useStickTriggerCalibrations';
 
 const useInputCalibration = () => {
-  const [events, setEvents] = useState<EventEntry[]>([]);
+  const events = useControllerEventLog();
   const logRef = useRef<HTMLDivElement>(null);
 
   const [controllerConnected, setControllerConnected] = useState(controllerInputStore.isConnected());
@@ -20,38 +19,22 @@ const useInputCalibration = () => {
   const [calibrating, setCalibrating] = useState(false);
   const [lastCalibration, setLastCalibration] = useState<HidControllerMap | null>(null);
 
-  const { entries, isRescanPending, handleRescan } = useControllerDevices();
+  const { entries, groups: controllerGroups, isRescanPending, handleRescan, addMapping } = useControllerDevices();
 
-  const readyCount = useMemo(() => entries.filter((entry) => entry.status === 'ready').length, [entries]);
+  const readyDeviceKeys = useMemo(
+    () => entries.filter((entry) => entry.status === 'ready').map((entry) => entry.deviceKey),
+    [entries],
+  );
+  const calibrations = useStickTriggerCalibrations(readyDeviceKeys);
 
-  useEffect(() => {
-    const unsub = getInputManager().onInputState((hidStates) => {
-      setControllerStates(hidStates);
-      setControllerConnected(hidStates.size > 0 || controllerInputStore.isConnected() || readyCount > 0);
-    });
-    return unsub;
-  }, [readyCount]);
+  useEffect(() => getInputManager().onInputState((hidStates) => {
+    setControllerStates(hidStates);
+    setControllerConnected(hidStates.size > 0 || controllerInputStore.isConnected() || readyDeviceKeys.length > 0);
+  }), [readyDeviceKeys]);
 
-  useEffect(() => {
-    const api = inputApi();
-    const unsubConnect = api.onAdded((info) => {
-      setEvents(prev => [...prev.slice(-EVENT_LOG_KEEP), { time: Date.now(), type: 'connect', id: info.name || info.deviceKey }]);
-    });
-    const unsubRemoved = api.onRemoved((deviceKey) => {
-      setEvents(prev => [...prev.slice(-EVENT_LOG_KEEP), { time: Date.now(), type: 'disconnect', id: deviceKey }]);
-    });
-    return () => {
-      unsubConnect();
-      unsubRemoved();
-    };
-  }, []);
-
-  useEffect(() => {
-    const unsubDiag = controllerInputStore.onDiag(() => {
-      setControllerDiag([...controllerInputStore.getDiagLog()]);
-    });
-    return unsubDiag;
-  }, []);
+  useEffect(() => controllerInputStore.onDiag(() => {
+    setControllerDiag([...controllerInputStore.getDiagLog()]);
+  }), []);
 
   const handleCalibrationComplete = (map: HidControllerMap) => {
     setLastCalibration(map);
@@ -63,19 +46,11 @@ const useInputCalibration = () => {
   }, [events, controllerDiag]);
 
   return {
-    events,
-    logRef,
-    controllerConnected,
-    controllerStates,
-    controllerDiag,
-    calibrating,
-    setCalibrating,
-    lastCalibration,
-    entries,
-    connectedCount: readyCount,
-    isRescanPending,
-    handleRescan,
-    handleCalibrationComplete,
+    events, logRef, controllerConnected, controllerStates, controllerDiag,
+    calibrating, setCalibrating, lastCalibration,
+    controllerGroups, connectedCount: readyDeviceKeys.length,
+    isRescanPending, handleRescan, addMapping, handleCalibrationComplete,
+    ...calibrations,
   };
 };
 

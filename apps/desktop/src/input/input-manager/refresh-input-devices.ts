@@ -1,23 +1,11 @@
 /* @layer renderer-lib @kind logic */
-import { inputApi } from '@drizztdourden08/brock-input/renderer';
 import { detectAllDevices, rebuildSchemeBindings, notifyQuietly } from '@rotp/input-mapping';
 import type { InputManager } from './input-manager';
 
 const refreshInputDevices = (m: InputManager): void => {
   m.devices = detectAllDevices(m.hidDeviceCache);
   notifyQuietly(m.deviceListeners, m.devices);
-
-  inputApi().list()
-    .then(deviceEntries => {
-      m.hidDeviceCache = deviceEntries;
-      rebuildSchemeBindings(m.activeProfile, deviceEntries);
-      const updated = detectAllDevices(deviceEntries);
-      if (JSON.stringify(updated) !== JSON.stringify(m.devices)) {
-        m.devices = updated;
-        notifyQuietly(m.deviceListeners, m.devices);
-      }
-    })
-    .catch(() => undefined);
+  rebuildSchemeBindings(m.activeProfile, m.hidDeviceCache);
 };
 
 export { refreshInputDevices };
