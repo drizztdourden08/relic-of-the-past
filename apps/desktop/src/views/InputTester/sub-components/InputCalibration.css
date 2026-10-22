@@ -109,28 +109,6 @@
   gap: var(--space-lg);
 }
 
-.input-cal__device {
-  min-width: 0;
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-sm);
-}
-
-.input-cal__device .pressed-grid__cell {
-  align-items: center;
-  justify-content: center;
-}
-
-.input-cal__device .pressed-grid__cell img,
-.input-cal__device .pressed-grid__cell svg,
-.input-cal__device .pressed-grid__cell [role='img'] {
-  align-self: center;
-}
-
-.input-cal__device-extra {
-  min-width: 0;
-}
-
 .input-cal__card {
   background: var(--c-surface);
   border: var(--border-width-thin) solid var(--c-border);

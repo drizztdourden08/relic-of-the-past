@@ -14,8 +14,9 @@ const InputCalibration = () => {
   const [reportDeviceKey, setReportDeviceKey] = useState<string | null>(null);
   const {
     events, logRef, controllerConnected, controllerStates, controllerDiag,
-    calibrating, setCalibrating, lastCalibration,
-    entries, connectedCount, isRescanPending, handleRescan, handleCalibrationComplete,
+    calibrating, setCalibrating, lastCalibration, stickCalibrationStore,
+    controllerGroups, connectedCount, isRescanPending, handleRescan, addMapping,
+    handleCalibrationComplete, handleStickCalibrationComplete, handleTriggerCalibrationComplete,
   } = useInputCalibration();
   const openDiagnostics = useCallback(() => setCalibrating(true), [setCalibrating]);
   const closeDiagnostics = useCallback(() => setCalibrating(false), [setCalibrating]);
@@ -27,16 +28,14 @@ const InputCalibration = () => {
     <Box className="input-cal">
       <Box className="input-cal__header">
         <Text className={`input-cal__status ${anyHidConnected ? 'input-cal__status--connected' : 'input-cal__status--disconnected'}`}>
-          {anyHidConnected
-            ? `Connected: ${connectedCount} controller(s)`
-            : '0 controllers detected'}
+          {anyHidConnected ? `Connected: ${connectedCount} controller(s)` : '0 controllers detected'}
         </Text>
         <RescanButton isPending={isRescanPending} onRescan={handleRescan} />
       </Box>
 
       <Box className="input-cal__actions">
         <Text className="input-cal__hint">
-          Live input, stick and trigger calibration, rumble tests and diagnostics are together here.
+          A controller is bound from a console default or a pasted mapping, not from this page.
         </Text>
         <Button
           variant="tertiary"
@@ -57,9 +56,12 @@ const InputCalibration = () => {
       {lastCalibration && !calibrating && <CalibrationResult calibration={lastCalibration} />}
 
       <ControllersSection
-        connectedCount={connectedCount}
-        entries={entries}
+        groups={controllerGroups}
         controllerStates={controllerStates}
+        stickCalibrationStore={stickCalibrationStore}
+        onStickCalibrationComplete={handleStickCalibrationComplete}
+        onTriggerCalibrationComplete={handleTriggerCalibrationComplete}
+        onAddMapping={addMapping}
         onReportDevice={setReportDeviceKey}
       />
 

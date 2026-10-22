@@ -9,6 +9,7 @@ const unsubscribeControllers = (m: InputManager): void => {
   m.controllerRawUnsub?.(); m.controllerRawUnsub = null;
   m.controllerNameCacheUnsub?.(); m.controllerNameCacheUnsub = null;
   m.controllerFamilyCacheUnsub?.(); m.controllerFamilyCacheUnsub = null;
+  m.controllerDevicesUnsub?.(); m.controllerDevicesUnsub = null;
 };
 
 const stopInput = (m: InputManager): void => {

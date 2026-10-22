@@ -43,6 +43,7 @@ class InputManager {
   controllerRawUnsub: (() => void) | null = null;
   controllerNameCacheUnsub: (() => void) | null = null;
   controllerFamilyCacheUnsub: (() => void) | null = null;
+  controllerDevicesUnsub: (() => void) | null = null;
 
   devices: DetectedDevice[] = [];
   deviceListeners = new Set<DeviceChangeListener>();

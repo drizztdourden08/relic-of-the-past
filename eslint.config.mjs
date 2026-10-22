@@ -80,8 +80,9 @@ const rotpExtension = {
         files: [
           'apps/desktop/src/views/InputTester/sub-components/ControllerRawBytes.tsx',
           'apps/desktop/src/views/InputTester/sub-components/hid-calibration/components/ByteChangeDot.tsx',
+          'apps/desktop/src/views/InputTester/sub-components/{input-cal-visuals,trigger-calibration/sub-components}/TriggerBar.tsx',
         ],
-        why: 'Each raw byte cell is shaded by its live value, and the change dot takes its position, width and colour from the size of the change.',
+        why: 'Each raw byte cell is shaded by its live value, the change dot takes its position, width and colour from the size of the change, and a trigger bar fills to the live trigger value and marks the dead zone the user drags.',
       }, {
         files: [
           'packages/design/src/compounds/Mascot/Mascot.tsx',

@@ -4,9 +4,11 @@ import { useControllerDevicesStore } from '@drizztdourden08/brock-input/renderer
 import { groupControllerDevices } from '@rotp/input-mapping';
 
 const useControllerDevices = () => {
-  const { entries, rescanPending, refresh, rescan, addMapping } = useControllerDevicesStore();
+  const { entries, loaded, rescanPending, refresh, rescan, addMapping } = useControllerDevicesStore();
 
-  useEffect(() => { void refresh(); }, [refresh]);
+  useEffect(() => {
+    if (!loaded) void refresh();
+  }, [loaded, refresh]);
 
   const handleRescan = useCallback(() => { void rescan(); }, [rescan]);
 

@@ -1,0 +1,14 @@
+/* @layer renderer-components @kind style */
+
+.input-cal__cal-badge {
+  font-size: var(--size-10);
+  padding: var(--size-1) var(--size-6);
+  border-radius: var(--size-4);
+  background: var(--c-secondary-dim);
+  color: var(--c-secondary-bright);
+  font-weight: var(--weight-semi);
+}
+
+.input-cal__wizard-wrap {
+  margin-top: var(--space-md);
+}
