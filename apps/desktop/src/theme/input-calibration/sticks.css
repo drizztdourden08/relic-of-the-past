@@ -1,8 +1,10 @@
 /* @layer renderer-components @kind style */
 
 .input-cal__sticks {
-  display: flex;
-  gap: var(--space-xl);
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(var(--input-cal-col, var(--size-80)), 1fr));
+  gap: var(--space-xs);
+  align-items: stretch;
   margin-top: var(--space-md);
 }
 
@@ -16,6 +18,7 @@
 .input-cal__stick-label {
   font-size: var(--text-xs);
   color: var(--c-text-dim);
+  text-align: center;
   text-transform: uppercase;
 }
 

@@ -7,6 +7,10 @@
   gap: var(--size-4);
 }
 
+.input-cal__axis-col > .input-cal__axis-row {
+  margin-top: auto;
+}
+
 .input-cal__axis-row {
   display: flex;
   gap: var(--size-4);
@@ -28,7 +32,7 @@
 
 .input-cal__trigger-track {
   width: var(--size-24);
-  height: calc(60 * var(--size-1));
+  height: var(--size-80);
   border-radius: var(--size-4);
   border: var(--border-width-thin) solid var(--c-border);
   background: var(--c-surface);

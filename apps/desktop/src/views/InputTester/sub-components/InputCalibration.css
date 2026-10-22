@@ -117,6 +117,8 @@
   transition: border-color var(--transition-fast);
   position: relative;
   overflow: hidden;
+
+  --input-cal-col: var(--size-80);
 }
 
 .input-cal__card::after {
@@ -169,7 +171,7 @@
 
 .input-cal__btn-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(calc(44 * var(--size-1)), 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(var(--input-cal-col), 1fr));
   gap: var(--space-xs);
   margin-bottom: var(--space-md);
 }
@@ -178,6 +180,7 @@
   display: flex;
   flex-direction: column;
   align-items: center;
+  justify-content: flex-start;
   gap: var(--space-xs);
   padding: var(--space-xs);
   border-radius: var(--radius-sm);
@@ -192,23 +195,28 @@
   box-shadow: 0 0 var(--size-8) var(--c-secondary-soft);
 }
 
-.input-cal__btn-cell img {
+.input-cal__btn-glyph {
+  flex: none;
   width: var(--size-24);
   height: var(--size-24);
-  object-fit: contain;
   opacity: 0.7;
   transition: opacity 0.05s;
 }
 
-.input-cal__btn-cell--pressed img {
+.input-cal__btn-cell--pressed .input-cal__btn-glyph {
   opacity: 1;
 }
 
 .input-cal__btn-cell-label {
   font-size: var(--text-xs);
   color: var(--c-text-muted);
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  width: 100%;
+  min-height: calc(2 * 1.2 * var(--text-xs));
   text-align: center;
-  line-height: 1;
+  line-height: 1.2;
 }
 
 .input-cal__btn-cell--pressed .input-cal__btn-cell-label {
@@ -266,6 +274,12 @@
 }
 
 .input-cal__btn-fallback {
+  display: flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  width: var(--size-24);
+  height: var(--size-24);
   font-size: var(--size-10);
   color: var(--c-text-dim);
 }

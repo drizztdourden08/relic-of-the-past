@@ -23,7 +23,7 @@ const ControllerButtonGrid = ({ resolvedDevice, state }: ControllerButtonGridPro
             title={`${control.label} (${control.position})`}
           >
             {iconUrl ? (
-              <Image src={iconUrl} alt={control.label} draggable={false} />
+              <Image src={iconUrl} alt={control.label} draggable={false} fit="contain" className="input-cal__btn-glyph" />
             ) : (
               <Text className="input-cal__btn-fallback">{control.label}</Text>
             )}
