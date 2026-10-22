@@ -41,7 +41,7 @@ const searchIndex = buildSearchIndex(config, [
   {"kind":"page","id":"character","bucket":"store","group":"catalogue","title":"Characters","icon":"person-standing","keywords":["sprites","player","sprite","skins"]},
   {"kind":"page","id":"language","bucket":"store","group":"catalogue","title":"Languages","icon":"languages","keywords":["translation","text"]},
   {"kind":"page","id":"music","bucket":"store","group":"catalogue","title":"Music packs","icon":"music","keywords":["msu","soundtrack","songs"]},
-  {"kind":"page","id":"home","bucket":"store","title":"Home","icon":"house","keywords":["hookshop","store","shop","packs","install","download","sign","in","account"]},
+  {"kind":"hero","id":"home","bucket":"store","title":"Home","icon":"house","keywords":["hookshop","store","shop","packs","install","download","sign","in","account"]},
   {"kind":"page","id":"installed","bucket":"store","group":"mine","title":"Installed","icon":"hard-drive","keywords":["uninstall","library","packs","on","this","computer"]},
   {"kind":"page","id":"updates","bucket":"store","group":"mine","title":"Updates","icon":"refresh-cw","keywords":["update","new","version","outdated"]},
   ...devSearchSeeds,

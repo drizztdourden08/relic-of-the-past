@@ -40,7 +40,7 @@ import { meta as storeCatalogueBrowsePageMeta } from '../src/screens/store/catal
 import { meta as storeCatalogueCharacterPageMeta } from '../src/screens/store/catalogue/character.page';
 import { meta as storeCatalogueLanguagePageMeta } from '../src/screens/store/catalogue/language.page';
 import { meta as storeCatalogueMusicPageMeta } from '../src/screens/store/catalogue/music.page';
-import { meta as storeHomePageMeta } from '../src/screens/store/home.page';
+import { meta as storeHomeHeroMeta } from '../src/screens/store/home.hero';
 import { meta as storeMineInstalledPageMeta } from '../src/screens/store/mine/installed.page';
 import { meta as storeMineUpdatesPageMeta } from '../src/screens/store/mine/updates.page';
 
@@ -83,7 +83,7 @@ const screenTree = buildScreenTree(config, [
   { kind: 'page', bucket: 'store', group: 'catalogue', id: 'character', component: lazyComponent(() => import('../src/screens/store/catalogue/character.page')), meta: storeCatalogueCharacterPageMeta },
   { kind: 'page', bucket: 'store', group: 'catalogue', id: 'language', component: lazyComponent(() => import('../src/screens/store/catalogue/language.page')), meta: storeCatalogueLanguagePageMeta },
   { kind: 'page', bucket: 'store', group: 'catalogue', id: 'music', component: lazyComponent(() => import('../src/screens/store/catalogue/music.page')), meta: storeCatalogueMusicPageMeta },
-  { kind: 'page', bucket: 'store', id: 'home', component: lazyComponent(() => import('../src/screens/store/home.page')), meta: storeHomePageMeta },
+  { kind: 'hero', bucket: 'store', id: 'home', component: lazyComponent(() => import('../src/screens/store/home.hero')), meta: storeHomeHeroMeta },
   { kind: 'page', bucket: 'store', group: 'mine', id: 'installed', component: lazyComponent(() => import('../src/screens/store/mine/installed.page')), meta: storeMineInstalledPageMeta },
   { kind: 'page', bucket: 'store', group: 'mine', id: 'updates', component: lazyComponent(() => import('../src/screens/store/mine/updates.page')), meta: storeMineUpdatesPageMeta },
   ...devScreens,

@@ -19,7 +19,7 @@ const StoreHomeView = () => {
   const showUpdates = useCallback(() => nav.open(UPDATES_ROUTE), []);
 
   return (
-    <Box className="store">
+    <Box className="store-home">
       {account.signedIn && account.me ? (
         <StoreHome
           name={account.me.user.displayName}
