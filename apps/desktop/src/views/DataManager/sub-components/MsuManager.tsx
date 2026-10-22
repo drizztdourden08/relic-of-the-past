@@ -43,6 +43,7 @@ const MsuManager = (props: MsuManagerProps) => {
 
   return (
     <ListDetailLayout
+      listShowTitle={false}
       listContainers={PACK_SECTIONS.map(({ section, title }) => ({
         title,
         content: (

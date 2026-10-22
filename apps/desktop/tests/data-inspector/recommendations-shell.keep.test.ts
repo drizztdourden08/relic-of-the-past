@@ -39,7 +39,6 @@ describe('the foldable detail column', () => {
       detail: 'the panes',
       listLabel: 'Data inspector',
       listRatio: RECORD_LIST_RATIO,
-      resizable: false,
       collapsible: false,
       detailCollapsible: true,
       detailCollapsed: collapsed,

@@ -12,6 +12,7 @@ const StoreBrowse = (props: StoreBrowseProps) => {
 
   return (
     <ListDetailLayout
+      listShowTitle={false}
       className="store-browse"
       listContainers={[{
         title: 'Packs',

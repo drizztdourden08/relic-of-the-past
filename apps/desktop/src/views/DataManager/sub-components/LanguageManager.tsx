@@ -31,7 +31,7 @@ const LanguageManager = (props: LanguageManagerProps) => {
   const origin = installed === null ? null : <InstalledOriginBar pack={installed} onDuplicated={refreshThenSelect} onUpdateInstalled={refreshThenSelect} onUninstalled={handleUninstalled} />;
 
   return (
-    <ListDetailLayout
+    <ListDetailLayout listShowTitle={false}
       listContainers={[
         {
           title: 'Extract from a ROM',
