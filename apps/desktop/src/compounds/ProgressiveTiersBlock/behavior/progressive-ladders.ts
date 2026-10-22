@@ -1,13 +1,9 @@
 /* @layer renderer-components @kind logic */
 import { getItemSprite } from '@rotp/game-data';
 import { PROGRESSIVE_FAMILIES, progressiveFamilyName, progressiveTierName, progressiveTierKeyOf } from '@rotp/randomizer';
-import type { ProgressiveFamilyId, ProgressiveModeSetting, ProgressiveSetting } from '@rotp/randomizer';
+import type { ProgressiveModeSetting, ProgressiveSetting } from '@rotp/randomizer';
 import type { ItemId } from '@rotp/game-data';
-import type { LadderStepperModel } from '@app/composites/LadderStepper';
-
-interface ProgressiveLadder extends LadderStepperModel {
-  id: ProgressiveFamilyId;
-}
+import type { ProgressiveLadder } from './progressive-ladders.type';
 
 const countTextOf = (ticked: number, total: number): string =>
   (ticked === 0 ? 'none in the pool' : `${ticked} of ${total} in the pool`);
@@ -40,5 +36,4 @@ const progressiveLaddersOf = (
     };
   });
 
-export type { ProgressiveLadder };
 export { progressiveLaddersOf };

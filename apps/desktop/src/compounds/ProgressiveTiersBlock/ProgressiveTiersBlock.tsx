@@ -30,7 +30,6 @@ const ProgressiveTiersBlock = (props: ProgressiveTiersBlockProps) => {
               ladder={ladder}
               modeOptions={MODE_OPTIONS}
               modeLabel={PROGRESSIVE_MODE_LABELS[modeOf(ladder.mode) ?? ORDERED_MODE]}
-              ordered={ladder.mode === ORDERED_MODE}
               disabled={readOnly}
               readout={readOnly}
               onRungChange={readOnly
