@@ -62,6 +62,7 @@ const ControllerDeviceList = (props: ControllerDeviceListProps) => {
             existingStickCal={stickCalibrationStore[port.deviceKey] ?? null}
             busType={port.entry.busType}
             hasRumble={port.entry.hasRumble}
+            family={port.entry.family}
             onReportDevice={onReportDevice}
             hasGyro={port.entry.hasGyro}
             onStickCalibrationComplete={onStickCalibrationComplete}

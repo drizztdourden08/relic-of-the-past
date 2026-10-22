@@ -9,14 +9,9 @@ interface ControllerCardHeaderProps {
   onReportDevice?: (deviceKey: string) => void;
 }
 
-interface ControllerButtonGridProps {
-  resolvedDevice: ResolvedDevice;
-  state: ControllerInputState;
-}
-
 interface ControllerCardActionsProps {
   deviceKey: string;
   state: ControllerInputState;
 }
 
-export type { ControllerButtonGridProps, ControllerCardActionsProps, ControllerCardHeaderProps };
+export type { ControllerCardActionsProps, ControllerCardHeaderProps };

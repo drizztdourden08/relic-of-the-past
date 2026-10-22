@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind types */
-import type { ControllerBusType, DeviceStickCalibration, TriggerCalibration, VibrateSegment } from '@drizztdourden08/brock-input';
+import type { ControllerBusType, DeviceStickCalibration, PadFamily, TriggerCalibration, VibrateSegment } from '@drizztdourden08/brock-input';
 import type { HapticPatternId, ResolvedDevice } from '@rotp/input-mapping';
 import type { ControllerInputState } from '../../../input/controller-input-store';
 
@@ -11,6 +11,7 @@ interface ControllerCardProps {
   existingStickCal?: DeviceStickCalibration | null;
   busType?: ControllerBusType;
   hasRumble?: boolean;
+  family?: PadFamily;
   onReportDevice?: (deviceKey: string) => void;
   hasGyro?: boolean;
   onStickCalibrationComplete?: (cal: DeviceStickCalibration) => void;

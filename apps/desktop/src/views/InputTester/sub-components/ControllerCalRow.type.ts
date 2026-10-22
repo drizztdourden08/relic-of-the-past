@@ -4,7 +4,7 @@ import type { ControllerInputState } from '../../../input/controller-input-store
 import type { StickPairGroup } from '../../../input/resolved-axis-groups/resolved-axis-groups.type';
 import type { CalibrationTarget } from './ControllerCard.type';
 
-interface ControllerAxesProps {
+interface ControllerCalRowProps {
   state: ControllerInputState;
   controls: readonly ResolvedControl[];
   onCalibrate: (target: CalibrationTarget) => void;
@@ -23,4 +23,4 @@ interface TriggerAxisPanelProps {
   onCalibrate: (target: CalibrationTarget) => void;
 }
 
-export type { ControllerAxesProps, StickAxisPanelProps, TriggerAxisPanelProps };
+export type { ControllerCalRowProps, StickAxisPanelProps, TriggerAxisPanelProps };
