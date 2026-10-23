@@ -8,11 +8,14 @@ interface ControllerStatusBarProps {
   hasRumble?: boolean;
   hasGyro?: boolean;
   idLabel?: string;
+  detected?: boolean;
+  showAbsent?: boolean;
 }
 
 interface StatusItemProps {
   icon: IconifyIcon;
   label: string;
+  dim?: boolean;
 }
 
 export type { ControllerStatusBarProps, StatusItemProps };

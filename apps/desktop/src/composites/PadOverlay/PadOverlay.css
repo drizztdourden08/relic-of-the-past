@@ -1,0 +1,85 @@
+/* @layer renderer-components @kind style */
+
+.pad-overlay {
+  position: relative;
+  inline-size: 100%;
+  max-inline-size: var(--size-1024);
+  margin: 0 auto;
+}
+
+.pad-overlay__art {
+  display: block;
+  inline-size: 100%;
+  block-size: auto;
+  overflow: visible;
+}
+
+.pad-overlay__outline {
+  fill: none;
+  stroke: var(--c-border-strong);
+  stroke-width: var(--border-width-thick);
+  stroke-linejoin: round;
+  vector-effect: non-scaling-stroke;
+}
+
+.pad-overlay__leader {
+  fill: none;
+  stroke: var(--c-text-muted);
+  stroke-width: var(--border-width-thin);
+  stroke-linejoin: round;
+  vector-effect: non-scaling-stroke;
+  transition: stroke var(--transition-fast);
+}
+
+.pad-overlay__label {
+  fill: var(--c-text-dim);
+  font-size: var(--text-xs);
+  transition: fill var(--transition-fast);
+}
+
+.pad-overlay__name {
+  font-weight: var(--weight-semi);
+}
+
+.pad-overlay__detail {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+}
+
+.pad-overlay__callout[data-active] .pad-overlay__leader {
+  stroke: var(--c-danger);
+}
+
+.pad-overlay__callout[data-active] .pad-overlay__label {
+  fill: var(--c-danger-bright);
+}
+
+.pad-overlay__halo {
+  fill: var(--c-danger-soft);
+  stroke: var(--c-danger);
+  stroke-width: var(--border-width-thin);
+  opacity: var(--pad-overlay-level, 0);
+  transition: opacity var(--transition-fast);
+}
+
+.pad-overlay__blank {
+  fill: none;
+  stroke: var(--c-text-muted);
+  stroke-width: var(--border-width-thin);
+  vector-effect: non-scaling-stroke;
+}
+
+.pad-overlay__stick {
+  transition: transform var(--transition-fast);
+}
+
+.pad-overlay__held {
+  position: absolute;
+  inline-size: var(--size-1);
+  block-size: var(--size-1);
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  list-style: none;
+  clip-path: inset(50%);
+}

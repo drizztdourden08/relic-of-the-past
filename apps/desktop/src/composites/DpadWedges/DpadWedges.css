@@ -1,0 +1,10 @@
+/* @layer renderer-components @kind style */
+
+.dpad-wedges__wedge {
+  fill: var(--c-text);
+  transition: fill var(--transition-fast);
+}
+
+.dpad-wedges__wedge[data-down] {
+  fill: var(--c-danger);
+}

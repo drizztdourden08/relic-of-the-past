@@ -1,0 +1,37 @@
+/* @layer renderer-components @kind style */
+
+.signed-bar {
+  display: flex;
+  align-items: center;
+  gap: var(--space-xs);
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+}
+
+.signed-bar__label {
+  inline-size: var(--size-12);
+  color: var(--c-text-muted);
+}
+
+.signed-bar__track {
+  flex: 1;
+  block-size: var(--size-8);
+  background: var(--c-sunken);
+  border-radius: var(--radius-sm);
+}
+
+.signed-bar__fill {
+  fill: var(--c-primary);
+}
+
+.signed-bar__zero {
+  stroke: var(--c-text-muted);
+  stroke-width: var(--border-width-thin);
+}
+
+.signed-bar__value {
+  inline-size: var(--size-40);
+  color: var(--c-text-dim);
+  font-variant-numeric: tabular-nums;
+  text-align: end;
+}

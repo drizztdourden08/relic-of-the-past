@@ -21,6 +21,10 @@
   flex-shrink: 0;
 }
 
+.controller-status-bar__item[data-dim] {
+  opacity: var(--opacity-faint);
+}
+
 .controller-status-bar__item svg {
   flex-shrink: 0;
 }

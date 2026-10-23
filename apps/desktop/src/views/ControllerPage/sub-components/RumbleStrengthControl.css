@@ -1,0 +1,16 @@
+/* @layer renderer-components @kind style */
+
+.rumble-strength {
+  display: flex;
+  align-items: center;
+  gap: var(--space-xs);
+}
+
+.rumble-strength__label {
+  color: var(--c-text-muted);
+  font-size: var(--text-xs);
+}
+
+.rumble-strength__input {
+  inline-size: var(--size-64);
+}
