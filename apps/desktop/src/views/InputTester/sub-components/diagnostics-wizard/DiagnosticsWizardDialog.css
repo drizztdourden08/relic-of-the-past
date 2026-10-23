@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind style */
-.diagnostics-wizard {
+.diagnostics-wizard-dialog {
   display: flex;
   flex-direction: column;
   width: fit-content;

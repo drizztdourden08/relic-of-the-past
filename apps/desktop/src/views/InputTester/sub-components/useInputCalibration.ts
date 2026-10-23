@@ -5,11 +5,15 @@ import type { ControllerInputState } from '../../../input/controller-input-store
 import { getInputManager } from '@app/input/input-manager/get-input-manager';
 import type { HidControllerMap } from './HidCalibrationWizard';
 import { useControllerDevices } from '../../../hooks/useControllerDevices';
-import { useControllerEventLog } from './useControllerEventLog';
+import { useControllerEventLog } from '../../../input/controller-event-log/useControllerEventLog';
 import { useStickTriggerCalibrations } from './useStickTriggerCalibrations';
 
 const useInputCalibration = () => {
-  const events = useControllerEventLog();
+  const eventLog = useControllerEventLog();
+  const events = useMemo(
+    () => eventLog.flatMap((event) => (event.kind === 'hid' ? [] : [{ time: event.time, type: event.kind, id: event.text }])),
+    [eventLog],
+  );
   const logRef = useRef<HTMLDivElement>(null);
 
   const [controllerConnected, setControllerConnected] = useState(controllerInputStore.isConnected());

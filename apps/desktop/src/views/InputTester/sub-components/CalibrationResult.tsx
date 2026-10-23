@@ -2,25 +2,21 @@
 import { useCallback } from 'react';
 import { Box, Text, Button } from '@drizztdourden08/tessera/primitives';
 import type { CalibrationResultProps } from './CalibrationResult.type';
+import './CalibrationResult.css';
 
 const CalibrationResult = (props: CalibrationResultProps) => {
   const { calibration } = props;
   const copyResult = useCallback(() => navigator.clipboard.writeText(JSON.stringify(calibration, null, 2)), [calibration]);
+  const inputCount = Object.keys(calibration.buttons).length + Object.keys(calibration.axes).length;
 
   return (
-    <Box className="input-cal__section">
-      <Box className="input-cal__result">
-        <Box className="input-cal__result-header">
-          <Text className="input-cal__result-title">Diagnostics Report</Text>
-          <Text className="input-cal__meta">
-            {calibration.name}: {Object.keys(calibration.buttons).length + Object.keys(calibration.axes).length} inputs mapped
-          </Text>
-        </Box>
-        <Box as="pre">{JSON.stringify(calibration, null, 2)}</Box>
-        <Button variant="tertiary" size="sm" onClick={copyResult} className="input-cal__copy-btn">
-          Copy JSON
-        </Button>
+    <Box className="calibration-result">
+      <Box className="calibration-result__header">
+        <Text className="calibration-result__title">{calibration.name}</Text>
+        <Text className="calibration-result__meta">{inputCount} inputs mapped</Text>
+        <Button variant="tertiary" size="sm" onClick={copyResult}>Copy JSON</Button>
       </Box>
+      <Box as="pre" className="calibration-result__json">{JSON.stringify(calibration, null, 2)}</Box>
     </Box>
   );
 };
