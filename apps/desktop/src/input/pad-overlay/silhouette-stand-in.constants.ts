@@ -11,7 +11,7 @@ const PILL_PATH =
   + 'C 272 42 280 50 280 62 A 80 80 0 0 1 280 222 L 120 222 A 80 80 0 0 1 120 62 Z';
 
 const CONTROLLER_SILHOUETTE_PATHS: Readonly<Record<SilhouetteVariant, string>> = {
-  xbox: GRIP_PATH, playstation: GRIP_PATH, nintendo: GRIP_PATH, generic: PILL_PATH,
+  offset: GRIP_PATH, symmetric: GRIP_PATH, nintendo: GRIP_PATH, pad: PILL_PATH,
 };
 
 const GRIP_TOP_ROWS: readonly SilhouetteAnchor[] = [
@@ -43,14 +43,14 @@ const GRIP_STICK_ROWS: readonly SilhouetteAnchor[] = [
 ];
 
 const CONTROLLER_SILHOUETTE_ANCHORS: Readonly<Record<SilhouetteVariant, readonly SilhouetteAnchor[]>> = {
-  xbox: [
+  offset: [
     ...GRIP_TOP_ROWS, ...GRIP_FACE_ROWS, ...GRIP_DPAD_ROWS, ...GRIP_STICK_ROWS,
     { id: 'meta.view', kind: 'button', x: 172, y: 104, r: 8 },
     { id: 'meta.menu', kind: 'button', x: 228, y: 104, r: 8 },
     { id: 'meta.guide', kind: 'button', x: 200, y: 84, r: 10 },
     { id: 'meta.capture', kind: 'button', x: 200, y: 128, r: 8 },
   ],
-  playstation: [
+  symmetric: [
     ...GRIP_TOP_ROWS,
     { id: 'face.north', kind: 'button', x: 292, y: 94, r: 11 },
     { id: 'face.east', kind: 'button', x: 316, y: 118, r: 11 },
@@ -76,7 +76,7 @@ const CONTROLLER_SILHOUETTE_ANCHORS: Readonly<Record<SilhouetteVariant, readonly
     { id: 'meta.guide', kind: 'button', x: 220, y: 126, r: 10 },
     { id: 'meta.capture', kind: 'button', x: 180, y: 126, r: 8 },
   ],
-  generic: [
+  pad: [
     { id: 'trigger.left', kind: 'trigger', x: 153, y: 53, r: 10 },
     { id: 'trigger.right', kind: 'trigger', x: 247, y: 53, r: 10 },
     { id: 'shoulder.left', kind: 'shoulder', x: 112, y: 86, r: 8 },

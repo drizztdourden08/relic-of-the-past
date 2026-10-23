@@ -3,7 +3,7 @@ import type { LayoutFamily } from '../controller-families/controller-families.ty
 import type { FamilyOverlay } from './pad-overlay.type';
 
 const XBOX_OVERLAY: FamilyOverlay = {
-  variant: 'xbox',
+  variant: 'offset',
   slots: [
     { anchor: 'face.south', kind: 'button', glyph: 'xbox-a', label: 'A' },
     { anchor: 'face.east', kind: 'button', glyph: 'xbox-b', label: 'B' },
@@ -24,7 +24,7 @@ const XBOX_OVERLAY: FamilyOverlay = {
 };
 
 const PLAYSTATION_OVERLAY: FamilyOverlay = {
-  variant: 'playstation',
+  variant: 'symmetric',
   slots: [
     { anchor: 'face.south', kind: 'button', glyph: 'ps-cross', label: 'Cross' },
     { anchor: 'face.east', kind: 'button', glyph: 'ps-circle', label: 'Circle' },
@@ -66,7 +66,7 @@ const NINTENDO_OVERLAY: FamilyOverlay = {
 };
 
 const GENERIC_OVERLAY: FamilyOverlay = {
-  variant: 'generic',
+  variant: 'offset',
   slots: [
     { anchor: 'face.south', kind: 'button', glyph: 'generic-btn-circle', label: 'S' },
     { anchor: 'face.east', kind: 'button', glyph: 'generic-btn-circle', label: 'E' },
@@ -87,7 +87,7 @@ const GENERIC_OVERLAY: FamilyOverlay = {
 };
 
 const SNES_OVERLAY: FamilyOverlay = {
-  variant: 'generic',
+  variant: 'pad',
   slots: [
     { anchor: 'face.south', kind: 'button', glyph: 'snes-b', label: 'B' },
     { anchor: 'face.east', kind: 'button', glyph: 'snes-a', label: 'A' },

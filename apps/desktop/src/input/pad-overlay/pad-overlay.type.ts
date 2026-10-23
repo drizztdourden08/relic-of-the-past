@@ -3,7 +3,7 @@ import type { ControllerSlotId } from '@drizztdourden08/tessera/composites';
 import type { LabelSide, Nudge, OverlayPartKind } from '@app/composites/PadOverlay';
 import type { LayoutFamily } from '../controller-families/controller-families.type';
 
-type SilhouetteVariant = 'xbox' | 'playstation' | 'nintendo' | 'generic';
+type SilhouetteVariant = 'offset' | 'symmetric' | 'nintendo' | 'pad';
 
 type SilhouetteAnchorKind = 'button' | 'dpad' | 'stick' | 'shoulder' | 'trigger';
 
