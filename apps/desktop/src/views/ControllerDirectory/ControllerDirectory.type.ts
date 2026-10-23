@@ -35,4 +35,4 @@ interface ControllerDirectoryProps {
   onOpenController?: (deviceKey: string) => void;
 }
 
-export type { ControllerDirectoryProps, DirectoryGroup, DirectoryRow, MappingDbEntry, MappingEntries, MappingSource };
+export type { ControllerDirectoryProps, DirectoryRow, MappingDbEntry, MappingEntries };

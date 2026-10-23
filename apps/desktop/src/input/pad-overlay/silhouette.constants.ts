@@ -1,4 +1,4 @@
 /* @layer renderer-lib @kind constants */
 export {
-  CONTROLLER_SILHOUETTE_ANCHORS, CONTROLLER_SILHOUETTE_PATHS, CONTROLLER_SILHOUETTE_VIEW_BOX,
+  CONTROLLER_SILHOUETTE_ANCHORS, CONTROLLER_SILHOUETTE_PATHS,
 } from '@drizztdourden08/tessera/composites';

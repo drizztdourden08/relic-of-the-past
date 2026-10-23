@@ -13,7 +13,6 @@ interface OverlaySlot {
   scale?: number;
 }
 
-type SlotOptions = Pick<OverlaySlot, 'side' | 'nudge' | 'scale'>;
 
 interface FamilyOverlay {
   variant: ControllerSilhouetteVariant;
@@ -32,5 +31,5 @@ type ControllerOverrides = Readonly<Record<VidPid, ControllerOverride>>;
 
 export type {
   ControllerOverride, ControllerOverrides, FamilyOverlay, OverlaySlot,
-  SlotOptions, VidPid,
+  VidPid,
 };
