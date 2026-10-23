@@ -2,7 +2,7 @@
 import type { ReactNode } from 'react';
 import type { SelectGroup } from '@drizztdourden08/tessera/primitives';
 import type { CapacityFamilyId, CapacityMode, CurveId, FamilyBonus, CurvePresetId, OptionDescription } from '@rotp/randomizer';
-import type { LadderPreviewProps } from '../LadderPreview';
+import type { LadderStep } from '@app/composites/LadderStepper';
 import type { ImpactCell } from '../PoolImpactCell';
 
 type CurveChoice = CurveId | 'free' | `preset:${CurvePresetId}`;
@@ -13,6 +13,11 @@ interface CapacityRowState {
   count: number;
   curve: CurveChoice;
   jumps: readonly number[];
+}
+
+interface CapacityPreviewModel {
+  steps: readonly LadderStep[];
+  note?: string;
 }
 
 interface CapacityRowModel {
@@ -30,7 +35,7 @@ interface CapacityRowModel {
   maxCount: number;
   maxJump: number;
   curveOptions: readonly SelectGroup[];
-  preview: LadderPreviewProps;
+  preview: CapacityPreviewModel;
   impact: ImpactCell;
   problem?: string;
   footnote?: string;
@@ -90,6 +95,6 @@ interface RowLineProps {
 }
 
 export type {
-  BonusLineProps, CapacityFamilyRowProps, CapacityRowModel, CapacityRowState, CurveChoice, FamilyHeadProps,
+  BonusLineProps, CapacityFamilyRowProps, CapacityPreviewModel, CapacityRowModel, CapacityRowState, CurveChoice, FamilyHeadProps,
   FamilyLinesProps, LadderControlsProps, LadderReadoutProps, RowLineProps,
 };
