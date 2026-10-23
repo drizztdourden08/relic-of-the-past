@@ -16,6 +16,7 @@ import { appTours } from '../.brock/tours';
 import { appWidgetKits } from '../.brock/widget-kits';
 import { rotpBugReport } from './bug-report/rotp-bug-report';
 import { installAppShim } from './platform/api-shim';
+import { startControllerEventLog } from './input/controller-event-log/controller-event-log';
 import { rotpShellModule } from './shell/rotp-shell-module';
 import { rotpProfileHooks } from './profiles/rotp-profile-hooks';
 import { useWidgetDisabled } from './widget-gates/useWidgetDisabled';
@@ -37,6 +38,7 @@ import './theme/msu-studio/msu-files.css';
 import './theme/store/store.css';
 
 installAppShim();
+startControllerEventLog();
 
 const rendererModulesWithRotpControllers: RendererModule[] = rendererModules.map((module) =>
   module.id === 'input'
@@ -44,7 +46,7 @@ const rendererModulesWithRotpControllers: RendererModule[] = rendererModules.map
         ...module,
         screens: [],
         menu: module.menu?.map((item) =>
-          item === 'separator' ? item : { ...item, screen: 'input-calibration' },
+          item === 'separator' ? item : { ...item, screen: 'controllers' },
         ),
       }
     : module,

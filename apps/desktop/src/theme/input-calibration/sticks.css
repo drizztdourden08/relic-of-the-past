@@ -1,11 +1,5 @@
 /* @layer renderer-components @kind style */
 
-.input-cal__vibrate-btn {
-  display: flex;
-  align-items: center;
-  gap: var(--space-xs);
-}
-
 .input-cal__log {
   padding: var(--space-md);
   background: var(--c-bg);
@@ -20,53 +14,4 @@
 .input-cal__log-entry {
   line-height: 1.6;
   color: var(--c-text-muted);
-}
-
-.input-cal__log-entry--connect {
-  color: var(--c-secondary);
-}
-
-.input-cal__log-entry--disconnect {
-  color: var(--c-danger);
-}
-
-.input-cal__result {
-  background: var(--c-surface);
-  border: var(--size-1) solid var(--c-secondary-dim);
-  border-radius: var(--radius-lg);
-  padding: var(--space-lg);
-}
-
-.input-cal__result-header {
-  display: flex;
-  align-items: center;
-  gap: var(--space-sm);
-  margin-bottom: var(--space-sm);
-}
-
-.input-cal__result-title {
-  font-size: var(--text-base);
-  font-weight: var(--weight-medium);
-  color: var(--c-secondary-bright);
-}
-
-.input-cal__result pre {
-  font-size: var(--text-xs);
-  background: var(--c-bg);
-  padding: var(--space-sm);
-  border-radius: var(--radius-sm);
-  max-height: var(--input-cal-log-max);
-  overflow: auto;
-  color: var(--c-text-dim);
-  border: var(--size-1) solid var(--c-border);
-}
-
-.input-cal__empty {
-  text-align: center;
-  padding: var(--space-2xl);
-  color: var(--c-text-muted);
-}
-
-.input-cal__empty p {
-  margin: var(--space-xs) 0;
 }

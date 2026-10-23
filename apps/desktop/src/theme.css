@@ -49,7 +49,6 @@
   --input-cal-byte-box: calc(38 * var(--size-1));
   --input-cal-input-min: calc(200 * var(--size-1));
   --input-cal-panel-max: calc(200 * var(--size-1));
-  --input-cal-log-max: calc(240 * var(--size-1));
   --input-cal-alert-rule: calc(3 * var(--size-1));
   --input-cal-step-tracking: calc(0.5 * var(--size-1));
   --line-row-h: calc(var(--game-line-h) + var(--space-2xs));

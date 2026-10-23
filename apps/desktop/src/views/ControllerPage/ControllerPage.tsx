@@ -1,7 +1,7 @@
 /* @layer renderer-components @kind component */
 import { useCallback, useState } from 'react';
 import { Box, EmptyState } from '@drizztdourden08/tessera/primitives';
-import { ControllerReportDialog } from '@app/views/InputTester/sub-components/controller-report';
+import { ControllerReportDialog } from '@app/views/InputTester';
 import { useControllerPage } from './behavior/useControllerPage';
 import type { ControllerPageProps } from './ControllerPage.type';
 import { AxesBox } from './sub-components/AxesBox';

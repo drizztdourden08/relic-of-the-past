@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind component */
 import { Button } from '@drizztdourden08/tessera/primitives';
-import { AxisRecordButton } from '@app/views/InputTester/sub-components/input-cal-visuals';
+import { AxisRecordButton } from '@app/views/InputTester';
 import type { AxisActionsProps } from '../ControllerPage.type';
 
 const AxisActions = ({ label, getValues, onCalibrate }: AxisActionsProps) => (

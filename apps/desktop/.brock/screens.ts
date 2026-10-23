@@ -3,6 +3,10 @@ import { buildScreenTree, lazyComponent } from '@drizztdourden08/brock-react';
 import config from '../src/screens/screens.config';
 import { searchIndex } from './search';
 import { devScreens } from './screens.dev';
+import { meta as controllersConnectedPadsPageMeta } from '../src/screens/controllers/connected/pads.page';
+import { meta as controllersHomeHeroMeta } from '../src/screens/controllers/home.hero';
+import { meta as controllersToolsDiagnosticsPageMeta } from '../src/screens/controllers/tools/diagnostics.page';
+import { meta as controllersToolsLogsPageMeta } from '../src/screens/controllers/tools/logs.page';
 import { meta as creditsCardMeta } from '../src/screens/credits.card';
 import { meta as dataHomeHeroMeta } from '../src/screens/data/home.hero';
 import { meta as dataLibraryProfilesPageMeta } from '../src/screens/data/library/profiles.page';
@@ -29,7 +33,6 @@ import GameVideoPictureSettings, { meta as gameVideoPictureSettingsMeta } from '
 import GameVideoWindowSettings, { meta as gameVideoWindowSettingsMeta } from '../src/screens/game/video/window.settings';
 import { meta as gameViewBaseMeta } from '../src/screens/game-view.base';
 import { meta as hudLayoutCardMeta } from '../src/screens/hud-layout.card';
-import { meta as inputCalibrationCardMeta } from '../src/screens/input-calibration.card';
 import { meta as randomizerArchipelagoNetworkPageMeta } from '../src/screens/randomizer/archipelago/network.page';
 import { meta as randomizerArchipelagoOnlinePageMeta } from '../src/screens/randomizer/archipelago/online.page';
 import { meta as randomizerLogsPageMeta } from '../src/screens/randomizer/logs.page';
@@ -45,6 +48,10 @@ import { meta as storeMineInstalledPageMeta } from '../src/screens/store/mine/in
 import { meta as storeMineUpdatesPageMeta } from '../src/screens/store/mine/updates.page';
 
 const screenTree = buildScreenTree(config, [
+  { kind: 'page', bucket: 'controllers', group: 'connected', id: 'pads', component: lazyComponent(() => import('../src/screens/controllers/connected/pads.page')), meta: controllersConnectedPadsPageMeta },
+  { kind: 'hero', bucket: 'controllers', id: 'home', component: lazyComponent(() => import('../src/screens/controllers/home.hero')), meta: controllersHomeHeroMeta },
+  { kind: 'page', bucket: 'controllers', group: 'tools', id: 'diagnostics', component: lazyComponent(() => import('../src/screens/controllers/tools/diagnostics.page')), meta: controllersToolsDiagnosticsPageMeta },
+  { kind: 'page', bucket: 'controllers', group: 'tools', id: 'logs', component: lazyComponent(() => import('../src/screens/controllers/tools/logs.page')), meta: controllersToolsLogsPageMeta },
   { kind: 'card', id: 'credits', component: lazyComponent(() => import('../src/screens/credits.card')), meta: creditsCardMeta },
   { kind: 'hero', bucket: 'data', id: 'home', component: lazyComponent(() => import('../src/screens/data/home.hero')), meta: dataHomeHeroMeta },
   { kind: 'page', bucket: 'data', group: 'library', id: 'profiles', component: lazyComponent(() => import('../src/screens/data/library/profiles.page')), meta: dataLibraryProfilesPageMeta },
@@ -72,7 +79,6 @@ const screenTree = buildScreenTree(config, [
   { kind: 'settings', bucket: 'game', group: 'video', id: 'window', sections: GameVideoWindowSettings, meta: gameVideoWindowSettingsMeta },
   { kind: 'base', id: 'game-view', component: lazyComponent(() => import('../src/screens/game-view.base')), meta: gameViewBaseMeta },
   { kind: 'card', id: 'hud-layout', component: lazyComponent(() => import('../src/screens/hud-layout.card')), meta: hudLayoutCardMeta },
-  { kind: 'card', id: 'input-calibration', component: lazyComponent(() => import('../src/screens/input-calibration.card')), meta: inputCalibrationCardMeta },
   { kind: 'page', bucket: 'randomizer', group: 'archipelago', id: 'network', component: lazyComponent(() => import('../src/screens/randomizer/archipelago/network.page')), meta: randomizerArchipelagoNetworkPageMeta },
   { kind: 'page', bucket: 'randomizer', group: 'archipelago', id: 'online', component: lazyComponent(() => import('../src/screens/randomizer/archipelago/online.page')), meta: randomizerArchipelagoOnlinePageMeta },
   { kind: 'page', bucket: 'randomizer', id: 'logs', component: lazyComponent(() => import('../src/screens/randomizer/logs.page')), meta: randomizerLogsPageMeta },

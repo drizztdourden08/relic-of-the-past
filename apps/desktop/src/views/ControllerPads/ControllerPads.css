@@ -1,0 +1,12 @@
+/* @layer renderer-components @kind style */
+.controller-pads {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-md);
+  min-block-size: 0;
+}
+
+.controller-pads__page {
+  flex: 1;
+  min-inline-size: 0;
+}

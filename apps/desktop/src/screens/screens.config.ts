@@ -15,6 +15,17 @@ export default defineScreens({
         { id: 'app', label: 'App' },
       ],
     },
+    {
+      id: 'controllers',
+      title: 'Controllers',
+      icon: 'gamepad-2',
+      menu: 'hidden',
+      requiresProfile: false,
+      groups: [
+        { id: 'connected', label: 'Connected' },
+        { id: 'tools', label: 'Tools' },
+      ],
+    },
     { id: 'randomizer', title: 'Randomizer', icon: 'sparkles', menu: 'entry', when: ({ profile }) => profile?.randomizer !== undefined },
     {
       id: 'data',

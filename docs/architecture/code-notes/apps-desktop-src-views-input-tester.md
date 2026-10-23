@@ -5,10 +5,7 @@ Facts about `apps/desktop/src/views/InputTester/` that the code cannot say on it
 
 ## apps/desktop/src/views/InputTester/ (stylesheets)
 
-- `ControllerReportDialog.css` and `DiagnosticsWizardDialog.css`: the header (title and step strip) and the footer (actions) stay put, and only the body scrolls.
-- `DiagnosticsWizardDialog.css`: the title shares its row with a five-step strip, and the shared header style ellipsises the title when space runs short, which cut it to a single letter. The row wraps and the title keeps its natural width.
-- `DiagnosticsWizardDialog.css`: the layout overlay covers the step instead of replacing it, so the choice stays visible behind the read and the dialog does not change size mid-transition.
-- `InputCalibration.css`: the card shimmer runs continuously, so a stutter means the UI thread is blocked.
+- `ControllerReportDialog.css`: the header (title and step strip) and the footer (actions) stay put, and only the body scrolls.
 - `apps/desktop/src/theme/input-calibration/hid-inputs.css`: the idle read is a real step, so its prompt carries the same weight as the live-capture readout. The change magnitude mark is drawn on the byte cell's top border so it can sit on top of any cell state, and its width and colour are set inline from the byte's own delta.
 
 ## apps/desktop/src/views/InputTester/sub-components/controller-report/behavior/useControllerReportForm.ts
@@ -43,19 +40,7 @@ Merges the report's steps with the wizard's dynamic step list into one strip. Th
 - `ReportSection` is a collapsible text block, the same pattern as the bug report's debug info preview.
 - `StepIndicator` is the persistent "where am I" strip across the report steps.
 
-## apps/desktop/src/views/InputTester/sub-components/ControllerCard.tsx
-
-- The pad as the game sees it: its family glyphs lit from live state, the game rumble preview, the per-device rumble strength and the raw report bytes.
-- `busType` comes from the module's device snapshot and is undefined without a snapshot entry.
-- `onReportDevice` is raised, not handled in the card: the report releases SDL partway through, which unmounts the card, so the screen mounts the report dialog.
-
-## apps/desktop/src/views/InputTester/sub-components/ControllerDeviceList.tsx
-
-- One card per `ready` device. A device SDL has not claimed is shown by the module's Controllers screen.
-- The resolved family view is keyed off `entries`, which changes only on a snapshot update, not on every `controllerStates` tick (up to 60 per second).
-- A device with no state yet shows an idle state of released buttons and centred axes, sized by the module's SDL button and axis names.
-
-## apps/desktop/src/views/InputTester/sub-components/ControllerRawBytes.tsx
+## apps/desktop/src/views/ControllerPage/sub-components/ControllerRawBytes.tsx
 
 A collapsible raw report byte grid for a controller card.
 
@@ -134,13 +119,6 @@ The fixed wizard steps, in order. Byte capture shows only for a controller the r
 ## apps/desktop/src/views/InputTester/sub-components/diagnostics-wizard/DiagnosticsFlowBody.tsx
 
 Shared by the standalone diagnostics dialog and the controller report, so both render the same steps.
-
-## apps/desktop/src/views/InputTester/sub-components/diagnostics-wizard/DiagnosticsWizardDialog.tsx
-
-- Gamepad diagnostics as a modal wizard: shut SDL down, pick a controller, byte capture (byte-capable devices only), positional capture again after the hold is restored, then a summary.
-- It cannot be dismissed by backdrop, Escape or close while a run is in progress, because this wizard owns whether SDL is up. Only its own Cancel, Restart and Close actions end it, and they always restore the hold.
-- Cancel appears on every step so a misbehaving step is never a dead end.
-- `onComplete` fires when the dialog closes with a byte capture on hand, mirroring what the standalone `HidCalibrationWizard` reported through its own `onComplete`.
 
 ## apps/desktop/src/views/InputTester/sub-components/diagnostics-wizard/positional-capture/ (detection)
 
@@ -312,16 +290,6 @@ Holds only `getByteColor`. The file keeps this name because `eslint.config.mjs` 
 - `initialProfileId` skips the profile picker and starts live calibration against that profile. `initialHasGyro` goes with it and is ignored when `initialProfileId` is unset.
 - `HidWizardHandle` is the imperative surface for a `hideOwnActions` host. `copyJson` resolves true on success and false on failure, for example a denied clipboard write.
 
-## apps/desktop/src/views/InputTester/sub-components/InputCalibration.tsx
-
-The Controller Diagnostics page: the game's own tools on top of the Brock input module. The generic tester (live state, stick and trigger calibration, rumble tests, mapping lines) is the module's Controllers screen. This page keeps the gamepad diagnostics wizard (with the byte-level HID calibration wizard inside it), the controller report dialog, the family view of each pad, the game rumble preview and the diagnostics log.
-
-## apps/desktop/src/views/InputTester/sub-components/RumbleStrengthControl.tsx
+## apps/desktop/src/views/ControllerPage/sub-components/RumbleStrengthControl.tsx
 
 A per-device rumble multiplier on top of the family strength curve in `packages/input-mapping/src/family/vibration-shaping.ts`. It is neutral at 1 and persisted per device key.
-
-## apps/desktop/src/views/InputTester/sub-components/useInputCalibration.ts
-
-- The state for the Controller Diagnostics page. Connect and disconnect events for the log come from `inputApi()` (`onAdded`, `onRemoved`).
-- The definitive "is a controller connected" answer is the module's device snapshot with status `ready`. The input store's own tally counts only devices that have sent at least one input report, so an untouched pad already visible as a card would read as disconnected there.
-- It subscribes to the input manager for all input state and to a lightweight HID diagnostics listener with no input polling. The log scrolls itself to the newest entry.

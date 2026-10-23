@@ -2,8 +2,7 @@
 import { useCallback } from 'react';
 import type { DeviceStickCalibration, TriggerCalibration } from '@drizztdourden08/brock-input';
 import { Box } from '@drizztdourden08/tessera/primitives';
-import { StickCalibrationWizard } from '@app/views/InputTester/sub-components/stick-calibration';
-import { TriggerCalibrationWizard } from '@app/views/InputTester/sub-components/trigger-calibration';
+import { StickCalibrationWizard, TriggerCalibrationWizard } from '@app/views/InputTester';
 import type { CardCalibrationProps } from '../ControllerPage.type';
 
 const CardCalibration = (props: CardCalibrationProps) => {
