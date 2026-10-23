@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind types */
-import type { ControllerSlotId } from '@drizztdourden08/tessera/composites';
+import type { ControllerSilhouetteAnchorSet, ControllerSlotId } from '@drizztdourden08/tessera/composites';
 import type { DpadWedgeState } from '../DpadWedges';
 
 type OverlayPartKind = 'button' | 'analog' | 'stick' | 'dpad';
@@ -14,13 +14,6 @@ interface Point {
 interface Nudge {
   dx: number;
   dy: number;
-}
-
-interface OverlayAnchor {
-  id: ControllerSlotId;
-  x: number;
-  y: number;
-  r: number;
 }
 
 interface OverlaySlotView {
@@ -45,7 +38,7 @@ type PadOverlayState = Readonly<Partial<Record<ControllerSlotId, PartState>>>;
 
 interface PadOverlayProps {
   outline: string;
-  anchors: readonly OverlayAnchor[];
+  anchors: ControllerSilhouetteAnchorSet;
   slots: readonly OverlaySlotView[];
   state: PadOverlayState;
   label: string;
@@ -107,6 +100,6 @@ interface OverlayLabelProps {
 }
 
 export type {
-  AnchorFrame, Leader, LabelSide, Nudge, OverlayAnchor, OverlayBox, OverlayHaloProps, OverlayLabelProps, OverlayPartKind,
+  AnchorFrame, Leader, LabelSide, Nudge, OverlayBox, OverlayHaloProps, OverlayLabelProps, OverlayPartKind,
   OverlaySlotView, PadOverlayProps, PadOverlayState, PartProps, PartState, PlacedLabel, PlacedLine, PlacedPart, Point,
 };

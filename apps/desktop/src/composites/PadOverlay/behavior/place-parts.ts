@@ -1,13 +1,13 @@
 /* @layer renderer-components @kind logic */
-import type { OverlayAnchor, OverlayBox, OverlaySlotView, PlacedPart } from '../PadOverlay.type';
-import { dpadCentre } from './dpad-centre';
+import type { ControllerSilhouetteAnchorSet } from '@drizztdourden08/tessera/composites';
+import type { OverlayBox, OverlaySlotView, PlacedPart } from '../PadOverlay.type';
+import { slotFrame } from './slot-frame';
 
 const placeParts = (
-  slots: readonly OverlaySlotView[], anchors: readonly OverlayAnchor[], box: OverlayBox,
-): PlacedPart[] => {
-  const byId = new Map<string, OverlayAnchor>(anchors.map((anchor) => [anchor.id, anchor]));
-  return slots.flatMap((slot) => {
-    const at = slot.kind === 'dpad' ? dpadCentre(byId) : byId.get(slot.anchor);
+  slots: readonly OverlaySlotView[], anchors: ControllerSilhouetteAnchorSet, box: OverlayBox,
+): PlacedPart[] =>
+  slots.flatMap((slot) => {
+    const at = slotFrame(slot.anchor, anchors);
     if (!at) return [];
     return [{
       slot,
@@ -16,6 +16,5 @@ const placeParts = (
       radius: at.r * (slot.scale ?? 1),
     }];
   });
-};
 
 export { placeParts };

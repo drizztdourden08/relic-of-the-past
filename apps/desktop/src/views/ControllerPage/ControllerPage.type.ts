@@ -4,7 +4,8 @@ import type {
 } from '@drizztdourden08/brock-input';
 import type { ControllerInputState, HapticPatternId, ResolvedControl, ResolvedDevice } from '@rotp/input-mapping';
 import type { StickPairGroup } from '@app/input/resolved-axis-groups/resolved-axis-groups.type';
-import type { OverlayAnchor, OverlaySlotView, PadOverlayState } from '@app/composites/PadOverlay';
+import type { ControllerSilhouetteAnchorSet } from '@drizztdourden08/tessera/composites';
+import type { OverlaySlotView, PadOverlayState } from '@app/composites/PadOverlay';
 
 interface ControllerPageProps {
   deviceKey: string;
@@ -14,7 +15,7 @@ interface ControllerPageProps {
 
 interface PadOverlayModel {
   outline: string;
-  anchors: readonly OverlayAnchor[];
+  anchors: ControllerSilhouetteAnchorSet;
   slots: readonly OverlaySlotView[];
 }
 
