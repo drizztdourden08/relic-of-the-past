@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind types */
 import type { PatternValue } from '@drizztdourden08/tessera/composites';
-import type { DraftProblems, LobbyDraft } from '@app/hooks/randomizer/lobby-setup';
+import type { LobbyDraft } from '@app/hooks/randomizer/lobby-setup';
 
 interface LanServerRow {
   id: string;
@@ -22,7 +22,6 @@ interface LobbySetupProps {
   onChange: (part: Partial<LobbyDraft>) => void;
   servers: readonly LanServerRow[];
   lobby: LobbyLineState;
-  invalid: DraftProblems;
   disabled?: boolean;
 }
 
@@ -36,7 +35,6 @@ interface LanServerRowsProps {
 interface RemoteAddressProps {
   value: PatternValue;
   onChange: (next: PatternValue) => void;
-  invalid: boolean;
   disabled: boolean;
 }
 

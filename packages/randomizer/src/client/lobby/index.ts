@@ -1,5 +1,7 @@
 /* @layer bridge-wasm @kind barrel */
-export { DEFAULT_PORT as LOBBY_DEFAULT_PORT, formatLobbyCode } from '@drizztdourden08/archipelia-lobby-protocol';
+export {
+  CODE_ALPHABET as LOBBY_CODE_ALPHABET, DEFAULT_PORT as LOBBY_DEFAULT_PORT, formatLobbyCode,
+} from '@drizztdourden08/archipelia-lobby-protocol';
 export type { ClientInfo as LobbyClientInfo } from '@drizztdourden08/archipelia-lobby-protocol';
 export { lobbyUrlCandidates } from './address/lobby-url-candidates';
 export { createLobbyClientInfo, lobbyPlatformOf } from './client-info';

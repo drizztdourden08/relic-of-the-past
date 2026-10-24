@@ -2,9 +2,7 @@
 import { useEffect } from 'react';
 import { Toggle } from '@drizztdourden08/tessera/primitives';
 import { LobbySetup } from '@app/compounds/LobbySetup';
-import {
-  draftProblems, lobbyCodeOf, lobbyServerOf, useBundledVersions, useLanServers, useLobbyCheck,
-} from '@app/hooks/randomizer/lobby-setup';
+import { lobbyCodeOf, lobbyServerOf, useBundledVersions, useLanServers, useLobbyCheck } from '@app/hooks/randomizer/lobby-setup';
 import { lanRowsOf } from './lan-rows-of';
 import { lobbyLineOf } from './lobby-line-of';
 import type { ArchipeliaFieldsProps } from './ArchipelagoFields.type';
@@ -26,7 +24,6 @@ const ArchipeliaFields = ({ value, onChange, joining = false }: ArchipeliaFields
         onChange={(part) => onChange({ lobby: { ...draft, ...part } })}
         servers={lanRowsOf(servers, versions)}
         lobby={lobbyLineOf(check)}
-        invalid={draftProblems(draft)}
         disabled={joining}
       />
       <Toggle label="DeathLink" checked={value.deathLink} disabled={joining} onChange={(deathLink) => onChange({ deathLink })} />

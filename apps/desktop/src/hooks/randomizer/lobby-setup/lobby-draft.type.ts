@@ -11,9 +11,4 @@ interface LobbyDraft {
   slotName: string;
 }
 
-interface DraftProblems {
-  address: boolean;
-  code: boolean;
-}
-
-export type { DraftProblems, LobbyDraft, LobbyLocation };
+export type { LobbyDraft, LobbyLocation };

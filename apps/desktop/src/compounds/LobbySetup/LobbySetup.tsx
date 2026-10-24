@@ -10,7 +10,7 @@ import { RemoteAddress } from './sub-components/RemoteAddress';
 import './LobbySetup.css';
 
 const LobbySetup = (props: LobbySetupProps) => {
-  const { value, onChange, servers, lobby, invalid, disabled = false } = props;
+  const { value, onChange, servers, lobby, disabled = false } = props;
 
   return (
     <Stack gap="sm" className="lobby-setup">
@@ -24,7 +24,7 @@ const LobbySetup = (props: LobbySetupProps) => {
       {value.location === 'remote' && (
         <Field label="Address">
           <RemoteAddress
-            value={value.address} invalid={invalid.address} disabled={disabled}
+            value={value.address} disabled={disabled}
             onChange={(address) => onChange({ address })}
           />
         </Field>
@@ -32,7 +32,7 @@ const LobbySetup = (props: LobbySetupProps) => {
       <Field label="Lobby code" error={lobby.kind === 'error' ? lobby.text : undefined}>
         <DynamicInput
           className="lobby-setup__code" pattern={CODE_PATTERN} slots={CODE_SLOTS} value={value.code}
-          invalid={invalid.code} disabled={disabled} aria-label="Lobby code"
+          disabled={disabled} aria-label="Lobby code"
           onChange={(code) => onChange({ code })}
         />
       </Field>
