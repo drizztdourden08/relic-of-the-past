@@ -6,4 +6,8 @@ interface ArchipelagoFieldsProps {
   onChange: (part: Partial<RandomizerFormState>) => void;
 }
 
-export type { ArchipelagoFieldsProps };
+interface ArchipeliaFieldsProps extends ArchipelagoFieldsProps {
+  joining?: boolean;
+}
+
+export type { ArchipelagoFieldsProps, ArchipeliaFieldsProps };

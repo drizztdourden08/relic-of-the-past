@@ -9,6 +9,7 @@ import { useConfirmDialog } from './useConfirmDialog';
 import { useDebugLaunchHooks } from './useDebugLaunchHooks';
 import { useDisplaySettings } from './useDisplaySettings';
 import { useGameLifecycle } from './useGameLifecycle';
+import { useLobbyWatchBoot } from './useLobbyWatchBoot';
 import { useMsulOpen } from './useMsulOpen';
 import { useOpenHubOnStart } from './useOpenHubOnStart';
 import { useProfileManagement } from './useProfileManagement';
@@ -52,6 +53,7 @@ const useGameSessionValue = (): GameSessionValue => {
   });
   useDebugLaunchHooks({ activeProfile: profileMgmt.activeProfile, loadProfileForGame: profileMgmt.loadProfileForGame, openNavWidget });
   useRandomizerBoot(profileId);
+  useLobbyWatchBoot(profileMgmt.profiles);
   useMsulOpen();
   useStoreLinks();
   useOpenHubOnStart(profileId);

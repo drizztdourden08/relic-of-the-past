@@ -4,7 +4,7 @@ import { requireHostApi } from '@drizztdourden08/brock-react';
 import { DEFAULT_AP_VERSION, SUPPORTED_AP_VERSIONS } from '@rotp/randomizer';
 import { useAppVersion } from '@app/hooks/useAppVersion';
 import { worldPackageFor } from '@app/archipelago/world-package';
-import { archipelagoYamlOf } from './archipelago-yaml-of';
+import { archipelagoYamlOf } from '@app/archipelago/player-yaml';
 import { feedbackOf } from './save-feedback';
 import type { ProfileRandomizerConfig } from '@app/profiles/types';
 import type { SaveFeedback } from './save-feedback.type';
@@ -14,11 +14,6 @@ const noPackageFeedback = (apVersion: string): SaveFeedback => ({
   text: `Not saved: this app has no world package for Archipelago ${apVersion}. Supported versions: ${SUPPORTED_AP_VERSIONS.join(', ')}.`,
 });
 
-/**
- * Writes this profile Archipelago files (the player file and the bundled world package)
- * through the main process, which asks for the folder. The outcome becomes one line of feedback.
- * The package is the one for the newest supported Archipelago version.
- */
 const useSaveArchipelagoFiles = (config: ProfileRandomizerConfig) => {
   const appVersion = useAppVersion();
   const [saving, setSaving] = useState(false);

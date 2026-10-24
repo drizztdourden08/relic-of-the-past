@@ -19,6 +19,7 @@ const useProfileForm = () => {
   const [formPreset, setFormPreset] = useState<ProfilePresetId>('enhanced');
   const [formConfigOverrides, setFormConfigOverrides] = useState<Partial<GameSettings>>(applyProfilePreset('enhanced'));
   const [formError, setFormError] = useState<string | null>(null);
+  const [formJoining, setFormJoining] = useState<number | null>(null);
 
   const handlePickPreset = useCallback((id: ProfilePresetId) => {
     setFormPreset(id);
@@ -44,6 +45,7 @@ const useProfileForm = () => {
     formPreset,
     formConfigOverrides,
     formError, setFormError,
+    formJoining, setFormJoining,
     formInvalid: randomizerFormError(formRandomizer, experimentalFeaturesEnabled(settings)) !== undefined,
     handlePickPreset,
     resetForm,

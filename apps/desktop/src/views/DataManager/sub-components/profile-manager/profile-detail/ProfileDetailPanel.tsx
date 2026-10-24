@@ -4,6 +4,7 @@ import { Stack, Tabs } from '@drizztdourden08/tessera/primitives';
 import { modeOf } from './mode-of';
 import { ProfileDataTab } from './ProfileDataTab';
 import { ProfileDetailHeader } from './ProfileDetailHeader';
+import { ProfileLobbyStatus } from './ProfileLobbyStatus';
 import { ProfileOverviewTab } from './ProfileOverviewTab';
 import { ProfileRandomizerTab } from './ProfileRandomizerTab';
 import { ProfileSettingsTab } from './ProfileSettingsTab';
@@ -26,6 +27,7 @@ const ProfileDetailPanel = (props: ProfileDetailPanelProps) => {
         onOpen={() => onSelectProfile(profile)}
         onDelete={() => onDeleteProfile(profile.id)}
       />
+      {randomizer?.mode === 'archipelia' && <ProfileLobbyStatus profile={profile} onDelete={() => onDeleteProfile(profile.id)} />}
       <Tabs tabs={tabs} activeTab={tab} onTabChange={setTab} />
       {tab === SETTINGS_TAB && <ProfileSettingsTab settings={settings} />}
       {tab === DATA_TAB && <ProfileDataTab profile={profile} settings={settings} />}

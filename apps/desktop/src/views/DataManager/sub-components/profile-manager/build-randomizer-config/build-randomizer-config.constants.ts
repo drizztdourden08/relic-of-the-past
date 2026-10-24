@@ -1,11 +1,13 @@
 /* @layer renderer-components @kind constants */
 import { DEFAULT_CAPACITY_BONUS, DEFAULT_CAPACITY_PROFILE, DEFAULT_POND_PROFILES, defaultShopScope, DEFAULT_DARK_ROOM_SETTING, defaultDifficulty, DEFAULT_ITEM_POWER, defaultProgressiveSetting, defaultProgressiveModes, defaultRetroBow, DEFAULT_ACCESSIBILITY, INCLUDE_NPC_CHECKS_KEY, INCLUDE_WORLD_ITEMS_KEY, DEFAULT_DUNGEON_ITEM_SETTING, DEFAULT_STORY_GATES } from '@rotp/randomizer';
+import { EMPTY_LOBBY_DRAFT } from '@app/hooks/randomizer/lobby-setup';
 import { EMPTY_SERVER_SETUP } from '@app/hooks/randomizer/server-setup/server-setup-draft';
 import { baselineSwitch } from './baseline-switch';
 import type { RandomizerFormState } from './build-randomizer-config.type';
 
 const EMPTY_RANDOMIZER_FORM: RandomizerFormState = {
   enabled: false, seed: '', mode: 'local', server: EMPTY_SERVER_SETUP, deathLink: false,
+  lobby: EMPTY_LOBBY_DRAFT, lobbyCheck: { kind: 'idle' },
   trackOtherPlayers: true,
   keyDropShuffle: baselineSwitch('key_drop_shuffle'),
   includeNpcChecks: baselineSwitch(INCLUDE_NPC_CHECKS_KEY),
@@ -37,4 +39,6 @@ const EMPTY_RANDOMIZER_FORM: RandomizerFormState = {
 
 const NO_SEED_ERROR = 'The randomizer needs a seed. Type one, or keep the one thrown for you.';
 
-export { EMPTY_RANDOMIZER_FORM, NO_SEED_ERROR };
+const NO_LOBBY_ERROR = 'Pick a lobby RotP can join.';
+
+export { EMPTY_RANDOMIZER_FORM, NO_LOBBY_ERROR, NO_SEED_ERROR };

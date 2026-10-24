@@ -5,6 +5,7 @@ interface RandomizerFieldsProps {
   value: RandomizerFormState;
   onChange: (next: RandomizerFormState) => void;
   experimental: boolean;
+  joining?: boolean;
 }
 
 export type { RandomizerFieldsProps };

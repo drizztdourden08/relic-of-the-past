@@ -2,16 +2,17 @@
 import { useEffect } from 'react';
 import { Text, Toggle, Select, TextInput, Field } from '@drizztdourden08/tessera/primitives';
 import { ArchipelagoFields } from './ArchipelagoFields';
+import { ArchipeliaFields } from './ArchipeliaFields';
 import { MODE_OPTIONS } from './RandomizerFields.constants';
 import type { RandomizerFormState } from './build-randomizer-config';
 import type { RandomizerFieldsProps } from './RandomizerFields.type';
 
 const RandomizerFields = (props: RandomizerFieldsProps) => {
-  const { value, onChange, experimental } = props;
+  const { value, onChange, experimental, joining } = props;
   const patch = (part: Partial<RandomizerFormState>) => onChange({ ...value, ...part });
 
   useEffect(() => {
-    if (!experimental && value.mode === 'online') onChange({ ...value, mode: 'local' });
+    if (!experimental && value.mode !== 'local') onChange({ ...value, mode: 'local' });
   }, [experimental, value, onChange]);
 
   return (
@@ -39,6 +40,7 @@ const RandomizerFields = (props: RandomizerFieldsProps) => {
             />
           </Field>}
           {experimental && value.mode === 'online' && <ArchipelagoFields value={value} onChange={patch} />}
+          {experimental && value.mode === 'archipelia' && <ArchipeliaFields value={value} onChange={patch} joining={joining} />}
           <Text variant="caption">
             {experimental && value.mode === 'online'
               ? 'Seed and options lock once the profile is created. The connection stays editable.'

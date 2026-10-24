@@ -12,4 +12,4 @@ interface WorldPackageBuilds {
   builds: WorldPackageBuild[];
 }
 
-export type { WorldPackageBuilds };
+export type { WorldPackageBuild, WorldPackageBuilds };

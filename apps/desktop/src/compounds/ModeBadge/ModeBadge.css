@@ -33,3 +33,4 @@
 .mode-badge--vanilla-safe .mode-badge__monogram { color: var(--c-secondary-bright); }
 .mode-badge--randomizer .mode-badge__monogram { color: var(--c-primary-bright); }
 .mode-badge--randomizer-online .mode-badge__monogram { color: var(--c-info); }
+.mode-badge--randomizer-archipelia .mode-badge__monogram { color: var(--c-warning); }

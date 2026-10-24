@@ -12,6 +12,8 @@ interface UseProfileManagerParams {
 
 type ProfileFormState = ReturnType<typeof useProfileForm>;
 
+type CreateFn = (opts: CreateProfileOptions) => Promise<CreateProfileResult>;
+
 interface UseCreateProfileParams {
   form: ProfileFormState;
   onCreateProfile: (opts: CreateProfileOptions) => Promise<CreateProfileResult>;
@@ -47,6 +49,12 @@ interface ProfileRowsProps {
   onDelete: (id: string) => void;
 }
 
+interface ProfileCreateActionsProps {
+  form: ProfileFormState;
+  onCancel: () => void;
+  onCreate: () => void;
+}
+
 export type {
-  ProfileCreateFormProps, ProfileListPaneProps, ProfileRowsProps, UseCreateProfileParams, UseProfileManagerParams,
+  CreateFn, ProfileCreateActionsProps, ProfileCreateFormProps, ProfileListPaneProps, ProfileRowsProps, UseCreateProfileParams, UseProfileManagerParams,
 };

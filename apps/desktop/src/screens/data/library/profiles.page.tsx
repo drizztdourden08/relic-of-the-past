@@ -18,7 +18,7 @@ const ProfilesPage = (props: PageProps) => {
 
   const createProfile = useCallback(async (opts: CreateProfileOptions) => {
     const result = await handleCreateProfile(opts);
-    if (result.success) open('game');
+    if (result.success && opts.randomizer?.mode !== 'archipelia') open('game');
     return result;
   }, [handleCreateProfile, open]);
 
