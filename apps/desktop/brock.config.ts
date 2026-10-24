@@ -18,6 +18,7 @@ if ! "$EMSDK_PYTHON" -m pip install --disable-pip-version-check requests; then
 fi`,
   },
   { name: 'Build the wasm core', shell: 'bash', run: 'pnpm run ensure-wasm' },
+  { name: 'Build the Archipelago world packages', shell: 'bash', run: 'pnpm run ensure-apworld' },
 ];
 
 const releaseInputSteps: WorkflowStep[] = [
@@ -39,11 +40,23 @@ const publishStateFormat: WorkflowStep = {
   run: 'node tooling/state-format/check-state-format.mjs --emit upload',
 };
 
+const shipArchipelagoBuilds: WorkflowStep = {
+  name: 'Ship the Archipelago world packages',
+  platforms: ['linux'],
+  shell: 'bash',
+  run: 'cp build/archipelago/* upload/',
+};
+
 const linuxSdl3Soname: WorkflowStep = {
   name: 'Make the Linux SDL3 runtime loadable',
   platforms: ['linux'],
   run: 'node tooling/ensure-linux-sdl3-soname.mjs',
 };
+
+// Brock 0.82 renders workflows.attest but its BrockWorkflowOptions type does not list it yet.
+const archipelagoAttest = {
+  attest: { stage: 'beforePackage', paths: ['build/archipelago/*.apworld'] },
+} as const;
 
 export default defineBrockConfig({
   product: {
@@ -97,8 +110,9 @@ export default defineBrockConfig({
           { name: 'Analyze every file type', run: 'node tooling/analyze/analyze.mjs --ci' },
         ],
         beforePackage: [...wasmCoreSteps, linuxSdl3Soname, ...releaseInputSteps],
-        afterPackage: [publishStateFormat],
+        afterPackage: [publishStateFormat, shipArchipelagoBuilds],
       },
     },
+    ...archipelagoAttest,
   },
 });

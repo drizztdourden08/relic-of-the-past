@@ -67,6 +67,10 @@ jobs:
         shell: bash
         run: "pnpm run ensure-wasm"
 
+      - name: "Build the Archipelago world packages"
+        shell: bash
+        run: "pnpm run ensure-apworld"
+
       - name: Build
         run: pnpm --dir "$APP_DIR" exec brock build
 
@@ -139,6 +143,10 @@ jobs:
         shell: bash
         run: "pnpm run ensure-wasm"
 
+      - name: "Build the Archipelago world packages"
+        shell: bash
+        run: "pnpm run ensure-apworld"
+
       - name: Build
         run: pnpm --dir "$APP_DIR" exec brock build
 
@@ -205,6 +213,10 @@ jobs:
       - name: "Build the wasm core"
         shell: bash
         run: "pnpm run ensure-wasm"
+
+      - name: "Build the Archipelago world packages"
+        shell: bash
+        run: "pnpm run ensure-apworld"
 
       - name: Build the web app
         run: pnpm --dir "$APP_DIR" exec brock web build
