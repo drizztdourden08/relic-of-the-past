@@ -1,6 +1,6 @@
 /* @layer renderer-widgets @kind component */
 import { useCallback, useMemo, useState } from 'react';
-import { Box, Text } from '@drizztdourden08/tessera/primitives';
+import { Box } from '@drizztdourden08/tessera/primitives';
 import { DisabledOverlay } from '@drizztdourden08/tessera/composites';
 import { getSpritesBase } from '@rotp/game-data';
 import { useConsoleScale } from '../../behavior/useConsoleScale';
@@ -65,9 +65,6 @@ const ItemsTab = ({ gates }: CheatTabProps) => {
           onOpen={setOpen}
           write={write}
         />
-        <Text as="p" className="cheats-hint">
-          Ghosted: not owned, click gives it. Owned: click opens its tiers, with Remove.
-        </Text>
         {open && <TierList open={open} spritesBase={spritesBase} write={write} onClose={close} />}
       </PointerHintProvider>
       </Box>

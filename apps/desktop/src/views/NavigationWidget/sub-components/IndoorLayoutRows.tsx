@@ -10,14 +10,14 @@ const IndoorLayoutRows = ({ roomLayoutInfo, dungeonMapPos }: IndoorLayoutRowsPro
   return (
     <>
       {roomLayoutInfo && (
-        <DescRow label="Viewport" desc="Camera viewport of this room (width × height in screens). Based on the room's quadrant allocation + fullsize flags. 'open' = no internal camera scroll boundaries. 'scroll' = camera scrolls between quadrants.">
+        <DescRow label="Viewport" desc="Camera viewport of this room (width × height in screens). 'open' = no internal scroll boundaries. 'scroll' = camera scrolls between quadrants.">
           <Text className="nav-val-info">{effectiveShapeOf(roomLayoutInfo)}</Text>
           <Text className={hasScrollBoundaries ? 'nav-game-state-panel__scroll-tag nav-game-state-panel__scroll-tag--scroll' : 'nav-game-state-panel__scroll-tag nav-val-green'}>{hasScrollBoundaries ? 'scroll' : 'open'}</Text>
           <Text className="nav-val-badge">raw={roomLayoutInfo.shape} idx={roomLayoutInfo.layout}</Text>
         </DescRow>
       )}
       {dungeonMapPos?.found && (
-        <DescRow label="Effective Layout" desc="The room's actual footprint on the dungeon map grid, determined by counting how many cells this room occupies in the 5×5 map layout. This is what the in-game MAP screen shows.">
+        <DescRow label="Effective Layout" desc="How many cells the room occupies on the dungeon map grid.">
           <Text className="nav-val-info">{dungeonMapPos.effectiveLayout}</Text>
         </DescRow>
       )}

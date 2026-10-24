@@ -36,14 +36,6 @@
   margin: var(--space-md) 0 var(--space-xs);
 }
 
-.cheats-hint {
-  font-size: var(--text-xs);
-  color: var(--c-text-muted);
-  line-height: var(--leading-tight);
-  margin: var(--space-xs) 0 0;
-}
-
-
 .cheats-legend {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));

@@ -8,7 +8,7 @@ const mobile: Section[] = [
     id: 'mobile',
     title: 'Display',
     items: [
-      { key: 'renderIntoNotch', label: 'Render under camera cutout', description: 'On: the game and UI use the full screen, extending under the camera notch. Off: keep everything inside the usable screen area.', hint: 'On, the picture reaches under the camera cutout. Off keeps it clear of the cutout.', keywords: 'notch cutout camera safe area fullscreen mobile display edge' },
+      { key: 'renderIntoNotch', label: 'Render under camera cutout', description: 'On: the game and UI use the full screen, extending under the camera notch. Off: keep everything inside the usable screen area.', hint: '', keywords: 'notch cutout camera safe area fullscreen mobile display edge' },
     ],
   },
 ];

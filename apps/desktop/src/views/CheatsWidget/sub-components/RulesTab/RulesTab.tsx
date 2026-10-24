@@ -4,7 +4,7 @@ import { Box, Text } from '@drizztdourden08/tessera/primitives';
 import type { CheatCategory } from '@app/game';
 import { onCheatRulesRestored } from '@rotp/game-core';
 import type { CheatTabProps } from '../../CheatsWidget.type';
-import { ACTION_TILES, RULES_HINT, RULE_TILES, RUNG_TILES } from './RulesTab.constants';
+import { ACTION_TILES, RULE_TILES, RUNG_TILES } from './RulesTab.constants';
 import { RuleTile } from './sub-components/RuleTile';
 import { RungTile } from './sub-components/RungTile';
 import { ActionTile } from './sub-components/ActionTile';
@@ -53,8 +53,6 @@ const RulesTab = (props: CheatTabProps) => {
           <ActionTile key={spec.id} spec={spec} reason={reasonFor(spec.category)} />
         ))}
       </Box>
-
-      <Text as="p" className="cheats-hint">{RULES_HINT}</Text>
     </Box>
   );
 };

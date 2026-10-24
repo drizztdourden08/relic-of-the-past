@@ -1,11 +1,11 @@
 /* @layer renderer-components @kind component */
 import { useCallback } from 'react';
-import { Box, Callout, Toggle } from '@drizztdourden08/tessera/primitives';
+import { Box, Toggle } from '@drizztdourden08/tessera/primitives';
 import { SettingsSection } from '@drizztdourden08/tessera/composites';
 import { SearchAnchor } from '@drizztdourden08/brock-react';
 import { GbaDifferenceTable } from './GbaDifferenceTable';
 import { useGbaAvailability } from './behavior/useGbaAvailability';
-import { EXPERIMENTAL_NOTICE, EXTRA_DUNGEON_DESCRIPTION, TRACKER_NOTE } from './gba-settings.constants';
+import { EXTRA_DUNGEON_DESCRIPTION } from './gba-settings.constants';
 import type { GbaSettingsProps } from './gba-settings.type';
 import './GbaSettings.css';
 
@@ -23,8 +23,6 @@ const GbaSettings = ({ settings, onChange }: GbaSettingsProps) => {
 
   return (
     <Box className="gba-settings">
-      <Callout tone="danger">{EXPERIMENTAL_NOTICE}</Callout>
-
       <SettingsSection title="Enable">
         <SearchAnchor anchor="extraDungeon">
           <Toggle
@@ -38,7 +36,7 @@ const GbaSettings = ({ settings, onChange }: GbaSettingsProps) => {
       </SettingsSection>
 
       <SearchAnchor anchor="gba-differences">
-        <SettingsSection title="Advancement tracker" description={TRACKER_NOTE}>
+        <SettingsSection title="Advancement tracker">
           <GbaDifferenceTable />
         </SettingsSection>
       </SearchAnchor>

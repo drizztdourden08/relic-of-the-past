@@ -10,7 +10,6 @@ import { soundToolGroups } from './sound-tool-groups';
 import { soundPanelSubtitle } from './behavior/sound-subtitle';
 import { useSoundPanel } from './behavior/useSoundPanel';
 import { useSoundTabActions } from './behavior/useSoundTabActions';
-import { SOUND_FILTER_HINT } from './msu.constants';
 import { SOUND_CHANNEL_LABELS } from './sound-labels';
 import { DETAILS_PANEL, EDITOR_LABELS } from './studio-frame/studio-frame.constants';
 import type { MsuSoundPanelProps } from './MsuSoundPanel.type';
@@ -27,7 +26,7 @@ const MsuSoundPanel = (props: MsuSoundPanelProps) => {
     <SoundSide
       open={openRow === undefined ? null : { channel, row: openRow, sound }}
       noteTitle={SOUND_CHANNEL_LABELS[channel]}
-      note={`${soundPanelSubtitle({ ...sound, channel, showUnreachable })} ${SOUND_FILTER_HINT}`}
+      note={soundPanelSubtitle({ ...sound, channel, showUnreachable })}
       packPanel={packPanel}
       pack={pack}
       manifest={manifest}

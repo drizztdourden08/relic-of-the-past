@@ -14,7 +14,7 @@ const ProfileConnectionSection = ({ profile, randomizer }: ProfileConnectionSect
   );
 
   return (
-    <Card title="Connection" subtitle="The server this profile plays on. These save as you change them." level={4}>
+    <Card title="Connection" level={4}>
       <Stack gap="md">
         <ConnectionEditor config={current} sessionError={null} onSave={saveConnection} />
         <Toggle label="DeathLink" checked={current.deathLink ?? false} onChange={setFlag('deathLink')} />

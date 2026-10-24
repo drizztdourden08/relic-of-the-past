@@ -18,11 +18,7 @@ const ProfileRandomizerTab = ({ profile, randomizer }: ProfileRandomizerTabProps
   return (
     <Stack gap="lg">
       {randomizer.mode === 'online' && experimentalFeaturesEnabled(settings) && <ProfileConnectionSection profile={profile} randomizer={randomizer} />}
-      <FactsSection
-        title="Run"
-        hint="The seed and options are fixed once the profile exists."
-        facts={[buildRunFacts(randomizer)]}
-      />
+      <FactsSection title="Run" facts={[buildRunFacts(randomizer)]} />
       <Stack gap="sm">
         <Text variant="subtitle">Options changed from the default</Text>
         <Text variant="caption" tone="muted">

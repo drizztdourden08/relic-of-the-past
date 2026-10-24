@@ -68,7 +68,7 @@ const CaseListEditor = (props: CaseListEditorProps) => {
           <Button variant="ghost" size="sm" onClick={() => onChange({ otherwise: placeholderChild() })}>+ add otherwise</Button>
         )}
       </Flex>
-      <Text className="hud-editor__hint">First match wins, top to bottom. The order is the logic, so reorder with ↑/↓.</Text>
+      <Text className="hud-editor__hint">First match wins, top to bottom.</Text>
     </Flex>
   );
 };

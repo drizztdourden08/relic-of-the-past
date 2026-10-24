@@ -50,7 +50,7 @@ const ProfileManager = (props: ProfileManagerProps) => {
       listContainers={[{ title: 'Profiles', content: list }]}
       listLabel="Profile manager"
       detail={detail}
-      emptyDetail={<EmptyState message="Select a profile to view details · Double-click to open" />}
+      emptyDetail={<EmptyState message="Select a profile. Double-click to open it." />}
     />
   );
 };

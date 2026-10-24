@@ -41,7 +41,7 @@ const LanguageManager = (props: LanguageManagerProps) => {
               placeholder="Paste ROM download URL..."
               accept={['.sfc', '.smc', '.zip', '.7z', '.rar']}
               dropLabel="Drop a ROM file to extract its language"
-              dropHint="The language is detected from the ROM. The ROM is used temporarily and not saved"
+              dropHint="The language is read from the ROM. The ROM is not saved."
               onUrlImport={handleUrlImport}
               onFileImport={handleFileImport}
             />

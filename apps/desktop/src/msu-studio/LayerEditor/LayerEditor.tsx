@@ -25,18 +25,14 @@ const LayerEditor = (props: LayerEditorProps) => {
     <Box className="layer-editor">
       <SectionHeader
         title={`Layers - ${target.label}`}
-        subtitle={
-          isLayered || readOnly
-            ? 'Each layer is scheduled on its own; they play together.'
-            : 'This pack has no manifest yet. Saving writes one and keeps every other slot as it plays today.'
-        }
+        subtitle={isLayered || readOnly ? undefined : 'This pack has no manifest yet. Saving writes one.'}
         action={
           <Button variant="secondary" size="sm" disabled={locked} onClick={addLayer}>Add layer</Button>
         }
       />
 
       {layers.length === 0 ? (
-        <EmptyState message="No layers yet. Add one to give this slot audio." />
+        <EmptyState message="No layers yet." />
       ) : (
         layers.map((layer, index) => (
           <LayerCard

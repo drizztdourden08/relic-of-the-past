@@ -6,8 +6,8 @@ const DISABLED_SETTING_MESSAGES: Record<string, string> = {
   trackerEnabled: 'Tracker is disabled',
   devNavigationData: 'Navigation data is disabled',
   developerTools: 'Needs Developer Mode turned on',
-  onlineOnly: 'These options belong to online randomizer profiles. Open a profile that plays an Archipelago room to set them.',
-  mobileOnly: 'These options apply to the phone and tablet app only.',
+  onlineOnly: 'Only for online randomizer profiles.',
+  mobileOnly: 'Phone and tablet app only.',
 };
 
 export { DISABLED_SETTING_MESSAGES };

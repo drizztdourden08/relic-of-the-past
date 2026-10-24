@@ -26,11 +26,11 @@ const buildBugFixSection = (): Section => {
         items: [
           {
             key: 'miscBugFixes', label: 'All general bug fixes', description: 'Turn on every general fix below at once. Individual toggles below override this.',
-            hint: 'On, every general fix below starts on. A fix you set by hand keeps your choice.', keywords: 'misc bug fixes all bundle', link: 'https://github.com/snesrev/zelda3/wiki/Bug-Fixes-:-Misc.',
+            hint: '', keywords: 'misc bug fixes all bundle', link: 'https://github.com/snesrev/zelda3/wiki/Bug-Fixes-:-Misc.',
           },
           {
             key: 'gameChangingBugFixes', label: 'All gameplay-altering bug fixes', description: 'Turn on fixes that change game behavior in ways speedrunners may care about. Individual toggles override this.',
-            hint: 'On, every gameplay-altering fix below starts on. Runs that compare against the original game should leave it off.', keywords: 'game changing fixes all bundle', link: 'https://github.com/snesrev/zelda3/wiki/Bug-Fixes-:-Game-Changing',
+            hint: 'Runs that compare against the original game should leave it off.', keywords: 'game changing fixes all bundle', link: 'https://github.com/snesrev/zelda3/wiki/Bug-Fixes-:-Game-Changing',
           },
         ],
       },

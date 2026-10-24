@@ -27,12 +27,8 @@ const FfmpegInstallStep = (props: FfmpegInstallStepProps) => {
         This needs ffmpeg, which is not shipped with the app.
       </Text>
       <Text className="ffmpeg-install-step__note ffmpeg-install-step__note--faint">
-        A one-time download (around 140 MB) from the FFmpeg-Builds project, checked against its
-        published checksum before anything is unpacked. It goes in this install&apos;s own data
-        folder and deleting that folder removes it. Nothing outside the app is touched.
-      </Text>
-      <Text className="ffmpeg-install-step__note ffmpeg-install-step__note--faint">
-        LGPL licensed, and run as a separate program, not built in.
+        A one-time download of about 140 MB, checked against its published checksum and kept in the
+        app&apos;s data folder.
       </Text>
       {error !== null && (
         <Text className="ffmpeg-install-step__note ffmpeg-install-step__note--bad">{error}</Text>

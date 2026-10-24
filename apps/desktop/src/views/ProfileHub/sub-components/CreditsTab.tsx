@@ -7,12 +7,6 @@ import './CreditsTab.css';
 const CreditsPage = () => {
   return (
     <Box className="credits-tab">
-      <Box className="credits-tab__header">
-        <Text as="p" className="credits-tab__subtitle">
-          This project is built on the work of many talented people and communities.
-        </Text>
-      </Box>
-
       {CREDITS.map((category) => (
         <Box as="section" key={category.id} className="credits-tab__section">
           <Text as="h3" className="credits-tab__section-title">{category.title}</Text>

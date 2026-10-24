@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind component */
 import { useCallback, useLayoutEffect, useMemo } from 'react';
-import { Box, EmptyState, Text } from '@drizztdourden08/tessera/primitives';
+import { Box, EmptyState } from '@drizztdourden08/tessera/primitives';
 import { SidePanel } from '@drizztdourden08/tessera/composites';
 import { useStoredFold } from '../../../../hooks/useStoredFold';
 import { RescanButton } from '../../../../compounds/RescanButton';
@@ -51,7 +51,6 @@ const ControlsDevices = ({ ctrl, narrow }: ControlsSideProps) => {
                 <DeviceRow key={entry.key} entry={entry} onAssign={handleAssign} onAddMapping={addMapping} />
               ))}
               {entries.length === 0 && <EmptyState message="No devices detected" />}
-              <Text variant="caption" tone="muted">Click a device or drag it onto the bindings to assign it.</Text>
             </>
           ),
         }]}

@@ -20,7 +20,7 @@ const RunSummary = (props: RunSummaryProps) => {
       <StatTiles tiles={summaryTilesOf(profileName, config, source)} />
       {counters.length > 0 && <StatTiles tiles={counters} />}
       {!session && !gameRunning && (
-        <Text className="randomizer-page__hint">The session starts automatically when the game boots.</Text>
+        <Text className="randomizer-page__hint">Waiting for the game to start.</Text>
       )}
     </DashboardCard>
   );

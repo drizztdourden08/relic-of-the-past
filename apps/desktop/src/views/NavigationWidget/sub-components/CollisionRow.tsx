@@ -9,7 +9,7 @@ const CollisionRow = ({ playerDebug }: PlayerRowProps) => {
   if (collisionType === null || collisionType < 0) return null;
 
   return (
-    <DescRow label="Collision" desc="Room collision type (room_is_dark byte bits). 0=single layer, 1=both layers active, 2=both+scroll, 3=moving floor, 4=water/swim. Determines which BG layers have collision.">
+    <DescRow label="Collision" desc="Room collision type. 0=single layer, 1=both layers active, 2=both+scroll, 3=moving floor, 4=water/swim.">
       <Text className="nav-val-info">
         {collisionType} ({COLLISION_NAMES[collisionType] ?? '?'})
       </Text>

@@ -24,9 +24,7 @@ const ModernControlsTab = ({ ctrl }: CtrlProps) => {
         <Box className="modern-tab__slots-head">
           <Text className="modern-tab__slots-title">Slots</Text>
           <Text variant="caption" className="modern-tab__slots-hint">
-            Slots are numbered, and the list is yours: add as many as your device has controls, and
-            remove the ones you do not want. What a slot fires is chosen in the pause menu; this list
-            says where each one sits and lets you re-bind the control itself.
+            Add as many slots as your device has controls. What a slot fires is chosen in the pause menu.
           </Text>
         </Box>
         <BindingListHeader actionLabel="Slot" middleLabel="Assignment" />

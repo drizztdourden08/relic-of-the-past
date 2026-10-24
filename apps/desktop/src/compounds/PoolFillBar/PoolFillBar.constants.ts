@@ -9,7 +9,7 @@ const SEGMENTS: readonly SegmentEntry[] = [
   { key: 'prizes', color: 'info', label: 'prizes', description: 'The ten boss-reward slots, pre-placed from their own fixed pool' },
 ];
 
-const TOTAL_TITLE = 'Every location this seed generates, the same total the Checks widget shows';
+const TOTAL_TITLE = 'Every location this seed generates';
 
 const BAR_LABEL = 'Item pool';
 

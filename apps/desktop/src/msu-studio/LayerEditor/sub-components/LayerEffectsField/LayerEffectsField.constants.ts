@@ -54,7 +54,7 @@ const MAX_HZ = 20000;
 const MAX_DB = 12;
 
 const EFFECTS_LABEL = 'Effects';
-const EFFECTS_HINT = 'Processing on this layer alone, in order from top to bottom. Pick a preset to start from, then adjust.';
+const EFFECTS_HINT = 'Applied to this layer only, top to bottom.';
 
 export {
   PRESETS, PRESET_OPTIONS, EFFECT_KIND_OPTIONS, DEFAULT_EFFECT, MIN_HZ, MAX_HZ, MAX_DB,

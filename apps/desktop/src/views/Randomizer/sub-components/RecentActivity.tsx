@@ -16,7 +16,7 @@ const RecentActivity = (props: RecentActivityProps) => {
   return (
     <DashboardCard placement={placement} title="Recent activity" actions={openLog}>
       {rows.length === 0
-        ? <Text className="randomizer-page__hint">Nothing yet. Checks, items and the session show here as they happen.</Text>
+        ? <Text className="randomizer-page__hint">Nothing yet.</Text>
         : <LogPanel rows={rows} kinds={ACTIVITY_KINDS} toolbar={false} height={RECENT_HEIGHT} className="randomizer-log" />}
     </DashboardCard>
   );

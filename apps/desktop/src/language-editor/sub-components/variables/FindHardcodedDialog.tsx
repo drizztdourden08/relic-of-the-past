@@ -49,9 +49,8 @@ const FindHardcodedDialog = (props: FindHardcodedDialogProps) => {
       ) : (
         <Box className="hardcoded-dialog">
           <Text as="p" variant="caption" className="hardcoded-dialog__lead">
-            Each name below is written out as plain text somewhere in this set. Retagging
-            makes those lines reference the variable instead, so a later rename reaches
-            every one of them.
+            Each name below is written out as plain text. Retagging makes those lines reference
+            the variable, so a later rename reaches all of them.
           </Text>
           <Box className="hardcoded-dialog__rows">
             {groups.map((group) => (

@@ -14,7 +14,7 @@ const CountdownContent = (props: CountdownContentProps) => {
       <Field size="sm" label="pie">
         <SegmentedControl size="sm" value={spec.variant ?? 'setting'} options={PIE_OPTIONS} onChange={pick} />
       </Field>
-      <Text className="hud-editor__hint">Draws only while a countdown runs. The stage shows a sample.</Text>
+      <Text className="hud-editor__hint">Draws only while a countdown runs.</Text>
     </Box>
   );
 };

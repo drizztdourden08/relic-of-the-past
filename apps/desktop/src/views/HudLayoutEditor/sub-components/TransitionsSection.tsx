@@ -24,7 +24,7 @@ const TransitionsSection = (props: TransitionsSectionProps) => {
       {driven.size === 0 && (
         <EmptyState
           size="sm"
-          message="No property on this node changes at runtime yet, so nothing has anything to ease between. Adding one anyway is fine. It will ease the day something drives it."
+          message="Nothing on this node changes at runtime yet."
         />
       )}
       {TRANSITION_PROPERTIES.map((key) => (
@@ -37,10 +37,7 @@ const TransitionsSection = (props: TransitionsSectionProps) => {
       ))}
       {properties.length > 0 && (
         <Box className="hud-inspect__group">
-          <Text className="hud-editor__hint">
-            One duration and one curve, shared by every property above, because the document model carries a
-            single pair per node.
-          </Text>
+          <Text className="hud-editor__hint">One duration and one curve, shared by every property above.</Text>
           <ValueField
             label="duration (ms)"
             value={transition?.duration ?? 200}
