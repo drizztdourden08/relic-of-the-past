@@ -5,6 +5,7 @@ import { ControllerPortRow } from '@app/compounds/ControllerPortRow';
 import { ControllerStatusBar } from '@app/compounds/ControllerStatusBar';
 import type { BoxProps } from '../ControllerPage.type';
 import { controllerFacts } from '../behavior/controller-facts';
+import { InfoIdentity } from './InfoIdentity';
 import { RumbleTests } from './RumbleTests';
 
 const InfoBox = ({ page }: BoxProps) => {
@@ -15,19 +16,20 @@ const InfoBox = ({ page }: BoxProps) => {
   return (
     <Card title="Controller" actions={status} className="controller-page__info">
       <Box className="controller-page__stack">
-        <ControllerStatusBar
-          detected
-          showAbsent
-          busType={entry.busType}
-          connectionState={entry.connectionState}
-          hasRumble={entry.hasRumble}
-          hasGyro={entry.hasGyro}
-        />
+        <InfoIdentity page={page} />
         <Box className="controller-page__badges">
+          <ControllerStatusBar
+            detected
+            showAbsent
+            busType={entry.busType}
+            connectionState={entry.connectionState}
+            hasRumble={entry.hasRumble}
+            hasGyro={entry.hasGyro}
+          />
           <Status tone="primary">HID</Status>
-          {calibration.existingStickCal && <Status tone="success">Sticks Calibrated</Status>}
+          {calibration.existingStickCal && <Status tone="success">Sticks calibrated</Status>}
         </Box>
-        <FactsPanel groups={controllerFacts(page)} layout="rows" label="Controller facts" />
+        <FactsPanel groups={controllerFacts(page)} layout="terms" label="Controller facts" />
         {adapterPort !== null && (
           <ControllerPortRow
             portNumber={adapterPort}

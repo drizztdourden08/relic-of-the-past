@@ -1,12 +1,7 @@
 /* @layer renderer-components @kind style */
-.controller-pads {
+.controller-directory {
   display: flex;
-  align-items: flex-start;
+  flex-direction: column;
   gap: var(--space-md);
-  min-block-size: 0;
-}
-
-.controller-pads__page {
-  flex: 1;
   min-inline-size: 0;
 }

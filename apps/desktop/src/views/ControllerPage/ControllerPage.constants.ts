@@ -21,4 +21,16 @@ const FALLBACK_GLYPH = 'generic-btn';
 const NO_RUMBLE_REASON = 'This controller reports no rumble.';
 const UNMAPPED_REASON = 'No input until the controller is mapped.';
 
-export { FALLBACK_GLYPH, IDLE_AXIS_SLOTS, IDLE_BUTTON_SLOTS, NO_RUMBLE_REASON, RUMBLE_TESTS, UNMAPPED_REASON };
+const NO_PADS_KEY = 'none';
+const NO_PADS_TITLE = 'No controllers';
+const NO_PADS_MESSAGE = 'No controllers.';
+const GONE_MESSAGE = 'Controller disconnected.';
+
+const RUN_DIAGNOSTICS_LABEL = 'Run diagnostics';
+const DIAGNOSTICS_ROUTE = 'controllers/diagnostics';
+const REPORT_LABEL = 'Report this controller as not working';
+
+export {
+  DIAGNOSTICS_ROUTE, FALLBACK_GLYPH, GONE_MESSAGE, IDLE_AXIS_SLOTS, IDLE_BUTTON_SLOTS, NO_PADS_KEY, NO_PADS_MESSAGE, NO_PADS_TITLE, NO_RUMBLE_REASON,
+  REPORT_LABEL, RUMBLE_TESTS, RUN_DIAGNOSTICS_LABEL, UNMAPPED_REASON,
+};

@@ -1,2 +1,2 @@
 /* @layer renderer-components @kind barrel */
-export { ControllerPage } from './ControllerPage';
+export { usePadPages } from './behavior/usePadPages';

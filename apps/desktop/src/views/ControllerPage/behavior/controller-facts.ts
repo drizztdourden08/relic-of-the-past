@@ -16,8 +16,6 @@ const controllerFacts = (page: ControllerPageModel): readonly FactsPanelGroup[] 
   return [[
     { label: 'Vendor:Product', value: idLabel, mono: true, copyable: true },
     ...(entry.guid ? [{ label: 'GUID', value: entry.guid, mono: true, copyable: true }] : []),
-    { label: 'Family', value: entry.family ?? 'generic' },
-    { label: 'SDL type', value: entry.sdlType ?? 'unknown' },
     ...(resolved ? [{ label: 'Inputs', value: `${resolved.controls.length}` }] : []),
     ...(report ? [{ label: 'Report', value: report, mono: true }] : []),
     { label: 'Mapping', value: entry.mapping ? 'Custom mapping' : 'SDL built in' },

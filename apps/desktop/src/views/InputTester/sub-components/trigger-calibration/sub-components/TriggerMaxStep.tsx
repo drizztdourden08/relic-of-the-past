@@ -14,7 +14,7 @@ const TriggerMaxStep = ({ cal, label }: TriggerStepProps) => {
   return (
     <Box>
       <Text as="p" className="cal-wizard__para">
-        <Text as="strong">Fully press the {label}</Text> and hold it down. The software tracks the maximum value.
+        <Text as="strong">Fully press the {label}</Text> and hold it.
       </Text>
 
       <Box className="cal-wizard__value-box">

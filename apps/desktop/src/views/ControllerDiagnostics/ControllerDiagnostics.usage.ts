@@ -2,7 +2,7 @@
 import type { ComponentUsage } from '@drizztdourden08/tessera';
 
 const usage = {
-  job: 'The diagnostics page of the Controllers area: the gamepad diagnostics wizard inline, and a card with the last result.',
+  job: 'The diagnostics page of the Controllers area: the gamepad diagnostics wizard inline, and the last result under it.',
   useWhen: ['As the body of the Diagnostics page, or opened from a pad page with that pad chosen.'],
   avoidWhen: [{ case: 'A one-off dialog over another page.', use: 'DialogShell' }],
   rules: [

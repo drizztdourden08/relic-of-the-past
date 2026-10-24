@@ -7,7 +7,7 @@ import type { BoxProps } from '../ControllerPage.type';
 const PadBox = ({ page }: BoxProps) => {
   const { overlay, overlayState, name, addMapping } = page;
   return (
-    <Card title="Live input" subtitle="Press buttons and move the sticks" className="controller-page__pad">
+    <Card title="Live input" className="controller-page__pad">
       {overlay ? (
         <PadOverlay
           outline={overlay.outline}

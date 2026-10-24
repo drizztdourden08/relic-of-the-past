@@ -21,7 +21,7 @@ const ControllerRawBytes = ({ state }: { state: ControllerInputState }) => (
         ))}
       </Box>
     ) : (
-      <Text className="controller-raw-bytes__summary">This controller sends no raw report.</Text>
+      <Text className="controller-raw-bytes__summary">No raw report.</Text>
     )}
   </Box>
 );

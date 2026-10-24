@@ -4,6 +4,7 @@ import { usePadState } from '@drizztdourden08/brock-input/renderer';
 import { controllerCardInfo, resolveDeviceFromEntry } from '@rotp/input-mapping';
 import { CONTROLLER_ICON_MAP } from '@app/input/controller-families/controller-icon-map.constants';
 import { useControllerDevices } from '@app/hooks/useControllerDevices';
+import { padDisplayName } from '@app/input/controller-names/pad-display-name';
 import type { ControllerPageModel } from '../ControllerPage.type';
 import { padToOverlayState } from './pad-to-overlay-state';
 import { useControllerCalibration } from './useControllerCalibration';
@@ -33,7 +34,7 @@ const useControllerPage = (deviceKey: string): ControllerPageModel | null => {
     const info = controllerCardInfo(entry);
     return {
       deviceKey, entry, resolved, state, pad, overlay, overlayState, calibration, addMapping, adapterPort,
-      name: info.displayName,
+      name: padDisplayName(entry),
       idLabel: `${info.vendorId}:${info.productId}`,
       brandIcon: CONTROLLER_ICON_MAP[info.deviceFamily] ?? null,
     };

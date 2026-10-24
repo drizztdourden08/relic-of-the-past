@@ -7,7 +7,7 @@ import { TriggerBar } from './TriggerBar';
 const TriggerRestStep = ({ cal, label, axisIndex }: TriggerRestStepProps) => (
   <Box>
     <Text as="p" className="cal-wizard__para">
-      <Text as="strong">Leave the {label} fully released</Text>. Don't touch it. Recording the idle rest position.
+      <Text as="strong">Leave the {label} fully released.</Text>
     </Text>
 
     {!cal.restDone ? (

@@ -9,8 +9,13 @@ import type { OverlaySlotView, PadOverlayState } from '@app/composites/PadOverla
 
 interface ControllerPageProps {
   deviceKey: string;
-  gone?: boolean;
   onRunDiagnostics?: (deviceKey: string) => void;
+}
+
+interface PadNavEntry {
+  id: string;
+  label: string;
+  connected: boolean;
 }
 
 interface PadOverlayModel {
@@ -80,8 +85,8 @@ interface AxisActionsProps {
   onCalibrate: () => void;
 }
 
-interface PageHeadProps {
-  page: ControllerPageModel;
+interface PadActionsProps {
+  deviceKey: string;
   onRunDiagnostics: ((deviceKey: string) => void) | undefined;
   onReport: (deviceKey: string) => void;
 }
@@ -106,5 +111,5 @@ interface TriggerReadoutProps {
 
 export type {
   AxisActionsProps, BoxProps, CalibrationTarget, CardCalibrationProps, ControllerCalibration, ControllerPageModel, ControllerPageProps, PadOverlayModel,
-  PageHeadProps, RumbleStrengthControlProps, RumbleTest, RumbleTestButtonProps, RumbleTestsProps, StickReadoutProps, TriggerReadoutProps,
+  PadActionsProps, PadNavEntry, RumbleStrengthControlProps, RumbleTest, RumbleTestButtonProps, RumbleTestsProps, StickReadoutProps, TriggerReadoutProps,
 };

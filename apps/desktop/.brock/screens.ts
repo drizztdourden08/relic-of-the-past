@@ -3,8 +3,8 @@ import { buildScreenTree, lazyComponent } from '@drizztdourden08/brock-react';
 import config from '../src/screens/screens.config';
 import { searchIndex } from './search';
 import { devScreens } from './screens.dev';
-import { meta as controllersConnectedPadsPageMeta } from '../src/screens/controllers/connected/pads.page';
-import { meta as controllersHomeHeroMeta } from '../src/screens/controllers/home.hero';
+import ControllersConnectedPadsLive, { meta as controllersConnectedPadsLiveMeta } from '../src/screens/controllers/connected/pads.live';
+import { meta as controllersDirectoryPageMeta } from '../src/screens/controllers/directory.page';
 import { meta as controllersToolsDiagnosticsPageMeta } from '../src/screens/controllers/tools/diagnostics.page';
 import { meta as controllersToolsLogsPageMeta } from '../src/screens/controllers/tools/logs.page';
 import { meta as creditsCardMeta } from '../src/screens/credits.card';
@@ -48,8 +48,8 @@ import { meta as storeMineInstalledPageMeta } from '../src/screens/store/mine/in
 import { meta as storeMineUpdatesPageMeta } from '../src/screens/store/mine/updates.page';
 
 const screenTree = buildScreenTree(config, [
-  { kind: 'page', bucket: 'controllers', group: 'connected', id: 'pads', component: lazyComponent(() => import('../src/screens/controllers/connected/pads.page')), meta: controllersConnectedPadsPageMeta },
-  { kind: 'hero', bucket: 'controllers', id: 'home', component: lazyComponent(() => import('../src/screens/controllers/home.hero')), meta: controllersHomeHeroMeta },
+  { kind: 'live', bucket: 'controllers', group: 'connected', id: 'pads', usePages: ControllersConnectedPadsLive, meta: controllersConnectedPadsLiveMeta },
+  { kind: 'page', bucket: 'controllers', id: 'directory', component: lazyComponent(() => import('../src/screens/controllers/directory.page')), meta: controllersDirectoryPageMeta },
   { kind: 'page', bucket: 'controllers', group: 'tools', id: 'diagnostics', component: lazyComponent(() => import('../src/screens/controllers/tools/diagnostics.page')), meta: controllersToolsDiagnosticsPageMeta },
   { kind: 'page', bucket: 'controllers', group: 'tools', id: 'logs', component: lazyComponent(() => import('../src/screens/controllers/tools/logs.page')), meta: controllersToolsLogsPageMeta },
   { kind: 'card', id: 'credits', component: lazyComponent(() => import('../src/screens/credits.card')), meta: creditsCardMeta },

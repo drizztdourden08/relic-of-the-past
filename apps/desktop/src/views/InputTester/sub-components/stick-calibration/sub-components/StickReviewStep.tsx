@@ -18,7 +18,7 @@ const StickReviewStep = ({ cal, onComplete }: StickReviewStepProps) => {
   return (
     <Box>
       <Text as="p" className="cal-wizard__para">
-        <Text as="strong">Test the calibrated output</Text>. Sticks should be centered at rest and reach the edge evenly. Adjust the deadzones below.
+        <Text as="strong">Check the sticks, then adjust the deadzones.</Text>
       </Text>
       <Box className="stick-cal__dz-grid">
         <DeadzoneSlider title="Inner Deadzone" value={innerDz} min={0} max={30} note="Eliminates stick drift near center" onChange={setInnerDz} />

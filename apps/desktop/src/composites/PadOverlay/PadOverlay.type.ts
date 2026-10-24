@@ -6,6 +6,8 @@ type OverlayPartKind = 'button' | 'analog' | 'stick' | 'dpad';
 
 type LabelSide = 'left' | 'right';
 
+type LabelMode = 'inline' | 'stacked';
+
 interface Point {
   x: number;
   y: number;
@@ -14,6 +16,13 @@ interface Point {
 interface Nudge {
   dx: number;
   dy: number;
+}
+
+interface Bounds {
+  x: number;
+  y: number;
+  w: number;
+  h: number;
 }
 
 interface OverlaySlotView {
@@ -58,6 +67,7 @@ interface PlacedLabel {
   side: LabelSide;
   text: Point;
   leader: Leader;
+  detailDy: number;
 }
 
 interface PlacedLine {
@@ -71,16 +81,72 @@ interface AnchorFrame {
   r: number;
 }
 
-interface OverlayBox {
-  readonly width: number;
-  readonly height: number;
-  readonly gutter: number;
-  readonly top: number;
-  readonly lineH: number;
-  readonly minLineH: number;
-  readonly centreBand: number;
-  readonly elbow: number;
-  readonly textGap: number;
+interface BoxSize {
+  width: number;
+  height: number;
+}
+
+interface TextMeasure {
+  name: (text: string) => number;
+  detail: (text: string) => number;
+}
+
+interface OverlayMetrics {
+  width: number;
+  height: number;
+  fontPx: number;
+  measure: TextMeasure;
+}
+
+interface OverlayFrame {
+  width: number;
+  height: number;
+  mode: LabelMode;
+  scale: number;
+  origin: Point;
+  top: number;
+  bottom: number;
+  lineH: number;
+  minLineH: number;
+  lineGap: number;
+  edge: (side: LabelSide, y: number, own: PlacedPart) => number;
+}
+
+interface EdgeBand {
+  y: number;
+  half: number;
+  own: PlacedPart;
+}
+
+interface LabelSlack {
+  left: number;
+  right: number;
+}
+
+interface FitInput {
+  raw: readonly PlacedPart[];
+  bounds: Bounds;
+  sides: ReadonlyMap<string, LabelSide>;
+  points: readonly Point[];
+  metrics: OverlayMetrics;
+  mode: LabelMode;
+  widths: ReadonlyMap<string, number>;
+}
+
+interface FramedParts {
+  frame: OverlayFrame;
+  parts: PlacedPart[];
+}
+
+interface OverlayLayout {
+  frame: OverlayFrame;
+  parts: PlacedPart[];
+  labels: PlacedLabel[];
+}
+
+interface FitAttempt {
+  layout: OverlayLayout;
+  fits: boolean;
 }
 
 interface PartProps {
@@ -100,6 +166,7 @@ interface OverlayLabelProps {
 }
 
 export type {
-  AnchorFrame, Leader, LabelSide, Nudge, OverlayBox, OverlayHaloProps, OverlayLabelProps, OverlayPartKind,
-  OverlaySlotView, PadOverlayProps, PadOverlayState, PartProps, PartState, PlacedLabel, PlacedLine, PlacedPart, Point,
+  AnchorFrame, Bounds, BoxSize, EdgeBand, FitAttempt, FitInput, FramedParts, LabelSlack, Leader, LabelMode, LabelSide, Nudge, OverlayFrame, OverlayHaloProps, OverlayLabelProps, OverlayLayout,
+  OverlayMetrics, OverlayPartKind, OverlaySlotView, PadOverlayProps, PadOverlayState, PartProps, PartState, PlacedLabel,
+  PlacedLine, PlacedPart, Point, TextMeasure,
 };

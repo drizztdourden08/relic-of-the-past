@@ -17,7 +17,7 @@ const StickRangeStep = ({ cal, target }: StickStepProps) => {
   return (
     <Box>
       <Text as="p" className="cal-wizard__para">
-        <Text as="strong">Slowly rotate {target ? `the ${target} stick` : 'both sticks'}</Text> in full circles, reaching the physical limits in all directions.
+        <Text as="strong">Slowly rotate {target ? `the ${target} stick` : 'both sticks'}</Text> in full circles to the edge.
       </Text>
       <Box className={`${valuesClass} stick-cal__values--range`}>
         {calibrateLeft && (

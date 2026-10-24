@@ -1,10 +1,11 @@
 /* @layer renderer-components @kind component */
 import { useCallback, useState } from 'react';
-import { Button, Card, Stack, Text } from '@drizztdourden08/tessera/primitives';
+import { Box, Button, Text } from '@drizztdourden08/tessera/primitives';
 import { CalibrationResult, DiagnosticsWizard } from '@app/views/InputTester';
 import type { HidControllerMap } from '@app/views/InputTester';
-import { IDLE_HINT, IDLE_TITLE, RESULT_TITLE } from './ControllerDiagnostics.constants';
+import { RESULT_TITLE, RUN_LABEL } from './ControllerDiagnostics.constants';
 import type { ControllerDiagnosticsProps } from './ControllerDiagnostics.type';
+import './ControllerDiagnostics.css';
 
 const ControllerDiagnostics = (props: ControllerDiagnosticsProps) => {
   const { initialDeviceKey } = props;
@@ -14,25 +15,17 @@ const ControllerDiagnostics = (props: ControllerDiagnosticsProps) => {
   const stop = useCallback(() => setRunning(false), []);
 
   return (
-    <Stack gap="md" align="stretch">
-      {running ? (
-        <Card>
-          <DiagnosticsWizard initialDeviceKey={initialDeviceKey} onComplete={setLastResult} onClose={stop} />
-        </Card>
-      ) : (
-        <Card title={IDLE_TITLE}>
-          <Stack gap="sm" align="start">
-            <Text as="p">{IDLE_HINT}</Text>
-            <Button variant="primary" onClick={start}>Run diagnostics</Button>
-          </Stack>
-        </Card>
-      )}
+    <Box className="controller-diagnostics">
+      {running
+        ? <DiagnosticsWizard initialDeviceKey={initialDeviceKey} onComplete={setLastResult} onClose={stop} />
+        : <Box className="controller-diagnostics__idle"><Button variant="primary" onClick={start}>{RUN_LABEL}</Button></Box>}
       {lastResult && (
-        <Card title={RESULT_TITLE}>
+        <Box className="controller-diagnostics__result">
+          <Text className="controller-diagnostics__label">{RESULT_TITLE}</Text>
           <CalibrationResult calibration={lastResult} />
-        </Card>
+        </Box>
       )}
-    </Stack>
+    </Box>
   );
 };
 

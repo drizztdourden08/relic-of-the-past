@@ -25,4 +25,8 @@ const UNSIZED_RADIUS: Readonly<Partial<Record<ControllerSilhouetteAnchorId, numb
   'shoulder.left': 8, 'shoulder.right': 8, 'trigger.left': 6, 'trigger.right': 6,
 };
 
-export { FACE_BEARINGS, FACE_BUTTON_RATIO, SLOT_ANCHOR_ID, UNSIZED_RADIUS };
+const CENTRE_BAND = 24;
+
+const PATH_NUMBER = /-?\d*\.?\d+/g;
+
+export { CENTRE_BAND, FACE_BEARINGS, FACE_BUTTON_RATIO, PATH_NUMBER, SLOT_ANCHOR_ID, UNSIZED_RADIUS };

@@ -2,21 +2,25 @@
 
 .pad-overlay {
   position: relative;
+  flex: 1;
   inline-size: 100%;
-  max-inline-size: var(--size-1024);
-  margin: 0 auto;
+  aspect-ratio: 2 / 1;
+  min-block-size: var(--size-256);
+  max-block-size: 60vh;
+  margin: 0;
+  font-size: var(--text-base);
 }
 
 .pad-overlay__art {
+  position: absolute;
+  inset: 0;
   display: block;
-  inline-size: 100%;
-  block-size: auto;
   overflow: visible;
 }
 
 .pad-overlay__outline {
   fill: none;
-  stroke: var(--c-border-strong);
+  stroke: var(--c-controller-line);
   stroke-width: var(--border-width-thick);
   stroke-linejoin: round;
   vector-effect: non-scaling-stroke;
@@ -24,16 +28,14 @@
 
 .pad-overlay__leader {
   fill: none;
-  stroke: var(--c-text-muted);
+  stroke: var(--c-text-faint);
   stroke-width: var(--border-width-thin);
   stroke-linejoin: round;
-  vector-effect: non-scaling-stroke;
   transition: stroke var(--transition-fast);
 }
 
 .pad-overlay__label {
   fill: var(--c-text-dim);
-  font-size: var(--text-xs);
   transition: fill var(--transition-fast);
 }
 
@@ -42,6 +44,7 @@
 }
 
 .pad-overlay__detail {
+  fill: var(--c-text-muted);
   font-family: var(--font-mono);
   font-variant-numeric: tabular-nums;
 }
@@ -51,6 +54,10 @@
 }
 
 .pad-overlay__callout[data-active] .pad-overlay__label {
+  fill: var(--c-text);
+}
+
+.pad-overlay__callout[data-active] .pad-overlay__detail {
   fill: var(--c-danger-bright);
 }
 
@@ -66,7 +73,6 @@
   fill: none;
   stroke: var(--c-text-muted);
   stroke-width: var(--border-width-thin);
-  vector-effect: non-scaling-stroke;
 }
 
 .pad-overlay__stick {

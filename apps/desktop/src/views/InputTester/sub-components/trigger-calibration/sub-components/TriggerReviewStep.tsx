@@ -17,7 +17,7 @@ const TriggerReviewStep = ({ cal, onComplete }: TriggerReviewStepProps) => {
   return (
     <Box>
       <Text as="p" className="cal-wizard__para">
-        <Text as="strong">Test the calibrated output.</Text> The trigger should read 0 at rest and 1 when fully pressed.
+        <Text as="strong">Check the trigger: 0 at rest, 1 fully pressed.</Text>
       </Text>
 
       <Box className="trigger-cal__dz-box">

@@ -34,7 +34,7 @@ const ButtonMappingActions = (props: ButtonMappingActionsProps) => {
   return (
     <Box className="hid-cal__prereq-actions">
       <Text className="hid-cal__manual-hint">
-        Click a button above to detect, or click a byte in the grid to assign manually.
+        Click a button to detect it, or a byte to assign it.
       </Text>
       <Button variant="tertiary" size="sm" onClick={pauseInput}>Deselect</Button>
     </Box>

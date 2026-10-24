@@ -12,9 +12,9 @@ const ByteCaptureStep = forwardRef<HidWizardHandle, ByteCaptureStepProps>((props
     <>
       <HoldStatusLine
         status={releaseStatus}
-        pendingText="Releasing the hold on every controller..."
-        doneText="The hold on this controller is dropped for the capture below."
-        errorText="Couldn't release the hold. The capture below may stay empty."
+        pendingText="Releasing the controller..."
+        doneText="Controller released."
+        errorText="Could not release the controller. The capture may stay empty."
       />
       {releaseStatus === 'done' && (
         <HidCalibrationWizard

@@ -11,7 +11,7 @@ const StickCenterStep = ({ cal, target }: StickStepProps) => {
   return (
     <Box>
       <Text as="p" className="cal-wizard__para">
-        <Text as="strong">Leave {target ? `the ${target} stick` : 'both sticks'} at rest</Text>. Don't touch {target ? 'it' : 'them'}. The software will record the idle center position.
+        <Text as="strong">Leave {target ? `the ${target} stick` : 'both sticks'} at rest.</Text>
       </Text>
       {!centerDone ? (
         <SamplingProgress progress={centerProgress} />

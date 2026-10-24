@@ -1,19 +1,21 @@
 /* @layer renderer-components @kind hook */
-import { useMemo } from 'react';
+import { useEffect, useState } from 'react';
 import type { DeviceEntry } from '@drizztdourden08/brock-input';
-import type { MappingDbEntry, MappingEntries } from '../ControllerDirectory.type';
+import { inputApi } from '@drizztdourden08/brock-input/renderer';
+import type { MappingList } from './mapping-list.type';
 
-const entryOfDevice = (device: DeviceEntry): MappingDbEntry => ({
-  guid: device.guid ?? device.deviceKey,
-  name: device.name ?? device.product,
-  vendorId: device.vendorId,
-  productId: device.productId,
-  family: device.family ?? 'generic',
-  source: 'sdl',
-  mapping: device.mapping ?? '',
-});
+const useMappingEntries = (devices: readonly DeviceEntry[]): MappingList => {
+  const [list, setList] = useState<MappingList>({ entries: [], loaded: false });
 
-const useMappingEntries = (connected: readonly DeviceEntry[]): MappingEntries =>
-  useMemo(() => ({ entries: connected.map(entryOfDevice), complete: false }), [connected]);
+  useEffect(() => {
+    let live = true;
+    void inputApi().mapping.list()
+      .then((entries) => { if (live) setList({ entries, loaded: true }); })
+      .catch(() => { if (live) setList((previous) => ({ ...previous, loaded: true })); });
+    return () => { live = false; };
+  }, [devices]);
+
+  return list;
+};
 
 export { useMappingEntries };
