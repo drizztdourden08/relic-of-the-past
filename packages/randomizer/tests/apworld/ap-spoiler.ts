@@ -27,7 +27,7 @@ const parseApSpoiler = (text: string): ApSpoiler => {
   for (const line of body.split(/\r?\n/)) {
     const header = /^([A-Z][A-Za-z ]+):\s*$/.exec(line);
     if (header !== null && sphere === null) {
-      section = header[1];
+      section = header[1] ?? '';
       continue;
     }
     if (section === 'Locations' && line.trim() !== '') {
