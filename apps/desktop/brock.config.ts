@@ -53,11 +53,6 @@ const linuxSdl3Soname: WorkflowStep = {
   run: 'node tooling/ensure-linux-sdl3-soname.mjs',
 };
 
-// Brock 0.82 renders workflows.attest but its BrockWorkflowOptions type does not list it yet.
-const archipelagoAttest = {
-  attest: { stage: 'beforePackage', paths: ['build/archipelago/*.apworld'] },
-} as const;
-
 export default defineBrockConfig({
   product: {
     id: 'relic-of-the-past',
@@ -113,6 +108,6 @@ export default defineBrockConfig({
         afterPackage: [publishStateFormat, shipArchipelagoBuilds],
       },
     },
-    ...archipelagoAttest,
+    attest: { stage: 'beforePackage', paths: ['build/archipelago/*.apworld'], perFile: true },
   },
 });

@@ -14,8 +14,8 @@ const sections: Section[] = [
     id: 'window',
     title: 'Window',
     items: [
-      { key: 'startFullscreen', label: 'Start in Fullscreen', description: 'Automatically enter fullscreen when the game starts', hint: '', keywords: 'fullscreen launch start' },
-      { key: 'viewportConstraint', label: 'Viewport', description: 'Controls how the game canvas relates to the window', hint: '', keywords: 'ratio lock constrain aspect black bars stretch fill fit viewport', control: { kind: 'choice', options: viewportModes } },
+      { key: 'startFullscreen', label: 'Start in Fullscreen', description: 'Automatically enter fullscreen when the game starts', keywords: 'fullscreen launch start' },
+      { key: 'viewportConstraint', label: 'Viewport', description: 'Controls how the game canvas relates to the window', keywords: 'ratio lock constrain aspect black bars stretch fill fit viewport', control: { kind: 'choice', options: viewportModes } },
       { key: 'pixelPerfect', label: 'Pixel Perfect', description: 'Scale the picture by whole source pixels only, so every pixel is exactly the same size. Removes the shimmer on fences, walls and other straight edges while scrolling, at the cost of slightly wider black borders. Turns Linear Filtering off while active.', hint: 'Needs the Letterbox viewport.', keywords: 'pixel perfect integer scale scaling sharp crisp shimmer wobble ripple tearing nearest' },
     ],
   },

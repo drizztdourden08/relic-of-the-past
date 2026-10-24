@@ -11,13 +11,13 @@ interface ControlRowLook {
 interface ControlRowProps extends ControlRowLook {
   id: string;
   title: string;
-  hint: string;
+  hint?: string;
   description?: string;
 }
 
 interface SettingItemText {
   title: string;
-  hint: string;
+  hint?: string;
   description?: string;
 }
 

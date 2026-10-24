@@ -408,25 +408,165 @@ jobs:
         shell: bash
         run: "node tooling/vault/check-dataset.mjs"
 
-      - name: "Attest the release files"
-        id: brock-attest
+      - name: "List the release files to attest"
+        id: brock-attest-files
+        shell: bash
+        env:
+          ATTEST_PATHS: "build/archipelago/*.apworld"
+        run: |
+          shopt -s globstar nullglob
+          declare -A seen
+          files=()
+          while IFS= read -r pattern; do
+            for file in $pattern; do
+              case "$file" in *.sigstore.json) continue ;; esac
+              if [ -f "$file" ] && [ -z "${seen[$file]:-}" ]; then seen[$file]=1; files+=("$file"); fi
+            done
+          done <<< "$ATTEST_PATHS"
+          if [ "${#files[@]}" -eq 0 ]; then echo "::error::No file matches workflows.attest.paths."; exit 1; fi
+          if [ "${#files[@]}" -gt 16 ]; then echo "::error::workflows.attest.perFile attests up to 16 files, and ${#files[@]} match."; exit 1; fi
+          printf '%s\n' "${files[@]}" > "$RUNNER_TEMP/brock-attest-files.txt"
+          i=0
+          for file in "${files[@]}"; do i=$((i + 1)); echo "file-$i=$file" >> "$GITHUB_OUTPUT"; done
+
+      - name: "Attest release file 1"
+        id: brock-attest-1
+        if: "steps.brock-attest-files.outputs.file-1 != ''"
         uses: actions/attest-build-provenance@4d101475d8b20a2381f78447822ac1eab6504dd8
         with:
-          subject-path: "build/archipelago/*.apworld"
+          subject-path: "${{ steps.brock-attest-files.outputs.file-1 }}"
+
+      - name: "Attest release file 2"
+        id: brock-attest-2
+        if: "steps.brock-attest-files.outputs.file-2 != ''"
+        uses: actions/attest-build-provenance@4d101475d8b20a2381f78447822ac1eab6504dd8
+        with:
+          subject-path: "${{ steps.brock-attest-files.outputs.file-2 }}"
+
+      - name: "Attest release file 3"
+        id: brock-attest-3
+        if: "steps.brock-attest-files.outputs.file-3 != ''"
+        uses: actions/attest-build-provenance@4d101475d8b20a2381f78447822ac1eab6504dd8
+        with:
+          subject-path: "${{ steps.brock-attest-files.outputs.file-3 }}"
+
+      - name: "Attest release file 4"
+        id: brock-attest-4
+        if: "steps.brock-attest-files.outputs.file-4 != ''"
+        uses: actions/attest-build-provenance@4d101475d8b20a2381f78447822ac1eab6504dd8
+        with:
+          subject-path: "${{ steps.brock-attest-files.outputs.file-4 }}"
+
+      - name: "Attest release file 5"
+        id: brock-attest-5
+        if: "steps.brock-attest-files.outputs.file-5 != ''"
+        uses: actions/attest-build-provenance@4d101475d8b20a2381f78447822ac1eab6504dd8
+        with:
+          subject-path: "${{ steps.brock-attest-files.outputs.file-5 }}"
+
+      - name: "Attest release file 6"
+        id: brock-attest-6
+        if: "steps.brock-attest-files.outputs.file-6 != ''"
+        uses: actions/attest-build-provenance@4d101475d8b20a2381f78447822ac1eab6504dd8
+        with:
+          subject-path: "${{ steps.brock-attest-files.outputs.file-6 }}"
+
+      - name: "Attest release file 7"
+        id: brock-attest-7
+        if: "steps.brock-attest-files.outputs.file-7 != ''"
+        uses: actions/attest-build-provenance@4d101475d8b20a2381f78447822ac1eab6504dd8
+        with:
+          subject-path: "${{ steps.brock-attest-files.outputs.file-7 }}"
+
+      - name: "Attest release file 8"
+        id: brock-attest-8
+        if: "steps.brock-attest-files.outputs.file-8 != ''"
+        uses: actions/attest-build-provenance@4d101475d8b20a2381f78447822ac1eab6504dd8
+        with:
+          subject-path: "${{ steps.brock-attest-files.outputs.file-8 }}"
+
+      - name: "Attest release file 9"
+        id: brock-attest-9
+        if: "steps.brock-attest-files.outputs.file-9 != ''"
+        uses: actions/attest-build-provenance@4d101475d8b20a2381f78447822ac1eab6504dd8
+        with:
+          subject-path: "${{ steps.brock-attest-files.outputs.file-9 }}"
+
+      - name: "Attest release file 10"
+        id: brock-attest-10
+        if: "steps.brock-attest-files.outputs.file-10 != ''"
+        uses: actions/attest-build-provenance@4d101475d8b20a2381f78447822ac1eab6504dd8
+        with:
+          subject-path: "${{ steps.brock-attest-files.outputs.file-10 }}"
+
+      - name: "Attest release file 11"
+        id: brock-attest-11
+        if: "steps.brock-attest-files.outputs.file-11 != ''"
+        uses: actions/attest-build-provenance@4d101475d8b20a2381f78447822ac1eab6504dd8
+        with:
+          subject-path: "${{ steps.brock-attest-files.outputs.file-11 }}"
+
+      - name: "Attest release file 12"
+        id: brock-attest-12
+        if: "steps.brock-attest-files.outputs.file-12 != ''"
+        uses: actions/attest-build-provenance@4d101475d8b20a2381f78447822ac1eab6504dd8
+        with:
+          subject-path: "${{ steps.brock-attest-files.outputs.file-12 }}"
+
+      - name: "Attest release file 13"
+        id: brock-attest-13
+        if: "steps.brock-attest-files.outputs.file-13 != ''"
+        uses: actions/attest-build-provenance@4d101475d8b20a2381f78447822ac1eab6504dd8
+        with:
+          subject-path: "${{ steps.brock-attest-files.outputs.file-13 }}"
+
+      - name: "Attest release file 14"
+        id: brock-attest-14
+        if: "steps.brock-attest-files.outputs.file-14 != ''"
+        uses: actions/attest-build-provenance@4d101475d8b20a2381f78447822ac1eab6504dd8
+        with:
+          subject-path: "${{ steps.brock-attest-files.outputs.file-14 }}"
+
+      - name: "Attest release file 15"
+        id: brock-attest-15
+        if: "steps.brock-attest-files.outputs.file-15 != ''"
+        uses: actions/attest-build-provenance@4d101475d8b20a2381f78447822ac1eab6504dd8
+        with:
+          subject-path: "${{ steps.brock-attest-files.outputs.file-15 }}"
+
+      - name: "Attest release file 16"
+        id: brock-attest-16
+        if: "steps.brock-attest-files.outputs.file-16 != ''"
+        uses: actions/attest-build-provenance@4d101475d8b20a2381f78447822ac1eab6504dd8
+        with:
+          subject-path: "${{ steps.brock-attest-files.outputs.file-16 }}"
 
       - name: "Write the attestation bundles"
         shell: bash
         env:
-          BUNDLE_PATH: "${{ steps.brock-attest.outputs.bundle-path }}"
-          ATTEST_PATHS: "build/archipelago/*.apworld"
+          BUNDLE_1: "${{ steps.brock-attest-1.outputs.bundle-path }}"
+          BUNDLE_2: "${{ steps.brock-attest-2.outputs.bundle-path }}"
+          BUNDLE_3: "${{ steps.brock-attest-3.outputs.bundle-path }}"
+          BUNDLE_4: "${{ steps.brock-attest-4.outputs.bundle-path }}"
+          BUNDLE_5: "${{ steps.brock-attest-5.outputs.bundle-path }}"
+          BUNDLE_6: "${{ steps.brock-attest-6.outputs.bundle-path }}"
+          BUNDLE_7: "${{ steps.brock-attest-7.outputs.bundle-path }}"
+          BUNDLE_8: "${{ steps.brock-attest-8.outputs.bundle-path }}"
+          BUNDLE_9: "${{ steps.brock-attest-9.outputs.bundle-path }}"
+          BUNDLE_10: "${{ steps.brock-attest-10.outputs.bundle-path }}"
+          BUNDLE_11: "${{ steps.brock-attest-11.outputs.bundle-path }}"
+          BUNDLE_12: "${{ steps.brock-attest-12.outputs.bundle-path }}"
+          BUNDLE_13: "${{ steps.brock-attest-13.outputs.bundle-path }}"
+          BUNDLE_14: "${{ steps.brock-attest-14.outputs.bundle-path }}"
+          BUNDLE_15: "${{ steps.brock-attest-15.outputs.bundle-path }}"
+          BUNDLE_16: "${{ steps.brock-attest-16.outputs.bundle-path }}"
         run: |
-          shopt -s globstar nullglob
-          while IFS= read -r pattern; do
-            for file in $pattern; do
-              case "$file" in *.sigstore.json) continue ;; esac
-              if [ -f "$file" ]; then cp "$BUNDLE_PATH" "$file.sigstore.json"; fi
-            done
-          done <<< "$ATTEST_PATHS"
+          i=0
+          while IFS= read -r file; do
+            i=$((i + 1))
+            var="BUNDLE_$i"
+            cp "${!var}" "$file.sigstore.json"
+          done < "$RUNNER_TEMP/brock-attest-files.txt"
 
       - name: Package
         shell: bash

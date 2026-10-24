@@ -9,7 +9,7 @@ const sections: Section[] = [
     title: 'Camera',
     items: [
       { key: 'cameraLockToViewport', label: 'Lock Camera to View', description: 'Pins the view to the area boundary, so no black space shows outside it. Off keeps the original camera.', hint: 'Needs Extended Rendering, in Display.', keywords: 'camera lock viewport edge black border bound speedrun glitch wide tall' },
-      { key: 'smoothTransitions', label: 'Smooth Transitions', description: 'Smooths panning across area seams. Needs Lock Camera to View.', hint: '', keywords: 'smooth transition scroll area seam tilemap' },
+      { key: 'smoothTransitions', label: 'Smooth Transitions', description: 'Smooths panning across area seams. Needs Lock Camera to View.', keywords: 'smooth transition scroll area seam tilemap' },
     ],
   },
 ];

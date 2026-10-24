@@ -8,27 +8,27 @@ const sections: Section[] = [
     id: 'haptics-general',
     title: 'Vibration',
     items: [
-      { key: 'haptics.enabled', label: 'Enable Haptic Feedback', description: 'Enable controller vibration/rumble for game events. Requires a compatible controller (Xbox, Switch Pro, DualSense).', hint: '', keywords: 'vibration rumble haptic feedback controller' },
-      { key: 'haptics.intensity', label: 'Vibration Intensity', description: 'Global intensity multiplier for all haptic feedback', hint: '', keywords: 'vibration intensity strength level' },
+      { key: 'haptics.enabled', label: 'Enable Haptic Feedback', description: 'Enable controller vibration/rumble for game events. Requires a compatible controller (Xbox, Switch Pro, DualSense).', keywords: 'vibration rumble haptic feedback controller' },
+      { key: 'haptics.intensity', label: 'Vibration Intensity', description: 'Global intensity multiplier for all haptic feedback', keywords: 'vibration intensity strength level' },
     ],
   },
   {
     id: 'haptics-combat',
     title: 'Combat',
     items: [
-      { key: 'haptics.swordSwing', label: 'Sword Swing', description: 'Very faint vibration when the player swings the sword', hint: '', keywords: 'sword swing slash attack' },
-      { key: 'haptics.swordHitEnemy', label: 'Sword Hit Enemy', description: 'Normal vibration when the sword connects with an enemy', hint: '', keywords: 'sword hit enemy damage' },
-      { key: 'haptics.swordClink', label: 'Sword Clink', description: 'Faint vibration when the sword clinks against an invulnerable surface or shield', hint: '', keywords: 'sword clink deflect shield bounce' },
-      { key: 'haptics.damageTaken', label: 'Damage Taken', description: 'Vibration scaled to damage amount when the player gets hurt (stronger for more damage)', hint: '', keywords: 'damage hurt health hearts' },
+      { key: 'haptics.swordSwing', label: 'Sword Swing', description: 'Very faint vibration when the player swings the sword', keywords: 'sword swing slash attack' },
+      { key: 'haptics.swordHitEnemy', label: 'Sword Hit Enemy', description: 'Normal vibration when the sword connects with an enemy', keywords: 'sword hit enemy damage' },
+      { key: 'haptics.swordClink', label: 'Sword Clink', description: 'Faint vibration when the sword clinks against an invulnerable surface or shield', keywords: 'sword clink deflect shield bounce' },
+      { key: 'haptics.damageTaken', label: 'Damage Taken', description: 'Vibration scaled to damage amount when the player gets hurt (stronger for more damage)', keywords: 'damage hurt health hearts' },
     ],
   },
   {
     id: 'haptics-actions',
     title: 'Items and Movement',
     items: [
-      { key: 'haptics.itemUse', label: 'Item Use', description: 'Vibration when using items (hammer, hookshot, bombs, medallions, rods, etc.)', hint: '', keywords: 'item use bomb hookshot hammer rod medallion' },
-      { key: 'haptics.dashVibration', label: 'Dash Vibration', description: 'Rhythmic step vibration while running with the Pegasus Boots', hint: '', keywords: 'dash run boots pegasus step rhythm' },
-      { key: 'haptics.environmentalEffects', label: 'Environmental Effects', description: 'Vibration for world events: falling into pits, landing from ledges, entering water, mirror warp, chest opens, bomb explosions', hint: '', keywords: 'environment fall pit ledge water mirror chest' },
+      { key: 'haptics.itemUse', label: 'Item Use', description: 'Vibration when using items (hammer, hookshot, bombs, medallions, rods, etc.)', keywords: 'item use bomb hookshot hammer rod medallion' },
+      { key: 'haptics.dashVibration', label: 'Dash Vibration', description: 'Rhythmic step vibration while running with the Pegasus Boots', keywords: 'dash run boots pegasus step rhythm' },
+      { key: 'haptics.environmentalEffects', label: 'Environmental Effects', description: 'Vibration for world events: falling into pits, landing from ledges, entering water, mirror warp, chest opens, bomb explosions', keywords: 'environment fall pit ledge water mirror chest' },
     ],
   },
 ];

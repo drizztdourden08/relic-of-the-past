@@ -10,7 +10,7 @@ const useSettingItemText = (key: string): SettingItemText => {
   const { settings } = useSettings<AppSettings>();
   return useMemo(() => {
     const item = findSettingItem(tabs, settings, key);
-    if (item === null) return { title: key, hint: '' };
+    if (item === null) return { title: key };
     return { title: item.label, hint: item.hint, description: item.description };
   }, [tabs, settings, key]);
 };

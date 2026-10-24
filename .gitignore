@@ -33,18 +33,7 @@ __pycache__/
 /integrations/archipelago/relic_of_the_past/archipelago.json
 
 # Brock generated outputs: brock icons and brock package write these
-**/build/icons/
-**/build/splash/
 **/build/installer-splash.png
-**/public/logos/icon.svg
-**/public/logos/icon.ico
-**/public/logos/icon-256.png
-**/public/logos/icon-32.png
-**/public/logos/icon-24.png
-**/public/logos/icon-bot.svg
-**/public/logos/icon-bot.ico
-**/public/logos/icon-bot-256.png
-**/public/logos/mark.svg
 
 # WASM build artifacts
 core/wasm-build/output/
@@ -179,3 +168,16 @@ tests/fixtures/save-states/
 .claude/settings.json
 .ai/
 .codex/config.toml
+# brock sync: generated icon files, start. Brock rewrites the lines up to the end marker.
+apps/desktop/build/icons/
+apps/desktop/build/splash/
+apps/desktop/public/logos/icon.svg
+apps/desktop/public/logos/icon.ico
+apps/desktop/public/logos/icon-256.png
+apps/desktop/public/logos/icon-32.png
+apps/desktop/public/logos/icon-24.png
+apps/desktop/public/logos/icon-bot.svg
+apps/desktop/public/logos/icon-bot.ico
+apps/desktop/public/logos/icon-bot-256.png
+apps/desktop/public/logos/mark.svg
+# brock sync: generated icon files, end.

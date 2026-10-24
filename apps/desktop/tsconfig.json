@@ -10,6 +10,6 @@
       "react-dom/*": ["./node_modules/@types/react-dom/*", "../../node_modules/@types/react-dom/*"]
     }
   },
-  "include": ["src", "electron", "tests", ".brock/*.ts", "brock.config.ts"],
+  "include": ["src", "electron", "server", "tests", ".brock/*.ts", "brock.config.ts"],
   "exclude": ["node_modules", "dist", "release"]
 }
