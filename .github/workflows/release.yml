@@ -314,6 +314,11 @@ jobs:
   build-linux:
     needs: prepare
     runs-on: ubuntu-24.04
+    permissions:
+      attestations: write
+      contents: write
+      id-token: write
+      packages: read
     steps:
       - uses: actions/checkout@v7
         with:
@@ -403,6 +408,26 @@ jobs:
         shell: bash
         run: "node tooling/vault/check-dataset.mjs"
 
+      - name: "Attest the release files"
+        id: brock-attest
+        uses: actions/attest-build-provenance@4d101475d8b20a2381f78447822ac1eab6504dd8
+        with:
+          subject-path: "build/archipelago/*.apworld"
+
+      - name: "Write the attestation bundles"
+        shell: bash
+        env:
+          BUNDLE_PATH: "${{ steps.brock-attest.outputs.bundle-path }}"
+          ATTEST_PATHS: "build/archipelago/*.apworld"
+        run: |
+          shopt -s globstar nullglob
+          while IFS= read -r pattern; do
+            for file in $pattern; do
+              case "$file" in *.sigstore.json) continue ;; esac
+              if [ -f "$file" ]; then cp "$BUNDLE_PATH" "$file.sigstore.json"; fi
+            done
+          done <<< "$ATTEST_PATHS"
+
       - name: Package
         shell: bash
         env:
@@ -419,6 +444,10 @@ jobs:
           cp "$APP_DIR"/release/velopack/* upload/
           cp "$APP_DIR"/release/*.deb upload/
           ls -l upload
+
+      - name: "Ship the Archipelago world packages"
+        shell: bash
+        run: "cp build/archipelago/* upload/"
 
       - uses: actions/upload-artifact@v7
         with:

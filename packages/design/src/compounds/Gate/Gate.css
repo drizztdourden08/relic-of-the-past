@@ -12,7 +12,7 @@
 
 .gate__card {
   width: 100%;
-  border-top: var(--border-width-thin) solid var(--c-gradient-light-to);
+  border-top: var(--border-width-thin) solid var(--c-primary);
 }
 
 .gate__lead {
