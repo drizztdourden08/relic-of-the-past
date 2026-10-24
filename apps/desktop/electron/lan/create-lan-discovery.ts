@@ -1,12 +1,8 @@
 /* @layer electron-main @kind logic */
-import type { LanDiscoverySettings, LanSighting } from '@rotp/randomizer';
+import type { LanSighting } from '@rotp/randomizer';
 import { browseMdns } from './browse-mdns';
+import type { LanDiscovery } from './create-lan-discovery.type';
 import { listenBeacons } from './listen-beacons';
-
-type LanDiscovery = {
-  start: (settings: LanDiscoverySettings) => void;
-  stop: () => void;
-};
 
 const createLanDiscovery = (report: (sighting: LanSighting) => void): LanDiscovery => {
   let stops: (() => void)[] = [];
@@ -16,7 +12,7 @@ const createLanDiscovery = (report: (sighting: LanSighting) => void): LanDiscove
     stops = [];
   };
 
-  const start = (settings: LanDiscoverySettings): void => {
+  const start: LanDiscovery['start'] = (settings) => {
     stop();
     stops = [browseMdns(settings, report), listenBeacons(settings.beaconPort, report)];
   };
@@ -25,4 +21,3 @@ const createLanDiscovery = (report: (sighting: LanSighting) => void): LanDiscove
 };
 
 export { createLanDiscovery };
-export type { LanDiscovery };
