@@ -8,22 +8,23 @@ import { controllerFacts } from '../behavior/controller-facts';
 import { InfoIdentity } from './InfoIdentity';
 import { PadActions } from './PadActions';
 import { RumbleTests } from './RumbleTests';
+import './InfoBox.css';
 
 const InfoBox = ({ page, onRunDiagnostics, onReport }: InfoBoxProps) => {
-  const { entry, deviceKey, adapterPort, calibration } = page;
+  const { entry, deviceKey, adapterPort } = page;
   const ready = entry.status === 'ready';
   const actions = (
     <Box className="controller-page__info-actions">
-      <Status tone={ready ? 'success' : 'warning'}>{ready ? 'Connected' : 'Unavailable'}</Status>
+      <Status tone={ready ? 'success' : 'warning'} dot>{ready ? 'Connected' : 'Unavailable'}</Status>
       <PadActions deviceKey={deviceKey} onRunDiagnostics={onRunDiagnostics} onReport={onReport} />
     </Box>
   );
 
   return (
     <Card title="Controller" actions={actions} className="controller-page__info">
-      <Box className="controller-page__stack">
-        <InfoIdentity page={page} />
-        <Box className="controller-page__badges">
+      <Box className="controller-info">
+        <Box className="controller-info__head">
+          <InfoIdentity page={page} />
           <ControllerStatusBar
             detected
             showAbsent
@@ -32,10 +33,8 @@ const InfoBox = ({ page, onRunDiagnostics, onReport }: InfoBoxProps) => {
             hasRumble={entry.hasRumble}
             hasGyro={entry.hasGyro}
           />
-          <Status tone="primary">HID</Status>
-          {calibration.existingStickCal && <Status tone="success">Sticks calibrated</Status>}
         </Box>
-        <FactsPanel groups={controllerFacts(page)} layout="rows" framed={false} label="Controller facts" />
+        <FactsPanel groups={controllerFacts(page)} layout="rows" framed={false} label="Controller facts" className="controller-info__facts" />
         {adapterPort !== null && (
           <ControllerPortRow
             portNumber={adapterPort}

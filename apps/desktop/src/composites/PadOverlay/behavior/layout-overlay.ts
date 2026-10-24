@@ -11,7 +11,9 @@ import { topScale } from './top-scale';
 
 const better = (inline: OverlayLayout, stacked: OverlayLayout): OverlayLayout => {
   if (inline.clear !== stacked.clear) return inline.clear ? inline : stacked;
-  return stacked.frame.scale > inline.frame.scale * STACKED_WIN ? stacked : inline;
+  if (stacked.frame.scale > inline.frame.scale * STACKED_WIN) return stacked;
+  const sameScale = stacked.frame.scale >= inline.frame.scale;
+  return sameScale && stacked.frame.height < inline.frame.height ? stacked : inline;
 };
 
 const layoutOverlay = (
@@ -25,7 +27,7 @@ const layoutOverlay = (
     return fitLayout({ raw, bounds, points, metrics, mode, sizes });
   };
   const inline = fitFor('inline');
-  const roomy = inline.clear && inline.frame.scale >= topScale(bounds, metrics);
+  const roomy = inline.clear && inline.frame.scale >= topScale(bounds, metrics) && inline.frame.height <= metrics.height;
   return roomy ? inline : better(inline, fitFor('stacked'));
 };
 

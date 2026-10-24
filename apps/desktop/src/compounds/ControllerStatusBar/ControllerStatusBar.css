@@ -2,17 +2,12 @@
 
 .controller-status-bar {
   display: flex;
-  align-items: center;
-  gap: var(--space-md);
   flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-xs);
 }
 
 .controller-status-bar__item {
-  display: flex;
-  align-items: center;
-  gap: var(--space-xs);
-  color: var(--c-text-dim);
-  font-size: var(--text-xs);
   flex-shrink: 0;
 }
 

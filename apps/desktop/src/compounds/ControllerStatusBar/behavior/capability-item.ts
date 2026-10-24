@@ -5,8 +5,8 @@ import type { Capability } from './status-items.type';
 
 const capabilityItem = (capability: Capability, present: boolean | undefined, showAbsent: boolean): StatusItemProps | null => {
   const icon = CAPABILITY_ICON[capability];
-  if (present) return { icon, label: PRESENT_LABEL[capability] };
-  return showAbsent ? { icon, label: ABSENT_LABEL[capability], dim: true } : null;
+  if (present) return { icon, label: PRESENT_LABEL[capability], tone: 'primary' };
+  return showAbsent ? { icon, label: ABSENT_LABEL[capability], tone: 'neutral', dim: true } : null;
 };
 
 export { capabilityItem };

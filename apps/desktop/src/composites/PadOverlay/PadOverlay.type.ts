@@ -52,6 +52,7 @@ interface PadOverlayProps {
   slots: readonly OverlaySlotView[];
   state: PadOverlayState;
   label: string;
+  onGrownChange?: (grown: boolean) => void;
 }
 
 interface PlacedPart {
@@ -105,6 +106,11 @@ interface OverlayLayout {
   clear: boolean;
 }
 
+interface FittedOverlay {
+  layout: OverlayLayout | null;
+  grownTo: number;
+}
+
 interface AnchorFrame {
   x: number;
   y: number;
@@ -128,7 +134,7 @@ interface OverlayLabelProps {
 }
 
 export type {
-  AnchorFrame, Bounds, BoxSize, LabelMode, LabelSide, Nudge, OverlayFrame, OverlayHaloProps, OverlayLabelProps, OverlayLayout,
+  AnchorFrame, Bounds, BoxSize, FittedOverlay, LabelMode, LabelSide, Nudge, OverlayFrame, OverlayHaloProps, OverlayLabelProps, OverlayLayout,
   OverlayMetrics, OverlayPartKind, OverlaySlotView, PadOverlayProps, PadOverlayState, PartProps, PartState, PlacedLabel,
   PlacedPart, Point, TextAnchor, TextMeasure,
 };

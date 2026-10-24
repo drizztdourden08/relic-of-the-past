@@ -6,6 +6,7 @@ import type { ControllerInputState, HapticPatternId, ResolvedControl, ResolvedDe
 import type { StickPairGroup } from '@app/input/resolved-axis-groups/resolved-axis-groups.type';
 import type { ControllerSilhouetteAnchorSet } from '@drizztdourden08/tessera/composites';
 import type { OverlaySlotView, PadOverlayState } from '@app/composites/PadOverlay';
+import type { PositionIcons } from '@app/input/pad-overlay/pad-overlay.type';
 
 interface ControllerPageProps {
   deviceKey: string;

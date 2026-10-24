@@ -9,6 +9,10 @@
   font-size: var(--text-base);
 }
 
+.pad-overlay[data-grown] {
+  min-block-size: var(--pad-overlay-grow);
+}
+
 .pad-overlay__art {
   position: absolute;
   inset: 0;

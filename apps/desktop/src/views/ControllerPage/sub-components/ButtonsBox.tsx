@@ -25,7 +25,7 @@ const ButtonsBox = ({ page }: BoxProps) => {
         ) : (
           <Box className="controller-page__stack">
             {resolved
-              ? <PressedGrid items={buttons.items} pressed={buttons.pressed} />
+              ? <PressedGrid items={buttons.items} pressed={buttons.pressed} className="controller-page__pressed-grid" />
               : <Text className="controller-page__note">{UNMAPPED_REASON}</Text>}
             <Text className="controller-page__note">{extras.items.length > 0 ? 'Other inputs' : 'Other inputs: none on this pad'}</Text>
             {extras.items.length > 0 && <PressedGrid items={extras.items} pressed={extras.pressed} />}

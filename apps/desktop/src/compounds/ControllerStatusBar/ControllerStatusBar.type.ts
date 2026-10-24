@@ -1,6 +1,7 @@
 /* @layer renderer-components @kind types */
 import type { IconifyIcon } from '@iconify/types';
 import type { ControllerBusType, ControllerConnectionState } from '@drizztdourden08/brock-input';
+import type { StatusTone } from '@drizztdourden08/tessera/primitives';
 
 interface ControllerStatusBarProps {
   busType?: ControllerBusType;
@@ -15,6 +16,7 @@ interface ControllerStatusBarProps {
 interface StatusItemProps {
   icon: IconifyIcon;
   label: string;
+  tone: StatusTone;
   dim?: boolean;
 }
 

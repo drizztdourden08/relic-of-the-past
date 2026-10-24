@@ -11,15 +11,21 @@ const reportOf = ({ state }: ControllerPageModel): string | undefined => {
 };
 
 const controllerFacts = (page: ControllerPageModel): readonly FactsPanelGroup[] => {
-  const { entry, resolved, idLabel } = page;
+  const { entry, resolved, idLabel, calibration } = page;
   const report = reportOf(page);
-  return [[
-    { label: 'Vendor:Product', value: idLabel, mono: true, copyable: true },
-    ...(entry.guid ? [{ label: 'GUID', value: entry.guid, mono: true, copyable: true }] : []),
-    ...(resolved ? [{ label: 'Inputs', value: `${resolved.controls.length}` }] : []),
-    ...(report ? [{ label: 'Report', value: report, mono: true }] : []),
-    { label: 'Mapping', value: entry.mapping ? 'Custom mapping' : 'SDL built in' },
-  ]];
+  return [
+    [
+      { label: 'Vendor:Product', value: idLabel, mono: true, copyable: true },
+      ...(entry.guid ? [{ label: 'GUID', value: entry.guid, mono: true, copyable: true }] : []),
+    ],
+    [
+      { label: 'Interface', value: 'HID' },
+      ...(resolved ? [{ label: 'Inputs', value: `${resolved.controls.length}` }] : []),
+      ...(report ? [{ label: 'Report', value: report, mono: true }] : []),
+      { label: 'Mapping', value: entry.mapping ? 'Custom mapping' : 'SDL built in' },
+      { label: 'Sticks', value: calibration.existingStickCal ? 'Calibrated' : 'Factory' },
+    ],
+  ];
 };
 
 export { controllerFacts };
