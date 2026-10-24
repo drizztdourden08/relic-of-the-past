@@ -33,7 +33,8 @@ cloudEvent('killSwitch', async (event: unknown) => {
     `budget notification: cost=${notification.costAmount ?? 0} ` +
       `budget=${notification.budgetAmount ?? 0} currency=${notification.currencyCode ?? 'unknown'}\n`,
   );
-  if ((notification.costAmount ?? 0) > 0) {
+  const cost = notification.costAmount ?? 0;
+  if (cost > 0 && cost >= (notification.budgetAmount ?? 0)) {
     await unlinkBilling();
   }
 });
