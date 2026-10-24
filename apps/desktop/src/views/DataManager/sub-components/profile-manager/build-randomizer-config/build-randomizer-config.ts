@@ -7,7 +7,7 @@ import { randomSeed } from './random-seed';
 import type { RandomizerFormState } from './build-randomizer-config.type';
 
 const allowedMode = (mode: RandomizerFormState['mode'], experimental: boolean): RandomizerFormState['mode'] =>
-  (experimental ? mode : 'local');
+  (experimental || mode !== 'online' ? mode : 'local');
 
 const buildRandomizerConfig = (form: RandomizerFormState, experimental: boolean): ProfileRandomizerConfig | undefined => {
   if (!form.enabled) return undefined;

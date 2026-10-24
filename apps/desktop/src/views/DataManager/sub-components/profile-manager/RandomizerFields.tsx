@@ -12,7 +12,7 @@ const RandomizerFields = (props: RandomizerFieldsProps) => {
   const patch = (part: Partial<RandomizerFormState>) => onChange({ ...value, ...part });
 
   useEffect(() => {
-    if (!experimental && value.mode !== 'local') onChange({ ...value, mode: 'local' });
+    if (!experimental && value.mode === 'online') onChange({ ...value, mode: 'local' });
   }, [experimental, value, onChange]);
 
   return (
@@ -32,15 +32,15 @@ const RandomizerFields = (props: RandomizerFieldsProps) => {
               onChange={(e) => patch({ seed: e.target.value })}
             />
           </Field>
-          {experimental && <Field label="Mode">
+          <Field label="Mode">
             <Select
               value={value.mode}
               onChange={(mode) => patch({ mode: mode as RandomizerFormState['mode'] })}
-              options={MODE_OPTIONS}
+              options={experimental ? MODE_OPTIONS : MODE_OPTIONS.filter((option) => option.value !== 'online')}
             />
-          </Field>}
+          </Field>
           {experimental && value.mode === 'online' && <ArchipelagoFields value={value} onChange={patch} />}
-          {experimental && value.mode === 'archipelia' && <ArchipeliaFields value={value} onChange={patch} joining={joining} />}
+          {value.mode === 'archipelia' && <ArchipeliaFields value={value} onChange={patch} joining={joining} />}
           <Text variant="caption">
             {experimental && value.mode === 'online'
               ? 'Seed and options lock once the profile is created. The connection stays editable.'
