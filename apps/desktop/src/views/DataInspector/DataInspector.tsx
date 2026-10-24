@@ -60,7 +60,7 @@ const DataInspector = () => {
           listLabel="Data inspector"
           listShowTitle={false}
           listRatio={isCollection ? RECORD_LIST_RATIO : COMPARING_LIST_RATIO}
-          collapsible={false}
+          collapsible
           detailCollapsible
           detailCollapsed={detailCollapsed}
           onDetailCollapsedChange={setDetailCollapsed}
