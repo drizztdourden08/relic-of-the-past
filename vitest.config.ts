@@ -20,6 +20,9 @@ export default defineConfig({
     // and Tessera ship TypeScript source, so the first cold import of the shell
     // transforms thousands of files and takes over a minute beside other workers.
     testTimeout: 20000,
+    // The Archipelia lobby protocol ships TypeScript source, which Node refuses to
+    // load from node_modules, so vitest transpiles it with the rest of the tests.
+    server: { deps: { inline: ['@archipelia/lobby-protocol'] } },
     hookTimeout: 240000,
   },
   esbuild: { jsx: 'automatic' },

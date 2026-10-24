@@ -28,7 +28,10 @@ const APP_CHANNELS = defineChannels({
   hubMe: invoke<RotpInvoke['hub:me']>()('hub:me'),
   submitSanctuaryReport: invoke<RotpInvoke['sanctuary:submitReport']>()('sanctuary:submitReport'),
   storeDuplicate: invoke<RotpInvoke['store:duplicate']>()('store:duplicate'),
+  startLanDiscovery: invoke<RotpInvoke['lan:discovery:start']>()('lan:discovery:start'),
+  stopLanDiscovery: invoke<RotpInvoke['lan:discovery:stop']>()('lan:discovery:stop'),
   onMsuOptimizeProgress: event<RotpEvent['msu:optimize:progress']>()('msu:optimize:progress'),
+  onLanSighting: event<RotpEvent['lan:sighting']>()('lan:sighting'),
 });
 
 const APP_INVOKE_MAP = APP_CHANNELS.maps.invoke;
