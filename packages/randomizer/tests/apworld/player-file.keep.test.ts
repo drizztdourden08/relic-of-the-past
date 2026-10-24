@@ -4,15 +4,17 @@
  * written as its id (Archipelago would roll the word), the word is never written bare, and
  * death_link comes from the profile's toggle.
  */
+import { emitYaml } from '@drizztdourden08/archipelia-client-kit';
 import { describe, expect, it } from 'vitest';
 import { baselineValues, optionByKey } from '../../src/world/options';
 import { renderPlayerYaml } from '../../src/archipelago/player-yaml';
-import { emitYaml } from '../../src/archipelago/yaml-emit';
-import { choiceIdOf } from '../../src/archipelago/export/choice-id-of';
-import type { OptionValue, RandomizerOptionsSnapshot } from '../../src/world/options.type';
+import { choicesOf } from '../../src/archipelago/export/choices-of';
+import type { OptionDef, OptionValue, RandomizerOptionsSnapshot } from '../../src/world/options.type';
 
 const snapshot = (over: Record<string, OptionValue>): RandomizerOptionsSnapshot =>
   ({ schema: 'ap-options-v2', values: { ...baselineValues, ...over } });
+
+const choiceIdOf = (option: OptionDef, value: string) => choicesOf(option)?.find((choice) => choice.value === value)?.id;
 
 const lineOf = (yaml: string, key: string): string | undefined =>
   yaml.split('\n').find((line) => line.trimStart().startsWith(`${key}:`))?.trim();

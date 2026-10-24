@@ -1,5 +1,5 @@
 /* @layer bridge-wasm @kind logic */
-import type { FileDone } from '@archipelia/lobby-protocol';
+import type { FileDone } from '@drizztdourden08/archipelia-lobby-protocol';
 import { sha256Hex } from '../crypto/sha256-hex';
 import type { SessionCtx } from '../session/session-context.type';
 import { joinParts } from './join-parts';

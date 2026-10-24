@@ -1,5 +1,5 @@
 /* @layer bridge-wasm @kind logic */
-import { BEACON_EXPIRY_MS } from '@archipelia/lobby-protocol';
+import { BEACON_EXPIRY_MS } from '@drizztdourden08/archipelia-lobby-protocol';
 import type { LanEntry } from './create-lan-server-list.type';
 import type { LanServer, LanServerList, LanSighting } from './lan.type';
 import { parseSighting } from './parse-sighting';

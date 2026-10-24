@@ -1,5 +1,5 @@
 /* @layer bridge-wasm @kind logic */
-import type { ErrorMessage } from '@archipelia/lobby-protocol';
+import type { ErrorMessage } from '@drizztdourden08/archipelia-lobby-protocol';
 import { problemOfError } from '../failure';
 import { HASH_MISMATCH_RETRIES } from '../lobby.constants';
 import { beginUpload } from './begin-upload';

@@ -1,5 +1,5 @@
 /* @layer bridge-wasm @kind logic */
-import { DEFAULT_LIMITS, decodeMessage, encodeMessage } from '@archipelia/lobby-protocol';
+import { DEFAULT_LIMITS, decodeMessage, encodeMessage } from '@drizztdourden08/archipelia-lobby-protocol';
 import type { CreateSocket } from '../../ap-socket.type';
 import { openSocketLink } from '../../online-socket';
 import { lobbyUrlCandidates } from '../address/lobby-url-candidates';

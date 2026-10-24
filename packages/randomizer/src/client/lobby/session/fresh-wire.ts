@@ -1,5 +1,5 @@
 /* @layer bridge-wasm @kind logic */
-import { DEFAULT_LIMITS } from '@archipelia/lobby-protocol';
+import { DEFAULT_LIMITS } from '@drizztdourden08/archipelia-lobby-protocol';
 import type { WireState } from './session-context.type';
 
 const freshWire = (): WireState => ({

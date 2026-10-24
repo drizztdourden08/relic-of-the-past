@@ -1,5 +1,5 @@
 /* @layer bridge-wasm @kind types */
-import type { ServerMessage } from '@archipelia/lobby-protocol';
+import type { ServerMessage } from '@drizztdourden08/archipelia-lobby-protocol';
 import type { SessionCtx } from './session-context.type';
 
 type MessageHandlers = {

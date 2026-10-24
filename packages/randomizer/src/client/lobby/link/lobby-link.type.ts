@@ -1,5 +1,5 @@
 /* @layer bridge-wasm @kind types */
-import type { ClientMessage, DecodeOutcome } from '@archipelia/lobby-protocol';
+import type { ClientMessage, DecodeOutcome } from '@drizztdourden08/archipelia-lobby-protocol';
 
 type LobbyLinkHandlers = {
   onOpen: (url: string) => void;

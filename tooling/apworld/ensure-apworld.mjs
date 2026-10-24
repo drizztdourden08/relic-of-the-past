@@ -9,22 +9,21 @@ import { existsSync, readdirSync, statSync } from 'node:fs';
 import { spawnSync } from 'node:child_process';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { APP_PACKAGE_JSON, DATA_DIR, MANIFEST_FILE, OUT_DIR, PACKAGE_DIR, PUBLIC_DIR, ROOT } from './apworld.constants.mjs';
+import { APP_PACKAGE_JSON, OUT_DIR, PACKAGE_DIR, PUBLIC_DIR, ROOT } from './apworld.constants.mjs';
 
 const HERE = path.dirname(fileURLToPath(import.meta.url));
 const BUILT_INDEX = path.join(PUBLIC_DIR, 'builds.json');
 const RELEASE_INDEX = path.join(OUT_DIR, 'relic_of_the_past.apworld.json');
 const IGNORED_NAMES = new Set(['node_modules', '__pycache__']);
-const GENERATED = new Set([DATA_DIR, MANIFEST_FILE]);
 
 const SOURCE_ROOTS = [PACKAGE_DIR, HERE, path.join(ROOT, 'packages')];
 
-/** The newest modification time under a path, the package generated files and dependency folders left out. */
+/** The newest modification time under a path, dependency folders left out. */
 const newestUnder = (target) => {
   const stat = statSync(target);
   if (!stat.isDirectory()) return stat.mtimeMs;
   return readdirSync(target)
-    .filter((name) => !IGNORED_NAMES.has(name) && !GENERATED.has(path.join(target, name)))
+    .filter((name) => !IGNORED_NAMES.has(name))
     .reduce((newest, name) => Math.max(newest, newestUnder(path.join(target, name))), 0);
 };
 

@@ -1,5 +1,5 @@
 /* @layer bridge-wasm @kind types */
-import type { LobbyState, MemberAdmission, RoomState, Welcome } from '@archipelia/lobby-protocol';
+import type { LobbyState, MemberAdmission, RoomState, Welcome } from '@drizztdourden08/archipelia-lobby-protocol';
 import type { LobbyFailure, LobbyProblem } from '../failure';
 import type { LobbyInfo } from '../info';
 import type { LobbyProgress, LobbyStart, UploadProgress } from './lobby-state.type';

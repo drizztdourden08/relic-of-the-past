@@ -5,7 +5,7 @@ const ROTP_HOMEPAGE = 'https://github.com/drizztdourden08/relic-of-the-past';
 const ROTP_GAME = 'Relic of the Past';
 const ROTP_MODULE = 'relic_of_the_past';
 
-const LOBBY_SDK = { name: '@archipelia/lobby-protocol', version: '1.0.0' };
+const LOBBY_SDK = { name: '@drizztdourden08/archipelia-lobby-protocol', version: '1.1.0' };
 const DEFAULT_CAPABILITIES = ['slots.yaml', 'worlds.upload'];
 
 const INFO_TIMEOUT_MS = 15000;

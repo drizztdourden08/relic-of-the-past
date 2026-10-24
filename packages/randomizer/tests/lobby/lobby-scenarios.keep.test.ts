@@ -1,6 +1,6 @@
 /* @layer tests @kind test */
 import { describe, expect, it } from 'vitest';
-import { SCENARIO_CATALOG } from '@archipelia/lobby-protocol/testing';
+import { SCENARIO_CATALOG } from '@drizztdourden08/archipelia-lobby-protocol/testing';
 import { createBrowserSocket } from '../../src/client/browser-socket';
 import { joinLobby, lobbyInfo } from '../../src/client/lobby';
 import { openLobbyLink } from '../../src/client/lobby/link/open-lobby-link';

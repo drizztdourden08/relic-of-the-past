@@ -1,5 +1,5 @@
 /* @layer bridge-wasm @kind logic */
-import type { RoomStatus } from '@archipelia/lobby-protocol';
+import type { RoomStatus } from '@drizztdourden08/archipelia-lobby-protocol';
 import { emitEvent } from './emit-event';
 import type { SessionCtx } from './session-context.type';
 

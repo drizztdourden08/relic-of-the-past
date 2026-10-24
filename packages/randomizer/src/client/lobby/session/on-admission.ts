@@ -1,5 +1,5 @@
 /* @layer bridge-wasm @kind logic */
-import type { AdmissionMessage } from '@archipelia/lobby-protocol';
+import type { AdmissionMessage } from '@drizztdourden08/archipelia-lobby-protocol';
 import { emitEvent } from './emit-event';
 import { endSession } from './end-session';
 import { maybeReady } from './maybe-ready';

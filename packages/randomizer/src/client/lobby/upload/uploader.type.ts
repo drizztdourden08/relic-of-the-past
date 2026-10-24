@@ -1,5 +1,5 @@
 /* @layer bridge-wasm @kind types */
-import type { ServerMessage } from '@archipelia/lobby-protocol';
+import type { ServerMessage } from '@drizztdourden08/archipelia-lobby-protocol';
 import type { LobbyProblem } from '../failure';
 import type { PreparedFile } from '../join/prepared-join.type';
 import type { LobbyLink } from '../link/lobby-link.type';

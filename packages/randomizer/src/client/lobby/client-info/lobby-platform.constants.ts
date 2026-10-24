@@ -1,5 +1,5 @@
 /* @layer bridge-wasm @kind constants */
-import type { PlatformArch, PlatformOs } from '@archipelia/lobby-protocol';
+import type { PlatformArch, PlatformOs } from '@drizztdourden08/archipelia-lobby-protocol';
 
 const OS_OF_NODE: Record<string, PlatformOs> = {
   win32: 'windows',

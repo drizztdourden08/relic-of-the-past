@@ -1,5 +1,5 @@
 /* @layer bridge-wasm @kind logic */
-import type { Welcome } from '@archipelia/lobby-protocol';
+import type { Welcome } from '@drizztdourden08/archipelia-lobby-protocol';
 import { emitEvent } from './emit-event';
 import type { SessionCtx } from './session-context.type';
 import { uploadsOf } from './uploads-of';

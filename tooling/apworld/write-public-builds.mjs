@@ -1,6 +1,7 @@
 /* @layer tooling-scripts @kind logic */
 import { mkdirSync, rmSync, writeFileSync } from 'node:fs';
 import path from 'node:path';
+import { serializeApworldIndex } from '@drizztdourden08/archipelia-client-kit';
 
 /**
  * The builds the app fetches, laid out like the wasm under apps/desktop/public: one
@@ -13,7 +14,7 @@ const writePublicBuilds = ({ publicDir, moduleName, versions, bytes, index }) =>
     mkdirSync(path.join(publicDir, apVersion), { recursive: true });
     writeFileSync(path.join(publicDir, apVersion, `${moduleName}.apworld`), bytes);
   }
-  writeFileSync(path.join(publicDir, 'builds.json'), `${JSON.stringify(index, null, 2)}\n`);
+  writeFileSync(path.join(publicDir, 'builds.json'), serializeApworldIndex(index));
 };
 
 export { writePublicBuilds };

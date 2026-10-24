@@ -8,7 +8,7 @@
     "rotp-build-apworld": "./build-apworld.mjs"
   },
   "dependencies": {
-    "jszip": "^3.10.1",
+    "@drizztdourden08/archipelia-client-kit": "^0.1.0",
     "vite": "catalog:"
   }
 }

@@ -1,5 +1,5 @@
 /* @layer bridge-wasm @kind logic */
-import { BEACON_PORT, DISCOVERY_SERVICE } from '@archipelia/lobby-protocol';
+import { BEACON_PORT, DISCOVERY_SERVICE } from '@drizztdourden08/archipelia-lobby-protocol';
 import type { LanDiscoverySettings } from './lan.type';
 import { SERVICE_NAME } from './lan.constants';
 

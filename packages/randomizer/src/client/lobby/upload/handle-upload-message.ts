@@ -1,5 +1,5 @@
 /* @layer bridge-wasm @kind logic */
-import type { ServerMessage } from '@archipelia/lobby-protocol';
+import type { ServerMessage } from '@drizztdourden08/archipelia-lobby-protocol';
 import { finishUpload } from './finish-upload';
 import { handleUploadError } from './handle-upload-error';
 import { sendChunks } from './send-chunks';

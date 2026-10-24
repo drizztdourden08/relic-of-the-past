@@ -1,5 +1,5 @@
 /* @layer bridge-wasm @kind logic */
-import type { LobbyState } from '@archipelia/lobby-protocol';
+import type { LobbyState } from '@drizztdourden08/archipelia-lobby-protocol';
 import type { LobbyJoinState } from './lobby-state.type';
 
 const applyLobbyState = (state: LobbyJoinState, lobbyState: LobbyState): LobbyJoinState => {

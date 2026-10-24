@@ -1,5 +1,5 @@
 /* @layer bridge-wasm @kind logic */
-import type { SlotEntry, WorldEntry } from '@archipelia/lobby-protocol';
+import type { SlotEntry, WorldEntry } from '@drizztdourden08/archipelia-lobby-protocol';
 import { sha256Hex } from '../crypto/sha256-hex';
 import { ROTP_GAME, ROTP_MODULE } from '../lobby.constants';
 import type { SlotInput, WorldInput } from './join-config.type';

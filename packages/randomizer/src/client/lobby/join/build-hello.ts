@@ -1,6 +1,6 @@
 /* @layer bridge-wasm @kind logic */
-import { PROTOCOL_NAME, SUPPORTED_PROTOCOL_VERSIONS, formatLobbyCode } from '@archipelia/lobby-protocol';
-import type { Hello } from '@archipelia/lobby-protocol';
+import { PROTOCOL_NAME, SUPPORTED_PROTOCOL_VERSIONS, formatLobbyCode } from '@drizztdourden08/archipelia-lobby-protocol';
+import type { Hello } from '@drizztdourden08/archipelia-lobby-protocol';
 import { DEFAULT_CAPABILITIES } from '../lobby.constants';
 import type { JoinConfig } from './join-config.type';
 import type { PreparedJoin } from './prepared-join.type';

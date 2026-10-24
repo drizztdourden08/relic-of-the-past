@@ -35,7 +35,7 @@ def _doc(row: dict) -> str:
 # Archipelago keeps `random` for itself (roll any value) and from 0.6.7 refuses a Choice that
 # offers it as an option name. The app's own `random` choices keep their ids and app values;
 # only the name the generator shows changes. A player file writes such a choice as its id
-# (concrete-option-values.ts), so the name is never parsed.
+# (the Archipelia client kit does this), so the name is never parsed.
 RESERVED_CHOICE_NAMES = {"random": "randomized"}
 
 

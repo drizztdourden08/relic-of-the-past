@@ -4,7 +4,7 @@ import type { SessionCtx } from './session-context.type';
 
 const maybeReady = (ctx: SessionCtx): void => {
   const { state, wire, config } = ctx;
-  if (config.autoReady === false || wire.readySent || ctx.link === null) return;
+  if (config.autoReady === false || wire.readySent || wire.awaitingSlots || ctx.link === null) return;
   if (!state.uploadsDone || state.admission !== 'approved' || state.ready) return;
   sendReady(ctx, true);
 };

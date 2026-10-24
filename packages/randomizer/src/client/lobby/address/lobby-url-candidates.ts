@@ -1,5 +1,5 @@
 /* @layer bridge-wasm @kind logic */
-import { DEFAULT_PORT, LOBBY_PATH } from '@archipelia/lobby-protocol';
+import { DEFAULT_PORT, LOBBY_PATH } from '@drizztdourden08/archipelia-lobby-protocol';
 import { serverUrlCandidates } from '../../server-url';
 import { splitServerAddress } from '../../server-address';
 import { BARE_ORIGIN, HAS_SCHEME } from './lobby-url.constants';

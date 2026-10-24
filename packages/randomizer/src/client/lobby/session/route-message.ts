@@ -1,5 +1,5 @@
 /* @layer bridge-wasm @kind logic */
-import type { DecodeOutcome, ServerMessage } from '@archipelia/lobby-protocol';
+import type { DecodeOutcome, ServerMessage } from '@drizztdourden08/archipelia-lobby-protocol';
 import { emitEvent } from './emit-event';
 import { MESSAGE_HANDLERS } from './message-handlers.constants';
 import type { SessionCtx } from './session-context.type';

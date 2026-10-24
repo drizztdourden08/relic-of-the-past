@@ -1142,9 +1142,12 @@ importers:
 
   packages/randomizer:
     dependencies:
-      '@archipelia/lobby-protocol':
-        specifier: github:drizztdourden08/archipelia#lobby-protocol-v1.0.0&path:/packages/lobby-protocol
-        version: https://codeload.github.com/drizztdourden08/archipelia/tar.gz/8d8d2c853b8fc694e4d3096f6a32d65d38c12933#path:/packages/lobby-protocol
+      '@drizztdourden08/archipelia-client-kit':
+        specifier: ^0.1.0
+        version: 0.1.0
+      '@drizztdourden08/archipelia-lobby-protocol':
+        specifier: ^1.1.0
+        version: 1.1.0
       '@rotp/asset-extraction':
         specifier: workspace:*
         version: link:../asset-extraction
@@ -1178,9 +1181,9 @@ importers:
 
   tooling/apworld:
     dependencies:
-      jszip:
-        specifier: ^3.10.1
-        version: 3.10.1
+      '@drizztdourden08/archipelia-client-kit':
+        specifier: ^0.1.0
+        version: 0.1.0
       vite:
         specifier: 'catalog:'
         version: 7.3.5(@types/node@25.9.2)(jiti@2.7.0)(tsx@4.23.12)(yaml@2.9.1)
@@ -1256,11 +1259,6 @@ importers:
   tooling/wiki: {}
 
 packages:
-
-  '@archipelia/lobby-protocol@https://codeload.github.com/drizztdourden08/archipelia/tar.gz/8d8d2c853b8fc694e4d3096f6a32d65d38c12933#path:/packages/lobby-protocol':
-    resolution: {path: /packages/lobby-protocol, tarball: https://codeload.github.com/drizztdourden08/archipelia/tar.gz/8d8d2c853b8fc694e4d3096f6a32d65d38c12933}
-    version: 1.0.0
-    engines: {node: '>=24'}
 
   '@asamuzakjp/css-color@5.1.11':
     resolution: {integrity: sha512-KVw6qIiCTUQhByfTd78h2yD1/00waTmm9uy/R7Ck/ctUyAPj+AEDLkQIdJW0T8+qGgj3j5bpNKK7Q3G+LedJWg==}
@@ -1561,6 +1559,15 @@ packages:
     peerDependencies:
       postcss-selector-parser: ^7.1.1
 
+  '@drizztdourden08/archipelia-client-kit@0.1.0':
+    resolution: {integrity: sha512-bkUl3MkQHZ54thtNr9uaINHB+BE0XFg1ggReXWxbG6hv1qZd8bFatoVJbTqMBXviowjyA6geFw9WIDFTwAo/8g==, tarball: https://npm.pkg.github.com/download/@drizztdourden08/archipelia-client-kit/0.1.0/5da62e61b0aed3489d8aa66fe22e13bf9e20dd22}
+    engines: {node: '>=24'}
+    hasBin: true
+
+  '@drizztdourden08/archipelia-lobby-protocol@1.1.0':
+    resolution: {integrity: sha512-ij5M7fxSZJQEfjdwnD/q/hbS8pG9TQZvnOWMr4dsBLCVsNKY/BxxW5T6yyTidl5xOPGAQc65KMPENw0HP8eUmg==, tarball: https://npm.pkg.github.com/download/@drizztdourden08/archipelia-lobby-protocol/1.1.0/217d35b20f50195ee533d4b2f98acd60d79112a1}
+    engines: {node: '>=24'}
+
   '@drizztdourden08/brock-build@0.87.0':
     resolution: {integrity: sha512-8YFygVWPYqV3sX22Fm7XqZJDVb5hRXvUmvmz8tEV/hMl8qrhVWnGdQ9lWX6IQmHahPTIOm5B8kSq7hsWCZYFGw==, tarball: https://npm.pkg.github.com/download/@drizztdourden08/brock-build/0.87.0/89f3c66cc57aa2b9868957f50fd6a603a0267e2e}
     engines: {node: '>=24'}
@@ -1571,6 +1578,11 @@ packages:
       electron-builder: '>=26'
       electron-vite: '>=5'
       playwright-core: '>=1.40'
+    peerDependenciesMeta:
+      electron-builder:
+        optional: true
+      playwright-core:
+        optional: true
 
   '@drizztdourden08/brock-catalog@0.87.0':
     resolution: {integrity: sha512-hfAzwl8KAZKJCTUkGM1GcPzkYsGIbOHSWL1UPPucGEg4acRAD1791a51EGiZqf2gpynBzJKjFPtx8AhMHikmow==, tarball: https://npm.pkg.github.com/download/@drizztdourden08/brock-catalog/0.87.0/3100713ad224dc3654dd16553bbcff983a16fd8b}
@@ -1594,6 +1606,9 @@ packages:
       koffi: ^2.9.0 || ^3.0.0
       react: ^19.0.0
       zustand: ^5.0.0
+    peerDependenciesMeta:
+      koffi:
+        optional: true
 
   '@drizztdourden08/brock-electron@0.87.0':
     resolution: {integrity: sha512-ZAWBH9fSP6qnk1xTIazFVpq3Y8ZK+5PiysAAsB06xgQsCnH9zHo0e0ccb0x1puFfKkXdIUgugg/ijTJrz5w3Nw==, tarball: https://npm.pkg.github.com/download/@drizztdourden08/brock-electron/0.87.0/744125de34fd6e696d2320830d1f7d2a8245ce64}
@@ -1617,6 +1632,11 @@ packages:
       eslint: ^10.0.0
       markdownlint-cli2: ^0.22.0
       stylelint: ^17.0.0
+    peerDependenciesMeta:
+      markdownlint-cli2:
+        optional: true
+      stylelint:
+        optional: true
 
   '@drizztdourden08/brock-plugin-snes@0.87.0':
     resolution: {integrity: sha512-OQuh/Yg6EwUB2b4tDTxrAWQ7/Hn+JnpxU3ZcZHfID0H6nYoJsS3R6wazzmqCoemI+c5V5HaAof20SsK35wp8MA==, tarball: https://npm.pkg.github.com/download/@drizztdourden08/brock-plugin-snes/0.87.0/b72424ac0bd6c3eebf038bf281384117a3753596}
@@ -1677,6 +1697,11 @@ packages:
       eslint: ^10.0.0
       stylelint: ^17.0.0
       typescript: ^6.0.0
+    peerDependenciesMeta:
+      stylelint:
+        optional: true
+      typescript:
+        optional: true
 
   '@drizztdourden08/tessera@0.56.2':
     resolution: {integrity: sha512-azJvKG8U5fiHuDy/w4wg1LBTT+2E3F9aL2mOWTgZcvj99ATvr4jCNkXJsuO86nlAeS1A3kVB0wePlKDr0V4iUA==, tarball: https://npm.pkg.github.com/download/@drizztdourden08/tessera/0.56.2/50e316b28e845952dcdd9d757873484995a53043}
@@ -1686,6 +1711,9 @@ packages:
       react: ^19.0.0
       react-dom: ^19.0.0
       typescript: '>=5.0'
+    peerDependenciesMeta:
+      typescript:
+        optional: true
 
   '@electron-internal/extract-zip@1.0.2':
     resolution: {integrity: sha512-VJuNETNPEhrmQEZezeTZO5TZMV+dobBRyJ7zHjGJWIhMS7m7W1UeClt69u4hkUxv9ZZVxuli/E9Yvc4gDNHGsg==}
@@ -4671,6 +4699,9 @@ packages:
       picomatch:
         optional: true
 
+  fflate@0.8.3:
+    resolution: {integrity: sha512-tbZNuJrLwGUp3zshBtdy4W+ORxZuIh8a5ilyIEQDC5rY1f3U20JMry0Ll3WBzU58EZKsEuJFXhb5gwv8CsPvgA==}
+
   file-entry-cache@11.1.3:
     resolution: {integrity: sha512-oMbq0PD6VIiIwMF6LIa7MEwd/l9huKwmqRKXqmrkqIZv8CvRbfowL+L0ryAl8h//HfAS0zS+4SbYoRyAoA6BJA==}
 
@@ -7539,8 +7570,6 @@ packages:
 
 snapshots:
 
-  '@archipelia/lobby-protocol@https://codeload.github.com/drizztdourden08/archipelia/tar.gz/8d8d2c853b8fc694e4d3096f6a32d65d38c12933#path:/packages/lobby-protocol': {}
-
   '@asamuzakjp/css-color@5.1.11':
     dependencies:
       '@asamuzakjp/generational-cache': 1.0.1
@@ -8008,6 +8037,12 @@ snapshots:
     dependencies:
       postcss-selector-parser: 7.1.2
 
+  '@drizztdourden08/archipelia-client-kit@0.1.0':
+    dependencies:
+      fflate: 0.8.3
+
+  '@drizztdourden08/archipelia-lobby-protocol@1.1.0': {}
+
   '@drizztdourden08/brock-build@0.87.0(@types/node@24.19.1)(@vitejs/plugin-react@5.2.0(vite@7.3.5(@types/node@24.19.1)(jiti@2.7.0)(tsx@4.23.12)(yaml@2.9.1)))(electron-builder@26.15.2(electron-builder-squirrel-windows@26.15.2(dmg-builder@26.15.2)))(electron-vite@5.0.0(vite@7.3.5(@types/node@24.19.1)(jiti@2.7.0)(tsx@4.23.12)(yaml@2.9.1)))(electron@42.4.0)(eslint@10.4.1(jiti@2.7.0))(markdownlint-cli2@0.22.1)(playwright-core@1.60.0)(stylelint@17.13.0(typescript@6.0.3))(typescript@6.0.3)':
     dependencies:
       '@drizztdourden08/brock-core': 0.87.0
@@ -8017,11 +8052,12 @@ snapshots:
       '@resvg/resvg-js': 2.6.2
       '@vitejs/plugin-react': 5.2.0(vite@7.3.5(@types/node@24.19.1)(jiti@2.7.0)(tsx@4.23.12)(yaml@2.9.1))
       electron: 42.4.0
-      electron-builder: 26.15.2(electron-builder-squirrel-windows@26.15.2(dmg-builder@26.15.2))
       electron-vite: 5.0.0(vite@7.3.5(@types/node@24.19.1)(jiti@2.7.0)(tsx@4.23.12)(yaml@2.9.1))
-      playwright-core: 1.60.0
       pngjs: 7.0.0
       rcedit: 5.0.2
+    optionalDependencies:
+      electron-builder: 26.15.2(electron-builder-squirrel-windows@26.15.2(dmg-builder@26.15.2))
+      playwright-core: 1.60.0
     transitivePeerDependencies:
       - '@types/node'
       - eslint
@@ -8051,9 +8087,10 @@ snapshots:
       '@drizztdourden08/brock-react': 0.87.0(@drizztdourden08/tessera@0.56.2(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(typescript@6.0.3))(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(zustand@5.0.14(@types/react@19.2.17)(react@19.2.7)(use-sync-external-store@1.6.0(react@19.2.7)))
       '@drizztdourden08/tessera': 0.56.2(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(typescript@6.0.3)
       electron: 42.4.0
-      koffi: 3.1.2
       react: 19.2.7
       zustand: 5.0.14(@types/react@19.2.17)(react@19.2.7)(use-sync-external-store@1.6.0(react@19.2.7))
+    optionalDependencies:
+      koffi: 3.1.2
     transitivePeerDependencies:
       - react-dom
 
@@ -8079,6 +8116,7 @@ snapshots:
     dependencies:
       '@drizztdourden08/standards': 0.11.0(@types/node@24.19.1)(eslint@10.4.1(jiti@2.7.0))(stylelint@17.13.0(typescript@6.0.3))(typescript@6.0.3)
       eslint: 10.4.1(jiti@2.7.0)
+    optionalDependencies:
       markdownlint-cli2: 0.22.1
       stylelint: 17.13.0(typescript@6.0.3)
     transitivePeerDependencies:
@@ -8187,10 +8225,11 @@ snapshots:
       jscpd: 4.3.0
       knip: 5.88.1(@types/node@24.19.1)(typescript@6.0.3)
       markdownlint-cli2: 0.22.1
-      stylelint: 17.13.0(typescript@6.0.3)
       stylelint-config-standard: 40.0.0(stylelint@17.13.0(typescript@6.0.3))
-      typescript: 6.0.3
       typescript-eslint: 8.61.0(eslint@10.4.1(jiti@2.7.0))(typescript@6.0.3)
+    optionalDependencies:
+      stylelint: 17.13.0(typescript@6.0.3)
+      typescript: 6.0.3
     transitivePeerDependencies:
       - '@types/node'
       - supports-color
@@ -8203,10 +8242,11 @@ snapshots:
       jscpd: 4.3.0
       knip: 5.88.1(@types/node@25.9.2)(typescript@6.0.3)
       markdownlint-cli2: 0.22.1
-      stylelint: 17.13.0(typescript@6.0.3)
       stylelint-config-standard: 40.0.0(stylelint@17.13.0(typescript@6.0.3))
-      typescript: 6.0.3
       typescript-eslint: 8.61.0(eslint@10.4.1(jiti@2.7.0))(typescript@6.0.3)
+    optionalDependencies:
+      stylelint: 17.13.0(typescript@6.0.3)
+      typescript: 6.0.3
     transitivePeerDependencies:
       - '@types/node'
       - supports-color
@@ -8223,6 +8263,7 @@ snapshots:
       react-color: 2.19.3(react@19.2.7)
       react-dom: 19.2.7(react@19.2.7)
       react-markdown: 10.1.0(@types/react@19.2.17)(react@19.2.7)
+    optionalDependencies:
       typescript: 6.0.3
     transitivePeerDependencies:
       - '@types/react'
@@ -11317,6 +11358,8 @@ snapshots:
   fdir@6.5.0(picomatch@4.0.7):
     optionalDependencies:
       picomatch: 4.0.7
+
+  fflate@0.8.3: {}
 
   file-entry-cache@11.1.3:
     dependencies:

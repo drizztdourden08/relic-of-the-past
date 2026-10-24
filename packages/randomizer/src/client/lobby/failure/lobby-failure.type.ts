@@ -1,5 +1,5 @@
 /* @layer bridge-wasm @kind types */
-import type { ErrorCode } from '@archipelia/lobby-protocol';
+import type { ErrorCode } from '@drizztdourden08/archipelia-lobby-protocol';
 
 type LobbyFailureCode =
   | ErrorCode

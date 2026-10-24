@@ -1,5 +1,5 @@
 /* @layer bridge-wasm @kind types */
-import type { ClientInfo } from '@archipelia/lobby-protocol';
+import type { ClientInfo } from '@drizztdourden08/archipelia-lobby-protocol';
 import type { CreateSocket } from '../../ap-socket.type';
 
 type WorldInput = {

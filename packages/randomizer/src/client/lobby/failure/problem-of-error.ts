@@ -1,5 +1,5 @@
 /* @layer bridge-wasm @kind logic */
-import type { ErrorMessage } from '@archipelia/lobby-protocol';
+import type { ErrorMessage } from '@drizztdourden08/archipelia-lobby-protocol';
 import type { LobbyProblem } from './lobby-failure.type';
 
 const problemOfError = (error: ErrorMessage): LobbyProblem => {

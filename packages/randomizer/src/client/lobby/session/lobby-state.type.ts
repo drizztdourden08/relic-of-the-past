@@ -10,7 +10,7 @@ import type {
   TrustLevel,
   UploadKind,
   Welcome,
-} from '@archipelia/lobby-protocol';
+} from '@drizztdourden08/archipelia-lobby-protocol';
 import type { LobbyFailure, LobbyProblem } from '../failure';
 
 type LobbyStatus =

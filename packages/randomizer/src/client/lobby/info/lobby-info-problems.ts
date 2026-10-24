@@ -1,6 +1,6 @@
 /* @layer bridge-wasm @kind logic */
-import { checkClientVersion, checkWorldVersion } from '@archipelia/lobby-protocol';
-import type { Failure } from '@archipelia/lobby-protocol';
+import { checkClientVersion, checkWorldVersion } from '@drizztdourden08/archipelia-lobby-protocol';
+import type { Failure } from '@drizztdourden08/archipelia-lobby-protocol';
 import { ROTP_GAME } from '../lobby.constants';
 import type { LobbyInfo } from './lobby-info.type';
 import type { InfoCheckInput } from './lobby-info-problems.type';

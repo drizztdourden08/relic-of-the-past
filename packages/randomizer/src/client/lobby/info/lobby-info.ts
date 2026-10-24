@@ -1,6 +1,6 @@
 /* @layer bridge-wasm @kind logic */
-import { PROTOCOL_NAME, SUPPORTED_PROTOCOL_VERSIONS, formatLobbyCode } from '@archipelia/lobby-protocol';
-import type { DecodeOutcome } from '@archipelia/lobby-protocol';
+import { PROTOCOL_NAME, SUPPORTED_PROTOCOL_VERSIONS, formatLobbyCode } from '@drizztdourden08/archipelia-lobby-protocol';
+import type { DecodeOutcome } from '@drizztdourden08/archipelia-lobby-protocol';
 import { createBrowserSocket } from '../../browser-socket';
 import { closedEarly, connectionFailed, failureOfError, invalidCode, timedOut } from '../failure';
 import { openLobbyLink } from '../link/open-lobby-link';

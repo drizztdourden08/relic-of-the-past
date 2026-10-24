@@ -1,5 +1,5 @@
 /* @layer bridge-wasm @kind logic */
-import type { Failure, Limits } from '@archipelia/lobby-protocol';
+import type { Failure, Limits } from '@drizztdourden08/archipelia-lobby-protocol';
 import type { InfoCheckInput } from './lobby-info-problems.type';
 import { MIB } from './size-problems.constants';
 

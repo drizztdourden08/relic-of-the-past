@@ -1,5 +1,5 @@
 /* @layer bridge-wasm @kind logic */
-import { BEACON_INTERVAL_MS } from '@archipelia/lobby-protocol';
+import { BEACON_INTERVAL_MS } from '@drizztdourden08/archipelia-lobby-protocol';
 import { createLanServerList } from './create-lan-server-list';
 import { lanDiscoverySettings } from './lan-discovery-settings';
 import type { LanServer, LanSightingSource } from './lan.type';

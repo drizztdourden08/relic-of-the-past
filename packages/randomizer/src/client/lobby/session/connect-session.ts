@@ -1,5 +1,5 @@
 /* @layer bridge-wasm @kind logic */
-import { PROTOCOL_NAME, SUPPORTED_PROTOCOL_VERSIONS, formatLobbyCode } from '@archipelia/lobby-protocol';
+import { PROTOCOL_NAME, SUPPORTED_PROTOCOL_VERSIONS, formatLobbyCode } from '@drizztdourden08/archipelia-lobby-protocol';
 import { closedEarly, connectionFailed, connectionLost } from '../failure';
 import { openLobbyLink } from '../link/open-lobby-link';
 import { emitEvent } from './emit-event';

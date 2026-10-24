@@ -1,5 +1,5 @@
 /* @layer bridge-wasm @kind logic */
-import type { FileChunk } from '@archipelia/lobby-protocol';
+import type { FileChunk } from '@drizztdourden08/archipelia-lobby-protocol';
 import { base64ToBytes } from '../crypto/base64-to-bytes';
 import type { SessionCtx } from '../session/session-context.type';
 

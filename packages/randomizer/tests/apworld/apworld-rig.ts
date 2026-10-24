@@ -11,7 +11,8 @@ import { tmpdir } from 'node:os';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import JSZip from 'jszip';
-import { apworldAssetName, SUPPORTED_AP_VERSIONS, WORLD_MODULE_NAME } from '../../src/archipelago/ap-game';
+import { apworldNames } from '@drizztdourden08/archipelia-client-kit';
+import { SUPPORTED_AP_VERSIONS, WORLD_MODULE_NAME } from '../../src/archipelago/ap-game';
 
 const ROOT = path.join(path.dirname(fileURLToPath(import.meta.url)), '..', '..', '..', '..');
 const AP_DIR = process.env.ROTP_AP_DIR ?? 'C:/ProgramData/Archipelago';
@@ -34,7 +35,7 @@ const supportsInstalledVersion = (): boolean => hasArchipelago() && SUPPORTED_AP
 const installWorldPackage = (): string => {
   const build = spawnSync(process.execPath, [BUILD_SCRIPT], { encoding: 'utf8', cwd: ROOT });
   if (build.status !== 0) throw new Error(`build-apworld failed: ${build.stderr}`);
-  const built = path.join(ROOT, 'build', 'archipelago', apworldAssetName(installedVersion()));
+  const built = path.join(ROOT, 'build', 'archipelago', apworldNames(WORLD_MODULE_NAME, installedVersion()).file);
   const same = existsSync(INSTALLED) && readFileSync(INSTALLED).equals(readFileSync(built));
   if (same) return `world package already installed at ${INSTALLED}`;
   copyFileSync(built, INSTALLED);

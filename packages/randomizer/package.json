@@ -10,7 +10,8 @@
     "./package.json": "./package.json"
   },
   "dependencies": {
-    "@archipelia/lobby-protocol": "github:drizztdourden08/archipelia#lobby-protocol-v1.0.0&path:/packages/lobby-protocol",
+    "@drizztdourden08/archipelia-client-kit": "^0.1.0",
+    "@drizztdourden08/archipelia-lobby-protocol": "^1.1.0",
     "@rotp/asset-extraction": "workspace:*",
     "@rotp/features": "workspace:*",
     "@rotp/game-core": "workspace:*",

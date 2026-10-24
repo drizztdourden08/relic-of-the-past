@@ -1,5 +1,5 @@
 /* @layer bridge-wasm @kind logic */
-import type { ClientInfo } from '@archipelia/lobby-protocol';
+import type { ClientInfo } from '@drizztdourden08/archipelia-lobby-protocol';
 import { LOBBY_SDK, ROTP_CLIENT_ID, ROTP_CLIENT_NAME, ROTP_HOMEPAGE } from '../lobby.constants';
 import type { ClientInfoInput } from './client-info.type';
 

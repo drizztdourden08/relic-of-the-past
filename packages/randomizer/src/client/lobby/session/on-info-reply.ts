@@ -1,5 +1,5 @@
 /* @layer bridge-wasm @kind logic */
-import type { LobbyInfoReply } from '@archipelia/lobby-protocol';
+import type { LobbyInfoReply } from '@drizztdourden08/archipelia-lobby-protocol';
 import { emitEvent } from './emit-event';
 import { sendHello } from './send-hello';
 import type { SessionCtx } from './session-context.type';

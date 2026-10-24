@@ -1,5 +1,5 @@
 /* @layer bridge-wasm @kind logic */
-import { checkHello, validateMessage } from '@archipelia/lobby-protocol';
+import { checkHello, validateMessage } from '@drizztdourden08/archipelia-lobby-protocol';
 import { downloadFile } from '../files/download-file';
 import { closeSession } from '../session/close-session';
 import { connectSession } from '../session/connect-session';

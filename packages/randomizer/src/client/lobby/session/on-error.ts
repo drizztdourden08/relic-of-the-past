@@ -1,5 +1,5 @@
 /* @layer bridge-wasm @kind logic */
-import type { ErrorMessage } from '@archipelia/lobby-protocol';
+import type { ErrorMessage } from '@drizztdourden08/archipelia-lobby-protocol';
 import { failureOfError, problemOfError } from '../failure';
 import { emitEvent } from './emit-event';
 import { endSession } from './end-session';

@@ -1,8 +1,8 @@
 /* @layer tests @kind test */
 import { expect, it } from 'vitest';
-import { createFakeServer, createScenarioKit, loadScenario } from '@archipelia/lobby-protocol/testing';
-import type { JsonObject, JsonValue, Scenario } from '@archipelia/lobby-protocol/testing';
-import type { ClientInfo, ErrorCode } from '@archipelia/lobby-protocol';
+import { createFakeServer, createScenarioKit, loadScenario } from '@drizztdourden08/archipelia-lobby-protocol/testing';
+import type { JsonObject, JsonValue, Scenario } from '@drizztdourden08/archipelia-lobby-protocol/testing';
+import type { ClientInfo, ErrorCode } from '@drizztdourden08/archipelia-lobby-protocol';
 import { joinLobby } from '../../src/client/lobby';
 import type { JoinConfig, LobbyEvent, LobbyJoinState, LobbySession } from '../../src/client/lobby';
 

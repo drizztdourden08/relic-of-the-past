@@ -1,5 +1,5 @@
 /* @layer bridge-wasm @kind types */
-import type { SlotEntry, UploadKind, WorldEntry } from '@archipelia/lobby-protocol';
+import type { SlotEntry, UploadKind, WorldEntry } from '@drizztdourden08/archipelia-lobby-protocol';
 
 type PreparedFile = { sha256: string; kind: UploadKind; bytes: Uint8Array; size: number };
 
