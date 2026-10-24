@@ -176,6 +176,10 @@ jobs:
         shell: bash
         run: "pnpm run ensure-wasm"
 
+      - name: "Build the Archipelago world packages"
+        shell: bash
+        run: "pnpm run ensure-apworld"
+
       - name: "Check the save state format is registered"
         shell: bash
         run: "node tooling/state-format/check-state-format.mjs"
@@ -268,6 +272,10 @@ jobs:
       - name: "Build the wasm core"
         shell: bash
         run: "pnpm run ensure-wasm"
+
+      - name: "Build the Archipelago world packages"
+        shell: bash
+        run: "pnpm run ensure-apworld"
 
       - name: "Fetch the private dataset"
         shell: bash
@@ -376,6 +384,10 @@ jobs:
         shell: bash
         run: "pnpm run ensure-wasm"
 
+      - name: "Build the Archipelago world packages"
+        shell: bash
+        run: "pnpm run ensure-apworld"
+
       - name: "Make the Linux SDL3 runtime loadable"
         run: "node tooling/ensure-linux-sdl3-soname.mjs"
 
@@ -481,6 +493,10 @@ jobs:
         shell: bash
         run: "pnpm run ensure-wasm"
 
+      - name: "Build the Archipelago world packages"
+        shell: bash
+        run: "pnpm run ensure-apworld"
+
       - name: "Fetch the private dataset"
         shell: bash
         env:
@@ -559,6 +575,10 @@ jobs:
       - name: "Build the wasm core"
         shell: bash
         run: "pnpm run ensure-wasm"
+
+      - name: "Build the Archipelago world packages"
+        shell: bash
+        run: "pnpm run ensure-apworld"
 
       - name: "Fetch the private dataset"
         shell: bash

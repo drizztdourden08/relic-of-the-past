@@ -1170,6 +1170,15 @@ importers:
         specifier: workspace:*
         version: link:../tool-paths
 
+  tooling/apworld:
+    dependencies:
+      jszip:
+        specifier: ^3.10.1
+        version: 3.10.1
+      vite:
+        specifier: 'catalog:'
+        version: 7.3.5(@types/node@25.9.2)(jiti@2.7.0)(tsx@4.23.12)(yaml@2.9.1)
+
   tooling/bundle-flags: {}
 
   tooling/deploy: {}

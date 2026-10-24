@@ -27,6 +27,7 @@ const APP_CHANNELS = defineChannels({
   hubSignOut: invoke<RotpInvoke['hub:signOut']>()('hub:signOut'),
   hubMe: invoke<RotpInvoke['hub:me']>()('hub:me'),
   submitSanctuaryReport: invoke<RotpInvoke['sanctuary:submitReport']>()('sanctuary:submitReport'),
+  saveArchipelagoFiles: invoke<RotpInvoke['archipelago:save-files']>()('archipelago:save-files'),
   storeDuplicate: invoke<RotpInvoke['store:duplicate']>()('store:duplicate'),
   onMsuOptimizeProgress: event<RotpEvent['msu:optimize:progress']>()('msu:optimize:progress'),
 });

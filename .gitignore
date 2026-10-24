@@ -27,6 +27,11 @@ out/
 __pycache__/
 *.tsbuildinfo
 
+# The Archipelago world package build (tooling/apworld): release assets, generated data, manifest.
+/build/archipelago/
+/integrations/archipelago/relic_of_the_past/data/
+/integrations/archipelago/relic_of_the_past/archipelago.json
+
 # Brock generated outputs: brock icons and brock package write these
 **/build/icons/
 **/build/splash/
@@ -48,6 +53,7 @@ core/wasm-build/output/
 third_party/
 
 apps/desktop/public/wasm/
+apps/desktop/public/archipelago/
 
 # Extracted sprites (generated at runtime)
 apps/desktop/public/sprites/

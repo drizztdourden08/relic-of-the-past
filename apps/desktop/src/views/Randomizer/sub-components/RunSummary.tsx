@@ -4,6 +4,7 @@ import { summaryTilesOf } from '../behavior/run-summary-tiles';
 import { counterTilesOf } from '../behavior/counter-tiles';
 import { sessionToneOf } from '../behavior/session-tone';
 import { NetworkPill } from './NetworkTab';
+import { ArchipelagoFiles } from './ArchipelagoFiles';
 import { DashboardCard } from './DashboardCard';
 import { StatTiles } from './StatTiles';
 import type { RunSummaryProps } from './RunSummary.type';
@@ -19,6 +20,7 @@ const RunSummary = (props: RunSummaryProps) => {
       {archipelago && <NetworkPill onOpen={onOpenNetwork} />}
       <StatTiles tiles={summaryTilesOf(profileName, config, source)} />
       {counters.length > 0 && <StatTiles tiles={counters} />}
+      {archipelago && <ArchipelagoFiles config={config} />}
       {!session && !gameRunning && (
         <Text className="randomizer-page__hint">The session starts automatically when the game boots.</Text>
       )}

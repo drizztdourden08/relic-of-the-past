@@ -18,6 +18,7 @@ if ! "$EMSDK_PYTHON" -m pip install --disable-pip-version-check requests; then
 fi`,
   },
   { name: 'Build the wasm core', shell: 'bash', run: 'pnpm run ensure-wasm' },
+  { name: 'Build the Archipelago world packages', shell: 'bash', run: 'pnpm run ensure-apworld' },
 ];
 
 const releaseInputSteps: WorkflowStep[] = [

@@ -1,0 +1,14 @@
+{
+  "name": "@rotp/apworld",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Builds the Archipelago world package as release assets, one per supported Archipelago version",
+  "type": "module",
+  "bin": {
+    "rotp-build-apworld": "./build-apworld.mjs"
+  },
+  "dependencies": {
+    "jszip": "^3.10.1",
+    "vite": "catalog:"
+  }
+}
