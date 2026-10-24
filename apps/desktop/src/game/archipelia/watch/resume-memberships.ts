@@ -18,9 +18,9 @@ const resumeOne = async (profile: Profile): Promise<void> => {
   useLobbyStatusStore.getState().setMember(profile.id, membership);
   if (membership.token === undefined || !WAITING_KINDS.includes(membership.state.kind) || lobbyWatch.isWatched(profile.id)) return;
   const { server, code, ap, token } = membership;
-  const session = await startJoin({ server, code, ap, config: profile.randomizer, token });
-  if (session !== null) {
-    lobbyWatch.adopt(profile.id, session, membership);
+  const started = await startJoin({ server, code, ap, config: profile.randomizer, token });
+  if ('session' in started) {
+    lobbyWatch.adopt(profile.id, started.session, membership);
     return;
   }
   const gone = unsupported(membership);

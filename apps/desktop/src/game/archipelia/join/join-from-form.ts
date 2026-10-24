@@ -37,8 +37,9 @@ const endOf = (check: LobbyCheckOk, session: LobbySession, event: LobbyEvent, st
 const joinFromForm = async (
   check: LobbyCheckOk, config: ProfileRandomizerConfig, onProgress: (fraction: number) => void,
 ): Promise<JoinOutcome> => {
-  const session = await startJoin({ server: check.server, code: check.code, ap: check.ap, config });
-  if (session === null) return { ok: false, error: `The bundled build for Archipelago ${check.ap} is missing.` };
+  const started = await startJoin({ server: check.server, code: check.code, ap: check.ap, config });
+  if ('error' in started) return { ok: false, error: started.error };
+  const { session } = started;
   return new Promise((resolve) => {
     const stop = session.subscribe((event, state) => {
       if (state.uploads.length > 0) onProgress(sentOf(state.uploads));

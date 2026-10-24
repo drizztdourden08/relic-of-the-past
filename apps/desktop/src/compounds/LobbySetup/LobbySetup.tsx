@@ -1,7 +1,7 @@
 /* @layer renderer-components @kind component */
 import { Field, SegmentedControl, Stack, TextInput } from '@drizztdourden08/tessera/primitives';
 import { DynamicInput } from '@drizztdourden08/tessera/composites';
-import { DEFAULT_SLOT_NAME } from '@rotp/randomizer';
+import { DEFAULT_SLOT_NAME, slotNameError } from '@rotp/randomizer';
 import { CODE_PATTERN, CODE_SLOTS, LOCATION_OPTIONS } from './LobbySetup.constants';
 import type { LobbySetupProps } from './LobbySetup.type';
 import { LanServerRows } from './sub-components/LanServerRows';
@@ -37,7 +37,7 @@ const LobbySetup = (props: LobbySetupProps) => {
         />
       </Field>
       <LobbyLine state={lobby} />
-      <Field label="Slot name">
+      <Field label="Slot name" error={slotNameError(value.slotName) ?? undefined}>
         <TextInput
           type="text" value={value.slotName} spellCheck={false} placeholder={DEFAULT_SLOT_NAME} disabled={disabled}
           onChange={(e) => onChange({ slotName: e.target.value })}

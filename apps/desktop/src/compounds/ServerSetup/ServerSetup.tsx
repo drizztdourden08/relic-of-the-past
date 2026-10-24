@@ -2,6 +2,7 @@
 import { useState } from 'react';
 import { Box, Button, Field, Flex, Spinner, Stack, Text, TextInput } from '@drizztdourden08/tessera/primitives';
 import type { ServerSetupProps } from './ServerSetup.type';
+import { SlotNameField } from './sub-components/SlotNameField';
 import './ServerSetup.css';
 
 const ServerSetup = (props: ServerSetupProps) => {
@@ -37,12 +38,7 @@ const ServerSetup = (props: ServerSetupProps) => {
           </Button>
         </Flex>
       </Field>
-      <Field label="Slot name">
-        <TextInput
-          type="text" value={value.slotName} spellCheck={false} disabled={disabled}
-          onChange={(e) => onChange({ slotName: e.target.value })}
-        />
-      </Field>
+      <SlotNameField value={value.slotName} onChange={(slotName) => onChange({ slotName })} disabled={disabled} />
       <Flex gap="sm" align="center" wrap>
         <Button variant="secondary" size="sm" onClick={onTest} disabled={disabled || testing}>Test connection</Button>
         {testing && <Spinner size="sm" />}

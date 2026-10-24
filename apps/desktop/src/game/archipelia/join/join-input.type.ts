@@ -29,4 +29,6 @@ type JoinOutcome =
   | { ok: true; session: LobbySession; membership: ArchipeliaMembership }
   | { ok: false; error: string };
 
-export type { JoinInput, JoinOutcome, StartJoinInput };
+type StartJoinResult = { session: LobbySession } | { error: string };
+
+export type { JoinInput, JoinOutcome, StartJoinInput, StartJoinResult };
