@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind component */
 import { useCallback } from 'react';
-import { StickPlot } from '@drizztdourden08/tessera/composites';
+import { StickPlot } from '@drizztdourden08/brock-input/renderer';
 import { resolveLiveControlState } from '@rotp/input-mapping';
 import type { StickReadoutProps } from '../ControllerPage.type';
 import { AxisActions } from './AxisActions';

@@ -1,2 +1,2 @@
 /* @layer renderer-components @kind barrel */
-export { usePadPages } from './behavior/usePadPages';
+export { padLivePages } from './behavior/pad-live-pages';

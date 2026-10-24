@@ -8,7 +8,6 @@ import type { ControllerPageProps } from './ControllerPage.type';
 import { AxesBox } from './sub-components/AxesBox';
 import { ButtonsBox } from './sub-components/ButtonsBox';
 import { InfoBox } from './sub-components/InfoBox';
-import { PadActions } from './sub-components/PadActions';
 import { PadBox } from './sub-components/PadBox';
 import './ControllerPage.css';
 
@@ -21,12 +20,11 @@ const ControllerPage = ({ deviceKey, onRunDiagnostics }: ControllerPageProps) =>
 
   return (
     <Box className="controller-page">
-      <PadActions deviceKey={deviceKey} onRunDiagnostics={onRunDiagnostics} onReport={setReportKey} />
       <Box className="controller-page__grid">
         <PadBox page={page} />
         <AxesBox page={page} />
         <ButtonsBox page={page} />
-        <InfoBox page={page} />
+        <InfoBox page={page} onRunDiagnostics={onRunDiagnostics} onReport={setReportKey} />
       </Box>
       {reportKey && <ControllerReportDialog open deviceKey={reportKey} onClose={closeReport} />}
     </Box>

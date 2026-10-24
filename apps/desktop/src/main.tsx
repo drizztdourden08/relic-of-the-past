@@ -14,6 +14,7 @@ import { appReview } from '../.brock/review';
 import { appTitleBar } from '../.brock/title-bar';
 import { appTours } from '../.brock/tours';
 import { appWidgetKits } from '../.brock/widget-kits';
+import { appStartupPrompts } from '../.brock/startup';
 import { rotpBugReport } from './bug-report/rotp-bug-report';
 import { installAppShim } from './platform/api-shim';
 import { startControllerEventLog } from './input/controller-event-log/controller-event-log';
@@ -81,6 +82,7 @@ const App = () => {
       showFlags={showFlags}
       widgetKits={appWidgetKits}
       bugReport={rotpBugReport}
+      startupPrompts={appStartupPrompts}
     />
   );
 };

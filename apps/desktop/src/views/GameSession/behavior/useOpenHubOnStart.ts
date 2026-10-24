@@ -2,7 +2,7 @@
 import { useEffect, useRef } from 'react';
 import { nav, useBootStore, useNavigationStore } from '@drizztdourden08/brock-react';
 import { screenshotHold } from '@app/boot/screenshot-hold';
-import { startupFlag } from '@app/startup/startup-flag';
+import { startupFlag } from '@app/launch-flags/startup-flag';
 import { HOME_HUB } from '../GameSession.constants';
 import { RENDER_SETTLE_MS } from './auto-launch.constants';
 

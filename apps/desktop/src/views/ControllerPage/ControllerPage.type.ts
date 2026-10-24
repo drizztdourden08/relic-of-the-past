@@ -50,6 +50,11 @@ interface BoxProps {
   page: ControllerPageModel;
 }
 
+interface InfoBoxProps extends BoxProps {
+  onRunDiagnostics: ((deviceKey: string) => void) | undefined;
+  onReport: (deviceKey: string) => void;
+}
+
 type CalibrationTarget =
   | { type: 'stick'; side: 'left' | 'right' | 'both' }
   | { type: 'trigger'; axisIndex: number; label: string }
@@ -110,6 +115,6 @@ interface TriggerReadoutProps {
 }
 
 export type {
-  AxisActionsProps, BoxProps, CalibrationTarget, CardCalibrationProps, ControllerCalibration, ControllerPageModel, ControllerPageProps, PadOverlayModel,
+  AxisActionsProps, BoxProps, InfoBoxProps, CalibrationTarget, CardCalibrationProps, ControllerCalibration, ControllerPageModel, ControllerPageProps, PadOverlayModel,
   PadActionsProps, PadNavEntry, RumbleStrengthControlProps, RumbleTest, RumbleTestButtonProps, RumbleTestsProps, StickReadoutProps, TriggerReadoutProps,
 };

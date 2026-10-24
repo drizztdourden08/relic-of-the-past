@@ -7,10 +7,10 @@
 .controller-page__grid {
   display: grid;
   gap: var(--space-md);
-  grid-template-columns: minmax(0, 1fr) var(--size-320);
-  grid-template-areas:
-    'pad axes'
-    'buttons info';
+  grid-template:
+    'pad axes' minmax(min(60vh, 40vw), auto)
+    'buttons info' auto
+    / minmax(0, 1fr) var(--size-320);
   align-items: stretch;
 }
 
@@ -45,17 +45,17 @@
   font-size: var(--text-xs);
 }
 
+.controller-page__info-actions {
+  display: flex;
+  align-items: center;
+  gap: var(--space-xs);
+  margin-inline-start: var(--space-sm);
+}
+
 .controller-page__pad { grid-area: pad; }
 .controller-page__axes { grid-area: axes; }
 .controller-page__buttons { grid-area: buttons; }
 .controller-page__info { grid-area: info; }
-
-.controller-page__pad > :last-child {
-  display: flex;
-  flex: 1;
-  flex-direction: column;
-  min-block-size: 0;
-}
 
 .controller-page__readouts {
   display: flex;
@@ -90,7 +90,11 @@
 
 @container controller-page (width < 56rem) {
   .controller-page__grid {
-    grid-template-columns: minmax(0, 1fr);
-    grid-template-areas: 'pad' 'axes' 'buttons' 'info';
+    grid-template:
+      'pad' minmax(min(60vh, 60vw), auto)
+      'axes' auto
+      'buttons' auto
+      'info' auto
+      / minmax(0, 1fr);
   }
 }

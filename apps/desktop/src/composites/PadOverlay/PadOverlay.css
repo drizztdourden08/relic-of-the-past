@@ -4,9 +4,7 @@
   position: relative;
   flex: 1;
   inline-size: 100%;
-  aspect-ratio: 2 / 1;
   min-block-size: var(--size-256);
-  max-block-size: 60vh;
   margin: 0;
   font-size: var(--text-base);
 }

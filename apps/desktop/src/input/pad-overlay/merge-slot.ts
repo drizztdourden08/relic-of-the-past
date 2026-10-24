@@ -1,5 +1,5 @@
 /* @layer renderer-lib @kind logic */
-import type { ControllerSlotId } from '@drizztdourden08/tessera/composites';
+import type { ControllerSlotId } from '@drizztdourden08/brock-input/renderer';
 import type { SlotPatches } from './merge-slot.type';
 import type { OverlaySlot } from './pad-overlay.type';
 

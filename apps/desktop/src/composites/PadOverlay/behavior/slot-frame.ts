@@ -1,5 +1,6 @@
 /* @layer renderer-components @kind logic */
-import type { ControllerSilhouetteAnchorSet, ControllerSlotId } from '@drizztdourden08/tessera/composites';
+import type { ControllerSilhouetteAnchorSet } from '@drizztdourden08/tessera/composites';
+import type { ControllerSlotId } from '@drizztdourden08/brock-input/renderer';
 import type { AnchorFrame } from '../PadOverlay.type';
 import { FACE_BEARINGS, FACE_BUTTON_RATIO, SLOT_ANCHOR_ID, UNSIZED_RADIUS } from './slot-anchors.constants';
 

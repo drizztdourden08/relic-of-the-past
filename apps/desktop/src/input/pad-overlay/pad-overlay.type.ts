@@ -1,5 +1,6 @@
 /* @layer renderer-lib @kind types */
-import type { ControllerSilhouetteVariant, ControllerSlotId } from '@drizztdourden08/tessera/composites';
+import type { ControllerSilhouetteVariant } from '@drizztdourden08/tessera/composites';
+import type { ControllerSlotId } from '@drizztdourden08/brock-input/renderer';
 import type { LabelSide, Nudge, OverlayPartKind } from '@app/composites/PadOverlay';
 import type { LayoutFamily } from '../controller-families/controller-families.type';
 

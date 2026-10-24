@@ -1,5 +1,6 @@
 /* @layer renderer-components @kind types */
-import type { ControllerSilhouetteAnchorSet, ControllerSlotId } from '@drizztdourden08/tessera/composites';
+import type { ControllerSilhouetteAnchorSet } from '@drizztdourden08/tessera/composites';
+import type { ControllerSlotId } from '@drizztdourden08/brock-input/renderer';
 import type { DpadWedgeState } from '../DpadWedges';
 
 type OverlayPartKind = 'button' | 'analog' | 'stick' | 'dpad';
@@ -60,25 +61,14 @@ interface PlacedPart {
   radius: number;
 }
 
-type Leader = readonly [Point, Point, Point];
+type TextAnchor = 'start' | 'middle' | 'end';
 
 interface PlacedLabel {
   part: PlacedPart;
-  side: LabelSide;
   text: Point;
-  leader: Leader;
+  anchor: TextAnchor;
+  leader: readonly Point[];
   detailDy: number;
-}
-
-interface PlacedLine {
-  part: PlacedPart;
-  y: number;
-}
-
-interface AnchorFrame {
-  x: number;
-  y: number;
-  r: number;
 }
 
 interface BoxSize {
@@ -104,49 +94,21 @@ interface OverlayFrame {
   mode: LabelMode;
   scale: number;
   origin: Point;
-  top: number;
-  bottom: number;
-  lineH: number;
-  minLineH: number;
+  labelH: number;
   lineGap: number;
-  edge: (side: LabelSide, y: number, own: PlacedPart) => number;
-}
-
-interface EdgeBand {
-  y: number;
-  half: number;
-  own: PlacedPart;
-}
-
-interface LabelSlack {
-  left: number;
-  right: number;
-}
-
-interface FitInput {
-  raw: readonly PlacedPart[];
-  bounds: Bounds;
-  sides: ReadonlyMap<string, LabelSide>;
-  points: readonly Point[];
-  metrics: OverlayMetrics;
-  mode: LabelMode;
-  widths: ReadonlyMap<string, number>;
-}
-
-interface FramedParts {
-  frame: OverlayFrame;
-  parts: PlacedPart[];
 }
 
 interface OverlayLayout {
   frame: OverlayFrame;
   parts: PlacedPart[];
   labels: PlacedLabel[];
+  clear: boolean;
 }
 
-interface FitAttempt {
-  layout: OverlayLayout;
-  fits: boolean;
+interface AnchorFrame {
+  x: number;
+  y: number;
+  r: number;
 }
 
 interface PartProps {
@@ -166,7 +128,7 @@ interface OverlayLabelProps {
 }
 
 export type {
-  AnchorFrame, Bounds, BoxSize, EdgeBand, FitAttempt, FitInput, FramedParts, LabelSlack, Leader, LabelMode, LabelSide, Nudge, OverlayFrame, OverlayHaloProps, OverlayLabelProps, OverlayLayout,
+  AnchorFrame, Bounds, BoxSize, LabelMode, LabelSide, Nudge, OverlayFrame, OverlayHaloProps, OverlayLabelProps, OverlayLayout,
   OverlayMetrics, OverlayPartKind, OverlaySlotView, PadOverlayProps, PadOverlayState, PartProps, PartState, PlacedLabel,
-  PlacedLine, PlacedPart, Point, TextMeasure,
+  PlacedPart, Point, TextAnchor, TextMeasure,
 };

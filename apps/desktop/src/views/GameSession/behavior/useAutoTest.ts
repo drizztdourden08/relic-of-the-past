@@ -6,7 +6,7 @@ import { log } from '@app/log-bus';
 import type { AutoTestDeps } from './useAutoTest.type';
 import { RENDER_SETTLE_MS } from './auto-launch.constants';
 import { waitForGameRunning } from './wait-for-game-running';
-import { isAutoStart } from '@app/startup/is-auto-start';
+import { isAutoStart } from '@app/launch-flags/is-auto-start';
 import { screenshotHold } from '@app/boot/screenshot-hold';
 
 const useAutoTest = ({ activeProfile, loadProfileForGame }: AutoTestDeps) => {

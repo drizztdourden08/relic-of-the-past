@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind component */
 import { useState } from 'react';
-import { PressedGrid } from '@drizztdourden08/tessera/composites';
+import { PressedGrid } from '@drizztdourden08/brock-input/renderer';
 import { Box, Card, Tabs, Text } from '@drizztdourden08/tessera/primitives';
 import { UNMAPPED_REASON } from '../ControllerPage.constants';
 import type { BoxProps } from '../ControllerPage.type';

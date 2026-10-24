@@ -4,9 +4,8 @@ import { SvgTspan } from '@app/primitives/SvgTspan';
 import type { OverlayLabelProps } from '../PadOverlay.type';
 
 const OverlayLabel = ({ placed, detail, active }: OverlayLabelProps) => {
-  const { leader, text, side, part, detailDy } = placed;
+  const { leader, text, anchor, part, detailDy } = placed;
   const path = leader.map((point, index) => `${index === 0 ? 'M' : 'L'}${point.x} ${point.y}`).join(' ');
-  const anchor = side === 'left' ? 'end' : 'start';
   const stacked = detailDy > 0 && detail !== undefined;
   const nameY = stacked ? text.y - detailDy / 2 : text.y;
 

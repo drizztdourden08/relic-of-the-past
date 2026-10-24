@@ -13,6 +13,8 @@ const knownRows = (mappings: readonly MappingEntry[], devices: readonly DeviceEn
       name: entry.name,
       vidPid: vidPidKey(entry.vid, entry.pid),
       family: entry.family ?? 'generic',
+      source: entry.source,
+      inputs: entry.inputCount,
       group: 'Known',
       connectedKey: null,
     }));

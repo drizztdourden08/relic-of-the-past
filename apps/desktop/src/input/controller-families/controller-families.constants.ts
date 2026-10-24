@@ -1,5 +1,5 @@
 /* @layer renderer-lib @kind data */
-import type { ControllerSlotId } from '@drizztdourden08/tessera/composites';
+import type { ControllerSlotId } from '@drizztdourden08/brock-input/renderer';
 
 const SLOT_POSITIONS: Partial<Record<ControllerSlotId, readonly string[]>> = {
   'face.south': ['SOUTH'], 'face.east': ['EAST'], 'face.west': ['WEST'], 'face.north': ['NORTH'],

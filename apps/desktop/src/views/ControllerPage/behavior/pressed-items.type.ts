@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind types */
-import type { PressedGridItem } from '@drizztdourden08/tessera/composites';
+import type { PressedGridItem } from '@drizztdourden08/brock-input/renderer';
 
 interface PressedModel {
   items: readonly PressedGridItem[];

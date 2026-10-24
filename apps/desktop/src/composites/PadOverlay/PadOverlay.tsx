@@ -1,9 +1,9 @@
 /* @layer renderer-components @kind component */
-import { useMemo, useRef } from 'react';
+import { useRef } from 'react';
 import { Box, Svg, SvgPath } from '@drizztdourden08/tessera/primitives';
 import { describePart } from './behavior/describe-part';
 import { isActive } from './behavior/is-active';
-import { layoutOverlay } from './behavior/layout-overlay';
+import { useOverlayLayout } from './behavior/useOverlayLayout';
 import { useOverlayMetrics } from './behavior/useOverlayMetrics';
 import type { PadOverlayProps } from './PadOverlay.type';
 import { OverlayLabel } from './sub-components/OverlayLabel';
@@ -13,7 +13,7 @@ import './PadOverlay.css';
 const PadOverlay = ({ outline, anchors, slots, state, label }: PadOverlayProps) => {
   const ref = useRef<HTMLElement>(null);
   const metrics = useOverlayMetrics(ref);
-  const layout = useMemo(() => (metrics ? layoutOverlay(slots, anchors, outline, metrics) : null), [slots, anchors, outline, metrics]);
+  const layout = useOverlayLayout(slots, anchors, outline, metrics);
   const held = slots.filter((slot) => isActive(slot.kind, state[slot.anchor]));
 
   return (

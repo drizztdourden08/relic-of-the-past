@@ -1,6 +1,8 @@
 /* @layer renderer-app @kind component */
-import type { LiveMeta } from '@drizztdourden08/brock-react';
-import { usePadPages } from '@app/views/ControllerPage';
+import { useMemo } from 'react';
+import type { LiveMeta, LivePage } from '@drizztdourden08/brock-react';
+import { useControllerDevices } from '@app/hooks/useControllerDevices';
+import { padLivePages } from '@app/views/ControllerPage';
 
 const meta: LiveMeta = {
   icon: 'gamepad-2',
@@ -9,5 +11,10 @@ const meta: LiveMeta = {
   keywords: ['controller', 'gamepad', 'hid', 'rumble', 'raw bytes', 'stick', 'trigger', 'calibrate', 'report'],
 };
 
-export default usePadPages;
+const usePads = (): readonly LivePage[] => {
+  const { groups } = useControllerDevices();
+  return useMemo(() => padLivePages(groups), [groups]);
+};
+
+export default usePads;
 export { meta };

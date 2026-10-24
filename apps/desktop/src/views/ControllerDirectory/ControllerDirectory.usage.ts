@@ -8,7 +8,7 @@ const usage = {
   rules: [
     'Pass onOpenController to open the page of a connected controller from its row.',
     'Every mapping SDL3 knows lists under Known; every connected controller lists under Connected, mapped or not.',
-    'The view puts its Rescan button in the page header.',
+    'The Rescan button sits at the end of the search and filter row.',
   ],
   a11y: ['The search field is labelled; the table rows are selectable only for connected controllers.'],
   buildingBlock: true,
