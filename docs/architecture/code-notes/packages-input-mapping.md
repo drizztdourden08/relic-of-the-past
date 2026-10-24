@@ -187,12 +187,6 @@ Facts about `packages/input-mapping` that the code cannot say on its own. Each h
 - EnvironmentalEvent values are the param when the event type is ENVIRONMENTAL.
 - HapticItemId values come from the game's item switch in player.c.
 
-## packages/input-mapping/src/haptics-rumble-strength/index.ts
-
-- A per-device multiplier layered on top of a family's strength curve, for a controller that still feels weak after shaping. Neutral at 1.
-- Persisted per device in packages/input-mapping/src/rumble-strength and cached in memory so a dispatch never waits on disk.
-- applyRumbleStrength clamps to the transport's 0 to 1 range. Values loaded from disk are clamped too.
-
 ## packages/input-mapping/src/haptics/index.ts
 
 - Maps game events to vibration patterns and handles dispatch, cooldowns, delays and settings gating.

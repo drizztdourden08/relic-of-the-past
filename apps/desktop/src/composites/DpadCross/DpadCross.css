@@ -1,0 +1,13 @@
+/* @layer renderer-components @kind style */
+
+.dpad-cross__body {
+  fill: var(--c-text);
+}
+
+.dpad-cross__arm {
+  fill: var(--c-danger);
+  stroke: var(--c-danger);
+  stroke-width: var(--border-width-thin);
+  stroke-linejoin: round;
+  vector-effect: non-scaling-stroke;
+}

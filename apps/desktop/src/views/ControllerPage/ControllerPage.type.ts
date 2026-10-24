@@ -72,11 +72,6 @@ interface RumbleTestButtonProps {
   disabled: boolean;
 }
 
-interface RumbleStrengthControlProps {
-  deviceKey: string;
-  disabled: boolean;
-}
-
 interface CardCalibrationProps {
   deviceKey: string;
   target: CalibrationTarget;
@@ -118,5 +113,5 @@ interface TriggerReadoutProps {
 
 export type {
   AxisActionsProps, BoxProps, InfoBoxProps, CalibrationTarget, CardCalibrationProps, ControllerCalibration, ControllerPageModel, ControllerPageProps, PadOverlayModel,
-  PadActionsProps, PadNavEntry, RumbleStrengthControlProps, RumbleTest, RumbleTestButtonProps, RumbleTestsProps, StickReadoutProps, TriggerReadoutProps,
+  PadActionsProps, PadNavEntry, RumbleTest, RumbleTestButtonProps, RumbleTestsProps, StickReadoutProps, TriggerReadoutProps,
 };

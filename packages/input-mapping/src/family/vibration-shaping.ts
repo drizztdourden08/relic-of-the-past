@@ -1,7 +1,6 @@
 /* @layer shared-input @kind logic */
 import type { VibrationSegment } from '../vibration-segment.type';
 import { buildDisplayContext, resolveMinDurationMs, resolveShapeVibration } from './resolve-display';
-import { applyRumbleStrength, getCachedRumbleStrength } from '../haptics-rumble-strength';
 import type { ApplyVibrationShapingParams } from './vibration-shaping.type';
 
 const stretchToMinDuration = (pattern: VibrationSegment[], minDurationMs: number): VibrationSegment[] => {
@@ -13,14 +12,10 @@ const stretchToMinDuration = (pattern: VibrationSegment[], minDurationMs: number
 };
 
 const applyVibrationShaping = (params: ApplyVibrationShapingParams): VibrationSegment[] => {
-  const { sdlType, deviceKey, pattern, minDurationExempt } = params;
+  const { sdlType, pattern, minDurationExempt } = params;
   const ctx = buildDisplayContext({ sdlType });
   const shapeVibration = resolveShapeVibration(ctx);
-  const strength = getCachedRumbleStrength(deviceKey);
-  const shaped = pattern.map((seg) => ({
-    durationMs: seg.durationMs,
-    intensity: applyRumbleStrength(shapeVibration(seg.intensity), strength),
-  }));
+  const shaped = pattern.map((seg) => ({ durationMs: seg.durationMs, intensity: shapeVibration(seg.intensity) }));
   const minDurationMs = resolveMinDurationMs(ctx);
   if (minDurationMs <= 0 || minDurationExempt) return shaped;
   return stretchToMinDuration(shaped, minDurationMs);

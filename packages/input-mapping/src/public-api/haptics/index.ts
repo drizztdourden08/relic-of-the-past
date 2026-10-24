@@ -2,12 +2,6 @@
 export * from '../../haptics';
 export type { HapticPatternId } from '../../data/haptics/haptic-pattern.type';
 export { HAPTIC_PATTERNS } from '../../data/haptics/haptic-patterns.constants';
-export { getCachedRumbleStrength } from '../../haptics-rumble-strength/get-cached-rumble-strength';
-export { DEFAULT_RUMBLE_STRENGTH, MAX_RUMBLE_STRENGTH, MIN_RUMBLE_STRENGTH } from '../../haptics-rumble-strength/haptics-rumble-strength.constants';
-export { loadRumbleStrengthCache } from '../../haptics-rumble-strength/load-rumble-strength-cache';
-export { setCachedRumbleStrength } from '../../haptics-rumble-strength/set-cached-rumble-strength';
-export { readRumbleStrength } from '../../rumble-strength/read-rumble-strength';
-export { writeRumbleStrength } from '../../rumble-strength/write-rumble-strength';
 export { destroyHapticBridge } from '../../runtime/haptic-bridge/destroy-haptic-bridge';
 export { HID_WORKER_OVERHEAD_MS, INPUT_UNAVAILABLE } from '../../runtime/haptic-bridge/haptic-bridge.constants';
 export { hapticState } from '../../runtime/haptic-bridge/haptic-state';

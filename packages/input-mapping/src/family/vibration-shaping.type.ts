@@ -4,7 +4,6 @@ import type { SdlGamepadType } from './family.type';
 
 interface ApplyVibrationShapingParams {
   readonly sdlType: SdlGamepadType;
-  readonly deviceKey: string;
   readonly pattern: readonly VibrationSegment[];
   readonly minDurationExempt?: boolean;
 }

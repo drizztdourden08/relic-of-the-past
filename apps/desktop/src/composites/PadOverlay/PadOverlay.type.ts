@@ -1,7 +1,7 @@
 /* @layer renderer-components @kind types */
 import type { ControllerSilhouetteAnchorSet } from '@drizztdourden08/tessera/composites';
 import type { ControllerSlotId } from '@drizztdourden08/brock-input/renderer';
-import type { DpadWedgeState } from '../DpadWedges';
+import type { DpadPressState } from '../DpadCross';
 
 type OverlayPartKind = 'button' | 'analog' | 'stick' | 'dpad';
 
@@ -41,7 +41,7 @@ interface PartState {
   value?: number;
   x?: number;
   y?: number;
-  dpad?: DpadWedgeState;
+  dpad?: DpadPressState;
 }
 
 type PadOverlayState = Readonly<Partial<Record<ControllerSlotId, PartState>>>;
@@ -117,6 +117,13 @@ interface AnchorFrame {
   r: number;
 }
 
+interface StickCap {
+  dx: number;
+  dy: number;
+  angle: number;
+  deflected: boolean;
+}
+
 interface PartProps {
   part: PlacedPart;
   state: PartState | undefined;
@@ -136,5 +143,5 @@ interface OverlayLabelProps {
 export type {
   AnchorFrame, Bounds, BoxSize, FittedOverlay, LabelMode, LabelSide, Nudge, OverlayFrame, OverlayHaloProps, OverlayLabelProps, OverlayLayout,
   OverlayMetrics, OverlayPartKind, OverlaySlotView, PadOverlayProps, PadOverlayState, PartProps, PartState, PlacedLabel,
-  PlacedPart, Point, TextAnchor, TextMeasure,
+  PlacedPart, Point, StickCap, TextAnchor, TextMeasure,
 };

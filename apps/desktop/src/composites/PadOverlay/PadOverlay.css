@@ -77,8 +77,31 @@
   stroke-width: var(--border-width-thin);
 }
 
-.pad-overlay__stick {
-  transition: transform var(--transition-fast);
+.pad-overlay__well {
+  fill: var(--c-bg);
+  stroke: var(--c-controller-line);
+  stroke-width: var(--border-width-thick);
+}
+
+.pad-overlay__cap-face {
+  fill: var(--c-text);
+  transition: fill var(--transition-fast);
+}
+
+.pad-overlay__cap[data-pressed] .pad-overlay__cap-face {
+  fill: var(--c-danger);
+}
+
+.pad-overlay__cap-tick {
+  fill: none;
+  stroke: var(--c-bg);
+  stroke-width: var(--border-width-thick);
+  stroke-linecap: round;
+}
+
+.pad-overlay__cap-mark {
+  fill: var(--c-bg);
+  font-weight: var(--weight-semi);
 }
 
 .pad-overlay__held {

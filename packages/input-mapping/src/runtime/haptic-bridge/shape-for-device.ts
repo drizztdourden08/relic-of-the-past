@@ -7,7 +7,7 @@ const shapeForDevice = (deviceKey: string, pattern: VibrationSegment[], minDurat
   const [vidHex, pidHex] = deviceKey.split(':');
   const sdlType = recallControllerSdlType(parseInt(vidHex ?? '', 16), parseInt(pidHex ?? '', 16));
   if (!sdlType) return pattern;
-  return applyVibrationShaping({ sdlType, deviceKey, pattern, minDurationExempt });
+  return applyVibrationShaping({ sdlType, pattern, minDurationExempt });
 };
 
 export { shapeForDevice };
