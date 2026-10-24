@@ -170,6 +170,7 @@ tests/fixtures/save-states/
 .codex/config.toml
 # brock sync: generated icon files, start. Brock rewrites the lines up to the end marker.
 apps/desktop/build/icons/
+apps/desktop/build/filetypes/
 apps/desktop/build/splash/
 apps/desktop/public/logos/icon.svg
 apps/desktop/public/logos/icon.ico

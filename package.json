@@ -111,7 +111,7 @@
     "@capacitor/assets": "^3.0.5",
     "@capacitor/cli": "catalog:",
     "@drizztdourden08/brock-build": "catalog:",
-    "@drizztdourden08/brock-core": "^0.87.0",
+    "@drizztdourden08/brock-core": "^0.92.0",
     "@drizztdourden08/brock-lint-config": "catalog:",
     "@drizztdourden08/brock-plugin-snes": "catalog:",
     "@drizztdourden08/brock-thread": "catalog:",
@@ -167,8 +167,8 @@
     "vitest": "catalog:"
   },
   "brock": {
-    "version": "0.87.0",
-    "tessera": "0.56.2"
+    "version": "0.92.0",
+    "tessera": "0.58.0"
   },
   "bin": {
     "rotp": "./bin/rotp.mjs"
