@@ -8,7 +8,7 @@ const ProfileRows = (props: ProfileRowsProps) => {
 
   return (
     <Stack gap="xs">
-      {profiles.length === 0 && <EmptyState message="No profiles yet. Import a ROM to get started." />}
+      {profiles.length === 0 && <EmptyState message="No profiles yet." />}
       {profiles.map((profile) => (
         <ListItemRow
           key={profile.id}

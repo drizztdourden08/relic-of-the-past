@@ -36,7 +36,7 @@ const sections: Section[] = [
         id: 'turbo',
         title: 'Turbo',
         items: [
-          { key: 'turboEnabled', label: 'Turbo', description: 'Run the game faster than normal while the Turbo shortcut is held. Bind the shortcut under Controls. Music keeps its own tempo; everything else moves at the chosen speed.', hint: 'On, holding the Turbo shortcut speeds the game up.', keywords: turboKeywords },
+          { key: 'turboEnabled', label: 'Turbo', description: 'Runs the game faster while the Turbo shortcut is held. Music keeps its tempo.', hint: 'On, holding the Turbo shortcut speeds the game up.', keywords: turboKeywords },
           { key: 'turboSpeed', label: 'Turbo Speed', description: 'How much faster the game runs while the shortcut is held, from 1.25x up to 10x.', hint: 'Drag to set how fast Turbo runs. Needs Turbo on.', keywords: turboKeywords },
         ],
       },
@@ -58,7 +58,7 @@ const sections: Section[] = [
       { key: 'turnWhileDashing', label: 'Turn While Dashing', description: 'Change direction while using the Pegasus Boots dash', hint: 'On, you can steer during a Pegasus Boots dash.', keywords: 'dash turn pegasus boots direction' },
       { key: 'mirrorToDarkworld', label: 'Mirror to Dark World', description: 'The Magic Mirror can warp you to the Dark World from the Light World', hint: 'On, the Magic Mirror also works from the Light World.', keywords: 'mirror warp dark world light world' },
       { key: 'cancelBirdTravel', label: 'Cancel Bird Travel', description: 'Cancel duck flight in progress by pressing the X button', hint: 'On, X cancels a duck flight while it is in the air.', keywords: 'bird duck cancel fly' },
-      { key: 'allowDiving', label: 'Allow Diving with Flippers', description: 'Press B while swimming to duck under for a moment, out of reach of anything that would hit you. Turned on automatically by the extra dungeon, whose water room needs it.', hint: 'On, B dives under the water for a moment while you swim.', keywords: 'dive diving swim underwater flippers b button dodge' },
+      { key: 'allowDiving', label: 'Allow Diving with Flippers', description: 'Press B while swimming to duck under for a moment, out of reach of anything that would hit you.', hint: 'On, B dives under the water for a moment while you swim.', keywords: 'dive diving swim underwater flippers b button dodge' },
     ],
   },
   {
@@ -67,7 +67,7 @@ const sections: Section[] = [
     items: [
       { key: 'collectItemsWithSword', label: 'Collect Items with Sword', description: 'Pick up hearts, rupees, and other items by slashing them with your sword', hint: 'On, a sword slash picks up the items it touches.', keywords: 'sword collect slash hearts items' },
       { key: 'breakPotsWithSword', label: 'Break Pots with Sword', description: 'Level 2 or higher swords can break pots by slashing them', hint: 'On, a level 2 sword or better breaks pots.', keywords: 'pots sword break level' },
-      { key: 'moreActiveBombs', label: 'More Active Bombs', description: 'Place up to 4 active bombs at once instead of the original limit of 2', hint: 'On, four bombs can be down at once.', keywords: 'bombs active limit' },
+      { key: 'moreActiveBombs', label: 'More Active Bombs', description: 'Place up to 4 active bombs at once', hint: 'On, four bombs can be down at once.', keywords: 'bombs active limit' },
     ],
   },
   {
@@ -88,7 +88,7 @@ const sections: Section[] = [
         id: 'dialog-skipping',
         title: 'Skipping',
         items: [
-          { key: 'autoSkipDialog', label: 'Auto-Skip Dialog', description: 'Show dialog text instantly and dismiss message boxes for you, including item-get text. Yes/no and shop prompts still wait for your answer. Not in the original game.', hint: 'On, message boxes show at once and close by themselves. Questions still wait for you.', keywords: 'dialog text skip fast auto advance message box speed instant' },
+          { key: 'autoSkipDialog', label: 'Auto-Skip Dialog', description: 'Show dialog text instantly and dismiss message boxes for you, including item-get text. Yes/no and shop prompts still wait for your answer.', hint: 'On, message boxes show at once and close by themselves. Questions still wait for you.', keywords: 'dialog text skip fast auto advance message box speed instant' },
           { key: 'disableTelepathy', label: 'Disable Telepathic Messages', description: "Suppress the princess's periodic telepathic pleas while walking to the castle in the rain", hint: 'On, the calls for help on the way to the castle stay quiet.', keywords: 'princess telepathy rain message annoying skip' },
         ],
       },
@@ -103,22 +103,22 @@ const sections: Section[] = [
       { key: 'showMaxItemsInYellow', label: 'Indicate Max Resources', description: "Highlight rupees, bombs, and arrows in yellow when you're carrying the maximum amount", hint: 'On, a full count of rupees, bombs or arrows turns yellow.', keywords: 'max yellow rupees bombs arrows' },
       { key: 'carryMoreRupees', label: 'Larger Wallet', description: 'Increase the maximum rupee capacity from 999 to 9999', hint: 'On, the wallet holds up to 9999 rupees.', keywords: 'rupees wallet money' },
       { key: 'prefillFileName', label: 'Prefill File Name', description: 'New files start named Link, with the cursor on End.', hint: 'On, a new file starts with a name already typed.', keywords: 'name file link new save naming end default' },
-      { key: 'archeryNeedsBow', label: 'Archery Game Asks For A Bow', description: 'Stop the archery game from taking your money when you have nothing to shoot with; the owner tells you why instead. Not in the original game.', hint: 'On, the archery game refuses to charge you until you own a bow.', keywords: 'archery shooting gallery target bow arrow minigame game refund fee rupees' },
-      { key: 'mapOnSelect', label: 'Open Map with Select', description: 'Press the select button to open the map without going through the pause menu. Classic controls only, since Modern gives the map a verb of its own.', hint: 'On, Select opens the map. Not used with the Modern controls.', keywords: 'map select button shortcut' },
+      { key: 'archeryNeedsBow', label: 'Archery Game Asks For A Bow', description: 'Stop the archery game from taking your money when you have nothing to shoot with; the owner tells you why instead.', hint: 'On, the archery game refuses to charge you until you own a bow.', keywords: 'archery shooting gallery target bow arrow minigame game refund fee rupees' },
+      { key: 'mapOnSelect', label: 'Open Map with Select', description: 'Press the select button to open the map without going through the pause menu. Classic controls only.', hint: 'On, Select opens the map. Not used with the Modern controls.', keywords: 'map select button shortcut' },
     ],
   },
   {
     id: 'cheats',
     title: 'Cheats',
     items: [
-      { key: 'cheatsEnabled', label: 'Enable Cheats', description: 'Master gate for every cheat (stats, items, combat, ignore collision). Off by default: every cheat no-ops in the C core while this is off, so leaving it off can never affect gameplay.', hint: 'On, the cheat tools work. Off, every cheat does nothing.', keywords: 'cheat cheats enable master gate ignore collision walk through walls noclip kill enemies magic' },
+      { key: 'cheatsEnabled', label: 'Enable Cheats', description: 'Master switch for every cheat: stats, items, combat and ignore collision.', hint: 'On, the cheat tools work. Off, every cheat does nothing.', keywords: 'cheat cheats enable master gate ignore collision walk through walls noclip kill enemies magic' },
     ],
   },
   {
     id: 'tracker',
     title: 'Tracker',
     items: [
-      { key: 'trackerEnabled', label: 'Enable Checks Tracker', description: 'The checks tracker reads inventory and save flags out of the running game. Turning it off stops that polling and the tracker stops updating.', hint: 'On, the checks tracker follows the game as you play.', keywords: 'tracker checks inventory save flags poll widget' },
+      { key: 'trackerEnabled', label: 'Enable Checks Tracker', description: 'Turning this off stops the checks tracker updating.', hint: 'On, the checks tracker follows the game as you play.', keywords: 'tracker checks inventory save flags poll widget' },
     ],
   },
   {

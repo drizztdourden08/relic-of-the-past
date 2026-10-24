@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind component */
-import { Flex, Spinner, Stack, Text } from '@drizztdourden08/tessera/primitives';
+import { Spinner, Stack, Text } from '@drizztdourden08/tessera/primitives';
 import type { StoreHomeProps } from '../Store.type';
 import { StoreGrid } from './StoreGrid';
 import { StoreHomeWelcome } from './StoreHomeWelcome';
@@ -20,10 +20,7 @@ const StoreHome = (props: StoreHomeProps) => {
       )}
       {home && home.popular.length > 0 && (
         <Stack gap="sm">
-          <Flex align="baseline" gap="sm">
-            <Text as="h3" className="store__heading">Popular this month</Text>
-            <Text as="span" className="store__hint">by installs in the last 30 days</Text>
-          </Flex>
+          <Text as="h3" className="store__heading">Popular this month</Text>
           <StoreGrid items={home.popular} statusFor={statusFor} selectedId={null} onSelect={onSelect} />
         </Stack>
       )}

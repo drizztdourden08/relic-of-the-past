@@ -11,7 +11,7 @@ const ProfileOverviewTab = (props: ProfileOverviewTabProps) => {
   return (
     <Stack gap="lg">
       <ProfileEditSection profile={profile} languages={languages} msuPacks={msuPacks} onRefresh={onRefresh} />
-      <FactsSection title="Details" hint="Set by the app. These do not change here." facts={[buildProfileFacts(profile, mode)]} />
+      <FactsSection title="Details" facts={[buildProfileFacts(profile, mode)]} />
     </Stack>
   );
 };

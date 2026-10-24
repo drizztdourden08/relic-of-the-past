@@ -24,8 +24,7 @@ const ORDER_OPTIONS: SegmentOption<LoopOrder>[] = [
 const ORDER_HINTS: Record<LoopOrder, string> = {
   sequential: 'Plays the files in the order listed, then starts over.',
   random: 'Draws a different file each pass.',
-  single: 'One track, repeating at its own loop point. The intro plays once and the body repeats. '
-    + 'No crossfade: the seam is wherever the file says it is. This is how MSU-1 itself works.',
+  single: 'One track, repeating at its own loop point. The intro plays once and the body repeats.',
 };
 
 const CROSSFADE_LABEL = 'Crossfade into the next pass';
@@ -37,9 +36,8 @@ const CROSSFADE_HINT
 const WAIT_LABEL = 'Wait for the sound to finish';
 
 const WAIT_HINTS = {
-  off: 'Off: the gap is timed from the moment a sound STARTS, so a file longer than the gap is '
-    + 'still playing when the next one fires and they layer up.',
-  on: 'On: the gap starts only once the sound has FINISHED, so exactly one plays at a time.',
+  off: 'Off: the gap is timed from when a sound starts, so long files can overlap.',
+  on: 'On: the gap starts when the sound finishes, so only one plays at a time.',
 };
 
 export {

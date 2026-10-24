@@ -16,12 +16,6 @@
   border-left: var(--border-width-thin) solid var(--c-border);
 }
 
-.difficulty-block__caption {
-  color: var(--c-text-dim);
-  font-size: var(--text-xs);
-  padding: 0 var(--space-sm);
-}
-
 .difficulty-block__heading {
   color: var(--c-text-muted);
   font-size: var(--text-xs);

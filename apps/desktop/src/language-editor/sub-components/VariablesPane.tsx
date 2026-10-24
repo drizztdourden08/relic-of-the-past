@@ -1,13 +1,12 @@
 /* @layer renderer-components @kind component */
 import { VariablesTable } from '@rotp/design/packs';
-import { VARIABLES_SUMMARY } from '../LanguageEditor.constants';
 import { UnbuiltPane } from './UnbuiltPane';
 import type { VariablesPaneProps } from './VariablesPane.type';
 
 const VariablesPane = (props: VariablesPaneProps) => {
   const { variables, tab, readOnly, setVariableValue, upsertGlossaryTerm, removeGlossaryTerm } = props;
   return (
-    <UnbuiltPane summary={VARIABLES_SUMMARY}>
+    <UnbuiltPane>
       <VariablesTable
         variables={variables}
         rows={tab.rows}

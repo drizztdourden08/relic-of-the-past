@@ -36,7 +36,7 @@ const DEVICE_DESCRIPTIONS = {
     manual: 'Mono collapses the output to one channel; Stereo keeps left and right separate.',
   },
   audioSamples: {
-    auto: `Left at a value that is stable on most machines. ${AUTO_NOTE}`,
+    auto: AUTO_NOTE,
     manual: 'Smaller buffers reduce latency but may crackle; larger ones are steadier but add delay.',
   },
 } as const;
@@ -48,15 +48,15 @@ const GROUP_VOLUME_KEYS = ['musicVolume', 'ambientVolume', 'sfxVolume'];
 const DEVICE_KEYS = ['audioFreq', 'audioChannels', 'audioSamples'];
 
 const VOLUME_ROWS = {
-  masterVolume: { label: 'Master Volume', description: 'Controls the overall game volume, so it affects all audio output', mutedKey: 'masterMuted' },
+  masterVolume: { label: 'Master Volume', description: 'Controls the overall game volume', mutedKey: 'masterMuted' },
   musicVolume: {
     label: 'Music Volume',
-    description: 'Sets the music level for the original soundtrack and any music pack alike, since a pack plays in place of it, not alongside it',
+    description: 'Sets the music level, for the original soundtrack and any music pack',
     mutedKey: 'musicMuted',
   },
   ambientVolume: {
     label: 'Ambience Volume',
-    description: 'Sets the replacement ambient-bed level for rain, waterfalls and wind played by a pack. The sound chip cannot split its own ambience, so this governs replacement audio only',
+    description: 'Sets the level of the rain, waterfalls and wind played by a pack',
     mutedKey: 'ambientMuted',
   },
   sfxVolume: { label: 'SFX Volume', description: 'Sets the sound-effects level', mutedKey: 'sfxMuted' },

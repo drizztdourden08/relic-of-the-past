@@ -137,8 +137,3 @@
 .store-sign-in__actions {
   width: 100%;
 }
-
-.store-sign-in .store-sign-in__hint {
-  color: var(--c-text-muted);
-  font-size: var(--text-sm);
-}

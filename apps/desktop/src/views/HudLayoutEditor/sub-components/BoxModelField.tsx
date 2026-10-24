@@ -24,7 +24,7 @@ const BoxModelField = (props: BoxModelFieldProps) => {
 
   const readOnlyMargin = (side: Side): boolean => marginLocked || OFFSET_SIDES.includes(side);
   const marginNote = marginLocked
-    ? 'The screen is always exactly the view, so it has no margin to give.'
+    ? 'The screen has no margin.'
     : 'left and top are this node\'s offset. They show here and are edited in Position.';
 
   return (

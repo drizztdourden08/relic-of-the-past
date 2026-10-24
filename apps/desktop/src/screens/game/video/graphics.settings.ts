@@ -12,9 +12,9 @@ const sections: Section[] = [
         id: 'rendering-engine',
         title: 'Engine',
         items: [
-          { key: 'newRenderer', label: 'Optimized PPU', description: 'Use a faster, rewritten pixel processing unit instead of the cycle-accurate SNES PPU. Looks identical and runs much faster', hint: 'On, the game draws with the faster renderer. The picture looks the same.', keywords: 'ppu renderer engine optimized fast' },
+          { key: 'newRenderer', label: 'Optimized PPU', description: 'Uses a faster pixel processing unit. Looks identical and runs much faster', hint: 'On, the game draws with the faster renderer. The picture looks the same.', keywords: 'ppu renderer engine optimized fast' },
           { key: 'enhancedMode7', label: 'Enhanced Mode 7', description: 'Render the world map and flying sequences at higher resolution with smooth rotation and scaling, replacing the original pixelated Mode 7 effect', hint: 'On, the world map and the flight scenes draw at a higher resolution.', keywords: 'mode7 map resolution hd smooth' },
-          { key: 'noSpriteLimits', label: 'No Sprite Limit', description: 'Remove the original SNES limitation of 8 sprites per scanline, so busy scenes stop flickering', hint: 'On, crowded scenes stop flickering because every sprite on a line is drawn.', keywords: 'sprite limit scanline flicker' },
+          { key: 'noSpriteLimits', label: 'No Sprite Limit', description: 'Lifts the limit of 8 sprites per line, so busy scenes stop flickering', hint: 'On, crowded scenes stop flickering because every sprite on a line is drawn.', keywords: 'sprite limit scanline flicker' },
         ],
       },
       {
@@ -22,7 +22,7 @@ const sections: Section[] = [
         title: 'Quality',
         items: [
           { key: 'linearFiltering', label: 'Linear Filtering', description: 'Apply bilinear interpolation for smoother, less pixelated visuals. Turn it off for crisp pixel art', hint: 'On, the scaled picture is smoothed. Off keeps sharp pixels. Pixel Perfect turns it off.', keywords: 'filter smooth pixel crisp bilinear' },
-          { key: 'dimFlashes', label: 'Dim Flashes', description: 'Reduce the intensity of screen flashing effects (lightning, boss hits) similar to Virtual Console. Helps with photosensitivity', hint: 'On, lightning and other full screen flashes are softer.', keywords: 'flash dim reduce epilepsy accessibility' },
+          { key: 'dimFlashes', label: 'Dim Flashes', description: 'Reduces the intensity of screen flashes (lightning, boss hits). Helps with photosensitivity', hint: 'On, lightning and other full screen flashes are softer.', keywords: 'flash dim reduce epilepsy accessibility' },
         ],
       },
     ],

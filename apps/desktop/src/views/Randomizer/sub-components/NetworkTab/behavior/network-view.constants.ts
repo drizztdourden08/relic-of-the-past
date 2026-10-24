@@ -1,4 +1,4 @@
 /* @layer renderer-components @kind constants */
-const NOT_CONNECTED_HINT = 'Fills in once the game connects to the room.';
+const NOT_CONNECTED_HINT = 'Not connected.';
 
 export { NOT_CONNECTED_HINT };

@@ -11,11 +11,11 @@ const DataHome = (props: DataHomeProps) => {
   return (
     <Stack gap="xl">
       <Stack as="section" gap="md" aria-label="Sections">
-        <SectionHeader level={2} title="Sections" subtitle="Each part of the data area, and what you do there." />
+        <SectionHeader level={2} title="Sections" />
         <DataSections groups={DATA_SECTION_GROUPS} onOpen={(page) => open(`${DATA_BUCKET}/${page}`)} />
       </Stack>
       <Stack as="section" gap="md" aria-label="Storage details">
-        <SectionHeader level={2} title="Storage details" subtitle="Where the data lives and how much each folder uses." />
+        <SectionHeader level={2} title="Storage details" />
         <DataStorageDetails summary={summary} loading={loading} />
       </Stack>
     </Stack>

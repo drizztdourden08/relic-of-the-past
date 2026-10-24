@@ -12,14 +12,13 @@ const AspectRatioRow = (props: ControlContext) => {
     <DisabledOverlay active={disabled} contained message={ASPECT_LOCKED_MESSAGE}>
       <AspectRatioControl
         label="Aspect Ratio"
-        description="Screen aspect ratio for the game content."
         value={settings.aspectRatio}
         options={options}
         widePresets={widePresets}
         tallPresets={tallPresets}
         descriptions={ASPECT_DESCRIPTIONS}
         recommendedValue="auto"
-        recommendedNote="Best for most setups. Follows your window and adapts to notch or resize."
+        recommendedNote="Best for most setups."
         customW={settings.customAspectW}
         customH={settings.customAspectH}
         ratioKey="aspectRatio"

@@ -11,9 +11,6 @@ const MeasuringStep = (props: MeasuringStepProps) => {
           ? 'Measuring...'
           : `Measuring ${progress.fileName} (${progress.index} of ${progress.total})`}
       </Text>
-      <Text className="msu-optimize__note msu-optimize__note--faint">
-        A short slice of every file is encoded, so the estimate is measured, not assumed.
-      </Text>
     </Box>
   );
 };

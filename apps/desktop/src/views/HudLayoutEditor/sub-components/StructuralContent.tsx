@@ -19,7 +19,7 @@ const StructuralContent = (props: StructuralContentProps) => {
     case 'switch':
       return <SwitchContent spec={element} onChange={onChange} scope={scope} insideRepeat={insideRepeat} glyphPacks={glyphPacks} selectedId={selectedId} onSelectNode={onSelectNode} />;
     case 'spacer':
-      return <Text className="hud-editor__hint">A spacer draws nothing. It only has a box.</Text>;
+      return <Text className="hud-editor__hint">A spacer draws nothing.</Text>;
   }
 };
 

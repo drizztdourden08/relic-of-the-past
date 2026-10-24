@@ -5,7 +5,7 @@ import type { PlayerPositionRowsProps } from './PlayerStatePanel.type';
 
 const PlayerPositionRows = ({ playerDebug, isIndoors, playerX, playerY }: PlayerPositionRowsProps) => (
   <>
-    <DescRow label="Player Pos" desc="The player's absolute world position in pixels. Indoor: relative to room origin. Outdoor: relative to overworld origin (0,0 = top-left of screen 0x00).">
+    <DescRow label="Player Pos" desc="The player's world position in pixels, relative to the room origin indoors and the overworld origin outdoors.">
       <Text className="nav-val-dim">{playerX}, {playerY}</Text>
     </DescRow>
     {!isIndoors && (

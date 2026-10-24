@@ -33,7 +33,7 @@ const CORE_VERB_GROUPS: readonly CoreVerbGroup[] = [
   {
     id: 'menu',
     title: 'Menu',
-    hint: 'These four drive the pause menu. They are live only while it is open, so each one can also be a gameplay slot.',
+    hint: 'These drive the pause menu and are live only while it is open.',
     verbs: ['confirm', 'cancel', 'prevScreen', 'nextScreen'],
   },
 ];
@@ -46,8 +46,8 @@ const MODIFIER_CODES = new Set([
 const CANCEL_ARM_DELAY_MS = 150;
 const LISTEN_ARM_DELAY_MS = 200;
 
-const VANILLA_ONLY = 'The Modern HUD style replaces the original buttons with core verbs and slots. See Modern Controls.';
-const MODERN_ONLY = 'Modern controls come with the Modern HUD style. Without it, the original buttons apply.';
+const VANILLA_ONLY = 'The Modern HUD style uses Modern Controls instead.';
+const MODERN_ONLY = 'Needs the Modern HUD style.';
 
 const CONTROLS_TAB_IDS: readonly ControlsTab[] = ['controls', 'modern', 'shortcuts', 'cheats', 'options'];
 
@@ -74,8 +74,6 @@ const SDL_TYPE_ICON: Record<string, string> = {
   gamecube: publicAsset('buttons/gc/controller_gamecube.svg'),
 };
 
-const REQUIRED_INPUTS_DESCRIPTION = 'The devices the bindings of this profile use.';
-
 const BUS_NAME: Record<ControllerBusType, string | null> = { usb: 'USB', bluetooth: 'Bluetooth', unknown: null };
 
 const PROFILES_FOLD_KEY = 'controls.profiles.collapsed';
@@ -84,10 +82,10 @@ const CONTROLS_PANEL_WIDTH = 192;
 
 const SIDE_PANEL_SIZE = { width: 192, minWidth: 160, maxWidth: 360 };
 
-const EMPTY_HINT = 'Assign a controller to this profile to see its slots. Drop one from the Devices column.';
+const EMPTY_HINT = 'Assign a controller to this profile to see its slots.';
 
 export {
   ADAPTER_FAMILY_ICON, BUS_NAME, CANCEL_ARM_DELAY_MS, CONTROLS_PANEL_WIDTH, CONTROLS_TAB_IDS, CORE_VERB_GROUPS,
   CORE_VERB_LABELS, DEVICE_FAMILY_ICON, DEVICES_FOLD_KEY, EMPTY_HINT, GENERIC_DEVICE_ICON, LISTEN_ARM_DELAY_MS, MODERN_ONLY,
-  MODIFIER_CODES, PROFILES_FOLD_KEY, REQUIRED_INPUTS_DESCRIPTION, SDL_TYPE_ICON, SIDE_PANEL_SIZE, VANILLA_ONLY,
+  MODIFIER_CODES, PROFILES_FOLD_KEY, SDL_TYPE_ICON, SIDE_PANEL_SIZE, VANILLA_ONLY,
 };

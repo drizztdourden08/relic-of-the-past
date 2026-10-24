@@ -11,8 +11,8 @@ const STORE_COPY: HubAccountCopy = {
   siteHost: STORE_SITE_HOST,
 };
 
-const SIGN_IN_LEAD = 'Browsing and installing packs needs a Relic of the Past account. It is the same account as the Sanctuary; publishing, ratings and your profile are on the site.';
-const WAITING_LINK = 'Sign in to install the pack you picked on the site. The install starts as soon as you are signed in.';
+const SIGN_IN_LEAD = 'Sign in to browse and install packs.';
+const WAITING_LINK = 'Sign in to install the pack you picked.';
 
 const BROWSE_ROUTE = 'store/browse';
 const UPDATES_ROUTE = 'store/updates';

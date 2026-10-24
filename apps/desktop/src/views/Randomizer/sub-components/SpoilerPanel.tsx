@@ -37,9 +37,7 @@ const SpoilerPanel = () => {
     return (
       <Box className="randomizer-page__scroll">
         <Box className="randomizer-page__panel">
-          <Text className="randomizer-page__hint">
-            No placement loaded. A local run loads its spoiler when the session starts.
-          </Text>
+          <Text className="randomizer-page__hint">No placement loaded.</Text>
         </Box>
       </Box>
     );

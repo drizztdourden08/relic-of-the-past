@@ -13,9 +13,9 @@ const ProfileDataTab = ({ profile, settings }: ProfileDataTabProps) => {
   if (data === null) return <Spinner size="md" />;
   return (
     <Stack gap="lg">
-      <FactsSection title="Saves" hint="Load, rename and delete saves from the profile's own screen." facts={[buildSaveFacts(data)]} />
+      <FactsSection title="Saves" facts={[buildSaveFacts(data)]} />
       <FactsSection title="Play" facts={[buildPlayFacts(data)]} />
-      <FactsSection title="Controls" hint="Controller profiles belong to this profile." facts={[buildControlFacts(data, settings)]} />
+      <FactsSection title="Controls" facts={[buildControlFacts(data, settings)]} />
     </Stack>
   );
 };

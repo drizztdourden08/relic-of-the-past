@@ -6,11 +6,11 @@ import { FactsSection } from './FactsSection';
 import type { ProfileSettingsTabProps } from './profile-detail.type';
 
 const ProfileSettingsTab = ({ settings }: ProfileSettingsTabProps) => {
-  if (settings === null) return <Text variant="caption" tone="muted">This profile has no settings file yet.</Text>;
+  if (settings === null) return <Text variant="caption" tone="muted">No settings saved yet.</Text>;
 
   return (
     <Stack gap="md">
-      <Callout tone="info" variant="footnote">These are read only here. Change them in the game's Settings.</Callout>
+      <Callout tone="info" variant="footnote">Read only. Change these in Settings.</Callout>
       <Box className="profile-detail__grid">
         {SETTINGS_SECTIONS.map(({ title, keys }) => (
           <FactsSection
