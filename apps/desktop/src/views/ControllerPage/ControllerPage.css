@@ -71,7 +71,14 @@
 }
 
 .controller-page__buttons .controller-page__pressed-grid {
-  grid-template-columns: repeat(auto-fill, minmax(var(--size-128), 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(var(--size-160), 1fr));
+}
+
+.controller-page__buttons .controller-page__pressed-grid .input-pressed-grid__label {
+  overflow: visible;
+  text-align: center;
+  text-overflow: clip;
+  white-space: normal;
 }
 
 .controller-page__note {
