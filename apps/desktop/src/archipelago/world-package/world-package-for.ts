@@ -1,10 +1,4 @@
 /* @layer renderer-lib @kind logic */
-/**
- * The bundled world package for one Archipelago version, fetched from the public folder the
- * build fills (tooling/apworld, like the wasm): builds.json names each build with its hash, the
- * build itself sits at archipelago/<version>/relic_of_the_past.apworld. Null when the app has
- * no build for that version, or when the bytes do not match the index.
- */
 import { publicAsset } from '@app/public-asset/public-asset';
 import { BUILDS_INDEX_PATH, buildPathOf } from './world-package.constants';
 import { sha256Hex } from './sha256-hex';

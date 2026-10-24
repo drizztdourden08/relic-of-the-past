@@ -1,6 +1,12 @@
 /* @layer electron-main @kind logic */
-import { FALLBACK_SLOT_NAME, UNSAFE_FILENAME } from './save-files.constants';
+import { FALLBACK_SLOT_NAME, FIRST_PRINTABLE_CODE, UNSAFE_FILENAME_CHARACTERS } from './save-files.constants';
 
-const safeFileStem = (name: string): string => name.replace(UNSAFE_FILENAME, '_').trim() || FALLBACK_SLOT_NAME;
+const isSafeCharacter = (character: string): boolean => (
+  (character.codePointAt(0) ?? 0) >= FIRST_PRINTABLE_CODE && !UNSAFE_FILENAME_CHARACTERS.includes(character)
+);
+
+const safeFileStem = (name: string): string => (
+  [...name].map((character) => (isSafeCharacter(character) ? character : '_')).join('').trim() || FALLBACK_SLOT_NAME
+);
 
 export { safeFileStem };

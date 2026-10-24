@@ -1,9 +1,4 @@
 /* @layer electron-main @kind logic */
-/**
- * Writes what an Archipelago host needs for one slot into a folder the player picks: the player
- * file (<slot>.yaml) and the world package, both handed over by the renderer, the package under
- * the name Archipelago loads it by.
- */
 import { writeFile } from 'fs/promises';
 import { join } from 'path';
 import { WORLD_MODULE_NAME } from '@rotp/randomizer';

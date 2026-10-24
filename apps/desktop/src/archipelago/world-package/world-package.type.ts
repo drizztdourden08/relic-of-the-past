@@ -6,7 +6,6 @@ interface WorldPackageBuild {
   size: number;
 }
 
-/** The part of builds.json the app reads; the release index carries more. */
 interface WorldPackageBuilds {
   minimumAp: string;
   maximumAp: string;

@@ -1,10 +1,10 @@
 /* @layer electron-main @kind constants */
 import type { OpenDialogOptions } from 'electron';
 
-/** Characters Windows refuses in a file name, plus control characters. */
-const UNSAFE_FILENAME = /[<>:"/\|?*\u0000-\u001f]/g;
+const UNSAFE_FILENAME_CHARACTERS = '<>:"/\\|?*';
 
-/** The slot a profile with no name of its own connects as, so the file names the same slot. */
+const FIRST_PRINTABLE_CODE = 32;
+
 const FALLBACK_SLOT_NAME = 'Player';
 
 const CANCELLED_REASON = 'cancelled';
@@ -14,4 +14,4 @@ const FOLDER_DIALOG: OpenDialogOptions = {
   properties: ['openDirectory', 'createDirectory'],
 };
 
-export { CANCELLED_REASON, FALLBACK_SLOT_NAME, FOLDER_DIALOG, UNSAFE_FILENAME };
+export { CANCELLED_REASON, FALLBACK_SLOT_NAME, FIRST_PRINTABLE_CODE, FOLDER_DIALOG, UNSAFE_FILENAME_CHARACTERS };
