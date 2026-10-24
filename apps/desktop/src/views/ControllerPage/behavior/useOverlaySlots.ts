@@ -3,6 +3,7 @@ import { useMemo } from 'react';
 import type { DeviceEntry } from '@drizztdourden08/brock-input';
 import type { ResolvedDevice } from '@rotp/input-mapping';
 import { layoutFamilyOf } from '@app/input/controller-families/layout-family-of';
+import { positionIconsOf } from '@app/input/pad-overlay/position-icons';
 import { resolveOverlay } from '@app/input/pad-overlay/resolve-overlay';
 import { CONTROLLER_SILHOUETTE_ANCHORS, CONTROLLER_SILHOUETTE_PATHS } from '@app/input/pad-overlay/silhouette.constants';
 import { vidPidKey } from '@app/input/pad-overlay/vid-pid-key';
@@ -19,6 +20,7 @@ const useOverlaySlots = (entry: DeviceEntry | undefined, resolved: ResolvedDevic
       outline: CONTROLLER_SILHOUETTE_PATHS[variant],
       anchors: CONTROLLER_SILHOUETTE_ANCHORS[variant],
       slots: slotViewsOf(slots),
+      icons: positionIconsOf(slots, positions),
     };
   }, [entry, resolved]);
 

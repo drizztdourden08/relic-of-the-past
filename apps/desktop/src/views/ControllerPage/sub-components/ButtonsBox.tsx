@@ -13,7 +13,7 @@ import { DebugLine } from './DebugLine';
 const ButtonsBox = ({ page }: BoxProps) => {
   const { resolved, state, pad } = page;
   const [tab, setTab] = useState<string>(BUTTON_TABS[0].id);
-  const buttons = buttonModelOf(resolved?.controls ?? [], state);
+  const buttons = buttonModelOf(resolved?.controls ?? [], state, page.overlay?.icons ?? {});
   const extras = extrasModelOf(pad.extras);
 
   return (

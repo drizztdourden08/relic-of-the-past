@@ -8,6 +8,7 @@ const meta: ScreenMeta = {
   title: 'Directory',
   icon: 'list',
   order: 0,
+  fill: true,
   keywords: ['controller', 'gamepad', 'directory', 'mapping', 'sdl', 'vid', 'pid', 'rescan'],
 };
 

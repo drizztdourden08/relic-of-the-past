@@ -1,6 +1,7 @@
 /* @layer renderer-lib @kind types */
 import type { ControllerSilhouetteVariant } from '@drizztdourden08/tessera/composites';
 import type { ControllerSlotId } from '@drizztdourden08/brock-input/renderer';
+import type { InputIconSource } from '@drizztdourden08/tessera/primitives';
 import type { LabelSide, Nudge, OverlayPartKind } from '@app/composites/PadOverlay';
 import type { LayoutFamily } from '../controller-families/controller-families.type';
 
@@ -30,7 +31,9 @@ interface ControllerOverride {
 
 type ControllerOverrides = Readonly<Record<VidPid, ControllerOverride>>;
 
+type PositionIcons = Readonly<Record<string, InputIconSource>>;
+
 export type {
-  ControllerOverride, ControllerOverrides, FamilyOverlay, OverlaySlot,
+  ControllerOverride, ControllerOverrides, FamilyOverlay, OverlaySlot, PositionIcons,
   VidPid,
 };

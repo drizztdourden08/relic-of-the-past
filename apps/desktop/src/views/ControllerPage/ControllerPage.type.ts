@@ -22,6 +22,7 @@ interface PadOverlayModel {
   outline: string;
   anchors: ControllerSilhouetteAnchorSet;
   slots: readonly OverlaySlotView[];
+  icons: PositionIcons;
 }
 
 interface ControllerCalibration {
