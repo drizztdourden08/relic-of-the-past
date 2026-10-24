@@ -13,11 +13,11 @@ catalog:
   '@capacitor/core': ^8.4.0
   '@capacitor/filesystem': ^8.1.2
   '@capacitor/haptics': ^8.0.2
-  '@drizztdourden08/brock-build': ^0.83.0
-  '@drizztdourden08/brock-lint-config': ^0.83.0
-  '@drizztdourden08/brock-plugin-snes': ^0.83.0
-  '@drizztdourden08/brock-thread': ^0.83.0
-  '@drizztdourden08/tessera': ^0.53.0
+  '@drizztdourden08/brock-build': ^0.84.0
+  '@drizztdourden08/brock-lint-config': ^0.84.0
+  '@drizztdourden08/brock-plugin-snes': ^0.84.0
+  '@drizztdourden08/brock-thread': ^0.84.0
+  '@drizztdourden08/tessera': ^0.54.0
   '@electron-toolkit/utils': ^4.0.0
   '@google-cloud/firestore': ^7.11.6
   '@google-cloud/functions-framework': ^3.5.1
