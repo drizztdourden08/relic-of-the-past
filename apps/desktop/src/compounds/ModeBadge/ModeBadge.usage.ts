@@ -12,7 +12,7 @@ const usage = {
 
 const Mounted = () => <ModeBadge mode="randomizer" />;
 `,
-  propsHash: 'f2d09fb596dc0f3b',
+  propsHash: '2fad52b368af8a57',
 } satisfies ComponentUsage;
 
 export { usage };

@@ -3,9 +3,9 @@ import { EmptyState, Icon, Stack, Status } from '@drizztdourden08/tessera/primit
 import { ListItemRow } from '@drizztdourden08/tessera/composites';
 import type { LanServerRow, LanServerRowsProps } from '../LobbySetup.type';
 
-const versionStatus = (server: LanServerRow) => {
-  if (!server.supported) return <Status tone="warning" variant="pill">{`AP ${server.ap} · No build`}</Status>;
-  return <Status tone={server.open ? 'success' : 'neutral'} variant="pill">{server.open ? `AP ${server.ap}` : `AP ${server.ap} · No lobby`}</Status>;
+const metaOf = (server: LanServerRow): string => {
+  if (!server.supported) return 'No build';
+  return server.open ? server.address : 'No lobby';
 };
 
 const LanServerRows = ({ servers, picked, onPick, disabled }: LanServerRowsProps) => (
@@ -17,10 +17,10 @@ const LanServerRows = ({ servers, picked, onPick, disabled }: LanServerRowsProps
         className={server.open ? undefined : 'lobby-setup__lan-row--closed'}
         icon={<Icon name="server" />}
         name={server.name}
-        meta={server.address}
+        meta={metaOf(server)}
         selected={picked === server.id}
         onClick={disabled ? undefined : () => onPick(server.id)}
-        action={versionStatus(server)}
+        action={<Status tone={server.supported ? 'success' : 'warning'} variant="pill">{`AP ${server.ap}`}</Status>}
         actionVisibility="always"
       />
     ))}

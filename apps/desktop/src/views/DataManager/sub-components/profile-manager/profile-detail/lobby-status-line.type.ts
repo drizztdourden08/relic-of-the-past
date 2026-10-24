@@ -10,7 +10,6 @@ interface LobbyStatusLine {
 
 interface ProfileLobbyStatusProps {
   profile: Profile;
-  onDelete: () => void;
 }
 
 export type { LobbyStatusLine, ProfileLobbyStatusProps };

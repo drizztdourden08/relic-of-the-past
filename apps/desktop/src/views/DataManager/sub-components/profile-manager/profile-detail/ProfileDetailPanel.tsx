@@ -27,7 +27,7 @@ const ProfileDetailPanel = (props: ProfileDetailPanelProps) => {
         onOpen={() => onSelectProfile(profile)}
         onDelete={() => onDeleteProfile(profile.id)}
       />
-      {randomizer?.mode === 'archipelia' && <ProfileLobbyStatus profile={profile} onDelete={() => onDeleteProfile(profile.id)} />}
+      {randomizer?.mode === 'archipelia' && <ProfileLobbyStatus profile={profile} />}
       <Tabs tabs={tabs} activeTab={tab} onTabChange={setTab} />
       {tab === SETTINGS_TAB && <ProfileSettingsTab settings={settings} />}
       {tab === DATA_TAB && <ProfileDataTab profile={profile} settings={settings} />}

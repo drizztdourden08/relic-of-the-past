@@ -1,13 +1,13 @@
 /* @layer renderer-components @kind component */
 import { useState } from 'react';
-import { Button, Flex, Icon, ProgressBar, Spinner, Stack, Text } from '@drizztdourden08/tessera/primitives';
+import { Button, Flex, ProgressBar, Spinner, Stack, Text } from '@drizztdourden08/tessera/primitives';
 import { FactsPanel } from '@drizztdourden08/tessera/composites';
 import { useLobbyStatusStore } from '@app/stores/lobby-status-store';
 import { convertToLocal } from './convert-to-local';
 import { lobbyStatusLine } from './lobby-status-line';
 import type { ProfileLobbyStatusProps } from './lobby-status-line.type';
 
-const ProfileLobbyStatus = ({ profile, onDelete }: ProfileLobbyStatusProps) => {
+const ProfileLobbyStatus = ({ profile }: ProfileLobbyStatusProps) => {
   const membership = useLobbyStatusStore((state) => state.members[profile.id]);
   const live = useLobbyStatusStore((state) => state.live[profile.id]);
   const [converting, setConverting] = useState(false);
@@ -27,10 +27,7 @@ const ProfileLobbyStatus = ({ profile, onDelete }: ProfileLobbyStatusProps) => {
         {line.why !== undefined && line.why !== '' && <Text tone="muted">{line.why}</Text>}
         {line.progress !== undefined && <ProgressBar value={line.progress} max={1} showValue />}
         {line.final && (
-          <Flex gap="sm" className="profile-lobby-status__actions">
-            <Button variant="secondary" size="sm" loading={converting} onClick={changeToLocal}>Change to Local</Button>
-            <Button variant="danger" size="sm" icon={<Icon name="trash-2" />} onClick={onDelete}>Delete</Button>
-          </Flex>
+          <Button variant="secondary" size="sm" loading={converting} onClick={changeToLocal}>Change to Local</Button>
         )}
       </Flex>
       <FactsPanel
