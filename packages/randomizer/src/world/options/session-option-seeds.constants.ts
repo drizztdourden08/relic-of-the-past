@@ -4,6 +4,7 @@ import { optionChoices } from './option-choices';
 import { lockedChoice } from './locked-choice';
 import { lockedRange } from './locked-range';
 import { lockedToggle } from './locked-toggle';
+import { unlocked } from './unlocked';
 import type { OptionSeed } from '../options.type';
 
 const SESSION_OPTION_SEEDS: readonly OptionSeed[] = [
@@ -23,7 +24,7 @@ const SESSION_OPTION_SEEDS: readonly OptionSeed[] = [
   lockedRange({ key: 'red_clock_time', displayName: 'Red Clock Time', group: 'timers', implementation: 'not-implemented' }, { min: -60, max: 60 }, -2, 0),
   lockedRange({ key: 'blue_clock_time', displayName: 'Blue Clock Time', group: 'timers', implementation: 'not-implemented' }, { min: -60, max: 60 }, 2, 0),
   lockedRange({ key: 'green_clock_time', displayName: 'Green Clock Time', group: 'timers', implementation: 'not-implemented' }, { min: -60, max: 60 }, 4, 0),
-  lockedToggle({ key: 'death_link', displayName: 'Death Link', group: 'session', implementation: 'active' }),
+  unlocked(lockedToggle({ key: 'death_link', displayName: 'Death Link', group: 'session', implementation: 'active' })),
   lockedToggle({ key: 'allow_collect', displayName: 'Collect checks for other players', group: 'session', implementation: 'not-applicable' }, true),
 ];
 

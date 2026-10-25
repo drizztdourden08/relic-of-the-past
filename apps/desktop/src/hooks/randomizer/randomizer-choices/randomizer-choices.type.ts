@@ -4,6 +4,7 @@ import type { ItemPowerSetting } from '@rotp/game-core';
 
 interface RandomizerOptionChoices {
   keyDropShuffle: boolean;
+  deathLink: boolean;
   includeNpcChecks: boolean;
   includeWorldItems: boolean;
   bigKeyShuffle: DungeonItemMode;

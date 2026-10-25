@@ -17,7 +17,7 @@ interface PlayerYamlInput {
   preRolled?: Record<string, unknown>;
   /** The spots the app proved deliverable; absent, every scope spot stays locked vanilla. */
   deliverable?: DeliverableSets;
-  /** The profile's DeathLink toggle, the one source of `death_link`; absent, the snapshot's value stands. */
+  /** The profile's DeathLink setting (picked as a randomizer option, then editable in Online settings), the source of `death_link`; absent, the snapshot's value stands. */
   deathLink?: boolean;
 }
 

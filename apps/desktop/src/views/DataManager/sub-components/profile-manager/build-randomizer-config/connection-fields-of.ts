@@ -7,7 +7,7 @@ const slotOf = (name: string): Partial<ProfileRandomizerConfig> => (name.trim() 
 
 const connectionFieldsOf = (form: RandomizerFormState, mode: RandomizerFormState['mode']): Partial<ProfileRandomizerConfig> => {
   if (mode === 'local') return {};
-  const flags = { deathLink: form.deathLink, trackOtherPlayers: form.trackOtherPlayers };
+  const flags = { deathLink: form.deathLink, trackOtherPlayers: true };
   if (mode === 'archipelia') return { ...flags, ...slotOf(form.lobby.slotName) };
   const server = absorbPort(form.server);
   return {

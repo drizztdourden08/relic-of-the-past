@@ -11,8 +11,6 @@ interface RandomizerFormState extends RandomizerOptionChoices {
   server: ServerSetupDraft;
   lobby: LobbyDraft;
   lobbyCheck: LobbyCheck;
-  deathLink: boolean;
-  trackOtherPlayers: boolean;
 }
 
 export type { RandomizerFormState };

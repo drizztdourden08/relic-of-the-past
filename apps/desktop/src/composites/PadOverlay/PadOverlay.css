@@ -52,7 +52,7 @@
 }
 
 .pad-overlay__callout[data-active] .pad-overlay__leader {
-  stroke: var(--c-danger);
+  stroke: var(--c-primary);
 }
 
 .pad-overlay__callout[data-active] .pad-overlay__label {
@@ -60,12 +60,12 @@
 }
 
 .pad-overlay__callout[data-active] .pad-overlay__detail {
-  fill: var(--c-danger-bright);
+  fill: var(--c-primary-bright);
 }
 
 .pad-overlay__halo {
-  fill: var(--c-danger-soft);
-  stroke: var(--c-danger);
+  fill: var(--c-primary-soft);
+  stroke: var(--c-primary);
   stroke-width: var(--border-width-thin);
   opacity: var(--pad-overlay-level, 0);
   transition: opacity var(--transition-fast);
@@ -89,7 +89,7 @@
 }
 
 .pad-overlay__cap[data-pressed] .pad-overlay__cap-face {
-  fill: var(--c-danger);
+  fill: var(--c-primary);
 }
 
 .pad-overlay__cap-tick {

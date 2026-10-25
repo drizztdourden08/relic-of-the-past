@@ -5,8 +5,8 @@
 }
 
 .dpad-cross__arm {
-  fill: var(--c-danger);
-  stroke: var(--c-danger);
+  fill: var(--c-primary);
+  stroke: var(--c-primary);
   stroke-width: var(--border-width-thin);
   stroke-linejoin: round;
   vector-effect: non-scaling-stroke;

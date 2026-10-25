@@ -87,7 +87,7 @@ describeDataset('Archipelago ids are frozen', () => {
 });
 
 describe('the death_link option', () => {
-  it('is locked, so the profile DeathLink toggle is the one control', () => {
-    expect(optionByKey.get('death_link')).toMatchObject({ kind: 'toggle', locked: true, baseline: false, implementation: 'active' });
+  it('is a real choice made with the other options, off by default', () => {
+    expect(optionByKey.get('death_link')).toMatchObject({ kind: 'toggle', locked: false, baseline: false, implementation: 'active' });
   });
 });

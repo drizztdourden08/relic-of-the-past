@@ -7,6 +7,7 @@ import type { RandomizerOptionChoices } from '@app/hooks/randomizer/randomizer-c
 
 const BASE: RandomizerOptionChoices = {
   keyDropShuffle: true,
+  deathLink: false,
   includeNpcChecks: false,
   includeWorldItems: false,
   shufflePrizes: false,

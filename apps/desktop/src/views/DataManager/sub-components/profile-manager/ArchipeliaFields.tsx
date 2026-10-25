@@ -1,6 +1,5 @@
 /* @layer renderer-components @kind component */
 import { useEffect } from 'react';
-import { Toggle } from '@drizztdourden08/tessera/primitives';
 import { LobbySetup } from '@app/compounds/LobbySetup';
 import { lobbyCodeOf, lobbyServerOf, useBundledVersions, useLanServers, useLobbyCheck } from '@app/hooks/randomizer/lobby-setup';
 import { lanRowsOf } from './lan-rows-of';
@@ -18,20 +17,13 @@ const ArchipeliaFields = ({ value, onChange, joining = false }: ArchipeliaFields
   }, [check, value.lobbyCheck, onChange]);
 
   return (
-    <>
-      <LobbySetup
-        value={draft}
-        onChange={(part) => onChange({ lobby: { ...draft, ...part } })}
-        servers={lanRowsOf(servers, versions)}
-        lobby={lobbyLineOf(check)}
-        disabled={joining}
-      />
-      <Toggle label="DeathLink" checked={value.deathLink} disabled={joining} onChange={(deathLink) => onChange({ deathLink })} />
-      <Toggle
-        label="Track other players" checked={value.trackOtherPlayers} disabled={joining}
-        onChange={(trackOtherPlayers) => onChange({ trackOtherPlayers })}
-      />
-    </>
+    <LobbySetup
+      value={draft}
+      onChange={(part) => onChange({ lobby: { ...draft, ...part } })}
+      servers={lanRowsOf(servers, versions)}
+      lobby={lobbyLineOf(check)}
+      disabled={joining}
+    />
   );
 };
 

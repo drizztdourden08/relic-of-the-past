@@ -9,6 +9,7 @@ import { scopeWith } from './scope-with';
 const BASE: Omit<RandomizerOptionChoices, 'shops' | 'shopPrices'> = {
   ...NEUTRAL_CHOICES,
   keyDropShuffle: true,
+  deathLink: false,
   includeNpcChecks: false,
   includeWorldItems: false,
   shufflePrizes: false,

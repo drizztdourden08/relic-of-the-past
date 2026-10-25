@@ -1,15 +1,15 @@
 /* @layer renderer-components @kind constants */
-import { DEFAULT_CAPACITY_BONUS, DEFAULT_CAPACITY_PROFILE, DEFAULT_POND_PROFILES, defaultShopScope, DEFAULT_DARK_ROOM_SETTING, defaultDifficulty, DEFAULT_ITEM_POWER, defaultProgressiveSetting, defaultProgressiveModes, defaultRetroBow, DEFAULT_ACCESSIBILITY, INCLUDE_NPC_CHECKS_KEY, INCLUDE_WORLD_ITEMS_KEY, DEFAULT_DUNGEON_ITEM_SETTING, DEFAULT_STORY_GATES } from '@rotp/randomizer';
+import { DEFAULT_CAPACITY_BONUS, DEFAULT_CAPACITY_PROFILE, DEFAULT_POND_PROFILES, defaultShopScope, DEFAULT_DARK_ROOM_SETTING, defaultDifficulty, DEFAULT_ITEM_POWER, defaultProgressiveSetting, defaultProgressiveModes, defaultRetroBow, DEFAULT_ACCESSIBILITY, INCLUDE_NPC_CHECKS_KEY, INCLUDE_WORLD_ITEMS_KEY, DEFAULT_DUNGEON_ITEM_SETTING, DEFAULT_STORY_GATES, DEATH_LINK_KEY } from '@rotp/randomizer';
 import { EMPTY_LOBBY_DRAFT } from '@app/hooks/randomizer/lobby-setup';
 import { EMPTY_SERVER_SETUP } from '@app/hooks/randomizer/server-setup/server-setup-draft';
 import { baselineSwitch } from './baseline-switch';
 import type { RandomizerFormState } from './build-randomizer-config.type';
 
 const EMPTY_RANDOMIZER_FORM: RandomizerFormState = {
-  enabled: false, seed: '', mode: 'local', server: EMPTY_SERVER_SETUP, deathLink: false,
+  enabled: false, seed: '', mode: 'local', server: EMPTY_SERVER_SETUP,
   lobby: EMPTY_LOBBY_DRAFT, lobbyCheck: { kind: 'idle' },
-  trackOtherPlayers: true,
   keyDropShuffle: baselineSwitch('key_drop_shuffle'),
+  deathLink: baselineSwitch(DEATH_LINK_KEY),
   includeNpcChecks: baselineSwitch(INCLUDE_NPC_CHECKS_KEY),
   includeWorldItems: baselineSwitch(INCLUDE_WORLD_ITEMS_KEY),
   shufflePrizes: baselineSwitch('dungeon_prize_shuffle'),
