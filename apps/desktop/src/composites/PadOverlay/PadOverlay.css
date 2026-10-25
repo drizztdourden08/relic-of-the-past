@@ -30,33 +30,32 @@
 
 .pad-overlay__leader {
   fill: none;
-  stroke: var(--c-text-faint);
+  stroke: var(--c-text-muted);
   stroke-width: var(--border-width-thin);
+  stroke-linecap: round;
   stroke-linejoin: round;
   transition: stroke var(--transition-fast);
 }
 
-.pad-overlay__label {
-  fill: var(--c-text-dim);
+.pad-overlay__name {
+  fill: var(--c-text);
+  font-weight: var(--weight-semi);
   transition: fill var(--transition-fast);
 }
 
-.pad-overlay__name {
-  font-weight: var(--weight-semi);
-}
-
 .pad-overlay__detail {
-  fill: var(--c-text-muted);
+  fill: var(--c-text-dim);
   font-family: var(--font-mono);
   font-variant-numeric: tabular-nums;
+  transition: fill var(--transition-fast);
 }
 
 .pad-overlay__callout[data-active] .pad-overlay__leader {
   stroke: var(--c-primary);
 }
 
-.pad-overlay__callout[data-active] .pad-overlay__label {
-  fill: var(--c-text);
+.pad-overlay__callout[data-active] .pad-overlay__name {
+  fill: var(--c-primary);
 }
 
 .pad-overlay__callout[data-active] .pad-overlay__detail {

@@ -2,14 +2,14 @@
 import type { OverlayLayout } from '../PadOverlay.type';
 import { labelOptions } from './label-options';
 import { placeLabels } from './place-labels';
-import type { FitInput } from './placement.type';
+import type { FitInput, GrowRows } from './placement.type';
 import { sceneAt } from './scene-at';
 
-const attemptLayout = (input: FitInput, scale: number): OverlayLayout => {
-  const scene = sceneAt(input, scale);
+const attemptLayout = (input: FitInput, scale: number, grow: GrowRows): OverlayLayout => {
+  const scene = sceneAt(input, scale, grow);
   const options = scene.parts.map((part, index) => {
-    const size = input.sizes.get(part.slot.anchor) ?? { w: 0, h: scene.frame.labelH };
-    return labelOptions(index, size, scene, input.metrics.fontPx);
+    const size = input.sizes.get(part.slot.anchor);
+    return size ? labelOptions(index, size, scene, input.metrics.fontPx) : [];
   });
   const { labels, clear } = placeLabels(scene, options);
   return { frame: scene.frame, parts: [...scene.parts], labels, clear };

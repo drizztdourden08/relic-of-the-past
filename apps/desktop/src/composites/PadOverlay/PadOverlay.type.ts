@@ -7,8 +7,6 @@ type OverlayPartKind = 'button' | 'analog' | 'stick' | 'dpad';
 
 type LabelSide = 'left' | 'right';
 
-type LabelMode = 'inline' | 'stacked';
-
 interface Point {
   x: number;
   y: number;
@@ -66,10 +64,10 @@ type TextAnchor = 'start' | 'middle' | 'end';
 
 interface PlacedLabel {
   part: PlacedPart;
-  text: Point;
-  anchor: TextAnchor;
   leader: readonly Point[];
-  detailDy: number;
+  anchor: TextAnchor;
+  nameAt: Point;
+  detailAt: Point;
 }
 
 interface BoxSize {
@@ -92,11 +90,8 @@ interface OverlayMetrics {
 interface OverlayFrame {
   width: number;
   height: number;
-  mode: LabelMode;
   scale: number;
   origin: Point;
-  labelH: number;
-  lineGap: number;
 }
 
 interface OverlayLayout {
@@ -141,7 +136,7 @@ interface OverlayLabelProps {
 }
 
 export type {
-  AnchorFrame, Bounds, BoxSize, FittedOverlay, LabelMode, LabelSide, Nudge, OverlayFrame, OverlayHaloProps, OverlayLabelProps, OverlayLayout,
+  AnchorFrame, Bounds, BoxSize, FittedOverlay, LabelSide, Nudge, OverlayFrame, OverlayHaloProps, OverlayLabelProps, OverlayLayout,
   OverlayMetrics, OverlayPartKind, OverlaySlotView, PadOverlayProps, PadOverlayState, PartProps, PartState, PlacedLabel,
   PlacedPart, Point, StickCap, TextAnchor, TextMeasure,
 };

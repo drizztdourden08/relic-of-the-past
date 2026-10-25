@@ -38,7 +38,7 @@ const placeLabels = (scene: Scene, options: readonly LabelOption[][]): Placement
   const labels: PlacedLabel[] = picks.flatMap((pick, index) => {
     const part = scene.parts[index];
     const option = pick ?? options[index]?.[0];
-    return part && option ? [placedLabelOf(part, option, scene.frame)] : [];
+    return part && option ? [placedLabelOf(part, option)] : [];
   });
   return { labels, clear: missing(picks) === 0 && labels.length === scene.parts.length };
 };

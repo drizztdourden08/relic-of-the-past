@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind types */
-import type { Bounds, LabelMode, OverlayFrame, OverlayMetrics, PlacedLabel, PlacedPart, Point, TextAnchor } from '../PadOverlay.type';
+import type { Bounds, OverlayFrame, OverlayMetrics, PlacedLabel, PlacedPart, Point, TextAnchor } from '../PadOverlay.type';
 
 interface Rect {
   left: number;
@@ -16,12 +16,25 @@ interface Circle {
 
 type Segment = readonly [Point, Point];
 
+type Axis = 'x' | 'y';
+
+type Zone = 'left' | 'right' | 'above' | 'below';
+
+type Toward = -1 | 1;
+
+interface Span {
+  low: number;
+  high: number;
+}
+
 interface LabelSpot {
-  text: Point;
+  elbow: Point;
+  tail: Point;
   anchor: TextAnchor;
+  nameAt: Point;
+  detailAt: Point;
   rect: Rect;
-  attach: Point;
-  middle: boolean;
+  zone: Zone;
 }
 
 interface LabelOption {
@@ -33,7 +46,8 @@ interface LabelOption {
 
 interface LabelSize {
   w: number;
-  h: number;
+  up: number;
+  down: number;
 }
 
 interface Scene {
@@ -41,13 +55,15 @@ interface Scene {
   parts: readonly PlacedPart[];
   circles: readonly Circle[];
   outline: readonly Point[];
-  edges: readonly Segment[];
-  sideEdges: Map<string, SideEdge | null>;
+  outlineEdges: readonly Segment[];
+  hull: readonly Point[];
+  hullEdges: readonly Segment[];
+  spans: Map<string, Span | null>;
 }
 
-interface SideEdge {
-  left: number;
-  right: number;
+interface GrowRows {
+  top: number;
+  bottom: number;
 }
 
 interface FitInput {
@@ -55,8 +71,8 @@ interface FitInput {
   bounds: Bounds;
   points: readonly Point[];
   metrics: OverlayMetrics;
-  mode: LabelMode;
   sizes: ReadonlyMap<string, LabelSize>;
+  rowH: number;
 }
 
 interface Occupied {
@@ -77,4 +93,7 @@ interface Placement {
   clear: boolean;
 }
 
-export type { Budget, Choice, Circle, Domains, FitInput, LabelOption, LabelSize, LabelSpot, Occupied, Placement, Rect, Scene, Segment, SideEdge };
+export type {
+  Axis, Budget, Choice, Circle, Domains, FitInput, GrowRows, LabelOption, LabelSize, LabelSpot, Occupied, Placement, Rect, Scene,
+  Segment, Span, Toward, Zone,
+};
