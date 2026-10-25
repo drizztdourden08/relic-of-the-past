@@ -30,13 +30,13 @@ A visual inspector for the game's sprite system:
 
 ---
 
-## Input Calibration
+## Controllers
 
-A controller diagnostic panel, also covered in [Input & Controllers](input-controllers.md):
+The controller tools live under **Advanced > Controllers**, also covered in [Controller Calibration](controller-calibration.md):
 
-- **Byte inspector:** raw gamepad input values in real time
-- **Vibration tester:** sends rumble pulses to verify haptics
-- **Input recording:** captures sequences for replay and debugging
+- **Diagnostics:** a guided wizard that captures the raw bytes a controller reports
+- **Pad page:** live inputs, calibration and rumble tests for each connected controller
+- **Logs:** the connect and disconnect history
 
 ---
 

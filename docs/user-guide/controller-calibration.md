@@ -1,27 +1,45 @@
 <!-- @layer docs @kind doc -->
 # Controller Calibration
 
-The **Input Calibration** view, reached from the menu's controller diagnostics or the input-tester page,
-detects your controller and tunes its analog inputs. It pairs with
-[Input & Controllers](input-controllers.md) for button mapping and [Haptics](haptics.md) for rumble.
+Calibration tunes the analog inputs of a controller: its sticks and its triggers. It lives under
+**Advanced > Controllers**. It pairs with [Input & Controllers](input-controllers.md) for button
+mapping and [Haptics](haptics.md) for rumble.
 
-## What you can calibrate
+## Where to find it
 
-- **Detection:** finds connected controllers through SDL3.
-- **Stick calibration wizard:** rotate each stick through its full range. The tool fits that range and
-  lets you set a dead zone per stick, with a tester circle showing the live stick position.
-- **Trigger calibration:** per analog axis such as L2 and R2: base value, max value, and deadzone, so
-  partial presses register and a resting trigger reads as released.
-- **Button mapping check:** press buttons to see them light up and confirm the device reports what you
-  expect.
-- **Vibration test:** fire rumble to confirm haptics work on the device.
+1. Open **Advanced > Controllers** in the menu.
+2. The **Directory** page lists every controller the app can see. Use **Rescan controllers** if
+   yours is missing.
+3. Each connected controller also has its own **pad page**. It draws the controller with a callout
+   for every input, and shows the sticks, triggers and buttons live as you press them.
 
-## How it's stored
+The **Logs** page lists when controllers connected and disconnected, which helps when a pad keeps
+dropping out.
 
-- **Stick calibration:** global, keyed per device by VID:PID.
-- **Trigger calibration:** saved per device and per axis.
-- Both persist through the Electron `input` domain (`readStickCalibration`/`writeStickCalibration`,
-  `readTriggerCalibration`/`writeTriggerCalibration`), so a controller stays calibrated across profiles.
+## Calibrating a stick or trigger
+
+On the pad page, each stick and each analog trigger (such as L2 and R2) has a **Calibrate** button.
+
+- **Sticks:** rotate the stick through its full range. The app fits that range and lets you set a
+  dead zone, with a tester circle showing the live stick position.
+- **Triggers:** set the resting value, the fully pressed value and a dead zone, so partial presses
+  register and a resting trigger reads as released.
+
+A stick or trigger that has been calibrated says so on its pad page. Calibration is saved per
+controller and applies to every profile.
+
+## Diagnostics
+
+If a controller misbehaves, open **Diagnostics** under **Advanced > Controllers**, or choose
+**Run diagnostics** in the Controller box of its pad page. A guided wizard asks you to press the
+controller's buttons and move its sticks, then shows what the controller reported. If something
+still does not work, you can send the result as a controller report from the same place.
+
+## Checking buttons and rumble
+
+- **Buttons:** press them on the pad page and watch them light up to confirm the controller reports
+  what you expect.
+- **Rumble:** the pad page has test buttons that fire a vibration, to confirm haptics work.
 
 Button bindings, meaning which controller button maps to which SNES or app action, are saved
-separately as per-profile input profiles. See [Input & Controllers](input-controllers.md).
+separately in your input profile. See [Input & Controllers](input-controllers.md).
