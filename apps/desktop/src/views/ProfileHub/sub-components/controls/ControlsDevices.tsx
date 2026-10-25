@@ -3,7 +3,7 @@ import { useCallback, useLayoutEffect, useMemo } from 'react';
 import { Box, EmptyState } from '@drizztdourden08/tessera/primitives';
 import { SidePanel } from '@drizztdourden08/tessera/composites';
 import { useStoredFold } from '../../../../hooks/useStoredFold';
-import { RescanButton } from '../../../../compounds/RescanButton';
+import { RescanButton } from '@drizztdourden08/brock-input/renderer';
 import { DeviceRow } from './DeviceRow';
 import { DeviceRailButton } from './DeviceRailButton';
 import { keyboardEntry } from './keyboard-entry';

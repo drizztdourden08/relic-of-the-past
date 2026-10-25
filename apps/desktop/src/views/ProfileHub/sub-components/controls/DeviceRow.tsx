@@ -1,7 +1,7 @@
 /* @layer renderer-components @kind component */
 import { Box } from '@drizztdourden08/tessera/primitives';
 import { ListItemRow } from '@drizztdourden08/tessera/composites';
-import { UnavailableControllerNotice } from '../../../../compounds/UnavailableControllerNotice';
+import { UnavailableControllerNotice } from '@drizztdourden08/brock-input/renderer';
 import { DeviceIcon } from './DeviceIcon';
 import { useDeviceActions } from './useDeviceActions';
 import type { DeviceRowProps } from './DeviceRow.type';

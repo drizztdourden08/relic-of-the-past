@@ -1,10 +1,9 @@
 /* @layer renderer-lib @kind logic */
 import { effectiveModernBindings } from '../../scheme';
-import type { DeviceEntry } from '@drizztdourden08/brock-input';
+import type { DeviceEntry, ResolvedControl } from '@drizztdourden08/brock-input';
 import type { InputProfile } from '../../controls/devices/devices.type';
 import type { ModernBindings } from '@rotp/game-data';
-import type { ResolvedControl } from '../../family';
-import { resolveDeviceFromEntry } from '../resolve-device';
+import { resolveDeviceFromEntry } from '@drizztdourden08/brock-input/renderer';
 import { profileDevice } from './profile-device';
 import { resolveCoreBindings } from './resolve-core-bindings';
 

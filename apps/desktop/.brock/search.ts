@@ -4,10 +4,6 @@ import config from '../src/screens/screens.config';
 import { devSearchSeeds } from './screens.dev';
 
 const searchIndex = buildSearchIndex(config, [
-  {"kind":"live","id":"pads","bucket":"controllers","group":"connected","icon":"gamepad-2","keywords":["controller","gamepad","hid","rumble","raw","bytes","stick","trigger","calibrate","report"]},
-  {"kind":"page","id":"directory","bucket":"controllers","title":"Directory","icon":"list","keywords":["controller","gamepad","directory","mapping","sdl","vid","pid","rescan"]},
-  {"kind":"page","id":"diagnostics","bucket":"controllers","group":"tools","title":"Diagnostics","icon":"wrench","keywords":["diagnostics","wizard","calibrate","buttons","mapping","raw","bytes","hid"]},
-  {"kind":"page","id":"logs","bucket":"controllers","group":"tools","title":"Logs","icon":"scroll-text","keywords":["log","connect","disconnect","hid","report","history"]},
   {"kind":"card","id":"credits","title":"Credits","icon":"trophy","keywords":["thanks","contributors","authors","licence"]},
   {"kind":"hero","id":"home","bucket":"data","title":"Home","icon":"house","keywords":["data","overview","disk","folder","total","library"]},
   {"kind":"page","id":"profiles","bucket":"data","group":"library","title":"Profiles","icon":"users","keywords":["profile","create","delete","preset","language","msu","randomizer","archipelago"]},

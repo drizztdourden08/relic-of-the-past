@@ -1,8 +1,7 @@
 /* @layer renderer-lib @kind logic */
-import { useCalibrationStore } from '@drizztdourden08/brock-input/renderer';
+import { useCalibrationStore, controllerInputStore } from '@drizztdourden08/brock-input/renderer';
 import { log } from '../../log-bus';
 import { errorMessage } from '../../storage/error-message';
-import { controllerInputStore } from '../controller-input-store';
 
 const logLoadedCalibrations = (): void => {
   const { sticks, triggers } = useCalibrationStore.getState();

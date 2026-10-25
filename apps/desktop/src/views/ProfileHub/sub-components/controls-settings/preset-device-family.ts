@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind logic */
-import { buildDisplayContext, resolveBrandLogoKey } from '@rotp/input-mapping';
-import type { SdlGamepadType } from '@rotp/input-mapping';
+import { buildDisplayContext, resolveBrandLogoKey } from '@drizztdourden08/brock-input';
+import type { SdlGamepadType } from '@drizztdourden08/brock-input';
 import type { DeviceFamily } from '@rotp/game-data';
 
 const presetDeviceFamily = (sdlType: string): DeviceFamily => {

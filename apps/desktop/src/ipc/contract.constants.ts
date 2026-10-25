@@ -7,7 +7,6 @@ const APP_CHANNELS = defineChannels({
   analyzeMsuOptimize: invoke<RotpInvoke['msu:optimize:analyze']>()('msu:optimize:analyze'),
   runMsuOptimize: invoke<RotpInvoke['msu:optimize:run']>()('msu:optimize:run'),
   probeAudioFile: invoke<RotpInvoke['ffmpeg:probeAudio']>()('ffmpeg:probeAudio'),
-  writeHidDebugFile: invoke<RotpInvoke['controller:write-debug-capture']>()('controller:write-debug-capture'),
   loadRecommendations: invoke<RotpInvoke['recommendations:load']>()('recommendations:load'),
   applyRecommendationPass: invoke<RotpInvoke['recommendations:applyPass']>()('recommendations:applyPass'),
   decideRecommendation: invoke<RotpInvoke['recommendations:decide']>()('recommendations:decide'),

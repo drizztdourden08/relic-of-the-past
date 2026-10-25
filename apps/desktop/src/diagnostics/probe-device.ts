@@ -1,6 +1,5 @@
 /* @layer renderer-lib @kind logic */
-import { inputApi } from '@drizztdourden08/brock-input/renderer';
-import { recallControllerName } from '@rotp/input-mapping';
+import { inputApi, recallControllerName } from '@drizztdourden08/brock-input/renderer';
 import type { DeviceEnvironment } from './diagnostics.type';
 import type { ChromiumNavigator, ChromiumPerformance } from './probe-device.type';
 

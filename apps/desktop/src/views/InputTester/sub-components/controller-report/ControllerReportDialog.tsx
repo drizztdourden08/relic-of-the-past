@@ -6,7 +6,7 @@ import { useReportDialogControls } from './behavior/useReportDialogControls';
 import { buildReportStepLabels, reportStepIndex } from './report-step-labels';
 import { ReportActions } from './sub-components/ReportActions';
 import { ReportBody } from './sub-components/ReportBody';
-import { StepIndicator } from './sub-components/StepIndicator';
+import { StepIndicator } from '@drizztdourden08/brock-input/renderer';
 import type { ControllerReportDialogProps } from './ControllerReportDialog.type';
 import './ControllerReportDialog.css';
 

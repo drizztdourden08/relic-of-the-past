@@ -1,8 +1,8 @@
 /* @layer renderer-components @kind hook */
 import { useCallback, useRef, useState } from 'react';
-import type { HidWizardHandle } from '../../HidCalibrationWizard';
-import { useSummaryExport } from '../../diagnostics-wizard/behavior/useSummaryExport';
-import { useFlashStatus } from '../../hid-calibration/hooks/useFlashStatus';
+import type { HidWizardHandle } from '@drizztdourden08/brock-input/renderer';
+import { useSummaryExport } from '@drizztdourden08/brock-input/renderer';
+import { useFlashStatus } from '@drizztdourden08/brock-input/renderer';
 import type { UseReportDialogControlsParams } from '../report-dialog-controls.type';
 
 const useReportDialogControls = (params: UseReportDialogControlsParams) => {

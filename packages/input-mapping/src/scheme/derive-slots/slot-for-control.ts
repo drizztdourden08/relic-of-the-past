@@ -2,7 +2,7 @@
 import { SDL_AXIS, SDL_BUTTON } from '@rotp/game-data';
 import { RESERVED_CATEGORY } from './derive-slots.constants';
 import { sdlIndexOf } from './sdl-index-of';
-import type { ResolvedControl } from '../../family/family.type';
+import type { ResolvedControl } from '@drizztdourden08/brock-input';
 import type { InputBinding, ModernSlot } from '@rotp/game-data';
 
 const pressableBinding = (control: ResolvedControl): InputBinding | null => {

@@ -4,11 +4,6 @@ import type { InputManager } from './input-manager';
 const unsubscribeControllers = (m: InputManager): void => {
   m.hidUnsubscribe?.(); m.hidUnsubscribe = null;
   m.hidDisconnectUnsub?.(); m.hidDisconnectUnsub = null;
-  m.ipcControllerStateUnsub?.(); m.ipcControllerStateUnsub = null;
-  m.controllerRemovedUnsub?.(); m.controllerRemovedUnsub = null;
-  m.controllerRawUnsub?.(); m.controllerRawUnsub = null;
-  m.controllerNameCacheUnsub?.(); m.controllerNameCacheUnsub = null;
-  m.controllerFamilyCacheUnsub?.(); m.controllerFamilyCacheUnsub = null;
   m.controllerDevicesUnsub?.(); m.controllerDevicesUnsub = null;
 };
 

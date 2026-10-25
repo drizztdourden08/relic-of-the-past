@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind logic */
-import type { ResolvedControl, InputProfile } from '@rotp/input-mapping';
-import type { DeviceEntry } from '@drizztdourden08/brock-input';
+import type { InputProfile } from '@rotp/input-mapping';
+import type { ResolvedControl, DeviceEntry } from '@drizztdourden08/brock-input';
 import { controlsForDevice } from './profile-controls';
 
 const controlsForProfile = (profile: InputProfile | null, entries: readonly DeviceEntry[]): ResolvedControl[] => {

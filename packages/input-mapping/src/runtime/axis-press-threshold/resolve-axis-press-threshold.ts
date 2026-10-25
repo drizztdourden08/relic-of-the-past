@@ -1,7 +1,7 @@
 /* @layer renderer-lib @kind logic */
-import { buildDisplayContext, resolveTriggerPressThreshold } from '../../family';
-import type { SdlGamepadType } from '../../family';
-import { recallControllerSdlType } from '../controller-family-cache';
+import { buildDisplayContext, resolveTriggerPressThreshold } from '@drizztdourden08/brock-input';
+import type { SdlGamepadType } from '@rotp/game-data';
+import { recallControllerSdlType } from '@drizztdourden08/brock-input/renderer';
 import { STICK_DIRECTION_PRESS_THRESHOLD, TRIGGER_AXIS_INDICES } from './axis-press-threshold.constants';
 
 const sdlTypeForDeviceKey = (deviceKey: string): SdlGamepadType | null => {

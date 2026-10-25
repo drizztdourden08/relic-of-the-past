@@ -1,6 +1,5 @@
 /* @layer shared-types @kind types */
 import type { ArchipelagoInvokeContract } from './archipelago-contract.type';
-import type { ControllerInvokeContract } from './controller-contract';
 import type { MsuInvokeContract } from './msu-contract';
 import type { FfmpegInvokeContract } from './ffmpeg-contract.type';
 import type { SanctuaryInvokeContract } from './sanctuary-contract.type';
@@ -11,7 +10,7 @@ import type { DevToolsInvokeContract } from './invoke/dev-tools-invoke-contract.
 import type { ScreenEditorInvokeContract } from './invoke/screen-editor-invoke-contract.type';
 
 interface InvokeContract extends
-  DevToolsInvokeContract, ScreenEditorInvokeContract, ControllerInvokeContract, MsuInvokeContract,
+  DevToolsInvokeContract, ScreenEditorInvokeContract, MsuInvokeContract,
   FfmpegInvokeContract, SanctuaryInvokeContract, HubInvokeContract, StoreInvokeContract, ArchipelagoInvokeContract, LanInvokeContract {}
 
 export type { InvokeContract };

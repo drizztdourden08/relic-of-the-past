@@ -1,7 +1,7 @@
 /* @layer shared-input @kind logic */
 import { BUILT_IN_GLYPH_PACKS, GENERIC_PACK_ID, findGlyphPack } from './built-in-packs';
 import { AUTO_PACK_ID, FAMILY_PACK_IDS } from './resolve-glyph.constants';
-import type { SdlAxisName, SdlButtonName } from '../family';
+import type { SdlAxisName, SdlButtonName } from '@rotp/game-data';
 import type { DeviceFamily } from '@rotp/game-data';
 import type { GlyphPack, GlyphSource } from '../types/glyph-pack';
 

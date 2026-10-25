@@ -2,7 +2,7 @@
 import type { DetectedDevice } from '../../controls/devices/devices.type';
 import type { DeviceFamily } from '@rotp/game-data';
 import type { DeviceEntry } from '@drizztdourden08/brock-input';
-import { resolveDeviceFromEntry } from '../resolve-device';
+import { resolveDeviceFromEntry } from '@drizztdourden08/brock-input/renderer';
 
 const toHex4 = (n: number): string => n.toString(16).padStart(4, '0');
 

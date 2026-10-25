@@ -1,5 +1,5 @@
 /* @layer shared-input @kind constants */
-import { GAMECUBE_FAMILY, GENERIC_FAMILY, NINTENDO_FAMILY, PLAYSTATION_FAMILY, XBOX_FAMILY } from '../../family';
+import { GAMECUBE_FAMILY, GENERIC_FAMILY, NINTENDO_FAMILY, PLAYSTATION_FAMILY, XBOX_FAMILY } from '@drizztdourden08/brock-input';
 import { GENERIC_PACK_ID } from './built-in-packs.constants';
 import { GENERIC_PACK_ART } from './built-in-pack-art.constants';
 import { keyboardPack } from './keyboard-pack';

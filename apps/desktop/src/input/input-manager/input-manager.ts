@@ -3,8 +3,8 @@ import type { InputProfile, DetectedDevice, PauseListener, RawInputListener, All
 import type { SnesButton } from '@rotp/game-data';
 import type { FunctionMapping, FunctionAction } from '@rotp/features';
 import type { DeviceEntry } from '@drizztdourden08/brock-input';
-import { controllerInputStore } from '../controller-input-store';
-import type { ControllerInputState } from '../controller-input-store';
+import { controllerInputStore } from '@drizztdourden08/brock-input/renderer';
+import type { ControllerInputState } from '@drizztdourden08/brock-input/renderer';
 import { wasmSetPaused, suspendAudio, resumeAudio } from '@rotp/game-core';
 import { PauseManager, FunctionActionEngine, RawInputDispatcher } from '@rotp/input-mapping';
 import { startInput } from './start-input';
@@ -38,11 +38,6 @@ class InputManager {
   hidStates = new Map<string, { buttons: boolean[]; axes: number[] }>();
   hidUnsubscribe: (() => void) | null = null;
   hidDisconnectUnsub: (() => void) | null = null;
-  ipcControllerStateUnsub: (() => void) | null = null;
-  controllerRemovedUnsub: (() => void) | null = null;
-  controllerRawUnsub: (() => void) | null = null;
-  controllerNameCacheUnsub: (() => void) | null = null;
-  controllerFamilyCacheUnsub: (() => void) | null = null;
   controllerDevicesUnsub: (() => void) | null = null;
 
   devices: DetectedDevice[] = [];

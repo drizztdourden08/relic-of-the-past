@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind logic */
-import { recallControllerName } from '@rotp/input-mapping';
+import { recallControllerName } from '@drizztdourden08/brock-input/renderer';
 import { resolveLiveFamilyIcon } from './family-icon-map';
 import { FAMILY_ICON_MAP, GENERIC_CONTROLLER_ICON } from './controls-settings.constants';
 import { findLiveDevice } from './live-device';

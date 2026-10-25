@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind logic */
 import { KEYBOARD_DEFAULT, buildConsoleDefaultMappings } from '@rotp/input-mapping';
-import type { SdlGamepadType } from '@rotp/input-mapping';
+import type { SdlGamepadType } from '@drizztdourden08/brock-input';
 import type { PresetMappingsParams } from './controls-settings.type';
 
 const presetMappings = ({ sdlType, vid, pid }: PresetMappingsParams) => {

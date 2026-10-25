@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind component */
 import { Text } from '@drizztdourden08/tessera/primitives';
-import { DiagnosticsFlowBody } from '../../diagnostics-wizard/DiagnosticsFlowBody';
+import { DiagnosticsFlowBody } from '@drizztdourden08/brock-input/renderer';
 import type { ReportDialogPartProps } from '../report-dialog-controls.type';
 import { ConfirmStep } from './ConfirmStep';
 import { IntroStep } from './IntroStep';

@@ -1,10 +1,10 @@
 /* @layer renderer-components @kind types */
 import type { HubMe } from '@app/ipc';
 import type { ReportContext } from '@rotp/hub-contracts';
-import type { HidControllerMap } from '../../HidCalibrationWizard';
-import type { GamepadDiagnosticsReport } from '../../hid-calibration/diagnostics';
-import type { PositionalCaptureRecord } from '../../diagnostics-wizard/positional-capture/positional-capture.type';
-import type { DetectionContext } from '../controller-report.type';
+import type { HidControllerMap } from '@drizztdourden08/brock-input/renderer';
+import type { GamepadDiagnosticsReport } from '@drizztdourden08/brock-input/renderer';
+import type { PositionalCaptureRecord } from '@drizztdourden08/brock-input/renderer';
+import type { DetectionContext } from '@drizztdourden08/brock-input/renderer';
 
 interface ReportRequestParams {
   subjectPrefix: string;

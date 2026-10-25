@@ -7,7 +7,6 @@ import { debugReportHandlers } from '../electron/handlers/debug-report-handlers'
 import { documentsHandlers } from '../electron/handlers/documents-handlers';
 import { ffmpegHandlers } from '../electron/handlers/ffmpeg-handlers';
 import { hubHandlers } from '../electron/handlers/hub-handlers';
-import { inputHandlers } from '../electron/handlers/input-handlers';
 import { lanHandlers } from '../electron/handlers/lan-handlers';
 import { msuHandlers } from '../electron/handlers/msu-handlers';
 import { recommendationsHandlers } from '../electron/handlers/recommendations-handlers';
@@ -16,6 +15,6 @@ import { shadowCastingHandlers } from '../electron/handlers/shadow-casting-handl
 import { storeHandlers } from '../electron/handlers/store-handlers';
 import { testHandlers } from '../electron/handlers/test-handlers';
 
-const mainHandlers: HandlerGroup[] = [archipelagoHandlers, debugHandlers, debugReportHandlers, documentsHandlers, ffmpegHandlers, hubHandlers, inputHandlers, lanHandlers, msuHandlers, recommendationsHandlers, sanctuaryHandlers, shadowCastingHandlers, storeHandlers, testHandlers, ...devHandlers];
+const mainHandlers: HandlerGroup[] = [archipelagoHandlers, debugHandlers, debugReportHandlers, documentsHandlers, ffmpegHandlers, hubHandlers, lanHandlers, msuHandlers, recommendationsHandlers, sanctuaryHandlers, shadowCastingHandlers, storeHandlers, testHandlers, ...devHandlers];
 
 export { mainHandlers };

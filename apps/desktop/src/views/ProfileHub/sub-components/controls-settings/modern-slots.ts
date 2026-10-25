@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind logic */
 import { SDL_BUTTON } from '@rotp/game-data';
-import type { ResolvedControl } from '@rotp/input-mapping';
+import type { ResolvedControl } from '@drizztdourden08/brock-input';
 import type { InputBinding } from '@rotp/game-data';
 import type { SlotDisplay } from './controls-settings.type';
 

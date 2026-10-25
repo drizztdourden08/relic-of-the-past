@@ -1,7 +1,9 @@
 /* @layer shared-input @kind logic */
-import { BUTTON_INDEX, buildDisplayContext, resolveAxisConsoleDefault, resolveAxisLabel, resolveButtonIcon, resolveButtonLabel, resolveConsoleDefault } from './family';
-import type { DisplayContext, SdlButtonName, SdlGamepadType } from './family';
+import { BUTTON_INDEX, buildDisplayContext, resolveAxisLabel, resolveButtonIcon, resolveButtonLabel } from '@drizztdourden08/brock-input';
+import { resolveAxisConsoleDefault, resolveConsoleDefault } from './console-defaults';
+import type { DisplayContext } from '@drizztdourden08/brock-input';
 import { SDL_AXIS } from '@rotp/game-data';
+import type { SdlButtonName, SdlGamepadType } from '@rotp/game-data';
 import { axisEndLabel } from './axis-end-label';
 import { AXIS_DIRECTIONS, AXIS_POSITIONS } from './build-console-defaults.constants';
 import type { ButtonMapping } from '@rotp/game-data';

@@ -3,7 +3,7 @@ import { KEYBOARD_DEFAULT } from '../../keyboard-default';
 import { keyboardGlyphPath } from '../keyboard-glyph-path';
 import { builtInGlyphSource } from './built-in-glyph-source';
 import { CONSOLE_LAYOUT, GENERIC_PACK_ID } from './built-in-packs.constants';
-import type { SdlButtonName } from '../../family';
+import type { SdlButtonName } from '@rotp/game-data';
 import type { GlyphPack } from '../../types/glyph-pack';
 import type { GlyphTable } from './built-in-packs.type';
 

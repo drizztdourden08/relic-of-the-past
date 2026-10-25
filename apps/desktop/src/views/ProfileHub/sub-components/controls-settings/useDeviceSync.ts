@@ -2,7 +2,7 @@
 import { useState, useEffect } from 'react';
 import type { DetectedDevice } from '@rotp/input-mapping';
 import { getInputManager } from '@app/input/input-manager/get-input-manager';
-import { useControllerDevices } from '../../../../hooks/useControllerDevices';
+import { useControllerDevices } from '@drizztdourden08/brock-input/renderer';
 
 const useDeviceSync = () => {
   const [devices, setDevices] = useState<DetectedDevice[]>([]);
