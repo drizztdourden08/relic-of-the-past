@@ -490,6 +490,8 @@ frame, when given, is uploaded separately and mirrored with its blue and red cha
 
 A `FileStore` held in memory, with bytes, text and a modification time. Tests use it as a disk, and the pack viewers use it to run a file bound reader over bytes that never touch one.
 
+It has its own entry, `@rotp/game-core/mem-file-store`, and `@rotp/languages` imports it from there. The ROM extraction web worker compiles language sets through `@rotp/languages`, and the package barrel would load input mapping, the Brock input renderer and its React screens into that worker. A worker has no `document`, and the dev build does not tree-shake, so one module that touches it at import ends every extraction step with "document is not defined".
+
 ## packages/game-core/src/oam-ring.ts
 
 - The core captures each frame once, after its OAM is complete, into a ring buffer. Reading `oam_buf` live is unsound: the game clears every entry at the top of its loop and draws sprites after, so a read mid loop reports entries that were never missing from a rendered frame. Draining the ring gives every game frame in order, with no sampling race.
