@@ -20,6 +20,7 @@ export default defineScreens({
       title: 'Controllers',
       icon: 'gamepad-2',
       menu: 'hidden',
+      switcher: false,
       requiresProfile: false,
       groups: [
         { id: 'connected', label: 'Connected' },
