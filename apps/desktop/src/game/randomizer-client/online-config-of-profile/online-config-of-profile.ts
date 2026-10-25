@@ -5,6 +5,7 @@ import type { ProfileRandomizerConfig } from '@app/profiles/types';
 
 const onlineConfigOfProfile = (config: ProfileRandomizerConfig): OnlineSessionConfig => ({
   url: normalizeServerUrl(config.serverUrl ?? ''),
+  ...(config.fallbackServerUrl ? { fallbackUrl: normalizeServerUrl(config.fallbackServerUrl) } : {}),
   slotName: config.slotName ?? DEFAULT_SLOT_NAME,
   ...(config.password ? { password: config.password } : {}),
   deathLink: config.deathLink === true,

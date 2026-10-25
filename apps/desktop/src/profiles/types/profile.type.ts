@@ -8,6 +8,7 @@ interface ProfileRandomizerConfig {
   seed: string;
   options: RandomizerOptionsSnapshot;
   serverUrl?: string;
+  fallbackServerUrl?: string;
   slotName?: string;
   password?: string;
   deathLink?: boolean;

@@ -34,6 +34,7 @@ type StartedRoom = {
   tls: RoomTls;
   password?: string;
   roomUrl?: string;
+  localAddress?: string;
 };
 
 type StartedSlot = { name: string; game: string; team: number; files: StartedFile[] };

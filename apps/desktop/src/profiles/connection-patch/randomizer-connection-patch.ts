@@ -39,6 +39,12 @@ const withDeathLinkOption = (config: ProfileRandomizerConfig, deathLink: boolean
     : { ...config, options: { ...config.options, values: { ...config.options.values, [DEATH_LINK_KEY]: deathLink } } }
 );
 
+const withoutStaleFallback = (config: ProfileRandomizerConfig, patch: RandomizerConnectionPatch): ProfileRandomizerConfig => {
+  if (patch.serverUrl === undefined) return config;
+  const { fallbackServerUrl: _stale, ...rest } = config;
+  return rest;
+};
+
 const applyConnectionPatch = (
   config: ProfileRandomizerConfig | undefined, patch: RandomizerConnectionPatch,
 ): ProfileRandomizerConfig => {
@@ -50,7 +56,7 @@ const applyConnectionPatch = (
   for (const key of FLAG_KEYS) if (patch[key] !== undefined) next[key] = patch[key];
   if (patch.password === null || patch.password === '') delete next.password;
   else if (patch.password !== undefined) next.password = patch.password;
-  return withDeathLinkOption(next, patch.deathLink);
+  return withDeathLinkOption(withoutStaleFallback(next, patch), patch.deathLink);
 };
 
 export { applyConnectionPatch };

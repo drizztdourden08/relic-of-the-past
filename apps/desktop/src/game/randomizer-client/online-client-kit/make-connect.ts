@@ -6,7 +6,7 @@ import type { ClientKit } from './online-client-kit.type';
 
 const makeConnect = (kit: ClientKit, ctx: OnlineContext, onClose: (opened: boolean) => void) => (): void => {
   const { config, deps, state, network, deathLinks } = kit;
-  const candidates = state.workingUrl !== null ? [state.workingUrl] : serverUrlCandidates(config.url);
+  const candidates = state.workingUrl !== null ? [state.workingUrl] : [...new Set([...serverUrlCandidates(config.url), ...serverUrlCandidates(config.fallbackUrl ?? '')])];
   state.link = openSocketLink(candidates, deps.createSocket, {
     onOpen: (openedUrl) => {
       state.workingUrl = openedUrl;

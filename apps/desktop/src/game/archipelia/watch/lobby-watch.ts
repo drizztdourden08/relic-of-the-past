@@ -37,8 +37,8 @@ const adopt = (profileId: string, session: LobbySession, membership: ArchipeliaM
       store.setMember(profileId, current);
       void writeMembership(profileId, current);
     }
-    if (step.promote !== null) void promoteProfile(profileId, step.promote);
-    if (step.room !== null) void followRoom(profileId, step.room);
+    if (step.promote !== null) void promoteProfile(profileId, step.promote, current.server);
+    if (step.room !== null) void followRoom(profileId, step.room, current.server);
     if (current.state.kind !== 'started' && !WAITING_KINDS.includes(current.state.kind)) release(profileId);
   };
   watched.set(profileId, { session, stop: session.subscribe(apply) });
