@@ -8,9 +8,9 @@
 |---|---|---|
 | covered | 105 | 62% |
 | partial | 25 | 15% |
-| none | 38 | 23% |
+| none | 40 | 24% |
 
-168 areas counted (one row per table row above, not weighted by file count). 2 rows excluded from the count: presentational primitives (n/a, not a real gap) and shadow-casting (unclear, needs a follow-up pass, covered in the Electron section).
+170 areas counted (one row per table row above, not weighted by file count). 2 rows excluded from the count: presentational primitives (n/a, not a real gap) and shadow-casting (unclear, needs a follow-up pass, covered in the Electron section).
 
 ## UI views (`apps/desktop/src/views/`)
 
@@ -104,8 +104,11 @@ RotP's own copy of the design system is gone. Every primitive, composite, field 
 | recommendations file store (write queue) | apps/desktop/tests/electron/recommendation-files.keep.test.ts | covered |
 | **saves/profiles/roms, the real Electron store (`electron/{saves,profiles,roms}/store.ts`)** | none. Only the separate `apps/desktop/src/storage/*` web-target abstraction is tested | **none. A coverage illusion: the code path the real desktop app runs is untested; only a parallel, non-shared implementation is** |
 | Controller input (Brock input module: SDL3, mapping db, calibration, rumble) | Brock's own suite | n/a in RotP |
+| Controllers screens (directory, per-pad pages, pad overlay, diagnostics, logs, HID calibration wizard, diagnostics wizard, device families and display resolvers). Moved to `@drizztdourden08/brock-input` 0.96.0 and deleted from RotP | Brock's own suite (brock-input) | covered in brock-input, n/a in RotP |
+| SNES console defaults (`packages/input-mapping/src/console-defaults`, `build-console-defaults.ts`: which SNES button each pad position maps to per family, used by the drag-and-drop apply-defaults flow) | none | none |
+| Controller report dialog and its host (`apps/desktop/src/views/InputTester`, `apps/desktop/src/controller-report`: the "report this controller" flow that reuses brock-input's diagnostics wizard) | none | none |
 | Android controllers (Brock input `BrockInput` plugin) | Brock's own suite | n/a in RotP |
-| Portable input logic (`packages/input-mapping`, pause-manager, profile-devices, polling-engine) | packages/input-mapping/tests/*.keep.test.ts (4 files) | covered. Dropped the Gamepad-API dual-bus dispatch case (the haptic dispatch test) when that transport was removed; vibration-shaping.keep.test.ts now exercises the family layer's shapeVibration instead of BaseController |
+| Portable input logic (`packages/input-mapping`, pause-manager, profile-devices, polling-engine) | packages/input-mapping/tests/*.keep.test.ts (7 files: device-gate, haptic-gates, pause-disconnect, primary-modifier, slot-list, slot-prefill-order, vibration-shaping) | covered. Dropped the Gamepad-API dual-bus dispatch case (the haptic dispatch test) when that transport was removed; vibration-shaping.keep.test.ts exercises brock-input's `resolveShapeVibration` now that the device families live there |
 | Modern control scheme + numbered slots (`packages/input-mapping/src/scheme`, `apps/desktop/src/input` per-frame router, `control-scheme-store`) | packages/input-mapping/tests/slot-list.keep.test.ts, packages/features/tests/hud-style-scheme.keep.test.ts, apps/desktop/tests/e2e/hud-style-drives-scheme.keep.spec.ts | partial. The slot list's add/remove/renumber is covered, and since §59 the SCHEME itself is derived from `hudStyle` instead of stored, which `hud-style-scheme.keep.test.ts` pins and the e2e spec drives end to end; `corePositions`, `defaultSlotList` and `remapModern` still have no test. The `hostMenu`/`modernControls` gate bits are covered by bundle-flags-parity (its scan was widened to word 3) |
 | MSU-1 audio IPC handlers | none directly (business logic tested via apps/desktop/src/storage/msu-store) | partial. The same coverage-illusion pattern as saves/profiles/roms |
 | Window management (aspect-ratio, create-window, window-state, startup-config, send-to-back, text-interaction) | apps/desktop/tests/game/aspect-ratio.keep.test.ts (aspect-ratio only) | partial |

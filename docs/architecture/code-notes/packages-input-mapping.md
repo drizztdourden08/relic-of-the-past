@@ -3,6 +3,8 @@
 
 Facts about `packages/input-mapping` that the code cannot say on its own. Each heading names a file or folder by its path from the repository root.
 
+The device families (Xbox, PlayStation, Nintendo, GameCube, generic), the SDL capability tables, the display resolvers, the device profile builders, the live control state and the controller caches moved into `@drizztdourden08/brock-input`. This package imports them from there and keeps the SNES side: console defaults, bindings, the scheme and the runtime that turns input into a frame mask.
+
 ## packages/input-mapping/src/axis-end-label.ts
 
 - The axis label names the whole axis, so the two ends would read the same without the sign. The minus is U+2212, the same "label sign" shape the saved-binding icon lookup produces.
@@ -14,6 +16,10 @@ Facts about `packages/input-mapping` that the code cannot say on its own. Each h
 - The stick mappings are emitted first. The controls screen shows one row per SNES button and picks the first mapping that names it, so the row reads "Left Stick Y -" and not "D-Pad Up".
 - Axis mappings carry no stored icon. A family declares one base key per stick, shared by X and Y, so a stored key could only be the neutral pose. With the icon null, the controls screen resolves the glyph from the binding's axis and direction at render time (resolveIconByVidPid, then resolveStickDirectionIcon). A binding with no source device falls back to directional generic art (AXIS_FALLBACK in apps/desktop/src/input/binding-display).
 - Button labels ride on the binding; without one, a binding falls back to "Button 3".
+
+## packages/input-mapping/src/console-defaults/
+
+Which SNES button each controller position maps to by default, per device family. The families themselves (`XBOX_FAMILY`, `NINTENDO_FAMILY` and the rest) come from `@drizztdourden08/brock-input`; this folder only holds the SNES table keyed by them (`SNES_CONSOLE_DEFAULTS`). A family without an entry falls back to `GENERIC_DEFAULTS`, which also carries the left stick as the d-pad. The Nintendo family files its bottom button under SNES B and its right button under A (and X/Y likewise), matching the layout of the SNES pad. Both resolvers take a `DisplayContext`, so they answer for the physical pad's family and never for a hardcoded one.
 
 ## packages/input-mapping/src/controls/devices/devices.type.ts
 
@@ -38,112 +44,6 @@ Facts about `packages/input-mapping` that the code cannot say on its own. Each h
 ## packages/input-mapping/src/data/haptics/haptic-pattern.type.ts
 
 - gapMs is the gap between segments (default 0). delayMs is a delay before the pattern starts, for animation or sound sync (default 0). cooldownMs is the minimum time between repeats (0 means no limit).
-
-## packages/input-mapping/src/device-profile/device-profile.constants.ts
-
-- AXIS_ID_ALIAS gives the axis ids the calibration wizard groups sticks and triggers by (its STICK_IDS and TRIGGER_IDS), stable whatever SDL calls the positions.
-- ALL_BUTTONS and ALL_AXES back the synthetic full-capability profile for a device known only by sdlType (a disconnected saved binding, or the wizard's manual family picker).
-
-## packages/input-mapping/src/device-profile/device-profile.type.ts
-
-- DeviceProfileAxis.icon is the family's base icon key; a stick's X and Y share one key, and resolveStickDirectionIcon turns it into a direction glyph. A trigger's icon is its own glyph.
-
-## packages/input-mapping/src/device-profile/profile-from-controls.ts
-
-- AXIS_ORDER in sdl-capabilities only assigns 'stick' or 'trigger' to an axis control, which is why the axis category narrows safely.
-
-## packages/input-mapping/src/family/family-registry/find-family.ts
-
-- Every SdlGamepadType is claimed by exactly one built-in family (generic claims 'standard' and 'unknown'), so the 'unknown' and EMPTY_FAMILY fallbacks only guard an out-of-order lookup.
-
-## packages/input-mapping/src/family/family.type.ts
-
-- The family model only says what to SHOW for a control SDL already reported. Whether a control exists is SDL's answer alone. Every field is keyed by SDL's positional names.
-- AxisConsoleDefault exists because an axis has two ends that default to two different console buttons. Either end may be left out.
-- deviceName is a display-only rename of SDL's reported name.
-- consoleDefaults and axisConsoleDefaults are used only when a preset or drag and drop is applied on the controls screen. Detection, calibration and diagnostics never read them.
-- Movement defaults to the left stick on every gamepad through generic's axisConsoleDefaults; generic is the last link of every family's chain. The d-pad console defaults stay as movement's second binding.
-- triggerPressThreshold is how far a trigger reported as an axis must travel to count as pressed for a button-style highlight. A digital-only trigger has no threshold. Default is DEFAULT_TRIGGER_PRESS_THRESHOLD.
-- shapeVibration maps a 0 to 1 pattern intensity to the motor magnitude a family plays. It touches strength only, never duration. Identity when unset.
-- minDurationMs is the shortest total duration a family's motor needs to spin up and be felt. Shorter patterns are stretched up to it; longer ones and intensity are untouched. A pattern opts out with HapticPatternEntry.minDurationExempt.
-- ResolvedControl.pressThreshold is set only for an axis in the 'trigger' category.
-
-## packages/input-mapping/src/family/gamecube-family.ts
-
-- Measured from a real pad (057e:2073, sdlType 'gamecube'): 16 buttons (four face, GUIDE, START, both shoulders, d-pad, MISC1 to MISC4) and 6 axes including the triggers. No BACK and no stick clicks.
-- RIGHT_SHOULDER is the Z button. MISC1 is Capture, MISC2 the C button. MISC3 and MISC4 are the digital clicks at the bottom of the L and R triggers' analog travel, so they reuse the trigger glyphs.
-- SDL's labels are right: EAST is X and WEST is B; only the glyphs were crossed, so the icons pair each position with its own art.
-- gc_button_c.svg on disk is the C stick artwork despite its name. The round C button glyph is gc_button_chat.svg.
-- SNES L and R default to the trigger clicks (MISC3, MISC4), not the shoulders, because RIGHT_SHOULDER is Z. Z stays unbound.
-- A licensed wireless GameCube style pad uses an ERM motor with spin-up lag (unlike the Switch Pro's near-instant LRA), so short bursts are stretched to 90 ms (minDurationMs).
-
-## packages/input-mapping/src/family/generic-family.ts
-
-- Generic is the Null Object of the family layer: the fallback for 'standard' (a device the platform already normalizes) and 'unknown' (one SDL cannot classify), and the last link of every other family's chain. It covers every position so nothing reaches a bare positional name or an empty icon.
-- Its consoleDefaults are also read as a position to console button layout by the built-in glyph packs; dropping the d-pad entries would strip the d-pad glyphs from the Console and Keyboard packs.
-- axisConsoleDefaults is movement's default for every gamepad family. SDL normalizes the left stick to LEFT_X and LEFT_Y on every pad. SDL's Y axis points down, so '-' is up and '+' is down.
-
-## packages/input-mapping/src/family/index.ts
-
-- Import the family layer through this barrel. Families now register through family-registry.constants.ts, so a deep import also sees a full registry.
-
-## packages/input-mapping/src/family/live-control-state.constants.ts
-
-- DEFAULT_TRIGGER_PRESS_THRESHOLD is high on purpose: a trigger reads as pressed only near the end of its travel, the same feel the Standard Gamepad API gives a trigger button.
-
-## packages/input-mapping/src/family/live-control-state.ts
-
-- A trigger SDL reports as an axis takes both value and pressed from the analog reading. A control SDL reports only as a button has pressed straight from the button state and a value of 0 or 1.
-
-## packages/input-mapping/src/family/nintendo-family.ts
-
-- Covers the Switch Pro Controller and the three Joy-Con reports (left, right, paired).
-- Face button labels are set here because buttonIcons already commits to the layout (EAST is A and draws switch_button_a.svg). Readers with no live device (a saved binding for an unplugged pad, buildConsoleDefaultMappings, buildDeviceProfileFromSdlType) would otherwise show generic's "Button 2 (East)" beside the A glyph. A family's own name wins over SDL's live label (resolveButtonLabelSpecific). The d-pad stays with generic, which matches what the pad prints.
-- Each stick shares one base icon key for X and Y; direction glyphs and the neutral pose come from resolveStickDirectionIcon at render time.
-- The d-pad consoleDefaults are movement's second binding; they also feed the glyph pack layout.
-
-## packages/input-mapping/src/family/playstation-family.ts
-
-- Covers PS3, PS4 and PS5 reports (DualShock 4, DualSense, DualSense Edge).
-- Face labels are set for the same reason as the Nintendo family (EAST draws playstation_button_circle.svg). D-pad and shoulders come from the chain.
-
-## packages/input-mapping/src/family/resolve-display/index.ts
-
-- Every lookup walks device override, then family, then generic, and returns the first defined answer for one field (chain of responsibility).
-
-## packages/input-mapping/src/family/resolve-display/resolve-button-label-specific.ts
-
-- Generic is left out on purpose. SDL's own per-device label must win over generic's filler text but never over a family's own label; resolveDeviceControls slots the live label in at that point.
-
-## packages/input-mapping/src/family/sdl-capabilities.ts
-
-- Only positions SDL reported present appear. Display order: face, d-pad, shoulders (with grip paddles), stick clicks, system buttons, sticks, triggers. Category comes from the position, never from a family.
-- Button label order: override or family, then SDL's live label, then generic's filler, then the positional name. Icons have no live source, so they use the flat override, family, generic chain.
-- Only a trigger axis carries a press threshold; a stick axis has no pressed reading.
-
-## packages/input-mapping/src/family/sdl-capabilities.type.ts
-
-- hasButton and buttonLabels are indexed by the SDL button enum; hasAxis by the SDL axis enum (length 6).
-
-## packages/input-mapping/src/family/stick-direction-icon.ts
-
-- A family declares one base icon key per stick, shared by X and Y; the neutral pose is the base key itself. The calibration card and every other stick drawing use this one inference.
-- STICK_DIRECTION_DEADZONE is how far off center an axis must sit to count as deflected.
-
-## packages/input-mapping/src/family/vibration-shaping.ts
-
-- Every send-to-controller path goes through applyVibrationShaping, so amplitude and duration are decided only here: family curve, then the per-device multiplier, then the minimum-duration floor.
-- The floor stretches only the last segment.
-- A rhythmic pattern (the per-step dash pulse) opts out of the floor, since stretching every repeat would blur distinct taps into one buzz.
-
-## packages/input-mapping/src/family/xbox-family.ts
-
-- Covers Xbox 360 and Xbox One reports; Series X|S, Elite and Adaptive report as one of those two.
-- Face labels are set because SOUTH draws xbox_button_a.svg. D-pad and shoulders come from generic, whose "D-Pad Up" and "Left Bumper" match the pad.
-
-## packages/input-mapping/src/family/xbox-shape-vibration.ts
-
-- Xbox dual rumble is a linear ERM magnitude that barely moves below about 0.25, unlike Switch HD rumble. The curve lifts every non-zero intensity onto a 0.3 floor with a 0.85 gain so short combat pulses land. Strength only.
 
 ## packages/input-mapping/src/glyphs/built-in-packs/built-in-pack-art.constants.ts
 
@@ -219,25 +119,9 @@ Each folder is one concept of the package's public surface, and the package `ind
 The single place where a raw axis reading becomes pressed, shared by live play (the SNES
 bitmask, function hotkeys) and by binding capture (the raw input dispatcher). A trigger axis
 (SDL's fixed `LEFT_TRIGGER` and `RIGHT_TRIGGER` indices) uses the family overridable
-threshold the calibration screen shows (`packages/input-mapping/src/family/live-control-state.ts`,
-`resolveTriggerPressThreshold`), never a second number. Any other axis, such as a stick
+threshold the Controllers screen of `@drizztdourden08/brock-input` shows (`resolveTriggerPressThreshold`), never a second number. Any other axis, such as a stick
 standing in for a direction, uses a plain deflection of 0.5. Device keys are `vid:pid` in
 hex; a device whose SDL type was not recorded this session uses the generic threshold.
-
-## packages/input-mapping/src/runtime/controller-card-info.ts
-
-Name and family come from the SDL driven resolver (`resolve-device.ts`), never from a hand
-written database. `sdlType` is carried for the controls screen's apply console defaults drag
-and drop, which resolves the defaults through the family layer.
-
-## packages/input-mapping/src/runtime/controller-device-groups.ts
-
-Groups the snapshot by vendor and product id, so an adapter that presents one entry per port
-renders as one group with a port list. The Brock input module suffixes `#N` to the device key
-of the second and later devices sharing a vid:pid; that is read back to number ports.
-Unclaimed listed devices sharing a vid:pid never get a suffix (only SDL claimed devices get a
-key assigned), so arrival order is the fallback. A blank product name falls back to
-the first group member that has one.
 
 ## packages/input-mapping/src/runtime/device-detector/
 
@@ -307,13 +191,6 @@ never disagree about who owns the d-pad. Core resolution order: `profile.core` (
 rebind lands), then the modern block's copy, then the device defaults. The slot list is the
 player's, stored on the profile (contract section 19); `effectiveModernBindings` falls back to
 the device prefill only for a profile never edited.
-
-## packages/input-mapping/src/runtime/resolve-device.ts
-
-The single resolver both the calibration cards and the controls screen use. SDL's own
-`hasButton`, `hasAxis` and `buttonLabels` decide what exists; the family layer only decides
-labels and icons. No preset and no device database is consulted, so the screens cannot
-disagree. An unavailable entry was never opened by SDL and resolves to an empty control list.
 
 ## packages/input-mapping/src/runtime/scheme-runtime/
 

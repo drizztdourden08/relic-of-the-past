@@ -13,10 +13,6 @@ Facts about `apps/desktop/src/ipc/` that the code cannot say on its own. Each he
 - `startup` holds the test and automation start flags (set from the launch flags). `automation` is true for any automated launch and makes it read only for shared configuration. `muted` and `sound` are the launch's audio intent, applied through the app's own mute control; both directions are explicit so neither depends on the profile's stored volume. `autoStart` boots the game and stops at its title screen, with no save state involved.
 - `instance` is the named instance identity (set from the launch flags). Both fields are null on a normal launch; `name` marks the window and `profile` is the profile to boot into.
 
-## apps/desktop/src/ipc/controller-contract/
-
-The one controller channel that is RotP's own: `controller:write-debug-capture` writes an input calibration debug capture into `userData/Data/debug` and returns the full path. Every other controller channel, and the device, capture and calibration types, come from the Brock input module (`input:*`, types from `@drizztdourden08/brock-input`).
-
 ## apps/desktop/src/ipc/event-contract.type.ts
 
 Event channels, main to renderer: `webContents.send` paired with `ipcRenderer.on`. Each value is the listener signature; the `onX(cb)` subscribers and the main process `emit` derive from it.

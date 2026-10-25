@@ -121,10 +121,6 @@ SDL3 controllers, hotplug, the mapping database, calibration, rumble and the raw
 
 The WebHID and WebUSB choosers on the main window session. The USB device chooser prefers a Nintendo device (vendor `0x057E`).
 
-## apps/desktop/electron/input/register-input-handlers.ts
-
-The `controller:write-debug-capture` channel, which writes a diagnostics or byte-capture report under `<userData>/debug/`. `sanitizeFileStem` strips anything outside `[A-Za-z0-9_-]`, so a device supplied name can never contain a path separator, `..` or a drive letter.
-
 ## apps/desktop/electron/lib/node-file-store.ts
 
 A Node fs `FileStore` for the main process itself, rooted at the same Data folder that the renderer reaches over IPC. It is called in process, so a domain module from `apps/desktop/src/storage` can run inside a handler with no renderer round trip.

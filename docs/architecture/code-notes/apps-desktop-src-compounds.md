@@ -151,31 +151,6 @@ the shelves its shop scope opened, so that switch shows on the plain game only. 
 off on the plain game and on for a seed (`smallKeyDoorsOf`). `apps/desktop/src/compounds/ChecksTracker/behavior/active-logic-toggles.ts`
 counts the switches away from their default for the drawer's badge.
 
-## apps/desktop/src/compounds/ControllerCapabilityBadges/ControllerCapabilityBadges.tsx
-
-The badges show the bus type and the rumble and gyro capabilities SDL reports for a claimed
-device. A fact SDL did not report renders nothing: an unavailable device was never opened, so it
-has none. The badges share only the icon set with ControllerStatusBar, because the bar's own
-bordered chrome would double the box inside the device card.
-
-## apps/desktop/src/compounds/ControllerPortRow/ControllerPortRow.tsx
-
-An empty port renders exactly like an occupied one. Whether the two differ has not been
-measured, and a wrong guess would hide a working port. `liveHint` is a short proof of life for
-a ready port, such as a button and axis count.
-
-## apps/desktop/src/compounds/ControllerStatusBadge/ControllerStatusBadge.tsx
-
-Ready means SDL3 claimed the device. Unavailable means the Brock input module lists it but SDL3
-did not claim it.
-
-## apps/desktop/src/compounds/ControllerStatusBar/ControllerStatusBar.tsx
-
-The wired or wireless chip is a fallback shown only when the bus type is unknown. It never
-stands in for USB or Bluetooth, and the bar never shows a bus chip and a wired or wireless chip
-together. `idLabel` arrives formatted: a vendor and product id, or a label for an unmapped
-gamepad.
-
 ## apps/desktop/src/compounds/CurrencyPriceRow/behavior/currency-rows.ts
 
 A price can never exceed what the profile can pay, so a row's range stops where its currency
@@ -431,12 +406,6 @@ chip is flagged when its jump ran past the top of the ladder. An ordered ladder 
 sprite of the currency its value is asked in: the picture names the currency and the number the
 amount, so a demand with no amount (one item, held up and handed back) is the icon alone.
 
-## apps/desktop/src/compounds/MappingPasteBox/MappingPasteBox.tsx
-
-Lets a player paste an SDL mapping line for a controller that is not recognized, as an
-alternative to the calibration wizard. The IPC call happens in the view that wires `onSubmit`,
-which resolves false for a malformed mapping.
-
 ## apps/desktop/src/compounds/ModeBadge/ModeBadge.tsx
 
 The badge says at a glance what kind of playthrough a profile is. The art lives in
@@ -688,13 +657,6 @@ The preview of one debug recording, for the icon of a row. A recording with a vi
 Says who a report is filed as, in place of the email field once the app is signed in. The GitHub
 login shows when the issue will mention it.
 
-## apps/desktop/src/compounds/RescanButton/RescanButton.tsx
-
-The one control that tears down and repopulates the controller list. It is small and icon only
-and lives in a screen header, never on a device card, because the rescan covers the whole
-subsystem. `isPending` stays true from the click until the next device snapshot arrives or a
-timeout passes, and the glyph spins meanwhile.
-
 ## apps/desktop/src/compounds/RetroBowBlock/RetroBowBlock.tsx
 
 One switch and, under it, the two costs a shot takes out of the wallet. The costs go inert with
@@ -886,12 +848,6 @@ picture draws the kind's icon in its place.
 Three views of the same inventory: the default view grouped by category, the in game view laid
 out like the SNES pause screen, and the compact view as one flat grid with the upgrades broken
 down. The Inventory widget is its only user, so it has no height cap of its own: it fills the widget and the widget scrolls.
-
-## apps/desktop/src/compounds/UnavailableControllerNotice/UnavailableControllerNotice.tsx
-
-Both remedies sit on the same card because the API can prove the device is connected and
-unclaimed but cannot prove why: another process may hold it (Steam is the common case) or the
-mapping database may not know it.
 
 ## apps/desktop/src/compounds/WishingPondRow/sub-components/PondAskControls.tsx
 
