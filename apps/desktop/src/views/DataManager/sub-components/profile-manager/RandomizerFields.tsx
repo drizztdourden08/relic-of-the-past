@@ -35,7 +35,7 @@ const RandomizerFields = (props: RandomizerFieldsProps) => {
           <Field label="Mode">
             <Select
               value={value.mode}
-              onChange={(mode) => patch({ mode: mode as RandomizerFormState['mode'] })}
+              onChange={(mode) => patch({ mode: mode as RandomizerFormState['mode'], ...(mode === 'local' ? { deathLink: false } : {}) })}
               options={experimental ? MODE_OPTIONS : MODE_OPTIONS.filter((option) => option.value !== 'online')}
             />
           </Field>

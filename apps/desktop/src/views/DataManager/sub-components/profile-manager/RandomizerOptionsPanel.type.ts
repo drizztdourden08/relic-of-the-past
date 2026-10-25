@@ -2,6 +2,7 @@
 import type { OptionTabId } from '@app/hooks/randomizer/option-tab-model';
 import type { RandomizerOptionsSnapshot } from '@rotp/randomizer';
 import type { RandomizerOptionChoices } from '@app/hooks/randomizer/randomizer-choices';
+import type { ProfileRandomizerConfig } from '@app/profiles/types';
 import type { POOL_TAB } from './RandomizerOptionsPanel.constants';
 import type { usePanelModel } from './randomizer-options/usePanelModel';
 
@@ -11,6 +12,7 @@ interface RandomizerOptionsPanelProps {
   value: RandomizerOptionChoices;
   onChange?: (next: RandomizerOptionChoices) => void;
   frozen?: RandomizerOptionsSnapshot;
+  mode?: ProfileRandomizerConfig['mode'];
 }
 
 type PanelTab = OptionTabId | typeof POOL_TAB;

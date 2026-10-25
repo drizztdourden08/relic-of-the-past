@@ -17,7 +17,7 @@ const OptionsTab = (props: OptionsTabProps) => {
 
   return (
     <Box className="randomizer-page__options">
-      <RandomizerOptionsPanel romFile={romFile ?? ''} seed={seed} value={choices} frozen={frozenSnapshot} />
+      <RandomizerOptionsPanel romFile={romFile ?? ''} seed={seed} value={choices} frozen={frozenSnapshot} mode={config.mode} />
     </Box>
   );
 };

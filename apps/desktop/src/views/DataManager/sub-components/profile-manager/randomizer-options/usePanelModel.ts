@@ -9,6 +9,7 @@ import { usePoolImpacts } from '@app/hooks/randomizer/usePoolImpacts';
 import { usePondDemands } from '@app/hooks/randomizer/usePondDemands';
 import { usePoolListing } from '@app/hooks/randomizer/usePoolListing';
 import { usePoolTotals } from '@app/hooks/randomizer/usePoolTotals';
+import { groupsForMode } from './groups-for-mode';
 import { optionTabsOf } from './option-tabs-of';
 import { choicesAfterRow } from './choices-after-row';
 import { valueFor } from './value-for';
@@ -17,7 +18,7 @@ import type { OptionDef, OptionValue } from '@rotp/randomizer';
 import type { RandomizerOptionsPanelProps } from '../RandomizerOptionsPanel.type';
 
 const usePanelModel = (props: RandomizerOptionsPanelProps, narrow: boolean) => {
-  const { romFile, seed, value, onChange, frozen } = props;
+  const { romFile, seed, value, onChange, frozen, mode } = props;
   const { unlockedGroups, lockedGroups } = catalogByLock;
 
   const snapshot = useMemo(() => frozen ?? snapshotOfChoices(value), [frozen, value]);
@@ -27,7 +28,7 @@ const usePanelModel = (props: RandomizerOptionsPanelProps, narrow: boolean) => {
   const pondDemands = usePondDemands(snapshot, seed);
   const totals = usePoolTotals(accounting);
 
-  const groups = useMemo(() => splitUnlockedGroups(unlockedGroups), [unlockedGroups]);
+  const groups = useMemo(() => splitUnlockedGroups(groupsForMode(unlockedGroups, mode)), [unlockedGroups, mode]);
   const fixed = useMemo(() => splitLockedGroups(lockedGroups), [lockedGroups]);
   const optionTabs = useMemo(() => optionTabsOf(changedCountsOf(snapshot.values)), [snapshot]);
   const tabs = useMemo<TabItem[]>(

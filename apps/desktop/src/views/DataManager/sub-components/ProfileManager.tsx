@@ -29,6 +29,7 @@ const ProfileManager = (props: ProfileManagerProps) => {
       romFile={formRom}
       seed={formRandomizer.seed}
       value={formRandomizer}
+      mode={formRandomizer.mode}
       onChange={(next) => setFormRandomizer({ ...formRandomizer, ...next })}
     />
   ) : selectedProfile && (
