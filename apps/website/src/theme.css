@@ -22,10 +22,18 @@
   --px-gold-dark: #4a3208;
   --px-gold-line: #96700c;
   --px-gold-dither: rgb(224 172 46 / 0.4);
+  --px-ramp-0: #f8e8a8;
+  --px-ramp-1: #e4c65a;
+  --px-ramp-2: #c8a84e;
+  --px-ramp-3: #b8860f;
+  --px-ramp-4: #8a5e0a;
   --site-rule-h: 3px;
   --site-gem-glow: 0 0 4px rgb(224 172 46 / 0.45);
   --site-gem-glow-low: 0 0 3px rgb(224 172 46 / 0.3);
   --site-gem-glow-high: 0 0 9px rgb(228 198 90 / 0.8);
+  --site-cta-pad-x: 36px;
+  --site-cta-shadow: 0 0 32px var(--c-primary-soft), 0 4px 18px rgb(0 0 0 / 0.5);
+  --site-cta-shadow-hover: 0 0 48px var(--c-primary-soft), 0 8px 24px rgb(0 0 0 / 0.55);
   --site-text-shadow-soft: 0 1px 8px rgb(0 0 0 / 0.9);
   --site-text-shadow-strong: 0 2px 12px rgb(0 0 0 / 0.8);
   --site-hero-min-h: clamp(640px, 96svh, 1040px);

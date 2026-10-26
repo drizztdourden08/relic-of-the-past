@@ -7,4 +7,6 @@ const DOWNLOAD_TEXT = {
   viewDownloads: 'view downloads for',
 } as const;
 
-export { DOWNLOAD_TEXT };
+const DOWNLOAD_ICON_SIZE = '1.2em';
+
+export { DOWNLOAD_ICON_SIZE, DOWNLOAD_TEXT };
