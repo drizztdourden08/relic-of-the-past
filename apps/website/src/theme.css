@@ -73,6 +73,19 @@
   --site-feature-gap: clamp(32px, 5vw, 72px);
   --site-feature-title-size: clamp(26px, 3.4vw, 36px);
   --site-community-title-size: clamp(28px, 3.6vw, 40px);
+  --site-legal-body-w: 760px;
+  --site-card-w: clamp(18rem, 34vw, 32rem);
+  --site-card-gap: var(--size-24);
+  --site-card-ratio: 16 / 10;
+  --site-card-dim: 0.4;
+  --site-card-title-size: clamp(20px, 2.2vw, 26px);
+  --site-heading-w: clamp(16rem, 26vw, 24rem);
+  --site-backdrop-inset: -15%;
+  --site-backdrop-blur: 28px;
+  --site-backdrop-opacity: 0.45;
+  --site-backdrop-brightness: 0.55;
+  --site-drift-from: -10%;
+  --site-drift-to: 10%;
   --site-shot-shadow:
     0 0 0 1px rgb(0 0 0 / 0.6),
     0 12px 40px rgb(0 0 0 / 0.5),

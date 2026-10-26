@@ -1,0 +1,16 @@
+/* @layer website-site @kind style */
+.legal-header {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--size-16);
+  padding: var(--size-24) var(--site-gutter);
+}
+
+.legal-header .legal-header__mark {
+  width: var(--size-48);
+}
+
+.legal-header .legal-header__wordmark {
+  width: min(var(--size-288), 60vw);
+}

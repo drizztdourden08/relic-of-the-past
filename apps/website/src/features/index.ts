@@ -1,3 +1,5 @@
 /* @layer website-site @kind barrel */
-export { FEATURES } from './features.constants';
+export { FEATURE_GROUPS } from './feature-groups.constants';
 export type { Feature } from './feature.type';
+export type { FeatureGroup } from './feature-group.type';
+export type { Screenshot } from './screenshot.type';

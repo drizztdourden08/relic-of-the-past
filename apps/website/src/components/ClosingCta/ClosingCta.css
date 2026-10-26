@@ -1,0 +1,14 @@
+/* @layer website-site @kind style */
+.closing-cta {
+  gap: var(--size-32);
+  padding: var(--site-section-pad) var(--site-gutter);
+  text-align: center;
+}
+
+.closing-cta .closing-cta__title {
+  font-family: var(--site-font-heading);
+  font-size: var(--site-community-title-size);
+  font-weight: var(--weight-semi);
+  letter-spacing: var(--tracking-normal);
+  text-transform: none;
+}

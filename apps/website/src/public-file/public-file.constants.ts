@@ -1,13 +1,13 @@
 /* @layer website-site @kind constants */
 const PUBLIC_FILES = {
   heroArt: 'media/hero-art.webp',
-  mark: 'logos/mark.png',
-  wordmark: 'logos/wordmark.png',
+  mark: 'logos/logo.svg',
+  wordmark: 'logos/wordmark.svg',
 } as const;
 
 const PUBLIC_FILE_RATIOS = {
-  mark: '870 / 753',
-  wordmark: '967 / 109',
+  mark: '35 / 28',
+  wordmark: '321 / 29',
 } as const;
 
 export { PUBLIC_FILE_RATIOS, PUBLIC_FILES };

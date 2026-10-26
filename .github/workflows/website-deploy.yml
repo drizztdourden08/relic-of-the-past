@@ -48,6 +48,10 @@ jobs:
       - name: Build the site
         run: pnpm --dir "$APP_DIR" exec brock site build
 
+      # GitHub Pages has no rewrite rules: each legal route needs a real index.html.
+      - name: Route pages
+        run: for r in privacy terms; do mkdir -p "$APP_DIR/dist/$r"; cp "$APP_DIR/dist/index.html" "$APP_DIR/dist/$r/index.html"; done
+
       - name: Publish to gh-pages
         uses: peaceiris/actions-gh-pages@v4
         with:

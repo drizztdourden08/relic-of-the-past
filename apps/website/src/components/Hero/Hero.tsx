@@ -21,6 +21,7 @@ const Hero = () => (
         alt=""
         aspectRatio={PUBLIC_FILE_RATIOS.mark}
         fit="contain"
+        pixelated
       />
       <Title level={1} className="landing-hero__title">
         <Image

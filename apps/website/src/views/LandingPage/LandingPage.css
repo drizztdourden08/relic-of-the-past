@@ -28,5 +28,5 @@
 }
 
 .landing__features {
-  padding: var(--site-section-pad) 0;
+  padding-bottom: var(--site-section-pad);
 }

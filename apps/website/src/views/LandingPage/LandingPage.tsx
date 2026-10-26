@@ -1,11 +1,12 @@
 /* @layer website-site @kind component */
 import { Box } from '@drizztdourden08/tessera/primitives';
+import { ClosingCta } from '../../components/ClosingCta';
 import { CommunitySection } from '../../components/CommunitySection';
-import { FeatureRow } from '../../components/FeatureRow';
+import { FeatureGroupSection } from '../../components/FeatureGroupSection';
 import { Footer } from '../../components/Footer';
 import { Hero } from '../../components/Hero';
 import { Separator } from '../../components/Separator';
-import { FEATURES } from '../../features';
+import { FEATURE_GROUPS } from '../../features';
 import './LandingPage.css';
 
 const LandingPage = () => (
@@ -15,14 +16,15 @@ const LandingPage = () => (
       <Separator flush />
     </Box>
     <Box as="main" className="landing__features">
-      {FEATURES.map((feature, index) => (
-        <FeatureRow key={feature.id} feature={feature} flip={index % 2 === 1} />
+      {FEATURE_GROUPS.map((group, index) => (
+        <FeatureGroupSection key={group.id} group={group} index={index} />
       ))}
     </Box>
     <Box className="landing__section-boundary">
       <Separator flush />
     </Box>
     <CommunitySection />
+    <ClosingCta />
     <Footer />
   </Box>
 );

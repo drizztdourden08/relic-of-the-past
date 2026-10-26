@@ -1,0 +1,191 @@
+/* @layer website-site @kind style */
+.feature-group {
+  view-timeline: --group block;
+  padding: var(--site-section-pad) 0;
+}
+
+.feature-group__stage {
+  position: relative;
+  display: grid;
+  gap: var(--size-32);
+  overflow: hidden;
+}
+
+.feature-group__cards {
+  position: relative;
+  min-width: 0;
+}
+
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) and (width > 800px) {
+    .feature-group {
+      padding: 0;
+    }
+
+    .feature-group--cards-3 {
+      height: 300svh;
+    }
+
+    .feature-group--cards-4 {
+      height: 400svh;
+    }
+
+    .feature-group__stage {
+      position: sticky;
+      top: 0;
+      grid-template-columns: var(--site-heading-w) minmax(0, 1fr);
+      align-items: center;
+      height: 100svh;
+      padding-inline: var(--site-gutter);
+    }
+
+    .feature-group .group-heading {
+      padding-inline: 0;
+    }
+
+    .feature-track-clip {
+      overflow: hidden;
+    }
+
+    .feature-track {
+      overflow: visible;
+      padding-inline: 0;
+      animation: linear both;
+      animation-timeline: --group;
+    }
+
+    .parallax-backdrop {
+      animation: backdrop-drift linear both;
+      animation-range: cover;
+      animation-timeline: --group;
+    }
+
+    .group-progress {
+      display: block;
+      margin-top: var(--size-16);
+    }
+
+    .group-progress__fill {
+      animation: progress-grow linear both;
+      animation-timeline: --group;
+    }
+
+    .feature-card {
+      animation: card-focus linear both;
+      animation-timeline: --group;
+    }
+
+    .feature-group--cards-3 .feature-track {
+      animation-name: feature-slide-3;
+    }
+
+    .feature-group--cards-4 .feature-track {
+      animation-name: feature-slide-4;
+    }
+
+    .feature-group--cards-3 .feature-track,
+    .feature-group--cards-3 .group-progress__fill {
+      animation-range: cover 25% cover 75%;
+    }
+
+    .feature-group--cards-4 .feature-track,
+    .feature-group--cards-4 .group-progress__fill {
+      animation-range: cover 20% cover 80%;
+    }
+
+    .feature-group--cards-3 .feature-card:nth-child(1) {
+      animation-name: card-leave;
+      animation-range: cover 25% cover 50%;
+    }
+
+    .feature-group--cards-3 .feature-card:nth-child(2) {
+      animation-range: cover 25% cover 75%;
+    }
+
+    .feature-group--cards-3 .feature-card:nth-child(3) {
+      animation-name: card-enter;
+      animation-range: cover 50% cover 75%;
+    }
+
+    .feature-group--cards-4 .feature-card:nth-child(1) {
+      animation-name: card-leave;
+      animation-range: cover 20% cover 40%;
+    }
+
+    .feature-group--cards-4 .feature-card:nth-child(2) {
+      animation-range: cover 20% cover 60%;
+    }
+
+    .feature-group--cards-4 .feature-card:nth-child(3) {
+      animation-range: cover 40% cover 80%;
+    }
+
+    .feature-group--cards-4 .feature-card:nth-child(4) {
+      animation-name: card-enter;
+      animation-range: cover 60% cover 80%;
+    }
+  }
+}
+
+@keyframes feature-slide-3 {
+  to {
+    translate: calc(-2 * (var(--site-card-w) + var(--site-card-gap))) 0;
+  }
+}
+
+@keyframes feature-slide-4 {
+  to {
+    translate: calc(-3 * (var(--site-card-w) + var(--site-card-gap))) 0;
+  }
+}
+
+@keyframes backdrop-drift {
+  from {
+    translate: 0 var(--site-drift-from);
+  }
+
+  to {
+    translate: 0 var(--site-drift-to);
+  }
+}
+
+@keyframes progress-grow {
+  from {
+    scale: 0 1;
+  }
+
+  to {
+    scale: 1 1;
+  }
+}
+
+@keyframes card-focus {
+  0%,
+  100% {
+    opacity: var(--site-card-dim);
+  }
+
+  50% {
+    opacity: 1;
+  }
+}
+
+@keyframes card-leave {
+  from {
+    opacity: 1;
+  }
+
+  to {
+    opacity: var(--site-card-dim);
+  }
+}
+
+@keyframes card-enter {
+  from {
+    opacity: var(--site-card-dim);
+  }
+
+  to {
+    opacity: 1;
+  }
+}

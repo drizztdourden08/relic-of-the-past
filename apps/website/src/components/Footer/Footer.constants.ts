@@ -1,8 +1,13 @@
 /* @layer website-site @kind constants */
 import type { SiteLink } from '@drizztdourden08/tessera/composites';
+import { LEGAL_PATHS } from '../../routes';
 import { REPO_HOME_URL } from '../../repo';
 
-const FOOTER_LINKS: SiteLink[] = [{ id: 'source', label: 'Source on GitHub', href: REPO_HOME_URL, external: true }];
+const FOOTER_LINKS: SiteLink[] = [
+  { id: 'source', label: 'Source on GitHub', href: REPO_HOME_URL, external: true },
+  { id: 'privacy', label: 'Privacy Policy', href: LEGAL_PATHS.privacy },
+  { id: 'terms', label: 'Terms of Service', href: LEGAL_PATHS.terms },
+];
 
 const FOOTER_TEXT = {
   copyright: (year: number): string => `Copyright ${year} Relic of the Past contributors. MIT License.`,

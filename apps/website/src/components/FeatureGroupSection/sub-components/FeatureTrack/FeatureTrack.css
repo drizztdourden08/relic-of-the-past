@@ -1,0 +1,14 @@
+/* @layer website-site @kind style */
+.feature-track-clip {
+  position: relative;
+}
+
+.feature-track {
+  display: flex;
+  gap: var(--site-card-gap);
+  overflow-x: auto;
+  margin: 0;
+  padding: var(--size-8) var(--site-gutter) var(--size-16);
+  list-style: none;
+  scroll-snap-type: x mandatory;
+}

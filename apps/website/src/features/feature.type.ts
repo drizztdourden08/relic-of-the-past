@@ -1,11 +1,12 @@
 /* @layer website-site @kind types */
+import type { Screenshot } from './screenshot.type';
+
 type Feature = {
   id: string;
   title: string;
   body: string;
-  media: string | null;
-  mediaRatio: string;
-  mediaAlt: string;
+  shot: Screenshot;
+  compare?: Screenshot;
 };
 
 export type { Feature };
