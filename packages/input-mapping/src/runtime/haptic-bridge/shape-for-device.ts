@@ -1,7 +1,6 @@
 /* @layer renderer-lib @kind logic */
 import type { VibrationSegment } from '../../vibration-segment.type';
-import { applyVibrationShaping } from '@drizztdourden08/brock-input';
-import { recallControllerSdlType } from '@drizztdourden08/brock-input/renderer';
+import { applyVibrationShaping, recallControllerSdlType } from '@drizztdourden08/brock-input';
 
 const shapeForDevice = (deviceKey: string, pattern: VibrationSegment[], minDurationExempt?: boolean): VibrationSegment[] => {
   const [vidHex, pidHex] = deviceKey.split(':');

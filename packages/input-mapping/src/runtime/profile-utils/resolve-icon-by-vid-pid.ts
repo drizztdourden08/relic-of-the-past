@@ -1,9 +1,8 @@
 /* @layer renderer-lib @kind logic */
 import type { FunctionMapping } from '@rotp/features';
 import type { ButtonIcon } from '@rotp/game-data';
-import { buildDeviceProfileFromSdlType, resolveStickDirectionIcon } from '@drizztdourden08/brock-input';
+import { buildDeviceProfileFromSdlType, recallControllerSdlType, resolveStickDirectionIcon } from '@drizztdourden08/brock-input';
 import type { SdlGamepadType } from '@rotp/game-data';
-import { recallControllerSdlType } from '@drizztdourden08/brock-input/renderer';
 import type { AxisBinding, AxisEntry } from './resolve-icon-by-vid-pid.type';
 
 const axisIcon = (ax: AxisEntry, binding: AxisBinding): ButtonIcon => {

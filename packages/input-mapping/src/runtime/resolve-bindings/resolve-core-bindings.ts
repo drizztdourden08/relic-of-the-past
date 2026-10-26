@@ -1,9 +1,9 @@
 /* @layer renderer-lib @kind logic */
 import { defaultCoreBindings, keyboardModernBindings } from '../../scheme';
+import { resolveDeviceFromEntry } from '@drizztdourden08/brock-input';
 import type { DeviceEntry } from '@drizztdourden08/brock-input';
 import type { CoreBindings } from '@rotp/game-data';
 import type { InputProfile } from '../../controls/devices/devices.type';
-import { resolveDeviceFromEntry } from '@drizztdourden08/brock-input/renderer';
 import { profileDevice } from './profile-device';
 
 const resolveCoreBindings = (profile: InputProfile | null, devices: readonly DeviceEntry[]): CoreBindings | null => {
