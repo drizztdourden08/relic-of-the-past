@@ -15,7 +15,7 @@ const FeatureGroupSection = ({ group, index }: FeatureGroupSectionProps) => (
     className={`feature-group feature-group--cards-${group.features.length}`}
   >
     <Box className="feature-group__stage">
-      <ParallaxBackdrop shot={group.backdrop} />
+      {group.backdrop && !group.backdrop.pending ? <ParallaxBackdrop shot={group.backdrop} /> : null}
       <GroupHeading group={group} index={index} />
       <Box className="feature-group__cards">
         <FeatureTrack features={group.features} />

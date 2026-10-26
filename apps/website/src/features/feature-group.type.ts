@@ -9,7 +9,7 @@ type FeatureGroup = {
   kicker: string;
   title: string;
   lead: string;
-  backdrop: Screenshot;
+  backdrop?: Screenshot;
   features: FeatureCards;
 };
 

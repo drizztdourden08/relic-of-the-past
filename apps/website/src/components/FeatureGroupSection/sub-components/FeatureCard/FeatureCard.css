@@ -14,6 +14,21 @@
   box-shadow: var(--site-shot-shadow);
 }
 
+.feature-card__panel {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  aspect-ratio: var(--site-card-ratio);
+  padding: var(--size-24);
+  border: var(--border-width-thin) solid var(--px-gold-dark);
+  border-radius: var(--radius-xl);
+  background: var(--c-surface);
+}
+
+.feature-card__panel .feature-card__title {
+  margin-top: 0;
+}
+
 .feature-card__shots--compare {
   grid-template-columns: 1fr 1fr;
 }

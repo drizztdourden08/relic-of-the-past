@@ -53,6 +53,7 @@ const SHOTS: Readonly<Record<ShotId, Screenshot>> = {
   },
   'sh-08': {
     id: 'sh-08',
+    pending: true,
     src: 'media/shots/sh-08.webp',
     width: 1280,
     height: 720,
@@ -67,6 +68,7 @@ const SHOTS: Readonly<Record<ShotId, Screenshot>> = {
   },
   'sh-10': {
     id: 'sh-10',
+    pending: true,
     src: 'media/shots/sh-10.webp',
     width: 1280,
     height: 720,
@@ -74,6 +76,7 @@ const SHOTS: Readonly<Record<ShotId, Screenshot>> = {
   },
   'sh-11': {
     id: 'sh-11',
+    pending: true,
     src: 'media/shots/sh-11.webp',
     width: 1280,
     height: 720,
@@ -95,6 +98,7 @@ const SHOTS: Readonly<Record<ShotId, Screenshot>> = {
   },
   'sh-14': {
     id: 'sh-14',
+    pending: true,
     src: 'media/shots/sh-15.webp',
     width: 1280,
     height: 720,
@@ -102,6 +106,7 @@ const SHOTS: Readonly<Record<ShotId, Screenshot>> = {
   },
   'sh-15': {
     id: 'sh-15',
+    pending: true,
     src: 'media/shots/sh-15.webp',
     width: 1280,
     height: 720,
@@ -109,6 +114,7 @@ const SHOTS: Readonly<Record<ShotId, Screenshot>> = {
   },
   'sh-16': {
     id: 'sh-16',
+    pending: true,
     src: 'media/shots/sh-16.webp',
     width: 1280,
     height: 720,

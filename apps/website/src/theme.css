@@ -79,6 +79,7 @@
   --site-card-ratio: 16 / 10;
   --site-card-dim: 0.4;
   --site-card-title-size: clamp(20px, 2.2vw, 26px);
+  --site-fade-w: calc(var(--size-32) * 2);
   --site-heading-w: clamp(16rem, 26vw, 24rem);
   --site-backdrop-inset: -15%;
   --site-backdrop-blur: 28px;

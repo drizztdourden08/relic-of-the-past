@@ -6,6 +6,7 @@ import { RELEASES_PAGE_URL } from '../../repo';
 import { DOWNLOAD_TEXT } from './DownloadButton.constants';
 import { DownloadCta } from './sub-components/DownloadCta';
 import { ReleaseDownload } from './sub-components/ReleaseDownload';
+import './DownloadButton.css';
 
 const DownloadButton = () => {
   const release = useLatestRelease();

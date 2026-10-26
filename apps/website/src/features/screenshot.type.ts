@@ -11,6 +11,7 @@ type Screenshot = {
   width: number;
   height: number;
   alt: string;
+  pending?: boolean;
 };
 
 export type { Screenshot, ShotId };

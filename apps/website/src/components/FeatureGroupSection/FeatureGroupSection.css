@@ -40,16 +40,18 @@
     }
 
     .feature-group .group-heading {
-      padding-inline: 0;
+      padding-inline: 0 var(--size-32);
     }
 
     .feature-track-clip {
+      margin-inline-start: calc(var(--site-fade-w) * -1);
       overflow: hidden;
+      mask-image: linear-gradient(to right, transparent, var(--c-bg) var(--site-fade-w));
     }
 
     .feature-track {
       overflow: visible;
-      padding-inline: 0;
+      padding-inline: var(--site-fade-w) 0;
       animation: linear both;
       animation-timeline: --group;
     }

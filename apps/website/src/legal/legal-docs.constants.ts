@@ -1,8 +1,8 @@
 /* @layer website-site @kind constants */
 import { fillContact } from './fill-contact';
 import type { LegalDoc, LegalDocId } from './legal-doc.type';
-import privacy from '../legal-text/privacy.md?raw';
-import terms from '../legal-text/terms.md?raw';
+import privacy from '../../content/privacy.md?raw';
+import terms from '../../content/terms.md?raw';
 
 const LEGAL_UPDATED = '2026-10-26';
 

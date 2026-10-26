@@ -7,7 +7,7 @@ const RANDOMIZER_GROUP: FeatureGroup = {
   kicker: 'A new quest',
   title: 'Randomizer and multiworld',
   lead: "Shuffle every item with Archipelago's own world logic, alone or in a room with friends.",
-  backdrop: SHOTS['sh-11'],
+  backdrop: SHOTS['sh-13'],
   features: [
     {
       id: 'item-randomizer',
