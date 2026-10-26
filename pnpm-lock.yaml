@@ -46,8 +46,8 @@ catalogs:
       specifier: ^0.106.0
       version: 0.106.0
     '@drizztdourden08/tessera':
-      specifier: ^0.72.0
-      version: 0.72.0
+      specifier: ^0.75.0
+      version: 0.75.0
     '@electron-toolkit/utils':
       specifier: ^4.0.0
       version: 4.0.0
@@ -273,13 +273,13 @@ importers:
         version: 0.106.0(@types/node@24.19.1)(eslint@10.4.1(jiti@2.7.0))(markdownlint-cli2@0.22.1)(stylelint@17.13.0(typescript@6.0.3))(typescript@6.0.3)
       '@drizztdourden08/brock-plugin-snes':
         specifier: 'catalog:'
-        version: 0.106.0(@drizztdourden08/tessera@0.72.0(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(typescript@6.0.3))(@types/node@24.19.1)(electron@42.4.0)(eslint@10.4.1(jiti@2.7.0))(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(stylelint@17.13.0(typescript@6.0.3))(typescript@6.0.3)(zustand@5.0.14(@types/react@19.2.17)(react@19.2.7)(use-sync-external-store@1.6.0(react@19.2.7)))
+        version: 0.106.0(@drizztdourden08/tessera@0.75.0(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(typescript@6.0.3))(@types/node@24.19.1)(electron@42.4.0)(eslint@10.4.1(jiti@2.7.0))(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(stylelint@17.13.0(typescript@6.0.3))(typescript@6.0.3)(zustand@5.0.14(@types/react@19.2.17)(react@19.2.7)(use-sync-external-store@1.6.0(react@19.2.7)))
       '@drizztdourden08/brock-thread':
         specifier: 'catalog:'
         version: 0.106.0(@types/node@24.19.1)(eslint@10.4.1(jiti@2.7.0))(stylelint@17.13.0(typescript@6.0.3))(typescript@6.0.3)
       '@drizztdourden08/tessera':
         specifier: 'catalog:'
-        version: 0.72.0(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(typescript@6.0.3)
+        version: 0.75.0(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(typescript@6.0.3)
       '@iconify/types':
         specifier: ^2.0.0
         version: 2.0.0
@@ -450,37 +450,37 @@ importers:
         version: 8.0.2(@capacitor/core@8.4.0)
       '@drizztdourden08/brock-catalog':
         specifier: ^0.106.0
-        version: 0.106.0(@drizztdourden08/tessera@0.72.0(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(typescript@6.0.3))(electron@42.4.0)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(zustand@5.0.14(@types/react@19.2.17)(react@19.2.7)(use-sync-external-store@1.6.0(react@19.2.7)))
+        version: 0.106.0(@drizztdourden08/tessera@0.75.0(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(typescript@6.0.3))(electron@42.4.0)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(zustand@5.0.14(@types/react@19.2.17)(react@19.2.7)(use-sync-external-store@1.6.0(react@19.2.7)))
       '@drizztdourden08/brock-core':
         specifier: ^0.106.0
         version: 0.106.0
       '@drizztdourden08/brock-display':
         specifier: ^0.106.0
-        version: 0.106.0(@drizztdourden08/tessera@0.72.0(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(typescript@6.0.3))(electron@42.4.0)(koffi@3.1.2)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(zustand@5.0.14(@types/react@19.2.17)(react@19.2.7)(use-sync-external-store@1.6.0(react@19.2.7)))
+        version: 0.106.0(@drizztdourden08/tessera@0.75.0(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(typescript@6.0.3))(electron@42.4.0)(koffi@3.1.2)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(zustand@5.0.14(@types/react@19.2.17)(react@19.2.7)(use-sync-external-store@1.6.0(react@19.2.7)))
       '@drizztdourden08/brock-electron':
         specifier: ^0.106.0
         version: 0.106.0(electron@42.4.0)
       '@drizztdourden08/brock-input':
         specifier: ^0.106.0
-        version: 0.106.0(@drizztdourden08/tessera@0.72.0(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(typescript@6.0.3))(electron@42.4.0)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(zustand@5.0.14(@types/react@19.2.17)(react@19.2.7)(use-sync-external-store@1.6.0(react@19.2.7)))
+        version: 0.106.0(@drizztdourden08/tessera@0.75.0(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(typescript@6.0.3))(electron@42.4.0)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(zustand@5.0.14(@types/react@19.2.17)(react@19.2.7)(use-sync-external-store@1.6.0(react@19.2.7)))
       '@drizztdourden08/brock-port-kit':
         specifier: ^0.106.0
-        version: 0.106.0(@drizztdourden08/tessera@0.72.0(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(typescript@6.0.3))(electron@42.4.0)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(zustand@5.0.14(@types/react@19.2.17)(react@19.2.7)(use-sync-external-store@1.6.0(react@19.2.7)))
+        version: 0.106.0(@drizztdourden08/tessera@0.75.0(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(typescript@6.0.3))(electron@42.4.0)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(zustand@5.0.14(@types/react@19.2.17)(react@19.2.7)(use-sync-external-store@1.6.0(react@19.2.7)))
       '@drizztdourden08/brock-react':
         specifier: ^0.106.0
-        version: 0.106.0(@drizztdourden08/tessera@0.72.0(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(typescript@6.0.3))(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(zustand@5.0.14(@types/react@19.2.17)(react@19.2.7)(use-sync-external-store@1.6.0(react@19.2.7)))
+        version: 0.106.0(@drizztdourden08/tessera@0.75.0(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(typescript@6.0.3))(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(zustand@5.0.14(@types/react@19.2.17)(react@19.2.7)(use-sync-external-store@1.6.0(react@19.2.7)))
       '@drizztdourden08/brock-secrets':
         specifier: ^0.106.0
-        version: 0.106.0(@drizztdourden08/tessera@0.72.0(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(typescript@6.0.3))(electron@42.4.0)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(zustand@5.0.14(@types/react@19.2.17)(react@19.2.7)(use-sync-external-store@1.6.0(react@19.2.7)))
+        version: 0.106.0(@drizztdourden08/tessera@0.75.0(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(typescript@6.0.3))(electron@42.4.0)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(zustand@5.0.14(@types/react@19.2.17)(react@19.2.7)(use-sync-external-store@1.6.0(react@19.2.7)))
       '@drizztdourden08/brock-tools':
         specifier: ^0.106.0
-        version: 0.106.0(@drizztdourden08/tessera@0.72.0(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(typescript@6.0.3))(electron@42.4.0)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(zustand@5.0.14(@types/react@19.2.17)(react@19.2.7)(use-sync-external-store@1.6.0(react@19.2.7)))
+        version: 0.106.0(@drizztdourden08/tessera@0.75.0(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(typescript@6.0.3))(electron@42.4.0)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(zustand@5.0.14(@types/react@19.2.17)(react@19.2.7)(use-sync-external-store@1.6.0(react@19.2.7)))
       '@drizztdourden08/brock-updater':
         specifier: ^0.106.0
-        version: 0.106.0(@drizztdourden08/tessera@0.72.0(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(typescript@6.0.3))(electron@42.4.0)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(zustand@5.0.14(@types/react@19.2.17)(react@19.2.7)(use-sync-external-store@1.6.0(react@19.2.7)))
+        version: 0.106.0(@drizztdourden08/tessera@0.75.0(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(typescript@6.0.3))(electron@42.4.0)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(zustand@5.0.14(@types/react@19.2.17)(react@19.2.7)(use-sync-external-store@1.6.0(react@19.2.7)))
       '@drizztdourden08/tessera':
         specifier: 'catalog:'
-        version: 0.72.0(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(typescript@6.0.3)
+        version: 0.75.0(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(typescript@6.0.3)
       '@electron-toolkit/utils':
         specifier: 'catalog:'
         version: 4.0.0(electron@42.4.0)
@@ -710,7 +710,7 @@ importers:
     dependencies:
       '@drizztdourden08/tessera':
         specifier: 'catalog:'
-        version: 0.72.0(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(typescript@6.0.3)
+        version: 0.75.0(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(typescript@6.0.3)
       '@iconify-icons/lucide':
         specifier: ^1.2.135
         version: 1.2.136
@@ -796,7 +796,7 @@ importers:
     dependencies:
       '@drizztdourden08/tessera':
         specifier: 'catalog:'
-        version: 0.72.0(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(typescript@6.0.3)
+        version: 0.75.0(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(typescript@6.0.3)
       '@iconify-icons/lucide':
         specifier: ^1.2.135
         version: 1.2.136
@@ -888,7 +888,7 @@ importers:
     dependencies:
       '@drizztdourden08/tessera':
         specifier: 'catalog:'
-        version: 0.72.0(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(typescript@6.0.3)
+        version: 0.75.0(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(typescript@6.0.3)
       react:
         specifier: 'catalog:'
         version: 19.2.7
@@ -931,7 +931,7 @@ importers:
     dependencies:
       '@drizztdourden08/tessera':
         specifier: 'catalog:'
-        version: 0.72.0(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(typescript@6.0.3)
+        version: 0.75.0(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(typescript@6.0.3)
       '@iconify-icons/logos':
         specifier: ^1.2.37
         version: 1.2.37
@@ -985,7 +985,7 @@ importers:
         version: 0.106.0
       '@drizztdourden08/brock-display':
         specifier: ^0.106.0
-        version: 0.106.0(@drizztdourden08/tessera@0.72.0(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(typescript@6.0.3))(electron@42.4.0)(koffi@3.1.2)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(zustand@5.0.14(@types/react@19.2.17)(react@19.2.7)(use-sync-external-store@1.6.0(react@19.2.7)))
+        version: 0.106.0(@drizztdourden08/tessera@0.75.0(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(typescript@6.0.3))(electron@42.4.0)(koffi@3.1.2)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(zustand@5.0.14(@types/react@19.2.17)(react@19.2.7)(use-sync-external-store@1.6.0(react@19.2.7)))
       '@rotp/asset-extraction':
         specifier: workspace:*
         version: link:../asset-extraction
@@ -1082,7 +1082,7 @@ importers:
         version: 0.106.0
       '@drizztdourden08/brock-input':
         specifier: ^0.106.0
-        version: 0.106.0(@drizztdourden08/tessera@0.72.0(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(typescript@6.0.3))(electron@42.4.0)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(zustand@5.0.14(@types/react@19.2.17)(react@19.2.7)(use-sync-external-store@1.6.0(react@19.2.7)))
+        version: 0.106.0(@drizztdourden08/tessera@0.75.0(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(typescript@6.0.3))(electron@42.4.0)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(zustand@5.0.14(@types/react@19.2.17)(react@19.2.7)(use-sync-external-store@1.6.0(react@19.2.7)))
       '@rotp/features':
         specifier: workspace:*
         version: link:../features
@@ -1612,6 +1612,11 @@ packages:
       electron-builder: '>=26'
       electron-vite: '>=5'
       playwright-core: '>=1.40'
+    peerDependenciesMeta:
+      electron-builder:
+        optional: true
+      playwright-core:
+        optional: true
 
   '@drizztdourden08/brock-catalog@0.106.0':
     resolution: {integrity: sha512-JZVxDDdW01acRdvc3OjlGzHt61k960a7vKmQOtjtU6iI0pAFTlcuTrCiHnhKqFqD6SJt/iw6Ekmnv5uMi7fVhw==, tarball: https://npm.pkg.github.com/download/@drizztdourden08/brock-catalog/0.106.0/941e788e5700bf2a441ff3fc9d3d20e93b4dd066}
@@ -1732,8 +1737,8 @@ packages:
       typescript:
         optional: true
 
-  '@drizztdourden08/tessera@0.72.0':
-    resolution: {integrity: sha512-NlLgfWkXewVuORaBmVEd/Hz1CUfJyQurWhGNYx43tkE6XEZSHKpUxp0K+9uQmd2XsFsVNIVKIVyNK5HXDwNSQA==, tarball: https://npm.pkg.github.com/download/@drizztdourden08/tessera/0.72.0/2efc9a5ea99830d056b0811f53abcef1be869c81}
+  '@drizztdourden08/tessera@0.75.0':
+    resolution: {integrity: sha512-p+OV3meIB7S/GbFbr3CMFEQo6nQRUlD7YHfP6Ekv6CkLp8awwOeCtvm+H35YgG+r8+OCQGP2ZLoNH82yBQQbpw==, tarball: https://npm.pkg.github.com/download/@drizztdourden08/tessera/0.75.0/f402b3d331b0da9df92cfc1f8e7f4251a0fd47b9}
     engines: {node: '>=24'}
     hasBin: true
     peerDependencies:
@@ -8128,11 +8133,12 @@ snapshots:
       '@resvg/resvg-js': 2.6.2
       '@vitejs/plugin-react': 5.2.0(vite@7.3.5(@types/node@24.19.1)(jiti@2.7.0)(tsx@4.23.12)(yaml@2.9.1))
       electron: 42.4.0
-      electron-builder: 26.15.2(electron-builder-squirrel-windows@26.15.2(dmg-builder@26.15.2))
       electron-vite: 5.0.0(vite@7.3.5(@types/node@24.19.1)(jiti@2.7.0)(tsx@4.23.12)(yaml@2.9.1))
-      playwright-core: 1.60.0
       pngjs: 7.0.0
       rcedit: 5.0.2
+    optionalDependencies:
+      electron-builder: 26.15.2(electron-builder-squirrel-windows@26.15.2(dmg-builder@26.15.2))
+      playwright-core: 1.60.0
     transitivePeerDependencies:
       - '@types/node'
       - eslint
@@ -8141,12 +8147,12 @@ snapshots:
       - supports-color
       - typescript
 
-  '@drizztdourden08/brock-catalog@0.106.0(@drizztdourden08/tessera@0.72.0(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(typescript@6.0.3))(electron@42.4.0)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(zustand@5.0.14(@types/react@19.2.17)(react@19.2.7)(use-sync-external-store@1.6.0(react@19.2.7)))':
+  '@drizztdourden08/brock-catalog@0.106.0(@drizztdourden08/tessera@0.75.0(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(typescript@6.0.3))(electron@42.4.0)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(zustand@5.0.14(@types/react@19.2.17)(react@19.2.7)(use-sync-external-store@1.6.0(react@19.2.7)))':
     dependencies:
       '@drizztdourden08/brock-core': 0.106.0
       '@drizztdourden08/brock-electron': 0.106.0(electron@42.4.0)
-      '@drizztdourden08/brock-react': 0.106.0(@drizztdourden08/tessera@0.72.0(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(typescript@6.0.3))(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(zustand@5.0.14(@types/react@19.2.17)(react@19.2.7)(use-sync-external-store@1.6.0(react@19.2.7)))
-      '@drizztdourden08/tessera': 0.72.0(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(typescript@6.0.3)
+      '@drizztdourden08/brock-react': 0.106.0(@drizztdourden08/tessera@0.75.0(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(typescript@6.0.3))(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(zustand@5.0.14(@types/react@19.2.17)(react@19.2.7)(use-sync-external-store@1.6.0(react@19.2.7)))
+      '@drizztdourden08/tessera': 0.75.0(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(typescript@6.0.3)
       electron: 42.4.0
       react: 19.2.7
       zustand: 5.0.14(@types/react@19.2.17)(react@19.2.7)(use-sync-external-store@1.6.0(react@19.2.7))
@@ -8155,12 +8161,12 @@ snapshots:
 
   '@drizztdourden08/brock-core@0.106.0': {}
 
-  '@drizztdourden08/brock-display@0.106.0(@drizztdourden08/tessera@0.72.0(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(typescript@6.0.3))(electron@42.4.0)(koffi@3.1.2)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(zustand@5.0.14(@types/react@19.2.17)(react@19.2.7)(use-sync-external-store@1.6.0(react@19.2.7)))':
+  '@drizztdourden08/brock-display@0.106.0(@drizztdourden08/tessera@0.75.0(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(typescript@6.0.3))(electron@42.4.0)(koffi@3.1.2)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(zustand@5.0.14(@types/react@19.2.17)(react@19.2.7)(use-sync-external-store@1.6.0(react@19.2.7)))':
     dependencies:
       '@drizztdourden08/brock-core': 0.106.0
       '@drizztdourden08/brock-electron': 0.106.0(electron@42.4.0)
-      '@drizztdourden08/brock-react': 0.106.0(@drizztdourden08/tessera@0.72.0(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(typescript@6.0.3))(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(zustand@5.0.14(@types/react@19.2.17)(react@19.2.7)(use-sync-external-store@1.6.0(react@19.2.7)))
-      '@drizztdourden08/tessera': 0.72.0(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(typescript@6.0.3)
+      '@drizztdourden08/brock-react': 0.106.0(@drizztdourden08/tessera@0.75.0(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(typescript@6.0.3))(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(zustand@5.0.14(@types/react@19.2.17)(react@19.2.7)(use-sync-external-store@1.6.0(react@19.2.7)))
+      '@drizztdourden08/tessera': 0.75.0(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(typescript@6.0.3)
       electron: 42.4.0
       react: 19.2.7
       zustand: 5.0.14(@types/react@19.2.17)(react@19.2.7)(use-sync-external-store@1.6.0(react@19.2.7))
@@ -8175,12 +8181,12 @@ snapshots:
       '@electron-toolkit/utils': 4.0.0(electron@42.4.0)
       electron: 42.4.0
 
-  '@drizztdourden08/brock-input@0.106.0(@drizztdourden08/tessera@0.72.0(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(typescript@6.0.3))(electron@42.4.0)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(zustand@5.0.14(@types/react@19.2.17)(react@19.2.7)(use-sync-external-store@1.6.0(react@19.2.7)))':
+  '@drizztdourden08/brock-input@0.106.0(@drizztdourden08/tessera@0.75.0(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(typescript@6.0.3))(electron@42.4.0)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(zustand@5.0.14(@types/react@19.2.17)(react@19.2.7)(use-sync-external-store@1.6.0(react@19.2.7)))':
     dependencies:
       '@drizztdourden08/brock-core': 0.106.0
       '@drizztdourden08/brock-electron': 0.106.0(electron@42.4.0)
-      '@drizztdourden08/brock-react': 0.106.0(@drizztdourden08/tessera@0.72.0(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(typescript@6.0.3))(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(zustand@5.0.14(@types/react@19.2.17)(react@19.2.7)(use-sync-external-store@1.6.0(react@19.2.7)))
-      '@drizztdourden08/tessera': 0.72.0(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(typescript@6.0.3)
+      '@drizztdourden08/brock-react': 0.106.0(@drizztdourden08/tessera@0.75.0(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(typescript@6.0.3))(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(zustand@5.0.14(@types/react@19.2.17)(react@19.2.7)(use-sync-external-store@1.6.0(react@19.2.7)))
+      '@drizztdourden08/tessera': 0.75.0(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(typescript@6.0.3)
       '@iconify-icons/lucide': 1.2.136
       '@iconify/react': 6.0.2(react@19.2.7)
       '@iconify/types': 2.0.0
@@ -8202,9 +8208,9 @@ snapshots:
       - supports-color
       - typescript
 
-  '@drizztdourden08/brock-plugin-snes@0.106.0(@drizztdourden08/tessera@0.72.0(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(typescript@6.0.3))(@types/node@24.19.1)(electron@42.4.0)(eslint@10.4.1(jiti@2.7.0))(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(stylelint@17.13.0(typescript@6.0.3))(typescript@6.0.3)(zustand@5.0.14(@types/react@19.2.17)(react@19.2.7)(use-sync-external-store@1.6.0(react@19.2.7)))':
+  '@drizztdourden08/brock-plugin-snes@0.106.0(@drizztdourden08/tessera@0.75.0(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(typescript@6.0.3))(@types/node@24.19.1)(electron@42.4.0)(eslint@10.4.1(jiti@2.7.0))(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(stylelint@17.13.0(typescript@6.0.3))(typescript@6.0.3)(zustand@5.0.14(@types/react@19.2.17)(react@19.2.7)(use-sync-external-store@1.6.0(react@19.2.7)))':
     dependencies:
-      '@drizztdourden08/brock-port-kit': 0.106.0(@drizztdourden08/tessera@0.72.0(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(typescript@6.0.3))(electron@42.4.0)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(zustand@5.0.14(@types/react@19.2.17)(react@19.2.7)(use-sync-external-store@1.6.0(react@19.2.7)))
+      '@drizztdourden08/brock-port-kit': 0.106.0(@drizztdourden08/tessera@0.75.0(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(typescript@6.0.3))(electron@42.4.0)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(zustand@5.0.14(@types/react@19.2.17)(react@19.2.7)(use-sync-external-store@1.6.0(react@19.2.7)))
       '@drizztdourden08/brock-thread': 0.106.0(@types/node@24.19.1)(eslint@10.4.1(jiti@2.7.0))(stylelint@17.13.0(typescript@6.0.3))(typescript@6.0.3)
     transitivePeerDependencies:
       - '@drizztdourden08/tessera'
@@ -8218,31 +8224,31 @@ snapshots:
       - typescript
       - zustand
 
-  '@drizztdourden08/brock-port-kit@0.106.0(@drizztdourden08/tessera@0.72.0(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(typescript@6.0.3))(electron@42.4.0)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(zustand@5.0.14(@types/react@19.2.17)(react@19.2.7)(use-sync-external-store@1.6.0(react@19.2.7)))':
+  '@drizztdourden08/brock-port-kit@0.106.0(@drizztdourden08/tessera@0.75.0(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(typescript@6.0.3))(electron@42.4.0)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(zustand@5.0.14(@types/react@19.2.17)(react@19.2.7)(use-sync-external-store@1.6.0(react@19.2.7)))':
     dependencies:
       '@drizztdourden08/brock-core': 0.106.0
       '@drizztdourden08/brock-electron': 0.106.0(electron@42.4.0)
-      '@drizztdourden08/brock-react': 0.106.0(@drizztdourden08/tessera@0.72.0(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(typescript@6.0.3))(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(zustand@5.0.14(@types/react@19.2.17)(react@19.2.7)(use-sync-external-store@1.6.0(react@19.2.7)))
-      '@drizztdourden08/tessera': 0.72.0(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(typescript@6.0.3)
+      '@drizztdourden08/brock-react': 0.106.0(@drizztdourden08/tessera@0.75.0(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(typescript@6.0.3))(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(zustand@5.0.14(@types/react@19.2.17)(react@19.2.7)(use-sync-external-store@1.6.0(react@19.2.7)))
+      '@drizztdourden08/tessera': 0.75.0(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(typescript@6.0.3)
       electron: 42.4.0
       react: 19.2.7
     transitivePeerDependencies:
       - react-dom
       - zustand
 
-  '@drizztdourden08/brock-react@0.106.0(@drizztdourden08/tessera@0.72.0(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(typescript@6.0.3))(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(zustand@5.0.14(@types/react@19.2.17)(react@19.2.7)(use-sync-external-store@1.6.0(react@19.2.7)))':
+  '@drizztdourden08/brock-react@0.106.0(@drizztdourden08/tessera@0.75.0(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(typescript@6.0.3))(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(zustand@5.0.14(@types/react@19.2.17)(react@19.2.7)(use-sync-external-store@1.6.0(react@19.2.7)))':
     dependencies:
       '@drizztdourden08/brock-core': 0.106.0
-      '@drizztdourden08/tessera': 0.72.0(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(typescript@6.0.3)
+      '@drizztdourden08/tessera': 0.75.0(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(typescript@6.0.3)
       react: 19.2.7
       react-dom: 19.2.7(react@19.2.7)
       zustand: 5.0.14(@types/react@19.2.17)(react@19.2.7)(use-sync-external-store@1.6.0(react@19.2.7))
 
-  '@drizztdourden08/brock-secrets@0.106.0(@drizztdourden08/tessera@0.72.0(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(typescript@6.0.3))(electron@42.4.0)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(zustand@5.0.14(@types/react@19.2.17)(react@19.2.7)(use-sync-external-store@1.6.0(react@19.2.7)))':
+  '@drizztdourden08/brock-secrets@0.106.0(@drizztdourden08/tessera@0.75.0(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(typescript@6.0.3))(electron@42.4.0)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(zustand@5.0.14(@types/react@19.2.17)(react@19.2.7)(use-sync-external-store@1.6.0(react@19.2.7)))':
     dependencies:
       '@drizztdourden08/brock-core': 0.106.0
       '@drizztdourden08/brock-electron': 0.106.0(electron@42.4.0)
-      '@drizztdourden08/brock-react': 0.106.0(@drizztdourden08/tessera@0.72.0(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(typescript@6.0.3))(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(zustand@5.0.14(@types/react@19.2.17)(react@19.2.7)(use-sync-external-store@1.6.0(react@19.2.7)))
+      '@drizztdourden08/brock-react': 0.106.0(@drizztdourden08/tessera@0.75.0(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(typescript@6.0.3))(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(zustand@5.0.14(@types/react@19.2.17)(react@19.2.7)(use-sync-external-store@1.6.0(react@19.2.7)))
       electron: 42.4.0
       react: 19.2.7
       zustand: 5.0.14(@types/react@19.2.17)(react@19.2.7)(use-sync-external-store@1.6.0(react@19.2.7))
@@ -8270,11 +8276,11 @@ snapshots:
       - supports-color
       - typescript
 
-  '@drizztdourden08/brock-tools@0.106.0(@drizztdourden08/tessera@0.72.0(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(typescript@6.0.3))(electron@42.4.0)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(zustand@5.0.14(@types/react@19.2.17)(react@19.2.7)(use-sync-external-store@1.6.0(react@19.2.7)))':
+  '@drizztdourden08/brock-tools@0.106.0(@drizztdourden08/tessera@0.75.0(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(typescript@6.0.3))(electron@42.4.0)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(zustand@5.0.14(@types/react@19.2.17)(react@19.2.7)(use-sync-external-store@1.6.0(react@19.2.7)))':
     dependencies:
       '@drizztdourden08/brock-core': 0.106.0
       '@drizztdourden08/brock-electron': 0.106.0(electron@42.4.0)
-      '@drizztdourden08/brock-react': 0.106.0(@drizztdourden08/tessera@0.72.0(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(typescript@6.0.3))(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(zustand@5.0.14(@types/react@19.2.17)(react@19.2.7)(use-sync-external-store@1.6.0(react@19.2.7)))
+      '@drizztdourden08/brock-react': 0.106.0(@drizztdourden08/tessera@0.75.0(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(typescript@6.0.3))(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(zustand@5.0.14(@types/react@19.2.17)(react@19.2.7)(use-sync-external-store@1.6.0(react@19.2.7)))
       electron: 42.4.0
       react: 19.2.7
     transitivePeerDependencies:
@@ -8282,12 +8288,12 @@ snapshots:
       - react-dom
       - zustand
 
-  '@drizztdourden08/brock-updater@0.106.0(@drizztdourden08/tessera@0.72.0(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(typescript@6.0.3))(electron@42.4.0)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(zustand@5.0.14(@types/react@19.2.17)(react@19.2.7)(use-sync-external-store@1.6.0(react@19.2.7)))':
+  '@drizztdourden08/brock-updater@0.106.0(@drizztdourden08/tessera@0.75.0(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(typescript@6.0.3))(electron@42.4.0)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(zustand@5.0.14(@types/react@19.2.17)(react@19.2.7)(use-sync-external-store@1.6.0(react@19.2.7)))':
     dependencies:
       '@drizztdourden08/brock-core': 0.106.0
       '@drizztdourden08/brock-electron': 0.106.0(electron@42.4.0)
-      '@drizztdourden08/brock-react': 0.106.0(@drizztdourden08/tessera@0.72.0(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(typescript@6.0.3))(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(zustand@5.0.14(@types/react@19.2.17)(react@19.2.7)(use-sync-external-store@1.6.0(react@19.2.7)))
-      '@drizztdourden08/tessera': 0.72.0(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(typescript@6.0.3)
+      '@drizztdourden08/brock-react': 0.106.0(@drizztdourden08/tessera@0.75.0(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(typescript@6.0.3))(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(zustand@5.0.14(@types/react@19.2.17)(react@19.2.7)(use-sync-external-store@1.6.0(react@19.2.7)))
+      '@drizztdourden08/tessera': 0.75.0(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(typescript@6.0.3)
       electron: 42.4.0
       react: 19.2.7
       velopack: 1.2.161
@@ -8329,7 +8335,7 @@ snapshots:
       - '@types/node'
       - supports-color
 
-  '@drizztdourden08/tessera@0.72.0(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(typescript@6.0.3)':
+  '@drizztdourden08/tessera@0.75.0(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(typescript@6.0.3)':
     dependencies:
       '@iconify-icons/lucide': 1.2.136
       '@iconify-icons/ph': 2.0.0
