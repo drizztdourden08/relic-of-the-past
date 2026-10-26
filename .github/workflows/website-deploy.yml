@@ -1,0 +1,59 @@
+name: Website deploy
+run-name: Website deploy ${{ github.ref_name }}
+
+# Builds apps/website and publishes its dist folder to the gh-pages branch of this
+# repository, which GitHub Pages serves at relic-of-the-past.com. Runs on a push to
+# master that touches the site, or on demand from the GitHub UI (Run workflow).
+# The branch is replaced on every run (force_orphan), so it holds the latest build only.
+on:
+  push:
+    branches: [master]
+    paths:
+      - 'apps/website/**'
+      - '.github/workflows/website-deploy.yml'
+  workflow_dispatch:
+
+concurrency:
+  group: website-deploy
+  cancel-in-progress: true
+
+permissions:
+  contents: write
+  packages: read
+
+env:
+  APP_DIR: apps/website
+
+jobs:
+  deploy:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v7
+
+      # pnpm/action-setup takes the version from packageManager in the root package.json.
+      # Naming a version here as well fails the step.
+      - uses: pnpm/action-setup@v6
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 24
+          cache: pnpm
+          registry-url: https://npm.pkg.github.com
+          scope: '@drizztdourden08'
+
+      - name: Install
+        run: pnpm install --frozen-lockfile
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.PACKAGES_TOKEN || secrets.GITHUB_TOKEN }}
+
+      - name: Build the site
+        run: pnpm --dir "$APP_DIR" exec brock site build
+
+      - name: Publish to gh-pages
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_branch: gh-pages
+          publish_dir: ${{ env.APP_DIR }}/dist
+          cname: relic-of-the-past.com
+          force_orphan: true
+          commit_message: 'deploy: website ${{ github.sha }}'

@@ -1,0 +1,80 @@
+/* @layer website-site @kind style */
+:root {
+  --site-font-heading: 'Cinzel', 'Palatino Linotype', 'Book Antiqua', serif;
+  --site-body-size: 17px;
+  --site-body-leading: 1.6;
+  --site-text-sm: 13px;
+  --site-text-md: 15px;
+  --site-content-w: 1080px;
+  --site-legal-w: 640px;
+  --site-blurb-w: 560px;
+  --site-gutter: var(--size-24);
+  --site-section-pad: clamp(48px, 8vw, 112px);
+  --site-boundary-lift: calc(var(--size-24) * -1);
+  --site-boundary-z: 2;
+  --site-gold-ink: #1b1405;
+  --site-green: #2ea84a;
+  --site-green-bright: #45cc5f;
+  --site-green-dim: #0f2a16;
+  --site-green-soft: rgb(46 168 74 / 0.16);
+  --px-gold: #b8860f;
+  --px-gold-bright: #e0ac2e;
+  --px-gold-dark: #4a3208;
+  --px-gold-line: #96700c;
+  --px-gold-dither: rgb(224 172 46 / 0.4);
+  --px-ramp-0: #f8e8a8;
+  --px-ramp-1: #e4c65a;
+  --px-ramp-2: #c8a84e;
+  --px-ramp-3: #b8860f;
+  --px-ramp-4: #8a5e0a;
+  --site-rule-h: 3px;
+  --site-gem-glow: 0 0 4px rgb(224 172 46 / 0.45);
+  --site-gem-glow-low: 0 0 3px rgb(224 172 46 / 0.3);
+  --site-gem-glow-high: 0 0 9px rgb(228 198 90 / 0.8);
+  --site-cta-pad-x: 36px;
+  --site-cta-shadow: 0 0 32px var(--c-primary-soft), 0 4px 18px rgb(0 0 0 / 0.5);
+  --site-cta-shadow-hover: 0 0 48px var(--c-primary-soft), 0 8px 24px rgb(0 0 0 / 0.55);
+  --site-text-shadow-soft: 0 1px 8px rgb(0 0 0 / 0.9);
+  --site-text-shadow-strong: 0 2px 12px rgb(0 0 0 / 0.8);
+  --site-hero-min-h: clamp(640px, 96svh, 1040px);
+  --site-hero-bg-w: 130%;
+  --site-hero-content-w: 760px;
+  --site-hero-pad-y: 96px;
+  --site-hero-tagline-size: clamp(17px, 2.2vw, 21px);
+  --site-hero-scrim:
+    radial-gradient(ellipse 60% 55% at 50% 54%, rgb(0 0 0 / 0.62), transparent 75%),
+    linear-gradient(to bottom, rgb(0 0 0 / 0.35), transparent 30%, rgb(0 0 0 / 0.9) 96%);
+  --site-wordmark-glow: 0 6px 32px rgb(200 168 78 / 0.35);
+  --ray-halo: #ffecaa;
+  --ray-core: #ffeeb2;
+  --ray-edge: #ecce76;
+  --site-ray-blur: 7px;
+  --firefly-gold: #ffd86b;
+  --firefly-cream: #fff4d6;
+  --firefly-amber: #e4c65a;
+  --firefly-ember: #c98018;
+  --site-firefly-x1: 22px;
+  --site-firefly-y1: -28px;
+  --site-firefly-x2: -16px;
+  --site-firefly-y2: -48px;
+  --site-firefly-glow:
+    1em 0 0 color-mix(in srgb, currentcolor 55%, transparent),
+    -1em 0 0 color-mix(in srgb, currentcolor 55%, transparent),
+    0 1em 0 color-mix(in srgb, currentcolor 55%, transparent),
+    0 -1em 0 color-mix(in srgb, currentcolor 55%, transparent),
+    1em 1em 0 color-mix(in srgb, currentcolor 28%, transparent),
+    -1em 1em 0 color-mix(in srgb, currentcolor 28%, transparent),
+    1em -1em 0 color-mix(in srgb, currentcolor 28%, transparent),
+    -1em -1em 0 color-mix(in srgb, currentcolor 28%, transparent),
+    2em 0 0 color-mix(in srgb, currentcolor 16%, transparent),
+    -2em 0 0 color-mix(in srgb, currentcolor 16%, transparent),
+    0 2em 0 color-mix(in srgb, currentcolor 16%, transparent),
+    0 -2em 0 color-mix(in srgb, currentcolor 16%, transparent);
+  --site-feature-gap: clamp(32px, 5vw, 72px);
+  --site-feature-title-size: clamp(26px, 3.4vw, 36px);
+  --site-community-title-size: clamp(28px, 3.6vw, 40px);
+  --site-shot-shadow:
+    0 0 0 1px rgb(0 0 0 / 0.6),
+    0 12px 40px rgb(0 0 0 / 0.5),
+    0 0 56px var(--c-primary-soft);
+}

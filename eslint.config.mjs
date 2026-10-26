@@ -52,6 +52,12 @@ const rotpExtension = {
         why: 'The editor rails take the width the user drags them to, and the stage keeps the aspect ratio of the live game view.',
       }, {
         files: [
+          'apps/website/src/components/Hero/sub-components/Fireflies/Fireflies.tsx',
+          'apps/website/src/components/CommunitySection/sub-components/CommunityTexture/CommunityTexture.tsx',
+        ],
+        why: 'Each firefly and each background triforce takes its position, size and animation timing from a fixed table or a seeded scatter, a value per element that no shared class can carry.',
+      }, {
+        files: [
           'apps/store/src/components/{CropDialog,FeaturedHero,ItemPicture}/**/*.{ts,tsx}',
           'apps/store/src/components/RatingPanel/sub-components/RatingHistogram.tsx',
           'apps/store/src/pages/ReviewItem/sub-components/ListingDetails.tsx',

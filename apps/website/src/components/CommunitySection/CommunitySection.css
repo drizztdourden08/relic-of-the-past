@@ -1,0 +1,55 @@
+/* @layer website-site @kind style */
+.landing-community {
+  position: relative;
+  padding: var(--site-section-pad) 0;
+  overflow: hidden;
+}
+
+.landing-community__inner {
+  position: relative;
+  max-width: var(--site-content-w);
+  margin: 0 auto;
+  padding: 0 var(--site-gutter);
+  text-align: center;
+}
+
+.landing-community .landing-community__title {
+  color: var(--site-green-bright);
+  font-family: var(--site-font-heading);
+  font-size: var(--site-community-title-size);
+  font-weight: var(--weight-semi);
+  letter-spacing: var(--tracking-normal);
+  text-transform: none;
+}
+
+.landing-community__blurb {
+  max-width: var(--site-blurb-w);
+  margin-top: var(--size-16);
+  color: var(--c-text-dim);
+  font-size: var(--site-body-size);
+}
+
+.landing-community__github {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--size-12);
+  margin-top: var(--size-48);
+  padding: var(--size-14) var(--size-32);
+  border: var(--border-width-thin) solid var(--site-green);
+  border-radius: var(--radius-xl);
+  background: var(--site-green-dim);
+  box-shadow: 0 0 var(--size-32) var(--site-green-soft);
+  color: var(--site-green-bright);
+  font-size: var(--site-body-size);
+  font-weight: var(--weight-semi);
+  transition:
+    transform var(--duration-normal) var(--ease-standard),
+    filter var(--duration-normal) var(--ease-standard);
+}
+
+.landing-community__github:hover {
+  color: var(--site-green-bright);
+  filter: brightness(1.2);
+  text-decoration: none;
+  transform: translateY(calc(var(--size-2) * -1));
+}

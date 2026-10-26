@@ -1,0 +1,27 @@
+{
+  "name": "@rotp/website",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "brock site dev",
+    "build": "brock site build",
+    "preview": "brock site preview",
+    "typecheck": "tsc --noEmit",
+    "lint": "pnpm run typecheck && stylelint \"src/**/*.css\""
+  },
+  "dependencies": {
+    "@drizztdourden08/tessera": "catalog:",
+    "react": "catalog:",
+    "react-dom": "catalog:"
+  },
+  "devDependencies": {
+    "@drizztdourden08/brock-build": "catalog:",
+    "@types/node": "catalog:",
+    "@types/react": "catalog:",
+    "@types/react-dom": "catalog:",
+    "@vitejs/plugin-react": "catalog:",
+    "typescript": "catalog:",
+    "vite": "catalog:"
+  }
+}

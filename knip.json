@@ -24,6 +24,15 @@
       "project": [
         "src/**/*.{ts,tsx}"
       ]
+    },
+    "apps/website": {
+      "entry": [
+        "brock.site.ts",
+        "src/**/*.usage.ts"
+      ],
+      "project": [
+        "src/**/*.{ts,tsx}"
+      ]
     }
   }
 }

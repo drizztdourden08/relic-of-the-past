@@ -78,6 +78,7 @@ Add a note to the page of the package or area that holds the file, under a headi
 | [apps/sanctuary](apps-sanctuary.md) | 51 |
 | [apps/store-api](apps-store-api.md) | 66 |
 | [apps/store](apps-store.md) | 93 |
+| [apps/website](apps-website.md) | 6 |
 
 ## Repo
 

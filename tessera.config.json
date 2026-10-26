@@ -42,6 +42,16 @@
       "theme": {
         "css": "apps/store/src/theme.css"
       }
+    },
+    "apps/website": {
+      "parts": {
+        "views": [
+          "apps/website/src/views"
+        ]
+      },
+      "theme": {
+        "css": "apps/website/src/theme.css"
+      }
     }
   }
 }

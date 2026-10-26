@@ -1,0 +1,105 @@
+/* @layer website-site @kind style */
+.landing-rays {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.landing-rays__glow {
+  position: absolute;
+  top: -18%;
+  left: 14%;
+  width: 40%;
+  height: 50%;
+  background: radial-gradient(ellipse at center, color-mix(in srgb, var(--ray-halo) 50%, transparent), transparent 70%);
+  filter: blur(var(--size-20));
+  mix-blend-mode: screen;
+  animation: ray-breathe 11s var(--ease-in-out) infinite;
+}
+
+.landing-rays__ray {
+  position: absolute;
+  top: -12%;
+  height: 105%;
+  background: linear-gradient(
+    to bottom,
+    color-mix(in srgb, var(--ray-core) 85%, transparent),
+    color-mix(in srgb, var(--ray-edge) 40%, transparent) 45%,
+    transparent 80%
+  );
+  filter: blur(var(--site-ray-blur));
+  mix-blend-mode: screen;
+}
+
+.landing-rays__ray--1 {
+  left: 22%;
+  width: 5vw;
+  animation:
+    ray-sway-a 19s var(--ease-in-out) infinite alternate,
+    ray-breathe 8s var(--ease-in-out) infinite;
+}
+
+.landing-rays__ray--2 {
+  left: 34%;
+  width: 10vw;
+  animation:
+    ray-sway-b 26s var(--ease-in-out) infinite alternate,
+    ray-breathe 12s var(--ease-in-out) infinite 2.5s;
+}
+
+.landing-rays__ray--3 {
+  left: 48%;
+  width: 4vw;
+  animation:
+    ray-sway-a 16s var(--ease-in-out) infinite alternate-reverse,
+    ray-breathe 7s var(--ease-in-out) infinite 1.2s;
+}
+
+.landing-rays__ray--4 {
+  left: 56%;
+  width: 2.5vw;
+  animation:
+    ray-sway-b 22s var(--ease-in-out) infinite alternate-reverse,
+    ray-breathe 9s var(--ease-in-out) infinite 4s;
+}
+
+@keyframes ray-sway-a {
+  from {
+    transform: skewX(14deg) translateX(-12%);
+  }
+
+  to {
+    transform: skewX(9deg) translateX(12%);
+  }
+}
+
+@keyframes ray-sway-b {
+  from {
+    transform: skewX(10deg) translateX(10%);
+  }
+
+  to {
+    transform: skewX(16deg) translateX(-10%);
+  }
+}
+
+@keyframes ray-breathe {
+  0%,
+  100% {
+    opacity: 0.35;
+  }
+
+  50% {
+    opacity: 1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .landing-rays__ray,
+  .landing-rays__glow {
+    opacity: 0.55;
+    animation: none;
+    transform: skewX(12deg);
+  }
+}

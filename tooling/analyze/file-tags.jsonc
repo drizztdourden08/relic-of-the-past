@@ -18,6 +18,7 @@
 
   // Binary / non-text assets (cannot carry a header comment).
   "**/*.png":   { "kind": "asset" },
+  "**/*.webp":  { "kind": "asset" },
   "**/*.jpg":   { "kind": "asset" },
   "**/*.jpeg":  { "kind": "asset" },
   "**/*.gif":   { "kind": "asset" },

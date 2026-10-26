@@ -1,0 +1,14 @@
+/* @layer website-site @kind style */
+.landing-feature-placeholder {
+  aspect-ratio: 16 / 10;
+  background:
+    radial-gradient(ellipse at center, var(--c-primary-dim), transparent 80%),
+    var(--c-surface);
+  color: var(--c-text-muted);
+  font-size: var(--text-base);
+}
+
+.landing-feature-placeholder__mark {
+  width: var(--size-56);
+  opacity: 0.35;
+}

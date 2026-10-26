@@ -1,0 +1,19 @@
+/* @layer website-site @kind style */
+.landing-end {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-bottom: var(--size-48);
+  text-align: center;
+}
+
+.landing-end > * {
+  width: 100%;
+}
+
+.landing-end__legal {
+  max-width: var(--site-legal-w);
+  margin-top: var(--size-12);
+  color: var(--c-text-muted);
+  font-size: var(--size-12);
+}

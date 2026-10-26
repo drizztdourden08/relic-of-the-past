@@ -29,7 +29,7 @@ flowchart TD
         R["screens/ · widgets/ · views/ · compounds/ · composites/ · primitives/<br/>stores/ · hooks/ · renderer logic by subject (game/, storage/, input/, hud/ ...)"]
     end
     subgraph WEB["Sites and APIs"]
-        W["apps/sanctuary · apps/store · apps/sanctuary-api · apps/store-api · apps/kill-switch"]
+        W["apps/sanctuary · apps/store · apps/website · apps/sanctuary-api · apps/store-api · apps/kill-switch"]
     end
     CORE -->|"ccall / HEAPU8 / EM_ASM"| PKG
     PKG --> EL

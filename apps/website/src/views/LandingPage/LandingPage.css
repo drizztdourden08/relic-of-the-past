@@ -1,0 +1,32 @@
+/* @layer website-site @kind style */
+.landing {
+  height: 100%;
+  overflow: hidden auto;
+  background: var(--c-bg);
+  color: var(--c-text);
+  font-size: var(--site-body-size);
+  line-height: var(--site-body-leading);
+  scroll-behavior: smooth;
+  user-select: text;
+}
+
+.landing ::selection {
+  background: var(--c-primary);
+  color: var(--site-gold-ink);
+}
+
+.landing__hero-boundary {
+  position: relative;
+  z-index: var(--site-boundary-z);
+  margin-top: var(--site-boundary-lift);
+}
+
+.landing__section-boundary {
+  position: relative;
+  z-index: var(--site-boundary-z);
+  margin-bottom: var(--site-boundary-lift);
+}
+
+.landing__features {
+  padding: var(--site-section-pad) 0;
+}

@@ -1,0 +1,17 @@
+/* @layer website-site @kind style */
+.landing-stats {
+  margin-top: var(--size-32);
+  list-style: none;
+}
+
+.landing-stats__item {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--size-8);
+  padding: var(--size-8) var(--size-16);
+  border: var(--border-width-thin) solid var(--site-green);
+  border-radius: var(--radius-pill);
+  background: var(--site-green-dim);
+  color: var(--site-green-bright);
+  font-size: var(--site-text-md);
+}

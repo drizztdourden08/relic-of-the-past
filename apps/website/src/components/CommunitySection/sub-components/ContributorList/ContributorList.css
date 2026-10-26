@@ -1,0 +1,18 @@
+/* @layer website-site @kind style */
+.landing-contributors {
+  margin-top: var(--size-32);
+  list-style: none;
+}
+
+.landing-contributors__avatar {
+  border: var(--border-width-thick) solid var(--c-border-strong);
+  border-radius: var(--radius-round);
+  transition:
+    border-color var(--duration-normal) var(--ease-standard),
+    transform var(--duration-normal) var(--ease-standard);
+}
+
+.landing-contributors__link:hover .landing-contributors__avatar {
+  border-color: var(--site-green-bright);
+  transform: translateY(calc(var(--size-2) * -1.5));
+}

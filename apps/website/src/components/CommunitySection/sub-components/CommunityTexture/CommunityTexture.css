@@ -1,0 +1,38 @@
+/* @layer website-site @kind style */
+.landing-texture {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.landing-texture__triforce {
+  position: absolute;
+  fill: none;
+  stroke: var(--c-border-strong);
+  stroke-width: 2.5;
+  opacity: 0.1;
+  animation-name: triforce-pulse;
+  animation-timing-function: var(--ease-in-out);
+  animation-iteration-count: infinite;
+}
+
+@keyframes triforce-pulse {
+  0%,
+  100% {
+    opacity: 0.08;
+    transform: translateY(0);
+  }
+
+  50% {
+    opacity: 0.55;
+    transform: translateY(calc(var(--size-4) * -1.25));
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .landing-texture__triforce {
+    opacity: 0.2;
+    animation: none;
+  }
+}
