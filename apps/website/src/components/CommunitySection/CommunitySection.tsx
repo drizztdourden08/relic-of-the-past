@@ -1,7 +1,6 @@
 /* @layer website-site @kind component */
 import { Box, Flex, Icon, Link, P, Title } from '@drizztdourden08/tessera/primitives';
 import { useContributors, useGitHubStats } from '../../github';
-import { ICON_PATHS, ICON_SIZE } from '../../icons';
 import { REPO_HOME_URL } from '../../repo';
 import { COMMUNITY_TEXT } from './CommunitySection.constants';
 import { CommunityStats } from './sub-components/CommunityStats';
@@ -24,7 +23,7 @@ const CommunitySection = () => {
         {stats && <CommunityStats stats={stats} />}
         <ContributorList contributors={contributors} />
         <Link href={REPO_HOME_URL} className="landing-community__github">
-          <Icon path={ICON_PATHS.github} size={ICON_SIZE} />
+          <Icon name="github" />
           {COMMUNITY_TEXT.viewOnGitHub}
         </Link>
       </Flex>

@@ -1,59 +1,8 @@
 /* @layer website-site @kind style */
-.landing-download {
-  position: relative;
-  display: inline-flex;
-  align-items: center;
-  gap: var(--size-14);
-  padding: var(--size-16) var(--site-cta-pad-x);
-  overflow: hidden;
-  border: var(--border-width-thick) solid var(--px-gold-dark);
-  border-radius: var(--radius-md);
-  background-color: var(--c-primary);
-  box-shadow: var(--site-cta-shadow);
-  color: var(--site-gold-ink);
-  font-size: var(--text-xl);
-  font-weight: var(--weight-bold);
-  transition:
-    transform var(--duration-normal) var(--ease-standard),
-    box-shadow var(--duration-normal) var(--ease-standard),
-    filter var(--duration-normal) var(--ease-standard);
-}
-
-.landing-download:hover {
-  box-shadow: var(--site-cta-shadow-hover);
-  color: var(--site-gold-ink);
-  filter: brightness(1.08);
-  text-decoration: none;
-  transform: translateY(calc(var(--size-2) * -1));
-}
-
-.landing-download--loading {
-  cursor: progress;
-  filter: saturate(0.4);
-}
-
-.landing-download__bg {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-}
-
-.landing-download > :not(.landing-download__bg) {
-  position: relative;
-}
-
-.landing-download__label {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  line-height: 1.25;
-}
-
 .landing-download__caption {
+  color: var(--c-text-dim);
   font-size: var(--site-text-sm);
-  font-weight: var(--weight-medium);
-  opacity: 0.75;
+  text-shadow: var(--site-text-shadow-soft);
 }
 
 .landing-download-stack {

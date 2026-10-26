@@ -1,5 +1,5 @@
 /* @layer website-site @kind component */
-import { Box } from '@drizztdourden08/tessera/primitives';
+import { Box, PageRoot } from '@drizztdourden08/tessera/primitives';
 import { ClosingCta } from '../../components/ClosingCta';
 import { CommunitySection } from '../../components/CommunitySection';
 import { FeatureGroupSection } from '../../components/FeatureGroupSection';
@@ -10,7 +10,7 @@ import { FEATURE_GROUPS } from '../../features';
 import './LandingPage.css';
 
 const LandingPage = () => (
-  <Box className="landing">
+  <PageRoot className="landing">
     <Hero />
     <Box className="landing__hero-boundary">
       <Separator flush />
@@ -26,7 +26,7 @@ const LandingPage = () => (
     <CommunitySection />
     <ClosingCta />
     <Footer />
-  </Box>
+  </PageRoot>
 );
 
 export { LandingPage };

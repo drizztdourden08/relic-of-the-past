@@ -9,7 +9,7 @@ const usage = {
     'Write a document as a Markdown file in content/ and register it in legal-docs.constants.ts; the file starts with a level one title that the page drops.',
     'The contact address is written once in legal/contact.constants.ts and filled into the {{contact}} token.',
   ],
-  a11y: ['The text is the main landmark and the page sets its own document title.'],
+  a11y: ['The text is the main landmark and the document title is set in the built HTML of the route.'],
   buildingBlock: true,
   example: `import { LEGAL_DOCS } from '@app/legal';
 import { LegalPage } from '@app/views/LegalPage';

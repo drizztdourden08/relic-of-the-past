@@ -1,5 +1,5 @@
 /* @layer website-site @kind types */
-import type { IconPath } from '@drizztdourden08/tessera';
+import type { IconName } from '@drizztdourden08/tessera/primitives';
 import type { GitHubStats } from '../../../../github';
 
 type CommunityStatsProps = {
@@ -8,7 +8,7 @@ type CommunityStatsProps = {
 
 type StatEntry = {
   id: string;
-  icon: IconPath;
+  icon: IconName;
   text: string;
 };
 

@@ -2,7 +2,6 @@
 import { Flex, Icon, Link } from '@drizztdourden08/tessera/primitives';
 import { variantLabel } from '../../../../downloads';
 import { formatBytes } from '../../../../format';
-import { ICON_PATHS, ICON_SIZE } from '../../../../icons';
 import type { DownloadVariantsProps } from './DownloadVariants.type';
 
 const DownloadVariants = (props: DownloadVariantsProps) => {
@@ -13,7 +12,7 @@ const DownloadVariants = (props: DownloadVariantsProps) => {
     <Flex wrap gap="sm" className="landing-download-variants">
       {assets.map((asset) => (
         <Link key={asset.name} href={asset.browser_download_url} className="landing-download-variant">
-          <Icon path={ICON_PATHS.download} size={ICON_SIZE} />
+          <Icon name="download" />
           {`${variantLabel(asset.name)} / ${formatBytes(asset.size)}`}
         </Link>
       ))}

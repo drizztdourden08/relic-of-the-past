@@ -1,12 +1,9 @@
 /* @layer website-site @kind style */
 .landing {
-  height: 100%;
-  overflow: hidden auto;
   background: var(--c-bg);
   color: var(--c-text);
   font-size: var(--site-body-size);
   line-height: var(--site-body-leading);
-  scroll-behavior: smooth;
   user-select: text;
 }
 

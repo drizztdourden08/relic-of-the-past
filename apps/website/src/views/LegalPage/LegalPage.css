@@ -1,7 +1,5 @@
 /* @layer website-site @kind style */
 .legal {
-  height: 100%;
-  overflow: hidden auto;
   background: var(--c-bg);
   color: var(--c-text);
   font-size: var(--site-body-size);

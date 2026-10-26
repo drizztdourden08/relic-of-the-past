@@ -53,11 +53,10 @@ const SHOTS: Readonly<Record<ShotId, Screenshot>> = {
   },
   'sh-08': {
     id: 'sh-08',
-    pending: true,
     src: 'media/shots/sh-08.webp',
-    width: 1280,
-    height: 720,
-    alt: 'The controls page with a controller mapped button by button',
+    width: 910,
+    height: 555,
+    alt: 'The controls page with every SNES button bound to a key',
   },
   'sh-09': {
     id: 'sh-09',
@@ -68,11 +67,10 @@ const SHOTS: Readonly<Record<ShotId, Screenshot>> = {
   },
   'sh-10': {
     id: 'sh-10',
-    pending: true,
     src: 'media/shots/sh-10.webp',
-    width: 1280,
-    height: 720,
-    alt: 'The gameplay settings with the movement and items switches',
+    width: 910,
+    height: 555,
+    alt: 'The gameplay settings: auto-save, save on quit and the quick save shortcut',
   },
   'sh-11': {
     id: 'sh-11',

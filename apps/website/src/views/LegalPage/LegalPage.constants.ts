@@ -2,7 +2,6 @@
 const LEGAL_PAGE_TEXT = {
   back: 'Back to the home page',
   updated: (date: string): string => `Last updated ${date}`,
-  titleSuffix: 'Relic of the Past',
 } as const;
 
 export { LEGAL_PAGE_TEXT };
