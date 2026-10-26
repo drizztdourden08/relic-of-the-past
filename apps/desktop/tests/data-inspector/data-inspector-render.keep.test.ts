@@ -167,7 +167,7 @@ describeDataset('DataInspector detail panel', () => {
   });
 
   it('never claims a writable collection cannot save', () => {
-    const NOTE = 'No write path is wired';
+    const NOTE = 'This collection is read only.';
     for (const kind of KINDS) {
       expect(COLLECTION_SOURCES[kind].onSave, `${kind} has no write path`).toBeDefined();
       expect(renderDetail(kind, 'editor'), kind).not.toContain(NOTE);

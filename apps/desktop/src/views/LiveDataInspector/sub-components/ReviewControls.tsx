@@ -17,7 +17,7 @@ const ReviewControls = (props: ReviewControlsProps) => {
   const write = async (next: ReviewMark): Promise<void> => {
     const writer = RECORD_WRITERS[kind];
     if (!writer) {
-      setError('This collection has no write path.');
+      setError('This collection is read only.');
       return;
     }
     setError(null);

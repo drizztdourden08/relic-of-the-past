@@ -7,7 +7,7 @@ import { useDevices } from '../behavior/useDevices';
 const DevicesSection = () => {
   const { devices, busy, error, revoke } = useDevices();
   return (
-    <SettingsSection title="Signed-in devices" description="The app, on each machine it is signed in on.">
+    <SettingsSection title="Signed-in devices">
       {devices === null && <Text as="p" variant="caption">Loading devices</Text>}
       {devices?.length === 0 && <Text as="p" variant="caption">No device is signed in.</Text>}
       {devices && devices.length > 0 && (

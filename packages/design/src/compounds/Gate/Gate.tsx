@@ -15,7 +15,7 @@ const Gate = (props: GateProps) => {
       <Stack gap="xl" align="center" className="gate__column">
         <AppLink to="/" aria-label={brand.homeLabel} variant="subtle" tone="neutral" className="gate__brand">
           <Stack gap="sm" align="center">
-            <BrandMark app="rotp" size="xl" ground="dark" />
+            <BrandMark app="rotp" size="xl" />
             <PixelWordmark text={brand.wordmark} colors={BRAND_FAMILY.rotp.wordmark.colors} size="md" />
           </Stack>
         </AppLink>

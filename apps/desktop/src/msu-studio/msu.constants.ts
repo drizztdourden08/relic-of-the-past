@@ -15,8 +15,7 @@ const AMBIENT_ROLE_HINTS: Record<AmbientRole, string> = {
   cue: 'A one-off sound raised over whatever the channel is already playing',
 };
 
-const SOUND_FILTER_HINT = 'Matches the id, its name, or the game function that raises it.';
 const SOUND_FILTER_PLACEHOLDER = '0x0C, explosion, AncillaAdd_Bomb...';
 
 export {
-  SOUND_FILTER_HINT, SOUND_FILTER_PLACEHOLDER, AMBIENT_ROLE_HINTS, AMBIENT_ROLE_LABELS, AUDIO_ACCEPT, AUDIO_ACCEPT_HINT };
+  SOUND_FILTER_PLACEHOLDER, AMBIENT_ROLE_HINTS, AMBIENT_ROLE_LABELS, AUDIO_ACCEPT, AUDIO_ACCEPT_HINT };

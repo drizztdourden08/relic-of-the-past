@@ -27,19 +27,13 @@ out/
 __pycache__/
 *.tsbuildinfo
 
+# The Archipelago world package build (tooling/apworld): release assets, generated data, manifest.
+/build/archipelago/
+/integrations/archipelago/relic_of_the_past/data/
+/integrations/archipelago/relic_of_the_past/archipelago.json
+
 # Brock generated outputs: brock icons and brock package write these
-**/build/icons/
-**/build/splash/
 **/build/installer-splash.png
-**/public/logos/icon.svg
-**/public/logos/icon.ico
-**/public/logos/icon-256.png
-**/public/logos/icon-32.png
-**/public/logos/icon-24.png
-**/public/logos/icon-bot.svg
-**/public/logos/icon-bot.ico
-**/public/logos/icon-bot-256.png
-**/public/logos/mark.svg
 
 # WASM build artifacts
 core/wasm-build/output/
@@ -48,6 +42,7 @@ core/wasm-build/output/
 third_party/
 
 apps/desktop/public/wasm/
+apps/desktop/public/archipelago/
 
 # Extracted sprites (generated at runtime)
 apps/desktop/public/sprites/
@@ -173,3 +168,17 @@ tests/fixtures/save-states/
 .claude/settings.json
 .ai/
 .codex/config.toml
+# brock sync: generated icon files, start. Brock rewrites the lines up to the end marker.
+apps/desktop/build/icons/
+apps/desktop/build/filetypes/
+apps/desktop/build/splash/
+apps/desktop/public/logos/icon.svg
+apps/desktop/public/logos/icon.ico
+apps/desktop/public/logos/icon-256.png
+apps/desktop/public/logos/icon-32.png
+apps/desktop/public/logos/icon-24.png
+apps/desktop/public/logos/icon-bot.svg
+apps/desktop/public/logos/icon-bot.ico
+apps/desktop/public/logos/icon-bot-256.png
+apps/desktop/public/logos/mark.svg
+# brock sync: generated icon files, end.

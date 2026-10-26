@@ -1,6 +1,6 @@
 /* @layer renderer-widgets @kind hook */
 import { useEffect, useRef, useCallback } from 'react';
-import { isAutoFlood } from '@app/startup/is-auto-flood';
+import { isAutoFlood } from '@app/launch-flags/is-auto-flood';
 import { setDeveloperToolsOverride } from '@rotp/game-core';
 import { reassertFeatureFlags } from '../../../game';
 import { inventoryKeyOf } from './inventory-key-of';

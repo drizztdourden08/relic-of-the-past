@@ -1,5 +1,5 @@
 /* @layer renderer-lib @kind types */
-import type { buildDeviceProfileFromSdlType } from '../..';
+import type { buildDeviceProfileFromSdlType } from '@drizztdourden08/brock-input';
 import type { FunctionMapping } from '@rotp/features';
 
 type AxisEntry = ReturnType<typeof buildDeviceProfileFromSdlType>['axes'][number];

@@ -25,8 +25,7 @@ const GlyphPackPicker = (props: GlyphPackPickerProps) => {
       </Box>
 
       <Text className="hud-editor__hint">
-        Auto follows the controller in hand. A custom pack replaces only the buttons you give it
-        an image for; everything else keeps the pack it falls back to.
+        Auto follows the controller in hand. A custom pack replaces only the buttons you give an image for.
       </Text>
 
       {selectedCustom && (

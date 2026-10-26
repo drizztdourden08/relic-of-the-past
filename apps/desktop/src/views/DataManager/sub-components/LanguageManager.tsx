@@ -31,7 +31,7 @@ const LanguageManager = (props: LanguageManagerProps) => {
   const origin = installed === null ? null : <InstalledOriginBar pack={installed} onDuplicated={refreshThenSelect} onUpdateInstalled={refreshThenSelect} onUninstalled={handleUninstalled} />;
 
   return (
-    <ListDetailLayout
+    <ListDetailLayout listShowTitle={false}
       listContainers={[
         {
           title: 'Extract from a ROM',
@@ -41,7 +41,7 @@ const LanguageManager = (props: LanguageManagerProps) => {
               placeholder="Paste ROM download URL..."
               accept={['.sfc', '.smc', '.zip', '.7z', '.rar']}
               dropLabel="Drop a ROM file to extract its language"
-              dropHint="The language is detected from the ROM. The ROM is used temporarily and not saved"
+              dropHint="The language is read from the ROM. The ROM is not saved."
               onUrlImport={handleUrlImport}
               onFileImport={handleFileImport}
             />

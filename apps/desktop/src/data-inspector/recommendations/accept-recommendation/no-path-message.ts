@@ -2,6 +2,6 @@
 import type { EntityKind } from '@rotp/game-data';
 
 const noPathMessage = (kind: EntityKind, action: string): string =>
-  `No ${action} path is wired for the ${kind} collection.`;
+  `The ${kind} collection does not support ${action}.`;
 
 export { noPathMessage };

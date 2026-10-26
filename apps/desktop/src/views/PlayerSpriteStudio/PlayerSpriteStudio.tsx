@@ -65,6 +65,7 @@ const PlayerSpriteStudio = (props: PlayerSpriteStudioProps) => {
 
   return (
     <ListDetailLayout
+      listShowTitle={false}
       listContainers={[{ title: 'Sprite library', content: list }]}
       detail={detail}
       emptyDetail={<EmptyState message={EMPTY_EDITOR} />}

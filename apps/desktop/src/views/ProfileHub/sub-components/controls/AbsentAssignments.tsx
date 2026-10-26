@@ -10,7 +10,7 @@ const AbsentAssignments = ({ entries }: AbsentAssignmentsProps) => {
   return (
     <Box className="modern-tab__absent">
       <Text variant="caption" className="modern-tab__absent-title">
-        Kept for slot numbers this profile no longer has. They come back if you add the slots again.
+        Kept for slots this profile no longer has. They return if you add the slots again.
       </Text>
       {entries.map((entry) => (
         <Box key={entry.index} className="modern-tab__absent-row">

@@ -236,12 +236,6 @@ Fetches the app version through IPC. It lives in the renderer hooks layer, which
 
 Moving the window to a monitor with another display scaling changes the device pixel ratio without changing the container's CSS size, so the resize observer never fires; the `resolution` media query does. It is armed again on each change, because a query only matches the ratio it was built with. Only pixel-perfect mode depends on the ratio, so nothing else pays for the listener.
 
-## apps/desktop/src/hooks/useControllerDevices.ts
-
-Device list state for the Controls page and the Controller Diagnostics page, read from the
-input module's `useControllerDevicesStore`, plus RotP's adapter grouping. The module keeps a
-rescan pending until the next snapshot arrives or three seconds pass.
-
 ## apps/desktop/src/hooks/useHud.ts and apps/desktop/src/hooks/usePauseMenu.ts and apps/desktop/src/hooks/useLocationNotification.ts
 
 `useHud` gives the HUD's data and sprite config. All HUD layout is in SNES pixel units (native 256 by 224, tiles of 8) multiplied by the scale (1 SNES pixel is `scale` CSS pixels); the original top bar is 32 SNES pixels (4 tile rows). `items` is the 20 item slots used to pick the equipped item's upgrade tier sprite, and the max fields are what each counter can reach now, with upgrades and settings counted.

@@ -2,9 +2,9 @@
 import { useMemo } from 'react';
 import { usePlatform } from '@drizztdourden08/brock-react';
 import { useAppVersion } from '@app/hooks/useAppVersion';
-import type { GamepadDiagnosticsReport } from '../../hid-calibration/diagnostics';
-import { buildReport } from '../../hid-calibration/diagnostics/report-builder';
-import { useDiagnosticsWizardState } from '../../diagnostics-wizard/behavior/useDiagnosticsWizardState';
+import type { GamepadDiagnosticsReport } from '@drizztdourden08/brock-input/renderer';
+import { buildReport } from '@drizztdourden08/brock-input/renderer';
+import { useDiagnosticsWizardState } from '@drizztdourden08/brock-input/renderer';
 
 const useReportDiagnostics = (deviceKey: string, isActive: boolean) => {
   const wizard = useDiagnosticsWizardState({ open: isActive, initialDeviceKey: deviceKey });

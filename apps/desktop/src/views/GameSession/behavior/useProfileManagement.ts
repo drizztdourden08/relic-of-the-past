@@ -46,7 +46,7 @@ const useProfileManagement = (params: ProfileManagementParams) => {
     const result = await runCreateProfileFlow(opts);
     if (!result.success) return result;
     await refreshProfilesAndRoms();
-    await handleSelectProfile(result.profile);
+    if (opts.randomizer?.mode !== 'archipelia') await handleSelectProfile(result.profile);
     return result;
   }, [refreshProfilesAndRoms, handleSelectProfile]);
 

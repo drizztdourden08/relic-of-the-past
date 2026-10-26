@@ -15,6 +15,8 @@ export { pondSessionOf } from '../../pond-session';
 export type { PondSessionPlan } from '../../pond-session.type';
 export { backoffDelay, createReconnector } from '../../reconnect';
 export { joinServerAddress, serverAddressError, splitServerAddress } from '../../server-address';
+export { slotNameError } from '../../slot-name';
+export { isKitError } from '@drizztdourden08/archipelia-client-kit';
 export type { ServerAddress } from '../../server-address';
 export { cancelServerDeliveries } from '../../server-delivery/cancel-server-deliveries';
 export { waitingDeliveries } from '../../server-delivery/waiting-deliveries';

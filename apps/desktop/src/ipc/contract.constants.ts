@@ -7,7 +7,6 @@ const APP_CHANNELS = defineChannels({
   analyzeMsuOptimize: invoke<RotpInvoke['msu:optimize:analyze']>()('msu:optimize:analyze'),
   runMsuOptimize: invoke<RotpInvoke['msu:optimize:run']>()('msu:optimize:run'),
   probeAudioFile: invoke<RotpInvoke['ffmpeg:probeAudio']>()('ffmpeg:probeAudio'),
-  writeHidDebugFile: invoke<RotpInvoke['controller:write-debug-capture']>()('controller:write-debug-capture'),
   loadRecommendations: invoke<RotpInvoke['recommendations:load']>()('recommendations:load'),
   applyRecommendationPass: invoke<RotpInvoke['recommendations:applyPass']>()('recommendations:applyPass'),
   decideRecommendation: invoke<RotpInvoke['recommendations:decide']>()('recommendations:decide'),
@@ -27,8 +26,12 @@ const APP_CHANNELS = defineChannels({
   hubSignOut: invoke<RotpInvoke['hub:signOut']>()('hub:signOut'),
   hubMe: invoke<RotpInvoke['hub:me']>()('hub:me'),
   submitSanctuaryReport: invoke<RotpInvoke['sanctuary:submitReport']>()('sanctuary:submitReport'),
+  saveArchipelagoFiles: invoke<RotpInvoke['archipelago:save-files']>()('archipelago:save-files'),
   storeDuplicate: invoke<RotpInvoke['store:duplicate']>()('store:duplicate'),
+  startLanDiscovery: invoke<RotpInvoke['lan:discovery:start']>()('lan:discovery:start'),
+  stopLanDiscovery: invoke<RotpInvoke['lan:discovery:stop']>()('lan:discovery:stop'),
   onMsuOptimizeProgress: event<RotpEvent['msu:optimize:progress']>()('msu:optimize:progress'),
+  onLanSighting: event<RotpEvent['lan:sighting']>()('lan:sighting'),
 });
 
 const APP_INVOKE_MAP = APP_CHANNELS.maps.invoke;

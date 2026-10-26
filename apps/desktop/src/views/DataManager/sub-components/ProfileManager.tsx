@@ -29,6 +29,7 @@ const ProfileManager = (props: ProfileManagerProps) => {
       romFile={formRom}
       seed={formRandomizer.seed}
       value={formRandomizer}
+      mode={formRandomizer.mode}
       onChange={(next) => setFormRandomizer({ ...formRandomizer, ...next })}
     />
   ) : selectedProfile && (
@@ -46,10 +47,11 @@ const ProfileManager = (props: ProfileManagerProps) => {
 
   return (
     <ListDetailLayout
+      listShowTitle={false}
       listContainers={[{ title: 'Profiles', content: list }]}
       listLabel="Profile manager"
       detail={detail}
-      emptyDetail={<EmptyState message="Select a profile to view details · Double-click to open" />}
+      emptyDetail={<EmptyState message="Select a profile. Double-click to open it." />}
     />
   );
 };

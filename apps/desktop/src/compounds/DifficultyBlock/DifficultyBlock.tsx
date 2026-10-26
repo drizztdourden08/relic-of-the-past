@@ -4,7 +4,7 @@ import { COPY_MULTIPLIER_LABELS, MAX_HEART_CAP, STARTING_HEARTS, asCopyMultiplie
 import { OptionSliderRow } from '../OptionSliderRow';
 import { RandomizerOptionGroup } from '../RandomizerOptionGroup';
 import {
-  DIFFICULTY_CAPTION, DIFFICULTY_COPIES_HEADING, DIFFICULTY_HEARTS_HEADING, DIFFICULTY_TITLE, FIRST_STEP, LAST_STEP,
+  DIFFICULTY_COPIES_HEADING, DIFFICULTY_HEARTS_HEADING, DIFFICULTY_TITLE, FIRST_STEP, LAST_STEP,
   NO_RUNGS_NOTE,
 } from './DifficultyBlock.constants';
 import type { DifficultyBlockProps } from './DifficultyBlock.type';
@@ -20,7 +20,6 @@ const DifficultyBlock = (props: DifficultyBlockProps) => {
 
   return (
     <RandomizerOptionGroup title={DIFFICULTY_TITLE} live className="difficulty-block">
-      <Text className="difficulty-block__caption">{DIFFICULTY_CAPTION}</Text>
       <Text className="difficulty-block__heading">{DIFFICULTY_COPIES_HEADING}</Text>
       <Box className="difficulty-block__copies">
         {PROGRESSIVE_FAMILIES.map((family) => {

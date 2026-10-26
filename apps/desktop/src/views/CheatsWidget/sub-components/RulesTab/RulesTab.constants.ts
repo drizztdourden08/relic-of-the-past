@@ -41,6 +41,4 @@ const ACTION_TILES: ActionTileSpec[] = [
   { id: 'unblock', label: 'Unblock Link', name: 'Unblock', sprite: 'hud-magic-mirror', category: 'collision', run: cheatUnblockLink },
 ];
 
-const RULES_HINT = 'The art is the label, the box is the state. A category the profile turns off draws inert.';
-
-export { ACTION_TILES, RULES_HINT, RULE_TILES, RUNG_TILES };
+export { ACTION_TILES, RULE_TILES, RUNG_TILES };

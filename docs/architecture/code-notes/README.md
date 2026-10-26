@@ -18,7 +18,7 @@ Add a note to the page of the package or area that holds the file, under a headi
 | [packages/hub-contracts](packages-hub-contracts.md) | 52 |
 | [packages/hub-server](packages-hub-server.md) | 72 |
 | [packages/hud](packages-hud.md) | 92 |
-| [packages/input-mapping](packages-input-mapping.md) | 80 |
+| [packages/input-mapping](packages-input-mapping.md) | 57 |
 | [packages/languages](packages-languages.md) | 79 |
 | [packages/msu](packages-msu.md) | 39 |
 | [packages/navigation](packages-navigation.md) | 167 |
@@ -30,7 +30,7 @@ Add a note to the page of the package or area that holds the file, under a headi
 
 | Page | Notes |
 |---|---|
-| [apps/desktop/electron](apps-desktop-electron.md) | 80 |
+| [apps/desktop/electron](apps-desktop-electron.md) | 79 |
 | [apps/desktop/tests](apps-desktop-tests.md) | 173 |
 
 ## Desktop renderer
@@ -38,19 +38,19 @@ Add a note to the page of the package or area that holds the file, under a headi
 | Page | Notes |
 |---|---|
 | [apps/desktop/src/composites](apps-desktop-src-composites.md) | 11 |
-| [apps/desktop/src/compounds](apps-desktop-src-compounds.md) | 129 |
+| [apps/desktop/src/compounds](apps-desktop-src-compounds.md) | 118 |
 | [apps/desktop/src/data-inspector](apps-desktop-src-data-inspector.md) | 21 |
 | [apps/desktop/src/game](apps-desktop-src-game.md) | 106 |
-| [apps/desktop/src/hooks](apps-desktop-src-hooks.md) | 40 |
+| [apps/desktop/src/hooks](apps-desktop-src-hooks.md) | 39 |
 | [apps/desktop/src/hud-layout-editing](apps-desktop-src-hud-layout-editing.md) | 56 |
 | [apps/desktop/src/hud](apps-desktop-src-hud.md) | 7 |
-| [apps/desktop/src/input](apps-desktop-src-input.md) | 11 |
-| [apps/desktop/src/ipc](apps-desktop-src-ipc.md) | 12 |
+| [apps/desktop/src/input](apps-desktop-src-input.md) | 6 |
+| [apps/desktop/src/ipc](apps-desktop-src-ipc.md) | 11 |
 | [apps/desktop/src/language-editor](apps-desktop-src-language-editor.md) | 105 |
 | [apps/desktop/src/msu-studio](apps-desktop-src-msu-studio.md) | 77 |
 | [apps/desktop/src/nav-widget](apps-desktop-src-nav-widget.md) | 27 |
 | [apps/desktop/src/navigation-overlay](apps-desktop-src-navigation-overlay.md) | 12 |
-| [apps/desktop/src (smaller areas)](apps-desktop-src-other.md) | 36 |
+| [apps/desktop/src (smaller areas)](apps-desktop-src-other.md) | 37 |
 | [apps/desktop/src/primitives](apps-desktop-src-primitives.md) | 16 |
 | [apps/desktop/src/settings-controls](apps-desktop-src-settings-controls.md) | 24 |
 | [apps/desktop/src/storage](apps-desktop-src-storage.md) | 16 |
@@ -62,7 +62,7 @@ Add a note to the page of the package or area that holds the file, under a headi
 | [apps/desktop/src/views/DataManager](apps-desktop-src-views-data-manager.md) | 35 |
 | [apps/desktop/src/views/GameSession](apps-desktop-src-views-game-session.md) | 28 |
 | [apps/desktop/src/views/HudLayoutEditor](apps-desktop-src-views-hud-layout-editor.md) | 130 |
-| [apps/desktop/src/views/InputTester](apps-desktop-src-views-input-tester.md) | 61 |
+| [apps/desktop/src/views/InputTester](apps-desktop-src-views-input-tester.md) | 7 |
 | [apps/desktop/src/views/NavigationWidget](apps-desktop-src-views-navigation-widget.md) | 27 |
 | [apps/desktop/src/views/ProfileHub](apps-desktop-src-views-profile-hub.md) | 65 |
 | [apps/desktop/src/views/Randomizer](apps-desktop-src-views-randomizer.md) | 23 |

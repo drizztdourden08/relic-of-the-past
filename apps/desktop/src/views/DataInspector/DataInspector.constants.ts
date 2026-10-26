@@ -66,7 +66,7 @@ const NO_SOURCE_FILE = 'No source file could be derived for this record.';
 const NOT_A_RECORD = 'This row is not a saved record: it has no id.';
 const TAG_NAME_MISMATCH = "A tag's name must read namespace:value, matching its own namespace and value.";
 const TAG_NOT_CONVENTION = 'Tags must be in the form namespace:value.';
-const TAG_NO_SCOPE = 'This collection has no tag vocabulary to file a new term under.';
+const TAG_NO_SCOPE = 'This collection has no tags.';
 
 const EMPTY_PLACEMENT: ConnectionPlacement = { form: 'area', rect: { x: 0, y: 0, w: 0, h: 0 }, tiles: [] };
 
@@ -120,7 +120,7 @@ const CLOSED_DELETE_DIALOG: DeleteGuardDialogState = { open: false, hits: [] };
 const ID_REF_SELECTOR = '[data-id-ref]';
 
 const NOTHING_MATCHES = 'No records match these filters.';
-const NO_FINDINGS = 'No open findings. The dataset agrees with everything seen so far.';
+const NO_FINDINGS = 'No open findings.';
 const COMPARISON_TITLE = 'Comparison';
 
 const RECORD_LIST_RATIO = 0.63;
@@ -134,7 +134,7 @@ const DETAIL_TABS: TabItem[] = [
 
 const NOTHING_SELECTED = 'Select a record to inspect it.';
 
-const READ_ONLY_NOTE = 'No write path is wired for this collection yet. This form reads the record, it cannot save it.';
+const READ_ONLY_NOTE = 'This collection is read only.';
 
 export { isEntityKind } from './behavior/is-entity-kind';
 export { queryViewKey } from './behavior/query-view-key';

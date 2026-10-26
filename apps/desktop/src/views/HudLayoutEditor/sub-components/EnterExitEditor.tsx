@@ -64,8 +64,7 @@ const EnterExitEditor = (props: EnterExitEditorProps) => {
       {row('exit', 'exit')}
       {insideRepeat !== true && (
         <Text className="hud-editor__hint">
-          This node is not inside a repeat, so nothing adds or removes it. Enter and exit will not
-          fire until it is.
+          This node is not inside a repeat, so enter and exit will not fire.
         </Text>
       )}
     </Box>

@@ -1,7 +1,7 @@
 /* @layer renderer-components @kind logic */
 import { defaultModernBindings, keyboardModernBindings, renumberSlots } from '@rotp/input-mapping';
 import { defaultLayoutIdFor } from '@rotp/hud';
-import type { ResolvedControl } from '@rotp/input-mapping';
+import type { ResolvedControl } from '@drizztdourden08/brock-input';
 import type { ModernBindings } from '@rotp/game-data';
 
 const baseBindings = (deviceType: 'keyboard' | 'gamepad', controls: readonly ResolvedControl[]) => {

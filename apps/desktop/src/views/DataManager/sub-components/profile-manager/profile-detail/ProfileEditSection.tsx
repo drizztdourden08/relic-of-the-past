@@ -8,7 +8,7 @@ const ProfileEditSection = (props: ProfileEditSectionProps) => {
   const { profile, onRefresh } = props;
 
   return (
-    <Card title="Edit" subtitle="These save as you change them." level={4}>
+    <Card title="Edit" level={4}>
       <Stack gap="md">
         <ProfileNameField profile={profile} onRefresh={onRefresh} />
         <ProfilePackFields {...props} />

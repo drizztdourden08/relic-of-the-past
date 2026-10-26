@@ -7,7 +7,7 @@ import {
 
 const withDeliverable = (opts: CreateProfileOptions): CreateProfileOptions => {
   const { randomizer } = opts;
-  if (randomizer?.mode !== 'online') return opts;
+  if (randomizer?.mode !== 'online' && randomizer?.mode !== 'archipelia') return opts;
   const deliverable = deliverableListsOf({
     npc: probeDeliverableNpcLocations(),
     capacity: probeDeliverablePondLocations(),

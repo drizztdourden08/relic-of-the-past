@@ -3,48 +3,17 @@
 
 Facts about `apps/desktop/src/input/` that the code cannot say on its own. Each heading names a file or folder by its path from the repository root.
 
+Controller state, the name and SDL type caches, the diagnostic log, the raw HID capture and the Controllers screens live in `@drizztdourden08/brock-input` (`controllerInputStore`, `recallControllerName`, `recallControllerSdlType` and the diagnostics wizard come from `@drizztdourden08/brock-input/renderer`). This folder keeps what is the game's own: routing a frame of input to the core, bindings, haptics and item ownership.
+
 ## apps/desktop/src/input/binding-display/
 
 One source of truth for a binding's label and icon, shared by the controls editor rows, the
-save state hints, `InputGlyph` and the controller overlays. A bound control always draws a
+save state hints, `InputGlyph` and the pad overlay of brock-input's Controllers screen. A bound control always draws a
 glyph: one row of bare text beside rows with art reads as broken. Device art is preferred
 and comes through `icon`, but it is missing when the pad is unplugged or its family has no
 picture for that control, and an axis never stored an icon because its glyph depends on which
 end of the stick is meant. So the generic fallbacks are keyed off the binding's own shape,
 and only `none` draws nothing.
-
-## apps/desktop/src/input/controller-family-cache/
-
-The SDL gamepad type of every controller seen this session, seeded from the snapshot and kept
-live by the input module's `onDevices` and `onAdded` (`seed-device-cache.ts`). Family display
-metadata (icons, labels, console defaults) is keyed by this type, so this is the only way to
-resolve it for a saved binding or a drag payload whose device is unplugged. Recording starts
-once at module load and is never torn down; the cache outlives any screen.
-
-## apps/desktop/src/input/controller-input-store.ts
-
-Holds each pad's button and axis state and the diagnostic log the Controller Diagnostics page
-reads. Decoding and calibration storage belong to the Brock input module.
-
-- `getDevicesThatHaveReported` is not the connected set: SDL emits state only on change, so an
-  untouched connected pad never appears. Connection state is the device snapshot
-  (`InputManager.hidDeviceCache`, status `ready`).
-- `handleRawReport` takes one HID report while a diagnostic raw capture is open
-  (the input module's `capture.startRaw`). Only one capture runs at a time, keyed by vendor and product,
-  so the `vid:pid` device key is rebuilt here.
-- `rawSticks` are the raw 12 bit stick values `[lx, ly, rx, ry]` before calibration, for the
-  calibration UI; `rawBytes` are the report bytes for the debug UI.
-- The store is exposed as `window.__controllerInputStore`.
-
-## apps/desktop/src/input/controller-name-cache/
-
-Names for every controller seen this session, seeded from the snapshot and kept live by
-the input module's `onAdded`. An event only listener never learns the name of a device connected before
-it subscribed, since that device announces itself once. The OS product string is no
-substitute: devices reached over a raw USB interface report it empty, which is how a pad
-shows as "Unknown Controller". Names are keyed by device key and by vendor and product, since
-a caller with a raw device list has ids but no device key. Blank names are ignored so a later
-real one is not shadowed. Recording starts at module load and only listens.
 
 ## apps/desktop/src/input/frame-router.ts
 
@@ -93,7 +62,7 @@ About 20 ms is added for the worker's own overhead.
   are resolved from the SDL type recorded at connect, and combined in
   `vibration-shaping.ts`.
 - `previewHapticPattern` fires one pattern at one device, bypassing the mixer, cooldown and
-  targeting (a calibration screen test must always fire), with the same scaling and shaping
+  targeting (a rumble test on the Controllers screen must always fire), with the same scaling and shaping
   as gameplay so the felt strength matches.
 - The platform's device vibrate buzzes a phone; it does nothing on desktop.
 - In dev builds a once a second console line counts core hooks, events, dispatches and
@@ -118,9 +87,7 @@ instance. Lifecycle: create, `start`, `stop`, `start` again.
 - On start, a mapped pad that sends data again resumes a disconnect pause. A device poll every
   two seconds is the safety net for a reconnect that fired no event; it only resumes, never
   re-pauses, so a manual resume of an absent pad stays resumed.
-- Raw HID bytes flow only while a raw capture is open (the calibration wizard), so staying
-  subscribed is harmless. Controller names and SDL types are announced once at connect, so
-  their caches start here, not in whichever screen imports them.
+- Pad state, removals and raw HID bytes are recorded by brock-input's `controllerInputStore`, which this manager only reads and subscribes to. The name and SDL type caches also live in brock-input and start themselves.
 - The scheme bindings are rebuilt when the snapshot arrives, because it comes after the
   profile is set; otherwise a pad profile keeps the null bindings it had on the frame it was
   applied and the modern scheme never engages.
@@ -149,21 +116,6 @@ so the press and the menu cannot drift. It lives in the input layer because the 
 only place holding both the pressed slot and the live state. The UI store publishes a new
 inventory object on most frames, so identity is useless as a memo key; the 24 bytes are
 compared instead and the cells rebuilt only when the inventory moved. Item ids are 1 to 24.
-
-## apps/desktop/src/input/process-controller-state.ts
-
-SDL3 controller intake. The native addon already decodes and factory calibrates reports into
-normalized values, so the old per device HID parser is bypassed. Trigger calibration applies
-here, on the normalized 0 to 1 range of the trigger axes (from `LEFT_TRIGGER` on), read live
-from the input module's `useCalibrationStore` so a calibration saved on the Controllers screen
-applies at once; sticks arrive normalized to -1 to 1.
-
-## apps/desktop/src/input/seed-device-cache.ts
-
-Seeds a per device cache from the controller snapshot, then keeps it live with the input
-module's `onDevices` and `onAdded`. Three caches once listened to the added event alone and never recorded a device connected before they subscribed. Snapshot
-entries and added events both satisfy `DeviceSnapshotFields`; `remember` decides whether an
-entry carries enough to record.
 
 ## apps/desktop/src/input/snes-button-glyph.ts
 

@@ -45,7 +45,7 @@ const PresetBar = (props: PresetBarProps) => {
 
       {draft.builtIn && (
         <Text className="hud-editor__hint">
-          This is a shipped layout, so saving makes a copy of your own. The original stays as it is.
+          This is a shipped layout, so saving makes a copy.
         </Text>
       )}
     </Box>

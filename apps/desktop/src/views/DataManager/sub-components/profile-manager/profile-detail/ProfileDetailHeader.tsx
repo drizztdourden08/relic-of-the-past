@@ -18,7 +18,9 @@ const ProfileDetailHeader = (props: ProfileDetailHeaderProps) => {
         <Text variant="caption" tone="muted">{profile.romFile}</Text>
       </Stack>
       <Flex gap="sm" align="center" wrap>
-        <Button variant="primary" icon={<Icon name="play" />} onClick={onOpen}>Open profile</Button>
+        <Button variant="primary" icon={<Icon name="play" />} onClick={onOpen} disabled={profile.randomizer?.mode === 'archipelia'}>
+          Open profile
+        </Button>
         <ProfileFolderButton profileId={profile.id} />
         <Button variant="danger" icon={<Icon name="trash-2" />} onClick={onDelete}>Delete</Button>
       </Flex>

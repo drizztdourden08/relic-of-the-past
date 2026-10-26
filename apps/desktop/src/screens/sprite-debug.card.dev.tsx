@@ -1,0 +1,14 @@
+/* @layer renderer-app @kind component */
+import type { ScreenMeta } from '@drizztdourden08/brock-react';
+import { useGameSession } from '@app/hooks/useGameSession';
+import { SpriteDebug } from '@app/views/SpriteDebug';
+
+const meta: ScreenMeta = { title: 'Sprite Debug', icon: 'bug', bare: true, menu: 'Advanced', devOnly: true, shortcut: 'Mod+Shift+D', keywords: ['sprite', 'review', 'items', 'debug'] };
+
+const SpriteDebugCard = () => {
+  const { activeProfile } = useGameSession().profileMgmt;
+  return <SpriteDebug romFile={activeProfile?.romFile ?? ''} />;
+};
+
+export default SpriteDebugCard;
+export { meta };

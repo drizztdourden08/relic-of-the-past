@@ -9,7 +9,7 @@ const StaircaseRow = ({ playerDebug }: PlayerRowProps) => {
   if (staircaseType === null || staircaseType < 0) return null;
 
   return (
-    <DescRow label="Staircase" desc="Controls layer-change behavior (kind_of_in_room_staircase). 0=intra-room stairs (layer+room shift), 1=layer stairs (changes allowed), 2=pseudo/water stairs (ALL layer changes BLOCKED).">
+    <DescRow label="Staircase" desc="0=intra-room stairs (layer+room shift), 1=layer stairs (changes allowed), 2=pseudo/water stairs (layer changes blocked).">
       <Text className={staircaseType === BLOCKED_STAIRCASE ? 'nav-val-danger' : 'nav-val-pos'}>
         {staircaseType} ({STAIRCASE_NAMES[staircaseType] ?? '?'})
       </Text>

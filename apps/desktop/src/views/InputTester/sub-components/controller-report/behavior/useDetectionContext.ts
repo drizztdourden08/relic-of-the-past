@@ -1,9 +1,9 @@
 /* @layer renderer-components @kind hook */
 import { useMemo } from 'react';
-import { recallControllerSdlType, recallControllerName } from '@rotp/input-mapping';
-import { controllerInputStore } from '@app/input/controller-input-store';
+import { recallControllerSdlType, recallControllerName } from '@drizztdourden08/brock-input/renderer';
+import { controllerInputStore } from '@drizztdourden08/brock-input/renderer';
 import { RAW_LOG_TAIL } from '../controller-report.constants';
-import type { DetectionContext } from '../controller-report.type';
+import type { DetectionContext } from '@drizztdourden08/brock-input/renderer';
 
 const useDetectionContext = (deviceKey: string): DetectionContext => {
   return useMemo(() => {

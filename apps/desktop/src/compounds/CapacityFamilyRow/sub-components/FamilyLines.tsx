@@ -1,13 +1,13 @@
 /* @layer renderer-components @kind component */
-import { Box } from '@drizztdourden08/tessera/primitives';
-import { LadderPreview } from '../../LadderPreview';
+import { Box, Text } from '@drizztdourden08/tessera/primitives';
+import { LadderStepper } from '@app/composites/LadderStepper';
 import type { FamilyLinesProps } from '../CapacityFamilyRow.type';
 import { BonusLine } from './BonusLine';
 import { LadderControls } from './LadderControls';
 import { RowLine } from './RowLine';
 
 const FamilyLines = ({ model, inert, readout, onChange, onBonusChange }: FamilyLinesProps) => {
-  const { state, preview, bonus, bonusCaption } = model;
+  const { state, label, preview, bonus, bonusCaption } = model;
 
   return (
     <Box className="capacity-row__lines">
@@ -22,7 +22,10 @@ const FamilyLines = ({ model, inert, readout, onChange, onBonusChange }: FamilyL
         />
       )}
       <RowLine label="ladder" className="capacity-row__ladder">
-        <LadderPreview {...preview} />
+        <Box className="capacity-row__preview">
+          <LadderStepper label={label} steps={preview.steps} size="compact" mediaPlacement="below" showLabels={false} />
+          {preview.note !== undefined && <Text className="capacity-row__preview-note">{preview.note}</Text>}
+        </Box>
       </RowLine>
     </Box>
   );

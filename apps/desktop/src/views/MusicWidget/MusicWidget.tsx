@@ -14,23 +14,22 @@ const MusicWidgetContent = () => {
   return (
     <Box className="music-widget">
       <Box className="music-widget__section">
-        <SectionHeader title="Replacement audio" subtitle="What the pack's engine is playing right now" />
+        <SectionHeader title="Replacement audio" />
         {sessionActive
           ? channels.map((channel) => <ChannelLive key={channel.name} channel={channel} />)
-          : <EmptyState message="No music pack session. The sound chip owns everything." />}
+          : <EmptyState message="No music pack session." />}
       </Box>
 
       <Box className="music-widget__section">
         <SectionHeader
           title="Counts"
-          subtitle="Raises per sound, and rolls per chance layer"
           action={<Button variant="ghost" size="sm" onClick={clear}>Clear</Button>}
         />
         <CounterTable counters={counters} />
       </Box>
 
       <Box className="music-widget__section music-widget__section--feed">
-        <SectionHeader title="Events" subtitle="Every raise the core reported, and every roll the engine decided" />
+        <SectionHeader title="Events" />
         <EventFeed events={events} />
       </Box>
     </Box>

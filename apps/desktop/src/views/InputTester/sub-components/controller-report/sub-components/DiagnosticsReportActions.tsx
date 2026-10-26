@@ -1,8 +1,8 @@
 /* @layer renderer-components @kind component */
 import { Button } from '@drizztdourden08/tessera/primitives';
-import { COPY_LABELS } from '../../diagnostics-wizard/diagnostics-wizard.constants';
-import { DiagnosticsStepActions } from '../../diagnostics-wizard/sub-components/DiagnosticsStepActions';
-import { FlashButton } from '../../diagnostics-wizard/sub-components/FlashButton';
+import { COPY_LABELS } from '@drizztdourden08/brock-input/renderer';
+import { DiagnosticsStepActions } from '@drizztdourden08/brock-input/renderer';
+import { FlashButton } from '@drizztdourden08/brock-input/renderer';
 import type { ReportDialogPartProps } from '../report-dialog-controls.type';
 
 const DiagnosticsReportActions = (props: ReportDialogPartProps) => {

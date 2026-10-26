@@ -2,7 +2,7 @@
 import { bindingForPosition } from './binding-for-position';
 import { buildCore } from './build-core';
 import { DEFAULT_CORE_POSITIONS } from './default-modern-bindings.constants';
-import type { ResolvedControl } from '../../family/family.type';
+import type { ResolvedControl } from '@drizztdourden08/brock-input';
 import type { CoreBindings } from '@rotp/game-data';
 
 const defaultCoreBindings = (controls: readonly ResolvedControl[]): CoreBindings => {

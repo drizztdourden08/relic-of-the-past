@@ -13,7 +13,7 @@ const engineOf = (parent: HudContainer): string =>
 const reasonOf = (parent: HudContainer | null): string =>
   (parent
     ? `This parent is a ${engineOf(parent)}. Switch it to grid to place by cell.`
-    : 'The screen is the whole view; it sits in nothing.');
+    : 'The screen is the whole view.');
 
 const PlacementSection = (props: PlacementSectionProps) => {
   const { node, parent, onSelectNode, onPatch } = props;

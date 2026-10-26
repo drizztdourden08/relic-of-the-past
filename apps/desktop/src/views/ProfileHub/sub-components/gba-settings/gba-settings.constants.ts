@@ -5,10 +5,6 @@ import { buildSchema } from '@drizztdourden08/tessera/data';
 import type { SchemaConfig, TableColumn } from '@drizztdourden08/tessera/data';
 import type { GbaAvailability } from './gba-settings.type';
 
-const EXPERIMENTAL_NOTICE = 'Experimental and unfinished. Expect missing pieces and bugs.';
-
-const TRACKER_NOTE = 'What the Game Boy Advance release changes and how far each part has got. None of it can be switched on or off yet.';
-
 const EXTRA_DUNGEON_DESCRIPTION = 'Adds the optional post-game dungeon and its overworld entrance. Requires the second cartridge.';
 
 const GBA_GROUP_ORDER: GbaGroup[] = [
@@ -55,6 +51,6 @@ const GBA_SEARCH_PLACEHOLDER = 'Search differences...';
 const NO_SUPPLEMENT: GbaAvailability = { hasSupplement: false, supplementFile: null };
 
 export {
-  EXPERIMENTAL_NOTICE, EXTRA_DUNGEON_DESCRIPTION, GBA_COUNT_LABEL, GBA_GROUP_ORDER, GBA_SCHEMA, GBA_SCHEMA_CONFIG,
-  GBA_SEARCH_PLACEHOLDER, GBA_TABLE_COLUMNS, NO_SUPPLEMENT, TRACKER_NOTE,
+  EXTRA_DUNGEON_DESCRIPTION, GBA_COUNT_LABEL, GBA_GROUP_ORDER, GBA_SCHEMA, GBA_SCHEMA_CONFIG,
+  GBA_SEARCH_PLACEHOLDER, GBA_TABLE_COLUMNS, NO_SUPPLEMENT,
 };

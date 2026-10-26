@@ -23,7 +23,7 @@ const GroupsSection = (props: GroupsSectionProps) => {
   const editorGroup = editing?.kind === 'edit' ? editing.group : null;
 
   return (
-    <SettingsSection title="Groups" description="What each group sees. A Discord role fills a group; an admin can add people by hand.">
+    <SettingsSection title="Groups">
       {loading && <Text as="p" variant="caption">Loading groups</Text>}
       <ListItemList label="Groups">
         {groups.map((group) => (

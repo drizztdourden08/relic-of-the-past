@@ -1,6 +1,6 @@
 /* @layer renderer-app @kind logic */
 import { defineBootTask } from '@drizztdourden08/brock-react';
-import { startupFlag } from '@app/startup/startup-flag';
+import { startupFlag } from '@app/launch-flags/startup-flag';
 import { screenshotHold } from './screenshot-hold';
 
 export default defineBootTask({

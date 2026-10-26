@@ -40,7 +40,7 @@ const PreviewStep = (props: PreviewStepProps) => {
             <Text className="detail-panel__label">Grows</Text>
             <Text className="detail-panel__value">
               {totals.growingCount} already-compressed file{totals.growingCount === 1 ? '' : 's'} gets
-              bigger. Lossless, so the audio itself is stored exactly as it decodes today.
+              bigger. The audio is unchanged.
             </Text>
           </>
         )}

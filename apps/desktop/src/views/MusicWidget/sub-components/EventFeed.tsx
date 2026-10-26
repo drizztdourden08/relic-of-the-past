@@ -13,7 +13,7 @@ const EventFeed = (props: { events: MusicDebugEvent[] }) => {
     bottomRef.current?.scrollIntoView({ block: 'nearest' });
   }, [events]);
 
-  if (events.length === 0) return <EmptyState message="No sound events yet. Play, or make some noise." />;
+  if (events.length === 0) return <EmptyState message="No sound events yet." />;
 
   return (
     <ScrollArea className="music-widget__rows music-widget__feed">

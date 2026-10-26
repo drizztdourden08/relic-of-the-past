@@ -5,7 +5,7 @@ export type { AutoSaveTrigger } from '../../auto-save/auto-save.type';
 export { notifyAutoSavesChanged } from '../../auto-save/notify-auto-saves-changed';
 export { onAutoSavesChanged } from '../../auto-save/on-auto-saves-changed';
 export { stopAutoSave } from '../../auto-save/stop-auto-save';
-export { createMemFileStore } from '../../mem-file-store/mem-file-store';
+export { createMemFileStore } from '../../mem-file-store';
 export * as store from '../../profile-data';
 export { blockOffsetOf } from '../../save-file/block-offset-of';
 export * as mirror from '../../save-file/hook-save-bytes';

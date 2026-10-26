@@ -18,6 +18,7 @@ if ! "$EMSDK_PYTHON" -m pip install --disable-pip-version-check requests; then
 fi`,
   },
   { name: 'Build the wasm core', shell: 'bash', run: 'pnpm run ensure-wasm' },
+  { name: 'Build the Archipelago world packages', shell: 'bash', run: 'pnpm run ensure-apworld' },
 ];
 
 const releaseInputSteps: WorkflowStep[] = [
@@ -37,6 +38,13 @@ const publishStateFormat: WorkflowStep = {
   platforms: ['windows'],
   shell: 'bash',
   run: 'node tooling/state-format/check-state-format.mjs --emit upload',
+};
+
+const shipArchipelagoBuilds: WorkflowStep = {
+  name: 'Ship the Archipelago world packages',
+  platforms: ['linux'],
+  shell: 'bash',
+  run: 'cp build/archipelago/* upload/',
 };
 
 const linuxSdl3Soname: WorkflowStep = {
@@ -97,8 +105,9 @@ export default defineBrockConfig({
           { name: 'Analyze every file type', run: 'node tooling/analyze/analyze.mjs --ci' },
         ],
         beforePackage: [...wasmCoreSteps, linuxSdl3Soname, ...releaseInputSteps],
-        afterPackage: [publishStateFormat],
+        afterPackage: [publishStateFormat, shipArchipelagoBuilds],
       },
     },
+    attest: { stage: 'beforePackage', paths: ['build/archipelago/*.apworld'], perFile: true },
   },
 });

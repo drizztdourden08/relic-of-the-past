@@ -5,7 +5,6 @@ import './theme.css';
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 import { BrockApp } from '@drizztdourden08/brock-react';
-import type { RendererModule } from '@drizztdourden08/brock-react';
 import { rendererModules } from '../.brock/modules.renderer';
 import { rendererBootTasks } from '../.brock/boot.renderer';
 import { screenTree } from '../.brock/screens';
@@ -14,9 +13,12 @@ import { appReview } from '../.brock/review';
 import { appTitleBar } from '../.brock/title-bar';
 import { appTours } from '../.brock/tours';
 import { appWidgetKits } from '../.brock/widget-kits';
+import { appStartupPrompts } from '../.brock/startup';
+import { appToolbars } from '../.brock/toolbars';
 import { rotpBugReport } from './bug-report/rotp-bug-report';
 import { installAppShim } from './platform/api-shim';
 import { rotpShellModule } from './shell/rotp-shell-module';
+import { rotpControllersModule } from './controller-report/rotp-controllers-module';
 import { rotpProfileHooks } from './profiles/rotp-profile-hooks';
 import { useWidgetDisabled } from './widget-gates/useWidgetDisabled';
 import { DEVELOPER_TOOLS, SETTINGS, VOLUME } from './main.constants';
@@ -31,26 +33,13 @@ import './theme/hud-layout-editor/hud-layout-editor.css';
 import './theme/update-dialog.css';
 import './theme/data-manager/data-manager.css';
 import './theme/dialogue-editor/lines.css';
-import './theme/input-calibration/input-calibration.css';
 import './theme/msu-studio/msu-studio.css';
 import './theme/msu-studio/msu-files.css';
 import './theme/store/store.css';
 
 installAppShim();
 
-const rendererModulesWithRotpControllers: RendererModule[] = rendererModules.map((module) =>
-  module.id === 'input'
-    ? {
-        ...module,
-        screens: [],
-        menu: module.menu?.map((item) =>
-          item === 'separator' ? item : { ...item, screen: 'input-calibration' },
-        ),
-      }
-    : module,
-);
-
-const modules = [...rendererModulesWithRotpControllers, rotpShellModule];
+const modules = [...rendererModules, rotpShellModule, rotpControllersModule];
 
 const root = document.getElementById('root');
 if (!root) throw new Error('index.html has no #root element');
@@ -79,6 +68,8 @@ const App = () => {
       showFlags={showFlags}
       widgetKits={appWidgetKits}
       bugReport={rotpBugReport}
+      startupPrompts={appStartupPrompts}
+      toolbars={appToolbars}
     />
   );
 };

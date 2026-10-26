@@ -17,7 +17,7 @@ const SpritePicker = (props: SpritePickerProps) => {
   return (
     <Anchored anchorRef={anchorRef} placement="bottom-start" layer="popover" className="sprite-picker" onDismiss={onClose}>
       {present.length === 0 ? (
-        <EmptyState message="No sprite definitions in this checkout." />
+        <EmptyState message="No sprite definitions." />
       ) : (
         <>
           {notice}

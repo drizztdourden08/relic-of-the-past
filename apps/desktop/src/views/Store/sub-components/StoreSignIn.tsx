@@ -2,7 +2,6 @@
 import { Icon as IconifyIcon } from '@iconify/react/offline';
 import logInIcon from '@iconify-icons/lucide/log-in';
 import { Box, Button, Stack, Text } from '@drizztdourden08/tessera/primitives';
-import { STORE_SITE_HOST } from '@rotp/hub-client';
 import { HookshopHighlight } from '@rotp/design/packs';
 import { HubAccountCard } from '../../../compounds/HubAccountCard';
 import type { StoreSignInProps } from '../Store.type';
@@ -15,7 +14,6 @@ const StoreSignIn = (props: StoreSignInProps) => {
   return (
     <Stack gap="lg" align="center" className="store-sign-in">
       <HookshopHighlight pixelSize={HIGHLIGHT_PIXEL} className="store-sign-in__art" />
-      <Text as="h2" className="store-sign-in__title">Hookshop</Text>
       {waitingLink
         ? <Box className="store-sign-in__callout"><Text as="p">{WAITING_LINK}</Text></Box>
         : <Text as="p" className="store-sign-in__lead">{SIGN_IN_LEAD}</Text>}
@@ -36,7 +34,6 @@ const StoreSignIn = (props: StoreSignInProps) => {
           <Button variant="primary" size="md" fullWidth icon={<IconifyIcon icon={logInIcon} />} onClick={account.onSignIn}>
             Sign in with your browser
           </Button>
-          <Text as="p" className="store-sign-in__hint">Your browser opens {STORE_SITE_HOST} to confirm this computer.</Text>
           {account.lastError && <Text as="p" className="store__error">{account.lastError}</Text>}
           <Button variant="ghost" size="sm" onClick={account.onOpenSite}>Open the Hookshop site</Button>
         </Stack>

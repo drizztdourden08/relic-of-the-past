@@ -2,7 +2,7 @@
 import { useEffect, useRef } from 'react';
 import { nav, useBootStore, useSetAppContext, widgets } from '@drizztdourden08/brock-react';
 import { useDataViewStore } from '@app/stores/data-view-store';
-import { startupWidgets } from '@app/startup/startup-widgets';
+import { startupWidgets } from '@app/launch-flags/startup-widgets';
 import { GAME_CONTEXT, DATA_INSPECTOR_SCREEN } from '../GameSession.constants';
 import { useNavigationOverlayFollowsWidget } from './useNavigationOverlayFollowsWidget';
 

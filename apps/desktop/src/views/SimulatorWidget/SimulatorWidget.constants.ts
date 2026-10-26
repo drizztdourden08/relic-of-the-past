@@ -8,9 +8,8 @@ const PAUSED_POLL_MS = 120;
 const FEATURES_LATCH_WAIT_MS = 500;
 const SEQUENCE_PREFIX = 'Sequence ';
 
-const RECORD_REQUIRED = 'This suggestion is a code block; the writer now takes a record. '
-  + 'Apply it from the Dataset widget, which builds the record.';
-const CHECK_DISABLED_HINT = 'Check writing is not available in this build.';
+const RECORD_REQUIRED = 'Apply this suggestion from the Dataset widget.';
+const CHECK_DISABLED_HINT = 'Check writing is not available.';
 
 const EMPTY_FILTER: FilterState = {
   searchQuery: '',

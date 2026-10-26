@@ -13,7 +13,7 @@ import { ProfileHero } from '@app/compounds/ProfileHero';
 
 const Mounted = (props: ComponentProps<typeof ProfileHero>) => <ProfileHero {...props} />;
 `,
-  propsHash: 'a98a8edc5a58bb65',
+  propsHash: 'a1b2f08b7f89b262',
 } satisfies ComponentUsage;
 
 export { usage };

@@ -40,16 +40,16 @@
     "@capacitor/core": "catalog:",
     "@capacitor/filesystem": "catalog:",
     "@capacitor/haptics": "catalog:",
-    "@drizztdourden08/brock-catalog": "^0.68.6",
-    "@drizztdourden08/brock-core": "^0.68.6",
-    "@drizztdourden08/brock-display": "^0.68.6",
-    "@drizztdourden08/brock-electron": "^0.68.6",
-    "@drizztdourden08/brock-input": "^0.68.6",
-    "@drizztdourden08/brock-port-kit": "^0.68.6",
-    "@drizztdourden08/brock-react": "^0.68.6",
-    "@drizztdourden08/brock-secrets": "^0.68.6",
-    "@drizztdourden08/brock-tools": "^0.68.6",
-    "@drizztdourden08/brock-updater": "^0.68.6",
+    "@drizztdourden08/brock-catalog": "^0.106.0",
+    "@drizztdourden08/brock-core": "^0.106.0",
+    "@drizztdourden08/brock-display": "^0.106.0",
+    "@drizztdourden08/brock-electron": "^0.106.0",
+    "@drizztdourden08/brock-input": "^0.106.0",
+    "@drizztdourden08/brock-port-kit": "^0.106.0",
+    "@drizztdourden08/brock-react": "^0.106.0",
+    "@drizztdourden08/brock-secrets": "^0.106.0",
+    "@drizztdourden08/brock-tools": "^0.106.0",
+    "@drizztdourden08/brock-updater": "^0.106.0",
     "@drizztdourden08/tessera": "catalog:",
     "@electron-toolkit/utils": "catalog:",
     "@iconify-icons/game-icons": "^1.2.1",
@@ -79,6 +79,7 @@
     "@tiptap/extension-text": "^3.30.2",
     "@tiptap/pm": "^3.30.2",
     "@tiptap/react": "^3.30.2",
+    "bonjour-service": "^1.4.4",
     "expr-eval": "2.0.2",
     "js-yaml": "^4.1.1",
     "jszip": "^3.10.1",
@@ -124,8 +125,8 @@
     "vitest": "catalog:"
   },
   "brock": {
-    "version": "0.68.6",
-    "tessera": "0.46.1"
+    "version": "0.106.0",
+    "tessera": "0.72.0"
   },
   "portKit": {
     "wasm": {

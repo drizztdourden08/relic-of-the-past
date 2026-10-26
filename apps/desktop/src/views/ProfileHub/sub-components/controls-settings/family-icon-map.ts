@@ -1,5 +1,6 @@
 /* @layer renderer-components @kind logic */
-import { buildDisplayContext, resolveBrandLogoKey, recallControllerSdlType } from '@rotp/input-mapping';
+import { buildDisplayContext, resolveBrandLogoKey } from '@drizztdourden08/brock-input';
+import { recallControllerSdlType } from '@drizztdourden08/brock-input/renderer';
 import { FAMILY_ICON_MAP, GENERIC_CONTROLLER_ICON } from './controls-settings.constants';
 import { findLiveDevice } from './live-device';
 import type { LiveFamilyIconParams } from './controls-settings.type';

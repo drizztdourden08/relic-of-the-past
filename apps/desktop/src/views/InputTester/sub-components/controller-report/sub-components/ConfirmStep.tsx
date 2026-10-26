@@ -3,7 +3,7 @@ import { Text } from '@drizztdourden08/tessera/primitives';
 import { describeReportContact } from '../behavior/describe-report-contact';
 import { stringifyOrEmpty } from '../behavior/stringify-or-empty';
 import type { ConfirmStepProps } from '../controller-report-form.type';
-import { ReportSection } from './ReportSection';
+import { ReportSection } from '@drizztdourden08/brock-input/renderer';
 
 const ConfirmStep = (props: ConfirmStepProps) => {
   const { me, email, name, additionalInfo, debugText, detection, calibrationMap, diagnosticsReport, status } = props;

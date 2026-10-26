@@ -1,5 +1,5 @@
 /* @layer shared-input @kind types */
-import type { ResolvedControl } from '../../family/family.type';
+import type { ResolvedControl } from '@drizztdourden08/brock-input';
 import type { CoreBindings, ModernSlot } from '@rotp/game-data';
 
 interface SlotSource {

@@ -18,8 +18,7 @@ const MotionTransport = (props: MotionTransportProps) => {
   if (preview.disabled) {
     return (
       <Text className="hud-editor__hint">
-        Reduced motion is on, so animations are held at their rest pose here and in game, so there is
-        nothing to play. Transitions and enter/exit still run.
+        Reduced motion is on, so animations are held at their rest pose.
       </Text>
     );
   }

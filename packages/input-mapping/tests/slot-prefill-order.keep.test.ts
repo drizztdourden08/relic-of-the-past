@@ -1,7 +1,7 @@
 /* @layer test @kind test */
 import { describe, expect, it } from 'vitest';
 import { defaultSlotList } from '@rotp/input-mapping';
-import type { ResolvedControl, SdlButtonName } from '@rotp/input-mapping';
+import type { ResolvedControl, SdlButtonName } from '@drizztdourden08/brock-input';
 import type { CoreBindings } from '@rotp/game-data';
 
 const button = (position: SdlButtonName): ResolvedControl =>

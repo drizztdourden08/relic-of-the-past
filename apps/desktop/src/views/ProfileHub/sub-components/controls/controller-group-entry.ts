@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind logic */
-import { controllerCardInfo } from '@rotp/input-mapping';
-import type { ControllerDeviceGroup } from '@rotp/input-mapping';
+import { controllerCardInfo } from '@drizztdourden08/brock-input/renderer';
+import type { ControllerDeviceGroup } from '@drizztdourden08/brock-input/renderer';
 import { firstPort } from './first-port';
 import { ADAPTER_FAMILY_ICON, BUS_NAME, DEVICE_FAMILY_ICON, GENERIC_DEVICE_ICON, SDL_TYPE_ICON } from './controls.constants';
 import type { DeviceEntry } from './DeviceRow.type';

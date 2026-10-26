@@ -97,6 +97,8 @@ interface PrimitiveData {
   potionSeller: string;
 }
 
+type WorldExport = Record<string, unknown>;
+
 interface WorldModel {
   options: Record<string, OptionValue>;
   present: string[];
@@ -140,5 +142,5 @@ type HelperNode = Extract<RuleNode, { op: 'helper' }>;
 export type {
   CapacityFamilyData, ExportedEvent, ExportedExit, ExportedHelperCall, ExportedItem, ExportedLocation, ExportedOption,
   ExportedRegions, ExportedRules, HelperNode, ItemClass, ItemHalf, ItemHalfInput, LocationRequires, OptionType,
-  PrimitiveData, Readings, WorldModel, WorldModelInput,
+  PrimitiveData, Readings, WorldExport, WorldModel, WorldModelInput,
 };

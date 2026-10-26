@@ -3,6 +3,7 @@ import { apiUrl } from '../endpoints';
 import type { HubApi } from '../endpoints';
 import { apiError } from './api-error';
 import type { ApiCall } from './client.type';
+import { reachHub } from './reach-hub';
 
 const messageOf = async (res: Response): Promise<string> => {
   const parsed = await res.json().catch(() => null) as { error?: string; message?: string } | null;
@@ -14,7 +15,7 @@ const callApi = async <T>(api: HubApi, call: ApiCall): Promise<T> => {
   const headers: Record<string, string> = { Accept: 'application/json' };
   if (body !== undefined) headers['Content-Type'] = 'application/json';
   if (token) headers.Authorization = `Bearer ${token}`;
-  const res = await fetch(apiUrl(api, route, params, query), {
+  const res = await reachHub(apiUrl(api, route, params, query), {
     method: route.method,
     headers,
     body: body === undefined ? undefined : JSON.stringify(body),

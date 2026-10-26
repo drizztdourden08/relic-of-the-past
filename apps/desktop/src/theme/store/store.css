@@ -9,6 +9,10 @@
   overflow: hidden;
 }
 
+.store-home {
+  user-select: text;
+}
+
 .store-page {
   min-width: 0;
   overflow-y: auto;
@@ -118,14 +122,6 @@
   text-align: center;
 }
 
-.store-sign-in .store-sign-in__title {
-  margin: 0;
-  color: var(--c-primary);
-  font-family: var(--font-game);
-  font-size: var(--text-2xl);
-  font-weight: var(--weight-normal);
-}
-
 .store-sign-in .store-sign-in__lead {
   color: var(--c-text-dim);
 }
@@ -140,9 +136,4 @@
 
 .store-sign-in__actions {
   width: 100%;
-}
-
-.store-sign-in .store-sign-in__hint {
-  color: var(--c-text-muted);
-  font-size: var(--text-sm);
 }

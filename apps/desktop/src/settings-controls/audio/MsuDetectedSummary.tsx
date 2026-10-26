@@ -13,11 +13,7 @@ const MsuDetectedSummary = (props: MsuDetectedSummaryProps) => {
     <Box className="msu-detected">
       <Box className="msu-detected__header">
         <Text as="span" className="msu-detected__label">Pack Format</Text>
-        <Text as="span" className="msu-detected__description">
-          {pack
-            ? 'Read from the pack assigned to this profile.'
-            : 'No pack assigned to this profile. Assign one in Data Manager.'}
-        </Text>
+        {!pack && <Text as="span" className="msu-detected__description">No pack assigned to this profile. Assign one in Data Manager.</Text>}
       </Box>
       <Box className="msu-detected__value">
         <Text as="span" className={`msu-detected__mode ${pack ? '' : 'msu-detected__mode--off'}`}>

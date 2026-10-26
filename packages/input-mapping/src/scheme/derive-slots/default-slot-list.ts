@@ -3,7 +3,7 @@ import { corePositions } from '../core-positions';
 import { inPrefillOrder } from '../prefill-order';
 import { renumberSlots } from '../slot-list';
 import { deviceSlots } from './device-slots';
-import type { ResolvedControl } from '../../family/family.type';
+import type { ResolvedControl } from '@drizztdourden08/brock-input';
 import type { CoreBindings, ModernSlot } from '@rotp/game-data';
 
 const defaultSlotList = (controls: readonly ResolvedControl[], core: CoreBindings): ModernSlot[] => {

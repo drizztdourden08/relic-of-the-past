@@ -1,7 +1,7 @@
 /* @layer shared-input @kind logic */
 import { glyphAssetPath } from '../glyph-asset-paths';
 import { builtInGlyphSource } from './built-in-glyph-source';
-import type { SdlAxisName, SdlButtonName } from '../../family';
+import type { SdlAxisName, SdlButtonName } from '@rotp/game-data';
 import type { GlyphTable, IconKeyTable } from './built-in-packs.type';
 
 const tableFromIcons = (...tables: readonly (IconKeyTable | undefined)[]): GlyphTable => {

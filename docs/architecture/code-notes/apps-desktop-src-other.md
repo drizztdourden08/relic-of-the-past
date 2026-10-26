@@ -7,6 +7,10 @@ Facts about the smaller areas of `apps/desktop/src/` that the code cannot say on
 
 The renderer's half of the Sanctuary bug report; the dialog is Brock's and the transport runs in the main process (`apps/desktop/electron/sanctuary/bug-report/`). `useReportSnapshotOnOpen` sends the report context, the active profile and a live save state the moment the dialog opens, because only the renderer can read the running game. `useSignedOutIssueFallback` swaps in a transport that opens a prefilled GitHub issue while nobody is signed in, so a signed out player can still report; it puts `rotpBugReport` (the recordings section) back when it lets go. `useDefaultReportTitle` fills the title with the app version and the current screen each time the dialog opens, unless the caller passed its own title to `bugReport.open`. The dialog's recordings section is `views/BugReportRecordings`, shown only while debug logging is on and a game session has set the snapshot.
 
+## apps/desktop/src/controller-report/
+
+The app's side of the Controllers screens, which live in `@drizztdourden08/brock-input`. `rotp-controllers-module.ts` is a Brock renderer module whose provider mounts `ControllerReportHost`, the one place the report dialog (`apps/desktop/src/views/InputTester/`) is rendered, driven by `useControllerReportStore` (`open(deviceKey)` and `close`). `register-controller-hooks.ts` hands brock-input the three things only the game knows, at boot (`apps/desktop/src/boot/controller-hooks.task.ts`): the per-device "report this controller" action (`DEVICE_CARD_ACTIONS`), the "Sword Hit" rumble test (`RUMBLE_TESTS`, which plays through the game's haptic preview) and the glyph source that gives the pad overlay the app's button and controller art (`GLYPH_SOURCE`).
+
 ## apps/desktop/src/credits/
 
 The project credits. Keep them in step with `CREDITS.md` at the repository root.
@@ -48,7 +52,7 @@ carry the report.
   DOM typings. SDL3 claims every controller directly (the Gamepad API path is gone). The probe
   reads the device snapshot from the controller layer, not the input manager's cache (which
   exists only after the manager started) and not the reported input set (SDL emits state only
-  on change, so an untouched pad would be missing). Names come from the controller name
+  on change, so an untouched pad would be missing). Names come from brock-input's controller name
   cache (fed by the input module's `onAdded`), then the snapshot's fields. Device ids carry the vendor and
   product pair a controller mapping report needs.
 - `probe-display.ts`: scale factor and colour capability decide how the pixel art scaler

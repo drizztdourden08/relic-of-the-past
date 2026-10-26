@@ -10,7 +10,7 @@ const ProfilePackFields = (props: ProfileEditSectionProps) => {
 
   return (
     <>
-      <Field label="Language" hint="The text the game shows.">
+      <Field label="Language">
         <Select
           value={profile.language ?? ''}
           onChange={async (val) => {
@@ -24,7 +24,7 @@ const ProfilePackFields = (props: ProfileEditSectionProps) => {
           placeholder="Default (English)"
         />
       </Field>
-      <Field label="MSU pack" hint="Plays at once when this profile is running.">
+      <Field label="MSU pack">
         <Select
           value={profile.msuPack ?? ''}
           onChange={async (val) => {

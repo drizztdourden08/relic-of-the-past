@@ -14,7 +14,7 @@ const SoundAudioSection = (props: SoundAudioSectionProps) => {
     <StudioSection title="Audio">
       {unclaimed && !readOnly && (
         <Text variant="caption" tone="muted">
-          This sound still plays from the sound chip. Add a layer with audio and save to hand it over to the pack.
+          This sound plays from the sound chip. Add a layer with audio and save to replace it.
         </Text>
       )}
       <DropZone

@@ -14,7 +14,7 @@ const IndoorBasicRows = ({ palaceIndex, roomIndex, dungeonMapPos }: IndoorBasicR
     <DescRow label="Room" desc="The current room ID in the indoor tilemap (0x0000-0x0127). Each indoor room is a 512×512 pixel area.">
       <Text>{hexLabelOf(roomIndex, 4)}</Text>
     </DescRow>
-    <DescRow label="Grid Pos" desc="The room's position in the dungeon's 5×5 map grid for the current floor (from the dungeon map layout data). 1-based row,col. Falls back to absolute room grid (16×16) for caves/houses.">
+    <DescRow label="Grid Pos" desc="The room's position in the dungeon's 5×5 map grid for the current floor, as 1-based row,col. Caves and houses use the 16×16 room grid.">
       {dungeonMapPos?.found ? (
         <Text className="nav-val-dim">({dungeonMapPos.mapRow + 1}, {dungeonMapPos.mapCol + 1})</Text>
       ) : (
@@ -22,7 +22,7 @@ const IndoorBasicRows = ({ palaceIndex, roomIndex, dungeonMapPos }: IndoorBasicR
       )}
     </DescRow>
     {dungeonMapPos && (
-      <DescRow label="Floor" desc="The current dungeon floor. Derived from dung_cur_floor: 0=1F, 1=2F, 0xFF=B1, 0xFE=B2, etc. The range shows all floors in this dungeon from highest to lowest.">
+      <DescRow label="Floor" desc="The current dungeon floor, with the range of all floors in this dungeon from highest to lowest.">
         <Text className="nav-val-warning">{dungeonMapPos.floorLabel}</Text>
         <Text className="nav-val-badge">{floorRangeLabel(dungeonMapPos.numAboveFloors, dungeonMapPos.numBasementFloors)}</Text>
       </DescRow>

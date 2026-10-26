@@ -1,2 +1,2 @@
 /* @layer renderer-components @kind barrel */
-export { InputCalibration } from './sub-components/InputCalibration';
+export { ControllerReportDialog } from './sub-components/controller-report';

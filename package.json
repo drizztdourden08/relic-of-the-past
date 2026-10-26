@@ -32,16 +32,20 @@
     "generate:gba-asset-index:check": "node tooling/generate-gba-asset-index/generate-gba-asset-index-cli.mjs --check",
     "gba:extract-palace": "tsx tooling/gba-alttp-re/export-palace-dungeon.ts",
     "gba:build-playable-assets": "tsx tooling/gba-alttp-re/build-playable-assets.ts",
-    "predev": "pnpm run ensure-wasm",
+    "ensure-apworld": "node tooling/apworld/ensure-apworld.mjs",
+    "predev": "pnpm run ensure-wasm && pnpm run ensure-apworld",
     "dev": "pnpm --filter ./apps/desktop dev",
-    "prebuild": "pnpm run ensure-wasm",
+    "prebuild": "pnpm run ensure-wasm && pnpm run ensure-apworld",
+    "prebuild:web": "pnpm run ensure-apworld",
     "build": "pnpm --filter ./apps/desktop package",
+    "build:apworld": "node tooling/apworld/build-apworld.mjs",
     "logos": "node apps/desktop/public/logos/build.mjs",
     "msul:icon": "node tooling/msul-icon/make-msul-icon.mjs",
     "build:linux": "pnpm run build",
     "preview": "pnpm --filter ./apps/desktop exec electron-vite preview",
     "build:web": "pnpm --filter ./apps/desktop build:web",
     "push:linux": "node tooling/deploy/push-linux.mjs",
+    "prepush:android": "pnpm run ensure-apworld",
     "push:android": "node tooling/deploy/push-android.mjs",
     "emulator:start": "node tooling/deploy/push-android.mjs --emulator-only",
     "prepare": "git config core.hooksPath .githooks || true",
@@ -107,7 +111,7 @@
     "@capacitor/assets": "^3.0.5",
     "@capacitor/cli": "catalog:",
     "@drizztdourden08/brock-build": "catalog:",
-    "@drizztdourden08/brock-core": "^0.68.6",
+    "@drizztdourden08/brock-core": "^0.106.0",
     "@drizztdourden08/brock-lint-config": "catalog:",
     "@drizztdourden08/brock-plugin-snes": "catalog:",
     "@drizztdourden08/brock-thread": "catalog:",
@@ -163,8 +167,8 @@
     "vitest": "catalog:"
   },
   "brock": {
-    "version": "0.68.6",
-    "tessera": "0.46.1"
+    "version": "0.106.0",
+    "tessera": "0.72.0"
   },
   "bin": {
     "rotp": "./bin/rotp.mjs"

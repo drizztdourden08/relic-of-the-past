@@ -21,9 +21,7 @@ const StageColumn = (props: StageColumnProps) => {
         onSelect={edits.select}
       />
       <Text className="hud-editor__hint">
-        Every placeholder is dealt a sample item so the density of a group can be judged.
-        {sample.live ? ' Hearts and counters come from the running save.' : ' Nothing is running, so the counters are made up too.'}
-        {' '}None of it is written anywhere.
+        {sample.live ? 'Showing sample items. Hearts and counters come from the running save.' : 'Showing sample items and counters.'}
       </Text>
       <EditorStepStrip step={editorStep} onStepChange={setEditorStep} />
     </Box>

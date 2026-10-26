@@ -15,7 +15,3 @@
 .reporting-as__who {
   color: var(--c-primary);
 }
-
-.reporting-as__hint {
-  color: var(--c-text-dim);
-}

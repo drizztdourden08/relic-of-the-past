@@ -16,7 +16,7 @@ const SlotRefField = (props: SlotRefFieldProps) => {
   const known = slotInScheme(slots, value);
   const highest = slots.reduce((top, slot) => Math.max(top, slot.index), 0);
   const note = slots.length > 0 && !known
-    ? `The previewed scheme reaches slot ${highest}, so this draws nothing here. Still legal.`
+    ? `The previewed scheme reaches slot ${highest}, so this draws nothing here.`
     : undefined;
 
   return (

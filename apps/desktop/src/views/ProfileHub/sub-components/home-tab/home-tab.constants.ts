@@ -34,6 +34,7 @@ const RUN_OF_MODE: Readonly<Record<ProfileModeId, RunKind | null>> = {
   'vanilla-safe': null,
   randomizer: 'seed',
   'randomizer-online': 'online',
+  'randomizer-archipelia': null,
 };
 
 export {

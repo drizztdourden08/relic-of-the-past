@@ -18,6 +18,7 @@ interface PoolListingProps {
   groups: readonly PoolListingGroup[];
   totals: PoolFillTotals | null;
   error?: string;
+  titled?: boolean;
   className?: string;
 }
 

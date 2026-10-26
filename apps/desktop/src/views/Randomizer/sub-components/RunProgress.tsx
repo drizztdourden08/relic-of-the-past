@@ -31,7 +31,7 @@ const RunProgress = ({ placement, room }: RunProgressProps) => {
   return (
     <DashboardCard placement={placement} title="Progress">
       {counts === null ? (
-        <Text className="randomizer-page__hint">The progress shows once the game boots and the session loads the seed.</Text>
+        <Text className="randomizer-page__hint">No progress yet.</Text>
       ) : (
         <ProgressBar
           value={counts.taken}

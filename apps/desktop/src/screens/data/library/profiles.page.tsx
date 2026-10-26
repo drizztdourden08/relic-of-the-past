@@ -5,7 +5,7 @@ import type { CreateProfileOptions } from '@app/profiles/types';
 import { useDataLibrary } from '@app/views/DataManager/behavior/useDataLibrary';
 import { ProfileManager } from '@app/views/DataManager/sub-components/ProfileManager';
 
-const meta: ScreenMeta = { title: 'Profiles', icon: 'users', order: 1, fill: true, keywords: ['profile', 'create', 'delete', 'preset', 'language', 'msu', 'randomizer', 'archipelago'] };
+const meta: ScreenMeta = { title: 'Profiles', icon: 'users', showHeader: true, order: 1, fill: true, keywords: ['profile', 'create', 'delete', 'preset', 'language', 'msu', 'randomizer', 'archipelago'] };
 
 const ProfilesPage = (props: PageProps) => {
   const { open } = props;
@@ -18,7 +18,7 @@ const ProfilesPage = (props: PageProps) => {
 
   const createProfile = useCallback(async (opts: CreateProfileOptions) => {
     const result = await handleCreateProfile(opts);
-    if (result.success) open('game');
+    if (result.success && opts.randomizer?.mode !== 'archipelia') open('game');
     return result;
   }, [handleCreateProfile, open]);
 

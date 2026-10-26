@@ -1,7 +1,7 @@
 /* @layer renderer-components @kind types */
 import type { ReactNode } from 'react';
 import type { CurveId, PondAskSetting, PondAskCurrency, ShopBottleContent, OptionDescription, PondMode } from '@rotp/randomizer';
-import type { LadderPreviewProps } from '../LadderPreview';
+import type { LadderStep } from '@app/composites/LadderStepper';
 
 interface PondRowState {
   mode: PondMode;
@@ -41,6 +41,11 @@ interface PondCurveOption {
   label: string;
 }
 
+interface PondPreviewModel {
+  steps: readonly LadderStep[];
+  note: string;
+}
+
 interface PondRowModel {
   label: string;
   modeLabel: string;
@@ -52,7 +57,7 @@ interface PondRowModel {
   maxItems: number;
   hasPrices: boolean;
   offersItems: boolean;
-  preview: LadderPreviewProps;
+  preview: PondPreviewModel;
   askModel: PondAskModel;
   walletNote?: string;
 }
@@ -78,5 +83,5 @@ interface PondOptionLineProps {
 
 export type {
   PondAskModel, PondAskRowModel, PondControlsProps, PondOptionLineProps,
-  PondRowModel, PondRowState, WishingPondRowProps,
+  PondPreviewModel, PondRowModel, PondRowState, WishingPondRowProps,
 };

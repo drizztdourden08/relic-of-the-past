@@ -71,7 +71,11 @@ describe('the connection patch', () => {
     const next = applyConnectionPatch(onlineConfig('nope'), {
       serverUrl: ' other:1 ', slotName: 'Zelda', password: '', deathLink: true, trackOtherPlayers: true,
     });
-    expect(next).toEqual({ ...onlineConfig('nope'), serverUrl: 'other:1', slotName: 'Zelda', deathLink: true, trackOtherPlayers: true, password: undefined });
+    const before = onlineConfig('nope');
+    expect(next).toEqual({
+      ...before, serverUrl: 'other:1', slotName: 'Zelda', deathLink: true, trackOtherPlayers: true, password: undefined,
+      options: { ...before.options, values: { ...before.options.values, death_link: true } },
+    });
     expect('password' in next).toBe(false);
   });
 

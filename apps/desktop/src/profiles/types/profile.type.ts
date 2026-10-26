@@ -3,10 +3,12 @@ import type { RandomizerOptionsSnapshot, DeliverableLists } from '@rotp/randomiz
 import type { GameSettings } from '@rotp/features';
 
 interface ProfileRandomizerConfig {
-  mode: 'local' | 'online';
+  mode: 'local' | 'online' | 'archipelia';
+  origin?: 'archipelia';
   seed: string;
   options: RandomizerOptionsSnapshot;
   serverUrl?: string;
+  fallbackServerUrl?: string;
   slotName?: string;
   password?: string;
   deathLink?: boolean;

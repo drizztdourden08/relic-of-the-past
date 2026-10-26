@@ -1,7 +1,7 @@
 /* @layer renderer-components @kind logic */
-import type { DiagnosticsWizardState } from '../../diagnostics-wizard/behavior/useDiagnosticsWizardState';
+import type { DiagnosticsWizardState } from '@drizztdourden08/brock-input/renderer';
 import { LEAD_STEP_COUNT } from '../controller-report.constants';
-import type { ReportStep } from '../controller-report.type';
+import type { ReportStep } from '@drizztdourden08/brock-input/renderer';
 
 const reportStepIndex = (step: ReportStep, wizard: DiagnosticsWizardState): number => {
   if (step === 'about') return 0;

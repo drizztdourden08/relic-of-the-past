@@ -1,4 +1,5 @@
 /* @layer shared-storage @kind logic */
+import { DEATH_LINK_KEY } from '@rotp/randomizer';
 import type { ProfileRandomizerConfig, RandomizerConnectionPatch } from '@app/profiles/types';
 import { CONNECTION_KEYS, FLAG_KEYS, TEXT_KEYS } from './randomizer-connection-patch.constants';
 
@@ -32,6 +33,18 @@ const checkValues = (patch: RandomizerConnectionPatch): void => {
   if (password !== undefined && password !== null && typeof password !== 'string') refuse('password is not text');
 };
 
+const withDeathLinkOption = (config: ProfileRandomizerConfig, deathLink: boolean | undefined): ProfileRandomizerConfig => (
+  deathLink === undefined
+    ? config
+    : { ...config, options: { ...config.options, values: { ...config.options.values, [DEATH_LINK_KEY]: deathLink } } }
+);
+
+const withoutStaleFallback = (config: ProfileRandomizerConfig, patch: RandomizerConnectionPatch): ProfileRandomizerConfig => {
+  if (patch.serverUrl === undefined) return config;
+  const { fallbackServerUrl: _stale, ...rest } = config;
+  return rest;
+};
+
 const applyConnectionPatch = (
   config: ProfileRandomizerConfig | undefined, patch: RandomizerConnectionPatch,
 ): ProfileRandomizerConfig => {
@@ -43,7 +56,7 @@ const applyConnectionPatch = (
   for (const key of FLAG_KEYS) if (patch[key] !== undefined) next[key] = patch[key];
   if (patch.password === null || patch.password === '') delete next.password;
   else if (patch.password !== undefined) next.password = patch.password;
-  return next;
+  return withDeathLinkOption(withoutStaleFallback(next, patch), patch.deathLink);
 };
 
 export { applyConnectionPatch };

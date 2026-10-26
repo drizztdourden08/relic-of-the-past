@@ -11,6 +11,7 @@ const AUTHORITIES: readonly CapacityPondAuthority[] = ['pond', 'capacity', 'expl
 const BASE_CHOICES: Omit<RandomizerOptionChoices, 'capacityEnabled' | 'capacity' | 'ponds' | 'retroBow'> = {
   ...NEUTRAL_CHOICES,
   keyDropShuffle: true,
+  deathLink: false,
   includeNpcChecks: false,
   includeWorldItems: false,
   shufflePrizes: false,

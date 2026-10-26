@@ -2,12 +2,13 @@
 import { useEffect } from 'react';
 import { Text, Toggle, Select, TextInput, Field } from '@drizztdourden08/tessera/primitives';
 import { ArchipelagoFields } from './ArchipelagoFields';
+import { ArchipeliaFields } from './ArchipeliaFields';
 import { MODE_OPTIONS } from './RandomizerFields.constants';
 import type { RandomizerFormState } from './build-randomizer-config';
 import type { RandomizerFieldsProps } from './RandomizerFields.type';
 
 const RandomizerFields = (props: RandomizerFieldsProps) => {
-  const { value, onChange, experimental } = props;
+  const { value, onChange, experimental, joining } = props;
   const patch = (part: Partial<RandomizerFormState>) => onChange({ ...value, ...part });
 
   useEffect(() => {
@@ -31,14 +32,15 @@ const RandomizerFields = (props: RandomizerFieldsProps) => {
               onChange={(e) => patch({ seed: e.target.value })}
             />
           </Field>
-          {experimental && <Field label="Mode">
+          <Field label="Mode">
             <Select
               value={value.mode}
-              onChange={(mode) => patch({ mode: mode as RandomizerFormState['mode'] })}
-              options={MODE_OPTIONS}
+              onChange={(mode) => patch({ mode: mode as RandomizerFormState['mode'], ...(mode === 'local' ? { deathLink: false } : {}) })}
+              options={experimental ? MODE_OPTIONS : MODE_OPTIONS.filter((option) => option.value !== 'online')}
             />
-          </Field>}
+          </Field>
           {experimental && value.mode === 'online' && <ArchipelagoFields value={value} onChange={patch} />}
+          {value.mode === 'archipelia' && <ArchipeliaFields value={value} onChange={patch} joining={joining} />}
           <Text variant="caption">
             {experimental && value.mode === 'online'
               ? 'Seed and options lock once the profile is created. The connection stays editable.'

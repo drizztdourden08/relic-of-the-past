@@ -3,7 +3,7 @@ import type { PageProps, ScreenMeta } from '@drizztdourden08/brock-react';
 import { Randomizer } from '@app/views/Randomizer';
 import { isOnlineExperimental } from '@app/shell/show-rules';
 
-const meta: ScreenMeta = { title: 'Online', icon: 'globe', order: 2, when: isOnlineExperimental, keywords: ['archipelago', 'death link', 'track other players'] };
+const meta: ScreenMeta = { title: 'Online', icon: 'globe', showHeader: true, order: 2, when: isOnlineExperimental, keywords: ['archipelago', 'death link', 'track other players'] };
 
 const RandomizerOnlinePage = (props: PageProps) => {
   const { open } = props;

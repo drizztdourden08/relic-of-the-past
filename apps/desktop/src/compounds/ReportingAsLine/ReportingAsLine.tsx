@@ -11,7 +11,6 @@ const ReportingAsLine = (props: ReportingAsLineProps) => {
     <Text as="p" className="reporting-as">
       <Text as="span" tone="faint" className="reporting-as__label">reporting as</Text>
       <Text as="span" className="reporting-as__who">{who}</Text>
-      <Text as="span" className="reporting-as__hint"> · change in Contributor</Text>
     </Text>
   );
 };

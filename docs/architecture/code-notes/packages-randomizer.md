@@ -37,9 +37,9 @@ The order the id tables were first numbered in: natural key order, so rung 10 so
 
 Every location the world can declare under any option. The widest world is built once (key drops on, every pond rung present, every shelf slot opened at the deepest restock), and each seed row of the collection and every shelf key at every depth are added on top, so a row an option would hide still counts. A story event is no location, so none is here.
 
-## packages/randomizer/src/archipelago/concrete-option-values.ts
+## packages/randomizer/src/archipelago/player-yaml/render-player-yaml.ts
 
-Archipelago reads the word `random` in a player file as its own keyword: roll any value of the option. In this app `random` is a real choice of some rows (a progressive family's any-order mode, the shop shuffle's random mode), the value the pre-roll was built for. Written as the word, the generator would roll a different value and the package would refuse the file for disagreeing with its pre-roll. So such a choice is written as its numeric id, which Archipelago stores as is and the package reads back as the same app value (`options.py` `app_value_of`). Every other value passes through.
+The player file, written by the Archipelia client kit (`buildPlayerYaml`) from the option catalog as its schema. Archipelago reads the word `random` in a player file as its own keyword: roll any value of the option. In this app `random` is a real choice of some rows (a progressive family's any-order mode, the shop shuffle's random mode), the value the pre-roll was built for. Written as the word, the generator would roll a different value and the package would refuse the file for disagreeing with its pre-roll. So the kit writes such a choice as its numeric id, which Archipelago stores as is and the package reads back as the same app value (`options.py` `app_value_of`). Every other value passes through.
 
 ## packages/randomizer/src/archipelago/export/export-options.ts
 

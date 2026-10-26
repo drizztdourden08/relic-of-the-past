@@ -31,6 +31,7 @@ const RomManager = (props: RomManagerProps) => {
 
   return (
     <ListDetailLayout
+      listShowTitle={false}
       listContainers={[
         {
           title: 'Import ROMs',

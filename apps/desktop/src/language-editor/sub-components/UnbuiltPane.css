@@ -3,30 +3,7 @@
   display: flex;
   flex: 1;
   flex-direction: column;
-  gap: var(--space-xs);
   min-height: 0;
-}
-
-.unbuilt-pane__notice {
-  display: flex;
-  align-items: baseline;
-  flex-wrap: wrap;
-  gap: var(--space-xs);
-  flex: none;
-  padding: var(--space-xs) var(--space-sm);
-  border: var(--border-width-thin) solid var(--c-warning);
-  border-left-width: var(--border-width-thick);
-  border-radius: var(--radius-sm);
-  background: var(--c-warning-dim);
-}
-
-.unbuilt-pane__title {
-  color: var(--c-warning);
-  font-weight: var(--weight-semi);
-}
-
-.unbuilt-pane__summary {
-  color: var(--c-text);
 }
 
 .unbuilt-pane__body {

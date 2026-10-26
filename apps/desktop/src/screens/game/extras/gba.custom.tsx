@@ -5,7 +5,7 @@ import type { AppSettings } from '@app/settings.type';
 import { GbaSettings } from '@app/views/ProfileHub/sub-components/gba-settings';
 import { isExperimental } from '@app/shell/show-rules';
 
-const meta: ScreenMeta = { title: 'GBA', icon: 'puzzle', order: 5, when: isExperimental, keywords: ['gba', 'game boy advance', 'second cartridge', 'four swords', 'extra dungeon'] };
+const meta: ScreenMeta = { title: 'GBA', icon: 'puzzle', showHeader: true, order: 5, when: isExperimental, keywords: ['gba', 'game boy advance', 'second cartridge', 'four swords', 'extra dungeon'] };
 
 const searchEntries: SearchEntrySeed[] = [
   { label: 'Extra Dungeon', keywords: ['post game', 'second cartridge', 'supplement', 'extra dungeon'], anchor: 'extraDungeon', description: 'The optional post-game dungeon from the second cartridge' },

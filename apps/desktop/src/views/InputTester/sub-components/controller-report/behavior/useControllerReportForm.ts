@@ -5,7 +5,7 @@ import { useDebugTextBuilder, useDebugText } from '@app/diagnostics';
 import { useReportContext } from '@app/hooks/useReportContext';
 import { useHubSessionStore } from '@app/stores/hub-session';
 import { EMAIL_RE } from '../controller-report.constants';
-import type { FiledControllerReport, ReportStep, SubmitStatus } from '../controller-report.type';
+import type { FiledControllerReport, ReportStep, SubmitStatus } from '@drizztdourden08/brock-input/renderer';
 import { buildReportRequest } from './build-report-request';
 import { useDetectionContext } from './useDetectionContext';
 import { useReportDiagnostics } from './useReportDiagnostics';

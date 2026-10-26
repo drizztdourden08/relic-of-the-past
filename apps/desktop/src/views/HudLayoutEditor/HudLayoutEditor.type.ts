@@ -4,7 +4,6 @@ import type { HudLayout, Size } from '@rotp/hud';
 
 interface HudLayoutEditorProps {
   layoutId?: string;
-  onClose: () => void;
   onCommitted?: (layout: HudLayout) => void;
 }
 

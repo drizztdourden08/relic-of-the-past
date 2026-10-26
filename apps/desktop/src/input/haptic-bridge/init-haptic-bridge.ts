@@ -1,7 +1,7 @@
 /* @layer renderer-lib @kind logic */
-import { handleHapticEvent, setVibrateFunction, updateHapticSettings, loadRumbleStrengthCache, readRumbleStrength, hapticState, startDebugLog } from '@rotp/input-mapping';
+import { handleHapticEvent, setVibrateFunction, updateHapticSettings, hapticState, startDebugLog } from '@rotp/input-mapping';
 import type { HapticSettings } from '@rotp/features';
-import { getPlatform, hostApi } from '@drizztdourden08/brock-react';
+import { hostApi } from '@drizztdourden08/brock-react';
 import { dispatchVibration } from './dispatch-vibration';
 
 const onHapticEvent = (eventType: number, param: number): void => {
@@ -16,7 +16,6 @@ const initHapticBridge = (settings: HapticSettings): void => {
   if (hostApi()?.isDev) startDebugLog();
   setVibrateFunction(dispatchVibration);
   updateHapticSettings(settings);
-  readRumbleStrength(getPlatform().files).then(loadRumbleStrengthCache).catch(() => undefined);
 
   Object.assign(window, { __onHapticEvent: onHapticEvent });
 };

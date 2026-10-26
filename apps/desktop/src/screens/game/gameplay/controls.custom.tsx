@@ -4,7 +4,7 @@ import type { PageProps, ScreenMeta, SearchEntrySeed } from '@drizztdourden08/br
 import type { AppSettings } from '@app/settings.type';
 import { ControlsSettings } from '@app/views/ProfileHub/sub-components/ControlsSettings';
 
-const meta: ScreenMeta = { title: 'Controls', icon: 'keyboard', order: 4, fill: true, keywords: ['controls', 'bindings', 'keys', 'gamepad', 'controller', 'buttons'] };
+const meta: ScreenMeta = { title: 'Controls', icon: 'keyboard', showHeader: true, order: 4, fill: true, keywords: ['controls', 'bindings', 'keys', 'gamepad', 'controller', 'buttons'] };
 
 const searchEntries: SearchEntrySeed[] = [
   { label: 'Input profiles', keywords: ['input profile', 'bindings set', 'rename', 'new profile'], anchor: 'input-profiles', description: 'Sets of bindings you can switch between' },

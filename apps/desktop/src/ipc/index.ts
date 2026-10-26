@@ -8,6 +8,9 @@ export type {
   SanctuaryReportSnapshot,
   SanctuaryReportExtras,
 } from './sanctuary-contract.type';
+export type {
+  ArchipelagoSaveFilesRequest, ArchipelagoSaveFilesResult,
+} from './archipelago-contract.type';
 export type { HubMe } from './hub-contract.type';
 export type { StoreResult, StoreDuplicateResult } from './store-contract.type';
 export type {

@@ -1,9 +1,9 @@
 /* @layer renderer-components @kind logic */
-import { resolveDeviceControls, resolveDeviceFromEntry, recallControllerSdlType } from '@rotp/input-mapping';
+import { resolveDeviceControls } from '@drizztdourden08/brock-input';
+import type { ResolvedControl, SdlGamepadType, DeviceEntry } from '@drizztdourden08/brock-input';
+import { resolveDeviceFromEntry, recallControllerSdlType } from '@drizztdourden08/brock-input/renderer';
 import { padHex } from './pad-hex';
 import { ALL_AXES, ALL_BUTTONS } from './controls-settings.constants';
-import type { ResolvedControl, SdlGamepadType } from '@rotp/input-mapping';
-import type { DeviceEntry } from '@drizztdourden08/brock-input';
 import type { DeviceIdentity } from './controls-settings.type';
 
 const toHex4 = (value: number): string => value.toString(16).padStart(4, '0');

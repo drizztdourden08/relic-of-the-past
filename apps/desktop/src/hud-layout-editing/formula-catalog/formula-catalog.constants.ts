@@ -22,7 +22,7 @@ const OPERATORS: readonly FormulaName[] = [
 ];
 
 const FUNCTIONS: readonly FormulaName[] = [
-  { name: 'ceil', note: 'Up to the next whole number. This is how a container count is made.' },
+  { name: 'ceil', note: 'Up to the next whole number.' },
   { name: 'floor', note: 'Down to the whole number below.' },
   { name: 'round', note: 'To the nearest whole number.' },
   { name: 'trunc', note: 'Drop the fraction, toward zero.' },

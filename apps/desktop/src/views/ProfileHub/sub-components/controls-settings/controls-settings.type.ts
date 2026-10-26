@@ -1,7 +1,7 @@
 /* @layer renderer-components @kind types */
 import type { GameSettings, ControlSchemeId, FunctionAction, FunctionMapping } from '@rotp/features';
-import type { CoreVerb, ResolvedControl, DetectedDevice, InputProfile } from '@rotp/input-mapping';
-import type { DeviceEntry } from '@drizztdourden08/brock-input';
+import type { CoreVerb, DetectedDevice, InputProfile } from '@rotp/input-mapping';
+import type { ResolvedControl, DeviceEntry } from '@drizztdourden08/brock-input';
 import type { HudLayout } from '@rotp/hud';
 import type { ButtonIcon, CoreBindings, InputBinding, ModernSlot, SlotAssignment, SlotIndex, SnesButton } from '@rotp/game-data';
 

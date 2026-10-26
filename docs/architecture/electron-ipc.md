@@ -57,7 +57,7 @@ only its own channels.
 | `sprites/` | Per-ROM sprite extraction + the sprite-debug store. |
 | `languages/` | Translation extraction + dialogue. |
 | `msu/` | MSU-1 pack import, listing, track files. |
-| `input/` | Input profiles + stick/trigger calibration; HID enumeration, read, write, vibrate. |
+| `input/` | Only the WebHID and WebUSB device permission choosers. Controller IPC (state, devices, calibration, rumble, raw capture, debug files) lives in the Brock `input` module, not in this folder. |
 | `connections/` · `screen-editor/` | Navigation connection/nav review + (dev) screen editing. |
 | `shadow-casting/` | Per-screen heightmap + lighting data. |
 | `hub/` · `sanctuary/` · `store/` | Hub sign-in, bug reports, and the community store. |
@@ -76,7 +76,7 @@ the app uses.
 
 The SDL3 controller addon lives only in the main process, never in a package or the renderer.
 It ships with Brock's `input` module. Controller input is read in main and forwarded to the
-renderer already decoded, via that module's `input:*` channels; see [Input & Controllers](../user-guide/input-controllers.md) and
+renderer already decoded, via that module's `input:*` channels. The module also owns the Controllers screens and the channels behind them, so the app registers no controller channels of its own. See [Input & Controllers](../user-guide/input-controllers.md) and
 [Haptics](../user-guide/haptics.md).
 
 ## CLI / automation flags

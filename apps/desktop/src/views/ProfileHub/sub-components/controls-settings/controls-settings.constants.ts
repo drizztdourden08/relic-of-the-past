@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind constants */
-import { BUTTON_INDEX } from '@rotp/input-mapping';
+import { BUTTON_INDEX } from '@drizztdourden08/brock-input';
 import { publicAsset } from '@app/public-asset/public-asset';
 import type { InputBinding } from '@rotp/game-data';
 
