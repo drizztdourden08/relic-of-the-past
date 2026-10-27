@@ -2,7 +2,7 @@
 import { Box, Flex, Icon, Link, P, Title } from '../../design';
 import { useContributors, useGitHubStats } from '../../github';
 import { REPO_HOME_URL } from '../../repo';
-import { COMMUNITY_TEXT } from './CommunitySection.constants';
+import { COMMUNITY_TEXT, GITHUB_ICON_SIZE } from './CommunitySection.constants';
 import { CommunityStats } from './sub-components/CommunityStats';
 import { CommunityTexture } from './sub-components/CommunityTexture';
 import { ContributorList } from './sub-components/ContributorList';
@@ -23,7 +23,7 @@ const CommunitySection = () => {
         {stats && <CommunityStats stats={stats} />}
         <ContributorList contributors={contributors} />
         <Link href={REPO_HOME_URL} className="landing-community__github">
-          <Icon name="github" />
+          <Icon name="github" size={GITHUB_ICON_SIZE} />
           {COMMUNITY_TEXT.viewOnGitHub}
         </Link>
       </Flex>

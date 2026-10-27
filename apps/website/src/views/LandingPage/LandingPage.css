@@ -15,6 +15,7 @@
 
 .landing__world {
   position: relative;
+  overflow: clip;
 }
 
 .landing__features {

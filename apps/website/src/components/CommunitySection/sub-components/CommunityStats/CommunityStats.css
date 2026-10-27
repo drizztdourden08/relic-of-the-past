@@ -8,7 +8,7 @@
   display: inline-flex;
   align-items: center;
   gap: var(--ds-size-8);
-  padding: var(--ds-size-8) var(--ds-size-16);
+  padding: var(--ds-size-8) var(--site-end-chip-pad-x);
   border: var(--ds-border-thin) solid var(--site-green);
   border-radius: var(--ds-radius-pill);
   background: var(--site-green-dim);

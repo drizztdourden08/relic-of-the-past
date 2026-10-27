@@ -10,7 +10,7 @@ const ContributorList = (props: ContributorListProps) => {
   if (contributors.length === 0) return null;
 
   return (
-    <Flex as="ul" wrap justify="center" gap="sm" className="landing-contributors">
+    <Flex as="ul" wrap justify="center" className="landing-contributors">
       {contributors.map((contributor) => (
         <Box as="li" key={contributor.login}>
           <Link

@@ -1,8 +1,6 @@
 /* @layer website-site @kind barrel */
 export { AnchorPills } from './composites/AnchorPills';
 export type { AnchorPillItem } from './composites/AnchorPills';
-export { FooterBar } from './composites/FooterBar';
-export type { FooterLink } from './composites/FooterBar';
 export { Prose } from './composites/Prose';
 export { ScrollRail } from './composites/ScrollRail';
 export type { ScrollRailMark } from './composites/ScrollRail';

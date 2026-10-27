@@ -6,4 +6,6 @@ const COMMUNITY_TEXT = {
   viewOnGitHub: 'View on GitHub',
 } as const;
 
-export { COMMUNITY_TEXT };
+const GITHUB_ICON_SIZE = 20;
+
+export { COMMUNITY_TEXT, GITHUB_ICON_SIZE };

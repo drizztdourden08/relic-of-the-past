@@ -1,12 +1,25 @@
 /* @layer website-site @kind component */
-import { Box, FooterBar, P } from '../../design';
+import { Fragment } from 'react';
+import { Box, Link } from '../../design';
 import { FOOTER_LINKS, FOOTER_TEXT } from './Footer.constants';
 import './Footer.css';
 
 const Footer = () => (
-  <Box className="landing-end">
-    <FooterBar note={FOOTER_TEXT.copyright(new Date().getFullYear())} links={FOOTER_LINKS} label={FOOTER_TEXT.linksLabel} />
-    <P className="landing-end__legal">{FOOTER_TEXT.legal}</P>
+  <Box as="footer" className="landing-end">
+    <Box as="p">
+      {FOOTER_TEXT.copyright(new Date().getFullYear())}
+      {FOOTER_LINKS.map((link) => (
+        <Fragment key={link.id}>
+          {FOOTER_TEXT.separator}
+          <Link href={link.href} className="landing-end__link">
+            {link.label}
+          </Link>
+        </Fragment>
+      ))}
+    </Box>
+    <Box as="p" className="landing-end__legal">
+      {FOOTER_TEXT.legal}
+    </Box>
   </Box>
 );
 

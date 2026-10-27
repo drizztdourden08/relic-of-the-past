@@ -1,11 +1,12 @@
 /* @layer website-site @kind style */
 .landing-contributors {
+  gap: var(--site-end-avatar-gap);
   margin-top: var(--ds-size-32);
   list-style: none;
 }
 
 .landing-contributors__avatar {
-  border: var(--ds-border-thick) solid var(--ds-border-strong);
+  border: var(--ds-border-thick) solid var(--site-end-border-strong);
   border-radius: var(--ds-radius-round);
   transition:
     border-color var(--ds-duration-normal) var(--ds-ease),

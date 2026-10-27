@@ -9,7 +9,7 @@
 .landing-texture__triforce {
   position: absolute;
   fill: none;
-  stroke: var(--ds-border-strong);
+  stroke: var(--site-end-border-strong);
   stroke-width: 2.5;
   opacity: 0.1;
   animation-name: triforce-pulse;
