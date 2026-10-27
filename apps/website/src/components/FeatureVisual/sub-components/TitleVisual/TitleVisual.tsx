@@ -1,36 +1,45 @@
 /* @layer website-site @kind component */
-import { Box, Video } from '../../../../design';
-import { publicFileUrl } from '../../../../public-file';
+import { useState } from 'react';
+import { Box, Pressable } from '../../../../design';
 import { ShotImage } from '../../../ShotImage';
-import { useReducedMotion } from '../../behavior/useReducedMotion';
+import { aspectOf } from '../../behavior/aspect-of';
+import { ClipPlayer } from '../ClipPlayer';
+import { Expandable } from '../Expandable';
 import { ShotFrame } from '../ShotFrame';
+import { THUMB_RATIO } from './TitleVisual.constants';
 import type { VisualProps } from '../../FeatureVisual.type';
 import './TitleVisual.css';
 
 const TitleVisual = ({ visual, caption }: VisualProps<'title'>) => {
-  const { video, swords } = visual;
-  const reduced = useReducedMotion();
+  const { variants } = visual;
+  const [pickedId, setPickedId] = useState(variants[0].id);
+  const picked = variants.find((variant) => variant.id === pickedId) ?? variants[0];
 
   return (
     <ShotFrame caption={caption} framed={false}>
       <Box className="title-visual">
-        <Box className="title-visual__screen">
-          <Video
-            src={publicFileUrl(video.src)}
-            poster={publicFileUrl(video.poster.src)}
-            autoPlay={!reduced}
-            looping
-            preload="metadata"
-            aria-label={video.poster.alt}
-          />
+        <Expandable
+          aspect={aspectOf(picked.video.poster)}
+          label={caption}
+          expanded={<ClipPlayer clip={picked.video} />}
+          className="title-visual__screen"
+        >
+          <ClipPlayer clip={picked.video} />
+        </Expandable>
+        <Box className="title-visual__variants" role="group" aria-label={caption}>
+          {variants.map((variant) => (
+            <Pressable
+              key={variant.id}
+              className="title-visual__variant"
+              aria-label={variant.name}
+              title={variant.name}
+              aria-pressed={variant.id === picked.id}
+              onClick={() => setPickedId(variant.id)}
+            >
+              <ShotImage shot={variant.thumb} alt="" ratio={THUMB_RATIO} className="title-visual__thumb" />
+            </Pressable>
+          ))}
         </Box>
-        {swords.length > 0 ? (
-          <Box className="title-visual__swords">
-            {swords.map((sword) => (
-              <ShotImage key={sword.id} shot={sword} ratio="1 / 1" className="title-visual__sword" />
-            ))}
-          </Box>
-        ) : null}
       </Box>
     </ShotFrame>
   );

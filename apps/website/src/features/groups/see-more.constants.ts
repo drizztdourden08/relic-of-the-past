@@ -1,9 +1,7 @@
 /* @layer website-site @kind data */
 import type { FeatureGroup } from '../feature-group.type';
-import { DIALOG_SHOTS as DIALOG } from '../shots/dialog-shots.constants';
-import { RATIO_SHOTS as RATIO } from '../shots/ratio-shots.constants';
-import { SEE_MORE_SHOTS as SHOTS } from '../shots/see-more-shots.constants';
-import { TITLE_SWORD_SHOTS as SWORDS } from '../shots/title-sword-shots.constants';
+import { SEE_MORE_STYLE_FEATURES } from './see-more-style.constants';
+import { SEE_MORE_VIEW_FEATURES } from './see-more-view.constants';
 
 const SEE_MORE_GROUP: FeatureGroup = {
   id: 'see-more',
@@ -12,134 +10,9 @@ const SEE_MORE_GROUP: FeatureGroup = {
   kicker: 'The view',
   title: 'See more of Hyrule',
   accent: 'Hyrule',
-  lead: 'Wide and tall views, clean edges, a modern message box and graphics that look right. Each one is a switch.',
+  lead: 'Wide and tall views, a HUD that fits, clean edges and smooth transitions, a modern message box and graphics that look right. Each one is a switch.',
   glow: 'castle',
-  features: [
-    {
-      id: 'widescreen',
-      label: 'Aspect ratio',
-      short: 'Widescreen',
-      title: 'Wide screens and tall screens',
-      promise: ['More of Hyrule, not a stretched picture.', 'Ultrawide monitors and tall phones alike.'],
-      body: 'The game draws the extra world around you at any shape: wide for monitors up to 32:9, and tall for portrait screens and phones. You choose whether enemies out there keep moving.',
-      settings: ['Aspect ratio', 'Extend Y', 'Tall view'],
-      caption: 'Ten views of the same spot, centred on the same point. The wide ones reach sideways, the tall ones up and down.',
-      layout: 'wide',
-      visual: {
-        kind: 'ratios',
-        frames: [
-          { label: '4:3', shot: RATIO['ratio-4-3'] },
-          { label: '3:2', shot: RATIO['ratio-3-2'] },
-          { label: '16:10', shot: RATIO['ratio-16-10'] },
-          { label: '16:9', shot: RATIO['ratio-16-9'] },
-          { label: '21:9', shot: RATIO['ratio-21-9'] },
-          { label: '32:9', shot: RATIO['ratio-32-9'] },
-          { label: '4:5', shot: RATIO['ratio-4-5'] },
-          { label: '3:4', shot: RATIO['ratio-3-4'] },
-          { label: '9:16', shot: RATIO['ratio-9-16'] },
-          { label: '8:15', shot: RATIO['ratio-8-15'] },
-        ],
-      },
-    },
-    {
-      id: 'edge-effect',
-      label: 'Edge Effect',
-      short: 'Edge Effect',
-      title: 'No black bars at the edge',
-      promise: ['The edge of the map, filled in.', 'A soft mirror of the scene instead of black.'],
-      body: "Edge Effect fills the space past the map's edge with a soft mirror of the scene. Move the cursor over the picture to take the divider and compare it with the black edge.",
-      settings: ['Edge Effect'],
-      caption: 'Edge Effect off, then on. The divider sweeps by itself until the cursor takes it.',
-      layout: 'split',
-      visual: {
-        kind: 'compare',
-        before: SHOTS['edge-off'],
-        after: SHOTS['edge-on'],
-        labels: ['Black edge', 'Edge Effect'],
-        axis: 'x',
-      },
-    },
-    {
-      id: 'hide-space',
-      label: 'Hide Space Beyond Walls',
-      short: 'Beyond walls',
-      title: 'No void past the walls',
-      promise: ['Houses, caves and the Sanctuary stay closed.', 'Black beyond the walls, as it should be.'],
-      body: 'In a wide or tall view the game shows what lies past the walls of a room, a void tinted by the room. Hide Space Beyond Walls turns it black. Pick a room under the picture, and hover to compare.',
-      settings: ['Hide Space Beyond Walls'],
-      caption: 'The space past the walls, off and on, in the Sanctuary and in a house.',
-      layout: 'split',
-      visual: {
-        kind: 'picker',
-        labels: ['Off', 'On'],
-        axis: 'x',
-        focus: 'center',
-        options: [
-          { id: 'sanctuary', name: 'Sanctuary', before: SHOTS['hide-sanctuary-off'], after: SHOTS['hide-sanctuary-on'] },
-          { id: 'house', name: "Link's house", before: SHOTS['hide-house-off'], after: SHOTS['hide-house-on'] },
-        ],
-      },
-    },
-    {
-      id: 'message-box',
-      label: 'Dialog Box',
-      short: 'Message box',
-      title: 'A modern message box',
-      promise: ['Your text, your pace,', 'your style.'],
-      body: 'Text speed, hold to hurry it, button prompts and a modern font. Then make the box your own: single, double or no border, any colour, and textures such as the Triforce, scanlines, hexagons and stripes, with outlines to finish. Pick a style under the picture to set it against the original.',
-      settings: ['Dialog Box: Enhanced', 'Text speed', 'Modern font', 'Border', 'Texture'],
-      caption: "Uncle's message in the original box, against six of the enhanced styles.",
-      layout: 'split',
-      visual: {
-        kind: 'picker',
-        labels: ['Original', 'Enhanced'],
-        axis: 'x',
-        focus: 'bottom',
-        options: [
-          { id: 'triforce', name: 'Triforce', before: DIALOG.original, after: DIALOG.triforce },
-          { id: 'gold', name: 'Double gold', before: DIALOG.original, after: DIALOG.gold },
-          { id: 'scanlines', name: 'Scanlines', before: DIALOG.original, after: DIALOG.scanlines },
-          { id: 'hex', name: 'Hexagons', before: DIALOG.original, after: DIALOG.hex },
-          { id: 'stripes', name: 'Green stripes', before: DIALOG.original, after: DIALOG.stripes },
-          { id: 'outline', name: 'Red outline', before: DIALOG.original, after: DIALOG.outline },
-        ],
-      },
-    },
-    {
-      id: 'title-screen',
-      label: 'Title screen',
-      short: 'Title screen',
-      title: 'A reimagined title screen',
-      promise: ['A new opening,', "drawn from the game's own art."],
-      body: "An optional title scene built from the ROM's own pictures, with a slow drift. All the swords have been redesigned, and you pick the one you like.",
-      settings: ['Title screen: Reimagined', 'Sword'],
-      caption: 'The reimagined title scene, and the four redesigned swords.',
-      layout: 'split',
-      visual: {
-        kind: 'title',
-        video: { src: 'media/shots/title-loop.mp4', poster: SHOTS['title-poster'] },
-        swords: SWORDS,
-      },
-    },
-    {
-      id: 'graphical-fixes',
-      label: 'Graphical fixes',
-      short: 'Graphical fixes',
-      title: 'Rupees that match the other games',
-      promise: ['Green, blue, red, violet, silver and gold.', 'The colours every other Zelda uses.'],
-      body: 'The original drew its big rupees as a green gem with the amount written beside it. The new rupees take the colours of the other Zelda games: violet for 50, silver for 100 and gold for 300. Hover to compare.',
-      settings: ['Coloured rupees'],
-      caption: 'The original rupees, then the new ones: 1, 5, 20, 50, 100 and 300.',
-      layout: 'split',
-      visual: {
-        kind: 'compare',
-        before: SHOTS['rupees-original'],
-        after: SHOTS['rupees-fixed'],
-        labels: ['Original', 'New rupees'],
-        axis: 'x',
-      },
-    },
-  ],
+  features: [...SEE_MORE_VIEW_FEATURES, ...SEE_MORE_STYLE_FEATURES],
 };
 
 export { SEE_MORE_GROUP };

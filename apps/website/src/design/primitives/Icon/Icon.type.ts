@@ -1,7 +1,7 @@
 /* @layer website-site @kind types */
 import type { SVGProps } from 'react';
 
-type IconName = 'download' | 'github' | 'star' | 'git-fork' | 'circle-dot' | 'external-link';
+type IconName = 'download' | 'github' | 'star' | 'git-fork' | 'circle-dot' | 'external-link' | 'close';
 
 type IconShape = {
   paths: readonly string[];

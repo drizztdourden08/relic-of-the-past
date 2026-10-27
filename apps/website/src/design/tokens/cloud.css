@@ -1,0 +1,25 @@
+/* @layer website-site @kind style */
+:root {
+  --ds-cloud-unit-sparse: 3.8;
+  --ds-cloud-unit-normal: 2.3;
+  --ds-cloud-unit-dense: 1.9;
+  --ds-cloud-size-1: 1.6;
+  --ds-cloud-size-2: 0.9;
+  --ds-cloud-size-3: 1.2;
+  --ds-cloud-size-4: 2.1;
+  --ds-cloud-size-5: 1.05;
+  --ds-cloud-size-6: 1.4;
+  --ds-cloud-size-7: 0.8;
+  --ds-cloud-peak-high: 0.95;
+  --ds-cloud-peak-mid: 0.8;
+  --ds-cloud-peak-low: 0.65;
+  --ds-cloud-span-1: 8s;
+  --ds-cloud-span-2: 11s;
+  --ds-cloud-span-3: 13s;
+  --ds-cloud-span-4: 9.5s;
+  --ds-cloud-offset-1: -1s;
+  --ds-cloud-offset-2: -3.7s;
+  --ds-cloud-offset-3: -6.1s;
+  --ds-cloud-offset-4: -8.4s;
+  --ds-cloud-offset-5: -10.6s;
+}

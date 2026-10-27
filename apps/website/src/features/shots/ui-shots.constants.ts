@@ -44,13 +44,6 @@ const UI_SHOTS = {
     height: 912,
     alt: 'The controllers screen with an Xbox pad drawn out and every button labelled',
   },
-  gameplayFixes: {
-    id: 'ui-gameplay',
-    src: 'media/shots/ui-gameplay.webp',
-    width: 1790,
-    height: 690,
-    alt: 'The gameplay settings for movement and combat, one switch per fix',
-  },
   checksOpen: {
     id: 'ui-checks-open',
     src: 'media/shots/ui-checks-open.webp',
@@ -85,6 +78,27 @@ const UI_SHOTS = {
     width: 1790,
     height: 912,
     alt: 'The Language Studio with a dialogue line open for editing',
+  },
+  haptics: {
+    id: 'ui-haptics',
+    src: 'media/shots/ui-haptics.webp',
+    width: 1762,
+    height: 905,
+    alt: 'The haptics settings: vibration intensity and one switch per kind of event',
+  },
+  audio: {
+    id: 'ui-audio',
+    src: 'media/shots/ui-audio.webp',
+    width: 1762,
+    height: 905,
+    alt: 'The audio settings with a master volume and separate music, ambience and sound effect volumes',
+  },
+  msulPack: {
+    id: 'ui-msul-pack',
+    src: 'media/shots/ui-msul-pack.webp',
+    width: 1762,
+    height: 905,
+    alt: 'A layered .msul pack open in MSU Studio, a track with its rain and thunder layers',
   },
   hookshop: {
     id: 'ui-hookshop',

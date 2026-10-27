@@ -37,6 +37,9 @@
   --ds-scrollbar: 6px;
   --ds-z-base: 1;
   --ds-z-sticky: 10;
+  --ds-z-overlay: 100;
+  --ds-viewport-w-max: 90vw;
+  --ds-viewport-h-max: 85svh;
   --ds-overlay-dim: 0.3;
   --ds-opacity-muted: 0.6;
 }

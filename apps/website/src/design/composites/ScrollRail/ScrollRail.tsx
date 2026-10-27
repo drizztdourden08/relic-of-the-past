@@ -10,7 +10,7 @@ import type { ScrollRailProps } from './ScrollRail.type';
 import './ScrollRail.css';
 
 const ScrollRail = (props: ScrollRailProps) => {
-  const { marks, rangeId, activeId, onSelect, ariaLabel, thumbLabel, className } = props;
+  const { marks, rangeId, activeId, onSelect, ariaLabel, thumbLabel, end, className } = props;
   const geometry = useRailGeometry(marks, rangeId);
   const railRef = useRailProgress(geometry);
   const trackRef = useRef<HTMLElement | null>(null);
@@ -36,6 +36,11 @@ const ScrollRail = (props: ScrollRailProps) => {
           </Box>
         ))}
       </Box>
+      {end ? (
+        <Pressable className="ds-rail__end" aria-label={end.name} onClick={end.onSelect}>
+          {end.icon}
+        </Pressable>
+      ) : null}
     </Box>
   );
 };

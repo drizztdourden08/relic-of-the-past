@@ -1,9 +1,11 @@
 /* @layer website-site @kind barrel */
 export { AnchorPills } from './composites/AnchorPills';
 export type { AnchorPillItem } from './composites/AnchorPills';
+export { Lightbox } from './composites/Lightbox';
 export { Prose } from './composites/Prose';
 export { ScrollRail } from './composites/ScrollRail';
-export type { ScrollRailMark } from './composites/ScrollRail';
+export type { ScrollRailEnd, ScrollRailMark } from './composites/ScrollRail';
+export { Audio } from './primitives/Audio';
 export { Box } from './primitives/Box';
 export { Flex } from './primitives/Flex';
 export { Icon } from './primitives/Icon';

@@ -20,7 +20,12 @@ const ORIGINAL_GROUP: FeatureGroup = {
       title: 'No emulator in between',
       promise: ['The real game, rebuilt as an app.', 'It plays the way you remember.'],
       body: 'The reverse-engineered game code runs natively on your computer and your phone. Bring your own ROM: nothing from the game is downloaded.',
-      settings: ['Windows', 'Linux', 'macOS', 'Android'],
+      settings: [
+        { label: 'Windows', logo: 'windows' },
+        { label: 'Linux', logo: 'linux' },
+        { label: 'macOS', logo: 'macos' },
+        { label: 'Android', logo: 'android' },
+      ],
       caption: 'The real game at 4:3, pixel for pixel.',
       layout: 'split',
       visual: {
@@ -38,7 +43,7 @@ const ORIGINAL_GROUP: FeatureGroup = {
       title: 'A full app around the game',
       promise: ['Widgets, menus and profiles.', 'Every setting is yours to change.'],
       body: 'The game comes with a complete interface: widgets you can dock beside it, such as the Checks tracker, and a settings screen where every option the app offers, from the view to the controls, can be changed.',
-      settings: ['Widgets', 'Full UI', 'Every setting'],
+      settings: ['Widgets', 'Settings'],
       caption: 'The game with its widgets docked around it, the world map with the Checks and Inventory widgets, and the settings screens.',
       layout: 'split',
       visual: {
@@ -58,7 +63,7 @@ const ORIGINAL_GROUP: FeatureGroup = {
       title: 'A sharp world map',
       promise: ['The world map in high resolution.', 'Smooth rotation and scaling, no blocky zoom.'],
       body: "The world map and the flights with the bird are drawn at full resolution instead of the console's pixelated Mode 7.",
-      settings: ['Enhanced Mode 7'],
+      settings: ['Mode 7'],
       caption: 'The same square of Death Mountain, before and after, at eight times its native size.',
       layout: 'split',
       visual: {

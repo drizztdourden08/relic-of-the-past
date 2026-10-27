@@ -8,10 +8,14 @@ const LANDING_TEXT = {
   timeline: 'Features',
   thumb: 'Scroll position',
   rangeId: 'features',
+  githubId: 'open-source',
+  githubName: 'Open source on GitHub',
 } as const;
+
+const GITHUB_ICON_SIZE = 16;
 
 const OBSERVED_IDS: readonly string[] = [HERO_ID, ...SECTION_IDS];
 
 const RAIL_MARKS = railMarksOf(FEATURE_GROUPS);
 
-export { LANDING_TEXT, OBSERVED_IDS, RAIL_MARKS };
+export { GITHUB_ICON_SIZE, LANDING_TEXT, OBSERVED_IDS, RAIL_MARKS };

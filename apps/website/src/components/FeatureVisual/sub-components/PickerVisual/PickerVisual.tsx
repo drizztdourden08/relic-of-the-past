@@ -2,7 +2,9 @@
 import { useState } from 'react';
 import { Box, Pressable, Span } from '../../../../design';
 import { ShotImage } from '../../../ShotImage';
+import { aspectOf } from '../../behavior/aspect-of';
 import { CompareStage } from '../CompareStage';
+import { Expandable } from '../Expandable';
 import { ShotFrame } from '../ShotFrame';
 import { PAIR, THUMB_RATIO } from './PickerVisual.constants';
 import type { VisualProps } from '../../FeatureVisual.type';
@@ -12,10 +14,13 @@ const PickerVisual = ({ visual, caption }: VisualProps<'picker'>) => {
   const { options, labels, axis, focus } = visual;
   const [pickedId, setPickedId] = useState(options[0].id);
   const picked = options.find((option) => option.id === pickedId) ?? options[0];
+  const stage = <CompareStage before={picked.before} after={picked.after} labels={labels} axis={axis} />;
 
   return (
     <ShotFrame caption={caption} framed={false}>
-      <CompareStage before={picked.before} after={picked.after} labels={labels} axis={axis} />
+      <Expandable aspect={aspectOf(picked.before)} label={caption} expanded={stage}>
+        {stage}
+      </Expandable>
       <Box
         className={options.length > PAIR ? 'picker-visual__options picker-visual__options--many' : 'picker-visual__options'}
         role="group"

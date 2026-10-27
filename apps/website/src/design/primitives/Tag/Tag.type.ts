@@ -2,11 +2,12 @@
 import type { HTMLAttributes, ReactNode } from 'react';
 
 type TagVariant = 'normal' | 'urgency';
-type TagColor = 'neutral' | 'warning';
+type TagColor = 'neutral' | 'warning' | 'accent';
 
 type TagProps = HTMLAttributes<HTMLSpanElement> & {
   variant?: TagVariant;
   color?: TagColor;
+  icon?: ReactNode;
   children?: ReactNode;
 };
 

@@ -1,6 +1,7 @@
 /* @layer website-site @kind component */
 import { Box, P, Span, Tag, Title } from '../../../../design';
-import { FEATURE_COPY_TEXT } from './FeatureCopy.constants';
+import { PlatformLogo } from '../PlatformLogo';
+import { FEATURE_TAG_COLORS, FEATURE_TAG_LABELS } from './FeatureCopy.constants';
 import type { FeatureCopyProps } from './FeatureCopy.type';
 import './FeatureCopy.css';
 
@@ -18,16 +19,22 @@ const FeatureCopy = ({ feature, figure }: FeatureCopyProps) => {
       </P>
       <P className="feature-copy__body">{body}</P>
       <Box className="feature-copy__chips">
-        {tag === 'experimental' ? (
-          <Tag variant="urgency" color="warning">
-            {FEATURE_COPY_TEXT.experimental}
+        {tag ? (
+          <Tag variant="urgency" color={FEATURE_TAG_COLORS[tag]}>
+            {FEATURE_TAG_LABELS[tag]}
           </Tag>
         ) : null}
-        {settings.map((setting) => (
-          <Tag key={setting} color="neutral">
-            {setting}
-          </Tag>
-        ))}
+        {settings.map((setting) =>
+          typeof setting === 'string' ? (
+            <Tag key={setting} color="neutral">
+              {setting}
+            </Tag>
+          ) : (
+            <Tag key={setting.label} color="neutral" icon={<PlatformLogo logo={setting.logo} />}>
+              {setting.label}
+            </Tag>
+          ),
+        )}
       </Box>
     </Box>
   );

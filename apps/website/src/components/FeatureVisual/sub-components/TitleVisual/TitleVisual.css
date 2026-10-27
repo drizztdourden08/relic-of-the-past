@@ -12,17 +12,51 @@
   box-shadow: var(--site-shot-shadow);
 }
 
-.title-visual__swords {
+.title-visual__variants {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: var(--ds-size-8);
 }
 
-.title-visual__sword {
+.title-visual__variant {
+  display: block;
+  padding: var(--ds-size-2);
   border: var(--ds-border-thin) solid var(--px-gold-dark);
   border-radius: var(--ds-radius-lg);
+  background: var(--ds-surface);
+  opacity: 0.72;
+  cursor: pointer;
+  transition:
+    opacity var(--ds-duration-slow) var(--ds-ease),
+    border-color var(--ds-duration-slow) var(--ds-ease);
 }
 
-.title-visual__sword img {
+.title-visual__variant:hover {
+  border-color: var(--px-gold-line);
+  opacity: 1;
+}
+
+.title-visual__variant[aria-pressed='true'] {
+  border-color: var(--ds-accent-bright);
+  box-shadow: var(--site-gem-glow);
+  opacity: 1;
+}
+
+.title-visual__variant:focus-visible {
+  outline: var(--ds-border-thin) solid var(--ds-accent-bright);
+  outline-offset: var(--ds-size-2);
+}
+
+.title-visual__thumb {
+  border-radius: var(--ds-radius-sm);
+}
+
+.title-visual__thumb img {
   object-position: 36% 30%;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .title-visual__variant {
+    transition: none;
+  }
 }

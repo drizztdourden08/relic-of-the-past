@@ -17,7 +17,7 @@ The app is open source under the MIT licence. It is provided as is, with no warr
 
 ## Accounts
 
-You must be 13 or older to sign in, which is Discord's own minimum age. You are responsible for what happens under your account. We can close an account that is used for abuse, spam or harm to others.
+You must be 16 or older to sign in. You are responsible for what happens under your account. We can close an account that is used for abuse, spam or harm to others.
 
 ## What you upload
 
@@ -27,11 +27,11 @@ Upload only what you have the right to share. Packs must respect copyright. In p
 
 ## Removal
 
-We may remove any file or pack that breaks these terms or the law, and we may close the account that uploaded it. You can withdraw your own files and packs at any time.
+We may remove any file or pack that breaks these terms or the law, and we may close the account that uploaded it. You can delete your own files at any time and withdraw a pack version until it is approved. To take down an approved pack, write to us.
 
 ## Bug reports
 
-A bug report you send may open a public issue on the GitHub repository. Do not put secrets or private information in the text.
+A bug report you send opens a public issue on the GitHub repository, showing your display name. Do not put secrets or private information in the text. The Privacy Policy lists what a report keeps and for how long.
 
 ## Liability
 

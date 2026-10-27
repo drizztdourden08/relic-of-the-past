@@ -10,6 +10,37 @@
   position: relative;
 }
 
+.collage-visual__press {
+  position: relative;
+  display: block;
+  cursor: pointer;
+}
+
+.collage-visual__press--main {
+  cursor: zoom-in;
+}
+
+.collage-visual__press:focus-visible {
+  outline: var(--ds-border-thick) solid var(--ds-focus);
+  outline-offset: var(--ds-size-4);
+}
+
+.collage-visual__press:not(.collage-visual__press--main):hover {
+  filter: brightness(1.12);
+}
+
+.collage-visual__press[data-flip='0'] {
+  animation: collage-settle-a var(--ds-duration-slow) var(--ds-ease);
+}
+
+.collage-visual__press[data-flip='1'] {
+  animation: collage-settle-b var(--ds-duration-slow) var(--ds-ease);
+}
+
+.collage-visual__expanded {
+  position: relative;
+}
+
 .collage-visual__shot {
   display: block;
   overflow: hidden;
@@ -22,6 +53,36 @@
   display: block;
   width: 100%;
   height: auto;
+}
+
+@keyframes collage-settle-a {
+  from {
+    opacity: 0.5;
+    scale: 0.96;
+  }
+
+  to {
+    opacity: 1;
+    scale: 1;
+  }
+}
+
+@keyframes collage-settle-b {
+  from {
+    opacity: 0.5;
+    scale: 0.96;
+  }
+
+  to {
+    opacity: 1;
+    scale: 1;
+  }
+}
+
+@media (width <= 800px) {
+  .collage-visual__layer--main {
+    order: -1;
+  }
 }
 
 @media (width > 800px) {
@@ -50,5 +111,11 @@
   .collage-visual__layer--bottom-right {
     right: var(--site-slot-bleed);
     bottom: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .collage-visual__press[data-flip] {
+    animation: none;
   }
 }

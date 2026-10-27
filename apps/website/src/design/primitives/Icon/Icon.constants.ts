@@ -33,6 +33,7 @@ const ICON_SHAPES: Record<IconName, IconShape> = {
       { cx: 12, cy: 12, r: 1 },
     ],
   },
+  close: { paths: ['M18 6L6 18', 'M6 6l12 12'] },
   'external-link': { paths: ['M15 3h6v6m-11 5L21 3m-3 10v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6'] },
 };
 

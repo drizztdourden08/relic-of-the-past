@@ -3,8 +3,10 @@ import { isReady } from './is-ready';
 import type { Degrader } from './ready-visual.type';
 
 const degradeTitle: Degrader<'title'> = (visual) => {
-  if (!isReady(visual.video.poster)) return null;
-  return { ...visual, swords: visual.swords.filter(isReady) };
+  const [first, second, ...rest] = visual.variants.filter((variant) => isReady(variant.video.poster) && isReady(variant.thumb));
+  if (!first) return null;
+  if (!second) return { kind: 'video', video: first.video };
+  return { kind: 'title', variants: [first, second, ...rest] };
 };
 
 export { degradeTitle };

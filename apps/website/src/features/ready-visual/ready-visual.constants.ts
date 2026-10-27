@@ -1,4 +1,6 @@
 /* @layer website-site @kind data */
+import { degradeAudio } from './degrade-audio';
+import { degradeCloud } from './degrade-cloud';
 import { degradeCollage } from './degrade-collage';
 import { degradeCompare } from './degrade-compare';
 import { degradeIcons } from './degrade-icons';
@@ -8,6 +10,7 @@ import { degradePins } from './degrade-pins';
 import { degradeRatios } from './degrade-ratios';
 import { degradeSingle } from './degrade-single';
 import { degradeTitle } from './degrade-title';
+import { degradeVideo } from './degrade-video';
 import type { Degraders } from './ready-visual.type';
 
 const DEGRADERS: Degraders = {
@@ -20,6 +23,9 @@ const DEGRADERS: Degraders = {
   pins: degradePins,
   title: degradeTitle,
   icons: degradeIcons,
+  video: degradeVideo,
+  cloud: degradeCloud,
+  audio: degradeAudio,
 };
 
 export { DEGRADERS };

@@ -111,6 +111,35 @@
   outline-offset: var(--ds-size-2);
 }
 
+.ds-rail__end {
+  position: absolute;
+  top: 100%;
+  left: var(--ds-size-24);
+  display: grid;
+  place-items: center;
+  width: var(--ds-size-32);
+  height: var(--ds-size-32);
+  margin-top: var(--ds-size-8);
+  padding: 0;
+  border: var(--ds-border-thin) solid var(--px-gold-dark);
+  border-radius: var(--ds-radius-round);
+  background: var(--ds-scrim);
+  color: var(--px-gold-line);
+  transition:
+    color var(--ds-duration-normal) var(--ds-ease),
+    border-color var(--ds-duration-normal) var(--ds-ease);
+}
+
+.ds-rail__end:hover {
+  border-color: var(--px-gold-line);
+  color: var(--px-gold-bright);
+}
+
+.ds-rail__end:focus-visible {
+  outline: var(--ds-border-thick) solid var(--ds-focus);
+  outline-offset: var(--ds-size-2);
+}
+
 @media (width <= 1100px) {
   .ds-rail {
     display: none;
@@ -119,6 +148,7 @@
 
 @media (prefers-reduced-motion: reduce) {
   .ds-rail,
+  .ds-rail__end,
   .ds-rail__numeral {
     transition: none;
   }

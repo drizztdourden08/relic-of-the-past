@@ -40,3 +40,9 @@
   --tag-fill: var(--ds-amber-soft);
   --tag-edge: var(--ds-amber);
 }
+
+.ds-tag--accent {
+  --tag-ink: var(--ds-accent-bright);
+  --tag-fill: var(--ds-accent-soft);
+  --tag-edge: var(--ds-accent);
+}

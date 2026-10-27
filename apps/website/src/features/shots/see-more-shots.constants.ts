@@ -44,12 +44,26 @@ const SEE_MORE_SHOTS = {
     height: 672,
     alt: "Link's house with Hide Space Beyond Walls: the space past the walls is black",
   },
-  'title-poster': {
-    id: 'title-poster',
-    src: 'media/shots/title-poster.webp',
+  'hud-wide-off': {
+    id: 'hud-wide-off',
+    src: 'media/shots/hud-wide-off.webp',
     width: 1280,
-    height: 722,
-    alt: "The reimagined title screen, drawn from the game's own pictures",
+    height: 720,
+    alt: 'A widescreen view with the original HUD',
+  },
+  'hud-wide-on': {
+    id: 'hud-wide-on',
+    src: 'media/shots/hud-wide-on.webp',
+    width: 1280,
+    height: 720,
+    alt: 'The same widescreen view with the HUD drawn and supported for the wide view',
+  },
+  'camera-transition-poster': {
+    id: 'camera-transition-poster',
+    src: 'media/shots/camera-transition-poster.webp',
+    width: 1194,
+    height: 672,
+    alt: 'The camera crossing from one area to the next with no black bars',
   },
   'rupees-original': {
     id: 'rupees-original',

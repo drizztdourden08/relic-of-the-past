@@ -1,0 +1,37 @@
+/* @layer website-site @kind style */
+.ratios-visual__stage {
+  position: relative;
+  width: 100%;
+}
+
+.ratios-visual__frame {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  translate: -50% -50%;
+  transition: opacity var(--ds-duration-slow) var(--ds-ease);
+}
+
+.ratios-visual[data-picked] .ratios-visual__frame {
+  opacity: 0.38;
+}
+
+.ratios-visual[data-picked] .ratios-visual__frame--lit {
+  z-index: var(--site-content-z);
+  opacity: 1;
+  outline: var(--ds-border-thin) solid var(--ds-accent-bright);
+  box-shadow: var(--site-shot-shadow);
+}
+
+.ratios-visual__shot,
+.ratios-visual__shot img {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ratios-visual__frame {
+    transition: none;
+  }
+}

@@ -5,7 +5,7 @@ type GroupGlow = 'forest' | 'castle' | 'gold' | 'shop' | 'violet';
 
 type FeatureGroup = {
   id: string;
-  numeral: 'I' | 'II' | 'III' | 'IV' | 'V';
+  numeral: 'I' | 'II' | 'III' | 'IV' | 'V' | 'VI';
   short: string;
   kicker: string;
   title: string;

@@ -1,0 +1,6 @@
+/* @layer website-site @kind style */
+.platform-logo {
+  flex: none;
+  width: var(--ds-size-12);
+  height: var(--ds-size-12);
+}

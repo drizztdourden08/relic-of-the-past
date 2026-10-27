@@ -1,3 +1,3 @@
 /* @layer website-site @kind barrel */
 export { ScrollRail } from './ScrollRail';
-export type { ScrollRailMark } from './ScrollRail.type';
+export type { ScrollRailEnd, ScrollRailMark } from './ScrollRail.type';
