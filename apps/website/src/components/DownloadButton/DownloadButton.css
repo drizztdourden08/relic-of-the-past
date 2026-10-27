@@ -3,20 +3,20 @@
   position: relative;
   display: inline-flex;
   align-items: center;
-  gap: var(--size-14);
-  padding: var(--size-16) var(--site-cta-pad-x);
+  gap: var(--ds-size-14);
+  padding: var(--ds-size-16) var(--site-cta-pad-x);
   overflow: hidden;
-  border: var(--border-width-thick) solid var(--px-gold-dark);
-  border-radius: var(--radius-md);
-  background-color: var(--c-primary);
+  border: var(--ds-border-thick) solid var(--px-gold-dark);
+  border-radius: var(--ds-radius-md);
+  background-color: var(--ds-accent);
   box-shadow: var(--site-cta-shadow);
   color: var(--site-gold-ink);
-  font-size: var(--text-xl);
-  font-weight: var(--weight-bold);
+  font-size: var(--ds-text-xl);
+  font-weight: var(--ds-weight-bold);
   transition:
-    transform var(--duration-normal) var(--ease-standard),
-    box-shadow var(--duration-normal) var(--ease-standard),
-    filter var(--duration-normal) var(--ease-standard);
+    transform var(--ds-duration-normal) var(--ds-ease),
+    box-shadow var(--ds-duration-normal) var(--ds-ease),
+    filter var(--ds-duration-normal) var(--ds-ease);
 }
 
 .landing-download:hover {
@@ -24,7 +24,7 @@
   color: var(--site-gold-ink);
   filter: brightness(1.08);
   text-decoration: none;
-  transform: translateY(calc(var(--size-2) * -1));
+  transform: translateY(calc(var(--ds-size-2) * -1));
 }
 
 .landing-download--loading {
@@ -52,7 +52,7 @@
 
 .landing-download__caption {
   font-size: var(--site-text-sm);
-  font-weight: var(--weight-medium);
+  font-weight: var(--ds-weight-medium);
   opacity: 0.75;
 }
 
@@ -67,23 +67,23 @@
 .landing-download-variant {
   display: inline-flex;
   align-items: center;
-  gap: var(--size-8);
-  padding: var(--size-8) var(--size-16);
-  border: var(--border-width-thin) solid var(--px-gold-dark);
-  border-radius: var(--radius-md);
-  background: var(--c-primary-dim);
-  color: var(--c-primary-bright);
-  font-size: var(--text-base);
-  font-weight: var(--weight-semi);
+  gap: var(--ds-size-8);
+  padding: var(--ds-size-8) var(--ds-size-16);
+  border: var(--ds-border-thin) solid var(--px-gold-dark);
+  border-radius: var(--ds-radius-md);
+  background: var(--ds-accent-dim);
+  color: var(--ds-accent-bright);
+  font-size: var(--ds-text-base);
+  font-weight: var(--ds-weight-semi);
   text-shadow: var(--site-text-shadow-soft);
   transition:
-    filter var(--duration-normal) var(--ease-standard),
-    transform var(--duration-normal) var(--ease-standard);
+    filter var(--ds-duration-normal) var(--ds-ease),
+    transform var(--ds-duration-normal) var(--ds-ease);
 }
 
 .landing-download-variant:hover {
-  color: var(--c-primary-bright);
+  color: var(--ds-accent-bright);
   filter: brightness(1.25);
   text-decoration: none;
-  transform: translateY(calc(var(--size-1) * -1));
+  transform: translateY(calc(var(--ds-size-1) * -1));
 }

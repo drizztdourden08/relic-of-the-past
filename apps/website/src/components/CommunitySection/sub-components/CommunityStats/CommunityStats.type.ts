@@ -1,5 +1,5 @@
 /* @layer website-site @kind types */
-import type { IconName } from '@drizztdourden08/tessera/primitives';
+import type { IconName } from '../../../../design';
 import type { GitHubStats } from '../../../../github';
 
 type CommunityStatsProps = {

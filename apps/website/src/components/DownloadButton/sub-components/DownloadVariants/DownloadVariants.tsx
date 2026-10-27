@@ -1,5 +1,5 @@
 /* @layer website-site @kind component */
-import { Flex, Icon, Link } from '@drizztdourden08/tessera/primitives';
+import { Flex, Icon, Link } from '../../../../design';
 import { variantLabel } from '../../../../downloads';
 import { formatBytes } from '../../../../format';
 import { DOWNLOAD_ICON_SIZE } from '../../DownloadButton.constants';

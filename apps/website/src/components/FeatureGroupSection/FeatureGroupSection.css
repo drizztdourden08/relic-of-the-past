@@ -27,7 +27,7 @@
   inset: 0 0 auto;
   height: 100%;
   background: radial-gradient(ellipse 70% 30% at 18% 50%, var(--group-glow), transparent 72%);
-  mask-image: linear-gradient(to bottom, transparent, var(--p-pure-black) 25%, var(--p-pure-black) 75%, transparent);
+  mask-image: linear-gradient(to bottom, transparent, var(--ds-black) 25%, var(--ds-black) 75%, transparent);
   pointer-events: none;
 }
 

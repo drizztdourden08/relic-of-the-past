@@ -1,5 +1,5 @@
 /* @layer website-site @kind component */
-import { Svg, SvgLine, SvgRect } from '@drizztdourden08/tessera/primitives';
+import { Svg, SvgLine, SvgRect } from '../../../../design';
 import { useGradientLayout } from './behavior/useGradientLayout';
 import { GRADIENT_VIEW_WIDTH } from './PixelGradientBg.constants';
 

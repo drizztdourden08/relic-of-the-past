@@ -1,5 +1,5 @@
 /* @layer website-site @kind component */
-import { Box, P, Span, Tag, Title } from '@drizztdourden08/tessera/primitives';
+import { Box, P, Span, Tag, Title } from '../../../../design';
 import { FEATURE_COPY_TEXT } from './FeatureCopy.constants';
 import type { FeatureCopyProps } from './FeatureCopy.type';
 import './FeatureCopy.css';

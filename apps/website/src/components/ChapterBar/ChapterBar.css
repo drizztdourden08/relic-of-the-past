@@ -2,12 +2,12 @@
 .chapter-bar {
   position: sticky;
   top: 0;
-  z-index: var(--z-sticky);
+  z-index: var(--ds-z-sticky);
   display: none;
   height: var(--site-chapterbar-h);
   background: var(--site-chapterbar-bg);
-  backdrop-filter: blur(var(--size-8));
-  border-bottom: var(--border-width-thin) solid var(--px-gold-dark);
+  backdrop-filter: blur(var(--ds-size-8));
+  border-bottom: var(--ds-border-thin) solid var(--px-gold-dark);
 }
 
 .chapter-bar__progress {
@@ -15,8 +15,8 @@
   right: 0;
   bottom: 0;
   left: 0;
-  height: var(--size-2);
-  background: var(--c-primary);
+  height: var(--ds-size-2);
+  background: var(--ds-accent);
   transform-origin: left;
   scale: 0 1;
 }

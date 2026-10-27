@@ -9,11 +9,11 @@
 .landing-texture__triforce {
   position: absolute;
   fill: none;
-  stroke: var(--c-border-strong);
+  stroke: var(--ds-border-strong);
   stroke-width: 2.5;
   opacity: 0.1;
   animation-name: triforce-pulse;
-  animation-timing-function: var(--ease-in-out);
+  animation-timing-function: var(--ds-ease-in-out);
   animation-iteration-count: infinite;
 }
 
@@ -26,7 +26,7 @@
 
   50% {
     opacity: 0.55;
-    transform: translateY(calc(var(--size-4) * -1.25));
+    transform: translateY(calc(var(--ds-size-4) * -1.25));
   }
 }
 

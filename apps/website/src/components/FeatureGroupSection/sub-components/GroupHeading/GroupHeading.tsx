@@ -1,5 +1,5 @@
 /* @layer website-site @kind component */
-import { Box, P, Span, Title } from '@drizztdourden08/tessera/primitives';
+import { Box, P, Span, Title } from '../../../../design';
 import { DepthLayer } from '../../../DepthLayer';
 import { splitAccent } from './behavior/split-accent';
 import type { GroupHeadingProps } from './GroupHeading.type';

@@ -1,5 +1,5 @@
 /* @layer website-site @kind component */
-import { Box, Image } from '@drizztdourden08/tessera/primitives';
+import { Box, Image } from '../../design';
 import { PUBLIC_FILES, publicFileUrl } from '../../public-file';
 import { Fireflies } from './sub-components/Fireflies';
 import { HeroRays } from './sub-components/HeroRays';

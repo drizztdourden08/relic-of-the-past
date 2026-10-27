@@ -1,5 +1,5 @@
 /* @layer website-site @kind component */
-import { Image, Link } from '@drizztdourden08/tessera/primitives';
+import { Image, Link } from '../../design';
 import { PUBLIC_FILE_RATIOS, PUBLIC_FILES, publicFileUrl } from '../../public-file';
 import { LEGAL_HEADER_TEXT } from './LegalHeader.constants';
 import './LegalHeader.css';

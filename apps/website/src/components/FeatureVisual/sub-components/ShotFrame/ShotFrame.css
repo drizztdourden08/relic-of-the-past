@@ -6,8 +6,8 @@
 .shot-frame__stage--framed {
   position: relative;
   overflow: hidden;
-  border: var(--border-width-thin) solid var(--px-gold-dark);
-  border-radius: var(--radius-xl);
+  border: var(--ds-border-thin) solid var(--px-gold-dark);
+  border-radius: var(--ds-radius-xl);
   box-shadow: var(--site-shot-shadow);
 }
 
@@ -18,8 +18,8 @@
 }
 
 .shot-frame__caption {
-  margin-top: var(--size-12);
-  color: var(--c-text-muted);
+  margin-top: var(--ds-size-12);
+  color: var(--ds-text-muted);
   font-size: var(--site-text-sm);
   text-shadow: var(--site-text-shadow-soft);
 }

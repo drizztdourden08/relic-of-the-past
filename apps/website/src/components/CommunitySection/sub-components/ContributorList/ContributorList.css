@@ -1,18 +1,18 @@
 /* @layer website-site @kind style */
 .landing-contributors {
-  margin-top: var(--size-32);
+  margin-top: var(--ds-size-32);
   list-style: none;
 }
 
 .landing-contributors__avatar {
-  border: var(--border-width-thick) solid var(--c-border-strong);
-  border-radius: var(--radius-round);
+  border: var(--ds-border-thick) solid var(--ds-border-strong);
+  border-radius: var(--ds-radius-round);
   transition:
-    border-color var(--duration-normal) var(--ease-standard),
-    transform var(--duration-normal) var(--ease-standard);
+    border-color var(--ds-duration-normal) var(--ds-ease),
+    transform var(--ds-duration-normal) var(--ds-ease);
 }
 
 .landing-contributors__link:hover .landing-contributors__avatar {
   border-color: var(--site-green-bright);
-  transform: translateY(calc(var(--size-2) * -1.5));
+  transform: translateY(calc(var(--ds-size-2) * -1.5));
 }

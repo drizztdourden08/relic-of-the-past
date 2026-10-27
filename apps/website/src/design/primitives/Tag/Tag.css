@@ -1,0 +1,42 @@
+/* @layer website-site @kind style */
+.ds-tag {
+  --tag-ink: var(--ds-text-dim);
+  --tag-fill: var(--ds-inset);
+  --tag-edge: var(--ds-border);
+
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  gap: var(--ds-space-xs);
+  box-sizing: border-box;
+  max-width: 100%;
+  height: var(--ds-size-20);
+  padding: 0 var(--ds-space-sm);
+  border: var(--ds-border-thin) solid var(--tag-edge);
+  border-radius: var(--ds-radius-sm);
+  background: var(--tag-fill);
+  color: var(--tag-ink);
+  font-size: var(--ds-text-xs);
+  font-weight: var(--ds-weight-medium);
+  line-height: 1;
+  white-space: nowrap;
+  vertical-align: middle;
+}
+
+.ds-tag__text {
+  min-width: 0;
+  overflow: hidden;
+  line-height: var(--ds-leading-tight);
+  text-overflow: ellipsis;
+}
+
+.ds-tag--urgency {
+  border-color: transparent;
+  font-weight: var(--ds-weight-semi);
+}
+
+.ds-tag--warning {
+  --tag-ink: var(--ds-amber-bright);
+  --tag-fill: var(--ds-amber-soft);
+  --tag-edge: var(--ds-amber);
+}

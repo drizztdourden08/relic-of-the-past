@@ -1,5 +1,5 @@
 /* @layer website-site @kind component */
-import { Box, Flex, Icon } from '@drizztdourden08/tessera/primitives';
+import { Box, Flex, Icon } from '../../../../design';
 import { statEntriesOf } from './behavior/stat-entries-of';
 import type { CommunityStatsProps } from './CommunityStats.type';
 import './CommunityStats.css';

@@ -1,5 +1,5 @@
 /* @layer website-site @kind component */
-import { Box, Flex, Icon, Link, P, Title } from '@drizztdourden08/tessera/primitives';
+import { Box, Flex, Icon, Link, P, Title } from '../../design';
 import { useContributors, useGitHubStats } from '../../github';
 import { REPO_HOME_URL } from '../../repo';
 import { COMMUNITY_TEXT } from './CommunitySection.constants';

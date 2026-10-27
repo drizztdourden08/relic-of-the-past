@@ -3,7 +3,7 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding-bottom: var(--size-48);
+  padding-bottom: var(--ds-size-48);
   text-align: center;
 }
 
@@ -13,7 +13,7 @@
 
 .landing-end__legal {
   max-width: var(--site-legal-w);
-  margin-top: var(--size-12);
-  color: var(--c-text-muted);
-  font-size: var(--size-12);
+  margin-top: var(--ds-size-12);
+  color: var(--ds-text-muted);
+  font-size: var(--ds-size-12);
 }

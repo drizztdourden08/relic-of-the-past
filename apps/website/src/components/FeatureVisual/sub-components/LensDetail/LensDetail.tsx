@@ -1,5 +1,5 @@
 /* @layer website-site @kind component */
-import { Box, Span } from '@drizztdourden08/tessera/primitives';
+import { Box, Span } from '../../../../design';
 import { ShotImage } from '../../../ShotImage';
 import type { LensDetailProps } from './LensDetail.type';
 import './LensDetail.css';

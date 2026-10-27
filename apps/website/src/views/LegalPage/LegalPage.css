@@ -1,7 +1,7 @@
 /* @layer website-site @kind style */
 .legal {
-  background: var(--c-bg);
-  color: var(--c-text);
+  background: var(--ds-bg);
+  color: var(--ds-text);
   font-size: var(--site-body-size);
   line-height: var(--site-body-leading);
   user-select: text;
@@ -10,20 +10,20 @@
 .legal__body {
   max-width: var(--site-legal-body-w);
   margin: 0 auto;
-  padding: var(--size-32) var(--site-gutter) var(--site-section-pad);
+  padding: var(--ds-size-32) var(--site-gutter) var(--site-section-pad);
 }
 
 .legal .legal__title {
-  margin-top: var(--size-24);
-  font-family: var(--site-font-heading);
+  margin-top: var(--ds-size-24);
+  font-family: var(--ds-font-heading);
   font-size: var(--site-feature-title-size);
-  font-weight: var(--weight-semi);
-  letter-spacing: var(--tracking-normal);
+  font-weight: var(--ds-weight-semi);
+  letter-spacing: var(--ds-tracking-normal);
   text-transform: none;
 }
 
 .legal__updated {
-  margin: var(--size-8) 0 var(--size-24);
-  color: var(--c-text-muted);
+  margin: var(--ds-size-8) 0 var(--ds-size-24);
+  color: var(--ds-text-muted);
   font-size: var(--site-text-sm);
 }

@@ -4,10 +4,10 @@
 }
 
 .shot-frame .pins-visual__legend {
-  gap: var(--size-4);
-  padding: var(--size-12) var(--size-16) var(--size-12) var(--size-40);
-  border-top: var(--border-width-thin) solid var(--px-gold-dark);
-  background: var(--c-surface);
-  color: var(--c-text-dim);
+  gap: var(--ds-size-4);
+  padding: var(--ds-size-12) var(--ds-size-16) var(--ds-size-12) var(--ds-size-40);
+  border-top: var(--ds-border-thin) solid var(--px-gold-dark);
+  background: var(--ds-surface);
+  color: var(--ds-text-dim);
   font-size: var(--site-text-md);
 }

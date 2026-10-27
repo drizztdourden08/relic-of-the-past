@@ -1,5 +1,5 @@
 /* @layer website-site @kind component */
-import { Box, List, ListItem } from '@drizztdourden08/tessera/primitives';
+import { Box, List, ListItem } from '../../../../design';
 import { ShotImage } from '../../../ShotImage';
 import { PinMarks } from '../PinMarks';
 import { ShotFrame } from '../ShotFrame';

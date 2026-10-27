@@ -1,5 +1,5 @@
 /* @layer website-site @kind component */
-import { Box } from '@drizztdourden08/tessera/primitives';
+import { Box } from '../../../../design';
 import { DepthLayer } from '../../../DepthLayer';
 import { ShotImage } from '../../../ShotImage';
 import { PinMarks } from '../PinMarks';

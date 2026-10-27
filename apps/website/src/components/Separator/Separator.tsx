@@ -1,5 +1,5 @@
 /* @layer website-site @kind component */
-import { Box } from '@drizztdourden08/tessera/primitives';
+import { Box } from '../../design';
 import { CenterGem } from './sub-components/CenterGem';
 import type { SeparatorProps } from './Separator.type';
 import './Separator.css';

@@ -1,5 +1,5 @@
 /* @layer website-site @kind component */
-import { Flex } from '@drizztdourden08/tessera/primitives';
+import { Flex } from '../../../../design';
 import { pickAssets, variantLabel } from '../../../../downloads';
 import { formatBytes } from '../../../../format';
 import { PLATFORM_LABELS } from '../../../../platform';

@@ -1,5 +1,5 @@
 /* @layer website-site @kind component */
-import { Box, Icon, Link, Small, Span } from '@drizztdourden08/tessera/primitives';
+import { Box, Icon, Link, Small, Span } from '../../../../design';
 import { DOWNLOAD_ICON_SIZE } from '../../DownloadButton.constants';
 import { PixelGradientBg } from '../PixelGradientBg';
 import type { DownloadCtaProps } from './DownloadCta.type';

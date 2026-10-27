@@ -12,7 +12,7 @@
   box-shadow: var(--site-firefly-glow);
   opacity: 0;
   animation-name: firefly-drift, firefly-flicker;
-  animation-timing-function: var(--ease-in-out);
+  animation-timing-function: var(--ds-ease-in-out);
   animation-iteration-count: infinite;
 }
 

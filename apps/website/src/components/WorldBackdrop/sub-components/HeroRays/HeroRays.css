@@ -13,9 +13,9 @@
   width: 40%;
   height: 50%;
   background: radial-gradient(ellipse at center, color-mix(in srgb, var(--ray-halo) 50%, transparent), transparent 70%);
-  filter: blur(var(--size-20));
+  filter: blur(var(--ds-size-20));
   mix-blend-mode: screen;
-  animation: ray-breathe 11s var(--ease-in-out) infinite;
+  animation: ray-breathe 11s var(--ds-ease-in-out) infinite;
 }
 
 .landing-rays__ray {
@@ -36,32 +36,32 @@
   left: 22%;
   width: 5vw;
   animation:
-    ray-sway-a 19s var(--ease-in-out) infinite alternate,
-    ray-breathe 8s var(--ease-in-out) infinite;
+    ray-sway-a 19s var(--ds-ease-in-out) infinite alternate,
+    ray-breathe 8s var(--ds-ease-in-out) infinite;
 }
 
 .landing-rays__ray--2 {
   left: 34%;
   width: 10vw;
   animation:
-    ray-sway-b 26s var(--ease-in-out) infinite alternate,
-    ray-breathe 12s var(--ease-in-out) infinite 2.5s;
+    ray-sway-b 26s var(--ds-ease-in-out) infinite alternate,
+    ray-breathe 12s var(--ds-ease-in-out) infinite 2.5s;
 }
 
 .landing-rays__ray--3 {
   left: 48%;
   width: 4vw;
   animation:
-    ray-sway-a 16s var(--ease-in-out) infinite alternate-reverse,
-    ray-breathe 7s var(--ease-in-out) infinite 1.2s;
+    ray-sway-a 16s var(--ds-ease-in-out) infinite alternate-reverse,
+    ray-breathe 7s var(--ds-ease-in-out) infinite 1.2s;
 }
 
 .landing-rays__ray--4 {
   left: 56%;
   width: 2.5vw;
   animation:
-    ray-sway-b 22s var(--ease-in-out) infinite alternate-reverse,
-    ray-breathe 9s var(--ease-in-out) infinite 4s;
+    ray-sway-b 22s var(--ds-ease-in-out) infinite alternate-reverse,
+    ray-breathe 9s var(--ds-ease-in-out) infinite 4s;
 }
 
 @keyframes ray-sway-a {

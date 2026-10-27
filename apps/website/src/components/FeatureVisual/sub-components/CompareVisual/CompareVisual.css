@@ -13,8 +13,8 @@
   position: relative;
   display: grid;
   overflow: hidden;
-  border: var(--border-width-thin) solid var(--px-gold-dark);
-  border-radius: var(--radius-xl);
+  border: var(--ds-border-thin) solid var(--px-gold-dark);
+  border-radius: var(--ds-radius-xl);
   box-shadow: var(--site-shot-shadow);
 }
 
@@ -41,7 +41,7 @@
 
 .compare-visual__divider {
   position: absolute;
-  background: var(--c-primary-bright);
+  background: var(--ds-accent-bright);
   box-shadow: var(--site-gem-glow);
 }
 
@@ -49,44 +49,44 @@
   top: 0;
   bottom: 0;
   left: var(--compare-split);
-  width: var(--size-2);
+  width: var(--ds-size-2);
 }
 
 .compare-visual--y .compare-visual__divider {
   top: var(--compare-split);
   right: 0;
   left: 0;
-  height: var(--size-2);
+  height: var(--ds-size-2);
 }
 
 .compare-visual__label {
   position: absolute;
-  padding: var(--size-2) var(--size-8);
-  border-radius: var(--radius-pill);
-  background: var(--c-scrim);
-  color: var(--c-text);
+  padding: var(--ds-size-2) var(--ds-size-8);
+  border-radius: var(--ds-radius-pill);
+  background: var(--ds-scrim);
+  color: var(--ds-text);
   font-size: var(--site-text-sm);
 }
 
 .compare-visual__label--before {
-  top: var(--size-12);
-  left: var(--size-12);
+  top: var(--ds-size-12);
+  left: var(--ds-size-12);
 }
 
 .compare-visual--x .compare-visual__label--after {
-  top: var(--size-12);
-  right: var(--size-12);
+  top: var(--ds-size-12);
+  right: var(--ds-size-12);
 }
 
 .compare-visual--y .compare-visual__label--after {
-  bottom: var(--size-12);
-  left: var(--size-12);
+  bottom: var(--ds-size-12);
+  left: var(--ds-size-12);
 }
 
 .compare-visual__insets {
   position: absolute;
-  right: var(--size-12);
-  bottom: var(--size-12);
+  right: var(--ds-size-12);
+  bottom: var(--ds-size-12);
   width: var(--site-inset-w);
 }
 
@@ -94,17 +94,17 @@
   position: static;
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: var(--size-8);
+  gap: var(--ds-size-8);
   width: auto;
-  margin-top: var(--size-12);
+  margin-top: var(--ds-size-12);
 }
 
 .compare-visual__inset img {
   display: block;
   width: 100%;
   height: auto;
-  border: var(--border-width-thin) solid var(--px-gold-dark);
-  border-radius: var(--radius-md);
+  border: var(--ds-border-thin) solid var(--px-gold-dark);
+  border-radius: var(--ds-radius-md);
   box-shadow: var(--site-shot-shadow);
 }
 

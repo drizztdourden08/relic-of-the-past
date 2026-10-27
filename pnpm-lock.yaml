@@ -886,9 +886,6 @@ importers:
 
   apps/website:
     dependencies:
-      '@drizztdourden08/tessera':
-        specifier: 'catalog:'
-        version: 0.75.0(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(typescript@6.0.3)
       react:
         specifier: 'catalog:'
         version: 19.2.7

@@ -1,0 +1,42 @@
+/* @layer website-site @kind style */
+:root {
+  --ds-size-1: 1px;
+  --ds-size-2: 2px;
+  --ds-size-4: 4px;
+  --ds-size-6: 6px;
+  --ds-size-8: 8px;
+  --ds-size-10: 10px;
+  --ds-size-12: 12px;
+  --ds-size-14: 14px;
+  --ds-size-16: 16px;
+  --ds-size-20: 20px;
+  --ds-size-24: 24px;
+  --ds-size-28: 28px;
+  --ds-size-32: 32px;
+  --ds-size-40: 40px;
+  --ds-size-48: 48px;
+  --ds-size-64: 64px;
+  --ds-size-96: 96px;
+  --ds-size-288: 288px;
+  --ds-size-640: 640px;
+  --ds-space-2xs: var(--ds-size-2);
+  --ds-space-xs: var(--ds-size-4);
+  --ds-space-sm: var(--ds-size-8);
+  --ds-space-md: var(--ds-size-12);
+  --ds-space-lg: var(--ds-size-16);
+  --ds-space-xl: var(--ds-size-24);
+  --ds-space-2xl: var(--ds-size-32);
+  --ds-radius-sm: 4px;
+  --ds-radius-md: 6px;
+  --ds-radius-lg: 8px;
+  --ds-radius-xl: 12px;
+  --ds-radius-pill: 1024px;
+  --ds-radius-round: 50%;
+  --ds-border-thin: 1px;
+  --ds-border-thick: 2px;
+  --ds-scrollbar: 6px;
+  --ds-z-base: 1;
+  --ds-z-sticky: 10;
+  --ds-overlay-dim: 0.3;
+  --ds-opacity-muted: 0.6;
+}

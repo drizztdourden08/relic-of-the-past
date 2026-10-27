@@ -1,5 +1,5 @@
 /* @layer website-site @kind component */
-import { Box } from '@drizztdourden08/tessera/primitives';
+import { Box } from '../../design';
 import { DepthLayer } from '../DepthLayer';
 import { FeatureRow } from './sub-components/FeatureRow';
 import { GroupHeading } from './sub-components/GroupHeading';

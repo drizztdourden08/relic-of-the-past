@@ -1,5 +1,5 @@
 /* @layer website-site @kind component */
-import { Box, Flex, Image, Link, P, Title } from '@drizztdourden08/tessera/primitives';
+import { Box, Flex, Image, Link, P, Title } from '../../design';
 import { PUBLIC_FILE_RATIOS, PUBLIC_FILES, publicFileUrl } from '../../public-file';
 import { RELEASES_PAGE_URL } from '../../repo';
 import { DownloadButton } from '../DownloadButton';

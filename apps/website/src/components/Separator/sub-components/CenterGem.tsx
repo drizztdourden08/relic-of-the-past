@@ -1,5 +1,5 @@
 /* @layer website-site @kind component */
-import { Svg, SvgPath } from '@drizztdourden08/tessera/primitives';
+import { Svg, SvgPath } from '../../../design';
 import { GEM_CENTER, GEM_LAYERS, GEM_SIZE } from '../Separator.constants';
 import { diamondPath } from '../behavior/diamond-path';
 

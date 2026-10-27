@@ -11,12 +11,12 @@
   place-items: center;
   width: var(--site-pin-d);
   aspect-ratio: 1;
-  border: var(--border-width-thin) solid var(--px-gold-bright);
-  border-radius: var(--radius-round);
-  background: var(--c-scrim);
+  border: var(--ds-border-thin) solid var(--px-gold-bright);
+  border-radius: var(--ds-radius-round);
+  background: var(--ds-scrim);
   box-shadow: var(--site-gem-glow);
   color: var(--px-gold-bright);
   font-size: var(--site-text-sm);
-  font-weight: var(--weight-bold);
+  font-weight: var(--ds-weight-bold);
   translate: -50% -50%;
 }

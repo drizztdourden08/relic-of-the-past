@@ -1,6 +1,5 @@
 /* @layer website-site @kind style */
 :root {
-  --site-font-heading: 'Cinzel', 'Palatino Linotype', 'Book Antiqua', serif;
   --site-body-size: 17px;
   --site-body-leading: 1.6;
   --site-text-sm: 13px;
@@ -8,9 +7,9 @@
   --site-content-w: 1080px;
   --site-legal-w: 640px;
   --site-blurb-w: 560px;
-  --site-gutter: var(--size-24);
+  --site-gutter: var(--ds-size-24);
   --site-section-pad: clamp(48px, 8vw, 112px);
-  --site-boundary-lift: calc(var(--size-24) * -1);
+  --site-boundary-lift: calc(var(--ds-size-24) * -1);
   --site-boundary-z: 2;
   --site-gold-ink: #1b1405;
   --site-green: #2ea84a;
@@ -32,8 +31,8 @@
   --site-gem-glow-low: 0 0 3px rgb(224 172 46 / 0.3);
   --site-gem-glow-high: 0 0 9px rgb(228 198 90 / 0.8);
   --site-cta-pad-x: 36px;
-  --site-cta-shadow: 0 0 32px var(--c-primary-soft), 0 4px 18px rgb(0 0 0 / 0.5);
-  --site-cta-shadow-hover: 0 0 48px var(--c-primary-soft), 0 8px 24px rgb(0 0 0 / 0.55);
+  --site-cta-shadow: 0 0 32px var(--ds-accent-soft), 0 4px 18px rgb(0 0 0 / 0.5);
+  --site-cta-shadow-hover: 0 0 48px var(--ds-accent-soft), 0 8px 24px rgb(0 0 0 / 0.55);
   --site-text-shadow-soft: 0 1px 8px rgb(0 0 0 / 0.9);
   --site-text-shadow-strong: 0 2px 12px rgb(0 0 0 / 0.8);
   --site-hero-min-h: clamp(640px, 96svh, 1040px);
@@ -87,7 +86,7 @@
   --site-glow-gold: rgb(224 172 46 / 0.18);
   --site-glow-shop: rgb(214 140 40 / 0.18);
   --site-glow-violet: rgb(150 100 220 / 0.18);
-  --site-world-ground: color-mix(in srgb, var(--c-bg) 76%, transparent);
+  --site-world-ground: color-mix(in srgb, var(--ds-bg) 76%, transparent);
   --site-world-fade: 60svh;
   --site-world-sink: -14svh;
   --site-world-dim: 0.4;
@@ -95,7 +94,7 @@
   --site-content-z: 1;
   --site-timeline-w: 13rem;
   --site-chapterbar-h: 48px;
-  --site-chapterbar-bg: color-mix(in srgb, var(--c-bg) 72%, transparent);
+  --site-chapterbar-bg: color-mix(in srgb, var(--ds-bg) 72%, transparent);
   --site-pin-d: 28px;
   --site-lens-d: 11.6%;
   --site-compare-from: 12%;
@@ -109,7 +108,7 @@
   --site-shot-shadow:
     0 0 0 1px rgb(0 0 0 / 0.6),
     0 12px 40px rgb(0 0 0 / 0.5),
-    0 0 56px var(--c-primary-soft);
+    0 0 56px var(--ds-accent-soft);
 }
 
 @media (width <= 800px) {

@@ -30,7 +30,7 @@ const rotpExtension = {
   description: 'Relic of the Past: the dataset facade, the primitives tiers and the HUD inline styles',
   eslint: {
     options: {
-      primitivesGlobs: ['apps/desktop/src/primitives/**/*.tsx'],
+      primitivesGlobs: ['apps/desktop/src/primitives/**/*.tsx', 'apps/website/src/design/primitives/**/*.tsx'],
       inlineStyle: [{
         files: [
           'apps/desktop/src/{primitives,composites,hud}/**/*.{ts,tsx}',
@@ -56,6 +56,9 @@ const rotpExtension = {
           'apps/website/src/components/CommunitySection/sub-components/CommunityTexture/CommunityTexture.tsx',
         ],
         why: 'Each firefly and each background triforce takes its position, size and animation timing from a fixed table or a seeded scatter, a value per element that no shared class can carry.',
+      }, {
+        files: ['apps/website/src/design/primitives/Image/Image.tsx'],
+        why: 'Each picture frame takes the aspect ratio and size of the image it holds, a value per image that no shared class can carry.',
       }, {
         files: [
           'apps/website/src/components/FeatureVisual/sub-components/{OverlayVisual/OverlayVisual,LensVisual/LensVisual,PinMarks/PinMarks}.tsx',

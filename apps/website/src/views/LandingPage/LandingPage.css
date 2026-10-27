@@ -1,7 +1,7 @@
 /* @layer website-site @kind style */
 .landing {
-  background: var(--c-bg);
-  color: var(--c-text);
+  background: var(--ds-bg);
+  color: var(--ds-text);
   font-size: var(--site-body-size);
   line-height: var(--site-body-leading);
   user-select: text;
@@ -9,7 +9,7 @@
 }
 
 .landing ::selection {
-  background: var(--c-primary);
+  background: var(--ds-accent);
   color: var(--site-gold-ink);
 }
 
@@ -26,7 +26,7 @@
     transparent,
     var(--site-world-ground) var(--site-world-fade),
     var(--site-world-ground) calc(100% - var(--site-world-fade)),
-    var(--c-bg)
+    var(--ds-bg)
   );
   view-timeline: --features block;
 }

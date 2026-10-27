@@ -1,0 +1,9 @@
+/* @layer website-site @kind style */
+:root {
+  --ds-duration-fast: 0.1s;
+  --ds-duration-normal: 0.15s;
+  --ds-duration-slow: 0.26s;
+  --ds-ease: ease;
+  --ds-ease-in-out: ease-in-out;
+  --ds-transition-fast: var(--ds-duration-fast) var(--ds-ease);
+}

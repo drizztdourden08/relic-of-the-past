@@ -1,0 +1,22 @@
+/* @layer website-site @kind style */
+.ds-list {
+  --list-indent: var(--ds-space-lg);
+
+  display: flex;
+  flex-direction: column;
+  gap: var(--ds-space-2xs);
+  margin: 0;
+  padding-inline-start: var(--list-indent);
+}
+
+.ds-list--bullets {
+  list-style: disc;
+}
+
+.ds-list--numbers {
+  list-style: decimal;
+}
+
+.ds-list .ds-list--bullets {
+  list-style: circle;
+}

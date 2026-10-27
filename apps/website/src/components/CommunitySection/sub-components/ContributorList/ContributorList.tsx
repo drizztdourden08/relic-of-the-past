@@ -1,5 +1,5 @@
 /* @layer website-site @kind component */
-import { Box, Flex, Image, Link } from '@drizztdourden08/tessera/primitives';
+import { Box, Flex, Image, Link } from '../../../../design';
 import { formatCount } from '../../../../format';
 import { AVATAR_SIZE } from './ContributorList.constants';
 import type { ContributorListProps } from './ContributorList.type';

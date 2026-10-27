@@ -2,8 +2,8 @@
 .collage-visual {
   position: relative;
   display: grid;
-  gap: var(--size-16);
-  padding-bottom: var(--size-24);
+  gap: var(--ds-size-16);
+  padding-bottom: var(--ds-size-24);
 }
 
 .collage-visual__layer {
@@ -13,8 +13,8 @@
 .collage-visual__shot {
   display: block;
   overflow: hidden;
-  border: var(--border-width-thin) solid var(--px-gold-dark);
-  border-radius: var(--radius-xl);
+  border: var(--ds-border-thin) solid var(--px-gold-dark);
+  border-radius: var(--ds-radius-xl);
   box-shadow: var(--site-shot-shadow);
 }
 

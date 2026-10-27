@@ -1,5 +1,5 @@
 /* @layer website-site @kind component */
-import { Box, PageRoot } from '@drizztdourden08/tessera/primitives';
+import { Box, Page } from '../../design';
 import { ChapterBar } from '../../components/ChapterBar';
 import { CommunitySection } from '../../components/CommunitySection';
 import { FeatureGroupSection } from '../../components/FeatureGroupSection';
@@ -19,7 +19,7 @@ const LandingPage = () => {
   const activeId = sectionId === LANDING_TEXT.heroId ? null : sectionId;
 
   return (
-    <PageRoot className="landing">
+    <Page className="landing">
       <Box className="landing__world">
         <WorldBackdrop />
         <Hero />
@@ -42,7 +42,7 @@ const LandingPage = () => {
       </Box>
       <CommunitySection />
       <Footer />
-    </PageRoot>
+    </Page>
   );
 };
 

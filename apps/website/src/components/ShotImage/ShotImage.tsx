@@ -1,5 +1,5 @@
 /* @layer website-site @kind component */
-import { Image } from '@drizztdourden08/tessera/primitives';
+import { Image } from '../../design';
 import { publicFileUrl } from '../../public-file';
 import type { ShotImageProps } from './ShotImage.type';
 

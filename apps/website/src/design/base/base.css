@@ -1,0 +1,65 @@
+/* @layer website-site @kind style */
+@layer ds-base {
+  *,
+  *::before,
+  *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  html,
+  body,
+  #root {
+    background: var(--ds-bg);
+    color: var(--ds-text);
+    font-family: var(--ds-font-body);
+    font-size: var(--ds-text-base);
+    font-optical-sizing: auto;
+    line-height: var(--ds-leading-normal);
+    user-select: none;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  html {
+    overflow: hidden auto;
+    scrollbar-gutter: stable;
+  }
+
+  body {
+    min-height: 100%;
+  }
+
+  #root {
+    min-height: 100vh;
+  }
+
+  button {
+    font: inherit;
+    color: inherit;
+    cursor: pointer;
+    user-select: none;
+  }
+
+  *::-webkit-scrollbar {
+    width: var(--ds-scrollbar);
+    height: var(--ds-scrollbar);
+  }
+
+  *::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  *::-webkit-scrollbar-thumb {
+    background: var(--ds-border);
+    border-radius: var(--ds-radius-sm);
+  }
+
+  *::-webkit-scrollbar-thumb:hover {
+    background: var(--ds-text-muted);
+  }
+
+  *::-webkit-scrollbar-corner {
+    background: transparent;
+  }
+}

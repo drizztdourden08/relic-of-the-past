@@ -11,7 +11,6 @@
     "lint": "pnpm run typecheck && stylelint \"src/**/*.css\""
   },
   "dependencies": {
-    "@drizztdourden08/tessera": "catalog:",
     "react": "catalog:",
     "react-dom": "catalog:"
   },

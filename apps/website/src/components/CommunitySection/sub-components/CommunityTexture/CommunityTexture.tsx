@@ -1,5 +1,5 @@
 /* @layer website-site @kind component */
-import { Box, Svg, SvgPath } from '@drizztdourden08/tessera/primitives';
+import { Box, Svg, SvgPath } from '../../../../design';
 import { TRIFORCE_PATHS, TRIFORCE_VIEW_BOX } from './CommunityTexture.constants';
 import { useTriforceStyles } from './behavior/useTriforceStyles';
 import './CommunityTexture.css';

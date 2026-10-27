@@ -8,8 +8,8 @@
 .overlay-visual__stage {
   position: relative;
   overflow: hidden;
-  border: var(--border-width-thin) solid var(--px-gold-dark);
-  border-radius: var(--radius-xl);
+  border: var(--ds-border-thin) solid var(--px-gold-dark);
+  border-radius: var(--ds-radius-xl);
   box-shadow: var(--site-shot-shadow);
 }
 
@@ -23,23 +23,23 @@
 .overlay-visual__frame {
   position: absolute;
   overflow: hidden;
-  outline: var(--border-width-thin) solid var(--c-primary-bright);
-  box-shadow: 0 0 0 100vmax color-mix(in srgb, var(--p-pure-black) calc(var(--overlay-dim) * 100%), transparent);
+  outline: var(--ds-border-thin) solid var(--ds-accent-bright);
+  box-shadow: 0 0 0 100vmax color-mix(in srgb, var(--ds-black) calc(var(--ds-overlay-dim) * 100%), transparent);
 }
 
 .overlay-visual .overlay-visual__ratios {
   flex-flow: row wrap;
-  gap: var(--size-8);
-  margin-top: var(--size-12);
+  gap: var(--ds-size-8);
+  margin-top: var(--ds-size-12);
   padding: 0;
 }
 
 .overlay-visual .overlay-visual__ratio {
   margin: 0;
-  padding: var(--size-2) var(--size-10);
-  border: var(--border-width-thin) solid var(--px-gold-dark);
-  border-radius: var(--radius-pill);
-  color: var(--c-text-dim);
+  padding: var(--ds-size-2) var(--ds-size-10);
+  border: var(--ds-border-thin) solid var(--px-gold-dark);
+  border-radius: var(--ds-radius-pill);
+  color: var(--ds-text-dim);
   font-size: var(--site-text-sm);
 }
 

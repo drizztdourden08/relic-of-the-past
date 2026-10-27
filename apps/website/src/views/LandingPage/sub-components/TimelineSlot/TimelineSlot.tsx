@@ -1,5 +1,5 @@
 /* @layer website-site @kind component */
-import { Box, Link, List, ListItem } from '@drizztdourden08/tessera/primitives';
+import { Box, Link, List, ListItem } from '../../../../design';
 import type { TimelineSlotProps } from './TimelineSlot.type';
 import './TimelineSlot.css';
 
