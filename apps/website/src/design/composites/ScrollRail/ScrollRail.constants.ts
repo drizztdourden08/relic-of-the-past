@@ -8,6 +8,7 @@ const KEY_STEPS: Record<string, number> = {
   ArrowLeft: -KEY_STEP,
 };
 const PROGRESS_VAR = '--rail-progress';
+const PAST_ATTR = 'data-past';
 const EMPTY_GEOMETRY = { top: 0, span: 1, fractions: [] } as const;
 
-export { EMPTY_GEOMETRY, KEY_STEPS, PROGRESS_VAR, VIEW_ANCHOR };
+export { EMPTY_GEOMETRY, KEY_STEPS, PAST_ATTR, PROGRESS_VAR, VIEW_ANCHOR };

@@ -13,7 +13,8 @@
   transition: opacity var(--ds-duration-slow) var(--ds-ease);
 }
 
-.ds-rail[data-idle] {
+.ds-rail[data-idle],
+.ds-rail[data-past] {
   opacity: 0;
   pointer-events: none;
 }
