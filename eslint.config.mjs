@@ -57,8 +57,8 @@ const rotpExtension = {
         ],
         why: 'Each firefly and each background triforce takes its position, size and animation timing from a fixed table or a seeded scatter, a value per element that no shared class can carry.',
       }, {
-        files: ['apps/website/src/design/primitives/Image/Image.tsx'],
-        why: 'Each picture frame takes the aspect ratio and size of the image it holds, a value per image that no shared class can carry.',
+        files: ['apps/website/src/design/composites/ScrollRail/ScrollRail.tsx', 'apps/website/src/design/primitives/Image/Image.tsx'],
+        why: 'Each numeral of the scroll rail sits at the share of the page where its group starts, measured from the document at run time, and each picture frame takes the aspect ratio and size of the image it holds: a value per element that no shared class can carry.',
       }, {
         files: [
           'apps/website/src/components/FeatureVisual/sub-components/{OverlayVisual/OverlayVisual,LensVisual/LensVisual,PinMarks/PinMarks}.tsx',

@@ -93,6 +93,7 @@
   --site-world-z: 0;
   --site-content-z: 1;
   --site-timeline-w: 13rem;
+  --site-rail-numeral-size: clamp(28px, 2.4vw, 40px);
   --site-chapterbar-h: 48px;
   --site-chapterbar-bg: color-mix(in srgb, var(--ds-bg) 72%, transparent);
   --site-pin-d: 28px;
