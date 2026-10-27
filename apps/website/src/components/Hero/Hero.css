@@ -15,6 +15,7 @@
 
 .landing-hero__content {
   position: relative;
+  width: 100%;
   max-width: var(--site-hero-content-w);
   padding: var(--site-hero-pad-y) var(--site-gutter);
   text-align: center;
@@ -22,20 +23,22 @@
 
 .landing-hero__mark {
   flex: none;
-  width: var(--ds-size-96);
+  width: var(--site-hero-mark-w);
   filter: drop-shadow(0 0 var(--ds-size-24) var(--ds-accent-soft));
 }
 
 .landing-hero__title {
+  width: min(var(--site-hero-wordmark-w), 100%);
   margin-top: var(--ds-size-20);
 }
 
 .landing-hero__wordmark {
-  width: min(var(--ds-size-640), 86vw);
+  width: 100%;
   filter: drop-shadow(var(--site-wordmark-glow));
 }
 
 .landing-hero__tagline {
+  max-width: var(--site-hero-text-w);
   margin: var(--ds-size-16) 0 var(--ds-size-40);
   color: var(--ds-text);
   font-size: var(--site-hero-tagline-size);
@@ -49,6 +52,7 @@
 }
 
 .landing-hero__note {
+  max-width: var(--site-hero-text-w);
   margin-top: var(--ds-size-28);
   color: var(--ds-text-dim);
   font-size: var(--site-text-sm);

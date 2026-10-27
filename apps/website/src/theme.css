@@ -51,7 +51,10 @@
   --site-text-shadow-strong: 0 2px 12px rgb(0 0 0 / 0.8);
   --site-hero-min-h: clamp(640px, 96svh, 1040px);
   --site-hero-bg-w: 130%;
-  --site-hero-content-w: 760px;
+  --site-hero-content-w: 1080px;
+  --site-hero-text-w: 760px;
+  --site-hero-mark-w: clamp(96px, 18vw, 144px);
+  --site-hero-wordmark-w: 960px;
   --site-hero-pad-y: 96px;
   --site-hero-tagline-size: clamp(17px, 2.2vw, 21px);
   --site-hero-scrim: radial-gradient(ellipse 60% 55% at 50% 54%, rgb(0 0 0 / 0.62), transparent 75%);
