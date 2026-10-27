@@ -5,6 +5,7 @@ const START_PAGE_ROUTES: Readonly<Record<string, string>> = {
   randomizer: 'randomizer/options',
   'msu-studio': 'data/msu',
   'sprite-studio': 'data/characters',
+  'language-studio': 'data/languages',
   hookshop: 'store',
   'data-inspector': 'data-inspector',
 };
