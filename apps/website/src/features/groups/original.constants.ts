@@ -36,7 +36,7 @@ const ORIGINAL_GROUP: FeatureGroup = {
       short: 'No flicker',
       title: 'No more flicker',
       promise: ['Every sprite, every frame.', 'Crowded scenes stop blinking.'],
-      body: 'The game could only draw eight sprites per line, so busy scenes blinked. No Sprite Limit draws them all, and V-Sync keeps the scrolling smooth.',
+      body: 'The console could only draw so many sprites on one line, so in crowded scenes enemies lost pieces or blinked. No Sprite Limit draws them all, and V-Sync keeps the scrolling smooth.',
       settings: ['No Sprite Limit', 'V-Sync'],
       caption: 'A crowded room. With the limit on, enemies lose parts of their sprites. With No Sprite Limit every sprite is drawn whole.',
       layout: 'split',
