@@ -1,0 +1,83 @@
+/* @layer website-site @kind style */
+.world-backdrop {
+  position: sticky;
+  top: 0;
+  z-index: var(--site-world-z);
+  height: 100svh;
+  margin-bottom: -100svh;
+  overflow: clip;
+  pointer-events: none;
+}
+
+.world-backdrop__art,
+.world-backdrop__rays {
+  position: absolute;
+  inset: 0;
+}
+
+.world-backdrop__art {
+  bottom: var(--site-world-sink);
+}
+
+.world-backdrop__img {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: var(--site-hero-bg-w);
+  max-width: none;
+  height: 100%;
+  animation: world-pan 120s var(--ease-in-out) infinite;
+}
+
+@keyframes world-pan {
+  0%,
+  4% {
+    transform: translateX(0);
+  }
+
+  46%,
+  54% {
+    transform: translateX(-23%);
+  }
+
+  96%,
+  100% {
+    transform: translateX(0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .world-backdrop__img {
+    animation: none;
+    transform: translateX(-11.5%);
+  }
+}
+
+@supports (animation-timeline: scroll()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .world-backdrop__art {
+      animation: world-sink linear both;
+      animation-timeline: scroll(root);
+      animation-range: 0 160svh;
+    }
+
+    .world-backdrop__rays {
+      animation: world-fade-out linear both;
+      animation-timeline: scroll(root);
+      animation-range: 50svh 150svh;
+    }
+  }
+}
+
+@keyframes world-sink {
+  to {
+    translate: 0 var(--site-world-sink);
+    filter: brightness(var(--site-world-dim)) saturate(0.8);
+  }
+}
+
+@keyframes world-fade-out {
+  to {
+    opacity: 0;
+  }
+}

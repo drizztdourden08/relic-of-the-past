@@ -1,0 +1,26 @@
+/* @layer website-site @kind style */
+.lens-detail {
+  position: relative;
+  overflow: hidden;
+  border: var(--border-width-thin) solid var(--px-gold-dark);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--site-shot-shadow);
+}
+
+.lens-detail__image img {
+  display: block;
+  width: 100%;
+  height: auto;
+  image-rendering: pixelated;
+}
+
+.lens-detail__label {
+  position: absolute;
+  bottom: var(--size-8);
+  left: var(--size-8);
+  padding: var(--size-2) var(--size-8);
+  border-radius: var(--radius-pill);
+  background: var(--c-scrim);
+  color: var(--c-text);
+  font-size: var(--site-text-sm);
+}

@@ -41,9 +41,7 @@
   --site-hero-content-w: 760px;
   --site-hero-pad-y: 96px;
   --site-hero-tagline-size: clamp(17px, 2.2vw, 21px);
-  --site-hero-scrim:
-    radial-gradient(ellipse 60% 55% at 50% 54%, rgb(0 0 0 / 0.62), transparent 75%),
-    linear-gradient(to bottom, rgb(0 0 0 / 0.35), transparent 30%, rgb(0 0 0 / 0.9) 96%);
+  --site-hero-scrim: radial-gradient(ellipse 60% 55% at 50% 54%, rgb(0 0 0 / 0.62), transparent 75%);
   --site-wordmark-glow: 0 6px 32px rgb(200 168 78 / 0.35);
   --ray-halo: #ffecaa;
   --ray-core: #ffeeb2;
@@ -74,21 +72,48 @@
   --site-feature-title-size: clamp(26px, 3.4vw, 36px);
   --site-community-title-size: clamp(28px, 3.6vw, 40px);
   --site-legal-body-w: 760px;
-  --site-card-w: clamp(18rem, 34vw, 32rem);
-  --site-card-gap: var(--size-24);
-  --site-card-ratio: 16 / 10;
-  --site-card-dim: 0.4;
-  --site-card-title-size: clamp(20px, 2.2vw, 26px);
-  --site-fade-w: calc(var(--size-32) * 2);
-  --site-heading-w: clamp(16rem, 26vw, 24rem);
-  --site-backdrop-inset: -15%;
-  --site-backdrop-blur: 28px;
-  --site-backdrop-opacity: 0.45;
-  --site-backdrop-brightness: 0.55;
-  --site-drift-from: -10%;
-  --site-drift-to: 10%;
+  --site-feature-title-size-row: clamp(22px, 2.6vw, 30px);
+  --site-promise-size: clamp(17px, 1.8vw, 20px);
+  --site-row-pad: clamp(40px, 7vw, 96px);
+  --site-row-gap: clamp(24px, 4vw, 64px);
+  --site-row-split: minmax(0, 5fr) minmax(0, 7fr);
+  --site-narrow-w: 760px;
+  --site-numeral-size: clamp(120px, 20vw, 260px);
+  --site-depth-range: 48px;
+  --site-depth-back: -1;
+  --site-depth-front: 0.6;
+  --site-glow-forest: rgb(46 168 74 / 0.2);
+  --site-glow-castle: rgb(86 120 214 / 0.18);
+  --site-glow-gold: rgb(224 172 46 / 0.18);
+  --site-glow-shop: rgb(214 140 40 / 0.18);
+  --site-glow-violet: rgb(150 100 220 / 0.18);
+  --site-world-ground: color-mix(in srgb, var(--c-bg) 76%, transparent);
+  --site-world-fade: 60svh;
+  --site-world-sink: -14svh;
+  --site-world-dim: 0.4;
+  --site-world-z: 0;
+  --site-content-z: 1;
+  --site-timeline-w: 13rem;
+  --site-chapterbar-h: 48px;
+  --site-chapterbar-bg: color-mix(in srgb, var(--c-bg) 72%, transparent);
+  --site-pin-d: 28px;
+  --site-lens-d: 11.6%;
+  --site-compare-from: 12%;
+  --site-compare-to: 88%;
+  --site-dim-from: 0.38;
+  --site-dim-to: 0;
+  --site-slot-w-side: 42%;
+  --site-slot-w-wide: 48%;
+  --site-slot-bleed: -4%;
+  --site-inset-w: 38%;
   --site-shot-shadow:
     0 0 0 1px rgb(0 0 0 / 0.6),
     0 12px 40px rgb(0 0 0 / 0.5),
     0 0 56px var(--c-primary-soft);
+}
+
+@media (width <= 800px) {
+  :root {
+    --site-depth-range: 18px;
+  }
 }

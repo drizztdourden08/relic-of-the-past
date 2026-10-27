@@ -1,0 +1,25 @@
+/* @layer website-site @kind style */
+.shot-frame {
+  min-width: 0;
+}
+
+.shot-frame__stage--framed {
+  position: relative;
+  overflow: hidden;
+  border: var(--border-width-thin) solid var(--px-gold-dark);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--site-shot-shadow);
+}
+
+.shot-frame__stage img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.shot-frame__caption {
+  margin-top: var(--size-12);
+  color: var(--c-text-muted);
+  font-size: var(--site-text-sm);
+  text-shadow: var(--site-text-shadow-soft);
+}

@@ -1,0 +1,34 @@
+/* @layer website-site @kind style */
+.depth--back {
+  --depth: var(--site-depth-back);
+}
+
+.depth--front {
+  --depth: var(--site-depth-front);
+}
+
+.feature-group,
+.feature-row,
+.group-heading {
+  view-timeline: --row block;
+}
+
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .depth:not(.depth--mid) {
+      animation: depth-drift linear both;
+      animation-timeline: --row;
+      animation-range: cover;
+    }
+  }
+}
+
+@keyframes depth-drift {
+  from {
+    translate: 0 calc(var(--depth) * var(--site-depth-range));
+  }
+
+  to {
+    translate: 0 calc(var(--depth) * var(--site-depth-range) * -1);
+  }
+}

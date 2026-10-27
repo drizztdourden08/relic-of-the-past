@@ -1,0 +1,25 @@
+/* @layer website-site @kind style */
+.timeline-slot {
+  position: fixed;
+  top: 50%;
+  left: var(--site-gutter);
+  z-index: var(--z-sticky);
+  width: calc(var(--site-timeline-w) - var(--site-gutter));
+  translate: 0 -50%;
+}
+
+.timeline-slot[data-idle] {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.timeline-slot:focus-within {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+@media (width <= 1100px) {
+  .timeline-slot {
+    display: none;
+  }
+}

@@ -1,0 +1,44 @@
+/* @layer website-site @kind style */
+.chapter-bar {
+  position: sticky;
+  top: 0;
+  z-index: var(--z-sticky);
+  display: none;
+  height: var(--site-chapterbar-h);
+  background: var(--site-chapterbar-bg);
+  backdrop-filter: blur(var(--size-8));
+  border-bottom: var(--border-width-thin) solid var(--px-gold-dark);
+}
+
+.chapter-bar__progress {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  height: var(--size-2);
+  background: var(--c-primary);
+  transform-origin: left;
+  scale: 0 1;
+}
+
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .chapter-bar__progress {
+      animation: chapter-progress linear both;
+      animation-timeline: --features;
+      animation-range: cover 10% cover 90%;
+    }
+  }
+}
+
+@keyframes chapter-progress {
+  to {
+    scale: 1 1;
+  }
+}
+
+@media (width <= 1100px) {
+  .chapter-bar {
+    display: block;
+  }
+}

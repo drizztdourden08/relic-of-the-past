@@ -4,47 +4,13 @@
   display: grid;
   place-items: center;
   min-height: var(--site-hero-min-h);
-  overflow: hidden;
-}
-
-.landing-hero__bg {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: var(--site-hero-bg-w);
-  max-width: none;
-  height: 100%;
-  animation: hero-pan 120s var(--ease-in-out) infinite;
-}
-
-@keyframes hero-pan {
-  0%,
-  4% {
-    transform: translateX(0);
-  }
-
-  46%,
-  54% {
-    transform: translateX(-23%);
-  }
-
-  96%,
-  100% {
-    transform: translateX(0);
-  }
+  z-index: var(--site-content-z);
 }
 
 .landing-hero__scrim {
   position: absolute;
   inset: 0;
   background: var(--site-hero-scrim);
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .landing-hero__bg {
-    animation: none;
-    transform: translateX(-11.5%);
-  }
 }
 
 .landing-hero__content {

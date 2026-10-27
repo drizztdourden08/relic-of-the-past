@@ -1,16 +1,18 @@
 /* @layer website-site @kind types */
 import type { Feature } from './feature.type';
-import type { Screenshot } from './screenshot.type';
 
-type FeatureCards = readonly [Feature, Feature, Feature] | readonly [Feature, Feature, Feature, Feature];
+type GroupGlow = 'forest' | 'castle' | 'gold' | 'shop' | 'violet';
 
 type FeatureGroup = {
   id: string;
+  numeral: 'I' | 'II' | 'III' | 'IV' | 'V';
+  short: string;
   kicker: string;
   title: string;
+  accent: string;
   lead: string;
-  backdrop?: Screenshot;
-  features: FeatureCards;
+  glow: GroupGlow;
+  features: readonly Feature[];
 };
 
-export type { FeatureCards, FeatureGroup };
+export type { FeatureGroup };

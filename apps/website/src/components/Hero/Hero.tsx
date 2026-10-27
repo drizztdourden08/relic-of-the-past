@@ -3,17 +3,12 @@ import { Box, Flex, Image, Link, P, Title } from '@drizztdourden08/tessera/primi
 import { PUBLIC_FILE_RATIOS, PUBLIC_FILES, publicFileUrl } from '../../public-file';
 import { RELEASES_PAGE_URL } from '../../repo';
 import { DownloadButton } from '../DownloadButton';
-import { HERO_TEXT } from './Hero.constants';
-import { Fireflies } from './sub-components/Fireflies';
-import { HeroRays } from './sub-components/HeroRays';
+import { HERO_ID, HERO_TEXT } from './Hero.constants';
 import './Hero.css';
 
 const Hero = () => (
-  <Box as="header" className="landing-hero">
-    <Image className="landing-hero__bg" src={publicFileUrl(PUBLIC_FILES.heroArt)} alt="" aria-hidden="true" />
+  <Box as="header" id={HERO_ID} className="landing-hero">
     <Box className="landing-hero__scrim" aria-hidden="true" />
-    <HeroRays />
-    <Fireflies />
     <Flex direction="column" align="center" className="landing-hero__content">
       <Image
         className="landing-hero__mark"
