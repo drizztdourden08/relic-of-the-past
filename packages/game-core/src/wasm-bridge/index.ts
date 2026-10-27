@@ -12,7 +12,7 @@ export { UI_STATE_BUFFER_SIZE } from './wasm-bridge.constants';
 export { wasmGetPlayerStateInfo } from '../bridge/player-state';
 export type { PlayerStateInfo } from '../bridge/player-state';
 
-export { wasmSetPaused } from '../bridge/commands';
+export { wasmGetPendingSteps, wasmSetPaused, wasmStepFrames } from '../bridge/commands';
 export {
   wasmHostMenuClose, wasmHostMenuIsHolding, wasmHostMenuSaveAndQuit, wasmHostMenuSetTakeover,
   wasmHostSetActiveItem, wasmHostSetGear,

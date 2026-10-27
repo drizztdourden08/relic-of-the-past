@@ -20,6 +20,8 @@ const rotpRendererFlags = (argv: string[]): string[] => {
   if (createAutomationFlags(ROTP_AUTOMATION_FLAGS).isHeadlessLaunch(argv) && !argv.includes('--sound')) flags.push('--startup-muted');
   const startPage = createAutomationFlags(ROTP_AUTOMATION_FLAGS).flagValue('--start-page', argv);
   if (startPage) flags.push(`--startup-start-page=${startPage}`);
+  const frames = createAutomationFlags(ROTP_AUTOMATION_FLAGS).flagValue('--screenshot-frames', argv);
+  if (frames) flags.push(`--startup-screenshot-frames=${frames}`);
   const screenshot = screenshotKindOf(argv);
   if (screenshot) flags.push(`--startup-screenshot=${screenshot}`);
   return flags;

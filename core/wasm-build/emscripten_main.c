@@ -47,6 +47,8 @@ int g_snes_width, g_snes_height;
 int g_ppu_render_flags = 0;
 int g_input1_state;
 uint8 g_paused;
+// Frames a paused core still owes: one per drawn tick, taken by the loop below (WasmStepFrames).
+uint16 g_pause_steps;
 static bool g_running = true;
 bool g_js_input_mode = false;
 
@@ -103,11 +105,14 @@ static void MainFrameCallback(void) {
     }
   }
 
-  if (g_paused) return;
+  // A paused core owes nothing, except the frames WasmStepFrames asked for: each of those runs as
+  // one whole drawn tick, so a paused picture can advance by exactly one emulator frame.
+  if (g_paused && g_pause_steps == 0) return;
 
   // A tick that owes nothing leaves the canvas holding the previous frame (the context is created
   // with preserveDrawingBuffer), so there is nothing to redraw and no reason to burn a draw on it.
-  int steps = StepsOwedThisTick();
+  int steps = g_paused ? 1 : StepsOwedThisTick();
+  if (g_paused) g_pause_steps--;
   if (steps == 0) return;
 
   // FPS measurement: count frames per wall-clock second using emscripten_get_now()
