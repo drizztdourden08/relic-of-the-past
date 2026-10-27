@@ -1,0 +1,52 @@
+/* @layer website-site @kind style */
+.icons-visual {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: var(--ds-size-12);
+}
+
+.icons-visual__tile {
+  display: grid;
+  gap: var(--ds-size-8);
+  justify-items: center;
+  padding: var(--ds-size-12) var(--ds-size-8);
+  border: var(--ds-border-thin) solid var(--px-gold-dark);
+  border-radius: var(--ds-radius-xl);
+  background: var(--ds-surface);
+  box-shadow: var(--site-shot-shadow);
+  text-align: center;
+}
+
+.icons-visual__tile--hero {
+  grid-column: span 2;
+  grid-row: span 2;
+  align-content: center;
+  border-color: var(--px-gold-line);
+}
+
+.icons-visual__icon {
+  width: 100%;
+  max-width: var(--site-game-icon-w);
+  background: transparent;
+}
+
+.icons-visual__tile--hero .icons-visual__icon {
+  max-width: calc(var(--site-game-icon-w) * 2);
+}
+
+.icons-visual__name {
+  color: var(--ds-text-dim);
+  font-size: var(--site-text-sm);
+  line-height: 1.25;
+}
+
+@media (width <= 480px) {
+  .icons-visual {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .icons-visual__tile--hero {
+    grid-column: span 3;
+    grid-row: auto;
+  }
+}

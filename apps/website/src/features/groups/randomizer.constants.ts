@@ -1,6 +1,8 @@
 /* @layer website-site @kind data */
 import type { FeatureGroup } from '../feature-group.type';
+import { GAME_ICONS } from '../shots/game-icons.constants';
 import { NEW_QUEST_SHOTS as SHOTS } from '../shots/new-quest-shots.constants';
+import { UI_SHOTS as UI } from '../shots/ui-shots.constants';
 
 const RANDOMIZER_GROUP: FeatureGroup = {
   id: 'new-quest',
@@ -39,14 +41,21 @@ const RANDOMIZER_GROUP: FeatureGroup = {
       promise: ['Know what is left,', 'room by room.'],
       body: 'The Checks tracker lists every chest, key and heart piece, and in a randomized seed it shows what that seed placed.',
       settings: ['Checks widget'],
-      caption: 'The Checks tracker beside the game: the chest in the room, the totals for each world.',
+      caption: 'The Checks tracker beside the game, and the Eastern Palace opened to show each check and the item placed there.',
       layout: 'split',
       visual: {
-        kind: 'pins',
-        shot: SHOTS['v-22'],
-        callouts: [
-          { x: 37, y: 24, label: 'A chest the tracker counts' },
-          { x: 73, y: 58, label: 'Taken, open and left in each world' },
+        kind: 'collage',
+        layers: [
+          {
+            shot: SHOTS['v-22'],
+            slot: 'main',
+            depth: 'mid',
+            callouts: [
+              { x: 37, y: 24, label: 'A chest the tracker counts' },
+              { x: 73, y: 58, label: 'Taken, open and left in each world' },
+            ],
+          },
+          { shot: UI.checksOpen, slot: 'bottom-right', depth: 'front' },
         ],
       },
     },
@@ -58,16 +67,10 @@ const RANDOMIZER_GROUP: FeatureGroup = {
       promise: ['One seed across many games.', "Your items land in your friends' games, theirs in yours."],
       body: 'Join an online Archipelago room from the app and play your part of a shared seed.',
       settings: ['Developer Mode'],
-      caption: "An item arriving from another player's game, with the room panel beside it.",
+      caption: "The game icons the app shows for items that belong to other players' games, Archipelago itself included.",
       layout: 'split',
       tag: 'experimental',
-      visual: {
-        kind: 'collage',
-        layers: [
-          { shot: SHOTS['v-23'], slot: 'main', depth: 'mid' },
-          { shot: SHOTS['v-24'], slot: 'bottom-right', depth: 'front' },
-        ],
-      },
+      visual: { kind: 'icons', icons: GAME_ICONS },
     },
   ],
 };

@@ -2,82 +2,68 @@
 import type { Screenshot } from '../screenshot.type';
 
 const SEE_MORE_SHOTS = {
-  'v-07': {
-    id: 'v-07',
-    src: 'media/shots/v-07.webp',
-    width: 1278,
-    height: 720,
-    alt: 'A path through the fields of Hyrule in a 16:9 widescreen view',
-  },
-  'v-08': {
-    id: 'v-08',
-    src: 'media/shots/v-08.webp',
-    width: 768,
-    height: 672,
-    alt: 'The same spot in the original 4:3 view',
-  },
-  'v-09': {
-    id: 'v-09',
-    src: 'media/shots/v-09.webp',
+  'edge-off': {
+    id: 'edge-off',
+    src: 'media/shots/edge-effect-off.webp',
     width: 1278,
     height: 720,
     alt: 'A ledge in widescreen with black bars at the edge of the world',
   },
-  'v-10': {
-    id: 'v-10',
-    src: 'media/shots/v-10.webp',
+  'edge-on': {
+    id: 'edge-on',
+    src: 'media/shots/edge-effect-on.webp',
     width: 1278,
     height: 720,
     alt: 'The same ledge with Edge Effect filling the border with a soft mirror of the scene',
   },
-  'v-11': {
-    id: 'v-11',
-    src: 'media/shots/v-11.webp',
-    width: 1278,
-    height: 720,
-    alt: "Link's house in widescreen with the space past the walls darkened",
+  'hide-sanctuary-off': {
+    id: 'hide-sanctuary-off',
+    src: 'media/shots/hide-sanctuary-off.webp',
+    width: 1194,
+    height: 672,
+    alt: 'The Sanctuary interior in widescreen with a dark green void beside the walls',
   },
-  'v-12': {
-    id: 'v-12',
-    src: 'media/shots/v-12.webp',
-    width: 1278,
-    height: 312,
-    alt: "Uncle's message in the original message box",
+  'hide-sanctuary-on': {
+    id: 'hide-sanctuary-on',
+    src: 'media/shots/hide-sanctuary-on.webp',
+    width: 1194,
+    height: 672,
+    alt: 'The Sanctuary interior with Hide Space Beyond Walls: the space past the walls is black',
   },
-  'v-13': {
-    id: 'v-13',
-    src: 'media/shots/v-13.webp',
-    width: 1278,
-    height: 312,
-    alt: "Uncle's first message in the enhanced message box",
+  'hide-house-off': {
+    id: 'hide-house-off',
+    src: 'media/shots/hide-house-off.webp',
+    width: 1194,
+    height: 672,
+    alt: "Link's house in widescreen with a brown void beside the walls",
   },
-  'v-14a': {
-    id: 'v-14a',
-    src: 'media/shots/v-14a.webp',
-    width: 588,
-    height: 201,
-    alt: 'A message box with a stone border',
+  'hide-house-on': {
+    id: 'hide-house-on',
+    src: 'media/shots/hide-house-on.webp',
+    width: 1194,
+    height: 672,
+    alt: "Link's house with Hide Space Beyond Walls: the space past the walls is black",
   },
-  'v-14b': {
-    id: 'v-14b',
-    src: 'media/shots/v-14b.webp',
-    width: 588,
-    height: 201,
-    alt: 'A message box in night colours',
-  },
-  'v-14c': {
-    id: 'v-14c',
-    src: 'media/shots/v-14c.webp',
-    width: 588,
-    height: 201,
-    alt: 'A message box with a parchment texture',
-  },
-  'v-15': {
-    id: 'v-15',
-    src: 'media/shots/v-15.webp',
-    width: 1278,
-    height: 486,
+  'title-poster': {
+    id: 'title-poster',
+    src: 'media/shots/title-poster.webp',
+    width: 1280,
+    height: 722,
     alt: "The reimagined title screen, drawn from the game's own pictures",
+  },
+  'rupees-original': {
+    id: 'rupees-original',
+    src: 'media/shots/rupees-original.webp',
+    width: 1152,
+    height: 648,
+    alt: 'The original rupees: green, blue and red gems, and a green gem with the amount written beside it for 50, 100 and 300',
+  },
+  'rupees-fixed': {
+    id: 'rupees-fixed',
+    src: 'media/shots/rupees-fixed.webp',
+    width: 1152,
+    height: 648,
+    alt: 'The new rupees: green, blue, red, violet for 50, silver for 100 and gold for 300',
   },
 } as const satisfies Record<string, Screenshot>;
 

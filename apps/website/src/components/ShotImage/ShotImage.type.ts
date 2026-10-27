@@ -5,6 +5,7 @@ type ShotImageProps = {
   shot: Screenshot;
   className?: string;
   alt?: string;
+  ratio?: string;
 };
 
 export type { ShotImageProps };

@@ -30,22 +30,6 @@ const NEW_QUEST_SHOTS = {
     height: 926,
     alt: 'The jail cell with the checks tracker docked beside the game',
   },
-  'v-23': {
-    id: 'v-23',
-    pending: true,
-    src: 'media/shots/v-23.webp',
-    width: 1278,
-    height: 720,
-    alt: 'A notice that an item arrived from another player in an Archipelago room',
-  },
-  'v-24': {
-    id: 'v-24',
-    pending: true,
-    src: 'media/shots/v-24.webp',
-    width: 910,
-    height: 555,
-    alt: 'The room connection panel for an online Archipelago room',
-  },
 } as const satisfies Record<string, Screenshot>;
 
 export { NEW_QUEST_SHOTS };

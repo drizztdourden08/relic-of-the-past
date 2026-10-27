@@ -1,21 +1,25 @@
 /* @layer website-site @kind data */
-import { degradeClip } from './degrade-clip';
 import { degradeCollage } from './degrade-collage';
 import { degradeCompare } from './degrade-compare';
+import { degradeIcons } from './degrade-icons';
 import { degradeLens } from './degrade-lens';
-import { degradeOverlay } from './degrade-overlay';
+import { degradePicker } from './degrade-picker';
 import { degradePins } from './degrade-pins';
+import { degradeRatios } from './degrade-ratios';
 import { degradeSingle } from './degrade-single';
+import { degradeTitle } from './degrade-title';
 import type { Degraders } from './ready-visual.type';
 
 const DEGRADERS: Degraders = {
   single: degradeSingle,
   compare: degradeCompare,
-  overlay: degradeOverlay,
+  picker: degradePicker,
+  ratios: degradeRatios,
   lens: degradeLens,
   collage: degradeCollage,
   pins: degradePins,
-  clip: degradeClip,
+  title: degradeTitle,
+  icons: degradeIcons,
 };
 
 export { DEGRADERS };

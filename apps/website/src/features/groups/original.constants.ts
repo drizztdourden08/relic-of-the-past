@@ -1,6 +1,7 @@
 /* @layer website-site @kind data */
 import type { FeatureGroup } from '../feature-group.type';
 import { ORIGINAL_SHOTS as SHOTS } from '../shots/original-shots.constants';
+import { UI_SHOTS as UI } from '../shots/ui-shots.constants';
 
 const ORIGINAL_GROUP: FeatureGroup = {
   id: 'original',
@@ -31,16 +32,24 @@ const ORIGINAL_GROUP: FeatureGroup = {
       },
     },
     {
-      id: 'no-flicker',
-      label: 'No Sprite Limit',
-      short: 'No flicker',
-      title: 'No more flicker',
-      promise: ['Every sprite, every frame.', 'Crowded scenes stop blinking.'],
-      body: 'The console could only draw so many sprites on one line, so in crowded scenes enemies lost pieces or blinked. No Sprite Limit draws them all, and V-Sync keeps the scrolling smooth.',
-      settings: ['No Sprite Limit', 'V-Sync'],
-      caption: 'A crowded room. With the limit on, enemies lose parts of their sprites. With No Sprite Limit every sprite is drawn whole.',
+      id: 'app',
+      label: 'The app',
+      short: 'The app',
+      title: 'A full app around the game',
+      promise: ['Widgets, menus and profiles.', 'Every setting is yours to change.'],
+      body: 'The game comes with a complete interface: widgets you can dock beside it, such as the Checks tracker, and a settings screen where every option the app offers, from the view to the controls, can be changed.',
+      settings: ['Widgets', 'Full UI', 'Every setting'],
+      caption: 'The game with its widgets docked around it, the world map with the Checks and Inventory widgets, and the settings screens.',
       layout: 'split',
-      visual: { kind: 'clip', poster: SHOTS['v-03'], loop: SHOTS['v-03-anim'], after: SHOTS['v-04'] },
+      visual: {
+        kind: 'collage',
+        layers: [
+          { shot: UI.appWidgets, slot: 'main', depth: 'mid' },
+          { shot: UI.appMap, slot: 'top-right', depth: 'back' },
+          { shot: UI.settingsGraphics, slot: 'bottom-right', depth: 'front' },
+          { shot: UI.settingsHud, slot: 'bottom-left', depth: 'front' },
+        ],
+      },
     },
     {
       id: 'mode-7',

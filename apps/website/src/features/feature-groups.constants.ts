@@ -1,6 +1,6 @@
 /* @layer website-site @kind data */
 import type { FeatureGroup } from './feature-group.type';
-import { MAKE_IT_YOURS_GROUP } from './groups/make-it-yours.constants';
+import { COMMUNITY_GROUP } from './groups/community.constants';
 import { ORIGINAL_GROUP } from './groups/original.constants';
 import { RANDOMIZER_GROUP } from './groups/randomizer.constants';
 import { SEE_MORE_GROUP } from './groups/see-more.constants';
@@ -11,7 +11,7 @@ const FEATURE_GROUPS: readonly FeatureGroup[] = [
   SEE_MORE_GROUP,
   YOUR_WAY_GROUP,
   RANDOMIZER_GROUP,
-  MAKE_IT_YOURS_GROUP,
+  COMMUNITY_GROUP,
 ];
 
 export { FEATURE_GROUPS };

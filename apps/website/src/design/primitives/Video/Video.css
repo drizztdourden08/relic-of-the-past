@@ -1,0 +1,8 @@
+/* @layer website-site @kind style */
+.ds-video {
+  display: block;
+  width: 100%;
+  height: auto;
+  background: var(--ds-sunken);
+  pointer-events: none;
+}

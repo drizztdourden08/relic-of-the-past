@@ -1,0 +1,28 @@
+/* @layer website-site @kind style */
+.title-visual {
+  display: grid;
+  gap: var(--ds-size-12);
+  max-width: var(--site-title-w);
+}
+
+.title-visual__screen {
+  overflow: hidden;
+  border: var(--ds-border-thin) solid var(--px-gold-dark);
+  border-radius: var(--ds-radius-xl);
+  box-shadow: var(--site-shot-shadow);
+}
+
+.title-visual__swords {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: var(--ds-size-8);
+}
+
+.title-visual__sword {
+  border: var(--ds-border-thin) solid var(--px-gold-dark);
+  border-radius: var(--ds-radius-lg);
+}
+
+.title-visual__sword img {
+  object-position: 36% 30%;
+}

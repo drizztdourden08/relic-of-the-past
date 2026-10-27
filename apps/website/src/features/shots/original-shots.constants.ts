@@ -17,28 +17,6 @@ const ORIGINAL_SHOTS = {
     height: 1170,
     alt: 'The same game running on an Android phone',
   },
-  'v-03': {
-    id: 'v-03',
-    src: 'media/shots/v-03.webp',
-    width: 768,
-    height: 640,
-    alt: 'A crowded Misery Mire room with the sprite limit on: enemies lose parts of their sprites',
-  },
-  'v-03-anim': {
-    id: 'v-03-anim',
-    animated: true,
-    src: 'media/shots/v-03-anim.webp',
-    width: 768,
-    height: 640,
-    alt: 'The same room looping with the sprite limit on: enemies flicker as their sprites are cut',
-  },
-  'v-04': {
-    id: 'v-04',
-    src: 'media/shots/v-04.webp',
-    width: 768,
-    height: 640,
-    alt: 'The same room with No Sprite Limit: every sprite drawn whole',
-  },
   'v-05-lens': {
     id: 'v-05-lens',
     src: 'media/shots/v-05-lens.webp',

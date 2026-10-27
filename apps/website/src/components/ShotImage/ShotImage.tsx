@@ -3,12 +3,12 @@ import { Image } from '../../design';
 import { publicFileUrl } from '../../public-file';
 import type { ShotImageProps } from './ShotImage.type';
 
-const ShotImage = ({ shot, className, alt }: ShotImageProps) => (
+const ShotImage = ({ shot, className, alt, ratio }: ShotImageProps) => (
   <Image
     className={className}
     src={publicFileUrl(shot.src)}
     alt={alt ?? shot.alt}
-    aspectRatio={`${shot.width} / ${shot.height}`}
+    aspectRatio={ratio ?? `${shot.width} / ${shot.height}`}
     loading="lazy"
     decoding="async"
   />
