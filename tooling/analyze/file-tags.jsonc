@@ -15,6 +15,8 @@
   "**/*.jsonc":               { "kind": "config" },
   "**/*.html":                { "kind": "config" },
   "**/*.txt":                 { "kind": "doc" },
+  // Shipped as a release asset: Archipelia drops raw HTML, so no header comment in the file.
+  "apps/desktop/release-assets/archipelia-description.md": { "layer": "root-config", "kind": "doc" },
 
   // Binary / non-text assets (cannot carry a header comment).
   "**/*.png":   { "kind": "asset" },

@@ -10,8 +10,9 @@
  *    versions to the Archipelia client kit (buildApworldSet), which zips the package
  *    reproducibly, stamps archipelago.json with AP_WORLD_VERSION and the first and last of
  *    SUPPORTED_AP_VERSIONS, and writes build/archipelago/: relic_of_the_past-ap<version>.apworld
- *    for every supported Archipelago version, relic_of_the_past.apworld (a copy of the newest)
- *    and the index relic_of_the_past.apworld.json.
+ *    for every supported Archipelago version, relic_of_the_past.apworld (a copy of the newest),
+ *    the index relic_of_the_past.apworld.json, and the Archipelia release files: archipelia.json,
+ *    archipelia-thumbnail.png and archipelia-description.md (from apps/desktop/release-assets).
  * 3. Copies the builds to apps/desktop/public/archipelago/<version>/relic_of_the_past.apworld with
  *    builds.json (the index), where the app fetches them like the wasm (gitignored).
  */

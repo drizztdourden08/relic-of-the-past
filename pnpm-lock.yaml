@@ -1143,8 +1143,8 @@ importers:
   packages/randomizer:
     dependencies:
       '@drizztdourden08/archipelia-client-kit':
-        specifier: ^0.1.0
-        version: 0.1.0
+        specifier: ^0.2.0
+        version: 0.2.0
       '@drizztdourden08/archipelia-lobby-protocol':
         specifier: ^1.2.0
         version: 1.2.0
@@ -1182,8 +1182,8 @@ importers:
   tooling/apworld:
     dependencies:
       '@drizztdourden08/archipelia-client-kit':
-        specifier: ^0.1.0
-        version: 0.1.0
+        specifier: ^0.2.0
+        version: 0.2.0
       vite:
         specifier: 'catalog:'
         version: 7.3.5(@types/node@25.9.2)(jiti@2.7.0)(tsx@4.23.12)(yaml@2.9.1)
@@ -1559,8 +1559,8 @@ packages:
     peerDependencies:
       postcss-selector-parser: ^7.1.1
 
-  '@drizztdourden08/archipelia-client-kit@0.1.0':
-    resolution: {integrity: sha512-bkUl3MkQHZ54thtNr9uaINHB+BE0XFg1ggReXWxbG6hv1qZd8bFatoVJbTqMBXviowjyA6geFw9WIDFTwAo/8g==, tarball: https://npm.pkg.github.com/download/@drizztdourden08/archipelia-client-kit/0.1.0/5da62e61b0aed3489d8aa66fe22e13bf9e20dd22}
+  '@drizztdourden08/archipelia-client-kit@0.2.0':
+    resolution: {integrity: sha512-ZrpbJedDq6sAhvTwsk6Z7m8FcNgIFvk5nXj+gpQT81pdC0MWaANHyU2eY+Yw+ihAmxDKmYMQtjd/mD8m2ulgAQ==, tarball: https://npm.pkg.github.com/download/@drizztdourden08/archipelia-client-kit/0.2.0/dff3990f8f44130b8b8a4ad480d1853c10d45344}
     engines: {node: '>=24'}
     hasBin: true
 
@@ -1711,6 +1711,9 @@ packages:
       react: ^19.0.0
       react-dom: ^19.0.0
       typescript: '>=5.0'
+    peerDependenciesMeta:
+      typescript:
+        optional: true
 
   '@electron-internal/extract-zip@1.0.2':
     resolution: {integrity: sha512-VJuNETNPEhrmQEZezeTZO5TZMV+dobBRyJ7zHjGJWIhMS7m7W1UeClt69u4hkUxv9ZZVxuli/E9Yvc4gDNHGsg==}
@@ -8038,7 +8041,7 @@ snapshots:
     dependencies:
       postcss-selector-parser: 7.1.2
 
-  '@drizztdourden08/archipelia-client-kit@0.1.0':
+  '@drizztdourden08/archipelia-client-kit@0.2.0':
     dependencies:
       fflate: 0.8.3
 
@@ -8267,6 +8270,7 @@ snapshots:
       react-color: 2.19.3(react@19.2.7)
       react-dom: 19.2.7(react@19.2.7)
       react-markdown: 10.1.0(@types/react@19.2.17)(react@19.2.7)
+    optionalDependencies:
       typescript: 6.0.3
     transitivePeerDependencies:
       - '@types/react'

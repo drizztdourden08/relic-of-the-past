@@ -412,7 +412,7 @@ jobs:
         id: brock-attest-files
         shell: bash
         env:
-          ATTEST_PATHS: "build/archipelago/*.apworld"
+          ATTEST_PATHS: "build/archipelago/*.apworld\nbuild/archipelago/archipelia.json"
         run: |
           shopt -s globstar nullglob
           declare -A seen
