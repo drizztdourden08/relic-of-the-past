@@ -1,8 +1,8 @@
 /* @layer renderer-widgets @kind style */
 .layer-slot {
   display: grid;
-  grid-template-columns: var(--size-8) minmax(0, 1fr) 8ch var(--size-32) 12ch 9ch;
-  align-items: center;
+  grid-template-columns: var(--size-8) minmax(0, 1fr) 8ch var(--size-32) 11ch 8ch;
+  align-items: stretch;
   gap: var(--space-xs);
   block-size: var(--size-20);
   padding-inline: var(--space-sm);
@@ -14,11 +14,14 @@
 
 .layer-slot > * {
   min-inline-size: 0;
+  block-size: var(--size-20);
+  line-height: var(--size-20);
   overflow: hidden;
   text-overflow: ellipsis;
 }
 
 .layer-slot__pulse {
+  align-self: center;
   inline-size: var(--size-6);
   block-size: var(--size-6);
   border-radius: var(--radius-round);
@@ -27,6 +30,11 @@
 
 .layer-slot[data-sounding='yes'] .layer-slot__pulse {
   background: var(--c-secondary-bright);
+}
+
+.layer-slot__bar {
+  display: flex;
+  align-items: center;
 }
 
 .layer-slot__name {

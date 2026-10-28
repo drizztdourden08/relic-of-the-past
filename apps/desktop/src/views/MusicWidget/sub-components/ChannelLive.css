@@ -15,8 +15,8 @@
 
 .channel-live__head {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) 24ch 6ch;
-  align-items: center;
+  grid-template-columns: auto minmax(0, 1fr) 6ch;
+  align-items: stretch;
   gap: var(--space-sm);
   block-size: var(--size-20);
   padding-inline: var(--space-sm);
@@ -26,6 +26,8 @@
 
 .channel-live__head > * {
   min-inline-size: 0;
+  block-size: var(--size-20);
+  line-height: var(--size-20);
   overflow: hidden;
   text-overflow: ellipsis;
 }

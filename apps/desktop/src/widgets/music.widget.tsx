@@ -8,8 +8,8 @@ const meta: WidgetMeta = {
   icon: 'headphones',
   order: 8,
   defaultSide: 'right',
-  defaultDockedSize: 360,
-  defaultFloatingSize: { width: 380, height: 560 },
+  defaultDockedSize: 420,
+  defaultFloatingSize: { width: 420, height: 560 },
   context: 'game',
   devOnly: true,
 };
