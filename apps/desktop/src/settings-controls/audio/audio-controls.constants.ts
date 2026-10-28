@@ -48,18 +48,10 @@ const GROUP_VOLUME_KEYS = ['musicVolume', 'ambientVolume', 'sfxVolume'];
 const DEVICE_KEYS = ['audioFreq', 'audioChannels', 'audioSamples'];
 
 const VOLUME_ROWS = {
-  masterVolume: { label: 'Master Volume', description: 'Controls the overall game volume', mutedKey: 'masterMuted' },
-  musicVolume: {
-    label: 'Music Volume',
-    description: 'Sets the music level, for the original soundtrack and any music pack',
-    mutedKey: 'musicMuted',
-  },
-  ambientVolume: {
-    label: 'Ambience Volume',
-    description: 'Sets the level of the rain, waterfalls and wind played by a pack',
-    mutedKey: 'ambientMuted',
-  },
-  sfxVolume: { label: 'SFX Volume', description: 'Sets the sound-effects level', mutedKey: 'sfxMuted' },
+  masterVolume: { mutedKey: 'masterMuted' },
+  musicVolume: { mutedKey: 'musicMuted' },
+  ambientVolume: { mutedKey: 'ambientMuted' },
+  sfxVolume: { mutedKey: 'sfxMuted' },
 } as const;
 
 export {

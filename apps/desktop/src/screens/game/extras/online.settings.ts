@@ -1,6 +1,5 @@
 /* @layer renderer-app @kind config */
 import type { ScreenMeta, Section } from '@drizztdourden08/brock-react';
-import { withOwnRows } from '@app/settings-controls/own-row-sections';
 import { isOnlineExperimental } from '@app/shell/show-rules';
 
 const meta: ScreenMeta = { title: 'Online', icon: 'globe', order: 3, when: isOnlineExperimental, keywords: ['online', 'archipelago', 'multiworld', 'deathlink', 'notifications'] };
@@ -36,7 +35,7 @@ const online: Section[] = [
   },
 ];
 
-const sections = (): Section[] => withOwnRows(online);
+const sections = (): Section[] => online;
 
 export default sections;
 export { meta };

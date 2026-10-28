@@ -6,7 +6,7 @@ import { SESSION_ITEMS } from './online/online-rows.constants';
 
 const OWN_ROW_KEYS: ReadonlySet<string> = new Set<string>([
   'aspectRatio', 'vsync', 'linkSprite',
-  'turboSpeed', 'dialogSpeed', 'dialogHoldToAccelerate',
+  'turboSpeed', 'dialogSpeed', 'dialogHoldToAccelerate', 'saveHoldDuration',
   'enableMSU', ...DEVICE_KEYS, ...Object.keys(VOLUME_ROWS),
   'hudStyle', 'hudRatio', 'titleSword', 'dialogFontScale', 'dialogStrokeWidth', 'dialogTextureScale', ...COLOR_KEYS,
   ...Object.keys(SESSION_ITEMS),

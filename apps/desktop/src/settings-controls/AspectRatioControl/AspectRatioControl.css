@@ -5,6 +5,25 @@
   gap: var(--space-sm);
 }
 
+.aspect-ratio-control__header {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+  min-width: 0;
+}
+
+.aspect-ratio-control__label {
+  font-size: var(--control-font);
+  font-weight: var(--weight-medium);
+  color: var(--c-text);
+}
+
+.aspect-ratio-control__body {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+}
+
 .aspect-ratio-control__custom {
   display: flex;
   flex-direction: column;

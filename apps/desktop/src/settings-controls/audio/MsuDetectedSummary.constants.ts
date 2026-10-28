@@ -10,4 +10,6 @@ const MODE_LABELS: Record<GameSettings['enableMSU'], string> = {
   msul: 'MSUL',
 };
 
-export { MODE_LABELS };
+const NO_PACK_LINE = 'None. No pack assigned to this profile. Assign one in Data Manager.';
+
+export { MODE_LABELS, NO_PACK_LINE };

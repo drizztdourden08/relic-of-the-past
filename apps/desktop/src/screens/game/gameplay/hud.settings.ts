@@ -1,6 +1,5 @@
 /* @layer renderer-app @kind config */
 import type { ScreenMeta, Section } from '@drizztdourden08/brock-react';
-import { withOwnRows } from '@app/settings-controls/own-row-sections';
 
 const meta: ScreenMeta = { title: 'HUD', icon: 'layout-grid', order: 3, keywords: ['hud', 'hearts', 'magic', 'dialog box', 'title screen', 'overlay'] };
 
@@ -139,5 +138,5 @@ const sections: Section[] = [
   },
 ];
 
-export default withOwnRows(sections);
+export default sections;
 export { meta };
