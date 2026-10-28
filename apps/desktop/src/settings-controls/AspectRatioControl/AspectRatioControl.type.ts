@@ -5,13 +5,11 @@ import type { PRESET_GROUP_IDS } from './AspectRatioControl.constants';
 
 interface AspectRatioControlProps {
   label: string;
-  description?: string;
   value: string;
   options: SegmentOption[];
   presetOptions?: SegmentOption[];
   widePresets?: SegmentOption[];
   tallPresets?: SegmentOption[];
-  descriptions?: Record<string, string>;
   recommendedValue?: string;
   recommendedNote?: string;
   customW: number;

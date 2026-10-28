@@ -5,8 +5,6 @@ interface SessionSwitch {
   field: 'deathLink' | 'trackOtherPlayers';
   fallback: boolean;
   label: string;
-  description: string;
-  hint: string;
 }
 
 interface OnlineSessionToggleProps {

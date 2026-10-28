@@ -17,7 +17,7 @@ const sections: Section[] = [
     id: 'developer-sanctuary',
     title: 'Sanctuary account',
     items: [
-      { key: 'sanctuaryAccount', label: 'Sanctuary account', description: 'Sign in so bug reports carry your name and appear on the hub.', keywords: 'sanctuary account sign in hub contributor device code reports' },
+      { key: 'sanctuaryAccount', label: 'Sanctuary account', description: 'Sign in so bug reports carry your name and appear on the hub.', keywords: 'sanctuary account sign in hub contributor device code reports', chrome: false },
     ],
   },
   {

@@ -3,6 +3,7 @@ import type { ScreenMeta, Section } from '@drizztdourden08/brock-react';
 
 const meta: ScreenMeta = { title: 'HUD', icon: 'layout-grid', order: 3, keywords: ['hud', 'hearts', 'magic', 'dialog box', 'title screen', 'overlay'] };
 
+const colorControl = { kind: 'color' } as const;
 const drawChoices = [{ value: 'original', label: 'Original' }, { value: 'enhanced', label: 'Enhanced' }];
 const enhancedParts = [{ value: 'main', label: 'Main' }, { value: 'pause', label: 'Pause' }];
 const titleScreens = [{ value: 'original', label: 'Original' }, { value: 'reimagined', label: 'Reimagined' }];
@@ -45,8 +46,8 @@ const sections: Section[] = [
     items: [
       { key: 'hudMode', label: 'HUD Mode', description: 'Original renders the HUD on the game canvas. Enhanced replaces selected parts with a high-quality overlay that supports widescreen and smooth animations.', keywords: 'hud mode original enhanced overlay', control: { kind: 'choice', options: drawChoices } },
       { key: 'hudEnhancedParts', label: 'Enhanced Parts', description: 'Choose which HUD components are replaced by the enhanced overlay. Parts not selected will continue using the original game rendering.', keywords: 'hud parts main pause enhanced toggle', control: { kind: 'multi', options: enhancedParts } },
-      { key: 'hudStyle', label: 'Style', description: "Original is the game's own HUD. Enhanced keeps that look and hands the HUD and the pause menu to the app; Modern adds the modern control scheme on top. Both app-drawn styles need a 16:9 or wider display.", keywords: 'hud style original enhanced modern theme sprites widescreen pause menu control scheme slots' },
-      { key: 'hudRatio', label: 'Aspect Ratio', description: 'Aspect ratio for the enhanced overlay. Match keeps it in sync with the game viewport.', keywords: 'hud ratio aspect match widescreen' },
+      { key: 'hudStyle', label: 'Style', description: "Original is the game's own HUD. Enhanced adds the app-drawn HUD and pause menu. Modern adds the modern control scheme.", keywords: 'hud style original enhanced modern theme sprites widescreen pause menu control scheme slots', layout: 'wide' },
+      { key: 'hudRatio', label: 'Aspect Ratio', description: 'Match follows the game view. Fixed ratios pin the HUD to a narrower area.', keywords: 'hud ratio aspect match widescreen', layout: 'wide' },
     ],
   },
   {
@@ -78,8 +79,8 @@ const sections: Section[] = [
         items: [
           { key: 'dialogFont', label: 'Font', description: "Original uses the game's glyphs. Modern uses the app's dialogue font.", keywords: 'dialog font glyph modern original text', control: { kind: 'choice', options: fonts } },
           { key: 'dialogFontScale', label: 'Font Size', description: 'How large the modern font draws.', keywords: 'dialog font size scale large small text' },
-          { key: 'dialogInkColor', label: 'Ink Color', description: 'The colour the modern font is written in.', keywords: 'dialog ink color colour text font' },
-          { key: 'dialogStrokeColor', label: 'Stroke Color', description: 'The outline colour around each modern glyph.', keywords: 'dialog stroke outline color colour text font' },
+          { key: 'dialogInkColor', label: 'Ink Color', description: 'The colour the modern font is written in.', keywords: 'dialog ink color colour text font', control: colorControl },
+          { key: 'dialogStrokeColor', label: 'Stroke Color', description: 'The outline colour around each modern glyph.', keywords: 'dialog stroke outline color colour text font', control: colorControl },
           { key: 'dialogStrokeWidth', label: 'Stroke Width', description: 'How thick the outline is, in game pixels.', keywords: 'dialog stroke outline width thickness text font' },
         ],
       },
@@ -87,8 +88,8 @@ const sections: Section[] = [
         id: 'hud-dialog-highlight',
         title: 'Highlights',
         items: [
-          { key: 'hudHighlightPrimary', label: 'Highlight Primary', description: 'Item names in randomizer messages.', keywords: 'dialog highlight primary color colour item name randomizer message gold' },
-          { key: 'hudHighlightSecondary', label: 'Highlight Secondary', description: 'Player names in randomizer messages.', keywords: 'dialog highlight secondary color colour player name randomizer multiworld message green' },
+          { key: 'hudHighlightPrimary', label: 'Highlight Primary', description: 'Item names in randomizer messages.', keywords: 'dialog highlight primary color colour item name randomizer message gold', control: colorControl },
+          { key: 'hudHighlightSecondary', label: 'Highlight Secondary', description: 'Player names in randomizer messages.', keywords: 'dialog highlight secondary color colour player name randomizer multiworld message green', control: colorControl },
         ],
       },
       {
@@ -97,7 +98,7 @@ const sections: Section[] = [
         items: [
           { key: 'dialogBorder', label: 'Border', description: "The game's tiles, no border, one line, or a thin line inside a thicker one.", hint: 'Single and Double unlock the line options.', keywords: 'dialog box border frame single double none original', control: { kind: 'choice', options: borders } },
           { key: 'dialogBorderThickness', label: 'Thickness', description: 'How heavy the drawn line is.', keywords: 'dialog box border thickness thin thick', control: { kind: 'choice', options: thicknesses } },
-          { key: 'dialogBorderColor', label: 'Border Color', description: 'The colour of the drawn line and the corner marks.', keywords: 'dialog box border color colour' },
+          { key: 'dialogBorderColor', label: 'Border Color', description: 'The colour of the drawn line and the corner marks.', keywords: 'dialog box border color colour', control: colorControl },
           { key: 'dialogCorner', label: 'Corners', description: 'Square, rounded, or cut at a diagonal.', keywords: 'dialog box corner square rounded chamfered chamfer', control: { kind: 'choice', options: corners } },
           { key: 'dialogCornerMark', label: 'Corner Marks', description: 'A small mark inside each corner.', keywords: 'dialog box corner mark decoration circle square triforce', control: { kind: 'choice', options: marks } },
           { key: 'dialogCornerMarkAngle', label: 'Mark Angle', description: 'Turns the marks; each corner mirrors the top-left one.', keywords: 'dialog box corner mark angle rotate rotation', control: { kind: 'range', min: 0, max: 345, step: 15, format: degrees } },
@@ -107,7 +108,7 @@ const sections: Section[] = [
         id: 'hud-dialog-background',
         title: 'Background',
         items: [
-          { key: 'dialogGroundColor', label: 'Background Color', description: 'The ground behind the text.', keywords: 'dialog box background color colour ground' },
+          { key: 'dialogGroundColor', label: 'Background Color', description: 'The ground behind the text.', keywords: 'dialog box background color colour ground', control: colorControl },
           { key: 'dialogBoxOpacity', label: 'Background Opacity', description: 'How solid the ground is, from clear to solid.', keywords: 'dialog box background opacity translucent transparent', control: { kind: 'range', min: 0, max: 1, step: 0.05, format: percent } },
           { key: 'dialogGroundFade', label: 'Fade Edges', description: 'Fades the background out toward its edges. Only without a border.', keywords: 'dialog box background fade feather soft edges vignette' },
           { key: 'dialogFloatingGround', label: 'Behind Telepathy', description: 'Also draws the background behind borderless messages, such as telepathy.', keywords: 'dialog box background telepathy floating borderless zelda' },
@@ -119,7 +120,7 @@ const sections: Section[] = [
         title: 'Texture',
         items: [
           { key: 'dialogTexture', label: 'Pattern', description: 'A repeating pattern on the ground behind the text.', hint: 'None turns the pattern options off.', keywords: 'dialog box texture pattern triforce hex scanlines stripes', control: { kind: 'choice', options: textures } },
-          { key: 'dialogTextureColor', label: 'Pattern Color', description: 'The colour the pattern is drawn in.', keywords: 'dialog box texture pattern color colour' },
+          { key: 'dialogTextureColor', label: 'Pattern Color', description: 'The colour the pattern is drawn in.', keywords: 'dialog box texture pattern color colour', control: colorControl },
           { key: 'dialogTextureOpacity', label: 'Pattern Opacity', description: 'How visible the pattern is.', keywords: 'dialog box texture pattern opacity', control: { kind: 'range', min: 0, max: 1, step: 0.05, format: percent } },
           { key: 'dialogTextureAnimation', label: 'Animation', description: 'Still, sliding, drifting, appearing at random, or breathing.', keywords: 'dialog box texture animation scroll drift twinkle pulse still', control: { kind: 'choice', options: animations } },
           { key: 'dialogTextureSpeed', label: 'Animation Speed', description: 'How fast the pattern moves.', keywords: 'dialog box texture animation speed slow fast', control: { kind: 'choice', options: speeds } },

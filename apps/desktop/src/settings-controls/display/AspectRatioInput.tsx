@@ -2,10 +2,10 @@
 import { DisabledOverlay } from '@drizztdourden08/tessera/composites';
 import { AspectRatioControl } from '../AspectRatioControl';
 import { aspectChoices } from './aspect-choices';
-import { ASPECT_DESCRIPTIONS, ASPECT_LOCKED_MESSAGE } from './display.constants';
+import { ASPECT_LOCKED_MESSAGE } from './display.constants';
 import type { ControlContext } from '../settings-controls.type';
 
-const AspectRatioRow = (props: ControlContext) => {
+const AspectRatioInput = (props: ControlContext) => {
   const { settings, onChange, disabled } = props;
   const { options, widePresets, tallPresets } = aspectChoices(settings);
   return (
@@ -16,7 +16,6 @@ const AspectRatioRow = (props: ControlContext) => {
         options={options}
         widePresets={widePresets}
         tallPresets={tallPresets}
-        descriptions={ASPECT_DESCRIPTIONS}
         recommendedValue="auto"
         recommendedNote="Best for most setups."
         customW={settings.customAspectW}
@@ -31,4 +30,4 @@ const AspectRatioRow = (props: ControlContext) => {
   );
 };
 
-export { AspectRatioRow };
+export { AspectRatioInput };

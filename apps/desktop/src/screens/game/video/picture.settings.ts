@@ -1,5 +1,12 @@
 /* @layer renderer-app @kind config */
+import { effectiveHz } from '@drizztdourden08/brock-display';
+import { useRefreshRateStore } from '@drizztdourden08/brock-display/renderer';
 import type { ScreenMeta, Section } from '@drizztdourden08/brock-react';
+import { ASPECT_FALLBACK, VSYNC_DESCRIPTION } from '@app/settings-controls/display/display.constants';
+import { aspectDescription } from '@app/settings-controls/display/aspect-description';
+import { refreshAdvisory } from '@app/settings-controls/display/refresh-advisory';
+import { overrideItems } from '@app/settings-controls/item-overrides/override-items';
+import type { AppSettings } from '@app/settings.type';
 
 const meta: ScreenMeta = { title: 'Picture', icon: 'image', order: 1, keywords: ['picture', 'widescreen', 'aspect ratio', 'fps', 'vsync'] };
 
@@ -9,7 +16,7 @@ const offscreenOptions = [
   { value: 'paused', label: 'Freeze', hint: 'Enemies in the extra width stop completely, mid-step, until they reach the original 4:3 screen. No movement, no animation, and no shadow.' },
 ];
 
-const sections: Section[] = [
+const base: Section[] = [
   {
     id: 'picture',
     title: 'Picture',
@@ -35,6 +42,11 @@ const sections: Section[] = [
     ],
   },
 ];
+
+const sections = (settings: AppSettings): Section[] => overrideItems(base, {
+  aspectRatio: { description: aspectDescription(settings, ASPECT_FALLBACK), layout: 'wide' },
+  vsync: { description: `${VSYNC_DESCRIPTION}${refreshAdvisory(effectiveHz(useRefreshRateStore.getState().info))}` },
+});
 
 export default sections;
 export { meta };

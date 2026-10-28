@@ -7,10 +7,6 @@
   max-width: 100%;
 }
 
-.player-sprite-selector__title {
-  font-weight: var(--weight-medium);
-}
-
 .player-sprite-selector__hint {
   font-size: var(--text-sm);
   color: var(--c-text-dim);

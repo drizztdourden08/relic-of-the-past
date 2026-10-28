@@ -1,5 +1,9 @@
 /* @layer renderer-app @kind config */
 import type { ScreenMeta, Section } from '@drizztdourden08/brock-react';
+import { detectMsuMismatch } from '@rotp/features';
+import { DEVICE_DESCRIPTIONS } from '@app/settings-controls/audio/audio-controls.constants';
+import { overrideItems } from '@app/settings-controls/item-overrides/override-items';
+import type { AppSettings } from '@app/settings.type';
 
 const meta: ScreenMeta = { title: 'Audio', icon: 'volume-2', order: 2, keywords: ['audio', 'volume', 'music', 'msu', 'pack', 'sound'] };
 
@@ -8,7 +12,7 @@ const configModes = [
   { value: 'manual', label: 'Manual', hint: 'Lets you set every one of them by hand.' },
 ];
 
-const sections: Section[] = [
+const base: Section[] = [
   {
     id: 'volume',
     title: 'Volume',
@@ -54,6 +58,17 @@ const sections: Section[] = [
     ],
   },
 ];
+
+const deviceText = (settings: AppSettings) => {
+  const mode = settings.msuConfigMode === 'auto' ? 'auto' : 'manual';
+  return {
+    audioFreq: { description: DEVICE_DESCRIPTIONS.audioFreq[mode], ...(detectMsuMismatch(settings) === null ? {} : { layout: 'wide' as const }) },
+    audioChannels: { description: DEVICE_DESCRIPTIONS.audioChannels[mode] },
+    audioSamples: { description: DEVICE_DESCRIPTIONS.audioSamples[mode] },
+  };
+};
+
+const sections = (settings: AppSettings): Section[] => overrideItems(base, deviceText(settings));
 
 export default sections;
 export { meta };

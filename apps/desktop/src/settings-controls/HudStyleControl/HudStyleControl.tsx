@@ -6,7 +6,7 @@ import { SegmentedControl, Button, Box, Text } from '@drizztdourden08/tessera/pr
 import { useSpriteAvailabilityStore } from '@app/stores/sprite-availability-store';
 import { enhancedAspectAllowed } from '@rotp/game-core';
 import * as spritesStore from '@app/storage/sprites-store';
-import { NO_SPRITES, STYLE_DESCRIPTION, TOO_NARROW } from './HudStyleControl.constants';
+import { NO_SPRITES, TOO_NARROW } from './HudStyleControl.constants';
 import type { HudStyleControlProps } from './HudStyleControl.type';
 import './HudStyleControl.css';
 
@@ -46,8 +46,7 @@ const HudStyleControl = ({ value, settings, onChange }: HudStyleControlProps) =>
   return (
     <Box className="hud-style-control">
       <SegmentedControl
-        label="Style"
-        description={STYLE_DESCRIPTION}
+        aria-label="Style"
         value={value}
         options={options}
         onChange={handleChange}

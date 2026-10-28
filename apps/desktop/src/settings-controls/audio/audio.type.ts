@@ -1,23 +1,17 @@
 /* @layer renderer-app @kind types */
-import type { SettingsInput } from '@drizztdourden08/tessera/composites';
 import type { ControlContext } from '../settings-controls.type';
-import type { VOLUME_ROWS } from './audio-controls.constants';
+import type { VOLUME_MUTED_KEYS } from './audio-controls.constants';
 
 type DeviceKey = 'audioFreq' | 'audioChannels' | 'audioSamples';
 
-type VolumeKey = keyof typeof VOLUME_ROWS;
+type VolumeKey = keyof typeof VOLUME_MUTED_KEYS;
 
-interface AudioDeviceRowProps extends ControlContext {
+interface AudioDeviceControlProps extends ControlContext {
   settingKey: DeviceKey;
 }
 
-interface VolumeRowProps extends ControlContext {
+interface VolumeInputProps extends ControlContext {
   settingKey: VolumeKey;
 }
 
-interface DeviceRowLook {
-  input: SettingsInput;
-  description: string;
-}
-
-export type { AudioDeviceRowProps, DeviceKey, DeviceRowLook, VolumeKey, VolumeRowProps };
+export type { AudioDeviceControlProps, DeviceKey, VolumeKey, VolumeInputProps };

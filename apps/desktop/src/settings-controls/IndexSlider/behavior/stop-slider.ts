@@ -2,15 +2,15 @@
 import { createElement } from 'react';
 import type { ReactNode } from 'react';
 import { nearestStopIndex } from '@rotp/game-data';
-import { IndexSliderRow } from '../IndexSliderRow';
-import type { StopSliderInput } from '../IndexSliderRow.type';
+import { IndexSlider } from '../IndexSlider';
+import type { StopSliderInput } from '../IndexSlider.type';
 
 const stopAt = (stops: readonly number[], index: number): number =>
   stops[Math.min(stops.length - 1, Math.max(0, Math.round(index)))] ?? 0;
 
-const stopSliderRow = (input: StopSliderInput): ReactNode => {
+const stopSlider = (input: StopSliderInput): ReactNode => {
   const { settingKey, stops, value, format, onStop, disabled } = input;
-  return createElement(IndexSliderRow, {
+  return createElement(IndexSlider, {
     settingKey,
     index: nearestStopIndex(stops, value),
     count: stops.length,
@@ -20,4 +20,4 @@ const stopSliderRow = (input: StopSliderInput): ReactNode => {
   });
 };
 
-export { stopSliderRow };
+export { stopSlider };

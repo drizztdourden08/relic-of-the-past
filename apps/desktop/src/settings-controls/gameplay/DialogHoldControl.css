@@ -1,6 +1,5 @@
 /* @layer renderer-components @kind style */
-
-.dialog-hold-row__cell {
+.dialog-hold-control__slider {
   flex: 1 1 0;
   min-width: 0;
 }

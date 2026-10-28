@@ -59,7 +59,7 @@ const sections: Section[] = [
     id: 'appearance',
     title: 'Appearance',
     items: [
-      { key: 'linkSprite', label: 'Player Sprite', description: 'Choose a custom player sprite from your library.', keywords: 'player sprite character appearance custom zspr' },
+      { key: 'linkSprite', label: 'Player Sprite', description: 'Choose a custom player sprite from your library.', hint: 'Manage sprites in Data > Character Studio. Applies right away.', keywords: 'player sprite character appearance custom zspr', layout: 'wide' },
     ],
   },
 ];

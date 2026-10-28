@@ -27,8 +27,8 @@ const renderReadout = (r: RatioReadout) => {
 
 const AspectRatioControl = (props: AspectRatioControlProps) => {
   const {
-    label, description, value, options, presetOptions, widePresets, tallPresets,
-    descriptions, recommendedValue, recommendedNote,
+    label, value, options, presetOptions, widePresets, tallPresets,
+    recommendedValue, recommendedNote,
     customW, customH, ratioKey, wKey, hKey, renderIntoNotch = true, onChange,
   } = props;
 
@@ -54,8 +54,7 @@ const AspectRatioControl = (props: AspectRatioControlProps) => {
   return (
     <Box className="aspect-ratio-control">
       <SegmentedControl
-        label={label}
-        description={descriptions?.[mainValue] ?? description}
+        aria-label={label}
         value={mainValue}
         options={options}
         onChange={handleMain}

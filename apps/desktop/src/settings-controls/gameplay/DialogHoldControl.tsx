@@ -2,30 +2,23 @@
 import { useCallback } from 'react';
 import { DIALOG_HOLD_STOPS } from '@rotp/game-data';
 import type { DialogHoldStop } from '@rotp/game-data';
-import { Box, Flex, Toggle } from '@drizztdourden08/tessera/primitives';
+import { Box, Flex } from '@drizztdourden08/tessera/primitives';
+import { ToggleControl } from '../inputs';
 import { DialogStopSlider } from './DialogStopSlider';
-import type { DialogHoldRowProps } from './gameplay.type';
-import './DialogHoldRow.css';
+import type { DialogHoldControlProps } from './gameplay.type';
+import './DialogHoldControl.css';
 
-const DialogHoldRow = (props: DialogHoldRowProps) => {
-  const { label, description, enabled, speed, disabled, onChange } = props;
+const DialogHoldControl = (props: DialogHoldControlProps) => {
+  const { enabled, speed, disabled, onChange } = props;
   const handleToggle = useCallback((v: boolean) => onChange({ dialogHoldToAccelerate: v }), [onChange]);
   const handleSpeed = useCallback(
     (stop: number) => onChange({ dialogHoldSpeed: stop as DialogHoldStop }),
     [onChange],
   );
   return (
-    <Flex className="dialog-hold-row" align="center" gap="lg">
-      <Box className="dialog-hold-row__cell">
-        <Toggle
-          label={label}
-          description={description}
-          checked={enabled}
-          onChange={handleToggle}
-          disabled={disabled}
-        />
-      </Box>
-      <Box className="dialog-hold-row__cell">
+    <Flex className="dialog-hold-control" align="center" gap="lg">
+      <ToggleControl settingKey="dialogHoldToAccelerate" value={enabled} onChange={handleToggle} disabled={disabled} />
+      <Box className="dialog-hold-control__slider">
         <DialogStopSlider
           stops={DIALOG_HOLD_STOPS}
           value={speed}
@@ -37,4 +30,4 @@ const DialogHoldRow = (props: DialogHoldRowProps) => {
   );
 };
 
-export { DialogHoldRow };
+export { DialogHoldControl };

@@ -20,10 +20,6 @@ const PlayerSpriteSelector = (props: PlayerSpriteSelectorProps) => {
 
   return (
     <Box className="player-sprite-selector">
-      <Text className="player-sprite-selector__title">Player Sprite</Text>
-      <Text className="player-sprite-selector__hint">
-        Manage sprites in Data &gt; Character Studio. Applies right away.
-      </Text>
       <Box className="player-sprite-selector__grid">
         {choices.map((c) => (
           <SpriteChoiceCard

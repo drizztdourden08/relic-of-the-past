@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind component */
 import { Box, Text } from '@drizztdourden08/tessera/primitives';
-import { MODE_LABELS } from './MsuDetectedSummary.constants';
+import { MODE_LABELS, NO_PACK_NOTE } from './MsuDetectedSummary.constants';
 import { packDetail } from './pack-detail';
 import type { MsuDetectedSummaryProps } from './MsuDetectedSummary.type';
 import './MsuDetectedSummary.css';
@@ -11,16 +11,10 @@ const MsuDetectedSummary = (props: MsuDetectedSummaryProps) => {
 
   return (
     <Box className="msu-detected">
-      <Box className="msu-detected__header">
-        <Text as="span" className="msu-detected__label">Pack Format</Text>
-        {!pack && <Text as="span" className="msu-detected__description">No pack assigned to this profile. Assign one in Data Manager.</Text>}
-      </Box>
-      <Box className="msu-detected__value">
-        <Text as="span" className={`msu-detected__mode ${pack ? '' : 'msu-detected__mode--off'}`}>
-          {label}
-        </Text>
-        {pack && <Text as="span" className="msu-detected__meta">{packDetail(pack, resolved)}</Text>}
-      </Box>
+      <Text as="span" className={`msu-detected__mode ${pack ? '' : 'msu-detected__mode--off'}`}>
+        {label}
+      </Text>
+      <Text as="span" className="msu-detected__meta">{pack ? packDetail(pack, resolved) : NO_PACK_NOTE}</Text>
     </Box>
   );
 };

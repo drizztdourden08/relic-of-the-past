@@ -1,5 +1,5 @@
 /* @layer renderer-app @kind types */
-interface IndexSliderRowProps {
+interface IndexSliderProps {
   settingKey: string;
   index: number;
   count: number;
@@ -17,4 +17,4 @@ interface StopSliderInput {
   disabled: boolean;
 }
 
-export type { IndexSliderRowProps, StopSliderInput };
+export type { IndexSliderProps, StopSliderInput };
