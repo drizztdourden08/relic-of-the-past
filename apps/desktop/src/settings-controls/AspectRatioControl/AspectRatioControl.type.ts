@@ -20,6 +20,7 @@ interface AspectRatioControlProps {
   wKey: 'customAspectW' | 'customHudAspectW';
   hKey: 'customAspectH' | 'customHudAspectH';
   renderIntoNotch?: boolean;
+  lockedMessage?: string;
   onChange: (patch: Partial<GameSettings>) => void;
 }
 

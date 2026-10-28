@@ -1,15 +1,14 @@
 /* @layer renderer-app @kind component */
 import { VolumeControl } from '@drizztdourden08/tessera/composites';
+import { KeyedControlRow } from '../KeyedControlRow';
 import { VOLUME_ROWS } from './audio-controls.constants';
 import type { VolumeRowProps } from './audio.type';
 
 const VolumeRow = (props: VolumeRowProps) => {
   const { settingKey, settings, onChange, disabled } = props;
-  const { label, description, mutedKey } = VOLUME_ROWS[settingKey];
-  return (
+  const { mutedKey } = VOLUME_ROWS[settingKey];
+  const control = (
     <VolumeControl
-      label={label}
-      description={description}
       value={settings[settingKey]}
       step={5}
       showValue
@@ -19,6 +18,7 @@ const VolumeRow = (props: VolumeRowProps) => {
       disabled={disabled}
     />
   );
+  return <KeyedControlRow settingKey={settingKey} input={{ kind: 'custom', control }} disabled={disabled} />;
 };
 
 export { VolumeRow };

@@ -43,10 +43,6 @@
   white-space: nowrap;
 }
 
-.msu-detected__mode--off {
-  color: var(--c-text-dim);
-}
-
 .msu-detected__meta {
   font-size: var(--text-sm);
   color: var(--c-text-dim);
