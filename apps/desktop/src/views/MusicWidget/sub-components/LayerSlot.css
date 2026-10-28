@@ -1,7 +1,7 @@
 /* @layer renderer-widgets @kind style */
 .layer-slot {
   display: grid;
-  grid-template-columns: var(--size-8) minmax(0, 1fr) 8ch var(--size-32) 11ch 9ch;
+  grid-template-columns: var(--size-8) minmax(0, 1fr) auto var(--size-32) auto auto;
   align-items: stretch;
   gap: var(--space-xs);
   block-size: var(--size-20);
@@ -43,15 +43,18 @@
 }
 
 .layer-slot__mode {
+  inline-size: 9ch;
   color: var(--c-text-dim);
 }
 
 .layer-slot__label {
+  inline-size: 12ch;
   color: var(--c-text-dim);
   text-align: end;
 }
 
 .layer-slot__flag {
+  inline-size: 10ch;
   color: var(--c-primary);
   text-align: end;
 }

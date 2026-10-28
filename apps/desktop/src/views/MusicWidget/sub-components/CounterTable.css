@@ -10,7 +10,7 @@
 
 .counter-table__row {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) 22ch;
+  grid-template-columns: minmax(0, 1fr) auto;
   align-items: center;
   gap: var(--space-sm);
   block-size: var(--size-20);
@@ -37,6 +37,7 @@
 }
 
 .counter-table__value {
+  inline-size: 24ch;
   color: var(--c-text);
   text-align: end;
 }

@@ -15,7 +15,7 @@
 
 .channel-live__head {
   display: grid;
-  grid-template-columns: auto minmax(0, 1fr) 6ch;
+  grid-template-columns: auto minmax(0, 1fr) auto;
   align-items: stretch;
   gap: var(--space-sm);
   block-size: var(--size-20);
@@ -38,6 +38,10 @@
   color: var(--c-primary);
   text-transform: uppercase;
   letter-spacing: var(--tracking-caps);
+}
+
+.channel-live__clock {
+  inline-size: 7ch;
 }
 
 .channel-live__detail,

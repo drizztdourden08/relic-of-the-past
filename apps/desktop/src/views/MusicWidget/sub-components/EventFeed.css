@@ -11,7 +11,7 @@
 
 .event-feed__row {
   display: grid;
-  grid-template-columns: 11ch 7ch 7ch minmax(0, 1fr);
+  grid-template-columns: auto auto auto minmax(0, 1fr);
   align-items: center;
   gap: var(--space-sm);
   block-size: var(--size-20);
@@ -33,7 +33,16 @@
   text-overflow: ellipsis;
 }
 
+.event-feed__time {
+  inline-size: 12ch;
+}
+
+.event-feed__owner {
+  inline-size: 8ch;
+}
+
 .event-feed__channel {
+  inline-size: 8ch;
   color: var(--c-text-dim);
 }
 
