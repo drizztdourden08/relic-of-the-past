@@ -1,10 +1,7 @@
 /* @layer renderer-app @kind config */
-import { effectiveHz } from '@drizztdourden08/brock-display';
-import { useRefreshRateStore } from '@drizztdourden08/brock-display/renderer';
 import type { ScreenMeta, Section } from '@drizztdourden08/brock-react';
-import { ASPECT_FALLBACK, VSYNC_DESCRIPTION } from '@app/settings-controls/display/display.constants';
+import { ASPECT_FALLBACK } from '@app/settings-controls/display/display.constants';
 import { aspectDescription } from '@app/settings-controls/display/aspect-description';
-import { refreshAdvisory } from '@app/settings-controls/display/refresh-advisory';
 import { overrideItems } from '@app/settings-controls/item-overrides/override-items';
 import type { AppSettings } from '@app/settings.type';
 
@@ -45,7 +42,7 @@ const base: Section[] = [
 
 const sections = (settings: AppSettings): Section[] => overrideItems(base, {
   aspectRatio: { description: aspectDescription(settings, ASPECT_FALLBACK), layout: 'wide' },
-  vsync: { description: `${VSYNC_DESCRIPTION}${refreshAdvisory(effectiveHz(useRefreshRateStore.getState().info))}` },
+  vsync: { layout: 'wide' },
 });
 
 export default sections;

@@ -24,10 +24,8 @@ const EXTENDED_ONLY_KEYS = new Set([
 
 const ASPECT_LOCKED_MESSAGE = 'Turn on Extended Rendering to pick a ratio other than 4:3.';
 
-const VSYNC_DESCRIPTION = 'Paces the game against the display refresh rate instead of an internal timer, which smooths scrolling.';
-
 const ASPECT_FALLBACK = 'Original uses the game width. Wide, Tall, Auto, Screen and Custom use 240 lines.';
 
 export {
-  ASPECT_DESCRIPTIONS, ASPECT_FALLBACK, VSYNC_DESCRIPTION, ASPECT_LOCKED_MESSAGE, EXTENDED_ONLY_KEYS, REQUIRES_LINEAR, REQUIRES_ULTRAWIDE, TALL_PRESETS, TALL_PRESET_VALUES,
+  ASPECT_DESCRIPTIONS, ASPECT_FALLBACK, ASPECT_LOCKED_MESSAGE, EXTENDED_ONLY_KEYS, REQUIRES_LINEAR, REQUIRES_ULTRAWIDE, TALL_PRESETS, TALL_PRESET_VALUES,
 };
