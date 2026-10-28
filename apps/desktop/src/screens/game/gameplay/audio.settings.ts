@@ -1,5 +1,6 @@
 /* @layer renderer-app @kind config */
 import type { ScreenMeta, Section } from '@drizztdourden08/brock-react';
+import { withOwnRows } from '@app/settings-controls/own-row-sections';
 
 const meta: ScreenMeta = { title: 'Audio', icon: 'volume-2', order: 2, keywords: ['audio', 'volume', 'music', 'msu', 'pack', 'sound'] };
 
@@ -55,5 +56,5 @@ const sections: Section[] = [
   },
 ];
 
-export default sections;
+export default withOwnRows(sections);
 export { meta };

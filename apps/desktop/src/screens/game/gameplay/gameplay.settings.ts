@@ -1,5 +1,6 @@
 /* @layer renderer-app @kind config */
 import type { ScreenMeta, Section } from '@drizztdourden08/brock-react';
+import { withOwnRows } from '@app/settings-controls/own-row-sections';
 
 const meta: ScreenMeta = { title: 'Gameplay', icon: 'gamepad-2', order: 1, keywords: ['gameplay', 'auto save', 'turbo', 'dialog', 'cheats', 'vanilla safe'] };
 
@@ -130,5 +131,5 @@ const sections: Section[] = [
   },
 ];
 
-export default sections;
+export default withOwnRows(sections);
 export { meta };
