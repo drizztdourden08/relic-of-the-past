@@ -33,15 +33,15 @@ const GRAPHICS_SHOTS = {
   'bunny-map-off': {
     id: 'gfx-bunny-map-off',
     src: 'media/shots/gfx-bunny-map-off.webp',
-    width: 512,
-    height: 512,
+    width: 1152,
+    height: 648,
     alt: 'Link as a bunny after the map, with the wrong colours on his face',
   },
   'bunny-map-on': {
     id: 'gfx-bunny-map-on',
     src: 'media/shots/gfx-bunny-map-on.webp',
-    width: 512,
-    height: 512,
+    width: 1152,
+    height: 648,
     alt: 'Link as a bunny after the map, in his proper colours',
   },
 } as const satisfies Record<string, Screenshot>;
