@@ -56,7 +56,7 @@ const AspectRatioControl = (props: AspectRatioControlProps) => {
   return (
     <Box className="aspect-ratio-control">
       <RatioHeader label={label} description={descriptions?.[mainValue] ?? description} />
-      <DisabledOverlay active={lockedMessage !== undefined} contained message={lockedMessage}>
+      <DisabledOverlay active={lockedMessage !== undefined} contained message={lockedMessage} className="aspect-ratio-control__lock">
         <Box className="aspect-ratio-control__body">
           <SegmentedControl
             aria-label={label}
