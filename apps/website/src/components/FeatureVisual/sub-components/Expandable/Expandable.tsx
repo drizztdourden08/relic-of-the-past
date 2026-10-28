@@ -6,9 +6,13 @@ import { EXPANDABLE_TEXT } from './Expandable.constants';
 import type { ExpandableProps } from './Expandable.type';
 import './Expandable.css';
 
-const Expandable = ({ aspect, label, expanded, zoomable, className, children }: ExpandableProps) => {
+const Expandable = ({ aspect, label, expanded, zoomable, onOpenChange, className, children }: ExpandableProps) => {
   const [open, setOpen] = useState(false);
-  const press = activatableProps(() => setOpen(true), EXPANDABLE_TEXT.expand(label));
+  const change = (next: boolean): void => {
+    setOpen(next);
+    onOpenChange?.(next);
+  };
+  const press = activatableProps(() => change(true), EXPANDABLE_TEXT.expand(label));
 
   return (
     <>
@@ -23,7 +27,7 @@ const Expandable = ({ aspect, label, expanded, zoomable, className, children }: 
       >
         {children}
       </Box>
-      <Lightbox open={open} onClose={() => setOpen(false)} label={label} aspect={aspect} zoomable={zoomable}>
+      <Lightbox open={open} onClose={() => change(false)} label={label} aspect={aspect} zoomable={zoomable}>
         {expanded}
       </Lightbox>
     </>

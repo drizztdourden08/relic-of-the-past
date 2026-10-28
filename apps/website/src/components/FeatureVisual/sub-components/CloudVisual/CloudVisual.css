@@ -1,0 +1,8 @@
+/* @layer website-site @kind style */
+@media (width > 1100px) {
+  .feature-row--split:has(.cloud-stage) {
+    grid-template-columns: minmax(0, 4fr) minmax(0, 8fr);
+    max-width: var(--ds-cloud-row-w);
+    margin-inline: calc((100% - var(--site-content-w)) / 2) auto;
+  }
+}

@@ -16,19 +16,12 @@ const YOUR_WAY_SHOTS = {
     height: 560,
     alt: 'The home screen saves list, each save with a screenshot',
   },
-  'v-18a': {
-    id: 'v-18a',
-    src: 'media/shots/v-18a.webp',
-    width: 854,
-    height: 119,
-    alt: 'A save card with its screenshot and name',
-  },
-  'v-18b': {
-    id: 'v-18b',
-    src: 'media/shots/v-18b.webp',
-    width: 854,
-    height: 119,
-    alt: 'Another save card with its screenshot and name',
+  'ui-save-panel': {
+    id: 'ui-save-panel',
+    src: 'media/shots/ui-save-panel.webp',
+    width: 1280,
+    height: 728,
+    alt: 'The save panel sliding down over the game, with the saves listed',
   },
 } as const satisfies Record<string, Screenshot>;
 

@@ -19,4 +19,4 @@ type FrameStyleParams = {
   style?: CSSProperties;
 };
 
-export type { FrameStyleParams, ImageFit, ImageProps, ImageStatus };
+export type { FrameStyleParams, ImageProps, ImageStatus };

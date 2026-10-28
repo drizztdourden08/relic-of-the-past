@@ -30,4 +30,4 @@ type RailGeometry = {
   fractions: readonly number[];
 };
 
-export type { RailGeometry, ScrollRailEnd, ScrollRailMark, ScrollRailProps };
+export type { RailGeometry, ScrollRailMark, ScrollRailProps };

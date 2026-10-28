@@ -1,15 +1,10 @@
 /* @layer website-site @kind style */
 :root {
-  --ds-cloud-unit-sparse: 3.8;
-  --ds-cloud-unit-normal: 2.3;
-  --ds-cloud-unit-dense: 1.9;
-  --ds-cloud-size-1: 1.6;
-  --ds-cloud-size-2: 0.9;
-  --ds-cloud-size-3: 1.2;
-  --ds-cloud-size-4: 2.1;
-  --ds-cloud-size-5: 1.05;
-  --ds-cloud-size-6: 1.4;
-  --ds-cloud-size-7: 0.8;
+  --ds-cloud-aspect: 1.1547;
+  --ds-cloud-row-w: 1200px;
+  --ds-cloud-leading: 1.05;
+  --ds-cloud-font-max: 4.2;
+  --ds-cloud-font-min: 2;
   --ds-cloud-peak-high: 0.95;
   --ds-cloud-peak-mid: 0.8;
   --ds-cloud-peak-low: 0.65;

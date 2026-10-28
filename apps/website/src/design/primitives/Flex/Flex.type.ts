@@ -15,4 +15,4 @@ type FlexProps = HTMLAttributes<HTMLElement> & {
   children?: ReactNode;
 };
 
-export type { FlexAlign, FlexGap, FlexJustify, FlexProps };
+export type { FlexProps };

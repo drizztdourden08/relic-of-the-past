@@ -2,7 +2,6 @@
 import type { FeatureGroup } from '../feature-group.type';
 import { GAME_ICONS } from '../shots/game-icons.constants';
 import { NEW_QUEST_SHOTS as SHOTS } from '../shots/new-quest-shots.constants';
-import { UI_SHOTS as UI } from '../shots/ui-shots.constants';
 
 const RANDOMIZER_GROUP: FeatureGroup = {
   id: 'new-quest',
@@ -11,7 +10,7 @@ const RANDOMIZER_GROUP: FeatureGroup = {
   kicker: 'A new quest',
   title: 'A new game every seed',
   accent: 'every seed',
-  lead: "Shuffle every item, inspired by the existing randomizers and built on Archipelago's logic, and track every check as you go.",
+  lead: 'Shuffle every item and keep track of every check as you go.',
   glow: 'shop',
   features: [
     {
@@ -19,10 +18,10 @@ const RANDOMIZER_GROUP: FeatureGroup = {
       label: 'Randomizer',
       short: 'Randomizer',
       title: 'Item randomizer',
-      promise: ['Inspired by the existing randomizers.', "Built on Archipelago's logic, and going further."],
-      body: "Inspired by the existing A Link to the Past randomizers, it builds on Archipelago's logic and expands on many aspects of them. Seeds come from a local port of that logic. Progressive items, shuffled capacity upgrades, and shops that charge in rupees, arrows, bombs or hearts.",
+      promise: ['Inspired by the existing randomizers.', "Built on Archipelago's logic."],
+      body: "Progressive items, shuffled upgrades and shops that charge in more than rupees. Seeds come from a local port of Archipelago's logic.",
       settings: ['Progressive items', 'Wishing pond'],
-      caption: 'The randomizer options and item pool, a shop a seed placed, and the progression items.',
+      caption: 'The options, a shop a seed placed, and the progression items.',
       layout: 'split',
       tag: 'in-progress',
       visual: {
@@ -40,23 +39,15 @@ const RANDOMIZER_GROUP: FeatureGroup = {
       short: 'Checks',
       title: 'Track every check',
       promise: ['Know what is left,', 'room by room.'],
-      body: 'The Checks tracker lists every chest, key and heart piece, and in a randomized seed it shows what that seed placed.',
+      body: 'The Checks tracker lists every chest, key and heart piece. In a randomized seed it shows what was placed there.',
       settings: ['Widget'],
-      caption: 'The Checks tracker beside the game, and the Eastern Palace opened to show each check and the item placed there.',
+      caption: "The tracker in Zelda's cell, and again in the Eastern Palace.",
       layout: 'split',
       visual: {
         kind: 'collage',
         layers: [
-          {
-            shot: SHOTS['v-22'],
-            slot: 'main',
-            depth: 'mid',
-            callouts: [
-              { x: 37, y: 24, label: 'A chest the tracker counts' },
-              { x: 73, y: 58, label: 'Taken, open and left in each world' },
-            ],
-          },
-          { shot: UI.checksOpen, slot: 'bottom-right', depth: 'front' },
+          { shot: SHOTS['tracker-jail'], slot: 'main', depth: 'mid' },
+          { shot: SHOTS['tracker-second'], slot: 'bottom-right', depth: 'front' },
         ],
       },
     },
@@ -66,9 +57,9 @@ const RANDOMIZER_GROUP: FeatureGroup = {
       short: 'Multiworld',
       title: 'Archipelago multiworld',
       promise: ['One seed across many games.', "Your items land in your friends' games, theirs in yours."],
-      body: 'Join an online Archipelago room from the app and play your part of a shared seed.',
+      body: 'Join an Archipelago room from the app and play your part of a shared seed.',
       settings: ['Online room'],
-      caption: "The game icons the app shows for items that belong to other players' games, Archipelago itself included.",
+      caption: "The icons shown for items that belong to other players' games.",
       layout: 'split',
       tag: 'in-development',
       visual: { kind: 'icons', icons: GAME_ICONS },

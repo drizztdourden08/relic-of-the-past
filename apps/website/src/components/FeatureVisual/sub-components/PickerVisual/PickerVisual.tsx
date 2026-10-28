@@ -14,7 +14,7 @@ const PickerVisual = ({ visual, caption }: VisualProps<'picker'>) => {
   const { options, labels, axis, focus } = visual;
   const [pickedId, setPickedId] = useState(options[0].id);
   const picked = options.find((option) => option.id === pickedId) ?? options[0];
-  const stage = <CompareStage before={picked.before} after={picked.after} labels={labels} axis={axis} />;
+  const stage = <CompareStage before={picked.before} after={picked.after} labels={labels} axis={axis} clips={picked.clips} />;
 
   return (
     <ShotFrame caption={caption} framed={false}>

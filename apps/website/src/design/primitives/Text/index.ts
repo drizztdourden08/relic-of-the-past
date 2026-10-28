@@ -2,4 +2,4 @@
 export { P } from './P';
 export { Small } from './Small';
 export { Span } from './Span';
-export type { TextProps, TextTone } from './Text.type';
+export type { TextTone } from './Text.type';

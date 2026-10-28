@@ -10,7 +10,7 @@ const ORIGINAL_GROUP: FeatureGroup = {
   kicker: 'The original',
   title: 'The classic, running natively',
   accent: 'natively',
-  lead: 'The original game logic, rebuilt in C and compiled into a real app. No emulator in between.',
+  lead: 'The original game, rebuilt in C and running as a real app. No emulator.',
   glow: 'forest',
   features: [
     {
@@ -19,14 +19,14 @@ const ORIGINAL_GROUP: FeatureGroup = {
       short: 'No emulator',
       title: 'No emulator in between',
       promise: ['The real game, rebuilt as an app.', 'It plays the way you remember.'],
-      body: 'The reverse-engineered game code runs natively on your computer and your phone. Bring your own ROM: nothing from the game is downloaded.',
+      body: 'The game runs natively on your computer and your phone. You bring your own ROM.',
       settings: [
         { label: 'Windows', logo: 'windows' },
         { label: 'Linux', logo: 'linux' },
         { label: 'macOS', logo: 'macos' },
         { label: 'Android', logo: 'android' },
       ],
-      caption: 'The real game at 4:3, pixel for pixel.',
+      caption: 'The real game, pixel for pixel.',
       layout: 'split',
       visual: {
         kind: 'collage',
@@ -41,10 +41,10 @@ const ORIGINAL_GROUP: FeatureGroup = {
       label: 'The app',
       short: 'The app',
       title: 'A full app around the game',
-      promise: ['Widgets, menus and profiles.', 'Every setting is yours to change.'],
-      body: 'The game comes with a complete interface: widgets you can dock beside it, such as the Checks tracker, and a settings screen where every option the app offers, from the view to the controls, can be changed.',
+      promise: ['Widgets, menus and profiles.', 'Every setting is yours.'],
+      body: 'Dock widgets like the Checks tracker beside the game, and change almost anything in the settings.',
       settings: ['Widgets', 'Settings'],
-      caption: 'The game with its widgets docked around it, the world map with the Checks and Inventory widgets, and the settings screens.',
+      caption: 'The game with its widgets, the world map and the settings.',
       layout: 'split',
       visual: {
         kind: 'collage',
@@ -61,10 +61,10 @@ const ORIGINAL_GROUP: FeatureGroup = {
       label: 'Enhanced Mode 7',
       short: 'Mode 7',
       title: 'A sharp world map',
-      promise: ['The world map in high resolution.', 'Smooth rotation and scaling, no blocky zoom.'],
-      body: "The world map and the flights with the bird are drawn at full resolution instead of the console's pixelated Mode 7.",
+      promise: ['A sharp world map.', 'Smooth turning, no blocky zoom.'],
+      body: "The world map and the bird flights are drawn sharp, not in the console's blocky Mode 7.",
       settings: ['Mode 7'],
-      caption: 'The same square of Death Mountain, before and after, at eight times its native size.',
+      caption: 'Death Mountain before and after, magnified.',
       layout: 'split',
       visual: {
         kind: 'lens',

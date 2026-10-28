@@ -6,6 +6,7 @@ type ExpandableProps = {
   label: string;
   expanded: ReactNode;
   zoomable?: boolean;
+  onOpenChange?: (open: boolean) => void;
   className?: string;
   children: ReactNode;
 };

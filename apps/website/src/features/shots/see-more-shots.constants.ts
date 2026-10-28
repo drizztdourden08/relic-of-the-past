@@ -61,23 +61,9 @@ const SEE_MORE_SHOTS = {
   'camera-transition-poster': {
     id: 'camera-transition-poster',
     src: 'media/shots/camera-transition-poster.webp',
-    width: 1194,
+    width: 1566,
     height: 672,
-    alt: 'The camera crossing from one area to the next with no black bars',
-  },
-  'rupees-original': {
-    id: 'rupees-original',
-    src: 'media/shots/rupees-original.webp',
-    width: 1152,
-    height: 648,
-    alt: 'The original rupees: green, blue and red gems, and a green gem with the amount written beside it for 50, 100 and 300',
-  },
-  'rupees-fixed': {
-    id: 'rupees-fixed',
-    src: 'media/shots/rupees-fixed.webp',
-    width: 1152,
-    height: 648,
-    alt: 'The new rupees: green, blue, red, violet for 50, silver for 100 and gold for 300',
+    alt: "Link walking north from his uncle's house, the camera moving into the next area",
   },
 } as const satisfies Record<string, Screenshot>;
 

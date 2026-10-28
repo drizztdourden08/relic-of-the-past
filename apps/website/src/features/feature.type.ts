@@ -21,4 +21,4 @@ type Feature = {
   tag?: FeatureTag;
 };
 
-export type { Feature, FeatureTag, PlatformLogo, SettingTag };
+export type { Feature, FeatureTag, PlatformLogo };

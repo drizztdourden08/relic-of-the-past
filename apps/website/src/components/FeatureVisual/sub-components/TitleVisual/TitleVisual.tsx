@@ -1,6 +1,6 @@
 /* @layer website-site @kind component */
 import { useState } from 'react';
-import { Box, Pressable } from '../../../../design';
+import { Box, Pressable, Span } from '../../../../design';
 import { ShotImage } from '../../../ShotImage';
 import { aspectOf } from '../../behavior/aspect-of';
 import { ClipPlayer } from '../ClipPlayer';
@@ -31,12 +31,11 @@ const TitleVisual = ({ visual, caption }: VisualProps<'title'>) => {
             <Pressable
               key={variant.id}
               className="title-visual__variant"
-              aria-label={variant.name}
-              title={variant.name}
               aria-pressed={variant.id === picked.id}
               onClick={() => setPickedId(variant.id)}
             >
               <ShotImage shot={variant.thumb} alt="" ratio={THUMB_RATIO} className="title-visual__thumb" />
+              <Span className="title-visual__name">{variant.name}</Span>
             </Pressable>
           ))}
         </Box>

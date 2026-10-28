@@ -114,9 +114,7 @@
   --site-chapterbar-h: 48px;
   --site-chapterbar-bg: color-mix(in srgb, var(--ds-bg) 72%, transparent);
   --site-pin-d: 28px;
-  --site-lens-d: 11.6%;
-  --site-title-w: 30rem;
-  --site-game-icon-w: 4.5rem;
+  --site-lens-d: 11.6%;  --site-game-icon-w: 4.5rem;
   --site-slot-w-side: 42%;
   --site-slot-w-wide: 48%;
   --site-slot-bleed: -4%;

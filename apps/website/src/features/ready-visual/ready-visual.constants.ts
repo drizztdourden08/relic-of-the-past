@@ -1,5 +1,4 @@
 /* @layer website-site @kind data */
-import { degradeAudio } from './degrade-audio';
 import { degradeCloud } from './degrade-cloud';
 import { degradeCollage } from './degrade-collage';
 import { degradeCompare } from './degrade-compare';
@@ -25,7 +24,6 @@ const DEGRADERS: Degraders = {
   icons: degradeIcons,
   video: degradeVideo,
   cloud: degradeCloud,
-  audio: degradeAudio,
 };
 
 export { DEGRADERS };

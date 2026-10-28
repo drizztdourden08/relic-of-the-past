@@ -22,7 +22,9 @@
 }
 
 .compare-stage__after img,
-.compare-stage__before img {
+.compare-stage__before img,
+.compare-stage__after video,
+.compare-stage__before video {
   display: block;
   width: 100%;
   height: 100%;

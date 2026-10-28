@@ -11,4 +11,4 @@ type TagProps = HTMLAttributes<HTMLSpanElement> & {
   children?: ReactNode;
 };
 
-export type { TagColor, TagProps, TagVariant };
+export type { TagProps };

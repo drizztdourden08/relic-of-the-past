@@ -9,6 +9,10 @@
   scroll-margin-top: var(--site-chapterbar-h);
 }
 
+.feature-row__visual {
+  min-width: 0;
+}
+
 .feature-row--split {
   grid-template-columns: var(--site-row-split);
 }

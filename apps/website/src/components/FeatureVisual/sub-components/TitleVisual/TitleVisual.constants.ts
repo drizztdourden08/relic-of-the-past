@@ -1,4 +1,4 @@
 /* @layer website-site @kind constants */
-const THUMB_RATIO = '1 / 1';
+const THUMB_RATIO = '16 / 9';
 
 export { THUMB_RATIO };

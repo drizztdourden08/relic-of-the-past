@@ -1,0 +1,45 @@
+/* @layer website-site @kind style */
+.sound-player {
+  position: relative;
+}
+
+.sound-player__play {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  width: var(--ds-size-64);
+  height: var(--ds-size-64);
+  margin: auto;
+  padding: 0;
+  border: var(--ds-border-thick) solid var(--px-gold-line);
+  border-radius: var(--ds-radius-round);
+  background: var(--ds-scrim);
+  color: var(--ds-accent-bright);
+  box-shadow: var(--site-gem-glow);
+  cursor: pointer;
+  transition:
+    background var(--ds-duration-normal) var(--ds-ease),
+    color var(--ds-duration-normal) var(--ds-ease);
+}
+
+.sound-player__play:hover {
+  background: var(--ds-accent);
+  color: var(--site-gold-ink);
+}
+
+.sound-player__play:focus-visible {
+  outline: var(--ds-border-thick) solid var(--ds-focus);
+  outline-offset: var(--ds-size-4);
+}
+
+.sound-player__icon {
+  width: var(--ds-size-28);
+  height: var(--ds-size-28);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sound-player__play {
+    transition: none;
+  }
+}

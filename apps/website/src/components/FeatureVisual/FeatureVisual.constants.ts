@@ -1,5 +1,4 @@
 /* @layer website-site @kind data */
-import { AudioVisual } from './sub-components/AudioVisual';
 import { CloudVisual } from './sub-components/CloudVisual';
 import { CollageVisual } from './sub-components/CollageVisual';
 import { CompareVisual } from './sub-components/CompareVisual';
@@ -25,7 +24,6 @@ const VISUAL_RENDERERS: VisualRenderers = {
   icons: IconsVisual,
   video: VideoVisual,
   cloud: CloudVisual,
-  audio: AudioVisual,
 };
 
 export { VISUAL_RENDERERS };

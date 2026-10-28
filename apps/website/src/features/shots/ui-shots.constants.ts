@@ -44,13 +44,6 @@ const UI_SHOTS = {
     height: 912,
     alt: 'The controllers screen with an Xbox pad drawn out and every button labelled',
   },
-  checksOpen: {
-    id: 'ui-checks-open',
-    src: 'media/shots/ui-checks-open.webp',
-    width: 1920,
-    height: 1040,
-    alt: 'The Checks tracker with the Eastern Palace opened, each check with the item placed there',
-  },
   msuStudio: {
     id: 'ui-msu',
     src: 'media/shots/ui-msu.webp',
@@ -93,13 +86,6 @@ const UI_SHOTS = {
     height: 905,
     alt: 'The audio settings with a master volume and separate music, ambience and sound effect volumes',
   },
-  msulPack: {
-    id: 'ui-msul-pack',
-    src: 'media/shots/ui-msul-pack.webp',
-    width: 1762,
-    height: 905,
-    alt: 'A layered .msul pack open in MSU Studio, a track with its rain and thunder layers',
-  },
   hookshop: {
     id: 'ui-hookshop',
     src: 'media/shots/ui-hookshop.webp',
@@ -113,6 +99,13 @@ const UI_SHOTS = {
     width: 680,
     height: 460,
     alt: 'The Sanctuary site',
+  },
+  msulDemoPoster: {
+    id: 'msul-demo-poster',
+    src: 'media/shots/msul-demo-poster.webp',
+    width: 1280,
+    height: 720,
+    alt: "The intro in the rain with a layered music pack playing, and the app's music debugger open",
   },
 } as const satisfies Record<string, Screenshot>;
 

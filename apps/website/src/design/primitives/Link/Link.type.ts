@@ -11,4 +11,4 @@ type LinkProps = AnchorHTMLAttributes<HTMLAnchorElement> & {
   children?: ReactNode;
 };
 
-export type { LinkProps, LinkTone, LinkVariant };
+export type { LinkProps };

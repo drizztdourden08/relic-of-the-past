@@ -1,6 +1,7 @@
 /* @layer website-site @kind component */
 import { Box } from '../../../../design';
 import { readyVisualOf } from '../../../../features';
+import { DepthLayer } from '../../../DepthLayer';
 import { FeatureVisual } from '../../../FeatureVisual';
 import { FeatureCopy } from '../FeatureCopy';
 import type { FeatureRowProps } from './FeatureRow.type';
@@ -13,7 +14,11 @@ const FeatureRow = ({ feature, figure }: FeatureRowProps) => {
   return (
     <Box as="article" id={feature.id} aria-labelledby={`${feature.id}-title`} className={`feature-row feature-row--${layout}`}>
       <FeatureCopy feature={feature} figure={figure} />
-      {visual ? <FeatureVisual visual={visual} caption={`${figure} · ${feature.caption}`} /> : null}
+      {visual ? (
+        <DepthLayer depth="front" className="feature-row__visual">
+          <FeatureVisual visual={visual} caption={`${figure} · ${feature.caption}`} />
+        </DepthLayer>
+      ) : null}
     </Box>
   );
 };

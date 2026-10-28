@@ -23,12 +23,19 @@ const NEW_QUEST_SHOTS = {
     height: 250,
     alt: 'The progression items in the item pool: wallet, arrow and bomb capacity, bottle, sword, magic, shield and bow',
   },
-  'v-22': {
-    id: 'v-22',
-    src: 'media/shots/v-22.webp',
-    width: 2066,
-    height: 926,
-    alt: 'The jail cell with the checks tracker docked beside the game',
+  'tracker-jail': {
+    id: 'tracker-jail',
+    src: 'media/shots/tracker-jail.webp',
+    width: 1920,
+    height: 1040,
+    alt: "Link in Princess Zelda's cell with the Checks widget docked beside the game, scrolled to Zelda's Chest",
+  },
+  'tracker-second': {
+    id: 'tracker-second',
+    src: 'media/shots/tracker-second.webp',
+    width: 1920,
+    height: 1040,
+    alt: 'The Eastern Palace with the Checks widget open on the Cannonball Chest',
   },
 } as const satisfies Record<string, Screenshot>;
 

@@ -10,4 +10,4 @@ type TitleProps = HTMLAttributes<HTMLHeadingElement> & {
   children?: ReactNode;
 };
 
-export type { TitleLevel, TitleProps };
+export type { TitleProps };

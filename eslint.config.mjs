@@ -61,9 +61,10 @@ const rotpExtension = {
         why: 'Each numeral of the scroll rail sits at the share of the page where its group starts, measured from the document at run time, and each picture frame takes the aspect ratio and size of the image it holds: a value per element that no shared class can carry.',
       }, {
         files: [
-          'apps/website/src/components/FeatureVisual/sub-components/{RatiosStage/RatiosStage,LensVisual/LensVisual,PinMarks/PinMarks}.tsx',
+          'apps/website/src/components/FeatureVisual/sub-components/{RatiosStage/RatiosStage,LensVisual/LensVisual,PinMarks/PinMarks,CloudStage/CloudStage}.tsx',
+          'apps/website/src/components/FeatureVisual/sub-components/SoundBar/SoundBar.tsx',
         ],
-        why: 'Each pin and the lens ring sit at a percentage of the screenshot measured from the capture itself, and each aspect ratio frame takes its share of the stage from the pixel size of its capture: a value per element that no shared class can carry.',
+        why: 'Each pin and the lens ring sit at a percentage of the screenshot measured from the capture itself, each aspect ratio frame takes its share of the stage from the pixel size of its capture, each word of the Triforce word cloud takes the position, size and width the packer measured for it, and the video progress bar fills to the live playback position: a value per element that no shared class can carry.',
       }, {
         files: [
           'apps/store/src/components/{CropDialog,FeaturedHero,ItemPicture}/**/*.{ts,tsx}',
