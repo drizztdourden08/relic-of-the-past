@@ -1,10 +1,4 @@
 /* @layer tooling-scripts @kind build */
-/**
- * Builds the world packages when they are missing or older than their sources, so dev, the
- * desktop package and the web build all find them in apps/desktop/public/archipelago.
- *
- *   pnpm run ensure-apworld        (force a rebuild with: pnpm run build:apworld)
- */
 import { existsSync, readdirSync, statSync } from 'node:fs';
 import { spawnSync } from 'node:child_process';
 import path from 'node:path';
@@ -18,7 +12,6 @@ const IGNORED_NAMES = new Set(['node_modules', '__pycache__']);
 
 const SOURCE_ROOTS = [PACKAGE_DIR, HERE, RELEASE_ASSETS_DIR, path.join(ROOT, 'packages')];
 
-/** The newest modification time under a path, dependency folders left out. */
 const newestUnder = (target) => {
   const stat = statSync(target);
   if (!stat.isDirectory()) return stat.mtimeMs;

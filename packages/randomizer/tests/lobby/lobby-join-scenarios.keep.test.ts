@@ -3,7 +3,7 @@ import { describe, expect, it } from 'vitest';
 import { joinLobby } from '../../src/client/lobby';
 import type { LobbyEvent, LobbySession } from '../../src/client/lobby';
 import { failureCode, play, watch } from './lobby-harness.keep.test';
-import { endsWith, expectOk, finalState, infoDriver, joined, until } from './lobby-drivers';
+import { downloadDriver, endsWith, expectOk, finalState, infoDriver, joined } from './lobby-drivers';
 
 describe('lobby.info scenarios', () => {
   it('lobby-info', async () => {
@@ -70,16 +70,7 @@ describe('joining', () => {
     expectOk(outcome);
   });
   it('file-download (uploads handled by the caller)', async () => {
-    let downloaded: Promise<Uint8Array> | null = null;
-    const outcome = await play('file-download', async (tools) => {
-      const drive = await joined((event, _state, session) => {
-        const file = event.type === 'started' ? event.started.slots[0]?.files[0] : undefined;
-        if (file) downloaded = session.downloadFile(file.fileId);
-      }, { autoUpload: false, autoReady: false })(tools);
-      const [session] = drive.sessions;
-      if (session) await until(session, (state) => state.started !== null);
-      return { ...drive, extra: await downloaded };
-    });
+    const outcome = await play('file-download', downloadDriver());
     expectOk(outcome);
     expect(new TextDecoder().decode(outcome.drive.extra as Uint8Array)).toBe('patch');
   });
