@@ -79,7 +79,7 @@ Thickness and colour describe a drawn line, so the game's tiles and no border le
 
 ## apps/desktop/src/settings-controls/hud/is-dialog-disabled.ts
 
-`EITHER_BOX_KEYS` act on both boxes, so the original box leaves them live. Every other row describes the enhanced box, so the original box idles them all.
+`ENHANCED_BOX_KEYS` describe the enhanced box, so the original box idles them all. Every other key, in any section, is left to its own rule: the predicate runs for every setting in the app, so an unlisted key is never idled here.
 
 ## apps/desktop/src/settings-controls/hud/is-hud-disabled.ts
 
