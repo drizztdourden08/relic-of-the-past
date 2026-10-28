@@ -1,21 +1,4 @@
 /* @layer tooling-scripts @kind build */
-/**
- * Builds the Archipelago world package as release assets.
- *
- *   pnpm run build:apworld
- *
- * 1. Runs the exporter (packages/randomizer/src/archipelago/export/export-world.ts) through
- *    Vite SSR.
- * 2. packApworld hands the package folder, the exporter files and the supported Archipelago
- *    versions to the Archipelia client kit (buildApworldSet), which zips the package
- *    reproducibly, stamps archipelago.json with AP_WORLD_VERSION and the first and last of
- *    SUPPORTED_AP_VERSIONS, and writes build/archipelago/: relic_of_the_past-ap<version>.apworld
- *    for every supported Archipelago version, relic_of_the_past.apworld (a copy of the newest),
- *    the index relic_of_the_past.apworld.json, and the Archipelia release files: archipelia.json,
- *    archipelia-thumbnail.png and archipelia-description.md (from apps/desktop/release-assets).
- * 3. Copies the builds to apps/desktop/public/archipelago/<version>/relic_of_the_past.apworld with
- *    builds.json (the index), where the app fetches them like the wasm (gitignored).
- */
 import { readFileSync } from 'node:fs';
 import path from 'node:path';
 import { APP_PACKAGE_JSON, MODULE_NAME, OUT_DIR, PACKAGE_DIR, PUBLIC_DIR, ROOT } from './apworld.constants.mjs';

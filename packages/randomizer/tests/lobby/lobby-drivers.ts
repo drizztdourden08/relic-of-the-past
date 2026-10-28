@@ -1,4 +1,5 @@
 /* @layer tests @kind test */
+import { expect } from 'vitest';
 import { joinLobby, lobbyInfo } from '../../src/client/lobby';
 import type { LobbyEvent, LobbyJoinState, LobbySession } from '../../src/client/lobby';
 import { firstMessage, watch } from './lobby-harness.keep.test';
@@ -37,6 +38,17 @@ const endsWith = (test: (state: LobbyJoinState) => boolean, patch?: object): Dri
   return drive;
 };
 
+const downloadDriver = (): Driver => async (tools) => {
+  const downloads: Promise<Uint8Array>[] = [];
+  const drive = await joined((event, _state, session) => {
+    const file = event.type === 'started' ? event.started.slots[0]?.files[0] : undefined;
+    if (file) downloads.push(session.downloadFile(file.fileId));
+  }, { autoUpload: false, autoReady: false })(tools);
+  const [session] = drive.sessions;
+  if (session) await until(session, (state) => state.started !== null);
+  return { ...drive, extra: await downloads[0] };
+};
+
 const infoDriver = (): Driver => async (tools) => {
   const hello = firstMessage(tools.scenario, 'lobby.info') as { lobby: { code: string }; protocol: { versions: number[] } };
   const result = await lobbyInfo(tools.server, hello.lobby.code, { protocolVersions: hello.protocol.versions });
@@ -54,4 +66,4 @@ const finalState = (outcome: Awaited<ReturnType<typeof play>>): LobbyJoinState =
   return state;
 };
 
-export { endsWith, expectOk, finalState, infoDriver, joined, until };
+export { downloadDriver, endsWith, expectOk, finalState, infoDriver, joined, until };

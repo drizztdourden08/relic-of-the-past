@@ -1,11 +1,13 @@
 /* @layer tests @kind test */
 import { describe, expect, it } from 'vitest';
 import { SCENARIO_CATALOG } from '@drizztdourden08/archipelia-lobby-protocol/testing';
+import type { Scenario } from '@drizztdourden08/archipelia-lobby-protocol/testing';
 import { createBrowserSocket } from '../../src/client/browser-socket';
 import { joinLobby } from '../../src/client/lobby';
 import { openLobbyLink } from '../../src/client/lobby/link/open-lobby-link';
-import type { LobbyEvent, LobbySession } from '../../src/client/lobby';
+import type { LobbySession } from '../../src/client/lobby';
 import { failureCode, firstMessage, isMessageLine, play, startJoin } from './lobby-harness.keep.test';
+import type { Driver, Tools } from './lobby-harness.keep.test';
 import { endsWith, expectOk, finalState, joined } from './lobby-drivers';
 
 describe('version and trust', () => {
@@ -94,52 +96,57 @@ describe('wrong codes', () => {
   });
 });
 
+const rawLink = (tools: { server: string }, onOpen: (link: ReturnType<typeof openLobbyLink>) => void) =>
+  new Promise<unknown[]>((resolve) => {
+    const seen: unknown[] = [];
+    const link: ReturnType<typeof openLobbyLink> = openLobbyLink(tools.server, createBrowserSocket, {
+      onOpen: () => onOpen(link),
+      onMessage: (outcome) => { seen.push(outcome.ok ? outcome.message : outcome.failure); },
+      onClose: () => resolve(seen),
+    });
+  });
+
+type Link = ReturnType<typeof openLobbyLink>;
+
+const rawLinkDriver = (onOpen: (link: Link, tools: Tools) => void): Driver => async (tools) => ({
+  sessions: [],
+  events: [],
+  extra: await rawLink(tools, (link) => { onOpen(link, tools); }),
+});
+
+const floodInfo = (link: Link): void => {
+  for (let count = 0; count < 31; count += 1) {
+    link.send({ type: 'lobby.info', protocol: { name: 'archipelia-lobby', versions: [1] }, lobby: { code: 'K7QM-4XT2' } });
+  }
+};
+
+const swapUploadBegin = (scenario: Scenario): Scenario => ({
+  ...scenario,
+  lines: scenario.lines.map((line) => (
+    isMessageLine(line) && line.msg.type === 'upload.begin' ? { ...line, msg: { ...line.msg, sha256: '$W', size: '$W_size' } } : line)),
+});
+
 describe('scenarios a client cannot start natively', () => {
-  const rawLink = (tools: { server: string }, onOpen: (link: ReturnType<typeof openLobbyLink>) => void) =>
-    new Promise<unknown[]>((resolve) => {
-      const seen: unknown[] = [];
-      const link: ReturnType<typeof openLobbyLink> = openLobbyLink(tools.server, createBrowserSocket, {
-        onOpen: () => onOpen(link),
-        onMessage: (outcome) => { seen.push(outcome.ok ? outcome.message : outcome.failure); },
-        onClose: () => resolve(seen),
-      });
-    });
   it('lobby-info-rate-limit (31 requests on one link)', async () => {
-    const outcome = await play('lobby-info-rate-limit', async (tools) => {
-      const seen = await rawLink(tools, (link) => {
-        for (let count = 0; count < 31; count += 1) {
-          link.send({ type: 'lobby.info', protocol: { name: 'archipelia-lobby', versions: [1] }, lobby: { code: 'K7QM-4XT2' } });
-        }
-      });
-      return { sessions: [], events: [], extra: seen };
-    });
+    const outcome = await play('lobby-info-rate-limit', rawLinkDriver(floodInfo));
     expectOk(outcome);
     const seen = outcome.drive.extra as { type: string; code?: string }[];
     expect(seen.filter((message) => message.type === 'lobby.info.reply')).toHaveLength(30);
     expect(seen.at(-1)?.code).toBe('rate-limited');
   });
   it('lobby-info-oversize (the padded request as the fixture writes it)', async () => {
-    const outcome = await play('lobby-info-oversize', async (tools) => {
-      const msg = firstMessage(tools.scenario, 'lobby.info');
-      const seen = await rawLink(tools, (link) => { link.sendText(JSON.stringify(msg)); });
-      return { sessions: [], events: [], extra: seen };
-    });
+    const outcome = await play('lobby-info-oversize', rawLinkDriver((link, tools) => {
+      link.sendText(JSON.stringify(firstMessage(tools.scenario, 'lobby.info')));
+    }));
     expectOk(outcome);
   });
   it('bad-message-prewelcome (text that is not JSON)', async () => {
-    const outcome = await play('bad-message-prewelcome', async (tools) => {
-      const seen = await rawLink(tools, (link) => { link.sendText('this is not json'); });
-      return { sessions: [], events: [], extra: seen };
-    });
+    const outcome = await play('bad-message-prewelcome', rawLinkDriver((link) => { link.sendText('this is not json'); }));
     expectOk(outcome);
     expect((outcome.drive.extra as { code?: string }[])[0]?.code).toBe('bad-message');
   });
   it('upload-unexpected (the begin line swapped to a declared hash, to test the reaction)', async () => {
-    const outcome = await play('upload-unexpected', endsWith((state) => state.failure !== null), (scenario) => ({
-      ...scenario,
-      lines: scenario.lines.map((line) => (
-        isMessageLine(line) && line.msg.type === 'upload.begin' ? { ...line, msg: { ...line.msg, sha256: '$W', size: '$W_size' } } : line)),
-    }));
+    const outcome = await play('upload-unexpected', endsWith((state) => state.failure !== null), swapUploadBegin);
     expectOk(outcome);
     expect(failureCode(finalState(outcome))).toBe('upload-unexpected');
   });

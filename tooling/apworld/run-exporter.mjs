@@ -4,7 +4,6 @@ import { abs, ROOT } from './apworld.constants.mjs';
 
 const BARREL = '/packages/randomizer/src/archipelago/index.ts';
 
-/** The exporter output and the package identity, loaded through Vite so the workspace TS resolves. */
 const runExporter = async () => {
   const server = await createServer({
     configFile: false,
