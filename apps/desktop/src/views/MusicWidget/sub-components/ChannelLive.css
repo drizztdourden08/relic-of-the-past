@@ -24,7 +24,8 @@
   white-space: nowrap;
 }
 
-.channel-live__head > * {
+.channel-live__head > :is(span, div) {
+  font-size: inherit;
   min-inline-size: 0;
   block-size: var(--size-20);
   line-height: var(--size-20);

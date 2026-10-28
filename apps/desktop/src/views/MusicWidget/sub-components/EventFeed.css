@@ -26,7 +26,8 @@
   background: var(--c-hover);
 }
 
-.event-feed__row > * {
+.event-feed__row > :is(span, div) {
+  font-size: inherit;
   min-inline-size: 0;
   overflow: hidden;
   text-overflow: ellipsis;

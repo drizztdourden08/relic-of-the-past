@@ -1,7 +1,7 @@
 /* @layer renderer-widgets @kind style */
 .layer-slot {
   display: grid;
-  grid-template-columns: var(--size-8) minmax(0, 1fr) 8ch var(--size-32) 11ch 8ch;
+  grid-template-columns: var(--size-8) minmax(0, 1fr) 8ch var(--size-32) 11ch 9ch;
   align-items: stretch;
   gap: var(--space-xs);
   block-size: var(--size-20);
@@ -12,7 +12,8 @@
   white-space: nowrap;
 }
 
-.layer-slot > * {
+.layer-slot > :is(span, div) {
+  font-size: inherit;
   min-inline-size: 0;
   block-size: var(--size-20);
   line-height: var(--size-20);

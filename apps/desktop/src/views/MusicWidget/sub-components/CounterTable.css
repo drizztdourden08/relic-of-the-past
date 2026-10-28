@@ -25,7 +25,8 @@
   background: var(--c-hover);
 }
 
-.counter-table__row > * {
+.counter-table__row > :is(span, div) {
+  font-size: inherit;
   min-inline-size: 0;
   overflow: hidden;
   text-overflow: ellipsis;
