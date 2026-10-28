@@ -15,6 +15,7 @@ import { appTours } from '../.brock/tours';
 import { appWidgetKits } from '../.brock/widget-kits';
 import { appStartupPrompts } from '../.brock/startup';
 import { appToolbars } from '../.brock/toolbars';
+import { withOwnRowTabs } from './settings-controls/own-row-tabs';
 import { rotpBugReport } from './bug-report/rotp-bug-report';
 import { installAppShim } from './platform/api-shim';
 import { rotpShellModule } from './shell/rotp-shell-module';
@@ -39,6 +40,7 @@ import './theme/store/store.css';
 
 installAppShim();
 
+const ownRowTree = withOwnRowTabs(screenTree);
 const modules = [...rendererModules, rotpShellModule, rotpControllersModule];
 
 const root = document.getElementById('root');
@@ -53,7 +55,7 @@ const App = () => {
       settings={SETTINGS}
       volume={VOLUME}
       developerTools={DEVELOPER_TOOLS}
-      screenTree={screenTree}
+      screenTree={ownRowTree}
       modules={modules}
       bootTasks={rendererBootTasks}
       widgets={appWidgets}

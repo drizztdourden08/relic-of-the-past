@@ -1,6 +1,5 @@
 /* @layer renderer-app @kind config */
 import type { ScreenMeta, Section } from '@drizztdourden08/brock-react';
-import { withOwnRows } from '@app/settings-controls/own-row-sections';
 
 const meta: ScreenMeta = { title: 'Graphics', icon: 'palette', order: 2, keywords: ['graphics', 'renderer', 'filter', 'sprite', 'mode 7', 'rupees'] };
 
@@ -65,5 +64,5 @@ const sections: Section[] = [
   },
 ];
 
-export default withOwnRows(sections);
+export default sections;
 export { meta };
