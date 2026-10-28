@@ -108,6 +108,6 @@ export default defineBrockConfig({
         afterPackage: [publishStateFormat, shipArchipelagoBuilds],
       },
     },
-    attest: { stage: 'beforePackage', paths: ['build/archipelago/*.apworld'], perFile: true },
+    attest: { stage: 'beforePackage', paths: ['build/archipelago/*.apworld', 'build/archipelago/archipelia.json'], perFile: true },
   },
 });
