@@ -18,6 +18,11 @@
   color: var(--c-text);
 }
 
+.aspect-ratio-control__lock {
+  inline-size: max-content;
+  min-inline-size: 100%;
+}
+
 .aspect-ratio-control__body {
   display: flex;
   flex-direction: column;

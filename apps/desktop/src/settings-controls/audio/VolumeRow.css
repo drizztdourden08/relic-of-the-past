@@ -1,0 +1,11 @@
+/* @layer renderer-app @kind style */
+.volume-row {
+  display: flex;
+  inline-size: var(--size-256);
+  max-inline-size: 100%;
+}
+
+.volume-row > * {
+  flex: 1;
+  min-width: 0;
+}
