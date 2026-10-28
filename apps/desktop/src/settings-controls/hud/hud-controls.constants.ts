@@ -21,6 +21,10 @@ const ENHANCED_BOX_KEYS = new Set([
 
 const DIALOG_TEXTURE_SCALES = [0.5, 0.75, 1, 1.5, 2] as const;
 
+const COLOR_KEYS = [
+  'dialogBorderColor', 'dialogInkColor', 'dialogStrokeColor', 'dialogGroundColor', 'dialogTextureColor', 'hudHighlightPrimary', 'hudHighlightSecondary',
+] as const;
+
 export {
-  ASPECT_OPTIONS, DIALOG_TEXTURE_SCALES, ENHANCED_BOX_KEYS, MODERN_ONLY_KEYS, TITLE_SETTING_KEYS,
+  ASPECT_OPTIONS, COLOR_KEYS, DIALOG_TEXTURE_SCALES, ENHANCED_BOX_KEYS, MODERN_ONLY_KEYS, TITLE_SETTING_KEYS,
 };

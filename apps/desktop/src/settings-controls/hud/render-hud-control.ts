@@ -7,11 +7,15 @@ import { HudStyleControl } from '../HudStyleControl';
 import { stopSlider } from '../IndexSlider';
 import { HudRatioInput } from './HudRatioInput';
 import { TitleSwordButton } from './TitleSwordButton';
-import { DIALOG_TEXTURE_SCALES } from './hud-controls.constants';
+import { colorRow } from './color-row';
+import { COLOR_KEYS, DIALOG_TEXTURE_SCALES } from './hud-controls.constants';
 import type { ControlContext } from '../settings-controls.type';
+import type { ColorKey } from './hud.type';
 
 const timesLabel = (stop: number): string => `${stop}x`;
 const strokeLabel = (stop: number): string => (stop === 0 ? 'None' : `${stop}px`);
+
+const isColorKey = (key: string): key is ColorKey => (COLOR_KEYS as readonly string[]).includes(key);
 
 const styleControl = (ctx: ControlContext): ReactNode => createElement(HudStyleControl, {
   value: ctx.settings.hudStyle,
@@ -34,6 +38,7 @@ const sliderControl = (key: string, ctx: ControlContext): ReactNode | null => {
 };
 
 const renderHudControl = (key: string, ctx: ControlContext): ReactNode | null => {
+  if (isColorKey(key)) return colorRow(key, ctx);
   switch (key) {
     case 'hudStyle': return styleControl(ctx);
     case 'hudRatio': return createElement(HudRatioInput, ctx);
