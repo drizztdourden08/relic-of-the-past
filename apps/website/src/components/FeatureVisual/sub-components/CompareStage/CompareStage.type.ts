@@ -9,6 +9,6 @@ type CompareStageProps = {
   clips?: ClipPair;
 };
 
-type SweepState = { pos: number; dir: 1 | -1 };
+type SweepState = { progress: number; dir: 1 | -1; hold: number };
 
 export type { CompareStageProps, SweepState };

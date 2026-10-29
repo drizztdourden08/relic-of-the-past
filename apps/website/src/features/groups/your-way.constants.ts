@@ -21,13 +21,13 @@ const YOUR_WAY_GROUP: FeatureGroup = {
       promise: ['Plug it in and play.', 'Remap every action.'],
       body: 'Xbox, PlayStation and Switch Pro pads come with ready layouts. Bind any action to any button or key.',
       settings: ['Presets', 'Profiles'],
-      caption: 'The mapping page and the controller screen.',
+      caption: 'The controller screen and the mapping page.',
       layout: 'split',
       visual: {
         kind: 'collage',
         layers: [
-          { shot: UI.controlsMapping, slot: 'main', depth: 'mid' },
-          { shot: UI.controllers, slot: 'top-right', depth: 'back' },
+          { shot: UI.controllers, slot: 'main', depth: 'mid' },
+          { shot: UI.controlsMapping, slot: 'top-right', depth: 'back' },
         ],
       },
     },

@@ -5,16 +5,19 @@ import { useReducedMotion } from '../../../behavior/useReducedMotion';
 import { SPLIT_REST, SPLIT_VAR } from '../CompareStage.constants';
 import type { SweepState } from '../CompareStage.type';
 import { advanceSweep } from './advance-sweep';
+import { posOfSweep } from './pos-of-sweep';
 import { splitOfPointer } from './split-of-pointer';
+import { sweepAtPos } from './sweep-at-pos';
 
 const useCompareSplit = (axis: 'x' | 'y') => {
   const stageRef = useRef<HTMLElement>(null);
-  const state = useRef<SweepState>({ pos: SPLIT_REST, dir: 1 });
+  const state = useRef<SweepState>(sweepAtPos(SPLIT_REST, 1));
+  const pos = useRef(SPLIT_REST);
   const hovering = useRef(false);
   const visible = useRef(false);
   const reduced = useReducedMotion();
 
-  const paint = () => stageRef.current?.style.setProperty(SPLIT_VAR, `${state.current.pos}%`);
+  const paint = () => stageRef.current?.style.setProperty(SPLIT_VAR, `${pos.current}%`);
 
   useEffect(() => {
     const stage = stageRef.current;
@@ -30,6 +33,7 @@ const useCompareSplit = (axis: 'x' | 'y') => {
       last = now;
       if (!reduced && !hovering.current && visible.current) {
         state.current = advanceSweep(state.current, elapsed);
+        pos.current = posOfSweep(state.current);
         paint();
       }
       frame = requestAnimationFrame(tick);
@@ -44,12 +48,13 @@ const useCompareSplit = (axis: 'x' | 'y') => {
 
   const follow = (event: PointerEvent<HTMLElement>) => {
     hovering.current = true;
-    state.current = { ...state.current, pos: splitOfPointer(event, axis) };
+    pos.current = splitOfPointer(event, axis);
     paint();
   };
 
   const release = () => {
     hovering.current = false;
+    state.current = sweepAtPos(pos.current, state.current.dir);
   };
 
   return { stageRef, handlers: { onPointerMove: follow, onPointerDown: follow, onPointerLeave: release, onPointerCancel: release } };
