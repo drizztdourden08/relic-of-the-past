@@ -16,7 +16,7 @@ const open = async (): Promise<Rig> => {
   const { app, window, close } = await launchApp({
     instance: LAYOUT_INSTANCE,
     openByDefault: true,
-    config: { developerToolsEnabled: true },
+    config: { developerToolsEnabled: true, experimentalFeaturesEnabled: true },
     fixtures: [],
   });
   await window.waitForSelector('.window-title-bar', { timeout: 60_000 });

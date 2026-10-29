@@ -29,7 +29,7 @@ const openProfile = async (seed: ProfileSeed): Promise<Hub> => {
   await cdp.send('Emulation.setDeviceMetricsOverride', { width: 1500, height: 1200, deviceScaleFactor: 1, mobile: false });
   await page.waitForTimeout(1200);
   await page.click('[aria-label="Menu"]');
-  await page.getByRole('menuitem', { name: 'Settings', exact: true }).click();
+  await page.getByRole('menuitem', { name: /^Game\b/ }).click();
   await page.waitForTimeout(2500);
 
   const tab = async (name: string): Promise<void> => {

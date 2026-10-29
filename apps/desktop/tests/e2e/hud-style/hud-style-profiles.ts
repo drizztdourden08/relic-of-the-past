@@ -1,7 +1,9 @@
 /* @layer tests @kind constants */
 import type { ProfileSeed } from '../isolated-app';
 
-const PLAIN_PROFILE: ProfileSeed = { instance: 'hud-style-spec', name: 'visual-test', openByDefault: true, fixtures: [] };
+const UNFINISHED_FEATURES = { developerToolsEnabled: true, experimentalFeaturesEnabled: true };
+
+const PLAIN_PROFILE: ProfileSeed = { instance: 'hud-style-spec', name: 'visual-test', openByDefault: true, fixtures: [], config: UNFINISHED_FEATURES };
 
 const MODERN_PROFILE: ProfileSeed = {
   instance: 'hud-style-spec-mc',
@@ -9,6 +11,7 @@ const MODERN_PROFILE: ProfileSeed = {
   openByDefault: true,
   fixtures: [],
   config: {
+    ...UNFINISHED_FEATURES,
     hudStyle: 'modern',
     mapOnSelect: false,
     modernScheme: {
