@@ -12,7 +12,7 @@
   white-space: nowrap;
 }
 
-.layer-slot > :is(span, div) {
+.layer-slot > :is(span, div):not(.layer-slot__pulse) {
   font-size: inherit;
   min-inline-size: 0;
   block-size: var(--size-20);
