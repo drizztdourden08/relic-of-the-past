@@ -8,7 +8,7 @@ import type { VisualProps } from '../../FeatureVisual.type';
 
 const VideoVisual = ({ visual, caption }: VisualProps<'video'>) =>
   visual.sound ? (
-    <SoundVideo clip={visual.video} caption={caption} />
+    <SoundVideo clip={visual.video} steps={visual.steps} caption={caption} />
   ) : (
     <ShotFrame caption={caption}>
       <Expandable aspect={aspectOf(visual.video.poster)} label={caption} expanded={<ClipPlayer clip={visual.video} />}>

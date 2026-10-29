@@ -1,6 +1,6 @@
 /* @layer website-site @kind types */
 import type { ReactNode, RefObject } from 'react';
-import type { VideoClip } from '../../../../features';
+import type { VideoClip, VideoStep } from '../../../../features';
 
 type PlaybackSync = { time: number; playing: boolean; muted: boolean };
 
@@ -10,6 +10,8 @@ type SoundPlayerProps = {
   clip: VideoClip;
   sync: RefObject<PlaybackSync>;
   active: boolean;
+  steps?: readonly VideoStep[];
+  listed?: boolean;
   frame?: (video: ReactNode) => ReactNode;
 };
 

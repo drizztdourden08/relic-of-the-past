@@ -8,7 +8,7 @@ import { SoundPlayer, START_SYNC } from '../SoundPlayer';
 import type { PlaybackSync } from '../SoundPlayer';
 import type { SoundVideoProps } from './SoundVideo.type';
 
-const SoundVideo = ({ clip, caption }: SoundVideoProps) => {
+const SoundVideo = ({ clip, steps, caption }: SoundVideoProps) => {
   const [open, setOpen] = useState(false);
   const sync = useRef<PlaybackSync>({ ...START_SYNC });
 
@@ -17,7 +17,7 @@ const SoundVideo = ({ clip, caption }: SoundVideoProps) => {
       aspect={aspectOf(clip.poster)}
       label={caption}
       onOpenChange={setOpen}
-      expanded={<SoundPlayer clip={clip} sync={sync} active />}
+      expanded={<SoundPlayer clip={clip} sync={sync} steps={steps} active />}
     >
       {video}
     </Expandable>
@@ -25,7 +25,7 @@ const SoundVideo = ({ clip, caption }: SoundVideoProps) => {
 
   return (
     <ShotFrame caption={caption}>
-      <SoundPlayer clip={clip} sync={sync} active={!open} frame={expandable} />
+      <SoundPlayer clip={clip} sync={sync} steps={steps} active={!open} frame={expandable} listed />
     </ShotFrame>
   );
 };

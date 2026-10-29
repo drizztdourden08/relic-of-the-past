@@ -11,6 +11,7 @@ export type {
   FeatureVisual,
   RatioFrame,
   VideoClip,
+  VideoStep,
 } from './feature-visual.type';
 export { readyVisualOf } from './ready-visual';
 export type { Screenshot } from './screenshot.type';

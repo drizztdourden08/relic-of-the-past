@@ -7,7 +7,7 @@ import { SOUND_ICON_PATHS, SOUND_ICON_VIEW_BOX, SOUND_TEXT } from '../SoundPlaye
 import type { SoundBarProps } from './SoundBar.type';
 import './SoundBar.css';
 
-const SoundBar = ({ view, onToggle, onMute, onSeekPointer, onSeekKey }: SoundBarProps) => {
+const SoundBar = ({ view, steps, onToggle, onMute, onSeekPointer, onSeekKey }: SoundBarProps) => {
   const share = view.duration > 0 ? Math.min(view.time / view.duration, 1) : 0;
 
   return (
@@ -36,6 +36,13 @@ const SoundBar = ({ view, onToggle, onMute, onSeekPointer, onSeekKey }: SoundBar
         onPointerDown={keepPointer}
       >
         <Box className="sound-bar__fill" aria-hidden="true" style={{ width: `${share * 100}%` }} />
+        {view.duration > 0
+          ? steps.map((step) =>
+              step.at > 0 && step.at < view.duration ? (
+                <Box key={step.at} className="sound-bar__tick" aria-hidden="true" style={{ left: `${(step.at / view.duration) * 100}%` }} />
+              ) : null,
+            )
+          : null}
       </Box>
       <Span className="sound-bar__time">{`${formatTime(view.time)} / ${formatTime(view.duration)}`}</Span>
       <Pressable

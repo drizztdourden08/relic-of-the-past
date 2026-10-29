@@ -1,8 +1,9 @@
 /* @layer website-site @kind hook */
 import { useEffect, useRef, useState } from 'react';
-import type { KeyboardEvent, MouseEvent, RefObject, SyntheticEvent } from 'react';
+import type { KeyboardEvent, MouseEvent, RefObject } from 'react';
 import { SEEK_DIRECTIONS, SEEK_STEP_SECONDS } from '../SoundPlayer.constants';
 import type { PlaybackSync, PlayerView } from '../SoundPlayer.type';
+import { videoHandlers } from './video-handlers';
 
 const useSoundPlayer = (sync: RefObject<PlaybackSync>, active: boolean) => {
   const videoRef = useRef<HTMLVideoElement | null>(null);
@@ -46,6 +47,11 @@ const useSoundPlayer = (sync: RefObject<PlaybackSync>, active: boolean) => {
     setView((prev) => ({ ...prev, time: video.currentTime }));
   };
 
+  const playAt = (seconds: number): void => {
+    seekTo(seconds);
+    videoRef.current?.play().catch(() => undefined);
+  };
+
   const seekByPointer = (event: MouseEvent<HTMLElement>): void => {
     event.stopPropagation();
     const rect = event.currentTarget.getBoundingClientRect();
@@ -61,16 +67,7 @@ const useSoundPlayer = (sync: RefObject<PlaybackSync>, active: boolean) => {
     seekTo(video.currentTime + direction * SEEK_STEP_SECONDS);
   };
 
-  const videoHandlers = {
-    onPlay: () => setView((prev) => ({ ...prev, playing: true, started: true })),
-    onPause: () => setView((prev) => ({ ...prev, playing: false })),
-    onEnded: () => setView((prev) => ({ ...prev, playing: false })),
-    onTimeUpdate: ({ currentTarget: { currentTime: time } }: SyntheticEvent<HTMLVideoElement>) => setView((prev) => ({ ...prev, time })),
-    onDurationChange: ({ currentTarget: { duration } }: SyntheticEvent<HTMLVideoElement>) => setView((prev) => ({ ...prev, duration })),
-    onVolumeChange: ({ currentTarget: { muted } }: SyntheticEvent<HTMLVideoElement>) => setView((prev) => ({ ...prev, muted })),
-  };
-
-  return { videoRef, view, toggle, toggleMute, seekByPointer, seekByKey, videoHandlers };
+  return { videoRef, view, toggle, toggleMute, playAt, seekByPointer, seekByKey, videoHandlers: videoHandlers(setView) };
 };
 
 export { useSoundPlayer };

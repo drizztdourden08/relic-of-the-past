@@ -103,8 +103,8 @@ const UI_SHOTS = {
   msulDemoPoster: {
     id: 'msul-demo-poster',
     src: 'media/shots/msul-demo-poster.webp',
-    width: 1280,
-    height: 720,
+    width: 1920,
+    height: 1080,
     alt: "The intro in the rain with a layered music pack playing, and the app's music debugger open",
   },
 } as const satisfies Record<string, Screenshot>;

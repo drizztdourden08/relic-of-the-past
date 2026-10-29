@@ -1,4 +1,5 @@
 /* @layer website-site @kind constants */
+import type { VideoStep } from '../../../../features';
 import type { PlaybackSync } from './SoundPlayer.type';
 
 const SOUND_ICON_PATHS = {
@@ -25,6 +26,10 @@ const SEEK_DIRECTIONS: Readonly<Record<string, number>> = { ArrowRight: 1, Arrow
 
 const SECONDS_PER_MINUTE = 60;
 
+const NO_STEP = -1;
+
+const NO_STEPS: readonly VideoStep[] = [];
+
 const START_SYNC: PlaybackSync = { time: 0, playing: false, muted: false };
 
-export { SECONDS_PER_MINUTE, SEEK_DIRECTIONS, SEEK_STEP_SECONDS, SOUND_ICON_PATHS, SOUND_ICON_VIEW_BOX, SOUND_TEXT, START_SYNC };
+export { NO_STEP, NO_STEPS, SECONDS_PER_MINUTE, SEEK_DIRECTIONS, SEEK_STEP_SECONDS, SOUND_ICON_PATHS, SOUND_ICON_VIEW_BOX, SOUND_TEXT, START_SYNC };

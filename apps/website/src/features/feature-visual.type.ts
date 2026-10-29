@@ -12,6 +12,8 @@ type RatioFrame = { label: string; shot: Screenshot };
 
 type VideoClip = { src: string; poster: Screenshot };
 
+type VideoStep = { at: number; label: string };
+
 type ClipPair = { before: VideoClip; after: VideoClip };
 
 type PickerOption = { id: string; name: string; before: Screenshot; after: Screenshot; clips?: ClipPair };
@@ -42,8 +44,8 @@ type FeatureVisual =
   | { kind: 'collage'; layers: readonly [CollageLayer, CollageLayer, ...CollageLayer[]] }
   | { kind: 'pins'; shot: Screenshot; callouts: readonly Callout[] }
   | { kind: 'title'; variants: readonly [TitleVariant, ...TitleVariant[]] }
-  | { kind: 'video'; video: VideoClip; sound?: boolean }
+  | { kind: 'video'; video: VideoClip; sound?: boolean; steps?: readonly [VideoStep, ...VideoStep[]] }
   | { kind: 'cloud'; words: readonly [string, ...string[]] }
   | { kind: 'icons'; icons: readonly [GameIcon, ...GameIcon[]] };
 
-export type { ClipPair, CollageLayer, CollageSlot, Depth, FeatureVisual, GameIcon, PickerOption, RatioFrame, TitleVariant, VideoClip };
+export type { ClipPair, CollageLayer, CollageSlot, Depth, FeatureVisual, GameIcon, PickerOption, RatioFrame, TitleVariant, VideoClip, VideoStep };

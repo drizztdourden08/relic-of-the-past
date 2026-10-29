@@ -68,6 +68,17 @@
   box-shadow: var(--site-gem-glow);
 }
 
+.sound-bar__tick {
+  position: absolute;
+  top: 50%;
+  width: var(--ds-size-2);
+  height: var(--ds-size-10);
+  background: var(--ds-white);
+  box-shadow: 0 0 0 var(--ds-size-1) var(--ds-scrim);
+  pointer-events: none;
+  translate: -50% -50%;
+}
+
 .sound-bar__time {
   flex: none;
   color: var(--ds-text);
