@@ -264,6 +264,21 @@ void WasmSetSfxVolume(int volume) {
 EMSCRIPTEN_KEEPALIVE
 void WasmSetPaused(int paused) {
   g_paused = paused ? 1 : 0;
+  g_pause_steps = 0;
+}
+
+// Owe a paused core |frames| more emulator frames, each run and drawn by one loop tick. Ignored
+// while running, where the loop already advances the game. Used by the screenshot-frames capture
+// to show consecutive frames of a still picture.
+EMSCRIPTEN_KEEPALIVE
+void WasmStepFrames(int frames) {
+  if (!g_paused || frames <= 0) return;
+  g_pause_steps = (uint16)(g_pause_steps + frames);
+}
+
+EMSCRIPTEN_KEEPALIVE
+int WasmGetPendingSteps(void) {
+  return g_pause_steps;
 }
 
 EMSCRIPTEN_KEEPALIVE

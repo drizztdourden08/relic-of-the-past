@@ -7,7 +7,7 @@ import type { AutoTestDeps } from './useAutoTest.type';
 import { RENDER_SETTLE_MS } from './auto-launch.constants';
 import { waitForGameRunning } from './wait-for-game-running';
 import { isAutoStart } from '@app/launch-flags/is-auto-start';
-import { screenshotHold } from '@app/boot/screenshot-hold';
+import { releaseScreenshot } from '@app/boot/screenshot-frames/release-screenshot';
 
 const useAutoTest = ({ activeProfile, loadProfileForGame }: AutoTestDeps) => {
   const didRun = useRef(false);
@@ -44,7 +44,7 @@ const useAutoTest = ({ activeProfile, loadProfileForGame }: AutoTestDeps) => {
 
       if (args.screenshot) {
         log.app(`[AutoTest] Game frame drawn, releasing screenshot "${args.screenshot}"`);
-        screenshotHold.release();
+        await releaseScreenshot('game');
       }
     })();
 
