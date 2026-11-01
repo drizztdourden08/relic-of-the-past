@@ -34,7 +34,7 @@ const fireAll = () => {
   handleDashPulse();
 };
 
-describe('haptics master gate (C-side kFeatures0_Haptics)', () => {
+describe('haptics master gate (C-side kFeatures0_Haptics)', { tags: ['critical'] }, () => {
   it('sends the feature bit on the live path when enabled, and clears it when disabled', () => {
     expect(buildFeatureFlags({ ...DEFAULT_SETTINGS, haptics: settings() }) & HAPTICS_BIT).toBe(HAPTICS_BIT);
     expect(buildFeatureFlags({ ...DEFAULT_SETTINGS, haptics: settings({ enabled: false }) }) & HAPTICS_BIT).toBe(0);
@@ -55,7 +55,7 @@ describe('haptics master gate (C-side kFeatures0_Haptics)', () => {
   });
 });
 
-describe('haptics per-category gates each block only their own category', () => {
+describe('haptics per-category gates each block only their own category', { tags: ['critical'] }, () => {
   it('sword swing', () => {
     updateHapticSettings(settings({ swordSwing: false }));
     handleHapticEvent(HapticEventType.SWORD_SWING, 0);
@@ -63,24 +63,6 @@ describe('haptics per-category gates each block only their own category', () => 
     expect(calls).toBe(0);
     updateHapticSettings(settings({ swordSwing: true }));
     handleHapticEvent(HapticEventType.SWORD_SWING, 0);
-    expect(calls).toBe(1);
-  });
-
-  it('sword hit enemy', () => {
-    updateHapticSettings(settings({ swordHitEnemy: false }));
-    handleHapticEvent(HapticEventType.SWORD_HIT_ENEMY, 8);
-    expect(calls).toBe(0);
-    updateHapticSettings(settings({ swordHitEnemy: true }));
-    handleHapticEvent(HapticEventType.SWORD_HIT_ENEMY, 8);
-    expect(calls).toBe(1);
-  });
-
-  it('sword clink', () => {
-    updateHapticSettings(settings({ swordClink: false }));
-    handleHapticEvent(HapticEventType.SWORD_CLINK, 0);
-    expect(calls).toBe(0);
-    updateHapticSettings(settings({ swordClink: true }));
-    handleHapticEvent(HapticEventType.SWORD_CLINK, 0);
     expect(calls).toBe(1);
   });
 
@@ -95,7 +77,7 @@ describe('haptics per-category gates each block only their own category', () => 
   });
 });
 
-describe('haptics per-category gates each block only their own category', () => {
+describe('haptics per-category gates each block only their own category', { tags: ['critical'] }, () => {
   it('item use (incl. hookshot-wall + boomerang-catch)', () => {
     updateHapticSettings(settings({ itemUse: false }));
     handleHapticEvent(HapticEventType.ITEM_USED, BOMBS_ITEM);

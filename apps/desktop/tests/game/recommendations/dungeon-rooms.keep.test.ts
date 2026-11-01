@@ -35,7 +35,7 @@ const aDungeon = (): DungeonRecord => {
 const detector = detectorFromStrategy(dungeonStrategy);
 
 describeDataset('dungeon strategy (room-screens probe)', () => {
-  it('proposes adding the current screen when the room resolves to a dungeon that does not list it', () => {
+  it('proposes adding the current screen when the room resolves to a dungeon that does not list it', { tags: ['critical'] }, () => {
     const dungeon = aDungeon();
     const missingScreen = all('screen').find(s => !dungeon.roomScreenIds.includes(s.id));
     if (!missingScreen) throw new Error('every screen is already a member of this dungeon');
@@ -55,7 +55,7 @@ describeDataset('dungeon strategy (room-screens probe)', () => {
     expect((draft.proposed as DungeonRecord).roomScreenIds.length).toBe(dungeon.roomScreenIds.length + 1);
   });
 
-  it('proposes nothing when the screen is already a member of the resolved dungeon', () => {
+  it('proposes nothing when the screen is already a member of the resolved dungeon', { tags: ['critical'] }, () => {
     const dungeon = aDungeon();
     const memberScreen = required(dungeon.roomScreenIds[0], 'a member screen');
     const drafts = detector.detect(contextFor(memberScreen, {
@@ -64,7 +64,7 @@ describeDataset('dungeon strategy (room-screens probe)', () => {
     expect(drafts).toEqual([]);
   });
 
-  it('proposes nothing when the palace index resolves to no dungeon record', () => {
+  it('proposes nothing when the palace index resolves to no dungeon record', { tags: ['critical'] }, () => {
     const noSuchPalace = Math.max(...all('dungeon').map(d => d.gameId.palaceIndex ?? 0)) + 5;
     const drafts = detector.detect(contextFor('screen-001', {
       liveGameId: { palaceIndex: noSuchPalace },
@@ -72,7 +72,7 @@ describeDataset('dungeon strategy (room-screens probe)', () => {
     expect(drafts).toEqual([]);
   });
 
-  it('stays silent without a live palace index or a resolved screen', () => {
+  it('stays silent without a live palace index or a resolved screen', { tags: ['critical'] }, () => {
     const dungeon = aDungeon();
     expect(detector.detect(contextFor(null, { liveGameId: { palaceIndex: dungeon.gameId.palaceIndex } }))).toEqual([]);
     expect(detector.detect(contextFor('screen-001', { liveGameId: null }))).toEqual([]);

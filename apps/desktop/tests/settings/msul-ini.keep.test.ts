@@ -2,7 +2,7 @@
 import { describe, expect, it } from 'vitest';
 import { DEFAULT_SETTINGS, serializeToIni } from '@rotp/game-core';
 
-describe('MSUL config', () => {
+describe('MSUL config', { tags: ['critical'] }, () => {
   it('keeps the host-managed MSUL mode out of the native INI', () => {
     const ini = serializeToIni({ ...DEFAULT_SETTINGS, enableMSU: 'msul' });
     expect(ini).toContain('EnableMSU = false');

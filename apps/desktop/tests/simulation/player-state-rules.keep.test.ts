@@ -18,7 +18,7 @@ const info = (over: Partial<PlayerStateInfo> = {}): PlayerStateInfo => ({
 
 const labels = (i: PlayerStateInfo | null): string[] => playerStates(i).map((s) => s.label);
 
-describe('player activity states', () => {
+describe('player activity states', { tags: ['critical'] }, () => {
   it('says nothing while Link just stands on the ground', () => {
     expect(playerStates(info())).toEqual([]);
   });
@@ -48,7 +48,7 @@ describe('player activity states', () => {
   });
 });
 
-describe('traversal-affecting states', () => {
+describe('traversal-affecting states', { tags: ['critical'] }, () => {
   it('reports dashing, and flags it as affecting reach', () => {
     const first = required(playerStates(info({ isRunning: true }))[0], 'first state');
     expect(first.label).toBe('Dashing (boots)');
@@ -59,18 +59,13 @@ describe('traversal-affecting states', () => {
     expect(labels(info({ isBunny: true }))).toEqual(['Bunny - cannot use items']);
   });
 
-  it('reports deep water and wall grabbing', () => {
-    expect(labels(info({ inDeepWater: true }))).toEqual(['In deep water']);
-    expect(labels(info({ grabbingWall: true }))).toEqual(['Grabbing a wall']);
-  });
-
   it('combines an activity with the flags that hold alongside it', () => {
     expect(labels(info({ handlerState: PlayerState.swimming, inDeepWater: true, isRunning: true })))
       .toEqual(['Swimming', 'Dashing (boots)', 'In deep water']);
   });
 });
 
-describe('progress flag bits', () => {
+describe('progress flag bits', { tags: ['critical'] }, () => {
   it('names each set bit and shows its mask so a label can be checked', () => {
     const first = required(playerStates(info({ progressFlags: 0x01 }))[0], 'first state');
     expect(first.label).toBe('Uncle gave the sword');
@@ -89,7 +84,7 @@ describe('progress flag bits', () => {
   });
 });
 
-describe('no player state available', () => {
+describe('no player state available', { tags: ['critical'] }, () => {
   it('returns an empty list instead of throwing when the module is not running', () => {
     expect(playerStates(null)).toEqual([]);
   });

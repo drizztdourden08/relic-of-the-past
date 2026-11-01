@@ -8,7 +8,7 @@ import { installOutlineRig } from './install-outline-rig';
 
 const { rowsInOrder, layOut, pointer, rowFor, mountOutline } = installOutlineRig();
 
-describe('spring-load: a collapsed row opens after the dwell, and puts itself back', () => {
+describe('spring-load: a collapsed row opens after the dwell, and puts itself back', { tags: ['standard'] }, () => {
   const collapsed = (): ReadonlySet<string> => useHudEditorViewStore.getState().collapsedNodeIds;
 
   const hoverVault = (): void => {

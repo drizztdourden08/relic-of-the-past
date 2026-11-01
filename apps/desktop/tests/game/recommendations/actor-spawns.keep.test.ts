@@ -30,7 +30,7 @@ const detector = detectorFromStrategy(actorStrategy);
 const creates = (context: DetectionContext) => detector.detect(context).filter(d => d.action === 'create');
 
 describeDataset('actor strategy (spawns probe)', () => {
-  it('proposes a new ActorRecord for a spawn with no catalogued sprite type', () => {
+  it('proposes a new ActorRecord for a spawn with no catalogued sprite type', { tags: ['critical'] }, () => {
     const drafts = creates(contextFor({
       liveSprites: [{ spriteType: UNCATALOGUED, col: 4, row: 4, floor: 0 }],
     }));
@@ -46,7 +46,7 @@ describeDataset('actor strategy (spawns probe)', () => {
     expect((draft.proposed as { kind: string }).kind).toBe('object');
   });
 
-  it('classifies as enemy and attaches the combat profile when a native combat row backs it', () => {
+  it('classifies as enemy and attaches the combat profile when a native combat row backs it', { tags: ['critical'] }, () => {
     const drafts = creates(contextFor({
       liveSprites: [{ spriteType: UNCATALOGUED, col: 4, row: 4, floor: 0 }],
       spriteCombat: { [UNCATALOGUED]: { health: 8, flags4: 0x40, damageByClass: Array(16).fill(2) } },
@@ -58,7 +58,7 @@ describeDataset('actor strategy (spawns probe)', () => {
     expect(proposed.combat?.health).toBe(8);
   });
 
-  it('collapses repeat spawns of the same uncatalogued type into one finding', () => {
+  it('collapses repeat spawns of the same uncatalogued type into one finding', { tags: ['critical'] }, () => {
     const drafts = creates(contextFor({
       liveSprites: [
         { spriteType: UNCATALOGUED, col: 1, row: 1, floor: 0 },
@@ -68,7 +68,7 @@ describeDataset('actor strategy (spawns probe)', () => {
     expect(drafts).toHaveLength(1);
   });
 
-  it('proposes nothing for a spawn whose sprite type is already catalogued', () => {
+  it('proposes nothing for a spawn whose sprite type is already catalogued', { tags: ['critical'] }, () => {
     const known = all('actor').find(a => a.gameId.spriteType != null);
     if (!known) throw new Error('dataset has no actor with a spriteType');
     const drafts = creates(contextFor({
@@ -77,7 +77,7 @@ describeDataset('actor strategy (spawns probe)', () => {
     expect(drafts).toEqual([]);
   });
 
-  it('stays silent when live sprites were never read', () => {
+  it('stays silent when live sprites were never read', { tags: ['critical'] }, () => {
     expect(creates(contextFor({}))).toEqual([]);
   });
 });

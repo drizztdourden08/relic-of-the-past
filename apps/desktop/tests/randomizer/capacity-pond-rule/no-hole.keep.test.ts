@@ -7,7 +7,7 @@ import { bothHaveSource } from './both-have-source';
 import { combinations } from './combinations';
 import { settingFor } from './setting-for';
 
-describe('the capacity/pond rule leaves no seed without its upgrades', () => {
+describe('the capacity/pond rule leaves no seed without its upgrades', { tags: ['critical'] }, () => {
   it('settles every combination of the two tabs into a pair with a source', () => {
     for (const { selection, authority } of combinations()) {
       const settled = reconcileCapacityPond(selection, authority);
@@ -39,7 +39,7 @@ describe('the capacity/pond rule leaves no seed without its upgrades', () => {
   });
 });
 
-describe('the capacity/pond rule leaves no seed without its upgrades', () => {
+describe('the capacity/pond rule leaves no seed without its upgrades', { tags: ['critical'] }, () => {
   it('offers no pond mode that would open the hole', () => {
     for (const { selection, authority } of combinations()) {
       const settled = reconcileCapacityPond(selection, authority);

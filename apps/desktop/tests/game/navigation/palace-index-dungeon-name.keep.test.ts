@@ -24,24 +24,24 @@ const hex = (n: number): string => `0x${n.toString(16).toUpperCase().padStart(2,
 
 describeDataset('palace index -> dungeon record', () => {
   for (const [palace, fileStem] of EXPECTED) {
-    it(`resolves ${hex(palace)} to ${fileStem}`, () => {
+    it(`resolves ${hex(palace)} to ${fileStem}`, { tags: ['critical'] }, () => {
       expect(dungeonForPalaceIndex(palace)?.fileStem).toBe(fileStem);
     });
   }
 
-  it('covers exactly the 14 dungeon palace values and nothing else', () => {
+  it('covers exactly the 14 dungeon palace values and nothing else', { tags: ['critical'] }, () => {
     const resolvable = Array.from({ length: 0x100 }, (_, i) => i)
       .filter(i => dungeonForPalaceIndex(i) !== undefined);
     expect(resolvable).toEqual(EXPECTED.map(([palace]) => palace));
   });
 
-  it('gives every dungeon record a unique file stem, with no orphans', () => {
+  it('gives every dungeon record a unique file stem, with no orphans', { tags: ['critical'] }, () => {
     const stems = all('dungeon').map(d => d.fileStem);
     expect(new Set(stems).size).toBe(stems.length);
     expect(new Set(stems)).toEqual(new Set(EXPECTED.map(([, stem]) => stem)));
   });
 
-  it('leaves cave/house rooms out of the dungeon mapping', () => {
+  it('leaves cave/house rooms out of the dungeon mapping', { tags: ['critical'] }, () => {
     expect(getPalaceName(0xFF)).toBe('Cave / House');
     expect(isDungeonPalace(0xFF)).toBe(false);
     expect(dungeonForPalaceIndex(0xFF)).toBeUndefined();

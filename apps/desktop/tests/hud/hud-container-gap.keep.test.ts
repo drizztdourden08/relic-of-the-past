@@ -31,7 +31,7 @@ const loaded = (raw: unknown): HudLayout => {
   return result.doc;
 };
 
-describe('the two axes are independent, and `x` is always horizontal', () => {
+describe('the two axes are independent, and `x` is always horizontal', { tags: ['critical'] }, () => {
   const wrapping = (direction: 'row' | 'column'): HudLayout => loaded(docOf({
     kind: 'container', id: 'flow', direction, wrap: true,
     gap: { x: 2, y: 6 },
@@ -65,7 +65,7 @@ describe('the two axes are independent, and `x` is always horizontal', () => {
   });
 });
 
-describe('gap placement and the grid gap', () => {
+describe('gap placement and the grid gap', { tags: ['critical'] }, () => {
   const children = ['a', 'b', 'c'].map(box);
 
   it('places a flow by its pair gap, a bound gap included', () => {
@@ -85,7 +85,7 @@ describe('gap placement and the grid gap', () => {
   });
 });
 
-describe('the validator knows one gap shape and one guide, for both engines', () => {
+describe('the validator knows one gap shape and one guide, for both engines', { tags: ['critical'] }, () => {
   const flexWith = (extra: Record<string, unknown>) => validateLayout(docOf({
     kind: 'container', id: 'flow', direction: 'row', children: [box('a')], ...extra,
   }));

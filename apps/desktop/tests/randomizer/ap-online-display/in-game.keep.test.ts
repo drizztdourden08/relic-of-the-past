@@ -35,7 +35,7 @@ const poolPictures = (): Map<string, ImageBuffer> => new Map(POOL_SPRITE_DEFINIT
   return [def.file, badge === undefined ? artImage(art) : extractArtBadge({ art, badge })];
 }));
 
-describe('another player\'s item in the game itself', () => {
+describe('another player\'s item in the game itself', { tags: ['standard'] }, () => {
   const US = required(kLanguages.us, 'US language');
   const WIDTHS = new Uint8Array(US.alphabet.length).fill(8);
   const CHARSET = dialogueCharsetOf(US.alphabet, WIDTHS, extraGlyphSlots(US.alphabet, WIDTHS.length));
@@ -71,7 +71,7 @@ describe('another player\'s item in the game itself', () => {
   });
 });
 
-describe('another player\'s item in the game itself', () => {
+describe('another player\'s item in the game itself', { tags: ['standard'] }, () => {
   describe('the pool icons in the game', () => {
     const pictures = poolPictures();
     const file = required(buildForeignIconsFile(pictures) ?? undefined, 'foreign icons file');

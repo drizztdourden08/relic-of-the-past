@@ -56,7 +56,7 @@ afterEach(restore);
 const detector = detectorFromStrategy(checkStrategy);
 
 describeDataset('check strategy on create', () => {
-  it('proposes a check for a chest the room draws that no record covers', () => {
+  it('proposes a check for a chest the room draws that no record covers', { tags: ['critical'] }, () => {
     unregisterRecord('check', CHECK_ID);
 
     const drafts = detector.detect(contextFor({ chests: [roomChest()] }));
@@ -79,7 +79,7 @@ describeDataset('check strategy on create', () => {
     expect(proposed.vanillaItemIds).toEqual(ORIGINAL.vanillaItemIds);
   });
 
-  it('leaves vanillaItemIds empty instead of inventing one for an uncatalogued reward', () => {
+  it('leaves vanillaItemIds empty instead of inventing one for an uncatalogued reward', { tags: ['critical'] }, () => {
     unregisterRecord('check', CHECK_ID);
     const unknown = Math.max(...all('item').map(i => i.gameId?.receiveItemId ?? 0)) + 5;
 
@@ -88,7 +88,7 @@ describeDataset('check strategy on create', () => {
     expect((required(drafts[0], 'the first draft').proposed as CheckRecord).vanillaItemIds).toEqual([]);
   });
 
-  it('mints one finding per chest slot when a room draws several unknown ones', () => {
+  it('mints one finding per chest slot when a room draws several unknown ones', { tags: ['critical'] }, () => {
     unregisterRecord('check', CHECK_ID);
 
     const drafts = detector.detect(contextFor({
@@ -100,11 +100,11 @@ describeDataset('check strategy on create', () => {
 });
 
 describeDataset('check strategy when already covered', () => {
-  it('proposes nothing for a chest the dataset already catalogues', () => {
+  it('proposes nothing for a chest the dataset already catalogues', { tags: ['critical'] }, () => {
     expect(detector.detect(contextFor({ chests: [roomChest()] }))).toEqual([]);
   });
 
-  it('proposes nothing when the pass resolved another screen record for the same room', () => {
+  it('proposes nothing when the pass resolved another screen record for the same room', { tags: ['critical'] }, () => {
     const variant = all('screen').find(s => s.gameId.roomIndex === ROOM && s.id !== SCREEN);
     if (!variant) throw new Error('dataset has no second screen record for this room');
 
@@ -113,7 +113,7 @@ describeDataset('check strategy when already covered', () => {
 });
 
 describeDataset('check strategy on update', () => {
-  it('corrects a record catalogued as something other than a chest', () => {
+  it('corrects a record catalogued as something other than a chest', { tags: ['critical'] }, () => {
     const asNpc: CheckRecord = { ...ORIGINAL, kind: 'npc' };
     replaceRecord('check', asNpc);
 
@@ -128,7 +128,7 @@ describeDataset('check strategy on update', () => {
     expect((draft.current as CheckRecord).kind).toBe('npc');
   });
 
-  it('corrects a record whose screen belongs to a different room', () => {
+  it('corrects a record whose screen belongs to a different room', { tags: ['critical'] }, () => {
     const elsewhere = all('screen').find(s => s.gameId.roomIndex != null && s.gameId.roomIndex !== ROOM);
     if (!elsewhere) throw new Error('dataset has no screen for another room');
     const movedAway: CheckRecord = { ...ORIGINAL, screenId: elsewhere.id };
@@ -142,16 +142,16 @@ describeDataset('check strategy on update', () => {
 });
 
 describeDataset('check strategy and what it refuses to read', () => {
-  it('stays silent when the chest table was never read', () => {
+  it('stays silent when the chest table was never read', { tags: ['critical'] }, () => {
     expect(detector.detect(contextFor({}))).toEqual([]);
   });
 
-  it('stays silent outdoors, where there is no chest table at all', () => {
+  it('stays silent outdoors, where there is no chest table at all', { tags: ['critical'] }, () => {
     unregisterRecord('check', CHECK_ID);
     expect(detector.detect(contextFor({ chests: [roomChest()], isIndoors: false }))).toEqual([]);
   });
 
-  it('stays silent when the room resolved to no screen', () => {
+  it('stays silent when the room resolved to no screen', { tags: ['critical'] }, () => {
     unregisterRecord('check', CHECK_ID);
     expect(detector.detect(contextFor({ chests: [roomChest()] }, null))).toEqual([]);
   });

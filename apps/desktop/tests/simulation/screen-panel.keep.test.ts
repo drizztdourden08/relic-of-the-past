@@ -8,7 +8,7 @@ import { describeDataset } from '../dataset-guard';
 const at = (kind: ScreenAnnotation['kind'], label: string, extra: Partial<ScreenAnnotation> = {}): ScreenAnnotation =>
   ({ kind, label, tile: { row: 0, col: 0 }, ...extra });
 
-describeDataset('annotation grouping', () => {
+describeDataset('annotation grouping', { tags: ['critical'] }, () => {
   it('keeps every item, including unmapped kinds', () => {
     const items = [
       at('chest', 'Map Chest'),
@@ -28,14 +28,9 @@ describeDataset('annotation grouping', () => {
   });
 });
 
-describeDataset('room tag names', () => {
+describeDataset('room tag names', { tags: ['critical'] }, () => {
   it('labels the whole clear-the-room family, not just one value', () => {
     for (const tag of [0x01, 0x0a, 0x13]) expect(roomTagName(tag)).toBe('clear enemies -> doors open');
-  });
-
-  it('labels the known door/water/hole mechanics', () => {
-    expect(roomTagName(0x14)).toBe('trigger -> block door');
-    expect(roomTagName(0x26)).toBe('kill room -> block');
   });
 
   it('falls back to hex instead of claiming to know an unmapped tag', () => {

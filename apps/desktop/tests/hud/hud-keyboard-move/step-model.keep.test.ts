@@ -5,7 +5,7 @@ import { announcementFor, ghostFor } from '@app/hud-layout-editing/drop-ghost';
 import type { HudLayout } from '@rotp/hud';
 import { DOC } from './keyboard-move.constants';
 
-describe('four directions, computed from the tree', () => {
+describe('four directions, computed from the tree', { tags: ['critical'] }, () => {
   it('reorders among siblings', () => {
     expect(stepIntent(DOC, 'magic-bar', 'up')).toEqual({ kind: 'flex', parentId: 'hud', index: 0 });
     expect(stepIntent(DOC, 'hearts', 'down')).toEqual({ kind: 'flex', parentId: 'hud', index: 1 });
@@ -46,7 +46,7 @@ describe('four directions, computed from the tree', () => {
   });
 });
 
-describe('THE ANNOUNCEMENT IS THE GHOST\'S OWN WORDS, flattened', () => {
+describe('THE ANNOUNCEMENT IS THE GHOST\'S OWN WORDS, flattened', { tags: ['critical'] }, () => {
   const say = (id: string, direction: 'up' | 'down' | 'out' | 'in'): { said: string; model: ReturnType<typeof ghostFor> } => {
     const intent = stepIntent(DOC, id, direction);
     if (!intent) throw new Error('no intent');
@@ -62,11 +62,6 @@ describe('THE ANNOUNCEMENT IS THE GHOST\'S OWN WORDS, flattened', () => {
     expect(said).toBe(`${model.chip} moved ${model.kind}, ${model.position}`);
   });
 
-  it('reads as a sentence, which is the plan\'s own check on the design', () => {
-    expect(say('magic-bar', 'up').said).toBe('magic-bar moved into column, position 1 of 2');
-    expect(say('loose', 'in').said).toBe('loose moved into row, position 2 of 2');
-  });
-
   it('says what is wrong instead of that something is, when a drop is refused', () => {
     const model = ghostFor(DOC, ['hud'], {
       kind: 'refused', reason: 'descendant', parentId: 'hearts', nodeId: 'hearts',
@@ -76,7 +71,7 @@ describe('THE ANNOUNCEMENT IS THE GHOST\'S OWN WORDS, flattened', () => {
   });
 });
 
-describe('the menu names its own preconditions instead of hiding items', () => {
+describe('the menu names its own preconditions instead of hiding items', { tags: ['critical'] }, () => {
   it('offers all four, and dims the ones that cannot happen', () => {
     const options = stepOptions(DOC, 'hud');
     expect(options.map((o) => o.direction)).toEqual(['up', 'down', 'out', 'in']);

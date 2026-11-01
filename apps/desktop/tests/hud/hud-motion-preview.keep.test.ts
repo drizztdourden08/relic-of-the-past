@@ -103,7 +103,7 @@ afterEach(() => {
   expect(dismissStackDepth()).toBe(0);
 });
 
-describe('the motion transport drives the stage', () => {
+describe('the motion transport drives the stage', { tags: ['standard'] }, () => {
   it('hands the stage nothing until the author takes hold of it', () => {
     mount(h(Harness, { onClose: () => {} }));
     expect(document.querySelector('[data-testid="stage"]')?.getAttribute('data-now')).toBe('null');
@@ -134,7 +134,7 @@ describe('the motion transport drives the stage', () => {
   });
 });
 
-describe('Escape while the preview is playing', () => {
+describe('Escape while the preview is playing', { tags: ['standard'] }, () => {
   it('stops the playback and leaves the editor standing, then closes it on the second press', () => {
     const onClose = vi.fn();
     mount(h(Harness, { onClose }));
@@ -162,7 +162,7 @@ describe('Escape while the preview is playing', () => {
   });
 });
 
-describe('reduced motion', () => {
+describe('reduced motion', { tags: ['standard'] }, () => {
   it('replaces the transport with the reason it is off, not a dead button', () => {
     reduced = true;
     stubMatchMedia();

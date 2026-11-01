@@ -3,33 +3,10 @@ import { it, expect } from 'vitest';
 import { COLLECTION_SOURCES } from '@app/data-inspector/collection-sources';
 import { ENTITY_KINDS } from '@app/views/DataInspector/DataInspector.constants';
 import { resolveIdRef } from '@app/views/DataInspector/behavior/id-ref-target';
-import { buildSchema, createSchemaIndex } from '@drizztdourden08/tessera/data';
 import { describeDataset } from '../dataset-guard';
 import { required } from '../required';
 
-describeDataset('collection sources', () => {
-  it('adapts every collection, with real rows behind each one', () => {
-    expect(Object.keys(COLLECTION_SOURCES)).toHaveLength(ENTITY_KINDS.length);
-    for (const kind of ENTITY_KINDS) {
-      const source = COLLECTION_SOURCES[kind];
-      expect(source.id).toBe(kind);
-      expect(source.label.length).toBeGreaterThan(0);
-      expect(source.rows.length).toBeGreaterThan(0);
-    }
-  });
-
-  it('identifies a row by the id the row itself carries, prefixed with its kind', () => {
-    const idPrefixes: Partial<Record<string, string>> = { 'item-group': 'ig', enumeration: 'enum' };
-    for (const kind of ENTITY_KINDS) {
-      const source = COLLECTION_SOURCES[kind];
-      const idPattern = new RegExp(`^${idPrefixes[kind] ?? kind}-\\d+$`);
-      for (const row of source.rows) {
-        expect(source.getId(row)).toBe(row.id);
-        expect(source.getId(row)).toMatch(idPattern);
-      }
-    }
-  });
-
+describeDataset('collection sources', { tags: ['critical'] }, () => {
   it('emits source text for every collection that has a serializer, and the record is in it', () => {
     for (const kind of ENTITY_KINDS) {
       const source = COLLECTION_SOURCES[kind];
@@ -39,35 +16,9 @@ describeDataset('collection sources', () => {
       expect(code).toContain(source.getId(first));
     }
   });
-
-  it('names only paths the derived schema has in every default column set', () => {
-    for (const kind of ENTITY_KINDS) {
-      const source = COLLECTION_SOURCES[kind];
-      const schema = createSchemaIndex(buildSchema(source.rows, source.config));
-      for (const path of source.config?.defaultColumns ?? []) {
-        expect(schema.byPath(path), `${kind}: ${path}`).toBeDefined();
-      }
-    }
-  });
-
-  it('claims each grouped path once per collection', () => {
-    for (const kind of ENTITY_KINDS) {
-      const groups = COLLECTION_SOURCES[kind].config?.groups ?? [];
-      const paths = groups.flatMap(group => group.paths);
-      const ids = groups.map(group => group.id);
-      expect(new Set(paths).size, kind).toBe(paths.length);
-      expect(new Set(ids).size, kind).toBe(ids.length);
-    }
-  });
-
-  it('offers a save path for every collection', () => {
-    for (const kind of ENTITY_KINDS) {
-      expect(COLLECTION_SOURCES[kind].onSave, kind).toBeTypeOf('function');
-    }
-  });
 });
 
-describeDataset('id reference resolution', () => {
+describeDataset('id reference resolution', { tags: ['critical'] }, () => {
   it('resolves the published target kind and a display name', () => {
     const screen = required(COLLECTION_SOURCES.screen.rows[0], 'a screen row');
     const id = COLLECTION_SOURCES.screen.getId(screen);

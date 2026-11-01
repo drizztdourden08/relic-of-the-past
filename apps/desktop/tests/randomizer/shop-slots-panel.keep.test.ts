@@ -20,7 +20,7 @@ const scopeOf = (over: Partial<ShopScope>): ShopScope =>
 const namedCardsOf = (scope: ShopScope): string[] => shopSectionsOf(scope)
   .flatMap((section) => section.cards.map((card) => `${section.world}:${card.name}`));
 
-describe('the count control and the total read the opened set', () => {
+describe('the count control and the total read the opened set', { tags: ['critical'] }, () => {
   it('shows the ticked count in custom mode, whatever the stored count says', () => {
     const scope = scopeOf({ mode: 'custom', depth: 2 });
     const summary = summaryOf(scope);
@@ -69,7 +69,7 @@ describe('the count control and the total read the opened set', () => {
   });
 });
 
-describe('the cards are split by world and named for their section', () => {
+describe('the cards are split by world and named for their section', { tags: ['critical'] }, () => {
   it('files every shop under exactly one heading', () => {
     const sections = shopSectionsOf(scopeOf({ mode: 'custom' }));
     expect(sections.map((section) => section.title)).toEqual(['Light World', 'Dark World']);
@@ -94,7 +94,7 @@ describe('the cards are split by world and named for their section', () => {
   });
 });
 
-describe('the count is drawn as whatever it honestly is', () => {
+describe('the count is drawn as whatever it honestly is', { tags: ['critical'] }, () => {
   const fillOf = (value: number, max: number): number => value / max;
 
   it('reads out instead of sliding in the modes the ticks alone decide', () => {
@@ -126,7 +126,7 @@ describe('the count is drawn as whatever it honestly is', () => {
   });
 });
 
-describe('a brand-new profile starts on the shipped ticks', () => {
+describe('a brand-new profile starts on the shipped ticks', { tags: ['critical'] }, () => {
   const hutSlots = SHOP_SLOT_ROWS
     .filter((row) => DEFAULT_OFF_SHOPS.includes(row.slot.shopId))
     .map((row) => row.canonicalIndex);

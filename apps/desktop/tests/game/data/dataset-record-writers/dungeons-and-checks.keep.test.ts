@@ -12,7 +12,7 @@ const { root, sourceOf } = setUpWriterWorkspace();
 const NO_DUNGEON_ITEMS = { bigKey: null, smallKey: null, smallKeyCount: 0, map: null, compass: null };
 
 describeDataset('a dungeon record', () => {
-  it('creates into its own file and edits the one already there', async () => {
+  it('creates into its own file and edits the one already there', { tags: ['critical'] }, async () => {
     const created = await allocateDungeon(root(), {
       record: { gameId: { palaceIndex: 4 }, name: 'Second', fileStem: 'second', items: NO_DUNGEON_ITEMS, roomScreenIds: [], regionIds: [] },
     });
@@ -41,14 +41,14 @@ describeDataset('a check record', () => {
     vanillaItemIds: [],
   };
 
-  it('creates into the file its dungeon owns', async () => {
+  it('creates into the file its dungeon owns', { tags: ['critical'] }, async () => {
     const result = await allocateCheck(root(), { record: draft });
     expect(result.success ? '' : result.error).toBe('');
     if (!result.success) return;
     expect(await sourceOf('checks/dark-world/turtle-rock.ts')).toContain(`id: '${result.record.id}'`);
   });
 
-  it('round-trips an update and a delete through the file it was created in', async () => {
+  it('round-trips an update and a delete through the file it was created in', { tags: ['critical'] }, async () => {
     const created = await allocateCheck(root(), { record: draft });
     expect(created.success).toBe(true);
     if (!created.success) return;
@@ -62,7 +62,7 @@ describeDataset('a check record', () => {
     expect(await sourceOf('checks/dark-world/turtle-rock.ts')).not.toContain(`id: '${id}'`);
   });
 
-  it('writes a review mark into the record file, last, and reads it back unchanged', async () => {
+  it('writes a review mark into the record file, last, and reads it back unchanged', { tags: ['critical'] }, async () => {
     const review = {
       status: 'needs-work' as const,
       source: 'person' as const,
@@ -78,7 +78,7 @@ describeDataset('a check record', () => {
     expect(Object.keys(required(written, 'written check record')).at(-1)).toBe('review');
   });
 
-  it('refuses a check with no destination instead of picking one', async () => {
+  it('refuses a check with no destination instead of picking one', { tags: ['critical'] }, async () => {
     const result = await allocateCheck(root(), {
       record: { gameId: {}, kind: 'event', name: 'Nowhere', vanillaItemIds: [] },
     });

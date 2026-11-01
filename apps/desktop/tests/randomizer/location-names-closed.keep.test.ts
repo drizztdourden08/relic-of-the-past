@@ -62,7 +62,7 @@ const POND_SLOTS: ReadonlySet<LocationKey> = new Set([
   ...POND_LOCATION_SET, ...CAPACITY_UPGRADE_LOCATIONS.keys(),
 ]);
 
-describe('every id-keyed table names a location the world has', () => {
+describe('every id-keyed table names a location the world has', { tags: ['standard'] }, () => {
   for (const [label, keys] of KEYED_TABLES) {
     it(label, () => {
       expect(keys.length).toBeGreaterThan(0);
@@ -71,7 +71,7 @@ describe('every id-keyed table names a location the world has', () => {
   }
 });
 
-describe('every event row names a story event of the world, never a location', () => {
+describe('every event row names a story event of the world, never a location', { tags: ['standard'] }, () => {
   it('rule tables', () => {
     const events = Object.values(RULE_TABLES).flat().filter((entry) => entry.kind === 'event').map((entry) => entry.target);
     expect(events.length).toBeGreaterThan(0);
@@ -79,7 +79,7 @@ describe('every event row names a story event of the world, never a location', (
   });
 });
 
-describe('Normal fills the world it is built over', () => {
+describe('Normal fills the world it is built over', { tags: ['standard'] }, () => {
   it('fills every declared location, and only locations the world declares', () => {
     const filled = new Set(Object.keys(buildNormalPlacement().locations));
     expect([...filled].filter((key) => !isLocation(key))).toEqual([]);

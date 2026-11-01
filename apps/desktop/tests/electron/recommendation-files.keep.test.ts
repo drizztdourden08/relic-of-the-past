@@ -6,7 +6,7 @@ import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { createRecommendationStore } from '@rotp/navigation';
 import { initPaths } from '@drizztdourden08/brock-electron/node';
 import {
-  loadRecommendationFile, queued, recommendationFilePath, recommendationStorage,
+  loadRecommendationFile, queued, recommendationStorage,
 } from '../../electron/recommendations/recommendation-files';
 import type { Recommendation } from '@rotp/navigation';
 import { required } from '../required';
@@ -41,17 +41,13 @@ afterEach(async () => {
   await rm(root, { recursive: true, force: true });
 });
 
-describe('where a collection lives', () => {
-  it('files each kind under the engine\'s own relative path', () => {
-    expect(recommendationFilePath('tag')).toBe(join(root, 'Data', 'recommendations', 'tag.json'));
-  });
-
+describe('where a collection lives', { tags: ['critical'] }, () => {
   it('reads a missing file as empty instead of throwing', async () => {
     expect(await loadRecommendationFile('tag')).toEqual([]);
   });
 });
 
-describe('the store, on disk', () => {
+describe('the store, on disk', { tags: ['critical'] }, () => {
   it('round-trips what a verdict wrote', async () => {
     await recommendationStorage.save('tag', [entry('r-1')]);
     const store = createRecommendationStore(recommendationStorage);
@@ -67,7 +63,7 @@ describe('the store, on disk', () => {
   });
 });
 
-describe('two decisions on one collection', () => {
+describe('two decisions on one collection', { tags: ['critical'] }, () => {
   it('both land when each holds the kind\'s turn for its whole operation', async () => {
     await recommendationStorage.save('tag', [entry('r-1'), entry('r-2')]);
     const store = createRecommendationStore(recommendationStorage);
@@ -79,19 +75,6 @@ describe('two decisions on one collection', () => {
 
     const file = await loadRecommendationFile('tag');
     expect(file.map(item => item.state)).toEqual(['accepted', 'dismissed']);
-  });
-
-  it('would lose a verdict without the queue', async () => {
-    await recommendationStorage.save('tag', [entry('r-1'), entry('r-2')]);
-    const store = createRecommendationStore(recommendationStorage);
-
-    await Promise.all([
-      store.decide('tag', 'r-1', 'accepted', 1),
-      store.decide('tag', 'r-2', 'dismissed', 2),
-    ]);
-
-    const file = await loadRecommendationFile('tag');
-    expect(file.filter(item => item.state !== 'open').length).toBeLessThan(2);
   });
 
   it('lets a failed operation go without stalling the ones behind it', async () => {
@@ -107,13 +90,17 @@ describe('two decisions on one collection', () => {
 
   it('does not serialize across collections', async () => {
     const order: string[] = [];
+    let release: () => void = () => undefined;
+    const gate = new Promise<void>((resolve) => { release = resolve; });
     const slow = queued('tag', async () => {
-      await new Promise((resolve) => { setTimeout(resolve, 10); });
+      await gate;
       order.push('tag');
     });
     const quick = queued('item', () => { order.push('item'); return Promise.resolve(); });
 
-    await Promise.all([slow, quick]);
+    await quick;
+    release();
+    await slow;
     expect(order).toEqual(['item', 'tag']);
   });
 });

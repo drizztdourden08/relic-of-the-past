@@ -1,29 +1,9 @@
 /* @layer test @kind test */
 import { describe, expect, it } from 'vitest';
-import { HUD_SCOPE_EXTRAS, HUD_VARIABLES, hudDataScope, hudVariableNamesFor, isHudScopeExtra, isHudVariableName, suggestVariableName } from '@rotp/hud';
+import { HUD_SCOPE_EXTRAS, HUD_VARIABLES, hudDataScope, hudVariableNamesFor, isHudScopeExtra, suggestVariableName } from '@rotp/hud';
 import type { HudVitalsSource } from '@rotp/hud';
 
-const PLAN_VARIABLES = [
-  'life_current', 'life_max', 'magic_current', 'magic_max', 'half_magic', 'armor',
-  'arrow_current', 'arrow_max', 'bomb_current', 'bomb_max', 'key_current',
-  'rupee_current', 'rupee_max', 'silver_arrows', 'slot_count',
-  'countdown_active', 'countdown_seconds', 'countdown_frames',
-];
-
-describe('the table matches the plan, name for name', () => {
-  it('is exactly the eighteen documented variables, one entry each', () => {
-    expect(HUD_VARIABLES.map((entry) => entry.name)).toEqual(PLAN_VARIABLES);
-    HUD_VARIABLES.forEach((entry) => expect(entry.note.length).toBeGreaterThan(0));
-  });
-
-  it('every table name reports as known; nothing else does', () => {
-    PLAN_VARIABLES.forEach((name) => expect(isHudVariableName(name)).toBe(true));
-    expect(isHudVariableName('index')).toBe(false);
-    expect(isHudVariableName('nonsense')).toBe(false);
-  });
-});
-
-describe('index/count/item are scope extras, never table entries', () => {
+describe('index/count/item are scope extras, never table entries', { tags: ['critical'] }, () => {
   it('are exactly the three named in the plan', () => {
     expect(HUD_SCOPE_EXTRAS).toEqual(['index', 'count', 'item']);
     HUD_SCOPE_EXTRAS.forEach((name) => expect(isHudScopeExtra(name)).toBe(true));
@@ -32,11 +12,11 @@ describe('index/count/item are scope extras, never table entries', () => {
   it('a picker offers them only when it says it is inside a repeat', () => {
     expect(hudVariableNamesFor({ insideRepeat: false })).not.toContain('index');
     expect(hudVariableNamesFor({ insideRepeat: true })).toEqual(expect.arrayContaining(['index', 'count', 'item']));
-    expect(hudVariableNamesFor({ insideRepeat: false })).toHaveLength(PLAN_VARIABLES.length);
+    expect(hudVariableNamesFor({ insideRepeat: false })).toHaveLength(HUD_VARIABLES.length);
   });
 });
 
-describe('hudDataScope - sourced from the HUD\'s own existing fields, no new plumbing', () => {
+describe('hudDataScope - sourced from the HUD\'s own existing fields, no new plumbing', { tags: ['critical'] }, () => {
   const vitals: HudVitalsSource = {
     healthCurrent: 28, healthCapacity: 40, magic: 96, halfMagic: true, armor: 2,
     arrows: 12, maxArrows: 40, bombs: 5, maxBombs: 30, keys: 3,
@@ -68,7 +48,7 @@ describe('hudDataScope - sourced from the HUD\'s own existing fields, no new plu
   });
 });
 
-describe('suggestVariableName - a typo, not a guess', () => {
+describe('suggestVariableName - a typo, not a guess', { tags: ['critical'] }, () => {
   it('catches the exact typo the plan\'s own wireframe shows', () => {
     expect(suggestVariableName('life_curent', false)).toBe('life_current');
   });

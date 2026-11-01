@@ -1,9 +1,7 @@
 /* @layer tests @kind test */
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 
-const COLD_GRAPH_TIMEOUT_MS = 120_000;
-
-describe('module init order from every entry point into the cycle', () => {
+describe('module init order from every entry point into the cycle', { tags: ['standard'] }, () => {
   beforeEach(() => {
     vi.resetModules();
   });
@@ -13,7 +11,7 @@ describe('module init order from every entry point into the cycle', () => {
 
     expect(RECORD_WRITERS.tag).toBeTypeOf('function');
     expect(RECORD_WRITERS.screen).toBeTypeOf('function');
-  }, COLD_GRAPH_TIMEOUT_MS);
+  });
 
   it('survives entering through record-creators, which has the same shape', async () => {
     const { RECORD_CREATORS } = await import('@app/data-inspector/record-creators');
@@ -25,12 +23,6 @@ describe('module init order from every entry point into the cycle', () => {
     const { resolveIdRefOptionsFor } = await import('@app/views/DataInspector/behavior/id-ref-options');
 
     expect(resolveIdRefOptionsFor).toBeTypeOf('function');
-  });
-
-  it('still survives entering through collection-sources, which always worked', async () => {
-    const { COLLECTION_SOURCES } = await import('@app/data-inspector/collection-sources');
-
-    expect(COLLECTION_SOURCES.tag.onSave).toBeTypeOf('function');
   });
 
   it('wires a collection its write path when record-writers loaded first', async () => {

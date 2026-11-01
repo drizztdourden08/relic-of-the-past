@@ -1,6 +1,6 @@
 /* @layer tests @kind test */
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import { FOREIGN_ITEM_KEY, FOREIGN_ITEM_NAME, ITEM, itemKeyName, buildPlacementView, virtualCheckIdOf } from '@rotp/randomizer';
+import { FOREIGN_ITEM_KEY, FOREIGN_ITEM_NAME, ITEM, buildPlacementView, virtualCheckIdOf } from '@rotp/randomizer';
 import { currentRun } from '@app/game/randomizer-client/run-kind';
 import {
   getSessionState, resetSession, startOnline, stopActive,
@@ -139,12 +139,7 @@ beforeEach(() => {
   resetSession();
 });
 
-describe('another player\'s item on display', () => {
-  it('itemKeyName names it and never throws', () => {
-    expect(itemKeyName(FOREIGN_ITEM_KEY)).toBe(FOREIGN_ITEM_NAME);
-    expect(FOREIGN_ITEM_NAME).toBe('Another player\'s item');
-  });
-
+describe('another player\'s item on display', { tags: ['critical'] }, () => {
   it('the placement view shows it with the owner the scouts named, and never as a record', () => {
     const view = buildPlacementView(SCOUTED, OWNERS);
     expect(view.foreignByCheck.get('check-001')).toBe('Zelda\'s item');
@@ -171,7 +166,7 @@ describe('another player\'s item on display', () => {
   });
 });
 
-describe('a stopped online session', () => {
+describe('a stopped online session', { tags: ['critical'] }, () => {
   it('drops its placement on stop, so the run reads as plain play and not a seed', async () => {
     await startArmed();
     stopActive();

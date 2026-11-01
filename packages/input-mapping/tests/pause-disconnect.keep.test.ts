@@ -33,7 +33,7 @@ const makePM = () => {
   return { pm, events };
 };
 
-describe('PauseManager.checkControllerDisconnect', () => {
+describe('PauseManager.checkControllerDisconnect', { tags: ['critical'] }, () => {
   it('pauses when a mapped device is missing, naming it', () => {
     const { pm, events } = makePM();
     const p = profile([padBinding('045e', '02ff', 0)], assigned('057e', '2009', 'Switch Pro'));
@@ -66,7 +66,7 @@ describe('PauseManager.checkControllerDisconnect', () => {
   });
 });
 
-describe('PauseManager.resumeIfPresent', () => {
+describe('PauseManager.resumeIfPresent', { tags: ['critical'] }, () => {
   const p = () => profile([padBinding('045e', '02ff', 0)], assigned('057e', '2009', 'Switch Pro'));
 
   it('resumes once every mapped device is reconnected', () => {
@@ -94,7 +94,7 @@ describe('PauseManager.resumeIfPresent', () => {
   });
 });
 
-describe('PauseManager.reevaluateForProfile (profile switch)', () => {
+describe('PauseManager.reevaluateForProfile (profile switch)', { tags: ['critical'] }, () => {
   it('pauses when the newly-selected profile\'s controller is absent', () => {
     const { pm, events } = makePM();
     const p = profile([padBinding('057e', '2009', 0)], assigned('057e', '2009', 'Switch Pro'));

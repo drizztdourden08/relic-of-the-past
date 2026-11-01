@@ -77,8 +77,7 @@ const dumpFor = async (state: string): Promise<Record<string, unknown>> => {
 };
 
 for (const expected of CASES) {
-  test(`ledge baseline: ${expected.state}`, async () => {
-    test.setTimeout(300_000);
+  test(`ledge baseline: ${expected.state}`, { tag: '@e2e' }, async () => {
     const fixture = join(PROJECT_ROOT, 'tests', 'fixtures', 'save-states', `${expected.state}.sav`);
     if (!existsSync(fixture)) {
       test.skip(true, `fixture ${expected.state}.sav absent (needs the private vault)`);

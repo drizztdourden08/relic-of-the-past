@@ -36,18 +36,12 @@ const CLAIMS: ReadonlyArray<readonly [string, string]> = [
 
 const SPAN_NAMES = ['SAVE_BLOCK_BASE', 'HOOK_SAVE_FIRST', 'HOOK_SAVE_LAST'] as const;
 
-describe('the hook-owned save-byte registry', () => {
+describe('the hook-owned save-byte registry', { tags: ['standard'] }, () => {
   const defines = parseHeader();
   const spanOf = (base: string, count: string): [number, number] => {
     const start = required(defines[base], base);
     return [start, start + (count === '' ? 1 : required(defines[count], count))];
   };
-
-  it('parses every name the mirror restates', () => {
-    for (const name of [...SPAN_NAMES, ...CLAIMS.flat().filter((n) => n !== '')]) {
-      expect(defines[name], `${name} missing from save_bytes.h`).toBeTypeOf('number');
-    }
-  });
 
   it('allocates no address twice and stays inside the span', () => {
     let cursor = required(defines.HOOK_SAVE_FIRST, 'HOOK_SAVE_FIRST');

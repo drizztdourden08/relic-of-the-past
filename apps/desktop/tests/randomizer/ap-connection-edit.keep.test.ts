@@ -66,7 +66,7 @@ afterEach(() => {
   vi.unstubAllGlobals();
 });
 
-describe('the connection patch', () => {
+describe('the connection patch', { tags: ['critical'] }, () => {
   it('changes only the connection keys and clears an emptied password', () => {
     const next = applyConnectionPatch(onlineConfig('nope'), {
       serverUrl: ' other:1 ', slotName: 'Zelda', password: '', deathLink: true, trackOtherPlayers: true,
@@ -97,7 +97,7 @@ describe('the connection patch', () => {
   });
 });
 
-describe('fixing a wrong password from the Network tab (T30)', () => {
+describe('fixing a wrong password from the Network tab (T30)', { tags: ['critical'] }, () => {
   it('a save after the refusal reconnects on the new password and becomes active', async () => {
     fake.server = createRoom();
     const files = createMemFileStore();
@@ -122,7 +122,7 @@ describe('fixing a wrong password from the Network tab (T30)', () => {
   });
 });
 
-describe('the address fields', () => {
+describe('the address fields', { tags: ['critical'] }, () => {
   it('split a stored address, keep a scheme on the host, and join back', () => {
     expect(splitServerAddress('archipelago.gg:38281')).toEqual({ host: 'archipelago.gg', port: '38281' });
     expect(splitServerAddress('wss://archipelago.gg:38281')).toEqual({ host: 'wss://archipelago.gg', port: '38281' });

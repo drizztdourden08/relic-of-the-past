@@ -33,7 +33,7 @@ const docOf = (root: HudGridContainer): HudLayout => ({
 
 const rectOf = (doc: HudLayout, id: string) => placedById(layoutHud(doc, VIEW, {}), id)?.rect;
 
-describe('explicit place - column and row together', () => {
+describe('explicit place - column and row together', { tags: ['critical'] }, () => {
   it('two children may name the SAME cell, which is what an overlay is', () => {
     const at = { column: 1, row: 1 };
     const doc = docOf(grid([
@@ -70,7 +70,7 @@ describe('explicit place - column and row together', () => {
   });
 });
 
-describe('auto-flow - row-major, in order, skipping explicit placements', () => {
+describe('auto-flow - row-major, in order, skipping explicit placements', { tags: ['critical'] }, () => {
   it('three children with no place fill the two columns left to right, top to bottom', () => {
     const doc = docOf(grid([cell('a'), cell('b'), cell('c')]));
     expect(rectOf(doc, 'a')).toMatchObject({ x: 0, y: 0 });
@@ -90,7 +90,7 @@ describe('auto-flow - row-major, in order, skipping explicit placements', () => 
   });
 });
 
-describe('spans', () => {
+describe('spans', { tags: ['critical'] }, () => {
   it('a colSpan of 2 covers both column tracks', () => {
     const doc = docOf(grid([cell('a', { place: { column: 1, row: 1, colSpan: 2 } })]));
     expect(rectOf(doc, 'a')?.w).toBe(40);
@@ -107,7 +107,7 @@ describe('spans', () => {
   });
 });
 
-describe('fill tracks and gaps', () => {
+describe('fill tracks and gaps', { tags: ['critical'] }, () => {
   it('a fill column shares whatever the fixed columns leave, and gap.x separates them', () => {
     const doc = docOf(grid([cell('a'), cell('b')], {
       columns: [{ px: 20 }, 'fill'], gap: { x: 4 }, size: { w: { px: 100 } },
@@ -117,7 +117,7 @@ describe('fill tracks and gaps', () => {
   });
 });
 
-describe('alignment - justifyItems, alignItems and a per-child alignSelf', () => {
+describe('alignment - justifyItems, alignItems and a per-child alignSelf', { tags: ['critical'] }, () => {
   it('stretch (the default) fills the whole cell', () => {
     const doc = docOf(grid([cell('a')], { rows: [{ px: 30 }] }));
     expect(rectOf(doc, 'a')).toMatchObject({ w: 20, h: 30 });
@@ -138,14 +138,14 @@ describe('alignment - justifyItems, alignItems and a per-child alignSelf', () =>
   });
 });
 
-describe('a zero-size resolved child leaves the flow, matching the flex engine', () => {
+describe('a zero-size resolved child leaves the flow, matching the flex engine', { tags: ['critical'] }, () => {
   it('min/max apply to a grid child exactly as they do to a flex one', () => {
     const doc = docOf(grid([cell('a', { size: { w: { px: 5 } }, min: { w: 15 } })]));
     expect(rectOf(doc, 'a')?.w).toBe(15);
   });
 });
 
-describe('every cell of a placed grid, empty ones included', () => {
+describe('every cell of a placed grid, empty ones included', { tags: ['critical'] }, () => {
   const cells = (root: HudGridContainer) => {
     const doc = docOf(root);
     const placed = required(placedById(layoutHud(doc, VIEW, {}), 'grid'), 'the placed grid');

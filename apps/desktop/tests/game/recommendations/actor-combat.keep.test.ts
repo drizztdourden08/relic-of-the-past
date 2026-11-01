@@ -33,7 +33,7 @@ const anActor = (): ActorRecord => {
 const detector = detectorFromStrategy(actorStrategy);
 
 describeDataset('actor strategy (combat probe)', () => {
-  it('proposes filling in a combat profile the record has never carried', () => {
+  it('proposes filling in a combat profile the record has never carried', { tags: ['critical'] }, () => {
     const actor = anActor();
     expect(actor.combat).toBeUndefined();
     const spriteType = actor.gameId.spriteType as number;
@@ -51,7 +51,7 @@ describeDataset('actor strategy (combat probe)', () => {
     expect((draft.proposed as ActorRecord).combat?.damageByClass[3]).toBe(1);
   });
 
-  it('proposes a correction when the record disagrees with the native table', () => {
+  it('proposes a correction when the record disagrees with the native table', { tags: ['critical'] }, () => {
     const actor = anActor();
     const spriteType = actor.gameId.spriteType as number;
     const patched: ActorRecord = { ...actor, combat: { health: 5, flags4: 0, damageByClass: { 0: 1 } } };
@@ -70,7 +70,7 @@ describeDataset('actor strategy (combat probe)', () => {
     }
   });
 
-  it('proposes nothing when the stored profile already matches the native table', () => {
+  it('proposes nothing when the stored profile already matches the native table', { tags: ['critical'] }, () => {
     const actor = anActor();
     const spriteType = actor.gameId.spriteType as number;
     const damageByClass = Object.fromEntries(Array(16).fill(0).map((_, i) => [i, i]));
@@ -87,7 +87,7 @@ describeDataset('actor strategy (combat probe)', () => {
     }
   });
 
-  it('proposes nothing for a sprite type no ActorRecord catalogues, because that gap belongs to the spawns probe', () => {
+  it('proposes nothing for a sprite type no ActorRecord catalogues, because that gap belongs to the spawns probe', { tags: ['critical'] }, () => {
     const uncatalogued = Math.max(...all('actor').map(a => a.gameId.spriteType ?? 0)) + 5;
     expect(getActorByGameId({ spriteType: uncatalogued })).toBeUndefined();
     const drafts = detector.detect(contextFor({
@@ -96,7 +96,7 @@ describeDataset('actor strategy (combat probe)', () => {
     expect(drafts).toEqual([]);
   });
 
-  it('stays silent when the combat table was never read', () => {
+  it('stays silent when the combat table was never read', { tags: ['critical'] }, () => {
     expect(detector.detect(contextFor({})).filter(d => d.action === 'update')).toEqual([]);
   });
 });

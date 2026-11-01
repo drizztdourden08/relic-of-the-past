@@ -8,7 +8,7 @@ import { setUpWriterWorkspace } from './set-up-writer-workspace';
 const { root, sourceOf } = setUpWriterWorkspace();
 
 describeDataset('an item record', () => {
-  it('creates into the canonical file for its category, with an allocated id', async () => {
+  it('creates into the canonical file for its category, with an allocated id', { tags: ['critical'] }, async () => {
     const result = await allocateItem(root(), {
       record: { origin: 'vanilla', category: 'junk', name: 'Green Rupee' },
     });
@@ -19,7 +19,7 @@ describeDataset('an item record', () => {
     expect(await sourceOf('items/randomizer.ts')).not.toContain("id: 'item-002'");
   });
 
-  it('updates a record living somewhere a create would not have put it, in place', async () => {
+  it('updates a record living somewhere a create would not have put it, in place', { tags: ['critical'] }, async () => {
     const result = await writeItemRecord(root(), {
       id: 'item-001',
       record: { origin: 'vanilla', category: 'junk', name: 'Red Rupee' },
@@ -31,12 +31,12 @@ describeDataset('an item record', () => {
     expect(await sourceOf('items/junk.ts')).not.toContain("id: 'item-001'");
   });
 
-  it('deletes a record from the file it sits in', async () => {
+  it('deletes a record from the file it sits in', { tags: ['critical'] }, async () => {
     expect(await deleteItem(root(), { id: 'item-001' })).toEqual({ success: true, ids: ['item-001'] });
     expect(await sourceOf('items/randomizer.ts')).not.toContain("id: 'item-001'");
   });
 
-  it('refuses an id no file carries, instead of writing anywhere', async () => {
+  it('refuses an id no file carries, instead of writing anywhere', { tags: ['critical'] }, async () => {
     const before = await sourceOf('items/randomizer.ts');
     const result = await deleteItem(root(), { id: 'item-404' });
     expect(result.success).toBe(false);
@@ -45,7 +45,7 @@ describeDataset('an item record', () => {
 });
 
 describeDataset('an actor record', () => {
-  it('creates into the file its kind owns', async () => {
+  it('creates into the file its kind owns', { tags: ['critical'] }, async () => {
     const result = await allocateActor(root(), {
       record: { gameId: { spriteType: 9 }, kind: 'enemy', name: 'Soldier' },
     });
@@ -55,7 +55,7 @@ describeDataset('an actor record', () => {
     expect(await sourceOf('actors/enemies.ts')).toContain("id: 'actor-002'");
   });
 
-  it('updates and deletes one that sits in another file of the collection', async () => {
+  it('updates and deletes one that sits in another file of the collection', { tags: ['critical'] }, async () => {
     await writeActorRecord(root(), {
       id: 'actor-001',
       record: { gameId: { spriteType: 8 }, kind: 'enemy', name: 'Sentry' },

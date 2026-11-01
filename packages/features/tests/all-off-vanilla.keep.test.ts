@@ -34,7 +34,7 @@ const allOff = {
   haptics: { enabled: false },
 } as GameSettings;
 
-describe('all-off == vanilla (bridge boundary)', () => {
+describe('all-off == vanilla (bridge boundary)', { tags: ['critical'] }, () => {
   it('sends zero feature words with everything off at 4:3', () => {
     expect(buildFeatureFlags(allOff)).toBe(0);
     const { features1, features2 } = buildFeatureWords(allOff);

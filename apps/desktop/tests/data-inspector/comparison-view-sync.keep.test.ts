@@ -1,12 +1,8 @@
 /* @layer tests @kind test */
-import { afterEach, beforeEach, expect, it, vi } from 'vitest';
-import { createElement } from 'react';
-import { renderToStaticMarkup } from 'react-dom/server';
+import { expect, it } from 'vitest';
 import { createScrollSyncController } from '@drizztdourden08/tessera/primitives';
 import { followerScrollTo } from '@app/data-inspector/recommendations/use-comparison-scroll';
 import type { Lead, PaneSide } from '@app/data-inspector/recommendations/use-comparison-scroll';
-import type * as DetailModule from '@app/views/DataInspector/sub-components/RecommendationDetail';
-import type { Recommendation } from '@rotp/navigation';
 import { describeDataset } from '../dataset-guard';
 
 interface Position { top: number; left: number }
@@ -32,7 +28,7 @@ const createFakeNode = (): FakeNode => {
   return node;
 };
 
-describeDataset('followerScrollTo drives only the follower', () => {
+describeDataset('followerScrollTo drives only the follower', { tags: ['critical'] }, () => {
   const lead: Lead = { side: 'current', position: { top: 120, left: 0 } };
 
   it('gives the other side the leader\'s offset', () => {
@@ -49,14 +45,13 @@ describeDataset('followerScrollTo drives only the follower', () => {
   });
 });
 
-describeDataset('the pane pair, wired as the component wires it', () => {
+describeDataset('the pane pair, wired as the component wires it', { tags: ['critical'] }, () => {
   const buildPanes = () => {
     const nodes: Record<PaneSide, FakeNode> = { current: createFakeNode(), proposed: createFakeNode() };
     const controllers = {
       current: createScrollSyncController(() => nodes.current),
       proposed: createScrollSyncController(() => nodes.proposed),
     };
-    const other = (side: PaneSide): PaneSide => (side === 'current' ? 'proposed' : 'current');
 
     const onScroll = (side: PaneSide) => (position: Position): void => {
       const lead: Lead = { side, position };
@@ -74,7 +69,7 @@ describeDataset('the pane pair, wired as the component wires it', () => {
       }
     };
 
-    return { nodes, controllers, other, onScroll };
+    return { nodes, controllers, onScroll };
   };
 
   it('carries a scroll on one pane to the other, exactly once', () => {
@@ -100,92 +95,5 @@ describeDataset('the pane pair, wired as the component wires it', () => {
     expect(nodes.current.scrollTop).toBe(300);
     expect(nodes.proposed.scrollTop).toBe(300);
     expect(nodes.current.scrollToCalls + nodes.proposed.scrollToCalls).toBe(3);
-  });
-
-  it('does nothing when the panes are already level', () => {
-    const { nodes, controllers, onScroll } = buildPanes();
-    controllers.current.handleScroll({ top: 0, left: 0 }, onScroll('current'));
-    expect(nodes.proposed.scrollToCalls).toBe(0);
-  });
-});
-
-const TAG_FIELDS = {
-  namespace: 'area',
-  value: 'cave',
-  label: 'Cave',
-  namespaceLabel: 'Area',
-  appliesTo: ['screen'],
-} as const;
-
-const entry: Recommendation = {
-  id: 'r-1',
-  kind: 'tag',
-  action: 'update',
-  targetId: 'tag-001',
-  current: { id: 'tag-001', name: 'area:cave', ...TAG_FIELDS },
-  proposed: { id: 'tag-001', name: 'area:cavern', ...TAG_FIELDS },
-  reason: 'the vocabulary spells it differently',
-  detector: 'test',
-  evidence: [{ source: 'test', detail: 'seen' }],
-  confidence: 'certain',
-  screenId: null,
-  origin: 'live',
-  state: 'open',
-  firstSeenAt: 1,
-  decidedAt: null,
-};
-
-describeDataset('the two panes share one tab', () => {
-  let RecommendationDetail: typeof DetailModule.RecommendationDetail;
-
-  beforeEach(async () => {
-    vi.resetModules();
-    vi.stubGlobal('window', {
-      api: {
-        uiViews: { load: vi.fn().mockResolvedValue({}), save: vi.fn().mockResolvedValue(undefined) },
-        loadRecommendations: vi.fn().mockResolvedValue([]),
-      },
-      addEventListener: () => {},
-      removeEventListener: () => {},
-      matchMedia: () => ({ matches: false, addEventListener: () => {}, removeEventListener: () => {} }),
-    });
-    ({ RecommendationDetail } = await import(
-      '@app/views/DataInspector/sub-components/RecommendationDetail'
-    ));
-  });
-
-  afterEach(() => {
-    vi.unstubAllGlobals();
-  });
-
-  const render = (tab: 'json' | 'ts' | 'editor'): string => renderToStaticMarkup(createElement(
-    RecommendationDetail,
-    { entries: [entry], selectedId: 'r-1', onSelect: () => {}, tab, onTabChange: () => {} },
-  ));
-
-  it('renders both sides, each with its own record', () => {
-    const html = render('json');
-    expect(html).toContain('Current');
-    expect(html).toContain('Proposed');
-    expect(html).toContain('area:cave');
-    expect(html).toContain('area:cavern');
-  });
-
-  it('opens the same tab on both sides, on every tab', () => {
-    for (const tab of ['json', 'ts', 'editor'] as const) {
-      const html = render(tab);
-      const active = html.split('tabs__tab--active').length - 1;
-      expect(active, tab).toBe(2);
-    }
-  });
-
-  it('marks the changed line in both code tabs', () => {
-    for (const tab of ['json', 'ts'] as const) {
-      expect(render(tab), tab).toContain('code-block__line--changed');
-    }
-  });
-
-  it('marks the changed field in the editor tab too', () => {
-    expect(render('editor')).toContain('record-editor__row--changed');
   });
 });

@@ -2,8 +2,7 @@
 import { test, expect } from '@playwright/test';
 import { withState } from './state-harness';
 
-test('test-tag-room still decodes its kill gate', async () => {
-  test.setTimeout(300_000);
+test('test-tag-room still decodes its kill gate', { tag: '@e2e' }, async () => {
   await withState('test-tag-room', async (r) => {
     expect(await r.screenId(), 'the Boomerang Chest Room is screen-127 (room 0x071)').toMatch(/^screen-127 · 0x71 · INDOOR/);
 

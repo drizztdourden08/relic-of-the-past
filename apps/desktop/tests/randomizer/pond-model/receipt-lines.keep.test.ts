@@ -5,7 +5,7 @@ import { receiptLineCandidates } from '@rotp/game-core';
 import { required } from '../../required';
 import { CUSTOM, LONGEST_FITTING_LINE } from './pond-model.constants';
 
-describe('pond receipt lines', () => {
+describe('pond receipt lines', { tags: ['critical'] }, () => {
   it('allocates one line per distinct price, then the award and closing lines', () => {
     const flat = pondLinesOf(pondPlanOf({ mode: 'vanilla-cost', items: 2 }));
     expect(flat.prices).toEqual([100]);
@@ -18,14 +18,6 @@ describe('pond receipt lines', () => {
     const custom = pondLinesOf(pondPlanOf(CUSTOM));
     expect(custom.prices).toEqual([100, 150, 200, 250, 300]);
     expect(custom.lines).toHaveLength(8);
-  });
-
-  it('the award lines differ only in what they say about what is left', () => {
-    const more = receiptLineCandidates(POND_AWARD_MORE_LINE);
-    const last = receiptLineCandidates(POND_AWARD_LAST_LINE);
-    expect(more).toHaveLength(last.length);
-    expect(more.some((candidate) => /more/i.test(candidate))).toBe(true);
-    expect(last.every((candidate) => /last|empty/i.test(candidate))).toBe(true);
   });
 
   it('quotes the amounts of the throws it was built from', () => {

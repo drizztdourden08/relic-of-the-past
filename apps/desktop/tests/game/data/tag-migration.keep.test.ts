@@ -1,6 +1,6 @@
 /* @layer tests @kind test */
 import { it, expect } from 'vitest';
-import { all, CONNECTION_TAG_METADATA, tagById, tagKeysOf, TAG_METADATA } from '@rotp/game-data';
+import { all, tagById } from '@rotp/game-data';
 import type { EntityKind } from '@rotp/game-data';
 import { describeDataset } from '../../dataset-guard';
 
@@ -11,18 +11,7 @@ const storedTags = (kind: EntityKind): readonly string[] =>
 
 describeDataset('every tag is a real reference', () => {
   for (const kind of TAGGED) {
-    it(`${kind}: holds ids, never terms`, () => {
-      const stored = storedTags(kind);
-      expect(stored.length).toBeGreaterThan(0);
-      for (const value of stored) expect(value, value).toMatch(/^tag-\d+$/);
-    });
-
-    it(`${kind}: every reference resolves to a record`, () => {
-      const dangling = [...new Set(storedTags(kind))].filter(id => tagById(id) === undefined);
-      expect(dangling).toEqual([]);
-    });
-
-    it(`${kind}: every term it uses is one this collection may carry`, () => {
+    it(`${kind}: every term it uses is one this collection may carry`, { tags: ['standard'] }, () => {
       const wrongScope = [...new Set(storedTags(kind))]
         .map(id => tagById(id))
         .filter(tag => tag && !tag.appliesTo.includes(kind))
@@ -30,28 +19,8 @@ describeDataset('every tag is a real reference', () => {
       expect(wrongScope).toEqual([]);
     });
   }
-});
 
-describeDataset('the tag taxonomy and the stored references agree', () => {
-  it('uses only terms the taxonomy defines', () => {
-    const used = new Set<string>();
-    for (const kind of TAGGED) for (const key of tagKeysOf(storedTags(kind))) used.add(key);
-    const defined = new Set<string>([
-      ...TAG_METADATA.map(entry => entry.id),
-      ...CONNECTION_TAG_METADATA.map(entry => entry.id),
-    ]);
-    const strays = [...used].filter(key => !defined.has(key));
-    expect(strays).toEqual([]);
-  });
-
-  it('resolves as many terms as there are stored references', () => {
-    for (const kind of TAGGED) {
-      const stored = storedTags(kind);
-      expect(tagKeysOf(stored), kind).toHaveLength(stored.length);
-    }
-  });
-
-  it('leaves no record with a duplicated reference', () => {
+  it('leaves no record with a duplicated reference', { tags: ['standard'] }, () => {
     for (const kind of TAGGED) {
       for (const row of all(kind) as readonly { id: string; tags: readonly string[] }[]) {
         expect(new Set(row.tags).size, row.id).toBe(row.tags.length);

@@ -71,7 +71,7 @@ afterEach(() => {
   vi.unstubAllGlobals();
 });
 
-describe('reaching the room', () => {
+describe('reaching the room', { tags: ['critical'] }, () => {
   it('retries a server that is down at the first connect, with a countdown, until it answers (T02)', async () => {
     const room = makeRoom({ refusedUrls: new Set([URL]) });
     const { server, session } = await bootWith(room);
@@ -113,7 +113,7 @@ describe('reaching the room', () => {
   });
 });
 
-describe('who sent an item', () => {
+describe('who sent an item', { tags: ['critical'] }, () => {
   it('a negative location is the server, even when this slot asked; a real own pickup is an echo (T16)', async () => {
     const items = [item(101, 1, 1), item(100, 1, -1), item(101, 1, -2), item(100, 2, 900)];
     const { core } = await bootWith(makeRoom({ items }), (c) => { c.armedLocations.add(1); });
@@ -126,7 +126,7 @@ describe('who sent an item', () => {
   });
 });
 
-describe('the save is bound to the room first (T20b)', () => {
+describe('the save is bound to the room first (T20b)', { tags: ['critical'] }, () => {
   const otherRoom = (c: FakeCore): void => {
     c.roomHash = roomHashOf('seed-A');
     c.index = 3;

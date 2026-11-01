@@ -5,7 +5,7 @@ import { itemKeyOfName, ITEM, pondPlanOf, isDemandableItem, DEMAND_ITEM_ORDER, d
 import { all } from '@rotp/game-data';
 import { CUSTOM } from './pond-model.constants';
 
-describe('pond item demand', () => {
+describe('pond item demand', { tags: ['critical'] }, () => {
   const ITEM_ONLY = { ...pondRupeesOnlyAsk(100, 300), rupees: { enabled: false, min: 100, max: 300 }, item: { enabled: true } };
   const plan = pondPlanOf({ ...CUSTOM, items: 5 }, POND_INSTANCE_BY_ID.wishing);
   const roll = (pool: readonly ItemKey[], ask = ITEM_ONLY, seed = 'demand') =>

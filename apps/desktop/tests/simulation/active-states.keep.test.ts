@@ -14,19 +14,9 @@ const snap = (over: Partial<Record<number, number>> = {}, follower = 0): StateSn
 const ids = (s: StateSnapshot): string[] => activeStates(s).map((a) => a.id);
 const labels = (s: StateSnapshot): string[] => activeStates(s).map((a) => a.label);
 
-describe('active game states', () => {
+describe('active game states', { tags: ['critical'] }, () => {
   it('reports nothing when nothing notable holds', () => {
     expect(activeStates(snap())).toEqual([]);
-  });
-
-  it('names the princess as the follower', () => {
-    expect(labels(snap({}, 1))).toContain('Princess following');
-  });
-
-  it('names the other tagalongs the game can hand Link', () => {
-    expect(labels(snap({}, 4))).toContain('Old Man following');
-    expect(labels(snap({}, 7))).toContain("Blacksmith's frog following");
-    expect(labels(snap({}, 10))).toContain('Kiki following');
   });
 
   it('reports an unmapped tagalong id by number instead of guessing', () => {

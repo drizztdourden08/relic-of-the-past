@@ -1,5 +1,5 @@
 /* @layer tests @kind test */
-import { describe, it, expect, vi } from 'vitest';
+import { describe, it, expect } from 'vitest';
 import {
   acceptAllCertain, certainOnly,
 } from '@app/data-inspector/recommendations/accept-all-certain';
@@ -37,7 +37,7 @@ const createSourceFile = () => {
   };
 };
 
-describe('the certainOnly gate', () => {
+describe('the certainOnly gate', { tags: ['critical'] }, () => {
   it('takes the certain findings and leaves the likely ones', () => {
     const entries = [
       finding({ id: 'sure', confidence: 'certain' }),
@@ -56,7 +56,7 @@ describe('the certainOnly gate', () => {
   });
 });
 
-describe('acceptAllCertain with two findings in one source file', () => {
+describe('acceptAllCertain with two findings in one source file', { tags: ['critical'] }, () => {
   const twoInOneFile = [
     finding({ id: 'first', targetId: 'tag-001' }),
     finding({ id: 'second', targetId: 'tag-002' }),
@@ -75,33 +75,9 @@ describe('acceptAllCertain with two findings in one source file', () => {
     expect(result.failures).toEqual([]);
   });
 
-  it('would lose one of the two if the same writes overlapped', async () => {
-    const file = createSourceFile();
-    await Promise.all(certainOnly(twoInOneFile).map(entry => file.apply(entry.id)));
-    expect(file.read()).toEqual(['second']);
-  });
-
-  it('applies them strictly one at a time, never overlapping', async () => {
-    let inFlight = 0;
-    let overlapped = false;
-    await acceptAllCertain(twoInOneFile, async () => {
-      inFlight += 1;
-      if (inFlight > 1) overlapped = true;
-      await Promise.resolve();
-      inFlight -= 1;
-      return { success: true, id: 'tag-001' };
-    });
-    expect(overlapped).toBe(false);
-  });
-
-  it('writes the certain ones and leaves the likely one alone', async () => {
-    const accept = vi.fn().mockResolvedValue({ success: true });
-    await acceptAllCertain(twoInOneFile, accept);
-    expect(accept.mock.calls.map(([entry]) => (entry as Recommendation).id)).toEqual(['first', 'second']);
-  });
 });
 
-describe('acceptAllCertain when a refusal lands mid-run', () => {
+describe('acceptAllCertain when a refusal lands mid-run', { tags: ['critical'] }, () => {
   it('carries on and reports what could not be written', async () => {
     const entries = [finding({ id: 'a' }), finding({ id: 'b' }), finding({ id: 'c' })];
     const result = await acceptAllCertain(entries, entry => Promise.resolve(

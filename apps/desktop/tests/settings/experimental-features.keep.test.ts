@@ -11,7 +11,7 @@ const settings = (part: Partial<AppSettings> = {}): AppSettings => ({
   ...part,
 });
 
-describe('experimental feature gate', () => {
+describe('experimental feature gate', { tags: ['critical'] }, () => {
   it('requires Developer Mode and the Experimental Features toggle', () => {
     expect(experimentalFeaturesEnabled(settings({ experimentalFeaturesEnabled: true }))).toBe(false);
     expect(experimentalFeaturesEnabled(settings({ developerToolsEnabled: true }))).toBe(false);

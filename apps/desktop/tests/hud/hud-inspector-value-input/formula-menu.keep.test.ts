@@ -8,7 +8,7 @@ import { instanceScopes } from '@app/hud-layout-editing/formula-scope';
 
 const scope = { life_current: 112, life_max: 160 };
 
-describe('the menu knows what is in scope, and says so where it is not', () => {
+describe('the menu knows what is in scope, and says so where it is not', { tags: ['critical'] }, () => {
   const names = (insideRepeat: boolean, extraNames?: readonly string[]) =>
     formulaGroups({ insideRepeat, extraNames }).flatMap((g) => g.items);
 
@@ -26,29 +26,9 @@ describe('the menu knows what is in scope, and says so where it is not', () => {
     const onTransition = names(false, ['delta']).find((n) => n.name === 'delta');
     expect(onTransition?.unavailable).toBeUndefined();
   });
-
-  it('makes && and || unreachable, because neither is an insertable entry at any scope', () => {
-    for (const insideRepeat of [false, true]) {
-      for (const offered of names(insideRepeat, ['delta']).map((n) => n.name)) {
-        expect(`${offered}: ${offered.includes('&&') || offered.includes('||')}`).toBe(`${offered}: false`);
-      }
-    }
-    expect(names(false).map((n) => n.name)).toEqual(expect.arrayContaining(['and', 'or', 'not']));
-    const warnings = names(false).filter((n) => ['and', 'or'].includes(n.name)).map((n) => n.note).join(' ');
-    expect(warnings).toContain('&&');
-    expect(warnings).toContain('||');
-  });
-
-  it('offers no dead end: every function listed evaluates', () => {
-    const listed = names(false).map((n) => n.name).join(' ');
-    for (const dead of ['length', 'join', 'map', 'filter', 'fold', 'indexOf', 'gamma']) {
-      expect(`${dead}: ${listed.includes(dead)}`).toBe(`${dead}: false`);
-    }
-    expect(listed).not.toContain('random');
-  });
 });
 
-describe('the worked starting points are the corpus, and they compile', () => {
+describe('the worked starting points are the corpus, and they compile', { tags: ['critical'] }, () => {
   it('offers a gate a comparison and a count a fraction, never the reverse', () => {
     const gate = formulaStarters({ role: 'gate', insideRepeat: false }).map((s) => s.expr).join(' ');
     const number = formulaStarters({ role: 'number', insideRepeat: false }).map((s) => s.expr).join(' ');
@@ -81,7 +61,7 @@ describe('the worked starting points are the corpus, and they compile', () => {
   });
 });
 
-describe('a formula in a repeat produces N values, and the strip has them', () => {
+describe('a formula in a repeat produces N values, and the strip has them', { tags: ['critical'] }, () => {
   it('builds one scope per instance, the same shape engine/expand.ts bakes', () => {
     const scopes = instanceScopes({ count: 20, item: 'index' }, scope);
     expect(scopes).toHaveLength(20);

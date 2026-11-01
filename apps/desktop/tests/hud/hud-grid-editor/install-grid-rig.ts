@@ -66,16 +66,13 @@ const installGridRig = () => {
     Array.from(document.querySelectorAll('.hud-grid__bar [data-action]'))
       .map((el) => (el as HTMLElement).dataset.action ?? '?');
 
-  const legendCaps = (): string[] =>
-    Array.from(document.querySelectorAll('.hud-grid__key')).map((el) => el.textContent);
-
   const status = (): string => document.querySelector('.hud-grid__status')?.textContent ?? '';
 
   const mountGrid = (onPatchContainer: (patch: Partial<HudGridContainer>) => void = ignore): void => {
     mount(h(GridEditor, { container: screenRoot(), onPatchContainer }));
   };
 
-  return { mount, cell, header, down, enter, up, press, toolbarKeys, legendCaps, status, mountGrid };
+  return { mount, cell, header, down, enter, up, press, toolbarKeys, status, mountGrid };
 };
 
 export { installGridRig };

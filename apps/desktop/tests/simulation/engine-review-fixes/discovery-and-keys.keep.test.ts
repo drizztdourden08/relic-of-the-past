@@ -24,7 +24,7 @@ const makeChest = (posKnown: boolean, tile: { row: number; col: number }): SimCh
   itemId: BOMBS_ID,
 });
 
-describeDataset('discover on unknown-position interactables', () => {
+describeDataset('discover on unknown-position interactables', { tags: ['critical'] }, () => {
   it('discovers a posKnown=false chest even when its tile is unreachable', () => {
     const state = freshState();
     const obs = baseObs('A', emptySnapshot());
@@ -53,7 +53,7 @@ describeDataset('discover on unknown-position interactables', () => {
   });
 });
 
-describeDataset('explorer attributes a generic key', () => {
+describeDataset('explorer attributes a generic key', { tags: ['critical'] }, () => {
   const detected = (opts: Partial<DetectedCheck>): DetectedCheck => ({
     evidence: [],
     at: { screenId: 'A', tile: { row: 0, col: 0 } },

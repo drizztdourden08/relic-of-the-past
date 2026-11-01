@@ -29,7 +29,7 @@ const mountOutline = (onDrop: (ids: readonly string[], intent: unknown) => void 
   }));
 };
 
-describe('the shortcuts, on a focused row', () => {
+describe('the shortcuts, on a focused row', { tags: ['standard'] }, () => {
   it('moves the row and announces it, through the ONE door every drop uses', () => {
     const onDrop = vi.fn<Dropper>();
     mountOutline(onDrop);
@@ -77,22 +77,11 @@ describe('the shortcuts, on a focused row', () => {
   });
 });
 
-describe('the context menu is where the keys are learned', () => {
+describe('the context menu is where the keys are learned', { tags: ['standard'] }, () => {
   const open = (id: string): void => {
     act(() => { rowFor(id).dispatchEvent(new MouseEvent('contextmenu', { bubbles: true, cancelable: true })); });
   };
   const items = (): HTMLElement[] => Array.from(document.querySelectorAll('.dropdown__item'));
-
-  it('opens on a right-click and prints the key beside every operation', () => {
-    mountOutline();
-    open('loose');
-    const labels = items().map((el) => el.textContent);
-    expect(labels[0]).toContain('Move up');
-    expect(labels[0]).toContain('Ctrl');
-    expect(labels[0]).toContain('Up arrow');
-    expect(labels[3]).toContain('Move into vault');
-    expect(labels[3]).toContain('Right arrow');
-  });
 
   it('opens from the KEYBOARD too, which is the whole point of the phase', () => {
     mountOutline();

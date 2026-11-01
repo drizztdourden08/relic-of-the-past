@@ -8,7 +8,7 @@ import type { FieldDescriptor } from '@drizztdourden08/tessera/data';
 const field = (path: string, kind: FieldDescriptor['kind'], overrides: Partial<FieldDescriptor> = {}): FieldDescriptor =>
   ({ path, label: path, kind, optional: false, ...overrides });
 
-describe('requiredPaths', () => {
+describe('requiredPaths', { tags: ['critical'] }, () => {
   it('names every non-optional top-level field, and none of the optional ones', () => {
     const schema = [
       field('name', 'string'),
@@ -51,7 +51,7 @@ describe('requiredPaths', () => {
   });
 });
 
-describe('blankRecordFor + requiredPaths together gate a create form', () => {
+describe('blankRecordFor + requiredPaths together gate a create form', { tags: ['critical'] }, () => {
   const schema = [
     field('name', 'string'),
     field('note', 'string', { optional: true }),

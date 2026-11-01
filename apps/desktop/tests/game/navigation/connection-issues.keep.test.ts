@@ -15,15 +15,15 @@ describeDataset('connectionIssues raises per-connection completeness warnings', 
     tags: ['transit:walk'] as ConnectionTag[],
   };
 
-  it('reports no issues when tiles, endpoints, and required tags are all present', () => {
+  it('reports no issues when tiles, endpoints, and required tags are all present', { tags: ['critical'] }, () => {
     expect(connectionIssues(complete, 'tiles: [30, 31]')).toEqual([]);
   });
 
-  it('flags missing tile data (replaces the silent blank)', () => {
+  it('flags missing tile data (replaces the silent blank)', { tags: ['critical'] }, () => {
     expect(connectionIssues(complete, null)).toContain('no tile data');
   });
 
-  it('flags unknown endpoints by id', () => {
+  it('flags unknown endpoints by id', { tags: ['critical'] }, () => {
     const issues = connectionIssues(
       { from: UNKNOWN_ID, to: 'also-bad', tags: complete.tags },
       'tiles: [1]',
@@ -32,7 +32,7 @@ describeDataset('connectionIssues raises per-connection completeness warnings', 
     expect(issues).toContain('unknown screen: also-bad');
   });
 
-  it('flags a missing transit tag', () => {
+  it('flags a missing transit tag', { tags: ['critical'] }, () => {
     const noTransit = connectionIssues({ ...complete, tags: [] as ConnectionTag[] }, 'tiles: [1]');
     expect(noTransit).toContain('no transit type');
   });

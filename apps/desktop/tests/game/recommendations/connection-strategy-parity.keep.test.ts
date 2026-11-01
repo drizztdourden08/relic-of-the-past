@@ -72,30 +72,30 @@ describeDataset('connection strategy (nav probe) parity with connectionIssues', 
   const { screen, connections } = screenWithConnections();
   const drafts = navDetector.detect(contextFor(screen.id, connections));
 
-  it('agrees the real records are missing tile data', () => {
+  it('agrees the real records are missing tile data', { tags: ['standard'] }, () => {
     for (const conn of connections) {
       expect(issuesFor(conn, [], screen.id)).toContain(CONNECTION_ISSUE.noTileData);
     }
   });
 
-  it('proposes nothing for a missing-tile warning no flood crossing can fix', () => {
+  it('proposes nothing for a missing-tile warning no flood crossing can fix', { tags: ['standard'] }, () => {
     expect(drafts.filter(d => d.key === 'nav')).toEqual([]);
   });
 
   const backing = floodBackedConnection(connections);
 
-  it('finds a flood-backed connection to compare, so the fixture is not vacuously green', () => {
+  it('finds a flood-backed connection to compare, so the fixture is not vacuously green', { tags: ['standard'] }, () => {
     expect(backing).not.toBeNull();
   });
 
-  it('still proposes a nav once the display stops warning, because the record is unchanged', () => {
+  it('still proposes a nav once the display stops warning, because the record is unchanged', { tags: ['standard'] }, () => {
     if (!backing) return;
     expect(issuesFor(backing.conn, [backing.info], screen.id)).not.toContain(CONNECTION_ISSUE.noTileData);
     expect(backing.conn.nav).toBeUndefined();
     expect(navDetector.detect(contextFor(screen.id, [backing.conn], [backing.info])).some(d => d.key === 'nav')).toBe(true);
   });
 
-  it('proposes the flood-derived nav for the one crossing the flood does back', () => {
+  it('proposes the flood-derived nav for the one crossing the flood does back', { tags: ['standard'] }, () => {
     if (!backing) return;
     const backed = navDetector.detect(contextFor(screen.id, [backing.conn], [backing.info]));
     const navDrafts = backed.filter(d => d.key === 'nav');
@@ -109,7 +109,7 @@ describeDataset('connection strategy (nav probe) parity with connectionIssues', 
     }
   });
 
-  it('proposes no nav for a record that already has one', () => {
+  it('proposes no nav for a record that already has one', { tags: ['standard'] }, () => {
     if (!backing) return;
     const persisted: ConnectionRecord = {
       ...backing.conn,
@@ -118,7 +118,7 @@ describeDataset('connection strategy (nav probe) parity with connectionIssues', 
     expect(navDetector.detect(contextFor(screen.id, [persisted], [backing.info])).filter(d => d.key === 'nav')).toEqual([]);
   });
 
-  it('proposes no NAV fix for an unresolvable endpoint instead of inventing one', () => {
+  it('proposes no NAV fix for an unresolvable endpoint instead of inventing one', { tags: ['standard'] }, () => {
     const broken: ConnectionRecord = { ...required(connections[0], 'the first connection'), toConnectionId: 'connection-999999' };
     expect(issuesFor(broken, [], screen.id).some(i => i.includes('unknown screen'))).toBe(true);
     expect(navDetector.detect(contextFor(screen.id, [broken])).filter(d => d.key === 'nav')).toEqual([]);

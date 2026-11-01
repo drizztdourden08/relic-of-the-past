@@ -5,7 +5,7 @@ import { find } from '@rotp/game-data';
 
 const slotKeys = () => POND_INSTANCES.flatMap((pond) => pond.slots.map((slot) => slot.key));
 
-describe('pond slot identity', () => {
+describe('pond slot identity', { tags: ['standard'] }, () => {
   it('every pond slot is a location of the world', () => {
     const declared = new Set([...POND_REGION_LOCATIONS.values()].flat());
     for (const pond of POND_INSTANCES) {

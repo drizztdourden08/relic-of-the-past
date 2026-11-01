@@ -3,7 +3,7 @@ import { describe, expect, it } from 'vitest';
 import { MAX_SAFE_RESULT, clampFinite, resolveValue } from '@rotp/hud';
 import type { Value } from '@rotp/hud';
 
-describe('clampFinite - the documented bound', () => {
+describe('clampFinite - the documented bound', { tags: ['critical'] }, () => {
   it('passes an ordinary number through unchanged', () => {
     expect(clampFinite(42)).toBe(42);
     expect(clampFinite(-42)).toBe(-42);
@@ -25,7 +25,7 @@ describe('clampFinite - the documented bound', () => {
   });
 });
 
-describe('resolveValue - a bare number', () => {
+describe('resolveValue - a bare number', { tags: ['critical'] }, () => {
   it('is clamped exactly like any other resolved number', () => {
     expect(resolveValue(5, {})).toBe(5);
     expect(resolveValue(Infinity, {})).toBe(MAX_SAFE_RESULT);
@@ -33,7 +33,7 @@ describe('resolveValue - a bare number', () => {
   });
 });
 
-describe('resolveValue - the nasty expressions', () => {
+describe('resolveValue - the nasty expressions', { tags: ['critical'] }, () => {
   const expr = (source: string): Value => ({ from: 'data', expr: source });
 
   it('division by zero clamps to the finite bound, not Infinity', () => {

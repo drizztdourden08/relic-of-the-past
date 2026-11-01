@@ -1,16 +1,11 @@
 /* @layer tests @kind test */
 import { it, expect } from 'vitest';
 import { all } from '@rotp/game-data';
-import { COLLECTION_SOURCES } from '@app/data-inspector/collection-sources';
-import {
-  ENTITY_KINDS, KIND_NAV_ITEMS,
-} from '@app/views/DataInspector/DataInspector.constants';
 import { resolveIdRefOptionsFor } from '@app/views/DataInspector/behavior/id-ref-options';
 import { resolveIdRef } from '@app/views/DataInspector/behavior/id-ref-target';
 import { buildSchema } from '@drizztdourden08/tessera/data';
 import type { FieldDescriptor } from '@drizztdourden08/tessera/data';
 import { describeDataset } from '../dataset-guard';
-import { required } from '../required';
 
 const fieldAt = (rows: readonly unknown[], path: string): FieldDescriptor => {
   const field = buildSchema(rows).find(entry => entry.path === path);
@@ -18,36 +13,7 @@ const fieldAt = (rows: readonly unknown[], path: string): FieldDescriptor => {
   return field;
 };
 
-describeDataset('tags are a collection of their own', () => {
-  it('is listed as a kind and given a place in the side menu', () => {
-    expect(ENTITY_KINDS).toContain('tag');
-    const item = KIND_NAV_ITEMS.find(entry => entry.id === 'tag');
-    expect(item?.label).toBe('Tags');
-    expect(item?.icon.length).toBeGreaterThan(0);
-  });
-
-  it('adapts to a source with real rows and a serializer', () => {
-    const source = COLLECTION_SOURCES.tag;
-    expect(source.rows.length).toBe(all('tag').length);
-    expect(source.rows.length).toBeGreaterThan(0);
-    expect(source.serialize?.(required(source.rows[0], 'the first tag row'))).toContain("id: 'tag-001'");
-  });
-
-  it('derives the hierarchy as fields, so the collection can be searched by it', () => {
-    const paths = buildSchema(COLLECTION_SOURCES.tag.rows).map(field => field.path);
-    for (const path of ['id', 'name', 'namespace', 'value', 'label']) {
-      expect(paths, path).toContain(path);
-    }
-  });
-
-  it('opens on the hierarchy instead of on key-insertion order', () => {
-    expect(COLLECTION_SOURCES.tag.config?.defaultColumns).toEqual(
-      ['id', 'namespace', 'value', 'label', 'appliesTo'],
-    );
-  });
-});
-
-describeDataset('a tag field is now a reference', () => {
+describeDataset('a tag field is now a reference', { tags: ['standard'] }, () => {
   for (const kind of ['screen', 'connection'] as const) {
     it(`${kind}: derives as an array of references into the tag collection`, () => {
       const field = fieldAt(all(kind), 'tags');

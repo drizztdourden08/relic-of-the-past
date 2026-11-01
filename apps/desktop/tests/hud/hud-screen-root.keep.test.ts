@@ -31,7 +31,7 @@ const docWith = (screen: Partial<HudContainer> = {}, child: Partial<HudContainer
   id: 'test', name: 'Test', builtIn: false, screen: screenOf(screen, child),
 });
 
-describe('the screen root', () => {
+describe('the screen root', { tags: ['critical'] }, () => {
   it('is placed at exactly the view, whatever the view is', () => {
     const placed = layoutHud(docWith(), VIEW);
     expect(placed.find((node) => node.id === 'screen')?.rect).toEqual({ x: 0, y: 0, w: 398, h: 224 });
@@ -96,7 +96,7 @@ const REFUSED_VALUES: Readonly<Record<string, unknown>> = {
   dimWhenEmpty: [1],
 };
 
-describe('the screen lock', () => {
+describe('the screen lock', { tags: ['critical'] }, () => {
   const validated = (screen: Record<string, unknown>) => validateLayout({
     id: 'test', name: 'Test', builtIn: false,
     screen: { ...screenOf({}), ...screen },

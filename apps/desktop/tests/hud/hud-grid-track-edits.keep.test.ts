@@ -29,7 +29,7 @@ const expectInRange = (child: HudNode, columns: number, rows: number): void => {
     .toBe(`${child.id} r true`);
 };
 
-describe('removing a track takes its children somewhere real', () => {
+describe('removing a track takes its children somewhere real', { tags: ['critical'] }, () => {
   const grid = (): HudGridContainer => gridOf(4, 2, [
     leaf('before', { column: 1, row: 1 }),
     leaf('inside', { column: 2, row: 1 }),
@@ -76,7 +76,7 @@ describe('removing a track takes its children somewhere real', () => {
   });
 });
 
-describe('inserting a track pushes what is at or after it away', () => {
+describe('inserting a track pushes what is at or after it away', { tags: ['critical'] }, () => {
   const grid = (): HudGridContainer => gridOf(3, 3, [
     leaf('first', { column: 1, row: 1 }),
     leaf('at', { column: 2, row: 1 }),
@@ -112,7 +112,7 @@ describe('inserting a track pushes what is at or after it away', () => {
   });
 });
 
-describe('moving a track carries its children with it', () => {
+describe('moving a track carries its children with it', { tags: ['critical'] }, () => {
   const grid = (): HudGridContainer => gridOf(3, 1, [
     leaf('a', { column: 1, row: 1 }),
     leaf('b', { column: 2, row: 1 }),
@@ -138,7 +138,7 @@ describe('moving a track carries its children with it', () => {
   });
 });
 
-describe('append and size never move a child at all', () => {
+describe('append and size never move a child at all', { tags: ['critical'] }, () => {
   it('hands the same children back, identically', () => {
     const grid = gridOf(2, 2, [leaf('x', { column: 2, row: 2, colSpan: 1 })]);
     const appended = editGridTracks(grid, { op: 'append', axis: 'columns' });
@@ -150,7 +150,7 @@ describe('append and size never move a child at all', () => {
   });
 });
 
-describe('the invariant, over a sequence instead of a case', () => {
+describe('the invariant, over a sequence instead of a case', { tags: ['critical'] }, () => {
   const EDITS: TrackEdit[] = [
     { op: 'remove', axis: 'columns', index: 1 },
     { op: 'insert', axis: 'rows', index: 0 },

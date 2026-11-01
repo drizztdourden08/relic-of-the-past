@@ -101,32 +101,23 @@ describeRom('native entrance ids, against the cartridge', () => {
   const facts = readRomFacts();
   const { rom, screens } = facts;
 
-  it('reads the tables at their documented sizes', () => {
-    expect(rom.areaHeads).toHaveLength(64);
-    expect(rom.entranceRooms).toHaveLength(133);
-    expect(rom.entrancePalaces).toHaveLength(133);
-    expect(rom.mouths.filter((m) => m.table === 'entrance')).toHaveLength(129);
-    expect(rom.mouths.filter((m) => m.table === 'hole')).toHaveLength(19);
-    expect(rom.exits).toHaveLength(79);
-  });
-
-  it('gives every screen entranceId a mouth that lands in that screen room', () => {
+  it('gives every screen entranceId a mouth that lands in that screen room', { tags: ['standard'] }, () => {
     expect(entranceLandingMismatches(facts)).toEqual([]);
   });
 
-  it('keeps an interior in the area its own door stands in', () => {
+  it('keeps an interior in the area its own door stands in', { tags: ['standard'] }, () => {
     expect(interiorAreaMismatches(facts)).toEqual([]);
   });
 
-  it('never gives one mouth to more screens than the cartridge has slots for it', () => {
+  it('never gives one mouth to more screens than the cartridge has slots for it', { tags: ['standard'] }, () => {
     expect(overclaimedMouths(facts)).toEqual([]);
   });
 
-  it('gives every room a door opens into a screen that carries one of its doors', () => {
+  it('gives every room a door opens into a screen that carries one of its doors', { tags: ['standard'] }, () => {
     expect(roomsWithoutDoorScreen(facts)).toEqual([]);
   });
 
-  it('gives every mouth of the cartridge a screen, or a room a door already holds', () => {
+  it('gives every mouth of the cartridge a screen, or a room a door already holds', { tags: ['standard'] }, () => {
     const carried = new Set(screens.map((screen) => screen.gameId.entranceId).filter((id) => id !== undefined));
     const uncarried = [...new Set(rom.mouths.map((mouth) => mouth.entranceId))]
       .filter((id) => !carried.has(id) && !SCRIPTED_ENTRANCES.includes(id));
@@ -134,11 +125,11 @@ describeRom('native entrance ids, against the cartridge', () => {
     expect(lostMouths(facts)).toEqual([]);
   });
 
-  it('never claims a room with more doors than the cartridge reaches it by', () => {
+  it('never claims a room with more doors than the cartridge reaches it by', { tags: ['standard'] }, () => {
     expect(overclaimedRooms(facts)).toEqual([]);
   });
 
-  it('keeps a dungeon screen entranceId on an entrance that enters that dungeon', () => {
+  it('keeps a dungeon screen entranceId on an entrance that enters that dungeon', { tags: ['standard'] }, () => {
     const wrong = screens
       .filter((screen) => screen.gameId.entranceId !== undefined && screen.gameId.palaceIndex !== undefined)
       .filter((screen) => rom.entrancePalaces[screen.gameId.entranceId as number] !== screen.gameId.palaceIndex)

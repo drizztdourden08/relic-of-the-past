@@ -37,7 +37,7 @@ const row = (children: HudNode[], extra: Partial<HudContainer> = {}): HudContain
 const rectOf = (doc: HudLayout, id: string, scope?: Record<string, number>) =>
   placedById(layoutHud(doc, VIEW, { scope }), id)?.rect;
 
-describe('the magic bar - size.w bound to an expression, no new element kind', () => {
+describe('the magic bar - size.w bound to an expression, no new element kind', { tags: ['critical'] }, () => {
   const magicBar = (): HudNode => ({
     kind: 'element',
     id: 'magic-bar',
@@ -69,7 +69,7 @@ describe('the magic bar - size.w bound to an expression, no new element kind', (
   });
 });
 
-describe('visible, scale and opacity all accept a Value', () => {
+describe('visible, scale and opacity all accept a Value', { tags: ['critical'] }, () => {
   it('visible resolves truthy from data, not only from a literal boolean', () => {
     const doc = docOf(row([
       leaf('a', { visible: { from: 'data', expr: 'arrow_current > 0' } }),
@@ -102,7 +102,7 @@ describe('visible, scale and opacity all accept a Value', () => {
   });
 });
 
-describe('min/max on every extent - a fill child no longer collapses to nothing', () => {
+describe('min/max on every extent - a fill child no longer collapses to nothing', { tags: ['critical'] }, () => {
   it('a fill child holds its min when the row has nothing left to give it', () => {
     const doc = docOf(row([
       box('fixed', { size: { w: { px: 400 }, h: { px: 10 } } }),

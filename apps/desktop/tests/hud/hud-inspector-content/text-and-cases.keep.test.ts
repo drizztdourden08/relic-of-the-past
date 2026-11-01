@@ -28,7 +28,7 @@ import { installDomHarness } from './install-dom-harness';
 
 const { mount, one } = installDomHarness();
 
-describe('the text mode switch is gone, and it was destroying expressions', () => {
+describe('the text mode switch is gone, and it was destroying expressions', { tags: ['standard'] }, () => {
   it('keeps the formula the document holds, and never stores the marker', () => {
     expect(textOfTextValue({ from: 'data', expr: 'bomb_current' })).toBe('= bomb_current');
     expect(textValueOf('= bomb_current')).toEqual({ from: 'data', expr: 'bomb_current' });
@@ -67,7 +67,7 @@ describe('the text mode switch is gone, and it was destroying expressions', () =
   });
 });
 
-describe('the live-match marker is the engine own answer', () => {
+describe('the live-match marker is the engine own answer', { tags: ['standard'] }, () => {
   const cases: HudSwitchSpec['cases'] = [
     { when: 'item >= 8', node: { kind: 'element', id: 'full', element: { type: 'shape', shape: 'heart', fill: 1 } } },
     { when: 'item >= 4', node: { kind: 'element', id: 'half', element: { type: 'shape', shape: 'heart', fill: 0.5 } } },

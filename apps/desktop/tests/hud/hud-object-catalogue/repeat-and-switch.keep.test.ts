@@ -5,7 +5,7 @@ import type { HudNode } from '@rotp/hud';
 import { leaf } from './leaf';
 import { placedOf } from './placed-of';
 
-describe('worked example 2 - the hearts (repeat over containers, switch per heart)', () => {
+describe('worked example 2 - the hearts (repeat over containers, switch per heart)', { tags: ['critical'] }, () => {
   const hearts = (): HudNode => ({
     kind: 'element',
     id: 'hearts',
@@ -55,7 +55,7 @@ describe('worked example 2 - the hearts (repeat over containers, switch per hear
   });
 });
 
-describe('repeat - index, count and item reach the child', () => {
+describe('repeat - index, count and item reach the child', { tags: ['critical'] }, () => {
   it('index and the repeat\'s own resolved count are both in scope', () => {
     const rep: HudNode = {
       kind: 'element',
@@ -83,7 +83,7 @@ describe('repeat - index, count and item reach the child', () => {
   });
 });
 
-describe('switch - first match wins, order is the logic', () => {
+describe('switch - first match wins, order is the logic', { tags: ['critical'] }, () => {
   const pick = (): HudNode => ({
     kind: 'element',
     id: 'sw',
@@ -116,7 +116,7 @@ describe('switch - first match wins, order is the logic', () => {
   });
 });
 
-describe('expand.ts guards a runaway expression', () => {
+describe('expand.ts guards a runaway expression', { tags: ['critical'] }, () => {
   it('ceil(1 / 0) does not become a repeat of a million - it clamps to MAX_REPEAT_COUNT (200)', () => {
     const rep: HudNode = {
       kind: 'element', id: 'rep', element: { type: 'repeat', count: { from: 'data', expr: 'ceil(1 / 0)' }, child: leaf('cell') },

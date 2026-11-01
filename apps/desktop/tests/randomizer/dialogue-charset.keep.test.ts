@@ -49,7 +49,7 @@ const codesOf = (text: string, charset: DialogueCharset): number[] =>
 const LANGUAGES = ['us', 'de', 'fr', 'fr-c'];
 const EU_FALLBACKS: Readonly<Record<string, string>> = { '{': '(', '}': ')', '\\': '/', '|': '?', $: '?' };
 
-describe('coverage of the native box', () => {
+describe('coverage of the native box', { tags: ['critical'] }, () => {
   it('draws every required character with a real glyph in the US and European fonts', () => {
     for (const code of LANGUAGES) {
       const charset = charsetOf(code);
@@ -95,7 +95,7 @@ describe('coverage of the native box', () => {
   });
 });
 
-describe('names and items keep their characters', () => {
+describe('names and items keep their characters', { tags: ['critical'] }, () => {
   it('round-trips every sample unchanged and encodes it in both text encodings', () => {
     for (const code of ['us', 'de']) {
       const charset = charsetOf(code);
@@ -128,7 +128,7 @@ describe('names and items keep their characters', () => {
   });
 });
 
-describe('fallbacks', () => {
+describe('fallbacks', { tags: ['critical'] }, () => {
   const us = charsetOf('us');
   const read = (text: string, charset = us): string => readableText(toDialogueText(text, charset), charset);
 
@@ -152,7 +152,7 @@ describe('fallbacks', () => {
   });
 });
 
-describe('the extra glyphs are drawn as the font draws its own', () => {
+describe('the extra glyphs are drawn as the font draws its own', { tags: ['critical'] }, () => {
   it('fits every glyph in its cell and its width, with the edge ringing the body', () => {
     for (const glyph of EXTRA_GLYPHS) {
       expect(glyph.rows, glyph.char).toHaveLength(16);

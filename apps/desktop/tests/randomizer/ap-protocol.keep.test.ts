@@ -14,7 +14,7 @@ vi.mock('@app/log-bus', () => {
 
 installClientHarness();
 
-describe('handshake', () => {
+describe('handshake', { tags: ['critical'] }, () => {
   it('connects a local server over plain ws only, with password, uuid, the server version and DeathLink', async () => {
     const room = makeRoom({ password: 'pw' });
     const { server, session } = await boot(room, { deathLink: true });
@@ -57,7 +57,7 @@ describe('handshake', () => {
   });
 });
 
-describe('received items', () => {
+describe('received items', { tags: ['critical'] }, () => {
   it('never delivers an item twice across a reconnect that replays the whole list', async () => {
     const room = makeRoom({ items: [item(100, 2, 900), item(101, 2, 900)] });
     const { server, core, session } = await boot(room);
@@ -99,7 +99,7 @@ describe('received items', () => {
   });
 });
 
-describe('checks and goal', () => {
+describe('checks and goal', { tags: ['critical'] }, () => {
   it('reports offline checks the server lacks, and the goal once', async () => {
     const room = makeRoom({ checked: [2], missing: [1, 3] });
     const server = createFakeServer(room);
@@ -114,7 +114,7 @@ describe('checks and goal', () => {
   });
 });
 
-describe('reconnect', () => {
+describe('reconnect', { tags: ['critical'] }, () => {
   it('backs off 1s, 2s, 4s while the server stays away', async () => {
     const room = makeRoom();
     const { server, session } = await boot(room, { url: 'ws://host:1' });
@@ -140,7 +140,7 @@ describe('reconnect', () => {
   });
 });
 
-describe('messages', () => {
+describe('messages', { tags: ['critical'] }, () => {
   it('renders PrintJSON with names from every game in the room', async () => {
     const { server, session } = await boot(makeRoom());
     const seen: string[] = [];
@@ -159,7 +159,7 @@ describe('messages', () => {
   });
 });
 
-describe('server url candidates', () => {
+describe('server url candidates', { tags: ['critical'] }, () => {
   const LOCAL = [
     'localhost:38281', 'LOCALHOST:38281', 'room.localhost:38281', '127.0.0.1:38281', '127.5.5.5',
     '0.0.0.0:38281', '10.0.0.4:38281', '172.16.0.9:38281', '172.31.255.1:38281', '192.168.1.20:38281',

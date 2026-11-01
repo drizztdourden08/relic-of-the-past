@@ -30,7 +30,7 @@ const SHAPE_CASES: readonly Record<string, OptionValue>[] = [
 const SEEDS = 20;
 const FORWARD_SEED = 'apworld-oracle';
 
-describe('the exported trees and model', () => {
+describe('the exported trees and model', { tags: ['e2e'] }, () => {
   it('keep one tree shape per location and exit under every option set', () => {
     const widest = widestRuledWorld();
     for (const over of SHAPE_CASES) {
@@ -43,7 +43,7 @@ describe('the exported trees and model', () => {
         .map(([name]) => name);
       expect(differ, JSON.stringify(over)).toEqual([]);
     }
-  }, 600_000);
+  });
 
   it('balances every present location against one item', () => {
     for (const over of SHAPE_CASES) {
@@ -53,7 +53,7 @@ describe('the exported trees and model', () => {
         + Object.keys(model.prizes.vanilla).length;
       expect(spoken, JSON.stringify(over)).toBe(model.present.length);
     }
-  }, 600_000);
+  });
 });
 
 const describeAp = supportsInstalledVersion() ? describe : describe.skip;
@@ -62,10 +62,10 @@ else if (!supportsInstalledVersion()) {
   console.log(`apworld oracle: Archipelago ${installedVersion()} is not in SUPPORTED_AP_VERSIONS, the generator half is skipped`);
 }
 
-describeAp('the world package against Archipelago', () => {
+describeAp('the world package against Archipelago', { tags: ['e2e'] }, () => {
   it('installs the built package', () => {
     console.log(`apworld oracle: ${installWorldPackage()}`);
-  }, 600_000);
+  });
 
   it(`generates ${SEEDS} seeds our rules beat sphere by sphere`, async () => {
     const snapshot = snapshotOf({});
@@ -79,7 +79,7 @@ describeAp('the world package against Archipelago', () => {
       const verdict = replayForward(fillWorld, spoiler);
       expect(verdict, `seed ${seed}`).toEqual({ unknown: [], sphereMisses: [], unreachable: [], beaten: true });
     }
-  }, 1_800_000);
+  });
 
   it(`accepts ${SEEDS} of our placements under its own rules`, async () => {
     const snapshot = snapshotOf({});
@@ -97,5 +97,5 @@ describeAp('the world package against Archipelago', () => {
       expect(run.log, seed).not.toMatch(/Could not access required locations|not fulfilled|unbeatable/i);
       expect(run.spoiler ?? '', seed).not.toMatch(/^Unreachable Items:/m);
     }
-  }, 1_800_000);
+  });
 });

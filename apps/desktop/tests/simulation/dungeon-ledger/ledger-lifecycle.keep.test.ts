@@ -12,7 +12,7 @@ import { required } from '../../required';
 const ledgerOf = (state: EngineState, group: number) =>
   required(state.ledgers.get(group), `ledger for group ${group}`);
 
-describeDataset('closeIdleDungeonGroups', () => {
+describeDataset('closeIdleDungeonGroups', { tags: ['critical'] }, () => {
   it('marks a group complete once its owed list is empty', () => {
     const state = freshState('some-other-screen');
     const group = dungeonGroupOf(SEWERS_PALACE);
@@ -63,7 +63,7 @@ describeDataset('closeIdleDungeonGroups', () => {
   });
 });
 
-describeDataset('reopenLedgersFor', () => {
+describeDataset('reopenLedgersFor', { tags: ['critical'] }, () => {
   const exhaustedState = () => {
     const state = freshState('some-other-screen');
     const group = dungeonGroupOf(SEWERS_PALACE);
@@ -100,7 +100,7 @@ describeDataset('reopenLedgersFor', () => {
   });
 });
 
-describeDataset('onCheckVerified hooks reopen into the item-gained path', () => {
+describeDataset('onCheckVerified hooks reopen into the item-gained path', { tags: ['critical'] }, () => {
   it('reopens an exhausted group when the received item grants a listed token', () => {
     const state = freshState('some-other-screen');
     const group = dungeonGroupOf(SEWERS_PALACE);

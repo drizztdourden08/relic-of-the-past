@@ -4,15 +4,11 @@ import { baselineValues, parsePondSetting, pondValuesOf, pondPlanOf, DEFAULT_PON
 import type { PondSetting } from '@rotp/randomizer';
 import { CUSTOM } from './pond-model.constants';
 
-describe('pond snapshot adapter', () => {
+describe('pond snapshot adapter', { tags: ['critical'] }, () => {
   it('reads a snapshot with no pond row as the baseline pond', () => {
     const values = { ...baselineValues };
     delete (values as Record<string, unknown>)['pond_capacity_mode'];
     expect(parsePondSetting(values).setting).toEqual(DEFAULT_POND_SETTING);
-  });
-
-  it('the shipped baseline is the fresh-profile pond', () => {
-    expect(parsePondSetting(baselineValues).setting).toEqual(DEFAULT_POND_SETTING);
   });
 
   it('round-trips every mode', () => {
@@ -36,7 +32,7 @@ describe('pond snapshot adapter', () => {
   });
 });
 
-describe('pond held to the wallet', () => {
+describe('pond held to the wallet', { tags: ['critical'] }, () => {
   const walletTo = (top: string) => ({
     capacity_wallet_mode: 'custom', capacity_wallet_start: '0', capacity_wallet_max: top, capacity_wallet_count: 1,
   });

@@ -21,7 +21,7 @@ const bytesWith = (index: number, value: number): number[] => {
   return bytes;
 };
 
-describe('evaluatePresence', () => {
+describe('evaluatePresence', { tags: ['critical'] }, () => {
   it('treats an absent condition as always present', () => {
     expect(evaluatePresence(undefined, baseState())).toBe(true);
   });

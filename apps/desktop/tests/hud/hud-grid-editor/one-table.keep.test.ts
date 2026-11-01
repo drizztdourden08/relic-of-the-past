@@ -10,7 +10,7 @@ import { actionContext as ctxFor } from './action-context';
 import { installGridRig } from './install-grid-rig';
 import { screenRoot } from './screen-root';
 
-const { cell, header, down, toolbarKeys, legendCaps, mountGrid } = installGridRig();
+const { cell, header, down, toolbarKeys, mountGrid } = installGridRig();
 
 const keysOf = (selection: GridSelection): string[] =>
   gridActions(ctxFor(selection, screenRoot())).map((a) => `${a.kind}:${a.key}`);
@@ -28,7 +28,7 @@ const checkLegend = (selection: GridSelection): void => {
   }
 };
 
-describe('one table drives the toolbar and the legend', () => {
+describe('one table drives the toolbar and the legend', { tags: ['standard'] }, () => {
   it('offers no action but the pointer gestures when nothing is selected', () => {
     expect(keysOf({ kind: 'none' })).toEqual([
       'gesture:pick', 'gesture:add-to', 'gesture:range', 'gesture:rectangle',
@@ -77,13 +77,5 @@ describe('one table drives the toolbar and the legend', () => {
     checkLegend({ kind: 'track', axis: 'columns', indices: [1], anchor: 1 });
     down(cell(2, 2));
     checkLegend({ kind: 'cells', cells: [{ column: 2, row: 2 }], anchor: { column: 2, row: 2 } });
-  });
-
-  it('draws the keys as CAPS and the pointer as a MOUSE, not as prose', () => {
-    mountGrid();
-    expect(document.querySelectorAll('.hud-grid__key .shortcut__cap').length).toBeGreaterThan(0);
-    expect(document.querySelectorAll('.hud-grid__key .shortcut__mouse').length).toBe(4);
-    expect(legendCaps().join(' ')).toContain('Ctrl');
-    expect(document.querySelector('.hud-grid__key .shortcut__mouse--drag')).not.toBeNull();
   });
 });

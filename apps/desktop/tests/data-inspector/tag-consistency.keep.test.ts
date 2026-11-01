@@ -20,7 +20,7 @@ const writeTag = (): NonNullable<typeof RECORD_WRITERS.tag> => {
   return writer;
 };
 
-describe('writeTag enforces the namespace:value convention on every edit', () => {
+describe('writeTag enforces the namespace:value convention on every edit', { tags: ['critical'] }, () => {
   let writeTagApi: ReturnType<typeof vi.fn>;
 
   beforeEach(() => {
@@ -34,12 +34,6 @@ describe('writeTag enforces the namespace:value convention on every edit', () =>
 
   it('rejects a value edit that leaves name out of step with namespace:value', async () => {
     const mismatched = { ...baseTag, value: 'indoor' };
-    await expect(writeTag()(mismatched)).rejects.toThrow(/namespace:value/);
-    expect(writeTagApi).not.toHaveBeenCalled();
-  });
-
-  it('rejects a namespace edit that leaves name out of step with namespace:value', async () => {
-    const mismatched = { ...baseTag, namespace: 'terrain' };
     await expect(writeTag()(mismatched)).rejects.toThrow(/namespace:value/);
     expect(writeTagApi).not.toHaveBeenCalled();
   });

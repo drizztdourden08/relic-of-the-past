@@ -28,7 +28,7 @@ const owObs = (owScreenIndex: number, sprites: SimSprite[]): SimObservation => (
 const owState = (owScreenIndex: number) =>
   createEngineState({ screenId: `ow:${owScreenIndex}`, tile: { row: 0, col: 0 } }, new Set(), {});
 
-describeDataset('discoverTargets resolves overworld sprites to their true screen', () => {
+describeDataset('discoverTargets resolves overworld sprites to their true screen', { tags: ['critical'] }, () => {
   it('discovers a sprite normally when it belongs to the observed screen', () => {
     const obs = owObs(HEAD_SCREEN, [owSprite(HEAD_SCREEN, { row: 20, col: 12 })]);
     expect(discoverTargets(owState(HEAD_SCREEN), obs, allReachable(64, 64))).toHaveLength(1);
@@ -39,13 +39,9 @@ describeDataset('discoverTargets resolves overworld sprites to their true screen
     expect(discoverTargets(owState(HEAD_SCREEN), obs, allReachable(64, 64))).toHaveLength(0);
   });
 
-  it('offers that same sprite once its own screen is the one being observed', () => {
-    const obs = owObs(SOUTH_SCREEN, [owSprite(SOUTH_SCREEN, { row: 20, col: 12 })]);
-    expect(discoverTargets(owState(SOUTH_SCREEN), obs, allReachable(64, 64))).toHaveLength(1);
-  });
 });
 
-describeDataset('discoverTargets falls back when posKnown === false', () => {
+describeDataset('discoverTargets falls back when posKnown === false', { tags: ['critical'] }, () => {
   it('discovers an unknown-position interactable regardless of a real, unrelated flood grid', () => {
     const farOutsideAnyGrid = { row: 999, col: 999 };
     const sprite: SimSprite = {

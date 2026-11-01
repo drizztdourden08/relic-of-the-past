@@ -5,7 +5,7 @@ import { describePondCore } from './describe-pond-core';
 import { installPondRig } from './install-pond-rig';
 import { pondGemSlot } from './pond-gem-slot';
 
-describePondCore('pond seams in the built core (headless): prices and gems', () => {
+describePondCore('pond seams in the built core (headless): prices and gems', { tags: ['standard'] }, () => {
   const { call, set8, get8, gate3, armPlan } = installPondRig();
 
   it('asks the plan price, takes it whole, and fills the bank exactly', () => {

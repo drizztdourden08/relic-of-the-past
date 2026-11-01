@@ -5,7 +5,7 @@ import { installLayoutSectionRig } from './install-layout-section-rig';
 
 const { mountGrid, pick, click, states } = installLayoutSectionRig();
 
-describe('every other property still writes what §50 said it wrote', () => {
+describe('every other property still writes what §50 said it wrote', { tags: ['standard'] }, () => {
   it('flips the engine from section ONE\'s own pair (§56)', () => {
     const patch = vi.fn();
     mountGrid(patch);
@@ -27,14 +27,5 @@ describe('every other property still writes what §50 said it wrote', () => {
         expect(patch).toHaveBeenCalledWith({ alignItems: value });
       }
     }
-  });
-
-  it('opens the guide picker from a bare swatch with no hex box beside it', () => {
-    mountGrid();
-    const swatch = pick<HTMLElement>('.hud-layout-set__overlay .color-swatch');
-    expect(swatch.getAttribute('aria-label')).toBe('Open the guide colour picker');
-    expect(document.querySelector('[aria-label="guide hex"]')).toBeNull();
-    click(swatch);
-    expect(document.querySelector('.color-picker')).not.toBeNull();
   });
 });

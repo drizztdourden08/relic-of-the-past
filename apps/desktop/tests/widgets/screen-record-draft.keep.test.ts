@@ -28,7 +28,7 @@ const draft = (over: Partial<ScreenDraft>): ScreenDraft => ({
 const isStoredTags = (value: unknown): value is ScreenDraft['tags'] =>
   Array.isArray(value) && value.every((term) => typeof term === 'string');
 
-describe('buildScreenRecord and the native id the record carries', () => {
+describe('buildScreenRecord and the native id the record carries', { tags: ['critical'] }, () => {
   it('a dungeon room is addressed by room index plus palace index', () => {
     const { record } = buildScreenRecord(draft({}));
     expect(record?.gameId).toEqual({ roomIndex: 0x80, palaceIndex: 2 });
@@ -50,7 +50,7 @@ describe('buildScreenRecord and the native id the record carries', () => {
   });
 });
 
-describe('buildScreenRecord position and defaults', () => {
+describe('buildScreenRecord position and defaults', { tags: ['critical'] }, () => {
   it('carries a floor only alongside a grid position', () => {
     expect(buildScreenRecord(draft({})).record?.position).toEqual({ gridX: 1, gridY: 2, floor: 0 });
     expect(buildScreenRecord(draft({ kind: 'interior', floor: undefined })).record?.position)
@@ -78,7 +78,7 @@ describe('buildScreenRecord position and defaults', () => {
   });
 });
 
-describe('buildScreenRecord and what it refuses to invent', () => {
+describe('buildScreenRecord and what it refuses to invent', { tags: ['critical'] }, () => {
   const blockersFor = (over: Partial<ScreenDraft>): readonly string[] =>
     buildScreenRecord(draft(over)).blockers;
 
@@ -105,7 +105,7 @@ describe('buildScreenRecord and what it refuses to invent', () => {
   });
 });
 
-describe('buildScreenRecord on fields the form does not own', () => {
+describe('buildScreenRecord on fields the form does not own', { tags: ['critical'] }, () => {
   it('carries them across from the record being edited instead of dropping them', () => {
     const existing: ScreenRecord = {
       id: 'screen-183',

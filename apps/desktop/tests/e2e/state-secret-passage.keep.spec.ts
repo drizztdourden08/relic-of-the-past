@@ -2,8 +2,7 @@
 import { test, expect } from '@playwright/test';
 import { withState } from './state-harness';
 
-test('test-secret-passage keeps the blocked chest and the substituted item', async () => {
-  test.setTimeout(300_000);
+test('test-secret-passage keeps the blocked chest and the substituted item', { tag: '@e2e' }, async () => {
   await withState('test-secret-passage', async (r) => {
     expect(await r.screenId(), 'room 0x055 is the Secret Passage (screen-171), not the Dam (screen-170)').toMatch(/^screen-171 · 0x55 · INDOOR/);
 

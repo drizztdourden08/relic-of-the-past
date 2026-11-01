@@ -55,7 +55,7 @@ const OPTION_SETS: readonly OptionSet[] = [
   },
 ];
 
-describe('physical plan covers every generated location', () => {
+describe('physical plan covers every generated location', { tags: ['standard'] }, () => {
   for (const { name, overrides, npc, world } of OPTION_SETS) {
     it(name, () => {
       const snapshot = buildOptionsSnapshot(overrides);

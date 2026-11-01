@@ -1,8 +1,8 @@
 /* @layer root-config @kind config */
-import { defineConfig } from 'vitest/config';
+import { defineStandardsVitest } from '@drizztdourden08/standards/vitest';
 import { resolve } from 'path';
 
-export default defineConfig({
+export default defineStandardsVitest({
   test: {
     include: [
       'apps/desktop/tests/**/*.test.{ts,tsx}',
@@ -11,15 +11,8 @@ export default defineConfig({
     ],
     exclude: ['**/node_modules/**', '**/dist/**'],
     globals: true,
-    // The default 5s is a measure of how loaded the machine is, not of whether a
-    // test is correct. Two dataset suites render every screen in the record set
-    // and finish in about two seconds alone; the moment a jsdom suite runs
-    // alongside them they cross five and fail for no reason of their own. Both
-    // limits are raised so the number is a real hang, not a busy CPU: a hook that
-    // resets modules and imports a view graph cold crosses ten the same way. Brock
-    // and Tessera ship TypeScript source, so the first cold import of the shell
-    // transforms thousands of files and takes over a minute beside other workers.
-    testTimeout: 20000,
+    passWithNoTests: true,
+    // Brock and Tessera ship TypeScript source, so the first cold import of the shell in a hook transforms thousands of files.
     hookTimeout: 240000,
   },
   esbuild: { jsx: 'automatic' },

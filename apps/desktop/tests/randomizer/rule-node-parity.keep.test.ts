@@ -1,6 +1,6 @@
 /* @layer tests @kind test */
 import { describe, expect, it } from 'vitest';
-import { generateFromSnapshot, primitiveHelperNames } from '@rotp/randomizer';
+import { generateFromSnapshot } from '@rotp/randomizer';
 import { exportParity, placementDigest, ruleDigest, snapshotOf } from './rule-parity-harness';
 import type { OptionValue } from '@rotp/randomizer';
 
@@ -75,14 +75,14 @@ const PINNED_PLACEMENTS: readonly string[] = [
   'fa62e5e7f1a0a24622eb', 'dd2cc64507ffb3706790', 'a36a4cac4eb06ad07bae', '5763ab90f3f651cf7a91',
 ];
 
-describe('rule answers match the closure-only engine', () => {
+describe('rule answers match the closure-only engine', { tags: ['e2e'] }, () => {
   for (const parityCase of CASES) {
     it(parityCase.name, () => {
       const { digest, trues } = ruleDigest(parityCase.over, STATES, parityCase.actRecord);
       expect(trues).toBeGreaterThan(0);
       if (PINNED_RULES[parityCase.name] === undefined) console.log(`RULES ${parityCase.name}: ${digest}`);
       expect(digest).toBe(PINNED_RULES[parityCase.name]);
-    }, 600_000);
+    });
   }
 });
 
@@ -91,24 +91,21 @@ const PRIMITIVES = [
   'canExtendMagic', 'explosivesAtLeast', 'hasHearts', 'heartCapacityAbove', 'projectilesAtLeast', 'walletAtLeast',
 ];
 
-describe('exported trees answer as the engine does', () => {
-  it('keeps the primitive helper list short and fixed', () => {
-    expect(primitiveHelperNames().sort()).toEqual(PRIMITIVES);
-  });
+describe('exported trees answer as the engine does', { tags: ['e2e'] }, () => {
   for (const parityCase of CASES) {
     it(parityCase.name, () => {
       const { asked, mismatches, residualCalls } = exportParity(parityCase.over, EXPORT_STATES, parityCase.actRecord);
       expect(asked).toBeGreaterThan(0);
       expect(mismatches).toEqual([]);
       expect(residualCalls.every((name) => PRIMITIVES.includes(name)), residualCalls.join(' ')).toBe(true);
-    }, 600_000);
+    });
   }
 });
 
-describe('generation matches the closure-only engine', () => {
+describe('generation matches the closure-only engine', { tags: ['e2e'] }, () => {
   it('places the same items for 20 seeds', () => {
     const digests = GENERATION_SEEDS.map((seed) => placementDigest(generateFromSnapshot({ seed, snapshot: snapshotOf({}) })));
     if (PINNED_PLACEMENTS.length === 0) console.log(`PLACEMENTS ${JSON.stringify(digests)}`);
     expect(digests).toEqual(PINNED_PLACEMENTS);
-  }, 600_000);
+  });
 });

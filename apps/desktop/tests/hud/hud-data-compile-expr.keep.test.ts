@@ -3,7 +3,7 @@ import { describe, expect, it } from 'vitest';
 import expressions from './hud-expressions.json';
 import { MAX_EXPR_LENGTH, compileExpr, compileExprCacheSize } from '@rotp/hud';
 
-describe('compileExpr - the worked examples, corrected dialect and all', () => {
+describe('compileExpr - the worked examples, corrected dialect and all', { tags: ['critical'] }, () => {
   it('compiles every valid fixture and names its free variables', () => {
     expect(compileExpr(expressions.valid['arrow-count']).ok).toBe(true);
     const heartCount = compileExpr(expressions.valid['heart-count']);
@@ -18,7 +18,7 @@ describe('compileExpr - the worked examples, corrected dialect and all', () => {
   });
 });
 
-describe('compileExpr - disabled operators are rejected', () => {
+describe('compileExpr - disabled operators are rejected', { tags: ['critical'] }, () => {
   it('refuses assignment', () => {
     expect(compileExpr(expressions.invalid.assignment).ok).toBe(false);
   });
@@ -61,7 +61,7 @@ describe('compileExpr - disabled operators are rejected', () => {
   });
 });
 
-describe('compileExpr - malformed and pathological input', () => {
+describe('compileExpr - malformed and pathological input', { tags: ['critical'] }, () => {
   it('refuses an empty or whitespace-only expression, without throwing', () => {
     expect(() => compileExpr(expressions.invalid.empty)).not.toThrow();
     expect(compileExpr(expressions.invalid.empty).ok).toBe(false);
@@ -95,7 +95,7 @@ describe('compileExpr - malformed and pathological input', () => {
   });
 });
 
-describe('compileExpr - the parse-once cache', () => {
+describe('compileExpr - the parse-once cache', { tags: ['critical'] }, () => {
   it('parses the same source once: identical results, not merely equal ones', () => {
     const source = 'life_current / 8 + arrow_current';
     const before = compileExprCacheSize();

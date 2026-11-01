@@ -27,7 +27,7 @@ const heads = (() => {
 })();
 
 describe('getOverworldSprites resolves spawns to their true screen', () => {
-  it('emits a far-half spawn already resolved to its true screen and local tile', () => {
+  it('emits a far-half spawn already resolved to its true screen and local tile', { tags: ['critical'] }, () => {
     vi.mocked(wasmGetAreaHeads).mockReturnValue(heads);
     vi.mocked(wasmGetOverworldSpriteSpawns).mockReturnValue([
       { spriteType: 0xeb, row: 84, col: 12, carriesKey: false, carriesBigKey: false, floor: 0 },
@@ -46,7 +46,7 @@ describe('getOverworldSprites resolves spawns to their true screen', () => {
     ]);
   });
 
-  it('leaves an in-range spawn on the queried screen when the area-head table is unavailable', () => {
+  it('leaves an in-range spawn on the queried screen when the area-head table is unavailable', { tags: ['critical'] }, () => {
     vi.mocked(wasmGetAreaHeads).mockReturnValue(null);
     vi.mocked(wasmGetOverworldSpriteSpawns).mockReturnValue([
       { spriteType: 0xeb, row: 5, col: 5, carriesKey: false, carriesBigKey: false, floor: 0 },

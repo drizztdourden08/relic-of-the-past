@@ -78,7 +78,7 @@ afterEach(() => {
   vi.unstubAllGlobals();
 });
 
-describe('DeathLink toasts from the session', () => {
+describe('DeathLink toasts from the session', { tags: ['critical'] }, () => {
   it('a room death that kills Link shows who died and why', async () => {
     const { core, lines, notices, bounce, stop } = await boot();
     await bounce('Drizztdourden_', CAUSE);
@@ -114,7 +114,7 @@ describe('DeathLink toasts from the session', () => {
   });
 });
 
-describe('the toast line', () => {
+describe('the toast line', { tags: ['critical'] }, () => {
   const received = (cause: string): DeathLinkNotice => ({ kind: 'received', source: 'Zelda', cause });
 
   it('a cause that adds nothing reads as a plain line', () => {

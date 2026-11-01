@@ -46,7 +46,7 @@ afterEach(async () => {
 });
 
 describe('allocateItemGroup', () => {
-  it('mints a real id past the old seven-group ceiling and appends the row', async () => {
+  it('mints a real id past the old seven-group ceiling and appends the row', { tags: ['critical'] }, async () => {
     const result = await allocateItemGroup(root, { label: 'Gloves', memberIds: ['item-028', 'item-029'] });
     expect(result.success).toBe(true);
     if (!result.success) return;
@@ -57,20 +57,20 @@ describe('allocateItemGroup', () => {
     expect(source).toContain("memberIds: ['item-028', 'item-029']");
   });
 
-  it('refuses a blank label instead of minting an id', async () => {
+  it('refuses a blank label instead of minting an id', { tags: ['critical'] }, async () => {
     const result = await allocateItemGroup(root, { label: '   ', memberIds: [] });
     expect(result).toEqual({ success: false, error: 'An item group needs a label.' });
     expect(await sourceOf()).not.toContain('ig-003');
   });
 
-  it('refuses a label already on file, so two groups never collide on name', async () => {
+  it('refuses a label already on file, so two groups never collide on name', { tags: ['critical'] }, async () => {
     const result = await allocateItemGroup(root, { label: 'Swords', memberIds: [] });
     expect(result.success).toBe(false);
   });
 });
 
 describe('writeItemGroup and deleteItemGroup', () => {
-  it('still replaces and removes an id already on file after the create path landed', async () => {
+  it('still replaces and removes an id already on file after the create path landed', { tags: ['critical'] }, async () => {
     const created = await allocateItemGroup(root, { label: 'Gloves', memberIds: ['item-028'] });
     expect(created.success).toBe(true);
     if (!created.success) return;

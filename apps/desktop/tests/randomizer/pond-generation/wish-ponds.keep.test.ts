@@ -5,7 +5,7 @@ import { ALL_NPC, ALL_POND_SLOTS, DELIVERABLE, EMPTY } from './pond-generation.c
 import { snapshotOf } from './snapshot-of';
 import { required } from '../../required';
 
-describe('pond generation', () => {
+describe('pond generation', { tags: ['standard'] }, () => {
   for (const pond of POND_INSTANCES.filter((entry) => entry.id !== 'capacity')) {
     const slots = pond.slots.map((slot) => slot.key);
     const worldOf = (mode: string, flag: boolean) => buildFillWorld({
@@ -46,11 +46,11 @@ describe('pond generation', () => {
       for (const name of POND_RUNGS_BY_ID[pond.id].slice(4)) {
         expect(placement.locations[name], name).toBeUndefined();
       }
-    }, 30_000);
+    });
   }
 });
 
-describe('pond generation', () => {
+describe('pond generation', { tags: ['standard'] }, () => {
   it('the shared switch gives all three ponds the capacity pond settings', () => {
     const separate = {
       pond_capacity_mode: 'custom', pond_capacity_items: 4, pond_capacity_throws: 4,
@@ -71,7 +71,7 @@ describe('pond generation', () => {
       deliverable: { npc: EMPTY, capacity: DELIVERABLE, world: EMPTY },
     });
     expect(placement.stats.pondPrizeCount).toBeGreaterThan(0);
-  }, 30_000);
+  });
 
   it('Vanilla grants with the npc switch off keeps a Blue Boomerang to throw', () => {
     const snapshot = snapshotOf({ include_npc_checks: false, pond_wishing_mode: 'capacity' });
@@ -82,5 +82,5 @@ describe('pond generation', () => {
       .toEqual([ITEM.redBoomerang, ITEM.redBoomerang]);
     const placement = generatePlacement({ seed: 'double-red', snapshot, deliverable: { npc: EMPTY, capacity: ALL_POND_SLOTS, world: EMPTY } });
     expect(Object.values(placement.locations)).toContain(ITEM.blueBoomerang);
-  }, 30_000);
+  });
 });

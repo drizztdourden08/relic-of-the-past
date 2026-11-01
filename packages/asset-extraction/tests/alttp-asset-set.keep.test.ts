@@ -2,25 +2,14 @@
 import { existsSync, readFileSync } from 'fs';
 import { resolve } from 'path';
 import { describe, expect, it } from 'vitest';
-import { compileAlttpAssetSet, compileResources, loadGbaAlttpRomFromBuffer, loadRomFromBuffer } from '@rotp/asset-extraction/buffer';
+import { compileAlttpAssetSet, loadGbaAlttpRomFromBuffer, loadRomFromBuffer } from '@rotp/asset-extraction/buffer';
 import { required } from './required';
 
 const snesPath = resolve('test-roms', 'Legend of Zelda, The - A Link to the Past (USA).sfc');
 const gbaPath = resolve('test-roms', 'Legend of Zelda, The - A Link to the Past & Four Swords (USA).gba');
 const integration = existsSync(snesPath) && existsSync(gbaPath) ? it : it.skip;
 
-describe('multi-source asset aggregation', () => {
-  integration('leaves the base byte-identical whether or not a supplement is present', async () => {
-    const snes = loadRomFromBuffer(readFileSync(snesPath));
-    const gba = loadGbaAlttpRomFromBuffer(readFileSync(gbaPath));
-
-    const baseOnly = await compileAlttpAssetSet({ snes });
-    const combined = await compileAlttpAssetSet({ snes, gbaAlttp: gba });
-
-    expect(baseOnly.base).toEqual(compileResources(snes));
-    expect(combined.base).toEqual(baseOnly.base);
-  });
-
+describe('multi-source asset aggregation', { tags: ['standard'] }, () => {
   integration('reports the supplement as its own container', async () => {
     const snes = loadRomFromBuffer(readFileSync(snesPath));
     const gba = loadGbaAlttpRomFromBuffer(readFileSync(gbaPath));

@@ -10,7 +10,7 @@ const gridBlockedBelow = (wall: number): number[][] =>
 const at = (kind: ScreenAnnotation['kind'], row: number, col: number, extra: Partial<ScreenAnnotation> = {}): ScreenAnnotation =>
   ({ kind, label: kind, tile: { row, col }, state: 'available', ...extra });
 
-describe('annotation reachability', () => {
+describe('annotation reachability', { tags: ['critical'] }, () => {
   it('counts a solid feature reachable when a neighbour tile is walkable', () => {
     const grid = gridBlockedBelow(10);
     expect(required(grid[10], 'grid row 10')[5]).toBe(0);

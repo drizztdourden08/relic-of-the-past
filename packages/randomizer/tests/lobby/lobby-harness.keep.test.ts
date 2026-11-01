@@ -3,7 +3,6 @@ import { expect, it } from 'vitest';
 import { createFakeServer, createScenarioKit, loadScenario } from '@drizztdourden08/archipelia-lobby-protocol/testing';
 import type { JsonObject, JsonValue, Scenario } from '@drizztdourden08/archipelia-lobby-protocol/testing';
 import type { ClientInfo } from '@drizztdourden08/archipelia-lobby-protocol';
-import { joinLobby } from '../../src/client/lobby';
 import type { JoinConfig, LobbyEvent, LobbyJoinState, LobbySession } from '../../src/client/lobby';
 
 const kit = createScenarioKit();
@@ -100,18 +99,11 @@ const watch = (session: LobbySession, events: LobbyEvent[], react?: (event: Lobb
     react?.(event, state);
   });
 
-const startJoin: Driver = (tools) => {
-  const events: LobbyEvent[] = [];
-  const session = joinLobby(tools.config());
-  watch(session, events);
-  return Promise.resolve({ sessions: [session], events });
-};
-
 const failureCode = (state: LobbyJoinState): string | undefined => state.failure?.code;
 
-it('loads the kit and the fake server', () => {
+it('loads the kit and the fake server', { tags: ['standard'] }, () => {
   expect(kit.files.length).toBeGreaterThan(0);
 });
 
-export { configFor, failureCode, firstMessage, isMessageLine, kit, play, startJoin, watch };
+export { configFor, failureCode, firstMessage, isMessageLine, kit, play, watch };
 export type { Drive, Driver, Tools };

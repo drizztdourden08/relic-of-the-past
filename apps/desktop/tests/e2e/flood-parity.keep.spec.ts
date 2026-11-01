@@ -53,8 +53,7 @@ const dumpReachable = async (state: string): Promise<number> => {
 };
 
 for (const state of STATES) {
-  test(`flood parity: ${state}`, async () => {
-    test.setTimeout(600_000);
+  test(`flood parity: ${state}`, { tag: '@e2e' }, async () => {
     const widget = await widgetReachable(state);
     const dump = await dumpReachable(state);
     test.info().annotations.push({ type: 'parity', description: `${state} widget=${widget} dump=${dump}` });

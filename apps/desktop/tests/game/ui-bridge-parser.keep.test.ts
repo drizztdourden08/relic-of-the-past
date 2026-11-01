@@ -16,14 +16,14 @@ const modeForModule = (mainModule: number): UIMode => {
 };
 
 describe('deriveUIMode (via parseGameUIBuffer)', () => {
-  it('maps the intro attract demo and file-select menus to title (HUD hidden)', () => {
+  it('maps the intro attract demo and file-select menus to title (HUD hidden)', { tags: ['critical'] }, () => {
     for (const mainModule of [...FILE_MENU_MODULES, ATTRACT_MODULE]) {
       expect(modeForModule(mainModule)).toBe('title');
       expect(isMainHudVisibleForMode(modeForModule(mainModule))).toBe(false);
     }
   });
 
-  it('keeps active overworld and dungeon play as gameplay (HUD shown)', () => {
+  it('keeps active overworld and dungeon play as gameplay (HUD shown)', { tags: ['critical'] }, () => {
     for (const mainModule of [7, 9]) {
       expect(modeForModule(mainModule)).toBe('gameplay');
       expect(isMainHudVisibleForMode(modeForModule(mainModule))).toBe(true);

@@ -8,7 +8,7 @@ import { DOC } from './ghost-doc.constants';
 import { childrenOf, gridOf } from '../hud-node-guards';
 import { required } from '../../required';
 
-describe('line 1 states the KIND, in §42\'s vocabulary and no other', () => {
+describe('line 1 states the KIND, in §42\'s vocabulary and no other', { tags: ['critical'] }, () => {
   it('says row, column, grid n×m, overlap and screen but never stack', () => {
     const kind = (id: string): string => {
       const found = [DOC.screen, ...DOC.screen.children].find((n) => n.id === id);
@@ -26,7 +26,7 @@ describe('line 1 states the KIND, in §42\'s vocabulary and no other', () => {
   });
 });
 
-describe('the four states', () => {
+describe('the four states', { tags: ['critical'] }, () => {
   it('FLEX names a position among the children it would have', () => {
     const ghost = ghostFor(DOC, ['magic-bar'], { kind: 'flex', parentId: 'hud', index: 1 });
     expect(ghost).toMatchObject({ tone: 'move', chip: 'magic-bar', kind: 'into column' });
@@ -63,7 +63,7 @@ describe('the four states', () => {
 
 });
 
-describe('line 3 carries the one thing no other surface says', () => {
+describe('line 3 carries the one thing no other surface says', { tags: ['critical'] }, () => {
   it('warns that the drop lands in a template drawn N times', () => {
     const ghost = ghostFor(DOC, ['magic-bar'], { kind: 'flex', parentId: 'heart', index: 0 });
     expect(ghost.path).toBe('inside repeat ×8');
@@ -71,7 +71,7 @@ describe('line 3 carries the one thing no other surface says', () => {
   });
 });
 
-describe('where the card sits', () => {
+describe('where the card sits', { tags: ['critical'] }, () => {
   it('is below-right of the cursor by +14, +18', () => {
     expect(ghostPosition({ x: 400, y: 300 }, { w: 1400, h: 900 }))
       .toEqual({ left: 414, top: 318, transform: 'translate(0, 0)' });

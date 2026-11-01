@@ -10,7 +10,7 @@ const check = (value: unknown, context?: { insideRepeat?: boolean }) => {
   return { result, issues };
 };
 
-describe('validateValue - numbers', () => {
+describe('validateValue - numbers', { tags: ['critical'] }, () => {
   it('a finite number passes through untouched', () => {
     const { result, issues } = check(24);
     expect(result).toBe(24);
@@ -23,7 +23,7 @@ describe('validateValue - numbers', () => {
   });
 });
 
-describe('validateValue - a valid data expression', () => {
+describe('validateValue - a valid data expression', { tags: ['critical'] }, () => {
   it('passes an expression naming only known variables', () => {
     const { result, issues } = check({ from: 'data', expr: expressions.valid['arrow-count'] });
     expect(result).toEqual({ from: 'data', expr: 'arrow_current' });
@@ -37,7 +37,7 @@ describe('validateValue - a valid data expression', () => {
   });
 });
 
-describe('validateValue - refusal, naming the field and the column', () => {
+describe('validateValue - refusal, naming the field and the column', { tags: ['critical'] }, () => {
   it('an unparseable expression is refused with the field path and a column', () => {
     const { result, issues } = check({ from: 'data', expr: expressions.invalid.assignment });
     expect(result).toBeUndefined();

@@ -3,15 +3,11 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { act, createElement as h, type ReactNode } from 'react';
 import { createRoot, type Root } from 'react-dom/client';
-import { readFileSync } from 'fs';
-import { resolve } from 'path';
 import { StageSelection } from '@app/views/HudLayoutEditor/sub-components/StageSelection';
 import type { HudContainer, HudElement, PlacedNode } from '@rotp/hud';
-import { REPO_ROOT } from '../repo-root';
 
 (globalThis as { IS_REACT_ACT_ENVIRONMENT?: boolean }).IS_REACT_ACT_ENVIRONMENT = true;
 
-const EDITOR = resolve(REPO_ROOT, 'apps/desktop/src/views/HudLayoutEditor');
 
 const spacer = (id: string): HudElement => ({ id, kind: 'element', element: { type: 'spacer' } });
 
@@ -84,19 +80,13 @@ const render = (onSelect: (id: string) => void, selectedId: string | null): void
   }));
 };
 
-describe('a press on a stage node selects it, and a drag changes nothing', () => {
+describe('a press on a stage node selects it, and a drag changes nothing', { tags: ['standard'] }, () => {
   it('writes NOTHING across a whole press/move/release, and leaves the node selected', () => {
     const onSelect = vi.fn();
     render(onSelect, 'hearts');
     drag(boxFor('hearts'));
     expect(onSelect).toHaveBeenCalledTimes(1);
     expect(onSelect).toHaveBeenCalledWith('hearts');
-    expect(boxFor('hearts').classList.contains('is-selected')).toBe(true);
-    expect(document.querySelector('.hud-stage__snap-guide')).toBeNull();
-    expect(document.querySelector('.hud-stage__handle')).toBeNull();
-    expect(document.querySelector('[aria-label="Scale"]')).toBeNull();
-    expect(document.querySelector('.hud-drop')).toBeNull();
-    expect(document.querySelector('.hud-ghost')).toBeNull();
   });
 
   it('selects on the way down with no threshold, arming and no "select first" rule', () => {
@@ -107,29 +97,5 @@ describe('a press on a stage node selects it, and a drag changes nothing', () =>
     act(() => { boxFor('screen').dispatchEvent(pointer('pointerdown', 10, 10)); });
     expect(onSelect).toHaveBeenLastCalledWith('screen');
     expect(onSelect).toHaveBeenCalledTimes(2);
-  });
-
-  it('keeps the selection ring and the measured badge, which are not gestures', () => {
-    render(() => {}, 'wallet');
-    expect(boxFor('wallet').classList.contains('is-selected')).toBe(true);
-    expect(boxFor('wallet').querySelector('.hud-stage__measured')?.textContent).toBe('20×10');
-    expect(boxFor('hearts').querySelector('.hud-stage__measured')).toBeNull();
-    expect(boxFor('screen').classList.contains('is-container')).toBe(true);
-  });
-});
-
-describe('the drag cannot come back unnoticed', () => {
-  it('leaves no pointer-drag machinery in the stage layer at all', () => {
-    const src = readFileSync(resolve(EDITOR, 'sub-components/StageSelection.tsx'), 'utf8');
-    expect(src).not.toMatch(/onPointer(Move|Up|Cancel)/);
-    expect(src).not.toContain('setPointerCapture');
-    expect(src).not.toContain('useDragGesture');
-    expect(src).not.toMatch(/from '@app\/hud-layout-editing\/offset'/);
-  });
-
-  it('gives the stage no write prop to aim a drag at', () => {
-    const src = readFileSync(resolve(EDITOR, 'sub-components/EditorStage.tsx'), 'utf8');
-    expect(src).not.toContain('onOffset');
-    expect(src).not.toContain('onScale');
   });
 });

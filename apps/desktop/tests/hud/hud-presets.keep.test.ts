@@ -21,7 +21,7 @@ const everyId = (node: HudNode, out: string[] = []): string[] => {
   return out;
 };
 
-describe('the eight presets - every one is a valid, self-contained subtree', () => {
+describe('the eight presets - every one is a valid, self-contained subtree', { tags: ['critical'] }, () => {
   it('ships exactly the presets the plan names, each a real node', () => {
     expect(HUD_PRESETS.map((p) => p.id).sort()).toEqual([...PRESET_IDS].sort());
     HUD_PRESETS.forEach((preset) => {
@@ -72,7 +72,7 @@ describe('the eight presets - every one is a valid, self-contained subtree', () 
   });
 });
 
-describe('a heart is a shape, not a sprite switch - the model this phase had to grow', () => {
+describe('a heart is a shape, not a sprite switch - the model this phase had to grow', { tags: ['critical'] }, () => {
   it('the shape leaf is fixed-size regardless of fill, armor or context', () => {
     expect(intrinsicSize({ type: 'shape', shape: 'heart', fill: 0 })).toEqual({ w: 8, h: 8 });
     expect(intrinsicSize({ type: 'shape', shape: 'heart', fill: 1, armor: 2 })).toEqual({ w: 8, h: 8 });
@@ -88,7 +88,7 @@ describe('a heart is a shape, not a sprite switch - the model this phase had to 
   });
 });
 
-describe('a sprite may declare its own natural box', () => {
+describe('a sprite may declare its own natural box', { tags: ['critical'] }, () => {
   it('defaults to the 16x16 tile, and honours an explicit non-square box', () => {
     expect(intrinsicSize({ type: 'sprite', file: 'x' })).toEqual({ w: 16, h: 16 });
     expect(intrinsicSize({ type: 'sprite', file: 'x', box: { w: 16, h: 8 } })).toEqual({ w: 16, h: 8 });

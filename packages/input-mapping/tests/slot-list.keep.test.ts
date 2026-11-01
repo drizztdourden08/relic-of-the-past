@@ -9,7 +9,7 @@ const slot = (index: number, label = `Slot ${index}`): ModernSlot =>
 
 const listOf = (n: number): ModernSlot[] => Array.from({ length: n }, (_, i) => slot(i + 1));
 
-describe('the numbered slot list', () => {
+describe('the numbered slot list', { tags: ['critical'] }, () => {
   it('appends an EMPTY slot, which still exists and still has a number', () => {
     const { slots } = addSlot(listOf(3));
     expect(slots).toHaveLength(4);

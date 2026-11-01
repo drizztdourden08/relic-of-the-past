@@ -3,31 +3,31 @@ import { describe, it, expect, vi, afterEach } from 'vitest';
 import { validateCustomRatio, detectScreenRatio, MAX_ASPECT } from '@rotp/game-core';
 
 describe('validateCustomRatio', () => {
-  it('accepts ratios from 4:3 up to the wide ceiling', () => {
+  it('accepts ratios from 4:3 up to the wide ceiling', { tags: ['critical'] }, () => {
     expect(validateCustomRatio(4, 3).valid).toBe(true);
     expect(validateCustomRatio(16, 9).valid).toBe(true);
     expect(validateCustomRatio(32, 9).valid).toBe(true);
   });
 
-  it('accepts tall (taller-than-4:3) ratios down to the portrait floor', () => {
+  it('accepts tall (taller-than-4:3) ratios down to the portrait floor', { tags: ['critical'] }, () => {
     expect(validateCustomRatio(5, 4).valid).toBe(true);
     expect(validateCustomRatio(1, 1).valid).toBe(true);
     expect(validateCustomRatio(3, 4).valid).toBe(true);
     expect(validateCustomRatio(9, 16).valid).toBe(true);
   });
 
-  it('rejects ratios taller than the portrait floor', () => {
+  it('rejects ratios taller than the portrait floor', { tags: ['critical'] }, () => {
     const r = validateCustomRatio(1, 2);
     expect(r.valid).toBe(false);
     expect(r.error).toMatch(/tall/i);
   });
 
-  it('rejects ratios wider than the max', () => {
+  it('rejects ratios wider than the max', { tags: ['critical'] }, () => {
     expect(validateCustomRatio(9, 2).valid).toBe(false);
     expect(validateCustomRatio(5, 1).valid).toBe(false);
   });
 
-  it('rejects non-integer or non-positive input', () => {
+  it('rejects non-integer or non-positive input', { tags: ['critical'] }, () => {
     expect(validateCustomRatio(16.5, 9).valid).toBe(false);
     expect(validateCustomRatio(0, 9).valid).toBe(false);
     expect(validateCustomRatio(Number.NaN, 9).valid).toBe(false);
@@ -37,22 +37,22 @@ describe('validateCustomRatio', () => {
 describe('detectScreenRatio', () => {
   afterEach(() => vi.unstubAllGlobals());
 
-  it('GCD-reduces a landscape phone screen', () => {
+  it('GCD-reduces a landscape phone screen', { tags: ['critical'] }, () => {
     vi.stubGlobal('window', { screen: { width: 1920, height: 1080 } });
     expect(detectScreenRatio()).toEqual({ w: 16, h: 9 });
   });
 
-  it('normalizes a portrait screen to its landscape ratio', () => {
+  it('normalizes a portrait screen to its landscape ratio', { tags: ['critical'] }, () => {
     vi.stubGlobal('window', { screen: { width: 1080, height: 1920 } });
     expect(detectScreenRatio()).toEqual({ w: 16, h: 9 });
   });
 
-  it('renders a 5:4 screen at its own (mildly tall) ratio', () => {
+  it('renders a 5:4 screen at its own (mildly tall) ratio', { tags: ['critical'] }, () => {
     vi.stubGlobal('window', { screen: { width: 1280, height: 1024 } });
     expect(detectScreenRatio()).toEqual({ w: 5, h: 4 });
   });
 
-  it('clamps ultra-wide screens to the max', () => {
+  it('clamps ultra-wide screens to the max', { tags: ['critical'] }, () => {
     vi.stubGlobal('window', { screen: { width: 5120, height: 1080 } });
     const { w, h } = detectScreenRatio();
     expect(w / h).toBeLessThanOrEqual(MAX_ASPECT + 1e-6);

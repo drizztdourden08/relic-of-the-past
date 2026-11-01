@@ -19,7 +19,7 @@ const LW_10 = 'screen-030';
 const WEST_DARK_WORLD = 'screen-260';
 const SUPERBUNNY_CAVE_TOP = 'screen-463';
 
-describeDataset('cross-world gating stops an empty inventory crossing into the dark world', () => {
+describeDataset('cross-world gating stops an empty inventory crossing into the dark world', { tags: ['standard'] }, () => {
   it('reachableFrom a light-world screen reaches no dark-world screen', () => {
     const adjacency = buildAdjacency();
     const ctx = emptyInventoryContext();

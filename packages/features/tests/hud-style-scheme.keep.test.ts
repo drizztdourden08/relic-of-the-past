@@ -5,7 +5,7 @@ import { mergeSettings } from '@rotp/game-core';
 
 const merge = (raw: Record<string, unknown>): Record<string, unknown> => ({ ...mergeSettings(raw) });
 
-describe('hostDrawnHud answers whether the app draws this HUD', () => {
+describe('hostDrawnHud answers whether the app draws this HUD', { tags: ['critical'] }, () => {
   it('is false for the game\'s own HUD and true for both app-drawn styles', () => {
     expect(hostDrawnHud('vanilla')).toBe(false);
     expect(hostDrawnHud('enhanced')).toBe(true);
@@ -13,7 +13,7 @@ describe('hostDrawnHud answers whether the app draws this HUD', () => {
   });
 });
 
-describe('controlSchemeOf derives the scheme, which is never stored', () => {
+describe('controlSchemeOf derives the scheme, which is never stored', { tags: ['critical'] }, () => {
   it('is modern for exactly one style, and classic for the other two', () => {
     expect(controlSchemeOf({ hudStyle: 'modern' })).toBe('modern');
     expect(controlSchemeOf({ hudStyle: 'enhanced' })).toBe('classic');
@@ -21,7 +21,7 @@ describe('controlSchemeOf derives the scheme, which is never stored', () => {
   });
 });
 
-describe('mergeSettings and the HUD style', () => {
+describe('mergeSettings and the HUD style', { tags: ['critical'] }, () => {
   it('keeps each style as stored', () => {
     for (const style of ['vanilla', 'enhanced', 'modern'])
       expect(merge({ hudStyle: style }).hudStyle).toBe(style);

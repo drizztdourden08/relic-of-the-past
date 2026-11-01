@@ -27,7 +27,7 @@ const trackerConnects = (server: FakeServer) => server.of('Connect').filter((pac
 
 installNetworkHarness();
 
-describe('presence and other players\' checks', () => {
+describe('presence and other players\' checks', { tags: ['critical'] }, () => {
   it('reads every slot\'s client status at connect, then follows its SetReply', async () => {
     const { session, server } = await boot(makeRoom({ clientStatus: { 1: 5, 2: 20 } }));
     const zeldaKey = '_read_client_status_0_2';
@@ -76,7 +76,7 @@ describe('presence and other players\' checks', () => {
   });
 });
 
-describe('presence and other players\' checks', () => {
+describe('presence and other players\' checks', { tags: ['critical'] }, () => {
   it('tracker links close with the connection, reopen after a reconnect, and close on stop', async () => {
     const { session, server } = await boot(trackedRoom());
     await settle();

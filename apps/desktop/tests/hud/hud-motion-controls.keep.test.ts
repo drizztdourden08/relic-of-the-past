@@ -17,7 +17,7 @@ const SCOPE = { life_current: 8 };
 const TWO: HudAnimationKeyframe[] = [{ at: 0, value: 1 }, { at: 1, value: 1.1 }];
 const THREE: HudAnimationKeyframe[] = [{ at: 0, value: 1 }, { at: 0.5, value: 2 }, { at: 1, value: 1 }];
 
-describe('KeyframeTrack: dragging a diamond', () => {
+describe('KeyframeTrack: dragging a diamond', { tags: ['critical'] }, () => {
   it('turns a pointer x into the fraction of the rail it landed on', () => {
     const rail = { left: 100, width: 200 };
     expect(atFromPointer(100, rail)).toBe(0);
@@ -77,7 +77,7 @@ describe('KeyframeTrack: dragging a diamond', () => {
   });
 });
 
-describe('EasingPicker: exactly the strings the engine accepts', () => {
+describe('EasingPicker: exactly the strings the engine accepts', { tags: ['critical'] }, () => {
   const issuesFor = (easing: string): string[] => {
     const issues: string[] = [];
     validateAnimations(
@@ -120,7 +120,7 @@ describe('EasingPicker: exactly the strings the engine accepts', () => {
   });
 });
 
-describe('Transitions and enter/exit', () => {
+describe('Transitions and enter/exit', { tags: ['critical'] }, () => {
   const leaf = (extra: Partial<HudNode>): HudNode => ({
     id: 'heart', kind: 'element', element: { type: 'shape', shape: 'rect' }, ...extra,
   } as HudNode);
@@ -158,7 +158,7 @@ describe('Transitions and enter/exit', () => {
   });
 });
 
-describe('the reflow warning lands on the property that caused it', () => {
+describe('the reflow warning lands on the property that caused it', { tags: ['critical'] }, () => {
   it('names the animated property, so a card can claim its own warning', () => {
     const row: HudFlexContainer = {
       id: 'vitals',

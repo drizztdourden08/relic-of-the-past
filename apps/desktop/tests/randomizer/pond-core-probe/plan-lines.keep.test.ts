@@ -4,7 +4,7 @@ import { FEATURES3_POND_PLAN, WRAM } from './pond-core.constants';
 import { describePondCore } from './describe-pond-core';
 import { installPondRig } from './install-pond-rig';
 
-describePondCore('pond seams in the built core (headless): lines and the player', () => {
+describePondCore('pond seams in the built core (headless): lines and the player', { tags: ['standard'] }, () => {
   const { call, set8, gate3, armPlan } = installPondRig();
 
   it('the award line says whether the water still holds a prize', () => {

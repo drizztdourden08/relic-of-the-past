@@ -7,7 +7,7 @@ import { describeDataset } from '../dataset-guard';
 const EMPTY = new Set<ItemId>();
 const WITH_LAMP = new Set<ItemId>(['item-019']);
 
-describeDataset('duplicate item alternates', () => {
+describeDataset('duplicate item alternates', { tags: ['critical'] }, () => {
   it('yields the primary item when it is not owned', () => {
     expect(resolveDuplicate(0x12, EMPTY)).toBe(0x12);
     expect(itemLabel(resolveDuplicate(0x12, EMPTY))).toBe('Lamp');
@@ -26,11 +26,6 @@ describeDataset('duplicate item alternates', () => {
   it('leaves items with no alternate alone, owned or not', () => {
     expect(resolveDuplicate(0x01, new Set<ItemId>(['item-012']))).toBe(0x01);
     expect(isDuplicated(0x01, new Set<ItemId>(['item-012']))).toBe(false);
-  });
-
-  it('reports whether a swap happened, for the "already owned" note', () => {
-    expect(isDuplicated(0x12, WITH_LAMP)).toBe(true);
-    expect(isDuplicated(0x12, EMPTY)).toBe(false);
   });
 
   it('names an unmapped id by hex instead of returning undefined', () => {

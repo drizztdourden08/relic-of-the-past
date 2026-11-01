@@ -29,7 +29,7 @@ afterEach(() => {
   tempRoot = null;
 });
 
-describe('generateEnumTypes(root) lets an explicit root win over the file-relative guess', () => {
+describe('generateEnumTypes(root) lets an explicit root win over the file-relative guess', { tags: ['critical'] }, () => {
   it('reads and writes under the GIVEN root, not the script\'s own directory', async () => {
     tempRoot = mkdtempSync(join(tmpdir(), 'enum-root-'));
     const recordsDir = join(tempRoot, 'packages', 'game-data', 'src', 'data', 'records', 'enumeration');

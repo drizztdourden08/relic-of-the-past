@@ -9,7 +9,7 @@ import { installOutlineRig } from './install-outline-rig';
 const rig = installOutlineRig();
 const { runFrames, layOut, pointer, rowFor, mountOutline, dragTo } = rig;
 
-describe('the ramp is the design decision, so it is pinned as arithmetic', () => {
+describe('the ramp is the design decision, so it is pinned as arithmetic', { tags: ['standard'] }, () => {
   it('is 0 at the band\'s inner lip and the full rate at the very edge', () => {
     expect(rateFor(VIEW, VIEW.bottom - HOT, RATE)).toBe(0);
     expect(rateFor(VIEW, VIEW.bottom, RATE)).toBe(RATE);
@@ -28,7 +28,7 @@ describe('the ramp is the design decision, so it is pinned as arithmetic', () =>
   });
 });
 
-describe('which element is panned is resolved, never assumed', () => {
+describe('which element is panned is resolved, never assumed', { tags: ['standard'] }, () => {
   it('walks up to the nearest ancestor that can scroll', () => {
     mountOutline();
     const rows = layOut();
@@ -45,7 +45,7 @@ describe('which element is panned is resolved, never assumed', () => {
   });
 });
 
-describe('the pan itself', () => {
+describe('the pan itself', { tags: ['standard'] }, () => {
   it('scrolls by the ramped rate, once per frame, while the pointer sits in the band', () => {
     mountOutline();
     layOut();
@@ -78,7 +78,7 @@ describe('the pan itself', () => {
   });
 });
 
-describe('EVERY LOOP IS CANCELLED, since a leaked loop is the defect this phase would most plausibly ship', () => {
+describe('EVERY LOOP IS CANCELLED, since a leaked loop is the defect this phase would most plausibly ship', { tags: ['standard'] }, () => {
   const leaks = (finish: () => void): { queued: number; after: number } => {
     mountOutline();
     layOut();

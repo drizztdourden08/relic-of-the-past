@@ -8,7 +8,7 @@ import { required } from '../required';
 const bytes = (n: number, fill: number): Uint8Array => new Uint8Array(n).fill(fill);
 const P = 'p1';
 
-describe('saves store (over FileStore)', () => {
+describe('saves store (over FileStore)', { tags: ['critical'] }, () => {
   it('keeps SRAM at the profile path and rotates a backup', async () => {
     const f = createMemFileStore();
     const { sram } = createSaveStore(f);

@@ -65,7 +65,7 @@ afterEach(() => {
   vi.unstubAllGlobals();
 });
 
-describe('the real online core', () => {
+describe('the real online core', { tags: ['standard'] }, () => {
   it('mirrors the core\'s own foreign sentinel', () => {
     const source = readFileSync(resolve(REPO_ROOT, 'core/game-hooks/foreign_item.c'), 'utf8');
     const defined = /^#define FOREIGN_ITEM_ID (0x[0-9A-Fa-f]+)$/m.exec(source);
@@ -94,7 +94,7 @@ describe('the real online core', () => {
   });
 });
 
-describe('the real online core', () => {
+describe('the real online core', { tags: ['standard'] }, () => {
   it('arms another player\'s item as its game\'s icon id, saying what it was and who it went to', async () => {
     const snapshot = normalizeRandomizerOptions(buildOptionsSnapshot({}));
     const placement = generateFromSnapshot({
@@ -149,7 +149,7 @@ describe('the real online core', () => {
   });
 });
 
-describe('the real online core', () => {
+describe('the real online core', { tags: ['critical'] }, () => {
   it('shows the room\'s checked locations done and takes them out of the poller, writing no flag', () => {
     const core = installFakeModule(setModule);
     try {

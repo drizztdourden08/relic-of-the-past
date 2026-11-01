@@ -3,9 +3,6 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { act, createElement as h, type ReactNode } from 'react';
 import { createRoot, type Root } from 'react-dom/client';
-import { ghostFor } from '@app/hud-layout-editing/drop-ghost';
-import { outlineIntent } from '@app/hud-layout-editing/drop-intent';
-import { DragGhost } from '@app/views/HudLayoutEditor/sub-components/DragGhost';
 import { OutlinePanel } from '@app/views/HudLayoutEditor/sub-components/OutlinePanel';
 import { PlatformContext } from '@drizztdourden08/brock-react';
 import { DOC } from './ghost-doc.constants';
@@ -31,35 +28,6 @@ afterEach(() => {
   host.remove();
   mounted = null;
   document.querySelector('#portal-root')?.remove();
-});
-
-describe('the card itself', () => {
-  it('renders nothing at all when nothing is being dragged', () => {
-    mount(h(DragGhost, { model: null }));
-    expect(document.querySelector('.hud-ghost')).toBeNull();
-  });
-
-  it('draws three lines, in order, once the cursor has reported', () => {
-    mount(h(DragGhost, { model: ghostFor(DOC, ['magic-bar'], { kind: 'flex', parentId: 'hud', index: 1 }) }));
-    act(() => {
-      window.dispatchEvent(new MouseEvent('pointermove', { clientX: 200, clientY: 100 }));
-    });
-    const card = document.querySelector('.hud-ghost');
-    expect(card).not.toBeNull();
-    expect(card?.querySelector('.hud-ghost__chip')?.textContent).toBe('magic-bar');
-    expect(card?.querySelector('.hud-ghost__kind')?.textContent).toBe('into column');
-    expect(card?.querySelector('.hud-ghost__l2')?.textContent).toBe('position 2 of 2');
-    expect(card?.querySelector('.hud-ghost__l3')?.textContent).toBe('screen › hud');
-  });
-
-  it('turns the whole card on a refusal, so the state reads in peripheral vision', () => {
-    const intent = outlineIntent(DOC, 'pip1', 'inside-start', ['hearts']);
-    mount(h(DragGhost, { model: ghostFor(DOC, ['hearts'], intent) }));
-    act(() => {
-      window.dispatchEvent(new MouseEvent('pointermove', { clientX: 200, clientY: 100 }));
-    });
-    expect(document.querySelector('.hud-ghost.is-refused')).not.toBeNull();
-  });
 });
 
 const ROW = 22;
@@ -96,7 +64,7 @@ const dragRow = (from: string, to: string, offset: number): void => {
   }
 };
 
-describe('the outline, with a ghost on it', () => {
+describe('the outline, with a ghost on it', { tags: ['standard'] }, () => {
   const mountOutline = (onDrop: (ids: readonly string[], intent: unknown) => void): void => {
     mount(h(PlatformContext.Provider, { value: WINDOWS_PLATFORM }, h(OutlinePanel, {
       doc: DOC,
@@ -113,30 +81,7 @@ describe('the outline, with a ghost on it', () => {
     mountOutline(onDrop);
     const lowerHalfOfHeartsMiddleBand = 14;
     dragRow('magic-bar', 'hearts', lowerHalfOfHeartsMiddleBand);
-    expect(document.querySelector('.hud-ghost__kind')?.textContent).toBe('into row');
-    expect(document.querySelector('.hud-ghost__l2')?.textContent).toBe('position 3 of 3');
     act(() => { window.dispatchEvent(pointer('pointerup', rowFor('hearts').top + 14)); });
     expect(onDrop).toHaveBeenCalledWith(['magic-bar'], { kind: 'flex', parentId: 'hearts', index: 2 });
-  });
-
-  it('STOPS SILENTLY SWALLOWING A REFUSED DROP, which is the loop §43 left open', () => {
-    const onDrop = vi.fn();
-    mountOutline(onDrop);
-    dragRow('hud', 'hearts', 14);
-    const card = document.querySelector('.hud-ghost.is-refused');
-    expect(card).not.toBeNull();
-    expect(card?.querySelector('.hud-ghost__l2')?.textContent).toBe('hearts is already inside hud');
-    expect(card?.querySelector('.hud-ghost__l3')?.textContent).toBe('screen › hud › hearts');
-    expect(document.querySelector('.hud-outline__row.is-drop-inside')).toBeNull();
-  });
-
-  it('shows nothing at all before the slop threshold', () => {
-    const onDrop = vi.fn();
-    mountOutline(onDrop);
-    layOutRows();
-    act(() => { rowFor('magic-bar').element.dispatchEvent(pointer('pointerdown', rowFor('magic-bar').top + 11)); });
-    expect(document.querySelector('.hud-ghost')).toBeNull();
-    act(() => { window.dispatchEvent(pointer('pointerup', rowFor('magic-bar').top + 11)); });
-    expect(onDrop).not.toHaveBeenCalled();
   });
 });

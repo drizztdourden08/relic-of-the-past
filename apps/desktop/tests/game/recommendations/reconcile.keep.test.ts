@@ -48,26 +48,26 @@ const entryFrom = (d: DraftRecommendation<'screen'>, overrides: Partial<Recommen
 const firstOf = (entries: readonly Recommendation[]): Recommendation => required(entries[0], 'the first entry');
 
 describe('recommendationId', () => {
-  it('is derived from content, so the same finding mints the same id twice', () => {
+  it('is derived from content, so the same finding mints the same id twice', { tags: ['critical'] }, () => {
     expect(recommendationId(draft())).toBe(recommendationId(draft()));
   });
 
-  it('ignores the proposed record, which shifts between passes', () => {
+  it('ignores the proposed record, which shifts between passes', { tags: ['critical'] }, () => {
     const withNav = draft({ proposed: { ...SCREEN_100, nav: EMPTY_NAV } });
     expect(recommendationId(withNav)).toBe(recommendationId(draft()));
   });
 
-  it('separates two findings that differ only in their key', () => {
+  it('separates two findings that differ only in their key', { tags: ['critical'] }, () => {
     expect(recommendationId(draft({ key: 'gameId.roomIndex' }))).not.toBe(recommendationId(draft()));
   });
 
-  it('separates two findings that differ only in their screen', () => {
+  it('separates two findings that differ only in their screen', { tags: ['critical'] }, () => {
     expect(recommendationId(draft({ screenId: 'screen-200' }))).not.toBe(recommendationId(draft()));
   });
 });
 
 describe('reconcile', () => {
-  it('collapses a re-detected finding onto its existing entry instead of duplicating it', () => {
+  it('collapses a re-detected finding onto its existing entry instead of duplicating it', { tags: ['critical'] }, () => {
     const previous = [entryFrom(draft())];
     const next = reconcile(previous, [draft()], { now: 2000 });
 
@@ -78,14 +78,14 @@ describe('reconcile', () => {
     expect(first.state).toBe('open');
   });
 
-  it('refreshes the payload of a finding that still reproduces', () => {
+  it('refreshes the payload of a finding that still reproduces', { tags: ['critical'] }, () => {
     const previous = [entryFrom(draft())];
     const next = reconcile(previous, [draft({ reason: 'a better explanation' })], { now: 2000 });
 
     expect(firstOf(next).reason).toBe('a better explanation');
   });
 
-  it('resolves an open finding that no longer reproduces', () => {
+  it('resolves an open finding that no longer reproduces', { tags: ['critical'] }, () => {
     const previous = [entryFrom(draft())];
     const first = firstOf(reconcile(previous, [], { now: 2000 }));
 
@@ -93,7 +93,7 @@ describe('reconcile', () => {
     expect(first.decidedAt).toBe(2000);
   });
 
-  it('keeps a dismissed finding dismissed when it is detected again', () => {
+  it('keeps a dismissed finding dismissed when it is detected again', { tags: ['critical'] }, () => {
     const previous = [entryFrom(draft(), { state: 'dismissed', decidedAt: 1500 })];
     const next = reconcile(previous, [draft()], { now: 2000 });
 
@@ -103,14 +103,14 @@ describe('reconcile', () => {
     expect(first.decidedAt).toBe(1500);
   });
 
-  it('keeps an accepted finding accepted when it stops reproducing', () => {
+  it('keeps an accepted finding accepted when it stops reproducing', { tags: ['critical'] }, () => {
     const previous = [entryFrom(draft(), { state: 'accepted', decidedAt: 1500 })];
     const next = reconcile(previous, [], { now: 2000 });
 
     expect(firstOf(next).state).toBe('accepted');
   });
 
-  it('does not re-add a dismissed finding as a second, open entry', () => {
+  it('does not re-add a dismissed finding as a second, open entry', { tags: ['critical'] }, () => {
     const previous = [entryFrom(draft(), { state: 'dismissed', decidedAt: 1500 })];
     const twice = reconcile(reconcile(previous, [draft()], { now: 2000 }), [draft()], { now: 3000 });
 
@@ -118,7 +118,7 @@ describe('reconcile', () => {
     expect(firstOf(twice).state).toBe('dismissed');
   });
 
-  it('reopens a resolved finding that comes back, because resolved is a state, not a verdict', () => {
+  it('reopens a resolved finding that comes back, because resolved is a state, not a verdict', { tags: ['critical'] }, () => {
     const previous = [entryFrom(draft(), { state: 'resolved', decidedAt: 1500 })];
     const first = firstOf(reconcile(previous, [draft()], { now: 2000 }));
 
@@ -126,7 +126,7 @@ describe('reconcile', () => {
     expect(first.decidedAt).toBeNull();
   });
 
-  it('leaves a resolved finding alone while it stays gone', () => {
+  it('leaves a resolved finding alone while it stays gone', { tags: ['critical'] }, () => {
     const previous = [entryFrom(draft(), { state: 'resolved', decidedAt: 1500 })];
     const first = firstOf(reconcile(previous, [], { now: 2000 }));
 
@@ -134,7 +134,7 @@ describe('reconcile', () => {
     expect(first.decidedAt).toBe(1500);
   });
 
-  it('adds a new finding as open, stamped now', () => {
+  it('adds a new finding as open, stamped now', { tags: ['critical'] }, () => {
     const next = reconcile([], [draft()], { now: 2000 });
 
     expect(next).toHaveLength(1);
@@ -148,7 +148,7 @@ describe('scopedToPass', () => {
   const other = entryFrom(draft({ screenId: 'screen-999', targetId: 'screen-999' }));
   const mine = entryFrom(draft());
 
-  it('does not resolve findings about a screen this pass never looked at', () => {
+  it('does not resolve findings about a screen this pass never looked at', { tags: ['critical'] }, () => {
     const inScope = scopedToPass(['screen-identity'], 'screen-100');
     const next = reconcile([mine, other], [], { inScope, now: 2000 });
 
@@ -156,7 +156,7 @@ describe('scopedToPass', () => {
     expect(next.find(r => r.id === mine.id)?.state).toBe('resolved');
   });
 
-  it('does not resolve findings owned by a detector that did not run', () => {
+  it('does not resolve findings owned by a detector that did not run', { tags: ['critical'] }, () => {
     const foreign = entryFrom(draft({ detector: 'connection-shape' }));
     const inScope = scopedToPass(['screen-identity'], 'screen-100');
     const next = reconcile([foreign], [], { inScope, now: 2000 });

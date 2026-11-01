@@ -4,7 +4,7 @@ import { pondPlanOf, decomposeRupees, describeRupees, rupeeVolleysOf, LEGACY_PON
 import type { PondSetting } from '@rotp/randomizer';
 import { CUSTOM } from './pond-model.constants';
 
-describe('rupee decomposition', () => {
+describe('rupee decomposition', { tags: ['critical'] }, () => {
   it('names the gems the amount is made of', () => {
     expect(describeRupees(300)).toBe('1 gold');
     expect(describeRupees(427)).toBe('1 gold, 1 silver, 1 red, 1 blue, 2 green');
@@ -33,7 +33,7 @@ describe('rupee decomposition', () => {
   });
 });
 
-describe('pond plan', () => {
+describe('pond plan', { tags: ['critical'] }, () => {
   it('leaves the legacy pond with nothing to sell', () => {
     const plan = pondPlanOf(LEGACY_POND_SETTING);
     expect(plan.throws).toEqual([]);

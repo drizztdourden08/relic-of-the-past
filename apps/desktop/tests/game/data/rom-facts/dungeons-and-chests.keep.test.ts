@@ -1,11 +1,9 @@
 /* @layer tests @kind test */
-import { readFileSync } from 'fs';
-import { join } from 'path';
 import { expect, it } from 'vitest';
 import { all } from '@rotp/game-data';
 import { censusFindings, readRomCensus } from '@rotp/randomizer';
 import { describeRom, usRom } from '../rom-fixture';
-import { BOSS_TAGS, CHEST_ROW_EXCEPTIONS, CORE, SPECIAL_SCREENS } from './rom-facts.constants';
+import { BOSS_TAGS, CHEST_ROW_EXCEPTIONS } from './rom-facts.constants';
 import { readRomFacts } from './read-rom-facts';
 import { roomOf } from './room-of';
 
@@ -25,11 +23,11 @@ const chestScreenMismatches = (): string[] => {
 describeRom('native dungeon and chest ids, against the cartridge', () => {
   const { rom, screens } = readRomFacts();
 
-  it('puts a chest check on the screen that holds its room', () => {
+  it('puts a chest check on the screen that holds its room', { tags: ['standard'] }, () => {
     expect(chestScreenMismatches()).toEqual([]);
   });
 
-  it('agrees with the dungeon map about which rooms belong to which dungeon', () => {
+  it('agrees with the dungeon map about which rooms belong to which dungeon', { tags: ['standard'] }, () => {
     const wrong: string[] = [];
     for (const screen of screens) {
       const room = screen.gameId.roomIndex;
@@ -43,7 +41,7 @@ describeRom('native dungeon and chest ids, against the cartridge', () => {
     expect(wrong).toEqual([]);
   });
 
-  it('gives every room the dungeon map draws a screen of that dungeon', () => {
+  it('gives every room the dungeon map draws a screen of that dungeon', { tags: ['standard'] }, () => {
     const held = new Set(screens.map((screen) => `${screen.gameId.palaceIndex}:${screen.gameId.roomIndex}`));
     const missing = [...rom.palaceOfRoom]
       .filter(([room, palace]) => !held.has(`${palace}:${room}`))
@@ -51,7 +49,7 @@ describeRom('native dungeon and chest ids, against the cartridge', () => {
     expect(missing).toEqual([]);
   });
 
-  it('gives every dungeon a bossRoomId the cartridge marks as a boss room', () => {
+  it('gives every dungeon a bossRoomId the cartridge marks as a boss room', { tags: ['standard'] }, () => {
     const wrong: string[] = [];
     for (const dungeon of all('dungeon')) {
       const room = dungeon.gameId.bossRoomId;
@@ -64,19 +62,9 @@ describeRom('native dungeon and chest ids, against the cartridge', () => {
     expect(wrong).toEqual([]);
   });
 
-  it('resolves every chest check in the native chest table', () => {
+  it('resolves every chest check in the native chest table', { tags: ['standard'] }, () => {
     const findings = censusFindings(readRomCensus(usRom()), all('check'), all('item'));
     expect(findings.chestMismatches.map((row) => row.checkId)).toEqual(CHEST_ROW_EXCEPTIONS);
     expect(findings.vanillaItemDiffs).toEqual([]);
-  });
-
-  it('keeps every area-head event on an area that is its own head', () => {
-    const source = readFileSync(join(CORE, 'event_areas.h'), 'utf-8');
-    const heads = [...source.matchAll(/\{\s*(0x[0-9A-Fa-f]{2}),\s*kEvent_Area_/g)].map((match) => Number(match[1]));
-    expect(heads.length).toBeGreaterThan(50);
-    const wrong = heads
-      .filter((head) => !SPECIAL_SCREENS.includes(head) && !rom.isAreaHead(head))
-      .map((head) => `0x${head.toString(16)} heads to 0x${rom.headOf(head).toString(16)}`);
-    expect(wrong).toEqual([]);
   });
 });

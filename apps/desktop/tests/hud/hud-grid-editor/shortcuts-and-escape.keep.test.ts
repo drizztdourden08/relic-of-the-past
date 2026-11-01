@@ -21,7 +21,7 @@ const patchSpy = () => vi.fn<(patch: Partial<HudGridContainer>) => void>();
 const firstPatch = (patch: ReturnType<typeof patchSpy>): Partial<HudGridContainer> =>
   required(patch.mock.calls[0], 'the first patch')[0];
 
-describe('every shortcut does what the legend draws', () => {
+describe('every shortcut does what the legend draws', { tags: ['standard'] }, () => {
   it('moves a selected column with the arrow on the cap', () => {
     const patch = patchSpy();
     mountGrid(patch);
@@ -73,7 +73,7 @@ describe('every shortcut does what the legend draws', () => {
   });
 });
 
-describe('Escape clears the selection and leaves the editor standing', () => {
+describe('Escape clears the selection and leaves the editor standing', { tags: ['standard'] }, () => {
   it('answers with the lattice, not with the layer behind it (§33)', () => {
     mount(h(ScreenWindow, {
       onClose: ignore,
@@ -90,7 +90,7 @@ describe('Escape clears the selection and leaves the editor standing', () => {
   });
 });
 
-describe('removing an occupied column survives the validator and the engine', () => {
+describe('removing an occupied column survives the validator and the engine', { tags: ['standard'] }, () => {
   it('drops the screen\'s first band and lands both children in the new first one', () => {
     let doc: HudLayout = { id: 'grid-editor', name: 'Grid editor', builtIn: false, screen: screenRoot() };
     const before = layoutHud(validateLayout(doc).doc as HudLayout, VIEW, {});

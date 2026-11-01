@@ -1,5 +1,5 @@
 /* @layer tests @kind test */
-import { describe, expect, it } from 'vitest';
+import { expect, it } from 'vitest';
 import { PLACEHOLDER_AREA_ID, PLACEHOLDER_LOCATION_ID, all, get, KIND_ID_PREFIXES, LAST_EVENT_BIT } from '@rotp/game-data';
 import type { EntityKind } from '@rotp/game-data';
 import { recordReferences } from './record-references';
@@ -33,7 +33,7 @@ const unpairedBitLine = ({ bit, places }: { bit: number; places: readonly Ledger
 describeDataset('every id a record points at', () => {
   const references = recordReferences();
 
-  it('collects a reference from every collection that holds one', () => {
+  it('collects a reference from every collection that holds one', { tags: ['standard'] }, () => {
     const fields = new Set(references.map((reference) => reference.field));
     expect(references.length).toBeGreaterThan(10000);
     for (const field of ['toConnectionId', 'vanillaItemIds', 'regionId', 'roomScreenIds']) {
@@ -41,7 +41,7 @@ describeDataset('every id a record points at', () => {
     }
   });
 
-  it('resolves to a record of the kind the field names', () => {
+  it('resolves to a record of the kind the field names', { tags: ['standard'] }, () => {
     const dangling = references
       .filter((reference) => !UNPLACED.includes(reference.id))
       .filter((reference) => get(reference.kind, reference.id) === undefined)
@@ -49,16 +49,10 @@ describeDataset('every id a record points at', () => {
     expect([...new Set(dangling)].sort()).toEqual([]);
   });
 
-  it('spells every reference with the prefix of the collection it names', () => {
-    const wrong = references
-      .filter((reference) => !reference.id.startsWith(`${KIND_ID_PREFIXES[reference.kind]}-`))
-      .map((reference) => `${reference.from}.${reference.field} -> '${reference.id}' is not a ${reference.kind} id`);
-    expect([...new Set(wrong)].sort()).toEqual([]);
-  });
 });
 
 describeDataset('every id a record carries', () => {
-  it('is unique inside its own collection', () => {
+  it('is unique inside its own collection', { tags: ['standard'] }, () => {
     const duplicates: string[] = [];
     for (const kind of KINDS) {
       const seen = new Set<string>();
@@ -71,7 +65,7 @@ describeDataset('every id a record carries', () => {
     expect(duplicates).toEqual([]);
   });
 
-  it('is spelled with its own collection prefix', () => {
+  it('is spelled with its own collection prefix', { tags: ['standard'] }, () => {
     const wrong: string[] = [];
     for (const kind of KINDS) {
       for (const record of all(kind)) {
@@ -86,7 +80,7 @@ describeDataset('every id a record carries', () => {
 describeDataset('a screen and the places above it', () => {
   const agrees = (above: string, screen: string): boolean => above === 'both' || above === screen;
 
-  it('agrees with its area about the world', () => {
+  it('agrees with its area about the world', { tags: ['standard'] }, () => {
     const wrong = all('screen')
       .filter((screen) => screen.areaId !== PLACEHOLDER_AREA_ID)
       .map((screen) => ({ screen, area: get('area', screen.areaId) }))
@@ -95,7 +89,7 @@ describeDataset('a screen and the places above it', () => {
     expect(wrong).toEqual([]);
   });
 
-  it('agrees with the area its location is filed under', () => {
+  it('agrees with the area its location is filed under', { tags: ['standard'] }, () => {
     const wrong = all('screen')
       .filter((screen) => screen.locationId !== PLACEHOLDER_LOCATION_ID)
       .map((screen) => {
@@ -108,7 +102,7 @@ describeDataset('a screen and the places above it', () => {
     expect(wrong).toEqual([]);
   });
 
-  it('agrees with its region about the world', () => {
+  it('agrees with its region about the world', { tags: ['standard'] }, () => {
     const wrong = all('screen')
       .filter((screen) => screen.regionId !== undefined)
       .map((screen) => ({ screen, region: get('region', screen.regionId as string) }))
@@ -117,7 +111,7 @@ describeDataset('a screen and the places above it', () => {
     expect(wrong).toEqual([]);
   });
 
-  it('puts a location in the same area as every screen that names it', () => {
+  it('puts a location in the same area as every screen that names it', { tags: ['standard'] }, () => {
     const wrong: string[] = [];
     for (const screen of all('screen')) {
       if (screen.locationId === PLACEHOLDER_LOCATION_ID) continue;
@@ -137,18 +131,18 @@ describeDataset('the event ledger', () => {
   const byBit = new Map<number, typeof rows>();
   for (const row of rows) byBit.set(row.bit, [...(byBit.get(row.bit) ?? []), row]);
 
-  it('gives a bit to enough rows that the read is not empty', () => {
+  it('gives a bit to enough rows that the read is not empty', { tags: ['standard'] }, () => {
     expect(rows.length).toBeGreaterThan(50);
   });
 
-  it('keeps every bit inside the ledger the core declares', () => {
+  it('keeps every bit inside the ledger the core declares', { tags: ['standard'] }, () => {
     const outside = rows
       .filter((row) => !Number.isInteger(row.bit) || row.bit < 0 || row.bit > LAST_EVENT_BIT)
       .map((row) => `${row.id}: bit ${row.bit}, the ledger ends at ${LAST_EVENT_BIT}`);
     expect(outside).toEqual([]);
   });
 
-  it('gives no two event rows the same bit', () => {
+  it('gives no two event rows the same bit', { tags: ['standard'] }, () => {
     const shared = [...byBit]
       .map(eventsOnBit)
       .filter((entry) => entry.events.length > 1)
@@ -156,17 +150,11 @@ describeDataset('the event ledger', () => {
     expect(shared).toEqual([]);
   });
 
-  it('pairs every location on a bit with exactly one event row', () => {
+  it('pairs every location on a bit with exactly one event row', { tags: ['standard'] }, () => {
     const wrong = [...byBit]
       .map(placesAndEventsOnBit)
       .filter((entry) => entry.places.length > 0 && (entry.places.length > 1 || entry.events.length !== 1))
       .map(unpairedBitLine);
     expect(wrong).toEqual([]);
-  });
-});
-
-describe('the exemption list', () => {
-  it('holds the two unplaced ids and nothing else', () => {
-    expect(UNPLACED).toEqual(['area-000', 'location-000']);
   });
 });

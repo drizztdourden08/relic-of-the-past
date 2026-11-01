@@ -16,42 +16,42 @@ const heads = (() => {
 })();
 
 describe('resolveAreaSprite', () => {
-  it('keeps an in-range tile on the head screen unchanged', () => {
+  it('keeps an in-range tile on the head screen unchanged', { tags: ['critical'] }, () => {
     expect(resolveAreaSprite(HEAD, { row: 5, col: 5 }, heads)).toEqual({
       screenIndex: HEAD,
       tile: { row: 5, col: 5 },
     });
   });
 
-  it('resolves a row past 63 to the screen one row down, with the row rebased', () => {
+  it('resolves a row past 63 to the screen one row down, with the row rebased', { tags: ['critical'] }, () => {
     expect(resolveAreaSprite(HEAD, { row: 84, col: 12 }, heads)).toEqual({
       screenIndex: HEAD + 8,
       tile: { row: 20, col: 12 },
     });
   });
 
-  it('resolves a column past 63 to the screen one column right, with the column rebased', () => {
+  it('resolves a column past 63 to the screen one column right, with the column rebased', { tags: ['critical'] }, () => {
     expect(resolveAreaSprite(HEAD, { row: 12, col: 84 }, heads)).toEqual({
       screenIndex: HEAD + 1,
       tile: { row: 12, col: 20 },
     });
   });
 
-  it('resolves both axes overflowing to the south-east screen', () => {
+  it('resolves both axes overflowing to the south-east screen', { tags: ['critical'] }, () => {
     expect(resolveAreaSprite(HEAD, { row: 70, col: 70 }, heads)).toEqual({
       screenIndex: HEAD + 8 + 1,
       tile: { row: 6, col: 6 },
     });
   });
 
-  it('resolves the same way whichever of the area\'s screens the table was queried through', () => {
+  it('resolves the same way whichever of the area\'s screens the table was queried through', { tags: ['critical'] }, () => {
     expect(resolveAreaSprite(SOUTH_SCREEN,{ row: 84, col: 12 }, heads)).toEqual({
       screenIndex: HEAD + 8,
       tile: { row: 20, col: 12 },
     });
   });
 
-  it('reuses the light-world head layout for the dark world via the +64 offset', () => {
+  it('reuses the light-world head layout for the dark world via the +64 offset', { tags: ['critical'] }, () => {
     const DARK_HEAD = HEAD + 64;
     expect(resolveAreaSprite(DARK_HEAD, { row: 84, col: 12 }, heads)).toEqual({
       screenIndex: DARK_HEAD + 8,

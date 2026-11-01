@@ -19,7 +19,7 @@ const makeProfile = (mappings: ButtonMapping[], assigned: InputProfile['assigned
   mappings, isDefault: false, assignedDevice: assigned, createdAt: 0, modifiedAt: 0,
 });
 
-describe('allowedDevices', () => {
+describe('allowedDevices', { tags: ['critical'] }, () => {
   it('collects binding sources and the assigned device as vid:pid keys', () => {
     const profile = makeProfile(
       [gamepadBinding('A', 0, '045e', '02ff')],
@@ -39,7 +39,7 @@ describe('allowedDevices', () => {
   });
 });
 
-describe('computeBitmask device gate', () => {
+describe('computeBitmask device gate', { tags: ['critical'] }, () => {
   const gamepadButtonMap = new Map([[ANY_DEVICE, new Map<number, SnesButton>([[0, 'A']])]]);
   const noKeys = new Map<string, boolean>();
   const noKeyboardMap = new Map<string, SnesButton>();

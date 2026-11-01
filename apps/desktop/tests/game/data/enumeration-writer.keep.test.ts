@@ -33,7 +33,7 @@ afterEach(async () => {
 });
 
 describe('allocateEnumeration', () => {
-  it('mints a real id and appends a new closed-set row', async () => {
+  it('mints a real id and appends a new closed-set row', { tags: ['standard'] }, async () => {
     const result = await allocateEnumeration(root, {
       category: 'world', value: 'both', label: 'Both Worlds', appliesTo: ['screen', 'area'],
     });
@@ -46,12 +46,12 @@ describe('allocateEnumeration', () => {
     expect(source).toContain("label: 'Both Worlds'");
   });
 
-  it('refuses a blank value instead of minting an id', async () => {
+  it('refuses a blank value instead of minting an id', { tags: ['critical'] }, async () => {
     const result = await allocateEnumeration(root, { category: 'world', value: '  ', label: 'x', appliesTo: ['screen'] });
     expect(result).toEqual({ success: false, error: 'An enumeration entry needs a value.' });
   });
 
-  it('refuses an entry with no collection to apply to', async () => {
+  it('refuses an entry with no collection to apply to', { tags: ['critical'] }, async () => {
     const result = await allocateEnumeration(root, { category: 'world', value: 'both', label: 'Both', appliesTo: [] });
     expect(result).toEqual({
       success: false,
@@ -59,14 +59,14 @@ describe('allocateEnumeration', () => {
     });
   });
 
-  it('refuses a category/value pair already on file, even under a different label', async () => {
+  it('refuses a category/value pair already on file, even under a different label', { tags: ['critical'] }, async () => {
     const result = await allocateEnumeration(root, {
       category: 'world', value: 'light', label: 'Somehow Different', appliesTo: ['screen'],
     });
     expect(result.success).toBe(false);
   });
 
-  it('allows the same value under a different category, since the pair is the key', async () => {
+  it('allows the same value under a different category, since the pair is the key', { tags: ['standard'] }, async () => {
     const result = await allocateEnumeration(root, {
       category: 'screen-status', value: 'light', label: 'Light-ish', appliesTo: ['screen'],
     });
@@ -75,7 +75,7 @@ describe('allocateEnumeration', () => {
 });
 
 describe('writeEnumeration and deleteEnumeration', () => {
-  it('replaces and removes an entry already on file after the create path landed', async () => {
+  it('replaces and removes an entry already on file after the create path landed', { tags: ['standard'] }, async () => {
     const created = await allocateEnumeration(root, {
       category: 'world', value: 'both', label: 'Both Worlds', appliesTo: ['screen', 'area'],
     });

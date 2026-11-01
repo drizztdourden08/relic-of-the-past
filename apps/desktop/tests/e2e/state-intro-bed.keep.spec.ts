@@ -20,8 +20,7 @@ const tapUntil = async (r: StateReader, label: string, want: (chips: string[]) =
 const someMatch = (match: RegExp) => (chips: string[]) => chips.some((s) => match.test(s));
 const noneMatch = (match: RegExp) => (chips: string[]) => !chips.some((s) => match.test(s));
 
-test('test-intro-bed plays the opening and reports each beat', async () => {
-  test.setTimeout(600_000);
+test('test-intro-bed plays the opening and reports each beat', { tag: '@e2e' }, async () => {
   await withState('test-intro-bed', async (r) => {
     expect(await r.screenId(), 'the intro bed scene is screen-205, the intro variant (room 0x104)').toMatch(/^screen-205 · 0x104 · INDOOR/);
 

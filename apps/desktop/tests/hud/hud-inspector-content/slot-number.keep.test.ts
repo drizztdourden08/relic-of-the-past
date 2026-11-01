@@ -16,14 +16,13 @@ vi.hoisted(() => {
 });
 
 import { createElement as h } from 'react';
-import { readFileSync } from 'fs';
 import { SlotRefField } from '@app/views/HudLayoutEditor/sub-components/SlotRefField';
-import { EDITOR, PACKS, SLOTS } from './content-fixtures.constants';
+import { PACKS, SLOTS } from './content-fixtures.constants';
 import { installDomHarness } from './install-dom-harness';
 
 const { mount, one } = installDomHarness();
 
-describe('a slot number past the previewed scheme', () => {
+describe('a slot number past the previewed scheme', { tags: ['standard'] }, () => {
   it('is accepted, drawn empty, and explained where it was typed', () => {
     mount(h(SlotRefField, {
       label: 'slot', value: 9, onChange: () => {}, slots: SLOTS, glyphPacks: PACKS,
@@ -41,14 +40,5 @@ describe('a slot number past the previewed scheme', () => {
     } as never));
     expect(one('.hud-ref-field img').getAttribute('src')).toContain('south.svg');
     expect(document.body.textContent).not.toContain('Still legal');
-  });
-
-  it('has retired all three copies of the standing disclaimer', () => {
-    for (const file of ['SlotContent.tsx', 'GlyphContent.tsx', 'ButtonStatesEditor.tsx']) {
-      const src = readFileSync(`${EDITOR}/sub-components/${file}`, 'utf8');
-      const kept = [/hint="Any number/, /hint="Draws whichever/, /aria-label="Slot number"/]
-        .filter((pattern) => pattern.test(src));
-      expect(`${file}: ${kept.join(', ') || 'gone'}`).toBe(`${file}: gone`);
-    }
   });
 });

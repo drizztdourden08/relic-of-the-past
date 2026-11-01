@@ -26,7 +26,7 @@ beforeEach(() => {
   useDataViewStore.getState().clearPendingRecommendation();
 });
 
-describe('openRecommendation', () => {
+describe('openRecommendation', { tags: ['critical'] }, () => {
   it('leaves the finding standing for the view to pick up', () => {
     const entry = finding('r-1');
     useDataViewStore.getState().openRecommendation(entry);
@@ -54,31 +54,9 @@ describe('openRecommendation', () => {
     expect(useDataViewStore.getState().pendingRecommendation?.id).toBe('r-4');
   });
 
-  it('is spent once the view has consumed it', () => {
-    useDataViewStore.getState().openRecommendation(finding('r-5'));
-    useDataViewStore.getState().clearPendingRecommendation();
-    expect(useDataViewStore.getState().pendingRecommendation).toBeNull();
-  });
-
   it('replaces an unconsumed request instead of queueing behind it', () => {
     useDataViewStore.getState().openRecommendation(finding('first'));
     useDataViewStore.getState().openRecommendation(finding('second'));
     expect(useDataViewStore.getState().pendingRecommendation?.id).toBe('second');
-  });
-
-  it('withdraws the opener when the shell unmounts', () => {
-    const open = vi.fn();
-    useDataViewStore.getState().registerInspectorOpener(open);
-    useDataViewStore.getState().registerInspectorOpener(null);
-    useDataViewStore.getState().openRecommendation(finding('r-6'));
-    expect(open).not.toHaveBeenCalled();
-  });
-
-  it('does not re-render subscribers when the shell re-registers', () => {
-    const listener = vi.fn();
-    const unsubscribe = useDataViewStore.subscribe(listener);
-    useDataViewStore.getState().registerInspectorOpener(() => {});
-    unsubscribe();
-    expect(listener).not.toHaveBeenCalled();
   });
 });

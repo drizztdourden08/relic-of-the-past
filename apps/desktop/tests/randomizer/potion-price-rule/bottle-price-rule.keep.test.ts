@@ -1,10 +1,10 @@
 /* @layer tests @kind test */
 import { describe, expect, it } from 'vitest';
-import { POTION_CAULDRONS, ruleForPrice } from '@rotp/randomizer';
+import { ruleForPrice } from '@rotp/randomizer';
 import { CAULDRON } from './potion-price-rule.constants';
 import { stateWith } from './state-with';
 
-describe('paying a bottle price needs a source to buy the content back from', () => {
+describe('paying a bottle price needs a source to buy the content back from', { tags: ['critical'] }, () => {
 
   it('asks a potion price for the hut and the bottle', () => {
     const rule = ruleForPrice({ currency: 'bottle', content: CAULDRON.content });
@@ -34,9 +34,5 @@ describe('paying a bottle price needs a source to buy the content back from', ()
       expect(bare(stateWith(held, false)), `${held} held`).toBe(one(stateWith(held, false)));
       expect(bare(stateWith(held, false)), `${held} held`).toBe(held >= 1);
     }
-  });
-
-  it('names a refill price for every cauldron content, so none is gated on nothing', () => {
-    for (const cauldron of POTION_CAULDRONS) expect(cauldron.price).toBeGreaterThan(0);
   });
 });

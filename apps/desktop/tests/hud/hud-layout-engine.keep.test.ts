@@ -34,7 +34,7 @@ const row = (children: HudNode[], extra: Partial<HudFlexContainer> = {}): HudFle
 const rectOf = (doc: HudLayout, id: string, ctx = {}) =>
   placedById(layoutHud(doc, VIEW, ctx), id)?.rect;
 
-describe('boxes, extents and the flow', () => {
+describe('boxes, extents and the flow', { tags: ['critical'] }, () => {
   it('a row lays its children out along x, a column along y, both with the gap', () => {
     const across = docOf(row([leaf('a'), leaf('b')], { gap: { x: 4, y: 4 } }));
     const down = docOf(row([leaf('a'), leaf('b')], { gap: { x: 4, y: 4 }, direction: 'column' }));
@@ -89,7 +89,7 @@ describe('boxes, extents and the flow', () => {
 
 });
 
-describe('boxes, extents and the flow', () => {
+describe('boxes, extents and the flow', { tags: ['critical'] }, () => {
   describe('the three space distributions put the ends where they say', () => {
     const three = (justify: 'between' | 'around' | 'evenly'): (number | undefined)[] => {
       const doc = docOf(row([leaf('a'), leaf('b'), leaf('c')], {
@@ -130,7 +130,7 @@ describe('boxes, extents and the flow', () => {
   });
 });
 
-describe('nothing ever stretches', () => {
+describe('nothing ever stretches', { tags: ['critical'] }, () => {
   it('a box of the wrong shape letterboxes the content and centres it', () => {
     const fitted = containRect({ w: 16, h: 16 }, { x: 0, y: 0, w: 64, h: 32 });
     expect(fitted).toEqual({ x: 16, y: 0, w: 32, h: 32 });
@@ -150,7 +150,7 @@ describe('nothing ever stretches', () => {
   });
 });
 
-describe('cells, visibility, opacity and dimming', () => {
+describe('cells, visibility, opacity and dimming', { tags: ['critical'] }, () => {
   it('each band of the screen pins its child, and margins measure inward from it', () => {
     const at = (place: { column: number; row: number }, extra: Pick<HudFlexContainer, 'alignSelf'>) => {
       const root = row([leaf('a')], { margin: { left: 8, top: 8, right: 8, bottom: 8 } });

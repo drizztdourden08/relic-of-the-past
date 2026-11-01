@@ -102,7 +102,7 @@ const driveFrames = (frames: number): number => {
   return target;
 };
 
-describe('one drag is one edit', () => {
+describe('one drag is one edit', { tags: ['standard'] }, () => {
   it('writes the document exactly once, on release and never before it', () => {
     const onDrop = vi.fn();
     mountOutline(onDrop);
@@ -130,7 +130,7 @@ describe('one drag is one edit', () => {
   });
 });
 
-describe('cancel is free, because nothing was written', () => {
+describe('cancel is free, because nothing was written', { tags: ['standard'] }, () => {
   it('takes Escape mid-drag and leaves the document alone', () => {
     const onDrop = vi.fn();
     mountOutline(onDrop);

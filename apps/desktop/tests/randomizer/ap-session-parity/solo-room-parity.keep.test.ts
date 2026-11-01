@@ -191,7 +191,7 @@ const expectParity = ({ localSet, onlineSet, online, placement, foreign }: Parit
   }
 };
 
-describe('a solo room arms the game exactly like the local seed', () => {
+describe('a solo room arms the game exactly like the local seed', { tags: ['standard'] }, () => {
   for (const parityCase of CASES) {
     it(parityCase.name, async () => {
       const { room, placement } = caseRoom(parityCase);

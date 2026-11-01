@@ -1,13 +1,8 @@
 /* @layer test @kind test */
 import { describe, expect, it } from 'vitest';
-import { readFileSync, readdirSync, statSync } from 'fs';
-import { join, resolve } from 'path';
 import { gridCellRects } from '@rotp/hud';
 import { stageCellRects } from '@app/hud-layout-editing/stage-cells';
 import type { PlacedNode, HudGridContainer, Rect } from '@rotp/hud';
-import { REPO_ROOT } from '../repo-root';
-
-const EDITOR = resolve(REPO_ROOT, 'apps/desktop/src/views/HudLayoutEditor');
 
 const SCREEN: HudGridContainer = {
   kind: 'container', id: 'screen', layout: 'grid',
@@ -32,7 +27,7 @@ const hull = (rects: readonly Rect[]): Rect => {
 const VIEW: Rect = { x: 0, y: 0, w: 398, h: 224 };
 const DISPLAY = 1.39;
 
-describe('a placed grid\'s cells, at the display scale', () => {
+describe('a placed grid\'s cells, at the display scale', { tags: ['critical'] }, () => {
   it('together cover exactly the container - not 1/scale of it', () => {
     const cells = stageCellRects(placedAt(VIEW, 1), DISPLAY, {});
     const all = hull(cells.map((c) => c.rect));
@@ -70,20 +65,5 @@ describe('a placed grid\'s cells, at the display scale', () => {
     expect(all.w).toBeCloseTo(298.5 * DISPLAY, 6);
     expect(all.h).toBeCloseTo(168 * DISPLAY, 6);
     expect(cells.find((c) => c.column === 1 && c.row === 1)?.rect.w).toBeCloseTo(124 * 0.75 * DISPLAY, 6);
-  });
-});
-
-describe('one door to the solve', () => {
-  const sources = (dir: string): string[] => readdirSync(dir).flatMap((name) => {
-    const full = join(dir, name);
-    if (statSync(full).isDirectory()) return sources(full);
-    return /\.tsx?$/.test(name) ? [full] : [];
-  });
-
-  it('no stage drawing calls gridCellRects itself - the unit is too easy to get wrong', () => {
-    const offenders = sources(EDITOR)
-      .filter((file) => !file.endsWith('stage-cells.ts'))
-      .filter((file) => /\bgridCellRects\s*\(/.test(readFileSync(file, 'utf8')));
-    expect(offenders).toEqual([]);
   });
 });

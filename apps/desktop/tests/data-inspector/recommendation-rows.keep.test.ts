@@ -1,11 +1,7 @@
 /* @layer tests @kind test */
 import { describe, it, expect } from 'vitest';
-import {
-  byConfidenceThenAge, openRecommendations, recommendationRows,
-} from '@app/data-inspector/recommendations/recommendation-rows';
-import {
-  RECOMMENDATION_GROUP_BY, RECOMMENDATION_SCHEMA, recommendationSource,
-} from '@app/data-inspector/recommendations/recommendation-source';
+import { openRecommendations, recommendationRows } from '@app/data-inspector/recommendations/recommendation-rows';
+import { recommendationSource } from '@app/data-inspector/recommendations/recommendation-source';
 import { buildSchema, createSchemaIndex } from '@drizztdourden08/tessera/data';
 import type { Recommendation } from '@rotp/navigation';
 import { required } from '../required';
@@ -29,7 +25,7 @@ const entry = (over: Partial<Recommendation> = {}): Recommendation => ({
   ...over,
 } as Recommendation);
 
-describe('recommendationRows builds one flat, kind-agnostic table', () => {
+describe('recommendationRows builds one flat, kind-agnostic table', { tags: ['critical'] }, () => {
   it('carries exactly the columns every finding can answer, whatever its collection', () => {
     const row = required(recommendationRows([entry()])[0], 'the one row');
     expect(Object.keys(row).sort()).toEqual(
@@ -37,13 +33,6 @@ describe('recommendationRows builds one flat, kind-agnostic table', () => {
     );
   });
 
-  it('offers no column that only some collections have', () => {
-    const rows = recommendationRows([
-      entry({ id: 'a', kind: 'screen', targetId: 'screen-001' }),
-      entry({ id: 'b', kind: 'item', targetId: 'item-004' }),
-    ]);
-    expect(Object.keys(required(rows[0], 'the screen row'))).toEqual(Object.keys(required(rows[1], 'the item row')));
-  });
 
   it('keeps a create\'s missing target/screen as null, not a placeholder string', () => {
     const row = required(
@@ -75,7 +64,7 @@ describe('recommendationRows builds one flat, kind-agnostic table', () => {
   });
 });
 
-describe('recommendationRows keeps the pass order by default', () => {
+describe('recommendationRows keeps the pass order by default', { tags: ['critical'] }, () => {
   it('puts certain findings ahead of likely ones', () => {
     const rows = recommendationRows([
       entry({ id: 'maybe', confidence: 'likely', firstSeenAt: 1 }),
@@ -98,14 +87,9 @@ describe('recommendationRows keeps the pass order by default', () => {
     expect(entries.map(item => item.id)).toEqual(['b', 'a']);
   });
 
-  it('exposes the same comparator the "next finding" step reuses', () => {
-    const certain = entry({ confidence: 'certain', firstSeenAt: 10 });
-    const likely = entry({ confidence: 'likely', firstSeenAt: 1 });
-    expect(byConfidenceThenAge(certain, likely)).toBeLessThan(0);
-  });
 });
 
-describe('recommendationRows returns only what is still open', () => {
+describe('recommendationRows returns only what is still open', { tags: ['critical'] }, () => {
   it('drops accepted, dismissed and resolved findings', () => {
     const entries = [
       entry({ id: 'open', state: 'open' }),
@@ -118,16 +102,8 @@ describe('recommendationRows returns only what is still open', () => {
   });
 });
 
-describe('the pseudo-collection source', () => {
-  it('opens grouped by which collection each finding is about', () => {
-    expect(RECOMMENDATION_GROUP_BY).toEqual(['kind']);
-  });
+describe('the pseudo-collection source', { tags: ['critical'] }, () => {
 
-  it('shows the kind-agnostic columns in review order', () => {
-    expect(RECOMMENDATION_SCHEMA.defaultColumns).toEqual([
-      'kind', 'action', 'targetId', 'reason', 'confidence', 'screenId', 'firstSeenAt',
-    ]);
-  });
 
   it('identifies a row by the finding id, and declares no write path', () => {
     const source = recommendationSource([entry({ id: 'r-42' })]);

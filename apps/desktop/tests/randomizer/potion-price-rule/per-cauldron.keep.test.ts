@@ -7,7 +7,7 @@ import { ALL_PRICES } from './potion-price-rule.constants';
 import { scopeWith } from './scope-with';
 import { valuesOf } from './values-of';
 
-describe('each cauldron answers for its own content alone', () => {
+describe('each cauldron answers for its own content alone', { tags: ['critical'] }, () => {
   const contentOf = (canonicalIndex: number) =>
     required(POTION_CAULDRONS.find((row) => row.canonicalIndex === canonicalIndex), `cauldron ${canonicalIndex}`).content;
 
