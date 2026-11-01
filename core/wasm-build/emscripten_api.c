@@ -282,6 +282,11 @@ int WasmGetPendingSteps(void) {
 }
 
 EMSCRIPTEN_KEEPALIVE
+int WasmGetFramesRun(void) {
+  return (int)g_frames_run;
+}
+
+EMSCRIPTEN_KEEPALIVE
 int WasmGetPaused(void) {
   return g_paused;
 }

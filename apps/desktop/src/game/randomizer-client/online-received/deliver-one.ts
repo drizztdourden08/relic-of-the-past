@@ -1,5 +1,6 @@
 /* @layer bridge-wasm @kind logic */
 import { log } from '../../../log-bus';
+import { logItemReceived } from '../../event-log';
 import { settlePosition, adoptRoom, isFromServer, senderNameOf } from '@rotp/randomizer';
 import type { ApNetworkItem, DeliveryOutcome, OnlineContext } from '@rotp/randomizer';
 
@@ -16,10 +17,13 @@ const settleItem = (ctx: OnlineContext, index: number, epoch: number): void => {
   core.writeReceivedIndex(next);
 };
 
+const isSelf = (ctx: OnlineContext, item: ApNetworkItem): boolean => !isFromServer(item) && item.player === ctx.room.slot;
+
 const deliverOne = (ctx: OnlineContext, item: ApNetworkItem, index: number): DeliveryOutcome => {
   const { epoch } = ctx.room.cursor;
   if (isOwnPickupEcho(ctx, item)) {
     log.randomizer(`[Online] Own pickup at location ${item.location} echoed back, already granted in-world`);
+    logItemReceived(item.item, ctx.room.itemNameById.get(item.item) ?? `item ${item.item}`, senderNameOf(ctx, item), true);
     settleItem(ctx, index, epoch);
     return 'delivered';
   }
@@ -32,6 +36,7 @@ const deliverOne = (ctx: OnlineContext, item: ApNetworkItem, index: number): Del
     settleItem(ctx, index, epoch);
   } else if (outcome === 'delivered') {
     log.randomizer(`[Online] Received: ${itemName} from ${from}`);
+    logItemReceived(item.item, itemName ?? `item ${item.item}`, from, isSelf(ctx, item));
   }
   return outcome;
 };

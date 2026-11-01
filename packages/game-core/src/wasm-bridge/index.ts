@@ -12,6 +12,7 @@ export { UI_STATE_BUFFER_SIZE } from './wasm-bridge.constants';
 export { wasmGetPlayerStateInfo } from '../bridge/player-state';
 export type { PlayerStateInfo } from '../bridge/player-state';
 
+export { wasmGetFramesRun } from '../bridge/wasm-get-frames-run';
 export { wasmGetPendingSteps } from '../bridge/wasm-get-pending-steps';
 export { wasmSetPaused } from '../bridge/wasm-set-paused';
 export { wasmStepFrames } from '../bridge/wasm-step-frames';

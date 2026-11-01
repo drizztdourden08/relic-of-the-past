@@ -49,6 +49,8 @@ int g_input1_state;
 uint8 g_paused;
 // Frames a paused core still owes: one per drawn tick, taken by the loop below (WasmStepFrames).
 uint16 g_pause_steps;
+// Emulator frames run since this core booted (WasmGetFramesRun); the event log stamps its lines with it.
+uint32 g_frames_run;
 static bool g_running = true;
 bool g_js_input_mode = false;
 
@@ -141,8 +143,10 @@ static void MainFrameCallback(void) {
   // turbo is held; the intermediate states are simulated but never drawn, which keeps the owed
   // speed without rendering frames nobody sees.
   int inputs = g_input1_state;
-  for (int i = 0; i < steps; i++)
+  for (int i = 0; i < steps; i++) {
     ZeldaRunFrame(inputs);
+    g_frames_run++;
+  }
 
   // Draw
   int render_scale = PpuGetCurrentRenderScale(g_zenv.ppu, g_ppu_render_flags);

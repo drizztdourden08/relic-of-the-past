@@ -6,6 +6,7 @@ import type {
 } from '@app/debug-report';
 import type { EntityKind } from '@rotp/game-data';
 import type { PassResult, Recommendation, RecommendationPassRequest } from '../recommendation-contract.type';
+import type { EventLogEntry } from '../event-log-entry.type';
 import type { TestArgs } from '../test-args.type';
 import type { InvokeResult } from './invoke-result.type';
 
@@ -16,6 +17,7 @@ interface DevToolsInvokeContract {
     state: 'accepted' | 'dismissed') => Promise<readonly Recommendation[]>;
 
   'test:getArgs': () => Promise<TestArgs>;
+  'eventLog:append': (event: EventLogEntry) => Promise<InvokeResult>;
 
   'debug:getDumpLayersSlot': () => Promise<number | null>;
   'debug:getHoverTile': () => Promise<{ col: number; row: number } | null>;

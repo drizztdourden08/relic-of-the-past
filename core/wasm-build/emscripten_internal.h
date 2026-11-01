@@ -20,6 +20,7 @@ extern int g_ppu_render_flags;
 extern int g_input1_state;
 extern uint8 g_paused;
 extern uint16 g_pause_steps;
+extern uint32 g_frames_run;
 extern bool g_js_input_mode;
 
 // ── FPS (defined in emscripten_main.c) ──

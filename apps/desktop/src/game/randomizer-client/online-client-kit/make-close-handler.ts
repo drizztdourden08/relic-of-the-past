@@ -1,11 +1,13 @@
 /* @layer bridge-wasm @kind logic */
 import { resetConnection } from '@rotp/randomizer';
+import { logDisconnected } from '../../event-log';
 import type { ClientKit } from './online-client-kit.type';
 
 const makeCloseHandler = (kit: ClientKit, cleanup: () => void, scheduleReconnect: () => void) =>
   (opened: boolean): void => {
     const { config, deps, state, room, network, setStatus } = kit;
     state.link = null;
+    if (room.connected) logDisconnected(state.stopped ? 'session stopped' : 'connection lost');
     resetConnection(room);
     network.closed();
     if (state.stopped) {

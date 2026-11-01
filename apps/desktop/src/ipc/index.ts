@@ -17,3 +17,4 @@ export type {
   RecommendationPassRequest,
 } from './recommendation-contract.type';
 export type { InputScriptFile, TestArgs } from './test-args.type';
+export type { EventLogEntry } from './event-log-entry.type';

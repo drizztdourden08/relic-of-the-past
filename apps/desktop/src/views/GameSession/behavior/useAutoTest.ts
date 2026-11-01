@@ -30,13 +30,14 @@ const useAutoTest = ({ activeProfile, loadProfileForGame }: AutoTestDeps) => {
       if (isCancelled() || didRun.current) return;
       didRun.current = true;
 
-      const script = await prepareAutoLaunch(activeProfile, args.autoState !== null || autoStart);
-      if (script === null) return;
+      const prepared = await prepareAutoLaunch(activeProfile, args.autoState !== null || autoStart);
+      if (prepared === null) return;
+      const { script, profile } = prepared;
 
       log.app(`[AutoTest] args: autoState=${args.autoState}, screenshot=${args.screenshot}, autoStart=${autoStart}`);
 
-      log.app(`[AutoTest] Starting game with profile: ${activeProfile.name}`);
-      await loadProfileForGame(activeProfile);
+      log.app(`[AutoTest] Starting game with profile: ${profile.name}`);
+      await loadProfileForGame(profile);
 
       await waitForGameRunning(isCancelled);
 
@@ -61,7 +62,9 @@ const useAutoTest = ({ activeProfile, loadProfileForGame }: AutoTestDeps) => {
       }
     })();
 
-    return () => abort.abort();
+    return () => {
+      if (!didRun.current) abort.abort();
+    };
   }, [activeProfile]);
 };
 

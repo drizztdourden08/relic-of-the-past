@@ -43,13 +43,15 @@ The JSON dumps are the most reliable way to check navigation and collision behav
 
 ### Scripted input and Archipelago flags
 
-Three more flags let a run play the game and reach a multiworld without anyone at the keyboard. All three count as automation flags, so the launch stays hidden and muted, the same as `--auto-state`.
+Five more flags let a run play the game, reach a multiworld and report what happened without anyone at the keyboard. All five count as automation flags, so the launch stays hidden and muted, the same as `--auto-state`.
 
 | Flag | What it does |
 |------|--------------|
 | `--input-script=PATH` | play a JSON file of frame-timed pad input into the game |
-| `--ap-connect=HOST:PORT:SLOT[:PASSWORD]` | point the loaded Archipelago profile at a plain Archipelago server and slot before the game boots |
-| `--lobby-join=HOST[:PORT]:CODE` | join an Archipelia lobby with the loaded Archipelia profile, wait for the host to start the room, then boot the game connected to it |
+| `--ap-connect=HOST:PORT:SLOT[:PASSWORD]` | point an Archipelago (online) profile at a plain Archipelago server and slot before the game boots, creating the profile from the server's slot data when none exists |
+| `--lobby-join=HOST[:PORT]:CODE` | join an Archipelia lobby with an Archipelia profile (created when none exists), wait for the host to start the room, then boot the game connected to it |
+| `--profile-name=NAME` | the profile `--ap-connect` / `--lobby-join` use or create, by exact name |
+| `--event-log=PATH` | append one JSON line per Archipelago event to PATH, for a test that waits on the game |
 
 **`--input-script`** takes a JSON array of events. Frames are counted from the first frame after `--auto-state` has loaded (or after the game starts, with `--auto-start`):
 
@@ -66,9 +68,43 @@ Three more flags let a run play the game and reach a multiworld without anyone a
 - Pair it with `--screenshot=NAME --screenshot-frames=N` to see the result. A long script needs a larger `--screenshot-timeout=SECONDS`.
 - A script that cannot be read or parsed stops the launch with an error in the app log; nothing is played.
 
-**`--ap-connect`** needs a profile that already is an Archipelago (online) profile, with Developer Tools and Experimental Features on in its settings. It rewrites that profile's server, slot and password and the game connects the way it does after a normal start. The host may not contain a colon, so IPv6 literals are not supported. The password is everything after the third colon.
+**`--ap-connect`** rewrites an Archipelago (online) profile's server, slot and password and the game connects the way it does after a normal start. The host may not contain a colon, so IPv6 literals are not supported. The password is everything after the third colon. Which profile it uses:
 
-**`--lobby-join`** needs an Archipelia profile. The host and port are the lobby's, and the code is the eight-character lobby code, written with or without its dash. The port is optional and defaults to the lobby port. The launch waits (up to 15 minutes) for the lobby to start its room; when that happens the profile becomes an online profile for the room, and the game boots connected to it. `--ap-connect` and `--lobby-join` cannot be combined, and neither boots the game by itself: add `--auto-state=NAME` or `--auto-start` (without one, `--lobby-join` only joins and waits).
+- With `--profile-name=NAME`: the profile called NAME. It is created when it does not exist, and the launch stops if it exists but is not an online profile.
+- Without it: the active profile when that already is an online profile; otherwise the profile called after the slot; otherwise one created with the slot's name.
+- A created profile shares the ROM, language and sound pack of the profile the launch started on, has Developer Tools and Experimental Features on, and is selected for the launch. Its options come from the server: the launch connects once as the slot (and leaves), reads the Connected packet's `slot_data`, and stores that as the profile's options, seed and Death Link setting. A server that is unreachable, refuses the slot or holds slot data from another world version stops the launch with the reason in the app log.
+
+The slot data RotP reads (`parseSlotData`): `worldVersion` (must equal the app's), `seed`, `options` (a flat map of option name to string, number or boolean), `medallions` (`mire`, `turtleRock`), `deathLink` and `preRolled`. Every name in `options` is a key of the option catalog (`packages/randomizer/src/world/options/`); a name missing from the slot data keeps its baseline value. The keys:
+
+```text
+accessibility allow_collect beemizer_total_chance beemizer_trap_chance big_key_shuffle blue_clock_time
+boss_shuffle bush_shuffle compass_shuffle countdown_start_time dark_room_light_required death_link
+difficulty_heart_cap dungeon_prize_shuffle enemy_damage enemy_health enemy_shuffle entrance_shuffle
+entrance_shuffle_seed glitch_boots glitches_required goal green_clock_time hints include_npc_checks
+include_world_items key_drop_shuffle killable_thieves map_shuffle misery_mire_medallion mode
+plando_connections pot_shuffle red_clock_time restrict_dungeon_item_on_boss retro_arrow_cost_silver
+retro_arrow_cost_wood retro_bow retro_caves scams shop_item_slots shop_price_bottle shop_price_modifier
+shop_shuffle_mode shop_slot_depth shuffle_prizes small_key_shuffle start_inventory_from_pool tile_shuffle
+timer triforce_pieces_available triforce_pieces_extra triforce_pieces_mode triforce_pieces_percentage
+triforce_pieces_required turtle_rock_medallion
+```
+
+Two more families are generated rather than listed: `capacity_upgrades_enabled`, `capacity_progressive` and every key matching `capacity_(explosives|projectiles|meter|wallet)_(mode|start|max|count|curve|jumps)` (`world/capacity/capacity-option-keys/`), and `pond_share` with the per-pond ask keys of `pondAskKeysOf` (`world/pond/pond-ask-keys/`).
+
+**`--lobby-join`** uses an Archipelia profile, picked the same way as for `--ap-connect`: `--profile-name=NAME` names it exactly; without that the active profile when it is an Archipelia profile, otherwise the one called `RotP-` plus the first four characters of the lobby code. A missing profile is created and joins the lobby through the code the profile form runs. Its name is also its slot name, so it must be a valid slot name (at most 16 characters, no braces). The lobby's `lobby.info` reply fixes the server, code and Archipelago build; it carries no per-slot options, so a created profile starts from the form's default options. The host and port are the lobby's, and the code is the eight-character lobby code, written with or without its dash. The port is optional and defaults to the lobby port. The launch waits (up to 15 minutes) for the lobby to start its room; when that happens the profile becomes an online profile for the room, and the game boots connected to it. `--ap-connect` and `--lobby-join` cannot be combined, and neither boots the game by itself: add `--auto-state=NAME` or `--auto-start` (without one, `--lobby-join` only joins and waits).
+
+**`--event-log`** writes through the main process, one JSON object per line, appended and flushed per line (the file and its folder are created on the first line). Only the online Archipelago client writes to it; the frame is the number of emulator frames the core has run since it booted, so it advances with `--input-script` steps and with real play alike.
+
+```json
+{"t":"location-checked","id":<AP location id>,"name":"...","frame":n}
+{"t":"item-received","id":<AP item id>,"name":"...","from":"<player>","self":true,"frame":n}
+{"t":"connected","slot":"...","server":"..."}
+{"t":"disconnected","reason":"..."}
+```
+
+- `location-checked` is written when this instance reports a check (the line is written even if the server is not reachable yet; the report is then sent on connect).
+- `item-received` is written when an item the server sent is handed to the game, or arrives back as the echo of this instance's own pickup. `from` is the sending player, or `the server` for items the server sent itself; `self` is true when the sender is this slot.
+- `disconnected` reasons are `connection lost` (the link dropped; the client retries) and `session stopped`.
 
 For example, two instances playing the same multiworld, one through a lobby and one by hand:
 
