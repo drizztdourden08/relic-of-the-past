@@ -1,6 +1,6 @@
 /* @layer electron-main @kind logic */
 import { createAutomationFlags } from '@drizztdourden08/brock-core';
-import { GAME_LAUNCH_FLAGS, ROTP_AUTOMATION_FLAGS, SCREENSHOT_FLAG } from './automation-flags.constants';
+import { FORWARDED_VALUE_FLAGS, GAME_LAUNCH_FLAGS, ROTP_AUTOMATION_FLAGS, SCREENSHOT_FLAG } from './automation-flags.constants';
 
 const widgetsOf = (argv: readonly string[]): string[] =>
   argv.filter((arg) => arg.startsWith('--widgets=')).flatMap((arg) => arg.slice('--widgets='.length).split(',')).map((id) => id.trim()).filter(Boolean);
@@ -22,6 +22,10 @@ const rotpRendererFlags = (argv: string[]): string[] => {
   if (startPage) flags.push(`--startup-start-page=${startPage}`);
   const frames = createAutomationFlags(ROTP_AUTOMATION_FLAGS).flagValue('--screenshot-frames', argv);
   if (frames) flags.push(`--startup-screenshot-frames=${frames}`);
+  for (const name of FORWARDED_VALUE_FLAGS) {
+    const value = createAutomationFlags(ROTP_AUTOMATION_FLAGS).flagValue(`--${name}`, argv);
+    if (value) flags.push(`--startup-${name}=${value}`);
+  }
   const screenshot = screenshotKindOf(argv);
   if (screenshot) flags.push(`--startup-screenshot=${screenshot}`);
   return flags;

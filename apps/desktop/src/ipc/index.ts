@@ -16,3 +16,4 @@ export type { StoreResult, StoreDuplicateResult } from './store-contract.type';
 export type {
   RecommendationPassRequest,
 } from './recommendation-contract.type';
+export type { InputScriptFile, TestArgs } from './test-args.type';

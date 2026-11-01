@@ -11,7 +11,7 @@ const EMPTY_ARRAY_METHODS = new Set<string>([
 
 const STUB_RETURNS: Record<string, () => unknown> = {
   getAppState: () => ({ lastProfileId: null }),
-  getTestArgs: () => ({ autoState: null, screenshot: null }),
+  getTestArgs: () => ({ autoState: null, screenshot: null, inputScript: null }),
   getAppVersion: readNativeAppVersion,
 };
 

@@ -41,6 +41,42 @@ pnpm exec electron apps/desktop/dist/electron/main.js --no-focus --muted --insta
 
 The JSON dumps are the most reliable way to check navigation and collision behavior, so read those instead of squinting at a screenshot.
 
+### Scripted input and Archipelago flags
+
+Three more flags let a run play the game and reach a multiworld without anyone at the keyboard. All three count as automation flags, so the launch stays hidden and muted, the same as `--auto-state`.
+
+| Flag | What it does |
+|------|--------------|
+| `--input-script=PATH` | play a JSON file of frame-timed pad input into the game |
+| `--ap-connect=HOST:PORT:SLOT[:PASSWORD]` | point the loaded Archipelago profile at a plain Archipelago server and slot before the game boots |
+| `--lobby-join=HOST[:PORT]:CODE` | join an Archipelia lobby with the loaded Archipelia profile, wait for the host to start the room, then boot the game connected to it |
+
+**`--input-script`** takes a JSON array of events. Frames are counted from the first frame after `--auto-state` has loaded (or after the game starts, with `--auto-start`):
+
+```json
+[
+  { "frame": 120, "press": ["A"] },
+  { "frame": 130, "hold": ["Up"], "for": 40 }
+]
+```
+
+- `press` taps the buttons for 3 frames unless `for` says otherwise; `hold` needs `for`, the number of frames.
+- Buttons are `B Y Select Start Up Down Left Right A X L R`, in any letter case. Overlapping events combine.
+- The game is paused while the script plays and advanced one frame per tick, so the same script on the same save gives the same result however slow the machine is. The game stays paused for a `--screenshot` taken afterwards, so the picture is the frame after the script's last one. Without `--screenshot` the game resumes when the script ends.
+- Pair it with `--screenshot=NAME --screenshot-frames=N` to see the result. A long script needs a larger `--screenshot-timeout=SECONDS`.
+- A script that cannot be read or parsed stops the launch with an error in the app log; nothing is played.
+
+**`--ap-connect`** needs a profile that already is an Archipelago (online) profile, with Developer Tools and Experimental Features on in its settings. It rewrites that profile's server, slot and password and the game connects the way it does after a normal start. The host may not contain a colon, so IPv6 literals are not supported. The password is everything after the third colon.
+
+**`--lobby-join`** needs an Archipelia profile. The host and port are the lobby's, and the code is the eight-character lobby code, written with or without its dash. The port is optional and defaults to the lobby port. The launch waits (up to 15 minutes) for the lobby to start its room; when that happens the profile becomes an online profile for the room, and the game boots connected to it. `--ap-connect` and `--lobby-join` cannot be combined, and neither boots the game by itself: add `--auto-state=NAME` or `--auto-start` (without one, `--lobby-join` only joins and waits).
+
+For example, two instances playing the same multiworld, one through a lobby and one by hand:
+
+```bash
+rotp worktree launch a test-links-house --lobby-join=192.168.1.20:38281:K7M2-Q9XD --input-script=chest.json
+rotp worktree launch b test-links-house --ap-connect=192.168.1.20:38282:Player2 --input-script=chest.json
+```
+
 Launch test runs with `--no-focus --muted` so the window doesn't grab focus while you work. For a quick dev-server boot check, use `pnpm run dev -- --no-focus --muted`.
 
 ### Mandatory: an automated launch always names its own profile

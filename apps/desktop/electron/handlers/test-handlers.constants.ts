@@ -1,4 +1,6 @@
 /* @layer electron-main @kind constants */
 const AUTO_STATE_FLAG = '--auto-state';
 
-export { AUTO_STATE_FLAG };
+const INPUT_SCRIPT_FLAG = '--input-script';
+
+export { AUTO_STATE_FLAG, INPUT_SCRIPT_FLAG };

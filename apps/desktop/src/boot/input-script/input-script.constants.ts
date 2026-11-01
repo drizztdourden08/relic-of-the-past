@@ -1,0 +1,10 @@
+/* @layer renderer-app @kind constants */
+const PRESS_FRAMES = 3;
+
+const MAX_SCRIPT_FRAMES = 1_000_000;
+
+const STEP_CHUNK_FRAMES = 600;
+
+const MAX_STEP_WAIT_TICKS = 2_000;
+
+export { MAX_SCRIPT_FRAMES, MAX_STEP_WAIT_TICKS, PRESS_FRAMES, STEP_CHUNK_FRAMES };
