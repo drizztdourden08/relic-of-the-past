@@ -1,0 +1,39 @@
+/* @layer website-site @kind style */
+.sound-caption {
+  position: absolute;
+  right: var(--ds-size-16);
+  bottom: var(--ds-size-64);
+  left: var(--ds-size-16);
+  display: flex;
+  justify-content: center;
+  pointer-events: none;
+}
+
+.sound-caption__chip {
+  max-width: 100%;
+  padding: var(--ds-size-4) var(--ds-size-14);
+  border: var(--ds-border-thin) solid var(--px-gold-line);
+  border-radius: var(--ds-radius-pill);
+  background: var(--ds-scrim);
+  color: var(--ds-text);
+  font-size: var(--site-text-md);
+  text-align: center;
+  text-shadow: var(--site-text-shadow-soft);
+  animation: sound-caption-in var(--ds-duration-slow) var(--ds-ease) both;
+}
+
+@keyframes sound-caption-in {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sound-caption__chip {
+    animation: none;
+  }
+}

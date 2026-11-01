@@ -1,0 +1,10 @@
+/* @layer website-site @kind style */
+.expandable {
+  display: block;
+  cursor: zoom-in;
+}
+
+.expandable:focus-visible {
+  outline: var(--ds-border-thick) solid var(--ds-focus);
+  outline-offset: var(--ds-size-4);
+}

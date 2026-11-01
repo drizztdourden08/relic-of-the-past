@@ -1,0 +1,18 @@
+/* @layer website-site @kind style */
+.ds-list-item {
+  display: list-item;
+  margin: 0;
+}
+
+.ds-list-item::marker {
+  color: var(--ds-text-dim);
+}
+
+.ds-list-item--bare {
+  margin-inline-start: calc(var(--list-indent) * -1);
+  list-style: none;
+}
+
+.ds-list-item > .ds-list {
+  margin-block-start: var(--ds-space-2xs);
+}

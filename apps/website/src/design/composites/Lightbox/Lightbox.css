@@ -1,0 +1,98 @@
+/* @layer website-site @kind style */
+.ds-lightbox {
+  --lb-max-w: var(--ds-viewport-w-max);
+  --lb-max-h: var(--ds-viewport-h-max);
+  --lb-blur: var(--ds-size-8);
+  --lb-aspect: var(--ds-ratio-wide);
+  --lb-x: var(--ds-offset-rest);
+  --lb-y: var(--ds-offset-rest);
+  --lb-scale: var(--ds-scale-rest);
+
+  position: fixed;
+  inset: 0;
+  z-index: var(--ds-z-overlay);
+  display: grid;
+  place-items: center;
+  background: color-mix(in srgb, var(--ds-black) 62%, transparent);
+  backdrop-filter: blur(var(--lb-blur));
+  animation: lightbox-in var(--ds-duration-slow) var(--ds-ease) both;
+  user-select: none;
+}
+
+.ds-lightbox__panel {
+  width: min(var(--lb-max-w), calc(var(--lb-max-h) * var(--lb-aspect, 1.6)));
+  max-height: var(--lb-max-h);
+  overflow: hidden;
+  border-radius: var(--ds-radius-xl);
+  background: var(--ds-sunken);
+  box-shadow: var(--site-shot-shadow);
+  outline: none;
+  touch-action: none;
+  cursor: zoom-in;
+}
+
+.ds-lightbox__panel[data-zoomed] {
+  cursor: grab;
+}
+
+.ds-lightbox__content {
+  translate: var(--lb-x, 0) var(--lb-y, 0);
+  scale: var(--lb-scale, 1);
+  transform-origin: center;
+  will-change: translate, scale;
+}
+
+.ds-lightbox__content[data-dragging] {
+  cursor: grabbing;
+}
+
+.ds-lightbox__close {
+  position: absolute;
+  top: var(--ds-size-16);
+  right: var(--ds-size-16);
+  display: grid;
+  place-items: center;
+  width: var(--ds-size-40);
+  height: var(--ds-size-40);
+  border: var(--ds-border-thin) solid var(--px-gold-dark);
+  border-radius: var(--ds-radius-round);
+  background: var(--ds-scrim);
+  color: var(--ds-text);
+  transition:
+    color var(--ds-duration-normal) var(--ds-ease),
+    border-color var(--ds-duration-normal) var(--ds-ease);
+}
+
+.ds-lightbox__close:hover {
+  border-color: var(--px-gold-line);
+  color: var(--ds-accent-bright);
+}
+
+.ds-lightbox__close:focus-visible {
+  outline: var(--ds-border-thick) solid var(--ds-focus);
+  outline-offset: var(--ds-size-2);
+}
+
+@keyframes lightbox-in {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ds-lightbox {
+    animation: none;
+  }
+
+  .ds-lightbox__content {
+    will-change: auto;
+  }
+
+  .ds-lightbox__close {
+    transition: none;
+  }
+}

@@ -1,0 +1,26 @@
+/* @layer website-site @kind style */
+.lens-detail {
+  position: relative;
+  overflow: hidden;
+  border: var(--ds-border-thin) solid var(--px-gold-dark);
+  border-radius: var(--ds-radius-lg);
+  box-shadow: var(--site-shot-shadow);
+}
+
+.lens-detail__image img {
+  display: block;
+  width: 100%;
+  height: auto;
+  image-rendering: pixelated;
+}
+
+.lens-detail__label {
+  position: absolute;
+  bottom: var(--ds-size-8);
+  left: var(--ds-size-8);
+  padding: var(--ds-size-2) var(--ds-size-8);
+  border-radius: var(--ds-radius-pill);
+  background: var(--ds-scrim);
+  color: var(--ds-text);
+  font-size: var(--site-text-sm);
+}

@@ -1,0 +1,11 @@
+/* @layer website-site @kind style */
+.ds-text--p {
+  margin: 0;
+  color: var(--ds-text);
+  font-size: var(--ds-text-base);
+  line-height: var(--ds-leading-normal);
+}
+
+.ds-text--small {
+  font-size: var(--ds-text-sm);
+}

@@ -32,6 +32,7 @@ const ROLE_RULES = [
   ['apps/desktop/public/', 'renderer-public'],
   ['apps/sanctuary/', 'sanctuary-site'],
   ['apps/store/', 'store-site'],
+  ['apps/website/', 'website-site'],
   ['apps/sanctuary-api/', 'sanctuary-api'],
   ['apps/store-api/', 'store-api'],
   ['packages/hub-contracts/src/ports/', 'shared-config'],

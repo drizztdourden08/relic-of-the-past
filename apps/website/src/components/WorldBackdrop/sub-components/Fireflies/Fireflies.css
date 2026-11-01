@@ -1,0 +1,66 @@
+/* @layer website-site @kind style */
+.landing-fireflies {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.landing-fireflies__fly {
+  position: absolute;
+  background: currentcolor;
+  box-shadow: var(--site-firefly-glow);
+  opacity: 0;
+  animation-name: firefly-drift, firefly-flicker;
+  animation-timing-function: var(--ds-ease-in-out);
+  animation-iteration-count: infinite;
+}
+
+.landing-fireflies__fly[data-hue='gold'] {
+  color: var(--firefly-gold);
+}
+
+.landing-fireflies__fly[data-hue='cream'] {
+  color: var(--firefly-cream);
+}
+
+.landing-fireflies__fly[data-hue='amber'] {
+  color: var(--firefly-amber);
+}
+
+.landing-fireflies__fly[data-hue='ember'] {
+  color: var(--firefly-ember);
+}
+
+@keyframes firefly-drift {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0);
+  }
+
+  33% {
+    transform: translate3d(var(--site-firefly-x1), var(--site-firefly-y1), 0);
+  }
+
+  66% {
+    transform: translate3d(var(--site-firefly-x2), var(--site-firefly-y2), 0);
+  }
+}
+
+@keyframes firefly-flicker {
+  0%,
+  100% {
+    opacity: 0.3;
+  }
+
+  50% {
+    opacity: 1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .landing-fireflies__fly {
+    opacity: 0.35;
+    animation: none;
+  }
+}

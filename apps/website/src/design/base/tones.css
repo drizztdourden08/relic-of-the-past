@@ -1,0 +1,20 @@
+/* @layer website-site @kind style */
+.ds-tone--dim {
+  --tone-ink: var(--ds-text-dim);
+}
+
+.ds-tone--muted {
+  --tone-ink: var(--ds-text-muted);
+}
+
+.ds-tone--primary {
+  --tone-ink: var(--ds-accent-bright);
+}
+
+.ds-tone--secondary {
+  --tone-ink: var(--ds-green);
+}
+
+.ds-text--toned:is(.ds-text, .ds-title) {
+  color: var(--tone-ink);
+}

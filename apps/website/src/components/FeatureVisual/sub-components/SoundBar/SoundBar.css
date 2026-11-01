@@ -1,0 +1,94 @@
+/* @layer website-site @kind style */
+.sound-bar {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  display: flex;
+  gap: var(--ds-size-12);
+  align-items: center;
+  padding: var(--ds-size-24) var(--ds-size-12) var(--ds-size-10);
+  background: linear-gradient(to top, var(--ds-scrim), transparent);
+  cursor: default;
+}
+
+.sound-bar__button {
+  display: grid;
+  flex: none;
+  place-items: center;
+  width: var(--ds-size-28);
+  height: var(--ds-size-28);
+  padding: 0;
+  border: var(--ds-border-thin) solid var(--px-gold-line);
+  border-radius: var(--ds-radius-round);
+  background: var(--ds-scrim);
+  color: var(--ds-accent-bright);
+  cursor: pointer;
+  transition:
+    background var(--ds-duration-normal) var(--ds-ease),
+    color var(--ds-duration-normal) var(--ds-ease);
+}
+
+.sound-bar__button:hover {
+  background: var(--ds-accent);
+  color: var(--site-gold-ink);
+}
+
+.sound-bar__button:focus-visible,
+.sound-bar__track:focus-visible {
+  outline: var(--ds-border-thick) solid var(--ds-focus);
+  outline-offset: var(--ds-size-2);
+}
+
+.sound-bar__icon {
+  width: var(--ds-size-14);
+  height: var(--ds-size-14);
+}
+
+.sound-bar__track {
+  position: relative;
+  flex: 1;
+  min-width: var(--ds-size-48);
+  height: var(--ds-size-4);
+  border-radius: var(--ds-radius-pill);
+  background: color-mix(in srgb, var(--ds-white) 28%, transparent);
+  cursor: pointer;
+}
+
+.sound-bar__track::before {
+  position: absolute;
+  inset: calc(var(--ds-size-8) * -1) 0;
+  content: '';
+}
+
+.sound-bar__fill {
+  height: 100%;
+  border-radius: inherit;
+  background: var(--ds-accent-bright);
+  box-shadow: var(--site-gem-glow);
+}
+
+.sound-bar__tick {
+  position: absolute;
+  top: 50%;
+  width: var(--ds-size-2);
+  height: var(--ds-size-10);
+  background: var(--ds-white);
+  box-shadow: 0 0 0 var(--ds-size-1) var(--ds-scrim);
+  pointer-events: none;
+  translate: -50% -50%;
+}
+
+.sound-bar__time {
+  flex: none;
+  color: var(--ds-text);
+  font-size: var(--site-text-sm);
+  font-variant-numeric: tabular-nums;
+  text-shadow: var(--site-text-shadow-soft);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sound-bar__button {
+    transition: none;
+  }
+}
