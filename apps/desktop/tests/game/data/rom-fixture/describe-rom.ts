@@ -3,7 +3,7 @@ import { describe, it } from 'vitest';
 import { loadedUsRom } from './loaded-us-rom';
 
 const missingRomPlaceholder = (name: string): void => {
-  describe.skip(name, () => {
+  describe.skip(name, { tags: ['critical'] }, () => {
     it('needs the US cartridge, so put one in assets/ or point ROTP_ROM at it', () => undefined);
   });
 };

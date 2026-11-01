@@ -3,7 +3,7 @@ import { describe, it } from 'vitest';
 import { hasDataset } from './has-dataset';
 
 const emptyDatasetPlaceholder = (name: string): void => {
-  describe.skip(name, () => {
+  describe.skip(name, { tags: ['critical'] }, () => {
     it('needs the record dataset, which seeded empty', () => undefined);
   });
 };
