@@ -1,6 +1,6 @@
 /* @layer shared-hud @kind logic */
 import { checkKeys, isRecord, numberAt, oneOf } from './validate-box';
-import { paintAt } from './validate-style';
+import { paintAt, widthColorAt } from './validate-style';
 import { validateValue } from './validate-value';
 import { ALIGN, FONT_FAMILIES, PAD, SPRITE_SETS, TEXT_KEYS } from './validate-text-node.constants';
 import type { Issues } from './validate-box';
@@ -53,15 +53,7 @@ const faceAt = (value: unknown, path: string, issues: Issues): HudTextFace | und
 
 const strokeAt = (
   value: unknown, path: string, issues: Issues, insideRepeat: boolean,
-): { width: Value; color: Paint } | undefined => {
-  if (value === undefined) return undefined;
-  if (!isRecord(value)) { issues.push(`${path}: expected { width, color }`); return undefined; }
-  checkKeys(value, ['width', 'color'], path, issues);
-  const width = validateValue(value.width, `${path}.width`, issues, { insideRepeat });
-  const color = paintAt(value.color, `${path}.color`, issues, { required: true, insideRepeat });
-  if (width === undefined || color === undefined) return undefined;
-  return { width, color };
-};
+): { width: Value; color: Paint } | undefined => widthColorAt(value, path, issues, insideRepeat);
 
 const paintParts = ({ color, stroke, align, tracking }: TextPaintParts): TextPaintFragment => ({
   ...(color !== undefined ? { color } : {}),

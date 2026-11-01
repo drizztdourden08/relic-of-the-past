@@ -5,7 +5,7 @@ import type { SimChest, DetectedCheck } from '@rotp/navigation';
 import { createEngineState, onCheckVerified, discoverTargets, emptySnapshot } from '@rotp/navigation';
 import { describeDataset } from '../../dataset-guard';
 import { BIG_KEY, BOMBS_ID, KAKARIKO_TAVERN_ROOM, SMALL_KEY } from './engine-review-fixes.constants';
-import { baseObs } from './base-obs';
+import { baseObs } from '../base-obs';
 
 const freshState = () => createEngineState({ screenId: 'A', tile: { row: 0, col: 0 } }, new Set(), {});
 

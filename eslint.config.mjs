@@ -61,8 +61,9 @@ const rotpExtension = {
         files: [
           'packages/design/src/compounds/HookshopHighlight/HookshopHighlight.tsx',
           'packages/design/src/compounds/Hookshot/Hookshot.tsx',
+          'packages/design/src/compounds/PlacedPart/PlacedPart.tsx',
         ],
-        why: 'Each hookshot sprite takes the position, size and rotation computed for it per frame from the curve layout.',
+        why: 'Each hookshot and mascot sprite takes the position, size and rotation computed for it per frame from the curve layout.',
       }, {
         files: [
           'apps/desktop/src/views/GameLayer/sub-components/NavigationOverlay/sub-components/{TileInspector,RectSelectionView,TileTooltipContent,LegendSwatch}.tsx',

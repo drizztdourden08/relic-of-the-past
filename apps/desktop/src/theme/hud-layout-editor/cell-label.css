@@ -1,0 +1,15 @@
+/* @layer renderer-components @kind style */
+
+.hud-cell-label {
+  display: block;
+  min-width: 0;
+  padding: 0 var(--space-2xs);
+  overflow: hidden;
+  text-align: center;
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  color: var(--c-text-dim);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  pointer-events: none;
+}

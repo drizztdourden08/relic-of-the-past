@@ -27,7 +27,13 @@ interface HeroProgressFile {
   total: number;
 }
 
-interface ProfileHeroProps {
+interface HeroToolsProps {
+  canRevealFolder: boolean;
+  onOpenFolder: () => void;
+  onImportSram: () => void;
+}
+
+interface ProfileHeroProps extends HeroToolsProps {
   mode: ProfileModeId;
   backdrop?: ReactNode;
   facts: HeroFact[];
@@ -35,9 +41,6 @@ interface ProfileHeroProps {
   progress: HeroProgressFile[] | null;
   lastSave: HeroLastSave | null;
   actions?: ReactNode;
-  canRevealFolder: boolean;
-  onOpenFolder: () => void;
-  onImportSram: () => void;
 }
 
-export type { HeroFact, HeroLastSave, HeroProgressFile, ProfileHeroProps };
+export type { HeroFact, HeroLastSave, HeroProgressFile, HeroToolsProps, ProfileHeroProps };

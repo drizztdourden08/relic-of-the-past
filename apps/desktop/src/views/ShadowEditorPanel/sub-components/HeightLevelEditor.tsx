@@ -28,13 +28,13 @@ const HeightLevelEditor = () => {
       </Box>
       <Box className="height-level-editor__add">
         <TextInput
-          className="height-level-editor__name"
+          className="shadow-field-box height-level-editor__name"
           placeholder="Label"
           value={newLabel}
           onChange={(e) => setNewLabel(e.target.value)}
         />
         <TextInput
-          className="height-level-editor__value"
+          className="shadow-field-box height-level-editor__value"
           type="number"
           placeholder="0.5"
           value={newValue}

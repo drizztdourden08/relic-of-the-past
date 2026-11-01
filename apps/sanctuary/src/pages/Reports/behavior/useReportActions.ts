@@ -1,25 +1,12 @@
 /* @layer sanctuary-site @kind hook */
-import { useCallback, useState } from 'react';
+import { useCallback } from 'react';
+import { useNoticeRun } from '@rotp/design';
 import { deleteReport, downloadReport, extendReport } from '../../../endpoints/reports-endpoints';
-import { errorMessage } from '@rotp/hub-client';
 import type { UseReportActionsParams } from './useReportActions.type';
 
 const useReportActions = (params: UseReportActionsParams) => {
   const { onExtended, onDeleted } = params;
-  const [busy, setBusy] = useState(false);
-  const [notice, setNotice] = useState<string | null>(null);
-
-  const run = useCallback(async (work: () => Promise<string | null>) => {
-    setBusy(true);
-    setNotice(null);
-    try {
-      setNotice(await work());
-    } catch (cause) {
-      setNotice(errorMessage(cause));
-    } finally {
-      setBusy(false);
-    }
-  }, []);
+  const { busy, notice, run } = useNoticeRun();
 
   const download = useCallback((id: string) => run(async () => {
     const { url } = await downloadReport(id);

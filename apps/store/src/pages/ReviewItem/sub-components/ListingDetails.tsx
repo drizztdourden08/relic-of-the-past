@@ -2,7 +2,7 @@
 import { SettingsSection } from '@drizztdourden08/tessera/composites';
 import { Box, Flex, StatRow, Text } from '@drizztdourden08/tessera/primitives';
 import type { MediaRef } from '@rotp/hub-contracts';
-import { TagList } from '@rotp/design';
+import { NoteBox, TagList } from '@rotp/design';
 import { itemColorStyle } from '../../../catalog/item-color-style';
 import type { ListingDetailsProps } from './ListingDetails.type';
 
@@ -29,7 +29,7 @@ const ListingDetails = (props: ListingDetailsProps) => {
       <StatRow label="banner" value={pictureSize(item.banner)} mono />
       <StatRow label="status" value={item.status} />
       <Text as="span" variant="caption">Description</Text>
-      <Text as="p" className="review-item__text">{item.description.trim() || 'No description.'}</Text>
+      <NoteBox>{item.description.trim() || 'No description.'}</NoteBox>
     </SettingsSection>
   );
 };

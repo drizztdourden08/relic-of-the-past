@@ -1,5 +1,6 @@
 /* @layer bridge-wasm @kind logic */
-import { asNativeReceiveId, dungeonItemReceiveIdOfRecord, getItem, progressiveReceiveIdOfItem, upgradeReceiveIdOfItem } from '@rotp/game-data';
+import { dungeonItemReceiveIdOfRecord, getItem, progressiveReceiveIdOfItem, upgradeReceiveIdOfItem } from '@rotp/game-data';
+import { receiveIdOf } from '../item-lookup/receive-id-of';
 
 const resolveAssignedItemId = (itemId: string): number | undefined => {
   const virtual = progressiveReceiveIdOfItem(itemId) ?? upgradeReceiveIdOfItem(itemId);
@@ -7,9 +8,7 @@ const resolveAssignedItemId = (itemId: string): number | undefined => {
   const record = getItem(itemId);
   const targetedAtOwnDungeon = dungeonItemReceiveIdOfRecord(record);
   if (targetedAtOwnDungeon !== undefined) return targetedAtOwnDungeon;
-  if (record.gameId?.receiveItemId !== undefined) return asNativeReceiveId(record.gameId.receiveItemId);
-  if (record.aliasOf !== undefined) return asNativeReceiveId(getItem(record.aliasOf).gameId?.receiveItemId);
-  return undefined;
+  return receiveIdOf(record);
 };
 
 export { resolveAssignedItemId };

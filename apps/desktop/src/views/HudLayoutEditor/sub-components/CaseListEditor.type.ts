@@ -1,15 +1,6 @@
 /* @layer renderer-components @kind types */
-import type { GlyphPack } from '@rotp/input-mapping';
-import type { HudSwitchSpec } from '@rotp/hud';
+import type { SwitchContentProps } from './SwitchContent.type';
 
-interface CaseListEditorProps {
-  spec: HudSwitchSpec;
-  onChange: (patch: Partial<HudSwitchSpec>) => void;
-  scope: Readonly<Record<string, number>>;
-  insideRepeat?: boolean;
-  glyphPacks: readonly GlyphPack[];
-  selectedId: string | null;
-  onSelectNode: (id: string) => void;
-}
+type CaseListEditorProps = SwitchContentProps;
 
 export type { CaseListEditorProps };

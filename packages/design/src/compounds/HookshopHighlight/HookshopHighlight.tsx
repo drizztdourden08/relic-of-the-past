@@ -20,19 +20,19 @@ const HookshopHighlight = (props: HookshopHighlightProps) => {
 
   return (
     <Box className={className ? `hookshop-highlight ${className}` : 'hookshop-highlight'} style={rootStyle} role="img" aria-label={LABEL}>
-      <Box className="hookshop-highlight__part" style={STYLES.bot}>
+      <Box className="placed-part" style={STYLES.bot}>
         <Mascot />
       </Box>
       {BEHIND_BAG.map(({ key, src, style }) => (
-        <Image key={key} className="hookshop-highlight__part" src={src} style={style} alt="" draggable={false} />
+        <Image key={key} className="placed-part" src={src} style={style} alt="" draggable={false} />
       ))}
-      <Box className="hookshop-highlight__part" style={STYLES.bag}>
+      <Box className="placed-part" style={STYLES.bag}>
         <Image className="hookshop-highlight__fill" src={SOURCES.bag} alt="" draggable={false} />
-        <Image className="hookshop-highlight__part" src={SOURCES.stamp} style={STYLES.stamp} alt="" draggable={false} />
+        <Image className="placed-part" src={SOURCES.stamp} style={STYLES.stamp} alt="" draggable={false} />
       </Box>
       <Hookshot curve={LAYOUT.hookshot} clip={LAYOUT.hookshotClip} />
       {EFFECTS.map(({ key, src, style }) => (
-        <Image key={key} className="hookshop-highlight__part" src={src} style={style} alt="" draggable={false} />
+        <Image key={key} className="placed-part" src={src} style={style} alt="" draggable={false} />
       ))}
     </Box>
   );

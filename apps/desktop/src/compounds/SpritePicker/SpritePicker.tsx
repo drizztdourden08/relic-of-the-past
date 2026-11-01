@@ -1,7 +1,6 @@
 /* @layer renderer-components @kind component */
 import { useState } from 'react';
 import { Anchored, Box, EmptyState, Image, Pressable, Tabs, Text } from '@drizztdourden08/tessera/primitives';
-import './SpritePicker.css';
 import type { SpritePickerProps } from './SpritePicker.type';
 
 const SpritePicker = (props: SpritePickerProps) => {

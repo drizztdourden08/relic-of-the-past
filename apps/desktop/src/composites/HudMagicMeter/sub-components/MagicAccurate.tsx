@@ -3,6 +3,7 @@ import { HudBox } from '../../../primitives/HudBox';
 import { HudImage } from '../../../primitives/HudImage';
 import { outlineFilter } from '../../../primitives/HudSprite';
 import { MAGIC_GREEN, MAGIC_WHITE } from '../HudMagicMeter.constants';
+import { MagicCapRow } from './MagicCapRow';
 import type { MagicAccurateProps } from '../HudMagicMeter.type';
 
 const MagicAccurate = (props: MagicAccurateProps) => {
@@ -18,11 +19,7 @@ const MagicAccurate = (props: MagicAccurateProps) => {
   return (
     <>
       <HudBox style={{ position: 'absolute', inset: 0, zIndex: 2, filter: outlineFilter(scale) }}>
-        <HudImage src={`${spritesBase}hud-magic-tl.png`} width={tile} height={tile} atOrigin pixelated />
-        <HudImage src={`${spritesBase}hud-magic-top.png`} width={tile} height={tile}
-          style={{ position: 'absolute', left: tile, top: 0, imageRendering: 'pixelated' }} />
-        <HudImage src={`${spritesBase}hud-magic-tr.png`} width={tile} height={tile}
-          style={{ position: 'absolute', left: tile * 2, top: 0, imageRendering: 'pixelated' }} />
+        <MagicCapRow edge="top" tile={tile} spritesBase={spritesBase} />
         {Array.from({ length: 4 }).map((_, i) => (
           <HudBox key={i}>
             <HudImage src={`${spritesBase}hud-magic-left.png`} width={tile} height={tile}
@@ -31,12 +28,7 @@ const MagicAccurate = (props: MagicAccurateProps) => {
               style={{ position: 'absolute', left: tile * 2, top: tile * (i + 1), imageRendering: 'pixelated' }} />
           </HudBox>
         ))}
-        <HudImage src={`${spritesBase}hud-magic-bl.png`} width={tile} height={tile}
-          style={{ position: 'absolute', left: 0, top: tile * 5, imageRendering: 'pixelated' }} />
-        <HudImage src={`${spritesBase}hud-magic-bottom.png`} width={tile} height={tile}
-          style={{ position: 'absolute', left: tile, top: tile * 5, imageRendering: 'pixelated' }} />
-        <HudImage src={`${spritesBase}hud-magic-br.png`} width={tile} height={tile}
-          style={{ position: 'absolute', left: tile * 2, top: tile * 5, imageRendering: 'pixelated' }} />
+        <MagicCapRow edge="bottom" tile={tile} spritesBase={spritesBase} />
       </HudBox>
 
       {fillFraction > 0 && (

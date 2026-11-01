@@ -1,25 +1,19 @@
 /* @layer store-api @kind logic */
 import { STORE_ROUTES } from '@rotp/hub-contracts';
-import type { ItemChangeResponse } from '@rotp/hub-contracts';
 import { now } from '@rotp/hub-server';
 import type { Route } from '@rotp/hub-server';
-import { personOf, requirePlayer } from '../auth/player';
+import { personOf } from '../auth/player';
 import { itemsRepo } from '../db/items-repo';
 import { invalidateHome } from '../home/home-cache';
-import { loadVisibleItem } from '../items/item-guards';
 import { moveVersion } from '../items/move-version';
-import { actorsOf } from '../items/project-item';
 import { removeFile } from '../items/remove-file';
-import { loadVersion, versionOf } from '../items/versions';
-import { signItem } from '../media/sign-media';
+import { loadVersionTarget, sendSignedItem } from '../items/version-routes';
+import { versionOf } from '../items/versions';
 
 const versionsDelete: Route = {
   ...STORE_ROUTES.versionsDelete,
-  handler: async ({ req, res, params }) => {
-    const player = await requirePlayer(req);
-    const item = await loadVisibleItem(params.id, player);
-    const actors = actorsOf(item, player);
-    const { n } = loadVersion(item, params.n);
+  handler: async (ctx) => {
+    const { player, item, actors, n } = await loadVersionTarget(ctx);
     const removal = { at: now(), reason: 'deleted' as const, by: personOf(player) };
     const updated = await itemsRepo.mutate(item.id, (latest) => moveVersion(latest, {
       n,
@@ -30,8 +24,7 @@ const versionsDelete: Route = {
     const deleted = versionOf(updated, n);
     if (deleted) await removeFile(deleted);
     if (updated.liveVersion !== item.liveVersion) invalidateHome();
-    const body: ItemChangeResponse = { item: await signItem(updated) };
-    res.status(200).json(body);
+    await sendSignedItem(ctx, updated);
   },
 };
 

@@ -2,6 +2,7 @@
 import type { InstalledPack } from '@rotp/hub-contracts';
 import type { LanguageSetSummary } from '@rotp/languages';
 import type { LanguageResult } from '@app/storage/languages-store/languages-store.type';
+import type { PackRemovalBase } from '../pack-removal/pack-removal.type';
 
 type SelectSet = (code: string | null) => void;
 
@@ -26,14 +27,7 @@ interface SettleExtractionParams {
   setSelected: SelectSet;
 }
 
-interface LanguageDeleteParams {
-  selected: string | null;
-  setSelected: SelectSet;
-  refresh: () => Promise<void>;
-  packFor: (code: string) => InstalledPack | null;
-  confirmUninstall: (pack: InstalledPack, onDone: () => void) => void;
-  onDeleteConfirm: (title: string, message: string, onConfirm: () => void) => void;
-}
+type LanguageDeleteParams = PackRemovalBase;
 
 interface LanguageManagerDisplayParams {
   languages: LanguageSetSummary[];

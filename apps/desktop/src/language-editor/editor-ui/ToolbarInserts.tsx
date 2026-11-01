@@ -2,11 +2,11 @@
 import { useMemo } from 'react';
 import variableIcon from '@iconify-icons/lucide/variable';
 import { ToolbarButton } from './ToolbarButton';
+import { PresetInsertButton } from './PresetInsertButton';
 import { GLYPH_ICON } from './icon-for-token';
 import { buildGlyphItems } from './toolbar-model';
 import {
-  GlyphPopover, PAUSE_CODE, pausePresetsFor, PresetPopover, SPEED_CODE, speedPresetsFor,
-  VariablePopover,
+  GlyphPopover, PAUSE_CODE, pausePresetsFor, SPEED_CODE, speedPresetsFor, VariablePopover,
 } from './popovers';
 import {
   GLYPH, GLYPH_LABEL, PAUSE, PAUSE_ICON, PAUSE_LABEL, SPEED, SPEED_ICON, SPEED_LABEL, VARIABLE, VARIABLE_LABEL,
@@ -31,37 +31,27 @@ const ToolbarInserts = (props: ToolbarInsertsProps) => {
         popover={<VariablePopover label={VARIABLE_LABEL} variables={variables} onInsert={onInsert} />}
         onPress={onPress}
       />
-      <ToolbarButton
+      <PresetInsertButton
         id={PAUSE}
         icon={PAUSE_ICON}
         label={PAUSE_LABEL}
-        disabled={disabled || pausePresets.length === 0}
-        open={open === PAUSE}
-        popover={(
-          <PresetPopover
-            label={PAUSE_LABEL}
-            code={PAUSE_CODE}
-            presets={pausePresets}
-            onInsert={onInsert}
-          />
-        )}
+        code={PAUSE_CODE}
+        presets={pausePresets}
+        disabled={disabled}
+        openId={open}
         onPress={onPress}
+        onInsert={onInsert}
       />
-      <ToolbarButton
+      <PresetInsertButton
         id={SPEED}
         icon={SPEED_ICON}
         label={SPEED_LABEL}
-        disabled={disabled || speedPresets.length === 0}
-        open={open === SPEED}
-        popover={(
-          <PresetPopover
-            label={SPEED_LABEL}
-            code={SPEED_CODE}
-            presets={speedPresets}
-            onInsert={onInsert}
-          />
-        )}
+        code={SPEED_CODE}
+        presets={speedPresets}
+        disabled={disabled}
+        openId={open}
         onPress={onPress}
+        onInsert={onInsert}
       />
       <ToolbarButton
         id={GLYPH}

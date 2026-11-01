@@ -1,8 +1,8 @@
 /* @layer sanctuary-site @kind hook */
-import { useCallback, useState } from 'react';
+import { useCallback } from 'react';
 import type { FileType, SanctuaryFile } from '@rotp/hub-contracts';
+import { useNoticeRun } from '@rotp/design';
 import { deleteFile, patchFile } from '../../../endpoints/files-endpoints';
-import { errorMessage } from '@rotp/hub-client';
 import { fileLink } from './file-link';
 import { EMPTY_TALLY } from './batch-edits.constants';
 import { addTagsPatch } from './add-tags-patch';
@@ -15,20 +15,7 @@ import type { FileWrite, UseBatchActionsParams } from './useBatchActions.type';
 
 const useBatchActions = (params: UseBatchActionsParams) => {
   const { canEdit, onPatched, onDeleted } = params;
-  const [busy, setBusy] = useState(false);
-  const [notice, setNotice] = useState<string | null>(null);
-
-  const run = useCallback(async (work: () => Promise<string>) => {
-    setBusy(true);
-    setNotice(null);
-    try {
-      setNotice(await work());
-    } catch (cause) {
-      setNotice(errorMessage(cause));
-    } finally {
-      setBusy(false);
-    }
-  }, []);
+  const { busy, notice, setNotice, run } = useNoticeRun();
 
   const eachMine = useCallback(async (files: readonly SanctuaryFile[], write: FileWrite): Promise<BatchTally> => {
     const { mine, others } = splitByRight(files, canEdit);

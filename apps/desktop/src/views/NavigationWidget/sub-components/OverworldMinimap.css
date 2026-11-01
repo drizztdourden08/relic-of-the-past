@@ -1,13 +1,5 @@
 /* @layer renderer-widgets @kind style */
 
-.nav-overworld-minimap__root {
-  position: relative;
-  width: 100%;
-  margin-top: var(--size-4);
-  margin-left: auto;
-  margin-right: auto;
-}
-
 .nav-overworld-minimap__cell {
   position: absolute;
   border-radius: var(--radius-sm);
@@ -36,24 +28,6 @@
   font-size: calc(var(--size-1) * 9);
   color: var(--c-text-dim);
   position: relative;
-}
-
-.nav-overworld-minimap__marker {
-  position: absolute;
-  pointer-events: none;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.nav-overworld-minimap__player-dot {
-  position: absolute;
-  width: var(--size-6);
-  height: var(--size-6);
-  border-radius: 50%;
-  background: var(--c-secondary);
-  box-shadow: 0 0 calc(var(--size-1) * 3) var(--c-secondary);
-  pointer-events: none;
 }
 
 .nav-overworld-minimap__cell--active {

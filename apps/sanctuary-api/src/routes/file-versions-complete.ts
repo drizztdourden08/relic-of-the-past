@@ -1,37 +1,25 @@
 /* @layer root-config @kind logic */
-import { LIMITS, SANCTUARY_ROUTES, completeFileSchema } from '@rotp/hub-contracts';
-import { badRequest, conflict, notFound, parseBody, requireMember, verifyUpload } from '@rotp/hub-server';
-import { loadVisibleFile } from '../files/file-guards';
-import { assertUploader, loadVersion, mirrorOf, replaceVersion, versionOf } from '../files/versions';
+import { SANCTUARY_ROUTES } from '@rotp/hub-contracts';
+import { notFound } from '@rotp/hub-server';
+import { completeUpload, loadUploadingVersion } from '../files/upload-routes';
+import { mirrorOf, replaceVersion, versionOf } from '../files/versions';
 import { filesRepo } from '../db/files-repo';
-import { filesBucket } from '../storage/files-bucket';
 import type { Route } from '@rotp/hub-server';
-import { SANCTUARY_SITE } from '../site';
 
 const fileVersionsComplete: Route = {
   ...SANCTUARY_ROUTES.fileVersionsComplete,
-  handler: async ({ req, res, params }) => {
-    const member = await requireMember(req, SANCTUARY_SITE);
-    const file = await loadVisibleFile(params.id, member);
-    const version = loadVersion(file, params.n);
-    assertUploader(version, member);
-    if (version.status !== 'uploading' || !version.upload) throw conflict('This version is not being uploaded.');
-    const { etags } = parseBody(completeFileSchema, req.body);
-    if (etags.length !== version.upload.parts) throw badRequest(`Expected ${version.upload.parts} ETags.`);
-    await filesBucket.complete(version.key, version.upload.multipartId, etags);
-    try {
-      await verifyUpload(filesBucket, version.key, version.bytes, LIMITS.fileBytes);
-    } catch (err) {
+  handler: async (ctx) => {
+    const { file, version, upload } = await loadUploadingVersion(ctx);
+    await completeUpload(ctx.req.body, { key: version.key, bytes: version.bytes, upload }, async () => {
       await filesRepo.mutate(file.id, (latest) => ({ versions: latest.versions.filter((entry) => entry.n !== version.n) }));
-      throw err;
-    }
+    });
     const updated = await filesRepo.mutate(file.id, (latest) => {
       const entry = versionOf(latest, version.n);
       if (!entry) throw notFound('No such version.');
       const ready = { ...entry, status: 'ready' as const, upload: null };
       return { versions: replaceVersion(latest, ready), currentVersion: ready.n, ...mirrorOf(ready) };
     });
-    res.status(200).json({ file: updated });
+    ctx.res.status(200).json({ file: updated });
   },
 };
 

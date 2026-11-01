@@ -3,14 +3,14 @@ import { HudBox } from '../../../../primitives/HudBox';
 import { HudCountdown, countdownBox } from '../../../../compounds/HudCountdown';
 import { SNES_TILE } from '../../../../hooks/hooks.constants';
 import { useFadePresence } from '../../../DialogView/behavior/useFadePresence';
-import { useHudCountdown } from '../../behavior/useHudCountdown';
+import { useCountdownTrack } from '../../../../hooks/useCountdownTrack';
 import { BOTTOM_MARGIN_TILES, COUNTDOWN_FADE_MS } from './HudCountdownSlot.constants';
 import type { HudCountdownSlotProps } from './HudCountdownSlot.type';
 import './HudCountdownSlot.css';
 
 const HudCountdownSlot = (props: HudCountdownSlotProps) => {
   const { variant, scale, spritesBase } = props;
-  const { track } = useHudCountdown();
+  const { track } = useCountdownTrack();
   const fade = useFadePresence(track.running, COUNTDOWN_FADE_MS);
 
   if (!fade.mounted) return null;

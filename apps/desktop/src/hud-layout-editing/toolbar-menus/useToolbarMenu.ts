@@ -10,7 +10,7 @@ const useToolbarMenu = () => {
     if (!openKey) return;
     const dismiss = (event: Event): void => {
       const target = event.target as HTMLElement | null;
-      if (target?.closest('.dropdown-menu, .hud-picker-grid') || (bar.current && target && bar.current.contains(target))) return;
+      if (target?.closest('.dropdown-menu, .sprite-picker') || (bar.current && target && bar.current.contains(target))) return;
       setOpenKey(null);
     };
     document.addEventListener('pointerdown', dismiss, true);

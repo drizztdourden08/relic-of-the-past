@@ -1,7 +1,7 @@
 /* @layer store-site @kind component */
 import { Stack, Text } from '@drizztdourden08/tessera/primitives';
 import type { StoreItem, StoreVersion } from '@rotp/hub-contracts';
-import { DetailPane, AppLink } from '@rotp/design';
+import { DetailPane, AppLink, NoteBox } from '@rotp/design';
 import { itemPath } from '../../../catalog/item-paths';
 import { liveVersionOf } from '../../../catalog/approved-versions';
 import { detailFieldsOf } from '../behavior/detail-fields-of';
@@ -44,13 +44,13 @@ const PublicationDetail = (props: PublicationDetailProps) => {
       {version?.changelog && (
         <Stack gap="xs" align="stretch">
           <Text as="span" variant="label">Changes</Text>
-          <Text as="p" className="publication-detail__text">{version.changelog}</Text>
+          <NoteBox>{version.changelog}</NoteBox>
         </Stack>
       )}
       {note && (
         <Stack gap="xs" align="stretch">
           <Text as="span" variant="label">Reviewer's note</Text>
-          <Text as="p" className="publication-detail__text publication-detail__note">{note}</Text>
+          <NoteBox accent>{note}</NoteBox>
         </Stack>
       )}
     </DetailPane>

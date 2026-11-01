@@ -1,4 +1,5 @@
 /* @layer package @kind barrel */
+export * from './public-api/checked-access';
 export * from './public-api/delivery';
 export * from './public-api/overrides';
 export * from './public-api/placement';

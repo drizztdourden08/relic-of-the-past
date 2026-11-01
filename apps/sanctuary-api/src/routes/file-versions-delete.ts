@@ -1,13 +1,12 @@
 /* @layer root-config @kind logic */
 import { SANCTUARY_ROUTES } from '@rotp/hub-contracts';
 import type { FileVersion, SanctuaryFile } from '@rotp/hub-contracts';
-import { conflict, requireMember } from '@rotp/hub-server';
-import { assertOwnerOrAdmin, loadVisibleFile } from '../files/file-guards';
-import { loadVersion } from '../files/versions';
+import { conflict } from '@rotp/hub-server';
+import { assertOwnerOrAdmin } from '../files/file-guards';
+import { loadMemberVersion } from '../files/upload-routes';
 import { filesRepo } from '../db/files-repo';
 import { filesBucket } from '../storage/files-bucket';
 import type { Member, Route } from '@rotp/hub-server';
-import { SANCTUARY_SITE } from '../site';
 
 const assertDeletable = (file: SanctuaryFile, n: number): void => {
   if (file.versions.length <= 1) throw conflict('A file keeps at least one version.');
@@ -27,10 +26,9 @@ const dropObject = async ({ key, status, upload }: FileVersion): Promise<void> =
 
 const fileVersionsDelete: Route = {
   ...SANCTUARY_ROUTES.fileVersionsDelete,
-  handler: async ({ req, res, params }) => {
-    const member = await requireMember(req, SANCTUARY_SITE);
-    const file = await loadVisibleFile(params.id, member);
-    const version = loadVersion(file, params.n);
+  handler: async (ctx) => {
+    const { res } = ctx;
+    const { member, file, version } = await loadMemberVersion(ctx);
     if (!isOwnUnfinished(version, member)) assertOwnerOrAdmin(file, member);
     assertDeletable(file, version.n);
     const updated = await filesRepo.mutate(file.id, (latest) => {

@@ -1,33 +1,19 @@
 /* @layer renderer-components @kind component */
-import { useState } from 'react';
 import { Box, Button, Text } from '@drizztdourden08/tessera/primitives';
-import { useSpriteAvailabilityStore } from '@app/stores/sprite-availability-store';
-import * as spritesStore from '@app/storage/sprites-store';
+import { useSpriteExtraction } from '@app/hooks/useSpriteExtraction';
 
 const SpriteExtractionNotice = () => {
-  const { available, romFile, setAvailability } = useSpriteAvailabilityStore();
-  const [extracting, setExtracting] = useState(false);
+  const { available, romFile, extracting, extract } = useSpriteExtraction();
 
   if (available) return null;
 
-  const handleExtract = async () => {
-    if (!romFile || extracting) return;
-    setExtracting(true);
-    const res = await spritesStore.extractSprites(romFile);
-    if (res.success) {
-      const { extracted } = await spritesStore.checkSpritesExtracted(romFile);
-      setAvailability(romFile, extracted);
-    }
-    setExtracting(false);
-  };
-
   return (
-    <Box className="hud-picker-grid__notice">
+    <Box className="sprite-picker__notice">
       <Text variant="caption">
         {romFile ? 'Sprites are not fully extracted for this ROM.' : 'No ROM loaded. Extraction is unavailable.'}
       </Text>
       {romFile && (
-        <Button variant="secondary" size="sm" onClick={handleExtract} disabled={extracting}>
+        <Button variant="secondary" size="sm" onClick={extract} disabled={extracting}>
           {extracting ? 'Extracting...' : 'Extract sprites'}
         </Button>
       )}

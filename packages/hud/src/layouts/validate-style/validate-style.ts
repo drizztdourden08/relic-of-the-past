@@ -2,6 +2,7 @@
 import { checkKeys, isRecord, oneOf } from '../validate-box';
 import { validateValue } from '../validate-value';
 import { paintAt } from './paint-at';
+import { widthColorAt } from './width-color-at';
 import {
   BORDER_SIDES, BORDER_STYLES, SHADOW_KEYS, STYLE_KEYS, TINT_MODES,
 } from './validate-style.constants';
@@ -77,15 +78,8 @@ const shadowAt = (value: unknown, path: string, issues: Issues, insideRepeat = f
     .filter((entry): entry is HudShadow => entry !== undefined);
 };
 
-const outlineAt = (value: unknown, path: string, issues: Issues, insideRepeat = false): HudOutline | undefined => {
-  if (value === undefined) return undefined;
-  if (!isRecord(value)) { issues.push(`${path}: expected { width, color }`); return undefined; }
-  checkKeys(value, ['width', 'color'], path, issues);
-  const width = validateValue(value.width, `${path}.width`, issues, { insideRepeat });
-  const color = paintAt(value.color, `${path}.color`, issues, { required: true, insideRepeat });
-  if (width === undefined || color === undefined) return undefined;
-  return { width, color };
-};
+const outlineAt = (value: unknown, path: string, issues: Issues, insideRepeat = false): HudOutline | undefined =>
+  widthColorAt(value, path, issues, insideRepeat);
 
 const tintAt = (value: unknown, path: string, issues: Issues, insideRepeat = false): HudTint | undefined => {
   if (value === undefined) return undefined;

@@ -10,7 +10,7 @@ const LatticeOccupants = (props: LatticeOccupantsProps) => {
       {occupants.map((occupant) => (
         <Text
           key={occupant.id}
-          className="hud-lattice__occupant"
+          className="hud-cell-label hud-lattice__occupant"
           aria-hidden="true"
           data-active={occupant.id === activeChildId ? 'true' : undefined}
           style={{

@@ -2,7 +2,14 @@
 import type { CapacityRowModel, CapacityRowState } from '../CapacityFamilyRow';
 import type { CapacityFamilyId, FamilyBonus, OptionDef } from '@rotp/randomizer';
 
-interface CapacityUpgradesBlockProps {
+interface CapacityChangeHandlers {
+  onChange?: (family: CapacityFamilyId, next: CapacityRowState) => void;
+  onBonusChange?: (family: CapacityFamilyId, next: FamilyBonus) => void;
+  onEnabledChange?: (enabled: boolean) => void;
+  onProgressiveChange?: (progressive: boolean) => void;
+}
+
+interface CapacityUpgradesBlockProps extends CapacityChangeHandlers {
   rows: readonly CapacityRowModel[];
   notes: readonly string[];
   enabledOption?: OptionDef;
@@ -10,21 +17,14 @@ interface CapacityUpgradesBlockProps {
   progressiveOption?: OptionDef;
   progressive?: boolean;
   readOnly?: boolean;
-  onChange?: (family: CapacityFamilyId, next: CapacityRowState) => void;
-  onBonusChange?: (family: CapacityFamilyId, next: FamilyBonus) => void;
-  onEnabledChange?: (enabled: boolean) => void;
-  onProgressiveChange?: (progressive: boolean) => void;
 }
 
-interface CapacityRowsProps {
+interface CapacityRowsProps extends Omit<CapacityChangeHandlers, 'onEnabledChange'> {
   rows: readonly CapacityRowModel[];
   progressiveOption?: OptionDef;
   progressive: boolean;
   frozen: boolean;
   readOnly: boolean;
-  onChange?: (family: CapacityFamilyId, next: CapacityRowState) => void;
-  onBonusChange?: (family: CapacityFamilyId, next: FamilyBonus) => void;
-  onProgressiveChange?: (progressive: boolean) => void;
 }
 
-export type { CapacityRowsProps, CapacityUpgradesBlockProps };
+export type { CapacityChangeHandlers, CapacityRowsProps, CapacityUpgradesBlockProps };

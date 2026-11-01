@@ -1,17 +1,14 @@
 /* @layer renderer-components @kind component */
 import { useState } from 'react';
-import { Box } from '@drizztdourden08/tessera/primitives';
-import { StudioLayout } from '@drizztdourden08/tessera/composites';
-import { STUDIO_EDITOR_MIN_WIDTH, StudioPanelContent } from '@app/studio';
-import { SoundListHeader } from './SoundListHeader';
 import { SoundPanelRows } from './SoundPanelRows';
+import { SoundPanelShell } from './SoundPanelShell';
 import { SoundSide } from './SoundSide';
 import { soundToolGroups } from './sound-tool-groups';
 import { soundPanelSubtitle } from './behavior/sound-subtitle';
 import { useSoundPanel } from './behavior/useSoundPanel';
 import { useSoundTabActions } from './behavior/useSoundTabActions';
 import { SOUND_CHANNEL_LABELS } from './sound-labels';
-import { DETAILS_PANEL, EDITOR_LABELS } from './studio-frame/studio-frame.constants';
+import { EDITOR_LABELS } from './studio-frame/studio-frame.constants';
 import type { MsuSoundPanelProps } from './MsuSoundPanel.type';
 
 const MsuSoundPanel = (props: MsuSoundPanelProps) => {
@@ -53,24 +50,20 @@ const MsuSoundPanel = (props: MsuSoundPanelProps) => {
   });
 
   return (
-    <StudioLayout
+    <SoundPanelShell
       editorLabel={EDITOR_LABELS.ambient}
-      compactToolbar
-      editorMinWidth={STUDIO_EDITOR_MIN_WIDTH}
       toolbar={toolbar}
-      end={{ ...DETAILS_PANEL, content: <StudioPanelContent>{detail}</StudioPanelContent> }}
+      detail={detail}
+      header={{
+        title: `${SOUND_CHANNEL_LABELS[channel]} · ${sound.replacedCount} of ${sound.total} replaced`,
+        sounding: sound.playing !== null || sound.playingOriginal !== null,
+        status: sound.statusMessage,
+        statusOk: sound.statusOk,
+        onStop: sound.stop,
+      }}
     >
-      <Box className="msu-panel">
-        <SoundListHeader
-          title={`${SOUND_CHANNEL_LABELS[channel]} · ${sound.replacedCount} of ${sound.total} replaced`}
-          sounding={sound.playing !== null || sound.playingOriginal !== null}
-          status={sound.statusMessage}
-          statusOk={sound.statusOk}
-          onStop={sound.stop}
-        />
-        <SoundPanelRows channel={channel} sound={sound} filter={filter} onSelect={select} onPreview={sound.play} onPlayOriginal={original} />
-      </Box>
-    </StudioLayout>
+      <SoundPanelRows channel={channel} sound={sound} filter={filter} onSelect={select} onPreview={sound.play} onPlayOriginal={original} />
+    </SoundPanelShell>
   );
 };
 

@@ -4,21 +4,14 @@ import { getSpritesBase } from '@rotp/game-data';
 import type { TitleSwordPicture } from '@rotp/game-data';
 import { getPlatform } from '@drizztdourden08/brock-react';
 import { useSpriteAvailabilityStore } from '../../../stores/sprite-availability-store';
+import { loadImage } from '../../../title/scene/load-image';
+import { loadSceneAssets } from '../../../title/scene/load-scene-assets';
 import { LIGHT_SCENE_FILES } from '../../../title/scene/scene-files';
 import type { Picture } from '../../../title/choreography/choreography.type';
 import { OPENING_MARK_URL, SPRITE_SCHEME } from '../TitleView.constants';
 import type { PictureSource, TitleAssets } from '../TitleView.type';
 import { logoSourceFor } from './logo-source-for';
 import { swordSourceFor } from './sword-source-for';
-
-const load = (src: string): Promise<HTMLImageElement> => new Promise((resolve, reject) => {
-  const img = new Image();
-  img.onload = () => resolve(img);
-  img.onerror = () => reject(new Error(`title asset failed to load: ${src}`));
-  img.src = src;
-});
-
-const loadAll = (srcs: readonly string[]): Promise<HTMLImageElement[]> => Promise.all(srcs.map(load));
 
 const sameOriginUrl = async (url: string): Promise<string> => {
   if (!url.startsWith(SPRITE_SCHEME)) return url;
@@ -30,19 +23,18 @@ const sameOriginUrl = async (url: string): Promise<string> => {
 const loadPicture = async ({ url, scale }: PictureSource): Promise<Picture> => {
   const src = await sameOriginUrl(url);
   try {
-    return { img: await load(src), scale };
+    return { img: await loadImage(src), scale };
   } finally {
     if (src !== url) URL.revokeObjectURL(src);
   }
 };
 
 const loadTitleAssets = async (spritesBase: string, swordChoice: TitleSwordPicture): Promise<TitleAssets> => {
-  const files = LIGHT_SCENE_FILES;
-  const [sky, mountains, trees, clouds, landmark, logo, sword, openingMark] = await Promise.all([
-    load(files.sky), loadAll(files.mountains), loadAll(files.trees), loadAll(files.clouds), load(files.landmark),
-    loadPicture(logoSourceFor(spritesBase)), loadPicture(swordSourceFor(swordChoice, spritesBase)), load(OPENING_MARK_URL),
+  const [scene, logo, sword, openingMark] = await Promise.all([
+    loadSceneAssets(LIGHT_SCENE_FILES),
+    loadPicture(logoSourceFor(spritesBase)), loadPicture(swordSourceFor(swordChoice, spritesBase)), loadImage(OPENING_MARK_URL),
   ]);
-  return { scene: { sky, mountains, trees, clouds, landmark }, pictures: { logo, sword, openingMark } };
+  return { scene, pictures: { logo, sword, openingMark } };
 };
 
 const useTitleAssets = (sword: TitleSwordPicture): TitleAssets | null => {

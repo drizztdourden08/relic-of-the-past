@@ -40,7 +40,7 @@ const FlexStrip = (props: FlexStripProps) => {
           style={{ '--hud-flex-weight': weights[index] } as CSSProperties}
           onPointerDown={(event) => onCellDown(index, event)}
         >
-          <Text className="hud-flex-strip__label">{cell.id}</Text>
+          <Text className="hud-cell-label hud-flex-strip__label">{cell.id}</Text>
         </Box>
       ))}
     </Box>

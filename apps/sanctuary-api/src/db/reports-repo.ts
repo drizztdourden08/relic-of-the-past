@@ -1,6 +1,6 @@
 /* @layer root-config @kind logic */
 import type { Report } from '@rotp/hub-contracts';
-import { decodeCursor, encodeCursor } from '@rotp/hub-server';
+import { decodeCursor, pageOf } from '@rotp/hub-server';
 import { sanctuaryCollection } from './collections';
 import type { ReportFilter, ReportPage, ReportPatch } from './reports-repo.type';
 
@@ -27,8 +27,7 @@ const list = async ({ mineUserId, state, cursor }: ReportFilter, pageSize: numbe
   if (after !== null) query = query.startAfter(after);
   const snap = await query.get();
   const items = snap.docs.map((doc) => doc.data() as Report);
-  const last = items.at(-1);
-  return { items, nextCursor: items.length === pageSize && last ? encodeCursor(last.createdAt) : null };
+  return pageOf(items, pageSize);
 };
 
 const listForSweep = async (): Promise<Report[]> => {

@@ -1,0 +1,5 @@
+/* @layer renderer-components @kind style */
+
+.profile-hero__capitalize {
+  text-transform: capitalize;
+}

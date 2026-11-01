@@ -8,7 +8,7 @@ import { FakeWorld } from '../engine-loop/fake-world';
 import {
   BOMBS_ID, CHICKEN_HOUSE_ROOM, HOUSE_CHECK, KAKARIKO_TAVERN_ROOM, LAMP_ID, LINKS_HOUSE_ROOM, STEP_LIMIT,
 } from './engine-review-fixes.constants';
-import { baseObs } from './base-obs';
+import { baseObs } from '../base-obs';
 import { trackConnectionPairs } from './track-connection-pairs';
 
 const registerPair = trackConnectionPairs();

@@ -53,20 +53,6 @@
   box-shadow: inset 0 0 0 var(--size-1) var(--c-text);
 }
 
-.hud-flex-strip__label {
-  display: block;
-  min-width: 0;
-  padding: 0 var(--space-2xs);
-  overflow: hidden;
-  text-align: center;
-  font-family: var(--font-mono);
-  font-size: var(--text-xs);
-  color: var(--c-text-dim);
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  pointer-events: none;
-}
-
 .hud-flex-strip__cell[data-state='selected'] > .hud-flex-strip__label {
   color: var(--c-primary-bright);
 }

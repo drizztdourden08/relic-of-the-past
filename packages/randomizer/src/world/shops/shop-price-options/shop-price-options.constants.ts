@@ -9,7 +9,7 @@ import { currencyKeyOf } from './currency-key-of';
 import { currencyMaxKeyOf } from './currency-max-key-of';
 import { currencyMinKeyOf } from './currency-min-key-of';
 import { shopPriceRangeSeed } from './shop-price-range-seed';
-import { shopPriceToggleSeed } from './shop-price-toggle-seed';
+import { shopToggleSeed } from '../shop-toggle-seed';
 import type { OptionSeed } from '../../options.type';
 import type { BottleContentRow } from '../shop-price.type';
 
@@ -23,13 +23,13 @@ const BOTTLE_CONTENTS: readonly BottleContentRow[] = [
 
 const SHOP_PRICE_OPTION_SEEDS: readonly OptionSeed[] = [
   ...CURRENCY_ROWS.flatMap(({ currency, label, max, defaultMin, defaultMax }) => [
-    shopPriceToggleSeed(currencyKeyOf(currency), `${label} prices`, ROLLED_BY_DEFAULT),
+    shopToggleSeed(currencyKeyOf(currency), `${label} prices`, ROLLED_BY_DEFAULT),
     shopPriceRangeSeed(currencyMinKeyOf(currency), `${label} price minimum`, max, defaultMin),
     shopPriceRangeSeed(currencyMaxKeyOf(currency), `${label} price maximum`, max, defaultMax),
   ]),
-  shopPriceToggleSeed(BOTTLE_KEY, 'Bottle prices', ROLLED_BY_DEFAULT),
+  shopToggleSeed(BOTTLE_KEY, 'Bottle prices', ROLLED_BY_DEFAULT),
   ...BOTTLE_CONTENTS.map(({ content, label }) =>
-    shopPriceToggleSeed(bottleContentKeyOf(content), `${label} as a price`, true)),
+    shopToggleSeed(bottleContentKeyOf(content), `${label} as a price`, true)),
 ];
 
 const SHOP_PRICE_OPTION_KEYS: readonly string[] = SHOP_PRICE_OPTION_SEEDS.map((seed) => seed.key);

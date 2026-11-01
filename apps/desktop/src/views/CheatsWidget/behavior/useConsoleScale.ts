@@ -1,5 +1,6 @@
 /* @layer renderer-widgets @kind hook */
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useState } from 'react';
+import { useResizeMeasure } from '../../../hooks/useResizeMeasure';
 import { SCALE_MAX, SCALE_MIN, SCALE_STEP, SNES_TILE } from '../CheatsWidget.constants';
 
 const scaleFor = (width: number, tilesWide: number): number => {
@@ -9,23 +10,14 @@ const scaleFor = (width: number, tilesWide: number): number => {
 };
 
 const useConsoleScale = (tilesWide: number) => {
-  const ref = useRef<HTMLDivElement>(null);
   const [scale, setScale] = useState(1);
 
-  const measure = useCallback(() => {
-    const el = ref.current;
-    if (!el || el.clientWidth <= 0) return;
+  const measure = useCallback((el: HTMLDivElement) => {
+    if (el.clientWidth <= 0) return;
     setScale(scaleFor(el.clientWidth, tilesWide));
   }, [tilesWide]);
 
-  useEffect(() => {
-    measure();
-    const el = ref.current;
-    if (!el) return;
-    const observer = new ResizeObserver(() => measure());
-    observer.observe(el);
-    return () => observer.disconnect();
-  }, [measure]);
+  const ref = useResizeMeasure(measure);
 
   return { ref, scale };
 };

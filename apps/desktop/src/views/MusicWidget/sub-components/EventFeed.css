@@ -10,27 +10,7 @@
 }
 
 .event-feed__row {
-  display: grid;
   grid-template-columns: auto auto auto minmax(0, 1fr);
-  align-items: center;
-  gap: var(--space-sm);
-  block-size: var(--size-20);
-  padding-inline: var(--space-sm);
-  font-family: var(--font-mono);
-  font-size: var(--text-xs);
-  font-variant-numeric: tabular-nums;
-  white-space: nowrap;
-}
-
-.event-feed__row:nth-child(even) {
-  background: var(--c-hover);
-}
-
-.event-feed__row > :is(span, div) {
-  font-size: inherit;
-  min-inline-size: 0;
-  overflow: hidden;
-  text-overflow: ellipsis;
 }
 
 .event-feed__time {

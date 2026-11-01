@@ -1,6 +1,6 @@
 /* @layer store-site @kind hook */
-import { useCallback, useState } from 'react';
-import { errorMessage } from '@rotp/hub-client';
+import { useCallback } from 'react';
+import { useNoticeRun } from '@rotp/design';
 import { abortVersion, deleteVersion, submitVersion, withdrawVersion } from '../../../endpoints/publish-endpoints';
 import { useStoreData } from '../../../data/store-data-context';
 import { startDownload } from '../../../catalog/start-download';
@@ -8,24 +8,11 @@ import type { ItemChange } from './usePublicationActions.type';
 
 const usePublicationActions = () => {
   const { onItem } = useStoreData();
-  const [busy, setBusy] = useState(false);
-  const [notice, setNotice] = useState<string | null>(null);
-
-  const run = useCallback(async (work: () => Promise<void>) => {
-    setBusy(true);
-    setNotice(null);
-    try {
-      await work();
-    } catch (cause) {
-      setNotice(errorMessage(cause));
-    } finally {
-      setBusy(false);
-    }
-  }, []);
+  const { busy, notice, run } = useNoticeRun();
 
   const change = useCallback((call: ItemChange, done: string) => (itemId: string, n: number) => run(async () => {
     onItem((await call(itemId, n)).item);
-    setNotice(done);
+    return done;
   }), [run, onItem]);
 
   const submit = useCallback(
@@ -50,6 +37,7 @@ const usePublicationActions = () => {
 
   const download = useCallback((itemId: string, n: number) => run(async () => {
     await startDownload(itemId, n);
+    return null;
   }), [run]);
 
   return { busy, notice, submit, withdraw, remove, abort, download };

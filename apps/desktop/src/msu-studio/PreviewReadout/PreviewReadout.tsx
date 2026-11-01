@@ -13,7 +13,7 @@ const PreviewReadout = (props: PreviewReadoutProps) => {
   if (report === null) return null;
 
   return (
-    <Box className="preview-readout">
+    <Box className="msu-accent-panel preview-readout">
       <Box className="preview-readout__head">
         <Text className="preview-readout__title">Live · {label}</Text>
         {report.detail != null && (

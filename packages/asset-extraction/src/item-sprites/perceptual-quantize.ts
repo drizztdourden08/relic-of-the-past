@@ -1,7 +1,7 @@
 /* @layer shared-asset-extraction @kind logic */
 import { itemAt } from '../checked-read';
 import { toOklab } from '../graphics/oklab';
-import { SLOT_SIDE } from './fixed-row-tiles';
+import { SLOT_SIDE, squaredDistance } from './fixed-row-tiles';
 import { colorKey, matchTones } from './perceptual-match';
 import type { ImageBuffer } from '../graphics/png-writer';
 import type { RGBA } from '../graphics/palette';
@@ -22,9 +22,6 @@ const tonesOf = (picture: ImageBuffer): Tone[] => {
   }
   return [...tones.values()];
 };
-
-const squaredDistance = (a: RGBA, b: RGBA): number =>
-  (a[0] - b[0]) ** 2 + (a[1] - b[1]) ** 2 + (a[2] - b[2]) ** 2;
 
 const quantizeIconPerceptual = (picture: ImageBuffer, row: readonly RGBA[]): QuantizedIcon => {
   const map = matchTones(tonesOf(picture), row);

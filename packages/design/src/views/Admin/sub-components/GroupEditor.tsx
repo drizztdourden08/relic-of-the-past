@@ -1,5 +1,6 @@
 /* @layer site-kit @kind component */
-import { Button, Field, Flex, Stack, Text, TextInput } from '@drizztdourden08/tessera/primitives';
+import { Field, Stack, Text, TextInput } from '@drizztdourden08/tessera/primitives';
+import { FormActions } from '../../../compounds/FormActions/FormActions';
 import { useGroupDraft } from '../behavior/useGroupDraft';
 import { GroupRightsFields } from './GroupRightsFields';
 import { GroupRoleField } from './GroupRoleField';
@@ -32,10 +33,7 @@ const GroupEditor = (props: GroupEditorProps) => {
         onChange={(site, next) => setRights((current) => ({ ...current, [site]: next }))}
       />
       {name.trim() && problem && <Text as="p" variant="caption" role="alert">{problem}</Text>}
-      <Flex gap="sm">
-        <Button type="submit" variant="primary" size="sm" disabled={busy || !parsed.success}>Save</Button>
-        <Button type="button" variant="tertiary" size="sm" disabled={busy} onClick={onCancel}>Cancel</Button>
-      </Flex>
+      <FormActions busy={busy} canSave={parsed.success} onCancel={onCancel} />
     </Stack>
   );
 };

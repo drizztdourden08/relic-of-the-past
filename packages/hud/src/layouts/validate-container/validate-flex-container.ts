@@ -1,8 +1,7 @@
 /* @layer shared-hud @kind logic */
-import { checkKeys, oneOf, validateBox } from '../validate-box';
+import { checkKeys, oneOf } from '../validate-box';
+import { buildContainer } from './build-container';
 import { containerCommon } from './container-common';
-import { motionParts } from './motion-parts';
-import { validateChildren } from './validate-children';
 import { ALIGN, DIRECTIONS, FLEX_KEYS, JUSTIFY } from './validate-container.constants';
 import type { HudFlexContainer } from '../../types/hud-node';
 import type { NodeContext, NodeValidator } from './validate-container.type';
@@ -21,19 +20,16 @@ const validateFlexContainer = (
   if (value.wrap !== undefined && typeof value.wrap !== 'boolean') issues.push(`${path}.wrap: expected true or false`);
   const justify = oneOf(value.justify, JUSTIFY, `${path}.justify`, issues);
   const align = oneOf(value.align, ALIGN, `${path}.align`, issues);
-  if (!Array.isArray(value.children)) { issues.push(`${path}.children: expected an array`); return null; }
-  const motion = motionParts(value, path, issues, insideRepeat);
-  return {
-    ...validateBox(value, path, issues, insideRepeat),
-    kind: 'container',
-    direction,
-    ...common,
-    ...(justify ? { justify } : {}),
-    ...(align ? { align } : {}),
-    ...(typeof value.wrap === 'boolean' ? { wrap: value.wrap } : {}),
-    ...motion,
-    children: validateChildren(value, path, ctx, validateNode),
-  };
+  return buildContainer({
+    value, path, ctx, validateNode,
+    own: {
+      direction,
+      ...common,
+      ...(justify ? { justify } : {}),
+      ...(align ? { align } : {}),
+      ...(typeof value.wrap === 'boolean' ? { wrap: value.wrap } : {}),
+    },
+  });
 };
 
 export { validateFlexContainer };

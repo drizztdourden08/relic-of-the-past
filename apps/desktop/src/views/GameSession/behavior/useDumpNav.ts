@@ -1,57 +1,48 @@
 /* @layer renderer-appshell @kind hook */
 import { requireHostApi } from '@drizztdourden08/brock-react';
-import { useEffect, useRef } from 'react';
 import { loadStateRef } from '@app/game';
 import type { DumpNavDeps } from './useDumpNav.type';
 import { DUMP_SETTLE_MS } from './nav-dump.constants';
 import { EXIT_DELAY_MS } from './auto-launch.constants';
 import { waitForGameRunning } from './wait-for-game-running';
 import { collectNavDump } from './collect-nav-dump';
+import { useLaunchTask } from './useLaunchTask';
 
 const useDumpNav = ({ activeProfile, loadProfileForGame }: DumpNavDeps) => {
-  const didRun = useRef(false);
+  useLaunchTask(activeProfile, async ({ isCancelled, markRan }) => {
+    if (!activeProfile) return;
+    const slot = await requireHostApi().getDumpNavSlot();
+    if (slot === null) return;
+    markRan();
 
-  useEffect(() => {
-    if (!activeProfile || didRun.current) return;
-    const abort = new AbortController();
-    const isCancelled = () => abort.signal.aborted;
+    console.log(`[DumpNav] Starting game for profile: ${activeProfile.name}`);
+    await loadProfileForGame(activeProfile);
 
-    void (async () => {
-      const slot = await requireHostApi().getDumpNavSlot();
-      if (slot === null) return;
-      didRun.current = true;
+    await waitForGameRunning(isCancelled);
+    if (isCancelled()) return;
 
-      console.log(`[DumpNav] Starting game for profile: ${activeProfile.name}`);
-      await loadProfileForGame(activeProfile);
-
-      await waitForGameRunning(isCancelled);
-      if (isCancelled()) return;
-
-      const kind = typeof slot === 'number' ? 'quick slot' : 'manual save';
-      console.log(`[DumpNav] Game running. Loading ${kind} ${slot}...`);
-      const loadResult = await loadStateRef(slot);
-      console.log(`[DumpNav] load ${kind} ${slot} returned: ${loadResult}`);
-      if (!loadResult) {
-        const dump = { slot, error: `loading ${kind} "${slot}" returned false. The state was not found, or the module is not ready.` };
-        await requireHostApi().writeDumpNav(dump);
-        setTimeout(() => window.close(), EXIT_DELAY_MS);
-        return;
-      }
-      await new Promise((r) => setTimeout(r, DUMP_SETTLE_MS));
-      if (isCancelled()) return;
-
-      const dump = collectNavDump(slot);
-
-      console.log(`[DumpNav] Dumping navigation data...`);
-      console.log(JSON.stringify(dump, null, 2));
-      const path = await requireHostApi().writeDumpNav(dump);
-      console.log(`[DumpNav] Written to: ${path}`);
-
+    const kind = typeof slot === 'number' ? 'quick slot' : 'manual save';
+    console.log(`[DumpNav] Game running. Loading ${kind} ${slot}...`);
+    const loadResult = await loadStateRef(slot);
+    console.log(`[DumpNav] load ${kind} ${slot} returned: ${loadResult}`);
+    if (!loadResult) {
+      const dump = { slot, error: `loading ${kind} "${slot}" returned false. The state was not found, or the module is not ready.` };
+      await requireHostApi().writeDumpNav(dump);
       setTimeout(() => window.close(), EXIT_DELAY_MS);
-    })();
+      return;
+    }
+    await new Promise((r) => setTimeout(r, DUMP_SETTLE_MS));
+    if (isCancelled()) return;
 
-    return () => abort.abort();
-  }, [activeProfile]);
+    const dump = collectNavDump(slot);
+
+    console.log(`[DumpNav] Dumping navigation data...`);
+    console.log(JSON.stringify(dump, null, 2));
+    const path = await requireHostApi().writeDumpNav(dump);
+    console.log(`[DumpNav] Written to: ${path}`);
+
+    setTimeout(() => window.close(), EXIT_DELAY_MS);
+  });
 };
 
 export { useDumpNav };

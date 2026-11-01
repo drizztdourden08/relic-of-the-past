@@ -1,28 +1,22 @@
 /* @layer store-api @kind logic */
 import { STORE_ROUTES, versionCompleteSchema } from '@rotp/hub-contracts';
-import type { VersionCompleteResponse } from '@rotp/hub-contracts';
 import { badRequest, conflict, parseBody } from '@rotp/hub-server';
 import type { Route } from '@rotp/hub-server';
-import { requirePlayer } from '../auth/player';
 import { itemsRepo } from '../db/items-repo';
-import { loadOwnItem } from '../items/item-guards';
-import { dropVersion, loadVersion, replaceVersion, versionOf } from '../items/versions';
+import { loadUploadingVersion, sendSignedItem } from '../items/version-routes';
+import { dropVersion, replaceVersion, versionOf } from '../items/versions';
 import { statusAfter } from '../items/item-status';
 import { verifyVersion } from '../items/verify-version';
 import type { VerifiedVersion } from '../items/verify-version.type';
 import { storeBucket } from '../storage/store-bucket';
-import { signItem } from '../media/sign-media';
 
 const versionsComplete: Route = {
   ...STORE_ROUTES.versionsComplete,
-  handler: async ({ req, res, params }) => {
-    const player = await requirePlayer(req);
-    const item = await loadOwnItem(params.id, player);
-    const version = loadVersion(item, params.n);
-    if (version.review.state !== 'uploading' || !version.upload) throw conflict('This version is not being uploaded.');
-    const { etags } = parseBody(versionCompleteSchema, req.body);
-    if (etags.length !== version.upload.parts) throw badRequest(`Expected ${version.upload.parts} ETags.`);
-    await storeBucket.complete(version.key, version.upload.multipartId, etags);
+  handler: async (ctx) => {
+    const { item, version, upload } = await loadUploadingVersion(ctx);
+    const { etags } = parseBody(versionCompleteSchema, ctx.req.body);
+    if (etags.length !== upload.parts) throw badRequest(`Expected ${upload.parts} ETags.`);
+    await storeBucket.complete(version.key, upload.multipartId, etags);
 
     let verified: VerifiedVersion;
     try {
@@ -48,8 +42,7 @@ const versionsComplete: Route = {
       const versions = replaceVersion(latest, ready);
       return { versions, status: statusAfter({ ...latest, versions }) };
     });
-    const body: VersionCompleteResponse = { item: await signItem(updated) };
-    res.status(200).json(body);
+    await sendSignedItem(ctx, updated);
   },
 };
 

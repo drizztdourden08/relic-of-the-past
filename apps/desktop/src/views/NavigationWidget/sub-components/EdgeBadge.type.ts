@@ -1,5 +1,5 @@
 /* @layer renderer-widgets @kind types */
-import type { ConnectionInfo } from '@rotp/game-core';
+import type { BorderEdge, ConnectionInfo } from '@rotp/game-core';
 
 interface EdgeBadgeBox {
   top: number;
@@ -14,4 +14,11 @@ interface EdgeBadgeProps {
   title: string;
 }
 
-export type { EdgeBadgeBox, EdgeBadgeProps };
+interface EdgeBadgeRowsProps {
+  byEdge: Record<BorderEdge, ConnectionInfo[]>;
+  offsets: Record<BorderEdge, number>;
+  horizontalBox: (connection: ConnectionInfo, top: number) => EdgeBadgeBox;
+  verticalBox: (connection: ConnectionInfo, left: number) => EdgeBadgeBox;
+}
+
+export type { EdgeBadgeBox, EdgeBadgeProps, EdgeBadgeRowsProps };

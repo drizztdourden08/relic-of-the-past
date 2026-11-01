@@ -1,37 +1,36 @@
 /* @layer renderer-lib @kind logic */
 import type { LayerResume } from '@rotp/game-data';
-import type { LayerActivity, LayerContext, LayerScheduler, LiveVoice } from './scheduler.type';
-import { liveActivity } from './live-activity';
+import type { LayerActivity, LayerContext, LayerScheduler } from './scheduler.type';
 import { intervalPointAt } from './interval-point-at';
 import { playLiveVoice } from './play-live-voice';
+import { secondsUntilDue } from './seconds-until-due';
+import { stopTimed } from './stop-timed';
+import { timedActivity } from './timed-activity';
+import { createTimedState } from './timed-state';
 
 const createIntervalScheduler = (ctx: LayerContext, atSeconds: number[]): LayerScheduler => {
   const points = [...new Set(atSeconds.filter((s) => Number.isFinite(s) && s >= 0))].sort((a, b) => a - b);
   const cycle = points.at(-1) ?? 0;
   const pointAt = (index: number): number => intervalPointAt(points, index);
 
-  let timer: ReturnType<typeof setTimeout> | null = null;
-  let live: LiveVoice[] = [];
+  const state = createTimedState();
   let pointIndex = 0;
-  let dueAt = 0;
-  let currentWait: number | null = null;
-  let lastFileIndex: number | null = null;
 
   const fireIndex = (index: number): void => {
     if (ctx.files.length === 0) return;
     const fileIndex = ctx.files.length > 1 ? index % ctx.files.length : 0;
-    lastFileIndex = fileIndex;
-    live.push(playLiveVoice(ctx, fileIndex, (entry) => { live = live.filter((v) => v !== entry); }));
+    state.lastFileIndex = fileIndex;
+    state.live.push(playLiveVoice(ctx, fileIndex, (entry) => { state.live = state.live.filter((v) => v !== entry); }));
   };
 
   const gapAfter = (previous: number, next: number): number =>
     (pointIndex === 0 ? Math.max(0, cycle - previous) + next : Math.max(0, next - previous));
 
   const scheduleIn = (seconds: number): void => {
-    dueAt = ctx.elapsedSeconds() + seconds;
-    currentWait = seconds;
-    timer = setTimeout(() => {
-      timer = null;
+    state.dueAt = ctx.elapsedSeconds() + seconds;
+    state.currentWait = seconds;
+    state.timer = setTimeout(() => {
+      state.timer = null;
       fireIndex(pointIndex);
       pointIndex += 1;
       if (pointIndex >= points.length) pointIndex = 0;
@@ -50,23 +49,12 @@ const createIntervalScheduler = (ctx: LayerContext, atSeconds: number[]): LayerS
   const position = (): LayerResume => ({
     fileIndex: pointIndex,
     offsetSeconds: 0,
-    nextEventInSeconds: Math.max(0, dueAt - ctx.elapsedSeconds()),
+    nextEventInSeconds: secondsUntilDue(ctx, state),
   });
 
-  const activity = (): LayerActivity => liveActivity({
-    live,
-    fileNames: ctx.fileNames,
-    lastFileIndex,
-    nextEventInSeconds: timer === null ? null : Math.max(0, dueAt - ctx.elapsedSeconds()),
-    waitSeconds: currentWait,
-  });
+  const activity = (): LayerActivity => timedActivity(ctx, state, state.currentWait);
 
-  const stop = (): void => {
-    if (timer !== null) clearTimeout(timer);
-    timer = null;
-    live.forEach((v) => v.voice.stop());
-    live = [];
-  };
+  const stop = (): void => stopTimed(state);
 
   return { start, position, activity, stop };
 };

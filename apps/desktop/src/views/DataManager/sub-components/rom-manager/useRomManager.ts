@@ -40,27 +40,21 @@ const useRomManager = (params: UseRomManagerParams) => {
     romStatuses.filter((base) => base.hasAssets).forEach((base) => { void onExtractAssets(base.romFile); });
   }, [romStatuses, onExtractAssets]);
 
-  const handleUrlImport = useCallback(async (url: string) => {
-    const result = await romsStore.importUrl(url, activeKind);
-    if (result.success) {
-      onRefresh();
-      if (!result.alreadyExists) triggerRebuild(activeKind, result.romFile);
-      return { success: true, message: importMessage(activeKind, result.romFile, Boolean(result.alreadyExists)) };
-    }
-    return { success: false, message: result.error ?? 'Download failed' };
+  const settleImport = useCallback((result: Awaited<ReturnType<typeof romsStore.importUrl>>, failure: string) => {
+    if (!result.success) return { success: false, message: result.error ?? failure };
+    onRefresh();
+    if (!result.alreadyExists) triggerRebuild(activeKind, result.romFile);
+    return { success: true, message: importMessage(activeKind, result.romFile, Boolean(result.alreadyExists)) };
   }, [activeKind, onRefresh, triggerRebuild]);
+
+  const handleUrlImport = useCallback(async (url: string) =>
+    settleImport(await romsStore.importUrl(url, activeKind), 'Download failed'), [activeKind, settleImport]);
 
   const handleFileImport = useCallback(async (files: File[]) => {
     const [file] = files;
     if (file === undefined) return { success: false, message: 'No file selected' };
-    const result = await romsStore.importFile(file, activeKind);
-    if (result.success) {
-      onRefresh();
-      if (!result.alreadyExists) triggerRebuild(activeKind, result.romFile);
-      return { success: true, message: importMessage(activeKind, result.romFile, Boolean(result.alreadyExists)) };
-    }
-    return { success: false, message: result.error ?? 'Import failed' };
-  }, [activeKind, onRefresh, triggerRebuild]);
+    return settleImport(await romsStore.importFile(file, activeKind), 'Import failed');
+  }, [activeKind, settleImport]);
 
   return {
     activeKind, setActiveKind,

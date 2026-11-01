@@ -1,8 +1,8 @@
 /* @layer sanctuary-site @kind component */
 import { useMemo } from 'react';
 import { Flex, Stack, Text } from '@drizztdourden08/tessera/primitives';
-import { DataTable, FilterBar, SettingsPage } from '@drizztdourden08/tessera/composites';
-import { SavedViewsMenu, useSectionHeading } from '@rotp/design';
+import { DataTable, SettingsPage } from '@drizztdourden08/tessera/composites';
+import { SurfaceFilterBar, useSectionHeading } from '@rotp/design';
 import { reportRowId } from '../../reports/report-row';
 import { REPORT_DEFAULT_COLUMNS, REPORT_DEFAULT_GROUP_BY } from '../../reports/report-schema.constants';
 import { useReportsPage } from './behavior/useReportsPage';
@@ -21,18 +21,7 @@ const Reports = (props: ReportsProps) => {
     [scope.tabs, scope.activeId, scope.select],
   );
 
-  const toolbar = (
-    <FilterBar
-      schema={page.schema}
-      clauses={view.clauses}
-      onChange={view.setClauses}
-      search={view.search}
-      onSearchChange={view.setSearch}
-      searchPlaceholder={SEARCH_PLACEHOLDER}
-      searchLabel="Search reports"
-      extra={<SavedViewsMenu state={view.savedViews} />}
-    />
-  );
+  const toolbar = <SurfaceFilterBar schema={page.schema} view={view} placeholder={SEARCH_PLACEHOLDER} label="Search reports" />;
 
   const table = (
     <DataTable

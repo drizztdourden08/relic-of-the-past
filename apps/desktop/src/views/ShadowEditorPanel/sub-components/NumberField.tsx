@@ -25,7 +25,7 @@ const NumberField = ({ value, onChange, label, icon, min, max, step = 1, suffix 
         />
       ) : (
         <Text
-          className="shadow-number-field__value"
+          className="shadow-field-box shadow-number-field__value"
           onDoubleClick={edit.startEdit}
           onPointerDown={scrub.onPointerDown}
           onPointerMove={scrub.onPointerMove}

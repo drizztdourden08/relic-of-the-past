@@ -1,26 +1,10 @@
 /* @layer renderer-widgets @kind style */
 
-.nav-indoor-minimap__root {
-  position: relative;
-  width: 100%;
-  margin-top: var(--size-4);
-  margin-left: auto;
-  margin-right: auto;
-}
-
 .nav-indoor-minimap__map-frame {
   position: absolute;
   border-radius: var(--radius-sm);
   background: var(--c-secondary-soft);
   overflow: hidden;
-}
-
-.nav-indoor-minimap__marker {
-  position: absolute;
-  pointer-events: none;
-  display: flex;
-  align-items: center;
-  justify-content: center;
 }
 
 .nav-indoor-minimap__fall-hole {
@@ -30,16 +14,6 @@
   pointer-events: none;
   background: repeating-linear-gradient(45deg, var(--c-primary) 0, var(--c-primary) var(--size-2), transparent var(--size-2), transparent var(--size-4));
   opacity: 0.8;
-}
-
-.nav-indoor-minimap__player-dot {
-  position: absolute;
-  width: var(--size-6);
-  height: var(--size-6);
-  border-radius: 50%;
-  background: var(--c-secondary);
-  box-shadow: 0 0 calc(var(--size-1) * 3) var(--c-secondary);
-  pointer-events: none;
 }
 
 .nav-indoor-minimap__boundary-dot {

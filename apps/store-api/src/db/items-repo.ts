@@ -1,7 +1,7 @@
 /* @layer store-api @kind logic */
 import { FieldValue } from '@google-cloud/firestore';
 import type { ItemStatus, StoreItem, StoreKind } from '@rotp/hub-contracts';
-import { notFound, db, decodeCursor, encodeCursor } from '@rotp/hub-server';
+import { notFound, db, decodeCursor, pageOf } from '@rotp/hub-server';
 import { isAwaitingReview } from '../items/item-status';
 import { storeCollection } from './collections';
 import type { ItemChange, ItemPage, ShelfField, StoredItem } from './items-repo.type';
@@ -66,8 +66,7 @@ const listPublished = async (kind: StoreKind | null, cursor: string | undefined,
   if (after !== null) query = query.startAfter(after);
   const snap = await query.get();
   const page = snap.docs.map((doc) => toItem(doc.data()));
-  const last = page.at(-1);
-  return { items: page, nextCursor: page.length === pageSize && last ? encodeCursor(last.createdAt) : null };
+  return pageOf(page, pageSize);
 };
 
 const topPublished = async (field: ShelfField, limit: number): Promise<StoreItem[]> => {

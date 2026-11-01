@@ -4,6 +4,7 @@ import { readHubEnv } from '../../env';
 import { API, CDN, SCOPES } from './discord.constants';
 import type { DiscordUser } from './discord.type';
 import { getJson } from './get-json';
+import { pkceFlow } from './pkce-flow';
 import type { OAuthProvider } from './provider.type';
 
 const client = (redirect: string): Discord => {
@@ -16,10 +17,7 @@ const avatarUrl = ({ id, avatar }: DiscordUser): string | null =>
 
 const discordProvider: OAuthProvider = {
   name: 'discord',
-  authUrl: (state, verifier, redirect) => client(redirect).createAuthorizationURL(state, verifier, SCOPES),
-  exchange: async (code, verifier, redirect) => ({
-    accessToken: (await client(redirect).validateAuthorizationCode(code, verifier)).accessToken(),
-  }),
+  ...pkceFlow(client, SCOPES),
   profile: async (accessToken) => {
     const user = await getJson<DiscordUser>(`${API}/users/@me`, accessToken);
     return { subject: user.id, handle: user.username, email: user.email ?? null, avatarUrl: avatarUrl(user) };

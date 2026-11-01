@@ -1,13 +1,13 @@
 /* @layer store-api @kind logic */
-import { STORE_ROUTES, HUB_LIMITS, isPackKey, STORE_LIMITS } from '@rotp/hub-contracts';
-import type { PackLinkResponse, StoreItem, StoreVersion } from '@rotp/hub-contracts';
+import { STORE_ROUTES, isPackKey, STORE_LIMITS } from '@rotp/hub-contracts';
+import type { StoreItem, StoreVersion } from '@rotp/hub-contracts';
 import { conflict, notFound, tooMany, rateLimitRepo } from '@rotp/hub-server';
 import type { Route } from '@rotp/hub-server';
 import { requirePlayer } from '../auth/player';
 import { DAY_MS } from '../db/daily-repo.constants';
 import { loadVisibleItem } from '../items/item-guards';
+import { packLinkOf } from '../items/version-routes';
 import { versionOf } from '../items/versions';
-import { storeBucket } from '../storage/store-bucket';
 import { OVER_CAP } from './items-pack.constants';
 
 const livePack = (item: StoreItem): StoreVersion & { packKey: string } => {
@@ -27,14 +27,7 @@ const itemsPack: Route = {
     const version = livePack(await loadVisibleItem(params.id, player));
     const key = `store-pack-previews-${player.caller.userId}`;
     if (!(await rateLimitRepo.checkRateLimit(key, STORE_LIMITS.packPreviewsPerDay, DAY_MS))) throw tooMany(OVER_CAP);
-    const url = await storeBucket.signPreview(version.packKey, version.contentType);
-    const body: PackLinkResponse = {
-      url,
-      bytes: version.bytes,
-      container: version.container,
-      expiresAt: Date.now() + HUB_LIMITS.previewUrlSeconds * 1000,
-    };
-    res.status(200).json(body);
+    res.status(200).json(await packLinkOf(version.packKey, version));
   },
 };
 

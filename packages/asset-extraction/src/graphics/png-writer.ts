@@ -45,28 +45,24 @@ class ImageBuffer {
     }
   }
 
-  flipX(): ImageBuffer {
+  private mirrored(targetOf: (x: number, y: number) => number): ImageBuffer {
     const flipped = new ImageBuffer(this.width, this.height);
     for (let y = 0; y < this.height; y++) {
       for (let x = 0; x < this.width; x++) {
         const srcOffset = (y * this.width + x) * 4;
-        const dstOffset = (y * this.width + (this.width - 1 - x)) * 4;
+        const dstOffset = targetOf(x, y) * 4;
         this.data.copy(flipped.data, dstOffset, srcOffset, srcOffset + 4);
       }
     }
     return flipped;
   }
 
+  flipX(): ImageBuffer {
+    return this.mirrored((x, y) => y * this.width + (this.width - 1 - x));
+  }
+
   flipY(): ImageBuffer {
-    const flipped = new ImageBuffer(this.width, this.height);
-    for (let y = 0; y < this.height; y++) {
-      for (let x = 0; x < this.width; x++) {
-        const srcOffset = (y * this.width + x) * 4;
-        const dstOffset = ((this.height - 1 - y) * this.width + x) * 4;
-        this.data.copy(flipped.data, dstOffset, srcOffset, srcOffset + 4);
-      }
-    }
-    return flipped;
+    return this.mirrored((x, y) => (this.height - 1 - y) * this.width + x);
   }
 
   scale(factor: number): ImageBuffer {

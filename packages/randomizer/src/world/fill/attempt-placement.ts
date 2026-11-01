@@ -1,10 +1,9 @@
 /* @layer shared-game @kind logic */
 import { itemAt } from '../../checked-access';
-import { createRng } from '../../rng';
 import { placementStatsOf } from './placement-stats';
-import { buildFillWorld, fillEligibleLocations } from './fill-world';
-import { fillOptionsFromSnapshot, shufflePrizesFromSnapshot } from './fill-options-from-snapshot';
-import { rollPrices } from './roll-placement-prices';
+import { buildRolledFillWorld } from './build-rolled-fill-world';
+import { fillEligibleLocations } from './fill-world';
+import { shufflePrizesFromSnapshot } from './fill-options-from-snapshot';
 import { prefillDungeonItems } from './dungeon-fill';
 import { fillRestrictive } from './fill-restrictive';
 import { placePrizes } from './place-prizes';
@@ -18,14 +17,9 @@ const attemptPlacement = (
   attempt: PlacementAttempt, deliverable: Required<DeliverableSets>, pondDemands: PondDemandView,
 ): Placement => {
   const { seed, attemptSeed, snapshot, attempts } = attempt;
-  const rng = createRng(attemptSeed);
-  const fillOptions = fillOptionsFromSnapshot(snapshot, deliverable, {
-    pickBottle: (choices) => itemAt(choices, rng.int(choices.length)),
-    pickFiller: (count) => rng.int(count),
-    pickWeapon: (choices) => itemAt(choices, rng.int(choices.length)),
-  }, seed);
-  const shopPrices = rollPrices({ values: snapshot.values, options: fillOptions, rng });
-  const fillWorld = buildFillWorld({ ...fillOptions, shopPrices, pondDemands });
+  const { rng, shopPrices, fillWorld } = buildRolledFillWorld({
+    seed, rngSeed: attemptSeed, snapshot, deliverable, pondDemands,
+  });
   const { world, pool, accessibility } = fillWorld;
   const relaxWhenBeatable = accessibility === 'minimal';
   const shufflePrizes = shufflePrizesFromSnapshot(snapshot);

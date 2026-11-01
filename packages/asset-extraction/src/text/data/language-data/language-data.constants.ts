@@ -1,11 +1,15 @@
 /* @layer shared-asset-extraction @kind verbatim @source the game's ROM text dictionaries and alphabets, as in upstream text_compression.py */
 import type { EuLanguageBase, LanguageConfig } from './language-data.type';
 
-const kTextAlphabet_US: string[] = [
+const kAlphabetLatinHead: string[] = [
   'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P',
   'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', 'a', 'b', 'c', 'd', 'e', 'f',
   'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v',
   'w', 'x', 'y', 'z', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '!', '?',
+];
+
+const kTextAlphabet_US: string[] = [
+  ...kAlphabetLatinHead,
   '-', '.', ',',
   '[...]', '>', '(', ')',
   '[Ankh]', '[Waves]', '[Snake]', '[LinkL]', '[LinkR]',
@@ -14,32 +18,26 @@ const kTextAlphabet_US: string[] = [
   '[4HeartL]', '[4HeartR]', ' ', '<', '[A]', '[B]', '[X]', '[Y]',
 ];
 
-const kTextAlphabet_DE: string[] = [
-  'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P',
-  'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', 'a', 'b', 'c', 'd', 'e', 'f',
-  'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v',
-  'w', 'x', 'y', 'z', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '!', '?',
+const kAlphabetEuHead: string[] = [
+  ...kAlphabetLatinHead,
   '-', '.', ',', '[...]', '>', '(', ')',
   '[Ankh]', '[Waves]', '[Snake]', '[LinkL]', '[LinkR]',
   '"', '[UpL]', '[UpR]', '[LeftL]',
   '[LeftR]', "'", '[1HeartL]', '[1HeartR]', '[2HeartL]', '[3HeartL]', '[3HeartR]',
   '[4HeartL]', '[4HeartR]', ' ', 'ö', '[A]', '[B]', '[X]', '[Y]', 'ü',
-  'ß', ':', '[DownL]', '[DownR]', '[RightL]', '[RightR]',
-  'è', 'é', 'ê', 'à', 'ù', 'ç', 'Ä', 'Ö', 'Ü', 'ä',
+];
+
+const kAlphabetEuAccents: string[] = [
+  ':', '[DownL]', '[DownR]', '[RightL]', '[RightR]',
+  'è', 'é', 'ê', 'à', 'ù', 'ç',
+];
+
+const kTextAlphabet_DE: string[] = [
+  ...kAlphabetEuHead, 'ß', ...kAlphabetEuAccents, 'Ä', 'Ö', 'Ü', 'ä',
 ];
 
 const kTextAlphabet_FR: string[] = [
-  'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P',
-  'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', 'a', 'b', 'c', 'd', 'e', 'f',
-  'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v',
-  'w', 'x', 'y', 'z', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '!', '?',
-  '-', '.', ',', '[...]', '>', '(', ')',
-  '[Ankh]', '[Waves]', '[Snake]', '[LinkL]', '[LinkR]',
-  '"', '[UpL]', '[UpR]', '[LeftL]',
-  '[LeftR]', "'", '[1HeartL]', '[1HeartR]', '[2HeartL]', '[3HeartL]', '[3HeartR]',
-  '[4HeartL]', '[4HeartR]', ' ', 'ö', '[A]', '[B]', '[X]', '[Y]', 'ü',
-  'ô', ':', '[DownL]', '[DownR]', '[RightL]', '[RightR]',
-  'è', 'é', 'ê', 'à', 'ù', 'ç', 'â', 'û', 'î', 'ä',
+  ...kAlphabetEuHead, 'ô', ...kAlphabetEuAccents, 'â', 'û', 'î', 'ä',
 ];
 
 const kTextAlphabet_ES: string[] = [
@@ -55,16 +53,7 @@ const kTextAlphabet_ES: string[] = [
   '¡', '¿', 'Ñ',
 ];
 
-const kTextAlphabet_NL: string[] = [
-  'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P',
-  'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', 'a', 'b', 'c', 'd', 'e', 'f',
-  'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v',
-  'w', 'x', 'y', 'z', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '!', '?',
-  '-', '.', ',', '[...]', '>', '(', ')', '[Ankh]',
-  '[Waves]', '[Snake]', '[LinkL]', '[LinkR]', '"', '[Up]', '[Down]', '[Left]',
-  '[Right]', "'", '[1HeartL]', '[1HeartR]', '[2HeartL]', '[3HeartL]', '[3HeartR]',
-  '[4HeartL]', '[4HeartR]', ' ', '<', '[A]', '[B]', '[X]', '[Y]',
-];
+const kTextAlphabet_NL: string[] = [...kTextAlphabet_US];
 
 const kTextAlphabet_SV: string[] = [
   'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'Ö', 'P',
@@ -79,10 +68,7 @@ const kTextAlphabet_SV: string[] = [
 ];
 
 const kTextAlphabet_PL: string[] = [
-  'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P',
-  'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', 'a', 'b', 'c', 'd', 'e', 'f',
-  'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v',
-  'w', 'x', 'y', 'z', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '!', '?',
+  ...kAlphabetLatinHead,
   '-', '.', ',', 'ć', '[Right]', '(', ')', '[Ankh]',
   '[Waves]', '[Snake]', '[LinkL]', '[LinkR]', '"', '[Up]', '[Down]', 'ę',
   'ł', 'ń', '[1HeartL]', '[1HeartR]', '[2HeartL]', '[3HeartL]', '[3HeartR]',
@@ -91,14 +77,7 @@ const kTextAlphabet_PL: string[] = [
 ];
 
 const kTextAlphabet_PT: string[] = [
-  'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P',
-  'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', 'a', 'b', 'c', 'd', 'e', 'f',
-  'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v',
-  'w', 'x', 'y', 'z', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '!', '?',
-  '-', '.', ',', '[...]', '>', '(', ')', '[Ankh]',
-  '[Waves]', '[Snake]', '[LinkL]', '[LinkR]', '"', '[Up]', '[Down]', '[Left]',
-  '[Right]', "'", '[1HeartL]', '[1HeartR]', '[2HeartL]', '[3HeartL]', '[3HeartR]',
-  '[4HeartL]', '[4HeartR]', ' ', '<', '[A]', '[B]', '[X]', '[Y]', '[I]',
+  ...kTextAlphabet_US, '[I]',
   '¡', '[!]', 'Á', 'À', 'Â', 'Ã', 'É', 'Ê', 'Í', 'Ó', 'Ô', 'Õ', 'Ú', 'á', 'à', 'â',
   'ã', 'é', 'ê', 'í', 'ó', 'ô', 'õ', 'ú', 'ç',
 ];
@@ -178,18 +157,7 @@ const kTextDictionary_ES: string[] = [
   'ol', 'o, ', 'ten', 'lle', ' a ', 'aba', 'com',
 ];
 
-const kTextDictionary_NL: string[] = [
-  '    ', '   ', '  ', "'s ", 'and ', 'are ', 'all ', 'ain', 'and', 'at ',
-  'ast', 'an', 'at', 'ble', 'ba', 'be', 'bo', 'can ', 'che', 'com',
-  'ck', 'des', 'di', 'do', 'en ', 'er ', 'ear', 'ent', 'ed ', 'en',
-  'er', 'ev', 'for', 'fro', 'give ', 'get', 'go', 'have', 'has', 'her',
-  'hi', 'ha', 'ight ', 'ing ', 'in', 'is', 'it', 'just', 'know', 'ly ',
-  'la', 'lo', 'man', 'ma', 'me', 'mu', "n't ", 'non', 'not', 'open',
-  'ound', 'out ', 'of', 'on', 'or', 'per', 'ple', 'pow', 'pro', 're ',
-  're', 'some', 'se', 'sh', 'so', 'st', 'ter ', 'thin', 'ter', 'tha',
-  'the', 'thi', 'to', 'tr', 'up', 'ver', 'with', 'wa', 'we', 'wh',
-  'wi', 'you', 'Her', 'Tha', 'The', 'Thi', 'You',
-];
+const kTextDictionary_NL: string[] = [...kTextDictionary_US];
 
 const kTextDictionary_SV: string[] = [
   '    ', '   ', '  ', 'Du ', 'till', 'vill', 'bara', 'det', 'den', 'och',

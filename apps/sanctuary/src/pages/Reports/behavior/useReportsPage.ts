@@ -1,6 +1,6 @@
 /* @layer sanctuary-site @kind hook */
 import { useCallback, useMemo, useState } from 'react';
-import { navigate, useSessionContext, useSurfaceView, filterRows } from '@rotp/design';
+import { navigate, useSessionContext, useSurfaceRows } from '@rotp/design';
 import { useSiteData } from '../../../data/useSiteData';
 import { toReportRow } from '../../../reports/report-row';
 import { buildReportSchema } from '../../../reports/report-schema';
@@ -27,11 +27,7 @@ const useReportsPage = (selectedId: string | null) => {
   const rows = useMemo(() => inScope.map(toReportRow), [inScope]);
   const allRows = useMemo(() => data.reports.map(toReportRow), [data.reports]);
   const schema = useMemo(() => buildReportSchema(allRows), [allRows]);
-  const view = useSurfaceView(SANCTUARY_VIEWS, 'reports', schema);
-  const shown = useMemo(
-    () => filterRows({ rows, schema, clauses: view.clauses, search: view.search }),
-    [rows, schema, view.clauses, view.search],
-  );
+  const { view, shown } = useSurfaceRows(SANCTUARY_VIEWS, 'reports', schema, rows);
 
   const tabs = useMemo(() => reportScopeTabs(data.reports, meId, visitedAt), [data.reports, meId, visitedAt]);
   const openCount = useMemo(() => inScope.filter((report) => report.issue.state === 'open').length, [inScope]);

@@ -1,14 +1,14 @@
 /* @layer renderer-components @kind component */
 import { useCallback, useMemo } from 'react';
-import { usePlatform } from '@drizztdourden08/brock-react';
-import { Box, Button, Icon } from '@drizztdourden08/tessera/primitives';
-import { log } from '@app/log-bus';
+import { Box } from '@drizztdourden08/tessera/primitives';
+import { useRevealProfileFolder } from '@app/hooks/useRevealProfileFolder';
 import { SceneBackdrop } from '@app/title';
 import { MODE_BADGE_LABELS } from '@app/compounds/ModeBadge';
 import { factGroupOf } from '@app/compounds/ProfileHero/behavior/fact-group-of';
 import { heroArtSrc } from '@app/compounds/ProfileHero/behavior/hero-art-src';
 import { HeroLastSaveTile } from '@app/compounds/ProfileHero/sub-components/HeroLastSaveTile';
 import { HeroProgress } from '@app/compounds/ProfileHero/sub-components/HeroProgress';
+import { HeroTools } from '@app/compounds/ProfileHero/sub-components/HeroTools';
 import { HubGameControls } from '../HubGameControls';
 import { HomeTabColumns } from './HomeTabColumns';
 import { HomeTabDialogs } from './HomeTabDialogs';
@@ -19,7 +19,6 @@ import { useHomeRandomizerStatus } from './useHomeRandomizerStatus';
 import { useHomeSaveFileChecks } from './useHomeSaveFileChecks';
 import { useHomeTabSaves } from './useHomeTabSaves';
 import type { HomeHeroContentProps } from './home-tab.type';
-import './HomeHeroContent.css';
 
 const backdrop = <SceneBackdrop />;
 
@@ -29,7 +28,7 @@ const HomeHeroContent = (props: HomeHeroContentProps) => {
   const { id: profileId, romFile, lastPlayed, created, randomizer } = profile;
   const saves = useHomeTabSaves({ profileId, isGameRunning, onStartGame });
   const { heroSave, normalScreenshots, busyNormal, handleLoadNormal, handleImportSram } = saves;
-  const { storage, capabilities } = usePlatform();
+  const { reveal, canReveal } = useRevealProfileFolder(profileId);
   const randomizerStatus = useHomeRandomizerStatus();
   const mode = deriveProfileMode(randomizer, vanillaSafe);
   const progress = useHomeSaveFileChecks(profileId, mode, isGameRunning);
@@ -41,11 +40,6 @@ const HomeHeroContent = (props: HomeHeroContentProps) => {
     return run ? [own, factGroupOf(run)] : [own];
   }, [romFile, lastPlayed, created, randomizer, randomizerStatus]);
 
-  const handleOpenFolder = useCallback(() => {
-    storage.revealProfile(profileId)
-      .then((opened) => { if (!opened) log.app('Could not open the profile folder', 'warn'); })
-      .catch((e: unknown) => log.app(`Could not open the profile folder: ${e instanceof Error ? e.message : String(e)}`, 'error'));
-  }, [storage, profileId]);
   const handleImportSramClick = useCallback(() => void handleImportSram(), [handleImportSram]);
 
   const lastSave = useMemo(() => (heroSave ? {
@@ -66,10 +60,7 @@ const HomeHeroContent = (props: HomeHeroContentProps) => {
         <HubGameControls isGameRunning={isGameRunning} showPlay size="md" onStartGame={onStartGame} onStopGame={onStopGame} onResetGame={onResetGame} />
       </Actions>
       <Tools>
-        {capabilities.revealDataFolder && (
-          <Button variant="secondary" size="sm" icon={<Icon name="folder-open" />} onClick={handleOpenFolder} title="Open this profile's folder">Folder</Button>
-        )}
-        <Button variant="secondary" size="sm" icon={<Icon name="download" />} onClick={handleImportSramClick} title="Import a raw SRAM save (.srm) from another emulator">Import</Button>
+        <HeroTools canRevealFolder={canReveal} onOpenFolder={reveal} onImportSram={handleImportSramClick} />
       </Tools>
       <Facts rows={facts} />
       {lastSave && <Aside><HeroLastSaveTile save={lastSave} /></Aside>}

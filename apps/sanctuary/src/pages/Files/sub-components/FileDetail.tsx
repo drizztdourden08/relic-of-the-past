@@ -1,9 +1,9 @@
 /* @layer sanctuary-site @kind component */
 import { useState } from 'react';
 import type { SanctuaryFile } from '@rotp/hub-contracts';
-import { Text, formatDate } from '@drizztdourden08/tessera/primitives';
+import { formatDate } from '@drizztdourden08/tessera/primitives';
 import { Dialog } from '@drizztdourden08/tessera/composites';
-import { DetailPane, TagList } from '@rotp/design';
+import { DetailPane, NoteBox, TagList } from '@rotp/design';
 import type { DetailField } from '@rotp/design';
 import { TypeChip } from '../../../components/TypeChip/TypeChip';
 import { formatBytes, mediaKindOf } from '@rotp/hub-client';
@@ -60,7 +60,7 @@ const FileDetail = (props: FileDetailProps) => {
           />
         )
         : (
-          <Text as="p" className="files__note">{file.note || 'No note.'}</Text>
+          <NoteBox>{file.note || 'No note.'}</NoteBox>
         )}
       <VersionsPanel
         file={file}

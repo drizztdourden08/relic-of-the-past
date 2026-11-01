@@ -50,16 +50,6 @@
   overflow-wrap: anywhere;
 }
 
-.files__note {
-  margin: 0;
-  padding: var(--space-sm) var(--space-md);
-  border: var(--border-width-thin) solid var(--c-border);
-  border-radius: var(--radius-md);
-  background: var(--c-sunken);
-  color: var(--c-text);
-  white-space: pre-wrap;
-}
-
 .files__side {
   display: flex;
   gap: var(--space-2xs);

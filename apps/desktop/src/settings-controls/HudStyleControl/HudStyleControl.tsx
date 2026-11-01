@@ -1,9 +1,9 @@
 /* @layer renderer-components @kind component */
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo } from 'react';
 import type { GameSettings } from '@rotp/features';
 import { experimentalFeaturesEnabled } from '@rotp/features';
 import { SegmentedControl, Button, Box, Text } from '@drizztdourden08/tessera/primitives';
-import { useSpriteAvailabilityStore } from '@app/stores/sprite-availability-store';
+import { useSpriteExtraction } from '@app/hooks/useSpriteExtraction';
 import { enhancedAspectAllowed } from '@rotp/game-core';
 import * as spritesStore from '@app/storage/sprites-store';
 import { NO_SPRITES, STYLE_DESCRIPTION, TOO_NARROW } from './HudStyleControl.constants';
@@ -11,8 +11,7 @@ import type { HudStyleControlProps } from './HudStyleControl.type';
 import './HudStyleControl.css';
 
 const HudStyleControl = ({ value, settings, onChange }: HudStyleControlProps) => {
-  const { available, romFile, setAvailability } = useSpriteAvailabilityStore();
-  const [extracting, setExtracting] = useState(false);
+  const { available, romFile, extracting, extract: handleExtract, setAvailability } = useSpriteExtraction();
   const wideEnough = enhancedAspectAllowed(settings);
   const experimental = experimentalFeaturesEnabled(settings);
 
@@ -29,17 +28,6 @@ const HudStyleControl = ({ value, settings, onChange }: HudStyleControlProps) =>
 
   const tooNarrow = wideEnough ? null : TOO_NARROW;
   const notice = available ? tooNarrow : NO_SPRITES;
-
-  const handleExtract = useCallback(async () => {
-    if (!romFile || extracting) return;
-    setExtracting(true);
-    const res = await spritesStore.extractSprites(romFile);
-    if (res.success) {
-      const { extracted } = await spritesStore.checkSpritesExtracted(romFile);
-      setAvailability(romFile, extracted);
-    }
-    setExtracting(false);
-  }, [romFile, extracting, setAvailability]);
 
   const handleChange = useCallback((v: string) => onChange(v as GameSettings['hudStyle']), [onChange]);
 

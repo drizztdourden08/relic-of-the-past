@@ -2,6 +2,7 @@
 import { Box, Button, Image, Text } from '@drizztdourden08/tessera/primitives';
 import { DateText } from '@drizztdourden08/tessera/composites';
 import type { HeroLastSave } from '../ProfileHero.type';
+import './HeroLastSaveTile.css';
 
 const HeroLastSaveTile = (props: { save: HeroLastSave }) => {
   const { save } = props;

@@ -4,11 +4,6 @@
   flex-direction: column;
   gap: var(--space-xs);
   margin: var(--space-2xs) 0 var(--space-sm);
-  padding: var(--space-sm) var(--space-md);
-  background: var(--c-inset);
-  border: var(--border-width-thin) solid var(--c-border);
-  border-left: var(--border-width-thick) solid var(--c-primary);
-  border-radius: var(--radius-md);
 }
 
 .preview-readout__head {

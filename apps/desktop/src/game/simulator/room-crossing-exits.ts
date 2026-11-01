@@ -1,29 +1,20 @@
 /* @layer bridge-wasm @kind logic */
-import type { ConnectionInfo, GridPos, ScreenCrossing, ScreenCrossings } from '@rotp/game-core';
+import type { ScreenCrossing, ScreenCrossings } from '@rotp/game-core';
 import type { SimExit, EdgeName, RoomExitContext, RoomExitPass } from '@rotp/navigation';
-import { wasmGetRoomDoorInfo, wasmGetRoomStairInfoFor, wasmGetRoomWalkBoundariesFor } from '..';
-import { enrichEntrances, connectionCrossingId, midOf, takeableCrossing, entryFromEdge, OPPOSITE, LAST_ROW, OUTDOOR_LANDING_DEPTH, WARP_DOOR, WARP_SIDES } from '@rotp/navigation';
+import { wasmGetRoomDoorInfo } from '..';
+import { bundlesOf } from './bundles-of';
+import { roomOf } from './crossing-room-of';
+import { screenOf } from './crossing-screen-of';
+import { tailNumber } from './crossing-tail-number';
+import { enrichEntrances, roomLandingTile, midOf, takeableCrossing, entryFromEdge, OPPOSITE, LAST_ROW, OUTDOOR_LANDING_DEPTH, WARP_DOOR, WARP_SIDES } from '@rotp/navigation';
 import { interiorScreenId, owScreenId, screenAreaInfo } from './screen-resolve';
 
-const tailNumber = (id: string): number => Number(id.slice(id.indexOf(':') + 1));
 const lastNumber = (id: string): number => Number(id.slice(id.lastIndexOf(':') + 1));
-
-const roomOf = (crossing: ScreenCrossing): number | null =>
-  crossing.target.native?.kind === 'room' ? crossing.target.native.room : null;
-
-const screenOf = (crossing: ScreenCrossing): number | null =>
-  crossing.target.native?.kind === 'overworld' ? crossing.target.native.screen : null;
-
-const stairLandingTile = (destRoom: number, fromRoom: number): GridPos | undefined => {
-  const back = wasmGetRoomStairInfoFor(destRoom).find((s) => s.destRoom === fromRoom)
-    ?? wasmGetRoomWalkBoundariesFor(destRoom).find((b) => b.destRoom === fromRoom);
-  return back ? { row: back.row, col: back.col } : undefined;
-};
 
 const stairExit = (crossing: ScreenCrossing, pass: RoomExitPass): SimExit | null => {
   const destRoom = roomOf(crossing);
   if (destRoom === null) return null;
-  const landing = stairLandingTile(destRoom, pass.roomIndex);
+  const landing = roomLandingTile(destRoom, pass.roomIndex);
   return {
     to: interiorScreenId(destRoom, landing, pass.cached),
     ...(landing ? { entryTile: landing } : {}),
@@ -129,9 +120,7 @@ const roomExitFor = (crossing: ScreenCrossing, pass: RoomExitPass): SimExit | nu
 };
 
 const roomCrossingExits = (crossings: ScreenCrossings, context: RoomExitContext): SimExit[] => {
-  const bundles = new Map<string, ConnectionInfo>();
-  for (const connection of context.connections) bundles.set(connectionCrossingId(connection), connection);
-  const pass: RoomExitPass = { ...context, owSide: enrichEntrances(), bundles };
+  const pass: RoomExitPass = { ...context, owSide: enrichEntrances(), bundles: bundlesOf(context.connections) };
   const out: SimExit[] = [];
   for (const crossing of [...crossings.entrances, ...crossings.edges]) {
     if (!takeableCrossing(crossing)) continue;

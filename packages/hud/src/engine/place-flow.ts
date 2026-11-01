@@ -1,6 +1,6 @@
 /* @layer shared-hud @kind logic */
 import {
-  crossMargin, crossOf, flowGaps, insetsOf, mainOf, outerCross, outerMain, toLines,
+  crossMargin, crossOf, flowGaps, insetsOf, mainOf, outerCross, outerMain, paddedArea, toLines,
 } from './flow';
 import { inOrder } from './grid-cells';
 import { measureBox } from './measure';
@@ -125,13 +125,7 @@ const flowBoxes = (container: HudFlexContainer, items: FlowItem[], plan: FlowPla
 const collapsed = (item: FlowItem): boolean => item.size.w <= 0 || item.size.h <= 0;
 
 const childBoxes = (container: HudFlexContainer, box: Rect, unit: number, ctx: MeasureContext): ChildBox[] => {
-  const pad = insetsOf(container.padding);
-  const area: Rect = {
-    x: box.x + pad.left * unit,
-    y: box.y + pad.top * unit,
-    w: Math.max(0, box.w - (pad.left + pad.right) * unit),
-    h: Math.max(0, box.h - (pad.top + pad.bottom) * unit),
-  };
+  const area = paddedArea(container.padding, box, unit);
   const available: Size = { w: area.w / unit, h: area.h / unit };
   const { items, fills } = sizedItems(container, ctx, available);
   const row = container.direction === 'row';

@@ -1,5 +1,6 @@
 /* @layer tests @kind helper */
 import { act } from 'react';
+import { setInputValue } from '../set-input-value';
 
 const pick = <T extends HTMLElement>(selector: string): T => {
   const found = document.querySelector<T>(selector);
@@ -34,14 +35,7 @@ const bar = (): HTMLElement => pick('.hud-grid__bar');
 
 const field = (label: string): HTMLInputElement => pick(`[aria-label="${label}"]`);
 
-const type = (label: string, text: string): void => {
-  const input = field(label);
-  const setter = Object.getOwnPropertyDescriptor(HTMLInputElement.prototype, 'value')?.set;
-  act(() => {
-    setter?.call(input, text);
-    input.dispatchEvent(new Event('input', { bubbles: true }));
-  });
-};
+const type = (label: string, text: string): void => { setInputValue(field(label), text); };
 
 const enter = (label: string): void => {
   act(() => {

@@ -1,11 +1,10 @@
 /* @layer sanctuary-site @kind component */
 import { useMemo } from 'react';
-import { FILE_TYPES, FILE_TYPE_LABELS, LIMITS } from '@rotp/hub-contracts';
-import type { FileType } from '@rotp/hub-contracts';
-import { Button, Stack, Field, Select, TextInput, Textarea, Text } from '@drizztdourden08/tessera/primitives';
-import { DialogShell, TagInput } from '@drizztdourden08/tessera/composites';
+import { FILE_TYPES, FILE_TYPE_LABELS } from '@rotp/hub-contracts';
+import { Button, Stack, Text } from '@drizztdourden08/tessera/primitives';
+import { DialogShell } from '@drizztdourden08/tessera/composites';
 import { formatBytes } from '@rotp/hub-client';
-import { validateTag } from '../../files/validate-tag';
+import { FileMetaFields } from '../FileMetaFields';
 import { useUploadForm } from './behavior/useUploadForm';
 import type { UploadDialogProps } from './UploadDialog.type';
 import './UploadDialog.css';
@@ -40,29 +39,19 @@ const UploadDialog = (props: UploadDialogProps) => {
           ))}
         </Text>
         <Text as="p" variant="caption">{formatBytes(total)} in total, stored exactly as sent.</Text>
-        <Field label="Type">
-          <Select value={type} onChange={(value) => setType(value as FileType)} options={typeOptions} />
-        </Field>
-        <TagInput
-          label="Tags"
-          value={tags}
-          onChange={setTags}
-          suggestions={knownTags}
-          validate={validateTag}
-          enforce
-          placeholder="castle, jail..."
+        <FileMetaFields
+          variant="upload"
+          type={type}
+          typeOptions={typeOptions}
+          tags={tags}
+          knownTags={knownTags}
+          version={version}
+          note={note}
+          onTypeChange={setType}
+          onTagsChange={setTags}
+          onVersionChange={setVersion}
+          onNoteChange={setNote}
         />
-        <Field label="App version" hint="The app version the file relates to, if any.">
-          <TextInput value={version} onChange={(event) => setVersion(event.target.value)} placeholder="0.20.7" />
-        </Field>
-        <Field label="Note" hint={`${note.length} / ${LIMITS.noteMaxChars}`}>
-          <Textarea
-            rows={2}
-            maxLength={LIMITS.noteMaxChars}
-            value={note}
-            onChange={(event) => setNote(event.target.value)}
-          />
-        </Field>
       </Stack>
     </DialogShell>
   );

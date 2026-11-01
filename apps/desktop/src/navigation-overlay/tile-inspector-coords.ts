@@ -1,7 +1,7 @@
 /* @layer renderer-components @kind logic */
 import { GRID_SIZE } from '@rotp/navigation';
 import { screenOriginFor } from '@app/game/flood';
-import { viewOrigin } from '@rotp/game-core';
+import { pointerWorld } from './pointer-world';
 import type { GridPos } from './navigation-overlay.type';
 import type { MouseEventToTileParams } from './tile-inspector-coords.type';
 import { TILE_PX } from './pathfinding/pathfinding.constants';
@@ -9,16 +9,7 @@ import { TILE_PX } from './pathfinding/pathfinding.constants';
 const mouseEventToTile = (params: MouseEventToTileParams): GridPos | null => {
   const { event, vp, result, width, height, isIndoors } = params;
   if (!vp || !result.attrGrid) return null;
-  const rect = event.currentTarget.getBoundingClientRect();
-  const mx = event.clientX - rect.left;
-  const my = event.clientY - rect.top;
-  const scaleX = width / vp.snesWidth;
-  const scaleY = height / vp.snesHeight;
-  const snesX = mx / scaleX;
-  const snesY = my / scaleY;
-  const { viewLeft, viewTop } = viewOrigin(vp);
-  const worldX = snesX + viewLeft;
-  const worldY = snesY + viewTop;
+  const { worldX, worldY } = pointerWorld({ event, vp, width, height });
   const { x: screenWorldX, y: screenWorldY } = screenOriginFor({
     isIndoors, linkX: vp.linkX, linkY: vp.linkY, screenIndex: result.screenIndex,
   });

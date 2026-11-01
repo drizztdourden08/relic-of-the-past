@@ -5,22 +5,8 @@ import { createFadePlan } from './voice-parts/create-fade-plan';
 import { fadeAt } from './voice-parts/fade-at';
 import { loopStartOf } from './voice-parts/loop-start-of';
 import { playbackOffset } from './voice-parts/playback-offset';
+import { scheduleEnvelope } from './voice-parts/schedule-envelope';
 import { wireSource } from './voice-parts/wire-source';
-
-const scheduleEnvelope = (gain: AudioParam, startedAt: number, options: VoiceOptions): void => {
-  const { fadeInSeconds = 0, fadeOutAfterSeconds, fadeOutSeconds = 0 } = options;
-  if (fadeInSeconds > 0) {
-    gain.setValueAtTime(0, startedAt);
-    gain.linearRampToValueAtTime(1, startedAt + fadeInSeconds);
-  } else {
-    gain.setValueAtTime(1, startedAt);
-  }
-  if (fadeOutAfterSeconds !== undefined && fadeOutSeconds > 0) {
-    const outAt = startedAt + Math.max(fadeInSeconds, fadeOutAfterSeconds);
-    gain.setValueAtTime(1, outAt);
-    gain.linearRampToValueAtTime(0, outAt + fadeOutSeconds);
-  }
-};
 
 const stopIfPlaying = (source: AudioBufferSourceNode): void => {
   try { source.stop(); } catch { return undefined; }

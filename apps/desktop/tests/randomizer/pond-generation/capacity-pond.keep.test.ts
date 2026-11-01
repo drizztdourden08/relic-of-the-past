@@ -2,7 +2,7 @@
 import { describe, expect, it } from 'vitest';
 import { generatePlacement, buildFillWorld, fillOptionsFromSnapshot, POND_PRIZE_LOCATIONS, pondPlanOf, createCollectionState, WALLET, reachableTopOf } from '@rotp/randomizer';
 import { DELIVERABLE, EMPTY, MODES, SEEDS } from './pond-generation.constants';
-import { snapshotOf } from './snapshot-of';
+import { snapshotOf } from '../rule-parity-harness/snapshot-of';
 
 describe('pond generation', { tags: ['standard'] }, () => {
   for (const mode of MODES) {

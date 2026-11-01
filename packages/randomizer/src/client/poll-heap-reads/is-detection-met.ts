@@ -1,12 +1,7 @@
 /* @layer bridge-wasm @kind logic */
 import type { CheckDetection } from '../check-detection';
 import type { HeapReads } from './poll-heap-reads.type';
-
-const thresholdMet = (val: number, compare: 'gte' | 'eq' | 'any-of', value: number | number[] | undefined): boolean => {
-  if (compare === 'gte') return val >= (value as number);
-  if (compare === 'eq') return val === (value as number);
-  return (value as number[]).includes(val);
-};
+import { thresholdMet } from './threshold-met';
 
 const isDetectionMet = (detection: CheckDetection, reads: HeapReads): boolean => {
   if (detection.mode === 'room-mask') return (reads.roomWord(detection.roomId) & detection.mask) !== 0;

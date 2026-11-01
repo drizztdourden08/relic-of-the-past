@@ -1,39 +1,33 @@
 /* @layer store-api @kind logic */
 import { STORE_ROUTES, signPartsSchema } from '@rotp/hub-contracts';
-import type { SignPartsResponse, StoreVersion } from '@rotp/hub-contracts';
-import { badRequest, conflict, parseBody, now } from '@rotp/hub-server';
+import type { SignPartsResponse } from '@rotp/hub-contracts';
+import { badRequest, parseBody, now } from '@rotp/hub-server';
 import type { Route } from '@rotp/hub-server';
-import { requirePlayer } from '../auth/player';
 import { itemsRepo } from '../db/items-repo';
-import { loadOwnItem } from '../items/item-guards';
-import { loadVersion, replaceVersion, versionOf } from '../items/versions';
+import { loadUploadingVersion } from '../items/version-routes';
+import { replaceVersion, versionOf } from '../items/versions';
 import { storeBucket } from '../storage/store-bucket';
-
-const isUploading = (version: StoreVersion | null): version is StoreVersion =>
-  version !== null && version.review.state === 'uploading' && version.upload !== null;
 
 const recordPartsDone = (itemId: string, n: number, partsDone: number) =>
   itemsRepo.mutate(itemId, (latest) => {
     const version = versionOf(latest, n);
-    if (!isUploading(version) || !version.upload) return {};
+    if (version?.review.state !== 'uploading' || !version.upload) return {};
     const upload = { ...version.upload, partsDone: Math.min(partsDone, version.upload.parts), updatedAt: now() };
     return { versions: replaceVersion(latest, { ...version, upload }) };
   });
 
 const versionsSignParts: Route = {
   ...STORE_ROUTES.versionsSignParts,
-  handler: async ({ req, res, params }) => {
-    const player = await requirePlayer(req);
-    const item = await loadOwnItem(params.id, player);
-    const version = loadVersion(item, params.n);
-    if (!isUploading(version) || !version.upload) throw conflict('This version is not being uploaded.');
-    const { parts, partsDone } = parseBody(signPartsSchema, req.body);
-    const { multipartId, parts: total } = version.upload;
-    if (parts.some((part) => part > total)) throw badRequest(`This upload has ${total} parts.`);
+  handler: async (ctx) => {
+    const { item, version, upload } = await loadUploadingVersion(ctx);
+    const { parts, partsDone } = parseBody(signPartsSchema, ctx.req.body);
+    if (parts.some((part) => part > upload.parts)) throw badRequest(`This upload has ${upload.parts} parts.`);
     if (partsDone !== undefined) await recordPartsDone(item.id, version.n, partsDone);
-    const urls = await Promise.all(parts.map(async (part) => ({ part, url: await storeBucket.signPart(version.key, multipartId, part) })));
+    const urls = await Promise.all(
+      parts.map(async (part) => ({ part, url: await storeBucket.signPart(version.key, upload.multipartId, part) })),
+    );
     const body: SignPartsResponse = { urls };
-    res.status(200).json(body);
+    ctx.res.status(200).json(body);
   },
 };
 

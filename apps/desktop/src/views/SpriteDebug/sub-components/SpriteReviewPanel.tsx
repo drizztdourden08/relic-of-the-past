@@ -3,10 +3,9 @@ import { useState, useMemo } from 'react';
 import { SPRITE_MANIFEST, CATEGORY_LABELS, CATEGORY_ORDER } from '@rotp/game-data';
 import type { SpriteCategory } from '@rotp/game-data';
 import type { ReviewStatus } from '../SpriteDebug.type';
-import { Box, Button, Tabs } from '@drizztdourden08/tessera/primitives';
+import { Box, Tabs } from '@drizztdourden08/tessera/primitives';
 import type { TabItem } from '@drizztdourden08/tessera/primitives';
-import { FilterBtns } from './FilterBtns';
-import { ReviewStats } from './ReviewStats';
+import { ReviewHeader } from './ReviewHeader';
 import { SpriteImageCard } from './SpriteImageCard';
 import { useReviewData } from '../behavior/useReviewData';
 import { loadSpriteReview, saveSpriteReview } from '@app/storage/sprites-store';
@@ -39,14 +38,14 @@ const SpriteReviewPanel = ({ baseUrl }: { baseUrl: string }) => {
 
   return (
     <>
-      <Box className="sprite-debug-header">
-        <Tabs tabs={catTabs} activeTab={catFilter} onTabChange={(id) => setCatFilter(id as 'all' | SpriteCategory)} />
-        <ReviewStats counts={counts} total={SPRITE_MANIFEST.length} />
-        <Box className="sprite-debug-header-buttons">
-          <FilterBtns filter={filter} setFilter={setFilter} />
-          <Button variant="danger" size="xs" onClick={reset}>Reset</Button>
-        </Box>
-      </Box>
+      <ReviewHeader
+        counts={counts}
+        total={SPRITE_MANIFEST.length}
+        filter={filter}
+        setFilter={setFilter}
+        onReset={reset}
+        tabs={<Tabs tabs={catTabs} activeTab={catFilter} onTabChange={(id) => setCatFilter(id as 'all' | SpriteCategory)} />}
+      />
       <Box className="sprite-debug-grid">
         {filtered.map(sprite => (
           <SpriteImageCard

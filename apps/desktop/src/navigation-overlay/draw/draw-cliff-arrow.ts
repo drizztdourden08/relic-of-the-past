@@ -1,7 +1,7 @@
 /* @layer renderer-components @kind logic */
 import type { LedgeTraversal } from '@rotp/game-core';
 import type { DrawContext, ScreenOrigin } from './draw.type';
-import { ARROW_HEAD_SPREAD } from './draw.constants';
+import { fillArrowHead } from './fill-arrow-head';
 import { isSegmentOffscreen } from './is-segment-offscreen';
 
 const drawCliffArrow = (dc: DrawContext, origin: ScreenOrigin, ledge: LedgeTraversal): void => {
@@ -33,12 +33,7 @@ const drawCliffArrow = (dc: DrawContext, origin: ScreenOrigin, ledge: LedgeTrave
   ctx.lineTo(x2 - dx, y2 - dy);
   ctx.stroke();
 
-  ctx.beginPath();
-  ctx.moveTo(x2, y2);
-  ctx.lineTo(x2 - headLen * Math.cos(angle - ARROW_HEAD_SPREAD), y2 - headLen * Math.sin(angle - ARROW_HEAD_SPREAD));
-  ctx.lineTo(x2 - headLen * Math.cos(angle + ARROW_HEAD_SPREAD), y2 - headLen * Math.sin(angle + ARROW_HEAD_SPREAD));
-  ctx.closePath();
-  ctx.fill();
+  fillArrowHead(ctx, { x: x2, y: y2, angle, headLen });
 };
 
 export { drawCliffArrow };

@@ -39,4 +39,4 @@ interface OverworldEdgeBadgesProps extends OverworldPartProps {
   byEdge: Record<BorderEdge, ConnectionInfo[]>;
 }
 
-export type { CellBodyProps, CellOrigin, OverworldAnnotationsProps, OverworldEdgeBadgesProps, OverworldGrid };
+export type { CellBodyProps, CellOrigin, OverworldAnnotationsProps, OverworldEdgeBadgesProps, OverworldGrid, OverworldPartProps };

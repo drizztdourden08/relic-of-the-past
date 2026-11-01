@@ -1,8 +1,8 @@
 /* @layer sanctuary-site @kind component */
 import { useMemo } from 'react';
 import { Flex, Stack, Text } from '@drizztdourden08/tessera/primitives';
-import { DataTable, FilterBar, SettingsPage } from '@drizztdourden08/tessera/composites';
-import { SavedViewsMenu, useSectionHeading } from '@rotp/design';
+import { DataTable, SettingsPage } from '@drizztdourden08/tessera/composites';
+import { SurfaceFilterBar, useSectionHeading } from '@rotp/design';
 import { fileRowId } from '../../files/file-row';
 import { FILE_DEFAULT_COLUMNS } from '../../files/file-schema.constants';
 import { formatBytes } from '@rotp/hub-client';
@@ -24,18 +24,7 @@ const Files = (props: FilesProps) => {
     [scope.tabs, scope.activeId, scope.select],
   );
 
-  const toolbar = (
-    <FilterBar
-      schema={page.schema}
-      clauses={view.clauses}
-      onChange={view.setClauses}
-      search={view.search}
-      onSearchChange={view.setSearch}
-      searchPlaceholder={SEARCH_PLACEHOLDER}
-      searchLabel="Search files"
-      extra={<SavedViewsMenu state={view.savedViews} />}
-    />
-  );
+  const toolbar = <SurfaceFilterBar schema={page.schema} view={view} placeholder={SEARCH_PLACEHOLDER} label="Search files" />;
 
   const table = (
     <DataTable

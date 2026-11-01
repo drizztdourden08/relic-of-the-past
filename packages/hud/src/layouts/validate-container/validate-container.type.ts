@@ -10,4 +10,12 @@ interface NodeContext {
 
 type NodeValidator = (value: unknown, path: string, ctx: NodeContext) => HudNode | null;
 
-export type { NodeContext, NodeValidator };
+interface BuildContainerOptions<Own extends object> {
+  value: Record<string, unknown>;
+  path: string;
+  ctx: NodeContext;
+  validateNode: NodeValidator;
+  own: Own;
+}
+
+export type { BuildContainerOptions, NodeContext, NodeValidator };

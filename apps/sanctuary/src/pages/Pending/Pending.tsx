@@ -1,30 +1,14 @@
 /* @layer sanctuary-site @kind component */
-import { useCallback, useState } from 'react';
 import { PROVIDER_LABELS } from '@rotp/hub-contracts';
 import { Stack, Button, Pressable, Text } from '@drizztdourden08/tessera/primitives';
-import { Gate, ProviderButton, useSessionContext } from '@rotp/design';
-import { recheckAccess, errorMessage } from '@rotp/hub-client';
+import { Gate, ProviderButton, useRecheckAccess, useSessionContext } from '@rotp/design';
 import './Pending.css';
 
 const Pending = () => {
-  const { access, identities, refresh, signOut } = useSessionContext();
-  const [busy, setBusy] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  const { access, identities, signOut } = useSessionContext();
+  const { busy, error, recheck } = useRecheckAccess();
   const hasDiscord = identities.some((identity) => identity.provider === 'discord');
   const signedInWith = identities.map((identity) => PROVIDER_LABELS[identity.provider]).join(', ');
-
-  const handleRecheck = useCallback(async () => {
-    setBusy(true);
-    setError(null);
-    try {
-      await recheckAccess();
-      await refresh();
-    } catch (cause) {
-      setError(errorMessage(cause));
-    } finally {
-      setBusy(false);
-    }
-  }, [refresh]);
 
   const title = access?.state === 'revoked' ? 'Access revoked' : 'Waiting for access';
   const footnote = (
@@ -42,7 +26,7 @@ const Pending = () => {
     >
       <Stack gap="sm" align="stretch">
         {!hasDiscord && <ProviderButton provider="discord" intent="link" returnTo="/" fullWidth />}
-        <Button variant="ghost" disabled={busy} onClick={() => void handleRecheck()}>Re-check access</Button>
+        <Button variant="ghost" disabled={busy} onClick={() => void recheck()}>Re-check access</Button>
         {error && <Text as="p" variant="caption" role="alert">{error}</Text>}
       </Stack>
     </Gate>

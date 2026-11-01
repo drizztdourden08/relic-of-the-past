@@ -35,6 +35,11 @@ import './theme/data-manager/data-manager.css';
 import './theme/dialogue-editor/lines.css';
 import './theme/msu-studio/msu-studio.css';
 import './theme/msu-studio/msu-files.css';
+import './theme/msu-studio/accent-panel.css';
+import './theme/music-widget/music-row.css';
+import './theme/navigation-widget/minimap.css';
+import './theme/shadow-editor/field-box.css';
+import './theme/sprite-picker/sprite-picker.css';
 import './theme/store/store.css';
 
 installAppShim();

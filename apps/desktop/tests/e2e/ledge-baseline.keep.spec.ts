@@ -1,12 +1,11 @@
 /* @layer tests @kind test */
 import { test, expect } from '@playwright/test';
 import { join } from 'path';
-import { existsSync, readFileSync, rmSync } from 'fs';
-import { E2E_INSTANCE, STATE_SPEC_CONFIG, launchApp } from './isolated-app';
+import { existsSync } from 'fs';
+import { dumpNav } from './dump-nav';
 import { REPO_ROOT } from '../repo-root';
 
 const PROJECT_ROOT = REPO_ROOT;
-const DUMP_PATH = join(PROJECT_ROOT, 'debug-output', 'dump-nav.json');
 
 interface Expected {
   state: string;
@@ -58,23 +57,7 @@ const directionOf = (l: { startRow: number; startCol: number; endRow: number; en
   return `${stepLetter(dr, 'n', 's')}${stepLetter(dc, 'w', 'e')}` || '?';
 };
 
-const dumpFor = async (state: string): Promise<Record<string, unknown>> => {
-  if (existsSync(DUMP_PATH)) rmSync(DUMP_PATH);
-  const { close } = await launchApp({
-    instance: E2E_INSTANCE,
-    openByDefault: true,
-    config: STATE_SPEC_CONFIG,
-    fixtures: [state],
-    args: [`--dump-nav=${state}`],
-  });
-  try {
-    for (let i = 0; i < 120 && !existsSync(DUMP_PATH); i++) await new Promise((r) => setTimeout(r, 1000));
-    if (!existsSync(DUMP_PATH)) throw new Error(`--dump-nav=${state} wrote no dump`);
-    return JSON.parse(readFileSync(DUMP_PATH, 'utf8')) as Record<string, unknown>;
-  } finally {
-    await close();
-  }
-};
+const dumpFor = (state: string): Promise<Record<string, unknown>> => dumpNav<Record<string, unknown>>(state);
 
 for (const expected of CASES) {
   test(`ledge baseline: ${expected.state}`, { tag: '@e2e' }, async () => {

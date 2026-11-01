@@ -1,8 +1,7 @@
 /* @layer shared-hud @kind logic */
-import { checkKeys, extentAt, oneOf, validateBox } from '../validate-box';
+import { checkKeys, extentAt, oneOf } from '../validate-box';
+import { buildContainer } from './build-container';
 import { containerCommon } from './container-common';
-import { motionParts } from './motion-parts';
-import { validateChildren } from './validate-children';
 import { GRID_JUSTIFY_ITEMS, GRID_KEYS } from './validate-container.constants';
 import type { Extent, HudGridContainer } from '../../types/hud-node';
 import type { Issues } from '../validate-box';
@@ -33,20 +32,17 @@ const validateGridContainer = (
   const common = containerCommon(value, path, issues, insideRepeat);
   const justifyItems = oneOf(value.justifyItems, GRID_JUSTIFY_ITEMS, `${path}.justifyItems`, issues);
   const alignItems = oneOf(value.alignItems, GRID_JUSTIFY_ITEMS, `${path}.alignItems`, issues);
-  if (!Array.isArray(value.children)) { issues.push(`${path}.children: expected an array`); return null; }
-  const motion = motionParts(value, path, issues, insideRepeat);
-  return {
-    ...validateBox(value, path, issues, insideRepeat),
-    kind: 'container',
-    layout: 'grid',
-    columns,
-    ...(rows?.length ? { rows } : {}),
-    ...common,
-    ...(justifyItems ? { justifyItems } : {}),
-    ...(alignItems ? { alignItems } : {}),
-    ...motion,
-    children: validateChildren(value, path, ctx, validateNode),
-  };
+  return buildContainer({
+    value, path, ctx, validateNode,
+    own: {
+      layout: 'grid' as const,
+      columns,
+      ...(rows?.length ? { rows } : {}),
+      ...common,
+      ...(justifyItems ? { justifyItems } : {}),
+      ...(alignItems ? { alignItems } : {}),
+    },
+  });
 };
 
 export { validateGridContainer };

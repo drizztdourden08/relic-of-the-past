@@ -1,7 +1,7 @@
 /* @layer store-site @kind component */
 import { Flex, Stack, Text } from '@drizztdourden08/tessera/primitives';
-import { DataTable, FilterBar, SettingsPage } from '@drizztdourden08/tessera/composites';
-import { SavedViewsMenu, AppLink, useSectionHeading, useSessionContext } from '@rotp/design';
+import { DataTable, SettingsPage } from '@drizztdourden08/tessera/composites';
+import { SurfaceFilterBar, AppLink, useSectionHeading, useSessionContext } from '@rotp/design';
 import { authorPath } from '../../catalog/item-paths';
 import { publicationRowId } from '../../publications/publication-row';
 import { PUBLICATION_DEFAULT_COLUMNS, PUBLICATION_DEFAULT_GROUP_BY } from '../../publications/publication-schema';
@@ -28,16 +28,7 @@ const Publications = (props: PublicationsProps) => {
             {me && <AppLink to={authorPath(me.id)} className="publications__public">View my public page {'›'}</AppLink>}
           </Flex>
           {publications.error && <Text as="p" variant="caption" role="alert">{publications.error}</Text>}
-          <FilterBar
-            schema={page.schema}
-            clauses={view.clauses}
-            onChange={view.setClauses}
-            search={view.search}
-            onSearchChange={view.setSearch}
-            searchPlaceholder="Search your items and versions..."
-            searchLabel="Search publications"
-            extra={<SavedViewsMenu state={view.savedViews} />}
-          />
+          <SurfaceFilterBar schema={page.schema} view={view} placeholder="Search your items and versions..." label="Search publications" />
           <DataTable
             rows={page.shown}
             schema={page.schema}
