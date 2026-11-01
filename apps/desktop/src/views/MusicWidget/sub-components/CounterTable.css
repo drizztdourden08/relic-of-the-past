@@ -1,0 +1,47 @@
+/* @layer renderer-widgets @kind style */
+.counter-table {
+  block-size: calc(3 * var(--size-20));
+  background: var(--c-inset);
+  border: var(--border-width-thin) solid var(--c-hairline);
+  border-radius: var(--radius-md);
+  scrollbar-gutter: stable;
+  scroll-behavior: auto;
+}
+
+.counter-table__row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: var(--space-sm);
+  block-size: var(--size-20);
+  padding-inline: var(--space-sm);
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.counter-table__row:nth-child(even) {
+  background: var(--c-hover);
+}
+
+.counter-table__row > :is(span, div) {
+  font-size: inherit;
+  min-inline-size: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.counter-table__label {
+  color: var(--c-text-muted);
+}
+
+.counter-table__value {
+  inline-size: 24ch;
+  color: var(--c-text);
+  text-align: end;
+}
+
+.counter-table__row[data-empty='yes'] .counter-table__label {
+  color: var(--c-text-muted);
+}

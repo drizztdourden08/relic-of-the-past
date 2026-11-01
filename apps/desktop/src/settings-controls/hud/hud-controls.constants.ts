@@ -11,7 +11,13 @@ const TITLE_SETTING_KEYS = new Set(['titleScreen', 'titleMotion', 'titleFollowsP
 
 const MODERN_ONLY_KEYS = new Set(['dialogFontScale', 'dialogInkColor', 'dialogStrokeColor', 'dialogStrokeWidth']);
 
-const EITHER_BOX_KEYS = new Set(['dialogBox', 'hudHighlightPrimary', 'hudHighlightSecondary']);
+const ENHANCED_BOX_KEYS = new Set([
+  'dialogBoxFit', 'dialogButtonPrompts', 'dialogFont', 'dialogFontScale', 'dialogInkColor', 'dialogStrokeColor', 'dialogStrokeWidth',
+  'dialogBorder', 'dialogBorderThickness', 'dialogBorderColor', 'dialogCorner', 'dialogCornerMark', 'dialogCornerMarkAngle',
+  'dialogGroundColor', 'dialogBoxOpacity', 'dialogGroundFade', 'dialogFloatingGround', 'dialogIntroTelepathyGround',
+  'dialogTexture', 'dialogTextureColor', 'dialogTextureOpacity', 'dialogTextureAnimation', 'dialogTextureSpeed',
+  'dialogTextureScale', 'dialogTextureDensity', 'dialogTextureScatter',
+]);
 
 const DIALOG_TEXTURE_SCALES = [0.5, 0.75, 1, 1.5, 2] as const;
 
@@ -20,5 +26,5 @@ const COLOR_KEYS = [
 ] as const;
 
 export {
-  ASPECT_OPTIONS, COLOR_KEYS, DIALOG_TEXTURE_SCALES, EITHER_BOX_KEYS, MODERN_ONLY_KEYS, TITLE_SETTING_KEYS,
+  ASPECT_OPTIONS, COLOR_KEYS, DIALOG_TEXTURE_SCALES, ENHANCED_BOX_KEYS, MODERN_ONLY_KEYS, TITLE_SETTING_KEYS,
 };

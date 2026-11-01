@@ -1,0 +1,56 @@
+/* @layer renderer-widgets @kind style */
+.event-feed {
+  flex: 1;
+  min-block-size: 0;
+  background: var(--c-inset);
+  border: var(--border-width-thin) solid var(--c-hairline);
+  border-radius: var(--radius-md);
+  scrollbar-gutter: stable;
+  scroll-behavior: auto;
+}
+
+.event-feed__row {
+  display: grid;
+  grid-template-columns: auto auto auto minmax(0, 1fr);
+  align-items: center;
+  gap: var(--space-sm);
+  block-size: var(--size-20);
+  padding-inline: var(--space-sm);
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.event-feed__row:nth-child(even) {
+  background: var(--c-hover);
+}
+
+.event-feed__row > :is(span, div) {
+  font-size: inherit;
+  min-inline-size: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.event-feed__time {
+  inline-size: 12ch;
+}
+
+.event-feed__owner {
+  inline-size: 8ch;
+}
+
+.event-feed__channel {
+  inline-size: 8ch;
+  color: var(--c-text-dim);
+}
+
+.event-feed__detail {
+  color: var(--c-text);
+}
+
+.event-feed__row[data-empty='yes'] .event-feed__detail {
+  grid-column: 1 / -1;
+  color: var(--c-text-muted);
+}

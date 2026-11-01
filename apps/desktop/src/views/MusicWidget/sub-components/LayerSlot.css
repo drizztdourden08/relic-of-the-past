@@ -1,0 +1,68 @@
+/* @layer renderer-widgets @kind style */
+.layer-slot {
+  display: grid;
+  grid-template-columns: var(--size-8) minmax(0, 1fr) auto var(--size-32) auto auto;
+  align-items: stretch;
+  gap: var(--space-xs);
+  block-size: var(--size-20);
+  padding-inline: var(--space-sm);
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.layer-slot > :is(span, div) {
+  font-size: inherit;
+  min-inline-size: 0;
+  block-size: var(--size-20);
+  line-height: var(--size-20);
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.layer-slot__pulse {
+  align-self: center;
+  inline-size: var(--size-6);
+  block-size: var(--size-6);
+  border-radius: var(--radius-round);
+  background: var(--c-text-faint);
+}
+
+.layer-slot[data-sounding='yes'] .layer-slot__pulse {
+  background: var(--c-secondary-bright);
+}
+
+.layer-slot__bar {
+  display: flex;
+  align-items: center;
+}
+
+.layer-slot__name {
+  color: var(--c-text);
+}
+
+.layer-slot__mode {
+  inline-size: 9ch;
+  color: var(--c-text-dim);
+}
+
+.layer-slot__label {
+  inline-size: 12ch;
+  color: var(--c-text-dim);
+  text-align: end;
+}
+
+.layer-slot__flag {
+  inline-size: 10ch;
+  color: var(--c-primary);
+  text-align: end;
+}
+
+.layer-slot[data-empty='yes'] > * {
+  color: var(--c-text-muted);
+}
+
+.layer-slot[data-empty='yes'] .layer-slot__bar {
+  opacity: var(--opacity-muted);
+}

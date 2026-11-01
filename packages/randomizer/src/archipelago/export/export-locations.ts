@@ -1,10 +1,4 @@
 /* @layer shared-game @kind logic */
-/**
- * locations.json: every location of the widest world, with its Archipelago id and name, its
- * region, whether it exists in every world or only while a profile's world model lists it,
- * and its rule tree as the engine holds it. The story events are no locations here: they
- * travel in regions.json and the loader creates them (export-regions.ts).
- */
 import { AP_LOCATION_IDS, AP_LOCATION_NAMES } from '../ap-ids.constants';
 import { isShopSlotLocation } from '../../world/shops/shop-slots';
 import { TRUE } from '../../world/rules/rule-node-build';

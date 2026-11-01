@@ -1,15 +1,4 @@
 /* @layer tests @kind helper */
-/**
- * Both directions of the apworld oracle, on the TypeScript side.
- *
- * Forward: an Archipelago spoiler's placement loaded into the fill world the profile's seed
- * builds, then every playthrough sphere asked of our rules with only the items of the spheres
- * before it, and the whole placement swept for the goal and full accessibility.
- *
- * Reverse: one of our own placements written as a player file whose every fillable location
- * is locked to its item, so Archipelago's fill has nothing left to decide and its beatability
- * and accessibility checks judge our placement with the package's rules.
- */
 import { renderPlayerYaml } from '../../src/archipelago/player-yaml';
 import { preRolledOfFillWorld } from '../../src/archipelago/pre-rolled';
 import { exportItems } from '../../src/archipelago/export/export-items';
@@ -34,7 +23,6 @@ const LOCATIONS = exportLocations(widestRuledWorld());
 const ITEMS = exportItems();
 const LOCATION_KEY = new Map(LOCATIONS.map((row) => [row.name, row.key as LocationKey]));
 const ITEM_KEY = new Map(ITEMS.map((row) => [row.name, row.key as ItemKey]));
-/** A story event's name, which Archipelago gives both its event location and its event item. */
 const EVENT_KEY = new Map(exportRegions(widestRuledWorld()).events.map((row) => [row.name, row.key as CheckId]));
 
 interface ForwardVerdict {
@@ -50,7 +38,6 @@ const keyOf = <V>(table: ReadonlyMap<string, V>, name: string, unknown: string[]
   return key;
 };
 
-/** Whether a spoiler's sphere entry is in reach: its story event, or its location. An unknown name is reported, not a miss. */
 const reachedIn = (state: CollectionState, name: string, unknown: string[]): boolean => {
   const event = EVENT_KEY.get(name);
   if (event !== undefined) return canReachEvent(state, event);
@@ -58,29 +45,35 @@ const reachedIn = (state: CollectionState, name: string, unknown: string[]): boo
   return key === undefined || canCollectLocation(state, key);
 };
 
-const replayForward = (fillWorld: FillWorld, spoiler: ApSpoiler): ForwardVerdict => {
-  const { world } = fillWorld;
-  const unknown: string[] = [];
+const placeSpoilerItems = (world: FillWorld['world'], spoiler: ApSpoiler, unknown: string[]): void => {
   world.placedItems.clear();
-  // A story event is an Archipelago event: a spoiler may list it, but it holds nothing to place.
   for (const [location, item] of spoiler.placements) {
     if (EVENT_KEY.has(location)) continue;
     const locationKey = keyOf(LOCATION_KEY, location, unknown);
     const itemKey = keyOf(ITEM_KEY, item, unknown);
     if (locationKey !== undefined && itemKey !== undefined) world.placedItems.set(locationKey, itemKey);
   }
-  const state = createCollectionState(world);
+};
+
+const walkSpheres = (state: CollectionState, spoiler: ApSpoiler, unknown: string[]): string[] => {
   const sphereMisses: string[] = [];
   for (const sphere of spoiler.spheres) {
     for (const [location] of sphere) {
       if (!reachedIn(state, location, unknown)) sphereMisses.push(location);
     }
     for (const [location, item] of sphere) {
-      const event = EVENT_KEY.get(location);
-      const itemKey = event ?? keyOf(ITEM_KEY, item, unknown);
+      const itemKey = EVENT_KEY.get(location) ?? keyOf(ITEM_KEY, item, unknown);
       if (itemKey !== undefined) state.collect(itemKey);
     }
   }
+  return sphereMisses;
+};
+
+const replayForward = (fillWorld: FillWorld, spoiler: ApSpoiler): ForwardVerdict => {
+  const { world } = fillWorld;
+  const unknown: string[] = [];
+  placeSpoilerItems(world, spoiler, unknown);
+  const sphereMisses = walkSpheres(createCollectionState(world), spoiler, unknown);
   const sweep = sweepPlacementSpheres(world);
   const unreachable = accessibilityFailures({
     mode: 'full', capacity: fillWorld.capacity, uncollected: sweep.uncollected, missedEvents: sweep.missedEvents,
@@ -89,12 +82,6 @@ const replayForward = (fillWorld: FillWorld, spoiler: ApSpoiler): ForwardVerdict
   return { unknown, sphereMisses, unreachable, beaten: sweep.beaten };
 };
 
-/**
- * A player file whose world model locks every fillable location to what `placement` put there,
- * so Archipelago's fill has nothing left to decide. Plando would do the same job but places
- * each item against an assumed state of its own, which refuses self-locking key spots our fill
- * reached in another order; locking judges only the finished placement.
- */
 const reversePlayerYaml = (
   seed: string, snapshot: RandomizerOptionsSnapshot, fillWorld: FillWorld, placement: Placement,
 ): string => {

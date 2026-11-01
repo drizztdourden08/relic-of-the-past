@@ -1,5 +1,5 @@
 /* @layer renderer-widgets @kind component */
-import { Box, Button, EmptyState, SectionHeader } from '@drizztdourden08/tessera/primitives';
+import { Box, Button, SectionHeader, Status } from '@drizztdourden08/tessera/primitives';
 import { useLiveChannels } from './behavior/useLiveChannels';
 import { useMusicDebugData } from './behavior/useMusicDebugData';
 import { ChannelLive } from './sub-components/ChannelLive';
@@ -12,12 +12,13 @@ const MusicWidgetContent = () => {
   const { events, counters, clear } = useMusicDebugData();
 
   return (
-    <Box className="music-widget">
+    <Box className="music-widget" data-session={sessionActive ? 'active' : 'none'}>
       <Box className="music-widget__section">
-        <SectionHeader title="Replacement audio" />
-        {sessionActive
-          ? channels.map((channel) => <ChannelLive key={channel.name} channel={channel} />)
-          : <EmptyState message="No music pack session." />}
+        <SectionHeader
+          title="Replacement audio"
+          action={<Status tone={sessionActive ? 'success' : 'neutral'}>{sessionActive ? 'Pack session' : 'No pack session'}</Status>}
+        />
+        {channels.map((channel) => <ChannelLive key={channel.name} channel={channel} />)}
       </Box>
 
       <Box className="music-widget__section">

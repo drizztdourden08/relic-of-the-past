@@ -1,6 +1,8 @@
 /* @layer renderer-widgets @kind component */
-import { Box, EmptyState, StatRow } from '@drizztdourden08/tessera/primitives';
+import { Box, ScrollArea, Text } from '@drizztdourden08/tessera/primitives';
 import type { MusicDebugCounter } from '@rotp/msu';
+import { useStableOrder } from '../behavior/useStableOrder';
+import './CounterTable.css';
 
 const splitOf = (row: MusicDebugCounter): string => {
   if (row.skipped > 0 || row.key.startsWith('roll:')) {
@@ -13,14 +15,22 @@ const splitOf = (row: MusicDebugCounter): string => {
 };
 
 const CounterTable = (props: { counters: MusicDebugCounter[] }) => {
-  const { counters } = props;
-  if (counters.length === 0) return <EmptyState message="Nothing counted yet." />;
+  const rows = useStableOrder(props.counters);
+
   return (
-    <Box className="music-widget__rows music-widget__rows--scroll">
-      {counters.map((row) => (
-        <StatRow key={row.key} className="music-widget__row" label={`${row.channel} · ${row.label}`} value={splitOf(row)} mono />
+    <ScrollArea className="counter-table" fade={false}>
+      {rows.length === 0 && (
+        <Box className="counter-table__row" data-empty="yes">
+          <Text className="counter-table__label">Nothing counted yet.</Text>
+        </Box>
+      )}
+      {rows.map((row) => (
+        <Box key={row.key} className="counter-table__row">
+          <Text className="counter-table__label" title={`${row.channel} · ${row.label}`}>{`${row.channel} · ${row.label}`}</Text>
+          <Text className="counter-table__value">{splitOf(row)}</Text>
+        </Box>
       ))}
-    </Box>
+    </ScrollArea>
   );
 };
 

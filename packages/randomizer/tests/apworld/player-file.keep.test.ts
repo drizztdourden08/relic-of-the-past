@@ -1,20 +1,19 @@
 /* @layer tests @kind test */
-/**
- * The player file speaks the package's option ids: a choice whose value is the word random is
- * written as its id (Archipelago would roll the word), the word is never written bare, and
- * death_link comes from the profile's toggle.
- */
 import { emitYaml } from '@drizztdourden08/archipelia-client-kit';
 import { describe, expect, it } from 'vitest';
 import { baselineValues, optionByKey } from '../../src/world/options';
 import { renderPlayerYaml } from '../../src/archipelago/player-yaml';
 import { choicesOf } from '../../src/archipelago/export/choices-of';
-import type { OptionDef, OptionValue, RandomizerOptionsSnapshot } from '../../src/world/options.type';
+import type { OptionValue, RandomizerOptionsSnapshot } from '../../src/world/options.type';
 
 const snapshot = (over: Record<string, OptionValue>): RandomizerOptionsSnapshot =>
   ({ schema: 'ap-options-v2', values: { ...baselineValues, ...over } });
 
-const choiceIdOf = (option: OptionDef, value: string) => choicesOf(option)?.find((choice) => choice.value === value)?.id;
+const choiceIdOf = (key: string, value: string) => {
+  const option = optionByKey.get(key);
+  if (option === undefined) throw new Error(`no option ${key}`);
+  return choicesOf(option)?.find((choice) => choice.value === value)?.id;
+};
 
 const lineOf = (yaml: string, key: string): string | undefined =>
   yaml.split('\n').find((line) => line.trimStart().startsWith(`${key}:`))?.trim();
@@ -24,10 +23,8 @@ describe('the player file', () => {
     const yaml = renderPlayerYaml({
       slotName: 'Link', options: snapshot({ progressive_mode_sword: 'random', shop_shuffle_mode: 'random' }),
     });
-    const sword = optionByKey.get('progressive_mode_sword');
-    const shops = optionByKey.get('shop_shuffle_mode');
-    expect(lineOf(yaml, 'progressive_mode_sword')).toBe(`progressive_mode_sword: ${choiceIdOf(sword!, 'random')}`);
-    expect(lineOf(yaml, 'shop_shuffle_mode')).toBe(`shop_shuffle_mode: ${choiceIdOf(shops!, 'random')}`);
+    expect(lineOf(yaml, 'progressive_mode_sword')).toBe(`progressive_mode_sword: ${choiceIdOf('progressive_mode_sword', 'random')}`);
+    expect(lineOf(yaml, 'shop_shuffle_mode')).toBe(`shop_shuffle_mode: ${choiceIdOf('shop_shuffle_mode', 'random')}`);
     expect(lineOf(yaml, 'progressive_mode_shield')).toBe('progressive_mode_shield: progressive');
     expect(yaml).not.toMatch(/:\s*random\s*$/m);
   });
