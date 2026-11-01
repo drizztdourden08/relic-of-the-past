@@ -1,13 +1,25 @@
 /* @layer website-site @kind style */
 .chapter-bar {
   position: sticky;
-  top: 0;
+  top: calc(var(--ds-border-thin) * -1);
   z-index: var(--ds-z-sticky);
   display: none;
-  height: var(--site-chapterbar-h);
+  padding: var(--ds-space-xs) var(--site-gutter);
+  border-bottom: var(--ds-border-thin) solid transparent;
+  background: transparent;
+  transition:
+    background var(--ds-duration-normal) var(--ds-ease),
+    border-color var(--ds-duration-normal) var(--ds-ease);
+}
+
+.chapter-bar[data-stuck] {
+  border-bottom-color: var(--px-gold-dark);
   background: var(--site-chapterbar-bg);
   backdrop-filter: blur(var(--ds-size-8));
-  border-bottom: var(--ds-border-thin) solid var(--px-gold-dark);
+}
+
+.chapter-bar:not([data-stuck]) .chapter-bar__progress {
+  visibility: hidden;
 }
 
 .chapter-bar__progress {
@@ -40,5 +52,11 @@
 @media (width <= 1100px) {
   .chapter-bar {
     display: block;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .chapter-bar {
+    transition: none;
   }
 }

@@ -19,6 +19,12 @@
   scrollbar-width: none;
 }
 
+.ds-pills--wrap .ds-pills__track {
+  flex-wrap: wrap;
+  justify-content: center;
+  overflow: visible;
+}
+
 .ds-pills__track::-webkit-scrollbar {
   display: none;
 }

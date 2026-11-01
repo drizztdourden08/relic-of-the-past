@@ -5,11 +5,12 @@ import { useRevealActive } from './behavior/useRevealActive';
 import type { AnchorPillsProps } from './AnchorPills.type';
 import './AnchorPills.css';
 
-const AnchorPills = ({ items, activeId, onSelect, ariaLabel, className }: AnchorPillsProps) => {
+const AnchorPills = ({ items, activeId, onSelect, ariaLabel, className, wrap = false }: AnchorPillsProps) => {
   const trackRef = useRevealActive(activeId);
+  const classes = ['ds-pills', wrap ? 'ds-pills--wrap' : '', className ?? ''].filter(Boolean).join(' ');
 
   return (
-    <Box as="nav" className={className ? `ds-pills ${className}` : 'ds-pills'} aria-label={ariaLabel}>
+    <Box as="nav" className={classes} aria-label={ariaLabel}>
       <Box as="ul" ref={trackRef} className="ds-pills__track">
         {items.map((item) => (
           <Box as="li" key={item.id}>

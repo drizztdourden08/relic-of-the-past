@@ -3,4 +3,8 @@ const CHAPTER_BAR_TEXT = {
   label: 'Feature groups',
 } as const;
 
-export { CHAPTER_BAR_TEXT };
+const STUCK_ATTR = 'data-stuck';
+
+const BAR_HEIGHT_VAR = '--site-chapterbar-h';
+
+export { BAR_HEIGHT_VAR, CHAPTER_BAR_TEXT, STUCK_ATTR };

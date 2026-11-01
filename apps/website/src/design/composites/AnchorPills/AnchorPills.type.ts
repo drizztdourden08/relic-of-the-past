@@ -10,6 +10,7 @@ type AnchorPillsProps = {
   onSelect: (id: string) => void;
   ariaLabel: string;
   className?: string;
+  wrap?: boolean;
 };
 
 export type { AnchorPillItem, AnchorPillsProps };
