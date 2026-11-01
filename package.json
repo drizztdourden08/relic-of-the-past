@@ -119,7 +119,7 @@
     "@drizztdourden08/brock-lint-config": "catalog:",
     "@drizztdourden08/brock-plugin-snes": "catalog:",
     "@drizztdourden08/brock-thread": "catalog:",
-    "@drizztdourden08/standards": "^0.14.1",
+    "@drizztdourden08/standards": "^0.14.2",
     "@drizztdourden08/tessera": "catalog:",
     "@iconify/types": "^2.0.0",
     "@playwright/test": "^1.60.0",
