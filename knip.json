@@ -1,10 +1,28 @@
 {
   "$schema": "https://unpkg.com/knip@5/schema.json",
   "ignoreDependencies": [],
+  "ignoreFiles": [
+    "**/index.ts",
+    "packages/design/src/**/*.usage.ts",
+    "packages/navigation/src/pathfinding/**",
+    "apps/store-api/src/window-api.type.ts"
+  ],
+  "ignoreIssues": {
+    "apps/desktop/src/game/index.ts": ["exports", "types"],
+    "apps/desktop/src/game/delivery-api/**": ["exports", "types"],
+    "apps/desktop/src/game/receipt-grants/**": ["exports", "types"],
+    "packages/game-core/src/wasm-bridge/index.ts": ["exports", "types"],
+    "packages/game-core/src/bridge/**": ["exports", "types"],
+    "packages/navigation/src/pathfinding/**": ["exports", "types"],
+    "packages/randomizer/src/delivery-execute/**": ["exports", "types"]
+  },
   "workspaces": {
     ".": {
       "entry": [
-        "brock.workspace.mjs"
+        "brock.workspace.mjs",
+        "standards.config.mjs",
+        ".markdownlint-cli2.mjs",
+        "core/wasm-build/*.mjs"
       ]
     },
     "apps/desktop": {
@@ -13,6 +31,10 @@
         "electron/preload.ts",
         "src/main.tsx",
         "src/ipc/contract.type.ts",
+        "src/augment.ts",
+        "src/profile.type.ts",
+        "src/platform/rotp-platform-ports.type.ts",
+        "src/shell/show-rules/show-flags.type.ts",
         "src/screens/**/*.custom.tsx",
         "src/**/*.usage.ts",
         "tests/**/*.{ts,tsx}",
@@ -52,6 +74,18 @@
       ],
       "project": [
         "src/**/*.{ts,tsx}"
+      ]
+    },
+    "apps/store-api": {
+      "ignoreDependencies": [
+        "@aws-sdk/client-s3",
+        "@aws-sdk/s3-request-presigner"
+      ]
+    },
+    "apps/sanctuary-api": {
+      "ignoreDependencies": [
+        "@aws-sdk/client-s3",
+        "@aws-sdk/s3-request-presigner"
       ]
     },
     "packages/*": {}
