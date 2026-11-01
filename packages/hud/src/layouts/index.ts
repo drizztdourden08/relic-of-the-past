@@ -4,6 +4,7 @@ export {
   COUNTDOWN_SIZE,
 } from './element-sizes';
 export { VITALS_RESERVE } from './vitals-reserve';
+export { unionOf } from './union-of';
 export type { Rect, Size } from './geometry.type';
 export { BUILT_IN_LAYOUTS, DEFAULT_LAYOUT, layoutById } from './built-in-layouts';
 export { editGridTracks } from './grid-track-edits';

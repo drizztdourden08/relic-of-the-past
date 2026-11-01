@@ -5,3 +5,4 @@ export { collectionOf } from './collection-of';
 export { now } from './now';
 export { decodeCursor } from './decode-cursor';
 export { pageOf } from './page-of';
+export { queryPage } from './query-page';

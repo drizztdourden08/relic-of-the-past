@@ -1,7 +1,7 @@
 /* @layer root-config @kind logic */
 import { FieldValue } from '@google-cloud/firestore';
 import type { FileType, SanctuaryFile } from '@rotp/hub-contracts';
-import { notFound, db, decodeCursor, pageOf } from '@rotp/hub-server';
+import { notFound, db, queryPage } from '@rotp/hub-server';
 import { upgradeFile } from '../files/upgrade-file';
 import type { StoredFile } from '../files/upgrade-file.type';
 import { sanctuaryCollection } from './collections';
@@ -38,12 +38,7 @@ const listReady = async (types: FileType[] | null, cursor: string | undefined, p
   let query = files().where('status', '==', 'ready');
   if (types?.length === 1) query = query.where('type', '==', types[0]);
   else if (types) query = query.where('type', 'in', types);
-  query = query.orderBy('createdAt', 'desc').limit(pageSize);
-  const after = decodeCursor(cursor);
-  if (after !== null) query = query.startAfter(after);
-  const snap = await query.get();
-  const items = snap.docs.map((doc) => upgradeFile(doc.data() as StoredFile));
-  return pageOf(items, pageSize);
+  return queryPage(query, cursor, pageSize, (data) => upgradeFile(data as StoredFile));
 };
 
 const bumpDownloads = async (id: string): Promise<void> => {

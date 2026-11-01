@@ -1,6 +1,7 @@
 /* @layer root-config @kind logic */
+import type { Query } from '@google-cloud/firestore';
 import type { Report } from '@rotp/hub-contracts';
-import { decodeCursor, pageOf } from '@rotp/hub-server';
+import { queryPage } from '@rotp/hub-server';
 import { sanctuaryCollection } from './collections';
 import type { ReportFilter, ReportPage, ReportPatch } from './reports-repo.type';
 
@@ -20,14 +21,10 @@ const update = async (id: string, patch: ReportPatch): Promise<void> => {
 };
 
 const list = async ({ mineUserId, state, cursor }: ReportFilter, pageSize: number): Promise<ReportPage> => {
-  let query = reports().orderBy('createdAt', 'desc').limit(pageSize);
+  let query: Query = reports();
   if (mineUserId) query = query.where('reporter.userId', '==', mineUserId);
   if (state) query = query.where('issue.state', '==', state);
-  const after = decodeCursor(cursor);
-  if (after !== null) query = query.startAfter(after);
-  const snap = await query.get();
-  const items = snap.docs.map((doc) => doc.data() as Report);
-  return pageOf(items, pageSize);
+  return queryPage(query, cursor, pageSize, (data) => data as Report);
 };
 
 const listForSweep = async (): Promise<Report[]> => {
