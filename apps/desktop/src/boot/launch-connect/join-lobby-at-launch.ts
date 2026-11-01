@@ -23,7 +23,6 @@ const joinWithProfile = async (profile: Profile, check: LobbyCheckOk): Promise<P
   return profile;
 };
 
-/** Returns the profile the launch goes on with once the lobby has started its room: the one that fits, or a new one named after the slot. */
 const joinLobbyAtLaunch = async (active: Profile, lobby: LobbyJoin, explicitName: string | null): Promise<Profile | null> => {
   if (lobby.code === null) return refuse('the lobby code is missing (--lobby-join=<host>[:<port>]:<code>)');
   const check = await checkLobby(lobby.server, lobby.code);

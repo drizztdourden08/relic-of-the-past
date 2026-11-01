@@ -6,4 +6,6 @@ interface LobbyJoin {
 
 type LobbyJoinParse = { ok: true; value: LobbyJoin } | { ok: false; error: string };
 
-export type { LobbyJoin, LobbyJoinParse };
+type LobbyJoinFlag = { kind: 'absent' } | { kind: 'invalid' } | { kind: 'set'; value: LobbyJoin };
+
+export type { LobbyJoin, LobbyJoinFlag, LobbyJoinParse };

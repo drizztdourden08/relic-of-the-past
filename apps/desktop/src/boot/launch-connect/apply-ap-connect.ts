@@ -25,7 +25,6 @@ const repoint = async (profile: Profile, connect: ApConnect): Promise<Profile | 
   return profile;
 };
 
-/** Returns the profile the launch goes on with: the one that fits, re-pointed at the server, or a new one named after the slot. */
 const applyApConnect = async (active: Profile, connect: ApConnect, explicitName: string | null): Promise<Profile | null> => {
   const pick = await pickLaunchProfile(active, 'online', explicitName, connect.slot);
   if (pick.kind === 'refuse') return refuse(pick.why);

@@ -13,10 +13,6 @@ const namedProfile = async (name: string): Promise<Profile | null> => {
   return found ?? null;
 };
 
-/**
- * Runs --ap-connect or --lobby-join before the game loads and returns the profile the launch goes on with
- * (created when none fits, or the one --profile-name names); null means the launch must not go on.
- */
 const prepareLaunchConnection = async (active: Profile): Promise<Profile | null> => {
   const connect = apConnectFlag();
   const lobby = lobbyJoinFlag();

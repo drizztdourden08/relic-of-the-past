@@ -6,4 +6,6 @@ interface ScriptStep {
 
 type InputScriptParse = { ok: true; steps: ScriptStep[] } | { ok: false; error: string };
 
-export type { InputScriptParse, ScriptStep };
+type LoadedScript = { kind: 'absent' } | { kind: 'invalid' } | { kind: 'ready'; steps: ScriptStep[] };
+
+export type { InputScriptParse, LoadedScript, ScriptStep };

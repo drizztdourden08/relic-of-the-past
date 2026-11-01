@@ -1,18 +1,16 @@
 /* @layer renderer-appshell @kind hook */
 import { requireHostApi } from '@drizztdourden08/brock-react';
 import { useEffect, useRef } from 'react';
-import { loadStateRef } from '@app/game';
 import { log } from '@app/log-bus';
 import type { AutoTestDeps } from './useAutoTest.type';
-import { RENDER_SETTLE_MS } from './auto-launch.constants';
+import { settleAutoState } from './settle-auto-state';
 import { waitForGameRunning } from './wait-for-game-running';
 import { isAutoStart } from '@app/launch-flags/is-auto-start';
-import { apConnectFlag } from '@app/launch-flags/ap-connect/ap-connect';
-import { lobbyJoinFlag } from '@app/launch-flags/lobby-join/lobby-join';
 import { releaseScreenshot } from '@app/boot/screenshot-frames/release-screenshot';
+import { launchesConnection } from '@app/boot/auto-launch/launches-connection';
+import { pauseForScript } from '@app/boot/auto-launch/pause-for-script';
+import { playScript } from '@app/boot/auto-launch/play-script';
 import { prepareAutoLaunch } from '@app/boot/auto-launch/prepare-auto-launch';
-import { runInputScript } from '@app/boot/input-script/run-input-script';
-import { wasmSetPaused } from '@rotp/game-core';
 
 const useAutoTest = ({ activeProfile, loadProfileForGame }: AutoTestDeps) => {
   const didRun = useRef(false);
@@ -25,8 +23,7 @@ const useAutoTest = ({ activeProfile, loadProfileForGame }: AutoTestDeps) => {
     void (async () => {
       const args = await requireHostApi().getTestArgs();
       const autoStart = isAutoStart();
-      const launchesConnection = apConnectFlag().kind !== 'absent' || lobbyJoinFlag().kind !== 'absent';
-      if (args.autoState === null && !autoStart && !launchesConnection) return;
+      if (args.autoState === null && !autoStart && !launchesConnection()) return;
       if (isCancelled() || didRun.current) return;
       didRun.current = true;
 
@@ -42,19 +39,9 @@ const useAutoTest = ({ activeProfile, loadProfileForGame }: AutoTestDeps) => {
       await waitForGameRunning(isCancelled);
 
       if (isCancelled()) return;
-      if (script.kind === 'ready') wasmSetPaused(true);
-
-      if (args.autoState !== null) {
-        const kind = typeof args.autoState === 'number' ? 'quick slot' : 'manual save';
-        log.app(`[AutoTest] Loading ${kind} ${args.autoState}...`);
-        await loadStateRef(args.autoState);
-        await new Promise((r) => setTimeout(r, RENDER_SETTLE_MS));
-      } else if (args.screenshot) {
-        await new Promise((r) => setTimeout(r, RENDER_SETTLE_MS));
-      }
-
-      if (script.kind === 'ready') await runInputScript(script.steps);
-      if (script.kind === 'ready' && !args.screenshot) wasmSetPaused(false);
+      pauseForScript(script);
+      await settleAutoState(args);
+      await playScript(script, Boolean(args.screenshot));
 
       if (args.screenshot) {
         log.app(`[AutoTest] Game frame drawn, releasing screenshot "${args.screenshot}"`);

@@ -1,10 +1,8 @@
 /* @layer renderer-lib @kind logic */
 import { log } from '../../log-bus';
 import { startupFlag } from '../startup-flag';
-import type { ApConnect } from './ap-connect.type';
+import type { ApConnectFlag } from './ap-connect.type';
 import { parseApConnect } from './parse-ap-connect';
-
-type ApConnectFlag = { kind: 'absent' } | { kind: 'invalid' } | { kind: 'set'; value: ApConnect };
 
 const apConnectFlag = (): ApConnectFlag => {
   const raw = startupFlag('ap-connect');
@@ -16,4 +14,3 @@ const apConnectFlag = (): ApConnectFlag => {
 };
 
 export { apConnectFlag };
-export type { ApConnectFlag };

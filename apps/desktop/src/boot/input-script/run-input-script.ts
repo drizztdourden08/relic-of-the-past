@@ -23,7 +23,6 @@ const runStep = async (step: ScriptStep): Promise<boolean> => {
   return true;
 };
 
-/** Plays the steps against a paused core, one emulator frame per drawn tick, so the result does not depend on wall-clock time. */
 const runInputScript = async (steps: readonly ScriptStep[]): Promise<boolean> => {
   const total = steps.reduce((sum, step) => sum + step.frames, 0);
   const manager = getInputManager();

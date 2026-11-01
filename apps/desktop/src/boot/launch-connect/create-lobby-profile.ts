@@ -8,11 +8,6 @@ import { buildRandomizerConfig, freshRandomizerForm } from '@app/views/DataManag
 import { createArchipeliaProfile } from '@app/views/DataManager/sub-components/profile-manager/create-archipelia-profile';
 import { baseOptionsOf } from './profile-seed';
 
-/**
- * Creates an Archipelia profile named `name` (which is also its slot name) and joins the checked lobby with it,
- * through the same code the profile form runs. The lobby fixes the server, code and build; the options are the
- * form's defaults, because a lobby publishes no per-slot options.
- */
 const createLobbyProfile = async (active: Profile, name: string, check: LobbyCheckOk): Promise<Profile | null> => {
   const slotProblem = slotNameError(name);
   if (slotProblem !== null || name === '') {

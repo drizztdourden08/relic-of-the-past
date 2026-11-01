@@ -14,7 +14,6 @@ const slotDataResult = (packet: ApConnectedPacket): SlotProbe => {
 const connectLine = (room: ApRoomInfoPacket, { slot, password }: ProbeTarget): string =>
   JSON.stringify([buildConnect({ game: AP_GAME, slotName: slot, uuid: clientUuid(), password: password ?? undefined, version: versionOf(room) })]);
 
-/** One connection to one candidate address: waits for the room, connects as the slot, reads the slot data it answers with, leaves. */
 const probeSlotAttempt = (target: ProbeTarget): Promise<ProbeAttempt> =>
   new Promise((resolve) => {
     let settled = false;
@@ -24,7 +23,7 @@ const probeSlotAttempt = (target: ProbeTarget): Promise<ProbeAttempt> =>
       if (settled) return;
       settled = true;
       clearTimeout(timer);
-      try { socket?.close(); } catch { /* already closed */ }
+      socket?.close();
       resolve({ result, opened });
     };
     const timer = setTimeout(() => finish({ ok: false, error: `no answer from ${target.url} within ${SLOT_PROBE_MS / 1000}s` }), SLOT_PROBE_MS);

@@ -1,10 +1,8 @@
 /* @layer renderer-app @kind logic */
 import { requireHostApi } from '@drizztdourden08/brock-react';
 import { log } from '@app/log-bus';
-import type { ScriptStep } from './input-script.type';
+import type { LoadedScript } from './input-script.type';
 import { parseInputScript } from './parse-input-script';
-
-type LoadedScript = { kind: 'absent' } | { kind: 'invalid' } | { kind: 'ready'; steps: ScriptStep[] };
 
 const loadInputScript = async (): Promise<LoadedScript> => {
   const { inputScript } = await requireHostApi().getTestArgs();
@@ -20,4 +18,3 @@ const loadInputScript = async (): Promise<LoadedScript> => {
 };
 
 export { loadInputScript };
-export type { LoadedScript };

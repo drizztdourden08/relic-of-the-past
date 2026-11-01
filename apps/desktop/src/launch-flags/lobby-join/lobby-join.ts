@@ -1,10 +1,8 @@
 /* @layer renderer-lib @kind logic */
 import { log } from '../../log-bus';
 import { startupFlag } from '../startup-flag';
-import type { LobbyJoin } from './lobby-join.type';
+import type { LobbyJoinFlag } from './lobby-join.type';
 import { parseLobbyJoin } from './parse-lobby-join';
-
-type LobbyJoinFlag = { kind: 'absent' } | { kind: 'invalid' } | { kind: 'set'; value: LobbyJoin };
 
 const lobbyJoinFlag = (): LobbyJoinFlag => {
   const raw = startupFlag('lobby-join');
@@ -16,4 +14,3 @@ const lobbyJoinFlag = (): LobbyJoinFlag => {
 };
 
 export { lobbyJoinFlag };
-export type { LobbyJoinFlag };

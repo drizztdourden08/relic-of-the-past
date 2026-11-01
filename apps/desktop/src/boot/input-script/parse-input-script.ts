@@ -3,7 +3,7 @@ import { compileSteps } from './compile-steps';
 import { MAX_SCRIPT_FRAMES } from './input-script.constants';
 import type { InputScriptParse } from './input-script.type';
 import { parseEvent } from './parse-event';
-import type { ScriptEvent } from './parse-event';
+import type { ScriptEvent } from './parse-event.type';
 
 const parseInputScript = (text: string): InputScriptParse => {
   let json: unknown;

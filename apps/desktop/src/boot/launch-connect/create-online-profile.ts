@@ -5,11 +5,9 @@ import type { ApConnect } from '@app/launch-flags/ap-connect/ap-connect.type';
 import { runCreateProfileFlow } from '@app/views/GameSession/behavior/create-profile-flow';
 import { log } from '@app/log-bus';
 import { baseOptionsOf } from './profile-seed';
+import { OPTIONS_SCHEMA } from './launch-connect.constants';
 import { probeSlotData } from './probe-slot-data';
 
-const OPTIONS_SCHEMA = 'ap-options-v2';
-
-/** Creates an online profile named `name` for the slot, with its options and seed read from the slot data the server holds. */
 const createOnlineProfile = async (active: Profile, name: string, connect: ApConnect): Promise<Profile | null> => {
   const serverUrl = `${connect.host}:${connect.port}`;
   const probe = await probeSlotData({ url: serverUrl, slot: connect.slot, password: connect.password });

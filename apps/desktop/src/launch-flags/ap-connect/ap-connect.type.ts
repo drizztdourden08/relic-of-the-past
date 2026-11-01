@@ -8,4 +8,6 @@ interface ApConnect {
 
 type ApConnectParse = { ok: true; value: ApConnect } | { ok: false; error: string };
 
-export type { ApConnect, ApConnectParse };
+type ApConnectFlag = { kind: 'absent' } | { kind: 'invalid' } | { kind: 'set'; value: ApConnect };
+
+export type { ApConnect, ApConnectFlag, ApConnectParse };

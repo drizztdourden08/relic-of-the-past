@@ -19,11 +19,13 @@ const settleItem = (ctx: OnlineContext, index: number, epoch: number): void => {
 
 const isSelf = (ctx: OnlineContext, item: ApNetworkItem): boolean => !isFromServer(item) && item.player === ctx.room.slot;
 
+const labelOf = (ctx: OnlineContext, item: ApNetworkItem): string => ctx.room.itemNameById.get(item.item) ?? `item ${item.item}`;
+
 const deliverOne = (ctx: OnlineContext, item: ApNetworkItem, index: number): DeliveryOutcome => {
   const { epoch } = ctx.room.cursor;
   if (isOwnPickupEcho(ctx, item)) {
     log.randomizer(`[Online] Own pickup at location ${item.location} echoed back, already granted in-world`);
-    logItemReceived(item.item, ctx.room.itemNameById.get(item.item) ?? `item ${item.item}`, senderNameOf(ctx, item), true);
+    logItemReceived(item.item, labelOf(ctx, item), senderNameOf(ctx, item), true);
     settleItem(ctx, index, epoch);
     return 'delivered';
   }
@@ -36,7 +38,7 @@ const deliverOne = (ctx: OnlineContext, item: ApNetworkItem, index: number): Del
     settleItem(ctx, index, epoch);
   } else if (outcome === 'delivered') {
     log.randomizer(`[Online] Received: ${itemName} from ${from}`);
-    logItemReceived(item.item, itemName ?? `item ${item.item}`, from, isSelf(ctx, item));
+    logItemReceived(item.item, labelOf(ctx, item), from, isSelf(ctx, item));
   }
   return outcome;
 };

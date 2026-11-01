@@ -1,17 +1,16 @@
 /* @layer electron-main @kind logic */
 import { appendFileSync, mkdirSync } from 'node:fs';
 import { dirname, resolve } from 'node:path';
-import type { EventLogEntry } from '@app/ipc';
 import { rotpAutomationFlags } from '../automation/rotp-automation-flags';
+import type { AppendResult } from './append-event-log.type';
 import { EVENT_LOG_FLAG } from './test-handlers.constants';
 
-type AppendResult = { success: boolean; error?: string };
+const isJsonObject = (value: unknown): boolean => typeof value === 'object' && value !== null && !Array.isArray(value);
 
-/** Appends one JSON line to the --event-log file; each call opens, writes and closes, so every line is on disk when it returns. */
-const appendEventLog = (event: EventLogEntry): AppendResult => {
+const appendEventLog = (event: unknown): AppendResult => {
   const raw = rotpAutomationFlags.flagValue(EVENT_LOG_FLAG);
   if (raw === null) return { success: false, error: `${EVENT_LOG_FLAG} is not set` };
-  if (typeof event !== 'object' || event === null || Array.isArray(event)) return { success: false, error: 'an event is a JSON object' };
+  if (!isJsonObject(event)) return { success: false, error: 'an event is a JSON object' };
   try {
     const path = resolve(raw);
     mkdirSync(dirname(path), { recursive: true });

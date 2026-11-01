@@ -1,22 +1,10 @@
 /* @layer renderer-app @kind logic */
 import { listProfiles } from '@app/storage/profile-store';
-
-type LaunchMode = 'online' | 'archipelia';
-
-type LaunchProfilePick =
-  | { kind: 'use'; profile: Profile }
-  | { kind: 'create'; name: string }
-  | { kind: 'refuse'; why: string };
-
-const MODE_WORDS: Record<LaunchMode, string> = { online: 'an Archipelago (online)', archipelia: 'an Archipelia' };
+import { MODE_WORDS } from './launch-connect.constants';
+import type { LaunchMode, LaunchProfilePick } from './pick-launch-profile.type';
 
 const isMode = (profile: Profile, mode: LaunchMode): boolean => profile.randomizer?.mode === mode;
 
-/**
- * Chooses the profile a connection flag runs against. A name from --profile-name is exact: that profile
- * is used when it exists and fits, created when it does not. Without a name the active profile is used
- * when it already fits, then a profile called `fallbackName`, and otherwise one is created under it.
- */
 const pickLaunchProfile = async (
   active: Profile, mode: LaunchMode, explicitName: string | null, fallbackName: string,
 ): Promise<LaunchProfilePick> => {
@@ -30,4 +18,3 @@ const pickLaunchProfile = async (
 };
 
 export { pickLaunchProfile };
-export type { LaunchMode, LaunchProfilePick };
