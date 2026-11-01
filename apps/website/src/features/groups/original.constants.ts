@@ -14,6 +14,18 @@ const ORIGINAL_GROUP: FeatureGroup = {
   glow: 'forest',
   features: [
     {
+      id: 'vanilla-safe',
+      label: 'Vanilla Safe',
+      short: 'Vanilla Safe',
+      title: 'As close to the original as you like',
+      promise: ['The bugs, glitches and quirks you expect,', 'or every new comfort. You choose.'],
+      body: 'Vanilla Safe runs the game exactly as the original, bugs and glitches included. Every new feature is its own switch, so you can stay that close or go as far as you like.',
+      settings: ['Vanilla Safe'],
+      caption: 'Vanilla Safe in the gameplay settings.',
+      layout: 'split',
+      visual: { kind: 'single', shot: UI.vanillaSafe },
+    },
+    {
       id: 'no-emulator',
       label: 'Native',
       short: 'No emulator',

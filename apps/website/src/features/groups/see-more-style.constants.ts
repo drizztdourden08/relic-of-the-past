@@ -89,7 +89,10 @@ const SEE_MORE_STYLE_FEATURES: readonly Feature[] = [
     label: 'Title screen',
     short: 'Title screen',
     title: 'A reimagined title screen',
-    promise: ['The reflections in the water are real.', 'The background is drawn live.'],
+    promise: [
+      'Real reflections in the water and a randomly generated parallax background.',
+      'An adapting title screen, with the sword changing at each stage as you progress in the game.',
+    ],
     body: "An optional title scene built from the ROM's own pictures. Every sword has been redrawn, and each one has its own loop.",
     settings: ['Title screen', 'Sword', 'Motion'],
     caption: 'The new title scene. Pick a sword to see its loop.',

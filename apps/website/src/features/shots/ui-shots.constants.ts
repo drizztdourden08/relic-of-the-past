@@ -107,6 +107,13 @@ const UI_SHOTS = {
     height: 1080,
     alt: "The intro in the rain with a layered music pack playing, and the app's music debugger open",
   },
+  vanillaSafe: {
+    id: 'ui-vanilla-safe',
+    src: 'media/shots/ui-vanilla-safe.webp',
+    width: 1790,
+    height: 912,
+    alt: 'The gameplay settings with the Vanilla Safe switch',
+  },
 } as const satisfies Record<string, Screenshot>;
 
 export { UI_SHOTS };

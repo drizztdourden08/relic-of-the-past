@@ -24,7 +24,7 @@ const GRAPHICAL_FIXES_FEATURE: Feature = {
   short: 'Graphical fixes',
   title: 'Graphics that look right',
   promise: ['Small things that look right.', 'Rupees are just one of them.'],
-  body: 'A few little visual fixes, like rupees in the colours of the other Zelda games. Pick one to compare.',
+  body: 'A few little visual fixes, like rupees in the colours of the other Zelda games.',
   settings: ['Rupees', 'Sheen', 'Bunny'],
   caption: 'Each fix, off and on.',
   layout: 'split',
