@@ -23,7 +23,7 @@ const HudStyleControl = ({ value, settings, onChange }: HudStyleControlProps) =>
 
   const options = useMemo(() => [
     { value: 'vanilla' as const, label: 'Original', disabled: !available },
-    { value: 'enhanced' as const, label: 'Enhanced', disabled: !available || !wideEnough },
+    { value: 'enhanced' as const, label: 'Enhanced', disabled: !available || !wideEnough || !experimental },
     { value: 'modern' as const, label: 'Modern', disabled: !available || !wideEnough || !experimental },
   ], [available, wideEnough, experimental]);
 

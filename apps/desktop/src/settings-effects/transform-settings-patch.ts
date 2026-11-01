@@ -11,7 +11,7 @@ const transformSettingsPatch = (patch: Partial<AppSettings>, settings: AppSettin
   const gated = { ...patch };
   if (!experimentalFeaturesEnabled(next)) {
     if (next.experimentalFeaturesEnabled) gated.experimentalFeaturesEnabled = false;
-    if (next.hudStyle === 'modern') gated.hudStyle = 'enhanced';
+    if (next.hudStyle === 'modern' || next.hudStyle === 'enhanced') gated.hudStyle = 'vanilla';
     if (next.extraDungeon) gated.extraDungeon = false;
   }
   return withAspectCascade(withHostDrawnOverlay(gated), settings);
