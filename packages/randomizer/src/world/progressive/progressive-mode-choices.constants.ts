@@ -11,4 +11,4 @@ const MODE_CHOICES: readonly OptionChoice[] = PROGRESSIVE_MODES.map((mode) => ({
   label: PROGRESSIVE_MODE_LABELS[mode],
 }));
 
-export { MODE_CHOICES, MODE_SOURCE_VALUE };
+export { MODE_CHOICES };

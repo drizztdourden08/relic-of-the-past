@@ -1,5 +1,4 @@
 /* @layer shared-game @kind barrel */
-export { capacityEnabledFromSnapshot } from './capacity-enabled-from-snapshot';
 export { capacityEnabledOf } from './capacity-enabled-of';
 export { capacityProfileFromSnapshot } from './capacity-profile-from-snapshot';
 export { capacityProgressiveFromSnapshot } from './capacity-progressive-from-snapshot';

@@ -7,4 +7,4 @@ const PROGRESSIVE_TIER_KEYS: readonly string[] =
 
 const PROGRESSIVE_TIER_KEY_SET: ReadonlySet<string> = new Set(PROGRESSIVE_TIER_KEYS);
 
-export { PROGRESSIVE_TIER_KEYS, PROGRESSIVE_TIER_KEY_SET };
+export { PROGRESSIVE_TIER_KEY_SET };

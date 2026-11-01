@@ -5,9 +5,17 @@
     "**/index.ts",
     "packages/design/src/**/*.usage.ts",
     "packages/navigation/src/pathfinding/**",
-    "apps/store-api/src/window-api.type.ts"
+    "apps/store-api/src/window-api.type.ts",
+    "packages/randomizer/src/audit/**",
+    "packages/languages/src/messages/choices/**",
+    "packages/randomizer/src/world/retro/**",
+    "packages/randomizer/src/spoiler.ts",
+    "packages/navigation/src/save-file/offline-inventory.ts",
+    "packages/randomizer/src/client/local-session-items/**"
   ],
   "ignoreIssues": {
+    "packages/randomizer/src/audit/**": ["exports", "types"],
+    "apps/desktop/src/data-inspector/recommendations/recommendation-cache/index.ts": ["exports"],
     "apps/desktop/src/game/index.ts": ["exports", "types"],
     "apps/desktop/src/game/delivery-api/**": ["exports", "types"],
     "apps/desktop/src/game/receipt-grants/**": ["exports", "types"],
@@ -22,7 +30,24 @@
         "brock.workspace.mjs",
         "standards.config.mjs",
         ".markdownlint-cli2.mjs",
-        "core/wasm-build/*.mjs"
+        "core/wasm-build/*.mjs",
+        "tooling/ensure-linux-sdl3-soname.mjs"
+      ]
+    },
+    "tooling/apworld": {
+      "entry": [
+        "ensure-apworld.mjs",
+        "build-apworld.mjs",
+        "pack-apworld.mjs",
+        "run-exporter.mjs",
+        "write-public-builds.mjs"
+      ]
+    },
+    "tooling/gba-alttp-re": {
+      "entry": [
+        "*.mjs",
+        "build-playable-assets.ts",
+        "export-palace-dungeon.ts"
       ]
     },
     "apps/desktop": {
@@ -76,16 +101,32 @@
         "src/**/*.{ts,tsx}"
       ]
     },
+    "apps/kill-switch": {
+      "entry": [
+        "src/index.ts"
+      ]
+    },
     "apps/store-api": {
+      "entry": [
+        "src/index.ts"
+      ],
       "ignoreDependencies": [
         "@aws-sdk/client-s3",
         "@aws-sdk/s3-request-presigner"
       ]
     },
     "apps/sanctuary-api": {
+      "entry": [
+        "src/index.ts"
+      ],
       "ignoreDependencies": [
         "@aws-sdk/client-s3",
         "@aws-sdk/s3-request-presigner"
+      ]
+    },
+    "packages/game-core": {
+      "entry": [
+        "src/save-state/formats.ts"
       ]
     },
     "packages/*": {}

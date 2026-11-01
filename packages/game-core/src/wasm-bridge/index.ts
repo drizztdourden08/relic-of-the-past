@@ -7,7 +7,6 @@ export { setModule } from './set-module';
 export { setProfileId } from './set-profile-id';
 export { setState } from './set-state';
 export { subscribeGameState } from './subscribe-game-state';
-export { UI_STATE_BUFFER_SIZE } from './wasm-bridge.constants';
 
 export { wasmGetPlayerStateInfo } from '../bridge/player-state';
 export type { PlayerStateInfo } from '../bridge/player-state';

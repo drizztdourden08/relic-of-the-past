@@ -16,8 +16,4 @@ const STORY_GATE_KEY = {
   mountainRespawn: 'story_mountain_respawn',
 } as const;
 
-const STORY_GATE_OPTION_KEYS: readonly string[] = Object.values(STORY_GATE_KEY);
-
-const STORY_GATE_KEY_SET: ReadonlySet<string> = new Set(STORY_GATE_OPTION_KEYS);
-
-export { STORY_GATE_KEY, STORY_GATE_KEY_SET, STORY_GATE_OPTION_KEYS };
+export { STORY_GATE_KEY };

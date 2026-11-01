@@ -7,4 +7,4 @@ const PROGRESSIVE_MODE_KEYS: readonly string[] =
 
 const PROGRESSIVE_MODE_KEY_SET: ReadonlySet<string> = new Set(PROGRESSIVE_MODE_KEYS);
 
-export { PROGRESSIVE_MODE_KEYS, PROGRESSIVE_MODE_KEY_SET };
+export { PROGRESSIVE_MODE_KEY_SET };
