@@ -51,4 +51,3 @@ const ReviewItem = (props: ReviewItemProps) => {
 };
 
 export { ReviewItem };
-export type { ReviewItemProps } from './ReviewItem.type';

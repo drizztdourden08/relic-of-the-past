@@ -24,4 +24,3 @@ const ItemPicture = (props: ItemPictureProps) => {
 };
 
 export { ItemPicture };
-export type { ItemPictureProps } from './ItemPicture.type';

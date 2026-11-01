@@ -34,4 +34,4 @@ const indexPaths = (root, paths) => {
   return index;
 };
 
-export { indexTree, indexPaths, sha256 };
+export { indexTree, indexPaths };

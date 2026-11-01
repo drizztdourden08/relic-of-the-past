@@ -9,4 +9,4 @@ const ReviewChip = (props: ReviewChipProps) => {
 };
 
 export { ReviewChip };
-export type { ReviewChipProps, ReviewChipState } from './ReviewChip.type';
+export type { ReviewChipState } from './ReviewChip.type';

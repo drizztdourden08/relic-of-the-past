@@ -107,4 +107,3 @@ const noticeOfPrint = (packet: ApPrintJsonPacket, side: PrintSide): OnlineNotice
 };
 
 export { noticeOfPrint };
-export type { PrintSide } from './notice-of-print.type';

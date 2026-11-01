@@ -15,4 +15,3 @@ const rebaselineEntries = (input: RebaselineInput): RebaselineResult => {
 };
 
 export { rebaselineEntries };
-export type { RebaselineInput, RebaselineResult } from './poll-rebaseline.type';

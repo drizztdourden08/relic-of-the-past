@@ -2,7 +2,7 @@
 import { ITEM } from '../item-ids';
 import type { ItemId } from '@rotp/game-data';
 import type {
-  ProgressiveFamilyDef, ProgressiveFamilyId, ProgressiveSetting, ProgressiveTierTicks,
+  ProgressiveFamilyDef, ProgressiveSetting, ProgressiveTierTicks,
 } from './progressive.type';
 
 const REPLACEMENT_ITEM: ItemId = ITEM.rupees20;
@@ -56,8 +56,6 @@ const PROGRESSIVE_FAMILIES: readonly ProgressiveFamilyDef[] = [
   },
 ];
 
-const PROGRESSIVE_FAMILY_IDS: readonly ProgressiveFamilyId[] = ['sword', 'shield', 'mail', 'glove', 'bow', 'ocarina'];
-
 const DEFAULT_PROGRESSIVE_SETTING: ProgressiveSetting = {
   sword: [true, true, true, true],
   shield: [true, true, true],
@@ -70,6 +68,5 @@ const DEFAULT_PROGRESSIVE_SETTING: ProgressiveSetting = {
 export {
   DEFAULT_PROGRESSIVE_SETTING,
   PROGRESSIVE_FAMILIES,
-  PROGRESSIVE_FAMILY_IDS,
   REPLACEMENT_ITEM,
 };

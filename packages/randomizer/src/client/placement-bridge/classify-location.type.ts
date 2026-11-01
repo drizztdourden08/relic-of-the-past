@@ -26,4 +26,4 @@ interface CheckPlanContext {
   targetLocalId: number;
 }
 
-export type { CheckPlanContext, DetectionField, ScopedContext };
+export type { CheckPlanContext, ScopedContext };

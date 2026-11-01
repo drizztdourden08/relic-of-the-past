@@ -20,4 +20,4 @@ interface PondAskSetting {
 
 type PondDemandView = Readonly<Partial<Record<LocationKey, ShopPrice>>>;
 
-export type { PondAskAmountKind, PondAskCurrency, PondAskSetting, PondBottleAsk, PondDemandView };
+export type { PondAskAmountKind, PondAskCurrency, PondAskSetting, PondDemandView };

@@ -1,5 +1,5 @@
 /* @layer renderer-widgets @kind types */
-import type { ConnectionRecord, ConnectionTag, ScreenId, ScreenRecord, ConnectionNavData } from '@rotp/game-data';
+import type { ConnectionRecord, ConnectionTag, ScreenId, ConnectionNavData } from '@rotp/game-data';
 import type { RoomStairInfo } from '../../game';
 
 interface ConnectionDraft {
@@ -30,21 +30,6 @@ interface DetectionInput {
   detectedFallHoleRooms: number[];
 }
 
-type ScreenDataStatus = 'mapped' | 'incomplete' | 'missing';
-
-interface DataCorrection {
-  field: string;
-  message: string;
-  suggestedValue: unknown;
-}
-
-interface ScreenDataStatusResult {
-  status: ScreenDataStatus;
-  screen: ScreenRecord | null;
-  issues: string[];
-  corrections: DataCorrection[];
-}
-
 type ConnectionStatus = 'complete' | 'partial' | 'none';
 
 interface ConnectionStatusResult {
@@ -61,6 +46,6 @@ interface PositionSpan {
 }
 
 export type {
-  ConnectionDraft, ConnectionIssueInput, ConnectionStatus, ConnectionStatusResult, DataCorrection, DetectedConnection, DetectionInput,
-  PositionSpan, ScreenDataStatus, ScreenDataStatusResult,
+  ConnectionDraft, ConnectionIssueInput, ConnectionStatus, ConnectionStatusResult, DetectedConnection, DetectionInput,
+  PositionSpan,
 };

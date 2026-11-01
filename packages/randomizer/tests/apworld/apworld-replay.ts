@@ -97,4 +97,3 @@ const reversePlayerYaml = (
 };
 
 export { replayForward, reversePlayerYaml };
-export type { ForwardVerdict };

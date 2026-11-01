@@ -11,4 +11,3 @@ const AppLink = (props: AppLinkProps) => {
 };
 
 export { AppLink };
-export type { AppLinkProps } from './AppLink.type';

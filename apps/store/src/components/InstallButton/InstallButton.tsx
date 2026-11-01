@@ -32,4 +32,3 @@ const InstallButton = (props: InstallButtonProps) => {
 };
 
 export { InstallButton };
-export type { InstallButtonProps } from './InstallButton.type';

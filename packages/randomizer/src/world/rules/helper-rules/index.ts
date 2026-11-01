@@ -6,7 +6,6 @@ export {
 } from './helper-rules.constants';
 export { arrows } from './arrows';
 export { bombs } from './bombs';
-export { crystals } from './crystals';
 export { hearts } from './hearts';
 export { kill } from './kill';
 export { killStart } from './kill-start';

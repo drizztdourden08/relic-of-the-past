@@ -122,16 +122,12 @@ type ApServerPacket =
 export type {
   ApBouncedPacket,
   ApConnectedPacket,
-  ApConnectionRefusedPacket,
   ApDataPackagePacket,
   ApInvalidPacket,
   ApLocationInfoPacket,
   ApPrintJsonPacket,
   ApReceivedItemsPacket,
-  ApRetrievedPacket,
   ApRoomInfoPacket,
   ApRoomUpdatePacket,
   ApServerPacket,
-  ApSetReplyPacket,
-  ApUnknownPacket,
 };

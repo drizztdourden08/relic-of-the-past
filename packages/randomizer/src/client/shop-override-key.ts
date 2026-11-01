@@ -29,4 +29,3 @@ const shopOverrideKeyOf = (
 };
 
 export { shopOverrideKeyOf };
-export type { ShopKey } from './shop-override-key.type';

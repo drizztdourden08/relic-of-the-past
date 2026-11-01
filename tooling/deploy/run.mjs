@@ -28,12 +28,8 @@ const captureOrNull = (file, args, opts = {}) => {
   }
 };
 
-const wsl = (distro, bashCmd, opts = {}) => run('wsl', ['-d', distro, 'bash', '-lc', bashCmd], opts);
-const wslCapture = (distro, bashCmd, opts = {}) =>
-  capture('wsl', ['-d', distro, 'bash', '-lc', bashCmd], opts);
-
 const sleep = (ms) => {
   Atomics.wait(new Int32Array(new SharedArrayBuffer(4)), 0, 0, ms);
 };
 
-export { log, warn, fail, run, capture, runAllowingFailure, captureOrNull, wsl, wslCapture, sleep };
+export { log, warn, fail, run, capture, runAllowingFailure, captureOrNull, sleep };

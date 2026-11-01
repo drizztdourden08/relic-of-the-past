@@ -20,4 +20,3 @@ const SignIn = (props: SignInProps) => {
 };
 
 export { SignIn };
-export type { SignInProps } from './SignIn.type';

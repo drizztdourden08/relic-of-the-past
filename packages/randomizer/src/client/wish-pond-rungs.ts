@@ -69,5 +69,5 @@ const wishPondSessionOf = (
 
 export { wishPondSessionOf };
 export type {
-  WishPondArmContext, WishPondRungRow, WishPondSessionPlan, WishPondWaterPlan,
+  WishPondSessionPlan, WishPondWaterPlan,
 } from './wish-pond-rungs.type';

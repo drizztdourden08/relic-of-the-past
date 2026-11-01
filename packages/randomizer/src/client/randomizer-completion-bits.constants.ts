@@ -27,4 +27,4 @@ const COMPLETION_BIT_BY_CHECK: ReadonlyMap<string, CompletionBit> = new Map([
   ['check-078', { bufferIndex: SUBSTITUTION_BYTE_2, mask: 0x08 }],
 ]);
 
-export { COMPLETION_BIT_BY_CHECK, SUBSTITUTION_BYTE_0, SUBSTITUTION_BYTE_1, SUBSTITUTION_BYTE_2 };
+export { COMPLETION_BIT_BY_CHECK };

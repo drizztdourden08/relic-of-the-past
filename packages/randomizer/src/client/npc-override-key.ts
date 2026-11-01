@@ -74,4 +74,3 @@ const npcOverrideKeyOf = (checkId: CheckId): NpcOverrideKey | null => {
 };
 
 export { npcOverrideKeyOf };
-export type { NpcOverrideKey } from './npc-override-key.type';

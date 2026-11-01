@@ -31,4 +31,3 @@ const createTrackerLinks = (deps: TrackerLinksDeps): TrackerLinks => {
 };
 
 export { createTrackerLinks };
-export type { TrackerLinks, TrackerLinksDeps } from '@rotp/randomizer';

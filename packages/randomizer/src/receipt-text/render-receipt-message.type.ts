@@ -10,4 +10,4 @@ interface ReceiptMessageParams {
   count?: ReceiptCount;
 }
 
-export type { ReceiptGrantKind, ReceiptMessageParams };
+export type { ReceiptMessageParams };

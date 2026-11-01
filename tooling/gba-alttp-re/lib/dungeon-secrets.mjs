@@ -27,4 +27,4 @@ const parseDungeonSecretList = (rom, start, maxRecords = 64) => {
   return { records, raw: rom.subarray(start, offset + 2), endOffset: offset + 2 };
 };
 
-export { decodeDungeonSecretRecord, parseDungeonSecretList };
+export { parseDungeonSecretList };

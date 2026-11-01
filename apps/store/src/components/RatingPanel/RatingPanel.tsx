@@ -40,4 +40,3 @@ const RatingPanel = (props: RatingPanelProps) => {
 };
 
 export { RatingPanel };
-export type { RatingPanelProps } from './RatingPanel.type';

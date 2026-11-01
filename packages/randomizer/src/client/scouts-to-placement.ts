@@ -80,4 +80,3 @@ const scoutsToPlacement = (input: ScoutsToPlacementInput): Placement => {
 };
 
 export { scoutsToPlacement };
-export type { ScoutsToPlacementInput } from './scouts-to-placement.type';

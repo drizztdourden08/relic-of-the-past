@@ -6,4 +6,3 @@ export { capacityProgressiveFromSnapshot } from './capacity-progressive-from-sna
 export { capacityProgressiveOf } from './capacity-progressive-of';
 export { capacityValuesOf } from './capacity-values-of';
 export { parseCapacityProfile } from './parse-capacity-profile';
-export type { ParsedCapacityProfile } from '../capacity-profile.type';

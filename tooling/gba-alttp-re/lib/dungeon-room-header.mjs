@@ -36,4 +36,4 @@ const parseDungeonRoomHeader = (rom, offset) => {
   };
 };
 
-export { DUNGEON_ROOM_HEADER_SIZE, parseDungeonRoomHeader };
+export { parseDungeonRoomHeader };

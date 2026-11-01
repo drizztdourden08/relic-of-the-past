@@ -18,4 +18,3 @@ const createListenerSet = <A extends unknown[]>(): ListenerSet<A> => {
 };
 
 export { createListenerSet };
-export type { ListenerSet } from './listener-set.type';

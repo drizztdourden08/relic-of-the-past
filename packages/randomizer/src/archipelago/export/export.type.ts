@@ -140,7 +140,7 @@ interface Readings {
 type HelperNode = Extract<RuleNode, { op: 'helper' }>;
 
 export type {
-  CapacityFamilyData, ExportedEvent, ExportedExit, ExportedHelperCall, ExportedItem, ExportedLocation, ExportedOption,
-  ExportedRegions, ExportedRules, HelperNode, ItemClass, ItemHalf, ItemHalfInput, LocationRequires, OptionType,
-  PrimitiveData, Readings, WorldExport, WorldModel, WorldModelInput,
+  CapacityFamilyData, ExportedEvent, ExportedHelperCall, ExportedItem, ExportedLocation, ExportedOption,
+  ExportedRegions, ExportedRules, HelperNode, ItemClass, ItemHalf, ItemHalfInput, LocationRequires, PrimitiveData,
+  Readings, WorldExport, WorldModel, WorldModelInput,
 };

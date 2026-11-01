@@ -11,4 +11,4 @@ const POND_ASK_ROW_BY_KIND: Readonly<Record<PondAskAmountKind, PondAskRow>> = {
   ...POND_ASK_ROW_BY_CURRENCY, bottle: POND_BOTTLE_ROW,
 };
 
-export { POND_ASK_ROW_BY_CURRENCY, POND_ASK_ROW_BY_KIND };
+export { POND_ASK_ROW_BY_KIND };

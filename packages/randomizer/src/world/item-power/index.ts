@@ -1,9 +1,9 @@
 /* @layer shared-game @kind barrel */
 export {
-  DEFAULT_ITEM_POWER, ITEM_POWER_KEY, ITEM_POWER_OPTION_KEYS,
+  DEFAULT_ITEM_POWER, ITEM_POWER_KEY,
 } from './item-power.constants';
 export { itemPowerFromSnapshot, itemPowerOfValues, itemPowerValuesOf } from './item-power-from-snapshot';
-export { derivedItemPower, itemPowerOf, requestedItemPowerOf } from './item-power-rule';
+export { derivedItemPower, itemPowerOf } from './item-power-rule';
 export { forcedItemPowerReasons } from './item-power-forced';
 export {
   FORCED_ON_REASON, FORCED_WITHOUT_BEAM, FORCED_WITHOUT_BLADE,

@@ -22,4 +22,3 @@ const nativeDemandOf = (
 };
 
 export { nativeDemandOf };
-export type { NativeDemand } from './pond-demand-native.type';

@@ -13,4 +13,3 @@ const receivedBatchOrder = (
 };
 
 export { receivedBatchOrder };
-export type { ReceivedEntry } from './received-batch-order.type';

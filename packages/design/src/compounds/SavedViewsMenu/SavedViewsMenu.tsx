@@ -55,4 +55,3 @@ const SavedViewsMenu = (props: SavedViewsMenuProps) => {
 };
 
 export { SavedViewsMenu };
-export type { SavedViewsMenuProps } from './SavedViewsMenu.type';

@@ -13,4 +13,3 @@ const TagList = (props: TagListProps) => {
 };
 
 export { TagList };
-export type { TagListProps } from './TagList.type';

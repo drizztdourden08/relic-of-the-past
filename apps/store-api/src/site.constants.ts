@@ -14,4 +14,4 @@ const STORE_SITE: SiteConfig = {
   defaultGroup: null,
 };
 
-export { STORE_SITE, STORE_VIEW_SURFACES };
+export { STORE_SITE };

@@ -29,4 +29,3 @@ const Author = (props: AuthorProps) => {
 };
 
 export { Author };
-export type { AuthorProps } from './Author.type';

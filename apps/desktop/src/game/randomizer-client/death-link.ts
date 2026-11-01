@@ -40,4 +40,3 @@ const createDeathLink = (deps: DeathLinkDeps): DeathLink => {
 };
 
 export { createDeathLink };
-export type { DeathLink, DeathLinkDeps } from '@rotp/randomizer';

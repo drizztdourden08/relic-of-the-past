@@ -22,4 +22,3 @@ const UploadLayer = (props: UploadLayerProps) => {
 };
 
 export { UploadLayer };
-export type { UploadLayerProps };

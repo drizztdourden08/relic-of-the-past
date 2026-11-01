@@ -95,6 +95,5 @@ interface PhysicalPlan {
 }
 
 export type {
-  PhysicalPlan, PlanClass, PlanCounts, PlanDropOverride, PlanEntry, PlanError,
-  PlanNpcGrant, PlanNpcOverride, PlanScriptedOverride, PlanShopOverride, PlanStandingOverride,
+  PhysicalPlan, PlanClass, PlanCounts, PlanEntry, PlanError, PlanShopOverride,
 };

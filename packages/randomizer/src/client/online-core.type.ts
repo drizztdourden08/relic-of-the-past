@@ -55,4 +55,4 @@ interface OnlineCore {
   onLinkDied(listener: LinkDiedListener): () => void;
 }
 
-export type { CheckReporter, DeliveryOutcome, OnlineCore, ScoutedInput, ScoutedOutcome };
+export type { CheckReporter, DeliveryOutcome, OnlineCore, ScoutedInput };

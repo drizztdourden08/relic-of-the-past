@@ -14,19 +14,6 @@ const ITEM_POWER_KEY = {
   hammerTowerSeal: 'item_power_hammer_tower_seal',
 } as const satisfies Readonly<Record<keyof ItemPowerSetting, string>>;
 
-const ITEM_POWER_OPTION_KEYS: readonly string[] = [
-  ITEM_POWER_KEY.catchFairies,
-  ITEM_POWER_KEY.byrnaInvulnerable,
-  ITEM_POWER_KEY.capeDoubleMagic,
-  ITEM_POWER_KEY.silverArrowsAnywhere,
-  ITEM_POWER_KEY.powderFairy,
-  ITEM_POWER_KEY.hammerTablets,
-  ITEM_POWER_KEY.swordlessMedallions,
-  ITEM_POWER_KEY.pullableCurtains,
-  ITEM_POWER_KEY.hammerLastFight,
-  ITEM_POWER_KEY.hammerTowerSeal,
-];
-
 const DEFAULT_ITEM_POWER: ItemPowerSetting = {
   catchFairies: true,
   byrnaInvulnerable: true,
@@ -40,4 +27,4 @@ const DEFAULT_ITEM_POWER: ItemPowerSetting = {
   hammerTowerSeal: false,
 };
 
-export { DEFAULT_ITEM_POWER, ITEM_POWER_KEY, ITEM_POWER_OPTION_KEYS };
+export { DEFAULT_ITEM_POWER, ITEM_POWER_KEY };

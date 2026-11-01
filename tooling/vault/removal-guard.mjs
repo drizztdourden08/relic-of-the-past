@@ -37,4 +37,4 @@ const refusalLines = ({ outgoing, head }) => [
   'or re-run with --force-push to declare this checkout correct.',
 ];
 
-export { MAX_MIRRORED_DELETIONS, guardMirroredDeletions, refusalLines, vaultHead };
+export { guardMirroredDeletions, refusalLines };

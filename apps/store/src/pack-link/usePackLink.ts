@@ -26,4 +26,3 @@ const usePackLink = (load: RenewLink | null): PackLink => {
 };
 
 export { usePackLink };
-export type { PackLink } from './pack-link.type';

@@ -2,4 +2,4 @@
 export { isSlotKey } from './is-slot-key';
 export { pondRungKey } from './pond-rung-key';
 export { shopLocationKey } from './shop-location-key';
-export type { LocationKey, ShelfSide, ShopLocationKey, SlotKey } from '../location-key.type';
+export type { LocationKey, ShelfSide, ShopLocationKey } from '../location-key.type';

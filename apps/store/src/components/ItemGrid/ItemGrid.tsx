@@ -24,4 +24,3 @@ const ItemGrid = (props: ItemGridProps) => {
 };
 
 export { ItemGrid };
-export type { ItemGridProps } from './ItemGrid.type';

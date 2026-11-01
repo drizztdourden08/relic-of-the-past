@@ -62,4 +62,3 @@ const armSessionFromPlacement = async (
 };
 
 export { armSessionFromPlacement };
-export type { SessionArmResult, SessionStartHooks } from '@rotp/randomizer';

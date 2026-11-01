@@ -74,4 +74,4 @@ const startSessionReceiptTexts = (
 };
 
 export { startSessionReceiptTexts };
-export type { PondDemandMessageIds, PondDemandMessagesOf, PondMessageIds, SessionReceiptTexts, WishPondMessageIds } from '@rotp/randomizer';
+export type { SessionReceiptTexts } from '@rotp/randomizer';

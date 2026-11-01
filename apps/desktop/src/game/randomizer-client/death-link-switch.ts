@@ -21,4 +21,3 @@ const createDeathLinkSwitch = (deps: DeathLinkSwitchDeps): DeathLinkSwitch => {
 };
 
 export { createDeathLinkSwitch };
-export type { DeathLinkSwitch } from '@rotp/randomizer';

@@ -33,4 +33,3 @@ const FeaturedHero = (props: FeaturedHeroProps) => {
 };
 
 export { FeaturedHero };
-export type { FeaturedHeroProps } from './FeaturedHero.type';

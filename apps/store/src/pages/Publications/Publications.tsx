@@ -63,4 +63,3 @@ const Publications = (props: PublicationsProps) => {
 };
 
 export { Publications };
-export type { PublicationsProps } from './Publications.type';

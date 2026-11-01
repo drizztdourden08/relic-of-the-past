@@ -103,4 +103,3 @@ const buildNetworkStatus = (input: NetworkStatusInput): NetworkStatus => {
 };
 
 export { buildNetworkStatus };
-export type { NetworkStatusInput } from './network-status.type';

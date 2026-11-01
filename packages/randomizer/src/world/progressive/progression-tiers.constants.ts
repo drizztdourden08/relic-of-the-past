@@ -14,4 +14,4 @@ const PROGRESSION_TIERS: ReadonlyMap<ItemId, readonly ItemId[]> = new Map([
   [ITEM.progressiveBowAlt, BOW_TIERS] as [ItemId, readonly ItemId[]],
 ]);
 
-export { BOW_TIERS, PROGRESSION_TIERS };
+export { PROGRESSION_TIERS };

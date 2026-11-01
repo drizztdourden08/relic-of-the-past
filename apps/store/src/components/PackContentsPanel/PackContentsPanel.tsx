@@ -17,4 +17,3 @@ const PackContentsPanel = (props: PackContentsPanelProps) => {
 };
 
 export { PackContentsPanel };
-export type { PackContentsPanelProps } from './PackContentsPanel.type';

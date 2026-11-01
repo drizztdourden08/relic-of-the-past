@@ -5,4 +5,4 @@ type IssueBodyInput = SubmitReportRequest & { reporterLine: string; reportId: st
 
 type IssueBodyRenderer = (input: IssueBodyInput) => string;
 
-export type { IssueBodyInput, IssueBodyRenderer };
+export type { IssueBodyRenderer };

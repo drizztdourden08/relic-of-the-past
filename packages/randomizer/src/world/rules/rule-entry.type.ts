@@ -14,11 +14,6 @@ interface RuleEntry {
   rule: Rule;
 }
 
-interface ForbidEntry {
-  location: LocationKey;
-  item: ItemKey;
-}
-
 interface ItemRuleEntry {
   location: LocationKey;
   allowed: (item: ItemKey) => boolean;
@@ -29,4 +24,4 @@ interface AlwaysAllowEntry {
   rule: AlwaysAllowRule;
 }
 
-export type { RuleTargetKind, RuleMode, RuleEntry, ForbidEntry, ItemRuleEntry, AlwaysAllowEntry };
+export type { RuleTargetKind, RuleEntry, ItemRuleEntry, AlwaysAllowEntry };

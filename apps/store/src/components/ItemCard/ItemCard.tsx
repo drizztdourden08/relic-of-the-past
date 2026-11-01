@@ -31,4 +31,3 @@ const ItemCard = (props: ItemCardProps) => {
 };
 
 export { ItemCard };
-export type { ItemCardProps, OwnedState } from './ItemCard.type';

@@ -40,4 +40,3 @@ const VersionHistory = (props: VersionHistoryProps) => {
 };
 
 export { VersionHistory };
-export type { VersionHistoryProps } from './VersionHistory.type';

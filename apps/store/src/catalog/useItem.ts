@@ -28,4 +28,3 @@ const useItem = (id: string | null) => {
 };
 
 export { useItem };
-export type { ItemState } from './item.type';

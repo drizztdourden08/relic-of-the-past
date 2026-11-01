@@ -68,4 +68,4 @@ const generateEnumTypes = async (root = DEFAULT_ROOT_WHEN_RUN_FROM_THE_CLI) => {
   return outputPath;
 };
 
-export { buildGeneratedTypesSource, generateEnumTypes, CATEGORY_TYPE_NAMES };
+export { buildGeneratedTypesSource, generateEnumTypes };

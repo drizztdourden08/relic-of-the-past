@@ -28,4 +28,4 @@ const buildScoutPlan = (gameData: ApGameData, maps: ScoutMaps): ScoutPlan => {
 };
 
 export { buildScoutPlan };
-export type { ScoutMaps, ScoutPlan } from '@rotp/randomizer';
+export type { ScoutMaps } from '@rotp/randomizer';

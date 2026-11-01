@@ -61,6 +61,6 @@ interface HudNodeRendererProps {
 interface DrawOrigin { x: number; y: number }
 
 export type {
-  DrawOrigin, HudCountdownContent, HudGlyphSpec, HudNodeContent, HudNodeRendererProps, HudSlotContent, HudSlotRole,
+  DrawOrigin, HudCountdownContent, HudGlyphSpec, HudNodeContent, HudNodeRendererProps, HudSlotContent,
   HudVitalsContent,
 };

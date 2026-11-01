@@ -10,4 +10,3 @@ const KindChip = (props: KindChipProps) => {
 };
 
 export { KindChip };
-export type { KindChipProps } from './KindChip.type';

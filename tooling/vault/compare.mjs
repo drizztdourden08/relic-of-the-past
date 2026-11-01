@@ -50,4 +50,4 @@ const summarize = (entries) => {
   return counts;
 };
 
-export { classify, compareTrees, directionOf, summarize };
+export { compareTrees, summarize };

@@ -10,4 +10,4 @@ interface OnlineNetworkDeps extends MonitorDeps {
   url: TrackerLinksDeps['url'];
 }
 
-export type { MonitorDeps, OnlineNetworkDeps };
+export type { OnlineNetworkDeps };

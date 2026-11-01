@@ -3,7 +3,7 @@
   "minTokens": 50,
   "minLines": 5,
   "format": ["typescript", "tsx", "javascript", "css"],
-  "ignore": ["**/node_modules/**", "**/dist/**", "**/out/**", "**/release/**", "**/fonts/**"],
+  "ignore": ["**/node_modules/**", "**/dist/**", "**/out/**", "**/release/**", "**/fonts/**", "packages/game-data/src/data/records/**"],
   "gitignore": true,
   "reporters": ["console"],
   "absolute": false
