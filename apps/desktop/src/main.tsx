@@ -16,6 +16,7 @@ import { appWidgetKits } from '../.brock/widget-kits';
 import { appStartupPrompts } from '../.brock/startup';
 import { appToolbars } from '../.brock/toolbars';
 import { withOwnRowTabs } from './settings-controls/own-row-tabs';
+import { withDisplaySearchRows } from './settings-controls/display/with-display-search-rows';
 import { rotpBugReport } from './bug-report/rotp-bug-report';
 import { installAppShim } from './platform/api-shim';
 import { rotpShellModule } from './shell/rotp-shell-module';
@@ -31,7 +32,6 @@ import type { AppSettings } from './settings.type';
 import './log-bus';
 import './hud/hud.css';
 import './theme/hud-layout-editor/hud-layout-editor.css';
-import './theme/update-dialog.css';
 import './theme/data-manager/data-manager.css';
 import './theme/dialogue-editor/lines.css';
 import './theme/msu-studio/msu-studio.css';
@@ -41,7 +41,7 @@ import './theme/store/store.css';
 installAppShim();
 
 const ownRowTree = withOwnRowTabs(screenTree);
-const modules = [...rendererModules, rotpShellModule, rotpControllersModule];
+const modules = [...withDisplaySearchRows(rendererModules), rotpShellModule, rotpControllersModule];
 
 const root = document.getElementById('root');
 if (!root) throw new Error('index.html has no #root element');

@@ -1,12 +1,12 @@
 /* @layer renderer-components @kind style */
-.number-field {
+.shadow-number-field {
   display: flex;
   align-items: center;
   gap: var(--space-xs);
   min-width: 0;
 }
 
-.number-field__label {
+.shadow-number-field__label {
   font-size: var(--text-sm);
   color: var(--c-text-muted);
   flex-shrink: 0;
@@ -14,7 +14,7 @@
   text-align: center;
 }
 
-.number-field__value {
+.shadow-number-field__value {
   font-size: var(--text-sm);
   color: var(--c-text);
   background: var(--c-inset);
@@ -28,11 +28,11 @@
   flex: 1;
 }
 
-.number-field__value:hover {
+.shadow-number-field__value:hover {
   border-color: var(--c-border-strong);
 }
 
-.number-field__input {
+.shadow-number-field__input {
   font-size: var(--text-sm);
   color: var(--c-text);
   background: var(--c-inset);
