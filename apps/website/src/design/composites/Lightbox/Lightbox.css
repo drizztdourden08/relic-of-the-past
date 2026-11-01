@@ -3,6 +3,10 @@
   --lb-max-w: var(--ds-viewport-w-max);
   --lb-max-h: var(--ds-viewport-h-max);
   --lb-blur: var(--ds-size-8);
+  --lb-aspect: var(--ds-ratio-wide);
+  --lb-x: var(--ds-offset-rest);
+  --lb-y: var(--ds-offset-rest);
+  --lb-scale: var(--ds-scale-rest);
 
   position: fixed;
   inset: 0;

@@ -3,6 +3,7 @@
   --rail-line-w: var(--ds-size-2);
   --rail-thumb: var(--ds-size-16);
   --rail-hit: var(--ds-size-32);
+  --rail-progress: var(--ds-progress-start);
 
   position: fixed;
   top: 50%;

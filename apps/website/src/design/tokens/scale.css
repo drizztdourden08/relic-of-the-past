@@ -42,4 +42,9 @@
   --ds-viewport-h-max: 85svh;
   --ds-overlay-dim: 0.3;
   --ds-opacity-muted: 0.6;
+  --ds-ratio-wide: 1.6;
+  --ds-offset-rest: 0px;
+  --ds-scale-rest: 1;
+  --ds-progress-start: 0;
+  --ds-split-half: 50%;
 }

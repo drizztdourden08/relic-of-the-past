@@ -1,5 +1,7 @@
 /* @layer website-site @kind style */
 .compare-stage {
+  --compare-split: var(--ds-split-half);
+
   position: relative;
   display: grid;
   overflow: hidden;
