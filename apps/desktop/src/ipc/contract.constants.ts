@@ -10,6 +10,7 @@ const APP_CHANNELS = defineChannels({
   loadRecommendations: invoke<RotpInvoke['recommendations:load']>()('recommendations:load'),
   applyRecommendationPass: invoke<RotpInvoke['recommendations:applyPass']>()('recommendations:applyPass'),
   decideRecommendation: invoke<RotpInvoke['recommendations:decide']>()('recommendations:decide'),
+  appendEventLog: invoke<RotpInvoke['eventLog:append']>()('eventLog:append'),
   getTestArgs: invoke<RotpInvoke['test:getArgs']>()('test:getArgs'),
   getDumpLayersSlot: invoke<RotpInvoke['debug:getDumpLayersSlot']>()('debug:getDumpLayersSlot'),
   getHoverTile: invoke<RotpInvoke['debug:getHoverTile']>()('debug:getHoverTile'),

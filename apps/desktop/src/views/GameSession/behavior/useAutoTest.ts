@@ -2,9 +2,14 @@
 import { requireHostApi } from '@drizztdourden08/brock-react';
 import { log } from '@app/log-bus';
 import type { AutoTestDeps } from './useAutoTest.type';
+import { settleAutoState } from './settle-auto-state';
 import { waitForGameRunning } from './wait-for-game-running';
 import { isAutoStart } from '@app/launch-flags/is-auto-start';
-import { settleAutoTest } from './settle-auto-test';
+import { releaseScreenshot } from '@app/boot/screenshot-frames/release-screenshot';
+import { launchesConnection } from '@app/boot/auto-launch/launches-connection';
+import { pauseForScript } from '@app/boot/auto-launch/pause-for-script';
+import { playScript } from '@app/boot/auto-launch/play-script';
+import { prepareAutoLaunch } from '@app/boot/auto-launch/prepare-auto-launch';
 import { useLaunchTask } from './useLaunchTask';
 
 const useAutoTest = ({ activeProfile, loadProfileForGame }: AutoTestDeps) => {
@@ -12,20 +17,30 @@ const useAutoTest = ({ activeProfile, loadProfileForGame }: AutoTestDeps) => {
     if (!activeProfile) return;
     const args = await requireHostApi().getTestArgs();
     const autoStart = isAutoStart();
-    if (args.autoState === null && !autoStart) return;
+    if (args.autoState === null && !autoStart && !launchesConnection()) return;
     if (isCancelled() || hasRun()) return;
     markRan();
 
+    const prepared = await prepareAutoLaunch(activeProfile, args.autoState !== null || autoStart);
+    if (prepared === null) return;
+    const { script, profile } = prepared;
+
     log.app(`[AutoTest] args: autoState=${args.autoState}, screenshot=${args.screenshot}, autoStart=${autoStart}`);
 
-    log.app(`[AutoTest] Starting game with profile: ${activeProfile.name}`);
-    await loadProfileForGame(activeProfile);
+    log.app(`[AutoTest] Starting game with profile: ${profile.name}`);
+    await loadProfileForGame(profile);
 
     await waitForGameRunning(isCancelled);
 
     if (isCancelled()) return;
+    pauseForScript(script);
+    await settleAutoState(args);
+    await playScript(script, Boolean(args.screenshot));
 
-    await settleAutoTest(args);
+    if (args.screenshot) {
+      log.app(`[AutoTest] Game frame drawn, releasing screenshot "${args.screenshot}"`);
+      await releaseScreenshot('game');
+    }
   });
 };
 
