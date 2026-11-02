@@ -1091,10 +1091,6 @@ Picks the template for one planned grant and renders its line. A grant the seed 
 
 The seeded deterministic generator. A seed string hashes to a u32 with FNV-1a over its UTF-16 code units, which seeds a mulberry32 stream, so the same seed string gives the same sequence forever on every platform (all math is u32 through `Math.imul`). `next` gives a float in [0, 1); `int` a uniform integer below its bound; `shuffle` is Fisher and Yates and returns a new array, leaving the input untouched.
 
-## packages/randomizer/src/spoiler.ts
-
-Renders a placement's spoiler as text: the seed line, the two rolled medallions, then the verification sweep's spheres with each location's item. A placement holds ids, so every name is read off the record at print time.
-
 ## packages/randomizer/src/world/accessibility/accessibility-check.ts
 
 The post-fill verdict is the single-world reading of `fulfills_accessibility`. The source walks only the locations it calls relevant and stops once every one that has to be collected has been, with the goal reached:

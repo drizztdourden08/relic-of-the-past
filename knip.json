@@ -7,10 +7,7 @@
     "packages/navigation/src/pathfinding/**",
     "apps/store-api/src/window-api.type.ts",
     "packages/randomizer/src/audit/**",
-    "packages/languages/src/messages/choices/**",
     "packages/randomizer/src/world/retro/**",
-    "packages/randomizer/src/spoiler.ts",
-    "packages/navigation/src/save-file/offline-inventory.ts",
     "packages/randomizer/src/client/local-session-items/**"
   ],
   "ignoreIssues": {

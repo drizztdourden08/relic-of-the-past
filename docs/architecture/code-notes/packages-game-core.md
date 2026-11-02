@@ -613,8 +613,8 @@ The live evidence shapes carried by `ScreenObservations`.
   blocks at `0x000`, `0x500` and `0xA00`, each mirrored `0xF00` later; a block is valid when its
   `0x280` little endian words sum to `0x5A5A`. The primary copy is used when it checksums, else
   the backup (the game's own fallback), else the slot is empty or corrupt.
-- `offline-inventory.ts`: rebuilds the 34 byte buffer `WasmGetInventoryState` fills
-  (`state_queries.c`) from the slot block, so live and offline share one parser. Offsets are the
+- `offline-inventory.constants.ts`: the slot block offsets of the 34 byte buffer `WasmGetInventoryState` fills
+  (`state_queries.c`), so live and offline share one parser. Offsets are the
   vanilla `variables.h` addresses minus `0xF000`: `0x340` to `0x347` bow to bombos, `0x348` to
   `0x34E` ether to book (`0x34F` is the bottle cursor), `0x350` to `0x357` somaria to moon
   pearl, `0x359` to `0x35B` sword, shield, armor, `0x35C` to `0x35F` bottles, `0x374` pendants,
