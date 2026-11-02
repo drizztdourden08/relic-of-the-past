@@ -3,7 +3,6 @@
   "ignoreDependencies": [],
   "ignoreFiles": [
     "**/index.ts",
-    "packages/design/src/**/*.usage.ts",
     "packages/navigation/src/pathfinding/**",
     "apps/store-api/src/window-api.type.ts",
     "packages/randomizer/src/client/local-session-items/**"
@@ -34,6 +33,7 @@
         "ensure-apworld.mjs",
         "pack-apworld.mjs",
         "run-exporter.mjs",
+        "write-player-file.mjs",
         "write-public-builds.mjs"
       ]
     },

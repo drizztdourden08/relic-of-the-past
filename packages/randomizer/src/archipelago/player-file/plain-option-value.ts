@@ -1,8 +1,6 @@
 /* @layer shared-game @kind logic */
 import type { OptionDef, OptionValue } from '../../world/options.type';
-
-const TRUE_WORDS = new Set(['true', 'yes', 'on', '1']);
-const FALSE_WORDS = new Set(['false', 'no', 'off', '0']);
+import { FALSE_WORDS, TRUE_WORDS } from './plain-option-value.constants';
 
 const toggleOf = (option: OptionDef, raw: unknown): boolean => {
   if (typeof raw === 'boolean') return raw;
