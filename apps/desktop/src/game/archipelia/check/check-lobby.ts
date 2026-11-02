@@ -5,7 +5,7 @@ import { pickBuild } from '../builds/pick-build';
 import { unsupportedVersionText } from '../builds/unsupported-version-text';
 import { clientInfoOf } from '../client-info-of';
 import { createMainSocket } from '../socket/create-main-socket';
-import { FORM_ERRORS } from './form-error.constants';
+import { FORM_ERRORS, NO_BUILDS_INDEX } from './form-error.constants';
 import { formErrorOf } from './form-error-of';
 import type { LobbyCheck } from './lobby-check.type';
 
@@ -15,7 +15,9 @@ const checkLobby = async (server: string, code: string): Promise<LobbyCheck> => 
   const result = await lobbyInfo(server, code, { createSocket: createMainSocket });
   if (!result.ok) return errorOf(formErrorOf(result.failure, server));
   const { lobby } = result.info;
-  const builds = (await loadBuildsIndex())?.builds ?? [];
+  const index = await loadBuildsIndex();
+  if (index === null) return errorOf(NO_BUILDS_INDEX);
+  const { builds } = index;
   const build = pickBuild(builds, lobby.engine.ap);
   if (build === null) return errorOf(unsupportedVersionText(lobby.engine.ap, builds));
   if (!lobby.joinable) return errorOf(FORM_ERRORS['lobby-locked'] ?? '');
