@@ -69,12 +69,11 @@ A read only catalogue of everything the Game Boy Advance release changes. It is 
 The HUD style is the one choice the player makes. Everything the control scheme used to ask separately derives from it here.
 
 - `vanilla` is the game's own HUD, drawn by the core.
-- `enhanced` has the app draw the HUD and own the pause menu.
-- `modern` is everything Enhanced does, plus the modern control scheme.
+- `modern` has the app draw the HUD and own the pause menu, plus the modern control scheme.
 
 The values are the words shown on screen.
 
-`hostDrawnHud` answers whether the app draws the HUD and owns the pause menu, which is true for every style but the original. `controlSchemeOf` is all that the old `GameSettings.controlScheme` setting used to store: the scheme is never stored, it is what the Modern style means.
+`hostDrawnHud` answers whether the app draws the HUD and owns the pause menu, which is true for every style but the original (that is, Modern). `controlSchemeOf` is all that the old `GameSettings.controlScheme` setting used to store: the scheme is never stored, it is what the Modern style means.
 
 ## packages/features/src/msu-auto-config/
 
@@ -200,7 +199,7 @@ This is the TS settings pipeline. The C side mirror that cannot be bypassed is `
 
 ## packages/features/src/settings/hud-settings.type.ts
 
-- `hudStyle`: `vanilla` rebuilds the original look from extracted sprites; `enhanced` is the same sprite set driven by the host (host owned pause menu, free HUD layout) and needs a 16:9 or wider display; `modern` is Enhanced plus the modern control scheme.
+- `hudStyle`: `vanilla` rebuilds the original look from extracted sprites; `modern` is the same sprite set driven by the host (host owned pause menu, free HUD layout) plus the modern control scheme, and needs a 16:9 or wider display.
 - The stored value and the label are the same word on purpose. There is no separate control scheme key; the scheme is derived from this field (see packages/features/src/hud-style).
 - `customHudAspectW` and `customHudAspectH` apply when `hudRatio` is `custom`; 0 means auto detect from the screen.
 - Title screen fields are on the HUD tab: the host draws the title over the hidden native one. `titleMotion: 'drifting'` adds a slow parallax and drifting clouds while the title idles. `titleFollowsProgress` takes the world, and the sword when it is set to progress, from the most advanced save. `titleSword` is the sword planted in the title, or the save's own.

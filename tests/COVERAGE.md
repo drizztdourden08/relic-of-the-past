@@ -218,7 +218,7 @@ compile path itself, which remains untested.
 | bundle-fixes/bundle-flags parity between C and TS (words 1-2 generated, word 3 gate bits, the two word-2 host-menu bits) | packages/features/tests/bundle-flags-parity.keep.test.ts | covered |
 | all-off/vanilla preset | packages/features/tests/all-off-vanilla.keep.test.ts | covered |
 | Vanilla Safe lock (resolveGates completeness across the whole registry) | packages/features/tests/vanilla-safe-lock.keep.test.ts | covered |
-| packages/features/src/hud-style's derived control scheme (`controlSchemeOf`, `hostDrawnHud`), plus `mergeSettings`' handling of the style | packages/features/tests/hud-style-scheme.keep.test.ts | covered. Both predicates asserted across all three styles, each style kept as stored, Modern forces the overlay on exactly as Enhanced does, and a fresh profile defaults to Original and so to Classic |
+| packages/features/src/hud-style's derived control scheme (`controlSchemeOf`, `hostDrawnHud`), plus `mergeSettings`' handling of the style | packages/features/tests/hud-style-scheme.keep.test.ts | covered. Both predicates asserted for Original and Modern, each style kept as stored, Modern falls back to Original while Experimental Features is off, Modern forces the overlay on, and a fresh profile defaults to Original and so to Classic |
 | packages/features/src/feature-registry / feature.type.ts (own shape), including the `devNavigationData` / `trackerEnabled` host-query gates | none directly (exercised transitively, because vanilla-safe-lock.keep.test.ts and resolve-features.keep.test.ts iterate the whole `FEATURES` array, so new entries are covered automatically) | partial |
 
 ## WASM / game-hooks bridge (`core/game-hooks/` C surface + JS consumers)

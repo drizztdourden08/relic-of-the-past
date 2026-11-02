@@ -95,9 +95,9 @@ Every title row but the switch describes the reimagined title, so the original o
 
 ## apps/desktop/src/settings-controls/HudStyleControl/HudStyleControl.tsx
 
-- Original, Enhanced and Modern all rebuild the SNES HUD from the active ROM's extracted sprites, so all three are locked when none exist. The two app-drawn styles also need a 16:9 or wider display, because their groups and their host-drawn menu live in the side bands a narrower view does not have. Modern is Enhanced plus the modern control scheme, so it has exactly Enhanced's requirements. When sprites are missing a notice offers a one-click extract that unlocks every style once it succeeds.
+- Original and Modern both rebuild the SNES HUD from the active ROM's extracted sprites, so both are locked when none exist. Modern also needs a 16:9 or wider display, because its groups and its host-drawn menu live in the side bands a narrower view does not have. When sprites are missing a notice offers a one-click extract that unlocks every style once it succeeds.
 - Availability is checked again on mount, since sprites may have been extracted from the Data Manager.
-- The notice names only the condition the user can act on, one fix at a time: missing sprites is the blocking one (it locks all three styles), and the aspect rule is only raised once the sprites are there. When neither applies there is no notice.
+- The notice names only the condition the user can act on, one fix at a time: missing sprites is the blocking one (it locks both styles), and the aspect rule is only raised once the sprites are there. When neither applies there is no notice.
 
 ## apps/desktop/src/settings-controls/PlayerSpriteSelector/PlayerSpriteSelector.tsx
 

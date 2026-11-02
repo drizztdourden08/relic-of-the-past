@@ -1,7 +1,7 @@
 /* @layer renderer-stores @kind types */
 interface HudSettings {
   mode: 'original' | 'enhanced';
-  style: 'vanilla' | 'enhanced' | 'modern';
+  style: 'vanilla' | 'modern';
   ratio: 'match' | '4:3' | '3:2' | '16:9' | '16:10' | 'custom';
   customW: number;
   customH: number;

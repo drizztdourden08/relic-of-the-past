@@ -22,16 +22,16 @@ describe('experimental feature gate', { tags: ['critical'] }, () => {
     const current = settings({ developerToolsEnabled: true, experimentalFeaturesEnabled: true, hudStyle: 'modern', extraDungeon: true });
     expect(transformSettingsPatch({ experimentalFeaturesEnabled: false }, current)).toMatchObject({
       experimentalFeaturesEnabled: false,
-      hudStyle: 'enhanced',
+      hudStyle: 'vanilla',
       extraDungeon: false,
     });
   });
 
   it('normalises old profile settings and rejects a direct Modern HUD patch', () => {
     const old = mergeSettings({ developerToolsEnabled: false, experimentalFeaturesEnabled: true, hudStyle: 'modern', extraDungeon: true });
-    expect(old).toMatchObject({ experimentalFeaturesEnabled: false, hudStyle: 'enhanced', extraDungeon: false });
+    expect(old).toMatchObject({ experimentalFeaturesEnabled: false, hudStyle: 'vanilla', extraDungeon: false });
     expect(transformSettingsPatch({ hudStyle: 'modern', extraDungeon: true }, settings())).toMatchObject({
-      hudStyle: 'enhanced',
+      hudStyle: 'vanilla',
       extraDungeon: false,
     });
   });

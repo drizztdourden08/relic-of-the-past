@@ -342,7 +342,7 @@ frame, when given, is uploaded separately and mirrored with its blue and red cha
 
 ## packages/game-core/src/enhanced-fallback/
 
-- The app-drawn HUD styles (Enhanced and Modern) need a 16:9 or wider display. There are two ways to lose one: narrow the ratio in settings, or narrow the window.
+- The app-drawn HUD style (Modern) needs a 16:9 or wider display. There are two ways to lose one: narrow the ratio in settings, or narrow the window.
 - The settings screen owns the correction either way, because it alone holds the profile's settings and the toast queue. Both routes ask through this one event instead of each dropping the style and raising its own message: one rule, one wording, one toast id, so a player who trips it twice sees the notice replaced, not stacked.
 - requestEnhancedFallback asks the settings owner to drop back to the Original style and say why.
 
@@ -374,7 +374,7 @@ frame, when given, is uploaded separately and mirrored with its blue and red cha
 - The wanted equipped item: the core has one register, and the native menu's own init walks the 21-entry grid before the host's hold matters, replacing any id that grid has no row for (a bottle, or the digging tool). Byte 132 of the state buffer is the register read back, so reconcileHostMenu can see that and write it again.
 - The item write is deduped here, not at the call site: pollFrame calls it every frame an item slot is down, and the re-assert paths must be able to bypass the dedupe. One owner, two doors.
 - GEAR_KIND_ARG is the `kind` argument of WasmHostSetGear, in the order host_menu_gear.c reads it.
-- The takeover is on whenever the host owns the pause menu: the Enhanced HUD style and the modern control scheme (which implies it) both do. It is never a raw user toggle.
+- The takeover is on whenever the host owns the pause menu: the Modern HUD style, which carries the modern control scheme, does. It is never a raw user toggle.
 - setActiveItem takes new-style ids only; 0 means leave the core's register alone.
 - reassertAfterSaveLoad re-arms after the core read a save back into WRAM (a save state load, or the player picking an in-game save file). The takeover usually survives both, so reconcile sees no drop. What does not survive is the side effect of arming: WasmHostMenuSetTakeover zeroes hud_cur_item_x/l/r (HostMenu_DropSecondaryItems), and a save written under the abandoned lane design carries those bytes back. DidPressButtonForMap reads hud_cur_item_x with no feature gate and moves the map to Select the moment it is non-zero, while the modern scheme still sends X, so the map button goes quiet until this runs. Re-sending the standing request is the whole fix: the C side clears the registers again on every arming call. lastHolding is dropped too, because the WRAM it mirrored was replaced.
 - wantedActiveItem is what the host last asked the register to hold (0 if never). The pause menu reads this, not byte 132, to choose the opening cell: on the frame the menu appears, byte 132 may still show the value the native init just replaced.
@@ -845,7 +845,7 @@ token measures by its slot.
 ## packages/game-core/src/settings/
 
 - The old file was `@kind data` with code in it. DEFAULT_SETTINGS is now the data file packages/game-core/src/settings/default-settings.ts; the INI writer, the merge and the small helpers moved to logic files beside it.
-- MIN_ENHANCED_ASPECT: the two host drawn HUD styles (Enhanced and Modern) draw the life, magic and consumable groups and the host owned menu out into the side bands, which only exist from 16:9 up. The 0.001 absorbs the rounding in a reduced W:H pair, so a display that is 16:9 is never rejected by a last decimal miss.
+- MIN_ENHANCED_ASPECT: the host drawn HUD style (Modern) draws the life, magic and consumable groups and the host owned menu out into the side bands, which only exist from 16:9 up. The 0.001 absorbs the rounding in a reduced W:H pair, so a display that is 16:9 is never rejected by a last decimal miss.
 - Dialog pacing defaults are the stock values, so a fresh profile plays text exactly as the game does.
 - The enhanced dialog box is what the app ships with, so a fresh profile gets the chamfered single line frame over a dark ground with drifting triforces. Vanilla Safe masks the HudOverride bit these all ride on, which keeps a stock profile stock.
 - hudHighlightPrimary and hudHighlightSecondary are the app's own accent gold and ok green, snapped to the game's 15 bit colours when pushed.
