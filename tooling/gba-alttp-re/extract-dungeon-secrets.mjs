@@ -1,11 +1,9 @@
 #!/usr/bin/env node
 /* @layer scripts @kind tooling */
-import { dungeonRoomEntry } from './lib/dungeon-room-entry.mjs';
+import { collectDungeonRooms } from './lib/collect-dungeon-rooms.mjs';
 import { dungeonSourceInfo } from './lib/dungeon-source-info.mjs';
 import { parseDungeonSecretList } from './lib/dungeon-secrets.mjs';
-import { readGbaRoomPointer } from './lib/gba-room-pointer.mjs';
 import { loadDungeonSources } from './lib/load-dungeon-sources.mjs';
-import { readSnesRoomOffset } from './lib/snes-room-pointer.mjs';
 import { writeJsonArtifact } from './lib/write-json-artifact.mjs';
 
 const GBA_POINTER_TABLE_OFFSET = 0x2264c8;
@@ -16,24 +14,16 @@ const SNES_DATA_BANK = 0x810000;
 const sources = loadDungeonSources('tooling/gba-alttp-re/artifacts/gba-dungeon-secrets.json');
 const { gba, snes, outPath } = sources;
 
-const readSnesList = roomId => parseDungeonSecretList(
+const { rooms, exactSnesMatches, modifiedSnesRooms } = collectDungeonRooms({
+  gba,
   snes,
-  readSnesRoomOffset(snes, SNES_POINTER_TABLE, SNES_DATA_BANK, roomId),
-);
-
-const rooms = [];
-let exactSnesMatches = 0;
-const modifiedSnesRooms = [];
-for (let roomId = 0; roomId < GBA_ROOM_COUNT; roomId++) {
-  const source = readGbaRoomPointer(gba, GBA_POINTER_TABLE_OFFSET, roomId);
-  const parsed = parseDungeonSecretList(gba, source.offset);
-  const snesList = readSnesList(roomId);
-  const snesComparison = parsed.raw.equals(snesList.raw) ? 'exact' : 'modified';
-  if (snesComparison === 'exact') exactSnesMatches++;
-  else modifiedSnesRooms.push(roomId);
-
-  rooms.push(dungeonRoomEntry(roomId, source, parsed, snesComparison));
-}
+  gbaTableOffset: GBA_POINTER_TABLE_OFFSET,
+  roomCount: GBA_ROOM_COUNT,
+  snesRoomCount: GBA_ROOM_COUNT,
+  snesTable: SNES_POINTER_TABLE,
+  snesBank: SNES_DATA_BANK,
+  parseList: (rom, offset) => parseDungeonSecretList(rom, offset),
+});
 
 const result = {
   format: 'alttp-gba-dungeon-secrets-v1',

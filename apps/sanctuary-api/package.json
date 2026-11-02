@@ -5,7 +5,7 @@
   "description": "The Sanctuary API, a Cloud Functions function.",
   "main": "dist/index.js",
   "scripts": {
-    "bundle": "esbuild src/index.ts --bundle --platform=node --format=cjs --target=node24 --outfile=dist/index.js --external:@google-cloud/* --external:@aws-sdk/* --loader:.svg=text",
+    "bundle": "esbuild ./src/index.ts--bundle --platform=node --format=cjs --target=node24 --outfile=dist/index.js --external:@google-cloud/* --external:@aws-sdk/* --loader:.svg=text",
     "typecheck": "tsc --noEmit",
     "start": "functions-framework --target=sanctuaryApi --source=dist",
     "dev": "rotp-serve-function sanctuaryApi siteApi"

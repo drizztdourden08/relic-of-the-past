@@ -4,7 +4,6 @@ export {
   RETRO_QUIVER_PRICE, RETRO_REPLACEMENT_ITEM, RETRO_SILVER_ARROW_COST, RETRO_SILVER_COST_KEY,
   RETRO_WOOD_ARROW_COST, RETRO_WOOD_COST_KEY,
 } from './retro-bow.constants';
-export { dearestShotCost } from './dearest-shot-cost';
 export { retroShotWalletNeed } from './retro-shot-wallet-need';
 export { retroWalletNeed } from './retro-wallet-need';
 export { heldRetroBow } from './held-retro-bow';
