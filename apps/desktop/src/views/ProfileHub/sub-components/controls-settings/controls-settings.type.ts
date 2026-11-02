@@ -133,6 +133,12 @@ interface BindSnesButtonParams {
   pid: string | null;
 }
 
+interface ClearSnesMappingParams {
+  profile: InputProfile;
+  button: SnesButton;
+  mappingIndex: number;
+}
+
 interface BindFunctionActionParams {
   mappings: readonly FunctionMapping[];
   action: FunctionAction;
@@ -200,7 +206,7 @@ interface UseProfileLoaderArgs {
 
 export type {
   AbsentAssignment, BindFunctionActionParams, BindMappingParams, BindSnesButtonParams, BuildPresetProfileParams, PresetMappingsParams, ReadDroppedPresetParams, ResolveCoreBindingsParams,
-  ButtonDisplayMappingParams, ControlsTab, GamepadDisplayMappingParams, CoreIcons, DeviceIdentity, DisplayFunctionMapping, ListeningTarget, LiveFamilyIconParams,
+  ButtonDisplayMappingParams, ClearSnesMappingParams, ControlsTab, GamepadDisplayMappingParams, CoreIcons, DeviceIdentity, DisplayFunctionMapping, ListeningTarget, LiveFamilyIconParams,
   PendingPreset, RequiredInput, SchemeLayout, SlotDisplay, UseBindingStateArgs,
   UseControlsSettingsArgs, UseCoreIconsArgs, UseDisplayFunctionMappingsArgs, UseDisplayMappingsArgs,
   UseDragDropArgs, UseHapticsToggleArgs, UseModernSchemeArgs, UseProfileActionsArgs,

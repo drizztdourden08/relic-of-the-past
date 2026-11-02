@@ -11,9 +11,12 @@ const useDisplayMappings = ({ activeProfile, devices }: UseDisplayMappingsArgs) 
 
   const multiController = useMemo(() => allowedDevices(activeProfile).gamepadKeys.size > 1, [activeProfile]);
 
-  const displayMappings = useMemo(() => SNES_BUTTONS.map(button => {
-    const mapping = activeProfile?.mappings.find(m => m.snesButton === button);
-    return buttonDisplayMapping({ button, mapping, multiController, devices });
+  const displayMappings = useMemo(() => SNES_BUTTONS.flatMap(button => {
+    const bound = (activeProfile?.mappings ?? [])
+      .map((mapping, mappingIndex) => ({ mapping, mappingIndex }))
+      .filter(({ mapping }) => mapping.snesButton === button);
+    if (bound.length === 0) return [{ ...buttonDisplayMapping({ button, mapping: undefined, multiController, devices }), mappingIndex: -1 }];
+    return bound.map(({ mapping, mappingIndex }) => ({ ...buttonDisplayMapping({ button, mapping, multiController, devices }), mappingIndex }));
   }), [activeProfile, devices, multiController]);
 
   return { requiredInputs, displayMappings };

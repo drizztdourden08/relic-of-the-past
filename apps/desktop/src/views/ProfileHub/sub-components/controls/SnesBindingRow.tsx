@@ -6,9 +6,9 @@ import { BindingRow } from './BindingRow';
 import type { SnesBindingRowProps } from './controls.type';
 
 const SnesBindingRow = (props: SnesBindingRowProps) => {
-  const { snesButton, binding, bindingIcon, deviceIconUrl, onRebind, onClear } = props;
+  const { snesButton, mappingIndex, binding, bindingIcon, deviceIconUrl, onRebind, onClear } = props;
   const handleRebind = useCallback(() => onRebind(snesButton), [onRebind, snesButton]);
-  const handleClear = useCallback(() => onClear(snesButton), [onClear, snesButton]);
+  const handleClear = useCallback(() => onClear(snesButton, mappingIndex), [onClear, snesButton, mappingIndex]);
   return (
     <BindingRow
       actionLabel={SNES_ACTION_LABELS[snesButton]}

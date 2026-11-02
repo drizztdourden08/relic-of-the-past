@@ -128,11 +128,12 @@ interface FunctionBindingRowProps {
 
 interface SnesBindingRowProps {
   snesButton: SnesButton;
+  mappingIndex: number;
   binding: InputBinding;
   bindingIcon?: ButtonIcon | null;
   deviceIconUrl?: string | null;
   onRebind: (button: SnesButton) => void;
-  onClear: (button: SnesButton) => void;
+  onClear: (button: SnesButton, mappingIndex: number) => void;
 }
 
 interface BindingListenerProps {
