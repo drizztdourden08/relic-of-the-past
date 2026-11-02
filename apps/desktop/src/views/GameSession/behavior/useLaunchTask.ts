@@ -2,20 +2,27 @@
 import { useEffect, useRef } from 'react';
 import type { LaunchTask } from './useLaunchTask.type';
 
+// The task ends only on unmount. A task that loads a different profile (--profile-name,
+// --ap-connect, --lobby-join) changes activeProfile itself and must keep running.
 const useLaunchTask = (activeProfile: Profile | null, task: LaunchTask) => {
   const didRun = useRef(false);
+  const mounted = useRef<AbortController | null>(null);
 
   useEffect(() => {
-    if (!activeProfile || didRun.current) return;
-    const abort = new AbortController();
+    const controller = new AbortController();
+    mounted.current = controller;
+    return () => controller.abort();
+  }, []);
+
+  useEffect(() => {
+    const controller = mounted.current;
+    if (!activeProfile || didRun.current || controller === null) return;
 
     void task({
-      isCancelled: () => abort.signal.aborted,
+      isCancelled: () => controller.signal.aborted,
       hasRun: () => didRun.current,
       markRan: () => { didRun.current = true; },
     });
-
-    return () => abort.abort();
   }, [activeProfile]);
 };
 
