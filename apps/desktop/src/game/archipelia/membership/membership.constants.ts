@@ -13,4 +13,4 @@ const GONE_CODES: Readonly<Record<string, GoneReason>> = {
   'resume-invalid': 'resume-invalid',
 };
 
-export { GONE_CODES, LIVE_KINDS, MEMBERSHIP_KEY, WAITING_KINDS };
+export { GONE_CODES, LIVE_KINDS, MEMBERSHIP_KEY };
