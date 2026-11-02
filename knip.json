@@ -112,6 +112,35 @@
         "src/save-state/formats.ts"
       ]
     },
+    "packages/design": {
+      "entry": [
+        "src/index.ts",
+        "src/packs/index.ts",
+        "src/**/*.usage.ts"
+      ],
+      "project": [
+        "src/**/*.{ts,tsx}"
+      ]
+    },
+    "packages/randomizer": {
+      "entry": [
+        "src/index.ts",
+        "tests/**/*.{ts,tsx}"
+      ],
+      "project": [
+        "src/**/*.ts",
+        "tests/**/*.ts"
+      ]
+    },
+    "packages/navigation": {
+      "entry": [
+        "src/index.ts",
+        "src/recommendations/index.ts"
+      ],
+      "project": [
+        "src/**/*.ts"
+      ]
+    },
     "packages/*": {}
   }
 }
