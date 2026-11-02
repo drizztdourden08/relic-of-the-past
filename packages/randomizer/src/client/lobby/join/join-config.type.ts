@@ -24,6 +24,7 @@ type JoinConfig = {
   world: WorldInput;
   slots: SlotInput[];
   displayName?: string;
+  seat?: string;
   token?: string | null;
   preflight?: boolean;
   autoReady?: boolean;

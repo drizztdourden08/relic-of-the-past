@@ -14,6 +14,7 @@ interface JoinInput {
   build: WorldPackageBuild;
   bytes: Uint8Array;
   client: ClientInfo;
+  seat?: string;
   token?: string;
 }
 
@@ -22,6 +23,7 @@ interface StartJoinInput {
   code: string;
   ap: string;
   config: ProfileRandomizerConfig;
+  seat?: string;
   token?: string;
 }
 

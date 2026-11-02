@@ -7,6 +7,7 @@ import type { LobbySetupProps } from './LobbySetup.type';
 import { LanServerRows } from './sub-components/LanServerRows';
 import { LobbyLine } from './sub-components/LobbyLine';
 import { RemoteAddress } from './sub-components/RemoteAddress';
+import { SeatField } from './sub-components/SeatField';
 import './LobbySetup.css';
 
 const LobbySetup = (props: LobbySetupProps) => {
@@ -37,6 +38,9 @@ const LobbySetup = (props: LobbySetupProps) => {
         />
       </Field>
       <LobbyLine state={lobby} />
+      {lobby.kind === 'ok' && lobby.seats.length > 0 && (
+        <SeatField seats={lobby.seats} picked={value.seat} onPick={(seat) => onChange({ seat })} disabled={disabled} />
+      )}
       <Field label="Slot name" error={slotNameError(value.slotName) ?? undefined}>
         <TextInput
           type="text" value={value.slotName} spellCheck={false} placeholder={DEFAULT_SLOT_NAME} disabled={disabled}

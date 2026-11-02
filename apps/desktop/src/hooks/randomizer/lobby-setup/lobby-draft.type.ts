@@ -9,6 +9,7 @@ interface LobbyDraft {
   address: PatternValue;
   code: PatternValue;
   slotName: string;
+  seat: string | null;
 }
 
 export type { LobbyDraft, LobbyLocation };

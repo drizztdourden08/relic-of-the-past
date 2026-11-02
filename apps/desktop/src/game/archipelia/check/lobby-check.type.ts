@@ -1,4 +1,5 @@
 /* @layer bridge-wasm @kind types */
+import type { HeldSeat } from '@rotp/randomizer';
 import type { WorldPackageBuild } from '@app/archipelago/world-package';
 
 interface LobbyCheckOk {
@@ -8,6 +9,7 @@ interface LobbyCheckOk {
   name: string;
   ap: string;
   approval: boolean;
+  seats: readonly HeldSeat[];
   build: WorldPackageBuild;
 }
 

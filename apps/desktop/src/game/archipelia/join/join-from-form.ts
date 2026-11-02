@@ -1,4 +1,5 @@
 /* @layer bridge-wasm @kind logic */
+import { pickSeat } from '@rotp/randomizer';
 import type { LobbyEvent, LobbyJoinState, LobbySession, UploadProgress } from '@rotp/randomizer';
 import type { ProfileRandomizerConfig } from '@app/profiles/types';
 import { formErrorOf } from '../check/form-error-of';
@@ -35,9 +36,11 @@ const endOf = (check: LobbyCheckOk, session: LobbySession, event: LobbyEvent, st
 };
 
 const joinFromForm = async (
-  check: LobbyCheckOk, config: ProfileRandomizerConfig, onProgress: (fraction: number) => void,
+  check: LobbyCheckOk, config: ProfileRandomizerConfig, wanted: string | null, onProgress: (fraction: number) => void,
 ): Promise<JoinOutcome> => {
-  const started = await startJoin({ server: check.server, code: check.code, ap: check.ap, config });
+  const picked = wanted === null ? null : pickSeat(check.seats, wanted);
+  const seat = picked !== null && picked.ok ? picked.seat : undefined;
+  const started = await startJoin({ server: check.server, code: check.code, ap: check.ap, config, seat });
   if ('error' in started) return { ok: false, error: started.error };
   const { session } = started;
   return new Promise((resolve) => {

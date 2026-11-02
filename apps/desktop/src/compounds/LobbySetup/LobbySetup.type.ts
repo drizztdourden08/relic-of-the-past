@@ -14,7 +14,7 @@ interface LanServerRow {
 type LobbyLineState =
   | { kind: 'idle' }
   | { kind: 'checking' }
-  | { kind: 'ok'; name: string; ap: string; approval: boolean }
+  | { kind: 'ok'; name: string; ap: string; approval: boolean; seats: readonly string[] }
   | { kind: 'error'; text: string };
 
 interface LobbySetupProps {
@@ -38,8 +38,15 @@ interface RemoteAddressProps {
   disabled: boolean;
 }
 
+interface SeatFieldProps {
+  seats: readonly string[];
+  picked: string | null;
+  onPick: (seat: string | null) => void;
+  disabled: boolean;
+}
+
 interface LobbyLineProps {
   state: LobbyLineState;
 }
 
-export type { LanServerRow, LanServerRowsProps, LobbyLineProps, LobbyLineState, LobbySetupProps, RemoteAddressProps };
+export type { LanServerRow, LanServerRowsProps, LobbyLineProps, LobbyLineState, LobbySetupProps, RemoteAddressProps, SeatFieldProps };

@@ -32,7 +32,7 @@ const useCreateProfile = (params: UseCreateProfileParams) => {
         : formConfigOverrides,
     };
     const result = opts.randomizer?.mode === 'archipelia'
-      ? await createArchipeliaProfile(opts, formRandomizer.lobbyCheck, onCreateProfile, setFormJoining)
+      ? await createArchipeliaProfile(opts, formRandomizer.lobbyCheck, onCreateProfile, formRandomizer.lobby.seat, setFormJoining)
       : await onCreateProfile(opts);
     setFormJoining(null);
     if (!result.success) {

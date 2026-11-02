@@ -7,12 +7,12 @@ import { NO_LOBBY_ERROR } from './build-randomizer-config/build-randomizer-confi
 import type { CreateFn } from './profile-manager.type';
 
 const createArchipeliaProfile = async (
-  opts: CreateProfileOptions, check: LobbyCheck, create: CreateFn, onProgress: (fraction: number) => void,
+  opts: CreateProfileOptions, check: LobbyCheck, create: CreateFn, seat: string | null, onProgress: (fraction: number) => void,
 ): Promise<CreateProfileResult> => {
   const ready = withDeliverable(opts);
   if (check.kind !== 'ok' || ready.randomizer === undefined) return { success: false, error: NO_LOBBY_ERROR };
   onProgress(0);
-  const joined = await joinFromForm(check, ready.randomizer, onProgress);
+  const joined = await joinFromForm(check, ready.randomizer, seat, onProgress);
   if (!joined.ok) return { success: false, error: joined.error };
   const result = await create(ready);
   if (!result.success) {
