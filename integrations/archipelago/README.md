@@ -39,6 +39,14 @@ same fill world the local generator builds (`packages/randomizer/src/archipelago
 world from the options itself. A file with no model, or with options changed after the app wrote
 it, is refused with a message naming the option.
 
+Without the app, `node tooling/apworld/write-player-file.mjs --name <slot> --out <file.yaml>` writes the
+same file, `pre_rolled.world` included, from plain options on top of the randomizer defaults. Give the
+profile seed with `--seed <text>` (it defaults to the slot name, so a rerun writes the same world) and
+options with `--options <file.json|yaml>` (a flat `key: value` map), `--set key=value ...`, or both
+(`--set` wins). An unknown key or a value its option does not take fails with the list of valid ones.
+For example: `node tooling/apworld/write-player-file.mjs --name RotP-B --out RotP-B.yaml --set death_link=true
+pot_shuffle=true bush_shuffle=true killable_thieves=true`. It prints the written path.
+
 ## The JSON files
 
 ### locations.json

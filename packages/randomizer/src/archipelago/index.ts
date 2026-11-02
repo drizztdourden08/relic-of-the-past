@@ -11,5 +11,7 @@ export type { WorldExport } from './export/export.type';
 export { FOREIGN_ITEM_KEY, FOREIGN_ITEM_NAME, isForeignItem } from './foreign-item';
 export { parseSlotData } from './parse-slot-data';
 export type { ParsedSlotData, RotpSlotData } from './slot-data.type';
+export { playerFileOf, snapshotOfPlainOptions } from './player-file';
+export type { PlayerFile, PlayerFileInput } from './player-file';
 export { DEATH_LINK_KEY, renderPlayerYaml } from './player-yaml';
 export type { PlayerYamlInput } from './player-yaml';
