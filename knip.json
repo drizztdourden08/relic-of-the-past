@@ -32,7 +32,6 @@
     "tooling/apworld": {
       "entry": [
         "ensure-apworld.mjs",
-        "build-apworld.mjs",
         "pack-apworld.mjs",
         "run-exporter.mjs",
         "write-public-builds.mjs"
@@ -96,24 +95,13 @@
         "src/**/*.{ts,tsx}"
       ]
     },
-    "apps/kill-switch": {
-      "entry": [
-        "src/index.ts"
-      ]
-    },
     "apps/store-api": {
-      "entry": [
-        "src/index.ts"
-      ],
       "ignoreDependencies": [
         "@aws-sdk/client-s3",
         "@aws-sdk/s3-request-presigner"
       ]
     },
     "apps/sanctuary-api": {
-      "entry": [
-        "src/index.ts"
-      ],
       "ignoreDependencies": [
         "@aws-sdk/client-s3",
         "@aws-sdk/s3-request-presigner"
