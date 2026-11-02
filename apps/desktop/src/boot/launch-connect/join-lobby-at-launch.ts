@@ -12,7 +12,7 @@ const joinWithProfile = async (profile: Profile, check: LobbyCheckOk): Promise<P
   const config = profile.randomizer;
   if (config?.mode !== 'archipelia') return refuse(`profile "${profile.name}" is not an Archipelia profile`);
   const joined = await joinFromForm(check, config, null, () => undefined);
-  if (!joined.ok) return refuse(joined.error);
+  if (!joined.ok) return refuse(joined.error, joined.code);
   await writeMembership(profile.id, joined.membership);
   lobbyWatch.adopt(profile.id, joined.session, joined.membership);
   log.app(`[LaunchConnect] Joined lobby "${check.name}" as profile "${profile.name}"`);
@@ -22,7 +22,8 @@ const joinWithProfile = async (profile: Profile, check: LobbyCheckOk): Promise<P
 const joinLobbyAtLaunch = async (active: Profile, lobby: LobbyJoin, explicitName: string | null): Promise<Profile | null> => {
   if (lobby.code === null) return refuse('the lobby code is missing (--lobby-join=<host>[:<port>]:<code>)');
   const check = await checkLobby(lobby.server, lobby.code);
-  if (check.kind !== 'ok') return refuse(check.kind === 'error' ? check.text : 'the lobby check did not finish');
+  if (check.kind === 'error') return refuse(check.text, check.code);
+  if (check.kind !== 'ok') return refuse('the lobby check did not finish');
   const pick = await pickLaunchProfile(active, 'archipelia', explicitName, `RotP-${lobby.code.slice(0, 4)}`);
   if (pick.kind === 'refuse') return refuse(pick.why);
   const profile = pick.kind === 'create' ? await createLobbyProfile(active, pick.name, check) : await joinWithProfile(pick.profile, check);

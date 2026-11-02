@@ -40,7 +40,7 @@ interface CreateProfileOptions {
 
 type CreateProfileResult =
   | { success: true; profile: Profile }
-  | { success: false; error: string };
+  | { success: false; error: string; code?: string };
 
 interface ProfilePatch {
   name?: string;

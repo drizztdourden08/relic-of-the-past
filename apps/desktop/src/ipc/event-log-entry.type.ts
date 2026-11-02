@@ -4,6 +4,6 @@ type EventLogEntry =
   | { t: 'item-received'; id: number; name: string; from: string; self: boolean; frame: number }
   | { t: 'connected'; slot: string; server: string }
   | { t: 'disconnected'; reason: string }
-  | { t: 'lobby-join-refused'; reason: string };
+  | { t: 'lobby-join-refused'; reason: string; code?: string };
 
 export type { EventLogEntry };

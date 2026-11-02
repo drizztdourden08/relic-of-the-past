@@ -29,7 +29,7 @@ interface StartJoinInput {
 
 type JoinOutcome =
   | { ok: true; session: LobbySession; membership: ArchipeliaMembership }
-  | { ok: false; error: string };
+  | { ok: false; error: string; code?: string };
 
 type StartJoinResult = { session: LobbySession } | { error: string };
 

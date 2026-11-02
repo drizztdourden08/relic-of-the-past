@@ -13,7 +13,7 @@ const createArchipeliaProfile = async (
   if (check.kind !== 'ok' || ready.randomizer === undefined) return { success: false, error: NO_LOBBY_ERROR };
   onProgress(0);
   const joined = await joinFromForm(check, ready.randomizer, seat, onProgress);
-  if (!joined.ok) return { success: false, error: joined.error };
+  if (!joined.ok) return { success: false, error: joined.error, ...(joined.code === undefined ? {} : { code: joined.code }) };
   const result = await create(ready);
   if (!result.success) {
     joined.session.leave();

@@ -15,7 +15,7 @@ const createLobbyProfile = async (active: Profile, name: string, check: LobbyChe
   const form = { ...freshRandomizerForm(), enabled: true, mode: 'archipelia' as const, lobby: { ...EMPTY_LOBBY_DRAFT, slotName: name }, lobbyCheck: check };
   const opts = { ...baseOptionsOf(active, name), randomizer: buildRandomizerConfig(form, true) };
   const result = await createArchipeliaProfile(opts, check, runCreateProfileFlow, { seat: null, onProgress: () => undefined });
-  if (!result.success) return refuseLobbyJoin(result.error);
+  if (!result.success) return refuseLobbyJoin(result.error, result.code);
   log.app(`[LaunchConnect] Created Archipelia profile "${name}" and joined lobby "${check.name}"`);
   return result.profile;
 };

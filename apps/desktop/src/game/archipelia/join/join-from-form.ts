@@ -25,11 +25,11 @@ const membershipOf = (check: LobbyCheckOk, state: LobbyJoinState): ArchipeliaMem
 });
 
 const endOf = (check: LobbyCheckOk, session: LobbySession, event: LobbyEvent, state: LobbyJoinState): JoinOutcome | null => {
-  if (event.type === 'failed') return { ok: false, error: formErrorOf(event.failure, check.server) };
-  if (event.type === 'closed') return { ok: false, error: formErrorOf({ code: 'closed', message: '' }, check.server) };
+  if (event.type === 'failed') return { ok: false, error: formErrorOf(event.failure, check.server), code: event.failure.code };
+  if (event.type === 'closed') return { ok: false, error: formErrorOf({ code: 'closed', message: '' }, check.server), code: 'closed' };
   if (event.type === 'problem' && event.problem.code === 'slot-name-taken') {
     session.leave();
-    return { ok: false, error: formErrorOf(event.problem, check.server) };
+    return { ok: false, error: formErrorOf(event.problem, check.server), code: event.problem.code };
   }
   if (state.uploadsDone && state.token !== null) return { ok: true, session, membership: membershipOf(check, state) };
   return null;

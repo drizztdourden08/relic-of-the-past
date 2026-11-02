@@ -17,6 +17,6 @@ type LobbyCheck =
   | { kind: 'idle' }
   | { kind: 'checking' }
   | LobbyCheckOk
-  | { kind: 'error'; text: string };
+  | { kind: 'error'; text: string; code?: string };
 
 export type { LobbyCheck, LobbyCheckOk };
