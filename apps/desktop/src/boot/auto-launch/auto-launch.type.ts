@@ -3,4 +3,6 @@ import type { LoadedScript } from '../input-script/input-script.type';
 
 type AutoLaunch = { script: LoadedScript; profile: Profile };
 
-export type { AutoLaunch };
+type ConnectionVerdict = 'connected' | 'failed' | 'cancelled' | 'timed-out';
+
+export type { AutoLaunch, ConnectionVerdict };

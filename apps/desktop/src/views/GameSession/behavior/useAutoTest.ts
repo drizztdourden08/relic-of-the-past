@@ -6,6 +6,8 @@ import { settleAutoState } from './settle-auto-state';
 import { waitForGameRunning } from './wait-for-game-running';
 import { isAutoStart } from '@app/launch-flags/is-auto-start';
 import { releaseScreenshot } from '@app/boot/screenshot-frames/release-screenshot';
+import { awaitLaunchConnection } from '@app/boot/auto-launch/await-launch-connection';
+import { carryAutoStateSave } from '@app/boot/auto-launch/carry-auto-state-save';
 import { pauseForScript } from '@app/boot/auto-launch/pause-for-script';
 import { playScript } from '@app/boot/auto-launch/play-script';
 import { prepareAutoLaunch } from '@app/boot/auto-launch/prepare-auto-launch';
@@ -27,12 +29,13 @@ const useAutoTest = ({ activeProfile, loadProfileForGame }: AutoTestDeps) => {
 
     log.app(`[AutoTest] args: autoState=${args.autoState}, screenshot=${args.screenshot}, autoStart=${autoStart}`);
 
+    await carryAutoStateSave(activeProfile, profile, args.autoState);
     log.app(`[AutoTest] Starting game with profile: ${profile.name}`);
     await loadProfileForGame(profile);
 
     await waitForGameRunning(isCancelled);
 
-    if (isCancelled()) return;
+    if (isCancelled() || !(await awaitLaunchConnection(isCancelled))) return;
     pauseForScript(script);
     await settleAutoState(args);
     await playScript(script, Boolean(args.screenshot));
