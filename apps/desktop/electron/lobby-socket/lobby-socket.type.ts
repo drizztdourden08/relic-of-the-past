@@ -17,4 +17,4 @@ type LobbySockets = {
   closeOwnedBy: (owner: number) => void;
 };
 
-export type { LobbySocketEntry, LobbySocketPush, LobbySockets };
+export type { LobbySocketEntry, LobbySockets };

@@ -6,18 +6,18 @@ import { settleAutoState } from './settle-auto-state';
 import { waitForGameRunning } from './wait-for-game-running';
 import { isAutoStart } from '@app/launch-flags/is-auto-start';
 import { releaseScreenshot } from '@app/boot/screenshot-frames/release-screenshot';
-import { launchesConnection } from '@app/boot/auto-launch/launches-connection';
 import { pauseForScript } from '@app/boot/auto-launch/pause-for-script';
 import { playScript } from '@app/boot/auto-launch/play-script';
 import { prepareAutoLaunch } from '@app/boot/auto-launch/prepare-auto-launch';
 import { useLaunchTask } from './useLaunchTask';
+import { wantsAutoLaunch } from './wants-auto-launch';
 
 const useAutoTest = ({ activeProfile, loadProfileForGame }: AutoTestDeps) => {
   useLaunchTask(activeProfile, async ({ isCancelled, hasRun, markRan }) => {
     if (!activeProfile) return;
     const args = await requireHostApi().getTestArgs();
     const autoStart = isAutoStart();
-    if (args.autoState === null && !autoStart && !launchesConnection()) return;
+    if (!wantsAutoLaunch(args.autoState, autoStart)) return;
     if (isCancelled() || hasRun()) return;
     markRan();
 

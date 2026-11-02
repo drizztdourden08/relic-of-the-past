@@ -39,7 +39,7 @@ const joinFromForm = async (
   check: LobbyCheckOk, config: ProfileRandomizerConfig, wanted: string | null, onProgress: (fraction: number) => void,
 ): Promise<JoinOutcome> => {
   const picked = wanted === null ? null : pickSeat(check.seats, wanted);
-  const seat = picked !== null && picked.ok ? picked.seat : undefined;
+  const seat = picked?.ok === true ? picked.seat : undefined;
   const started = await startJoin({ server: check.server, code: check.code, ap: check.ap, config, seat });
   if ('error' in started) return { ok: false, error: started.error };
   const { session } = started;
