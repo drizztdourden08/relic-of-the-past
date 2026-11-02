@@ -25,7 +25,7 @@
     "start:headless": "brock start -- --no-focus --muted",
     "sync": "brock sync",
     "typecheck": "tsc --noEmit",
-    "lint": "pnpm typecheck && eslint . && stylelint \"src/**/*.css\" && brock prose && brock knip --workspace . && jscpd .",
+    "lint": "pnpm typecheck && eslint . && stylelint \"src/**/*.css\" && brock prose && jscpd .",
     "lint:md": "markdownlint-cli2",
     "structure": "brock structure --check",
     "deadcode": "brock knip --workspace .",
