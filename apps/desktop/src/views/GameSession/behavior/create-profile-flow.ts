@@ -23,8 +23,7 @@ const runCreateProfileFlow = async (opts: CreateProfileOptions): Promise<CreateP
 
   const overrides = { ...opts.initialConfig, ...opts.randomizer?.frozenSettings };
   if (Object.keys(overrides).length > 0) {
-    const current = (await profileStore.readConfig(profile.id)) ?? {};
-    await profileStore.writeConfig(profile.id, { ...current, ...overrides });
+    await profileStore.updateConfig(profile.id, (current) => ({ ...current, ...overrides }));
   }
   if (placement) await saveRandomizerPlacement(profile.id, placement);
 
