@@ -4,7 +4,9 @@ import type { SdlButtonName, SnesButton } from '@rotp/game-data';
 import { GENERIC_DEFAULTS, SNES_CONSOLE_DEFAULTS } from './snes-console-defaults.constants';
 
 const resolveConsoleDefault = (ctx: DisplayContext, position: SdlButtonName): SnesButton | undefined => {
-  return SNES_CONSOLE_DEFAULTS.get(ctx.family)?.buttons[position] ?? GENERIC_DEFAULTS.buttons[position];
+  const family = SNES_CONSOLE_DEFAULTS.get(ctx.family);
+  if (family?.unbound?.includes(position)) return undefined;
+  return family?.buttons[position] ?? GENERIC_DEFAULTS.buttons[position];
 };
 
 export { resolveConsoleDefault };

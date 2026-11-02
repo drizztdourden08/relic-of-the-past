@@ -9,6 +9,7 @@ interface AxisConsoleDefault {
 interface SnesConsoleDefaults {
   readonly buttons: Partial<Record<SdlButtonName, SnesButton>>;
   readonly axes?: Partial<Record<SdlAxisName, AxisConsoleDefault>>;
+  readonly unbound?: readonly SdlButtonName[];
 }
 
 export type { AxisConsoleDefault, SnesConsoleDefaults };
