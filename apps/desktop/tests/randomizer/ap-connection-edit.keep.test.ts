@@ -22,7 +22,8 @@ vi.mock('@app/log-bus', () => {
   const quiet = (): void => undefined;
   return { log: { core: quiet, app: quiet, randomizer: quiet, wasm: quiet, ipc: quiet, sim: quiet, error: quiet } };
 });
-vi.mock('@app/game/randomizer-client/local-session', () => ({ createLocalSession: () => null }));
+vi.mock('@app/game/event-log/append-event', () => ({ appendEvent: (): void => undefined }));
+vi.mock('@app/game/randomizer-client/local-session',() => ({ createLocalSession: () => null }));
 vi.mock('@app/game/randomizer-client/online-session', () => ({
   createOnlineSession: (config: OnlineSessionConfig) =>
     createOnlineClient(config, { core: createFakeCore(), createSocket: required(fake.server, 'fake server').createSocket }),
