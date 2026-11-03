@@ -14,7 +14,7 @@ interface LanServerRow {
 type LobbyLineState =
   | { kind: 'idle' }
   | { kind: 'checking' }
-  | { kind: 'ok'; name: string; ap: string; approval: boolean; seats: readonly string[] }
+  | { kind: 'ok'; name: string; ap: string; approval: boolean; seats: readonly string[]; open?: { total: number; free: number } }
   | { kind: 'error'; text: string };
 
 interface LobbySetupProps {

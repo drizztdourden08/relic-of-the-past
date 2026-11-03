@@ -12,7 +12,7 @@ const LOCATION_OPTIONS: { value: LobbyLocation; label: string }[] = [
 
 const ANY_SEAT = '__any-seat__';
 
-const ANY_SEAT_OPTION = { value: ANY_SEAT, label: 'Any seat' };
+const ANY_SEAT_OPTION = { value: ANY_SEAT, label: 'Any open seat' };
 
 const CODE_PATTERN = '{left:text len4 upper}-{right:text len4 upper}';
 

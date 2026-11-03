@@ -19,7 +19,7 @@ const packApworld = async (input) => {
     data,
     builds: versions.map((archipelagoVersion) => ({ archipelagoVersion })),
   });
-  const release = await writeReleaseFiles({ dir: outDir, module: input.moduleName, direct: true, thumbnail: THUMBNAIL, description: DESCRIPTION });
+  const release = await writeReleaseFiles({ dir: outDir, module: input.moduleName, direct: true, playerFile: 'app', thumbnail: THUMBNAIL, description: DESCRIPTION });
   for (const warning of release.warnings) console.warn(`pack-apworld: ${warning}`);
   return {
     files: [...result.files.map((file) => file.file), `${input.moduleName}.apworld`],

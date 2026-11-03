@@ -4,7 +4,7 @@ export {
 } from '@drizztdourden08/archipelia-lobby-protocol';
 export type { ClientInfo as LobbyClientInfo } from '@drizztdourden08/archipelia-lobby-protocol';
 export { freeSeats, pickSeat } from '@drizztdourden08/archipelia-client-kit';
-export type { HeldSeat } from '@drizztdourden08/archipelia-client-kit';
+export type { HeldSeat, OpenSeats } from '@drizztdourden08/archipelia-client-kit';
 export { lobbyUrlCandidates } from './address/lobby-url-candidates';
 export { createLobbyClientInfo, lobbyPlatformOf } from './client-info';
 export type { ClientInfoInput, LobbyPlatform } from './client-info';
