@@ -9,6 +9,11 @@ const LobbyLine = ({ state }: LobbyLineProps) => {
     <Flex gap="sm" align="center" wrap className="lobby-setup__line">
       <Text weight={600}>{state.name}</Text>
       <Status tone="success" variant="pill">{`Archipelago ${state.ap}`}</Status>
+      {state.open !== undefined && (
+        <Status tone={state.open.free > 0 ? 'success' : 'neutral'} variant="pill">
+          {`Open seats ${state.open.free}/${state.open.total}`}
+        </Status>
+      )}
       {state.approval && <Status tone="neutral" variant="pill">Host approval</Status>}
     </Flex>
   );

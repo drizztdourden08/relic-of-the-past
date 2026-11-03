@@ -1,4 +1,6 @@
 /* @layer bridge-wasm @kind constants */
+import { ROTP_GAME } from '@rotp/randomizer';
+
 const UNVERIFIED = 'This RotP build could not be verified. Update RotP.';
 
 const FORM_ERRORS: Readonly<Record<string, string>> = {
@@ -8,6 +10,8 @@ const FORM_ERRORS: Readonly<Record<string, string>> = {
   'lobby-full': 'This lobby is full.',
   'refused': 'The host refused this player.',
   'slot-name-taken': 'Another player has this slot name.',
+  'seat-unavailable': 'That seat is not available. Pick another or join an open seat.',
+  'game-not-allowed': `This lobby does not accept ${ROTP_GAME}.`,
   'trust-failed': UNVERIFIED,
   'client-revoked': UNVERIFIED,
   'unlisted-not-allowed': UNVERIFIED,

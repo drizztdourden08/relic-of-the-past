@@ -4,6 +4,7 @@ import type { Failure } from '@drizztdourden08/archipelia-lobby-protocol';
 import { ROTP_GAME } from '../lobby.constants';
 import type { LobbyInfo } from './lobby-info.type';
 import type { InfoCheckInput } from './lobby-info-problems.type';
+import { gameProblem } from './game-problem';
 import { sizeProblems } from './size-problems';
 
 const lobbyInfoProblems = (info: LobbyInfo, input: InfoCheckInput): Failure[] => {
@@ -14,6 +15,8 @@ const lobbyInfoProblems = (info: LobbyInfo, input: InfoCheckInput): Failure[] =>
     archipelago: { version: input.archipelagoVersion },
   });
   if (version !== null) found.push(version);
+  const allowed = gameProblem(info.lobby.allowedGames, game);
+  if (allowed !== null) found.push(allowed);
   const fixed = info.lobby.worlds.find((world) => world.game === game)?.worldVersion;
   const world = checkWorldVersion(fixed, game, input.worldVersion);
   if (world !== null) found.push(world);

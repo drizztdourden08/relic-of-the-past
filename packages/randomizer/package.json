@@ -10,8 +10,8 @@
     "./package.json": "./package.json"
   },
   "dependencies": {
-    "@drizztdourden08/archipelia-client-kit": "^0.3.0",
-    "@drizztdourden08/archipelia-lobby-protocol": "^1.3.0",
+    "@drizztdourden08/archipelia-client-kit": "^0.4.0",
+    "@drizztdourden08/archipelia-lobby-protocol": "^1.4.0",
     "@rotp/asset-extraction": "workspace:*",
     "@rotp/features": "workspace:*",
     "@rotp/game-core": "workspace:*",

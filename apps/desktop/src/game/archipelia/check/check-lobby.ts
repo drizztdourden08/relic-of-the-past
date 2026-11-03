@@ -26,7 +26,7 @@ const checkLobby = async (server: string, code: string): Promise<LobbyCheck> => 
     client, archipelagoVersion: build.archipelagoVersion, worldVersion: AP_WORLD_VERSION, worldBytes: build.size, yamlBytes: [],
   })[0];
   if (problem !== undefined) return errorOf(problem.message, problem.code);
-  return { kind: 'ok', server, code, name: lobby.name, ap: lobby.engine.ap, approval: lobby.admission === 'host-approval', seats: lobby.seats ?? [], build };
+  return { kind: 'ok', server, code, name: lobby.name, ap: lobby.engine.ap, approval: lobby.admission === 'host-approval', seats: lobby.seats ?? [], ...(lobby.open === undefined ? {} : { open: lobby.open }), build };
 };
 
 export { checkLobby };
