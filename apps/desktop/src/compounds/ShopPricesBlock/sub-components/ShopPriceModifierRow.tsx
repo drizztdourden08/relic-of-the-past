@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind component */
 import { Box, Slider, Text } from '@drizztdourden08/tessera/primitives';
-import { OptionValueTag } from '../../OptionValueTag';
+import { ValueTag } from '@drizztdourden08/tessera/composites';
 import type { ShopPriceModifierRowProps } from './ShopPriceModifierRow.type';
 import './ShopPriceModifierRow.css';
 
@@ -12,7 +12,7 @@ const ShopPriceModifierRow = (props: ShopPriceModifierRowProps) => {
   return (
     <Box className={`shop-price-modifier-row${disabled ? ' shop-price-modifier-row--off' : ''}`}>
       <Text className="shop-price-modifier-row__label">{label}</Text>
-      {readout ? <OptionValueTag value={percent(value)} /> : (
+      {readout ? <ValueTag value={percent(value)} /> : (
         <Slider
           value={value}
           min={min}

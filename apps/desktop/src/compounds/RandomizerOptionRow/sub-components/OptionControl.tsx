@@ -1,7 +1,7 @@
 /* @layer renderer-components @kind component */
 import { useMemo } from 'react';
 import { Select, Slider, TextInput, Toggle } from '@drizztdourden08/tessera/primitives';
-import { OptionValueTag } from '../../OptionValueTag';
+import { ValueTag } from '@drizztdourden08/tessera/composites';
 import { readoutOf } from '../behavior/readout-of';
 import { EMPTY_CHOICES } from '../RandomizerOptionRow.constants';
 import type { OptionControlProps } from '../RandomizerOptionRow.type';
@@ -14,7 +14,7 @@ const OptionControl = (props: OptionControlProps) => {
     [option.choices],
   );
 
-  if (readout) return <OptionValueTag value={readoutOf(option, value)} />;
+  if (readout) return <ValueTag value={readoutOf(option, value)} />;
   if (option.kind === 'toggle') {
     return <Toggle checked={Boolean(value)} onChange={(checked) => onChange?.(checked)} disabled={frozen} />;
   }

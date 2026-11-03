@@ -1,7 +1,7 @@
 /* @layer renderer-components @kind component */
 import { Box, Select, Slider, Text } from '@drizztdourden08/tessera/primitives';
-import { OptionValueTag, choiceLabelOf } from '../OptionValueTag';
-import { RandomizerOptionGroup } from '../RandomizerOptionGroup';
+import { ValueTag, OptionGroup } from '@drizztdourden08/tessera/composites';
+import { choiceLabelOf } from '@app/hooks/randomizer/option-labels';
 import { ShopSlotCount } from './sub-components/ShopSlotCount';
 import { ShopSlotSection } from './sub-components/ShopSlotSection';
 import { shopSectionsOf } from './behavior/shop-sections';
@@ -28,9 +28,9 @@ const ShopSlotsBlock = (props: ShopSlotsBlockProps) => {
 
   return (
     <Box className="shop-slots-block">
-      <RandomizerOptionGroup title={MODE_TITLE} live className="shop-slots-block__mode">
+      <OptionGroup title={MODE_TITLE} tone="live" className="shop-slots-block__mode">
         <Box className="shop-slots-block__mode-control">
-          {readOnly ? <OptionValueTag value={choiceLabelOf(MODE_OPTIONS, scope.mode)} /> : (
+          {readOnly ? <ValueTag value={choiceLabelOf(MODE_OPTIONS, scope.mode)} /> : (
             <Select
               value={scope.mode}
               options={MODE_OPTIONS}
@@ -39,9 +39,9 @@ const ShopSlotsBlock = (props: ShopSlotsBlockProps) => {
           )}
         </Box>
         {retroNote !== null && <Text className="shop-slots-block__note">{retroNote}</Text>}
-      </RandomizerOptionGroup>
+      </OptionGroup>
 
-      <RandomizerOptionGroup title={SLOTS_TITLE} live className="shop-slots-block__slots">
+      <OptionGroup title={SLOTS_TITLE} tone="live" className="shop-slots-block__slots">
         {sections.map((section) => (
           <ShopSlotSection
             key={section.world}
@@ -52,7 +52,7 @@ const ShopSlotsBlock = (props: ShopSlotsBlockProps) => {
               : (index, next) => onChange(withSlotTicked(scope, index, next))}
           />
         ))}
-      </RandomizerOptionGroup>
+      </OptionGroup>
 
       <Box className="shop-slots-block__controls">
         <ShopSlotCount
@@ -61,7 +61,7 @@ const ShopSlotsBlock = (props: ShopSlotsBlockProps) => {
           readout={readOnly}
           onChange={readOnly ? undefined : (next) => onChange(withSlotCount(scope, next))}
         />
-        {readOnly ? <OptionValueTag label={DEPTH_LABEL} value={summary.depth} /> : (
+        {readOnly ? <ValueTag label={DEPTH_LABEL} value={summary.depth} /> : (
           <Slider
             label={DEPTH_LABEL}
             value={summary.depth}

@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind component */
-import { RandomizerOptionGroup } from '@app/compounds/RandomizerOptionGroup';
+import { OptionGroup } from '@drizztdourden08/tessera/composites';
 import { RandomizerOptionRow } from '@app/compounds/RandomizerOptionRow';
 import { storyGateValuesOf, storyGatesOfValues } from '@rotp/randomizer';
 import { STORY_GATE_OPTIONS, STORY_GATES_TITLE } from './StoryGatesSection.constants';
@@ -17,7 +17,7 @@ const StoryGatesSection = (props: StoryGatesSectionProps) => {
   const values = storyGateValuesOf(setting);
 
   return (
-    <RandomizerOptionGroup title={STORY_GATES_TITLE} live className="story-gates">
+    <OptionGroup title={STORY_GATES_TITLE} tone="live" className="story-gates">
       {STORY_GATE_OPTIONS.map((option) => (
         <RandomizerOptionRow
           key={option.key}
@@ -30,7 +30,7 @@ const StoryGatesSection = (props: StoryGatesSectionProps) => {
             : (next) => onChange(storyGatesOfValues({ ...values, [option.key]: next }))}
         />
       ))}
-    </RandomizerOptionGroup>
+    </OptionGroup>
   );
 };
 

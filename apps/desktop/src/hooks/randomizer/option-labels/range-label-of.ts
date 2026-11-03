@@ -1,4 +1,4 @@
-/* @layer renderer-components @kind logic */
+/* @layer renderer-hooks @kind logic */
 const rangeLabelOf = (stops: readonly (string | number)[], range: readonly [number, number]): string =>
   `${stops[range[0]]} to ${stops[range[1]]}`;
 

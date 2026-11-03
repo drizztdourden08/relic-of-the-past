@@ -1,5 +1,4 @@
 /* @layer renderer-components @kind component */
-import { ScrollArea } from '@drizztdourden08/tessera/primitives';
 import { PoolListing } from '@app/compounds/PoolListing';
 import { OptionTabBody } from './OptionTabBody';
 import { POOL_TAB } from '../RandomizerOptionsPanel.constants';
@@ -12,23 +11,21 @@ const PanelBody = (props: PanelBodyProps) => {
   if (tab === POOL_TAB) return <PoolListing groups={listing} totals={totals} error={error} />;
 
   return (
-    <ScrollArea className="randomizer-options__body">
-      <OptionTabBody
-        tab={tab}
-        groups={groups}
-        lockedGroups={fixed}
-        values={snapshot.values}
-        valueOf={valueOf}
-        cellOf={cellOf}
-        choices={choices}
-        seed={seed}
-        pondDemands={pondDemands}
-        notes={notes}
-        fillerHeadroom={accounting?.filler ?? null}
-        onRowChange={onChange === undefined ? undefined : handleRowChange}
-        onChange={onChange}
-      />
-    </ScrollArea>
+    <OptionTabBody
+      tab={tab}
+      groups={groups}
+      lockedGroups={fixed}
+      values={snapshot.values}
+      valueOf={valueOf}
+      cellOf={cellOf}
+      choices={choices}
+      seed={seed}
+      pondDemands={pondDemands}
+      notes={notes}
+      fillerHeadroom={accounting?.filler ?? null}
+      onRowChange={onChange === undefined ? undefined : handleRowChange}
+      onChange={onChange}
+    />
   );
 };
 

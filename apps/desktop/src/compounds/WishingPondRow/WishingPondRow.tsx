@@ -1,7 +1,7 @@
 /* @layer renderer-components @kind component */
 import { Box, Slider, Text } from '@drizztdourden08/tessera/primitives';
+import { ValueTag } from '@drizztdourden08/tessera/composites';
 import { LadderStepper } from '@app/composites/LadderStepper';
-import { OptionValueTag } from '../OptionValueTag';
 import { OptionDescription } from '../OptionDescription';
 import { PondAskControls } from './sub-components/PondAskControls';
 import { PondOptionLine } from './sub-components/PondOptionLine';
@@ -30,7 +30,7 @@ const WishingPondRow = (props: WishingPondRowProps) => {
           <PondAskControls model={model} readOnly={readOnly} readout={readout} onChange={patch} />
           {hasPrices && <PondPriceControls model={model} readOnly={readOnly} readout={readout} onChange={patch} />}
           <PondOptionLine label="pool items in the pond">
-            {readout ? <OptionValueTag value={itemsLabel(Math.min(state.items, maxItems))} /> : (
+            {readout ? <ValueTag value={itemsLabel(Math.min(state.items, maxItems))} /> : (
               <Slider
                 value={Math.min(state.items, maxItems)}
                 min={0}

@@ -1,7 +1,7 @@
 /* @layer renderer-components @kind component */
 import { useCallback } from 'react';
 import { Box, Checkbox, Image } from '@drizztdourden08/tessera/primitives';
-import { OptionValueTag } from '@app/compounds/OptionValueTag';
+import { ValueTag } from '@drizztdourden08/tessera/composites';
 import type { DarkRoomLightTileProps } from './DarkRoomLightTile.type';
 import './DarkRoomLightTile.css';
 
@@ -25,7 +25,7 @@ const DarkRoomLightTile = (props: DarkRoomLightTileProps) => {
 
   return (
     <Box className="dark-room-light" data-state={tileStateOf(disabled, forced, checked)} title={title}>
-      {readout ? <OptionValueTag className="dark-room-light__readout" label={art} value={checked} /> : (
+      {readout ? <ValueTag className="dark-room-light__readout" label={art} value={checked} /> : (
         <Checkbox
           className="dark-room-light__control"
           checked={checked}

@@ -1,9 +1,9 @@
 /* @layer renderer-components @kind component */
 import { Box, Text } from '@drizztdourden08/tessera/primitives';
+import { OptionGroup } from '@drizztdourden08/tessera/composites';
 import { PROGRESSIVE_MODE_LABELS, progressiveTickConsequences, unrollableTickSetReasons } from '@rotp/randomizer';
 import { OptionDescription } from '../OptionDescription';
 import { ProgressiveLadderCard } from './sub-components/ProgressiveLadderCard';
-import { RandomizerOptionGroup } from '../RandomizerOptionGroup';
 import { modeOf } from './behavior/mode-of';
 import { progressiveLaddersOf } from './behavior/progressive-ladders';
 import { withFamilyMode } from './behavior/with-family-mode';
@@ -21,7 +21,7 @@ const ProgressiveTiersBlock = (props: ProgressiveTiersBlockProps) => {
 
   return (
     <Box className="progressive-tiers-block">
-      <RandomizerOptionGroup title={TIERS_TITLE} live className="progressive-tiers-block__group">
+      <OptionGroup title={TIERS_TITLE} tone="live" className="progressive-tiers-block__group">
         <Text className="progressive-tiers-block__caption">{TIERS_CAPTION}</Text>
         <Box className="progressive-tiers-block__ladders">
           {ladders.map((ladder) => (
@@ -58,7 +58,7 @@ const ProgressiveTiersBlock = (props: ProgressiveTiersBlockProps) => {
             ))}
           </Box>
         )}
-      </RandomizerOptionGroup>
+      </OptionGroup>
     </Box>
   );
 };

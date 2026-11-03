@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind component */
 import { Box, Checkbox, Text } from '@drizztdourden08/tessera/primitives';
-import { OptionValueTag } from '../../OptionValueTag';
+import { ValueTag } from '@drizztdourden08/tessera/composites';
 import type { BottleContentRowProps } from '../CurrencyPriceRow.type';
 import './BottleContentRow.css';
 
@@ -10,7 +10,7 @@ const BottleContentRow = (props: BottleContentRowProps) => {
 
   return (
     <Box className="bottle-content-row" data-blocked={blocked ? '' : undefined}>
-      {readout ? <OptionValueTag label={label} value={checked} /> : (
+      {readout ? <ValueTag label={label} value={checked} /> : (
         <Checkbox
           label={label}
           checked={checked}

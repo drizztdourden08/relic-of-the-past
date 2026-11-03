@@ -1,7 +1,7 @@
 /* @layer renderer-components @kind component */
 import { Box } from '@drizztdourden08/tessera/primitives';
+import { OptionGroup } from '@drizztdourden08/tessera/composites';
 import { BottleContentRow, CurrencyPriceRow, currencyRowsOf } from '../CurrencyPriceRow';
-import { RandomizerOptionGroup } from '../RandomizerOptionGroup';
 import { ShopPriceModifierRow } from './sub-components/ShopPriceModifierRow';
 import { bottleContentRowsOf } from './behavior/bottle-content-rows';
 import { BOTTLE_KEY, CURRENCY_ROWS, SHOP_PRICE_MODIFIER_DEFAULT, SHOP_PRICE_MODIFIER_KEY, SHOP_PRICE_MODIFIER_MAX, SHOP_PRICE_MODIFIER_MIN } from '@rotp/randomizer';
@@ -21,7 +21,7 @@ const ShopPricesBlock = (props: ShopPricesBlockProps) => {
   const countedOn = currencyRows.some((row) => row.checked);
 
   return (
-    <RandomizerOptionGroup title="Shop prices" live className="shop-prices-block">
+    <OptionGroup title="Shop prices" tone="live" className="shop-prices-block">
       <Box className="shop-prices-block__rows">
         {currencyRows.map((row) => (
           <CurrencyPriceRow
@@ -66,7 +66,7 @@ const ShopPricesBlock = (props: ShopPricesBlockProps) => {
           onChange={onChange === undefined ? undefined : (next) => onChange({ [SHOP_PRICE_MODIFIER_KEY]: next })}
         />
       </Box>
-    </RandomizerOptionGroup>
+    </OptionGroup>
   );
 };
 

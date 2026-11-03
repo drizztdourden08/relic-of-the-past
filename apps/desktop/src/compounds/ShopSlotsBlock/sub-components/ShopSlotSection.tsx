@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind component */
 import { Grid } from '@drizztdourden08/tessera/primitives';
-import { RandomizerOptionGroup } from '../../RandomizerOptionGroup';
+import { OptionGroup } from '@drizztdourden08/tessera/composites';
 import { ShopSlotCard } from './ShopSlotCard';
 import type { ShopSlotSectionProps } from '../ShopSlotsBlock.type';
 import './ShopSlotSection.css';
@@ -9,7 +9,7 @@ const ShopSlotSection = (props: ShopSlotSectionProps) => {
   const { section, disabled, readout, onSlotChange } = props;
 
   return (
-    <RandomizerOptionGroup title={section.title} live className="shop-slot-section">
+    <OptionGroup title={section.title} tone="live" className="shop-slot-section">
       <Grid className="shop-slot-section__grid">
         {section.cards.map((card) => (
           <ShopSlotCard
@@ -21,7 +21,7 @@ const ShopSlotSection = (props: ShopSlotSectionProps) => {
           />
         ))}
       </Grid>
-    </RandomizerOptionGroup>
+    </OptionGroup>
   );
 };
 

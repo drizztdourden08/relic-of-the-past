@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind component */
 import { Box, Text } from '@drizztdourden08/tessera/primitives';
-import { RandomizerOptionGroup } from '../RandomizerOptionGroup';
+import { OptionGroup } from '@drizztdourden08/tessera/composites';
 import { RandomizerOptionRow } from '../RandomizerOptionRow';
 import type { CapacityUpgradesBlockProps } from './CapacityUpgradesBlock.type';
 import { CapacityRows } from './sub-components/CapacityRows';
@@ -14,7 +14,7 @@ const CapacityUpgradesBlock = (props: CapacityUpgradesBlockProps) => {
   const frozen = readOnly || !enabled;
 
   return (
-    <RandomizerOptionGroup title="Capacity upgrades" live className="capacity-block">
+    <OptionGroup title="Capacity upgrades" tone="live" className="capacity-block">
       {enabledOption !== undefined && (
         <RandomizerOptionRow
           option={enabledOption}
@@ -39,7 +39,7 @@ const CapacityUpgradesBlock = (props: CapacityUpgradesBlockProps) => {
       {notes.map((note) => (
         <Text key={note} className="capacity-block__note">{note}</Text>
       ))}
-    </RandomizerOptionGroup>
+    </OptionGroup>
   );
 };
 

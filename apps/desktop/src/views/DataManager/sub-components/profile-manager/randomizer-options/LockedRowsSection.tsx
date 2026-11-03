@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind component */
-import { RandomizerOptionGroup } from '@app/compounds/RandomizerOptionGroup';
+import { OptionGroup } from '@drizztdourden08/tessera/composites';
 import { RandomizerOptionRow } from '@app/compounds/RandomizerOptionRow';
 import type { LockedRowsSectionProps } from './LockedRowsSection.type';
 
@@ -10,7 +10,7 @@ const LockedRowsSection = (props: LockedRowsSectionProps) => {
   if (options.length === 0) return null;
 
   return (
-    <RandomizerOptionGroup title={title}>
+    <OptionGroup title={title}>
       {options.map((option) => (
         <RandomizerOptionRow
           key={option.key}
@@ -20,7 +20,7 @@ const LockedRowsSection = (props: LockedRowsSectionProps) => {
           readout={readout}
         />
       ))}
-    </RandomizerOptionGroup>
+    </OptionGroup>
   );
 };
 

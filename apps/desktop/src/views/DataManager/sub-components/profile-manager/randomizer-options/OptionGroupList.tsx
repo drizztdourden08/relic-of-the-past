@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind component */
+import { OptionGroup } from '@drizztdourden08/tessera/composites';
 import { RandomizerOptionRow } from '@app/compounds/RandomizerOptionRow';
-import { RandomizerOptionGroup } from '@app/compounds/RandomizerOptionGroup';
 import type { OptionGroupListProps } from './OptionGroupList.type';
 
 const OptionGroupList = (props: OptionGroupListProps) => {
@@ -9,7 +9,7 @@ const OptionGroupList = (props: OptionGroupListProps) => {
   return (
     <>
       {groups.map(({ group, options }) => (
-        <RandomizerOptionGroup key={`${live ? 'live-' : ''}${group.id}`} title={group.label} live={live}>
+        <OptionGroup key={`${live ? 'live-' : ''}${group.id}`} title={group.label} tone={live ? 'live' : 'default'}>
           {options.map((option) => (
             <RandomizerOptionRow
               key={option.key}
@@ -22,7 +22,7 @@ const OptionGroupList = (props: OptionGroupListProps) => {
               onChange={onRowChange === undefined ? undefined : (next) => onRowChange(option.key, next)}
             />
           ))}
-        </RandomizerOptionGroup>
+        </OptionGroup>
       ))}
     </>
   );
