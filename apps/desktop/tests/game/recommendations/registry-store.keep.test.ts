@@ -8,7 +8,7 @@ import type { ObservedTransition } from '@rotp/game-core';
 import '@app/nav-widget/recommendations/strategies/connection';
 import '@app/nav-widget/recommendations/strategies/connection/wire-detector';
 import { describeDataset } from '../../dataset-guard';
-import { required } from '../../required';
+import { required } from '@rotp/asset-extraction/testing';
 
 const observations = (overrides: Partial<ScreenObservations> = {}): ScreenObservations => ({
   match: null,

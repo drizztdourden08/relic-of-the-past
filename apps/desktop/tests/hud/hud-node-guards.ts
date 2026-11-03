@@ -1,6 +1,6 @@
 /* @layer tests @kind helper */
 import type { HudContainer, HudFlexContainer, HudGridContainer, HudNode } from '@rotp/hud';
-import { required } from '../required';
+import { required } from '@rotp/asset-extraction/testing';
 
 const containerOf = (node: HudNode | undefined, what: string): HudContainer => {
   const found = required(node, what);

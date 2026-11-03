@@ -7,7 +7,7 @@ import { MinMaxField } from '@app/views/HudLayoutEditor/sub-components/MinMaxFie
 import { SizeBoxSection } from '@app/views/HudLayoutEditor/sub-components/SizeBoxSection';
 import { installPlatformHarness } from './install-platform-harness';
 import { spacerNode as node } from './spacer-node';
-import { required } from '../../required';
+import { required } from '@rotp/asset-extraction/testing';
 
 const { mount, field, type } = installPlatformHarness();
 

@@ -5,7 +5,7 @@ import { fitReceiptLine, toDialogueText, stripHighlight } from '@rotp/game-core'
 import { dialogueCharsetOf, extraGlyphSlots, readableText, POOL_SPRITE_DEFINITIONS } from '@rotp/game-data';
 import { kLanguages, buildForeignIconsFile, FOREIGN_ICON_FILES, FOREIGN_ICON_PALETTE_BYTES, chromaOf, toOklab, snesToRgba, NEUTRAL_CHROMA, extractArtBadge, artImage, quantizeIconPerceptual } from '@rotp/asset-extraction';
 import type { ImageBuffer, RGBA } from '@rotp/asset-extraction';
-import { required } from '../../required';
+import { required } from '@rotp/asset-extraction/testing';
 
 vi.mock('@app/log-bus', () => {
   const quiet = (): void => undefined;

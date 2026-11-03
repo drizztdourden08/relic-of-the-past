@@ -3,7 +3,7 @@ import { describe, it, expect } from 'vitest';
 import type { ScreenRecord } from '@rotp/game-data';
 import { reconcile, scopedToPass, recommendationId } from '@rotp/navigation';
 import type { DraftRecommendation, Recommendation } from '@rotp/navigation';
-import { required } from '../../required';
+import { required } from '@rotp/asset-extraction/testing';
 
 const SCREEN_100: ScreenRecord = {
   id: 'screen-100',

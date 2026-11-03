@@ -13,7 +13,7 @@ vi.mock('../../../../packages/game-core/src', async (importOriginal) => ({
 
 import { wasmGetOverworldSpriteSpawns, wasmGetAreaHeads } from '@rotp/game-core';
 import { getOverworldSprites } from '@rotp/navigation';
-import { required } from '../required';
+import { required } from '@rotp/asset-extraction/testing';
 
 const HEAD = 24;
 const heads = (() => {

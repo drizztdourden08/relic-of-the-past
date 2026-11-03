@@ -6,7 +6,7 @@ import type { ChestObservation } from '@rotp/game-core';
 import type { DetectionContext, ScreenObservations } from '@rotp/navigation';
 import { detectorFromStrategy, checkStrategy } from '@rotp/navigation';
 import { describeDataset } from '../../dataset-guard';
-import { required } from '../../required';
+import { required } from '@rotp/asset-extraction/testing';
 
 const ROOM = 260;
 const SCREEN: ScreenId = 'screen-204';

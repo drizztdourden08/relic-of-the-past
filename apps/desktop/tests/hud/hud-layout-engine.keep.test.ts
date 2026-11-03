@@ -2,7 +2,7 @@
 import { describe, expect, it } from 'vitest';
 import { aspectOf, containRect, intrinsicSize, layoutHud, measureBox, placedById, validateLayout } from '@rotp/hud';
 import type { HudContainer, HudFlexContainer, HudLayout, HudNode } from '@rotp/hud';
-import { required } from '../required';
+import { required } from '@rotp/asset-extraction/testing';
 
 const VIEW = { w: 400, h: 200 };
 

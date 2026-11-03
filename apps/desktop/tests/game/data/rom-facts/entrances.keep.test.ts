@@ -1,7 +1,7 @@
 /* @layer tests @kind test */
 import { expect, it } from 'vitest';
 import type { ScreenRecord } from '@rotp/game-data';
-import { required } from '../../../required';
+import { required } from '@rotp/asset-extraction/testing';
 import { describeRom } from '../rom-fixture';
 import { MOUTH_AREA_EXCEPTIONS, MOUTHS_NO_SCREEN_CARRIES, SCRIPTED_ENTRANCES } from './rom-facts.constants';
 import type { RomFacts } from './rom-facts.type';

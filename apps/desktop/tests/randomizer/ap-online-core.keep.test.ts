@@ -9,7 +9,7 @@ import { installFakeModule } from './ap-fake-module';
 import { createFakeServer } from './ap-fake-server';
 import { soloRoomOf } from './ap-solo-room';
 import { REPO_ROOT } from '../repo-root';
-import { required } from '../required';
+import { required } from '@rotp/asset-extraction/testing';
 
 const lines = vi.hoisted(() => [] as unknown[]);
 

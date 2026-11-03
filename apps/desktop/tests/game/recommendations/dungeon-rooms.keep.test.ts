@@ -5,7 +5,7 @@ import type { DungeonRecord, ScreenId } from '@rotp/game-data';
 import type { DetectionContext, ScreenObservations } from '@rotp/navigation';
 import { detectorFromStrategy, dungeonStrategy } from '@rotp/navigation';
 import { describeDataset } from '../../dataset-guard';
-import { required } from '../../required';
+import { required } from '@rotp/asset-extraction/testing';
 
 const observations = (overrides: Partial<ScreenObservations> = {}): ScreenObservations => ({
   match: null,

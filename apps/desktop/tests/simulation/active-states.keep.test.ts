@@ -2,7 +2,7 @@
 import { describe, it, expect } from 'vitest';
 import { activeStates, SLOT } from '@rotp/game-core';
 import type { StateSnapshot } from '@rotp/game-core';
-import { required } from '../required';
+import { required } from '@rotp/asset-extraction/testing';
 
 const snap = (over: Partial<Record<number, number>> = {}, follower = 0): StateSnapshot => {
   const progress = new Array(16).fill(0);

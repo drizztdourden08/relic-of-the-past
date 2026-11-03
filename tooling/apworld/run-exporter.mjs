@@ -1,5 +1,5 @@
 /* @layer tooling-scripts @kind logic */
-import { createSsrServer } from '../lib/create-ssr-server.mjs';
+import { createSsrServer } from '@rotp/ssr-server';
 import { ROOT } from './apworld.constants.mjs';
 
 const BARREL = '/packages/randomizer/src/archipelago/index.ts';

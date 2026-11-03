@@ -5,7 +5,7 @@ import { GLYPH_SLOTS, alphabetChars, dialogueCharsetOf, displayAlphabetOf, extra
 import { primary, secondary } from '@rotp/randomizer';
 import { stripHighlight, toDialogueText, compressMarkedStrings } from '@rotp/game-core';
 import type { DialogueCharset } from '@rotp/game-data';
-import { required } from '../required';
+import { required } from '@rotp/asset-extraction/testing';
 import { ICE_TRAP_NAME } from './dialogue-charset.fixture';
 
 type Glyph = (typeof EXTRA_GLYPHS)[number];

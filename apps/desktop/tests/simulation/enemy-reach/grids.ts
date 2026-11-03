@@ -2,7 +2,7 @@
 import type { GridPos } from '@rotp/game-core';
 import type { ScreenGridBundle } from '@rotp/navigation';
 import { GRID_SIZE } from './enemy-reach.constants';
-import { required } from '../../required';
+import { required } from '@rotp/asset-extraction/testing';
 
 const grids = {
   emptyReached: (): boolean[][] => Array.from({ length: GRID_SIZE }, () => new Array<boolean>(GRID_SIZE).fill(false)),

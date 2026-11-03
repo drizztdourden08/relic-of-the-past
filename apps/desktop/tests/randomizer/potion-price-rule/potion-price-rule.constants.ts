@@ -2,7 +2,7 @@
 import { POTION_CAULDRONS, BOTTLE_CONTENTS, BOTTLE_KEY, bottleContentKeyOf, customSetting, DEFAULT_ITEM_POWER, defaultProgressiveSetting, defaultRetroBow, LEGACY_POND_PROFILES } from '@rotp/randomizer';
 import type { RandomizerOptionChoices } from '@app/hooks/randomizer/randomizer-choices';
 import { NEUTRAL_CHOICES } from '../neutral-choices';
-import { required } from '../../required';
+import { required } from '@rotp/asset-extraction/testing';
 import type { Values } from './potion-price-rule.type';
 import { scopeWith } from './scope-with';
 

@@ -2,7 +2,7 @@
 import { describe, expect, it } from 'vitest';
 import { cyclePosition, easingFn, expand, sampleAnimation, sampleKeyframes } from '@rotp/hud';
 import type { HudAnimation, HudContainer } from '@rotp/hud';
-import { required } from '../../required';
+import { required } from '@rotp/asset-extraction/testing';
 
 describe('easing curves', { tags: ['critical'] }, () => {
   it('every named curve starts at 0 and ends at 1', () => {

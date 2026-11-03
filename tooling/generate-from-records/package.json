@@ -8,6 +8,6 @@
     "rotp-generate-from-records": "./generate-from-records.mjs"
   },
   "dependencies": {
-    "vite": "catalog:"
+    "@rotp/ssr-server": "workspace:*"
   }
 }

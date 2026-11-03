@@ -9,7 +9,7 @@ import { createFakeCore } from '../ap-fake-core';
 import { OWN, boot, settle } from '../ap-protocol-harness';
 import { installNetworkHarness } from './install-network-harness';
 import { networkRoom as makeRoom } from './network-room';
-import { required } from '../../required';
+import { required } from '@rotp/asset-extraction/testing';
 
 vi.mock('@app/log-bus', () => {
   const quiet = (): void => undefined;

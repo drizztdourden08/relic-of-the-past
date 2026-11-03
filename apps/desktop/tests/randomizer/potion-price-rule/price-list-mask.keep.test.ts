@@ -2,7 +2,7 @@
 import { describe, expect, it } from 'vitest';
 import { blockedContentsOf, potionPriceStateOfValues, reconcilePotionPrices, bottleContentKeyOf, rollShopPrices, shopPricePlanOf, shopSlotLocationsOf, shopScopeOfValues, createRng } from '@rotp/randomizer';
 import type { ShopBottleContent } from '@rotp/randomizer';
-import { required } from '../../required';
+import { required } from '@rotp/asset-extraction/testing';
 import { ALL_PRICES, BLOCKED_SCOPE, CAULDRON } from './potion-price-rule.constants';
 import { cauldronSubsets } from './cauldron-subsets';
 import { combinations } from './combinations';

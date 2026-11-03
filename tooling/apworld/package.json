@@ -9,6 +9,6 @@
   },
   "dependencies": {
     "@drizztdourden08/archipelia-client-kit": "^0.4.0",
-    "vite": "catalog:"
+    "@rotp/ssr-server": "workspace:*"
   }
 }

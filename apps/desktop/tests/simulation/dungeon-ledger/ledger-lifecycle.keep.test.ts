@@ -7,7 +7,7 @@ import { describeDataset } from '../../dataset-guard';
 import { BOMB_PICKUP, CASTLE_SCREEN, SEWERS_PALACE, SEWERS_ROOM, SEWERS_SCREEN } from './dungeon-ledger.constants';
 import { freshState } from './fresh-state';
 import { makeChest } from './make-chest';
-import { required } from '../../required';
+import { required } from '@rotp/asset-extraction/testing';
 
 const ledgerOf = (state: EngineState, group: number) =>
   required(state.ledgers.get(group), `ledger for group ${group}`);

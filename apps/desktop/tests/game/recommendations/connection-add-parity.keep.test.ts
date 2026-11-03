@@ -8,7 +8,7 @@ import { resolveRealDestId } from '@app/nav-widget/connection-audit-resolve';
 import { connectionStrategy } from '@app/nav-widget/recommendations/strategies/connection/connection-strategy';
 import { onUnresolvableConnection } from '@app/nav-widget/recommendations/strategies/connection/unresolvable-screen';
 import { describeDataset } from '../../dataset-guard';
-import { required } from '../../required';
+import { required } from '@rotp/asset-extraction/testing';
 
 const detector = detectorFromStrategy(connectionStrategy, onUnresolvableConnection);
 

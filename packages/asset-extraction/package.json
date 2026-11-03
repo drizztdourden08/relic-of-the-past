@@ -9,6 +9,7 @@
     ".": "./src/index.ts",
     "./buffer": "./src/buffer/index.ts",
     "./node": "./src/node/index.ts",
+    "./testing": "./src/testing/index.ts",
     "./package.json": "./package.json"
   },
   "dependencies": {

@@ -3,7 +3,7 @@ import { FOREIGN_ITEM_KEY, AP_LOCATION_IDS } from '@rotp/randomizer';
 import type { LocationKey, Placement } from '@rotp/randomizer';
 import type { FakeRoom } from '../ap-fake-server';
 import { OTHER_SLOT } from './parity-cases.data';
-import { required } from '../../required';
+import { required } from '@rotp/asset-extraction/testing';
 
 const handAway = (placement: Placement, room: FakeRoom, spots: readonly LocationKey[]): Placement => {
   const locations = { ...placement.locations };

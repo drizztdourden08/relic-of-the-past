@@ -6,7 +6,7 @@ import { FEATURES0_DEVELOPER_TOOLS, SRAM_BASE, SRAM_SIZE, WRAM_SIZE } from './co
 import { assetBlobPath } from './asset-blob-path';
 import { fixturePath } from './fixture-path';
 import { maskOf } from './mask-of';
-import { required } from '../../required';
+import { required } from '@rotp/asset-extraction/testing';
 import type { RawCore, Step } from './core-harness.type';
 
 class Core {

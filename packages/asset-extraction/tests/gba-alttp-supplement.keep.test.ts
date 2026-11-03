@@ -4,7 +4,7 @@ import { resolve } from 'path';
 import { describe, expect, it } from 'vitest';
 import { decode4bppTile, convertGbaMapWordToSnes, convertGbaSheetToSnes4bpp, decodeGbaPacked4bppTile, PALACE_ROOM_IDS, extractEntityHandlerTable, extractRoomTagHandlerTable, extractGbaAlttpText } from '@rotp/asset-extraction';
 import { compileGbaAlttpSupplement, loadGbaAlttpRomFromBuffer, loadRomFromBuffer, GbaAlttpDungeonSource, extractDungeonSpriteGraphics } from '@rotp/asset-extraction/buffer';
-import { required } from './required';
+import { required } from '@rotp/asset-extraction/testing';
 
 describe('GBA to SNES native translation', { tags: ['critical'] }, () => {
   it('moves GBA palette and flip bits into the SNES tilemap layout', () => {

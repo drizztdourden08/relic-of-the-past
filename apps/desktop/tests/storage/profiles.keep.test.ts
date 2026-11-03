@@ -5,7 +5,7 @@ import {
   getAppState, listProfiles, loadProfile, createProfile, updateProfile,
   deleteProfile, setLastProfile, readConfig, writeConfig,
 } from '@app/profiles/storage';
-import { required } from '../required';
+import { required } from '@rotp/asset-extraction/testing';
 
 const memFiles = (): FileStore => {
   const store = new Map<string, string>();

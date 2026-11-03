@@ -4,7 +4,7 @@ import { openRecommendations, recommendationRows } from '@app/data-inspector/rec
 import { recommendationSource } from '@app/data-inspector/recommendations/recommendation-source';
 import { buildSchema, createSchemaIndex } from '@drizztdourden08/tessera/data';
 import type { Recommendation } from '@rotp/navigation';
-import { required } from '../required';
+import { required } from '@rotp/asset-extraction/testing';
 
 const entry = (over: Partial<Recommendation> = {}): Recommendation => ({
   id: 'r1',

@@ -27,7 +27,7 @@ import type { HudNode } from '@rotp/hud';
 import { PACKS, SCOPE } from './content-fixtures.constants';
 import { installDomHarness } from './install-dom-harness';
 import { roundTrips } from './round-trips';
-import { required } from '../../required';
+import { required } from '@rotp/asset-extraction/testing';
 
 const { mount, one, click } = installDomHarness();
 

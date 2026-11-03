@@ -2,7 +2,7 @@
 import { existsSync, readFileSync, writeFileSync } from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { createSsrServer } from '../lib/create-ssr-server.mjs';
+import { createSsrServer } from '@rotp/ssr-server';
 import { buildEventBits } from './records-generator/event-bits.mjs';
 import { cTableTargets } from './records-generator/c-tables.mjs';
 import { taxonomyTargets } from './records-generator/taxonomies.mjs';
