@@ -1,13 +1,11 @@
 /* @layer renderer-components @kind logic */
 import type { FactsPanelFact } from '@drizztdourden08/tessera/composites';
 import type { ProfileRandomizerConfig } from '@app/profiles/types';
-import { RUN_TYPE_LABELS } from './build-run-facts.constants';
-
-const NONE = 'None';
+import { NONE, RUN_TYPE_LABELS } from './build-run-facts.constants';
 
 const connectionFacts = (randomizer: ProfileRandomizerConfig): FactsPanelFact[] => [
   ...(randomizer.serverUrl ? [{ label: 'Server', value: randomizer.serverUrl, mono: true }] : []),
-  { label: 'Name', value: randomizer.slotName || NONE },
+  { label: 'Name', value: randomizer.slotName ?? NONE },
   ...(randomizer.mode === 'online' ? [{ label: 'Password', value: randomizer.password ? 'Set' : NONE }] : []),
   { label: 'Death Link', value: randomizer.deathLink ? 'On' : 'Off' },
 ];

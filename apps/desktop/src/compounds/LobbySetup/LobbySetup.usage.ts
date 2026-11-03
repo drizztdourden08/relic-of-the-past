@@ -3,7 +3,7 @@ import type { ComponentUsage } from '@drizztdourden08/tessera';
 
 const usage = {
   job: 'The form part that says where an Archipelia lobby is, its code and the name to join as.',
-  useWhen: ['When a player joins an Archipelia lobby from the profile form.'],
+  useWhen: ['When a player joins an Archipelia lobby from the profile wizard.'],
   avoidWhen: [{ case: 'A plain Archipelago server with host, port and password.', use: 'Field' }],
   rules: ['Auto lists the lobbies found and shows the code under the chosen one; Manual takes an address and a code.', 'Remote is always Manual.', 'Pass the lobby answer in; the part never asks it.'],
   a11y: ['Each input has a label, and each slot of the code and the address has its own name.'],
@@ -13,7 +13,7 @@ import { LobbySetup } from '@app/compounds/LobbySetup';
 
 const Mounted = (props: ComponentProps<typeof LobbySetup>) => <LobbySetup {...props} />;
 `,
-  propsHash: '62a90c23f2f64541',
+  propsHash: 'ae8ed1149ce2df07',
 } satisfies ComponentUsage;
 
 export { usage };

@@ -4,8 +4,13 @@ import { CREATING_HINT, FINISH_LABEL, STEP_IDS, STEP_LABELS } from '../ProfileCr
 import type { ProfileWizardValues, StepContext } from '../ProfileCreateWizard.type';
 import { optionSubSteps } from './option-sub-steps';
 import { needsConnection } from './step-conditions';
-import { connectionProblem, profileProblem, seedProblem } from './step-problems';
-import { connectionSummary, optionsSummary, profileSummary, randomizerSummary } from './step-summaries';
+import { connectionProblem } from './connection-problem';
+import { connectionSummary } from './connection-summary';
+import { optionsSummary } from './options-summary';
+import { profileProblem } from './profile-problem';
+import { profileSummary } from './profile-summary';
+import { randomizerSummary } from './randomizer-summary';
+import { seedProblem } from './seed-problem';
 
 const busyHintOf = (joining: number | null): string =>
   (joining === null ? CREATING_HINT : `Joining the lobby, ${Math.round(joining * 100)}%`);

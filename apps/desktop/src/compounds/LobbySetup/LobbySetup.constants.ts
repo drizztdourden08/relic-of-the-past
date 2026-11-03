@@ -15,6 +15,8 @@ const CONNECT_OPTIONS: { value: LobbyConnect; label: string }[] = [
   { value: 'manual', label: 'Manual' },
 ];
 
+const REMOTE_NEEDS_ADDRESS = 'A remote lobby is joined by address';
+
 const NAME_PLACEHOLDER = 'Player Name / Slot Name';
 
 const ANY_SEAT = '__any-seat__';
@@ -57,5 +59,5 @@ const ADDRESS_SLOTS: PatternSlotConfigs = {
 };
 
 export {
-  ADDRESS_LISTS, ANY_SEAT, ANY_SEAT_OPTION, ADDRESS_SLOTS, CODE_PATTERN, CODE_SLOTS, CONNECT_OPTIONS, HOST_PATTERN, IP_PATTERN, LOCATION_OPTIONS, NAME_PLACEHOLDER,
+  ADDRESS_LISTS, ANY_SEAT, ANY_SEAT_OPTION, ADDRESS_SLOTS, CODE_PATTERN, CODE_SLOTS, CONNECT_OPTIONS, HOST_PATTERN, IP_PATTERN, LOCATION_OPTIONS, NAME_PLACEHOLDER, REMOTE_NEEDS_ADDRESS,
 };

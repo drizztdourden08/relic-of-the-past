@@ -1,17 +1,8 @@
 /* @layer renderer-components @kind logic */
-import { LOBBY_DEFAULT_PORT } from '@rotp/randomizer';
 import type { LanServer } from '@rotp/randomizer';
 import type { LobbyRow } from '@app/compounds/LobbySetup';
-import { LOCAL_HOST, LOCAL_LOBBY_ID } from '@app/hooks/randomizer/lobby-setup';
 import type { LobbyLocation } from '@app/hooks/randomizer/lobby-setup';
-
-const LOCAL_ROW: LobbyRow = {
-  id: LOCAL_LOBBY_ID,
-  name: 'Local lobby server',
-  address: `${LOCAL_HOST}:${LOBBY_DEFAULT_PORT}`,
-  supported: true,
-  open: true,
-};
+import { LOCAL_ROW } from './lobby-rows-of.constants';
 
 const lobbyRowsOf = (location: LobbyLocation, servers: readonly LanServer[], versions: readonly string[]): LobbyRow[] =>
   (location === 'local'

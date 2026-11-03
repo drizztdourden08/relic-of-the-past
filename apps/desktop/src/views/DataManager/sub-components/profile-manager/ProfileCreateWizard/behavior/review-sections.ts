@@ -2,7 +2,10 @@
 import type { WizardReviewSection } from '@drizztdourden08/tessera/composites';
 import { STEP_IDS, STEP_LABELS } from '../ProfileCreateWizard.constants';
 import type { ProfileWizardValues, StepContext } from '../ProfileCreateWizard.type';
-import { connectionRows, optionRows, profileRows, randomizerRows } from './review-rows';
+import { connectionRows } from './connection-rows';
+import { optionRows } from './option-rows';
+import { profileRows } from './profile-rows';
+import { randomizerRows } from './randomizer-rows';
 import { needsConnection } from './step-conditions';
 
 const reviewSections = (values: ProfileWizardValues, { experimental }: Pick<StepContext, 'experimental'>): WizardReviewSection[] => {

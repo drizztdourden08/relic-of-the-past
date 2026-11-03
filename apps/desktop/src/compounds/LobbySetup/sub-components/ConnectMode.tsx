@@ -1,9 +1,7 @@
 /* @layer renderer-components @kind component */
 import { SegmentedControl } from '@drizztdourden08/tessera/primitives';
-import { CONNECT_OPTIONS } from '../LobbySetup.constants';
+import { CONNECT_OPTIONS, REMOTE_NEEDS_ADDRESS } from '../LobbySetup.constants';
 import type { ConnectModeProps } from '../LobbySetup.type';
-
-const REMOTE_NEEDS_ADDRESS = 'A remote lobby is joined by address';
 
 const ConnectMode = ({ mode, location, onChange, disabled }: ConnectModeProps) => (
   <SegmentedControl
