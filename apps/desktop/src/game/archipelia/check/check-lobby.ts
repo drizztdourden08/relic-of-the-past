@@ -14,7 +14,7 @@ const errorOf = (text: string, code: string): LobbyCheck => ({ kind: 'error', te
 
 const checkLobby = async (server: string, ref: LobbyRef): Promise<LobbyCheck> => {
   const result = await lobbyInfo(server, ref, { createSocket: createMainSocket });
-  if (!result.ok) return errorOf(formErrorOf(result.failure, server), result.failure.code);
+  if (!result.ok) return errorOf(formErrorOf(result.failure, server, ref), result.failure.code);
   const { lobby } = result.info;
   const index = await loadBuildsIndex();
   if (index === null) return errorOf(NO_BUILDS_INDEX, 'no-builds-index');

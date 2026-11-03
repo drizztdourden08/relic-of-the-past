@@ -151,7 +151,7 @@ describe('scenarios a client cannot start natively', { tags: ['standard'] }, () 
   });
   it('metadata-missing (the client refuses before it connects)', async () => {
     const session = joinLobby({
-      server: '127.0.0.1:1', code: 'K7QM-4XT2', archipelagoVersion: '0.6.8',
+      server: '127.0.0.1:1', lobby: { code: 'K7QM-4XT2' }, archipelagoVersion: '0.6.8',
       client: { id: 'relic-of-the-past', name: 'Relic of the Past', version: '', platform: { os: 'windows', arch: 'x64' } },
       world: { worldVersion: '0.1.0', bytes: new Uint8Array(4), sha256: 'a'.repeat(64), size: 4 },
       slots: [{ name: 'Link', yaml: 'name: Link' }],

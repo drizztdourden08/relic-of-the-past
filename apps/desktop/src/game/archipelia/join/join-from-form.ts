@@ -25,7 +25,7 @@ const membershipOf = (check: LobbyCheckOk, state: LobbyJoinState): ArchipeliaMem
 });
 
 const endOf = (check: LobbyCheckOk, session: LobbySession, event: LobbyEvent, state: LobbyJoinState): JoinOutcome | null => {
-  if (event.type === 'failed') return { ok: false, error: formErrorOf(event.failure, check.server), code: event.failure.code };
+  if (event.type === 'failed') return { ok: false, error: formErrorOf(event.failure, check.server, check.lobby), code: event.failure.code };
   if (event.type === 'closed') return { ok: false, error: formErrorOf({ code: 'closed', message: '' }, check.server), code: 'closed' };
   if (event.type === 'problem' && event.problem.code === 'slot-name-taken') {
     session.leave();

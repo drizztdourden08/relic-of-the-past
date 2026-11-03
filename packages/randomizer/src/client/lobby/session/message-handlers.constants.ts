@@ -15,6 +15,7 @@ import { onWelcome } from './on-welcome';
 
 const MESSAGE_HANDLERS: MessageHandlers = {
   'lobby.info.reply': onInfoReply,
+  'lobby.browse.reply': () => undefined,
   welcome: onWelcome,
   error: onError,
   admission: onAdmission,
