@@ -117,6 +117,8 @@
     "knip": "catalog:",
     "markdownlint-cli2": "catalog:",
     "playwright": "catalog:",
+    "png-to-ico": "^3.0.1",
+    "sharp": "^0.34.5",
     "stylelint": "catalog:",
     "typescript": "catalog:",
     "vite": "catalog:",

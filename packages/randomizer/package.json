@@ -16,5 +16,8 @@
     "@rotp/features": "workspace:*",
     "@rotp/game-core": "workspace:*",
     "@rotp/game-data": "workspace:*"
+  },
+  "devDependencies": {
+    "jszip": "^3.10.1"
   }
 }

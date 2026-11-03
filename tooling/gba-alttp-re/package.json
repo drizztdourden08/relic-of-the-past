@@ -19,5 +19,8 @@
   "dependencies": {
     "@rotp/asset-extraction": "workspace:*",
     "pngjs": "catalog:"
+  },
+  "devDependencies": {
+    "@types/pngjs": "^6.0.5"
   }
 }

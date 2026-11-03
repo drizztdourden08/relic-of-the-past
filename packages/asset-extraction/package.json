@@ -15,5 +15,9 @@
   "dependencies": {
     "js-yaml": "^4.1.1",
     "pngjs": "catalog:"
+  },
+  "devDependencies": {
+    "@types/js-yaml": "^4.0.9",
+    "@types/pngjs": "^6.0.5"
   }
 }

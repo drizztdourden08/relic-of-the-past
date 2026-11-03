@@ -29,5 +29,8 @@
     "@rotp/msu": "workspace:*",
     "@rotp/packs": "workspace:*",
     "react": "catalog:"
+  },
+  "devDependencies": {
+    "@types/react": "catalog:"
   }
 }

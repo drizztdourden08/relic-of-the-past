@@ -26,6 +26,23 @@
         ".markdownlint-cli2.mjs",
         "core/wasm-build/*.mjs",
         "tooling/ensure-linux-sdl3-soname.mjs"
+      ],
+      "ignoreDependencies": [
+        "@drizztdourden08/tessera",
+        "@rotp/game-core",
+        "@types/node",
+        "@vitejs/plugin-react",
+        "clang-format-node",
+        "electron",
+        "electron-builder",
+        "electron-vite",
+        "eslint",
+        "jsdom",
+        "knip",
+        "stylelint",
+        "typescript",
+        "vite",
+        "vitest"
       ]
     },
     "tooling/apworld": {
@@ -74,7 +91,9 @@
         "@capacitor/haptics",
         "@capacitor-community/keep-awake",
         "vite-plugin-node-polyfills",
-        "@rotp/workspace"
+        "@rotp/workspace",
+        "png-to-ico",
+        "sharp"
       ]
     },
     "apps/sanctuary": {
