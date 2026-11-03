@@ -17,6 +17,7 @@
     "@rotp/design": "workspace:*",
     "@rotp/hub-client": "workspace:*",
     "@rotp/hub-contracts": "workspace:*",
+    "jszip": "^3.10.1",
     "react": "catalog:",
     "react-dom": "catalog:"
   },

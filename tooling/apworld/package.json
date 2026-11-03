@@ -9,6 +9,7 @@
   },
   "dependencies": {
     "@drizztdourden08/archipelia-client-kit": "^0.4.0",
-    "@rotp/ssr-server": "workspace:*"
+    "@rotp/ssr-server": "workspace:*",
+    "js-yaml": "^4.1.1"
   }
 }
