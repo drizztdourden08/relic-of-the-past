@@ -9,7 +9,7 @@ import { SeatField } from './sub-components/SeatField';
 import './LobbySetup.css';
 
 const LobbySetup = (props: LobbySetupProps) => {
-  const { value, onChange, lobbies, lobby, disabled = false } = props;
+  const { value, onChange, lobbies, lobby, access, disabled = false } = props;
 
   return (
     <Stack gap="md" className="lobby-setup">
@@ -17,7 +17,7 @@ const LobbySetup = (props: LobbySetupProps) => {
         label="Lobby on" value={value.location} options={LOCATION_OPTIONS} disabled={disabled}
         onChange={(location) => onChange({ location, joinToken: null, lobbyServer: null })}
       />
-      <ConnectionSection value={value} onChange={onChange} lobbies={lobbies} lobby={lobby} disabled={disabled} />
+      <ConnectionSection value={value} onChange={onChange} lobbies={lobbies} lobby={lobby} access={access} disabled={disabled} />
       <LobbyLine state={lobby} />
       <Grid columns={2} gap="md">
         {lobby.kind === 'ok' && lobby.seats.length > 0 && (

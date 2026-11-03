@@ -18,12 +18,29 @@ type LobbyLineState =
   | { kind: 'ok'; name: string; ap: string; approval: boolean; seats: readonly string[]; open?: { total: number; free: number } }
   | { kind: 'error'; text: string };
 
+interface LobbyAccess {
+  refreshing: boolean;
+  onRefresh: () => void;
+  blocked: boolean;
+  onAllow: () => void;
+}
+
 interface LobbySetupProps {
   value: LobbyDraft;
   onChange: (part: Partial<LobbyDraft>) => void;
   lobbies: readonly LobbyRow[];
   lobby: LobbyLineState;
+  access?: LobbyAccess;
   disabled?: boolean;
+}
+
+interface RefreshButtonProps {
+  access: LobbyAccess;
+  disabled: boolean;
+}
+
+interface NetworkWarningProps {
+  onAllow: () => void;
 }
 
 interface LobbyRowsProps {
@@ -45,6 +62,7 @@ interface ConnectionSectionProps {
   onChange: (part: Partial<LobbyDraft>) => void;
   lobbies: readonly LobbyRow[];
   lobby: LobbyLineState;
+  access?: LobbyAccess;
   disabled: boolean;
 }
 
@@ -73,6 +91,6 @@ interface LobbyLineProps {
 }
 
 export type {
-  ConnectModeProps, ConnectionSectionProps, LobbyCodeFieldProps, LobbyLineProps, LobbyLineState, LobbyRow, LobbyRowsProps, LobbySetupProps,
-  RemoteAddressProps, SeatFieldProps,
+  ConnectModeProps, ConnectionSectionProps, LobbyCodeFieldProps, LobbyLineProps, LobbyAccess, LobbyLineState, LobbyRow, LobbyRowsProps, LobbySetupProps,
+  NetworkWarningProps, RefreshButtonProps, RemoteAddressProps, SeatFieldProps,
 };

@@ -9,13 +9,14 @@ const hostSource = (): LanSightingSource => {
   return { start: api.startLanDiscovery, stop: api.stopLanDiscovery, onSighting: api.onLanSighting };
 };
 
-const useLanServers = (on: boolean): LanServer[] => {
+const useLanServers = (on: boolean, refresh = 0): LanServer[] => {
   const [servers, setServers] = useState<LanServer[]>([]);
 
   useEffect(() => {
     if (!on) return undefined;
+    setServers([]);
     return watchLanServers(hostSource(), setServers);
-  }, [on]);
+  }, [on, refresh]);
 
   return servers;
 };

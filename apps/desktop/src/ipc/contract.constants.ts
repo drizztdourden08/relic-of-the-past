@@ -31,6 +31,8 @@ const APP_CHANNELS = defineChannels({
   storeDuplicate: invoke<RotpInvoke['store:duplicate']>()('store:duplicate'),
   startLanDiscovery: invoke<RotpInvoke['lan:discovery:start']>()('lan:discovery:start'),
   stopLanDiscovery: invoke<RotpInvoke['lan:discovery:stop']>()('lan:discovery:stop'),
+  getFirewallStatus: invoke<RotpInvoke['lan:firewall:status']>()('lan:firewall:status'),
+  allowFirewall: invoke<RotpInvoke['lan:firewall:allow']>()('lan:firewall:allow'),
   openLobbySocket: invoke<RotpInvoke['lobby-socket:open']>()('lobby-socket:open'),
   sendLobbySocket: invoke<RotpInvoke['lobby-socket:send']>()('lobby-socket:send'),
   closeLobbySocket: invoke<RotpInvoke['lobby-socket:close']>()('lobby-socket:close'),

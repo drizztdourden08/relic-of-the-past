@@ -15,6 +15,11 @@ const CONNECT_OPTIONS: { value: LobbyConnect; label: string }[] = [
   { value: 'manual', label: 'Manual' },
 ];
 
+const NO_LOBBIES_HINT =
+  'No lobbies found. In Archipelia, turn on Show on the network for the lobby, or switch to Manual and paste the session code.';
+
+const NETWORK_BLOCKED = 'Network access is blocked for Relic of the Past.';
+
 const REMOTE_NEEDS_ADDRESS = 'A remote lobby is joined by address';
 
 const NAME_PLACEHOLDER = 'Player Name / Slot Name';
@@ -59,5 +64,5 @@ const ADDRESS_SLOTS: PatternSlotConfigs = {
 };
 
 export {
-  ADDRESS_LISTS, ANY_SEAT, ANY_SEAT_OPTION, ADDRESS_SLOTS, CODE_PATTERN, CODE_SLOTS, CONNECT_OPTIONS, HOST_PATTERN, IP_PATTERN, LOCATION_OPTIONS, NAME_PLACEHOLDER, REMOTE_NEEDS_ADDRESS,
+  ADDRESS_LISTS, ANY_SEAT, ANY_SEAT_OPTION, ADDRESS_SLOTS, CODE_PATTERN, CODE_SLOTS, CONNECT_OPTIONS, HOST_PATTERN, IP_PATTERN, LOCATION_OPTIONS, NAME_PLACEHOLDER, NETWORK_BLOCKED, NO_LOBBIES_HINT, REMOTE_NEEDS_ADDRESS,
 };

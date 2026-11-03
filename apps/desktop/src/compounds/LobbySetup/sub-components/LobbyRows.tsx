@@ -1,6 +1,7 @@
 /* @layer renderer-components @kind component */
 import { EmptyState, Icon, Stack, Status } from '@drizztdourden08/tessera/primitives';
 import { ListItemRow } from '@drizztdourden08/tessera/composites';
+import { NO_LOBBIES_HINT } from '../LobbySetup.constants';
 import type { LobbyRow, LobbyRowsProps } from '../LobbySetup.type';
 
 const metaOf = (lobby: LobbyRow): string => {
@@ -10,7 +11,7 @@ const metaOf = (lobby: LobbyRow): string => {
 
 const LobbyRows = ({ lobbies, picked, onPick, disabled }: LobbyRowsProps) => (
   <Stack gap="2xs" className="lobby-setup__rows">
-    {lobbies.length === 0 && <EmptyState message="No lobbies found." />}
+    {lobbies.length === 0 && <EmptyState message={NO_LOBBIES_HINT} />}
     {lobbies.map((lobby) => {
       const joinable = lobby.open && lobby.supported;
       return (
