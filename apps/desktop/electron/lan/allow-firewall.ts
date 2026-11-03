@@ -21,11 +21,8 @@ const elevatedCommand = (): string => {
 
 const allowFirewall = async (): Promise<FirewallStatus> => {
   if (process.platform !== 'win32') return 'unknown';
-  try {
-    await run(POWERSHELL, ['-NoProfile', '-WindowStyle', 'Hidden', '-Command', elevatedCommand()], { windowsHide: true });
-  } catch {
-    // The UAC prompt was declined; the status below stays as it was.
-  }
+  await run(POWERSHELL, ['-NoProfile', '-WindowStyle', 'Hidden', '-Command', elevatedCommand()], { windowsHide: true })
+    .catch(() => undefined);
   return readFirewallStatus();
 };
 

@@ -14,6 +14,7 @@ const ProfileCreateWizard = (props: ProfileCreateWizardProps) => {
       wizard={wizard}
       title={WIZARD_TITLE}
       orientation="vertical"
+      stepperSize="sm"
       activeSubStepId={optionTab}
       onSubStepSelect={handleSubStepSelect}
       onExit={onCancel}

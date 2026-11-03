@@ -1,13 +1,12 @@
 /* @layer electron-main @kind logic */
 import type { FirewallStatus } from '@app/ipc';
-
-const FIELD = /^\s*([A-Za-z ]+?):\s*(.*?)\s*$/;
+import { FIELD } from './parse-firewall-rules.constants';
 
 const fieldsOf = (block: string): Map<string, string> => {
   const fields = new Map<string, string>();
   for (const line of block.split(/\r?\n/)) {
-    const match = FIELD.exec(line);
-    if (match) fields.set(match[1].toLowerCase(), match[2]);
+    const [, key, value] = FIELD.exec(line) ?? [];
+    if (key !== undefined && value !== undefined) fields.set(key.toLowerCase(), value);
   }
   return fields;
 };
