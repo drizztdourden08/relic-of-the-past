@@ -93,6 +93,9 @@
       ],
       "project": [
         "src/**/*.{ts,tsx}"
+      ],
+      "ignoreDependencies": [
+        "vite-plugin-node-polyfills"
       ]
     },
     "apps/store-api": {
