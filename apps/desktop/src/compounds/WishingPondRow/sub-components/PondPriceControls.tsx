@@ -1,7 +1,8 @@
 /* @layer renderer-components @kind component */
 import { Select, Slider } from '@drizztdourden08/tessera/primitives';
+import { ValueTag } from '@drizztdourden08/tessera/composites';
 import { JumpChipsEditor } from '../../JumpChipsEditor';
-import { OptionValueTag, choiceLabelOf, stepsLabelOf } from '../../OptionValueTag';
+import { choiceLabelOf, stepsLabelOf } from '@app/hooks/randomizer/option-labels';
 import { PondOptionLine } from './PondOptionLine';
 import type { PondControlsProps, PondRowState } from '../WishingPondRow.type';
 
@@ -18,7 +19,7 @@ const PondPriceControls = (props: PondControlsProps) => {
   return (
     <>
       <PondOptionLine label="throws the pond sells">
-        {readout ? <OptionValueTag value={throwsLabel(throws)} /> : (
+        {readout ? <ValueTag value={throwsLabel(throws)} /> : (
           <Slider
             value={throws}
             min={1}
@@ -31,7 +32,7 @@ const PondPriceControls = (props: PondControlsProps) => {
         )}
       </PondOptionLine>
       <PondOptionLine label="price curve">
-        {readout ? <OptionValueTag value={curveLabel} /> : (
+        {readout ? <ValueTag value={curveLabel} /> : (
           <Select
             size="sm"
             value={state.curve}
@@ -43,7 +44,7 @@ const PondPriceControls = (props: PondControlsProps) => {
       </PondOptionLine>
       {state.curve === 'free' && (
         <PondOptionLine label="price steps">
-          {readout ? <OptionValueTag value={stepsLabelOf(state.jumps)} /> : (
+          {readout ? <ValueTag value={stepsLabelOf(state.jumps)} /> : (
             <JumpChipsEditor
               jumps={state.jumps}
               span={span}

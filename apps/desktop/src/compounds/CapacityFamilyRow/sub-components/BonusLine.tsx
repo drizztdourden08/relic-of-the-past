@@ -1,7 +1,7 @@
 /* @layer renderer-components @kind component */
 import { Box, Slider, Toggle } from '@drizztdourden08/tessera/primitives';
+import { ValueTag } from '@drizztdourden08/tessera/composites';
 import { CAPACITY_BONUS_MAX, CAPACITY_BONUS_STEP } from '@rotp/randomizer';
-import { OptionValueTag } from '../../OptionValueTag';
 import { STEP_BASE_LABEL } from '../CapacityFamilyRow.constants';
 import type { BonusLineProps } from '../CapacityFamilyRow.type';
 import { RowLine } from './RowLine';
@@ -14,8 +14,8 @@ const BonusLine = (props: BonusLineProps) => {
   if (readout) {
     return (
       <RowLine label="bonus" note={caption}>
-        <OptionValueTag value={percentLabel(bonus.percent)} />
-        <OptionValueTag label={STEP_BASE_LABEL} value={bonus.stepBase} />
+        <ValueTag value={percentLabel(bonus.percent)} />
+        <ValueTag label={STEP_BASE_LABEL} value={bonus.stepBase} />
       </RowLine>
     );
   }

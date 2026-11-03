@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind component */
 import { Status, Box, Checkbox, Text } from '@drizztdourden08/tessera/primitives';
-import { OptionValueTag } from '../../OptionValueTag';
+import { ValueTag } from '@drizztdourden08/tessera/composites';
 import { OFF_BY_DEFAULT_LABEL } from '../ShopSlotsBlock.constants';
 import type { ShopSlotCardProps } from '../ShopSlotsBlock.type';
 import './ShopSlotCard.css';
@@ -30,7 +30,7 @@ const ShopSlotCard = (props: ShopSlotCardProps) => {
       <Text className="shop-slot-card__stock">{stock}</Text>
       <Box className="shop-slot-card__slots">
         {slots.map((slot) => (readout ? (
-          <OptionValueTag
+          <ValueTag
             key={slot.key}
             className="shop-slot-card__slot shop-slot-card__slot--readout"
             label={slot.label}

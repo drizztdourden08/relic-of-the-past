@@ -1,9 +1,7 @@
 /* @layer renderer-components @kind component */
 import { useCallback, useMemo, useState } from 'react';
 import { Box, Tabs, Text, Toggle } from '@drizztdourden08/tessera/primitives';
-import { ErrorBoundary } from '@drizztdourden08/tessera/composites';
-import { OptionValueTag } from '@app/compounds/OptionValueTag';
-import { RandomizerOptionGroup } from '@app/compounds/RandomizerOptionGroup';
+import { ErrorBoundary, ValueTag, OptionGroup } from '@drizztdourden08/tessera/composites';
 import { POND_INSTANCES, pondCeilingsOf } from '@rotp/randomizer';
 import { PondInstanceRow } from './PondInstanceRow';
 import { firstPond } from '../behavior/first-pond';
@@ -32,9 +30,9 @@ const WishingPondSection = (props: WishingPondSectionProps) => {
 
   return (
     <ErrorBoundary label={NOTICE} resetKey={profiles}>
-      <RandomizerOptionGroup title="Fairy ponds" live>
+      <OptionGroup title="Fairy ponds" tone="live">
         <Box className="pond-section__head">
-          {readOnly ? <OptionValueTag label={SHARE_LABEL} value={share} /> : (
+          {readOnly ? <ValueTag label={SHARE_LABEL} value={share} /> : (
             <Toggle
               checked={share}
               disabled={onShareChange === undefined}
@@ -59,7 +57,7 @@ const WishingPondSection = (props: WishingPondSectionProps) => {
         {notes.map((note) => (
           <Text key={note} className="pond-row__note">{note}</Text>
         ))}
-      </RandomizerOptionGroup>
+      </OptionGroup>
     </ErrorBoundary>
   );
 };

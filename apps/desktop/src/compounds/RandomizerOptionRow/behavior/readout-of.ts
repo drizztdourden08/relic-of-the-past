@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind logic */
 import type { OptionDef, OptionValue } from '@rotp/randomizer';
-import { choiceLabelOf } from '../../OptionValueTag';
+import { choiceLabelOf } from '@app/hooks/randomizer/option-labels';
 import { EMPTY_CHOICES } from '../RandomizerOptionRow.constants';
 
 const readoutOf = (option: OptionDef, value: OptionValue): boolean | string => {

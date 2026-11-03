@@ -1,7 +1,8 @@
 /* @layer renderer-components @kind component */
 import { Box, Select, Text } from '@drizztdourden08/tessera/primitives';
+import { ValueTag } from '@drizztdourden08/tessera/composites';
 import { OptionDescription } from '../../OptionDescription';
-import { OptionValueTag, choiceLabelOf } from '../../OptionValueTag';
+import { choiceLabelOf } from '@app/hooks/randomizer/option-labels';
 import { PoolImpactCell } from '../../PoolImpactCell';
 import { MODE_OPTIONS, WALLET_MODE_OPTIONS } from '../CapacityFamilyRow.constants';
 import type { CapacityRowState, FamilyHeadProps } from '../CapacityFamilyRow.type';
@@ -16,7 +17,7 @@ const FamilyHead = ({ model, readout, disabled, onPick }: FamilyHeadProps) => {
         {caption !== undefined && <OptionDescription className="capacity-row__caption" description={caption} />}
       </Box>
       <Box className="capacity-row__mode">
-        {readout ? <OptionValueTag value={choiceLabelOf(MODE_OPTIONS, state.mode)} /> : (
+        {readout ? <ValueTag value={choiceLabelOf(MODE_OPTIONS, state.mode)} /> : (
           <Select
             size="sm"
             value={state.mode}

@@ -1,6 +1,7 @@
 /* @layer renderer-components @kind component */
 import { Text } from '@drizztdourden08/tessera/primitives';
-import { OptionValueTag, choiceLabelOf, rangeLabelOf, stepsLabelOf } from '../../OptionValueTag';
+import { ValueTag } from '@drizztdourden08/tessera/composites';
+import { choiceLabelOf, rangeLabelOf, stepsLabelOf } from '@app/hooks/randomizer/option-labels';
 import { RowLine } from './RowLine';
 import { itemsLabel } from '../behavior/items-label';
 import type { LadderReadoutProps } from '../CapacityFamilyRow.type';
@@ -13,17 +14,17 @@ const LadderReadout = (props: LadderReadoutProps) => {
   return (
     <>
       <RowLine label="range" note={floorNote}>
-        <OptionValueTag value={rangeLabelOf(stops, state.range)} />
+        <ValueTag value={rangeLabelOf(stops, state.range)} />
       </RowLine>
       <RowLine label="items">
-        <OptionValueTag value={itemsLabel(count)} />
+        <ValueTag value={itemsLabel(count)} />
         {hasCurve
-          ? <OptionValueTag value={choiceLabelOf(curveOptions, state.curve)} />
+          ? <ValueTag value={choiceLabelOf(curveOptions, state.curve)} />
           : <Text className="capacity-row__aside">one level per item</Text>}
       </RowLine>
       {hasCurve && state.curve === 'free' && (
         <RowLine label="jumps">
-          <OptionValueTag value={stepsLabelOf(state.jumps)} />
+          <ValueTag value={stepsLabelOf(state.jumps)} />
         </RowLine>
       )}
     </>

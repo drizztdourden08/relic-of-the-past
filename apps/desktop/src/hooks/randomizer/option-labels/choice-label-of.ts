@@ -1,5 +1,5 @@
-/* @layer renderer-components @kind logic */
-import type { LabelledGroup, LabelledValue } from '../OptionValueTag.type';
+/* @layer renderer-hooks @kind logic */
+import type { LabelledGroup, LabelledValue } from './option-labels.type';
 
 const isGroup = (entry: LabelledValue | LabelledGroup): entry is LabelledGroup => 'options' in entry;
 

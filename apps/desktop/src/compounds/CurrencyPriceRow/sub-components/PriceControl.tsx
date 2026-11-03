@@ -1,6 +1,7 @@
 /* @layer renderer-components @kind component */
 import { Slider, Text } from '@drizztdourden08/tessera/primitives';
-import { OptionValueTag, rangeLabelOf } from '../../OptionValueTag';
+import { ValueTag } from '@drizztdourden08/tessera/composites';
+import { rangeLabelOf } from '@app/hooks/randomizer/option-labels';
 import type { PriceControlProps } from '../CurrencyPriceRow.type';
 
 const PriceControl = (props: PriceControlProps) => {
@@ -8,7 +9,7 @@ const PriceControl = (props: PriceControlProps) => {
 
   if (blocked && note !== '') return <Text className="currency-price-row__note">{note}</Text>;
   if (stops === undefined || range === undefined) return null;
-  if (readout) return <OptionValueTag value={rangeLabelOf(stops, range)} />;
+  if (readout) return <ValueTag value={rangeLabelOf(stops, range)} />;
 
   return (
     <Slider

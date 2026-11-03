@@ -1,7 +1,7 @@
 /* @layer renderer-components @kind component */
 import { useCallback } from 'react';
 import { Box, Callout, Text } from '@drizztdourden08/tessera/primitives';
-import { RandomizerOptionGroup } from '@app/compounds/RandomizerOptionGroup';
+import { OptionGroup } from '@drizztdourden08/tessera/composites';
 import { RandomizerOptionRow } from '@app/compounds/RandomizerOptionRow';
 import type { OptionValue } from '@rotp/randomizer';
 import type { DarkRoomLightField } from '@rotp/game-core';
@@ -29,7 +29,7 @@ const DarkRoomsSection = (props: DarkRoomsSectionProps) => {
   );
 
   return (
-    <RandomizerOptionGroup title={DARK_ROOMS_TITLE} live className="dark-rooms">
+    <OptionGroup title={DARK_ROOMS_TITLE} tone="live" className="dark-rooms">
       {DARK_ROOM_REQUIRED_OPTION !== undefined && (
         <RandomizerOptionRow
           option={DARK_ROOM_REQUIRED_OPTION}
@@ -55,7 +55,7 @@ const DarkRoomsSection = (props: DarkRoomsSectionProps) => {
         <Text key={tile.field} className="dark-rooms__reason">{`${tile.name} ${tile.reason}`}</Text>
       ))}
       {rolledBlind && <Callout tone="primary" className="dark-rooms__banner">{BLIND_NOTE}</Callout>}
-    </RandomizerOptionGroup>
+    </OptionGroup>
   );
 };
 
