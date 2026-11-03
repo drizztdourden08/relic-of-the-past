@@ -14,10 +14,7 @@
     "@aws-sdk/client-s3": "catalog:",
     "@aws-sdk/s3-request-presigner": "catalog:",
     "@google-cloud/firestore": "catalog:",
-    "@google-cloud/functions-framework": "catalog:",
-    "arctic": "catalog:",
-    "jose": "catalog:",
-    "zod": "catalog:"
+    "@google-cloud/functions-framework": "catalog:"
   },
   "devDependencies": {
     "@rotp/hub-contracts": "workspace:*",

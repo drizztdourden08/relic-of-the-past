@@ -28,21 +28,7 @@
         "tooling/ensure-linux-sdl3-soname.mjs"
       ],
       "ignoreDependencies": [
-        "@drizztdourden08/tessera",
-        "@rotp/game-core",
-        "@types/node",
-        "@vitejs/plugin-react",
-        "clang-format-node",
-        "electron",
-        "electron-builder",
-        "electron-vite",
-        "eslint",
-        "jsdom",
-        "knip",
-        "stylelint",
-        "typescript",
-        "vite",
-        "vitest"
+        "clang-format-node"
       ]
     },
     "tooling/apworld": {
