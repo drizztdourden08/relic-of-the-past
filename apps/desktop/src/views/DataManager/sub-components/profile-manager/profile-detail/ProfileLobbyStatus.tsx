@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { Button, Flex, ProgressBar, Spinner, Stack, Text } from '@drizztdourden08/tessera/primitives';
 import { FactsPanel } from '@drizztdourden08/tessera/composites';
 import { useLobbyStatusStore } from '@app/stores/lobby-status-store';
+import { buildLobbyFacts } from './build-lobby-facts';
 import { convertToLocal } from './convert-to-local';
 import { lobbyStatusLine } from './lobby-status-line';
 import type { ProfileLobbyStatusProps } from './lobby-status-line.type';
@@ -30,15 +31,7 @@ const ProfileLobbyStatus = ({ profile }: ProfileLobbyStatusProps) => {
           <Button variant="secondary" size="sm" loading={converting} onClick={changeToLocal}>Change to Local</Button>
         )}
       </Flex>
-      <FactsPanel
-        groups={[[
-          { label: 'Server', value: membership.server, mono: true },
-          { label: 'Lobby', value: membership.lobbyName },
-          ...(membership.lobby.code === undefined ? [] : [{ label: 'Code', value: membership.lobby.code, mono: true, copyable: true }]),
-          { label: 'Archipelago', value: membership.ap, mono: true },
-          { label: 'Slot', value: profile.randomizer?.slotName ?? '' },
-        ]]}
-      />
+      <FactsPanel groups={[buildLobbyFacts(membership, profile.randomizer?.slotName ?? '')]} />
     </Stack>
   );
 };

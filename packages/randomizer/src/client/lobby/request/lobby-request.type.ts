@@ -1,5 +1,5 @@
 /* @layer bridge-wasm @kind types */
-import type { ClientMessage, ServerMessage } from '@drizztdourden08/archipelia-lobby-protocol';
+import type { ClientMessage, ProtocolMessage } from '@drizztdourden08/archipelia-lobby-protocol';
 import type { CreateSocket } from '../../ap-socket.type';
 import type { LobbyFailure } from '../failure';
 
@@ -15,8 +15,8 @@ interface LobbyRequestSpec<R> {
   server: string;
   deps: LobbyRequestDeps;
   build: (seq: number, protocol: ProtocolOffer) => ClientMessage;
-  pick: (message: ServerMessage) => R | null;
+  pick: (message: ProtocolMessage) => R | null;
   failed: (failure: LobbyFailure) => R;
 }
 
-export type { LobbyRequestDeps, LobbyRequestSpec, ProtocolOffer };
+export type { LobbyRequestSpec };

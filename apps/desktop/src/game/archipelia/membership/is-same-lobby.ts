@@ -7,7 +7,7 @@ const lobbyUrlOf = (server: string): string => lobbyUrlCandidates(server)[0] ?? 
 
 const refKeyOf = (lobby: LobbyRef): string => {
   const ref = formatLobbyRef(lobby);
-  return ref === null ? '' : (ref.joinToken ?? ref.code ?? '');
+  return ref === null ? '' : (ref.joinToken ?? ref.code);
 };
 
 const isSameLobby = (membership: ArchipeliaMembership, server: string, lobby: LobbyRef): boolean => {
