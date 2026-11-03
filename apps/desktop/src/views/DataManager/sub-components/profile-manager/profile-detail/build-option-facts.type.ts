@@ -12,4 +12,6 @@ interface ChangedOption {
   value: OptionValue;
 }
 
-export type { ChangedOption, OptionFactGroup };
+type OptionScope = 'changed' | 'all';
+
+export type { ChangedOption, OptionFactGroup, OptionScope };

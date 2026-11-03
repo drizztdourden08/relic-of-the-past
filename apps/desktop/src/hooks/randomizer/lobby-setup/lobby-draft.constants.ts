@@ -5,9 +5,12 @@ import type { LobbyDraft } from './lobby-draft.type';
 
 const LOCAL_HOST = 'localhost';
 
+const LOCAL_LOBBY_ID = 'local';
+
 const EMPTY_LOBBY_DRAFT: LobbyDraft = {
   location: 'local',
-  lanId: null,
+  connect: 'auto',
+  lobbyId: null,
   address: { kind: 'host', port: LOBBY_DEFAULT_PORT },
   code: {},
   slotName: '',
@@ -24,4 +27,4 @@ const CHECK_DEBOUNCE_MS = 400;
 
 const IDLE_CHECK: LobbyCheck = { kind: 'idle' };
 
-export { CHECK_DEBOUNCE_MS, CODE_HALF, EMPTY_LOBBY_DRAFT, HOST_NAME, IDLE_CHECK, LOCAL_HOST, OCTETS };
+export { CHECK_DEBOUNCE_MS, CODE_HALF, EMPTY_LOBBY_DRAFT, HOST_NAME, IDLE_CHECK, LOCAL_HOST, LOCAL_LOBBY_ID, OCTETS };

@@ -3,13 +3,16 @@ import type { PatternValue } from '@drizztdourden08/tessera/composites';
 
 type LobbyLocation = 'local' | 'lan' | 'remote';
 
+type LobbyConnect = 'auto' | 'manual';
+
 interface LobbyDraft {
   location: LobbyLocation;
-  lanId: string | null;
+  connect: LobbyConnect;
+  lobbyId: string | null;
   address: PatternValue;
   code: PatternValue;
   slotName: string;
   seat: string | null;
 }
 
-export type { LobbyDraft, LobbyLocation };
+export type { LobbyConnect, LobbyDraft, LobbyLocation };

@@ -1,12 +1,13 @@
 /* @layer renderer-components @kind types */
+import type { ReactNode } from 'react';
 import type { PatternValue } from '@drizztdourden08/tessera/composites';
-import type { LobbyDraft } from '@app/hooks/randomizer/lobby-setup';
+import type { LobbyConnect, LobbyDraft, LobbyLocation } from '@app/hooks/randomizer/lobby-setup';
 
-interface LanServerRow {
+interface LobbyRow {
   id: string;
   name: string;
   address: string;
-  ap: string;
+  ap?: string;
   supported: boolean;
   open: boolean;
 }
@@ -20,15 +21,38 @@ type LobbyLineState =
 interface LobbySetupProps {
   value: LobbyDraft;
   onChange: (part: Partial<LobbyDraft>) => void;
-  servers: readonly LanServerRow[];
+  lobbies: readonly LobbyRow[];
   lobby: LobbyLineState;
   disabled?: boolean;
 }
 
-interface LanServerRowsProps {
-  servers: readonly LanServerRow[];
+interface LobbyRowsProps {
+  lobbies: readonly LobbyRow[];
   picked: string | null;
   onPick: (id: string) => void;
+  pickedExtra: ReactNode;
+  disabled: boolean;
+}
+
+interface LobbyCodeFieldProps {
+  value: PatternValue;
+  onChange: (next: PatternValue) => void;
+  error?: string;
+  disabled: boolean;
+}
+
+interface ConnectionSectionProps {
+  value: LobbyDraft;
+  onChange: (part: Partial<LobbyDraft>) => void;
+  lobbies: readonly LobbyRow[];
+  lobby: LobbyLineState;
+  disabled: boolean;
+}
+
+interface ConnectModeProps {
+  mode: LobbyConnect;
+  location: LobbyLocation;
+  onChange: (mode: LobbyConnect) => void;
   disabled: boolean;
 }
 
@@ -49,4 +73,7 @@ interface LobbyLineProps {
   state: LobbyLineState;
 }
 
-export type { LanServerRow, LanServerRowsProps, LobbyLineProps, LobbyLineState, LobbySetupProps, RemoteAddressProps, SeatFieldProps };
+export type {
+  ConnectModeProps, ConnectionSectionProps, LobbyCodeFieldProps, LobbyLineProps, LobbyLineState, LobbyRow, LobbyRowsProps, LobbySetupProps,
+  RemoteAddressProps, SeatFieldProps,
+};

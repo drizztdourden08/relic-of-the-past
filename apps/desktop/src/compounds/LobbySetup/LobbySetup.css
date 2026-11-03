@@ -1,7 +1,11 @@
 /* @layer renderer-components @kind style */
 
-.lobby-setup__lan-row--closed {
+.lobby-setup__row--closed {
   opacity: var(--opacity-disabled);
+}
+
+.lobby-setup__picked-extra {
+  padding-inline-start: var(--space-lg);
 }
 
 .lobby-setup__code,

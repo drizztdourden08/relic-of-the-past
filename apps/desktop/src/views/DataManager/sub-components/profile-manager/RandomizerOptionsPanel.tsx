@@ -14,11 +14,16 @@ import type { PanelTab, RandomizerOptionsPanelProps } from './RandomizerOptionsP
 import './RandomizerOptionsPanel.css';
 
 const RandomizerOptionsPanel = (props: RandomizerOptionsPanelProps) => {
-  const { seed, value, onChange } = props;
+  const { seed, value, onChange, activeTab, onTabChange } = props;
   const rootRef = useRef<HTMLDivElement>(null);
   const narrow = useIsNarrow(rootRef, SPLIT_MIN_REM);
-  const [chosenTab, setTab] = useState<PanelTab>(FIRST_OPTION_TAB);
+  const [ownTab, setOwnTab] = useState<PanelTab>(FIRST_OPTION_TAB);
+  const chosenTab = activeTab ?? ownTab;
   const tab = !narrow && chosenTab === POOL_TAB ? FIRST_OPTION_TAB : chosenTab;
+  const handleTabChange = (id: string) => {
+    setOwnTab(id as PanelTab);
+    onTabChange?.(id as PanelTab);
+  };
   const model = usePanelModel(props, narrow);
   const { error, listing, totals, tabs } = model;
 
@@ -41,7 +46,7 @@ const RandomizerOptionsPanel = (props: RandomizerOptionsPanelProps) => {
         title={PANEL_TITLE}
         tabs={tabs}
         activeTab={tab}
-        onTabChange={(id) => setTab(id as PanelTab)}
+        onTabChange={handleTabChange}
         aside={narrow ? undefined : pool}
       >
         <PanelBody tab={tab} model={model} choices={value} seed={seed} onChange={onChange} />

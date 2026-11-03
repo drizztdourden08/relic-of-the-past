@@ -1,3 +1,3 @@
 /* @layer renderer-components @kind barrel */
 export { LobbySetup } from './LobbySetup';
-export type { LanServerRow, LobbyLineState } from './LobbySetup.type';
+export type { LobbyLineState, LobbyRow } from './LobbySetup.type';
