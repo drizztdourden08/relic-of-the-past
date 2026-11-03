@@ -1,3 +1,4 @@
+<!-- @layer root-config @kind doc -->
 # Relic of the Past
 
 Relic of the Past is a desktop port of *The Legend of Zelda: A Link to the Past* for Windows, macOS and Linux. It runs a decompiled C reimplementation of the game in WebAssembly inside an Electron app, with save profiles, controller support, MSU-1 audio and randomizer tools. No Nintendo game files are included: the app needs your own legally obtained ROM.

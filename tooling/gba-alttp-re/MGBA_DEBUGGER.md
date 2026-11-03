@@ -1,3 +1,4 @@
+<!-- @layer tooling-scripts @kind doc -->
 # mGBA debugger notes
 
 The official Windows mGBA build omits its terminal debugger but includes the supported

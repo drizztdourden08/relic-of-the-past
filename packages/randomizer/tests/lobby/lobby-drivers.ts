@@ -51,7 +51,7 @@ const downloadDriver = (): Driver => async (tools) => {
 
 const infoDriver = (): Driver => async (tools) => {
   const hello = firstMessage(tools.scenario, 'lobby.info') as { lobby: { code: string }; protocol: { versions: number[] } };
-  const result = await lobbyInfo(tools.server, hello.lobby.code, { protocolVersions: hello.protocol.versions });
+  const result = await lobbyInfo(tools.server, { code: hello.lobby.code }, { protocolVersions: hello.protocol.versions });
   return { sessions: [], events: [], extra: result };
 };
 

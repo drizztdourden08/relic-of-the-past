@@ -4,7 +4,7 @@ import { MEMBERSHIP_KEY } from './membership.constants';
 import type { ArchipeliaMembership } from './membership.type';
 
 const isMembership = (value: unknown): value is ArchipeliaMembership =>
-  typeof value === 'object' && value !== null && 'state' in value && 'server' in value && 'code' in value;
+  typeof value === 'object' && value !== null && 'state' in value && 'server' in value && 'lobby' in value;
 
 const readMembership = async (profileId: string): Promise<ArchipeliaMembership | null> => {
   const stored = (await readConfig(profileId))?.[MEMBERSHIP_KEY];

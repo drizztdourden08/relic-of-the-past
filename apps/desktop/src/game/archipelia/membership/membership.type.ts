@@ -1,5 +1,5 @@
 /* @layer bridge-wasm @kind types */
-import type { LobbyStart } from '@rotp/randomizer';
+import type { LobbyRef, LobbyStart } from '@rotp/randomizer';
 
 type GoneReason = 'closed' | 'not-found' | 'resume-invalid' | 'unsupported';
 
@@ -13,7 +13,7 @@ type MembershipState =
 
 interface ArchipeliaMembership {
   server: string;
-  code: string;
+  lobby: LobbyRef;
   ap: string;
   lobbyName: string;
   memberId: string;

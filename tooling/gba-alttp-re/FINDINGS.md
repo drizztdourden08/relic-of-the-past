@@ -1,3 +1,4 @@
+<!-- @layer tooling-scripts @kind doc -->
 # Findings log
 
 All findings below apply to the validated US ROM profile in `anchors.json`. A static

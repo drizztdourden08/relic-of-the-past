@@ -1,7 +1,8 @@
 /* @layer bridge-wasm @kind logic */
-import { PROTOCOL_NAME, SUPPORTED_PROTOCOL_VERSIONS, formatLobbyCode } from '@drizztdourden08/archipelia-lobby-protocol';
+import { PROTOCOL_NAME, SUPPORTED_PROTOCOL_VERSIONS } from '@drizztdourden08/archipelia-lobby-protocol';
 import { closedEarly, connectionFailed, connectionLost } from '../failure';
 import { openLobbyLink } from '../link/open-lobby-link';
+import { formatLobbyRef } from '../ref/format-lobby-ref';
 import { emitEvent } from './emit-event';
 import { failSession } from './fail-session';
 import { freshWire } from './fresh-wire';
@@ -19,7 +20,7 @@ const sendInfoRequest = (ctx: SessionCtx): void => {
     type: 'lobby.info',
     seq: ctx.wire.infoSeq,
     protocol: { name: PROTOCOL_NAME, versions: config.protocolVersions ?? [...SUPPORTED_PROTOCOL_VERSIONS] },
-    lobby: { code: formatLobbyCode(config.code) ?? config.code },
+    lobby: formatLobbyRef(config.lobby) ?? config.lobby,
   });
 };
 

@@ -8,7 +8,8 @@ type LobbyConnect = 'auto' | 'manual';
 interface LobbyDraft {
   location: LobbyLocation;
   connect: LobbyConnect;
-  lobbyId: string | null;
+  joinToken: string | null;
+  lobbyServer: string | null;
   address: PatternValue;
   code: PatternValue;
   slotName: string;

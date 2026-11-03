@@ -1,3 +1,4 @@
+<!-- @layer docs @kind doc -->
 # Test clean-up
 
 Every test file was judged against the test standard (`docs/test-standard.md`): each kept case carries

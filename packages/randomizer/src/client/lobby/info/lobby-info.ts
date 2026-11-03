@@ -1,10 +1,11 @@
 /* @layer bridge-wasm @kind logic */
-import { PROTOCOL_NAME, SUPPORTED_PROTOCOL_VERSIONS, formatLobbyCode } from '@drizztdourden08/archipelia-lobby-protocol';
-import type { DecodeOutcome } from '@drizztdourden08/archipelia-lobby-protocol';
+import { PROTOCOL_NAME, SUPPORTED_PROTOCOL_VERSIONS } from '@drizztdourden08/archipelia-lobby-protocol';
+import type { DecodeOutcome, LobbyRef } from '@drizztdourden08/archipelia-lobby-protocol';
 import { createBrowserSocket } from '../../browser-socket';
 import { closedEarly, connectionFailed, failureOfError, invalidCode, timedOut } from '../failure';
 import { openLobbyLink } from '../link/open-lobby-link';
 import { INFO_TIMEOUT_MS } from '../lobby.constants';
+import { formatLobbyRef } from '../ref/format-lobby-ref';
 import type { LobbyInfoDeps, LobbyInfoResult } from './lobby-info.type';
 
 const replyOf = (outcome: DecodeOutcome): LobbyInfoResult | null => {
@@ -16,10 +17,10 @@ const replyOf = (outcome: DecodeOutcome): LobbyInfoResult | null => {
   return { ok: true, info };
 };
 
-const lobbyInfo = (server: string, code: string, deps: LobbyInfoDeps = {}): Promise<LobbyInfoResult> =>
+const lobbyInfo = (server: string, lobby: LobbyRef, deps: LobbyInfoDeps = {}): Promise<LobbyInfoResult> =>
   new Promise((resolve) => {
-    const formatted = formatLobbyCode(code);
-    if (formatted === null) {
+    const ref = formatLobbyRef(lobby);
+    if (ref === null) {
       resolve({ ok: false, failure: invalidCode() });
       return;
     }
@@ -37,7 +38,7 @@ const lobbyInfo = (server: string, code: string, deps: LobbyInfoDeps = {}): Prom
           type: 'lobby.info',
           seq: link.nextSeq(),
           protocol: { name: PROTOCOL_NAME, versions: deps.protocolVersions ?? SUPPORTED_PROTOCOL_VERSIONS },
-          lobby: { code: formatted },
+          lobby: ref,
         });
       },
       onMessage: (outcome) => {

@@ -4,10 +4,6 @@
   opacity: var(--opacity-disabled);
 }
 
-.lobby-setup__picked-extra {
-  padding-inline-start: var(--space-lg);
-}
-
 .lobby-setup__code,
 .lobby-setup__address {
   max-width: 100%;

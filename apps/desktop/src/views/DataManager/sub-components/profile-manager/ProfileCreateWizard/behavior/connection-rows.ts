@@ -11,7 +11,7 @@ const lobbyRows = ({ lobby, lobbyCheck }: ProfileWizardValues['randomizer']): Fa
   ...(lobbyCheck.kind === 'ok'
     ? [
       { label: 'Server', value: lobbyCheck.server, mono: true },
-      { label: 'Lobby code', value: lobbyCheck.code, mono: true },
+      ...(lobbyCheck.lobby.code === undefined ? [] : [{ label: 'Lobby code', value: lobbyCheck.lobby.code, mono: true }]),
       { label: 'Lobby', value: lobbyCheck.name },
       { label: 'Archipelago version', value: lobbyCheck.ap, mono: true },
     ]

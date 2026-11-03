@@ -1,5 +1,4 @@
 /* @layer renderer-components @kind types */
-import type { ReactNode } from 'react';
 import type { PatternValue } from '@drizztdourden08/tessera/composites';
 import type { LobbyConnect, LobbyDraft, LobbyLocation } from '@app/hooks/randomizer/lobby-setup';
 
@@ -10,6 +9,7 @@ interface LobbyRow {
   ap?: string;
   supported: boolean;
   open: boolean;
+  seats: string;
 }
 
 type LobbyLineState =
@@ -29,8 +29,7 @@ interface LobbySetupProps {
 interface LobbyRowsProps {
   lobbies: readonly LobbyRow[];
   picked: string | null;
-  onPick: (id: string) => void;
-  pickedExtra: ReactNode;
+  onPick: (lobby: LobbyRow) => void;
   disabled: boolean;
 }
 

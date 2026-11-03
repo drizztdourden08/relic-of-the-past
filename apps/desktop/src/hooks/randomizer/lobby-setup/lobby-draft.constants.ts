@@ -5,12 +5,11 @@ import type { LobbyDraft } from './lobby-draft.type';
 
 const LOCAL_HOST = 'localhost';
 
-const LOCAL_LOBBY_ID = 'local';
-
 const EMPTY_LOBBY_DRAFT: LobbyDraft = {
   location: 'local',
   connect: 'auto',
-  lobbyId: null,
+  joinToken: null,
+  lobbyServer: null,
   address: { kind: 'host', port: LOBBY_DEFAULT_PORT },
   code: {},
   slotName: '',
@@ -25,6 +24,12 @@ const CODE_HALF = 4;
 
 const CHECK_DEBOUNCE_MS = 400;
 
+const BROWSE_REFRESH_MS = 5000;
+
+const SERVER_KEY_SEPARATOR = '|';
+
 const IDLE_CHECK: LobbyCheck = { kind: 'idle' };
 
-export { CHECK_DEBOUNCE_MS, CODE_HALF, EMPTY_LOBBY_DRAFT, HOST_NAME, IDLE_CHECK, LOCAL_HOST, LOCAL_LOBBY_ID, OCTETS };
+export {
+  BROWSE_REFRESH_MS, CHECK_DEBOUNCE_MS, CODE_HALF, EMPTY_LOBBY_DRAFT, HOST_NAME, IDLE_CHECK, LOCAL_HOST, OCTETS, SERVER_KEY_SEPARATOR,
+};

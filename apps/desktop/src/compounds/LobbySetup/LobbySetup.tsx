@@ -15,7 +15,7 @@ const LobbySetup = (props: LobbySetupProps) => {
     <Stack gap="md" className="lobby-setup">
       <SegmentedControl
         label="Lobby on" value={value.location} options={LOCATION_OPTIONS} disabled={disabled}
-        onChange={(location) => onChange({ location })}
+        onChange={(location) => onChange({ location, joinToken: null, lobbyServer: null })}
       />
       <ConnectionSection value={value} onChange={onChange} lobbies={lobbies} lobby={lobby} disabled={disabled} />
       <LobbyLine state={lobby} />

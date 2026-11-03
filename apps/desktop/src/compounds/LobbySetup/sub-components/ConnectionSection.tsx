@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind component */
 import { Field, SectionHeader, Stack } from '@drizztdourden08/tessera/primitives';
-import { connectModeOf, LOCAL_LOBBY_ID } from '@app/hooks/randomizer/lobby-setup';
+import { connectModeOf } from '@app/hooks/randomizer/lobby-setup';
 import type { ConnectionSectionProps } from '../LobbySetup.type';
 import { ConnectMode } from './ConnectMode';
 import { LobbyCodeField } from './LobbyCodeField';
@@ -9,12 +9,6 @@ import { RemoteAddress } from './RemoteAddress';
 
 const ConnectionSection = ({ value, onChange, lobbies, lobby, disabled }: ConnectionSectionProps) => {
   const mode = connectModeOf(value);
-  const code = (
-    <LobbyCodeField
-      value={value.code} error={lobby.kind === 'error' ? lobby.text : undefined} disabled={disabled}
-      onChange={(next) => onChange({ code: next })}
-    />
-  );
 
   return (
     <Stack gap="sm" className="lobby-setup__connection">
@@ -26,17 +20,19 @@ const ConnectionSection = ({ value, onChange, lobbies, lobby, disabled }: Connec
       {mode === 'auto' ? (
         <LobbyRows
           lobbies={lobbies}
-          picked={value.location === 'local' ? LOCAL_LOBBY_ID : value.lobbyId}
-          pickedExtra={code}
+          picked={value.joinToken}
           disabled={disabled}
-          onPick={(lobbyId) => onChange({ lobbyId })}
+          onPick={(row) => onChange({ joinToken: row.id, lobbyServer: row.address })}
         />
       ) : (
         <>
           <Field label="Address">
             <RemoteAddress value={value.address} disabled={disabled} onChange={(address) => onChange({ address })} />
           </Field>
-          {code}
+          <LobbyCodeField
+            value={value.code} error={lobby.kind === 'error' ? lobby.text : undefined} disabled={disabled}
+            onChange={(code) => onChange({ code })}
+          />
         </>
       )}
     </Stack>

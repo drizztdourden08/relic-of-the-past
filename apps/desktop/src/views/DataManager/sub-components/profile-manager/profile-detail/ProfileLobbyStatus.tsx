@@ -34,7 +34,7 @@ const ProfileLobbyStatus = ({ profile }: ProfileLobbyStatusProps) => {
         groups={[[
           { label: 'Server', value: membership.server, mono: true },
           { label: 'Lobby', value: membership.lobbyName },
-          { label: 'Code', value: membership.code, mono: true, copyable: true },
+          ...(membership.lobby.code === undefined ? [] : [{ label: 'Code', value: membership.lobby.code, mono: true, copyable: true }]),
           { label: 'Archipelago', value: membership.ap, mono: true },
           { label: 'Slot', value: profile.randomizer?.slotName ?? '' },
         ]]}

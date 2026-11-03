@@ -1,3 +1,4 @@
+<!-- @layer tooling-scripts @kind doc -->
 # ALttP GBA reverse-engineering workspace
 
 This directory is an isolated research toolchain for the **A Link to the Past** half of

@@ -1,4 +1,6 @@
 /* @layer bridge-wasm @kind barrel */
+export { browseLobbies } from './browse/browse-lobbies';
+export type { BrowsedEntry } from './browse/browsed-entry.type';
 export { checkLobby } from './check/check-lobby';
 export type { LobbyCheck, LobbyCheckOk } from './check/lobby-check.type';
 export { joinFromForm } from './join/join-from-form';
