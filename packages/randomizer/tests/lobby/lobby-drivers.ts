@@ -66,4 +66,4 @@ const finalState = (outcome: Awaited<ReturnType<typeof play>>): LobbyJoinState =
   return state;
 };
 
-export { downloadDriver, endsWith, expectOk, finalState, infoDriver, joined, until };
+export { downloadDriver, endsWith, expectOk, finalState, infoDriver, joined };

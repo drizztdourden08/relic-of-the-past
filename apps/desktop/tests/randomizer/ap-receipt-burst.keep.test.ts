@@ -73,7 +73,7 @@ afterEach(() => {
   fake.remove();
 });
 
-it('gives each of 200 items received at once its own line at delivery time', () => {
+it('gives each of 200 items received at once its own line at delivery time', { tags: ['critical'] }, () => {
   const planned = ['Bow at Link\'s House. 0 of 2 found.', WALLET_STEP];
   const plannedIds = setSessionReceiptMessages(planned) as number[];
   const detailId = required(plannedIds[1], 'detail page id');

@@ -1,4 +1,4 @@
 /* @layer shared-game @kind barrel */
 export type {
-  Caret, CaretSite, LineBreak, StructureContext, StructureMode, StructurePolicy, WorkLine,
+  LineBreak, StructureContext, StructureMode,
 } from './structure.type';

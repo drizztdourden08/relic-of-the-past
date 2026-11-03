@@ -8,9 +8,7 @@ import type { KeyboardEvent as ReactKeyboardEvent } from 'react';
 import type { GradientStop } from '@rotp/hud';
 import { NUDGE_FINE, NUDGE_COARSE, NUDGE_KEYS } from './GradientRamp.constants';
 import type { GradientRampProps } from './GradientRamp.type';
-
-const clamp01 = (n: number): number => Math.min(1, Math.max(0, n));
-const round2 = (n: number): number => Math.round(n * 100) / 100;
+import { clamp01, round2 } from '@app/hud-layout-editing/keyframe-track';
 
 const GradientRamp = (props: GradientRampProps) => {
   const { stops, onChange, kind } = props;

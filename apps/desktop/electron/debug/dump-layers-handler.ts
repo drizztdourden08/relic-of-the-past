@@ -1,9 +1,6 @@
 /* @layer electron-main @kind logic */
-import { app } from 'electron';
-import { join } from 'path';
 import { handle } from '@drizztdourden08/brock-electron/main';
-import { getWorkspaceRoot } from '../screen-editor/workspace-root';
-import { writeFile, mkdir } from 'fs/promises';
+import { writeDebugOutput } from './write-debug-output';
 
 const parseDumpLayersSlot = (): number | null => {
   for (const arg of process.argv) {
@@ -28,17 +25,7 @@ const registerDumpLayersHandler = (): void => {
   handle('debug:getDumpLayersSlot', () => slot);
   handle('debug:getHoverTile', () => hoverTile);
 
-  handle('debug:dumpLayers', async (_event, data: unknown) => {
-    const appRoot = app.isPackaged
-      ? join(app.getAppPath(), '../..')
-      : getWorkspaceRoot();
-    const dir = join(appRoot, 'debug-output');
-    await mkdir(dir, { recursive: true });
-    const outPath = join(dir, 'dump-layers.json');
-    await writeFile(outPath, JSON.stringify(data, null, 2));
-    console.log(`[dump-layers] Written to: ${outPath}`);
-    return outPath;
-  });
+  handle('debug:dumpLayers', (_event, data: unknown) => writeDebugOutput('dump-layers', 'dump-layers.json', data));
 };
 
 export { registerDumpLayersHandler };

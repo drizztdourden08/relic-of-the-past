@@ -1,19 +1,16 @@
 /* @layer shared-game @kind barrel */
 export {
-  COPY_MULTIPLIERS, COPY_MULTIPLIER_LABELS, DEFAULT_COPY_MULTIPLIER, DEFAULT_COPY_MULTIPLIERS,
-  DEFAULT_DIFFICULTY, DEFAULT_HEART_CAP, MAX_HEART_CAP, PIECES_PER_HEART, STARTING_HEARTS,
-  asCopyMultiplier, asHeartCap, isReferenceDifficulty,
+  COPY_MULTIPLIERS, COPY_MULTIPLIER_LABELS, DEFAULT_COPY_MULTIPLIER, DEFAULT_DIFFICULTY, DEFAULT_HEART_CAP,
+  MAX_HEART_CAP, PIECES_PER_HEART, STARTING_HEARTS, asCopyMultiplier, asHeartCap,
 } from './difficulty';
 export {
-  DIFFICULTY_COPIES_KEYS, DIFFICULTY_OPTION_KEYS, DIFFICULTY_OPTION_KEY_SET, HEART_CAP_KEY,
-  difficultyCopiesKeyOf, isDifficultyOptionKey,
+  DIFFICULTY_OPTION_KEYS, HEART_CAP_KEY, difficultyCopiesKeyOf, isDifficultyOptionKey,
 } from './difficulty-option-keys';
 export {
   DIFFICULTY_OPTION_DESCRIPTIONS, DIFFICULTY_OPTION_SEEDS,
 } from './difficulty-options.constants';
 export {
-  copiesOfValues, defaultDifficulty, difficultyFromSnapshot, difficultyOfValues,
-  difficultyValuesOf, heartCapOfValues,
+  defaultDifficulty, difficultyFromSnapshot, difficultyOfValues, difficultyValuesOf, heartCapOfValues,
 } from './difficulty-from-snapshot';
 export { applyCopyMultipliers } from './difficulty-copies-pool';
 export { applyHeartCap } from './difficulty-hearts-pool';

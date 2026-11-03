@@ -21,37 +21,37 @@ const base = (): ConnectionRecord => ({
 });
 
 describe('changedPaths', () => {
-  it('reports nothing for structurally identical records', () => {
+  it('reports nothing for structurally identical records', { tags: ['critical'] }, () => {
     expect(changedPaths(base(), base())).toEqual([]);
   });
 
-  it('ignores key ORDER, so a reordered object is not a change', () => {
+  it('ignores key ORDER, so a reordered object is not a change', { tags: ['critical'] }, () => {
     const reordered = { toConnectionId: 'connection-002', screenId: 'screen-100' };
     const original = { screenId: 'screen-100', toConnectionId: 'connection-002' };
     expect(changedPaths(original, reordered)).toEqual([]);
   });
 
-  it('reports a changed scalar at its own top-level path', () => {
+  it('reports a changed scalar at its own top-level path', { tags: ['critical'] }, () => {
     expect(changedPaths(base(), { ...base(), canExit: false })).toEqual(['canExit']);
   });
 
-  it('reports an array element at its index, not the whole array', () => {
+  it('reports an array element at its index, not the whole array', { tags: ['critical'] }, () => {
     const next = { ...base(), tags: ['tag-074', 'tag-099'] as ConnectionRecord['tags'] };
     expect(changedPaths(base(), next)).toEqual(['tags[1]']);
   });
 
-  it('reports an appended array element and leaves the untouched ones alone', () => {
+  it('reports an appended array element and leaves the untouched ones alone', { tags: ['critical'] }, () => {
     const next = { ...base(), tags: ['tag-074', 'tag-061', 'tag-051'] as ConnectionRecord['tags'] };
     expect(changedPaths(base(), next)).toEqual(['tags[2]']);
   });
 
-  it('reports a deeply nested change at its real path', () => {
+  it('reports a deeply nested change at its real path', { tags: ['critical'] }, () => {
     const next = base();
     const nextPlacement = { ...next.placement, rect: { ...next.placement.rect, w: 12 } };
     expect(changedPaths(base(), { ...next, placement: nextPlacement })).toEqual(['placement.rect.w']);
   });
 
-  it('reports a union field that switched variant at the paths that differ', () => {
+  it('reports a union field that switched variant at the paths that differ', { tags: ['critical'] }, () => {
     const withItem = { itemId: 'item-032' as const };
     const withAllOf = { allOf: [{ itemId: 'item-032' as const }, { itemId: 'item-075' as const }] };
     const paths = changedPaths({ ...base(), requirements: withItem }, { ...base(), requirements: withAllOf });
@@ -59,22 +59,22 @@ describe('changedPaths', () => {
     expect(paths).toContain('requirements.itemId');
   });
 
-  it('treats an absent key and an explicitly undefined one as the same', () => {
+  it('treats an absent key and an explicitly undefined one as the same', { tags: ['critical'] }, () => {
     const withUndefined = { ...base(), nav: undefined };
     expect(changedPaths(base(), withUndefined)).toEqual([]);
   });
 
-  it('reports a shape change at its own path instead of recursing into it', () => {
+  it('reports a shape change at its own path instead of recursing into it', { tags: ['critical'] }, () => {
     const paths = changedPaths({ nav: { weight: 1 } }, { nav: 3 });
     expect(paths).toEqual(['nav']);
   });
 
-  it('reports every declared leaf when there is no current record (a create)', () => {
+  it('reports every declared leaf when there is no current record (a create)', { tags: ['critical'] }, () => {
     const paths = changedPaths(null, { screenId: 'screen-100', tags: ['tag-073'] });
     expect(paths).toEqual(['screenId', 'tags[0]']);
   });
 
-  it('reports the leaves of a subtree the proposal removes', () => {
+  it('reports the leaves of a subtree the proposal removes', { tags: ['critical'] }, () => {
     const withNav = { ...base(), nav: { transitType: 'walk', weight: 2 } };
     expect(changedPaths(withNav, base())).toEqual(['nav.transitType', 'nav.weight']);
   });
@@ -83,34 +83,34 @@ describe('changedPaths', () => {
 describe('linesForPaths', () => {
   const source = serializeConnectionRecord(base());
 
-  it('maps a top-level field to the line it is written on', () => {
+  it('maps a top-level field to the line it is written on', { tags: ['critical'] }, () => {
     const line = firstLine(linesForPaths(source, ['canExit']));
     expect(source.split('\n')[line - 1]).toContain('canExit');
   });
 
-  it('maps a nested path to the line holding that leaf', () => {
+  it('maps a nested path to the line holding that leaf', { tags: ['critical'] }, () => {
     const line = firstLine(linesForPaths(source, ['placement.rect.w']));
     expect(source.split('\n')[line - 1]).toContain('w');
   });
 
-  it('falls back to the nearest declared ancestor for a path the source lacks', () => {
+  it('falls back to the nearest declared ancestor for a path the source lacks', { tags: ['critical'] }, () => {
     const line = firstLine(linesForPaths(source, ['placement.rect.zzz']));
     expect(source.split('\n')[line - 1]).toContain('rect');
   });
 
-  it('returns sorted, deduplicated lines when several paths share one', () => {
+  it('returns sorted, deduplicated lines when several paths share one', { tags: ['critical'] }, () => {
     const lines = linesForPaths(source, ['tags[0]', 'tags[1]', 'canExit']);
     expect(lines).toEqual([...lines].sort((a, b) => a - b));
     expect(new Set(lines).size).toBe(lines.length);
   });
 
-  it('reads plain JSON and the record emitter output', () => {
+  it('reads plain JSON and the record emitter output', { tags: ['critical'] }, () => {
     const json = JSON.stringify(base(), null, 2);
     const line = firstLine(linesForPaths(json, ['placement.rect.w']));
     expect(json.split('\n')[line - 1]).toContain('"w"');
   });
 
-  it('does not mistake a brace inside a string for a container', () => {
+  it('does not mistake a brace inside a string for a container', { tags: ['critical'] }, () => {
     const json = JSON.stringify({ name: 'a { b } c', canExit: true }, null, 2);
     const line = firstLine(linesForPaths(json, ['canExit']));
     expect(json.split('\n')[line - 1]).toContain('"canExit"');

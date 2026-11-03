@@ -4,14 +4,13 @@ export {
   RETRO_QUIVER_PRICE, RETRO_REPLACEMENT_ITEM, RETRO_SILVER_ARROW_COST, RETRO_SILVER_COST_KEY,
   RETRO_WOOD_ARROW_COST, RETRO_WOOD_COST_KEY,
 } from './retro-bow.constants';
-export { dearestShotCost } from './dearest-shot-cost';
 export { retroShotWalletNeed } from './retro-shot-wallet-need';
 export { retroWalletNeed } from './retro-wallet-need';
 export { heldRetroBow } from './held-retro-bow';
 export { retroCostCeilingsOf } from './retro-cost-ceiling';
 export type { RetroCostCeilings, RetroBowSetting } from './retro.type';
 export {
-  RETRO_OPTION_DESCRIPTIONS, RETRO_OPTION_KEYS, RETRO_OPTION_SEEDS, isRetroOptionKey,
+  RETRO_OPTION_DESCRIPTIONS, RETRO_OPTION_SEEDS, isRetroOptionKey,
 } from './retro-options';
 export {
   defaultRetroBow, retroBowFromSnapshot, retroBowOfValues, retroBowValuesOf, storedRetroBowOf,
@@ -23,6 +22,6 @@ export {
   retroVanillaShelves, withRetroArrowSlots,
 } from './retro-shops';
 export {
-  canAffordQuiverAndShots, canAffordShots, canBuyQuiver, canHoldQuiver, canReachQuiverShelf,
+  canHoldQuiver,
 } from './retro-logic';
 export type { RetroShelfStock } from './retro-shops';

@@ -9,7 +9,7 @@ export type { PollEntry, ReportingSession } from '../../location-poller/location
 export { pollerState } from '../../location-poller/poller-state';
 export { requestLocationRebaseline } from '../../location-poller/request-location-rebaseline';
 export { suppressLocationReport } from '../../location-poller/suppress-location-report';
-export { buildHeapReads } from '../../poll-heap-reads';
+export { buildHeapReads, liveRoomWordReader, thresholdMet } from '../../poll-heap-reads';
 export type { HeapReads } from '../../poll-heap-reads';
 export { rebaselineEntries } from '../../poll-rebaseline';
 export { pondDemandLineKey } from '../../pond-demand-line-key';

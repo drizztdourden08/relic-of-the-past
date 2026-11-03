@@ -80,12 +80,6 @@ certain first, then oldest first. A decided finding leaves the list, which is wh
 Reject remove it from view. A missing target or screen stays `null`: a placeholder string
 would be sampled, fail the id pattern and turn the column into plain text.
 
-## apps/desktop/tests/data-inspector/recommendations-shell.keep.test.ts
-
-The folded detail column is hidden by CSS and stays mounted, so folding never discards a
-half made amendment. The shell knows nothing about recommendations; a plain collection's
-detail pane uses it too.
-
 ## apps/desktop/tests/data-inspector/record-creators.keep.test.ts
 
 One adapter per collection's `Allocate*` shape. Each folds the record into the live
@@ -125,15 +119,9 @@ which raises the window on Windows and steals focus.
 
 ### e2e/state specs
 
-- `state-big-screen`: the castle exterior is a four screen area (0x1B, 0x1C, 0x23, 0x24); one
-  screen is 64x64 = 4096 tiles, so the total must be 16384.
 - `state-intro-bed`: the sleep handler waits for a button, so beats need taps; A and B
   alternate so a stuck auto repeat cannot stall. The tap budget is a ceiling, checked before
   each tap. The first frame is the zero baseline for progress flags.
-- `state-jail-cell`: the flood now reaches past the cell, so the summary counts a third
-  check outside it, already done; the two behind the lock are what the state guards.
-- `state-links-house`: a follower in tow is what makes this the intro and not a later visit.
-- `state-sanctuary-grounds`: the single screen outdoor case, on purpose.
 - `state-secret-passage`: room 0x55 is the Secret Passage, `screen-171` (roomIndex 85). The Dam
   is its own record, `screen-170` (roomIndex 267), so the two no longer collide.
 - `state-tag-room`: the flood derives the annotations, so it runs first; the tag must decode,
@@ -168,46 +156,6 @@ The widget, the simulator's runner and the `--dump-nav` dumper must flood a loca
 same number. They once disagreed (Jail Cell: dumper 590, widget 608) because the dumper used
 an empty inventory and a fixed interior tile context. `--dump-nav` writes the dump and exits
 by itself, so the spec polls for the file.
-
-## apps/desktop/tests/e2e/hud-layout-options/
-
-The rig for pressing every option of the HUD Layout panel in the built app. `readShape`
-reads every control of one section as tags, names and rectangles, without each control's own
-lit or checked state, which is the one thing an option may change about itself.
-`readPlaced` reads every node's placed box off the stage. The page readers are self
-contained functions, because `page.evaluate` does not carry a closure. A tall viewport keeps
-a whole section in one capture; `element.screenshot` paints black past the viewport.
-
-The rule: press an option, and its section comes back with the same controls, rectangles and
-box (`stable`), while the option's own state did move (`flipped`), or the case is vacuous.
-`stageState` includes the overlay's cell boundaries: a grid whose outer tracks are `auto`
-around a `fill` track answers add, insert and gap by resizing the fill track, so no child
-rectangle moves while the cells do (they come from `stageCellRects`). A grid line paints its
-background and a flex slot its border, which is why the overlay colour reads one or the
-other. An inserted `auto` column is empty and solves to zero width, so a track edit is judged
-by the occupancy map it rewrites (children are renumbered). Pressing an alignment tile that
-is already lit writes the value it had, so nothing may move.
-
-The screen root is the subject because alignment, flow and distribution only show in a
-container with room to spare; the root is the full play field with three children and can
-take either engine. Each spec is one serial `describe` sharing one app, so the cases depend
-on order (the flex spec starts by flipping the engine). In the grid spec, the alignment case
-first sizes column 1 and row 1 to `fill`, because `auto` tracks hug their content and leave
-nothing to align. Sizing a column that was `auto` to `px` then `%` carries the number zero,
-so `%` moves no pixel and is exempt from the solve check. Wrap on a flex row whose children
-already fit moves nothing; what wrap does when it applies is pinned in
-`hud-layout-engine.keep.test.ts`. A flex overlay draws one slot per child and no lines. The
-gap field's formula promotion floats the control and must not reflow its row.
-
-## apps/desktop/tests/e2e/hud-style-drives-scheme.keep.spec.ts
-
-The hub's side navigation shows labels only while open, so a tab is picked by its accessible
-name. The slot list sits inside the column's own scroller, so the shot scrolls the last row
-into view and clips to the visible rows. The modern profile is stored as
-`hudStyle: 'modern'` with four assignments keyed by slot number, and the Style row and the
-slot list must show exactly that.
-Original is pressed first so a rerun never depends on how the last run ended, and every
-setting changed is changed back.
 
 ## apps/desktop/tests/e2e/ledge-baseline.keep.spec.ts
 
@@ -252,12 +200,6 @@ The widest custom ratio is about 4.27, the 1024 px linear world width. The talle
 The writer suites (`dataset-record-writers`, `enumeration-writer`, `item-group-writer`) run in
 a throwaway workspace shaped like `packages/game-data/src/data/...`, because the id allocator scans that
 shape and the path resolver refuses to leave it.
-
-## apps/desktop/tests/game/data/check-content-tags.keep.test.ts
-
-The check content tags (key, big key, map and compass, boss item) are a seeded
-`CheckRecord.tags` array, no longer computed on read. A few known checks are pinned so a
-seed edit shows as a diff.
 
 ## apps/desktop/tests/game/data/connection-pairing.keep.test.ts
 
@@ -581,33 +523,6 @@ copy, erase and name menus. None of them is gameplay, so the main HUD stays hidd
 The HUD layout editor suites. Section numbers (§50, §55 and so on) in test names refer to the
 design passes of the layout editor plan.
 
-## apps/desktop/tests/hud/hud-appearance-controls/
-
-Phase 8 of the inspector UX review, Appearance measured at 289 / 232 / 188 px with the stylesheets
-walked (this phase added `apps/desktop/src/theme/hud-layout-editor/appearance.css`).
-
-- The claim to prove is height. The case for `SubsectionGroup` is that closed, the redesign is one
-  screen tall; the section was about 1800px of flat scroll with everything on. SSR renders the
-  initial state, every group collapsed, so the measurement needs no mocks or clicks. The rail is
-  the window less the editor chrome (16px padding twice, an 8px gap, a ~34px toolbar: H minus 74);
-  on a 768px laptop that is 694px, the Inspector label and eight other headers take ~180, so
-  Appearance's body has ~500px. Against `expanded`, the same six groups open (the old shape), the
-  closed groups are under a third of the height; the unconditional rows (visible, opacity, radius,
-  clip, dim when empty) are excluded because they would only dilute the ratio. The open bodies use
-  today's controls, which are shorter than the old ones, so the comparison understates the win.
-- Each header is one line whatever its value (the summary ellipses, since a wrapping header costs
-  what opening would), states its value closed, and carries a 16px colour chip (a gradient paints a
-  real gradient).
-- Every colour row clears 100px of hex at 188 (seven times §34's 13.9px, against about 50px for
-  `#rrggbb` at `--text-sm`): background, border, outline, tint, both shadows, and a gradient stop
-  nested inside the ramp. All are the same `ColorField`. The hex is found by the aria-label
-  `ColorField` writes, scoped to a case because a group's editor labels its colour plainly.
-- The border sides are a 46x34 box instead of four checkboxes, the gradient ramp takes the full row
-  at 18px tall, the paint kind is three 26px icons (82px) instead of a `Select` taking 75% of the
-  row, and four slot chips fit one row at the default rail.
-- The probe keys elements by their `hud-` class, since `Text`, `Flex` and `Box` prepend their own
-  primitive class. Nothing escapes the rail and every label stays on one line.
-
 ## apps/desktop/tests/hud/hud-appearance-escape.keep.test.ts
 
 The prerequisite of the appearance phase, checked against what was built. The inspector UX
@@ -733,23 +648,6 @@ it for the reflow warning, but wrong as a name).
   a rect and the lookup is answered from y. That is not browser hit testing (no overlap, scroll
   or occlusion), but it is the question `rowUnder` asks. Nothing shows before the slop threshold.
 
-## apps/desktop/tests/hud/hud-drag-indicators.keep.test.ts
-
-The drag's own marks, measured in headless Chromium with the real stylesheets, walked rather
-than listed (§36.9: a list silently measures an unstyled control the day a sheet moves). §46
-removed §44's stage drop surface, the most visual part of the plan (the 2px insertion line and
-caps, the cell wash, the co place hatch, the band ring), so none of it is asserted. What remains
-is what the outline draws: a 24px pan band at each end of the scroller (a zero height sticky
-child and a pseudo element, costing no layout, because undrawn auto scroll is the version nobody
-understands), the ghost's offset from the cursor and its corner flip (which keeps it on screen),
-and the cell hatch. A sibling occupied cell is a destination and wears a hatch instead of a fill
-or a dim, since landing there stacks the two; that hatch moved from the stage (§45) into the
-lattice (§48) and into `CellPicker` (§50), the only control that places a child, as its
-`occupied-selected` state. The fixture child spans both columns of row 1, so one cell is shared
-and hatched and the other is its own. The probe keys boxes by the first `hud-` class anywhere in
-the list, because a design system `Button` puts its own classes first, plus the lattice's
-`data-state`, or every cell would collapse onto one entry.
-
 ## apps/desktop/tests/hud/hud-drag-timers/
 
 Phase 5 of the HUD drag and drop plan: auto scroll and spring load, both loops. The claim worth
@@ -822,36 +720,6 @@ screen. Since §57 `gap` is `{ x, y }` under both engines (x horizontal, y verti
 belongs to any container, so both pass straight through in either direction and flipping back
 restores the grid exactly. The round trip never strands a child outside the new grid.
 
-## apps/desktop/tests/hud/hud-grid-editor-metrics/
-
-§50's lattice measured in headless Chromium at 188 / 232 / 320 px. The maintainer's claim: cells
-must match their row and column in size, or it does not look like a grid. §48 drew every address
-as a uniform square, so the screen's `[auto, fill, auto]` root (narrow, wide, narrow) drew as three
-equal squares. Now cells carry the engine's solved proportions on both axes, read from the same
-solve the stage uses (`apps/desktop/src/hud-layout-editing/grid-solve-lookup.ts`).
-
-- Against a 398x224 view the screen root solves to columns 16, 382, 0 and rows 16, 192, 16: the
-  third column holds no child, so its `auto` measures 0. That empty track is drawn at the 24px
-  floor and its header is marked, because drawing 0px at 24px silently would lie about its size.
-- Every cell of a row shares a height and every cell of a column a width, and each header sits
-  exactly over or beside what it labels; one CSS grid holds both, so this is a property, asserted so
-  the two cannot drift.
-- Proportion never squashes a track below WCAG 2.2 SC 2.5.8's 24px target. Twelve columns by ten
-  rows (twelve 24px floors alone do not fit 320px) scroll instead of shrinking, the lattice caps its
-  own height (at most 220px) instead of pushing the legend away, and both header strips stay pinned
-  (sticky, moving at most the lattice's 2px padding over 120px of travel), because the strips are
-  what identify a cell; frozen panes, as in a spreadsheet.
-- The four cell states (empty, occupied, selected, selected on occupied) are four computed paints;
-  the crossed one is §45.7's hatch, since landing on a sibling is a destination (§42.3). The
-  `CellPicker` fixture is the one control with a selected state under SSR: one cell shared with a
-  sibling, one the child's own, one a sibling's, one empty.
-- The stage echo is `gridCellRects`' own answer to the pixel, solved in game pixels with the host's
-  unit of 1 and only then scaled for display; this test once passed the display scale as the unit,
-  agreeing with the echo's own mistake (§52). An echo nearly right would teach the wrong cell. It
-  never takes the pointer, since §46 removed the clickable surface it replaces.
-- The editor view store is mocked to a fixed echo selection, because zustand serves
-  `getInitialState` as the server snapshot; the selection itself is proved in `hud-grid-editor`.
-
 ## apps/desktop/tests/hud/hud-grid-editor/
 
 §50's grid editor, driven.
@@ -910,34 +778,6 @@ the §55, §56 and §58 arrangements so none was spent buying the new one.
   pair, and a rebuilt option table most often breaks by one entry writing its neighbour's value.
   The guide colour is a bare swatch opening the picker, with no separate hex box.
 
-## apps/desktop/tests/hud/hud-grid-strip/
-
-The geometry half, on the same rig. Each claim is one of the maintainer's requests turned into
-a rectangle:
-
-- Its own section means a title with a gold rule and the content under it: three titled
-  sections under a grid, four under a flex container, named by concern. Flow is its own section
-  because `direction` turns the alignment diagrams.
-- No box around anything: nothing in the section's own chrome paints a background or border.
-  §54 drew three nested surfaces (the block's card, the settings well, the alignment pad's
-  well); the only thing that paints now is the sub section rule, a border on the title.
-- Section one keeps labels (Type, Overlay, Gap), the same three under either engine, packed
-  into as few lines as their measured widths allow: two lines at 220 and 232, one at 320. Lines
-  are counted by overlapping vertical ranges, since the 28px gap field is centred against the
-  26px icon rows.
-- No empty space: the gap piece reaches the section's right edge, within 1px since a `1fr`
-  track can land on a half pixel. A grid's two gap fields share one line and clear 50px each
-  (54 at 320, 98 at 220); §55 had stacked them because the alignment pad was still in this
-  section.
-- Every alignment tile has one size, in full lines: a grid's two axes are a line each, and a
-  flex container's six main axis values fold into two lines of three above the cross axis.
-- The add column and add row `+` sit at the very end of their header strips.
-- A flex container has the same two gap fields and the same overlay box as a grid; §57 showed
-  the flow engine always spent a gap on each axis and `guide` belongs to any container.
-- The toolbar strip is one row in every selection state at every rail. A track used to add an
-  81px size field to five buttons behind its chip, 287.4px against a 224px strip at 232, so it
-  wrapped; the size moved onto the track's own header. The lattice never moves between states.
-
 ## apps/desktop/tests/hud/hud-grid-track-edits.keep.test.ts
 
 §50's document rule: a track edit just happens and the children follow. §48 refused to remove a
@@ -950,51 +790,6 @@ track that took its index. A collapsed span loses the key entirely, since a key 
 undefined survives a JSON round trip. Columns keep one track; rows empty back to implicit. A grid
 with no declared rows still shows the rows its children reach, so those are materialised before
 an insert, which must mean what the eye saw.
-
-## apps/desktop/tests/hud/hud-inspector-collapsed-fields.keep.test.ts
-
-Phase 1 of the inspector UX review covers finding F2, flex rows with no `min-width` collapsing
-fields to zero. The claim is about layout, so declarations prove nothing; the rows render in
-headless Chromium against the real stylesheets (the tokens index is skipped because it only
-lists `@import`s, which `setContent` cannot resolve) and are measured. A control gets the rail
-less 32: 289px at the 320 default, 188px at the 220 minimum. Every threshold was 0 before the fix.
-
-- Transition duration: `.select-trigger` is `width: 100%`, a 100% basis on a flex item, so the
-  easing Select took all 281px. Phase 1 gave 68.3, phase 3's compact tier 104.3, phase 4's
-  removal of the mode switch 172.6 at 289; 11.3, 47.3, 115.6 at 232; 0, 3.3, 71.6 at 188. The
-  easing `Select` sits in its own non extent `Field` so it stays content sized.
-- A committed formula has the whole row now that the "+ var" Select is gone (`FormulaMenu` is a
-  popover on the f chip): 237.5 / 180.5 / 136.5.
-- The paint row (behind background, border, shadow, outline, tint and text colours, the most
-  rendered row in Appearance) was 13.9px at every rail, photographed under F1 as a colour clipped
-  to `#0`; phase 8 made its flat branch a `ColorField` with the kind on its own icon row, reached
-  by the `background hex` label: 253 / 196 / 152 against phase 1's 166.1 / 109.1 / 65.1.
-- The keyframe row carried `at`, the value, an easing `Select` and a delete button on one line;
-  `at` and the `Select` both had 100% bases, so the value's `flex: 1 1 0` had no free space and
-  stayed 0 through phases 1, 3 and 4 (removing the switch let `at` absorb the space instead).
-  Phase 10's `KeyframeTrack` edits one key at a time with three full width rows: the value is
-  242 / 185 / 141 and `at` became a `Slider` with 251 / 194 / 150 of track. A range input has an
-  intrinsic ~129px width acting as a flex minimum and has no `aria-label`, so it is found by its
-  class.
-- Nothing escapes the rail at any width.
-
-## apps/desktop/tests/hud/hud-inspector-content-width.keep.test.ts
-
-Phase 9 of the inspector UX review, measured; the behaviour half is `hud-inspector-content`. Most
-of these controls are read, not typed into, so what is measured is that the artwork is drawn at an
-identifiable size (2rem and 1.25rem against the design system's 13px root: 26 and 16.3px, with
-`flex-shrink: 0` so a long label eats the name, never the picture), that the name gets exactly
-what the picture and caret leave (186.1 / 129.1 / 85.1; at the minimum it ellipsises after
-"Silver arrow i", the trade `min-width: 0` buys to keep the caret on screen), that a reference is
-one row (32 and 22.5px) in both densities, and that nothing overflows at 188px, including the
-slot field's out of range note (two wrapped lines, 30px). The bounded track has 277 / 220 / 176px:
-at the minimum, 20 steps of 0.05 are 8.8px each, coarse but still a handle, and the number beside
-it (141px) types an exact value. The text value is typed into: 263 / 206 / 162px for
-`= bomb_current`, which two mode switches once clipped to `bomb_curre`; it is wider than §36.7's
-formula row because it has no spinner and no half width sibling. The glyph editor is rendered
-whole because its source and shows switch carries phrases, and a wrapping `SegmentedControl` would
-be a new F2. A jsdom `window` with an `api` proxy satisfies modules `glyph-art` reaches at import
-(the log bus, a device store); the measurement still runs in real Chromium.
 
 ## apps/desktop/tests/hud/hud-inspector-content/
 
@@ -1023,21 +818,6 @@ The behaviour half of phase 9 of the inspector UX review; widths are in
 - `window.api` is stubbed before the imports because the glyph art resolver reaches the custom
   glyph store, which reaches the desktop bridge at module scope; `ResizeObserver` is a no op
   because jsdom has no layout for `SegmentedControl`'s indicator.
-
-## apps/desktop/tests/hud/hud-inspector-geometry-width/
-
-Phases 5 and 6 of the inspector UX review, measured at 289 / 232 / 188 px with the stylesheets
-walked (§36.9). The one to prove is the box model at 188: §35.6 measured the four margin edges as
-four spinners in a row at 3.0px of typing surface each and concluded no arrangement of four
-spinners fits, naming `BoxModelField` as the answer. Nested rings with no spinner column give
-every edge over 18px at the minimum (two digits and a minus sign), growing with the rail; a padding
-edge never measures wider than its margin edge, or the rings would have collapsed into a row. The
-whole Size and Box section, which the plan estimated at about 850px before (a node with a size, a
-margin and four paddings), is 398px and does not change with the rail because nothing wraps. The
-other controls are checked for what killed their predecessors: no overflow, no wrapped label. The
-offset pair (the section's top row, two numbers in `PositionInput`'s shell) stays typeable, the
-limits keep one row per axis, and the lattice's six cells clear 24px on both axes (§48: they were
-57.3 x 12, failing WCAG 2.2 SC 2.5.8 on the short axis).
 
 ## apps/desktop/tests/hud/hud-inspector-geometry/
 
@@ -1070,86 +850,6 @@ platform for the primary modifier, so the platform provider is part of the chain
 - The screen root cannot be given a size by any path: size and limits sit under one inert scrim
   saying it is always exactly the view, all four margins and the scale are locked, and padding
   stays live.
-
-## apps/desktop/tests/hud/hud-inspector-layout-widths/
-
-Phase 7 of the inspector UX review: the Layout section's controls measured at 289 / 232 / 188 px,
-stylesheets walked (this phase added `apps/desktop/src/theme/hud-layout-editor/layout.css`).
-
-- `AlignmentTiles` at 188 (§56) is the one to prove. The 3x3 pad it replaced was a fixed 82px, so
-  the only question was whether it fit; a row of tiles is elastic. Round 10 drew a flex
-  container's six main axis tiles at 30px beside three 48px cross axis tiles, so every tile in a
-  component is one size (the track count is the widest row's). Round 12 let six values wrap
-  freely into three ragged lines with the cap floating mid block; round 17 held six on one line
-  at about 26px, where between, around and evenly differ by a pixel. So a row longer than four
-  folds at a fixed count, positions over distributions, every line full. Tiles stop growing at
-  72px instead of letterboxing.
-- The track strip is gone (§48): one `GridEditor` replaced `TrackListField`'s chip strips and its
-  44px miniature, so the lattice's 24px floor per cell is measured instead (the old drawing was
-  57.3 x 12 at 188, failing SC 2.5.8). §50 made cells proportional; the floor survived. Three
-  columns fit at every rail, so nothing scrolls; twelve is `hud-grid-editor-metrics`.
-- The picked track editor (rebuilt here, since SSR cannot click a header) keeps a typeable extent
-  field beside its four 26px tools at 188.
-- Labels and hints stay on one line; the pad's self explaining label is the longest.
-- `ColorField` gives a hex 253 / 196 / 152px; the old raw hex box beside a swatch with no
-  `min-width: 0` had the paint row's 13.9px shape.
-- The direction control is two 26px buttons and a 2px gap, 54px at every rail; it was 82 with
-  three until §42 gave `stack` back to the grid.
-
-## apps/desktop/tests/hud/hud-inspector-property-rows.keep.test.ts
-
-Phase 3 of the inspector UX review covers finding F3: a design system with a `Field`, and a panel
-that never used it. The source half is grep shaped and covers every row; the layout half reuses
-the collapsed fields harness at 289 / 232 / 188 px.
-
-- No file under `HudLayoutEditor/` puts a property label in anything but a `Field`.
-  `.hud-inspect__label` (group headings) and `.hud-inspect__sub` (per property labels) became the
-  `Field` label; two card headings remain (a switch case's number, a button state's name), which
-  title a card instead of naming a control. The duplicate id error and the expression parse error
-  (`.hud-inspect__error`, `.hud-expr__error`) and the loose hint lines go through `Field`'s
-  `error` and `hint` slots.
-- Every control passes `size="sm"` itself, because `Field` deliberately does not write the shared
-  control variables (contract §32.3).
-- The inspector sheet's hand written `--space-2xs` count fell from 21 (contract §32.1) to 10, then
-  9 when a button state's face became a `ReferenceField` (§40); what remains is what a primitive
-  cannot express (paddings, a Button gap, gaps on elements carrying a popover `ref`, which `Flex`
-  does not forward). Down is the direction it should move.
-- Self alignment belongs to the child's own section again (§50): one axis under a flex parent
-  (align down), both under a grid (align self, align across). The box model names each edge, and
-  min and max share one hint.
-- `sm` had never been on screen before phase 3. Every `SegmentedControl` option set fits the
-  188px minimum; the track is `flex-shrink: 0`, so a set that did not fit would push its row wide.
-  The widest is none, loop, ping-pong at 155.1px; then uniform, per corner 129.6; fixed position,
-  slot 124.4; game sprite, font 117.8; glyph, image 97; verb, slot 78.2; flex, grid 76.2; text, fx
-  68.9. The old 123, fx set (66.3) is gone with the mode switch.
-- Every label stays on one line; `bottom` in a 42px edge column is the tightest. Nothing escapes
-  the rail: the min and max row once escaped by 75px because `.field--inline .field__control` had
-  `flex: 1` without `min-width: 0`, fixed in the field stylesheet. The four border side checkboxes fit one
-  row at 188.
-- The margin edges (four spinners, 28.3 / 14.0 / 3.0px of typing surface) moved to
-  `BoxModelField`, measured in `hud-inspector-geometry-width`; `EdgesInput` and
-  `MinMaxExtentField` stay deleted.
-- The duration and delay pair, at `md` 138.5px each against 141.3 needed (contract §34.4), at
-  `sm` 31.2px at the default, is now 99.5 / 71 / 49 per field after the mode switch's removal.
-
-## apps/desktop/tests/hud/hud-inspector-value-input-width.keep.test.ts
-
-Phase 4 of the inspector UX review, measured in headless Chromium at 289 / 232 / 188 px (the 320
-default rail less 32, the wireframe width, and the 220 minimum less 32). Deleting the value mode
-switch gave back 66.3px of `SegmentedControl` plus its 2px gap on every numeric row, turning the
-duration and delay pair (the same shape as the grid gap pair) from 31.2 / 2.7 / 0 into 99.5 / 71
-/ 49; at `md` (contract §34.4) two fields sharing 281px got 138.5 each against 141.3 needed. The
-stylesheets are walked, not listed, because `ValueInput.css` lives in its own folder and a listed
-set measured an unstyled control while still passing. A half width formula stays half width at
-rest; its sibling sits to the right (tops differ only because the row aligns to flex end and the
-formula's result line makes its field taller). Promotion (§58) is an overlay: the field keeps its
-height (`--promote-height`) and its control floats over the row, so the sibling never moves. §36
-promoted with `flex: 1 0 100%`, which reflowed the pair and broke the maintainer's rule that
-touching a control may not rearrange what is beside it. The probe applies the class with the
-four numbers the overlay promotion measures, mirroring its `boxFor`, since an SSR page
-cannot focus; the real hook runs in the e2e layout options spec. The promoted width is 233.5 /
-176.5 / 132.5, 4px under §36 for the 2px padding each side that makes it read as a card on the
-row.
 
 ## apps/desktop/tests/hud/hud-inspector-value-input/
 
@@ -1209,31 +909,6 @@ producers final, and not optional. The fixture is a screen column holding `hud` 
   cell is a destination: hatched, named with its occupant, and placeable, because co placing is
   legal (§42) and the only way an overlay is authored. The node's own cell is never counted as
   someone else's.
-
-## apps/desktop/tests/hud/hud-layout-bands.keep.test.ts
-
-The totals half of the Layout section, measured; the geometry is `hud-grid-strip`.
-
-- A grid section measured 689.5 / 689.5 / 637 (§50), 474.5 / 414.5 / 399.5 (§51), 579 / 579 /
-  564 (§54), 447 / 447 / 433 (§55), then 455 / 455 / 413 (§56): 8px taller at the two narrow
-  rails and 20px shorter at the default. It spent width on section one's three labels and two
-  32px alignment tile rows where the 3x3 pad was one 82px square; it bought every piece of
-  section one on one line at 320. At 220 and 232 the pieces need two lines, and the gap
-  field's 28px is 2px more than the 26px rows beside it. A layout packed by measured width is
-  supposed to answer differently at a different width.
-- A flex section measured 152 / 124 / 124 (§51 and §54), 150 (§55), 164 then 198 (§56), then
-  362 / 362 / 334 (§58), and 358 / 358 / 330 once the strip's 2px sunken well went. The growth
-  is a flex manipulation section (title, strip, child cells, legend), Flow as its own titled
-  section (because `direction` turns the alignment tiles and a section may not rearrange itself
-  when one of its own options is pressed), and section one's second gap cell and Overlay piece,
-  which make it the same section under both engines. The grid's numbers did not change.
-- Nothing escapes the rail, down to 220.
-- The block's band order is grepped out of `GridEditor.tsx`, so a band added, moved or dropped
-  fails here instead of the numbers measuring something no longer on screen. §51's
-  `persistent` prop, §54's settings panel, its heading box and the strip's old `controls` slot
-  must stay gone. `LayoutSection.tsx` mounts four sections in the order Layout, Flow,
-  Alignment, manipulation; both manipulation components hang off one slot titled for the
-  engine in force, and the two wrappers §54 needed are mounted from nowhere.
 
 ## apps/desktop/tests/hud/hud-layout-bindable.keep.test.ts
 
@@ -1323,20 +998,6 @@ Phase 7 of the inspector UX review: what the Layout section's controls write (wi
   colour, not the toggle. The guide colour lives in a constant because the raw colour lint rule
   flags a hex on a `color` property, and this is a document value. A grid mounts `GridEditor`,
   whose selection hook asks the platform for the modifier key's name.
-
-## apps/desktop/tests/hud/hud-layout-section-one.keep.test.ts
-
-Section one is byte for byte the same section under both engines, except which Type button is
-lit (§58). The maintainer's rule: nothing in a section may change when another option in the
-same section is pressed. §56 asserted the breakage as a feature (a different gap cell count and
-a grid only overlay), which is why six rounds passed every gate and were rejected. So section one
-is rendered for a grid and a flex container, the two `aria-pressed` flags and the lit class are
-stripped, and the markup must be identical. The cut is at the second sub section's wrapper,
-because that wrapper carries the next section's label (Alignment or Flow). Alignment belongs to
-section three. §57 gave `ContainerOverlay` a flex drawing, so the overlay is offered under both
-engines. Both engines mount a manipulation component that asks the platform for the modifier
-key's name, hence the platform stub. Behaviour is `hud-grid-settings`, geometry is
-`hud-grid-strip`, and the stage's reaction is the e2e layout options specs.
 
 ## apps/desktop/tests/hud/hud-motion-controls.keep.test.ts
 
@@ -1460,29 +1121,6 @@ write, the node still selected, and no snap guide, scale handle, drop surface or
 is a review. A click is a click: an unselected box, a container and the screen root all select on
 pointer down the first time. The source may contain no other pointer handler and neither drag
 hook; it still names `apps/desktop/src/hud-layout-editing/offset` in prose, so only the import is forbidden.
-
-## apps/desktop/tests/hud/layout-bands.harness/
-
-The Layout section measuring rig, shared by `hud-grid-strip` and `hud-layout-bands`: SSR the
-real components, load the real token, primitive and editor stylesheets into headless Chromium,
-and read the boxes at three rails. The rails are the widths that exist: 188 was measured until
-the rails became draggable, but `PANEL_MIN_WIDTH` is 220, so no gesture reaches anything
-narrower; 220 is the floor, 232 the narrow case, 320 the default.
-
-- The composed block had five bands (title, settings panel, strip, lattice, legend) and now
-  has three: the strip, the lattice, the legend. The settings are `LayoutSection`'s own flat
-  sub sections, which the `section` cases render whole.
-- The block is composed here instead of driven, because SSR renders the initial state and
-  nothing in the harness can click. It mirrors `GridEditor.tsx` band for band, and
-  `hud-layout-bands` greps that file to prove it still does.
-- `probe` runs in the page through `page.evaluate`, so it may close over nothing; every
-  constant it needs is declared inside it. A box paints when it has a non transparent
-  background or any visible border, and only the section's own chrome is asked; controls are
-  meant to be drawn. The legend's key strip is a deliberate sideways scroller, so what is
-  inside it is exempt from the overflow check, but the strip itself is not.
-- One toolbar row is a 26px button plus 2px of padding above and below. It was 32 while the
-  strip wore the toolbar's border; the strip is flat now, so the border went with it. The
-  guarantee is unchanged: one row, the same in every state.
 
 ## apps/desktop/tests/randomizer/
 
@@ -1952,12 +1590,6 @@ reported by number. Progress bits come from the live player state bytes and are 
 `player-state-rules`. An unmapped progress tier invents no story beat. `link_num_keys` is
 0xFF outside a dungeon, which once rendered as "255 small keys".
 
-## apps/desktop/tests/simulation/annotation-coverage.keep.test.ts
-
-The annotation list is generated, so a new mechanic could produce a kind nothing draws.
-`EXPECTED_KINDS` mirrors the `AnnotationKind` union, because a type cannot be enumerated at
-runtime. `kill-trigger` describes the whole room and has no tile, so it is panel only.
-
 ## apps/desktop/tests/simulation/annotation-reachability.keep.test.ts
 
 The Secret Passage case: the uncle blocks the corridor, so the chest behind him must not read
@@ -2068,13 +1700,6 @@ own; the last stop has no successor. `screenId` holds a traversal id (`ow:<n>` o
 
 The "On this screen" list must show everything the overlay draws; an unmapped kind lands in
 "Unmapped" and never vanishes.
-
-## apps/desktop/tests/snapshot.spec.ts
-
-A visual snapshot driven by environment variables. The app loads the current profile and
-save state slot `SNAPSHOT_SLOT` (default 2), then its auto test hook writes
-`tests/screenshots/<SNAPSHOT_NAME>.png`. `SNAPSHOT_WAIT` is the time given to the app to
-finish (default 20000 ms). Run it with `npx playwright test apps/desktop/tests/snapshot.spec.ts`.
 
 ## apps/desktop/tests/storage/sprite-set-freshness.keep.test.ts
 

@@ -40,7 +40,7 @@ const errorsOf = (value: unknown): string[] => {
   return result.ok ? [] : result.errors;
 };
 
-describe('one reader for built-in and custom alike', () => {
+describe('one reader for built-in and custom alike', { tags: ['critical'] }, () => {
   it('every shipped document loads, and the three are the three', () => {
     expect(BUILT_IN_LAYOUTS.map((doc) => doc.id))
       .toEqual(['default', 'compact', 'bottom-right']);
@@ -73,7 +73,7 @@ describe('one reader for built-in and custom alike', () => {
   });
 });
 
-describe('a bad document fails loudly, at the line that is wrong', () => {
+describe('a bad document fails loudly, at the line that is wrong', { tags: ['critical'] }, () => {
   it('names the path of a mis-typed key instead of dropping it', () => {
     const errors = errorsOf(edited((doc) => {
       bandOf(doc, 0).gapp = 4;

@@ -6,4 +6,3 @@ export { loadVersion } from './load-version';
 export { mirrorOf } from './mirror-of';
 export { replaceVersion } from './replace-version';
 export { assertUploader } from './assert-uploader';
-export type { VersionMirror } from './versions.type';

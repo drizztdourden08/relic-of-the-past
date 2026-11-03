@@ -20,7 +20,7 @@ const run = (rawAttr: number[][]): { grid: TilePassability[][]; ledges: LedgeTra
 };
 
 describe('processStraightCliffs (indoor) and the 2-wide same-direction rule', () => {
-  it('drops a lone trigger beside a staircase whose neighbor infers the opposite direction', () => {
+  it('drops a lone trigger beside a staircase whose neighbor infers the opposite direction', { tags: ['critical'] }, () => {
     const rawAttr = emptyAttr();
     rowOf(rawAttr, 22)[12] = JUMP_TRIGGER;
     rowOf(rawAttr, 22)[13] = JUMP_TRIGGER;
@@ -34,7 +34,7 @@ describe('processStraightCliffs (indoor) and the 2-wide same-direction rule', ()
     expect(ledges.some(l => l.startRow === 22 && l.startCol === 13)).toBe(false);
   });
 
-  it('keeps a wide same-direction fan (room 0x72 north jump)', () => {
+  it('keeps a wide same-direction fan (room 0x72 north jump)', { tags: ['critical'] }, () => {
     const rawAttr = emptyAttr();
     for (let c = 6; c <= 9; c++) {
       rowOf(rawAttr, 53)[c] = JUMP_TRIGGER;

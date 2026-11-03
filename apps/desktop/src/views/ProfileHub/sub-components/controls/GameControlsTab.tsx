@@ -16,8 +16,9 @@ const GameControlsTab = ({ ctrl }: CtrlProps) => {
         <BindingListHeader middleLabel="SNES" />
         {ctrl.displayMappings.map((mapping) => (
           <SnesBindingRow
-            key={mapping.snesButton}
+            key={`${mapping.snesButton}-${mapping.mappingIndex}`}
             snesButton={mapping.snesButton}
+            mappingIndex={mapping.mappingIndex}
             binding={mapping.binding}
             bindingIcon={mapping.icon}
             deviceIconUrl={mapping.deviceIconUrl}

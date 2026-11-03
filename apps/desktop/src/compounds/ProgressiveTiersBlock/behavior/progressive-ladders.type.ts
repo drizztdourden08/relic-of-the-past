@@ -18,4 +18,4 @@ interface ProgressiveLadder {
   mode: string;
 }
 
-export type { ProgressiveLadder, ProgressiveRung };
+export type { ProgressiveLadder };

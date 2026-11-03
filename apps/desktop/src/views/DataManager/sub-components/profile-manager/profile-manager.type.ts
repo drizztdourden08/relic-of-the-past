@@ -14,6 +14,11 @@ type ProfileFormState = ReturnType<typeof useProfileForm>;
 
 type CreateFn = (opts: CreateProfileOptions) => Promise<CreateProfileResult>;
 
+interface LobbyJoinChoice {
+  seat: string | null;
+  onProgress: (fraction: number) => void;
+}
+
 interface UseCreateProfileParams {
   form: ProfileFormState;
   onCreateProfile: (opts: CreateProfileOptions) => Promise<CreateProfileResult>;
@@ -56,5 +61,5 @@ interface ProfileCreateActionsProps {
 }
 
 export type {
-  CreateFn, ProfileCreateActionsProps, ProfileCreateFormProps, ProfileListPaneProps, ProfileRowsProps, UseCreateProfileParams, UseProfileManagerParams,
+  CreateFn, LobbyJoinChoice, ProfileCreateActionsProps, ProfileCreateFormProps, ProfileListPaneProps, ProfileRowsProps, UseCreateProfileParams, UseProfileManagerParams,
 };

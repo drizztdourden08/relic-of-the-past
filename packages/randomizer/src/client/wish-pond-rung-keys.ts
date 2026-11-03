@@ -18,4 +18,4 @@ const wishPondRungKeysOf = (profiles: PondProfiles): ReadonlyMap<LocationKey, Wi
 };
 
 export { wishPondRungKeysOf };
-export type { WishPondRungKey, WishPondWater } from './wish-pond-rung-keys.type';
+export type { WishPondRungKey } from './wish-pond-rung-keys.type';

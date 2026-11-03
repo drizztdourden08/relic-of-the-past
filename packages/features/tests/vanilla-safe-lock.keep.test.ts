@@ -2,7 +2,7 @@
 import { describe, it, expect } from 'vitest';
 import { resolveGates, FEATURES, FEATURES_BY_ID } from '@rotp/features';
 
-describe('Vanilla Safe makes resolveGates lock out every parity-affecting feature', () => {
+describe('Vanilla Safe makes resolveGates lock out every parity-affecting feature', { tags: ['critical'] }, () => {
   it('requesting every registered feature id with vanillaSafe leaves none of them parity-affecting', () => {
     const allFeatureIds = FEATURES.map((f) => f.id);
     const { effective } = resolveGates(allFeatureIds, { vanillaSafe: true });

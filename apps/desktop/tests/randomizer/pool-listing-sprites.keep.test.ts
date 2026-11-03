@@ -8,7 +8,7 @@ import type { ItemRecord } from '@rotp/game-data';
 const BASE = 'app-sprite://sprites/A Rom Stem/';
 const romOf = (romFile: string, hasAssets: boolean) => ({ romFile, hasAssets, assetSize: null });
 
-describe('sprite set activation without an active profile', () => {
+describe('sprite set activation without an active profile', { tags: ['critical'] }, () => {
   it('stands a ready ROM in, so the creation form has art before a profile exists', () => {
     const roms = [romOf('unprepared.sfc', false), romOf('ready.sfc', true)];
     expect(spriteRomOf(null, roms)).toBe('ready.sfc');
@@ -26,7 +26,7 @@ describe('sprite set activation without an active profile', () => {
   });
 });
 
-describeDataset('sprite URLs a pool row can ask for', () => {
+describeDataset('sprite URLs a pool row can ask for', { tags: ['critical'] }, () => {
   const emitted = new Set(extractedFileNames(SPRITE_DEFINITIONS));
   const items = all('item') as ItemRecord[];
 

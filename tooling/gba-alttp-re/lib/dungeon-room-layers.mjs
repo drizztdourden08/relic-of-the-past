@@ -28,10 +28,4 @@ const parseDungeonRoomLayer = buffer => {
   return { width: DUNGEON_LAYER_WIDTH, height: DUNGEON_LAYER_HEIGHT, cells };
 };
 
-export {
-  DUNGEON_LAYER_HEIGHT,
-  DUNGEON_LAYER_SIZE,
-  DUNGEON_LAYER_WIDTH,
-  decodeTextBackgroundEntry,
-  parseDungeonRoomLayer,
-};
+export { parseDungeonRoomLayer };

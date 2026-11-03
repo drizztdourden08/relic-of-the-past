@@ -1,19 +1,11 @@
 /* @layer tooling-scripts @kind logic */
-import { createServer } from 'vite';
-import { abs, ROOT } from './apworld.constants.mjs';
+import { createSsrServer } from '../lib/create-ssr-server.mjs';
+import { ROOT } from './apworld.constants.mjs';
 
 const BARREL = '/packages/randomizer/src/archipelago/index.ts';
 
 const runExporter = async () => {
-  const server = await createServer({
-    configFile: false,
-    root: ROOT,
-    appType: 'custom',
-    logLevel: 'error',
-    optimizeDeps: { noDiscovery: true },
-    server: { middlewareMode: true, watch: null },
-    resolve: { alias: { '@app': abs('apps/desktop/src') } },
-  });
+  const server = await createSsrServer(ROOT);
   try {
     const {
       exportWorld, AP_GAME, AP_WORLD_VERSION, SUPPORTED_AP_VERSIONS,

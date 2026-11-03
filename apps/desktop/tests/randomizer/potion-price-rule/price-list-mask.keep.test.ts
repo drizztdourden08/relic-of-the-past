@@ -9,7 +9,7 @@ import { combinations } from './combinations';
 import { scopeWith } from './scope-with';
 import { valuesOf } from './values-of';
 
-describe('a cauldron given to the shuffle takes its potion off the price list', () => {
+describe('a cauldron given to the shuffle takes its potion off the price list', { tags: ['critical'] }, () => {
   it('masks every blocked content row, in every scope the panel can hold', () => {
     for (const { scope, prices } of combinations()) {
       const settled = reconcilePotionPrices({ shops: scope, prices });
@@ -63,7 +63,7 @@ describe('a cauldron given to the shuffle takes its potion off the price list', 
   });
 });
 
-describe('the mask is not an overwrite', () => {
+describe('the mask is not an overwrite', { tags: ['critical'] }, () => {
   it('gives the row straight back when the cauldron is unticked', () => {
     const key = bottleContentKeyOf(CAULDRON.content);
     expect(valuesOf({ scope: BLOCKED_SCOPE, prices: ALL_PRICES })[key]).toBe(false);
@@ -78,7 +78,7 @@ describe('the mask is not an overwrite', () => {
   });
 });
 
-describe('a snapshot this app did not write', () => {
+describe('a snapshot this app did not write', { tags: ['critical'] }, () => {
   it('is refused by the roll instead of trusted', () => {
     const honest = valuesOf({ scope: BLOCKED_SCOPE, prices: ALL_PRICES });
     const tampered = { ...honest, [bottleContentKeyOf(CAULDRON.content)]: true };

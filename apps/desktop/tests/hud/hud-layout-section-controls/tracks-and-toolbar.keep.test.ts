@@ -24,7 +24,7 @@ vi.mock('@app/stores/hud-editor-view-store', () => ({
     select({ gridOverlayEnabled: true, editorStep: 1, toggleGridOverlay: () => {} }),
 }));
 
-describe('a track list survives the document it is written to', () => {
+describe('a track list survives the document it is written to', { tags: ['critical'] }, () => {
   it('adds, sizes, reorders and removes, then places what it said it would', () => {
     let columns: Extent[] = [{ px: 20 }];
     columns = insertTrack(columns, 0);
@@ -67,7 +67,7 @@ describe('a track list survives the document it is written to', () => {
   });
 });
 
-describe('a grid is insertable from the toolbar, and so is an overlay', () => {
+describe('a grid is insertable from the toolbar, and so is an overlay', { tags: ['critical'] }, () => {
   it('offers Grid and Overlay beside Row and Column - there is no Stack (§42)', () => {
     const inserted: HudNode[] = [];
     const groups = buildToolbarGroups({ insert: (node) => inserted.push(node) });

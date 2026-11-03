@@ -7,7 +7,7 @@ import { createMemFileStore } from './mem-file-store';
 
 const bytes = (n: number): Uint8Array => new Uint8Array(n).fill(1);
 
-describe('msu store (over FileStore)', () => {
+describe('msu store (over FileStore)', { tags: ['critical'] }, () => {
   it('installs tracks and lists packs/tracks', async () => {
     const f = createMemFileStore();
     await msu.installTracks(f, 'cool', [{ name: '1.pcm', bytes: bytes(8) }, { name: '2.opuz', bytes: bytes(4) }, { name: 'msu.msu', bytes: bytes(2) }]);
@@ -19,7 +19,7 @@ describe('msu store (over FileStore)', () => {
   });
 });
 
-describe('sprites store (over FileStore)', () => {
+describe('sprites store (over FileStore)', { tags: ['critical'] }, () => {
   it('writes sprite buffers and reports extracted', async () => {
     const f = createMemFileStore();
     await sprites.writeSprites(f, 'game.sfc', [{ name: 'hud-a.png', bytes: bytes(10) }, { name: 'hud-b.png', bytes: bytes(10) }]);
@@ -29,7 +29,7 @@ describe('sprites store (over FileStore)', () => {
   });
 });
 
-describe('languages store (over FileStore)', () => {
+describe('languages store (over FileStore)', { tags: ['critical'] }, () => {
   it('writes a pack and lists it as a set', async () => {
     const f = createMemFileStore();
     await languages.writePack(f, {

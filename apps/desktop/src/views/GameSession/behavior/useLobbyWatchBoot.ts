@@ -1,10 +1,7 @@
 /* @layer renderer-appshell @kind hook */
 import { useEffect } from 'react';
-import { lobbyWatch, resumeMemberships } from '@app/game/archipelia';
+import { inLobby, lobbyWatch, resumeMemberships } from '@app/game/archipelia';
 import { useLobbyStatusStore } from '@app/stores/lobby-status-store';
-
-const inLobby = (profile: Profile): boolean =>
-  profile.randomizer?.mode === 'archipelia' || profile.randomizer?.origin === 'archipelia';
 
 const useLobbyWatchBoot = (profiles: readonly Profile[]): void => {
   useEffect(() => {

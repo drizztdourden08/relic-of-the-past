@@ -25,18 +25,18 @@ describe('constrainVoidTiles keeps doorway gaps from seeding the void flood', ()
 
   const constrained = constrainVoidTiles(layer, grid(0x00));
 
-  it('keeps the enclosed floor walkable', () => {
+  it('keeps the enclosed floor walkable', { tags: ['critical'] }, () => {
     expect(cellOf(constrained, 50, 20)).toBe(0x00);
     expect(cellOf(constrained, 45, 30)).toBe(0x00);
   });
 
-  it('keeps the wall-flanked exit corridor open down to the edge', () => {
+  it('keeps the wall-flanked exit corridor open down to the edge', { tags: ['critical'] }, () => {
     expect(cellOf(constrained, 60, 21)).toBe(0x00);
     expect(cellOf(constrained, 63, 20)).toBe(0x00);
     expect(cellOf(constrained, 63, 23)).toBe(0x00);
   });
 
-  it('still walls the wide-open structural void', () => {
+  it('still walls the wide-open structural void', { tags: ['critical'] }, () => {
     expect(cellOf(constrained, 0, 0)).toBe(0x01);
     expect(cellOf(constrained, 20, 32)).toBe(0x01);
     expect(cellOf(constrained, 63, 40)).toBe(0x01);

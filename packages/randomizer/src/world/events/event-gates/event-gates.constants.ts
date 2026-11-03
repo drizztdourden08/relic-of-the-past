@@ -29,4 +29,4 @@ const GATE_BY_CHECK: ReadonlyMap<string, EventGate> = new Map(EVENT_GATES.map((g
 
 const RECORDED_ACTS: readonly ActToken[] = [...EVENT_GATES.map((gate) => gate.checkId), ...WORLD_EVENT_IDS];
 
-export { EVENT_GATES, GATE_BY_CHECK, RECORDED_ACTS };
+export { GATE_BY_CHECK, RECORDED_ACTS };

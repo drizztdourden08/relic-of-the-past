@@ -9,6 +9,7 @@
 @import url('./panels.css');
 @import url('./outline.css');
 @import url('./pickers.css');
+@import url('./cell-label.css');
 @import url('./inspector.css');
 @import url('./geometry.css');
 @import url('./echo.css');

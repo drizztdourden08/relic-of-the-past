@@ -30,4 +30,4 @@ const DetailPane = (props: DetailPaneProps) => {
 };
 
 export { DetailPane };
-export type { DetailField, DetailPaneProps } from './DetailPane.type';
+export type { DetailField } from './DetailPane.type';

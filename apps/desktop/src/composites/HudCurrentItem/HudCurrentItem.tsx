@@ -2,6 +2,7 @@
 import { HudBox } from '../../primitives/HudBox';
 import { HudImage } from '../../primitives/HudImage';
 import { getSlotSprite } from '../PauseItemSlot';
+import { ITEMBOX_CELLS } from './HudCurrentItem.constants';
 import type { HudCurrentItemProps } from './HudCurrentItem.type';
 
 const HudCurrentItem = (props: HudCurrentItemProps) => {
@@ -29,31 +30,15 @@ const HudCurrentItem = (props: HudCurrentItemProps) => {
       }} />
 
       <HudImage src={`${spritesBase}hud-itembox-tl.png`} width={tile} height={tile} atOrigin pixelated />
-      <HudImage src={`${spritesBase}hud-itembox-top.png`} width={tile} height={tile}
-        style={{ position: 'absolute', left: tile, top: 0, imageRendering: 'pixelated' }} />
-      <HudImage src={`${spritesBase}hud-itembox-top.png`} width={tile} height={tile}
-        style={{ position: 'absolute', left: tile * 2, top: 0, imageRendering: 'pixelated' }} />
-      <HudImage src={`${spritesBase}hud-itembox-tr.png`} width={tile} height={tile}
-        style={{ position: 'absolute', left: tile * 3, top: 0, imageRendering: 'pixelated' }} />
-
-      <HudImage src={`${spritesBase}hud-itembox-left.png`} width={tile} height={tile}
-        style={{ position: 'absolute', left: 0, top: tile, imageRendering: 'pixelated' }} />
-      <HudImage src={`${spritesBase}hud-itembox-left.png`} width={tile} height={tile}
-        style={{ position: 'absolute', left: 0, top: tile * 2, imageRendering: 'pixelated' }} />
-
-      <HudImage src={`${spritesBase}hud-itembox-right.png`} width={tile} height={tile}
-        style={{ position: 'absolute', left: tile * 3, top: tile, imageRendering: 'pixelated' }} />
-      <HudImage src={`${spritesBase}hud-itembox-right.png`} width={tile} height={tile}
-        style={{ position: 'absolute', left: tile * 3, top: tile * 2, imageRendering: 'pixelated' }} />
-
-      <HudImage src={`${spritesBase}hud-itembox-bl.png`} width={tile} height={tile}
-        style={{ position: 'absolute', left: 0, top: tile * 3, imageRendering: 'pixelated' }} />
-      <HudImage src={`${spritesBase}hud-itembox-bottom.png`} width={tile} height={tile}
-        style={{ position: 'absolute', left: tile, top: tile * 3, imageRendering: 'pixelated' }} />
-      <HudImage src={`${spritesBase}hud-itembox-bottom.png`} width={tile} height={tile}
-        style={{ position: 'absolute', left: tile * 2, top: tile * 3, imageRendering: 'pixelated' }} />
-      <HudImage src={`${spritesBase}hud-itembox-br.png`} width={tile} height={tile}
-        style={{ position: 'absolute', left: tile * 3, top: tile * 3, imageRendering: 'pixelated' }} />
+      {ITEMBOX_CELLS.map(({ piece, col, row }) => (
+        <HudImage
+          key={`${col}:${row}`}
+          src={`${spritesBase}hud-itembox-${piece}.png`}
+          width={tile}
+          height={tile}
+          style={{ position: 'absolute', left: tile * col, top: tile * row, imageRendering: 'pixelated' }}
+        />
+      ))}
 
       {sprite && (
         <HudImage

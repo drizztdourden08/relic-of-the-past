@@ -5,4 +5,4 @@ type Reshape = (version: StoreVersion, to: ReviewState) => StoreVersion;
 
 type Move = { n: number; action: VersionAction; actors: readonly Actor[]; reshape: Reshape };
 
-export type { Move, Reshape };
+export type { Move };

@@ -14,7 +14,7 @@ const zeros = (): number[][] =>
 const FULL_BOUNDS: QuadrantBounds = { minRow: 0, maxRow: GRID_SIZE - 1, minCol: 0, maxCol: GRID_SIZE - 1 };
 
 describe('DualLayerStrategy enqueues the layer-1 landing of a ledge drop', () => {
-  it('returns the landing cell on layer 1 when Link drops south off a 2-wide ledge', () => {
+  it('returns the landing cell on layer 1 when Link drops south off a 2-wide ledge', { tags: ['critical'] }, () => {
     const upperLayer = fill({ type: 'free' });
     for (const r of [11, 12]) {
       for (const c of [20, 21]) rowOf(upperLayer, r)[c] = { type: 'ledge', dir: 's' };
@@ -30,7 +30,7 @@ describe('DualLayerStrategy enqueues the layer-1 landing of a ledge drop', () =>
     expect(results[0]).toMatchObject({ row: 13, col: 20, layer: 1 });
   });
 
-  it('crosses a 1-deep north trigger line (leading edge fully on ledges)', () => {
+  it('crosses a 1-deep north trigger line (leading edge fully on ledges)', { tags: ['critical'] }, () => {
     const upperLayer = fill({ type: 'free' });
     for (const r of [18, 19, 20]) {
       for (const c of [20, 21]) rowOf(upperLayer, r)[c] = { type: 'ledge', dir: 'n' };
@@ -45,7 +45,7 @@ describe('DualLayerStrategy enqueues the layer-1 landing of a ledge drop', () =>
     expect(results[0]).toMatchObject({ row: 16, col: 20, layer: 1 });
   });
 
-  it('refuses a 1-wide ledge, because the 2-wide leading edge cannot fit', () => {
+  it('refuses a 1-wide ledge, because the 2-wide leading edge cannot fit', { tags: ['critical'] }, () => {
     const upperLayer = fill({ type: 'free' });
     for (const r of [18, 19, 20]) rowOf(upperLayer, r)[20] = { type: 'ledge', dir: 'n' };
     const lowerLayer = fill({ type: 'free' });

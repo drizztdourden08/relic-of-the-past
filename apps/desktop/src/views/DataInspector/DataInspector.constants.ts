@@ -43,8 +43,6 @@ const RECOMMENDATIONS_NAV_ITEM: { id: string; icon: IconName; label: string } = 
   id: RECOMMENDATIONS_KIND, icon: 'triangle-alert', label: 'Recommendations',
 };
 
-const NAV_ITEMS: { id: string; icon: IconName; label: string }[] = [...KIND_NAV_ITEMS, RECOMMENDATIONS_NAV_ITEM];
-
 const NAV_ICONS: Record<string, IconData> = {
   screen: mapIcon,
   connection: linkIcon,
@@ -136,14 +134,10 @@ const NOTHING_SELECTED = 'Select a record to inspect it.';
 
 const READ_ONLY_NOTE = 'This collection is read only.';
 
-export { isEntityKind } from './behavior/is-entity-kind';
-export { queryViewKey } from './behavior/query-view-key';
-export { tableViewKey } from './behavior/table-view-key';
-
 export {
   AREA_FIELD, CLOSED_DELETE_DIALOG, COMPARING_LIST_RATIO, COMPARISON_TITLE, CONTAINER_KINDS, CREATE_ONLY_EXCLUDED,
   DEFAULT_KIND, DEFAULT_TAB, DETAIL_TABS, EMIT_FAILED, EMPTY_PLACEMENT, ENTITY_KINDS,
-  FALLBACK_NAV_ICON, ID_REF_SELECTOR, KIND_NAV_ITEMS, NAME_FIELD_BY_KIND, NARROWED_KIND, NAV_ICONS, NAV_ITEMS,
+  FALLBACK_NAV_ICON, ID_REF_SELECTOR, KIND_NAV_ITEMS, NAME_FIELD_BY_KIND, NARROWED_KIND, NAV_ICONS,
   NO_COLUMNS, NO_FINDINGS, NO_OPTIONS, NO_ORDER, NO_ROWS, NO_SCHEMA, NO_SERIALIZER, NO_SOURCE_FILE, NO_TABLE, NO_TAG_SUGGESTIONS,
   NO_TARGET_FIELDS, NOT_A_RECORD, NOTHING_MATCHES, NOTHING_SELECTED, OVERWORLD_GRID, OVERWORLD_KIND, READ_ONLY_NOTE,
   RECOMMENDATIONS_KIND, RECOMMENDATIONS_NAV_ITEM, RECORD_LIST_RATIO, ROOM_GRID, ROW_PAGE_SIZE, SCREEN_FLOOR, SCREEN_TILE,

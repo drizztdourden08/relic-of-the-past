@@ -21,7 +21,7 @@ const MENU_REGION = 'region-001';
 const normal = (): ReturnType<typeof buildNormalPlacement> => buildNormalPlacement();
 
 describeDataset('regions to screens', () => {
-  it('brings every real screen inside a region the engine reached', () => {
+  it('brings every real screen inside a region the engine reached', { tags: ['critical'] }, () => {
     const screens = screensOfRegions([LIGHT_WORLD_REGION]);
     expect(screens.has(LIGHT_WORLD)).toBe(true);
     const members = all('screen').filter((screen) => screen.regionId === LIGHT_WORLD_REGION);
@@ -29,20 +29,20 @@ describeDataset('regions to screens', () => {
     for (const member of members) expect(screens.has(member.id)).toBe(true);
   });
 
-  it('brings a dungeon whole once one of its rooms is reached', () => {
+  it('brings a dungeon whole once one of its rooms is reached', { tags: ['critical'] }, () => {
     const screens = screensOfRegions([EASTERN_PALACE_REGION]);
     const rooms = getDungeon('dungeon-003').roomScreenIds;
     expect(rooms.length).toBeGreaterThan(1);
     for (const room of rooms) expect(screens.has(room)).toBe(true);
   });
 
-  it('says nothing about a region no screen carries', () => {
+  it('says nothing about a region no screen carries', { tags: ['critical'] }, () => {
     expect([...screensOfRegions([MENU_REGION])]).toEqual([]);
   });
 });
 
 describeDataset('what the settings hand the record-read rows', () => {
-  it('reads every Big Key door as open by handing the keys over', () => {
+  it('reads every Big Key door as open by handing the keys over', { tags: ['standard'] }, () => {
     const placement = normal();
     const shut = grantedInventory({ placement, inventory: new Set(), darkRoomsNeedLight: true, bigKeyDoors: true });
     const open = grantedInventory({ placement, inventory: new Set(), darkRoomsNeedLight: true, bigKeyDoors: false });
@@ -51,7 +51,7 @@ describeDataset('what the settings hand the record-read rows', () => {
     expect(open.has(LAMP)).toBe(false);
   });
 
-  it('reads an unlit room as lit only when the file says the player can see', () => {
+  it('reads an unlit room as lit only when the file says the player can see', { tags: ['standard'] }, () => {
     const placement = normal();
     const blind = grantedInventory({ placement, inventory: new Set(), darkRoomsNeedLight: true, bigKeyDoors: true });
     expect(blind.has(LAMP)).toBe(false);
@@ -63,13 +63,13 @@ describeDataset('what the settings hand the record-read rows', () => {
     expect(withFireRod.has(LAMP)).toBe(false);
   });
 
-  it('asks each medallion entrance for the medallion the placement recorded', () => {
+  it('asks each medallion entrance for the medallion the placement recorded', { tags: ['standard'] }, () => {
     const overrides = recordRowOverrides(normal());
     expect(JSON.stringify(overrides[MIRE_MEDALLION_CHECK])).toContain(ETHER);
     expect(JSON.stringify(overrides[TURTLE_ROCK_MEDALLION_CHECK])).toContain(QUAKE);
   });
 
-  it('asks the pedestal for the three pendants the unmodified game asks for', () => {
+  it('asks the pedestal for the three pendants the unmodified game asks for', { tags: ['standard'] }, () => {
     const overrides = recordRowOverrides(normal());
     expect(overrides['check-312']).toEqual({ count: { groupId: ITEM_GROUP_IDS.Pendants, n: 3 } });
   });

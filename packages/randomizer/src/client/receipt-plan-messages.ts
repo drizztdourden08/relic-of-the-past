@@ -91,6 +91,3 @@ const buildPlanReceiptTexts = (
 };
 
 export { buildPlanReceiptTexts };
-export type {
-  PlanFixedLine, PlanPondLines, PlanReceiptTexts, PlanWishPondLines,
-} from './receipt-plan-messages.type';

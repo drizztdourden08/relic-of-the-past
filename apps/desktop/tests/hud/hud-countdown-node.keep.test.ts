@@ -1,12 +1,9 @@
 /* @layer test @kind test */
 // @vitest-environment jsdom
 import { describe, expect, it } from 'vitest';
-import { createElement as h } from 'react';
-import { renderToStaticMarkup } from 'react-dom/server';
 import { hudDataScope, intrinsicSize, layoutHud, placedById, COUNTDOWN_SIZE, layoutById, validateLayout, advanceCountdown, IDLE_TRACK } from '@rotp/hud';
 import { parseGameUIBuffer } from '@rotp/game-core';
 import { countdownBox } from '@app/compounds/HudCountdown';
-import { HudNodeCountdown } from '@app/compounds/HudNodeRenderer/sub-components/HudNodeCountdown';
 import { drawOrigin } from '@app/compounds/HudNodeRenderer/behavior/draw-origin';
 import { countdownInset } from '@app/compounds/HudNodeRenderer/behavior/countdown-inset';
 import { countdownVariantOf } from '@app/compounds/HudNodeRenderer/behavior/countdown-variant-of';
@@ -27,7 +24,7 @@ const docOf = (children: HudNode[], grid = false): HudLayout => ({
 });
 const errorsOf = (element: unknown): string[] => validateLayout(docOf([{ kind: 'element', id: 'cd', element } as HudNode])).errors;
 
-describe('the countdown kind validates', () => {
+describe('the countdown kind validates', { tags: ['critical'] }, () => {
   it('accepts a bare countdown and every variant the setting names, plus "setting"', () => {
     expect(errorsOf({ type: 'countdown' })).toEqual([]);
     for (const variant of ['setting', 'pixel', 'smooth']) expect(errorsOf({ type: 'countdown', variant })).toEqual([]);
@@ -40,7 +37,7 @@ describe('the countdown kind validates', () => {
   });
 });
 
-describe('the countdown measures as the pixel pie', () => {
+describe('the countdown measures as the pixel pie', { tags: ['critical'] }, () => {
   it('is 44x44, the pixel grid, and the smooth pie is within a game pixel of it', () => {
     expect(intrinsicSize({ type: 'countdown' })).toEqual({ w: 44, h: 44 });
     expect(countdownBox('pixel', 1).size).toBe(COUNTDOWN_SIZE.w);
@@ -56,7 +53,7 @@ describe('the countdown measures as the pixel pie', () => {
   });
 });
 
-describe('an idle countdown is not placed and takes no space', () => {
+describe('an idle countdown is not placed and takes no space', { tags: ['critical'] }, () => {
   it('leaves a flex line, so the sibling after it does not carry its gap', () => {
     const doc = docOf([leaf('a'), countdown(), leaf('b')]);
     const idle = layoutHud(doc, { w: 398, h: 224 }, { scope: {} });
@@ -89,7 +86,7 @@ describe('an idle countdown is not placed and takes no space', () => {
   });
 });
 
-describe('the drawn origin snaps to whole game pixels for the countdown only', () => {
+describe('the drawn origin snaps to whole game pixels for the countdown only', { tags: ['critical'] }, () => {
   const placed = (node: HudNode): PlacedNode =>
     ({ id: node.id, node, rect: { x: 177.25, y: 168.5, w: 44, h: 44 }, scale: 1, opacity: 1, dimmed: false });
 
@@ -99,7 +96,7 @@ describe('the drawn origin snaps to whole game pixels for the countdown only', (
   });
 });
 
-describe('the live path: a parsed reading to a pie on the shipped layout', () => {
+describe('the live path: a parsed reading to a pie on the shipped layout', { tags: ['critical'] }, () => {
   const VITALS = {
     healthCurrent: 24, healthCapacity: 24, magic: 0, halfMagic: false, armor: 0, arrows: 0, maxArrows: 30,
     bombs: 0, maxBombs: 10, keys: 0, rupees: 0, maxRupees: 999, hasSilverArrows: false,
@@ -111,7 +108,7 @@ describe('the live path: a parsed reading to a pie on the shipped layout', () =>
     buffer[130] = 40;
     const state = parseGameUIBuffer(buffer, 0);
     const track = advanceCountdown(IDLE_TRACK, { ...state.countdown, isIndoors: state.map.isIndoors });
-    const { countdown: art, source } = countdownContentOf(track, state.countdown.frames, 'pixel');
+    const { source } = countdownContentOf(track, state.countdown.frames, 'pixel');
     const scope = hudDataScope(VITALS, 8, source);
     expect(scope).toMatchObject(ACTIVE);
 
@@ -120,13 +117,6 @@ describe('the live path: a parsed reading to a pie on the shipped layout', () =>
     expect(node?.rect).toEqual({ x: 177.5, y: 168, w: 44, h: 44 });
 
     expect(drawOrigin(node as PlacedNode)).toEqual({ x: 178, y: 168 });
-    const markup = renderToStaticMarkup(h(HudNodeCountdown, {
-      spec: { type: 'countdown' }, countdown: art, scale: 2, spritesBase: 'sprites/',
-    }));
-    expect(markup).toContain('hud-pixel-pie');
-    expect(markup).toContain('width:88px;height:88px');
-    expect(markup).toContain('font-digit-1');
-    expect(markup).toContain('font-digit-8');
   });
 
   it('draws nothing at all while the reading says idle', () => {

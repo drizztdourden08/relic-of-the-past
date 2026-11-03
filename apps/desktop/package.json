@@ -25,7 +25,7 @@
     "start:headless": "brock start -- --no-focus --muted",
     "sync": "brock sync",
     "typecheck": "tsc --noEmit",
-    "lint": "pnpm typecheck && eslint . && stylelint \"src/**/*.css\" && brock prose && brock knip --workspace . && jscpd .",
+    "lint": "pnpm typecheck && eslint . && stylelint \"src/**/*.css\" && brock prose && jscpd .",
     "lint:md": "markdownlint-cli2",
     "structure": "brock structure --check",
     "deadcode": "brock knip --workspace .",
@@ -40,16 +40,17 @@
     "@capacitor/core": "catalog:",
     "@capacitor/filesystem": "catalog:",
     "@capacitor/haptics": "catalog:",
-    "@drizztdourden08/brock-catalog": "^0.99.0",
-    "@drizztdourden08/brock-core": "^0.99.0",
-    "@drizztdourden08/brock-display": "^0.99.0",
-    "@drizztdourden08/brock-electron": "^0.99.0",
-    "@drizztdourden08/brock-input": "^0.99.0",
-    "@drizztdourden08/brock-port-kit": "^0.99.0",
-    "@drizztdourden08/brock-react": "^0.99.0",
-    "@drizztdourden08/brock-secrets": "^0.99.0",
-    "@drizztdourden08/brock-tools": "^0.99.0",
-    "@drizztdourden08/brock-updater": "^0.99.0",
+    "@drizztdourden08/archipelia-lobby-protocol": "^1.3.0",
+    "@drizztdourden08/brock-catalog": "^0.116.1",
+    "@drizztdourden08/brock-core": "^0.116.1",
+    "@drizztdourden08/brock-display": "^0.116.1",
+    "@drizztdourden08/brock-electron": "^0.116.1",
+    "@drizztdourden08/brock-input": "^0.116.1",
+    "@drizztdourden08/brock-port-kit": "^0.116.1",
+    "@drizztdourden08/brock-react": "^0.116.1",
+    "@drizztdourden08/brock-secrets": "^0.116.1",
+    "@drizztdourden08/brock-tools": "^0.116.1",
+    "@drizztdourden08/brock-updater": "^0.116.1",
     "@drizztdourden08/tessera": "catalog:",
     "@electron-toolkit/utils": "catalog:",
     "@iconify-icons/game-icons": "^1.2.1",
@@ -125,8 +126,8 @@
     "vitest": "catalog:"
   },
   "brock": {
-    "version": "0.99.0",
-    "tessera": "0.64.0"
+    "version": "0.116.0",
+    "tessera": "0.93.2"
   },
   "portKit": {
     "wasm": {

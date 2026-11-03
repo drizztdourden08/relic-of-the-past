@@ -43,4 +43,3 @@ const UploadTray = (props: UploadTrayProps) => {
 };
 
 export { UploadTray };
-export type { UploadTrayProps };

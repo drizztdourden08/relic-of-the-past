@@ -10,7 +10,7 @@ const unidentifiedAt = (screenId: string, roomId: number, row: number, col: numb
   tile: { row, col },
 });
 
-describe('recordCheck collapses an unidentified observation', () => {
+describe('recordCheck collapses an unidentified observation', { tags: ['critical'] }, () => {
   it('keeps two unidentified observations made in different rooms', () => {
     const rec = createRecorder();
     recordCheck(rec, unidentifiedAt('A', 0x10, 0, 0));

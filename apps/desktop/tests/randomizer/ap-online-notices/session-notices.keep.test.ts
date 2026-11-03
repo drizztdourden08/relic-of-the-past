@@ -70,7 +70,7 @@ const lines = (notices: readonly OnlineNotice[]): string[] => notices.map(({ kin
 
 installClientHarness();
 
-describe('notices from the session', () => {
+describe('notices from the session', { tags: ['critical'] }, () => {
   it('items: received, sent, our own, and passed between two other players', async () => {
     const { push, stop } = await boot();
     const got = await push([
@@ -114,7 +114,7 @@ describe('notices from the session', () => {
   });
 });
 
-describe('notices from the session', () => {
+describe('notices from the session', { tags: ['critical'] }, () => {
   it('joins, goals, release and collect, and chat; trackers and our own lines say nothing', async () => {
     const { push, stop } = await boot();
     const print = (type: string, slot: number, extra: Partial<ApServerPacket> = {}): ApServerPacket =>
@@ -144,7 +144,7 @@ describe('notices from the session', () => {
   });
 });
 
-describe('notices from the session', () => {
+describe('notices from the session', { tags: ['critical'] }, () => {
   it('the connection: accepted, lost, accepted again', async () => {
     const { server, notices, stop } = await boot();
     expect(lines(notices)).toEqual(['connection: Connected to the room as Link']);

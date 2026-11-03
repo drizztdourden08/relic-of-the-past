@@ -2,4 +2,6 @@
 import { getEntries } from './get-entries';
 import { subscribe } from './subscribe';
 
-Object.assign(window, { __logEntries: getEntries, __logSubscribe: subscribe });
+if (typeof window !== 'undefined') {
+  Object.assign(window, { __logEntries: getEntries, __logSubscribe: subscribe });
+}

@@ -46,4 +46,3 @@ const UploadProgressDialog = (props: UploadProgressDialogProps) => {
 };
 
 export { UploadProgressDialog };
-export type { UploadProgressDialogProps };

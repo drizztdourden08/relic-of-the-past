@@ -5,8 +5,6 @@ type ShopCountedCurrency = 'rupees' | 'arrows' | 'bombs' | 'hearts';
 
 type ShopBottleContent = 'fairy' | 'bee' | 'red-potion' | 'blue-potion' | 'green-potion';
 
-type ShopCurrency = ShopCountedCurrency | 'bottle' | 'item';
-
 interface ShopCountedPrice {
   currency: ShopCountedCurrency;
   amount: number;
@@ -61,6 +59,6 @@ interface BottleContentRow {
 }
 
 export type {
-  BottleContentRow, CurrencyRow, NativePrice, ShopBottleContent, ShopBottlePrice, ShopCountedCurrency, ShopCountedPrice,
-  ShopCurrency, ShopCurrencySetting, ShopItemPrice, ShopPrice, ShopPricePlan, ShopPriceView,
+  BottleContentRow, CurrencyRow, NativePrice, ShopBottleContent, ShopBottlePrice, ShopCountedCurrency,
+  ShopCurrencySetting, ShopPrice, ShopPricePlan, ShopPriceView,
 };

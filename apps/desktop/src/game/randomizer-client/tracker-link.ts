@@ -69,4 +69,4 @@ const createTrackerLink = (config: TrackerLinkConfig): TrackerLink => {
 };
 
 export { createTrackerLink };
-export type { TrackerLink, TrackerLinkConfig, TrackerProgress } from '@rotp/randomizer';
+export type { TrackerLink } from '@rotp/randomizer';

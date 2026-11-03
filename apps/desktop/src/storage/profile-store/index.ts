@@ -7,4 +7,5 @@ export { updateLastPlayed } from './update-last-played';
 export { getAppState } from './get-app-state';
 export { readConfig } from './read-config';
 export { writeConfig } from './write-config';
+export { updateConfig } from './update-config';
 export { updateActiveInputProfileId } from './update-active-input-profile-id';

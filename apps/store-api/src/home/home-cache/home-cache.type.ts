@@ -5,4 +5,4 @@ type HomeCacheEntry = { view: HomeView; at: number };
 
 type HomeCacheSlot = { entry: HomeCacheEntry | null };
 
-export type { HomeCacheEntry, HomeCacheSlot };
+export type { HomeCacheSlot };

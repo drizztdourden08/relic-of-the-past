@@ -1,0 +1,20 @@
+/* @layer sanctuary-site @kind style */
+
+.table-page {
+  flex: 1 1 auto;
+  min-height: 0;
+}
+
+.table-page__page {
+  flex: 1 1 0;
+  min-width: 0;
+}
+
+.table-page__body {
+  flex: 1 1 auto;
+  min-height: 0;
+}
+
+.table-page__summary {
+  font-variant-numeric: tabular-nums;
+}

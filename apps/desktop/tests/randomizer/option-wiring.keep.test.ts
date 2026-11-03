@@ -43,7 +43,7 @@ const BASE: RandomizerOptionChoices = {
 
 const NO_DELIVERABLE = {};
 
-describe('every unlocked catalog row reaches the generator', () => {
+describe('every unlocked catalog row reaches the generator', { tags: ['critical'] }, () => {
   it('covers the whole catalog, since an unwired row would freeze silently', () => {
     const everyPrice = Object.fromEntries(SHOP_PRICE_BLOCK_KEYS.map((key) =>
       [key, SHOP_PRICE_OPTION_KEYS.includes(key) ? false : 100]));
@@ -71,7 +71,7 @@ const shopChoice = (
   ...BASE, shops: { ...defaultShopScope(), mode: 'sequential', depth: 1, ...overrides },
 });
 
-describe('the shop controls move the fill', () => {
+describe('the shop controls move the fill', { tags: ['critical'] }, () => {
   it('carries the whole scope into the fill options', () => {
     const choices = shopChoice({ slotCount: 6, depth: 3 });
     const flags = fillFlagsOf(snapshotOfChoices(choices));

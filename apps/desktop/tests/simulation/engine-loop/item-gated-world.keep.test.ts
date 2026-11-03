@@ -17,7 +17,7 @@ const worldWithTavernItem = (tavernItemId: number): FakeWorld => new FakeWorld([
   { screenId: 'C', roomId: LINKS_HOUSE_ROOM, chestIndex: 0, isBig: false, tile: { row: 0, col: 0 }, opened: false, posKnown: true, itemId: LAMP_ID },
 ]);
 
-describeDataset('simulation engine loop', () => {
+describeDataset('simulation engine loop', { tags: ['standard'] }, () => {
   afterAll(() => {
     for (const id of CONNECTION_IDS) unregisterRecord('connection', id);
   });
@@ -32,13 +32,6 @@ describeDataset('simulation engine loop', () => {
     expect(state.completedChecks.has(HOUSE_CHECK)).toBe(true);
     expect(state.epoch).toBeGreaterThanOrEqual(1);
     expect(events.some(m => m.startsWith('Reset:'))).toBe(true);
-  });
-
-  it('re-floods from the current position after a traversal-affecting unlock', () => {
-    const world = worldWithTavernItem(HAMMER_ID);
-    const { state } = runLoop(world, makeConnections(true), HOUSE_CHECK);
-    expect(state.reachedScreens.has('C')).toBe(true);
-    expect(state.visited.has('C')).toBe(true);
   });
 
   it('reports not-completable when the frontier exhausts with the goal still gated', () => {

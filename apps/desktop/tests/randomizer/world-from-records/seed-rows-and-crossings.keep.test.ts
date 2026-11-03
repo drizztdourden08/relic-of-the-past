@@ -16,7 +16,7 @@ const spotCountOf = (built: World, regions: readonly RegionId[]): number =>
 
 const pondRungKeys = () => POND_INSTANCES.flatMap((pond) => pond.slots.map((slot) => slot.key));
 
-describeDataset('the records say which rows a seed fills', () => {
+describeDataset('the records say which rows a seed fills', { tags: ['standard'] }, () => {
   it('picks the spots out of the collection, and gives every one of them a region', () => {
     const spots = all('check').filter(isSeedLocation);
     expect(spots).toHaveLength(SEED_LOCATIONS);
@@ -56,7 +56,7 @@ describeDataset('the records say which rows a seed fills', () => {
   });
 });
 
-describeDataset('a passage names its crossing where the records can say which one', () => {
+describeDataset('a passage names its crossing where the records can say which one', { tags: ['standard'] }, () => {
   it('names one where exactly one crossing joins the same pair', () => {
     const byPair = new Map<string, ConnectionId[]>();
     for (const crossing of [...crossingsByRegion().values()].flat()) {

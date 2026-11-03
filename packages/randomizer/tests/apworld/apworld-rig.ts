@@ -66,4 +66,3 @@ const generate = async (yaml: string, seed: number, extra: readonly string[] = [
 };
 
 export { generate, hasArchipelago, installWorldPackage, installedVersion, supportsInstalledVersion };
-export type { GenerationRun };

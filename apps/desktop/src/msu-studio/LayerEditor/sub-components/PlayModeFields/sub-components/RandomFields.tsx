@@ -24,7 +24,7 @@ const RandomFields = (props: RandomFieldsProps) => {
           <Status tone="danger">Shortest is longer than longest</Status>
         )}
       </Flex>
-      <Box className="layer-card__switch">
+      <Box className="msu-accent-panel layer-card__switch">
         <Toggle
           id={`wait-for-completion-${layerId}`}
           label={WAIT_LABEL}

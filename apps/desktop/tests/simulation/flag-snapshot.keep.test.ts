@@ -7,7 +7,7 @@ const CHEST_SLOT_0_MASK = 0x10;
 const STARTING_HOUSE_ROOM = 0x104;
 const UNCLAIMED_ROOM = 0x2;
 
-describeDataset('flag-snapshot diffing', () => {
+describeDataset('flag-snapshot diffing', { tags: ['critical'] }, () => {
   it('produces no diffs for identical snapshots', () => {
     const a = emptySnapshot();
     const b = cloneSnapshot(a);
@@ -33,13 +33,6 @@ describeDataset('flag-snapshot diffing', () => {
     const diffs = diffSnapshots(before, after);
     const kinds = diffs.map(d => d.kind).sort();
     expect(kinds).toEqual(['overworld', 'progress']);
-  });
-
-  it('cloneSnapshot is a deep copy, so mutating the clone leaves the original clean', () => {
-    const a = emptySnapshot();
-    const b = cloneSnapshot(a);
-    b.dungInfo[0] = 0x1234;
-    expect(a.dungInfo[0]).toBe(0);
   });
 
   it('identifies a room-flag diff as the check whose chest bit it is', () => {

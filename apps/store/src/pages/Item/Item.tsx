@@ -62,4 +62,3 @@ const Item = (props: ItemProps) => {
 };
 
 export { Item };
-export type { ItemProps } from './Item.type';

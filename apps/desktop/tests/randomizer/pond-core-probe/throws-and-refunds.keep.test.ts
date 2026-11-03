@@ -4,7 +4,7 @@ import { CLOSED_COST, FEATURES3_POND_PLAN, WRAM } from './pond-core.constants';
 import { describePondCore } from './describe-pond-core';
 import { installPondRig } from './install-pond-rig';
 
-describePondCore('pond seams in the built core (headless): throws and refunds', () => {
+describePondCore('pond seams in the built core (headless): throws and refunds', { tags: ['standard'] }, () => {
   const { call, set8, get8, set16, get16, gate3, armPlan, seam } = installPondRig();
 
   it('resolves the throws in order, once each, then closes the pond', () => {

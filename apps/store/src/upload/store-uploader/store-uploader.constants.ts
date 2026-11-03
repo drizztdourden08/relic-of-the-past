@@ -54,4 +54,4 @@ const STORE_UPLOADER: UploadRunner<PublishTarget, StoreItem> = {
   },
 };
 
-export { LARGEST_PACK, STORE_UPLOADER };
+export { STORE_UPLOADER };

@@ -4,6 +4,7 @@ import type { InputBinding, SnesButton } from '@rotp/game-data';
 import type { FunctionAction } from '@rotp/features';
 import { bindFunctionAction } from './bind-function-action';
 import { bindSnesButton } from './bind-snes-button';
+import { clearSnesMapping } from './clear-snes-mapping';
 import { NO_BINDING } from './controls-settings.constants';
 import { mergeFunctionMappings } from './merge-function-mappings';
 import { padHexOrNull } from './pad-hex-or-null';
@@ -19,9 +20,9 @@ const useBindingState = (args: UseBindingStateArgs) => {
   const displayFunctionMappings = useDisplayFunctionMappings({ functionMappings, activeProfile, devices });
   const rebindHandlers = useRebindHandlers({ setListeningFor });
 
-  const handleSnesClear = useCallback((button: SnesButton) => {
+  const handleSnesClear = useCallback((button: SnesButton, mappingIndex: number) => {
     if (!activeProfile) return;
-    updateActiveProfile(bindSnesButton({ profile: activeProfile, button, binding: NO_BINDING, vid: null, pid: null }));
+    updateActiveProfile(clearSnesMapping({ profile: activeProfile, button, mappingIndex }));
   }, [activeProfile, updateActiveProfile]);
 
   const handleFunctionClear = useCallback((action: FunctionAction) => {

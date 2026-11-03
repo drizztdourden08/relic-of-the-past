@@ -1,21 +1,7 @@
 /* @layer shared-asset-extraction @kind logic */
-const decode4bppTile = (data: Buffer | Uint8Array, offset: number): Uint8Array => {
-  const pixels = new Uint8Array(64);
-  for (let y = 0; y < 8; y++) {
-    const d0 = data[offset + y * 2] ?? 0;
-    const d1 = data[offset + y * 2 + 1] ?? 0;
-    const d2 = data[offset + 16 + y * 2] ?? 0;
-    const d3 = data[offset + 16 + y * 2 + 1] ?? 0;
-    for (let x = 0; x < 8; x++) {
-      const bit = 7 - x;
-      pixels[y * 8 + x] =
-        ((d0 >>> bit) & 1) |
-        (((d1 >>> bit) & 1) << 1) |
-        (((d2 >>> bit) & 1) << 2) |
-        (((d3 >>> bit) & 1) << 3);
-    }
-  }
-  return pixels;
-};
+import { decodePlanarTile } from './decode-planar-tile';
+
+const decode4bppTile = (data: Buffer | Uint8Array, offset: number): Uint8Array =>
+  decodePlanarTile(data, offset, 4, (plane, row) => (plane < 2 ? 0 : 16) + row * 2 + (plane & 1));
 
 export { decode4bppTile };

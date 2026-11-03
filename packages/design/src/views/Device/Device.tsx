@@ -42,4 +42,3 @@ const Device = (props: DeviceProps) => {
 };
 
 export { Device };
-export type { DeviceProps } from './Device.type';

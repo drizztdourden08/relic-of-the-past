@@ -5,5 +5,5 @@ export { noticeOf } from './notice-of';
 export { onOnlineNotice } from './on-online-notice';
 export { playerPart } from './player-part';
 export type {
-  DeathLinkNotice, NoticePart, NoticeTone, OnlineNotice, OnlineNoticeListener,
+  DeathLinkNotice, NoticePart, NoticeTone, OnlineNotice,
 } from './online-notices.type';

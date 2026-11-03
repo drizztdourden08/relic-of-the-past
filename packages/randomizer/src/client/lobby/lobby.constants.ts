@@ -1,6 +1,8 @@
 /* @layer bridge-wasm @kind constants */
 const ROTP_CLIENT_ID = 'relic-of-the-past';
 const ROTP_CLIENT_NAME = 'Relic of the Past';
+const ROTP_UNSIGNED_CLIENT_ID = 'relic-of-the-past-unsigned';
+const ROTP_UNSIGNED_CLIENT_NAME = 'Relic of the Past (unsigned build)';
 const ROTP_HOMEPAGE = 'https://github.com/drizztdourden08/relic-of-the-past';
 const ROTP_GAME = 'Relic of the Past';
 const ROTP_MODULE = 'relic_of_the_past';
@@ -25,4 +27,6 @@ export {
   ROTP_GAME,
   ROTP_HOMEPAGE,
   ROTP_MODULE,
+  ROTP_UNSIGNED_CLIENT_ID,
+  ROTP_UNSIGNED_CLIENT_NAME,
 };

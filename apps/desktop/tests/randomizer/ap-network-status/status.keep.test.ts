@@ -25,7 +25,7 @@ const echoLastPing = (server: FakeServer): void => {
 
 installNetworkHarness();
 
-describe('network status', () => {
+describe('network status', { tags: ['critical'] }, () => {
   it('a connect fills the connection, server and progress facts', async () => {
     const { session, server } = await boot(makeRoom({ password: 'pw' }));
     const { connection, health, server: info, progress } = session.networkStatus;
@@ -69,7 +69,7 @@ describe('network status', () => {
   });
 });
 
-describe('network status', () => {
+describe('network status', { tags: ['critical'] }, () => {
   it('Join and Part mark the other players online or not; ours follows the connection', async () => {
     const { session, server } = await boot(makeRoom());
     const onlineOf = () => session.networkStatus.players.map((player) => [player.alias, player.online, player.self]);
@@ -109,7 +109,7 @@ describe('network status', () => {
   });
 });
 
-describe('network status', () => {
+describe('network status', { tags: ['critical'] }, () => {
   it('a try in flight reads as trying now, with no countdown; a refused one schedules the next', async () => {
     const room = makeRoom();
     const server = createFakeServer(room);

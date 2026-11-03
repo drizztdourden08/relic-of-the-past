@@ -1,0 +1,8 @@
+/* @layer renderer-components @kind style */
+.msu-accent-panel {
+  padding: var(--space-sm) var(--space-md);
+  background: var(--c-inset);
+  border: var(--border-width-thin) solid var(--c-border);
+  border-left: var(--border-width-thick) solid var(--c-primary);
+  border-radius: var(--radius-md);
+}

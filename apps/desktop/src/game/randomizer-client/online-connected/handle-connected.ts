@@ -1,5 +1,6 @@
 /* @layer bridge-wasm @kind logic */
 import { log } from '../../../log-bus';
+import { logConnected } from '../../event-log';
 import { applySlotDeathLink, bindSaveToRoom, isKnownReported, markRoomChecked } from '@rotp/randomizer';
 import type { ApConnectedPacket, OnlineContext } from '@rotp/randomizer';
 import { scoutOnce } from './scout-once';
@@ -25,6 +26,7 @@ const handleConnected = (ctx: OnlineContext, packet: ApConnectedPacket): void =>
   scoutOnce(ctx);
   markRoomChecked(ctx, room.checked);
   core.startPolling(ctx.reporter, room.pollEntries, (key) => isKnownReported(ctx, key));
+  logConnected(ctx.config.slotName, ctx.config.url);
   log.randomizer(`[Online] Connected as ${ctx.config.slotName} (slot ${packet.slot}, team ${packet.team})`);
 };
 

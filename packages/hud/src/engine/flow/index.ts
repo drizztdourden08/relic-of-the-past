@@ -9,3 +9,4 @@ export { outerCross } from './outer-cross';
 export { outerMain } from './outer-main';
 export { toLines } from './to-lines';
 export type { FlowItem, Insets } from './flow.type';
+export { paddedArea } from './padded-area';

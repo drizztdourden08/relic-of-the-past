@@ -2,9 +2,8 @@
 import { BOTTLE_PREFIX } from './variable-edits.constants';
 
 const bottleContentOf = (key: string): number | null => {
-  if (!key.startsWith(BOTTLE_PREFIX)) return null;
-  const digits = key.slice(BOTTLE_PREFIX.length);
-  return /^\d+$/.test(digits) ? Number(digits) : null;
+  const suffix = key.startsWith(BOTTLE_PREFIX) ? key.slice(BOTTLE_PREFIX.length) : '';
+  return /^\d+$/.test(suffix) ? Number(suffix) : null;
 };
 
 export { bottleContentOf };

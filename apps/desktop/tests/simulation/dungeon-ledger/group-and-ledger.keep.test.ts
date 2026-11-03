@@ -24,7 +24,7 @@ const fakeTarget = (key: string, roomId: number): SimTarget => ({
   action: { type: 'chest', roomId, chestIndex: 0, itemId: 0 },
 });
 
-describeDataset('dungeon group derivation', () => {
+describeDataset('dungeon group derivation', { tags: ['critical'] }, () => {
   it('folds the sewers (palace 0) into the castle above it (palace 1)', () => {
     expect(dungeonGroupOf(0x00)).toBe(dungeonGroupOf(0x02));
   });
@@ -40,7 +40,7 @@ describeDataset('dungeon group derivation', () => {
   });
 });
 
-describeDataset('updateDungeonLedger accumulates what is owed', () => {
+describeDataset('updateDungeonLedger accumulates what is owed', { tags: ['critical'] }, () => {
   it('records an unopened chest as owed, blocked by bombs when a bombable wall stands and none are held', () => {
     const state = freshState();
     const obs = baseObs();

@@ -22,7 +22,7 @@ const errorsOf = (value: unknown): string[] => {
   return result.ok ? [] : result.errors;
 };
 
-describe('validating a node\'s style', () => {
+describe('validating a node\'s style', { tags: ['critical'] }, () => {
   it('accepts background, border, radius, shadow, outline, tint and clip together', () => {
     const doc = edited((d) => {
       rootOf(d).style = {
@@ -72,7 +72,7 @@ describe('validating a node\'s style', () => {
   });
 });
 
-describe('validating a grid container', () => {
+describe('validating a grid container', { tags: ['critical'] }, () => {
   it('accepts columns, rows, gap, justifyItems, alignItems and guide', () => {
     const doc = edited((d) => {
       const root = rootOf(d);
@@ -108,7 +108,7 @@ describe('validating a grid container', () => {
   });
 });
 
-describe('resolveNodeStyle - the CSS half', () => {
+describe('resolveNodeStyle - the CSS half', { tags: ['critical'] }, () => {
   it('a flat colour becomes a plain background', () => {
     expect(resolveNodeStyle({ background: FIXTURE_COLOURS.navy }, {})).toEqual({ background: FIXTURE_COLOURS.navy });
   });

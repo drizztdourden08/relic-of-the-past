@@ -13,7 +13,7 @@ const { mount, mountGrid, pick, header, down, click, bar, field, type, enter } =
 
 const ignore = (): void => {};
 
-describe('the tracks are edited on the drawing they belong to', () => {
+describe('the tracks are edited on the drawing they belong to', { tags: ['standard'] }, () => {
   it('appends a column and a row from the lattice\'s own trailing `+`s', () => {
     const patch = vi.fn<(next: Partial<HudGridContainer>) => void>();
     mountGrid(patch);
@@ -55,7 +55,7 @@ describe('the tracks are edited on the drawing they belong to', () => {
   });
 });
 
-describe('the gap is the numeric input this panel already had (§56)', () => {
+describe('the gap is the numeric input this panel already had (§56)', { tags: ['standard'] }, () => {
   it('is a `ValueField` with its own spinner, and no second control around it', () => {
     const patch = vi.fn<(next: Partial<HudGridContainer>) => void>();
     mountGrid(patch, screenRoot({ x: 2, y: 2 }));

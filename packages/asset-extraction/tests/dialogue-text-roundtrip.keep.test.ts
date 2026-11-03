@@ -3,7 +3,7 @@ import { describe, it, expect } from 'vitest';
 import { formatDialogueText, parseDialogueText, dialogueTexts } from '@rotp/asset-extraction';
 import { required } from './required';
 
-describe('dialogue text round-trip', () => {
+describe('dialogue text round-trip', { tags: ['critical'] }, () => {
   const asDecoded = (texts: string[]) => texts.map((text) => ({ text, srcData: [] }));
 
   it('parses ids and content back from a formatted dump', () => {

@@ -11,7 +11,7 @@ import { isShopOnByDefault } from './is-shop-on-by-default';
 import { shopSlotDescriptionOf } from './shop-slot-description-of';
 import { shopSlotKeyOf } from './shop-slot-key-of';
 import { shopSlotLabelOf } from './shop-slot-label-of';
-import { shopSlotToggleSeed } from './shop-slot-toggle-seed';
+import { shopToggleSeed } from '../shop-toggle-seed';
 import type { OptionSeed } from '../../options.type';
 import type { ShopSlotRow } from '../shop-slot.type';
 
@@ -51,7 +51,7 @@ const SHOP_SLOT_DEPTH_SEED: OptionSeed = {
 
 const SHOP_SLOT_OPTION_SEEDS: readonly OptionSeed[] = [
   SHOP_MODE_SEED,
-  ...SHOP_SLOT_ROWS.map(({ slot, key, label }) => shopSlotToggleSeed(key, label, isShopOnByDefault(slot))),
+  ...SHOP_SLOT_ROWS.map(({ slot, key, label }) => shopToggleSeed(key, label, isShopOnByDefault(slot))),
 ];
 
 const SHOP_SLOT_DESCRIPTIONS: Readonly<Record<string, string>> = Object.fromEntries(
@@ -65,6 +65,5 @@ const SHOP_SCOPE_OPTION_KEYS: readonly string[] = [
 ];
 
 export {
-  SHOP_MODE_SEED, SHOP_SCOPE_OPTION_KEYS, SHOP_SLOT_DEPTH_SEED, SHOP_SLOT_DESCRIPTIONS, SHOP_SLOT_OPTION_KEYS,
-  SHOP_SLOT_OPTION_SEEDS, SHOP_SLOT_ROWS,
+  SHOP_SCOPE_OPTION_KEYS, SHOP_SLOT_DEPTH_SEED, SHOP_SLOT_DESCRIPTIONS, SHOP_SLOT_OPTION_SEEDS, SHOP_SLOT_ROWS,
 };

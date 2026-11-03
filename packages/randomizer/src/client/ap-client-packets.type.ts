@@ -81,16 +81,7 @@ type ApClientPacket =
   | ApBouncePacket;
 
 export type {
-  ApBouncePacket,
   ApClientPacket,
   ApConnectPacket,
-  ApConnectUpdatePacket,
   ApGetDataPackagePacket,
-  ApGetPacket,
-  ApLocationChecksPacket,
-  ApLocationScoutsPacket,
-  ApSayPacket,
-  ApSetNotifyPacket,
-  ApStatusUpdatePacket,
-  ApSyncPacket,
 };

@@ -5,7 +5,7 @@ import { haulAt } from '@app/views/SimulatorWidget/behavior/trail-haul';
 
 const stop = (screenId: string, checksAt: number): TrailStop => ({ screenId, epoch: 0, checksAt });
 
-describe('run trail haul', () => {
+describe('run trail haul', { tags: ['critical'] }, () => {
   const trail = [stop('ow:44', 0), stop('room:260', 1), stop('room:128', 1), stop('room:18', 4)];
 
   it('credits a stop with the checks earned before leaving it', () => {

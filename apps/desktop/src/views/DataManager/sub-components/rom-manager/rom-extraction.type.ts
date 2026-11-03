@@ -13,4 +13,4 @@ interface ExtractionOptionsProps {
   extraction: RomExtraction;
 }
 
-export type { ExtractionOptionsProps, ExtractRom, RomExtraction, UseRomExtractionParams };
+export type { ExtractionOptionsProps, UseRomExtractionParams };

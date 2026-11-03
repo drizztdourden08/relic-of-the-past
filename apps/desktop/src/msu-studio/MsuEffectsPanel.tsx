@@ -1,16 +1,14 @@
 /* @layer renderer-components @kind component */
-import { Box, SearchInput } from '@drizztdourden08/tessera/primitives';
-import { StudioLayout } from '@drizztdourden08/tessera/composites';
-import { STUDIO_EDITOR_MIN_WIDTH, StudioPanelContent } from '@app/studio';
+import { SearchInput } from '@drizztdourden08/tessera/primitives';
 import { sectionGroup } from './studio-frame/section-group';
 import { EffectRows } from './EffectRows';
-import { SoundListHeader } from './SoundListHeader';
+import { SoundPanelShell } from './SoundPanelShell';
 import { SoundSide } from './SoundSide';
 import { effectsSummary } from './behavior/effects-summary';
 import { useEffectsPanel } from './behavior/useEffectsPanel';
 import { SOUND_FILTER_PLACEHOLDER } from './msu.constants';
 import { EFFECTS_NOTE } from './MsuEffectsPanel.constants';
-import { DETAILS_PANEL, EDITOR_LABELS } from './studio-frame/studio-frame.constants';
+import { EDITOR_LABELS } from './studio-frame/studio-frame.constants';
 import type { MsuEffectsPanelProps } from './msu.type';
 
 const MsuEffectsPanel = (props: MsuEffectsPanelProps) => {
@@ -51,24 +49,20 @@ const MsuEffectsPanel = (props: MsuEffectsPanelProps) => {
   ];
 
   return (
-    <StudioLayout
+    <SoundPanelShell
       editorLabel={EDITOR_LABELS.effects}
-      compactToolbar
-      editorMinWidth={STUDIO_EDITOR_MIN_WIDTH}
       toolbar={toolbar}
-      end={{ ...DETAILS_PANEL, content: <StudioPanelContent>{detail}</StudioPanelContent> }}
+      detail={detail}
+      header={{
+        title: `Effects · ${summary.replaced} of ${summary.total} replaced`,
+        sounding: summary.sounding,
+        status: summary.status,
+        statusOk: summary.statusOk,
+        onStop: panel.stopAll,
+      }}
     >
-      <Box className="msu-panel">
-        <SoundListHeader
-          title={`Effects · ${summary.replaced} of ${summary.total} replaced`}
-          sounding={summary.sounding}
-          status={summary.status}
-          statusOk={summary.statusOk}
-          onStop={panel.stopAll}
-        />
-        <EffectRows panel={panel} />
-      </Box>
-    </StudioLayout>
+      <EffectRows panel={panel} />
+    </SoundPanelShell>
   );
 };
 

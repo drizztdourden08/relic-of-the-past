@@ -21,7 +21,7 @@ const LayerEffectsField = (props: LayerEffectsFieldProps) => {
   const removeAt = (index: number): void => onChange(effects.filter((_, i) => i !== index));
 
   return (
-    <Box className="layer-card__effects">
+    <Box className="msu-accent-panel layer-card__effects">
       <Field label={EFFECTS_LABEL} hint={EFFECTS_HINT}>
         <Flex gap="sm" align="center" wrap>
           <Select value={presetOf(effects)} options={PRESET_OPTIONS} disabled={disabled} onChange={choosePreset} />

@@ -1,24 +1,8 @@
 /* @layer store-api @kind logic */
+import { cardViewOf } from '@rotp/hub-contracts';
 import type { ItemCardView, StoreItem } from '@rotp/hub-contracts';
 import { liveVersionOf } from './versions';
 
-const ratingAverage = ({ ratingSum, ratingCount }: StoreItem['stats']): number | null =>
-  (ratingCount > 0 ? ratingSum / ratingCount : null);
-
-const toCardView = (item: StoreItem): ItemCardView => ({
-  id: item.id,
-  kind: item.kind,
-  slug: item.slug,
-  name: item.name,
-  summary: item.summary,
-  author: item.author,
-  color: item.color,
-  card: item.card,
-  banner: item.banner,
-  semver: liveVersionOf(item)?.semver ?? null,
-  ratingAverage: ratingAverage(item.stats),
-  ratingCount: item.stats.ratingCount,
-  installs30d: item.stats.installs30d,
-});
+const toCardView = (item: StoreItem): ItemCardView => cardViewOf(item, liveVersionOf(item)?.semver ?? null);
 
 export { toCardView };

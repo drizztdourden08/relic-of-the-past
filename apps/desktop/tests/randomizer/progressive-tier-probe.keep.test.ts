@@ -83,12 +83,12 @@ const installTierRig = (): TierRig => {
     frames(2);
     call('WasmSetGateWord', 3, FEATURES3_RECEIPT_EXPORT);
     frames(2);
-  }, 120_000);
+  });
 
   return { call, grantAt };
 };
 
-describeCore('progressive tier masks in the built core (headless)', () => {
+describeCore('progressive tier masks in the built core (headless)', { tags: ['standard'] }, () => {
   const { call, grantAt } = installTierRig();
 
   it('unarmed: every rung is there, so a copy hands over the next tier as it always did', () => {

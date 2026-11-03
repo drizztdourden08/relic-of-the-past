@@ -28,4 +28,3 @@ const pondSessionOf = (placement: Placement, messages: PondMessageIds = NO_POND_
 };
 
 export { pondSessionOf };
-export type { PondSessionPlan } from './pond-session.type';

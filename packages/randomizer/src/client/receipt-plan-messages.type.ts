@@ -34,4 +34,4 @@ interface PlanReceiptTexts {
   pondDemandLines: PlanPondDemandLines;
 }
 
-export type { PlanFixedLine, PlanPondLines, PlanReceiptTexts, PlanWishPondLines };
+export type { PlanFixedLine, PlanPondLines, PlanReceiptTexts };

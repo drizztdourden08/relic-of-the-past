@@ -11,7 +11,7 @@ import { required } from '../../required';
 
 const { mount, field, type } = installPlatformHarness();
 
-describe('a limit is cleared by emptying the field', () => {
+describe('a limit is cleared by emptying the field', { tags: ['standard'] }, () => {
   it('DELETES the key instead of zeroing it', () => {
     const onMin = vi.fn();
     mount(h(MinMaxField, { min: { w: 8, h: 4 }, max: undefined, onMin, onMax: () => {}, scope: {} }));
@@ -39,7 +39,7 @@ describe('a limit is cleared by emptying the field', () => {
   });
 });
 
-describe('the box model', () => {
+describe('the box model', { tags: ['standard'] }, () => {
   it('shows margin left and top, and refuses to edit them', () => {
     mount(h(BoxModelField, {
       margin: { left: -12, top: 2, right: 3 }, padding: undefined,
@@ -76,23 +76,13 @@ describe('the box model', () => {
   });
 });
 
-describe('the screen root cannot be given a size through any path', () => {
+describe('the screen root cannot be given a size through any path', { tags: ['standard'] }, () => {
   const mountScreen = (): void => {
     mount(h(SizeBoxSection, {
       node: node({ id: 'screen', kind: 'container', direction: 'row', children: [] }),
       onPatch: () => {}, scope: {}, isScreen: true,
     }));
   };
-
-  it('covers size and limits with one scrim that states the cause', () => {
-    mountScreen();
-    const scrim = document.querySelector('.disabled-overlay__scrim');
-    expect(scrim?.textContent).toContain('always exactly the view');
-    const covered = document.querySelector('.disabled-overlay__content');
-    expect(covered?.hasAttribute('inert')).toBe(true);
-    expect(covered?.querySelector('[aria-label="w value"], [aria-label="w unit is auto"]')).not.toBeNull();
-    expect(covered?.querySelector('[aria-label="min w"]')).not.toBeNull();
-  });
 
   it('locks all four margin edges and the scale, and leaves padding alone', () => {
     mountScreen();

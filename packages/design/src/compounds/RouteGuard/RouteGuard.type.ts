@@ -13,4 +13,4 @@ type RouteGuardProps = {
   siteName: string;
 };
 
-export type { RouteGuardProps, FrameProps };
+export type { RouteGuardProps };

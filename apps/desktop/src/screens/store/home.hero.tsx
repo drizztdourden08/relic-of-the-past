@@ -10,10 +10,11 @@ const meta: ScreenMeta = {
 };
 
 const StoreHomeHero = (props: HeroProps) => {
-  const { Art, Title } = props.slots;
+  const { Art, Eyebrow, Title } = props.slots;
   return (
     <>
       <Art kind="none" />
+      <Eyebrow>Community packs</Eyebrow>
       <Title>Hookshop</Title>
       <StoreHomeView />
     </>

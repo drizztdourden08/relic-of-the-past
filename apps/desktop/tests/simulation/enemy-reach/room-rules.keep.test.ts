@@ -8,7 +8,7 @@ import { makeSprite } from './make-sprite';
 import { makeTables } from './make-tables';
 import { required } from '../../required';
 
-describeDataset('evaluateRoomThreat on room-clear-exempt sprites', () => {
+describeDataset('evaluateRoomThreat on room-clear-exempt sprites', { tags: ['critical'] }, () => {
   it('excludes a sprite whose flags4 carries the room-clear-exempt bit from gating', () => {
     const sprite = makeSprite({ row: 5, col: 5 });
     const threat = evaluateRoomThreat({
@@ -27,7 +27,7 @@ describeDataset('evaluateRoomThreat on room-clear-exempt sprites', () => {
   });
 });
 
-describeDataset('evaluateRoomThreat in a multi-section room', () => {
+describeDataset('evaluateRoomThreat in a multi-section room', { tags: ['critical'] }, () => {
   const SECTION_GRID_SIZE = 64;
   const wideOpenAttrGrid = (): number[][] => Array.from({ length: SECTION_GRID_SIZE }, () => new Array<number>(SECTION_GRID_SIZE).fill(0));
   const wideReached = (): boolean[][] => Array.from({ length: SECTION_GRID_SIZE }, () => new Array<boolean>(SECTION_GRID_SIZE).fill(true));
@@ -61,7 +61,7 @@ describeDataset('evaluateRoomThreat in a multi-section room', () => {
   });
 });
 
-describeDataset('evaluateRoomThreat when combat reasoning is unavailable', () => {
+describeDataset('evaluateRoomThreat when combat reasoning is unavailable', { tags: ['critical'] }, () => {
   it('reads every sprite as not killable when the developer-tools combat gate is off', () => {
     const sprite = makeSprite({ row: 5, col: 5 });
     const threat = evaluateRoomThreat({

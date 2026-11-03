@@ -17,7 +17,7 @@ const CrossfadeField = (props: CrossfadeFieldProps) => {
   const inputId = `crossfade-${layerId}`;
 
   return (
-    <Box className="layer-card__crossfade">
+    <Box className="msu-accent-panel layer-card__crossfade">
       <Field label={CROSSFADE_LABEL} hint={CROSSFADE_HINT} htmlFor={inputId}>
         <Flex gap="md" align="center" wrap>
           <Slider

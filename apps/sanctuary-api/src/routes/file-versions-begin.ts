@@ -1,21 +1,19 @@
 /* @layer root-config @kind logic */
 import { LIMITS, SANCTUARY_ROUTES, beginVersionSchema } from '@rotp/hub-contracts';
 import type { FileVersion } from '@rotp/hub-contracts';
-import { conflict, parseBody, requireMember, now } from '@rotp/hub-server';
-import { loadVisibleFile } from '../files/file-guards';
+import { conflict, parseBody, now } from '@rotp/hub-server';
+import { loadReadyFile } from '../files/upload-routes';
 import { lastVersionNumber } from '../files/versions';
 import { filesRepo } from '../db/files-repo';
 import { filesBucket } from '../storage/files-bucket';
 import { versionKey } from '../storage/keys';
 import type { Route } from '@rotp/hub-server';
-import { SANCTUARY_SITE } from '../site';
 
 const fileVersionsBegin: Route = {
   ...SANCTUARY_ROUTES.fileVersionsBegin,
-  handler: async ({ req, res, params }) => {
-    const member = await requireMember(req, SANCTUARY_SITE);
-    const file = await loadVisibleFile(params.id, member);
-    if (file.status !== 'ready') throw conflict('This file is still uploading.');
+  handler: async (ctx) => {
+    const { req, res } = ctx;
+    const { member, file } = await loadReadyFile(ctx);
     const body = parseBody(beginVersionSchema, req.body);
     const n = lastVersionNumber(file) + 1;
     const key = versionKey(file.id, n);

@@ -32,4 +32,4 @@ declare global {
   }
 }
 
-export type { ChannelReport, LayerSlotView, LiveChannel, MusicWidgetFeed };
+export type { ChannelReport, LayerSlotView, LiveChannel };

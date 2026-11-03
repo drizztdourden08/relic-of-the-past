@@ -6,7 +6,7 @@ import { describeDataset } from '../../dataset-guard';
 import { BUNNY_IMPASSABLE, REGION_COUNT } from './world-from-records.constants';
 import { vanillaWorld } from './vanilla-world';
 
-describeDataset('the records are the engine region list', () => {
+describeDataset('the records are the engine region list', { tags: ['standard'] }, () => {
   it('hands over every region once, in record order', () => {
     const ids = regionRecords().map((region) => region.id);
     expect(ids).toHaveLength(REGION_COUNT);
@@ -43,7 +43,7 @@ describeDataset('the records are the engine region list', () => {
   });
 });
 
-describeDataset('the dungeons and the medallion gates read the same collection', () => {
+describeDataset('the dungeons and the medallion gates read the same collection', { tags: ['standard'] }, () => {
   it('spans the wings its record names, in the records own order', () => {
     const built = vanillaWorld();
     expect([...built.dungeons.values()]).toHaveLength(DUNGEON_ORDER.length);
@@ -80,7 +80,7 @@ describeDataset('the dungeons and the medallion gates read the same collection',
   });
 });
 
-describeDataset('the transform-suppression flag lives on the record', () => {
+describeDataset('the transform-suppression flag lives on the record', { tags: ['standard'] }, () => {
   it('flags exactly the regions the reference names', () => {
     const flagged = bunnyImpassableRegionIds().map((id) => getRegion(id).name).sort();
     expect(flagged).toEqual([...BUNNY_IMPASSABLE].sort());

@@ -61,14 +61,13 @@ interface EntranceDataInput {
 
 type FloodRun = { result: FloodFillResult; connections: ConnectionInfo[] };
 
-interface FloodFillDumpInput {
+interface FloodStartContext {
   roomIndex: number;
-  run: FloodRun | null;
   attrGrid: Uint8Array | null;
   dualLayerGrids: { layer0: number[][]; layer1: number[][]; stairTiles: Array<{ row: number; col: number }> } | null;
   playerLayer: 0 | 1 | null;
   staircaseType: number | null;
-  startPos?: { row: number; col: number };
+  startPos?: GridPos;
   roomLayout: {
     intraEdges?: EdgeName[];
     shape?: string;
@@ -77,17 +76,14 @@ interface FloodFillDumpInput {
   } | null;
 }
 
-interface RunFloodArgs {
+interface FloodFillDumpInput extends FloodStartContext {
+  run: FloodRun | null;
+}
+
+interface RunFloodArgs extends FloodStartContext {
   isIndoors: boolean;
-  roomIndex: number;
   overworldScreenIndex: number;
-  startPos?: GridPos;
   screenId: string | null;
-  attrGrid: Uint8Array | null;
-  dualLayerGrids: { layer0: number[][]; layer1: number[][]; stairTiles: Array<{ row: number; col: number }> } | null;
-  playerLayer: 0 | 1 | null;
-  staircaseType: number | null;
-  roomLayout: { intraEdges?: Array<'north' | 'south' | 'east' | 'west'>; shape?: string; quadrantFullsizeX?: number; quadrantFullsizeY?: number } | null;
 }
 
 interface AreaTotalsParams {

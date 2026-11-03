@@ -1,6 +1,6 @@
 /* @layer store-site @kind component */
-import { StatRow, Text } from '@drizztdourden08/tessera/primitives';
-import { TagList } from '@rotp/design';
+import { StatRow } from '@drizztdourden08/tessera/primitives';
+import { NoteBox, TagList } from '@rotp/design';
 import type { ListingEditPreviewProps } from './ListingEditPreview.type';
 
 const ListingTextChanges = (props: ListingEditPreviewProps) => {
@@ -13,7 +13,7 @@ const ListingTextChanges = (props: ListingEditPreviewProps) => {
       {patch.license !== undefined && <StatRow label="licence" value={`${item.license} -> ${patch.license}`} />}
       {patch.tags !== undefined && <StatRow label="tags" value={<TagList tags={patch.tags} />} />}
       {patch.color !== undefined && <StatRow label="colour" value={`${item.color} -> ${patch.color}`} mono />}
-      {patch.description !== undefined && <Text as="p" className="review-item__text">{patch.description || 'Description removed.'}</Text>}
+      {patch.description !== undefined && <NoteBox>{patch.description || 'Description removed.'}</NoteBox>}
     </>
   );
 };

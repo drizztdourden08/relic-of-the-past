@@ -4,9 +4,7 @@ import { Box, Pressable } from '@drizztdourden08/tessera/primitives';
 import { swatchOf } from '@app/hud-layout-editing/appearance-summary';
 import type { PointerEvent as ReactPointerEvent } from 'react';
 import type { RampTrackProps } from './RampTrack.type';
-
-const clamp01 = (n: number): number => Math.min(1, Math.max(0, n));
-const round2 = (n: number): number => Math.round(n * 100) / 100;
+import { clamp01, round2 } from '@app/hud-layout-editing/keyframe-track';
 
 const RampTrack = (props: RampTrackProps) => {
   const { stops, kind, index, onSelect, onCommit, onAddAt, onNudge } = props;

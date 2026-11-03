@@ -1,11 +1,9 @@
 /* @layer sanctuary-site @kind component */
-import { useMemo } from 'react';
-import { Flex, Stack, Text } from '@drizztdourden08/tessera/primitives';
-import { DataTable, FilterBar, SettingsPage } from '@drizztdourden08/tessera/composites';
-import { SavedViewsMenu, useSectionHeading } from '@rotp/design';
+import { DataTable } from '@drizztdourden08/tessera/composites';
 import { fileRowId } from '../../files/file-row';
 import { FILE_DEFAULT_COLUMNS } from '../../files/file-schema.constants';
 import { formatBytes } from '@rotp/hub-client';
+import { TablePage } from '../../components/TablePage';
 import { useFilesPage } from './behavior/useFilesPage';
 import { FilesAside } from './sub-components/FilesAside';
 import { FileDropDialogs } from './sub-components/FileDropDialogs';
@@ -17,25 +15,7 @@ import './Files.css';
 const Files = (props: FilesProps) => {
   const { selectedId = null } = props;
   const page = useFilesPage(selectedId);
-  const heading = useSectionHeading('files');
   const { data, scope, view, drops } = page;
-  const headerTabs = useMemo(
-    () => ({ items: scope.tabs, activeId: scope.activeId, onSelect: scope.select }),
-    [scope.tabs, scope.activeId, scope.select],
-  );
-
-  const toolbar = (
-    <FilterBar
-      schema={page.schema}
-      clauses={view.clauses}
-      onChange={view.setClauses}
-      search={view.search}
-      onSearchChange={view.setSearch}
-      searchPlaceholder={SEARCH_PLACEHOLDER}
-      searchLabel="Search files"
-      extra={<SavedViewsMenu state={view.savedViews} />}
-    />
-  );
 
   const table = (
     <DataTable
@@ -55,25 +35,18 @@ const Files = (props: FilesProps) => {
     />
   );
 
-  const headerActions = (
-    <UploadActions canUpload={page.types.length > 0} onDrop={drops.drop} />
-  );
-
   return (
     <>
-      <Flex gap="md" align="stretch" className="files">
-        <SettingsPage icon={heading.icon} title={heading.title} tabs={headerTabs} scroll={false} actions={headerActions} className="files__page">
-          <Stack gap="md" align="stretch" className="files__body">
-            <Text as="span" variant="caption" className="files__summary">
-              {page.shown.length === 1 ? '1 file' : `${page.shown.length} files`} · {formatBytes(scope.bytes)}
-            </Text>
-            {data.error && <Text as="p" variant="caption" role="alert">{data.error}</Text>}
-            {toolbar}
-            {table}
-          </Stack>
-        </SettingsPage>
-        <FilesAside page={page} />
-      </Flex>
+      <TablePage
+        section="files"
+        scope={scope}
+        actions={<UploadActions canUpload={page.types.length > 0} onDrop={drops.drop} />}
+        summary={`${page.shown.length === 1 ? '1 file' : `${page.shown.length} files`} · ${formatBytes(scope.bytes)}`}
+        error={data.error}
+        filter={{ schema: page.schema, view, placeholder: SEARCH_PLACEHOLDER, label: 'Search files' }}
+        table={table}
+        aside={<FilesAside page={page} />}
+      />
       <FileDropDialogs page={page} />
     </>
   );

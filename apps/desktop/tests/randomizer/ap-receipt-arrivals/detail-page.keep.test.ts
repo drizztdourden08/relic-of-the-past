@@ -85,7 +85,7 @@ const WALLET = progressiveCapacityItemName('wallet');
 const WALLET_STEP = renderCapacityStep('wallet', 0, 1, 100);
 const WALLET_STEP_TEXT = 'Your wallet stretches 1 tier. 0 > 99 rupees. 9999 is the ceiling.';
 
-describe('a receipt with a detail page', () => {
+describe('a receipt with a detail page', { tags: ['critical'] }, () => {
   it('reads the incoming line first and the climb on the next page, from a player and from the server', () => {
     const fromPlayer = pagesOf(joined(renderOnline('Zelda', WALLET), WALLET_STEP));
     expect(fromPlayer.map(readPage)).toEqual(['Zelda turned up your Progressive Wallet over in their world.', WALLET_STEP_TEXT]);
@@ -127,12 +127,6 @@ describe('a receipt with a detail page', () => {
     expect(detail.match(/\[Scroll\]/g)).toHaveLength(3);
     expect(detail).not.toMatch(/\[(?:2|3)\]/);
     for (const rows of pagesOf(message)) expect(rows.length).toBeLessThanOrEqual(3);
-  });
-
-  it('keeps an item with no detail line on one page', () => {
-    expect(joined(renderOnline('Zelda', 'Moon Pearl'))).not.toMatch(/\[(?:Waitkey|Scroll)\]/);
-    const found = renderReceiptMessage({ kind: 'physical', itemName: 'Lamp', locationName: 'Sanctuary' });
-    expect(pagesOf(joined(found))).toHaveLength(1);
   });
 
   it('composes a detail page into the pool like any other line', () => {

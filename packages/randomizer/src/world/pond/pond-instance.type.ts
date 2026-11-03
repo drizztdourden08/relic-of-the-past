@@ -27,4 +27,4 @@ interface PondInstance {
   slots: readonly [PondSlot, PondSlot];
 }
 
-export type { PondHardFamily, PondId, PondInstance, PondSlot, PondSlotLock };
+export type { PondId, PondInstance, PondSlot, PondSlotLock };

@@ -27,7 +27,7 @@ const recordWrongPalaceFor = (screen: ScreenRecord) => {
 describeDataset('screen strategy parity with screen-identity on palace mismatches', () => {
   beforeEach(() => { clearPalaceMismatches(); });
 
-  it('proposes the live palace index for exactly the mismatch the correction described', () => {
+  it('proposes the live palace index for exactly the mismatch the correction described', { tags: ['critical'] }, () => {
     const screen = dungeonScreen();
     const drafts = wrongPalaceDrafts(screen);
     const palaceDraft = drafts.find(d => d.key === 'gameId.palaceIndex');
@@ -40,7 +40,7 @@ describeDataset('screen strategy parity with screen-identity on palace mismatche
     expect((palaceDraft?.proposed as ScreenRecord).gameId.palaceIndex).toBe(WRONG_PALACE);
   });
 
-  it('changes nothing else about the record it patches', () => {
+  it('changes nothing else about the record it patches', { tags: ['critical'] }, () => {
     const screen = dungeonScreen();
     const [first] = wrongPalaceDrafts(screen).filter(d => d.key === 'gameId.palaceIndex');
     const proposed = required(first, 'the palace draft').proposed as ScreenRecord;
@@ -49,13 +49,13 @@ describeDataset('screen strategy parity with screen-identity on palace mismatche
     expect(proposed.gameId).toEqual({ ...screen.gameId, palaceIndex: WRONG_PALACE });
   });
 
-  it('says nothing when the record and the game agree', () => {
+  it('says nothing when the record and the game agree', { tags: ['critical'] }, () => {
     const screen = dungeonScreen();
     const match: ScreenMatchResult = { screen, method: 'exact' };
     expect(detector.detect(contextFor(observations({ match, liveGameId: screen.gameId, isIndoors: true })))).toEqual([]);
   });
 
-  it('turns a recorded fallback hit into a fix, with no live match at all', () => {
+  it('turns a recorded fallback hit into a fix, with no live match at all', { tags: ['critical'] }, () => {
     const recorded = recordWrongPalaceFor(dungeonScreen());
     expect(recorded.length).toBeGreaterThan(0);
 
@@ -68,7 +68,7 @@ describeDataset('screen strategy parity with screen-identity on palace mismatche
     }
   });
 
-  it('emits one finding, not two, when the map and the live match name the same screen', () => {
+  it('emits one finding, not two, when the map and the live match name the same screen', { tags: ['critical'] }, () => {
     const screen = dungeonScreen();
     const recorded = recordWrongPalaceFor(screen);
 
@@ -77,7 +77,7 @@ describeDataset('screen strategy parity with screen-identity on palace mismatche
     expect(forScreen).toHaveLength(1);
   });
 
-  it('proposes a fix for a palace mismatch on a screen that is NOT the current one, which is the bug the old detector had', () => {
+  it('proposes a fix for a palace mismatch on a screen that is NOT the current one, which is the bug the old detector had', { tags: ['critical'] }, () => {
     const current = dungeonScreen();
     const other = dungeonScreen(current.id);
     const recorded = recordWrongPalaceFor(other);

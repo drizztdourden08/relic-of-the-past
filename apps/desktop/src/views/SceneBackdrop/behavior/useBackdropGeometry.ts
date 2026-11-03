@@ -1,6 +1,7 @@
 /* @layer renderer-hud @kind hook */
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useState } from 'react';
 import { FRAME_H, FRAME_W, HORIZON_Y } from '@rotp/game-data';
+import { useResizeMeasure } from '../../../hooks/useResizeMeasure';
 import type { SceneGeometry } from '../../../title/scene/scene.type';
 import type { BackdropGeometry } from '../SceneBackdrop.type';
 
@@ -8,12 +9,9 @@ const sameGeometry = (a: SceneGeometry, b: SceneGeometry): boolean =>
   a.width === b.width && a.height === b.height && a.frameX === b.frameX && a.frameY === b.frameY && a.horizonY === b.horizonY;
 
 const useBackdropGeometry = (horizon: number, scaleOverride?: number) => {
-  const containerRef = useRef<HTMLDivElement>(null);
   const [measured, setMeasured] = useState<BackdropGeometry | null>(null);
 
-  const measure = useCallback(() => {
-    const el = containerRef.current;
-    if (!el) return;
+  const measure = useCallback((el: HTMLDivElement) => {
     const w = el.clientWidth;
     const h = el.clientHeight;
     if (w <= 0 || h <= 0) return;
@@ -25,14 +23,7 @@ const useBackdropGeometry = (horizon: number, scaleOverride?: number) => {
     setMeasured((prev) => (prev?.scale === scale && sameGeometry(prev.geometry, geometry) ? prev : { geometry, scale }));
   }, [horizon, scaleOverride]);
 
-  useEffect(() => {
-    measure();
-    const el = containerRef.current;
-    if (!el) return;
-    const observer = new ResizeObserver(() => measure());
-    observer.observe(el);
-    return () => observer.disconnect();
-  }, [measure]);
+  const containerRef = useResizeMeasure(measure);
 
   return { containerRef, measured };
 };

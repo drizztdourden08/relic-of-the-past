@@ -1,11 +1,6 @@
 /* @layer bridge-wasm @kind logic */
+import { thresholdMet } from '@rotp/randomizer';
 import type { CheckGameId } from '@rotp/game-data';
-
-const thresholdMet = (val: number, compare: 'gte' | 'eq' | 'any-of', value: number | number[] | undefined): boolean => {
-  if (compare === 'gte') return val >= (value as number);
-  if (compare === 'eq') return val === (value as number);
-  return (value as number[]).includes(val);
-};
 
 const isProgressFactMet = (gameId: CheckGameId, readProgByte: (bufferIndex: number) => number): boolean => {
   const { bufferIndex, mask, compare, value } = gameId;

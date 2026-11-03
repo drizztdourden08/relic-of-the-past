@@ -1,15 +1,8 @@
 /* @layer renderer-components @kind logic */
+import { unionOf } from '@rotp/hud';
+import { UNBOUNDED_RECT } from './hull.constants';
 import type { Rect } from '@rotp/hud';
 
-const hull = (rects: readonly Rect[]): Rect => {
-  const x = Math.min(...rects.map((r) => r.x));
-  const y = Math.min(...rects.map((r) => r.y));
-  return {
-    x,
-    y,
-    w: Math.max(...rects.map((r) => r.x + r.w)) - x,
-    h: Math.max(...rects.map((r) => r.y + r.h)) - y,
-  };
-};
+const hull = (rects: readonly Rect[]): Rect => (rects.length === 0 ? { ...UNBOUNDED_RECT } : unionOf(rects));
 
 export { hull };

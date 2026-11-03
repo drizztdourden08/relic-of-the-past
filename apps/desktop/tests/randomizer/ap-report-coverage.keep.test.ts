@@ -125,7 +125,7 @@ afterEach(() => {
   errors.length = 0;
 });
 
-describe('every Archipelago location has a reporting path', () => {
+describe('every Archipelago location has a reporting path', { tags: ['standard'] }, () => {
   for (const { name, overrides, foreignEvery } of CASES) {
     it(name, async () => {
       const { outcome, keys } = await armRoom(overrides, foreignEvery);
@@ -143,7 +143,7 @@ describe('every Archipelago location has a reporting path', () => {
   }
 });
 
-describe('every collected location shows as done', () => {
+describe('every collected location shows as done', { tags: ['standard'] }, () => {
   it('a collect of every other player\'s item ticks each row, restocks and pond rungs too', async () => {
     const { outcome, keys, foreignKeys } = await armRoom({}, 3);
     if (outcome.placement === null) throw new Error('the scouts armed no placement');

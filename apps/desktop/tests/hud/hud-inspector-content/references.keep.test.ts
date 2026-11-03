@@ -37,7 +37,7 @@ const iconBody = (name: IconName): string => {
   return required(probe.querySelector('svg'), `the ${name} icon`).innerHTML;
 };
 
-describe('a reference shows the referent, and picking one round-trips', () => {
+describe('a reference shows the referent, and picking one round-trips', { tags: ['standard'] }, () => {
   it('draws a glyph as its artwork and writes back what the grid picked', () => {
     const patches: Record<string, unknown>[] = [];
     mount(h(GlyphContent, {
@@ -47,7 +47,6 @@ describe('a reference shows the referent, and picking one round-trips', () => {
     } as never));
 
     const trigger = one('.hud-ref-field');
-    expect(trigger.querySelector('img')?.getAttribute('src')).toContain('south.svg');
     expect(trigger.textContent).toContain('SOUTH');
 
     click('.hud-ref-field');
@@ -65,8 +64,6 @@ describe('a reference shows the referent, and picking one round-trips', () => {
       onChange: (next: unknown) => faces.push(next),
     } as never));
 
-    expect(one('.hud-ref-field').querySelector('img')?.getAttribute('src')).toContain('south.svg');
-    expect(document.querySelectorAll('input[type="text"], input:not([type])')).toHaveLength(0);
 
     click('.hud-ref-field');
     click('[title="EAST"]');

@@ -1,19 +1,15 @@
 /* @layer bridge-wasm @kind logic */
-import type { ConnectionInfo, GridPos, ScreenCrossing } from '@rotp/game-core';
+import type { GridPos, ScreenCrossing } from '@rotp/game-core';
 import type { TileReq } from '@rotp/game-data';
 import type { SimExit, DetectedScreen, OrderedExit, OverworldExitPass } from '@rotp/navigation';
 import { computeBigScreenGroup } from '@app/nav-widget/widget-helpers';
-import { collectCrossings, connectionCrossingId, midOf, takeableCrossing, usableCrossings, floodOneOverworld, summarizeRun, stepDistances, distanceAt, sortExitsByDistance, entryFromEdge, reachedGrid, AREA_EXIT_BIAS, dedupe, locationForScreen, SCREEN_EXIT_UNREACHED } from '@rotp/navigation';
+import { bundlesOf } from './bundles-of';
+import { roomOf } from './crossing-room-of';
+import { screenOf } from './crossing-screen-of';
+import { tailNumber } from './crossing-tail-number';
+import { collectCrossings, midOf, takeableCrossing, usableCrossings, floodOneOverworld, summarizeRun, stepDistances, distanceAt, sortExitsByDistance, entryFromEdge, reachedGrid, AREA_EXIT_BIAS, dedupe, locationForScreen, SCREEN_EXIT_UNREACHED } from '@rotp/navigation';
 import { owScreenId, interiorScreenId, spawnTile, screenAreaInfo } from './screen-resolve';
 import { detectRoom } from './room-exits';
-
-const tailNumber = (id: string): number => Number(id.slice(id.indexOf(':') + 1));
-
-const roomOf = (crossing: ScreenCrossing): number | null =>
-  crossing.target.native?.kind === 'room' ? crossing.target.native.room : null;
-
-const screenOf = (crossing: ScreenCrossing): number | null =>
-  crossing.target.native?.kind === 'overworld' ? crossing.target.native.screen : null;
 
 const borderExit = (crossing: ScreenCrossing, pass: OverworldExitPass): OrderedExit | null => {
   const target = screenOf(crossing);
@@ -68,10 +64,8 @@ const detectOverworld = (screenIndex: number, items: TileReq[], entryTile?: Grid
     flood: run.result, connections: run.connections, items,
   };
   const crossings = usableCrossings(collectCrossings(scope), scope);
-  const bundles = new Map<string, ConnectionInfo>();
-  for (const connection of run.connections) bundles.set(connectionCrossingId(connection), connection);
   const group = new Set(computeBigScreenGroup(screenIndex));
-  const pass: OverworldExitPass = { fromKey, bundles, group };
+  const pass: OverworldExitPass = { fromKey, bundles: bundlesOf(run.connections), group };
   const dist = stepDistances(run.result.reachable, run.result.startPos, run.result.ledges);
   const inArea = group.size > 1;
   const exits: SimExit[] = [];

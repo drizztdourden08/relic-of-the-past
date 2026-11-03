@@ -34,4 +34,4 @@ const pondDemandSessionOf = (
 };
 
 export { pondDemandSessionOf };
-export type { PondDemandRow, PondDemandSessionPlan } from './pond-demand-rows.type';
+export type { PondDemandSessionPlan } from './pond-demand-rows.type';

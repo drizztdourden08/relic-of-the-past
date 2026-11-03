@@ -5,7 +5,7 @@ import type { SimChest, DetectedCheck } from '@rotp/navigation';
 import { createEngineState, onCheckVerified, discoverTargets, emptySnapshot } from '@rotp/navigation';
 import { describeDataset } from '../../dataset-guard';
 import { BIG_KEY, BOMBS_ID, KAKARIKO_TAVERN_ROOM, SMALL_KEY } from './engine-review-fixes.constants';
-import { baseObs } from './base-obs';
+import { baseObs } from '../base-obs';
 
 const freshState = () => createEngineState({ screenId: 'A', tile: { row: 0, col: 0 } }, new Set(), {});
 
@@ -24,7 +24,7 @@ const makeChest = (posKnown: boolean, tile: { row: number; col: number }): SimCh
   itemId: BOMBS_ID,
 });
 
-describeDataset('discover on unknown-position interactables', () => {
+describeDataset('discover on unknown-position interactables', { tags: ['critical'] }, () => {
   it('discovers a posKnown=false chest even when its tile is unreachable', () => {
     const state = freshState();
     const obs = baseObs('A', emptySnapshot());
@@ -53,7 +53,7 @@ describeDataset('discover on unknown-position interactables', () => {
   });
 });
 
-describeDataset('explorer attributes a generic key', () => {
+describeDataset('explorer attributes a generic key', { tags: ['critical'] }, () => {
   const detected = (opts: Partial<DetectedCheck>): DetectedCheck => ({
     evidence: [],
     at: { screenId: 'A', tile: { row: 0, col: 0 } },

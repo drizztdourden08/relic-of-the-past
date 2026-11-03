@@ -1,9 +1,7 @@
 /* @layer renderer-lib @kind logic */
-import { readConfig, writeConfig } from '@drizztdourden08/brock-react';
+import { updateConfig } from './update-config';
 
-const updateActiveInputProfileId = async (id: string, activeInputProfileId: string): Promise<void> => {
-  const current = (await readConfig(id)) ?? {};
-  await writeConfig(id, { ...current, activeInputProfileId });
-};
+const updateActiveInputProfileId = (id: string, activeInputProfileId: string): Promise<void> =>
+  updateConfig(id, (current) => ({ ...current, activeInputProfileId }));
 
 export { updateActiveInputProfileId };

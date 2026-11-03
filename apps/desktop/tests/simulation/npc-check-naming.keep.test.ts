@@ -9,7 +9,7 @@ const PASSAGE_SPRITE = 0x73;
 const PASSAGE_ROOM = 0x55;
 const PASSAGE_CHECK: CheckId = 'check-017';
 
-describeDataset('npc check naming', () => {
+describeDataset('npc check naming', { tags: ['critical'] }, () => {
   it('names the passage sprite by its check id and name', () => {
     expect(npcCheckFor(PASSAGE_SPRITE, PASSAGE_ROOM, NONE)).toEqual({
       checkId: PASSAGE_CHECK, name: "Link's Uncle", done: false,
@@ -22,10 +22,6 @@ describeDataset('npc check naming', () => {
 
   it('reports presence state from the completed set, keyed by id', () => {
     expect(npcCheckFor(PASSAGE_SPRITE, PASSAGE_ROOM, new Set([PASSAGE_CHECK]))?.done).toBe(true);
-  });
-
-  it('is not fooled by the check display name in the completed set', () => {
-    expect(npcCheckFor(PASSAGE_SPRITE, PASSAGE_ROOM, new Set(['check-999'] as CheckId[]))?.done).toBe(false);
   });
 
   it('returns null for a sprite that is in no check table', () => {

@@ -1,7 +1,7 @@
 /* @layer store-site @kind component */
 import { Stack, Text } from '@drizztdourden08/tessera/primitives';
-import { DataTable, FilterBar, SettingsPage } from '@drizztdourden08/tessera/composites';
-import { SavedViewsMenu, useSectionHeading } from '@rotp/design';
+import { DataTable, SettingsPage } from '@drizztdourden08/tessera/composites';
+import { SurfaceFilterBar, useSectionHeading } from '@rotp/design';
 import { reviewRowId } from '../../review/review-row';
 import { REVIEW_DEFAULT_COLUMNS } from '../../review/review-schema';
 import { useReviewPage } from './behavior/useReviewPage';
@@ -14,16 +14,7 @@ const Review = () => {
   const { view } = page;
 
   const toolbar = (
-    <FilterBar
-      schema={page.schema}
-      clauses={view.clauses}
-      onChange={view.setClauses}
-      search={view.search}
-      onSearchChange={view.setSearch}
-      searchPlaceholder="Search the queue..."
-      searchLabel="Search the review queue"
-      extra={<SavedViewsMenu state={view.savedViews} />}
-    />
+    <SurfaceFilterBar schema={page.schema} view={view} placeholder="Search the queue..." label="Search the review queue" />
   );
 
   const table = (

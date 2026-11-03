@@ -8,7 +8,7 @@ import { FakeWorld } from '../engine-loop/fake-world';
 import {
   BOMBS_ID, CHICKEN_HOUSE_ROOM, HOUSE_CHECK, KAKARIKO_TAVERN_ROOM, LAMP_ID, LINKS_HOUSE_ROOM, STEP_LIMIT,
 } from './engine-review-fixes.constants';
-import { baseObs } from './base-obs';
+import { baseObs } from '../base-obs';
 import { trackConnectionPairs } from './track-connection-pairs';
 
 const registerPair = trackConnectionPairs();
@@ -29,7 +29,7 @@ const target: SimTarget = {
   verb: 'Opening',
 };
 
-describeDataset('resetFrontier and its epoch reset semantics', () => {
+describeDataset('resetFrontier and its epoch reset semantics', { tags: ['critical'] }, () => {
   it('clears visited and failed so everything is re-explored from here', () => {
     const s = createEngineState({ screenId: 'A', tile: { row: 0, col: 0 } }, new Set(), {});
     s.visited = new Set(['A', 'B', 'C']);
@@ -47,7 +47,7 @@ describeDataset('resetFrontier and its epoch reset semantics', () => {
   });
 });
 
-describeDataset('engine backtracks visited pass-through screens instead of re-exploring them', () => {
+describeDataset('engine backtracks visited pass-through screens instead of re-exploring them', { tags: ['standard'] }, () => {
   it('routes through an already-visited screen with one Backtrack event and no re-discovery', () => {
     const world = new FakeWorld([
       { screenId: 'B', roomId: CHICKEN_HOUSE_ROOM, chestIndex: 0, isBig: false, tile: { row: 0, col: 0 }, opened: false, posKnown: true, itemId: BOMBS_ID },
@@ -73,7 +73,7 @@ describeDataset('engine backtracks visited pass-through screens instead of re-ex
   });
 });
 
-describeDataset('engine traverse never teleports through a blocked edge', () => {
+describeDataset('engine traverse never teleports through a blocked edge', { tags: ['critical'] }, () => {
   it('aborts the route when the next hop has no passable edge', () => {
     const conns: ConnectionRecord[] = [
       registerPair({
@@ -95,7 +95,7 @@ describeDataset('engine traverse never teleports through a blocked edge', () => 
   });
 });
 
-describeDataset('engine handling of a failed trigger', () => {
+describeDataset('engine handling of a failed trigger', { tags: ['critical'] }, () => {
   it('records a no-flag-change trigger as failed instead of done, then retries after an epoch reset', () => {
     const engine = createEngine({ adjacency: buildAdjacency(CHAIN) });
     const state = createEngineState({ screenId: 'A', tile: { row: 0, col: 0 } }, new Set(), {});

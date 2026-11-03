@@ -10,6 +10,10 @@ const LOCATION_OPTIONS: { value: LobbyLocation; label: string }[] = [
   { value: 'remote', label: 'Remote' },
 ];
 
+const ANY_SEAT = '__any-seat__';
+
+const ANY_SEAT_OPTION = { value: ANY_SEAT, label: 'Any seat' };
+
 const CODE_PATTERN = '{left:text len4 upper}-{right:text len4 upper}';
 
 const CODE_ALIASES = { I: '1', L: '1', O: '0' };
@@ -45,4 +49,4 @@ const ADDRESS_SLOTS: PatternSlotConfigs = {
   port: { label: 'Port', placeholder: 'port' },
 };
 
-export { ADDRESS_LISTS, ADDRESS_SLOTS, CODE_PATTERN, CODE_SLOTS, HOST_PATTERN, IP_PATTERN, LOCATION_OPTIONS };
+export { ADDRESS_LISTS, ANY_SEAT, ANY_SEAT_OPTION, ADDRESS_SLOTS, CODE_PATTERN, CODE_SLOTS, HOST_PATTERN, IP_PATTERN, LOCATION_OPTIONS };

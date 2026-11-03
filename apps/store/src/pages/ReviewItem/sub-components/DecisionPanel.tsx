@@ -4,7 +4,7 @@ import { Icon as IconifyIcon } from '@iconify/react/offline';
 import downloadIcon from '@iconify-icons/lucide/download';
 import { Field, Link, Stack, Text, Textarea } from '@drizztdourden08/tessera/primitives';
 import type { ReviewEntry } from '@rotp/hub-contracts';
-import { DetailPane, AppLink } from '@rotp/design';
+import { DetailPane, AppLink, NoteBox } from '@rotp/design';
 import type { DetailField } from '@rotp/design';
 import { formatBytes } from '@rotp/hub-client';
 import { authorPath } from '../../../catalog/item-paths';
@@ -48,7 +48,7 @@ const DecisionPanel = (props: DecisionPanelProps) => {
       {version && (
         <Stack gap="xs" align="stretch">
           <Text as="span" variant="label">Changes</Text>
-          <Text as="p" className="review-item__text">{version.changelog.trim() || 'No changes listed.'}</Text>
+          <NoteBox>{version.changelog.trim() || 'No changes listed.'}</NoteBox>
         </Stack>
       )}
       {edit && <ListingEditPreview item={entry.item} edit={edit} />}

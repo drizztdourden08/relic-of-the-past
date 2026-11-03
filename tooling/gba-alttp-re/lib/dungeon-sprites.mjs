@@ -39,4 +39,4 @@ const parseDungeonSpriteList = (rom, start, roomId, maxRecords = 64) => {
   return { sortMode, records, raw: rom.subarray(start, offset + 1), endOffset: offset + 1 };
 };
 
-export { decodeDungeonSpriteRecord, parseDungeonSpriteList };
+export { parseDungeonSpriteList };

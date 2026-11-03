@@ -69,7 +69,7 @@ afterEach(() => {
   fake.remove();
 });
 
-describe('a received item\'s receipt line', () => {
+describe('a received item\'s receipt line', { tags: ['critical'] }, () => {
   it('sits in the ring in front of the planned lines and survives a refresh of any length', () => {
     const ids = setSessionReceiptMessages(planned(0)) as number[];
     const arrival = appendSessionReceiptMessage('Zelda sent you the Hookshot.') as number;
@@ -107,7 +107,7 @@ describe('a received item\'s receipt line', () => {
   });
 });
 
-describe('a server delivery', () => {
+describe('a server delivery', { tags: ['critical'] }, () => {
   it('grants through onGranted only, frees its line on completion, and withdraws what still waits', () => {
     setSessionReceiptMessages(planned(0));
     const granted: string[] = [];

@@ -105,55 +105,15 @@ The values a profile settles before any fill, rolled as the local generator roll
 
 What the world package hands the game in `Connected.slot_data`: the slot's options and the few per-seed values the client needs before play (the two medallion locks, and the values the generator already rolled: pond demands, prices, capacity). `deliverable` holds the npc, pond and world spots the world was built with (`packages/randomizer/src/world/fill/deliverable-lists`). `seed` is the seed the per-seed values derive from (a pond's throw schedule, a random shop draw), as a local placement keeps it; when absent, the room's seed name stands in.
 
-## packages/randomizer/src/audit/anchor-checks.constants.ts
-
-Live-verified crosswalk anchors: each check paired with the room id and chest index it was confirmed to occupy in the native chest table. They are keyed by check id, because a record has one name and an audit that named a row by text would go stale the moment the name was edited. `strideGroups` lists checks expected to occupy consecutive chest-table entries, in listed order.
-
-## packages/randomizer/src/audit/check-invariants.ts
-
-The mechanical-invariant audit over the check dataset: every rule module composed into one pure pass. Findings are returned, never thrown; this feeds the data-certification pipeline's discovery run. `spriteMainText` is the text of the core sprite source file; the source-function rule runs only when it is provided.
-
-## packages/randomizer/src/audit/check-item-refs.ts and packages/randomizer/src/audit/check-dungeon-refs.ts
-
-A4-item: every `vanillaItemIds` entry must resolve to a real item record, and for physically granted kinds the resolved item (one `aliasOf` hop) must carry a native receive id. A5-dungeon: a check claiming a dungeon must sit on one of that dungeon's room screens, and any dungeon-bound vanilla item must belong to the same dungeon.
-
-## packages/randomizer/src/audit/check-names.ts and packages/randomizer/src/audit/check-source-funcs.ts
-
-A6-name: every check names itself for the randomizer, and no two checks within the same dungeon scope (or both scope-less) share a name. SRC-func: a check citing a source function must point at text that exists in the core sprite source; it runs only when that text is supplied.
-
-## packages/randomizer/src/audit/check-names.ts
+## packages/randomizer/src/client/check-names/
 
 - Maps a check id to its community standard display name: `<dungeon> - <check>` when the check belongs to a dungeon, else the check's own name, with a small data file override table for sub-areas whose standard prefix differs from their dungeon (the shared check-standard-name).
 - The record form (standardNameOfCheck) takes the CheckRecord itself, so it also answers for a record the registry does not hold: a virtual row the tracker mints for a location with no check of its own (packages/randomizer/src/client/virtual-locations).
 - completedLocationKeys is the set of locations a run counts as taken: the locations of the completed checks, plus the locations the substitution seam reported, which are the only word on a row no check record covers (a shelf, a pond prize past the reference's two). Two callers need exactly this set: the rules engine's collected state and the receipt lines' found/total.
 
-## packages/randomizer/src/audit/chest-address-to-table-index.ts
-
-Crosswalk between the reference project's location addresses and the native chest table (linear offset `0xe96e`, 168 entries of 3 bytes, the same table the census reads). It was validated against the live anchors: chest-check addresses fall inside the table span and advance in 3-byte strides congruent to the table base, so the table index is `(address - 0xe96e) / 3`. The anchors rule out an item-byte +2 offset: consecutive same-room entries sit exactly 3 apart, starting at an address congruent to `0xe96e` mod 3. Addresses at or above `REFERENCE_CUSTOM_ADDRESS_FLOOR` (`0x180000`) are the reference project's own expanded-ROM slots. An address that is custom, outside the table span, or not stride-aligned gives null.
-
-## packages/randomizer/src/audit/comparator-vanilla.ts
-
-The vanilla-item side of the comparator: it resolves a check's declared vanilla item (first item, its record, one `aliasOf` hop) to a native receive-item id and judges it against the census byte. Decomp ruling: the chest-table item byte and the receive-item index are the same id space (identity pass-through). The owned-duplicate alternates `0x0C` and `0x44`, `0x12` and `0x35`, `0x2A` and `0x46` apply only when the item is already owned (`OWNED_DUPLICATE_PAIRS`). A check whose resolved id differs from the census byte is a dataset vanilla-item error, unless it is exactly the alternate of the byte, which is still wrong for override matching but is classified separately as `vanilla-alt-id`.
-
-## packages/randomizer/src/audit/comparator.ts
-
-The S3 comparator: a pure cross-check of every dataset chest check against the ROM census (S1) and the reference project's location table (S2). Per chest check it can emit up to two verdicts (position and vanilla item); `ok` is emitted only when nothing else was. Key-drop checks are judged for datapackage name coverage only. In `ComparatorInput`, `flatTable` is the native chest table in table order (room ids drive the per-room ordinal join), `referenceLocationIds` is the datapackage map from location name to id, and `nameOf` builds the reference project's standard name for a check.
-
-## packages/randomizer/src/audit/invariant-shape.ts
-
-A1-shape: every check's `gameId` must carry the physical keys its kind demands, and nothing contradictory. A check with no physical identity at all is flagged unless its kind legitimately has none (prize, event). A progress-buffer bit is how the receive-crossing standing grants (the two tablets) are detected: their only persisted completion fact is their substitution-completion bit, exposed through the progress buffer.
-
-## packages/randomizer/src/audit/invariant-unique.ts
-
-A2-unique: no two checks may claim the same physical save bit. A room bit is keyed by room id plus its chest index or mask; an overworld bit by its screen plus mask; a `roomFlag` occupies a chest bit like a chest does. One sharing is legitimate: a boss check and its prize check read the same room `0x800` bit (`BOSS_KILL_MASK`), because the prize is granted by the boss kill itself.
-
-## packages/randomizer/src/audit/join-crosswalk.ts
-
-The address alone gives only a global table index. A per-room chest ordinal needs the table contents (room ids in table order), so the join against the census is a separate step. The chest index is the entry's ordinal among earlier entries of the same room, matching the save-bit assignment order.
-
 ## packages/randomizer/src/audit/rom-census/
 
-The S1 census: reads the ROM's native chest table and produces the physical ground truth the dataset's check records are verified against. The layout is the same parse as `packages/asset-extraction/src/compile-dungeons/build-dungeon-rooms.ts`: base SNES address `0x81e96e`, 168 entries of 3 bytes, a little-endian room word at +0 (bit 15 is the big-chest flag, the low 15 bits the room id) and an item byte at +2. A chest's index is its order among the chests of its own room in table order, matching the save-bit assignment (`0x10 << index`). `flat` keeps every entry in native table order, the order the address crosswalk indexes into. `censusFindings` is pure: no I/O, no logging.
+The S1 census: reads the ROM's native chest table and produces the physical ground truth the dataset's check records are verified against. The layout is the same parse as `packages/asset-extraction/src/compile-dungeons/build-dungeon-rooms.ts`: base SNES address `0x81e96e`, 168 entries of 3 bytes, a little-endian room word at +0 (bit 15 is the big-chest flag, the low 15 bits the room id) and an item byte at +2. A chest's index is its order among the chests of its own room in table order, matching the save-bit assignment (`0x10 << index`). `flat` keeps every entry in native table order. `censusFindings` is pure: no I/O, no logging.
 
 ## packages/randomizer/src/audit/rom-native-tables/
 
@@ -1091,10 +1051,6 @@ Picks the template for one planned grant and renders its line. A grant the seed 
 
 The seeded deterministic generator. A seed string hashes to a u32 with FNV-1a over its UTF-16 code units, which seeds a mulberry32 stream, so the same seed string gives the same sequence forever on every platform (all math is u32 through `Math.imul`). `next` gives a float in [0, 1); `int` a uniform integer below its bound; `shuffle` is Fisher and Yates and returns a new array, leaving the input untouched.
 
-## packages/randomizer/src/spoiler.ts
-
-Renders a placement's spoiler as text: the seed line, the two rolled medallions, then the verification sweep's spheres with each location's item. A placement holds ids, so every name is read off the record at print time.
-
 ## packages/randomizer/src/world/accessibility/accessibility-check.ts
 
 The post-fill verdict is the single-world reading of `fulfills_accessibility`. The source walks only the locations it calls relevant and stops once every one that has to be collected has been, with the goal reached:
@@ -1970,9 +1926,9 @@ Types of the ported world graph (Archipelago worlds/alttp/Regions.py `create_reg
 
 On a `WorldLocation`, `kdsOnly` means it exists only with key-drop shuffle on (python `key_drop_data`); `capacityOnly` means it exists only with capacity-upgrade shuffle on (the fairy-pond slots); `pondSlot` marks a slot of a pond (one of the two fairy slots a legacy pond hands over, or a numbered prize rung every other mode replaces them with, present only while the pond carries that many prizes); `prize` is a boss prize slot (the crystal flag in the python location table), never a pool item; `vanillaItem` is the item sitting there in vanilla, for key-drop, capacity and npc-scope locations. A `WorldEvent` is a story event that happens in a region: never a location, never filled, granted by the sweep once its region is reached and its own rule holds. A `WorldDungeon` is the record's own facts with each restricted item resolved to the pool name the fill carries; `smallKeyCount` is the record's own count with key drops on. A `RegionCrossing` is one physical crossing between two different regions, as the connection records draw it.
 
-## packages/randomizer/src/world/retro/dearest-shot-cost.ts and packages/randomizer/src/world/retro/retro-shot-wallet-need.ts and packages/randomizer/src/world/retro/retro-wallet-need.ts
+## packages/randomizer/src/world/retro/retro-shot-wallet-need.ts and packages/randomizer/src/world/retro/retro-wallet-need.ts
 
-`dearestShotCost` is the most one shot can ask for: the silver shot is the dear one, and a bow that has climbed to it never goes back. `retroShotWalletNeed` is what the wallet must hold at once for the shots to be worth taking: a plain shot, and the final fight's silver shots back to back (`packages/randomizer/src/world/final-fight.constants.ts`). Nothing can be farmed once that fight starts, so the term is the count times the cost. A seed that hands the quiver over as a found item is held to this, because nothing was paid for it. `retroWalletNeed` adds the quiver's asking price: a seed that sells the quiver is held to it, because a wallet that cannot hold 80 can never make the purchase.
+`retroShotWalletNeed` is what the wallet must hold at once for the shots to be worth taking: a plain shot, and the final fight's silver shots back to back (`packages/randomizer/src/world/final-fight.constants.ts`). Nothing can be farmed once that fight starts, so the term is the count times the cost. A seed that hands the quiver over as a found item is held to this, because nothing was paid for it. `retroWalletNeed` adds the quiver's asking price: a seed that sells the quiver is held to it, because a wallet that cannot hold 80 can never make the purchase.
 
 ## packages/randomizer/src/world/retro/retro-bow.constants.ts
 

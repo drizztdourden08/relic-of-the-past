@@ -1,5 +1,4 @@
 /* @layer shared-game @kind data */
-import { POND_PRICE_LADDER, POND_VANILLA_WALLET_TOP } from '../pond-ladder.constants';
 import type { PondCustomSetting, PondSetting } from '../pond-profile.type';
 
 const LEGACY_POND_SETTING: PondSetting = { mode: 'capacity' };
@@ -24,12 +23,4 @@ const DEFAULT_POND_SETTING: PondSetting = {
   shape: { curve: 'equal' },
 };
 
-const DEFAULT_WISH_POND_SETTING: PondSetting = { mode: 'vanilla-cost', items: DEFAULT_POND_ITEMS };
-
-const POND_PRICE_FLOOR = POND_PRICE_LADDER[0];
-const POND_PRICE_CEILING = POND_VANILLA_WALLET_TOP;
-
-export {
-  DEFAULT_POND_CUSTOM, DEFAULT_POND_ITEMS, DEFAULT_POND_SETTING, DEFAULT_WISH_POND_SETTING, LEGACY_POND_SETTING,
-  POND_PRICE_CEILING, POND_PRICE_FLOOR,
-};
+export { DEFAULT_POND_CUSTOM, DEFAULT_POND_ITEMS, DEFAULT_POND_SETTING, LEGACY_POND_SETTING };

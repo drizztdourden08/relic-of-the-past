@@ -21,27 +21,27 @@ const GlyphPickerGrid = (props: GlyphPickerGridProps) => {
   if (!open) return null;
 
   return (
-    <Anchored anchorRef={anchorRef} placement="bottom-start" layer="popover" className="hud-picker-grid" onDismiss={onClose}>
-      <Box className="hud-picker-grid__tabs">
+    <Anchored anchorRef={anchorRef} placement="bottom-start" layer="popover" className="sprite-picker" onDismiss={onClose}>
+      <Box className="sprite-picker__tabs">
         <Tabs
           tabs={[{ id: AUTO_PACK_ID, label: 'Auto' }, ...packs.map((pack) => ({ id: pack.id, label: pack.name }))]}
           activeTab={packId}
           onTabChange={setPackId}
         />
       </Box>
-      <Box className="hud-picker-grid__tiles">
+      <Box className="sprite-picker__tiles">
         {tiles.map((tile) => (
           <Pressable
             key={tile.position}
-            className="hud-picker-grid__tile"
+            className="sprite-picker__tile"
             title={tile.position}
             onClick={() => {
               onPick({ position: tile.position, ...(packId === AUTO_PACK_ID ? {} : { pack: packId }) });
               onClose();
             }}
           >
-            <Image frame fit="contain" src={glyphUrlOf(tile.source)} alt={tile.position} className="hud-picker-grid__thumb" />
-            <Text className="hud-picker-grid__label">{tile.position}</Text>
+            <Image frame fit="contain" src={glyphUrlOf(tile.source)} alt={tile.position} className="sprite-picker__thumb" />
+            <Text className="sprite-picker__label">{tile.position}</Text>
           </Pressable>
         ))}
       </Box>

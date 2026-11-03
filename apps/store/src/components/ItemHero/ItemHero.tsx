@@ -39,4 +39,3 @@ const ItemHero = (props: ItemHeroProps) => {
 };
 
 export { ItemHero };
-export type { ItemHeroProps } from './ItemHero.type';

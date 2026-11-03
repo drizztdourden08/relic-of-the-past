@@ -1,5 +1,6 @@
 /* @layer renderer-widgets @kind constants */
 import { CheatSlot } from '@app/game';
+import { ABILITY_GRID } from '@app/compounds/PauseAbilitiesPanel/PauseAbilitiesPanel.constants';
 import type { ControlHint } from '../ControlHint.type';
 import type { DungeonItem, EquipmentBytes, GearSlot, SlotName } from './ItemsTab.type';
 
@@ -46,10 +47,7 @@ const CRYSTAL_SPOTS = [
 const CRYSTALS_FROM_PROGRESS = 3;
 
 const ABILITY_PANEL = { cols: 17, rows: 7, textTop: 2 / 3, textWidth: 16.7, textRows: 4, slotRow: 5, left: 2, width: 14 };
-const ABILITY_WORDS = [
-  { label: 'LIFT', bit: 7 }, { label: 'READ', bit: 6 }, { label: 'TALK', bit: 5 },
-  { label: 'PULL', bit: 3 }, { label: 'RUN', bit: 2 }, { label: 'SWIM', bit: 1 },
-];
+const ABILITY_WORDS = ABILITY_GRID;
 const ABILITY_SLOT_ORDER = [CheatSlot.Boots, CheatSlot.Gloves, CheatSlot.Flippers, CheatSlot.MoonPearl] as const;
 const ABILITY_EQUIP_TYPE: Record<(typeof ABILITY_SLOT_ORDER)[number], string> = {
   [CheatSlot.Boots]: 'boots', [CheatSlot.Gloves]: 'gloves', [CheatSlot.Flippers]: 'flippers', [CheatSlot.MoonPearl]: 'moonPearl',

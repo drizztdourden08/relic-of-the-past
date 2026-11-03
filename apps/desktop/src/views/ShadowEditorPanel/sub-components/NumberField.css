@@ -1,12 +1,12 @@
 /* @layer renderer-components @kind style */
-.number-field {
+.shadow-number-field {
   display: flex;
   align-items: center;
   gap: var(--space-xs);
   min-width: 0;
 }
 
-.number-field__label {
+.shadow-number-field__label {
   font-size: var(--text-sm);
   color: var(--c-text-muted);
   flex-shrink: 0;
@@ -14,12 +14,7 @@
   text-align: center;
 }
 
-.number-field__value {
-  font-size: var(--text-sm);
-  color: var(--c-text);
-  background: var(--c-inset);
-  border: var(--border-width-thin) solid var(--c-border-strong);
-  border-radius: var(--radius-sm);
+.shadow-number-field__value {
   padding: var(--space-xs) var(--space-sm);
   cursor: ew-resize;
   user-select: none;
@@ -28,11 +23,11 @@
   flex: 1;
 }
 
-.number-field__value:hover {
+.shadow-number-field__value:hover {
   border-color: var(--c-border-strong);
 }
 
-.number-field__input {
+.shadow-number-field__input {
   font-size: var(--text-sm);
   color: var(--c-text);
   background: var(--c-inset);

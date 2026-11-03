@@ -2,7 +2,7 @@
 import { existsSync, readFileSync, writeFileSync } from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { createServer } from 'vite';
+import { createSsrServer } from '../lib/create-ssr-server.mjs';
 import { buildEventBits } from './records-generator/event-bits.mjs';
 import { cTableTargets } from './records-generator/c-tables.mjs';
 import { taxonomyTargets } from './records-generator/taxonomies.mjs';
@@ -16,19 +16,7 @@ const read = (rel) => readFileSync(abs(rel), 'utf8');
 const readIfPresent = (rel) => (existsSync(abs(rel)) ? read(rel) : null);
 
 const loadDatasetAsTheAppSeedsIt = async () => {
-  const server = await createServer({
-    configFile: false,
-    root: ROOT,
-    appType: 'custom',
-    logLevel: 'error',
-    optimizeDeps: { noDiscovery: true },
-    server: { middlewareMode: true, watch: null },
-    resolve: {
-      alias: {
-        '@app': abs('apps/desktop/src'),
-      },
-    },
-  });
+  const server = await createSsrServer(ROOT);
   const data = await server.ssrLoadModule('/packages/game-data/src/data/index.ts');
   return { data, close: () => server.close() };
 };

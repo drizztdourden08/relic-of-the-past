@@ -1,10 +1,7 @@
 /* @layer electron-main @kind logic */
-import { app } from 'electron';
-import { join } from 'path';
 import { handle } from '@drizztdourden08/brock-electron/main';
-import { getWorkspaceRoot } from '../screen-editor/workspace-root';
-import { writeFile, mkdir } from 'fs/promises';
 import type { SimRunConfig } from '@rotp/navigation';
+import { writeDebugOutput } from './write-debug-output';
 import { DEFAULT_MAX_STEPS } from './sim-run-handler.constants';
 import { SIM_RUN_FIELDS } from './sim-run-fields.constants';
 
@@ -28,15 +25,7 @@ const registerSimRunHandler = (): void => {
 
   handle('debug:getSimRunConfig', () => config);
 
-  handle('debug:writeSimRun', async (_event, data: unknown) => {
-    const appRoot = app.isPackaged ? join(app.getAppPath(), '../..') : getWorkspaceRoot();
-    const dir = join(appRoot, 'debug-output');
-    await mkdir(dir, { recursive: true });
-    const outPath = join(dir, 'sim-run.json');
-    await writeFile(outPath, JSON.stringify(data, null, 2));
-    console.log(`[sim-run] Written to: ${outPath}`);
-    return outPath;
-  });
+  handle('debug:writeSimRun', (_event, data: unknown) => writeDebugOutput('sim-run', 'sim-run.json', data));
 };
 
 export { registerSimRunHandler };

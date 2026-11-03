@@ -1,10 +1,10 @@
 /* @layer renderer-components @kind component */
-import { memo, useCallback, useMemo } from 'react';
+import { memo, useCallback } from 'react';
 import { EntryCardCollapsed } from './EntryCardCollapsed';
 import { EntryPanel } from './EntryPanel';
 import { ReadView } from './ReadView';
 import { issueWords } from './issue-words';
-import { entryRowModel } from './entry-row-model';
+import { useEntryRowModel } from './useEntryRowModel';
 import { proseOf } from './entry-prose';
 import { metaRowsForEntry } from './meta-rows-for-entry';
 import type { EntryViewMode } from '../../behavior/language-behavior.type';
@@ -22,9 +22,7 @@ const EntryListItem = memo((props: EntryListItemProps) => {
     [entry.id, onModeChange],
   );
 
-  const model = useMemo(() => entryRowModel({
-    entry, blocks: layout.blocks, lineCount: layout.lines.length, variables, issues,
-  }), [entry, layout.blocks, layout.lines.length, variables, issues]);
+  const model = useEntryRowModel(props);
 
   if (!open) {
     return <EntryCardCollapsed model={model} rows={layout.rows} onOpen={onOpen} />;

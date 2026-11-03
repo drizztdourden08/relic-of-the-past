@@ -1,0 +1,19 @@
+/* @layer renderer-components @kind style */
+
+.placed-layer {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.placed-part {
+  position: absolute;
+  left: calc(var(--part-x) * var(--px));
+  top: calc(var(--part-y) * var(--px));
+  width: calc(var(--part-w) * var(--px));
+  height: calc(var(--part-h) * var(--px));
+  transform: rotate(var(--part-angle));
+  transform-origin: calc(var(--part-ox) * var(--px)) calc(var(--part-oy) * var(--px));
+  image-rendering: pixelated;
+  user-select: none;
+}

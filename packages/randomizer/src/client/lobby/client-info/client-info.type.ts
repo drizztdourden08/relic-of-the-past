@@ -3,6 +3,6 @@ import type { PlatformArch, PlatformOs } from '@drizztdourden08/archipelia-lobby
 
 type LobbyPlatform = { os: PlatformOs; arch: PlatformArch };
 
-type ClientInfoInput = { version: string; build?: string; platform: LobbyPlatform };
+type ClientInfoInput = { version: string; build?: string; signed?: boolean; platform: LobbyPlatform };
 
 export type { ClientInfoInput, LobbyPlatform };

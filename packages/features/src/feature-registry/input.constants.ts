@@ -8,7 +8,7 @@ const INPUT_FEATURES: FeatureDef[] = [
     description:
       'Hands the pause menu to the host: the core stops drawing and running its own menu, and the 24-slot item table is used instead of the 20-slot one.',
     userMessage:
-      'Lets the app draw and run the pause menu itself, which is what makes the enhanced menu (gear tiers, the full item grid, bottle slots) possible. The Enhanced and Modern HUD styles turn it on for you, so there is nothing to switch here. It replaces the original menu, so leave those styles off for vanilla parity.',
+      'Lets the app draw and run the pause menu itself, which is what makes the enhanced menu (gear tiers, the full item grid, bottle slots) possible. The Modern HUD style turns it on for you, so there is nothing to switch here. It replaces the original menu, so leave that style off for vanilla parity.',
     group: 'HUD',
     kind: 'features0-bit',
     origin: 'relic',

@@ -1,7 +1,7 @@
 /* @layer store-site @kind hook */
 import { useCallback, useMemo, useState } from 'react';
 import type { ReviewEntry } from '@rotp/hub-contracts';
-import { navigate, useSurfaceView, filterRows } from '@rotp/design';
+import { navigate, useSurfaceRows } from '@rotp/design';
 import { listUnsubmitted } from '../../../endpoints/review-endpoints';
 import { STORE_VIEWS } from '../../../views/store-views';
 import { toReviewRow } from '../../../review/review-row';
@@ -32,11 +32,7 @@ const useReviewPage = () => {
   const rows = useMemo(() => byScope[scopeId].map(toReviewRow), [byScope, scopeId]);
   const allRows = useMemo(() => [...queue.entries, ...unsubmitted.entries].map(toReviewRow), [queue.entries, unsubmitted.entries]);
   const schema = useMemo(() => buildReviewSchema(allRows), [allRows]);
-  const view = useSurfaceView(STORE_VIEWS, 'review', schema);
-  const shown = useMemo(
-    () => filterRows({ rows, schema, clauses: view.clauses, search: view.search }),
-    [rows, schema, view.clauses, view.search],
-  );
+  const { view, shown } = useSurfaceRows(STORE_VIEWS, 'review', schema, rows);
 
   const tabs = useMemo(() => ({
     items: SCOPES.map((scope) => ({ id: scope.id, label: scope.label, badge: byScope[scope.id].length })),

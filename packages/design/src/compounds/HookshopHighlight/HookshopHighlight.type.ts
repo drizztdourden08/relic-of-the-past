@@ -56,5 +56,5 @@ interface HookshopHighlightProps {
 }
 
 export type {
-  BagEffects, Point, PartName, PartSize, HookshopParts, PlacedPart, Rect, HookshopLayout, HookshopHighlightProps, SpriteName,
+  BagEffects, Point, PartName, HookshopParts, PlacedPart, Rect, HookshopLayout, HookshopHighlightProps, SpriteName,
 };

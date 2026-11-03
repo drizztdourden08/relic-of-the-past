@@ -5,6 +5,7 @@ export { CONTAINERS, CONTAINER_KIND, CONTAINER_MANIFEST, KIND_CONTAINER } from '
 export { isContainer } from '../../store/containers/is-container';
 export { INSTALL_SCHEME } from '../../store/deep-link/deep-link.constants';
 export { formatInstallLink } from '../../store/deep-link/format-install-link';
+export { cardViewOf } from '../../store/home-types/card-view-of';
 export type { HomeSettings, HomeView, ItemCardView } from '../../store/home-types/home-types.type';
 export type { InstallProgress, PackInstaller } from '../../store/install/installer.type';
 export type { InstalledOrigin, InstalledPack } from '../../store/installed-types/installed-types.type';

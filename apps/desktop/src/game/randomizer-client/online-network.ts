@@ -15,4 +15,3 @@ const createOnlineNetwork = (deps: OnlineNetworkDeps): NetworkMonitor => {
 };
 
 export { createOnlineNetwork };
-export type { OnlineNetworkDeps } from '@rotp/randomizer';

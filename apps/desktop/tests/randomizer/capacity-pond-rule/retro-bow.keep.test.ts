@@ -6,7 +6,7 @@ import { BASE_CHOICES, FAMILY_MODES } from './capacity-pond-rule.constants';
 import { selectionOf } from './selection-of';
 import { settingFor } from './setting-for';
 
-describe('retro bow pins the projectiles family', () => {
+describe('retro bow pins the projectiles family', { tags: ['critical'] }, () => {
   const pair = selectionOf({ enabled: true, pondMode: 'capacity', explosives: 'vanilla', projectiles: 'custom', retroBow: true });
 
   it('reads the family as Vanilla with the reason on its card, whatever was stored', () => {
@@ -44,7 +44,7 @@ describe('retro bow pins the projectiles family', () => {
   });
 });
 
-describe('a snapshot with no master switch value', () => {
+describe('a snapshot with no master switch value', { tags: ['critical'] }, () => {
   it('reads as the feature being on', () => {
     expect(capacityEnabledOf({})).toBe(true);
     expect(capacityEnabledOf({ capacity_upgrades_enabled: true })).toBe(true);

@@ -13,15 +13,4 @@ const REVIEW_STATUSES = defineStatuses({
   expired: { label: 'expired', tone: 'neutral' },
 }) satisfies Record<ReviewChipState, unknown>;
 
-const REVIEW_LABELS: Record<ReviewChipState, string> = {
-  uploading: REVIEW_STATUSES.uploading.label,
-  ready: REVIEW_STATUSES.ready.label,
-  waiting: REVIEW_STATUSES.waiting.label,
-  approved: REVIEW_STATUSES.approved.label,
-  rejected: REVIEW_STATUSES.rejected.label,
-  deleted: REVIEW_STATUSES.deleted.label,
-  withdrawn: REVIEW_STATUSES.withdrawn.label,
-  expired: REVIEW_STATUSES.expired.label,
-};
-
-export { REVIEW_STATUSES, REVIEW_LABELS };
+export { REVIEW_STATUSES };

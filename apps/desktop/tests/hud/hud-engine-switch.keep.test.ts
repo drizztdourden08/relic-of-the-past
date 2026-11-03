@@ -22,7 +22,7 @@ const switched = (doc: HudLayout, engine: 'flex' | 'grid'): HudLayout => {
   return patch ? patchNode(doc, doc.screen.id, patch) : doc;
 };
 
-describe('grid -> flex, with the gap that used to crash it', () => {
+describe('grid -> flex, with the gap that used to crash it', { tags: ['critical'] }, () => {
   const withGap = patchNode(base, base.screen.id, { gap: { x: 2, y: 3 } });
   const flex = switched(withGap, 'flex');
   const node = recordOf(screenOf(flex));
@@ -55,7 +55,7 @@ describe('grid -> flex, with the gap that used to crash it', () => {
   });
 });
 
-describe('flex -> grid, and back again', () => {
+describe('flex -> grid, and back again', { tags: ['critical'] }, () => {
   const flex = switched(base, 'flex');
   const grid = switched(flex, 'grid');
   const node = recordOf(screenOf(grid));
@@ -83,7 +83,7 @@ describe('flex -> grid, and back again', () => {
   });
 });
 
-describe('resolveValue keeps its own promise', () => {
+describe('resolveValue keeps its own promise', { tags: ['critical'] }, () => {
   it.each([
     ['a grid gap object', { x: 2, y: 2 }],
     ['an empty object', {}],

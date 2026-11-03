@@ -12,7 +12,7 @@ const vanillaIsBigKey = (checkId: CheckId): boolean => {
   return dungeonId !== undefined && vanillaItemIds[0] === getDungeon(dungeonId).items.bigKey;
 };
 
-describe('key drops are armed at their real drop size', () => {
+describe('key drops are armed at their real drop size', { tags: ['standard'] }, () => {
   const placement = generatePlacement({ seed: 'key-drop-size', snapshot: buildOptionsSnapshot({ key_drop_shuffle: true }) });
   const drops = buildPhysicalPlan(placement).entries.filter((entry) => entry.planClass === 'override-drop');
 

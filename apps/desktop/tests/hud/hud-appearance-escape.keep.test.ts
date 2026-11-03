@@ -91,7 +91,7 @@ afterEach(() => {
   expect(dismissStackDepth()).toBe(0);
 });
 
-describe("Escape inside Appearance's summary-plus-popover shape", () => {
+describe("Escape inside Appearance's summary-plus-popover shape", { tags: ['standard'] }, () => {
   it('closes the colour picker and leaves the editor up', () => {
     const onClose = vi.fn();
     mount(editor(onClose));

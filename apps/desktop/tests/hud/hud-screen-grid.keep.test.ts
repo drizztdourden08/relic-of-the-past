@@ -10,7 +10,7 @@ const SCOPE = {
   key_current: 3, rupee_current: 245, rupee_max: 999, silver_arrows: 1, slot_count: 8,
 };
 
-describe('the shipped HUD is pixel-identical to what the anchors drew', () => {
+describe('the shipped HUD is pixel-identical to what the anchors drew', { tags: ['critical'] }, () => {
   const placed = layoutHud(layoutById('default') as HudLayout, VIEW, { scope: SCOPE, hearts: 20 });
   const rect = (id: string) => placedById(placed, id)?.rect;
 
@@ -39,7 +39,7 @@ describe('the shipped HUD is pixel-identical to what the anchors drew', () => {
   });
 });
 
-describe('the countdown (§62) joins every built-in without moving a pixel', () => {
+describe('the countdown (§62) joins every built-in without moving a pixel', { tags: ['critical'] }, () => {
   const VIEWS = [VIEW, { w: 256, h: 224 }, { w: 399, h: 224 }, { w: 512, h: 448 }];
   const COUNTING = { ...SCOPE, countdown_active: 1, countdown_seconds: 18, countdown_frames: 40 };
   const without = (doc: HudLayout): HudLayout =>
@@ -67,7 +67,7 @@ describe('the countdown (§62) joins every built-in without moving a pixel', () 
   });
 });
 
-describe('overlap is explicit, and only auto-flow avoids it', () => {
+describe('overlap is explicit, and only auto-flow avoids it', { tags: ['critical'] }, () => {
   const box = (id: string, place: unknown, extra: Partial<HudNode> = {}): HudNode => ({
     kind: 'container', id, direction: 'row', children: [], place, size: { w: { px: 20 }, h: { px: 20 } }, ...extra,
   } as HudNode);
@@ -106,7 +106,7 @@ describe('overlap is explicit, and only auto-flow avoids it', () => {
   });
 });
 
-describe('the screen keeps the lock that is about its rectangle, and loses the one that was not', () => {
+describe('the screen keeps the lock that is about its rectangle, and loses the one that was not', { tags: ['critical'] }, () => {
   const screenWith = (extra: Record<string, unknown>) => validateLayout({
     id: 't',
     name: 't',

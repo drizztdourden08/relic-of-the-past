@@ -14,65 +14,6 @@
   background: var(--c-border);
 }
 
-.hud-picker-grid {
-  --anchored-gap: var(--space-xs);
-
-  pointer-events: auto;
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-xs);
-  width: calc(300 * var(--size-1));
-  max-height: calc(22 * var(--text-base));
-  padding: var(--space-xs) var(--space-sm) var(--space-xs) var(--space-xs);
-  overflow-y: auto;
-  scrollbar-gutter: stable;
-  background: var(--c-surface);
-  border: var(--border-width-thin) solid var(--c-border);
-  border-radius: var(--radius-sm);
-  box-shadow: var(--shadow-dropdown);
-}
-
-.hud-picker-grid__tabs {
-  flex-shrink: 0;
-}
-
-.hud-picker-grid__tiles {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(calc(4.5 * var(--text-base)), 1fr));
-  gap: var(--space-2xs);
-}
-
-.hud-picker-grid__tile {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: var(--space-2xs);
-  padding: var(--space-2xs);
-  border: var(--border-width-thin) solid transparent;
-  border-radius: var(--radius-sm);
-}
-
-.hud-picker-grid__tile:hover,
-.hud-picker-grid__tile:focus-visible {
-  background: var(--c-hover);
-  border-color: var(--c-border);
-  outline: none;
-}
-
-.hud-picker-grid__thumb {
-  width: calc(2.75 * var(--text-base));
-  height: calc(2.75 * var(--text-base));
-}
-
-.hud-picker-grid__label {
-  overflow: hidden;
-  max-width: 100%;
-  font-size: var(--text-xs);
-  color: var(--c-text-muted);
-  white-space: nowrap;
-  text-overflow: ellipsis;
-}
-
 .hud-slot-picker__manual {
   display: flex;
   gap: var(--space-2xs);

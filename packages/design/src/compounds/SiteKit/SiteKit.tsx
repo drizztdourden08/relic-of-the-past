@@ -14,4 +14,3 @@ const SiteKit = (props: SiteKitProps) => {
 };
 
 export { SiteKit };
-export type { SiteKitProps } from './SiteKit.type';

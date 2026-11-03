@@ -6,6 +6,7 @@ import { ABILITY_EQUIP_TYPE, ABILITY_PANEL, ABILITY_SLOT_ORDER } from '../ItemsT
 import { isSlotOwned } from '../behavior/is-slot-owned';
 import { slotValueOf } from '../behavior/slot-value-of';
 import { givableTier } from '../behavior/givable-tier';
+import { slotCellLook } from '../behavior/slot-cell-look';
 import { useSlotClick } from '../behavior/useSlotClick';
 import { AbilityTextGrid } from './AbilityTextGrid';
 import { SlotCell } from './SlotCell';
@@ -33,15 +34,11 @@ const AbilitiesEditor = ({ specs, scale, spritesBase, onHover, onOpen, write }: 
             if (!spec) return null;
             const value = slotValueOf(slot, items, equipment);
             const owned = isSlotOwned(slot, value);
-            const ghost = givableTier(spec)?.sprite ?? null;
             return (
               <SlotCell
                 key={flashKey(slot)}
                 size={tile * 2}
-                owned={owned}
-                menu={owned}
-                ghost={ghost ? `${spritesBase}${ghost}.png` : null}
-                title={spec.tiers.find((tier) => tier.value === value)?.label ?? givableTier(spec)?.label ?? spec.nameKey}
+                {...slotCellLook(spec, { value, owned, ghostSprite: givableTier(spec)?.sprite ?? null, spritesBase })}
                 flash={isFlashing(slot)}
                 onClick={(e) => click(spec, owned, e)}
                 onOpenList={(e) => onOpen({ spec, anchor: e.currentTarget })}

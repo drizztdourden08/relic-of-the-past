@@ -2,7 +2,7 @@
 import { describe, it, expect } from 'vitest';
 import { resolveFeatures, requirementClosure, suggestionsFor, FEATURES_BY_ID } from '@rotp/features';
 
-describe('resolveFeatures prunes requirements', () => {
+describe('resolveFeatures prunes requirements', { tags: ['critical'] }, () => {
   it('drops a child whose requirement is missing', () => {
     const { effective, autoDisabled } = resolveFeatures(['cameraLockToViewport']);
     expect(effective.has('cameraLockToViewport')).toBe(false);
@@ -31,7 +31,7 @@ describe('resolveFeatures prunes requirements', () => {
   });
 });
 
-describe('requirementClosure / suggestionsFor', () => {
+describe('requirementClosure / suggestionsFor', { tags: ['critical'] }, () => {
   it('returns the transitive requirements not yet enabled', () => {
     const ids = requirementClosure('tallRendering', new Set()).map((d) => d.id);
     expect(ids).toContain('linearWorldTilemap');

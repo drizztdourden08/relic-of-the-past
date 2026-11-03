@@ -4,7 +4,7 @@ import { cyclePosition, easingFn, expand, sampleAnimation, sampleKeyframes } fro
 import type { HudAnimation, HudContainer } from '@rotp/hud';
 import { required } from '../../required';
 
-describe('easing curves', () => {
+describe('easing curves', { tags: ['critical'] }, () => {
   it('every named curve starts at 0 and ends at 1', () => {
     ['linear', 'ease', 'ease-in', 'ease-out', 'ease-in-out'].forEach((name) => {
       const fn = easingFn(name);
@@ -29,7 +29,7 @@ describe('easing curves', () => {
   });
 });
 
-describe('cyclePosition', () => {
+describe('cyclePosition', { tags: ['critical'] }, () => {
   it("'none' clamps at the end instead of wrapping", () => {
     expect(cyclePosition(0, 0, 1000, 'none')).toBe(0);
     expect(cyclePosition(500, 0, 1000, 'none')).toBeCloseTo(0.5, 5);
@@ -53,7 +53,7 @@ describe('cyclePosition', () => {
   });
 });
 
-describe('sampleAnimation - the last-heart proof, exactly as the plan writes it', () => {
+describe('sampleAnimation - the last-heart proof, exactly as the plan writes it', { tags: ['critical'] }, () => {
   const lastHeartPulse: HudAnimation = {
     when: 'index == count - 1 and item < 8 and item > 0',
     property: 'scale',
@@ -87,7 +87,7 @@ describe('sampleAnimation - the last-heart proof, exactly as the plan writes it'
   });
 });
 
-describe('staggering a repeat with delay - ten hearts do not pulse in lockstep', () => {
+describe('staggering a repeat with delay - ten hearts do not pulse in lockstep', { tags: ['critical'] }, () => {
   const pulseOnLastEighth = (): HudAnimation => ({
     property: 'scale',
     keyframes: [{ at: 0, value: 1 }, { at: 1, value: 1.15 }],
@@ -126,7 +126,7 @@ describe('staggering a repeat with delay - ten hearts do not pulse in lockstep',
   });
 });
 
-describe('steps(n) - the sprite-sheet flipbook mechanism', () => {
+describe('steps(n) - the sprite-sheet flipbook mechanism', { tags: ['critical'] }, () => {
   it('a keyframe track sampled with steps(n) reads discrete frame offsets, never a blend between two', () => {
     const keyframes = [{ at: 0, value: 0 }, { at: 1, value: -48 }];
     const frameAt = (t: number) => sampleKeyframes(keyframes, t, {}, undefined);

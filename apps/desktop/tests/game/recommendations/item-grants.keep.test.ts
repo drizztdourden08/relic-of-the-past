@@ -43,7 +43,7 @@ const creates = (context: DetectionContext) => detect(context).filter(d => d.act
 const updates = (context: DetectionContext) => detect(context).filter(d => d.action === 'update');
 
 describeDataset('item strategy on create', () => {
-  it('proposes a new ItemRecord for a granted native id no record covers', () => {
+  it('proposes a new ItemRecord for a granted native id no record covers', { tags: ['critical'] }, () => {
     const unknown = Math.max(...all('item').map(i => i.gameId?.receiveItemId ?? 0)) + 5;
     expect(getItemByGameId({ receiveItemId: unknown })).toBeUndefined();
 
@@ -63,7 +63,7 @@ describeDataset('item strategy on create', () => {
     expect(proposed.gameId?.receiveItemId).toBe(unknown);
   });
 
-  it('grades a tracker-inventory-delta grant only likely', () => {
+  it('grades a tracker-inventory-delta grant only likely', { tags: ['critical'] }, () => {
     const unknown = Math.max(...all('item').map(i => i.gameId?.receiveItemId ?? 0)) + 5;
     const drafts = creates(contextFor({
       grantedItems: [{ itemId: unknown, receiveCount: 0, ownedItemIds: [], fromInventoryDelta: true }],
@@ -72,7 +72,7 @@ describeDataset('item strategy on create', () => {
     expect(required(drafts[0], 'the one draft').confidence).toBe('likely');
   });
 
-  it('proposes nothing for a granted id that already has a record', () => {
+  it('proposes nothing for a granted id that already has a record', { tags: ['critical'] }, () => {
     const item = all('item').find(i => i.gameId?.receiveItemId != null);
     if (!item) throw new Error('dataset has no item with a receiveItemId');
     const drafts = creates(contextFor({
@@ -81,13 +81,13 @@ describeDataset('item strategy on create', () => {
     expect(drafts).toEqual([]);
   });
 
-  it('stays silent when nothing was granted', () => {
+  it('stays silent when nothing was granted', { tags: ['critical'] }, () => {
     expect(creates(contextFor({}))).toEqual([]);
   });
 });
 
 describeDataset('item strategy on chest contents', () => {
-  it('proposes a record for a chest holding an id no ItemRecord covers, without it being opened', () => {
+  it('proposes a record for a chest holding an id no ItemRecord covers, without it being opened', { tags: ['critical'] }, () => {
     const unknown = uncatalogued();
     const drafts = creates(contextFor({ chests: [roomChest(unknown)] }));
 
@@ -99,7 +99,7 @@ describeDataset('item strategy on chest contents', () => {
     expect((draft.proposed as ItemRecord).gameId?.receiveItemId).toBe(unknown);
   });
 
-  it('proposes nothing for a chest whose contents the catalogue already covers', () => {
+  it('proposes nothing for a chest whose contents the catalogue already covers', { tags: ['critical'] }, () => {
     const item = all('item').find(i => i.gameId?.receiveItemId != null);
     if (!item) throw new Error('dataset has no item with a receiveItemId');
     const drafts = creates(contextFor({
@@ -108,7 +108,7 @@ describeDataset('item strategy on chest contents', () => {
     expect(drafts).toEqual([]);
   });
 
-  it('collapses a chest signal and a grant for the same id into the certain finding', () => {
+  it('collapses a chest signal and a grant for the same id into the certain finding', { tags: ['critical'] }, () => {
     const unknown = uncatalogued();
     const drafts = creates(contextFor({
       chests: [roomChest(unknown)],
@@ -121,13 +121,13 @@ describeDataset('item strategy on chest contents', () => {
     expect(required(draft.evidence[0], 'the first evidence').source).toBe('native:room-chests');
   });
 
-  it('stays silent when neither the chest table nor the receive table was read', () => {
+  it('stays silent when neither the chest table nor the receive table was read', { tags: ['critical'] }, () => {
     expect(creates(contextFor({}))).toEqual([]);
   });
 });
 
 describeDataset('item strategy on an alias mismatch', () => {
-  it('flags a record whose aliasOf rule the observed grant contradicts', () => {
+  it('flags a record whose aliasOf rule the observed grant contradicts', { tags: ['critical'] }, () => {
     const item = aliasedItem();
     const primary = item.gameId?.receiveItemId as number;
     const alias = getItem(item.aliasOf as ItemId);
@@ -145,7 +145,7 @@ describeDataset('item strategy on an alias mismatch', () => {
     expect(draft.reason).toContain(alias.name);
   });
 
-  it('grades an alias mismatch sourced from a tracker delta only likely', () => {
+  it('grades an alias mismatch sourced from a tracker delta only likely', { tags: ['critical'] }, () => {
     const item = aliasedItem();
     const primary = item.gameId?.receiveItemId as number;
     const drafts = updates(contextFor({
@@ -155,7 +155,7 @@ describeDataset('item strategy on an alias mismatch', () => {
     expect(required(drafts[0], 'the one draft').confidence).toBe('likely');
   });
 
-  it('proposes nothing when the item was not yet owned, because no swap was expected', () => {
+  it('proposes nothing when the item was not yet owned, because no swap was expected', { tags: ['critical'] }, () => {
     const item = aliasedItem();
     const primary = item.gameId?.receiveItemId as number;
     const drafts = updates(contextFor({
@@ -164,7 +164,7 @@ describeDataset('item strategy on an alias mismatch', () => {
     expect(drafts).toEqual([]);
   });
 
-  it('proposes nothing for a plain record with no aliasOf at all', () => {
+  it('proposes nothing for a plain record with no aliasOf at all', { tags: ['critical'] }, () => {
     const item = all('item').find(i => !i.aliasOf && i.gameId?.receiveItemId != null);
     if (!item) throw new Error('dataset has no plain item with a receiveItemId');
     const drafts = updates(contextFor({

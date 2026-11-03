@@ -33,7 +33,7 @@ const makeSprite = (spriteType: number, kind: SimSprite['kind'], roomId: number)
   kind,
 });
 
-describeDataset('discoverTargets and NPC room-aware matching', () => {
+describeDataset('discoverTargets and NPC room-aware matching', { tags: ['critical'] }, () => {
   it('matches Link\'s Uncle (0x73) in the secret passage room 0x55', () => {
     const obs = spriteObs(makeSprite(0x73, 'npc', PASSAGE_ROOM), presenceWith());
     expect(discoverTargets(freshState(), obs, undefined)).toHaveLength(1);
@@ -45,7 +45,7 @@ describeDataset('discoverTargets and NPC room-aware matching', () => {
   });
 });
 
-describeDataset('discoverTargets and NPC presence gating', () => {
+describeDataset('discoverTargets and NPC presence gating', { tags: ['critical'] }, () => {
   it('discovers a conditional room-less NPC when its condition holds (King Zora, no Flippers)', () => {
     const obs = spriteObs(makeSprite(0x52, 'npc', 0x181), presenceWith());
     expect(discoverTargets(freshState(), obs, undefined)).toHaveLength(1);

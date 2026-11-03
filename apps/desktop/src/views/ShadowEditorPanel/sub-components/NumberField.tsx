@@ -12,12 +12,12 @@ const NumberField = ({ value, onChange, label, icon, min, max, step = 1, suffix 
   const displayValue = suffix ? `${Math.round(value)}${suffix}` : String(Math.round(value * 100) / 100);
 
   return (
-    <Box className="number-field">
-      {caption ? <Text className="number-field__label">{caption}</Text> : null}
+    <Box className="shadow-number-field">
+      {caption ? <Text className="shadow-number-field__label">{caption}</Text> : null}
       {edit.editing ? (
         <TextInput
           ref={edit.inputRef}
-          className="number-field__input"
+          className="shadow-number-field__input"
           value={edit.text}
           onChange={edit.handleTextChange}
           onBlur={edit.commit}
@@ -25,7 +25,7 @@ const NumberField = ({ value, onChange, label, icon, min, max, step = 1, suffix 
         />
       ) : (
         <Text
-          className="number-field__value"
+          className="shadow-field-box shadow-number-field__value"
           onDoubleClick={edit.startEdit}
           onPointerDown={scrub.onPointerDown}
           onPointerMove={scrub.onPointerMove}

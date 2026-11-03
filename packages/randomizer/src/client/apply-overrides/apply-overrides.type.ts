@@ -7,4 +7,4 @@ type ArmedShopEntry = { location: LocationKey; slotIndex: number; depthIndex: nu
 
 type ArmedShopState = { entries: ArmedShopEntry[] };
 
-export type { ArmedShopEntry, ArmedShopState, MessageIdOf };
+export type { ArmedShopState, MessageIdOf };

@@ -58,4 +58,3 @@ const Browse = (props: BrowseProps) => {
 };
 
 export { Browse };
-export type { BrowseProps } from './Browse.type';

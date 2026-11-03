@@ -13,7 +13,7 @@ const NO_CORE: CoreBindings = { up: { type: 'none' }, down: { type: 'none' }, le
   right: { type: 'none' }, pause: { type: 'none' }, map: { type: 'none' },
   confirm: { type: 'none' }, cancel: { type: 'none' }, prevScreen: { type: 'none' }, nextScreen: { type: 'none' } };
 
-describe('the prefilled slot order', () => {
+describe('the prefilled slot order', { tags: ['critical'] }, () => {
   it('puts the face cross on 1-4 and the d-pad on 5-8, whatever order the device reported', () => {
     const slots = defaultSlotList(SDL_REPORT_ORDER.map(button), NO_CORE);
     expect(slots.map((s) => s.position)).toEqual([

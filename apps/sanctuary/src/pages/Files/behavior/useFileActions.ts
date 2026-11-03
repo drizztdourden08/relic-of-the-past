@@ -1,9 +1,9 @@
 /* @layer sanctuary-site @kind hook */
-import { useCallback, useState } from 'react';
+import { useCallback } from 'react';
 import type { PatchFileBody } from '@rotp/hub-contracts';
+import { useNoticeRun } from '@rotp/design';
 import { deleteFile, downloadFile, patchFile } from '../../../endpoints/files-endpoints';
 import { deleteVersion, downloadVersion, restoreVersion } from '../../../endpoints/versions-endpoints';
-import { errorMessage } from '@rotp/hub-client';
 import { versionLabel } from '../../../files/file-versions';
 import { fileLink } from './file-link';
 import { COPIED_MS } from './useFileActions.constants';
@@ -11,20 +11,7 @@ import type { UseFileActionsParams } from './useFileActions.type';
 
 const useFileActions = (params: UseFileActionsParams) => {
   const { onPatched, onDeleted } = params;
-  const [busy, setBusy] = useState(false);
-  const [notice, setNotice] = useState<string | null>(null);
-
-  const run = useCallback(async (work: () => Promise<string | null>) => {
-    setBusy(true);
-    setNotice(null);
-    try {
-      setNotice(await work());
-    } catch (cause) {
-      setNotice(errorMessage(cause));
-    } finally {
-      setBusy(false);
-    }
-  }, []);
+  const { busy, notice, setNotice, run } = useNoticeRun();
 
   const download = useCallback((id: string) => run(async () => {
     const { url } = await downloadFile(id);

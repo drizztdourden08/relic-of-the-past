@@ -26,4 +26,3 @@ const RatingHistogram = (props: RatingHistogramProps) => {
 };
 
 export { RatingHistogram };
-export type { RatingHistogramProps } from './RatingHistogram.type';

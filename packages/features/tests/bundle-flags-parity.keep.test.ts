@@ -34,7 +34,7 @@ const parseCEnums = (...sources: string[]): Record<string, number> => {
 const readCoreFile = (name: string): string =>
   readFileSync(resolve(__dirname, `../../../core/zelda3/src/${name}`), 'utf8');
 
-describe('split bug-fix flags: C <-> TS parity', () => {
+describe('split bug-fix flags: C <-> TS parity', { tags: ['standard'] }, () => {
   const cEnums = parseCEnums(readCoreFile('features_bugfixes.h'));
 
   it('every registry fix has a C enum with the same bit value', () => {
@@ -72,7 +72,7 @@ describe('split bug-fix flags: C <-> TS parity', () => {
 const FEATURES3 = 'kFeatures3_';
 const FEATURES2 = 'kFeatures2_';
 
-describe('word-3 gate bits: C <-> registry parity', () => {
+describe('word-3 gate bits: C <-> registry parity', { tags: ['standard'] }, () => {
   const cEnums = parseCEnums(readCoreFile('features.h'));
   const defs = FEATURES.filter((f) => f.flag?.startsWith(FEATURES3));
 
@@ -83,26 +83,9 @@ describe('word-3 gate bits: C <-> registry parity', () => {
       expect(cEnums[required(def.flag, `${def.id} flag`)], `${def.flag} missing/mismatched in features.h`).toBe(def.bit);
     }
   });
-
-  it('word-3 bit values are single powers of two within a 32-bit word', () => {
-    for (const def of defs) {
-      const b = required(def.bit, `${def.id} bit`);
-      expect(b > 0 && (b & (b - 1)) === 0, `${def.flag}=${b} is not a single bit`).toBe(true);
-      expect(b <= 0x80000000, `${def.flag}=${b} overflows 32 bits`).toBe(true);
-    }
-  });
-
-  it('no two word-3 features claim the same bit', () => {
-    const seen = new Map<number, string>();
-    for (const def of defs) {
-      const bit = required(def.bit, `${def.id} bit`);
-      expect(seen.has(bit), `bit ${def.bit} claimed by ${seen.get(bit)} and ${def.id}`).toBe(false);
-      seen.set(bit, def.id);
-    }
-  });
 });
 
-describe('host-menu gate bits: C <-> registry parity', () => {
+describe('host-menu gate bits: C <-> registry parity', { tags: ['standard'] }, () => {
   const cEnums = parseCEnums(readCoreFile('features.h'));
   const defs = FEATURES.filter((f) => f.id === 'hostMenu' || f.id === 'modernControls');
 

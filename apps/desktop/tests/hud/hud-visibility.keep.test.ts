@@ -3,7 +3,7 @@ import { describe, it, expect } from 'vitest';
 import type { UIMode } from '@rotp/game-data';
 import { isMainHudVisibleForMode } from '@app/hud/hud-visibility';
 
-describe('isMainHudVisibleForMode', () => {
+describe('isMainHudVisibleForMode', { tags: ['critical'] }, () => {
   it('shows the main HUD during gameplay, dialogue, and the pause slide', () => {
     const visible: UIMode[] = ['gameplay', 'text', 'paused_menu'];
     for (const mode of visible) expect(isMainHudVisibleForMode(mode)).toBe(true);

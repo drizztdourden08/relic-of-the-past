@@ -7,16 +7,13 @@ const drawsASlot = (nodes: readonly PlacedNode[]): boolean =>
   nodes.some((placed) => placed.node.kind === 'element' && placed.node.element.type === 'slot');
 
 const unionOf = (nodes: readonly PlacedNode[]): Rect | null => {
-  if (nodes.length === 0) return null;
-  const rects = nodes.map((placed) => placed.rect);
-  const x = Math.min(...rects.map((r) => r.x));
-  const y = Math.min(...rects.map((r) => r.y));
-  return {
-    x,
-    y,
-    w: Math.max(...rects.map((r) => r.x + r.w)) - x,
-    h: Math.max(...rects.map((r) => r.y + r.h)) - y,
-  };
+  const [first, ...others] = nodes.map((placed) => placed.rect);
+  if (!first) return null;
+  const edges = others.reduce(
+    (box, r) => ({ left: Math.min(box.left, r.x), top: Math.min(box.top, r.y), right: Math.max(box.right, r.x + r.w), bottom: Math.max(box.bottom, r.y + r.h) }),
+    { left: first.x, top: first.y, right: first.x + first.w, bottom: first.y + first.h },
+  );
+  return { x: edges.left, y: edges.top, w: edges.right - edges.left, h: edges.bottom - edges.top };
 };
 
 const placeLayout = (doc: HudLayout, view: Size, ctx: MeasureContext): PlacedLayout => {

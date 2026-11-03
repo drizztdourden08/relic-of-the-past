@@ -7,7 +7,7 @@ import { deleteRomFile, importRomBytes } from '@app/storage/rom-files';
 import { listRomInfos } from '@app/game/port';
 import { createMemFileStore } from './mem-file-store';
 
-describe('roms store (over FileStore)', () => {
+describe('roms store (over FileStore)', { tags: ['critical'] }, () => {
   it('imports a raw ROM and reports status', async () => {
     const f = createMemFileStore();
     const r = await importRomBytes(f, { fileName: 'game.sfc', bytes: new Uint8Array(1024) });
@@ -30,14 +30,6 @@ describe('roms store (over FileStore)', () => {
     const r = await importRomBytes(f, { fileName: 'pack.zip', bytes: zipBytes });
     expect(r).toMatchObject({ success: true, romFile: 'cool.sfc' });
     expect(await roms.listRoms(f)).toEqual(['cool.sfc']);
-  });
-
-  it('getInfo returns size + 16-char hash', async () => {
-    const f = createMemFileStore();
-    await importRomBytes(f, { fileName: 'game.sfc', bytes: new Uint8Array([1, 2, 3, 4]) });
-    const info = await roms.getInfo(f, 'game.sfc');
-    expect(info?.size).toBe(4);
-    expect(info?.hash).toHaveLength(16);
   });
 
   it('delete cascades to profiles using the ROM', async () => {

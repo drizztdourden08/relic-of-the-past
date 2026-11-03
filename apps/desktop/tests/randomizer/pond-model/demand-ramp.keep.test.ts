@@ -17,7 +17,7 @@ const oneKind = (kind: PondAskAmountKind, min: number, max: number): PondAskSett
   ...kindAsk(kind, min, max),
 });
 
-describe('one ramp per demand', () => {
+describe('one ramp per demand', { tags: ['critical'] }, () => {
   const pondOf = (curve: CurveId): PondSetting =>
     ({ mode: 'custom', start: 0, max: 999, throws: 10, items: 10, shape: { curve } });
   const amountOf = (demand: unknown): number => (demand as { amount: number }).amount;

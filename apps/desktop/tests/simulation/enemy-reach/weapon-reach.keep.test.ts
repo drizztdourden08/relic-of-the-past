@@ -10,7 +10,7 @@ import { makeSprite } from './make-sprite';
 import { makeTables } from './make-tables';
 import { required } from '../../required';
 
-describeDataset('evaluateRoomThreat and the line of fire', () => {
+describeDataset('evaluateRoomThreat and the line of fire', { tags: ['critical'] }, () => {
   it('is blocked by a wall between the only standable tile and the target', () => {
     const enemy = { row: 10, col: 10 };
     const reached = grids.emptyReached();
@@ -38,7 +38,7 @@ describeDataset('evaluateRoomThreat and the line of fire', () => {
   });
 });
 
-describeDataset('evaluateRoomThreat on a zero damage class', () => {
+describeDataset('evaluateRoomThreat on a zero damage class', { tags: ['critical'] }, () => {
   it('reads not killable when the only weapon on hand deals zero damage to this sprite', () => {
     const enemy = { row: 5, col: 5 };
     const threat = evaluateRoomThreat({
@@ -77,7 +77,7 @@ describeDataset('evaluateRoomThreat on a zero damage class', () => {
   });
 });
 
-describeDataset('evaluateRoomThreat with unbounded beam reach', () => {
+describeDataset('evaluateRoomThreat with unbounded beam reach', { tags: ['critical'] }, () => {
   it('kills an enemy only reachable from far away with an unbounded weapon', () => {
     const enemy = { row: 15, col: 15 };
     const reached = grids.emptyReached();

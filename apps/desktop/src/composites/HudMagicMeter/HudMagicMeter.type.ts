@@ -22,4 +22,10 @@ interface MagicAccurateProps {
   value: number;
 }
 
-export type { HudMagicMeterProps, MagicAccurateProps, MagicOriginalProps };
+interface MagicCapRowProps {
+  edge: 'top' | 'bottom';
+  tile: number;
+  spritesBase: string;
+}
+
+export type { HudMagicMeterProps, MagicAccurateProps, MagicCapRowProps, MagicOriginalProps };

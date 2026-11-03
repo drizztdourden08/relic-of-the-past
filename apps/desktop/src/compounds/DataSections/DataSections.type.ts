@@ -19,4 +19,4 @@ interface DataSectionsProps {
   onOpen: (id: string) => void;
 }
 
-export type { DataSectionGroup, DataSectionItem, DataSectionsProps };
+export type { DataSectionGroup, DataSectionsProps };

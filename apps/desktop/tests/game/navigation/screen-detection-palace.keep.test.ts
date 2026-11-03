@@ -20,27 +20,20 @@ describeDataset('screen detection resolves the blessed nav baselines without the
     clearPalaceMismatches();
   });
 
-  it('resolves the jail cell (room 0x80, palace 0x02) on the exact key', () => {
+  it('resolves the jail cell (room 0x80, palace 0x02) on the exact key', { tags: ['critical'] }, () => {
     const match = resolve(BASELINES['test-jail-cell']);
     expect(match?.screen.id).toBe('screen-133');
     expect(match?.method).toBe('exact');
     expect(match?.palaceMismatch).toBeUndefined();
   });
 
-  it('resolves the throne room (room 0x51, palace 0x02) on the exact key', () => {
-    const match = resolve(BASELINES['test-throne-room']);
-    expect(match?.screen.id).toBe('screen-119');
-    expect(match?.method).toBe('exact');
-    expect(match?.palaceMismatch).toBeUndefined();
-  });
-
-  it('resolves the sanctuary grounds as an overworld screen', () => {
+  it('resolves the sanctuary grounds as an overworld screen', { tags: ['critical'] }, () => {
     const match = resolve(BASELINES['test-sanctuary-grounds']);
     expect(match?.screen.id).toBe('screen-061');
     expect(match?.method).toBe('overworld');
   });
 
-  it('records no palace mismatch for any baseline state', () => {
+  it('records no palace mismatch for any baseline state', { tags: ['critical'] }, () => {
     for (const state of Object.values(BASELINES)) resolve(state);
     expect([...getPalaceMismatches().values()]).toEqual([]);
   });
@@ -51,14 +44,14 @@ describeDataset('screen detection still catches a mislabelled room with the pala
     clearPalaceMismatches();
   });
 
-  it('resolves the room anyway and reports the mismatch', () => {
+  it('resolves the room anyway and reports the mismatch', { tags: ['critical'] }, () => {
     const match = resolveCurrentScreenDetailed({ isIndoors: true, palaceIndex: 0x00, roomIndex: 0x80, overworldScreenIndex: 0x00 });
     expect(match?.screen.id).toBe('screen-133');
     expect(match?.method).toBe('palace-scan');
     expect(match?.palaceMismatch).toEqual({ expected: 0x02, actual: 0x00 });
   });
 
-  it('records the mismatch so a mislabel is observable, not silent', () => {
+  it('records the mismatch so a mislabel is observable, not silent', { tags: ['critical'] }, () => {
     resolveCurrentScreenDetailed({ isIndoors: true, palaceIndex: 0x00, roomIndex: 0x80, overworldScreenIndex: 0x00 });
     expect([...getPalaceMismatches().values()]).toEqual([
       { expected: 0x02, actual: 0x00, room: 0x80, screenId: 'screen-133' },

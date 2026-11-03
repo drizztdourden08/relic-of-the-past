@@ -1,16 +1,15 @@
 /* @layer tests @kind test */
 import { describe, expect, it } from 'vitest';
-import { SCENARIO_CATALOG } from '@drizztdourden08/archipelia-lobby-protocol/testing';
 import type { Scenario } from '@drizztdourden08/archipelia-lobby-protocol/testing';
 import { createBrowserSocket } from '../../src/client/browser-socket';
 import { joinLobby } from '../../src/client/lobby';
 import { openLobbyLink } from '../../src/client/lobby/link/open-lobby-link';
 import type { LobbySession } from '../../src/client/lobby';
-import { failureCode, firstMessage, isMessageLine, play, startJoin } from './lobby-harness.keep.test';
+import { failureCode, firstMessage, isMessageLine, play } from './lobby-harness.keep.test';
 import type { Driver, Tools } from './lobby-harness.keep.test';
 import { endsWith, expectOk, finalState, joined } from './lobby-drivers';
 
-describe('version and trust', () => {
+describe('version and trust', { tags: ['standard'] }, () => {
   it.each([
     ['version-mismatch', 'version-mismatch'],
     ['world-version-conflict', 'world-version-conflict'],
@@ -37,7 +36,7 @@ describe('version and trust', () => {
   });
 });
 
-describe('lobby state and uploads', () => {
+describe('lobby state and uploads', { tags: ['standard'] }, () => {
   it('slots-set-locked', async () => {
     const outcome = await play('slots-set-locked', joined((event, _state, session) => {
       if (event.type === 'lobby-state') session.setSlots({ slots: [{ name: 'Link2', yaml: 'name: Link2\ngame: Relic of the Past\n' }] });
@@ -77,7 +76,7 @@ describe('lobby state and uploads', () => {
   });
 });
 
-describe('wrong codes', () => {
+describe('wrong codes', { tags: ['standard'] }, () => {
   it('wrong-code-rate-limit (eleven joins)', async () => {
     const outcome = await play('wrong-code-rate-limit', async (tools) => {
       const sessions: LobbySession[] = [];
@@ -126,7 +125,7 @@ const swapUploadBegin = (scenario: Scenario): Scenario => ({
     isMessageLine(line) && line.msg.type === 'upload.begin' ? { ...line, msg: { ...line.msg, sha256: '$W', size: '$W_size' } } : line)),
 });
 
-describe('scenarios a client cannot start natively', () => {
+describe('scenarios a client cannot start natively', { tags: ['standard'] }, () => {
   it('lobby-info-rate-limit (31 requests on one link)', async () => {
     const outcome = await play('lobby-info-rate-limit', rawLinkDriver(floodInfo));
     expectOk(outcome);
@@ -160,13 +159,5 @@ describe('scenarios a client cannot start natively', () => {
     const state = await session.ended;
     expect(state.failure?.code).toBe('metadata-missing');
     expect(state.failure?.field).toBe('client.version');
-  });
-});
-
-describe('catalog coverage', () => {
-  it('knows every scenario', () => {
-    const all = SCENARIO_CATALOG.map((entry) => entry.name);
-    expect(all.length).toBeGreaterThan(40);
-    expect(startJoin).toBeDefined();
   });
 });

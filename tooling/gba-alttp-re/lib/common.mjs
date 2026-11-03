@@ -94,10 +94,6 @@ const hexBytes = (buffer) => Array.from(buffer, byte => byte.toString(16).padSta
 const loadAnchors = () => JSON.parse(readFileSync(resolve(TOOL_DIR, 'anchors.json'), 'utf8'));
 
 export {
-  DEFAULT_GBA_ROM,
-  DEFAULT_SNES_ROM,
-  REPO_ROOT,
-  TOOL_DIR,
   gbaAddressToOffset,
   hashBuffer,
   hex,

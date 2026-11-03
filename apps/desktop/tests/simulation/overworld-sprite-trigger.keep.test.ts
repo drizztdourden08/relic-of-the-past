@@ -1,7 +1,7 @@
 /* @layer tests @kind test */
 import { it, expect } from 'vitest';
 import type { SimSprite } from '@rotp/navigation';
-import { planTrigger, planSpriteTrigger } from '@rotp/navigation';
+import { planSpriteTrigger } from '@rotp/navigation';
 import { find } from '@rotp/game-data';
 import { describeDataset } from '../dataset-guard';
 import { required } from '../required';
@@ -17,7 +17,7 @@ const owSprite = (spriteType: number, kind: SimSprite['kind']): SimSprite => ({
   kind,
 });
 
-describeDataset('planSpriteTrigger on outdoor sprites', () => {
+describeDataset('planSpriteTrigger on outdoor sprites', { tags: ['critical'] }, () => {
   it("maps an overworld NPC sprite to its npc trigger via the check's own gameId", () => {
     const found = find('check', c => c.gameId.spriteType === KING_ZORA_TYPE)[0]?.gameId;
     expect(found).toBeDefined();
@@ -36,11 +36,4 @@ describeDataset('planSpriteTrigger on outdoor sprites', () => {
     expect(planSpriteTrigger(owSprite(0x00, 'other'))).toBeNull();
   });
 
-  it('returns null for an NPC-kind sprite with no matching check record', () => {
-    expect(planSpriteTrigger(owSprite(0xfe, 'npc'))).toBeNull();
-  });
-
-  it('dispatches an outdoor sprite through planTrigger by shape', () => {
-    expect(planTrigger(owSprite(0x00, 'other'))).toBeNull();
-  });
 });

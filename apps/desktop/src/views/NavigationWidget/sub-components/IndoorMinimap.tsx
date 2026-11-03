@@ -37,13 +37,13 @@ const IndoorMinimap = ({ bundle, connections, renderResults, playerPos, roomInde
   };
 
   return (
-    <Box style={{ maxWidth: AVAIL, height: AVAIL }} className="nav-indoor-minimap__root">
+    <Box style={{ maxWidth: AVAIL, height: AVAIL }} className="nav-minimap__root">
       <Box style={{ left: FRAME_LEFT, top: FRAME_TOP, width: MAP_SIZE, height: MAP_SIZE, border: `${BORDER_W}px solid var(--c-secondary-soft)` }} className="nav-indoor-minimap__map-frame">
         <IndoorFrameBody result={primaryResult} />
       </Box>
 
       {crossings.flatMap(screen => markerCrossings(screen, true).map(crossing => (
-        <Box key={`ent-${screen.screenIndex}-${crossing.id}`} style={markerBox(crossing.tile)} title={crossing.label} className="nav-indoor-minimap__marker">
+        <Box key={`ent-${screen.screenIndex}-${crossing.id}`} style={markerBox(crossing.tile)} title={crossing.label} className="nav-minimap__marker">
           <Icon icon={crossingIcon(crossing).icon} width={MARKER_SIZE} height={MARKER_SIZE} className="nav-marker-icon nav-marker-icon--shadowed" data-tone={markerTone(crossing)} />
         </Box>
       )))}
@@ -52,7 +52,7 @@ const IndoorMinimap = ({ bundle, connections, renderResults, playerPos, roomInde
         <Box key={`fh-${screen.screenIndex}-${crossing.id}`} style={markerBox(crossing.tile)} className="nav-indoor-minimap__fall-hole" />
       )))}
 
-      {player && <Box style={{ left: player.x - 3, top: player.y - 3 }} className="nav-indoor-minimap__player-dot" />}
+      {player && <Box style={{ left: player.x - 3, top: player.y - 3 }} className="nav-minimap__player-dot" />}
 
       <AnnotationLayer annotations={annotations.find(a => a.screenIndex === roomIndex) ?? null} cellLeft={MAP_LEFT} cellTop={MAP_TOP} cellW={MAP_SIZE} cellH={MAP_SIZE} />
 

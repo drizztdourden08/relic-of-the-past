@@ -76,7 +76,7 @@ afterEach(() => {
   vi.unstubAllGlobals();
 });
 
-describe('quiet receipts on', () => {
+describe('quiet receipts on', { tags: ['critical'] }, () => {
   beforeEach(() => setQuietReceiptBits(ALL_ON));
 
   it('puts rupees, bombs and arrows from a player or the server in with no line and no hold-up', () => {
@@ -133,7 +133,7 @@ describe('quiet receipts on', () => {
   });
 });
 
-describe('quiet receipts off', () => {
+describe('quiet receipts off', { tags: ['critical'] }, () => {
   it('shows each one its own per-source line through the receipt flow', () => {
     deliverServerItem('Rupees (20)', 'Zelda', () => undefined);
     step(2);

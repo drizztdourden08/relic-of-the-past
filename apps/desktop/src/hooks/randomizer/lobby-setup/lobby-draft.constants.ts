@@ -11,6 +11,7 @@ const EMPTY_LOBBY_DRAFT: LobbyDraft = {
   address: { kind: 'host', port: LOBBY_DEFAULT_PORT },
   code: {},
   slotName: '',
+  seat: null,
 };
 
 const HOST_NAME = /^(?=.{1,253}$)[a-z\d](?:[a-z\d-]{0,61}[a-z\d])?(?:\.[a-z\d](?:[a-z\d-]{0,61}[a-z\d])?)*$/i;

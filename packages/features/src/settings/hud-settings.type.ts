@@ -3,7 +3,7 @@ import type { TitleSword } from '@rotp/game-data';
 
 interface HudSettings {
   hudMode: 'original' | 'enhanced';
-  hudStyle: 'vanilla' | 'enhanced' | 'modern';
+  hudStyle: 'vanilla' | 'modern';
   hudRatio: 'match' | '4:3' | '3:2' | '16:9' | '16:10' | 'custom';
   customHudAspectW: number;
   customHudAspectH: number;

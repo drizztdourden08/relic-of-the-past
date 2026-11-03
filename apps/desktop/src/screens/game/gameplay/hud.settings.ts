@@ -45,7 +45,7 @@ const sections: Section[] = [
     items: [
       { key: 'hudMode', label: 'HUD Mode', description: 'Original renders the HUD on the game canvas. Enhanced replaces selected parts with a high-quality overlay that supports widescreen and smooth animations.', keywords: 'hud mode original enhanced overlay', control: { kind: 'choice', options: drawChoices } },
       { key: 'hudEnhancedParts', label: 'Enhanced Parts', description: 'Choose which HUD components are replaced by the enhanced overlay. Parts not selected will continue using the original game rendering.', keywords: 'hud parts main pause enhanced toggle', control: { kind: 'multi', options: enhancedParts } },
-      { key: 'hudStyle', label: 'Style', description: "Original is the game's own HUD. Enhanced keeps that look and hands the HUD and the pause menu to the app; Modern adds the modern control scheme on top. Both app-drawn styles need a 16:9 or wider display.", keywords: 'hud style original enhanced modern theme sprites widescreen pause menu control scheme slots' },
+      { key: 'hudStyle', label: 'Style', description: "Original is the game's own HUD. Modern hands the HUD and the pause menu to the app and adds the modern control scheme. It needs a 16:9 or wider display.", keywords: 'hud style original modern theme sprites widescreen pause menu control scheme slots' },
       { key: 'hudRatio', label: 'Aspect Ratio', description: 'Aspect ratio for the enhanced overlay. Match keeps it in sync with the game viewport.', keywords: 'hud ratio aspect match widescreen' },
     ],
   },

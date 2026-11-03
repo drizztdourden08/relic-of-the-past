@@ -73,4 +73,4 @@ const STORE_OWN_ROUTES: Route[] = [
 
 const ROUTES: Route[] = [...accountRoutes(STORE_SITE).filter((route) => !isSanctuaryOnly(route)), ...STORE_OWN_ROUTES];
 
-export { ROUTES, STORE_OWN_ROUTES };
+export { ROUTES };

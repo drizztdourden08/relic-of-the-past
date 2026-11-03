@@ -73,4 +73,4 @@ const checkGbaAssetIndex = async (root = DEFAULT_ROOT) => {
   return { outputPath, current: actual === expected };
 };
 
-export { buildGeneratedHeaderSource, checkGbaAssetIndex, enumMemberNameFor, generateGbaAssetIndex };
+export { checkGbaAssetIndex, generateGbaAssetIndex };

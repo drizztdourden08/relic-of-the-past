@@ -54,4 +54,3 @@ const SiteLayout = (props: SiteLayoutProps) => {
 };
 
 export { SiteLayout };
-export type { SiteLayoutProps } from './SiteLayout.type';

@@ -1,8 +1,4 @@
 /* @layer shared-game @kind barrel */
-export { bombsEverHeld } from './bombs-record';
-export { BOMBS_HELD_CHECK } from './bombs-record.constants';
-export { actGate, actTokensOf, EVENT_GATES } from './event-gates';
-export { canReachEvent, collectReachableEvents, reachableEvents } from './event-sweep';
+export { actGate } from './event-gates';
 export { storyEvent } from './story-event-rule';
-export { GOAL_EVENT, STORY_EVENT, WORLD_EVENT_IDS } from './story-events.constants';
-export type { ActToken, EventGate } from './event-gate.type';
+export { GOAL_EVENT, STORY_EVENT } from './story-events.constants';

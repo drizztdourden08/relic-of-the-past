@@ -51,11 +51,11 @@ describeDataset('connection strategy ADD side (SetProbe) against the real datase
 
   const drafts = detector.detect(context).filter(d => d.kind === 'connection');
 
-  it('finds something to compare, so the fixture is not vacuously green', () => {
+  it('finds something to compare, so the fixture is not vacuously green', { tags: ['standard'] }, () => {
     expect(drafts.length).toBeGreaterThan(0);
   });
 
-  it('proposes a create for the real, resolvable destination', () => {
+  it('proposes a create for the real, resolvable destination', { tags: ['standard'] }, () => {
     const first = required(drafts[0], 'the first draft');
     expect(first.action).toBe('create');
     expect(first.targetId).toBeNull();
@@ -64,11 +64,11 @@ describeDataset('connection strategy ADD side (SetProbe) against the real datase
     expect(first.key).toContain(to.id);
   });
 
-  it('grades a native crossing certain', () => {
+  it('grades a native crossing certain', { tags: ['standard'] }, () => {
     expect(drafts.every(d => d.confidence === 'certain')).toBe(true);
   });
 
-  it('proposes nothing once a covering record exists', () => {
+  it('proposes nothing once a covering record exists', { tags: ['standard'] }, () => {
     const partnerId = 'connection-fixture-partner' as ConnectionId;
     registerRecord('connection', {
       id: partnerId, kind: 'stairs', screenId: to.id, toConnectionId: 'connection-fixture' as ConnectionId,
@@ -88,14 +88,14 @@ describeDataset('connection strategy ADD side (SetProbe) against the real datase
     }
   });
 
-  it('stays silent when the room tables were never read', () => {
+  it('stays silent when the room tables were never read', { tags: ['standard'] }, () => {
     expect(detector.detect(contextFor(from.id, {
       realTransitions: [{ source: 'stair', kind: 'room', index: destRoom }],
       realAvailable: false,
     })).filter(d => d.kind === 'connection')).toEqual([]);
   });
 
-  it('proposes a screen create for an unresolvable destination (F2) instead of dropping it', () => {
+  it('proposes a screen create for an unresolvable destination (F2) instead of dropping it', { tags: ['standard'] }, () => {
     const unresolvedRoom = 0xfffe;
     const found = detector.detect(contextFor(from.id, {
       realTransitions: [{ source: 'stair', kind: 'room', index: unresolvedRoom }],

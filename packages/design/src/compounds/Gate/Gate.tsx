@@ -34,4 +34,3 @@ const Gate = (props: GateProps) => {
 };
 
 export { Gate };
-export type { GateProps } from './Gate.type';

@@ -216,12 +216,6 @@ GBA-exclusive NPC line is displayed.
 6. Move next to Palace rooms/bosses, Riddle Quest/text, Hurricane Spin/save state, and
    finally new graphics and palettes.
 
-Run the standalone unit tests with:
-
-```powershell
-node --test tooling/gba-alttp-re/test/*.test.mjs
-```
-
 ## Local toolchain
 
 The pinned portable toolchain is installed under the ignored `toolchain/` directory.

@@ -24,14 +24,14 @@ const SCRIPT: readonly Step[] = [
 const ready = existsSync(NEW_JS) && existsSync(BASE_JS);
 const describeCore = ready ? describe : describe.skip;
 
-describeCore('T1: gate off matches the master core byte for byte', () => {
+describeCore('T1: gate off matches the master core byte for byte', { tags: ['e2e'] }, () => {
   let fresh: Core;
   let base: Core;
 
   beforeAll(async () => {
     fresh = await Core.load(NEW_JS, 'new');
     base = await Core.load(BASE_JS, 'master');
-  }, 120_000);
+  });
 
   for (const name of fixtureNames()) {
     it(`fixture ${name}`, () => {

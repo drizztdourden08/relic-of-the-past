@@ -46,4 +46,3 @@ const CropDialog = (props: CropDialogProps) => {
 };
 
 export { CropDialog };
-export type { CropDialogProps } from './CropDialog.type';

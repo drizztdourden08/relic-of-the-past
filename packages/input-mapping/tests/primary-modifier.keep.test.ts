@@ -4,7 +4,7 @@ import { isPrimaryModifier, primaryModifierLabel } from '@rotp/input-mapping';
 
 const held = (ctrl: boolean, meta: boolean) => ({ ctrlKey: ctrl, metaKey: meta });
 
-describe('isPrimaryModifier', () => {
+describe('isPrimaryModifier', { tags: ['critical'] }, () => {
   it('is Cmd, and only Cmd, on the Apple platforms', () => {
     expect(isPrimaryModifier(held(false, true), 'macos')).toBe(true);
     expect(isPrimaryModifier(held(true, false), 'macos')).toBe(false);

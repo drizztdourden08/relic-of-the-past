@@ -2,11 +2,11 @@
 import { useCallback, useEffect, useState } from 'react';
 import type { Device } from '@rotp/hub-contracts';
 import { listDevices, revokeDevice, errorMessage } from '@rotp/hub-client';
+import { useNoticeRun } from '../../../hooks/useNoticeRun/useNoticeRun';
 
 const useDevices = () => {
   const [devices, setDevices] = useState<Device[] | null>(null);
-  const [busy, setBusy] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  const { busy, notice: error, setNotice: setError, run } = useNoticeRun();
 
   const load = useCallback(async () => {
     try {
@@ -16,20 +16,15 @@ const useDevices = () => {
       setError(errorMessage(cause));
       setDevices([]);
     }
-  }, []);
+  }, [setError]);
 
   const revoke = useCallback(async (id: string) => {
-    setBusy(true);
-    setError(null);
-    try {
+    await run(async () => {
       await revokeDevice(id);
-      await load();
-    } catch (cause) {
-      setError(errorMessage(cause));
-    } finally {
-      setBusy(false);
-    }
-  }, [load]);
+      return null;
+    });
+    await load();
+  }, [run, load]);
 
   useEffect(() => {
     void load();

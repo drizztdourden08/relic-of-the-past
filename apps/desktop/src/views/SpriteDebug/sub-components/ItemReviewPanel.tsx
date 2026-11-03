@@ -1,9 +1,8 @@
 /* @layer renderer-components @kind component */
 import { useState, useMemo } from 'react';
 import type { ReviewStatus } from '../SpriteDebug.type';
-import { Box, Button } from '@drizztdourden08/tessera/primitives';
-import { FilterBtns } from './FilterBtns';
-import { ReviewStats } from './ReviewStats';
+import { Box } from '@drizztdourden08/tessera/primitives';
+import { ReviewHeader } from './ReviewHeader';
 import { ItemAssocCard } from './ItemAssocCard';
 import { ALL_ITEMS } from './ItemReviewPanel.constants';
 import { useReviewData } from '../behavior/useReviewData';
@@ -28,13 +27,7 @@ const ItemReviewPanel = ({ baseUrl }: { baseUrl: string }) => {
 
   return (
     <>
-      <Box className="sprite-debug-header">
-        <ReviewStats counts={counts} total={ALL_ITEMS.length} />
-        <Box className="sprite-debug-header-buttons">
-          <FilterBtns filter={filter} setFilter={setFilter} />
-          <Button variant="danger" size="xs" onClick={reset}>Reset</Button>
-        </Box>
-      </Box>
+      <ReviewHeader counts={counts} total={ALL_ITEMS.length} filter={filter} setFilter={setFilter} onReset={reset} />
       <Box className="sprite-debug-grid">
         {filtered.map(item => (
           <ItemAssocCard

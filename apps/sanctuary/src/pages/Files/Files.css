@@ -1,28 +1,9 @@
 /* @layer sanctuary-site @kind style */
 
-.files {
-  flex: 1 1 auto;
-  min-height: 0;
-}
-
-.files__page {
-  flex: 1 1 0;
-  min-width: 0;
-}
-
-.files__body {
-  flex: 1 1 auto;
-  min-height: 0;
-}
-
 .files__aside {
   flex: 0 0 var(--detail-w);
   min-height: 0;
   overflow-y: auto;
-}
-
-.files__summary {
-  font-variant-numeric: tabular-nums;
 }
 
 .versions {
@@ -48,16 +29,6 @@
 
 .version-dialog__value {
   overflow-wrap: anywhere;
-}
-
-.files__note {
-  margin: 0;
-  padding: var(--space-sm) var(--space-md);
-  border: var(--border-width-thin) solid var(--c-border);
-  border-radius: var(--radius-md);
-  background: var(--c-sunken);
-  color: var(--c-text);
-  white-space: pre-wrap;
 }
 
 .files__side {

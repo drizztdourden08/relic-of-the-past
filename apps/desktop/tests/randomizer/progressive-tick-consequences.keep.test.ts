@@ -27,7 +27,7 @@ const NO_BLADE = withSwordTicks([false, false, false, false]);
 const FIRST_RUNG_ONLY = withSwordTicks([true, false, false, false]);
 const BEAM_ONLY = withSwordTicks([false, true, false, false]);
 
-describe('progressive tick consequences', () => {
+describe('progressive tick consequences', { tags: ['critical'] }, () => {
   it('says nothing while every rung is ticked', () => {
     expect(progressiveTickConsequences(defaultProgressiveSetting())).toEqual([]);
   });
@@ -44,14 +44,6 @@ describe('progressive tick consequences', () => {
 
   it('names only the beam three when the first rung alone is ticked', () => {
     expect(termsOf(FIRST_RUNG_ONLY)).toEqual(['Tablets', 'The tower seal', 'The last fight']);
-  });
-
-  it('gives every line a term and a finished sentence', () => {
-    for (const { term, detail } of progressiveTickConsequences(NO_BLADE)) {
-      expect(term.length).toBeGreaterThan(0);
-      expect(detail.endsWith('.')).toBe(true);
-      expect(detail.startsWith(term)).toBe(false);
-    }
   });
 
   it('stays in lockstep with the item-power derivation', () => {

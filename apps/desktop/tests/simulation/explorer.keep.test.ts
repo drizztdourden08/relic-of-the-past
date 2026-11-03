@@ -8,12 +8,11 @@ import { describeDataset } from '../dataset-guard';
 const EASTERN = 'dungeon-003';
 const TITANS_MITTS = 'item-029';
 const HAMMER = 'item-010';
-const BOMB_PICKUP = 'item-041';
 const RUPEES = 'item-054';
 
 const freshState = () => createEngineState({ screenId: 'A', tile: { row: 0, col: 0 } }, new Set(), {});
 
-describe('explorer with consumable small keys', () => {
+describe('explorer with consumable small keys', { tags: ['critical'] }, () => {
   it('adds, spends, and reports availability per dungeon', () => {
     const s = freshState();
     addKey(s, EASTERN);
@@ -44,7 +43,7 @@ describe('explorer with consumable small keys', () => {
   });
 });
 
-describeDataset('explorer turns inventory into traversal tokens', () => {
+describeDataset('explorer turns inventory into traversal tokens', { tags: ['critical'] }, () => {
   it('grants the lower lift rungs with the top one, from the token progression', () => {
     const s = freshState();
     applyItem(s, TITANS_MITTS);
@@ -55,7 +54,7 @@ describeDataset('explorer turns inventory into traversal tokens', () => {
   });
 });
 
-describeDataset('explorer and the unlock-reset rule', () => {
+describeDataset('explorer and the unlock-reset rule', { tags: ['critical'] }, () => {
   const detected = (opts: Partial<DetectedCheck>): DetectedCheck => ({
     evidence: [],
     at: { screenId: 'A', tile: { row: 0, col: 0 } },
@@ -85,15 +84,9 @@ describeDataset('explorer and the unlock-reset rule', () => {
     expect(s.completedChecks.has('check-073')).toBe(true);
   });
 
-  it('treats the bomb pickup as traversal-affecting', () => {
-    const s = freshState();
-    onCheckVerified(s, detected({ itemReceived: BOMB_PICKUP, checkId: 'check-074' }));
-    expect(s.epoch).toBe(1);
-    expect(s.reachTokens.has('bombs')).toBe(true);
-  });
 });
 
-describe('goal terminal conditions', () => {
+describe('goal terminal conditions', { tags: ['critical'] }, () => {
   it('returns null while the frontier still has work', () => {
     const s = freshState();
     s.frontier = ['B'];

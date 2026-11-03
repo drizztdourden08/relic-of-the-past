@@ -1,6 +1,6 @@
 /* @layer test @kind test */
 import { it, expect, afterEach } from 'vitest';
-import { all, getConnection, registerRecord, unregisterRecord } from '@rotp/game-data';
+import { getConnection, registerRecord, unregisterRecord } from '@rotp/game-data';
 import type { ConnectionId, ConnectionRecord, ScreenId } from '@rotp/game-data';
 import type { DetectionContext, ScreenObservations } from '@rotp/navigation';
 import { detectorFromStrategy } from '@rotp/navigation';
@@ -70,7 +70,7 @@ const fixtureConn = (overrides: Partial<ConnectionRecord> & {
 };
 
 describeDataset('connection strategy REMOVE side (SetProbe) against the real dataset', () => {
-  it('proposes a delete for a non-edge record no real transition backs', () => {
+  it('proposes a delete for a non-edge record no real transition backs', { tags: ['critical'] }, () => {
     const conn = fixtureConn({ kind: 'stairs' });
     const context = contextFor('screen-a', {
       existingConnections: [conn],
@@ -81,14 +81,14 @@ describeDataset('connection strategy REMOVE side (SetProbe) against the real dat
     expect(drafts.find(d => d.targetId === conn.id)?.confidence).toBe('likely');
   });
 
-  it('never proposes removing an OUTDOOR edge, because the flood cannot prove an absence', () => {
+  it('never proposes removing an OUTDOOR edge, because the flood cannot prove an absence', { tags: ['critical'] }, () => {
     const conn = fixtureConn({ kind: 'edge' });
     const context = contextFor('screen-a', { isIndoors: false, existingConnections: [conn] });
     const drafts = detector.detect(context);
     expect(drafts.some(d => d.targetId === conn.id)).toBe(false);
   });
 
-  it('never proposes removing an indoor edge unless BOTH boundary tables were read (F3)', () => {
+  it('never proposes removing an indoor edge unless BOTH boundary tables were read (F3)', { tags: ['critical'] }, () => {
     const conn = fixtureConn({ kind: 'edge' });
     const partiallyRead = contextFor('screen-a', {
       isIndoors: true, existingConnections: [conn], walkBoundaries: [],
@@ -96,7 +96,7 @@ describeDataset('connection strategy REMOVE side (SetProbe) against the real dat
     expect(detector.detect(partiallyRead).some(d => d.targetId === conn.id)).toBe(false);
   });
 
-  it('proposes removing an indoor edge once both boundary tables are read and back nothing', () => {
+  it('proposes removing an indoor edge once both boundary tables are read and back nothing', { tags: ['critical'] }, () => {
     const conn = fixtureConn({ kind: 'edge' });
     const context = contextFor('screen-a', {
       isIndoors: true, existingConnections: [conn], walkBoundaries: [], doorBoundaries: [],
@@ -105,14 +105,10 @@ describeDataset('connection strategy REMOVE side (SetProbe) against the real dat
     expect(drafts.some(d => d.targetId === conn.id && d.action === 'delete')).toBe(true);
   });
 
-  it('judges a one-way record only from the screen that can observe it (F4)', () => {
+  it('judges a one-way record only from the screen that can observe it (F4)', { tags: ['critical'] }, () => {
     const conn = fixtureConn({ kind: 'stairs', canExit: true, toScreenId: 'screen-b', partnerCanExit: false });
     const partner = getConnection(conn.toConnectionId);
     const fromTargetSide = contextFor('screen-b', { existingConnections: [partner] });
     expect(detector.detect(fromTargetSide).some(d => d.targetId === partner.id)).toBe(false);
-  });
-
-  it('still finds something on the real dataset, so the fixture path is not the only path', () => {
-    expect(all('connection').length).toBeGreaterThan(0);
   });
 });

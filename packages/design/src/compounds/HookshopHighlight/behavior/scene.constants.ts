@@ -1,15 +1,15 @@
 /* @layer renderer-components @kind constants */
 import { HOOKSHOP_PARTS } from '../HookshopHighlight.constants';
-import { boxStyle } from './box-style';
+import { placedPartStyle } from '../../PlacedPart';
 import { computeLayout } from './scene-layout';
 import { spriteEntries } from './sprite-entries';
 
 const LAYOUT = computeLayout(HOOKSHOP_PARTS);
 
 const STYLES = {
-  bot: boxStyle(LAYOUT.bot),
-  bag: boxStyle(LAYOUT.bag),
-  stamp: boxStyle(LAYOUT.stamp),
+  bot: placedPartStyle(LAYOUT.bot),
+  bag: placedPartStyle(LAYOUT.bag),
+  stamp: placedPartStyle(LAYOUT.stamp),
 };
 const BEHIND_BAG = spriteEntries(LAYOUT.behindBag);
 const EFFECTS = spriteEntries(LAYOUT.effects);

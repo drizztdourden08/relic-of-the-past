@@ -14,6 +14,7 @@ interface JoinInput {
   build: WorldPackageBuild;
   bytes: Uint8Array;
   client: ClientInfo;
+  seat?: string;
   token?: string;
 }
 
@@ -22,12 +23,13 @@ interface StartJoinInput {
   code: string;
   ap: string;
   config: ProfileRandomizerConfig;
+  seat?: string;
   token?: string;
 }
 
 type JoinOutcome =
   | { ok: true; session: LobbySession; membership: ArchipeliaMembership }
-  | { ok: false; error: string };
+  | { ok: false; error: string; code?: string };
 
 type StartJoinResult = { session: LobbySession } | { error: string };
 

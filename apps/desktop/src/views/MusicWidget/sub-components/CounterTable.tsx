@@ -20,12 +20,12 @@ const CounterTable = (props: { counters: MusicDebugCounter[] }) => {
   return (
     <ScrollArea className="counter-table" fade={false}>
       {rows.length === 0 && (
-        <Box className="counter-table__row" data-empty="yes">
+        <Box className="music-row counter-table__row" data-empty="yes">
           <Text className="counter-table__label">Nothing counted yet.</Text>
         </Box>
       )}
       {rows.map((row) => (
-        <Box key={row.key} className="counter-table__row">
+        <Box key={row.key} className="music-row counter-table__row">
           <Text className="counter-table__label" title={`${row.channel} · ${row.label}`}>{`${row.channel} · ${row.label}`}</Text>
           <Text className="counter-table__value">{splitOf(row)}</Text>
         </Box>

@@ -32,7 +32,7 @@ const names = (core: FakeCore): string[] => core.delivered.map((d) => d.itemName
 
 installRecoveryHarness();
 
-describe('received items and the save file', () => {
+describe('received items and the save file', { tags: ['critical'] }, () => {
   const five = () => [100, 101, 100, 101, 100].map((id) => item(id, 2, 900));
 
   it('delivers nothing and keeps the index while no file is in play, then asks once one is', async () => {
@@ -93,7 +93,7 @@ describe('received items and the save file', () => {
   });
 });
 
-describe('the room\'s checked locations', () => {
+describe('the room\'s checked locations', { tags: ['critical'] }, () => {
   const twoChecks = (): Partial<FakeRoom> => ({
     games: {
       [OWN]: {

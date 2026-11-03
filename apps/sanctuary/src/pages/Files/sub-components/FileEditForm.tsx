@@ -1,10 +1,10 @@
 /* @layer sanctuary-site @kind component */
 import { useState } from 'react';
-import { FILE_TYPES, FILE_TYPE_LABELS, LIMITS } from '@rotp/hub-contracts';
+import { FILE_TYPES, FILE_TYPE_LABELS } from '@rotp/hub-contracts';
 import type { FileType, PatchFileBody } from '@rotp/hub-contracts';
-import { Button, Field, Flex, Select, Stack, TextInput, Textarea } from '@drizztdourden08/tessera/primitives';
-import { TagInput } from '@drizztdourden08/tessera/composites';
-import { validateTag } from '../../../files/validate-tag';
+import { FormActions } from '@rotp/design';
+import { Stack } from '@drizztdourden08/tessera/primitives';
+import { FileMetaFields } from '../../../components/FileMetaFields';
 import type { FileEditFormProps } from './FileEditForm.type';
 
 const typeOptions = (types: readonly FileType[], own: FileType) =>
@@ -29,20 +29,20 @@ const FileEditForm = (props: FileEditFormProps) => {
 
   return (
     <Stack as="form" gap="sm" align="stretch" onSubmit={(event) => { event.preventDefault(); onSave(patch); }}>
-      <Field label="Type">
-        <Select value={type} onChange={(value) => setType(value as FileType)} options={typeOptions(types, file.type)} size="sm" />
-      </Field>
-      <TagInput label="Tags" value={tags} onChange={setTags} suggestions={knownTags} validate={validateTag} enforce />
-      <Field label="App version">
-        <TextInput value={version} onChange={(event) => setVersion(event.target.value)} />
-      </Field>
-      <Field label="Note" hint={`${note.length} / ${LIMITS.noteMaxChars}`}>
-        <Textarea rows={2} maxLength={LIMITS.noteMaxChars} value={note} onChange={(event) => setNote(event.target.value)} />
-      </Field>
-      <Flex gap="sm">
-        <Button type="submit" variant="primary" size="sm" disabled={busy || !changed}>Save</Button>
-        <Button type="button" variant="tertiary" size="sm" disabled={busy} onClick={onCancel}>Cancel</Button>
-      </Flex>
+      <FileMetaFields
+        variant="edit"
+        type={type}
+        typeOptions={typeOptions(types, file.type)}
+        tags={tags}
+        knownTags={knownTags}
+        version={version}
+        note={note}
+        onTypeChange={setType}
+        onTagsChange={setTags}
+        onVersionChange={setVersion}
+        onNoteChange={setNote}
+      />
+      <FormActions busy={busy} canSave={changed} onCancel={onCancel} />
     </Stack>
   );
 };

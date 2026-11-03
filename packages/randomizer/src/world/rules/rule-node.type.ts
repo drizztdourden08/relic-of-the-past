@@ -63,11 +63,8 @@ type RuleNode =
   | { op: 'seed'; key: string; equals: RuleOptionValue }
   | { op: 'helper'; name: HelperName; args?: readonly RuleArg[] };
 
-type RuleOp = RuleNode['op'];
-
 type HelperNode = Extract<RuleNode, { op: 'helper' }>;
 
 export type {
-  DerivedHelperName, HelperName, HelperNode, OptionRef, PrimitiveHelperName, RuleArg, RuleCount, RuleNode, RuleOp,
-  RuleOptionKey, RuleOptionValue, SeedRef,
+  HelperName, HelperNode, OptionRef, RuleArg, RuleCount, RuleNode, RuleOptionKey, RuleOptionValue, SeedRef,
 };

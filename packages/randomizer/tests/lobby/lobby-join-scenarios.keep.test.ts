@@ -5,7 +5,7 @@ import type { LobbyEvent, LobbySession } from '../../src/client/lobby';
 import { failureCode, play, watch } from './lobby-harness.keep.test';
 import { downloadDriver, endsWith, expectOk, finalState, infoDriver, joined } from './lobby-drivers';
 
-describe('lobby.info scenarios', () => {
+describe('lobby.info scenarios', { tags: ['standard'] }, () => {
   it('lobby-info', async () => {
     const outcome = await play('lobby-info', infoDriver());
     expectOk(outcome);
@@ -36,7 +36,7 @@ describe('lobby.info scenarios', () => {
   });
 });
 
-describe('joining', () => {
+describe('joining', { tags: ['standard'] }, () => {
   it('open-join', async () => {
     const outcome = await play('open-join', endsWith((state) => state.uploadsDone && state.ready));
     expectOk(outcome);
@@ -80,7 +80,7 @@ describe('joining', () => {
   });
 });
 
-describe('slot name', () => {
+describe('slot name', { tags: ['standard'] }, () => {
   const rename = (event: LobbyEvent, session: LobbySession): void => {
     if (event.type === 'problem' && event.problem.code === 'slot-name-taken') {
       session.setSlots({ slots: [{ name: 'Link2', yaml: 'name: Link2\ngame: Relic of the Past\n' }] });
@@ -92,7 +92,7 @@ describe('slot name', () => {
   });
 });
 
-describe('resume', () => {
+describe('resume', { tags: ['standard'] }, () => {
   it('upload-resume (reconnect keeps the token)', async () => {
     const outcome = await play('upload-resume', endsWith((state) => state.uploadsDone && state.uploads.length === 2 && state.resumed));
     expectOk(outcome);

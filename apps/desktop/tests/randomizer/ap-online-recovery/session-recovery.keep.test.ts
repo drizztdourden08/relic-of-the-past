@@ -16,7 +16,7 @@ vi.mock('@app/log-bus', () => {
 
 installRecoveryHarness();
 
-describe('online recovery', () => {
+describe('online recovery', { tags: ['critical'] }, () => {
   it('asks for the list again once the game can take items, and resumes where it stopped', async () => {
     const room = makeRoom({ items: [item(100, 2, 900), item(101, 2, 900)] });
     const server = createFakeServer(room);
@@ -53,7 +53,7 @@ describe('online recovery', () => {
   });
 });
 
-describe('online recovery', () => {
+describe('online recovery', { tags: ['critical'] }, () => {
   it('asks for the scouts again when a drop lost the answer, then delivers', async () => {
     const server = createFakeServer(makeRoom({ items: [item(100, 2, 900)] }));
     let swallowScout = true;
@@ -93,7 +93,7 @@ describe('online recovery', () => {
   });
 });
 
-describe('the offline baseline', () => {
+describe('the offline baseline', { tags: ['critical'] }, () => {
   const plan: PhysicalPlan = {
     entries: [
       { location: 'check-019', item: 'item-bow', checkId: 'check-019', planClass: 'override-npc' },

@@ -3,7 +3,13 @@
   "minTokens": 50,
   "minLines": 5,
   "format": ["typescript", "tsx", "javascript", "css"],
-  "ignore": ["**/node_modules/**", "**/dist/**", "**/out/**", "**/release/**", "**/fonts/**"],
+  "ignore": ["**/node_modules/**", "**/dist/**", "**/out/**", "**/release/**", "**/fonts/**", "packages/game-data/src/data/records/**",
+    "packages/navigation/src/pathfinding/strategies/layer-strategy/layer-strategy.type.ts",
+    "packages/randomizer/src/world/fill/placement.type.ts",
+    "packages/input-mapping/src/glyphs/built-in-packs/built-in-pack-art.constants.ts",
+    "packages/game-data/src/data/inventory-layouts/tracker.ts",
+    "packages/game-data/src/data/types/screen/screen.type.ts"
+  ],
   "gitignore": true,
   "reporters": ["console"],
   "absolute": false

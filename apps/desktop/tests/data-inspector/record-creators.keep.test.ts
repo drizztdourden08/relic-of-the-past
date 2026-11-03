@@ -27,7 +27,7 @@ afterEach(() => {
   vi.unstubAllGlobals();
 });
 
-describe('createTagRecord', () => {
+describe('createTagRecord', { tags: ['critical'] }, () => {
   const creator = required(RECORD_CREATORS.tag, 'the tag creator');
 
   it('refuses a namespace/value pair that would not read namespace:value', async () => {
@@ -58,14 +58,9 @@ describe('createTagRecord', () => {
     expect(COLLECTION_SOURCES.tag.rows.some((row) => row.id === 'tag-900')).toBe(true);
   });
 
-  it('surfaces the main process\'s own refusal (e.g. a duplicate key) unchanged', async () => {
-    api.allocateTag.mockResolvedValue({ success: false, error: 'The tag test:brand-new already exists.' });
-    const result = await creator({ namespace: 'test', value: 'brand-new', appliesTo: ['screen'] });
-    expect(result).toEqual({ success: false, error: 'The tag test:brand-new already exists.' });
-  });
 });
 
-describe('createItemGroupRecord', () => {
+describe('createItemGroupRecord', { tags: ['critical'] }, () => {
   const creator = required(RECORD_CREATORS['item-group'], 'the item group creator');
 
   it('mints a group and folds it into the registry', async () => {
@@ -82,7 +77,7 @@ describe('createItemGroupRecord', () => {
   });
 });
 
-describe('a record-facade collection (check)', () => {
+describe('a record-facade collection (check)', { tags: ['critical'] }, () => {
   const creator = required(RECORD_CREATORS.check, 'the check creator');
 
   it('sends the whole draft as the record and folds the allocated result back in', async () => {

@@ -6,4 +6,3 @@ const completionBitOf = (checkId: string): CompletionBit | undefined =>
   COMPLETION_BIT_BY_CHECK.get(checkId);
 
 export { completionBitOf };
-export type { CompletionBit } from './randomizer-completion-bits.type';

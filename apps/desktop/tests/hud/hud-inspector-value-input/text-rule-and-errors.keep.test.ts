@@ -13,7 +13,7 @@ const raw = (source: string): string => {
 
 const said = (source: string): string => explainExprError(source, raw(source)).message;
 
-describe('the leading = discriminates, and is never stored', () => {
+describe('the leading = discriminates, and is never stored', { tags: ['critical'] }, () => {
   it('keeps a bare numeral a number and a marked one an expression', () => {
     expect(valueOf('24')).toBe(24);
     expect(valueOf('= 24')).toEqual({ from: 'data', expr: '24' });
@@ -43,7 +43,7 @@ describe('the leading = discriminates, and is never stored', () => {
   });
 });
 
-describe('the seven translated errors, fed the parser\'s own words', () => {
+describe('the seven translated errors, fed the parser\'s own words', { tags: ['critical'] }, () => {
   it('1 · a formula that stops after an operator', () => {
     expect(raw('silvr_arrows +')).toBe('unexpected TEOF: EOF');
     expect(said('silvr_arrows +')).toBe('The formula stops after +. Add the value it should add to.');
@@ -80,7 +80,7 @@ describe('the seven translated errors, fed the parser\'s own words', () => {
   });
 });
 
-describe('the seven translated errors, fed the parser\'s own words', () => {
+describe('the seven translated errors, fed the parser\'s own words', { tags: ['critical'] }, () => {
   it('6 ·two values with no operator between them', () => {
     expect(raw('life_current 8')).toBe('parse error [1:15]: Expected EOF');
     const problem = explainExprError('life_current 8', raw('life_current 8'));
@@ -117,7 +117,7 @@ describe('the seven translated errors, fed the parser\'s own words', () => {
   });
 });
 
-describe('random() is refused at parse time, not left to surprise someone', () => {
+describe('random() is refused at parse time, not left to surprise someone', { tags: ['critical'] }, () => {
   it('refuses it with a sentence instead of a lexer message', () => {
     const compiled = compileExpr('ceil(random() * 3)');
     expect(compiled.ok).toBe(false);

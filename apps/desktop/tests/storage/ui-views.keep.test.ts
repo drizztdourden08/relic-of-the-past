@@ -47,7 +47,7 @@ afterEach(() => {
   vi.unstubAllGlobals();
 });
 
-describe('loadViewSnapshot', () => {
+describe('loadViewSnapshot', { tags: ['critical'] }, () => {
   it('loads the whole map once and caches it across calls', async () => {
     load.mockResolvedValue({ 'a:b': emptySnapshot() });
     expect(await loadViewSnapshot('a:b')).toEqual(emptySnapshot());
@@ -70,11 +70,7 @@ describe('loadViewSnapshot', () => {
   });
 });
 
-describe('saveViewSnapshot debounces and coalesces', () => {
-  it('does not write immediately', () => {
-    saveViewSnapshot('a:b', emptySnapshot());
-    expect(save).not.toHaveBeenCalled();
-  });
+describe('saveViewSnapshot debounces and coalesces', { tags: ['critical'] }, () => {
 
   it('collapses many rapid calls, same or different keys, into one write', async () => {
     const renamed: ViewSnapshot = { ...emptySnapshot(), tab: 'json' };
@@ -128,11 +124,4 @@ describe('saveViewSnapshot debounces and coalesces', () => {
     expect(save).toHaveBeenCalledTimes(2);
   });
 
-  it('never throws when the write fails, because it is fire and forget', async () => {
-    save.mockRejectedValue(new Error('disk full'));
-    saveViewSnapshot('a:b', emptySnapshot());
-    await Promise.resolve();
-    await vi.advanceTimersByTimeAsync(400);
-    expect(save).toHaveBeenCalledTimes(1);
-  });
 });

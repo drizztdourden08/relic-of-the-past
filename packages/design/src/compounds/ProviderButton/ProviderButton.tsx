@@ -27,4 +27,3 @@ const ProviderButton = (props: ProviderButtonProps) => {
 };
 
 export { ProviderButton };
-export type { ProviderButtonProps } from './ProviderButton.type';

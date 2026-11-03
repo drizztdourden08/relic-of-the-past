@@ -27,7 +27,7 @@ const baseContext = (over: Partial<DetectionContext> = {}): DetectionContext => 
   ...over,
 });
 
-describeDataset('recordsFor a screen', () => {
+describeDataset('recordsFor a screen', { tags: ['critical'] }, () => {
   const screen = required(all('screen')[0], 'the first screen');
 
   it('resolves the current screen\'s own record', () => {
@@ -40,7 +40,7 @@ describeDataset('recordsFor a screen', () => {
   });
 });
 
-describeDataset('recordsFor a connection, EVERY edge touching this screen', () => {
+describeDataset('recordsFor a connection, EVERY edge touching this screen', { tags: ['critical'] }, () => {
   it('passes existingConnections through unchanged, with no [0] truncation', () => {
     const connections = all('connection').slice(0, 3);
     expect(connections.length).toBeGreaterThanOrEqual(3);
@@ -50,7 +50,7 @@ describeDataset('recordsFor a connection, EVERY edge touching this screen', () =
   });
 });
 
-describeDataset('recordsFor a check, every check that names this screen', () => {
+describeDataset('recordsFor a check, every check that names this screen', { tags: ['critical'] }, () => {
   it('finds a real screen with several checks and returns all of them, none other', () => {
     const byScreen = new Map<string, number>();
     for (const check of all('check')) {
@@ -73,7 +73,7 @@ describeDataset('recordsFor a check, every check that names this screen', () => 
   });
 });
 
-describeDataset('recordsFor an actor, one card per DISTINCT sprite type, not per spawn', () => {
+describeDataset('recordsFor an actor, one card per DISTINCT sprite type, not per spawn', { tags: ['critical'] }, () => {
   const actorsWithSpriteType = all('actor').filter((actor) => actor.gameId.spriteType != null);
 
   it('resolves every distinct sprite type spawned here, deduped', () => {
@@ -101,7 +101,7 @@ describeDataset('recordsFor an actor, one card per DISTINCT sprite type, not per
   });
 });
 
-describeDataset('recordsFor an item, one card per DISTINCT granted item, not per grant', () => {
+describeDataset('recordsFor an item, one card per DISTINCT granted item, not per grant', { tags: ['critical'] }, () => {
   const itemsWithReceiveId = all('item').filter((item) => item.gameId?.receiveItemId != null);
 
   it('resolves every distinct item granted this session, deduped', () => {
@@ -128,7 +128,7 @@ describeDataset('recordsFor an item, one card per DISTINCT granted item, not per
   });
 });
 
-describeDataset('recordsFor a dungeon, the one currently loaded', () => {
+describeDataset('recordsFor a dungeon, the one currently loaded', { tags: ['critical'] }, () => {
   const dungeon = required(all('dungeon')[0], 'the first dungeon');
 
   it('resolves the indoor palace by its live index', () => {
@@ -149,7 +149,7 @@ describeDataset('recordsFor a dungeon, the one currently loaded', () => {
   });
 });
 
-describeDataset('recordsFor a kind with no direct live link', () => {
+describeDataset('recordsFor a kind with no direct live link', { tags: ['critical'] }, () => {
   it.each(['area', 'location', 'tag', 'item-group', 'enumeration'] satisfies EntityKind[])(
     'resolves nothing for %s instead of guessing',
     (kind) => {

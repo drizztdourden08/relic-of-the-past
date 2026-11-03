@@ -1,0 +1,12 @@
+[
+  { "frame": 10, "hold": ["Right"], "for": 30 },
+  { "frame": 60, "hold": ["Down"], "for": 80 },
+  { "frame": 150, "hold": ["Right"], "for": 40 },
+  { "frame": 200, "hold": ["Up"], "for": 30 },
+  { "frame": 232, "press": ["A"] },
+  { "frame": 300, "press": ["A"] },
+  { "frame": 330, "press": ["A"] },
+  { "frame": 360, "press": ["A"] },
+  { "frame": 400, "press": ["A"] },
+  { "frame": 440, "press": ["A"] }
+]

@@ -85,7 +85,7 @@ const withoutDropped = (placement: unknown): unknown => {
   return { ...shot, locations, spheres, stats };
 };
 
-(ready ? describe : describe.skip)('the net', () => {
+(ready ? describe : describe.skip)('the net', { tags: ['e2e'] }, () => {
   const base = ready ? read(BASE) : ({} as Shot);
   const now = ready ? read(CURRENT) : ({} as Shot);
 

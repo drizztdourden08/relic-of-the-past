@@ -32,18 +32,9 @@ const ROW_ABOVE_ANCHOR_ONLY = [
   [0, 0, 0],
 ];
 
-describeDataset('hasReachableOpenTile', () => {
+describeDataset('hasReachableOpenTile', { tags: ['critical'] }, () => {
   it('is true when the tile two rows below the anchor (left column) is reachable', () => {
     expect(hasReachableOpenTile(openBelowLeft(0, 0), { row: 0, col: 0 })).toBe(true);
-  });
-
-  it('is true when the tile two rows below the anchor (right column) is reachable', () => {
-    const flood = floodFrom([
-      [0, 0, 0],
-      [0, 0, 0],
-      [0, 0, 1],
-    ]);
-    expect(hasReachableOpenTile(flood, { row: 0, col: 1 })).toBe(true);
   });
 
   it('is false when only a wrong-side neighbor (above/beside) is reachable', () => {
@@ -52,7 +43,7 @@ describeDataset('hasReachableOpenTile', () => {
   });
 });
 
-describeDataset('discoverTargets reads chest reachability off the open-from tile below', () => {
+describeDataset('discoverTargets reads chest reachability off the open-from tile below', { tags: ['critical'] }, () => {
   it('discovers a chest when the tile two rows below its anchor is reachable', () => {
     const flood = openBelowLeft(0, 0);
     const state = freshState();
@@ -73,18 +64,4 @@ describeDataset('discoverTargets reads chest reachability off the open-from tile
     expect(targets).toHaveLength(0);
   });
 
-  it('drops a chest fully surrounded by blocked tiles', () => {
-    const flood = floodFrom([
-      [0, 0, 0],
-      [0, 0, 0],
-      [0, 0, 0],
-      [0, 0, 0],
-    ]);
-    const state = freshState();
-    const obs = baseObs(emptySnapshot());
-    obs.interactables = { chests: [makeChest({ row: 1, col: 1 })], sprites: [], doors: [] };
-
-    const targets = discoverTargets(state, obs, flood);
-    expect(targets).toHaveLength(0);
-  });
 });

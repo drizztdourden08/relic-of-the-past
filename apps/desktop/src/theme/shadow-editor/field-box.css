@@ -1,0 +1,8 @@
+/* @layer renderer-components @kind style */
+.shadow-field-box {
+  font-size: var(--text-sm);
+  color: var(--c-text);
+  background: var(--c-inset);
+  border: var(--border-width-thin) solid var(--c-border-strong);
+  border-radius: var(--radius-sm);
+}

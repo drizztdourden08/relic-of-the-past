@@ -40,15 +40,6 @@
   gap: var(--space-sm);
 }
 
-.layer-card__crossfade,
-.layer-card__switch {
-  padding: var(--space-sm) var(--space-md);
-  background: var(--c-inset);
-  border: var(--border-width-thin) solid var(--c-border);
-  border-left: var(--border-width-thick) solid var(--c-primary);
-  border-radius: var(--radius-md);
-}
-
 .layer-card__crossfade-slider {
   flex: 1 1 calc(12 * var(--text-base));
   min-width: calc(10 * var(--text-base));
@@ -73,11 +64,6 @@
   display: flex;
   flex-direction: column;
   gap: var(--space-xs);
-  padding: var(--space-sm) var(--space-md);
-  background: var(--c-inset);
-  border: var(--border-width-thin) solid var(--c-border);
-  border-left: var(--border-width-thick) solid var(--c-primary);
-  border-radius: var(--radius-md);
 }
 
 .layer-card__effect {

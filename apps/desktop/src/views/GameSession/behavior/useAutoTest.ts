@@ -1,55 +1,50 @@
 /* @layer renderer-appshell @kind hook */
 import { requireHostApi } from '@drizztdourden08/brock-react';
-import { useEffect, useRef } from 'react';
-import { loadStateRef } from '@app/game';
 import { log } from '@app/log-bus';
 import type { AutoTestDeps } from './useAutoTest.type';
-import { RENDER_SETTLE_MS } from './auto-launch.constants';
+import { settleAutoState } from './settle-auto-state';
 import { waitForGameRunning } from './wait-for-game-running';
 import { isAutoStart } from '@app/launch-flags/is-auto-start';
-import { screenshotHold } from '@app/boot/screenshot-hold';
+import { releaseScreenshot } from '@app/boot/screenshot-frames/release-screenshot';
+import { awaitLaunchConnection } from '@app/boot/auto-launch/await-launch-connection';
+import { carryAutoStateSave } from '@app/boot/auto-launch/carry-auto-state-save';
+import { pauseForScript } from '@app/boot/auto-launch/pause-for-script';
+import { playScript } from '@app/boot/auto-launch/play-script';
+import { prepareAutoLaunch } from '@app/boot/auto-launch/prepare-auto-launch';
+import { useLaunchTask } from './useLaunchTask';
+import { wantsAutoLaunch } from './wants-auto-launch';
 
 const useAutoTest = ({ activeProfile, loadProfileForGame }: AutoTestDeps) => {
-  const didRun = useRef(false);
+  useLaunchTask(activeProfile, async ({ isCancelled, hasRun, markRan }) => {
+    if (!activeProfile) return;
+    const args = await requireHostApi().getTestArgs();
+    const autoStart = isAutoStart();
+    if (!wantsAutoLaunch(args.autoState, autoStart)) return;
+    if (isCancelled() || hasRun()) return;
+    markRan();
 
-  useEffect(() => {
-    if (!activeProfile || didRun.current) return;
-    const abort = new AbortController();
-    const isCancelled = () => abort.signal.aborted;
+    const prepared = await prepareAutoLaunch(activeProfile, args.autoState !== null || autoStart);
+    if (prepared === null) return;
+    const { script, profile } = prepared;
 
-    void (async () => {
-      const args = await requireHostApi().getTestArgs();
-      const autoStart = isAutoStart();
-      if (args.autoState === null && !autoStart) return;
-      if (isCancelled() || didRun.current) return;
-      didRun.current = true;
+    log.app(`[AutoTest] args: autoState=${args.autoState}, screenshot=${args.screenshot}, autoStart=${autoStart}`);
 
-      log.app(`[AutoTest] args: autoState=${args.autoState}, screenshot=${args.screenshot}, autoStart=${autoStart}`);
+    await carryAutoStateSave(activeProfile, profile, args.autoState);
+    log.app(`[AutoTest] Starting game with profile: ${profile.name}`);
+    await loadProfileForGame(profile);
 
-      log.app(`[AutoTest] Starting game with profile: ${activeProfile.name}`);
-      await loadProfileForGame(activeProfile);
+    await waitForGameRunning(isCancelled);
 
-      await waitForGameRunning(isCancelled);
+    if (isCancelled() || !(await awaitLaunchConnection(isCancelled))) return;
+    pauseForScript(script);
+    await settleAutoState(args);
+    await playScript(script, Boolean(args.screenshot));
 
-      if (isCancelled()) return;
-
-      if (args.autoState !== null) {
-        const kind = typeof args.autoState === 'number' ? 'quick slot' : 'manual save';
-        log.app(`[AutoTest] Loading ${kind} ${args.autoState}...`);
-        await loadStateRef(args.autoState);
-        await new Promise((r) => setTimeout(r, RENDER_SETTLE_MS));
-      } else if (args.screenshot) {
-        await new Promise((r) => setTimeout(r, RENDER_SETTLE_MS));
-      }
-
-      if (args.screenshot) {
-        log.app(`[AutoTest] Game frame drawn, releasing screenshot "${args.screenshot}"`);
-        screenshotHold.release();
-      }
-    })();
-
-    return () => abort.abort();
-  }, [activeProfile]);
+    if (args.screenshot) {
+      log.app(`[AutoTest] Game frame drawn, releasing screenshot "${args.screenshot}"`);
+      await releaseScreenshot('game');
+    }
+  });
 };
 
 export { useAutoTest };

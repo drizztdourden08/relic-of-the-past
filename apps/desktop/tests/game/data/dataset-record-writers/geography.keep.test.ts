@@ -9,7 +9,7 @@ import { setUpWriterWorkspace } from './set-up-writer-workspace';
 const { root, sourceOf } = setUpWriterWorkspace();
 
 describeDataset('geography records', () => {
-  it('round-trips an area through create, update and delete', async () => {
+  it('round-trips an area through create, update and delete', { tags: ['critical'] }, async () => {
     const created = await allocateGeography(root(), { kind: 'area', name: 'New Land', world: 'dark' });
     expect(created.success).toBe(true);
     if (!created.success || created.kind !== 'area') return;
@@ -23,7 +23,7 @@ describeDataset('geography records', () => {
     expect(await sourceOf('areas/dark-world.ts')).not.toContain(`id: '${id}'`);
   });
 
-  it('round-trips a location through create, update and delete', async () => {
+  it('round-trips a location through create, update and delete', { tags: ['critical'] }, async () => {
     const created = await allocateGeography(root(), { kind: 'location', name: 'A Shop', areaId: 'area-001' });
     expect(created.success).toBe(true);
     if (!created.success || created.kind !== 'location') return;

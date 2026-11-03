@@ -48,4 +48,4 @@ const appendPondDemandLines = (placement: Placement, lines: ReceiptLine[]): Plan
 };
 
 export { appendPondDemandLines };
-export type { PlanPondDemandLines, PondDemandLineIndex } from './pond-demand-messages.type';
+export type { PlanPondDemandLines } from './pond-demand-messages.type';

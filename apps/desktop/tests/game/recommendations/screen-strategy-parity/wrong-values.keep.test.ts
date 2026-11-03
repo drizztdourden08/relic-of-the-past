@@ -16,7 +16,7 @@ const entranceRoomsLeadingTo = (room: number): number[] => {
 };
 
 describeDataset('screen strategy: a WRONG value is reported, not just a missing one', () => {
-  it('reports a wrong roomIndex', () => {
+  it('reports a wrong roomIndex', { tags: ['critical'] }, () => {
     const screen = dungeonScreen();
     const match: ScreenMatchResult = { screen, method: 'exact' };
     const wrongRoom = (screen.gameId.roomIndex as number) ^ 0x1;
@@ -30,7 +30,7 @@ describeDataset('screen strategy: a WRONG value is reported, not just a missing 
     expect((roomDraft.proposed as ScreenRecord).gameId.roomIndex).toBe(wrongRoom);
   });
 
-  it('reports a wrong overworldIndex outdoors', () => {
+  it('reports a wrong overworldIndex outdoors', { tags: ['critical'] }, () => {
     const screen = overworldScreen();
     const match: ScreenMatchResult = { screen, method: 'overworld' };
     const wrongOw = (screen.gameId.overworldIndex as number) ^ 0x1;
@@ -42,7 +42,7 @@ describeDataset('screen strategy: a WRONG value is reported, not just a missing 
     expect((required(owDrafts[0], 'the overworldIndex draft').proposed as ScreenRecord).gameId.overworldIndex).toBe(wrongOw);
   });
 
-  it('never compares overworldIndex indoors, because the RAM slot is stale, leftover from the last outdoor screen', () => {
+  it('never compares overworldIndex indoors, because the RAM slot is stale, leftover from the last outdoor screen', { tags: ['critical'] }, () => {
     const screen = dungeonScreen();
     const match: ScreenMatchResult = { screen, method: 'exact' };
     const liveGameId = { ...screen.gameId, overworldIndex: 0x3f };
@@ -51,7 +51,7 @@ describeDataset('screen strategy: a WRONG value is reported, not just a missing 
     expect(drafts.filter(d => d.key === 'gameId.overworldIndex')).toEqual([]);
   });
 
-  it('reports the live entrance id when this room was entered directly', () => {
+  it('reports the live entrance id when this room was entered directly', { tags: ['critical'] }, () => {
     const screen = dungeonScreen();
     const match: ScreenMatchResult = { screen, method: 'exact' };
     const room = screen.gameId.roomIndex as number;
@@ -64,7 +64,7 @@ describeDataset('screen strategy: a WRONG value is reported, not just a missing 
     expect((required(entranceDrafts[0], 'the entranceId draft').proposed as ScreenRecord).gameId.entranceId).toBe(0x2b);
   });
 
-  it('does NOT compare entranceId when the room was entered indirectly (walked in from another indoor room)', () => {
+  it('does NOT compare entranceId when the room was entered indirectly (walked in from another indoor room)', { tags: ['critical'] }, () => {
     const screen = dungeonScreen();
     const match: ScreenMatchResult = { screen, method: 'exact' };
     const room = screen.gameId.roomIndex as number;
@@ -76,7 +76,7 @@ describeDataset('screen strategy: a WRONG value is reported, not just a missing 
     expect(drafts.filter(d => d.key === 'gameId.entranceId')).toEqual([]);
   });
 
-  it('does not compare entranceId at all without an entranceRooms observation, since absent means "not read"', () => {
+  it('does not compare entranceId at all without an entranceRooms observation, since absent means "not read"', { tags: ['critical'] }, () => {
     const screen = dungeonScreen();
     const match: ScreenMatchResult = { screen, method: 'exact' };
     const liveGameId = { ...screen.gameId, entranceId: 0x2b };

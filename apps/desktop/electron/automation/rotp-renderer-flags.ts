@@ -1,6 +1,7 @@
 /* @layer electron-main @kind logic */
 import { createAutomationFlags } from '@drizztdourden08/brock-core';
 import { GAME_LAUNCH_FLAGS, ROTP_AUTOMATION_FLAGS, SCREENSHOT_FLAG } from './automation-flags.constants';
+import { forwardedValueFlags } from './forwarded-value-flags';
 
 const widgetsOf = (argv: readonly string[]): string[] =>
   argv.filter((arg) => arg.startsWith('--widgets=')).flatMap((arg) => arg.slice('--widgets='.length).split(',')).map((id) => id.trim()).filter(Boolean);
@@ -18,6 +19,11 @@ const rotpRendererFlags = (argv: string[]): string[] => {
   if (argv.includes('--auto-start')) flags.push('--startup-auto-start');
   if (argv.includes('--auto-flood')) flags.push('--startup-auto-flood');
   if (createAutomationFlags(ROTP_AUTOMATION_FLAGS).isHeadlessLaunch(argv) && !argv.includes('--sound')) flags.push('--startup-muted');
+  const startPage = createAutomationFlags(ROTP_AUTOMATION_FLAGS).flagValue('--start-page', argv);
+  if (startPage) flags.push(`--startup-start-page=${startPage}`);
+  const frames = createAutomationFlags(ROTP_AUTOMATION_FLAGS).flagValue('--screenshot-frames', argv);
+  if (frames) flags.push(`--startup-screenshot-frames=${frames}`);
+  flags.push(...forwardedValueFlags(argv));
   const screenshot = screenshotKindOf(argv);
   if (screenshot) flags.push(`--startup-screenshot=${screenshot}`);
   return flags;

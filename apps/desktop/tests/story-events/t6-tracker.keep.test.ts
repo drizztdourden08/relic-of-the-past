@@ -23,7 +23,7 @@ const readersOf = (h: Heap): ProgressReaders => ({
 });
 const sweep = (h: Heap) => computeCompletedChecks(readersOf(h), () => false);
 
-describe('T6: event records', () => {
+describe('T6: event records', { tags: ['critical'] }, () => {
   it('are unique, in range, and every combined event names records that exist', () => {
     const ids = new Set<string>();
     const known = new Set<string>(all('check').map((c) => c.id));
@@ -50,7 +50,7 @@ describe('T6: event records', () => {
   });
 });
 
-describe('T6: event records', () => {
+describe('T6: event records', { tags: ['critical'] }, () => {
   it('ledger bits and vanilla bits each complete their record', () => {
     const h = heap();
     h.ledger.add(EVENT_BIT.oldManRescued);
@@ -73,7 +73,7 @@ describe('T6: event records', () => {
   });
 });
 
-describe('T6: event records', () => {
+describe('T6: event records', { tags: ['critical'] }, () => {
   it('a reversible event reports its live status without unticking', () => {
     const state = buildPresenceState({
       progress: [0, 0, 0x80, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 12],

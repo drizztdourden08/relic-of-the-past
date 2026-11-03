@@ -16,4 +16,3 @@ const freestandingKeyDropOf = (checkId: CheckId): FreestandingKeyDrop | null => 
 };
 
 export { freestandingKeyDropOf };
-export type { FreestandingKeyDrop } from './freestanding-key-drops.type';

@@ -1,6 +1,6 @@
 /* @layer store-site @kind hook */
 import { useCallback, useMemo, useState } from 'react';
-import { navigate, useSurfaceView, filterRows } from '@rotp/design';
+import { navigate, useSurfaceRows } from '@rotp/design';
 import { useStoreData } from '../../../data/store-data-context';
 import { STORE_VIEWS } from '../../../views/store-views';
 import { parseRowId, rowsOfItem } from '../../../publications/publication-row';
@@ -26,11 +26,7 @@ const usePublicationsPage = (selectedId: string | null) => {
     return items.flatMap((item) => rowsOfItem(item, now));
   }, [items]);
   const schema = useMemo(() => buildPublicationSchema(allRows), [allRows]);
-  const view = useSurfaceView(STORE_VIEWS, 'publications', schema);
-  const shown = useMemo(
-    () => filterRows({ rows, schema, clauses: view.clauses, search: view.search }),
-    [rows, schema, view.clauses, view.search],
-  );
+  const { view, shown } = useSurfaceRows(STORE_VIEWS, 'publications', schema, rows);
 
   const totals = useMemo(() => {
     const installs = items.reduce((sum, item) => sum + item.stats.installs, 0);

@@ -1,4 +1,5 @@
 /* @layer bridge-wasm @kind logic */
+import { pickSeat } from '@rotp/randomizer';
 import type { LobbyEvent, LobbyJoinState, LobbySession, UploadProgress } from '@rotp/randomizer';
 import type { ProfileRandomizerConfig } from '@app/profiles/types';
 import { formErrorOf } from '../check/form-error-of';
@@ -24,20 +25,22 @@ const membershipOf = (check: LobbyCheckOk, state: LobbyJoinState): ArchipeliaMem
 });
 
 const endOf = (check: LobbyCheckOk, session: LobbySession, event: LobbyEvent, state: LobbyJoinState): JoinOutcome | null => {
-  if (event.type === 'failed') return { ok: false, error: formErrorOf(event.failure, check.server) };
-  if (event.type === 'closed') return { ok: false, error: formErrorOf({ code: 'closed', message: '' }, check.server) };
+  if (event.type === 'failed') return { ok: false, error: formErrorOf(event.failure, check.server), code: event.failure.code };
+  if (event.type === 'closed') return { ok: false, error: formErrorOf({ code: 'closed', message: '' }, check.server), code: 'closed' };
   if (event.type === 'problem' && event.problem.code === 'slot-name-taken') {
     session.leave();
-    return { ok: false, error: formErrorOf(event.problem, check.server) };
+    return { ok: false, error: formErrorOf(event.problem, check.server), code: event.problem.code };
   }
   if (state.uploadsDone && state.token !== null) return { ok: true, session, membership: membershipOf(check, state) };
   return null;
 };
 
 const joinFromForm = async (
-  check: LobbyCheckOk, config: ProfileRandomizerConfig, onProgress: (fraction: number) => void,
+  check: LobbyCheckOk, config: ProfileRandomizerConfig, wanted: string | null, onProgress: (fraction: number) => void,
 ): Promise<JoinOutcome> => {
-  const started = await startJoin({ server: check.server, code: check.code, ap: check.ap, config });
+  const picked = wanted === null ? null : pickSeat(check.seats, wanted);
+  const seat = picked?.ok === true ? picked.seat : undefined;
+  const started = await startJoin({ server: check.server, code: check.code, ap: check.ap, config, seat });
   if ('error' in started) return { ok: false, error: started.error };
   const { session } = started;
   return new Promise((resolve) => {

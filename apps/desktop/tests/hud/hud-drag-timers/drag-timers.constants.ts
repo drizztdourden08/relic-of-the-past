@@ -1,22 +1,16 @@
 /* @layer tests @kind constants */
-import type { HudElement, HudLayout } from '@rotp/hud';
+import type { HudLayout } from '@rotp/hud';
+import { layoutOf, leaf } from '../layout-doc';
 
-const leaf = (id: string): HudElement => ({ id, kind: 'element', element: { type: 'spacer' } });
-
-const DOC: HudLayout = {
-  id: 'l',
-  name: 'l',
-  builtIn: false,
-  screen: {
-    id: 'screen',
-    kind: 'container',
-    direction: 'column',
-    children: [
-      leaf('a'), leaf('b'), leaf('c'), leaf('d'), leaf('e'), leaf('f'),
-      { id: 'vault', kind: 'container', direction: 'row', children: [leaf('coin'), leaf('gem')] },
-    ],
-  },
-};
+const DOC: HudLayout = layoutOf({
+  id: 'screen',
+  kind: 'container',
+  direction: 'column',
+  children: [
+    leaf('a'), leaf('b'), leaf('c'), leaf('d'), leaf('e'), leaf('f'),
+    { id: 'vault', kind: 'container', direction: 'row', children: [leaf('coin'), leaf('gem')] },
+  ],
+});
 
 const ROW = 22;
 

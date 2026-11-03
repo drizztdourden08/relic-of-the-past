@@ -64,7 +64,6 @@ export type {
   FileResponse,
   DownloadResponse,
   PreviewResponse,
-  ReportReporterView,
   ReportView,
   ReportsListResponse,
   ReportResponse,

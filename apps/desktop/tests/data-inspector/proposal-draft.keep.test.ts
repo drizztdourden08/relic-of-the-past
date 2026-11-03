@@ -37,7 +37,7 @@ const finding = (id: string, proposed: TagRecord): Recommendation => ({
 const ORIGINAL = tagRecord('tag-001', 'cavern');
 const AMENDED = tagRecord('tag-001', 'grotto');
 
-describe('the proposal shown', () => {
+describe('the proposal shown', { tags: ['critical'] }, () => {
   it('is the detector\'s own draft until anybody edits it', () => {
     expect(proposalOf(finding('r-1', ORIGINAL), NO_DRAFT)).toEqual(ORIGINAL);
   });
@@ -52,7 +52,7 @@ describe('the proposal shown', () => {
   });
 });
 
-describe('revert', () => {
+describe('revert', { tags: ['critical'] }, () => {
   it('restores the detector\'s original draft', () => {
     const entry = finding('r-1', ORIGINAL);
     const amended = editedDraft(entry, AMENDED);
@@ -73,7 +73,7 @@ describe('revert', () => {
   });
 });
 
-describe('an amendment belongs to one finding', () => {
+describe('an amendment belongs to one finding', { tags: ['critical'] }, () => {
   it('does not carry over to the next one selected', () => {
     const first = finding('r-1', ORIGINAL);
     const second = finding('r-2', tagRecord('tag-002', 'ledge'));

@@ -2,9 +2,9 @@
 import { describe, expect, it } from 'vitest';
 import { generatePlacement, buildFillWorld, fillOptionsFromSnapshot, POND_PRIZE_LOCATIONS, pondPlanOf, createCollectionState, WALLET, reachableTopOf } from '@rotp/randomizer';
 import { DELIVERABLE, EMPTY, MODES, SEEDS } from './pond-generation.constants';
-import { snapshotOf } from './snapshot-of';
+import { snapshotOf } from '../rule-parity-harness/snapshot-of';
 
-describe('pond generation', () => {
+describe('pond generation', { tags: ['standard'] }, () => {
   for (const mode of MODES) {
     it(`${mode}: beatable over ${SEEDS.length} seeds with 6 pool items`, () => {
       const snapshot = snapshotOf({
@@ -19,7 +19,7 @@ describe('pond generation', () => {
         }
         expect(placement.spheres.length, seed).toBeGreaterThan(0);
       }
-    }, 30_000);
+    });
   }
 
   it('zero pool items leaves the pond out of the world entirely', () => {
@@ -27,16 +27,16 @@ describe('pond generation', () => {
     const placement = generatePlacement({ seed: 'pond-none', snapshot, deliverable: { npc: EMPTY, capacity: DELIVERABLE, world: EMPTY } });
     expect(placement.stats.pondPrizeCount).toBe(0);
     for (const name of POND_PRIZE_LOCATIONS) expect(placement.locations[name]).toBeUndefined();
-  }, 30_000);
+  });
 
   it('an unproven pond seam contributes no location at all', () => {
     const snapshot = snapshotOf({ pond_capacity_mode: 'vanilla-cost', pond_capacity_items: 4 });
     const placement = generatePlacement({ seed: 'pond-unproven', snapshot, deliverable: { npc: EMPTY, capacity: EMPTY, world: EMPTY } });
     expect(placement.stats.pondPrizeCount).toBe(0);
-  }, 30_000);
+  });
 });
 
-describe('pond generation', () => {
+describe('pond generation', { tags: ['standard'] }, () => {
   it('a prize past the reachable wallet is held to it, so the pond stays in logic', () => {
     const snapshot = snapshotOf({
       pond_capacity_mode: 'custom', pond_capacity_items: 2, pond_capacity_throws: 2, pond_capacity_ask_rupees_min: '900', pond_capacity_ask_rupees_max: '999',
@@ -56,7 +56,7 @@ describe('pond generation', () => {
     for (const price of pondPlanOf(fillWorld.ponds.capacity).worstPriceOfPrize) {
       expect(price).toBeLessThanOrEqual(top);
     }
-  }, 30_000);
+  });
 
   it('a custom range past the lowest wallet that rolls still generates, at the wallet\'s reach', () => {
     const snapshot = snapshotOf({
@@ -69,7 +69,7 @@ describe('pond generation', () => {
       expect(placement.stats.pondPrizeCount, seed).toBe(2);
       expect(pondPlanOf(placement.stats.ponds.capacity).throws.map((entry) => entry.price)).toEqual([500, 500]);
     }
-  }, 60_000);
+  });
 
   it('a placement re-derives the same schedule the generator planned', () => {
     const snapshot = snapshotOf({ pond_capacity_mode: 'custom', pond_capacity_items: 3, pond_capacity_throws: 5 });
@@ -77,5 +77,5 @@ describe('pond generation', () => {
     const plan = pondPlanOf(placement.stats.ponds.capacity);
     expect(plan.locations).toHaveLength(3);
     expect(plan.locations.every((name) => placement.locations[name] !== undefined)).toBe(true);
-  }, 30_000);
+  });
 });

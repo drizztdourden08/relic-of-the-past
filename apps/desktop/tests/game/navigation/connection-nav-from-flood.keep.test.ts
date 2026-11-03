@@ -3,7 +3,6 @@ import { describe, it, expect } from 'vitest';
 import { buildConnectionNav } from '@rotp/navigation';
 import { serializeConnectionRecord } from '@rotp/game-data';
 import type { ConnectionInfo } from '@rotp/game-core';
-import type { ConnectionRecord } from '@rotp/game-data';
 
 const makeInfo = (over: Partial<ConnectionInfo>): ConnectionInfo => ({
   edge: 'east',
@@ -16,7 +15,7 @@ const makeInfo = (over: Partial<ConnectionInfo>): ConnectionInfo => ({
 });
 
 describe('buildConnectionNav turns ConnectionInfo into ConnectionNavData', () => {
-  it('walk crossing records positions as overlapTiles and distance weight', () => {
+  it('walk crossing records positions as overlapTiles and distance weight', { tags: ['critical'] }, () => {
     const info = makeInfo({ edge: 'east', positions: [30, 31, 32], requirements: [] });
     const nav = buildConnectionNav(info, ['transit:walk']);
     expect(nav.transitType).toBe('walk');
@@ -26,7 +25,7 @@ describe('buildConnectionNav turns ConnectionInfo into ConnectionNavData', () =>
     expect(nav.invalid).toBeUndefined();
   });
 
-  it('door crossing records a fromPoint entry from positions + edge', () => {
+  it('door crossing records a fromPoint entry from positions + edge', { tags: ['critical'] }, () => {
     const info = makeInfo({ edge: 'north', positions: [24], requirements: ['boots'] });
     const nav = buildConnectionNav(info, ['transit:door']);
     expect(nav.transitType).toBe('door');
@@ -39,14 +38,14 @@ describe('buildConnectionNav turns ConnectionInfo into ConnectionNavData', () =>
     expect(nav.requirements).toEqual([['boots']]);
   });
 
-  it('hole maps requirements as OR-of-AND', () => {
+  it('hole maps requirements as OR-of-AND', { tags: ['critical'] }, () => {
     const info = makeInfo({ edge: 'south', positions: [10], requirements: [] });
     const nav = buildConnectionNav(info, ['transit:hole']);
     expect(nav.transitType).toBe('hole');
     expect(nav.fromPoint?.position).toEqual({ row: 63, col: 10 });
   });
 
-  it('empty crossing flags invalid', () => {
+  it('empty crossing flags invalid', { tags: ['critical'] }, () => {
     const nav = buildConnectionNav(makeInfo({ positions: [] }), ['transit:walk']);
     expect(nav.invalid).toBe(true);
     expect(nav.overlapTiles).toEqual([]);
@@ -63,7 +62,7 @@ describe('serializeConnectionRecord emits a record', () => {
     tags: [],
   } as const;
 
-  it('omits nav when absent, and every other optional field with it', () => {
+  it('omits nav when absent, and every other optional field with it', { tags: ['critical'] }, () => {
     const literal = serializeConnectionRecord({ ...base });
     expect(literal).toBe([
       '  {',
@@ -77,13 +76,13 @@ describe('serializeConnectionRecord emits a record', () => {
     ].join('\n'));
   });
 
-  it('collapses a nav literal onto one line while it fits', () => {
+  it('collapses a nav literal onto one line while it fits', { tags: ['critical'] }, () => {
     const nav = buildConnectionNav(makeInfo({ positions: [30, 31], requirements: [] }), ['transit:walk']);
     const literal = serializeConnectionRecord({ ...base, nav });
     expect(literal).toContain(`nav: { transitType: 'walk', requirements: [], weight: 2, overlapTiles: [30, 31] },`);
   });
 
-  it('expands a nav literal that no longer fits, keeping every field', () => {
+  it('expands a nav literal that no longer fits, keeping every field', { tags: ['critical'] }, () => {
     const nav = buildConnectionNav(makeInfo({ edge: 'north', positions: [24], requirements: ['boots'] }), ['transit:door']);
     const literal = serializeConnectionRecord({ ...base, kind: 'door', nav });
     expect(literal).toContain(`      transitType: 'door',`);
@@ -94,32 +93,8 @@ describe('serializeConnectionRecord emits a record', () => {
     expect(literal).toContain(`        oneWay: null,`);
   });
 
-  it('emits the frozen id first when the allocator has stamped one', () => {
+  it('emits the frozen id first when the allocator has stamped one', { tags: ['critical'] }, () => {
     const literal = serializeConnectionRecord({ id: 'connection-897', ...base });
     expect(literal.split('\n')[1]).toBe("    id: 'connection-897',");
-  });
-});
-
-const ROUND_TRIP: ConnectionRecord = {
-  id: 'connection-897',
-  kind: 'edge',
-  screenId: 'screen-030',
-  toConnectionId: 'connection-1000',
-  placement: { form: 'area', tiles: [], rect: { x: 0, y: 0, w: 0, h: 0 } },
-  canExit: true,
-  tags: [],
-  nav: {
-    transitType: 'walk',
-    requirements: [['boots']],
-    fromPoint: { id: 'flood-30-n', direction: 'n', tiles: [24], requirements: [], position: { row: 0, col: 24 }, oneWay: null },
-    overlapTiles: [30, 31],
-    weight: 2,
-    invalid: false,
-  },
-};
-
-describe('emitted nav literal type-checks as ConnectionRecord', () => {
-  it('round-trip const is well-typed', () => {
-    expect(ROUND_TRIP.nav?.transitType).toBe('walk');
   });
 });

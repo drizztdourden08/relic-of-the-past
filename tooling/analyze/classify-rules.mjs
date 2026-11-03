@@ -147,4 +147,4 @@ const readLayerTag = (content) => {
   return m ? m[1].toLowerCase() : null;
 };
 
-export { classifyLang, classifyRole, classifyType, readLayerTag, baseName };
+export { classifyLang, classifyRole, classifyType, readLayerTag };

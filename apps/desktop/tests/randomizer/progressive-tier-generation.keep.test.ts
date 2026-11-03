@@ -52,7 +52,7 @@ const REFUSED: Array<[string, ProgressiveSetting, string]> = [
   ['no bow at all', NO_BOW, 'Bow'],
 ];
 
-describe('generation over representative tier tick sets', () => {
+describe('generation over representative tier tick sets', { tags: ['standard'] }, () => {
   for (const [name, setting] of ROLLABLE) {
     it(`rolls ${SEEDS} beatable seeds with ${name}`, () => {
       for (let index = 0; index < SEEDS; index += 1) {
@@ -60,7 +60,7 @@ describe('generation over representative tier tick sets', () => {
         expect(placement.stats.sphereCount, `seed ${index}`).toBeGreaterThan(0);
         expect(placement.stats.progressiveTiers).toEqual(setting);
       }
-    }, 120_000);
+    });
   }
 
   it('rolls beatable seeds with the ticks biting, both scopes shuffled', () => {
@@ -71,7 +71,7 @@ describe('generation over representative tier tick sets', () => {
       });
       expect(placement.stats.sphereCount, `seed ${index}`).toBeGreaterThan(0);
     }
-  }, 120_000);
+  });
 
   for (const [name, setting, family] of REFUSED) {
     it(`refuses ${name}, naming the rung to tick back on`, () => {
@@ -86,7 +86,7 @@ describe('generation over representative tier tick sets', () => {
   }
 });
 
-describe('an unticked rung leaves the pool the same size', () => {
+describe('an unticked rung leaves the pool the same size', { tags: ['standard'] }, () => {
   it('swaps the copy for the reference own stand-in instead of shrinking the pool', () => {
     const full = shuffledScopePoolOf(ALL_ON);
     const trimmed = shuffledScopePoolOf(NO_GOLD_SWORD);

@@ -37,7 +37,7 @@ const memFiles = (): FileStore => {
   };
 };
 
-describe('shared profile store (over FileStore)', () => {
+describe('shared profile store (over FileStore)', { tags: ['critical'] }, () => {
   it('creates, lists, loads and patches profiles', async () => {
     const files = memFiles();
     const a = await createProfile(files, { name: 'Alpha', romFile: 'alttp.sfc', language: 'us' });

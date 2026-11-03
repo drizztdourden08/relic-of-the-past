@@ -55,4 +55,3 @@ const RouteGuard = (props: RouteGuardProps) => {
 };
 
 export { RouteGuard };
-export type { RouteGuardProps, FrameProps } from './RouteGuard.type';

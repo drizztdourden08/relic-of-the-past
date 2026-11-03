@@ -16,7 +16,7 @@ export { handleDataPackage } from '../../online-data-package/handle-data-package
 export { sendConnect } from '../../online-data-package/send-connect';
 export type { BouncedHandler } from '../../online-dispatch/online-dispatch.type';
 export { GOAL_CHECK, createGoalReporter } from '../../online-goal';
-export { DEATH_LINK_TAG, buildGetDataPackage, parseServerPackets, versionOf } from '../../online-handshake';
+export { DEATH_LINK_TAG, buildConnect, buildGetDataPackage, parseServerPackets, versionOf } from '../../online-handshake';
 export { resolveServerItemLocalId } from '../../online-items';
 export { handleRoomUpdate } from '../../online-messages/handle-room-update';
 export { kindOfPrint } from '../../online-messages/kind-of-print';

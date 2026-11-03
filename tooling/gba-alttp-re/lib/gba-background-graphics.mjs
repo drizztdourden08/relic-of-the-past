@@ -78,10 +78,7 @@ const renderBackgroundRegion = ({ layers, tiles, palettes, x, y, width, height }
 };
 
 export {
-  GBA_TILE_BYTES,
-  GBA_TILE_SIZE,
   decodeGba4bppTile,
-  decodeGbaColor,
   decodeGbaPaletteBanks,
   renderBackgroundRegion,
 };

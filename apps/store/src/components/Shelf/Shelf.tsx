@@ -27,4 +27,3 @@ const Shelf = (props: ShelfProps) => {
 };
 
 export { Shelf };
-export type { ShelfProps } from './Shelf.type';

@@ -4,7 +4,7 @@ export { readCaller } from './auth/require-caller';
 export type { Caller } from './auth/require-caller';
 export { requireMember } from './auth/require-member';
 export type { Member } from './auth/require-member';
-export { collectionOf, db, decodeCursor, encodeCursor, now } from './db/firestore';
+export { collectionOf, db, decodeCursor, now, pageOf, queryPage } from './db/firestore';
 export { identitiesRepo } from './db/identities-repo';
 export { rateLimitRepo } from './db/rate-limit-repo';
 export { usersRepo } from './db/users-repo';

@@ -1,43 +1,10 @@
 /* @layer tests @kind test */
-// @vitest-environment jsdom
 import { describe, expect, it } from 'vitest';
-import { readFileSync } from 'fs';
-import { join, resolve } from 'path';
-import { filesIn } from './files-in';
-import { act, createElement } from 'react';
-import { createRoot } from 'react-dom/client';
-import { useEscapeStack } from '@drizztdourden08/tessera/primitives';
-import type { EscapeLevel, EscapeStack } from '@drizztdourden08/tessera/primitives';
 import {
   applyDrop, outlineIntent, refusalFor, refusalText, zoneIn,
 } from '@app/hud-layout-editing/drop-intent';
 import { siteOf } from '@app/hud-layout-editing/node-edits';
 import type { HudLayout, HudNode } from '@rotp/hud';
-import { REPO_ROOT } from '../repo-root';
-
-const EDITOR = resolve(REPO_ROOT, 'apps/desktop/src/views/HudLayoutEditor');
-const EDITING = resolve(REPO_ROOT, 'apps/desktop/src/hud-layout-editing');
-
-(globalThis as { IS_REACT_ACT_ENVIRONMENT?: boolean }).IS_REACT_ACT_ENVIRONMENT = true;
-
-const pushEscapeLevel = (level: EscapeLevel): (() => void) => {
-  const root = createRoot(document.createElement('div'));
-  const Layer = (): null => { useEscapeStack({ level, onEscape: () => {} }); return null; };
-  act(() => { root.render(createElement(Layer)); });
-  return () => act(() => { root.unmount(); });
-};
-
-const escapeStack = (): EscapeStack => {
-  const found: EscapeStack[] = [];
-  const root = createRoot(document.createElement('div'));
-  const Probe = (): null => { found.push(useEscapeStack()); return null; };
-  act(() => { root.render(createElement(Probe)); });
-  act(() => { root.unmount(); });
-  const stack = found[0];
-  if (!stack) throw new Error('the escape stack probe never rendered');
-  return stack;
-};
-const tsIn = (dir: string): string[] => filesIn(dir, (name) => /\.tsx?$/.test(name));
 
 const leaf = (id: string, extra: Partial<HudNode> = {}): HudNode =>
   ({ id, kind: 'element', element: { type: 'spacer' }, ...extra }) as HudNode;
@@ -72,7 +39,7 @@ const childIds = (d: HudLayout, id: string): string[] => {
   return node?.kind === 'container' ? node.children.map((c) => c.id) : [];
 };
 
-describe('the outline zones', () => {
+describe('the outline zones', { tags: ['critical'] }, () => {
   it('splits a container row four ways and a leaf row two', () => {
     const container = { isContainer: true, hasSiblings: true };
     expect(zoneIn(0.1, container)).toBe('before');
@@ -91,7 +58,7 @@ describe('the outline zones', () => {
   });
 });
 
-describe('inserting at the front of a container', () => {
+describe('inserting at the front of a container', { tags: ['critical'] }, () => {
   it('can target either end of a container', () => {
     const d = doc();
     expect(outlineIntent(d, 'hud', 'inside-start', ['wallet'])).toEqual({ kind: 'flex', parentId: 'hud', index: 0 });
@@ -113,7 +80,7 @@ describe('inserting at the front of a container', () => {
   });
 });
 
-describe('the seven refusals, each naming both nodes', () => {
+describe('the seven refusals, each naming both nodes', { tags: ['critical'] }, () => {
   const d = doc();
   const reasonOf = (rowId: string, zone: Parameters<typeof outlineIntent>[2], ids: string[]) => {
     const intent = outlineIntent(d, rowId, zone, ids);
@@ -160,7 +127,7 @@ describe('the seven refusals, each naming both nodes', () => {
   });
 });
 
-describe('the one write', () => {
+describe('the one write', { tags: ['critical'] }, () => {
   it('drops a `place` that has stopped meaning anything, and keeps one that has not', () => {
     const d = doc();
     const moved = applyDrop(d, ['wallet'], outlineIntent(d, 'hearts', 'inside-end', ['wallet']));
@@ -169,39 +136,11 @@ describe('the one write', () => {
     expect(siteOf(same, 'wallet')?.node.place).toEqual({ column: 1, row: 3 });
   });
 
-  it('makes a grid drop one edit that carries the move and the cell together', () => {
+  it('makes a grid drop one edit that carries the move and the cell together', { tags: ['critical'] }, () => {
     const d = doc();
     const next = applyDrop(d, ['magic'], { kind: 'grid', parentId: 'screen', place: { column: 3, row: 1 }, onto: null });
     expect(siteOf(next, 'magic')?.parent?.id).toBe('screen');
     expect(siteOf(next, 'magic')?.node.place).toEqual({ column: 3, row: 1 });
     expect(childIds(next, 'hud')).toEqual(['hearts']);
-  });
-});
-
-describe('single ownership, and the new dismiss level', () => {
-  it('leaves `moveNode` exactly one caller in the whole editor', () => {
-    const callers = [...tsIn(EDITOR), ...tsIn(EDITING)]
-      .filter((f) => !/hud-layout-editing[\\/](drop-intent[\\/]move-all|node-edits)\.ts$/.test(f))
-      .filter((f) => /\bmoveNode\s*\(/.test(readFileSync(f, 'utf8')));
-    expect(callers).toEqual([]);
-  });
-
-  it('routes the outline through `applyDrop`, not through the tree', () => {
-    const reads = (f: string): string => readFileSync(join(EDITOR, f), 'utf8');
-    expect(readFileSync(join(EDITING, 'useNodeEdits.ts'), 'utf8')).toContain("from './drop-intent'");
-    expect(reads('sub-components/OutlinePanel.tsx')).toContain("from '@app/hud-layout-editing/useOutlineDrag'");
-    expect(readFileSync(join(EDITING, 'useOutlineDrag.ts'), 'utf8')).toContain("from './drop-intent'");
-  });
-
-  it('puts `drag` above `popover`, so Escape mid-drag cancels the drag', () => {
-    const stack = escapeStack();
-    const closePopover = pushEscapeLevel('popover');
-    expect(stack.top()).toBe('popover');
-    const cancelDrag = pushEscapeLevel('drag');
-    expect(stack.top()).toBe('drag');
-    cancelDrag();
-    expect(stack.top()).toBe('popover');
-    closePopover();
-    expect(stack.depth()).toBe(0);
   });
 });

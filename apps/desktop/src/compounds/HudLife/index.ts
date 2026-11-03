@@ -1,3 +1,2 @@
 /* @layer renderer-hud @kind barrel */
 export { HudLife } from './HudLife';
-export type { HudLifeProps } from './HudLife.type';

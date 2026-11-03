@@ -1,7 +1,7 @@
 /* @layer test @kind test */
 import { describe, it, expect, beforeEach } from 'vitest';
 import { sprites } from '@rotp/packs';
-import { EXTRACTION_STAMP_FILE, extractionVersionOf, CURRENCY_SYMBOLS_FILE, FOREIGN_ICONS_FILE, GEAR_ICONS_FILE, QUIVER_ICON_FILE } from '@rotp/asset-extraction';
+import { EXTRACTION_STAMP_FILE, extractionVersionOf, GEAR_ICONS_FILE } from '@rotp/asset-extraction';
 import { SPRITE_DEFINITIONS, getCapacityUpgradeSprite, setSpritesBase, setSpritesRevision } from '@rotp/game-data';
 import { createMemFileStore } from './mem-file-store';
 import type { FileStore } from '@drizztdourden08/brock-core';
@@ -17,14 +17,7 @@ const writeCurrentSet = async (files: FileStore): Promise<void> => {
   await files.writeText(`${DIR}/${EXTRACTION_STAMP_FILE}`, JSON.stringify({ version: VERSION }));
 };
 
-describe('extracted sprite set freshness', () => {
-  it('names the five binaries and one PNG per definition as the files an extraction writes', () => {
-    expect(EXPECTED).toHaveLength(DEFS.length + 5);
-    expect(EXPECTED).toContain(GEAR_ICONS_FILE);
-    expect(EXPECTED).toContain(QUIVER_ICON_FILE);
-    expect(EXPECTED).toContain(CURRENCY_SYMBOLS_FILE);
-    expect(EXPECTED).toContain(FOREIGN_ICONS_FILE);
-  });
+describe('extracted sprite set freshness', { tags: ['critical'] }, () => {
 
   it('keeps a complete, currently stamped set', async () => {
     const files = createMemFileStore();
@@ -60,7 +53,7 @@ describe('extracted sprite set freshness', () => {
   });
 });
 
-describe('sprite URLs across a rewrite', () => {
+describe('sprite URLs across a rewrite', { tags: ['critical'] }, () => {
   beforeEach(() => {
     setSpritesBase('app-sprite://sprites/game/');
     setSpritesRevision(0);

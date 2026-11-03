@@ -1,42 +1,31 @@
 /* @layer tests @kind helper */
-import { afterEach, beforeEach, vi } from 'vitest';
+import { beforeEach, vi } from 'vitest';
 import { act, createElement as h } from 'react';
-import { createRoot, type Root } from 'react-dom/client';
 import { OutlinePanel } from '@app/views/HudLayoutEditor/sub-components/OutlinePanel';
 import { useHudEditorViewStore } from '../../../src/stores/hud-editor-view-store';
-import { PlatformContext } from '@drizztdourden08/brock-react';
+import { createMountHarness } from '../mount-harness';
 import { DOC, ROW, VIEW } from './drag-timers.constants';
 import { createFrameQueue } from './frame-queue';
 import { outlineDom } from './outline-dom';
-import { WINDOWS_PLATFORM } from '../windows-platform';
 
 const { rowsInOrder, rect, pointer, rowFor } = outlineDom;
 
 const installOutlineRig = () => {
-  (globalThis as { IS_REACT_ACT_ENVIRONMENT?: boolean }).IS_REACT_ACT_ENVIRONMENT = true;
   const frames = createFrameQueue();
   let scrolled = 0;
-  let mounted: { root: Root; host: HTMLElement } | null = null;
 
-  const unmount = (): void => {
-    if (!mounted) return;
-    const { root, host } = mounted;
-    act(() => root.unmount());
-    host.remove();
-    mounted = null;
-  };
+  const { mount, unmount } = createMountHarness({
+    afterUnmount: () => {
+      document.querySelector('#portal-root')?.remove();
+      vi.useRealTimers();
+      frames.restore();
+    },
+  });
 
   beforeEach(() => {
     frames.install();
     vi.useFakeTimers({ toFake: ['setTimeout', 'clearTimeout'] });
     useHudEditorViewStore.setState({ collapsedNodeIds: new Set() });
-  });
-
-  afterEach(() => {
-    unmount();
-    document.querySelector('#portal-root')?.remove();
-    vi.useRealTimers();
-    frames.restore();
   });
 
   const layOut = (canScroll = true): HTMLElement => {
@@ -56,15 +45,9 @@ const installOutlineRig = () => {
   };
 
   const mountOutline = (onDrop: (ids: readonly string[], intent: unknown) => void = () => {}): void => {
-    const host = document.createElement('div');
-    document.body.appendChild(host);
-    const root = createRoot(host);
-    act(() => {
-      root.render(h(PlatformContext.Provider, { value: WINDOWS_PLATFORM }, h(OutlinePanel, {
-        doc: DOC, selectedId: null, slotNumbers: [], onSelect: () => {}, onRemove: () => {}, onDrop,
-      })));
-    });
-    mounted = { root, host };
+    mount(h(OutlinePanel, {
+      doc: DOC, selectedId: null, slotNumbers: [], onSelect: () => {}, onRemove: () => {}, onDrop,
+    }));
   };
 
   const dragTo = (y: number): void => {

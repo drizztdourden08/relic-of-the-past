@@ -25,4 +25,3 @@ const Publish = (props: PublishProps) => {
 };
 
 export { Publish };
-export type { PublishProps } from './Publish.type';

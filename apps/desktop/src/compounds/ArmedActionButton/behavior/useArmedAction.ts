@@ -44,4 +44,3 @@ const useArmedAction = ({ resetKey }: UseArmedActionParams) => {
 };
 
 export { useArmedAction };
-export type { ArmedAction };

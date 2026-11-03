@@ -1,6 +1,7 @@
 /* @layer store-site @kind hook */
 import { useCallback, useEffect, useState } from 'react';
 import { errorMessage } from '@rotp/hub-client';
+import { useNoticeRun } from '@rotp/design';
 import { getHome } from '../../../endpoints/catalog-endpoints';
 import { putFeatured, putWelcome } from '../../../endpoints/review-endpoints';
 import type { Move } from './useHomeSettings.type';
@@ -8,8 +9,7 @@ import type { Move } from './useHomeSettings.type';
 const useHomeSettings = () => {
   const [featured, setFeatured] = useState<string[] | null>(null);
   const [welcome, setWelcome] = useState('');
-  const [busy, setBusy] = useState(false);
-  const [notice, setNotice] = useState<string | null>(null);
+  const { busy, notice, setNotice, run } = useNoticeRun();
 
   useEffect(() => {
     let live = true;
@@ -41,18 +41,6 @@ const useHomeSettings = () => {
   }, []);
 
   const remove = useCallback((id: string) => setFeatured((ids) => (ids ? ids.filter((entry) => entry !== id) : ids)), []);
-
-  const run = useCallback(async (work: () => Promise<string>) => {
-    setBusy(true);
-    setNotice(null);
-    try {
-      setNotice(await work());
-    } catch (cause) {
-      setNotice(errorMessage(cause));
-    } finally {
-      setBusy(false);
-    }
-  }, []);
 
   const saveFeatured = useCallback(() => run(async () => {
     const { itemIds } = await putFeatured({ itemIds: featured ?? [] });

@@ -8,4 +8,4 @@ type OverrideContext = {
 
 type OverrideApplier = (entry: PlanEntry, context: OverrideContext) => void;
 
-export type { OverrideApplier, OverrideContext };
+export type { OverrideApplier };

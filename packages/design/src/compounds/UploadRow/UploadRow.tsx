@@ -30,4 +30,3 @@ const UploadRow = (props: UploadRowProps) => {
 };
 
 export { UploadRow };
-export type { UploadRowProps };

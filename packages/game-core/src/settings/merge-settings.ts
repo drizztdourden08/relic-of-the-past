@@ -21,7 +21,7 @@ const mergeSettings = (partial: Partial<GameSettings>): GameSettings => {
 
   if (!merged.developerToolsEnabled) merged.experimentalFeaturesEnabled = false;
   if (!merged.experimentalFeaturesEnabled) {
-    if (merged.hudStyle === 'modern') merged.hudStyle = 'enhanced';
+    if (merged.hudStyle === 'modern') merged.hudStyle = 'vanilla';
     merged.extraDungeon = false;
   }
 

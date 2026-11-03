@@ -24,7 +24,7 @@ const GATE_STORY_WORD = 0x2e00006;
 const sorted = <T,>(entries: Iterable<[string, T]>): Record<string, T> =>
   Object.fromEntries([...entries].sort(([a], [b]) => (a < b ? -1 : 1)));
 
-(LABEL ? it : it.skip)('records what every save reports', async () => {
+(LABEL ? it : it.skip)('records what every save reports', { tags: ['e2e'] }, async () => {
   const checks = find('check', () => true);
   const placements = sorted(Object.entries(CORPUS_SEEDS).map(([name, make]) => [name, make()]));
   const normal = buildNormalPlacement();
@@ -66,4 +66,4 @@ const sorted = <T,>(entries: Iterable<[string, T]>): Record<string, T> =>
   const names = sorted(checks.map((check) => [check.id, standardCheckName(check.id)]));
   writeFileSync(resolve(OUT_DIR, `${LABEL}.json`), JSON.stringify({ names, placements, saves }, null, 1));
   expect(Object.keys(saves).length).toBeGreaterThan(0);
-}, 900000);
+});

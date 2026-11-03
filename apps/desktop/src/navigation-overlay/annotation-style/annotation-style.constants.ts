@@ -28,7 +28,4 @@ const ANNOTATION_STYLES: Record<AnnotationKind, AnnotationStyle> = {
   unknown: { glyph: '?', color: INFO_COLOR, tone: 'other', legend: 'Unmapped (the sim found something new)' },
 };
 
-const DRAWN_KINDS = (Object.keys(ANNOTATION_STYLES) as AnnotationKind[])
-  .filter((k) => !ANNOTATION_STYLES[k].panelOnly);
-
-export { ANNOTATION_STYLES, DRAWN_KINDS };
+export { ANNOTATION_STYLES };

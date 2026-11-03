@@ -8,7 +8,7 @@ export type { GridCellRect } from './engine/place-grid';
 export { IDLE_TRACK, advanceCountdown } from './hud-countdown-track';
 export type { CountdownReading, CountdownTrack } from './hud-countdown-track';
 export { engineSwitchPatch } from './layouts/convert-engine';
-export { BUILT_IN_LAYOUTS, COUNTDOWN_SIZE, DEFAULT_LAYOUT, HUD_EDGE_INSET, MAX_EXPANDED_NODES, PAUSE_LEGEND_HEIGHT, PAUSE_LEGEND_LEFT_RESERVE, VITALS_RESERVE, collectReflowWarnings, defaultLayoutIdFor, editGridTracks, isOverlay, layoutById, loadLayout, tryLoadLayout, validateLayout, validateValue, worstCaseNodeCount } from './layouts';
+export { BUILT_IN_LAYOUTS, COUNTDOWN_SIZE, DEFAULT_LAYOUT, HUD_EDGE_INSET, MAX_EXPANDED_NODES, PAUSE_LEGEND_HEIGHT, PAUSE_LEGEND_LEFT_RESERVE, VITALS_RESERVE, collectReflowWarnings, defaultLayoutIdFor, editGridTracks, isOverlay, layoutById, loadLayout, tryLoadLayout, unionOf, validateLayout, validateValue, worstCaseNodeCount } from './layouts';
 export type { Rect, Size, TrackEdit } from './layouts';
 export type { Issues } from './layouts/validate-box';
 export { validateAnimations, validateTransition } from './layouts/validate-motion';

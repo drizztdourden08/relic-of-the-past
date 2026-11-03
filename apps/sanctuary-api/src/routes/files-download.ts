@@ -1,22 +1,18 @@
 /* @layer root-config @kind logic */
 import { LIMITS, SANCTUARY_ROUTES } from '@rotp/hub-contracts';
-import { conflict, requireMember } from '@rotp/hub-server';
-import { loadVisibleFile } from '../files/file-guards';
+import { loadReadyFile } from '../files/upload-routes';
 import { currentVersionOf } from '../files/versions';
 import { filesRepo } from '../db/files-repo';
 import { filesBucket } from '../storage/files-bucket';
 import type { Route } from '@rotp/hub-server';
-import { SANCTUARY_SITE } from '../site';
 
 const filesDownload: Route = {
   ...SANCTUARY_ROUTES.filesDownload,
-  handler: async ({ req, res, params }) => {
-    const member = await requireMember(req, SANCTUARY_SITE);
-    const file = await loadVisibleFile(params.id, member);
-    if (file.status !== 'ready') throw conflict('This file is still uploading.');
+  handler: async (ctx) => {
+    const { file } = await loadReadyFile(ctx);
     const url = await filesBucket.signDownload(currentVersionOf(file).key, file.name);
     await filesRepo.bumpDownloads(file.id);
-    res.status(200).json({ url, expiresInSeconds: LIMITS.downloadUrlSeconds });
+    ctx.res.status(200).json({ url, expiresInSeconds: LIMITS.downloadUrlSeconds });
   },
 };
 

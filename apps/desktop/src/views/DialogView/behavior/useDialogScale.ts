@@ -1,7 +1,9 @@
 /* @layer renderer-hud @kind hook */
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useState } from 'react';
 import { SCREEN_H, SCREEN_W } from '@rotp/game-data';
 import { wasmGetViewportInfo, linesAbovePicture } from '@rotp/game-core';
+import { canvasNativeHeight } from '../../../hooks/canvas-native-height';
+import { useResizeMeasure } from '../../../hooks/useResizeMeasure';
 import { INITIAL_DIALOG_SCALE, SCANLINE_LEAD } from '../DialogView.constants';
 import type { DialogScale } from '../DialogView.type';
 
@@ -9,17 +11,13 @@ const linesAbove = (nativeH: number): number =>
   linesAbovePicture(nativeH, wasmGetViewportInfo()?.extraTopBottom);
 
 const useDialogScale = () => {
-  const containerRef = useRef<HTMLDivElement>(null);
   const [metrics, setMetrics] = useState<DialogScale>(INITIAL_DIALOG_SCALE);
 
-  const measure = useCallback(() => {
-    const el = containerRef.current;
-    if (!el) return;
+  const measure = useCallback((el: HTMLDivElement) => {
     const h = el.clientHeight;
     const w = el.clientWidth;
     if (h <= 0 || w <= 0) return;
-    const canvas = document.getElementById('canvas') as HTMLCanvasElement | null;
-    const nativeH = canvas ? canvas.height / 2 : SCREEN_H;
+    const nativeH = canvasNativeHeight(SCREEN_H);
     const scale = h / nativeH;
     setMetrics({
       height: h,
@@ -29,14 +27,7 @@ const useDialogScale = () => {
     });
   }, []);
 
-  useEffect(() => {
-    measure();
-    const el = containerRef.current;
-    if (!el) return;
-    const observer = new ResizeObserver(() => measure());
-    observer.observe(el);
-    return () => observer.disconnect();
-  }, [measure]);
+  const containerRef = useResizeMeasure(measure);
 
   return { containerRef, ...metrics };
 };

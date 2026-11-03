@@ -11,8 +11,11 @@ export type {
 export type {
   ArchipelagoSaveFilesRequest, ArchipelagoSaveFilesResult,
 } from './archipelago-contract.type';
+export type { LobbySocketEvent } from './lobby-socket-contract.type';
 export type { HubMe } from './hub-contract.type';
 export type { StoreResult, StoreDuplicateResult } from './store-contract.type';
 export type {
   RecommendationPassRequest,
 } from './recommendation-contract.type';
+export type { InputScriptFile, TestArgs } from './test-args.type';
+export type { EventLogEntry } from './event-log-entry.type';

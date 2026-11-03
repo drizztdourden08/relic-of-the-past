@@ -31,5 +31,5 @@ interface TagMetadata {
 }
 
 export type {
-  EnvironmentTag, HazardTag, LootTag, RoleTag, ScreenTag, TagMetadata, TagNamespace, TraversalTag,
+  ScreenTag, TagMetadata, TagNamespace,
 };

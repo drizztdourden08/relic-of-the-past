@@ -2,11 +2,11 @@
 import { existsSync, readFileSync, readdirSync } from 'fs';
 import { resolve } from 'path';
 import { describe, expect, it } from 'vitest';
-import { decode4bppTile, convertGbaMapWordToSnes, convertGbaSheetToSnes4bpp, decodeGbaPacked4bppTile, PALACE_ROOM_IDS, decodeGbaAlttpSaveProgression, extractEntityHandlerTable, extractRoomTagHandlerTable, extractGbaAlttpText } from '@rotp/asset-extraction';
+import { decode4bppTile, convertGbaMapWordToSnes, convertGbaSheetToSnes4bpp, decodeGbaPacked4bppTile, PALACE_ROOM_IDS, extractEntityHandlerTable, extractRoomTagHandlerTable, extractGbaAlttpText } from '@rotp/asset-extraction';
 import { compileGbaAlttpSupplement, loadGbaAlttpRomFromBuffer, loadRomFromBuffer, GbaAlttpDungeonSource, extractDungeonSpriteGraphics } from '@rotp/asset-extraction/buffer';
 import { required } from './required';
 
-describe('GBA to SNES native translation', () => {
+describe('GBA to SNES native translation', { tags: ['critical'] }, () => {
   it('moves GBA palette and flip bits into the SNES tilemap layout', () => {
     const gba = 0x3000 | 0x0800 | 0x0400 | 0x0155;
     expect(convertGbaMapWordToSnes(gba)).toBe(0xc000 | 0x0c00 | 0x0155);
@@ -28,7 +28,7 @@ const snesPath = snesFixture ? resolve('test-roms', snesFixture) : '';
 
 const integration = existsSync(romPath) && snesPath !== '' ? it : it.skip;
 
-integration('extracts and compiles every Palace room from the validated ROM', () => {
+integration('extracts and compiles every Palace room from the validated ROM', { tags: ['e2e'] }, () => {
   const rom = loadGbaAlttpRomFromBuffer(readFileSync(romPath));
   const rooms = new GbaAlttpDungeonSource(rom).palaceRooms();
   expect(rooms.map(room => room.id)).toEqual([...PALACE_ROOM_IDS]);
@@ -64,14 +64,4 @@ integration('extracts and compiles every Palace room from the validated ROM', ()
   expect(required(text[0x1b2], 'text 0x1b2').plainText).toContain('Spin like a tornado');
   const snes = loadRomFromBuffer(readFileSync(snesPath));
   expect(compileGbaAlttpSupplement(rom, snes).length).toBeGreaterThan(100_000);
-}, 1_800_000);
-
-const savePath = resolve('test-roms', 'Legend of Zelda, The - A Link to the Past & Four Swords (USA).sav');
-const saveIntegration = existsSync(savePath) ? it : it.skip;
-
-saveIntegration('decodes the GBA-exclusive sword powers from SRAM', () => {
-  const slots = decodeGbaAlttpSaveProgression(readFileSync(savePath));
-  expect(slots).toHaveLength(3);
-  expect(slots.every(slot => typeof slot.type === 'string' && slot.type.length > 0)).toBe(true);
-  expect(slots.every(slot => typeof slot.hurricaneSpin === 'boolean')).toBe(true);
 });

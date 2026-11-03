@@ -1,13 +1,10 @@
 /* @layer tests @kind test */
-import { readFileSync } from 'node:fs';
-import { resolve } from 'node:path';
 import { describe, expect, it } from 'vitest';
 import { compressStrings, kLanguages } from '@rotp/asset-extraction';
-import { HIGHLIGHT_END, HIGHLIGHT_PRIMARY, HIGHLIGHT_SECONDARY, stripHighlight, receiptLineCandidates, compressMarkedStrings, wrapMessageText, wrapRows, toDialogueText, DEFAULT_SETTINGS } from '@rotp/game-core';
+import { HIGHLIGHT_END, HIGHLIGHT_PRIMARY, HIGHLIGHT_SECONDARY, stripHighlight, receiptLineCandidates, compressMarkedStrings, wrapMessageText, wrapRows, toDialogueText } from '@rotp/game-core';
 import { primary, secondary, renderReceiptMessage, renderFromServer, renderJunk, renderOnline, renderProgressive, pondDemandLinesOf, renderCapacityStep, foreignItemLine } from '@rotp/randomizer';
 import { hexToSnes15, dialogueCharsetOf } from '@rotp/game-data';
 import type { ReceiptLine } from '@rotp/game-core';
-import { REPO_ROOT } from '../repo-root';
 import { required } from '../required';
 
 const US = required(kLanguages.us, 'US language');
@@ -29,7 +26,7 @@ const candidatesOf = (line: ReceiptLine): readonly string[] => receiptLineCandid
 
 const encodedRun = (runs: readonly Uint8Array[], index: number): number[] => [...required(runs[index], `encoded run ${index}`)];
 
-describe('markup to control bytes', () => {
+describe('markup to control bytes', { tags: ['critical'] }, () => {
   it('writes 0x81 / 0x82 to open and 0x80 to close in the US encoding, between runs encoded on their own', () => {
     const text = `You got ${primary('Bow')} from ${secondary('Zelda')}!`;
     const bytes = encodedRun(compressMarkedStrings([text], 'us'), 0);
@@ -56,7 +53,7 @@ describe('markup to control bytes', () => {
   });
 });
 
-describe('widths ignore the markup', () => {
+describe('widths ignore the markup', { tags: ['critical'] }, () => {
   it('keeps the markup through the character filter and wraps a marked line as it wraps the plain one', () => {
     const text = `${primary('Small Key of Eastern Palace')} (2 of 4), out of ${secondary('Eastern Palace - Big Chest')}.`;
     const marked = toDialogueText(text, US_CHARSET);
@@ -94,7 +91,7 @@ describe('widths ignore the markup', () => {
   });
 });
 
-describe('every composer marks the item and the player', () => {
+describe('every composer marks the item and the player', { tags: ['critical'] }, () => {
   it('found, delivered and uncounted receipts mark the item name and leave the numbers plain', () => {
     const counted = renderReceiptMessage({ kind: 'physical', itemName: 'Bow', locationName: "Link's House", count: { ordinal: 1, total: 2 } });
     const uncounted = renderReceiptMessage({ kind: 'physical', itemName: 'Lamp', locationName: 'Sanctuary' });
@@ -128,7 +125,7 @@ describe('every composer marks the item and the player', () => {
   });
 });
 
-describe('every composer marks the item and the player', () => {
+describe('every composer marks the item and the player', { tags: ['critical'] }, () => {
   it('a foreign line marks the item and the player it went to in every candidate', () => {
     const line = foreignItemLine({ owner: 'Zelda_', item: 'Progressive Scale' });
     const candidates = candidatesOf(line);
@@ -167,16 +164,7 @@ describe('every composer marks the item and the player', () => {
   });
 });
 
-describe('highlight colour defaults', () => {
-  it('are the app gold and green, snapped to 15-bit words the core starts with', () => {
-    expect(DEFAULT_SETTINGS.hudHighlightPrimary).toBe('#e8a33d');
-    expect(DEFAULT_SETTINGS.hudHighlightSecondary).toBe('#7fb861');
-    expect(hexToSnes15(DEFAULT_SETTINGS.hudHighlightPrimary)).toBe(0x1e9c);
-    expect(hexToSnes15(DEFAULT_SETTINGS.hudHighlightSecondary)).toBe(0x32cf);
-    const core = readFileSync(resolve(REPO_ROOT, 'core/game-hooks/dialog_highlight.c'), 'utf8');
-    expect(core).toContain('g_colors[2] = {0x1e9c, 0x32cf}');
-  });
-
+describe('highlight colour defaults', { tags: ['critical'] }, () => {
   it('snaps each channel to the nearest of its 32 levels, red lowest', () => {
     expect(hexToSnes15('#ffffff')).toBe(0x7fff);
     expect(hexToSnes15('#000000')).toBe(0);

@@ -4,7 +4,7 @@ import type { JoinConfig } from '@rotp/randomizer';
 import type { JoinInput } from './join-input.type';
 
 const joinConfigOf = (input: JoinInput): JoinConfig => {
-  const { server, code, ap, slotName, yaml, build, bytes, client, token } = input;
+  const { server, code, ap, slotName, yaml, build, bytes, client, seat, token } = input;
   return {
     server,
     code,
@@ -13,6 +13,7 @@ const joinConfigOf = (input: JoinInput): JoinConfig => {
     world: { worldVersion: AP_WORLD_VERSION, bytes, sha256: build.sha256, size: build.size },
     slots: [{ name: slotName, yaml }],
     displayName: slotName,
+    ...(seat === undefined ? {} : { seat }),
     token: token ?? null,
   };
 };

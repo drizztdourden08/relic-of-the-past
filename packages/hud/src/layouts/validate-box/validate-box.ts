@@ -7,6 +7,7 @@ import { isRecord } from './is-record';
 import { nonEmptyText } from './non-empty-text';
 import { numberAt } from './number-at';
 import { oneOf } from './one-of';
+import { widthHeightAt } from './width-height-at';
 import { ALIGN_SELF, EDGE_KEYS } from './validate-box.constants';
 import type { Edges, HudBox } from '../../types/hud-node';
 import type { ValueContext } from '../validate-value.type';
@@ -27,17 +28,8 @@ const edgesAt = (value: unknown, path: string, issues: Issues): Edges | undefine
   return edges;
 };
 
-const sizeAt = (value: unknown, path: string, issues: Issues, insideRepeat = false): HudBox['size'] => {
-  if (value === undefined) return undefined;
-  if (!isRecord(value)) {
-    issues.push(`${path}: expected { w?, h? }`);
-    return undefined;
-  }
-  checkKeys(value, ['w', 'h'], path, issues);
-  const w = extentAt(value.w, `${path}.w`, issues, insideRepeat);
-  const h = extentAt(value.h, `${path}.h`, issues, insideRepeat);
-  return { ...(w !== undefined ? { w } : {}), ...(h !== undefined ? { h } : {}) };
-};
+const sizeAt = (value: unknown, path: string, issues: Issues, insideRepeat = false): HudBox['size'] =>
+  widthHeightAt(value, path, issues, (inner, innerPath) => extentAt(inner, innerPath, issues, insideRepeat));
 
 const slotsAt = (value: unknown, path: string, issues: Issues): number[] | undefined => {
   if (value === undefined) return undefined;

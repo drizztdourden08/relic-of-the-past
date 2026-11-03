@@ -167,18 +167,7 @@
 
 .hud-lattice__occupant {
   z-index: var(--z-base);
-  display: block;
   align-self: center;
-  min-width: 0;
-  padding: 0 var(--space-2xs);
-  overflow: hidden;
-  text-align: center;
-  font-family: var(--font-mono);
-  font-size: var(--text-xs);
-  color: var(--c-text-dim);
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  pointer-events: none;
   opacity: 0.75;
 }
 

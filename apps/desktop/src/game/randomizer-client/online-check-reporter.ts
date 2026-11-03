@@ -1,6 +1,7 @@
 /* @layer bridge-wasm @kind logic */
 import { log } from '../../log-bus';
-import { GOAL_CHECK } from '@rotp/randomizer';
+import { AP_LOCATION_NAMES, GOAL_CHECK } from '@rotp/randomizer';
+import { logLocationChecked } from '../event-log';
 import type { LocationKey, CheckReporterDeps } from '@rotp/randomizer';
 
 const createCheckReporter = (deps: CheckReporterDeps) => {
@@ -11,6 +12,7 @@ const createCheckReporter = (deps: CheckReporterDeps) => {
     const locationId = maps.locationIdByKey.get(location);
     if (locationId === undefined) return;
     room.reportedLocal.add(locationId);
+    logLocationChecked(locationId, AP_LOCATION_NAMES[locationId] ?? location);
     if (room.connected) send({ cmd: 'LocationChecks', locations: [locationId] });
   };
 };

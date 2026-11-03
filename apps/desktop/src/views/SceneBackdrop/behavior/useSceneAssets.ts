@@ -1,23 +1,8 @@
 /* @layer renderer-hud @kind hook */
 import { useEffect, useState } from 'react';
+import { loadSceneAssets } from '../../../title/scene/load-scene-assets';
 import { LIGHT_SCENE_FILES } from '../../../title/scene/scene-files';
-import type { SceneAssets, SceneFiles } from '../../../title/scene/scene.type';
-
-const load = (src: string): Promise<HTMLImageElement> => new Promise((resolve, reject) => {
-  const img = new Image();
-  img.onload = () => resolve(img);
-  img.onerror = () => reject(new Error(`scene tile failed to load: ${src}`));
-  img.src = src;
-});
-
-const loadAll = (srcs: readonly string[]): Promise<HTMLImageElement[]> => Promise.all(srcs.map(load));
-
-const loadSceneAssets = async (files: SceneFiles): Promise<SceneAssets> => {
-  const [sky, mountains, trees, clouds, landmark] = await Promise.all([
-    load(files.sky), loadAll(files.mountains), loadAll(files.trees), loadAll(files.clouds), load(files.landmark),
-  ]);
-  return { sky, mountains, trees, clouds, landmark };
-};
+import type { SceneAssets } from '../../../title/scene/scene.type';
 
 let pending: Promise<SceneAssets> | null = null;
 

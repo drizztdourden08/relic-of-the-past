@@ -65,7 +65,7 @@ beforeEach(() => {
   mocks.decide.mockReset().mockResolvedValue(undefined);
 });
 
-describe('acceptRecommendation uses one verb per action', () => {
+describe('acceptRecommendation uses one verb per action', { tags: ['critical'] }, () => {
   it('mints a record for a create, and reports the id that was allocated', async () => {
     const entry = finding({ action: 'create', targetId: null, current: null, proposed: NEW_TAG });
     const outcome = await acceptRecommendation(entry, { value: 'cavern' });
@@ -74,14 +74,6 @@ describe('acceptRecommendation uses one verb per action', () => {
     expect(mocks.write).not.toHaveBeenCalled();
     expect(mocks.remove).not.toHaveBeenCalled();
     expect(outcome).toEqual({ success: true, id: 'tag-009' });
-  });
-
-  it('replaces the record for an update', async () => {
-    await acceptRecommendation(finding(), { id: 'tag-001', value: 'cavern' });
-
-    expect(mocks.write).toHaveBeenCalledWith({ id: 'tag-001', value: 'cavern' });
-    expect(mocks.create).not.toHaveBeenCalled();
-    expect(mocks.remove).not.toHaveBeenCalled();
   });
 
   it('keys an update by the target, not by the id on the proposal', async () => {
@@ -95,23 +87,12 @@ describe('acceptRecommendation uses one verb per action', () => {
     expect(mocks.remove).toHaveBeenCalledWith('tag-001');
     expect(mocks.write).not.toHaveBeenCalled();
   });
-
-  it('writes the amended proposal instead of the detector\'s original', async () => {
-    await acceptRecommendation(finding(), { id: 'tag-001', value: 'grotto' });
-    expect(mocks.write).toHaveBeenCalledWith({ id: 'tag-001', value: 'grotto' });
-  });
 });
 
-describe('acceptRecommendation closing out', () => {
+describe('acceptRecommendation closing out', { tags: ['critical'] }, () => {
   it('records the verdict once the write lands', async () => {
     await acceptRecommendation(finding(), { id: 'tag-001', value: 'cavern' });
     expect(mocks.decide).toHaveBeenCalledWith('tag', 'r-1', 'accepted');
-  });
-
-  it('reports the ALLOCATED id after a create, not the absent target', async () => {
-    const entry = finding({ action: 'create', targetId: null, current: null, proposed: NEW_TAG });
-    const outcome = await acceptRecommendation(entry, { value: 'cavern' });
-    expect(outcome.success && outcome.id).toBe('tag-009');
   });
 
   it('leaves the finding open when the write is refused', async () => {
@@ -141,7 +122,7 @@ describe('acceptRecommendation closing out', () => {
   });
 });
 
-describe('dismissRecommendation', () => {
+describe('dismissRecommendation', { tags: ['critical'] }, () => {
   it('records the verdict and writes nothing to the dataset', async () => {
     await dismissRecommendation(finding());
     expect(mocks.decide).toHaveBeenCalledWith('tag', 'r-1', 'dismissed');

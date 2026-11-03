@@ -50,7 +50,7 @@ const installPondRig = (): PondRig => {
     expect(ram).toBeGreaterThan(0);
     call('WasmLoadState', 0);
     frames(2);
-  }, 120_000);
+  });
 
   return { call, set8, get8, set16, get16, gate3, armPlan, seam };
 };

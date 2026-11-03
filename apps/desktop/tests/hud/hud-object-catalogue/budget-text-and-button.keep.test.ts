@@ -12,7 +12,7 @@ const screenWith = (root: unknown) => ({
   kind: 'container', id: 'screen', layout: 'grid', columns: ['auto'], children: [root],
 });
 
-describe('validate-expand-budget - the validator refuses a document that could expand too far', () => {
+describe('validate-expand-budget - the validator refuses a document that could expand too far', { tags: ['critical'] }, () => {
   const deepRepeat = (count: number): HudNode => ({
     kind: 'element',
     id: 'outer',
@@ -39,7 +39,7 @@ describe('validate-expand-budget - the validator refuses a document that could e
   });
 });
 
-describe('text - content resolution and the pixel-face size snap', () => {
+describe('text - content resolution and the pixel-face size snap', { tags: ['critical'] }, () => {
   it('a literal string value draws exactly as given, ignoring format', () => {
     expect(resolveTextContent(
       { type: 'text', value: 'HELLO', face: { from: 'font', family: 'sans', size: 16 } },
@@ -69,7 +69,7 @@ describe('text - content resolution and the pixel-face size snap', () => {
   });
 });
 
-describe('button - bind validation, derived unassigned flag, and the states fallback', () => {
+describe('button - bind validation, derived unassigned flag, and the states fallback', { tags: ['critical'] }, () => {
   const buttonDoc = (bind: unknown) => ({
     id: 'btn', name: 'Btn', builtIn: false,
     screen: screenWith({

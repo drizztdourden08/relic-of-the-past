@@ -1,5 +1,6 @@
 /* @layer renderer-components @kind style */
-.import-form {
+.import-form,
+.profile-form {
   display: flex;
   flex-direction: column;
   gap: var(--space-sm);
@@ -43,16 +44,6 @@
   background: var(--c-danger-soft);
 }
 
-.profile-form {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-sm);
-  padding: var(--space-md);
-  background: var(--c-hover);
-  border: var(--border-width-thin) solid var(--c-border);
-  border-radius: var(--radius-lg);
-}
-
 .profile-form__field {
   display: flex;
   flex-direction: column;
@@ -66,21 +57,7 @@
   letter-spacing: calc(0.5 * var(--size-1));
 }
 
-.profile-form__input {
-  padding: var(--space-xs) var(--space-sm);
-  background: var(--c-inset);
-  border: var(--border-width-thin) solid var(--c-border);
-  border-radius: var(--radius-sm);
-  color: var(--c-text);
-  font-size: var(--text-sm);
-  font-family: inherit;
-  outline: none;
-}
-
-.profile-form__input:focus {
-  border-color: var(--c-primary);
-}
-
+.profile-form__input,
 .profile-form__select {
   padding: var(--space-xs) var(--space-sm);
   background: var(--c-inset);
@@ -90,9 +67,13 @@
   font-size: var(--text-sm);
   font-family: inherit;
   outline: none;
+}
+
+.profile-form__select {
   cursor: pointer;
 }
 
+.profile-form__input:focus,
 .profile-form__select:focus {
   border-color: var(--c-primary);
 }

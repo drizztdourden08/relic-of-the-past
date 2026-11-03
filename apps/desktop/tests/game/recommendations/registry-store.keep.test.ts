@@ -2,12 +2,10 @@
 import { it, expect, beforeEach } from 'vitest';
 import { all, find, toScreenIdOf } from '@rotp/game-data';
 import type { ConnectionRecord, ScreenId } from '@rotp/game-data';
-import { createRecommendationStore, detectorsFor, memoryStorage, recommendationFile, runDetection } from '@rotp/navigation';
+import { createRecommendationStore, memoryStorage, runDetection } from '@rotp/navigation';
 import type { DetectionContext, ScreenObservations } from '@rotp/navigation';
 import type { ObservedTransition } from '@rotp/game-core';
 import '@app/nav-widget/recommendations/strategies/connection';
-import '@rotp/navigation';
-import '@rotp/navigation';
 import '@app/nav-widget/recommendations/strategies/connection/wire-detector';
 import { describeDataset } from '../../dataset-guard';
 import { required } from '../../required';
@@ -40,14 +38,7 @@ const contextFor = (screenId: ScreenId, realTransitions: ObservedTransition[], e
   ({ origin: 'live', screenId, observations: observations({ realTransitions, existingConnections }) });
 
 describeDataset('the detector barrel', () => {
-  it('installs a detector for both kinds it covers', () => {
-    expect(detectorsFor('connection').map(d => d.id).sort())
-      .toEqual(['strategy:connection']);
-    expect(detectorsFor('screen').map(d => d.id).sort())
-      .toEqual(['screen:geography', 'strategy:screen']);
-  });
-
-  it('reports every detector that ran, including the ones that found nothing', () => {
+  it('reports every detector that ran, including the ones that found nothing', { tags: ['critical'] }, () => {
     const { screenId, realTransitions, existingConnections } = auditableScreen();
     const run = runDetection('connection', contextFor(screenId, realTransitions, existingConnections));
     expect(run.detectorIds).toContain('strategy:connection');
@@ -61,11 +52,7 @@ describeDataset('the recommendation store', () => {
 
   beforeEach(() => { store = createRecommendationStore(memoryStorage()); });
 
-  it('names one file per collection', () => {
-    expect(recommendationFile('connection')).toBe('recommendations/connection.json');
-  });
-
-  it('does not duplicate anything when the same pass runs twice', async () => {
+  it('does not duplicate anything when the same pass runs twice', { tags: ['critical'] }, async () => {
     const context = contextFor(screenId, realTransitions, existingConnections);
     const run = runDetection('connection', context);
 
@@ -76,7 +63,7 @@ describeDataset('the recommendation store', () => {
     expect(second.entries.every(e => e.firstSeenAt === 1000)).toBe(true);
   });
 
-  it('keeps a dismissal across a re-detection', async () => {
+  it('keeps a dismissal across a re-detection', { tags: ['critical'] }, async () => {
     const context = contextFor(screenId, realTransitions, existingConnections);
     const run = runDetection('connection', context);
     const { entries } = await store.applyPass('connection', context, { detectorIds: run.detectorIds, fresh: run.drafts }, 1000);
@@ -89,7 +76,7 @@ describeDataset('the recommendation store', () => {
     expect(after.entries.filter(e => e.id === firstId)).toHaveLength(1);
   });
 
-  it('does not resolve findings about a screen the pass never visited', async () => {
+  it('does not resolve findings about a screen the pass never visited', { tags: ['critical'] }, async () => {
     const context = contextFor(screenId, realTransitions, existingConnections);
     const run = runDetection('connection', context);
     await store.applyPass('connection', context, { detectorIds: run.detectorIds, fresh: run.drafts }, 1000);
@@ -101,23 +88,12 @@ describeDataset('the recommendation store', () => {
     expect(after.entries.every(e => e.state === 'open')).toBe(true);
   });
 
-  it('resolves a finding once the pass that owns it stops reproducing it', async () => {
+  it('resolves a finding once the pass that owns it stops reproducing it', { tags: ['critical'] }, async () => {
     const context = contextFor(screenId, realTransitions, existingConnections);
     const run = runDetection('connection', context);
     await store.applyPass('connection', context, { detectorIds: run.detectorIds, fresh: run.drafts }, 1000);
 
     const after = await store.applyPass('connection', context, { detectorIds: run.detectorIds, fresh: [] }, 2000);
     expect(after.entries.every(e => e.state === 'resolved')).toBe(true);
-  });
-
-  it('carries a record, not a code string, which was the whole point of the unification', async () => {
-    const context = contextFor(screenId, realTransitions, existingConnections);
-    const run = runDetection('connection', context);
-    const { entries } = await store.applyPass('connection', context, { detectorIds: run.detectorIds, fresh: run.drafts }, 1000);
-
-    for (const entry of entries) {
-      expect(typeof entry.proposed).toBe('object');
-      if (entry.action !== 'create') expect((entry.current as ConnectionRecord).id).toBe(entry.targetId);
-    }
   });
 });

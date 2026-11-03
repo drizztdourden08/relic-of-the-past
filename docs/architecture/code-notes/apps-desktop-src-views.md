@@ -153,12 +153,12 @@ anything in here is meant to be clickable. The pause menu slide takes 29 frames 
 linear, matching vanilla.
 
 The HUD style picks a pair, and only the pair: Original keeps the sprite HUD and the sprite pause
-menu exactly as they were; Enhanced and Modern swap in the placed HUD and the host owned menu.
+menu exactly as they were; Modern swaps in the placed HUD and the host owned menu.
 Every style reads the extracted sprites for the active ROM, and without them an HTML notice shows
 in their place, which has exactly one cause: no sprites extracted for this ROM. Both pairs take the
 same slide props from different sources, and that difference is the point. Original mirrors the
 native menu, so its slide is read from the native menu's own state machine once per frame, and
-that poll runs for Original only. Enhanced and Modern are the menu: `kFeatures2_HostMenu` parks the
+that poll runs for Original only. Modern is the menu: `kFeatures2_HostMenu` parks the
 native machine so the host can draw its own, and polling it would cost a call per frame to learn
 nothing; the slide follows the host's pause store instead. A parked machine's state describes
 something deliberately stopped, and letting it place this layer once left the menu "open" while it

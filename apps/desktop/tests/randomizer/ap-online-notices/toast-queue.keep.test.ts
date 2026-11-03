@@ -13,7 +13,7 @@ vi.mock('@app/log-bus', () => {
 
 installClientHarness();
 
-describe('the toast queue', () => {
+describe('the toast queue', { tags: ['critical'] }, () => {
   const received = (from: string): OnlineNotice => ({
     kind: 'itemReceived', text: `Received Bow from ${from}`, counterpart: from,
     parts: [{ text: 'Received ' }, { text: 'Bow', tone: 'item' }, { text: ' from ' }, { text: from, tone: 'player' }],

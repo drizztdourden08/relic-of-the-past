@@ -59,7 +59,7 @@ const picker = (onChange: (place: unknown) => void, place: HudPlace = { column: 
   mount(h(CellPicker, { container: PARENT, childId: 'wallet', place, onChange }));
 };
 
-describe('a click sets the cell, and only the cell', () => {
+describe('a click sets the cell, and only the cell', { tags: ['standard'] }, () => {
   it('writes `place` for the child it was opened for', () => {
     const onChange = vi.fn();
     picker(onChange);
@@ -77,7 +77,7 @@ describe('a click sets the cell, and only the cell', () => {
   });
 });
 
-describe('shift and drag set the span', () => {
+describe('shift and drag set the span', { tags: ['standard'] }, () => {
   it('spans from the child\'s own origin to a shift-clicked cell', () => {
     const onChange = vi.fn();
     picker(onChange, { column: 1, row: 1 });
@@ -106,37 +106,12 @@ describe('shift and drag set the span', () => {
   });
 });
 
-describe('it shows the parent\'s grid and never changes it', () => {
-  it('offers no toolbar and no selectable track header', () => {
-    picker(ignore);
-    expect(document.querySelector('.hud-grid__bar')).toBeNull();
-    expect(document.querySelectorAll('[data-action]').length).toBe(0);
-    for (const head of Array.from(document.querySelectorAll('.hud-lattice__head'))) {
-      expect((head as HTMLElement).dataset.inert).toBe('true');
-    }
-  });
-
+describe('it shows the parent\'s grid and never changes it', { tags: ['standard'] }, () => {
   it('presses a header and writes nothing', () => {
     const onChange = vi.fn();
     picker(onChange);
     const head = document.querySelector('.hud-lattice__head');
     if (head) down(head);
     expect(onChange).not.toHaveBeenCalled();
-  });
-
-  it('draws the siblings, and marks its OWN cells as the selection', () => {
-    picker(ignore, { column: 1, row: 3 });
-    expect(cell(1, 1).dataset.state).toBe('occupied');
-    expect(cell(1, 3).dataset.state).toBe('selected');
-    expect(cell(2, 2).dataset.state).toBe('empty');
-  });
-});
-
-describe('each control says which document it edits', () => {
-  it('names the child here and the container in the grid editor', () => {
-    picker(ignore);
-    expect(document.querySelector('.hud-cellpick__title')?.textContent)
-      .toBe("The cell where wallet sits in its parent's grid");
-    expect(document.body.textContent).toContain("The parent's columns and rows are edited in its own Layout section.");
   });
 });

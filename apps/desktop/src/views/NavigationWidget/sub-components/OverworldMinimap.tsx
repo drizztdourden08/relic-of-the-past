@@ -25,7 +25,7 @@ const OverworldMinimap = ({ bundle, connections, renderResults, playerScreenInde
   const playerOrigin = overworldCellOrigin(grid, playerSlot);
 
   return (
-    <Box style={{ maxWidth: grid.totalW, height: grid.totalH }} className="nav-overworld-minimap__root">
+    <Box style={{ maxWidth: grid.totalW, height: grid.totalH }} className="nav-minimap__root">
       {bundle.screens.map((scr, idx) => {
         const scrResult = renderResults.find(r => r.screenIndex === scr);
         const { left, top } = overworldCellOrigin(grid, idx);
@@ -43,7 +43,7 @@ const OverworldMinimap = ({ bundle, connections, renderResults, playerScreenInde
         const x = left + (crossing.tile.col / TILE_COUNT) * grid.cellW - markerSize / 2;
         const y = top + (crossing.tile.row / TILE_COUNT) * grid.cellH - markerSize / 2;
         return (
-          <Box key={`ent-${screen.screenIndex}-${crossing.id}`} style={{ left: x, top: y, width: markerSize, height: markerSize }} title={crossing.label} className="nav-overworld-minimap__marker">
+          <Box key={`ent-${screen.screenIndex}-${crossing.id}`} style={{ left: x, top: y, width: markerSize, height: markerSize }} title={crossing.label} className="nav-minimap__marker">
             <Icon icon={crossingIcon(crossing).icon} width={markerSize} height={markerSize} className="nav-marker-icon nav-marker-icon--shadowed" data-tone={markerTone(crossing)} />
           </Box>
         );
@@ -52,7 +52,7 @@ const OverworldMinimap = ({ bundle, connections, renderResults, playerScreenInde
       {playerPos && playerSlot >= 0 && (
         <Box
           style={{ left: playerOrigin.left + (playerPos.col / TILE_COUNT) * grid.cellW - 3, top: playerOrigin.top + (playerPos.row / TILE_COUNT) * grid.cellH - 3 }}
-          className="nav-overworld-minimap__player-dot"
+          className="nav-minimap__player-dot"
         />
       )}
 

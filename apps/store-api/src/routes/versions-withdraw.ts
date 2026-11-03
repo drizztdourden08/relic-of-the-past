@@ -1,30 +1,21 @@
 /* @layer store-api @kind logic */
 import { STORE_ROUTES } from '@rotp/hub-contracts';
-import type { ItemChangeResponse } from '@rotp/hub-contracts';
 import type { Route } from '@rotp/hub-server';
-import { requirePlayer } from '../auth/player';
 import { itemsRepo } from '../db/items-repo';
-import { loadVisibleItem } from '../items/item-guards';
 import { moveVersion } from '../items/move-version';
-import { actorsOf } from '../items/project-item';
-import { loadVersion } from '../items/versions';
-import { signItem } from '../media/sign-media';
+import { loadVersionTarget, sendSignedItem } from '../items/version-routes';
 
 const versionsWithdraw: Route = {
   ...STORE_ROUTES.versionsWithdraw,
-  handler: async ({ req, res, params }) => {
-    const player = await requirePlayer(req);
-    const item = await loadVisibleItem(params.id, player);
-    const actors = actorsOf(item, player);
-    const { n } = loadVersion(item, params.n);
+  handler: async (ctx) => {
+    const { item, actors, n } = await loadVersionTarget(ctx);
     const updated = await itemsRepo.mutate(item.id, (latest) => moveVersion(latest, {
       n,
       action: 'withdraw',
       actors,
       reshape: (version, to) => ({ ...version, review: { ...version.review, state: to, submittedAt: null } }),
     }));
-    const body: ItemChangeResponse = { item: await signItem(updated) };
-    res.status(200).json(body);
+    await sendSignedItem(ctx, updated);
   },
 };
 

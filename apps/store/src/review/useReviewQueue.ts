@@ -31,4 +31,3 @@ const useReviewQueue = (load: EntriesLoader = listReviewQueue) => {
 };
 
 export { useReviewQueue };
-export type { ReviewQueue, EntriesLoader } from './review-queue.type';

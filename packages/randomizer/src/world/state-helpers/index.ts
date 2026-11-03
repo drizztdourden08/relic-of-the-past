@@ -1,11 +1,7 @@
 /* @layer shared-game @kind barrel */
 export { BASELINE, MAX_BOMBS_ASKED } from './state-helpers.constants';
-export { bottleCount } from './bottle-count';
 export { canBombOrBonk } from './can-bomb-or-bonk';
-export { canBuy } from './can-buy';
-export { canBuyUnlimited } from './can-buy-unlimited';
 export { canExtendMagic } from './can-extend-magic';
-export { canHoldArrows } from './can-hold-arrows';
 export { canLiftHeavyRocks } from './can-lift-heavy-rocks';
 export { canLiftRocks } from './can-lift-rocks';
 export { canMeltThings } from './can-melt-things';
@@ -16,4 +12,3 @@ export { hasFireSource } from './has-fire-source';
 export { hasHearts } from './has-hearts';
 export { hasMeleeWeapon } from './has-melee-weapon';
 export { hasSword } from './has-sword';
-export { heartCount } from './heart-count';

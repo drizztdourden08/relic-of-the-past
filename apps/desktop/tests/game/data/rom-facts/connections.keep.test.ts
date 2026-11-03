@@ -89,23 +89,23 @@ describeRom('native connection ids, against the cartridge', () => {
   const facts = readRomFacts();
   const { connections } = facts;
 
-  it('puts every connection entranceId on a mouth of its own screen area, or in its own room', () => {
+  it('puts every connection entranceId on a mouth of its own screen area, or in its own room', { tags: ['standard'] }, () => {
     expect(entranceIdMismatches(facts)).toEqual([]);
   });
 
-  it('puts every connection exitId on the room that exit leaves', () => {
+  it('puts every connection exitId on the room that exit leaves', { tags: ['standard'] }, () => {
     expect(exitIdMismatches(facts)).toEqual([]);
   });
 
-  it('puts every connection holeIndex on a fall hole that drops into the other end room', () => {
+  it('puts every connection holeIndex on a fall hole that drops into the other end room', { tags: ['standard'] }, () => {
     expect(holeIndexMismatches(facts)).toEqual([]);
   });
 
-  it('points every connection stairIndex at the room header slot that travels there', () => {
+  it('points every connection stairIndex at the room header slot that travels there', { tags: ['standard'] }, () => {
     expect(stairIndexMismatches(facts)).toEqual([]);
   });
 
-  it('backs every key requirement on a dungeon crossing with a lock in that same room', () => {
+  it('backs every key requirement on a dungeon crossing with a lock in that same room', { tags: ['standard'] }, () => {
     const doorsByRoom = readRomRoomDoors(usRom());
     const keyGates = new Map<string, string>();
     for (const dungeon of all('dungeon')) {
