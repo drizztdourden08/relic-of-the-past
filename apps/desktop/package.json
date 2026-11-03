@@ -126,7 +126,7 @@
     "vitest": "catalog:"
   },
   "brock": {
-    "version": "0.116.0",
+    "version": "0.116.1",
     "tessera": "0.93.2"
   },
   "portKit": {

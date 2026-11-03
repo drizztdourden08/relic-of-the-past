@@ -104,7 +104,7 @@ jobs:
         run: pnpm --dir "$APP_DIR" exec brock release-notes check "${{ steps.resolve.outputs.version }}"
 
       - name: Lint
-        run: pnpm lint:all
+        run: pnpm lint
 
   build-windows:
     needs: prepare

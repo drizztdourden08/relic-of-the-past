@@ -27,6 +27,8 @@ jobs:
     runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
 
       - name: "Install libusb and pkg-config (Linux)"
         run: "sudo apt-get update && sudo apt-get install -y libusb-1.0-0-dev pkg-config"
@@ -82,12 +84,16 @@ jobs:
 
       - name: App gate steps
         run: pnpm --dir "$APP_DIR" exec brock gate
-
       - name: Managed files match brock sync
         run: pnpm exec brock check
 
-      - name: Lint and typecheck
+      - name: Lint and typecheck (changed files)
+        if: github.event_name == 'pull_request'
         run: pnpm run lint
+
+      - name: Lint and typecheck (all files)
+        if: github.event_name != 'pull_request'
+        run: pnpm run lint:all
 
       - name: Markdown
         run: pnpm run --if-present lint:md
@@ -95,8 +101,8 @@ jobs:
       - name: Structure
         run: pnpm exec brock structure --check
 
-      - name: Tests
-        run: pnpm run --if-present test
+      - name: Tests (changed files)
+        run: pnpm run --if-present test:pr
   # The review job is pinned to one image, never ubuntu-latest: the apparmor step below and the
   # linux screenshot baselines both depend on the image, so a new Ubuntu moves only with Brock.
   review:
