@@ -12,8 +12,10 @@
   "dependencies": {
     "@drizztdourden08/brock-core": "^0.116.1",
     "@drizztdourden08/brock-input": "^0.116.1",
-    "@rotp/asset-extraction": "workspace:*",
     "@rotp/features": "workspace:*",
     "@rotp/game-data": "workspace:*"
+  },
+  "devDependencies": {
+    "@rotp/asset-extraction": "workspace:*"
   }
 }
