@@ -7,7 +7,7 @@ import { createFakeServer } from '../ap-fake-server';
 import type { FakeRoom } from '../ap-fake-server';
 import { createFakeCore } from '../ap-fake-core';
 import { OWN, installClientHarness, settle } from '../ap-protocol-harness';
-import { required } from '../../required';
+import { required } from '@rotp/asset-extraction/testing';
 
 vi.mock('@app/log-bus', () => {
   const quiet = (): void => undefined;

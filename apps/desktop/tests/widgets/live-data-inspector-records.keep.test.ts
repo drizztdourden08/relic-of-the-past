@@ -6,7 +6,7 @@ import type { EntityKind } from '@rotp/game-data';
 import type { DetectionContext } from '@rotp/navigation';
 import type { LiveSpriteObservation } from '@rotp/game-core';
 import { describeDataset } from '../dataset-guard';
-import { required } from '../required';
+import { required } from '@rotp/asset-extraction/testing';
 
 const baseContext = (over: Partial<DetectionContext> = {}): DetectionContext => ({
   origin: 'live',

@@ -2,7 +2,7 @@
 import { describe, expect, it } from 'vitest';
 import { layoutHud, placedById, tryLoadLayout, validateLayout } from '@rotp/hud';
 import type { HudContainer, HudLayout, HudNode } from '@rotp/hud';
-import { required } from '../required';
+import { required } from '@rotp/asset-extraction/testing';
 import { FIXTURE_COLOURS } from './fixture-colours.constants';
 
 const VIEWS = [{ w: 398, h: 224 }, { w: 256, h: 224 }, { w: 512, h: 448 }, { w: 640, h: 240 }];

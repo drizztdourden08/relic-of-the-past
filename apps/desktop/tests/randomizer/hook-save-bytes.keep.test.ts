@@ -4,7 +4,7 @@ import { resolve } from 'node:path';
 import { describe, expect, it } from 'vitest';
 import { mirror } from '@rotp/game-core';
 import { REPO_ROOT } from '../repo-root';
-import { required } from '../required';
+import { required } from '@rotp/asset-extraction/testing';
 
 const HEADER = resolve(REPO_ROOT, 'core/game-hooks/save_bytes.h');
 

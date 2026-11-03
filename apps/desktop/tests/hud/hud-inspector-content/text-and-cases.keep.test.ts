@@ -22,7 +22,7 @@ import { textOfTextValue, textValueOf } from '@app/hud-layout-editing/value-text
 import { CaseListEditor } from '@app/views/HudLayoutEditor/sub-components/CaseListEditor';
 import { TextContent } from '@app/views/HudLayoutEditor/sub-components/TextContent';
 import type { HudContainer, HudNode, HudSwitchSpec } from '@rotp/hud';
-import { required } from '../../required';
+import { required } from '@rotp/asset-extraction/testing';
 import { PACKS, SCOPE } from './content-fixtures.constants';
 import { installDomHarness } from './install-dom-harness';
 

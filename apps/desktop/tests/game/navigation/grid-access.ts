@@ -1,5 +1,5 @@
 /* @layer tests @kind helper */
-import { required } from '../../required';
+import { required } from '@rotp/asset-extraction/testing';
 
 const rowOf = <T>(grid: readonly T[][], row: number): T[] => required(grid[row], `grid row ${row}`);
 

@@ -7,7 +7,7 @@ import { LayoutSection } from '@app/views/HudLayoutEditor/sub-components/LayoutS
 import type { HudContainer, HudGridContainer, HudNode, Value } from '@rotp/hud';
 import { installLayoutSectionRig } from './install-layout-section-rig';
 import { screenRoot } from './screen-root';
-import { required } from '../../required';
+import { required } from '@rotp/asset-extraction/testing';
 
 const { mount, mountGrid, pick, header, down, click, bar, field, type, enter } = installLayoutSectionRig();
 

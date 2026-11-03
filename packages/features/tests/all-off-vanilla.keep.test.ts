@@ -3,7 +3,7 @@ import { describe, it, expect } from 'vitest';
 import type { GameSettings } from '@rotp/features';
 import { BUNDLE_FIXES } from '@rotp/features';
 import { buildFeatureFlags, buildFeatureWords, buildPpuFlags } from '@rotp/game-core';
-import { required } from './required';
+import { required } from '@rotp/asset-extraction/testing';
 
 const allOff = {
   aspectRatio: '4:3',

@@ -5,7 +5,7 @@ import { serverUrlCandidates } from '@rotp/randomizer';
 import { createFakeServer, VERSION } from './ap-fake-server';
 import { createFakeCore } from './ap-fake-core';
 import { boot, installClientHarness, item, makeRoom, OWN, settle } from './ap-protocol-harness';
-import { required } from '../required';
+import { required } from '@rotp/asset-extraction/testing';
 
 vi.mock('@app/log-bus', () => {
   const quiet = (): void => undefined;

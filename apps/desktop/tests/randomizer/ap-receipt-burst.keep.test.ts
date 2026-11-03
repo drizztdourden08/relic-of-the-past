@@ -9,7 +9,7 @@ import { cancelServerDeliveries, deliverServerItem } from '@app/game/randomizer-
 import { installFakeModule } from './ap-fake-module';
 import type { FakeModule } from './ap-fake-module';
 import type { DeliverItemParams } from '@app/game/delivery-api';
-import { required } from '../required';
+import { required } from '@rotp/asset-extraction/testing';
 
 const bridge = vi.hoisted(() => ({ mod: null }));
 const queue = vi.hoisted(() => ({

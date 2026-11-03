@@ -3,7 +3,7 @@ import { readFileSync } from 'node:fs';
 import { createRequire } from 'node:module';
 import { beforeAll, expect } from 'vitest';
 import { assetBlobPath } from '../../story-events/core-harness/asset-blob-path';
-import { required } from '../../required';
+import { required } from '@rotp/asset-extraction/testing';
 import { FEATURES0_DEVELOPER_TOOLS, FIXTURE, NO_PRIZE, UNARMED_LINE, WASM_JS, WRAM } from './pond-core.constants';
 import type { Core, PondRig } from './pond-core.type';
 

@@ -2,7 +2,7 @@
 import { it, expect } from 'vitest';
 import type { ScreenRecord, ScreenMatchResult } from '@rotp/game-data';
 import { describeDataset } from '../../../dataset-guard';
-import { required } from '../../../required';
+import { required } from '@rotp/asset-extraction/testing';
 import { contextFor } from './context-for';
 import { dungeonScreen } from './dungeon-screen';
 import { observations } from './observations';

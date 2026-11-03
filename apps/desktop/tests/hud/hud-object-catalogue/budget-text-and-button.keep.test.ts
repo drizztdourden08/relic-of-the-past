@@ -6,7 +6,7 @@ import { resolveTextContent, snapGameFontSize, textIntrinsicSize, tryLoadLayout 
 import type { HudNode } from '@rotp/hud';
 import { leaf } from './leaf';
 import { row } from './row';
-import { required } from '../../required';
+import { required } from '@rotp/asset-extraction/testing';
 
 const screenWith = (root: unknown) => ({
   kind: 'container', id: 'screen', layout: 'grid', columns: ['auto'], children: [root],

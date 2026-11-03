@@ -2,7 +2,7 @@
 import { all } from '@rotp/game-data';
 import { actTokensOf, compileRule, inlineNamedRules, walkRuleNode, ruleNodesOfWorld } from '@rotp/randomizer';
 import type { Rule, RuleNode, OptionValue, World } from '@rotp/randomizer';
-import { required } from '../../required';
+import { required } from '@rotp/asset-extraction/testing';
 import type { ExportParity } from './rule-parity-harness.type';
 import { prepareState } from './prepare-state';
 import { seededRandom } from './seeded-random';

@@ -2,7 +2,7 @@
 import { it, expect } from 'vitest';
 import { referencesTo, all, ITEM_GROUP_IDS } from '@rotp/game-data';
 import { describeDataset } from '../../dataset-guard';
-import { required } from '../../required';
+import { required } from '@rotp/asset-extraction/testing';
 
 const CHECK_NEEDING_THREE_PENDANTS = 'check-072';
 

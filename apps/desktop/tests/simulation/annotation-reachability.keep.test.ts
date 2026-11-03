@@ -2,7 +2,7 @@
 import { describe, it, expect } from 'vitest';
 import type { ScreenAnnotation } from '@rotp/navigation';
 import { markUnreachable, reachableNear, TOUCH } from '@rotp/navigation';
-import { required } from '../required';
+import { required } from '@rotp/asset-extraction/testing';
 
 const gridBlockedBelow = (wall: number): number[][] =>
   Array.from({ length: 20 }, (_, r) => Array.from({ length: 20 }, () => (r < wall ? 1 : 0)));

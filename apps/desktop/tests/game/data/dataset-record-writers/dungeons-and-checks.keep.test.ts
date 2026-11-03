@@ -3,7 +3,7 @@ import { expect, it } from 'vitest';
 import { allocateCheck, deleteCheck, writeCheckRecord } from '../../../../electron/screen-editor/check-writer';
 import { allocateDungeon, deleteDungeon, writeDungeonRecord } from '../../../../electron/screen-editor/dungeon-writer';
 import { describeDataset } from '../../../dataset-guard';
-import { required } from '../../../required';
+import { required } from '@rotp/asset-extraction/testing';
 import { recordsIn } from './records-in';
 import { setUpWriterWorkspace } from './set-up-writer-workspace';
 

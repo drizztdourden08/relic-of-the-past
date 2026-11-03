@@ -6,7 +6,7 @@ import { BOW, DAMAGE_CLASS_COUNT, ROOM_CLEAR_EXEMPT_FLAG, SWORD_1, SWORD_4 } fro
 import { grids } from './grids';
 import { makeSprite } from './make-sprite';
 import { makeTables } from './make-tables';
-import { required } from '../../required';
+import { required } from '@rotp/asset-extraction/testing';
 
 describeDataset('evaluateRoomThreat on room-clear-exempt sprites', { tags: ['critical'] }, () => {
   it('excludes a sprite whose flags4 carries the room-clear-exempt bit from gating', () => {

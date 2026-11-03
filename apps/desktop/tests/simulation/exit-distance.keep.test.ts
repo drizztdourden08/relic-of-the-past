@@ -1,7 +1,7 @@
 /* @layer tests @kind test */
 import { describe, it, expect } from 'vitest';
 import { stepDistances, distanceAt, decodeScore } from '@rotp/navigation';
-import { required } from '../required';
+import { required } from '@rotp/asset-extraction/testing';
 
 const GRID = 64;
 const UNREACHED = 0xffff;

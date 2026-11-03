@@ -5,7 +5,7 @@ import {
   defaultIdRefDisplay, entityKindFromId, resolveRecordLabel,
 } from '@app/data-inspector/record-links';
 import { describeDataset } from '../dataset-guard';
-import { required } from '../required';
+import { required } from '@rotp/asset-extraction/testing';
 
 describeDataset('entityKindFromId', { tags: ['critical'] }, () => {
   it('resolves an item-group id (ig-NNN) to item-group', () => {

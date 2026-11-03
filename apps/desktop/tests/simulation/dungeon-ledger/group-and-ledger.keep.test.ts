@@ -7,7 +7,7 @@ import { describeDataset } from '../../dataset-guard';
 import { CASTLE_SCREEN, SEWERS_PALACE, SEWERS_ROOM, SEWERS_SCREEN } from './dungeon-ledger.constants';
 import { freshState } from './fresh-state';
 import { makeChest } from './make-chest';
-import { required } from '../../required';
+import { required } from '@rotp/asset-extraction/testing';
 
 const baseObs = (flags: FlagSnapshot = emptySnapshot()): SimObservation => ({
   virtual: { screenId: SEWERS_SCREEN, tile: { row: 0, col: 0 } },

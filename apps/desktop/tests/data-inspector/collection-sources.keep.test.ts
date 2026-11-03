@@ -4,7 +4,7 @@ import { COLLECTION_SOURCES } from '@app/data-inspector/collection-sources';
 import { ENTITY_KINDS } from '@app/views/DataInspector/DataInspector.constants';
 import { resolveIdRef } from '@app/views/DataInspector/behavior/id-ref-target';
 import { describeDataset } from '../dataset-guard';
-import { required } from '../required';
+import { required } from '@rotp/asset-extraction/testing';
 
 describeDataset('collection sources', { tags: ['critical'] }, () => {
   it('emits source text for every collection that has a serializer, and the record is in it', () => {

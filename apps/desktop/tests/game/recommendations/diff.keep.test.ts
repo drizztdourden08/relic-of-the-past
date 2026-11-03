@@ -3,7 +3,7 @@ import { describe, it, expect } from 'vitest';
 import { changedPaths, linesForPaths } from '@rotp/navigation';
 import { serializeConnectionRecord } from '@rotp/game-data';
 import type { ConnectionRecord } from '@rotp/game-data';
-import { required } from '../../required';
+import { required } from '@rotp/asset-extraction/testing';
 
 const firstLine = (lines: readonly number[]): number => required(lines[0], 'the first mapped line');
 

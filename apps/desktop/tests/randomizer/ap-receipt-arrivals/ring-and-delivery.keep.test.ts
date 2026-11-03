@@ -11,7 +11,7 @@ import { installFakeModule } from '../ap-fake-module';
 import type { FakeModule } from '../ap-fake-module';
 import { plannedLines as planned } from './planned-lines';
 import { sessionChunks } from './session-chunks';
-import { required } from '../../required';
+import { required } from '@rotp/asset-extraction/testing';
 import type { DeliverItemParams } from '@app/game/delivery-api';
 
 const bridge = vi.hoisted(() => ({ mod: null }));

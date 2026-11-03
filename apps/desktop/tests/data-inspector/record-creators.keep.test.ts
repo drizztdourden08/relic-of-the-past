@@ -6,7 +6,7 @@ import { all } from '@rotp/game-data';
 import { RECORD_CREATORS } from '@app/data-inspector/record-creators';
 import { COLLECTION_SOURCES } from '@app/data-inspector/collection-sources';
 import { resolveIdRefOptionsFor } from '@app/views/DataInspector/behavior/id-ref-options';
-import { required } from '../required';
+import { required } from '@rotp/asset-extraction/testing';
 
 const stubApi = () => ({
   allocateTag: vi.fn(),

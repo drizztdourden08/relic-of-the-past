@@ -6,7 +6,7 @@ import type * as KindDataModule from '@app/views/DataInspector/behavior/kind-dat
 import type * as WindowedModule from '@app/views/DataInspector/behavior/windowed-rows';
 import type * as ReachForModule from '@app/views/DataInspector/behavior/reach-for';
 import { describeDataset } from '../dataset-guard';
-import { required } from '../required';
+import { required } from '@rotp/asset-extraction/testing';
 
 let loadKindData: typeof KindDataModule.loadKindData;
 let orderedRows: typeof WindowedModule.orderedRows;

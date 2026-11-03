@@ -2,7 +2,7 @@
 import { describe, it, expect } from 'vitest';
 import { playerStates, PlayerState } from '@rotp/game-core';
 import type { PlayerStateInfo } from '@rotp/game-core';
-import { required } from '../required';
+import { required } from '@rotp/asset-extraction/testing';
 
 const info = (over: Partial<PlayerStateInfo> = {}): PlayerStateInfo => ({
   handlerState: PlayerState.ground,

@@ -3,7 +3,7 @@ import { describe, it, expect } from 'vitest';
 import { createSaveStore } from '@drizztdourden08/brock-port-kit';
 import { autoSaves, normalSaves, quickSlotInfos } from '@app/storage/save-files';
 import { createMemFileStore } from './mem-file-store';
-import { required } from '../required';
+import { required } from '@rotp/asset-extraction/testing';
 
 const bytes = (n: number, fill: number): Uint8Array => new Uint8Array(n).fill(fill);
 const P = 'p1';

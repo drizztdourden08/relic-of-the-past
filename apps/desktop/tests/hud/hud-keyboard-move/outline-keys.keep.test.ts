@@ -5,7 +5,7 @@ import { act, createElement as h } from 'react';
 import { OutlinePanel } from '@app/views/HudLayoutEditor/sub-components/OutlinePanel';
 import { DOC } from './keyboard-move.constants';
 import { installPanelHarness } from './install-panel-harness';
-import { required } from '../../required';
+import { required } from '@rotp/asset-extraction/testing';
 
 const { mount } = installPanelHarness();
 

@@ -4,7 +4,7 @@ import { createRequire } from 'node:module';
 import { join, resolve } from 'node:path';
 import { beforeAll, describe, expect, it } from 'vitest';
 import { REPO_ROOT } from '../repo-root';
-import { required } from '../required';
+import { required } from '@rotp/asset-extraction/testing';
 
 const ROOT = REPO_ROOT;
 const WASM_JS = resolve(ROOT, 'apps/desktop/public/wasm/zelda3.js');
