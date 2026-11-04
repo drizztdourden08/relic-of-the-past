@@ -1,5 +1,5 @@
 /* @layer renderer-app @kind constants */
-import type { RatioKeys } from '../ratio-patch';
+import type { RatioKeys } from '../ratio-patch.type';
 
 const ASPECT_OPTIONS = [
   { value: '4:3', label: '4:3' },

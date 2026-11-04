@@ -1,5 +1,5 @@
 /* @layer renderer-app @kind constants */
-import type { RatioKeys } from '../ratio-patch';
+import type { RatioKeys } from '../ratio-patch.type';
 
 const REQUIRES_LINEAR = new Set(['21:9']);
 const REQUIRES_ULTRAWIDE = new Set(['32:9']);
