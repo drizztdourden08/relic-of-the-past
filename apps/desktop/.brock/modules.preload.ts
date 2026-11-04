@@ -7,6 +7,7 @@ import toolsPreload from '@drizztdourden08/brock-tools/preload';
 import catalogPreload from '@drizztdourden08/brock-catalog/preload';
 import portKitPreload from '@drizztdourden08/brock-port-kit/preload';
 import inputPreload from '@drizztdourden08/brock-input/preload';
+import mcpPreload from '@drizztdourden08/brock-mcp/preload';
 
 const preloadNamespaces: PreloadNamespace[] = [
   updaterPreload,
@@ -16,6 +17,7 @@ const preloadNamespaces: PreloadNamespace[] = [
   catalogPreload,
   portKitPreload,
   inputPreload,
+  mcpPreload,
 ];
 
 export { preloadNamespaces };

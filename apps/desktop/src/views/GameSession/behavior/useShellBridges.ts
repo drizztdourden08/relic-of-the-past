@@ -3,12 +3,14 @@ import { useEffect, useRef } from 'react';
 import { nav, useBootStore, useSetAppContext, widgets } from '@drizztdourden08/brock-react';
 import { useDataViewStore } from '@app/stores/data-view-store';
 import { startupWidgets } from '@app/launch-flags/startup-widgets';
+import { useAppMcpTools } from '@app/mcp-tools';
 import { GAME_CONTEXT, DATA_INSPECTOR_SCREEN } from '../GameSession.constants';
 import { useNavigationOverlayFollowsWidget } from './useNavigationOverlayFollowsWidget';
 
 const useShellBridges = (isGameRunning: boolean): void => {
   useSetAppContext(GAME_CONTEXT, isGameRunning);
   useNavigationOverlayFollowsWidget();
+  useAppMcpTools();
   const registerInspectorOpener = useDataViewStore((state) => state.registerInspectorOpener);
   const ready = useBootStore((s) => s.phase === 'ready');
   const opened = useRef(false);

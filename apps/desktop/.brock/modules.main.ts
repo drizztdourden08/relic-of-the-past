@@ -7,6 +7,7 @@ import toolsMain from '@drizztdourden08/brock-tools/main';
 import catalogMain from '@drizztdourden08/brock-catalog/main';
 import portKitMain from '@drizztdourden08/brock-port-kit/main';
 import inputMain from '@drizztdourden08/brock-input/main';
+import mcpMain from '@drizztdourden08/brock-mcp/main';
 
 const mainModules: MainModule[] = [
   updaterMain,
@@ -16,6 +17,7 @@ const mainModules: MainModule[] = [
   catalogMain,
   portKitMain,
   inputMain,
+  mcpMain,
 ];
 
 export { mainModules };

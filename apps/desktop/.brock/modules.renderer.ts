@@ -7,6 +7,7 @@ import toolsRenderer from '@drizztdourden08/brock-tools/renderer';
 import catalogRenderer from '@drizztdourden08/brock-catalog/renderer';
 import portKitRenderer from '@drizztdourden08/brock-port-kit/renderer';
 import inputRenderer from '@drizztdourden08/brock-input/renderer';
+import mcpRenderer from '@drizztdourden08/brock-mcp/renderer';
 
 const rendererModules: RendererModule[] = [
   updaterRenderer,
@@ -16,6 +17,7 @@ const rendererModules: RendererModule[] = [
   catalogRenderer,
   portKitRenderer,
   inputRenderer,
+  mcpRenderer,
 ];
 
 export { rendererModules };
