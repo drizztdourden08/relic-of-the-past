@@ -91,6 +91,6 @@ interface LobbyLineProps {
 }
 
 export type {
-  ConnectModeProps, ConnectionSectionProps, LobbyCodeFieldProps, LobbyLineProps, LobbyAccess, LobbyLineState, LobbyRow, LobbyRowsProps, LobbySetupProps,
+  ConnectModeProps, ConnectionSectionProps, LobbyCodeFieldProps, LobbyLineProps, LobbyLineState, LobbyRow, LobbyRowsProps, LobbySetupProps,
   NetworkWarningProps, RefreshButtonProps, RemoteAddressProps, SeatFieldProps,
 };
