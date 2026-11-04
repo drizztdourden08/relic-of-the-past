@@ -1,7 +1,7 @@
 /* @layer renderer-lib @kind logic */
-import { msu } from '@rotp/msu';
+import { alttpMsuConfig, msu } from '@rotp/msu';
 import { platformFiles } from '../platform-files';
 
-const deleteMsuPack = (pack: string) => msu.deletePack(platformFiles(), pack);
+const deleteMsuPack = (pack: string) => msu.deletePack(alttpMsuConfig, platformFiles(), pack);
 
 export { deleteMsuPack };

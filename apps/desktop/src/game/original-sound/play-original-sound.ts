@@ -2,7 +2,8 @@
 import type { PreviewTarget } from '@rotp/game-core';
 import type { PlayOutcome } from '@rotp/msu';
 import { ensurePreviewModule } from '../preview-core';
-import { audioContext, loadOriginalSound, originalSoundState, stopOriginalSound, CONTINUOUS } from '@rotp/msu';
+import { alttpMsuConfig, audioContext, isContinuousTarget, loadOriginalSound, originalSoundState, stopOriginalSound } from '@rotp/msu';
+import { msuHost } from '../msu-session/msu-host';
 
 const playOriginalSound = async (
   target: PreviewTarget,
@@ -11,7 +12,7 @@ const playOriginalSound = async (
 ): Promise<PlayOutcome> => {
   stopOriginalSound();
   if (await ensurePreviewModule() === null) return { started: false, silent: false };
-  const sound = loadOriginalSound(target, soundId);
+  const sound = loadOriginalSound(msuHost, alttpMsuConfig, target, soundId);
   if (sound === null) return { started: false, silent: false };
   if (!sound.audible) return { started: false, silent: true };
 
@@ -19,7 +20,7 @@ const playOriginalSound = async (
   void ctx.resume();
   const source = ctx.createBufferSource();
   source.buffer = sound.buffer;
-  source.loop = CONTINUOUS.includes(target);
+  source.loop = isContinuousTarget(alttpMsuConfig, target);
   source.connect(ctx.destination);
   source.onended = () => {
     const stillCurrent = originalSoundState.playing === source;

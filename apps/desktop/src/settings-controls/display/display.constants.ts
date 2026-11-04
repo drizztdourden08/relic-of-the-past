@@ -1,4 +1,6 @@
 /* @layer renderer-app @kind constants */
+import type { RatioKeys } from '../ratio-patch.type';
+
 const REQUIRES_LINEAR = new Set(['21:9']);
 const REQUIRES_ULTRAWIDE = new Set(['32:9']);
 const TALL_PRESET_VALUES = new Set(['4:5', '3:4']);
@@ -22,8 +24,10 @@ const EXTENDED_ONLY_KEYS = new Set([
   'widescreenSprites', 'widescreenPlayArea', 'offscreenAI', 'cameraLockToViewport', 'smoothTransitions',
 ]);
 
+const ASPECT_KEYS: RatioKeys = { ratio: 'aspectRatio', w: 'customAspectW', h: 'customAspectH' };
+
 const ASPECT_LOCKED_MESSAGE = 'Turn on Extended Rendering to pick a ratio other than 4:3.';
 
 export {
-  ASPECT_DESCRIPTIONS, ASPECT_LOCKED_MESSAGE, EXTENDED_ONLY_KEYS, REQUIRES_LINEAR, REQUIRES_ULTRAWIDE, TALL_PRESETS, TALL_PRESET_VALUES,
+  ASPECT_DESCRIPTIONS, ASPECT_KEYS, ASPECT_LOCKED_MESSAGE, EXTENDED_ONLY_KEYS, REQUIRES_LINEAR, REQUIRES_ULTRAWIDE, TALL_PRESETS, TALL_PRESET_VALUES,
 };

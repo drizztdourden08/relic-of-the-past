@@ -5,6 +5,7 @@
     "**/index.ts",
     "packages/navigation/src/pathfinding/**",
     "apps/store-api/src/window-api.type.ts",
+    "apps/desktop/src/game/msu-session/msu-window.type.ts",
     "packages/randomizer/src/client/local-session-items/**"
   ],
   "ignoreIssues": {

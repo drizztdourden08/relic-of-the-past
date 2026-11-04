@@ -1,7 +1,9 @@
 /* @layer renderer-app @kind component */
-import { AspectRatioControl } from '../AspectRatioControl';
+import { AspectRatioControl } from '@drizztdourden08/brock-display/renderer';
+import { ASPECT_LIMITS } from '@rotp/game-core';
+import { ratioPatch } from '../ratio-patch';
 import { aspectChoices } from './aspect-choices';
-import { ASPECT_DESCRIPTIONS, ASPECT_LOCKED_MESSAGE } from './display.constants';
+import { ASPECT_DESCRIPTIONS, ASPECT_KEYS, ASPECT_LOCKED_MESSAGE } from './display.constants';
 import type { ControlContext } from '../settings-controls.type';
 
 const AspectRatioRow = (props: ControlContext) => {
@@ -19,12 +21,11 @@ const AspectRatioRow = (props: ControlContext) => {
       recommendedNote="Best for most setups."
       customW={settings.customAspectW}
       customH={settings.customAspectH}
-      ratioKey="aspectRatio"
-      wKey="customAspectW"
-      hKey="customAspectH"
-      renderIntoNotch={settings.renderIntoNotch}
-      lockedMessage={disabled ? ASPECT_LOCKED_MESSAGE : undefined}
-      onChange={onChange}
+      limits={ASPECT_LIMITS}
+      letterbox={!settings.renderIntoNotch}
+      disabled={disabled}
+      lockedMessage={ASPECT_LOCKED_MESSAGE}
+      onChange={(change) => onChange(ratioPatch(change, ASPECT_KEYS))}
     />
   );
 };

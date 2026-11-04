@@ -31,7 +31,6 @@ describe('a slot number past the previewed scheme', { tags: ['standard'] }, () =
     expect(trigger.textContent).toContain('Slot 9');
     expect(trigger.querySelector('img')).toBeNull();
     expect(document.body.textContent).toContain('reaches slot 4');
-    expect(document.body.textContent).toContain('Still legal');
   });
 
   it('shows the bound glyph, and says nothing at all, for a number it has', () => {

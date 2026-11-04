@@ -1,6 +1,6 @@
 /* @layer electron-main @kind logic */
 import { open } from 'fs/promises';
-import { MSU1_HEADER_BYTES, MSU1_MAGIC_TEXT } from '@rotp/msu';
+import { MSU1_HEADER_BYTES, MSU1_MAGIC_TEXT } from '@drizztdourden08/brock-msu/format';
 import { MAGIC_BYTES } from './loop-point.constants';
 
 const readLoopSample = async (filePath: string): Promise<number | null> => {

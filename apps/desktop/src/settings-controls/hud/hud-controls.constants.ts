@@ -1,4 +1,6 @@
 /* @layer renderer-app @kind constants */
+import type { RatioKeys } from '../ratio-patch.type';
+
 const ASPECT_OPTIONS = [
   { value: '4:3', label: '4:3' },
   { value: '3:2', label: '3:2' },
@@ -6,6 +8,8 @@ const ASPECT_OPTIONS = [
   { value: '16:10', label: '16:10' },
   { value: 'custom', label: 'Custom' },
 ];
+
+const HUD_RATIO_KEYS: RatioKeys = { ratio: 'hudRatio', w: 'customHudAspectW', h: 'customHudAspectH' };
 
 const TITLE_SETTING_KEYS = new Set(['titleScreen', 'titleMotion', 'titleFollowsProgress', 'titleSword']);
 
@@ -26,5 +30,5 @@ const COLOR_KEYS = [
 ] as const;
 
 export {
-  ASPECT_OPTIONS, COLOR_KEYS, DIALOG_TEXTURE_SCALES, ENHANCED_BOX_KEYS, MODERN_ONLY_KEYS, TITLE_SETTING_KEYS,
+  ASPECT_OPTIONS, COLOR_KEYS, DIALOG_TEXTURE_SCALES, ENHANCED_BOX_KEYS, HUD_RATIO_KEYS, MODERN_ONLY_KEYS, TITLE_SETTING_KEYS,
 };

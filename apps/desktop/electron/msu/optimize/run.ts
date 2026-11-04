@@ -2,7 +2,7 @@
 import { rm, stat } from 'fs/promises';
 import type { OptimizeConversion, OptimizeRunResult } from '@rotp/msu';
 import type { MsuPackManifest } from '@rotp/game-data';
-import { withFileRenamed, withLoopSampleCarried, withSupersededRepointed, synthesizeClassicManifest, trackNumberOf } from '@rotp/msu';
+import { alttpMsuConfig, withFileRenamed, withLoopSampleCarried, withSupersededRepointed, synthesizeClassicManifest, trackNumberOf } from '@rotp/msu';
 import { errMessage } from '../../lib/result';
 import { packFilePath, readPackManifest, refuseInstalledPack, writePackManifest } from '../pack-fs';
 import { describeSource } from './audio-source';
@@ -34,7 +34,7 @@ const manifestToEdit = async (pack: string, names: string[]): Promise<MsuPackMan
     .map((fileName) => ({ fileName, trackNum: trackNumberOf(fileName) }))
     .filter((track): track is { fileName: string; trackNum: number } => track.trackNum !== null);
   if (tracks.length === 0) throw new Error(NO_MANIFEST);
-  return synthesizeClassicManifest(pack, tracks);
+  return synthesizeClassicManifest(alttpMsuConfig, pack, tracks);
 };
 
 const convertPack = async (request: RunRequest): Promise<OptimizeRunResult> => {

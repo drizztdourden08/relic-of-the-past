@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind hook */
 import { useCallback, useRef, useState } from 'react';
-import { createMsuEngine } from '@rotp/msu';
+import { alttpMsuConfig, createMsuEngine } from '@rotp/msu';
 import type { MsuEngine } from '@rotp/msu';
 import { readMsuTrackFile } from '@app/storage/msu-store';
 import { isCurrentSession } from './is-current-session';
@@ -50,7 +50,7 @@ const usePreviewSession = (pack: string | null) => {
       loadBytes: async (fileName) => {
         try { return new Uint8Array(await readMsuTrackFile(pack, fileName)); } catch { return null; }
       },
-      isDeluxe: false,
+      config: alttpMsuConfig,
       musicVolume: () => 100,
       onError: setError,
     });

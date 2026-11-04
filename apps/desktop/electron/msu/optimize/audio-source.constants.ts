@@ -1,5 +1,5 @@
 /* @layer electron-main @kind constants */
-import { MSU1_CHANNELS, MSU1_HEADER_BYTES, MSU1_SAMPLE_RATE } from '@rotp/msu';
+import { MSU1_CHANNELS, MSU1_HEADER_BYTES, MSU1_SAMPLE_RATE } from '@drizztdourden08/brock-msu/format';
 
 const MSU1_EXTENSION = 'pcm';
 
