@@ -2,7 +2,7 @@
 import { describe, expect, it, vi } from 'vitest';
 import { parseSlotData, AP_WORLD_VERSION } from '@rotp/randomizer';
 import { boot, installClientHarness, makeRoom, settle } from './ap-protocol-harness';
-import { required } from '../required';
+import { required } from '@rotp/asset-extraction/testing';
 import type { FakeRoom, FakeServer } from './ap-fake-server';
 
 vi.mock('@app/log-bus', () => {

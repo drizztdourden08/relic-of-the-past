@@ -26,6 +26,9 @@
         ".markdownlint-cli2.mjs",
         "core/wasm-build/*.mjs",
         "tooling/ensure-linux-sdl3-soname.mjs"
+      ],
+      "ignoreDependencies": [
+        "clang-format-node"
       ]
     },
     "tooling/apworld": {
@@ -74,7 +77,9 @@
         "@capacitor/haptics",
         "@capacitor-community/keep-awake",
         "vite-plugin-node-polyfills",
-        "@rotp/workspace"
+        "@rotp/workspace",
+        "png-to-ico",
+        "sharp"
       ]
     },
     "apps/sanctuary": {
@@ -93,6 +98,9 @@
       ],
       "project": [
         "src/**/*.{ts,tsx}"
+      ],
+      "ignoreDependencies": [
+        "vite-plugin-node-polyfills"
       ]
     },
     "apps/store-api": {

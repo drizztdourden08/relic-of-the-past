@@ -2,7 +2,7 @@
 import { describe, expect, it } from 'vitest';
 import defaultJson from '@rotp/hud/data/layouts/default.json';
 import { tryLoadLayout } from '@rotp/hud';
-import { required } from '../required';
+import { required } from '@rotp/asset-extraction/testing';
 import { OUTLINE_MAX_WIDTH } from '@app/compounds/HudNodeRenderer/behavior/hud-node-style.constants';
 import { resolveNodeStyle } from '@app/compounds/HudNodeRenderer/behavior/resolve-node-style';
 import { FIXTURE_COLOURS } from './fixture-colours.constants';

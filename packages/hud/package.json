@@ -14,7 +14,6 @@
     "@drizztdourden08/brock-core": "^0.116.1",
     "@rotp/features": "workspace:*",
     "@rotp/game-data": "workspace:*",
-    "@rotp/input-mapping": "workspace:*",
     "expr-eval": "2.0.2"
   }
 }

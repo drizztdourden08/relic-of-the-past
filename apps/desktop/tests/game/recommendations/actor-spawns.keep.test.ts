@@ -4,7 +4,7 @@ import { all } from '@rotp/game-data';
 import type { DetectionContext, ScreenObservations } from '@rotp/navigation';
 import { detectorFromStrategy, actorStrategy } from '@rotp/navigation';
 import { describeDataset } from '../../dataset-guard';
-import { required } from '../../required';
+import { required } from '@rotp/asset-extraction/testing';
 
 const UNCATALOGUED = Math.max(...all('actor').map(a => a.gameId.spriteType ?? 0)) + 5;
 

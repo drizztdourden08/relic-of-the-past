@@ -14,5 +14,8 @@
     "@drizztdourden08/brock-input": "^0.116.1",
     "@rotp/features": "workspace:*",
     "@rotp/game-data": "workspace:*"
+  },
+  "devDependencies": {
+    "@rotp/asset-extraction": "workspace:*"
   }
 }

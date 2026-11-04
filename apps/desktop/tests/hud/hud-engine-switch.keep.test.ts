@@ -3,7 +3,7 @@ import { describe, expect, it } from 'vitest';
 import { layoutHud, validateLayout, BUILT_IN_LAYOUTS, engineSwitchPatch, resolveValue } from '@rotp/hud';
 import { nodeById, patchNode } from '@app/hud-layout-editing/node-edits';
 import type { HudContainer, HudLayout } from '@rotp/hud';
-import { required } from '../required';
+import { required } from '@rotp/asset-extraction/testing';
 import { FIXTURE_COLOURS } from './fixture-colours.constants';
 
 const VIEW = { w: 398, h: 224 };

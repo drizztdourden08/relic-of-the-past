@@ -3,7 +3,7 @@ import { describe, expect, it } from 'vitest';
 import { generatePlacement, pondDemandsOfSnapshot, POND_PRIZE_LOCATIONS } from '@rotp/randomizer';
 import { DELIVERABLE, EMPTY, MIXED_ASK, SEEDS } from './pond-generation.constants';
 import { snapshotOf } from '../rule-parity-harness/snapshot-of';
-import { required } from '../../required';
+import { required } from '@rotp/asset-extraction/testing';
 
 describe('pond demands come from the seed, so a preview cannot lie', { tags: ['standard'] }, () => {
   const snapshot = snapshotOf(MIXED_ASK);

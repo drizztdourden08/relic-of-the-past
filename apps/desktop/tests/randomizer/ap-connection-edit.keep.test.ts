@@ -11,7 +11,7 @@ import { absorbPort, draftError, draftOf, patchOf } from '@app/hooks/randomizer/
 import { createMemFileStore } from '../storage/mem-file-store';
 import { createFakeServer } from './ap-fake-server';
 import { createFakeCore } from './ap-fake-core';
-import { required } from '../required';
+import { required } from '@rotp/asset-extraction/testing';
 import type { FakeServer } from './ap-fake-server';
 import type { OnlineSessionConfig, RandomizerOptionsSnapshot } from '@rotp/randomizer';
 import type { ProfileRandomizerConfig, RandomizerConnectionPatch } from '@app/profiles/types';

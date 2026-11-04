@@ -2,7 +2,7 @@
 import { describe, expect, it } from 'vitest';
 import { POTION_CAULDRONS, potionPriceStateOfValues, bottleContentKeyOf } from '@rotp/randomizer';
 import { bottleContentRowsOf } from '@app/compounds/ShopPricesBlock/behavior/bottle-content-rows';
-import { required } from '../../required';
+import { required } from '@rotp/asset-extraction/testing';
 import { ALL_PRICES } from './potion-price-rule.constants';
 import { scopeWith } from './scope-with';
 import { valuesOf } from './values-of';

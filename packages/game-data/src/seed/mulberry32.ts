@@ -1,5 +1,5 @@
-/* @layer renderer-lib @kind logic */
-import { MULBERRY_INCREMENT, UINT32_RANGE } from './prng.constants';
+/* @layer shared-game @kind logic */
+import { MULBERRY_INCREMENT, UINT32_RANGE } from './seed.constants';
 
 const mulberry32 = (seed: number): (() => number) => {
   let state = seed >>> 0;

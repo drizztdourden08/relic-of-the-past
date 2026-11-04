@@ -8,7 +8,7 @@ import {
 import { grids } from './grids';
 import { makeSprite } from './make-sprite';
 import { makeTables } from './make-tables';
-import { required } from '../../required';
+import { required } from '@rotp/asset-extraction/testing';
 
 describeDataset('evaluateRoomThreat and the line of fire', { tags: ['critical'] }, () => {
   it('is blocked by a wall between the only standable tile and the target', () => {

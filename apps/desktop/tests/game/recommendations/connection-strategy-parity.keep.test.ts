@@ -9,7 +9,7 @@ import { CONNECTION_ISSUE, connectionIssues } from '@app/nav-widget/connection-i
 import { describeConnectionTiles, findFloodForTarget } from '@app/nav-widget/connection-tile-display';
 import { connectionStrategy } from '@app/nav-widget/recommendations/strategies/connection/connection-strategy';
 import { describeDataset } from '../../dataset-guard';
-import { required } from '../../required';
+import { required } from '@rotp/asset-extraction/testing';
 
 const navDetector = detectorFromStrategy(connectionStrategy);
 

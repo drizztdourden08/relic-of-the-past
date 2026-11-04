@@ -33,13 +33,11 @@ catalog:
   electron-vite: ^5.0.0
   esbuild: ^0.25.0
   eslint: ^10.4.0
-  eslint-plugin-react-hooks: ^7.1.1
   jose: ^6.2.12
   jscpd: ^4.0.5
   jsdom: ^29.1.1
   knip: ^5.65.0
   markdownlint-cli2: ^0.22.1
-  node-addon-api: ^8.9.1
   playwright: ^1.60.0
   pngjs: ^7.0.0
   react: ^19.2.6
@@ -47,7 +45,6 @@ catalog:
   stylelint: ^17.13.0
   stylelint-config-standard: ^40.0.0
   typescript: ^6.0.3
-  typescript-eslint: ^8.60.1
   velopack: ^1.2.110-ge826545
   vite: ^7.3.3
   vitest: ^4.1.7

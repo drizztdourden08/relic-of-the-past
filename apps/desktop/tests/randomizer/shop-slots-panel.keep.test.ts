@@ -10,7 +10,7 @@ import { defaultShopScope, SHOP_IDS, STANDARD_SHOP_SLOT_COUNT, DEFAULT_OFF_SHOPS
 import { EMPTY_RANDOMIZER_FORM } from '@app/views/DataManager/sub-components/profile-manager/build-randomizer-config';
 import { snapshotOfChoices } from '@app/hooks/randomizer/randomizer-choices';
 import type { ShopScope } from '@rotp/randomizer';
-import { required } from '../required';
+import { required } from '@rotp/asset-extraction/testing';
 
 const STALE_COUNT = 12;
 

@@ -1,4 +1,5 @@
 /* @layer shared-game @kind logic */
+import { mulberry32 } from '@rotp/game-data';
 import { hashSeed } from './hash-seed';
 import type { Rng } from './rng.type';
 
@@ -9,15 +10,7 @@ const swapAt = <T>(list: T[], i: number, j: number): void => {
 };
 
 const createRng = (seed: string): Rng => {
-  let state = hashSeed(seed);
-
-  const next = (): number => {
-    state = (state + 0x6d2b79f5) >>> 0;
-    let t = state;
-    t = Math.imul(t ^ (t >>> 15), t | 1);
-    t ^= t + Math.imul(t ^ (t >>> 7), t | 61);
-    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
-  };
+  const next = mulberry32(hashSeed(seed));
 
   const int = (maxExclusive: number): number => Math.floor(next() * maxExclusive);
 

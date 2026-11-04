@@ -4,7 +4,7 @@ import { BURST_LIMIT, BURST_WINDOW_MS, queueNotice } from '@rotp/randomizer';
 import { ONLINE_NOTICE_DEFAULTS } from '@rotp/game-core';
 import type { OnlineNotice, NoticeEntry } from '@rotp/randomizer';
 import { installClientHarness } from '../ap-protocol-harness';
-import { required } from '../../required';
+import { required } from '@rotp/asset-extraction/testing';
 
 vi.mock('@app/log-bus', () => {
   const quiet = (): void => undefined;

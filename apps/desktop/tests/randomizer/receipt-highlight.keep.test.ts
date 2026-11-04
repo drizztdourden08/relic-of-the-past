@@ -5,7 +5,7 @@ import { HIGHLIGHT_END, HIGHLIGHT_PRIMARY, HIGHLIGHT_SECONDARY, stripHighlight, 
 import { primary, secondary, renderReceiptMessage, renderFromServer, renderJunk, renderOnline, renderProgressive, pondDemandLinesOf, renderCapacityStep, foreignItemLine } from '@rotp/randomizer';
 import { hexToSnes15, dialogueCharsetOf } from '@rotp/game-data';
 import type { ReceiptLine } from '@rotp/game-core';
-import { required } from '../required';
+import { required } from '@rotp/asset-extraction/testing';
 
 const US = required(kLanguages.us, 'US language');
 const WIDTHS = new Uint8Array(US.alphabet.length).fill(6);

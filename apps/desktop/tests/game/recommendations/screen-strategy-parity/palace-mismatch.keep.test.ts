@@ -4,7 +4,7 @@ import { findOne, getScreenLookup, clearPalaceMismatches, getPalaceMismatches, s
 import type { ScreenRecord, ScreenMatchResult } from '@rotp/game-data';
 import type { ScreenObservations } from '@rotp/navigation';
 import { describeDataset } from '../../../dataset-guard';
-import { required } from '../../../required';
+import { required } from '@rotp/asset-extraction/testing';
 import { WRONG_PALACE } from './screen-strategy-parity.constants';
 import { contextFor } from './context-for';
 import { dungeonScreen } from './dungeon-screen';

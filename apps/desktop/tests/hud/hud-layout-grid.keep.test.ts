@@ -2,7 +2,7 @@
 import { describe, expect, it } from 'vitest';
 import { gridCellRects, layoutHud, placedById } from '@rotp/hud';
 import type { HudGridContainer, HudLayout, HudNode } from '@rotp/hud';
-import { required } from '../required';
+import { required } from '@rotp/asset-extraction/testing';
 
 const VIEW = { w: 400, h: 200 };
 const ROWS = [{ px: 20 }, { px: 20 }, { px: 20 }, { px: 20 }];

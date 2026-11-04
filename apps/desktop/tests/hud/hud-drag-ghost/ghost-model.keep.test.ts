@@ -6,7 +6,7 @@ import {
 import { outlineIntent } from '@app/hud-layout-editing/drop-intent';
 import { DOC } from './ghost-doc.constants';
 import { childrenOf, gridOf } from '../hud-node-guards';
-import { required } from '../../required';
+import { required } from '@rotp/asset-extraction/testing';
 
 describe('line 1 states the KIND, in §42\'s vocabulary and no other', { tags: ['critical'] }, () => {
   it('says row, column, grid n×m, overlap and screen but never stack', () => {

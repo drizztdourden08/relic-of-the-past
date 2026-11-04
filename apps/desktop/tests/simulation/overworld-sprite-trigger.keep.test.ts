@@ -4,7 +4,7 @@ import type { SimSprite } from '@rotp/navigation';
 import { planSpriteTrigger } from '@rotp/navigation';
 import { find } from '@rotp/game-data';
 import { describeDataset } from '../dataset-guard';
-import { required } from '../required';
+import { required } from '@rotp/asset-extraction/testing';
 
 const KING_ZORA_TYPE = 0x52;
 const ZORAS_DOMAIN_SCREEN = 0x0f;

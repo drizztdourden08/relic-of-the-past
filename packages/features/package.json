@@ -12,5 +12,8 @@
   "dependencies": {
     "@rotp/game-data": "workspace:*",
     "@rotp/hub-contracts": "workspace:*"
+  },
+  "devDependencies": {
+    "@rotp/asset-extraction": "workspace:*"
   }
 }

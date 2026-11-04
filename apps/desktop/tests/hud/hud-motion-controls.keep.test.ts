@@ -11,7 +11,7 @@ import {
 } from '@app/hud-layout-editing/transition-edits';
 import { validateTransition, validateAnimations, collectReflowWarnings, easingFn, sampleKeyframes } from '@rotp/hud';
 import type { HudAnimationKeyframe, HudFlexContainer, HudNode } from '@rotp/hud';
-import { required } from '../required';
+import { required } from '@rotp/asset-extraction/testing';
 
 const SCOPE = { life_current: 8 };
 const TWO: HudAnimationKeyframe[] = [{ at: 0, value: 1 }, { at: 1, value: 1.1 }];

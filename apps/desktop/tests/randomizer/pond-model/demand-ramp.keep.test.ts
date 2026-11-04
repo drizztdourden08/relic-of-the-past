@@ -2,7 +2,7 @@
 import { describe, expect, it } from 'vitest';
 import { baselineValues, parsePondSetting, pondPlanOf, rollPondDemands, POND_ASK_ROW_BY_KIND, pondRupeesOnlyAsk, curvePositionsOf, POND_INSTANCE_BY_ID, REFERENCE_CAPACITY_PROFILE, createRng } from '@rotp/randomizer';
 import type { CurveId, PondAskAmountKind, PondAskSetting, PondSetting } from '@rotp/randomizer';
-import { required } from '../../required';
+import { required } from '@rotp/asset-extraction/testing';
 import { CURVES } from './pond-model.constants';
 
 const kindAsk = (kind: PondAskAmountKind, min: number, max: number) => {

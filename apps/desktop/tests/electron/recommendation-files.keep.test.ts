@@ -9,7 +9,7 @@ import {
   loadRecommendationFile, queued, recommendationStorage,
 } from '../../electron/recommendations/recommendation-files';
 import type { Recommendation } from '@rotp/navigation';
-import { required } from '../required';
+import { required } from '@rotp/asset-extraction/testing';
 
 let root = '';
 

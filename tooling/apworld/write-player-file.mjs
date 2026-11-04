@@ -1,7 +1,7 @@
 /* @layer tooling-scripts @kind logic */
 import { mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import path from 'node:path';
-import { createSsrServer } from '../lib/create-ssr-server.mjs';
+import { createSsrServer } from '@rotp/ssr-server';
 import { APP_PACKAGE_JSON, ROOT } from './apworld.constants.mjs';
 import { parsePlayerFileArgs } from './player-file-args.mjs';
 

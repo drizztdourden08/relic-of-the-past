@@ -10,7 +10,7 @@ import type { HudGridContainer, HudLayout } from '@rotp/hud';
 import { VIEW } from './grid-editor.constants';
 import { installGridRig } from './install-grid-rig';
 import { screenRoot } from './screen-root';
-import { required } from '../../required';
+import { required } from '@rotp/asset-extraction/testing';
 
 const { mount, cell, header, down, press, toolbarKeys, status, mountGrid } = installGridRig();
 

@@ -3,7 +3,7 @@ import { describe, expect, it } from 'vitest';
 import defaultJson from '@rotp/hud/data/layouts/default.json';
 import { BUILT_IN_LAYOUTS, layoutById, loadLayout, tryLoadLayout, layoutHud } from '@rotp/hud';
 import type { HudLayout } from '@rotp/hud';
-import { required } from '../required';
+import { required } from '@rotp/asset-extraction/testing';
 
 const VIEW = { w: 398, h: 224 };
 
