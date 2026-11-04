@@ -1,4 +1,5 @@
 /* @layer shared-game @kind logic */
+import { createRng } from '../../rng';
 import { buildRolledFillWorld } from '../../world/fill/build-rolled-fill-world';
 import { pondDemandsOfSnapshot } from '../../world/fill/pond-demands-of-snapshot';
 import type { DeliverableSets } from '../../world/fill/fill-options-from-snapshot';
@@ -9,7 +10,7 @@ const profileFillWorld = (
   seed: string, snapshot: RandomizerOptionsSnapshot, deliverable: DeliverableSets = {},
 ): FillWorld => {
   const pondDemands = pondDemandsOfSnapshot(snapshot, seed, deliverable);
-  return buildRolledFillWorld({ seed, rngSeed: seed, snapshot, deliverable, pondDemands }).fillWorld;
+  return buildRolledFillWorld({ seed, rng: createRng(seed), snapshot, deliverable, pondDemands }).fillWorld;
 };
 
 export { profileFillWorld };

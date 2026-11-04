@@ -1,9 +1,11 @@
 /* @layer shared-game @kind types */
-import type { CheckId } from '@rotp/game-data';
+import type {
+  AssumedState as WorldAssumedState, FillRestrictiveInput as WorldFillRestrictiveInput,
+  PlacementSphere as WorldPlacementSphere, PlacementSweep as WorldPlacementSweep,
+} from '@drizztdourden08/brock-randomizer/world';
 import type { ItemKey } from '../item-ids';
 import type { LocationKey } from '../location-key';
-import type { World } from '../world.type';
-import type { CollectionState } from '../collection-state';
+import type { RotpWorld } from '../world.type';
 import type { Rng } from '../../rng';
 import type { OptionValues, RandomizerOptionsSnapshot } from '../options.type';
 import type { AccessibilityMode } from '../accessibility/accessibility.type';
@@ -60,41 +62,13 @@ interface SnapshotFillFlags {
 
 type FillPickers = Pick<FillWorldOptions, 'pickBottle' | 'pickWeapon' | 'pickFiller'>;
 
-interface FillRestrictiveInput {
-  world: World;
-  items: ItemKey[];
-  locations: LocationKey[];
-  assumedItems?: readonly ItemKey[];
-  allowedAt?: (item: ItemKey, location: LocationKey) => boolean;
-  relaxWhenBeatable?: boolean;
-}
+type FillRestrictiveInput = WorldFillRestrictiveInput<RotpWorld>;
 
-interface SwapRun {
-  world: World;
-  items: ItemKey[];
-  assumedItems: readonly ItemKey[];
-  placedHere: LocationKey[];
-  swapCounts: Map<ItemKey, number>;
-  fits: (state: CollectionState, item: ItemKey, location: LocationKey, checkAccess: boolean) => boolean;
-}
+type AssumedState = WorldAssumedState<RotpWorld>;
 
-interface AssumedState {
-  state: CollectionState;
-  collectedLocations: Set<LocationKey>;
-}
+type PlacementSphere = WorldPlacementSphere<RotpWorld>;
 
-interface PlacementSphere {
-  index: number;
-  locations: LocationKey[];
-}
-
-interface PlacementSweep {
-  spheres: PlacementSphere[];
-  collected: Set<LocationKey>;
-  uncollected: LocationKey[];
-  missedEvents: CheckId[];
-  beaten: boolean;
-}
+type PlacementSweep = WorldPlacementSweep<RotpWorld>;
 
 interface PlacementStatsInput {
   fillWorld: FillWorld;
@@ -110,13 +84,6 @@ interface RollInput {
   rng: Rng;
 }
 
-interface PlacementAttempt {
-  seed: string;
-  attemptSeed: string;
-  snapshot: RandomizerOptionsSnapshot;
-  attempts: number;
-}
-
 interface DungeonOwnership {
   locationDungeon: Map<LocationKey, string>;
   itemDungeon: Map<ItemKey, string>;
@@ -124,5 +91,5 @@ interface DungeonOwnership {
 
 export type {
   AssumedState, DeliverableLists, DeliverableSets, DungeonOwnership, FillPickers, FillRestrictiveInput, GenerateRequest,
-  PlacementAttempt, PlacementSphere, PlacementStatsInput, PlacementSweep, RollInput, SnapshotFillFlags, SwapRun,
+  PlacementSphere, PlacementStatsInput, PlacementSweep, RollInput, SnapshotFillFlags,
 };

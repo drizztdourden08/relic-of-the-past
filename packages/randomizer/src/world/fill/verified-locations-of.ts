@@ -1,6 +1,6 @@
 /* @layer shared-game @kind logic */
 import { accessibilityFailures } from '../accessibility/accessibility-check';
-import { FillError } from './fill-error';
+import { FillError } from '@drizztdourden08/brock-randomizer/world';
 import { verifyStandardEscape } from './verify-standard';
 import type { ItemKey } from '../item-ids';
 import type { LocationKey } from '../location-key';
