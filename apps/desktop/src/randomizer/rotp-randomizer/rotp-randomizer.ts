@@ -2,7 +2,6 @@
 import { PLACEMENT_SCHEMAS, rotpWorldGame } from '@rotp/randomizer';
 import type { DeliveryAction, Placement } from '@rotp/randomizer';
 import { defineRandomizerGame } from '@drizztdourden08/brock-randomizer';
-import type { RandomizerWorldGame } from '@drizztdourden08/brock-randomizer/world';
 import './rotp-randomizer.augment.type';
 import { rotpApplier } from './rotp-applier';
 import { rotpApStateStore } from './rotp-ap-state-store';
@@ -17,7 +16,7 @@ import { rollRotpPlacement } from './rotp-roll';
 
 const rotpRandomizer = defineRandomizerGame<Placement, DeliveryAction>({
   id: 'rotp',
-  world: rotpWorldGame as unknown as RandomizerWorldGame,
+  world: rotpWorldGame,
   placementSchemas: PLACEMENT_SCHEMAS,
   core: rotpCoreSignal,
   roll: rollRotpPlacement,
