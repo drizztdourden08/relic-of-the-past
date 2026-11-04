@@ -1,7 +1,7 @@
 /* @layer renderer-lib @kind logic */
-import { msu } from '@rotp/msu';
+import { alttpMsuConfig, msu } from '@rotp/msu';
 import { platformFiles } from '../platform-files';
 
-const listMsuAudioFiles = (pack: string) => msu.listAudioFiles(platformFiles(), pack);
+const listMsuAudioFiles = (pack: string) => msu.listAudioFiles(alttpMsuConfig, platformFiles(), pack);
 
 export { listMsuAudioFiles };
