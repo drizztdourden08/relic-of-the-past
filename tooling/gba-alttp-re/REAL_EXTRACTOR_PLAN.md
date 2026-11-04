@@ -1,3 +1,4 @@
+<!-- @layer tooling-scripts @kind doc -->
 # ALttP GBA supplement extractor plan
 
 ## Current answer

@@ -1,5 +1,6 @@
 /* @layer bridge-wasm @kind logic */
 import { AP_WORLD_VERSION, lobbyInfo, lobbyInfoProblems } from '@rotp/randomizer';
+import type { LobbyRef } from '@rotp/randomizer';
 import { loadBuildsIndex } from '@app/archipelago/world-package';
 import { pickBuild } from '../builds/pick-build';
 import { unsupportedVersionText } from '../builds/unsupported-version-text';
@@ -11,9 +12,9 @@ import type { LobbyCheck } from './lobby-check.type';
 
 const errorOf = (text: string, code: string): LobbyCheck => ({ kind: 'error', text, code });
 
-const checkLobby = async (server: string, code: string): Promise<LobbyCheck> => {
-  const result = await lobbyInfo(server, code, { createSocket: createMainSocket });
-  if (!result.ok) return errorOf(formErrorOf(result.failure, server), result.failure.code);
+const checkLobby = async (server: string, ref: LobbyRef): Promise<LobbyCheck> => {
+  const result = await lobbyInfo(server, ref, { createSocket: createMainSocket });
+  if (!result.ok) return errorOf(formErrorOf(result.failure, server, ref), result.failure.code);
   const { lobby } = result.info;
   const index = await loadBuildsIndex();
   if (index === null) return errorOf(NO_BUILDS_INDEX, 'no-builds-index');
@@ -26,7 +27,7 @@ const checkLobby = async (server: string, code: string): Promise<LobbyCheck> => 
     client, archipelagoVersion: build.archipelagoVersion, worldVersion: AP_WORLD_VERSION, worldBytes: build.size, yamlBytes: [],
   })[0];
   if (problem !== undefined) return errorOf(problem.message, problem.code);
-  return { kind: 'ok', server, code, name: lobby.name, ap: lobby.engine.ap, approval: lobby.admission === 'host-approval', seats: lobby.seats ?? [], ...(lobby.open === undefined ? {} : { open: lobby.open }), build };
+  return { kind: 'ok', server, lobby: ref, name: lobby.name, ap: lobby.engine.ap, approval: lobby.admission === 'host-approval', seats: lobby.seats ?? [], ...(lobby.open === undefined ? {} : { open: lobby.open }), build };
 };
 
 export { checkLobby };

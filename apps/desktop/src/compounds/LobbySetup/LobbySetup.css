@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind style */
 
-.lobby-setup__lan-row--closed {
+.lobby-setup__row--closed {
   opacity: var(--opacity-disabled);
 }
 

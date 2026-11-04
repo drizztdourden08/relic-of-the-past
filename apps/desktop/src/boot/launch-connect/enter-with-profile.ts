@@ -17,9 +17,9 @@ const holdsOtherLobby = (profile: Profile, membership: ArchipeliaMembership): bo
 
 const enterWithProfile = async (profile: Profile, server: string, code: string): Promise<Profile | null> => {
   const membership = await readMembership(profile.id);
-  if (membership !== null && isSameLobby(membership, server, code)) return resumeWithProfile(profile, membership);
+  if (membership !== null && isSameLobby(membership, server, { code })) return resumeWithProfile(profile, membership);
   if (membership !== null && holdsOtherLobby(profile, membership)) {
-    return refuse(`profile "${profile.name}" belongs to lobby ${membership.code} on ${membership.server}, not ${code}; name another profile with --profile-name`);
+    return refuse(`profile "${profile.name}" belongs to lobby ${membership.lobby.code ?? membership.lobbyName} on ${membership.server}, not ${code}; name another profile with --profile-name`);
   }
   const check = await checkedLobby(server, code);
   return check === null ? null : joinWithProfile(profile, check);

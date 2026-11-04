@@ -1,7 +1,7 @@
 /* @layer renderer-components @kind constants */
 import type { PatternLists, PatternSlotConfigs } from '@drizztdourden08/tessera/composites';
 import { HOST_NAME } from '@app/hooks/randomizer/lobby-setup';
-import type { LobbyLocation } from '@app/hooks/randomizer/lobby-setup';
+import type { LobbyConnect, LobbyLocation } from '@app/hooks/randomizer/lobby-setup';
 import { LOBBY_CODE_ALPHABET } from '@rotp/randomizer';
 
 const LOCATION_OPTIONS: { value: LobbyLocation; label: string }[] = [
@@ -9,6 +9,20 @@ const LOCATION_OPTIONS: { value: LobbyLocation; label: string }[] = [
   { value: 'lan', label: 'LAN' },
   { value: 'remote', label: 'Remote' },
 ];
+
+const CONNECT_OPTIONS: { value: LobbyConnect; label: string }[] = [
+  { value: 'auto', label: 'Auto' },
+  { value: 'manual', label: 'Manual' },
+];
+
+const NO_LOBBIES_HINT =
+  'No lobbies found. In Archipelia, turn on Show on the network for the lobby, or switch to Manual and paste the session code.';
+
+const NETWORK_BLOCKED = 'Network access is blocked for Relic of the Past.';
+
+const REMOTE_NEEDS_ADDRESS = 'A remote lobby is joined by address';
+
+const NAME_PLACEHOLDER = 'Player Name / Slot Name';
 
 const ANY_SEAT = '__any-seat__';
 
@@ -49,4 +63,6 @@ const ADDRESS_SLOTS: PatternSlotConfigs = {
   port: { label: 'Port', placeholder: 'port' },
 };
 
-export { ADDRESS_LISTS, ANY_SEAT, ANY_SEAT_OPTION, ADDRESS_SLOTS, CODE_PATTERN, CODE_SLOTS, HOST_PATTERN, IP_PATTERN, LOCATION_OPTIONS };
+export {
+  ADDRESS_LISTS, ANY_SEAT, ANY_SEAT_OPTION, ADDRESS_SLOTS, CODE_PATTERN, CODE_SLOTS, CONNECT_OPTIONS, HOST_PATTERN, IP_PATTERN, LOCATION_OPTIONS, NAME_PLACEHOLDER, NETWORK_BLOCKED, NO_LOBBIES_HINT, REMOTE_NEEDS_ADDRESS,
+};

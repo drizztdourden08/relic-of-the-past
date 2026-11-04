@@ -24,6 +24,7 @@ const registerLobbySocketHandlers = (): void => {
     const { sender } = event;
     closeWithWindow(sender);
     sockets.open(sender.id, id, url, (socketEvent) => {
+      if (sender.isDestroyed()) return;
       const win = BrowserWindow.fromWebContents(sender);
       if (win) emit(win, 'lobby-socket:event', socketEvent);
     });

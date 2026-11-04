@@ -1,14 +1,15 @@
 /* @layer renderer-components @kind types */
 import type { PatternValue } from '@drizztdourden08/tessera/composites';
-import type { LobbyDraft } from '@app/hooks/randomizer/lobby-setup';
+import type { LobbyConnect, LobbyDraft, LobbyLocation } from '@app/hooks/randomizer/lobby-setup';
 
-interface LanServerRow {
+interface LobbyRow {
   id: string;
   name: string;
   address: string;
-  ap: string;
+  ap?: string;
   supported: boolean;
   open: boolean;
+  seats: string;
 }
 
 type LobbyLineState =
@@ -17,18 +18,58 @@ type LobbyLineState =
   | { kind: 'ok'; name: string; ap: string; approval: boolean; seats: readonly string[]; open?: { total: number; free: number } }
   | { kind: 'error'; text: string };
 
+interface LobbyAccess {
+  refreshing: boolean;
+  onRefresh: () => void;
+  blocked: boolean;
+  onAllow: () => void;
+}
+
 interface LobbySetupProps {
   value: LobbyDraft;
   onChange: (part: Partial<LobbyDraft>) => void;
-  servers: readonly LanServerRow[];
+  lobbies: readonly LobbyRow[];
   lobby: LobbyLineState;
+  access?: LobbyAccess;
   disabled?: boolean;
 }
 
-interface LanServerRowsProps {
-  servers: readonly LanServerRow[];
+interface RefreshButtonProps {
+  access: LobbyAccess;
+  disabled: boolean;
+}
+
+interface NetworkWarningProps {
+  onAllow: () => void;
+}
+
+interface LobbyRowsProps {
+  lobbies: readonly LobbyRow[];
   picked: string | null;
-  onPick: (id: string) => void;
+  onPick: (lobby: LobbyRow) => void;
+  disabled: boolean;
+}
+
+interface LobbyCodeFieldProps {
+  value: PatternValue;
+  onChange: (next: PatternValue) => void;
+  error?: string;
+  disabled: boolean;
+}
+
+interface ConnectionSectionProps {
+  value: LobbyDraft;
+  onChange: (part: Partial<LobbyDraft>) => void;
+  lobbies: readonly LobbyRow[];
+  lobby: LobbyLineState;
+  access?: LobbyAccess;
+  disabled: boolean;
+}
+
+interface ConnectModeProps {
+  mode: LobbyConnect;
+  location: LobbyLocation;
+  onChange: (mode: LobbyConnect) => void;
   disabled: boolean;
 }
 
@@ -49,4 +90,7 @@ interface LobbyLineProps {
   state: LobbyLineState;
 }
 
-export type { LanServerRow, LanServerRowsProps, LobbyLineProps, LobbyLineState, LobbySetupProps, RemoteAddressProps, SeatFieldProps };
+export type {
+  ConnectModeProps, ConnectionSectionProps, LobbyCodeFieldProps, LobbyLineProps, LobbyLineState, LobbyRow, LobbyRowsProps, LobbySetupProps,
+  NetworkWarningProps, RefreshButtonProps, RemoteAddressProps, SeatFieldProps,
+};

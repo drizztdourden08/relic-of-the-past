@@ -1,52 +1,35 @@
 /* @layer renderer-components @kind component */
-import { Field, SegmentedControl, Stack, TextInput } from '@drizztdourden08/tessera/primitives';
-import { DynamicInput } from '@drizztdourden08/tessera/composites';
-import { DEFAULT_SLOT_NAME, slotNameError } from '@rotp/randomizer';
-import { CODE_PATTERN, CODE_SLOTS, LOCATION_OPTIONS } from './LobbySetup.constants';
+import { Field, Grid, SegmentedControl, Stack, TextInput } from '@drizztdourden08/tessera/primitives';
+import { slotNameError } from '@rotp/randomizer';
+import { LOCATION_OPTIONS, NAME_PLACEHOLDER } from './LobbySetup.constants';
 import type { LobbySetupProps } from './LobbySetup.type';
-import { LanServerRows } from './sub-components/LanServerRows';
+import { ConnectionSection } from './sub-components/ConnectionSection';
 import { LobbyLine } from './sub-components/LobbyLine';
-import { RemoteAddress } from './sub-components/RemoteAddress';
 import { SeatField } from './sub-components/SeatField';
 import './LobbySetup.css';
 
 const LobbySetup = (props: LobbySetupProps) => {
-  const { value, onChange, servers, lobby, disabled = false } = props;
+  const { value, onChange, lobbies, lobby, access, disabled = false } = props;
 
   return (
-    <Stack gap="sm" className="lobby-setup">
+    <Stack gap="md" className="lobby-setup">
       <SegmentedControl
         label="Lobby on" value={value.location} options={LOCATION_OPTIONS} disabled={disabled}
-        onChange={(location) => onChange({ location })}
+        onChange={(location) => onChange({ location, joinToken: null, lobbyServer: null })}
       />
-      {value.location === 'lan' && (
-        <LanServerRows servers={servers} picked={value.lanId} onPick={(lanId) => onChange({ lanId })} disabled={disabled} />
-      )}
-      {value.location === 'remote' && (
-        <Field label="Address">
-          <RemoteAddress
-            value={value.address} disabled={disabled}
-            onChange={(address) => onChange({ address })}
+      <ConnectionSection value={value} onChange={onChange} lobbies={lobbies} lobby={lobby} access={access} disabled={disabled} />
+      <LobbyLine state={lobby} />
+      <Grid columns={2} gap="md">
+        {lobby.kind === 'ok' && lobby.seats.length > 0 && (
+          <SeatField seats={lobby.seats} picked={value.seat} onPick={(seat) => onChange({ seat })} disabled={disabled} />
+        )}
+        <Field label="Name" error={slotNameError(value.slotName) ?? undefined}>
+          <TextInput
+            type="text" value={value.slotName} spellCheck={false} placeholder={NAME_PLACEHOLDER} disabled={disabled}
+            onChange={(e) => onChange({ slotName: e.target.value })}
           />
         </Field>
-      )}
-      <Field label="Lobby code" error={lobby.kind === 'error' ? lobby.text : undefined}>
-        <DynamicInput
-          className="lobby-setup__code" pattern={CODE_PATTERN} slots={CODE_SLOTS} value={value.code}
-          disabled={disabled} aria-label="Lobby code"
-          onChange={(code) => onChange({ code })}
-        />
-      </Field>
-      <LobbyLine state={lobby} />
-      {lobby.kind === 'ok' && lobby.seats.length > 0 && (
-        <SeatField seats={lobby.seats} picked={value.seat} onPick={(seat) => onChange({ seat })} disabled={disabled} />
-      )}
-      <Field label="Slot name" error={slotNameError(value.slotName) ?? undefined}>
-        <TextInput
-          type="text" value={value.slotName} spellCheck={false} placeholder={DEFAULT_SLOT_NAME} disabled={disabled}
-          onChange={(e) => onChange({ slotName: e.target.value })}
-        />
-      </Field>
+      </Grid>
     </Stack>
   );
 };

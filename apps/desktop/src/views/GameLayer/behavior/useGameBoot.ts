@@ -1,23 +1,22 @@
 /* @layer renderer-components @kind hook */
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
+import { getGameState } from '../../../game';
 import type { GameBootParams } from './useGameBoot.type';
 
 const useGameBoot = (params: GameBootParams): void => {
-  const { status, canvasKey, canvasRef, hasStartedRef, assetData, configIni, profileId, start, setCanvasKey } = params;
+  const { status, canvasKey, canvasRef, assetData, configIni, profileId, start, setCanvasKey } = params;
+  const bootedKeyRef = useRef<number | null>(null);
 
   useEffect(() => {
-    if (assetData && status === 'idle' && canvasRef.current) {
-      hasStartedRef.current = true;
-      void start(canvasRef.current, assetData, configIni, profileId);
+    if (status !== 'idle') return;
+    if (bootedKeyRef.current === canvasKey) {
+      if (getGameState().status === 'idle') setCanvasKey((k) => k + 1);
+      return;
     }
+    if (!assetData || !canvasRef.current) return;
+    bootedKeyRef.current = canvasKey;
+    void start(canvasRef.current, assetData, configIni, profileId);
   }, [assetData, status, start, configIni, profileId, canvasKey]);
-
-  useEffect(() => {
-    const returnedToIdleAfterRun = status === 'idle' && hasStartedRef.current;
-    if (returnedToIdleAfterRun) {
-      setCanvasKey((k) => k + 1);
-    }
-  }, [status]);
 };
 
 export { useGameBoot };

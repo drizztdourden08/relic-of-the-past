@@ -1,3 +1,4 @@
+<!-- @layer tooling-scripts @kind doc -->
 # Offline extraction boundary
 
 The production target is a deterministic script whose only copyrighted input is the

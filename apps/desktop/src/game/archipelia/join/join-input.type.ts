@@ -1,5 +1,5 @@
 /* @layer bridge-wasm @kind types */
-import type { LobbyClientInfo as ClientInfo } from '@rotp/randomizer';
+import type { LobbyClientInfo as ClientInfo, LobbyRef } from '@rotp/randomizer';
 import type { LobbySession } from '@rotp/randomizer';
 import type { WorldPackageBuild } from '@app/archipelago/world-package';
 import type { ProfileRandomizerConfig } from '@app/profiles/types';
@@ -7,7 +7,7 @@ import type { ArchipeliaMembership } from '../membership/membership.type';
 
 interface JoinInput {
   server: string;
-  code: string;
+  lobby: LobbyRef;
   ap: string;
   slotName: string;
   yaml: string;
@@ -20,7 +20,7 @@ interface JoinInput {
 
 interface StartJoinInput {
   server: string;
-  code: string;
+  lobby: LobbyRef;
   ap: string;
   config: ProfileRandomizerConfig;
   seat?: string;

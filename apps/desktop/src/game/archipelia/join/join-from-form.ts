@@ -15,7 +15,7 @@ const sentOf = (uploads: readonly UploadProgress[]): number => {
 
 const membershipOf = (check: LobbyCheckOk, state: LobbyJoinState): ArchipeliaMembership => ({
   server: check.server,
-  code: check.code,
+  lobby: check.lobby,
   ap: check.ap,
   lobbyName: state.lobby?.name ?? check.name,
   memberId: state.memberId ?? '',
@@ -25,7 +25,7 @@ const membershipOf = (check: LobbyCheckOk, state: LobbyJoinState): ArchipeliaMem
 });
 
 const endOf = (check: LobbyCheckOk, session: LobbySession, event: LobbyEvent, state: LobbyJoinState): JoinOutcome | null => {
-  if (event.type === 'failed') return { ok: false, error: formErrorOf(event.failure, check.server), code: event.failure.code };
+  if (event.type === 'failed') return { ok: false, error: formErrorOf(event.failure, check.server, check.lobby), code: event.failure.code };
   if (event.type === 'closed') return { ok: false, error: formErrorOf({ code: 'closed', message: '' }, check.server), code: 'closed' };
   if (event.type === 'problem' && event.problem.code === 'slot-name-taken') {
     session.leave();
@@ -40,7 +40,7 @@ const joinFromForm = async (
 ): Promise<JoinOutcome> => {
   const picked = wanted === null ? null : pickSeat(check.seats, wanted);
   const seat = picked?.ok === true ? picked.seat : undefined;
-  const started = await startJoin({ server: check.server, code: check.code, ap: check.ap, config, seat });
+  const started = await startJoin({ server: check.server, lobby: check.lobby, ap: check.ap, config, seat });
   if ('error' in started) return { ok: false, error: started.error };
   const { session } = started;
   return new Promise((resolve) => {

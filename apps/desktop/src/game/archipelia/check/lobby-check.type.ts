@@ -1,11 +1,11 @@
 /* @layer bridge-wasm @kind types */
-import type { HeldSeat, OpenSeats } from '@rotp/randomizer';
+import type { HeldSeat, LobbyRef, OpenSeats } from '@rotp/randomizer';
 import type { WorldPackageBuild } from '@app/archipelago/world-package';
 
 interface LobbyCheckOk {
   kind: 'ok';
   server: string;
-  code: string;
+  lobby: LobbyRef;
   name: string;
   ap: string;
   approval: boolean;

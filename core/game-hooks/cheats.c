@@ -1,6 +1,7 @@
 /* @layer core-game-hooks @kind native */
 #include "game_hooks_internal.h"
 #include "cheat_inventory.h"
+#include "src/player.h"
 
 // ─── Debug trace (read by the player control handler in player.c) ───
 int g_cheat_trace_frames = 0;
@@ -315,6 +316,10 @@ int WasmCanReceiveItem(void) {
   // item button, so it reads as a soft-lock (see the barrier/cane report). Wait for the
   // handler to finish.
   if (link_position_mode)
+    return 0;
+  // Must be awake: while the player is asleep in bed at the start of the game the sleeping
+  // handler owns the player, and a receipt over it leaves the player unable to get up.
+  if (link_player_handler_state == kPlayerState_AsleepInBed)
     return 0;
   return 1;
 }

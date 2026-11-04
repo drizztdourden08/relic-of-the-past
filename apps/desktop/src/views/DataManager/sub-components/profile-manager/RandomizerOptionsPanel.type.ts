@@ -13,6 +13,8 @@ interface RandomizerOptionsPanelProps {
   onChange?: (next: RandomizerOptionChoices) => void;
   frozen?: RandomizerOptionsSnapshot;
   mode?: ProfileRandomizerConfig['mode'];
+  activeTab?: PanelTab;
+  onTabChange?: (tab: PanelTab) => void;
 }
 
 type PanelTab = OptionTabId | typeof POOL_TAB;

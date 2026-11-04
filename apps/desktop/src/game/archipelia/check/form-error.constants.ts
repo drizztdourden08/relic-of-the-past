@@ -17,8 +17,10 @@ const FORM_ERRORS: Readonly<Record<string, string>> = {
   'unlisted-not-allowed': UNVERIFIED,
 };
 
+const NOT_LISTED = 'This lobby is no longer listed.';
+
 const NO_BUILDS_INDEX = 'RotP could not read its list of Archipelago builds. Try again.';
 
 const UNREACHABLE_CODES: readonly string[] = ['connection-failed', 'connection-lost', 'timeout', 'closed'];
 
-export { FORM_ERRORS, NO_BUILDS_INDEX, UNREACHABLE_CODES };
+export { FORM_ERRORS, NO_BUILDS_INDEX, NOT_LISTED, UNREACHABLE_CODES };

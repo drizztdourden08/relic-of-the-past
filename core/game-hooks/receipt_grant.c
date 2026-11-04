@@ -6,6 +6,7 @@
 // conditions so a mistimed call can never fire the receipt flow into a menu, text box
 // or cutscene state.
 #include "game_hooks_internal.h"
+#include "src/player.h"
 
 // The same gameplay conditions WasmCanReceiveItem (cheats.c) reports, minus its
 // DeliveryQueries gate: these exports answer to their own bit instead.
@@ -16,7 +17,8 @@ static bool CanRunReceiptNow(void) {
   // grant fires on top of the live handler and parks an un-advanceable item-get message
   // over it (the apparent soft-lock in the barrier/cane report). Mirror of the guard in
   // WasmCanReceiveItem (cheats.c) that paces the queue.
-  return in_gameplay && submodule_index == 0 && !flag_is_link_immobilized && !link_item_in_hand && !link_position_mode;
+  return in_gameplay && submodule_index == 0 && !flag_is_link_immobilized && !link_item_in_hand && !link_position_mode &&
+         link_player_handler_state != kPlayerState_AsleepInBed;
 }
 
 // Give item |item_id| through the native receipt flow: the standing hold-up animation,

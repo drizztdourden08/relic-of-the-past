@@ -1,40 +1,55 @@
 /* @layer renderer-components @kind hook */
-import { useEffect, useState } from 'react';
-import { useCreateProfile } from './useCreateProfile';
-import { useProfileForm } from './useProfileForm';
+import { useCallback, useEffect, useState } from 'react';
 import { useProfileLists } from './useProfileLists';
 import type { UseProfileManagerParams } from './profile-manager.type';
 
-const useProfileManager = ({ profiles, romStatuses, onCreateProfile, onRefresh }: UseProfileManagerParams) => {
+const useProfileManager = ({ profiles, romStatuses, onRefresh }: UseProfileManagerParams) => {
   const [selected, setSelected] = useState<string | null>(null);
+  const [pendingId, setPendingId] = useState<string | null>(null);
   const [creating, setCreating] = useState(false);
-  const form = useProfileForm();
+  const [listCollapsed, setListCollapsed] = useState(false);
   const { languages, msuPacks, settings } = useProfileLists(creating, selected);
 
   const readyRoms = romStatuses.filter((r) => r.hasAssets || r.extractionStatus === 'ready');
   const selectedProfile = profiles.find((p) => p.id === selected);
 
   useEffect(() => {
-    if (selected !== null && selectedProfile === undefined) setSelected(null);
-  }, [selected, selectedProfile]);
+    if (selected === null) return;
+    if (selectedProfile !== undefined) {
+      if (pendingId === selected) setPendingId(null);
+    } else if (pendingId !== selected) setSelected(null);
+  }, [selected, selectedProfile, pendingId]);
 
-  const handleCreate = useCreateProfile({ form, onCreateProfile, onRefresh, setCreating });
+  const startCreating = useCallback(() => {
+    setCreating(true);
+    setListCollapsed(true);
+  }, []);
 
-  const handleKeyDown = (e: React.KeyboardEvent) => {
-    if (e.key === 'Enter') void handleCreate();
-    if (e.key === 'Escape') { e.preventDefault(); setCreating(false); }
-  };
+  const stopCreating = useCallback(() => {
+    setCreating(false);
+    setListCollapsed(false);
+  }, []);
+
+  const select = useCallback((id: string) => {
+    setSelected(id);
+    stopCreating();
+  }, [stopCreating]);
+
+  const finishCreating = useCallback((profileId: string) => {
+    setPendingId(profileId);
+    setSelected(profileId);
+    stopCreating();
+    onRefresh();
+  }, [onRefresh, stopCreating]);
 
   return {
-    selected, setSelected,
-    creating, setCreating,
-    form,
+    selected, select,
+    creating, startCreating, stopCreating, finishCreating,
+    listCollapsed, setListCollapsed,
     languages, msuPacks,
     settings,
     readyRoms,
     selectedProfile,
-    handleCreate,
-    handleKeyDown,
   };
 };
 

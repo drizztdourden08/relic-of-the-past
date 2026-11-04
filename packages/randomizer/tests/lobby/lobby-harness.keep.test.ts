@@ -53,7 +53,7 @@ const configFor = (scenario: Scenario, server: string): JoinConfig => {
   const resume = hello.resume;
   return {
     server,
-    code: hello.lobby.code,
+    lobby: { code: hello.lobby.code },
     client: hello.client,
     archipelagoVersion: hello.archipelago.version,
     displayName: hello.player.displayName,

@@ -7,4 +7,6 @@ const RUN_TYPE_LABELS: Readonly<Record<ProfileRandomizerConfig['mode'], string>>
   archipelia: 'Archipelia',
 };
 
-export { RUN_TYPE_LABELS };
+const NONE = 'None';
+
+export { NONE, RUN_TYPE_LABELS };

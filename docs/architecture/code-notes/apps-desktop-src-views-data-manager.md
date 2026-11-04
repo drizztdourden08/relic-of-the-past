@@ -129,9 +129,9 @@ A tab whose whole subject is still to be built. Rows the catalog already carries
 
 The master switch and the pond mode rows are read off the snapshot instead of the raw choices. The snapshot is the pair after the capacity and pond rule settled it, so the row says what the seed will be built from, not what was asked before the rule answered. Plain unlocked rows go through the catalog key to form field map (`PLAIN_FIELD_BY_KEY`), so a new unlocked toggle is one map row plus its form field.
 
-## apps/desktop/src/views/DataManager/sub-components/profile-manager/RandomizerFields.tsx
+## apps/desktop/src/views/DataManager/sub-components/profile-manager/ProfileCreateWizard/sub-components/RandomizerStep/RandomizerStep.tsx
 
-The randomizer section of the creation form: the enable toggle, then seed and mode, and the server setup when Archipelago is picked. The seed arrives already thrown so the options panel can preview what it rolls. Typing over it is expected; emptying it is refused, because there is then nothing to preview from.
+The randomizer step of the creation wizard: the enable toggle, then seed and mode. The connection has its own step. The seed arrives already thrown so the options panel can preview what it rolls. Typing over it is expected; emptying it is refused, because there is then nothing to preview from.
 
 ## apps/desktop/src/views/DataManager/sub-components/profile-manager/RandomizerOptionsPanel.css
 

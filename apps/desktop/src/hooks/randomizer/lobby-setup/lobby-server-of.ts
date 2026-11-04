@@ -1,15 +1,8 @@
 /* @layer renderer-lib @kind logic */
-import { LOBBY_DEFAULT_PORT } from '@rotp/randomizer';
-import type { LanServer } from '@rotp/randomizer';
-import { LOCAL_HOST } from './lobby-draft.constants';
+import { connectModeOf } from './connect-mode-of';
 import type { LobbyDraft } from './lobby-draft.type';
-import { remoteAddressOf } from './remote-address-of';
+import { SERVER_STRATEGIES } from './lobby-server-of.constants';
 
-const lobbyServerOf = (draft: LobbyDraft, servers: readonly LanServer[]): string | null => {
-  if (draft.location === 'local') return `${LOCAL_HOST}:${LOBBY_DEFAULT_PORT}`;
-  if (draft.location === 'remote') return remoteAddressOf(draft.address);
-  const server = servers.find((candidate) => candidate.id === draft.lanId);
-  return server === undefined ? null : `${server.address}:${server.port}`;
-};
+const lobbyServerOf = (draft: LobbyDraft): string | null => SERVER_STRATEGIES[connectModeOf(draft)](draft);
 
 export { lobbyServerOf };

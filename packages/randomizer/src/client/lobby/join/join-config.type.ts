@@ -1,5 +1,5 @@
 /* @layer bridge-wasm @kind types */
-import type { ClientInfo } from '@drizztdourden08/archipelia-lobby-protocol';
+import type { ClientInfo, LobbyRef } from '@drizztdourden08/archipelia-lobby-protocol';
 import type { CreateSocket } from '../../ap-socket.type';
 
 type WorldInput = {
@@ -18,7 +18,7 @@ type SlotsUpdate = { slots: SlotInput[]; world?: WorldInput };
 
 type JoinConfig = {
   server: string;
-  code: string;
+  lobby: LobbyRef;
   client: ClientInfo;
   archipelagoVersion: string;
   world: WorldInput;

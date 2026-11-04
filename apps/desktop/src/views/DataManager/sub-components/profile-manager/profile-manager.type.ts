@@ -1,39 +1,18 @@
 /* @layer renderer-components @kind types */
 import type { CreateProfileOptions, CreateProfileResult } from '@app/profiles/types';
-import type { useProfileForm } from './useProfileForm';
 import type { useProfileManager } from './useProfileManager';
 
 interface UseProfileManagerParams {
   profiles: Profile[];
   romStatuses: RomDisplayInfo[];
-  onCreateProfile: (opts: CreateProfileOptions) => Promise<CreateProfileResult>;
   onRefresh: () => void;
 }
-
-type ProfileFormState = ReturnType<typeof useProfileForm>;
 
 type CreateFn = (opts: CreateProfileOptions) => Promise<CreateProfileResult>;
 
 interface LobbyJoinChoice {
   seat: string | null;
   onProgress: (fraction: number) => void;
-}
-
-interface UseCreateProfileParams {
-  form: ProfileFormState;
-  onCreateProfile: (opts: CreateProfileOptions) => Promise<CreateProfileResult>;
-  onRefresh: () => void;
-  setCreating: (creating: boolean) => void;
-}
-
-interface ProfileCreateFormProps {
-  form: ProfileFormState;
-  readyRoms: RomDisplayInfo[];
-  languages: Array<{ code: string }>;
-  msuPacks: Array<{ name: string }>;
-  onKeyDown: (e: React.KeyboardEvent) => void;
-  onCancel: () => void;
-  onCreate: () => void;
 }
 
 type ProfileManagerState = ReturnType<typeof useProfileManager>;
@@ -54,12 +33,4 @@ interface ProfileRowsProps {
   onDelete: (id: string) => void;
 }
 
-interface ProfileCreateActionsProps {
-  form: ProfileFormState;
-  onCancel: () => void;
-  onCreate: () => void;
-}
-
-export type {
-  CreateFn, LobbyJoinChoice, ProfileCreateActionsProps, ProfileCreateFormProps, ProfileListPaneProps, ProfileRowsProps, UseCreateProfileParams, UseProfileManagerParams,
-};
+export type { CreateFn, LobbyJoinChoice, ProfileListPaneProps, ProfileRowsProps, UseProfileManagerParams };
