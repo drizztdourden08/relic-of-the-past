@@ -13,10 +13,4 @@ const attachHooks = (session: MsuSession): void => {
     session.isPlaying(cueOf(ctrl, module, entrance, overworldArea));
 };
 
-const detachHooks = (): void => {
-  window.__onMusicCtrl = undefined;
-  window.__onGameSound = undefined;
-  window.__msuIsPlaying = undefined;
-};
-
-export { attachHooks, detachHooks };
+export { attachHooks };

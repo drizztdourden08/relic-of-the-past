@@ -6,6 +6,7 @@ import { stopMsuSession } from '../msu-session';
 import { ALTTP_DELUXE_VARIANT, msuPackSessionOwner } from '@rotp/msu';
 import type { Settings } from '@rotp/msu';
 import { startPackSession } from './start-pack-session';
+import { packReadyMessage } from './pack-ready-message';
 
 const loadMsuPack = async (profile: Profile, settings: Settings) => {
   stopMsuSession();
@@ -35,7 +36,13 @@ const loadMsuPack = async (profile: Profile, settings: Settings) => {
     log.app(`[MSU] Resolved '${plan.resolved.enableMSU}' @ ${plan.resolved.audioFreq}Hz, ${plan.resolved.audioChannels}ch, buffer ${plan.resolved.audioSamples}`);
 
     startPackSession({ packName, manifest, tracks, variant: plan.isDeluxe ? ALTTP_DELUXE_VARIANT : undefined, settings });
-    log.app(`[MSU] Pack "${packName}" ready with ${manifest ? `${manifest.tracks.length} authored tracks, ${audioFiles.length} files` : `${tracks.length} tracks`}${plan.isDeluxe ? ', extended numbering' : ''}`);
+    log.app(packReadyMessage({
+      packName,
+      manifest,
+      audioFileCount: audioFiles.length,
+      trackCount: tracks.length,
+      isDeluxe: plan.isDeluxe,
+    }));
   } catch (err) {
     log.error(`[MSU] Failed to prepare pack: ${err instanceof Error ? err.message : err}`);
     stopMsuSession();
