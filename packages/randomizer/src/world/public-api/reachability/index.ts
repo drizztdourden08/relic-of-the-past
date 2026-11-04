@@ -3,7 +3,7 @@ export { buildWorld } from '../../build-world';
 export { createCollectionState } from '../../collection-state';
 export type { CollectionState } from '../../collection-state';
 export { computeReachableRegions } from '../../compute-reachable-regions';
-export { updateReachableRegions } from '../../update-reachable-regions';
+export { updateReachableRegions } from '@drizztdourden08/brock-randomizer/world';
 export { markWorldZones } from '../../world-zones';
 export {
   BASELINE,

@@ -1,4 +1,7 @@
 /* @layer shared-game @kind types */
+import type {
+  ItemRule as WorldItemRule, SeedValue, World as BaseWorld,
+} from '@drizztdourden08/brock-randomizer/world';
 import type { CheckId, RegionId } from '@rotp/game-data';
 import type { WorldDungeon, WorldEvent, WorldLocation, Region } from './region.type';
 import type { ItemKey } from './item-ids';
@@ -19,12 +22,11 @@ import type { RetroBowSetting } from './retro/retro.type';
 import type { ShopScope } from './shops/shop-scope.type';
 import type { ShopPriceView } from './shops/shop-price.type';
 import type { RuleNode } from './rules/rule-node.type';
+import type { RotpKeys } from './rotp-keys.type';
 
 type Rule = ((state: CollectionState) => boolean) & { readonly node: RuleNode };
 
-type SeedValue = string | number | boolean;
-
-type ItemRule = (item: ItemKey) => boolean;
+type ItemRule = WorldItemRule<RotpKeys>;
 
 type AlwaysAllowRule = (state: CollectionState, item: ItemKey) => boolean;
 
@@ -59,7 +61,7 @@ interface WorldOptions {
   };
 }
 
-interface World {
+interface RotpWorld extends BaseWorld<RotpKeys> {
   regions: ReadonlyMap<RegionId, Region>;
   locationsByKey: ReadonlyMap<LocationKey, WorldLocation>;
   eventsByKey: ReadonlyMap<CheckId, WorldEvent>;
@@ -68,15 +70,13 @@ interface World {
   rules: Map<string, Rule>;
   locationRules: Map<LocationKey, Rule>;
   eventRules: Map<CheckId, Rule>;
-  itemRules: Map<LocationKey, ItemRule>;
   alwaysAllow: Map<LocationKey, AlwaysAllowRule>;
-  placedItems: Map<LocationKey, ItemKey>;
-  seedValues: Map<string, SeedValue>;
   getRule(name: string): Rule | undefined;
   getLocationRule(key: LocationKey): Rule | undefined;
   getEventRule(key: CheckId): Rule | undefined;
-  getItemRule(key: LocationKey): ItemRule;
   isBeaten(state: CollectionState): boolean;
 }
 
-export type { Rule, ItemRule, AlwaysAllowRule, SeedValue, WorldOptions, World };
+type World = RotpWorld;
+
+export type { Rule, ItemRule, AlwaysAllowRule, SeedValue, WorldOptions, RotpWorld, World };

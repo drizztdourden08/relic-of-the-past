@@ -8,14 +8,13 @@ import type { FillWorld } from './fill-world.type';
 
 interface BuildRolledFillWorldInput {
   seed: string;
-  rngSeed: string;
+  rng: Rng;
   snapshot: RandomizerOptionsSnapshot;
   deliverable: DeliverableSets;
   pondDemands: PondDemandView;
 }
 
 interface RolledFillWorld {
-  rng: Rng;
   shopPrices: ShopPriceView;
   fillWorld: FillWorld;
 }

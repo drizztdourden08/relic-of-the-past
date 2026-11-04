@@ -1,5 +1,5 @@
 /* @layer shared-game @kind logic */
-import { hasItem } from './has-item';
+import { hasItem } from './combinators.constants';
 import type { ItemKey } from '../../item-ids';
 import type { Rule } from '../../world.type';
 

@@ -1,5 +1,5 @@
 /* @layer shared-game @kind logic */
-import { fillRestrictive } from './fill-restrictive';
+import { fillRestrictive } from '@drizztdourden08/brock-randomizer/world';
 import { fillEligibleLocations } from './fill-world';
 import { modeOfDungeonItem, staysInOwnDungeon } from '../dungeon-items/dungeon-item-modes';
 import {

@@ -1,8 +1,10 @@
 /* @layer shared-game @kind types */
+import type {
+  SeedTable,
+} from '@drizztdourden08/brock-randomizer/world';
 import type { CheckId, RegionId } from '@rotp/game-data';
 import type { LocationKey } from '../location-key.type';
-import type { CollectionState } from '../collection-state.type';
-import type { SeedValue, World } from '../world.type';
+import type { World } from '../world.type';
 import type { RuleTargetKind } from './rule-entry.type';
 import type { RuleNode, RuleOptionKey, RuleOptionValue } from './rule-node.type';
 
@@ -12,13 +14,7 @@ interface PricedEntry {
   price: number;
 }
 
-type RuleNodeVisitor = (node: RuleNode, depth: number) => void;
-
-type RuleCheck = (state: CollectionState) => boolean;
-
 type OptionReader = (world: World) => RuleOptionValue;
-
-type SeedTable = Map<string, SeedValue>;
 
 interface RuleCoverageReport {
   ruledExits: number;
@@ -53,6 +49,6 @@ interface WorldRulesView {
 }
 
 export type {
-  CoverageCount, EventRuleView, ExitRuleView, OptionReader, PricedEntry, RuleCheck, RuleCoverageReport,
-  RuleNodeVisitor, SeedTable, WorldRulesView,
+  CoverageCount, EventRuleView, ExitRuleView, OptionReader, PricedEntry, RuleCoverageReport,
+  SeedTable, WorldRulesView,
 };

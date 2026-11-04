@@ -3,6 +3,8 @@ import { ITEM, REGION } from '@rotp/randomizer';
 import type { CollectionState, World } from '@rotp/randomizer';
 
 const emptyWorld = (): World => ({
+  start: REGION.start,
+  sweepsEvents: true,
   regions: new Map(),
   locationsByKey: new Map(),
   eventsByKey: new Map(),
@@ -20,6 +22,7 @@ const emptyWorld = (): World => ({
   alwaysAllow: new Map(),
   placedItems: new Map(),
   seedValues: new Map(),
+  readOption: () => false,
   getRule: () => undefined,
   getLocationRule: () => undefined,
   getEventRule: () => undefined,
