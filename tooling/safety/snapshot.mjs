@@ -11,6 +11,7 @@ const git = (args, extraEnv) =>
     cwd: repoRoot,
     encoding: 'utf8',
     maxBuffer: 64 * 1024 * 1024,
+    windowsHide: true,
     env: extraEnv ? { ...process.env, ...extraEnv } : process.env,
   });
 
@@ -81,6 +82,7 @@ const writeBlobs = (entries) => {
     cwd: repoRoot,
     input: `${entries.map((e) => e.sha).join('\n')}\n`,
     maxBuffer: 1024 * 1024 * 1024,
+    windowsHide: true,
   });
   let at = 0;
   for (const entry of entries) {

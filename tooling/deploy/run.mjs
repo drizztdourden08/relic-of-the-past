@@ -8,8 +8,8 @@ const fail = (msg) => {
   process.exit(1);
 };
 
-const run = (file, args, opts = {}) => execFileSync(file, args, { stdio: 'inherit', ...opts });
-const capture = (file, args, opts = {}) => execFileSync(file, args, { encoding: 'utf8', ...opts }).trim();
+const run = (file, args, opts = {}) => execFileSync(file, args, { stdio: 'inherit', windowsHide: true, ...opts });
+const capture = (file, args, opts = {}) => execFileSync(file, args, { encoding: 'utf8', windowsHide: true, ...opts }).trim();
 
 const runAllowingFailure = (file, args, opts = {}) => {
   try {

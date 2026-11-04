@@ -24,7 +24,7 @@ const installedVersion = (): string => {
 const supportsInstalledVersion = (): boolean => hasArchipelago() && SUPPORTED_AP_VERSIONS.includes(installedVersion());
 
 const installWorldPackage = (): string => {
-  const build = spawnSync(process.execPath, [BUILD_SCRIPT], { encoding: 'utf8', cwd: ROOT });
+  const build = spawnSync(process.execPath, [BUILD_SCRIPT], { encoding: 'utf8', cwd: ROOT, windowsHide: true });
   if (build.status !== 0) throw new Error(`build-apworld failed: ${build.stderr}`);
   const built = path.join(ROOT, 'build', 'archipelago', apworldNames(WORLD_MODULE_NAME, installedVersion()).file);
   const same = existsSync(INSTALLED) && readFileSync(INSTALLED).equals(readFileSync(built));

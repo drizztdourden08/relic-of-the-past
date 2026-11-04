@@ -40,6 +40,7 @@ const bootEmulator = (avd) => {
   const child = spawn(emulatorBin, ['-avd', avd, '-no-snapshot', '-no-boot-anim'], {
     detached: true,
     stdio: 'ignore',
+    windowsHide: true,
   });
   child.unref();
   waitForBoot();

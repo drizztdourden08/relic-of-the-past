@@ -6,7 +6,7 @@ const MAX_MIRRORED_DELETIONS = 10;
 const vaultHead = (vaultDir) => {
   try {
     return execFileSync('git', ['rev-parse', '--short', 'HEAD'], {
-      cwd: vaultDir, encoding: 'utf8', stdio: ['ignore', 'pipe', 'pipe'],
+      cwd: vaultDir, encoding: 'utf8', stdio: ['ignore', 'pipe', 'pipe'], windowsHide: true,
     }).trim();
   } catch {
     return null;

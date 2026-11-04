@@ -110,7 +110,7 @@ const run = () => {
   const cmd = isWin ? process.env.COMSPEC || 'cmd.exe' : 'emcc';
   const spawnArgs = isWin ? ['/c', 'emcc', `@${rsp}`] : [`@${rsp}`];
 
-  const result = spawnSync(cmd, spawnArgs, { stdio: 'inherit' });
+  const result = spawnSync(cmd, spawnArgs, { stdio: 'inherit', windowsHide: true });
   rmSync(rspDir, { recursive: true, force: true });
   if (result.status !== 0) {
     console.error('\nBUILD FAILED');
@@ -125,7 +125,7 @@ const run = () => {
   console.log(`        ${join(outputDir, 'zelda3.wasm')}`);
   console.log('============================================');
 
-  const probe = spawnSync(process.execPath, [join(here, 'layout-probe.mjs')], { stdio: 'inherit' });
+  const probe = spawnSync(process.execPath, [join(here, 'layout-probe.mjs')], { stdio: 'inherit', windowsHide: true });
   if (probe.status !== 0) {
     console.error('\nSave state layout probe FAILED. The format id was not refreshed.');
     process.exit(probe.status ?? 1);

@@ -3,7 +3,7 @@ import { execFileSync } from 'node:child_process';
 import { repoRoot } from './repo-root.mjs';
 import { KEEP_DAYS, KEEP_MIN, SAFETY_NAMESPACE } from './roots.mjs';
 
-const git = (args) => execFileSync('git', args, { cwd: repoRoot, encoding: 'utf8' });
+const git = (args) => execFileSync('git', args, { cwd: repoRoot, encoding: 'utf8', windowsHide: true });
 
 const listSnapshots = () => {
   const out = git([

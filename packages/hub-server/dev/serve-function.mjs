@@ -30,5 +30,5 @@ const frameworkBin = () => {
 };
 
 process.stdout.write(`${target} on http://localhost:${port}\n`);
-const child = spawn(process.execPath, [frameworkBin(), `--target=${target}`, '--source=dist', `--port=${port}`], { cwd: apiDir, stdio: 'inherit' });
+const child = spawn(process.execPath, [frameworkBin(), `--target=${target}`, '--source=dist', `--port=${port}`], { cwd: apiDir, stdio: 'inherit', windowsHide: true });
 child.on('close', (code) => process.exit(code ?? 0));

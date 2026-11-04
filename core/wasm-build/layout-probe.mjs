@@ -36,11 +36,11 @@ const runEmcc = (outFile) => {
   const isWin = process.platform === 'win32';
   const cmd = isWin ? process.env.COMSPEC || 'cmd.exe' : 'emcc';
   const spawnArgs = isWin ? ['/c', 'emcc', ...args] : args;
-  return spawnSync(cmd, spawnArgs, { encoding: 'utf8' });
+  return spawnSync(cmd, spawnArgs, { encoding: 'utf8', windowsHide: true });
 };
 
 const readLayout = (probeJs) => {
-  const run = spawnSync(process.execPath, [probeJs], { encoding: 'utf8' });
+  const run = spawnSync(process.execPath, [probeJs], { encoding: 'utf8', windowsHide: true });
   if (run.status !== 0) {
     throw new Error(`probe exited ${run.status}\n${run.stderr || run.stdout}`);
   }

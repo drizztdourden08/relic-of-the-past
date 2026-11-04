@@ -26,7 +26,7 @@ const gitChanged = () => {
 const classifyAll = (rels, manifest) => rels.map((rel) => classifyFile(ROOT, rel, manifest));
 
 const selectFiles = (mode) => {
-  const visible = new Set(execFileSync('git', ['ls-files', '--cached', '--others', '--exclude-standard', '-z'], { cwd: ROOT })
+  const visible = new Set(execFileSync('git', ['ls-files', '--cached', '--others', '--exclude-standard', '-z'], { cwd: ROOT, windowsHide: true })
     .toString('utf8').split('\0').filter(Boolean).map((rel) => rel.replace(/\\/g, '/')));
   const rels = walkFiles(ROOT).filter((rel) => visible.has(rel));
   if (mode !== 'diff') return rels;
