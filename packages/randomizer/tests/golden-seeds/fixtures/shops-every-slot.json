@@ -1,0 +1,1466 @@
+{
+  "seed": "golden-shops",
+  "medallions": {
+    "mire": "item-017",
+    "turtleRock": "item-018"
+  },
+  "locations": {
+    "check-006": "item-042",
+    "check-007": "item-023",
+    "check-008": "item-179",
+    "check-009": "item-024",
+    "check-010": "item-023",
+    "check-019": "item-031",
+    "check-020": "item-024",
+    "check-042": "item-023",
+    "check-057": "item-024",
+    "check-058": "item-024",
+    "check-059": "item-024",
+    "check-072": "item-079",
+    "check-070": "item-017",
+    "check-071": "item-024",
+    "check-080": "item-016",
+    "check-073": "item-024",
+    "check-076": "item-024",
+    "check-077": "item-018",
+    "check-078": "item-020",
+    "check-079": "item-024",
+    "check-272": "item-024",
+    "check-012": "item-069",
+    "check-013": "item-069",
+    "check-014": "item-066",
+    "check-015": "item-066",
+    "check-016": "item-066",
+    "check-017": "item-079",
+    "check-018": "item-019",
+    "check-021": "item-013",
+    "check-022": "item-080",
+    "check-023": "item-066",
+    "check-024": "item-010",
+    "check-026": "item-041",
+    "check-027": "item-176",
+    "kakariko-shop-shelf_left-slot_1": "item-066",
+    "kakariko-shop-shelf_left-slot_2": "item-032",
+    "kakariko-shop-shelf_center-slot_1": "item-066",
+    "kakariko-shop-shelf_center-slot_2": "item-066",
+    "kakariko-shop-shelf_right-slot_1": "item-066",
+    "kakariko-shop-shelf_right-slot_2": "item-178",
+    "check-028": "item-024",
+    "check-029": "item-066",
+    "check-030": "item-066",
+    "check-031": "item-066",
+    "check-032": "item-066",
+    "check-033": "item-076",
+    "check-034": "item-055",
+    "check-035": "item-055",
+    "check-036": "item-066",
+    "check-037": "item-178",
+    "check-038": "item-066",
+    "check-039": "item-079",
+    "check-040": "item-077",
+    "check-041": "item-034",
+    "check-043": "item-024",
+    "check-044": "item-024",
+    "check-045": "item-024",
+    "check-046": "item-024",
+    "check-047": "item-024",
+    "check-048": "item-066",
+    "check-049": "item-082",
+    "check-050": "item-081",
+    "check-051": "item-083",
+    "check-052": "item-071",
+    "check-053": "item-065",
+    "cave-shop-lake-hylia-shelf_left-slot_1": "item-066",
+    "cave-shop-lake-hylia-shelf_left-slot_2": "item-055",
+    "cave-shop-lake-hylia-shelf_center-slot_1": "item-041",
+    "cave-shop-lake-hylia-shelf_center-slot_2": "item-024",
+    "cave-shop-lake-hylia-shelf_right-slot_1": "item-041",
+    "cave-shop-lake-hylia-shelf_right-slot_2": "item-066",
+    "cave-shop-dark-death-mountain-shelf_left-slot_1": "item-066",
+    "cave-shop-dark-death-mountain-shelf_left-slot_2": "item-066",
+    "cave-shop-dark-death-mountain-shelf_center-slot_1": "item-177",
+    "cave-shop-dark-death-mountain-shelf_center-slot_2": "item-066",
+    "cave-shop-dark-death-mountain-shelf_right-slot_1": "item-054",
+    "cave-shop-dark-death-mountain-shelf_right-slot_2": "item-025",
+    "check-054": "item-024",
+    "check-055": "item-030",
+    "check-056": "item-014",
+    "potion-shop-shelf_left-slot_1": "item-175",
+    "potion-shop-shelf_left-slot_2": "item-066",
+    "potion-shop-shelf_center-slot_1": "item-009",
+    "potion-shop-shelf_center-slot_2": "item-066",
+    "potion-shop-shelf_right-slot_1": "item-041",
+    "potion-shop-shelf_right-slot_2": "item-066",
+    "check-060": "item-027",
+    "check-061": "item-024",
+    "check-062": "item-024",
+    "check-063": "item-041",
+    "check-064": "item-054",
+    "check-065": "item-041",
+    "check-066": "item-066",
+    "check-067": "item-066",
+    "check-068": "item-069",
+    "light-world-death-mountain-shop-shelf_left-slot_1": "item-064",
+    "light-world-death-mountain-shop-shelf_left-slot_2": "item-071",
+    "light-world-death-mountain-shop-shelf_center-slot_1": "item-041",
+    "light-world-death-mountain-shop-shelf_center-slot_2": "item-178",
+    "light-world-death-mountain-shop-shelf_right-slot_1": "item-055",
+    "light-world-death-mountain-shop-shelf_right-slot_2": "item-082",
+    "check-069": "item-081",
+    "big-bomb-shop-shelf_center-slot_1": "item-176",
+    "big-bomb-shop-shelf_center-slot_2": "item-066",
+    "check-084": "item-053",
+    "check-085": "item-066",
+    "check-086": "item-066",
+    "check-087": "item-066",
+    "check-088": "item-071",
+    "village-of-outcasts-shop-shelf_left-slot_1": "item-066",
+    "village-of-outcasts-shop-shelf_left-slot_2": "item-055",
+    "village-of-outcasts-shop-shelf_center-slot_1": "item-066",
+    "village-of-outcasts-shop-shelf_center-slot_2": "item-175",
+    "village-of-outcasts-shop-shelf_right-slot_1": "item-066",
+    "village-of-outcasts-shop-shelf_right-slot_2": "item-055",
+    "dark-lake-hylia-shop-shelf_left-slot_1": "item-041",
+    "dark-lake-hylia-shop-shelf_left-slot_2": "item-008",
+    "dark-lake-hylia-shop-shelf_center-slot_1": "item-066",
+    "dark-lake-hylia-shop-shelf_center-slot_2": "item-176",
+    "dark-lake-hylia-shop-shelf_right-slot_1": "item-066",
+    "dark-lake-hylia-shop-shelf_right-slot_2": "item-041",
+    "dark-world-lumberjack-shop-shelf_left-slot_1": "item-066",
+    "dark-world-lumberjack-shop-shelf_left-slot_2": "item-066",
+    "dark-world-lumberjack-shop-shelf_center-slot_1": "item-176",
+    "dark-world-lumberjack-shop-shelf_center-slot_2": "item-066",
+    "dark-world-lumberjack-shop-shelf_right-slot_1": "item-066",
+    "dark-world-lumberjack-shop-shelf_right-slot_2": "item-066",
+    "dark-world-potion-shop-shelf_left-slot_1": "item-055",
+    "dark-world-potion-shop-shelf_left-slot_2": "item-066",
+    "dark-world-potion-shop-shelf_center-slot_1": "item-055",
+    "dark-world-potion-shop-shelf_center-slot_2": "item-022",
+    "dark-world-potion-shop-shelf_right-slot_1": "item-066",
+    "dark-world-potion-shop-shelf_right-slot_2": "item-024",
+    "check-271": "item-024",
+    "check-266": "item-079",
+    "check-267": "item-083",
+    "check-268": "item-043",
+    "check-269": "item-071",
+    "check-270": "item-024",
+    "red-shield-shop-shelf_left-slot_1": "item-178",
+    "red-shield-shop-shelf_left-slot_2": "item-178",
+    "red-shield-shop-shelf_center-slot_1": "item-055",
+    "red-shield-shop-shelf_center-slot_2": "item-066",
+    "red-shield-shop-shelf_right-slot_1": "item-178",
+    "red-shield-shop-shelf_right-slot_2": "item-175",
+    "check-089": "item-066",
+    "check-090": "item-011",
+    "check-091": "item-176",
+    "check-092": "item-066",
+    "check-075": "item-066",
+    "check-093": "item-177",
+    "check-094": "item-066",
+    "check-095": "item-175",
+    "check-096": "item-066",
+    "check-074": "item-066",
+    "check-125": "item-098",
+    "check-126": "item-098",
+    "check-127": "item-055",
+    "check-128": "item-152",
+    "check-129": "item-139",
+    "check-132": "item-098",
+    "check-133": "item-093",
+    "check-134": "item-098",
+    "check-130": "item-063",
+    "check-131": "item-112",
+    "check-116": "item-097",
+    "check-117": "item-097",
+    "check-118": "item-066",
+    "check-123": "item-176",
+    "check-124": "item-138",
+    "check-119": "item-151",
+    "check-120": "item-094",
+    "check-121": "item-063",
+    "check-122": "item-057",
+    "check-100": "item-095",
+    "check-101": "item-096",
+    "check-102": "item-066",
+    "check-108": "item-096",
+    "check-109": "item-096",
+    "check-111": "item-177",
+    "check-103": "item-055",
+    "check-110": "item-096",
+    "check-104": "item-026",
+    "check-105": "item-054",
+    "check-106": "item-066",
+    "check-107": "item-136",
+    "check-112": "item-099",
+    "check-113": "item-099",
+    "check-114": "item-099",
+    "check-115": "item-099",
+    "check-135": "item-105",
+    "check-136": "item-087",
+    "check-137": "item-066",
+    "check-138": "item-140",
+    "check-139": "item-153",
+    "check-140": "item-063",
+    "check-141": "item-118",
+    "check-157": "item-100",
+    "check-158": "item-100",
+    "check-168": "item-100",
+    "check-169": "item-092",
+    "check-159": "item-100",
+    "check-160": "item-055",
+    "check-170": "item-066",
+    "check-171": "item-100",
+    "check-161": "item-142",
+    "check-162": "item-155",
+    "check-163": "item-069",
+    "check-164": "item-100",
+    "check-172": "item-176",
+    "check-165": "item-066",
+    "check-166": "item-063",
+    "check-167": "item-116",
+    "check-173": "item-106",
+    "check-174": "item-041",
+    "check-175": "item-106",
+    "check-176": "item-086",
+    "check-177": "item-144",
+    "check-178": "item-157",
+    "check-182": "item-175",
+    "check-183": "item-066",
+    "check-179": "item-106",
+    "check-180": "item-063",
+    "check-181": "item-117",
+    "check-185": "item-103",
+    "check-188": "item-080",
+    "check-184": "item-156",
+    "check-187": "item-143",
+    "check-186": "item-103",
+    "check-189": "item-103",
+    "check-193": "item-089",
+    "check-190": "item-103",
+    "check-194": "item-103",
+    "check-191": "item-063",
+    "check-192": "item-115",
+    "check-204": "item-104",
+    "check-195": "item-104",
+    "check-205": "item-088",
+    "check-196": "item-104",
+    "check-207": "item-104",
+    "check-197": "item-158",
+    "check-198": "item-145",
+    "check-199": "item-104",
+    "check-200": "item-066",
+    "check-201": "item-104",
+    "check-206": "item-041",
+    "check-202": "item-063",
+    "check-203": "item-114",
+    "check-208": "item-041",
+    "check-209": "item-102",
+    "check-210": "item-102",
+    "check-211": "item-102",
+    "check-212": "item-102",
+    "check-217": "item-102",
+    "check-218": "item-102",
+    "check-219": "item-090",
+    "check-213": "item-159",
+    "check-214": "item-146",
+    "check-215": "item-063",
+    "check-216": "item-058",
+    "check-220": "item-107",
+    "check-221": "item-041",
+    "check-222": "item-107",
+    "check-233": "item-107",
+    "check-223": "item-085",
+    "check-224": "item-066",
+    "check-234": "item-107",
+    "check-225": "item-107",
+    "check-226": "item-147",
+    "check-227": "item-160",
+    "check-228": "item-066",
+    "check-229": "item-055",
+    "check-230": "item-107",
+    "check-231": "item-063",
+    "check-232": "item-056",
+    "check-142": "item-101",
+    "check-143": "item-101",
+    "check-144": "item-101",
+    "check-145": "item-141",
+    "check-146": "item-101",
+    "check-147": "item-066",
+    "check-148": "item-101",
+    "check-149": "item-066",
+    "check-150": "item-101",
+    "check-151": "item-024",
+    "check-152": "item-091",
+    "check-153": "item-154",
+    "check-154": "item-178",
+    "check-155": "item-063",
+    "check-156": "item-113",
+    "check-235": "item-108",
+    "check-236": "item-108",
+    "check-237": "item-108",
+    "check-262": "item-108",
+    "check-238": "item-066",
+    "check-239": "item-045",
+    "check-240": "item-161",
+    "check-241": "item-055",
+    "check-242": "item-080",
+    "check-264": "item-069",
+    "check-243": "item-175",
+    "check-244": "item-055",
+    "check-245": "item-108",
+    "check-246": "item-055",
+    "check-263": "item-108",
+    "check-247": "item-178",
+    "check-248": "item-055",
+    "check-249": "item-175",
+    "check-250": "item-066",
+    "check-251": "item-066",
+    "check-252": "item-066",
+    "check-253": "item-066",
+    "check-254": "item-148",
+    "check-255": "item-055",
+    "check-256": "item-084",
+    "check-257": "item-055",
+    "check-258": "item-108",
+    "check-259": "item-055",
+    "check-260": "item-055",
+    "check-265": "item-108",
+    "check-261": "item-066"
+  },
+  "shopPrices": {
+    "cave-shop-dark-death-mountain-shelf_left-slot_1": {
+      "currency": "hearts",
+      "amount": 8
+    },
+    "cave-shop-dark-death-mountain-shelf_left-slot_2": {
+      "currency": "bottle",
+      "content": "fairy"
+    },
+    "cave-shop-dark-death-mountain-shelf_center-slot_1": {
+      "currency": "arrows",
+      "amount": 0
+    },
+    "cave-shop-dark-death-mountain-shelf_center-slot_2": {
+      "currency": "hearts",
+      "amount": 4
+    },
+    "cave-shop-dark-death-mountain-shelf_right-slot_1": {
+      "currency": "hearts",
+      "amount": 8
+    },
+    "cave-shop-dark-death-mountain-shelf_right-slot_2": {
+      "currency": "bombs",
+      "amount": 0
+    },
+    "red-shield-shop-shelf_left-slot_1": {
+      "currency": "arrows",
+      "amount": 1
+    },
+    "red-shield-shop-shelf_left-slot_2": {
+      "currency": "bombs",
+      "amount": 3
+    },
+    "red-shield-shop-shelf_center-slot_1": {
+      "currency": "rupees",
+      "amount": 357
+    },
+    "red-shield-shop-shelf_center-slot_2": {
+      "currency": "arrows",
+      "amount": 10
+    },
+    "red-shield-shop-shelf_right-slot_1": {
+      "currency": "bottle",
+      "content": "fairy"
+    },
+    "red-shield-shop-shelf_right-slot_2": {
+      "currency": "hearts",
+      "amount": 8
+    },
+    "dark-lake-hylia-shop-shelf_left-slot_1": {
+      "currency": "rupees",
+      "amount": 668
+    },
+    "dark-lake-hylia-shop-shelf_left-slot_2": {
+      "currency": "hearts",
+      "amount": 9
+    },
+    "dark-lake-hylia-shop-shelf_center-slot_1": {
+      "currency": "rupees",
+      "amount": 81
+    },
+    "dark-lake-hylia-shop-shelf_center-slot_2": {
+      "currency": "hearts",
+      "amount": 10
+    },
+    "dark-lake-hylia-shop-shelf_right-slot_1": {
+      "currency": "hearts",
+      "amount": 10
+    },
+    "dark-lake-hylia-shop-shelf_right-slot_2": {
+      "currency": "arrows",
+      "amount": 3
+    },
+    "light-world-death-mountain-shop-shelf_left-slot_1": {
+      "currency": "rupees",
+      "amount": 749
+    },
+    "light-world-death-mountain-shop-shelf_left-slot_2": {
+      "currency": "bombs",
+      "amount": 9
+    },
+    "light-world-death-mountain-shop-shelf_center-slot_1": {
+      "currency": "rupees",
+      "amount": 871
+    },
+    "light-world-death-mountain-shop-shelf_center-slot_2": {
+      "currency": "arrows",
+      "amount": 2
+    },
+    "light-world-death-mountain-shop-shelf_right-slot_1": {
+      "currency": "bombs",
+      "amount": 1
+    },
+    "light-world-death-mountain-shop-shelf_right-slot_2": {
+      "currency": "hearts",
+      "amount": 8
+    },
+    "kakariko-shop-shelf_left-slot_1": {
+      "currency": "rupees",
+      "amount": 640
+    },
+    "kakariko-shop-shelf_left-slot_2": {
+      "currency": "arrows",
+      "amount": 4
+    },
+    "kakariko-shop-shelf_center-slot_1": {
+      "currency": "bombs",
+      "amount": 0
+    },
+    "kakariko-shop-shelf_center-slot_2": {
+      "currency": "rupees",
+      "amount": 200
+    },
+    "kakariko-shop-shelf_right-slot_1": {
+      "currency": "arrows",
+      "amount": 6
+    },
+    "kakariko-shop-shelf_right-slot_2": {
+      "currency": "bombs",
+      "amount": 0
+    },
+    "cave-shop-lake-hylia-shelf_left-slot_1": {
+      "currency": "bombs",
+      "amount": 7
+    },
+    "cave-shop-lake-hylia-shelf_left-slot_2": {
+      "currency": "bottle",
+      "content": "fairy"
+    },
+    "cave-shop-lake-hylia-shelf_center-slot_1": {
+      "currency": "hearts",
+      "amount": 3
+    },
+    "cave-shop-lake-hylia-shelf_center-slot_2": {
+      "currency": "arrows",
+      "amount": 3
+    },
+    "cave-shop-lake-hylia-shelf_right-slot_1": {
+      "currency": "arrows",
+      "amount": 10
+    },
+    "cave-shop-lake-hylia-shelf_right-slot_2": {
+      "currency": "hearts",
+      "amount": 3
+    },
+    "dark-world-lumberjack-shop-shelf_left-slot_1": {
+      "currency": "arrows",
+      "amount": 7
+    },
+    "dark-world-lumberjack-shop-shelf_left-slot_2": {
+      "currency": "arrows",
+      "amount": 9
+    },
+    "dark-world-lumberjack-shop-shelf_center-slot_1": {
+      "currency": "bombs",
+      "amount": 4
+    },
+    "dark-world-lumberjack-shop-shelf_center-slot_2": {
+      "currency": "bombs",
+      "amount": 8
+    },
+    "dark-world-lumberjack-shop-shelf_right-slot_1": {
+      "currency": "arrows",
+      "amount": 6
+    },
+    "dark-world-lumberjack-shop-shelf_right-slot_2": {
+      "currency": "bottle",
+      "content": "fairy"
+    },
+    "village-of-outcasts-shop-shelf_left-slot_1": {
+      "currency": "hearts",
+      "amount": 3
+    },
+    "village-of-outcasts-shop-shelf_left-slot_2": {
+      "currency": "rupees",
+      "amount": 696
+    },
+    "village-of-outcasts-shop-shelf_center-slot_1": {
+      "currency": "bottle",
+      "content": "bee"
+    },
+    "village-of-outcasts-shop-shelf_center-slot_2": {
+      "currency": "rupees",
+      "amount": 358
+    },
+    "village-of-outcasts-shop-shelf_right-slot_1": {
+      "currency": "bottle",
+      "content": "fairy"
+    },
+    "village-of-outcasts-shop-shelf_right-slot_2": {
+      "currency": "rupees",
+      "amount": 98
+    },
+    "dark-world-potion-shop-shelf_left-slot_1": {
+      "currency": "arrows",
+      "amount": 5
+    },
+    "dark-world-potion-shop-shelf_left-slot_2": {
+      "currency": "rupees",
+      "amount": 357
+    },
+    "dark-world-potion-shop-shelf_center-slot_1": {
+      "currency": "bombs",
+      "amount": 6
+    },
+    "dark-world-potion-shop-shelf_center-slot_2": {
+      "currency": "bottle",
+      "content": "bee"
+    },
+    "dark-world-potion-shop-shelf_right-slot_1": {
+      "currency": "bombs",
+      "amount": 1
+    },
+    "dark-world-potion-shop-shelf_right-slot_2": {
+      "currency": "bottle",
+      "content": "fairy"
+    },
+    "potion-shop-shelf_left-slot_1": {
+      "currency": "bottle",
+      "content": "fairy"
+    },
+    "potion-shop-shelf_left-slot_2": {
+      "currency": "bombs",
+      "amount": 8
+    },
+    "potion-shop-shelf_center-slot_1": {
+      "currency": "bottle",
+      "content": "fairy"
+    },
+    "potion-shop-shelf_center-slot_2": {
+      "currency": "hearts",
+      "amount": 2
+    },
+    "potion-shop-shelf_right-slot_1": {
+      "currency": "bottle",
+      "content": "fairy"
+    },
+    "potion-shop-shelf_right-slot_2": {
+      "currency": "arrows",
+      "amount": 1
+    },
+    "big-bomb-shop-shelf_center-slot_1": {
+      "currency": "hearts",
+      "amount": 10
+    },
+    "big-bomb-shop-shelf_center-slot_2": {
+      "currency": "hearts",
+      "amount": 10
+    }
+  },
+  "pondDemands": {
+    "slot-pond-capacity-1": {
+      "currency": "rupees",
+      "amount": 0
+    },
+    "slot-pond-capacity-2": {
+      "currency": "rupees",
+      "amount": 10
+    },
+    "slot-pond-capacity-3": {
+      "currency": "rupees",
+      "amount": 25
+    },
+    "slot-pond-capacity-4": {
+      "currency": "rupees",
+      "amount": 75
+    },
+    "slot-pond-capacity-5": {
+      "currency": "rupees",
+      "amount": 150
+    },
+    "slot-pond-capacity-6": {
+      "currency": "rupees",
+      "amount": 250
+    },
+    "slot-pond-capacity-7": {
+      "currency": "rupees",
+      "amount": 400
+    },
+    "slot-pond-capacity-8": {
+      "currency": "rupees",
+      "amount": 600
+    },
+    "slot-pond-capacity-9": {
+      "currency": "rupees",
+      "amount": 800
+    },
+    "slot-pond-capacity-10": {
+      "currency": "rupees",
+      "amount": 999
+    },
+    "check-021": {
+      "currency": "rupees",
+      "amount": 0
+    },
+    "check-022": {
+      "currency": "rupees",
+      "amount": 5
+    },
+    "slot-pond-wishing-3": {
+      "currency": "bombs",
+      "amount": 3
+    },
+    "slot-pond-wishing-4": {
+      "currency": "arrows",
+      "amount": 3
+    },
+    "slot-pond-wishing-5": {
+      "currency": "bombs",
+      "amount": 4
+    },
+    "slot-pond-wishing-6": {
+      "currency": "item",
+      "itemName": "Fire Rod"
+    },
+    "slot-pond-wishing-7": {
+      "currency": "rupees",
+      "amount": 75
+    },
+    "slot-pond-wishing-8": {
+      "currency": "rupees",
+      "amount": 150
+    },
+    "slot-pond-wishing-9": {
+      "currency": "item",
+      "itemName": "Cane of Byrna"
+    },
+    "slot-pond-wishing-10": {
+      "currency": "bombs",
+      "amount": 10
+    },
+    "check-266": {
+      "currency": "bottle",
+      "amount": 1,
+      "content": "fairy"
+    },
+    "check-267": {
+      "currency": "item",
+      "itemName": "Progressive Shield"
+    },
+    "slot-pond-cursed-3": {
+      "currency": "bottle",
+      "amount": 1,
+      "content": "blue-potion"
+    },
+    "slot-pond-cursed-4": {
+      "currency": "bottle",
+      "amount": 1,
+      "content": "green-potion"
+    },
+    "slot-pond-cursed-5": {
+      "currency": "bottle",
+      "amount": 1,
+      "content": "red-potion"
+    },
+    "slot-pond-cursed-6": {
+      "currency": "item",
+      "itemName": "Hookshot"
+    },
+    "slot-pond-cursed-7": {
+      "currency": "bottle",
+      "amount": 2,
+      "content": "bee"
+    },
+    "slot-pond-cursed-8": {
+      "currency": "item",
+      "itemName": "Progressive Mail"
+    },
+    "slot-pond-cursed-9": {
+      "currency": "bottle",
+      "amount": 2,
+      "content": "green-potion"
+    },
+    "slot-pond-cursed-10": {
+      "currency": "item",
+      "itemName": "Cane of Somaria"
+    }
+  },
+  "spheres": [
+    {
+      "index": 0,
+      "locations": [
+        "check-017",
+        "check-018",
+        "check-026",
+        "check-101"
+      ]
+    },
+    {
+      "index": 1,
+      "locations": [
+        "check-100",
+        "check-108",
+        "check-109"
+      ]
+    },
+    {
+      "index": 2,
+      "locations": [
+        "check-102",
+        "check-111",
+        "check-103",
+        "check-110"
+      ]
+    },
+    {
+      "index": 3,
+      "locations": [
+        "check-006",
+        "check-013",
+        "check-014",
+        "check-015",
+        "check-016",
+        "check-024",
+        "check-027",
+        "kakariko-shop-shelf_center-slot_1",
+        "kakariko-shop-shelf_right-slot_2",
+        "check-035",
+        "check-036",
+        "check-037",
+        "check-038",
+        "check-043",
+        "potion-shop-shelf_center-slot_2",
+        "check-116",
+        "check-118",
+        "check-123",
+        "check-120",
+        "check-107"
+      ]
+    },
+    {
+      "index": 4,
+      "locations": [
+        "check-007",
+        "check-009",
+        "kakariko-shop-shelf_left-slot_2",
+        "kakariko-shop-shelf_right-slot_1",
+        "cave-shop-lake-hylia-shelf_center-slot_2",
+        "cave-shop-lake-hylia-shelf_right-slot_1",
+        "check-056",
+        "potion-shop-shelf_right-slot_2",
+        "check-117",
+        "check-124"
+      ]
+    },
+    {
+      "index": 5,
+      "locations": [
+        "check-040",
+        "check-041",
+        "cave-shop-lake-hylia-shelf_left-slot_2",
+        "potion-shop-shelf_left-slot_1",
+        "potion-shop-shelf_center-slot_1",
+        "potion-shop-shelf_right-slot_1",
+        "check-119"
+      ]
+    },
+    {
+      "index": 6,
+      "locations": [
+        "check-058",
+        "check-012",
+        "check-028",
+        "check-029",
+        "check-030",
+        "check-031",
+        "check-032",
+        "check-034",
+        "check-048",
+        "check-049",
+        "check-050",
+        "check-051",
+        "check-052",
+        "check-053",
+        "cave-shop-lake-hylia-shelf_left-slot_1",
+        "potion-shop-shelf_left-slot_2",
+        "check-104",
+        "check-105",
+        "check-106"
+      ]
+    },
+    {
+      "index": 7,
+      "locations": [
+        "check-076",
+        "check-077",
+        "check-078",
+        "check-079",
+        "check-272",
+        "cave-shop-lake-hylia-shelf_center-slot_1",
+        "cave-shop-lake-hylia-shelf_right-slot_2",
+        "check-060",
+        "check-061",
+        "check-084",
+        "check-085",
+        "check-086",
+        "check-087",
+        "check-088",
+        "village-of-outcasts-shop-shelf_left-slot_1",
+        "village-of-outcasts-shop-shelf_center-slot_1",
+        "village-of-outcasts-shop-shelf_right-slot_1",
+        "village-of-outcasts-shop-shelf_right-slot_2",
+        "dark-lake-hylia-shop-shelf_center-slot_1",
+        "dark-lake-hylia-shop-shelf_right-slot_2",
+        "dark-world-lumberjack-shop-shelf_left-slot_1",
+        "dark-world-lumberjack-shop-shelf_left-slot_2",
+        "dark-world-lumberjack-shop-shelf_center-slot_1",
+        "dark-world-lumberjack-shop-shelf_center-slot_2",
+        "dark-world-lumberjack-shop-shelf_right-slot_1",
+        "dark-world-lumberjack-shop-shelf_right-slot_2",
+        "dark-world-potion-shop-shelf_left-slot_1",
+        "dark-world-potion-shop-shelf_center-slot_1",
+        "dark-world-potion-shop-shelf_center-slot_2",
+        "dark-world-potion-shop-shelf_right-slot_1",
+        "dark-world-potion-shop-shelf_right-slot_2",
+        "check-268",
+        "check-269",
+        "check-270",
+        "red-shield-shop-shelf_left-slot_1",
+        "red-shield-shop-shelf_left-slot_2",
+        "red-shield-shop-shelf_center-slot_2",
+        "red-shield-shop-shelf_right-slot_1",
+        "check-075",
+        "check-121",
+        "check-122",
+        "check-112",
+        "check-173",
+        "check-174",
+        "check-175",
+        "check-176",
+        "check-185",
+        "check-188",
+        "check-184",
+        "check-187",
+        "check-189",
+        "check-193",
+        "check-142",
+        "check-143",
+        "check-144",
+        "check-146",
+        "check-147"
+      ]
+    },
+    {
+      "index": 8,
+      "locations": [
+        "check-008",
+        "check-019",
+        "check-071",
+        "kakariko-shop-shelf_left-slot_1",
+        "kakariko-shop-shelf_center-slot_2",
+        "check-045",
+        "check-046",
+        "check-062",
+        "check-063",
+        "check-064",
+        "check-065",
+        "check-066",
+        "check-067",
+        "check-068",
+        "light-world-death-mountain-shop-shelf_left-slot_1",
+        "light-world-death-mountain-shop-shelf_left-slot_2",
+        "light-world-death-mountain-shop-shelf_center-slot_1",
+        "light-world-death-mountain-shop-shelf_center-slot_2",
+        "light-world-death-mountain-shop-shelf_right-slot_1",
+        "check-069",
+        "village-of-outcasts-shop-shelf_left-slot_2",
+        "village-of-outcasts-shop-shelf_center-slot_2",
+        "dark-lake-hylia-shop-shelf_left-slot_1",
+        "dark-world-potion-shop-shelf_left-slot_2",
+        "red-shield-shop-shelf_center-slot_1",
+        "check-113",
+        "check-135",
+        "check-136",
+        "check-182",
+        "check-183",
+        "check-179",
+        "check-186",
+        "check-148",
+        "check-149",
+        "check-150"
+      ]
+    },
+    {
+      "index": 9,
+      "locations": [
+        "check-020",
+        "check-042",
+        "check-057",
+        "check-021",
+        "check-022",
+        "check-114",
+        "check-137",
+        "check-138",
+        "check-139",
+        "check-140",
+        "check-141",
+        "check-157",
+        "check-177",
+        "check-178",
+        "check-180",
+        "check-181",
+        "check-145",
+        "check-151",
+        "check-152",
+        "check-154"
+      ]
+    },
+    {
+      "index": 10,
+      "locations": [
+        "light-world-death-mountain-shop-shelf_right-slot_2",
+        "big-bomb-shop-shelf_center-slot_1",
+        "big-bomb-shop-shelf_center-slot_2",
+        "dark-lake-hylia-shop-shelf_left-slot_2",
+        "dark-lake-hylia-shop-shelf_center-slot_2",
+        "dark-lake-hylia-shop-shelf_right-slot_1",
+        "red-shield-shop-shelf_right-slot_2",
+        "check-115",
+        "check-158",
+        "check-168",
+        "check-153",
+        "check-155",
+        "check-156"
+      ]
+    },
+    {
+      "index": 11,
+      "locations": [
+        "check-059",
+        "check-073",
+        "check-047",
+        "cave-shop-dark-death-mountain-shelf_left-slot_1",
+        "cave-shop-dark-death-mountain-shelf_left-slot_2",
+        "cave-shop-dark-death-mountain-shelf_center-slot_1",
+        "cave-shop-dark-death-mountain-shelf_center-slot_2",
+        "cave-shop-dark-death-mountain-shelf_right-slot_1",
+        "cave-shop-dark-death-mountain-shelf_right-slot_2",
+        "check-271",
+        "check-089",
+        "check-090",
+        "check-091",
+        "check-092",
+        "check-127",
+        "check-132",
+        "check-169",
+        "check-160",
+        "check-171",
+        "check-190",
+        "check-204",
+        "check-220",
+        "check-221",
+        "check-222"
+      ]
+    },
+    {
+      "index": 12,
+      "locations": [
+        "check-093",
+        "check-094",
+        "check-095",
+        "check-096",
+        "check-159",
+        "check-170",
+        "check-194",
+        "check-195",
+        "check-205",
+        "check-233",
+        "check-223"
+      ]
+    },
+    {
+      "index": 13,
+      "locations": [
+        "check-039",
+        "check-074",
+        "check-163",
+        "check-164",
+        "check-172",
+        "check-165",
+        "check-191",
+        "check-192",
+        "check-196",
+        "check-207",
+        "check-197",
+        "check-198",
+        "check-199",
+        "check-200",
+        "check-201",
+        "check-206",
+        "check-234",
+        "check-225",
+        "check-226"
+      ]
+    },
+    {
+      "index": 14,
+      "locations": [
+        "check-010",
+        "check-161",
+        "check-162",
+        "check-166",
+        "check-167",
+        "check-202",
+        "check-203",
+        "check-227",
+        "check-228",
+        "check-229",
+        "check-230"
+      ]
+    },
+    {
+      "index": 15,
+      "locations": [
+        "check-266",
+        "check-267",
+        "check-224",
+        "check-231",
+        "check-232"
+      ]
+    },
+    {
+      "index": 16,
+      "locations": [
+        "check-033"
+      ]
+    },
+    {
+      "index": 17,
+      "locations": [
+        "check-023",
+        "check-044",
+        "check-054",
+        "check-055",
+        "check-126"
+      ]
+    },
+    {
+      "index": 18,
+      "locations": [
+        "check-070",
+        "check-080",
+        "check-133"
+      ]
+    },
+    {
+      "index": 19,
+      "locations": [
+        "check-125",
+        "check-211",
+        "check-212",
+        "check-217"
+      ]
+    },
+    {
+      "index": 20,
+      "locations": [
+        "check-134",
+        "check-209",
+        "check-210"
+      ]
+    },
+    {
+      "index": 21,
+      "locations": [
+        "check-128",
+        "check-129",
+        "check-130",
+        "check-131",
+        "check-218",
+        "check-219"
+      ]
+    },
+    {
+      "index": 22,
+      "locations": [
+        "check-208",
+        "check-213",
+        "check-214",
+        "check-215",
+        "check-216",
+        "check-235",
+        "check-236",
+        "check-237",
+        "check-262",
+        "check-238",
+        "check-243",
+        "check-244",
+        "check-245",
+        "check-246",
+        "check-263"
+      ]
+    },
+    {
+      "index": 23,
+      "locations": [
+        "check-072",
+        "check-253",
+        "check-255",
+        "check-256",
+        "check-257"
+      ]
+    },
+    {
+      "index": 24,
+      "locations": [
+        "check-254",
+        "check-258",
+        "check-259",
+        "check-265"
+      ]
+    },
+    {
+      "index": 25,
+      "locations": [
+        "check-239",
+        "check-240",
+        "check-241",
+        "check-242",
+        "check-264",
+        "check-247",
+        "check-248",
+        "check-249",
+        "check-250",
+        "check-251",
+        "check-252",
+        "check-260",
+        "check-261"
+      ]
+    }
+  ],
+  "stats": {
+    "attempts": 1,
+    "keyDropShuffle": true,
+    "includeNpcChecks": true,
+    "includeWorldItems": true,
+    "shufflePrizes": true,
+    "capacity": {
+      "explosives": {
+        "mode": "custom",
+        "start": 0,
+        "max": 50,
+        "count": 7,
+        "shape": {
+          "curve": "equal"
+        }
+      },
+      "projectiles": {
+        "mode": "custom",
+        "start": 0,
+        "max": 70,
+        "count": 7,
+        "shape": {
+          "curve": "equal"
+        }
+      },
+      "meter": {
+        "mode": "custom",
+        "start": 0,
+        "max": 3,
+        "count": 3,
+        "shape": {
+          "curve": "equal"
+        }
+      },
+      "wallet": {
+        "mode": "custom",
+        "start": 0,
+        "max": 9999,
+        "count": 8,
+        "shape": {
+          "curve": "geometric"
+        }
+      }
+    },
+    "capacityProgressive": true,
+    "capacityBonus": {
+      "explosives": {
+        "percent": 25,
+        "stepBase": true
+      },
+      "projectiles": {
+        "percent": 25,
+        "stepBase": true
+      },
+      "meter": {
+        "percent": 100,
+        "stepBase": false
+      },
+      "wallet": {
+        "percent": 0,
+        "stepBase": true
+      }
+    },
+    "capacityCounts": {
+      "perFamily": {
+        "explosives": 7,
+        "projectiles": 7,
+        "meter": 3,
+        "wallet": 8
+      },
+      "poolDelta": 25
+    },
+    "npcDeliverableCount": 0,
+    "worldDeliverableCount": 0,
+    "capacityDeliverableCount": 0,
+    "ponds": {
+      "capacity": {
+        "mode": "custom",
+        "start": 0,
+        "max": 999,
+        "throws": 10,
+        "items": 10,
+        "shape": {
+          "curve": "equal"
+        }
+      },
+      "wishing": {
+        "mode": "custom",
+        "start": 0,
+        "max": 400,
+        "throws": 10,
+        "items": 10,
+        "shape": {
+          "curve": "geometric"
+        },
+        "ask": {
+          "rupees": {
+            "enabled": true,
+            "min": 0,
+            "max": 400
+          },
+          "bombs": {
+            "enabled": true,
+            "min": 1,
+            "max": 10
+          },
+          "arrows": {
+            "enabled": true,
+            "min": 1,
+            "max": 20
+          },
+          "bottle": {
+            "enabled": false,
+            "min": 1,
+            "max": 1,
+            "contents": [
+              "fairy",
+              "bee",
+              "red-potion",
+              "blue-potion",
+              "green-potion"
+            ]
+          },
+          "item": {
+            "enabled": true
+          }
+        }
+      },
+      "cursed": {
+        "mode": "custom",
+        "start": 100,
+        "max": 300,
+        "throws": 10,
+        "items": 10,
+        "shape": {
+          "curve": "equal"
+        },
+        "ask": {
+          "rupees": {
+            "enabled": false,
+            "min": 100,
+            "max": 300
+          },
+          "bombs": {
+            "enabled": false,
+            "min": 1,
+            "max": 5
+          },
+          "arrows": {
+            "enabled": false,
+            "min": 1,
+            "max": 10
+          },
+          "bottle": {
+            "enabled": true,
+            "min": 1,
+            "max": 2,
+            "contents": [
+              "fairy",
+              "bee",
+              "red-potion",
+              "blue-potion",
+              "green-potion"
+            ]
+          },
+          "item": {
+            "enabled": true
+          }
+        }
+      }
+    },
+    "darkRooms": {
+      "requireLight": true,
+      "lights": {
+        "lamp": true,
+        "fireRod": true,
+        "bombos": true,
+        "redCane": true
+      }
+    },
+    "storyGates": {
+      "pedestalScenes": true,
+      "pedestal": "pendants",
+      "sahasrahla": "pendant",
+      "barrier": "sword",
+      "bombShop": "crystals",
+      "bombShopAsksSmiths": true,
+      "tower": {
+        "kind": "crystals",
+        "count": 7
+      },
+      "ganon": {
+        "kind": "crystals",
+        "count": 7
+      },
+      "pyramidHole": "agahnim2",
+      "heraMusic": true,
+      "vaneScene": true,
+      "mountainRespawn": true
+    },
+    "pondPrizeCount": 0,
+    "pondSlotsFollowMode": true,
+    "progressiveTiers": {
+      "sword": [
+        true,
+        true,
+        true,
+        true
+      ],
+      "shield": [
+        true,
+        true,
+        true
+      ],
+      "mail": [
+        true,
+        true
+      ],
+      "glove": [
+        true,
+        true
+      ],
+      "bow": [
+        true,
+        true
+      ],
+      "ocarina": [
+        true,
+        false
+      ]
+    },
+    "progressiveModes": {
+      "sword": "progressive",
+      "shield": "progressive",
+      "mail": "progressive",
+      "glove": "progressive",
+      "bow": "progressive",
+      "ocarina": "progressive"
+    },
+    "retroBow": {
+      "enabled": false,
+      "woodArrowCost": 10,
+      "silverArrowCost": 50
+    },
+    "itemPower": {
+      "catchFairies": true,
+      "byrnaInvulnerable": true,
+      "capeDoubleMagic": false,
+      "silverArrowsAnywhere": true,
+      "powderFairy": true,
+      "hammerTablets": false,
+      "swordlessMedallions": false,
+      "pullableCurtains": false,
+      "hammerLastFight": false,
+      "hammerTowerSeal": false
+    },
+    "dungeonItems": {
+      "bigKey": "original_dungeon",
+      "smallKey": "original_dungeon",
+      "compass": "original_dungeon",
+      "map": "original_dungeon"
+    },
+    "accessibility": "full",
+    "shops": {
+      "mode": "custom",
+      "enabled": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        21,
+        22,
+        23,
+        24,
+        25,
+        26,
+        27,
+        28,
+        29,
+        30
+      ],
+      "slotCount": 0,
+      "depth": 2,
+      "seed": "golden-shops"
+    },
+    "locationCount": 321,
+    "sphereCount": 26
+  }
+}
