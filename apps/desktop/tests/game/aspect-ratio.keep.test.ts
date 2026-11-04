@@ -1,6 +1,10 @@
 /* @layer test @kind test */
 import { describe, it, expect, vi, afterEach } from 'vitest';
-import { validateCustomRatio, detectScreenRatio, MAX_ASPECT } from '@rotp/game-core';
+import { validateCustomRatio as validate, detectScreenRatio as detect } from '@drizztdourden08/brock-display/aspect-ratio';
+import { ASPECT_LIMITS } from '@rotp/game-core';
+
+const validateCustomRatio = (w: number, h: number) => validate(w, h, ASPECT_LIMITS);
+const detectScreenRatio = () => detect(ASPECT_LIMITS);
 
 describe('validateCustomRatio', () => {
   it('accepts ratios from 4:3 up to the wide ceiling', { tags: ['critical'] }, () => {
@@ -55,6 +59,6 @@ describe('detectScreenRatio', () => {
   it('clamps ultra-wide screens to the max', { tags: ['critical'] }, () => {
     vi.stubGlobal('window', { screen: { width: 5120, height: 1080 } });
     const { w, h } = detectScreenRatio();
-    expect(w / h).toBeLessThanOrEqual(MAX_ASPECT + 1e-6);
+    expect(w / h).toBeLessThanOrEqual(ASPECT_LIMITS.max + 1e-6);
   });
 });

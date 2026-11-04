@@ -1,6 +1,7 @@
 /* @layer renderer-components @kind logic */
 import type { GameSettings } from '@rotp/features';
-import { allowedRatio, parseRatioString } from '@rotp/game-core';
+import { parseRatioString } from '@drizztdourden08/brock-display/aspect-ratio';
+import { allowedRatio } from '@rotp/game-core';
 import { ASPECT_OPTIONS } from './hud-controls.constants';
 
 const hudRatioOptions = (settings: GameSettings) => {

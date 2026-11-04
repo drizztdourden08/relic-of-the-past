@@ -1,8 +1,7 @@
 /* @layer package @kind barrel */
 export { SLOT, activeStates } from '../../active-states';
 export type { ActiveState, StateSnapshot } from '../../active-states';
-export { MAX_ASPECT, aspectRatioValue, detectScreenRatio, detectViewportRatio, effectiveCustomRatio, niceRatio, parseRatioString, screenReadout, validateCustomRatio, viewportReadout } from '../../aspect-ratio';
-export type { RatioReadout } from '../../aspect-ratio';
+export { ASPECT_LIMITS, aspectRatioValue } from '../../aspect-ratio';
 export { getMasterAudioTarget, initMasterVolume, resetMasterVolume, resumeAudio, setMasterVolume, suspendAudio } from '../../audio-volume';
 export { DEFAULT_ZELDA3_INI } from '../../config.constants';
 export { darkRoomLightWordOf } from '../../dark-room-lights';
