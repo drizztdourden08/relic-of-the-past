@@ -44,7 +44,7 @@ const canReceiveNow = (): number => {
     value = scriptedReady(flying, deliveryModule.flightTicks);
   }
   const last = deliveryModule.canReceiveRuns.at(-1);
-  if (last && last.value === value && last.to === deliveryModule.frame - 1) last.to = deliveryModule.frame;
+  if (last?.value === value && last.to === deliveryModule.frame - 1) last.to = deliveryModule.frame;
   else deliveryModule.canReceiveRuns.push({ value, from: deliveryModule.frame, to: deliveryModule.frame });
   return value;
 };
