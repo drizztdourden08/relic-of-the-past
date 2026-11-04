@@ -1,0 +1,167 @@
+[
+  {
+    "frame": "start",
+    "reports": [],
+    "reported": [],
+    "logs": [
+      "randomizer info: [Poller] Location polling started: 8 checks (every 1000ms)"
+    ]
+  },
+  {
+    "frame": "1: first tick re-baselines",
+    "reports": [
+      "chk-e"
+    ],
+    "reported": [
+      "chk-e",
+      "room-a"
+    ],
+    "logs": [
+      "randomizer info: [Poller] Re-baselined: 2/8 already complete, 1 unreported"
+    ]
+  },
+  {
+    "frame": "2: overworld screen 3 flag",
+    "reports": [
+      "ow-b"
+    ],
+    "reported": [
+      "chk-e",
+      "ow-b",
+      "room-a"
+    ],
+    "logs": [
+      "randomizer info: [Poller] Check completed: ow-b"
+    ]
+  },
+  {
+    "frame": "3: room table pointer missing",
+    "reports": [],
+    "reported": [
+      "chk-e",
+      "ow-b",
+      "room-a"
+    ],
+    "logs": []
+  },
+  {
+    "frame": "4: progress flag lands, live room word completes room 0x20",
+    "reports": [
+      "prog-c",
+      "live-g"
+    ],
+    "reported": [
+      "chk-e",
+      "live-g",
+      "ow-b",
+      "prog-c",
+      "room-a"
+    ],
+    "logs": [
+      "randomizer info: [Poller] Check completed: prog-c",
+      "randomizer info: [Poller] Check completed: live-g"
+    ]
+  },
+  {
+    "frame": "5: threshold short, baseline-only check completes",
+    "reports": [],
+    "reported": [
+      "chk-e",
+      "live-g",
+      "ow-b",
+      "prog-c",
+      "room-a"
+    ],
+    "logs": []
+  },
+  {
+    "frame": "6: threshold met",
+    "reports": [
+      "prog-d"
+    ],
+    "reported": [
+      "chk-e",
+      "live-g",
+      "ow-b",
+      "prog-c",
+      "prog-d",
+      "room-a"
+    ],
+    "logs": [
+      "randomizer info: [Poller] Check completed: prog-d"
+    ]
+  },
+  {
+    "frame": "7: state load: heap replaced, late-h suppressed, re-baseline requested",
+    "reports": [
+      "ow-b",
+      "prog-c",
+      "chk-e",
+      "base-f"
+    ],
+    "reported": [
+      "base-f",
+      "chk-e",
+      "late-h",
+      "ow-b",
+      "prog-c",
+      "room-a"
+    ],
+    "logs": [
+      "randomizer info: [Poller] Re-baselined: 6/8 already complete, 4 unreported"
+    ]
+  },
+  {
+    "frame": "8: first tick after the load re-baselines",
+    "reports": [],
+    "reported": [
+      "base-f",
+      "chk-e",
+      "late-h",
+      "ow-b",
+      "prog-c",
+      "room-a"
+    ],
+    "logs": []
+  },
+  {
+    "frame": "9: threshold met again",
+    "reports": [
+      "prog-d"
+    ],
+    "reported": [
+      "base-f",
+      "chk-e",
+      "late-h",
+      "ow-b",
+      "prog-c",
+      "prog-d",
+      "room-a"
+    ],
+    "logs": [
+      "randomizer info: [Poller] Check completed: prog-d"
+    ]
+  },
+  {
+    "frame": "10: idle",
+    "reports": [],
+    "reported": [
+      "base-f",
+      "chk-e",
+      "late-h",
+      "ow-b",
+      "prog-c",
+      "prog-d",
+      "room-a"
+    ],
+    "logs": []
+  },
+  {
+    "frame": "stopped",
+    "reports": [],
+    "reported": [],
+    "logs": [
+      "randomizer info: [Poller] Location polling stopped"
+    ]
+  }
+]

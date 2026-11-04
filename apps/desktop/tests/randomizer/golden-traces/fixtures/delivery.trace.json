@@ -1,0 +1,147 @@
+{
+  "frames": 2434,
+  "events": [
+    "373 granted grant after refusals",
+    "377 complete grant after refusals",
+    "408 granted receipt grant timeout",
+    "1111 complete receipt grant timeout",
+    "1142 granted plain give timeout",
+    "1742 complete plain give timeout",
+    "1773 granted quiet settles",
+    "1773 complete quiet settles",
+    "1804 execute custom action",
+    "1804 granted custom action",
+    "2404 complete custom action"
+  ],
+  "ccalls": [
+    "1 WasmGrantItemWithReceipt(1)",
+    "32 WasmGrantItemWithReceipt(1)",
+    "63 WasmGrantItemWithReceipt(1)",
+    "94 WasmGrantItemWithReceipt(1)",
+    "125 WasmGrantItemWithReceipt(1)",
+    "156 WasmGrantItemWithReceipt(1)",
+    "187 WasmGrantItemWithReceipt(1)",
+    "218 WasmGrantItemWithReceipt(1)",
+    "249 WasmGrantItemWithReceipt(1)",
+    "280 WasmGrantItemWithReceipt(1)",
+    "311 WasmGrantItemWithReceipt(1)",
+    "342 WasmGrantItemWithReceipt(1)",
+    "373 WasmGrantItemWithReceipt(1)",
+    "408 WasmGrantItemWithReceipt(2)",
+    "1142 WasmCheatGiveItem(3)",
+    "1773 WasmGrantQuietReceipt(4)"
+  ],
+  "canReceiveRuns": [
+    {
+      "value": 1,
+      "from": 1,
+      "to": 1
+    },
+    {
+      "value": 1,
+      "from": 32,
+      "to": 32
+    },
+    {
+      "value": 1,
+      "from": 63,
+      "to": 63
+    },
+    {
+      "value": 1,
+      "from": 94,
+      "to": 94
+    },
+    {
+      "value": 1,
+      "from": 125,
+      "to": 125
+    },
+    {
+      "value": 1,
+      "from": 156,
+      "to": 156
+    },
+    {
+      "value": 1,
+      "from": 187,
+      "to": 187
+    },
+    {
+      "value": 1,
+      "from": 218,
+      "to": 218
+    },
+    {
+      "value": 1,
+      "from": 249,
+      "to": 249
+    },
+    {
+      "value": 1,
+      "from": 280,
+      "to": 280
+    },
+    {
+      "value": 1,
+      "from": 311,
+      "to": 311
+    },
+    {
+      "value": 1,
+      "from": 342,
+      "to": 342
+    },
+    {
+      "value": 1,
+      "from": 373,
+      "to": 373
+    },
+    {
+      "value": 0,
+      "from": 374,
+      "to": 376
+    },
+    {
+      "value": 1,
+      "from": 377,
+      "to": 377
+    },
+    {
+      "value": 1,
+      "from": 408,
+      "to": 1107
+    },
+    {
+      "value": 0,
+      "from": 1108,
+      "to": 1110
+    },
+    {
+      "value": 1,
+      "from": 1111,
+      "to": 1111
+    },
+    {
+      "value": 1,
+      "from": 1142,
+      "to": 1742
+    },
+    {
+      "value": 1,
+      "from": 1773,
+      "to": 1773
+    },
+    {
+      "value": 1,
+      "from": 1804,
+      "to": 2404
+    }
+  ],
+  "logs": [
+    "280 app warn: Delivery \"grant after refusals\" refused 10 times, retrying until the player can receive",
+    "1008 app warn: Delivery \"receipt grant timeout\" still waiting for its pickup to finish, keeping it in flight",
+    "1742 app warn: Delivery \"plain give timeout\" timed out waiting for pickup to finish",
+    "2404 app warn: Delivery \"custom action\" timed out waiting for pickup to finish"
+  ]
+}
