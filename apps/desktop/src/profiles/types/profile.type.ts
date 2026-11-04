@@ -1,7 +1,7 @@
 /* @layer shared-types @kind types */
 import type { RandomizerProfileConfig } from '@drizztdourden08/brock-randomizer';
 import type { GameSettings } from '@rotp/features';
-import '@app/randomizer/rotp-randomizer/rotp-randomizer.augment';
+import '@app/randomizer/rotp-randomizer/rotp-randomizer.augment.type';
 
 type ProfileRandomizerConfig = RandomizerProfileConfig;
 

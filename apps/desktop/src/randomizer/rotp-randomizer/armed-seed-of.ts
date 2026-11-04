@@ -1,15 +1,9 @@
 /* @layer renderer-app @kind logic */
-import type { DeliveryAction, MessageIdOf, PhysicalPlan, PlanEntry, PollEntry, SessionReceiptTexts } from '@rotp/randomizer';
+import type { DeliveryAction, PlanEntry } from '@rotp/randomizer';
 import type { ArmedSeed } from '@drizztdourden08/brock-randomizer/session';
 import { reportLocalCheck } from '@app/game/randomizer-client/local-check-report';
+import type { ArmedParts } from './armed-seed-of.type';
 import { pollEntriesOfPlan } from './poll-entries-of-plan';
-
-type ArmedParts = {
-  plan: PhysicalPlan;
-  pollEntries: PollEntry[];
-  messageIdOf: MessageIdOf;
-  receiptTexts: SessionReceiptTexts;
-};
 
 const armedSeedOf = ({ plan, pollEntries, messageIdOf, receiptTexts }: ArmedParts): ArmedSeed<DeliveryAction> => {
   const byLocation = new Map<string, PlanEntry>();

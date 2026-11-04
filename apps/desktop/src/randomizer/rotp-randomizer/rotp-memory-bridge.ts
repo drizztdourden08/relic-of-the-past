@@ -3,7 +3,7 @@ import { getModule } from '@rotp/game-core';
 import { buildHeapReads } from '@rotp/randomizer';
 import type { MemoryBridge } from '@drizztdourden08/brock-randomizer/session';
 import { memoryViewOf } from './rotp-memory-view';
-import { onStateLoaded } from './state-loaded-listeners';
+import { onStateLoaded } from './on-state-loaded';
 
 const rotpMemoryBridge: MemoryBridge = {
   view: () => {

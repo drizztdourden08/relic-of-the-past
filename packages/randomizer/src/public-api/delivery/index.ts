@@ -3,7 +3,7 @@ export { getApRoomHash, setApRoomHash } from '../../ap-room-hash';
 export * from '../../archipelago';
 export * from '../../client';
 export * from '../../delivery-api';
-export { executeEntry, isReceiptGrant } from '../../delivery-execute';
+export { executeAction, executeEntry, isReceiptGrant } from '../../delivery-execute';
 export * from '../../delivery-queue';
 export * from '../../foreign-icons';
 export * from '../../foreign-items';

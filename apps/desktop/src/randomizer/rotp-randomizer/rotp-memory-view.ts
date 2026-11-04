@@ -1,9 +1,7 @@
 /* @layer renderer-app @kind logic */
 import type { HeapReads } from '@rotp/randomizer';
 import type { MemoryView } from '@drizztdourden08/brock-randomizer/session';
-import { OVERWORLD_REGION, PROGRESS_REGION, ROOM_REGION } from './rotp-memory.constants';
-
-const ABSENT = 0;
+import { ABSENT, OVERWORLD_REGION, PROGRESS_REGION, ROOM_REGION } from './rotp-memory.constants';
 
 const memoryViewOf = (reads: HeapReads): MemoryView => ({
   byte: (region, offset) => {

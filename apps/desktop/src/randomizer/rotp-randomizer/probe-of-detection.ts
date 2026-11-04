@@ -2,8 +2,7 @@
 import type { CheckDetection } from '@rotp/randomizer';
 import type { FlagProbe } from '@drizztdourden08/brock-randomizer/session';
 import { OVERWORLD_REGION, PROGRESS_REGION, ROOM_REGION } from './rotp-memory.constants';
-
-const NEVER_MET: FlagProbe = { custom: () => false };
+import { NEVER_MET } from './probe-of-detection.constants';
 
 const progressProbe = (detection: Extract<CheckDetection, { mode: 'progress' }>): FlagProbe => {
   if (detection.mask !== undefined) return { region: PROGRESS_REGION, offset: detection.bufferIndex, mask: detection.mask };
