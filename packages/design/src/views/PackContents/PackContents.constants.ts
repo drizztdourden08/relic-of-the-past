@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind constants */
-import { MSU1_BYTES_PER_FRAME, MSU1_HEADER_BYTES, MSU1_SAMPLE_RATE } from '@rotp/msu';
+import { MSU1_BYTES_PER_FRAME, MSU1_HEADER_BYTES, MSU1_SAMPLE_RATE } from '@drizztdourden08/brock-msu/format';
 
 const PREVIEW_SECONDS = 30;
 const PCM_PREVIEW_BYTES = MSU1_HEADER_BYTES + MSU1_SAMPLE_RATE * MSU1_BYTES_PER_FRAME * PREVIEW_SECONDS;

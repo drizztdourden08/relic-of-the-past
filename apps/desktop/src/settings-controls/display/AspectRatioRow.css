@@ -1,5 +1,0 @@
-/* @layer renderer-app @kind style */
-.aspect-ratio-row__lock {
-  inline-size: max-content;
-  min-inline-size: 100%;
-}

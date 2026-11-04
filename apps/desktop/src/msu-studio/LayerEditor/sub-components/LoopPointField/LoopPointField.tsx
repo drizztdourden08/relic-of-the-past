@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind component */
 import { Status, Box, Field, Flex, NumberInput } from '@drizztdourden08/tessera/primitives';
-import { MSU1_SAMPLE_RATE } from '@rotp/msu';
+import { MSU1_SAMPLE_RATE } from '@drizztdourden08/brock-msu/format';
 import { MAX_LOOP_SECONDS } from './LoopPointField.constants';
 import type { LoopPointFieldProps } from './LoopPointField.type';
 
