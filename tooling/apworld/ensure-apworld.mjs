@@ -29,6 +29,6 @@ const isCurrent = () => {
 if (isCurrent()) {
   console.log('ensure-apworld: up to date');
 } else {
-  const build = spawnSync(process.execPath, [path.join(HERE, 'build-apworld.mjs')], { stdio: 'inherit' });
+  const build = spawnSync(process.execPath, [path.join(HERE, 'build-apworld.mjs')], { stdio: 'inherit', windowsHide: true });
   process.exit(build.status ?? 1);
 }

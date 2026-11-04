@@ -15,8 +15,8 @@ const OVERRIDE = process.env.BROCK_GLOBAL_PREFIX ?? '';
 const say = (line) => process.stderr.write(`${line}\n`);
 const quote = (arg) => (/^[\w@:/.=+-]+$/.test(arg) ? arg : `"${arg.replace(/"/g, '\\"')}"`);
 const exec = (command, args, stdio = 'pipe') => (IS_WINDOWS
-  ? spawnSync([command, ...args].map(quote).join(' '), { encoding: 'utf8', stdio, shell: true })
-  : spawnSync(command, args, { encoding: 'utf8', stdio }));
+  ? spawnSync([command, ...args].map(quote).join(' '), { encoding: 'utf8', stdio, shell: true, windowsHide: true })
+  : spawnSync(command, args, { encoding: 'utf8', stdio, windowsHide: true }));
 
 const npmOut = (args) => {
   const result = exec('npm', args);
@@ -52,7 +52,7 @@ const isWorktree = () => statSync(join(CHECKOUT, '.git'), { throwIfNoEntry: fals
 const runBrock = (file, args) => {
   if (!insideCheckout(process.cwd())) process.chdir(CHECKOUT);
   const result = file.endsWith('.mjs')
-    ? spawnSync(process.execPath, [file, ...args], { stdio: 'inherit' })
+    ? spawnSync(process.execPath, [file, ...args], { stdio: 'inherit', windowsHide: true })
     : exec(file, args, 'inherit');
   return result.status ?? 1;
 };

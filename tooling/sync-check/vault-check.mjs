@@ -25,7 +25,7 @@ const cleanGitEnv = () => {
 
 const git = (dir, args) => {
   try {
-    return execFileSync('git', ['-C', dir, ...args], { encoding: 'utf8', stdio: ['ignore', 'pipe', 'pipe'], env: cleanGitEnv() });
+    return execFileSync('git', ['-C', dir, ...args], { encoding: 'utf8', stdio: ['ignore', 'pipe', 'pipe'], env: cleanGitEnv(), windowsHide: true });
   } catch {
     return '';
   }
@@ -33,7 +33,7 @@ const git = (dir, args) => {
 
 /** True when the staged commit touches a vault-mirrored path. No -C: reads the calling repo's own diff. */
 const stagedTouchesVault = () => {
-  const staged = execFileSync('git', ['diff', '--cached', '--name-only'], { encoding: 'utf8' })
+  const staged = execFileSync('git', ['diff', '--cached', '--name-only'], { encoding: 'utf8', windowsHide: true })
     .split('\n').filter(Boolean);
   return staged.some((f) => MANAGED_ROOTS.some((root) => f === root || f.startsWith(`${root}/`)));
 };

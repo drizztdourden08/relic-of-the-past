@@ -10,7 +10,7 @@ const SCRIPT = join('tooling', 'generate-from-records', 'generate-from-records.m
 
 const runCheck = (): { ok: boolean; output: string } => {
   try {
-    return { ok: true, output: execFileSync(process.execPath, [SCRIPT, '--check'], { cwd: ROOT, encoding: 'utf8' }) };
+    return { ok: true, output: execFileSync(process.execPath, [SCRIPT, '--check'], { cwd: ROOT, encoding: 'utf8', windowsHide: true }) };
   } catch (error) {
     const failure = error as { stdout?: string; stderr?: string; message: string };
     return { ok: false, output: `${failure.stdout ?? ''}${failure.stderr ?? ''}${failure.message}` };

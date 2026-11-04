@@ -17,7 +17,7 @@ if (!process.argv[2] && installedRoots.length === 0) throw new Error('Brock Inpu
 
 for (const packageRoot of installedRoots) {
   const prepare = resolve(packageRoot, 'bin/ensure-addon.mjs');
-  const result = spawnSync(process.execPath, [prepare], { cwd: packageRoot, stdio: 'inherit' });
+  const result = spawnSync(process.execPath, [prepare], { cwd: packageRoot, stdio: 'inherit', windowsHide: true });
   if (result.error) throw result.error;
   if (result.status !== 0) throw new Error(`Brock Input preparation failed in ${packageRoot}`);
 }

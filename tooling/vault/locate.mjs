@@ -8,7 +8,7 @@ const ROOT = resolve(import.meta.dirname, '..', '..');
 const mainCheckout = () => {
   try {
     const common = execFileSync('git', ['rev-parse', '--path-format=absolute', '--git-common-dir'], {
-      cwd: ROOT, encoding: 'utf8', stdio: ['ignore', 'pipe', 'pipe'],
+      cwd: ROOT, encoding: 'utf8', stdio: ['ignore', 'pipe', 'pipe'], windowsHide: true,
     }).trim();
     return common.endsWith('.git') ? resolve(common, '..') : ROOT;
   } catch {

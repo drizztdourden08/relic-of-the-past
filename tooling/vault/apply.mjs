@@ -41,7 +41,7 @@ const applyEntries = ({ entries, root, treeDir }) => {
 };
 
 const run = (args, cwd) =>
-  execFileSync('git', args, { cwd, encoding: 'utf8', stdio: ['ignore', 'pipe', 'pipe'] });
+  execFileSync('git', args, { cwd, encoding: 'utf8', stdio: ['ignore', 'pipe', 'pipe'], windowsHide: true });
 
 const commitVault = (vaultDir, subject) => {
   if (run(['status', '--porcelain'], vaultDir).trim() === '') return null;
