@@ -53,6 +53,7 @@ describe('golden delivery trace', { tags: ['standard'] }, () => {
   beforeAll(() => {
     vi.useFakeTimers();
     vi.setSystemTime(0);
+    deliveryModule.inFlight = () => queueState.delivering?.message ?? null;
     vi.stubGlobal('requestAnimationFrame', (callback: () => void) => setTimeout(callback, FRAME_MS));
     vi.stubGlobal('cancelAnimationFrame', (id: ReturnType<typeof setTimeout>) => clearTimeout(id));
   });

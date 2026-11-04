@@ -1,12 +1,11 @@
 /* @layer tests @kind helper */
-import { queueState } from '@rotp/randomizer';
-
 const REFUSALS_BEFORE_GRANT = 12;
 const RECEIPT_TIMEOUT_BUSY_AT = 700;
 
 const deliveryModule = {
   calls: [] as string[],
   frame: 0,
+  inFlight: (): string | null => null,
   refusalsLeft: REFUSALS_BEFORE_GRANT,
   flightTicks: 0,
   flightOf: '',
@@ -34,15 +33,15 @@ const scriptedReady = (message: string, tick: number): number => {
 };
 
 const canReceiveNow = (): number => {
-  const flying = queueState.delivering;
+  const flying = deliveryModule.inFlight();
   let value = 1;
-  if (flying) {
-    if (deliveryModule.flightOf !== flying.message) {
-      deliveryModule.flightOf = flying.message;
+  if (flying !== null) {
+    if (deliveryModule.flightOf !== flying) {
+      deliveryModule.flightOf = flying;
       deliveryModule.flightTicks = 0;
     }
     deliveryModule.flightTicks++;
-    value = scriptedReady(flying.message, deliveryModule.flightTicks);
+    value = scriptedReady(flying, deliveryModule.flightTicks);
   }
   const last = deliveryModule.canReceiveRuns.at(-1);
   if (last && last.value === value && last.to === deliveryModule.frame - 1) last.to = deliveryModule.frame;
