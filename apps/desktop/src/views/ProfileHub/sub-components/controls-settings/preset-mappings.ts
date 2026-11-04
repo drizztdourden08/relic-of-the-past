@@ -10,7 +10,7 @@ const presetMappings = ({ sdlType, vid, pid }: PresetMappingsParams) => {
 
   return defaults.map(m => {
     const fromDevice = m.binding.type !== 'keyboard';
-    return { ...m, icon: null, sourceVid: fromDevice ? vid : null, sourcePid: fromDevice ? pid : null };
+    return { ...m, sourceVid: fromDevice ? vid : null, sourcePid: fromDevice ? pid : null };
   });
 };
 
