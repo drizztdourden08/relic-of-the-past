@@ -1,10 +1,10 @@
 /* @layer renderer-components @kind component */
 import { useMemo } from 'react';
-import { SettingsLayout } from '@drizztdourden08/brock-react';
+import { SettingsLayout, composeLockCauses } from '@drizztdourden08/brock-react';
 import { DEFAULT_SETTINGS } from '@rotp/game-core';
 import onlineSections from '@app/screens/game/extras/online.settings';
 import { isSettingDisabled } from '@app/settings-controls/is-setting-disabled';
-import { lockCauseOf } from '@app/settings-controls/lock-cause-of';
+import { LOCK_CAUSE_PROVIDERS } from '@app/settings-controls/lock-causes';
 import { lockOverlay } from '@app/settings-controls/lock-overlay';
 import { withOwnRows } from '@app/settings-controls/own-row-sections';
 import { renderSettingControl } from '@app/settings-controls/render-setting-control';
@@ -21,7 +21,7 @@ const OnlineSettings = (props: OnlineSettingsProps) => {
       onChange={onChange}
       renderControl={renderSettingControl}
       isDisabled={isSettingDisabled}
-      lockCauseOf={lockCauseOf}
+      lockCauseOf={composeLockCauses(LOCK_CAUSE_PROVIDERS)}
       lockOverlay={lockOverlay}
     />
   );
