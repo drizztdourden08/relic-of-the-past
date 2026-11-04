@@ -1,6 +1,6 @@
 {
   "brock": "0.116.1",
-  "generatedAt": "2026-11-03T06:22:09.907Z",
+  "generatedAt": "2026-11-04T01:27:08.479Z",
   "modules": [
     {
       "id": "updater",
@@ -35,6 +35,11 @@
     {
       "id": "input",
       "package": "@drizztdourden08/brock-input",
+      "version": "0.116.1"
+    },
+    {
+      "id": "mcp",
+      "package": "@drizztdourden08/brock-mcp",
       "version": "0.116.1"
     }
   ]

@@ -46,6 +46,7 @@
     "@drizztdourden08/brock-display": "^0.116.1",
     "@drizztdourden08/brock-electron": "^0.116.1",
     "@drizztdourden08/brock-input": "^0.116.1",
+    "@drizztdourden08/brock-mcp": "^0.116.1",
     "@drizztdourden08/brock-port-kit": "^0.116.1",
     "@drizztdourden08/brock-react": "^0.116.1",
     "@drizztdourden08/brock-secrets": "^0.116.1",
