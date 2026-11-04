@@ -1,11 +1,11 @@
 /* @layer shared-game @kind constants */
 import { HELPERS } from './helpers-registry.constants';
-import type { HelperRegistry, World as BaseWorld } from '@drizztdourden08/brock-randomizer/world';
+import type { KitHelperRegistry } from '@drizztdourden08/brock-randomizer/world';
 import type { RotpKeys } from '../../rotp-keys.type';
 
-const registry = (): HelperRegistry<BaseWorld<RotpKeys>> => HELPERS as HelperRegistry<BaseWorld<RotpKeys>>;
+const registry = (): KitHelperRegistry<RotpKeys> => HELPERS;
 
-const HELPER_REGISTRY: HelperRegistry<BaseWorld<RotpKeys>> = {
+const HELPER_REGISTRY: KitHelperRegistry<RotpKeys> = {
   get size() { return registry().size; },
   get: (name) => registry().get(name),
   has: (name) => registry().has(name),
