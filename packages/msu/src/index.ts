@@ -4,7 +4,6 @@ export type { AlttpMusicContext, MsuChannelName } from './alttp-msu-config';
 export { pushVolumes } from './live-settings/push-volumes';
 export { groupVolume } from './msu-pack-loader/group-volume';
 export type { PackSessionInput, Settings } from './msu-pack-loader/msu-pack-loader.type';
-export { MSU1_BYTES_PER_FRAME, MSU1_CHANNELS, MSU1_HEADER_BYTES, MSU1_MAGIC_TEXT, msu1FrameCount } from './msu1-format';
 export { msulInstaller } from './store/install/install-msul';
 export type {
   MsuDebugEvent as MusicDebugEvent, MsuDebugOwner as MusicDebugOwner, MsuEngine, MsuHost,

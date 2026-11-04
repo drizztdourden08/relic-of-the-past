@@ -1,7 +1,7 @@
 /* @layer electron-main @kind logic */
 import type { ToolsMain } from '@drizztdourden08/brock-tools/main';
 import type { ProbedAudio } from '@rotp/msu';
-import { MSU1_SAMPLE_RATE, msu1FrameCount } from '@rotp/msu';
+import { MSU1_SAMPLE_RATE, msu1FrameCount } from '@drizztdourden08/brock-msu/format';
 import { probeFile } from '../../tools/probe-file';
 import { MSU1_EXTENSION, MSU1_INPUT_ARGS } from './audio-source.constants';
 import type { AudioSource } from './audio-source.type';

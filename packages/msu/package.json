@@ -10,12 +10,10 @@
     "./package.json": "./package.json"
   },
   "dependencies": {
-    "@drizztdourden08/brock-core": "^0.120.0",
     "@drizztdourden08/brock-msu": "^0.120.1",
     "@rotp/features": "workspace:*",
     "@rotp/game-core": "workspace:*",
     "@rotp/game-data": "workspace:*",
-    "@rotp/hub-contracts": "workspace:*",
-    "@rotp/roms": "workspace:*"
+    "@rotp/hub-contracts": "workspace:*"
   }
 }
