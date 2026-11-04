@@ -1,21 +1,9 @@
 /* @layer shared-types @kind types */
-import type { RandomizerOptionsSnapshot, DeliverableLists } from '@rotp/randomizer';
+import type { RandomizerProfileConfig } from '@drizztdourden08/brock-randomizer';
 import type { GameSettings } from '@rotp/features';
+import '@app/randomizer/rotp-randomizer/rotp-randomizer.augment';
 
-interface ProfileRandomizerConfig {
-  mode: 'local' | 'online' | 'archipelia';
-  origin?: 'archipelia';
-  seed: string;
-  options: RandomizerOptionsSnapshot;
-  serverUrl?: string;
-  fallbackServerUrl?: string;
-  slotName?: string;
-  password?: string;
-  deathLink?: boolean;
-  trackOtherPlayers?: boolean;
-  frozenSettings?: Partial<GameSettings>;
-  deliverable?: DeliverableLists;
-}
+type ProfileRandomizerConfig = RandomizerProfileConfig;
 
 interface Profile {
   id: string;
