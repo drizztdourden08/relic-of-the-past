@@ -1,6 +1,7 @@
 /* @layer renderer-appshell @kind logic */
 import type { GameSettings } from '@rotp/features';
-import { parseRatioString, detectScreenRatio, detectViewportRatio } from '@rotp/game-core';
+import { parseRatioString, detectScreenRatio, detectViewportRatio } from '@drizztdourden08/brock-display/aspect-ratio';
+import { ASPECT_LIMITS } from '@rotp/game-core';
 import { ORIGINAL_RATIO } from './useDisplaySettings.constants';
 
 const getGameRatio = (aspectRatio: GameSettings['aspectRatio']): number => {
@@ -9,11 +10,11 @@ const getGameRatio = (aspectRatio: GameSettings['aspectRatio']): number => {
     return canvas.width / canvas.height;
   }
   if (aspectRatio === 'auto') {
-    const { w, h } = detectViewportRatio();
+    const { w, h } = detectViewportRatio(ASPECT_LIMITS);
     return w / h;
   }
   if (aspectRatio === 'screen' || aspectRatio === 'custom') {
-    const { w, h } = detectScreenRatio();
+    const { w, h } = detectScreenRatio(ASPECT_LIMITS);
     return w / h;
   }
   if (aspectRatio === 'original') return ORIGINAL_RATIO;
