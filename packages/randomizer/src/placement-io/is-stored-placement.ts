@@ -1,14 +1,9 @@
 /* @layer renderer-lib @kind logic */
+import { isStoredPlacement as isSchemaPlacement } from '@drizztdourden08/brock-randomizer/world';
 import type { StoredPlacement } from './randomizer-placement-io.type';
-import { PLACEMENT_SCHEMA } from './randomizer-placement-io.constants';
+import { PLACEMENT_SCHEMAS } from './randomizer-placement-io.constants';
 
-const isStoredPlacement = (raw: unknown): raw is StoredPlacement => {
-  if (!raw || typeof raw !== 'object') return false;
-  const candidate = raw as Record<string, unknown>;
-  return candidate.schema === PLACEMENT_SCHEMA
-    && typeof candidate.locations === 'object' && candidate.locations !== null
-    && typeof candidate.stats === 'object' && candidate.stats !== null
-    && Array.isArray(candidate.spheres);
-};
+const isStoredPlacement = (raw: unknown): raw is StoredPlacement =>
+  isSchemaPlacement<StoredPlacement>(raw, PLACEMENT_SCHEMAS);
 
 export { isStoredPlacement };
