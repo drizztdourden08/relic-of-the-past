@@ -1,5 +1,6 @@
 /* @layer shared-game @kind logic */
-import { MAIN_FILL, defineWorldGame } from '@drizztdourden08/brock-randomizer/world';
+import { defineWorldGame } from '@drizztdourden08/brock-randomizer/world';
+import { ROTP_WORLD_KIT } from './rotp-world-kit.constants';
 import { OPTION_SCHEMAS } from '../options-snapshot/options-snapshot.constants';
 import { PLACEMENT_SCHEMAS } from '../placement-io/randomizer-placement-io.constants';
 import {
@@ -14,7 +15,7 @@ const rotpWorldGame = defineWorldGame<RotpGameTypes>({
   optionSchemas: OPTION_SCHEMAS,
   prepare: preparePlacement,
   build: buildPlacementAttempt,
-  fillPhases: [PRIZES_PHASE, DUNGEON_PREFILL_PHASE, MAIN_FILL],
+  fillPhases: [PRIZES_PHASE, DUNGEON_PREFILL_PHASE, ROTP_WORLD_KIT.mainFill],
   finish: finishPlacement,
 });
 
