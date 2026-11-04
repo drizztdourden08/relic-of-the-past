@@ -13,3 +13,4 @@ export * from '../../pond-plan';
 export * from '../../progressive-tiers';
 export { createRng } from '../../rng';
 export * from '../../wish-pond-plan';
+export { PLACEMENT_SCHEMAS } from '../../placement-io/randomizer-placement-io.constants';
