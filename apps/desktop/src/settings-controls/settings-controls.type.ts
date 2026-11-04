@@ -1,6 +1,6 @@
 /* @layer renderer-app @kind types */
 import type { ReactNode } from 'react';
-import type { LockOverlayProps, RenderControl, SettingLockCause } from '@drizztdourden08/brock-react';
+import type { LockOverlayProps, RenderControl } from '@drizztdourden08/brock-react';
 import type { GameSettings } from '@rotp/features';
 import type { AppSettings } from '@app/settings.type';
 
@@ -15,7 +15,6 @@ interface ControlContext {
 interface SettingsControls {
   renderControl: RenderControl<AppSettings>;
   isDisabled: (key: string, settings: AppSettings) => boolean;
-  lockCauseOf: (key: string, settings: AppSettings) => SettingLockCause | null;
   lockOverlay: (props: LockOverlayProps) => ReactNode;
 }
 

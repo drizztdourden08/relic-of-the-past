@@ -1,6 +1,7 @@
 /* @layer renderer-app @kind constants */
 import { developerToolsFromSettings, volumeFromSettings } from '@drizztdourden08/brock-react';
 import type { BrockAppSettings } from '@drizztdourden08/brock-react';
+import { LOCK_CAUSE_PROVIDERS } from './settings-controls/lock-causes';
 import { SETTINGS_CONTROLS } from './settings-controls/settings-controls.constants';
 import { normaliseSettings } from './settings-effects/normalise-settings';
 import { transformSettingsPatch } from './settings-effects/transform-settings-patch';
@@ -12,6 +13,7 @@ const SETTINGS: BrockAppSettings<AppSettings> = {
   normalise: normaliseSettings,
   transformPatch: transformSettingsPatch,
   ...SETTINGS_CONTROLS,
+  lockCauses: LOCK_CAUSE_PROVIDERS,
 };
 
 const VOLUME = volumeFromSettings({ value: 'masterVolume', muted: 'masterMuted', max: 100 });

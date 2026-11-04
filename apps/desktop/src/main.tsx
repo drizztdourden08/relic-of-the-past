@@ -26,6 +26,7 @@ import { DEVELOPER_TOOLS, SETTINGS, VOLUME } from './main.constants';
 import { LEGAL_TEXT } from './legal.constants';
 import { ROTP_DATA_DOMAINS } from './storage/data-domains.constants';
 import { product } from './product';
+import { APP_PROFILE_MODES } from './profile-modes';
 import { useHubShowFlags } from './stores/hub-session';
 import type { AppSettings } from './settings.type';
 import './log-bus';
@@ -57,6 +58,7 @@ const App = () => {
       product={product}
       restoreNavigation={false}
       settings={SETTINGS}
+      profileModes={APP_PROFILE_MODES}
       volume={VOLUME}
       developerTools={DEVELOPER_TOOLS}
       screenTree={ownRowTree}
