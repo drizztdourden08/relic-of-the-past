@@ -32,7 +32,7 @@ const useTrackPreview = (pack: string | null, manifest: MsuPackManifest) => {
     const started = await start({
       manifest: singleTrackManifest(manifest, trackNum),
       read: readTrack,
-      begin: (engine) => engine.onMusicCtrl(trackNum, 0, 0, 0),
+      begin: (engine) => engine.onMusicCtrl({ ctrl: trackNum, scene: 0, context: { entrance: 0, overworldArea: 0 } }),
     });
     if (!started) setPlaying((current) => (current === trackNum ? null : current));
   }, [manifest, start]);

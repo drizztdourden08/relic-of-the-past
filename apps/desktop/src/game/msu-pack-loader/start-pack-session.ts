@@ -1,6 +1,6 @@
 /* @layer bridge-wasm @kind logic */
 import * as msuStore from '@app/storage/msu-store';
-import { effectivePackManifest, groupVolume } from '@rotp/msu';
+import { alttpMsuConfig, effectivePackManifest, groupVolume } from '@rotp/msu';
 import { liveSettingsNow } from '../live-settings';
 import { startMsuSession } from '../msu-session';
 import type { PackSessionInput, Settings } from '@rotp/msu';
@@ -15,11 +15,11 @@ const readTrackBytes = async (packName: string, fileName: string): Promise<Uint8
 };
 
 const startPackSession = (input: PackSessionInput): void => {
-  const { packName, manifest, tracks, isDeluxe, settings } = input;
+  const { packName, manifest, tracks, variant, settings } = input;
   const live = (): Settings => liveSettingsNow() ?? settings;
   startMsuSession({
-    manifest: effectivePackManifest(packName, manifest, tracks),
-    isDeluxe,
+    manifest: effectivePackManifest(alttpMsuConfig, packName, manifest, tracks),
+    variant,
     loadBytes: (fileName) => readTrackBytes(packName, fileName),
     musicVolume: () => groupVolume(live(), (s) => (s.musicMuted ? 0 : s.musicVolume)),
     sfxVolume: () => groupVolume(live(), (s) => (s.sfxMuted ? 0 : s.sfxVolume)),

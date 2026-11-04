@@ -1,25 +1,20 @@
 /* @layer bridge-wasm @kind logic */
-import { attachEngine } from './attach-engine';
-import { clearPoll, AUDIO_CONTEXT_POLL_MS, msuSessionState, stopMsuSession } from '@rotp/msu';
-import type { MsuSessionOptions } from '@rotp/msu';
+import { alttpMsuConfig, startMsuSession as start } from '@rotp/msu';
+import { log } from '../../log-bus';
+import { attachHooks } from './attach-hooks';
+import { msuHost } from './msu-host';
+import { stopMsuSession } from './stop-msu-session';
+import type { StartOptions } from './start-msu-session.type';
 
-const retryPendingAttach = (): void => {
-  const { pending } = msuSessionState;
-  if (!pending) {
-    clearPoll();
-    return;
-  }
-  if (!attachEngine(pending)) return;
-  msuSessionState.pending = null;
-  clearPoll();
-};
-
-const startMsuSession = (options: MsuSessionOptions): void => {
+const startMsuSession = (options: StartOptions): void => {
   stopMsuSession();
-  if (attachEngine(options)) return;
-  msuSessionState.pending = options;
-  clearPoll();
-  msuSessionState.pollId = setInterval(retryPendingAttach, AUDIO_CONTEXT_POLL_MS);
+  const session = start({
+    ...options,
+    config: alttpMsuConfig,
+    host: msuHost,
+    log: { info: (message) => log.app(`[MSU] ${message}`), error: (message) => log.error(`[MSU] ${message}`) },
+  });
+  attachHooks(session);
 };
 
 export { startMsuSession };

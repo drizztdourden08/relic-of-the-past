@@ -1,7 +1,7 @@
 /* @layer bridge-wasm @kind logic */
 import type { GameSettings } from '@rotp/features';
 import { setMasterVolume, callIfExported, liveSettingsState, toMasterVolume, toWasmVolume } from '@rotp/game-core';
-import { msuSyncVolume } from '../msu-session/msu-sync-volume';
+import { msuSyncVolume } from '@drizztdourden08/brock-msu/session';
 import type { EmscriptenModule } from '@rotp/game-core';
 
 const pushVolumes = (mod: EmscriptenModule, settings: GameSettings): void => {

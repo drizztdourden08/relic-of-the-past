@@ -1,6 +1,6 @@
 /* @layer test @kind test */
 import { describe, it, expect } from 'vitest';
-import { msu } from '@rotp/msu';
+import { alttpMsuConfig, msu } from '@rotp/msu';
 import { sprites } from '@rotp/packs';
 import { languages } from '@rotp/languages';
 import { createMemFileStore } from './mem-file-store';
@@ -10,12 +10,12 @@ const bytes = (n: number): Uint8Array => new Uint8Array(n).fill(1);
 describe('msu store (over FileStore)', { tags: ['critical'] }, () => {
   it('installs tracks and lists packs/tracks', async () => {
     const f = createMemFileStore();
-    await msu.installTracks(f, 'cool', [{ name: '1.pcm', bytes: bytes(8) }, { name: '2.opuz', bytes: bytes(4) }, { name: 'msu.msu', bytes: bytes(2) }]);
-    expect((await msu.listPacks(f))[0]).toMatchObject({ name: 'cool', fileCount: 3 });
-    expect(await msu.getTrackList(f, 'cool')).toHaveLength(2);
-    expect((await msu.getPackFiles(f, 'cool')).length).toBe(3);
-    await msu.deletePack(f, 'cool');
-    expect(await msu.listPacks(f)).toHaveLength(0);
+    await msu.installTracks(alttpMsuConfig, f, 'cool', [{ name: '1.pcm', bytes: bytes(8) }, { name: '2.opuz', bytes: bytes(4) }, { name: 'msu.msu', bytes: bytes(2) }]);
+    expect((await msu.listPacks(alttpMsuConfig, f))[0]).toMatchObject({ name: 'cool', fileCount: 3 });
+    expect(await msu.getTrackList(alttpMsuConfig, f, 'cool')).toHaveLength(2);
+    expect((await msu.getPackFiles(alttpMsuConfig, f, 'cool')).length).toBe(3);
+    await msu.deletePack(alttpMsuConfig, f, 'cool');
+    expect(await msu.listPacks(alttpMsuConfig, f)).toHaveLength(0);
   });
 });
 
