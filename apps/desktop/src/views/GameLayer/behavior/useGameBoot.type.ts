@@ -5,7 +5,6 @@ interface GameBootParams {
   status: string;
   canvasKey: number;
   canvasRef: React.RefObject<HTMLCanvasElement | null>;
-  hasStartedRef: React.RefObject<boolean>;
   assetData: Uint8Array | null;
   configIni?: string;
   profileId?: string;

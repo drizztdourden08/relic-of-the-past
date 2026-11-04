@@ -31,7 +31,6 @@ const GameLayer = (props: GameLayerProps) => {
   edgeEffectRef.current = edgeEffect;
   const { status, error, start } = useGameState();
   const [canvasKey, setCanvasKey] = useState(0);
-  const hasStartedRef = useRef(false);
   const { bufSize, setBufSize } = useCanvasBufferSize(canvasRef, status, canvasKey);
   const shadowDebugMode = useShadowEditorStore((s) => s.debugMode);
 
@@ -42,7 +41,7 @@ const GameLayer = (props: GameLayerProps) => {
 
   useEdgeGlowLoop({ status, canvasKey, canvasRef, fxCanvasRef, glowRendererRef, edgeEffectRef, setBufSize });
   useShadowCastingLoop({ status, canvasKey, canvasRef, shadowCanvasRef, shadowRendererRef, shadowProjectRef, shadowCastingRef });
-  useGameBoot({ status, canvasKey, canvasRef, hasStartedRef, assetData, configIni, profileId, start, setCanvasKey });
+  useGameBoot({ status, canvasKey, canvasRef, assetData, configIni, profileId, start, setCanvasKey });
 
   return (
     <Box className="game-layer" ref={containerRef}>
