@@ -1,6 +1,9 @@
 /* @layer shared-game @kind types */
-import type { CheckId, ConnectionId, DungeonId, ItemId, RegionId, ConnectionKind, RegionType } from '@rotp/game-data';
-import type { LocationKey } from './location-key.type';
+import type {
+  Exit as WorldExit, Region as BaseRegion, WorldEvent as BaseWorldEvent, WorldLocation as BaseWorldLocation,
+} from '@drizztdourden08/brock-randomizer/world';
+import type { ConnectionId, DungeonId, ItemId, RegionId, ConnectionKind, RegionType } from '@rotp/game-data';
+import type { RotpKeys } from './rotp-keys.type';
 
 interface RegionGraphRow {
   from: RegionId;
@@ -9,9 +12,7 @@ interface RegionGraphRow {
   connectionId?: ConnectionId;
 }
 
-interface WorldLocation {
-  key: LocationKey;
-  region: RegionId;
+interface WorldLocation extends BaseWorldLocation<RotpKeys> {
   kdsOnly: boolean;
   capacityOnly: boolean;
   pondSlot: boolean;
@@ -19,25 +20,13 @@ interface WorldLocation {
   vanillaItem?: ItemId;
 }
 
-interface WorldEvent {
-  key: CheckId;
-  region: RegionId;
-}
+type WorldEvent = BaseWorldEvent<RotpKeys>;
 
-interface Exit {
-  name: string;
-  source: RegionId;
-  target: RegionId;
-}
+type Exit = WorldExit<RotpKeys>;
 
-interface Region {
-  id: RegionId;
-  name: string;
+interface Region extends BaseRegion<RotpKeys> {
   type: RegionType;
   locations: WorldLocation[];
-  events: WorldEvent[];
-  exits: Exit[];
-  entrances: Exit[];
   isLightWorld: boolean;
   isDarkWorld: boolean;
 }

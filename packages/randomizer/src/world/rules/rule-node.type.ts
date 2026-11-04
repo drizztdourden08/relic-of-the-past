@@ -1,8 +1,9 @@
 /* @layer shared-game @kind types */
-import type { RegionId } from '@rotp/game-data';
-import type { ItemKey } from '../item-ids';
-import type { LocationKey } from '../location-key.type';
-import type { Holding } from '../collection-state.type';
+import type {
+  HelperNode as WorldHelperNode, OptionRef as WorldOptionRef, RuleArg as WorldRuleArg,
+  RuleCount as WorldRuleCount, RuleNode as WorldRuleNode, RuleOptionValue, SeedRef,
+} from '@drizztdourden08/brock-randomizer/world';
+import type { RotpKeys } from '../rotp-keys.type';
 
 type RuleOptionKey =
   | 'storyGates.pedestal' | 'storyGates.sahasrahla' | 'storyGates.barrier' | 'storyGates.bombShop'
@@ -18,19 +19,11 @@ type RuleOptionKey =
   | 'retroBow.enabled' | 'retroBow.quiverInPool' | 'retroBow.shotWalletNeed' | 'retroBow.walletNeed'
   | 'medallions.mire' | 'medallions.turtleRock';
 
-type RuleOptionValue = string | number | boolean;
+type OptionRef = WorldOptionRef<RotpKeys>;
 
-interface OptionRef {
-  option: RuleOptionKey;
-}
+type RuleCount = WorldRuleCount<RotpKeys>;
 
-interface SeedRef {
-  seed: string;
-}
-
-type RuleCount = number | OptionRef | SeedRef;
-
-type RuleArg = number | string | boolean | OptionRef | SeedRef;
+type RuleArg = WorldRuleArg<RotpKeys>;
 
 type PrimitiveHelperName =
   | 'explosivesAtLeast' | 'projectilesAtLeast' | 'walletAtLeast' | 'heartCapacityAbove'
@@ -45,25 +38,9 @@ type DerivedHelperName =
 
 type HelperName = PrimitiveHelperName | DerivedHelperName;
 
-type RuleNode =
-  | { op: 'true' }
-  | { op: 'false' }
-  | { op: 'has'; item: Holding | SeedRef; count?: number }
-  | { op: 'hasAny'; items: readonly Holding[] }
-  | { op: 'hasDistinct'; items: readonly Holding[]; atLeast: RuleCount }
-  | { op: 'countGroup'; items: readonly Holding[]; atLeast: RuleCount }
-  | { op: 'all'; of: readonly RuleNode[] }
-  | { op: 'any'; of: readonly RuleNode[] }
-  | { op: 'if'; cond: RuleNode; then: RuleNode; else: RuleNode }
-  | { op: 'region'; region: RegionId }
-  | { op: 'location'; location: LocationKey }
-  | { op: 'exit'; name: string }
-  | { op: 'placedAt'; location: LocationKey; item: ItemKey }
-  | { op: 'option'; key: RuleOptionKey; equals: RuleOptionValue }
-  | { op: 'seed'; key: string; equals: RuleOptionValue }
-  | { op: 'helper'; name: HelperName; args?: readonly RuleArg[] };
+type RuleNode = WorldRuleNode<RotpKeys>;
 
-type HelperNode = Extract<RuleNode, { op: 'helper' }>;
+type HelperNode = WorldHelperNode<RotpKeys>;
 
 export type {
   HelperName, HelperNode, OptionRef, RuleArg, RuleCount, RuleNode, RuleOptionKey, RuleOptionValue, SeedRef,

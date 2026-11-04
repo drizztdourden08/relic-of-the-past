@@ -2,7 +2,10 @@
 import { DUNGEON_ORDER } from '../fill/dungeon-order.constants';
 import { worldDungeonOf } from '../world-dungeon';
 import { GOAL_EVENT } from '../events/story-events.constants';
+import { REGION } from '../region-ids.constants';
+import { readRuleOption } from '../rules/rule-options/read-rule-option';
 import { ALLOW_ANY_ITEM } from './build-world.constants';
+import { collectionHooksOf } from './collection-hooks-of';
 import { wiredRegionsOf } from './wired-regions-of';
 import type { CheckId } from '@rotp/game-data';
 import type { LocationKey } from '../location-key.type';
@@ -25,7 +28,9 @@ const buildWorld = (options: World['options']): World => {
   const locationRules = new Map<LocationKey, Rule>();
   const eventRules = new Map<CheckId, Rule>();
   const itemRules = new Map<LocationKey, ItemRule>();
-  return {
+  const world: World = {
+    start: REGION.start,
+    sweepsEvents: options.actTokens === undefined,
     regions,
     locationsByKey,
     eventsByKey,
@@ -38,12 +43,15 @@ const buildWorld = (options: World['options']): World => {
     alwaysAllow: new Map(),
     placedItems: new Map(),
     seedValues: new Map(),
+    collection: collectionHooksOf(options),
+    readOption: (key) => readRuleOption(world, key),
     getRule: (name) => rules.get(name),
     getLocationRule: (key) => locationRules.get(key),
     getEventRule: (key) => eventRules.get(key),
     getItemRule: (key) => itemRules.get(key) ?? ALLOW_ANY_ITEM,
     isBeaten: (state) => state.has(GOAL_EVENT),
   };
+  return world;
 };
 
 export { buildWorld };

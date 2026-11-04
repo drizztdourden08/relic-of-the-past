@@ -1,15 +1,10 @@
 /* @layer shared-game @kind types */
-import type { CollectionState } from '../collection-state.type';
-import type { World } from '../world.type';
-import type { HelperName, RuleNode } from './rule-node.type';
+import type { HelperDefinition as WorldHelperDefinition } from '@drizztdourden08/brock-randomizer/world';
+import type { RotpWorld } from '../world.type';
+import type { RuleOptionValue } from './rule-node.type';
 
-type HelperArgValue = number | string | boolean;
+type HelperArgValue = RuleOptionValue;
 
-interface HelperDefinition {
-  name: HelperName;
-  params: readonly string[];
-  body: (state: CollectionState, ...args: readonly HelperArgValue[]) => boolean;
-  expand?: (world: World, ...args: readonly HelperArgValue[]) => RuleNode;
-}
+type HelperDefinition = WorldHelperDefinition<RotpWorld>;
 
 export type { HelperArgValue, HelperDefinition };
