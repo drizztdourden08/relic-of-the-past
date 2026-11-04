@@ -1,7 +1,7 @@
 /* @layer shared-game @kind types */
 import type {
-  HelperNode as WorldHelperNode, OptionRef as WorldOptionRef, RuleArg as WorldRuleArg,
-  RuleCount as WorldRuleCount, RuleNode as WorldRuleNode, RuleOptionValue, SeedRef,
+  HelperNode as WorldHelperNode, RuleArg as WorldRuleArg,
+  RuleCount as WorldRuleCount, RuleNode as WorldRuleNode, RuleOptionValue,
 } from '@drizztdourden08/brock-randomizer/world';
 import type { RotpKeys } from '../rotp-keys.type';
 
@@ -18,8 +18,6 @@ type RuleOptionKey =
   | 'progressive.swordless' | 'dungeonItems.keyFamilyPinned'
   | 'retroBow.enabled' | 'retroBow.quiverInPool' | 'retroBow.shotWalletNeed' | 'retroBow.walletNeed'
   | 'medallions.mire' | 'medallions.turtleRock';
-
-type OptionRef = WorldOptionRef<RotpKeys>;
 
 type RuleCount = WorldRuleCount<RotpKeys>;
 
@@ -43,5 +41,5 @@ type RuleNode = WorldRuleNode<RotpKeys>;
 type HelperNode = WorldHelperNode<RotpKeys>;
 
 export type {
-  HelperName, HelperNode, OptionRef, RuleArg, RuleCount, RuleNode, RuleOptionKey, RuleOptionValue, SeedRef,
+  HelperName, HelperNode, RuleArg, RuleCount, RuleNode, RuleOptionKey, RuleOptionValue,
 };

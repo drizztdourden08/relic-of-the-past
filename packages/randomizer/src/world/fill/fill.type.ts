@@ -1,6 +1,5 @@
 /* @layer shared-game @kind types */
 import type {
-  AssumedState as WorldAssumedState, FillRestrictiveInput as WorldFillRestrictiveInput,
   PlacementSphere as WorldPlacementSphere, PlacementSweep as WorldPlacementSweep,
 } from '@drizztdourden08/brock-randomizer/world';
 import type { ItemKey } from '../item-ids';
@@ -62,10 +61,6 @@ interface SnapshotFillFlags {
 
 type FillPickers = Pick<FillWorldOptions, 'pickBottle' | 'pickWeapon' | 'pickFiller'>;
 
-type FillRestrictiveInput = WorldFillRestrictiveInput<RotpWorld>;
-
-type AssumedState = WorldAssumedState<RotpWorld>;
-
 type PlacementSphere = WorldPlacementSphere<RotpWorld>;
 
 type PlacementSweep = WorldPlacementSweep<RotpWorld>;
@@ -90,6 +85,6 @@ interface DungeonOwnership {
 }
 
 export type {
-  AssumedState, DeliverableLists, DeliverableSets, DungeonOwnership, FillPickers, FillRestrictiveInput, GenerateRequest,
+  DeliverableLists, DeliverableSets, DungeonOwnership, FillPickers, GenerateRequest,
   PlacementSphere, PlacementStatsInput, PlacementSweep, RollInput, SnapshotFillFlags,
 };

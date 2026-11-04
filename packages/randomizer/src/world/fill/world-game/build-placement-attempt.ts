@@ -11,7 +11,7 @@ const buildPlacementAttempt = ({ request, prep, rng }: AttemptContext): RotpBuil
   const { world, pool, accessibility } = fillWorld;
   return {
     world,
-    progression: pool.progression,
+    progression: [...pool.progression],
     rest: [...pool.useful, ...pool.filler],
     eligible: () => fillEligibleLocations(fillWorld),
     relaxWhenBeatable: accessibility === 'minimal',

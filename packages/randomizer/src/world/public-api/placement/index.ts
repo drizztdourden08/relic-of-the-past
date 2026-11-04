@@ -17,7 +17,7 @@ export type { FillWorld, FillWorldOptions } from '../../fill/fill-world.type';
 export {
   FillError, MAX_PLACEMENT_ATTEMPTS, canFillLocation, createAssumedState, fillRestrictive, sweepPlacedItems,
 } from '@drizztdourden08/brock-randomizer/world';
-export type { FillRestrictiveInput, AssumedState, PlacementSphere, PlacementSweep } from '../../fill/fill.type';
+export type { PlacementSphere, PlacementSweep } from '../../fill/fill.type';
 export { prefillDungeonItems } from '../../fill/dungeon-fill';
 export { sweepPlacementSpheres } from '../../fill/verify-placement';
 export { verifyStandardEscape } from '../../fill/verify-standard';

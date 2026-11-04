@@ -1,11 +1,10 @@
 /* @layer shared-game @kind types */
 import type {
-  RuleCheck as WorldRuleCheck, RuleNodeVisitor as WorldRuleNodeVisitor, SeedTable,
+  SeedTable,
 } from '@drizztdourden08/brock-randomizer/world';
 import type { CheckId, RegionId } from '@rotp/game-data';
 import type { LocationKey } from '../location-key.type';
-import type { RotpKeys } from '../rotp-keys.type';
-import type { RotpWorld, World } from '../world.type';
+import type { World } from '../world.type';
 import type { RuleTargetKind } from './rule-entry.type';
 import type { RuleNode, RuleOptionKey, RuleOptionValue } from './rule-node.type';
 
@@ -14,10 +13,6 @@ interface PricedEntry {
   target: string;
   price: number;
 }
-
-type RuleNodeVisitor = WorldRuleNodeVisitor<RotpKeys>;
-
-type RuleCheck = WorldRuleCheck<RotpWorld>;
 
 type OptionReader = (world: World) => RuleOptionValue;
 
@@ -54,6 +49,6 @@ interface WorldRulesView {
 }
 
 export type {
-  CoverageCount, EventRuleView, ExitRuleView, OptionReader, PricedEntry, RuleCheck, RuleCoverageReport,
-  RuleNodeVisitor, SeedTable, WorldRulesView,
+  CoverageCount, EventRuleView, ExitRuleView, OptionReader, PricedEntry, RuleCoverageReport,
+  SeedTable, WorldRulesView,
 };
