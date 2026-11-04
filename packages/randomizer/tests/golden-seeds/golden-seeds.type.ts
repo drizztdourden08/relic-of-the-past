@@ -1,9 +1,9 @@
 /* @layer tests @kind types */
-import type { GenerateRequest } from '@rotp/randomizer';
+import type { generatePlacement } from '@rotp/randomizer';
 
 interface GoldenCase {
   name: string;
-  request: GenerateRequest;
+  request: Parameters<typeof generatePlacement>[0];
 }
 
 export type { GoldenCase };

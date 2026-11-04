@@ -1,10 +1,4 @@
 /* @layer tests @kind test */
-/*
- * Guards byte-identical placements across the Brock randomizer lift: every case in
- * golden-seeds.cases.ts is generated and its JSON text (key order included) must equal
- * fixtures/<case>.json. A missing fixture fails. GOLDEN_SEEDS_WRITE=1 writes every fixture.
- * Fixtures captured on: abb3976ea (retry path exercised by capacity-and-ponds, attempts 2)
- */
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
