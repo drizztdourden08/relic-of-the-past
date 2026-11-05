@@ -8,7 +8,6 @@ export { itemBehaviorOf } from '../../item-behavior-session/item-behavior-of';
 export type { ItemBehaviorPlan } from '../../item-behavior-session/item-behavior-session.type';
 export { CLASS_DEFAULT_MESSAGE, COMPLETION_NOTE } from '../../local-session.constants';
 export type { LocalSession } from '../../local-session.type';
-export { createBrowserSocket } from '../../browser-socket';
 export { pondSessionOf } from '../../pond-session';
 export type { PondSessionPlan } from '../../pond-session.type';
 export { isKitError } from '@drizztdourden08/archipelia-client-kit';
