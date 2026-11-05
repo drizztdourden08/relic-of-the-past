@@ -7,7 +7,7 @@ import {
 } from '@app/hooks/randomizer/lobby-setup';
 import { lobbyLineOf } from './lobby-line-of';
 import { lobbyRowsOf } from './lobby-rows-of';
-import type { ArchipeliaFieldsProps } from './ArchipelagoFields.type';
+import type { ArchipeliaFieldsProps } from './ArchipeliaFields.type';
 
 const ArchipeliaFields = ({ value, onChange, joining = false }: ArchipeliaFieldsProps) => {
   const draft = value.lobby;

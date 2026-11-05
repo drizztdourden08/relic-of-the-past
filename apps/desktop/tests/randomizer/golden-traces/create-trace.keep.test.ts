@@ -8,7 +8,7 @@ import { rotpCatalog } from '@app/randomizer/options/rotp-catalog';
 import { randomizerChoiceOverrides } from '@app/hooks/randomizer/randomizer-choices';
 import { EMPTY_RANDOMIZER_FORM } from '@app/views/DataManager/sub-components/profile-manager/build-randomizer-config';
 import { applyProfilePreset } from '@app/views/DataManager/sub-components/profile-manager/profile-presets';
-import type { ProfileWizardValues } from '@app/views/DataManager/sub-components/profile-manager/ProfileCreateWizard/ProfileCreateWizard.type';
+import type { RandomizerFormState } from '@app/views/DataManager/sub-components/profile-manager/build-randomizer-config/build-randomizer-config.type';
 import type { CreateProfileOptions } from '@app/profiles/types';
 import { configPath, createThroughModule, traceFiles } from './create-fake-profiles';
 import { checkTrace } from './golden-trace';
@@ -18,6 +18,15 @@ vi.mock('@drizztdourden08/brock-react', async (importOriginal) => {
   const { traceFiles: files } = await import('./create-fake-profiles');
   return { ...(await importOriginal<object>()), getPlatform: () => ({ files }) };
 });
+
+interface ProfileWizardValues {
+  name: string;
+  rom: string;
+  preset: Parameters<typeof applyProfilePreset>[0];
+  language: string;
+  msuPack: string;
+  randomizer: RandomizerFormState;
+}
 
 const LOCAL_VALUES: ProfileWizardValues = {
   name: '  Trace Local  ',

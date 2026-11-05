@@ -1,14 +1,15 @@
 /* @layer renderer-components @kind logic */
-import { freshRandomizerForm } from '../../build-randomizer-config';
+import { wizardInitialSlices } from '@drizztdourden08/brock-react';
+import type { ProfileWizardStepDef } from '@drizztdourden08/brock-react';
 import type { ProfileWizardValues } from '../ProfileCreateWizard.type';
 
-const initialProfileValues = (): ProfileWizardValues => ({
+const initialProfileValues = (modules: readonly ProfileWizardStepDef[]): ProfileWizardValues => ({
   name: '',
   rom: '',
   preset: 'enhanced',
   language: '',
   msuPack: '',
-  randomizer: freshRandomizerForm(),
+  ...wizardInitialSlices(modules),
 });
 
 export { initialProfileValues };

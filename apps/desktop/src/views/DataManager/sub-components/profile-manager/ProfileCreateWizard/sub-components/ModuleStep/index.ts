@@ -1,2 +1,2 @@
 /* @layer renderer-components @kind barrel */
-export { OptionsStep } from './OptionsStep';
+export { ModuleStep } from './ModuleStep';

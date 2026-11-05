@@ -4,17 +4,11 @@ import type { LobbyConnect, LobbyLocation } from '@app/hooks/randomizer/lobby-se
 
 const STEP_IDS = {
   profile: 'profile',
-  randomizer: 'randomizer',
-  connection: 'connection',
-  options: 'options',
   review: 'review',
 } as const;
 
 const STEP_LABELS = {
   profile: 'Profile',
-  randomizer: 'Randomizer',
-  connection: 'Connection',
-  options: 'Options',
   review: 'Review',
 } as const;
 
