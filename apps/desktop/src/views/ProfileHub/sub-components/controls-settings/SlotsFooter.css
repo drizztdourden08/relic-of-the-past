@@ -1,0 +1,34 @@
+/* @layer renderer-components @kind style */
+.modern-tab__slots-hint,
+.modern-tab__absent-title {
+  color: var(--c-text-muted);
+  line-height: var(--leading-tight);
+}
+
+.modern-tab__absent {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2xs);
+  margin: var(--space-sm) var(--space-md);
+  padding: var(--space-xs) var(--space-md);
+  border: var(--border-width-thin) dashed var(--c-border);
+  border-radius: var(--radius-lg);
+  opacity: var(--opacity-muted);
+}
+
+.modern-tab__absent-row {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--space-md);
+  font-size: var(--text-sm);
+}
+
+.modern-tab__absent-slot {
+  color: var(--c-text-dim);
+  text-transform: capitalize;
+}
+
+.modern-tab__absent-value {
+  color: var(--c-text-muted);
+}
