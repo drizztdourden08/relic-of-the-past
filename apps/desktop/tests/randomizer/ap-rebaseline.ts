@@ -16,7 +16,7 @@ const rebaselineEntries = <E extends { key: string }>(input: RebaselineInput<E>)
   const { entries, suppressed, isComplete, isKnownReported } = input;
   const done = new Set(entries.filter(isComplete).map((entry) => entry.key));
   const toReport: E['key'][] = [];
-  const keyOf = new Map(entries.map((entry) => [entry.key as string, entry.key]));
+  const keyOf = new Map<string, E['key']>(entries.map((entry) => [entry.key, entry.key]));
   const poller = createLocationPoller({ memory, completed: () => done, log: () => undefined });
   poller.start(
     entries.map((entry) => ({ key: entry.key, checkId: entry.key, baselineOnly: true })),

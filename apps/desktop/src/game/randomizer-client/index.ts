@@ -1,5 +1,5 @@
 /* @layer bridge-wasm @kind barrel */
-export type { RoomMessage, NetworkConnection, NetworkPlayer, NetworkProgress, NetworkServer, NetworkState, NetworkStatus, PlacementView, OnlineNotice, NoticeEntry } from '@rotp/randomizer';
+export type { NetworkConnection, NetworkPlayer, NetworkProgress, NetworkServer, NetworkState, NetworkStatus, PlacementView, OnlineNotice, NoticeEntry } from '@rotp/randomizer';
 export type { OnlineSession } from './online-session';
 export {
   clearPendingBoot, getPendingBoot, getSessionState, registerRotpFactories, resetSession, setOnlineAllowed, stopActive, subscribeSessionStore,
