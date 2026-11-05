@@ -9,7 +9,9 @@ const playerPart = (slot: number): ApJsonMessagePart => ({ type: 'player_id', te
 const itemPart = (id: number, owner: number): ApJsonMessagePart => ({ type: 'item_id', text: String(id), player: owner, flags: 0 });
 const locationPart = (id: number, owner: number): ApJsonMessagePart => ({ type: 'location_id', text: String(id), player: owner });
 
-const itemSend = (type: string, receiving: number, finder: number, id: number, location: number, team = 0): ApPrintJsonPacket => ({
+interface SendRoute { receiving: number; finder: number; team?: number }
+
+const itemSend = (type: string, { receiving, finder, team = 0 }: SendRoute, id: number, location: number): ApPrintJsonPacket => ({
   cmd: 'PrintJSON',
   type,
   team,
@@ -23,12 +25,12 @@ const slotPrint = (type: string, slot: number, parts: ApJsonMessagePart[], messa
 });
 
 const PRINT_PACKETS: ReadonlyArray<{ label: string; packet: ApServerPacket }> = [
-  { label: 'ItemSend received', packet: itemSend('ItemSend', 1, 2, 101, 900) },
-  { label: 'ItemSend sent', packet: itemSend('ItemSend', 2, 1, 500, 2) },
-  { label: 'ItemSend own check', packet: itemSend('ItemSend', 1, 1, 102, 3) },
-  { label: 'ItemSend other pair', packet: itemSend('ItemSend', 2, 2, 500, 900) },
-  { label: 'ItemSend other team', packet: itemSend('ItemSend', 1, 2, 101, 900, 1) },
-  { label: 'ItemCheat', packet: itemSend('ItemCheat', 1, 1, 103, -1) },
+  { label: 'ItemSend received', packet: itemSend('ItemSend', { receiving: 1, finder: 2 }, 101, 900) },
+  { label: 'ItemSend sent', packet: itemSend('ItemSend', { receiving: 2, finder: 1 }, 500, 2) },
+  { label: 'ItemSend own check', packet: itemSend('ItemSend', { receiving: 1, finder: 1 }, 102, 3) },
+  { label: 'ItemSend other pair', packet: itemSend('ItemSend', { receiving: 2, finder: 2 }, 500, 900) },
+  { label: 'ItemSend other team', packet: itemSend('ItemSend', { receiving: 1, finder: 2, team: 1 }, 101, 900) },
+  { label: 'ItemCheat', packet: itemSend('ItemCheat', { receiving: 1, finder: 1 }, 103, -1) },
   {
     label: 'Hint',
     packet: {
