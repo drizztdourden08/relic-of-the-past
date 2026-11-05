@@ -17,7 +17,7 @@ type GroupValueOf = (check: CheckRecord, screen: ScreenRecord | undefined, run?:
 
 interface GroupingPass {
   dimensions: GroupDimension[];
-  statuses: Map<string, CheckStatus>;
+  statuses: ReadonlyMap<string, CheckStatus>;
   run?: RunContext;
 }
 

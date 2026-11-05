@@ -9,7 +9,7 @@ import { matchesSearch } from './matches-search';
 const filterChecks = (
   checks: CheckRecord[],
   filter: FilterState,
-  statuses?: Map<string, CheckStatus>,
+  statuses?: ReadonlyMap<string, CheckStatus>,
   run?: RunContext
 ): CheckRecord[] => {
   let result = checks.filter(c => isListedRow(c, filter, run));
