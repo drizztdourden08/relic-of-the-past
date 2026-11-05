@@ -2,7 +2,7 @@
 import type { ActionBinding, SdlGamepadType } from '@drizztdourden08/brock-input';
 import type { PresetDevice } from '@drizztdourden08/brock-input/renderer';
 import { KEYBOARD_DEFAULT, buildConsoleDefaultMappings } from '@rotp/input-mapping';
-import { toBrockMappings } from './to-brock-profile';
+import { toBrockMappings } from './to-brock-mappings';
 
 const presetBindings = ({ sdlType, vid, pid }: PresetDevice): ActionBinding[] => {
   const defaults = sdlType === 'keyboard'

@@ -3,7 +3,7 @@ import type { ActionBinding, InputProfile as BrockProfile } from '@drizztdourden
 import { SNES_BUTTONS } from '@rotp/game-data';
 import type { ButtonMapping, ModernBindings } from '@rotp/game-data';
 import type { InputProfile } from '@rotp/input-mapping';
-import { coreFromVerbs } from './core-verbs-convert';
+import { coreFromVerbs } from './core-from-verbs';
 import { profileLayoutId } from './profile-layout-id';
 
 const toButtonMapping = (entry: ActionBinding): ButtonMapping[] => {

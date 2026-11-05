@@ -1,10 +1,9 @@
 /* @layer renderer-components @kind logic */
 import type { VerbBindings } from '@drizztdourden08/brock-input';
 import type { CoreBindings, InputBinding } from '@rotp/game-data';
+import { NONE_BINDING } from './none-binding.constants';
 
-const NONE: InputBinding = { type: 'none' };
-
-const pick = (verbs: VerbBindings, id: string): InputBinding => verbs[id] ?? NONE;
+const pick = (verbs: VerbBindings, id: string): InputBinding => verbs[id] ?? NONE_BINDING;
 
 const coreFromVerbs = (verbs: VerbBindings): CoreBindings => ({
   up: pick(verbs, 'up'),
@@ -19,6 +18,4 @@ const coreFromVerbs = (verbs: VerbBindings): CoreBindings => ({
   nextScreen: pick(verbs, 'nextScreen'),
 });
 
-const verbsFromCore = (core: CoreBindings): VerbBindings => Object.fromEntries(Object.entries(core));
-
-export { coreFromVerbs, verbsFromCore };
+export { coreFromVerbs };

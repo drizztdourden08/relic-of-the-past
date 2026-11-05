@@ -58,7 +58,7 @@ const buildControlsTabs = (args: BuildControlsTabsArgs): readonly ControlsTabDef
       scope: 'global',
       title: 'Cheat Bindings',
       actions: CHEAT_ACTION_DEFS,
-      gate: { active: !cheatsEnabled, message: DISABLED_SETTING_MESSAGES.cheatsEnabled, onOpenSettings: openCheatsSettings },
+      gate: { active: !cheatsEnabled, message: DISABLED_SETTING_MESSAGES.cheatsEnabled ?? '', onOpenSettings: openCheatsSettings },
     },
     {
       id: 'options',

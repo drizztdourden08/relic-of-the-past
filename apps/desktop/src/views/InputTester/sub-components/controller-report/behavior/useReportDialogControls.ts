@@ -34,7 +34,7 @@ const useReportDialogControls = (params: UseReportDialogControlsParams) => {
   const goAbout = useCallback(() => goToStep('about'), [goToStep]);
   const goUserInfo = useCallback(() => goToStep('user-info'), [goToStep]);
   const goDiagnostics = useCallback(() => goToStep('diagnostics'), [goToStep]);
-  const sanctuaryUrl = filed?.sanctuaryUrl;
+  const sanctuaryUrl = filed?.recordUrl;
   const issueUrl = filed?.issueUrl;
   const openSanctuary = useCallback(() => { if (sanctuaryUrl) openAndClose(sanctuaryUrl); }, [openAndClose, sanctuaryUrl]);
   const openIssue = useCallback(() => { if (issueUrl) openAndClose(issueUrl); }, [openAndClose, issueUrl]);

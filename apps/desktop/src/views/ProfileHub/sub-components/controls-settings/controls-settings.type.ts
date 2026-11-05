@@ -23,4 +23,4 @@ interface CreateProfileStoreArgs {
   latest: RefObject<LatestSettings>;
 }
 
-export type { CreateProfileStoreArgs, LatestSettings, SettingsChange, UseControlsArgs, UseProfileStoreArgs };
+export type { CreateProfileStoreArgs,SettingsChange, UseControlsArgs, UseProfileStoreArgs };

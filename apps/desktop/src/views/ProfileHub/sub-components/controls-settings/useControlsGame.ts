@@ -2,15 +2,12 @@
 import { useMemo } from 'react';
 import type { ControlsGame } from '@drizztdourden08/brock-input/renderer';
 import { controlSchemeOf, experimentalFeaturesEnabled } from '@rotp/features';
-import { KEYBOARD_DEFAULT } from '@rotp/input-mapping';
 import { buildControlsTabs } from './build-controls-tabs';
 import { CORE_VERB_DEFS } from './core-verbs.constants';
 import { decoratePreset } from './decorate-preset';
+import { KEYBOARD_DEFAULTS } from './keyboard-defaults.constants';
 import { presetBindings } from './preset-bindings';
-import { toBrockMappings } from './to-brock-profile';
 import type { UseControlsArgs } from './controls-settings.type';
-
-const KEYBOARD_DEFAULTS = toBrockMappings(KEYBOARD_DEFAULT.defaultMappings);
 
 const useControlsGame = ({ settings, onChange }: UseControlsArgs): ControlsGame => {
   const scheme = controlSchemeOf(settings);

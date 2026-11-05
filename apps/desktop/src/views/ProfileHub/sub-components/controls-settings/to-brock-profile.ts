@@ -1,19 +1,8 @@
 /* @layer renderer-components @kind logic */
-import type { ActionBinding } from '@drizztdourden08/brock-input';
-import type { ButtonMapping } from '@rotp/game-data';
 import type { InputProfile } from '@rotp/input-mapping';
 import type { ControlsProfile } from './controls-profile.type';
-import { verbsFromCore } from './core-verbs-convert';
-
-const toActionBinding = (mapping: ButtonMapping): ActionBinding => ({
-  action: mapping.snesButton,
-  binding: mapping.binding,
-  icon: mapping.icon,
-  sourceVid: mapping.sourceVid,
-  sourcePid: mapping.sourcePid,
-});
-
-const toBrockMappings = (mappings: readonly ButtonMapping[]): ActionBinding[] => mappings.map(toActionBinding);
+import { toBrockMappings } from './to-brock-mappings';
+import { verbsFromCore } from './verbs-from-core';
 
 const toBrockProfile = (profile: InputProfile): ControlsProfile => {
   const core = profile.core ?? profile.modern?.core;
@@ -34,4 +23,4 @@ const toBrockProfile = (profile: InputProfile): ControlsProfile => {
   };
 };
 
-export { toBrockMappings, toBrockProfile };
+export { toBrockProfile };

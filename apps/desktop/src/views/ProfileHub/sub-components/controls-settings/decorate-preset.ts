@@ -4,21 +4,25 @@ import { defaultLayoutIdFor } from '@rotp/hud';
 import { defaultModernBindings, keyboardModernBindings, renumberSlots } from '@rotp/input-mapping';
 import type { ControlSchemeId } from '@rotp/features';
 import type { ControlsProfile } from './controls-profile.type';
-import { verbsFromCore } from './core-verbs-convert';
+import { verbsFromCore } from './verbs-from-core';
+
+type PresetContext = Parameters<NonNullable<ControlsGame['decoratePreset']>>[1];
+
+const modernBindingsFor = (deviceType: string, controls: PresetContext['controls']) => {
+  if (deviceType === 'keyboard') return keyboardModernBindings();
+  return controls.length > 0 ? defaultModernBindings(controls) : null;
+};
 
 const decoratePreset = (scheme: ControlSchemeId): NonNullable<ControlsGame['decoratePreset']> =>
   (profile, { controls }) => {
     if (scheme !== 'modern') return profile;
-    const deviceType = profile.deviceType;
-    const bindings = deviceType === 'keyboard'
-      ? keyboardModernBindings()
-      : (controls.length > 0 ? defaultModernBindings(controls) : null);
+    const bindings = modernBindingsFor(profile.deviceType, controls);
     if (!bindings) return profile;
     const decorated: ControlsProfile = {
       ...profile,
       verbs: verbsFromCore(bindings.core),
       slots: renumberSlots(bindings.slots).slots,
-      layoutId: defaultLayoutIdFor(deviceType),
+      layoutId: defaultLayoutIdFor(profile.deviceType),
     };
     return decorated;
   };
