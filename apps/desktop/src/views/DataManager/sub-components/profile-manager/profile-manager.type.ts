@@ -10,11 +10,6 @@ interface UseProfileManagerParams {
 
 type CreateFn = (opts: CreateProfileOptions) => Promise<CreateProfileResult>;
 
-interface LobbyJoinChoice {
-  seat: string | null;
-  onProgress: (fraction: number) => void;
-}
-
 type ProfileManagerState = ReturnType<typeof useProfileManager>;
 
 interface ProfileListPaneProps {
@@ -33,4 +28,4 @@ interface ProfileRowsProps {
   onDelete: (id: string) => void;
 }
 
-export type { CreateFn, LobbyJoinChoice, ProfileListPaneProps, ProfileRowsProps, UseProfileManagerParams };
+export type { CreateFn, ProfileListPaneProps, ProfileRowsProps, UseProfileManagerParams };
