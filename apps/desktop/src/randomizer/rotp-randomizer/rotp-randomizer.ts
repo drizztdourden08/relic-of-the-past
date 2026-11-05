@@ -16,6 +16,7 @@ import { rotpLogText } from './rotp-log-text';
 import { rotpPoll } from './rotp-poll';
 import { rotpProfile } from './rotp-profile';
 import { rollRotpPlacement } from './rotp-roll';
+import { onRotpJoined } from './rotp-on-joined';
 import { rotpInventoryProvider } from './rotp-inventory-provider';
 import { rotpTrackerProvider } from './rotp-tracker-provider';
 
@@ -25,6 +26,7 @@ const rotpRandomizer = defineRandomizerGame<Placement, DeliveryAction>({
   placementSchemas: PLACEMENT_SCHEMAS,
   core: rotpCoreSignal,
   roll: rollRotpPlacement,
+  onJoined: onRotpJoined,
   describe: describePlacement,
   isPlacement: isRotpPlacement,
   memory: rotpMemoryBridge,

@@ -4,12 +4,10 @@ import { initialRotpLobby } from './rotp-lobby.constants';
 
 const CONNECTION_SLICE = 'randomizerConnection';
 
-const rotpLobbyOfConnection = (values: Readonly<Record<string, unknown>>): RotpLobbyForm => {
-  const slice = values[CONNECTION_SLICE];
+const rotpLobbyOfConnection = (connection: Readonly<Record<string, unknown>> | undefined): RotpLobbyForm => {
   const initial = initialRotpLobby();
-  if (typeof slice !== 'object' || slice === null) return initial;
-  const { lobby, lobbyCheck } = slice as Partial<RotpLobbyForm>;
+  const { lobby, lobbyCheck } = (connection ?? {}) as Partial<RotpLobbyForm>;
   return { lobby: lobby ?? initial.lobby, lobbyCheck: lobbyCheck ?? initial.lobbyCheck };
 };
 
-export { rotpLobbyOfConnection };
+export { CONNECTION_SLICE, rotpLobbyOfConnection };
