@@ -11,7 +11,7 @@ const armedSeedOf = ({ plan, pollEntries, messageIdOf, receiptTexts }: ArmedPart
   return {
     polled: pollEntriesOfPlan(pollEntries),
     counts: { ...plan.counts },
-    onCheck: (key) => reportLocalCheck(key, byLocation.get(key), messageIdOf),
+    onCheck: (key, deliver) => reportLocalCheck(key, byLocation.get(key), messageIdOf, deliver),
     stop: () => {
       receiptTexts.stop();
       byLocation.clear();

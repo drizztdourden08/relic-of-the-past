@@ -1,10 +1,9 @@
 /* @layer bridge-wasm @kind logic */
-import { queueState } from '@rotp/randomizer';
-import { tick } from './tick';
+import { startProcessing as startSharedProcessing } from '@rotp/randomizer';
+import { log } from '../../log-bus';
 
 const startProcessing = (): void => {
-  if (queueState.rafId != null) return;
-  queueState.rafId = requestAnimationFrame(tick);
+  startSharedProcessing((message, level) => log.app(message, level));
 };
 
 export { startProcessing };
