@@ -1,7 +1,6 @@
 /* @layer renderer-components @kind style */
 
-.network-tab,
-.network-tab__pill {
+.network-tab {
   font-variant-numeric: tabular-nums;
 }
 
@@ -62,17 +61,4 @@
 
 .network-tab__player--self .network-tab__cell {
   color: var(--c-primary-bright);
-}
-
-.network-tab__pill {
-  align-self: flex-start;
-  display: inline-flex;
-  align-items: center;
-  gap: var(--space-sm);
-}
-
-.network-tab__pill-text {
-  font-family: var(--font-mono);
-  font-size: var(--text-xs);
-  color: var(--c-text-dim);
 }

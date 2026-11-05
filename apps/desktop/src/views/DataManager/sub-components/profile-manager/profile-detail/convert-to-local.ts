@@ -3,7 +3,7 @@ import { lobbyWatch, writeMembership } from '@app/game/archipelia';
 import type { ProfileRandomizerConfig } from '@app/profiles/types';
 import { saveRandomizerPlacement } from '@app/randomizer-placement-io';
 import { updateProfile } from '@app/storage/profile-store';
-import { rollPlacement } from '@app/views/GameSession/behavior/roll-placement';
+import { rollPlacement } from '@app/randomizer/roll/roll-placement';
 
 const localConfigOf = ({ seed, options, frozenSettings }: ProfileRandomizerConfig): ProfileRandomizerConfig => ({
   mode: 'local',
