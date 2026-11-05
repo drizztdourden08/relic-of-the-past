@@ -1,25 +1,16 @@
 /* @layer bridge-wasm @kind logic */
 import { log } from '../../log-bus';
 import { deliverItem, deliverNpcCheck } from '../delivery-api';
-import type { DeliverySink } from '../delivery-api/delivery-sink.type';
-import { itemKeyName, COMPLETION_NOTE, remove, track } from '@rotp/randomizer';
+import { itemKeyName, COMPLETION_NOTE } from '@rotp/randomizer';
 import type { PlanEntry } from '@rotp/randomizer';
 import type { MessageIdOf } from './apply-overrides';
 
-const trackedSink = (deliver: DeliverySink): DeliverySink => (request) => {
-  const { id, request: tracked } = track(request);
-  const queued = deliver(tracked);
-  if (queued === null) remove(id);
-  return queued;
-};
-
-const deliverEntry = (entry: PlanEntry, messageId: number, deliver: DeliverySink): void => {
+const deliverEntry = (entry: PlanEntry, messageId: number): void => {
   if (entry.targetLocalId === undefined) {
     log.randomizer(`[Local] Cannot deliver "${entry.item}" for "${entry.location}": unresolvable`, 'error');
     return;
   }
   const contextual = messageId >= 0 ? messageId : undefined;
-  const sink = trackedSink(deliver);
   const queued = entry.npcGrant !== undefined
     ? deliverNpcCheck({
       ...entry.npcGrant,
@@ -27,15 +18,14 @@ const deliverEntry = (entry: PlanEntry, messageId: number, deliver: DeliverySink
       message: itemKeyName(entry.item),
       source: 'randomizer',
       messageId: contextual,
-      sink,
     })
-    : deliverItem({ itemId: entry.targetLocalId, message: itemKeyName(entry.item), source: 'randomizer', messageId: contextual, sink });
+    : deliverItem({ itemId: entry.targetLocalId, message: itemKeyName(entry.item), source: 'randomizer', messageId: contextual });
   if (queued === null) {
     log.randomizer(`[Local] Delivery refused for "${entry.location}": game not running or module gone`, 'error');
   }
 };
 
-const reportLocalCheck = (location: string, entry: PlanEntry | undefined, messageIdOf: MessageIdOf, deliver: DeliverySink): void => {
+const reportLocalCheck = (location: string, entry: PlanEntry | undefined, messageIdOf: MessageIdOf): void => {
   if (!entry) {
     log.randomizer(`[Local] Check completed: ${location} (not in plan, nothing to do)`, 'warn');
     return;
@@ -50,7 +40,7 @@ const reportLocalCheck = (location: string, entry: PlanEntry | undefined, messag
     return;
   }
   log.randomizer(`[Local] Check completed: ${location}: delivering "${entry.item}"`);
-  deliverEntry(entry, messageIdOf(location), deliver);
+  deliverEntry(entry, messageIdOf(location));
 };
 
 export { reportLocalCheck };

@@ -3,14 +3,13 @@ import { appRandomizerLog } from '@drizztdourden08/brock-randomizer/session';
 import type { PendingBoot } from '@drizztdourden08/brock-randomizer/session';
 import { normalizeServerUrl, probeOnlineServer } from '@rotp/randomizer';
 import type { ProfileRandomizerConfig } from '@app/profiles/types';
+import { onlineConfigOfProfile } from '../online-config-of-profile';
+import { onlineSlotName } from './online-slot-name-slot';
 
 const gateOnline = async (profileId: string, config: ProfileRandomizerConfig): Promise<PendingBoot | null> => {
   const url = normalizeServerUrl(config.serverUrl ?? '');
-  if (!url) {
-    appRandomizerLog('Randomizer boot blocked: this online profile has no server URL', 'error');
-    return null;
-  }
   const probe = await probeOnlineServer({ url });
+  onlineSlotName.current = onlineConfigOfProfile(config).slotName;
   if (probe.ok) {
     appRandomizerLog(`[Boot] Gate passed: server pre-flight ok (${url}, server ${probe.version ?? 'unknown'})`);
   } else {

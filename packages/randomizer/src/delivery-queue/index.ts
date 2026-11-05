@@ -6,7 +6,6 @@ export { enqueue } from './enqueue';
 export { getState } from './get-state';
 export { notify } from './notify';
 export { peek } from './peek';
-export { queueDeliverer } from './queue-deliverer';
 export { queueState } from './queue-state';
 export { remove } from './remove';
 export { size } from './size';

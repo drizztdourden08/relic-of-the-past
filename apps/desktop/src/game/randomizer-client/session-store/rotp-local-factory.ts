@@ -4,9 +4,10 @@ import type { SessionFactory } from '@drizztdourden08/brock-randomizer/session';
 import { rotpRandomizer } from '@app/randomizer/rotp-randomizer';
 import { installBridge } from './install-bridge';
 import { localWithStats } from './local-with-stats';
+import { rotpSessionLog } from './rotp-session-log';
 
 const rotpLocalFactory = (): SessionFactory => {
-  const base = createLocalSessionFactory(rotpRandomizer);
+  const base = createLocalSessionFactory(rotpRandomizer, rotpSessionLog);
   return {
     ...base,
     create: (pending) => {
