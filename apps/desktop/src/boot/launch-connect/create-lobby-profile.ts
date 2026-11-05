@@ -1,7 +1,7 @@
 /* @layer renderer-app @kind logic */
 import { slotNameError } from '@drizztdourden08/brock-randomizer/archipelago';
 import { EMPTY_LOBBY_DRAFT } from '@app/hooks/randomizer/lobby-setup';
-import type { LobbyCheckOk } from '@app/game/archipelia';
+import type { LobbyCheckOk } from '@drizztdourden08/brock-randomizer/renderer';
 import { log } from '@app/log-bus';
 import { runCreateProfileFlow } from '@app/views/GameSession/behavior/create-profile-flow';
 import { buildRandomizerConfig, freshRandomizerForm } from '@app/views/DataManager/sub-components/profile-manager/build-randomizer-config';

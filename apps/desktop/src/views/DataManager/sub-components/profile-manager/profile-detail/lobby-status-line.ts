@@ -1,6 +1,5 @@
 /* @layer renderer-components @kind logic */
-import type { ArchipeliaMembership } from '@app/game/archipelia';
-import type { LobbyLive } from '@app/stores/lobby-status-store';
+import type { ArchipeliaMembership, LobbyLive } from '@drizztdourden08/brock-randomizer/renderer';
 import type { LobbyStatusLine } from './lobby-status-line.type';
 
 const progressLine = (live: LobbyLive | undefined): LobbyStatusLine | null => {

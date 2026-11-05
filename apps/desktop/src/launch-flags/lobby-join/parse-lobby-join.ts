@@ -1,5 +1,5 @@
 /* @layer renderer-lib @kind logic */
-import { formatLobbyCode } from '@rotp/randomizer';
+import { formatLobbyCode } from '@drizztdourden08/brock-randomizer/archipelago';
 import type { LobbyJoinParse } from './lobby-join.type';
 import { LOBBY_JOIN_SHAPE } from './lobby-join.constants';
 

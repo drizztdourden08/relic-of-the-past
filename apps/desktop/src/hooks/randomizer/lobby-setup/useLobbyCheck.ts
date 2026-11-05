@@ -1,8 +1,8 @@
 /* @layer renderer-lib @kind hook */
 import { useEffect, useState } from 'react';
-import type { LobbyRef } from '@rotp/randomizer';
-import { checkLobby } from '@app/game/archipelia';
-import type { LobbyCheck } from '@app/game/archipelia';
+import type { LobbyRef } from '@drizztdourden08/brock-randomizer/archipelago';
+import { checkLobby } from '@drizztdourden08/brock-randomizer/renderer';
+import type { LobbyCheck } from '@drizztdourden08/brock-randomizer/renderer';
 import { CHECK_DEBOUNCE_MS, IDLE_CHECK as IDLE } from './lobby-draft.constants';
 
 const refOf = (code: string | undefined, joinToken: string | undefined): LobbyRef | null => {

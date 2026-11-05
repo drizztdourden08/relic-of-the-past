@@ -1,10 +1,10 @@
 /* @layer tests @kind test */
 import { describe, expect, it } from 'vitest';
 import type { Scenario } from '@drizztdourden08/archipelia-lobby-protocol/testing';
-import { createBrowserSocket } from '../../src/client/browser-socket';
-import { joinLobby } from '../../src/client/lobby';
-import { openLobbyLink } from '../../src/client/lobby/link/open-lobby-link';
-import type { LobbySession } from '../../src/client/lobby';
+import { joinLobby } from '@drizztdourden08/brock-randomizer/archipelago';
+import type { LobbySession } from '@drizztdourden08/brock-randomizer/archipelago';
+import { openRawLobbyLink } from './raw-lobby-link';
+import type { RawLobbyLink } from './raw-lobby-link';
 import { failureCode, firstMessage, isMessageLine, play } from './lobby-harness.keep.test';
 import type { Driver, Tools } from './lobby-harness.keep.test';
 import { endsWith, expectOk, finalState, joined } from './lobby-drivers';
@@ -95,17 +95,17 @@ describe('wrong codes', { tags: ['standard'] }, () => {
   });
 });
 
-const rawLink = (tools: { server: string }, onOpen: (link: ReturnType<typeof openLobbyLink>) => void) =>
+const rawLink = (tools: { server: string }, onOpen: (link: RawLobbyLink) => void) =>
   new Promise<unknown[]>((resolve) => {
     const seen: unknown[] = [];
-    const link: ReturnType<typeof openLobbyLink> = openLobbyLink(tools.server, createBrowserSocket, {
+    const link: RawLobbyLink = openRawLobbyLink(tools.server, {
       onOpen: () => onOpen(link),
       onMessage: (outcome) => { seen.push(outcome.ok ? outcome.message : outcome.failure); },
       onClose: () => resolve(seen),
     });
   });
 
-type Link = ReturnType<typeof openLobbyLink>;
+type Link = RawLobbyLink;
 
 const rawLinkDriver = (onOpen: (link: Link, tools: Tools) => void): Driver => async (tools) => ({
   sessions: [],
@@ -153,7 +153,7 @@ describe('scenarios a client cannot start natively', { tags: ['standard'] }, () 
     const session = joinLobby({
       server: '127.0.0.1:1', lobby: { code: 'K7QM-4XT2' }, archipelagoVersion: '0.6.8',
       client: { id: 'relic-of-the-past', name: 'Relic of the Past', version: '', platform: { os: 'windows', arch: 'x64' } },
-      world: { worldVersion: '0.1.0', bytes: new Uint8Array(4), sha256: 'a'.repeat(64), size: 4 },
+      world: { game: 'Relic of the Past', module: 'relic_of_the_past', worldVersion: '0.1.0', bytes: new Uint8Array(4), sha256: 'a'.repeat(64), size: 4 },
       slots: [{ name: 'Link', yaml: 'name: Link' }],
     });
     const state = await session.ended;

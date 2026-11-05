@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind logic */
-import { freeSeats } from '@rotp/randomizer';
-import type { LobbyCheck } from '@app/game/archipelia';
+import { freeSeats } from '@drizztdourden08/brock-randomizer/archipelago';
+import type { LobbyCheck } from '@drizztdourden08/brock-randomizer/renderer';
 import type { LobbyLineState } from '@app/compounds/LobbySetup';
 
 const lobbyLineOf = (check: LobbyCheck): LobbyLineState =>

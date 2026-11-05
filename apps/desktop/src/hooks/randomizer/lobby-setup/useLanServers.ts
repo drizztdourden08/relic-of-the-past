@@ -1,8 +1,8 @@
 /* @layer renderer-lib @kind hook */
 import { useEffect, useState } from 'react';
 import { requireHostApi } from '@drizztdourden08/brock-react';
-import { watchLanServers } from '@rotp/randomizer';
-import type { LanServer, LanSightingSource } from '@rotp/randomizer';
+import { watchLanServers } from '@drizztdourden08/brock-randomizer/archipelago';
+import type { LanServer, LanSightingSource } from '@drizztdourden08/brock-randomizer/archipelago';
 
 const hostSource = (): LanSightingSource => {
   const api = requireHostApi();

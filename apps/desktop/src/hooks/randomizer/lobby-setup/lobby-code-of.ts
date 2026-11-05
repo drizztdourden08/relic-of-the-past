@@ -1,6 +1,6 @@
 /* @layer renderer-lib @kind logic */
 import type { PatternValue } from '@drizztdourden08/tessera/composites';
-import { formatLobbyCode } from '@rotp/randomizer';
+import { formatLobbyCode } from '@drizztdourden08/brock-randomizer/archipelago';
 import { CODE_HALF } from './lobby-draft.constants';
 import { typedCode } from './typed-code';
 

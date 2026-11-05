@@ -1,5 +1,5 @@
 /* @layer renderer-app @kind logic */
-import { inLobby } from '@app/game/archipelia';
+import { inLobby } from '@drizztdourden08/brock-randomizer/renderer';
 import { listProfiles } from '@app/storage/profile-store';
 import { MODE_WORDS } from './launch-connect.constants';
 import type { LaunchMode, LaunchProfilePick } from './pick-launch-profile.type';

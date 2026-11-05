@@ -1,6 +1,6 @@
 /* @layer electron-main @kind logic */
 import Bonjour from 'bonjour-service';
-import type { LanDiscoverySettings, LanSighting } from '@rotp/randomizer';
+import type { LanDiscoverySettings, LanSighting } from '@drizztdourden08/brock-randomizer/archipelago';
 
 const textOf = (txt: unknown): Record<string, string> => {
   const entries = typeof txt === 'object' && txt !== null ? Object.entries(txt) : [];

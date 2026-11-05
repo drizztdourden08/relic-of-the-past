@@ -3,6 +3,7 @@ import { AP_GAME, AP_WORLD_VERSION } from '@rotp/randomizer';
 import type { DeliveryAction, Placement } from '@rotp/randomizer';
 import type { ArchipelagoGame } from '@drizztdourden08/brock-randomizer';
 import { isFileInPlay, onSaveSwap } from '@app/game/randomizer-client/file-in-play';
+import { rotpArchipelia } from './rotp-archipelia';
 import { rotpApDeathLink } from './rotp-ap-death-link';
 import { rotpApGate } from './rotp-ap-gate';
 import { rotpApGoal } from './rotp-ap-goal';
@@ -18,6 +19,7 @@ import { rotpApSlot } from './rotp-ap-slot';
 const rotpArchipelago: ArchipelagoGame<Placement, DeliveryAction> = {
   name: AP_GAME,
   worldVersion: AP_WORLD_VERSION,
+  archipelia: rotpArchipelia,
   locationKeyOf,
   locationIdOf,
   slot: rotpApSlot,

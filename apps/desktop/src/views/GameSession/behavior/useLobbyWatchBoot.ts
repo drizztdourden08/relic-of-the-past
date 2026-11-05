@@ -1,7 +1,6 @@
 /* @layer renderer-appshell @kind hook */
 import { useEffect } from 'react';
-import { inLobby, lobbyWatch, resumeMemberships } from '@app/game/archipelia';
-import { useLobbyStatusStore } from '@app/stores/lobby-status-store';
+import { inLobby, lobbyWatch, resumeMemberships, useLobbyStatusStore } from '@drizztdourden08/brock-randomizer/renderer';
 
 const useLobbyWatchBoot = (profiles: readonly Profile[]): void => {
   useEffect(() => {

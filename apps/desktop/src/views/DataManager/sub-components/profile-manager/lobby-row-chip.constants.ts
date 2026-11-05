@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind constants */
 import type { StatusTone } from '@drizztdourden08/tessera/primitives';
-import type { MembershipState } from '@app/game/archipelia';
+import type { MembershipState } from '@drizztdourden08/brock-randomizer/renderer';
 
 const ROW_CHIPS: Readonly<Record<MembershipState['kind'], { label: string; tone: StatusTone } | null>> = {
   pending: { label: 'Waiting', tone: 'warning' },

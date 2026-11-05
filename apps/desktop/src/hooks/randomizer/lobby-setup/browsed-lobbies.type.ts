@@ -1,5 +1,5 @@
 /* @layer renderer-lib @kind types */
-import type { BrowsedEntry } from '@app/game/archipelia';
+import type { BrowsedEntry } from '@drizztdourden08/brock-randomizer/renderer';
 
 interface BrowsedLobbies {
   entries: BrowsedEntry[];

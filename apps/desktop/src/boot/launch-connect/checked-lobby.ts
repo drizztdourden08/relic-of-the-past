@@ -1,6 +1,6 @@
 /* @layer renderer-app @kind logic */
-import { checkLobby } from '@app/game/archipelia';
-import type { LobbyCheckOk } from '@app/game/archipelia';
+import { checkLobby } from '@drizztdourden08/brock-randomizer/renderer';
+import type { LobbyCheckOk } from '@drizztdourden08/brock-randomizer/renderer';
 import { refuseLobbyJoin as refuse } from './refuse-lobby-join';
 
 const checkedLobby = async (server: string, code: string): Promise<LobbyCheckOk | null> => {

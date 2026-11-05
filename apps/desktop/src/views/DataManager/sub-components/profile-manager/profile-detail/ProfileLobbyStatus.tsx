@@ -2,7 +2,7 @@
 import { useState } from 'react';
 import { Button, Flex, ProgressBar, Spinner, Stack, Text } from '@drizztdourden08/tessera/primitives';
 import { FactsPanel } from '@drizztdourden08/tessera/composites';
-import { useLobbyStatusStore } from '@app/stores/lobby-status-store';
+import { useLobbyStatusStore } from '@drizztdourden08/brock-randomizer/renderer';
 import { buildLobbyFacts } from './build-lobby-facts';
 import { convertToLocal } from './convert-to-local';
 import { lobbyStatusLine } from './lobby-status-line';
