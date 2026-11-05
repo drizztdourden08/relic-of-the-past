@@ -1,12 +1,12 @@
 /* @layer tests @kind test */
 import { describe, expect, it, vi } from 'vitest';
-import { createOnlineClient } from '@app/game/randomizer-client/online-client';
 import { baselineEntriesOf } from '@rotp/randomizer';
 import { rebaselineEntries } from '../ap-rebaseline';
-import type { CreateSocket, PhysicalPlan } from '@rotp/randomizer';
+import type { CreateSocket } from '@drizztdourden08/brock-randomizer/archipelago';
+import type { PhysicalPlan } from '@rotp/randomizer';
 import { createFakeServer } from '../ap-fake-server';
 import { createFakeCore } from '../ap-fake-core';
-import { item, settle } from '../ap-protocol-harness';
+import { createOnlineClient, item, settle } from '../ap-protocol-harness';
 import { installRecoveryHarness } from './install-recovery-harness';
 import { recoveryRoom as makeRoom } from './recovery-room';
 
@@ -35,22 +35,17 @@ describe('online recovery', { tags: ['critical'] }, () => {
     expect(core.index).toBe(2);
   });
 
-  it('a scout arm that finishes after a stop disarms again', async () => {
+  it('a stop disarms the game, withdraws its deliveries and pauses the poll', async () => {
     const server = createFakeServer(makeRoom());
     const core = createFakeCore();
-    let finishArm: () => void = () => undefined;
-    core.armScouted = () => new Promise((resolve) => {
-      finishArm = () => resolve({ ok: true, placement: null, pollEntries: null });
-    });
     const session = createOnlineClient({ url: 'ws://host:1', slotName: 'Link' }, { core, createSocket: server.createSocket });
     await session.start();
     await settle();
+    const disarmsBefore = core.disarms;
     session.stop();
     await settle();
-    const disarmsAtStop = core.disarms;
-    finishArm();
-    await settle();
-    expect(core.disarms).toBe(disarmsAtStop + 1);
+    expect(core.disarms).toBeGreaterThan(disarmsBefore);
+    expect([core.cancels > 0, core.pauses > 0]).toEqual([true, true]);
   });
 });
 

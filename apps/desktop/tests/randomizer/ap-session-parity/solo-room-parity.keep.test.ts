@@ -1,8 +1,8 @@
 /* @layer tests @kind test */
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { buildOptionsSnapshot, normalizeRandomizerOptions, generateFromSnapshot, deliverableSetsOf, RETRO_QUIVER_ITEM, isShopSlotLocation } from '@rotp/randomizer';
-import { stripHighlight } from '@rotp/game-core';
+import { buildOptionsSnapshot, normalizeRandomizerOptions, generateFromSnapshot, deliverableSetsOf, RETRO_QUIVER_ITEM } from '@rotp/randomizer';
 import type { DeliverableLists, LocationKey, Placement, RandomizerOptionsSnapshot } from '@rotp/randomizer';
+import { required } from '@rotp/asset-extraction/testing';
 import { installFakeModule } from '../ap-fake-module';
 import type { FakeModule } from '../ap-fake-module';
 import { createFakeServer } from '../ap-fake-server';
@@ -13,6 +13,7 @@ import type { ParityCase } from './parity-cases.data';
 import { FOREIGN_LINE_TEXT } from './foreign-line.fixture';
 import { foreignSpotsOf } from './foreign-spots-of';
 import { handAway } from './hand-away';
+import { armedSet, expectForeignSpots, settle } from './parity-helpers';
 
 const armed = vi.hoisted(() => [] as string[]);
 const errors = vi.hoisted(() => [] as string[]);
@@ -52,17 +53,14 @@ const preloadApi: unknown = new Proxy({}, { get: () => new Proxy(answerEmpty, { 
   addEventListener: () => undefined, removeEventListener: () => undefined, api: preloadApi,
 };
 const { setModule } = await import('@rotp/game-core');
-const { createLocalSession } = await import('@drizztdourden08/brock-randomizer/session');
+const { createLocalSession, createOnlineSessionFactory, useSessionStore } = await import('@drizztdourden08/brock-randomizer/session');
 const { rotpRandomizer } = await import('@app/randomizer/rotp-randomizer');
-const { createOnlineClient } = await import('@app/game/randomizer-client/online-client');
-const { defaultOnlineCore } = await import('@app/game/randomizer-client/online-core');
 const { AP_ONLINE_BIT, AP_DEATH_LINK_BIT } = await import('@app/game/gate-word-5');
 const {
   probeDeliverableNpcLocations, probeDeliverablePondLocations, probeDeliverableWorldLocations, resolveLocalItemId,
 } = await import('@rotp/randomizer');
 
 const AP_BITS = AP_ONLINE_BIT | AP_DEATH_LINK_BIT;
-const SETTLE_TICKS = 400;
 
 const carriedLists = (): DeliverableLists => {
   const everyOther = (set: ReadonlySet<LocationKey>): LocationKey[] => [...set].sort().filter((_, i) => i % 2 === 0);
@@ -71,21 +69,6 @@ const carriedLists = (): DeliverableLists => {
     pond: everyOther(probeDeliverablePondLocations()),
     world: everyOther(probeDeliverableWorldLocations()),
   };
-};
-
-const settle = async (): Promise<void> => {
-  for (let i = 0; i < SETTLE_TICKS; i += 1) await Promise.resolve();
-};
-
-const armedSet = (calls: readonly string[]): { rest: string[]; word5: number[] } => {
-  const word5: number[] = [];
-  const rest: string[] = [];
-  for (const call of [...calls, ...armed].map(stripHighlight)) {
-    const match = WORD_5.exec(call);
-    if (match === null) rest.push(call);
-    else word5.push(Number(match[1]));
-  }
-  return { rest: rest.sort(), word5 };
 };
 
 beforeEach(() => {
@@ -106,12 +89,11 @@ afterEach(() => {
 });
 
 type ArmedSet = ReturnType<typeof armedSet>;
-type OnlineClient = ReturnType<typeof createOnlineClient>;
 
 interface ParityFacts {
   localSet: ArmedSet;
   onlineSet: ArmedSet;
-  online: OnlineClient;
+  onlinePlacement: Placement | null;
   placement: Placement;
   foreign: boolean | undefined;
 }
@@ -124,12 +106,6 @@ const generatedFor = (snapshot: RandomizerOptionsSnapshot, lists: DeliverableLis
     });
   }
   return generateFromSnapshot({ seed: SEED, snapshot, deliverable: deliverableSetsOf(lists) });
-};
-
-const expectForeignSpots = (spots: readonly LocationKey[]): void => {
-  expect(spots.filter((spot) => spot.startsWith('slot-pond-capacity')).length).toBeGreaterThan(0);
-  expect(spots.filter((spot) => /^slot-pond-(wishing|cursed)/.test(spot)).length).toBeGreaterThan(0);
-  expect(spots.some((spot) => isShopSlotLocation(spot))).toBe(true);
 };
 
 const caseRoom = ({ overrides, carried, foreign }: ParityCase): { room: FakeRoom; placement: Placement } => {
@@ -155,39 +131,50 @@ const armLocal = async (core: FakeModule, placement: Placement): Promise<ArmedSe
   const local = createLocalSession({ game: rotpRandomizer, placement, seed: placement.seed, log: () => undefined });
   await local.start();
   expect(local.status).toBe('active');
-  const localSet = armedSet(core.calls);
+  const localSet = armedSet(core.calls, armed);
   local.stop();
   return localSet;
 };
 
-const armOnline = async (core: FakeModule, room: FakeRoom): Promise<{ onlineSet: ArmedSet; online: OnlineClient }> => {
+const onlineSessionOver = (server: ReturnType<typeof createFakeServer>) => {
+  const archipelago = { ...required(rotpRandomizer.archipelago, 'RotP archipelago hook'), createSocket: server.createSocket };
+  const factory = createOnlineSessionFactory({ ...rotpRandomizer, archipelago }, () => undefined);
+  const session = factory.create({ profileId: '', mode: 'online', config: { serverUrl: 'ws://host:1', slotName: 'Link' } as never });
+  useSessionStore.getState().setSession(session);
+  return session;
+};
+
+const armOnline = async (
+  core: FakeModule, room: FakeRoom,
+): Promise<{ onlineSet: ArmedSet; onlinePlacement: Placement | null }> => {
   const server = createFakeServer(room);
-  const online = createOnlineClient({ url: 'ws://host:1', slotName: 'Link' },
-    { core: defaultOnlineCore, createSocket: server.createSocket });
+  const online = onlineSessionOver(server);
   await online.start();
   expect(core.calls.filter((call) => WORD_5.test(call)).length).toBeGreaterThan(0);
   core.clear();
   armed.length = 0;
   await settle();
   expect(online.status).toBe('active');
-  expect(online.placement).not.toBeNull();
-  const onlineSet = armedSet(core.calls);
+  const onlinePlacement = useSessionStore.getState().placement as Placement | null;
+  expect(onlinePlacement).not.toBeNull();
+  const onlineSet = armedSet(core.calls, armed);
   online.stop();
+  useSessionStore.getState().setSession(null);
   await settle();
-  return { onlineSet, online };
+  return { onlineSet, onlinePlacement };
 };
 
-const expectParity = ({ localSet, onlineSet, online, placement, foreign }: ParityFacts): void => {
+const expectParity = ({ localSet, onlineSet, onlinePlacement, placement, foreign }: ParityFacts): void => {
   expect(localSet.rest.length).toBeGreaterThan(100);
   if (foreign) expect(onlineSet.rest).toContainEqual(expect.stringContaining(' sent to Zelda!"'));
   const unnamed = onlineSet.rest.map((call) => call.replace(NAMED_FOREIGN_LINE, `"${FOREIGN_LINE_TEXT}"`));
   expect(unnamed.sort()).toEqual(localSet.rest);
   expect(onlineSet.word5.every((word) => (word & AP_ONLINE_BIT) !== 0)).toBe(true);
   expect(onlineSet.word5.map((word) => word & ~AP_BITS)).toEqual(localSet.word5);
-  expect(online.placement?.locations).toEqual(placement.locations);
-  expect(online.placement?.stats.storyGates).toEqual(placement.stats.storyGates);
+  expect(onlinePlacement?.locations).toEqual(placement.locations);
+  expect(onlinePlacement?.stats.storyGates).toEqual(placement.stats.storyGates);
   const spheresRecounted = foreign ? { sphereCount: 0 } : {};
-  expect({ ...online.placement?.stats, ...spheresRecounted }).toEqual({ ...placement.stats, ...spheresRecounted });
+  expect({ ...onlinePlacement?.stats, ...spheresRecounted }).toEqual({ ...placement.stats, ...spheresRecounted });
   expect(errors.filter((line) => line.includes('refused'))).toEqual([]);
   if (foreign) {
     for (const arm of FOREIGN_ARMS) expect(localSet.rest.some((call) => arm.test(call))).toBe(true);
@@ -203,8 +190,8 @@ describe('a solo room arms the game exactly like the local seed', { tags: ['stan
       const core = installFakeModule(setModule);
       try {
         const localSet = await armLocal(core, placement);
-        const { onlineSet, online } = await armOnline(core, room);
-        expectParity({ localSet, onlineSet, online, placement, foreign: parityCase.foreign });
+        const { onlineSet, onlinePlacement } = await armOnline(core, room);
+        expectParity({ localSet, onlineSet, onlinePlacement, placement, foreign: parityCase.foreign });
       } finally {
         core.remove();
       }

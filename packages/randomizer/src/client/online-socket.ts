@@ -57,4 +57,3 @@ const openSocketLink = (
 };
 
 export { openSocketLink };
-export type { SocketLink } from './online-socket.type';

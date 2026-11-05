@@ -1,12 +1,10 @@
 /* @layer tests @kind test */
 import { describe, expect, it, vi } from 'vitest';
-import { createOnlineClient } from '@app/game/randomizer-client/online-client';
-import { onOnlineNotice } from '@rotp/randomizer';
-import type { ApServerPacket, OnlineNotice } from '@rotp/randomizer';
+import type { ApServerPacket, OnlineNotice } from '@drizztdourden08/brock-randomizer/archipelago';
 import { createFakeServer } from '../ap-fake-server';
 import type { FakeRoom } from '../ap-fake-server';
 import { createFakeCore } from '../ap-fake-core';
-import { OWN, installClientHarness, settle } from '../ap-protocol-harness';
+import { OWN, collectNotices, createOnlineClient, installClientHarness, settle } from '../ap-protocol-harness';
 import { required } from '@rotp/asset-extraction/testing';
 
 vi.mock('@app/log-bus', () => {
@@ -50,11 +48,10 @@ const itemSend = (receiving: number, finder: number, item: number, location: num
 const boot = async (password?: string) => {
   const server = createFakeServer(room(password));
   const core = createFakeCore();
-  const notices: OnlineNotice[] = [];
-  const unsubscribe = onOnlineNotice((notice) => { notices.push(notice); });
   const session = createOnlineClient(
     { url: 'localhost:38281', slotName: 'Link', deathLink: true }, { core, createSocket: server.createSocket },
   );
+  const { notices, stop: unsubscribe } = collectNotices(session);
   await session.start();
   await settle();
   const push = async (packets: ApServerPacket[]): Promise<OnlineNotice[]> => {

@@ -22,7 +22,7 @@ const useProfileConnection = (profile: Profile | null): ProfileConnection => {
     const updated = await updateProfile(profileId, { randomizer });
     if (!updated?.randomizer) throw new Error('The profile is gone.');
     setSaved(profileId, updated.randomizer);
-    await reconnectProfileSession(profileId, updated.randomizer);
+    reconnectProfileSession(profileId, updated.randomizer);
   }, [profileId, setSaved]);
 
   return { config, saveConnection };

@@ -6,7 +6,6 @@ export { registerRotpFactories } from './register-rotp-factories';
 export { resetSession } from './reset-session';
 export { setOnlineAllowed } from './set-online-allowed';
 export { setPendingBoot } from './set-pending-boot';
-export { startOnline } from './start-online';
 export { stopActive } from './stop-active';
 export { subscribeSessionStore } from './subscribe-session-store';
 export type { SessionStoreState } from './session-store.type';

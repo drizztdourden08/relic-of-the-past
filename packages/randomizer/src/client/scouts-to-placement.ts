@@ -16,7 +16,7 @@ import type { ItemKey } from '../world/item-ids';
 import type { LocationKey } from '../world/location-key';
 import type { Placement } from '../world/fill/placement.type';
 import type { RotpSlotData } from '../archipelago/slot-data.type';
-import type { ApNetworkItem } from './ap-protocol.type';
+import type { ApNetworkItem } from '@drizztdourden08/brock-randomizer/archipelago';
 import type { ScoutsToPlacementInput } from './scouts-to-placement.type';
 
 const probedDeliverable = (): Required<DeliverableSets> => ({

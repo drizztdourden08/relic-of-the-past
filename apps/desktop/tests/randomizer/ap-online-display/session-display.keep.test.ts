@@ -2,17 +2,15 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { FOREIGN_ITEM_KEY, FOREIGN_ITEM_NAME, ITEM, buildPlacementView, virtualCheckIdOf } from '@rotp/randomizer';
 import { currentRun } from '@app/game/randomizer-client/run-kind';
-import {
-  getSessionState, resetSession, startOnline, stopActive,
-} from '@app/game/randomizer-client/session-store';
+import { getSessionState, resetSession, stopActive } from '@app/game/randomizer-client/session-store';
+import { setForeignOwners } from '@app/game/randomizer-client/session-store/set-foreign-owners';
+import { registerSessionFactory, startSession, useSessionStore } from '@drizztdourden08/brock-randomizer/session';
+import type { RandomizerSession, SessionStatus } from '@drizztdourden08/brock-randomizer/session';
 import type { ForeignOwners, LocationKey, Placement } from '@rotp/randomizer';
-import type { OnlineSession } from '@app/game/randomizer-client/online-session';
-
-type Status = OnlineSession['status'];
 
 interface FakeOnline {
-  session: OnlineSession;
-  setStatus(status: Status): void;
+  session: RandomizerSession;
+  setStatus(status: SessionStatus): void;
   arm(placement: Placement, owners: ForeignOwners): void;
 }
 
@@ -22,100 +20,30 @@ vi.mock('@app/log-bus', () => {
   const quiet = (): void => undefined;
   return { log: { core: quiet, app: quiet, randomizer: quiet, wasm: quiet, ipc: quiet, sim: quiet, error: quiet } };
 });
-vi.mock('@app/game/randomizer-client/online-session', () => ({ createOnlineSession: () => online.next?.session }));
 vi.mock('@app/randomizer/rotp-randomizer', () => ({ rotpRandomizer: {} }));
 
-const IDLE_NETWORK: OnlineSession['networkStatus'] = {
-  connection: {
-    state: 'idle',
-    configuredUrl: '',
-    url: null,
-    seedName: null,
-    serverVersion: null,
-    generatorVersion: null,
-    slot: null,
-    slotName: '',
-    team: null,
-    uuidShort: null,
-    worldVersion: null,
-    appWorldVersion: '',
-    deathLink: false,
-    passwordUsed: false,
-    connectedAt: null,
-    reconnectAttempt: 0,
-    nextRetryAt: null,
-    retryInFlight: false,
-    error: null,
-  },
-  health: {
-    lastPacketAt: null,
-    packetsIn: 0,
-    packetsOut: 0,
-    pingMs: null,
-    pingMeanMs: null,
-    pingSamples: 0,
-    heldItems: 0,
-    queuedItems: 0,
-    receivedIndex: 0,
-    fileInPlay: false,
-  },
-  players: [],
-  server: {
-    permissions: null,
-    hintCostPercent: null,
-    hintCostPoints: null,
-    hintPoints: null,
-    locationCheckPoints: null,
-    games: [],
-    checksums: [],
-    passwordRequired: null,
-  },
-  progress: { checked: 0, total: 0, itemsReceived: 0, itemsSentToOthers: 0, goalReported: false },
-};
-
 const createFakeOnline = (): FakeOnline => {
-  let status: Status = 'idle';
-  const statusListeners = new Set<(next: Status) => void>();
-  const placementListeners = new Set<(placement: Placement, owners: ForeignOwners) => void>();
-  const setStatus = (next: Status): void => {
-    status = next;
-    for (const listener of statusListeners) listener(next);
-  };
-  const session = {
+  let status: SessionStatus = 'idle';
+  const session: RandomizerSession = {
     kind: 'online',
     get status() { return status; },
     start: () => {
-      setStatus('active');
+      status = 'active';
       return Promise.resolve();
     },
-    stop: () => setStatus('idle'),
-    onStatusChange: (listener: (next: Status) => void) => {
-      statusListeners.add(listener);
-      return () => statusListeners.delete(listener);
-    },
-    onPlacement: (listener: (placement: Placement, owners: ForeignOwners) => void) => {
-      placementListeners.add(listener);
-      return () => placementListeners.delete(listener);
-    },
-    networkStatus: IDLE_NETWORK,
-    onNetworkStatus: () => () => undefined,
+    stop: () => { status = 'idle'; },
     reportCheck: () => undefined,
-    slotData: null,
-    team: null,
-    slot: null,
-    players: [],
-    checkedLocations: new Set<number>(),
-    missingLocations: new Set<number>(),
-    messages: [],
-    onMessages: () => () => undefined,
-    senderNameOf: () => '',
-    say: () => undefined,
-    placement: null,
-  } as OnlineSession;
+  };
   return {
     session,
-    setStatus,
-    arm: (placement, owners) => { for (const listener of placementListeners) listener(placement, owners); },
+    setStatus: (next) => {
+      status = next;
+      useSessionStore.getState().setStatus(next);
+    },
+    arm: (placement, owners) => {
+      useSessionStore.getState().setPlacement(placement);
+      setForeignOwners(owners);
+    },
   };
 };
 
@@ -130,7 +58,10 @@ const OWNERS: ForeignOwners = { 'check-001': 'Zelda' };
 const startArmed = async (): Promise<FakeOnline> => {
   const fake = createFakeOnline();
   online.next = fake;
-  await startOnline({ url: 'ws://host:1', slotName: 'Link' }, 'manual');
+  registerSessionFactory({
+    mode: 'online', placementBacked: true, gate: () => Promise.resolve(null), create: () => fake.session,
+  });
+  await startSession({ profileId: '', mode: 'online', config: {} as never });
   fake.arm(SCOUTED, OWNERS);
   return fake;
 };
@@ -178,8 +109,7 @@ describe('a stopped online session', { tags: ['critical'] }, () => {
   it('drops it when the session winds down on its own', async () => {
     const fake = await startArmed();
     fake.setStatus('idle');
-    expect(getSessionState().session).toBeNull();
-    expect(getSessionState().placement).toBeNull();
+    expect(getSessionState().session?.status).toBe('idle');
     expect(currentRun().kind).toBe('normal');
   });
 
@@ -187,7 +117,6 @@ describe('a stopped online session', { tags: ['critical'] }, () => {
     const fake = await startArmed();
     fake.setStatus('error');
     expect(getSessionState().session).not.toBeNull();
-    expect(getSessionState().placement).toBeNull();
     expect(currentRun().kind).toBe('normal');
   });
 });

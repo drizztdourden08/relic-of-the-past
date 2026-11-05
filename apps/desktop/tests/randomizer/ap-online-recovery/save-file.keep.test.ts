@@ -1,12 +1,10 @@
 /* @layer tests @kind test */
 import { describe, expect, it, vi } from 'vitest';
-import { createOnlineClient } from '@app/game/randomizer-client/online-client';
-import { roomHashOf, ROOM_MISMATCH } from '@rotp/randomizer';
 import { createFakeServer } from '../ap-fake-server';
 import type { FakeRoom } from '../ap-fake-server';
 import { createFakeCore } from '../ap-fake-core';
 import type { FakeCore } from '../ap-fake-core';
-import { OWN, item, settle } from '../ap-protocol-harness';
+import { OWN, ROOM_MISMATCH, createOnlineClient, item, roomHashOf, settle } from '../ap-protocol-harness';
 import { installRecoveryHarness } from './install-recovery-harness';
 import { recoveryRoom as makeRoom } from './recovery-room';
 

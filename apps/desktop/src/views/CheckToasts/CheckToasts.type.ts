@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind types */
 import type { CheckRecord, ItemId } from '@rotp/game-data';
-import type { OnlineNotice } from '@app/game/randomizer-client';
+import type { OnlineNotice } from '@drizztdourden08/brock-randomizer/archipelago';
 
 interface CheckToastsProps {
   width: number;

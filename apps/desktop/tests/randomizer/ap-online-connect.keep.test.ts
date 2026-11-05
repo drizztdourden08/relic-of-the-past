@@ -1,7 +1,8 @@
 /* @layer tests @kind test */
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { createOnlineClient } from '@app/game/randomizer-client/online-client';
-import { backoffDelay, refusalText, roomHashOf, ROOM_MISMATCH } from '@rotp/randomizer';
+import { backoffDelay, refusalText } from '@drizztdourden08/brock-randomizer/archipelago';
+import { AP_GAME } from '@rotp/randomizer';
+import { ROOM_MISMATCH, createOnlineClient, roomHashOf } from './ap-protocol-harness';
 import { createFakeServer } from './ap-fake-server';
 import { createFakeCore } from './ap-fake-core';
 import type { FakeRoom } from './ap-fake-server';
@@ -76,17 +77,23 @@ describe('reaching the room', { tags: ['critical'] }, () => {
     const room = makeRoom({ refusedUrls: new Set([URL]) });
     const { server, session } = await bootWith(room);
     expect(session.status).toBe('reconnecting');
-    expect(session.networkStatus.connection).toMatchObject({
-      state: 'reconnecting', reconnectAttempt: 1, nextRetryAt: Date.now() + 1000, error: `Could not reach ${URL}`,
-    });
-    await wait(1000);
-    expect(session.networkStatus.connection).toMatchObject({ reconnectAttempt: 2, nextRetryAt: Date.now() + 2000 });
+    expect(session.networkStatus.connection.state).toBe('reconnecting');
+    expect(server.urls).toHaveLength(1);
+    const { reconnect } = session.networkStatus;
+    expect(reconnect.inFlight).toBe(false);
+    expect(reconnect.nextRetryAt).toBe(Date.now() + 1000);
+    await wait(999);
+    expect(server.urls).toHaveLength(1);
+    expect(session.networkStatus.reconnect.nextRetryAt).toBe(Date.now() + 1);
+    await wait(1);
+    expect(server.urls).toHaveLength(2);
     await wait(2000);
-    expect(session.networkStatus.connection).toMatchObject({ reconnectAttempt: 3, nextRetryAt: Date.now() + 4000 });
+    expect(server.urls).toHaveLength(3);
     room.refusedUrls.clear();
     await wait(4000);
     expect(session.status).toBe('active');
-    expect(session.networkStatus.connection).toMatchObject({ state: 'connected', reconnectAttempt: 0, error: null });
+    expect(session.networkStatus.connection).toMatchObject({ state: 'connected', error: null });
+    expect(session.networkStatus.reconnect).toMatchObject({ attempt: 0, inFlight: false });
     expect(server.urls).toHaveLength(4);
     expect([0, 1, 2, 3, 4, 5, 6].map(backoffDelay)).toEqual([1000, 2000, 4000, 8000, 16000, 30000, 30000]);
   });
@@ -102,7 +109,7 @@ describe('reaching the room', { tags: ['critical'] }, () => {
 
   it('has a sentence for each refusal code', () => {
     expect(['InvalidSlot', 'InvalidGame', 'IncompatibleVersion', 'InvalidPassword', 'InvalidItemsHandling', 'Odd']
-      .map((code) => refusalText([code], 'Link'))).toEqual([
+      .map((code) => refusalText([code], 'Link', AP_GAME))).toEqual([
       'No player named Link in this room.',
       'This room has no Relic of the Past player named Link.',
       'The server needs a newer client.',

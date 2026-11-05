@@ -1,7 +1,6 @@
 /* @layer bridge-wasm @kind types */
 import type { CreateSocket } from '../../ap-socket.type';
-import type { Reconnector } from '../../reconnect';
-import type { ListenerSet } from '../../listener-set.type';
+import type { ListenerSet, Reconnector } from '@drizztdourden08/brock-randomizer/archipelago';
 import type { JoinConfig, WorldInput } from '../join/join-config.type';
 import type { PreparedJoin } from '../join/prepared-join.type';
 import type { LinkDownload } from '../files/download.type';

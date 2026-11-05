@@ -1,11 +1,11 @@
 /* @layer tests @kind test */
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { createOnlineClient } from '@app/game/randomizer-client/online-client';
-import { onOnlineNotice, deathLinkToastLine, deathLinkToastText, MAX_CAUSE_LENGTH } from '@rotp/randomizer';
+import { deathLinkToastText } from '@drizztdourden08/brock-randomizer/archipelago';
+import type { DeathLinkNotice, OnlineNotice } from '@drizztdourden08/brock-randomizer/archipelago';
 import { createFakeServer } from './ap-fake-server';
 import { createFakeCore } from './ap-fake-core';
+import { collectNotices, createOnlineClient } from './ap-protocol-harness';
 import type { FakeRoom } from './ap-fake-server';
-import type { DeathLinkNotice, OnlineNotice } from '@rotp/randomizer';
 
 vi.mock('@app/log-bus', () => {
   const quiet = (): void => undefined;
@@ -13,6 +13,7 @@ vi.mock('@app/log-bus', () => {
 });
 
 const OWN = 'Relic of the Past';
+const MAX_CAUSE_LENGTH = 90;
 const CAUSE = 'Shipwrecked by King Harkinian';
 
 const room = (): FakeRoom => ({
@@ -45,22 +46,25 @@ const boot = async () => {
   const core = createFakeCore();
   const lines: string[] = [];
   const notices: OnlineNotice[] = [];
-  const unsubscribe = onOnlineNotice((notice) => {
-    if (notice.kind !== 'deathLink') return;
-    notices.push(notice);
-    lines.push(notice.text);
-  });
   const session = createOnlineClient(
     { url: 'localhost:38281', slotName: 'Link', deathLink: true },
     { core, createSocket: server.createSocket },
   );
+  const collected = collectNotices(session);
+  const unsubscribe = session.client.onEvent(() => {
+    for (const notice of collected.notices.splice(0)) {
+      if (notice.kind !== 'deathLink') continue;
+      notices.push(notice);
+      lines.push(notice.parts.map((part) => part.text).join(''));
+    }
+  });
   await session.start();
   await settle();
   const bounce = async (source: string, cause: string): Promise<void> => {
     server.push([{ cmd: 'Bounced', tags: ['DeathLink'], data: { source, time: 0, cause } }]);
     await settle();
   };
-  return { server, core, lines, notices, bounce, stop: () => { unsubscribe(); session.stop(); } };
+  return { server, core, lines, notices, bounce, stop: () => { unsubscribe(); collected.stop(); session.stop(); } };
 };
 
 beforeEach(() => {
@@ -117,10 +121,15 @@ describe('DeathLink toasts from the session', { tags: ['critical'] }, () => {
 describe('the toast line', { tags: ['critical'] }, () => {
   const received = (cause: string): DeathLinkNotice => ({ kind: 'received', source: 'Zelda', cause });
 
+  const lineOf = (notice: DeathLinkNotice): string => {
+    const { name, text } = deathLinkToastText(notice);
+    return `${name}${text}`;
+  };
+
   it('a cause that adds nothing reads as a plain line', () => {
-    expect(['', '  ', 'Zelda', 'Zelda died', 'zelda died.'].map((cause) => deathLinkToastLine(received(cause))))
+    expect(['', '  ', 'Zelda', 'Zelda died', 'zelda died.'].map((cause) => lineOf(received(cause))))
       .toEqual(Array(5).fill('Zelda died, and took you along.'));
-    expect(deathLinkToastLine({ kind: 'dropped', source: 'Zelda', cause: '' })).toBe('Zelda died (already down)');
+    expect(lineOf({ kind: 'dropped', source: 'Zelda', cause: '' })).toBe('Zelda died (already down)');
   });
 
   it('a cause that opens with the name is kept as its own sentence, the name drawn apart', () => {

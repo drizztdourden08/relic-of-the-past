@@ -26,4 +26,3 @@ const killLinkInCore = (): KillOutcome => {
 };
 
 export { killLinkInCore };
-export type { KillOutcome } from './ap-kill-link.type';

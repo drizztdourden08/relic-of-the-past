@@ -1,7 +1,6 @@
 /* @layer bridge-wasm @kind logic */
 import { createBrowserSocket } from '../../browser-socket';
-import { createListenerSet } from '../../listener-set';
-import { createReconnector } from '../../reconnect';
+import { createListenerSet, createReconnector } from '@drizztdourden08/brock-randomizer/archipelago';
 import type { JoinConfig, JoinDeps } from '../join/join-config.type';
 import { MAX_RECONNECTS } from '../lobby.constants';
 import { connectSession } from './connect-session';

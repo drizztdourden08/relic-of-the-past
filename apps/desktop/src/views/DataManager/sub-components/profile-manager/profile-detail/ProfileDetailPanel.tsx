@@ -31,7 +31,7 @@ const ProfileDetailPanel = (props: ProfileDetailPanelProps) => {
       <Tabs tabs={tabs} activeTab={tab} onTabChange={setTab} />
       {tab === SETTINGS_TAB && <ProfileSettingsTab settings={settings} />}
       {tab === DATA_TAB && <ProfileDataTab profile={profile} settings={settings} />}
-      {tab === RANDOMIZER_TAB && randomizer && <ProfileRandomizerTab profile={profile} randomizer={randomizer} />}
+      {tab === RANDOMIZER_TAB && randomizer && <ProfileRandomizerTab randomizer={randomizer} />}
       {tab === OVERVIEW_TAB && (
         <ProfileOverviewTab profile={profile} mode={mode} languages={languages} msuPacks={msuPacks} onRefresh={onRefresh} />
       )}

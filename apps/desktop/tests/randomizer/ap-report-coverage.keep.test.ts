@@ -46,14 +46,15 @@ const preloadApi: unknown = new Proxy({}, { get: () => new Proxy(answerEmpty, { 
 };
 const { setModule } = await import('@rotp/game-core');
 const { installFakeModule } = await import('./ap-fake-module');
-const { armScouted } = await import('@app/game/randomizer-client/online-arm-scouted');
+const { rotpApplier } = await import('@app/randomizer/rotp-randomizer/rotp-applier');
+const { rotpApSlot } = await import('@app/randomizer/rotp-randomizer/rotp-ap-slot');
 const { disarmFireReporting, firedLocations } = await import('@app/game/randomizer-client/override-fire-registry');
 const {
   clearCollectedChecks, isCountedCheck, trackerCheckRecords, trackerStatuses, withCollectedChecks,
 } = await import('@rotp/navigation');
 const { markCollected } = await import('@app/game/randomizer-client/online-collected');
 const {
-  parseSlotData, probeDeliverableNpcLocations, probeDeliverablePondLocations, probeDeliverableWorldLocations, virtualCheckIdOf,
+  probeDeliverableNpcLocations, probeDeliverablePondLocations, probeDeliverableWorldLocations, virtualCheckIdOf,
 } = await import('@rotp/randomizer');
 
 const SLOT = 1;
@@ -87,35 +88,35 @@ const roomOf = (overrides: Record<string, OptionValue>, foreignEvery: number | u
       item: AP_ITEM_IDS[item] ?? 0, location: AP_LOCATION_IDS[where] ?? 0, flags: 0,
       player: foreignEvery !== undefined && index % foreignEvery === 0 ? OTHER_SLOT : SLOT,
     }));
-  const slotData = parseSlotData({
+  const reading = rotpApSlot({
     worldVersion: '0.1.0', seed: placement.seed, options: snapshot.values, medallions: placement.medallions,
     preRolled: { pondDemands: placement.pondDemands, shopPrices: placement.shopPrices }, deathLink: false,
   });
-  if (slotData.kind !== 'ok') throw new Error(`slot data: ${slotData.kind}`);
-  return { scouts, slotData: slotData.slotData };
+  if (reading.kind !== 'ok') throw new Error(`slot data: ${reading.kind}`);
+  return { scouts, reading };
 };
 
 const armRoom = async (overrides: Record<string, OptionValue>, foreignEvery: number | undefined) => {
   const module = installFakeModule(setModule);
-  const { scouts, slotData } = roomOf(overrides, foreignEvery);
-  const maps = {
-    keyByLocationId: new Map<number, LocationKey>(), locationIdByKey: new Map<LocationKey, number>(),
-    overriddenLocationIds: new Set<number>(),
+  const { scouts, reading } = roomOf(overrides, foreignEvery);
+  const keyOf = new Map<number, LocationKey>(scouts.map((scout) => [scout.location, locationKeyOfApId(scout.location)]));
+  const scouted = scouts.map((scout) => ({
+    ...scout, itemName: `Item ${scout.item}`, gameName: 'Other Game', locationKey: keyOf.get(scout.location) ?? '',
+  }));
+  const placement = reading.placement({ seedName: 'ap-report-coverage', slot: SLOT, team: 0, scouted });
+  const foreign = (key: string) => {
+    const entry = scouted.find((scout) => scout.locationKey === key);
+    return entry === undefined || entry.player === SLOT
+      ? undefined
+      : { itemName: entry.itemName, playerName: `Player ${entry.player}`, gameName: entry.gameName, flags: entry.flags };
   };
-  for (const { location } of scouts) {
-    const key = locationKeyOfApId(location);
-    maps.keyByLocationId.set(location, key);
-    maps.locationIdByKey.set(key, location);
-  }
-  const outcome = await armScouted({
-    scouts, maps, slot: SLOT, slotData, seedName: 'ap-report-coverage',
-    playerName: (slot) => `Player ${slot}`, itemName: (id) => `Item ${id}`, gameOf: () => 'Other Game',
-    reporter: { reportCheck: () => undefined },
+  const outcome = await rotpApplier.apply(placement, {
+    tag: '[Online]', reportCheck: () => undefined, suppress: () => undefined, log: () => undefined, foreign,
   });
   module.remove();
-  if (!outcome.ok) throw new Error(outcome.reason);
+  if (!outcome.ok) throw new Error(outcome.refusal);
   const foreignKeys = scouts.filter((scout) => scout.player !== SLOT).map((scout) => locationKeyOfApId(scout.location));
-  return { outcome, keys: [...maps.keyByLocationId.values()], foreignKeys };
+  return { polled: outcome.armed.polled ?? [], placement, keys: [...keyOf.values()], foreignKeys };
 };
 
 afterEach(() => {
@@ -128,15 +129,14 @@ afterEach(() => {
 describe('every Archipelago location has a reporting path', { tags: ['standard'] }, () => {
   for (const { name, overrides, foreignEvery } of CASES) {
     it(name, async () => {
-      const { outcome, keys } = await armRoom(overrides, foreignEvery);
-      const polled = new Set((outcome.pollEntries ?? [])
-        .filter((entry) => entry.baselineOnly !== true && (entry.detection !== undefined || entry.checkId !== undefined))
+      const { polled: entries, placement, keys } = await armRoom(overrides, foreignEvery);
+      const polled = new Set(entries
+        .filter((entry) => entry.baselineOnly !== true && (entry.probe !== undefined || entry.checkId !== undefined))
         .map((entry) => entry.key));
       expect(keys.filter((key) => !allocated.has(key) && !polled.has(key))).toEqual([]);
       expect(errors).toEqual([]);
 
-      if (outcome.placement === null) throw new Error('the scouts armed no placement');
-      const counted = trackerCheckRecords(find('check', () => true), outcome.placement)
+      const counted = trackerCheckRecords(find('check', () => true), placement)
         .filter((check) => isCountedCheck(check));
       expect(counted.length).toBe(keys.length);
     });
@@ -145,14 +145,13 @@ describe('every Archipelago location has a reporting path', { tags: ['standard']
 
 describe('every collected location shows as done', { tags: ['standard'] }, () => {
   it('a collect of every other player\'s item ticks each row, restocks and pond rungs too', async () => {
-    const { outcome, keys, foreignKeys } = await armRoom({}, 3);
-    if (outcome.placement === null) throw new Error('the scouts armed no placement');
+    const { placement, keys, foreignKeys } = await armRoom({}, 3);
     expect(foreignKeys.some((key) => checkIdOfLocation(key) === undefined)).toBe(true);
     markCollected(foreignKeys);
 
-    const rows = trackerCheckRecords(find('check', () => true), outcome.placement);
+    const rows = trackerCheckRecords(find('check', () => true), placement);
     const statuses = trackerStatuses({
-      placement: outcome.placement, checks: rows, inventory: new Set(),
+      placement, checks: rows, inventory: new Set(),
       completed: withCollectedChecks(new Set<CheckId>()), fired: firedLocations(),
     });
     const rowIdOf = (key: LocationKey): CheckId => checkIdOfLocation(key) ?? virtualCheckIdOf(key);

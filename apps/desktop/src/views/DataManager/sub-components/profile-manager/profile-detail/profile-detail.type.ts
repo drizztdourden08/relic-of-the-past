@@ -47,12 +47,6 @@ interface ProfileDataTabProps {
 }
 
 interface ProfileRandomizerTabProps {
-  profile: Profile;
-  randomizer: ProfileRandomizerConfig;
-}
-
-interface ProfileConnectionSectionProps {
-  profile: Profile;
   randomizer: ProfileRandomizerConfig;
 }
 
@@ -63,6 +57,6 @@ interface FactsSectionProps {
 }
 
 export type {
-  FactsSectionProps, ProfileConnectionSectionProps, ProfileDataTabProps, ProfileDetailHeaderProps, ProfileDetailPanelProps,
+  FactsSectionProps, ProfileDataTabProps, ProfileDetailHeaderProps, ProfileDetailPanelProps,
   ProfileEditSectionProps, ProfileOverviewTabProps, ProfileRandomizerTabProps, ProfileSettings, ProfileSettingsTabProps,
 };

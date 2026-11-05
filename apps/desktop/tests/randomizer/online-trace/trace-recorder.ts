@@ -1,5 +1,5 @@
 /* @layer tests @kind helper */
-import type { OnlineSession } from '@rotp/randomizer';
+import type { HarnessSession } from '../ap-protocol-harness';
 import type { FakeCore } from '../ap-fake-core';
 import type { FakeServer } from '../ap-fake-server';
 import { takeLines } from '../golden-traces/trace-log';
@@ -8,7 +8,7 @@ import { SETTLE_TICKS } from './online-trace.constants';
 interface Recorded {
   server: FakeServer;
   core: FakeCore;
-  session: OnlineSession;
+  session: HarnessSession;
   coreEvents: string[];
 }
 

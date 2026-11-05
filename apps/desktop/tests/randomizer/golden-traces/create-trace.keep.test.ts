@@ -55,7 +55,6 @@ const ONLINE_VALUES: ProfileWizardValues = {
     enabled: true,
     mode: 'online',
     seed: 'trace-seed-2',
-    server: { host: 'ap.example.test', port: '38281', password: 'trace-room-pass', slotName: 'Link' },
   },
 };
 

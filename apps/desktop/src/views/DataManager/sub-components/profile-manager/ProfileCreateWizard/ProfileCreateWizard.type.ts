@@ -25,7 +25,6 @@ interface CreateContext {
   experimental: boolean;
   modules: readonly ProfileWizardStepDef[];
   onCreateProfile: (opts: CreateProfileOptions) => Promise<CreateProfileResult>;
-  onProgress: (fraction: number | null) => void;
 }
 
 interface ProfileCreateWizardProps {

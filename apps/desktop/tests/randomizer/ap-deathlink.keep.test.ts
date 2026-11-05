@@ -42,7 +42,9 @@ describe('DeathLink', { tags: ['critical'] }, () => {
     bounce('Zelda');
     await settle();
     expect(core.kills).toBe(2);
-    expect([server.of('ConnectUpdate'), core.deathLinkBits]).toEqual([[], [true]]);
+    expect([server.of('ConnectUpdate'), core.deathLinkBits]).toEqual([
+      [{ cmd: 'ConnectUpdate', items_handling: 0b111, tags: ['DeathLink'] }], [true, true],
+    ]);
   });
 
   it('a death the room caused (core cause 1) is never sent, however late it commits', async () => {
@@ -69,7 +71,7 @@ describe('DeathLink', { tags: ['critical'] }, () => {
 });
 
 describe('DeathLink', { tags: ['critical'] }, () => {
-  it('the slot data decides once Connected, and a ConnectUpdate corrects the tags', async () => {
+  it('the slot data turns DeathLink off once Connected, and a ConnectUpdate corrects the tags', async () => {
     const off = await boot(withDeathLink(false), { deathLink: true });
     expect(required(off.server.of('Connect')[0], 'Connect packet').tags).toEqual(['DeathLink']);
     expect(off.server.of('ConnectUpdate')).toEqual([{ cmd: 'ConnectUpdate', items_handling: 0b111, tags: [] }]);
@@ -78,7 +80,9 @@ describe('DeathLink', { tags: ['critical'] }, () => {
     await settle();
     off.core.die('fell in a pit');
     expect([off.core.kills, deathLinkBounces(off.server).length]).toEqual([0, 0]);
+  });
 
+  it('the slot data turns DeathLink on once Connected, and a ConnectUpdate corrects the tags', async () => {
     const on = await boot(withDeathLink(true));
     expect(required(on.server.of('Connect')[0], 'Connect packet').tags).toEqual([]);
     expect(on.server.of('ConnectUpdate')).toEqual([{ cmd: 'ConnectUpdate', items_handling: 0b111, tags: ['DeathLink'] }]);

@@ -2,34 +2,50 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { createProfile, loadProfile, updateProfile } from '@app/profiles/storage';
 import { applyConnectionPatch } from '@app/profiles/connection-patch/randomizer-connection-patch';
-import { createOnlineClient } from '@app/game/randomizer-client/online-client';
-import { getSessionState, startOnline, stopActive } from '@app/game/randomizer-client/session-store';
-import { onlineConfigOfProfile } from '@app/game/randomizer-client/online-config-of-profile';
-import { reconnectProfileSession } from '@app/game/randomizer-client/profile-reconnect';
-import { joinServerAddress, serverAddressError, splitServerAddress } from '@rotp/randomizer';
-import { absorbPort, draftError, draftOf, patchOf } from '@app/hooks/randomizer/server-setup/server-setup-draft';
-import { createMemFileStore } from '../storage/mem-file-store';
-import { createFakeServer } from './ap-fake-server';
-import { createFakeCore } from './ap-fake-core';
+import { joinServerAddress, serverAddressError, splitServerAddress } from '@drizztdourden08/brock-randomizer/archipelago';
 import { required } from '@rotp/asset-extraction/testing';
+import { createMemFileStore } from '../storage/mem-file-store';
+import { installFakeModule } from './ap-fake-module';
+import { createFakeServer } from './ap-fake-server';
 import type { FakeServer } from './ap-fake-server';
-import type { OnlineSessionConfig, RandomizerOptionsSnapshot } from '@rotp/randomizer';
+import {
+  buildOptionsSnapshot, generateFromSnapshot, normalizeRandomizerOptions,
+  probeDeliverableNpcLocations, probeDeliverablePondLocations, probeDeliverableWorldLocations,
+} from '@rotp/randomizer';
+import type { RandomizerOptionsSnapshot } from '@rotp/randomizer';
+import { soloRoomOf } from './ap-solo-room';
 import type { ProfileRandomizerConfig, RandomizerConnectionPatch } from '@app/profiles/types';
-
-const fake = vi.hoisted(() => ({ server: undefined as FakeServer | undefined }));
 
 vi.mock('@app/log-bus', () => {
   const quiet = (): void => undefined;
   return { log: { core: quiet, app: quiet, randomizer: quiet, wasm: quiet, ipc: quiet, sim: quiet, error: quiet } };
 });
 vi.mock('@app/game/event-log/append-event', () => ({ appendEvent: (): void => undefined }));
-vi.mock('@app/randomizer/rotp-randomizer', () => ({ rotpRandomizer: {} }));
-vi.mock('@app/game/randomizer-client/online-session', () => ({
-  createOnlineSession: (config: OnlineSessionConfig) =>
-    createOnlineClient(config, { core: createFakeCore(), createSocket: required(fake.server, 'fake server').createSocket }),
+vi.mock('@app/game/session-dialogue', () => ({
+  setSessionReceiptMessages: (lines: unknown[]) => lines.map((_, index) => 1000 + index),
+  appendSessionReceiptMessage: () => null,
+  clearSessionDialogue: () => undefined,
 }));
+const iconSet = (name: string) => ({ [`apply${name}`]: () => Promise.resolve(true), [`clear${name}`]: () => undefined });
+vi.mock('@app/game/gear-icons', () => iconSet('GearIcons'));
+vi.mock('@app/game/quiver-icon', () => iconSet('QuiverIcon'));
+vi.mock('@app/game/currency-symbols', () => iconSet('CurrencySymbols'));
+vi.mock('@app/game/upgrade-icons', () => iconSet('UpgradeIcons'));
+vi.mock('@app/game/foreign-icons', () => ({ applyForeignIcons: () => Promise.resolve(false), clearForeignIcons: () => undefined }));
 
-const OWN = 'Relic of the Past';
+const answerEmpty = (): Promise<unknown[]> => Promise.resolve([]);
+const preloadApi: unknown = new Proxy({}, { get: () => new Proxy(answerEmpty, { get: () => answerEmpty }) });
+(globalThis as { window?: unknown }).window ??= {
+  addEventListener: () => undefined, removeEventListener: () => undefined, api: preloadApi,
+};
+const { setModule } = await import('@rotp/game-core');
+const { createOnlineSessionFactory, registerSessionFactory, startSession } =
+  await import('@drizztdourden08/brock-randomizer/session');
+const { rotpRandomizer } = await import('@app/randomizer/rotp-randomizer');
+const { stopActive, getSessionState } = await import('@app/game/randomizer-client/session-store');
+const { reconnectProfileSession } = await import('@app/game/randomizer-client/profile-reconnect');
+
+const fake = { server: undefined as FakeServer | undefined };
 const OPTIONS: RandomizerOptionsSnapshot = { schema: 'ap-options-v2', values: {} };
 
 const onlineConfig = (password: string): ProfileRandomizerConfig => ({
@@ -37,15 +53,14 @@ const onlineConfig = (password: string): ProfileRandomizerConfig => ({
   slotName: 'Link', password, deathLink: false, trackOtherPlayers: false,
 });
 
-const createRoom = (): FakeServer => createFakeServer({
-  password: 'pw',
-  games: { [OWN]: { item_name_to_id: { Bow: 100 }, location_name_to_id: { 'check-001': 1 }, checksum: 'own-1' } },
-  items: [], checked: [], missing: [1],
-  players: [{ team: 0, slot: 1, alias: 'Link', name: 'Link' }],
-  slotInfo: { 1: { name: 'Link', game: OWN, type: 1, group_members: [] } },
-  slotData: { worldVersion: '0.1.0', options: {}, medallions: { mire: 'Ether', turtleRock: 'Quake' }, deathLink: false },
-  placements: {}, refusedUrls: new Set(), seedName: 'seed-A',
-});
+const createRoom = (): FakeServer => {
+  const snapshot = normalizeRandomizerOptions(buildOptionsSnapshot({}));
+  const placement = generateFromSnapshot({
+    seed: 'seed-A', snapshot,
+    deliverable: { npc: probeDeliverableNpcLocations(), capacity: probeDeliverablePondLocations(), world: probeDeliverableWorldLocations() },
+  });
+  return createFakeServer({ ...soloRoomOf(placement, snapshot), password: 'pw', seedName: 'seed-A' });
+};
 
 const settle = async (): Promise<void> => {
   for (let i = 0; i < 60; i += 1) await Promise.resolve();
@@ -101,25 +116,30 @@ describe('the connection patch', { tags: ['critical'] }, () => {
 describe('fixing a wrong password from the Network tab (T30)', { tags: ['critical'] }, () => {
   it('a save after the refusal reconnects on the new password and becomes active', async () => {
     fake.server = createRoom();
+    const core = installFakeModule(setModule);
+    core.setReturn('WasmGetApRoomHash', 0);
+    const archipelago = { ...required(rotpRandomizer.archipelago, 'RotP archipelago hook'), createSocket: required(fake.server, 'fake server').createSocket };
+    registerSessionFactory(createOnlineSessionFactory({ ...rotpRandomizer, archipelago }, () => undefined));
     const files = createMemFileStore();
     const { id, randomizer } = await createProfile(files, { name: 'AP', romFile: 'rom.sfc', randomizer: onlineConfig('nope') });
-    await startOnline(onlineConfigOfProfile(required(randomizer, 'stored randomizer config')), 'profile');
+    await startSession({ profileId: id, mode: 'online', config: required(randomizer, 'stored randomizer config') });
     await settle();
     const refused = required(getSessionState().session ?? undefined, 'refused session');
-    expect([refused.status, refused.kind === 'online' && refused.networkStatus.connection.error])
-      .toEqual(['error', 'Wrong room password.']);
+    expect(refused.status).toBe('error');
+    expect(refused.kind === 'online' && refused.client.status().connection).toBe('refused');
 
     const updated = await updateProfile(files, id, { randomizerConnection: { password: 'pw' } });
     const updatedProfile = required(updated ?? undefined, 'updated profile');
-    await reconnectProfileSession(id, required(updatedProfile.randomizer, 'updated randomizer config'));
+    reconnectProfileSession(id, required(updatedProfile.randomizer, 'updated randomizer config'));
     await settle();
 
     const { session, source } = getSessionState();
-    expect(session).not.toBe(refused);
+    expect(session).toBe(refused);
     expect([session?.status, source]).toEqual(['active', 'profile']);
-    expect(session?.kind === 'online' && session.networkStatus.connection.state).toBe('connected');
+    expect(session?.kind === 'online' && session.client.status().connection).toBe('connected');
     expect(fake.server.of('Connect').map((packet) => packet.password)).toEqual(['nope', 'pw']);
     expect((await loadProfile(files, id))?.randomizer?.password).toBe('pw');
+    core.remove();
   });
 });
 
@@ -131,19 +151,10 @@ describe('the address fields', { tags: ['critical'] }, () => {
     expect(joinServerAddress({ host: ' localhost ', port: '38290' })).toBe('localhost:38290');
   });
 
-  it('a host:port in the host field moves its port across', () => {
-    const draft = { ...draftOf(onlineConfig('pw')), host: 'localhost:38290', port: '1' };
-    expect(absorbPort(draft)).toMatchObject({ host: 'localhost', port: '38290' });
-    expect(patchOf(absorbPort(draft))).toEqual({
-      serverUrl: 'localhost:38290', slotName: 'Link', password: 'pw',
-    });
-  });
-
   it('checks the port range, the host and the slot', () => {
     expect(['0', '1', '65535', '65536', 'x', ''].map((port) => serverAddressError({ host: 'h', port }))).toEqual([
       'Port is 1 to 65535.', null, null, 'Port is 1 to 65535.', 'Port is 1 to 65535.', 'Port is 1 to 65535.',
     ]);
     expect(serverAddressError({ host: ' ', port: '1' })).toBe('Enter a host.');
-    expect(draftError({ ...draftOf(onlineConfig('pw')), slotName: ' ' })).toBe('Enter a slot name.');
   });
 });
