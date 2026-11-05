@@ -32,7 +32,7 @@
         {
           "cmd": "Bounce",
           "tags": [
-            "rotp-ping"
+            "brock-ping"
           ],
           "slots": [
             1
@@ -57,8 +57,11 @@
           ]
         },
         {
-          "cmd": "Say",
-          "text": "!players"
+          "cmd": "ConnectUpdate",
+          "items_handling": 7,
+          "tags": [
+            "DeathLink"
+          ]
         },
         {
           "cmd": "LocationScouts",
@@ -91,10 +94,10 @@
       "messages": [],
       "connectionError": null,
       "logs": [
-        "randomizer info: [Online] Connecting to localhost:38281",
+        "randomizer info: [Online] Connecting to ws://localhost:38281",
         "randomizer info: [Online] Fetching data package for 2 game(s)",
-        "randomizer info: [Online] Scouting 3 locations",
         "randomizer info: [Online] Connected as Link (slot 1, team 0)",
+        "randomizer info: [Online] Scouting 3 locations",
         "randomizer info: [Online] Received: Bow from Zelda",
         "randomizer info: [Online] Received: Lamp from the server"
       ]
@@ -124,7 +127,7 @@
       "messages": [],
       "connectionError": null,
       "logs": [
-        "randomizer info: [Online] Received items start at 5, the save and the queue hold 2, asking the server for the full list"
+        "randomizer info: [Online] Gap in received items, asking the server for the full list"
       ]
     },
     {
@@ -495,9 +498,8 @@
       "messages": [],
       "connectionError": "Wrong room password.",
       "logs": [
-        "randomizer info: [Online] Connecting to localhost:38281",
-        "randomizer error: [Online] Connection refused (InvalidPassword): Wrong room password.",
-        "randomizer info: [Online] Session closed"
+        "randomizer info: [Online] Connecting to ws://localhost:38281",
+        "randomizer error: [Online] Connection refused (InvalidPassword): Wrong room password."
       ]
     }
   ]
