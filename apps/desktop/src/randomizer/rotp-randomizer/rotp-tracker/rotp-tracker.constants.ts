@@ -1,12 +1,9 @@
 /* @layer renderer-app @kind constants */
 import { GROUP_DIMENSIONS } from '@rotp/game-data';
+import { BIG_KEY_DOORS, DARK_ROOMS_NEED_LIGHT, SMALL_KEY_DOORS } from '@rotp/randomizer';
 import type {
   TrackerAssumption, TrackerGrouping,
 } from '@drizztdourden08/brock-randomizer/tracker';
-
-const SMALL_KEY_DOORS = 'small-key-doors';
-const BIG_KEY_DOORS = 'big-key-doors';
-const DARK_ROOMS_NEED_LIGHT = 'dark-rooms-need-light';
 
 const ROTP_ASSUMPTIONS: readonly TrackerAssumption[] = [
   {
@@ -37,6 +34,6 @@ const NOW_BADGE_ID = 'now';
 const TRACKER_EVENT_KIND = 'event';
 
 export {
-  BIG_KEY_DOORS, DARK_ROOMS_NEED_LIGHT, FACET_CATEGORY_LABELS, NOW_BADGE_ID, ROTP_ASSUMPTIONS, ROTP_GROUPINGS,
-  SMALL_KEY_DOORS, SWAP_BADGE_ID, TRACKER_EVENT_KIND, UNGROUPED,
+  FACET_CATEGORY_LABELS, NOW_BADGE_ID, ROTP_ASSUMPTIONS, ROTP_GROUPINGS,
+  SWAP_BADGE_ID, TRACKER_EVENT_KIND, UNGROUPED,
 };

@@ -6,8 +6,6 @@ const RANDOMIZER_BUCKET = 'randomizer';
 const RUN_PANELS = {
   players: { section: 'players', span: 2 },
   files: { section: 'files', span: 1 },
-  pool: { section: 'options-summary', span: 1 },
-  settings: { section: 'options-settings', span: 2 },
 } as const satisfies Record<string, PanelPlacement>;
 
 const NOT_RANDOMIZED = 'This profile is not randomized. Randomizer options are chosen when creating a profile.';

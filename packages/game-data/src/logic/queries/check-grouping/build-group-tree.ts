@@ -5,7 +5,7 @@ import { OUTSIDE_SWEEP } from './check-grouping.constants';
 import type { GroupDimension, GroupingPass, GroupNode, RunContext } from './check-grouping.type';
 import { getGroupValue } from './get-group-value';
 
-const computeStats = (checks: CheckRecord[], statuses: Map<string, CheckStatus>): GroupNode['stats'] => {
+const computeStats = (checks: CheckRecord[], statuses: ReadonlyMap<string, CheckStatus>): GroupNode['stats'] => {
   let completed = 0, reachable = 0, blocked = 0;
   for (const c of checks) {
     const s = statuses.get(c.id) ?? 'blocked';
@@ -62,7 +62,7 @@ const groupRecursive = (checks: CheckRecord[], depth: number, pass: GroupingPass
 
 const buildGroupTree = (
   checks: CheckRecord[],
-  statuses: Map<string, CheckStatus>,
+  statuses: ReadonlyMap<string, CheckStatus>,
   dimensions: GroupDimension[],
   run?: RunContext
 ): GroupNode => {

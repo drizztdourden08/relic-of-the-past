@@ -6,7 +6,9 @@ export * from '../../capacity-profile';
 export { generateFromSnapshot } from '../../generate';
 export { buildNormalPlacement, normalWorldOptions } from '../../normal-placement';
 export { buildOptionsSnapshot, normalizeRandomizerOptions } from '../../options-snapshot';
-export { computePlacementAvailability } from '../../placement-availability';
+export {
+  BIG_KEY_DOORS, computePlacementAvailability, DARK_ROOMS_NEED_LIGHT, placementReadingProvider, SMALL_KEY_DOORS,
+} from '../../placement-availability';
 export * from '../../placement-io';
 export type { PondDemandArm } from '../../pond-demands/pond-demands.type';
 export * from '../../pond-plan';
