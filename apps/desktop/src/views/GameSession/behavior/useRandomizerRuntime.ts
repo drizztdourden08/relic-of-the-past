@@ -1,13 +1,11 @@
 /* @layer renderer-appshell @kind hook */
 import { useEffect } from 'react';
 import { useSettings } from '@drizztdourden08/brock-react';
-import { startSessionRuntime } from '@drizztdourden08/brock-randomizer/session';
 import { experimentalFeaturesEnabled } from '@rotp/features';
 import type { AppSettings } from '@app/settings.type';
 import {
   clearPendingBoot, getPendingBoot, getSessionState, registerRotpFactories, setOnlineAllowed, stopActive,
 } from '@app/game/randomizer-client';
-import { rotpRandomizer } from '@app/randomizer/rotp-randomizer';
 
 const useRandomizerRuntime = (): void => {
   const { settings } = useSettings<AppSettings>();
@@ -15,7 +13,6 @@ const useRandomizerRuntime = (): void => {
 
   useEffect(() => {
     registerRotpFactories();
-    return startSessionRuntime(rotpRandomizer);
   }, []);
 
   useEffect(() => {
