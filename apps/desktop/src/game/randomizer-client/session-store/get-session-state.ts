@@ -1,5 +1,5 @@
 /* @layer bridge-wasm @kind logic */
-import { useSessionStore } from '@drizztdourden08/brock-randomizer/session';
+import { useSessionStore } from '@drizztdourden08/brock-randomizer/renderer';
 import { isRotpPlacement } from '@app/randomizer/rotp-randomizer/rotp-is-placement';
 import { isActiveSession } from './is-active-session';
 import { storeSlots } from './store-slots';

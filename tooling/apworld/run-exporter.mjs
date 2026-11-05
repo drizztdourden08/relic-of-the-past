@@ -8,10 +8,10 @@ const runExporter = async () => {
   const server = await createSsrServer(ROOT);
   try {
     const {
-      exportWorld, AP_GAME, AP_WORLD_VERSION, SUPPORTED_AP_VERSIONS,
+      exportRotpWorld, AP_GAME, AP_WORLD_VERSION, SUPPORTED_AP_VERSIONS,
     } = await server.ssrLoadModule(BARREL);
     return {
-      files: exportWorld(),
+      files: exportRotpWorld(),
       game: AP_GAME,
       worldVersion: AP_WORLD_VERSION,
       apVersions: [...SUPPORTED_AP_VERSIONS],

@@ -1,7 +1,7 @@
 /* @layer tests @kind test */
 import { createHash } from 'crypto';
 import { expect, it } from 'vitest';
-import { AP_ID_BASE, AP_ITEM_ID_OFFSET, AP_ITEM_IDS, AP_ITEM_NAMES, AP_LOCATION_IDS, AP_LOCATION_NAMES, apItemIdOf, apLocationIdOf, itemKeyOfApId, locationKeyOfApId, apItemUniverse, apLocationUniverse, FAMILIES, ITEM, POND_EXTRA_LOCATIONS, PRIZE_ITEMS, WORLD_EVENT_IDS, RETRO_QUIVER_ITEM, ALL_SHOP_SLOT_LOCATIONS } from '@rotp/randomizer';
+import { AP_ID_BASE, AP_ITEM_ID_OFFSET, AP_ITEM_IDS, AP_ITEM_NAMES, AP_LOCATION_IDS, AP_LOCATION_NAMES, ROTP_AP_IDS, apItemUniverse, apLocationUniverse, FAMILIES, ITEM, POND_EXTRA_LOCATIONS, PRIZE_ITEMS, WORLD_EVENT_IDS, RETRO_QUIVER_ITEM, ALL_SHOP_SLOT_LOCATIONS } from '@rotp/randomizer';
 import { describeDataset } from '../dataset-guard';
 
 const FROZEN_LOCATIONS = 472;
@@ -66,11 +66,11 @@ describeDataset('Archipelago ids are unique and named', { tags: ['critical'] }, 
     }
   });
 
-  it('looks up both ways, and throws on what the table does not hold', () => {
-    expect(locationKeyOfApId(apLocationIdOf('slot-pond-capacity-7'))).toBe('slot-pond-capacity-7');
-    expect(itemKeyOfApId(apItemIdOf(ITEM.hookshot))).toBe(ITEM.hookshot);
-    expect(() => apLocationIdOf('slot-nowhere')).toThrow(/no Archipelago/);
-    expect(() => itemKeyOfApId(0)).toThrow(/no Archipelago/);
+  it('looks up both ways, and finds nothing for what the table does not hold', () => {
+    expect(ROTP_AP_IDS.locationKeyOf(ROTP_AP_IDS.locationIdOf('slot-pond-capacity-7'))).toBe('slot-pond-capacity-7');
+    expect(ROTP_AP_IDS.itemKeyOf(ROTP_AP_IDS.itemIdOf(ITEM.hookshot))).toBe(ITEM.hookshot);
+    expect(ROTP_AP_IDS.locationKeyOf(0)).toBeUndefined();
+    expect(ROTP_AP_IDS.itemKeyOf(0)).toBeUndefined();
   });
 });
 

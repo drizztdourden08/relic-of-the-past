@@ -4,7 +4,8 @@ import { FOREIGN_ITEM_KEY, FOREIGN_ITEM_NAME, ITEM, buildPlacementView, virtualC
 import { currentRun } from '@app/game/randomizer-client/run-kind';
 import { getSessionState, resetSession, stopActive } from '@app/game/randomizer-client/session-store';
 import { setForeignOwners } from '@app/game/randomizer-client/session-store/set-foreign-owners';
-import { registerSessionFactory, startSession, useSessionStore } from '@drizztdourden08/brock-randomizer/session';
+import { startSession, useSessionStore } from '@drizztdourden08/brock-randomizer/renderer';
+import { registerSessionFactory } from '@drizztdourden08/brock-randomizer/session';
 import type { RandomizerSession, SessionStatus } from '@drizztdourden08/brock-randomizer/session';
 import type { ForeignOwners, LocationKey, Placement } from '@rotp/randomizer';
 

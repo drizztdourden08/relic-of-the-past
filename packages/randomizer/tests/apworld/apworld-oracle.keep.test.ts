@@ -3,7 +3,7 @@ import { describe, expect, it } from 'vitest';
 import { generatePlacement } from '../../src/world/fill/generate';
 import { widestRuledWorld } from '../../src/archipelago/export/widest-ruled-world';
 import { preRolledOfFillWorld, profileFillWorld } from '../../src/archipelago/pre-rolled';
-import { renderPlayerYaml } from '../../src/archipelago/player-yaml';
+import { rotpPlayerFileOf } from '../../src/archipelago/brock-adapter';
 import { buildFillWorld } from '../../src/world/fill/fill-world';
 import { fillOptionsFromSnapshot } from '../../src/world/fill/fill-options-from-snapshot';
 import { buildOptionsSnapshot } from '../../src/options-snapshot';
@@ -69,7 +69,7 @@ describeAp('the world package against Archipelago', { tags: ['e2e'] }, () => {
 
   it(`generates ${SEEDS} seeds our rules beat sphere by sphere`, async () => {
     const snapshot = snapshotOf({});
-    const yaml = renderPlayerYaml({ slotName: 'Oracle', options: snapshot, seedText: FORWARD_SEED });
+    const yaml = rotpPlayerFileOf({ slotName: 'Oracle', options: snapshot, seedText: FORWARD_SEED }).yaml;
     for (let seed = 1; seed <= SEEDS; seed += 1) {
       const run = await generate(yaml, seed);
       expect(run.ok && run.spoiler !== null, run.log.slice(-2000)).toBe(true);

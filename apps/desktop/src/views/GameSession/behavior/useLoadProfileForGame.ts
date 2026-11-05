@@ -6,7 +6,7 @@ import { serializeToIni, mergeSettings } from '@rotp/game-core';
 import { experimentalFeaturesEnabled } from '@rotp/features';
 import * as profileStore from '@app/storage/profile-store';
 import { loadMsuPack } from '@app/game/msu-pack-loader';
-import { gateRandomizerBoot } from '@drizztdourden08/brock-randomizer/session';
+import { gateRandomizerBoot } from '@drizztdourden08/brock-randomizer/renderer';
 import { resetSession, setOnlineAllowed } from '@app/game/randomizer-client';
 import { DEFAULT_SLOT_NAME } from '@rotp/randomizer';
 import { onlineSlotName } from '@app/randomizer/rotp-randomizer/online-slot-name-slot';

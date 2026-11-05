@@ -10,9 +10,9 @@ const BARREL = '/packages/randomizer/src/archipelago/index.ts';
 const writePlayerFile = async ({ name, out, seed, plain }) => {
   const server = await createSsrServer(ROOT);
   try {
-    const { playerFileOf, snapshotOfPlainOptions } = await server.ssrLoadModule(BARREL);
+    const { rotpPlayerFileOf, snapshotOfPlainOptions } = await server.ssrLoadModule(BARREL);
     const { version } = JSON.parse(readFileSync(APP_PACKAGE_JSON, 'utf8'));
-    const { yaml } = playerFileOf({
+    const { yaml } = rotpPlayerFileOf({
       slotName: name,
       options: snapshotOfPlainOptions(plain),
       seedText: seed ?? name,
