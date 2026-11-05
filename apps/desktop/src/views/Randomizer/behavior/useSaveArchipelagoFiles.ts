@@ -1,9 +1,9 @@
 /* @layer renderer-components @kind hook */
 import { useCallback, useState } from 'react';
 import { requireHostApi } from '@drizztdourden08/brock-react';
-import { DEFAULT_AP_VERSION, SUPPORTED_AP_VERSIONS } from '@rotp/randomizer';
+import { worldPackageFor } from '@drizztdourden08/brock-randomizer/renderer';
+import { DEFAULT_AP_VERSION, SUPPORTED_AP_VERSIONS, WORLD_MODULE_NAME } from '@rotp/randomizer';
 import { useAppVersion } from '@app/hooks/useAppVersion';
-import { worldPackageFor } from '@app/archipelago/world-package';
 import { archipelagoYamlOf } from '@app/archipelago/player-yaml';
 import { feedbackOf } from './save-feedback';
 import type { ProfileRandomizerConfig } from '@app/profiles/types';
@@ -29,7 +29,9 @@ const useSaveArchipelagoFiles = (config: ProfileRandomizerConfig) => {
         return;
       }
       const { slotName, yaml } = archipelagoYamlOf(config, appVersion);
-      const result = await requireHostApi().saveArchipelagoFiles({ slotName, yaml, apworld });
+      const result = await requireHostApi().randomizer.saveArchipelagoFiles({
+        slotName, yaml, apworld, moduleName: WORLD_MODULE_NAME,
+      });
       setFeedback(feedbackOf(result, config.deliverable !== undefined));
     } catch (err) {
       setFeedback({ tone: 'error', text: `Not saved: ${err instanceof Error ? err.message : String(err)}` });
