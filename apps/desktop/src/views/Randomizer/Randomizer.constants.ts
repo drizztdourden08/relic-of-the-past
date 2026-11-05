@@ -5,6 +5,7 @@ const RANDOMIZER_BUCKET = 'randomizer';
 
 const RUN_PANELS = {
   players: { section: 'players', span: 2 },
+  files: { section: 'files', span: 1 },
   pool: { section: 'options-summary', span: 1 },
   settings: { section: 'options-settings', span: 2 },
 } as const satisfies Record<string, PanelPlacement>;
@@ -19,6 +20,7 @@ const NETWORK_PANELS = {
   health: { section: 'health', span: 1 },
   progress: { section: 'progress', span: 1 },
   players: { section: 'players', span: 2 },
+  files: { section: 'files', span: 1 },
   server: { section: 'server', span: 1 },
 } as const satisfies Record<string, PanelPlacement>;
 
