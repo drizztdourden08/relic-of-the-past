@@ -79,8 +79,12 @@ describe('reaching the room', { tags: ['critical'] }, () => {
     expect(session.status).toBe('reconnecting');
     expect(session.networkStatus.connection.state).toBe('reconnecting');
     expect(server.urls).toHaveLength(1);
+    const { reconnect } = session.networkStatus;
+    expect(reconnect.inFlight).toBe(false);
+    expect(reconnect.nextRetryAt).toBe(Date.now() + 1000);
     await wait(999);
     expect(server.urls).toHaveLength(1);
+    expect(session.networkStatus.reconnect.nextRetryAt).toBe(Date.now() + 1);
     await wait(1);
     expect(server.urls).toHaveLength(2);
     await wait(2000);
@@ -89,6 +93,7 @@ describe('reaching the room', { tags: ['critical'] }, () => {
     await wait(4000);
     expect(session.status).toBe('active');
     expect(session.networkStatus.connection).toMatchObject({ state: 'connected', error: null });
+    expect(session.networkStatus.reconnect).toMatchObject({ attempt: 0, inFlight: false });
     expect(server.urls).toHaveLength(4);
     expect([0, 1, 2, 3, 4, 5, 6].map(backoffDelay)).toEqual([1000, 2000, 4000, 8000, 16000, 30000, 30000]);
   });
