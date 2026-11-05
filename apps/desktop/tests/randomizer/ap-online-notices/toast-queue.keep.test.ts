@@ -1,8 +1,8 @@
 /* @layer tests @kind test */
 import { describe, expect, it, vi } from 'vitest';
-import { BURST_LIMIT, BURST_WINDOW_MS, queueNotice } from '@rotp/randomizer';
+import { BURST_LIMIT, BURST_WINDOW_MS, queueNotice } from '@drizztdourden08/brock-randomizer/archipelago';
 import { ONLINE_NOTICE_DEFAULTS } from '@rotp/game-core';
-import type { OnlineNotice, NoticeEntry } from '@rotp/randomizer';
+import type { OnlineNotice, NoticeEntry } from '@drizztdourden08/brock-randomizer/archipelago';
 import { installClientHarness } from '../ap-protocol-harness';
 import { required } from '@rotp/asset-extraction/testing';
 

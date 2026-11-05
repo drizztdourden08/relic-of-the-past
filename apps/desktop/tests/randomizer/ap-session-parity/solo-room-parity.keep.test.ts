@@ -2,6 +2,7 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { buildOptionsSnapshot, normalizeRandomizerOptions, generateFromSnapshot, deliverableSetsOf, RETRO_QUIVER_ITEM } from '@rotp/randomizer';
 import type { DeliverableLists, LocationKey, Placement, RandomizerOptionsSnapshot } from '@rotp/randomizer';
+import { required } from '@rotp/asset-extraction/testing';
 import { installFakeModule } from '../ap-fake-module';
 import type { FakeModule } from '../ap-fake-module';
 import { createFakeServer } from '../ap-fake-server';
@@ -136,7 +137,7 @@ const armLocal = async (core: FakeModule, placement: Placement): Promise<ArmedSe
 };
 
 const onlineSessionOver = (server: ReturnType<typeof createFakeServer>) => {
-  const archipelago = Object.create(rotpRandomizer.archipelago, { createSocket: { value: server.createSocket } });
+  const archipelago = Object.create(required(rotpRandomizer.archipelago, 'RotP archipelago hook'), { createSocket: { value: server.createSocket } });
   const factory = createOnlineSessionFactory({ ...rotpRandomizer, archipelago }, () => undefined);
   const session = factory.create({ profileId: '', mode: 'online', config: { serverUrl: 'ws://host:1', slotName: 'Link' } as never });
   useSessionStore.getState().setSession(session);

@@ -8,7 +8,12 @@ import { createMemFileStore } from '../storage/mem-file-store';
 import { installFakeModule } from './ap-fake-module';
 import { createFakeServer } from './ap-fake-server';
 import type { FakeServer } from './ap-fake-server';
+import {
+  buildOptionsSnapshot, generateFromSnapshot, normalizeRandomizerOptions,
+  probeDeliverableNpcLocations, probeDeliverablePondLocations, probeDeliverableWorldLocations,
+} from '@rotp/randomizer';
 import type { RandomizerOptionsSnapshot } from '@rotp/randomizer';
+import { soloRoomOf } from './ap-solo-room';
 import type { ProfileRandomizerConfig, RandomizerConnectionPatch } from '@app/profiles/types';
 
 vi.mock('@app/log-bus', () => {
@@ -41,7 +46,6 @@ const { stopActive, getSessionState } = await import('@app/game/randomizer-clien
 const { reconnectProfileSession } = await import('@app/game/randomizer-client/profile-reconnect');
 
 const fake = { server: undefined as FakeServer | undefined };
-const OWN = 'Relic of the Past';
 const OPTIONS: RandomizerOptionsSnapshot = { schema: 'ap-options-v2', values: {} };
 
 const onlineConfig = (password: string): ProfileRandomizerConfig => ({
@@ -49,15 +53,14 @@ const onlineConfig = (password: string): ProfileRandomizerConfig => ({
   slotName: 'Link', password, deathLink: false, trackOtherPlayers: false,
 });
 
-const createRoom = (): FakeServer => createFakeServer({
-  password: 'pw',
-  games: { [OWN]: { item_name_to_id: { Bow: 100 }, location_name_to_id: { 'check-001': 1 }, checksum: 'own-1' } },
-  items: [], checked: [], missing: [1],
-  players: [{ team: 0, slot: 1, alias: 'Link', name: 'Link' }],
-  slotInfo: { 1: { name: 'Link', game: OWN, type: 1, group_members: [] } },
-  slotData: { worldVersion: '0.1.0', options: {}, medallions: { mire: 'Ether', turtleRock: 'Quake' }, deathLink: false },
-  placements: {}, refusedUrls: new Set(), seedName: 'seed-A',
-});
+const createRoom = (): FakeServer => {
+  const snapshot = normalizeRandomizerOptions(buildOptionsSnapshot({}));
+  const placement = generateFromSnapshot({
+    seed: 'seed-A', snapshot,
+    deliverable: { npc: probeDeliverableNpcLocations(), capacity: probeDeliverablePondLocations(), world: probeDeliverableWorldLocations() },
+  });
+  return createFakeServer({ ...soloRoomOf(placement, snapshot), password: 'pw', seedName: 'seed-A' });
+};
 
 const settle = async (): Promise<void> => {
   for (let i = 0; i < 60; i += 1) await Promise.resolve();
@@ -114,7 +117,7 @@ describe('fixing a wrong password from the Network tab (T30)', { tags: ['critica
   it('a save after the refusal reconnects on the new password and becomes active', async () => {
     fake.server = createRoom();
     const core = installFakeModule(setModule);
-    const archipelago = Object.create(rotpRandomizer.archipelago, {
+    const archipelago = Object.create(required(rotpRandomizer.archipelago, 'RotP archipelago hook'), {
       createSocket: { value: required(fake.server, 'fake server').createSocket },
     });
     registerSessionFactory(createOnlineSessionFactory({ ...rotpRandomizer, archipelago }, () => undefined));

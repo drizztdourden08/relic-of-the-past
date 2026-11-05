@@ -123,7 +123,7 @@ describe('who sent an item', { tags: ['critical'] }, () => {
       { itemName: 'Bow', sender: null }, { itemName: 'Hookshot', sender: null }, { itemName: 'Bow', sender: 'Zelda' },
     ]);
     expect(core.index).toBe(4);
-    expect(logged).toContain('[Online] Received: Bow from the server');
+    expect(logged).toContain('[Online] Received: Bow from Link');
     expect(logged).toContain('[Online] Received: Bow from Zelda');
   });
 });
