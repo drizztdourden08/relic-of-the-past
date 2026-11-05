@@ -99,7 +99,7 @@ const roomOf = (overrides: Record<string, OptionValue>, foreignEvery: number | u
 const locationKeyOfApId = (id: number): LocationKey => {
   const key = ROTP_AP_IDS.locationKeyOf(id);
   if (key === undefined) throw new Error(`no Archipelago location id: ${id}`);
-  return key as LocationKey;
+  return key;
 };
 
 const armRoom = async (overrides: Record<string, OptionValue>, foreignEvery: number | undefined) => {
