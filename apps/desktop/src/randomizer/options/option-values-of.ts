@@ -1,5 +1,5 @@
 /* @layer renderer-app @kind logic */
-type PlainValue = string | number | boolean;
+import type { PlainValue } from './option-values-of.type';
 
 const isPlainValue = (value: unknown): value is PlainValue =>
   typeof value === 'string' || typeof value === 'number' || typeof value === 'boolean';

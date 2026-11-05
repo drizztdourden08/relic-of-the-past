@@ -6,6 +6,7 @@ import { choicesOfSnapshot } from '@app/hooks/randomizer/choices-of-snapshot';
 import { RandomizerOptionsPanel } from '../../DataManager/sub-components/profile-manager/RandomizerOptionsPanel';
 import { NOT_RANDOMIZED } from '../Randomizer.constants';
 import type { OptionsTabProps } from './OptionsTab.type';
+import './OptionsTab.css';
 
 const OptionsTab = (props: OptionsTabProps) => {
   const { config, romFile } = props;

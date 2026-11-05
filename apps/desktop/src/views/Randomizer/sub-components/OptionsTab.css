@@ -1,0 +1,8 @@
+/* @layer renderer-components @kind style */
+
+.randomizer-page__options {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+}

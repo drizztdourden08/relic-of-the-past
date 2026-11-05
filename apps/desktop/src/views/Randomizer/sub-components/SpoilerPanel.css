@@ -1,0 +1,30 @@
+/* @layer renderer-components @kind style */
+
+.randomizer-page__scroll {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+}
+
+.randomizer-page__panel {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+  padding: var(--space-md);
+  border-radius: var(--radius-md);
+  background: var(--c-sunken);
+}
+
+.spoiler-tracker {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+}
+
+.spoiler-tracker .checks-tracker__list {
+  border: var(--border-width-thin) solid var(--c-hairline);
+  border-radius: var(--radius-md);
+  background: var(--c-sunken);
+}
