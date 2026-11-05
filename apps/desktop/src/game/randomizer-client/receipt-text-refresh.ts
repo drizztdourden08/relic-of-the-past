@@ -74,4 +74,3 @@ const startSessionReceiptTexts = (
 };
 
 export { startSessionReceiptTexts };
-export type { SessionReceiptTexts } from '@rotp/randomizer';

@@ -1,6 +1,6 @@
 /* @layer renderer-app @kind logic */
 import { appRandomizerLog } from '@drizztdourden08/brock-randomizer/session';
-import type { RandomizerLog } from '@drizztdourden08/brock-randomizer/session';
+import type { RandomizerLog } from '@drizztdourden08/brock-randomizer';
 import { log } from '@app/log-bus';
 
 const rotpLog: RandomizerLog = (message, level, line) => {

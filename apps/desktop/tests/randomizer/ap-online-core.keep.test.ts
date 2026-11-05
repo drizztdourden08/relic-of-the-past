@@ -69,6 +69,23 @@ afterEach(() => {
   vi.unstubAllGlobals();
 });
 
+const foreignItemRoom = () => {
+  const snapshot = normalizeRandomizerOptions(buildOptionsSnapshot({}));
+  const placement = generateFromSnapshot({
+    seed: 'foreign-item', snapshot,
+    deliverable: { npc: probeDeliverableNpcLocations(), capacity: probeDeliverablePondLocations(), world: probeDeliverableWorldLocations() },
+  });
+  const room = soloRoomOf(placement, snapshot);
+  const location = required(AP_LOCATION_IDS['check-012'], 'check-012 location id');
+  room.placements[location] = { item: 0x52510000, location, player: 2, flags: 0 };
+  room.players.push({ team: 0, slot: 2, alias: 'Zelda_', name: 'Zelda_' });
+  room.slotInfo['2'] = { name: 'Zelda_', game: 'Ship of Harkinian', type: 1, group_members: [] };
+  room.games['Ship of Harkinian'] = {
+    item_name_to_id: { 'Progressive Scale': 0x52510000 }, location_name_to_id: {}, checksum: 'soh',
+  };
+  return room;
+};
+
 describe('the real online core', { tags: ['standard'] }, () => {
   it('mirrors the core\'s own foreign sentinel', () => {
     const source = readFileSync(resolve(REPO_ROOT, 'core/game-hooks/foreign_item.c'), 'utf8');
@@ -100,19 +117,7 @@ describe('the real online core', { tags: ['standard'] }, () => {
 
 describe('the real online core', { tags: ['standard'] }, () => {
   it('arms another player\'s item as its game\'s icon id, saying what it was and who it went to', async () => {
-    const snapshot = normalizeRandomizerOptions(buildOptionsSnapshot({}));
-    const placement = generateFromSnapshot({
-      seed: 'foreign-item', snapshot,
-      deliverable: { npc: probeDeliverableNpcLocations(), capacity: probeDeliverablePondLocations(), world: probeDeliverableWorldLocations() },
-    });
-    const room = soloRoomOf(placement, snapshot);
-    const location = required(AP_LOCATION_IDS['check-012'], 'check-012 location id');
-    room.placements[location] = { item: 0x52510000, location, player: 2, flags: 0 };
-    room.players.push({ team: 0, slot: 2, alias: 'Zelda_', name: 'Zelda_' });
-    room.slotInfo['2'] = { name: 'Zelda_', game: 'Ship of Harkinian', type: 1, group_members: [] };
-    room.games['Ship of Harkinian'] = {
-      item_name_to_id: { 'Progressive Scale': 0x52510000 }, location_name_to_id: {}, checksum: 'soh',
-    };
+    const room = foreignItemRoom();
     const core = installFakeModule(setModule);
     try {
       const session = createOnlineClient({ url: 'ws://host:1', slotName: 'Link' },

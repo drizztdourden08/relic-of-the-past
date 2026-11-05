@@ -2,8 +2,7 @@
 import type { RandomizerSession } from '@drizztdourden08/brock-randomizer/session';
 import type { LocalSession } from '@rotp/randomizer';
 import { localStats } from './local-stats';
-
-const NO_REPORTED: ReadonlySet<string> = new Set();
+import { NO_REPORTED } from './local-with-stats.constants';
 
 const localWithStats = (base: RandomizerSession): LocalSession => ({
   kind: 'local',

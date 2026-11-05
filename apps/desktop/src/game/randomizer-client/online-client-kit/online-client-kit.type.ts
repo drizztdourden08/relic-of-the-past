@@ -2,8 +2,9 @@
 import type { createListenerSet, createReconnector } from '@rotp/randomizer';
 import type {
   CheckReporter, DeathLinkSwitch, ForeignOwners, NetworkMonitor, OnlineContext, OnlineDeps,
-  OnlineSessionConfig, Placement, RandomizerSession, SocketLink,
+  OnlineSessionConfig, Placement, SocketLink,
 } from '@rotp/randomizer';
+import type { RandomizerSession } from '@drizztdourden08/brock-randomizer/session';
 import type { ScoutMaps } from '../online-overrides';
 
 type SessionStatus = RandomizerSession['status'];

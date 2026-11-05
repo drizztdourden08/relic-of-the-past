@@ -1,14 +1,7 @@
 /* @layer tests @kind helper */
-import { vi } from 'vitest';
+import { stubLocalStorage } from '../ap-protocol-harness/stub-local-storage';
 import { TRACE_UUID, UUID_STORAGE_KEY } from './online-trace.constants';
 
-const stubTraceStorage = (): void => {
-  const store = new Map<string, string>([[UUID_STORAGE_KEY, TRACE_UUID]]);
-  vi.stubGlobal('localStorage', {
-    getItem: (key: string) => store.get(key) ?? null,
-    setItem: (key: string, value: string) => { store.set(key, value); },
-    removeItem: (key: string) => { store.delete(key); },
-  });
-};
+const stubTraceStorage = (): void => stubLocalStorage([[UUID_STORAGE_KEY, TRACE_UUID]]);
 
 export { stubTraceStorage };

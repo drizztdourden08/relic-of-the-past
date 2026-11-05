@@ -2,12 +2,10 @@
 export type { RoomMessage, NetworkConnection, NetworkPlayer, NetworkProgress, NetworkServer, NetworkState, NetworkStatus, PlacementView, OnlineNotice, NoticeEntry } from '@rotp/randomizer';
 export type { OnlineSession } from './online-session';
 export {
-  clearPendingBoot, getPendingBoot, getSessionState, registerRotpFactories, resetSession, setOnlineAllowed, setPendingBoot,
-  startLocalFromPlacement, startOnline, stopActive, subscribeSessionStore,
+  clearPendingBoot, getPendingBoot, getSessionState, registerRotpFactories, resetSession, setOnlineAllowed, stopActive, subscribeSessionStore,
 } from './session-store';
-export type { PendingBoot } from '@drizztdourden08/brock-randomizer/session';
-export type { ActiveSession, SessionSource, SessionStoreState } from './session-store';
-export { lastNetworkStatus, normalizeServerUrl, probeOnlineServer, probeDeliverablePondLocations, probeDeliverableNpcLocations, probeDeliverableWorldLocations, armedCheckIdsOfPlacement, buildPlacementView, computeTrackerSnapshot, onOnlineNotice, queueNotice, virtualChecksOf } from '@rotp/randomizer';
+export type { SessionStoreState } from './session-store';
+export { lastNetworkStatus, probeDeliverablePondLocations, probeDeliverableNpcLocations, probeDeliverableWorldLocations, armedCheckIdsOfPlacement, buildPlacementView, computeTrackerSnapshot, onOnlineNotice, queueNotice, virtualChecksOf } from '@rotp/randomizer';
 export { runKindOfProfile, runKindOfSession } from './run-kind';
 export { onlineConfigOfProfile } from './online-config-of-profile';
 export { reconnectProfileSession } from './profile-reconnect';
