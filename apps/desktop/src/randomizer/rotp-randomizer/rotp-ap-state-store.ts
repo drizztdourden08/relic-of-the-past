@@ -1,8 +1,7 @@
 /* @layer renderer-app @kind logic */
 import { getApReceivedIndex, getApRoomHash, setApReceivedIndex, setApRoomHash } from '@rotp/randomizer';
 import type { ApStateStore } from '@drizztdourden08/brock-randomizer/session';
-
-const NO_ROOM = 0;
+import { NO_ROOM } from './rotp-ap-state-store.constants';
 
 const memory = { receivedIndex: 0 };
 

@@ -1,12 +1,10 @@
 /* @layer renderer-app @kind logic */
-import { INVENTORY_LAYOUT, getItem, getItemSprite, getSpritesBase, resolveItemSprite } from '@rotp/game-data';
-import type { InventorySlot, ItemId } from '@rotp/game-data';
+import { getItem, getItemSprite, getSpritesBase, resolveItemSprite } from '@rotp/game-data';
+import type { ItemId } from '@rotp/game-data';
 import { EVENT_MARK } from '@app/compounds/ChecksTracker/ChecksTracker.constants';
 import { trackerCheckOf } from './rotp-tracker-check-of';
 import { TRACKER_EVENT_KIND } from './rotp-tracker.constants';
-
-const NOTHING_HELD: ReadonlySet<ItemId> = new Set();
-const SLOTS: readonly InventorySlot[] = INVENTORY_LAYOUT.flatMap((category) => category.items);
+import { NOTHING_HELD, SLOTS } from './rotp-tracker-art.constants';
 
 const spriteUrlOf = (file: string): string => `${getSpritesBase()}${file}.png`;
 
@@ -22,7 +20,7 @@ const slotArt = (key: string): string | null => {
 
 const itemArt = (key: string): string | null => {
   try {
-    getItem(key as ItemId);
+    getItem(key);
   } catch {
     return null;
   }

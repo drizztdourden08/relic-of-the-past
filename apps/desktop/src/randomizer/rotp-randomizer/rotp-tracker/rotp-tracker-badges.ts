@@ -5,8 +5,7 @@ import type { TrackerBadge } from '@drizztdourden08/brock-randomizer/tracker';
 import { getCompletedChecks, getEventStatus } from '@app/game/tracker';
 import { trackerCheckOf } from './rotp-tracker-check-of';
 import { NOW_BADGE_ID, SWAP_BADGE_ID } from './rotp-tracker.constants';
-
-const NO_BADGES: readonly TrackerBadge[] = [];
+import { NO_BADGES } from './rotp-tracker-badges.constants';
 
 const swapBadge = (check: CheckRecord, item: string | null): TrackerBadge[] => {
   const swap = chestSwapOf(check);

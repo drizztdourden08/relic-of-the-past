@@ -6,9 +6,11 @@ import { isFileInPlay, onSaveSwap } from '@app/game/randomizer-client/file-in-pl
 import { rotpApDeathLink } from './rotp-ap-death-link';
 import { rotpApGate } from './rotp-ap-gate';
 import { rotpApGoal } from './rotp-ap-goal';
-import { locationIdOf, locationKeyOf } from './rotp-ap-ids';
+import { locationIdOf } from './rotp-ap-location-id-of';
+import { locationKeyOf } from './rotp-ap-location-key-of';
 import { rotpApMarkCollected } from './rotp-ap-collected';
-import { rotpApArm, rotpApDisarm } from './rotp-ap-lifecycle';
+import { rotpApArm } from './rotp-ap-arm';
+import { rotpApDisarm } from './rotp-ap-disarm';
 import { rotpApReceivedAction } from './rotp-ap-received-action';
 import { rotpApReceivedOrder } from './rotp-ap-received-order';
 import { rotpApSlot } from './rotp-ap-slot';

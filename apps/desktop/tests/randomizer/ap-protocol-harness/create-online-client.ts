@@ -2,7 +2,7 @@
 import { createArchipelagoClient, createLocalStorageCache } from '@drizztdourden08/brock-randomizer/archipelago';
 import type { CreateSocket, OnlineConnection } from '@drizztdourden08/brock-randomizer/archipelago';
 import { createReceivedQueue } from '@drizztdourden08/brock-randomizer/session';
-import { locationKeyOf } from '@app/randomizer/rotp-randomizer/rotp-ap-ids';
+import { locationKeyOf } from '@app/randomizer/rotp-randomizer/rotp-ap-location-key-of';
 import { rotpApReceivedOrder } from '@app/randomizer/rotp-randomizer/rotp-ap-received-order';
 import { rotpApSlot } from '@app/randomizer/rotp-randomizer/rotp-ap-slot';
 import { log } from '@app/log-bus';
