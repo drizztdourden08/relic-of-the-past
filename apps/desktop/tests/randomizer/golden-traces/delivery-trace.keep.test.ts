@@ -15,18 +15,24 @@ vi.mock('@rotp/game-core', async (importOriginal) => {
 
 const FRAME_MS = 16;
 const MAX_FRAMES = 4000;
+const COOLDOWN_FRAMES = 30;
 
 const events: string[] = [];
+const lastComplete = { frame: -COOLDOWN_FRAMES };
 const mark = (what: string): void => { events.push(`${deliveryModule.frame} ${what}`); };
 
 const entry = (message: string, action: EnqueueParams['action']): EnqueueParams => ({
   message, source: 'trace', action,
   onGranted: () => mark(`granted ${message}`),
-  onComplete: () => mark(`complete ${message}`),
+  onComplete: () => {
+    lastComplete.frame = deliveryModule.frame;
+    mark(`complete ${message}`);
+  },
 });
 
 const isIdle = (): boolean =>
-  deliveryQueue.size() === 0 && queueState.delivering === null && queueState.cooldownFrames === 0;
+  deliveryQueue.size() === 0 && queueState.delivering === null
+  && deliveryModule.frame - 1 >= lastComplete.frame + COOLDOWN_FRAMES;
 
 const runDeliveryTrace = () => {
   deliveryQueue.enqueue(entry('grant after refusals', { type: 'give_item', itemId: 1, receiptExport: true }));
