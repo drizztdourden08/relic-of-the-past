@@ -4,7 +4,7 @@ import type { PendingBoot } from '@drizztdourden08/brock-randomizer/session';
 import { normalizeServerUrl, probeOnlineServer } from '@rotp/randomizer';
 import type { ProfileRandomizerConfig } from '@app/profiles/types';
 import { onlineConfigOfProfile } from '../online-config-of-profile';
-import { onlineSlotName } from './online-slot-name-slot';
+import { onlineSlotName } from '@app/randomizer/rotp-randomizer/online-slot-name-slot';
 
 const gateOnline = async (profileId: string, config: ProfileRandomizerConfig): Promise<PendingBoot | null> => {
   const url = normalizeServerUrl(config.serverUrl ?? '');

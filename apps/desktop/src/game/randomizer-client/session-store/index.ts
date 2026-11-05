@@ -5,7 +5,6 @@ export { getSessionState } from './get-session-state';
 export { localStats } from './local-stats';
 export { registerRotpFactories } from './register-rotp-factories';
 export { resetSession } from './reset-session';
-export { rotpSessionLog } from './rotp-session-log';
 export { setOnlineAllowed } from './set-online-allowed';
 export { setPendingBoot } from './set-pending-boot';
 export { startLocalFromPlacement } from './start-local-from-placement';

@@ -52,14 +52,9 @@ const useLoadProfileForGame = ({ onGameClear, onProfileLoaded, setActiveProfile,
     if (profile.randomizer) {
       const experimental = experimentalFeaturesEnabled(settings);
       setOnlineAllowed(experimental);
-      if (profile.randomizer.mode === 'online' && !experimental) {
-        log.error('Archipelago requires Experimental Features in Contributing settings');
-        setLoadingProfile(null);
-        return;
-      }
       const gate = await gateRandomizerBoot(profile.id, profile.randomizer);
       if (!gate.ok) {
-        log.error(gate.reason);
+        log.error(gate.detail);
         setLoadingProfile(null);
         return;
       }

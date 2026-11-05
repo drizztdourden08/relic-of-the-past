@@ -2,7 +2,7 @@
 export type { RoomMessage, NetworkConnection, NetworkPlayer, NetworkProgress, NetworkServer, NetworkState, NetworkStatus, PlacementView, OnlineNotice, NoticeEntry } from '@rotp/randomizer';
 export type { OnlineSession } from './online-session';
 export {
-  clearPendingBoot, getPendingBoot, getSessionState, registerRotpFactories, resetSession, rotpSessionLog, setOnlineAllowed, setPendingBoot,
+  clearPendingBoot, getPendingBoot, getSessionState, registerRotpFactories, resetSession, setOnlineAllowed, setPendingBoot,
   startLocalFromPlacement, startOnline, stopActive, subscribeSessionStore,
 } from './session-store';
 export type { PendingBoot } from '@drizztdourden08/brock-randomizer/session';

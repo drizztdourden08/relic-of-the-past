@@ -9,6 +9,7 @@ import { rotpCoreSignal } from './rotp-core-signal';
 import { describePlacement } from './rotp-describe';
 import { isRotpPlacement } from './rotp-is-placement';
 import { rotpMemoryBridge } from './rotp-memory-bridge';
+import { rotpLogText } from './rotp-log-text';
 import { rotpPoll } from './rotp-poll';
 import { rotpProfile } from './rotp-profile';
 import { rollRotpPlacement } from './rotp-roll';
@@ -25,6 +26,7 @@ const rotpRandomizer = defineRandomizerGame<Placement, DeliveryAction>({
   applier: rotpApplier,
   apState: rotpApStateStore,
   poll: rotpPoll,
+  logText: rotpLogText,
   profile: rotpProfile,
 });
 
