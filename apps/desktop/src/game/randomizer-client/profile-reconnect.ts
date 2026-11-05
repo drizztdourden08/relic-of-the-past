@@ -4,7 +4,7 @@ import { log } from '../../log-bus';
 import { getPendingBoot, getSessionState, setPendingBoot } from './session-store';
 import type { ProfileRandomizerConfig } from '@app/profiles/types';
 
-const reconnectProfileSession = async (profileId: string, config: ProfileRandomizerConfig): Promise<void> => {
+const reconnectProfileSession = (profileId: string, config: ProfileRandomizerConfig): void => {
   const pending = getPendingBoot();
   if (pending?.profileId === profileId) setPendingBoot({ ...pending, config });
   const { session, source } = getSessionState();
