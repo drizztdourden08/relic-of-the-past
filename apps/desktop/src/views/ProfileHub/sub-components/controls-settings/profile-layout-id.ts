@@ -2,7 +2,7 @@
 import type { InputProfile } from '@drizztdourden08/brock-input';
 
 const profileLayoutId = (profile: InputProfile): string | undefined => {
-  const value: unknown = Reflect.get(profile, 'layoutId');
+  const value = profile.extension?.layoutId;
   return typeof value === 'string' ? value : undefined;
 };
 

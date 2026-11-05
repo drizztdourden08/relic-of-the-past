@@ -3,6 +3,7 @@ import { useMemo } from 'react';
 import type { ControlsGame } from '@drizztdourden08/brock-input/renderer';
 import { controlSchemeOf, experimentalFeaturesEnabled } from '@rotp/features';
 import { buildControlsTabs } from './build-controls-tabs';
+import { CONTROLS_LABELS } from './controls-labels.constants';
 import { CORE_VERB_DEFS } from './core-verbs.constants';
 import { decoratePreset } from './decorate-preset';
 import { KEYBOARD_DEFAULTS } from './keyboard-defaults.constants';
@@ -18,6 +19,7 @@ const useControlsGame = ({ settings, onChange }: UseControlsArgs): ControlsGame 
   return useMemo(() => ({
     tabs: buildControlsTabs({ scheme, experimental, cheatsEnabled, hapticsEnabled, assignments, onChange }),
     verbs: CORE_VERB_DEFS,
+    labels: CONTROLS_LABELS,
     keyboardDefaults: KEYBOARD_DEFAULTS,
     defaultBindings: presetBindings,
     decoratePreset: decoratePreset(scheme),

@@ -3,7 +3,7 @@ import type { ControlsGame } from '@drizztdourden08/brock-input/renderer';
 import { defaultLayoutIdFor } from '@rotp/hud';
 import { defaultModernBindings, keyboardModernBindings, renumberSlots } from '@rotp/input-mapping';
 import type { ControlSchemeId } from '@rotp/features';
-import type { ControlsProfile } from './controls-profile.type';
+import type { InputProfile } from '@drizztdourden08/brock-input';
 import { verbsFromCore } from './verbs-from-core';
 
 type PresetContext = Parameters<NonNullable<ControlsGame['decoratePreset']>>[1];
@@ -18,11 +18,11 @@ const decoratePreset = (scheme: ControlSchemeId): NonNullable<ControlsGame['deco
     if (scheme !== 'modern') return profile;
     const bindings = modernBindingsFor(profile.deviceType, controls);
     if (!bindings) return profile;
-    const decorated: ControlsProfile = {
+    const decorated: InputProfile = {
       ...profile,
       verbs: verbsFromCore(bindings.core),
       slots: renumberSlots(bindings.slots).slots,
-      layoutId: defaultLayoutIdFor(profile.deviceType),
+      extension: { ...profile.extension, layoutId: defaultLayoutIdFor(profile.deviceType) },
     };
     return decorated;
   };

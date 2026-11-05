@@ -2,7 +2,7 @@
 import { useCallback, useMemo } from 'react';
 import { DEFAULT_LAYOUT } from '@rotp/hud';
 import { AbsentAssignments } from './AbsentAssignments';
-import type { ControlsProfile } from './controls-profile.type';
+import type { InputProfile } from '@drizztdourden08/brock-input';
 import { findAbsentAssignments } from './find-absent-assignments';
 import { footerSlots } from './footer-slots';
 import { profileLayoutId } from './profile-layout-id';
@@ -20,7 +20,7 @@ const SlotsFooter = ({ context, assignments }: SlotsFooterProps) => {
 
   const handleLayoutChange = useCallback((next: string) => {
     if (!profile) return;
-    const updated: ControlsProfile = { ...profile, verbs, layoutId: next, modifiedAt: Date.now() };
+    const updated: InputProfile = { ...profile, verbs, extension: { ...profile.extension, layoutId: next }, modifiedAt: Date.now() };
     updateProfile(updated);
   }, [profile, verbs, updateProfile]);
 
