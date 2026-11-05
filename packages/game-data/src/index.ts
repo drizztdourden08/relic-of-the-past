@@ -109,6 +109,8 @@ export type { FilterState, GroupDimension, GroupDimensionDef, GroupNode, ItemFil
 export { filterChecks } from './logic/queries/check-grouping/filter-checks';
 export { isListedRow } from './logic/queries/check-grouping/is-listed-row';
 export { smallKeyDoorsOf } from './logic/queries/check-grouping/small-key-doors-of';
+export { getGroupValue } from './logic/queries/check-grouping/get-group-value';
+export { matchesFacet } from './logic/queries/check-grouping/matches-facet';
 export { chestSwapOf } from './logic/queries/chest-stand-ins/chest-swap-of';
 export { liveChestItems } from './logic/queries/chest-stand-ins/live-chest-items';
 export { describeScreen } from './logic/queries/describe-screen/describe-screen';

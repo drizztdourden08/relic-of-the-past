@@ -18,6 +18,6 @@ export { computeTrackerSnapshot, trackerReading } from '../../tracker-availabili
 export { NO_ITEMS_HANDLING, TRACKER_TAGS } from '../../tracker-link.constants';
 export type { TrackerLink, TrackerLinkConfig, TrackerProgress } from '../../tracker-link.type';
 export type { TrackerLinks, TrackerLinksDeps } from '../../tracker-links.type';
-export { eventCheckRecords, placementCheckRecords, virtualCheckIdOf, virtualChecksOf } from '../../virtual-locations';
+export { VIRTUAL_PREFIX, eventCheckRecords, placementCheckRecords, virtualCheckIdOf, virtualChecksOf, virtualLocationOf } from '../../virtual-locations';
 export { wishPondSessionOf } from '../../wish-pond-rungs';
 export type { WishPondSessionPlan, WishPondWaterPlan } from '../../wish-pond-rungs';
