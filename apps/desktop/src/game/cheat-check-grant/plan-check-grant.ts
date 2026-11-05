@@ -1,7 +1,8 @@
 /* @layer bridge-wasm @kind logic */
 import type { CheckRecord } from '@rotp/game-data';
 import { itemKeyName, locationKeyOfCheck, standardCheckName, resolveLocalItemId, isWritable, markPlanOf, canGrantVanilla, vanillaItemLabelOf } from '@rotp/randomizer';
-import { currentRun } from '../randomizer-client/run-kind';
+import { currentRun } from '@drizztdourden08/brock-randomizer/session';
+import { isRotpPlacement } from '@app/randomizer/rotp-randomizer/rotp-is-placement';
 import type { CheckGrantPlan } from '@rotp/randomizer';
 
 const planCheckGrant = (check: CheckRecord): CheckGrantPlan => {
@@ -19,6 +20,9 @@ const planCheckGrant = (check: CheckRecord): CheckGrantPlan => {
       : { kind: 'blocked', reason: 'the console has no vanilla trigger for this check' };
   }
   const { placement } = run;
+  if (!isRotpPlacement(placement)) {
+    return { kind: 'blocked', reason: 'this run has no readable seed placement' };
+  }
   const markPlan = markPlanOf(check);
   if (!isWritable(markPlan)) {
     return { kind: 'blocked', reason: `it cannot be cleared here, because ${markPlan.refusal}` };

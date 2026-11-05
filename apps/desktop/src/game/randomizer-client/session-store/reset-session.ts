@@ -1,17 +1,13 @@
 /* @layer bridge-wasm @kind logic */
+import { useSessionStore } from '@drizztdourden08/brock-randomizer/session';
 import { clearPendingBoot } from './clear-pending-boot';
-import { notifySessionStore } from './notify-session-store';
-import { NO_OWNERS } from '@rotp/randomizer';
+import { dropOnlinePlacement } from './drop-online-placement';
 import { stopActive } from './stop-active';
-import { storeSlots } from './store-slots';
 
 const resetSession = (): void => {
   clearPendingBoot();
   stopActive();
-  if (storeSlots.placement === null) return;
-  storeSlots.placement = null;
-  storeSlots.foreignOwners = NO_OWNERS;
-  notifySessionStore();
+  if (useSessionStore.getState().placement !== null) dropOnlinePlacement();
 };
 
 export { resetSession };

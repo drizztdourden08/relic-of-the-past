@@ -1,8 +1,8 @@
 /* @layer bridge-wasm @kind constants */
 import type { NetworkState, PermissionMode } from './network-status.type';
-import type { RandomizerSession } from './session.type';
+import type { SessionStatus } from '@drizztdourden08/brock-randomizer/session';
 
-const STATE_OF_STATUS: Readonly<Record<RandomizerSession['status'], NetworkState>> = {
+const STATE_OF_STATUS: Readonly<Record<SessionStatus, NetworkState>> = {
   idle: 'idle',
   starting: 'connecting',
   active: 'connected',

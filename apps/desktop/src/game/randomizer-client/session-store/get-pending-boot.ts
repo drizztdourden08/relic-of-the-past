@@ -1,7 +1,7 @@
 /* @layer bridge-wasm @kind logic */
-import { storeSlots } from './store-slots';
-import type { PendingBoot } from './session-store.type';
+import { pendingBoot } from '@drizztdourden08/brock-randomizer/session';
+import type { PendingBoot } from '@drizztdourden08/brock-randomizer/session';
 
-const getPendingBoot = (): PendingBoot | null => storeSlots.pendingBoot;
+const getPendingBoot = (): PendingBoot | null => pendingBoot.get();
 
 export { getPendingBoot };
