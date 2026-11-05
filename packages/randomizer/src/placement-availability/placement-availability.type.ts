@@ -1,28 +1,27 @@
 /* @layer shared-game @kind types */
-import type { RegionId } from '@rotp/game-data';
 import type { ItemKey } from '../world/item-ids';
 import type { LocationKey } from '../world/location-key';
 import type { Placement } from '../world/fill/placement.type';
 
-interface PlacementReach {
-  available: Set<LocationKey>;
-  reachableRegions: Set<RegionId>;
+interface LogicToggles {
+  darkRoomsNeedLight: boolean;
+  bigKeyDoors: boolean;
+  smallKeyDoors: boolean;
 }
 
-interface ReachRequest {
+interface PlacementReadRequest extends Partial<LogicToggles> {
   placement: Placement;
   completedLocations: ReadonlySet<LocationKey>;
-  darkRoomsNeedLight?: boolean;
+  completedCheckIds: Iterable<string>;
   heldItems?: Iterable<ItemKey>;
-  completedCheckIds?: Iterable<string>;
 }
 
 type PlacementAvailabilityArgs = [
   placement: Placement,
   completedLocations: ReadonlySet<LocationKey>,
-  darkRoomsNeedLight?: boolean,
-  heldItems?: Iterable<ItemKey>,
-  completedCheckIds?: Iterable<string>,
+  darkRoomsNeedLight: boolean | undefined,
+  heldItems: Iterable<ItemKey> | undefined,
+  completedCheckIds: Iterable<string>,
 ];
 
-export type { PlacementAvailabilityArgs, PlacementReach, ReachRequest };
+export type { LogicToggles, PlacementAvailabilityArgs, PlacementReadRequest };

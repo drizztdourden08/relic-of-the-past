@@ -20,9 +20,9 @@ interface TrackerReadingRequest {
 }
 
 interface StatusInputs {
+  checks: readonly CheckRecord[];
   completedChecks: ReadonlySet<CheckId>;
   completedLocations: ReadonlySet<LocationKey>;
-  available: ReadonlySet<LocationKey>;
 }
 
 type TrackerSnapshotArgs = [

@@ -1,6 +1,6 @@
 /* @layer shared-game @kind logic */
+import { placeVanilla } from '@drizztdourden08/brock-randomizer/tracker';
 import { buildWorld } from '../world/build-world';
-import { sweepPlacementSpheres } from '../world/fill/verify-placement';
 import { originalContentOf } from './original-content-of';
 import { recordedContents } from './recorded-contents';
 import { normalPlacementStats } from './normal-placement-stats';
@@ -12,20 +12,13 @@ import type { Placement } from '../world/fill/placement.type';
 import type { NormalPlacementParams } from './normal-placement.type';
 
 const buildNormalPlacement = (params: NormalPlacementParams = {}): Placement => {
-  const options = normalWorldOptions(params);
-  const world = buildWorld(options);
+  const world = buildWorld(normalWorldOptions(params));
   const recorded = recordedContents();
+  const vanilla = placeVanilla(world, (location) => originalContentOf(world, recorded, location.key, location.region));
 
   const locations: Record<LocationKey, ItemKey> = {};
-  for (const region of world.regions.values()) {
-    for (const location of region.locations) {
-      const item = originalContentOf(world, recorded, location.key, region.id);
-      if (item === undefined) throw new Error(`no original item recorded for location: ${location.key}`);
-      locations[location.key] = item;
-    }
-  }
-  for (const [key, item] of Object.entries(locations)) world.placedItems.set(key as LocationKey, item);
-  const { spheres } = sweepPlacementSpheres(world);
+  for (const [key, item] of vanilla.locations) locations[key] = item;
+  const { spheres } = vanilla;
 
   return {
     seed: NORMAL_SEED,
