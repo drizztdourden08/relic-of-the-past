@@ -3,7 +3,7 @@ import type { ProfileRandomizerConfig } from '@app/profiles/types';
 import { buildOptionsSnapshot } from '@rotp/randomizer';
 import { randomizerChoiceOverrides } from '@app/hooks/randomizer/randomizer-choices';
 import { connectionFieldsOf } from './connection-fields-of';
-import { randomSeed } from './random-seed';
+import { randomSeed } from '@app/randomizer/roll/random-seed';
 import type { RandomizerFormState } from './build-randomizer-config.type';
 
 const allowedMode = (mode: RandomizerFormState['mode'], experimental: boolean): RandomizerFormState['mode'] =>

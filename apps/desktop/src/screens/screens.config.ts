@@ -15,7 +15,6 @@ export default defineScreens({
         { id: 'app', label: 'App' },
       ],
     },
-    { id: 'randomizer', title: 'Randomizer', icon: 'sparkles', menu: 'entry', when: ({ profile }) => profile?.randomizer !== undefined },
     {
       id: 'data',
       title: 'Data',
