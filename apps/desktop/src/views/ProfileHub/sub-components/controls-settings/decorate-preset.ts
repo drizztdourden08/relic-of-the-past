@@ -5,8 +5,7 @@ import { defaultModernBindings, keyboardModernBindings, renumberSlots } from '@r
 import type { ControlSchemeId } from '@rotp/features';
 import type { InputProfile } from '@drizztdourden08/brock-input';
 import { verbsFromCore } from './verbs-from-core';
-
-type PresetContext = Parameters<NonNullable<ControlsGame['decoratePreset']>>[1];
+import type { PresetContext } from './decorate-preset.type';
 
 const modernBindingsFor = (deviceType: string, controls: PresetContext['controls']) => {
   if (deviceType === 'keyboard') return keyboardModernBindings();
