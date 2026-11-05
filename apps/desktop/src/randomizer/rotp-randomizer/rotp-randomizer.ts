@@ -3,6 +3,8 @@ import { PLACEMENT_SCHEMAS, rotpWorldGame } from '@rotp/randomizer';
 import type { DeliveryAction, Placement } from '@rotp/randomizer';
 import { defineRandomizerGame } from '@drizztdourden08/brock-randomizer';
 import './rotp-randomizer.augment.type';
+import { rotpCatalog } from '../options/rotp-catalog';
+import { ROTP_LABELS, ROTP_MODES } from './rotp-modes.constants';
 import { rotpApplier } from './rotp-applier';
 import { rotpApStateStore } from './rotp-ap-state-store';
 import { rotpCoreSignal } from './rotp-core-signal';
@@ -28,6 +30,9 @@ const rotpRandomizer = defineRandomizerGame<Placement, DeliveryAction>({
   poll: rotpPoll,
   logText: rotpLogText,
   profile: rotpProfile,
+  catalog: rotpCatalog,
+  modes: ROTP_MODES,
+  labels: ROTP_LABELS,
 });
 
 export { rotpRandomizer };

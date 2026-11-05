@@ -1,29 +1,29 @@
 /* @layer renderer-components @kind types */
 import type { WizardApi } from '@drizztdourden08/tessera/composites';
+import type { ProfileWizardStepDef } from '@drizztdourden08/brock-react';
 import type { CreateProfileOptions, CreateProfileResult } from '@app/profiles/types';
 import type { ProfilePresetId } from '../profile-presets';
-import type { RandomizerFormState } from '../build-randomizer-config';
 
-interface ProfileWizardValues {
+type ProfileWizardValues = Record<string, unknown> & {
   name: string;
   rom: string;
   preset: ProfilePresetId;
   language: string;
   msuPack: string;
-  randomizer: RandomizerFormState;
-}
+};
 
 type ProfileWizardApi = WizardApi<ProfileWizardValues>;
 
 type UpdateValues = (patch: Partial<ProfileWizardValues>) => void;
 
 interface StepContext {
-  experimental: boolean;
   joining: number | null;
+  modules: readonly ProfileWizardStepDef[];
 }
 
 interface CreateContext {
   experimental: boolean;
+  modules: readonly ProfileWizardStepDef[];
   onCreateProfile: (opts: CreateProfileOptions) => Promise<CreateProfileResult>;
   onProgress: (fraction: number | null) => void;
 }

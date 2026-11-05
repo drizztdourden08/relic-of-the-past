@@ -29,12 +29,6 @@ import GameVideoPictureSettings, { meta as gameVideoPictureSettingsMeta } from '
 import GameVideoWindowSettings, { meta as gameVideoWindowSettingsMeta } from '../src/screens/game/video/window.settings';
 import { meta as gameViewBaseMeta } from '../src/screens/game-view.base';
 import { meta as hudLayoutCardMeta } from '../src/screens/hud-layout.card';
-import { meta as randomizerArchipelagoNetworkPageMeta } from '../src/screens/randomizer/archipelago/network.page';
-import { meta as randomizerArchipelagoOnlinePageMeta } from '../src/screens/randomizer/archipelago/online.page';
-import { meta as randomizerLogsPageMeta } from '../src/screens/randomizer/logs.page';
-import { meta as randomizerOptionsPageMeta } from '../src/screens/randomizer/options.page';
-import { meta as randomizerRunPageMeta } from '../src/screens/randomizer/run.page';
-import { meta as randomizerSpoilerPageMeta } from '../src/screens/randomizer/spoiler.page';
 import { meta as storeCatalogueBrowsePageMeta } from '../src/screens/store/catalogue/browse.page';
 import { meta as storeCatalogueCharacterPageMeta } from '../src/screens/store/catalogue/character.page';
 import { meta as storeCatalogueLanguagePageMeta } from '../src/screens/store/catalogue/language.page';
@@ -71,12 +65,6 @@ const screenTree = buildScreenTree(config, [
   { kind: 'settings', bucket: 'game', group: 'video', id: 'window', sections: GameVideoWindowSettings, meta: gameVideoWindowSettingsMeta },
   { kind: 'base', id: 'game-view', component: lazyComponent(() => import('../src/screens/game-view.base')), meta: gameViewBaseMeta },
   { kind: 'card', id: 'hud-layout', component: lazyComponent(() => import('../src/screens/hud-layout.card')), meta: hudLayoutCardMeta },
-  { kind: 'page', bucket: 'randomizer', group: 'archipelago', id: 'network', component: lazyComponent(() => import('../src/screens/randomizer/archipelago/network.page')), meta: randomizerArchipelagoNetworkPageMeta },
-  { kind: 'page', bucket: 'randomizer', group: 'archipelago', id: 'online', component: lazyComponent(() => import('../src/screens/randomizer/archipelago/online.page')), meta: randomizerArchipelagoOnlinePageMeta },
-  { kind: 'page', bucket: 'randomizer', id: 'logs', component: lazyComponent(() => import('../src/screens/randomizer/logs.page')), meta: randomizerLogsPageMeta },
-  { kind: 'page', bucket: 'randomizer', id: 'options', component: lazyComponent(() => import('../src/screens/randomizer/options.page')), meta: randomizerOptionsPageMeta },
-  { kind: 'page', bucket: 'randomizer', id: 'run', component: lazyComponent(() => import('../src/screens/randomizer/run.page')), meta: randomizerRunPageMeta },
-  { kind: 'page', bucket: 'randomizer', id: 'spoiler', component: lazyComponent(() => import('../src/screens/randomizer/spoiler.page')), meta: randomizerSpoilerPageMeta },
   { kind: 'page', bucket: 'store', group: 'catalogue', id: 'browse', component: lazyComponent(() => import('../src/screens/store/catalogue/browse.page')), meta: storeCatalogueBrowsePageMeta },
   { kind: 'page', bucket: 'store', group: 'catalogue', id: 'character', component: lazyComponent(() => import('../src/screens/store/catalogue/character.page')), meta: storeCatalogueCharacterPageMeta },
   { kind: 'page', bucket: 'store', group: 'catalogue', id: 'language', component: lazyComponent(() => import('../src/screens/store/catalogue/language.page')), meta: storeCatalogueLanguagePageMeta },

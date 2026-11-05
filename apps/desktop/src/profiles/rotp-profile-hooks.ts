@@ -2,13 +2,12 @@
 import type { ProfileStoreHooks } from '@drizztdourden08/brock-core';
 
 const rotpProfileHooks: ProfileStoreHooks = {
-  build: ({ romFile, language, msuPack, randomizer }) => ({
+  build: ({ romFile, language, msuPack }) => ({
     romFile: romFile ?? '',
     ...(language ? { language } : {}),
     ...(msuPack ? { msuPack } : {}),
-    ...(randomizer ? { randomizer } : {}),
   }),
-  patchable: ['language', 'msuPack', 'randomizer'],
+  patchable: ['language', 'msuPack'],
   onCreate: async (profile, files) => {
     await files.mkdir(`profiles/${profile.id}/saves`);
   },
