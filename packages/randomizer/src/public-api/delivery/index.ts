@@ -1,9 +1,10 @@
 /* @layer package @kind barrel */
+export { getApReceivedIndex, setApReceivedIndex } from '../../ap-received-index';
 export { getApRoomHash, setApRoomHash } from '../../ap-room-hash';
 export * from '../../archipelago';
 export * from '../../client';
 export * from '../../delivery-api';
-export { executeAction, executeEntry, isReceiptGrant } from '../../delivery-execute';
+export { executeAction, isReceiptGrant } from '../../delivery-execute';
 export * from '../../delivery-queue';
 export * from '../../foreign-icons';
 export * from '../../foreign-items';

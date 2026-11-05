@@ -22,6 +22,6 @@ export { cancelServerDeliveries } from '../../server-delivery/cancel-server-deli
 export { waitingDeliveries } from '../../server-delivery/waiting-deliveries';
 export { serverUrlCandidates } from '../../server-url';
 export type { SessionArmResult, SessionStartHooks } from '../../session-start.type';
-export { NO_OWNERS } from '../../session-store/session-store.constants';
+export { NO_OWNERS } from '../../session-store.constants';
 export { clearSessionWalletTable } from '../../session-wallet-table';
-export type { RandomizerSession, SessionStatusListener } from '../../session.type';
+export type { SessionStatusListener } from '../../session-status-listener.type';

@@ -1,11 +1,16 @@
 /* @layer renderer-app @kind logic */
-import { POLL_INTERVAL_MS, rescanShopCatchUp } from '@rotp/randomizer';
+import { rescanShopCatchUp } from '@rotp/randomizer';
+import { POLL_INTERVAL_MS } from '@drizztdourden08/brock-randomizer/session';
 import { getCompletedChecks } from '@app/game/tracker';
 import type { RandomizerGame } from '@drizztdourden08/brock-randomizer';
+import { pollSync } from './poll-sync';
 
 const rotpPoll: NonNullable<RandomizerGame['poll']> = {
   intervalMs: POLL_INTERVAL_MS,
-  completed: getCompletedChecks,
+  completed: () => {
+    pollSync.rebaselinePending = false;
+    return getCompletedChecks();
+  },
   beforePoll: rescanShopCatchUp,
 };
 

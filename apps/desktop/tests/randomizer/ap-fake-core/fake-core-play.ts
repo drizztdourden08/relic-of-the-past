@@ -1,5 +1,6 @@
 /* @layer tests @kind helper */
-import { rebaselineEntries, deathOf } from '@rotp/randomizer';
+import { deathOf } from '@rotp/randomizer';
+import { rebaselineEntries } from '../ap-rebaseline';
 import type { LinkDiedListener } from '@rotp/randomizer';
 import type { FakeCore } from './ap-fake-core.type';
 

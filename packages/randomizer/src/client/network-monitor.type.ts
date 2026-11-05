@@ -6,7 +6,7 @@ import type { NetworkStatus, NetworkStatusListener } from './network-status.type
 import type { OnlineCore } from './online-core.type';
 import type { OnlineRoom } from './online-room';
 import type { OnlineSessionConfig } from './online-session-config.type';
-import type { RandomizerSession } from './session.type';
+import type { SessionStatus } from '@drizztdourden08/brock-randomizer/session';
 import type { TrackerLinks } from './tracker-links.type';
 
 interface NetworkMonitorDeps {
@@ -16,7 +16,7 @@ interface NetworkMonitorDeps {
   core: Pick<OnlineCore, 'readReceivedIndex' | 'isFileInPlay'>;
   trackers: TrackerLinks;
   send(packet: ApClientPacket): void;
-  sessionStatus(): RandomizerSession['status'];
+  sessionStatus(): SessionStatus;
   now?: () => number;
 }
 

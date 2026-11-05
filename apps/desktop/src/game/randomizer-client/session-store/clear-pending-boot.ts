@@ -1,6 +1,6 @@
 /* @layer bridge-wasm @kind logic */
-import { storeSlots } from './store-slots';
+import { pendingBoot } from '@drizztdourden08/brock-randomizer/session';
 
-const clearPendingBoot = (): void => { storeSlots.pendingBoot = null; };
+const clearPendingBoot = (): void => pendingBoot.clear();
 
 export { clearPendingBoot };

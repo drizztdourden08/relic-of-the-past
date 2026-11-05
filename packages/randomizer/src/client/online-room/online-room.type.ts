@@ -4,7 +4,7 @@ import type {
   ApGameData, ApNetworkPlayer, ApReceivedItemsPacket, ApRoomInfoPacket,
 } from '../ap-protocol.type';
 import type { PollEntry } from '../location-poller/location-poller.type';
-import type { ReceivedCursor } from '../received-cursor';
+import type { ReceivedQueue } from '@drizztdourden08/brock-randomizer/session';
 
 interface OnlineRoom {
   roomInfo: ApRoomInfoPacket | null;
@@ -25,7 +25,7 @@ interface OnlineRoom {
   scoutArming: boolean;
   scouted: boolean;
   pollEntries: readonly PollEntry[];
-  cursor: ReceivedCursor;
+  received: ReceivedQueue;
   roomHash: number | null;
 }
 

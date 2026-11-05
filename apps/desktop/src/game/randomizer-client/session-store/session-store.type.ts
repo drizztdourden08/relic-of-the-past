@@ -1,8 +1,5 @@
 /* @layer bridge-wasm @kind types */
-import type { LocalSession } from '../local-session';
-import type { OnlineSession } from '../online-session';
-import type { ForeignOwners, Placement } from '@rotp/randomizer';
-import type { ProfileRandomizerConfig } from '@app/profiles/types';
+import type { ForeignOwners, LocalSession, OnlineSession, Placement } from '@rotp/randomizer';
 
 type ActiveSession = LocalSession | OnlineSession;
 type SessionSource = 'profile' | 'manual';
@@ -14,21 +11,6 @@ interface SessionStoreState {
   source: SessionSource | null;
 }
 
-interface PendingBoot {
-  profileId: string;
-  config: ProfileRandomizerConfig;
-  placement: Placement | null;
-}
-
 type SessionStoreListener = (state: SessionStoreState) => void;
 
-interface SessionStoreSlots extends SessionStoreState {
-  unsubscribeStatus: (() => void) | null;
-  unsubscribeNetwork: (() => void) | null;
-  pendingBoot: PendingBoot | null;
-  readonly listeners: Set<SessionStoreListener>;
-}
-
-export type {
-  ActiveSession, PendingBoot, SessionSource, SessionStoreListener, SessionStoreSlots, SessionStoreState,
-};
+export type { ActiveSession, SessionSource, SessionStoreListener, SessionStoreState };

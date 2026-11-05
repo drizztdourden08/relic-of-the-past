@@ -3,7 +3,7 @@ import { checkLoadable, stripStamp, getModule, isCoreReady, reassertAfterSaveLoa
 import { log } from '../../log-bus';
 import { pollInventoryState } from '../tracker';
 import { reassertLiveFlagsAfterLoad } from '../live-settings';
-import { requestLocationRebaseline } from '../randomizer-client/location-poller';
+import { notifyStateLoaded } from '@app/randomizer/rotp-randomizer/notify-state-loaded';
 import { resumeDialogAfterLoad } from '../state-dialog';
 
 const loadStateFromBuffer = (buffer: ArrayBuffer, slot = SCRATCH_SLOT): boolean => {
@@ -25,7 +25,7 @@ const loadStateFromBuffer = (buffer: ArrayBuffer, slot = SCRATCH_SLOT): boolean 
   mod.ccall('WasmLoadState', null, ['number'], [slot]);
   reassertLiveFlagsAfterLoad();
   resumeDialogAfterLoad(mod, verdict.stamp);
-  requestLocationRebaseline();
+  notifyStateLoaded();
   reassertAfterSaveLoad();
   markStateLoaded();
   pollInventoryState(true);

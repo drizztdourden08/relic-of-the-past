@@ -13,7 +13,7 @@ import { useLobbyWatchBoot } from './useLobbyWatchBoot';
 import { useMsulOpen } from './useMsulOpen';
 import { useOpenHubOnStart } from './useOpenHubOnStart';
 import { useProfileManagement } from './useProfileManagement';
-import { useRandomizerBoot } from './useRandomizerBoot';
+import { useRandomizerRuntime } from './useRandomizerRuntime';
 import { useSaveOverlay } from './useSaveOverlay';
 import { useSaveStateSettings } from './useSaveStateSettings';
 import { useSettingsBridge } from './useSettingsBridge';
@@ -52,7 +52,7 @@ const useGameSessionValue = (): GameSessionValue => {
     },
   });
   useDebugLaunchHooks({ activeProfile: profileMgmt.activeProfile, loadProfileForGame: profileMgmt.loadProfileForGame, openNavWidget });
-  useRandomizerBoot(profileId);
+  useRandomizerRuntime();
   useLobbyWatchBoot(profileMgmt.profiles);
   useMsulOpen();
   useStoreLinks();

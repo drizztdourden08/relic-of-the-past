@@ -23,7 +23,7 @@ vi.mock('@app/log-bus', () => {
   return { log: { core: quiet, app: quiet, randomizer: quiet, wasm: quiet, ipc: quiet, sim: quiet, error: quiet } };
 });
 vi.mock('@app/game/randomizer-client/online-session', () => ({ createOnlineSession: () => online.next?.session }));
-vi.mock('@app/game/randomizer-client/local-session', () => ({ createLocalSession: () => null }));
+vi.mock('@app/randomizer/rotp-randomizer', () => ({ rotpRandomizer: {} }));
 
 const IDLE_NETWORK: OnlineSession['networkStatus'] = {
   connection: {

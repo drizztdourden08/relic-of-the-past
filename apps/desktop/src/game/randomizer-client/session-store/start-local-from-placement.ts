@@ -1,17 +1,14 @@
 /* @layer bridge-wasm @kind logic */
-import { createLocalSession } from '../local-session';
-import { adoptSession } from './adopt-session';
-import { NO_OWNERS } from '@rotp/randomizer';
-import { storeSlots } from './store-slots';
+import { createLocalSession } from '@drizztdourden08/brock-randomizer/session';
 import type { Placement } from '@rotp/randomizer';
+import { rotpRandomizer } from '@app/randomizer/rotp-randomizer';
+import { activateSession } from './activate-session';
+import { localWithStats } from './local-with-stats';
 import type { SessionSource } from './session-store.type';
 
-const startLocalFromPlacement = async (nextPlacement: Placement, nextSource: SessionSource): Promise<void> => {
-  const next = createLocalSession(nextPlacement);
-  storeSlots.placement = nextPlacement;
-  storeSlots.foreignOwners = NO_OWNERS;
-  adoptSession(next, nextSource);
-  await next.start();
+const startLocalFromPlacement = async (placement: Placement, source: SessionSource): Promise<void> => {
+  const base = createLocalSession({ game: rotpRandomizer, placement, seed: placement.seed });
+  await activateSession(localWithStats(base), source, placement);
 };
 
 export { startLocalFromPlacement };

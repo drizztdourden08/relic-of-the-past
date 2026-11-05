@@ -42,9 +42,13 @@ const { defaultOnlineCore } = await import('@app/game/randomizer-client/online-c
 const { createOnlineClient } = await import('@app/game/randomizer-client/online-client');
 const { AP_DEATH_LINK_BIT, AP_ONLINE_BIT, gateWord5Now } = await import('@app/game/gate-word-5');
 const {
-  executeEntry, probeDeliverableNpcLocations, probeDeliverablePondLocations, probeDeliverableWorldLocations, rebaselineEntries,
+  clear, enqueue, probeDeliverableNpcLocations, probeDeliverablePondLocations, probeDeliverableWorldLocations, startProcessing, stopProcessing,
 } = await import('@rotp/randomizer');
+const { rebaselineEntries } = await import('./ap-rebaseline');
 const { withCollectedChecks } = await import('@rotp/navigation');
+
+const FRAME_MS = 16;
+const REFUSED_FRAMES = 40;
 
 const settle = async (): Promise<void> => {
   for (let i = 0; i < 400; i += 1) await Promise.resolve();
@@ -135,15 +139,23 @@ describe('the real online core', { tags: ['standard'] }, () => {
     const core = installFakeModule(setModule);
     try {
       let granted = 0;
-      const entry = {
-        id: 'dlv', message: 'Hookshot', source: 'randomizer', enqueuedAt: 0, onGranted: () => { granted += 1; },
-        action: { type: 'give_item' as const, itemId: 0x0a, receiptExport: true },
-      };
+      vi.stubGlobal('requestAnimationFrame', (callback: () => void) => setTimeout(callback, FRAME_MS));
+      vi.stubGlobal('cancelAnimationFrame', (id: ReturnType<typeof setTimeout>) => clearTimeout(id));
+      startProcessing(() => undefined);
+      enqueue({
+        message: 'Hookshot', source: 'randomizer', onGranted: () => { granted += 1; },
+        action: { type: 'give_item', itemId: 0x0a, receiptExport: true },
+      });
       core.setReturn('WasmGrantItemWithReceipt', 0);
-      expect([executeEntry(entry), granted]).toEqual(['refused', 0]);
+      vi.advanceTimersByTime(FRAME_MS * REFUSED_FRAMES);
+      const whileRefused = granted;
       core.setReturn('WasmGrantItemWithReceipt', 1);
-      expect([executeEntry(entry), granted]).toEqual(['done', 1]);
+      vi.advanceTimersByTime(FRAME_MS * REFUSED_FRAMES);
+      expect([whileRefused, granted]).toEqual([0, 1]);
     } finally {
+      stopProcessing();
+      clear();
+      vi.unstubAllGlobals();
       core.remove();
     }
   });
