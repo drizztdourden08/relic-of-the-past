@@ -1,0 +1,40 @@
+{
+  "seed": [
+    {
+      "slot": 0,
+      "name": "AAAAAA",
+      "taken": 48,
+      "available": 3,
+      "left": 536,
+      "total": 587
+    },
+    {
+      "slot": 2,
+      "name": "AAAAAA",
+      "taken": 280,
+      "available": 39,
+      "left": 268,
+      "total": 587
+    }
+  ],
+  "normal": [
+    {
+      "slot": 0,
+      "name": "AAAAAA",
+      "taken": 77,
+      "available": 5,
+      "left": 505,
+      "total": 587
+    },
+    {
+      "slot": 1,
+      "name": "AAAAAA",
+      "taken": 23,
+      "available": 5,
+      "left": 559,
+      "total": 587
+    }
+  ],
+  "online": null,
+  "unknownProfile": null
+}
