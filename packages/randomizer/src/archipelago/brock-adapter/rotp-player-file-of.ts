@@ -1,5 +1,5 @@
 /* @layer shared-game @kind logic */
-import { playerFileOf, withDeathLink } from '@drizztdourden08/brock-randomizer/archipelago';
+import { DEATH_LINK_KEY, playerFileOf } from '@drizztdourden08/brock-randomizer/archipelago';
 import { ACCESSIBILITY_KEY, accessibilityFromSnapshot } from '../../world/accessibility/accessibility-from-snapshot';
 import { deliverableListsOf } from '../../world/fill/deliverable-lists';
 import { AP_GAME } from '../ap-game';
@@ -16,8 +16,10 @@ const preRolledOf = (input: PlayerFileInput, options: RandomizerOptionsSnapshot)
 };
 
 const rotpPlayerFileOf = (input: PlayerFileInput): PlayerFile => {
+  const { deathLink } = input;
   const options: RandomizerOptionsSnapshot = {
-    ...input.options, values: withDeathLink(input.options.values, input.deathLink),
+    ...input.options,
+    values: deathLink === undefined ? input.options.values : { ...input.options.values, [DEATH_LINK_KEY]: deathLink },
   };
   return playerFileOf({
     game: AP_GAME,
