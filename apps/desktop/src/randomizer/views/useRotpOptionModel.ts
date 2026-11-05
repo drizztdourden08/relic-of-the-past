@@ -11,19 +11,20 @@ import type { RandomizerOptionChoices } from '@app/hooks/randomizer/randomizer-c
 import { usePondDemands } from '@app/hooks/randomizer/usePondDemands';
 import { usePoolImpacts } from '@app/hooks/randomizer/usePoolImpacts';
 import { optionValuesOf } from '@app/randomizer/options/option-values-of';
+import { groupsForMode } from '@app/views/DataManager/sub-components/profile-manager/randomizer-options/groups-for-mode';
 import { choicesAfterRow } from '@app/views/DataManager/sub-components/profile-manager/randomizer-options/choices-after-row';
 import { valueFor } from '@app/views/DataManager/sub-components/profile-manager/randomizer-options/value-for';
 import type { RotpOptionModel } from './useRotpOptionModel.type';
 
 const useRotpOptionModel = (props: OptionTabProps): RotpOptionModel => {
-  const { overrides, seed, frozen, onChange } = props;
+  const { overrides, seed, frozen, onChange, mode } = props;
   const snapshot = useMemo(() => buildOptionsSnapshot(optionValuesOf(overrides)), [overrides]);
   const choices = useMemo(() => choicesOfSnapshot(snapshot, seed), [snapshot, seed]);
   const { accounting, error, cellOf } = usePoolImpacts(snapshot, seed);
   const notes = useMemo(() => parseCapacityProfile(snapshot.values).notes, [snapshot]);
   const pondDemands = usePondDemands(snapshot, seed);
-  const groups = useMemo(() => splitUnlockedGroups(catalogByLock.unlockedGroups), []);
-  const fixed = useMemo(() => splitLockedGroups(catalogByLock.lockedGroups), []);
+  const groups = useMemo(() => splitUnlockedGroups(groupsForMode(catalogByLock.unlockedGroups, mode)), [mode]);
+  const fixed = useMemo(() => splitLockedGroups(groupsForMode(catalogByLock.lockedGroups, mode)), [mode]);
 
   const valueOf = (option: OptionDef): OptionValue => (frozen
     ? snapshot.values[option.key] ?? option.baseline
