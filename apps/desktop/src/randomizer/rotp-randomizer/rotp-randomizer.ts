@@ -7,6 +7,7 @@ import { rotpCatalog } from '../options/rotp-catalog';
 import { ROTP_LABELS, ROTP_MODES } from './rotp-modes.constants';
 import { rotpApplier } from './rotp-applier';
 import { rotpApStateStore } from './rotp-ap-state-store';
+import { rotpArchipelago } from './rotp-archipelago';
 import { rotpCoreSignal } from './rotp-core-signal';
 import { describePlacement } from './rotp-describe';
 import { isRotpPlacement } from './rotp-is-placement';
@@ -29,6 +30,7 @@ const rotpRandomizer = defineRandomizerGame<Placement, DeliveryAction>({
   memory: rotpMemoryBridge,
   applier: rotpApplier,
   apState: rotpApStateStore,
+  archipelago: rotpArchipelago,
   poll: rotpPoll,
   logText: rotpLogText,
   profile: rotpProfile,
