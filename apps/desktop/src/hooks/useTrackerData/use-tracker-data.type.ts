@@ -1,11 +1,10 @@
 /* @layer renderer-lib @kind types */
-import type { CheckRecord, FilterState, GroupDimension, RunContext } from '@rotp/game-data';
+import type { CheckId, CheckRecord, CheckStatus, GroupDimension, ItemId, RunContext } from '@rotp/game-data';
+import type { Placement } from '@rotp/randomizer';
+import type { TrackerReading } from '@drizztdourden08/brock-randomizer/tracker';
 import type { ViewMode } from '../../compounds/ChecksTracker';
-import type { trackerCheckRecords, trackerStatuses } from '@rotp/navigation';
 import type { runKindOfSession } from '../../game/randomizer-client';
-import type { PlacementView } from '../../game/randomizer-client';
-import type { useLiveTrackerInputs } from './useLiveTrackerInputs';
-import type { mergeStatusOnlyChecks } from './merge-status-only-checks';
+import type { PlacementView, SessionStoreState } from '../../game/randomizer-client';
 
 interface TrackerDataOptions {
   initialGrouping?: GroupDimension[];
@@ -20,32 +19,34 @@ interface TrackerStats {
   total: number;
 }
 
-type LiveInputs = ReturnType<typeof useLiveTrackerInputs>;
 type RunKind = ReturnType<typeof runKindOfSession>;
-type TrackerPlacement = LiveInputs['sessionState']['placement'];
 
-type TrackerStatusInputs = Pick<LiveInputs, 'inventory' | 'completedChecks' | 'eventStatus' | 'fired'> & {
-  placement: TrackerPlacement;
-  runKind: RunKind;
-  filter: FilterState;
-};
+interface TrackerStatusInputs {
+  placement: Placement | null;
+  reading: TrackerReading | null;
+}
 
-type TrackerStatuses = {
+interface TrackerStatuses {
   checkRecords: CheckRecord[];
-  effectiveCheckRecords: ReturnType<typeof trackerCheckRecords>;
-  effectiveCompleted: ReturnType<typeof mergeStatusOnlyChecks>;
-  snapshot: ReturnType<typeof trackerStatuses>;
-};
+  effectiveCheckRecords: CheckRecord[];
+  snapshot: ReadonlyMap<CheckId, CheckStatus>;
+}
 
-type TrackerRunInputs = Pick<LiveInputs['sessionState'], 'foreignOwners'> & Pick<TrackerStatuses, 'checkRecords' | 'effectiveCompleted'> & {
-  placement: TrackerPlacement;
+interface TrackerRunInputs {
+  session: SessionStoreState;
   runKind: RunKind;
-  inventory: LiveInputs['inventory'];
-};
+  checkRecords: readonly CheckRecord[];
+  inventory: ReadonlySet<ItemId>;
+  completed: ReadonlySet<CheckId>;
+}
 
-type TrackerRun = { placementView: PlacementView; run: RunContext };
+interface TrackerRun {
+  placementView: PlacementView;
+  run: RunContext;
+}
 
 export type {
+  RunKind,
   TrackerDataOptions,
   TrackerRun,
   TrackerRunInputs,

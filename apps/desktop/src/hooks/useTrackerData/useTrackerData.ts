@@ -1,14 +1,19 @@
 /* @layer renderer-lib @kind hook */
 import { useCallback, useMemo } from 'react';
 import { buildGroupTree, filterChecks } from '@rotp/game-data';
-import type { FilterState, GroupDimension } from '@rotp/game-data';
+import type { CheckId, FilterState, GroupDimension, ItemId } from '@rotp/game-data';
+import { useTrackerFeed, useTrackerReading } from '@drizztdourden08/brock-randomizer/renderer';
 import { runKindOfSession } from '../../game/randomizer-client';
 import type { ViewMode, TrackerPanels } from '../../compounds/ChecksTracker';
 import { CLOSED_PANELS } from '../../compounds/ChecksTracker';
 import { useWidgetPref } from '@drizztdourden08/brock-react';
 import type { TrackerDataOptions } from './use-tracker-data.type';
-import { DEFAULT_GROUPING, EMPTY_FILTER, NO_GROUPS } from './use-tracker-data.constants';
-import { useLiveTrackerInputs } from './useLiveTrackerInputs';
+import {
+  DEFAULT_GROUPING, EMPTY_FILTER, NO_COMPLETED, NO_GROUPS, NO_ITEMS,
+} from './use-tracker-data.constants';
+import { assumedIdsOf } from './assumed-ids-of';
+import { useEventStatus } from './useEventStatus';
+import { useSessionState } from './useSessionState';
 import { useTrackerRun } from './useTrackerRun';
 import { useTrackerStatuses } from './useTrackerStatuses';
 import { countTrackerStats } from './count-tracker-stats';
@@ -16,7 +21,9 @@ import { countTrackerStats } from './count-tracker-stats';
 const useTrackerData = (options: TrackerDataOptions = {}) => {
   const { initialGrouping = DEFAULT_GROUPING, initialViewMode = 'visual', prefKey = null } = options;
 
-  const { inventory, completedChecks, eventStatus, sessionState, fired } = useLiveTrackerInputs();
+  const feed = useTrackerFeed();
+  const eventStatus = useEventStatus();
+  const sessionState = useSessionState();
   const [viewMode, setViewMode] = useWidgetPref<ViewMode>(prefKey, 'viewMode', initialViewMode);
   const [grouping, setGrouping] = useWidgetPref<GroupDimension[]>(prefKey, 'grouping', initialGrouping);
   const [filter, setFilter] = useWidgetPref<FilterState>(prefKey, 'filter', EMPTY_FILTER);
@@ -29,14 +36,17 @@ const useTrackerData = (options: TrackerDataOptions = {}) => {
       : [...expandedGroups, key]);
   }, [expandedGroups, setExpandedGroups]);
 
-  const { placement, foreignOwners } = sessionState;
+  const { placement } = sessionState;
   const runKind = runKindOfSession(sessionState);
+  const assumed = useMemo(() => assumedIdsOf(filter, runKind), [filter, runKind]);
+  const reading = useTrackerReading(assumed);
 
-  const { checkRecords, effectiveCheckRecords, effectiveCompleted, snapshot } = useTrackerStatuses({
-    placement, runKind, filter, inventory, completedChecks, eventStatus, fired,
-  });
+  const inventory = useMemo(() => (feed ? new Set(feed.held as readonly ItemId[]) : NO_ITEMS), [feed]);
+  const completed = (feed?.completed ?? NO_COMPLETED) as ReadonlySet<CheckId>;
+
+  const { checkRecords, effectiveCheckRecords, snapshot } = useTrackerStatuses({ placement, reading });
   const { placementView, run } = useTrackerRun({
-    placement, foreignOwners, runKind, checkRecords, inventory, effectiveCompleted,
+    session: sessionState, runKind, checkRecords, inventory, completed,
   });
 
   const stats = useMemo(
