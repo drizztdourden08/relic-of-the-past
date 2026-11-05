@@ -1,6 +1,8 @@
 /* @layer renderer-app @kind logic */
-import { AP_GAME, buildConnect, clientUuid, createBrowserSocket, parseServerPackets, parseSlotData, versionOf } from '@rotp/randomizer';
-import type { ApConnectedPacket, ApRoomInfoPacket, ApServerPacket, ApSocket } from '@rotp/randomizer';
+import { buildConnectPacket, clientUuid, parseServerPackets, versionOf } from '@drizztdourden08/brock-randomizer/archipelago';
+import type { ApConnectedPacket, ApRoomInfoPacket, ApServerPacket } from '@drizztdourden08/brock-randomizer/archipelago';
+import { AP_GAME, createBrowserSocket, parseSlotData } from '@rotp/randomizer';
+import type { ApSocket } from '@rotp/randomizer';
 import { SLOT_PROBE_MS } from './launch-connect.constants';
 import type { ProbeAttempt, ProbeTarget, SlotProbe } from './slot-probe.type';
 
@@ -12,7 +14,7 @@ const slotDataResult = (packet: ApConnectedPacket): SlotProbe => {
 };
 
 const connectLine = (room: ApRoomInfoPacket, { slot, password }: ProbeTarget): string =>
-  JSON.stringify([buildConnect({ game: AP_GAME, slotName: slot, uuid: clientUuid(), password: password ?? undefined, version: versionOf(room) })]);
+  JSON.stringify([buildConnectPacket({ game: AP_GAME, slotName: slot, uuid: clientUuid(), password: password ?? undefined, version: versionOf(room) })]);
 
 const probeSlotAttempt = (target: ProbeTarget): Promise<ProbeAttempt> =>
   new Promise((resolve) => {

@@ -8,6 +8,8 @@ import * as profileStore from '@app/storage/profile-store';
 import { loadMsuPack } from '@app/game/msu-pack-loader';
 import { gateRandomizerBoot } from '@drizztdourden08/brock-randomizer/session';
 import { resetSession, setOnlineAllowed } from '@app/game/randomizer-client';
+import { DEFAULT_SLOT_NAME } from '@rotp/randomizer';
+import { onlineSlotName } from '@app/randomizer/rotp-randomizer/online-slot-name-slot';
 import type { LoadProfileForGameDeps } from './useProfileManagement.type';
 import { ensureProfileAssets } from './ensure-profile-assets';
 import { loadInputProfile } from './load-input-profile';
@@ -52,6 +54,7 @@ const useLoadProfileForGame = ({ onGameClear, onProfileLoaded, setActiveProfile,
     if (profile.randomizer) {
       const experimental = experimentalFeaturesEnabled(settings);
       setOnlineAllowed(experimental);
+      onlineSlotName.current = profile.randomizer.slotName ?? DEFAULT_SLOT_NAME;
       const gate = await gateRandomizerBoot(profile.id, profile.randomizer);
       if (!gate.ok) {
         log.error(gate.detail);

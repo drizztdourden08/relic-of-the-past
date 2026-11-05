@@ -1,5 +1,6 @@
 /* @layer bridge-wasm @kind types */
-import type { ForeignOwners, LocalSession, OnlineSession, Placement } from '@rotp/randomizer';
+import type { OnlineSession } from '@drizztdourden08/brock-randomizer/session';
+import type { ForeignOwners, LocalSession, Placement } from '@rotp/randomizer';
 
 type ActiveSession = LocalSession | OnlineSession;
 type SessionSource = 'profile' | 'manual';

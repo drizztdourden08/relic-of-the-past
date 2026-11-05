@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind logic */
-import type { NetworkPlayer } from '@app/game/randomizer-client';
+import type { NetworkPlayer } from '@drizztdourden08/brock-randomizer/archipelago';
 
 const playersSummaryOf = (players: readonly NetworkPlayer[]): string => {
   const online = players.filter((player) => player.online === true).length;

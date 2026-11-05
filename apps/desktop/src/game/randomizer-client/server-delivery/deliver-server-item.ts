@@ -3,12 +3,12 @@ import { RANDOMIZER_RECEIPT_MSG } from '@rotp/asset-extraction';
 import { renderFromServer, renderOnline, resolveServerItemLocalId, waitingDeliveries } from '@rotp/randomizer';
 import { deliverItem } from '../../delivery-api';
 import { appendSessionReceiptMessage, releaseSessionReceiptMessage } from '../../session-dialogue';
-import type { DeliveryOutcome } from '@rotp/randomizer';
+import type { DeliverResult } from '@drizztdourden08/brock-randomizer/archipelago';
 
 const arrivalLine = (itemName: string, senderName: string | null): string =>
   (senderName === null ? renderFromServer(itemName) : renderOnline(senderName, itemName));
 
-const deliverServerItem = (itemName: string, senderName: string | null, onGranted: () => void): DeliveryOutcome => {
+const deliverServerItem = (itemName: string, senderName: string | null, onGranted: () => void): DeliverResult => {
   const localId = resolveServerItemLocalId(itemName);
   if (localId === undefined) return 'unknown';
   const line = arrivalLine(itemName, senderName);

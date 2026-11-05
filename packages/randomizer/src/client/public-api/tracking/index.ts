@@ -15,9 +15,6 @@ export type { PondDemandMessageIds, PondDemandMessagesOf, PondMessageIds, Sessio
 export { receivedBatchOrder } from '../../received-batch-order';
 export { scoutsToPlacement } from '../../scouts-to-placement';
 export { computeTrackerSnapshot, trackerReading } from '../../tracker-availability';
-export { NO_ITEMS_HANDLING, TRACKER_TAGS } from '../../tracker-link.constants';
-export type { TrackerLink, TrackerLinkConfig, TrackerProgress } from '../../tracker-link.type';
-export type { TrackerLinks, TrackerLinksDeps } from '../../tracker-links.type';
 export { VIRTUAL_PREFIX, eventCheckRecords, placementCheckRecords, virtualCheckIdOf, virtualChecksOf, virtualLocationOf } from '../../virtual-locations';
 export { wishPondSessionOf } from '../../wish-pond-rungs';
 export type { WishPondSessionPlan, WishPondWaterPlan } from '../../wish-pond-rungs';

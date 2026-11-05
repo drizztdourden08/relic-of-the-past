@@ -1,5 +1,5 @@
 /* @layer renderer-app @kind logic */
-import { slotNameError } from '@rotp/randomizer';
+import { slotNameError } from '@drizztdourden08/brock-randomizer/archipelago';
 import { EMPTY_LOBBY_DRAFT } from '@app/hooks/randomizer/lobby-setup';
 import type { LobbyCheckOk } from '@app/game/archipelia';
 import { log } from '@app/log-bus';

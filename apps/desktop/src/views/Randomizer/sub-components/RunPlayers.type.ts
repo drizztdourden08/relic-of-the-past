@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind types */
-import type { NetworkPlayer } from '@app/game/randomizer-client';
+import type { NetworkPlayer } from '@drizztdourden08/brock-randomizer/archipelago';
 import type { PanelPlacement } from '../Randomizer.type';
 
 interface RunPlayersProps {

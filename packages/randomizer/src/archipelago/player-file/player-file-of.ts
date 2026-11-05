@@ -1,5 +1,5 @@
 /* @layer shared-game @kind logic */
-import { DEFAULT_SLOT_NAME } from '../../client/online-config-of-profile/online-config-of-profile.constants';
+import { DEFAULT_SLOT_NAME } from './player-file.constants';
 import { renderPlayerYaml } from '../player-yaml';
 import type { PlayerFile, PlayerFileInput } from './player-file.type';
 

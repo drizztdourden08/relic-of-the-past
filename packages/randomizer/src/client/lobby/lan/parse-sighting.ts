@@ -1,7 +1,7 @@
 /* @layer bridge-wasm @kind logic */
 import { parseBeacon, parseDiscoveryTxt } from '@drizztdourden08/archipelia-lobby-protocol';
 import { base64ToBytes } from '../crypto/base64-to-bytes';
-import { DOTTED_QUAD } from '../../server-host-locality.constants';
+import { DOTTED_QUAD } from './lan.constants';
 import type { LanSighting, ParsedSighting } from './lan.type';
 
 const pickAddress = (addresses: string[], fallback: string): string =>

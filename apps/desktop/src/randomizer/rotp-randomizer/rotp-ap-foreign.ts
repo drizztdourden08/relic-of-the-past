@@ -1,8 +1,9 @@
 /* @layer renderer-app @kind logic */
 import { foreignIconIdOfGame, stopScoutedTexts, TAG } from '@rotp/randomizer';
-import type { ForeignItem, ForeignItemOf, LocationKey, Placement, SessionStartHooks } from '@rotp/randomizer';
+import type { ForeignItem, ForeignItemOf, ForeignOwners, LocationKey, Placement, SessionStartHooks } from '@rotp/randomizer';
 import type { ApplyContext } from '@drizztdourden08/brock-randomizer/session';
 import { applyForeignIcons } from '@app/game/foreign-icons';
+import { setForeignOwners } from '@app/game/randomizer-client/session-store/set-foreign-owners';
 
 type ForeignHooks = Pick<SessionStartHooks, 'foreignItemOf' | 'foreignIconIdOf'>;
 
@@ -15,9 +16,16 @@ const foreignItemsOf = (placement: Placement, foreign: NonNullable<ApplyContext[
   return items;
 };
 
+const ownersOf = (items: ReadonlyMap<LocationKey, ForeignItem>): ForeignOwners => {
+  const owners: Partial<Record<LocationKey, string>> = {};
+  for (const [key, entry] of items) owners[key] = entry.owner;
+  return owners;
+};
+
 const rotpApForeignHooks = async (placement: Placement, ctx: ApplyContext): Promise<ForeignHooks> => {
   if (ctx.foreign === undefined) return {};
   const items = foreignItemsOf(placement, ctx.foreign);
+  setForeignOwners(ownersOf(items));
   stopScoutedTexts();
   const coreTookPictures = items.size > 0 && await applyForeignIcons(TAG);
   const foreignItemOf: ForeignItemOf = (location) => items.get(location);

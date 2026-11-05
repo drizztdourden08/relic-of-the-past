@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind component */
 import { Field, Grid, SegmentedControl, Stack, TextInput } from '@drizztdourden08/tessera/primitives';
-import { slotNameError } from '@rotp/randomizer';
+import { slotNameError } from '@drizztdourden08/brock-randomizer/archipelago';
 import { LOCATION_OPTIONS, NAME_PLACEHOLDER } from './LobbySetup.constants';
 import type { LobbySetupProps } from './LobbySetup.type';
 import { ConnectionSection } from './sub-components/ConnectionSection';
