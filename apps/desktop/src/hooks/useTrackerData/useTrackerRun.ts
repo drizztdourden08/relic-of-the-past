@@ -7,14 +7,15 @@ import type { PlacementView } from '../../game/randomizer-client';
 import type { TrackerRun, TrackerRunInputs } from './use-tracker-data.type';
 
 const useTrackerRun = (inputs: TrackerRunInputs): TrackerRun => {
-  const { placement, foreignOwners, runKind, checkRecords, inventory, effectiveCompleted } = inputs;
+  const { session, runKind, checkRecords, inventory, completed } = inputs;
+  const { placement, foreignOwners } = session;
 
   const placementView: PlacementView = useMemo(
     () => buildPlacementView(placement, foreignOwners), [placement, foreignOwners],
   );
   const liveItems = useMemo(
-    () => (runKind === 'normal' ? liveChestItems(checkRecords, inventory, effectiveCompleted) : undefined),
-    [runKind, checkRecords, inventory, effectiveCompleted],
+    () => (runKind === 'normal' ? liveChestItems(checkRecords, inventory, completed) : undefined),
+    [runKind, checkRecords, inventory, completed],
   );
   const run: RunContext = useMemo(
     () => (placement
