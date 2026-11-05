@@ -7,6 +7,7 @@ export { AP_ITEM_IDS, AP_ITEM_NAMES, AP_LOCATION_IDS, AP_LOCATION_NAMES } from '
 export { apItemUniverse } from './ap-item-universe';
 export { apLocationUniverse } from './ap-location-universe';
 export { exportWorld } from './export/export-world';
+export { exportRotpWorld, ROTP_AP_IDS, rotpPlayerFileOf, rotpReadItemsOf } from './brock-adapter';
 export type { WorldExport } from './export/export.type';
 export { FOREIGN_ITEM_KEY, FOREIGN_ITEM_NAME, isForeignItem } from './foreign-item';
 export { parseSlotData } from './parse-slot-data';

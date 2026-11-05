@@ -5,7 +5,7 @@ import { VANILLA_PRIZES } from '../../world/scope-tables';
 import { ruleOptionsOfWorld } from '../../world/rules/rule-options';
 import { progressiveSettingOf, progressiveTierMapOf } from '../../world/progressive/progressive-reach';
 import { specializeNode } from './specialize-node';
-import { readItemsOf } from './read-items';
+import { rotpReadItemsOf } from '../brock-adapter';
 import { primitiveDataOf } from './primitive-data';
 import { itemHalfOf } from './model-items';
 import type { FillWorld } from '../../world/fill/fill-world.type';
@@ -47,7 +47,7 @@ const worldModelOf = (input: WorldModelInput): WorldModel => {
     fillWorld,
     fillable,
     fixedProgression: new Set<string>([...PRIZE_ITEMS, ...pool.prizes]),
-    read: readItemsOf(specializedTrees(fillWorld), primitives),
+    read: rotpReadItemsOf(specializedTrees(fillWorld), primitives),
     locked: Object.values(locked),
   });
   return {

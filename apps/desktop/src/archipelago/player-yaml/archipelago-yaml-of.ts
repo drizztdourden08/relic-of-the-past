@@ -1,9 +1,9 @@
 /* @layer renderer-lib @kind logic */
-import { deliverableSetsOf, playerFileOf } from '@rotp/randomizer';
+import { deliverableSetsOf, rotpPlayerFileOf } from '@rotp/randomizer';
 import type { ProfileRandomizerConfig } from '@app/profiles/types';
 
 const archipelagoYamlOf = (config: ProfileRandomizerConfig, appVersion: string) =>
-  playerFileOf({
+  rotpPlayerFileOf({
     slotName: config.slotName,
     options: config.options,
     appVersion,
