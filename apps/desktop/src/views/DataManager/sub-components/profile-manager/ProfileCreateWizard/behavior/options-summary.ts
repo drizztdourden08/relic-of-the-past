@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind logic */
-import type { ProfileWizardValues } from '../ProfileCreateWizard.type';
+import type { ProfileWizardValues } from '@drizztdourden08/brock-react';
 import { changedCountsOfValues } from './changed-counts-of-values';
 
 const optionsSummary = (values: ProfileWizardValues): string => {

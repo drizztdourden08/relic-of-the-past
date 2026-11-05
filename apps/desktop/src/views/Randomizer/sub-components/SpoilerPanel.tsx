@@ -4,6 +4,7 @@ import { Box, Text } from '@drizztdourden08/tessera/primitives';
 import { ChecksTracker } from '@app/compounds/ChecksTracker';
 import { useTrackerData } from '../../../hooks/useTrackerData';
 import { SPOILER_DIMENSIONS } from './SpoilerPanel.constants';
+import './SpoilerPanel.css';
 
 const countOf = (count: number, one: string, many: string): string => `${count} ${count === 1 ? one : many}`;
 

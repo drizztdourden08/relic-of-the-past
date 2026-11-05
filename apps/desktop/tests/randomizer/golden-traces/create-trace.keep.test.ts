@@ -10,12 +10,13 @@ import { EMPTY_RANDOMIZER_FORM } from '@app/views/DataManager/sub-components/pro
 import { applyProfilePreset } from '@app/views/DataManager/sub-components/profile-manager/profile-presets';
 import type { RandomizerFormState } from '@app/views/DataManager/sub-components/profile-manager/build-randomizer-config/build-randomizer-config.type';
 import type { CreateProfileOptions } from '@app/profiles/types';
-import { configPath, createThroughModule, traceFiles } from './create-fake-profiles';
+import { configPath, createThroughModule } from './create-fake-profiles';
 import { checkTrace } from './golden-trace';
+import { traceFiles } from './trace-files';
 
 vi.mock('@app/log-bus', async () => ({ log: (await import('./trace-log')).traceLog }));
 vi.mock('@drizztdourden08/brock-react', async (importOriginal) => {
-  const { traceFiles: files } = await import('./create-fake-profiles');
+  const { traceFiles: files } = await import('./trace-files');
   return { ...(await importOriginal<object>()), getPlatform: () => ({ files }) };
 });
 
