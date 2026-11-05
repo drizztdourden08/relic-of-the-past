@@ -2,6 +2,7 @@
 import { describe, expect, it, vi } from 'vitest';
 import { BURST_LIMIT, BURST_WINDOW_MS, queueNotice } from '@drizztdourden08/brock-randomizer/archipelago';
 import { ONLINE_NOTICE_DEFAULTS } from '@rotp/game-core';
+import { isNoticeKindShown } from '@rotp/randomizer';
 import type { OnlineNotice, NoticeEntry } from '@drizztdourden08/brock-randomizer/archipelago';
 import { installClientHarness } from '../ap-protocol-harness';
 import { required } from '@rotp/asset-extraction/testing';
@@ -21,7 +22,9 @@ describe('the toast queue', { tags: ['critical'] }, () => {
   const run = (notices: readonly OnlineNotice[], settings = ONLINE_NOTICE_DEFAULTS, step = 0): readonly NoticeEntry[] => {
     let serial = 0;
     return notices.reduce<readonly NoticeEntry[]>(
-      (entries, notice, index) => queueNotice({ entries, notice, settings, now: index * step, nextId: () => `n${serial++}` }), [],
+      (entries, notice, index) => queueNotice({
+        entries, notice, shown: (kind) => isNoticeKindShown(settings, kind), now: index * step, nextId: () => `n${serial++}`,
+      }), [],
     );
   };
 

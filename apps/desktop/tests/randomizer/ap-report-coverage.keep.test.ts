@@ -116,7 +116,7 @@ const armRoom = async (overrides: Record<string, OptionValue>, foreignEvery: num
   module.remove();
   if (!outcome.ok) throw new Error(outcome.refusal);
   const foreignKeys = scouts.filter((scout) => scout.player !== SLOT).map((scout) => locationKeyOfApId(scout.location));
-  return { polled: outcome.armed.polled, placement, keys: [...keyOf.values()], foreignKeys };
+  return { polled: outcome.armed.polled ?? [], placement, keys: [...keyOf.values()], foreignKeys };
 };
 
 afterEach(() => {

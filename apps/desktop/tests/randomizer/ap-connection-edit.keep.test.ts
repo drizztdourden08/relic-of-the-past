@@ -117,6 +117,7 @@ describe('fixing a wrong password from the Network tab (T30)', { tags: ['critica
   it('a save after the refusal reconnects on the new password and becomes active', async () => {
     fake.server = createRoom();
     const core = installFakeModule(setModule);
+    core.setReturn('WasmGetApRoomHash', 0);
     const archipelago = Object.create(required(rotpRandomizer.archipelago, 'RotP archipelago hook'), {
       createSocket: { value: required(fake.server, 'fake server').createSocket },
     });
