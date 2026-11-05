@@ -1,11 +1,7 @@
 /* @layer tests @kind helper */
-import { renderPlayerYaml } from '../../src/archipelago/player-yaml';
+import { exportRotpWorld, rotpPlayerFileOf } from '../../src/archipelago/brock-adapter';
 import { preRolledOfFillWorld } from '../../src/archipelago/pre-rolled';
-import { exportItems } from '../../src/archipelago/export/export-items';
-import { exportLocations } from '../../src/archipelago/export/export-locations';
-import { exportRegions } from '../../src/archipelago/export/export-regions';
 import { canReachEvent } from '../../src/world/events/event-sweep';
-import { widestRuledWorld } from '../../src/archipelago/export/widest-ruled-world';
 import { createCollectionState } from '../../src/world/collection-state';
 import { canCollectLocation } from '../../src/world/rules/collect';
 import { sweepPlacementSpheres } from '../../src/world/fill/verify-placement';
@@ -19,11 +15,13 @@ import type { LocationKey } from '../../src/world/location-key';
 import type { RandomizerOptionsSnapshot } from '../../src/world/options.type';
 import type { ApSpoiler } from './ap-spoiler';
 
-const LOCATIONS = exportLocations(widestRuledWorld());
-const ITEMS = exportItems();
+const WORLD = exportRotpWorld();
+interface NamedRow { key: string; name: string }
+const LOCATIONS = WORLD['locations.json'] as readonly NamedRow[];
+const ITEMS = WORLD['items.json'] as readonly NamedRow[];
 const LOCATION_KEY = new Map(LOCATIONS.map((row) => [row.name, row.key as LocationKey]));
 const ITEM_KEY = new Map(ITEMS.map((row) => [row.name, row.key as ItemKey]));
-const EVENT_KEY = new Map(exportRegions(widestRuledWorld()).events.map((row) => [row.name, row.key as CheckId]));
+const EVENT_KEY = new Map((WORLD['regions.json'] as { events: readonly NamedRow[] }).events.map((row) => [row.name, row.key as CheckId]));
 
 interface ForwardVerdict {
   unknown: string[];
@@ -93,7 +91,7 @@ const reversePlayerYaml = (
   const world = {
     ...model, locked, dungeonItems: [], pool: {}, prizes: { ...model.prizes, shuffle: false, vanilla: prizes },
   };
-  return renderPlayerYaml({ slotName: 'Oracle', options: snapshot, seedText: seed, preRolled: { ...preRolled, world } });
+  return rotpPlayerFileOf({ slotName: 'Oracle', options: snapshot, seedText: seed, preRolled: { ...preRolled, world } }).yaml;
 };
 
 export { replayForward, reversePlayerYaml };

@@ -1,18 +1,19 @@
 /* @layer tests @kind test */
 import { describe, expect, it } from 'vitest';
-import { baselineValues, optionByKey } from '../../src/world/options';
-import { renderPlayerYaml } from '../../src/archipelago/player-yaml';
-import { choicesOf } from '../../src/archipelago/export/choices-of';
+import { baselineValues } from '../../src/world/options';
+import { exportRotpWorld, rotpPlayerFileOf } from '../../src/archipelago/brock-adapter';
+import type { ExportedOption } from '@drizztdourden08/brock-randomizer/archipelago';
 import type { OptionValue, RandomizerOptionsSnapshot } from '../../src/world/options.type';
 
 const snapshot = (over: Record<string, OptionValue>): RandomizerOptionsSnapshot =>
   ({ schema: 'ap-options-v2', values: { ...baselineValues, ...over } });
 
 const choiceIdOf = (key: string, value: string) => {
-  const option = optionByKey.get(key);
+  const option = (exportRotpWorld()['options.json'] as readonly ExportedOption[]).find((row) => row.key === key);
   if (option === undefined) throw new Error(`no option ${key}`);
-  return choicesOf(option)?.find((choice) => choice.value === value)?.id;
+  return option.choices?.find((choice) => choice.value === value)?.id;
 };
+const renderPlayerYaml = (input: Parameters<typeof rotpPlayerFileOf>[0]): string => rotpPlayerFileOf(input).yaml;
 
 const lineOf = (yaml: string, key: string): string | undefined =>
   yaml.split('\n').find((line) => line.trimStart().startsWith(`${key}:`))?.trim();

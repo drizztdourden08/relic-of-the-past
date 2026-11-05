@@ -1,6 +1,6 @@
 /* @layer tests @kind test */
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { buildOptionsSnapshot, generateFromSnapshot, AP_ITEM_IDS, AP_LOCATION_IDS, locationKeyOfApId, checkIdOfLocation } from '@rotp/randomizer';
+import { buildOptionsSnapshot, generateFromSnapshot, AP_ITEM_IDS, AP_LOCATION_IDS, ROTP_AP_IDS, checkIdOfLocation } from '@rotp/randomizer';
 import { find } from '@rotp/game-data';
 import type { ItemKey, LocationKey, OptionValue } from '@rotp/randomizer';
 import type { CheckId } from '@rotp/game-data';
@@ -94,6 +94,12 @@ const roomOf = (overrides: Record<string, OptionValue>, foreignEvery: number | u
   });
   if (reading.kind !== 'ok') throw new Error(`slot data: ${reading.kind}`);
   return { scouts, reading };
+};
+
+const locationKeyOfApId = (id: number): LocationKey => {
+  const key = ROTP_AP_IDS.locationKeyOf(id);
+  if (key === undefined) throw new Error(`no Archipelago location id: ${id}`);
+  return key as LocationKey;
 };
 
 const armRoom = async (overrides: Record<string, OptionValue>, foreignEvery: number | undefined) => {

@@ -28,7 +28,7 @@ const rotpPlayerFileOf = (input: PlayerFileInput): PlayerFile => {
     schemaRows: rotpOptionRows(),
     values: options.values,
     seedText: input.seedText,
-    preRolled: preRolledOf(input, options),
+    preRolled: input.preRolled ?? preRolledOf(input, options),
     block: (block) => {
       if (ACCESSIBILITY_KEY in block) block[ACCESSIBILITY_KEY] = accessibilityFromSnapshot(options);
       return block;

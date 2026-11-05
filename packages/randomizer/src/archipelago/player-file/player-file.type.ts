@@ -7,13 +7,9 @@ interface PlayerFileInput {
   options: RandomizerOptionsSnapshot;
   seedText?: string;
   appVersion?: string;
+  preRolled?: Record<string, unknown>;
   deliverable?: DeliverableSets;
   deathLink?: boolean;
 }
 
-interface PlayerFile {
-  slotName: string;
-  yaml: string;
-}
-
-export type { PlayerFile, PlayerFileInput };
+export type { PlayerFileInput };
