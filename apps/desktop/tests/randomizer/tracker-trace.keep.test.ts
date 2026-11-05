@@ -11,11 +11,11 @@ import { TRACKER_STEPS } from './tracker-trace/tracker-script';
 
 vi.mock('@app/storage/saves-store', async (importOriginal) => {
   const { traceSram: sram } = await import('./tracker-trace/save-file-stores');
-  return { ...(await importOriginal<Record<string, unknown>>()), readSram: async (id: string) => sram.get(id) ?? null };
+  return { ...(await importOriginal<Record<string, unknown>>()), readSram: (id: string) => Promise.resolve(sram.get(id) ?? null) };
 });
 vi.mock('@app/storage/profile-data-store', async (importOriginal) => {
   const { traceStored: stored } = await import('./tracker-trace/save-file-stores');
-  return { ...(await importOriginal<Record<string, unknown>>()), loadRandomizerState: async (id: string) => stored.get(id) ?? null };
+  return { ...(await importOriginal<Record<string, unknown>>()), loadRandomizerState: (id: string) => Promise.resolve(stored.get(id) ?? null) };
 });
 
 const SEED_PROFILE = 'trace-seed-profile';
