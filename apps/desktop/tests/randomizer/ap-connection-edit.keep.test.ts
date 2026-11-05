@@ -118,13 +118,11 @@ describe('fixing a wrong password from the Network tab (T30)', { tags: ['critica
     fake.server = createRoom();
     const core = installFakeModule(setModule);
     core.setReturn('WasmGetApRoomHash', 0);
-    const archipelago = Object.create(required(rotpRandomizer.archipelago, 'RotP archipelago hook'), {
-      createSocket: { value: required(fake.server, 'fake server').createSocket },
-    });
+    const archipelago = { ...required(rotpRandomizer.archipelago, 'RotP archipelago hook'), createSocket: required(fake.server, 'fake server').createSocket };
     registerSessionFactory(createOnlineSessionFactory({ ...rotpRandomizer, archipelago }, () => undefined));
     const files = createMemFileStore();
     const { id, randomizer } = await createProfile(files, { name: 'AP', romFile: 'rom.sfc', randomizer: onlineConfig('nope') });
-    await startSession({ profileId: id, mode: 'online', config: required(randomizer, 'stored randomizer config') } as never);
+    await startSession({ profileId: id, mode: 'online', config: required(randomizer, 'stored randomizer config') });
     await settle();
     const refused = required(getSessionState().session ?? undefined, 'refused session');
     expect(refused.status).toBe('error');
@@ -132,7 +130,7 @@ describe('fixing a wrong password from the Network tab (T30)', { tags: ['critica
 
     const updated = await updateProfile(files, id, { randomizerConnection: { password: 'pw' } });
     const updatedProfile = required(updated ?? undefined, 'updated profile');
-    await reconnectProfileSession(id, required(updatedProfile.randomizer, 'updated randomizer config'));
+    reconnectProfileSession(id, required(updatedProfile.randomizer, 'updated randomizer config'));
     await settle();
 
     const { session, source } = getSessionState();

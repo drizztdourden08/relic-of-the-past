@@ -8,7 +8,7 @@ import { ArchipeliaFields } from '@app/views/DataManager/sub-components/profile-
 const ArchipeliaConnectionSlot = ({ values, onChange }: ProfileWizardStepBodyProps<RandomizerConnectionValues>) => (
   <ArchipeliaFields
     value={rotpLobbyOfConnection(values)}
-    onChange={(part: Partial<RotpLobbyForm>) => onChange(part as Partial<RandomizerConnectionValues>)}
+    onChange={(part: Partial<RotpLobbyForm>) => onChange(part)}
   />
 );
 

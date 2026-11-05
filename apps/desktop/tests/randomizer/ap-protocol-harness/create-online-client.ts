@@ -22,14 +22,14 @@ const createOnlineClient = (
       core.host.writeCursor({ index: cursor.receivedIndex, roomHash: cursor.roomHash });
     },
   };
-  const received = createReceivedQueue({ store, roomHash: () => store.read()?.roomHash ?? '' });
+  const received = createReceivedQueue({ store, roomHash: () => store.read().roomHash });
   core.port = received;
   let placement: unknown = null;
   const client = createArchipelagoClient({
     game: AP_GAME,
     host: core.host,
     received,
-    slot: rotpApSlot as never,
+    slot: rotpApSlot,
     locationKeyOf: (id) => locationKeyOf(id, ''),
     placed: (next) => { placement = next; },
     order: rotpApReceivedOrder,

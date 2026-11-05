@@ -1,4 +1,4 @@
-/* @layer renderer-app @kind logic */
+/* @layer renderer-app @kind constants */
 import type { ConnectionView } from '@drizztdourden08/brock-randomizer';
 import { slotNameError } from '@drizztdourden08/brock-randomizer/archipelago';
 import { NO_LOBBY_ERROR } from '@app/views/DataManager/sub-components/profile-manager/build-randomizer-config/build-randomizer-config.constants';

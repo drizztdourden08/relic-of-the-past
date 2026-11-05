@@ -1,6 +1,4 @@
 /* @layer bridge-wasm @kind barrel */
-export type { OnlineNotice, NoticeEntry } from '@drizztdourden08/brock-randomizer/archipelago';
-export type { NetworkPlayer, NetworkStatus } from '@drizztdourden08/brock-randomizer/archipelago';
 export type { PlacementView } from '@rotp/randomizer';
 export {
   clearPendingBoot, getPendingBoot, getSessionState, registerRotpFactories, resetSession, setOnlineAllowed, stopActive, subscribeSessionStore,

@@ -2,7 +2,7 @@
 import type { RandomizerViews } from '@drizztdourden08/brock-randomizer';
 import { optionTabs, ROTP_LOG_RULES, ROTP_RUN_PANELS, RotpOnlineSettings, RotpOptionsAside } from '@app/randomizer/views';
 import { ChecksWidgetContent, ChecksWidgetSettings } from '@app/views/ChecksWidget';
-import { ARCHIPELIA_CONNECTION } from '@app/randomizer/lobby/archipelia-connection-view';
+import { ARCHIPELIA_CONNECTION } from '@app/randomizer/lobby/archipelia-connection-view.constants';
 import { ArchipelagoFilesSlot, OptionsSlot, OptionsStepSlot, SpoilerSlot } from './sub-components/slots';
 
 const ROTP_RANDOMIZER_VIEWS: RandomizerViews = {

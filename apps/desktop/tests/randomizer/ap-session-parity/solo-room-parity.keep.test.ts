@@ -137,7 +137,7 @@ const armLocal = async (core: FakeModule, placement: Placement): Promise<ArmedSe
 };
 
 const onlineSessionOver = (server: ReturnType<typeof createFakeServer>) => {
-  const archipelago = Object.create(required(rotpRandomizer.archipelago, 'RotP archipelago hook'), { createSocket: { value: server.createSocket } });
+  const archipelago = { ...required(rotpRandomizer.archipelago, 'RotP archipelago hook'), createSocket: server.createSocket };
   const factory = createOnlineSessionFactory({ ...rotpRandomizer, archipelago }, () => undefined);
   const session = factory.create({ profileId: '', mode: 'online', config: { serverUrl: 'ws://host:1', slotName: 'Link' } as never });
   useSessionStore.getState().setSession(session);

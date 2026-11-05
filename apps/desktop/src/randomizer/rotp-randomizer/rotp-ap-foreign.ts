@@ -1,11 +1,10 @@
 /* @layer renderer-app @kind logic */
 import { foreignIconIdOfGame, stopScoutedTexts, TAG } from '@rotp/randomizer';
-import type { ForeignItem, ForeignItemOf, ForeignOwners, LocationKey, Placement, SessionStartHooks } from '@rotp/randomizer';
+import type { ForeignItem, ForeignItemOf, ForeignOwners, LocationKey, Placement } from '@rotp/randomizer';
+import type { ForeignHooks } from './rotp-ap-foreign.type';
 import type { ApplyContext } from '@drizztdourden08/brock-randomizer/session';
 import { applyForeignIcons } from '@app/game/foreign-icons';
 import { setForeignOwners } from '@app/game/randomizer-client/session-store/set-foreign-owners';
-
-type ForeignHooks = Pick<SessionStartHooks, 'foreignItemOf' | 'foreignIconIdOf'>;
 
 const foreignItemsOf = (placement: Placement, foreign: NonNullable<ApplyContext['foreign']>): Map<LocationKey, ForeignItem> => {
   const items = new Map<LocationKey, ForeignItem>();
