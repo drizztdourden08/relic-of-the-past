@@ -2,9 +2,9 @@
 import { find } from '@rotp/game-data';
 import type { CheckId, CheckRecord, CheckStatus, ItemId } from '@rotp/game-data';
 import { trackerCheckRecords, trackerStatuses } from '@rotp/navigation';
+import { BIG_KEY_DOORS, DARK_ROOMS_NEED_LIGHT, SMALL_KEY_DOORS } from '@rotp/randomizer';
 import type { LocationKey, Placement } from '@rotp/randomizer';
 import type { LocationStatus, TrackerInput } from '@drizztdourden08/brock-randomizer/tracker';
-import { doorsOf } from './rotp-tracker-assumed';
 import { trackerLocationOf } from './rotp-tracker-location-of';
 
 const STATUS_OF: Readonly<Record<CheckStatus, LocationStatus>> = {
@@ -25,16 +25,15 @@ const rosterOf = (placement: Placement): readonly CheckRecord[] => {
 };
 
 const rotpStatuses = (input: TrackerInput<Placement>): ReadonlyMap<string, LocationStatus> => {
-  const { bigKeyDoors, smallKeyDoors, darkRoomsNeedLight } = doorsOf(input.assumed);
   const statuses = trackerStatuses({
     placement: input.placement,
     checks: rosterOf(input.placement),
     inventory: new Set(input.held as readonly ItemId[]),
     completed: input.completed as ReadonlySet<CheckId>,
     fired: input.checked as ReadonlySet<LocationKey>,
-    darkRoomsNeedLight,
-    bigKeyDoors,
-    smallKeyDoors,
+    darkRoomsNeedLight: input.assumed.has(DARK_ROOMS_NEED_LIGHT),
+    bigKeyDoors: input.assumed.has(BIG_KEY_DOORS),
+    smallKeyDoors: input.assumed.has(SMALL_KEY_DOORS),
   });
   return new Map([...statuses].map(([id, status]) => [trackerLocationOf(id), STATUS_OF[status]]));
 };

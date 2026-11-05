@@ -1,9 +1,7 @@
 /* @layer renderer-lib @kind logic */
 import { smallKeyDoorsOf } from '@rotp/game-data';
 import type { FilterState } from '@rotp/game-data';
-import {
-  BIG_KEY_DOORS, DARK_ROOMS_NEED_LIGHT, SMALL_KEY_DOORS,
-} from '@app/randomizer/rotp-randomizer/rotp-tracker/rotp-tracker.constants';
+import { BIG_KEY_DOORS, DARK_ROOMS_NEED_LIGHT, SMALL_KEY_DOORS } from '@rotp/randomizer';
 import type { RunKind } from './use-tracker-data.type';
 
 const assumedIdsOf = (filter: FilterState, runKind: RunKind): string[] => {
