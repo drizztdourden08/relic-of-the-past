@@ -1,7 +1,7 @@
 /* @layer renderer-app @kind logic */
+import { useLobbyStatusStore } from '@drizztdourden08/brock-randomizer/renderer';
 import { log } from '@app/log-bus';
 import { listProfiles } from '@app/storage/profile-store';
-import { useLobbyStatusStore } from '@app/stores/lobby-status-store';
 import { LOBBY_GIVEN_UP_STATES, ROOM_NOTE_MS, ROOM_POLL_MS, ROOM_WAIT_MS } from './launch-connect.constants';
 
 const pause = (ms: number): Promise<void> => new Promise((resolve) => { setTimeout(resolve, ms); });

@@ -3,7 +3,7 @@ import { expect, it } from 'vitest';
 import { createFakeServer, createScenarioKit, loadScenario } from '@drizztdourden08/archipelia-lobby-protocol/testing';
 import type { JsonObject, JsonValue, Scenario } from '@drizztdourden08/archipelia-lobby-protocol/testing';
 import type { ClientInfo } from '@drizztdourden08/archipelia-lobby-protocol';
-import type { JoinConfig, LobbyEvent, LobbyJoinState, LobbySession } from '../../src/client/lobby';
+import type { JoinConfig, LobbyEvent, LobbyJoinState, LobbySession } from '@drizztdourden08/brock-randomizer/archipelago';
 
 const kit = createScenarioKit();
 

@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind logic */
-import type { BrowsedEntry } from '@app/game/archipelia';
+import type { BrowsedEntry } from '@drizztdourden08/brock-randomizer/renderer';
 import type { LobbyRow } from '@app/compounds/LobbySetup';
 
 const seatsOf = ({ free, total }: BrowsedEntry['lobby']['seats']): string => `${String(free)} of ${String(total)} seats free`;

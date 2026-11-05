@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind logic */
-import { lobbyWatch, writeMembership } from '@app/game/archipelia';
+import { lobbyWatch, writeMembership } from '@drizztdourden08/brock-randomizer/renderer';
 import type { ProfileRandomizerConfig } from '@app/profiles/types';
 import { saveRandomizerPlacement } from '@app/randomizer-placement-io';
 import { updateProfile } from '@app/storage/profile-store';

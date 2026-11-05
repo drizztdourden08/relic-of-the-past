@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind logic */
 import type { FactsPanelFact } from '@drizztdourden08/tessera/composites';
-import type { ArchipeliaMembership } from '@app/game/archipelia';
+import type { ArchipeliaMembership } from '@drizztdourden08/brock-randomizer/renderer';
 
 const buildLobbyFacts = (membership: ArchipeliaMembership, slotName: string): FactsPanelFact[] => [
   { label: 'Server', value: membership.server, mono: true },

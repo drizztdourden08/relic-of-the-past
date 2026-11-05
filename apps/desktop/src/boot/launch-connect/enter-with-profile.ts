@@ -1,6 +1,6 @@
 /* @layer renderer-app @kind logic */
-import { isLiveMembership, isSameLobby, readMembership, resumeMembership } from '@app/game/archipelia';
-import type { ArchipeliaMembership } from '@app/game/archipelia';
+import { isLiveMembership, isSameLobby, readMembership, resumeMembership } from '@drizztdourden08/brock-randomizer/renderer';
+import type { ArchipeliaMembership } from '@drizztdourden08/brock-randomizer/renderer';
 import { log } from '@app/log-bus';
 import { checkedLobby } from './checked-lobby';
 import { joinWithProfile } from './join-with-profile';

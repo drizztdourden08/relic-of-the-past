@@ -1,6 +1,6 @@
 /* @layer electron-main @kind logic */
 import { createSocket } from 'node:dgram';
-import type { LanSighting } from '@rotp/randomizer';
+import type { LanSighting } from '@drizztdourden08/brock-randomizer/archipelago';
 import { MAX_DATAGRAM_BYTES } from './listen-beacons.constants';
 
 const listenBeacons = (port: number, report: (sighting: LanSighting) => void): (() => void) => {

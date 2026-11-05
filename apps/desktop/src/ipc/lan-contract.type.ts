@@ -1,5 +1,5 @@
 /* @layer shared-types @kind types */
-import type { LanDiscoverySettings } from '@rotp/randomizer';
+import type { LanDiscoverySettings } from '@drizztdourden08/brock-randomizer/archipelago';
 
 type FirewallStatus = 'allowed' | 'blocked' | 'unknown';
 

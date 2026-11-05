@@ -1,7 +1,7 @@
 /* @layer tests @kind test */
 import { describe, expect, it } from 'vitest';
-import { joinLobby } from '../../src/client/lobby';
-import type { LobbyEvent, LobbySession } from '../../src/client/lobby';
+import { joinLobby } from '@drizztdourden08/brock-randomizer/archipelago';
+import type { LobbyEvent, LobbySession } from '@drizztdourden08/brock-randomizer/archipelago';
 import { failureCode, play, watch } from './lobby-harness.keep.test';
 import { downloadDriver, endsWith, expectOk, finalState, infoDriver, joined } from './lobby-drivers';
 

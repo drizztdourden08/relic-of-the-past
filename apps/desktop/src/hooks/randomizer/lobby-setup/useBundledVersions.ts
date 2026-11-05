@@ -1,6 +1,6 @@
 /* @layer renderer-lib @kind hook */
 import { useEffect, useState } from 'react';
-import { loadBuildsIndex } from '@app/archipelago/world-package';
+import { loadBuildsIndex } from '@drizztdourden08/brock-randomizer/renderer';
 
 const useBundledVersions = (): readonly string[] => {
   const [versions, setVersions] = useState<readonly string[]>([]);

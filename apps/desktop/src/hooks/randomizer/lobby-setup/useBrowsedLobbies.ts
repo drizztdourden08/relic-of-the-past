@@ -1,6 +1,6 @@
 /* @layer renderer-lib @kind hook */
 import { useEffect, useState } from 'react';
-import { browseLobbies } from '@app/game/archipelia';
+import { browseLobbies } from '@drizztdourden08/brock-randomizer/renderer';
 import { BROWSE_REFRESH_MS, SERVER_KEY_SEPARATOR } from './lobby-draft.constants';
 import type { BrowsedLobbies } from './browsed-lobbies.type';
 

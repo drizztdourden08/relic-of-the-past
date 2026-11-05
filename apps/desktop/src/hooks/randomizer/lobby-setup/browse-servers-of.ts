@@ -1,6 +1,6 @@
 /* @layer renderer-lib @kind logic */
-import { LOBBY_DEFAULT_PORT } from '@rotp/randomizer';
-import type { LanServer } from '@rotp/randomizer';
+import { LOBBY_DEFAULT_PORT } from '@drizztdourden08/brock-randomizer/archipelago';
+import type { LanServer } from '@drizztdourden08/brock-randomizer/archipelago';
 import { connectModeOf } from './connect-mode-of';
 import { LOCAL_HOST } from './lobby-draft.constants';
 import type { LobbyDraft } from './lobby-draft.type';

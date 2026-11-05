@@ -1,6 +1,6 @@
 /* @layer renderer-lib @kind constants */
-import { LOBBY_DEFAULT_PORT } from '@rotp/randomizer';
-import type { LobbyCheck } from '@app/game/archipelia';
+import { LOBBY_DEFAULT_PORT } from '@drizztdourden08/brock-randomizer/archipelago';
+import type { LobbyCheck } from '@drizztdourden08/brock-randomizer/renderer';
 import type { LobbyDraft } from './lobby-draft.type';
 
 const LOCAL_HOST = 'localhost';

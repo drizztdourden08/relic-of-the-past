@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind types */
-import type { LobbyCheck } from '@app/game/archipelia';
+import type { LobbyCheck } from '@drizztdourden08/brock-randomizer/renderer';
 import type { LobbyDraft } from '@app/hooks/randomizer/lobby-setup';
 import type { RandomizerOptionChoices } from '@app/hooks/randomizer/randomizer-choices';
 

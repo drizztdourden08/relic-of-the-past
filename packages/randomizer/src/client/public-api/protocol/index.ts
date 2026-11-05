@@ -4,4 +4,3 @@ export { deathOf, onLinkDied } from '../../ap-link-died';
 export type { LinkDiedListener } from '../../ap-link-died';
 export { checkIdByStandardName, completedLocationKeys, standardCheckName } from '../../check-names';
 export { itemIdByStandardName, resolveLocalItemId } from '../../item-lookup';
-export type { ApSocket, CreateSocket } from '../../ap-socket.type';

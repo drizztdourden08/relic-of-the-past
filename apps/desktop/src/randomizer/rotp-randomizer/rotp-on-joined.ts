@@ -1,7 +1,7 @@
 /* @layer renderer-app @kind logic */
 import type { JoinedContext } from '@drizztdourden08/brock-randomizer';
-import { lobbyWatch, writeMembership } from '@app/game/archipelia';
-import type { JoinOutcome } from '@app/game/archipelia/join/join-input.type';
+import { lobbyWatch, writeMembership } from '@drizztdourden08/brock-randomizer/renderer';
+import type { JoinOutcome } from '@drizztdourden08/brock-randomizer/renderer';
 
 const onRotpJoined = async (result: unknown, { profileId }: JoinedContext): Promise<void> => {
   const joined = result as Extract<JoinOutcome, { ok: true }>;

@@ -1,5 +1,5 @@
 /* @layer electron-main @kind logic */
-import type { LanSighting } from '@rotp/randomizer';
+import type { LanSighting } from '@drizztdourden08/brock-randomizer/archipelago';
 import { browseMdns } from './browse-mdns';
 import type { LanDiscovery } from './create-lan-discovery.type';
 import { listenBeacons } from './listen-beacons';

@@ -2,7 +2,7 @@
 import type { PatternLists, PatternSlotConfigs } from '@drizztdourden08/tessera/composites';
 import { HOST_NAME } from '@app/hooks/randomizer/lobby-setup';
 import type { LobbyConnect, LobbyLocation } from '@app/hooks/randomizer/lobby-setup';
-import { LOBBY_CODE_ALPHABET } from '@rotp/randomizer';
+import { LOBBY_CODE_ALPHABET } from '@drizztdourden08/brock-randomizer/archipelago';
 
 const LOCATION_OPTIONS: { value: LobbyLocation; label: string }[] = [
   { value: 'local', label: 'Local' },
