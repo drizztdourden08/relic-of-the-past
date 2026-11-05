@@ -1,18 +1,18 @@
 /* @layer renderer-components @kind component */
 import { Button } from '@drizztdourden08/tessera/primitives';
 import { settingTilesOf } from '../behavior/setting-tiles';
-import { DashboardCard } from './DashboardCard';
 import { StatTiles } from './StatTiles';
+import { SHOW_ALL_LABEL } from './SettingsSummary.constants';
 import type { SettingsSummaryProps } from './SettingsSummary.type';
 
 const SettingsSummary = (props: SettingsSummaryProps) => {
-  const { placement, summary, onOpenOptions } = props;
-  const showAll = <Button variant="secondary" size="sm" onClick={onOpenOptions}>Show all options</Button>;
+  const { summary, onOpenOptions } = props;
 
   return (
-    <DashboardCard placement={placement} title="Settings" actions={showAll}>
+    <>
       <StatTiles tiles={settingTilesOf(summary)} />
-    </DashboardCard>
+      <Button variant="secondary" size="sm" onClick={onOpenOptions}>{SHOW_ALL_LABEL}</Button>
+    </>
   );
 };
 
