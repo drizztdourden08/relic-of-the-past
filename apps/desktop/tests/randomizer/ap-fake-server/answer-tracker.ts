@@ -1,5 +1,5 @@
 /* @layer tests @kind helper */
-import type { ApConnectPacket, ApNetworkPlayer, ApServerPacket } from '@rotp/randomizer';
+import type { ApConnectPacket, ApNetworkPlayer, ApServerPacket } from '@drizztdourden08/brock-randomizer/archipelago';
 import type { FakeTrackedSlot } from './ap-fake-server.type';
 
 const answerTracker = (

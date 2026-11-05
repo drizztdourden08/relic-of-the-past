@@ -1,5 +1,5 @@
 /* @layer tests @kind helper */
-import type { ApPrintJsonPacket, ApServerPacket } from '@rotp/randomizer';
+import type { ApPrintJsonPacket, ApServerPacket } from '@drizztdourden08/brock-randomizer/archipelago';
 import { traceItem } from './trace-room';
 
 type ApJsonMessagePart = ApPrintJsonPacket['data'][number];

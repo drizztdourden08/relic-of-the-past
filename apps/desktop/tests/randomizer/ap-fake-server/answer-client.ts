@@ -1,19 +1,19 @@
 /* @layer tests @kind helper */
-import type { ApClientPacket, ApGameData, ApNetworkItem, ApServerPacket, ApSocket } from '@rotp/randomizer';
+import type { ApClientPacket, ApGameData, ApNetworkItem, ApServerPacket, ArchipelagoSocket } from '@drizztdourden08/brock-randomizer/archipelago';
 import type { FakeServerWires } from './fake-server-wires.type';
 import { answerStorage } from './answer-storage';
 import { answerTracker } from './answer-tracker';
 
-const pushTo = (wires: FakeServerWires, socket: ApSocket, packets: ApServerPacket[]): void => {
+const pushTo = (wires: FakeServerWires, socket: ArchipelagoSocket, packets: ApServerPacket[]): void => {
   queueMicrotask(() => {
-    if (wires.open.has(socket)) socket.onmessage?.({ data: JSON.stringify(packets) });
+    if (wires.open.has(socket)) wires.handlers.get(socket)?.message(JSON.stringify(packets));
   });
 };
 
 const fullItems = (wires: FakeServerWires): ApServerPacket => ({ cmd: 'ReceivedItems', index: 0, items: [...wires.room.items] });
 
 const answerConnect = (
-  wires: FakeServerWires, socket: ApSocket, packet: Extract<ApClientPacket, { cmd: 'Connect' }>,
+  wires: FakeServerWires, socket: ArchipelagoSocket, packet: Extract<ApClientPacket, { cmd: 'Connect' }>,
 ): void => {
   const { room } = wires;
   if ((room.password ?? null) !== packet.password) {
@@ -43,7 +43,7 @@ const knownGames = (wires: FakeServerWires, names: readonly string[]): Record<st
 const placedItems = (wires: FakeServerWires, ids: readonly number[]): ApNetworkItem[] =>
   ids.map((id) => wires.room.placements[id]).filter((item): item is ApNetworkItem => item !== undefined);
 
-const answerClient = (wires: FakeServerWires, socket: ApSocket, packet: ApClientPacket): void => {
+const answerClient = (wires: FakeServerWires, socket: ArchipelagoSocket, packet: ApClientPacket): void => {
   if (packet.cmd === 'GetDataPackage') {
     pushTo(wires, socket, [{ cmd: 'DataPackage', data: { games: knownGames(wires, packet.games) } }]);
   } else if (packet.cmd === 'Connect') {

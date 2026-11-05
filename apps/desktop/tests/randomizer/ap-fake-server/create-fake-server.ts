@@ -1,28 +1,30 @@
 /* @layer tests @kind helper */
-import type { ApSocket, CreateSocket, ApClientPacket } from '@rotp/randomizer';
+import type { ApClientPacket, ArchipelagoSocket, CreateSocket } from '@drizztdourden08/brock-randomizer/archipelago';
 import { VERSION } from './ap-fake-server.constants';
 import type { FakeRoom, FakeServer } from './ap-fake-server.type';
 import type { FakeServerWires } from './fake-server-wires.type';
 import { answerClient, pushTo } from './answer-client';
 
-const close = (wires: FakeServerWires, socket: ApSocket): void => {
+const CLOSED_BY_CLIENT = 1000;
+const CLOSED_ABNORMALLY = 1006;
+
+const close = (wires: FakeServerWires, socket: ArchipelagoSocket, code: number): void => {
   wires.open.delete(socket);
   wires.trackerNames.delete(socket);
   if (wires.live === socket) wires.live = null;
-  queueMicrotask(() => socket.onclose?.({}));
+  queueMicrotask(() => wires.handlers.get(socket)?.close(code));
 };
 
-const openSocket = (wires: FakeServerWires, socket: ApSocket, url: string): void => {
+const openSocket = (wires: FakeServerWires, socket: ArchipelagoSocket, url: string): void => {
   const { room } = wires;
   if (room.refusedUrls.has(url)) {
-    socket.onerror?.({});
-    socket.onclose?.({});
+    wires.handlers.get(socket)?.close(CLOSED_ABNORMALLY);
     return;
   }
   wires.open.add(socket);
   const firstSocketIsTheGames = wires.live === null;
   if (firstSocketIsTheGames) wires.live = socket;
-  socket.onopen?.({});
+  wires.handlers.get(socket)?.open();
   const checksums = Object.fromEntries(Object.entries(room.games).map(([game, data]) => [game, data.checksum ?? '']));
   pushTo(wires, socket, [{
     cmd: 'RoomInfo', games: Object.keys(room.games), version: VERSION, password: room.password !== undefined,
@@ -32,22 +34,28 @@ const openSocket = (wires: FakeServerWires, socket: ApSocket, url: string): void
 
 const socketFactory = (wires: FakeServerWires): CreateSocket => (url) => {
   wires.urls.push(url);
-  const socket: ApSocket = {
-    onopen: null, onmessage: null, onerror: null, onclose: null,
+  const handlers = { open: (): void => undefined, message: (_text: string): void => undefined, close: (_code: number): void => undefined };
+  const socket: ArchipelagoSocket = {
     send: (data) => {
       for (const packet of JSON.parse(data) as ApClientPacket[]) {
         wires.received.push(packet);
         answerClient(wires, socket, packet);
       }
     },
-    close: () => close(wires, socket),
+    close: () => close(wires, socket, CLOSED_BY_CLIENT),
+    onOpen: (f) => { handlers.open = f; },
+    onMessage: (f) => { handlers.message = f; },
+    onClose: (f) => { handlers.close = f; },
   };
+  wires.handlers.set(socket, handlers);
   queueMicrotask(() => openSocket(wires, socket, url));
   return socket;
 };
 
 const createFakeServer = (room: FakeRoom): FakeServer => {
-  const wires: FakeServerWires = { room, urls: [], received: [], open: new Set(), trackerNames: new Map(), live: null };
+  const wires: FakeServerWires = {
+    room, urls: [], received: [], open: new Set(), handlers: new Map(), trackerNames: new Map(), live: null,
+  };
   return {
     createSocket: socketFactory(wires),
     urls: wires.urls,
@@ -59,7 +67,7 @@ const createFakeServer = (room: FakeRoom): FakeServer => {
     trackers: () => [...wires.trackerNames.values()],
     drop: () => {
       const socket = wires.live;
-      if (socket) close(wires, socket);
+      if (socket) close(wires, socket, CLOSED_ABNORMALLY);
     },
     of: (cmd) => wires.received.filter((packet) => packet.cmd === cmd) as never,
   };

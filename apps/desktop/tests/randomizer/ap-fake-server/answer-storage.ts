@@ -1,5 +1,5 @@
 /* @layer tests @kind helper */
-import type { ApClientPacket, ApServerPacket } from '@rotp/randomizer';
+import type { ApClientPacket, ApServerPacket } from '@drizztdourden08/brock-randomizer/archipelago';
 import { STATUS_KEY } from './ap-fake-server.constants';
 import type { FakeStorageRoom } from './ap-fake-server.type';
 

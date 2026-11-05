@@ -1,5 +1,5 @@
 /* @layer tests @kind helper */
-import { createOnlineClient } from '@app/game/randomizer-client/online-client';
+import { createOnlineClient } from '../ap-protocol-harness';
 import { createFakeCore } from '../ap-fake-core';
 import { createFakeServer } from '../ap-fake-server';
 import type { FakeRoom } from '../ap-fake-server';
