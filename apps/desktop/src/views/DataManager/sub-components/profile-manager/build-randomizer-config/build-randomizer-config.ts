@@ -1,9 +1,8 @@
 /* @layer renderer-components @kind logic */
 import type { ProfileRandomizerConfig } from '@app/profiles/types';
-import { buildOptionsSnapshot } from '@rotp/randomizer';
+import { rotpProfile } from '@app/randomizer/rotp-randomizer/rotp-profile';
 import { randomizerChoiceOverrides } from '@app/hooks/randomizer/randomizer-choices';
 import { connectionFieldsOf } from './connection-fields-of';
-import { randomSeed } from '@app/randomizer/roll/random-seed';
 import type { RandomizerFormState } from './build-randomizer-config.type';
 
 const allowedMode = (mode: RandomizerFormState['mode'], experimental: boolean): RandomizerFormState['mode'] =>
@@ -12,12 +11,7 @@ const allowedMode = (mode: RandomizerFormState['mode'], experimental: boolean): 
 const buildRandomizerConfig = (form: RandomizerFormState, experimental: boolean): ProfileRandomizerConfig | undefined => {
   if (!form.enabled) return undefined;
   const mode = allowedMode(form.mode, experimental);
-  const config: ProfileRandomizerConfig = {
-    mode,
-    seed: form.seed.trim() || randomSeed(),
-    options: buildOptionsSnapshot(randomizerChoiceOverrides(form)),
-  };
-  if (form.capacity.wallet.mode === 'custom') config.frozenSettings = { carryMoreRupees: true };
+  const config = rotpProfile.toConfig({ enabled: true, seed: form.seed, mode }, randomizerChoiceOverrides(form));
   return { ...config, ...connectionFieldsOf(form, mode) };
 };
 

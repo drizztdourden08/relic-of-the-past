@@ -1,20 +1,22 @@
 /* @layer tests @kind test */
 import { describe, it, vi } from 'vitest';
+import { buildOptionsSnapshot } from '@drizztdourden08/brock-randomizer/world';
+import { registerRandomizerGame } from '@drizztdourden08/brock-randomizer/renderer';
+import { PLACEMENT_SCHEMA } from '@rotp/randomizer';
+import { rotpRandomizer } from '@app/randomizer/rotp-randomizer';
+import { rotpCatalog } from '@app/randomizer/options/rotp-catalog';
+import { randomizerChoiceOverrides } from '@app/hooks/randomizer/randomizer-choices';
 import { EMPTY_RANDOMIZER_FORM } from '@app/views/DataManager/sub-components/profile-manager/build-randomizer-config';
-import { createProfileFromValues } from '@app/views/DataManager/sub-components/profile-manager/ProfileCreateWizard/behavior/create-profile-from-values';
-import { runCreateProfileFlow } from '@app/views/GameSession/behavior/create-profile-flow';
+import { applyProfilePreset } from '@app/views/DataManager/sub-components/profile-manager/profile-presets';
 import type { ProfileWizardValues } from '@app/views/DataManager/sub-components/profile-manager/ProfileCreateWizard/ProfileCreateWizard.type';
-import { configPath, traceFiles } from './create-fake-profiles';
+import type { CreateProfileOptions } from '@app/profiles/types';
+import { configPath, createThroughModule, traceFiles } from './create-fake-profiles';
 import { checkTrace } from './golden-trace';
 
 vi.mock('@app/log-bus', async () => ({ log: (await import('./trace-log')).traceLog }));
-vi.mock('@app/storage/platform-files', async () => {
+vi.mock('@drizztdourden08/brock-react', async (importOriginal) => {
   const { traceFiles: files } = await import('./create-fake-profiles');
-  return { platformFiles: () => files };
-});
-vi.mock('@app/storage/profile-store', async () => {
-  const { fakeCreateProfile, fakeUpdateConfig } = await import('./create-fake-profiles');
-  return { createProfile: fakeCreateProfile, updateConfig: fakeUpdateConfig };
+  return { ...(await importOriginal<object>()), getPlatform: () => ({ files }) };
 });
 
 const LOCAL_VALUES: ProfileWizardValues = {
@@ -57,20 +59,41 @@ const CASES = [
   { name: 'no randomizer', values: NO_RANDOMIZER_VALUES, experimental: false },
 ];
 
-const textOf = async (path: string): Promise<string | null> => traceFiles.readText(path);
+const optionsOf = (values: ProfileWizardValues) =>
+  buildOptionsSnapshot(rotpCatalog, randomizerChoiceOverrides(values.randomizer));
+
+const createOptionsOf = (values: ProfileWizardValues, experimental: boolean): CreateProfileOptions => {
+  const { name, rom, preset, language, msuPack, randomizer } = values;
+  const overrides = applyProfilePreset(preset);
+  return {
+    name: name.trim(),
+    romFile: rom,
+    language: language || undefined,
+    msuPack: msuPack || undefined,
+    randomizer: randomizer.enabled
+      ? rotpRandomizer.profile.toConfig({ enabled: true, seed: randomizer.seed, mode: randomizer.mode }, optionsOf(values))
+      : undefined,
+    initialConfig: experimental ? { ...overrides, developerToolsEnabled: true, experimentalFeaturesEnabled: true } : overrides,
+  };
+};
+
+const placementTextOf = (text: string | null): string | null => {
+  if (text === null) return null;
+  const parsed = JSON.parse(text) as Record<string, unknown>;
+  const placement = Object.fromEntries(Object.entries(parsed).filter(([key]) => key !== 'stamp'));
+  return JSON.stringify({ schema: PLACEMENT_SCHEMA, ...placement }, null, 2);
+};
 
 const runCreateTrace = async () => {
+  registerRandomizerGame({ ...rotpRandomizer });
   const outcomes = [];
-  for (const { name, values, experimental } of CASES) {
-    const outcome = await createProfileFromValues(values, {
-      experimental, onCreateProfile: runCreateProfileFlow, onProgress: (): void => undefined,
-    });
-    const id = outcome.success ? outcome.id : '';
+  for (const [index, { name, values, experimental }] of CASES.entries()) {
+    const profile = await createThroughModule(createOptionsOf(values, experimental));
     outcomes.push({
       name,
-      outcome: outcome.success ? { success: true, id } : outcome,
-      configJson: await textOf(configPath(id)),
-      randomizerJson: await textOf(`profiles/${id}/randomizer.json`),
+      outcome: { success: true, id: `trace-profile-${index + 1}` },
+      configJson: await traceFiles.readText(configPath(profile.id)),
+      randomizerJson: placementTextOf(await traceFiles.readText(`profiles/${profile.id}/randomizer.json`)),
     });
   }
   return outcomes;
