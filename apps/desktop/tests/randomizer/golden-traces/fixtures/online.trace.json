@@ -1,0 +1,504 @@
+{
+  "session": [
+    {
+      "step": "start: RoomInfo, DataPackage, Connect, Connected, LocationInfo",
+      "status": "active",
+      "sent": [
+        {
+          "cmd": "GetDataPackage",
+          "games": [
+            "Relic of the Past",
+            "Other"
+          ]
+        },
+        {
+          "cmd": "Connect",
+          "game": "Relic of the Past",
+          "name": "Link",
+          "password": "trace-pass",
+          "uuid": "00000000-0000-4000-8000-000000000001",
+          "version": {
+            "major": 0,
+            "minor": 6,
+            "build": 3,
+            "class": "Version"
+          },
+          "items_handling": 7,
+          "tags": [
+            "DeathLink"
+          ],
+          "slot_data": true
+        },
+        {
+          "cmd": "Bounce",
+          "tags": [
+            "rotp-ping"
+          ],
+          "slots": [
+            1
+          ],
+          "data": {
+            "t": 0,
+            "id": 0
+          }
+        },
+        {
+          "cmd": "Get",
+          "keys": [
+            "_read_client_status_0_1",
+            "_read_client_status_0_2"
+          ]
+        },
+        {
+          "cmd": "SetNotify",
+          "keys": [
+            "_read_client_status_0_1",
+            "_read_client_status_0_2"
+          ]
+        },
+        {
+          "cmd": "Say",
+          "text": "!players"
+        },
+        {
+          "cmd": "LocationScouts",
+          "locations": [
+            1,
+            2,
+            3
+          ],
+          "create_as_hint": 0
+        }
+      ],
+      "coreEvents": [
+        "writeRoomHash 1183476504",
+        "deliver Bow from Zelda",
+        "writeReceivedIndex 1",
+        "deliver Lamp from the server",
+        "writeReceivedIndex 2"
+      ],
+      "delivered": [
+        {
+          "itemName": "Bow",
+          "sender": "Zelda"
+        },
+        {
+          "itemName": "Lamp",
+          "sender": null
+        }
+      ],
+      "kills": 0,
+      "messages": [],
+      "connectionError": null,
+      "logs": [
+        "randomizer info: [Online] Connecting to localhost:38281",
+        "randomizer info: [Online] Fetching data package for 2 game(s)",
+        "randomizer info: [Online] Scouting 3 locations",
+        "randomizer info: [Online] Connected as Link (slot 1, team 0)",
+        "randomizer info: [Online] Received: Bow from Zelda",
+        "randomizer info: [Online] Received: Lamp from the server"
+      ]
+    },
+    {
+      "step": "ReceivedItems first batch",
+      "status": "active",
+      "sent": [],
+      "coreEvents": [],
+      "delivered": [],
+      "kills": 0,
+      "messages": [],
+      "connectionError": null,
+      "logs": []
+    },
+    {
+      "step": "ReceivedItems batch after a gap",
+      "status": "active",
+      "sent": [
+        {
+          "cmd": "Sync"
+        }
+      ],
+      "coreEvents": [],
+      "delivered": [],
+      "kills": 0,
+      "messages": [],
+      "connectionError": null,
+      "logs": [
+        "randomizer info: [Online] Received items start at 5, the save and the queue hold 2, asking the server for the full list"
+      ]
+    },
+    {
+      "step": "RoomUpdate",
+      "status": "active",
+      "sent": [],
+      "coreEvents": [],
+      "delivered": [],
+      "kills": 0,
+      "messages": [],
+      "connectionError": null,
+      "logs": []
+    },
+    {
+      "step": "PrintJSON ItemSend received",
+      "status": "active",
+      "sent": [],
+      "coreEvents": [],
+      "delivered": [],
+      "kills": 0,
+      "messages": [
+        {
+          "id": 0,
+          "at": 0,
+          "kind": "item",
+          "text": "Princess Zelda sent Hookshot to Link (Other Place)"
+        }
+      ],
+      "connectionError": null,
+      "logs": [
+        "randomizer info: [AP] Princess Zelda sent Hookshot to Link (Other Place)"
+      ]
+    },
+    {
+      "step": "PrintJSON ItemSend sent",
+      "status": "active",
+      "sent": [],
+      "coreEvents": [],
+      "delivered": [],
+      "kills": 0,
+      "messages": [
+        {
+          "id": 1,
+          "at": 0,
+          "kind": "item",
+          "text": "Link sent Other Sword to Princess Zelda (check-002)"
+        }
+      ],
+      "connectionError": null,
+      "logs": [
+        "randomizer info: [AP] Link sent Other Sword to Princess Zelda (check-002)"
+      ]
+    },
+    {
+      "step": "PrintJSON ItemSend own check",
+      "status": "active",
+      "sent": [],
+      "coreEvents": [],
+      "delivered": [],
+      "kills": 0,
+      "messages": [
+        {
+          "id": 2,
+          "at": 0,
+          "kind": "item",
+          "text": "Link sent Lamp to Link (check-003)"
+        }
+      ],
+      "connectionError": null,
+      "logs": [
+        "randomizer info: [AP] Link sent Lamp to Link (check-003)"
+      ]
+    },
+    {
+      "step": "PrintJSON ItemSend other pair",
+      "status": "active",
+      "sent": [],
+      "coreEvents": [],
+      "delivered": [],
+      "kills": 0,
+      "messages": [
+        {
+          "id": 3,
+          "at": 0,
+          "kind": "item",
+          "text": "Princess Zelda sent Other Sword to Princess Zelda (Other Place)"
+        }
+      ],
+      "connectionError": null,
+      "logs": [
+        "randomizer info: [AP] Princess Zelda sent Other Sword to Princess Zelda (Other Place)"
+      ]
+    },
+    {
+      "step": "PrintJSON ItemSend other team",
+      "status": "active",
+      "sent": [],
+      "coreEvents": [],
+      "delivered": [],
+      "kills": 0,
+      "messages": [
+        {
+          "id": 4,
+          "at": 0,
+          "kind": "item",
+          "text": "Princess Zelda sent Hookshot to Link (Other Place)"
+        }
+      ],
+      "connectionError": null,
+      "logs": [
+        "randomizer info: [AP] Princess Zelda sent Hookshot to Link (Other Place)"
+      ]
+    },
+    {
+      "step": "PrintJSON ItemCheat",
+      "status": "active",
+      "sent": [],
+      "coreEvents": [],
+      "delivered": [],
+      "kills": 0,
+      "messages": [
+        {
+          "id": 5,
+          "at": 0,
+          "kind": "item",
+          "text": "Link sent Boots to Link (Location -1)"
+        }
+      ],
+      "connectionError": null,
+      "logs": [
+        "randomizer info: [AP] Link sent Boots to Link (Location -1)"
+      ]
+    },
+    {
+      "step": "PrintJSON Hint",
+      "status": "active",
+      "sent": [],
+      "coreEvents": [],
+      "delivered": [],
+      "kills": 0,
+      "messages": [
+        {
+          "id": 6,
+          "at": 0,
+          "kind": "hint",
+          "text": "Boots is at check-003 in Link"
+        }
+      ],
+      "connectionError": null,
+      "logs": [
+        "randomizer info: [AP] Boots is at check-003 in Link"
+      ]
+    },
+    {
+      "step": "PrintJSON Chat",
+      "status": "active",
+      "sent": [],
+      "coreEvents": [],
+      "delivered": [],
+      "kills": 0,
+      "messages": [
+        {
+          "id": 7,
+          "at": 0,
+          "kind": "chat",
+          "text": "Zelda: hello"
+        }
+      ],
+      "connectionError": null,
+      "logs": [
+        "randomizer info: [AP] Zelda: hello"
+      ]
+    },
+    {
+      "step": "PrintJSON ServerChat",
+      "status": "active",
+      "sent": [],
+      "coreEvents": [],
+      "delivered": [],
+      "kills": 0,
+      "messages": [
+        {
+          "id": 8,
+          "at": 0,
+          "kind": "chat",
+          "text": "[Server]: welcome"
+        }
+      ],
+      "connectionError": null,
+      "logs": [
+        "randomizer info: [AP] [Server]: welcome"
+      ]
+    },
+    {
+      "step": "PrintJSON Join",
+      "status": "active",
+      "sent": [],
+      "coreEvents": [],
+      "delivered": [],
+      "kills": 0,
+      "messages": [
+        {
+          "id": 9,
+          "at": 0,
+          "kind": "join",
+          "text": "Princess Zelda joined"
+        }
+      ],
+      "connectionError": null,
+      "logs": [
+        "randomizer info: [AP] Princess Zelda joined"
+      ]
+    },
+    {
+      "step": "PrintJSON Part",
+      "status": "active",
+      "sent": [],
+      "coreEvents": [],
+      "delivered": [],
+      "kills": 0,
+      "messages": [
+        {
+          "id": 10,
+          "at": 0,
+          "kind": "join",
+          "text": "Princess Zelda left"
+        }
+      ],
+      "connectionError": null,
+      "logs": [
+        "randomizer info: [AP] Princess Zelda left"
+      ]
+    },
+    {
+      "step": "PrintJSON Goal",
+      "status": "active",
+      "sent": [],
+      "coreEvents": [],
+      "delivered": [],
+      "kills": 0,
+      "messages": [
+        {
+          "id": 11,
+          "at": 0,
+          "kind": "server",
+          "text": "Princess Zelda completed their goal"
+        }
+      ],
+      "connectionError": null,
+      "logs": [
+        "randomizer info: [AP] Princess Zelda completed their goal"
+      ]
+    },
+    {
+      "step": "PrintJSON Release",
+      "status": "active",
+      "sent": [],
+      "coreEvents": [],
+      "delivered": [],
+      "kills": 0,
+      "messages": [
+        {
+          "id": 12,
+          "at": 0,
+          "kind": "server",
+          "text": "Princess Zelda released"
+        }
+      ],
+      "connectionError": null,
+      "logs": [
+        "randomizer info: [AP] Princess Zelda released"
+      ]
+    },
+    {
+      "step": "PrintJSON Collect",
+      "status": "active",
+      "sent": [],
+      "coreEvents": [],
+      "delivered": [],
+      "kills": 0,
+      "messages": [
+        {
+          "id": 13,
+          "at": 0,
+          "kind": "server",
+          "text": "Princess Zelda collected"
+        }
+      ],
+      "connectionError": null,
+      "logs": [
+        "randomizer info: [AP] Princess Zelda collected"
+      ]
+    },
+    {
+      "step": "PrintJSON untyped",
+      "status": "active",
+      "sent": [],
+      "coreEvents": [],
+      "delivered": [],
+      "kills": 0,
+      "messages": [
+        {
+          "id": 14,
+          "at": 0,
+          "kind": "server",
+          "text": "plain server line"
+        }
+      ],
+      "connectionError": null,
+      "logs": [
+        "randomizer info: [AP] plain server line"
+      ]
+    },
+    {
+      "step": "Bounced DeathLink",
+      "status": "active",
+      "sent": [],
+      "coreEvents": [],
+      "delivered": [],
+      "kills": 1,
+      "messages": [],
+      "connectionError": null,
+      "logs": [
+        "randomizer info: [Online] DeathLink: Zelda fell in a pit"
+      ]
+    },
+    {
+      "step": "stop",
+      "status": "idle",
+      "sent": [],
+      "coreEvents": [],
+      "delivered": [],
+      "kills": 1,
+      "messages": [],
+      "connectionError": null,
+      "logs": [
+        "randomizer info: [Online] Session closed"
+      ]
+    }
+  ],
+  "refusal": [
+    {
+      "step": "start with a wrong password: ConnectionRefused",
+      "status": "error",
+      "sent": [
+        {
+          "cmd": "Connect",
+          "game": "Relic of the Past",
+          "name": "Link",
+          "password": "wrong-pass",
+          "uuid": "00000000-0000-4000-8000-000000000001",
+          "version": {
+            "major": 0,
+            "minor": 6,
+            "build": 3,
+            "class": "Version"
+          },
+          "items_handling": 7,
+          "tags": [
+            "DeathLink"
+          ],
+          "slot_data": true
+        }
+      ],
+      "coreEvents": [],
+      "delivered": [],
+      "kills": 0,
+      "messages": [],
+      "connectionError": "Wrong room password.",
+      "logs": [
+        "randomizer info: [Online] Connecting to localhost:38281",
+        "randomizer error: [Online] Connection refused (InvalidPassword): Wrong room password.",
+        "randomizer info: [Online] Session closed"
+      ]
+    }
+  ]
+}
