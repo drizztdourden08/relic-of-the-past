@@ -8,10 +8,11 @@ const ROTP_RANDOMIZER_VIEWS: RandomizerViews = {
   Options: OptionsSlot,
   Spoiler: SpoilerSlot,
   Checks: ChecksWidgetContent,
-  checksWidget: { context: 'game', order: 2, settings: ChecksWidgetSettings },
+  checksWidget: { context: 'game', order: 2, padding: 'none', icon: 'map', settings: ChecksWidgetSettings },
   optionsStep: OptionsStepSlot,
   optionTabs,
   optionsAside: RotpOptionsAside,
+  optionsAsideLabel: 'Pool',
   runPanels: [ArchipelagoFilesSlot, RunPlayersSlot, ...ROTP_RUN_PANELS],
   logRules: ROTP_LOG_RULES,
 };
