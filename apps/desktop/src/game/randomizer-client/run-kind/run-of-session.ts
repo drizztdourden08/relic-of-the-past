@@ -1,15 +1,14 @@
 /* @layer bridge-wasm @kind logic */
 import type { SessionStoreState } from '../session-store';
-import type { ActiveRun } from '@rotp/randomizer';
+import type { RunKind } from '@rotp/game-data';
 
 const isEndedOnline = (session: SessionStoreState['session']): boolean =>
   session?.kind === 'online' && (session.status === 'idle' || session.status === 'error');
 
-const runOfSession = ({ session, placement }: SessionStoreState): ActiveRun => {
-  if (isEndedOnline(session)) return { kind: 'normal' };
-  if (session?.kind === 'online') return { kind: 'online' };
-  if (placement !== null) return { kind: 'seed', placement };
-  return { kind: 'normal' };
+const runOfSession = ({ session, placement }: SessionStoreState): RunKind => {
+  if (isEndedOnline(session)) return 'normal';
+  if (session?.kind === 'online') return 'online';
+  return placement === null ? 'normal' : 'seed';
 };
 
 export { runOfSession };

@@ -7,7 +7,7 @@ import type { Presence } from './network-presence';
 import type { OnlineCore } from './online-core.type';
 import type { OnlineRoom } from './online-room';
 import type { OnlineSessionConfig } from './online-session-config.type';
-import type { RandomizerSession } from './session.type';
+import type { SessionStatus } from '@drizztdourden08/brock-randomizer/session';
 import type { TrackerLinks } from './tracker-links.type';
 
 type NetworkState = 'idle' | 'connecting' | 'connected' | 'reconnecting' | 'error';
@@ -102,7 +102,7 @@ interface NetworkStatus {
 type NetworkStatusListener = (status: NetworkStatus) => void;
 
 interface NetworkStatusInput {
-  sessionStatus: RandomizerSession['status'];
+  sessionStatus: SessionStatus;
   config: OnlineSessionConfig;
   facts: NetworkFacts;
   room: OnlineRoom;

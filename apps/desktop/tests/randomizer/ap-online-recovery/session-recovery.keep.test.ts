@@ -1,7 +1,8 @@
 /* @layer tests @kind test */
 import { describe, expect, it, vi } from 'vitest';
 import { createOnlineClient } from '@app/game/randomizer-client/online-client';
-import { rebaselineEntries, baselineEntriesOf } from '@rotp/randomizer';
+import { baselineEntriesOf } from '@rotp/randomizer';
+import { rebaselineEntries } from '../ap-rebaseline';
 import type { CreateSocket, PhysicalPlan } from '@rotp/randomizer';
 import { createFakeServer } from '../ap-fake-server';
 import { createFakeCore } from '../ap-fake-core';
@@ -109,7 +110,7 @@ describe('the offline baseline', { tags: ['critical'] }, () => {
   const input = {
     entries: baselineEntriesOf(plan),
     suppressed: new Set<string>(),
-    isComplete: (entry: { checkId?: string }) => entry.checkId !== undefined && completed.has(entry.checkId),
+    isComplete: (entry: { key: string; checkId?: string }) => entry.checkId !== undefined && completed.has(entry.checkId),
   };
 
   it('reports an armed pickup the save shows and the server lacks', () => {

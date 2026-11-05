@@ -5,7 +5,8 @@ import type { ApNetworkItem, ApNetworkPlayer } from './ap-protocol.type';
 import type { ForeignOwners } from './foreign-item-line';
 import type { MessageListener, RoomMessage } from './message-log';
 import type { NetworkStatus, NetworkStatusListener } from './network-status.type';
-import type { RandomizerSession, SessionStatusListener } from './session.type';
+import type { RandomizerSession } from '@drizztdourden08/brock-randomizer/session';
+import type { SessionStatusListener } from './session-status-listener.type';
 
 interface OnlineSession extends RandomizerSession {
   readonly kind: 'online';

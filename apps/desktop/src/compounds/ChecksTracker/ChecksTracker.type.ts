@@ -155,5 +155,5 @@ interface TrackerSummaryProps {
 export type {
   CheckBatch, CheckCardProps, CheckListProps, CheckStatusIconProps, ChecksTrackerProps, FilterControlsProps,
   FilterSearchProps, NowPillProps, StatusKey, SwapBadgeProps, TrackerCheckRowProps, TrackerFilterPanelsProps, TrackerFiltersProps, TrackerGroupTreeProps,
-  TrackerLogicTogglesProps, TrackerPanels, TrackerStats, TrackerSummaryProps, ViewMode,
+  TrackerLogicTogglesProps, TrackerPanels, TrackerSummaryProps, ViewMode,
 };

@@ -1,10 +1,10 @@
 /* @layer bridge-wasm @kind logic */
-import { pauseLocationPolling } from './pause-location-polling';
-import { pollerState } from '@rotp/randomizer';
+import { onlinePoller } from './online-poller';
+import { suppressSink } from './suppress-sink';
 
 const stopLocationPolling = (): void => {
-  pauseLocationPolling();
-  pollerState.suppressed.clear();
+  onlinePoller.stop();
+  suppressSink.current = null;
 };
 
 export { stopLocationPolling };

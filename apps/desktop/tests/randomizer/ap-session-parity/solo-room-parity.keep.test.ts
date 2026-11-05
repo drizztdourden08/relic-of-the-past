@@ -52,7 +52,8 @@ const preloadApi: unknown = new Proxy({}, { get: () => new Proxy(answerEmpty, { 
   addEventListener: () => undefined, removeEventListener: () => undefined, api: preloadApi,
 };
 const { setModule } = await import('@rotp/game-core');
-const { createLocalSession } = await import('@app/game/randomizer-client/local-session');
+const { createLocalSession } = await import('@drizztdourden08/brock-randomizer/session');
+const { rotpRandomizer } = await import('@app/randomizer/rotp-randomizer');
 const { createOnlineClient } = await import('@app/game/randomizer-client/online-client');
 const { defaultOnlineCore } = await import('@app/game/randomizer-client/online-core');
 const { AP_ONLINE_BIT, AP_DEATH_LINK_BIT } = await import('@app/game/gate-word-5');
@@ -89,6 +90,8 @@ const armedSet = (calls: readonly string[]): { rest: string[]; word5: number[] }
 
 beforeEach(() => {
   vi.useFakeTimers();
+  vi.stubGlobal('requestAnimationFrame', () => 0);
+  vi.stubGlobal('cancelAnimationFrame', () => undefined);
   const store = new Map<string, string>();
   vi.stubGlobal('localStorage', {
     getItem: (key: string) => store.get(key) ?? null,
@@ -149,7 +152,7 @@ const expectQuiver = (placement: Placement): void => {
 
 const armLocal = async (core: FakeModule, placement: Placement): Promise<ArmedSet> => {
   armed.length = 0;
-  const local = createLocalSession(placement);
+  const local = createLocalSession({ game: rotpRandomizer, placement, seed: placement.seed, log: () => undefined });
   await local.start();
   expect(local.status).toBe('active');
   const localSet = armedSet(core.calls);

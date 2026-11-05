@@ -1,9 +1,9 @@
 /* @layer renderer-components @kind logic */
-import type { ProfileWizardValues } from '../ProfileCreateWizard.type';
-import { changedTotalOf } from './changed-total-of';
+import type { ProfileWizardValues } from '@drizztdourden08/brock-react';
+import { changedCountsOfValues } from './changed-counts-of-values';
 
 const optionsSummary = (values: ProfileWizardValues): string => {
-  const total = changedTotalOf(values);
+  const total = Object.values(changedCountsOfValues(values)).reduce((sum, count) => sum + count, 0);
   return total === 0 ? 'Defaults' : `${total} changed`;
 };
 

@@ -1,10 +1,8 @@
 /* @layer renderer-app @kind logic */
-import { normalizeRandomizerOptions } from '@rotp/randomizer';
 import type { Placement } from '@rotp/randomizer';
 import type { RandomizerProfileConfig } from '@drizztdourden08/brock-randomizer';
-import { rollPlacement } from '@app/views/GameSession/behavior/roll-placement';
+import { rollPlacement } from '../roll/roll-placement';
 
-const rollRotpPlacement = (config: RandomizerProfileConfig): Placement =>
-  rollPlacement({ mode: 'local', seed: config.seed, options: normalizeRandomizerOptions(config.options) });
+const rollRotpPlacement = (config: RandomizerProfileConfig): Placement => rollPlacement(config);
 
 export { rollRotpPlacement };

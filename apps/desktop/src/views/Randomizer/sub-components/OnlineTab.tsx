@@ -4,6 +4,7 @@ import { Box } from '@drizztdourden08/tessera/primitives';
 import type { AppSettings } from '@app/settings.type';
 import { OnlineSettings } from '../../ProfileHub/sub-components';
 import type { OnlineTabProps } from './OnlineTab.type';
+import './OnlineTab.css';
 
 const OnlineTab = ({ profile }: OnlineTabProps) => {
   const { settings, patch } = useSettings<AppSettings>();

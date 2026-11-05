@@ -1,4 +1,6 @@
 /* @layer bridge-wasm @kind types */
+import type { DeliverySink } from './delivery-sink.type';
+
 type DeliverNpcCheckParams = {
   flagType: number;
   flagMask: number;
@@ -8,6 +10,7 @@ type DeliverNpcCheckParams = {
   message?: string;
   source?: string;
   messageId?: number;
+  sink?: DeliverySink;
 };
 
 export type { DeliverNpcCheckParams };

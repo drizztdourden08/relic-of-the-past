@@ -1,6 +1,6 @@
 {
   "brock": "0.120.1",
-  "generatedAt": "2026-11-04T23:24:23.570Z",
+  "generatedAt": "2026-11-05T00:03:11.556Z",
   "modules": [
     {
       "id": "updater",
@@ -40,6 +40,11 @@
     {
       "id": "mcp",
       "package": "@drizztdourden08/brock-mcp",
+      "version": "0.120.1"
+    },
+    {
+      "id": "randomizer",
+      "package": "@drizztdourden08/brock-randomizer",
       "version": "0.120.1"
     }
   ]

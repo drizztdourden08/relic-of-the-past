@@ -78,7 +78,7 @@ export default defineBrockConfig({
     schemes: [{ scheme: 'app-sprite', dir: 'sprites' }, { scheme: 'app-debug-capture', stream: true }],
   },
   targets: ['desktop', 'android', 'web'],
-  modules: ['updater', 'secrets', 'display', 'tools', 'catalog', 'port-kit', 'input', 'mcp'],
+  modules: ['updater', 'secrets', 'display', 'tools', 'catalog', 'port-kit', 'input', 'mcp', 'randomizer'],
   build: {
     nodePolyfills: { globals: { Buffer: true, process: true } },
     optimizeDeps: { worker: ['fs', 'crypto', 'path', 'js-yaml'] },

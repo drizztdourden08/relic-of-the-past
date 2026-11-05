@@ -4,7 +4,7 @@ import { storeSlots } from './store-slots';
 
 const notifySessionStore = (): void => {
   const state = getSessionState();
-  for (const listener of storeSlots.listeners) {
+  for (const listener of [...storeSlots.listeners]) {
     try { listener(state); } catch { continue; }
   }
 };

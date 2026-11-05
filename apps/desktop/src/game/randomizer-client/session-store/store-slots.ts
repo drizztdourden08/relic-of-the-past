@@ -1,16 +1,12 @@
 /* @layer bridge-wasm @kind logic */
 import { NO_OWNERS } from '@rotp/randomizer';
-import type { SessionStoreSlots } from './session-store.type';
+import type { StoreSlots } from './store-slots.type';
 
-const storeSlots: SessionStoreSlots = {
-  session: null,
-  placement: null,
-  foreignOwners: NO_OWNERS,
+const storeSlots: StoreSlots = {
   source: null,
-  unsubscribeStatus: null,
-  unsubscribeNetwork: null,
-  pendingBoot: null,
+  foreignOwners: NO_OWNERS,
   listeners: new Set(),
+  unwire: new Map(),
 };
 
 export { storeSlots };

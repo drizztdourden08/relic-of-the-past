@@ -42,9 +42,13 @@ const { defaultOnlineCore } = await import('@app/game/randomizer-client/online-c
 const { createOnlineClient } = await import('@app/game/randomizer-client/online-client');
 const { AP_DEATH_LINK_BIT, AP_ONLINE_BIT, gateWord5Now } = await import('@app/game/gate-word-5');
 const {
-  executeEntry, probeDeliverableNpcLocations, probeDeliverablePondLocations, probeDeliverableWorldLocations, rebaselineEntries,
+  clear, enqueue, probeDeliverableNpcLocations, probeDeliverablePondLocations, probeDeliverableWorldLocations, startProcessing, stopProcessing,
 } = await import('@rotp/randomizer');
+const { rebaselineEntries } = await import('./ap-rebaseline');
 const { withCollectedChecks } = await import('@rotp/navigation');
+
+const FRAME_MS = 16;
+const REFUSED_FRAMES = 40;
 
 const settle = async (): Promise<void> => {
   for (let i = 0; i < 400; i += 1) await Promise.resolve();
@@ -64,6 +68,23 @@ afterEach(() => {
   vi.useRealTimers();
   vi.unstubAllGlobals();
 });
+
+const foreignItemRoom = () => {
+  const snapshot = normalizeRandomizerOptions(buildOptionsSnapshot({}));
+  const placement = generateFromSnapshot({
+    seed: 'foreign-item', snapshot,
+    deliverable: { npc: probeDeliverableNpcLocations(), capacity: probeDeliverablePondLocations(), world: probeDeliverableWorldLocations() },
+  });
+  const room = soloRoomOf(placement, snapshot);
+  const location = required(AP_LOCATION_IDS['check-012'], 'check-012 location id');
+  room.placements[location] = { item: 0x52510000, location, player: 2, flags: 0 };
+  room.players.push({ team: 0, slot: 2, alias: 'Zelda_', name: 'Zelda_' });
+  room.slotInfo['2'] = { name: 'Zelda_', game: 'Ship of Harkinian', type: 1, group_members: [] };
+  room.games['Ship of Harkinian'] = {
+    item_name_to_id: { 'Progressive Scale': 0x52510000 }, location_name_to_id: {}, checksum: 'soh',
+  };
+  return room;
+};
 
 describe('the real online core', { tags: ['standard'] }, () => {
   it('mirrors the core\'s own foreign sentinel', () => {
@@ -96,19 +117,7 @@ describe('the real online core', { tags: ['standard'] }, () => {
 
 describe('the real online core', { tags: ['standard'] }, () => {
   it('arms another player\'s item as its game\'s icon id, saying what it was and who it went to', async () => {
-    const snapshot = normalizeRandomizerOptions(buildOptionsSnapshot({}));
-    const placement = generateFromSnapshot({
-      seed: 'foreign-item', snapshot,
-      deliverable: { npc: probeDeliverableNpcLocations(), capacity: probeDeliverablePondLocations(), world: probeDeliverableWorldLocations() },
-    });
-    const room = soloRoomOf(placement, snapshot);
-    const location = required(AP_LOCATION_IDS['check-012'], 'check-012 location id');
-    room.placements[location] = { item: 0x52510000, location, player: 2, flags: 0 };
-    room.players.push({ team: 0, slot: 2, alias: 'Zelda_', name: 'Zelda_' });
-    room.slotInfo['2'] = { name: 'Zelda_', game: 'Ship of Harkinian', type: 1, group_members: [] };
-    room.games['Ship of Harkinian'] = {
-      item_name_to_id: { 'Progressive Scale': 0x52510000 }, location_name_to_id: {}, checksum: 'soh',
-    };
+    const room = foreignItemRoom();
     const core = installFakeModule(setModule);
     try {
       const session = createOnlineClient({ url: 'ws://host:1', slotName: 'Link' },
@@ -135,15 +144,23 @@ describe('the real online core', { tags: ['standard'] }, () => {
     const core = installFakeModule(setModule);
     try {
       let granted = 0;
-      const entry = {
-        id: 'dlv', message: 'Hookshot', source: 'randomizer', enqueuedAt: 0, onGranted: () => { granted += 1; },
-        action: { type: 'give_item' as const, itemId: 0x0a, receiptExport: true },
-      };
+      vi.stubGlobal('requestAnimationFrame', (callback: () => void) => setTimeout(callback, FRAME_MS));
+      vi.stubGlobal('cancelAnimationFrame', (id: ReturnType<typeof setTimeout>) => clearTimeout(id));
+      startProcessing(() => undefined);
+      enqueue({
+        message: 'Hookshot', source: 'randomizer', onGranted: () => { granted += 1; },
+        action: { type: 'give_item', itemId: 0x0a, receiptExport: true },
+      });
       core.setReturn('WasmGrantItemWithReceipt', 0);
-      expect([executeEntry(entry), granted]).toEqual(['refused', 0]);
+      vi.advanceTimersByTime(FRAME_MS * REFUSED_FRAMES);
+      const whileRefused = granted;
       core.setReturn('WasmGrantItemWithReceipt', 1);
-      expect([executeEntry(entry), granted]).toEqual(['done', 1]);
+      vi.advanceTimersByTime(FRAME_MS * REFUSED_FRAMES);
+      expect([whileRefused, granted]).toEqual([0, 1]);
     } finally {
+      stopProcessing();
+      clear();
+      vi.unstubAllGlobals();
       core.remove();
     }
   });

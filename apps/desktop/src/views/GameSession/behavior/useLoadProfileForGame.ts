@@ -6,12 +6,12 @@ import { serializeToIni, mergeSettings } from '@rotp/game-core';
 import { experimentalFeaturesEnabled } from '@rotp/features';
 import * as profileStore from '@app/storage/profile-store';
 import { loadMsuPack } from '@app/game/msu-pack-loader';
-import { resetSession } from '@app/game/randomizer-client';
+import { gateRandomizerBoot } from '@drizztdourden08/brock-randomizer/session';
+import { resetSession, setOnlineAllowed } from '@app/game/randomizer-client';
 import type { LoadProfileForGameDeps } from './useProfileManagement.type';
 import { ensureProfileAssets } from './ensure-profile-assets';
 import { loadInputProfile } from './load-input-profile';
 import { loadPlayerSprite } from './load-player-sprite';
-import { gateRandomizerBoot } from './randomizer-boot-gate';
 
 const useLoadProfileForGame = ({ onGameClear, onProfileLoaded, setActiveProfile, setLoadingProfile }: LoadProfileForGameDeps) =>
   useCallback(async (staleProfile: Profile) => {
@@ -50,9 +50,11 @@ const useLoadProfileForGame = ({ onGameClear, onProfileLoaded, setActiveProfile,
     resetSession();
 
     if (profile.randomizer) {
-      const gate = await gateRandomizerBoot(profile.id, profile.randomizer, experimentalFeaturesEnabled(settings));
+      const experimental = experimentalFeaturesEnabled(settings);
+      setOnlineAllowed(experimental);
+      const gate = await gateRandomizerBoot(profile.id, profile.randomizer);
       if (!gate.ok) {
-        log.error(gate.reason);
+        log.error(gate.detail);
         setLoadingProfile(null);
         return;
       }

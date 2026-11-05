@@ -8,7 +8,7 @@ import { isGrantable } from './is-grantable';
 import type { DeliverItemParams } from './deliver-item.type';
 
 const deliverItem = (params: DeliverItemParams): string | null => {
-  const { itemId, message, source = 'randomizer', messageId, onComplete, onGranted } = params;
+  const { itemId, message, source = 'randomizer', messageId, onComplete, onGranted, sink = enqueue } = params;
   if (!isGrantable(itemId) || !isCoreReady()) return null;
   armReceiptGates();
   const action: DeliveryAction = typeof messageId === 'function'
@@ -16,9 +16,9 @@ const deliverItem = (params: DeliverItemParams): string | null => {
     : { type: 'give_item', itemId, receiptExport: true, messageId };
   const label = message ?? itemLabel(itemId);
   if (source === 'randomizer' && isQuietReceiptItem(itemId)) {
-    return enqueue({ message: label, source, action: { type: 'quiet_receipt', itemId, fallback: action }, onComplete, onGranted });
+    return sink({ message: label, source, action: { type: 'quiet_receipt', itemId, fallback: action }, onComplete, onGranted });
   }
-  return enqueue({ message: label, source, action, onComplete, onGranted });
+  return sink({ message: label, source, action, onComplete, onGranted });
 };
 
 export { deliverItem };

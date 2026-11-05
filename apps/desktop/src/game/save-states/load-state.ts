@@ -4,7 +4,7 @@ import { log } from '../../log-bus';
 import * as savesStore from '../../storage/saves-store';
 import { pollInventoryState } from '../tracker';
 import { reassertLiveFlagsAfterLoad } from '../live-settings';
-import { requestLocationRebaseline } from '../randomizer-client/location-poller';
+import { notifyStateLoaded } from '@app/randomizer/rotp-randomizer/notify-state-loaded';
 import { restoreMusicPosition } from '../msu-save-glue';
 import { resumeDialogAfterLoad } from '../state-dialog';
 
@@ -49,7 +49,7 @@ const loadState = async (slot: number): Promise<boolean> => {
 
     reassertLiveFlagsAfterLoad();
     resumeDialogAfterLoad(mod, verdict.stamp);
-    requestLocationRebaseline();
+    notifyStateLoaded();
     reassertAfterSaveLoad();
     markStateLoaded();
 

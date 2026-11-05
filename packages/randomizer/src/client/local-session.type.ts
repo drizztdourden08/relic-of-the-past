@@ -1,11 +1,10 @@
 /* @layer bridge-wasm @kind types */
+import type { RandomizerSession } from '@drizztdourden08/brock-randomizer/session';
 import type { PlanCounts } from './physical-plan.type';
-import type { RandomizerSession, SessionStatusListener } from './session.type';
 
 interface LocalSession extends RandomizerSession {
   readonly kind: 'local';
-  onStatusChange(listener: SessionStatusListener): () => void;
-  readonly stats: PlanCounts;
+  readonly stats: PlanCounts | null;
 }
 
 export type { LocalSession };

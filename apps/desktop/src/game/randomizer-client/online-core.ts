@@ -1,7 +1,8 @@
 /* @layer bridge-wasm @kind logic */
 import { setOnlineBits, AP_DEATH_LINK_BIT, AP_ONLINE_BIT } from '../gate-word-5';
-import { getApRoomHash, setApRoomHash, onDeliveryReady, detectionOf, readReceivedIndex, writeReceivedIndex, killLinkInCore, onLinkDied, GOAL_CHECK } from '@rotp/randomizer';
+import { getApRoomHash, setApRoomHash, onDeliveryReady, detectionOf, killLinkInCore, onLinkDied, GOAL_CHECK } from '@rotp/randomizer';
 import { clearCollectedChecks } from '@rotp/navigation';
+import { rotpApStateStore } from '@app/randomizer/rotp-randomizer/rotp-ap-state-store';
 import { armFireReporting } from './override-fire-registry';
 import { pauseLocationPolling, startLocationPolling } from './location-poller';
 import { buildScoutPlan } from './online-overrides';
@@ -52,8 +53,8 @@ const defaultOnlineCore: OnlineCore = {
     startLocationPolling(reporter, entries, isKnownReported);
   },
   pausePolling: pauseLocationPolling,
-  readReceivedIndex,
-  writeReceivedIndex,
+  readReceivedIndex: () => rotpApStateStore.read()?.receivedIndex ?? 0,
+  writeReceivedIndex: (receivedIndex) => rotpApStateStore.write({ receivedIndex, roomHash: String(getApRoomHash()) }),
   readRoomHash: getApRoomHash,
   writeRoomHash: setApRoomHash,
   markCollected,

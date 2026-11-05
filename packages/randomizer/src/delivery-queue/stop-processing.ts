@@ -1,11 +1,8 @@
 /* @layer bridge-wasm @kind logic */
-import { queueState } from './queue-state';
+import { sharedEngine } from './shared-engine';
 
 const stopProcessing = (): void => {
-  if (queueState.rafId != null) {
-    cancelAnimationFrame(queueState.rafId);
-    queueState.rafId = null;
-  }
+  sharedEngine.stop();
 };
 
 export { stopProcessing };

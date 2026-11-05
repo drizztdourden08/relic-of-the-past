@@ -1,0 +1,8 @@
+/* @layer renderer-components @kind style */
+
+.randomizer-page__hint {
+  font-size: var(--text-sm);
+  color: var(--c-text-muted);
+}
+
+.randomizer-page__hint--error { color: var(--c-danger); }

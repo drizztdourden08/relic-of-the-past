@@ -1,6 +1,7 @@
 /* @layer renderer-components @kind component */
 import { Card, Grid } from '@drizztdourden08/tessera/primitives';
 import type { DashboardCardProps } from './DashboardCard.type';
+import './DashboardCard.css';
 
 const DashboardCard = (props: DashboardCardProps) => {
   const { placement, title, subtitle, actions, className, children } = props;

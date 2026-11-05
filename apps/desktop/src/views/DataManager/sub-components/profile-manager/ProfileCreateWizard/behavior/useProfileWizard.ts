@@ -1,40 +1,44 @@
 /* @layer renderer-components @kind hook */
 import { useCallback, useMemo, useState } from 'react';
-import { useSettings } from '@drizztdourden08/brock-react';
+import { OPTIONS_STEP_ID } from '@drizztdourden08/brock-randomizer/renderer';
+import { useModuleWizardSteps, useSettings } from '@drizztdourden08/brock-react';
 import { useWizard } from '@drizztdourden08/tessera/composites';
 import { experimentalFeaturesEnabled } from '@rotp/features';
 import type { AppSettings } from '@app/settings.type';
 import { FIRST_OPTION_TAB } from '../../randomizer-options/option-tabs.constants';
 import type { PanelTab } from '../../RandomizerOptionsPanel.type';
-import { STEP_IDS } from '../ProfileCreateWizard.constants';
 import type { ProfileWizardValues, UseProfileWizardParams } from '../ProfileCreateWizard.type';
 import { createProfileFromValues } from './create-profile-from-values';
 import { initialProfileValues } from './initial-profile-values';
 import { profileWizardSteps } from './profile-wizard-steps';
+import { rotpLobbyStep } from './rotp-lobby-step';
+import { withStepFacts } from './with-step-facts';
 
 const useProfileWizard = ({ onCreateProfile, onCreated }: UseProfileWizardParams) => {
   const { settings } = useSettings<AppSettings>();
   const experimental = experimentalFeaturesEnabled(settings);
-  const [joining, setJoining] = useState<number | null>(null);
+  const moduleSteps = useModuleWizardSteps();
   const [optionTab, setOptionTab] = useState<PanelTab>(FIRST_OPTION_TAB);
-  const [initialValues] = useState(initialProfileValues);
-  const steps = useMemo(() => profileWizardSteps({ experimental, joining }), [experimental, joining]);
+  const [joining, setJoining] = useState<number | null>(null);
+  const modules = useMemo(() => [...moduleSteps.map(withStepFacts), rotpLobbyStep], [moduleSteps]);
+  const [initialValues] = useState(() => initialProfileValues(modules));
+  const steps = useMemo(() => profileWizardSteps({ joining, modules }), [joining, modules]);
 
   const handleFinish = useCallback(async (values: ProfileWizardValues) => {
     try {
-      return await createProfileFromValues(values, { experimental, onCreateProfile, onProgress: setJoining });
+      return await createProfileFromValues(values, { experimental, modules, onCreateProfile, onProgress: setJoining });
     } finally {
       setJoining(null);
     }
-  }, [experimental, onCreateProfile]);
+  }, [experimental, modules, onCreateProfile]);
 
   const wizard = useWizard({ steps, initialValues, onFinish: handleFinish, onFinished: onCreated });
 
   const handleSubStepSelect = useCallback((stepId: string, subStepId: string) => {
-    if (stepId === STEP_IDS.options) setOptionTab(subStepId as PanelTab);
+    if (stepId === OPTIONS_STEP_ID) setOptionTab(subStepId as PanelTab);
   }, []);
 
-  return { wizard, experimental, joining, optionTab, setOptionTab, handleSubStepSelect };
+  return { wizard, modules, optionTab, setOptionTab, handleSubStepSelect };
 };
 
 export { useProfileWizard };

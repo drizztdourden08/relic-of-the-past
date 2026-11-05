@@ -37,8 +37,7 @@ const EMPTY_RANDOMIZER_FORM: RandomizerFormState = {
   darkRoomLightRedCane: DEFAULT_DARK_ROOM_SETTING.lights.redCane,
 };
 
-const NO_SEED_ERROR = 'The randomizer needs a seed. Type one, or keep the one thrown for you.';
 
 const NO_LOBBY_ERROR = 'Pick a lobby RotP can join.';
 
-export { EMPTY_RANDOMIZER_FORM, NO_LOBBY_ERROR, NO_SEED_ERROR };
+export { EMPTY_RANDOMIZER_FORM, NO_LOBBY_ERROR };
