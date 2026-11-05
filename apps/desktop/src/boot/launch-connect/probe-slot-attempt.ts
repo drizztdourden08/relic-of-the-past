@@ -1,8 +1,7 @@
 /* @layer renderer-app @kind logic */
-import { buildConnectPacket, clientUuid, parseServerPackets, versionOf } from '@drizztdourden08/brock-randomizer/archipelago';
-import type { ApConnectedPacket, ApRoomInfoPacket, ApServerPacket } from '@drizztdourden08/brock-randomizer/archipelago';
-import { AP_GAME, createBrowserSocket, parseSlotData } from '@rotp/randomizer';
-import type { ApSocket } from '@rotp/randomizer';
+import { buildConnectPacket, clientUuid, createBrowserSocket, parseServerPackets, versionOf } from '@drizztdourden08/brock-randomizer/archipelago';
+import type { ApConnectedPacket, ApRoomInfoPacket, ApServerPacket, ArchipelagoSocket } from '@drizztdourden08/brock-randomizer/archipelago';
+import { AP_GAME, parseSlotData } from '@rotp/randomizer';
 import { SLOT_PROBE_MS } from './launch-connect.constants';
 import type { ProbeAttempt, ProbeTarget, SlotProbe } from './slot-probe.type';
 
@@ -20,7 +19,7 @@ const probeSlotAttempt = (target: ProbeTarget): Promise<ProbeAttempt> =>
   new Promise((resolve) => {
     let settled = false;
     let opened = false;
-    let socket: ApSocket | null = null;
+    let socket: ArchipelagoSocket | null = null;
     const finish = (result: SlotProbe): void => {
       if (settled) return;
       settled = true;
@@ -43,9 +42,8 @@ const probeSlotAttempt = (target: ProbeTarget): Promise<ProbeAttempt> =>
       finish({ ok: false, error: `invalid server URL: ${error instanceof Error ? error.message : String(error)}` });
       return;
     }
-    socket.onmessage = (event) => { for (const packet of parseServerPackets(String(event.data))) handle(packet); };
-    socket.onerror = () => finish({ ok: false, error: `could not reach ${target.url}` });
-    socket.onclose = () => finish({ ok: false, error: `${target.url} closed before answering` });
+    socket.onMessage((text) => { for (const packet of parseServerPackets(text)) handle(packet); });
+    socket.onClose(() => finish({ ok: false, error: opened ? `${target.url} closed before answering` : `could not reach ${target.url}` }));
   });
 
 export { probeSlotAttempt };

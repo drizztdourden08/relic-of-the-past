@@ -1,10 +1,8 @@
 /* @layer tests @kind test */
 import { describe, expect, it } from 'vitest';
 import type { Scenario } from '@drizztdourden08/archipelia-lobby-protocol/testing';
-import { joinLobby } from '@drizztdourden08/brock-randomizer/archipelago';
-import type { LobbySession } from '@drizztdourden08/brock-randomizer/archipelago';
-import { openRawLobbyLink } from './raw-lobby-link';
-import type { RawLobbyLink } from './raw-lobby-link';
+import { createBrowserSocket, joinLobby, openLobbyLink } from '@drizztdourden08/brock-randomizer/archipelago';
+import type { LobbyLink, LobbySession } from '@drizztdourden08/brock-randomizer/archipelago';
 import { failureCode, firstMessage, isMessageLine, play } from './lobby-harness.keep.test';
 import type { Driver, Tools } from './lobby-harness.keep.test';
 import { endsWith, expectOk, finalState, joined } from './lobby-drivers';
@@ -95,17 +93,17 @@ describe('wrong codes', { tags: ['standard'] }, () => {
   });
 });
 
-const rawLink = (tools: { server: string }, onOpen: (link: RawLobbyLink) => void) =>
+const rawLink = (tools: { server: string }, onOpen: (link: LobbyLink) => void) =>
   new Promise<unknown[]>((resolve) => {
     const seen: unknown[] = [];
-    const link: RawLobbyLink = openRawLobbyLink(tools.server, {
+    const link: LobbyLink = openLobbyLink(tools.server, createBrowserSocket, {
       onOpen: () => onOpen(link),
       onMessage: (outcome) => { seen.push(outcome.ok ? outcome.message : outcome.failure); },
       onClose: () => resolve(seen),
     });
   });
 
-type Link = RawLobbyLink;
+type Link = LobbyLink;
 
 const rawLinkDriver = (onOpen: (link: Link, tools: Tools) => void): Driver => async (tools) => ({
   sessions: [],
