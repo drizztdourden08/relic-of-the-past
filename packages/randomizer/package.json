@@ -7,6 +7,7 @@
   "sideEffects": false,
   "exports": {
     ".": "./src/index.ts",
+    "./ap-game": "./src/archipelago/ap-game/index.ts",
     "./package.json": "./package.json"
   },
   "dependencies": {

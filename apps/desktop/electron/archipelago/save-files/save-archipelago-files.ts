@@ -1,7 +1,7 @@
 /* @layer electron-main @kind logic */
 import { writeFile } from 'fs/promises';
 import { join } from 'path';
-import { WORLD_MODULE_NAME } from '@rotp/randomizer';
+import { WORLD_MODULE_NAME } from '@rotp/randomizer/ap-game';
 import { errMessage } from '../../lib/result';
 import { pickFolder } from './pick-folder';
 import { safeFileStem } from './safe-file-stem';
