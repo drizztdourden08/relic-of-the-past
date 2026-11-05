@@ -37,3 +37,6 @@ export { isSeedLocation } from '../../world/seed-locations';
 export { bunnyImpassableRegionIds, crossingsByRegion, regionRecords } from '../../world/world-from-records';
 export type { Rule, World } from '../../world/world.type';
 export { rotpWorldGame } from '../../world/rotp-world-game';
+export { BIG_KEY_ITEMS } from '../../world/big-keys';
+export { fullKeyRing } from '../../world/small-keys';
+export { worldFromPlacement } from '../../placement-availability/world-from-placement';

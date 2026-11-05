@@ -15,6 +15,8 @@ import { rotpLogText } from './rotp-log-text';
 import { rotpPoll } from './rotp-poll';
 import { rotpProfile } from './rotp-profile';
 import { rollRotpPlacement } from './rotp-roll';
+import { rotpInventoryProvider } from './rotp-inventory-provider';
+import { rotpTrackerProvider } from './rotp-tracker-provider';
 
 const rotpRandomizer = defineRandomizerGame<Placement, DeliveryAction>({
   id: 'rotp',
@@ -33,6 +35,8 @@ const rotpRandomizer = defineRandomizerGame<Placement, DeliveryAction>({
   catalog: rotpCatalog,
   modes: ROTP_MODES,
   labels: ROTP_LABELS,
+  tracker: rotpTrackerProvider,
+  inventory: rotpInventoryProvider,
 });
 
 export { rotpRandomizer };
