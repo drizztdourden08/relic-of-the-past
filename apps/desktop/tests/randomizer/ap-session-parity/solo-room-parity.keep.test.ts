@@ -90,6 +90,8 @@ const armedSet = (calls: readonly string[]): { rest: string[]; word5: number[] }
 
 beforeEach(() => {
   vi.useFakeTimers();
+  vi.stubGlobal('requestAnimationFrame', () => 0);
+  vi.stubGlobal('cancelAnimationFrame', () => undefined);
   const store = new Map<string, string>();
   vi.stubGlobal('localStorage', {
     getItem: (key: string) => store.get(key) ?? null,

@@ -5,10 +5,8 @@ import { createOnlineSession } from '../online-session';
 import { onlineConfigOfProfile } from '../online-config-of-profile';
 import { gateOnline } from './gate-online';
 import { onlineAllowed } from './online-allowed-slot';
+import { NOT_ALLOWED, NO_SERVER_URL } from './rotp-online-factory.constants';
 import { wireOnlineSession } from './wire-online-session';
-
-const NOT_ALLOWED = 'Archipelago requires Experimental Features in Contributing settings';
-const NO_SERVER_URL = 'this online profile has no server URL';
 
 const rotpOnlineFactory: SessionFactory = {
   mode: 'online',

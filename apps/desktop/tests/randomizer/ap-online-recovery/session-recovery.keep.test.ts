@@ -110,7 +110,7 @@ describe('the offline baseline', { tags: ['critical'] }, () => {
   const input = {
     entries: baselineEntriesOf(plan),
     suppressed: new Set<string>(),
-    isComplete: (entry: { checkId?: string }) => entry.checkId !== undefined && completed.has(entry.checkId),
+    isComplete: (entry: { key: string; checkId?: string }) => entry.checkId !== undefined && completed.has(entry.checkId),
   };
 
   it('reports an armed pickup the save shows and the server lacks', () => {

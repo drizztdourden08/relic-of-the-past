@@ -5,9 +5,9 @@ import { queueState } from './queue-state';
 
 const remove = (id: string): boolean => {
   const idx = queueState.queue.findIndex((e) => e.id === id);
-  if (idx === -1) return false;
-  cancelledActions.add(queueState.queue[idx].action);
-  queueState.queue.splice(idx, 1);
+  const [removed] = idx === -1 ? [] : queueState.queue.splice(idx, 1);
+  if (removed === undefined) return false;
+  cancelledActions.add(removed.action);
   notify();
   return true;
 };
