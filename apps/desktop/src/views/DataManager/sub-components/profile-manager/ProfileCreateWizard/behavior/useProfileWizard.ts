@@ -27,7 +27,7 @@ const useProfileWizard = ({ onCreateProfile, onCreated }: UseProfileWizardParams
     try {
       return await createProfileFromValues(values, { experimental, modules, onCreateProfile });
     } catch (error) {
-      return { success: false, error: error instanceof Error ? error.message : String(error) };
+      return { success: false as const, error: error instanceof Error ? error.message : String(error) };
     }
   }, [experimental, modules, onCreateProfile]);
 

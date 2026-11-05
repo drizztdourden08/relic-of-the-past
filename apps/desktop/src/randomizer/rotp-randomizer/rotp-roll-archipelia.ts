@@ -9,7 +9,7 @@ import { NO_LOBBY_ERROR } from '@app/views/DataManager/sub-components/profile-ma
 const rollArchipelia = async (config: RandomizerProfileConfig, ctx: RollContext) => {
   const { lobby, lobbyCheck } = rotpLobbyOfConnection(ctx.connection);
   if (lobbyCheck.kind !== 'ok') throw new Error(NO_LOBBY_ERROR);
-  Object.assign(config, withDeliverable({ name: '', randomizer: config }).randomizer);
+  Object.assign(config, withDeliverable({ name: '', romFile: '', randomizer: config }).randomizer);
   ctx.onProgress?.(0);
   const joined = await joinFromForm(lobbyCheck, config, lobby.seat, (fraction) => ctx.onProgress?.(fraction));
   if (!joined.ok) throw new Error(joined.error);
