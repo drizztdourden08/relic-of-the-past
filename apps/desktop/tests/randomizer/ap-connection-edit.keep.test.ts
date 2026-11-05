@@ -39,8 +39,8 @@ const preloadApi: unknown = new Proxy({}, { get: () => new Proxy(answerEmpty, { 
   addEventListener: () => undefined, removeEventListener: () => undefined, api: preloadApi,
 };
 const { setModule } = await import('@rotp/game-core');
-const { createOnlineSessionFactory, registerSessionFactory, startSession } =
-  await import('@drizztdourden08/brock-randomizer/session');
+const { registerSessionFactory } = await import('@drizztdourden08/brock-randomizer/session');
+const { createOnlineSessionFactory, startSession } = await import('@drizztdourden08/brock-randomizer/renderer');
 const { rotpRandomizer } = await import('@app/randomizer/rotp-randomizer');
 const { stopActive, getSessionState } = await import('@app/game/randomizer-client/session-store');
 const { reconnectProfileSession } = await import('@app/game/randomizer-client/profile-reconnect');

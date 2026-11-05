@@ -1,5 +1,5 @@
 /* @layer bridge-wasm @kind logic */
-import { useSessionStore } from '@drizztdourden08/brock-randomizer/session';
+import { useSessionStore } from '@drizztdourden08/brock-randomizer/renderer';
 import { notifySessionStore } from './notify-session-store';
 import { releaseSession } from './release-session';
 

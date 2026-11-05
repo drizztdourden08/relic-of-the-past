@@ -1,5 +1,6 @@
 /* @layer bridge-wasm @kind logic */
-import { appRandomizerLog, createLocationPoller } from '@drizztdourden08/brock-randomizer/session';
+import { appRandomizerLog } from '@drizztdourden08/brock-randomizer/renderer';
+import { createLocationPoller } from '@drizztdourden08/brock-randomizer/session';
 import { rotpMemoryBridge } from '@app/randomizer/rotp-randomizer/rotp-memory-bridge';
 import { rotpPoll } from '@app/randomizer/rotp-randomizer/rotp-poll';
 

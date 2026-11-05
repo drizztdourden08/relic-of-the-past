@@ -1,5 +1,5 @@
 /* @layer renderer-app @kind logic */
-import { appRandomizerLog } from '@drizztdourden08/brock-randomizer/session';
+import { appRandomizerLog } from '@drizztdourden08/brock-randomizer/renderer';
 import type { RandomizerLog } from '@drizztdourden08/brock-randomizer';
 import { log } from '@app/log-bus';
 

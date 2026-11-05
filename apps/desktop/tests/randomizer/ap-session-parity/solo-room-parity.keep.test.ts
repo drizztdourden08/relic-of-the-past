@@ -53,7 +53,8 @@ const preloadApi: unknown = new Proxy({}, { get: () => new Proxy(answerEmpty, { 
   addEventListener: () => undefined, removeEventListener: () => undefined, api: preloadApi,
 };
 const { setModule } = await import('@rotp/game-core');
-const { createLocalSession, createOnlineSessionFactory, useSessionStore } = await import('@drizztdourden08/brock-randomizer/session');
+const { createLocalSession } = await import('@drizztdourden08/brock-randomizer/session');
+const { createOnlineSessionFactory, useSessionStore } = await import('@drizztdourden08/brock-randomizer/renderer');
 const { rotpRandomizer } = await import('@app/randomizer/rotp-randomizer');
 const { AP_ONLINE_BIT, AP_DEATH_LINK_BIT } = await import('@app/game/gate-word-5');
 const {
