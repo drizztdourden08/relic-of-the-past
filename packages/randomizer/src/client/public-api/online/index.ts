@@ -29,7 +29,7 @@ export type { ProbeConfig, ProbeResult } from '../../online-probe';
 export { isFromServer } from '../../online-received/is-from-server';
 export { senderNameOf } from '../../online-received/sender-name-of';
 export { ROOM_MISMATCH, acceptsRoom, adoptRoom, bindSaveToRoom } from '../../online-room-identity';
-export { createOnlineRoom, resetConnection } from '../../online-room';
+export { bindReceived, createOnlineRoom, resetConnection } from '../../online-room';
 export type { OnlineSessionConfig } from '../../online-session-config.type';
 export type { OnlineSession } from '../../online-session.type';
 export { openSocketLink } from '../../online-socket';

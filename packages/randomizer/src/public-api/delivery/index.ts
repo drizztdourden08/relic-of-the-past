@@ -1,4 +1,5 @@
 /* @layer package @kind barrel */
+export { getApReceivedIndex, setApReceivedIndex } from '../../ap-received-index';
 export { getApRoomHash, setApRoomHash } from '../../ap-room-hash';
 export * from '../../archipelago';
 export * from '../../client';

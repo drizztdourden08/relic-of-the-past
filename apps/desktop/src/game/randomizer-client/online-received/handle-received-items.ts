@@ -1,6 +1,6 @@
 /* @layer bridge-wasm @kind logic */
 import { log } from '../../../log-bus';
-import { markHanded, nextToQueue, wasHanded, receivedBatchOrder, acceptsRoom } from '@rotp/randomizer';
+import { receivedBatchOrder, acceptsRoom } from '@rotp/randomizer';
 import { wireList } from '../wire-list';
 import { deliverOne } from './deliver-one';
 import { requestSync } from './request-sync';
@@ -22,22 +22,21 @@ const handleReceivedItems = (ctx: OnlineContext, packet: ApReceivedItemsPacket):
     return;
   }
   if (!ctx.isLive() || !core.isFileInPlay() || !acceptsRoom(ctx)) return;
-  const known = nextToQueue(room.cursor, core.readReceivedIndex());
+  const known = room.received.next();
   if (packet.index > known) {
     requestSync(ctx, `Received items start at ${packet.index}, the save and the queue hold ${known}`);
     return;
   }
   room.syncPending = false;
-  const saved = core.readReceivedIndex();
   const entries = wireList(packet.items).map((item, offset) => ({ item, index: packet.index + offset }))
-    .filter((entry) => !wasHanded(room.cursor, entry.index, saved));
+    .filter((entry) => room.received.isNew(entry.index));
   for (const { item, index } of receivedBatchOrder(entries, (id) => room.itemNameById.get(id))) {
     if (deliverOne(ctx, item, index) === 'not-ready') {
-      log.randomizer(`[Online] The game cannot take items right now; ${room.cursor.queued} of the server's items handed on`, 'warn');
+      log.randomizer(`[Online] The game cannot take items right now; ${room.received.next()} of the server's items handed on`, 'warn');
       resyncWhenReady(ctx);
       return;
     }
-    markHanded(room.cursor, index, saved);
+    if (room.received.isNew(index)) room.received.hand(index);
   }
 };
 

@@ -40,8 +40,7 @@ const uuidShortOf = (uuid: string | null): string | null => {
   return head;
 };
 
-const itemsHandedNotGranted =(room: OnlineRoom, receivedIndex: number): number =>
-  Math.max(0, room.cursor.queued - receivedIndex + room.cursor.handed.size - room.cursor.settled.size);
+const itemsHandedNotGranted = (room: OnlineRoom): number => Math.max(0, room.received.queued());
 
 const buildNetworkStatus = (input: NetworkStatusInput): NetworkStatus => {
   const { sessionStatus, config, facts, room, names, core, ping, presence, trackers } = input;
@@ -77,7 +76,7 @@ const buildNetworkStatus = (input: NetworkStatusInput): NetworkStatus => {
       pingMeanMs: ping.meanMs,
       pingSamples: ping.samples,
       heldItems: room.heldReceived.reduce((sum, packet) => sum + (packet.items?.length ?? 0), 0),
-      queuedItems: itemsHandedNotGranted(room, receivedIndex),
+      queuedItems: itemsHandedNotGranted(room),
       receivedIndex,
       fileInPlay: core.isFileInPlay(),
     },

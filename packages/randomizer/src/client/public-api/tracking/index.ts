@@ -13,8 +13,6 @@ export { completionBitOf } from '../../randomizer-completion-bits';
 export { buildPlanReceiptTexts } from '../../receipt-plan-messages';
 export type { PondDemandMessageIds, PondDemandMessagesOf, PondMessageIds, SessionReceiptTexts, WishPondMessageIds } from '../../receipt-text-refresh.type';
 export { receivedBatchOrder } from '../../received-batch-order';
-export { markHanded, nextToQueue, resetCursor, settlePosition, wasHanded } from '../../received-cursor';
-export { readReceivedIndex, writeReceivedIndex } from '../../received-index';
 export type { ActiveRun } from '../../run-kind/run-kind.type';
 export { scoutsToPlacement } from '../../scouts-to-placement';
 export { computeTrackerSnapshot, trackerReading } from '../../tracker-availability';
