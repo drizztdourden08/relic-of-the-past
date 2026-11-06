@@ -52,7 +52,7 @@ const useControllerReportForm = (deviceKey: string) => {
         setStatus('error');
         return;
       }
-      setFiled({ reportId: result.reportId, issueUrl: result.issueUrl, sanctuaryUrl: result.sanctuaryUrl });
+      setFiled({ reportId: result.reportId, issueUrl: result.issueUrl, recordUrl: result.sanctuaryUrl });
       setStatus('done');
     } catch {
       setStatus('error');

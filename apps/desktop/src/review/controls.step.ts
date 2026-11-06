@@ -39,7 +39,7 @@ const run = async (tour: AppReviewTour): Promise<void> => {
 
   await withNarrowWindow(tour, async () => {
     await setBothFolds(tour, true);
-    await shootTabs(tour, 'narrow-folded', ['vanilla', 'options']);
+    await shootTabs(tour, 'narrow-folded', ['vanilla', 'modern', 'options']);
   });
 
   await openTab(tour, CONTROLS_TABS[0].label);
