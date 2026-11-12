@@ -14,10 +14,10 @@ const DEFAULT_PORTRAIT_LAYOUT: OrientationLayout = {
     { id: 'b', emit: 'b', label: 'B', at: { x: 0.78, y: 0.805 }, scale: 1, shape: 'round', group: 'face' },
     { id: 'x', emit: 'x', label: 'X', at: { x: 0.78, y: 0.695 }, scale: 1, shape: 'round', group: 'face' },
     { id: 'y', emit: 'y', label: 'Y', at: { x: 0.66, y: 0.75 }, scale: 1, shape: 'round', group: 'face' },
-    { id: 'l', emit: 'l', label: 'L', at: { x: 0.12, y: 0.53 }, scale: 1, shape: 'pill', group: null },
-    { id: 'r', emit: 'r', label: 'R', at: { x: 0.88, y: 0.53 }, scale: 1, shape: 'pill', group: null },
-    { id: 'select', emit: 'select', label: 'SELECT', at: { x: 0.39, y: 0.95 }, scale: 0.8, shape: 'pill', group: null },
-    { id: 'start', emit: 'start', label: 'START', at: { x: 0.61, y: 0.95 }, scale: 0.8, shape: 'pill', group: null },
+    { id: 'l', emit: 'l', label: 'L', at: { x: 0.17, y: 0.53 }, scale: 1, shape: 'pill', group: null },
+    { id: 'r', emit: 'r', label: 'R', at: { x: 0.83, y: 0.53 }, scale: 1, shape: 'pill', group: null },
+    { id: 'select', emit: 'select', label: 'SELECT', at: { x: 0.33, y: 0.95 }, scale: 0.8, shape: 'pill', group: null },
+    { id: 'start', emit: 'start', label: 'START', at: { x: 0.67, y: 0.95 }, scale: 0.8, shape: 'pill', group: null },
   ],
 };
 
