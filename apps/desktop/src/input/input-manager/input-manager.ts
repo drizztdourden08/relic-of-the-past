@@ -16,6 +16,7 @@ import { keyDown } from './key-down';
 import { keyUp } from './key-up';
 import { pollFrame } from './poll-frame';
 import { connectedGamepadKeys } from './connected-gamepad-keys';
+import { touchPadAllowed } from '../touch-pad/touch-pad-allowed';
 import { cycleActiveProfile } from './cycle-active-profile';
 import { wireFunctionActions } from './wire-function-actions';
 
@@ -119,6 +120,7 @@ class InputManager {
   isPaused(): boolean { return this.pauseManager.isPaused; }
 
   checkControllerPresence(): void {
+    if (touchPadAllowed()) return;
     this.pauseManager.checkControllerDisconnect(this.activeProfile, connectedGamepadKeys(this), this.devices);
   }
 
@@ -127,6 +129,7 @@ class InputManager {
   }
 
   reevaluateControllerPresence(): void {
+    if (touchPadAllowed()) return;
     this.pauseManager.reevaluateForProfile(this.activeProfile, connectedGamepadKeys(this), this.devices);
   }
 
