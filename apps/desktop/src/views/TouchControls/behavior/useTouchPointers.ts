@@ -3,18 +3,14 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import type { PointerEvent } from 'react';
 import { clearTouchPad } from '@app/input/touch-pad/clear-touch-pad';
 import { publishTouchPad } from '@app/input/touch-pad/publish-touch-pad';
-import type { PxPoint } from '@rotp/input-mapping';
 import { IDLE_VIEW } from '../TouchControls.constants';
 import type { TouchSession, TouchViewState } from '../TouchControls.type';
 import { deriveTouchState } from './derive-touch-state';
+import { localPoint } from './local-point';
 import { moveSession } from './move-session';
+import { sessionAt } from './session-at';
 import { startSession } from './start-session';
 import type { PointerOptions } from './useTouchPointers.type';
-
-const localPoint = (event: PointerEvent<HTMLElement>): PxPoint => {
-  const rect = event.currentTarget.getBoundingClientRect();
-  return { x: event.clientX - rect.left, y: event.clientY - rect.top };
-};
 
 const useTouchPointers = (options: PointerOptions) => {
   const { layout, box, enabled, hold, onPress } = options;
@@ -63,9 +59,9 @@ const useTouchPointers = (options: PointerOptions) => {
   };
 
   const onPointerMove = (event: PointerEvent<HTMLElement>): void => {
-    const session = sessions.current.get(event.pointerId);
-    if (!session) return;
-    const point = localPoint(event);
+    const hit = sessionAt(sessions.current, event);
+    if (!hit) return;
+    const { session, point } = hit;
     if (moveSession(session, point, layout, box)) onPress();
     if (session.kind === 'empty') hold.move(event.pointerId, point);
     else apply();

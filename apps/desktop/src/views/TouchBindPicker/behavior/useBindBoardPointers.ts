@@ -3,13 +3,10 @@ import { useRef, useState } from 'react';
 import type { PointerEvent } from 'react';
 import { dragDirection, movementRadiusPx, readDpad, resolveTouchTarget, toPx, touchEmitBinding, touchStickBinding } from '@rotp/input-mapping';
 import type { PxPoint } from '@rotp/input-mapping';
+import { localPoint } from '@app/views/TouchControls/behavior/local-point';
+import { sessionAt } from '@app/views/TouchControls/behavior/session-at';
 import { DPAD_DIRECTIONS, STICK_PICK_FRACTION } from './bind-directions.constants';
 import type { BindBoardOptions, BindSession, BindStick } from './useBindBoardPointers.type';
-
-const localPoint = (event: PointerEvent<HTMLElement>): PxPoint => {
-  const rect = event.currentTarget.getBoundingClientRect();
-  return { x: event.clientX - rect.left, y: event.clientY - rect.top };
-};
 
 const clampKnob = (base: PxPoint, point: PxPoint, radius: number): PxPoint => {
   const dx = point.x - base.x;
@@ -60,9 +57,9 @@ const useBindBoardPointers = (options: BindBoardOptions) => {
   };
 
   const onPointerMove = (event: PointerEvent<HTMLElement>): void => {
-    const session = sessions.current.get(event.pointerId);
-    if (!session) return;
-    const point = localPoint(event);
+    const hit = sessionAt(sessions.current, event);
+    if (!hit) return;
+    const { session, point } = hit;
     if (session.kind === 'dpad') pickDpad(point, session.center);
     else pickStick(point, session.base);
   };

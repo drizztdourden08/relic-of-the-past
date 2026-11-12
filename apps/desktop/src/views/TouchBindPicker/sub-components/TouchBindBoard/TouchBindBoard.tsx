@@ -2,7 +2,8 @@
 import { useRef } from 'react';
 import type { CSSProperties } from 'react';
 import { Box } from '@drizztdourden08/tessera/primitives';
-import { basePx, movementRadiusPx, orientationOf, toPx } from '@rotp/input-mapping';
+import { orientationOf, toPx } from '@rotp/input-mapping';
+import { layerGeometry } from '@app/views/TouchControls/behavior/layer-geometry';
 import { TouchButton } from '@app/compounds/TouchButton';
 import { TouchDpad } from '@app/compounds/TouchDpad';
 import { TouchStick } from '@app/compounds/TouchStick';
@@ -23,10 +24,8 @@ const TouchBindBoard = (props: TouchBindBoardProps) => {
   const bound = boundControl(layout, current);
   const style = { '--touch-bind-aspect': window.innerWidth / window.innerHeight } as CSSProperties;
 
-  const size = basePx(box);
-  const radius = movementRadiusPx(layout, box);
+  const { size, radius, fixedBase } = layerGeometry(layout, box);
   const { movementType, movements } = layout;
-  const fixedBase = movementType === 'fixed-stick' ? toPx(movements['fixed-stick'].at, box) : null;
   const shownStick = stick ?? (fixedBase ? { base: fixedBase, knob: fixedBase } : null);
   const zone = movementType === 'dynamic-stick' ? movements['dynamic-stick'].zone : null;
 

@@ -1,5 +1,6 @@
 /* @layer renderer-app @kind component */
-import { basePx, movementRadiusPx, toPx } from '@rotp/input-mapping';
+import { toPx } from '@rotp/input-mapping';
+import { layerGeometry } from '../../behavior/layer-geometry';
 import { HoldRing } from '@app/compounds/HoldRing';
 import { TouchButton } from '@app/compounds/TouchButton';
 import { TouchDpad } from '@app/compounds/TouchDpad';
@@ -8,10 +9,8 @@ import type { TouchPlayLayerProps } from './TouchPlayLayer.type';
 
 const TouchPlayLayer = (props: TouchPlayLayerProps) => {
   const { layout, box, strength, view, ring } = props;
-  const size = basePx(box);
-  const radius = movementRadiusPx(layout, box);
+  const { size, radius, fixedBase } = layerGeometry(layout, box);
   const { movementType, movements } = layout;
-  const fixedBase = movementType === 'fixed-stick' ? toPx(movements['fixed-stick'].at, box) : null;
   const stick = view.stick ?? (fixedBase ? { base: fixedBase, knob: fixedBase } : null);
 
   return (

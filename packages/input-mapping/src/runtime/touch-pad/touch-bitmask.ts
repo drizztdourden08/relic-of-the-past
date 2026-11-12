@@ -3,7 +3,6 @@ import { buildConsoleDefaultMappings } from '../../build-console-defaults';
 import { computeBitmask } from '../polling-engine';
 import type { HidDeviceState } from '../polling-engine.type';
 import { setScoped } from '../device-scoped-map';
-import type { DeviceScopedMap } from '../device-scoped-map';
 import { TOUCH_PAD_KEY } from '../../touch/touch-emit.constants';
 import type { InputBinding, SnesButton } from '@rotp/game-data';
 import { EMPTY_KEYBOARD, EMPTY_KEYS, NO_CLASSIC, TOUCH_ALLOWED } from './touch-bitmask.constants';

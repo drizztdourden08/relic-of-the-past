@@ -13,8 +13,8 @@ const putOrDrop = (
 const setTouchBinding = (b: TouchBindings, target: TouchBindTarget, binding: InputBinding | null): TouchBindings => {
   if (target.kind === 'classic') return { ...b, classic: putOrDrop(b.classic, target.id, binding) };
   if (target.kind === 'verb') return { ...b, verbs: putOrDrop(b.verbs, target.id, binding) };
-  const slots = putOrDrop(b.slots as Readonly<Record<string, InputBinding>>, String(target.index), binding);
-  return { ...b, slots: slots as Readonly<Record<number, InputBinding>> };
+  const slots = putOrDrop(b.slots, String(target.index), binding);
+  return { ...b, slots };
 };
 
 export { setTouchBinding };
