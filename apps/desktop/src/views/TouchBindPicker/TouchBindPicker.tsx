@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { Box, Button } from '@drizztdourden08/tessera/primitives';
 import { useTouchControlsSettings } from '@app/hooks/useTouchControlsSettings';
 import { currentBinding } from './behavior/current-binding';
+import { swallowNextClick } from './behavior/swallow-next-click';
 import { useCommitTouchBinding } from './behavior/useCommitTouchBinding';
 import { TouchBindBoard } from './sub-components/TouchBindBoard';
 import type { TouchBindPickerProps } from './TouchBindPicker.type';
@@ -20,7 +21,7 @@ const TouchBindPicker = (props: TouchBindPickerProps) => {
   return (
     <Box className="touch-bind-picker">
       {!open && <Button variant="tertiary" onClick={() => setOpen(true)}>Touch here</Button>}
-      {open && <TouchBindBoard touch={touch} current={current} onPick={commit} />}
+      {open && <TouchBindBoard touch={touch} current={current} onPick={(binding) => { swallowNextClick(); commit(binding); }} />}
       {open && current && <Button variant="tertiary" size="sm" onClick={() => commit(null)}>Default</Button>}
     </Box>
   );

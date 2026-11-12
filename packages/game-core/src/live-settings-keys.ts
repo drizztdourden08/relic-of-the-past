@@ -110,6 +110,7 @@ const LIVE_SETTING_KEYS = [
   'hudCountLayout',
   'hudCountdownStyle',
   'haptics',
+  'touchControls',
   'developerToolsEnabled',
   'cheatsEnabled',
   'linkSprite',
