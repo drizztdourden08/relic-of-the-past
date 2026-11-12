@@ -12,7 +12,7 @@ const create2DFallbackRenderer = (fxCanvas: HTMLCanvasElement): EdgeGlowRenderer
     ctx.drawImage(gameCanvas, 0, 0);
   };
   const noop = (): void => {};
-  return { render, resize: noop, setEnabled: noop, setBlackBounds: noop, setMaxBounds: noop, setEffectOpacity: noop, setPixelateParams: noop, dispose: noop };
+  return { render, resize: noop, setEnabled: noop, isEnabled: () => false, setBlackBounds: noop, setMaxBounds: noop, setEffectOpacity: noop, setPixelateParams: noop, dispose: noop };
 };
 
 export { create2DFallbackRenderer };

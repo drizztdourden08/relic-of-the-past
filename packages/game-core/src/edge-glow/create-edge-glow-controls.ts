@@ -3,6 +3,7 @@ import type { EdgeGlowState } from './edge-glow-programs.type';
 
 const createEdgeGlowControls = (state: EdgeGlowState) => ({
   setEnabled: (val: boolean): void => { state.enabled = val; },
+  isEnabled: (): boolean => state.enabled,
   setBlackBounds: (left: number, right: number, bottom: number, top: number): void => {
     state.black = { left, right, bottom, top };
   },

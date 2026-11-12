@@ -35,8 +35,8 @@ const useEdgeGlowLoop = (params: EdgeGlowLoopParams): void => {
       edgeGlowFade.stepFadeOpacity(fade, dt);
       renderer.setEffectOpacity(fade.fadeOpacity);
 
-      const cleanFrameWithoutHud = vp?.isGameplay ? wasmRenderCleanFrame() : null;
-      renderer.render(gameCanvas, time, cleanFrameWithoutHud ?? null);
+      const cleanFrameWithoutHud = vp?.isGameplay && renderer.isEnabled() ? wasmRenderCleanFrame() : null;
+      renderer.render(gameCanvas, time, cleanFrameWithoutHud);
 
       fulfillFrameCapture(fxCanvas);
     },
