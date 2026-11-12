@@ -3,14 +3,8 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import type { PxPoint } from '@rotp/input-mapping';
 import { HOLD_RING_DELAY_MS, HOLD_SLOP_PX } from '../TouchControls.constants';
 import type { HoldRingState, MenuHold } from '../TouchControls.type';
+import type { ActiveHold } from './useMenuHold.type';
 
-interface ActiveHold {
-  pointerId: number;
-  origin: PxPoint;
-  startedAt: number;
-}
-
-/** A finger that rests on empty space for holdMs calls onOpen; the ring shows the last stretch of the wait. */
 const useMenuHold = (holdMs: number, onOpen: () => void): MenuHold => {
   const [ring, setRing] = useState<HoldRingState | null>(null);
   const active = useRef<ActiveHold | null>(null);

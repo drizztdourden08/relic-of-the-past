@@ -3,7 +3,6 @@ import type { TouchButton, TouchButtonShape, TouchEmit, TouchGroup } from '@rotp
 
 interface TouchButtonCardProps {
   button: TouchButton;
-  /** The button's group, or undefined for a free button. */
   group: TouchGroup | undefined;
   onEmit: (emit: TouchEmit) => void;
   onScale: (scale: number) => void;

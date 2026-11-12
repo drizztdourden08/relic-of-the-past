@@ -1,10 +1,6 @@
 /* @layer shared-input @kind constants */
 import type { OrientationLayout } from '@rotp/features';
 
-/**
- * Landscape: the game picture is pillarboxed in the middle, so every control sits in
- * the side bars. Movement on the left, face buttons on the right.
- */
 const DEFAULT_LANDSCAPE_LAYOUT: OrientationLayout = {
   movementType: 'dynamic-stick',
   movements: {

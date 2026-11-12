@@ -6,15 +6,8 @@ import { setScoped } from '../device-scoped-map';
 import type { DeviceScopedMap } from '../device-scoped-map';
 import { TOUCH_PAD_KEY } from '../../touch/touch-emit.constants';
 import type { SnesButton } from '@rotp/game-data';
-
-const EMPTY_KEYS = new Map<string, boolean>();
-const EMPTY_KEYBOARD = new Map<string, SnesButton>();
-const TOUCH_ALLOWED = { keyboard: false, gamepadKeys: new Set([TOUCH_PAD_KEY]) };
-
-interface TouchMaps {
-  gamepadButtonMap: DeviceScopedMap<number, SnesButton>;
-  gamepadAxisMap: DeviceScopedMap<string, SnesButton>;
-}
+import { EMPTY_KEYBOARD, EMPTY_KEYS, TOUCH_ALLOWED } from './touch-bitmask.constants';
+import type { TouchMaps } from './touch-bitmask.type';
 
 let cached: TouchMaps | null = null;
 
@@ -31,7 +24,6 @@ const touchMaps = (): TouchMaps => {
   return cached;
 };
 
-/** The SNES button bitmask a touch pad (SDL layout) presses under the standard console-default mapping. */
 const touchBitmask = (pad: HidDeviceState): number =>
   computeBitmask({
     keyStates: EMPTY_KEYS,

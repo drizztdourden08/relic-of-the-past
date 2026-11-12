@@ -1,5 +1,5 @@
 /* @layer shared-input @kind barrel */
-export { DEFAULT_TOUCH_CONTROLS } from '../../touch/defaults/default-touch-controls';
+export { DEFAULT_TOUCH_CONTROLS } from '../../touch/defaults/default-touch-controls.constants';
 export {
   EMIT_TO_PAD_INDEX,
   SNAP_CELL_SIZE,
@@ -22,7 +22,7 @@ export { setMovementScale } from '../../touch/editing/set-movement-scale';
 export { setMovementType } from '../../touch/editing/set-movement-type';
 export { basePx } from '../../touch/geometry/base-px';
 export { buttonHitBox } from '../../touch/geometry/button-hit-box';
-export type { ButtonHitBox } from '../../touch/geometry/button-hit-box';
+export type { ButtonHitBox } from '../../touch/geometry/button-hit-box.type';
 export { clampPoint } from '../../touch/geometry/clamp-point';
 export { clampRect } from '../../touch/geometry/clamp-rect';
 export { movementRadiusPx } from '../../touch/geometry/movement-radius-px';

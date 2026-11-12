@@ -1,7 +1,6 @@
 /* @layer renderer-app @kind types */
 import type { DpadReading, PxPoint } from '@rotp/input-mapping';
 
-/** What one finger is doing. A finger keeps the target it landed on until it lifts. */
 type TouchSession = { point: PxPoint } & (
   | { kind: 'button'; buttonId: string | null }
   | { kind: 'movement'; base: PxPoint }
@@ -14,7 +13,6 @@ interface StickView {
   knob: PxPoint;
 }
 
-/** What the overlay draws from the fingers on it. */
 interface TouchViewState {
   pressed: ReadonlySet<string>;
   stick: StickView | null;
@@ -34,4 +32,4 @@ interface MenuHold {
   cancel: () => void;
 }
 
-export type { HoldRingState, MenuHold, StickView, TouchSession, TouchViewState };
+export type { HoldRingState, MenuHold, TouchSession, TouchViewState };

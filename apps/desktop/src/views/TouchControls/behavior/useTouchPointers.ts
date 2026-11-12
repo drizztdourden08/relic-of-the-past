@@ -1,29 +1,21 @@
 /* @layer renderer-app @kind hook */
 import { useCallback, useEffect, useRef, useState } from 'react';
 import type { PointerEvent } from 'react';
-import type { OrientationLayout } from '@rotp/features';
 import { clearTouchPad } from '@app/input/touch-pad/clear-touch-pad';
 import { publishTouchPad } from '@app/input/touch-pad/publish-touch-pad';
-import type { PxPoint, ScreenBox } from '@rotp/input-mapping';
+import type { PxPoint } from '@rotp/input-mapping';
 import { IDLE_VIEW } from '../TouchControls.constants';
-import type { MenuHold, TouchSession, TouchViewState } from '../TouchControls.type';
+import type { TouchSession, TouchViewState } from '../TouchControls.type';
 import { deriveTouchState } from './derive-touch-state';
-import { moveSession, startSession } from './pointer-sessions';
-
-interface PointerOptions {
-  layout: OrientationLayout;
-  box: ScreenBox;
-  enabled: boolean;
-  hold: MenuHold;
-  onPress: () => void;
-}
+import { moveSession } from './move-session';
+import { startSession } from './start-session';
+import type { PointerOptions } from './useTouchPointers.type';
 
 const localPoint = (event: PointerEvent<HTMLElement>): PxPoint => {
   const rect = event.currentTarget.getBoundingClientRect();
   return { x: event.clientX - rect.left, y: event.clientY - rect.top };
 };
 
-/** Multi-touch for the overlay: each finger keeps the target it landed on, and the pad is published on every change. */
 const useTouchPointers = (options: PointerOptions) => {
   const { layout, box, enabled, hold, onPress } = options;
   const sessions = useRef(new Map<number, TouchSession>());

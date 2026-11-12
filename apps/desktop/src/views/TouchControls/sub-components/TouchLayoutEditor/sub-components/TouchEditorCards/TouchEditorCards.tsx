@@ -1,5 +1,6 @@
 /* @layer renderer-app @kind component */
 import type { ReactNode } from 'react';
+import { Box } from '@drizztdourden08/tessera/primitives';
 import { cardSide } from '../../behavior/card-side';
 import { TouchAddCard } from '../TouchAddCard';
 import { TouchButtonCard } from '../TouchButtonCard';
@@ -13,9 +14,9 @@ const TouchEditorCards = (props: TouchEditorCardsProps) => {
   if (!selection) return null;
 
   const placed = (card: ReactNode) => (
-    <div className={`touch-editor-cards touch-editor-cards--${cardSide(selection, layout, box, orientation)}`}>
+    <Box className={`touch-editor-cards touch-editor-cards--${cardSide(selection, layout, box, orientation)}`}>
       {card}
-    </div>
+    </Box>
   );
 
   if (selection.kind === 'layer') return placed(<TouchLayerCard shared={shared} onChange={onShared} onReset={onReset} />);

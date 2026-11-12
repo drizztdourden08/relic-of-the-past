@@ -1,4 +1,5 @@
 /* @layer renderer-app @kind component */
+import { Box } from '@drizztdourden08/tessera/primitives';
 import { basePx, toPx } from '@rotp/input-mapping';
 import { TouchButton } from '@app/compounds/TouchButton';
 import { TouchDpad } from '@app/compounds/TouchDpad';
@@ -7,10 +8,9 @@ import { TouchStick } from '@app/compounds/TouchStick';
 import { TouchZone } from '@app/compounds/TouchZone';
 import { groupFrameRects } from '../../behavior/group-frame-rects';
 import { movementGeometry } from '../../behavior/movement-geometry';
+import { NO_PRESS } from './TouchEditorVisuals.constants';
 import './TouchEditorVisuals.css';
 import type { TouchEditorVisualsProps } from './TouchEditorVisuals.type';
-
-const NO_PRESS = { up: false, down: false, left: false, right: false };
 
 const TouchEditorVisuals = (props: TouchEditorVisualsProps) => {
   const { layout, box, strength, selection } = props;
@@ -47,7 +47,7 @@ const TouchEditorVisuals = (props: TouchEditorVisualsProps) => {
   };
 
   return (
-    <div className="touch-editor-visuals">
+    <Box className="touch-editor-visuals">
       {renderMovement()}
       {groupFrameRects(layout, box).map((frame) => (
         <TouchGroupFrame
@@ -69,7 +69,7 @@ const TouchEditorVisuals = (props: TouchEditorVisualsProps) => {
           selected={selectedButton?.id === button.id}
         />
       ))}
-    </div>
+    </Box>
   );
 };
 

@@ -1,15 +1,11 @@
 /* @layer renderer-app @kind hook */
 import { useState } from 'react';
-import type { OrientationLayout, TouchControlsSettings, TouchOrientation } from '@rotp/features';
+import type { OrientationLayout } from '@rotp/features';
 import { DEFAULT_TOUCH_CONTROLS } from '@rotp/input-mapping';
 import type { TouchEditorSelection, TouchSharedDraft } from '../TouchLayoutEditor.state.type';
-import { diffSharedDraft, pickSharedDraft } from './shared-draft';
-
-interface EditorDraftInput {
-  layout: OrientationLayout;
-  orientation: TouchOrientation;
-  touch: TouchControlsSettings;
-}
+import { diffSharedDraft } from './diff-shared-draft';
+import { pickSharedDraft } from './pick-shared-draft';
+import type { EditorDraftInput } from './useEditorDraft.type';
 
 const useEditorDraft = ({ layout, orientation, touch }: EditorDraftInput) => {
   const [draft, setDraft] = useState<OrientationLayout>(layout);

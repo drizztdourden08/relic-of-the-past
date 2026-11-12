@@ -10,7 +10,6 @@ import {
   W3C_TO_SDL_BUTTON,
 } from './touch-pad.constants';
 
-/** Re-index a W3C standard pad into the SDL layout every physical pad reaches the game in. */
 const toSdlPad = (pad: PadState): { buttons: boolean[]; axes: number[] } => {
   const buttons = Array.from({ length: SDL_PAD_BUTTON_COUNT }, () => false);
   for (const [w3c, sdl] of Object.entries(W3C_TO_SDL_BUTTON)) {

@@ -1,22 +1,8 @@
 /* @layer renderer-app @kind logic */
 import type { OrientationLayout } from '@rotp/features';
 import { movementRadiusPx, toPx } from '@rotp/input-mapping';
-import type { PxPoint, ScreenBox } from '@rotp/input-mapping';
-
-interface PxRect {
-  left: number;
-  top: number;
-  width: number;
-  height: number;
-}
-
-interface MovementGeometry {
-  /** The dynamic stick's zone; null for the fixed stick and the D-pad. */
-  zone: PxRect | null;
-  /** The fixed stick's or D-pad's centre; null for the dynamic stick. */
-  centre: PxPoint | null;
-  radiusPx: number;
-}
+import type { ScreenBox } from '@rotp/input-mapping';
+import type { MovementGeometry } from './movement-geometry.type';
 
 const movementGeometry = (layout: OrientationLayout, box: ScreenBox): MovementGeometry => {
   const radiusPx = movementRadiusPx(layout, box);
@@ -33,4 +19,3 @@ const movementGeometry = (layout: OrientationLayout, box: ScreenBox): MovementGe
 };
 
 export { movementGeometry };
-export type { MovementGeometry, PxRect };

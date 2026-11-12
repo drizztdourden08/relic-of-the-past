@@ -6,7 +6,6 @@ import type { HoldRingState, TouchViewState } from '../../TouchControls.type';
 interface TouchPlayLayerProps {
   layout: OrientationLayout;
   box: ScreenBox;
-  /** Opacity of the controls, 0.1..1. */
   strength: number;
   view: TouchViewState;
   ring: HoldRingState | null;

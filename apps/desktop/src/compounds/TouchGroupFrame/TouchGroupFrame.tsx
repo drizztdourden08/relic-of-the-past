@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind component */
-import { Icon } from '@drizztdourden08/tessera/primitives';
+import { Box, Icon } from '@drizztdourden08/tessera/primitives';
 import './TouchGroupFrame.css';
 import type { TouchGroupFrameProps } from './TouchGroupFrame.type';
 
@@ -12,15 +12,15 @@ const TouchGroupFrame = (props: TouchGroupFrameProps) => {
   ].filter(Boolean).join(' ');
 
   return (
-    <div
+    <Box
       className={className}
       style={{ left: rect.left, top: rect.top, width: rect.width, height: rect.height }}
       aria-hidden="true"
     >
-      <span className="touch-group-frame__badge">
+      <Box className="touch-group-frame__badge">
         <Icon name={locked ? 'lock' : 'lock-open'} />
-      </span>
-    </div>
+      </Box>
+    </Box>
   );
 };
 

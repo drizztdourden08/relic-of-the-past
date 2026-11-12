@@ -1,4 +1,5 @@
 /* @layer renderer-app @kind component */
+import { Box } from '@drizztdourden08/tessera/primitives';
 import { EDITOR_MIN_STRENGTH } from './TouchLayoutEditor.constants';
 import { useEditorActions } from './behavior/useEditorActions';
 import { useEditorDraft } from './behavior/useEditorDraft';
@@ -20,7 +21,7 @@ const TouchLayoutEditor = (props: TouchLayoutEditorProps) => {
   const strength = Math.max(EDITOR_MIN_STRENGTH, shared.buttonStrength);
 
   return (
-    <div className="touch-layout-editor" onPointerDown={() => setSelection(null)}>
+    <Box className="touch-layout-editor" onPointerDown={() => setSelection(null)}>
       <TouchEditorGrid box={box} snap={shared.snap} />
       <TouchEditorVisuals layout={draft} box={box} strength={strength} selection={selection} />
       <TouchEditorHitAreas layout={draft} box={box} drag={drag} onSelect={setSelection} />
@@ -41,7 +42,7 @@ const TouchLayoutEditor = (props: TouchLayoutEditorProps) => {
         onShared={editor.patchShared}
         onReset={editor.resetLayout}
       />
-    </div>
+    </Box>
   );
 };
 

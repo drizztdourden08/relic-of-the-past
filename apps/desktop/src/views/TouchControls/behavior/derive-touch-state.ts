@@ -1,21 +1,12 @@
 /* @layer renderer-app @kind logic */
 import type { OrientationLayout, TouchEmit } from '@rotp/features';
 import { buildPadState, movementRadiusPx, readDpad, readStick } from '@rotp/input-mapping';
-import type { PadState, ScreenBox } from '@rotp/input-mapping';
+import type { ScreenBox } from '@rotp/input-mapping';
 import { IDLE_VIEW } from '../TouchControls.constants';
 import type { TouchSession, TouchViewState } from '../TouchControls.type';
+import { DIRECTIONS } from './derive-touch-state.constants';
+import type { Derived } from './derive-touch-state.type';
 
-interface Derived {
-  view: TouchViewState;
-  pad: PadState;
-}
-
-const DIRECTIONS = ['up', 'down', 'left', 'right'] as const;
-
-/**
- * Turns the fingers on the overlay into what to draw and the pad to publish.
- * A leashed stick drags its base along, so the movement session's base is updated here.
- */
 const deriveTouchState = (sessions: ReadonlyMap<number, TouchSession>, layout: OrientationLayout, box: ScreenBox): Derived => {
   const pressed = new Set<string>();
   const emits = new Set<TouchEmit>();

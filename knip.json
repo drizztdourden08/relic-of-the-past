@@ -75,7 +75,6 @@
         "@capacitor/android",
         "@capacitor/cli",
         "@capacitor/assets",
-        "@capacitor/haptics",
         "@capacitor-community/keep-awake",
         "vite-plugin-node-polyfills",
         "@rotp/workspace",

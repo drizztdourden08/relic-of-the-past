@@ -1,9 +1,8 @@
 /* @layer shared-input @kind constants */
 import type { TouchControlsSettings } from '@rotp/features';
-import { DEFAULT_LANDSCAPE_LAYOUT } from './default-landscape-layout';
-import { DEFAULT_PORTRAIT_LAYOUT } from './default-portrait-layout';
+import { DEFAULT_LANDSCAPE_LAYOUT } from './default-landscape-layout.constants';
+import { DEFAULT_PORTRAIT_LAYOUT } from './default-portrait-layout.constants';
 
-/** Device-wide touch overlay settings out of the box. Only mobile hosts draw the overlay. */
 const DEFAULT_TOUCH_CONTROLS: TouchControlsSettings = {
   enabled: true,
   hideWithPad: true,

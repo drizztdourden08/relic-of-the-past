@@ -1,29 +1,8 @@
 /* @layer renderer-app @kind hook */
 import { useRef } from 'react';
 import type { PointerEvent } from 'react';
-import type { OrientationLayout, TouchPoint, TouchSnap } from '@rotp/features';
-import type { ScreenBox } from '@rotp/input-mapping';
 import { DRAG_THRESHOLD_PX } from '../TouchLayoutEditor.constants';
-
-/** Moves the layout from its state at drag start by the total delta since then. */
-type DragApply = (start: OrientationLayout, delta: TouchPoint, snap: TouchSnap, box: ScreenBox) => OrientationLayout;
-
-interface DragSession {
-  pointerId: number;
-  x: number;
-  y: number;
-  start: OrientationLayout;
-  apply: DragApply;
-  onTap: () => void;
-  moved: boolean;
-}
-
-interface EditorDragInput {
-  layout: OrientationLayout;
-  box: ScreenBox;
-  snap: TouchSnap;
-  onLayout: (layout: OrientationLayout) => void;
-}
+import type { DragApply, DragSession, EditorDragInput } from './useEditorDrag.type';
 
 const useEditorDrag = ({ layout, box, snap, onLayout }: EditorDragInput) => {
   const session = useRef<DragSession | null>(null);
@@ -44,7 +23,7 @@ const useEditorDrag = ({ layout, box, snap, onLayout }: EditorDragInput) => {
 
   const move = (event: PointerEvent<HTMLElement>) => {
     const current = session.current;
-    if (!current || current.pointerId !== event.pointerId) return;
+    if (current?.pointerId !== event.pointerId) return;
     const dx = event.clientX - current.x;
     const dy = event.clientY - current.y;
     if (!current.moved && Math.hypot(dx, dy) < DRAG_THRESHOLD_PX) return;
@@ -54,7 +33,7 @@ const useEditorDrag = ({ layout, box, snap, onLayout }: EditorDragInput) => {
 
   const end = (event: PointerEvent<HTMLElement>) => {
     const current = session.current;
-    if (!current || current.pointerId !== event.pointerId) return;
+    if (current?.pointerId !== event.pointerId) return;
     session.current = null;
     if (!current.moved) current.onTap();
   };
@@ -67,4 +46,3 @@ const useEditorDrag = ({ layout, box, snap, onLayout }: EditorDragInput) => {
 };
 
 export { useEditorDrag };
-export type { DragApply };

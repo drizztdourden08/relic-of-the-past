@@ -1,0 +1,17 @@
+/* @layer renderer-app @kind style */
+.progress-ring {
+  display: block;
+}
+
+.progress-ring__track {
+  fill: none;
+  stroke: var(--c-text-faint);
+  stroke-width: 4;
+}
+
+.progress-ring__fill {
+  fill: none;
+  stroke: var(--c-primary);
+  stroke-width: 4;
+  stroke-linecap: round;
+}

@@ -1,21 +1,11 @@
 /* @layer shared-input @kind logic */
-import type { OrientationLayout, TouchPoint, TouchSnap } from '@rotp/features';
+import type { OrientationLayout } from '@rotp/features';
 import { clampPoint } from '../geometry/clamp-point';
 import { snapPoint } from '../geometry/snap-point';
-import type { ScreenBox } from '../touch-logic.type';
 import { lockedGroupOf } from './locked-group-of';
+import type { MoveButtonOptions } from './move-button.type';
 
-/**
- * Moves a button by the total drag offset from the layout at drag start. A member of a locked
- * group drags the whole group by the dragged button's actual offset; anything else moves alone.
- */
-const moveButton = (
-  layout: OrientationLayout,
-  id: string,
-  delta: TouchPoint,
-  snap: TouchSnap,
-  box: ScreenBox,
-): OrientationLayout => {
+const moveButton = (layout: OrientationLayout, { id, delta, snap, box }: MoveButtonOptions): OrientationLayout => {
   const dragged = layout.buttons.find((button) => button.id === id);
   if (!dragged) return layout;
   const moved = clampPoint({ x: dragged.at.x + delta.x, y: dragged.at.y + delta.y });

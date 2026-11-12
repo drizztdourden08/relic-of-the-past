@@ -3,14 +3,7 @@ import { useCallback } from 'react';
 import { useSettings } from '@drizztdourden08/brock-react';
 import type { OrientationLayout, TouchControlsSettings, TouchOrientation } from '@rotp/features';
 import type { AppSettings } from '@app/settings.type';
-
-type TouchPatch = Partial<Omit<TouchControlsSettings, 'layouts'>>;
-
-interface TouchControlsSettingsApi {
-  touch: TouchControlsSettings;
-  updateTouch: (patch: TouchPatch) => void;
-  updateLayout: (orientation: TouchOrientation, layout: OrientationLayout) => void;
-}
+import type { TouchControlsSettingsApi, TouchPatch } from './useTouchControlsSettings.type';
 
 const useTouchControlsSettings = (): TouchControlsSettingsApi => {
   const { settings, patch } = useSettings<AppSettings>();
@@ -31,4 +24,3 @@ const useTouchControlsSettings = (): TouchControlsSettingsApi => {
 };
 
 export { useTouchControlsSettings };
-export type { TouchControlsSettingsApi };

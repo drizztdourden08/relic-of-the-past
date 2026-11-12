@@ -1,5 +1,5 @@
 /* @layer renderer-app @kind hook */
-import type { MovementType, OrientationLayout, TouchButtonShape, TouchEmit } from '@rotp/features';
+import type { MovementType, TouchButtonShape, TouchEmit } from '@rotp/features';
 import {
   addButton,
   removeButton,
@@ -11,13 +11,7 @@ import {
   setMovementType,
 } from '@rotp/input-mapping';
 import { ADD_AT } from '../TouchLayoutEditor.constants';
-import type { TouchEditorSelection } from '../TouchLayoutEditor.state.type';
-
-interface EditorActionsInput {
-  layout: OrientationLayout;
-  onLayout: (layout: OrientationLayout) => void;
-  onSelect: (selection: TouchEditorSelection) => void;
-}
+import type { EditorActionsInput } from './useEditorActions.type';
 
 const useEditorActions = ({ layout, onLayout, onSelect }: EditorActionsInput) => ({
   setEmit: (id: string, emit: TouchEmit) => onLayout(setButtonEmit(layout, id, emit)),

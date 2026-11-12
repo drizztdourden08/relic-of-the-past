@@ -2,7 +2,6 @@
 import type { TouchRect } from '@rotp/features';
 import { clampNumber } from './clamp-number';
 
-/** Keeps a rectangle inside the screen, shifting it before shrinking it. */
 const clampRect = (r: TouchRect): TouchRect => {
   const w = clampNumber(r.w, 0, 1);
   const h = clampNumber(r.h, 0, 1);

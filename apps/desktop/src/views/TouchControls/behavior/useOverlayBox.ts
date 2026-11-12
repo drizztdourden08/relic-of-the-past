@@ -2,10 +2,8 @@
 import { useLayoutEffect, useState } from 'react';
 import type { RefObject } from 'react';
 import type { ScreenBox } from '@rotp/input-mapping';
+import { EMPTY_BOX } from './useOverlayBox.constants';
 
-const EMPTY_BOX: ScreenBox = { width: 0, height: 0 };
-
-/** The element's size in CSS px, as a new object only when the size changes. */
 const useOverlayBox = (ref: RefObject<HTMLElement | null>): ScreenBox => {
   const [box, setBox] = useState<ScreenBox>(EMPTY_BOX);
 

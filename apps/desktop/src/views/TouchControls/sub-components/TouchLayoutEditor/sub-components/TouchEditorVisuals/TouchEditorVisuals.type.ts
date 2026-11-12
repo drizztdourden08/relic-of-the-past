@@ -6,7 +6,6 @@ import type { TouchEditorSelection } from '../../TouchLayoutEditor.state.type';
 interface TouchEditorVisualsProps {
   layout: OrientationLayout;
   box: ScreenBox;
-  /** Piece opacity, already raised to the editor floor. */
   strength: number;
   selection: TouchEditorSelection;
 }

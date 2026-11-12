@@ -2,16 +2,9 @@
 import type { OrientationLayout } from '@rotp/features';
 import { basePx, toPx } from '@rotp/input-mapping';
 import type { ScreenBox } from '@rotp/input-mapping';
-import type { TouchGroupFrameRect } from '@app/compounds/TouchGroupFrame';
 import { GROUP_FRAME_PAD_PX } from '../TouchLayoutEditor.constants';
+import type { GroupFrameEntry } from './group-frame-rects.type';
 
-interface GroupFrameEntry {
-  id: string;
-  locked: boolean;
-  rect: TouchGroupFrameRect;
-}
-
-/** The bounding rectangle of each group's members, padded. */
 const groupFrameRects = (layout: OrientationLayout, box: ScreenBox): GroupFrameEntry[] => {
   const base = basePx(box);
   const entries: GroupFrameEntry[] = [];
@@ -45,4 +38,3 @@ const groupFrameRects = (layout: OrientationLayout, box: ScreenBox): GroupFrameE
 };
 
 export { groupFrameRects };
-export type { GroupFrameEntry };

@@ -33,6 +33,6 @@
 
 .touch-button__label {
   font-size: var(--text-md);
-  font-weight: 700;
+  font-weight: var(--weight-semi);
   color: inherit;
 }

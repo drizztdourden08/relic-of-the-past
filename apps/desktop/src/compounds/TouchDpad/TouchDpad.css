@@ -1,44 +1,11 @@
 /* @layer renderer-app @kind style */
 .touch-dpad {
   position: absolute;
-  overflow: visible;
   pointer-events: none;
   opacity: var(--touch-strength);
-  color: var(--c-text);
 }
 
 .touch-dpad[data-selected] {
   opacity: 1;
   filter: drop-shadow(0 0 var(--size-3) var(--c-primary));
-}
-
-.touch-dpad__body {
-  fill: none;
-  stroke: currentColor;
-  stroke-width: 4;
-  stroke-linejoin: round;
-}
-
-.touch-dpad__arm-fill {
-  fill: transparent;
-}
-
-.touch-dpad__notch {
-  fill: currentColor;
-  opacity: 0.6;
-}
-
-.touch-dpad__arm[data-pressed] .touch-dpad__arm-fill {
-  fill: currentColor;
-}
-
-.touch-dpad__arm[data-pressed] .touch-dpad__notch {
-  fill: var(--c-bg);
-  opacity: 1;
-}
-
-.touch-dpad__hub {
-  fill: none;
-  stroke: currentColor;
-  stroke-width: 4;
 }

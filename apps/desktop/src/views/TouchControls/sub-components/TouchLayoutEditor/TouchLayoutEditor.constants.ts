@@ -1,19 +1,14 @@
 /* @layer renderer-app @kind constants */
 import type { MovementType, TouchButtonShape, TouchEmit } from '@rotp/features';
 
-/** Pieces draw at least this strong while editing so they stay visible. */
 const EDITOR_MIN_STRENGTH = 0.6;
 
-/** A pointer must travel this far before a press becomes a drag. */
 const DRAG_THRESHOLD_PX = 6;
 
-/** Padding of a group frame around its members. */
 const GROUP_FRAME_PAD_PX = 8;
 
-/** Smallest hit area of a piece. */
 const MIN_HIT_PX = 44;
 
-/** Side of the zone resize handle. */
 const RESIZE_HANDLE_PX = 32;
 
 const BUTTON_SCALE_RANGE = { min: 0.6, max: 1.8, step: 0.05 } as const;

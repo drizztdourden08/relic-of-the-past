@@ -1,11 +1,9 @@
 /* @layer shared-input @kind logic */
 import type { OrientationLayout, TouchEmit, TouchPoint } from '@rotp/features';
 import { clampPoint } from '../geometry/clamp-point';
+import { ROUND_EMITS } from './add-button.constants';
 import { emitLabel } from './emit-label';
 
-const ROUND_EMITS: ReadonlySet<TouchEmit> = new Set<TouchEmit>(['a', 'b', 'x', 'y']);
-
-/** Adds a free button with an id of the form `<emit>-<n>` that no other button uses. */
 const addButton = (layout: OrientationLayout, emit: TouchEmit, at: TouchPoint): OrientationLayout => {
   const used = new Set(layout.buttons.map((button) => button.id));
   let n = 1;

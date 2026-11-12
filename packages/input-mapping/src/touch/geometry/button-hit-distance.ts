@@ -2,10 +2,8 @@
 import type { TouchButton } from '@rotp/features';
 import type { PxPoint, ScreenBox } from '../touch-logic.type';
 import { buttonHitBox } from './button-hit-box';
+import { HIT_GROW } from './button-hit-distance.constants';
 
-const HIT_GROW = 1.15;
-
-/** Distance from a touch to the button's centre when the touch is inside its grown hit box, otherwise null. */
 const buttonHitDistance = (p: PxPoint, button: TouchButton, box: ScreenBox): number | null => {
   const hit = buttonHitBox(button, box);
   const dx = p.x - hit.center.x;

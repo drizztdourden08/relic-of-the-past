@@ -4,7 +4,6 @@ import type { MenuEntry } from '@drizztdourden08/brock-react';
 import { useTouchControlsSettings } from '@app/hooks/useTouchControlsSettings';
 import { useTouchControlsStore } from '@app/stores/touch-controls-store';
 
-/** The touch-controls entries of the drawer: edit the layout (while on) and hide or show the overlay. */
 const useTouchMenuEntries = (): MenuEntry[] => {
   const { touch, updateTouch } = useTouchControlsSettings();
   const setEditing = useTouchControlsStore((s) => s.setEditing);

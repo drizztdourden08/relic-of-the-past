@@ -1,12 +1,10 @@
 /* @layer renderer-app @kind component */
 import { Button, Card, Flex, SegmentedControl, Select, Slider } from '@drizztdourden08/tessera/primitives';
-import { emitLabel } from '@rotp/input-mapping';
 import type { TouchEmit } from '@rotp/features';
-import { ALL_EMITS, BUTTON_SCALE_RANGE, SHAPE_OPTIONS } from '../../TouchLayoutEditor.constants';
+import { BUTTON_SCALE_RANGE, SHAPE_OPTIONS } from '../../TouchLayoutEditor.constants';
+import { EMIT_OPTIONS } from './TouchButtonCard.constants';
 import './TouchButtonCard.css';
 import type { TouchButtonCardProps } from './TouchButtonCard.type';
-
-const EMIT_OPTIONS = ALL_EMITS.map((emit) => ({ value: emit, label: emitLabel(emit) }));
 
 const TouchButtonCard = (props: TouchButtonCardProps) => {
   const { button, group, onEmit, onScale, onShape, onRemove, onLock } = props;

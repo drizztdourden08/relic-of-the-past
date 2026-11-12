@@ -5,7 +5,6 @@ import { clampRect } from '../geometry/clamp-rect';
 import { snapPoint } from '../geometry/snap-point';
 import type { ScreenBox } from '../touch-logic.type';
 
-/** Moves the current movement control by the total drag offset: the zone's top-left for the dynamic stick, `at` otherwise. */
 const moveMovement = (layout: OrientationLayout, delta: TouchPoint, snap: TouchSnap, box: ScreenBox): OrientationLayout => {
   const place = (p: TouchPoint): TouchPoint => {
     const clamped = clampPoint(p);

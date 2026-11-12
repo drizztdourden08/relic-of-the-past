@@ -3,9 +3,8 @@ import type { OrientationLayout, TouchOrientation } from '@rotp/features';
 import { toPx } from '@rotp/input-mapping';
 import type { PxPoint, ScreenBox } from '@rotp/input-mapping';
 import type { TouchEditorSelection } from '../TouchLayoutEditor.state.type';
+import type { CardSide } from './card-side.type';
 import { movementGeometry } from './movement-geometry';
-
-type CardSide = 'left' | 'right' | 'top' | 'bottom';
 
 const selectedCentre = (
   selection: TouchEditorSelection,
@@ -24,7 +23,6 @@ const selectedCentre = (
   return null;
 };
 
-/** The half of the screen opposite the selected piece, so the card never covers it. */
 const cardSide = (
   selection: TouchEditorSelection,
   layout: OrientationLayout,
@@ -37,4 +35,3 @@ const cardSide = (
 };
 
 export { cardSide };
-export type { CardSide };

@@ -1,12 +1,10 @@
 /* @layer shared-input @kind logic */
 import type { OrientationLayout } from '@rotp/features';
 import type { PxPoint, ScreenBox } from '../touch-logic.type';
+import { MOVEMENT_HIT_GROW } from './hits-movement.constants';
 import { movementRadiusPx } from './movement-radius-px';
 import { toPx } from './to-px';
 
-const MOVEMENT_HIT_GROW = 1.25;
-
-/** True when a touch lands on the current movement control: the zone rect for the dynamic stick, a circle for the others. */
 const hitsMovement = (p: PxPoint, layout: OrientationLayout, box: ScreenBox): boolean => {
   if (layout.movementType === 'dynamic-stick') {
     const zone = layout.movements['dynamic-stick'].zone;

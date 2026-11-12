@@ -6,7 +6,6 @@ import { TOUCH_DEVICE_ENTRY } from './touch-pad.constants';
 
 let cached: ModernBindings | null = null;
 
-/** The Modern-scheme bindings of the virtual touch pad: the default core verbs and slots of a standard pad. */
 const touchModernBindings = (): ModernBindings => {
   if (cached) return cached;
   const controls = resolveDeviceFromEntry(TOUCH_DEVICE_ENTRY).controls;

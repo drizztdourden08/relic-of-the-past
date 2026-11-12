@@ -52,6 +52,12 @@ const rotpExtension = {
         why: 'The editor rails take the width the user drags them to, and the stage keeps the aspect ratio of the live game view.',
       }, {
         files: [
+          'apps/desktop/src/compounds/{TouchButton,TouchStick,TouchDpad,TouchZone,TouchGroupFrame,HoldRing}/**/*.{ts,tsx}',
+          'apps/desktop/src/views/TouchControls/**/*.{ts,tsx}',
+        ],
+        why: 'Each touch control sits where the player placed it, at the size the player chose, measured against the live screen, and the stick follows the thumb: a value per element that no shared class can carry.',
+      }, {
+        files: [
           'apps/website/src/components/WorldBackdrop/sub-components/Fireflies/Fireflies.tsx',
           'apps/website/src/components/CommunitySection/sub-components/CommunityTexture/CommunityTexture.tsx',
         ],

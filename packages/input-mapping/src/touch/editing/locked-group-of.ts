@@ -1,7 +1,6 @@
 /* @layer shared-input @kind logic */
 import type { OrientationLayout, TouchButton } from '@rotp/features';
 
-/** The group id of a button that belongs to a locked group, otherwise null. */
 const lockedGroupOf = (layout: OrientationLayout, button: TouchButton): string | null => {
   if (button.group === null) return null;
   const group = layout.groups.find((candidate) => candidate.id === button.group);

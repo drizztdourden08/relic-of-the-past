@@ -5,10 +5,8 @@ import { clampPoint } from '../geometry/clamp-point';
 import { clampRect } from '../geometry/clamp-rect';
 import { snapPoint } from '../geometry/snap-point';
 import type { ScreenBox } from '../touch-logic.type';
+import { MIN_ZONE_SIZE } from './resize-zone.constants';
 
-const MIN_ZONE_SIZE = 0.15;
-
-/** Moves the dynamic zone's bottom-right corner by the total drag offset, keeping a minimum size inside the screen. */
 const resizeZone = (layout: OrientationLayout, delta: TouchPoint, snap: TouchSnap, box: ScreenBox): OrientationLayout => {
   const stick = layout.movements['dynamic-stick'];
   const moved = clampPoint({ x: stick.zone.x + stick.zone.w + delta.x, y: stick.zone.y + stick.zone.h + delta.y });

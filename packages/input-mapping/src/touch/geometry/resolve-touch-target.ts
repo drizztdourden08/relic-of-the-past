@@ -4,7 +4,6 @@ import type { PxPoint, ScreenBox, TouchTarget } from '../touch-logic.type';
 import { buttonHitDistance } from './button-hit-distance';
 import { hitsMovement } from './hits-movement';
 
-/** Buttons first (nearest centre wins), then the movement control, then empty space. */
 const resolveTouchTarget = (p: PxPoint, layout: OrientationLayout, box: ScreenBox): TouchTarget => {
   let bestId: string | null = null;
   let bestDistance = Infinity;

@@ -3,10 +3,8 @@ import { useEffect, useState } from 'react';
 import { useTouchControlsSettings } from '@app/hooks/useTouchControlsSettings';
 import { useTouchPadHidden } from '@app/input/touch-pad/useTouchPadHidden';
 import { isMobileHost } from '@app/platform/is-mobile-host';
+import { PORTRAIT_QUERY } from './useTouchPortrait.constants';
 
-const PORTRAIT_QUERY = '(orientation: portrait)';
-
-/** True when the touch overlay is on and the screen is portrait, so the picture sits at the top and the controls take the space below. */
 const useTouchPortrait = (): boolean => {
   const { touch } = useTouchControlsSettings();
   const hiddenByPad = useTouchPadHidden();

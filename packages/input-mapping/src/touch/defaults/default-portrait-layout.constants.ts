@@ -1,10 +1,6 @@
 /* @layer shared-input @kind constants */
 import type { OrientationLayout } from '@rotp/features';
 
-/**
- * Portrait: the game picture sits at the top (about the top 40% of a phone screen), so
- * every control sits below it. Movement bottom-left, face buttons bottom-right.
- */
 const DEFAULT_PORTRAIT_LAYOUT: OrientationLayout = {
   movementType: 'dynamic-stick',
   movements: {

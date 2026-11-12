@@ -3,15 +3,6 @@ import type { TouchControlsSettings } from '@rotp/features';
 import type { TouchSharedPatch } from '../TouchLayoutEditor.type';
 import type { TouchSharedDraft } from '../TouchLayoutEditor.state.type';
 
-const pickSharedDraft = (touch: TouchControlsSettings): TouchSharedDraft => ({
-  buttonStrength: touch.buttonStrength,
-  layerOpacity: touch.layerOpacity,
-  haptics: touch.haptics,
-  snap: { ...touch.snap },
-  menuHoldMs: touch.menuHoldMs,
-});
-
-/** Only the fields whose draft value differs from the saved one. */
 const diffSharedDraft = (saved: TouchControlsSettings, draft: TouchSharedDraft): TouchSharedPatch => {
   const patch: TouchSharedPatch = {};
   if (draft.buttonStrength !== saved.buttonStrength) patch.buttonStrength = draft.buttonStrength;
@@ -22,4 +13,4 @@ const diffSharedDraft = (saved: TouchControlsSettings, draft: TouchSharedDraft):
   return patch;
 };
 
-export { diffSharedDraft, pickSharedDraft };
+export { diffSharedDraft };

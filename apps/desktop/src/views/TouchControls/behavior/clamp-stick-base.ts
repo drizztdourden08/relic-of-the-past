@@ -5,7 +5,6 @@ import type { PxPoint, ScreenBox } from '@rotp/input-mapping';
 const clampRange = (value: number, low: number, high: number): number =>
   low > high ? (low + high) / 2 : Math.min(high, Math.max(low, value));
 
-/** Where a dynamic stick's ring sits for a touch at `point`: the point, nudged so the whole ring stays inside the zone. */
 const clampStickBase = (point: PxPoint, zone: TouchRect, radiusPx: number, box: ScreenBox): PxPoint => ({
   x: clampRange(point.x, zone.x * box.width + radiusPx, (zone.x + zone.w) * box.width - radiusPx),
   y: clampRange(point.y, zone.y * box.height + radiusPx, (zone.y + zone.h) * box.height - radiusPx),
