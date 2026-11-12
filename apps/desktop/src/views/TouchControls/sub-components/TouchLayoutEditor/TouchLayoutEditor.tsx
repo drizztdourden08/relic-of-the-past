@@ -17,7 +17,7 @@ const TouchLayoutEditor = (props: TouchLayoutEditorProps) => {
   const editor = useEditorDraft({ layout, orientation, touch });
   const { draft, setDraft, shared, selection, setSelection } = editor;
   const drag = useEditorDrag({ layout: draft, box, snap: shared.snap, onLayout: setDraft });
-  const actions = useEditorActions({ layout: draft, onLayout: setDraft, onSelect: setSelection });
+  const actions = useEditorActions({ layout: draft, box, onLayout: setDraft, onSelect: setSelection });
   const strength = Math.max(EDITOR_MIN_STRENGTH, shared.buttonStrength);
 
   return (

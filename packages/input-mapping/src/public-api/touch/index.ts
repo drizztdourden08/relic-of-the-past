@@ -16,8 +16,12 @@ export {
 } from '../../touch/binding';
 export type { StickDirection, TouchBindTarget } from '../../touch/binding';
 export { addButton } from '../../touch/editing/add-button';
+export { addGroup } from '../../touch/editing/add-group';
 export { emitLabel } from '../../touch/editing/emit-label';
+export { GROUP_PRESETS, GROUP_PRESET_IDS } from '../../touch/editing/group-presets.constants';
+export type { GroupPresetId } from '../../touch/editing/group-preset.type';
 export { moveButton } from '../../touch/editing/move-button';
+export { moveGroup } from '../../touch/editing/move-group';
 export { moveMovement } from '../../touch/editing/move-movement';
 export { removeButton } from '../../touch/editing/remove-button';
 export { resizeZone } from '../../touch/editing/resize-zone';

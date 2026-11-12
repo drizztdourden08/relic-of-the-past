@@ -1,15 +1,12 @@
 /* @layer renderer-app @kind logic */
 import type { OrientationLayout } from '@rotp/features';
-import { movementRadiusPx, resolveTouchTarget, toPx } from '@rotp/input-mapping';
+import { resolveTouchTarget, toPx } from '@rotp/input-mapping';
 import type { PxPoint, ScreenBox } from '@rotp/input-mapping';
 import type { TouchSession } from '../TouchControls.type';
-import { clampStickBase } from './clamp-stick-base';
 
 const movementBase = (point: PxPoint, layout: OrientationLayout, box: ScreenBox): PxPoint => {
   const { movements, movementType } = layout;
-  if (movementType === 'dynamic-stick') {
-    return clampStickBase(point, movements['dynamic-stick'].zone, movementRadiusPx(layout, box), box);
-  }
+  if (movementType === 'dynamic-stick') return point;
   return toPx(movements[movementType].at, box);
 };
 

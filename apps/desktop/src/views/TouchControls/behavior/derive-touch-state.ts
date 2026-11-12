@@ -30,8 +30,7 @@ const deriveTouchState = (sessions: ReadonlyMap<number, TouchSession>, layout: O
       continue;
     }
     const { deadZone } = layout.movements[layout.movementType];
-    const reading = readStick({ base: session.base, thumb: session.point }, radius, deadZone, layout.movementType === 'dynamic-stick');
-    session.base = reading.base;
+    const reading = readStick({ base: session.base, thumb: session.point }, radius, deadZone);
     stickAxes = reading.axes;
     const knob = { x: reading.base.x + reading.axes[0] * radius, y: reading.base.y + reading.axes[1] * radius };
     view = { ...view, stick: { base: reading.base, knob } };

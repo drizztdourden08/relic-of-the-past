@@ -1,50 +1,47 @@
 /* @layer renderer-app @kind component */
 import { Box } from '@drizztdourden08/tessera/primitives';
-import { basePx, moveButton, moveMovement, resizeZone, toPx } from '@rotp/input-mapping';
-import { movementGeometry } from '../../behavior/movement-geometry';
-import { MIN_HIT_PX, RESIZE_HANDLE_PX } from '../../TouchLayoutEditor.constants';
+import { basePx, moveButton, moveGroup, moveMovement, resizeZone, toPx } from '@rotp/input-mapping';
+import { groupFrameRects } from '../../behavior/group-frame-rects';
+import { MIN_HIT_PX } from '../../TouchLayoutEditor.constants';
+import { groupSelection } from './behavior/group-selection';
+import { movementHitRects } from './behavior/movement-hit-rects';
 import './TouchEditorHitAreas.css';
 import type { TouchEditorHitAreasProps } from './TouchEditorHitAreas.type';
 
 const TouchEditorHitAreas = (props: TouchEditorHitAreasProps) => {
   const { layout, box, drag, onSelect } = props;
   const base = basePx(box);
-  const geometry = movementGeometry(layout, box);
-  const pointerHandlers = {
-    onPointerMove: drag.move,
-    onPointerUp: drag.end,
-    onPointerCancel: drag.cancel,
-  };
-
-  const movementArea = () => {
-    if (geometry.zone) return geometry.zone;
-    if (!geometry.centre) return null;
-    const half = Math.max(geometry.radiusPx, MIN_HIT_PX / 2);
-    return { left: geometry.centre.x - half, top: geometry.centre.y - half, width: half * 2, height: half * 2 };
-  };
-  const movement = movementArea();
+  const movement = movementHitRects(layout, box);
+  const selectMovement = (): void => onSelect({ kind: 'movement' });
 
   return (
-    <Box className="touch-editor-hit" {...pointerHandlers}>
-      {movement && (
+    <Box className="touch-editor-hit" onPointerMove={drag.move} onPointerUp={drag.end} onPointerCancel={drag.cancel}>
+      {movement.area && (
         <Box
-          className={`touch-editor-hit__area${geometry.zone ? '' : ' touch-editor-hit__area--round'}`}
-          style={movement}
-          onPointerDown={(event) => drag.begin(event, moveMovement, () => onSelect({ kind: 'movement' }))}
+          className={`touch-editor-hit__area${movement.round ? ' touch-editor-hit__area--round' : ''}`}
+          style={movement.area}
+          onPointerDown={(event) => drag.begin(event, moveMovement, selectMovement)}
         />
       )}
-      {geometry.zone && (
+      {movement.handle && (
         <Box
           className="touch-editor-hit__handle"
-          style={{
-            left: geometry.zone.left + geometry.zone.width - RESIZE_HANDLE_PX,
-            top: geometry.zone.top + geometry.zone.height - RESIZE_HANDLE_PX,
-            width: RESIZE_HANDLE_PX,
-            height: RESIZE_HANDLE_PX,
-          }}
-          onPointerDown={(event) => drag.begin(event, resizeZone, () => onSelect({ kind: 'movement' }))}
+          style={movement.handle}
+          onPointerDown={(event) => drag.begin(event, resizeZone, selectMovement)}
         />
       )}
+      {groupFrameRects(layout, box).map((frame) => (
+        <Box
+          key={`group-${frame.id}`}
+          className="touch-editor-hit__area"
+          style={frame.rect}
+          onPointerDown={(event) => drag.begin(
+            event,
+            (start, delta, snap, screen) => moveGroup(start, { groupId: frame.id, delta, snap, box: screen }),
+            () => onSelect(groupSelection(layout, frame.id)),
+          )}
+        />
+      ))}
       {layout.buttons.map((button) => {
         const centre = toPx(button.at, box);
         const size = Math.max(base * button.scale, MIN_HIT_PX);

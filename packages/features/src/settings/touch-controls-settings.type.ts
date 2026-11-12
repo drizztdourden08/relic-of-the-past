@@ -89,6 +89,7 @@ interface TouchControlsSettings {
   buttonStrength: number;
   layerOpacity: number;
   haptics: boolean;
+  hapticStrength: number;
   snap: TouchSnap;
   menuHoldMs: number;
   layouts: Record<TouchOrientation, OrientationLayout>;

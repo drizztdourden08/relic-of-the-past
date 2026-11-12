@@ -3,13 +3,11 @@ import type { OrientationLayout, TouchEmit, TouchPoint } from '@rotp/features';
 import { clampPoint } from '../geometry/clamp-point';
 import { ROUND_EMITS } from './add-button.constants';
 import { emitLabel } from './emit-label';
+import { uniqueButtonId } from './unique-button-id';
 
 const addButton = (layout: OrientationLayout, emit: TouchEmit, at: TouchPoint): OrientationLayout => {
-  const used = new Set(layout.buttons.map((button) => button.id));
-  let n = 1;
-  while (used.has(`${emit}-${n}`)) n += 1;
   const button = {
-    id: `${emit}-${n}`,
+    id: uniqueButtonId(new Set(layout.buttons.map((b) => b.id)), emit),
     emit,
     label: emitLabel(emit),
     at: clampPoint(at),

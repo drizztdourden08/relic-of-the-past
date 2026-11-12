@@ -6,7 +6,7 @@ import { refuseEdit } from './refuse-edit';
 const EMPTY_ARRAY_METHODS = new Set<string>([
   'listProfiles', 'listRoms', 'listRomsWithStatus', 'listStates', 'listSessions',
   'listNormalSaves',
-  'listAutoSaves', 'getSlotInfos', 'takeOpenRequests',
+  'listAutoSaves', 'getSlotInfos',
 ]);
 
 const STUB_RETURNS: Record<string, () => unknown> = {

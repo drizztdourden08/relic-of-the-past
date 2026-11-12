@@ -21,7 +21,7 @@ const TouchSurface = (props: TouchSurfaceProps) => {
   const editing = useTouchControlsStore((s) => s.editing);
   const setEditing = useTouchControlsStore((s) => s.setEditing);
   const setMenuOpen = useTouchControlsStore((s) => s.setMenuOpen);
-  const tick = useTouchHaptics(touch.haptics);
+  const tick = useTouchHaptics(touch.haptics, touch.hapticStrength);
 
   const hold = useMenuHold(touch.menuHoldMs, () => {
     tick();

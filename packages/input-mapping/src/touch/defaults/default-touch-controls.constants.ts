@@ -9,6 +9,7 @@ const DEFAULT_TOUCH_CONTROLS: TouchControlsSettings = {
   buttonStrength: 0.22,
   layerOpacity: 0,
   haptics: true,
+  hapticStrength: 0.25,
   snap: { enabled: false, cell: 'm' },
   menuHoldMs: 3000,
   layouts: { landscape: DEFAULT_LANDSCAPE_LAYOUT, portrait: DEFAULT_PORTRAIT_LAYOUT },

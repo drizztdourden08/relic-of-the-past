@@ -20,7 +20,7 @@ const TouchEditorCards = (props: TouchEditorCardsProps) => {
   );
 
   if (selection.kind === 'layer') return placed(<TouchLayerCard shared={shared} onChange={onShared} onReset={onReset} />);
-  if (selection.kind === 'add') return placed(<TouchAddCard onPick={actions.add} />);
+  if (selection.kind === 'add') return placed(<TouchAddCard onPick={actions.add} onPickGroup={actions.addGroup} />);
   if (selection.kind === 'movement') {
     return placed(
       <TouchMovementCard
