@@ -1,0 +1,7 @@
+/* @layer renderer-app @kind style */
+.touch-bind-picker {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-md);
+}

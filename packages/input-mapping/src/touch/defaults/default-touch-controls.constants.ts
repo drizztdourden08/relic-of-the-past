@@ -12,6 +12,7 @@ const DEFAULT_TOUCH_CONTROLS: TouchControlsSettings = {
   snap: { enabled: false, cell: 'm' },
   menuHoldMs: 3000,
   layouts: { landscape: DEFAULT_LANDSCAPE_LAYOUT, portrait: DEFAULT_PORTRAIT_LAYOUT },
+  bindings: { classic: {}, verbs: {}, slots: {} },
 };
 
 export { DEFAULT_TOUCH_CONTROLS };

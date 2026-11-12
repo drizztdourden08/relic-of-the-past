@@ -23,7 +23,7 @@ export type { ControlSchemeId, RemapResult } from './scheme/remap.type';
 export type { OffscreenEnemyMode } from './settings/aspect-settings.type';
 export type { HapticSettings } from './settings/haptic-settings.type';
 export type {
-  DynamicStick, FixedStick, MovementType, OrientationLayout, SnapCell, TouchButton, TouchButtonShape,
+  DynamicStick, FixedStick, MovementType, OrientationLayout, SnapCell, TouchBindings, TouchButton, TouchButtonShape,
   TouchControlsSettings, TouchDpad, TouchEmit, TouchGroup, TouchMovements, TouchOrientation, TouchPoint,
   TouchRect, TouchSnap,
 } from './settings/touch-controls-settings.type';

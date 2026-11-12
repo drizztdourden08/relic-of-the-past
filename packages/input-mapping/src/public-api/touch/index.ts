@@ -8,6 +8,13 @@ export {
   TOUCH_PAD_BUTTON_COUNT,
   TOUCH_PAD_KEY,
 } from '../../touch/touch-emit.constants';
+export {
+  dragDirection,
+  setTouchBinding,
+  touchEmitBinding,
+  touchStickBinding,
+} from '../../touch/binding';
+export type { StickDirection, TouchBindTarget } from '../../touch/binding';
 export { addButton } from '../../touch/editing/add-button';
 export { emitLabel } from '../../touch/editing/emit-label';
 export { moveButton } from '../../touch/editing/move-button';

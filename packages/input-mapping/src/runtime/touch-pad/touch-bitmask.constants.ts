@@ -6,4 +6,6 @@ const EMPTY_KEYS = new Map<string, boolean>();
 const EMPTY_KEYBOARD = new Map<string, SnesButton>();
 const TOUCH_ALLOWED = { keyboard: false, gamepadKeys: new Set([TOUCH_PAD_KEY]) };
 
-export { EMPTY_KEYBOARD, EMPTY_KEYS, TOUCH_ALLOWED };
+const NO_CLASSIC: Readonly<Record<string, never>> = {};
+
+export { EMPTY_KEYBOARD, EMPTY_KEYS, NO_CLASSIC, TOUCH_ALLOWED };

@@ -1,6 +1,7 @@
 /* @layer renderer-lib @kind logic */
 import { computeBitmask, buildInputSample, edgeBaseline, schemeRuntime, menuEdges, menuShadowedSlots, mergeFunctionMasks, readFunctionMask, remapForScheme, touchBitmask, touchFunctionMask, KEEP_EQUIPPED_ITEM, NEUTRAL_MASK, NO_FUNCTIONS, NO_SHADOW, NO_SLOTS } from '@rotp/input-mapping';
 import { ownsHudItem } from './item-ownership';
+import { readTouchBindings } from './touch-pad/read-touch-bindings';
 import { readTouchPad } from './touch-pad/read-touch-pad';
 import { setActiveItem } from '@rotp/game-core';
 import type { SchemeRuntime, InputSample, FunctionMask } from '@rotp/input-mapping';
@@ -9,7 +10,7 @@ import type { InputManager } from '@app/input/input-manager/input-manager';
 
 const classicMask = (m: InputManager): number => {
   const touch = readTouchPad(m);
-  return computeBitmask(m) | (touch ? touchBitmask(touch) : 0);
+  return computeBitmask(m) | (touch ? touchBitmask(touch, readTouchBindings().classic) : 0);
 };
 
 const sampleOf = (m: InputManager): InputSample =>
@@ -18,12 +19,12 @@ const sampleOf = (m: InputManager): InputSample =>
 const pressedOf = (m: InputManager, lens: ModernBindings): FunctionMask => {
   const pressed = readFunctionMask(sampleOf(m), lens);
   const touch = readTouchPad(m);
-  return touch ? mergeFunctionMasks(pressed, touchFunctionMask(touch)) : pressed;
+  return touch ? mergeFunctionMasks(pressed, touchFunctionMask(touch, readTouchBindings())) : pressed;
 };
 
 const touchOnly = (m: InputManager): FunctionMask => {
   const touch = readTouchPad(m);
-  return touch ? touchFunctionMask(touch) : NO_FUNCTIONS;
+  return touch ? touchFunctionMask(touch, readTouchBindings()) : NO_FUNCTIONS;
 };
 
 const modernActive = (runtime: SchemeRuntime): boolean =>

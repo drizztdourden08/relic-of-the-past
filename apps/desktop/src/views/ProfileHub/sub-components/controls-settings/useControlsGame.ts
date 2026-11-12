@@ -9,6 +9,7 @@ import { CORE_VERB_DEFS } from './core-verbs.constants';
 import { decoratePreset } from './decorate-preset';
 import { KEYBOARD_DEFAULTS } from './keyboard-defaults.constants';
 import { presetBindings } from './preset-bindings';
+import { touchListenerExtra } from './touch-listener-extra';
 import type { UseControlsArgs } from './controls-settings.type';
 
 const useControlsGame = ({ settings, onChange }: UseControlsArgs): ControlsGame => {
@@ -25,6 +26,7 @@ const useControlsGame = ({ settings, onChange }: UseControlsArgs): ControlsGame 
     keyboardDefaults: KEYBOARD_DEFAULTS,
     defaultBindings: presetBindings,
     decoratePreset: decoratePreset(scheme),
+    listenerExtra: mobile && touch.enabled ? touchListenerExtra : undefined,
   }), [scheme, experimental, cheatsEnabled, hapticsEnabled, touch, mobile, assignments, onChange]);
 };
 

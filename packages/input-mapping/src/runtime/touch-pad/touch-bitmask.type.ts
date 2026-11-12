@@ -1,5 +1,5 @@
 /* @layer shared-input @kind types */
-import type { SnesButton } from '@rotp/game-data';
+import type { InputBinding, SnesButton } from '@rotp/game-data';
 import type { DeviceScopedMap } from '../device-scoped-map';
 
 interface TouchMaps {
@@ -7,4 +7,6 @@ interface TouchMaps {
   gamepadAxisMap: DeviceScopedMap<string, SnesButton>;
 }
 
-export type { TouchMaps };
+type TouchClassicBindings = Readonly<Record<string, InputBinding>>;
+
+export type { TouchClassicBindings, TouchMaps };
