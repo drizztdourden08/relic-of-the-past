@@ -22,6 +22,11 @@ export { resolveGates } from './resolve-gates';
 export type { ControlSchemeId, RemapResult } from './scheme/remap.type';
 export type { OffscreenEnemyMode } from './settings/aspect-settings.type';
 export type { HapticSettings } from './settings/haptic-settings.type';
+export type {
+  DynamicStick, FixedStick, MovementType, OrientationLayout, SnapCell, TouchButton, TouchButtonShape,
+  TouchControlsSettings, TouchDpad, TouchEmit, TouchGroup, TouchMovements, TouchOrientation, TouchPoint,
+  TouchRect, TouchSnap,
+} from './settings/touch-controls-settings.type';
 export type { GameSettings } from './settings/settings.type';
 export { experimentalFeaturesEnabled } from './settings/experimental-features-enabled';
 export { isVanillaSafeLockedSetting } from './vanilla-safe-settings/is-vanilla-safe-locked-setting';

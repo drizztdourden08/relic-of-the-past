@@ -1,0 +1,23 @@
+/* @layer renderer-app @kind style */
+.touch-zone {
+  position: absolute;
+  box-sizing: border-box;
+  border: var(--size-2) dashed var(--c-text);
+  border-radius: var(--radius-lg);
+  color: var(--c-text);
+  opacity: var(--touch-strength);
+  pointer-events: none;
+}
+
+.touch-zone[data-selected] {
+  border-color: var(--c-primary);
+  opacity: 1;
+}
+
+.touch-zone__label {
+  position: absolute;
+  top: var(--space-sm);
+  left: var(--space-md);
+  font-size: var(--text-xs);
+  color: inherit;
+}

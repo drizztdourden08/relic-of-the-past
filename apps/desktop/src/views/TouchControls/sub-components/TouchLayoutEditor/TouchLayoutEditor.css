@@ -1,0 +1,9 @@
+/* @layer renderer-app @kind style */
+
+.touch-layout-editor {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  touch-action: none;
+  user-select: none;
+}

@@ -1,0 +1,10 @@
+/* @layer renderer-app @kind style */
+.touch-controls {
+  position: fixed;
+  inset: 0;
+  z-index: var(--z-sticky);
+  touch-action: none;
+  user-select: none;
+  background: color-mix(in srgb, var(--c-bg) calc(var(--touch-layer) * 100%), transparent);
+  overflow: hidden;
+}

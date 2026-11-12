@@ -5,6 +5,7 @@ import { GameSessionContext } from '@app/contexts/game-session-context';
 import type { AppSettings } from '@app/settings.type';
 import { isMobileHost } from '@app/platform/is-mobile-host';
 import { MobileShell } from '@app/views/MobileShell';
+import { TouchControls } from '@app/views/TouchControls';
 import { GameSessionOverlays } from './GameSessionOverlays';
 import { useGameSessionValue } from '../behavior/useGameSessionValue';
 import type { GameSessionProps } from '../GameSession.type';
@@ -18,6 +19,7 @@ const MainWindowSession = (props: GameSessionProps) => {
     <GameSessionContext.Provider value={value}>
       {children}
       <GameSessionOverlays />
+      {isMobileHost() && <TouchControls />}
       {isMobileHost() && <MobileShell />}
     </GameSessionContext.Provider>
   );

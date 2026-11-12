@@ -1,15 +1,30 @@
 /* @layer renderer-lib @kind logic */
-import { computeBitmask, buildInputSample, edgeBaseline, schemeRuntime, menuEdges, menuShadowedSlots, readFunctionMask, remapForScheme, KEEP_EQUIPPED_ITEM, NEUTRAL_MASK, NO_FUNCTIONS, NO_SHADOW, NO_SLOTS } from '@rotp/input-mapping';
+import { computeBitmask, buildInputSample, edgeBaseline, schemeRuntime, menuEdges, menuShadowedSlots, mergeFunctionMasks, readFunctionMask, remapForScheme, touchBitmask, touchFunctionMask, KEEP_EQUIPPED_ITEM, NEUTRAL_MASK, NO_FUNCTIONS, NO_SHADOW, NO_SLOTS } from '@rotp/input-mapping';
 import { ownsHudItem } from './item-ownership';
+import { readTouchPad } from './touch-pad/read-touch-pad';
 import { setActiveItem } from '@rotp/game-core';
-import type { SchemeRuntime, InputSample } from '@rotp/input-mapping';
+import type { SchemeRuntime, InputSample, FunctionMask } from '@rotp/input-mapping';
 import type { ModernBindings } from '@rotp/game-data';
 import type { InputManager } from '@app/input/input-manager/input-manager';
 
-const classicMask = (m: InputManager): number => computeBitmask(m);
+const classicMask = (m: InputManager): number => {
+  const touch = readTouchPad(m);
+  return computeBitmask(m) | (touch ? touchBitmask(touch) : 0);
+};
 
 const sampleOf = (m: InputManager): InputSample =>
   buildInputSample(m.allPressedKeys, m.hidStates, m.allowed);
+
+const pressedOf = (m: InputManager, lens: ModernBindings): FunctionMask => {
+  const pressed = readFunctionMask(sampleOf(m), lens);
+  const touch = readTouchPad(m);
+  return touch ? mergeFunctionMasks(pressed, touchFunctionMask(touch)) : pressed;
+};
+
+const touchOnly = (m: InputManager): FunctionMask => {
+  const touch = readTouchPad(m);
+  return touch ? touchFunctionMask(touch) : NO_FUNCTIONS;
+};
 
 const modernActive = (runtime: SchemeRuntime): boolean =>
   runtime.scheme === 'modern' && runtime.bindings !== null;
@@ -22,7 +37,7 @@ const readLens = (runtime: SchemeRuntime): ModernBindings | null => {
 
 const routeToMenu = (m: InputManager, runtime: SchemeRuntime): void => {
   const lens = readLens(runtime);
-  const pressed = lens ? readFunctionMask(sampleOf(m), lens) : NO_FUNCTIONS;
+  const pressed = lens ? pressedOf(m, lens) : touchOnly(m);
   const shadowed = lens ? menuShadowedSlots(lens) : NO_SHADOW;
   runtime.menuSink.push(menuEdges(pressed, edgeBaseline(pressed), shadowed));
   m.setInputFn?.(NEUTRAL_MASK);
@@ -30,7 +45,7 @@ const routeToMenu = (m: InputManager, runtime: SchemeRuntime): void => {
 };
 
 const routeModern = (m: InputManager, runtime: SchemeRuntime, bindings: NonNullable<SchemeRuntime['bindings']>): void => {
-  const pressed = readFunctionMask(sampleOf(m), bindings);
+  const pressed = pressedOf(m, bindings);
   const { mask, activeItem } = remapForScheme({
     scheme: 'modern',
     classicMask: 0,

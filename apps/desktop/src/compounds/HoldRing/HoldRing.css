@@ -1,0 +1,18 @@
+/* @layer renderer-app @kind style */
+.hold-ring {
+  position: absolute;
+  pointer-events: none;
+}
+
+.hold-ring__track {
+  fill: none;
+  stroke: var(--c-text-faint);
+  stroke-width: 4;
+}
+
+.hold-ring__fill {
+  fill: none;
+  stroke: var(--c-primary);
+  stroke-width: 4;
+  stroke-linecap: round;
+}

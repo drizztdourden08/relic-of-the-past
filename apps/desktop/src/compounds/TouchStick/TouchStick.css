@@ -1,0 +1,28 @@
+/* @layer renderer-app @kind style */
+.touch-stick__ring,
+.touch-stick__knob {
+  position: absolute;
+  box-sizing: border-box;
+  border-radius: var(--radius-round);
+  pointer-events: none;
+  opacity: var(--touch-strength);
+}
+
+.touch-stick__ring {
+  border: var(--size-2) solid var(--c-text);
+  background: transparent;
+}
+
+.touch-stick__knob {
+  border: var(--size-2) solid var(--c-text);
+  background: var(--c-text-faint);
+}
+
+.touch-stick__ring[data-active],
+.touch-stick__knob[data-active] {
+  opacity: 1;
+}
+
+.touch-stick__knob[data-active] {
+  background: var(--c-text);
+}

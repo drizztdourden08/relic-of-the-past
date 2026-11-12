@@ -114,3 +114,12 @@
   border-radius: var(--radius-md);
   background: var(--c-border-strong);
 }
+
+.game-layer[data-touch-portrait] {
+  align-items: flex-start;
+}
+
+.game-layer[data-touch-portrait] .game-layer__shadow-canvas {
+  top: 0;
+  transform: translate(-50%, 0);
+}

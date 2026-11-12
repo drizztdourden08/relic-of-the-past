@@ -12,3 +12,5 @@ export type { PauseListener } from '../../runtime/pause-manager';
 export { computeBitmask } from '../../runtime/polling-engine';
 export { RawInputDispatcher } from '../../runtime/raw-input-dispatcher';
 export type { RawInputListener } from '../../runtime/raw-input-dispatcher';
+export { mergeFunctionMasks, toSdlPad, touchBitmask, touchFunctionMask } from '../../runtime/touch-pad';
+export type { FunctionMask } from '../../scheme/function-mask';

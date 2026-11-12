@@ -1,0 +1,27 @@
+/* @layer renderer-app @kind style */
+
+.touch-editor-hit {
+  position: absolute;
+  inset: 0;
+}
+
+.touch-editor-hit__area {
+  position: absolute;
+  box-sizing: border-box;
+  touch-action: none;
+  cursor: grab;
+}
+
+.touch-editor-hit__area--round {
+  border-radius: var(--radius-round);
+}
+
+.touch-editor-hit__handle {
+  position: absolute;
+  box-sizing: border-box;
+  border-right: var(--border-width-thin) solid var(--c-primary);
+  border-bottom: var(--border-width-thin) solid var(--c-primary);
+  border-bottom-right-radius: var(--radius-md);
+  touch-action: none;
+  cursor: nwse-resize;
+}

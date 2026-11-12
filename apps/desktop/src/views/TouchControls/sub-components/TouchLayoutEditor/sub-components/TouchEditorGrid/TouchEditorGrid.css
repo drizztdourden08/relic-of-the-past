@@ -1,0 +1,11 @@
+/* @layer renderer-app @kind style */
+
+.touch-editor-grid {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background-image:
+    linear-gradient(to right, var(--c-hairline) var(--border-width-thin), transparent var(--border-width-thin)),
+    linear-gradient(to bottom, var(--c-hairline) var(--border-width-thin), transparent var(--border-width-thin));
+  background-size: var(--touch-grid-cell) var(--touch-grid-cell);
+}

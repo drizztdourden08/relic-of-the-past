@@ -1,0 +1,38 @@
+/* @layer renderer-app @kind style */
+.touch-button {
+  position: absolute;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  background: transparent;
+  border: var(--size-2) solid var(--c-text);
+  border-radius: var(--radius-round);
+  color: var(--c-text);
+  opacity: var(--touch-strength);
+  pointer-events: none;
+  user-select: none;
+  transition: background var(--duration-fast) ease-out;
+}
+
+.touch-button[data-shape='pill'] {
+  border-radius: var(--radius-lg);
+}
+
+.touch-button[data-pressed] {
+  background: var(--c-text);
+  color: var(--c-bg);
+  opacity: 1;
+}
+
+.touch-button[data-selected] {
+  outline: var(--size-3) solid var(--c-primary);
+  outline-offset: var(--size-3);
+  opacity: 1;
+}
+
+.touch-button__label {
+  font-size: var(--text-md);
+  font-weight: 700;
+  color: inherit;
+}

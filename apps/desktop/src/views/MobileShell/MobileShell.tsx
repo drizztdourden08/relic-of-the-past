@@ -6,6 +6,7 @@ import { Drawer } from '@drizztdourden08/tessera/composites';
 import { useFpsReadout } from '@app/hooks/useFpsReadout';
 import { useGameSession } from '@app/hooks/useGameSession';
 import { useMobileBack } from './behavior/useMobileBack';
+import { useTouchMenuEntries } from './behavior/useTouchMenuEntries';
 import { runMenuEntry } from './behavior/run-menu-entry';
 import { MobileMenuDrawer } from './sub-components/MobileMenuDrawer';
 import { MOBILE_EXTRA_ENTRIES } from './MobileShell.constants';
@@ -17,10 +18,11 @@ const MobileShell = () => {
   const { game, display } = useGameSession();
   const { value, muted, toggleMute } = useVolumeStore();
   const { open, close } = useMobileBack();
+  const touchEntries = useTouchMenuEntries();
   const { fps } = useFpsReadout(open && display.showFps, game.isRunning);
   const entries = useMemo(
-    () => [...menu, ...MOBILE_EXTRA_ENTRIES, { key: 'widgets', label: 'Widgets', children: [...widgetEntries] }],
-    [menu, widgetEntries],
+    () => [...menu, ...touchEntries, ...MOBILE_EXTRA_ENTRIES, { key: 'widgets', label: 'Widgets', children: [...widgetEntries] }],
+    [menu, touchEntries, widgetEntries],
   );
   const pick = useCallback((entry: MenuEntry) => {
     close();

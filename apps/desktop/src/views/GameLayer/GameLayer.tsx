@@ -11,6 +11,7 @@ import { useEdgeGlowLoop } from './behavior/useEdgeGlowLoop';
 import { useGameBoot } from './behavior/useGameBoot';
 import { usePublishFitSize } from './behavior/usePublishFitSize';
 import { useShadowCastingLoop } from './behavior/useShadowCastingLoop';
+import { useTouchPortrait } from './behavior/useTouchPortrait';
 import { GameLayerCanvases } from './sub-components/GameLayerCanvases';
 import { GameLayerOverlays } from './sub-components/GameLayerOverlays';
 import './GameLayer.css';
@@ -33,6 +34,7 @@ const GameLayer = (props: GameLayerProps) => {
   const [canvasKey, setCanvasKey] = useState(0);
   const { bufSize, setBufSize } = useCanvasBufferSize(canvasRef, status, canvasKey);
   const shadowDebugMode = useShadowEditorStore((s) => s.debugMode);
+  const touchPortrait = useTouchPortrait();
 
   const fitSize = useCanvasFit({ containerRef, bufW: bufSize.w, bufH: bufSize.h, stretch, pixelPerfect });
 
@@ -44,7 +46,7 @@ const GameLayer = (props: GameLayerProps) => {
   useGameBoot({ status, canvasKey, canvasRef, assetData, configIni, profileId, start, setCanvasKey });
 
   return (
-    <Box className="game-layer" ref={containerRef}>
+    <Box className="game-layer" ref={containerRef} data-touch-portrait={touchPortrait || undefined}>
       {status === 'error' && (
         <Box className="game-layer__status-overlay">
           <Text className="game-layer__status-text game-layer__status-text--error">Error: {error}</Text>

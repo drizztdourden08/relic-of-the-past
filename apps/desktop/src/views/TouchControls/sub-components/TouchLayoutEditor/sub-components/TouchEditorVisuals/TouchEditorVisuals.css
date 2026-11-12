@@ -1,0 +1,7 @@
+/* @layer renderer-app @kind style */
+
+.touch-editor-visuals {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
