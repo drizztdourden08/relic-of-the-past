@@ -12,14 +12,14 @@ const ProgressRing = (props: ProgressRingProps) => {
 
   return (
     <svg
-      className={['progress-ring', className].filter(Boolean).join(' ')}
+      className={['rotp-hold-arc', className].filter(Boolean).join(' ')}
       style={{ ...style, width: size, height: size }}
       viewBox={`0 0 ${size} ${size}`}
       aria-hidden
     >
-      <circle className="progress-ring__track" cx={mid} cy={mid} r={radius} />
+      <circle className="rotp-hold-arc__track" cx={mid} cy={mid} r={radius} />
       <circle
-        className="progress-ring__fill"
+        className="rotp-hold-arc__fill"
         cx={mid}
         cy={mid}
         r={radius}

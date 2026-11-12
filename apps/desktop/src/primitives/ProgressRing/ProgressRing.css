@@ -1,15 +1,15 @@
 /* @layer renderer-app @kind style */
-.progress-ring {
+.rotp-hold-arc {
   display: block;
 }
 
-.progress-ring__track {
+.rotp-hold-arc__track {
   fill: none;
   stroke: var(--c-text-faint);
   stroke-width: 4;
 }
 
-.progress-ring__fill {
+.rotp-hold-arc__fill {
   fill: none;
   stroke: var(--c-primary);
   stroke-width: 4;
