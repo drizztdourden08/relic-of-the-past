@@ -6,7 +6,7 @@ import { refuseEdit } from './refuse-edit';
 const EMPTY_ARRAY_METHODS = new Set<string>([
   'listProfiles', 'listRoms', 'listRomsWithStatus', 'listStates', 'listSessions',
   'listNormalSaves',
-  'listAutoSaves', 'getSlotInfos',
+  'listAutoSaves', 'getSlotInfos', 'takeOpenRequests',
 ]);
 
 const STUB_RETURNS: Record<string, () => unknown> = {
@@ -28,4 +28,6 @@ const SCREEN_EDITOR_STUB: ScreenEditorApi = {
   writeLocationRecord: refuseEdit, deleteLocation: refuseEdit,
 };
 
-export { EMPTY_ARRAY_METHODS, STUB_RETURNS, SCREEN_EDITOR_STUB };
+const answerStub = (): (() => void) => () => {};
+
+export { EMPTY_ARRAY_METHODS, STUB_RETURNS, SCREEN_EDITOR_STUB, answerStub };
