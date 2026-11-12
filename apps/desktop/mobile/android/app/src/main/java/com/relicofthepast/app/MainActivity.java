@@ -4,6 +4,7 @@ import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
 import android.os.Bundle;
+import android.view.Display;
 import android.view.WindowManager;
 import android.webkit.WebView;
 
@@ -59,6 +60,7 @@ public class MainActivity extends BridgeActivity {
             getWindow().setAttributes(lp);
         }
         applyImmersive();
+        preferSixtyHertz();
 
         // Route Back per predictive-back swipe edge as the brock:back event (Brock hands it to
         // device.onBackButton); the JS chrome decides (left =
@@ -107,6 +109,34 @@ public class MainActivity extends BridgeActivity {
             + "s.setProperty('--sai-bottom','" + (cut.bottom / d) + "px');"
             + "window.dispatchEvent(new Event('rotpinsets'));})();";
         webView.evaluateJavascript(js, null);
+    }
+
+    // The game draws 60 frames a second. A faster panel (120 Hz) shows nothing new on the extra
+    // refreshes but runs every per-refresh pass twice (compositing, the input poll, the overlay
+    // draws), which on a phone takes the main thread time the game and its audio need.
+    private void preferSixtyHertz() {
+        WindowManager.LayoutParams lp = getWindow().getAttributes();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            Display display = Build.VERSION.SDK_INT >= Build.VERSION_CODES.R
+                ? getDisplay()
+                : getWindowManager().getDefaultDisplay();
+            if (display != null) {
+                Display.Mode current = display.getMode();
+                Display.Mode best = null;
+                for (Display.Mode mode : display.getSupportedModes()) {
+                    boolean sameSize = mode.getPhysicalWidth() == current.getPhysicalWidth()
+                        && mode.getPhysicalHeight() == current.getPhysicalHeight();
+                    if (!sameSize) continue;
+                    if (best == null
+                        || Math.abs(mode.getRefreshRate() - 60f) < Math.abs(best.getRefreshRate() - 60f)) {
+                        best = mode;
+                    }
+                }
+                if (best != null) lp.preferredDisplayModeId = best.getModeId();
+            }
+        }
+        lp.preferredRefreshRate = 60f;
+        getWindow().setAttributes(lp);
     }
 
     private void applyImmersive() {

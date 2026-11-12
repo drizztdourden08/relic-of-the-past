@@ -7,6 +7,7 @@ import { useCanvasOverlayLoop } from './useCanvasOverlayLoop';
 import { applyGlowViewport } from './apply-glow-viewport';
 import { edgeGlowFade } from './edge-glow-fade';
 import { syncFxCanvasSize } from './sync-fx-canvas-size';
+import { GLOW_MIN_FRAME_MS } from './useEdgeGlowLoop.constants';
 import type { EdgeGlowLoopParams, FadeState } from './useEdgeGlowLoop.type';
 
 const initialFade = (): FadeState => ({ prevBlackLeft: -1, prevBlackRight: -1, prevBlackBottom: -1, prevBlackTop: -1, fadeOpacity: 1.0, fadeTarget: 1.0, lastTime: 0 });
@@ -25,6 +26,8 @@ const useEdgeGlowLoop = (params: EdgeGlowLoopParams): void => {
     createRenderer: (fxCanvas) => createEdgeGlowRenderer(fxCanvas),
     onFrame: ({ renderer, gameCanvas, fxCanvas, time }) => {
       const fade = fadeRef.current;
+      const resized = gameCanvas.width !== fxCanvas.width || gameCanvas.height !== fxCanvas.height;
+      if (!resized && time - fade.lastTime < GLOW_MIN_FRAME_MS) return;
       const dt = fade.lastTime > 0 ? (time - fade.lastTime) / 1000 : 0;
       fade.lastTime = time;
       syncFxCanvasSize(gameCanvas, fxCanvas, setBufSize);
