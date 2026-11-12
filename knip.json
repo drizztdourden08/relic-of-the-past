@@ -104,6 +104,14 @@
         "vite-plugin-node-polyfills"
       ]
     },
+    "apps/website": {
+      "entry": [
+        "brock.site.ts"
+      ],
+      "project": [
+        "src/**/*.{ts,tsx}"
+      ]
+    },
     "apps/store-api": {
       "ignoreDependencies": [
         "@aws-sdk/client-s3",

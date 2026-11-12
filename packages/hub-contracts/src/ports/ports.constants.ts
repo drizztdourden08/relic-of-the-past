@@ -11,6 +11,7 @@ const PORT_OFFSET = {
   mgbaTracer: 5,
   store: 6,
   storeApi: 7,
+  website: 8,
 } as const;
 
 const ARCHIPELAGO_DEFAULT_PORT = 38281;

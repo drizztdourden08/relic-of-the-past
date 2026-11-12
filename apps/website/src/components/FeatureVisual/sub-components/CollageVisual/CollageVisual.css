@@ -1,0 +1,121 @@
+/* @layer website-site @kind style */
+.collage-visual {
+  position: relative;
+  display: grid;
+  gap: var(--ds-size-16);
+  padding-bottom: var(--ds-size-24);
+}
+
+.collage-visual__layer {
+  position: relative;
+}
+
+.collage-visual__press {
+  position: relative;
+  display: block;
+  cursor: pointer;
+}
+
+.collage-visual__press--main {
+  cursor: zoom-in;
+}
+
+.collage-visual__press:focus-visible {
+  outline: var(--ds-border-thick) solid var(--ds-focus);
+  outline-offset: var(--ds-size-4);
+}
+
+.collage-visual__press:not(.collage-visual__press--main):hover {
+  filter: brightness(1.12);
+}
+
+.collage-visual__press[data-flip='0'] {
+  animation: collage-settle-a var(--ds-duration-slow) var(--ds-ease);
+}
+
+.collage-visual__press[data-flip='1'] {
+  animation: collage-settle-b var(--ds-duration-slow) var(--ds-ease);
+}
+
+.collage-visual__expanded {
+  position: relative;
+}
+
+.collage-visual__shot {
+  display: block;
+  overflow: hidden;
+  border: var(--ds-border-thin) solid var(--px-gold-dark);
+  border-radius: var(--ds-radius-xl);
+  box-shadow: var(--site-shot-shadow);
+}
+
+.collage-visual__shot img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+@keyframes collage-settle-a {
+  from {
+    opacity: 0.5;
+    scale: 0.96;
+  }
+
+  to {
+    opacity: 1;
+    scale: 1;
+  }
+}
+
+@keyframes collage-settle-b {
+  from {
+    opacity: 0.5;
+    scale: 0.96;
+  }
+
+  to {
+    opacity: 1;
+    scale: 1;
+  }
+}
+
+@media (width <= 800px) {
+  .collage-visual__layer--main {
+    order: -1;
+  }
+}
+
+@media (width > 800px) {
+  .collage-visual {
+    display: block;
+    padding-bottom: 12%;
+  }
+
+  .collage-visual__layer:not(.collage-visual__layer--main) {
+    position: absolute;
+    z-index: var(--site-content-z);
+    width: var(--site-slot-w-side);
+  }
+
+  .collage-visual__layer--top-right {
+    top: var(--site-slot-bleed);
+    right: var(--site-slot-bleed);
+  }
+
+  .collage-visual__layer--bottom-left {
+    bottom: 0;
+    left: var(--site-slot-bleed);
+    width: var(--site-slot-w-wide);
+  }
+
+  .collage-visual__layer--bottom-right {
+    right: var(--site-slot-bleed);
+    bottom: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .collage-visual__press[data-flip] {
+    animation: none;
+  }
+}

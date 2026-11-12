@@ -1,0 +1,20 @@
+/* @layer website-site @kind style */
+:root {
+  --ds-cloud-aspect: 1.1547;
+  --ds-cloud-row-w: 1200px;
+  --ds-cloud-leading: 1.05;
+  --ds-cloud-font-max: 4.2;
+  --ds-cloud-font-min: 2;
+  --ds-cloud-peak-high: 0.95;
+  --ds-cloud-peak-mid: 0.8;
+  --ds-cloud-peak-low: 0.65;
+  --ds-cloud-span-1: 8s;
+  --ds-cloud-span-2: 11s;
+  --ds-cloud-span-3: 13s;
+  --ds-cloud-span-4: 9.5s;
+  --ds-cloud-offset-1: -1s;
+  --ds-cloud-offset-2: -3.7s;
+  --ds-cloud-offset-3: -6.1s;
+  --ds-cloud-offset-4: -8.4s;
+  --ds-cloud-offset-5: -10.6s;
+}

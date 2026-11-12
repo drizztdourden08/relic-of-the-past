@@ -1,0 +1,25 @@
+/* @layer website-site @kind style */
+.landing-end {
+  padding: var(--site-end-footer-pad);
+  border-top: var(--ds-border-thin) solid var(--site-end-border);
+  color: var(--site-end-text-muted);
+  font-family: var(--site-end-font);
+  font-size: var(--ds-size-14);
+  text-align: center;
+}
+
+.landing-end__link,
+.landing-end__link:hover {
+  color: var(--site-end-link);
+  text-decoration: none;
+}
+
+.landing-end__link:hover {
+  color: var(--site-end-link-hover);
+}
+
+.landing-end__legal {
+  max-width: var(--site-legal-w);
+  margin: var(--ds-size-12) auto 0;
+  font-size: var(--ds-size-12);
+}

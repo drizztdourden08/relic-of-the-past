@@ -1,0 +1,40 @@
+/* @layer website-site @kind style */
+.ds-title {
+  margin: 0;
+  font-family: var(--ds-font-heading);
+  font-weight: var(--ds-weight-semi);
+  line-height: var(--ds-leading-tight);
+  text-wrap: balance;
+}
+
+.ds-title--1,
+.ds-title--2,
+.ds-title--3 {
+  letter-spacing: var(--ds-tracking-caps);
+  text-transform: uppercase;
+}
+
+.ds-title--1 {
+  font-size: var(--ds-text-display);
+  font-weight: var(--ds-weight-bold);
+}
+
+.ds-title--2 {
+  font-size: var(--ds-size-32);
+}
+
+.ds-title--3 {
+  font-size: var(--ds-text-2xl);
+}
+
+.ds-title--4 {
+  font-size: var(--ds-text-xl);
+}
+
+.ds-title--5 {
+  font-size: var(--ds-text-lg);
+}
+
+.ds-title--6 {
+  font-size: var(--ds-text-base);
+}

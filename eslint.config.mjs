@@ -30,7 +30,7 @@ const rotpExtension = {
   description: 'Relic of the Past: the dataset facade, the primitives tiers and the HUD inline styles',
   eslint: {
     options: {
-      primitivesGlobs: ['apps/desktop/src/primitives/**/*.tsx'],
+      primitivesGlobs: ['apps/desktop/src/primitives/**/*.tsx', 'apps/website/src/design/primitives/**/*.tsx'],
       inlineStyle: [{
         files: [
           'apps/desktop/src/{primitives,composites,hud}/**/*.{ts,tsx}',
@@ -50,6 +50,21 @@ const rotpExtension = {
           'apps/desktop/src/views/HudLayoutEditor/sub-components/EditorStage.tsx',
         ],
         why: 'The editor rails take the width the user drags them to, and the stage keeps the aspect ratio of the live game view.',
+      }, {
+        files: [
+          'apps/website/src/components/WorldBackdrop/sub-components/Fireflies/Fireflies.tsx',
+          'apps/website/src/components/CommunitySection/sub-components/CommunityTexture/CommunityTexture.tsx',
+        ],
+        why: 'Each firefly and each background triforce takes its position, size and animation timing from a fixed table or a seeded scatter, a value per element that no shared class can carry.',
+      }, {
+        files: ['apps/website/src/design/composites/ScrollRail/ScrollRail.tsx', 'apps/website/src/design/primitives/Image/Image.tsx'],
+        why: 'Each numeral of the scroll rail sits at the share of the page where its group starts, measured from the document at run time, and each picture frame takes the aspect ratio and size of the image it holds: a value per element that no shared class can carry.',
+      }, {
+        files: [
+          'apps/website/src/components/FeatureVisual/sub-components/{RatiosStage/RatiosStage,LensVisual/LensVisual,PinMarks/PinMarks,CloudStage/CloudStage}.tsx',
+          'apps/website/src/components/FeatureVisual/sub-components/SoundBar/SoundBar.tsx',
+        ],
+        why: 'Each pin and the lens ring sit at a percentage of the screenshot measured from the capture itself, each aspect ratio frame takes its share of the stage from the pixel size of its capture, each word of the Triforce word cloud takes the position, size and width the packer measured for it, and the video progress bar fills to the live playback position: a value per element that no shared class can carry.',
       }, {
         files: [
           'apps/store/src/components/{CropDialog,FeaturedHero,ItemPicture}/**/*.{ts,tsx}',

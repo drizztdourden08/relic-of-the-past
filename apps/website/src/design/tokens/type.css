@@ -1,0 +1,19 @@
+/* @layer website-site @kind style */
+:root {
+  --ds-font-body: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --ds-font-heading: 'Cinzel', 'Palatino Linotype', 'Book Antiqua', serif;
+  --ds-text-xs: var(--ds-size-12);
+  --ds-text-sm: var(--ds-size-12);
+  --ds-text-base: var(--ds-size-14);
+  --ds-text-lg: var(--ds-size-16);
+  --ds-text-xl: var(--ds-size-20);
+  --ds-text-2xl: var(--ds-size-24);
+  --ds-text-display: var(--ds-size-48);
+  --ds-weight-medium: 500;
+  --ds-weight-semi: 600;
+  --ds-weight-bold: 700;
+  --ds-leading-tight: 1.3;
+  --ds-leading-normal: 1.5;
+  --ds-tracking-normal: 0;
+  --ds-tracking-caps: 0.08em;
+}

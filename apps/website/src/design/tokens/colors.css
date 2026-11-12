@@ -1,0 +1,29 @@
+/* @layer website-site @kind style */
+:root {
+  --ds-seed-gray: #9a9aa4;
+  --ds-seed-gold: #c8a84e;
+  --ds-seed-green: #4a9966;
+  --ds-seed-amber: #eb9a3a;
+  --ds-black: #000;
+  --ds-white: #fff;
+  --ds-bg: var(--ds-black);
+  --ds-text: color-mix(in oklab, var(--ds-seed-gray) 14%, var(--ds-white));
+  --ds-text-muted: color-mix(in oklab, var(--ds-seed-gray) 94%, var(--ds-black));
+  --ds-text-dim: var(--ds-seed-gray);
+  --ds-surface: color-mix(in oklab, var(--ds-seed-gray) 30%, var(--ds-black));
+  --ds-sunken: color-mix(in oklab, var(--ds-seed-gray) 17%, var(--ds-black));
+  --ds-inset: color-mix(in srgb, var(--ds-sunken) 45%, transparent);
+  --ds-border: color-mix(in oklab, var(--ds-seed-gray) 40%, var(--ds-black));
+  --ds-border-strong: color-mix(in oklab, var(--ds-seed-gray) 52%, var(--ds-black));
+  --ds-scrim: color-mix(in srgb, var(--ds-black) 60%, transparent);
+  --ds-accent: var(--ds-seed-gold);
+  --ds-accent-bright: color-mix(in oklab, var(--ds-seed-gold), var(--ds-white) 22%);
+  --ds-accent-soft: color-mix(in srgb, var(--ds-seed-gold) 14%, transparent);
+  --ds-accent-dim: color-mix(in oklab, var(--ds-seed-gold) 18%, var(--ds-black));
+  --ds-green: var(--ds-seed-green);
+  --ds-green-bright: color-mix(in oklab, var(--ds-seed-green), var(--ds-white) 22%);
+  --ds-amber: var(--ds-seed-amber);
+  --ds-amber-bright: color-mix(in oklch, var(--ds-seed-amber), var(--ds-white) 22%);
+  --ds-amber-soft: color-mix(in srgb, var(--ds-seed-amber) 14%, transparent);
+  --ds-focus: var(--ds-seed-gold);
+}

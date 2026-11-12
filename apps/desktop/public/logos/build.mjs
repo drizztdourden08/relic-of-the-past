@@ -1,5 +1,5 @@
 /* @layer tooling-scripts @kind logic */
-import { mkdirSync, readFileSync, writeFileSync } from 'node:fs';
+import { copyFileSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { openLayouts, sentriSvg, highlightSvg } from './build/compose.mjs';
 import { crisp, ico, icon } from './build/raster.mjs';
@@ -11,6 +11,8 @@ const ICON_SIZES = [16, 24, 32, 48, 64, 128, 256, 512];
 const ICO_SIZES = [16, 24, 32, 48, 64, 128, 256];
 const SITE_PUBLIC = ['apps/sanctuary/public', 'apps/store/public'];
 const SITE_SIZES = [32, 128];
+const WEBSITE_PUBLIC = 'apps/website/public';
+const WEBSITE_ICON_SIZE = 512;
 const STAMP = 'packages/design/art/hookshop/hookshop-stamp.svg';
 const RENDER_SCALES = [1, 2, 4];
 const TRIMMED_SCALE = 8;
@@ -43,6 +45,17 @@ const buildLogo = async () => {
   return written;
 };
 
+const buildWebsite = async () => {
+  const svg = readFileSync(resolve(HERE, 'logo/logo.svg'), 'utf8');
+  const target = (name) => resolve(ROOT, WEBSITE_PUBLIC, name);
+  mkdirSync(target('logos'), { recursive: true });
+  copyFileSync(resolve(HERE, 'logo/logo.svg'), target('logos/logo.svg'));
+  copyFileSync(resolve(HERE, 'wordmark.svg'), target('logos/wordmark.svg'));
+  writeFileSync(target('logos/logo-512.png'), await icon(svg, WEBSITE_ICON_SIZE));
+  writeFileSync(target('favicon.ico'), await ico(svg, ICO_SIZES));
+  return ['logos/logo.svg', 'logos/wordmark.svg', 'logos/logo-512.png', 'favicon.ico'].map((name) => `${WEBSITE_PUBLIC}/${name}`);
+};
+
 const buildSentri = async (layouts) => {
   const svg = sentriSvg(layouts);
   const written = [out('sentri', 'sentri.svg', svg), ...await buildLadder('sentri', 'sentri', svg)];
@@ -60,7 +73,7 @@ const buildHighlight = async (layouts, sentri) => {
 
 const layouts = await openLayouts();
 try {
-  const logo = await buildLogo();
+  const logo = [...(await buildLogo()), ...(await buildWebsite())];
   const sentri = await buildSentri(layouts);
   const highlight = await buildHighlight(layouts, sentri.svg);
   for (const file of [...logo, ...sentri.written, ...highlight]) console.log(`  ${file}`);
