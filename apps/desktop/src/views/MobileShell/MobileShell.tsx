@@ -34,7 +34,7 @@ const MobileShell = () => {
     'separator',
     ABOUT_ENTRY,
   ], [homeScreen, menu, touchEntries, widgetEntries]);
-  const hint = useEdgeHint(game.isRunning, open);
+  const showHint = useEdgeHint(game.isRunning, open);
   const pick = useCallback((entry: MenuEntry) => {
     close();
     runMenuEntry(entry);
@@ -42,7 +42,7 @@ const MobileShell = () => {
 
   return (
     <>
-      {hint.visible ? <EdgeSwipeHint startLabel={hint.startLabel} endLabel="Menu" /> : null}
+      {showHint ? <EdgeSwipeHint startLabel="Home" endLabel="Menu" /> : null}
       <Drawer open={open} onClose={close} side="right" label="Options">
         <MobileMenuDrawer key={String(open)} entries={entries} fps={fps} isMuted={muted || value <= 0} onToggleMute={toggleMute} onPick={pick} />
       </Drawer>

@@ -11,6 +11,9 @@ const EdgeSwipeHint = (props: EdgeSwipeHintProps) => {
       {EDGE_HINTS.map((hint) => (
         <Box key={hint.side} className="edge-hint__side" data-side={hint.side}>
           <Box className="edge-hint__strip" />
+          <Box className="edge-hint__track">
+            <Box className="edge-hint__touch" />
+          </Box>
           <Box className="edge-hint__cue">
             <Icon name={hint.icon} />
             <Text className="edge-hint__label">{hint.side === 'start' ? startLabel : endLabel}</Text>

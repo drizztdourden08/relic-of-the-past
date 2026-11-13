@@ -6,7 +6,7 @@ const usage = {
   useWhen: ['On Android while no game is playing, so a new player finds the edge swipes.'],
   avoidWhen: [{ case: 'A desktop window, where the title bar menu is always visible.', use: 'WindowTitleBar' }],
   rules: [
-    'Show it only while the game is not playing and the options drawer is closed.',
+    'Show it only while no game runs and no screen or drawer is open.',
     'It takes no touches: the edge swipes pass through it.',
   ],
   a11y: ['Hidden from assistive technology; the drawer and back gesture carry their own labels.'],

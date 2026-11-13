@@ -14,6 +14,8 @@ const SRAM_EXTENSIONS = ['srm', 'sav', 'dat'];
 const AUTO_TRIGGER_LABELS = { timer: 'On timer', quit: 'On quit' } as const;
 
 const NO_GAME_REASON = 'Start the game to save';
+const MISSING_STATE_MESSAGE = 'This save could not be read.';
+const STALE_STATE_HINT = 'Save over it to use this slot again.';
 
 const ARMED_PROMPTS: Readonly<Record<ArmedAction, string>> = {
   load: 'Click again to load',
@@ -38,6 +40,7 @@ const RUN_OF_MODE: Readonly<Record<ProfileModeId, RunKind | null>> = {
 };
 
 export {
-  ARMED_PROMPTS, AUTO_TRIGGER_LABELS, BOOT_WAIT_MS, IMPORT_CONFIRM_WORD, NO_GAME_REASON, QUICK_SAVE_SLOTS, RUN_OF_MODE,
-  SESSION_LIST_LIMIT, SRAM_BYTES, SRAM_EXTENSIONS, STATUS_LABELS, TOAST_DURATION_MS,
+  ARMED_PROMPTS, AUTO_TRIGGER_LABELS, BOOT_WAIT_MS, IMPORT_CONFIRM_WORD, MISSING_STATE_MESSAGE, NO_GAME_REASON,
+  QUICK_SAVE_SLOTS, RUN_OF_MODE, SESSION_LIST_LIMIT, SRAM_BYTES, SRAM_EXTENSIONS, STALE_STATE_HINT, STATUS_LABELS,
+  TOAST_DURATION_MS,
 };
