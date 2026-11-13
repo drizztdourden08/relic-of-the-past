@@ -3,6 +3,7 @@ import { useNavigationStore } from '@drizztdourden08/brock-react';
 import { useGameSession } from '@app/hooks/useGameSession';
 import { useTouchControlsSettings } from '@app/hooks/useTouchControlsSettings';
 import { useInputPaused } from '@app/input/touch-pad/useInputPaused';
+import { useTouchProfileActive } from '@app/input/touch-pad/useTouchProfileActive';
 import { TouchSurface } from './sub-components/TouchSurface';
 import './TouchControls.css';
 
@@ -11,8 +12,9 @@ const TouchControls = () => {
   const { game } = useGameSession();
   const screenOpen = useNavigationStore((s) => s.active !== null);
   const inputPaused = useInputPaused();
+  const touchProfileActive = useTouchProfileActive();
 
-  if (!game.isRunning || screenOpen || inputPaused) return null;
+  if (!game.isRunning || screenOpen || inputPaused || !touchProfileActive) return null;
   return <TouchSurface touch={touch} updateLayout={updateLayout} />;
 };
 

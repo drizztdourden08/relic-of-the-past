@@ -8,6 +8,7 @@ import type { TouchSession, TouchViewState } from '../TouchControls.type';
 import { deriveTouchState } from './derive-touch-state';
 import { localPoint } from './local-point';
 import { moveSession } from './move-session';
+import { sameView } from './same-view';
 import { sessionAt } from './session-at';
 import { startSession } from './start-session';
 import type { PointerOptions } from './useTouchPointers.type';
@@ -19,8 +20,8 @@ const useTouchPointers = (options: PointerOptions) => {
 
   const apply = useCallback(() => {
     const next = deriveTouchState(sessions.current, layout, box);
-    setView(next.view);
     publishTouchPad(next.pad);
+    setView((prev) => (sameView(prev, next.view) ? prev : next.view));
   }, [layout, box]);
 
   const { cancel: cancelHold } = hold;
@@ -53,18 +54,19 @@ const useTouchPointers = (options: PointerOptions) => {
     const movementTaken = [...sessions.current.values()].some((s) => s.kind === 'movement');
     const session = startSession(point, layout, box, movementTaken);
     sessions.current.set(event.pointerId, session);
-    if (session.kind === 'button') onPress();
     if (session.kind === 'empty') hold.begin(event.pointerId, point);
     apply();
+    if (session.kind === 'button') onPress();
   };
 
   const onPointerMove = (event: PointerEvent<HTMLElement>): void => {
     const hit = sessionAt(sessions.current, event);
     if (!hit) return;
     const { session, point } = hit;
-    if (moveSession(session, point, layout, box)) onPress();
+    const changedButton = moveSession(session, point, layout, box);
     if (session.kind === 'empty') hold.move(event.pointerId, point);
     else apply();
+    if (changedButton) onPress();
   };
 
   const onPointerUp = (event: PointerEvent<HTMLElement>): void => {

@@ -6,6 +6,6 @@ import { baseRatio } from './base-ratio';
 const requestedRatio = (s: GameSettings): number =>
   (s.aspectRatio === 'original'
     ? baseRatio(s)
-    : aspectRatioValue(s.aspectRatio, s.customAspectW, s.customAspectH, s.renderIntoNotch));
+    : aspectRatioValue(s.aspectRatio, s.customAspectW, s.customAspectH, s.renderIntoNotch, s.tallRendering === true));
 
 export { requestedRatio };

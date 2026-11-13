@@ -40,7 +40,7 @@
 // entry TUs (declared extern in emscripten_internal.h), plus the main-only bits.
 // ---------------------------------------------------------------------------
 static const char kWindowTitle[] = "ALttP WASM";
-static SDL_Window *g_window;
+SDL_Window *g_window;
 static struct RendererFuncs g_renderer_funcs;
 
 int g_snes_width, g_snes_height;
@@ -213,49 +213,9 @@ int main(int argc, char **argv) {
   // Initialize game core (use WASM-safe version to avoid ppu_init signature mismatch)
   WasmZeldaInitialize();
 
-  // Extended-rendering master kill-switch (plans/settings-registry-map.md): with the feature off the core
-  // ignores ALL extended geometry, collapsing the buffers to vanilla 256x224 regardless of any stored
-  // ratio/extend_y. This makes "all off == vanilla" enforced in C, not merely implied by zeroed config.
-  if (!(g_config.features0 & kFeatures0_ExtendedRendering)) {
-    g_config.extended_aspect_ratio = 0;
-    g_config.extended_aspect_ratio_vertical = 0;
-    g_config.extend_y = false;
-  }
-  // Tall view is gated by its own bit: without it, no taller-than-4:3 vertical budget.
-  if (!(g_config.features0 & kFeatures0_TallRender))
-    g_config.extended_aspect_ratio_vertical = 0;
-
-  // Horizontal capability caps (plans/settings-registry-map.md §4). Without the linear world tilemap the
-  // overworld BG2 uses the stock wrapping fetch, which can only represent the 512px SNES tilemap, so reading
-  // wider wraps to stale tiles. So 512px total (128 extra cols/side) is the hard ceiling without it
-  // (~19.2:9 at 240 lines, ~20.6:9 at 224). The world tilemap lifts that toward the build cap.
-  if (!(g_config.features0 & kFeatures0_LinearWorldTilemap))
-    g_config.extended_aspect_ratio = UintMin(g_config.extended_aspect_ratio, (512 - 256) / 2);
-  // Ultrawide lifts the cap from 21:9 (the widest preset reachable with the world tilemap alone) to the
-  // engine maximum (kPpuExtraLeftRight, ~32:9). Without it, clamp to the 21:9 budget for the current height.
-  if (!(g_config.features0 & kFeatures0_Ultrawide)) {
-    int h = g_config.extend_y ? 240 : 224;
-    int max_2109 = (h * 21 / 9 - 256) / 2;
-    if (max_2109 < 0)
-      max_2109 = 0;
-    g_config.extended_aspect_ratio = UintMin(g_config.extended_aspect_ratio, (uint16)max_2109);
-  }
-
-  // Configure PPU. Clamp the configured extra to the build cap up front so the render buffer width
-  // (g_snes_width) and the PPU's extra columns always agree, since a wider buffer would leave an unwritten
-  // edge, and a view past the 512px BG tilemap wraps to stale tiles (garbage on the sides).
-  g_config.extended_aspect_ratio = UintMin(g_config.extended_aspect_ratio, kPpuExtraLeftRight);
-  g_zenv.ppu->extraLeftRight = g_config.extended_aspect_ratio;
-  g_snes_width = (g_config.extended_aspect_ratio * 2 + 256);
-  // Tall: extraTopBottom is the per-side vertical budget; the buffer grows by top+bottom. botBudget keeps
-  // the legacy +16 (extend_y) when not tall. This 224+top+bot MUST match ZeldaDrawPpuFrame's loop height.
-  g_config.extended_aspect_ratio_vertical = UintMin(g_config.extended_aspect_ratio_vertical, kPpuExtraTopBottom);
-  g_zenv.ppu->extraTopBottom = g_config.extended_aspect_ratio_vertical;
-  g_oam_tall_budget = g_config.extended_aspect_ratio_vertical;  // sprite OAM 9-bit-Y gate + camera lock (types.h)
-  g_oam_wide_budget = g_config.extended_aspect_ratio;           // horizontal budget for the camera lock
-  int top_budget = g_config.extended_aspect_ratio_vertical;
-  int bot_budget = top_budget > 0 ? top_budget : (g_config.extend_y ? 16 : 0);
-  g_snes_height = 224 + top_budget + bot_budget;
+  // Extended view: kill-switch, capability caps, PPU extra columns/rows, buffer size and OAM budgets.
+  // Shared with the live WasmSetExtendedAspect export (emscripten_view.c).
+  ApplyExtendedView();
 
   g_ppu_render_flags = g_config.new_renderer * kPpuRenderFlags_NewRenderer |
                        g_config.enhanced_mode7 * kPpuRenderFlags_4x4Mode7 |

@@ -1,5 +1,6 @@
 /* @layer renderer-components @kind logic */
 import { checkLoadable } from '@rotp/game-core';
+import { nav } from '@drizztdourden08/brock-react';
 import { toast } from '@drizztdourden08/tessera/composites';
 import { ensureGameRunning } from './ensure-game-running';
 import { MISSING_STATE_MESSAGE, STALE_STATE_HINT, TOAST_DURATION_MS } from './home-tab.constants';
@@ -12,7 +13,11 @@ const refusalOf = (buffer: ArrayBuffer | null): string | null => {
 
 const startForLoad = async (buffer: ArrayBuffer | null, isGameRunning: boolean, onStartGame: () => void): Promise<boolean> => {
   const refusal = refusalOf(buffer);
-  if (refusal === null) return ensureGameRunning(isGameRunning, onStartGame);
+  if (refusal === null) {
+    const ready = await ensureGameRunning(isGameRunning, onStartGame);
+    if (ready) nav.close();
+    return ready;
+  }
   toast({ message: refusal, variant: 'danger', duration: TOAST_DURATION_MS });
   return false;
 };

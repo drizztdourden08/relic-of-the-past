@@ -14,6 +14,10 @@
 
 // ── Display / PPU (defined in emscripten_main.c) ──
 extern int g_snes_width, g_snes_height;
+extern SDL_Window *g_window;
+
+// ── Extended view sizing (defined in emscripten_view.c) ──
+void ApplyExtendedView(void);
 extern int g_ppu_render_flags;
 
 // ── Input (defined in emscripten_main.c) ──
@@ -56,6 +60,7 @@ void FlushPendingVolumes(void);
 
 // ── SDL renderer/input handlers (defined in emscripten_sdl.c) ──
 extern const struct RendererFuncs kSdlRendererFuncs;
+void SdlRenderer_Resize(void);
 void SDLCALL AudioCallback(void *userdata, Uint8 *stream, int len);
 void HandleInput(int keyCode, bool pressed);
 void HandleCommand(int keyCode);
