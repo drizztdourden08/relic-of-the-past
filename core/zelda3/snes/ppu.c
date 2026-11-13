@@ -1595,21 +1595,13 @@ static bool ppu_evaluateSprites(Ppu* ppu, int line) {
     // check if the sprite is on this line and get the sprite size
     int row;
     if (tall_view) {
-      // Tall view spans >256 lines, more than the 8-bit OAM-Y can place. Reconstruct the game's 9-bit Y
-      // (high bit from the marker) and map the high range to negative — above the screen top — exactly like
-      // the stock 9-bit X does for the left edge. Each sprite is then evaluated on a single line (no 256px-
-      // apart duplicate) and can sit anywhere in the tall pan.
-      yy += tallY == 2 ? 256 : 0;
-      // Decode the 9-bit value FIRST: the fold is what maps its high range back to negative rows above the
-      // screen, so it is part of reading the coordinate, not an adjustment to it. Applying the view shift
-      // beforehand moves the value across the fold threshold and the decode then lands 512 rows out; since
-      // the shift changes as the view pans, a sprite near that threshold alternates between placements and
-      // flickers. Shift after decoding instead.
-      // The fold moves with the camera lock's offset, exactly as the OAM writer's own range does
-      // (OamTallFold in sprite.h): the stored value is camera-relative and the offset is added below, so a
-      // locked view would otherwise fold its lowest rows into negative ones far above the screen.
-      if (yy >= 256 + (int)ppu->extraTopBottom - ppu->tallFoldShift)
-        yy -= 512;
+      // Tall view spans >256 lines, more than the 8-bit OAM-Y can place. The marker carries the signed bits
+      // above the low byte (see kOamY_* in sprite.h), exactly like oamHighX does for X, so the true screen Y
+      // is decoded with no fold. Each sprite is evaluated on a single line and can sit anywhere in the pan.
+      // An unmarked entry keeps its stock 8-bit Y.
+      if (tallY != 0)
+        yy += ((int)(int8_t)(uint8_t)(tallY - 0x80)) * 256;
+      // The view shift applies after decoding the coordinate.
       yy += PpuSpriteLockShift(ppu, index, ppu->cameraLockShiftY);
       row = line - yy;
       if (row < 0 || row >= spriteSize)

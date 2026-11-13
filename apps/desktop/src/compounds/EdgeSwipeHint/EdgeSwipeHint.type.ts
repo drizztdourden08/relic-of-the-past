@@ -12,4 +12,4 @@ interface EdgeHintSpec {
   icon: 'chevron-right' | 'chevron-left';
 }
 
-export type { EdgeHintSpec, EdgeSide, EdgeSwipeHintProps };
+export type { EdgeHintSpec, EdgeSwipeHintProps };

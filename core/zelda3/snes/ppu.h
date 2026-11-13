@@ -102,8 +102,7 @@ struct Ppu {
   // rendered view edge rests on the area boundary (no out-of-area black). Set per-frame by
   // ConfigurePpuSideSpace; the game camera (BG2VOFS) is untouched. 0 = no shift (not locked / mid-area).
   int32_t cameraLockShiftX, cameraLockShiftY;
-  // How far the 9-bit sprite Y fold moves with the lock (g_oam_tall_fold_shift). 0 leaves the fold where
-  // every build had it, which is what the corrections being off means.
+  // Unused; kept so the struct layout stays fixed.
   int32_t tallFoldShift;
   float mode7PerspectiveLow, mode7PerspectiveHigh;
 
@@ -169,9 +168,9 @@ struct Ppu {
   uint16_t oam[0x110];
   // Tall screens: OAM Y is 8-bit. This carries the per-sprite Y marker (synced from the game's
   // g_oam_y_high each frame) so ppu_evaluateSprites can place sprites across a >256px tall pan:
-  // 0 = not tall-encoded, read the entry the vanilla way; 1 = 9th bit clear; 2 = 9th bit set. The
-  // three states exist because a tall screen renders rows 240 and -16, both of which encode to the
-  // hardware's hide value 0xf0 — the marker is what tells a real row from a hidden sprite.
+  // 0 = not tall-encoded, read the entry the vanilla way; otherwise 0x80 + the signed Y bits above the
+  // low byte. A tall screen renders rows 240 and -16, both of which encode to the hardware's hide
+  // value 0xf0 — the marker is what tells a real row from a hidden sprite.
   uint8_t oamHighY[128];
   // Wide screens: OAM X is 9-bit. This carries the SIGNED per-sprite X bits above the stock 9 (synced from
   // g_oam_x_high each frame) so ppu_evaluateSprites can place sprites at their true X across a >512px wide

@@ -17,4 +17,4 @@ interface GroupPreset {
   members: readonly GroupPresetMember[];
 }
 
-export type { GroupPreset, GroupPresetId, GroupPresetMember };
+export type { GroupPreset, GroupPresetId };

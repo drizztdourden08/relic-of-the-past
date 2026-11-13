@@ -9,7 +9,7 @@ import {
   SPRITE_STRIDE,
   HIDDEN_Y,
   NO_SHADOW_OAM_POS,
-  Y_HIGH_NINTH_BIT_SET,
+  Y_MARKER_BASE,
 } from './oam-snapshot.constants';
 import { readU8 } from "./bridge/wasm-call";
 
@@ -37,12 +37,9 @@ const readSlots = (heap: Uint8Array, ptr: number, u16: (at: number) => number): 
       isPlayer: heap[at + 7] === 1,
       resolvedX: xLow + (ext & 1) * 256 + xHigh * 512,
       resolvedY: (() => {
-        const tall = u16(40);
         const marker = readU8(heap, at + 6);
-        if (!tall || marker === 0) return y;
-        let yy = y + (marker === Y_HIGH_NINTH_BIT_SET ? 256 : 0);
-        if (yy >= 256 + tall) yy -= 512;
-        return yy + s16(u16(42));
+        if (!u16(40) || marker === 0) return y;
+        return y + s8((marker - Y_MARKER_BASE) & 0xff) * 256 + s16(u16(42));
       })(),
       hidden: y === HIDDEN_Y,
     });

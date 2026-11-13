@@ -149,7 +149,7 @@ int WasmGetOverworldFlags(void) {
 
 // ─── Viewport Info ───
 
-static uint8 g_viewport_buf[32];
+static uint8 g_viewport_buf[36];
 
 EMSCRIPTEN_KEEPALIVE
 int WasmGetViewportInfo(void) {
@@ -163,8 +163,12 @@ int WasmGetViewportInfo(void) {
   PutU16(g_viewport_buf, 2, g_zenv.ppu->extraLeftRight);
   PutU16(g_viewport_buf, 4, g_zenv.ppu->extraLeftCur);
   PutU16(g_viewport_buf, 6, g_zenv.ppu->extraRightCur);
-  g_viewport_buf[8] = (uint8)g_zenv.ppu->extraBottomCur;  // vertical content rows below base (<=kPpuExtraTopBottom)
-  g_viewport_buf[11] = (uint8)g_zenv.ppu->extraTopCur;     // vertical content rows above base (tall); [11] was unused
+  // Vertical content rows can exceed 255, so they live in u16 slots at 32 (below base) and 34 (above base,
+  // tall); the low bytes stay at [8] and [11].
+  g_viewport_buf[8] = (uint8)g_zenv.ppu->extraBottomCur;
+  g_viewport_buf[11] = (uint8)g_zenv.ppu->extraTopCur;
+  PutU16(g_viewport_buf, 32, g_zenv.ppu->extraBottomCur);
+  PutU16(g_viewport_buf, 34, g_zenv.ppu->extraTopCur);
 
   // locationModule: the player's physical location regardless of UI overlays.
   // The menu / spotlight modules are transient overlays, so the player hasn't

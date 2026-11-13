@@ -12,4 +12,4 @@ interface MovementHitRects {
   round: boolean;
 }
 
-export type { HitRect, MovementHitRects };
+export type { MovementHitRects };

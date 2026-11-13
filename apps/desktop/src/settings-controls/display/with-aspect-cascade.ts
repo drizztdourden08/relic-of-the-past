@@ -1,6 +1,8 @@
 /* @layer renderer-app @kind logic */
 import type { GameSettings } from '@rotp/features';
-import { REQUIRES_LINEAR, REQUIRES_ULTRAWIDE, TALL_PRESET_VALUES } from './display.constants';
+import {
+  REQUIRES_LINEAR, REQUIRES_ULTRAWIDE, TALL_PRESET_VALUES, TALL_ULTRAWIDE_FALLBACK, TALL_ULTRAWIDE_PRESET,
+} from './display.constants';
 
 const turnedOff = (patch: Partial<GameSettings>, key: 'linearWorldTilemap' | 'ultrawideRendering' | 'tallRendering'): boolean =>
   key in patch && patch[key] === false;
@@ -15,6 +17,7 @@ const withAspectCascade = <P extends Partial<GameSettings>>(patch: P, current: G
   return {
     ...(turnedOff(patch, 'linearWorldTilemap') ? linearOffCascade(current) : {}),
     ...(turnedOff(patch, 'ultrawideRendering') && REQUIRES_ULTRAWIDE.has(ratio) ? { aspectRatio: '21:9' } : {}),
+    ...(turnedOff(patch, 'ultrawideRendering') && ratio === TALL_ULTRAWIDE_PRESET ? { aspectRatio: TALL_ULTRAWIDE_FALLBACK } : {}),
     ...(turnedOff(patch, 'tallRendering') && TALL_PRESET_VALUES.has(ratio) ? { aspectRatio: '4:3' } : {}),
     ...patch,
   };
