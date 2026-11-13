@@ -69,10 +69,6 @@
   max-width: 100%;
   max-height: 100%;
   pointer-events: none;
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
   z-index: var(--z-base);
   mix-blend-mode: multiply;
 }
@@ -115,11 +111,40 @@
   background: var(--c-border-strong);
 }
 
-.game-layer[data-touch-portrait] {
+.game-layer__picture {
+  position: absolute;
+  inset: 0;
+  margin: auto;
+}
+
+.game-layer[data-align='top'] {
   align-items: flex-start;
 }
 
-.game-layer[data-touch-portrait] .game-layer__shadow-canvas {
-  top: 0;
-  transform: translate(-50%, 0);
+.game-layer[data-align='top'] .game-layer__picture {
+  margin-top: 0;
+}
+
+.game-layer[data-align='bottom'] {
+  align-items: flex-end;
+}
+
+.game-layer[data-align='bottom'] .game-layer__picture {
+  margin-bottom: 0;
+}
+
+.game-layer[data-align='left'] {
+  justify-content: flex-start;
+}
+
+.game-layer[data-align='left'] .game-layer__picture {
+  margin-left: 0;
+}
+
+.game-layer[data-align='right'] {
+  justify-content: flex-end;
+}
+
+.game-layer[data-align='right'] .game-layer__picture {
+  margin-right: 0;
 }

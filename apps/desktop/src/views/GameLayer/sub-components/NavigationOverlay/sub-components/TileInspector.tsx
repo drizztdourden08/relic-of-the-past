@@ -37,7 +37,7 @@ const TileInspector = ({ width, height, result, roomIndex, isIndoors, onHoverTil
   return (
     <Box
       data-testid="tile-inspector"
-      className={selecting ? 'nav-overlay__inspector nav-overlay__inspector--selecting' : 'nav-overlay__inspector'}
+      className={selecting ? 'game-layer__picture nav-overlay__inspector nav-overlay__inspector--selecting' : 'game-layer__picture nav-overlay__inspector'}
       onMouseMove={handleMouseMove}
       onMouseDown={handleRectMouseDown}
       onMouseUp={handleRectMouseUp}

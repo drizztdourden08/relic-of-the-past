@@ -43,6 +43,7 @@ const DEFAULT_SETTINGS: GameSettings = {
   startFullscreen: false,
   viewportConstraint: 'none',
   pixelPerfect: false,
+  pictureAlign: 'center',
 
   renderIntoNotch: true,
 

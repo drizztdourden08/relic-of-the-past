@@ -30,7 +30,7 @@ const GameLayerCanvases = (props: GameLayerCanvasesProps) => {
       <Canvas
         key={`shadow-${canvasKey}`}
         ref={shadowCanvasRef}
-        className={`game-layer__shadow-canvas${shadowHidden}${shadowBlend}`}
+        className={`game-layer__picture game-layer__shadow-canvas${shadowHidden}${shadowBlend}`}
         width={CANVAS_WIDTH}
         height={CANVAS_HEIGHT}
       />

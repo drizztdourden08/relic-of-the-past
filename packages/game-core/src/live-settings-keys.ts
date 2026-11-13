@@ -79,6 +79,7 @@ const LIVE_SETTING_KEYS = [
   'syncedRateInFullscreen',
   'syncedRateTargetHz',
   'pixelPerfect',
+  'pictureAlign',
   'vsync',
   'turboEnabled',
   'turboSpeed',

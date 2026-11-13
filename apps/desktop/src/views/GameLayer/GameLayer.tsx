@@ -12,7 +12,7 @@ import { useGameBoot } from './behavior/useGameBoot';
 import { usePauseWhenAway } from './behavior/usePauseWhenAway';
 import { usePublishFitSize } from './behavior/usePublishFitSize';
 import { useShadowCastingLoop } from './behavior/useShadowCastingLoop';
-import { useTouchPortrait } from './behavior/useTouchPortrait';
+import { usePictureAlign } from './behavior/usePictureAlign';
 import { GameLayerCanvases } from './sub-components/GameLayerCanvases';
 import { GameLayerOverlays } from './sub-components/GameLayerOverlays';
 import './GameLayer.css';
@@ -35,7 +35,7 @@ const GameLayer = (props: GameLayerProps) => {
   const [canvasKey, setCanvasKey] = useState(0);
   const { bufSize, setBufSize } = useCanvasBufferSize(canvasRef, status, canvasKey);
   const shadowDebugMode = useShadowEditorStore((s) => s.debugMode);
-  const touchPortrait = useTouchPortrait();
+  const align = usePictureAlign();
 
   const fitSize = useCanvasFit({ containerRef, bufW: bufSize.w, bufH: bufSize.h, stretch, pixelPerfect });
 
@@ -48,7 +48,7 @@ const GameLayer = (props: GameLayerProps) => {
   usePauseWhenAway(status);
 
   return (
-    <Box className="game-layer" ref={containerRef} data-touch-portrait={touchPortrait || undefined}>
+    <Box className="game-layer" ref={containerRef} data-align={align}>
       {status === 'error' && (
         <Box className="game-layer__status-overlay">
           <Text className="game-layer__status-text game-layer__status-text--error">Error: {error}</Text>

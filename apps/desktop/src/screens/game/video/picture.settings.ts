@@ -9,6 +9,14 @@ const offscreenOptions = [
   { value: 'paused', label: 'Freeze', hint: 'Enemies in the extra width stop completely, mid-step, until they reach the original 4:3 screen. No movement, no animation, and no shadow.' },
 ];
 
+const alignOptions = [
+  { value: 'center', label: 'Center', hint: 'The picture fills as much of the screen as it can, centered both ways.' },
+  { value: 'top', label: 'Top', hint: 'The picture sits against the top edge, leaving the free space below it.' },
+  { value: 'bottom', label: 'Bottom', hint: 'The picture sits against the bottom edge, leaving the free space above it.' },
+  { value: 'left', label: 'Left', hint: 'The picture sits against the left edge, leaving the free space on the right.' },
+  { value: 'right', label: 'Right', hint: 'The picture sits against the right edge, leaving the free space on the left.' },
+];
+
 const sections: Section[] = [
   {
     id: 'picture',
@@ -19,6 +27,7 @@ const sections: Section[] = [
       { key: 'ultrawideRendering', label: 'Ultrawide', description: 'Unlocks ratios above 19:9 up to 32:9. Requires Linear World Tilemap.', hint: 'Turning it off moves a 32:9 picture back to 21:9.', keywords: 'ultrawide 32:9 super ultrawide' },
       { key: 'tallRendering', label: 'Tall Rendering', description: 'Adds extra rows above and below, which enables tall presets in the picker. Separate from widescreen.', hint: 'Turning it off puts a tall picture back to 4:3.', keywords: 'tall portrait vertical aspect ratio height rows' },
       { key: 'aspectRatio', label: 'Aspect Ratio', description: 'Original uses the game width. Wide, Tall, Auto, Screen and Custom use 240 lines.', keywords: 'original widescreen 4:3 16:9 16:10 21:9 32:9 tall 3:4 custom auto detect' },
+      { key: 'pictureAlign', label: 'Alignment', description: 'Where the picture and its overlays sit when the screen has room to spare, such as a portrait phone with the touch controls below.', keywords: 'align alignment position top bottom left right center portrait vertical touch controls', control: { kind: 'choice', options: alignOptions, look: 'select' } },
       { key: 'extendY', label: 'Extend Y', description: 'In Original mode, show 240 lines instead of 224.', keywords: 'height resolution vertical 240' },
       { key: 'widescreenVisualFixes', label: 'Widescreen Fixes', description: 'Corrections for a view wider or taller than the original: transitions, effects and sprites drawn for the 4:3 screen. One switch; on by default.', keywords: 'visual fixes widescreen tall tiles edges transitions iris link hide' },
       { key: 'widescreenSprites', label: 'Widescreen Sprites', description: 'Extend sprite spawn ranges so enemies and objects behave as intended in the wider view.', hint: 'Needs a ratio wider than 4:3.', keywords: 'sprites widescreen spawn despawn ranges' },

@@ -68,7 +68,7 @@ const CheckToasts = ({ width, height }: CheckToastsProps) => {
   }), [width, height, settings]);
 
   return (
-    <Box className="check-toasts" style={style}>
+    <Box className="game-layer__picture check-toasts" style={style}>
       {allToasts.length > 0 && (
         <Box className="play-area-notices">
           {allToasts.map((item) => (

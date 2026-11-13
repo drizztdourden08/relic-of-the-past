@@ -11,7 +11,7 @@ const OverlayCanvas = ({ width, height, gameRunning, mouseStateRef }: OverlayCan
   return (
     <Canvas
       ref={canvasRef}
-      className="nav-overlay__canvas"
+      className="game-layer__picture nav-overlay__canvas"
       width={width}
       height={height}
     />
