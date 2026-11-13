@@ -6,8 +6,6 @@ import { GAME_VIEW_RESIZED_EVENT, LIVE_ASPECT_MODES } from './live-aspect.consta
 
 const gameCanvas = (): HTMLCanvasElement | null => document.querySelector<HTMLCanvasElement>('.game-layer__canvas');
 
-// Recomputes the view size for the window as it is now and hands it to the running core. The core ignores an
-// unchanged size, so the event that tells the display to refit goes out only when the canvas buffer moved.
 const applyLiveAspect = (): void => {
   const settings = liveSettingsNow();
   if (!settings || !LIVE_ASPECT_MODES.has(settings.aspectRatio)) return;

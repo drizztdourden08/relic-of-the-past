@@ -6,7 +6,7 @@ import type { DeviceEntry } from '@drizztdourden08/brock-input';
 import { controllerInputStore } from '@drizztdourden08/brock-input/renderer';
 import type { ControllerInputState } from '@drizztdourden08/brock-input/renderer';
 import { wasmSetPaused, suspendAudio, resumeAudio } from '@rotp/game-core';
-import { PauseManager, FunctionActionEngine, RawInputDispatcher } from '@rotp/input-mapping';
+import { PauseManager, FunctionActionEngine, RawInputDispatcher, notifyQuietly } from '@rotp/input-mapping';
 import { startInput } from './start-input';
 import { stopInput } from './stop-input';
 import { refreshInputDevices } from './refresh-input-devices';
@@ -18,6 +18,7 @@ import { pollFrame } from './poll-frame';
 import { connectedGamepadKeys } from './connected-gamepad-keys';
 import { touchPadAllowed } from '../touch-pad/touch-pad-allowed';
 import { cycleActiveProfile } from './cycle-active-profile';
+import { switchActiveProfile } from './switch-active-profile';
 import { wireFunctionActions } from './wire-function-actions';
 
 class InputManager {
@@ -25,6 +26,8 @@ class InputManager {
   profiles: InputProfile[] = [];
   allowed: AllowedDevices = { keyboard: false, gamepadKeys: new Set() };
   activeProfileListeners = new Set<ActiveProfileListener>();
+  profileSetListeners = new Set<ActiveProfileListener>();
+  profilesListeners = new Set<() => void>();
   persistActiveProfileId: ((id: string) => void) | null = null;
   keyStates = new Map<string, boolean>();
   allPressedKeys = new Set<string>();
@@ -93,16 +96,35 @@ class InputManager {
   setProfile(profile: InputProfile): void {
     this.activeProfile = profile;
     rebuildMaps(this);
+    notifyQuietly(this.profileSetListeners, profile);
   }
 
   getProfile(): InputProfile | null { return this.activeProfile; }
   getProfiles(): InputProfile[] { return this.profiles; }
-  setProfiles(profiles: InputProfile[]): void { this.profiles = profiles; }
+  setProfiles(profiles: InputProfile[]): void {
+    this.profiles = profiles;
+    for (const listener of this.profilesListeners) listener();
+  }
+
+  onProfilesChange(listener: () => void): () => void {
+    this.profilesListeners.add(listener);
+    return () => this.profilesListeners.delete(listener);
+  }
+
+  switchProfile(id: string): void {
+    const next = this.profiles.find(p => p.id === id);
+    if (next) switchActiveProfile(this, next);
+  }
   setActiveProfilePersist(fn: (id: string) => void): void { this.persistActiveProfileId = fn; }
 
   onActiveProfileChange(listener: ActiveProfileListener): () => void {
     this.activeProfileListeners.add(listener);
     return () => this.activeProfileListeners.delete(listener);
+  }
+
+  onProfileSet(listener: ActiveProfileListener): () => void {
+    this.profileSetListeners.add(listener);
+    return () => this.profileSetListeners.delete(listener);
   }
 
   cycleActiveProfile(direction: 1 | -1): void { cycleActiveProfile(this, direction); }

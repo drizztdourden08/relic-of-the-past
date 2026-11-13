@@ -28,6 +28,7 @@ import { ROTP_DATA_DOMAINS } from './storage/data-domains.constants';
 import { product } from './product';
 import { APP_PROFILE_MODES } from './profile-modes';
 import { useHubShowFlags } from './stores/hub-session';
+import { useInputProfileMenu } from './shell/useInputProfileMenu';
 import type { AppSettings } from './settings.type';
 import './log-bus';
 import './hud/hud.css';
@@ -53,6 +54,7 @@ if (!root) throw new Error('index.html has no #root element');
 
 const App = () => {
   const showFlags = useHubShowFlags();
+  const inputProfileMenu = useInputProfileMenu();
   return (
     <BrockApp<AppSettings>
       product={product}
@@ -78,6 +80,7 @@ const App = () => {
       bugReport={rotpBugReport}
       startupPrompts={appStartupPrompts}
       toolbars={appToolbars}
+      menu={inputProfileMenu}
     />
   );
 };

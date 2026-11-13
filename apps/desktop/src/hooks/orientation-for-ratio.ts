@@ -1,8 +1,7 @@
 /* @layer renderer-app @kind logic */
 import { TALL_PRESET_VALUES } from '@app/settings-controls/display/display.constants';
 import type { AppSettings } from '@app/settings.type';
-
-type OrientationMode = 'landscape' | 'portrait' | 'any';
+import type { OrientationMode } from './orientation-for-ratio.type';
 
 const orientationForRatio = (settings: AppSettings): OrientationMode => {
   const { aspectRatio, customAspectW, customAspectH } = settings;

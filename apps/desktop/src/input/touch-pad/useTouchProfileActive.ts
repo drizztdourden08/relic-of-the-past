@@ -10,7 +10,7 @@ const useTouchProfileActive = (): boolean => {
     const manager = getInputManager();
     const refresh = (): void => setActive(isTouchProfile(manager.getProfile()));
     refresh();
-    return manager.onActiveProfileChange(refresh);
+    return manager.onProfileSet(refresh);
   }, []);
 
   return active;
