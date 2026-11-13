@@ -1,18 +1,18 @@
 /* @layer shared-input @kind logic */
-import type { OrientationLayout, TouchEmit, TouchPoint } from '@rotp/features';
+import type { OrientationLayout, TouchButton, TouchEmit, TouchPoint } from '@rotp/features';
 import { clampPoint } from '../geometry/clamp-point';
-import { ROUND_EMITS } from './add-button.constants';
 import { emitLabel } from './emit-label';
+import { formForEmit } from './form-for-emit';
 import { uniqueButtonId } from './unique-button-id';
 
 const addButton = (layout: OrientationLayout, emit: TouchEmit, at: TouchPoint): OrientationLayout => {
-  const button = {
+  const button: TouchButton = {
     id: uniqueButtonId(new Set(layout.buttons.map((b) => b.id)), emit),
     emit,
     label: emitLabel(emit),
     at: clampPoint(at),
     scale: 1,
-    shape: ROUND_EMITS.has(emit) ? ('round' as const) : ('pill' as const),
+    ...formForEmit(emit),
     group: null,
   };
   return { ...layout, buttons: [...layout.buttons, button] };

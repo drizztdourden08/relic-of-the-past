@@ -15,6 +15,7 @@ const DEFAULT_SETTINGS: GameSettings = {
   vsync: false,
   turboEnabled: false,
   turboSpeed: DEFAULT_TURBO_SPEED,
+  pauseWhenAway: true,
 
   extendedRendering: false,
   aspectRatio: '16:9',

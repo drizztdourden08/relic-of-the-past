@@ -13,10 +13,11 @@ const useTouchMenuEntries = (): MenuEntry[] => {
     const toggle: MenuEntry = {
       key: 'touch-toggle',
       label: enabled ? 'Hide touch controls' : 'Show touch controls',
+      icon: enabled ? 'eye-off' : 'eye',
       onClick: () => updateTouch({ enabled: !enabled }),
     };
     if (!enabled) return [toggle];
-    return [{ key: 'touch-edit', label: 'Edit touch layout', onClick: () => setEditing(true) }, toggle];
+    return [{ key: 'touch-edit', label: 'Edit touch layout', icon: 'pencil', onClick: () => setEditing(true) }, toggle];
   }, [enabled, updateTouch, setEditing]);
 };
 

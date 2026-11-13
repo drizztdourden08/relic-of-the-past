@@ -1,12 +1,12 @@
 /* @layer renderer-app @kind types */
-import type { TouchButton, TouchButtonShape, TouchEmit, TouchGroup } from '@rotp/features';
+import type { TouchButton, TouchButtonForm, TouchEmit, TouchGroup } from '@rotp/features';
 
 interface TouchButtonCardProps {
   button: TouchButton;
   group: TouchGroup | undefined;
   onEmit: (emit: TouchEmit) => void;
   onScale: (scale: number) => void;
-  onShape: (shape: TouchButtonShape) => void;
+  onForm: (form: Partial<TouchButtonForm>) => void;
   onRemove: () => void;
   onLock: (locked: boolean) => void;
 }

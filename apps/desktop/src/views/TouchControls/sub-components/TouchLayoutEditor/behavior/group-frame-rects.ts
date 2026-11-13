@@ -1,12 +1,11 @@
 /* @layer renderer-app @kind logic */
 import type { OrientationLayout } from '@rotp/features';
-import { basePx, toPx } from '@rotp/input-mapping';
+import { buttonHitBox } from '@rotp/input-mapping';
 import type { ScreenBox } from '@rotp/input-mapping';
 import { GROUP_FRAME_PAD_PX } from '../TouchLayoutEditor.constants';
 import type { GroupFrameEntry } from './group-frame-rects.type';
 
 const groupFrameRects = (layout: OrientationLayout, box: ScreenBox): GroupFrameEntry[] => {
-  const base = basePx(box);
   const entries: GroupFrameEntry[] = [];
   layout.groups.forEach((group) => {
     const members = layout.buttons.filter((button) => button.group === group.id);
@@ -16,12 +15,11 @@ const groupFrameRects = (layout: OrientationLayout, box: ScreenBox): GroupFrameE
     let right = -Infinity;
     let bottom = -Infinity;
     members.forEach((button) => {
-      const centre = toPx(button.at, box);
-      const half = (base * button.scale) / 2;
-      left = Math.min(left, centre.x - half);
-      top = Math.min(top, centre.y - half);
-      right = Math.max(right, centre.x + half);
-      bottom = Math.max(bottom, centre.y + half);
+      const { center, halfW, halfH } = buttonHitBox(button, box);
+      left = Math.min(left, center.x - halfW);
+      top = Math.min(top, center.y - halfH);
+      right = Math.max(right, center.x + halfW);
+      bottom = Math.max(bottom, center.y + halfH);
     });
     entries.push({
       id: group.id,

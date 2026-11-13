@@ -61,7 +61,7 @@ const TouchEditorVisuals = (props: TouchEditorVisualsProps) => {
         <TouchButton
           key={button.id}
           label={button.label}
-          shape={button.shape}
+          form={button}
           sizePx={base * button.scale}
           center={toPx(button.at, box)}
           pressed={false}

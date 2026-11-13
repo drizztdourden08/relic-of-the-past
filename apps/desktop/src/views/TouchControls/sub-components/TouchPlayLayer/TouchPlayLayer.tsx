@@ -19,7 +19,7 @@ const TouchPlayLayer = (props: TouchPlayLayerProps) => {
         <TouchButton
           key={button.id}
           label={button.label}
-          shape={button.shape}
+          form={button}
           sizePx={size * button.scale}
           center={toPx(button.at, box)}
           pressed={view.pressed.has(button.id)}

@@ -1,10 +1,11 @@
 /* @layer renderer-app @kind types */
 import type { OrientationLayout, TouchControlsSettings, TouchOrientation } from '@rotp/features';
 
+type TouchSurfacePatch = Partial<Omit<TouchControlsSettings, 'layouts'>>;
+
 interface TouchSurfaceProps {
   touch: TouchControlsSettings;
-  updateTouch: (patch: Partial<Omit<TouchControlsSettings, 'layouts'>>) => void;
-  updateLayout: (orientation: TouchOrientation, layout: OrientationLayout) => void;
+  updateLayout: (orientation: TouchOrientation, layout: OrientationLayout, change?: TouchSurfacePatch) => void;
 }
 
 export type { TouchSurfaceProps };

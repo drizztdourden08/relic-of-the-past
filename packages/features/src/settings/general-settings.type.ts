@@ -8,6 +8,7 @@ interface GeneralSettings {
   vsync: boolean;
   turboEnabled: boolean;
   turboSpeed: number;
+  pauseWhenAway: boolean;
 }
 
 export type { GeneralSettings };

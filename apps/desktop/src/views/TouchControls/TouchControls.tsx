@@ -8,14 +8,14 @@ import { TouchSurface } from './sub-components/TouchSurface';
 import './TouchControls.css';
 
 const TouchControls = () => {
-  const { touch, updateTouch, updateLayout } = useTouchControlsSettings();
+  const { touch, updateLayout } = useTouchControlsSettings();
   const hiddenByPad = useTouchPadHidden();
   const { game } = useGameSession();
   const screenOpen = useNavigationStore((s) => s.active !== null);
   const inputPaused = useInputPaused();
 
   if (!touch.enabled || hiddenByPad || !game.isRunning || screenOpen || inputPaused) return null;
-  return <TouchSurface touch={touch} updateTouch={updateTouch} updateLayout={updateLayout} />;
+  return <TouchSurface touch={touch} updateLayout={updateLayout} />;
 };
 
 export { TouchControls };

@@ -6,7 +6,7 @@ type TouchPatch = Partial<Omit<TouchControlsSettings, 'layouts'>>;
 interface TouchControlsSettingsApi {
   touch: TouchControlsSettings;
   updateTouch: (patch: TouchPatch) => void;
-  updateLayout: (orientation: TouchOrientation, layout: OrientationLayout) => void;
+  updateLayout: (orientation: TouchOrientation, layout: OrientationLayout, change?: TouchPatch) => void;
 }
 
 export type { TouchControlsSettingsApi, TouchPatch };

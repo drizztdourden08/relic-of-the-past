@@ -1,12 +1,12 @@
 /* @layer renderer-app @kind hook */
-import type { MovementType, OrientationLayout, TouchButtonShape, TouchEmit } from '@rotp/features';
+import type { MovementType, OrientationLayout, TouchButtonForm, TouchEmit } from '@rotp/features';
 import {
   addButton,
   addGroup,
   removeButton,
   setButtonEmit,
+  setButtonForm,
   setButtonScale,
-  setButtonShape,
   setGroupLocked,
   setMovementScale,
   setMovementType,
@@ -25,7 +25,7 @@ const useEditorActions = ({ layout, box, onLayout, onSelect }: EditorActionsInpu
   return {
     setEmit: (id: string, emit: TouchEmit) => onLayout(setButtonEmit(layout, id, emit)),
     setScale: (id: string, scale: number) => onLayout(setButtonScale(layout, id, scale)),
-    setShape: (id: string, shape: TouchButtonShape) => onLayout(setButtonShape(layout, id, shape)),
+    setForm: (id: string, form: Partial<TouchButtonForm>) => onLayout(setButtonForm(layout, id, form)),
     setLocked: (groupId: string, locked: boolean) => onLayout(setGroupLocked(layout, groupId, locked)),
     setMovement: (type: MovementType) => onLayout(setMovementType(layout, type)),
     setMovementSize: (scale: number) => onLayout(setMovementScale(layout, scale)),

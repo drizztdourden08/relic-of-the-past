@@ -1,5 +1,5 @@
 /* @layer renderer-app @kind component */
-import { CROSS_PATH, DPAD_ARMS, HUB_RADIUS } from './DpadCross.constants';
+import { ARM_RADIUS, CROSS_PATH, DPAD_ARMS, HUB_RADIUS } from './DpadCross.constants';
 import type { DpadCrossProps } from './DpadCross.type';
 import './DpadCross.css';
 
@@ -17,7 +17,7 @@ const DpadCross = (props: DpadCrossProps) => {
       <path className="dpad-cross__body" d={CROSS_PATH} />
       {DPAD_ARMS.map((arm) => (
         <g key={arm.key} data-pressed={pressed[arm.key] || undefined} className="dpad-cross__arm">
-          <rect className="dpad-cross__arm-fill" {...arm.rect} rx={10} />
+          <rect className="dpad-cross__arm-fill" {...arm.rect} rx={ARM_RADIUS} />
           <path className="dpad-cross__notch" d={arm.notch} />
         </g>
       ))}

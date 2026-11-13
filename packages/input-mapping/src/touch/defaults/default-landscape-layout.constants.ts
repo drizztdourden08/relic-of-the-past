@@ -1,5 +1,6 @@
 /* @layer shared-input @kind constants */
 import type { OrientationLayout } from '@rotp/features';
+import { MENU_FORM, ROUND_FORM, SHOULDER_FORM } from '../editing/button-forms.constants';
 
 const DEFAULT_LANDSCAPE_LAYOUT: OrientationLayout = {
   movementType: 'dynamic-stick',
@@ -10,14 +11,14 @@ const DEFAULT_LANDSCAPE_LAYOUT: OrientationLayout = {
   },
   groups: [{ id: 'face', label: 'Face buttons', locked: true }],
   buttons: [
-    { id: 'a', emit: 'a', label: 'A', at: { x: 0.935, y: 0.68 }, scale: 1, shape: 'round', group: 'face' },
-    { id: 'b', emit: 'b', label: 'B', at: { x: 0.88, y: 0.8 }, scale: 1, shape: 'round', group: 'face' },
-    { id: 'x', emit: 'x', label: 'X', at: { x: 0.88, y: 0.56 }, scale: 1, shape: 'round', group: 'face' },
-    { id: 'y', emit: 'y', label: 'Y', at: { x: 0.825, y: 0.68 }, scale: 1, shape: 'round', group: 'face' },
-    { id: 'l', emit: 'l', label: 'L', at: { x: 0.08, y: 0.18 }, scale: 1, shape: 'pill', group: null },
-    { id: 'r', emit: 'r', label: 'R', at: { x: 0.92, y: 0.18 }, scale: 1, shape: 'pill', group: null },
-    { id: 'select', emit: 'select', label: 'SELECT', at: { x: 0.215, y: 0.93 }, scale: 0.8, shape: 'pill', group: null },
-    { id: 'start', emit: 'start', label: 'START', at: { x: 0.785, y: 0.93 }, scale: 0.8, shape: 'pill', group: null },
+    { id: 'a', emit: 'a', label: 'A', at: { x: 0.935, y: 0.68 }, scale: 1, ...ROUND_FORM, group: 'face' },
+    { id: 'b', emit: 'b', label: 'B', at: { x: 0.88, y: 0.8 }, scale: 1, ...ROUND_FORM, group: 'face' },
+    { id: 'x', emit: 'x', label: 'X', at: { x: 0.88, y: 0.56 }, scale: 1, ...ROUND_FORM, group: 'face' },
+    { id: 'y', emit: 'y', label: 'Y', at: { x: 0.825, y: 0.68 }, scale: 1, ...ROUND_FORM, group: 'face' },
+    { id: 'l', emit: 'l', label: 'L', at: { x: 0.08, y: 0.18 }, scale: 1, ...SHOULDER_FORM, group: null },
+    { id: 'r', emit: 'r', label: 'R', at: { x: 0.92, y: 0.18 }, scale: 1, ...SHOULDER_FORM, group: null },
+    { id: 'select', emit: 'select', label: 'SELECT', at: { x: 0.215, y: 0.93 }, scale: 0.8, ...MENU_FORM, group: null },
+    { id: 'start', emit: 'start', label: 'START', at: { x: 0.785, y: 0.93 }, scale: 0.8, ...MENU_FORM, group: null },
   ],
 };
 

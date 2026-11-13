@@ -40,7 +40,7 @@ const TouchEditorCards = (props: TouchEditorCardsProps) => {
       group={layout.groups.find((group) => group.id === groupId)}
       onEmit={(emit) => actions.setEmit(button.id, emit)}
       onScale={(scale) => actions.setScale(button.id, scale)}
-      onShape={(shape) => actions.setShape(button.id, shape)}
+      onForm={(form) => actions.setForm(button.id, form)}
       onRemove={() => actions.remove(button.id)}
       onLock={(locked) => groupId && actions.setLocked(groupId, locked)}
     />,

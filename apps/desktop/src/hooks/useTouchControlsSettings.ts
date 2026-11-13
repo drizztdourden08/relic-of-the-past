@@ -15,8 +15,8 @@ const useTouchControlsSettings = (): TouchControlsSettingsApi => {
   );
 
   const updateLayout = useCallback(
-    (orientation: TouchOrientation, layout: OrientationLayout) =>
-      patch({ touchControls: { ...touch, layouts: { ...touch.layouts, [orientation]: layout } } }),
+    (orientation: TouchOrientation, layout: OrientationLayout, change: TouchPatch = {}) =>
+      patch({ touchControls: { ...touch, ...change, layouts: { ...touch.layouts, [orientation]: layout } } }),
     [patch, touch],
   );
 

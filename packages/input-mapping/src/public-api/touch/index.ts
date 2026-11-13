@@ -27,7 +27,7 @@ export { removeButton } from '../../touch/editing/remove-button';
 export { resizeZone } from '../../touch/editing/resize-zone';
 export { setButtonEmit } from '../../touch/editing/set-button-emit';
 export { setButtonScale } from '../../touch/editing/set-button-scale';
-export { setButtonShape } from '../../touch/editing/set-button-shape';
+export { setButtonForm } from '../../touch/editing/set-button-form';
 export { setGroupLocked } from '../../touch/editing/set-group-locked';
 export { setMovementScale } from '../../touch/editing/set-movement-scale';
 export { setMovementType } from '../../touch/editing/set-movement-type';

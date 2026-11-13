@@ -13,7 +13,7 @@ import { TouchPlayLayer } from '../TouchPlayLayer';
 import type { TouchSurfaceProps } from './TouchSurface.type';
 
 const TouchSurface = (props: TouchSurfaceProps) => {
-  const { touch, updateTouch, updateLayout } = props;
+  const { touch, updateLayout } = props;
   const ref = useRef<HTMLDivElement>(null);
   const box = useOverlayBox(ref);
   const orientation = orientationOf(box);
@@ -50,8 +50,7 @@ const TouchSurface = (props: TouchSurfaceProps) => {
           box={box}
           touch={touch}
           onSave={(saved, shared) => {
-            updateLayout(orientation, saved);
-            updateTouch(shared);
+            updateLayout(orientation, saved, shared);
             setEditing(false);
           }}
           onClose={() => setEditing(false)}

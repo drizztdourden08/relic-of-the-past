@@ -1,4 +1,5 @@
 /* @layer shared-input @kind constants */
+import { ROUND_FORM } from './button-forms.constants';
 import type { GroupPreset, GroupPresetId } from './group-preset.type';
 
 const GROUP_PRESETS: Readonly<Record<GroupPresetId, GroupPreset>> = {
@@ -6,7 +7,7 @@ const GROUP_PRESETS: Readonly<Record<GroupPresetId, GroupPreset>> = {
     label: 'Face buttons',
     scale: 1,
     spacing: 0.95,
-    shape: 'round',
+    form: ROUND_FORM,
     members: [
       { emit: 'a', dx: 1, dy: 0 },
       { emit: 'b', dx: 0, dy: 1 },
@@ -18,7 +19,7 @@ const GROUP_PRESETS: Readonly<Record<GroupPresetId, GroupPreset>> = {
     label: 'D-pad',
     scale: 0.85,
     spacing: 0.85,
-    shape: 'round',
+    form: ROUND_FORM,
     members: [
       { emit: 'up', dx: 0, dy: -1 },
       { emit: 'down', dx: 0, dy: 1 },

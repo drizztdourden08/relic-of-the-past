@@ -20,7 +20,7 @@ const addGroup = (layout: OrientationLayout, presetId: GroupPresetId, at: TouchP
     const id = uniqueButtonId(used, emit);
     used.add(id);
     const point = toFraction({ x: centre.x + dx * step, y: centre.y + dy * step }, box);
-    return { id, emit, label: emitLabel(emit), at: clampPoint(point), scale: preset.scale, shape: preset.shape, group: groupId };
+    return { id, emit, label: emitLabel(emit), at: clampPoint(point), scale: preset.scale, ...preset.form, group: groupId };
   });
   const group = { id: groupId, label: preset.label, locked: true };
   return { ...layout, groups: [...layout.groups, group], buttons: [...layout.buttons, ...buttons] };

@@ -18,15 +18,20 @@ interface TouchRect {
   h: number;
 }
 
-type TouchButtonShape = 'round' | 'pill';
+// width and height are multiples of the button size; radius is the corner rounding, 0 square to 1
+// fully round (half the shorter side), so a circle is 1 x 1 at radius 1.
+interface TouchButtonForm {
+  width: number;
+  height: number;
+  radius: number;
+}
 
-interface TouchButton {
+interface TouchButton extends TouchButtonForm {
   id: string;
   emit: TouchEmit;
   label: string;
   at: TouchPoint;
   scale: number;
-  shape: TouchButtonShape;
   group: string | null;
 }
 
@@ -104,7 +109,7 @@ export type {
   SnapCell,
   TouchBindings,
   TouchButton,
-  TouchButtonShape,
+  TouchButtonForm,
   TouchControlsSettings,
   TouchDpad,
   TouchEmit,

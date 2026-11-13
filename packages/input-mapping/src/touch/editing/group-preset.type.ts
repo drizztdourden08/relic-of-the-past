@@ -1,5 +1,5 @@
 /* @layer shared-input @kind types */
-import type { TouchButtonShape, TouchEmit } from '@rotp/features';
+import type { TouchButtonForm, TouchEmit } from '@rotp/features';
 
 type GroupPresetId = 'face' | 'dpad';
 
@@ -13,7 +13,7 @@ interface GroupPreset {
   label: string;
   scale: number;
   spacing: number;
-  shape: TouchButtonShape;
+  form: TouchButtonForm;
   members: readonly GroupPresetMember[];
 }
 

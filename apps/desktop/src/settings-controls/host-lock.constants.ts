@@ -1,5 +1,5 @@
 /* @layer renderer-app @kind constants */
-const MOBILE_ONLY_KEYS: readonly string[] = ['renderIntoNotch'];
+const MOBILE_ONLY_KEYS: readonly string[] = ['renderIntoNotch', 'pauseWhenAway'];
 
 const ONLINE_ONLY_KEY_PREFIXES: readonly string[] = ['session.', 'apNotify'];
 

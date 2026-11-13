@@ -1,5 +1,5 @@
 /* @layer renderer-app @kind constants */
-import type { MovementType, TouchButtonShape, TouchEmit } from '@rotp/features';
+import type { MovementType, TouchEmit } from '@rotp/features';
 
 const EDITOR_MIN_STRENGTH = 0.6;
 
@@ -29,10 +29,9 @@ const MOVEMENT_OPTIONS: { value: MovementType; label: string }[] = [
   { value: 'dpad', label: 'D-pad' },
 ];
 
-const SHAPE_OPTIONS: { value: TouchButtonShape; label: string }[] = [
-  { value: 'round', label: 'Round' },
-  { value: 'pill', label: 'Pill' },
-];
+const BUTTON_WIDTH_RANGE = { min: 0.4, max: 3, step: 0.05 } as const;
+const BUTTON_HEIGHT_RANGE = { min: 0.3, max: 2, step: 0.05 } as const;
+const BUTTON_RADIUS_RANGE = { min: 0, max: 1, step: 0.05 } as const;
 
 const CELL_OPTIONS = [
   { value: 's', label: 'S' },
@@ -43,7 +42,10 @@ const CELL_OPTIONS = [
 export {
   ADD_AT,
   ALL_EMITS,
+  BUTTON_HEIGHT_RANGE,
+  BUTTON_RADIUS_RANGE,
   BUTTON_SCALE_RANGE,
+  BUTTON_WIDTH_RANGE,
   CELL_OPTIONS,
   DRAG_THRESHOLD_PX,
   EDITOR_MIN_STRENGTH,
@@ -53,6 +55,5 @@ export {
   MOVEMENT_OPTIONS,
   MOVEMENT_SCALE_RANGE,
   RESIZE_HANDLE_PX,
-  SHAPE_OPTIONS,
   STRENGTH_RANGE,
 };
