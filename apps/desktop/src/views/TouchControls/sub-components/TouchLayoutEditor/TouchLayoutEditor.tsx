@@ -22,7 +22,7 @@ const TouchLayoutEditor = (props: TouchLayoutEditorProps) => {
 
   return (
     <Box className="touch-layout-editor" onPointerDown={() => setSelection(null)}>
-      <TouchEditorGrid box={box} snap={shared.snap} />
+      <TouchEditorGrid box={box} snap={shared.snap} guides={drag.guides} />
       <TouchEditorVisuals layout={draft} box={box} strength={strength} selection={selection} />
       <TouchEditorHitAreas layout={draft} box={box} drag={drag} onSelect={setSelection} />
       <TouchEditBar

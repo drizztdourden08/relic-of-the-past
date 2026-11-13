@@ -1,11 +1,14 @@
 /* @layer renderer-app @kind hook */
-import { useRef } from 'react';
+import { useRef, useState } from 'react';
 import type { PointerEvent } from 'react';
+import { movedBounds, snapGuides } from '@rotp/input-mapping';
+import type { SnapGuides } from '@rotp/input-mapping';
 import { DRAG_THRESHOLD_PX } from '../TouchLayoutEditor.constants';
 import type { DragApply, DragSession, EditorDragInput } from './useEditorDrag.type';
 
 const useEditorDrag = ({ layout, box, snap, onLayout }: EditorDragInput) => {
   const session = useRef<DragSession | null>(null);
+  const [guides, setGuides] = useState<SnapGuides | null>(null);
 
   const begin = (event: PointerEvent<HTMLElement>, apply: DragApply, onTap: () => void) => {
     event.stopPropagation();
@@ -28,21 +31,26 @@ const useEditorDrag = ({ layout, box, snap, onLayout }: EditorDragInput) => {
     const dy = event.clientY - current.y;
     if (!current.moved && Math.hypot(dx, dy) < DRAG_THRESHOLD_PX) return;
     current.moved = true;
-    onLayout(current.apply(current.start, { x: dx / box.width, y: dy / box.height }, snap, box));
+    const next = current.apply(current.start, { x: dx / box.width, y: dy / box.height }, snap, box);
+    onLayout(next);
+    const bounds = snap.enabled ? movedBounds(current.start, next, box) : null;
+    if (bounds) setGuides(snapGuides(bounds, snap.cell, box));
   };
 
   const end = (event: PointerEvent<HTMLElement>) => {
     const current = session.current;
     if (current?.pointerId !== event.pointerId) return;
     session.current = null;
+    setGuides(null);
     if (!current.moved) current.onTap();
   };
 
   const cancel = () => {
     session.current = null;
+    setGuides(null);
   };
 
-  return { begin, move, end, cancel };
+  return { begin, move, end, cancel, guides };
 };
 
 export { useEditorDrag };
