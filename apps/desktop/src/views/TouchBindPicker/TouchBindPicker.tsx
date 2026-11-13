@@ -1,28 +1,29 @@
 /* @layer renderer-app @kind component */
-import { useState } from 'react';
-import { Box, Button } from '@drizztdourden08/tessera/primitives';
+import { Box } from '@drizztdourden08/tessera/primitives';
 import { useTouchControlsSettings } from '@app/hooks/useTouchControlsSettings';
+import { getInputManager } from '@app/input/input-manager/get-input-manager';
+import { useTouchProfileActive } from '@app/input/touch-pad/useTouchProfileActive';
 import { currentBinding } from './behavior/current-binding';
-import { swallowNextClick } from './behavior/swallow-next-click';
-import { useCommitTouchBinding } from './behavior/useCommitTouchBinding';
+import { useTouchCapture } from './behavior/useTouchCapture';
+import { TouchBindBar } from './sub-components/TouchBindBar';
 import { TouchBindBoard } from './sub-components/TouchBindBoard';
 import type { TouchBindPickerProps } from './TouchBindPicker.type';
 import './TouchBindPicker.css';
 
 const TouchBindPicker = (props: TouchBindPickerProps) => {
-  const { ctx } = props;
+  const { ctx, actionLabel } = props;
   const { touch } = useTouchControlsSettings();
-  const [open, setOpen] = useState(false);
-  const commit = useCommitTouchBinding(ctx);
+  const touchProfile = useTouchProfileActive();
+  const { pick, restoreDefault } = useTouchCapture(ctx);
 
-  if (ctx.target.type === 'action' && ctx.target.scope === 'global') return null;
-  const current = currentBinding(touch.bindings, ctx.target);
+  if (!touchProfile) return null;
+  const global = ctx.target.type === 'action' && ctx.target.scope === 'global';
+  const current = currentBinding(getInputManager().getProfile(), ctx.target);
 
   return (
     <Box className="touch-bind-picker">
-      {!open && <Button variant="tertiary" onClick={() => setOpen(true)}>Touch here</Button>}
-      {open && <TouchBindBoard touch={touch} current={current} onPick={(binding) => { swallowNextClick(); commit(binding); }} />}
-      {open && current && <Button variant="tertiary" size="sm" onClick={() => commit(null)}>Default</Button>}
+      <TouchBindBoard touch={touch} current={current} onPick={pick} />
+      <TouchBindBar actionLabel={actionLabel} onCancel={ctx.close} onDefault={global ? null : restoreDefault} />
     </Box>
   );
 };

@@ -1,11 +1,7 @@
 /* @layer renderer-app @kind style */
 .touch-bind-board {
-  position: relative;
-  aspect-ratio: var(--touch-bind-aspect);
-  inline-size: min(calc(100vw - 8 * var(--space-lg)), calc(50dvh * var(--touch-bind-aspect)));
-  background: var(--c-surface);
-  border: var(--size-2) solid var(--c-border);
-  border-radius: var(--radius-md);
+  position: absolute;
+  inset: 0;
   overflow: hidden;
   touch-action: none;
   user-select: none;

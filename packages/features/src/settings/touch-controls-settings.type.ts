@@ -1,6 +1,4 @@
 /* @layer shared-types @kind types */
-import type { InputBinding } from '@rotp/game-data';
-
 type TouchEmit =
   | 'a' | 'b' | 'x' | 'y' | 'l' | 'r' | 'start' | 'select'
   | 'up' | 'down' | 'left' | 'right'
@@ -80,12 +78,6 @@ interface TouchSnap {
   cell: SnapCell;
 }
 
-interface TouchBindings {
-  classic: Readonly<Record<string, InputBinding>>;
-  verbs: Readonly<Record<string, InputBinding>>;
-  slots: Readonly<Record<number, InputBinding>>;
-}
-
 interface TouchControlsSettings {
   buttonStrength: number;
   layerOpacity: number;
@@ -94,7 +86,6 @@ interface TouchControlsSettings {
   snap: TouchSnap;
   editHoldMs: number;
   layouts: Record<TouchOrientation, OrientationLayout>;
-  bindings: TouchBindings;
 }
 
 export type {
@@ -103,7 +94,6 @@ export type {
   MovementType,
   OrientationLayout,
   SnapCell,
-  TouchBindings,
   TouchButton,
   TouchButtonForm,
   TouchControlsSettings,

@@ -1,5 +1,3 @@
 /* @layer shared-input @kind barrel */
-export { mergeFunctionMasks } from './merge-function-masks';
-export { touchBitmask } from './touch-bitmask';
-export { touchFunctionMask } from './touch-function-mask';
+export { TOUCH_DEVICE_ENTRY } from './touch-pad.constants';
 export { toSdlPad } from './to-sdl-pad';

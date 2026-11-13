@@ -11,6 +11,7 @@ import { KEYBOARD_DEFAULTS } from './keyboard-defaults.constants';
 import { presetBindings } from './preset-bindings';
 import { TOUCH_EXTRA_DEVICES } from './touch-device.constants';
 import { touchListenerExtra } from './touch-listener-extra';
+import { touchListenerFullscreen } from './touch-listener-fullscreen';
 import type { UseControlsArgs } from './controls-settings.type';
 
 const useControlsGame = ({ settings, onChange }: UseControlsArgs): ControlsGame => {
@@ -28,6 +29,7 @@ const useControlsGame = ({ settings, onChange }: UseControlsArgs): ControlsGame 
     defaultBindings: presetBindings,
     decoratePreset: decoratePreset(scheme),
     listenerExtra: mobile ? touchListenerExtra : undefined,
+    listenerFullscreen: mobile ? touchListenerFullscreen : undefined,
     extraDevices: mobile ? TOUCH_EXTRA_DEVICES : undefined,
   }), [scheme, experimental, cheatsEnabled, hapticsEnabled, touch, mobile, assignments, onChange]);
 };

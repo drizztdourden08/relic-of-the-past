@@ -1,7 +1,7 @@
 /* @layer shared-input @kind constants */
 import type { TouchEmit } from '@rotp/features';
 
-const TOUCH_PAD_KEY = 'touch:0';
+const TOUCH_PAD_KEY = '0000:0000';
 
 const TOUCH_PAD_BUTTON_COUNT = 16;
 

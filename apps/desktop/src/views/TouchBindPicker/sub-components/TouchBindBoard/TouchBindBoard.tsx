@@ -1,6 +1,5 @@
 /* @layer renderer-app @kind component */
 import { useRef } from 'react';
-import type { CSSProperties } from 'react';
 import { Box } from '@drizztdourden08/tessera/primitives';
 import { orientationOf, toPx } from '@rotp/input-mapping';
 import { layerGeometry } from '@app/views/TouchControls/behavior/layer-geometry';
@@ -22,7 +21,6 @@ const TouchBindBoard = (props: TouchBindBoardProps) => {
   const layout = touch.layouts[orientationOf(box)];
   const { stick, handlers } = useBindBoardPointers({ layout, box, onPick });
   const bound = boundControl(layout, current);
-  const style = { '--touch-bind-aspect': window.innerWidth / window.innerHeight } as CSSProperties;
 
   const { size, radius, fixedBase } = layerGeometry(layout, box);
   const { movementType, movements } = layout;
@@ -30,7 +28,7 @@ const TouchBindBoard = (props: TouchBindBoardProps) => {
   const zone = movementType === 'dynamic-stick' ? movements['dynamic-stick'].zone : null;
 
   return (
-    <Box className="touch-bind-board" ref={ref} style={style} {...handlers}>
+    <Box className="touch-bind-board" ref={ref} {...handlers}>
       {box.width > 0 && (
         <>
           {zone && (

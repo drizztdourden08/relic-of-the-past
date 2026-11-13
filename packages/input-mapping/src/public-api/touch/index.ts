@@ -10,7 +10,7 @@ export {
 } from '../../touch/touch-emit.constants';
 export {
   dragDirection,
-  setTouchBinding,
+  touchDefaultBinding,
   touchEmitBinding,
   touchStickBinding,
 } from '../../touch/binding';
