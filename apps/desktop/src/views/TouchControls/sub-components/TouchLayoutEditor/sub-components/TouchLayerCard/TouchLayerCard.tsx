@@ -46,11 +46,11 @@ const TouchLayerCard = ({ shared, onChange, onReset }: TouchLayerCardProps) => (
       </Flex>
       <Toggle size="sm" label="Haptics" checked={shared.haptics} onChange={(haptics) => onChange({ haptics })} />
       <Slider
-        label="Menu hold time"
+        label="Hold to edit"
         size="sm"
         {...HOLD_SECONDS_RANGE}
-        value={shared.menuHoldMs / 1000}
-        onChange={(seconds) => onChange({ menuHoldMs: Math.round(seconds * 1000) })}
+        value={shared.editHoldMs / 1000}
+        onChange={(seconds) => onChange({ editHoldMs: Math.round(seconds * 1000) })}
         formatValue={(value) => `${value} s`}
         showValue
       />

@@ -8,7 +8,7 @@ const diffSharedDraft = (saved: TouchControlsSettings, draft: TouchSharedDraft):
   if (draft.buttonStrength !== saved.buttonStrength) patch.buttonStrength = draft.buttonStrength;
   if (draft.layerOpacity !== saved.layerOpacity) patch.layerOpacity = draft.layerOpacity;
   if (draft.haptics !== saved.haptics) patch.haptics = draft.haptics;
-  if (draft.menuHoldMs !== saved.menuHoldMs) patch.menuHoldMs = draft.menuHoldMs;
+  if (draft.editHoldMs !== saved.editHoldMs) patch.editHoldMs = draft.editHoldMs;
   if (draft.snap.enabled !== saved.snap.enabled || draft.snap.cell !== saved.snap.cell) patch.snap = draft.snap;
   return patch;
 };

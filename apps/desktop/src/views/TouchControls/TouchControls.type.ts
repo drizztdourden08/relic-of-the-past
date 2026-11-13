@@ -24,7 +24,7 @@ interface HoldRingState {
   progress: number;
 }
 
-interface MenuHold {
+interface EditHold {
   ring: HoldRingState | null;
   begin: (pointerId: number, point: PxPoint) => void;
   move: (pointerId: number, point: PxPoint) => void;
@@ -32,4 +32,4 @@ interface MenuHold {
   cancel: () => void;
 }
 
-export type { HoldRingState, MenuHold, TouchSession, TouchViewState };
+export type { EditHold, HoldRingState, TouchSession, TouchViewState };

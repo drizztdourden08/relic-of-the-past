@@ -3,7 +3,7 @@ import type { TouchControlsSettings } from '@rotp/features';
 
 type TouchSharedDraft = Pick<
   TouchControlsSettings,
-  'buttonStrength' | 'layerOpacity' | 'haptics' | 'snap' | 'menuHoldMs'
+  'buttonStrength' | 'layerOpacity' | 'haptics' | 'snap' | 'editHoldMs'
 >;
 
 type TouchEditorSelection =

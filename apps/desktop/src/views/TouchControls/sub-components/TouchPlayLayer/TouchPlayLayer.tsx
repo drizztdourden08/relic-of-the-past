@@ -30,7 +30,7 @@ const TouchPlayLayer = (props: TouchPlayLayerProps) => {
       {movementType === 'dpad' && (
         <TouchDpad center={toPx(movements.dpad.at, box)} radiusPx={radius} pressed={view.dpad} strength={strength} />
       )}
-      {ring && <HoldRing center={ring.center} progress={ring.progress} />}
+      {ring && <HoldRing center={ring.center} progress={ring.progress} label="Edit layout" />}
     </>
   );
 };

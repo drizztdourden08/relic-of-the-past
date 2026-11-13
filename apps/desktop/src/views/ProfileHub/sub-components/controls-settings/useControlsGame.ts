@@ -26,7 +26,7 @@ const useControlsGame = ({ settings, onChange }: UseControlsArgs): ControlsGame 
     keyboardDefaults: KEYBOARD_DEFAULTS,
     defaultBindings: presetBindings,
     decoratePreset: decoratePreset(scheme),
-    listenerExtra: mobile && touch.enabled ? touchListenerExtra : undefined,
+    listenerExtra: mobile ? touchListenerExtra : undefined,
   }), [scheme, experimental, cheatsEnabled, hapticsEnabled, touch, mobile, assignments, onChange]);
 };
 

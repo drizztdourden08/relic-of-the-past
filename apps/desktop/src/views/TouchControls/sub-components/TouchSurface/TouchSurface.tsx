@@ -4,7 +4,7 @@ import type { CSSProperties } from 'react';
 import { Box } from '@drizztdourden08/tessera/primitives';
 import { orientationOf } from '@rotp/input-mapping';
 import { useTouchControlsStore } from '@app/stores/touch-controls-store';
-import { useMenuHold } from '../../behavior/useMenuHold';
+import { useEditHold } from '../../behavior/useEditHold';
 import { useOverlayBox } from '../../behavior/useOverlayBox';
 import { useTouchHaptics } from '../../behavior/useTouchHaptics';
 import { useTouchPointers } from '../../behavior/useTouchPointers';
@@ -20,12 +20,11 @@ const TouchSurface = (props: TouchSurfaceProps) => {
   const layout = touch.layouts[orientation];
   const editing = useTouchControlsStore((s) => s.editing);
   const setEditing = useTouchControlsStore((s) => s.setEditing);
-  const setMenuOpen = useTouchControlsStore((s) => s.setMenuOpen);
   const tick = useTouchHaptics(touch.haptics, touch.hapticStrength);
 
-  const hold = useMenuHold(touch.menuHoldMs, () => {
+  const hold = useEditHold(touch.editHoldMs, () => {
     tick();
-    setMenuOpen(true);
+    setEditing(true);
   });
   const { view, handlers } = useTouchPointers({ layout, box, enabled: !editing && box.width > 0, hold, onPress: tick });
 

@@ -2,10 +2,10 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import type { PxPoint } from '@rotp/input-mapping';
 import { HOLD_RING_DELAY_MS, HOLD_SLOP_PX } from '../TouchControls.constants';
-import type { HoldRingState, MenuHold } from '../TouchControls.type';
-import type { ActiveHold } from './useMenuHold.type';
+import type { EditHold, HoldRingState } from '../TouchControls.type';
+import type { ActiveHold } from './useEditHold.type';
 
-const useMenuHold = (holdMs: number, onOpen: () => void): MenuHold => {
+const useEditHold = (holdMs: number, onOpen: () => void): EditHold => {
   const [ring, setRing] = useState<HoldRingState | null>(null);
   const active = useRef<ActiveHold | null>(null);
   const frame = useRef(0);
@@ -54,4 +54,4 @@ const useMenuHold = (holdMs: number, onOpen: () => void): MenuHold => {
   return useMemo(() => ({ ring, begin, move, end, cancel }), [ring, begin, move, end, cancel]);
 };
 
-export { useMenuHold };
+export { useEditHold };

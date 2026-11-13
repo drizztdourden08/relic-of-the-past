@@ -7,7 +7,7 @@ const pickSharedDraft = (touch: TouchControlsSettings): TouchSharedDraft => ({
   layerOpacity: touch.layerOpacity,
   haptics: touch.haptics,
   snap: { ...touch.snap },
-  menuHoldMs: touch.menuHoldMs,
+  editHoldMs: touch.editHoldMs,
 });
 
 export { pickSharedDraft };

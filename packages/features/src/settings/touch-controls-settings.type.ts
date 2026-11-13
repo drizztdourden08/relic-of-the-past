@@ -18,8 +18,6 @@ interface TouchRect {
   h: number;
 }
 
-// width and height are multiples of the button size; radius is the corner rounding, 0 square to 1
-// fully round (half the shorter side), so a circle is 1 x 1 at radius 1.
 interface TouchButtonForm {
   width: number;
   height: number;
@@ -89,14 +87,12 @@ interface TouchBindings {
 }
 
 interface TouchControlsSettings {
-  enabled: boolean;
-  hideWithPad: boolean;
   buttonStrength: number;
   layerOpacity: number;
   haptics: boolean;
   hapticStrength: number;
   snap: TouchSnap;
-  menuHoldMs: number;
+  editHoldMs: number;
   layouts: Record<TouchOrientation, OrientationLayout>;
   bindings: TouchBindings;
 }
