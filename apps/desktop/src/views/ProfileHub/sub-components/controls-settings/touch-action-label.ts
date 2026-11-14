@@ -1,9 +1,7 @@
 /* @layer renderer-components @kind logic */
 import type { ListenTarget } from '@drizztdourden08/brock-input/renderer';
-import { CHEAT_ACTION_DEFS, SHORTCUT_ACTION_DEFS, SNES_ACTIONS } from './action-defs.constants';
 import { CORE_VERB_DEFS } from './core-verbs.constants';
-
-const ACTION_DEFS = [...SNES_ACTIONS, ...SHORTCUT_ACTION_DEFS, ...CHEAT_ACTION_DEFS];
+import { ACTION_DEFS } from './touch-action-label.constants';
 
 const touchActionLabel = (target: ListenTarget): string => {
   if (target.type === 'slot') return target.slot.label;

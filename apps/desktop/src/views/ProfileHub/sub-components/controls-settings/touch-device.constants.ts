@@ -22,4 +22,4 @@ const TOUCH_DEVICE: DetectedDevice = {
 
 const TOUCH_EXTRA_DEVICES: readonly DetectedDevice[] = [TOUCH_DEVICE];
 
-export { TOUCH_DEVICE, TOUCH_EXTRA_DEVICES };
+export { TOUCH_EXTRA_DEVICES };

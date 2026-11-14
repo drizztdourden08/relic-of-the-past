@@ -17,7 +17,7 @@ const useHudScale = ({ ratio, customW, customH }: HudScaleParams): HudScale => {
 
     setScale(h / canvasNativeHeight(SNES_HEIGHT));
 
-    const numericRatio = aspectRatioValue(ratio, customW, customH);
+    const numericRatio = aspectRatioValue({ ratio, customW, customH });
     if (numericRatio <= 0) {
       setHudWidth(undefined);
     } else {

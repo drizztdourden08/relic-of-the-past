@@ -10,6 +10,7 @@
   ],
   "ignoreIssues": {
     "packages/randomizer/src/audit/**": ["exports", "types"],
+    "packages/game-data/src/data/taxonomy/*-tags.type.ts": ["types"],
     "apps/desktop/src/data-inspector/recommendations/recommendation-cache/index.ts": ["exports"],
     "apps/desktop/src/game/index.ts": ["exports", "types"],
     "apps/desktop/src/game/delivery-api/**": ["exports", "types"],

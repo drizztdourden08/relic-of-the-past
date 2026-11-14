@@ -2,6 +2,7 @@
 import { useEffect, useState } from 'react';
 import { getInputManager } from '@app/input/input-manager/get-input-manager';
 import type { ProfileMenuState } from '../input-profile-menu.type';
+import { NO_PROFILES } from './useProfileMenuState.constants';
 
 const readState = (): ProfileMenuState => {
   const manager = getInputManager();
@@ -10,8 +11,6 @@ const readState = (): ProfileMenuState => {
     activeId: manager.getProfile()?.id ?? null,
   };
 };
-
-const NO_PROFILES: ProfileMenuState = { choices: [], activeId: null };
 
 const useProfileMenuState = (): ProfileMenuState => {
   const [state, setState] = useState(NO_PROFILES);

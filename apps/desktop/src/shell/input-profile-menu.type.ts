@@ -9,4 +9,4 @@ interface ProfileMenuState {
   activeId: string | null;
 }
 
-export type { ProfileChoice, ProfileMenuState };
+export type { ProfileMenuState };

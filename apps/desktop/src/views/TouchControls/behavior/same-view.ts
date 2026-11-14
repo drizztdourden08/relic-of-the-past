@@ -1,7 +1,6 @@
 /* @layer renderer-app @kind logic */
 import type { TouchViewState } from '../TouchControls.type';
-
-type Point = { x: number; y: number };
+import type { Point } from './same-view.type';
 
 const samePoint = (a: Point, b: Point): boolean =>
   Math.round(a.x) === Math.round(b.x) && Math.round(a.y) === Math.round(b.y);
