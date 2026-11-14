@@ -26,5 +26,5 @@ interface ConnectionTagMetadata {
 }
 
 export type {
-  ConnectionTag, ConnectionTagMetadata, ConnectionTagNamespace,
+  BarrierTag, ConnectionTag, ConnectionTagMetadata, ConnectionTagNamespace, ContextTag, TransitTag,
 };

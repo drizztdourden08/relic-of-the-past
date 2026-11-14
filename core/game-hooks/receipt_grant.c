@@ -17,8 +17,7 @@ static bool CanRunReceiptNow(void) {
   // grant fires on top of the live handler and parks an un-advanceable item-get message
   // over it (the apparent soft-lock in the barrier/cane report). Mirror of the guard in
   // WasmCanReceiveItem (cheats.c) that paces the queue.
-  return in_gameplay && submodule_index == 0 && !flag_is_link_immobilized && !link_item_in_hand && !link_position_mode &&
-         link_player_handler_state != kPlayerState_AsleepInBed;
+  return in_gameplay && submodule_index == 0 && !flag_is_link_immobilized && !link_item_in_hand && !link_position_mode && link_player_handler_state != kPlayerState_AsleepInBed;
 }
 
 // Give item |item_id| through the native receipt flow: the standing hold-up animation,
