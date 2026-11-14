@@ -18,10 +18,12 @@ describe('validateCustomRatio', () => {
     expect(validateCustomRatio(1, 1).valid).toBe(true);
     expect(validateCustomRatio(3, 4).valid).toBe(true);
     expect(validateCustomRatio(9, 16).valid).toBe(true);
+    expect(validateCustomRatio(1, 2).valid).toBe(true);
+    expect(validateCustomRatio(9, 32).valid).toBe(true);
   });
 
   it('rejects ratios taller than the portrait floor', { tags: ['critical'] }, () => {
-    const r = validateCustomRatio(1, 2);
+    const r = validateCustomRatio(1, 4);
     expect(r.valid).toBe(false);
     expect(r.error).toMatch(/tall/i);
   });
