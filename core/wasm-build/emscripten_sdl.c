@@ -78,6 +78,25 @@ static bool SdlRenderer_Init(SDL_Window *window) {
   return true;
 }
 
+// Live size change: the texture is sized to the frame at creation, so a different g_snes_width/height
+// needs a new one, and the logical size the canvas scales from follows.
+void SdlRenderer_Resize(void) {
+  if (!g_renderer || !g_texture)
+    return;
+  if (!g_config.ignore_aspect_ratio)
+    SDL_RenderSetLogicalSize(g_renderer, g_snes_width, g_snes_height);
+  int tex_mult = (g_ppu_render_flags & kPpuRenderFlags_4x4Mode7) ? 4 : 1;
+  SDL_Texture *texture = SDL_CreateTexture(g_renderer, SDL_PIXELFORMAT_ARGB8888,
+                                           SDL_TEXTUREACCESS_STREAMING,
+                                           g_snes_width * tex_mult, g_snes_height * tex_mult);
+  if (!texture) {
+    fprintf(stderr, "Failed to resize texture: %s\n", SDL_GetError());
+    return;
+  }
+  SDL_DestroyTexture(g_texture);
+  g_texture = texture;
+}
+
 static void SdlRenderer_Destroy(void) {
   SDL_DestroyTexture(g_texture);
   SDL_DestroyRenderer(g_renderer);

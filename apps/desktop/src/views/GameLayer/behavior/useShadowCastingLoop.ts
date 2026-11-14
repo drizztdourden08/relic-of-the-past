@@ -35,14 +35,13 @@ const useShadowCastingLoop = (params: ShadowLoopParams): void => {
     createRenderer: (fxCanvas) => createShadowRenderer(fxCanvas),
     onFrame: ({ renderer, gameCanvas, fxCanvas, time }) => {
       const project = shadowProjectRef.current;
+      if (gameCanvas.width !== fxCanvas.width || gameCanvas.height !== fxCanvas.height) {
+        renderer.resize(gameCanvas.width, gameCanvas.height);
+      }
       if (!shadowCastingRef.current || !project) {
         renderer.setEnabled(false);
         renderer.render(gameCanvas, time);
         return;
-      }
-
-      if (gameCanvas.width !== fxCanvas.width || gameCanvas.height !== fxCanvas.height) {
-        renderer.resize(gameCanvas.width, gameCanvas.height);
       }
 
       const screenId = overworldShadowScreen(renderer, wasmGetViewportInfo());

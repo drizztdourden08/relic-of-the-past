@@ -6,3 +6,4 @@ export * from './public-api/haptics';
 export * from './public-api/glyphs';
 export * from './public-api/input-runtime';
 export * from './public-api/scheme';
+export * from './public-api/touch';

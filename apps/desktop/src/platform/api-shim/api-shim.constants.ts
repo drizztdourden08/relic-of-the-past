@@ -28,4 +28,6 @@ const SCREEN_EDITOR_STUB: ScreenEditorApi = {
   writeLocationRecord: refuseEdit, deleteLocation: refuseEdit,
 };
 
-export { EMPTY_ARRAY_METHODS, STUB_RETURNS, SCREEN_EDITOR_STUB };
+const answerStub = (): (() => void) => () => {};
+
+export { EMPTY_ARRAY_METHODS, STUB_RETURNS, SCREEN_EDITOR_STUB, answerStub };

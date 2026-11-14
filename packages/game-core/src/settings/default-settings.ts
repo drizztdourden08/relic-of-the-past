@@ -4,6 +4,7 @@ import type { GameSettings } from '@rotp/features';
 import { DEFAULT_TURBO_SPEED } from '../turbo-speed';
 import { ONLINE_NOTICE_DEFAULTS } from '../archipelago/online-notice-settings';
 import { QUIET_RECEIPT_DEFAULTS } from '@rotp/game-data';
+import { DEFAULT_TOUCH_CONTROLS } from '@rotp/input-mapping';
 
 const DEFAULT_SETTINGS: GameSettings = {
   autoSaveEnabled: false,
@@ -14,6 +15,7 @@ const DEFAULT_SETTINGS: GameSettings = {
   vsync: false,
   turboEnabled: false,
   turboSpeed: DEFAULT_TURBO_SPEED,
+  pauseWhenAway: true,
 
   extendedRendering: false,
   aspectRatio: '16:9',
@@ -41,6 +43,7 @@ const DEFAULT_SETTINGS: GameSettings = {
   startFullscreen: false,
   viewportConstraint: 'none',
   pixelPerfect: false,
+  pictureAlign: 'center',
 
   renderIntoNotch: true,
 
@@ -163,6 +166,7 @@ const DEFAULT_SETTINGS: GameSettings = {
 
   cheatsEnabled: false,
   vanillaSafe: false,
+  touchControls: DEFAULT_TOUCH_CONTROLS,
 
   extraDungeon: false,
 

@@ -55,7 +55,7 @@ const hookSrcs = [
 
 const emMain = [
   'emscripten_main.c', 'emscripten_sdl.c', 'emscripten_api.c', 'emscripten_io.c',
-  'emscripten_pacing.c', 'emscripten_sound_preview.c', 'emscripten_volumes.c',
+  'emscripten_pacing.c', 'emscripten_sound_preview.c', 'emscripten_volumes.c', 'emscripten_clean_frame.c', 'emscripten_view.c',
   'emscripten_debug_gba.c', 'object_probe.c', 'room_probe.c',
 ].map((f) => join(here, f));
 

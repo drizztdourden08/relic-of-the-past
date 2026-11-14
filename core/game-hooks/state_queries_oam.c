@@ -46,7 +46,7 @@ static uint8 g_oam_snapshot_buf[OAM_SNAPSHOT_HEADER + OAM_SNAPSHOT_SLOTS * OAM_S
  *   +2 u8 charnum             +3 u8 flags
  *   +4 u8 bytewise_extended_oam (bit0 = 9th X bit, bit1 = large)
  *   +5 u8 g_oam_x_high (signed, X bits above the 9th)
- *   +6 u8 g_oam_y_high (9th Y bit for a tall view)
+ *   +6 u8 g_oam_y_high (0 = stock Y, else 0x80 + signed Y bits above the low byte, tall view)
  *   +7 u8 g_oam_player (1 when this slot is the player's own body)
  */
 EMSCRIPTEN_KEEPALIVE

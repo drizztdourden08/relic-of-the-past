@@ -1,0 +1,36 @@
+/* @layer renderer-app @kind style */
+.dpad-cross {
+  overflow: visible;
+  color: var(--c-text);
+}
+
+.dpad-cross__body {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 4;
+  stroke-linejoin: round;
+}
+
+.dpad-cross__arm-fill {
+  fill: transparent;
+}
+
+.dpad-cross__notch {
+  fill: currentColor;
+  opacity: 0.6;
+}
+
+.dpad-cross__arm[data-pressed] .dpad-cross__arm-fill {
+  fill: currentColor;
+}
+
+.dpad-cross__arm[data-pressed] .dpad-cross__notch {
+  fill: var(--c-bg);
+  opacity: 1;
+}
+
+.dpad-cross__hub {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 4;
+}

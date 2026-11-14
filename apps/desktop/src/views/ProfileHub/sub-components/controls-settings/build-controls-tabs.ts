@@ -10,6 +10,7 @@ import { MODERN_ONLY, VANILLA_ONLY } from './controls-tabs.constants';
 import { CORE_VERB_GROUPS } from './core-verbs.constants';
 import { keyboardSlots } from './keyboard-slots';
 import { SlotsFooter } from './SlotsFooter';
+import { touchTab } from './touch-tab';
 import type { BuildControlsTabsArgs } from './build-controls-tabs.type';
 
 const openCheatsSettings = () => openSetting('cheatsEnabled');
@@ -29,7 +30,7 @@ const modernTab = ({ assignments, onChange }: BuildControlsTabsArgs, disabledRea
 });
 
 const buildControlsTabs = (args: BuildControlsTabsArgs): readonly ControlsTabDef[] => {
-  const { scheme, experimental, cheatsEnabled, hapticsEnabled, onChange } = args;
+  const { scheme, experimental, cheatsEnabled, hapticsEnabled, touch, mobile, onChange } = args;
   return [
     {
       id: 'controls',
@@ -66,6 +67,7 @@ const buildControlsTabs = (args: BuildControlsTabsArgs): readonly ControlsTabDef
       kind: 'options',
       haptics: { enabled: hapticsEnabled, onChange: (enabled) => onChange({ hapticsEnabled: enabled }) },
     },
+    ...(mobile ? [touchTab({ touch, onChange })] : []),
   ];
 };
 

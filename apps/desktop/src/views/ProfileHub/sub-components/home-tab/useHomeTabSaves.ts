@@ -15,7 +15,7 @@ const useHomeTabSaves = (params: UseHomeTabSavesParams) => {
   const base = { profileId, isGameRunning, onStartGame };
 
   const { loadQuickSlots, loadNormalSaves, loadAutoSaves, ...lists } = useHomeTabLists(profileId);
-  const quick = useQuickSaveActions({ isGameRunning, onStartGame, loadQuickSlots });
+  const quick = useQuickSaveActions({ ...base, loadQuickSlots });
   const normal = useNormalSaveActions({ ...base, loadNormalSaves });
   const auto = useAutoSaveActions({ ...base, loadAutoSaves });
   const sramImport = useHomeTabSramImport({ profileId, filePicker, dialog, setDialog });

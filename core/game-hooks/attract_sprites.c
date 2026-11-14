@@ -17,7 +17,7 @@
 //
 // The scenes hold both coordinates in full before they truncate them, so the fix is to hand the same
 // value over a second time in the form the wide and tall views read: the X bits above the 9th that
-// g_oam_x_high carries, and the 9-bit Y of g_oam_y_high (sprite.h). attract_x_base and attract_y_base
+// g_oam_x_high carries, and the signed Y bits of g_oam_y_high (sprite.h). attract_x_base and attract_y_base
 // are themselves bytes, so the full origin cannot be recovered at the OAM write and the scene records it
 // where it computes it. Each axis is only touched where the view actually draws past the 4:3 picture on
 // it, so a plain 224-row frame keeps the byte SetOamPlain wrote, and with the gate down nothing here runs

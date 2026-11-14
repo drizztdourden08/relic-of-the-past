@@ -1,0 +1,5 @@
+/* @layer renderer-app @kind style */
+
+.touch-movement-card {
+  min-width: calc(var(--size-24) * 2);
+}

@@ -1,0 +1,92 @@
+/* @layer renderer-app @kind style */
+
+.touch-editor-grid {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.touch-editor-grid__quadrant {
+  position: absolute;
+  width: 50%;
+  height: 50%;
+  background-image:
+    linear-gradient(to right, var(--c-hairline) var(--border-width-thin), transparent var(--border-width-thin)),
+    linear-gradient(to bottom, var(--c-hairline) var(--border-width-thin), transparent var(--border-width-thin));
+  background-size: var(--touch-grid-cell) var(--touch-grid-cell);
+}
+
+.touch-editor-grid__quadrant[data-quadrant='top-left'] {
+  top: 0;
+  left: 0;
+  background-position: left top;
+}
+
+.touch-editor-grid__quadrant[data-quadrant='top-right'] {
+  top: 0;
+  right: 0;
+  background-position: right top;
+}
+
+.touch-editor-grid__quadrant[data-quadrant='bottom-left'] {
+  bottom: 0;
+  left: 0;
+  background-position: left bottom;
+}
+
+.touch-editor-grid__quadrant[data-quadrant='bottom-right'] {
+  right: 0;
+  bottom: 0;
+  background-position: right bottom;
+}
+
+.touch-editor-grid__mirror {
+  position: absolute;
+  border: 0 dashed var(--c-text-dim);
+}
+
+.touch-editor-grid__mirror[data-axis='x'] {
+  top: 0;
+  bottom: 0;
+  left: 50%;
+  border-left-width: var(--border-width-thin);
+}
+
+.touch-editor-grid__mirror[data-axis='y'] {
+  top: 50%;
+  right: 0;
+  left: 0;
+  border-top-width: var(--border-width-thin);
+}
+
+.touch-editor-grid__mirror[data-active='true'] {
+  border-style: solid;
+  border-color: var(--c-secondary);
+}
+
+.touch-editor-grid__mirror[data-axis='x'][data-active='true'] {
+  border-left-width: var(--border-width-thick);
+}
+
+.touch-editor-grid__mirror[data-axis='y'][data-active='true'] {
+  border-top-width: var(--border-width-thick);
+}
+
+.touch-editor-grid__guide {
+  position: absolute;
+  background: var(--c-primary);
+}
+
+.touch-editor-grid__guide[data-axis='x'] {
+  top: 0;
+  bottom: 0;
+  width: var(--border-width-thick);
+  transform: translateX(-50%);
+}
+
+.touch-editor-grid__guide[data-axis='y'] {
+  right: 0;
+  left: 0;
+  height: var(--border-width-thick);
+  transform: translateY(-50%);
+}

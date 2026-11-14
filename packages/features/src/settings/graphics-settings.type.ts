@@ -13,6 +13,7 @@ interface GraphicsSettings {
   startFullscreen: boolean;
   viewportConstraint: 'none' | 'fit' | 'fill';
   pixelPerfect: boolean;
+  pictureAlign: 'center' | 'top' | 'bottom' | 'left' | 'right';
   renderIntoNotch: boolean;
   overworldEdgeEffect: boolean;
   postProcessingShadows: boolean;

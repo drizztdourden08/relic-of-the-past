@@ -2,7 +2,7 @@
 import type { ComponentUsage } from '@drizztdourden08/tessera';
 
 const usage = {
-  job: 'The Android options drawer: the app menu, the widgets and mute, opened by the back gesture from the right edge.',
+  job: 'The Android options drawer: Home, Game, Profiles, the app menu with its sub-menus, the widgets and mute, opened by the back gesture from the right edge, plus the edge cue while no game plays.',
   useWhen: ['Once on Android, where a back swipe from the right edge opens it.'],
   avoidWhen: [{ case: 'The title bar of a desktop window.', use: 'WindowTitleBar' }],
   rules: ['Render it only when isMobileHost() is true.'],

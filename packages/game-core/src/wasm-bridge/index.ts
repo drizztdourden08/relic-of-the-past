@@ -19,7 +19,7 @@ export {
   wasmHostMenuClose, wasmHostMenuIsHolding, wasmHostMenuSaveAndQuit, wasmHostMenuSetTakeover,
   wasmHostSetActiveItem, wasmHostSetGear,
 } from '../bridge/host-menu';
-export { wasmGetViewportInfo, wasmRenderCleanFrame } from '../bridge/render';
+export { wasmGetViewportInfo, wasmRenderCleanFrame, wasmSetExtendedAspect } from '../bridge/render';
 export { wasmGetGameUIState, wasmSetUIOverlayMode, wasmGetUIOverlayMode, wasmGetMenuState } from '../bridge/ui-state';
 export {
   wasmGetDialogState, wasmSetDialogPacing, wasmSetDialogHidden, wasmGetDialogFont, wasmGetDialogPalette,

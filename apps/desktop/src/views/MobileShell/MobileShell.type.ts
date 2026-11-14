@@ -1,5 +1,5 @@
 /* @layer renderer-app @kind types */
-import type { MenuEntry } from '@drizztdourden08/brock-react';
+import type { MenuEntry, MenuItem } from '@drizztdourden08/brock-react';
 
 interface MobileMenuDrawerProps {
   entries: readonly MenuEntry[];
@@ -9,4 +9,15 @@ interface MobileMenuDrawerProps {
   onPick: (entry: MenuEntry) => void;
 }
 
-export type { MobileMenuDrawerProps };
+interface MobileMenuRowProps {
+  item: MenuItem;
+  onPress: (item: MenuItem) => void;
+}
+
+interface MobileMenuGroup {
+  key: string;
+  title?: string;
+  items: MenuItem[];
+}
+
+export type { MobileMenuDrawerProps, MobileMenuGroup, MobileMenuRowProps };

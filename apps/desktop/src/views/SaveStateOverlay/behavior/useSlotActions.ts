@@ -15,11 +15,9 @@ const useSlotActions = (loadSlots: () => Promise<void>, onClose: () => void) => 
   }, [loadSlots]);
 
   const handleLoad = useCallback(async (slot: number) => {
-    setBusy(slot);
     log.app(`[UI] Load from slot ${slot}`);
-    await loadState(slot);
-    setBusy(null);
     onClose();
+    await loadState(slot);
   }, [onClose]);
 
   return { busy, handleSave, handleLoad };

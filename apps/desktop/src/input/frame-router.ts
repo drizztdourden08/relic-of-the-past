@@ -2,14 +2,14 @@
 import { computeBitmask, buildInputSample, edgeBaseline, schemeRuntime, menuEdges, menuShadowedSlots, readFunctionMask, remapForScheme, KEEP_EQUIPPED_ITEM, NEUTRAL_MASK, NO_FUNCTIONS, NO_SHADOW, NO_SLOTS } from '@rotp/input-mapping';
 import { ownsHudItem } from './item-ownership';
 import { setActiveItem } from '@rotp/game-core';
-import type { SchemeRuntime, InputSample } from '@rotp/input-mapping';
+import type { SchemeRuntime, InputSample, FunctionMask } from '@rotp/input-mapping';
 import type { ModernBindings } from '@rotp/game-data';
 import type { InputManager } from '@app/input/input-manager/input-manager';
 
-const classicMask = (m: InputManager): number => computeBitmask(m);
-
 const sampleOf = (m: InputManager): InputSample =>
   buildInputSample(m.allPressedKeys, m.hidStates, m.allowed);
+
+const pressedOf = (m: InputManager, lens: ModernBindings): FunctionMask => readFunctionMask(sampleOf(m), lens);
 
 const modernActive = (runtime: SchemeRuntime): boolean =>
   runtime.scheme === 'modern' && runtime.bindings !== null;
@@ -22,7 +22,7 @@ const readLens = (runtime: SchemeRuntime): ModernBindings | null => {
 
 const routeToMenu = (m: InputManager, runtime: SchemeRuntime): void => {
   const lens = readLens(runtime);
-  const pressed = lens ? readFunctionMask(sampleOf(m), lens) : NO_FUNCTIONS;
+  const pressed = lens ? pressedOf(m, lens) : NO_FUNCTIONS;
   const shadowed = lens ? menuShadowedSlots(lens) : NO_SHADOW;
   runtime.menuSink.push(menuEdges(pressed, edgeBaseline(pressed), shadowed));
   m.setInputFn?.(NEUTRAL_MASK);
@@ -30,7 +30,7 @@ const routeToMenu = (m: InputManager, runtime: SchemeRuntime): void => {
 };
 
 const routeModern = (m: InputManager, runtime: SchemeRuntime, bindings: NonNullable<SchemeRuntime['bindings']>): void => {
-  const pressed = readFunctionMask(sampleOf(m), bindings);
+  const pressed = pressedOf(m, bindings);
   const { mask, activeItem } = remapForScheme({
     scheme: 'modern',
     classicMask: 0,
@@ -47,7 +47,7 @@ const routeModern = (m: InputManager, runtime: SchemeRuntime, bindings: NonNulla
 const routeClassic = (m: InputManager, runtime: SchemeRuntime): void => {
   const { mask } = remapForScheme({
     scheme: 'classic',
-    classicMask: classicMask(m),
+    classicMask: computeBitmask(m),
     pressed: NO_FUNCTIONS,
     assignments: runtime.assignments,
     mapOnSelect: runtime.mapOnSelect,

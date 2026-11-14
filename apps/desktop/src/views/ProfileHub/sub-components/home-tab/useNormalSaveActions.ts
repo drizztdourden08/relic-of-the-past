@@ -6,8 +6,9 @@ import { log } from '@app/log-bus';
 import * as savesStore from '@app/storage/saves-store';
 import { captureCanvasScreenshot } from './capture-canvas-screenshot';
 import { defaultSaveName } from './default-save-name';
-import { ensureGameRunning } from './ensure-game-running';
 import { loadStoredSave } from './load-stored-save';
+import { STORED_SAVE_READERS } from './load-stored-save.constants';
+import { startForLoad } from './start-for-load';
 import type { UseNormalSaveActionsParams } from './home-tab.type';
 
 const useNormalSaveActions = (params: UseNormalSaveActionsParams) => {
@@ -27,7 +28,8 @@ const useNormalSaveActions = (params: UseNormalSaveActionsParams) => {
 
   const handleLoadNormal = useCallback(async (id: string) => {
     setBusyNormal(id);
-    if (await ensureGameRunning(isGameRunning, onStartGame)) await loadStoredSave(profileId, 'normal', id);
+    const buffer = await STORED_SAVE_READERS.normal(profileId, id);
+    if (await startForLoad(buffer, isGameRunning, onStartGame) && buffer) await loadStoredSave(profileId, 'normal', id, buffer);
     setBusyNormal(null);
   }, [profileId, isGameRunning, onStartGame]);
 

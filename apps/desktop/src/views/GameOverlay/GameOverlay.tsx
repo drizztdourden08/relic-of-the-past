@@ -27,7 +27,7 @@ const GameOverlay = ({ width, height, profileId }: GameOverlayProps) => {
   useDeliveryQueueSync();
 
   return (
-    <Box className="game-overlay" style={{ width, height }}>
+    <Box className="game-layer__picture game-overlay" style={{ width, height }}>
       {hud.showPauseMenu && <PauseLayer enhancedRenderable={hud.enhancedRenderable} slide={slide} />}
       {hud.showMainSlot && (
         <MainHudLayer

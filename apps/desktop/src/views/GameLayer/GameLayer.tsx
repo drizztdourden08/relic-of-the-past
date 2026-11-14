@@ -9,8 +9,10 @@ import { useCanvasDisplaySize } from './behavior/useCanvasDisplaySize';
 import { useCanvasBufferSize } from './behavior/useCanvasBufferSize';
 import { useEdgeGlowLoop } from './behavior/useEdgeGlowLoop';
 import { useGameBoot } from './behavior/useGameBoot';
+import { usePauseWhenAway } from './behavior/usePauseWhenAway';
 import { usePublishFitSize } from './behavior/usePublishFitSize';
 import { useShadowCastingLoop } from './behavior/useShadowCastingLoop';
+import { usePictureAlign } from './behavior/usePictureAlign';
 import { GameLayerCanvases } from './sub-components/GameLayerCanvases';
 import { GameLayerOverlays } from './sub-components/GameLayerOverlays';
 import './GameLayer.css';
@@ -33,6 +35,7 @@ const GameLayer = (props: GameLayerProps) => {
   const [canvasKey, setCanvasKey] = useState(0);
   const { bufSize, setBufSize } = useCanvasBufferSize(canvasRef, status, canvasKey);
   const shadowDebugMode = useShadowEditorStore((s) => s.debugMode);
+  const align = usePictureAlign();
 
   const fitSize = useCanvasFit({ containerRef, bufW: bufSize.w, bufH: bufSize.h, stretch, pixelPerfect });
 
@@ -42,9 +45,10 @@ const GameLayer = (props: GameLayerProps) => {
   useEdgeGlowLoop({ status, canvasKey, canvasRef, fxCanvasRef, glowRendererRef, edgeEffectRef, setBufSize });
   useShadowCastingLoop({ status, canvasKey, canvasRef, shadowCanvasRef, shadowRendererRef, shadowProjectRef, shadowCastingRef });
   useGameBoot({ status, canvasKey, canvasRef, assetData, configIni, profileId, start, setCanvasKey });
+  usePauseWhenAway(status);
 
   return (
-    <Box className="game-layer" ref={containerRef}>
+    <Box className="game-layer" ref={containerRef} data-align={align}>
       {status === 'error' && (
         <Box className="game-layer__status-overlay">
           <Text className="game-layer__status-text game-layer__status-text--error">Error: {error}</Text>

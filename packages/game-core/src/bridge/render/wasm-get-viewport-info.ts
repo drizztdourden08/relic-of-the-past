@@ -18,8 +18,8 @@ const wasmGetViewportInfo = (): ViewportInfo | null =>
     const extraLeftRight = u16(2);
     const extraLeftCur = u16(4);
     const extraRightCur = u16(6);
-    const extraBottomCur = readU8(heap, ptr + 8);
-    const extraTopCur = readU8(heap, ptr + 11);
+    const extraBottomCur = u16(32);
+    const extraTopCur = u16(34);
     const locationModule = readU8(heap, ptr + 9);
     const locationType = readU8(heap, ptr + 10);
     const snesWidth = u16(12);

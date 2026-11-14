@@ -4,7 +4,7 @@ import type { RatioLimits } from '@drizztdourden08/brock-display/aspect-ratio';
 const BASE_WIDTH = 256;
 const BASE_HEIGHT = 224;
 const PPU_EXTRA_LEFT_RIGHT = 384;
-const PPU_EXTRA_TOP_BOTTOM = 128;
+const PPU_EXTRA_TOP_BOTTOM = 384;
 const EXTEND_Y_HEIGHT = 240;
 
 const ASPECT_LIMITS: RatioLimits = {

@@ -11,6 +11,13 @@ const mobile: Section[] = [
       { key: 'renderIntoNotch', label: 'Render under camera cutout', description: 'On: the game and UI use the full screen, extending under the camera notch. Off: keep everything inside the usable screen area.', keywords: 'notch cutout camera safe area fullscreen mobile display edge' },
     ],
   },
+  {
+    id: 'mobile-behavior',
+    title: 'Behavior',
+    items: [
+      { key: 'pauseWhenAway', label: 'Pause when the app is away', description: 'Pause the game and its sound when you switch apps or turn the screen off.', keywords: 'pause background focus away minimize sound mobile' },
+    ],
+  },
 ];
 
 const sections = (): Section[] => mobile;

@@ -19,11 +19,11 @@ enum {
   // larger stack — see core/wasm-build/build.mjs (-sSTACK_SIZE).
   kPpuExtraLeftRight = kEnableLargeScreen ? 384 : 0,
   // Vertical counterpart of kPpuExtraLeftRight: max extra scanlines per side (top AND bottom) for tall
-  // (taller-than-4:3) screens. 128 ⇒ up to 224+256 = 480 render rows ⇒ down to ~0.62:1 display, covering
-  // tall desktop windows and near-portrait. The linear-world fetch clamps vertically just like horizontally
+  // (taller-than-4:3) screens. 384 ⇒ up to 224+768 = 992 render rows ⇒ about 1:3.9 display, mirroring
+  // the wide cap and covering tall desktop windows and portrait. The linear-world fetch clamps vertically just like horizontally
   // (out-of-area rows ⇒ transparent ⇒ edge-mirror), and the overworld area carries up to 1024px of rows, so
   // this is bounded by the loaded area, not the SNES tilemap. 0 (kEnableLargeScreen off) = no tall.
-  kPpuExtraTopBottom = kEnableLargeScreen ? 128 : 0,
+  kPpuExtraTopBottom = kEnableLargeScreen ? 384 : 0,
 };
 
 typedef uint8_t uint8;
@@ -124,11 +124,6 @@ extern uint16 g_oam_wide_budget;
 // camera minus this shift. Declared once here; sprite.c and overworld.c used to each carry their own
 // ad-hoc `extern int` line for this instead of a shared declaration.
 extern int g_camera_lock_shift_x, g_camera_lock_shift_y;
-// How far the row where a 9-bit sprite Y stops meaning "below the picture" moves. A stored Y is camera
-// relative and the renderer adds the lock's offset after decoding, so a locked tall view needs the fold to
-// travel with that offset or it cannot express its own lowest rows. Zero with the widescreen corrections
-// off, which is the fold every build had before.
-extern int g_oam_tall_fold_shift;
 // Visible band width on each side for the frame just configured, in stock-screen coordinates: the rendered
 // view spans [-g_render_extra_left, 256 + g_render_extra_right]. Both 0 outside a wide view.
 extern int g_render_extra_left, g_render_extra_right;
@@ -155,8 +150,8 @@ static inline int WideRightPx(void) { return (int)g_oam_wide_budget - g_camera_l
 static inline int TallTopPx(void)    { return (int)g_oam_tall_budget + g_camera_lock_shift_y; }
 static inline int TallBottomPx(void) { return (int)g_oam_tall_budget - g_camera_lock_shift_y; }
 // OAM Y is only 8-bit, so a view taller than ~256px needs more per sprite than the entry can hold.
-// g_oam_y_high holds a per-slot THREE-state marker (see kOamY_* in sprite.h): untouched, tall-encoded with
-// the 9th bit clear, or tall-encoded with it set. The untouched state matters because rows 240 and -16 both
+// g_oam_y_high holds a per-slot marker (see kOamY_* in sprite.h): zero when untouched, else kOamY_Base plus
+// the signed Y bits above the low byte. The untouched state matters because rows 240 and -16 both
 // encode to the low byte 0xf0, which is also the hardware's hide value. Set by the OAM helpers, cleared
 // with the buffer each frame, synced to the PPU each frame.
 extern uint8 g_oam_y_high[128];

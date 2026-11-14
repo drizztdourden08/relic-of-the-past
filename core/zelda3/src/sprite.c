@@ -1547,9 +1547,7 @@ void SpriteDraw_Shadow_custom(int k, PrepOamCoordsRet *info, uint8 a) {  // 86dc
   } else {
     // Same representable window OamSetY uses for a tall view: keep instead of hiding across the whole
     // extra vertical band, not just the stock 256-row screen.
-    int16 ys = (int16)y;
-    int b = (int)g_oam_tall_budget;
-    if (!(ys >= b - 256 && ys < 256 + b))
+    if (!OamTallYVisible((int16)y))
       return;
   }
   OamEnt *oam = GetOamCurPtr() + (sprite_flags2[k] & 0x1f);
@@ -3273,10 +3271,10 @@ void Sprite_CorrectOamEntries(int k, int n, uint8 islarge) {  // 86febc
         oam->y = 0xf0;
     } else {
       // Same representable window OamSetY uses for a tall view, instead of hiding past the stock 256 rows.
-      int16 ys = (int16)(uint16)(y - BG2VOFS_copy2);
-      int b = (int)g_oam_tall_budget;
-      if (!(ys >= b - 256 && ys < 256 + b))
+      if (!OamTallYVisible((int16)(uint16)(y - BG2VOFS_copy2))) {
         oam->y = 0xf0;
+        g_oam_y_high[oam - oam_buf] = kOamY_Stock;
+      }
     }
   } while (oam++, extp++, --n >= 0);
 }

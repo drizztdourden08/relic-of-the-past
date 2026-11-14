@@ -1,17 +1,18 @@
 /* @layer bridge-wasm @kind logic */
 import type { RingFrame, RingSlot } from './oam-ring.type';
 import { getModule, getGameState } from './wasm-bridge';
-import { HEAD, SLOTS, SLOT_BYTES, HIDDEN_Y, Y_HIGH_NINTH_BIT_SET } from './oam-ring.constants';
+import { HEAD, SLOTS, SLOT_BYTES, HIDDEN_Y, Y_MARKER_BASE } from './oam-ring.constants';
 import { readU8 } from "./bridge/wasm-call";
 
 const s16 = (v: number): number => (v >= 0x8000 ? v - 0x10000 : v);
 
-const u16At = (heap: Uint8Array, at: number): number => (heap[at] ?? 0) | ((heap[at + 1] ?? 0) << 8);
+const s8 = (v: number): number => ((v & 0xff) >= 0x80 ? (v & 0xff) - 0x100 : v & 0xff);
+
+const u16At =(heap: Uint8Array, at: number): number => (heap[at] ?? 0) | ((heap[at + 1] ?? 0) << 8);
 
 const resolvedYOf = (y: number, yHigh: number, tallBudget: number, shiftY: number): number => {
   if (!tallBudget || yHigh === 0) return y;
-  const raised = y + (yHigh === Y_HIGH_NINTH_BIT_SET ? 256 : 0);
-  return (raised >= 256 + tallBudget ? raised - 512 : raised) + shiftY;
+  return y + (s8(yHigh - Y_MARKER_BASE) * 256) + shiftY;
 };
 
 const readRingSlot = (heap: Uint8Array, p: number, i: number): RingSlot => {

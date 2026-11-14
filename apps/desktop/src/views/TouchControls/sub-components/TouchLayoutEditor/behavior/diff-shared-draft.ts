@@ -1,0 +1,16 @@
+/* @layer renderer-app @kind logic */
+import type { TouchControlsSettings } from '@rotp/features';
+import type { TouchSharedPatch } from '../TouchLayoutEditor.type';
+import type { TouchSharedDraft } from '../TouchLayoutEditor.state.type';
+
+const diffSharedDraft = (saved: TouchControlsSettings, draft: TouchSharedDraft): TouchSharedPatch => {
+  const patch: TouchSharedPatch = {};
+  if (draft.buttonStrength !== saved.buttonStrength) patch.buttonStrength = draft.buttonStrength;
+  if (draft.layerOpacity !== saved.layerOpacity) patch.layerOpacity = draft.layerOpacity;
+  if (draft.haptics !== saved.haptics) patch.haptics = draft.haptics;
+  if (draft.editHoldMs !== saved.editHoldMs) patch.editHoldMs = draft.editHoldMs;
+  if (draft.snap.enabled !== saved.snap.enabled || draft.snap.cell !== saved.snap.cell) patch.snap = draft.snap;
+  return patch;
+};
+
+export { diffSharedDraft };

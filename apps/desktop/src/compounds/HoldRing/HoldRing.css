@@ -1,0 +1,28 @@
+/* @layer renderer-app @kind style */
+.hold-ring {
+  position: absolute;
+  pointer-events: none;
+}
+
+.hold-ring__label {
+  position: absolute;
+  bottom: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: var(--space-xs) var(--space-md);
+  border-radius: var(--radius-pill);
+  background: var(--c-scrim);
+  color: var(--c-primary-bright);
+  font-size: var(--text-lg);
+  white-space: nowrap;
+  filter: drop-shadow(0 0 var(--size-6) var(--c-primary-dim));
+}
+
+.hold-ring__arc {
+  filter: drop-shadow(0 0 var(--size-6) var(--c-primary-dim));
+}
+
+.hold-ring__arc .rotp-hold-arc__track,
+.hold-ring__arc .rotp-hold-arc__fill {
+  stroke-width: 12;
+}

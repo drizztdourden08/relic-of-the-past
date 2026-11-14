@@ -47,40 +47,35 @@ enum {
   kCheckDamageFromPlayer_Ne = 2,
 };
 
-// Tall screens: OAM Y is only 8-bit. When a tall view is configured (g_oam_tall_budget != 0) encode a
-// 9-bit screen-Y — low 8 bits in oam->y, the rest in g_oam_y_high[slot] — so the PPU can place sprites
-// across the taller-than-256px pan (mirror of the stock 9-bit X). Outside the representable range, hide
-// (0xf0). Non-tall keeps the exact stock 8-bit clip (screen-Y in [-16, 239]).
+// Tall screens: OAM Y is only 8-bit. When a tall view is configured (g_oam_tall_budget != 0) carry the
+// true signed screen-Y: low 8 bits in oam->y, the signed bits above them in g_oam_y_high[slot] (mirror of
+// g_oam_x_high), so the PPU places a sprite anywhere in the tall pan with no fold. Outside the
+// representable range, hide (0xf0). Non-tall keeps the exact stock 8-bit clip (screen-Y in [-16, 239]).
 //
-// g_oam_y_high is a THREE-state marker, not a bare bit: kOamY_Stock means no tall-aware writer touched
-// this slot this frame, so the PPU reads the entry the vanilla way. That distinction is load-bearing.
-// The hardware's hide value is a Y of 0xf0, and on a 224-row screen no visible row can produce that byte
-// — but a tall view renders rows 240 and -16, whose 9-bit encodings BOTH have 0xf0 as their low byte. With
-// only a bit to go on, the PPU cannot tell those two real rows from a hidden sprite and blanks the entry
-// for exactly the frames it sits there: every sprite crossing either row blinks out, once per crossing,
-// which reads as a flicker while the view pans. The marker says "this Y is a tall-encoded coordinate",
-// making the sentinel unambiguous again.
+// g_oam_y_high is zero (kOamY_Stock) when no tall-aware writer touched this slot this frame, so the PPU
+// reads the entry the vanilla way: 0xf0 means hidden. That distinction is load-bearing, because a tall
+// view renders rows 240 and -16, which both have 0xf0 as their low byte. A tall-aware writer stores
+// kOamY_Base + (screenY >> 8), never zero, which makes the sentinel unambiguous again; the PPU decodes
+// screenY = oam->y + 256 * (marker - kOamY_Base).
 enum {
-  kOamY_Stock = 0,  // untouched this frame: vanilla 8-bit Y, 0xf0 means hidden
-  kOamY_Low   = 1,  // tall-encoded, 9th bit clear
-  kOamY_High  = 2,  // tall-encoded, 9th bit set
+  kOamY_Stock = 0,     // untouched this frame: vanilla 8-bit Y, 0xf0 means hidden
+  kOamY_Base  = 0x80,  // tall-encoded: marker = kOamY_Base + (int8)(screenY >> 8)
 };
 
-// The row a 9-bit Y stops meaning "below the picture" and starts meaning "above it". The stored value is
-// camera-relative and the renderer adds the camera lock's offset after decoding, so the fold moves with
-// that offset: without this a locked tall view cannot express its own lowest rows, and everything drawn
-// there (a shot, its sparkle, the follower) vanishes for the last rows of the picture.
-static inline int OamTallFold(int budget) {
-  return 256 + budget - g_oam_tall_fold_shift;
+// Whether a camera-relative screen Y can be seen in a tall view: the rendered view spans the stock 224 rows
+// plus the budget on each side, the camera lock moves it by at most the budget, and a sprite is up to 64
+// rows tall.
+static inline bool OamTallYVisible(int ys) {
+  int b = (int)g_oam_tall_budget;
+  return ys >= -(2 * b + 64) && ys < 224 + 2 * b + 64;
 }
 
 static inline void OamSetY(OamEnt *oam, uint16 y) {
   if (g_oam_tall_budget) {
     int16 ys = (int16)y;
-    int b = (int)g_oam_tall_budget;
-    if (ys >= OamTallFold(b) - 512 && ys < OamTallFold(b)) {
+    if (OamTallYVisible(ys)) {
       oam->y = (uint8)y;
-      g_oam_y_high[oam - oam_buf] = ((y >> 8) & 1) ? kOamY_High : kOamY_Low;
+      g_oam_y_high[oam - oam_buf] = (uint8)(kOamY_Base + (ys >> 8));
     } else {
       oam->y = 0xf0;
       // Clear it: the OAM region allocator recycles slots within a frame, so a marker left by an earlier

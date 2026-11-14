@@ -1,9 +1,6 @@
 /* @layer renderer-components @kind style */
 
 .check-toasts {
-  position: absolute;
-  inset: 0;
-  margin: auto;
   pointer-events: none;
   z-index: var(--z-nav-overlay);
 }

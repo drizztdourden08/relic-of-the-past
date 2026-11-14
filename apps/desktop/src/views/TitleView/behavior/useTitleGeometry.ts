@@ -1,8 +1,8 @@
 /* @layer renderer-hud @kind hook */
 import { useCallback, useState } from 'react';
 import { FRAME_H, FRAME_W, HORIZON_Y } from '@rotp/game-data';
-import { wasmGetViewportInfo, linesAbovePicture } from '@rotp/game-core';
 import { canvasNativeHeight } from '../../../hooks/canvas-native-height';
+import { frameTopOf } from '../../../title/scene/frame-top';
 import { useResizeMeasure } from '../../../hooks/useResizeMeasure';
 import type { SceneGeometry } from '../../../title/scene/scene.type';
 import { GAME_CANVAS_ROWS_PER_LINE } from '../TitleView.constants';
@@ -19,7 +19,7 @@ const useTitleGeometry = () => {
     const scale = h / height;
     setScale(scale);
     const width = Math.max(FRAME_W, Math.round(w / scale));
-    const frameY = linesAbovePicture(height, wasmGetViewportInfo()?.extraTopBottom ?? undefined);
+    const frameY = frameTopOf(height);
     const frameX = Math.round((width - FRAME_W) / 2);
     setGeometry((prev) => {
       const next = { width, height, frameX, frameY, horizonY: frameY + HORIZON_Y };

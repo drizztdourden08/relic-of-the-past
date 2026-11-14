@@ -1,0 +1,11 @@
+/* @layer renderer-app @kind style */
+.touch-dpad {
+  position: absolute;
+  pointer-events: none;
+  opacity: var(--touch-strength);
+}
+
+.touch-dpad[data-selected] {
+  opacity: 1;
+  filter: drop-shadow(0 0 var(--size-3) var(--c-primary));
+}

@@ -83,6 +83,7 @@ interface SaveActionsBase {
 }
 
 interface UseQuickSaveActionsParams {
+  profileId: string;
   isGameRunning: boolean;
   onStartGame: () => void;
   loadQuickSlots: () => Promise<void>;
@@ -128,8 +129,10 @@ interface ArmedRow {
   action: ArmedAction;
 }
 
+type StoredSaveKind = 'normal' | 'auto';
+
 export type {
-  ArmedRow, AutoSavesData, CreateSaveFormProps, DialogState, HomeRandomizerStatus, HomeTabColumnsProps,
+  ArmedRow, AutoSavesData, StoredSaveKind, CreateSaveFormProps, DialogState, HomeRandomizerStatus, HomeTabColumnsProps,
   HomeTabDialogProps, HomeTabDialogsProps, HomeHeroContentProps, NormalSavesData, ProfileFactsInput,
   SaveFileChecks, SaveRowPartsInput, SlotInfo, SummaryFact, UseAutoSaveActionsParams,
   UseHomeTabSavesParams, UseHomeTabSramImportParams, UseNormalSaveActionsParams, UseQuickSaveActionsParams,

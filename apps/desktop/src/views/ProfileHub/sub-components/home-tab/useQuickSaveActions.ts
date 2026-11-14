@@ -1,11 +1,12 @@
 /* @layer renderer-components @kind hook */
 import { useState, useCallback } from 'react';
+import * as savesStore from '@app/storage/saves-store';
 import { saveState, loadState } from '../../../../game';
 import { log } from '../../../../log-bus';
-import { ensureGameRunning } from './ensure-game-running';
+import { startForLoad } from './start-for-load';
 import type { UseQuickSaveActionsParams } from './home-tab.type';
 
-const useQuickSaveActions = ({ isGameRunning, onStartGame, loadQuickSlots }: UseQuickSaveActionsParams) => {
+const useQuickSaveActions = ({ profileId, isGameRunning, onStartGame, loadQuickSlots }: UseQuickSaveActionsParams) => {
   const [busySlot, setBusySlot] = useState<number | null>(null);
 
   const handleQuickSave = useCallback(async (slot: number) => {
@@ -19,9 +20,10 @@ const useQuickSaveActions = ({ isGameRunning, onStartGame, loadQuickSlots }: Use
   const handleQuickLoad = useCallback(async (slot: number) => {
     setBusySlot(slot);
     log.app(`Loading state from slot ${slot + 1}`);
-    if (await ensureGameRunning(isGameRunning, onStartGame)) await loadState(slot);
+    const buffer = await savesStore.readState(profileId, slot);
+    if (await startForLoad(buffer, isGameRunning, onStartGame)) await loadState(slot);
     setBusySlot(null);
-  }, [isGameRunning, onStartGame]);
+  }, [profileId, isGameRunning, onStartGame]);
 
   return { busySlot, handleQuickSave, handleQuickLoad };
 };

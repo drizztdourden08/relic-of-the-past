@@ -1,0 +1,34 @@
+/* @layer renderer-components @kind style */
+
+.touch-group-frame {
+  position: absolute;
+  box-sizing: border-box;
+  border: var(--border-width-thin) dashed var(--c-border-strong);
+  border-radius: var(--radius-md);
+  pointer-events: none;
+}
+
+.touch-group-frame--locked {
+  border-color: var(--c-primary);
+}
+
+.touch-group-frame--selected {
+  background: var(--c-primary-soft);
+}
+
+.touch-group-frame__badge {
+  position: absolute;
+  top: calc(var(--space-xs) * -1);
+  right: calc(var(--space-xs) * -1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-2xs);
+  border-radius: var(--radius-sm);
+  background: var(--c-surface);
+  color: var(--c-text-muted);
+}
+
+.touch-group-frame--locked .touch-group-frame__badge {
+  color: var(--c-primary);
+}

@@ -6,6 +6,7 @@ const runMenuEntry = (entry: MenuEntry): void => {
   if (entry === 'separator') return;
   if (entry.onClick) entry.onClick();
   else if (entry.bucket) nav.open(joinRoute(entry.bucket, entry.page, entry.tab));
+  else if (entry.screen && entry.fresh) nav.home(entry.screen);
   else if (entry.screen) nav.open(entry.screen);
 };
 

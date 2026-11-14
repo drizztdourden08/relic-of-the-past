@@ -11,10 +11,10 @@
     "./package.json": "./package.json"
   },
   "dependencies": {
-    "@drizztdourden08/archipelia-client-kit": "^0.4.0",
+    "@drizztdourden08/archipelia-client-kit": "^0.5.0",
     "@drizztdourden08/archipelia-lobby-protocol": "^1.5.0",
-    "@drizztdourden08/brock-core": "^0.120.1",
-    "@drizztdourden08/brock-randomizer": "^0.120.1",
+    "@drizztdourden08/brock-core": "^0.122.0",
+    "@drizztdourden08/brock-randomizer": "^0.122.0",
     "@rotp/asset-extraction": "workspace:*",
     "@rotp/features": "workspace:*",
     "@rotp/game-core": "workspace:*",

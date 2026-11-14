@@ -396,7 +396,6 @@ static int g_lock_last_cam_x, g_lock_last_cam_y;
 // parallax (BG1) holds when non-zero so it doesn't drift against the static scene; the sprite proximity
 // loader scans the lock band (the shifted side) so sprites in the extended view spawn even while pinned.
 int g_camera_lock_shift_x, g_camera_lock_shift_y;
-int g_oam_tall_fold_shift;
 int g_render_extra_left, g_render_extra_right;
 int g_render_extra_top, g_render_extra_bottom;
 int g_band_lo_x, g_band_hi_x;  // window the sprite band classifier last used, for the diagnostic dump
@@ -663,10 +662,6 @@ static void ConfigurePpuSideSpace() {
   g_zenv.ppu->cameraLockShiftY = IntMax(-budget_y, IntMin(budget_y, g_zenv.ppu->cameraLockShiftY));
   g_camera_lock_shift_x = g_zenv.ppu->cameraLockShiftX;
   g_camera_lock_shift_y = g_zenv.ppu->cameraLockShiftY;
-  // The sprite fold travels with the lock only while the widescreen corrections are on; off, both the OAM
-  // writer and the renderer keep the fixed fold they always had.
-  g_oam_tall_fold_shift = (enhanced_features0 & kFeatures0_WidescreenVisualFixes) ? g_camera_lock_shift_y : 0;
-  g_zenv.ppu->tallFoldShift = g_oam_tall_fold_shift;
   // Per-frame visible band widths, for the sprite band classifier: the rendered view spans
   // [-g_render_extra_left, 256 + g_render_extra_right] in stock-screen coordinates.
   g_render_extra_left = (int)g_zenv.ppu->extraLeftCur;

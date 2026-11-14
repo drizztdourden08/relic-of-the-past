@@ -1,6 +1,6 @@
 /* @layer renderer-app @kind logic */
 import type { GameSettings } from '@rotp/features';
-import { TALL_PRESETS } from './display.constants';
+import { TALL_PRESETS, TALL_ULTRAWIDE_PRESET } from './display.constants';
 import type { AspectChoices } from './display.type';
 
 const widePresetsOf = (s: GameSettings) => [
@@ -9,6 +9,11 @@ const widePresetsOf = (s: GameSettings) => [
   { value: '16:10', label: '16:10' },
   ...(s.linearWorldTilemap ? [{ value: '21:9', label: '21:9' }] : []),
   ...(s.linearWorldTilemap && s.ultrawideRendering ? [{ value: '32:9', label: '32:9' }] : []),
+];
+
+const tallPresetsOf = (s: GameSettings) => [
+  ...TALL_PRESETS,
+  ...(s.ultrawideRendering ? [{ value: TALL_ULTRAWIDE_PRESET, label: TALL_ULTRAWIDE_PRESET }] : []),
 ];
 
 const optionsOf = (s: GameSettings) => [
@@ -23,7 +28,7 @@ const optionsOf = (s: GameSettings) => [
 const aspectChoices = (s: GameSettings): AspectChoices => ({
   options: optionsOf(s),
   widePresets: widePresetsOf(s),
-  tallPresets: s.tallRendering ? TALL_PRESETS : undefined,
+  tallPresets: s.tallRendering ? tallPresetsOf(s) : undefined,
 });
 
 export { aspectChoices };
