@@ -16,7 +16,7 @@
     "./package.json": "./package.json"
   },
   "dependencies": {
-    "@drizztdourden08/brock-msu": "^0.120.1",
+    "@drizztdourden08/brock-msu": "^0.122.0",
     "@drizztdourden08/tessera": "catalog:",
     "@iconify-icons/logos": "^1.2.37",
     "@iconify-icons/lucide": "^1.2.135",
