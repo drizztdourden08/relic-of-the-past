@@ -1,11 +1,7 @@
 /* @layer bridge-wasm @kind logic */
 import type { FontReference, RomData, RomLanguage } from '@rotp/asset-extraction';
 import { fontReferenceOfRom, loadRomFromBuffer } from '@rotp/asset-extraction/buffer';
-
-interface LibraryReferences {
-  baseRom: RomData | null;
-  references: FontReference[];
-}
+import type { LibraryReferences } from './library-references.type';
 
 const loadQuietly = (bytes: Uint8Array): RomData | null => {
   try {

@@ -26,7 +26,7 @@ const usePatchedImportForm = (props: PatchedImportFormProps) => {
   const blocked = busy || !name.trim() || file === null;
 
   const submit = useCallback(async () => {
-    if (blocked || file === null) return;
+    if (blocked) return;
     if (await onImport({ name, base, credits, file })) reset();
   }, [blocked, name, base, credits, file, onImport, reset]);
 

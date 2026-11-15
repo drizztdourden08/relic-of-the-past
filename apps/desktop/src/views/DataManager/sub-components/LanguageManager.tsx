@@ -1,12 +1,10 @@
 /* @layer renderer-components @kind component */
 import { EmptyState, Text } from '@drizztdourden08/tessera/primitives';
 import { ListDetailLayout } from '@drizztdourden08/tessera/composites';
-import { ImportForm } from './ImportForm';
 import { useLanguageCreation } from './language-manager/useLanguageCreation';
 import { useLanguageDelete } from './language-manager/useLanguageDelete';
 import { useLanguageExtraction } from './language-manager/useLanguageExtraction';
 import { useLanguageManagerDisplay } from './language-manager/useLanguageManagerDisplay';
-import { useLanguagePatchedImport } from './language-manager/useLanguagePatchedImport';
 import { useLanguageSets } from './language-manager/useLanguageSets';
 import type { LanguageManagerProps } from './LanguageManager.type';
 import { LanguageEditor } from '../../../language-editor';
@@ -14,8 +12,8 @@ import { NO_SET_MESSAGE } from '../../../language-editor/sub-components/studio-f
 import { SetCreateForm } from '../../../language-editor/sub-components/SetCreateForm';
 import { useInstalledKind } from '@app/hooks/useInstalledKind';
 import { InstalledOriginBar, useConfirmUninstall } from '@app/views/InstalledOriginBar';
-import { PatchedImportForm } from '@app/compounds/PatchedImportForm';
-import { PatchedImportReport } from '@app/compounds/PatchedImportReport';
+import { LanguagePatchedImport } from './LanguagePatchedImport';
+import { LanguageRomImport } from './LanguageRomImport';
 import { LanguageSetList } from './LanguageSetList';
 
 const LanguageManager = (props: LanguageManagerProps) => {
@@ -23,7 +21,6 @@ const LanguageManager = (props: LanguageManagerProps) => {
   const { languages, loading, selected, setSelected, refresh, refreshThenSelect } = useLanguageSets();
   const { handleUrlImport, handleFileImport } = useLanguageExtraction({ refresh, setSelected });
   const { busy, handleCreate, handleDuplicate } = useLanguageCreation({ refresh, setSelected });
-  const patched = useLanguagePatchedImport({ refresh, setSelected });
   const { pack: installed, packFor } = useInstalledKind('language', selected);
   const { confirmUninstall, uninstallError } = useConfirmUninstall(onDeleteConfirm);
   const { handleDelete, handleUninstalled } = useLanguageDelete({
@@ -34,53 +31,24 @@ const LanguageManager = (props: LanguageManagerProps) => {
 
   const origin = installed === null ? null : <InstalledOriginBar pack={installed} onDuplicated={refreshThenSelect} onUpdateInstalled={refreshThenSelect} onUninstalled={handleUninstalled} />;
 
+  const setList = (
+    <>
+      {uninstallError !== null && <Text variant="caption" tone="danger" role="alert">{uninstallError}</Text>}
+      <LanguageSetList sets={languages} loading={loading} selected={selected} labelOf={setLabel}
+        isInstalled={isInstalled} onSelect={setSelected} onDelete={handleDelete} />
+    </>
+  );
+
   return (
     <ListDetailLayout listShowTitle={false}
       listContainers={[
-        {
-          title: 'Extract from a ROM',
-          content: (
-            <ImportForm
-              kind="language"
-              placeholder="Paste ROM download URL..."
-              accept={['.sfc', '.smc', '.zip', '.7z', '.rar']}
-              dropLabel="Drop a ROM file to extract its language"
-              dropHint="The language is read from the ROM. The ROM is not saved."
-              onUrlImport={handleUrlImport}
-              onFileImport={handleFileImport}
-            />
-          ),
-        },
-        {
-          title: 'Import patched ROM',
-          content: (
-            <>
-              <PatchedImportForm busy={patched.busy} error={patched.error} onImport={patched.handlePatchedImport} />
-              <PatchedImportReport parts={patched.parts} />
-            </>
-          ),
-        },
+        { title: 'Extract from a ROM', content: <LanguageRomImport onUrlImport={handleUrlImport} onFileImport={handleFileImport} /> },
+        { title: 'Import patched ROM', content: <LanguagePatchedImport refresh={refresh} setSelected={setSelected} /> },
         {
           title: 'New set',
           content: <SetCreateForm sets={ownSets} busy={busy} onCreate={handleCreate} onDuplicate={handleDuplicate} />,
         },
-        {
-          title: 'Language sets',
-          content: (
-            <>
-              {uninstallError !== null && <Text variant="caption" tone="danger" role="alert">{uninstallError}</Text>}
-              <LanguageSetList
-                sets={languages}
-                loading={loading}
-                selected={selected}
-                labelOf={setLabel}
-                isInstalled={isInstalled}
-                onSelect={setSelected}
-                onDelete={handleDelete}
-              />
-            </>
-          ),
-        },
+        { title: 'Language sets', content: setList },
       ]}
       detail={selected && <LanguageEditor key={selected} id={selected} readOnly={installed !== null} origin={origin} />}
       emptyDetail={<EmptyState message={NO_SET_MESSAGE} />}
