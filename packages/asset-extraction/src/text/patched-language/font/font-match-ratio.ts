@@ -1,6 +1,7 @@
 /* @layer shared-asset-extraction @kind logic */
 import { MIN_DRAWN_GLYPHS } from './font.constants';
-import { glyphKey, isBlankGlyph } from './glyph-bytes';
+import { glyphKey } from './glyph-key';
+import { isBlankGlyph } from './is-blank-glyph';
 
 const fontMatchRatio = (tiles: Uint8Array, keys: ReadonlyMap<string, string>, glyphLimit: number): number => {
   let drawn = 0;

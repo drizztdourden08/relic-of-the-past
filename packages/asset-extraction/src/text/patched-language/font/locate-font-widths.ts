@@ -1,13 +1,7 @@
 /* @layer shared-asset-extraction @kind logic */
-import { LETTER_PROBE, LETTER_RATIO, MAX_GLYPH_WIDTH, WIDTH_SIMILARITY } from './font.constants';
+import { WIDTH_SIMILARITY } from './font.constants';
 import type { FontWidthsFound, FontWidthsSearch } from './font.type';
-
-const plausibleWidths = (widths: Uint8Array): boolean => {
-  if (widths.some((width) => width > MAX_GLYPH_WIDTH)) return false;
-  const letters = widths.subarray(0, LETTER_PROBE);
-  const drawn = letters.filter((width) => width >= 1).length;
-  return letters.length > 0 && drawn / letters.length >= LETTER_RATIO;
-};
+import { plausibleWidths } from './plausible-widths';
 
 const closeTo = (patched: Uint8Array, at: number, reference: Uint8Array): boolean => {
   const allowed = Math.floor(reference.length * (1 - WIDTH_SIMILARITY));
@@ -39,4 +33,4 @@ const locateFontWidths = (search: FontWidthsSearch): FontWidthsFound | null => {
   return { widths: reference.slice(0, search.count), source: 'release' };
 };
 
-export { locateFontWidths, plausibleWidths };
+export { locateFontWidths };

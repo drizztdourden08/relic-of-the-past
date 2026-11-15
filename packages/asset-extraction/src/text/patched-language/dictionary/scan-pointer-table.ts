@@ -1,7 +1,8 @@
 /* @layer shared-asset-extraction @kind logic */
 import { BANK_BYTES, MAX_ENTRY_BYTES, ROM_ADDRESS_BIT } from './dictionary.constants';
 import type { DictionaryInput } from './dictionary.type';
-import { readPointerTable, wordAt } from './read-pointer-table';
+import { readPointerTable } from './read-pointer-table';
+import { wordAt } from './word-at';
 
 const risesSteadily = (bytes: Uint8Array, at: number, count: number): boolean => {
   if ((wordAt(bytes, at) & ROM_ADDRESS_BIT) === 0) return false;

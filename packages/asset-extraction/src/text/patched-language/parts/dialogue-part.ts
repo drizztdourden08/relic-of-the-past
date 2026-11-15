@@ -17,7 +17,7 @@ const dialoguePart = (work: PatchedWork): PatchedPartReport => {
   const scan = { bytes: patched.bytes, layout, budget: { steps: SCAN_STEP_BUDGET } };
   const plan = resolveStream({ scan, romAddrs: config.romAddrs, hints: diffHints(patched.bytes, work.baseRom?.bytes ?? null) });
   if (!plan) {
-    const reason = scan.budget.steps <= 0 ? 'The search ran out of time' : 'No dialogue stream decodes cleanly';
+    const reason = scan.budget.steps <= 0 ? 'The search ran out of time' : 'No dialogue stream decodes';
     return { part: 'dialogue', status: 'failed', detail: `${reason}; the patch may change the text format.` };
   }
   work.plan = plan;

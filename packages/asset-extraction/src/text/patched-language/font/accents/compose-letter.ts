@@ -3,7 +3,7 @@ import { glyphPixelGrid } from '../glyph-pixel-grid';
 import { COMMON_LETTERS, MARK_NAMES, PLAIN_LETTER } from './accents.constants';
 import type { ComposeInput, ComposedLetter, LetterCandidate } from './accents.type';
 import { letterCandidate } from './letter-candidate';
-import { composeToken } from './mark-split';
+import { composeToken } from './compose-token';
 
 const commonRank = (letter: string): number => {
   const rank = COMMON_LETTERS.indexOf(letter);

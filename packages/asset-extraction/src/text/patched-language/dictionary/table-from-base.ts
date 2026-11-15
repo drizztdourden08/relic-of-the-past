@@ -2,8 +2,10 @@
 import { encodeDictionary } from '../../dialogue-encoder';
 import { BANK_BYTES, BANK_OFFSET_MASK, ROM_ADDRESS_BIT } from './dictionary.constants';
 import type { DictionaryInput, PointerTableRead } from './dictionary.type';
-import { findBytes, joinEntries } from './find-bytes';
-import { readPointerTable, wordAt } from './read-pointer-table';
+import { findBytes } from './find-bytes';
+import { joinEntries } from './join-entries';
+import { readPointerTable } from './read-pointer-table';
+import { wordAt } from './word-at';
 
 const sameEntries = (left: readonly Uint8Array[], right: readonly Uint8Array[]): boolean =>
   joinEntries(left).equals(joinEntries(right));

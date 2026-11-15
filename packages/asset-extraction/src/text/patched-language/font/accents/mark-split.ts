@@ -8,9 +8,4 @@ const markSplit = (token: string): MarkSplit | null => {
   return MARK_NAMES[mark] === undefined ? null : { letter, mark };
 };
 
-const composeToken = (letter: string, mark: string): string | null => {
-  const token = `${letter}${mark}`.normalize('NFC');
-  return [...token].length === 1 ? token : null;
-};
-
-export { composeToken, markSplit };
+export { markSplit };

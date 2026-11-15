@@ -2,7 +2,7 @@
 import { MAX_MARK_ROWS, MAX_REMOVED } from './accents.constants';
 import type { CutInput, MarkCut, PixelGrid, Shape } from './accents.type';
 import { cellAt } from './cell-at';
-import { cropShape, inkRows } from './crop-shape';
+import { cropShape } from './crop-shape';
 import { shiftedGrid } from './shifted-grid';
 
 const differingRows = (glyph: PixelGrid, base: PixelGrid): number =>

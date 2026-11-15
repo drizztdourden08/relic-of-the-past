@@ -8,7 +8,7 @@ const setStrings = (set: LanguageSet): string[] => [
   ...Object.values<string>(set.names.items),
   ...Object.values<string>(set.names.bottles),
   ...Object.values<string>(set.names.labels),
-  ...Object.values(set.text ?? {}).flatMap((slots) => Object.values<string>(slots ?? {})),
+  ...Object.values(set.text ?? {}).flatMap((slots) => Object.values<string>(slots)),
 ];
 
 export { setStrings };

@@ -1,10 +1,13 @@
 /* @layer shared-asset-extraction @kind logic */
 import { FONT_TILE_BYTES } from '../../data/font-data';
 import { FONT_MATCH_RATIO, PROBE_GLYPHS, TILE_BYTES } from './font.constants';
-import type { FontReference, FontTilesFound, FontTilesSearch } from './font.type';
-import { glyphBytes, glyphTopOffset, isBlankGlyph } from './glyph-bytes';
+import type { FontReference, FontTilesFound, FontTilesSearch, TileHunt } from './font.type';
+import { byBaseFirst } from './by-base-first';
 import { fontMatchRatio } from './font-match-ratio';
-import { byBaseFirst, referenceKeys } from './reference-keys';
+import { glyphBytes } from './glyph-bytes';
+import { glyphTopOffset } from './glyph-top-offset';
+import { isBlankGlyph } from './is-blank-glyph';
+import { referenceKeys } from './reference-keys';
 
 const tilesAt = (patched: Uint8Array, at: number): Uint8Array => patched.slice(at, at + FONT_TILE_BYTES);
 
@@ -23,17 +26,29 @@ const occurrences = (patched: Uint8Array, needle: Uint8Array): number[] => {
   return found;
 };
 
+const matchedStart = (hunt: TileHunt, glyph: number, hit: number): number | null => {
+  const { search, keys, tried } = hunt;
+  const start = hit - glyphTopOffset(glyph);
+  if (start < 0 || start + FONT_TILE_BYTES > search.patched.length || tried.has(start)) return null;
+  tried.add(start);
+  return fontMatchRatio(tilesAt(search.patched, start), keys, search.glyphLimit) >= FONT_MATCH_RATIO ? start : null;
+};
+
+const searchGlyph = (hunt: TileHunt, reference: FontReference, glyph: number): number | null => {
+  const top = glyphBytes(reference.tiles, glyph).subarray(0, TILE_BYTES);
+  for (const hit of occurrences(hunt.search.patched, top)) {
+    const start = matchedStart(hunt, glyph, hit);
+    if (start !== null) return start;
+  }
+  return null;
+};
+
 const searchMoved = (search: FontTilesSearch, keys: ReadonlyMap<string, string>): number | null => {
-  const tried = new Set<number>([search.at]);
+  const hunt: TileHunt = { search, keys, tried: new Set<number>([search.at]) };
   for (const reference of byBaseFirst(search.references)) {
     for (const glyph of probeGlyphs(reference, search.glyphLimit)) {
-      const top = glyphBytes(reference.tiles, glyph).subarray(0, TILE_BYTES);
-      for (const hit of occurrences(search.patched, top)) {
-        const start = hit - glyphTopOffset(glyph);
-        if (start < 0 || start + FONT_TILE_BYTES > search.patched.length || tried.has(start)) continue;
-        tried.add(start);
-        if (fontMatchRatio(tilesAt(search.patched, start), keys, search.glyphLimit) >= FONT_MATCH_RATIO) return start;
-      }
+      const start = searchGlyph(hunt, reference, glyph);
+      if (start !== null) return start;
     }
   }
   return null;

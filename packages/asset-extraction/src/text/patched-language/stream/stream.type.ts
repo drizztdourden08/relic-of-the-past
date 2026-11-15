@@ -42,6 +42,16 @@ interface SegmentWant {
   hints: readonly number[];
 }
 
+interface FoundSegment {
+  start: number;
+  count: number;
+}
+
+interface SecondSegment {
+  start: number;
+  moved: boolean;
+}
+
 interface StreamPlan {
   starts: number[];
   moved: string[];
@@ -54,6 +64,6 @@ interface StreamSearch {
 }
 
 export type {
-  ScanBudget, SegmentEnd, SegmentRequest, SegmentResult, SegmentScan, SegmentWant, StreamLayout, StreamPlan,
+  FoundSegment, ScanBudget, SecondSegment, SegmentEnd, SegmentRequest, SegmentResult, SegmentScan, SegmentWant, StreamLayout, StreamPlan,
   StreamSearch,
 };

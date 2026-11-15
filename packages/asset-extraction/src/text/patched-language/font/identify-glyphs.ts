@@ -1,22 +1,12 @@
 /* @layer shared-asset-extraction @kind logic */
 import { glyphPlaceholder } from '../../glyph-map';
-import type { GlyphMap } from '../../glyph-map';
 import { composeLetter, flippedLetter, learnMarks } from './accents';
-import type { ComposedLetter, LearnedMark } from './accents';
+import type { ComposedLetter } from './accents';
 import { RESTYLE_MATCH_RATIO, RESTYLE_MIN_CHANGED } from './font.constants';
-import type { FontReference, GlyphIdentify, GlyphNaming, GlyphReading } from './font.type';
-import { glyphKey, isBlankGlyph } from './glyph-bytes';
+import type { FontReference, GlyphIdentify, GlyphPass, GlyphReading } from './font.type';
+import { glyphKey } from './glyph-key';
+import { isBlankGlyph } from './is-blank-glyph';
 import { referenceKeys } from './reference-keys';
-
-interface GlyphPass {
-  alphabet: string[];
-  glyphs: GlyphMap;
-  changed: number[];
-  unknown: number[];
-  namings: GlyphNaming[];
-  marks: LearnedMark[];
-  matched: number;
-}
 
 const looksChanged = (input: GlyphIdentify, base: FontReference | undefined, glyph: number, match: string | undefined): boolean => {
   if (isBlankGlyph(input.tiles, glyph)) return false;

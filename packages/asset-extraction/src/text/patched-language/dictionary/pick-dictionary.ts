@@ -3,7 +3,8 @@ import type { LanguageConfig } from '../../data/language-data';
 import { kLanguages } from '../../data/language-data';
 import { encodeDictionary } from '../../dialogue-encoder';
 import type { DictionaryInput, DictionaryPick } from './dictionary.type';
-import { findBytes, joinEntries } from './find-bytes';
+import { findBytes } from './find-bytes';
+import { joinEntries } from './join-entries';
 import { scanPointerTable } from './scan-pointer-table';
 import { tableFromBase } from './table-from-base';
 

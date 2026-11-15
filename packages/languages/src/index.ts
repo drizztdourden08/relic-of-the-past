@@ -2,7 +2,7 @@
 export { readLanguageSets } from './assets/read-language-sets';
 export { defaultPauseNames } from './data/pause-names';
 export { MAX_NAME_GLYPHS, ROWS_PER_BOX, ROW_WIDTH_PX, STRUCTURE_MODES, advanceForNewLine, buildGroups, buildVariableIndex, codeInfoFor, compileSets, encodableParams, findHardcoded, glyphIndexOf, isGlyphName, joinLines, layoutPlan, lineMetrics, measureRows, mergeVariableMeta, resolve, resolveInherited, serializeTokens, splitBlocks, splitLines, splitScreens, structuralEntry, validateEntry, variablesFromNameTables, widthOf } from './messages';
-export type { Block, BlockDoc, DecodedLine, DialogueEntry, DialogueLineView, EntryIssue, GlossaryTerm, GlyphMetrics, GlyphSheet, LanguageSet, LayoutOptions, LineAdvance, NameTable, Occurrence, PauseLabelKey, RowFit, SetBakeInput, SetStructure, StructureMode, TextGroup, TextGroupId, TextLimit, TextSlot, Token, Variable, VariableIndex, VariableKind } from './messages';
+export type { Block, BlockDoc, DecodedLine, DialogueEntry, DialogueLineView, EntryIssue, GlossaryTerm, GlyphMetrics, GlyphSheet, LanguageSet, LayoutOptions, LineAdvance, NameTable, Occurrence, PauseLabelKey, RowFit, SetBakeInput, SetStructure, StructureMode, TextGroup, TextGroupId, TextOverrides, TextLimit, TextSlot, Token, Variable, VariableIndex, VariableKind } from './messages';
 export type { ScreenFit } from './messages/layout/types';
 export { breakLine } from './messages/structure';
 export { ENGINE_SAMPLES, NUMBER_KEY, PLAYER_NAME_KEY } from './messages/variables';

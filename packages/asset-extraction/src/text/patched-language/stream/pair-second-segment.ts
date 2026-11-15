@@ -1,16 +1,8 @@
 /* @layer shared-asset-extraction @kind logic */
 import { collectSegments } from './collect-segments';
+import { remainingCounts } from './remaining-counts';
 import { scanSegment } from './scan-segment';
-import { EXPECTED_MESSAGE_COUNTS } from './stream.constants';
-import type { StreamSearch } from './stream.type';
-
-interface SecondSegment {
-  start: number;
-  moved: boolean;
-}
-
-const remainingCounts = (before: number): number[] =>
-  EXPECTED_MESSAGE_COUNTS.map((total) => total - before).filter((count) => count > 0);
+import type { SecondSegment, StreamSearch } from './stream.type';
 
 const pairSecondSegment = (search: StreamSearch, before: number, baseStart: number | null): SecondSegment | null => {
   const counts = remainingCounts(before);
@@ -23,5 +15,4 @@ const pairSecondSegment = (search: StreamSearch, before: number, baseStart: numb
   return found ? { start: found.start, moved: true } : null;
 };
 
-export { pairSecondSegment, remainingCounts };
-export type { SecondSegment };
+export { pairSecondSegment };

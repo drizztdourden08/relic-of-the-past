@@ -1,14 +1,8 @@
 /* @layer shared-asset-extraction @kind logic */
-import type { RomData } from '../../../rom/rom-types';
 import type { DecodedLine } from '../../menu-text/menu-text.type';
-import type { PatchedPartId, PatchedPartReport, PatchedWork } from '../patched-language.type';
+import type { PatchedPartReport, PatchedWork } from '../patched-language.type';
 import { changedLines } from './changed-lines';
-
-interface ScreenTextRead {
-  part: Extract<PatchedPartId, 'menu-text' | 'credits'>;
-  decode: (rom: RomData, base: string) => DecodedLine[];
-  keep: (work: PatchedWork, lines: Record<string, string>) => void;
-}
+import type { ScreenTextRead } from './parts.type';
 
 const baseLines = (read: ScreenTextRead, work: PatchedWork): DecodedLine[] | null => {
   if (!work.baseRom) return null;
@@ -30,4 +24,3 @@ const screenTextPart = (read: ScreenTextRead, work: PatchedWork): PatchedPartRep
 };
 
 export { screenTextPart };
-export type { ScreenTextRead };

@@ -5,7 +5,7 @@ import { glyphPlaceholder } from './glyph-placeholder';
 const alphabetWithGlyphs = (alphabet: readonly string[], glyphs: GlyphMap | undefined): string[] => {
   const out = [...alphabet];
   for (const [token, index] of Object.entries(glyphs ?? {})) out[index] = token;
-  return Array.from(out, (token, index) => token ?? glyphPlaceholder(index));
+  return Array.from({ length: out.length }, (_, index) => out[index] ?? glyphPlaceholder(index));
 };
 
 export { alphabetWithGlyphs };

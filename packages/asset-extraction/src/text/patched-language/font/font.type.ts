@@ -1,5 +1,6 @@
 /* @layer shared-asset-extraction @kind types */
 import type { GlyphMap } from '../../glyph-map';
+import type { LearnedMark } from './accents';
 
 interface FontReference {
   release: string;
@@ -61,7 +62,23 @@ interface GlyphIdentify {
   glyphLimit: number;
 }
 
+interface TileHunt {
+  search: FontTilesSearch;
+  keys: ReadonlyMap<string, string>;
+  tried: Set<number>;
+}
+
+interface GlyphPass {
+  alphabet: string[];
+  glyphs: GlyphMap;
+  changed: number[];
+  unknown: number[];
+  namings: GlyphNaming[];
+  marks: LearnedMark[];
+  matched: number;
+}
+
 export type {
   FontReference, FontTilesFound, FontTilesSearch, FontWidthsFound, FontWidthsSearch, GlyphHow, GlyphIdentify,
-  GlyphNaming, GlyphReading,
+  GlyphNaming, GlyphPass, GlyphReading, TileHunt,
 };

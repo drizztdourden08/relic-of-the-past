@@ -3,7 +3,8 @@ import type { LanguageSet, TextOverrides } from '@rotp/languages';
 import type { GlyphMap } from '@rotp/asset-extraction';
 import type { GlyphNames } from '../../language-editor.type';
 import { renameGlyphTokens } from './rename-glyph-tokens';
-import { renameInRecord, renameInText } from './rename-in-text';
+import { renameInRecord } from './rename-in-record';
+import { renameInText } from './rename-in-text';
 
 const renamedGlyphs = (glyphs: GlyphMap, names: GlyphNames): GlyphMap => {
   const next: GlyphMap = { ...glyphs };

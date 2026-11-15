@@ -1,7 +1,10 @@
 /* @layer shared-asset-extraction @kind logic */
 import { byteStep } from './byte-step';
 import { BANK_BYTES, STEP_ERROR, STEP_FINISH, STEP_MESSAGE, STEP_SWITCH } from './stream.constants';
-import type { SegmentEnd, SegmentRequest, SegmentResult, SegmentScan } from './stream.type';
+import type { SegmentEnd, SegmentRequest, SegmentResult, SegmentScan, StreamLayout } from './stream.type';
+
+const reachedStop = (layout: StreamLayout, total: number): boolean =>
+  layout.stopAfter !== null && total >= layout.stopAfter;
 
 const scanSegment = (scan: SegmentScan, request: SegmentRequest): SegmentResult => {
   const { bytes, layout, budget } = scan;
@@ -20,7 +23,7 @@ const scanSegment = (scan: SegmentScan, request: SegmentRequest): SegmentResult 
       count += 1;
       if (firstEnd < 0) firstEnd = p;
       p += 1;
-      if (layout.stopAfter !== null && before + count >= layout.stopAfter) return done('finish');
+      if (reachedStop(layout, before + count)) return done('finish');
     } else if (step === STEP_FINISH) return done('finish');
     else if (step === STEP_SWITCH) return done('switch');
     else if (step === STEP_ERROR) return done('error');

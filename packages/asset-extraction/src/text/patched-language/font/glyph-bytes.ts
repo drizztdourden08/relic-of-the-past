@@ -1,8 +1,6 @@
 /* @layer shared-asset-extraction @kind logic */
-import { GLYPHS_PER_ROW, TILES_PER_GLYPH_ROW, TILE_BYTES } from './font.constants';
-
-const glyphTopOffset = (glyph: number): number =>
-  (Math.floor(glyph / GLYPHS_PER_ROW) * TILES_PER_GLYPH_ROW + (glyph % GLYPHS_PER_ROW)) * TILE_BYTES;
+import { GLYPHS_PER_ROW, TILE_BYTES } from './font.constants';
+import { glyphTopOffset } from './glyph-top-offset';
 
 const glyphBytes = (tiles: Uint8Array, glyph: number): Uint8Array => {
   const top = glyphTopOffset(glyph);
@@ -13,8 +11,4 @@ const glyphBytes = (tiles: Uint8Array, glyph: number): Uint8Array => {
   return out;
 };
 
-const glyphKey = (tiles: Uint8Array, glyph: number): string => Buffer.from(glyphBytes(tiles, glyph)).toString('hex');
-
-const isBlankGlyph = (tiles: Uint8Array, glyph: number): boolean => glyphBytes(tiles, glyph).every((byte) => byte === 0);
-
-export { glyphBytes, glyphKey, glyphTopOffset, isBlankGlyph };
+export { glyphBytes };

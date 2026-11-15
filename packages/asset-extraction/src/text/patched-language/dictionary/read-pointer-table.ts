@@ -1,8 +1,7 @@
 /* @layer shared-asset-extraction @kind logic */
 import { BANK_BYTES, BANK_OFFSET_MASK, MAX_ENTRY_BYTES, ROM_ADDRESS_BIT } from './dictionary.constants';
 import type { PointerTableRead } from './dictionary.type';
-
-const wordAt = (bytes: Uint8Array, at: number): number => (bytes[at] ?? 0) | ((bytes[at + 1] ?? 0) << 8);
+import { wordAt } from './word-at';
 
 const plausible = (length: number): boolean => length >= 1 && length <= MAX_ENTRY_BYTES;
 
@@ -32,4 +31,4 @@ const readPointerTable = (bytes: Uint8Array, read: PointerTableRead): Uint8Array
   return entries;
 };
 
-export { readPointerTable, wordAt };
+export { readPointerTable };

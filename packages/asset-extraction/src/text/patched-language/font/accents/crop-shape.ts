@@ -1,9 +1,7 @@
 /* @layer shared-asset-extraction @kind logic */
 import type { PixelGrid, Shape } from './accents.type';
 import { cellAt } from './cell-at';
-
-const inkRows = (grid: PixelGrid): number[] =>
-  grid.flatMap((row, index) => (row.some((cell) => cell !== 0) ? [index] : []));
+import { inkRows } from './ink-rows';
 
 const inkCols = (grid: PixelGrid): number[] => {
   const width = grid[0]?.length ?? 0;
@@ -25,4 +23,4 @@ const cropShape = (grid: PixelGrid): Shape | null => {
   return { top, height, width, cells };
 };
 
-export { cropShape, inkRows };
+export { cropShape };

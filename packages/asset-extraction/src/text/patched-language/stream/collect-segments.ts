@@ -1,14 +1,10 @@
 /* @layer shared-asset-extraction @kind logic */
 import { refineStart } from './refine-start';
 import { scanSegment } from './scan-segment';
-import { fewestWanted, segmentMatches } from './segment-matches';
+import { fewestWanted } from './fewest-wanted';
+import { segmentMatches } from './segment-matches';
 import { BANK_BYTES } from './stream.constants';
-import type { SegmentResult, SegmentScan, SegmentWant } from './stream.type';
-
-interface FoundSegment {
-  start: number;
-  count: number;
-}
+import type { FoundSegment, SegmentResult, SegmentScan, SegmentWant } from './stream.type';
 
 const nextStart = (at: number, result: SegmentResult, want: SegmentWant): number => {
   const tooShort = result.end !== want.end || result.count < fewestWanted(want);
@@ -44,4 +40,3 @@ const collectSegments = (scan: SegmentScan, want: SegmentWant, limit: number): F
 };
 
 export { collectSegments };
-export type { FoundSegment };

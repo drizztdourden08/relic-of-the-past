@@ -1,7 +1,8 @@
 /* @layer shared-asset-extraction @kind logic */
 import { linearToSnes, snesToLinear } from '../../../rom/snes-address';
 import { collectSegments } from './collect-segments';
-import { pairSecondSegment, remainingCounts } from './pair-second-segment';
+import { pairSecondSegment } from './pair-second-segment';
+import { remainingCounts } from './remaining-counts';
 import { scanSegment } from './scan-segment';
 import {
   EXPECTED_MESSAGE_COUNTS, MAX_SEGMENT_CANDIDATES, MIN_SEGMENT_MESSAGES, MOVED_FIRST, MOVED_SECOND,

@@ -1,9 +1,8 @@
 /* @layer shared-asset-extraction @kind logic */
+import { byBaseFirst } from './by-base-first';
 import type { FontReference } from './font.type';
-import { glyphKey, isBlankGlyph } from './glyph-bytes';
-
-const byBaseFirst = (references: readonly FontReference[]): FontReference[] =>
-  [...references].sort((left, right) => Number(right.isBase) - Number(left.isBase));
+import { glyphKey } from './glyph-key';
+import { isBlankGlyph } from './is-blank-glyph';
 
 const referenceKeys = (references: readonly FontReference[], glyphLimit: number): Map<string, string> => {
   const keys = new Map<string, string>();
@@ -19,4 +18,4 @@ const referenceKeys = (references: readonly FontReference[], glyphLimit: number)
   return keys;
 };
 
-export { byBaseFirst, referenceKeys };
+export { referenceKeys };
