@@ -19,7 +19,7 @@ const renamedGlyphs = (glyphs: GlyphMap, names: GlyphNames): GlyphMap => {
 
 const renamedText = (text: TextOverrides | undefined, names: GlyphNames): TextOverrides | undefined => {
   if (!text) return text;
-  return Object.fromEntries(Object.entries(text).map(([group, slots]) => [group, renameInRecord(slots ?? {}, names)]));
+  return Object.fromEntries(Object.entries(text).map(([group, slots]) => [group, renameInRecord(slots, names)]));
 };
 
 const withGlyphNames = (set: LanguageSet, names: GlyphNames): LanguageSet => {
