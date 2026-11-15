@@ -1,9 +1,9 @@
 /* @layer renderer-components @kind hook */
 import { useCallback } from 'react';
 import type { GlossaryTerm, SetStructure, TextGroupId, Token } from '@rotp/languages';
-import type { NameEdit } from '../language-editor.type';
+import type { GlyphNames, NameEdit } from '../language-editor.type';
 import {
-  withEntryNote, withEntryTokens, withGlossaryTerm, withManyEntryTokens, withNameValue,
+  withEntryNote, withEntryTokens, withGlossaryTerm, withGlyphNames, withManyEntryTokens, withNameValue,
   withStructure, withTextValue,
   withoutGlossaryTerm,
 } from './language-set-edits';
@@ -54,9 +54,13 @@ const useSetEdits = (params: SetEditsParams) => {
     apply((from) => withTextValue(from, group, key, value));
   }, [apply]);
 
+  const renameGlyphs = useCallback((names: GlyphNames) => {
+    apply((from) => withGlyphNames(from, names));
+  }, [apply]);
+
   return {
     apply, setEntryTokens, setEntryNote, setNameValue, upsertGlossaryTerm, removeGlossaryTerm,
-    setManyEntryTokens, setStructureMode, setTextValue,
+    setManyEntryTokens, setStructureMode, setTextValue, renameGlyphs,
   };
 };
 

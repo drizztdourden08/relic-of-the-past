@@ -30,7 +30,7 @@ const LanguageEditor = (props: LanguageEditorProps) => {
   const variablesTab = useVariablesTab({ dialogue, variables, onRewrite: editor.setManyEntryTokens });
   const { exporting, exportStatus, exportSet } = useSetExport({ id, dirty, saveNow });
   const text = useTextGroups(set, editor.setTextValue);
-  const tabs = useEditorTabs({ dialogueCount: dialogue.length, variableCount: variables.length, groups: text.groups });
+  const tabs = useEditorTabs({ dialogueCount: dialogue.length, variableCount: variables.length, groups: text.groups, glyphs: set?.glyphs });
   const warnings = useMemo(() => Object.values(issues).filter((entry) => entry.length > 0).length, [issues]);
   const actions = useStudioActions({ readOnly, dirty, saving, exporting, onSave: saveNow, onExport: exportSet });
 

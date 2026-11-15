@@ -42,10 +42,18 @@ text and the credits one by one. A report then lists each part as Ok, Recovered 
 or rebuilt) or Failed, with the reason. The set is saved when the dialogue and the font are read; otherwise
 nothing is saved and the report says what went wrong.
 
-Letters the patch adds to the font are kept. When the import cannot tell which letter a new picture is, it
-names it with a placeholder such as `[Glyph4F]` and lists it in the report. The placeholder works like any other letter in
-the editor. Keeping the original release in your ROM library helps the import recognise moved or redrawn
-parts, but it is not required.
+Letters the patch adds to the font are kept. The import compares each new picture with the fonts of the
+releases in your ROM library. A letter with an accent, such as é, ñ or ç, is read as its plain letter plus the
+mark; marks are learned from the release fonts that have them, and a tilde or a missing mark is told by its
+shape. The upside down ¡ and ¿ are found from ! and ?. The report says how each new letter was found.
+
+When the import cannot tell which letter a new picture is, it names it with a placeholder such as `[Glyph4F]`
+and lists it in the report. If more than a quarter of the letters the text uses are placeholders, the report
+says that most letters still need naming. Open the set in the Language Studio and use the **Name the letters**
+tab: it shows each unnamed picture from the set's own font, how many times it is used, and a field for its
+letter. Saving puts the letters into the dialogue, the names and the other texts of the set. Keeping the
+original release in your ROM library helps the import recognise moved or redrawn parts, but it is not
+required.
 
 ### MSU Studio
 
