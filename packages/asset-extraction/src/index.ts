@@ -82,6 +82,8 @@ export { kLanguages } from './text/data/language-data/language-data.constants';
 export type { LanguageConfig } from './text/data/language-data/language-data.type';
 export { alphabetWithGlyphs, glyphPlaceholder } from './text/glyph-map';
 export type { GlyphMap } from './text/glyph-map';
+export { glyphPixelGrid } from './text/patched-language/font/glyph-pixel-grid';
 export type {
-  FontReference, PatchedLanguage, PatchedLanguageInput, PatchedPartId, PatchedPartReport, PatchedPartStatus,
+  FontReference, GlyphHow, GlyphNaming, PatchedLanguage, PatchedLanguageInput, PatchedPartId, PatchedPartReport,
+  PatchedPartStatus,
 } from './text/patched-language';

@@ -35,11 +35,21 @@ interface FontWidthsSearch {
   reference: Uint8Array | null;
 }
 
+type GlyphHow = 'font' | 'accent' | 'shape' | 'flipped';
+
+interface GlyphNaming {
+  glyph: number;
+  token: string;
+  how: GlyphHow;
+  detail: string;
+}
+
 interface GlyphReading {
   alphabet: string[];
   glyphs: GlyphMap;
   changed: number[];
   unknown: number[];
+  namings: GlyphNaming[];
   checked: boolean;
   restyled: boolean;
 }
@@ -52,5 +62,6 @@ interface GlyphIdentify {
 }
 
 export type {
-  FontReference, FontTilesFound, FontTilesSearch, FontWidthsFound, FontWidthsSearch, GlyphIdentify, GlyphReading,
+  FontReference, FontTilesFound, FontTilesSearch, FontWidthsFound, FontWidthsSearch, GlyphHow, GlyphIdentify,
+  GlyphNaming, GlyphReading,
 };

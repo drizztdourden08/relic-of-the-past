@@ -6,4 +6,6 @@ const WIDTH_DETAILS = {
   release: 'The width table was not found; the release widths are used.',
 } as const;
 
-export { WIDTH_DETAILS };
+const UNKNOWN_SHARE_WARNING = 0.25;
+
+export { UNKNOWN_SHARE_WARNING, WIDTH_DETAILS };
