@@ -5,13 +5,11 @@ import { getLanguageSet, getLanguageSetFont } from '@app/storage/languages-store
 
 const assetsBySetId = new Map<string, Promise<SetFontAssets | null>>();
 
-const resolveBase = async (setId: string, base?: string): Promise<string | null> =>
-  base ?? (await getLanguageSet(setId))?.base ?? null;
-
 const read = async (setId: string, base?: string): Promise<SetFontAssets | null> => {
   const font = await getLanguageSetFont(setId);
   if (!font) return null;
-  return setFontAssets(font, await resolveBase(setId, base));
+  const set = await getLanguageSet(setId);
+  return setFontAssets(font, base ?? set?.base ?? null, set?.glyphs);
 };
 
 const loadSetFont = (setId: string, base?: string): Promise<SetFontAssets | null> => {

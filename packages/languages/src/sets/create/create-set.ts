@@ -13,7 +13,7 @@ const createSet = async (files: FileStore, params: CreateSetParams): Promise<Lan
   await assertFreeSetId(files, id);
   const source = await requireSet(files, base);
   return saveWithFont(files, {
-    id, name, base: source.base, origin: 'custom', version: 1,
+    id, name, base: source.base, origin: 'custom', version: 1, ...(source.glyphs ? { glyphs: clone(source.glyphs) } : {}),
     dialogue: clone(source.dialogue), glossary: [], names: emptyNameTable(),
     structure: source.structure,
   }, base);

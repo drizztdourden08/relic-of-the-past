@@ -46,6 +46,7 @@ const compileSet = (set: LanguageSet, font: SetFont): PackedLangEntry => {
     fontData: font.fontData,
     fontWidth: font.fontWidth,
     index: NON_BASE_INDEX,
+    glyphs: set.glyphs,
   });
 
   return { ...packed, code: set.id };

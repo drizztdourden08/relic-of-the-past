@@ -1,4 +1,7 @@
 /* @layer shared-storage @kind types */
+import type { GlyphMap } from '@rotp/asset-extraction';
+import type { TextOverrides } from '../../messages';
+
 type LanguageSetSummary = {
   id: string;
   name: string;
@@ -24,4 +27,12 @@ interface ExtractedPack {
   flags: number;
 }
 
-export type { ExtractedPack, LanguageSetSummary, SetFontBytes };
+interface PatchedPack extends ExtractedPack {
+  name: string;
+  base: string;
+  credits: string;
+  glyphs: GlyphMap;
+  text: TextOverrides;
+}
+
+export type { ExtractedPack, LanguageSetSummary, PatchedPack, SetFontBytes };

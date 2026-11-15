@@ -3,9 +3,7 @@ import { createHash } from 'crypto';
 import type { RomData } from '../rom-types';
 import { createRomData } from './create-rom-data';
 import { SMC_HEADER_BYTES, SWEDISH_DOUBLE_HEADER_LENGTH, ZELDA3_SHA1 } from './rom-loader.constants';
-
-const stripSmcHeader = (bytes: Buffer): Buffer =>
-  (bytes.length & 0xfffff) === SMC_HEADER_BYTES ? bytes.subarray(SMC_HEADER_BYTES) : bytes;
+import { stripSmcHeader } from './strip-smc-header';
 
 const loadRomFromBuffer = (buffer: Buffer, supportMultilanguage = false): RomData => {
   let romBytes = stripSmcHeader(buffer);

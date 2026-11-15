@@ -1,9 +1,10 @@
 /* @layer shared-asset-extraction @kind logic */
 import { kLanguages } from '../data/language-data';
+import type { GlyphMap } from '../glyph-map';
 import type { AlphabetLookup, DictionaryLookup } from './dialogue-encoder.type';
 import { encodeGreedyFromDict } from './encode-greedy-from-dict';
 
-const compressStrings = (strings: string[], lang = 'us'): Uint8Array[] => {
+const compressStrings = (strings: string[], lang = 'us', glyphs?: GlyphMap): Uint8Array[] => {
   const info = kLanguages[lang];
   if (!info) throw new Error(`Unknown language: ${lang}`);
 
@@ -18,6 +19,9 @@ const compressStrings = (strings: string[], lang = 'us'): Uint8Array[] => {
   const a2i: AlphabetLookup = new Map();
   for (const [idx, char] of info.alphabet.entries()) {
     a2i.set(char, idx);
+  }
+  for (const [token, idx] of Object.entries(glyphs ?? {})) {
+    a2i.set(token, idx);
   }
 
   return strings.map(s => {

@@ -1,5 +1,6 @@
 /* @layer shared-asset-extraction @kind types */
 import type { DialogueLine } from '../../sets-types';
+import type { GlyphMap } from '../glyph-map';
 
 interface PackedLangEntry {
   code: string;
@@ -23,6 +24,7 @@ interface PackedEntryParams {
   fontData: Buffer;
   fontWidth: Buffer;
   index: number;
+  glyphs?: GlyphMap;
 }
 
 export type { ExtractedLangEntry, PackedEntryParams, PackedLangEntry };
