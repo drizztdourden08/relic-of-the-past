@@ -21,12 +21,16 @@ interface MarkCut {
   shape: Shape;
   zone: MarkZone;
   clear: boolean;
+  removed: number;
+  inside: number;
+  matched: number;
 }
 
 interface CutInput {
   glyph: PixelGrid;
   base: PixelGrid;
   shift: number;
+  column?: number;
 }
 
 interface LearnedMark {
@@ -56,6 +60,7 @@ interface MarkPick {
 interface LetterCandidate extends MarkGuess {
   letter: string;
   cost: number;
+  matched: number;
 }
 
 interface CandidateInput {

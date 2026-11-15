@@ -1,9 +1,20 @@
 /* @layer shared-asset-extraction @kind logic */
 import { glyphPixelGrid } from '../glyph-pixel-grid';
-import { MARK_NAMES, PLAIN_LETTER } from './accents.constants';
+import { COMMON_LETTERS, MARK_NAMES, PLAIN_LETTER } from './accents.constants';
 import type { ComposeInput, ComposedLetter, LetterCandidate } from './accents.type';
 import { letterCandidate } from './letter-candidate';
 import { composeToken } from './mark-split';
+
+const commonRank = (letter: string): number => {
+  const rank = COMMON_LETTERS.indexOf(letter);
+  return rank < 0 ? COMMON_LETTERS.length : rank;
+};
+
+const beats = (next: LetterCandidate, best: LetterCandidate): boolean => {
+  if (next.cost !== best.cost) return next.cost < best.cost;
+  if (next.matched !== best.matched) return next.matched > best.matched;
+  return commonRank(next.letter) < commonRank(best.letter);
+};
 
 const bestCandidate = (input: ComposeInput): LetterCandidate | null => {
   const target = glyphPixelGrid(input.tiles, input.glyph);
@@ -12,7 +23,7 @@ const bestCandidate = (input: ComposeInput): LetterCandidate | null => {
     if (index === input.glyph || !PLAIN_LETTER.test(letter)) continue;
     const candidate = letterCandidate({ target, base: glyphPixelGrid(input.tiles, index), letter, marks: input.marks });
     if (!candidate || composeToken(candidate.letter, candidate.mark) === null) continue;
-    if (best === null || candidate.cost < best.cost) best = candidate;
+    if (best === null || beats(candidate, best)) best = candidate;
   }
   return best;
 };
