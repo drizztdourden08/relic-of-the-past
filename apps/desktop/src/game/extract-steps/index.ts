@@ -2,5 +2,6 @@
 export { assetsStep } from './assets-step';
 export { languageStep } from './language-step';
 export { menuTextStep } from './menu-text-step';
+export { patchedLanguageStep } from './patched-language-step';
 export { spritesStep } from './sprites-step';
-export type { ExtractInputs, ExtractStepId } from './extract-steps.type';
+export type { ExtractInputs, ExtractStepId, PatchedLanguageOutput, PatchedLanguageStepInput } from './extract-steps.type';

@@ -1,0 +1,17 @@
+/* @layer renderer-components @kind style */
+
+.patched-import {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2xs);
+  min-width: 0;
+  padding-bottom: var(--space-xs);
+}
+
+.patched-import--open {
+  gap: var(--space-xs);
+  padding: var(--space-xs);
+  border: var(--border-width-thin) solid var(--c-border);
+  border-radius: var(--radius-sm);
+  background: var(--c-surface);
+}

@@ -6,6 +6,7 @@ import { useLanguageCreation } from './language-manager/useLanguageCreation';
 import { useLanguageDelete } from './language-manager/useLanguageDelete';
 import { useLanguageExtraction } from './language-manager/useLanguageExtraction';
 import { useLanguageManagerDisplay } from './language-manager/useLanguageManagerDisplay';
+import { useLanguagePatchedImport } from './language-manager/useLanguagePatchedImport';
 import { useLanguageSets } from './language-manager/useLanguageSets';
 import type { LanguageManagerProps } from './LanguageManager.type';
 import { LanguageEditor } from '../../../language-editor';
@@ -13,6 +14,8 @@ import { NO_SET_MESSAGE } from '../../../language-editor/sub-components/studio-f
 import { SetCreateForm } from '../../../language-editor/sub-components/SetCreateForm';
 import { useInstalledKind } from '@app/hooks/useInstalledKind';
 import { InstalledOriginBar, useConfirmUninstall } from '@app/views/InstalledOriginBar';
+import { PatchedImportForm } from '@app/compounds/PatchedImportForm';
+import { PatchedImportReport } from '@app/compounds/PatchedImportReport';
 import { LanguageSetList } from './LanguageSetList';
 
 const LanguageManager = (props: LanguageManagerProps) => {
@@ -20,6 +23,7 @@ const LanguageManager = (props: LanguageManagerProps) => {
   const { languages, loading, selected, setSelected, refresh, refreshThenSelect } = useLanguageSets();
   const { handleUrlImport, handleFileImport } = useLanguageExtraction({ refresh, setSelected });
   const { busy, handleCreate, handleDuplicate } = useLanguageCreation({ refresh, setSelected });
+  const patched = useLanguagePatchedImport({ refresh, setSelected });
   const { pack: installed, packFor } = useInstalledKind('language', selected);
   const { confirmUninstall, uninstallError } = useConfirmUninstall(onDeleteConfirm);
   const { handleDelete, handleUninstalled } = useLanguageDelete({
@@ -45,6 +49,15 @@ const LanguageManager = (props: LanguageManagerProps) => {
               onUrlImport={handleUrlImport}
               onFileImport={handleFileImport}
             />
+          ),
+        },
+        {
+          title: 'Import patched ROM',
+          content: (
+            <>
+              <PatchedImportForm busy={patched.busy} error={patched.error} onImport={patched.handlePatchedImport} />
+              <PatchedImportReport parts={patched.parts} />
+            </>
           ),
         },
         {

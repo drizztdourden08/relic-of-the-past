@@ -10,3 +10,5 @@ export { createLanguageSet } from './create-language-set';
 export { duplicateLanguageSet } from './duplicate-language-set';
 export { getLanguageSetFont } from './get-language-set-font';
 export { exportLanguageSet } from './export-language-set';
+export { importPatchedLanguage } from './import-patched-language';
+export type { PatchedImportRequest, PatchedImportResult } from './patched-import.type';

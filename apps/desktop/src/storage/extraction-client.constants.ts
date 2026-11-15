@@ -6,6 +6,7 @@ const STEP_JOB_OPTIONS: Record<ExtractStepId, Pick<AssetWebWorkerJobOptions, 'vi
   assets: { onDuplicate: 'queue', forwardLog: true },
   language: { onDuplicate: 'parallel' },
   'menu-text': { onDuplicate: 'join', visible: false },
+  'patched-language': { onDuplicate: 'parallel' },
   sprites: { onDuplicate: 'join' },
 };
 
