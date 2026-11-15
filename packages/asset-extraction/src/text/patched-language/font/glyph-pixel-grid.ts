@@ -1,6 +1,6 @@
 /* @layer shared-asset-extraction @kind logic */
 import { decode2bppTile } from '../../../graphics/bitplane-decoder';
-import { GLYPH_ROWS, TILE_BYTES, TILE_SIDE } from './font.constants';
+import { GLYPH_ROWS, LETTER_SHADE, TILE_BYTES, TILE_SIDE } from './font.constants';
 import { glyphBytes } from './glyph-bytes';
 
 const glyphShades = (tiles: Uint8Array, glyph: number): number[][] => {
@@ -15,6 +15,6 @@ const glyphShades = (tiles: Uint8Array, glyph: number): number[][] => {
 };
 
 const glyphPixelGrid = (tiles: Uint8Array, glyph: number): number[][] =>
-  glyphShades(tiles, glyph).map((row) => row.map((shade) => (shade === 0 ? 0 : 1)));
+  glyphShades(tiles, glyph).map((row) => row.map((shade) => (shade === LETTER_SHADE ? 1 : 0)));
 
 export { glyphPixelGrid };
