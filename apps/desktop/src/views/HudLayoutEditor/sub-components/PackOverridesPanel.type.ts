@@ -1,7 +1,7 @@
 /* @layer renderer-components @kind types */
 import type { GlyphPosition } from '@app/hud/custom-glyph-store';
 import type { GlyphPack } from '@rotp/input-mapping';
-import type { GlyphOverrideActions } from './glyph-overrides.type';
+import type { GlyphOverrideActions } from './GlyphPackPicker.type';
 
 interface PackOverridesPanelProps extends GlyphOverrideActions {
   pack: GlyphPack;

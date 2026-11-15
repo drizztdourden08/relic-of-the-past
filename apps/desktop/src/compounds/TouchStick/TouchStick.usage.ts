@@ -13,7 +13,7 @@ import { TouchStick } from '@app/compounds/TouchStick';
 
 const Mounted = (props: ComponentProps<typeof TouchStick>) => <TouchStick {...props} />;
 `,
-  propsHash: '',
+  propsHash: 'c13daa85822af9f3',
 } satisfies ComponentUsage;
 
 export { usage };

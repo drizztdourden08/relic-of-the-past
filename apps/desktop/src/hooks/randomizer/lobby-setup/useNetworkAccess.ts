@@ -2,7 +2,7 @@
 import { useCallback, useEffect, useState } from 'react';
 import { requireHostApi } from '@drizztdourden08/brock-react';
 import type { FirewallStatus } from '@app/ipc';
-import type { NetworkAccess } from './useNetworkAccess.type';
+import type { NetworkAccess } from './use-network-access.type';
 
 const useNetworkAccess = (on: boolean): NetworkAccess => {
   const [status, setStatus] = useState<FirewallStatus>('unknown');

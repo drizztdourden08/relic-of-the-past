@@ -3,7 +3,7 @@ import { PROVIDERS } from '@rotp/hub-contracts';
 import { Stack } from '@drizztdourden08/tessera/primitives';
 import { Gate } from '../../compounds/Gate/Gate';
 import { ProviderButton } from '../../compounds/ProviderButton/ProviderButton';
-import { AgeNotice } from './AgeNotice';
+import { AgeNotice } from './sub-components/AgeNotice';
 import { SIGN_IN_TITLE } from './SignIn.constants';
 import type { SignInProps } from './SignIn.type';
 

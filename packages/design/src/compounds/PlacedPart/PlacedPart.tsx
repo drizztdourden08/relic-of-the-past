@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind component */
 import { Image } from '@drizztdourden08/tessera/primitives';
-import { placedPartStyle } from './placed-part-style';
+import { placedPartStyle } from './behavior/placed-part-style';
 import type { PlacedPartProps } from './PlacedPart.type';
 import './PlacedPart.css';
 

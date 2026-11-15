@@ -55,6 +55,7 @@ const rotpExtension = {
           'apps/desktop/src/compounds/{TouchButton,TouchStick,TouchDpad,TouchZone,TouchGroupFrame,HoldRing}/**/*.{ts,tsx}',
           'apps/desktop/src/views/TouchControls/**/*.{ts,tsx}',
           'apps/desktop/src/views/TouchBindPicker/**/*.{ts,tsx}',
+          'apps/desktop/src/views/TouchLayoutEditor/sub-components/{TouchEditorGrid,TouchEditorHitAreas}/*.tsx',
         ],
         why: 'Each touch control sits where the player placed it, at the size the player chose, measured against the live screen, and the stick follows the thumb: a value per element that no shared class can carry.',
       }, {

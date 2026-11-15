@@ -13,7 +13,7 @@ import { LobbySetup } from '@app/compounds/LobbySetup';
 
 const Mounted = (props: ComponentProps<typeof LobbySetup>) => <LobbySetup {...props} />;
 `,
-  propsHash: 'ae8ed1149ce2df07',
+  propsHash: '57b25244cb06f1ec',
 } satisfies ComponentUsage;
 
 export { usage };

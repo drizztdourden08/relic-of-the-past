@@ -1,2 +1,2 @@
 /* @layer renderer-components @kind barrel */
-export { ROTP_RANDOMIZER_VIEWS } from './Randomizer.views.constants';
+export { ROTP_RANDOMIZER_VIEWS } from './randomizer-views.constants';

@@ -2,7 +2,7 @@
 import { PLACEMENT_SCHEMAS, rotpWorldGame } from '@rotp/randomizer';
 import type { DeliveryAction, Placement } from '@rotp/randomizer';
 import { defineRandomizerGame } from '@drizztdourden08/brock-randomizer';
-import './rotp-randomizer.augment.type';
+import './rotp-randomizer-augment.type';
 import { rotpCatalog } from '../options/rotp-catalog';
 import { ROTP_LABELS, ROTP_MODES } from './rotp-modes.constants';
 import { rotpApplier } from './rotp-applier';

@@ -13,7 +13,7 @@ import { TouchButton } from '@app/compounds/TouchButton';
 
 const Mounted = (props: ComponentProps<typeof TouchButton>) => <TouchButton {...props} />;
 `,
-  propsHash: '',
+  propsHash: '121f671e48906f79',
 } satisfies ComponentUsage;
 
 export { usage };
