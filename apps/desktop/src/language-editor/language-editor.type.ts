@@ -8,10 +8,7 @@ type NameEdit =
   | { group: 'bottles'; key: number; value: string }
   | { group: 'labels'; key: PauseLabelKey; value: string };
 
-type GlyphNames = Readonly<Record<string, string>>;
-
 type LanguageEditorActions = {
-  renameGlyphs: (names: GlyphNames) => void;
   setEntryTokens: (id: number, tokens: Token[]) => void;
   setEntryNote: (id: number, note: string) => void;
   setNameValue: (edit: NameEdit) => void;
@@ -38,7 +35,6 @@ type LanguageEditorState = LanguageEditorActions & {
 
 export type {
   EntryIssueMap,
-  GlyphNames,
   LanguageEditorState,
   NameEdit,
 };

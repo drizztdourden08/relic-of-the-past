@@ -1,11 +1,9 @@
 /* @layer shared-asset-extraction @kind types */
-import type { GlyphMap } from '../../glyph-map';
 import type { LearnedMark } from './accents';
 
 interface FontReference {
   release: string;
   tiles: Uint8Array;
-  widths: Uint8Array | null;
   alphabet: readonly string[];
   isBase: boolean;
 }
@@ -24,18 +22,6 @@ interface FontTilesSearch {
   glyphLimit: number;
 }
 
-interface FontWidthsFound {
-  widths: Uint8Array;
-  source: 'base' | 'moved' | 'release' | 'unchecked';
-}
-
-interface FontWidthsSearch {
-  patched: Uint8Array;
-  at: number;
-  count: number;
-  reference: Uint8Array | null;
-}
-
 type GlyphHow = 'font' | 'accent' | 'shape' | 'flipped';
 
 interface GlyphNaming {
@@ -47,7 +33,6 @@ interface GlyphNaming {
 
 interface GlyphReading {
   alphabet: string[];
-  glyphs: GlyphMap;
   changed: number[];
   unknown: number[];
   namings: GlyphNaming[];
@@ -70,7 +55,6 @@ interface TileHunt {
 
 interface GlyphPass {
   alphabet: string[];
-  glyphs: GlyphMap;
   changed: number[];
   unknown: number[];
   namings: GlyphNaming[];
@@ -79,6 +63,6 @@ interface GlyphPass {
 }
 
 export type {
-  FontReference, FontTilesFound, FontTilesSearch, FontWidthsFound, FontWidthsSearch, GlyphHow, GlyphIdentify,
+  FontReference, FontTilesFound, FontTilesSearch, GlyphHow, GlyphIdentify,
   GlyphNaming, GlyphPass, GlyphReading, TileHunt,
 };

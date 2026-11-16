@@ -1,6 +1,5 @@
 /* @layer renderer-components @kind component */
 import { DialogueTab } from './DialogueTab';
-import { LettersPane } from './LettersPane';
 import { TextPane } from './TextPane';
 import { VariablesPane } from './VariablesPane';
 import type { EditorPanesProps } from './EditorPanes.type';
@@ -25,9 +24,6 @@ const EditorPanes = (props: EditorPanesProps) => {
   }
   if (tab === 'text') {
     return <TextPane text={text} readOnly={readOnly} />;
-  }
-  if (tab === 'letters') {
-    return <LettersPane set={editor.set} readOnly={readOnly} onRename={editor.renameGlyphs} />;
   }
   return null;
 };

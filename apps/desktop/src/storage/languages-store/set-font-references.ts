@@ -1,22 +1,19 @@
 /* @layer renderer-lib @kind logic */
-import { alphabetWithGlyphs, kLanguages } from '@rotp/asset-extraction';
+import { kLanguages } from '@rotp/asset-extraction';
 import type { FontReference } from '@rotp/asset-extraction';
 import type { LanguageSetSummary } from '@rotp/languages';
-import { getLanguageSet } from './get-language-set';
-import { getLanguageSetFont } from './get-language-set-font';
+import { getLanguageRomFont } from './get-language-rom-font';
 import { listLanguageSets } from './list-language-sets';
 
 const referenceOf = async (summary: LanguageSetSummary, base: string): Promise<FontReference | null> => {
-  const config = kLanguages[summary.base];
-  const font = config ? await getLanguageSetFont(summary.id) : null;
+  const config = kLanguages[summary.id];
+  const font = config && summary.origin === 'rom' ? await getLanguageRomFont(summary.id) : null;
   if (!config || !font) return null;
-  const set = await getLanguageSet(summary.id);
   return {
-    release: summary.base,
+    release: summary.id,
     tiles: Uint8Array.from(font.fontData),
-    widths: Uint8Array.from(font.fontWidth),
-    alphabet: alphabetWithGlyphs(config.alphabet, set?.glyphs),
-    isBase: summary.origin === 'rom' && summary.id === base,
+    alphabet: config.alphabet,
+    isBase: summary.id === base,
   };
 };
 

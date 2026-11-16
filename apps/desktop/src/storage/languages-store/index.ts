@@ -8,7 +8,7 @@ export { saveLanguageSet } from './save-language-set';
 export { listLanguageSets } from './list-language-sets';
 export { createLanguageSet } from './create-language-set';
 export { duplicateLanguageSet } from './duplicate-language-set';
-export { getLanguageSetFont } from './get-language-set-font';
+export { getLanguageRomFont } from './get-language-rom-font';
 export { exportLanguageSet } from './export-language-set';
 export { importPatchedLanguage } from './import-patched-language';
 export type { PatchedImportRequest, PatchedImportResult } from './patched-import.type';

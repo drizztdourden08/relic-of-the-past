@@ -11,7 +11,6 @@ const fontReferenceOfRom = (rom: RomData, base: string): FontReference | null =>
   return {
     release: rom.language,
     tiles: new Uint8Array(rom.getBytes(source.tileAddr, FONT_TILE_BYTES)),
-    widths: new Uint8Array(rom.getBytes(source.widthAddr, source.widthCount)),
     alphabet: config.alphabet,
     isBase: rom.language === base,
   };

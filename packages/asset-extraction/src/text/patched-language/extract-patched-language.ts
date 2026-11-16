@@ -6,7 +6,6 @@ import { decodeMenuText } from '../menu-text/decode-stripe-text';
 import { dialoguePart } from './parts/dialogue-part';
 import { dictionaryPart } from './parts/dictionary-part';
 import { fontTilesPart } from './parts/font-tiles-part';
-import { fontWidthsPart } from './parts/font-widths-part';
 import { lettersPart } from './parts/letters-part';
 import { readLetters } from './parts/read-letters';
 import { screenTextPart } from './parts/screen-text-part';
@@ -20,7 +19,7 @@ const startWork = (input: PatchedLanguageInput): PatchedWork => {
   if (!config) throw new Error(`"${base}" has no dialogue layout.`);
   return {
     ...input, base, config, tiles: null, reading: null, letters: [...config.alphabet], dictionary: null, plan: null,
-    texts: null, glyphs: {}, widths: null, menu: {}, credits: {},
+    texts: null, menu: {}, credits: {},
   };
 };
 
@@ -38,7 +37,6 @@ const runParts = (work: PatchedWork): PatchedPartReport[] => {
   const dictionary = runPart('dictionary', dictionaryPart, work);
   const dialogue = runPart('dialogue', dialoguePart, work);
   const letters = runPart('letters', lettersPart, work);
-  const widths = runPart('font-widths', fontWidthsPart, work);
   const menu = runPart('menu-text', (w) => screenTextPart({
     part: 'menu-text', decode: decodeMenuText, keep: (into, lines) => { into.menu = lines; },
   }, w), work);
@@ -46,21 +44,18 @@ const runParts = (work: PatchedWork): PatchedPartReport[] => {
     part: 'credits', decode: (rom) => [...decodeCredits(rom), ...decodeEndingCaptions(rom)],
     keep: (into, lines) => { into.credits = lines; },
   }, w), work);
-  return [dialogue, tiles, widths, letters, dictionary, menu, credits];
+  return [dialogue, tiles, letters, dictionary, menu, credits];
 };
 
 const extractPatchedLanguage = (input: PatchedLanguageInput): PatchedLanguage => {
   const work = startWork(input);
   const parts = runParts(work);
   const success = parts.every((part) => part.status !== 'failed' || !FATAL_PARTS.includes(part.part));
-  const done = success && work.texts && work.tiles && work.widths;
+  const done = success && work.texts && work.tiles;
   return {
     success: Boolean(done),
     parts,
     texts: done ? work.texts ?? [] : [],
-    fontData: done ? work.tiles ?? new Uint8Array() : new Uint8Array(),
-    fontWidth: done ? work.widths ?? new Uint8Array() : new Uint8Array(),
-    glyphs: work.glyphs,
     menu: work.menu,
     credits: work.credits,
   };

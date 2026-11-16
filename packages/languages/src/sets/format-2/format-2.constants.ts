@@ -1,7 +1,7 @@
 /* @layer shared-storage @kind constants */
 import type { SetStructure } from '../../messages';
 
-const SET_FORMAT = 2;
+const SET_FORMAT = 3;
 
 const DEFAULT_STRUCTURE: SetStructure = 'continuous';
 

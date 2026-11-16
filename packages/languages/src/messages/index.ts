@@ -9,6 +9,7 @@ export { serializeTokens } from './tokens/serialize-tokens';
 export { validateEntry } from './validate/validate-entry';
 export type { EntryIssue } from './validate/validate.type';
 export { compileSets } from './compile/compile-sets';
+export { extraLetterSlots } from './compile/extra-letter-slots';
 export type { SetBakeInput } from './compile/compile.type';
 export { ROW_WIDTH_PX, ROWS_PER_BOX } from './layout/types';
 export type { GlyphMetrics, GlyphSheet, RowFit } from './layout/types';

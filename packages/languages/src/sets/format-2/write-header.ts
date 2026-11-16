@@ -8,7 +8,7 @@ import { SET_FORMAT } from './format-2.constants';
 import { readHeader } from './read-header';
 
 const writeHeader = async (files: FileStore, set: LanguageSet): Promise<void> => {
-  const { id, name, base, origin, version, author, basedOn, credits, glyphs } = set;
+  const { id, name, base, origin, version, author, basedOn, credits } = set;
   const previous = await readHeader(files, id);
   await writeJson(files, setMetaPath(id), {
     ...previous,
@@ -20,7 +20,6 @@ const writeHeader = async (files: FileStore, set: LanguageSet): Promise<void> =>
     author,
     ...(basedOn ? { basedOn } : {}),
     ...(credits ? { credits } : {}),
-    ...(glyphs ? { glyphs } : {}),
     format: SET_FORMAT,
     structure: asStructure(set.structure),
   });

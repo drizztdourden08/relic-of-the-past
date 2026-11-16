@@ -1,5 +1,4 @@
 /* @layer shared-game @kind types */
-import type { GlyphMap } from '@rotp/asset-extraction';
 import type { BasedOn } from '@rotp/game-data';
 import type { TextOverrides } from '../text/types';
 import type { Variable } from '../variables/types';
@@ -40,7 +39,6 @@ type LanguageSetMeta = {
   author?: string;
   basedOn?: BasedOn;
   credits?: string;
-  glyphs?: GlyphMap;
 };
 
 type SetStructure = 'continuous' | 'block' | 'off';

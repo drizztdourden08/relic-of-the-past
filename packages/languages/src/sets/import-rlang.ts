@@ -3,7 +3,7 @@ import type { FileStore } from '@drizztdourden08/brock-core';
 import { isZip, unzip } from '@rotp/roms';
 import type { ArchiveEntry } from '@rotp/roms';
 import { writeJson } from '@drizztdourden08/brock-core';
-import { getSet, getSetFont } from './read';
+import { getSet } from './read';
 import { ACCEPTED_PAYLOAD, REQUIRED_PAYLOAD, RLANG_HEADER_ENTRY, isSetHeader } from './rlang-format';
 import type { SetHeader } from './rlang-format';
 import { SET_FILES } from '@rotp/hub-contracts';
@@ -59,7 +59,7 @@ const payloadOf = (entries: ArchiveEntry[]): ArchiveEntry[] => {
 };
 
 const assertOpens = async (files: FileStore, id: string): Promise<void> => {
-  if ((await getSet(files, id)) && (await getSetFont(files, id))) return;
+  if (await getSet(files, id)) return;
   await remove(files, id);
   throw new Error('This language set was unpacked but could not be opened, so it was not kept.');
 };

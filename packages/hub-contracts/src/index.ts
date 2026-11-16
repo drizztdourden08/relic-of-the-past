@@ -8,5 +8,5 @@ export { DELUXE_TRACK_THRESHOLD, MAX_CROSSFADE_SECONDS, MSUL_MANIFEST_NAME, SOUN
 export { portFor } from './ports/port-for';
 export { ARCHIPELAGO_DEFAULT_PORT } from './ports/ports.constants';
 export * from './public-api/sanctuary';
-export { SET_FILES } from './sets/paths/paths.constants';
+export { ROM_FONT_FILES, SET_FILES } from './sets/paths/paths.constants';
 export * from './public-api/store';

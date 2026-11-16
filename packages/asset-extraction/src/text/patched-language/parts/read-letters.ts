@@ -1,6 +1,5 @@
 /* @layer shared-asset-extraction @kind logic */
-import { glyphPlaceholder } from '../../glyph-map';
-import { identifyGlyphs } from '../font';
+import { identifyGlyphs, UNKNOWN_LETTER } from '../font';
 import type { PatchedWork } from '../patched-language.type';
 
 const readLetters = (work: PatchedWork): string[] => {
@@ -12,7 +11,7 @@ const readLetters = (work: PatchedWork): string[] => {
   work.reading = reading;
   const alphabet = reading?.alphabet ?? config.alphabet;
   const length = Math.max(alphabet.length, config.commandStart);
-  return Array.from({ length }, (_, glyph) => alphabet[glyph] ?? glyphPlaceholder(glyph));
+  return Array.from({ length }, (_, glyph) => alphabet[glyph] ?? UNKNOWN_LETTER);
 };
 
 export { readLetters };

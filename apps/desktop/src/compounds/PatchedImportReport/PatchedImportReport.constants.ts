@@ -11,7 +11,6 @@ const PART_STATUSES = defineStatuses({
 const PART_LABELS: Readonly<Record<PatchedPartId, string>> = {
   dialogue: 'Dialogue',
   'font-tiles': 'Font pictures',
-  'font-widths': 'Letter widths',
   letters: 'New letters',
   dictionary: 'Dictionary',
   'menu-text': 'Menu and caption text',

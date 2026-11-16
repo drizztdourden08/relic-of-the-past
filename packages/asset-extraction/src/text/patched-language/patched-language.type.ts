@@ -1,12 +1,11 @@
 /* @layer shared-asset-extraction @kind types */
 import type { RomData, RomLanguage } from '../../rom/rom-types';
 import type { LanguageConfig } from '../data/language-data';
-import type { GlyphMap } from '../glyph-map';
 import type { DictionaryPick } from './dictionary';
 import type { FontReference, GlyphReading } from './font';
 import type { StreamPlan } from './stream';
 
-type PatchedPartId = 'font-tiles' | 'font-widths' | 'letters' | 'dictionary' | 'dialogue' | 'menu-text' | 'credits';
+type PatchedPartId = 'font-tiles' | 'letters' | 'dictionary' | 'dialogue' | 'menu-text' | 'credits';
 
 type PatchedPartStatus = 'ok' | 'recovered' | 'failed';
 
@@ -31,8 +30,6 @@ interface PatchedWork extends PatchedLanguageInput {
   dictionary: DictionaryPick | null;
   plan: StreamPlan | null;
   texts: string[] | null;
-  glyphs: GlyphMap;
-  widths: Uint8Array | null;
   menu: Record<string, string>;
   credits: Record<string, string>;
 }
@@ -41,9 +38,6 @@ interface PatchedLanguage {
   success: boolean;
   parts: PatchedPartReport[];
   texts: string[];
-  fontData: Uint8Array;
-  fontWidth: Uint8Array;
-  glyphs: GlyphMap;
   menu: Record<string, string>;
   credits: Record<string, string>;
 }
