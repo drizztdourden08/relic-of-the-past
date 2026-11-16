@@ -19,7 +19,7 @@ const compileRomAssets = async (romFile: string): Promise<CompileResult> => {
 
   try {
     const rom = loadRom(localRomPath);
-    const extraLanguages = await loadCompiledLanguages();
+    const extraLanguages = await loadCompiledLanguages(rom);
     logToRenderer('core', 'info', `ROM loaded: ${rom.language} (${rom.description})`);
     if (extraLanguages.length > 0) {
       logToRenderer('app', 'info', `Baking ${extraLanguages.length} language set(s): ${extraLanguages.map((e) => e.code).join(', ')}`);
