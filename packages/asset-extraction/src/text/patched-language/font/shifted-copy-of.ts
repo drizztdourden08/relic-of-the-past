@@ -11,7 +11,7 @@ const shiftedCopyOf = (tiles: Uint8Array, alphabet: readonly string[], glyph: nu
     const token = alphabet[home];
     if (token === undefined || isBlankGlyph(tiles, home)) continue;
     const shape = cropShape(glyphPixelGrid(tiles, home));
-    if (shape && shape.top === target.top && shapeDistance(shape, target) === 0) return token;
+    if (shape?.top === target.top && shapeDistance(shape, target) === 0) return token;
   }
   return null;
 };
