@@ -38,4 +38,4 @@ interface ExtractInputs {
   sprites: { defs: SpriteDef[] };
 }
 
-export type { ExtractData, ExtractInputs, ExtractStepId, PatchedLanguageOutput, PatchedLanguageStepInput };
+export type { ExtractData, ExtractInputs, ExtractStepId, PatchedLanguageOutput };

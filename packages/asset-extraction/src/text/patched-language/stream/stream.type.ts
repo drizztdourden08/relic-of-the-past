@@ -64,6 +64,6 @@ interface StreamSearch {
 }
 
 export type {
-  FoundSegment, ScanBudget, SecondSegment, SegmentEnd, SegmentRequest, SegmentResult, SegmentScan, SegmentWant, StreamLayout, StreamPlan,
+  FoundSegment, SecondSegment, SegmentEnd, SegmentRequest, SegmentResult, SegmentScan, SegmentWant, StreamLayout, StreamPlan,
   StreamSearch,
 };

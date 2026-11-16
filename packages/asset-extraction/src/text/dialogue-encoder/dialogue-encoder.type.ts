@@ -24,5 +24,5 @@ interface EncodedToken {
 }
 
 export type {
-  AlphabetLookup, CommandInfo, CommandParamMap, DictionaryLookup, EncodeLookups, EncodedToken, GlyphBytesLookup,
+  AlphabetLookup, CommandInfo, CommandParamMap, DictionaryLookup, EncodeLookups, EncodedToken,
 };

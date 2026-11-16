@@ -23,4 +23,4 @@ interface DictionaryInput {
   config: LanguageConfig;
 }
 
-export type { DictionaryInput, DictionaryPick, DictionarySource, PointerTableRead };
+export type { DictionaryInput, DictionaryPick, PointerTableRead };

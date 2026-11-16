@@ -11,4 +11,3 @@ export { duplicateLanguageSet } from './duplicate-language-set';
 export { getLanguageRomFont } from './get-language-rom-font';
 export { exportLanguageSet } from './export-language-set';
 export { importPatchedLanguage } from './import-patched-language';
-export type { PatchedImportRequest, PatchedImportResult } from './patched-import.type';

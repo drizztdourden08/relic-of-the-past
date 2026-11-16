@@ -84,5 +84,5 @@ type ComposedLetter = Omit<GlyphNaming, 'glyph'>;
 
 export type {
   CandidateInput, ComposeInput, ComposedLetter, CutInput, FlipInput, LearnedMark, LetterCandidate, MarkCut, MarkGuess,
-  MarkPick, MarkSplit, MarkZone, PixelGrid, Shape, ShapeOffset,
+  MarkPick, MarkSplit, PixelGrid, Shape, ShapeOffset,
 };
