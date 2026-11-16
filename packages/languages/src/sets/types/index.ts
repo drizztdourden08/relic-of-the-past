@@ -1,2 +1,2 @@
 /* @layer shared-storage @kind barrel */
-export type { ExtractedPack, LanguageSetSummary, PatchedPack, SetFontBytes } from './types.type';
+export type { ExtractedPack, ExtractedPayload, LanguageSetSummary, PatchedPack, RomFontBytes } from './types.type';

@@ -1,6 +1,6 @@
 /* @layer bridge-wasm @kind types */
 import type {
-  FontReference, GlyphMap, PatchedPartReport, RomLanguage, SpriteDef,
+  FontReference, PatchedPartReport, RomLanguage, SpriteDef,
 } from '@rotp/asset-extraction';
 import type { SetBakeInput } from '@rotp/languages';
 import type { SupplementRoms } from '../../storage/asset-files';
@@ -22,13 +22,10 @@ interface PatchedLanguageOutput {
   parts: PatchedPartReport[];
   description: string;
   dialogue: string;
-  fontData: Uint8Array;
-  fontWidth: Uint8Array;
   glyphCount: number;
   lineCount: number;
   encoder: 'org' | 'new';
   flags: number;
-  glyphs: GlyphMap;
   menu: Record<string, string>;
   credits: Record<string, string>;
 }

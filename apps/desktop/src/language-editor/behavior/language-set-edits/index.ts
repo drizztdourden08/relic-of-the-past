@@ -2,7 +2,6 @@
 export { withEntryNote } from './with-entry-note';
 export { withEntryTokens } from './with-entry-tokens';
 export { withGlossaryTerm } from './with-glossary-term';
-export { withGlyphNames } from './with-glyph-names';
 export { withManyEntryTokens } from './with-many-entry-tokens';
 export { withNameValue } from './with-name-value';
 export { withStructure } from './with-structure';

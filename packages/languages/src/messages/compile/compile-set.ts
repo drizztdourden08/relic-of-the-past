@@ -6,6 +6,7 @@ import { buildVariableIndex } from '../variables/variable-index';
 import { resolve } from '../variables/resolve';
 import { variablesFromNameTables } from '../variables/variables-from-name-tables';
 import { serializeTokens } from '../tokens/serialize-tokens';
+import { extraLetterSlots } from './extra-letter-slots';
 import type { SetFont } from './compile.type';
 import { BAKE, EXPECTED_LINE_COUNT, NON_BASE_INDEX } from './compile.constants';
 
@@ -46,7 +47,7 @@ const compileSet = (set: LanguageSet, font: SetFont): PackedLangEntry => {
     fontData: font.fontData,
     fontWidth: font.fontWidth,
     index: NON_BASE_INDEX,
-    glyphs: set.glyphs,
+    glyphs: extraLetterSlots(set.base, font.fontWidth.length),
   });
 
   return { ...packed, code: set.id };

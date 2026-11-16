@@ -18,7 +18,7 @@ const useDialogueView = (params: DialogueViewParams) => {
 
   const dialogue = set?.dialogue ?? NO_ENTRIES;
   const search = useTranslationSearch(set, query);
-  const { metrics, sheet } = useSetFont(id, set?.base, set?.glyphs);
+  const { metrics, sheet } = useSetFont(set?.base);
   const layout = useEntryLayout(metrics, terms);
   const { view, draft, selected, open, close, setMode } = useEntryOpen(dialogue, setEntryTokens);
 

@@ -1,6 +1,6 @@
 /* @layer shared-storage @kind barrel */
-export { list, getSet, getSetFont } from './read';
-export { saveSet, writeSetFont, remove } from './write';
+export { list, getSet, getRomFont } from './read';
+export { saveSet, writeRomFont, remove } from './write';
 export { createSet, duplicateSet } from './create';
 export { writePack } from './extract';
 export { writePatchedPack } from './extract-patched';
@@ -14,4 +14,4 @@ export { RLANG_EXTENSION } from './rlang-format';
 export type { RlangImportOptions, RlangImportResult } from './import-rlang';
 export { listPacks, readPack as getLanguage } from './pack';
 export type { CreateSetParams } from './create';
-export type { ExtractedPack, LanguageSetSummary, PatchedPack, SetFontBytes } from './types';
+export type { ExtractedPack, LanguageSetSummary, PatchedPack, RomFontBytes } from './types';

@@ -63,6 +63,8 @@ export { SUPPLEMENT_IDS } from './sources/source-ids';
 export type { AssetSourceId } from './sources/source-ids.type';
 export type { PackedLangEntry } from './text/build-language-entry/build-language-entry.type';
 export { buildPackedEntry } from './text/build-language-entry/build-packed-entry';
+export { buildLangData } from './text/build-language-entry/build-lang-data';
+export { dialogueFlags } from './text/build-language-entry/dialogue-flags';
 export { extractLangEntry } from './text/build-language-entry/extract-lang-entry';
 export { kFontTypes } from './text/data/font-data';
 export { GLYPH_RAMP } from './text/data/glyph-ramp';
@@ -80,7 +82,6 @@ export { dialogueTexts } from './text/parse-dialogue-text/dialogue-texts';
 export { parseDialogueText } from './text/parse-dialogue-text/parse-dialogue-text';
 export { kLanguages } from './text/data/language-data/language-data.constants';
 export type { LanguageConfig } from './text/data/language-data/language-data.type';
-export { alphabetWithGlyphs, glyphPlaceholder } from './text/glyph-map';
 export type { GlyphMap } from './text/glyph-map';
 export { glyphPixelGrid } from './text/patched-language/font/glyph-pixel-grid';
 export type {

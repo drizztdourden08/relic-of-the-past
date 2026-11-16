@@ -13,15 +13,9 @@ interface DialogueLine {
   content: string;
 }
 
-interface LanguageFont {
-  tiles: number[];
-  glyphCount: number;
-}
-
 interface LanguagePack {
   meta: LanguageMeta;
   lines: DialogueLine[];
-  font: LanguageFont;
 }
 
 interface LanguageSummary {

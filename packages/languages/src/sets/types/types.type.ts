@@ -1,5 +1,4 @@
 /* @layer shared-storage @kind types */
-import type { GlyphMap } from '@rotp/asset-extraction';
 import type { TextOverrides } from '../../messages';
 
 type LanguageSetSummary = {
@@ -10,29 +9,28 @@ type LanguageSetSummary = {
   lineCount: number;
 };
 
-type SetFontBytes = {
+type RomFontBytes = {
   fontData: Uint8Array;
   fontWidth: Uint8Array;
 };
 
-interface ExtractedPack {
+interface ExtractedPayload {
   code: string;
   description: string;
   dialogue: string;
-  fontData: Uint8Array;
-  fontWidth: Uint8Array;
   glyphCount: number;
   lineCount: number;
   encoder: 'org' | 'new';
   flags: number;
 }
 
-interface PatchedPack extends ExtractedPack {
+interface ExtractedPack extends ExtractedPayload, RomFontBytes {}
+
+interface PatchedPack extends ExtractedPayload {
   name: string;
   base: string;
   credits: string;
-  glyphs: GlyphMap;
   text: TextOverrides;
 }
 
-export type { ExtractedPack, LanguageSetSummary, PatchedPack, SetFontBytes };
+export type { ExtractedPack, ExtractedPayload, LanguageSetSummary, PatchedPack, RomFontBytes };

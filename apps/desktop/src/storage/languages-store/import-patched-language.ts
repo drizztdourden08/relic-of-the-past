@@ -26,9 +26,9 @@ const runImport = async (request: PatchedImportRequest, report: ImportReport): P
     step: 'patched-language', title: 'Reading a patched ROM', subject: id, romBytes, input,
   });
   if (!found.success) return { success: false, error: FAILED_PATCHED_IMPORT, parts: found.parts };
-  const { description, dialogue, fontData, fontWidth, glyphCount, lineCount, encoder, flags, glyphs } = found;
+  const { description, dialogue, glyphCount, lineCount, encoder, flags } = found;
   await languages.writePatchedPack(platformFiles(), {
-    code: id, description, dialogue, fontData, fontWidth, glyphCount, lineCount, encoder, flags, glyphs,
+    code: id, description, dialogue, glyphCount, lineCount, encoder, flags,
     name: request.name.trim(), base: request.base, credits: request.credits.trim(),
     text: { menu: found.menu, credits: found.credits },
   });
