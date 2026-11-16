@@ -1,11 +1,13 @@
 /* @layer bridge-wasm @kind logic */
 import { wasmGetDialogFont, wasmGetDialogPalette } from '../../bridge/dialog';
+import { dialogFontGeneration } from '../../session-dialogue/letter-bank';
 import type { GlyphAtlas } from './glyph-atlas.type';
 import { BODY_ENTRY, CACHE_LIMIT, SHEET_TILES, WIDTH_TABLE } from './glyph-atlas.constants';
 import { glyphAtlasCache } from './glyph-atlas-cache';
 import { buildAtlas } from './build-atlas';
 
-const atlasKey = (ptr: number, size: number, palette: number[]): string => `${ptr}:${size}:${palette.join(',')}`;
+const atlasKey = (ptr: number, size: number, palette: number[]): string =>
+  `${ptr}:${size}:${dialogFontGeneration()}:${palette.join(',')}`;
 
 const getGlyphAtlas = (body?: number): GlyphAtlas | null => {
   const sheet = wasmGetDialogFont(SHEET_TILES);

@@ -1,5 +1,6 @@
 /* @layer bridge-wasm @kind logic */
-import { extraSlotOfToken } from '@rotp/game-data';
+import { usesNewFormat } from '@rotp/asset-extraction';
+import { extraSlotOfToken, letterEscapeBytes, letterOfToken } from '@rotp/game-data';
 import { HIGHLIGHT_KIND } from '../../receipt-text/highlight-markup';
 import { extraGlyphBytes } from './extra-glyph-bytes';
 import { highlightBytes } from './highlight-bytes';
@@ -9,7 +10,9 @@ const controlBytesOf = (ch: string, code: string): number[] | undefined => {
   const kind = HIGHLIGHT_KIND.get(ch);
   if (kind !== undefined) return highlightBytes(kind, code);
   const slot = extraSlotOfToken(ch);
-  return slot === undefined ? undefined : extraGlyphBytes(slot, code);
+  if (slot !== undefined) return extraGlyphBytes(slot, code);
+  const letter = letterOfToken(ch);
+  return letter === undefined ? undefined : letterEscapeBytes(letter, usesNewFormat(code));
 };
 
 const splitControls = (text: string, code: string): ControlSplit => {

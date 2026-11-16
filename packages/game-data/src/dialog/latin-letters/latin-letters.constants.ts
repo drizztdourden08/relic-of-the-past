@@ -1,4 +1,6 @@
 /* @layer shared-game @kind constants */
+import type { OverlayId } from './latin-letters.type';
+
 const LATIN_RANGES: readonly (readonly [number, number])[] = [
   [0x00c0, 0x024f],
   [0x1e00, 0x1eff],
@@ -16,7 +18,10 @@ const MARK_OF_COMBINING: ReadonlyMap<number, string> = new Map([
   [0x032e, 'breveBelow'], [0x0330, 'tildeBelow'], [0x0331, 'macronBelow'],
 ]);
 
-const OVERLAY_MARKS: ReadonlySet<string> = new Set(['horn', 'apostropheRight']);
+const OVERLAY_OF_MARK: ReadonlyMap<string, OverlayId> = new Map([
+  ['horn', 'horn'],
+  ['apostropheRight', 'apostropheRight'],
+]);
 const APOSTROPHE_CARON_BASES: ReadonlySet<string> = new Set(['d', 't', 'l', 'L']);
 const COMMA_CEDILLA_BASES: ReadonlySet<string> = new Set(['G', 'k', 'K', 'l', 'L', 'n', 'N', 'r', 'R']);
 const TURNED_COMMA_BASES: ReadonlySet<string> = new Set(['g']);
@@ -31,5 +36,5 @@ const QUESTION = '?';
 
 export {
   APOSTROPHE_CARON_BASES, COMMA_CEDILLA_BASES, IPA_LETTERS, LATIN_RANGES, MARK_OF_COMBINING, MAX_DEPTH,
-  MAX_SQUASH, MIN_SQUASHED_BODY, OVERLAY_MARKS, QUESTION, SIDE_HOSTS, SIDE_TONES, TITTLE_BASES, TURNED_COMMA_BASES,
+  MAX_SQUASH, MIN_SQUASHED_BODY, OVERLAY_OF_MARK, QUESTION, SIDE_HOSTS, SIDE_TONES, TITTLE_BASES, TURNED_COMMA_BASES,
 };

@@ -3,6 +3,7 @@ interface ActiveDialogue {
   code: string;
   dictPacked: Uint8Array;
   lineChunks: Uint8Array[];
+  fontSheet: Uint8Array;
   fontWidths: Uint8Array;
 }
 

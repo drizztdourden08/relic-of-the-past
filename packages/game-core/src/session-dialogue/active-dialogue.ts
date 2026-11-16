@@ -41,10 +41,10 @@ const readActiveDialogue = (mod: EmscriptenModule): ActiveDialogue | null => {
   if (langData === undefined || fontPacked === undefined) return null;
 
   const [dictPacked, dialoguePacked] = unpackPackedBytes(langData);
-  const fontWidths = unpackPackedBytes(fontPacked)[1];
-  if (dictPacked === undefined || dialoguePacked === undefined || fontWidths === undefined) return null;
+  const [fontSheet, fontWidths] = unpackPackedBytes(fontPacked);
+  if (dictPacked === undefined || dialoguePacked === undefined || fontSheet === undefined || fontWidths === undefined) return null;
 
-  return { code, dictPacked, lineChunks: unpackPackedBytes(dialoguePacked), fontWidths };
+  return { code, dictPacked, lineChunks: unpackPackedBytes(dialoguePacked), fontSheet, fontWidths };
 };
 
 export { readActiveDialogue };

@@ -46,6 +46,8 @@ static int g_count;
 static uint16 g_slot_letter[kGlyphSlots];
 static uint32 g_slot_used[kGlyphSlots];
 static uint32 g_clock;
+// The first slot the host's own text map leaves unused; no letter goes below it.
+static int g_first_slot = kGlyphSlots;
 // Raised whenever a slot's picture changes, so the host knows its copy of the font is stale.
 static uint32 g_generation;
 // A digest of the bank last loaded, so an identical reload keeps every slot's letter.
@@ -82,7 +84,8 @@ static int SlotOf(int letter) {
 // screen still shows. -1 when every free slot is on screen.
 static int PickSlot(void) {
   int best = -1;
-  for (int slot = DialogFont_FirstFreeSlot(); slot < kGlyphSlots; slot++) {
+  int first = DialogFont_FirstFreeSlot();
+  for (int slot = first > g_first_slot ? first : g_first_slot; slot < kGlyphSlots; slot++) {
     if (DialogFont_FixedSlot((uint8)slot) || DialogMirror_ShowsGlyph((uint8)slot)) continue;
     if (g_slot_letter[slot] == 0) return slot;
     if (best < 0 || g_slot_used[slot] < g_slot_used[best]) best = slot;
@@ -137,13 +140,16 @@ uint8 *WasmLetterBankTable(void) {
   return g_bank;
 }
 
-// Take |count| letters from the table. Returns the letters taken, or 0 when refused (a count past
-// the bank, or an entry whose width is not 1-8 or whose fallback is not a font glyph). Ungated, as
-// the extra glyphs' load is: the bank only changes what an escape draws, and only while the gate is
-// up. A bank that differs from the one loaded drops every slot's letter.
+// Take |count| letters from the table; no letter goes below |first_slot|, the first slot the host's
+// text map leaves unused. Returns the letters taken, or 0 when refused (a count past the bank, or an
+// entry whose width is not 1-8 or whose fallback is not a font glyph). Ungated, as the extra glyphs'
+// load is: the bank only changes what an escape draws, and only while the gate is up. A bank that
+// differs from the one loaded drops every slot's letter.
 EMSCRIPTEN_KEEPALIVE
-int WasmLoadLetterBank(int count) {
-  if (count <= 0 || count > kMaxLetters) return 0;
+int WasmLoadLetterBank(int count, int first_slot) {
+  if (count <= 0 || count > kMaxLetters || first_slot < 0) return 0;
+  if (first_slot != g_first_slot) g_digest = 0;
+  g_first_slot = first_slot;
   for (int i = 0; i < count; i++) {
     uint8 width = g_bank[i * kLetterBytes], fallback = g_bank[i * kLetterBytes + 1];
     if (width == 0 || width > 8 || fallback >= kGlyphSlots) return 0;

@@ -16,7 +16,7 @@ const useDialogContent = (frame: DialogFrame, look: DialogBoxSettings): DialogCo
   const { glyphsFor } = useButtonGlyphs();
 
   const atlas = useMemo(() => (frame.active ? getGlyphAtlas() : null), [frame.active, frame.messageId, frame.generation]);
-  const alphabet = useMemo(() => (frame.active ? activeAlphabet() : []), [frame.active]);
+  const alphabet = useMemo(() => (frame.active ? activeAlphabet() : []), [frame.active, frame.messageId, frame.generation]);
   const highlight = useHighlightLook({ frame, primary: look.highlightPrimary, secondary: look.highlightSecondary });
   const prompts = look.buttonPrompts
     ? promptsFor(frame, look.prompts).map((p) => ({ glyphs: glyphsFor(p.buttons), label: p.label, hold: p.hold }))

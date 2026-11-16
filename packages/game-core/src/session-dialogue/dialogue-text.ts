@@ -1,6 +1,6 @@
 /* @layer bridge-wasm @kind logic */
 import { isHighlightMarker } from '../receipt-text/highlight-markup';
-import { alphabetChars } from '@rotp/game-data';
+import { alphabetChars, letterTokenOf } from '@rotp/game-data';
 import type { DialogueCharset } from '@rotp/game-data';
 import type { Resolver } from './dialogue-text.type';
 import {
@@ -9,10 +9,13 @@ import {
 
 const resolverOf = (charset: DialogueCharset): Resolver => ({
   drawn: alphabetChars(charset.alphabet),
-  tokens: new Map(charset.extras.flatMap((extra) => {
-    const drawn = charset.alphabet[extra.slot];
-    return drawn === undefined ? [] : [[extra.char, drawn] as const];
-  })),
+  tokens: new Map([
+    ...charset.extras.flatMap((extra) => {
+      const drawn = charset.alphabet[extra.slot];
+      return drawn === undefined ? [] : [[extra.char, drawn] as const];
+    }),
+    ...(charset.letters ?? []).map((letter) => [letter.char, letterTokenOf(letter.index)] as const),
+  ]),
 });
 
 const baseFormOf = (ch: string): string => ch.normalize('NFKD').replace(COMBINING, '');
@@ -44,7 +47,7 @@ const resolveChar = (ch: string, resolver: Resolver, depth: number): string => {
 const toDialogueText = (text: string, charset: DialogueCharset): string => {
   const resolver = resolverOf(charset);
   let out = '';
-  for (const ch of text) out += resolveChar(ch, resolver, 0);
+  for (const ch of text.normalize('NFC')) out += resolveChar(ch, resolver, 0);
   return out.replace(/ {2,}/g, ' ').trim();
 };
 
