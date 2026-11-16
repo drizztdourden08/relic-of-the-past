@@ -25,6 +25,7 @@ const allOff = {
   cancelBirdTravel: false,
   dimFlashes: false,
   disableTelepathy: false,
+  extendedLetters: false,
   cameraLockToViewport: false,
   perGroupVolume: false,
   musicVolume: 100,
