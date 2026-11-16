@@ -6,6 +6,7 @@ const FEATURES2_FLAGS = {
   hostMenu: 1 << 27,
   modernControls: 1 << 28,
   allowDiving: 1 << 29,
+  extendedLetters: 1 << 30,
 } as const;
 
 const BUG_FIX_WORD_FEATURES2 = 2;

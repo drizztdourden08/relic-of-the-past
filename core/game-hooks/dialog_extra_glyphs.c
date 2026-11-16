@@ -18,6 +18,10 @@
 // step over any parameter. Only session lines carry the escape (session_dialogue.c), a baked line
 // never does, and with the gate down it decodes exactly as before. A slot nothing was loaded into
 // draws the font's question mark, so a stale line can never draw a blank slot or read past a width.
+//
+// The letter bank (dialog_letter_bank.c) borrows the same copy for its letters: it asks for one
+// (DialogFont_Copy) even with no entries here, writes letters into the free slots this table leaves,
+// and the copy stands in while either gate is up.
 
 enum {
   kSheetBytes = 256 * 16,
@@ -48,12 +52,17 @@ static bool ExtraGlyphGate(void) {
   return (enhanced_features3 & kFeatures3_ReceiptMessages) != 0;
 }
 
+static bool CopyWanted(void) {
+  return ExtraGlyphGate() || DialogLetterBank_Wanted();
+}
+
 static void DropCopy(void) {
   if (g_patched != NULL && g_zenv.dialogue_font_blk.ptr == g_patched) g_zenv.dialogue_font_blk = g_baked;
   free(g_patched);
   g_patched = NULL;
   g_built_count = 0;
   memset(g_loaded, 0, sizeof(g_loaded));
+  DialogLetterBank_Forget();
 }
 
 // Put the copy in or take it out to match the gate. A font the copy was not built from means the
@@ -65,10 +74,14 @@ static void SyncFont(void) {
     DropCopy();
     return;
   }
-  if (ExtraGlyphGate() && current != g_patched)
+  if (CopyWanted() && current != g_patched)
     g_zenv.dialogue_font_blk = (MemBlk){g_patched, kBlobBytes};
-  else if (!ExtraGlyphGate() && current == g_patched)
+  else if (!CopyWanted() && current == g_patched)
     g_zenv.dialogue_font_blk = g_baked;
+}
+
+static bool FontFits(MemBlk sheet, MemBlk widths) {
+  return sheet.ptr != NULL && sheet.size == kSheetBytes && widths.ptr != NULL && widths.size <= kGlyphSlots;
 }
 
 static bool EntriesFit(const uint8 *table, int count, size_t baked_widths) {
@@ -112,8 +125,7 @@ int WasmLoadExtraGlyphs(const uint8 *table, int count) {
   if (table == NULL || count <= 0 || count > kMaxEntries) return 0;
   MemBlk baked = (g_patched != NULL && g_zenv.dialogue_font_blk.ptr == g_patched) ? g_baked : g_zenv.dialogue_font_blk;
   MemBlk sheet = FindIndexInMemblk(baked, 0), widths = FindIndexInMemblk(baked, 1);
-  if (sheet.ptr == NULL || sheet.size != kSheetBytes || widths.ptr == NULL || widths.size > kGlyphSlots) return 0;
-  if (!EntriesFit(table, count, widths.size)) return 0;
+  if (!FontFits(sheet, widths) || !EntriesFit(table, count, widths.size)) return 0;
   size_t bytes = (size_t)count * kEntryBytes;
   if (g_patched != NULL && baked.ptr == g_baked.ptr && count == g_built_count && !memcmp(table, g_built, bytes)) {
     SyncFont();
@@ -137,8 +149,48 @@ void WasmClearExtraGlyphs(void) {
   DropCopy();
 }
 
+// The copy the letter bank writes into, built with no entries of its own when the table above has
+// none, and put in. Returns the copy's tile sheet, or NULL when the font is not one a copy can be made
+// from or no gate wants the copy in.
+uint8 *DialogFont_Copy(void) {
+  SyncFont();
+  if (g_patched == NULL) {
+    MemBlk baked = g_zenv.dialogue_font_blk;
+    MemBlk sheet = FindIndexInMemblk(baked, 0), widths = FindIndexInMemblk(baked, 1);
+    if (!FontFits(sheet, widths)) return NULL;
+    uint8 *blob = BuildCopy(sheet, widths, g_built, 0);
+    if (blob == NULL) return NULL;
+    g_baked = baked;
+    g_patched = blob;
+    SyncFont();
+  }
+  return g_zenv.dialogue_font_blk.ptr == g_patched ? g_patched + 2 : NULL;
+}
+
+// The first slot past the language's own glyphs: slots from here up are free for drawn glyphs.
+int DialogFont_FirstFreeSlot(void) {
+  MemBlk baked = (g_patched != NULL) ? g_baked : g_zenv.dialogue_font_blk;
+  return (int)FindIndexInMemblk(baked, 1).size;
+}
+
+// True for a slot the table above drew a glyph into.
+bool DialogFont_FixedSlot(uint8 slot) {
+  return slot < kGlyphSlots && g_loaded[slot] != 0;
+}
+
+// Write one glyph (width, then its top and bottom tiles) into |slot| of the copy.
+void DialogFont_WriteGlyph(uint8 slot, const uint8 *entry) {
+  if (g_patched == NULL || slot >= kGlyphSlots) return;
+  uint8 *tiles = g_patched + 2, *width_table = tiles + kSheetBytes;
+  int top = (slot & 0x70) * 2 + (slot & 0xf);
+  memcpy(tiles + top * kTileBytes, entry + 1, kTileBytes);
+  memcpy(tiles + (top + 16) * kTileBytes, entry + 1 + kTileBytes, kTileBytes);
+  width_table[slot] = entry[0];
+}
+
 uint32 GameHook_DialogExtraGlyphDecode(uint8 a, const uint8 *src) {
   SyncFont();
+  { uint32 letter = DialogLetterBank_Decode(a, src); if (letter) return letter; }
   if (!ExtraGlyphGate()) return 0;
   if ((g_zenv.dialogue_flags & 1) == 0) {
     if (a != kUsEscape) return 0;

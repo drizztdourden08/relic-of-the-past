@@ -40,6 +40,7 @@ const buildFeatureWords = (s: GameSettings): { features1: number; features2: num
   if (modernControlsWanted(s)) f2 |= FEATURES2_FLAGS.modernControls;
   if (hostMenuWanted(s)) f2 |= FEATURES2_FLAGS.hostMenu;
   if (s.allowDiving || s.extraDungeon) f2 |= FEATURES2_FLAGS.allowDiving;
+  if (effective.has('extendedLetters')) f2 |= FEATURES2_FLAGS.extendedLetters;
   return { features1, features2: f2 };
 };
 

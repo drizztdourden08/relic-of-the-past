@@ -54,6 +54,20 @@ void GameHook_DialogGlyphDrawn(void);
 // Text_DecodeCmd asks this second: the letter an extra-glyph escape draws (dialog_extra_glyphs.c), or 0
 // for any other byte and whenever the gate is down.
 uint32 GameHook_DialogExtraGlyphDecode(uint8 a, const uint8 *src);
+// The font copy dialog_extra_glyphs.c keeps, shared with the letter bank: the copy's tile sheet (built
+// and put in on demand, NULL when it cannot stand in), the first slot past the language's own glyphs,
+// whether a slot holds a fixed extra glyph, and a write of one [width, top tile, bottom tile] glyph.
+uint8 *DialogFont_Copy(void);
+int DialogFont_FirstFreeSlot(void);
+bool DialogFont_FixedSlot(uint8 slot);
+void DialogFont_WriteGlyph(uint8 slot, const uint8 *entry);
+// The letter bank (dialog_letter_bank.c): the letter a letter escape draws, or 0 for any other byte;
+// whether the bank wants the font copy in; and the copy's slots forgotten when the copy goes.
+uint32 DialogLetterBank_Decode(uint8 a, const uint8 *src);
+bool DialogLetterBank_Wanted(void);
+void DialogLetterBank_Forget(void);
+// True while a cell on the mirror's rows shows |glyph|, so its slot must keep its picture.
+bool DialogMirror_ShowsGlyph(uint8 glyph);
 // ZeldaDrawPpuFrame brackets its draw with these.
 void GameHook_DialogHighlightDrawBegin(void);
 void GameHook_DialogHighlightDrawEnd(void);

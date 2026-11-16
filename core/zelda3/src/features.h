@@ -132,6 +132,10 @@ enum {
   // While under, sprites cannot touch the player at all: no damage, no recoil, no shove. That is
   // what makes the second cartridge's water room crossable the way it was designed.
   kFeatures2_AllowDiving        = 1u << 29,
+  // Letters the dialogue font lacks (every accented Latin letter) are drawn by the host from the
+  // font's own letters and written into free slots as a line shows them (core/game-hooks/
+  // dialog_letter_bank.c). Down, each one draws its plain fallback letter, so Vanilla Safe strips it.
+  kFeatures2_ExtendedLetters    = 1u << 30,
 };
 
 // Enum values for kRam_Features3 — cheats and other C-side hook divergences. Unlike kFeatures0 (opt-in

@@ -365,6 +365,24 @@ const GAMEPLAY_FEATURES: FeatureDef[] = [
     live: true,
   },
   {
+    id: 'extendedLetters',
+    label: 'Every accented letter',
+    description:
+      'Letters the dialogue font lacks, every accented Latin letter among them, are drawn from the font\'s own letters and written into free font slots as a line shows them. Off, each draws its plain letter.',
+    userMessage:
+      'Dialog shows every accented letter a translation or a name uses, drawn in the game\'s own font. Off shows the plain letter instead.',
+    group: 'Dialog',
+    kind: 'features0-bit',
+    origin: 'relic',
+    flag: 'kFeatures2_ExtendedLetters',
+    word: 2,
+    bit: 1073741824,
+    default: true,
+    requires: [],
+    affectsVanillaParity: true,
+    live: true,
+  },
+  {
     id: 'prefillFileName',
     label: 'Prefill file name',
     description: 'A new file opens its naming screen named Link, with the character strip parked on End.',

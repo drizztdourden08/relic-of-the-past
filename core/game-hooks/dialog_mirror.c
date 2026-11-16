@@ -119,6 +119,13 @@ void GameHook_DialogGlyph(uint8 c, uint8 line, uint8 x, uint8 w) {
   g_mirror.rows[line][g_mirror.count[line]++] = (DialogCell){c, x, marked};
 }
 
+bool DialogMirror_ShowsGlyph(uint8 glyph) {
+  for (int r = 0; r < kDialogRows; r++)
+    for (int i = 0; i < g_mirror.count[r]; i++)
+      if (g_mirror.rows[r][i].glyph == glyph) return true;
+  return false;
+}
+
 void GameHook_DialogScrolled(void) {
   DialogHighlight_Scrolled();
   if (!DialogMirror_Recording()) return;
