@@ -22,30 +22,43 @@ const dialogueIndexOf = (dialogueMap: Uint8Array, code: string): number => {
   return 0;
 };
 
-const readActiveDialogue = (mod: EmscriptenModule): ActiveDialogue | null => {
-  let dat: Uint8Array;
+const readAssetFile = (mod: EmscriptenModule): Uint8Array | null => {
   try {
-    dat = mod.FS.readFile('/zelda3_assets.dat');
+    return mod.FS.readFile('/zelda3_assets.dat');
   } catch {
     return null;
   }
-  const dialogueAsset = findDatAsset(dat, 'kDialogue');
-  const mapAsset = findDatAsset(dat, 'kDialogueMap');
-  const fontAsset = findDatAsset(dat, 'kDialogueFont');
-  if (dialogueAsset === undefined || mapAsset === undefined || fontAsset === undefined) return null;
+};
 
-  const code = activeLanguageCode(mod);
-  const index = dialogueIndexOf(mapAsset, code);
+const languageParts = (
+  dialogueAsset: Uint8Array,
+  fontAsset: Uint8Array,
+  index: number,
+): Omit<ActiveDialogue, 'code'> | null => {
   const langData = unpackPackedBytes(dialogueAsset)[index];
   const fontPacked = unpackPackedBytes(fontAsset)[index];
   if (langData === undefined || fontPacked === undefined) return null;
 
   const [dictPacked, dialoguePacked, lettersPacked] = unpackPackedBytes(langData);
   const [fontSheet, fontWidths] = unpackPackedBytes(fontPacked);
-  if (dictPacked === undefined || dialoguePacked === undefined || fontSheet === undefined || fontWidths === undefined) return null;
+  if (dictPacked === undefined || dialoguePacked === undefined) return null;
+  if (fontSheet === undefined || fontWidths === undefined) return null;
 
   const bakedLetters = decodeLetterList(lettersPacked);
-  return { code, dictPacked, lineChunks: unpackPackedBytes(dialoguePacked), fontSheet, fontWidths, bakedLetters };
+  return { dictPacked, lineChunks: unpackPackedBytes(dialoguePacked), fontSheet, fontWidths, bakedLetters };
+};
+
+const readActiveDialogue = (mod: EmscriptenModule): ActiveDialogue | null => {
+  const dat = readAssetFile(mod);
+  if (dat === null) return null;
+  const dialogueAsset = findDatAsset(dat, 'kDialogue');
+  const mapAsset = findDatAsset(dat, 'kDialogueMap');
+  const fontAsset = findDatAsset(dat, 'kDialogueFont');
+  if (dialogueAsset === undefined || mapAsset === undefined || fontAsset === undefined) return null;
+
+  const code = activeLanguageCode(mod);
+  const parts = languageParts(dialogueAsset, fontAsset, dialogueIndexOf(mapAsset, code));
+  return parts === null ? null : { code, ...parts };
 };
 
 export { readActiveDialogue };

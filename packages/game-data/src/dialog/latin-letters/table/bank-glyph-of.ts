@@ -1,12 +1,10 @@
 /* @layer shared-game @kind logic */
 import { GLYPH_SLOTS } from '../../dialogue-charset/dialogue-charset.constants';
 import { extraGlyphTiles } from '../../extra-glyph-tiles';
-import { EXTRA_GLYPHS } from '../../extra-glyphs.constants';
 import { composeLetter } from '../compose/compose-letter';
 import { QUESTION } from '../latin-letters.constants';
 import type { LetterFont, LetterGlyph } from '../latin-letters.type';
-
-const SYMBOL_OF = new Map(EXTRA_GLYPHS.map((glyph) => [glyph.char, glyph]));
+import { SYMBOL_OF } from './letter-table.constants';
 
 const questionGlyph = (font: LetterFont): number => {
   const glyph = font.alphabet.indexOf(QUESTION);

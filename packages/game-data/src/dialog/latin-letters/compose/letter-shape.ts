@@ -2,6 +2,7 @@
 import { GLYPH_SLOTS } from '../../dialogue-charset/dialogue-charset.constants';
 import { MAX_DEPTH, TITTLE_BASES } from '../latin-letters.constants';
 import type { LetterFont, LetterRecipe, LetterShape } from '../latin-letters.type';
+import type { MarksRecipe } from './compose.type';
 import { drawnMask } from '../mask/drawn-mask';
 import { glyphMask } from '../mask/glyph-mask';
 import { MAX_WIDTH } from '../mask/mask.constants';
@@ -11,8 +12,6 @@ import { applyOverlay } from './apply-overlay';
 import { letterRecipe } from './letter-recipe';
 import { markLetter } from './mark-letter';
 import { markSteps } from './mark-steps';
-
-type MarksRecipe = Extract<LetterRecipe, { kind: 'marks' }>;
 
 const fontShape = (char: string, font: LetterFont): LetterShape | undefined => {
   const glyph = font.alphabet.indexOf(char);

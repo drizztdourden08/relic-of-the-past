@@ -12,7 +12,7 @@ import { useEntryOpen } from './useEntryOpen';
 import { useSetFont } from './useSetFont';
 
 const useDialogueView = (params: DialogueViewParams) => {
-  const { id, set, issues, variables, terms, setEntryTokens } = params;
+  const { set, issues, variables, terms, setEntryTokens } = params;
   const [query, setQuery] = useState('');
   const [filter, setFilter] = useState<EntryFilter>('all');
 

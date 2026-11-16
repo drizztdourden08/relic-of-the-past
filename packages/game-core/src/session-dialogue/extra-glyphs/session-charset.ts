@@ -16,7 +16,7 @@ const sessionCharset = (
 ): DialogueCharset => {
   const slots = extraGlyphSlots(alphabet, widths.length, source && usedChars(source.texts));
   const extras = loadExtraGlyphs(mod, slots) ? slots : [];
-  const letters = source ? sessionLetters(mod, alphabet, widths, extras, source) : [];
+  const letters = source ? sessionLetters({ mod, alphabet, widths, extras, source }) : [];
   return dialogueCharsetOf(alphabet, widths, extras, letters);
 };
 
