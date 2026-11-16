@@ -1,12 +1,12 @@
 /* @layer shared-game @kind logic */
 import type { PackedLangEntry } from '@rotp/asset-extraction';
 import { buildPackedEntry, kLanguages } from '@rotp/asset-extraction';
+import { bakedLetterTable } from '@rotp/game-data';
 import type { LanguageSet } from '../types';
 import { buildVariableIndex } from '../variables/variable-index';
 import { resolve } from '../variables/resolve';
 import { variablesFromNameTables } from '../variables/variables-from-name-tables';
 import { serializeTokens } from '../tokens/serialize-tokens';
-import { extraLetterSlots } from './extra-letter-slots';
 import type { SetFont } from './compile.type';
 import { BAKE, EXPECTED_LINE_COUNT, NON_BASE_INDEX } from './compile.constants';
 
@@ -41,13 +41,15 @@ const compileSet = (set: LanguageSet, font: SetFont): PackedLangEntry => {
   const texts = orderedDialogue(set)
     .map((entry) => serializeTokens(resolve(entry.tokens, vars, BAKE)));
 
+  const table = bakedLetterTable(texts, set.base);
   const packed = buildPackedEntry({
     code: set.base,
-    texts,
+    texts: table.texts,
     fontData: font.fontData,
     fontWidth: font.fontWidth,
     index: NON_BASE_INDEX,
-    glyphs: extraLetterSlots(set.base, font.fontWidth.length),
+    glyphs: table.glyphs,
+    letters: table.letters,
   });
 
   return { ...packed, code: set.id };

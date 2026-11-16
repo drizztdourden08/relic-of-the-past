@@ -29,7 +29,7 @@ const encodeCommand = (a: string, a2i: AlphabetLookup, info: LanguageConfig): En
 };
 
 const encodeGreedyFromDict = (s: string, i: number, lookups: EncodeLookups): EncodedToken => {
-  const { rev, a2i, info } = lookups;
+  const { rev, a2i, glyphBytes, info } = lookups;
   const a = s.slice(i);
 
   const first = a.charAt(0);
@@ -45,10 +45,12 @@ const encodeGreedyFromDict = (s: string, i: number, lookups: EncodeLookups): Enc
   if (first === '[') return encodeCommand(a, a2i, info);
 
   const idx = a2i.get(first);
-  if (idx === undefined) {
+  if (idx !== undefined) return { bytes: [idx], consumed: 1 };
+  const escape = glyphBytes.get(first);
+  if (escape === undefined) {
     throw new Error(`Character '${first}' not found in alphabet for language ${info.id}`);
   }
-  return { bytes: [idx], consumed: 1 };
+  return { bytes: [...escape], consumed: 1 };
 };
 
 export { encodeGreedyFromDict };

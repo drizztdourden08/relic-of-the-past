@@ -20,15 +20,13 @@ const compressStrings = (strings: string[], lang = 'us', glyphs?: GlyphMap): Uin
   for (const [idx, char] of info.alphabet.entries()) {
     a2i.set(char, idx);
   }
-  for (const [token, idx] of Object.entries(glyphs ?? {})) {
-    a2i.set(token, idx);
-  }
+  const glyphBytes = new Map(Object.entries(glyphs ?? {}));
 
   return strings.map(s => {
     const r: number[] = [];
     let i = 0;
     while (i < s.length) {
-      const { bytes, consumed } = encodeGreedyFromDict(s, i, { rev, a2i, info });
+      const { bytes, consumed } = encodeGreedyFromDict(s, i, { rev, a2i, glyphBytes, info });
       r.push(...bytes);
       i += consumed;
     }

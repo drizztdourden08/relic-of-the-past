@@ -1,10 +1,14 @@
 /* @layer shared-game @kind logic */
 import { BUILT_LETTERS } from '../built-letters.constants';
+import { DRAWN_CAPITALS_EXT_B } from '../drawn-capitals-ext-b.constants';
 import { DRAWN_LETTERS } from '../drawn-letters.constants';
+import { DRAWN_SMALL_EXT_B } from '../drawn-small-ext-b.constants';
 import { MARK_OF_COMBINING } from '../latin-letters.constants';
 import type { BuiltOp, LetterRecipe, LetterTransform } from '../latin-letters.type';
 
-const DRAWN_OF = new Map(DRAWN_LETTERS.map((letter) => [letter.char, letter]));
+const DRAWN_OF = new Map(
+  [...DRAWN_LETTERS, ...DRAWN_CAPITALS_EXT_B, ...DRAWN_SMALL_EXT_B].map((letter) => [letter.char, letter]),
+);
 const BUILT_OF = new Map(BUILT_LETTERS.map(([char, base, op]) => [char, { base, op }]));
 
 const isTransform = (op: BuiltOp): op is LetterTransform => op === 'mirror' || op === 'turn';

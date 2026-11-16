@@ -1,4 +1,4 @@
 /* @layer shared-asset-extraction @kind types */
-type GlyphMap = Record<string, number>;
+type GlyphMap = Readonly<Record<string, readonly number[]>>;
 
 export type { GlyphMap };

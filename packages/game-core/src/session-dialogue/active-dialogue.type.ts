@@ -5,6 +5,7 @@ interface ActiveDialogue {
   lineChunks: Uint8Array[];
   fontSheet: Uint8Array;
   fontWidths: Uint8Array;
+  bakedLetters: string[];
 }
 
 export type { ActiveDialogue };

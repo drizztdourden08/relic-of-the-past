@@ -1,6 +1,6 @@
 /* @layer bridge-wasm @kind logic */
 import { isHighlightMarker } from '../receipt-text/highlight-markup';
-import { alphabetChars, letterTokenOf } from '@rotp/game-data';
+import { alphabetChars, letterText, letterTokenOf } from '@rotp/game-data';
 import type { DialogueCharset } from '@rotp/game-data';
 import type { Resolver } from './dialogue-text.type';
 import {
@@ -47,7 +47,7 @@ const resolveChar = (ch: string, resolver: Resolver, depth: number): string => {
 const toDialogueText = (text: string, charset: DialogueCharset): string => {
   const resolver = resolverOf(charset);
   let out = '';
-  for (const ch of text.normalize('NFC')) out += resolveChar(ch, resolver, 0);
+  for (const ch of letterText(text)) out += resolveChar(ch, resolver, 0);
   return out.replace(/ {2,}/g, ' ').trim();
 };
 

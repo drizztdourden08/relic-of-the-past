@@ -18,7 +18,7 @@ export { clearQuiverIcon } from '../../quiver-icon/clear-quiver-icon';
 export { QUIVER_ICON_MEMFS_PATH } from '../../quiver-icon/quiver-icon.constants';
 export { HIGHLIGHT_END, HIGHLIGHT_PRIMARY, HIGHLIGHT_SECONDARY, stripHighlight } from '../../receipt-text/highlight-markup';
 export { isHighlightMarker } from '../../receipt-text/highlight-markup/is-highlight-marker';
-export { receiptLineCandidates } from '../../receipt-text/receipt-line.type';
+export { receiptLineCandidates, receiptLineTexts } from '../../receipt-text/receipt-line.type';
 export type { ChoiceReceiptLine, ReceiptLine } from '../../receipt-text/receipt-line.type';
 export { isChoiceLine } from '../../receipt-text/receipt-line.type/is-choice-line';
 export type { PageReceiptLine, PlainReceiptLine } from '../../receipt-text/receipt-line.type/receipt-line.type';
