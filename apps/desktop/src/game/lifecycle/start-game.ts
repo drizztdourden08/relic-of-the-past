@@ -1,6 +1,6 @@
 /* @layer bridge-wasm @kind logic */
 import { log } from '../../log-bus';
-import { reassertHostGates, getGameState, setModule, setProfileId, setState, exposeDebugHandles } from '@rotp/game-core';
+import { reassertHostGates, getGameState, loadBakedLetters, setModule, setProfileId, setState, exposeDebugHandles } from '@rotp/game-core';
 import { bootGameModule } from './boot-game-module';
 import { readProfileSram } from './read-profile-sram';
 import { rotpCore } from './rotp-core';
@@ -20,6 +20,7 @@ const startGame = async (canvas: HTMLCanvasElement, assetData: Uint8Array, confi
     const module = await bootGameModule(canvas, assetData, configIni, sramData);
     if (!module) return;
     setModule(module);
+    loadBakedLetters(module);
     setProfileId(profileId ?? null);
     exposeDebugHandles(module);
     setState({ status: 'running', error: null });

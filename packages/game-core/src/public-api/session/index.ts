@@ -18,6 +18,7 @@ export { ARRIVAL_SLOTS, releaseSlot, takeSlot } from '../../session-dialogue/arr
 export { toDialogueText } from '../../session-dialogue/dialogue-text';
 export { sessionCharset } from '../../session-dialogue/extra-glyphs';
 export { compressMarkedStrings } from '../../session-dialogue/highlight-bytes';
+export { loadBakedLetters } from '../../session-dialogue/letter-bank';
 export { baseChunksOf } from '../../session-dialogue/session-dialogue/base-chunks-of';
 export { clearSessionDialogue } from '../../session-dialogue/session-dialogue/clear-session-dialogue';
 export { encodeLines } from '../../session-dialogue/session-dialogue/encode-lines';

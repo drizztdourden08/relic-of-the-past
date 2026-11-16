@@ -83,6 +83,7 @@ export { parseDialogueText } from './text/parse-dialogue-text/parse-dialogue-tex
 export { kLanguages } from './text/data/language-data/language-data.constants';
 export type { LanguageConfig } from './text/data/language-data/language-data.type';
 export type { GlyphMap } from './text/glyph-map';
+export { decodeLetterList } from './text/letter-list';
 export { glyphPixelGrid } from './text/patched-language/font/glyph-pixel-grid';
 export type {
   FontReference, GlyphHow, GlyphNaming, PatchedLanguage, PatchedLanguageInput, PatchedPartId, PatchedPartReport,

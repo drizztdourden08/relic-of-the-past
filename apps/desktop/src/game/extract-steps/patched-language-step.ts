@@ -2,14 +2,15 @@
 import { buildLangData, dialogueFlags, kFontTypes, kLanguages } from '@rotp/asset-extraction';
 import type { PatchedLanguage, PatchedPartReport } from '@rotp/asset-extraction';
 import { extractPatchedLanguage, loadPatchedRomFromBuffer } from '@rotp/asset-extraction/buffer';
-import { extraLetterSlots } from '@rotp/languages';
+import { bakedLetterTable } from '@rotp/game-data';
 import { defineStep } from './define-step';
 import type { PatchedLanguageOutput } from './extract-steps.type';
 import { libraryReferences } from './library-references';
 
 const encodeCheck = (found: PatchedLanguage, base: string): { flags: number; failure: PatchedPartReport | null } => {
   try {
-    buildLangData(found.texts, base, extraLetterSlots(base, kFontTypes[base]?.widthCount ?? 0));
+    const table = bakedLetterTable(found.texts, base);
+    buildLangData(table.texts, base, table.glyphs, table.letters);
     return { flags: dialogueFlags(base, 1), failure: null };
   } catch (err) {
     const detail = `The text reads but cannot be written back: ${err instanceof Error ? err.message : String(err)}`;

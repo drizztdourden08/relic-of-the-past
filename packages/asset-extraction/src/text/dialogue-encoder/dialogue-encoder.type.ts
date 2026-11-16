@@ -9,9 +9,12 @@ type DictionaryLookup = Map<string, Map<string, number>>;
 
 type AlphabetLookup = Map<string, number>;
 
+type GlyphBytesLookup = ReadonlyMap<string, readonly number[]>;
+
 type EncodeLookups = {
   rev: DictionaryLookup;
   a2i: AlphabetLookup;
+  glyphBytes: GlyphBytesLookup;
   info: LanguageConfig;
 };
 
@@ -20,4 +23,6 @@ interface EncodedToken {
   consumed: number;
 }
 
-export type { AlphabetLookup, CommandInfo, CommandParamMap, DictionaryLookup, EncodeLookups, EncodedToken };
+export type {
+  AlphabetLookup, CommandInfo, CommandParamMap, DictionaryLookup, EncodeLookups, EncodedToken, GlyphBytesLookup,
+};

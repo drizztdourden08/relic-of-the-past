@@ -1,7 +1,7 @@
 /* @layer bridge-wasm @kind logic */
 import { kLanguages, packPackedBytes, usesNewFormat } from '@rotp/asset-extraction';
 import { log } from '../../../log-bus';
-import { getModule, readActiveDialogue, receiptLineCandidates, sessionCharset, baseChunksOf, encodeLines, prepareLine, SESSION_FILE, sessionPool } from '@rotp/game-core';
+import { getModule, readActiveDialogue, receiptLineTexts, sessionCharset, baseChunksOf, encodeLines, prepareLine, SESSION_FILE, sessionPool } from '@rotp/game-core';
 
 const compose = (): boolean => {
   const mod = getModule();
@@ -26,8 +26,9 @@ const compose = (): boolean => {
   try {
     const charset = sessionCharset(mod, config.alphabet, dialogue.fontWidths, {
       sheet: dialogue.fontSheet,
-      texts: pool.flatMap((line) => [...receiptLineCandidates(line)]),
+      texts: pool.flatMap((line) => [...receiptLineTexts(line)]),
       eu: usesNewFormat(dialogue.code),
+      baked: dialogue.bakedLetters,
     });
     const prepared = pool.map((line) => prepareLine(line, charset));
     const blob = packPackedBytes([

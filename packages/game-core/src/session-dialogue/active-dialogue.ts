@@ -1,5 +1,5 @@
 /* @layer bridge-wasm @kind logic */
-import { findDatAsset, unpackPackedBytes } from '@rotp/asset-extraction';
+import { decodeLetterList, findDatAsset, unpackPackedBytes } from '@rotp/asset-extraction';
 import type { EmscriptenModule } from '../types';
 import type { ActiveDialogue } from './active-dialogue.type';
 
@@ -40,11 +40,12 @@ const readActiveDialogue = (mod: EmscriptenModule): ActiveDialogue | null => {
   const fontPacked = unpackPackedBytes(fontAsset)[index];
   if (langData === undefined || fontPacked === undefined) return null;
 
-  const [dictPacked, dialoguePacked] = unpackPackedBytes(langData);
+  const [dictPacked, dialoguePacked, lettersPacked] = unpackPackedBytes(langData);
   const [fontSheet, fontWidths] = unpackPackedBytes(fontPacked);
   if (dictPacked === undefined || dialoguePacked === undefined || fontSheet === undefined || fontWidths === undefined) return null;
 
-  return { code, dictPacked, lineChunks: unpackPackedBytes(dialoguePacked), fontSheet, fontWidths };
+  const bakedLetters = decodeLetterList(lettersPacked);
+  return { code, dictPacked, lineChunks: unpackPackedBytes(dialoguePacked), fontSheet, fontWidths, bakedLetters };
 };
 
 export { readActiveDialogue };

@@ -1,12 +1,12 @@
 /* @layer shared-game @kind logic */
-import { isLatinLetter } from '../compose/latin-letter-set';
+import { isBankChar } from './is-bank-char';
 
 const tableLettersOf = (texts: readonly string[], known: ReadonlySet<string>, capacity: number): string[] => {
   const letters = new Set<string>();
   for (const text of texts) {
     for (const ch of text.normalize('NFC')) {
       if (letters.size >= capacity) return [...letters];
-      if (!known.has(ch) && isLatinLetter(ch)) letters.add(ch);
+      if (!known.has(ch) && isBankChar(ch)) letters.add(ch);
     }
   }
   return [...letters];

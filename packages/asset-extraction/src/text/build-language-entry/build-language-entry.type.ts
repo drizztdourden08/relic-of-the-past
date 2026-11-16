@@ -25,6 +25,7 @@ interface PackedEntryParams {
   fontWidth: Buffer;
   index: number;
   glyphs?: GlyphMap;
+  letters?: readonly string[];
 }
 
 export type { ExtractedLangEntry, PackedEntryParams, PackedLangEntry };
