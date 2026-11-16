@@ -31,6 +31,7 @@ const LIVE_SETTING_KEYS = [
   'bugFixToggles',
   'autoSkipDialog',
   'prefillFileName',
+  'extendedLetters',
   'coloredRupees',
   'itemSheen',
   'archeryNeedsBow',

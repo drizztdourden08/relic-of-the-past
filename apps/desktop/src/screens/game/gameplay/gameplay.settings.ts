@@ -92,6 +92,13 @@ const sections: Section[] = [
           { key: 'disableTelepathy', label: 'Disable Telepathic Messages', description: "Suppress the princess's periodic telepathic pleas while walking to the castle in the rain", keywords: 'princess telepathy rain message annoying skip' },
         ],
       },
+      {
+        id: 'dialog-letters',
+        title: 'Letters',
+        items: [
+          { key: 'extendedLetters', label: 'Every Accented Letter', description: "Dialog shows every accented letter a translation or a name uses, drawn in the game's own font. Off shows the plain letter instead.", keywords: 'dialog accent accented letters latin translation language name font diacritic' },
+        ],
+      },
     ],
   },
   {

@@ -60,6 +60,7 @@ const DIALOG_SECTION: SettingsSection = {
     { key: 'dialogTypewriter', label: 'Type letter by letter' },
     { key: 'autoSkipDialog', label: 'Auto-skip dialog' },
     { key: 'disableTelepathy', label: 'Disable telepathic messages' },
+    { key: 'extendedLetters', label: 'Every accented letter' },
     { key: 'dialogBox', label: 'Message box', format: (v) => capitalizeSetting(v, 'original') },
     { key: 'dialogFont', label: 'Dialog font', format: (v) => capitalizeSetting(v, 'original') },
     { key: 'dialogFontScale', label: 'Font scale', format: (v) => `${v ?? 1}x` },
