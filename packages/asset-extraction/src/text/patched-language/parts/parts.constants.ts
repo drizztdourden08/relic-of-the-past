@@ -1,4 +1,6 @@
 /* @layer shared-asset-extraction @kind constants */
 const NOT_LATIN_ERROR = 'Only Latin-alphabet languages can be imported.';
 
-export { NOT_LATIN_ERROR };
+const NON_LATIN_MIN_UNKNOWN = 12;
+
+export { NON_LATIN_MIN_UNKNOWN, NOT_LATIN_ERROR };

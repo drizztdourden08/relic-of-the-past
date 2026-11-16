@@ -1,9 +1,6 @@
 /* @layer shared-asset-extraction @kind logic */
-import { UNKNOWN_LETTER } from '../font';
 import type { PatchedPartReport, PatchedWork } from '../patched-language.type';
-import { NOT_LATIN_ERROR } from './parts.constants';
-
-const unknownCount = (work: PatchedWork): number => work.reading?.unknown.length ?? 0;
+import { NON_LATIN_MIN_UNKNOWN, NOT_LATIN_ERROR } from './parts.constants';
 
 const builtDetail = (work: PatchedWork): string => {
   const built = (work.reading?.namings ?? []).filter((naming) => naming.how !== 'font');
@@ -11,14 +8,19 @@ const builtDetail = (work: PatchedWork): string => {
   return ` ${built.length} letters built from a known letter and a mark: ${built.map((naming) => `${naming.token} (${naming.detail})`).join(', ')}.`;
 };
 
+const unknownDetail = (unknown: readonly number[]): string => {
+  if (unknown.length === 0) return '';
+  const ids = unknown.map((glyph) => `0x${glyph.toString(16).padStart(2, '0')}`).join(', ');
+  return ` ${unknown.length} redrawn glyphs are not letters the import can name (${ids}); they keep the release letters.`;
+};
+
 const lettersPart = (work: PatchedWork): PatchedPartReport => {
   const { reading } = work;
   if (!reading) return { part: 'letters', status: 'failed', detail: 'The font could not be read, so the letters were not checked.' };
-  const text = (work.texts ?? []).join('\n');
-  if (text.includes(UNKNOWN_LETTER)) {
+  if (reading.unknown.length >= NON_LATIN_MIN_UNKNOWN) {
     return {
       part: 'letters', status: 'failed',
-      detail: `${NOT_LATIN_ERROR} ${unknownCount(work)} glyphs the patch redrew are not Latin letters the import can name.`,
+      detail: `${NOT_LATIN_ERROR} ${reading.unknown.length} glyphs the patch redrew are not Latin letters the import can name.`,
     };
   }
   if (reading.restyled) {
@@ -27,11 +29,12 @@ const lettersPart = (work: PatchedWork): PatchedPartReport => {
       detail: `The patch redraws ${reading.changed.length} glyphs in its own style; they keep the release letters.`,
     };
   }
-  if (reading.namings.length === 0) {
+  if (reading.namings.length === 0 && reading.unknown.length === 0) {
     const how = reading.checked ? 'The letters are those of the release.' : 'No release font was at hand; letters are read as the release has them.';
     return { part: 'letters', status: 'ok', detail: how };
   }
-  return { part: 'letters', status: 'recovered', detail: `${reading.namings.length} redrawn letters identified.${builtDetail(work)}` };
+  const named = `${reading.namings.length} redrawn letters identified.${builtDetail(work)}`;
+  return { part: 'letters', status: 'recovered', detail: `${named}${unknownDetail(reading.unknown)}` };
 };
 
 export { lettersPart };

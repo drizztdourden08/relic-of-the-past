@@ -1,7 +1,7 @@
 /* @layer shared-asset-extraction @kind logic */
 import { composeLetter, flippedLetter, learnMarks } from './accents';
 import type { ComposedLetter } from './accents';
-import { RESTYLE_MATCH_RATIO, RESTYLE_MIN_CHANGED, UNKNOWN_LETTER } from './font.constants';
+import { RESTYLE_MATCH_RATIO, RESTYLE_MIN_CHANGED } from './font.constants';
 import type { FontReference, GlyphIdentify, GlyphPass, GlyphReading } from './font.type';
 import { glyphKey } from './glyph-key';
 import { isBlankGlyph } from './is-blank-glyph';
@@ -22,7 +22,6 @@ const recognise = (input: GlyphIdentify, pass: GlyphPass, glyph: number, match: 
 
 const nameGlyph = (input: GlyphIdentify, pass: GlyphPass, glyph: number, found: ComposedLetter | null): void => {
   if (found === null || !isLatinToken(found.token)) {
-    pass.alphabet[glyph] = UNKNOWN_LETTER;
     pass.unknown.push(glyph);
     return;
   }
