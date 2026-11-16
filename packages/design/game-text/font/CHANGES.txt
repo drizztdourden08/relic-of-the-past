@@ -17,4 +17,6 @@ folder are the originals and are unchanged.
   U+1EFF, U+2C60 to U+2C7F and a few IPA letters), so the web text draws every letter
   the game's dialogue box draws. Each is built from the face's own base letters plus
   drawn marks on the same pixel grid, with the dark edge left out.
-- The 52 letters the face already had keep their original outlines and advance widths.
+- Redrew 38 of the letters the face already had so they match the game pixel for pixel:
+  ÂÃÄÇÊËÌÍÎÏÑÔÕÖÛÜÝßàáâãäçêëìíîïñôõöûüýÿ
+  The other 14 already matched and keep their original outlines.
