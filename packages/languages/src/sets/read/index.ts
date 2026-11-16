@@ -2,3 +2,4 @@
 export { getSet } from './get-set';
 export { getRomFont } from './get-rom-font';
 export { list } from './list';
+export { missingRomFonts } from './missing-rom-fonts';

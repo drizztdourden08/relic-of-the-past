@@ -8,6 +8,7 @@ const buildPackedEntry = (params: PackedEntryParams): PackedLangEntry => {
   const { code, texts, fontData, fontWidth, index, glyphs, letters } = params;
   return {
     code,
+    base: code,
     langData: buildLangData(texts, code, glyphs, letters),
     fontPacked: buildFontPacked(fontData, fontWidth),
     flags: dialogueFlags(code, index),

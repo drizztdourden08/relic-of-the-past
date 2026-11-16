@@ -1,5 +1,5 @@
 /* @layer shared-storage @kind barrel */
-export { list, getSet, getRomFont } from './read';
+export { list, getSet, getRomFont, missingRomFonts } from './read';
 export { saveSet, writeRomFont, remove } from './write';
 export { createSet, duplicateSet } from './create';
 export { writePack } from './extract';

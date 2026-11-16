@@ -4,6 +4,7 @@ import type { GlyphMap } from '../glyph-map';
 
 interface PackedLangEntry {
   code: string;
+  base: string;
   langData: Buffer;
   fontPacked: Buffer;
   flags: number;

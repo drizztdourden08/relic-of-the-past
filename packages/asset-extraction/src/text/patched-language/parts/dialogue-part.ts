@@ -5,6 +5,7 @@ import { decodeStringsWithConfig } from '../../dialogue-decoder/decode-strings-w
 import { diffHints, resolveStream, SCAN_STEP_BUDGET, streamLayout } from '../stream';
 import { EXPECTED_LINE_COUNT } from '../patched-language.constants';
 import type { PatchedPartReport, PatchedWork } from '../patched-language.type';
+import { unnamedGlyphs } from './unnamed-glyphs';
 
 const dictionaryWords = (work: PatchedWork): string[] =>
   (work.dictionary?.entries ?? encodeDictionary(work.config.id))
@@ -25,6 +26,10 @@ const dialoguePart = (work: PatchedWork): PatchedPartReport => {
   const texts = normalizeTexts(decodeStringsWithConfig((addr) => patched.getByte(addr), info, config.id).map((d) => d.text));
   if (texts.length !== EXPECTED_LINE_COUNT) {
     return { part: 'dialogue', status: 'failed', detail: `Read ${texts.length} messages where ${EXPECTED_LINE_COUNT} are expected.` };
+  }
+  const unnamed = unnamedGlyphs(work.letters, texts);
+  if (unnamed.length > 0) {
+    return { part: 'dialogue', status: 'failed', detail: `The text uses glyphs the import cannot name (${unnamed.join(', ')}).` };
   }
   work.texts = texts;
   if (plan.moved.length === 0) return { part: 'dialogue', status: 'ok', detail: `${texts.length} messages read.` };

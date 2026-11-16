@@ -1,5 +1,6 @@
 /* @layer bridge-wasm @kind logic */
 import { decodeLetterList, findDatAsset, unpackPackedBytes } from '@rotp/asset-extraction';
+import { dialogueMapEntryOf } from './dialogue-map-entry';
 import type { EmscriptenModule } from '../types';
 import type { ActiveDialogue } from './active-dialogue.type';
 
@@ -10,16 +11,6 @@ const activeLanguageCode = (mod: EmscriptenModule): string => {
   } catch {
     return 'us';
   }
-};
-
-const dialogueIndexOf = (dialogueMap: Uint8Array, code: string): number => {
-  for (const entry of unpackPackedBytes(dialogueMap)) {
-    const [codeBytes, conf] = unpackPackedBytes(entry);
-    const dialogueIndex = conf?.[0];
-    if (codeBytes === undefined || conf === undefined || conf.length < 3 || dialogueIndex === undefined) continue;
-    if (new TextDecoder().decode(codeBytes) === code) return dialogueIndex;
-  }
-  return 0;
 };
 
 const readAssetFile = (mod: EmscriptenModule): Uint8Array | null => {
@@ -56,9 +47,9 @@ const readActiveDialogue = (mod: EmscriptenModule): ActiveDialogue | null => {
   const fontAsset = findDatAsset(dat, 'kDialogueFont');
   if (dialogueAsset === undefined || mapAsset === undefined || fontAsset === undefined) return null;
 
-  const code = activeLanguageCode(mod);
-  const parts = languageParts(dialogueAsset, fontAsset, dialogueIndexOf(mapAsset, code));
-  return parts === null ? null : { code, ...parts };
+  const { index, base } = dialogueMapEntryOf(mapAsset, activeLanguageCode(mod));
+  const parts = languageParts(dialogueAsset, fontAsset, index);
+  return parts === null ? null : { code: base, ...parts };
 };
 
 export { readActiveDialogue };

@@ -12,7 +12,7 @@ const buildDialogue = (rom: RomData, A: AssetBuilder, extras: PackedLangEntry[] 
   A.addPacked('kDialogue', all.map((e) => e.langData));
   A.addPacked('kDialogueFont', all.map((e) => e.fontPacked));
   A.addPacked('kDialogueMap', all.map((e, i) =>
-    packArrays([Buffer.from(e.code, 'utf8'), Buffer.from([i, i, e.flags])])));
+    packArrays([Buffer.from(e.code, 'utf8'), Buffer.from([i, i, e.flags]), Buffer.from(e.base, 'utf8')])));
 };
 
 export { buildDialogue };

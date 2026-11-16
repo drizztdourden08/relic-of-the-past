@@ -52,7 +52,7 @@ const compileSet = (set: LanguageSet, font: SetFont): PackedLangEntry => {
     letters: table.letters,
   });
 
-  return { ...packed, code: set.id };
+  return { ...packed, code: set.id, base: set.base };
 };
 
 export { compileSet };

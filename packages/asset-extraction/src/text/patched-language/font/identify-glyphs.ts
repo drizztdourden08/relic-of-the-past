@@ -6,6 +6,7 @@ import type { FontReference, GlyphIdentify, GlyphPass, GlyphReading } from './fo
 import { glyphKey } from './glyph-key';
 import { isBlankGlyph } from './is-blank-glyph';
 import { isLatinToken } from './is-latin-token';
+import { nameBeyondAlphabet } from './name-beyond-alphabet';
 import { referenceKeys } from './reference-keys';
 
 const looksChanged = (input: GlyphIdentify, base: FontReference | undefined, glyph: number, match: string | undefined): boolean => {
@@ -43,7 +44,8 @@ const identifyGlyphs = (input: GlyphIdentify): GlyphReading => {
     pass.changed.push(glyph);
     nameGlyph(input, pass, glyph, recognise(input, pass, glyph, match));
   }
-  const restyled = pass.changed.length >= RESTYLE_MIN_CHANGED && pass.matched / pass.changed.length < RESTYLE_MATCH_RATIO;
+  nameBeyondAlphabet(input, pass);
+  const restyled =pass.changed.length >= RESTYLE_MIN_CHANGED && pass.matched / pass.changed.length < RESTYLE_MATCH_RATIO;
   const checked = base !== undefined;
   if (restyled) {
     return { alphabet: [...input.alphabet], changed: pass.changed, unknown: [], namings: [], checked, restyled };
