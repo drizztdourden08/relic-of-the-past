@@ -11,3 +11,10 @@ folder are the originals and are unchanged.
 - Appended "(modified for Relic of the Past)" to the version string and a note
   listing the added characters to the description.
 - Every original glyph keeps its outline and advance width.
+
+2026-11-15
+- Added glyphs for 544 more precomposed Latin letters (U+00C0 to U+024F, U+1E00 to
+  U+1EFF, U+2C60 to U+2C7F and a few IPA letters), so the web text draws every letter
+  the game's dialogue box draws. Each is built from the face's own base letters plus
+  drawn marks on the same pixel grid, with the dark edge left out.
+- The 52 letters the face already had keep their original outlines and advance widths.
