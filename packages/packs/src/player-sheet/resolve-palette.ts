@@ -1,7 +1,7 @@
 /* @layer renderer-lib @kind logic */
 import { COLORS_PER_OUTFIT, GLOVES_INDEX } from '@rotp/game-data';
 import type { PlayerSheet, Wearing } from '@rotp/game-data';
-import { bgr555ToRgba } from '@rotp/game-core';
+import { bgr555ToRgba } from '@rotp/game-core/snes-color';
 import { flattenPalette } from './flatten-palette';
 import type { ResolvedRow } from './resolve-palette.type';
 
