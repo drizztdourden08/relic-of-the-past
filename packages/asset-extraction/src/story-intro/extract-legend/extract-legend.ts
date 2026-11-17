@@ -1,14 +1,14 @@
 /* @layer shared-asset-extraction @kind logic */
-import type { RomData } from '../../rom/rom-types';
+import type { SpriteSource } from '../../item-sprites/sources';
 import { itemAt } from '../../checked-read';
 import { ImageBuffer } from '../../graphics/png-writer';
 import { applyStripes } from '../../graphics/stripe-image';
-import { ADDR_LEGEND_STRIPES, BG3_CHARS, BG3_MAP, MAP_WORDS, UNWRITTEN } from './extract-legend.constants';
+import { BG3_CHARS, BG3_MAP, MAP_WORDS, UNWRITTEN } from './extract-legend.constants';
 import type { Legend } from './extract-legend.type';
 
-const legendStart = (rom: RomData, index: number): number => {
-  let p = ADDR_LEGEND_STRIPES;
-  for (let i = 0; i < index; i += 1) p = applyStripes(new Uint16Array(0x8000), rom, p);
+const legendStart = (source: SpriteSource, index: number): number => {
+  let p = source.legendStripes;
+  for (let i = 0; i < index; i += 1) p = applyStripes(new Uint16Array(0x8000), source.rom, p);
   return p;
 };
 
@@ -26,10 +26,10 @@ const drawCell = (img: ImageBuffer, legend: Legend, entry: number, at: { x: numb
   }
 };
 
-const extractLegend = (rom: RomData, legend: Legend, index: number): ImageBuffer => {
+const extractLegend = (source: SpriteSource, legend: Legend, index: number): ImageBuffer => {
   const vram = legend.vram;
   vram.fill(UNWRITTEN, BG3_MAP, BG3_MAP + MAP_WORDS);
-  applyStripes(vram, rom, legendStart(rom, index));
+  applyStripes(vram, source.rom, legendStart(source, index));
   const cells: number[] = [];
   for (let i = 0; i < MAP_WORDS; i += 1) if (vram[BG3_MAP + i] !== UNWRITTEN) cells.push(i);
   const cols = cells.map((i) => i & 31), rows = cells.map((i) => i >> 5);

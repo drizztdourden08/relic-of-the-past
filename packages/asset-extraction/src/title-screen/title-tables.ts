@@ -16,8 +16,6 @@ const TITLE_OBJ_NAMES = 0x5000;
 
 const TITLE_SWORD_SLOT: SheetSlot = { vram: TITLE_OBJ_NAMES, sheet: 50, high: false };
 
-const TITLE_TILEMAP_STRIPES = 0x0cdd6d;
-
 const TITLE_BLANK_TILE = 0x1ec;
 
 const TITLE_LOGO_MAP = 0x1000;
@@ -26,17 +24,16 @@ const TITLE_BACKGROUND_MAP = 0x0000;
 
 const TITLE_BG_CHARS = 0x2000;
 
-const POLYHEDRAL_PALETTE = 0x8cc425;
-
 const TRIFORCE_OBJ_PALETTE_CGRAM = 0xd0;
 
+const TRIFORCE_PALETTE_WORDS = 8;
+
 const TITLE_PALETTE_LOADS: readonly PaletteLoad[] = [
-  { rom: 0x9bd39e + 11 * 7 * 2, dst: 0x81, count: 7, rows: 1 },
-  { rom: 0x9be6c8 + 5 * 35 * 2, dst: 0x21, count: 7, rows: 5 },
-  { rom: 0x9be86c + 3 * 21 * 2, dst: 0x29, count: 7, rows: 3 },
-  { rom: 0x9be86c + 3 * 21 * 2, dst: 0x59, count: 7, rows: 3 },
-  { rom: 0x9be604, dst: 0x71, count: 7, rows: 1 },
-  { rom: POLYHEDRAL_PALETTE, dst: TRIFORCE_OBJ_PALETTE_CGRAM, count: 8, rows: 1 },
+  { table: 'spriteAux3', first: 11 * 7, dst: 0x81, count: 7, rows: 1 },
+  { table: 'overworldMain', first: 5 * 35, dst: 0x21, count: 7, rows: 5 },
+  { table: 'overworldAux12', first: 3 * 21, dst: 0x29, count: 7, rows: 3 },
+  { table: 'overworldAux12', first: 3 * 21, dst: 0x59, count: 7, rows: 3 },
+  { table: 'overworldAux3', first: 0, dst: 0x71, count: 7, rows: 1 },
 ];
 
 const SWORD_REST_Y = 30;
@@ -68,6 +65,6 @@ const TITLE_TRIFORCE_PALETTE = 13;
 
 export {
   SWORD_CHARS, SWORD_REST_Y, SWORD_X, SWORD_Y, TITLE_BACKGROUND_MAP, TITLE_BG_CHARS, TITLE_BG_SLOTS, TITLE_BLANK_TILE,
-  TITLE_LOGO_MAP, TITLE_OBJ_NAMES, TITLE_PALETTE_LOADS, TITLE_SWORD_PALETTE, TITLE_SWORD_SLOT, TITLE_TILEMAP_STRIPES,
-  TITLE_TRIFORCE_PALETTE, TRIFORCE_BITMAP_VRAM, TRIFORCE_GRID, TRIFORCE_PIECES_AT,
+  TITLE_LOGO_MAP, TITLE_OBJ_NAMES, TITLE_PALETTE_LOADS, TITLE_SWORD_PALETTE, TITLE_SWORD_SLOT,
+  TITLE_TRIFORCE_PALETTE, TRIFORCE_BITMAP_VRAM, TRIFORCE_OBJ_PALETTE_CGRAM, TRIFORCE_PALETTE_WORDS, TRIFORCE_GRID, TRIFORCE_PIECES_AT,
 };

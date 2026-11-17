@@ -1,4 +1,6 @@
 /* @layer shared-asset-extraction @kind types */
+import type { PaletteTable } from '../item-sprites/sources';
+
 interface SheetSlot {
   vram: number;
   sheet: number;
@@ -6,7 +8,8 @@ interface SheetSlot {
 }
 
 interface PaletteLoad {
-  rom: number;
+  table: PaletteTable;
+  first: number;
   dst: number;
   count: number;
   rows: number;

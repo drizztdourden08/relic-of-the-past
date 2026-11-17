@@ -5,7 +5,7 @@ import { defineStep } from './define-step';
 
 const spritesStep = defineStep<'sprites'>(({ defs }, { romBytes }, report) => {
   report.line('Extracting sprites...');
-  return extractSpriteBuffers(loadRomFromBuffer(Buffer.from(romBytes)), defs);
+  return extractSpriteBuffers(loadRomFromBuffer(Buffer.from(romBytes), true), defs);
 });
 
 export { spritesStep };
