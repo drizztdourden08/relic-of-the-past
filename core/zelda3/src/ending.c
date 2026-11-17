@@ -953,6 +953,7 @@ void EXIT_0CCA90(int k) {  // 8cc84f
 }
 
 void InitializeSceneSprite_Copyright(int k) {  // 8cc850
+  if (GameHook_CopyrightInit(k)) return;
   intro_x_lo[k] = 76;
   intro_x_hi[k] = 0;
   intro_y_lo[k] = 184;
@@ -961,6 +962,7 @@ void InitializeSceneSprite_Copyright(int k) {  // 8cc850
 }
 
 void AnimateSceneSprite_Copyright(int k) {  // 8cc864
+  if (GameHook_CopyrightAnimate(k)) return;
   static const IntroSpriteEnt kIntroSprite2_Ents[13] = {
     { 0, 0, 0x40, 0x0a, 0},
     { 8, 0, 0x41, 0x0a, 0},
