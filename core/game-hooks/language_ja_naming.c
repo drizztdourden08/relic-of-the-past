@@ -12,6 +12,8 @@ enum {
   kBarY0 = 0x3e, kRowPx = 0x10, kScrollX0 = 0x19c,
   kBoxVram = 0x6075, kBoxStep = 1, kCursorX0 = 0xa8, kCursorStep = 8, kCursorY = 0x14,
   kPadDown = 4, kPadVertical = 0xc,
+  kGridMapVram = 0x1000, kMapRows = 32, kMapCols = 32, kDividerCol = 15,
+  kDividerTile = 0x495, kEmptyTile = 0x7f,
 };
 
 static const uint8 *Grid(void) {
@@ -60,7 +62,7 @@ void GameHook_NameFileJapaneseInit(void) {
 // Japanese screen does not have, so it is set to the tilemap's empty tile.
 static void ClearDivider(void) {
   for (int row = 0; row < kMapRows; row++) {
-    uint16 *tile = &g_zenv.vram[kGridMapVram + row * kMapRows + kDividerCol];
+    uint16 *tile = &g_zenv.vram[kGridMapVram + row * kMapCols + kDividerCol];
     if (*tile == kDividerTile)
       *tile = kEmptyTile;
   }
