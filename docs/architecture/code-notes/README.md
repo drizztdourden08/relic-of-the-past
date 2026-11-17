@@ -38,15 +38,15 @@ Add a note to the page of the package or area that holds the file, under a headi
 | Page | Notes |
 |---|---|
 | [apps/desktop/src/composites](apps-desktop-src-composites.md) | 11 |
-| [apps/desktop/src/compounds](apps-desktop-src-compounds.md) | 118 |
+| [apps/desktop/src/compounds](apps-desktop-src-compounds.md) | 119 |
 | [apps/desktop/src/data-inspector](apps-desktop-src-data-inspector.md) | 21 |
 | [apps/desktop/src/game](apps-desktop-src-game.md) | 106 |
-| [apps/desktop/src/hooks](apps-desktop-src-hooks.md) | 39 |
+| [apps/desktop/src/hooks](apps-desktop-src-hooks.md) | 40 |
 | [apps/desktop/src/hud-layout-editing](apps-desktop-src-hud-layout-editing.md) | 56 |
 | [apps/desktop/src/hud](apps-desktop-src-hud.md) | 7 |
 | [apps/desktop/src/input](apps-desktop-src-input.md) | 6 |
 | [apps/desktop/src/ipc](apps-desktop-src-ipc.md) | 11 |
-| [apps/desktop/src/language-editor](apps-desktop-src-language-editor.md) | 105 |
+| [apps/desktop/src/language-editor](apps-desktop-src-language-editor.md) | 104 |
 | [apps/desktop/src/msu-studio](apps-desktop-src-msu-studio.md) | 77 |
 | [apps/desktop/src/nav-widget](apps-desktop-src-nav-widget.md) | 27 |
 | [apps/desktop/src/navigation-overlay](apps-desktop-src-navigation-overlay.md) | 12 |
@@ -59,7 +59,7 @@ Add a note to the page of the package or area that holds the file, under a headi
 | [apps/desktop/src/title](apps-desktop-src-title.md) | 17 |
 | [apps/desktop/src/views/CheatsWidget](apps-desktop-src-views-cheats-widget.md) | 38 |
 | [apps/desktop/src/views/DataInspector](apps-desktop-src-views-data-inspector.md) | 45 |
-| [apps/desktop/src/views/DataManager](apps-desktop-src-views-data-manager.md) | 35 |
+| [apps/desktop/src/views/DataManager](apps-desktop-src-views-data-manager.md) | 36 |
 | [apps/desktop/src/views/GameSession](apps-desktop-src-views-game-session.md) | 28 |
 | [apps/desktop/src/views/HudLayoutEditor](apps-desktop-src-views-hud-layout-editor.md) | 130 |
 | [apps/desktop/src/views/InputTester](apps-desktop-src-views-input-tester.md) | 7 |

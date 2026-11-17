@@ -2,7 +2,7 @@
 import { useCallback, useState } from 'react';
 import type { PatchedPartReport } from '@rotp/asset-extraction';
 import * as languagesStore from '@app/storage/languages-store';
-import type { PatchedImportFields } from '@app/compounds/PatchedImportForm';
+import type { PatchedImportRequest } from '@app/storage/languages-store/patched-import.type';
 import type { LanguageCreationParams } from './language-manager.type';
 
 const useLanguagePatchedImport = (params: LanguageCreationParams) => {
@@ -11,7 +11,7 @@ const useLanguagePatchedImport = (params: LanguageCreationParams) => {
   const [error, setError] = useState<string | null>(null);
   const [parts, setParts] = useState<readonly PatchedPartReport[]>([]);
 
-  const handlePatchedImport = useCallback(async (fields: PatchedImportFields): Promise<boolean> => {
+  const handlePatchedImport = useCallback(async (fields: PatchedImportRequest): Promise<boolean> => {
     setBusy(true);
     setError(null);
     setParts([]);

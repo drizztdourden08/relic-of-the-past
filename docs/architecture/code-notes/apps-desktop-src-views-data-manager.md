@@ -11,15 +11,21 @@ The gap on `.data-manager__body` leaves room for the round toggle of the side na
 
 ## apps/desktop/src/views/DataManager/sub-components/LanguageManager.tsx
 
-The Language Studio: a `ListDetailLayout` like every other list screen, with ROM extraction, the new set form and the set list on the left (kept under `language-studio.list`) and the open set's editor as the detail. The editor is keyed by the set, so switching sets flushes the old one's pending write and starts the new one with nothing selected.
-
-Creating or duplicating a set rebakes the asset blobs, so `busy` locks the list while one runs.
+The Language Studio: a `ListDetailLayout` like every other list screen, with the New language button and the set list on the left (`CreateListPane`, kept under `language-studio.list`) and the open set's editor as the detail. The editor is keyed by the set, so switching sets flushes the old one's pending write and starts the new one with nothing selected. It is the worked example of the shared creation shape: `useCreateFlow` holds the wizard state, the wizard replaces the detail while it is open, and its `onCreated` is the flow's `select`.
 
 Deleting a set installed from the Hookshop uninstalls it the way the Hookshop tab does, so its install record goes too.
 
 The duplicate source list leaves installed sets out. An installed set is copied through its origin bar, which checks the licence and keeps the credit.
 
 `refreshThenSelect` rereads the list first, because after a duplicate or an update the set to show may be one the list has not read yet.
+
+## apps/desktop/src/views/DataManager/sub-components/language-manager/LanguageCreateWizard/
+
+Four ways to make a set: extract an official ROM, import a fan-patched ROM, copy an own set, or start blank from a base language. The name of a patched set is typed by the user, because nothing in a patched ROM says reliably what language it carries.
+
+The patched import runs inside its own step rather than at finish, so its report, including the letters it could not name, is read before the wizard closes. Once it has run, Back and Cancel go away: the set already exists and running it again would make a second one. The new set's id counts as taken after the refresh, so the name check lets that one id through or the final re-validation would refuse the set it just made.
+
+Copying or creating a set rebakes the asset blobs, which is why that step shows the import progress. The extraction and creation hooks are given a no-op `setSelected`; selection happens only through the flow on success.
 
 ## apps/desktop/src/views/DataManager/sub-components/language-manager/useLanguageExtraction.ts
 

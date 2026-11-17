@@ -187,6 +187,10 @@ being off is a setting the player can undo on the spot; a blocked content is a c
 shop scope above (its cauldron went to the shuffle). Only the second carries a note, takes the
 whole line and wears the danger marker.
 
+## apps/desktop/src/compounds/CreateListPane/CreateListPane.tsx
+
+The list side of every data screen: one primary New button above the rows, the way the Profiles screen first had it. Pressing it hands the detail side to that screen's creation wizard, so the list holds nothing else; forms that used to sit above the rows became wizard steps. The button is disabled while the wizard is open so a second press cannot restart it, and `available` hides it when a screen has nothing to create from (Profiles without a ready ROM).
+
 ## apps/desktop/src/compounds/DataSections/DataSections.tsx
 
 The cards of a home page. The page above owns the level 2 heading, so a group label is level 3 and a card title level 4, which keeps the outline in order for a screen reader. The icon sits in a neutral media block so a card reads as a link to a page, not as a status.

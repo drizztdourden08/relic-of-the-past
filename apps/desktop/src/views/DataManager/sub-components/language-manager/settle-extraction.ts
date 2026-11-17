@@ -7,7 +7,7 @@ const settleExtraction = async (params: SettleExtractionParams): Promise<Languag
   if (!result.success) return { success: false, message: result.error };
   await refresh();
   setSelected(result.code);
-  return { success: true, message: `Extracted ${LANGUAGE_NAMES[result.code] ?? result.code} language pack` };
+  return { success: true, code: result.code, message: `Extracted ${LANGUAGE_NAMES[result.code] ?? result.code} language pack` };
 };
 
 export { settleExtraction };

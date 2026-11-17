@@ -9,6 +9,7 @@ type SelectSet = (code: string | null) => void;
 interface LanguageOutcome {
   success: boolean;
   message: string;
+  code?: string;
 }
 
 interface LanguageCreationParams {
