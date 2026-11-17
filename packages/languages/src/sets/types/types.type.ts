@@ -30,6 +30,7 @@ interface PatchedPack extends ExtractedPayload {
   name: string;
   base: string;
   credits: string;
+  license: string;
   text: TextOverrides;
 }
 

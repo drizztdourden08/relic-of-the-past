@@ -21,7 +21,7 @@ The duplicate source list leaves installed sets out. An installed set is copied 
 
 ## apps/desktop/src/views/DataManager/sub-components/language-manager/LanguageCreateWizard/
 
-Four ways to make a set: extract an official ROM, import a fan-patched ROM, copy an own set, or start blank from a base language. The name of a patched set is typed by the user, because nothing in a patched ROM says reliably what language it carries.
+Four ways to make a set: extract an official ROM, import a fan-patched ROM, copy an own set, or start blank from a base language. The name of a patched set is typed by the user, because nothing in a patched ROM says reliably what language it carries. The base is one of the five official releases, listed with its ROM name and SHA-1 taken from the asset-extraction hash table. The license and the notes or credits are each typed or dropped as a file, and both are kept as written.
 
 The patched import runs inside its own step rather than at finish, so its report, including the letters it could not name, is read before the wizard closes. Once it has run, Back and Cancel go away: the set already exists and running it again would make a second one. The new set's id counts as taken after the refresh, so the name check lets that one id through or the final re-validation would refuse the set it just made.
 

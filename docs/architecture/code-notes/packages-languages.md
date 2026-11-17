@@ -943,7 +943,7 @@ when there is one, so a round trip never grows the shape.
 
 ## packages/languages/src/sets/paths/index.ts
 
-- Layout of one set under `languages/<id>/`: `set.json` (identity, provenance, format, structure), `dialogue.json`, `text.json`, `variables.json`, `font.bin` (raw 2bpp glyph sheet), `font-width.bin` (per-glyph width table).
+- Layout of one set under `languages/<id>/`: `set.json` (identity, provenance, format, structure), `dialogue.json`, `text.json`, `variables.json`, an optional `LICENSE.txt` (the original translation's license, kept as written), `font.bin` (raw 2bpp glyph sheet), `font-width.bin` (per-glyph width table).
 - `text.json` holds the non-dialogue strings a translator retyped, overrides only, so a folder without it reads as nothing translated.
 - The two extraction files a ROM import leaves (`dialogue.txt`, `meta.json`) are named here for the payload reader.
 
@@ -961,7 +961,7 @@ when there is one, so a round trip never grows the shape.
 ## packages/languages/src/sets/rlang-format/index.ts
 
 - A `.rlang` file is one language set as a plain ZIP. `set.json` is entry 0, so a reader can identify a set from the head of the file, then the payload files follow in a fixed order.
-- Only the files a set folder is made of travel. The ROM-extraction leftovers (`dialogue.txt`, `meta.json`) never do.
+- Only the files a set folder is made of travel, `LICENSE.txt` included when the set has one. The notes and credits text rides in `set.json`. The ROM-extraction leftovers (`dialogue.txt`, `meta.json`) never do.
 - A header opens when it is named, its base language is known, its origin is `rom` or `custom`, it has a numeric version, and its format is not newer than this build writes.
 
 ## packages/languages/src/sets/set-id/index.ts

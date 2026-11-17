@@ -29,7 +29,8 @@ const runImport = async (request: PatchedImportRequest, report: ImportReport): P
   const { description, dialogue, glyphCount, lineCount, encoder, flags } = found;
   await languages.writePatchedPack(platformFiles(), {
     code: id, description, dialogue, glyphCount, lineCount, encoder, flags,
-    name: request.name.trim(), base: request.base, credits: request.credits.trim(),
+    name: request.name.trim(), base: request.base,
+    credits: request.credits, license: request.license,
     text: { menu: found.menu, credits: found.credits },
   });
   report.phase('extract', 'Baking into assets...');

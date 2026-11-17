@@ -1,7 +1,7 @@
 /* @layer shared-asset-extraction @kind logic */
 export type { RomData, RomLanguage, RomIdentEntry } from './rom/rom-types';
 export { snesToLinear, advanceAddress, advanceAddressWord } from './rom/snes-address';
-export { ZELDA3_SHA1, ZELDA3_SHA1_US } from './rom/rom-loader/rom-loader.constants';
+export { OFFICIAL_RELEASES, ZELDA3_SHA1, ZELDA3_SHA1_US } from './rom/rom-loader/rom-loader.constants';
 export { RomReader } from './rom/reader';
 
 export {

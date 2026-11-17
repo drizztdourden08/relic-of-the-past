@@ -4,6 +4,19 @@ import type { PatchedPartReport, RomLanguage } from '@rotp/asset-extraction';
 import type { LanguageSetSummary } from '@rotp/languages';
 import type { LanguageOutcome } from '../language-manager.type';
 
+interface TextOrFile {
+  mode: 'text' | 'file';
+  text: string;
+  fileName: string;
+}
+
+interface ReleaseItem {
+  value: RomLanguage;
+  release: string;
+  rom: string;
+  sha1: string;
+}
+
 type LanguageSource = 'rom' | 'patched' | 'copy' | 'blank';
 
 interface LanguageWizardValues {
@@ -13,7 +26,8 @@ interface LanguageWizardValues {
   patchedFile: File | null;
   name: string;
   release: RomLanguage;
-  credits: string;
+  credits: TextOrFile;
+  license: TextOrFile;
   baseSet: string;
 }
 
@@ -54,5 +68,5 @@ type UseLanguageWizardParams = Pick<LanguageCreateWizardProps, 'sets' | 'refresh
 
 export type {
   FinishContext, LanguageCreateWizardProps, LanguageSource, LanguageWizardApi, LanguageWizardValues, PatchedRun, StepContext,
-  UpdateValues, UseLanguageWizardParams,
+  ReleaseItem, TextOrFile, UpdateValues, UseLanguageWizardParams,
 };

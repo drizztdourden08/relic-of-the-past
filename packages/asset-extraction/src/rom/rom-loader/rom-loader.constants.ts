@@ -1,5 +1,5 @@
 /* @layer shared-asset-extraction @kind constants */
-import type { RomHashTable } from '../rom-types';
+import type { RomHashTable, RomLanguage } from '../rom-types';
 
 const ZELDA3_SHA1_US = '6D4F10A8B10E10DBE624CB23CF03B88BB8252973';
 
@@ -18,6 +18,8 @@ const ZELDA3_SHA1: RomHashTable = {
   '43CD3438469B2C3FE879EA2F410B3EF3CB3F1CA4': { language: 'sv', description: 'Swedish - https://www.romhacking.net/translations/982/' },
 };
 
+const OFFICIAL_RELEASES: readonly RomLanguage[] = ['us', 'de', 'fr', 'fr-c', 'en'];
+
 const SMC_HEADER_BYTES = 0x200;
 const SWEDISH_DOUBLE_HEADER_LENGTH = 0x10083b;
 
@@ -28,6 +30,6 @@ const PATCHED_ROM_MIN_BYTES = 0x80000;
 const PATCHED_ROM_MAX_BYTES = 0x400000;
 
 export {
-  PATCHED_ROM_MAX_BYTES, PATCHED_ROM_MIN_BYTES, ROM_BANK_BYTES, SMC_HEADER_BYTES, SWEDISH_DOUBLE_HEADER_LENGTH,
+  OFFICIAL_RELEASES, PATCHED_ROM_MAX_BYTES, PATCHED_ROM_MIN_BYTES, ROM_BANK_BYTES, SMC_HEADER_BYTES, SWEDISH_DOUBLE_HEADER_LENGTH,
   ZELDA3_SHA1, ZELDA3_SHA1_US,
 };

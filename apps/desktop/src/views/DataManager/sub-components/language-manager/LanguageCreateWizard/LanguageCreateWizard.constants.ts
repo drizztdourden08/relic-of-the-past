@@ -1,8 +1,8 @@
 /* @layer renderer-components @kind constants */
 import type { WizardStepButtons } from '@drizztdourden08/tessera/composites';
-import type { SelectOption } from '@drizztdourden08/tessera/primitives';
+import { OFFICIAL_RELEASES, ZELDA3_SHA1 } from '@rotp/asset-extraction';
 import type { RomLanguage } from '@rotp/asset-extraction';
-import type { LanguageSource, LanguageWizardValues } from './LanguageCreateWizard.type';
+import type { LanguageSource, LanguageWizardValues, ReleaseItem, TextOrFile } from './LanguageCreateWizard.type';
 
 const STEP_IDS = {
   source: 'source',
@@ -42,19 +42,29 @@ const NO_OWN_SET_REASON = 'You have no set of your own to start from yet.';
 
 const DEFAULT_RELEASE: RomLanguage = 'us';
 
-const RELEASE_OPTIONS: readonly SelectOption[] = [
-  { value: 'us', label: 'US English' },
-  { value: 'de', label: 'German' },
-  { value: 'fr', label: 'French' },
-  { value: 'fr-c', label: 'French Canadian' },
-  { value: 'en', label: 'European English' },
-  { value: 'es', label: 'Spanish' },
-  { value: 'pl', label: 'Polish' },
-  { value: 'pt', label: 'Portuguese' },
-  { value: 'nl', label: 'Dutch' },
-  { value: 'sv', label: 'Swedish' },
-  { value: 'redux', label: 'Redux' },
-];
+const RELEASE_NAMES: Readonly<Record<string, string>> = {
+  us: 'US English',
+  de: 'German',
+  fr: 'French',
+  'fr-c': 'French Canadian',
+  en: 'European English',
+};
+
+const releaseItem = (code: RomLanguage): ReleaseItem => {
+  const sha1 = Object.keys(ZELDA3_SHA1).find((hash) => ZELDA3_SHA1[hash]?.language === code) ?? '';
+  return { value: code, release: RELEASE_NAMES[code] ?? code, rom: ZELDA3_SHA1[sha1]?.description ?? '', sha1 };
+};
+
+const RELEASE_ITEMS: readonly ReleaseItem[] = OFFICIAL_RELEASES.map(releaseItem);
+
+const EMPTY_TEXT_OR_FILE: TextOrFile = { mode: 'text', text: '', fileName: '' };
+
+const TEXT_OR_FILE_OPTIONS = [
+  { value: 'text', label: 'Text' },
+  { value: 'file', label: 'File' },
+] as const;
+
+const LICENSE_ACCEPT = ['.txt', '.md', '.license'];
 
 const PATCHED_ROM_ACCEPT = ['.sfc', '.smc', '.zip'];
 
@@ -90,12 +100,13 @@ const INITIAL_VALUES: LanguageWizardValues = {
   patchedFile: null,
   name: '',
   release: DEFAULT_RELEASE,
-  credits: '',
+  credits: EMPTY_TEXT_OR_FILE,
+  license: EMPTY_TEXT_OR_FILE,
   baseSet: '',
 };
 
 export {
-  BUSY_HINTS, CREATE_BUTTONS, EXTRACT_BUTTONS, IMPORTED_BUTTONS, IMPORTED_MESSAGE, IMPORT_BUTTONS, INITIAL_VALUES,
-  NO_OWN_SET_REASON, PATCHED_ROM_ACCEPT, PROBLEMS, RELEASE_OPTIONS, SOURCE_DESCRIPTIONS, SOURCE_LABELS, SOURCE_ORDER,
-  STEP_IDS, STEP_LABELS, WIZARD_TITLE,
+  BUSY_HINTS, CREATE_BUTTONS, EMPTY_TEXT_OR_FILE, EXTRACT_BUTTONS, IMPORTED_BUTTONS, IMPORTED_MESSAGE, IMPORT_BUTTONS, INITIAL_VALUES,
+  LICENSE_ACCEPT, NO_OWN_SET_REASON, PATCHED_ROM_ACCEPT, PROBLEMS, RELEASE_ITEMS, SOURCE_DESCRIPTIONS, SOURCE_LABELS,
+  SOURCE_ORDER, STEP_IDS, STEP_LABELS, TEXT_OR_FILE_OPTIONS, WIZARD_TITLE,
 };

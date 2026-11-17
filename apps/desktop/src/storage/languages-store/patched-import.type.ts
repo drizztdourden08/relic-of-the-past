@@ -5,6 +5,7 @@ interface PatchedImportRequest {
   name: string;
   base: RomLanguage;
   credits: string;
+  license: string;
   file: File;
 }
 

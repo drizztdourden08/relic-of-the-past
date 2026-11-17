@@ -28,9 +28,9 @@ const useLanguageWizard = ({ sets, refresh, onCreated }: UseLanguageWizardParams
   const { values } = wizard;
 
   const run = useCallback(() => {
-    const { name, release, credits, patchedFile } = values;
+    const { name, release, credits, license, patchedFile } = values;
     if (patchedFile === null) return;
-    void handlePatchedImport({ name, base: release, credits, file: patchedFile });
+    void handlePatchedImport({ name, base: release, credits: credits.text, license: license.text, file: patchedFile });
   }, [values, handlePatchedImport]);
 
   const patched: PatchedRun = { busy, error, parts, imported, run };
