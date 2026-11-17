@@ -63,6 +63,11 @@ interface LetterCandidate extends MarkGuess {
   matched: number;
 }
 
+interface BaseVariant {
+  grid: PixelGrid;
+  cost: number;
+}
+
 interface CandidateInput {
   target: PixelGrid;
   base: PixelGrid;
@@ -83,6 +88,6 @@ interface ComposeInput extends FlipInput {
 type ComposedLetter = Omit<GlyphNaming, 'glyph'>;
 
 export type {
-  CandidateInput, ComposeInput, ComposedLetter, CutInput, FlipInput, LearnedMark, LetterCandidate, MarkCut, MarkGuess,
+  BaseVariant, CandidateInput, ComposeInput, ComposedLetter, CutInput, FlipInput, LearnedMark, LetterCandidate, MarkCut, MarkGuess,
   MarkPick, MarkSplit, PixelGrid, Shape, ShapeOffset,
 };

@@ -60,6 +60,7 @@ interface GlyphPass {
   namings: GlyphNaming[];
   marks: LearnedMark[];
   matched: number;
+  keys: ReadonlyMap<string, string>;
 }
 
 export type {

@@ -29,9 +29,14 @@ const lettersPart = (work: PatchedWork): PatchedPartReport => {
       detail: `The patch redraws ${reading.changed.length} glyphs in its own style; they keep the release letters.`,
     };
   }
+  if (!reading.checked) {
+    return {
+      part: 'letters', status: 'recovered',
+      detail: 'No release font was at hand, so the letters could not be checked; they are read as the release has them.',
+    };
+  }
   if (reading.namings.length === 0 && reading.unknown.length === 0) {
-    const how = reading.checked ? 'The letters are those of the release.' : 'No release font was at hand; letters are read as the release has them.';
-    return { part: 'letters', status: 'ok', detail: how };
+    return { part: 'letters', status: 'ok', detail: 'The letters are those of the release.' };
   }
   const named = `${reading.namings.length} redrawn letters identified.${builtDetail(work)}`;
   return { part: 'letters', status: 'recovered', detail: `${named}${unknownDetail(reading.unknown)}` };
