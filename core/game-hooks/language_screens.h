@@ -35,6 +35,7 @@ enum {
   kLangTbl_DungMapTab23,       // messaging.c kDungMap_Tab23   uint16[744]
   kLangTbl_CreditsDigits,      // ending.c kEnding_Credits_DigitChar uint16[2]
   kLangTbl_CreditsScrollY,     // ending.c kEnding_Digits_ScrollY uint16[14]
+  kLangTbl_SelectPalette,      // the file select's kPalette_DungBgMain set (Japanese layout) uint16[90]
   kLangTbl_Count
 };
 
@@ -103,5 +104,10 @@ void AssetSheet_SetOverride(int asset, int idx, const uint8 *p, uint32 size);
 enum { kLangSheetMax = 256 };
 
 // Whether an override of sheet kind |kind| (0 sprite, 1 background) is read this frame. The background
-// sheets are the intro's (main module 0): every other screen reads the baked ones.
+// sheets are the intro's (main module 0) and the Japanese file select layout's (while
+// LanguageScreens_SelectSheets is on): every other screen reads the baked ones.
 bool LanguageScreens_SheetLive(int kind);
+
+// Opens (|on|) or closes the background sheet overrides for the Japanese file select layout's sheet load
+// (select_screen_gfx.c).
+void LanguageScreens_SelectSheets(bool on);

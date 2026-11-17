@@ -42,7 +42,7 @@ const hookSrcs = [
   'state_queries_pose',
   'item_power', 'swordless_paths', 'story_events', 'story_probes', 'story_barrier', 'story_status', 'events/event_ledger', 'events/event_watch', 'events/event_receipts', 'retro_bow', 'retro_drops', 'retro_shelf', 'retro_quiver_icon', 'archery_host',
   'dark_room_lights', 'file_name_prefill', 'language_screens', 'language_screens_assets', 'language_screens_font',
-  'language_ja_mode', 'language_ja_naming', 'language_ja_file_draw', 'language_ja_player_name', 'select_layout', 'select_us_ja_labels', 'select_us_ja_stripes',
+  'language_ja_mode', 'language_ja_naming', 'language_ja_file_draw', 'language_ja_player_name', 'select_layout', 'select_us_ja_labels', 'select_us_ja_stripes', 'select_screen_gfx',
   'host_gates', 'hud_override', 'dialog_pacing', 'dialog_mirror', 'dialog_presence', 'dialog_suppress', 'dialog_hook_state', 'dialog_glyphs', 'dialog_highlight', 'dialog_highlight_draw', 'dialog_extra_glyphs', 'dialog_letter_bank', 'dialog_wide_glyphs', 'running_man', 'music_hooks', 'sound_hooks',
   'view_gates', 'attract_view', 'spotlight_growth', 'attract_sprites', 'iris_wide', 'hide_space_beyond_walls', 'fixed_picture_edges',
   'room_clear_reach', 'sprite_room_reach', 'world_scroll_carry',

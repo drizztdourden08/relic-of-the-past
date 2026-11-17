@@ -7,6 +7,10 @@
 enum {
   kTileMask = 0x3ff,
   kHighBits = 0xfc00,
+  kPaletteBits = 0x1c00,
+  kUsTextPalette = 0x1800,
+  kJaTextPalette = 0x1c00,
+  kFontEnd = 0x1a0,
   kRowHalf = 0x10,
   kJaBlankTile = 0x188,
   kJaDigitTop = 0x141,
@@ -40,7 +44,13 @@ enum {
 
 static uint8 g_out[kOutBytes];
 
-static uint16 TranslateTile(uint16 w) {
+// The US text palette (6) moved to the one the Japanese screens draw their text with (7): a Japanese
+// glyph draws strokes in a colour palette 6 leaves dark. Other palettes (the hearts) stay.
+static uint16 JaPalette(uint16 w) {
+  return (w & kPaletteBits) == kUsTextPalette ? (uint16)((w & ~kPaletteBits) | kJaTextPalette) : w;
+}
+
+static uint16 FontTile(uint16 w) {
   uint16 hi = w & kHighBits;
   uint16 t = w & kTileMask;
   if (t >= kMarkedName)
@@ -58,6 +68,11 @@ static uint16 TranslateTile(uint16 w) {
   if (t == kUsDigitMark)
     return hi | kJaDigitMark;
   return hi | (uint16)(LanguageJa_NameTile(t & ~kRowHalf) + (t & kRowHalf));
+}
+
+static uint16 TranslateTile(uint16 w) {
+  uint16 out = FontTile(w);
+  return (out & kTileMask) < kFontEnd ? JaPalette(out) : out;
 }
 
 static uint16 WordAt(const uint8 *p) {
@@ -102,11 +117,11 @@ static int Relabel(int screen, uint16 addr, const uint8 *p, int n, uint8 *out, i
   int bytes = (hi - lo) * 2;
   if (4 + bytes > room)
     return -1;
-  uint16 high = WordAt(p) & kHighBits;
+  uint16 blank = JaPalette((uint16)((WordAt(p) & kHighBits) | kJaBlankTile));
   PutHeader(out, (uint16)(addr - col + lo), 0, bytes);
   for (int c = lo; c < hi; c++) {
     bool glyph = c >= start && c < start + count;
-    PutWord(out + 4 + 2 * (c - lo), high | (glyph ? tiles[c - start] : kJaBlankTile));
+    PutWord(out + 4 + 2 * (c - lo), glyph ? tiles[c - start] : blank);
   }
   return 4 + bytes;
 }

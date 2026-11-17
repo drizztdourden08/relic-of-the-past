@@ -106,9 +106,16 @@ void LanguageScreensAssets_Apply(bool on) {
 
 // The language's background sheets are drawn for its intro tilemap (asset 99). The file select loads
 // the same sheets (tileset 35/81) under a frame, kSelectFile_Gfx0, drawn for the US sheets, and the
-// overworld and the triforce room share some of them, so they are read only during the intro.
+// overworld and the triforce room share some of them, so they are read only during the intro, and on
+// the file select only by the Japanese layout's own sheet load.
+static bool g_select_sheets;
+
 bool LanguageScreens_SheetLive(int kind) {
-  return kind != kBgSheetKind || main_module_index == kModuleIntro;
+  return kind != kBgSheetKind || main_module_index == kModuleIntro || g_select_sheets;
+}
+
+void LanguageScreens_SelectSheets(bool on) {
+  g_select_sheets = on;
 }
 
 int LanguageScreens_AssetLen(int slot, int orig_len) {

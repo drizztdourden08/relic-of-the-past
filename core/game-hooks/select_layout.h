@@ -15,7 +15,9 @@
 // The layout is chosen per screen: a screen runs a layout only while the set carries text for it there;
 // otherwise it takes the layout the set does carry, and the US layout when it carries neither. A ready
 // Japanese set uploads its tilemap font on the file select in both layouts (SelectLayout_JapaneseFont).
-// The background sheets of the intro never reach these screens (LanguageScreens_SheetLive).
+// The background sheets of the intro never reach these screens (LanguageScreens_SheetLive); with a
+// Japanese set each screen reloads the sheets, BG3 blank and frame palette of its own layout as it opens
+// (GameHook_FileSelectScreenGfx), since the name entry reloads none of them.
 #pragma once
 #include "src/types.h"
 
@@ -44,3 +46,8 @@ int SelectLayout_Active(void);
 
 // Whether the file select uploads the Japanese set's tilemap font (and moves the sprite sheet above it).
 bool SelectLayout_JapaneseFont(void);
+
+// Called from FileSelect_EraseTriforce as each file select screen opens, under force blank: for a
+// Japanese set, the background sheets, BG3 blank and frame palette of the layout the screen runs
+// (select_screen_gfx.c). Does nothing otherwise.
+void GameHook_FileSelectScreenGfx(void);

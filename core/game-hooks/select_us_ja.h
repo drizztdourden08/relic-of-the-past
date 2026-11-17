@@ -17,8 +17,8 @@ enum { kSelectUsJaLineMax = 32 };
 bool SelectUsJa_Ready(void);
 
 // The Japanese line that replaces the US label stripe at |row|, |col| (BG3 screen 0), |len| words long,
-// on |screen| (kSelectScreen_*): its tile numbers into |tiles| and its first column into |start|. Returns
-// the tile count (0 for a label with no Japanese words), or -1 when no label sits there.
+// on |screen| (kSelectScreen_*): its tilemap words, in the palette the set draws them with, into |tiles|
+// and its first column into |start|. Returns the tile count (0 for a label with no Japanese words), or -1 when no label sits there.
 int SelectUsJa_Label(int screen, int row, int col, int len, uint16 *tiles, int *start);
 
 // Called by the NMI with the stripe stream |p| it is about to draw for nmi_load_bg_from_vram |source|.

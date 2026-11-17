@@ -57,7 +57,8 @@ static const uint8 *SourceStream(const UsJaLabel *e, int *size) {
 }
 
 // The words of the first plain horizontal stripe on BG3 screen 0 at |row| of |p|, at most
-// kSelectUsJaLineMax. Returns their count, 0 when the stream has no such stripe.
+// kSelectUsJaLineMax, whole: the Japanese screens draw their text in their own palette, which the label
+// keeps. Returns their count, 0 when the stream has no such stripe.
 static int FindLine(const uint8 *p, int size, int row, uint16 *words) {
   int at = 0;
   while (at + 4 <= size && !(p[at] & kStreamEnd)) {
@@ -70,7 +71,7 @@ static int FindLine(const uint8 *p, int size, int row, uint16 *words) {
     if (plain && on_row && at + 4 + len <= size) {
       int n = len / 2 < kSelectUsJaLineMax ? len / 2 : kSelectUsJaLineMax;
       for (int i = 0; i < n; i++)
-        words[i] = (uint16)(p[at + 4 + 2 * i] | p[at + 5 + 2 * i] << 8) & kTileMask;
+        words[i] = (uint16)(p[at + 4 + 2 * i] | p[at + 5 + 2 * i] << 8);
       return n;
     }
     at += 4 + payload;
@@ -78,9 +79,13 @@ static int FindLine(const uint8 *p, int size, int row, uint16 *words) {
   return 0;
 }
 
+static bool BlankWord(uint16 w) {
+  return (w & kTileMask) == kJaBlankTile;
+}
+
 static bool BlankColumn(const uint16 *top, const uint16 *bottom, int bottom_n, int i) {
-  bool bottom_blank = i >= bottom_n || bottom[i] == kJaBlankTile;
-  return top[i] == kJaBlankTile && bottom_blank;
+  bool bottom_blank = i >= bottom_n || BlankWord(bottom[i]);
+  return BlankWord(top[i]) && bottom_blank;
 }
 
 // The Japanese line's columns kept for |half| (0 top, 1 bottom): trimmed of blank ends, and with its

@@ -12,6 +12,7 @@ interface JaScreenAddressTable {
   readonly dungeonMapLabels: TableRegion;
   readonly creditsDigits: TableRegion;
   readonly creditsScrollY: TableRegion;
+  readonly selectPalette: TableRegion;
   readonly endingCaptions: EndingCaptionSource;
   readonly credits: CreditsSource;
   readonly sheetPointers: { readonly spr: number; readonly bg: number };

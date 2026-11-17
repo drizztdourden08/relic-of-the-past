@@ -88,8 +88,8 @@ export { readSheetPointer } from './screens/read-sheet-pointers';
 export { PAUSE_TABLES, SELECT_FILE_TABLES } from './screens/screens.constants';
 export {
   CREDITS_DIGITS_ID, CREDITS_MAP_ID, CREDITS_OFFSETS_ID, CREDITS_SCROLL_Y_ID, CREDITS_TEXT_ID, DUNGEON_MAP_LABELS_ID,
-  ENDING_CAPTION_DATA_ID, ENDING_CAPTION_OFFSETS_ID, NAME_GRID_ID, TILEMAP_FONT_DATA_ID, TILEMAP_FONT_ID, menuTilemapId, pauseTableId,
-  selectFileTableId, sheetPatchTableId, sheetTableId,
+  ENDING_CAPTION_DATA_ID, ENDING_CAPTION_OFFSETS_ID, NAME_GRID_ID, SELECT_PALETTE_ID, TILEMAP_FONT_DATA_ID, TILEMAP_FONT_ID,
+  menuTilemapId, pauseTableId, selectFileTableId, sheetPatchTableId, sheetTableId,
 } from './screens/screen-table-ids.constants';
 export type { ScreenTable } from './screens/screen-table.type';
 export type {
