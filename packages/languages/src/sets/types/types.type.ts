@@ -6,7 +6,7 @@ type LanguageSetSummary = {
   id: string;
   name: string;
   base: string;
-  origin: 'rom' | 'custom';
+  origin: 'rom' | 'patch' | 'custom';
   lineCount: number;
 };
 

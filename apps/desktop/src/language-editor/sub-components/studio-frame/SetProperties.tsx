@@ -3,6 +3,7 @@ import { useMemo } from 'react';
 import { FactsPanel } from '@drizztdourden08/tessera/composites';
 import type { FactsPanelGroup } from '@drizztdourden08/tessera/composites';
 import { StudioSection } from '@app/studio';
+import { SOURCE_LABELS } from './studio-frame.constants';
 import { LANGUAGE_NAMES } from '../../../views/DataManager/sub-components/language-names.constants';
 import type { SetPropertiesProps } from './studio-frame.type';
 
@@ -13,7 +14,7 @@ const SetProperties = (props: SetPropertiesProps) => {
   const groups = useMemo<FactsPanelGroup[]>(() => [[
     { label: 'Name', value: set.name },
     { label: 'Id', value: set.id, mono: true },
-    { label: 'Source', value: set.origin === 'rom' ? `From a ${base} ROM` : `Based on ${base}` },
+    { label: 'Source', value: SOURCE_LABELS[set.origin](base) },
     { label: 'Lines', value: set.dialogue.length, mono: true },
     { label: 'Terms', value: set.glossary.length, mono: true },
     { label: 'Need attention', value: warnings, mono: true },
