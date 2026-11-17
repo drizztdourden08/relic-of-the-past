@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind logic */
-const WEB_PROTOCOLS: readonly string[] = ['http:', 'https:'];
+import { WEB_PROTOCOLS } from './is-web-address.constants';
 
 const isWebAddress = (text: string): boolean => {
   try {

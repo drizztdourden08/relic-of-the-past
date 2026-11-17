@@ -2,7 +2,6 @@
 import { useMemo } from 'react';
 import { EmptyState } from '@drizztdourden08/tessera/primitives';
 import { ListDetailLayout } from '@drizztdourden08/tessera/composites';
-import { CreateListPane } from '@app/compounds/CreateListPane';
 import { useCreateFlow } from '@app/hooks/useCreateFlow';
 import { useInstalledKind } from '@app/hooks/useInstalledKind';
 import { useConfirmUninstall } from '../InstalledOriginBar';
@@ -11,7 +10,7 @@ import { useSpriteDraft } from './behavior/useSpriteDraft';
 import { useSpriteExport } from './behavior/useSpriteExport';
 import { useStudioTask } from './behavior/useStudioTask';
 import { useStudioActions } from './behavior/useStudioActions';
-import { SpriteLibraryList } from './sub-components/SpriteLibraryList';
+import { SpriteListPane } from './sub-components/SpriteListPane';
 import { SpriteWorkArea } from './sub-components/SpriteWorkArea';
 import { CharacterCreateWizard, NEW_SPRITE_ID } from './sub-components/CharacterCreateWizard';
 import { EMPTY_EDITOR } from './PlayerSpriteStudio.constants';
@@ -35,19 +34,7 @@ const PlayerSpriteStudio = (props: PlayerSpriteStudioProps) => {
   const problem = error ?? uninstallError;
   const flow = useCreateFlow({ onSelect: (name) => { if (name !== NEW_SPRITE_ID) void run(() => draft.open(name)); } });
 
-  const list = (
-    <CreateListPane label="New character" creating={flow.creating} onCreate={flow.start}>
-      <SpriteLibraryList
-        entries={library.entries}
-        loading={library.loading}
-        selected={flow.creating ? null : openFile}
-        error={sheet ? null : problem}
-        isInstalled={actions.isInstalled}
-        onSelect={flow.select}
-        onDelete={actions.handleDelete}
-      />
-    </CreateListPane>
-  );
+  const list = <SpriteListPane flow={flow} library={library} actions={actions} selected={flow.creating ? null : openFile} error={sheet ? null : problem} />;
 
   const workArea = sheet && (
     <SpriteWorkArea

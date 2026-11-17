@@ -1,17 +1,9 @@
 /* @layer renderer-components @kind component */
 import { RadioGroup, Text } from '@drizztdourden08/tessera/primitives';
-import type { RadioOption } from '@drizztdourden08/tessera/primitives';
 import { ImportForm } from '@app/views/DataManager/sub-components/ImportForm';
-import {
-  CREATE_TEXT, IMPORTED_TEXT, SOURCE_DESCRIPTIONS, SOURCE_LABELS, SOURCE_ORDER, STEP_IDS,
-} from '../CharacterCreateWizard.constants';
-import type { CharacterSource, StepBodyProps } from '../CharacterCreateWizard.type';
-
-const SOURCE_OPTIONS: RadioOption<CharacterSource>[] = SOURCE_ORDER.map((value) => ({
-  value,
-  label: SOURCE_LABELS[value],
-  description: SOURCE_DESCRIPTIONS[value],
-}));
+import { CREATE_TEXT, IMPORTED_TEXT, STEP_IDS } from '../CharacterCreateWizard.constants';
+import type { StepBodyProps } from '../CharacterCreateWizard.type';
+import { SOURCE_OPTIONS } from './StepBody.constants';
 
 const StepBody = ({ wizard, imported, onUrlImport, onFileImport }: StepBodyProps) => {
   switch (wizard.current.id) {

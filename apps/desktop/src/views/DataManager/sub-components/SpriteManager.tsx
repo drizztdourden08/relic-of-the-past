@@ -34,6 +34,8 @@ const SpriteManager = (props: SpriteManagerProps) => {
     </CreateListPane>
   );
 
+  const grid = selectedRom && spriteBaseUrl ? <SpriteGrid baseUrl={spriteBaseUrl} /> : null;
+
   const detail = flow.creating ? (
     <SpriteCreateWizard
       roms={romsWithAssets}
@@ -43,7 +45,7 @@ const SpriteManager = (props: SpriteManagerProps) => {
       onCancel={flow.cancel}
       onCreated={flow.select}
     />
-  ) : selectedRom && spriteBaseUrl ? <SpriteGrid baseUrl={spriteBaseUrl} /> : null;
+  ) : grid;
 
   return (
     <ListDetailLayout

@@ -2,26 +2,15 @@
 import type { WizardStepDef } from '@drizztdourden08/tessera/composites';
 import { BUSY_HINT, CREATE_BUTTONS, SOURCE_LABELS, STEP_IDS, STEP_LABELS } from '../MsuCreateWizard.constants';
 import type { MsuWizardValues } from '../MsuCreateWizard.type';
+import { stepBuilder } from '../../../wizard-step';
 import { detailsProblem } from './details-problem';
 
+const step = stepBuilder<MsuWizardValues, keyof typeof STEP_IDS>(STEP_IDS, STEP_LABELS);
+
 const msuWizardSteps = (isTaken: (name: string) => boolean): readonly WizardStepDef<MsuWizardValues>[] => [
-  {
-    id: STEP_IDS.source,
-    label: STEP_LABELS.source,
-    summary: (values) => SOURCE_LABELS[values.source],
-  },
-  {
-    id: STEP_IDS.details,
-    label: STEP_LABELS.details,
-    validate: (values) => detailsProblem(values, isTaken),
-    summary: (values) => values.name.trim(),
-  },
-  {
-    id: STEP_IDS.create,
-    label: STEP_LABELS.create,
-    busyHint: BUSY_HINT,
-    buttons: CREATE_BUTTONS,
-  },
+  step('source', { summary: (values) => SOURCE_LABELS[values.source] }),
+  step('details', { validate: (values) => detailsProblem(values, isTaken), summary: (values) => values.name.trim() }),
+  step('create', { busyHint: BUSY_HINT, buttons: CREATE_BUTTONS }),
 ];
 
 export { msuWizardSteps };
