@@ -2,7 +2,7 @@
 import { kLanguages } from '@rotp/asset-extraction';
 import { slotBlockOffset } from './sram-slots';
 import {
-  DIGIT_TILE_SHIFT, FIRST_DIGIT_TILE, NAME_LENGTH, NAME_OFFSET, SPECIAL_TILE_CODES,
+  DIGIT_TILE_SHIFT, FIRST_DIGIT_TILE, KANA_NAME_BIT, KANA_PLACEHOLDER, NAME_LENGTH, NAME_OFFSET, SPECIAL_TILE_CODES,
 } from './offline-player-name.constants';
 
 const filterNameCode = (tile: number): number => {
@@ -25,7 +25,9 @@ const offlinePlayerName = (sram: Uint8Array, slot: number): string | null => {
   for (let i = 0; i < NAME_LENGTH; i++) {
     const at = base + NAME_OFFSET + i * 2;
     const word = (sram[at] ?? 0) | ((sram[at + 1] ?? 0) << 8);
-    name += glyphText(filterNameCode((word & 0xf) | ((word >> 1) & 0xf0)));
+    name += (word & KANA_NAME_BIT) !== 0
+      ? KANA_PLACEHOLDER
+      : glyphText(filterNameCode((word & 0xf) | ((word >> 1) & 0xf0)));
   }
   const trimmed = name.trimEnd();
   return trimmed.length > 0 ? trimmed : null;

@@ -57,7 +57,7 @@ static uint32 Packed(int glyph, int multibyte) {
 
 // The Japanese glyph for a US letter code: A-Z and a-z share the capitals, 0-9 the digits, the few
 // marks the game's own text uses their kana-set marks, anything else a space.
-static int GlyphOfUsLetter(uint8 code) {
+int DialogWide_GlyphOfUsLetter(uint8 code) {
   if (code < 26) return kLetterGlyph + code;
   if (code < 52) return kLetterGlyph + code - 26;
   if (code < 62) return kDigitGlyph + code - 52;
@@ -83,7 +83,7 @@ bool GameHook_DialogWideLoad(uint8 c, const uint8 **src, const uint8 *src_end, u
 uint32 GameHook_DialogWideDecode(uint8 a, const uint8 *src) {
   if (!JapaneseOn()) return 0;
   if (a >= kLeadFirst && a <= kLeadLast) return Packed((a - kLeadFirst) << 8 | src[0], 1);
-  if (a < kUsCommandStart) return Packed(GlyphOfUsLetter(a), 0);
+  if (a < kUsCommandStart) return Packed(DialogWide_GlyphOfUsLetter(a), 0);
   // The two-byte escapes of the Latin extras have no picture in this sheet: a question mark.
   if (a >= kUsEscapeFirst && a <= kUsEscapeLast) return Packed(kQuestionGlyph, 1);
   return 0;

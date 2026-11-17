@@ -28,6 +28,9 @@ void GameHook_DialogGlyph(uint16 c, uint8 line, uint8 x, uint8 w);
 bool GameHook_DialogWideLoad(uint8 c, const uint8 **src, const uint8 *src_end, uint8 **dst);
 uint32 GameHook_DialogWideDecode(uint8 a, const uint8 *src);
 bool GameHook_DialogWideGlyph(int c);
+// The Japanese glyph that stands for US letter code |code| (0xff, the space, for one with no picture).
+// The Japanese file select draws a US-letter name with it too.
+int DialogWide_GlyphOfUsLetter(uint8 code);
 // A [Scroll] finished: every row moved up one.
 void GameHook_DialogScrolled(void);
 // A message started: the glyph bitmap was cleared and the parsed buffer loaded.

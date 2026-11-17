@@ -93,6 +93,7 @@ void SelectFile_Func6_DrawOams2(int k) {
 void SelectFile_Func17(int k) {
   static const uint16 kSelectFile_DrawName_VramOffs[3] = {8, 0x5c, 0xb0};
   static const uint16 kSelectFile_DrawName_HealthVramOffs[3] = {0x16, 0x6a, 0xbe};
+  if (GameHook_SelectFileNameJa(k)) return;
   uint8 *sram = g_zenv.sram + 0x500 * k;
   uint16 *name = (uint16 *)(sram + kSrmOffs_Name);
   uint16 *dst = vram_upload_data + kSelectFile_DrawName_VramOffs[k] / 2;
@@ -173,7 +174,7 @@ void LoadFileSelectGraphics() {  // 80e4e9
   TransferFontToVRAM();
 
   Decomp_spr(&g_ram[0x14000], 0x6b);
-  memcpy(&g_zenv.vram[0x7800], &g_ram[0x14000], 0x300 * sizeof(uint16));
+  memcpy(&g_zenv.vram[GameHook_FileSelectSheetVram(0x7800)], &g_ram[0x14000], 0x300 * sizeof(uint16));
 }
 
 void Intro_ValidateSram() {  // 828054
@@ -303,7 +304,7 @@ void FileSelect_TriggerNameStripesAndAdvance() {  // 8cceb1
     0xa9, 0x18, 0xa9, 0x18, 0xa9, 0x18, 0xa9, 0x18, 0xa9, 0x18, 0xa9, 0x18, 0xff,
   };
 #define kSelectFile_Func3_Data LANG_PICK(uint8, kLangTbl_SelectFileFunc3, kSelectFile_Func3_Data)
-  memcpy(vram_upload_data, kSelectFile_Func3_Data, 253);
+  memcpy(vram_upload_data, kSelectFile_Func3_Data, LanguageScreens_Len(kLangTbl_SelectFileFunc3, 253));
   INIDISP_copy = 0xf;
   nmi_disable_core_updates = 0;
   submodule_index++;
@@ -409,6 +410,7 @@ void CopyFile_ConfirmSelection() {  // 8cd0b9
 
 void FilePicker_DeleteHeaderStripe() {  // 8cd0c6
   static const uint16 kFilePicker_DeleteHeaderStripe_Dst[2] = {4, 0x1e};
+  if (GameHook_FilePickerHeaderJa()) return;
   for (int j = 1; j >= 0; j--) {
     uint16 *dst = vram_upload_data + kFilePicker_DeleteHeaderStripe_Dst[j] / 2;
     for (int i = 0; i != 11; i++)
@@ -444,7 +446,7 @@ void CopyFile_SelectionAndBlinker() {  // 8cd13f
   static const uint8 kCopyFile_SelectionAndBlinker_FaerieY[4] = {87, 111, 135, 191};
 
   vram_upload_offset = 0xac;
-  memcpy(vram_upload_data, kCopyFile_SelectionAndBlinker_Tab, 173);
+  memcpy(vram_upload_data, kCopyFile_SelectionAndBlinker_Tab, LanguageScreens_Len(kLangTbl_CopyBlinkTab, 173));
 
   for (int k = 0; k != 3; k++) {
     if (selectfile_arr1[k] & 1) {
@@ -458,6 +460,7 @@ void CopyFile_SelectionAndBlinker() {  // 8cd13f
       }
     }
   }
+  GameHook_CopySelectNamesJa();
   FileSelect_DrawFairy(kCopyFile_SelectionAndBlinker_FaerieX[selectfile_R16], kCopyFile_SelectionAndBlinker_FaerieY[selectfile_R16]);
 
   uint8 a = (filtered_joypad_L & 0xc0 | filtered_joypad_H) & 0xfc;
@@ -486,12 +489,13 @@ void CopyFile_SelectionAndBlinker() {  // 8cd13f
       return;
     }
     selectfile_R20 = selectfile_R16 * 2;
-    memcpy(vram_upload_data + 26, kCopyFile_SelectionAndBlinker_Tab1, 73);
+    memcpy(vram_upload_data + 26, kCopyFile_SelectionAndBlinker_Tab1, LanguageScreens_Len(kLangTbl_CopyBlinkTab1, 73));
     if (selectfile_R16 != 2) {
       uint16 *dst = vram_upload_data + selectfile_R16 * 6;
       dst[26] = 0x2762;
       dst[29] = 0x4762;
     }
+    GameHook_CopySelectBlinkJa();
     submodule_index++;
     selectfile_R16 = 0;
   }
@@ -536,7 +540,7 @@ void CopyFile_TargetSelectionAndBlink() {  // 8cd27b
   static const uint8 kCopyFile_TargetSelectionAndBlink_FaerieY[3] = {0x67, 0x7f, 0xbf};
   static const uint16 kCopyFile_TargetSelectionAndBlink_Dst[2] = {0x38, 0x60};
   static const uint16 kCopyFile_TargetSelectionAndBlink_Tab1[3] = {0x18e7, 0x18e8, 0x18e9};
-  memcpy(vram_upload_data, kCopyFile_TargetSelectionAndBlink_Tab0, 133);
+  memcpy(vram_upload_data, kCopyFile_TargetSelectionAndBlink_Tab0, LanguageScreens_Len(kLangTbl_CopyTargetTab0, 133));
 
   for (int k = 0, j = 0; k != 3; k++) {
     if (k * 2 == selectfile_R20)
@@ -559,6 +563,7 @@ void CopyFile_TargetSelectionAndBlink() {  // 8cd27b
   }
 
   vram_upload_offset = 132;
+  GameHook_CopyTargetNamesJa();
 
   FileSelect_DrawFairy(kCopyFile_TargetSelectionAndBlink_FaerieX[selectfile_R16], kCopyFile_TargetSelectionAndBlink_FaerieY[selectfile_R16]);
 
@@ -588,6 +593,7 @@ void CopyFile_TargetSelectionAndBlink() {  // 8cd27b
       dst[26] = 0x1462;
       dst[29] = 0x3462;
     }
+    GameHook_CopyTargetBlinkJa();
     submodule_index++;
     selectfile_R16 = 0;
   }
@@ -683,7 +689,7 @@ void KILLFile_ChooseTarget() {  // 8cd4ba
 #define kKILLFile_ChooseTarget_Tab2 LANG_PICK(uint8, kLangTbl_KillTab2, kKILLFile_ChooseTarget_Tab2)
   static const uint8 kKILLFile_ChooseTarget_FaerieX[4] = {36, 36, 36, 28};
   static const uint8 kKILLFile_ChooseTarget_FaerieY[4] = {103, 127, 151, 191};
-  memcpy(vram_upload_data, kKILLFile_ChooseTarget_Tab, 253);
+  memcpy(vram_upload_data, kKILLFile_ChooseTarget_Tab, LanguageScreens_Len(kLangTbl_KillTab, 253));
   for (int k = 0; k < 3; k++) {
     if (selectfile_arr1[k])
       SelectFile_Func17(k);
@@ -726,12 +732,14 @@ void KILLFile_ChooseTarget() {  // 8cd4ba
       dst[0] = 0x6762;
       dst[3] = 0x8762;
     }
+    GameHook_KillTargetBlinkJa();
     subsubmodule_index = selectfile_R16;
     selectfile_R16 = 0;
   }
 }
 
 void FileSelect_DrawFairy(uint8 x, uint8 y) {  // 8cd7a5
+  GameHook_FileSelectFairy(&x, &y);
   SetOamPlain(&oam_buf[0], x, y, frame_counter & 8 ? 0xaa : 0xa8, 0x7e, 2);
 }
 
@@ -761,10 +769,12 @@ void NameFile_EraseSave() {  // 8cd89c
   uint16 *name = (uint16 *)(g_zenv.sram + offs + kSrmOffs_Name);
   name[0] = name[1] = name[2] = name[3] = name[4] = name[5] = 0xa9;
   GameHook_ArmFileNamePrefill();
+  GameHook_NameFileJapaneseInit();
 }
 
 void NameFile_DoTheNaming() {  // 8cda4d
   GameHook_PrefillFileName();
+  if (GameHook_NameFileJapanese()) return;
   static const int16 kNamePlayer_Tab1[26] = {
     -1, 1, -1, 1, -1, 1, -1, 1, -1, 1, -1, 1, -1, 1, -1, 1,
     -2, 2, -2, 2, -2, 2, -2, 2, -4, 4,

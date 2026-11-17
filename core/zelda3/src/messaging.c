@@ -2356,6 +2356,7 @@ void Text_LoadCharacterBuffer() {  // 8ec4e2
 }
 
 uint8 *Text_WritePlayerName(uint8 *p) {  // 8ec5b3
+  if (GameHook_WritePlayerNameWide(&p)) return p;
   uint8 slot = srm_var1;
   int offs = ((slot>>1) - 1) * 0x500;
   for (int i = 0; i < 6; i++) {

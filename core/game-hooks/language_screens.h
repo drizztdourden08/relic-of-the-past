@@ -10,8 +10,8 @@
 #include "src/types.h"
 
 // One id per hook-owned table. The byte length of each is the vendored table's own (a size-checked
-// copy is what the setter keeps), except the three stripe tables marked "variable", which keep the
-// host's own length up to a cap.
+// copy is what the setter keeps), except the select-file stripes and the name grid, which keep the
+// host's own length up to a cap (the Japanese layout's tables differ in length).
 enum {
   kLangTbl_HudAbility,         // hud.c kHudAbilityText        uint16[80]
   kLangTbl_HudGloves,          // hud.c kHudGlovesText         uint16[20]
@@ -58,11 +58,11 @@ extern LanguageScreens g_language_screens;
 #define LANG_PICK(T, id, orig) ((const T *)LanguageScreens_Pick((id), (orig)))
 
 // The table |id| for this frame: the host's copy when the gate is on and one was supplied, else |orig|.
+// The Japanese select-file set is picked only in Japanese mode (LanguageJa_On, language_ja_screens.h).
 const void *LanguageScreens_Pick(int id, const void *orig);
 
 // The byte length of table |id| for this frame: the host's own length while its copy is the one picked,
-// |orig_len| otherwise. Only the stripe tables a language may lengthen or shorten (file select gfx0,
-// copy and erase target tab2) are read through it; the rest are exact-size.
+// |orig_len| otherwise. Every select-file stripe copy is read through it; the rest are exact-size.
 int LanguageScreens_Len(int id, int orig_len);
 
 // Called by ZeldaSetLanguage once the language's dialogue blocks are set. Re-applies the host's
@@ -81,7 +81,8 @@ int GameHook_TilemapFont(void);
 int LanguageScreens_AssetLen(int slot, int orig_len);
 
 // Called at the top of TransferFontToVRAM with the font's VRAM destination. Uploads the host's tilemap
-// font and returns true for a Japanese set in the credits; false leaves the original upload.
+// font and returns true for a Japanese set in the credits or on the Japanese file select; false leaves
+// the original upload.
 bool GameHook_TransferTilemapFont(uint16 *dst);
 
 // Shared with language_screens_assets.c and language_screens_font.c.
@@ -91,6 +92,8 @@ bool LanguageScreensAssets_Set(int id, const void *data, int len);
 void LanguageScreensAssets_Clear(void);
 bool LanguageScreensFont_Set(const void *data, int len);
 void LanguageScreensFont_Clear(void);
+// Whether the host's whole 512-tile font is present.
+bool LanguageScreensFont_Ready(void);
 
 // core/wasm-build/emscripten_io.c: FindInAssetArray answers |p|/|size| for sheet |idx| of asset 64
 // (kSprGfx, |asset| 0) or 65 (kBgGfx, |asset| 1) in place of the baked one. NULL clears the override.

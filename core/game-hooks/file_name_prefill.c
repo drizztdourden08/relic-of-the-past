@@ -55,6 +55,9 @@ void GameHook_PrefillFileName(void) {
   g_prefill_armed = false;
   if (!(enhanced_features0 & kFeatures0_PrefillFileName))
     return;
+  // The prefilled name and its parked cell are the US grid's; the Japanese grid opens blank.
+  if (LanguageJa_On())
+    return;
 
   // NameFile_EraseSave leaves the file block's SRAM offset in attract_legend_ctr.
   uint8 *name = g_zenv.sram + attract_legend_ctr + kSrmOffs_Name;

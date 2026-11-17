@@ -6,8 +6,8 @@
 //
 // Host flow: WasmClearLanguageScreens, WasmSetLanguageScreenTable for each table the language has,
 // then ZeldaSetLanguage (or WasmApplyLanguageScreens when only the data changed). A table that was
-// never set, or was set with the wrong length, keeps reading the vendored one (three stripe tables
-// accept their own length, see kTableMaxBytes).
+// never set, or was set with the wrong length, keeps reading the vendored one (the select-file stripes
+// and the name grid accept their own length, see kTableMaxBytes).
 #include "game_hooks_internal.h"
 #include "src/features.h"
 #include <stdlib.h>
@@ -26,24 +26,45 @@ static const uint16 kTableBytes[kLangTbl_Count] = {
 
 // Largest byte length the host may give a variable table (0 = the length must match kTableBytes). The
 // vendored sites copy it into a buffer with room for this much: the stripe buffer at vram_upload_data.
+// The other select-file stripes and the name grid take the Japanese layout's own lengths.
 static const uint16 kTableMaxBytes[kLangTbl_Count] = {
   [kLangTbl_SelectFileGfx0] = 320,
+  [kLangTbl_SelectFileFunc3] = 320,
+  [kLangTbl_CopyBlinkTab] = 224,
+  [kLangTbl_CopyBlinkTab1] = 96,
+  [kLangTbl_CopyTargetTab0] = 160,
   [kLangTbl_CopyTargetTab2] = 96,
+  [kLangTbl_KillTab] = 320,
   [kLangTbl_KillTab2] = 128,
+  [kLangTbl_NameGrid] = 320,
 };
 
 bool LanguageScreens_On(void) {
   return (enhanced_features2 & kFeatures2_LanguageScreens) != 0;
 }
 
+// The Japanese select-file set (its stripes and grid, told apart by a stripe of another length than
+// the US one) is read only as a whole and only in Japanese mode: without it the US screens would write
+// US offsets into Japanese stripes, so they keep the vendored tables.
+static bool HeldBack(int id) {
+  if (id < kLangTbl_SelectFileFunc3 || id > kLangTbl_NameGrid) return false;
+  const LanguageScreens *s = &g_language_screens;
+  int func3 = kLangTbl_SelectFileFunc3;
+  bool ja_set = s->table[func3] != NULL && s->length[func3] != kTableBytes[func3];
+  return ja_set && !LanguageJa_On();
+}
+
+static bool HostPicked(int id) {
+  return id >= 0 && id < kLangTbl_Count && g_language_screens.table[id] != NULL && LanguageScreens_On() &&
+         !HeldBack(id);
+}
+
 const void *LanguageScreens_Pick(int id, const void *orig) {
-  const void *host = (id >= 0 && id < kLangTbl_Count) ? g_language_screens.table[id] : NULL;
-  return (host != NULL && LanguageScreens_On()) ? host : orig;
+  return HostPicked(id) ? g_language_screens.table[id] : orig;
 }
 
 int LanguageScreens_Len(int id, int orig_len) {
-  bool host = id >= 0 && id < kLangTbl_Count && g_language_screens.table[id] != NULL && LanguageScreens_On();
-  return host ? g_language_screens.length[id] : orig_len;
+  return HostPicked(id) ? g_language_screens.length[id] : orig_len;
 }
 
 int GameHook_TilemapFont(void) {
