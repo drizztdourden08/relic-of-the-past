@@ -14,6 +14,7 @@ const writePatchedPack = async (files: FileStore, pack: PatchedPack): Promise<vo
   await saveSet(files, {
     ...setFromPack(packFromExtracted(pack), screens),
     name,
+    origin: 'patch',
     base,
     text,
     ...(credits ? { credits } : {}),

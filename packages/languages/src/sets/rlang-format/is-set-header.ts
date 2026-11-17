@@ -8,7 +8,7 @@ const hasIdentity = (header: Record<string, unknown>): boolean =>
   && typeof header.base === 'string' && Object.hasOwn(kLanguages, header.base);
 
 const hasOriginAndVersion = (header: Record<string, unknown>): boolean =>
-  (header.origin === 'rom' || header.origin === 'custom') && typeof header.version === 'number';
+  (header.origin === 'rom' || header.origin === 'patch' || header.origin === 'custom') && typeof header.version === 'number';
 
 const hasSupportedFormat = (header: Record<string, unknown>): boolean =>
   header.format === SET_FORMAT;

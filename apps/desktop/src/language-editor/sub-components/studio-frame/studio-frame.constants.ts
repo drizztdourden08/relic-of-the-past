@@ -7,4 +7,10 @@ const PROPERTIES_PANEL = { title: 'Properties', storageKey: 'language-studio.pro
 const NO_SET_MESSAGE = 'Select a language set to edit';
 const UNREADABLE_SET = 'That language set could not be read';
 
-export { EDITOR_LABEL, NO_SET_MESSAGE, PROPERTIES_PANEL, STUDIO_LABEL, UNREADABLE_SET };
+const SOURCE_LABELS = {
+  rom: (base: string) => `From a ${base} ROM`,
+  patch: (base: string) => `Imported from a patched ${base} ROM`,
+  custom: (base: string) => `Based on ${base}`,
+};
+
+export { SOURCE_LABELS, EDITOR_LABEL, NO_SET_MESSAGE, PROPERTIES_PANEL, STUDIO_LABEL, UNREADABLE_SET };
