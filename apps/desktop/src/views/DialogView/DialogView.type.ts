@@ -68,6 +68,7 @@ interface Grounding {
 interface DialogContent {
   atlas: ReturnType<typeof getGlyphAtlas>;
   alphabet: ReturnType<typeof activeAlphabet>;
+  lang: string | undefined;
   highlight: HighlightLook;
   spritesBase: string;
   prompts: ResolvedPrompt[];
