@@ -1,7 +1,7 @@
 /* @layer renderer-hud @kind component */
 import { useLayoutEffect, useRef } from 'react';
 import type { DialogCell } from '@rotp/game-data';
-import { ATLAS_COLUMNS, CELL_H, CELL_W, NO_HIGHLIGHTS } from './GlyphRow.constants';
+import { ATLAS_COLUMNS, CELL_H, NO_HIGHLIGHTS } from './GlyphRow.constants';
 import type { GlyphRowProps } from './GlyphRow.type';
 
 const sourceOf = (cell: DialogCell, atlas: HTMLCanvasElement, highlights: readonly (HTMLCanvasElement | null)[]): HTMLCanvasElement =>
@@ -21,9 +21,10 @@ const paintRow = (canvas: HTMLCanvasElement, props: GlyphRowProps): void => {
   const px = unit * ratio;
   for (const cell of cells) {
     const { glyph, x, w } = cell;
-    const sx = (glyph % ATLAS_COLUMNS) * CELL_W;
-    const sy = Math.floor(glyph / ATLAS_COLUMNS) * CELL_H;
     const source = sourceOf(cell, atlas, highlightAtlases);
+    const cellW = source.width / ATLAS_COLUMNS;
+    const sx = (glyph % ATLAS_COLUMNS) * cellW;
+    const sy = Math.floor(glyph / ATLAS_COLUMNS) * CELL_H;
     ctx.drawImage(source, sx, sy, w, CELL_H, Math.round(x * px), 0, Math.round(w * px), Math.round(CELL_H * px));
   }
 };

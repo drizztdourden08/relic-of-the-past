@@ -27,17 +27,21 @@ const US_SCREEN_ADDRESSES: ScreenAddressTable = {
     dungeonItems: { address: 0x8ded09, count: 16 },
   },
   dungeonMapLabels: { address: 0x8af009, count: 744 },
+  creditsDigits: { address: 0x8ebe04, count: 2 },
   endingCaptions: {
+    kind: 'bytes',
     offsets: { address: 0x8ec2e1, count: 17 },
     data: { address: 0x8ebf4c, count: 917 },
   },
   credits: {
+    kind: 'bytes',
     text: { address: 0x8eb178, count: 1989 },
     offsets: { address: 0x8eb93d, count: 394 },
     map: { address: 0x8eb038, count: 160 },
   },
   sheetPointers: { spr: 0x00cff3, bg: 0x00cf80 },
   sheets: { spr: [105, 106, 107], bg: [] },
+  sheetPatches: [],
 };
 
 export { US_SCREEN_ADDRESSES };

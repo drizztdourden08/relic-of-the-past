@@ -2,8 +2,11 @@
 import { extractLangEntry, extractScreens, kScreenAddresses } from '@rotp/asset-extraction';
 import type { RomData } from '@rotp/asset-extraction';
 import type { ExtractedPack } from '../types';
+import { extractJapanesePack } from './extract-japanese-pack';
+import { JAPANESE } from './extract-rom-pack.constants';
 
 const extractRomPack = (rom: RomData): ExtractedPack => {
+  if (rom.language === JAPANESE) return extractJapanesePack(rom);
   const entry = extractLangEntry(rom, rom.language, 1);
   const addresses = kScreenAddresses[rom.language];
   return {

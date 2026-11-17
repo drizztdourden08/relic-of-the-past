@@ -3,7 +3,7 @@ import type { DialogCell, DialogFrame } from '@rotp/game-data';
 import { kindOf, waitOf } from '@rotp/game-data';
 import { readU8OrZero, readU16 } from '../../bridge/wasm-call';
 import {
-  CELL_BYTES, CELL_HIGHLIGHT_SHIFT, CELL_WIDTH_MASK, CELLS_PER_ROW, FLAG_BORDERED, FLAG_NATIVE_HIDDEN, FLAG_STORY,
+  CELL_BYTES, CELL_GLYPH_BIT_SHIFT, CELL_HIGHLIGHT_MASK, CELL_HIGHLIGHT_SHIFT, CELL_WIDTH_MASK, CELLS_PER_ROW, FLAG_BORDERED, FLAG_NATIVE_HIDDEN, FLAG_STORY,
   HEADER_BYTES, OFFSET_ACTIVE, OFFSET_CHOICE, OFFSET_FLAGS, OFFSET_GENERATION, OFFSET_LAST_COMMAND,
   OFFSET_MESSAGE_ID, OFFSET_MESSAGE_ROWS, OFFSET_MESSAGE_WIDTH, OFFSET_RENDER_STATE, OFFSET_ROW_CELL_COUNTS,
   OFFSET_SCROLL_STEP, OFFSET_SCROLL_X, OFFSET_SCROLL_Y, OFFSET_TOPLEFT, ROWS,
@@ -16,7 +16,11 @@ const readRow = (heap: Uint8Array, base: number, count: number): DialogCell[] =>
   for (let i = 0; i < Math.min(count, CELLS_PER_ROW); i++) {
     const at = base + i * CELL_BYTES;
     const width = readU8OrZero(heap, at + 2);
-    cells.push({ glyph: readU8OrZero(heap, at), x: readU8OrZero(heap, at + 1), w: width & CELL_WIDTH_MASK, highlight: width >> CELL_HIGHLIGHT_SHIFT });
+    const glyph = readU8OrZero(heap, at) | ((width >> CELL_GLYPH_BIT_SHIFT) << 8);
+    cells.push({
+      glyph, x: readU8OrZero(heap, at + 1), w: width & CELL_WIDTH_MASK,
+      highlight: (width >> CELL_HIGHLIGHT_SHIFT) & CELL_HIGHLIGHT_MASK,
+    });
   }
   return cells;
 };

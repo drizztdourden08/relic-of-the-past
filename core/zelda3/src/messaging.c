@@ -2246,6 +2246,7 @@ enum {
 #define TEXTCMD_MK(c, x, m) ((c) << 6 | (x) << 1 | (m))
 
 uint32 Text_DecodeCmd(uint8 a, const uint8 *src) {
+  { uint32 wide = GameHook_DialogWideDecode(a, src); if (wide) return wide; }
   { uint32 highlight = GameHook_DialogHighlightDecode(a, src); if (highlight) return highlight; }
   { uint32 extra = GameHook_DialogExtraGlyphDecode(a, src); if (extra) return extra; }
   if ((g_zenv.dialogue_flags & 1) == 0) {
@@ -2314,6 +2315,7 @@ void Text_LoadCharacterBuffer() {  // 8ec4e2
   uint8 *dst = messaging_text_buffer;
   while (src < src_end) {
     uint8 c = *src++;
+    if (GameHook_DialogWideLoad(c, &src, src_end, &dst)) continue;
     if (c >= kTextDictBase) {
       MemBlk blk = FindIndexInMemblk(dictionary, c - kTextDictBase);
       memcpy(dst, blk.ptr, blk.size);
@@ -2594,6 +2596,7 @@ void RenderText_Draw_Finish() {  // 8eca35
 }
 
 void VWF_RenderSingle(int c) {  // 8ecab8
+  if (GameHook_DialogWideGlyph(c)) return;
   if (c != 0x59)
     sound_effect_2 = 12;
   vwf_line_speed_cur = vwf_line_speed;

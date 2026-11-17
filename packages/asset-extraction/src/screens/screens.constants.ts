@@ -9,6 +9,12 @@ const PAUSE_TABLES: readonly PauseTable[] = [
   'ability', 'gloves', 'bottles', 'mushroom', 'flute', 'mirror', 'bow', 'items', 'dungeonItems',
 ];
 
+const SHEET_TILE_BYTES = 24;
+
+const END_WORD_SHEET = 45;
+
+const END_WORD_TILES: readonly number[] = [0, 1, 2, 3, 4, 5, 6, 7, 16, 17, 18, 19, 20, 21, 22, 23];
+
 const SHEET_TABLE_STRIDE = 0xdf;
 
 const SPRITE_RAW_SHEET_COUNT = 12;
@@ -20,6 +26,6 @@ const TILEMAP_FONT_BYTES = 256 * 16;
 const OWN_FONT_INDEX = 0;
 
 export {
-  OWN_FONT_INDEX, PAUSE_TABLES, SELECT_FILE_TABLES, SHEET_TABLE_STRIDE, SPRITE_RAW_SHEET_BYTES, SPRITE_RAW_SHEET_COUNT,
+  END_WORD_SHEET, END_WORD_TILES, OWN_FONT_INDEX, SHEET_TILE_BYTES, PAUSE_TABLES, SELECT_FILE_TABLES, SHEET_TABLE_STRIDE, SPRITE_RAW_SHEET_BYTES, SPRITE_RAW_SHEET_COUNT,
   TILEMAP_FONT_BYTES,
 };

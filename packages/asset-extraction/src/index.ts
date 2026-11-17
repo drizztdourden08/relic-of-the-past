@@ -1,5 +1,10 @@
 /* @layer shared-asset-extraction @kind logic */
-export type { RomData, RomLanguage, RomIdentEntry } from './rom/rom-types';
+export type { RomData, RomLanguage, RomIdentEntry, RomRevision } from './rom/rom-types';
+export { extractJapaneseLanguage } from './japanese/entry/extract-japanese-language';
+export { buildJapaneseEntry } from './japanese/entry/build-japanese-entry';
+export { glyphToChar } from './japanese/text/glyph-to-char';
+export { GLYPH_LIMIT as JAPANESE_GLYPH_LIMIT } from './japanese/text/japanese-charset.constants';
+export type { ExtractedJapaneseLanguage, JapanesePackedEntry } from './japanese/entry/japanese-entry.type';
 export { snesToLinear, advanceAddress, advanceAddressWord } from './rom/snes-address';
 export { GAME_ROM_LANGUAGE, OFFICIAL_RELEASES, ZELDA3_SHA1, ZELDA3_SHA1_US } from './rom/rom-loader/rom-loader.constants';
 export { fanTranslationRefusal } from './rom/rom-loader/fan-translation-refusal';
@@ -81,9 +86,9 @@ export { kScreenAddresses, US_SCREEN_ADDRESSES } from './screens/addresses';
 export { readSheetPointer } from './screens/read-sheet-pointers';
 export { PAUSE_TABLES, SELECT_FILE_TABLES } from './screens/screens.constants';
 export {
-  CREDITS_MAP_ID, CREDITS_OFFSETS_ID, CREDITS_TEXT_ID, DUNGEON_MAP_LABELS_ID, ENDING_CAPTION_DATA_ID,
+  CREDITS_DIGITS_ID, CREDITS_MAP_ID, CREDITS_OFFSETS_ID, CREDITS_TEXT_ID, DUNGEON_MAP_LABELS_ID, ENDING_CAPTION_DATA_ID,
   ENDING_CAPTION_OFFSETS_ID, NAME_GRID_ID, TILEMAP_FONT_DATA_ID, TILEMAP_FONT_ID, menuTilemapId, pauseTableId,
-  selectFileTableId, sheetTableId,
+  selectFileTableId, sheetPatchTableId, sheetTableId,
 } from './screens/screen-table-ids.constants';
 export type { ScreenTable } from './screens/screen-table.type';
 export type {

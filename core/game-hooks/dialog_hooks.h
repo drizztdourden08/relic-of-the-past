@@ -21,7 +21,13 @@ void GameHook_DialogMeasure(void);
 // Observers of the text engine, so the host can draw the box itself. All no-ops unless the host may
 // hide the native box (kFeatures3_HudOverride) or pace it (kFeatures3_DialogControls).
 // A glyph |c| of width |w| px was drawn on visible row |line| (0..2) at pen x |x| px.
-void GameHook_DialogGlyph(uint8 c, uint8 line, uint8 x, uint8 w);
+void GameHook_DialogGlyph(uint16 c, uint8 line, uint8 x, uint8 w);
+// Japanese dialogue (dialog_wide_glyphs.c), all no-ops without the Japanese flag. Load: the loader meets
+// byte |c|; a two-byte glyph is copied whole (true). Decode: the packed letter for a glyph pair or a US
+// letter code, 0 otherwise. Glyph: VWF_RenderSingle drew glyph |c| entirely (true).
+bool GameHook_DialogWideLoad(uint8 c, const uint8 **src, const uint8 *src_end, uint8 **dst);
+uint32 GameHook_DialogWideDecode(uint8 a, const uint8 *src);
+bool GameHook_DialogWideGlyph(int c);
 // A [Scroll] finished: every row moved up one.
 void GameHook_DialogScrolled(void);
 // A message started: the glyph bitmap was cleared and the parsed buffer loaded.

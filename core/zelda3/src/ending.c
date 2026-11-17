@@ -2545,6 +2545,7 @@ void Credits_AddNextAttribution() {  // 8ebe24
   static const uint8 kEnding_Func9_Tab2[14] = { 1, 0, 2, 3, 10, 6, 5, 8, 11, 9, 7, 12, 13, 15 };
   static const uint16 kEnding_Digits_ScrollY[14] = { 0x290, 0x298, 0x2a0, 0x2a8, 0x2b0, 0x2ba, 0x2c2, 0x2ca, 0x2d2, 0x2da, 0x2e2, 0x2ea, 0x2f2, 0x310 };
   static const uint16 kEnding_Credits_DigitChar[2] = { 0x3ce6, 0x3cf6 };
+#define kEnding_Credits_DigitChar LANG_PICK(uint16, kLangTbl_CreditsDigits, kEnding_Credits_DigitChar)
 
   uint16 *dst = vram_upload_data + (vram_upload_offset >> 1);
 

@@ -20,7 +20,10 @@ enum { kDialogRows = 3,
 // The text area is 21 tiles wide; a pen past it is a row the engine itself would not show.
 enum { kTextAreaWidthPx = 168 };
 enum { kCellWidthMask = 0x0f,
-       kCellHighlightShift = 4 };
+       kCellHighlightShift = 4,
+       kCellGlyphBitShift = 7,
+       kWideGlyphMask = 0x1ff,
+       kNarrowGlyphMask = 0x7f };
 
 typedef struct DialogCell {
   uint8 glyph, x, w;
@@ -61,7 +64,7 @@ enum {
 // The decoder's packed word, as messaging.c's TEXTCMD_* macros unpack it: bit 0 says the command took
 // a second byte, bits 1-5 are the command, the rest its parameter.
 static uint8 CmdOf(uint32 packed) { return (packed >> 1) & 0x1f; }
-static uint8 ParamOf(uint32 packed) { return (uint8)(packed >> 6); }
+static uint16 ParamOf(uint32 packed) { return (uint16)(packed >> 6); }
 static uint8 MultibyteOf(uint32 packed) { return packed & 1; }
 
 // Where RenderText_DrawSelectedYItem blits the 16 px item the picker shows, on the last row.
@@ -109,14 +112,15 @@ static void EvictOverlap(int line, int x, int w) {
 }
 
 // A cell's width byte carries the glyph's highlight span in its high nibble (dialog_highlight.c); a
-// glyph is at most 8 px wide, so the low nibble is the width and a plain cell reads as before.
-void GameHook_DialogGlyph(uint8 c, uint8 line, uint8 x, uint8 w) {
+// glyph is at most 11 px wide, so the low nibble is the width and a plain cell reads as before. The
+// highlight kind takes bits 4-5; bit 7 is the glyph's ninth bit, for a Japanese sheet of 512 glyphs.
+void GameHook_DialogGlyph(uint16 c, uint8 line, uint8 x, uint8 w) {
   DialogHighlight_GlyphAt(line, x, w);
   if (!DialogMirror_Recording() || line >= kDialogRows || x >= kTextAreaWidthPx) return;
   EvictOverlap(line, x, w);
   if (g_mirror.count[line] >= kDialogCells) return;
-  uint8 marked = (uint8)(w | DialogHighlight_Kind() << kCellHighlightShift);
-  g_mirror.rows[line][g_mirror.count[line]++] = (DialogCell){c, x, marked};
+  uint8 marked = (uint8)(w | DialogHighlight_Kind() << kCellHighlightShift | (c >> 8) << kCellGlyphBitShift);
+  g_mirror.rows[line][g_mirror.count[line]++] = (DialogCell){(uint8)c, x, marked};
 }
 
 bool DialogMirror_ShowsGlyph(uint8 glyph) {
@@ -155,7 +159,8 @@ void GameHook_DialogMeasure(void) {
     if (cmd == kCmd_EndMessage) break;
     if (cmd == kCmd_IsLetter) {
       int c = ParamOf(packed);
-      pen[line] += widths[c & 0x7f];
+      bool wide = (g_zenv.dialogue_flags & 4) != 0;
+      pen[line] += widths[c & (wide ? kWideGlyphMask : kNarrowGlyphMask)];
       if (pen[line] > widest) widest = pen[line];
     } else if (cmd >= kCmd_Line1 && cmd <= kCmd_Line3) {
       line = cmd - kCmd_Line1;

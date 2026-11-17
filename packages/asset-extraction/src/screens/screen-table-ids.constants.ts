@@ -26,6 +26,10 @@ const TILEMAP_FONT_ID = 30;
 
 const TILEMAP_FONT_DATA_ID = 31;
 
+const CREDITS_DIGITS_ID = 32;
+
+const SHEET_PATCH_BASE = 0x300;
+
 const SHEET_BASE: Readonly<Record<SheetKind, number>> = { spr: 0x100, bg: 0x200 };
 
 const menuTilemapId = (index: number): number => MENU_TILEMAP_BASE + index;
@@ -34,10 +38,12 @@ const selectFileTableId = (table: SelectFileTable): number => SELECT_FILE_BASE +
 
 const pauseTableId = (table: PauseTable): number => PAUSE_BASE + PAUSE_TABLES.indexOf(table);
 
+const sheetPatchTableId = (index: number): number => SHEET_PATCH_BASE + index;
+
 const sheetTableId = (kind: SheetKind, index: number): number => SHEET_BASE[kind] + index;
 
 export {
-  CREDITS_MAP_ID, CREDITS_OFFSETS_ID, CREDITS_TEXT_ID, DUNGEON_MAP_LABELS_ID, ENDING_CAPTION_DATA_ID,
+  CREDITS_DIGITS_ID, CREDITS_MAP_ID, CREDITS_OFFSETS_ID, CREDITS_TEXT_ID, DUNGEON_MAP_LABELS_ID, ENDING_CAPTION_DATA_ID,
   ENDING_CAPTION_OFFSETS_ID, NAME_GRID_ID, TILEMAP_FONT_DATA_ID, TILEMAP_FONT_ID, menuTilemapId, pauseTableId,
-  selectFileTableId, sheetTableId,
+  selectFileTableId, sheetPatchTableId, sheetTableId,
 };

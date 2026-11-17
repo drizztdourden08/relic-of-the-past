@@ -262,8 +262,9 @@ void Module_EraseFile_1() {  // 8cce53
   };
 #define kSelectFile_Gfx0 LANG_PICK(uint8, kLangTbl_SelectFileGfx0, kSelectFile_Gfx0)
   uint16 *dst = SelectFile_Func1();
-  memcpy(dst, kSelectFile_Gfx0, 224);
-  dst += 224 / 2;
+  int gfx0_len = LanguageScreens_Len(kLangTbl_SelectFileGfx0, 224);
+  memcpy(dst, kSelectFile_Gfx0, gfx0_len);
+  dst += gfx0_len / 2;
   uint16 t = 0x1103;
   for (int i = 17; i >= 0; i--) {
     *dst++ = swap16(t);
@@ -581,7 +582,7 @@ void CopyFile_TargetSelectionAndBlink() {  // 8cd27b
       return;
     }
     selectfile_R18 = selectfile_arr2[selectfile_R16];
-    memcpy(vram_upload_data + 26, kCopyFile_TargetSelectionAndBlink_Tab2, 49);
+    memcpy(vram_upload_data + 26, kCopyFile_TargetSelectionAndBlink_Tab2, LanguageScreens_Len(kLangTbl_CopyTargetTab2, 49));
     if (selectfile_R16 == 0) {
       uint16 *dst = vram_upload_data;
       dst[26] = 0x1462;
@@ -718,7 +719,7 @@ void KILLFile_ChooseTarget() {  // 8cd4ba
       return;
     }
 
-    memcpy(vram_upload_data, kKILLFile_ChooseTarget_Tab2, 101);
+    memcpy(vram_upload_data, kKILLFile_ChooseTarget_Tab2, LanguageScreens_Len(kLangTbl_KillTab2, 101));
     submodule_index++;
     if (selectfile_R16 != 2) {
       uint16 *dst = vram_upload_data + selectfile_R16 * 6;

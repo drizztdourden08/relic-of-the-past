@@ -6,7 +6,8 @@
 //
 // Host flow: WasmClearLanguageScreens, WasmSetLanguageScreenTable for each table the language has,
 // then ZeldaSetLanguage (or WasmApplyLanguageScreens when only the data changed). A table that was
-// never set, or was set with the wrong length, keeps reading the vendored one.
+// never set, or was set with the wrong length, keeps reading the vendored one (three stripe tables
+// accept their own length, see kTableMaxBytes).
 #include "game_hooks_internal.h"
 #include "src/features.h"
 #include <stdlib.h>
@@ -19,6 +20,15 @@ static const uint16 kTableBytes[kLangTbl_Count] = {
   224, 253, 173, 73, 133, 49, 253, 101,       // select_file.c stripes
   128,                                        // name grid
   1488,                                       // kDungMap_Tab23
+  4,                                          // credits death-count digit tiles
+};
+
+// Largest byte length the host may give a variable table (0 = the length must match kTableBytes). The
+// vendored sites copy it into a buffer with room for this much: the stripe buffer at vram_upload_data.
+static const uint16 kTableMaxBytes[kLangTbl_Count] = {
+  [kLangTbl_SelectFileGfx0] = 320,
+  [kLangTbl_CopyTargetTab2] = 96,
+  [kLangTbl_KillTab2] = 128,
 };
 
 bool LanguageScreens_On(void) {
@@ -28,6 +38,11 @@ bool LanguageScreens_On(void) {
 const void *LanguageScreens_Pick(int id, const void *orig) {
   const void *host = (id >= 0 && id < kLangTbl_Count) ? g_language_screens.table[id] : NULL;
   return (host != NULL && LanguageScreens_On()) ? host : orig;
+}
+
+int LanguageScreens_Len(int id, int orig_len) {
+  bool host = id >= 0 && id < kLangTbl_Count && g_language_screens.table[id] != NULL && LanguageScreens_On();
+  return host ? g_language_screens.length[id] : orig_len;
 }
 
 int GameHook_TilemapFont(void) {
@@ -46,17 +61,19 @@ void GameHook_LanguageScreensGate(bool on) {
 }
 
 static bool SetTable(int id, const void *data, int len) {
-  if (len != kTableBytes[id]) return false;
+  bool exact = len == kTableBytes[id];
+  if (!exact && !(len > 0 && len <= kTableMaxBytes[id])) return false;
   void *copy = data != NULL ? malloc((size_t)len) : NULL;
   if (copy == NULL) return false;
   memcpy(copy, data, (size_t)len);
   free((void *)g_language_screens.table[id]);
   g_language_screens.table[id] = copy;
+  g_language_screens.length[id] = (uint16)len;
   return true;
 }
 
 // |table_id|: 0..kLangTbl_Count-1 a static table (length must match), 0x40 + slot an asset blob
-// (kLangAsset_*), 0x100 + kind * 256 + index a sheet override. A null |data| with |len| 0 drops the
+// (kLangAsset_*), 0x100 + kind * 256 + index a sheet override, 0x300 + index a sprite-sheet tile patch. A null |data| with |len| 0 drops the
 // entry. Returns 1 when taken, 0 when refused (unknown id or wrong length), so a missing or refused
 // table keeps the vendored one.
 EMSCRIPTEN_KEEPALIVE

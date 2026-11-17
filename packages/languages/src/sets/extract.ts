@@ -8,7 +8,7 @@ import { saveSet, writeRomFont } from './write';
 const writePack = async (files: FileStore, pack: ExtractedPack): Promise<void> => {
   await writeExtractionPayload(files, pack);
   await writeRomFont(files, pack.code, { fontData: pack.fontData, fontWidth: pack.fontWidth });
-  await saveSet(files, setFromPack(packFromExtracted(pack), pack.screens));
+  await saveSet(files, setFromPack(packFromExtracted(pack), pack.screens, pack.script));
 };
 
 export { writePack };

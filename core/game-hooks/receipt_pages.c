@@ -103,7 +103,8 @@ static int SpellLine(int msg, uint8 *dst, int room) {
   int n = 0;
   for (size_t i = 0; i < line.size;) {
     uint8 c = line.ptr[i];
-    if (c >= kDictBase) {
+    bool wide_pair = i + 1 < line.size && GameHook_DialogWideDecode(c, &line.ptr[i + 1]) != 0;
+    if (c >= kDictBase && !wide_pair) {
       MemBlk word = FindIndexInMemblk(dictionary, c - kDictBase);
       if (n + (int)word.size > room) return -1;
       memcpy(dst + n, word.ptr, word.size);

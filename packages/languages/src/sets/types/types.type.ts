@@ -1,6 +1,6 @@
 /* @layer shared-storage @kind types */
 import type { ScreenPayload } from '@rotp/asset-extraction';
-import type { TextOverrides } from '../../messages';
+import type { LanguageScript, TextOverrides } from '../../messages';
 
 type LanguageSetSummary = {
   id: string;
@@ -23,6 +23,7 @@ interface ExtractedPayload {
   lineCount: number;
   encoder: 'org' | 'new';
   flags: number;
+  script?: LanguageScript;
 }
 
 interface ExtractedPack extends ExtractedPayload, RomFontBytes {

@@ -1,6 +1,6 @@
 /* @layer bridge-wasm @kind constants */
 import {
-  CREDITS_MAP_ID, CREDITS_OFFSETS_ID, CREDITS_TEXT_ID, DUNGEON_MAP_LABELS_ID, ENDING_CAPTION_DATA_ID,
+  CREDITS_DIGITS_ID, CREDITS_MAP_ID, CREDITS_OFFSETS_ID, CREDITS_TEXT_ID, DUNGEON_MAP_LABELS_ID, ENDING_CAPTION_DATA_ID,
   ENDING_CAPTION_OFFSETS_ID, NAME_GRID_ID, PAUSE_TABLES, SELECT_FILE_TABLES, menuTilemapId, pauseTableId,
   selectFileTableId,
 } from '@rotp/asset-extraction';
@@ -13,6 +13,8 @@ const C_SELECT_FILE_BASE = 10;
 const C_NAME_GRID = 18;
 
 const C_DUNGEON_MAP_LABELS = 19;
+
+const C_CREDITS_DIGITS = 20;
 
 const C_MENU_TILEMAP_SLOT = 5;
 
@@ -30,6 +32,7 @@ const buildTableIds = (): ReadonlyMap<number, number> => {
   const map = new Map<number, number>([
     [NAME_GRID_ID, C_NAME_GRID],
     [DUNGEON_MAP_LABELS_ID, C_DUNGEON_MAP_LABELS],
+    [CREDITS_DIGITS_ID, C_CREDITS_DIGITS],
     [CREDITS_TEXT_ID, cAssetId(0)],
     [CREDITS_OFFSETS_ID, cAssetId(1)],
     [CREDITS_MAP_ID, cAssetId(2)],

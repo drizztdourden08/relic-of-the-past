@@ -10,7 +10,8 @@
 #include "src/types.h"
 
 // One id per hook-owned table. The byte length of each is the vendored table's own (a size-checked
-// copy is what the setter keeps).
+// copy is what the setter keeps), except the three stripe tables marked "variable", which keep the
+// host's own length up to a cap.
 enum {
   kLangTbl_HudAbility,         // hud.c kHudAbilityText        uint16[80]
   kLangTbl_HudGloves,          // hud.c kHudGlovesText         uint16[20]
@@ -22,19 +23,21 @@ enum {
   kLangTbl_HudItem,            // hud.c kHudItemText           uint16[320]
   kLangTbl_HudNotAssigned,     // hud.c kNotAssignedItemText   uint16[16]
   kLangTbl_HudEquipDungeon,    // hud.c kHudEquipmentDungeonItemText uint16[16]
-  kLangTbl_SelectFileGfx0,     // select_file.c kSelectFile_Gfx0 uint8[224]
+  kLangTbl_SelectFileGfx0,     // select_file.c kSelectFile_Gfx0 uint8[224] variable
   kLangTbl_SelectFileFunc3,    // kSelectFile_Func3_Data       uint8[253]
   kLangTbl_CopyBlinkTab,       // kCopyFile_SelectionAndBlinker_Tab  uint8[173]
   kLangTbl_CopyBlinkTab1,      // kCopyFile_SelectionAndBlinker_Tab1 uint8[73]
   kLangTbl_CopyTargetTab0,     // kCopyFile_TargetSelectionAndBlink_Tab0 uint8[133]
-  kLangTbl_CopyTargetTab2,     // kCopyFile_TargetSelectionAndBlink_Tab2 uint8[49]
+  kLangTbl_CopyTargetTab2,     // kCopyFile_TargetSelectionAndBlink_Tab2 uint8[49] variable
   kLangTbl_KillTab,            // kKILLFile_ChooseTarget_Tab   uint8[253]
-  kLangTbl_KillTab2,           // kKILLFile_ChooseTarget_Tab2  uint8[101]
+  kLangTbl_KillTab2,           // kKILLFile_ChooseTarget_Tab2  uint8[101] variable
   kLangTbl_NameGrid,           // kNamePlayer_Tab3             int8[128]
   kLangTbl_DungMapTab23,       // messaging.c kDungMap_Tab23   uint16[744]
+  kLangTbl_CreditsDigits,      // ending.c kEnding_Credits_DigitChar uint16[2]
   kLangTbl_Count
 };
 
+// Sheet tile patches (id 0x300 + index, see language_screens_assets.c) overlay a few tiles of a baked sprite sheet.
 // Asset slots the host may repoint: assets 74-78 (ending, credits) then 99-104 (kBgTilemap_0..5).
 enum { kLangAsset_Count = 11 };
 
@@ -42,6 +45,7 @@ enum { kLangAsset_Count = 11 };
 // reader (or a probe) sees the whole set at once; reads go through LanguageScreens_Pick.
 typedef struct LanguageScreens {
   const void *table[kLangTbl_Count];
+  uint16 length[kLangTbl_Count];  // byte length of the host's copy
   int tilemap_font;  // index into kDialogueFont that TransferFontToVRAM uploads
 } LanguageScreens;
 extern LanguageScreens g_language_screens;
@@ -50,6 +54,11 @@ extern LanguageScreens g_language_screens;
 
 // The table |id| for this frame: the host's copy when the gate is on and one was supplied, else |orig|.
 const void *LanguageScreens_Pick(int id, const void *orig);
+
+// The byte length of table |id| for this frame: the host's own length while its copy is the one picked,
+// |orig_len| otherwise. Only the stripe tables a language may lengthen or shorten (file select gfx0,
+// copy and erase target tab2) are read through it; the rest are exact-size.
+int LanguageScreens_Len(int id, int orig_len);
 
 // Called by ZeldaSetLanguage once the language's dialogue blocks are set. Re-applies the host's
 // screen data (asset pointers, sheet overrides, font) for the current gate.
