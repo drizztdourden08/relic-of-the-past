@@ -5,6 +5,7 @@ import type { JaScreenAddressTable } from '../addresses/ja.type';
 import { extractEndText } from '../end-text/extract-end-text';
 import { readByteRegion } from '../read-byte-region';
 import { readSheet } from '../read-sheet';
+import { readSheetPatch } from '../read-sheet-patch';
 import { readStripeTable } from '../read-stripe-table';
 import { readWordRegion } from '../read-word-region';
 import type { PauseTable, ScreenPayload, SelectFileTable } from '../screen-payload.type';
@@ -40,7 +41,7 @@ const extractJapaneseScreens = (rom: RomData, table: JaScreenAddressTable): Scre
     ...table.sheets.spr.map((index) => readSheet(rom, table, 'spr', index)),
     ...table.sheets.bg.map((index) => readSheet(rom, table, 'bg', index)),
   ],
-  sheetPatches: [],
+  sheetPatches: table.sheetPatches.map((source) => readSheetPatch(rom, table, source)),
   tilemapFont: OWN_FONT_INDEX,
   tilemapFontData: buildJapaneseTilemapFont(extractJapaneseFont(rom).sheet),
 });

@@ -1,10 +1,11 @@
 /* @layer shared-asset-extraction @kind data */
+import { JA_COPYRIGHT_SHEET, JA_COPYRIGHT_TILES } from '../japanese/japanese-screens.constants';
 import type { JaScreenAddressTable } from './ja.type';
 
 const JA_SHARED_ADDRESSES: Pick<
   JaScreenAddressTable,
   | 'credits' | 'creditsDigits' | 'creditsScrollY' | 'dungeonMapLabels' | 'endingCaptions' | 'pauseText'
-  | 'sheetPointers' | 'sheets'
+  | 'sheetPatches' | 'sheetPointers' | 'sheets'
 > = {
   pauseText: {
     ability: { address: 0x8df979, count: 80 },
@@ -33,6 +34,7 @@ const JA_SHARED_ADDRESSES: Pick<
   },
   sheetPointers: { spr: 0xd033, bg: 0xcfc0 },
   sheets: { spr: [105, 106], bg: [22, 23, 29, 30, 57, 64, 65] },
+  sheetPatches: [{ index: JA_COPYRIGHT_SHEET, tiles: JA_COPYRIGHT_TILES }],
 };
 
 export { JA_SHARED_ADDRESSES };
