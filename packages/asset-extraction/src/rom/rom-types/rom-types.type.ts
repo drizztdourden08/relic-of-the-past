@@ -14,6 +14,7 @@ type RomHashTable = Record<string, RomIdentEntry>;
 interface RomData {
   readonly bytes: Buffer;
   readonly language: RomLanguage;
+  readonly revision: RomRevision;
   readonly description: string;
 
   getByte(ea: number): number;

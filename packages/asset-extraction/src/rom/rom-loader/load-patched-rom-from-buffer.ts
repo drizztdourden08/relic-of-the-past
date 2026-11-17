@@ -1,15 +1,15 @@
 /* @layer shared-asset-extraction @kind logic */
-import type { RomData, RomLanguage } from '../rom-types';
+import type { RomData, RomIdentEntry, RomLanguage } from '../rom-types';
 import { createRomData } from './create-rom-data';
 import {
   DOUBLE_HEADER_LENGTH, PATCHED_ROM_MAX_BYTES, PATCHED_ROM_MIN_BYTES, SMC_HEADER_BYTES, ZELDA3_SHA1,
 } from './rom-loader.constants';
 import { stripSmcHeader } from './strip-smc-header';
 
-const releaseDescription = (base: RomLanguage): string => {
+const releaseOf = (base: RomLanguage): RomIdentEntry => {
   const entry = Object.values(ZELDA3_SHA1).find((candidate) => candidate.language === base);
   if (!entry) throw new Error(`"${base}" is not a known release of A Link to the Past.`);
-  return entry.description;
+  return entry;
 };
 
 const romBodyOf = (buffer: Buffer): Buffer => {
@@ -18,12 +18,12 @@ const romBodyOf = (buffer: Buffer): Buffer => {
 };
 
 const loadPatchedRomFromBuffer = (buffer: Buffer, base: RomLanguage): RomData => {
-  const description = releaseDescription(base);
+  const release = releaseOf(base);
   const romBytes = romBodyOf(buffer);
   if (romBytes.length < PATCHED_ROM_MIN_BYTES || romBytes.length > PATCHED_ROM_MAX_BYTES) {
     throw new Error(`This file is ${romBytes.length} bytes, which is not the size of an A Link to the Past ROM.`);
   }
-  return createRomData(romBytes, base, `Fan patch of ${description}`);
+  return createRomData(romBytes, base, release.revision, `Fan patch of ${release.description}`);
 };
 
 export { loadPatchedRomFromBuffer };

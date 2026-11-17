@@ -17,7 +17,7 @@ const setFromPack = (pack: LanguagePack, screens?: ScreenPayload, script: Langua
   version: 1,
   dialogue: pack.lines.map(dialogueEntryFromLine),
   glossary: [],
-  names: namesFromScreens(screens),
+  names: namesFromScreens(script === 'latin' ? screens : undefined),
   script,
   ...(screens ? { screens } : {}),
 });

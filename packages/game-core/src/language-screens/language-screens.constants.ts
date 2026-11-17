@@ -1,8 +1,8 @@
 /* @layer bridge-wasm @kind constants */
 import {
-  CREDITS_DIGITS_ID, CREDITS_MAP_ID, CREDITS_OFFSETS_ID, CREDITS_TEXT_ID, DUNGEON_MAP_LABELS_ID, ENDING_CAPTION_DATA_ID,
-  ENDING_CAPTION_OFFSETS_ID, NAME_GRID_ID, PAUSE_TABLES, SELECT_FILE_TABLES, menuTilemapId, pauseTableId,
-  selectFileTableId,
+  CREDITS_DIGITS_ID, CREDITS_MAP_ID, CREDITS_OFFSETS_ID, CREDITS_SCROLL_Y_ID, CREDITS_TEXT_ID, DUNGEON_MAP_LABELS_ID,
+  ENDING_CAPTION_DATA_ID, ENDING_CAPTION_OFFSETS_ID, NAME_GRID_ID, PAUSE_TABLES, SELECT_FILE_TABLES,
+  TILEMAP_FONT_DATA_ID, menuTilemapId, pauseTableId, selectFileTableId,
 } from '@rotp/asset-extraction';
 import type { PauseTable } from '@rotp/asset-extraction';
 
@@ -15,6 +15,10 @@ const C_NAME_GRID = 18;
 const C_DUNGEON_MAP_LABELS = 19;
 
 const C_CREDITS_DIGITS = 20;
+
+const C_CREDITS_SCROLL_Y = 21;
+
+const C_TILEMAP_FONT_DATA = 0x80;
 
 const C_MENU_TILEMAP_SLOT = 5;
 
@@ -33,6 +37,8 @@ const buildTableIds = (): ReadonlyMap<number, number> => {
     [NAME_GRID_ID, C_NAME_GRID],
     [DUNGEON_MAP_LABELS_ID, C_DUNGEON_MAP_LABELS],
     [CREDITS_DIGITS_ID, C_CREDITS_DIGITS],
+    [CREDITS_SCROLL_Y_ID, C_CREDITS_SCROLL_Y],
+    [TILEMAP_FONT_DATA_ID, C_TILEMAP_FONT_DATA],
     [CREDITS_TEXT_ID, cAssetId(0)],
     [CREDITS_OFFSETS_ID, cAssetId(1)],
     [CREDITS_MAP_ID, cAssetId(2)],

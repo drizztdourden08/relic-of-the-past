@@ -962,6 +962,7 @@ void Graphics_LoadChrHalfSlot() {  // 80e3fa
 }
 
 void TransferFontToVRAM() {  // 80e556
+  if (GameHook_TransferTilemapFont(&g_zenv.vram[0x7000])) return;
   memcpy(&g_zenv.vram[0x7000], FindIndexInMemblk(kDialogueFont(GameHook_TilemapFont()), 0).ptr, 0x800 * sizeof(uint16));
 }
 

@@ -2546,6 +2546,7 @@ void Credits_AddNextAttribution() {  // 8ebe24
   static const uint16 kEnding_Digits_ScrollY[14] = { 0x290, 0x298, 0x2a0, 0x2a8, 0x2b0, 0x2ba, 0x2c2, 0x2ca, 0x2d2, 0x2da, 0x2e2, 0x2ea, 0x2f2, 0x310 };
   static const uint16 kEnding_Credits_DigitChar[2] = { 0x3ce6, 0x3cf6 };
 #define kEnding_Credits_DigitChar LANG_PICK(uint16, kLangTbl_CreditsDigits, kEnding_Credits_DigitChar)
+#define kEnding_Digits_ScrollY LANG_PICK(uint16, kLangTbl_CreditsScrollY, kEnding_Digits_ScrollY)
 
   uint16 *dst = vram_upload_data + (vram_upload_offset >> 1);
 
@@ -2554,7 +2555,7 @@ void Credits_AddNextAttribution() {  // 8ebe24
   dst[2] = kEnding_MapData[159];
   dst += 3;
 
-  if (R18 < 394) {
+  if (R18 < LanguageScreens_AssetLen(kLangAsset_CreditsOffs, 394 * 2) / 2) {
     const uint8 *src = &kEnding_Credits_Text[kEnding_Credits_Offs[R18]];
     if (*src != 0xff) {
       *dst++ = swap16(R16 + *src++);

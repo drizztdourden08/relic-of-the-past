@@ -25,7 +25,7 @@ const extractScreens = (rom: RomData, table: ScreenAddressTable): ScreenPayload 
   selectFileStripes: Object.fromEntries(
     SELECT_FILE_TABLES.map((id) => [id, readByteRegion(rom, table.selectFile[id])]),
   ) as Record<SelectFileTable, Uint8Array>,
-  nameGrid: Uint16Array.from(readByteRegion(rom, table.nameGrid)),
+  nameGrid: readByteRegion(rom, table.nameGrid),
   pauseText: Object.fromEntries(
     PAUSE_TABLES.map((id) => [id, readWordRegion(rom, table.pauseText[id])]),
   ) as Record<PauseTable, Uint16Array>,

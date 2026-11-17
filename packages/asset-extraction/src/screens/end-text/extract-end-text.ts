@@ -8,7 +8,10 @@ import { convertWordEnding } from './convert-word-ending';
 import { createWordIndexer } from './create-word-indexer';
 import type { EndText } from './end-text.type';
 
-const extractEndText = (rom: RomData, table: ScreenAddressTable): EndText => {
+const extractEndText = (
+  rom: RomData,
+  table: Pick<ScreenAddressTable, 'credits' | 'endingCaptions' | 'id'>,
+): EndText => {
   const { credits, endingCaptions } = table;
   if (credits.kind === 'bytes' && endingCaptions.kind === 'bytes') {
     return {

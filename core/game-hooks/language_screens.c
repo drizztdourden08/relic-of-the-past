@@ -21,6 +21,7 @@ static const uint16 kTableBytes[kLangTbl_Count] = {
   128,                                        // name grid
   1488,                                       // kDungMap_Tab23
   4,                                          // credits death-count digit tiles
+  28,                                         // credits scroll line of each death count
 };
 
 // Largest byte length the host may give a variable table (0 = the length must match kTableBytes). The
@@ -73,7 +74,7 @@ static bool SetTable(int id, const void *data, int len) {
 }
 
 // |table_id|: 0..kLangTbl_Count-1 a static table (length must match), 0x40 + slot an asset blob
-// (kLangAsset_*), 0x100 + kind * 256 + index a sheet override, 0x300 + index a sprite-sheet tile patch. A null |data| with |len| 0 drops the
+// (kLangAsset_*), kLangFontId the tilemap font tiles, 0x100 + kind * 256 + index a sheet override, 0x300 + index a sprite-sheet tile patch. A null |data| with |len| 0 drops the
 // entry. Returns 1 when taken, 0 when refused (unknown id or wrong length), so a missing or refused
 // table keeps the vendored one.
 EMSCRIPTEN_KEEPALIVE
@@ -86,6 +87,7 @@ int WasmSetLanguageScreenTable(int table_id, const void *data, int len) {
     }
     return SetTable(table_id, data, len) ? 1 : 0;
   }
+  if (table_id == kLangFontId) return LanguageScreensFont_Set(data, len) ? 1 : 0;
   return LanguageScreensAssets_Set(table_id, data, len) ? 1 : 0;
 }
 
@@ -110,4 +112,5 @@ void WasmClearLanguageScreens(void) {
   }
   g_language_screens.tilemap_font = 0;
   LanguageScreensAssets_Clear();
+  LanguageScreensFont_Clear();
 }

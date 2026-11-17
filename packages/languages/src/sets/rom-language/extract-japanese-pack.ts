@@ -1,5 +1,5 @@
 /* @layer shared-game @kind logic */
-import { extractJapaneseLanguage } from '@rotp/asset-extraction';
+import { extractJapaneseLanguage, extractJapaneseScreens, jaScreenAddressesOf } from '@rotp/asset-extraction';
 import type { RomData } from '@rotp/asset-extraction';
 import type { ExtractedPack } from '../types';
 
@@ -16,6 +16,7 @@ const extractJapanesePack = (rom: RomData): ExtractedPack => {
     encoder: 'org',
     flags: entry.flags,
     script: 'japanese',
+    screens: extractJapaneseScreens(rom, jaScreenAddressesOf(rom.revision)),
   };
 };
 

@@ -6,6 +6,7 @@ import { EditorToolbar } from './EditorToolbar';
 import { dialogueExtensions } from './editor-contract';
 import { glyphNamesOf } from './glyph-names';
 import { charAdvance } from './char-advance';
+import { langOfConfig } from './lang-of-config';
 import { LineEndMarkers } from './line-end-markers';
 import { withTokenNodeView } from './with-token-node-view';
 import { useDialogueEditor } from './behavior/useDialogueEditor';
@@ -60,7 +61,7 @@ const DialogueEditor = (props: DialogueEditorProps) => {
   const status = useMemo(() => statusOf(lines, caretLine), [lines, caretLine]);
 
   return (
-    <Box className={`dialogue-editor${readOnly ? ' dialogue-editor--read-only' : ''}`}>
+    <Box lang={langOfConfig(cfg)} className={`dialogue-editor${readOnly ? ' dialogue-editor--read-only' : ''}`}>
       <EditorToolbar
         cfg={cfg}
         variables={variables}

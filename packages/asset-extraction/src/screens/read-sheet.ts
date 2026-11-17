@@ -10,7 +10,12 @@ const sheetLength = (rom: RomData, kind: SheetKind, index: number, address: numb
     ? SPRITE_RAW_SHEET_BYTES
     : lzDecompressWithLen(rom, address).compressedLength;
 
-const readSheet = (rom: RomData, table: ScreenAddressTable, kind: SheetKind, index: number): SheetOverride => {
+const readSheet = (
+  rom: RomData,
+  table: Pick<ScreenAddressTable, 'sheetPointers'>,
+  kind: SheetKind,
+  index: number,
+): SheetOverride => {
   const address = readSheetPointer(rom, table.sheetPointers[kind], index);
   return { kind, index, data: Uint8Array.from(rom.getBytes(address, sheetLength(rom, kind, index, address))) };
 };

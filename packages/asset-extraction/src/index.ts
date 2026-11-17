@@ -82,12 +82,13 @@ export { formatDialogueText } from './text/dialogue-decoder/format-dialogue-text
 export { kCmdInfo } from './text/dialogue-encoder/cmd-info';
 export { compressStrings } from './text/dialogue-encoder/compress-strings';
 export { extractScreens } from './screens/extract-screens';
-export { kScreenAddresses, US_SCREEN_ADDRESSES } from './screens/addresses';
+export { extractJapaneseScreens } from './screens/japanese/extract-japanese-screens';
+export { jaScreenAddressesOf, kScreenAddresses, US_SCREEN_ADDRESSES } from './screens/addresses';
 export { readSheetPointer } from './screens/read-sheet-pointers';
 export { PAUSE_TABLES, SELECT_FILE_TABLES } from './screens/screens.constants';
 export {
-  CREDITS_DIGITS_ID, CREDITS_MAP_ID, CREDITS_OFFSETS_ID, CREDITS_TEXT_ID, DUNGEON_MAP_LABELS_ID, ENDING_CAPTION_DATA_ID,
-  ENDING_CAPTION_OFFSETS_ID, NAME_GRID_ID, TILEMAP_FONT_DATA_ID, TILEMAP_FONT_ID, menuTilemapId, pauseTableId,
+  CREDITS_DIGITS_ID, CREDITS_MAP_ID, CREDITS_OFFSETS_ID, CREDITS_SCROLL_Y_ID, CREDITS_TEXT_ID, DUNGEON_MAP_LABELS_ID,
+  ENDING_CAPTION_DATA_ID, ENDING_CAPTION_OFFSETS_ID, NAME_GRID_ID, TILEMAP_FONT_DATA_ID, TILEMAP_FONT_ID, menuTilemapId, pauseTableId,
   selectFileTableId, sheetPatchTableId, sheetTableId,
 } from './screens/screen-table-ids.constants';
 export type { ScreenTable } from './screens/screen-table.type';

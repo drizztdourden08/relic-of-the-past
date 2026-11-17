@@ -23,7 +23,7 @@ const loadRomFromBuffer = (buffer: Buffer, supportMultilanguage = false): RomDat
     throw new Error(`ROM with hash ${hash} not supported. Expected US ROM.`);
   }
 
-  return createRomData(romBytes, entry.language, entry.description);
+  return createRomData(romBytes, entry.language, entry.revision, entry.description);
 };
 
 export { loadRomFromBuffer };

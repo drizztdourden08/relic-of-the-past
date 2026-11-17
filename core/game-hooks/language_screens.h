@@ -34,12 +34,17 @@ enum {
   kLangTbl_NameGrid,           // kNamePlayer_Tab3             int8[128]
   kLangTbl_DungMapTab23,       // messaging.c kDungMap_Tab23   uint16[744]
   kLangTbl_CreditsDigits,      // ending.c kEnding_Credits_DigitChar uint16[2]
+  kLangTbl_CreditsScrollY,     // ending.c kEnding_Digits_ScrollY uint16[14]
   kLangTbl_Count
 };
 
 // Sheet tile patches (id 0x300 + index, see language_screens_assets.c) overlay a few tiles of a baked sprite sheet.
 // Asset slots the host may repoint: assets 74-78 (ending, credits) then 99-104 (kBgTilemap_0..5).
-enum { kLangAsset_Count = 11 };
+// Slot 1 is the credits line offsets, whose length is the number of credits lines.
+enum { kLangAsset_CreditsOffs = 1, kLangAsset_Count = 11 };
+
+// Id of the host's tilemap font tiles (language_screens_font.c), outside every other id range.
+enum { kLangFontId = 0x80 };
 
 // The hook-owned pointers, one per table. NULL means "the vendored table". Exposed as a struct so a
 // reader (or a probe) sees the whole set at once; reads go through LanguageScreens_Pick.
@@ -71,11 +76,21 @@ void GameHook_LanguageScreensGate(bool on);
 // The kDialogueFont index TransferFontToVRAM uploads: 0 (the US font) with the gate off.
 int GameHook_TilemapFont(void);
 
-// Shared with language_screens_assets.c.
+// The byte length of asset slot |slot| (kLangAsset_*) for this frame: the host's blob while it is the one
+// repointed, |orig_len| otherwise. The credits read their line count through it.
+int LanguageScreens_AssetLen(int slot, int orig_len);
+
+// Called at the top of TransferFontToVRAM with the font's VRAM destination. Uploads the host's tilemap
+// font and returns true for a Japanese set in the credits; false leaves the original upload.
+bool GameHook_TransferTilemapFont(uint16 *dst);
+
+// Shared with language_screens_assets.c and language_screens_font.c.
 bool LanguageScreens_On(void);
 void LanguageScreensAssets_Apply(bool on);
 bool LanguageScreensAssets_Set(int id, const void *data, int len);
 void LanguageScreensAssets_Clear(void);
+bool LanguageScreensFont_Set(const void *data, int len);
+void LanguageScreensFont_Clear(void);
 
 // core/wasm-build/emscripten_io.c: FindInAssetArray answers |p|/|size| for sheet |idx| of asset 64
 // (kSprGfx, |asset| 0) or 65 (kBgGfx, |asset| 1) in place of the baked one. NULL clears the override.

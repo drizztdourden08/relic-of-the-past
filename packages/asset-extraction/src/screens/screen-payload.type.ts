@@ -28,10 +28,11 @@ interface SheetPatchSource {
 interface ScreenPayload {
   readonly menuTilemaps: readonly Uint8Array[];
   readonly selectFileStripes: Readonly<Record<SelectFileTable, Uint8Array>>;
-  readonly nameGrid: Uint16Array;
+  readonly nameGrid: Uint8Array;
   readonly pauseText: Readonly<Record<PauseTable, Uint16Array>>;
   readonly dungeonMapLabels: Uint16Array;
   readonly creditsDigits: Uint16Array;
+  readonly creditsScrollY?: Uint16Array;
   readonly endingCaptions: { readonly offsets: Uint16Array; readonly data: Uint8Array };
   readonly credits: { readonly text: Uint8Array; readonly offsets: Uint16Array; readonly map: Uint16Array };
   readonly sheets: readonly SheetOverride[];

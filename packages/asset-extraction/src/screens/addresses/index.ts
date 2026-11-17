@@ -3,6 +3,10 @@ import type { RomLanguage } from '../../rom/rom-types';
 import type { ScreenAddressTable } from '../screen-payload.type';
 import { FR_SCREEN_ADDRESSES } from './fr';
 import { FR_C_SCREEN_ADDRESSES } from './fr-c';
+import type { JaScreenAddressTable } from './ja.type';
+import { JA_REV1_SCREEN_ADDRESSES } from './ja-rev1';
+import { JA_V1_0_SCREEN_ADDRESSES } from './ja-v1.0';
+import { jaScreenAddressesOf } from './ja-of-revision';
 import { US_SCREEN_ADDRESSES } from './us';
 
 const kScreenAddresses: Readonly<Partial<Record<RomLanguage, ScreenAddressTable>>> = {
@@ -11,4 +15,8 @@ const kScreenAddresses: Readonly<Partial<Record<RomLanguage, ScreenAddressTable>
   'fr-c': FR_C_SCREEN_ADDRESSES,
 };
 
-export { FR_C_SCREEN_ADDRESSES, FR_SCREEN_ADDRESSES, kScreenAddresses, US_SCREEN_ADDRESSES };
+export type { JaScreenAddressTable };
+export {
+  FR_C_SCREEN_ADDRESSES, FR_SCREEN_ADDRESSES, JA_REV1_SCREEN_ADDRESSES, JA_V1_0_SCREEN_ADDRESSES,
+  jaScreenAddressesOf, kScreenAddresses, US_SCREEN_ADDRESSES,
+};

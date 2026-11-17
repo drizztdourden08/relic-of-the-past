@@ -86,6 +86,11 @@ void LanguageScreensAssets_Apply(bool on) {
   }
 }
 
+int LanguageScreens_AssetLen(int slot, int orig_len) {
+  bool host = slot >= 0 && slot < kLangAsset_Count && g_assets[slot].data != NULL && LanguageScreens_On();
+  return host ? (int)g_assets[slot].size : orig_len;
+}
+
 static bool Store(Blob *slot, const void *data, int len) {
   uint8 *copy = NULL;
   if (len > 0) {
