@@ -80,6 +80,7 @@ void GameHook_LanguageScreens(const char *language) {
 }
 
 void GameHook_LanguageScreensGate(bool on) {
+  JaGraphics_Gate();
   LanguageScreensAssets_Apply(on);
 }
 

@@ -4,7 +4,7 @@ import { BUNDLE_FIXES, controlSchemeOf, hostDrawnHud } from '@rotp/features';
 import { effectiveFeatureIds } from './live-settings-gate';
 import { rendersWide } from './ratio-capability';
 import { offscreenEnemyMode } from './settings';
-import { BUG_FIX_WORD_FEATURES2, FEATURES2_FLAGS } from './live-settings-feature-words.constants';
+import { BUG_FIX_WORD_FEATURES2, FEATURES2_FLAGS, JA_GRAPHICS_KEYS } from './live-settings-feature-words.constants';
 
 const modernControlsWanted = (s: GameSettings): boolean =>
   controlSchemeOf(s) === 'modern' && !s.vanillaSafe;
@@ -31,8 +31,6 @@ const wideViewBits = (s: GameSettings, effective: Set<string>): number => {
   if (effective.has('offscreenAI') && offscreenEnemyMode(s) === 'idle') bits |= FEATURES2_FLAGS.widescreenIdleEnemies;
   return bits;
 };
-
-const JA_GRAPHICS_KEYS = ['jaIntroGraphics', 'jaHudGraphics', 'jaCopyrightLine', 'jaFileSelectStyle'] as const;
 
 const jaGraphicsBits = (effective: Set<string>): number =>
   JA_GRAPHICS_KEYS.reduce((bits, key) => (effective.has(key) ? bits | FEATURES2_FLAGS[key] : bits), 0);

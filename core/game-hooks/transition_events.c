@@ -23,6 +23,7 @@ void GameHook_ModuleFrameEnd(void) {
   // Every frame, after logic and before the draw: hold pinned camera bounds for the rooms
   // whose baked side columns are padding. No-op everywhere else.
   GbaAlttp_PinCameraBounds();
+  JaGraphics_FrameEnd();
   // This hook runs after a module has finished building its frame and before the frame is
   // rasterised, so anything that needs to EDIT what the module produced belongs here and not at a
   // call-site of its own. The host menu's player-sprite blank is one such tenant; it resolves its

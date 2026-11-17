@@ -16,4 +16,6 @@ const FEATURES2_FLAGS = {
 
 const BUG_FIX_WORD_FEATURES2 = 2;
 
-export { BUG_FIX_WORD_FEATURES2, FEATURES2_FLAGS };
+const JA_GRAPHICS_KEYS = ['jaIntroGraphics', 'jaHudGraphics', 'jaCopyrightLine', 'jaFileSelectStyle'] as const;
+
+export { BUG_FIX_WORD_FEATURES2, FEATURES2_FLAGS, JA_GRAPHICS_KEYS };

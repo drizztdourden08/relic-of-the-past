@@ -27,7 +27,14 @@ enum {
 // kGateWordParityMask, so the word itself reads clear under Vanilla Safe and the screen assets re-apply.
 uint32 GameHook_ParityMask(int word);
 
-// Whether option |bit| is on in the (already Vanilla Safe masked) features2 word.
+// The options take effect only as a screen loads, so a screen on display never changes under tiles loaded
+// for the other setting. Until the first frame ends the latch follows the gate word (JaGraphics_Gate,
+// from GateWordSideEffects); after that it is refreshed when the main module changes (JaGraphics_FrameEnd,
+// from GameHook_ModuleFrameEnd), re-applying the screen assets if a bit changed.
+void JaGraphics_Gate(void);
+void JaGraphics_FrameEnd(void);
+
+// Whether option |bit| is on: its latched value from the (already Vanilla Safe masked) features2 word.
 bool JaGraphics_On(uint32 bit);
 
 // The pack's copy of background (|kind| 1) or sprite (|kind| 0) sheet |index|, NULL unless the option

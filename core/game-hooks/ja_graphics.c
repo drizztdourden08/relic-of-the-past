@@ -35,8 +35,28 @@ uint32 GameHook_ParityMask(int word) {
   return word == 2 ? kJaGfx_Intro | kJaGfx_Hud | kJaGfx_Copyright | kJaGfx_FileSelect : 0;
 }
 
+enum { kAllBits = kJaGfx_Intro | kJaGfx_Hud | kJaGfx_Copyright | kJaGfx_FileSelect };
+
+static uint32 g_latched_bits;
+static bool g_started;
+static int g_prev_module = -1;
+
 bool JaGraphics_On(uint32 bit) {
-  return (enhanced_features2 & bit) != 0;
+  return (g_latched_bits & bit) != 0;
+}
+
+void JaGraphics_Gate(void) {
+  if (!g_started) g_latched_bits = enhanced_features2 & kAllBits;
+}
+
+void JaGraphics_FrameEnd(void) {
+  g_started = true;
+  if (main_module_index == g_prev_module) return;
+  g_prev_module = main_module_index;
+  uint32 live = enhanced_features2 & kAllBits;
+  if (live == g_latched_bits) return;
+  g_latched_bits = live;
+  LanguageScreensAssets_Apply(LanguageScreens_On());
 }
 
 static const uint8 *Taken(const Blob *blob, uint32 *size) {
