@@ -1,0 +1,36 @@
+/* @layer renderer-components @kind style */
+
+.official-roms {
+  min-width: 0;
+}
+
+.official-roms__title {
+  font-size: var(--text-xs);
+  color: var(--c-text-muted);
+  text-transform: uppercase;
+}
+
+.official-roms__list {
+  padding-inline-start: 0;
+}
+
+.official-roms__row {
+  min-width: 0;
+}
+
+.official-roms__mark {
+  display: inline-flex;
+  flex: none;
+  width: var(--size-16);
+  color: var(--c-success);
+}
+
+.official-roms__name {
+  font-size: var(--text-xs);
+  color: var(--c-text-dim);
+  overflow-wrap: anywhere;
+}
+
+.official-roms__row[data-supported='true'] .official-roms__name {
+  color: var(--c-text);
+}
