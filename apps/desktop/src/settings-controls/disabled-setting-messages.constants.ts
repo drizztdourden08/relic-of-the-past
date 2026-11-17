@@ -7,6 +7,7 @@ const DISABLED_SETTING_MESSAGES: Record<string, string> = {
   devNavigationData: 'Navigation data is disabled',
   developerTools: 'Needs Developer Mode turned on',
   onlineOnly: 'Only for online randomizer profiles.',
+  japaneseGraphics: 'Needs a Japanese ROM imported',
   mobileOnly: 'Phone and tablet app only.',
 };
 

@@ -84,6 +84,8 @@ export { compressStrings } from './text/dialogue-encoder/compress-strings';
 export { extractScreens } from './screens/extract-screens';
 export { extractJapaneseScreens } from './screens/japanese/extract-japanese-screens';
 export { jaScreenAddressesOf, kScreenAddresses, US_SCREEN_ADDRESSES } from './screens/addresses';
+export { compileJapaneseGraphics, decodeJapaneseGraphicsPack, encodeJapaneseGraphicsPack } from './japanese-graphics';
+export type { JapaneseGraphicEntry } from './japanese-graphics';
 export { readSheetPointer } from './screens/read-sheet-pointers';
 export { PAUSE_TABLES, SELECT_FILE_TABLES } from './screens/screens.constants';
 export {

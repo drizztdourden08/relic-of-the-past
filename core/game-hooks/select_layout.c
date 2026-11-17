@@ -10,7 +10,7 @@ static bool JapaneseSet(void) {
 }
 
 int SelectLayout_Preferred(void) {
-  return kSelectLayout_Us;
+  return JaGraphics_On(kJaGfx_FileSelect) ? kSelectLayout_Ja : kSelectLayout_Us;
 }
 
 bool SelectLayout_HasText(int layout, int screen) {

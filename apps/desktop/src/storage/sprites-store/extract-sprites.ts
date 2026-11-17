@@ -5,6 +5,7 @@ import { runExtractStep } from '../extraction-client';
 import { runImportJob } from '../import-job';
 import { platformFiles } from '../platform-files';
 import { errorMessage } from '../error-message';
+import { extractJapaneseGraphics } from './extract-japanese-graphics';
 import { SPRITE_DEFS } from './sprites-store.constants';
 
 const extractSprites = async (romFile: string): Promise<{ success: boolean; count?: number; error?: string }> => {
@@ -20,6 +21,7 @@ const extractSprites = async (romFile: string): Promise<{ success: boolean; coun
           step: 'sprites', title: 'Extracting sprites', subject: romFile, romBytes, input: { defs: SPRITE_DEFS },
         });
         await sprites.writeSprites(platformFiles(), romFile, result.buffers);
+        await extractJapaneseGraphics(romFile, romBytes);
         return result.buffers;
       },
     });

@@ -1,5 +1,9 @@
 /* @layer bridge-wasm @kind constants */
 const FEATURES2_FLAGS = {
+  jaIntroGraphics: 1 << 20,
+  jaHudGraphics: 1 << 21,
+  jaCopyrightLine: 1 << 22,
+  jaFileSelectStyle: 1 << 23,
   widescreenPlayArea: 1 << 24,
   widescreenIdleEnemies: 1 << 25,
   titleOverride: 1 << 26,

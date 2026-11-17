@@ -5,7 +5,7 @@ import type {
 import type { SetBakeInput } from '@rotp/languages';
 import type { SupplementRoms } from '../../storage/asset-files';
 
-type ExtractStepId = 'assets' | 'language' | 'menu-text' | 'patched-language' | 'sprites';
+type ExtractStepId = 'assets' | 'japanese-graphics' | 'language' | 'menu-text' | 'patched-language' | 'sprites';
 
 interface ExtractData {
   romBytes: Uint8Array;
@@ -33,6 +33,7 @@ interface PatchedLanguageOutput {
 
 interface ExtractInputs {
   assets: { supplementRoms: SupplementRoms; languages: SetBakeInput[] };
+  'japanese-graphics': undefined;
   language: undefined;
   'menu-text': undefined;
   'patched-language': PatchedLanguageStepInput;

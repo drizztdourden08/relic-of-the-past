@@ -4,6 +4,7 @@ import type { ExtractStepId } from '@app/game/extract-steps';
 
 const STEP_JOB_OPTIONS: Record<ExtractStepId, Pick<AssetWebWorkerJobOptions, 'visible' | 'forwardLog' | 'onDuplicate'>> = {
   assets: { onDuplicate: 'queue', forwardLog: true },
+  'japanese-graphics': { onDuplicate: 'join', visible: false },
   language: { onDuplicate: 'parallel' },
   'menu-text': { onDuplicate: 'join', visible: false },
   'patched-language': { onDuplicate: 'parallel' },

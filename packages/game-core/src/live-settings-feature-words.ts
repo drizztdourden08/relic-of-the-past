@@ -42,6 +42,10 @@ const buildFeatureWords = (s: GameSettings): { features1: number; features2: num
   if (s.allowDiving || s.extraDungeon) f2 |= FEATURES2_FLAGS.allowDiving;
   if (effective.has('extendedLetters')) f2 |= FEATURES2_FLAGS.extendedLetters;
   if (effective.has('languageScreens')) f2 |= FEATURES2_FLAGS.languageScreens;
+  if (effective.has('jaIntroGraphics')) f2 |= FEATURES2_FLAGS.jaIntroGraphics;
+  if (effective.has('jaHudGraphics')) f2 |= FEATURES2_FLAGS.jaHudGraphics;
+  if (effective.has('jaCopyrightLine')) f2 |= FEATURES2_FLAGS.jaCopyrightLine;
+  if (effective.has('jaFileSelectStyle')) f2 |= FEATURES2_FLAGS.jaFileSelectStyle;
   return { features1, features2: f2 };
 };
 

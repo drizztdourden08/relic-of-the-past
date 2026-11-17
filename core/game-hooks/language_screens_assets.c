@@ -15,7 +15,7 @@ typedef struct {
 
 // Ids 0x300 + index: a tile patch for sprite sheet |index| (see ApplyPatch).
 enum { kAssetIdBase = 0x40, kSheetIdBase = 0x100, kPatchIdBase = 0x300, kSheetBytes = 0x600, kTileBytes = 24, kFirstMenuSlot = 5 };
-enum { kFirstSelectSlot = 6, kLastSelectSlot = 9, kBgSheetKind = 1, kModuleIntro = 0 };
+enum { kFirstSelectSlot = 6, kLastSelectSlot = 9, kBgSheetKind = 1, kModuleIntro = 0, kIntroSlot = 5 };
 
 // The asset number of each slot, in kLangAsset_* order.
 static const uint8 kSlotAsset[kLangAsset_Count] = {74, 75, 76, 77, 78, 99, 100, 101, 102, 103, 104};
@@ -40,13 +40,13 @@ static void TakeOriginals(void) {
 // The baked sprite sheet |idx| with the host's tiles written over it, kept in g_patched[idx]. Lets a
 // language replace only the tiles of one word and keep the rest of the sheet (the ending sheet also
 // carries sprites the language has no copy of). NULL when there is no patch or the sheet is not raw-sized.
-static const uint8 *ApplyPatch(int idx) {
-  const Blob *patch = &g_patches[idx];
+// The patch is the Japanese graphics pack's while its option is on, else the set's (ApplyPatches).
+static const uint8 *ApplyPatch(int idx, const uint8 *pdata, uint32 psize) {
   Blob *out = &g_patched[idx];
   AssetSheet_SetOverride(0, idx, NULL, 0);
-  if (patch->data == NULL || patch->size < 1) return NULL;
-  uint32 count = patch->data[0];
-  if (patch->size != 1 + count + count * kTileBytes) return NULL;
+  if (pdata == NULL || psize < 1) return NULL;
+  uint32 count = pdata[0];
+  if (psize != 1 + count + count * kTileBytes) return NULL;
   MemBlk base = FindInAssetArray(64, idx);
   if (base.ptr == NULL) return NULL;
   uint8 *buf = out->data != NULL ? out->data : (uint8 *)malloc(kSheetBytes * 2);
@@ -57,9 +57,9 @@ static const uint8 *ApplyPatch(int idx) {
   else len = Decompress(buf, base.ptr);
   if (len != kSheetBytes) return NULL;
   for (uint32 i = 0; i < count; i++) {
-    uint32 tile = patch->data[1 + i];
+    uint32 tile = pdata[1 + i];
     if ((tile + 1) * kTileBytes > kSheetBytes) continue;
-    memcpy(buf + tile * kTileBytes, patch->data + 1 + count + i * kTileBytes, kTileBytes);
+    memcpy(buf + tile * kTileBytes, pdata + 1 + count + i * kTileBytes, kTileBytes);
   }
   out->size = kSheetBytes;
   return buf;
@@ -80,28 +80,56 @@ const uint8 *LanguageScreensAssets_Host(int slot, int *size) {
   return g_assets[slot].data;
 }
 
+static void ApplyAssetSlots(bool on, bool held) {
+  for (int i = 0; i < kLangAsset_Count; i++) {
+    uint32 pack_size = 0;
+    const uint8 *pack = i == kIntroSlot ? JaGraphics_IntroTilemap(&pack_size) : NULL;
+    bool host = on && g_assets[i].data != NULL && !(held && i >= kFirstMenuSlot) && !SelectSlotOff(i) &&
+                (i != kIntroSlot || JaGraphics_SetIntroAllowed());
+    if (pack != NULL) {
+      g_asset_ptrs[kSlotAsset[i]] = pack;
+      g_asset_sizes[kSlotAsset[i]] = pack_size;
+      continue;
+    }
+    g_asset_ptrs[kSlotAsset[i]] = host ? g_assets[i].data : g_orig_ptr[i];
+    g_asset_sizes[kSlotAsset[i]] = host ? g_assets[i].size : g_orig_size[i];
+  }
+}
+
+static void ApplySheets(bool on, bool held) {
+  for (int kind = 0; kind < 2; kind++) {
+    for (int i = 0; i < kLangSheetMax; i++) {
+      const Blob *b = &g_sheets[kind][i];
+      uint32 pack_size = 0;
+      const uint8 *pack = JaGraphics_Sheet(kind, i, &pack_size);
+      bool use = on && b->data != NULL && !(held && kind == 1) && JaGraphics_SetSheetAllowed(kind, i);
+      if (pack != NULL) AssetSheet_SetOverride(kind, i, pack, pack_size);
+      else AssetSheet_SetOverride(kind, i, use ? b->data : NULL, b->size);
+    }
+  }
+}
+
+static void ApplyPatches(bool on) {
+  for (int i = 0; i < kLangSheetMax; i++) {
+    uint32 sheet_size = 0;
+    if (g_sheets[0][i].data != NULL || JaGraphics_Sheet(0, i, &sheet_size) != NULL) continue;
+    uint32 pack_size = 0;
+    const uint8 *pack = JaGraphics_Patch(i, &pack_size);
+    const uint8 *patched = NULL;
+    if (pack != NULL) patched = ApplyPatch(i, pack, pack_size);
+    else if (on && JaGraphics_SetPatchAllowed(i)) patched = ApplyPatch(i, g_patches[i].data, g_patches[i].size);
+    if (patched != NULL) AssetSheet_SetOverride(0, i, patched, kSheetBytes);
+    else AssetSheet_SetOverride(0, i, NULL, 0);
+  }
+}
+
 void LanguageScreensAssets_Apply(bool on) {
   if (g_asset_ptrs[kSlotAsset[0]] == NULL) return;  // assets not loaded yet
   TakeOriginals();
   bool held = on && LanguageJa_SetHeldBack();
-  for (int i = 0; i < kLangAsset_Count; i++) {
-    bool host = on && g_assets[i].data != NULL && !(held && i >= kFirstMenuSlot) && !SelectSlotOff(i);
-    g_asset_ptrs[kSlotAsset[i]] = host ? g_assets[i].data : g_orig_ptr[i];
-    g_asset_sizes[kSlotAsset[i]] = host ? g_assets[i].size : g_orig_size[i];
-  }
-  for (int kind = 0; kind < 2; kind++) {
-    for (int i = 0; i < kLangSheetMax; i++) {
-      const Blob *b = &g_sheets[kind][i];
-      bool use = on && b->data != NULL && !(held && kind == 1);
-      AssetSheet_SetOverride(kind, i, use ? b->data : NULL, b->size);
-    }
-  }
-  for (int i = 0; i < kLangSheetMax; i++) {
-    if (g_sheets[0][i].data != NULL) continue;
-    const uint8 *patched = on ? ApplyPatch(i) : NULL;
-    if (patched != NULL) AssetSheet_SetOverride(0, i, patched, kSheetBytes);
-    else AssetSheet_SetOverride(0, i, NULL, 0);
-  }
+  ApplyAssetSlots(on, held);
+  ApplySheets(on, held);
+  ApplyPatches(on);
 }
 
 // The language's background sheets are drawn for its intro tilemap (asset 99). The file select loads

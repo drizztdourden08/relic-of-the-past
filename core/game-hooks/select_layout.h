@@ -2,7 +2,7 @@
 // The file select's layout (select_layout.c). Included from game_hooks.h.
 //
 // Two independent choices draw the file select screens (select, copy, erase, name entry):
-//   - the layout, one of two strategies, picked by the screen style (SelectLayout_Preferred);
+//   - the layout, one of two strategies, picked by the screen style option (SelectLayout_Preferred, kJaGfx_FileSelect);
 //   - the text, which always comes from the profile's language set, as everywhere else.
 // The strategies:
 //   kSelectLayout_Us  the vendored screens: US tilemaps 100-103, kSelectFile_Gfx0 frame, US stripes,
@@ -26,7 +26,7 @@ enum { kSelectLayout_Us, kSelectLayout_Ja };
 // The file select screens, by main module: 1 select, 2 copy, 3 erase, 4 name entry.
 enum { kSelectScreen_Select, kSelectScreen_Copy, kSelectScreen_Erase, kSelectScreen_Name };
 
-// The layout the screen style asks for. The US layout until the style setting exists.
+// The layout the screen style asks for: the Japanese one while kJaGfx_FileSelect is on, else the US one.
 int SelectLayout_Preferred(void);
 
 // Whether the current language set carries the text |layout| draws on |screen|.

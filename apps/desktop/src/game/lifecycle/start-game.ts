@@ -1,6 +1,6 @@
 /* @layer bridge-wasm @kind logic */
 import { log } from '../../log-bus';
-import { reassertHostGates, getGameState, loadBakedLetters, pushPendingLanguageScreens, setModule, setProfileId, setState, exposeDebugHandles } from '@rotp/game-core';
+import { reassertHostGates, getGameState, loadBakedLetters, pushPendingJapaneseGraphics, pushPendingLanguageScreens, setModule, setProfileId, setState, exposeDebugHandles } from '@rotp/game-core';
 import { bootGameModule } from './boot-game-module';
 import { readProfileSram } from './read-profile-sram';
 import { rotpCore } from './rotp-core';
@@ -23,6 +23,8 @@ const startGame = async (canvas: HTMLCanvasElement, assetData: Uint8Array, confi
     loadBakedLetters(module);
     const refused = pushPendingLanguageScreens(module);
     if (refused.length > 0) log.wasm(`The core refused language screen tables: ${refused.join(', ')}`);
+    const refusedGraphics = pushPendingJapaneseGraphics(module);
+    if (refusedGraphics.length > 0) log.wasm(`The core refused Japanese graphics: ${refusedGraphics.join(', ')}`);
     setProfileId(profileId ?? null);
     exposeDebugHandles(module);
     setState({ status: 'running', error: null });
