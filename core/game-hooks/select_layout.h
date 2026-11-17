@@ -51,3 +51,7 @@ bool SelectLayout_JapaneseFont(void);
 // Japanese set, the background sheets, BG3 blank and frame palette of the layout the screen runs
 // (select_screen_gfx.c). Does nothing otherwise.
 void GameHook_FileSelectScreenGfx(void);
+
+// Called by Module_NamePlayer_1 in place of SelectFile_Func1: for the Japanese layout the empty stripe
+// buffer (its name entry draws no backdrop), otherwise SelectFile_Func1's fill (select_screen_gfx.c).
+uint16 *GameHook_NameFileBackdrop(void);

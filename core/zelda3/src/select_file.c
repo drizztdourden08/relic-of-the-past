@@ -143,7 +143,7 @@ void SelectFile_Func16() {
 }
 
 void Module_NamePlayer_1() {
-  uint16 *dst = SelectFile_Func1();
+  uint16 *dst = GameHook_NameFileBackdrop();
   dst[0] = 0xffff;
   nmi_load_bg_from_vram = 1;
   submodule_index++;

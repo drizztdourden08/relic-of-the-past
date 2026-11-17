@@ -6,9 +6,11 @@
 // The two layouts want different background sheets in the eight slots: the US screens draw over the US
 // tileset (35/81), the Japanese cartridge's file select loads other sheets there and draws its frames
 // from the Japanese sheet 57, with its own colours in palette row 5. BG3 is cleared to the Japanese
-// font's blank, since the US blank is a kana in that font.
+// font's blank, since the US blank is a kana in that font. The Japanese name entry also leaves out the
+// US backdrop pattern under its grid (GameHook_NameFileBackdrop).
 #include "game_hooks_internal.h"
 #include "src/load_gfx.h"
+#include "src/select_file.h"
 
 enum {
   kSlots = 8,
@@ -21,6 +23,9 @@ enum {
   kPaletteDst = 0x42,
   kPaletteColumns = 14,
   kPaletteRows = 5,
+  kScratchRam = 0xbf,
+  kScratchBytes = 16,
+  kStripeBuffer = 0x1002,
 };
 
 // The background sheet in each slot, from VRAM 0x2000 up, main tileset 35 with aux tileset 81 applied.
@@ -34,13 +39,19 @@ static void ClearBg3(void) {
 }
 
 // The Japanese layout reads the set's own copy of a sheet where it has one, the US layout the baked one.
+// The high-plane conversion (Do3To4High) works in the 16 bytes at $BF, which the file select keeps its
+// file flags, chosen file and cursor in (selectfile_arr1, selectfile_R16, selectfile_arr2), so they are
+// put back afterwards.
 static void LoadSheets(bool ja) {
   const uint8 *sheets = ja ? kJaSheets : kUsSheets;
+  uint8 kept[kScratchBytes];
+  memcpy(kept, &g_ram[kScratchRam], kScratchBytes);
   LanguageScreens_SelectSheets(ja);
   for (int i = 0; i < kSlots; i++)
     LoadBackgroundGraphics(&g_zenv.vram[kSheetVram + i * kSlotWords], sheets[i], kSlots - 1 - i,
                            &g_ram[kDecompOffset]);
   LanguageScreens_SelectSheets(false);
+  memcpy(&g_ram[kScratchRam], kept, kScratchBytes);
 }
 
 // The set's palette when the Japanese layout runs and the set carries it, the vendored one otherwise.
@@ -59,4 +70,12 @@ void GameHook_FileSelectScreenGfx(void) {
   ClearBg3();
   LoadSheets(ja);
   LoadPalette(ja);
+}
+
+// The Japanese name entry has no backdrop pattern under its grid: the cartridge goes straight from
+// clearing the screen to its tilemap, so the US fill (SelectFile_Func1) would show through the kana.
+// Returns where the stream end goes: the empty stripe buffer for the Japanese layout, past the fill otherwise.
+uint16 *GameHook_NameFileBackdrop(void) {
+  bool ja = SelectLayout_JapaneseFont() && SelectLayout_ActiveOn(kSelectScreen_Name) == kSelectLayout_Ja;
+  return ja ? (uint16 *)&g_ram[kStripeBuffer] : SelectFile_Func1();
 }
