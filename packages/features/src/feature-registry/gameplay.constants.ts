@@ -383,6 +383,23 @@ const GAMEPLAY_FEATURES: FeatureDef[] = [
     live: true,
   },
   {
+    id: 'languageScreens',
+    label: 'Screens follow the language',
+    description:
+      'The file select, name grid, pause text, dungeon map labels, ending, credits and menu pictures read the active language\'s own data. Off, they read the original English ones.',
+    userMessage: 'Every screen shows the language\'s own text, not only the dialog.',
+    group: 'Dialog',
+    kind: 'features0-bit',
+    origin: 'relic',
+    flag: 'kFeatures2_LanguageScreens',
+    word: 2,
+    bit: 2147483648,
+    default: true,
+    requires: [],
+    affectsVanillaParity: true,
+    live: true,
+  },
+  {
     id: 'prefillFileName',
     label: 'Prefill file name',
     description: 'A new file opens its naming screen named Link, with the character strip parked on End.',

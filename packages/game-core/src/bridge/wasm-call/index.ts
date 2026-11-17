@@ -9,4 +9,5 @@ export { decodeGatedTable } from './decode-gated-table';
 export { callPtr } from './call-ptr';
 export { numberCall } from './number-call';
 export { voidCall } from './void-call';
+export { pushLanguageScreens } from './language-screens';
 export type { TableLayout, CallArgs } from './wasm-call.type';

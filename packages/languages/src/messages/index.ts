@@ -1,6 +1,6 @@
 /* @layer shared-game @kind barrel */
 export type {
-  DialogueEntry, GlossaryTerm, LanguageSet, LanguageSetMeta, NameTable, PauseLabelKey,
+  DialogueEntry, GlossaryTerm, LanguageScript, LanguageSet, LanguageSetMeta, NameTable, PauseLabelKey,
   SetStructure, Token,
 } from './types';
 export { emptyNameTable } from './pack-set/empty-name-table';
@@ -9,6 +9,8 @@ export { serializeTokens } from './tokens/serialize-tokens';
 export { validateEntry } from './validate/validate-entry';
 export type { EntryIssue } from './validate/validate.type';
 export { compileBake } from './compile/compile-bake';
+export { compileScreens } from './compile/compile-screens';
+export { namesFromScreens } from './pack-set/names-from-screens';
 export type { BakedLanguages, SetBakeInput } from './compile/compile.type';
 export { ROW_WIDTH_PX, ROWS_PER_BOX } from './layout/types';
 export type { GlyphMetrics, GlyphSheet, RowFit } from './layout/types';

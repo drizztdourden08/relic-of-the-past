@@ -50,6 +50,7 @@ const DEFAULT_SETTINGS: GameSettings = {
   autoSkipDialog: false,
   prefillFileName: false,
   extendedLetters: true,
+  languageScreens: true,
   turnWhileDashing: false,
   allowDiving: false,
   mirrorToDarkworld: false,

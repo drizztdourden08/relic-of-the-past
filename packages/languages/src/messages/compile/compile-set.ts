@@ -8,6 +8,7 @@ import { resolve } from '../variables/resolve';
 import { variablesFromNameTables } from '../variables/variables-from-name-tables';
 import { serializeTokens } from '../tokens/serialize-tokens';
 import type { SetFont } from './compile.type';
+import { compileScreens } from './compile-screens';
 import { BAKE, EXPECTED_LINE_COUNT, NON_BASE_INDEX } from './compile.constants';
 
 const orderedDialogue = (set: LanguageSet): LanguageSet['dialogue'] => {
@@ -52,7 +53,8 @@ const compileSet = (set: LanguageSet, font: SetFont): PackedLangEntry => {
     letters: table.letters,
   });
 
-  return { ...packed, code: set.id, base: set.base };
+  const screens = compileScreens(set.screens);
+  return { ...packed, code: set.id, base: set.base, ...(screens.length > 0 ? { screens } : {}) };
 };
 
 export { compileSet };

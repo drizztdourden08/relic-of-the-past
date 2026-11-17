@@ -15,6 +15,7 @@ const PART_LABELS: Readonly<Record<PatchedPartId, string>> = {
   dictionary: 'Dictionary',
   'menu-text': 'Menu and caption text',
   credits: 'Credits',
+  screens: 'Menu screens and graphics',
 };
 
 export { PART_LABELS, PART_STATUSES };

@@ -76,6 +76,19 @@ export { RANDOMIZER_MSG_BASE, RANDOMIZER_RECEIPT_MSG } from './text/data/randomi
 export { formatDialogueText } from './text/dialogue-decoder/format-dialogue-text';
 export { kCmdInfo } from './text/dialogue-encoder/cmd-info';
 export { compressStrings } from './text/dialogue-encoder/compress-strings';
+export { extractScreens } from './screens/extract-screens';
+export { kScreenAddresses, US_SCREEN_ADDRESSES } from './screens/addresses';
+export { readSheetPointer } from './screens/read-sheet-pointers';
+export { PAUSE_TABLES, SELECT_FILE_TABLES } from './screens/screens.constants';
+export {
+  CREDITS_MAP_ID, CREDITS_OFFSETS_ID, CREDITS_TEXT_ID, DUNGEON_MAP_LABELS_ID, ENDING_CAPTION_DATA_ID,
+  ENDING_CAPTION_OFFSETS_ID, NAME_GRID_ID, TILEMAP_FONT_DATA_ID, TILEMAP_FONT_ID, menuTilemapId, pauseTableId,
+  selectFileTableId, sheetTableId,
+} from './screens/screen-table-ids.constants';
+export type { ScreenTable } from './screens/screen-table.type';
+export type {
+  PauseTable, ScreenAddressTable, ScreenPayload, SelectFileTable, SheetKind, SheetOverride, TableRegion,
+} from './screens/screen-payload.type';
 export { decodeEndingCaptions } from './text/menu-text/decode-captions';
 export { decodeCredits } from './text/menu-text/decode-credits';
 export { decodeMenuText } from './text/menu-text/decode-stripe-text';

@@ -103,7 +103,17 @@ void LoadAssets(void) {
   }
 }
 
+// Sheet overrides for assets 64 (kSprGfx) and 65 (kBgGfx), filled by the language screens hook.
+static MemBlk g_sheet_override[2][kLangSheetMax];
+
+void AssetSheet_SetOverride(int asset, int idx, const uint8 *p, uint32 size) {
+  if (asset < 0 || asset > 1 || idx < 0 || idx >= kLangSheetMax) return;
+  g_sheet_override[asset][idx] = (MemBlk) { p, p ? size : 0 };
+}
+
 MemBlk FindInAssetArray(int asset, int idx) {
+  if ((asset == 64 || asset == 65) && idx >= 0 && idx < kLangSheetMax && g_sheet_override[asset - 64][idx].ptr != NULL)
+    return g_sheet_override[asset - 64][idx];
   return FindIndexInMemblk((MemBlk) { g_asset_ptrs[asset], g_asset_sizes[asset] }, idx);
 }
 

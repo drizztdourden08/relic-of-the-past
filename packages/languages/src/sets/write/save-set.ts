@@ -4,11 +4,13 @@ import type { LanguageSet } from '../../messages';
 import { writeJson } from '@drizztdourden08/brock-core';
 import { writeContent } from '../format-2';
 import { dialoguePath, textPath } from '../paths';
+import { writeScreens } from './write-screens';
 
 const saveSet = async (files: FileStore, set: LanguageSet): Promise<void> => {
   await writeContent(files, set);
   await writeJson(files, dialoguePath(set.id), set.dialogue);
   await writeJson(files, textPath(set.id), set.text ?? {});
+  await writeScreens(files, set);
 };
 
 export { saveSet };

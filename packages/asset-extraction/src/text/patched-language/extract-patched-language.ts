@@ -8,6 +8,7 @@ import { dictionaryPart } from './parts/dictionary-part';
 import { fontTilesPart } from './parts/font-tiles-part';
 import { lettersPart } from './parts/letters-part';
 import { readLetters } from './parts/read-letters';
+import { screensPart } from './parts/screens-part';
 import { screenTextPart } from './parts/screen-text-part';
 import { FATAL_PARTS } from './patched-language.constants';
 import type { PatchedLanguage, PatchedLanguageInput, PatchedPartReport, PatchedWork } from './patched-language.type';
@@ -19,7 +20,7 @@ const startWork = (input: PatchedLanguageInput): PatchedWork => {
   if (!config) throw new Error(`"${base}" has no dialogue layout.`);
   return {
     ...input, base, config, tiles: null, reading: null, letters: [...config.alphabet], dictionary: null, plan: null,
-    texts: null, menu: {}, credits: {},
+    texts: null, menu: {}, credits: {}, screens: null,
   };
 };
 
@@ -44,7 +45,8 @@ const runParts = (work: PatchedWork): PatchedPartReport[] => {
     part: 'credits', decode: (rom) => [...decodeCredits(rom), ...decodeEndingCaptions(rom)],
     keep: (into, lines) => { into.credits = lines; },
   }, w), work);
-  return [dialogue, tiles, letters, dictionary, menu, credits];
+  const screens = runPart('screens', screensPart, work);
+  return [dialogue, tiles, letters, dictionary, menu, credits, screens];
 };
 
 const extractPatchedLanguage = (input: PatchedLanguageInput): PatchedLanguage => {
@@ -58,6 +60,7 @@ const extractPatchedLanguage = (input: PatchedLanguageInput): PatchedLanguage =>
     texts: done ? work.texts ?? [] : [],
     menu: work.menu,
     credits: work.credits,
+    screens: work.screens,
   };
 };
 

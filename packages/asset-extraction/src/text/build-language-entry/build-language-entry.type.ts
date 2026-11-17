@@ -1,6 +1,7 @@
 /* @layer shared-asset-extraction @kind types */
 import type { DialogueLine } from '../../sets-types';
 import type { GlyphMap } from '../glyph-map';
+import type { ScreenTable } from '../../screens/screen-table.type';
 
 interface PackedLangEntry {
   code: string;
@@ -8,6 +9,7 @@ interface PackedLangEntry {
   langData: Buffer;
   fontPacked: Buffer;
   flags: number;
+  screens?: readonly ScreenTable[];
 }
 
 interface ExtractedLangEntry extends PackedLangEntry {

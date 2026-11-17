@@ -97,6 +97,7 @@ const sections: Section[] = [
         title: 'Letters',
         items: [
           { key: 'extendedLetters', label: 'Every Accented Letter', description: "Dialog shows every accented letter a translation or a name uses, drawn in the game's own font. Off shows the plain letter instead.", keywords: 'dialog accent accented letters latin translation language name font diacritic' },
+          { key: 'languageScreens', label: 'Screens Follow the Language', description: 'Menus, pause text, ending and credits use the language too.', keywords: 'screens menu pause file select name ending credits language translation' },
         ],
       },
     ],

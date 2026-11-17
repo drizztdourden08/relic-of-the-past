@@ -15,7 +15,8 @@ const createSet = async (files: FileStore, params: CreateSetParams): Promise<Lan
   const set: LanguageSet = {
     id, name, base: source.base, origin: 'custom', version: 1,
     dialogue: clone(source.dialogue), glossary: [], names: emptyNameTable(),
-    structure: source.structure,
+    structure: source.structure, script: source.script,
+    ...(source.screens ? { screens: source.screens } : {}),
   };
   await saveSet(files, set);
   return set;

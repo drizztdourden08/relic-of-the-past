@@ -32,6 +32,7 @@ const LIVE_SETTING_KEYS = [
   'autoSkipDialog',
   'prefillFileName',
   'extendedLetters',
+  'languageScreens',
   'coloredRupees',
   'itemSheen',
   'archeryNeedsBow',

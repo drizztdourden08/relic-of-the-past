@@ -14,7 +14,7 @@ fits in the wider app, see @docs/architecture/overview.md.
                              data, field-kits, color-picker (reusable, domain-agnostic)
 packages/design/game-text/  @rotp/design/game-text.css, shared by the app and the sites
 ├── game-text.css           colours and geometry of text the game draws
-└── font/                   the dialogue face (game-font.css, alttp-ext.woff2, licence)
+└── font/                   one folder per script (latin/ holds the dialogue face)
 apps/desktop/assets/        bundled pictures (mode badges, home hero, title scene)
 apps/desktop/src/
 ├── theme.css               RotP's own tokens, unlayered, imported after Tessera's

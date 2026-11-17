@@ -1,6 +1,6 @@
 /* @layer bridge-wasm @kind types */
 import type {
-  FontReference, PatchedPartReport, RomLanguage, SpriteDef,
+  FontReference, PatchedPartReport, RomLanguage, ScreenPayload, SpriteDef,
 } from '@rotp/asset-extraction';
 import type { SetBakeInput } from '@rotp/languages';
 import type { SupplementRoms } from '../../storage/asset-files';
@@ -28,6 +28,7 @@ interface PatchedLanguageOutput {
   flags: number;
   menu: Record<string, string>;
   credits: Record<string, string>;
+  screens: ScreenPayload | null;
 }
 
 interface ExtractInputs {

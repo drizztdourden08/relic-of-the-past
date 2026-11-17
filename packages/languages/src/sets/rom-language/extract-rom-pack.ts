@@ -1,11 +1,13 @@
 /* @layer shared-game @kind logic */
-import { extractLangEntry } from '@rotp/asset-extraction';
+import { extractLangEntry, extractScreens, kScreenAddresses } from '@rotp/asset-extraction';
 import type { RomData } from '@rotp/asset-extraction';
 import type { ExtractedPack } from '../types';
 
 const extractRomPack = (rom: RomData): ExtractedPack => {
   const entry = extractLangEntry(rom, rom.language, 1);
+  const addresses = kScreenAddresses[rom.language];
   return {
+    ...(addresses ? { screens: extractScreens(rom, addresses) } : {}),
     code: rom.language,
     description: rom.description,
     dialogue: `${entry.lines.map((line) => `${line.id}: ${line.content}`).join('\n')}\n`,

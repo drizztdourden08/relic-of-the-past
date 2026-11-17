@@ -4,6 +4,7 @@ const SET_FILES = {
   dialogue: 'dialogue.json',
   text: 'text.json',
   variables: 'variables.json',
+  screens: 'screens.json',
   license: 'LICENSE.txt',
   payloadDialogue: 'dialogue.txt',
   payloadMeta: 'meta.json',

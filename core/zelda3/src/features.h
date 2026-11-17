@@ -136,6 +136,11 @@ enum {
   // font's own letters and written into free slots as a line shows them (core/game-hooks/
   // dialog_letter_bank.c). Down, each one draws its plain fallback letter, so Vanilla Safe strips it.
   kFeatures2_ExtendedLetters    = 1u << 30,
+  // The screens that carry words (file select, name grid, pause text, dungeon map labels, ending
+  // captions, credits, menu tilemaps, swapped sheets, the tilemap font) read the language's own data
+  // instead of the US tables (core/game-hooks/language_screens.c). Off, every one reads the vendored
+  // table, so Vanilla Safe strips it.
+  kFeatures2_LanguageScreens    = 1u << 31,
 };
 
 // Enum values for kRam_Features3 — cheats and other C-side hook divergences. Unlike kFeatures0 (opt-in

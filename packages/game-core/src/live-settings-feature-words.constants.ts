@@ -7,6 +7,7 @@ const FEATURES2_FLAGS = {
   modernControls: 1 << 28,
   allowDiving: 1 << 29,
   extendedLetters: 1 << 30,
+  languageScreens: 1 << 31,
 } as const;
 
 const BUG_FIX_WORD_FEATURES2 = 2;

@@ -804,6 +804,9 @@ void HudOverride_SetWantedDialogHidden(bool on);
 // ─── Host-owned pause menu (host_menu.c, host_menu_gear.c): host_menu_hooks.h ───
 #include "host_menu_hooks.h"
 
+// ─── Language screens (language_screens.c, language_screens_assets.c): language_screens.h ───
+#include "language_screens.h"
+
 // ─── Dark-room lighting cheat (cheat_lighting.c) ───
 
 // Re-assert (or take back down) the lamp cone in a dark room the player has no lamp for. Runs every

@@ -5,7 +5,7 @@ const RAW_FEATURE_KEYS = [
   'extendedRendering', 'linearWorldTilemap', 'ultrawideRendering', 'tallRendering',
   'widescreenSprites', 'widescreenVisualFixes', 'cameraLockToViewport', 'smoothTransitions',
   'perGroupVolume', 'autoSkipDialog',
-  'prefillFileName', 'extendedLetters',
+  'prefillFileName', 'extendedLetters', 'languageScreens',
   'coloredRupees', 'itemSheen', 'archeryNeedsBow',
 ] as const satisfies readonly (keyof GameSettings)[];
 

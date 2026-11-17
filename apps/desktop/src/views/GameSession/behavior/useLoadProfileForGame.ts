@@ -14,6 +14,7 @@ import type { LoadProfileForGameDeps } from './useProfileManagement.type';
 import { ensureProfileAssets } from './ensure-profile-assets';
 import { loadInputProfile } from './load-input-profile';
 import { loadPlayerSprite } from './load-player-sprite';
+import { loadLanguageScreens } from './load-language-screens';
 
 const useLoadProfileForGame = ({ onGameClear, onProfileLoaded, setActiveProfile, setLoadingProfile }: LoadProfileForGameDeps) =>
   useCallback(async (staleProfile: Profile) => {
@@ -32,6 +33,7 @@ const useLoadProfileForGame = ({ onGameClear, onProfileLoaded, setActiveProfile,
     await loadInputProfile(profile.id, settings);
     await loadMsuPack(profile, settings);
     await loadPlayerSprite(settings);
+    await loadLanguageScreens(profile.language);
 
     const ini = serializeToIni(settings, undefined, profile.language);
     log.app(`Loaded profile settings (aspect: ${settings.aspectRatio}, viewport: ${settings.viewportConstraint}, renderer: ${settings.newRenderer ? 'new' : 'old'}, language: ${profile.language ?? 'us'})`);

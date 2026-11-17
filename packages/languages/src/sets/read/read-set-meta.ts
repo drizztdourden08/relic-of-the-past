@@ -7,11 +7,12 @@ import { setMetaPath } from '../paths';
 const readSetMeta = async (files: FileStore, id: string): Promise<LanguageSetMeta | null> => {
   const raw = await readJson<LanguageSetMeta | null>(files, setMetaPath(id), null);
   if (!raw) return null;
-  const { name, base, origin, version, author, basedOn, credits } = raw;
+  const { name, base, origin, version, author, basedOn, credits, script } = raw;
   return {
     id: raw.id, name, base, origin, version, author,
     ...(basedOn ? { basedOn } : {}),
     ...(credits ? { credits } : {}),
+    ...(script ? { script } : {}),
   };
 };
 

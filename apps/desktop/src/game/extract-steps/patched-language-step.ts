@@ -40,6 +40,7 @@ const patchedLanguageStep = defineStep<'patched-language'>((input, { romBytes },
     flags: check.flags,
     menu: found.menu,
     credits: found.credits,
+    screens: found.screens,
   };
 });
 

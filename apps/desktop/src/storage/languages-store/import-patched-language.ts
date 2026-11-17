@@ -32,6 +32,7 @@ const runImport = async (request: PatchedImportRequest, report: ImportReport): P
     name: request.name.trim(), base: request.base,
     credits: request.credits, license: request.license,
     text: { menu: found.menu, credits: found.credits },
+    ...(found.screens ? { screens: found.screens } : {}),
   });
   report.phase('extract', 'Baking into assets...');
   await recompileAll();

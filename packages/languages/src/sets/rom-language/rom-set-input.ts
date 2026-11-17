@@ -5,7 +5,7 @@ import { packFromExtracted } from '../pack';
 import type { ExtractedPack } from '../types';
 
 const romSetInput = (pack: ExtractedPack): SetBakeInput => ({
-  set: setFromPack(packFromExtracted(pack)),
+  set: setFromPack(packFromExtracted(pack), pack.screens),
   fontData: pack.fontData,
   fontWidth: pack.fontWidth,
 });

@@ -1,4 +1,5 @@
 /* @layer shared-storage @kind types */
+import type { ScreenPayload } from '@rotp/asset-extraction';
 import type { TextOverrides } from '../../messages';
 
 type LanguageSetSummary = {
@@ -24,7 +25,9 @@ interface ExtractedPayload {
   flags: number;
 }
 
-interface ExtractedPack extends ExtractedPayload, RomFontBytes {}
+interface ExtractedPack extends ExtractedPayload, RomFontBytes {
+  screens?: ScreenPayload;
+}
 
 interface PatchedPack extends ExtractedPayload {
   name: string;
@@ -32,6 +35,7 @@ interface PatchedPack extends ExtractedPayload {
   credits: string;
   license: string;
   text: TextOverrides;
+  screens?: ScreenPayload;
 }
 
 export type { ExtractedPack, ExtractedPayload, LanguageSetSummary, PatchedPack, RomFontBytes };

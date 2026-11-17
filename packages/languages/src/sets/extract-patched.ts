@@ -10,9 +10,9 @@ import { saveSet } from './write';
 const writePatchedPack = async (files: FileStore, pack: PatchedPack): Promise<void> => {
   await assertFreeSetId(files, pack.code);
   await writeExtractionPayload(files, pack);
-  const { name, base, credits, license, text } = pack;
+  const { name, base, credits, license, text, screens } = pack;
   await saveSet(files, {
-    ...setFromPack(packFromExtracted(pack)),
+    ...setFromPack(packFromExtracted(pack), screens),
     name,
     base,
     text,

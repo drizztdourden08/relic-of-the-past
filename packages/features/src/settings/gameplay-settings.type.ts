@@ -3,6 +3,7 @@ interface GameplaySettings {
   autoSkipDialog: boolean;
   prefillFileName: boolean;
   extendedLetters: boolean;
+  languageScreens: boolean;
   turnWhileDashing: boolean;
   allowDiving: boolean;
   mirrorToDarkworld: boolean;
