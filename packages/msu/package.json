@@ -7,7 +7,7 @@
   "sideEffects": false,
   "exports": {
     ".": "./src/index.ts",
-    "./main": "./src/main.ts",
+    "./main": "./src/main/index.ts",
     "./package.json": "./package.json"
   },
   "dependencies": {
