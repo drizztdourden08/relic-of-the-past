@@ -35,6 +35,7 @@ enum {
   kLangTbl_DungMapTab23,       // messaging.c kDungMap_Tab23   uint16[744]
   kLangTbl_CreditsDigits,      // ending.c kEnding_Credits_DigitChar uint16[2]
   kLangTbl_CreditsScrollY,     // ending.c kEnding_Digits_ScrollY uint16[14]
+  kLangTbl_SelectPalette,      // the file select's kPalette_DungBgMain set (Japanese layout) uint16[90]
   kLangTbl_Count
 };
 
@@ -89,6 +90,8 @@ bool GameHook_TransferTilemapFont(uint16 *dst);
 bool LanguageScreens_On(void);
 void LanguageScreensAssets_Apply(bool on);
 bool LanguageScreensAssets_Set(int id, const void *data, int len);
+// The host's blob for asset slot |slot| (kLangAsset_* order) and its byte size, NULL when none was sent.
+const uint8 *LanguageScreensAssets_Host(int slot, int *size);
 void LanguageScreensAssets_Clear(void);
 bool LanguageScreensFont_Set(const void *data, int len);
 void LanguageScreensFont_Clear(void);
@@ -99,3 +102,12 @@ bool LanguageScreensFont_Ready(void);
 // (kSprGfx, |asset| 0) or 65 (kBgGfx, |asset| 1) in place of the baked one. NULL clears the override.
 void AssetSheet_SetOverride(int asset, int idx, const uint8 *p, uint32 size);
 enum { kLangSheetMax = 256 };
+
+// Whether an override of sheet kind |kind| (0 sprite, 1 background) is read this frame. The background
+// sheets are the intro's (main module 0) and the Japanese file select layout's (while
+// LanguageScreens_SelectSheets is on): every other screen reads the baked ones.
+bool LanguageScreens_SheetLive(int kind);
+
+// Opens (|on|) or closes the background sheet overrides for the Japanese file select layout's sheet load
+// (select_screen_gfx.c).
+void LanguageScreens_SelectSheets(bool on);

@@ -15,6 +15,7 @@ typedef struct {
 
 // Ids 0x300 + index: a tile patch for sprite sheet |index| (see ApplyPatch).
 enum { kAssetIdBase = 0x40, kSheetIdBase = 0x100, kPatchIdBase = 0x300, kSheetBytes = 0x600, kTileBytes = 24, kFirstMenuSlot = 5 };
+enum { kFirstSelectSlot = 6, kLastSelectSlot = 9, kBgSheetKind = 1, kModuleIntro = 0 };
 
 // The asset number of each slot, in kLangAsset_* order.
 static const uint8 kSlotAsset[kLangAsset_Count] = {74, 75, 76, 77, 78, 99, 100, 101, 102, 103, 104};
@@ -64,12 +65,27 @@ static const uint8 *ApplyPatch(int idx) {
   return buf;
 }
 
+// Slots kFirstSelectSlot to kLastSelectSlot are the file select tilemaps (assets 100-103: name entry,
+// select, copy, erase), drawn for the set's own layout: each applies only while that layout is the one
+// its screen runs (select_layout.h).
+static bool SelectSlotOff(int slot) {
+  if (slot < kFirstSelectSlot || slot > kLastSelectSlot) return false;
+  int screen = slot == kFirstSelectSlot ? kSelectScreen_Name : kSelectScreen_Select + slot - kFirstSelectSlot - 1;
+  return SelectLayout_OfSet() != SelectLayout_ActiveOn(screen);
+}
+
+const uint8 *LanguageScreensAssets_Host(int slot, int *size) {
+  if (slot < 0 || slot >= kLangAsset_Count || g_assets[slot].data == NULL) return NULL;
+  *size = (int)g_assets[slot].size;
+  return g_assets[slot].data;
+}
+
 void LanguageScreensAssets_Apply(bool on) {
   if (g_asset_ptrs[kSlotAsset[0]] == NULL) return;  // assets not loaded yet
   TakeOriginals();
   bool held = on && LanguageJa_SetHeldBack();
   for (int i = 0; i < kLangAsset_Count; i++) {
-    bool host = on && g_assets[i].data != NULL && !(held && i >= kFirstMenuSlot);
+    bool host = on && g_assets[i].data != NULL && !(held && i >= kFirstMenuSlot) && !SelectSlotOff(i);
     g_asset_ptrs[kSlotAsset[i]] = host ? g_assets[i].data : g_orig_ptr[i];
     g_asset_sizes[kSlotAsset[i]] = host ? g_assets[i].size : g_orig_size[i];
   }
@@ -86,6 +102,20 @@ void LanguageScreensAssets_Apply(bool on) {
     if (patched != NULL) AssetSheet_SetOverride(0, i, patched, kSheetBytes);
     else AssetSheet_SetOverride(0, i, NULL, 0);
   }
+}
+
+// The language's background sheets are drawn for its intro tilemap (asset 99). The file select loads
+// the same sheets (tileset 35/81) under a frame, kSelectFile_Gfx0, drawn for the US sheets, and the
+// overworld and the triforce room share some of them, so they are read only during the intro, and on
+// the file select only by the Japanese layout's own sheet load.
+static bool g_select_sheets;
+
+bool LanguageScreens_SheetLive(int kind) {
+  return kind != kBgSheetKind || main_module_index == kModuleIntro || g_select_sheets;
+}
+
+void LanguageScreens_SelectSheets(bool on) {
+  g_select_sheets = on;
 }
 
 int LanguageScreens_AssetLen(int slot, int orig_len) {

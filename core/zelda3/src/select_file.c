@@ -143,7 +143,7 @@ void SelectFile_Func16() {
 }
 
 void Module_NamePlayer_1() {
-  uint16 *dst = SelectFile_Func1();
+  uint16 *dst = GameHook_NameFileBackdrop();
   dst[0] = 0xffff;
   nmi_load_bg_from_vram = 1;
   submodule_index++;
@@ -239,6 +239,7 @@ void FileSelect_EraseTriforce() {  // 8ccdf9
   nmi_disable_core_updates = 128;
   EnableForceBlank();
   EraseTileMaps_triforce();
+  GameHook_FileSelectScreenGfx();
   Palette_LoadForFileSelect();
   flag_update_cgram_in_nmi++;
   submodule_index++;

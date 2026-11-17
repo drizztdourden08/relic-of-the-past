@@ -586,7 +586,7 @@ void NMI_DoUpdates() {  // 8089e0
     case 9: p = kBgTilemap_5; break;
     default: assert(0);
     }
-    HandleStripes14(p);
+    HandleStripes14(GameHook_SelectStripes(p, nmi_load_bg_from_vram));
     if (nmi_load_bg_from_vram == 1)
       vram_upload_offset = 0;
     nmi_load_bg_from_vram = 0;

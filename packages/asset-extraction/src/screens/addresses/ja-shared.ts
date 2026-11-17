@@ -5,7 +5,7 @@ import type { JaScreenAddressTable } from './ja.type';
 const JA_SHARED_ADDRESSES: Pick<
   JaScreenAddressTable,
   | 'credits' | 'creditsDigits' | 'creditsScrollY' | 'dungeonMapLabels' | 'endingCaptions' | 'pauseText'
-  | 'sheetPatches' | 'sheetPointers' | 'sheets'
+  | 'selectPalette' | 'sheetPatches' | 'sheetPointers' | 'sheets'
 > = {
   pauseText: {
     ability: { address: 0x8df979, count: 80 },
@@ -21,6 +21,7 @@ const JA_SHARED_ADDRESSES: Pick<
   dungeonMapLabels: { address: 0x8af019, count: 744 },
   creditsDigits: { address: 0x8ee7dc, count: 2 },
   creditsScrollY: { address: 0x8ee629, count: 14 },
+  selectPalette: { address: 0x9bd950, count: 90 },
   endingCaptions: {
     kind: 'bytes',
     offsets: { address: 0x8eecc0, count: 17 },

@@ -1,6 +1,6 @@
 /* @layer core-game-hooks @kind native */
-// Japanese mode and what the Japanese screens share: the mode test, a name word's tile and glyph, the
-// faerie's positions and the address of the sprite sheet the Japanese font would cover. See
+// The Japanese layout and what its screens share: the layout's readiness and mode test, a name word's
+// tile and glyph, the faerie's positions and the address of the sprite sheet the Japanese font would cover. See
 // language_ja_screens.h.
 #include "game_hooks_internal.h"
 
@@ -36,7 +36,7 @@ static const FaerieScreen kFaerie[] = {
   {3, 4, 2, {0x14, 0x14}, {0xa7, 0xc7}},                                      // erase: confirm
 };
 
-bool LanguageJa_On(void) {
+bool LanguageJa_LayoutReady(void) {
   if (!LanguageScreens_On() || (g_zenv.dialogue_flags & kJapaneseFlag) == 0 || !LanguageScreensFont_Ready())
     return false;
   for (size_t i = 0; i < countof(kJaTables); i++) {
@@ -47,8 +47,12 @@ bool LanguageJa_On(void) {
   return true;
 }
 
+bool LanguageJa_On(void) {
+  return SelectLayout_Active() == kSelectLayout_Ja;
+}
+
 bool LanguageJa_SetHeldBack(void) {
-  return LanguageScreens_On() && (g_zenv.dialogue_flags & kJapaneseFlag) != 0 && !LanguageJa_On();
+  return LanguageScreens_On() && (g_zenv.dialogue_flags & kJapaneseFlag) != 0 && !LanguageJa_LayoutReady();
 }
 
 // The font holds a glyph's top half at row-pair tile (g & 0xf0) * 2 + (g & 0xf), its bottom half 0x10 on.
@@ -85,5 +89,5 @@ void GameHook_FileSelectFairy(uint8 *x, uint8 *y) {
 }
 
 uint16 GameHook_FileSelectSheetVram(uint16 orig) {
-  return LanguageJa_On() ? kSheetVramJa : orig;
+  return SelectLayout_JapaneseFont() ? kSheetVramJa : orig;
 }

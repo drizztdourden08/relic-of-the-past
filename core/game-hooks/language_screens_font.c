@@ -2,9 +2,10 @@
 // The language's own tilemap font: 2bpp tiles the credits upload to VRAM $7000 in place of the US font.
 // Only a Japanese set (dialogue_flags bit 2) takes it: its ending captions, credits and death-count
 // digits name tiles 0x000-0x1ff, a 512-tile font built from the dialogue glyphs, twice the 0x800 words
-// of the US font. The Japanese file select (LanguageJa_On, main module 1) takes its first 0x1a00 bytes,
-// tiles 0x000-0x19f: its names and kana grid draw from them, and the sprite sheet uploaded right after
-// moves above them (GameHook_FileSelectSheetVram). Otherwise the file select keeps the US font.
+// of the US font. The file select (main module 1) takes its first 0x1a00 bytes, tiles 0x000-0x19f,
+// whenever the set is ready (SelectLayout_JapaneseFont), in either layout: its names, labels and kana
+// grid draw from them, and the sprite sheet uploaded right after moves above them
+// (GameHook_FileSelectSheetVram). Otherwise the file select keeps the US font.
 // Gate: kFeatures2_LanguageScreens. Off, with no font or outside a Japanese set, the original upload runs.
 #include "game_hooks_internal.h"
 #include "src/features.h"
@@ -39,7 +40,7 @@ bool LanguageScreensFont_Ready(void) {
 
 bool GameHook_TransferTilemapFont(uint16 *dst) {
   if (g_font_len != kFontMaxBytes || !LanguageScreens_On()) return false;
-  if (main_module_index == kModuleFileSelect && LanguageJa_On()) {
+  if (main_module_index == kModuleFileSelect && SelectLayout_JapaneseFont()) {
     memcpy(dst, g_font, kFileSelectFontBytes);
     return true;
   }

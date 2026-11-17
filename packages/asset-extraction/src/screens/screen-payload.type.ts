@@ -33,6 +33,7 @@ interface ScreenPayload {
   readonly dungeonMapLabels: Uint16Array;
   readonly creditsDigits: Uint16Array;
   readonly creditsScrollY?: Uint16Array;
+  readonly selectPalette?: Uint16Array;
   readonly endingCaptions: { readonly offsets: Uint16Array; readonly data: Uint8Array };
   readonly credits: { readonly text: Uint8Array; readonly offsets: Uint16Array; readonly map: Uint16Array };
   readonly sheets: readonly SheetOverride[];
