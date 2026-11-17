@@ -22,7 +22,6 @@ static const uint16 kTableBytes[kLangTbl_Count] = {
   1488,                                       // kDungMap_Tab23
   4,                                          // credits death-count digit tiles
   28,                                         // credits scroll line of each death count
-  180,                                        // file select background palette set
 };
 
 // Largest byte length the host may give a variable table (0 = the length must match kTableBytes). The

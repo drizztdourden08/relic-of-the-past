@@ -12,7 +12,6 @@ interface JaScreenAddressTable extends Omit<ScreenAddressTable, 'id' | 'nameGrid
   readonly selectFile: Readonly<Partial<Record<SelectFileTable, TableRegion>>>;
   readonly nameGridAddress: number;
   readonly creditsScrollY: TableRegion;
-  readonly selectPalette: TableRegion;
   readonly copyrightOam: JaCopyrightOamSource;
 }
 

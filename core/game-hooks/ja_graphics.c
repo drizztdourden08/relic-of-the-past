@@ -5,7 +5,7 @@
 #include "src/ending.h"
 #include <stdlib.h>
 
-enum { kSheetIdBase = 0x100, kPatchIdBase = 0x300, kIntroTilemapId = 0x45, kCopyrightOamId = 0x46, kOamHeaderBytes = 3, kOamEntryBytes = 8, kOamEntriesMax = 16, kBgSheetKind = 1, kSprSheetKind = 0 };
+enum { kSheetIdBase = 0x100, kPatchIdBase = 0x300, kIntroTilemapId = 0x45, kCopyrightOamId = 0x46, kOamHeaderBytes = 3, kOamEntryBytes = 8, kOamEntriesMax = 16, kBgSheetKind = 1, kSprSheetKind = 0, kIntroModule = 0 };
 
 typedef struct {
   uint8 *data;
@@ -47,18 +47,29 @@ bool JaGraphics_On(uint32 bit) {
   return (g_latched_bits & bit) != 0;
 }
 
-void JaGraphics_Gate(void) {
-  if (!g_started) g_latched_bits = enhanced_features2 & kAllBits;
+// True until the intro has loaded its tilesets (they load as its submodule 1 ends), so a host that pushes
+// the settings after the core starts, even a few frames in, still reaches the first intro picture.
+static bool Following(void) {
+  return !g_started || (main_module_index == kIntroModule && submodule_index <= 1);
 }
 
-void JaGraphics_FrameEnd(void) {
-  g_started = true;
-  if (main_module_index == g_prev_module) return;
-  g_prev_module = main_module_index;
+static void Refresh(void) {
   uint32 live = enhanced_features2 & kAllBits;
   if (live == g_latched_bits) return;
   g_latched_bits = live;
   LanguageScreensAssets_Apply(LanguageScreens_On());
+}
+
+void JaGraphics_Gate(void) {
+  if (Following()) g_latched_bits = enhanced_features2 & kAllBits;
+}
+
+void JaGraphics_FrameEnd(void) {
+  bool follow = Following();
+  g_started = true;
+  if (!follow && main_module_index == g_prev_module) return;
+  g_prev_module = main_module_index;
+  Refresh();
 }
 
 static const uint8 *Taken(const Blob *blob, uint32 *size) {

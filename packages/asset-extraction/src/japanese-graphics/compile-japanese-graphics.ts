@@ -41,6 +41,7 @@ const compileJapaneseGraphics = (rom: RomData): JapaneseGraphicEntry[] => {
       bytes: readSheet(rom, table, 'spr', index).data,
     })),
     copyrightPatch(rom, table),
+    copyrightOam(rom, table),
   ];
 };
 
