@@ -14,7 +14,7 @@ typedef struct {
 } Blob;
 
 // Ids 0x300 + index: a tile patch for sprite sheet |index| (see ApplyPatch).
-enum { kAssetIdBase = 0x40, kSheetIdBase = 0x100, kPatchIdBase = 0x300, kSheetBytes = 0x600, kTileBytes = 24 };
+enum { kAssetIdBase = 0x40, kSheetIdBase = 0x100, kPatchIdBase = 0x300, kSheetBytes = 0x600, kTileBytes = 24, kFirstMenuSlot = 5 };
 
 // The asset number of each slot, in kLangAsset_* order.
 static const uint8 kSlotAsset[kLangAsset_Count] = {74, 75, 76, 77, 78, 99, 100, 101, 102, 103, 104};
@@ -67,15 +67,17 @@ static const uint8 *ApplyPatch(int idx) {
 void LanguageScreensAssets_Apply(bool on) {
   if (g_asset_ptrs[kSlotAsset[0]] == NULL) return;  // assets not loaded yet
   TakeOriginals();
+  bool held = on && LanguageJa_SetHeldBack();
   for (int i = 0; i < kLangAsset_Count; i++) {
-    bool host = on && g_assets[i].data != NULL;
+    bool host = on && g_assets[i].data != NULL && !(held && i >= kFirstMenuSlot);
     g_asset_ptrs[kSlotAsset[i]] = host ? g_assets[i].data : g_orig_ptr[i];
     g_asset_sizes[kSlotAsset[i]] = host ? g_assets[i].size : g_orig_size[i];
   }
   for (int kind = 0; kind < 2; kind++) {
     for (int i = 0; i < kLangSheetMax; i++) {
       const Blob *b = &g_sheets[kind][i];
-      AssetSheet_SetOverride(kind, i, (on && b->data != NULL) ? b->data : NULL, b->size);
+      bool use = on && b->data != NULL && !(held && kind == 1);
+      AssetSheet_SetOverride(kind, i, use ? b->data : NULL, b->size);
     }
   }
   for (int i = 0; i < kLangSheetMax; i++) {

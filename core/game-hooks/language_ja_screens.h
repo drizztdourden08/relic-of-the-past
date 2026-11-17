@@ -15,6 +15,10 @@ enum { kJaNameMark = 0x200, kJaNameTileMask = 0x1ff, kJaNameBlank = 0xa9 };
 
 bool LanguageJa_On(void);
 
+// A Japanese dialogue set is loaded under the gate but Japanese mode is not on (no font or a table
+// missing): the Japanese menu tilemaps and background sheets stay on the US ones.
+bool LanguageJa_SetHeldBack(void);
+
 // Tilemap tile (0-0x1ff, no palette bits) of name word |w| in the Japanese font: a marked word is its
 // own tile, a US letter its Japanese counterpart, a blank or an unknown mark the blank tile.
 uint16 LanguageJa_NameTile(uint16 w);

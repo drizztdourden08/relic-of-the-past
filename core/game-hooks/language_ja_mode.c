@@ -47,6 +47,10 @@ bool LanguageJa_On(void) {
   return true;
 }
 
+bool LanguageJa_SetHeldBack(void) {
+  return LanguageScreens_On() && (g_zenv.dialogue_flags & kJapaneseFlag) != 0 && !LanguageJa_On();
+}
+
 // The font holds a glyph's top half at row-pair tile (g & 0xf0) * 2 + (g & 0xf), its bottom half 0x10 on.
 static uint16 TileOfGlyph(int g) {
   return (uint16)((g & 0xf0) << 1 | (g & 0xf));

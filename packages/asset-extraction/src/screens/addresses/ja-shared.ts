@@ -32,7 +32,7 @@ const JA_SHARED_ADDRESSES: Pick<
     map: { address: 0x8eda68, count: 160 },
   },
   sheetPointers: { spr: 0xd033, bg: 0xcfc0 },
-  sheets: { spr: [105, 106], bg: [] },
+  sheets: { spr: [105, 106], bg: [22, 23, 29, 30, 57, 64, 65] },
 };
 
 export { JA_SHARED_ADDRESSES };

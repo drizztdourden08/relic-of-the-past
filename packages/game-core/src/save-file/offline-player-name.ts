@@ -1,9 +1,14 @@
 /* @layer bridge-wasm @kind logic */
-import { kLanguages } from '@rotp/asset-extraction';
+import { glyphToChar, kLanguages } from '@rotp/asset-extraction';
 import { slotBlockOffset } from './sram-slots';
 import {
-  DIGIT_TILE_SHIFT, FIRST_DIGIT_TILE, KANA_NAME_BIT, KANA_PLACEHOLDER, NAME_LENGTH, NAME_OFFSET, SPECIAL_TILE_CODES,
+  DIGIT_TILE_SHIFT, FIRST_DIGIT_TILE, KANA_NAME_BIT, KANA_TILE_MASK, NAME_LENGTH, NAME_OFFSET, SPECIAL_TILE_CODES,
 } from './offline-player-name.constants';
+
+const kanaText = (word: number): string => {
+  const tile = word & KANA_TILE_MASK;
+  return glyphToChar(((tile >> 1) & 0xf0) | (tile & 0xf));
+};
 
 const filterNameCode = (tile: number): number => {
   if (tile >= FIRST_DIGIT_TILE) return tile - DIGIT_TILE_SHIFT;
@@ -26,7 +31,7 @@ const offlinePlayerName = (sram: Uint8Array, slot: number): string | null => {
     const at = base + NAME_OFFSET + i * 2;
     const word = (sram[at] ?? 0) | ((sram[at + 1] ?? 0) << 8);
     name += (word & KANA_NAME_BIT) !== 0
-      ? KANA_PLACEHOLDER
+      ? kanaText(word)
       : glyphText(filterNameCode((word & 0xf) | ((word >> 1) & 0xf0)));
   }
   const trimmed = name.trimEnd();
