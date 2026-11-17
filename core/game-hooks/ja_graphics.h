@@ -11,12 +11,16 @@
 // The pictures come from the host's Japanese graphics pack (WasmSetJapaneseGraphic), extracted from a
 // Japanese cartridge, so they apply with any language set. A Japanese set also carries the same
 // pictures; its copy is used only while the option is on (JaGraphics_SetSheetAllowed).
-// The bits sit at 20 to 23, below kFeatures2_HandAuthoredFloor. gen-bundle-flags.mjs refuses to allocate
-// a generated word-2 bit at 20 or above, so the generated bug-fix flags never reach them.
+//   kJaGfx_Title      the Japanese title sequence: the intro art as kJaGfx_Intro, and the triforce pieces stop
+//                      at the Japanese cartridge's heights (the pack's title parameters). Never applies while
+//                      kFeatures2_TitleOverride is on.
+// The bits sit at 19 to 23, below kFeatures2_HandAuthoredFloor. gen-bundle-flags.mjs refuses to allocate
+// a generated word-2 bit at 19 or above, so the generated bug-fix flags never reach them.
 #pragma once
 #include "src/types.h"
 
 enum {
+  kJaGfx_Title = 1u << 19,
   kJaGfx_Intro = 1u << 20,
   kJaGfx_Hud = 1u << 21,
   kJaGfx_Copyright = 1u << 22,
@@ -60,3 +64,7 @@ bool JaGraphics_SetIntroAllowed(void);
 // off or no pack entry) to leave the US routine untouched.
 bool GameHook_CopyrightInit(int k);
 bool GameHook_CopyrightAnimate(int k);
+
+// The triforce piece |k|'s resting height: the pack's Japanese value while the Title option is on and the
+// pack has it, else |us_limit|. Called by ending.c's Intro_SpriteType_B_0.
+uint8 GameHook_TitleYLimit(int k, uint8 us_limit);

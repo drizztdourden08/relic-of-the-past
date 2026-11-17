@@ -51,6 +51,7 @@ const DEFAULT_SETTINGS: GameSettings = {
   prefillFileName: false,
   extendedLetters: true,
   languageScreens: true,
+  jaTitleScreen: false,
   jaIntroGraphics: false,
   jaHudGraphics: false,
   jaCopyrightLine: false,

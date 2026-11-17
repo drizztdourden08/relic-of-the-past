@@ -17,6 +17,7 @@ const JA_V1_0_SCREEN_ADDRESSES: JaScreenAddressTable = {
   },
   nameGridAddress: 0x8cd7df,
   copyrightOam: { table: { address: 0x0cc76f, count: 10 }, startX: 0x0cc758, startY: 0x0cc760 },
+  titleYLimit: 0x0cc5a1,
 };
 
 export { JA_V1_0_SCREEN_ADDRESSES };
