@@ -81,7 +81,14 @@ export default defineBrockConfig({
   modules: ['updater', 'secrets', 'display', 'tools', 'catalog', 'port-kit', 'input', 'mcp', 'randomizer'],
   build: {
     nodePolyfills: { globals: { Buffer: true, process: true } },
-    optimizeDeps: { worker: ['fs', 'crypto', 'path', 'js-yaml'] },
+    optimizeDeps: {
+      include: [
+        'vite-plugin-node-polyfills/shims/buffer',
+        'vite-plugin-node-polyfills/shims/process',
+        'vite-plugin-node-polyfills/shims/global',
+      ],
+      worker: ['fs', 'crypto', 'path', 'js-yaml'],
+    },
   },
   packaging: {
     fileAssociations: {
