@@ -808,6 +808,8 @@ void HudOverride_SetWantedDialogHidden(bool on);
 #include "language_screens.h"
 // ─── Japanese file select and name entry (language_ja_*.c): language_ja_screens.h ───
 #include "language_ja_screens.h"
+// ─── File select layout strategy, US or Japanese (select_layout.c): select_layout.h ───
+#include "select_layout.h"
 
 // ─── Dark-room lighting cheat (cheat_lighting.c) ───
 

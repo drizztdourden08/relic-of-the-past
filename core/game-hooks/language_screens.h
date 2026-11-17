@@ -99,3 +99,7 @@ bool LanguageScreensFont_Ready(void);
 // (kSprGfx, |asset| 0) or 65 (kBgGfx, |asset| 1) in place of the baked one. NULL clears the override.
 void AssetSheet_SetOverride(int asset, int idx, const uint8 *p, uint32 size);
 enum { kLangSheetMax = 256 };
+
+// Whether an override of sheet kind |kind| (0 sprite, 1 background) is read this frame. The background
+// sheets are the intro's (main module 0): every other screen reads the baked ones.
+bool LanguageScreens_SheetLive(int kind);

@@ -1,9 +1,11 @@
 /* @layer core-game-hooks @kind native */
 // The Japanese file select and name entry (language_ja_*.c). Included from game_hooks.h.
 //
-// Japanese mode is LanguageJa_On: kFeatures2_LanguageScreens on, a Japanese dialogue set loaded
-// (dialogue_flags bit 2), the host's 512-tile font and every Japanese file-select table present at its
-// Japanese length. Off, every hook below returns at once and the vendored US screens run unchanged.
+// These hooks are the Japanese layout strategy of select_layout.h. It is ready (LanguageJa_LayoutReady)
+// with kFeatures2_LanguageScreens on, a Japanese dialogue set loaded (dialogue_flags bit 2), the host's
+// 512-tile font and every Japanese file-select table present at its Japanese length, and it runs
+// (LanguageJa_On) while it is the active layout. Off, every hook below returns at once and the vendored
+// US screens run unchanged.
 //
 // A name keeps its six SRAM words (kSrmOffs_Name). A kana picked on the Japanese grid is stored as its
 // tile number with kJaNameMark set; US letter codes never reach that bit, and a blank box stays 0xa9 in
@@ -13,10 +15,14 @@
 
 enum { kJaNameMark = 0x200, kJaNameTileMask = 0x1ff, kJaNameBlank = 0xa9 };
 
+// The language set carries the Japanese layout's text: its tables at their Japanese lengths and the font.
+bool LanguageJa_LayoutReady(void);
+
+// The file select runs the Japanese layout (SelectLayout_Active).
 bool LanguageJa_On(void);
 
-// A Japanese dialogue set is loaded under the gate but Japanese mode is not on (no font or a table
-// missing): the Japanese menu tilemaps and background sheets stay on the US ones.
+// A Japanese dialogue set is loaded under the gate but its screen data is incomplete (no font or a table
+// missing): its intro tilemap, menu tilemaps and background sheets stay on the US ones.
 bool LanguageJa_SetHeldBack(void);
 
 // Tilemap tile (0-0x1ff, no palette bits) of name word |w| in the Japanese font: a marked word is its

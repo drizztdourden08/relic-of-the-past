@@ -112,7 +112,8 @@ void AssetSheet_SetOverride(int asset, int idx, const uint8 *p, uint32 size) {
 }
 
 MemBlk FindInAssetArray(int asset, int idx) {
-  if ((asset == 64 || asset == 65) && idx >= 0 && idx < kLangSheetMax && g_sheet_override[asset - 64][idx].ptr != NULL)
+  if ((asset == 64 || asset == 65) && idx >= 0 && idx < kLangSheetMax && g_sheet_override[asset - 64][idx].ptr != NULL &&
+      LanguageScreens_SheetLive(asset - 64))
     return g_sheet_override[asset - 64][idx];
   return FindIndexInMemblk((MemBlk) { g_asset_ptrs[asset], g_asset_sizes[asset] }, idx);
 }
