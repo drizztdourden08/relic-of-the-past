@@ -62,6 +62,7 @@ const DIALOG_SECTION: SettingsSection = {
     { key: 'disableTelepathy', label: 'Disable telepathic messages' },
     { key: 'extendedLetters', label: 'Every accented letter' },
     { key: 'languageScreens', label: 'Screens follow the language' },
+    { key: 'jaTitleScreen', label: 'Japanese title screen' },
     { key: 'jaIntroGraphics', label: 'Japanese intro graphics' },
     { key: 'jaHudGraphics', label: 'Japanese HUD graphics' },
     { key: 'jaCopyrightLine', label: 'Japanese intro copyright line' },

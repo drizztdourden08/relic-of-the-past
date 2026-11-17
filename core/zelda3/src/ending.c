@@ -860,7 +860,7 @@ void Intro_SpriteType_B_0(int k) {  // 8cc5b1
     }
     if (intro_x_lo[k] == kIntroSprite0_XLimit[k])
       intro_x_vel[k] = 0;
-    if (intro_y_lo[k] == kIntroSprite0_YLimit[k])
+    if (intro_y_lo[k] == GameHook_TitleYLimit(k, kIntroSprite0_YLimit[k]))
       intro_y_vel[k] = 0;
   } else {
     intro_x_vel[k] = 0;

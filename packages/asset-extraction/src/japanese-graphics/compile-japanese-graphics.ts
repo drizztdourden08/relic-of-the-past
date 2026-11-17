@@ -10,6 +10,8 @@ import {
   JA_GFX_BG_BASE, JA_GFX_COPYRIGHT_OAM_ID, JA_GFX_HUD_SPR_SHEETS, JA_GFX_INTRO_BG_SHEETS, JA_GFX_INTRO_TILEMAP_ID, JA_GFX_OAM_ENTRY_BYTES,
   JA_GFX_PATCH_BASE,
   JA_GFX_SPR_BASE,
+  JA_GFX_TITLE_PARAMS_BYTES,
+  JA_GFX_TITLE_PARAMS_ID,
 } from './japanese-graphics.constants';
 import type { JapaneseGraphicEntry } from './japanese-graphics.type';
 
@@ -27,6 +29,11 @@ const copyrightOam = (rom: RomData, table: JaScreenAddressTable): JapaneseGraphi
   };
 };
 
+const titleParams = (rom: RomData, table: JaScreenAddressTable): JapaneseGraphicEntry => ({
+  id: JA_GFX_TITLE_PARAMS_ID,
+  bytes: rom.getBytes(table.titleYLimit, JA_GFX_TITLE_PARAMS_BYTES),
+});
+
 const compileJapaneseGraphics = (rom: RomData): JapaneseGraphicEntry[] => {
   if (rom.language !== 'ja') throw new Error('Japanese graphics come from a Japanese ROM.');
   const table = jaScreenAddressesOf(rom.revision);
@@ -42,6 +49,7 @@ const compileJapaneseGraphics = (rom: RomData): JapaneseGraphicEntry[] => {
     })),
     copyrightPatch(rom, table),
     copyrightOam(rom, table),
+    titleParams(rom, table),
   ];
 };
 

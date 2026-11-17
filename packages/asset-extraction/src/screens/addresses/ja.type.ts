@@ -13,6 +13,7 @@ interface JaScreenAddressTable extends Omit<ScreenAddressTable, 'id' | 'nameGrid
   readonly nameGridAddress: number;
   readonly creditsScrollY: TableRegion;
   readonly copyrightOam: JaCopyrightOamSource;
+  readonly titleYLimit: number;
 }
 
 export type { JaCopyrightOamSource, JaScreenAddressTable };

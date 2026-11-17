@@ -5,7 +5,7 @@
 #include "src/ending.h"
 #include <stdlib.h>
 
-enum { kSheetIdBase = 0x100, kPatchIdBase = 0x300, kIntroTilemapId = 0x45, kCopyrightOamId = 0x46, kOamHeaderBytes = 3, kOamEntryBytes = 8, kOamEntriesMax = 16, kBgSheetKind = 1, kSprSheetKind = 0, kIntroModule = 0 };
+enum { kSheetIdBase = 0x100, kPatchIdBase = 0x300, kIntroTilemapId = 0x45, kCopyrightOamId = 0x46, kTitleParamsId = 0x47, kTitleParamsBytes = 3, kOamHeaderBytes = 3, kOamEntryBytes = 8, kOamEntriesMax = 16, kBgSheetKind = 1, kSprSheetKind = 0, kIntroModule = 0 };
 
 typedef struct {
   uint8 *data;
@@ -16,6 +16,7 @@ static Blob g_sheets[2][kLangSheetMax];
 static Blob g_patches[kLangSheetMax];
 static Blob g_intro_tilemap;
 static Blob g_copyright_oam;
+static Blob g_title_params;
 
 static const uint8 kIntroSheets[] = {22, 23, 29, 30, 57, 64, 65};
 static const uint8 kHudSheets[] = {105, 106};
@@ -34,10 +35,10 @@ static uint32 SheetOption(int kind, int index) {
 }
 
 uint32 GameHook_ParityMask(int word) {
-  return word == 2 ? kJaGfx_Intro | kJaGfx_Hud | kJaGfx_Copyright | kJaGfx_FileSelect : 0;
+  return word == 2 ? kJaGfx_Title | kJaGfx_Intro | kJaGfx_Hud | kJaGfx_Copyright | kJaGfx_FileSelect : 0;
 }
 
-enum { kAllBits = kJaGfx_Intro | kJaGfx_Hud | kJaGfx_Copyright | kJaGfx_FileSelect };
+enum { kAllBits = kJaGfx_Title | kJaGfx_Intro | kJaGfx_Hud | kJaGfx_Copyright | kJaGfx_FileSelect };
 
 static uint32 g_latched_bits;
 static bool g_started;
@@ -53,15 +54,21 @@ static bool Following(void) {
   return !g_started || (main_module_index == kIntroModule && submodule_index <= 1);
 }
 
-static void Refresh(void) {
+static uint32 Live(void) {
   uint32 live = enhanced_features2 & kAllBits;
+  if (enhanced_features2 & kFeatures2_TitleOverride) return live & ~(uint32)kJaGfx_Title;
+  return (live & kJaGfx_Title) ? live | kJaGfx_Intro : live;
+}
+
+static void Refresh(void) {
+  uint32 live = Live();
   if (live == g_latched_bits) return;
   g_latched_bits = live;
   LanguageScreensAssets_Apply(LanguageScreens_On());
 }
 
 void JaGraphics_Gate(void) {
-  if (Following()) g_latched_bits = enhanced_features2 & kAllBits;
+  if (Following()) g_latched_bits = Live();
 }
 
 void JaGraphics_FrameEnd(void) {
@@ -103,6 +110,13 @@ static const uint8 *CopyrightOam(int *count) {
   *count = data[0];
   if (*count == 0 || *count > kOamEntriesMax || size < kOamHeaderBytes + (uint32)*count * kOamEntryBytes) return NULL;
   return data;
+}
+
+uint8 GameHook_TitleYLimit(int k, uint8 us_limit) {
+  uint32 size;
+  if (!JaGraphics_On(kJaGfx_Title) || (enhanced_features2 & kFeatures2_TitleOverride)) return us_limit;
+  const uint8 *data = Taken(&g_title_params, &size);
+  return (data != NULL && size >= kTitleParamsBytes && k >= 0 && k < kTitleParamsBytes) ? data[k] : us_limit;
 }
 
 bool GameHook_CopyrightInit(int k) {
@@ -161,6 +175,7 @@ static bool Store(Blob *slot, const void *data, int len) {
 static Blob *SlotOf(int id) {
   if (id == kIntroTilemapId) return &g_intro_tilemap;
   if (id == kCopyrightOamId) return &g_copyright_oam;
+  if (id == kTitleParamsId) return &g_title_params;
   if (id >= kPatchIdBase && id < kPatchIdBase + kLangSheetMax) return &g_patches[id - kPatchIdBase];
   if (id >= kSheetIdBase && id < kSheetIdBase + 2 * kLangSheetMax)
     return &g_sheets[(id - kSheetIdBase) / kLangSheetMax][(id - kSheetIdBase) % kLangSheetMax];
@@ -184,5 +199,6 @@ void WasmClearJapaneseGraphics(void) {
   for (int i = 0; i < kLangSheetMax; i++) Store(&g_patches[i], NULL, 0);
   Store(&g_intro_tilemap, NULL, 0);
   Store(&g_copyright_oam, NULL, 0);
+  Store(&g_title_params, NULL, 0);
   LanguageScreensAssets_Apply(LanguageScreens_On());
 }

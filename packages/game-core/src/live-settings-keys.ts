@@ -33,6 +33,7 @@ const LIVE_SETTING_KEYS = [
   'prefillFileName',
   'extendedLetters',
   'languageScreens',
+  'jaTitleScreen',
   'jaIntroGraphics',
   'jaHudGraphics',
   'jaCopyrightLine',
