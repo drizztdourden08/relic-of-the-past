@@ -8,6 +8,10 @@
 // from the Japanese sheet 57, with its own colours in palette row 5. BG3 is cleared to the Japanese
 // font's blank, since the US blank is a kana in that font. The Japanese name entry also leaves out the
 // US backdrop pattern under its grid (GameHook_NameFileBackdrop).
+//
+// The Japanese name entry leaves its grid scroll in selectfile_var8 (0x19c at rest), which the file
+// select's BG3 split (irq_flag, set again on the way back) writes to BG3HOFS: the select screen would
+// open scrolled sideways. Each screen starts it at 0, as a fresh file select has it.
 #include "game_hooks_internal.h"
 #include "src/load_gfx.h"
 #include "src/select_file.h"
@@ -67,6 +71,7 @@ void GameHook_FileSelectScreenGfx(void) {
   if (!SelectLayout_JapaneseFont())
     return;
   bool ja = SelectLayout_Active() == kSelectLayout_Ja;
+  selectfile_var8 = 0;
   ClearBg3();
   LoadSheets(ja);
   LoadPalette(ja);

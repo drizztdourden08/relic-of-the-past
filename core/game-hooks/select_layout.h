@@ -48,8 +48,8 @@ int SelectLayout_Active(void);
 bool SelectLayout_JapaneseFont(void);
 
 // Called from FileSelect_EraseTriforce as each file select screen opens, under force blank: for a
-// Japanese set, the background sheets, BG3 blank and frame palette of the layout the screen runs
-// (select_screen_gfx.c). Does nothing otherwise.
+// Japanese set, the background sheets, BG3 blank and frame palette of the layout the screen runs, and
+// the name grid's scroll back to 0 (select_screen_gfx.c). Does nothing otherwise.
 void GameHook_FileSelectScreenGfx(void);
 
 // Called by Module_NamePlayer_1 in place of SelectFile_Func1: for the Japanese layout the empty stripe
