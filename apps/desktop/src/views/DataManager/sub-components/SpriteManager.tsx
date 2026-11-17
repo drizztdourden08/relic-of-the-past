@@ -1,11 +1,11 @@
 /* @layer renderer-components @kind component */
-import { useState } from 'react';
-import { EmptyState } from '@drizztdourden08/tessera/primitives';
+import { EmptyState, Text } from '@drizztdourden08/tessera/primitives';
 import { ListDetailLayout } from '@drizztdourden08/tessera/composites';
+import { CreateListPane } from '@app/compounds/CreateListPane';
+import { useCreateFlow } from '@app/hooks/useCreateFlow';
 import { SpriteGrid } from './SpriteGrid';
-import { useImportProgress } from '@app/hooks/useImportProgress';
 import { ImportedSpriteList } from './sprite-manager/ImportedSpriteList';
-import { SpriteExtractPanel } from './sprite-manager/SpriteExtractPanel';
+import { SpriteCreateWizard } from './sprite-manager/SpriteCreateWizard';
 import { useSpriteActions } from './sprite-manager/useSpriteActions';
 import { useSpriteBaseUrl } from './sprite-manager/useSpriteBaseUrl';
 import { useSpriteLibrary } from './sprite-manager/useSpriteLibrary';
@@ -14,49 +14,45 @@ import './SpriteManager.css';
 
 const SpriteManager = (props: SpriteManagerProps) => {
   const { romStatuses } = props;
-  const [toExtract, setToExtract] = useState('');
-  const progress = useImportProgress('sprite');
   const library = useSpriteLibrary(romStatuses);
   const { extractedMap, selectedRom, setSelectedRom, romsWithAssets, importedRoms, refreshExtracted } = library;
+  const flow = useCreateFlow({ onSelect: setSelectedRom });
   const spriteBaseUrl = useSpriteBaseUrl(selectedRom);
-  const { busy, message, handleExtract, handleDelete } = useSpriteActions({
-    toExtract, setToExtract, setSelectedRom, refreshExtracted,
-  });
+  const { busy, error, handleExtract, handleDelete } = useSpriteActions({ refreshExtracted });
+
+  const notice = error === null ? null : <Text variant="caption" tone="danger" role="alert">{error}</Text>;
+
+  const list = (
+    <CreateListPane label="New sprite set" creating={flow.creating} onCreate={flow.start} available={romsWithAssets.length > 0} notice={notice}>
+      <ImportedSpriteList
+        importedRoms={importedRoms}
+        extractedMap={extractedMap}
+        selectedRom={flow.creating ? '' : selectedRom}
+        onSelect={flow.select}
+        onDelete={handleDelete}
+      />
+    </CreateListPane>
+  );
+
+  const detail = flow.creating ? (
+    <SpriteCreateWizard
+      roms={romsWithAssets}
+      extractedMap={extractedMap}
+      busy={busy}
+      onExtract={handleExtract}
+      onCancel={flow.cancel}
+      onCreated={flow.select}
+    />
+  ) : selectedRom && spriteBaseUrl ? <SpriteGrid baseUrl={spriteBaseUrl} /> : null;
 
   return (
     <ListDetailLayout
       listShowTitle={false}
-      listContainers={[
-        {
-          title: 'Extract from a ROM',
-          content: (
-            <SpriteExtractPanel
-              roms={romsWithAssets}
-              extractedMap={extractedMap}
-              toExtract={toExtract}
-              onToExtractChange={setToExtract}
-              busy={busy}
-              message={message}
-              progress={progress}
-              onExtract={handleExtract}
-            />
-          ),
-        },
-        {
-          title: 'Extracted sprites',
-          content: (
-            <ImportedSpriteList
-              importedRoms={importedRoms}
-              extractedMap={extractedMap}
-              selectedRom={selectedRom}
-              onSelect={setSelectedRom}
-              onDelete={handleDelete}
-            />
-          ),
-        },
-      ]}
+      listContainers={[{ title: 'Sprites', content: list }]}
+      collapsed={flow.listCollapsed}
+      onCollapsedChange={flow.setListCollapsed}
       listLabel="Sprite manager"
-      detail={selectedRom && spriteBaseUrl ? <SpriteGrid baseUrl={spriteBaseUrl} /> : null}
+      detail={detail}
       emptyDetail={<EmptyState message="Select an imported ROM to view its sprites" />}
     />
   );

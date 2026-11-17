@@ -2,7 +2,7 @@
 import { slugSetId } from '@rotp/languages';
 import { PROBLEMS } from '../LanguageCreateWizard.constants';
 import type { LanguageWizardValues, StepContext } from '../LanguageCreateWizard.type';
-import { isWebAddress } from './is-web-address';
+import { isWebAddress } from '../../../is-web-address';
 
 const takenProblem = (id: string): string => `A language set with the id "${id}" already exists. Pick another name.`;
 

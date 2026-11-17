@@ -5,11 +5,10 @@ import type { PackRemovalBase } from '../pack-removal/pack-removal.type';
 type MsuPackActionsParams = PackRemovalBase;
 
 interface MsuListPaneProps {
-  section: 'create' | 'import' | 'packs';
   msu: MsuManagerModel;
-  nameInstalled: boolean;
-  error: string | null;
+  selected: string | null;
   isInstalled: (name: string) => boolean;
+  onSelect: (name: string) => void;
   onDelete: (name: string) => void;
 }
 

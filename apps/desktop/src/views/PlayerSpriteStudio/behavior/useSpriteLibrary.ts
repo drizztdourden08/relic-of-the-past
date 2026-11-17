@@ -36,21 +36,23 @@ const useSpriteLibrary = () => {
 
   const importFiles = useCallback(async (fileList: File[]) => {
     let last = '';
+    let lastName = '';
     for (const file of fileList) {
       const bytes = new Uint8Array(await file.arrayBuffer());
       const result = await importLinkSprite(file.name, bytes);
       if (!result.success) return { success: false, message: result.error ?? 'Import failed' };
-      last = spriteStem(result.name ?? file.name);
+      lastName = result.name ?? file.name;
+      last = spriteStem(lastName);
     }
     await refresh();
-    return { success: true, message: `Imported ${last}` };
+    return { success: true, message: `Imported ${last}`, name: lastName };
   }, [refresh]);
 
   const importBytes = useCallback(async (name: string, bytes: Uint8Array) => {
     const result = await importLinkSprite(name, bytes);
     if (!result.success) return { success: false, message: result.error ?? 'Import failed' };
     await refresh();
-    return { success: true, message: `Imported ${spriteStem(result.name ?? name)}` };
+    return { success: true, message: `Imported ${spriteStem(result.name ?? name)}`, name: result.name ?? name };
   }, [refresh]);
 
   const remove = useCallback(async (name: string) => {

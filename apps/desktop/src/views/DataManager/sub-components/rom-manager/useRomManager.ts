@@ -4,7 +4,7 @@ import type { RomKind, SupplementStatus } from '@rotp/roms';
 import { ROM_KINDS } from '@rotp/roms';
 import * as romsStore from '@app/storage/roms-store';
 import type { RomDetail } from './rom-detail.type';
-import type { UseRomManagerParams } from './rom-manager.type';
+import type { RomImportOutcome, UseRomManagerParams } from './rom-manager.type';
 
 const importMessage = (kind: RomKind, romFile: string, alreadyExists: boolean): string =>
   alreadyExists ? `${ROM_KINDS[kind].label} already imported` : `Imported ${romFile}`;
@@ -40,17 +40,17 @@ const useRomManager = (params: UseRomManagerParams) => {
     romStatuses.filter((base) => base.hasAssets).forEach((base) => { void onExtractAssets(base.romFile); });
   }, [romStatuses, onExtractAssets]);
 
-  const settleImport = useCallback((result: Awaited<ReturnType<typeof romsStore.importUrl>>, failure: string) => {
+  const settleImport = useCallback((result: Awaited<ReturnType<typeof romsStore.importUrl>>, failure: string): RomImportOutcome => {
     if (!result.success) return { success: false, message: result.error ?? failure };
     onRefresh();
     if (!result.alreadyExists) triggerRebuild(activeKind, result.romFile);
-    return { success: true, message: importMessage(activeKind, result.romFile, Boolean(result.alreadyExists)) };
+    return { success: true, id: result.romFile, message: importMessage(activeKind, result.romFile, Boolean(result.alreadyExists)) };
   }, [activeKind, onRefresh, triggerRebuild]);
 
   const handleUrlImport = useCallback(async (url: string) =>
     settleImport(await romsStore.importUrl(url, activeKind), 'Download failed'), [activeKind, settleImport]);
 
-  const handleFileImport = useCallback(async (files: File[]) => {
+  const handleFileImport = useCallback(async (files: File[]): Promise<RomImportOutcome> => {
     const [file] = files;
     if (file === undefined) return { success: false, message: 'No file selected' };
     return settleImport(await romsStore.importFile(file, activeKind), 'Import failed');

@@ -1,28 +1,8 @@
 /* @layer renderer-components @kind types */
-import type { ImportProgressState } from '@app/hooks/useImportProgress';
 import type { ExtractedStatus } from '../SpriteManager.type';
 
-interface SpriteMessage {
-  type: 'success' | 'error';
-  text: string;
-}
-
 interface SpriteActionsParams {
-  toExtract: string;
-  setToExtract: (romFile: string) => void;
-  setSelectedRom: (romFile: string) => void;
   refreshExtracted: () => Promise<void>;
-}
-
-interface SpriteExtractPanelProps {
-  roms: readonly RomDisplayInfo[];
-  extractedMap: Record<string, ExtractedStatus>;
-  toExtract: string;
-  onToExtractChange: (romFile: string) => void;
-  busy: boolean;
-  message: SpriteMessage | null;
-  progress: ImportProgressState;
-  onExtract: () => Promise<void>;
 }
 
 interface ImportedSpriteListProps {
@@ -33,4 +13,4 @@ interface ImportedSpriteListProps {
   onDelete: (romFile: string) => Promise<void>;
 }
 
-export type { ImportedSpriteListProps, SpriteActionsParams, SpriteExtractPanelProps, SpriteMessage };
+export type { ImportedSpriteListProps, SpriteActionsParams };

@@ -49,22 +49,6 @@
   cursor: not-allowed;
 }
 
-.sprite-manager__message {
-  font-size: var(--text-sm);
-  padding: var(--space-xs) var(--space-sm);
-  border-radius: var(--radius-sm);
-}
-
-.sprite-manager__message--success {
-  color: var(--c-secondary);
-  background: var(--c-secondary-soft);
-}
-
-.sprite-manager__message--error {
-  color: var(--c-danger);
-  background: var(--c-danger-soft);
-}
-
 .sprite-manager__panel {
   display: flex;
   flex-direction: column;

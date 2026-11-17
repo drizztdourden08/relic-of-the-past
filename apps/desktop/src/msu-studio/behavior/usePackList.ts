@@ -28,17 +28,6 @@ const usePackList = (onRefresh: () => void) => {
     void refresh().catch(() => undefined).finally(() => { setLoadingPacks(false); });
   }, [refresh]);
 
-  const createPack = useCallback(async (name: string): Promise<ActionResult> => {
-    const trimmed = name.trim();
-    if (!trimmed) return { success: false, message: 'Give the pack a name first.' };
-    try {
-      await msuStore.createMsuPack(trimmed);
-      await refresh();
-      setSelected(trimmed);
-      return { success: true, message: `Created empty pack "${trimmed}"` };
-    } catch (err) { return failure(err, 'Could not create the pack'); }
-  }, [refresh]);
-
   const renamePack = useCallback(async (from: string, to: string): Promise<ActionResult> => {
     const trimmed = to.trim();
     if (!trimmed) return { success: false, message: 'Give the pack a name first.' };
@@ -51,7 +40,7 @@ const usePackList = (onRefresh: () => void) => {
     } catch (err) { return failure(err, 'Could not rename the pack'); }
   }, [refresh]);
 
-  return { packs, loadingPacks, selected, setSelected, refresh, createPack, renamePack };
+  return { packs, loadingPacks, selected, setSelected, refresh, renamePack };
 };
 
 export { usePackList };

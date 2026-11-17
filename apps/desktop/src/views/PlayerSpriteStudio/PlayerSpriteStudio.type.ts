@@ -43,15 +43,10 @@ interface SpriteLibraryListProps {
   entries: LibraryEntry[];
   loading: boolean;
   selected: string | null;
-  canCreate: boolean;
-  busy: boolean;
   error: string | null;
   isInstalled: (name: string) => boolean;
   onSelect: (name: string) => void;
-  onCreate: () => void;
   onDelete: (name: string) => void;
-  onUrlImport: (url: string) => Promise<{ success: boolean; message: string }>;
-  onFileImport: (files: File[]) => Promise<{ success: boolean; message: string }>;
 }
 
 type SpriteDraftModel = ReturnType<typeof useSpriteDraft>;

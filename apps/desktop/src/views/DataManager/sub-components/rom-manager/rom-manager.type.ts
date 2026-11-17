@@ -5,4 +5,10 @@ interface UseRomManagerParams {
   onExtractAssets: (romFile: string) => Promise<boolean>;
 }
 
-export type { UseRomManagerParams };
+interface RomImportOutcome {
+  success: boolean;
+  message: string;
+  id?: string;
+}
+
+export type { RomImportOutcome, UseRomManagerParams };
