@@ -7,6 +7,7 @@ const RAW_FEATURE_KEYS = [
   'perGroupVolume', 'autoSkipDialog',
   'prefillFileName', 'extendedLetters', 'languageScreens',
   'coloredRupees', 'itemSheen', 'archeryNeedsBow',
+  'jaIntroGraphics', 'jaHudGraphics', 'jaCopyrightLine', 'jaFileSelectStyle',
 ] as const satisfies readonly (keyof GameSettings)[];
 
 const WIDESCREEN_FIX_BUNDLE = 'WidescreenVisualFixes';

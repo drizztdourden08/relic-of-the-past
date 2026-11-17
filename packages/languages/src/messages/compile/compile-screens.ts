@@ -2,7 +2,7 @@
 import type { ScreenPayload, ScreenTable } from '@rotp/asset-extraction';
 import {
   CREDITS_DIGITS_ID, CREDITS_MAP_ID, CREDITS_OFFSETS_ID, CREDITS_SCROLL_Y_ID, CREDITS_TEXT_ID, DUNGEON_MAP_LABELS_ID,
-  ENDING_CAPTION_DATA_ID, ENDING_CAPTION_OFFSETS_ID, NAME_GRID_ID, PAUSE_TABLES, SELECT_FILE_TABLES, SELECT_PALETTE_ID,
+  ENDING_CAPTION_DATA_ID, ENDING_CAPTION_OFFSETS_ID, NAME_GRID_ID, PAUSE_TABLES, SELECT_FILE_TABLES,
   TILEMAP_FONT_DATA_ID, TILEMAP_FONT_ID, menuTilemapId, pauseTableId, selectFileTableId, sheetPatchTableId, sheetTableId,
 } from '@rotp/asset-extraction';
 
@@ -32,9 +32,6 @@ const fontTables = (screens: ScreenPayload): ScreenTable[] =>
 const scrollTables = (screens: ScreenPayload): ScreenTable[] =>
   screens.creditsScrollY ? [{ id: CREDITS_SCROLL_Y_ID, bytes: bytesOfWords(screens.creditsScrollY) }] : [];
 
-const paletteTables = (screens: ScreenPayload): ScreenTable[] =>
-  screens.selectPalette ? [{ id: SELECT_PALETTE_ID, bytes: bytesOfWords(screens.selectPalette) }] : [];
-
 const compileScreens = (screens?: ScreenPayload): ScreenTable[] => {
   if (!screens) return [];
   return [
@@ -44,7 +41,6 @@ const compileScreens = (screens?: ScreenPayload): ScreenTable[] => {
     ...fixedTables(screens),
     ...fontTables(screens),
     ...scrollTables(screens),
-    ...paletteTables(screens),
     ...screens.sheetPatches.map(patchTable),
     ...screens.sheets.map((sheet) => ({ id: sheetTableId(sheet.kind, sheet.index), bytes: sheet.data })),
   ];

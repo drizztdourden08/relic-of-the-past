@@ -12,6 +12,8 @@ export { setAutoSaveConfig } from '../../lifecycle/set-auto-save-config';
 export { setLinkSpriteData } from '../../lifecycle/set-link-sprite-data';
 export { setLanguageScreens } from '../../lifecycle/set-language-screens';
 export { pushPendingLanguageScreens } from '../../lifecycle/push-pending-language-screens';
+export { setJapaneseGraphics } from '../../lifecycle/set-japanese-graphics';
+export { pushPendingJapaneseGraphics } from '../../lifecycle/push-pending-japanese-graphics';
 export { numArgs } from '../../num-args';
 export { previewCoreState } from '../../preview-core/preview-core-state';
 export { previewModuleNow } from '../../preview-core/preview-module-now';

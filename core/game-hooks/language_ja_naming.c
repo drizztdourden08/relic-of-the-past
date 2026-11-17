@@ -12,6 +12,8 @@ enum {
   kBarY0 = 0x3e, kRowPx = 0x10, kScrollX0 = 0x19c,
   kBoxVram = 0x6075, kBoxStep = 1, kCursorX0 = 0xa8, kCursorStep = 8, kCursorY = 0x14,
   kPadDown = 4, kPadVertical = 0xc,
+  kGridMapVram = 0x1000, kMapRows = 32, kMapCols = 32, kDividerCol = 15,
+  kDividerTile = 0x495, kEmptyTile = 0x7f,
 };
 
 static const uint8 *Grid(void) {
@@ -55,9 +57,21 @@ void GameHook_NameFileJapaneseInit(void) {
   selectfile_var8 = kScrollX0;
 }
 
+// The name entry's tilemap has a column of one tile at tile column 15 of the grid's map. Drawn from the
+// sheets the Japanese layout loads it shows as a line that stays put while the grid scrolls, which the
+// Japanese screen does not have, so it is set to the tilemap's empty tile.
+static void ClearDivider(void) {
+  for (int row = 0; row < kMapRows; row++) {
+    uint16 *tile = &g_zenv.vram[kGridMapVram + row * kMapCols + kDividerCol];
+    if (*tile == kDividerTile)
+      *tile = kEmptyTile;
+  }
+}
+
 bool GameHook_NameFileJapanese(void) {
   if (!LanguageJa_On())
     return SelectUsJaName_Frame();
+  ClearDivider();
   NameGrid_ScrollX(kScrollX0);
   NameGrid_ScrollY(BarY, InputY);
   NameGrid_DrawSprites((uint8)(kCursorX0 + selectfile_var4 * kCursorStep), kCursorY);

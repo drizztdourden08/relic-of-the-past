@@ -35,7 +35,6 @@ enum {
   kLangTbl_DungMapTab23,       // messaging.c kDungMap_Tab23   uint16[744]
   kLangTbl_CreditsDigits,      // ending.c kEnding_Credits_DigitChar uint16[2]
   kLangTbl_CreditsScrollY,     // ending.c kEnding_Digits_ScrollY uint16[14]
-  kLangTbl_SelectPalette,      // the file select's kPalette_DungBgMain set (Japanese layout) uint16[90]
   kLangTbl_Count
 };
 

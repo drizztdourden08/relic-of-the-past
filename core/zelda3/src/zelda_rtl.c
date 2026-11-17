@@ -794,7 +794,7 @@ void ZeldaDrawPpuFrame(uint8 *pixel_buffer, size_t pitch, uint32 render_flags) {
   }
 
   for (int i = 0; i <= height; i++) {
-    if (i == 128 + topBudget && irq_flag) {  // file-select BG3 split fires at content line 128 (shifted down by the top budget)
+    if (irq_flag && i == GameHook_FileSelectSplitLine() + topBudget) {  // file-select BG3 split, content line shifted down by the top budget
       zelda_ppu_write(BG3HOFS, selectfile_var8);
       zelda_ppu_write(BG3HOFS, selectfile_var8 >> 8);
       zelda_ppu_write(BG3VOFS, 0);
@@ -1467,7 +1467,7 @@ static void SyncGateWords(void) {
     uint32 *word = (uint32 *)(g_ram + kGateWordRamAddr[i]);
     uint32 wanted = g_wanted_gate_words[i];
     if (vanillaSafe)
-      wanted &= ~kGateWordParityMask[i];
+      wanted &= ~(kGateWordParityMask[i] | GameHook_ParityMask(i));
     if (*word == wanted)
       continue;
     GateWordTeardown(i, *word, wanted);

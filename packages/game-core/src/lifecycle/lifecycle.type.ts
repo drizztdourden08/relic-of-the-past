@@ -11,6 +11,7 @@ interface AutoSaveConfig {
 type LifecycleState = {
   pendingLinkSprite: Uint8Array | null;
   pendingLanguageScreens: readonly ScreenTable[];
+  pendingJapaneseGraphics: readonly ScreenTable[];
   activeAutoSaveConfig: AutoSaveConfig | null;
   appPauseUnsub: (() => void) | null;
 };

@@ -17,7 +17,7 @@ const JA_MENU_TILEMAP_SLOTS: readonly number[] = [0, 1, 2, 3, 4];
 
 const JA_COPYRIGHT_SHEET = 8;
 
-const JA_COPYRIGHT_TILES: readonly number[] = [0, 1, 2, 3, 4, 16, 17, 18, 19, 20, 40];
+const JA_COPYRIGHT_TILES: readonly number[] = [0, 1, 2, 3, 4, 16, 17, 18, 19, 20];
 
 export {
   BOTTOM_LEFT_TILE, BOTTOM_TILE_OFFSET, GLYPHS_PER_ROW, JA_COPYRIGHT_SHEET, JA_COPYRIGHT_TILES, JA_MENU_TILEMAP_SLOTS,

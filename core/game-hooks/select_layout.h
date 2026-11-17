@@ -2,7 +2,7 @@
 // The file select's layout (select_layout.c). Included from game_hooks.h.
 //
 // Two independent choices draw the file select screens (select, copy, erase, name entry):
-//   - the layout, one of two strategies, picked by the screen style (SelectLayout_Preferred);
+//   - the layout, one of two strategies, picked by the screen style option (SelectLayout_Preferred, kJaGfx_FileSelect);
 //   - the text, which always comes from the profile's language set, as everywhere else.
 // The strategies:
 //   kSelectLayout_Us  the vendored screens: US tilemaps 100-103, kSelectFile_Gfx0 frame, US stripes,
@@ -26,8 +26,14 @@ enum { kSelectLayout_Us, kSelectLayout_Ja };
 // The file select screens, by main module: 1 select, 2 copy, 3 erase, 4 name entry.
 enum { kSelectScreen_Select, kSelectScreen_Copy, kSelectScreen_Erase, kSelectScreen_Name };
 
-// The layout the screen style asks for. The US layout until the style setting exists.
+// The layout the screen style asks for: the Japanese one while kJaGfx_FileSelect is on, else the US one.
+// The value is latched: it follows the option only when a file select screen opens (SelectLayout_Sync),
+// so a live change never swaps a screen's tilemap under tiles loaded for the other layout.
 int SelectLayout_Preferred(void);
+
+// Takes the option's current value into the latch and re-applies the screen assets when it changed.
+// Called as each file select screen opens, under force blank, before its tilemap loads.
+void SelectLayout_Sync(void);
 
 // Whether the current language set carries the text |layout| draws on |screen|.
 bool SelectLayout_HasText(int layout, int screen);
@@ -55,3 +61,11 @@ void GameHook_FileSelectScreenGfx(void);
 // Called by Module_NamePlayer_1 in place of SelectFile_Func1: for the Japanese layout the empty stripe
 // buffer (its name entry draws no backdrop), otherwise SelectFile_Func1's fill (select_screen_gfx.c).
 uint16 *GameHook_NameFileBackdrop(void);
+
+// Called at the top of Module_EraseFile_1: for the Japanese layout, advances past the US frame step,
+// which the Japanese screens do not have, and returns true (select_screen_gfx.c).
+bool GameHook_SelectFileFrame(void);
+
+// The content line the file select's BG3 split (irq_flag) fires on: 0x38 on a file select screen in
+// the Japanese layout, 128 otherwise (select_screen_gfx.c).
+int GameHook_FileSelectSplitLine(void);

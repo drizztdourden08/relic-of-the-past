@@ -36,7 +36,6 @@ const extractJapaneseScreens = (rom: RomData, table: JaScreenAddressTable): Scre
   dungeonMapLabels: readWordRegion(rom, table.dungeonMapLabels),
   creditsDigits: readWordRegion(rom, table.creditsDigits),
   creditsScrollY: readWordRegion(rom, table.creditsScrollY),
-  selectPalette: readWordRegion(rom, table.selectPalette),
   ...extractEndText(rom, table),
   sheets: [
     ...table.sheets.spr.map((index) => readSheet(rom, table, 'spr', index)),
