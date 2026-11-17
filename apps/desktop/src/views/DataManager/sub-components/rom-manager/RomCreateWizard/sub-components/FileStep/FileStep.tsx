@@ -12,7 +12,7 @@ const FileStep = ({ values, update }: FileStepProps) => {
         <DropZone
           accept={lane.accept}
           variant="inline"
-          label={lane.dropLabel}
+          label={values.file?.name ?? lane.dropLabel}
           hint={lane.dropHint}
           status={values.file === null ? undefined : { tone: 'success', message: values.file.name }}
           onDrop={(files) => update({ file: files[0] ?? null, url: '' })}
