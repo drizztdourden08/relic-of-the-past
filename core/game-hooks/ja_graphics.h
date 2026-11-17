@@ -4,13 +4,15 @@
 // Four independent options, each a features2 bit the host sets from a setting; off is the US graphics:
 //   kJaGfx_FileSelect  the file select screens run the Japanese layout (select_layout.c) where the
 //                      language set carries text for it. The text still follows the set.
-//   kJaGfx_Intro       the intro's background sheets and its tilemap (asset 99).
+//   kJaGfx_Intro       the intro's background sheets and its tilemap (asset 99). The Japanese file select
+//                      layout reads the same sheets itself, whatever this option says.
 //   kJaGfx_Hud         the two HUD sprite sheets (105, 106).
 //   kJaGfx_Copyright   the tile patch on sprite sheet 8 that draws the Japanese copyright line.
 // The pictures come from the host's Japanese graphics pack (WasmSetJapaneseGraphic), extracted from a
 // Japanese cartridge, so they apply with any language set. A Japanese set also carries the same
 // pictures; its copy is used only while the option is on (JaGraphics_SetSheetAllowed).
-// The bits sit just under kFeatures2_HandAuthoredFloor, outside the generated bug-fix range.
+// The bits sit at 20 to 23, below kFeatures2_HandAuthoredFloor. gen-bundle-flags.mjs refuses to allocate
+// a generated word-2 bit at 20 or above, so the generated bug-fix flags never reach them.
 #pragma once
 #include "src/types.h"
 
@@ -21,7 +23,11 @@ enum {
   kJaGfx_FileSelect = 1u << 23,
 };
 
-// Whether option |bit| is on: set in features2 and Vanilla Safe off.
+// The bits Vanilla Safe strips from gate word |word|, applied in zelda_rtl.c's SyncGateWords on top of
+// kGateWordParityMask, so the word itself reads clear under Vanilla Safe and the screen assets re-apply.
+uint32 GameHook_ParityMask(int word);
+
+// Whether option |bit| is on in the (already Vanilla Safe masked) features2 word.
 bool JaGraphics_On(uint32 bit);
 
 // The pack's copy of background (|kind| 1) or sprite (|kind| 0) sheet |index|, NULL unless the option

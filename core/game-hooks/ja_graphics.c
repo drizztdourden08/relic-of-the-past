@@ -31,8 +31,12 @@ static uint32 SheetOption(int kind, int index) {
   return 0;
 }
 
+uint32 GameHook_ParityMask(int word) {
+  return word == 2 ? kJaGfx_Intro | kJaGfx_Hud | kJaGfx_Copyright | kJaGfx_FileSelect : 0;
+}
+
 bool JaGraphics_On(uint32 bit) {
-  return (enhanced_features2 & bit) != 0 && (enhanced_features3 & kFeatures3_VanillaSafe) == 0;
+  return (enhanced_features2 & bit) != 0;
 }
 
 static const uint8 *Taken(const Blob *blob, uint32 *size) {
@@ -58,6 +62,7 @@ const uint8 *JaGraphics_IntroTilemap(uint32 *size) {
 
 bool JaGraphics_SetSheetAllowed(int kind, int index) {
   uint32 option = SheetOption(kind, index);
+  if (kind == kBgSheetKind && SelectLayout_ActiveOn(kSelectScreen_Select) == kSelectLayout_Ja) return true;
   return option == 0 || SelectLayout_OfSet() != kSelectLayout_Ja || JaGraphics_On(option);
 }
 

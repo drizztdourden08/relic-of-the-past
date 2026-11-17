@@ -27,7 +27,13 @@ enum { kSelectLayout_Us, kSelectLayout_Ja };
 enum { kSelectScreen_Select, kSelectScreen_Copy, kSelectScreen_Erase, kSelectScreen_Name };
 
 // The layout the screen style asks for: the Japanese one while kJaGfx_FileSelect is on, else the US one.
+// The value is latched: it follows the option only when a file select screen opens (SelectLayout_Sync),
+// so a live change never swaps a screen's tilemap under tiles loaded for the other layout.
 int SelectLayout_Preferred(void);
+
+// Takes the option's current value into the latch and re-applies the screen assets when it changed.
+// Called as each file select screen opens, under force blank, before its tilemap loads.
+void SelectLayout_Sync(void);
 
 // Whether the current language set carries the text |layout| draws on |screen|.
 bool SelectLayout_HasText(int layout, int screen);

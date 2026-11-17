@@ -68,6 +68,7 @@ static void LoadPalette(bool ja) {
 }
 
 void GameHook_FileSelectScreenGfx(void) {
+  SelectLayout_Sync();
   if (!SelectLayout_JapaneseFont())
     return;
   bool ja = SelectLayout_Active() == kSelectLayout_Ja;

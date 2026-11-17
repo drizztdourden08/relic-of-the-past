@@ -139,7 +139,8 @@ void LanguageScreensAssets_Apply(bool on) {
 static bool g_select_sheets;
 
 bool LanguageScreens_SheetLive(int kind) {
-  return kind != kBgSheetKind || main_module_index == kModuleIntro || g_select_sheets;
+  if (kind != kBgSheetKind || g_select_sheets) return true;
+  return main_module_index == kModuleIntro && (SelectLayout_OfSet() != kSelectLayout_Ja || JaGraphics_On(kJaGfx_Intro));
 }
 
 void LanguageScreens_SelectSheets(bool on) {

@@ -9,8 +9,17 @@ static bool JapaneseSet(void) {
   return LanguageScreens_On() && (g_zenv.dialogue_flags & kJapaneseFlag) != 0;
 }
 
+static int g_latched_layout = kSelectLayout_Us;
+
 int SelectLayout_Preferred(void) {
-  return JaGraphics_On(kJaGfx_FileSelect) ? kSelectLayout_Ja : kSelectLayout_Us;
+  return g_latched_layout;
+}
+
+void SelectLayout_Sync(void) {
+  int wanted = JaGraphics_On(kJaGfx_FileSelect) ? kSelectLayout_Ja : kSelectLayout_Us;
+  if (wanted == g_latched_layout) return;
+  g_latched_layout = wanted;
+  LanguageScreensAssets_Apply(LanguageScreens_On());
 }
 
 bool SelectLayout_HasText(int layout, int screen) {

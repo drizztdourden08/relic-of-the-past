@@ -32,6 +32,11 @@ const wideViewBits = (s: GameSettings, effective: Set<string>): number => {
   return bits;
 };
 
+const JA_GRAPHICS_KEYS = ['jaIntroGraphics', 'jaHudGraphics', 'jaCopyrightLine', 'jaFileSelectStyle'] as const;
+
+const jaGraphicsBits = (effective: Set<string>): number =>
+  JA_GRAPHICS_KEYS.reduce((bits, key) => (effective.has(key) ? bits | FEATURES2_FLAGS[key] : bits), 0);
+
 const buildFeatureWords = (s: GameSettings): { features1: number; features2: number } => {
   const effective = effectiveFeatureIds(s);
   const { features1, features2: fixBits } = bugFixWords(effective);
@@ -42,11 +47,7 @@ const buildFeatureWords = (s: GameSettings): { features1: number; features2: num
   if (s.allowDiving || s.extraDungeon) f2 |= FEATURES2_FLAGS.allowDiving;
   if (effective.has('extendedLetters')) f2 |= FEATURES2_FLAGS.extendedLetters;
   if (effective.has('languageScreens')) f2 |= FEATURES2_FLAGS.languageScreens;
-  if (effective.has('jaIntroGraphics')) f2 |= FEATURES2_FLAGS.jaIntroGraphics;
-  if (effective.has('jaHudGraphics')) f2 |= FEATURES2_FLAGS.jaHudGraphics;
-  if (effective.has('jaCopyrightLine')) f2 |= FEATURES2_FLAGS.jaCopyrightLine;
-  if (effective.has('jaFileSelectStyle')) f2 |= FEATURES2_FLAGS.jaFileSelectStyle;
-  return { features1, features2: f2 };
+  return { features1, features2: f2 | jaGraphicsBits(effective) };
 };
 
 export { buildFeatureWords };

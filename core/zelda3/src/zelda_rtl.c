@@ -1467,7 +1467,7 @@ static void SyncGateWords(void) {
     uint32 *word = (uint32 *)(g_ram + kGateWordRamAddr[i]);
     uint32 wanted = g_wanted_gate_words[i];
     if (vanillaSafe)
-      wanted &= ~kGateWordParityMask[i];
+      wanted &= ~(kGateWordParityMask[i] | GameHook_ParityMask(i));
     if (*word == wanted)
       continue;
     GateWordTeardown(i, *word, wanted);
