@@ -65,11 +65,19 @@ static const uint8 *ApplyPatch(int idx) {
   return buf;
 }
 
-// Slots kFirstSelectSlot to kLastSelectSlot are the file select tilemaps (assets 100-103), drawn for the
-// set's own layout: they apply only while that layout is the active one (select_layout.h).
+// Slots kFirstSelectSlot to kLastSelectSlot are the file select tilemaps (assets 100-103: name entry,
+// select, copy, erase), drawn for the set's own layout: each applies only while that layout is the one
+// its screen runs (select_layout.h).
 static bool SelectSlotOff(int slot) {
   if (slot < kFirstSelectSlot || slot > kLastSelectSlot) return false;
-  return SelectLayout_OfSet() != SelectLayout_Active();
+  int screen = slot == kFirstSelectSlot ? kSelectScreen_Name : kSelectScreen_Select + slot - kFirstSelectSlot - 1;
+  return SelectLayout_OfSet() != SelectLayout_ActiveOn(screen);
+}
+
+const uint8 *LanguageScreensAssets_Host(int slot, int *size) {
+  if (slot < 0 || slot >= kLangAsset_Count || g_assets[slot].data == NULL) return NULL;
+  *size = (int)g_assets[slot].size;
+  return g_assets[slot].data;
 }
 
 void LanguageScreensAssets_Apply(bool on) {

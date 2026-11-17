@@ -89,5 +89,5 @@ void GameHook_FileSelectFairy(uint8 *x, uint8 *y) {
 }
 
 uint16 GameHook_FileSelectSheetVram(uint16 orig) {
-  return LanguageJa_On() ? kSheetVramJa : orig;
+  return SelectLayout_JapaneseFont() ? kSheetVramJa : orig;
 }

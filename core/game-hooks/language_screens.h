@@ -89,6 +89,8 @@ bool GameHook_TransferTilemapFont(uint16 *dst);
 bool LanguageScreens_On(void);
 void LanguageScreensAssets_Apply(bool on);
 bool LanguageScreensAssets_Set(int id, const void *data, int len);
+// The host's blob for asset slot |slot| (kLangAsset_* order) and its byte size, NULL when none was sent.
+const uint8 *LanguageScreensAssets_Host(int slot, int *size);
 void LanguageScreensAssets_Clear(void);
 bool LanguageScreensFont_Set(const void *data, int len);
 void LanguageScreensFont_Clear(void);

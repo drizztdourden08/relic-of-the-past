@@ -18,7 +18,7 @@ enum { kJaNameMark = 0x200, kJaNameTileMask = 0x1ff, kJaNameBlank = 0xa9 };
 // The language set carries the Japanese layout's text: its tables at their Japanese lengths and the font.
 bool LanguageJa_LayoutReady(void);
 
-// The file select runs the Japanese layout (SelectLayout_Active).
+// The current file select screen runs the Japanese layout (SelectLayout_Active).
 bool LanguageJa_On(void);
 
 // A Japanese dialogue set is loaded under the gate but its screen data is incomplete (no font or a table
@@ -35,8 +35,9 @@ uint8 LanguageJa_NameGlyph(uint16 w);
 // select_file.c FileSelect_DrawFairy: the faerie's position on the Japanese screens.
 void GameHook_FileSelectFairy(uint8 *x, uint8 *y);
 
-// select_file.c LoadFileSelectGraphics: VRAM word address of sprite sheet 0x6b (|orig| in US mode). The
-// Japanese font reaches past the US one, so the sheet sits above it.
+// select_file.c LoadFileSelectGraphics: VRAM word address of sprite sheet 0x6b (|orig| without the
+// Japanese font, SelectLayout_JapaneseFont). The Japanese font reaches past the US one, so the sheet
+// sits above it in both layouts.
 uint16 GameHook_FileSelectSheetVram(uint16 orig);
 
 // select_file.c NameFile_EraseSave: parks the Japanese grid on its first cell.

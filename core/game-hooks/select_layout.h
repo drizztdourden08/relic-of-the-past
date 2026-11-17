@@ -6,27 +6,41 @@
 //   - the text, which always comes from the profile's language set, as everywhere else.
 // The strategies:
 //   kSelectLayout_Us  the vendored screens: US tilemaps 100-103, kSelectFile_Gfx0 frame, US stripes,
-//                     faerie spots and letter grid, the US font. A set supplies US-layout text through
-//                     the same tables (French does). A Japanese set has no US-layout labels yet.
+//                     faerie spots and letter grid. A set supplies US-layout text through the same
+//                     tables (French does). A Japanese set draws its own words into this layout on the
+//                     select, copy and erase screens (select_us_ja_*.c); its name entry has no US-layout
+//                     kana grid yet, so that screen keeps the Japanese layout.
 //   kSelectLayout_Ja  the Japanese cartridge's screens (language_ja_*.c): the set's own tilemaps 100-103,
-//                     stripes at their Japanese lengths, faerie spots, the 10x32 kana grid and the
-//                     512-tile tilemap font. Only a Japanese set carries text for it today.
-// A layout runs only while the set carries text for it; otherwise the screens take the layout the set
-// does carry, and the US layout when it carries neither. The background sheets of the intro never reach
-// these screens in either layout (LanguageScreens_SheetLive).
+//                     stripes at their Japanese lengths, faerie spots, the 10x32 kana grid.
+// The layout is chosen per screen: a screen runs a layout only while the set carries text for it there;
+// otherwise it takes the layout the set does carry, and the US layout when it carries neither. A ready
+// Japanese set uploads its tilemap font on the file select in both layouts (SelectLayout_JapaneseFont).
+// The background sheets of the intro never reach these screens (LanguageScreens_SheetLive).
 #pragma once
 #include "src/types.h"
 
 enum { kSelectLayout_Us, kSelectLayout_Ja };
 
+// The file select screens, by main module: 1 select, 2 copy, 3 erase, 4 name entry.
+enum { kSelectScreen_Select, kSelectScreen_Copy, kSelectScreen_Erase, kSelectScreen_Name };
+
 // The layout the screen style asks for. The US layout until the style setting exists.
 int SelectLayout_Preferred(void);
 
-// Whether the current language set carries the text |layout| draws.
-bool SelectLayout_HasText(int layout);
+// Whether the current language set carries the text |layout| draws on |screen|.
+bool SelectLayout_HasText(int layout, int screen);
 
 // The layout the language set's own select tilemaps and stripes are drawn for.
 int SelectLayout_OfSet(void);
 
-// The layout the file select screens run this frame.
+// The screen the current main module draws (kSelectScreen_Select outside modules 2-4).
+int SelectLayout_ScreenNow(void);
+
+// The layout |screen| runs.
+int SelectLayout_ActiveOn(int screen);
+
+// The layout the current screen runs this frame.
 int SelectLayout_Active(void);
+
+// Whether the file select uploads the Japanese set's tilemap font (and moves the sprite sheet above it).
+bool SelectLayout_JapaneseFont(void);
