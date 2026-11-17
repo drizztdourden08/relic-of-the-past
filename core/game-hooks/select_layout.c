@@ -16,7 +16,7 @@ int SelectLayout_Preferred(void) {
 bool SelectLayout_HasText(int layout, int screen) {
   if (layout == kSelectLayout_Ja)
     return LanguageJa_LayoutReady();
-  return !JapaneseSet() || (screen != kSelectScreen_Name && SelectUsJa_Ready());
+  return !JapaneseSet() || (SelectUsJa_Ready() && (screen != kSelectScreen_Name || SelectUsJaName_Ready()));
 }
 
 int SelectLayout_OfSet(void) {

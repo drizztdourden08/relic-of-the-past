@@ -8,8 +8,8 @@
 //   kSelectLayout_Us  the vendored screens: US tilemaps 100-103, kSelectFile_Gfx0 frame, US stripes,
 //                     faerie spots and letter grid. A set supplies US-layout text through the same
 //                     tables (French does). A Japanese set draws its own words into this layout on the
-//                     select, copy and erase screens (select_us_ja_*.c); its name entry has no US-layout
-//                     kana grid yet, so that screen keeps the Japanese layout.
+//                     select, copy and erase screens and its kana grid, a page at a time, into the name
+//                     entry's letter grid (select_us_ja_*.c). The name entry has no faerie in this layout.
 //   kSelectLayout_Ja  the Japanese cartridge's screens (language_ja_*.c): the set's own tilemaps 100-103,
 //                     stripes at their Japanese lengths, faerie spots, the 10x32 kana grid.
 // The layout is chosen per screen: a screen runs a layout only while the set carries text for it there;

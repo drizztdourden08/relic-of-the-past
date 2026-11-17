@@ -808,6 +808,8 @@ void HudOverride_SetWantedDialogHidden(bool on);
 #include "language_screens.h"
 // ─── Japanese file select and name entry (language_ja_*.c): language_ja_screens.h ───
 #include "language_ja_screens.h"
+// ─── Kana name grid parts shared by both layouts (name_grid_input.c): name_grid.h ───
+#include "name_grid.h"
 // ─── File select layout strategy, US or Japanese (select_layout.c): select_layout.h ───
 #include "select_layout.h"
 // ─── US file select layout with a Japanese set's words (select_us_ja_*.c): select_us_ja.h ───

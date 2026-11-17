@@ -43,8 +43,9 @@ uint16 GameHook_FileSelectSheetVram(uint16 orig);
 // select_file.c NameFile_EraseSave: parks the Japanese grid on its first cell.
 void GameHook_NameFileJapaneseInit(void);
 
-// select_file.c NameFile_DoTheNaming: one frame of the Japanese grid. True when it handled the frame;
-// false hands the frame to the vendored code (US mode, or End with a name, whose save runs there).
+// select_file.c NameFile_DoTheNaming: one frame of the Japanese grid, or in the US layout of the kana
+// grid drawn into it (SelectUsJaName_Frame). True when it handled the frame; false hands the frame to
+// the vendored code (US mode, or End with a name, whose save runs there).
 bool GameHook_NameFileJapanese(void);
 
 // select_file.c SelectFile_Func17: draws file |k|'s name and hearts on the Japanese stripes (true).

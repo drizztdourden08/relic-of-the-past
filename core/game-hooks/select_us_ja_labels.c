@@ -45,6 +45,7 @@ static const UsJaLabel kLabels[] = {
   {kSelectScreen_Erase, 10, 4, 10, kNone, kNone, 0, kFrameMin, kFrameEnd},
   {kSelectScreen_Erase, 24, 6, 4, kSlotErase, kNone, 25, kFrameMin, kFrameEnd},
   {kSelectScreen_Erase, 22, 6, 17, kNone, kLangTbl_KillTab2, 21, kFrameMin, kFrameEnd},
+  {kSelectScreen_Name, 5, 4, 22, kNone, kNone, 0, kFrameMin, kFrameEnd},
 };
 
 static const uint8 *SourceStream(const UsJaLabel *e, int *size) {

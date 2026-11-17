@@ -34,12 +34,9 @@ enum {
   kVertical = 0x80,
   kMemset = 0x40,
   kOutBytes = 0x1000,
-  kSourceUpload = 1,
-  kSourceSelect = 6,
-  kSourceCopy = 7,
-  kSourceErase = 8,
-  kModuleSelect = 1,
-  kModuleErase = 3,
+  kSourceUpload = 1, kSourceName = 5, kSourceSelect = 6, kSourceCopy = 7, kSourceErase = 8,
+  kModuleSelect = 1, kModuleName = 4,
+  kGridTileRow0 = 16, kGridTileRowEnd = 24,
 };
 
 static uint8 g_out[kOutBytes];
@@ -126,6 +123,12 @@ static int Relabel(int screen, uint16 addr, const uint8 *p, int n, uint8 *out, i
   return 4 + bytes;
 }
 
+// The US name entry's letter grid, whose rows the kana pages replace.
+static bool UsGridRow(int screen, uint16 addr) {
+  int row = (addr >> 5) & 31;
+  return screen == kSelectScreen_Name && row >= kGridTileRow0 && row < kGridTileRowEnd;
+}
+
 // Copies the stripe at |p| into |out|, its BG3 tiles translated and its label relabelled. Returns the
 // bytes written (|*used| the bytes read), or -1 when |room| is too small.
 static int Stripe(int screen, const uint8 *p, uint8 *out, int room, int *used) {
@@ -135,6 +138,8 @@ static int Stripe(int screen, const uint8 *p, uint8 *out, int room, int *used) {
   int payload = (flags & kMemset) ? 2 : len;
   *used = 4 + payload;
   bool bg3 = addr >= kBg3First && addr < kBg3End;
+  if (bg3 && UsGridRow(screen, addr))
+    return 0;
   if (bg3 && !(flags & (kVertical | kMemset)) && (len & 1) == 0) {
     int written = Relabel(screen, addr, p + 4, len / 2, out, room);
     if (written != 0)
@@ -160,12 +165,19 @@ static const uint8 *Translate(int screen, const uint8 *p) {
     at += written;
     p += used;
   }
+  if (screen == kSelectScreen_Name) {
+    int written = SelectUsJaName_AppendPage(g_out + at, kOutBytes - 1 - at, true);
+    if (written < 0)
+      return NULL;
+    at += written;
+  }
   g_out[at] = 0xff;
   return g_out;
 }
 
 static int ScreenOfSource(int source) {
   switch (source) {
+  case kSourceName: return main_module_index == kModuleName ? kSelectScreen_Name : -1;
   case kSourceSelect: return kSelectScreen_Select;
   case kSourceCopy: return kSelectScreen_Copy;
   case kSourceErase: return kSelectScreen_Erase;
@@ -175,11 +187,13 @@ static int ScreenOfSource(int source) {
 }
 
 const uint8 *GameHook_SelectStripes(const uint8 *p, int source) {
-  if (main_module_index < kModuleSelect || main_module_index > kModuleErase)
+  if (main_module_index < kModuleSelect || main_module_index > kModuleName)
     return p;
   int screen = ScreenOfSource(source);
   if (screen < 0 || !SelectLayout_JapaneseFont() || SelectLayout_ActiveOn(screen) != kSelectLayout_Us)
     return p;
+  if (screen == kSelectScreen_Name && source == kSourceUpload)
+    return SelectUsJaName_Upload(p);
   const uint8 *out = Translate(screen, p);
   return out != NULL ? out : p;
 }
