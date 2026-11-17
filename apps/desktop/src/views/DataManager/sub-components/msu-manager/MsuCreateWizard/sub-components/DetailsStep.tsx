@@ -22,7 +22,7 @@ const DetailsStep = ({ values, update }: FieldsProps) => (
         <DropZone
           accept={[...MSU_PACK_ACCEPT]}
           variant="inline"
-          label={values.file?.name ?? 'Drop a pack here'}
+          label="Drop a pack here"
           hint=".msul, or a .zip / .7z / .rar archive of audio"
           status={chosenStatus(values.file)}
           onDrop={(files) => update({ file: files[0] ?? null })}

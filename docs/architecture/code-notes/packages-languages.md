@@ -154,8 +154,8 @@ encoding uses the right config, then the result's `code` is set to the set's own
 - `EXPECTED_LINE_COUNT` is the canonical 397 dialogue lines every compiled entry must match, as a
   contiguous run of ids 1 to 397.
 - `NON_BASE_INDEX`: a non zero index tells `buildPackedEntry` this is not the base US ROM entry
-  (its flags bit 1 means no US ROM match). A compiled set is always assembled as an extra beside
-  the US entry, never as index 0.
+  (its flags bit 1 means no US ROM match). The core reads only flags bit 0, so the same entry
+  also serves as index 0 when `compileBake` bakes the ROM's own set as the default language.
 - `SetFont` is the persisted font a set carries beside its dialogue: the raw 2bpp glyph sheet and
   its per glyph width table, the same pair `buildPackedEntry` takes from a ROM extraction.
 - A set read through storage carries `variables`. One built in memory may not, so the code falls
@@ -172,10 +172,22 @@ encode, a dialogue list that lost an entry) must not cost the user every other l
 blob. Each set compiles on its own, and a failure is reported through `onWarn`, which names the
 set, and then skipped.
 
-Every stored set becomes an extra, with no id filtering. That matches the folder scanning path it
-replaced, including one degenerate case: a set whose id equals the base entry's code (`us`) is
-still baked, but the core's lookup takes the first match in the map, so index 0 shadows it and
-its content is unreachable. That stays on purpose.
+Every set it is given becomes an extra, with no id filtering. `compileBake` takes the ROM's own
+set out first, so it is baked once, as index 0.
+
+## packages/languages/src/messages/compile/compile-bake.ts
+
+The languages of one asset blob: the base entry (index 0, the default language) and the extras.
+The base is the stored set with the ROM set's id and base when there is one, so edits to the ROM's
+own language reach the default; otherwise it is the set read from the ROM. A stored set that fails
+to compile is warned about and the ROM set is baked in its place, so the blob always has a default.
+
+## packages/languages/src/sets/rom-language/
+
+The ROM's own language as a set. `extractRomPack` decodes the ROM's dialogue and font into the same
+pack the Language studio's official ROM extraction writes. `romSetInput` turns it into the bake
+input `compileBake` takes as the base. `keepRomLanguage` stores it after a bake: payload, font and
+set are each written only when missing, so a re-import reuses the set and never replaces edits.
 
 `SetBakeInput` carries the font pair as `Uint8Array`, the storage layer's own type, so the value
 survives a structured clone hop to a Worker. The Node `Buffer` wrapping `compileSet` wants

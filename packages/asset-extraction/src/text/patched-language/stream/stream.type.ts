@@ -9,8 +9,6 @@ interface StreamLayout {
   dictCount: number;
   commandLengths: readonly number[];
   escape: number | null;
-  ignoresBankBytes: boolean;
-  stopAfter: number | null;
 }
 
 interface ScanBudget {
@@ -21,11 +19,6 @@ interface SegmentScan {
   bytes: Uint8Array;
   layout: StreamLayout;
   budget: ScanBudget;
-}
-
-interface SegmentRequest {
-  start: number;
-  before: number;
 }
 
 interface SegmentResult {
@@ -64,6 +57,6 @@ interface StreamSearch {
 }
 
 export type {
-  FoundSegment, SecondSegment, SegmentEnd, SegmentRequest, SegmentResult, SegmentScan, SegmentWant, StreamLayout, StreamPlan,
+  FoundSegment, SecondSegment, SegmentEnd, SegmentResult, SegmentScan, SegmentWant, StreamLayout, StreamPlan,
   StreamSearch,
 };

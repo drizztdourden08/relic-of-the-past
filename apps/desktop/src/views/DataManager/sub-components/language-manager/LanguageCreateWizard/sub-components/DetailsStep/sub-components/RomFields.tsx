@@ -10,7 +10,7 @@ const RomFields = ({ values, update }: SourceFieldsProps) => (
       <DropZone
         accept={[...LANGUAGE_ROM_ACCEPT]}
         variant="inline"
-        label={values.romFile?.name ?? 'Drop a ROM file to extract its language'}
+        label="Drop a ROM file to extract its language"
         hint="The language is read from the ROM. The ROM is not saved."
         status={chosenStatus(values.romFile)}
         onDrop={(files) => update({ romFile: files[0] ?? null, romUrl: '' })}

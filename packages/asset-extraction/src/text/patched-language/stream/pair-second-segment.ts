@@ -7,7 +7,7 @@ import type { SecondSegment, StreamSearch } from './stream.type';
 const pairSecondSegment = (search: StreamSearch, before: number, baseStart: number | null): SecondSegment | null => {
   const counts = remainingCounts(before);
   if (baseStart !== null) {
-    const atBase = scanSegment(search.scan, { start: baseStart, before });
+    const atBase = scanSegment(search.scan, baseStart);
     if (atBase.end === 'finish' && counts.includes(atBase.count)) return { start: baseStart, moved: false };
   }
   const want = { end: 'finish' as const, counts, before, hints: search.hints };

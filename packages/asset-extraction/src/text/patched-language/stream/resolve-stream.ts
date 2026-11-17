@@ -12,7 +12,7 @@ import type { StreamPlan, StreamSearch } from './stream.type';
 const planOf = (linear: readonly number[], moved: string[]): StreamPlan => ({ starts: linear.map(linearToSnes), moved });
 
 const fromFirstAt = (search: StreamSearch, first: number, firstMoved: boolean): StreamPlan | null => {
-  const head = scanSegment(search.scan, { start: first, before: 0 });
+  const head = scanSegment(search.scan, first);
   const moved = firstMoved ? [MOVED_FIRST] : [];
   if (head.end === 'finish' && EXPECTED_MESSAGE_COUNTS.includes(head.count)) return planOf([first], moved);
   if (head.end !== 'switch' || head.count < MIN_SEGMENT_MESSAGES) return null;
@@ -25,7 +25,7 @@ const fromFirstAt = (search: StreamSearch, first: number, firstMoved: boolean): 
 const fromSecondAtBase = (search: StreamSearch): StreamPlan | null => {
   const base = search.romAddrs[1];
   if (base === undefined) return null;
-  const tail = scanSegment(search.scan, { start: snesToLinear(base), before: 0 });
+  const tail = scanSegment(search.scan, snesToLinear(base));
   if (tail.end !== 'finish' || tail.count < MIN_SEGMENT_MESSAGES) return null;
   const want = { end: 'switch' as const, counts: remainingCounts(tail.count), before: 0, hints: search.hints };
   const head = collectSegments(search.scan, want, 1)[0];

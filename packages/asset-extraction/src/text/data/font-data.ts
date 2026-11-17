@@ -13,12 +13,6 @@ const kFontTypes: Record<string, FontSource> = {
   fr: { tileAddr: 0xcc6e8, widthAddr: 0x8cdeaf, widthCount: 112 },
   'fr-c': { tileAddr: 0xcd078, widthAddr: 0x8ce83f, widthCount: 112 },
   en: { tileAddr: 0x8e8000, widthAddr: 0x8ecaff, widthCount: 102 },
-  es: { tileAddr: 0x8e8000, widthAddr: 0x8ecadf, widthCount: 99 },
-  pl: { tileAddr: 0x8e8000, widthAddr: 0x8ecadf, widthCount: 99 },
-  pt: { tileAddr: 0x8e8000, widthAddr: 0x8ecadf, widthCount: 121 },
-  redux: { tileAddr: 0x8e8000, widthAddr: 0x8ecadf, widthCount: 99 },
-  nl: { tileAddr: 0x8e8000, widthAddr: 0x8ecadf, widthCount: 99 },
-  sv: { tileAddr: 0x8e8000, widthAddr: 0x8ecadf, widthCount: 99 },
 };
 
 export { FONT_TILE_BYTES, kFontTypes };

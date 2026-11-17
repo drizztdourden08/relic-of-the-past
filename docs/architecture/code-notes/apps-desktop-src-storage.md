@@ -25,6 +25,10 @@ which belongs off the UI thread.
   so the game assets store is told.
 - `recompileAll` rebuilds every ROM that already has a cached `.dat`, after a language set
   changes.
+- The worker also reads the ROM's own language and bakes it as index 0, the default (a stored
+  set with that id wins, so edits reach the default). The result carries that language back and
+  `storeAssetSet` keeps it as a stored set when it is missing, so importing a ROM adds its language
+  to the Languages tab and a re-import reuses it.
 
 ## apps/desktop/src/storage/audio-probe.ts
 
@@ -101,6 +105,10 @@ Import runs in the renderer (pick or download, unzip or raw, then FileStore) as 
 (`importRomJob`). Every import names its kind. The base cartridge boots the game; a
 supplement only adds to one, is digest checked before it is written, and never replaces a
 file already there.
+
+- The base store accepts any file, so a fan translation is caught after the store import: an
+  unknown digest that matches a known fan translation is refused with a message pointing to the
+  Fan-patched ROM language import, and the file is removed when this import wrote it.
 
 ## apps/desktop/src/storage/saves-store/
 

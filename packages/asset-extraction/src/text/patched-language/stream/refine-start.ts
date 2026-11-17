@@ -21,7 +21,7 @@ const refineStart = (scan: SegmentScan, start: number, found: SegmentResult, wan
   const last = found.firstEnd < 0 ? start : found.firstEnd;
   for (let at = start; at <= last; at += 1) {
     if (!isLikelyStart(scan.bytes, at)) continue;
-    if (segmentMatches(scanSegment(scan, { start: at, before: want.before }), want)) return at;
+    if (segmentMatches(scanSegment(scan, at), want)) return at;
   }
   return start;
 };

@@ -52,7 +52,7 @@ const RELEASE_NAMES: Readonly<Record<string, string>> = {
 
 const releaseItem = (code: RomLanguage): ReleaseItem => {
   const sha1 = Object.keys(ZELDA3_SHA1).find((hash) => ZELDA3_SHA1[hash]?.language === code) ?? '';
-  return { value: code, release: RELEASE_NAMES[code] ?? code, rom: ZELDA3_SHA1[sha1]?.description ?? '', sha1 };
+  return { value: code, release: RELEASE_NAMES[code] ?? code, sha1 };
 };
 
 const RELEASE_ITEMS: readonly ReleaseItem[] = OFFICIAL_RELEASES.map(releaseItem);

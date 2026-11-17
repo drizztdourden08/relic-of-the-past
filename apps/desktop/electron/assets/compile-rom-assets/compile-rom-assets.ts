@@ -19,12 +19,13 @@ const compileRomAssets = async (romFile: string): Promise<CompileResult> => {
 
   try {
     const rom = loadRom(localRomPath);
-    const extraLanguages = await loadCompiledLanguages(rom);
+    const baked = await loadCompiledLanguages(rom);
+    const { extraLanguages } = baked;
     logToRenderer('core', 'info', `ROM loaded: ${rom.language} (${rom.description})`);
     if (extraLanguages.length > 0) {
       logToRenderer('app', 'info', `Baking ${extraLanguages.length} language set(s): ${extraLanguages.map((e) => e.code).join(', ')}`);
     }
-    const dat = compileResources(rom, { extraLanguages });
+    const dat = compileResources(rom, baked);
     const assetFile = datName(romFile);
     await writeFile(getUserDataPath('assets', assetFile), dat);
     logToRenderer('app', 'info', `Assets cached as ${assetFile} (${(dat.length / 1024).toFixed(0)} KB)`);

@@ -1,7 +1,5 @@
 /* @layer shared-asset-extraction @kind types */
-type RomLanguage =
-  | 'us' | 'de' | 'fr' | 'fr-c' | 'en'
-  | 'es' | 'pl' | 'pt' | 'redux' | 'nl' | 'sv';
+type RomLanguage = 'us' | 'de' | 'fr' | 'fr-c' | 'en';
 
 interface RomIdentEntry {
   language: RomLanguage;

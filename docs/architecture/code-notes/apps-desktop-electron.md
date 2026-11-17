@@ -33,7 +33,7 @@ Compiles a ROM's `zelda3_assets.dat`, baking in every stored language set so the
 
 ## apps/desktop/electron/assets/load-compiled-languages.ts
 
-The language extras one asset blob compile bakes in, on the desktop host: every stored language set (its edited dialogue, glossary and name payload plus its font pair) is read off the Data folder and compiled into a packed entry. A set that fails to compile is warned about and skipped, so one broken translation never blocks the blob.
+The languages one asset blob compile bakes in, on the desktop host. The ROM's own language is read first and kept as a stored set (`keepRomLanguage`: payload, font and set, each written only when missing, so an edited set is never replaced). `compileBake` then compiles that set as index 0, the default language, and every other stored set (its edited dialogue, glossary and name payload plus its font pair) as an extra. A set that fails to compile is warned about and skipped, so one broken translation never blocks the blob.
 
 ## apps/desktop/electron/boot/ffmpeg.task.ts
 

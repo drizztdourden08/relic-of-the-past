@@ -32,7 +32,7 @@ const PatchedFields = ({ values, update }: SourceFieldsProps) => (
       <DropZone
         accept={PATCHED_ROM_ACCEPT}
         variant="inline"
-        label={values.patchedFile?.name ?? 'Drop the patched ROM'}
+        label="Drop the patched ROM"
         hint="The ROM is read, never saved."
         status={chosenStatus(values.patchedFile)}
         onDrop={(files) => update({ patchedFile: files[0] ?? null })}

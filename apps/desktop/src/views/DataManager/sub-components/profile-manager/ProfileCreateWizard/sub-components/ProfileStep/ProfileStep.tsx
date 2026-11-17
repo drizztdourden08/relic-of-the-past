@@ -1,6 +1,8 @@
 /* @layer renderer-components @kind component */
 import { Field, Grid, SegmentedControl, Select, Stack, TextInput } from '@drizztdourden08/tessera/primitives';
-import { DEFAULT_LANGUAGE_LABEL, NO_MSU_LABEL, PRESET_OPTIONS } from '../../ProfileCreateWizard.constants';
+import { languageOptions } from '../../../../language-options';
+import { shownLanguage } from '../../../../shown-language';
+import { NO_MSU_LABEL, PRESET_OPTIONS } from '../../ProfileCreateWizard.constants';
 import type { ProfileStepProps } from './ProfileStep.type';
 
 const ProfileStep = ({ values, update, readyRoms, languages, msuPacks }: ProfileStepProps) => (
@@ -22,10 +24,9 @@ const ProfileStep = ({ values, update, readyRoms, languages, msuPacks }: Profile
     <Grid columns={2} gap="md">
       <Field label="Language">
         <Select
-          value={values.language}
+          value={shownLanguage(values.language)}
           onChange={(language) => update({ language })}
-          options={[{ value: '', label: DEFAULT_LANGUAGE_LABEL }, ...languages.map((l) => ({ value: l.code, label: l.code }))]}
-          placeholder={DEFAULT_LANGUAGE_LABEL}
+          options={languageOptions(languages)}
         />
       </Field>
       <Field label="MSU Pack">

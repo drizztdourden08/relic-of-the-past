@@ -2,7 +2,8 @@
 import { Field, Select } from '@drizztdourden08/tessera/primitives';
 import { reloadMsuForProfile } from '@app/game/msu-pack-loader';
 import { updateProfile } from '@app/storage/profile-store';
-import { languageLabel } from '../../language-label';
+import { languageOptions } from '../../language-options';
+import { shownLanguage } from '../../shown-language';
 import type { ProfileEditSectionProps } from './profile-detail.type';
 
 const ProfilePackFields = (props: ProfileEditSectionProps) => {
@@ -12,16 +13,12 @@ const ProfilePackFields = (props: ProfileEditSectionProps) => {
     <>
       <Field label="Language">
         <Select
-          value={profile.language ?? ''}
+          value={shownLanguage(profile.language)}
           onChange={async (val) => {
             await updateProfile(profile.id, { language: val || null });
             onRefresh();
           }}
-          options={[
-            { value: '', label: 'Default (English)' },
-            ...languages.map((l) => ({ value: l.code, label: languageLabel(l.code) })),
-          ]}
-          placeholder="Default (English)"
+          options={languageOptions(languages)}
         />
       </Field>
       <Field label="MSU pack">

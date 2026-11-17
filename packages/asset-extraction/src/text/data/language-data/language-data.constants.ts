@@ -40,48 +40,6 @@ const kTextAlphabet_FR: string[] = [
   ...kAlphabetEuHead, 'ô', ...kAlphabetEuAccents, 'â', 'û', 'î', 'ä',
 ];
 
-const kTextAlphabet_ES: string[] = [
-  'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P',
-  'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'é', 'Y', 'Z', 'a', 'b', 'c', 'd', 'e', 'f',
-  'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v',
-  'ó', 'x', 'y', 'z', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '!', '?',
-  '[Waves]', '.', ',',
-  '[...]', '>', '(', ')',
-  'ñ', 'ú', 'á', '[LinkL]', '[LinkR]', '"', '[Up]', '[Down]', '[Left]',
-  '[Right]', 'í', '[1HeartL]', '[1HeartR]', '[2HeartL]', '[3HeartL]', '[3HeartR]',
-  '[Ankh]', '[4HeartR]', ' ', '[Snake]', '[A]', '[B]', '[X]', '[Y]', '[I]',
-  '¡', '¿', 'Ñ',
-];
-
-const kTextAlphabet_NL: string[] = [...kTextAlphabet_US];
-
-const kTextAlphabet_SV: string[] = [
-  'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'Ö', 'P',
-  'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', 'a', 'b', 'c', 'd', 'e', 'f',
-  'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v',
-  'w', 'x', 'y', 'z', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '!', '?',
-  'å', '.', ',', 'ä', '>', '(', ')', 'ö',
-  'Å', 'Ä', '[LinkL]', '[LinkR]', '"', '[Up]', '[Down]', '[Left]',
-  '[Right]', "'", '[1HeartL]', '[1HeartR]', '[2HeartL]', '[3HeartL]', '[3HeartR]',
-  '[4HeartL]', '[4HeartR]', ' ', '<', '[Ankh]', '[Waves]', '[Snake]', '-', '[I]',
-  '[i]', '…', ' ',
-];
-
-const kTextAlphabet_PL: string[] = [
-  ...kAlphabetLatinHead,
-  '-', '.', ',', 'ć', '[Right]', '(', ')', '[Ankh]',
-  '[Waves]', '[Snake]', '[LinkL]', '[LinkR]', '"', '[Up]', '[Down]', 'ę',
-  'ł', 'ń', '[1HeartL]', '[1HeartR]', '[2HeartL]', '[3HeartL]', '[3HeartR]',
-  'ą', '[4HeartR]', ' ', '[Left]', 'ó', 'ś', 'ż', 'ź', 'Ł',
-  'Ś', 'Ż', 'Ź',
-];
-
-const kTextAlphabet_PT: string[] = [
-  ...kTextAlphabet_US, '[I]',
-  '¡', '[!]', 'Á', 'À', 'Â', 'Ã', 'É', 'Ê', 'Í', 'Ó', 'Ô', 'Õ', 'Ú', 'á', 'à', 'â',
-  'ã', 'é', 'ê', 'í', 'ó', 'ô', 'õ', 'ú', 'ç',
-];
-
 const kTextDictionary_US: string[] = [
   '    ', '   ', '  ', "'s ", 'and ', 'are ', 'all ', 'ain', 'and', 'at ',
   'ast', 'an', 'at', 'ble', 'ba', 'be', 'bo', 'can ', 'che', 'com',
@@ -144,60 +102,6 @@ const kTextDictionary_FR: string[] = [
   'Tu as trouvé ', 'Ténèbres', 'Tu peux', 'Tu ',
 ];
 
-const kTextDictionary_ES: string[] = [
-  '    ', '   ', '  ', ' en', ' la ', ' el ', ' de ', 'ien', 'tra', ' de',
-  'te ', 'ar', 'a ', 'ada', 'es', 'as', 'o ', ' con', 'ero', 'ado',
-  'e ', 'que', 'en', 'al', 'os ', 'ora', 'nte', ' al', 'lo ', 'or',
-  'os', 'er', 'aci', 'res', ' que ', ' es', 'el', 'los ', 'tar', ' se',
-  ', ', 'ro', ' de l', ' est', 're', 'on', 'an', 'pued', ' del', 'ás ',
-  'la', 'ti', 'la ', 'Es', 'to', 'ta', 'para', 'uer', 'ier', ' un ',
-  ' por', 'oder', 'da', 'in', 'cu', ' ha', 'per', 'ano', ' ve', 'cer',
-  'lo', ' no ', 'ic', 'ra', 'ab', 'ir', ' una', 'undo', 'es ', 'as ',
-  'con', 'a, ', 'te', ' m', 'gu', ' tu', 'ando', ' p', 'de', 'le',
-  'ol', 'o, ', 'ten', 'lle', ' a ', 'aba', 'com',
-];
-
-const kTextDictionary_NL: string[] = [...kTextDictionary_US];
-
-const kTextDictionary_SV: string[] = [
-  '    ', '   ', '  ', 'Du ', 'till', 'vill', 'bara', 'det', 'den', 'och',
-  'en ', 'r ', 'n ', 'ett', 'en', ' d', 'a ', 'Hjäl', 'har', 'ter',
-  't ', 'var', ' s', 'de', 'kan', 'med', 'som', 'för', 'att', 'ar',
-  ' h', 'er', 'jag', 'dig', 'öppna', 'mig', 'är', 'inte', 'hit', 'på ',
-  'an', 'e ', 'rupie', '0kej', ' m', 'et', ', ', 'gång', 'måst', 'ten',
-  ' f', 'u ', 'men', 'te', 'tt', 'ka', 'vara', 'ken', '0m ', 'från',
-  'myck', 'någo', 'in', ' k', ' i', 'vil', 'bar', 'ond', 'För', 'Jag',
-  'ra', 'tack', 'll', 'g ', 'ta', 'om', 'anna', 'alla', 'en,', 'ber',
-  'hem', 'han', 'st', 'ig', ' t', 'tro', 'kraf', 'ör', ' v', 'ag',
-  '… ', 'får', 'sin', 'mme', 'mma', 'en ', 'tat',
-];
-
-const kTextDictionary_PL: string[] = [
-  'Trój', '...', 'ść', 'Nie', ' nie', ' się', 'może', ' że', 'and', 'at ',
-  ' ty', 'an', 'at', 'kus', 'ba', 'be', 'bo', 'chce', 'che', 'ki ',
-  'za', 'des', 'di', 'do', 'en ', 'er ', 'sz ', 'ent', 'ed ', 'en',
-  'er', ' w', 'moc', 'zię', 'przez', 'ale', 'go', 'dzie', 'has', 'rze',
-  'hi', 'ha', 'który', 'aby ', 'in', 'is', 'it', 'twoj', 'Może', 'łeś',
-  'la', 'lo', 'czn', 'ma', 'me', 'mu', 'szcz', 'ska', 'śli', 'przy',
-  'znaj', 'iecz', 'of', 'on', 'or', '   ', 'ple', 'pow', 'pro', 're ',
-  're', 'mnie', 'se', ' z', 'so', 'st', 'któr', ' jak', 'ksz', 'sze',
-  'coś', ' je', 'to', 'tr', 'up', 'kie', 'praw', 'wa', 'we', 'mi',
-  'wi', 'szy', 'chc', 'pra', 'cie', ' i ', 'esz',
-];
-
-const kTextDictionary_PT: string[] = [
-  '     ', '    ', '   ', '                                          ', 'o ', 'a ', 'e ', '..', 'de', 'ar',
-  's ', 'ra', ' d', 'es', 'ocê ', 'do', ' a', ' p', 'er', ' e',
-  'que', 'r ', 'os', 'te', ', ', 'as', 'or', 'm ', 'en', ' o',
-  'nt', 're', ' s', 'co', 'da', 'se', 'st', ' c', ' m', 'em',
-  'ma', 'ta', ' n', 'ad', 'on', 'al', 'ro', 'an', 'u ', 'nd',
-  ' um', 'pa', 'ca', 'el', ' f', 'to', 'in', ' t', 'ou', 'ei',
-  'ss', 'ir', 'no', 'ri', 'tr', 'me', 'la', 'ia', 'le', 've',
-  'is', 'sa', 'eu', 'pe', 'a.', 'na', 'so', 'mo', 'ga', 'o.',
-  'á ', 'lo', 'ha', 'pr', 'ua', ' l', '! ', 'ui', 'am', 'ti',
-  'io', 'gu', 'i ', 'di', 'nh', ' i', 'id',
-];
-
 const kText_CommandLengths_US: number[] = [
   1, 1, 1, 1, 2, 2, 2, 2, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 1, 1, 1, 1, 1,
 ];
@@ -243,48 +147,6 @@ const langEN: LanguageConfig = {
   romAddrs: [0x9c8000, 0x8edf60],
 };
 
-const langES: LanguageConfig = {
-  ...langUS,
-  id: 'es',
-  alphabet: kTextAlphabet_ES,
-  dictionary: kTextDictionary_ES,
-  romAddrs: [0x9c8000, 0x8edf40],
-};
-
-const langNL: LanguageConfig = {
-  ...langUS,
-  id: 'nl',
-  alphabet: kTextAlphabet_NL,
-  dictionary: kTextDictionary_NL,
-  romAddrs: [0x9c8000, 0x8edf40],
-};
-
-const langSV: LanguageConfig = {
-  ...langUS,
-  id: 'sv',
-  alphabet: kTextAlphabet_SV,
-  dictionary: kTextDictionary_SV,
-  romAddrs: [0x9c8000, 0x8edf40],
-};
-
-const langPL: LanguageConfig = {
-  ...langUS,
-  id: 'pl',
-  alphabet: kTextAlphabet_PL,
-  dictionary: kTextDictionary_PL,
-  romAddrs: [0x9c8000, 0x8edf40],
-};
-
-const langPT: LanguageConfig = {
-  ...langUS,
-  id: 'pt',
-  alphabet: kTextAlphabet_PT,
-  dictionary: kTextDictionary_PT,
-  romAddrs: [0x9c8000, 0x8edf40],
-  escapeCharacter: 0x62,
-  encoder: 'new',
-};
-
 const langEU_base: EuLanguageBase = {
   commandLengths: kText_CommandLengths_EU,
   commandNames: kText_CommandNames_EU,
@@ -327,12 +189,6 @@ const kLanguages: Record<string, LanguageConfig> = {
   fr: langFR,
   'fr-c': langFR_C,
   en: langEN,
-  es: langES,
-  pl: langPL,
-  pt: langPT,
-  redux: langUS,
-  nl: langNL,
-  sv: langSV,
 };
 
 export { kLanguages };

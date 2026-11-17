@@ -2,7 +2,7 @@
 import type { RomData, RomLanguage } from '../rom-types';
 import { createRomData } from './create-rom-data';
 import {
-  PATCHED_ROM_MAX_BYTES, PATCHED_ROM_MIN_BYTES, SMC_HEADER_BYTES, SWEDISH_DOUBLE_HEADER_LENGTH, ZELDA3_SHA1,
+  DOUBLE_HEADER_LENGTH, PATCHED_ROM_MAX_BYTES, PATCHED_ROM_MIN_BYTES, SMC_HEADER_BYTES, ZELDA3_SHA1,
 } from './rom-loader.constants';
 import { stripSmcHeader } from './strip-smc-header';
 
@@ -12,12 +12,14 @@ const releaseDescription = (base: RomLanguage): string => {
   return entry.description;
 };
 
+const romBodyOf = (buffer: Buffer): Buffer => {
+  const romBytes = stripSmcHeader(buffer);
+  return romBytes.length === DOUBLE_HEADER_LENGTH ? romBytes.subarray(SMC_HEADER_BYTES) : romBytes;
+};
+
 const loadPatchedRomFromBuffer = (buffer: Buffer, base: RomLanguage): RomData => {
   const description = releaseDescription(base);
-  let romBytes = stripSmcHeader(buffer);
-  if (base === 'sv' && romBytes.length === SWEDISH_DOUBLE_HEADER_LENGTH) {
-    romBytes = romBytes.subarray(SMC_HEADER_BYTES);
-  }
+  const romBytes = romBodyOf(buffer);
   if (romBytes.length < PATCHED_ROM_MIN_BYTES || romBytes.length > PATCHED_ROM_MAX_BYTES) {
     throw new Error(`This file is ${romBytes.length} bytes, which is not the size of an A Link to the Past ROM.`);
   }

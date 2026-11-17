@@ -1,6 +1,6 @@
 /* @layer renderer-lib @kind types */
 import type { AssetSourceId } from '@rotp/asset-extraction';
-import type { SetBakeInput } from '@rotp/languages';
+import type { ExtractedPack, SetBakeInput } from '@rotp/languages';
 
 type SupplementRoms = Partial<Record<AssetSourceId, Uint8Array>>;
 
@@ -16,6 +16,7 @@ interface AssetsResult {
   base: Uint8Array;
   sidecars: { id: AssetSourceId; bytes: Uint8Array }[];
   failures: AssetFailure[];
+  romLanguage: ExtractedPack;
 }
 
 type ExtractResult = { success: boolean; error?: string; failures?: AssetFailure[] };

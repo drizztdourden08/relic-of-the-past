@@ -39,6 +39,6 @@ interface StepBodyProps {
 }
 
 export type {
-  CharacterCreateWizardProps, CharacterSource, CharacterWizardApi, CharacterWizardValues, ImportOutcome, StepBodyProps, StepContext,
+  CharacterCreateWizardProps, CharacterSource, CharacterWizardValues, ImportOutcome, StepBodyProps, StepContext,
   UseCharacterWizardParams,
 };

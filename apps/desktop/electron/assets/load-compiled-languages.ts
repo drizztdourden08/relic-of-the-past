@@ -1,18 +1,21 @@
 /* @layer electron-main @kind logic */
-import type { PackedLangEntry, RomData } from '@rotp/asset-extraction';
-import { compileSets, readLanguageSets } from '@rotp/languages';
+import type { RomData } from '@rotp/asset-extraction';
+import { compileBake, extractRomPack, keepRomLanguage, languages, readLanguageSets, romSetInput } from '@rotp/languages';
+import type { BakedLanguages } from '@rotp/languages';
 import { createNodeFileStore } from '../lib/node-file-store';
 import { logToRenderer } from '../lib/renderer-log';
-import { ensureRomFont } from './ensure-rom-font';
 
-const loadCompiledLanguages = async (rom: RomData): Promise<PackedLangEntry[]> => {
+const warn = (message: string): void => logToRenderer('app', 'warn', message);
+
+const loadCompiledLanguages = async (rom: RomData): Promise<BakedLanguages> => {
   const files = createNodeFileStore();
-  const lacking = await ensureRomFont(files, rom);
+  const romLanguage = extractRomPack(rom);
+  await keepRomLanguage(files, romLanguage);
+  const lacking = await languages.missingRomFonts(files);
   if (lacking.length > 0) {
-    logToRenderer('app', 'warn', `Language sets on ${lacking.join(', ')} skipped: that base font is missing. Import that language's ROM first.`);
+    warn(`Language sets on ${lacking.join(', ')} skipped: that base font is missing. Import that language's ROM first.`);
   }
-  const inputs = await readLanguageSets(files);
-  return compileSets(inputs, (message) => logToRenderer('app', 'warn', message));
+  return compileBake(await readLanguageSets(files), romSetInput(romLanguage), warn);
 };
 
 export { loadCompiledLanguages };

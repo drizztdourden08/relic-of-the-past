@@ -34,8 +34,8 @@ Facts about `packages/asset-extraction` that the code cannot say on its own. Eac
 
 ## packages/asset-extraction/src/compile-dialogue.ts
 
-- Packs the US ROM dialogue plus any extra language packs into the parallel `kDialogue`, `kDialogueFont` and `kDialogueMap` arrays. The game picks one at startup through the INI `Language` key.
-- US is always index 0. Extras follow in the order given.
+- Packs the base language plus any extra language packs into the parallel `kDialogue`, `kDialogueFont` and `kDialogueMap` arrays. The game picks one at startup through the INI `Language` key; no key or an unknown code falls to index 0.
+- `baseLanguage` is index 0. The app always passes the ROM's own language set compiled the same way as every other set, so the game draws text through one path. Without it the raw ROM decode is used. Extras follow in the order given.
 
 ## packages/asset-extraction/src/compile-dungeons/build-default-and-overlay-rooms.ts
 
@@ -96,7 +96,7 @@ Facts about `packages/asset-extraction` that the code cannot say on its own. Eac
 
 - The final pipeline stage: assembles every game asset into `zelda3_assets.dat`. Ported from upstream's `compile_resources.py`.
 - The call order is the asset order of the blob and must not change.
-- Dialogue needs language extraction and the sound banks need the music compiler; `skipDialogue` and `skipMusic` leave them out. `extraLanguages` are baked after US, which is index 0.
+- Dialogue needs language extraction and the sound banks need the music compiler; `skipDialogue` and `skipMusic` leave them out. `baseLanguage` is index 0 (the raw ROM decode when absent) and `extraLanguages` are baked after it.
 
 ## packages/asset-extraction/src/compression/brr-codec/index.ts
 
@@ -513,7 +513,13 @@ Named ROM addresses used by asset extraction, which replace magic numbers from t
 ## packages/asset-extraction/src/rom/rom-loader/load-rom-from-buffer.ts
 
 - Loads a ROM with SHA-1 validation and version detection, and returns a `RomData` (dependency injected, no global state).
-- A 512-byte SMC header is stripped when present. The Swedish translation is identified by hash with a length of `0x10083b`, and then carries a second 512-byte header that is also stripped.
+- A 512-byte SMC header is stripped when present.
+- `ZELDA3_SHA1` lists only the five official releases. A fan translation is not a ROM release: `FAN_TRANSLATION_SHA1` keeps the hashes of the known ones for detection only, and `fanTranslationRefusal` turns a match into the message that sends the player to Languages > New language > Fan-patched ROM. The ROMs screen refuses such a file with that message (`apps/desktop/src/storage/rom-files/refuse-fan-translation.ts`), and this loader throws it.
+
+## packages/asset-extraction/src/rom/rom-loader/load-patched-rom-from-buffer.ts
+
+- Loads a fan-patched ROM for the patched language extractor, with no hash check, labelled after the official release it is based on.
+- A file of `0x10083b` bytes after the SMC header strip (the Swedish translation's) carries a second 512-byte header, which is stripped too.
 
 ## packages/asset-extraction/src/rom/rom-types/rom-types.type.ts
 
@@ -618,14 +624,14 @@ Named ROM addresses used by asset extraction, which replace magic numbers from t
 
 ## packages/asset-extraction/src/text/build-language-entry/build-language-entry.constants.ts
 
-- The core's kDialogue, kDialogueFont and kDialogueMap are parallel arrays; index 0 is the US ROM and extras follow. ZeldaSetLanguage(code) looks the code up in kDialogueMap and pulls dialogue and font by the stored index. Ported from upstream's compile_resources.py print_dialogue().
+- The core's kDialogue, kDialogueFont and kDialogueMap are parallel arrays; index 0 is the base language (the ROM's own set) and extras follow. ZeldaSetLanguage(code) looks the code up in kDialogueMap and pulls dialogue and font by the stored index. Ported from upstream's compile_resources.py print_dialogue().
 - The US ROM omits one control string. It is inserted at index 4 so a 396-string ROM reaches the canonical 397.
 - Dialogue map flags: bit 0 is the new format, bit 1 means no US ROM match.
 
 ## packages/asset-extraction/src/text/data/font-data.ts
 
 - Each language stores its 8x8 2bpp glyph tiles and a per-glyph width table at language-specific ROM addresses. Every dialogue font is 256 tiles of 16 bytes.
-- The official EU ROMs (de, fr, fr-c) keep their font in a different bank than the US ROM; the translation hacks reuse the US font slot but vary the glyph count.
+- The official EU ROMs (de, fr, fr-c) keep their font in a different bank than the US ROM. Only the five official releases are listed: a fan translation is read by the patched language extractor from the font slot of the release it is based on.
 - tileAddr is the SNES address of the glyph sheet, widthAddr the SNES address of the width table, widthCount the number of glyphs in the width table (the language's effective alphabet size). Ported from upstream's sprite_sheets.py kFontTypes.
 
 ## packages/asset-extraction/src/text/data/glyph-ramp.ts
@@ -636,7 +642,7 @@ Named ROM addresses used by asset extraction, which replace magic numbers from t
 
 ## packages/asset-extraction/src/text/data/language-data/language-data.constants.ts
 
-- Language definitions for the game's text compression and decompression, one config per language, ported from upstream's text_compression.py.
+- Language definitions for the game's text compression and decompression, one config per official release, ported from upstream's text_compression.py.
 
 ## packages/asset-extraction/src/text/data/randomizer-templates/randomizer-templates.constants.ts
 
@@ -650,7 +656,7 @@ Named ROM addresses used by asset extraction, which replace magic numbers from t
 ## packages/asset-extraction/src/text/dialogue-decoder/decode-strings-with-config.ts
 
 - Ported from upstream's text_compression.py decode_strings_generic(). Byte 0x7f ends a message.
-- The pt translation tolerates the eight bytes after its bank switch byte, and its decode stops after 397 messages.
+- The eight bytes after the bank switch byte are reserved: one in the stream is an error.
 
 ## packages/asset-extraction/src/text/dialogue-encoder/cmd-info.ts
 

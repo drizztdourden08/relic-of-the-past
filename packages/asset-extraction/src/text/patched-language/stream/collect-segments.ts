@@ -26,13 +26,13 @@ const collectSegments = (scan: SegmentScan, want: SegmentWant, limit: number): F
   };
 
   for (const start of quickStarts(scan, want.hints)) {
-    const result = scanSegment(scan, { start, before: want.before });
+    const result = scanSegment(scan, start);
     if (segmentMatches(result, want) && keep(start, result)) return found;
   }
 
   let at = 0;
   while (at < scan.bytes.length && scan.budget.steps > 0) {
-    const result = scanSegment(scan, { start: at, before: want.before });
+    const result = scanSegment(scan, at);
     if (segmentMatches(result, want) && keep(at, result)) return found;
     at = nextStart(at, result, want);
   }

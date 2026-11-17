@@ -38,4 +38,4 @@ interface StepBodyProps {
   onKindChange: (kind: RomKind) => void;
 }
 
-export type { FinishContext, RomCreateWizardProps, RomWizardApi, RomWizardValues, StepBodyProps, UpdateValues, UseRomWizardParams };
+export type { FinishContext, RomCreateWizardProps, RomWizardValues, StepBodyProps, UpdateValues, UseRomWizardParams };

@@ -1,7 +1,9 @@
 /* @layer shared-asset-extraction @kind logic */
 export type { RomData, RomLanguage, RomIdentEntry } from './rom/rom-types';
 export { snesToLinear, advanceAddress, advanceAddressWord } from './rom/snes-address';
-export { OFFICIAL_RELEASES, ZELDA3_SHA1, ZELDA3_SHA1_US } from './rom/rom-loader/rom-loader.constants';
+export { GAME_ROM_LANGUAGE, OFFICIAL_RELEASES, ZELDA3_SHA1, ZELDA3_SHA1_US } from './rom/rom-loader/rom-loader.constants';
+export { fanTranslationRefusal } from './rom/rom-loader/fan-translation-refusal';
+export { stripSmcHeader } from './rom/rom-loader/strip-smc-header';
 export { RomReader } from './rom/reader';
 
 export {

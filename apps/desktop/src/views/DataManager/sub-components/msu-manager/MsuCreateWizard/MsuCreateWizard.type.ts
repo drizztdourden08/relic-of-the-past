@@ -35,5 +35,5 @@ interface ReviewStepProps {
 }
 
 export type {
-  FieldsProps, MsuCreateWizardProps, MsuSource, MsuWizardApi, MsuWizardValues, ReviewStepProps, UpdateValues, UseMsuWizardParams,
+  FieldsProps, MsuCreateWizardProps, MsuSource, MsuWizardValues, ReviewStepProps, UseMsuWizardParams,
 };

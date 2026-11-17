@@ -2,20 +2,17 @@
 import type { PackedLangEntry } from '@rotp/asset-extraction';
 import type { SetBakeInput } from './compile.type';
 import { compileSet } from './compile-set';
-
-const messageOf = (err: unknown): string => (err instanceof Error ? err.message : String(err));
+import { messageOf } from './message-of';
+import { setFontOf } from './set-font-of';
 
 const compileSets = (inputs: SetBakeInput[], onWarn: (message: string) => void): PackedLangEntry[] => {
   const packed: PackedLangEntry[] = [];
 
-  for (const { set, fontData, fontWidth } of inputs) {
+  for (const input of inputs) {
     try {
-      packed.push(compileSet(set, {
-        fontData: Buffer.from(fontData),
-        fontWidth: Buffer.from(fontWidth),
-      }));
+      packed.push(compileSet(input.set, setFontOf(input)));
     } catch (err) {
-      onWarn(`Language set "${set.id}" failed to compile and was skipped: ${messageOf(err)}`);
+      onWarn(`Language set "${input.set.id}" failed to compile and was skipped: ${messageOf(err)}`);
     }
   }
 

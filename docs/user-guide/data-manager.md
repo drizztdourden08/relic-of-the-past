@@ -17,6 +17,10 @@ Import a ROM from a file or URL, view its info such as filename, size, hash, and
 [asset extraction](../getting-started/importing-a-rom.md), and delete ROMs. Extraction status is shown
 per ROM.
 
+Importing a ROM also adds its own language to the Languages tab, so a profile on the default language
+shows the text through that set. A fan translation ROM is refused here: it is a language, imported from
+**Languages > New language > Fan-patched ROM**.
+
 ### Sprites
 
 Per-ROM sprite extraction and management. Extract and cache sprite PNGs, review individual sprites, and

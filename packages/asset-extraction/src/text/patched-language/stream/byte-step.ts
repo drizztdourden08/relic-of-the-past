@@ -1,13 +1,13 @@
 /* @layer shared-asset-extraction @kind logic */
-import { END_MESSAGE, PT_IGNORED_BANK_BYTES } from '../../dialogue-decoder/dialogue-decoder.constants';
+import { END_MESSAGE, RESERVED_BANK_BYTES } from '../../dialogue-decoder/dialogue-decoder.constants';
 import { STEP_ERROR, STEP_FINISH, STEP_MESSAGE, STEP_SWITCH } from './stream.constants';
 import type { StreamLayout } from './stream.type';
 
 const bankStep = (layout: StreamLayout, c: number): number => {
-  const { switchBank, finish, dictBase, dictCount, ignoresBankBytes } = layout;
+  const { switchBank, finish, dictBase, dictCount } = layout;
   if (c === finish) return STEP_FINISH;
   if (c === switchBank) return STEP_SWITCH;
-  if (c < switchBank + PT_IGNORED_BANK_BYTES) return ignoresBankBytes ? 1 : STEP_ERROR;
+  if (c < switchBank + RESERVED_BANK_BYTES) return STEP_ERROR;
   return c - dictBase < dictCount ? 1 : STEP_ERROR;
 };
 

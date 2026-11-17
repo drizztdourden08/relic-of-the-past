@@ -13,7 +13,6 @@ interface TextOrFile {
 interface ReleaseItem {
   value: RomLanguage;
   release: string;
-  rom: string;
   sha1: string;
 }
 
