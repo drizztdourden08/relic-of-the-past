@@ -20,7 +20,7 @@ const DialogView = () => {
   const chrome = useDialogChrome(frame, look);
   const geometry = useDialogGeometry(frame, geometryOptionsOf(frame, look, chrome), metrics);
   const { grounded, feathered } = groundingOf(frame, look, chrome);
-  const { atlas, alphabet, highlight, spritesBase, prompts, itemSprite } = useDialogContent(frame, look);
+  const { atlas, alphabet, lang, highlight, spritesBase, prompts, itemSprite } = useDialogContent(frame, look);
 
   return (
     <HudBox ref={containerRef} layout="overlay">
@@ -43,6 +43,7 @@ const DialogView = () => {
                 atlas={atlas?.canvas ?? null}
                 highlight={highlight}
                 alphabet={alphabet}
+                lang={lang}
                 ink={inkColor}
                 stroke={strokeColor}
                 strokeWidth={strokeWidth}
