@@ -61,3 +61,11 @@ void GameHook_FileSelectScreenGfx(void);
 // Called by Module_NamePlayer_1 in place of SelectFile_Func1: for the Japanese layout the empty stripe
 // buffer (its name entry draws no backdrop), otherwise SelectFile_Func1's fill (select_screen_gfx.c).
 uint16 *GameHook_NameFileBackdrop(void);
+
+// Called at the top of Module_EraseFile_1: for the Japanese layout, advances past the US frame step,
+// which the Japanese screens do not have, and returns true (select_screen_gfx.c).
+bool GameHook_SelectFileFrame(void);
+
+// The content line the file select's BG3 split (irq_flag) fires on: 0x38 on a file select screen in
+// the Japanese layout, 128 otherwise (select_screen_gfx.c).
+int GameHook_FileSelectSplitLine(void);

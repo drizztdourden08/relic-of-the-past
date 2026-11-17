@@ -263,6 +263,8 @@ void Module_EraseFile_1() {  // 8cce53
        0,    1, 0x93, 0x35, 0x13, 0x43, 0x40, 0x32, 0x95, 0x35, 0x13, 0x5d,    0,    1, 0x94, 0x35,
   };
 #define kSelectFile_Gfx0 LANG_PICK(uint8, kLangTbl_SelectFileGfx0, kSelectFile_Gfx0)
+  if (GameHook_SelectFileFrame())
+    return;
   uint16 *dst = SelectFile_Func1();
   int gfx0_len = LanguageScreens_Len(kLangTbl_SelectFileGfx0, 224);
   memcpy(dst, kSelectFile_Gfx0, gfx0_len);

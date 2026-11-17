@@ -1,6 +1,7 @@
 /* @layer core-game-hooks @kind native */
 // The graphics each file select screen draws over, set as the screen opens (FileSelect_EraseTriforce)
-// for a Japanese set, by the layout that screen runs. See select_layout.h.
+// for a Japanese set, by the layout that screen runs, and the frame step and BG3 split line where the
+// Japanese layout differs from the US one. See select_layout.h.
 //
 // The name entry reloads no graphics of its own, so it would draw over what the select screen loaded.
 // The two layouts want different background sheets in the eight slots: the US screens draw over the US
@@ -24,9 +25,12 @@ enum {
   kBg3Words = 0x800,
   kJaBlankWord = 0x188,
   kDecompOffset = 0x14000,
-  kPaletteDst = 0x42,
-  kPaletteColumns = 14,
-  kPaletteRows = 5,
+  kJaHudPalette = 1,
+  kJaDungeonPalette = 0,
+  kSelectFirstModule = 1,
+  kSelectLastModule = 4,
+  kJaSplitLine = 0x38,
+  kUsSplitLine = 128,
   kScratchRam = 0xbf,
   kScratchBytes = 16,
   kStripeBuffer = 0x1002,
@@ -58,13 +62,21 @@ static void LoadSheets(bool ja) {
   memcpy(&g_ram[kScratchRam], kept, kScratchBytes);
 }
 
-// The set's palette when the Japanese layout runs and the set carries it, the vendored one otherwise.
+// The Japanese cartridge's file select loads HUD palette set 1 (its text colour 1 is black, set 0's is
+// green) and dungeon palette set 0, where the US one loads HUD set 0 and dungeon set 6. The US layout
+// reloads its own sets, so a screen that falls back to it after a Japanese one gets them back. Both
+// variables keep their US values for the game that follows.
 static void LoadPalette(bool ja) {
-  const uint16 *pal = LANG_PICK(uint16, kLangTbl_SelectPalette, NULL);
-  if (ja && pal != NULL)
-    Palette_LoadMultiple(pal, kPaletteDst, kPaletteColumns, kPaletteRows);
-  else
-    Palette_Load_DungeonSet();
+  uint8 hud = hud_palette;
+  uint8 indoors = palette_main_indoors;
+  if (ja) {
+    hud_palette = kJaHudPalette;
+    palette_main_indoors = kJaDungeonPalette;
+  }
+  Palette_Load_HUD();
+  Palette_Load_DungeonSet();
+  hud_palette = hud;
+  palette_main_indoors = indoors;
 }
 
 void GameHook_FileSelectScreenGfx(void) {
@@ -76,6 +88,25 @@ void GameHook_FileSelectScreenGfx(void) {
   ClearBg3();
   LoadSheets(ja);
   LoadPalette(ja);
+}
+
+// The Japanese cartridge's select, copy and erase screens have no frame step: their tilemaps draw the
+// text on BG3 and the copy box on BG2 alone. The US step (Module_EraseFile_1) would lay the backdrop
+// pattern and the kSelectFile_Gfx0 plate over the whole screen, which hides the Japanese title and the
+// bottom row. Returns true when it advanced past the step in its place.
+bool GameHook_SelectFileFrame(void) {
+  if (!LanguageJa_On())
+    return false;
+  submodule_index++;
+  return true;
+}
+
+// The Japanese cartridge moves the file select's BG3 split (its IRQ, $4209) to line 0x38, where the
+// name entry's kana grid starts, so the whole grid scrolls; the US cartridge splits at line 128.
+// Returns the content line the split fires on.
+int GameHook_FileSelectSplitLine(void) {
+  bool select = main_module_index >= kSelectFirstModule && main_module_index <= kSelectLastModule;
+  return select && LanguageJa_On() ? kJaSplitLine : kUsSplitLine;
 }
 
 // The Japanese name entry has no backdrop pattern under its grid: the cartridge goes straight from
