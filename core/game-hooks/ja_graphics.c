@@ -2,9 +2,10 @@
 // The Japanese graphics pack and the option bits that switch it in. See ja_graphics.h.
 #include "game_hooks_internal.h"
 #include "src/features.h"
+#include "src/ending.h"
 #include <stdlib.h>
 
-enum { kSheetIdBase = 0x100, kPatchIdBase = 0x300, kIntroTilemapId = 0x45, kBgSheetKind = 1, kSprSheetKind = 0 };
+enum { kSheetIdBase = 0x100, kPatchIdBase = 0x300, kIntroTilemapId = 0x45, kCopyrightOamId = 0x46, kOamHeaderBytes = 3, kOamEntryBytes = 8, kOamEntriesMax = 16, kBgSheetKind = 1, kSprSheetKind = 0 };
 
 typedef struct {
   uint8 *data;
@@ -14,6 +15,7 @@ typedef struct {
 static Blob g_sheets[2][kLangSheetMax];
 static Blob g_patches[kLangSheetMax];
 static Blob g_intro_tilemap;
+static Blob g_copyright_oam;
 
 static const uint8 kIntroSheets[] = {22, 23, 29, 30, 57, 64, 65};
 static const uint8 kHudSheets[] = {105, 106};
@@ -80,6 +82,43 @@ const uint8 *JaGraphics_IntroTilemap(uint32 *size) {
   return JaGraphics_On(kJaGfx_Intro) ? Taken(&g_intro_tilemap, size) : NULL;
 }
 
+// The copyright line's sprite layout from the pack: count, start x, start y, then count 8 byte records
+// (x word, y word, character, flags, extension word). NULL unless the option is on and the pack has it.
+static const uint8 *CopyrightOam(int *count) {
+  uint32 size;
+  if (!JaGraphics_On(kJaGfx_Copyright)) return NULL;
+  const uint8 *data = Taken(&g_copyright_oam, &size);
+  if (data == NULL || size < kOamHeaderBytes) return NULL;
+  *count = data[0];
+  if (*count == 0 || *count > kOamEntriesMax || size < kOamHeaderBytes + (uint32)*count * kOamEntryBytes) return NULL;
+  return data;
+}
+
+bool GameHook_CopyrightInit(int k) {
+  int count;
+  const uint8 *data = CopyrightOam(&count);
+  if (data == NULL) return false;
+  intro_x_lo[k] = data[1];
+  intro_x_hi[k] = 0;
+  intro_y_lo[k] = data[2];
+  intro_y_hi[k] = 0;
+  intro_sprite_isinited[k]++;
+  return true;
+}
+
+bool GameHook_CopyrightAnimate(int k) {
+  int count;
+  const uint8 *data = CopyrightOam(&count);
+  if (data == NULL) return false;
+  IntroSpriteEnt ents[kOamEntriesMax];
+  for (int i = 0; i < count; i++) {
+    const uint8 *rec = data + kOamHeaderBytes + i * kOamEntryBytes;
+    ents[i] = (IntroSpriteEnt){(int8)rec[0], (int8)rec[2], rec[4], rec[5], rec[6]};
+  }
+  AnimateSceneSprite_AddObjectsToOamBuffer(k, ents, count);
+  return true;
+}
+
 bool JaGraphics_SetSheetAllowed(int kind, int index) {
   uint32 option = SheetOption(kind, index);
   if (kind == kBgSheetKind && SelectLayout_ActiveOn(kSelectScreen_Select) == kSelectLayout_Ja) return true;
@@ -110,6 +149,7 @@ static bool Store(Blob *slot, const void *data, int len) {
 
 static Blob *SlotOf(int id) {
   if (id == kIntroTilemapId) return &g_intro_tilemap;
+  if (id == kCopyrightOamId) return &g_copyright_oam;
   if (id >= kPatchIdBase && id < kPatchIdBase + kLangSheetMax) return &g_patches[id - kPatchIdBase];
   if (id >= kSheetIdBase && id < kSheetIdBase + 2 * kLangSheetMax)
     return &g_sheets[(id - kSheetIdBase) / kLangSheetMax][(id - kSheetIdBase) % kLangSheetMax];
@@ -132,5 +172,6 @@ void WasmClearJapaneseGraphics(void) {
     for (int i = 0; i < kLangSheetMax; i++) Store(&g_sheets[kind][i], NULL, 0);
   for (int i = 0; i < kLangSheetMax; i++) Store(&g_patches[i], NULL, 0);
   Store(&g_intro_tilemap, NULL, 0);
+  Store(&g_copyright_oam, NULL, 0);
   LanguageScreensAssets_Apply(LanguageScreens_On());
 }

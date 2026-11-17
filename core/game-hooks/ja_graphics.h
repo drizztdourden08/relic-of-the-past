@@ -53,3 +53,10 @@ const uint8 *JaGraphics_IntroTilemap(uint32 *size);
 bool JaGraphics_SetSheetAllowed(int kind, int index);
 bool JaGraphics_SetPatchAllowed(int index);
 bool JaGraphics_SetIntroAllowed(void);
+
+// The Japanese copyright line's own sprite layout (its start position and objects differ from the US
+// line), read from the pack. Called first in ending.c's InitializeSceneSprite_Copyright and
+// AnimateSceneSprite_Copyright; each returns true when it ran in place of the US routine, false (option
+// off or no pack entry) to leave the US routine untouched.
+bool GameHook_CopyrightInit(int k);
+bool GameHook_CopyrightAnimate(int k);

@@ -16,6 +16,7 @@ const JA_REV1_SCREEN_ADDRESSES: JaScreenAddressTable = {
     killTargetTab2: { address: 0x8cd32c, count: 81 },
   },
   nameGridAddress: 0x8cd7ff,
+  copyrightOam: { table: { address: 0x0cc78f, count: 10 }, startX: 0x0cc778, startY: 0x0cc780 },
 };
 
 export { JA_REV1_SCREEN_ADDRESSES };
