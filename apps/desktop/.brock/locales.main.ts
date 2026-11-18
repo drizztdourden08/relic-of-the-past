@@ -2,6 +2,15 @@
 import type { MainLocales } from '@drizztdourden08/brock-electron/main';
 import type { Layer } from '@drizztdourden08/brock-core/i18n';
 import app_en_main from '../src/locales/en/main.json';
+import app_de_main from '../src/locales/de/main.json';
+import app_es_main from '../src/locales/es/main.json';
+import app_fr_main from '../src/locales/fr/main.json';
+import app_it_main from '../src/locales/it/main.json';
+import app_ja_main from '../src/locales/ja/main.json';
+import app_nl_main from '../src/locales/nl/main.json';
+import app_pl_main from '../src/locales/pl/main.json';
+import app_pt_main from '../src/locales/pt/main.json';
+import app_sv_main from '../src/locales/sv/main.json';
 
 const baseLayers: readonly Layer[] = [
   { locale: 'en', namespace: 'main', kind: 'app', messages: app_en_main },
@@ -10,7 +19,35 @@ const baseLayers: readonly Layer[] = [
 const mainLocales: MainLocales = {
   base: 'en',
   layers: baseLayers,
-  loaders: {},
+  loaders: {
+  'de': async () => [
+  { locale: 'de', namespace: 'main', kind: 'app', messages: app_de_main },
+],
+  'es': async () => [
+  { locale: 'es', namespace: 'main', kind: 'app', messages: app_es_main },
+],
+  'fr': async () => [
+  { locale: 'fr', namespace: 'main', kind: 'app', messages: app_fr_main },
+],
+  'it': async () => [
+  { locale: 'it', namespace: 'main', kind: 'app', messages: app_it_main },
+],
+  'ja': async () => [
+  { locale: 'ja', namespace: 'main', kind: 'app', messages: app_ja_main },
+],
+  'nl': async () => [
+  { locale: 'nl', namespace: 'main', kind: 'app', messages: app_nl_main },
+],
+  'pl': async () => [
+  { locale: 'pl', namespace: 'main', kind: 'app', messages: app_pl_main },
+],
+  'pt': async () => [
+  { locale: 'pt', namespace: 'main', kind: 'app', messages: app_pt_main },
+],
+  'sv': async () => [
+  { locale: 'sv', namespace: 'main', kind: 'app', messages: app_sv_main },
+],
+  },
 };
 
 export { mainLocales };

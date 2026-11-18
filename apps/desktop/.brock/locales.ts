@@ -95,11 +95,21 @@ const baseLayers: readonly Layer[] = [
   { locale: 'en', namespace: 'wizards', kind: 'app', messages: app_en_wizards },
 ];
 
-const chunks: Record<string, () => Promise<{ default: readonly Layer[] }>> = {};
+const chunks: Record<string, () => Promise<{ default: readonly Layer[] }>> = {
+  'de': () => import('./locales/de'),
+  'es': () => import('./locales/es'),
+  'fr': () => import('./locales/fr'),
+  'it': () => import('./locales/it'),
+  'ja': () => import('./locales/ja'),
+  'nl': () => import('./locales/nl'),
+  'pl': () => import('./locales/pl'),
+  'pt': () => import('./locales/pt'),
+  'sv': () => import('./locales/sv'),
+};
 
 const appLocales: AppLocales = {
   base: 'en',
-  tags: ['en'],
+  tags: ['en', 'de', 'es', 'fr', 'it', 'ja', 'nl', 'pl', 'pt', 'sv'],
   layers: baseLayers,
   load: async (tag) => (await chunks[tag]?.())?.default ?? [],
 };
