@@ -7,5 +7,7 @@
   "verdict.patched-bad-size": "Filen är {bytes} byte, vilket inte är storleken på en A Link to the Past-ROM.",
   "verdict.patched-ok": "En ROM på {size} MB (SHA-1 {hash})",
   "verdict.unsupported": "{name} är en officiell ROM, men stöds inte än.",
-  "verdict.wrong-kind": "Detta är {name}, en {kind}, inte en {expected}."
+  "verdict.wrong-kind": "Detta är {name} ({kind, select, snes-alttp {baskassett} gba-alttp {andra kassetten} other {?}}). Förväntat: {expected, select, snes-alttp {baskassett} gba-alttp {andra kassetten} other {?}}.",
+  "kind.snes-alttp": "Baskassett",
+  "kind.gba-alttp": "Andra kassetten"
 }

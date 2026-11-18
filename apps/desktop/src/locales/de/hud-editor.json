@@ -366,7 +366,7 @@
   "size-box.screen-reason": "Der Bildschirm entspricht immer der Ansicht.",
   "placement.engine.grid": "grid",
   "placement.engine.flex": "flex {direction}",
-  "placement.reason.parent": "Dieses Elternelement ist ein {engine}. Stelle es auf grid um, um nach Zelle zu platzieren.",
+  "placement.reason.parent": "Layout des übergeordneten Elements: {engine}. Stelle es auf Raster um, um nach Zelle zu platzieren.",
   "placement.reason.screen": "Der Bildschirm ist die ganze Ansicht.",
   "placement.align-down": "abwärts ausrichten",
   "placement.align-self": "selbst ausrichten",

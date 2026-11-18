@@ -39,7 +39,7 @@ const MsuPackList = (props: MsuPackListProps) => {
                 files: t('msu-studio:packs.meta.files', { count: pack.fileCount }),
                 size: formatBytes(pack.totalSize),
               })}
-              {' '}
+              {' · '}
               <Status tone={pack.format === 'layered' ? 'success' : 'neutral'}>
                 {pack.format === 'layered' ? t('msu-studio:pack.format.layered') : t('msu-studio:pack.format.classic')}
               </Status>

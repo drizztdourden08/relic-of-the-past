@@ -7,5 +7,7 @@
   "verdict.patched-bad-size": "This file is {bytes} bytes, which is not the size of an A Link to the Past ROM.",
   "verdict.patched-ok": "A ROM of {size} MB (SHA-1 {hash})",
   "verdict.unsupported": "{name} is an official ROM, but it is not supported yet.",
-  "verdict.wrong-kind": "This is {name}, a {kind}, not a {expected}."
+  "verdict.wrong-kind": "This is {name} ({kind, select, snes-alttp {base cartridge} gba-alttp {second cartridge} other {?}}). Expected: {expected, select, snes-alttp {base cartridge} gba-alttp {second cartridge} other {?}}.",
+  "kind.snes-alttp": "Base cartridge",
+  "kind.gba-alttp": "Second cartridge"
 }

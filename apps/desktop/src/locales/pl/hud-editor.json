@@ -366,7 +366,7 @@
   "size-box.screen-reason": "Ekran zawsze pasuje do widoku.",
   "placement.engine.grid": "siatka",
   "placement.engine.flex": "flex {direction}",
-  "placement.reason.parent": "Ten rodzic to {engine}. Przełącz go na siatkę, aby umieszczać według komórek.",
+  "placement.reason.parent": "Układ rodzica: {engine}. Przełącz go na siatkę, aby umieszczać według komórek.",
   "placement.reason.screen": "Ekran to cały widok.",
   "placement.align-down": "wyrównaj w dół",
   "placement.align-self": "wyrównaj siebie",

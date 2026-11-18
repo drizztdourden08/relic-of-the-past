@@ -320,5 +320,5 @@
   "layers.loop.from-file": "Het bestand geeft {where} aan, dus de intro speelt één keer en herhaalt dan vanaf daar",
   "layers.loop.intro": "Intro speelt één keer, herhaalt dan vanaf {where}",
   "studio.tabs.ambient": "Omgeving",
-  "packs.meta.summary": "{files} · {size} ·"
+  "packs.meta.summary": "{files} · {size}"
 }

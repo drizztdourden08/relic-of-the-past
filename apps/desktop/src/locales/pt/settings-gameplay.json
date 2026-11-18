@@ -90,5 +90,7 @@
   "tracker-enabled.description": "Desligar isto faz o rastreador de checks parar de atualizar.",
   "section.vanilla-safe.title": "Original seguro",
   "vanilla-safe.label": "Original seguro",
-  "vanilla-safe.description": "Desliga à força todo recurso, ajuste de conforto, correção de bug, cheat, alteração de item, sprite de jogador personalizado e alteração de HUD, para que o jogo seja idêntico ao cartucho original. Divergências inofensivas e de baixo risco também entram; não há exceções."
+  "vanilla-safe.description": "Desliga à força todo recurso, ajuste de conforto, correção de bug, cheat, alteração de item, sprite de jogador personalizado e alteração de HUD, para que o jogo seja idêntico ao cartucho original. Divergências inofensivas e de baixo risco também entram; não há exceções.",
+  "dialog-speed.instant": "Instantâneo",
+  "dialog-speed.original": "Original"
 }

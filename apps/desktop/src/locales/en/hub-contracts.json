@@ -1,4 +1,4 @@
 {
-  "copy-refusal.known": "Its licence, {id}, does not allow copies.",
-  "copy-refusal.unknown": "Its licence is not one the app knows, so it does not allow copies."
+  "copy-refusal.known": "Its license, {id}, does not allow copies.",
+  "copy-refusal.unknown": "Its license is not one the app knows, so it does not allow copies."
 }

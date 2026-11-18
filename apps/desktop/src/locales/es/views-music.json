@@ -11,7 +11,7 @@
   "channel.sfx2": "Efectos 2",
   "owner.pack": "MSU",
   "owner.chip": "CHIP",
-  "owner.skipped": "OMIT",
+  "owner.skipped": "OMITIDO",
   "channel.silent": "silencio",
   "counters.empty": "Aún no se ha contado nada.",
   "events.empty": "Aún no hay eventos de sonido.",

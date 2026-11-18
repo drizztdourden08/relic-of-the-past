@@ -19,7 +19,7 @@ const PriceControl = (props: PriceControlProps) => {
       stops={stops}
       value={range}
       disabled={readOnly || !enabled}
-      labels={t('compounds:price-control.every', { step: Math.max(1, Math.floor(stops.length / 5)) })}
+      labels={`every ${Math.max(1, Math.floor(stops.length / 5))}`}
       showValue={false}
       aria-label={t('compounds:price-control.range-aria', { label })}
       onChange={(next) => onRangeChange?.(next)}

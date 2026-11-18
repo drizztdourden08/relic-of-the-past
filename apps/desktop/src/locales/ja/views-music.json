@@ -11,7 +11,7 @@
   "channel.sfx2": "効果音2",
   "owner.pack": "MSU",
   "owner.chip": "CHIP",
-  "owner.skipped": "SKIP",
+  "owner.skipped": "スキップ",
   "channel.silent": "無音",
   "counters.empty": "まだカウントがありません。",
   "events.empty": "サウンドイベントはまだありません。",

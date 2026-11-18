@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind component */
 import { SpritePicker } from '@app/compounds/SpritePicker';
-import { getSpritesBase, CATEGORY_LABELS, CATEGORY_ORDER, SPRITE_MANIFEST } from '@rotp/game-data';
+import { getSpritesBase, CATEGORY_ORDER, SPRITE_MANIFEST } from '@rotp/game-data';
 import { ToolbarMenu } from './ToolbarMenu';
 import { GlyphPickerGrid } from './GlyphPickerGrid';
 import { SlotPickerPanel } from './SlotPickerPanel';
@@ -9,11 +9,13 @@ import { TOOLBAR_ICONS } from '@app/hud-layout-editing/toolbar-menus';
 import { newElement } from '@app/hud-layout-editing/new-node';
 import type { InsertMenusProps } from './InsertMenus.type';
 import { useT } from '@drizztdourden08/brock-react';
+import { useSpriteCategoryLabels } from '@app/hooks/sprite-category-labels';
 
 const spriteUrl = (file: string): string => `${getSpritesBase()}${file}.png`;
 
 const InsertMenus = (props: InsertMenusProps) => {
   const t = useT();
+  const categoryLabels = useSpriteCategoryLabels();
   const { insert, slotNumbers, glyphPacks, openKey, onToggle, onClose } = props;
 
   return (
@@ -46,7 +48,7 @@ const InsertMenus = (props: InsertMenusProps) => {
             anchorRef={anchorRef}
             sprites={SPRITE_MANIFEST}
             categories={CATEGORY_ORDER}
-            categoryLabels={CATEGORY_LABELS}
+            categoryLabels={categoryLabels}
             spriteUrl={spriteUrl}
             onClose={onClose}
             onPick={(file) => insert(newElement({ type: 'sprite', file }))}

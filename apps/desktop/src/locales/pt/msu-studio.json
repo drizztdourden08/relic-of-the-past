@@ -320,5 +320,5 @@
   "layers.loop.from-file": "O arquivo declara {where}, então a introdução toca uma vez e depois repete a partir dali",
   "layers.loop.intro": "A introdução toca uma vez e depois repete a partir de {where}",
   "studio.tabs.ambient": "Ambiente",
-  "packs.meta.summary": "{files} · {size} ·"
+  "packs.meta.summary": "{files} · {size}"
 }

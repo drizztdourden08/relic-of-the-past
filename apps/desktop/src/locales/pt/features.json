@@ -70,7 +70,7 @@
   "feature.pondPlan.label": "Plano do lago dos desejos do randomizador",
   "feature.pondPlan.message": "Definido por um perfil randomizado em que o lago faz parte do embaralhamento: o lago cobra seus próprios preços e pode entregar qualquer item. Muda bytes do save e a economia do lago, então o Original seguro o remove.",
   "feature.archeryNeedsBow.label": "Tiro ao alvo exige arco",
-  "feature.archeryNeedsBow.message": "Impede que o tiro ao alvo tome seu dinheiro quando você não tem com que atirar. O dono explica o motivo. Não existe no jogo original, que deixa você pagar e atirar com nada, então deixe desligado para manter a paridade com o original.",
+  "feature.archeryNeedsBow.message": "Impede que o tiro ao alvo tome seu dinheiro quando você não tem com que atirar. O atendente explica o motivo. Não existe no jogo original, que deixa você pagar e atirar com nada, então deixe desligado para manter a paridade com o original.",
   "feature.coloredRupees.label": "Rupias coloridas",
   "feature.coloredRupees.message": "Mostra as rupias no mundo como gemas coloridas simples, uma cor por valor, em vez da imagem com o valor escrito ao lado. Só muda a aparência, nunca o que você recebe. Ligado por padrão; não existe no jogo original, então desligue para manter a paridade com o original.",
   "feature.itemSheen.label": "Brilho de itens",

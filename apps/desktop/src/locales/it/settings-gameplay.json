@@ -90,5 +90,7 @@
   "tracker-enabled.description": "Disattivandolo il tracker dei controlli smette di aggiornarsi.",
   "section.vanilla-safe.title": "Originale sicuro",
   "vanilla-safe.label": "Originale sicuro",
-  "vanilla-safe.description": "Disattiva ogni funzione, opzione di comodità, correzione di bug, trucco, modifica di oggetti, sprite del giocatore personalizzato e modifica dell'HUD, così il gioco corrisponde esattamente alla cartuccia originale. Sono incluse anche le divergenze innocue e a basso rischio; non ci sono eccezioni."
+  "vanilla-safe.description": "Disattiva ogni funzione, opzione di comodità, correzione di bug, trucco, modifica di oggetti, sprite del giocatore personalizzato e modifica dell'HUD, così il gioco corrisponde esattamente alla cartuccia originale. Sono incluse anche le divergenze innocue e a basso rischio; non ci sono eccezioni.",
+  "dialog-speed.instant": "Istantaneo",
+  "dialog-speed.original": "Originale"
 }

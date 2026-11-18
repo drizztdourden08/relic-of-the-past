@@ -320,5 +320,5 @@
   "layers.loop.from-file": "Le fichier déclare {where} : l'intro joue une fois, puis la reprise se fait à partir de là",
   "layers.loop.intro": "L'intro joue une fois, puis reprend à {where}",
   "studio.tabs.ambient": "Ambiance",
-  "packs.meta.summary": "{files} · {size} ·"
+  "packs.meta.summary": "{files} · {size}"
 }

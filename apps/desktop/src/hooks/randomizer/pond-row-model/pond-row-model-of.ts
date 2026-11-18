@@ -5,7 +5,7 @@ import { pondAskModelOf } from '../pond-ask-rows';
 import { pondChargesOf, pondPreviewOf, pondWalletNoteOf } from '../pond-preview';
 import type { PondDemandView, PondCeilings, PondInstance, PondSetting } from '@rotp/randomizer';
 import type { PondRowModel } from '@app/compounds/WishingPondRow';
-import { curveOptionsOf, MODE_LABELS, PRICE_STOPS } from './pond-row-model.constants';
+import { curveOptionsOf, FREE_PRICE_LABEL, MODE_LABELS } from './pond-row-model.constants';
 import { stateOfSetting } from './state-of-setting';
 
 const pondRowModelOf = (
@@ -18,7 +18,8 @@ const pondRowModelOf = (
   const state = stateOfSetting(setting);
   const prizeCount = plan.locations.length;
   const charges = pondChargesOf(plan, demands);
-  const stops = PRICE_STOPS.slice(0, pondCeilingRungOf(ceilings.rupees) + 1);
+  const stops = POND_PRICE_LADDER.map((price) => (price === 0 ? text(FREE_PRICE_LABEL) : String(price)))
+    .slice(0, pondCeilingRungOf(ceilings.rupees) + 1);
   return {
     label: pond.label,
     modeLabel: text(MODE_LABELS[setting.mode]),

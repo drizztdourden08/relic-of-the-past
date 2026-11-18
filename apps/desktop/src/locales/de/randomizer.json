@@ -100,5 +100,8 @@
   "pool-listing.starting-weapon-one-of": "Startwaffe (eine von)",
   "pool-listing.useful": "Nützlich",
   "profile-connection.no-profile": "Kein Profil ist geöffnet.",
-  "profile-connection.profile-gone": "Das Profil ist weg."
+  "profile-connection.profile-gone": "Das Profil ist weg.",
+  "progressive.mode.progressive": "In Reihenfolge",
+  "progressive.mode.random": "Beliebige Reihenfolge",
+  "pond-row.price.free": "gratis"
 }

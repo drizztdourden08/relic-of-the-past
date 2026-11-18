@@ -2,7 +2,7 @@
 import { mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import path from 'node:path';
 import { createSsrServer } from '@rotp/ssr-server';
-import { APP_PACKAGE_JSON, ROOT } from './apworld.constants.mjs';
+import { APP_PACKAGE_JSON, EN_RANDOMIZER_MESSAGES, ROOT } from './apworld.constants.mjs';
 import { parsePlayerFileArgs } from './player-file-args.mjs';
 
 const BARREL = '/packages/randomizer/src/archipelago/index.ts';
@@ -10,7 +10,8 @@ const BARREL = '/packages/randomizer/src/archipelago/index.ts';
 const writePlayerFile = async ({ name, out, seed, plain }) => {
   const server = await createSsrServer(ROOT);
   try {
-    const { rotpPlayerFileOf, snapshotOfPlainOptions } = await server.ssrLoadModule(BARREL);
+    const { rotpPlayerFileOf, setExportOptionMessages, snapshotOfPlainOptions } = await server.ssrLoadModule(BARREL);
+    setExportOptionMessages(JSON.parse(readFileSync(EN_RANDOMIZER_MESSAGES, 'utf8')));
     const { version } = JSON.parse(readFileSync(APP_PACKAGE_JSON, 'utf8'));
     const { yaml } = rotpPlayerFileOf({
       slotName: name,

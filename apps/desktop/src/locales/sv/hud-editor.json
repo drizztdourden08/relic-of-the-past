@@ -366,7 +366,7 @@
   "size-box.screen-reason": "Skärmen matchar alltid vyn.",
   "placement.engine.grid": "rutnät",
   "placement.engine.flex": "flex {direction}",
-  "placement.reason.parent": "Denna förälder är ett {engine}. Byt den till rutnät för att placera per cell.",
+  "placement.reason.parent": "Förälderns layout: {engine}. Byt den till rutnät för att placera per cell.",
   "placement.reason.screen": "Skärmen är hela vyn.",
   "placement.align-down": "justera nedåt",
   "placement.align-self": "justera själv",

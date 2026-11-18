@@ -1,20 +1,22 @@
 /* @layer renderer-components @kind component */
-import { useT } from '@drizztdourden08/brock-react';
+import { useT, useText } from '@drizztdourden08/brock-react';
 import { Box, Text } from '@drizztdourden08/tessera/primitives';
 import { OptionGroup } from '@drizztdourden08/tessera/composites';
-import { PROGRESSIVE_MODE_LABELS, progressiveTickConsequences, unrollableTickSetReasons } from '@rotp/randomizer';
+import { PROGRESSIVE_MODES, PROGRESSIVE_MODE_LABELS, progressiveTickConsequences, unrollableTickSetReasons } from '@rotp/randomizer';
 import { OptionDescription } from '../OptionDescription';
 import { ProgressiveLadderCard } from './sub-components/ProgressiveLadderCard';
 import { modeOf } from './behavior/mode-of';
 import { progressiveLaddersOf } from './behavior/progressive-ladders';
 import { withFamilyMode } from './behavior/with-family-mode';
 import { withTierTicked } from './behavior/with-tier-ticked';
-import { MODE_OPTIONS, ORDERED_MODE } from './ProgressiveTiersBlock.constants';
+import { ORDERED_MODE } from './ProgressiveTiersBlock.constants';
 import type { ProgressiveTiersBlockProps } from './ProgressiveTiersBlock.type';
 import './ProgressiveTiersBlock.css';
 
 const ProgressiveTiersBlock = (props: ProgressiveTiersBlockProps) => {
   const t = useT();
+  const text = useText();
+  const modeOptions = PROGRESSIVE_MODES.map((mode) => ({ value: mode, label: text(PROGRESSIVE_MODE_LABELS[mode]) }));
   const { setting, modes, spritesAvailable = false, onChange, onModesChange } = props;
   const readOnly = onChange === undefined;
   const ladders = progressiveLaddersOf(setting, modes, spritesAvailable);
@@ -30,8 +32,8 @@ const ProgressiveTiersBlock = (props: ProgressiveTiersBlockProps) => {
             <ProgressiveLadderCard
               key={ladder.id}
               ladder={ladder}
-              modeOptions={MODE_OPTIONS}
-              modeLabel={PROGRESSIVE_MODE_LABELS[modeOf(ladder.mode) ?? ORDERED_MODE]}
+              modeOptions={modeOptions}
+              modeLabel={text(PROGRESSIVE_MODE_LABELS[modeOf(ladder.mode) ?? ORDERED_MODE])}
               disabled={readOnly}
               readout={readOnly}
               onRungChange={readOnly

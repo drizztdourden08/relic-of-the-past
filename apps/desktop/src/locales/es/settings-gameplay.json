@@ -88,7 +88,9 @@
   "section.tracker.title": "Tracker",
   "tracker-enabled.label": "Activar tracker de checks",
   "tracker-enabled.description": "Al desactivarlo, el tracker de checks deja de actualizarse.",
-  "section.vanilla-safe.title": "Vanilla seguro",
-  "vanilla-safe.label": "Vanilla seguro",
-  "vanilla-safe.description": "Desactiva todas las funciones, opciones de comodidad, correcciones, trucos, cambios de objetos, sprites de jugador personalizados y cambios del HUD, de modo que el juego coincide exactamente con el cartucho original. También se incluyen las divergencias inofensivas y de bajo riesgo; no hay excepciones."
+  "section.vanilla-safe.title": "Original seguro",
+  "vanilla-safe.label": "Original seguro",
+  "vanilla-safe.description": "Desactiva todas las funciones, opciones de comodidad, correcciones, trucos, cambios de objetos, sprites de jugador personalizados y cambios del HUD, de modo que el juego coincide exactamente con el cartucho original. También se incluyen las divergencias inofensivas y de bajo riesgo; no hay excepciones.",
+  "dialog-speed.instant": "Instantáneo",
+  "dialog-speed.original": "Original"
 }

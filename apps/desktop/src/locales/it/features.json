@@ -70,7 +70,7 @@
   "feature.pondPlan.label": "Piano del laghetto dei desideri del randomizzatore",
   "feature.pondPlan.message": "Impostato da un profilo randomizzato in cui il laghetto fa parte del mescolamento: il laghetto fa pagare prezzi propri e può consegnare qualsiasi oggetto. Cambia i byte di salvataggio e l'economia del laghetto, quindi Originale sicuro lo toglie.",
   "feature.archeryNeedsBow.label": "Il tiro con l'arco richiede un arco",
-  "feature.archeryNeedsBow.message": "Impedisce al gioco del tiro con l'arco di prendere i tuoi soldi quando non hai nulla con cui tirare. Il proprietario ti spiega il perché. Non presente nel gioco originale, che ti lascia pagare e tirare a vuoto, quindi lascialo disattivato per la parità con l'originale.",
+  "feature.archeryNeedsBow.message": "Impedisce al gioco del tiro con l'arco di prendere i tuoi soldi quando non hai nulla con cui tirare. L'addetto ti spiega il perché. Non presente nel gioco originale, che ti lascia pagare e tirare a vuoto, quindi lascialo disattivato per la parità con l'originale.",
   "feature.coloredRupees.label": "Rupie colorate",
   "feature.coloredRupees.message": "Mostra le rupie nel mondo come semplici gemme colorate, un colore per ogni valore, invece dell'immagine con l'importo scritto accanto. Cambia solo l'aspetto, mai ciò che ottieni. Attivo di default; non presente nel gioco originale, quindi disattivalo per la parità con l'originale.",
   "feature.itemSheen.label": "Lucentezza oggetti",

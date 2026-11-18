@@ -2,15 +2,17 @@
 import { useRef, useState } from 'react';
 import { Box } from '@drizztdourden08/tessera/primitives';
 import { SpritePicker } from '@app/compounds/SpritePicker';
-import { CATEGORY_LABELS, CATEGORY_ORDER, SPRITE_MANIFEST } from '@rotp/game-data';
+import { CATEGORY_ORDER, SPRITE_MANIFEST } from '@rotp/game-data';
 import { spriteLabel, spriteUrl } from '@app/hud-layout-editing/node-art';
 import { ReferenceField } from './ReferenceField';
 import { SpriteExtractionNotice } from './SpriteExtractionNotice';
 import type { SpriteContentProps } from './SpriteContent.type';
 import { useT } from '@drizztdourden08/brock-react';
+import { useSpriteCategoryLabels } from '@app/hooks/sprite-category-labels';
 
 const SpriteContent = (props: SpriteContentProps) => {
   const t = useT();
+  const categoryLabels = useSpriteCategoryLabels();
   const { spec, onChange } = props;
   const [open, setOpen] = useState(false);
   const anchorRef = useRef<HTMLButtonElement>(null);
@@ -29,7 +31,7 @@ const SpriteContent = (props: SpriteContentProps) => {
           anchorRef={anchorRef}
           sprites={SPRITE_MANIFEST}
           categories={CATEGORY_ORDER}
-          categoryLabels={CATEGORY_LABELS}
+          categoryLabels={categoryLabels}
           spriteUrl={spriteUrl}
           onClose={() => setOpen(false)}
           onPick={(file) => onChange({ file })}

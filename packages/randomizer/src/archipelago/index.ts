@@ -5,6 +5,7 @@ export {
 export { AP_ITEM_IDS, AP_ITEM_NAMES, AP_LOCATION_IDS, AP_LOCATION_NAMES } from './ap-ids.constants';
 export { apItemUniverse } from './ap-item-universe';
 export { apLocationUniverse } from './ap-location-universe';
+export { setExportOptionMessages } from '../world/options';
 export { exportRotpWorld, ROTP_AP_IDS, rotpPlayerFileOf, rotpReadItemsOf } from './brock-adapter';
 export { DEATH_LINK_KEY } from '@drizztdourden08/brock-randomizer/archipelago';
 export type { PlayerFile, WorldExport } from '@drizztdourden08/brock-randomizer/archipelago';

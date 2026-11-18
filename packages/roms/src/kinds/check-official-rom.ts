@@ -4,7 +4,6 @@ import { fanTranslationRefusal, stripSmcHeader } from '@rotp/asset-extraction';
 import { officialRomStatuses } from './official-roms';
 import { romBodyOf } from './rom-body-of';
 import { sha1Hex } from './sha1-hex';
-import { ROM_KINDS } from './rom-kind-specs.constants';
 import type { RomKind } from './rom-kinds.type';
 import type { RomVerdict } from './rom-verdict.type';
 
@@ -19,7 +18,7 @@ const checkOfficialRom = async (fileName: string, bytes: Uint8Array, expected?: 
     return { ok: false, message: refusal === null ? msg('roms:verdict.not-official', { hash }) : msg('roms:verdict.fan-translation', { reason: refusal }) };
   }
   if (expected !== undefined && match.kind !== expected) {
-    return { ok: false, message: msg('roms:verdict.wrong-kind', { name: match.name, kind: ROM_KINDS[match.kind].label.toLowerCase(), expected: ROM_KINDS[expected].label.toLowerCase() }) };
+    return { ok: false, message: msg('roms:verdict.wrong-kind', { name: match.name, kind: match.kind, expected }) };
   }
   if (!match.supported) return { ok: false, message: msg('roms:verdict.unsupported', { name: match.name }) };
   return { ok: true, message: msg('roms:verdict.official-ok', { name: match.name }) };

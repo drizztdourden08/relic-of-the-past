@@ -366,7 +366,7 @@
   "size-box.screen-reason": "画面は常にビューに合わせられます。",
   "placement.engine.grid": "グリッド",
   "placement.engine.flex": "フレックス{direction}",
-  "placement.reason.parent": "この親は{engine}です。セルで配置するにはグリッドに切り替えてください。",
+  "placement.reason.parent": "親のレイアウト：{engine}。セルで配置するにはグリッドに切り替えてください。",
   "placement.reason.screen": "画面はビュー全体です。",
   "placement.align-down": "下に整列",
   "placement.align-self": "自身を整列",

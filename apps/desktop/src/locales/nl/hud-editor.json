@@ -366,7 +366,7 @@
   "size-box.screen-reason": "Het scherm komt altijd overeen met het beeld.",
   "placement.engine.grid": "raster",
   "placement.engine.flex": "flex {direction}",
-  "placement.reason.parent": "Deze ouder is een {engine}. Zet hem op raster om per cel te plaatsen.",
+  "placement.reason.parent": "Indeling van de ouder: {engine}. Zet deze op raster om per cel te plaatsen.",
   "placement.reason.screen": "Het scherm is het hele beeld.",
   "placement.align-down": "omlaag uitlijnen",
   "placement.align-self": "zelf uitlijnen",

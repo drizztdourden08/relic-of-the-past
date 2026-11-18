@@ -366,7 +366,7 @@
   "size-box.screen-reason": "A tela sempre acompanha a vista.",
   "placement.engine.grid": "grade",
   "placement.engine.flex": "flex {direction}",
-  "placement.reason.parent": "Este pai é {engine}. Mude-o para grade para posicionar por célula.",
+  "placement.reason.parent": "Layout do pai: {engine}. Mude-o para grade para posicionar por célula.",
   "placement.reason.screen": "A tela é a vista inteira.",
   "placement.align-down": "alinhar na vertical",
   "placement.align-self": "alinhar a si mesmo",

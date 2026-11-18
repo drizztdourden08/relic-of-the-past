@@ -366,7 +366,7 @@
   "size-box.screen-reason": "L'écran correspond toujours à la vue.",
   "placement.engine.grid": "grille",
   "placement.engine.flex": "flex {direction}",
-  "placement.reason.parent": "Ce parent est un(e) {engine}. Passez-le en grille pour placer par cellule.",
+  "placement.reason.parent": "Disposition du parent : {engine}. Passez-le en grille pour placer par cellule.",
   "placement.reason.screen": "L'écran est la vue entière.",
   "placement.align-down": "aligner vers le bas",
   "placement.align-self": "aligner soi-même",

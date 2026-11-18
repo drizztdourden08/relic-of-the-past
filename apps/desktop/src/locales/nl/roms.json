@@ -7,5 +7,7 @@
   "verdict.patched-bad-size": "Dit bestand is {bytes} bytes, wat niet de grootte van een A Link to the Past-ROM is.",
   "verdict.patched-ok": "Een ROM van {size} MB (SHA-1 {hash})",
   "verdict.unsupported": "{name} is een officiële ROM, maar wordt nog niet ondersteund.",
-  "verdict.wrong-kind": "Dit is {name}, een {kind}, geen {expected}."
+  "verdict.wrong-kind": "Dit is {name} ({kind, select, snes-alttp {basiscartridge} gba-alttp {tweede cartridge} other {?}}). Verwacht: {expected, select, snes-alttp {basiscartridge} gba-alttp {tweede cartridge} other {?}}.",
+  "kind.snes-alttp": "Basiscartridge",
+  "kind.gba-alttp": "Tweede cartridge"
 }

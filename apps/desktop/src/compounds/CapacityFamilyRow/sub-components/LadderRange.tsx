@@ -18,7 +18,7 @@ const LadderRange = (props: LadderControlsProps) => {
         stops={stops}
         value={state.range}
         keyStep={rangeStep}
-        labels={t('compounds:capacity.every', { count: labelEvery })}
+        labels={`every ${labelEvery}`}
         showValue={false}
         disabled={readOnly}
         aria-label={label}

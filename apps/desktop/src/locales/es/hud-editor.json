@@ -366,7 +366,7 @@
   "size-box.screen-reason": "La pantalla siempre coincide con la vista.",
   "placement.engine.grid": "cuadrícula",
   "placement.engine.flex": "flex {direction}",
-  "placement.reason.parent": "Este padre es una {engine}. Cámbialo a cuadrícula para colocar por celda.",
+  "placement.reason.parent": "Diseño del padre: {engine}. Cámbialo a cuadrícula para colocar por celda.",
   "placement.reason.screen": "La pantalla es toda la vista.",
   "placement.align-down": "alinear a lo alto",
   "placement.align-self": "alinear a sí mismo",

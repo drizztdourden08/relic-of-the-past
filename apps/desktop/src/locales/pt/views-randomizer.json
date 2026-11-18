@@ -36,5 +36,7 @@
   "spoiler.unplaced.locations": "{count, plural, one {# local posicionado não tem} other {# locais posicionados não têm}} check aqui, não mostrados abaixo.",
   "spoiler.unplaced.items": "{count, plural, one {# item posicionado não tem} other {# itens posicionados não têm}} registro aqui, não mostrados abaixo.",
   "spoiler.unplaced.both": "{locations, plural, one {# local posicionado não tem} other {# locais posicionados não têm}} check aqui · {items, plural, one {# item posicionado não tem} other {# itens posicionados não têm}} registro aqui, não mostrados abaixo.",
-  "spoiler.noPlacement": "Nenhuma posição carregada."
+  "spoiler.noPlacement": "Nenhuma posição carregada.",
+  "aside.pool": "Conjunto",
+  "lobby.no-lobby": "Escolha um lobby ao qual o RotP possa se juntar."
 }

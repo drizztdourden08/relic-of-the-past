@@ -366,7 +366,7 @@
   "size-box.screen-reason": "La schermata corrisponde sempre alla vista.",
   "placement.engine.grid": "griglia",
   "placement.engine.flex": "flex {direction}",
-  "placement.reason.parent": "Questo genitore è {engine}. Passalo a griglia per posizionare per cella.",
+  "placement.reason.parent": "Layout del genitore: {engine}. Passalo a griglia per posizionare per cella.",
   "placement.reason.screen": "La schermata è l'intera vista.",
   "placement.align-down": "allinea in basso",
   "placement.align-self": "allinea sé stesso",

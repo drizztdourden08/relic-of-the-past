@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind component */
-import { useT } from '@drizztdourden08/brock-react';
+import { useT, useText } from '@drizztdourden08/brock-react';
 import { Status, Icon, IconButton, EmptyState, Stack } from '@drizztdourden08/tessera/primitives';
 import { ListItemRow } from '@drizztdourden08/tessera/composites';
 import { ROM_KINDS } from '@rotp/roms';
@@ -9,6 +9,7 @@ import type { RomListProps } from './RomList.type';
 
 const RomList = (props: RomListProps) => {
   const t = useT();
+  const text = useText();
   const { romStatuses, supplements, selected, onSelect, onDelete } = props;
   const isEmpty = romStatuses.length === 0 && supplements.length === 0;
 
@@ -19,7 +20,7 @@ const RomList = (props: RomListProps) => {
         <ListItemRow
           key={rom.romFile}
           icon={<Icon name="gamepad-2" />}
-          name={<>{rom.romFile} <Status tone="neutral">{ROM_KINDS['snes-alttp'].label}</Status></>}
+          name={<>{rom.romFile} <Status tone="neutral">{text(ROM_KINDS['snes-alttp'].label)}</Status></>}
           selected={selected === rom.romFile}
           onClick={() => onSelect(rom.romFile)}
           meta={<ExtractionMeta rom={rom} />}
@@ -34,7 +35,7 @@ const RomList = (props: RomListProps) => {
         <ListItemRow
           key={supplement.romFile}
           icon={<Icon name="puzzle" />}
-          name={<>{supplement.romFile} <Status tone="neutral">{ROM_KINDS[supplement.kind].label}</Status></>}
+          name={<>{supplement.romFile} <Status tone="neutral">{text(ROM_KINDS[supplement.kind].label)}</Status></>}
           selected={selected === supplement.romFile}
           onClick={() => onSelect(supplement.romFile)}
           meta={

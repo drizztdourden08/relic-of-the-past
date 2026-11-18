@@ -7,5 +7,7 @@
   "verdict.patched-bad-size": "このファイルは{bytes}バイトで、神々のトライフォースのROMのサイズではありません。",
   "verdict.patched-ok": "{size} MBのROM（SHA-1 {hash}）",
   "verdict.unsupported": "{name}は公式ROMですが、まだサポートされていません。",
-  "verdict.wrong-kind": "これは{kind}の{name}で、{expected}ではありません。"
+  "verdict.wrong-kind": "これは{name}（{kind, select, snes-alttp {ベースカートリッジ} gba-alttp {2本目のカートリッジ} other {?}}）です。必要なのは{expected, select, snes-alttp {ベースカートリッジ} gba-alttp {2本目のカートリッジ} other {?}}です。",
+  "kind.snes-alttp": "ベースカートリッジ",
+  "kind.gba-alttp": "2本目のカートリッジ"
 }

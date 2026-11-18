@@ -36,5 +36,7 @@
   "spoiler.unplaced.locations": "{count, plural, one {# placed location has} other {# placed locations have}} no check here, not shown below.",
   "spoiler.unplaced.items": "{count, plural, one {# placed item has} other {# placed items have}} no record here, not shown below.",
   "spoiler.unplaced.both": "{locations, plural, one {# placed location has} other {# placed locations have}} no check here · {items, plural, one {# placed item has} other {# placed items have}} no record here, not shown below.",
-  "spoiler.noPlacement": "No placement loaded."
+  "spoiler.noPlacement": "No placement loaded.",
+  "aside.pool": "Pool",
+  "lobby.no-lobby": "Pick a lobby RotP can join."
 }

@@ -11,7 +11,7 @@
   "channel.sfx2": "Effecten 2",
   "owner.pack": "MSU",
   "owner.chip": "CHIP",
-  "owner.skipped": "SKIP",
+  "owner.skipped": "OVERGESLAGEN",
   "channel.silent": "stil",
   "counters.empty": "Nog niets geteld.",
   "events.empty": "Nog geen geluidsgebeurtenissen.",

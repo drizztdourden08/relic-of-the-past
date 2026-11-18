@@ -90,5 +90,7 @@
   "tracker-enabled.description": "Turning this off stops the checks tracker updating.",
   "section.vanilla-safe.title": "Vanilla Safe",
   "vanilla-safe.label": "Vanilla Safe",
-  "vanilla-safe.description": "Forces off every feature, quality-of-life flag, bug fix, cheat, item override, custom player sprite and HUD override, so the game matches the original cartridge exactly. Harmless, low-risk divergences are included too; there are no exemptions."
+  "vanilla-safe.description": "Forces off every feature, quality-of-life flag, bug fix, cheat, item override, custom player sprite and HUD override, so the game matches the original cartridge exactly. Harmless, low-risk divergences are included too; there are no exemptions.",
+  "dialog-speed.instant": "Instant",
+  "dialog-speed.original": "Original"
 }

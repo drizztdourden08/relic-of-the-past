@@ -100,5 +100,8 @@
   "pool-listing.starting-weapon-one-of": "Startvapen (ett av)",
   "pool-listing.useful": "Användbara",
   "profile-connection.no-profile": "Ingen profil är öppen.",
-  "profile-connection.profile-gone": "Profilen finns inte längre."
+  "profile-connection.profile-gone": "Profilen finns inte längre.",
+  "progressive.mode.progressive": "I ordning",
+  "progressive.mode.random": "I valfri ordning",
+  "pond-row.price.free": "gratis"
 }

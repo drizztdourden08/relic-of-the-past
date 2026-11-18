@@ -90,5 +90,7 @@
   "tracker-enabled.description": "Ausschalten hält die Aktualisierung des Check-Trackers an.",
   "section.vanilla-safe.title": "Original-sicher",
   "vanilla-safe.label": "Original-sicher",
-  "vanilla-safe.description": "Schaltet jede Funktion, jedes Komfort-Flag, jede Fehlerbehebung, jeden Cheat, jede Gegenstandsüberschreibung, jedes eigene Spieler-Sprite und jede HUD-Überschreibung aus, sodass das Spiel exakt dem Original-Modul entspricht. Harmlose Abweichungen mit geringem Risiko sind ebenfalls eingeschlossen; es gibt keine Ausnahmen."
+  "vanilla-safe.description": "Schaltet jede Funktion, jedes Komfort-Flag, jede Fehlerbehebung, jeden Cheat, jede Gegenstandsüberschreibung, jedes eigene Spieler-Sprite und jede HUD-Überschreibung aus, sodass das Spiel exakt dem Original-Modul entspricht. Harmlose Abweichungen mit geringem Risiko sind ebenfalls eingeschlossen; es gibt keine Ausnahmen.",
+  "dialog-speed.instant": "Sofort",
+  "dialog-speed.original": "Original"
 }

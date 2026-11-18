@@ -1,7 +1,7 @@
 /* @layer renderer-components @kind constants */
 import { msg } from '@drizztdourden08/brock-core/i18n';
 import { DEFAULT_TURBO_SPEED, formatTurboSpeed } from '@rotp/game-core';
-import { formatDialogSpeed } from '@rotp/game-data';
+import { formatDialogSpeed } from '@app/settings-controls/gameplay/format-dialog-speed';
 import { capitalizeSetting } from './capitalize-setting';
 import type { SettingsSection } from './settings-sections.type';
 
@@ -64,8 +64,8 @@ const DIALOG_SECTION: SettingsSection = {
     { key: 'extendedLetters', label: msg('data-manager:settings-sections.label.extended-letters') },
     { key: 'languageScreens', label: msg('data-manager:settings-sections.label.language-screens') },
     { key: 'jaFileSelectStyle', label: msg('data-manager:settings-sections.label.ja-file-select-style') },
-    { key: 'dialogBox', label: msg('data-manager:settings-sections.label.dialog-box'), format: (v) => capitalizeSetting(v, 'original') },
-    { key: 'dialogFont', label: msg('data-manager:settings-sections.label.dialog-font'), format: (v) => capitalizeSetting(v, 'original') },
+    { key: 'dialogBox', label: msg('data-manager:settings-sections.label.dialog-box'), format: (v, t) => capitalizeSetting(v, 'original', t) },
+    { key: 'dialogFont', label: msg('data-manager:settings-sections.label.dialog-font'), format: (v, t) => capitalizeSetting(v, 'original', t) },
     { key: 'dialogFontScale', label: msg('data-manager:settings-sections.label.dialog-font-scale'), format: (v) => `${v ?? 1}x` },
     { key: 'dialogButtonPrompts', label: msg('data-manager:settings-sections.label.dialog-button-prompts') },
   ],

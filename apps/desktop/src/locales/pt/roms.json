@@ -7,5 +7,7 @@
   "verdict.patched-bad-size": "Este arquivo tem {bytes} bytes, que não é o tamanho de uma ROM de A Link to the Past.",
   "verdict.patched-ok": "Uma ROM de {size} MB (SHA-1 {hash})",
   "verdict.unsupported": "{name} é uma ROM oficial, mas ainda não é compatível.",
-  "verdict.wrong-kind": "Esta é {name}, um(a) {kind}, não um(a) {expected}."
+  "verdict.wrong-kind": "Este é {name} ({kind, select, snes-alttp {cartucho base} gba-alttp {segundo cartucho} other {?}}). Esperado: {expected, select, snes-alttp {cartucho base} gba-alttp {segundo cartucho} other {?}}.",
+  "kind.snes-alttp": "Cartucho base",
+  "kind.gba-alttp": "Segundo cartucho"
 }

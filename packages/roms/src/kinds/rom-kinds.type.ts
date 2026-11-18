@@ -1,11 +1,12 @@
 /* @layer shared-storage @kind types */
+import type { Message } from '@drizztdourden08/brock-core/i18n';
 import type { AssetSourceId } from '@rotp/asset-extraction';
 
 type RomKind = 'snes-alttp' | 'gba-alttp';
 
 interface RomKindSpec {
   kind: RomKind;
-  label: string;
+  label: Message;
   pattern: RegExp;
   pickExtensions: readonly string[];
   maxBytes: number;

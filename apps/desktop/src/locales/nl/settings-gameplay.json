@@ -88,7 +88,9 @@
   "section.tracker.title": "Tracker",
   "tracker-enabled.label": "Checktracker inschakelen",
   "tracker-enabled.description": "Uitzetten stopt het bijwerken van de checktracker.",
-  "section.vanilla-safe.title": "Vanilla Safe",
-  "vanilla-safe.label": "Vanilla Safe",
-  "vanilla-safe.description": "Zet elke functie, gebruiksgemakvlag, bugfix, cheat, itemoverschrijving, eigen spelersprite en HUD-overschrijving uit, zodat het spel exact overeenkomt met de originele cartridge. Ook onschuldige afwijkingen met laag risico zijn inbegrepen; er zijn geen uitzonderingen."
+  "section.vanilla-safe.title": "Origineel veilig",
+  "vanilla-safe.label": "Origineel veilig",
+  "vanilla-safe.description": "Zet elke functie, gebruiksgemakvlag, bugfix, cheat, itemoverschrijving, eigen spelersprite en HUD-overschrijving uit, zodat het spel exact overeenkomt met de originele cartridge. Ook onschuldige afwijkingen met laag risico zijn inbegrepen; er zijn geen uitzonderingen.",
+  "dialog-speed.instant": "Direct",
+  "dialog-speed.original": "Origineel"
 }

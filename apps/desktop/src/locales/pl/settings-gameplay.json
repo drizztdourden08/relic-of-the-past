@@ -90,5 +90,7 @@
   "tracker-enabled.description": "Wyłączenie zatrzymuje aktualizowanie trackera kontroli.",
   "section.vanilla-safe.title": "Bezpieczny oryginalny",
   "vanilla-safe.label": "Bezpieczny oryginalny",
-  "vanilla-safe.description": "Wyłącza każdą funkcję, flagę wygody, poprawkę błędu, kod, nadpisanie przedmiotu, własny sprite gracza i nadpisanie HUD, więc gra dokładnie odpowiada oryginalnemu cartridge'owi. Niegroźne, mało ryzykowne odstępstwa są też objęte; nie ma wyjątków."
+  "vanilla-safe.description": "Wyłącza każdą funkcję, flagę wygody, poprawkę błędu, kod, nadpisanie przedmiotu, własny sprite gracza i nadpisanie HUD, więc gra dokładnie odpowiada oryginalnemu cartridge'owi. Niegroźne, mało ryzykowne odstępstwa są też objęte; nie ma wyjątków.",
+  "dialog-speed.instant": "Natychmiast",
+  "dialog-speed.original": "Oryginalny"
 }

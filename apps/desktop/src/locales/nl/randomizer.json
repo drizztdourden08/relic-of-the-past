@@ -100,5 +100,8 @@
   "pool-listing.starting-weapon-one-of": "Startwapen (een van)",
   "pool-listing.useful": "Nuttig",
   "profile-connection.no-profile": "Er is geen profiel open.",
-  "profile-connection.profile-gone": "Het profiel is weg."
+  "profile-connection.profile-gone": "Het profiel is weg.",
+  "progressive.mode.progressive": "In volgorde",
+  "progressive.mode.random": "In willekeurige volgorde",
+  "pond-row.price.free": "gratis"
 }

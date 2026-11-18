@@ -88,7 +88,9 @@
   "section.tracker.title": "トラッカー",
   "tracker-enabled.label": "チェックトラッカーを有効にする",
   "tracker-enabled.description": "オフにすると、チェックトラッカーが更新されなくなります。",
-  "section.vanilla-safe.title": "バニラセーフ",
-  "vanilla-safe.label": "バニラセーフ",
-  "vanilla-safe.description": "すべての機能、快適さのフラグ、バグ修正、チート、アイテムの上書き、カスタムプレイヤースプライト、HUDの上書きを強制的にオフにし、ゲームを元のカートリッジとまったく同じにします。害のない低リスクの違いも含まれ、例外はありません。"
+  "section.vanilla-safe.title": "オリジナルセーフ",
+  "vanilla-safe.label": "オリジナルセーフ",
+  "vanilla-safe.description": "すべての機能、快適さのフラグ、バグ修正、チート、アイテムの上書き、カスタムプレイヤースプライト、HUDの上書きを強制的にオフにし、ゲームを元のカートリッジとまったく同じにします。害のない低リスクの違いも含まれ、例外はありません。",
+  "dialog-speed.instant": "即時",
+  "dialog-speed.original": "オリジナル"
 }

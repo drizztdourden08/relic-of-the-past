@@ -36,5 +36,7 @@
   "spoiler.unplaced.locations": "{count, plural, one {# platzierter Ort hat} other {# platzierte Orte haben}} hier keinen Check und {count, plural, one {wird} other {werden}} unten nicht angezeigt.",
   "spoiler.unplaced.items": "{count, plural, one {# platzierter Gegenstand hat} other {# platzierte Gegenstände haben}} hier keinen Eintrag und {count, plural, one {wird} other {werden}} unten nicht angezeigt.",
   "spoiler.unplaced.both": "{locations, plural, one {# platzierter Ort hat} other {# platzierte Orte haben}} hier keinen Check · {items, plural, one {# platzierter Gegenstand hat} other {# platzierte Gegenstände haben}} hier keinen Eintrag, unten nicht angezeigt.",
-  "spoiler.noPlacement": "Keine Platzierung geladen."
+  "spoiler.noPlacement": "Keine Platzierung geladen.",
+  "aside.pool": "Pool",
+  "lobby.no-lobby": "Wähle eine Lobby, der RotP beitreten kann."
 }

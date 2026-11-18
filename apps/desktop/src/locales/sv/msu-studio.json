@@ -320,5 +320,5 @@
   "layers.loop.from-file": "Filen anger {where}, så introt spelas en gång och upprepas sedan därifrån",
   "layers.loop.intro": "Introt spelas en gång och upprepas sedan från {where}",
   "studio.tabs.ambient": "Omgivning",
-  "packs.meta.summary": "{files} · {size} ·"
+  "packs.meta.summary": "{files} · {size}"
 }

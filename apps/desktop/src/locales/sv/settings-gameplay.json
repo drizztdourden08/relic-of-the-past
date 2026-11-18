@@ -88,7 +88,9 @@
   "section.tracker.title": "Spårare",
   "tracker-enabled.label": "Aktivera kontrollspårare",
   "tracker-enabled.description": "Om du stänger av detta slutar kontrollspåraren uppdateras.",
-  "section.vanilla-safe.title": "Vanilla Safe",
-  "vanilla-safe.label": "Vanilla Safe",
-  "vanilla-safe.description": "Tvingar av alla funktioner, bekvämlighetsflaggor, buggfixar, fusk, föremålsåsidosättningar, egna spelarsprites och HUD-åsidosättningar, så att spelet matchar originalkassetten exakt. Ofarliga avvikelser med låg risk ingår också; inga undantag finns."
+  "section.vanilla-safe.title": "Original säker",
+  "vanilla-safe.label": "Original säker",
+  "vanilla-safe.description": "Tvingar av alla funktioner, bekvämlighetsflaggor, buggfixar, fusk, föremålsåsidosättningar, egna spelarsprites och HUD-åsidosättningar, så att spelet matchar originalkassetten exakt. Ofarliga avvikelser med låg risk ingår också; inga undantag finns.",
+  "dialog-speed.instant": "Direkt",
+  "dialog-speed.original": "Original"
 }

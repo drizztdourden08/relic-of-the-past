@@ -36,5 +36,7 @@
   "spoiler.unplaced.locations": "{count, plural, other {配置済みの#か所}}はここにチェックがないため、下には表示されません。",
   "spoiler.unplaced.items": "{count, plural, other {配置済みの#個のアイテム}}はここにレコードがないため、下には表示されません。",
   "spoiler.unplaced.both": "{locations, plural, other {配置済みの#か所}}はここにチェックがありません · {items, plural, other {配置済みの#個のアイテム}}はここにレコードがないため、下には表示されません。",
-  "spoiler.noPlacement": "配置が読み込まれていません。"
+  "spoiler.noPlacement": "配置が読み込まれていません。",
+  "aside.pool": "プール",
+  "lobby.no-lobby": "RotPが参加できるロビーを選んでください。"
 }

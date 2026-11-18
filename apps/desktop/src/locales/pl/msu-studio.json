@@ -320,5 +320,5 @@
   "layers.loop.from-file": "Plik deklaruje {where}, więc intro gra raz, a potem powtarza się stamtąd",
   "layers.loop.intro": "Intro gra raz, potem powtarza się od {where}",
   "studio.tabs.ambient": "Otoczenie",
-  "packs.meta.summary": "{files} · {size} ·"
+  "packs.meta.summary": "{files} · {size}"
 }

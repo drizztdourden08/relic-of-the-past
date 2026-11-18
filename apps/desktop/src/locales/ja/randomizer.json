@@ -100,5 +100,8 @@
   "pool-listing.starting-weapon-one-of": "初期武器（いずれか1つ）",
   "pool-listing.useful": "有用",
   "profile-connection.no-profile": "開いているプロフィールはありません。",
-  "profile-connection.profile-gone": "プロフィールがなくなりました。"
+  "profile-connection.profile-gone": "プロフィールがなくなりました。",
+  "progressive.mode.progressive": "順番どおり",
+  "progressive.mode.random": "順不同",
+  "pond-row.price.free": "無料"
 }
