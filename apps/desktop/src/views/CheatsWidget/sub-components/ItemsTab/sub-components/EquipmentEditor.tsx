@@ -1,4 +1,5 @@
 /* @layer renderer-widgets @kind component */
+import { useT } from '@drizztdourden08/brock-react';
 import type { MouseEvent } from 'react';
 import { Box, Image } from '@drizztdourden08/tessera/primitives';
 import { cheatSetInventorySlot, CheatSlot } from '@app/game';
@@ -14,6 +15,7 @@ import type { SlotPanelProps, SlotSpec } from '../ItemsTab.type';
 const noHover = (): void => undefined;
 
 const EquipmentEditor = ({ specs, scale, spritesBase, onHover, onOpen }: SlotPanelProps) => {
+  const t = useT();
   const items = useGameUIStore((s) => s.inventory.items);
   const equipment = useGameUIStore((s) => s.equipment);
   const palaceIndex = useGameUIStore((s) => s.map.palaceIndex);
@@ -67,7 +69,7 @@ const EquipmentEditor = ({ specs, scale, spritesBase, onHover, onOpen }: SlotPan
           owned
           menu={false}
           ghost={null}
-          title={`Heart pieces ${equipment.heartPieces}/${HEART_PIECE_MAX + 1}: click to cycle`}
+          title={t('views-cheats:items.heartPieces', { count: equipment.heartPieces, max: HEART_PIECE_MAX + 1 })}
           style={{ position: 'absolute', top: tile * EQUIP_PANEL.bottomRow, left: tile * HEART_PIECE_COLUMN }}
           onClick={() => cheatSetInventorySlot(CheatSlot.HeartPieces, nextHeartPieces)}
           onHover={noHover}

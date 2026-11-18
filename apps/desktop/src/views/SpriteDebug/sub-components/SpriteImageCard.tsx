@@ -1,16 +1,19 @@
 /* @layer renderer-components @kind component */
+import { useT } from '@drizztdourden08/brock-react';
 import { Text, Image } from '@drizztdourden08/tessera/primitives';
 import type { SpriteManifestEntry } from '@rotp/game-data';
 import type { ReviewSubjectCardProps } from '../SpriteDebug.type';
 import { spriteCategoryTone } from '../behavior/sprite-category-tone';
 import { ReviewCard } from './ReviewCard';
 
-const SpriteImageCard = ({ sprite, entry, baseUrl, onSetStatus, onSetComment }: ReviewSubjectCardProps & { sprite: SpriteManifestEntry }) => (
+const SpriteImageCard = ({ sprite, entry, baseUrl, onSetStatus, onSetComment }: ReviewSubjectCardProps & { sprite: SpriteManifestEntry }) => {
+  const t = useT();
+  return (
   <ReviewCard
     entry={entry}
     onSetStatus={onSetStatus}
     onSetComment={onSetComment}
-    commentPlaceholder="What's wrong with this sprite?"
+    commentPlaceholder={t('views-sprite-debug:sprite.placeholder')}
     sprite={(
       <Image src={`${baseUrl}${sprite.file}.png`} alt={sprite.label} draggable={false}
         onError={e => { (e.target as HTMLImageElement).style.display = 'none'; }} className="sprite-debug-sprite" />
@@ -23,6 +26,7 @@ const SpriteImageCard = ({ sprite, entry, baseUrl, onSetStatus, onSetComment }: 
       </>
     )}
   />
-);
+  );
+};
 
 export { SpriteImageCard };

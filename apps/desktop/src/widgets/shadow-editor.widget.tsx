@@ -1,9 +1,10 @@
 /* @layer renderer-widgets @kind component */
 import type { WidgetMeta } from '@drizztdourden08/brock-react';
+import { msg } from '@drizztdourden08/brock-core/i18n';
 import { ShadowEditorPanel, ShadowEditorTools } from '@app/views/ShadowEditorPanel';
 
 const meta: WidgetMeta = {
-  label: 'Shadow Editor',
+  label: msg('widgets:shadow.editor.label'),
   icon: 'sun',
   kit: 'shadow-editor',
   chrome: 'compact',

@@ -1,10 +1,12 @@
 /* @layer renderer-hooks @kind logic */
+import { useT } from '@drizztdourden08/brock-react';
 import { useCallback } from 'react';
 import { fetchToBytes } from '@app/download/download';
 import type { StudioActionsParams } from '../PlayerSpriteStudio.type';
 import { spriteNameFromUrl } from './sprite-name-from-url';
 
 const useStudioActions = (params: StudioActionsParams) => {
+  const t = useT();
   const { openFile, packFor, confirmUninstall, onDeleteConfirm, run, library, draft } = params;
 
   const handleUrlImport = useCallback(async (url: string) => {
@@ -23,12 +25,12 @@ const useStudioActions = (params: StudioActionsParams) => {
       });
       return;
     }
-    const message = `Delete "${name}"? Any profile using it goes back to the original sprite. This cannot be undone.`;
-    onDeleteConfirm('Delete player sprite', message, () => {
+    const message = t('views-player-sprite-studio:delete.message', { name });
+    onDeleteConfirm(t('views-player-sprite-studio:delete.title'), message, () => {
       if (openFile === name) draft.close();
       void library.remove(name);
     });
-  }, [packFor, confirmUninstall, openFile, onDeleteConfirm, draft, library]);
+  }, [packFor, confirmUninstall, openFile, onDeleteConfirm, draft, library, t]);
 
   const openAfter = useCallback((name: string) => {
     void run(async () => { await library.refresh(); await draft.open(name); });

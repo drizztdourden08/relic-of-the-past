@@ -1,4 +1,5 @@
 /* @layer renderer-components @kind component */
+import { useT } from '@drizztdourden08/brock-react';
 import { Text } from '@drizztdourden08/tessera/primitives';
 import { DiagnosticsFlowBody } from '@drizztdourden08/brock-input/renderer';
 import type { ReportDialogPartProps } from '../report-dialog-controls.type';
@@ -7,13 +8,14 @@ import { IntroStep } from './IntroStep';
 import { UserInfoStep } from './UserInfoStep';
 
 const ReportBody = (props: ReportDialogPartProps) => {
+  const t = useT();
   const { form, controls } = props;
   const { filed, wizardRef, setCapturedCount } = controls;
 
   if (filed) {
     return (
       <>
-        <Text as="p">Thanks, your report was filed.</Text>
+        <Text as="p">{t('views-input-tester:body.thanks')}</Text>
         <Text as="p" className="controller-report__result-url">{filed.issueUrl}</Text>
       </>
     );

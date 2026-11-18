@@ -1,6 +1,8 @@
 /* @layer renderer-lib @kind constants */
+import { msg } from '@drizztdourden08/brock-core/i18n';
+
 const ROM_FILE_PATTERN = /\.(sfc|smc)$/i;
 
-const FAILED_PATCHED_IMPORT = 'The patched ROM could not be imported. The report below says which parts failed.';
+const FAILED_PATCHED_IMPORT = msg('errors:language.patched.failed');
 
 export { FAILED_PATCHED_IMPORT, ROM_FILE_PATTERN };

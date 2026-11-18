@@ -1,4 +1,5 @@
 /* @layer electron-main @kind constants */
-const RETRY_GONE_ERROR = 'The debug files are no longer available. Send the report again.';
+import { msg } from '@drizztdourden08/brock-core/i18n';
+const RETRY_GONE_ERROR = msg('main:sanctuary.report.retryGone');
 
 export { RETRY_GONE_ERROR };

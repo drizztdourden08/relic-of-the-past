@@ -1,5 +1,6 @@
 /* @layer renderer-components @kind logic */
-const updatesLine = (count: number): string =>
-  count === 1 ? '1 update for a pack you installed' : `${count} updates for packs you installed`;
+import type { I18n } from '@drizztdourden08/brock-core/i18n';
+
+const updatesLine = (t: I18n['t'], count: number): string => t('views-store:home.updates', { count });
 
 export { updatesLine };

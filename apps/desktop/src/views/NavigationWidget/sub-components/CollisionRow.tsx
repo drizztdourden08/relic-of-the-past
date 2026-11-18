@@ -1,17 +1,20 @@
 /* @layer renderer-widgets @kind component */
+import { useT, useText } from '@drizztdourden08/brock-react';
 import { Text } from '@drizztdourden08/tessera/primitives';
 import { DescRow } from './DescRow';
 import { COLLISION_NAMES } from './PlayerStatePanel.constants';
 import type { PlayerRowProps } from './PlayerStatePanel.type';
 
 const CollisionRow = ({ playerDebug }: PlayerRowProps) => {
+  const t = useT();
+  const text = useText();
   const { collisionType } = playerDebug;
   if (collisionType === null || collisionType < 0) return null;
 
   return (
-    <DescRow label="Collision" desc="Room collision type. 0=single layer, 1=both layers active, 2=both+scroll, 3=moving floor, 4=water/swim.">
+    <DescRow id="Collision" label={t('views-navigation:desc.collision.label')} desc={t('views-navigation:desc.collision.text')}>
       <Text className="nav-val-info">
-        {collisionType} ({COLLISION_NAMES[collisionType] ?? '?'})
+        {collisionType} ({COLLISION_NAMES[collisionType] ? text(COLLISION_NAMES[collisionType]) : '?'})
       </Text>
     </DescRow>
   );

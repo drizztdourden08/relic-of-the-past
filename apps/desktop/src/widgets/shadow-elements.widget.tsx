@@ -1,9 +1,10 @@
 /* @layer renderer-widgets @kind component */
 import type { WidgetMeta } from '@drizztdourden08/brock-react';
+import { msg } from '@drizztdourden08/brock-core/i18n';
 import { ShadowElementList } from '@app/views/ShadowElementList';
 
 const meta: WidgetMeta = {
-  label: 'Shadow Elements',
+  label: msg('widgets:shadow.elements.label'),
   icon: 'layers',
   kit: 'shadow-editor',
   chrome: 'compact',

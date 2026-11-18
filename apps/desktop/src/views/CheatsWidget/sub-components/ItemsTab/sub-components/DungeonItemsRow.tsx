@@ -1,4 +1,5 @@
 /* @layer renderer-widgets @kind component */
+import { useT } from '@drizztdourden08/brock-react';
 import { Box } from '@drizztdourden08/tessera/primitives';
 import { cheatSetDungeonItem } from '@app/game';
 import type { DungeonItemKind } from '@app/game';
@@ -12,6 +13,7 @@ import type { PanelProps } from '../ItemsTab.type';
 const noHover = (): void => undefined;
 
 const DungeonItemsRow = ({ scale, spritesBase }: PanelProps) => {
+  const t = useT();
   const palaceIndex = useGameUIStore((s) => s.map.palaceIndex);
   const progress = useGameUIStore((s) => s.dungeonProgress);
   const tile = 8 * scale;
@@ -34,7 +36,7 @@ const DungeonItemsRow = ({ scale, spritesBase }: PanelProps) => {
           owned={held[kind]}
           menu={false}
           ghost={`${spritesBase}${EQUIP_SPRITES[type]?.[1]}.png`}
-          title={`${label}: click to ${held[kind] ? 'take away' : 'give'}`}
+          title={t('views-cheats:items.toggle', { name: label, action: held[kind] ? 'take' : 'give' })}
           style={{ position: 'absolute', top: tile * EQUIP_PANEL.bottomRow, left: tile * col }}
           onClick={() => cheatSetDungeonItem(kind, palaceIndex, !held[kind])}
           onHover={noHover}

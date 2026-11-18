@@ -1,10 +1,11 @@
 /* @layer renderer-widgets @kind constants */
+import type { I18n } from '@drizztdourden08/brock-core/i18n';
 import type { Hint } from '@drizztdourden08/tessera/primitives';
 
-const PIN_HEADER_HINT: Hint = { label: 'Pin header', description: 'Keep the summary and filters in place' };
+const pinHeaderHint = (t: I18n['t']): Hint => ({ label: t('views-checks:pin.label'), description: t('views-checks:pin.description') });
 
-const NOTIFY_HINT: Hint = { label: 'Notifications', description: 'A card over the game for each check or event you complete' };
+const notifyHint = (t: I18n['t']): Hint => ({ label: t('views-checks:notify.label'), description: t('views-checks:notify.description') });
 
-const NOTIFY_WHEN_CLOSED_HINT: Hint = { label: 'While closed', description: 'Keep notifying while this tracker is closed' };
+const notifyWhenClosedHint = (t: I18n['t']): Hint => ({ label: t('views-checks:closed.label'), description: t('views-checks:closed.description') });
 
-export { NOTIFY_HINT, NOTIFY_WHEN_CLOSED_HINT, PIN_HEADER_HINT };
+export { notifyHint, notifyWhenClosedHint, pinHeaderHint };

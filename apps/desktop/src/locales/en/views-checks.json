@@ -1,0 +1,15 @@
+{
+  "view.label": "View",
+  "view.list.label": "List",
+  "view.list.title": "Compact rows",
+  "view.detailed.label": "Detailed",
+  "view.detailed.title": "Rows with items",
+  "view.visual.label": "Cards",
+  "view.visual.title": "Item cards",
+  "pin.label": "Pin header",
+  "pin.description": "Keep the summary and filters in place",
+  "notify.label": "Notifications",
+  "notify.description": "A card over the game for each check or event you complete",
+  "closed.label": "While closed",
+  "closed.description": "Keep notifying while this tracker is closed"
+}

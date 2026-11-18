@@ -1,35 +1,32 @@
 /* @layer renderer-components @kind hook */
 import { useCallback } from 'react';
 import { formatBytes } from '@drizztdourden08/brock-core';
+import { useT } from '@drizztdourden08/brock-react';
 import { NO_USES } from '../MsuFilePanel.constants';
 import type { FileConfirmsParams } from './file-confirms.type';
 
 const useFileConfirms = (params: FileConfirmsParams) => {
   const { usage, covered, onDeleteConfirm, deleteFile, report } = params;
+  const t = useT();
 
   const confirmDelete = useCallback((fileName: string) => {
     const uses = usage.get(fileName) ?? NO_USES;
-    const played = uses.length > 0 ? ` ${uses.join(', ')} will be left with nothing to play.` : '';
-    onDeleteConfirm(
-      'Delete Audio File',
-      `Delete "${fileName}" from this pack? This cannot be undone.${played}`,
-      () => { deleteFile(fileName); },
-    );
-  }, [usage, onDeleteConfirm, deleteFile]);
+    const message = uses.length > 0
+      ? t('msu-studio:files.delete.message-used', { name: fileName, uses: uses.join(', ') })
+      : t('msu-studio:files.delete.message', { name: fileName });
+    onDeleteConfirm(t('msu-studio:files.delete.title'), message, () => { deleteFile(fileName); });
+  }, [t, usage, onDeleteConfirm, deleteFile]);
 
   const confirmRemoveSuperseded = useCallback(() => {
     const doomed = [...covered.superseded];
-    const stillNamed = doomed.filter((name) => (usage.get(name) ?? NO_USES).length > 0);
-    const played = stillNamed.length > 0
-      ? ` ${stillNamed.length} of them ${stillNamed.length === 1 ? 'is' : 'are'} still named by a slot or sound, which will play the converted file instead.`
-      : '';
+    const named = doomed.filter((name) => (usage.get(name) ?? NO_USES).length > 0).length;
+    const values = { count: doomed.length, size: formatBytes(covered.totalBytes), named };
     onDeleteConfirm(
-      'Remove Superseded Originals',
-      `Delete ${doomed.length} original file${doomed.length === 1 ? '' : 's'} the pack already holds in the`
-      + ` converted format? This frees ${formatBytes(covered.totalBytes)} and cannot be undone.${played}`,
+      t('msu-studio:files.superseded.title'),
+      named > 0 ? t('msu-studio:files.superseded.message-named', values) : t('msu-studio:files.superseded.message', values),
       () => { void covered.removeAll().then(report); },
     );
-  }, [covered, usage, onDeleteConfirm, report]);
+  }, [t, covered, usage, onDeleteConfirm, report]);
 
   return { confirmDelete, confirmRemoveSuperseded };
 };

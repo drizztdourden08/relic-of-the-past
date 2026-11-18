@@ -1,4 +1,5 @@
 /* @layer renderer-widgets @kind constants */
+import { msg } from '@drizztdourden08/brock-core/i18n';
 import { CheatSlot } from '@app/game';
 import { ABILITY_GRID } from '@app/compounds/PauseAbilitiesPanel/PauseAbilitiesPanel.constants';
 import type { ControlHint } from '../ControlHint.type';
@@ -20,7 +21,6 @@ const MIRROR_SLOT_INDEX = 19;
 const BOOK_SLOT_INDEX = 14;
 
 const BOTTLE_SLOT_INDEX = 15;
-const BOTTLE_NOTICE = 'Bottles are on the Player tab';
 const EMPTY_BOTTLE = 2;
 
 const ITEM_GRID = { cols: 17, rows: 13, gridCols: 5, gridRows: 4, top: 1, left: 2 };
@@ -80,14 +80,14 @@ const EMPTY_NAME: SlotName = { lines: [''], sprite: null, owned: false };
 
 const CHEAT_SOURCE = 'cheat';
 
-const PICK_ROW: ControlHint = { glyph: 'mouse-right', label: 'pick a tier' };
-const GIVE_HINT: readonly ControlHint[] = [{ glyph: 'mouse-left', label: 'give it' }, PICK_ROW];
-const TIERS_HINT: readonly ControlHint[] = [{ glyph: 'mouse-left', label: 'open its tiers' }, PICK_ROW];
-const TOGGLE_HINT: readonly ControlHint[] = [{ glyph: 'mouse-left', label: 'toggle it' }];
+const PICK_ROW: ControlHint = { glyph: 'mouse-right', label: msg('views-cheats:hint.items.pick') };
+const GIVE_HINT: readonly ControlHint[] = [{ glyph: 'mouse-left', label: msg('views-cheats:hint.items.give') }, PICK_ROW];
+const TIERS_HINT: readonly ControlHint[] = [{ glyph: 'mouse-left', label: msg('views-cheats:hint.items.tiers') }, PICK_ROW];
+const TOGGLE_HINT: readonly ControlHint[] = [{ glyph: 'mouse-left', label: msg('views-cheats:hint.items.toggle') }];
 
 export {
   ABILITY_EQUIP_TYPE, ABILITY_FLAG_LIFT, ABILITY_FLAG_PULL, ABILITY_FLAG_READ_TALK, ABILITY_FLAG_RUN, ABILITY_FLAG_SWIM, ABILITY_PANEL,
-  ABILITY_SLOT_ORDER, ABILITY_WORDS, BOOK_SLOT_INDEX, BOTTLE_NOTICE, BOTTLE_SLOT_INDEX, BOW_RUNG_VALUES, BOW_TOP_VALUE, CHEAT_SOURCE,
+  ABILITY_SLOT_ORDER, ABILITY_WORDS, BOOK_SLOT_INDEX, BOTTLE_SLOT_INDEX, BOW_RUNG_VALUES, BOW_TOP_VALUE, CHEAT_SOURCE,
   CRYSTAL_SPOTS, CRYSTALS_FROM_PROGRESS, DUNGEON_ITEMS, EMPTY_BOTTLE, EMPTY_NAME, EQUIP_PANEL,
   EQUIPMENT_KEY, GEAR, GIVE_HINT, HEART_PIECE_COLUMN, HEART_PIECE_MAX, ITEM_GRID, ITEM_SLOT_COUNT, ITEMS_TILES_WIDE, MIRROR_SLOT_INDEX,
   NOT_IN_DUNGEON, PENDANT_SPOTS, PROGRESS_PANEL, RAW_VALUE_LABELS, TIERS_HINT, TOGGLE_HINT,

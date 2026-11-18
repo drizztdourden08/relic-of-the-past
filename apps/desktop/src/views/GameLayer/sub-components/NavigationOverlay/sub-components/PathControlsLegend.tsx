@@ -1,14 +1,16 @@
 /* @layer renderer-components @kind component */
+import { useT } from '@drizztdourden08/brock-react';
 import { Text } from '@drizztdourden08/tessera/primitives';
 import { CollapsiblePanel } from './CollapsiblePanel';
 
 const PathControlsLegend = () => {
+  const t = useT();
   return (
-    <CollapsiblePanel title="controls">
-      <Text className="nav-legend__dim">LMB hold: live A* path to cursor</Text>
-      <Text className="nav-legend__dim">RMB while holding: lock target</Text>
-      <Text className="nav-legend__dim">Release LMB: clear lock/path</Text>
-      <Text className="nav-legend__gold">Shift+drag: copy the selected tiles to the clipboard</Text>
+    <CollapsiblePanel title={t('views-game-layer:legend.controls.title')}>
+      <Text className="nav-legend__dim">{t('views-game-layer:legend.controls.hold')}</Text>
+      <Text className="nav-legend__dim">{t('views-game-layer:legend.controls.lock')}</Text>
+      <Text className="nav-legend__dim">{t('views-game-layer:legend.controls.release')}</Text>
+      <Text className="nav-legend__gold">{t('views-game-layer:legend.controls.copy')}</Text>
     </CollapsiblePanel>
   );
 };

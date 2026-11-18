@@ -1,11 +1,12 @@
 /* @layer renderer-components @kind constants */
+import type { I18n } from '@drizztdourden08/brock-core/i18n';
 import type { SegmentOption } from '@drizztdourden08/tessera/primitives';
 import type { EntryFilter } from './DialogueTab.type';
 
-const FILTER_OPTIONS: SegmentOption<EntryFilter>[] = [
-  { value: 'all', label: 'All' },
-  { value: 'warnings', label: 'Needs attention' },
-  { value: 'choices', label: 'Choices' },
+const filterOptionsOf = (t: I18n['t']): SegmentOption<EntryFilter>[] => [
+  { value: 'all', label: t('language-editor:filter.all') },
+  { value: 'warnings', label: t('language-editor:filter.warnings') },
+  { value: 'choices', label: t('language-editor:filter.choices') },
 ];
 
-export { FILTER_OPTIONS };
+export { filterOptionsOf };

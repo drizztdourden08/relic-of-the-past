@@ -1,5 +1,6 @@
 /* @layer renderer-app @kind component */
 import { useCallback } from 'react';
+import { useText } from '@drizztdourden08/brock-react';
 import { Callout, Inline, ScrollArea, Stack, Tag, Toggle } from '@drizztdourden08/tessera/primitives';
 import { ItemList } from '@drizztdourden08/tessera/composites';
 import type { ItemListRowState } from '@drizztdourden08/tessera/composites';
@@ -14,12 +15,13 @@ import type { RecordingsPickerProps } from './RecordingsPicker.type';
 
 const RecordingsPicker = (props: RecordingsPickerProps) => {
   const { profileId, setExtras, disabled } = props;
+  const text = useText();
   const { sessions, loading, selected, showSent, error, toggleSession, toggleShowSent, deleteSession } = useRecordings(profileId, setExtras);
 
   const render = useCallback((session: DebugCaptureSessionSummary) => ({
     icon: <RecordingPreview session={session} label={recordingName(session)} />,
-    meta: session.sentAt === null ? undefined : <Tag>{SENT_LABEL}</Tag>,
-  }), []);
+    meta: session.sentAt === null ? undefined : <Tag>{text(SENT_LABEL)}</Tag>,
+  }), [text]);
 
   const rowActions = useCallback((session: DebugCaptureSessionSummary, row: ItemListRowState) => (
     <IncludeButton
@@ -34,12 +36,12 @@ const RecordingsPicker = (props: RecordingsPickerProps) => {
   return (
     <Stack gap="sm" className="bug-report-recordings">
       <Inline justify="end" align="center">
-        <Toggle checked={showSent} onChange={toggleShowSent} label={SHOW_SENT_LABEL} disabled={disabled} />
+        <Toggle checked={showSent} onChange={toggleShowSent} label={text(SHOW_SENT_LABEL)} disabled={disabled} />
       </Inline>
       {error !== null && <Callout tone="danger">{error}</Callout>}
       <ScrollArea className="bug-report-recordings__list">
         <ItemList
-          title={TITLE}
+          title={text(TITLE)}
           items={sessions}
           getId={recordingId}
           getName={recordingName}
@@ -52,7 +54,7 @@ const RecordingsPicker = (props: RecordingsPickerProps) => {
           deleteKey
           filter={false}
           loading={loading}
-          empty={showSent ? NONE_MESSAGE : NONE_NEW_MESSAGE}
+          empty={text(showSent ? NONE_MESSAGE : NONE_NEW_MESSAGE)}
         />
       </ScrollArea>
     </Stack>

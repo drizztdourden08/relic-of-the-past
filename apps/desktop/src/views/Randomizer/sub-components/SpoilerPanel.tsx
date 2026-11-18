@@ -1,14 +1,14 @@
 /* @layer renderer-components @kind component */
 import { useMemo } from 'react';
+import { useT } from '@drizztdourden08/brock-react';
 import { Box, Text } from '@drizztdourden08/tessera/primitives';
 import { ChecksTracker } from '@app/compounds/ChecksTracker';
 import { useTrackerData } from '../../../hooks/useTrackerData';
 import { SPOILER_DIMENSIONS } from './SpoilerPanel.constants';
 import './SpoilerPanel.css';
 
-const countOf = (count: number, one: string, many: string): string => `${count} ${count === 1 ? one : many}`;
-
 const SpoilerPanel = () => {
+  const t = useT();
   const {
     viewMode, setViewMode, grouping, setGrouping, filter, setFilter,
     snapshot, stats, groupTree, run, placement, placementView,
@@ -17,28 +17,27 @@ const SpoilerPanel = () => {
   const unplacedNotice = useMemo(() => {
     const { unmatchedLocations, unmatchedItems } = placementView;
     if (unmatchedLocations.length === 0 && unmatchedItems.length === 0) return null;
-    const parts: string[] = [];
-    if (unmatchedLocations.length > 0) {
-      parts.push(`${countOf(unmatchedLocations.length, 'placed location has', 'placed locations have')} no check here`);
-    }
-    if (unmatchedItems.length > 0) {
-      parts.push(`${countOf(unmatchedItems.length, 'placed item has', 'placed items have')} no record here`);
-    }
+    const locations = unmatchedLocations.length;
+    const items = unmatchedItems.length;
+    let notice: string;
+    if (items === 0) notice = t('views-randomizer:spoiler.unplaced.locations', { count: locations });
+    else if (locations === 0) notice = t('views-randomizer:spoiler.unplaced.items', { count: items });
+    else notice = t('views-randomizer:spoiler.unplaced.both', { locations, items });
     return (
       <Text
         className="randomizer-page__hint"
         title={[...unmatchedLocations, ...unmatchedItems].join('\n')}
       >
-        {parts.join(' · ')}, not shown below.
+        {notice}
       </Text>
     );
-  }, [placementView]);
+  }, [placementView, t]);
 
   if (!placement) {
     return (
       <Box className="randomizer-page__scroll">
         <Box className="randomizer-page__panel">
-          <Text className="randomizer-page__hint">No placement loaded.</Text>
+          <Text className="randomizer-page__hint">{t('views-randomizer:spoiler.noPlacement')}</Text>
         </Box>
       </Box>
     );

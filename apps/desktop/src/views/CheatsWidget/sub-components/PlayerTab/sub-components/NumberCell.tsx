@@ -1,4 +1,5 @@
 /* @layer renderer-widgets @kind component */
+import { useT } from '@drizztdourden08/brock-react';
 import { Box, Pressable, TextInput } from '@drizztdourden08/tessera/primitives';
 import { HudNumber } from '@app/hud';
 import { numberCellTitle } from '../behavior/number-cell-title';
@@ -10,13 +11,14 @@ import type { NumberCellProps } from '../PlayerTab.type';
 
 const NumberCell = (props: NumberCellProps) => {
   const { label, value, min = 0, max, digits, isMax = false, write, steps, ladder, lockedReason, scale, spritesBase } = props;
+  const t = useT();
   const edit = useNumberEdit({ value, min, max, write: write ?? (() => undefined), ladder });
   const hint = usePointerHintTarget(label, NUMBER_HINTS);
   const tile = SNES_TILE * scale;
 
   const number = <HudNumber value={value} digits={digits} isMax={isMax} scale={scale} spritesBase={spritesBase} />;
   if (!write || lockedReason) {
-    return <Box className="cheats-player__number cheats-player__number--fixed" title={numberCellTitle(label, lockedReason)}>{number}</Box>;
+    return <Box className="cheats-player__number cheats-player__number--fixed" title={numberCellTitle(t, label, lockedReason)}>{number}</Box>;
   }
 
   return (
@@ -29,7 +31,7 @@ const NumberCell = (props: NumberCellProps) => {
           style={{ height: tile }}
           value={edit.draft ?? ''}
           inputMode="numeric"
-          aria-label={`${label}, ${min} to ${max}`}
+          aria-label={t('views-cheats:number.range', { label, min, max })}
           onChange={(e) => edit.setDraft(e.target.value)}
           onKeyDown={edit.onKeyDown}
           onBlur={edit.commit}
@@ -37,7 +39,7 @@ const NumberCell = (props: NumberCellProps) => {
       ) : (
         <Pressable
           className="cheats-player__number-hit"
-          aria-label={`Edit ${label}`}
+          aria-label={t('views-cheats:number.edit', { label })}
           onClick={edit.begin}
           onContextMenu={edit.openSetter}
         />

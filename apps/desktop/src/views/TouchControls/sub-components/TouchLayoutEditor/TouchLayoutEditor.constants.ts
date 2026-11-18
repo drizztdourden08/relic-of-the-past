@@ -1,4 +1,5 @@
 /* @layer renderer-app @kind constants */
+import type { MessageKey } from '@drizztdourden08/brock-core/i18n';
 import type { MovementType, TouchEmit } from '@rotp/features';
 
 const EDITOR_MIN_STRENGTH = 0.6;
@@ -23,10 +24,10 @@ const ALL_EMITS: readonly TouchEmit[] = [
   'up', 'down', 'left', 'right', 'l2', 'r2', 'l3', 'r3',
 ];
 
-const MOVEMENT_OPTIONS: { value: MovementType; label: string }[] = [
-  { value: 'dynamic-stick', label: 'Dynamic stick' },
-  { value: 'fixed-stick', label: 'Fixed stick' },
-  { value: 'dpad', label: 'D-pad' },
+const MOVEMENT_OPTIONS: { value: MovementType; key: MessageKey }[] = [
+  { value: 'dynamic-stick', key: 'views-touch-controls:movement.dynamicStick' },
+  { value: 'fixed-stick', key: 'views-touch-controls:movement.fixedStick' },
+  { value: 'dpad', key: 'views-touch-controls:movement.dpad' },
 ];
 
 const BUTTON_WIDTH_RANGE = { min: 0.4, max: 3, step: 0.05 } as const;

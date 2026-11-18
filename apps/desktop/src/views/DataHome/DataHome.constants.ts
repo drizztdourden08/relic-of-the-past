@@ -1,69 +1,70 @@
 /* @layer renderer-components @kind constants */
+import type { I18n } from '@drizztdourden08/brock-core/i18n';
 import type { DataSectionGroup } from '@app/compounds/DataSections';
 
 const DATA_BUCKET = 'data';
 
-const DATA_SECTION_GROUPS: readonly DataSectionGroup[] = [
+const dataSectionGroups = (t: I18n['t']): readonly DataSectionGroup[] => [
   {
     id: 'library',
-    label: 'Library',
+    label: t('views-data-home:library.label'),
     items: [
       {
         id: 'profiles',
-        title: 'Profiles',
+        title: t('views-data-home:library.profiles.title'),
         icon: 'users',
-        description: 'Create, open and delete profiles.',
+        description: t('views-data-home:library.profiles.description'),
       },
       {
         id: 'roms',
-        title: 'ROMs',
+        title: t('views-data-home:library.roms.title'),
         icon: 'gamepad-2',
-        description: 'Import a ROM and extract its assets.',
+        description: t('views-data-home:library.roms.description'),
       },
       {
         id: 'sprites',
-        title: 'Sprites',
+        title: t('views-data-home:library.sprites.title'),
         icon: 'image',
-        description: 'Browse the extracted HUD, item and menu pictures.',
+        description: t('views-data-home:library.sprites.description'),
       },
     ],
   },
   {
     id: 'studios',
-    label: 'Studios',
+    label: t('views-data-home:studios.label'),
     items: [
       {
         id: 'characters',
-        title: 'Character Studio',
+        title: t('views-data-home:studios.characters.title'),
         icon: 'user',
-        description: 'Import, create and edit player sprites.',
+        description: t('views-data-home:studios.characters.description'),
       },
       {
         id: 'languages',
-        title: 'Language Studio',
+        title: t('views-data-home:studios.languages.title'),
         icon: 'globe',
-        description: 'Edit the game dialogue and text.',
+        description: t('views-data-home:studios.languages.description'),
       },
       {
         id: 'msu',
-        title: 'MSU Studio',
+        title: t('views-data-home:studios.msu.title'),
         icon: 'headphones',
-        description: 'Create, import and edit music packs.',
+        description: t('views-data-home:studios.msu.description'),
       },
     ],
   },
   {
     id: 'folder',
-    label: 'Data folder',
+    label: t('views-data-home:folder.label'),
     items: [
       {
         id: 'storage',
-        title: 'Storage',
+        title: t('views-data-home:folder.storage.title'),
         icon: 'hard-drive',
-        description: 'See folder sizes, clean up old files, and export or import your data.',
+        description: t('views-data-home:folder.storage.description'),
       },
     ],
   },
 ];
 
-export { DATA_BUCKET, DATA_SECTION_GROUPS };
+export { DATA_BUCKET, dataSectionGroups };

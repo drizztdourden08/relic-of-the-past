@@ -1,4 +1,5 @@
 /* @layer renderer-components @kind component */
+import { useText } from '@drizztdourden08/brock-react';
 import { OptionGroup } from '@drizztdourden08/tessera/composites';
 import { RandomizerOptionRow } from '@app/compounds/RandomizerOptionRow';
 import { storyGateValuesOf, storyGatesOfValues } from '@rotp/randomizer';
@@ -14,10 +15,11 @@ const valueFor = (values: Readonly<Record<string, OptionValue>>, key: string): O
 
 const StoryGatesSection = (props: StoryGatesSectionProps) => {
   const { setting, cellOf, onChange } = props;
+  const text = useText();
   const values = storyGateValuesOf(setting);
 
   return (
-    <OptionGroup title={STORY_GATES_TITLE} tone="live" className="story-gates">
+    <OptionGroup title={text(STORY_GATES_TITLE)} tone="live" className="story-gates">
       {STORY_GATE_OPTIONS.map((option) => (
         <RandomizerOptionRow
           key={option.key}

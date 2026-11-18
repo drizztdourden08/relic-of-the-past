@@ -19,7 +19,7 @@ const SERIALIZERS: Partial<Record<EntityKind, Serializer>> = {
 };
 
 const SOURCE_LABELS: Record<string, string> = Object.fromEntries(
-  KIND_NAV_ITEMS.map(item => [item.id, item.label]),
+  KIND_NAV_ITEMS.map(item => [item.id, item.id]),
 );
 
 export { SERIALIZERS, SOURCE_LABELS };

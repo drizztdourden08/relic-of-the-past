@@ -1,18 +1,17 @@
 /* @layer renderer-components @kind component */
 import { SearchInput } from '@drizztdourden08/tessera/primitives';
+import { useT } from '@drizztdourden08/brock-react';
 import { sectionGroup } from './studio-frame/section-group';
 import { EffectRows } from './EffectRows';
 import { SoundPanelShell } from './SoundPanelShell';
 import { SoundSide } from './SoundSide';
 import { effectsSummary } from './behavior/effects-summary';
 import { useEffectsPanel } from './behavior/useEffectsPanel';
-import { SOUND_FILTER_PLACEHOLDER } from './msu.constants';
-import { EFFECTS_NOTE } from './MsuEffectsPanel.constants';
-import { EDITOR_LABELS } from './studio-frame/studio-frame.constants';
 import type { MsuEffectsPanelProps } from './msu.type';
 
 const MsuEffectsPanel = (props: MsuEffectsPanelProps) => {
   const { pack, manifest, saveBase, files, isLayered, readOnly, tabs, packPanel, onDeleteConfirm, onReload } = props;
+  const t = useT();
   const panel = useEffectsPanel(props);
   const { filter, setFilter, panelOf, rows, open } = panel;
   const summary = effectsSummary(panel.first, panel.second);
@@ -21,8 +20,8 @@ const MsuEffectsPanel = (props: MsuEffectsPanelProps) => {
   const detail = (
     <SoundSide
       open={openRow === undefined ? null : { channel: openRow.channel, row: openRow.row, sound: panelOf(openRow.channel) }}
-      noteTitle="Effects"
-      note={EFFECTS_NOTE}
+      noteTitle={t('msu-studio:sound.effects.note-title')}
+      note={t('msu-studio:sound.effects.note')}
       packPanel={packPanel}
       pack={pack}
       manifest={manifest}
@@ -40,21 +39,29 @@ const MsuEffectsPanel = (props: MsuEffectsPanelProps) => {
   );
 
   const toolbar = [
-    sectionGroup(tabs),
+    sectionGroup(t, tabs),
     {
       id: 'find',
-      label: 'Find',
-      content: <SearchInput grow={false} value={filter} onChange={setFilter} placeholder={SOUND_FILTER_PLACEHOLDER} aria-label="Find a sound" />,
+      label: t('msu-studio:studio.toolbar.find'),
+      content: (
+        <SearchInput
+          grow={false}
+          value={filter}
+          onChange={setFilter}
+          placeholder={t('msu-studio:sound.filter.placeholder')}
+          aria-label={t('msu-studio:sound.filter.aria')}
+        />
+      ),
     },
   ];
 
   return (
     <SoundPanelShell
-      editorLabel={EDITOR_LABELS.effects}
+      editorLabel={t('msu-studio:studio.editor.effects')}
       toolbar={toolbar}
       detail={detail}
       header={{
-        title: `Effects · ${summary.replaced} of ${summary.total} replaced`,
+        title: t('msu-studio:sound.header.effects', { replaced: summary.replaced, total: summary.total }),
         sounding: summary.sounding,
         status: summary.status,
         statusOk: summary.statusOk,

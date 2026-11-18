@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind hook */
-import { requireHostApi } from '@drizztdourden08/brock-react';
+import { requireHostApi, useT } from '@drizztdourden08/brock-react';
 import { useCallback, useEffect, useState } from 'react';
 import { useTool } from '@drizztdourden08/brock-tools/renderer';
 import type { OptimizeAnalysis, OptimizeProgress, OptimizeRunResult } from '@rotp/msu';
@@ -13,6 +13,7 @@ const convertibleNames = (analysis: OptimizeAnalysis | null): string[] =>
 
 const useOptimize = (params: OptimizeParams) => {
   const { pack, open, onRunSettled } = params;
+  const t = useT();
   const tool = useTool(FFMPEG_TOOL_ID);
   const { refresh } = tool;
   const [step, setStep] = useState<OptimizeStep>('checking');
@@ -44,12 +45,12 @@ const useOptimize = (params: OptimizeParams) => {
       setResult(await requireHostApi().runMsuOptimize(pack, names));
       setStep('result');
     } catch (err) {
-      setError(optimizeMessage(err, 'Could not convert this pack.'));
+      setError(optimizeMessage(err, t('msu-studio:optimize.error.convert')));
       setStep('error');
     } finally {
       onRunSettled();
     }
-  }, [analysis, pack, onRunSettled]);
+  }, [t, analysis, pack, onRunSettled]);
 
   return {
     step,

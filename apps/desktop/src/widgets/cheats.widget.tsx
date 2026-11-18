@@ -1,9 +1,10 @@
 /* @layer renderer-widgets @kind component */
 import type { WidgetMeta } from '@drizztdourden08/brock-react';
+import { msg } from '@drizztdourden08/brock-core/i18n';
 import { CheatsWidgetContent } from '@app/views/CheatsWidget';
 
 const meta: WidgetMeta = {
-  label: 'Cheats',
+  label: msg('widgets:cheats.label'),
   padding: 'none',
   icon: 'zap',
   order: 3,

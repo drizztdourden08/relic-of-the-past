@@ -1,12 +1,18 @@
 /* @layer renderer-components @kind component */
+import { useT } from '@drizztdourden08/brock-react';
 import { useMemo } from 'react';
+import { useT } from '@drizztdourden08/brock-react';
 import { Box, Text, Button } from '@drizztdourden08/tessera/primitives';
+import { useT } from '@drizztdourden08/brock-react';
 import { SettingsSection } from '@drizztdourden08/tessera/composites';
+import { useT } from '@drizztdourden08/brock-react';
 import { NumberField } from './NumberField';
+import { useT } from '@drizztdourden08/brock-react';
 import { HeightLevelPicker } from './HeightLevelPicker';
 import type { ShadowShapeInspectorProps } from './ShadowShapeInspector.type';
 
 const ShadowShapeInspector = ({ screenId, selectedHm, updateHeightmapElement, handleDelete }: ShadowShapeInspectorProps) => {
+  const t = useT();
   const setters = useMemo(() => {
     const setShape = (patch: Partial<typeof selectedHm.shape>) =>
       updateHeightmapElement(screenId, selectedHm.id, { shape: { ...selectedHm.shape, ...patch } });
@@ -23,7 +29,7 @@ const ShadowShapeInspector = ({ screenId, selectedHm, updateHeightmapElement, ha
   }, [screenId, selectedHm, updateHeightmapElement]);
 
   return (
-    <SettingsSection title="Shape">
+    <SettingsSection title={t('views-shadow-editor:shape.title')}>
       <Box className="shadow-editor-panel__field-row">
         <NumberField icon="X" value={selectedHm.shape.x} step={1} onChange={setters.x} />
         <NumberField icon="Y" value={selectedHm.shape.y} step={1} onChange={setters.y} />
@@ -44,11 +50,11 @@ const ShadowShapeInspector = ({ screenId, selectedHm, updateHeightmapElement, ha
       )}
 
       <Box className="shadow-editor-panel__subsection">
-        <Text className="shadow-editor-panel__sublabel">Height</Text>
+        <Text className="shadow-editor-panel__sublabel">{t('views-shadow-editor:height')}</Text>
         <HeightLevelPicker value={selectedHm.height} onChange={setters.level} />
       </Box>
 
-      <Button size="sm" variant="danger" onClick={handleDelete}>Delete Shape</Button>
+      <Button size="sm" variant="danger" onClick={handleDelete}>{t('views-shadow-editor:shape.delete')}</Button>
     </SettingsSection>
   );
 };

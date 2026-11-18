@@ -1,4 +1,5 @@
 /* @layer renderer-widgets @kind component */
+import { useText } from '@drizztdourden08/brock-react';
 import { Box, Button, Image, Text } from '@drizztdourden08/tessera/primitives';
 import { spriteUrlOf } from '@rotp/game-data';
 import { SpritePlaceholder } from './SpritePlaceholder';
@@ -11,7 +12,10 @@ const stateOf = (disabled: boolean, changed: boolean): TileState => {
 
 const RungTile = (props: RungTileProps) => {
   const { spec, value, reason, onChange } = props;
-  const { label, name, sprite, rungs } = spec;
+  const { sprite, rungs } = spec;
+  const text = useText();
+  const label = text(spec.label);
+  const name = text(spec.name);
   const disabled = reason !== undefined;
   const changed = value !== rungs[0]?.value;
 
@@ -32,7 +36,7 @@ const RungTile = (props: RungTileProps) => {
             disabled={disabled}
             onClick={() => onChange(rung.value)}
           >
-            {rung.label}
+            {text(rung.label)}
           </Button>
         ))}
       </Box>

@@ -1,5 +1,6 @@
 /* @layer renderer-components @kind hook */
 import { useCallback, useMemo, useState } from 'react';
+import { useT } from '@drizztdourden08/brock-react';
 import { supersededMap, withSupersededRepointed } from '@rotp/msu';
 import * as msuStore from '@app/storage/msu-store';
 import { failure } from './failure';
@@ -10,6 +11,7 @@ const supersededNames = (names: string[]): Set<string> => new Set(supersededMap(
 
 const useSupersededFiles = (params: SupersededParams) => {
   const { pack, files, saveBase, reload } = params;
+  const t = useT();
   const [removing, setRemoving] = useState(false);
 
   const names = useMemo(() => files.map((file) => file.name), [files]);
@@ -22,7 +24,7 @@ const useSupersededFiles = (params: SupersededParams) => {
 
   const removeAll = useCallback(async (): Promise<ActionResult> => {
     const doomed = [...superseded];
-    if (doomed.length === 0) return { success: false, message: 'Nothing is superseded.' };
+    if (doomed.length === 0) return { success: false, message: t('msu-studio:files.superseded.nothing') };
     setRemoving(true);
     try {
       if (saveBase !== null) {
@@ -30,15 +32,14 @@ const useSupersededFiles = (params: SupersededParams) => {
         if (repointed !== saveBase) await msuStore.writeMsuManifest(pack, repointed);
       }
       for (const name of doomed) await msuStore.deleteMsuTrackFile(pack, name);
-      const plural = doomed.length === 1 ? '' : 's';
-      return { success: true, message: `Removed ${doomed.length} superseded original${plural}` };
+      return { success: true, message: t('msu-studio:files.superseded.removed', { count: doomed.length }) };
     } catch (err) {
-      return failure(err, 'Could not remove every superseded original');
+      return failure(err, t('msu-studio:files.superseded.error'));
     } finally {
       setRemoving(false);
       reload();
     }
-  }, [pack, names, saveBase, superseded, reload]);
+  }, [t, pack, names, saveBase, superseded, reload]);
 
   return { superseded, count: superseded.size, totalBytes, removing, removeAll };
 };

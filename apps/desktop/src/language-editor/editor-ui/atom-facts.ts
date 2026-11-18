@@ -1,5 +1,6 @@
 /* @layer renderer-components @kind logic */
 import { codeInfoFor } from '@rotp/languages';
+import type { I18n } from '@drizztdourden08/brock-core/i18n';
 import type { DialogueTokenAttrs } from './editor-contract';
 import { iconForCodeName, GLOSSARY_ICON } from './icon-for-token';
 import type { AtomFacts, CodeInfo } from './TokenAtom.type';
@@ -20,19 +21,21 @@ const valueOf = (attrs: DialogueTokenAttrs): number | null => {
 const labelOf = (attrs: DialogueTokenAttrs, name: string | null, info: CodeInfo | null): string =>
   attrs.kind === 'ref' ? (attrs.key ?? '') : (info?.label ?? name ?? '');
 
-const descriptionOf = (attrs: DialogueTokenAttrs, label: string, info: CodeInfo | null): string =>
+const descriptionOf = (t: I18n['t'], attrs: DialogueTokenAttrs, label: string, info: CodeInfo | null): string =>
   attrs.kind === 'ref'
-    ? `glossary term ${label}`
-    : `${label}${info?.description ? `, ${info.description}` : ''}`;
+    ? t('language-editor:atom.glossary-term', { label })
+    : info?.description
+      ? t('language-editor:atom.described', { label, description: info.description })
+      : label;
 
-const atomFactsOf = (attrs: DialogueTokenAttrs): AtomFacts => {
+const atomFactsOf = (t: I18n['t'], attrs: DialogueTokenAttrs): AtomFacts => {
   const name = codeNameOf(attrs);
   const info = name === null ? null : codeInfoFor(name);
   const label = labelOf(attrs, name, info);
   return {
     name,
     label,
-    description: descriptionOf(attrs, label, info),
+    description: descriptionOf(t, attrs, label, info),
     icon: name === null ? GLOSSARY_ICON : iconForCodeName(name),
     value: valueOf(attrs),
   };

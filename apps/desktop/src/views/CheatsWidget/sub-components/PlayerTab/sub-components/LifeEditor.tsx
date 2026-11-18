@@ -1,4 +1,5 @@
 /* @layer renderer-widgets @kind component */
+import { useT } from '@drizztdourden08/brock-react';
 import { useCallback } from 'react';
 import type { MouseEvent } from 'react';
 import { Box, Pressable } from '@drizztdourden08/tessera/primitives';
@@ -15,7 +16,8 @@ import type { HeartButton, HudPieceProps } from '../PlayerTab.type';
 const LifeEditor = ({ scale, spritesBase }: HudPieceProps) => {
   const healthCurrent = useGameUIStore((s) => s.hud.healthCurrent);
   const healthCapacity = useGameUIStore((s) => s.hud.healthCapacity);
-  const hint = usePointerHintTarget('Life', LIFE_HINTS);
+  const t = useT();
+  const hint = usePointerHintTarget(t('views-cheats:title.life'), LIFE_HINTS);
   const inPlay = useInPlay();
   const tile = SNES_TILE * scale;
   const owned = Math.floor(healthCapacity / HEART_UNITS);
@@ -53,7 +55,7 @@ const LifeEditor = ({ scale, spritesBase }: HudPieceProps) => {
           <Pressable
             key={cell}
             className={`cheats-player__heart-cell${cell >= owned ? ' cheats-player__heart-cell--ghost' : ''}`}
-            aria-label={heartCellTitle(cell, healthCapacity)}
+            aria-label={heartCellTitle(t, cell, healthCapacity)}
             onClick={(e) => handleCell(cell, 0, e)}
             onContextMenu={(e) => handleCell(cell, 2, e)}
           />

@@ -1,4 +1,5 @@
 /* @layer renderer-components @kind component */
+import { useT, useText } from '@drizztdourden08/brock-react';
 import { Button } from '@drizztdourden08/tessera/primitives';
 import { ErrorBoundary } from '@drizztdourden08/tessera/composites';
 import { CapacityUpgradesRows } from './sub-components/CapacityUpgradesRows';
@@ -10,12 +11,14 @@ const CapacityUpgradesSection = (props: CapacityUpgradesSectionProps) => {
     profile, fillerHeadroom, notes, enabled, progressive, forced, walletFloor, bonus, readOnly = false,
     onChange, onBonusChange, onEnabledChange, onProgressiveChange, onReset,
   } = props;
+  const t = useT();
+  const text = useText();
   const action = onReset === undefined
     ? undefined
-    : <Button variant="secondary" size="sm" onClick={onReset}>Reset capacity settings</Button>;
+    : <Button variant="secondary" size="sm" onClick={onReset}>{t('views-randomizer:capacity.reset')}</Button>;
 
   return (
-    <ErrorBoundary label={NOTICE} action={action} resetKey={profile}>
+    <ErrorBoundary label={text(NOTICE)} action={action} resetKey={profile}>
       <CapacityUpgradesRows
         profile={profile}
         fillerHeadroom={fillerHeadroom}

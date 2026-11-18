@@ -1,4 +1,5 @@
 /* @layer renderer-components @kind component */
+import { useT } from '@drizztdourden08/brock-react';
 import { useCallback } from 'react';
 import { StateList, ViewerStage, useSpriteViewer, useWearing } from '@rotp/design/packs';
 import { StudioLayout } from '@drizztdourden08/tessera/composites';
@@ -13,6 +14,7 @@ import { viewerToolGroups } from '../behavior/viewer-tool-groups';
 
 const SpriteWorkArea = (props: SpriteWorkAreaProps) => {
   const { sheet, installed, busy, error, draft, library, exporter, run, onOpenAfter, onUninstalled } = props;
+  const t = useT();
   const wearing = useWearing();
   const viewer = useSpriteViewer({ setOutfit: wearing.setOutfit });
   const { setAction, setView } = viewer;
@@ -24,11 +26,11 @@ const SpriteWorkArea = (props: SpriteWorkAreaProps) => {
     setView('state');
   }, [setAction, setView]);
 
-  const groups = buildStudioGroups({ sheet, busy, readOnly, dirty: draft.dirty, isNew, draft, library, exporter, run });
+  const groups = buildStudioGroups({ sheet, busy, readOnly, dirty: draft.dirty, isNew, draft, library, exporter, run, t });
 
   return (
     <StudioPane
-      label="Character Studio"
+      label={t('views-player-sprite-studio:studio.label')}
       actions={groups}
       status={(
         <SpriteStatus isNew={isNew} dirty={draft.dirty} applied={draft.applied} readOnly={readOnly} exportStatus={exporter.status} error={error} />
@@ -38,13 +40,14 @@ const SpriteWorkArea = (props: SpriteWorkAreaProps) => {
       )}
     >
       <StudioLayout
-        editorLabel="Sprite preview"
+        editorLabel={t('views-player-sprite-studio:studio.previewLabel')}
         compactToolbar
         editorMinWidth={STUDIO_EDITOR_MIN_WIDTH}
-        toolbar={viewerToolGroups({ wearing, viewer })}
-        start={{ ...STATES_PANEL, content: <StudioPanelContent><StateList fill selected={viewer.action} onSelect={selectState} /></StudioPanelContent> }}
+        toolbar={viewerToolGroups({ wearing, viewer, t })}
+        start={{ ...STATES_PANEL, title: t('views-player-sprite-studio:panel.states'), content: <StudioPanelContent><StateList fill selected={viewer.action} onSelect={selectState} /></StudioPanelContent> }}
         end={{
           ...PROPERTIES_PANEL,
+          title: t('views-player-sprite-studio:panel.properties'),
           content: (
             <StudioPanelContent>
               <SpriteProperties sheet={sheet} outfit={wearing.outfit} readOnly={readOnly} draft={draft} />

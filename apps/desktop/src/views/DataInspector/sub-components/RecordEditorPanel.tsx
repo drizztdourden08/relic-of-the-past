@@ -1,4 +1,5 @@
 /* @layer renderer-app @kind component */
+import { useText } from '@drizztdourden08/brock-react';
 import { Box, Text } from '@drizztdourden08/tessera/primitives';
 import { DeleteGuardDialog, RecordEditor } from '@drizztdourden08/tessera/composites';
 import { READ_ONLY_NOTE } from '../DataInspector.constants';
@@ -12,6 +13,7 @@ import { useDeleteGuard } from '@app/data-inspector/useDeleteGuard';
 
 const RecordEditorPanel = (props: RecordEditorPanelProps) => {
   const { source, schema, record, onDeleted } = props;
+  const text = useText();
   const id = source.getId(record);
   const {
     onDelete, referencedBy, dialogOpen, dialogHits, dialogError, confirmDelete, cancelDelete,
@@ -20,7 +22,7 @@ const RecordEditorPanel = (props: RecordEditorPanelProps) => {
   return (
     <Box className="data-inspector__editor">
       {source.onSave === undefined && (
-        <Text as="p" className="data-inspector__note">{READ_ONLY_NOTE}</Text>
+        <Text as="p" className="data-inspector__note">{text(READ_ONLY_NOTE)}</Text>
       )}
       <RecordEditor
         record={record}

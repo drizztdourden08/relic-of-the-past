@@ -1,4 +1,5 @@
 /* @layer renderer-components @kind component */
+import { useT } from '@drizztdourden08/brock-react';
 import { DialogShell } from '@drizztdourden08/tessera/composites';
 import { Box } from '@drizztdourden08/tessera/primitives';
 import { useControllerReportForm } from './behavior/useControllerReportForm';
@@ -11,6 +12,7 @@ import type { ControllerReportDialogProps } from './ControllerReportDialog.type'
 import './ControllerReportDialog.css';
 
 const ControllerReportDialog = (props: ControllerReportDialogProps) => {
+  const t = useT();
   const { open, onClose, deviceKey } = props;
   const form = useControllerReportForm(deviceKey);
   const controls = useReportDialogControls({ form, onClose });
@@ -20,8 +22,8 @@ const ControllerReportDialog = (props: ControllerReportDialogProps) => {
     <DialogShell
       open={open}
       onClose={controls.closeForm}
-      title={showResult ? 'Report filed' : 'Report a controller as not working'}
-      headerExtra={!showResult && <StepIndicator labels={buildReportStepLabels(form.wizard)} current={reportStepIndex(form.step, form.wizard)} />}
+      title={showResult ? t('views-input-tester:dialog.filed') : t('views-input-tester:dialog.title')}
+      headerExtra={!showResult && <StepIndicator labels={buildReportStepLabels(form.wizard, t)} current={reportStepIndex(form.step, form.wizard)} />}
       className="controller-report controller-report--wide"
       actions={<ReportActions form={form} controls={controls} />}
     >

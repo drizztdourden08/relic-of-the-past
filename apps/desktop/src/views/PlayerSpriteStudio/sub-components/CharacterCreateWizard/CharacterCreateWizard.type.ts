@@ -1,4 +1,5 @@
 /* @layer renderer-components @kind types */
+import type { I18n } from '@drizztdourden08/brock-core/i18n';
 import type { WizardApi } from '@drizztdourden08/tessera/composites';
 
 type CharacterSource = 'blank' | 'import';
@@ -29,6 +30,7 @@ type UseCharacterWizardParams = Omit<CharacterCreateWizardProps, 'onCancel'>;
 interface StepContext {
   canCreate: boolean;
   imported: string | null;
+  t: I18n['t'];
 }
 
 interface StepBodyProps {

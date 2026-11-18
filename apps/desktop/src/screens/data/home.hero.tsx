@@ -1,6 +1,6 @@
 /* @layer renderer-app @kind component */
 import { useMemo } from 'react';
-import { usePlatform } from '@drizztdourden08/brock-react';
+import { usePlatform, useT } from '@drizztdourden08/brock-react';
 import type { HeroProps, ScreenMeta } from '@drizztdourden08/brock-react';
 import { Button, Icon } from '@drizztdourden08/tessera/primitives';
 import { DataHome, dataHomeFacts } from '@app/views/DataHome';
@@ -18,7 +18,8 @@ const DataHomeHero = (props: HeroProps) => {
   const { Art, Eyebrow, Title, Actions, Tools, Facts } = slots;
   const { storage, capabilities } = usePlatform();
   const { summary, loading, refresh } = useStorageSummary(storage);
-  const facts = useMemo(() => dataHomeFacts(summary), [summary]);
+  const t = useT();
+  const facts = useMemo(() => dataHomeFacts(summary, t), [summary, t]);
 
   return (
     <>

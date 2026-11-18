@@ -2,11 +2,12 @@
 import { codeInfoFor } from '@rotp/languages';
 import { MESSAGE_SETTING_NAMES } from '../../sub-components/message-settings';
 import { paramValuesFor } from '../../sub-components/code-params';
-import { AUTO_OPTION } from './settings-fields.constants';
+import { autoOptionOf } from './settings-fields.constants';
+import type { I18n } from '@drizztdourden08/brock-core/i18n';
 import type { LanguageConfig } from '@rotp/asset-extraction';
 import type { SettingField } from './settings-fields.type';
 
-const settingFieldsFor = (cfg: LanguageConfig): SettingField[] => (
+const settingFieldsFor = (t: I18n['t'], cfg: LanguageConfig): SettingField[] => (
   MESSAGE_SETTING_NAMES.map((name) => {
     const info = codeInfoFor(name);
     const values = paramValuesFor(name, cfg) ?? [];
@@ -15,7 +16,7 @@ const settingFieldsFor = (cfg: LanguageConfig): SettingField[] => (
       label: info?.label ?? name,
       description: info?.description ?? '',
       options: [
-        AUTO_OPTION,
+        autoOptionOf(t),
         ...values.map((value) => ({ value: String(value), label: String(value) })),
       ],
     };

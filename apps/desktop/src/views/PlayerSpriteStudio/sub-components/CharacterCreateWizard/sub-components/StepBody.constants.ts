@@ -1,12 +1,13 @@
 /* @layer renderer-components @kind constants */
 import type { RadioOption } from '@drizztdourden08/tessera/primitives';
-import { SOURCE_DESCRIPTIONS, SOURCE_LABELS, SOURCE_ORDER } from '../CharacterCreateWizard.constants';
+import type { I18n } from '@drizztdourden08/brock-core/i18n';
+import { SOURCE_ORDER } from '../CharacterCreateWizard.constants';
 import type { CharacterSource } from '../CharacterCreateWizard.type';
 
-const SOURCE_OPTIONS: RadioOption<CharacterSource>[] = SOURCE_ORDER.map((value) => ({
+const sourceOptionsOf = (t: I18n['t']): RadioOption<CharacterSource>[] => SOURCE_ORDER.map((value) => ({
   value,
-  label: SOURCE_LABELS[value],
-  description: SOURCE_DESCRIPTIONS[value],
+  label: t(`views-player-sprite-studio:wizard.source.${value}.label`),
+  description: t(`views-player-sprite-studio:wizard.source.${value}.description`),
 }));
 
-export { SOURCE_OPTIONS };
+export { sourceOptionsOf };

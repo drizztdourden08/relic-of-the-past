@@ -1,5 +1,6 @@
 /* @layer renderer-components @kind logic */
 import { buildInsertGroups } from '../sub-components/insert-menu-model';
+import type { I18n } from '@drizztdourden08/brock-core/i18n';
 import { isMergedSecond, mergedSecondOf } from '../editor/merged-glyph';
 import type { LanguageConfig } from '@rotp/asset-extraction';
 import type { InsertOption } from '../sub-components/insert-menu.type';
@@ -19,13 +20,13 @@ const glyphItem = (option: InsertOption): ToolbarItem => ({
 
 const bareGlyph = (item: ToolbarItem): string => (item.glyph ?? '').replace(/^\[|\]$/g, '');
 
-const pairedWith = (item: ToolbarItem, tail: ToolbarItem): ToolbarItem => ({
+const pairedWith = (t: I18n['t'], item: ToolbarItem, tail: ToolbarItem): ToolbarItem => ({
   ...item,
-  description: `${item.description}, spelled as a pair of entries and inserted as one`,
+  description: t('language-editor:insert.glyph.paired', { description: item.description }),
   make: (choice) => [...item.make(choice), ...tail.make(choice)],
 });
 
-const mergePairedGlyphs = (items: ToolbarItem[]): ToolbarItem[] => {
+const mergePairedGlyphs = (t: I18n['t'], items: ToolbarItem[]): ToolbarItem[] => {
   const byGlyph = new Map(items.map((item) => [bareGlyph(item), item]));
 
   return items
@@ -33,13 +34,13 @@ const mergePairedGlyphs = (items: ToolbarItem[]): ToolbarItem[] => {
     .map((item) => {
       const second = mergedSecondOf(bareGlyph(item));
       const tail = second === null ? undefined : byGlyph.get(second);
-      return tail === undefined ? item : pairedWith(item, tail);
+      return tail === undefined ? item : pairedWith(t, item, tail);
     });
 };
 
-const buildGlyphItems = (cfg: LanguageConfig): ToolbarItem[] => {
-  const group = buildInsertGroups(cfg, []).find((entry) => entry.id === GLYPH_GROUP);
-  return group === undefined ? [] : mergePairedGlyphs(group.options.map(glyphItem));
+const buildGlyphItems = (t: I18n['t'], cfg: LanguageConfig): ToolbarItem[] => {
+  const group = buildInsertGroups(t, cfg, []).find((entry) => entry.id === GLYPH_GROUP);
+  return group === undefined ? [] : mergePairedGlyphs(t, group.options.map(glyphItem));
 };
 
 export { buildGlyphItems };

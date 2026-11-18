@@ -4,8 +4,8 @@ import { useWidgetPref } from '@drizztdourden08/brock-react';
 import { Box, Text } from '@drizztdourden08/tessera/primitives';
 import './DescRow.css';
 
-const DescRow = ({ label, desc, children }: { label: string; desc: string; children: ReactNode }) => {
-  const [open, setOpen] = useWidgetPref<boolean>('navigation', `desc:${label}`, false);
+const DescRow = ({ id, label, desc, children }: { id: string; label: string; desc: string; children: ReactNode }) => {
+  const [open, setOpen] = useWidgetPref<boolean>('navigation', `desc:${id}`, false);
   return (
     <Box>
       <Box className="nav-info-row">

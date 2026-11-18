@@ -17,8 +17,4 @@ const DEFAULT_MODES: Record<PlayModeKind, LayerPlayMode> = {
   interval: { kind: 'interval', atSeconds: [] },
 };
 
-const MODE_LABELS: Record<PlayModeKind, string> = {
-  once: 'Once', loop: 'Loop', random: 'Random', interval: 'Interval',
-};
-
-export { DEFAULT_CROSSFADE_SECONDS, DEFAULT_MODES, MODE_LABELS };
+export { DEFAULT_CROSSFADE_SECONDS, DEFAULT_MODES };

@@ -1,18 +1,20 @@
 /* @layer renderer-components @kind component */
+import { useT } from '@drizztdourden08/brock-react';
 import { Icon, Image, IconButton, EmptyState, Status, Spinner, Stack, Text } from '@drizztdourden08/tessera/primitives';
 import { ListItemRow } from '@drizztdourden08/tessera/composites';
 import { HookshopChip } from '../../../compounds/HookshopChip';
 import type { SpriteLibraryListProps } from '../PlayerSpriteStudio.type';
 
 const SpriteLibraryList = (props: SpriteLibraryListProps) => {
+  const t = useT();
   const { entries, loading, selected, error, isInstalled, onSelect, onDelete } = props;
 
   return (
     <>
       {error && <Text variant="caption" tone="danger" role="alert">{error}</Text>}
       <Stack gap="xs">
-        {loading && <Spinner size="sm" label="Loading sprites" />}
-        {!loading && entries.length === 0 && <EmptyState size="sm" message="No player sprites yet" />}
+        {loading && <Spinner size="sm" label={t('views-player-sprite-studio:library.loading')} />}
+        {!loading && entries.length === 0 && <EmptyState size="sm" message={t('views-player-sprite-studio:library.empty')} />}
         {!loading && entries.map((entry) => (
           <ListItemRow
             key={entry.name}
@@ -28,7 +30,7 @@ const SpriteLibraryList = (props: SpriteLibraryListProps) => {
               <IconButton
                 variant="ghost"
                 size="sm"
-                label={isInstalled(entry.name) ? 'Uninstall' : 'Delete'}
+                label={isInstalled(entry.name) ? t('views-player-sprite-studio:library.uninstall') : t('views-player-sprite-studio:library.delete')}
                 onClick={(e) => { e.stopPropagation(); onDelete(entry.name); }}
               >
                 <Icon name="x" />

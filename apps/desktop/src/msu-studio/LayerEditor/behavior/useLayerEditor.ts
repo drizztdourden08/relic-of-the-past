@@ -1,5 +1,6 @@
 /* @layer renderer-components @kind hook */
 import { useCallback, useState } from 'react';
+import { useT } from '@drizztdourden08/brock-react';
 import type { MsuLayer } from '@rotp/game-data';
 import { writeMsuManifest } from '@app/storage/msu-store';
 import { createLayer } from './create-layer';
@@ -10,6 +11,7 @@ import type { LayerEditorState } from './useLayerEditor.type';
 
 const useLayerEditor = (params: LayerEditorState) => {
   const { pack, target, manifest, saveBase, onSaved } = params;
+  const t = useT();
   const [layers, setLayers] = useState<MsuLayer[]>(() => target.read(manifest));
   const [dirty, setDirty] = useState(false);
   const [saving, setSaving] = useState(false);
@@ -38,7 +40,7 @@ const useLayerEditor = (params: LayerEditorState) => {
   }, [mutate]);
 
   const save = useCallback(async () => {
-    const problem = validateLayers(layers);
+    const problem = validateLayers(t, layers);
     if (problem) { setError(problem); return; }
     setSaving(true);
     setError(null);
@@ -47,11 +49,11 @@ const useLayerEditor = (params: LayerEditorState) => {
       setDirty(false);
       onSaved();
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Could not save the layers');
+      setError(err instanceof Error ? err.message : t('msu-studio:layers.error.save'));
     } finally {
       setSaving(false);
     }
-  }, [layers, pack, saveBase, target, onSaved]);
+  }, [t, layers, pack, saveBase, target, onSaved]);
 
   const revert = useCallback(() => {
     setLayers(target.read(manifest));

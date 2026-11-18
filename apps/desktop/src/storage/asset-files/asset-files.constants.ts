@@ -1,4 +1,6 @@
 /* @layer renderer-lib @kind constants */
-const NO_US_ROM_MESSAGE = 'This ROM gives the game its language only; the game itself runs on the USA ROM. Import the USA ROM, then extract again.';
+import { msg } from '@drizztdourden08/brock-core/i18n';
 
-export { NO_US_ROM_MESSAGE };
+const NO_US_ROM_TEXT = msg('errors:rom.usRequired');
+
+export { NO_US_ROM_TEXT };

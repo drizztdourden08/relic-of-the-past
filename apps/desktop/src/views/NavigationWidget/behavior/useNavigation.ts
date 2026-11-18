@@ -1,5 +1,6 @@
 /* @layer renderer-widgets @kind hook */
 import { useEffect, useCallback, useRef } from 'react';
+import { useT } from '@drizztdourden08/brock-react';
 import { useGameUIStore } from '../../../stores/game-ui-store';
 import { listedCrossings } from '@rotp/navigation';
 import { liveGameStates } from '@rotp/game-core';
@@ -19,6 +20,7 @@ import { useRoomStartLayer } from './useRoomStartLayer';
 import type { RunHandler } from './hooks.type';
 
 const useNavigation = () => {
+  const t = useT();
   const { overworldScreenIndex, roomIndex, isIndoors, isDarkWorld, palaceIndex, whichEntrance, linkX: playerX, linkY: playerY } = useGameUIStore(s => s.map);
   const equipment = useGameUIStore(s => s.equipment);
   const inventoryItems = useGameUIStore(s => s.inventory.items);
@@ -34,7 +36,7 @@ const useNavigation = () => {
 
   const detectedScreen = useScreenDetection(debugTick)?.screen ?? null;
   const screenId = detectedScreen?.id ?? null;
-  const screenName = screenNameOf(detectedScreen, isIndoors, roomIndex, overworldScreenIndex);
+  const screenName = screenNameOf(t, detectedScreen, isIndoors, roomIndex, overworldScreenIndex);
   const displayedVariant = displayedVariantOf(isIndoors, result, variant);
   const renderResults = overlayStore.results;
   const reachableSum = renderResults.reduce((sum, r) => sum + r.reachableCount, 0);

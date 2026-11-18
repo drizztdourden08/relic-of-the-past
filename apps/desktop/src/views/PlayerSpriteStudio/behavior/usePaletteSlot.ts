@@ -1,4 +1,5 @@
 /* @layer renderer-hooks @kind logic */
+import { useT } from '@drizztdourden08/brock-react';
 import { useState, useMemo, useCallback, useRef } from 'react';
 import type { SwatchGroup } from '@drizztdourden08/tessera/color-picker';
 import { OUTFIT_IDS } from '@rotp/game-data';
@@ -12,6 +13,7 @@ import { slotTitle } from './slot-title';
 
 const usePaletteSlot = (params: PaletteEditorProps) => {
   const { sheet, outfit, readOnly = false, onColor, onGloveColor, onReset } = params;
+  const t = useT();
   const [slot, setSlot] = useState<Slot>(null);
   const anchorRef = useRef<HTMLElement | null>(null);
 
@@ -50,13 +52,13 @@ const usePaletteSlot = (params: PaletteEditorProps) => {
     const originalHex = bgr555ToHex(originalOf(slot));
     const thisColour = currentHex === originalHex ? [currentHex] : [currentHex, originalHex];
     return [
-      { label: 'This colour', colors: thisColour },
-      ...OUTFIT_IDS.map((id) => ({ label: `${OUTFIT_LABELS[id]} palette`, colors: live.outfits[id].map(bgr555ToHex) })),
-      { label: 'Gloves', colors: live.gloves.map(bgr555ToHex) },
+      { label: t('views-player-sprite-studio:palette.thisColour'), colors: thisColour },
+      ...OUTFIT_IDS.map((id) => ({ label: t('views-player-sprite-studio:palette.outfit', { outfit: OUTFIT_LABELS[id] }), colors: live.outfits[id].map(bgr555ToHex) })),
+      { label: t('views-player-sprite-studio:palette.gloves'), colors: live.gloves.map(bgr555ToHex) },
     ];
-  }, [slot, live, wordOf, originalOf]);
+  }, [slot, live, wordOf, originalOf, t]);
 
-  return { slot, setSlot, anchorRef, live, colors, originals, openAt, wordOf, originalOf, change, reset, swatchGroups, title: slotTitle(slot, outfit) };
+  return { slot, setSlot, anchorRef, live, colors, originals, openAt, wordOf, originalOf, change, reset, swatchGroups, title: slotTitle(slot, outfit, t) };
 };
 
 export { usePaletteSlot };

@@ -1,10 +1,11 @@
 /* @layer renderer-widgets @kind hook */
+import { useText } from '@drizztdourden08/brock-react';
 import { useEffect, useState } from 'react';
 import { cheatCategoryAllowed } from '@app/game';
 import type { CheatCategory } from '@app/game';
 import { useGameUIStore } from '@app/stores/game-ui-store';
 import { DISABLED_SETTING_MESSAGES } from '@app/settings-controls/disabled-setting-messages.constants';
-import { CATEGORIES, CATEGORY_LABEL, GATES_RECHECK_MS } from '../CheatsWidget.constants';
+import { CATEGORIES, CATEGORY_OFF, GATES_RECHECK_MS } from '../CheatsWidget.constants';
 import type { CheatGates } from '../CheatsWidget.type';
 
 const cheatsOffMessage = (): string => {
@@ -24,6 +25,7 @@ const sameGates = (a: Record<CheatCategory, boolean>, b: Record<CheatCategory, b
 
 const useCheatGates = (): CheatGates => {
   const mode = useGameUIStore((s) => s.mode);
+  const text = useText();
   const [allowed, setAllowed] = useState(readGates);
 
   useEffect(() => {
@@ -35,7 +37,7 @@ const useCheatGates = (): CheatGates => {
 
   const enabled = CATEGORIES.some((category) => allowed[category]);
   const reason = (category: CheatCategory): string =>
-    (enabled ? `${CATEGORY_LABEL[category]} cheats are off for this profile` : cheatsOffMessage());
+    (enabled ? text(CATEGORY_OFF[category]) : cheatsOffMessage());
 
   return { enabled, allowed, reason };
 };

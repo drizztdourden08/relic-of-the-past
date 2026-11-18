@@ -1,5 +1,7 @@
 /* @layer electron-main @kind logic */
 import { SANCTUARY_ROUTES } from '@rotp/hub-contracts';
+import { msg } from '@drizztdourden08/brock-core/i18n';
+import { mainText } from '../../lib/main-text';
 import { callApi } from '../../hub/client';
 import { SANCTUARY_API } from '../../hub/endpoints';
 import { readToken } from '../../hub/token-store';
@@ -11,7 +13,7 @@ const uploadReportZip = async (reportId: string, uploadUrl: string, zip: Buffer)
     headers: { 'Content-Type': ZIP_CONTENT_TYPE, 'Content-Length': String(zip.byteLength) },
     body: new Uint8Array(zip),
   });
-  if (!put.ok) throw new Error(`upload failed (${put.status})`);
+  if (!put.ok) throw new Error(mainText(msg('main:sanctuary.report.uploadStatus', { status: put.status })));
   await callApi(SANCTUARY_API, { route: SANCTUARY_ROUTES.reportsComplete, params: { id: reportId }, body: {}, token: await readToken() });
 };
 

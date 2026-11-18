@@ -1,4 +1,5 @@
 /* @layer renderer-components @kind types */
+import type { Message } from '@drizztdourden08/brock-core/i18n';
 import type { LayerEffect } from '@rotp/game-data';
 
 interface LayerEffectsFieldProps {
@@ -18,9 +19,15 @@ interface EffectRowProps {
 
 interface EffectPreset {
   id: string;
-  label: string;
-  description: string;
+  label: Message;
+  description: Message;
   effects: LayerEffect[];
 }
 
-export type { LayerEffectsFieldProps, EffectRowProps, EffectPreset };
+interface EffectChoice {
+  value: string;
+  label: Message;
+  description: Message;
+}
+
+export type { LayerEffectsFieldProps, EffectRowProps, EffectPreset, EffectChoice };

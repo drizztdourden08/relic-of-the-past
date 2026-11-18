@@ -1,5 +1,6 @@
 /* @layer renderer-components @kind component */
 import { useState } from 'react';
+import { useT } from '@drizztdourden08/brock-react';
 import { SoundPanelRows } from './SoundPanelRows';
 import { SoundPanelShell } from './SoundPanelShell';
 import { SoundSide } from './SoundSide';
@@ -8,11 +9,11 @@ import { soundPanelSubtitle } from './behavior/sound-subtitle';
 import { useSoundPanel } from './behavior/useSoundPanel';
 import { useSoundTabActions } from './behavior/useSoundTabActions';
 import { SOUND_CHANNEL_LABELS } from './sound-labels';
-import { EDITOR_LABELS } from './studio-frame/studio-frame.constants';
 import type { MsuSoundPanelProps } from './MsuSoundPanel.type';
 
 const MsuSoundPanel = (props: MsuSoundPanelProps) => {
   const { pack, channel, manifest, saveBase, files, isLayered, readOnly, tabs, packPanel, onDeleteConfirm, onReload } = props;
+  const t = useT();
   const [filter, setFilter] = useState('');
   const [showUnreachable, setShowUnreachable] = useState(false);
   const sound = useSoundPanel({ pack, channel, manifest, saveBase, files, filter, showUnreachable, reload: onReload });
@@ -23,7 +24,7 @@ const MsuSoundPanel = (props: MsuSoundPanelProps) => {
     <SoundSide
       open={openRow === undefined ? null : { channel, row: openRow, sound }}
       noteTitle={SOUND_CHANNEL_LABELS[channel]}
-      note={soundPanelSubtitle({ ...sound, channel, showUnreachable })}
+      note={soundPanelSubtitle(t, { ...sound, channel, showUnreachable })}
       packPanel={packPanel}
       pack={pack}
       manifest={manifest}
@@ -41,6 +42,7 @@ const MsuSoundPanel = (props: MsuSoundPanelProps) => {
   );
 
   const toolbar = soundToolGroups({
+    t,
     tabs,
     unreachableCount: sound.unreachableCount,
     filter,
@@ -51,11 +53,13 @@ const MsuSoundPanel = (props: MsuSoundPanelProps) => {
 
   return (
     <SoundPanelShell
-      editorLabel={EDITOR_LABELS.ambient}
+      editorLabel={t('msu-studio:studio.editor.ambient')}
       toolbar={toolbar}
       detail={detail}
       header={{
-        title: `${SOUND_CHANNEL_LABELS[channel]} · ${sound.replacedCount} of ${sound.total} replaced`,
+        title: t('msu-studio:sound.header.title', {
+          channel: SOUND_CHANNEL_LABELS[channel], replaced: sound.replacedCount, total: sound.total,
+        }),
         sounding: sound.playing !== null || sound.playingOriginal !== null,
         status: sound.statusMessage,
         statusOk: sound.statusOk,

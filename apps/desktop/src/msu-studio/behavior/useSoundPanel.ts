@@ -1,5 +1,6 @@
 /* @layer renderer-components @kind hook */
 import { useCallback, useState } from 'react';
+import { useT } from '@drizztdourden08/brock-react';
 import type { SoundChannel } from '@rotp/game-data';
 import { writeMsuManifest } from '@app/storage/msu-store';
 import { useAudibleIds } from './useAudibleIds';
@@ -15,6 +16,7 @@ import type { SoundPanelParams } from './sound-panel.type';
 
 const useSoundPanel = (params: SoundPanelParams) => {
   const { pack, channel, manifest, saveBase, files, filter, showUnreachable, reload } = params;
+  const t = useT();
   const [openSound, setOpenSound] = useState<number | null>(null);
   const [status, setStatus] = useState<ActionResult | null>(null);
 
@@ -52,13 +54,16 @@ const useSoundPanel = (params: SoundPanelParams) => {
   const stopReplacing = useCallback(async (soundId: number) => {
     try {
       await writeMsuManifest(pack, withoutSound(saveBase, channel, soundId));
-      setStatus({ success: true, message: `${soundTitle(channel, soundId)} plays from the sound chip again` });
+      setStatus({
+        success: true,
+        message: t('msu-studio:sound.status.chip-again', { sound: soundTitle(channel, soundId) }),
+      });
     } catch (err) {
-      setStatus(failure(err, 'Could not update the pack'));
+      setStatus(failure(err, t('msu-studio:sound.error.update')));
     } finally {
       reload();
     }
-  }, [pack, channel, saveBase, reload]);
+  }, [t, pack, channel, saveBase, reload]);
 
   const handleUpload = useCallback((dropped: File[]) => {
     void upload(dropped).then(setStatus);

@@ -1,4 +1,5 @@
 /* @layer renderer-lib @kind types */
+import type { Text } from '@drizztdourden08/brock-core/i18n';
 import type { PatchedPartReport, RomLanguage } from '@rotp/asset-extraction';
 
 interface PatchedImportRequest {
@@ -11,6 +12,6 @@ interface PatchedImportRequest {
 
 type PatchedImportResult =
   | { success: true; code: string; parts: PatchedPartReport[] }
-  | { success: false; error: string; parts: PatchedPartReport[] };
+  | { success: false; error: Text; parts: PatchedPartReport[] };
 
 export type { PatchedImportRequest, PatchedImportResult };

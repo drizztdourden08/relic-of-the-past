@@ -1,4 +1,5 @@
 /* @layer renderer-components @kind component */
+import { useT } from '@drizztdourden08/brock-react';
 import { Box, EmptyState, Icon, Text } from '@drizztdourden08/tessera/primitives';
 import { ListItemList, ListItemRow } from '@drizztdourden08/tessera/composites';
 import { useEnsureShadowProject, useShadowScreenId } from '@app/shadow-editor';
@@ -7,6 +8,7 @@ import { SHAPE_GLYPHS } from './ShadowElementList.constants';
 import './ShadowElementList.css';
 
 const ShadowElementList = () => {
+  const t = useT();
   const { selectedElementId, setSelectedElement, getScreenData, heightLevels } = useShadowEditorStore();
 
   useEnsureShadowProject();
@@ -27,12 +29,12 @@ const ShadowElementList = () => {
   return (
     <Box className="shadow-element-list">
       {screenData.heightmap.length > 0 && (
-        <ListItemList heading="Shapes" count={screenData.heightmap.length}>
+        <ListItemList heading={t('views-shadow-editor:elements.shapes')} count={screenData.heightmap.length}>
           {screenData.heightmap.map((el) => (
             <ListItemRow
               key={el.id}
               icon={getShapeIcon(el.shape.type, el.shape.sides)}
-              name={el.shape.type === 'freehand' ? 'Freehand' : `${el.shape.sides ?? 4}-gon`}
+              name={el.shape.type === 'freehand' ? t('views-shadow-editor:elements.freehand') : t('views-shadow-editor:elements.polygon', { sides: el.shape.sides ?? 4 })}
               columns={[{ primary: getHeightLabel(el.height), align: 'end' }]}
               selected={el.id === selectedElementId}
               onClick={() => setSelectedElement(el.id, 'heightmap')}
@@ -42,12 +44,12 @@ const ShadowElementList = () => {
       )}
 
       {screenData.lights.length > 0 && (
-        <ListItemList heading="Lights" count={screenData.lights.length}>
+        <ListItemList heading={t('views-shadow-editor:elements.lights')} count={screenData.lights.length}>
           {screenData.lights.map((light) => (
             <ListItemRow
               key={light.id}
               icon={<Icon name={light.type === 'point' ? 'sun' : 'square'} />}
-              name={`${light.type === 'point' ? 'Point' : 'Area'} Light`}
+              name={light.type === 'point' ? t('views-shadow-editor:elements.pointLight') : t('views-shadow-editor:elements.areaLight')}
               columns={[{ primary: `r${light.radius}`, align: 'end' }]}
               selected={light.id === selectedElementId}
               onClick={() => setSelectedElement(light.id, 'light')}
@@ -57,7 +59,7 @@ const ShadowElementList = () => {
       )}
 
       {screenData.heightmap.length === 0 && screenData.lights.length === 0 && (
-        <EmptyState message="No elements on this screen" />
+        <EmptyState message={t('views-shadow-editor:elements.empty')} />
       )}
     </Box>
   );

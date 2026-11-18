@@ -1,14 +1,8 @@
 /* @layer renderer-components @kind constants */
-const STUDIO_LABEL = 'MSU Studio';
-const NO_PACK_MESSAGE = 'Select a music pack to edit its slots, layers and sounds';
+import { msg } from '@drizztdourden08/brock-core/i18n';
 
-const DETAILS_PANEL = { title: 'Details', storageKey: 'msu-studio.details', width: 400, minWidth: 288, maxWidth: 640 };
+const NO_PACK_MESSAGE = msg('msu-studio:studio.no-pack');
 
-const EDITOR_LABELS = {
-  music: 'Music slots',
-  ambient: 'Ambient sounds',
-  effects: 'Effects',
-  files: 'Files',
-} as const;
+const DETAILS_PANEL = { storageKey: 'msu-studio.details', width: 400, minWidth: 288, maxWidth: 640 };
 
-export { DETAILS_PANEL, EDITOR_LABELS, NO_PACK_MESSAGE, STUDIO_LABEL };
+export { DETAILS_PANEL, NO_PACK_MESSAGE };

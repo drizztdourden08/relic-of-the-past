@@ -5,13 +5,13 @@ import { PlaybackControls, ViewSwitch, WearingBar, ZoomControl } from '@rotp/des
 import type { ViewerToolGroupsProps } from '../PlayerSpriteStudio.type';
 
 const viewerToolGroups = (props: ViewerToolGroupsProps): ToolGroup[] => {
-  const { wearing, viewer } = props;
+  const { wearing, viewer, t } = props;
 
   return [
-    { id: 'view', label: 'View', content: createElement(ViewSwitch, { view: viewer.view, onView: viewer.setView }) },
+    { id: 'view', label: t('views-player-sprite-studio:toolbar.view'), content: createElement(ViewSwitch, { view: viewer.view, onView: viewer.setView }) },
     {
       id: 'playback',
-      label: 'Playback',
+      label: t('views-player-sprite-studio:toolbar.playback'),
       content: createElement(
         Fragment,
         null,
@@ -21,7 +21,7 @@ const viewerToolGroups = (props: ViewerToolGroupsProps): ToolGroup[] => {
     },
     {
       id: 'wearing',
-      label: 'Wearing',
+      label: t('views-player-sprite-studio:toolbar.wearing'),
       content: createElement(WearingBar, {
         flat: true,
         outfit: wearing.outfit,

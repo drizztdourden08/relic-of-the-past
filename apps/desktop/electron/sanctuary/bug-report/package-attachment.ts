@@ -4,6 +4,8 @@ import type { BugReportPayload } from '@drizztdourden08/brock-core/types';
 import type { MainContext } from '@drizztdourden08/brock-electron/main';
 import type { SanctuaryReportExtras } from '@app/ipc';
 import { LIMITS } from '@rotp/hub-contracts';
+import { msg } from '@drizztdourden08/brock-core/i18n';
+import { mainText } from '../../lib/main-text';
 import { messageOf } from '../submit-report';
 import type { PackagedAttachment } from './bug-report.type';
 import { TOO_LARGE_ERROR } from './bug-report.constants';
@@ -18,9 +20,9 @@ const packageAttachment = async (ctx: MainContext, payload: BugReportPayload, sn
     const built = await buildReportZip(ctx, payload, profileId, snapshot);
     if (built.zip.bytes <= LIMITS.reportBytes) return { built, error: null };
     await rm(built.path, { force: true });
-    return { built: null, error: TOO_LARGE_ERROR };
+    return { built: null, error: mainText(TOO_LARGE_ERROR) };
   } catch (err) {
-    return { built: null, error: messageOf(err, 'Could not package the debug report.') };
+    return { built: null, error: messageOf(err, mainText(msg('main:sanctuary.report.packageFailed'))) };
   }
 };
 

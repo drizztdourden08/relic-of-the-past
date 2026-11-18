@@ -1,5 +1,6 @@
 /* @layer renderer-components @kind logic */
 import { codeInfoFor, isGlyphName } from '@rotp/languages';
+import type { I18n } from '@drizztdourden08/brock-core/i18n';
 import type { GlossaryTerm, Token } from '@rotp/languages';
 import type { LanguageConfig } from '@rotp/asset-extraction';
 import { paramValuesFor } from './code-params';
@@ -45,16 +46,16 @@ const codeOptionsFor = (section: SectionId, cfg: LanguageConfig): InsertOption[]
     .filter((option): option is InsertOption => option !== null)
 );
 
-const glossaryOption = (glossary: GlossaryTerm[]): InsertOption => ({
+const glossaryOption = (t: I18n['t'], glossary: GlossaryTerm[]): InsertOption => ({
   id: 'glossary-term',
-  label: 'Glossary term',
-  description: 'inserts one of this set\'s reusable phrases by name',
+  label: t('language-editor:insert.glossary.label'),
+  description: t('language-editor:insert.glossary.description'),
   needsChoice: true,
   choices: glossary.map((term) => ({ value: term.key, label: term.key, hint: term.value })),
   make: (choice) => ({ t: 'ref', key: choice ?? '' }),
 });
 
-const glyphOptions = (cfg: LanguageConfig): InsertOption[] => {
+const glyphOptions = (t: I18n['t'], cfg: LanguageConfig): InsertOption[] => {
   const seen = new Set<string>();
   const out: InsertOption[] = [];
   for (const entry of cfg.alphabet) {
@@ -64,7 +65,7 @@ const glyphOptions = (cfg: LanguageConfig): InsertOption[] => {
     out.push({
       id: `glyph-${name}`,
       label: entry,
-      description: 'a picture character from this set\'s alphabet',
+      description: t('language-editor:insert.glyph.description'),
       needsChoice: false,
       choices: [],
       make: () => ({ t: 'cmd', name }),
@@ -73,15 +74,15 @@ const glyphOptions = (cfg: LanguageConfig): InsertOption[] => {
   return out;
 };
 
-const buildInsertGroups = (cfg: LanguageConfig, glossary: GlossaryTerm[]): InsertGroup[] => [
+const buildInsertGroups = (t: I18n['t'], cfg: LanguageConfig, glossary: GlossaryTerm[]): InsertGroup[] => [
   {
     id: 'values',
-    heading: 'Dynamic values',
-    options: [...codeOptionsFor('values', cfg), glossaryOption(glossary)],
+    heading: t('language-editor:insert.heading.values'),
+    options: [...codeOptionsFor('values', cfg), glossaryOption(t, glossary)],
   },
-  { id: 'pacing', heading: 'Pacing', options: codeOptionsFor('pacing', cfg) },
-  { id: 'layout', heading: 'Layout', options: codeOptionsFor('layout', cfg) },
-  { id: 'icons', heading: 'Game icons', options: glyphOptions(cfg) },
+  { id: 'pacing', heading: t('language-editor:insert.heading.pacing'), options: codeOptionsFor('pacing', cfg) },
+  { id: 'layout', heading: t('language-editor:insert.heading.layout'), options: codeOptionsFor('layout', cfg) },
+  { id: 'icons', heading: t('language-editor:insert.heading.icons'), options: glyphOptions(t, cfg) },
 ];
 
 export { buildInsertGroups };

@@ -1,4 +1,5 @@
 /* @layer renderer-components @kind types */
+import type { Text } from '@drizztdourden08/brock-core/i18n';
 import type { OptionValue } from '@rotp/randomizer';
 
 type SnapshotValues = Readonly<Record<string, OptionValue>>;
@@ -10,7 +11,7 @@ interface Tally {
 
 interface ScopeFlag {
   id: string;
-  label: string;
+  label: Text;
   on: boolean;
 }
 

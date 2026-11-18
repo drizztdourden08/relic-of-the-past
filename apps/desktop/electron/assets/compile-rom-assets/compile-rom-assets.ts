@@ -1,9 +1,11 @@
 /* @layer electron-main @kind logic */
 import { writeFile, access } from 'fs/promises';
+import { msg } from '@drizztdourden08/brock-core/i18n';
 import { compileResources } from '@rotp/asset-extraction/buffer';
 import { loadRom } from '@rotp/asset-extraction/node';
 import { getUserDataPath } from '@drizztdourden08/brock-electron/main';
 import { datName } from '@rotp/roms';
+import { mainText } from '../../lib/main-text';
 import { logToRenderer } from '../../lib/renderer-log';
 import { loadCompiledLanguages } from '../load-compiled-languages';
 import { errMessage } from '../../lib/result';
@@ -14,7 +16,7 @@ const compileRomAssets = async (romFile: string): Promise<CompileResult> => {
   try {
     await access(localRomPath);
   } catch {
-    return { success: false, error: `ROM file not found: ${romFile}` };
+    return { success: false, error: mainText(msg('main:assets.romNotFound', { file: romFile })) };
   }
 
   try {

@@ -1,4 +1,5 @@
 /* @layer electron-main @kind constants */
-const CANNOT_STORE_ERROR = 'This system cannot keep a sign-in encrypted.';
+import { msg } from '@drizztdourden08/brock-core/i18n';
+const CANNOT_STORE_ERROR = msg('main:hub.signIn.cannotStore');
 
 export { CANNOT_STORE_ERROR };

@@ -1,4 +1,5 @@
 /* @layer renderer-widgets @kind component */
+import { useText } from '@drizztdourden08/brock-react';
 import { useCallback, useMemo, useRef, useState } from 'react';
 import type { MouseEvent } from 'react';
 import { Box, Portal, Shortcut, Text } from '@drizztdourden08/tessera/primitives';
@@ -12,6 +13,7 @@ import type { PointerHintProviderProps } from './PointerHintProvider.type';
 const PointerHintProvider = ({ children }: PointerHintProviderProps) => {
   const [state, setState] = useState<PointerHintState | null>(null);
   const boxRef = useRef<HTMLDivElement>(null);
+  const text = useText();
 
   const place = useCallback((e: MouseEvent): { x: number; y: number } => {
     const w = boxRef.current?.offsetWidth ?? 0;
@@ -36,12 +38,15 @@ const PointerHintProvider = ({ children }: PointerHintProviderProps) => {
         <Portal layer="tooltip">
           <Box ref={boxRef} className="cheats-pointer-hint" style={{ left: state.x, top: state.y }} aria-hidden="true">
             <Text className="cheats-pointer-hint__title">{state.title}</Text>
-            {state.items.map((item) => (
-              <Box key={`${item.glyph}-${item.label}`} className="cheats-pointer-hint__row">
-                <Shortcut size="xs" {...shortcutOf(item)} />
-                <Text className="cheats-pointer-hint__label">{item.label}</Text>
-              </Box>
-            ))}
+            {state.items.map((item) => {
+              const label = text(item.label);
+              return (
+                <Box key={`${item.glyph}-${label}`} className="cheats-pointer-hint__row">
+                  <Shortcut size="xs" {...shortcutOf(item)} />
+                  <Text className="cheats-pointer-hint__label">{label}</Text>
+                </Box>
+              );
+            })}
           </Box>
         </Portal>
       )}

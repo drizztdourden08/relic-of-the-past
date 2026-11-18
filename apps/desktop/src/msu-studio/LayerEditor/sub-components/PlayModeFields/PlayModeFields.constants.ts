@@ -1,46 +1,37 @@
 /* @layer renderer-components @kind constants */
-import type { SegmentOption } from '@drizztdourden08/tessera/primitives';
-import { MODE_LABELS } from '../../behavior/layer-ops.constants';
+import { msg } from '@drizztdourden08/brock-core/i18n';
+import type { Message } from '@drizztdourden08/brock-core/i18n';
 import type { PlayModeKind } from '../../behavior/layer-ops.type';
 import type { LoopOrder } from './PlayModeFields.type';
 
-const MODE_OPTIONS: SegmentOption<PlayModeKind>[] = (Object.keys(MODE_LABELS) as PlayModeKind[])
-  .map((kind) => ({ value: kind, label: MODE_LABELS[kind] }));
+const MODE_KINDS: PlayModeKind[] = ['once', 'loop', 'random', 'interval'];
 
-const MODE_HINTS: Record<PlayModeKind, string> = {
-  once: 'Plays through a single time and stops.',
-  loop: 'Repeats forever. With one file it loops on itself at its own repeat point; with several '
-    + 'it plays them one after another.',
-  random: 'Fires one file at a random gap, forever.',
-  interval: 'Fires at fixed times measured from the start of the slot.',
+const MODE_LABELS: Record<PlayModeKind, Message> = {
+  once: msg('msu-studio:layers.mode.once'),
+  loop: msg('msu-studio:layers.mode.loop'),
+  random: msg('msu-studio:layers.mode.random'),
+  interval: msg('msu-studio:layers.mode.interval'),
 };
 
-const ORDER_OPTIONS: SegmentOption<LoopOrder>[] = [
-  { value: 'sequential', label: 'Sequential' },
-  { value: 'random', label: 'Shuffle' },
-  { value: 'single', label: 'Single' },
-];
-
-const ORDER_HINTS: Record<LoopOrder, string> = {
-  sequential: 'Plays the files in the order listed, then starts over.',
-  random: 'Draws a different file each pass.',
-  single: 'One track, repeating at its own loop point. The intro plays once and the body repeats.',
+const MODE_HINTS: Record<PlayModeKind, Message> = {
+  once: msg('msu-studio:layers.mode.once-hint'),
+  loop: msg('msu-studio:layers.mode.loop-hint'),
+  random: msg('msu-studio:layers.mode.random-hint'),
+  interval: msg('msu-studio:layers.mode.interval-hint'),
 };
 
-const CROSSFADE_LABEL = 'Crossfade into the next pass';
+const ORDER_KINDS: LoopOrder[] = ['sequential', 'random', 'single'];
 
-const CROSSFADE_HINT
-  = 'How long one pass overlaps the next: the outgoing file fades out while the incoming one '
-  + 'fades in. Off cuts straight from one to the other.';
-
-const WAIT_LABEL = 'Wait for the sound to finish';
-
-const WAIT_HINTS = {
-  off: 'Off: the gap is timed from when a sound starts, so long files can overlap.',
-  on: 'On: the gap starts when the sound finishes, so only one plays at a time.',
+const ORDER_LABELS: Record<LoopOrder, Message> = {
+  sequential: msg('msu-studio:layers.order.sequential'),
+  random: msg('msu-studio:layers.order.random'),
+  single: msg('msu-studio:layers.order.single'),
 };
 
-export {
-  MODE_OPTIONS, MODE_HINTS, ORDER_OPTIONS, ORDER_HINTS,
-  CROSSFADE_LABEL, CROSSFADE_HINT, WAIT_LABEL, WAIT_HINTS,
+const ORDER_HINTS: Record<LoopOrder, Message> = {
+  sequential: msg('msu-studio:layers.order.sequential-hint'),
+  random: msg('msu-studio:layers.order.random-hint'),
+  single: msg('msu-studio:layers.order.single-hint'),
 };
+
+export { MODE_KINDS, MODE_LABELS, MODE_HINTS, ORDER_KINDS, ORDER_LABELS, ORDER_HINTS };

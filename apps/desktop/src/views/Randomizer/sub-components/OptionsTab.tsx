@@ -1,5 +1,6 @@
 /* @layer renderer-components @kind component */
 import { useMemo } from 'react';
+import { useText } from '@drizztdourden08/brock-react';
 import { Box, EmptyState } from '@drizztdourden08/tessera/primitives';
 import { normalizeRandomizerOptions } from '@rotp/randomizer';
 import { choicesOfSnapshot } from '@app/hooks/randomizer/choices-of-snapshot';
@@ -10,11 +11,12 @@ import './OptionsTab.css';
 
 const OptionsTab = (props: OptionsTabProps) => {
   const { config, romFile } = props;
+  const text = useText();
   const frozenSnapshot = useMemo(() => normalizeRandomizerOptions(config?.options), [config]);
   const seed = config?.seed ?? '';
   const choices = useMemo(() => choicesOfSnapshot(frozenSnapshot, seed), [frozenSnapshot, seed]);
 
-  if (config === null) return <EmptyState message={NOT_RANDOMIZED} />;
+  if (config === null) return <EmptyState message={text(NOT_RANDOMIZED)} />;
 
   return (
     <Box className="randomizer-page__options">

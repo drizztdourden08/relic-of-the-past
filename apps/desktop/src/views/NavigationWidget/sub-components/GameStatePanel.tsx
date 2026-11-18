@@ -1,4 +1,5 @@
 /* @layer renderer-widgets @kind component */
+import { useT } from '@drizztdourden08/brock-react';
 import { Box, Text } from '@drizztdourden08/tessera/primitives';
 import { DescRow } from './DescRow';
 import { IndoorBasicRows } from './IndoorBasicRows';
@@ -10,13 +11,14 @@ import type { GameStatePanelProps } from './GameStatePanel.type';
 import './GameStatePanel.css';
 
 const GameStatePanel = (props: GameStatePanelProps) => {
+  const t = useT();
   const { isIndoors, palaceIndex, roomIndex, dungeonMapPos, roomLayoutInfo, whichEntrance, roomStartLayer, overworldScreenIndex, isDarkWorld, progressInfo, displayedVariant, dynamicBlockerCount } = props;
   return (
     <Box className="nav-section">
-      <Box className="nav-section-title">Game State</Box>
+      <Box className="nav-section-title">{t('views-navigation:gamestate.title')}</Box>
       <Box className="nav-info-box">
-        <DescRow label="Mode" desc="Whether the player is currently indoors (dungeon/cave/house) or outdoors on the overworld.">
-          <Text className={isIndoors ? 'nav-val-warning' : 'nav-val-green'}>{isIndoors ? 'Indoor' : 'Outdoor'}</Text>
+        <DescRow id="Mode" label={t('views-navigation:desc.mode.label')} desc={t('views-navigation:desc.mode.text')}>
+          <Text className={isIndoors ? 'nav-val-warning' : 'nav-val-green'}>{isIndoors ? t('views-navigation:gamestate.indoor') : t('views-navigation:gamestate.outdoor')}</Text>
         </DescRow>
         {isIndoors ? (
           <>

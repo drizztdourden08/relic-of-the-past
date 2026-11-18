@@ -1,8 +1,11 @@
 /* @layer renderer-components @kind component */
+import { useT } from '@drizztdourden08/brock-react';
 import { useShadowEditorStore } from '@app/stores/shadow-editor-store';
+import { useT } from '@drizztdourden08/brock-react';
 import { Box, Slider } from '@drizztdourden08/tessera/primitives';
 
 const LightToolOptions = () => {
+  const t = useT();
   const { defaultLightIntensity, setDefaultLightIntensity, defaultLightRadius, setDefaultLightRadius } = useShadowEditorStore();
 
   return (
@@ -12,7 +15,7 @@ const LightToolOptions = () => {
         min={0}
         max={2}
         step={0.05}
-        label="Intensity"
+        label={t('views-shadow-editor:intensity')}
         onChange={setDefaultLightIntensity}
         showValue
       />
@@ -21,7 +24,7 @@ const LightToolOptions = () => {
         min={8}
         max={256}
         step={4}
-        label="Radius"
+        label={t('views-shadow-editor:radius')}
         onChange={setDefaultLightRadius}
         showValue
       />

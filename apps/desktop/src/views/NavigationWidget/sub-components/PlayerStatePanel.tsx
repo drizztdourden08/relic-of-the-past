@@ -1,4 +1,5 @@
 /* @layer renderer-widgets @kind component */
+import { useT } from '@drizztdourden08/brock-react';
 import { Box } from '@drizztdourden08/tessera/primitives';
 import { CollisionRow } from './CollisionRow';
 import { DoorwayRow } from './DoorwayRow';
@@ -9,11 +10,12 @@ import type { PlayerStatePanelProps } from './PlayerStatePanel.type';
 
 const PlayerStatePanel = (props: PlayerStatePanelProps) => {
   const { playerDebug, isIndoors, playerX, playerY } = props;
+  const t = useT();
   if (!playerDebug) return null;
 
   return (
     <Box className="nav-section">
-      <Box className="nav-section-title">Player State</Box>
+      <Box className="nav-section-title">{t('views-navigation:player.title')}</Box>
       <Box className="nav-info-box">
         <PlayerPositionRows playerDebug={playerDebug} isIndoors={isIndoors} playerX={playerX} playerY={playerY} />
         <LayerRow playerDebug={playerDebug} />

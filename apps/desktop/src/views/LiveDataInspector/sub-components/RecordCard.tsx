@@ -1,4 +1,5 @@
 /* @layer renderer-widgets @kind component */
+import { useText } from '@drizztdourden08/brock-react';
 import { Box, Flex, Icon, IconButton } from '@drizztdourden08/tessera/primitives';
 import { CompactRecordView } from '@drizztdourden08/tessera/composites';
 import { useDataViewStore } from '@app/stores/data-view-store';
@@ -10,12 +11,13 @@ import './RecordCard.css';
 
 const RecordCard = <T,>(props: RecordCardProps<T>) => {
   const { kind, id, record, schema, config, resolveIdRefDisplay, diffs, fieldRenderers } = props;
+  const text = useText();
   const openRecord = useDataViewStore((state) => state.openRecord);
 
   return (
     <Box className="live-record-card">
       <Flex justify="end" className="live-record-card__actions">
-        <IconButton label={EDIT_LABEL} title={EDIT_LABEL} onClick={() => openRecord(kind, id)}>
+        <IconButton label={text(EDIT_LABEL)} title={text(EDIT_LABEL)} onClick={() => openRecord(kind, id)}>
           <Icon name="pencil" />
         </IconButton>
       </Flex>
