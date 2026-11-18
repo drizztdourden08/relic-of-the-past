@@ -25,5 +25,5 @@
   "variable.rupee-max.note": "Nivel de la bolsa: 99, 999 o 9999.",
   "variable.silver-arrows.note": "0 o 1.",
   "variable.slot-count.note": "Cuántas ranuras tiene el esquema activo.",
-  "warning.reflow": "{id}: animar '{property}' puede recolocar a los elementos vecinos en el contenedor de flujo '{parent}'; las otras seis propiedades (scale, opacity, x, y, rotate, tint) nunca pueden"
+  "warning.reflow": "{id}: animar ''{property}'' puede recolocar a los elementos vecinos en el contenedor de flujo ''{parent}''; las otras seis propiedades (scale, opacity, x, y, rotate, tint) nunca pueden"
 }

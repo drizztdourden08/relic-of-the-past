@@ -25,5 +25,5 @@
   "variable.rupee-max.note": "Wallet tier: 99, 999 or 9999.",
   "variable.silver-arrows.note": "0 or 1.",
   "variable.slot-count.note": "How many slots the active scheme has.",
-  "warning.reflow": "{id}: animating '{property}' can reflow siblings in flow container '{parent}' - the other six properties (scale, opacity, x, y, rotate, tint) never can"
+  "warning.reflow": "{id}: animating ''{property}'' can reflow siblings in flow container ''{parent}'' - the other six properties (scale, opacity, x, y, rotate, tint) never can"
 }

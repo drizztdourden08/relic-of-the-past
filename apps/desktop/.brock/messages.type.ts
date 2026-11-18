@@ -3136,9 +3136,9 @@ declare module '@drizztdourden08/brock-core/augment' {
     'views-data-inspector:rec.reason.absent-in-game': { label: string | number; dataset: string | number };
     'views-data-inspector:rec.reason.set-create': { noun: string | number; key: string | number };
     'views-data-inspector:rec.reason.set-delete': { noun: string | number; key: string | number };
+    'views-data-inspector:rec.reason.geography': { location: string | number; pick: string | number; count: number };
     'views-data-inspector:rec.reason.crossing-interior': { label: string | number };
     'views-data-inspector:rec.reason.crossing-screen': { label: string | number };
-    'views-data-inspector:rec.reason.geography': { location: string | number; pick: string | number; count: number };
     'views-debug:section.mode': Record<never, never>;
     'views-debug:section.location': Record<never, never>;
     'views-debug:section.hud': Record<never, never>;

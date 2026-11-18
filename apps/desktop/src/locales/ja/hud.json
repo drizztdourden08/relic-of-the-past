@@ -25,5 +25,5 @@
   "variable.rupee-max.note": "財布の段階：99、999、または9999。",
   "variable.silver-arrows.note": "0または1。",
   "variable.slot-count.note": "有効なスキームが持つスロットの数。",
-  "warning.reflow": "{id}: '{property}'のアニメーションは、フローコンテナ'{parent}'内の隣接要素を再配置することがあります。他の6つのプロパティ（scale、opacity、x、y、rotate、tint）では起きません"
+  "warning.reflow": "{id}: ''{property}''のアニメーションは、フローコンテナ''{parent}''内の隣接要素を再配置することがあります。他の6つのプロパティ（scale、opacity、x、y、rotate、tint）では起きません"
 }

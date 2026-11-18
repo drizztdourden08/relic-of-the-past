@@ -25,5 +25,5 @@
   "variable.rupee-max.note": "Palier de bourse : 99, 999 ou 9999.",
   "variable.silver-arrows.note": "0 ou 1.",
   "variable.slot-count.note": "Nombre d'emplacements du schéma actif.",
-  "warning.reflow": "{id} : animer '{property}' peut déplacer les éléments voisins dans le conteneur de flux '{parent}' - les six autres propriétés (scale, opacity, x, y, rotate, tint) ne le peuvent jamais"
+  "warning.reflow": "{id} : animer ''{property}'' peut déplacer les éléments voisins dans le conteneur de flux ''{parent}'' - les six autres propriétés (scale, opacity, x, y, rotate, tint) ne le peuvent jamais"
 }

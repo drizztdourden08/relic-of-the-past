@@ -25,5 +25,5 @@
   "variable.rupee-max.note": "Nível da carteira: 99, 999 ou 9999.",
   "variable.silver-arrows.note": "0 ou 1.",
   "variable.slot-count.note": "Quantos slots o esquema ativo tem.",
-  "warning.reflow": "{id}: animar '{property}' pode reorganizar os elementos vizinhos no contêiner de fluxo '{parent}'; as outras seis propriedades (scale, opacity, x, y, rotate, tint) nunca podem"
+  "warning.reflow": "{id}: animar ''{property}'' pode reorganizar os elementos vizinhos no contêiner de fluxo ''{parent}''; as outras seis propriedades (scale, opacity, x, y, rotate, tint) nunca podem"
 }

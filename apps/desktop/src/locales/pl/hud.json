@@ -25,5 +25,5 @@
   "variable.rupee-max.note": "Poziom portfela: 99, 999 lub 9999.",
   "variable.silver-arrows.note": "0 lub 1.",
   "variable.slot-count.note": "Ile slotów ma aktywny schemat.",
-  "warning.reflow": "{id}: animowanie '{property}' może przesunąć sąsiednie elementy w kontenerze przepływu '{parent}' - pozostałe sześć właściwości (scale, opacity, x, y, rotate, tint) nigdy tego nie robi"
+  "warning.reflow": "{id}: animowanie ''{property}'' może przesunąć sąsiednie elementy w kontenerze przepływu ''{parent}'' - pozostałe sześć właściwości (scale, opacity, x, y, rotate, tint) nigdy tego nie robi"
 }
