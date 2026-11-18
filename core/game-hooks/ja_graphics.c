@@ -90,9 +90,11 @@ static const uint8 *Taken(const Blob *blob, uint32 *size) {
   return blob->data;
 }
 
-// The HUD sheets hold the pause words' glyphs in the Japanese order, so they are drawn only with the
-// pack's own words for them; a pack without the words keeps the US sheets.
-static bool HudTextComplete(void) {
+// The HUD sheets differ from the US ones only in their glyphs (kana where the US sheets hold letters),
+// and the pause words are text, which follows the profile's language. So they are drawn only for a
+// Japanese set, and only with the pack's own words for them; otherwise the US sheets stay.
+static bool HudPackDrawn(void) {
+  if (!JaGraphics_On(kJaGfx_Hud) || SelectLayout_OfSet() != kSelectLayout_Ja) return false;
   for (int i = 0; i < kHudTextCount; i++)
     if (g_hud_text[i].data == NULL) return false;
   return true;
@@ -101,7 +103,7 @@ static bool HudTextComplete(void) {
 const uint8 *JaGraphics_Sheet(int kind, int index, uint32 *size) {
   uint32 option = SheetOption(kind, index);
   if (option == 0 || !JaGraphics_On(option) || index < 0 || index >= kLangSheetMax) return NULL;
-  if (option == kJaGfx_Hud && !HudTextComplete()) return NULL;
+  if (option == kJaGfx_Hud && !HudPackDrawn()) return NULL;
   return Taken(&g_sheets[kind][index], size);
 }
 
@@ -110,7 +112,7 @@ const uint8 *JaGraphics_PackSheet(int kind, int index, uint32 *size) {
 }
 
 const uint8 *JaGraphics_HudText(int id, int *len) {
-  if (!JaGraphics_On(kJaGfx_Hud) || !HudTextComplete()) return NULL;
+  if (!HudPackDrawn()) return NULL;
   for (int i = 0; i < kHudTextCount; i++) {
     if (kHudTextTable[i] != id) continue;
     *len = (int)g_hud_text[i].size;

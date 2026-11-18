@@ -65,7 +65,8 @@ bool JaGraphics_SetIntroAllowed(void);
 bool JaGraphics_SetHudAllowed(void);
 
 // The pack's own pause words for language table |id| (a kLangTbl_Hud* id), drawn with its HUD sheets, and
-// their byte length in |len|. NULL unless kJaGfx_Hud is on and the pack carries every pause table.
+// their byte length in |len|. NULL unless kJaGfx_Hud is on, the set is Japanese and the pack carries
+// every pause table.
 const uint8 *JaGraphics_HudText(int id, int *len);
 
 // The Japanese copyright line's own sprite layout (its start position and objects differ from the US

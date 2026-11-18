@@ -69,13 +69,26 @@ static const void *PackText(int id) {
   return text != NULL && len == kTableBytes[id] ? text : NULL;
 }
 
+// The not-assigned word is the port's own (extra item buttons) and has no Japanese source; under the
+// Japanese HUD sheets its US letters would name kana, so it is drawn blank there.
+static const uint16 kBlankNotAssigned[16] = {
+  0x24f5, 0x24f5, 0x24f5, 0x24f5, 0x24f5, 0x24f5, 0x24f5, 0x24f5,
+  0x24f5, 0x24f5, 0x24f5, 0x24f5, 0x24f5, 0x24f5, 0x24f5, 0x24f5,
+};
+
+static bool JapaneseHudWords(void) {
+  return PackText(kLangTbl_HudItem) != NULL || (HostPicked(kLangTbl_HudItem) && SelectLayout_OfSet() == kSelectLayout_Ja);
+}
+
 const void *LanguageScreens_Pick(int id, const void *orig) {
+  if (id == kLangTbl_HudNotAssigned && JapaneseHudWords()) return kBlankNotAssigned;
   const void *pack = PackText(id);
   if (pack != NULL) return pack;
   return HostPicked(id) ? g_language_screens.table[id] : orig;
 }
 
 int LanguageScreens_Len(int id, int orig_len) {
+  if (id == kLangTbl_HudNotAssigned && JapaneseHudWords()) return (int)sizeof(kBlankNotAssigned);
   if (PackText(id) != NULL) return kTableBytes[id];
   return HostPicked(id) ? g_language_screens.length[id] : orig_len;
 }
