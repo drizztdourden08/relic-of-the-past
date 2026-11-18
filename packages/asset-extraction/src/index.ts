@@ -6,7 +6,10 @@ export { glyphToChar } from './japanese/text/glyph-to-char';
 export { GLYPH_LIMIT as JAPANESE_GLYPH_LIMIT } from './japanese/text/japanese-charset.constants';
 export type { ExtractedJapaneseLanguage, JapanesePackedEntry } from './japanese/entry/japanese-entry.type';
 export { snesToLinear, advanceAddress, advanceAddressWord } from './rom/snes-address';
-export { GAME_ROM_LANGUAGE, OFFICIAL_RELEASES, ZELDA3_SHA1, ZELDA3_SHA1_US } from './rom/rom-loader/rom-loader.constants';
+export {
+  DOUBLE_HEADER_LENGTH, GAME_ROM_LANGUAGE, OFFICIAL_RELEASES, PATCHED_ROM_MAX_BYTES, PATCHED_ROM_MIN_BYTES, SMC_HEADER_BYTES,
+  ZELDA3_SHA1, ZELDA3_SHA1_US,
+} from './rom/rom-loader/rom-loader.constants';
 export { fanTranslationRefusal } from './rom/rom-loader/fan-translation-refusal';
 export { stripSmcHeader } from './rom/rom-loader/strip-smc-header';
 export { RomReader } from './rom/reader';

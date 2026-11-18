@@ -51,11 +51,7 @@ const useImportForm = (params: UseImportFormParams) => {
     }
   }, [onFileImport]);
 
-  const handleKeyDown = (e: React.KeyboardEvent) => {
-    if (e.key === 'Enter' && !isDisabled) void handleDownload();
-  };
-
-  return { url, setUrl, status, busy, progress, isDisabled, handleDownload, handleDrop, handleKeyDown };
+  return { url, setUrl, status, busy, progress, isDisabled, handleDownload, handleDrop };
 };
 
 export { useImportForm };

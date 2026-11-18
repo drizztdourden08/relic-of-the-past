@@ -1,5 +1,6 @@
 /* @layer renderer-components @kind component */
-import { DropZone, Field, Stack, TextInput } from '@drizztdourden08/tessera/primitives';
+import { Field, Stack, TextInput } from '@drizztdourden08/tessera/primitives';
+import { UploadField } from '@app/compounds/UploadField';
 import type { DropZoneStatus } from '@drizztdourden08/tessera/primitives';
 import { MSU_PACK_ACCEPT, NAME_HINT } from '../MsuCreateWizard.constants';
 import type { FieldsProps } from '../MsuCreateWizard.type';
@@ -19,13 +20,12 @@ const DetailsStep = ({ values, update }: FieldsProps) => (
     </Field>
     {values.source === 'file' && (
       <Field label="Pack file">
-        <DropZone
+        <UploadField
           accept={[...MSU_PACK_ACCEPT]}
-          variant="inline"
           label="Drop a pack here"
           hint=".msul, or a .zip / .7z / .rar archive of audio"
           status={chosenStatus(values.file)}
-          onDrop={(files) => update({ file: files[0] ?? null })}
+          onFiles={(files) => update({ file: files[0] ?? null })}
         />
       </Field>
     )}

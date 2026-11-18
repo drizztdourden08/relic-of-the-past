@@ -3,8 +3,8 @@ import type { IconName } from '@drizztdourden08/tessera/primitives';
 import type { LanguageSetSummary } from '@rotp/languages';
 
 const LANGUAGE_ORIGIN_ICONS: Record<LanguageSetSummary['origin'], IconName> = {
-  rom: 'gamepad-2',
-  patch: 'wrench',
+  rom: 'cartridge',
+  patch: 'patch',
   custom: 'pencil',
 };
 

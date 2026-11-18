@@ -1,6 +1,7 @@
 /* @layer renderer-components @kind component */
 import { useState } from 'react';
-import { Box, DropZone, Text } from '@drizztdourden08/tessera/primitives';
+import { Box, Text } from '@drizztdourden08/tessera/primitives';
+import { UploadField } from '@app/compounds/UploadField';
 import { StudioLayout } from '@drizztdourden08/tessera/composites';
 import { STUDIO_EDITOR_MIN_WIDTH, StudioPanelContent } from '@app/studio';
 import { fileToolGroups } from './file-tool-groups';
@@ -38,12 +39,13 @@ const MsuFilePanel = (props: MsuFilePanelProps) => {
       end={{ ...DETAILS_PANEL, content: <StudioPanelContent>{detail}</StudioPanelContent> }}
     >
       <Box className="msu-panel">
-        <DropZone
+        <UploadField
+          variant="block"
           accept={AUDIO_ACCEPT}
           label="Drop audio here to add it to the pack"
           hint={AUDIO_ACCEPT_HINT}
           disabled={panel.busy || readOnly}
-          onDrop={panel.handleUpload}
+          onFiles={panel.handleUpload}
         />
         {panel.statusMessage != null && (
           <Text className={`msu-status${panel.statusOk ? '' : ' msu-status--error'}`}>{panel.statusMessage}</Text>

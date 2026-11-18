@@ -4,10 +4,12 @@ import type { RomKind } from '@rotp/roms';
 import type { ImportProgressState } from '@app/hooks/useImportProgress';
 import type { RomImportOutcome } from '../rom-manager.type';
 import type { RomExtraction } from '../rom-extraction.type';
+import type { RomCheck } from '../../rom-check';
 
 interface RomWizardValues {
   kind: RomKind;
   file: File | null;
+  check: RomCheck | null;
   url: string;
 }
 

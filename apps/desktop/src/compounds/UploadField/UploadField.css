@@ -1,0 +1,16 @@
+/* @layer renderer-components @kind style */
+
+.upload-field {
+  min-width: 0;
+}
+
+.upload-field__link {
+  display: flex;
+  gap: var(--space-xs);
+  min-width: 0;
+}
+
+.upload-field__url {
+  flex: 1;
+  min-width: 0;
+}

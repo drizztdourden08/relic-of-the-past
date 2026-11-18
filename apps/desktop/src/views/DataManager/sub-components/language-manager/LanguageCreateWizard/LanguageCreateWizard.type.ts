@@ -3,6 +3,7 @@ import type { WizardApi } from '@drizztdourden08/tessera/composites';
 import type { PatchedPartReport, RomLanguage } from '@rotp/asset-extraction';
 import type { LanguageSetSummary } from '@rotp/languages';
 import type { LanguageOutcome } from '../language-manager.type';
+import type { RomCheck } from '../../rom-check';
 
 interface TextOrFile {
   mode: 'text' | 'file';
@@ -22,7 +23,9 @@ interface LanguageWizardValues {
   source: LanguageSource;
   romFile: File | null;
   romUrl: string;
+  romCheck: RomCheck | null;
   patchedFile: File | null;
+  patchedCheck: RomCheck | null;
   name: string;
   release: RomLanguage;
   credits: TextOrFile;

@@ -25,6 +25,6 @@ const PROBLEMS = {
   badUrl: 'The download link is not a web address.',
 } as const;
 
-const INITIAL_VALUES: RomWizardValues = { kind: 'snes-alttp', file: null, url: '' };
+const INITIAL_VALUES: RomWizardValues = { kind: 'snes-alttp', file: null, check: null, url: '' };
 
 export { BUSY_HINT, IMPORT_BUTTONS, INITIAL_VALUES, PROBLEMS, STEP_IDS, STEP_LABELS, WIZARD_TITLE };

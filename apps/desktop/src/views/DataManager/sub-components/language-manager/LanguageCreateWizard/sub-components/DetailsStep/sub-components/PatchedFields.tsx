@@ -1,7 +1,9 @@
 /* @layer renderer-components @kind component */
-import { DropZone, Field, Stack, TextInput } from '@drizztdourden08/tessera/primitives';
+import { Field, Stack, TextInput } from '@drizztdourden08/tessera/primitives';
+import { officialRomStatuses } from '@rotp/roms';
+import { UploadField } from '@app/compounds/UploadField';
 import { PATCHED_ROM_ACCEPT } from '../../../LanguageCreateWizard.constants';
-import { chosenStatus } from '../../../behavior/chosen-status';
+import { checkPickedRom, romCheckStatus } from '../../../../../rom-check';
 import type { SourceFieldsProps } from '../DetailsStep.type';
 import { ReleaseSelect } from './ReleaseSelect';
 import { TextOrFileField } from './TextOrFileField';
@@ -29,13 +31,14 @@ const PatchedFields = ({ values, update }: SourceFieldsProps) => (
       onChange={(credits) => update({ credits })}
     />
     <Field label="ROM file">
-      <DropZone
+      <UploadField
         accept={PATCHED_ROM_ACCEPT}
-        variant="inline"
         label="Drop the patched ROM"
         hint="The ROM is read, never saved."
-        status={chosenStatus(values.patchedFile)}
-        onDrop={(files) => update({ patchedFile: files[0] ?? null })}
+        status={romCheckStatus(values.patchedFile, values.patchedCheck)}
+        roms={officialRomStatuses()}
+        onFiles={(files) => checkPickedRom(files, 'patched', undefined,
+          (patchedFile) => update({ patchedFile, patchedCheck: null }), (patchedCheck) => update({ patchedCheck }))}
       />
     </Field>
   </Stack>
