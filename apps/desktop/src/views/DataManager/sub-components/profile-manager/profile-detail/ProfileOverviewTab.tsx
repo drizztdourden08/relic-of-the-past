@@ -13,7 +13,7 @@ const ProfileOverviewTab = (props: ProfileOverviewTabProps) => {
   return (
     <Stack gap="lg">
       <ProfileEditSection profile={profile} languages={languages} msuPacks={msuPacks} onRefresh={onRefresh} />
-      <FactsSection title={t('data-manager:profile-manager.profile-overview-tab.details')} facts={[buildProfileFacts(profile, mode)]} />
+      <FactsSection title={t('data-manager:profile-manager.profile-overview-tab.details')} facts={[buildProfileFacts(profile, mode, t)]} />
     </Stack>
   );
 };

@@ -1,7 +1,7 @@
 /* @layer renderer-components @kind hook */
 import { useCallback, useMemo, useState } from 'react';
 import { OPTIONS_STEP_ID, useRollProgress } from '@drizztdourden08/brock-randomizer/renderer';
-import { useModuleWizardSteps, useSettings } from '@drizztdourden08/brock-react';
+import { useModuleWizardSteps, useSettings, useT } from '@drizztdourden08/brock-react';
 import { useWizard } from '@drizztdourden08/tessera/composites';
 import { experimentalFeaturesEnabled } from '@rotp/features';
 import type { AppSettings } from '@app/settings.type';
@@ -14,6 +14,7 @@ import { profileWizardSteps } from './profile-wizard-steps';
 import { withStepFacts } from './with-step-facts';
 
 const useProfileWizard = ({ onCreateProfile, onCreated }: UseProfileWizardParams) => {
+  const t = useT();
   const { settings } = useSettings<AppSettings>();
   const experimental = experimentalFeaturesEnabled(settings);
   const moduleSteps = useModuleWizardSteps();
@@ -21,7 +22,7 @@ const useProfileWizard = ({ onCreateProfile, onCreated }: UseProfileWizardParams
   const joining = useRollProgress((state) => state.fraction);
   const modules = useMemo(() => moduleSteps.map(withStepFacts), [moduleSteps]);
   const [initialValues] = useState(() => initialProfileValues(modules));
-  const steps = useMemo(() => profileWizardSteps({ joining, modules }), [joining, modules]);
+  const steps = useMemo(() => profileWizardSteps({ joining, modules, t }), [joining, modules, t]);
 
   const handleFinish = useCallback(async (values: ProfileWizardValues) => {
     try {

@@ -15,7 +15,7 @@ const ProfileLobbyStatus = ({ profile }: ProfileLobbyStatusProps) => {
   const live = useLobbyStatusStore((state) => state.live[profile.id]);
   const [converting, setConverting] = useState(false);
   if (membership === undefined) return null;
-  const line = lobbyStatusLine(membership, live);
+  const line = lobbyStatusLine(membership, live, t);
 
   const changeToLocal = () => {
     setConverting(true);
@@ -33,7 +33,7 @@ const ProfileLobbyStatus = ({ profile }: ProfileLobbyStatusProps) => {
           <Button variant="secondary" size="sm" loading={converting} onClick={changeToLocal}>{t('data-manager:profile-manager.profile-lobby-status.change-to-local')}</Button>
         )}
       </Flex>
-      <FactsPanel groups={[buildLobbyFacts(membership, profile.randomizer?.slotName ?? '')]} />
+      <FactsPanel groups={[buildLobbyFacts(membership, profile.randomizer?.slotName ?? '', t)]} />
     </Stack>
   );
 };

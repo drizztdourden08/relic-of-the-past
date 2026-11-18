@@ -8,7 +8,6 @@ import type { ProfileRowsProps } from './profile-manager.type';
 
 const ProfileRows = (props: ProfileRowsProps) => {
   const t = useT();
-  const t = useT();
   const { profiles, selected, onSelect, onOpen, onDelete } = props;
   const members = useLobbyStatusStore((state) => state.members);
 
@@ -16,7 +15,7 @@ const ProfileRows = (props: ProfileRowsProps) => {
     <Stack gap="xs">
       {profiles.length === 0 && <EmptyState message={t('data-manager:profile-manager.no-profiles-yet')} />}
       {profiles.map((profile) => {
-        const chip = profile.randomizer?.mode === 'archipelia' ? lobbyRowChip(members[profile.id]) : null;
+        const chip = profile.randomizer?.mode === 'archipelia' ? lobbyRowChip(members[profile.id], t) : null;
         return (
           <ListItemRow
             key={profile.id}

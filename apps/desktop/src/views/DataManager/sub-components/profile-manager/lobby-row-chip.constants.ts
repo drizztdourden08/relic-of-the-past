@@ -1,14 +1,15 @@
 /* @layer renderer-components @kind constants */
+import type { I18n } from '@drizztdourden08/brock-core/i18n';
 import type { StatusTone } from '@drizztdourden08/tessera/primitives';
 import type { MembershipState } from '@drizztdourden08/brock-randomizer/renderer';
 
-const ROW_CHIPS: Readonly<Record<MembershipState['kind'], { label: string; tone: StatusTone } | null>> = {
-  pending: { label: 'Waiting', tone: 'warning' },
-  failed: { label: 'Waiting', tone: 'warning' },
-  approved: { label: 'Approved', tone: 'success' },
-  refused: { label: 'Refused', tone: 'danger' },
-  gone: { label: 'Lobby gone', tone: 'danger' },
+const rowChips = (t: I18n['t']): Readonly<Record<MembershipState['kind'], { label: string; tone: StatusTone } | null>> => ({
+  pending: { label: t('data-manager:lobby-chip.waiting'), tone: 'warning' },
+  failed: { label: t('data-manager:lobby-chip.waiting'), tone: 'warning' },
+  approved: { label: t('data-manager:lobby-chip.approved'), tone: 'success' },
+  refused: { label: t('data-manager:lobby-chip.refused'), tone: 'danger' },
+  gone: { label: t('data-manager:lobby-chip.gone'), tone: 'danger' },
   started: null,
-};
+});
 
-export { ROW_CHIPS };
+export { rowChips };

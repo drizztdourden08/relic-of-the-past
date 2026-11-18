@@ -1,13 +1,14 @@
 /* @layer renderer-views @kind view */
+import { useT } from '@drizztdourden08/brock-react';
 import { useMemo } from 'react';
 import { Wizard } from '@drizztdourden08/tessera/composites';
 import { OptionTabContext } from '@app/randomizer/wizard/option-tab-context';
-import { WIZARD_TITLE } from './ProfileCreateWizard.constants';
 import type { ProfileCreateWizardProps } from './ProfileCreateWizard.type';
 import { useProfileWizard } from './behavior/useProfileWizard';
 import { StepBody } from './sub-components/StepBody';
 
 const ProfileCreateWizard = (props: ProfileCreateWizardProps) => {
+  const t = useT();
   const { readyRoms, languages, msuPacks, onCreateProfile, onCancel, onCreated } = props;
   const { wizard, modules, optionTab, setOptionTab, handleSubStepSelect } = useProfileWizard({ onCreateProfile, onCreated });
 
@@ -17,7 +18,7 @@ const ProfileCreateWizard = (props: ProfileCreateWizardProps) => {
     <OptionTabContext.Provider value={tabControl}>
       <Wizard
         wizard={wizard}
-        title={WIZARD_TITLE}
+        title={t('wizards:profile.title')}
         orientation="vertical"
         stepperSize="sm"
         activeSubStepId={optionTab}

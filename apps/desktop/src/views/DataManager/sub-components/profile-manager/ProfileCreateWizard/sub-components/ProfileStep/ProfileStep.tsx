@@ -3,7 +3,7 @@ import { useT } from '@drizztdourden08/brock-react';
 import { Field, Grid, SegmentedControl, Select, Stack, TextInput } from '@drizztdourden08/tessera/primitives';
 import { languageOptions } from '../../../../language-options';
 import { shownLanguage } from '../../../../shown-language';
-import { NO_MSU_LABEL, PRESET_OPTIONS } from '../../ProfileCreateWizard.constants';
+import { presetOptions } from '../../ProfileCreateWizard.constants';
 import type { ProfileStepProps } from './ProfileStep.type';
 
 const ProfileStep = ({ values, update, readyRoms, languages, msuPacks }: ProfileStepProps) => {
@@ -23,7 +23,7 @@ const ProfileStep = ({ values, update, readyRoms, languages, msuPacks }: Profile
         />
       </Field>
     </Grid>
-    <SegmentedControl label={t('wizards:profile.profile.preset')} value={values.preset} options={PRESET_OPTIONS} onChange={(preset) => update({ preset })} />
+    <SegmentedControl label={t('wizards:profile.profile.preset')} value={values.preset} options={presetOptions(t)} onChange={(preset) => update({ preset })} />
     <Grid columns={2} gap="md">
       <Field label={t('wizards:profile.profile.language')}>
         <Select
@@ -36,8 +36,8 @@ const ProfileStep = ({ values, update, readyRoms, languages, msuPacks }: Profile
         <Select
           value={values.msuPack}
           onChange={(msuPack) => update({ msuPack })}
-          options={[{ value: '', label: NO_MSU_LABEL }, ...msuPacks.map((p) => ({ value: p.name, label: p.name }))]}
-          placeholder={NO_MSU_LABEL}
+          options={[{ value: '', label: t('wizards:profile.none') }, ...msuPacks.map((p) => ({ value: p.name, label: p.name }))]}
+          placeholder={t('wizards:profile.none')}
         />
       </Field>
     </Grid>

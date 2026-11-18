@@ -15,9 +15,9 @@ const ProfileDataTab = ({ profile, settings }: ProfileDataTabProps) => {
   if (data === null) return <Spinner size="md" />;
   return (
     <Stack gap="lg">
-      <FactsSection title={t('data-manager:profile-manager.profile-data-tab.saves')} facts={[buildSaveFacts(data)]} />
-      <FactsSection title={t('data-manager:profile-manager.profile-data-tab.play')} facts={[buildPlayFacts(data)]} />
-      <FactsSection title={t('data-manager:profile-manager.profile-data-tab.controls')} facts={[buildControlFacts(data, settings)]} />
+      <FactsSection title={t('data-manager:profile-manager.profile-data-tab.saves')} facts={[buildSaveFacts(data, t)]} />
+      <FactsSection title={t('data-manager:profile-manager.profile-data-tab.play')} facts={[buildPlayFacts(data, t)]} />
+      <FactsSection title={t('data-manager:profile-manager.profile-data-tab.controls')} facts={[buildControlFacts(data, settings, t)]} />
     </Stack>
   );
 };

@@ -32,7 +32,7 @@ const ProfilePackFields = (props: ProfileEditSectionProps) => {
             onRefresh();
           }}
           options={[
-            { value: '', label: 'None' },
+            { value: '', label: t('data-manager:profile-manager.profile-pack-fields.none') },
             ...msuPacks.map((p) => ({ value: p.name, label: p.name })),
           ]}
           placeholder={t('data-manager:profile-manager.profile-pack-fields.none')}

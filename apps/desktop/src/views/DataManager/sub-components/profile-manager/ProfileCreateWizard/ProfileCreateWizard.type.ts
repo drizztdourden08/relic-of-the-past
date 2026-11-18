@@ -1,4 +1,5 @@
 /* @layer renderer-components @kind types */
+import type { I18n } from '@drizztdourden08/brock-core/i18n';
 import type { WizardApi } from '@drizztdourden08/tessera/composites';
 import type { ProfileWizardStepDef } from '@drizztdourden08/brock-react';
 import type { CreateProfileOptions, CreateProfileResult } from '@app/profiles/types';
@@ -17,6 +18,7 @@ type ProfileWizardApi = WizardApi<ProfileWizardValues>;
 type UpdateValues = (patch: Partial<ProfileWizardValues>) => void;
 
 interface StepContext {
+  t: I18n['t'];
   joining: number | null;
   modules: readonly ProfileWizardStepDef[];
 }
