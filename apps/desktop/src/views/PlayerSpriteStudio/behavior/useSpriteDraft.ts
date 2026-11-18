@@ -1,4 +1,5 @@
 /* @layer renderer-hooks @kind logic */
+import { useT } from '@drizztdourden08/brock-react';
 import { useState, useCallback, useMemo } from 'react';
 import type { OutfitId, PlayerSheet, SheetPalette } from '@rotp/game-data';
 import { loadSheet, saveSheet } from '@app/game/player-sheet/load-sheet';
@@ -10,6 +11,7 @@ import { isLiveSelection } from './is-live-selection';
 import { colorAt } from './color-at';
 
 const useSpriteDraft = (romFile: string | null, stockPalette?: SheetPalette) => {
+  const t = useT();
   const [draft, setDraft] = useState<OpenDraft | null>(null);
   const [applied, setApplied] = useState<boolean | null>(null);
 
@@ -23,10 +25,10 @@ const useSpriteDraft = (romFile: string | null, stockPalette?: SheetPalette) => 
     if (!romFile) return false;
     const stock = await loadStockSheet(romFile);
     if (!stock) return false;
-    setDraft({ file: null, sheet: { ...stock, meta: { name: 'Custom sprite', author: '', authorShort: '' } } });
+    setDraft({ file: null, sheet: { ...stock, meta: { name: t('views-player-sprite-studio:sprite.defaultName'), author: '', authorShort: '' } } });
     setApplied(null);
     return true;
-  }, [romFile]);
+  }, [romFile, t]);
 
   const close = useCallback(() => { setDraft(null); setApplied(null); }, []);
 

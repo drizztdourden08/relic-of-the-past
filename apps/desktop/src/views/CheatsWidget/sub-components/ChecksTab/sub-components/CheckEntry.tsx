@@ -1,4 +1,5 @@
 /* @layer renderer-widgets @kind component */
+import { useT } from '@drizztdourden08/brock-react';
 import { Box, Button, Text } from '@drizztdourden08/tessera/primitives';
 import { grantFromCheck } from '@app/game';
 import { detailOf } from '../behavior/detail-of';
@@ -6,8 +7,9 @@ import { screenLabelOf } from '../behavior/screen-label-of';
 import type { CheckEntryProps } from '../ChecksTab.type';
 
 const CheckEntry = ({ check, done, plan }: CheckEntryProps) => {
+  const t = useT();
   const blocked = plan.kind === 'blocked';
-  const detail = detailOf(plan);
+  const detail = detailOf(t, plan);
 
   return (
     <Box className={`cheats-checks__entry ${done ? 'cheats-checks__entry--completed' : ''}`}>
@@ -26,7 +28,7 @@ const CheckEntry = ({ check, done, plan }: CheckEntryProps) => {
         title={detail}
         onClick={() => grantFromCheck(check)}
       >
-        Grant
+        {t('views-cheats:checks.grant')}
       </Button>
     </Box>
   );

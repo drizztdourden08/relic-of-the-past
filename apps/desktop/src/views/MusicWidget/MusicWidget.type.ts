@@ -1,10 +1,11 @@
 /* @layer renderer-widgets @kind types */
+import type { Message } from '@drizztdourden08/brock-core/i18n';
 import type { MsuChannelName, msuChannelReport } from '@rotp/msu';
 import type { PreviewReportStore } from '@app/msu-studio/behavior/preview-report-store';
 
 interface LiveChannel {
   name: MsuChannelName;
-  title: string;
+  title: Message;
   store: PreviewReportStore;
 }
 

@@ -1,4 +1,5 @@
 /* @layer renderer-components @kind component */
+import { useT } from '@drizztdourden08/brock-react';
 import { useMemo } from 'react';
 import { EmptyState } from '@drizztdourden08/tessera/primitives';
 import { ListDetailLayout } from '@drizztdourden08/tessera/composites';
@@ -13,11 +14,11 @@ import { useStudioActions } from './behavior/useStudioActions';
 import { SpriteListPane } from './sub-components/SpriteListPane';
 import { SpriteWorkArea } from './sub-components/SpriteWorkArea';
 import { CharacterCreateWizard, NEW_SPRITE_ID } from './sub-components/CharacterCreateWizard';
-import { EMPTY_EDITOR } from './PlayerSpriteStudio.constants';
 import type { PlayerSpriteStudioProps } from './PlayerSpriteStudio.type';
 import './PlayerSpriteStudio.css';
 
 const PlayerSpriteStudio = (props: PlayerSpriteStudioProps) => {
+  const t = useT();
   const { romStatuses, onDeleteConfirm } = props;
 
   const romWithAssets = useMemo(() => romStatuses.find((r) => r.hasAssets)?.romFile ?? null, [romStatuses]);
@@ -65,15 +66,15 @@ const PlayerSpriteStudio = (props: PlayerSpriteStudioProps) => {
   return (
     <ListDetailLayout
       listShowTitle={false}
-      listContainers={[{ title: 'Sprite library', content: list }]}
+      listContainers={[{ title: t('views-player-sprite-studio:library.title'), content: list }]}
       collapsed={flow.listCollapsed}
       onCollapsedChange={flow.setListCollapsed}
       detail={detail}
-      emptyDetail={<EmptyState message={EMPTY_EDITOR} />}
+      emptyDetail={<EmptyState message={t('views-player-sprite-studio:empty.editor')} />}
       detailScroll={false}
       storageKey="sprite-studio.list"
-      listLabel="Sprite Studio"
-      detailLabel="sprite editor"
+      listLabel={t('views-player-sprite-studio:list.label')}
+      detailLabel={t('views-player-sprite-studio:detail.label')}
     />
   );
 };

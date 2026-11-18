@@ -6,7 +6,7 @@ import { cheatCategoryAllowed } from '@app/game';
 import type { CheatCategory } from '@app/game';
 import { useGameUIStore } from '@app/stores/game-ui-store';
 import { DISABLED_SETTING_MESSAGES } from '@app/settings-controls/disabled-setting-messages.constants';
-import { CATEGORIES, CATEGORY_LABEL, GATES_RECHECK_MS } from '../CheatsWidget.constants';
+import { CATEGORIES, CATEGORY_OFF, GATES_RECHECK_MS } from '../CheatsWidget.constants';
 import type { CheatGates } from '../CheatsWidget.type';
 
 const cheatsOffMessage = (): Message => {
@@ -15,7 +15,7 @@ const cheatsOffMessage = (): Message => {
   return message;
 };
 
-const readGates =(): Record<CheatCategory, boolean> => {
+const readGates = (): Record<CheatCategory, boolean> => {
   const allowed = {} as Record<CheatCategory, boolean>;
   for (const category of CATEGORIES) allowed[category] = cheatCategoryAllowed(category);
   return allowed;
@@ -38,7 +38,7 @@ const useCheatGates = (): CheatGates => {
 
   const enabled = CATEGORIES.some((category) => allowed[category]);
   const reason = (category: CheatCategory): string =>
-    (enabled ? `${CATEGORY_LABEL[category]} cheats are off for this profile` : text(cheatsOffMessage()));
+    text(enabled ? CATEGORY_OFF[category] : cheatsOffMessage());
 
   return { enabled, allowed, reason };
 };

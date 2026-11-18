@@ -1,4 +1,5 @@
 /* @layer renderer-lib @kind types */
+import type { Text } from '@drizztdourden08/brock-core/i18n';
 import type { AssetSourceId, ZELDA3_SHA1 } from '@rotp/asset-extraction';
 import type { ExtractedPack, SetBakeInput } from '@rotp/languages';
 
@@ -21,7 +22,7 @@ interface AssetsResult {
   romLanguage: ExtractedPack;
 }
 
-type ExtractResult = { success: boolean; error?: string; failures?: AssetFailure[] };
+type ExtractResult = { success: boolean; error?: Text; failures?: AssetFailure[] };
 
 export type {
   AssetsResult, BakeInputs, ExtractResult, RomRelease, SupplementRoms,

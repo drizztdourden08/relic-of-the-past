@@ -1,4 +1,5 @@
 /* @layer renderer-widgets @kind component */
+import { useT } from '@drizztdourden08/brock-react';
 import { useCallback, useState } from 'react';
 import type { KeyboardEvent } from 'react';
 import { Anchored, Box, Button, Pressable, Text, TextInput } from '@drizztdourden08/tessera/primitives';
@@ -14,6 +15,7 @@ const digits = (n: number): string => String(n);
 const NumberSetter = (props: NumberSetterProps) => {
   const { title, value, min, max, steps: stepList = NO_STEPS, ladder, format = digits, anchor, onCommit, onClose } = props;
   const anchorRef = useAnchorRef(anchor);
+  const t = useT();
   const [draft, setDraft] = useState(String(value));
   const commit = useCallback((next: number) => {
     const clamped = clampTo(min, max, next);
@@ -33,17 +35,17 @@ const NumberSetter = (props: NumberSetterProps) => {
     <Anchored anchorRef={anchorRef} placement="bottom-start" layer="popover" className="cheats-popover cheats-setter" role="dialog" aria-label={title} onDismiss={onClose}>
       <Text className="cheats-popover__title">{title}</Text>
       <Box className="cheats-setter__row">
-        <Button variant="tertiary" size="sm" aria-label="Down" onClick={() => nudge(-1)}>-</Button>
+        <Button variant="tertiary" size="sm" aria-label={t('views-cheats:setter.down')} onClick={() => nudge(-1)}>-</Button>
         <TextInput
           className="cheats-setter__input"
           value={draft}
           inputMode="numeric"
-          aria-label={`${title}, ${min} to ${max}`}
+          aria-label={t('views-cheats:number.range', { label: title, min, max })}
           onChange={(e) => setDraft(e.target.value)}
           onKeyDown={onKeyDown}
           onBlur={commitDraft}
         />
-        <Button variant="tertiary" size="sm" aria-label="Up" onClick={() => nudge(1)}>+</Button>
+        <Button variant="tertiary" size="sm" aria-label={t('views-cheats:setter.up')} onClick={() => nudge(1)}>+</Button>
       </Box>
       {stepList.length > 1 && (
         <Box className="cheats-setter__steps">
@@ -63,8 +65,8 @@ const NumberSetter = (props: NumberSetterProps) => {
         </Box>
       )}
       <Box className="cheats-setter__ends">
-        <Pressable className="cheats-setter__end" onClick={() => commit(min)}>Min {format(min)}</Pressable>
-        <Pressable className="cheats-setter__end" onClick={() => commit(max)}>Max {format(max)}</Pressable>
+        <Pressable className="cheats-setter__end" onClick={() => commit(min)}>{t('views-cheats:setter.min', { value: format(min) })}</Pressable>
+        <Pressable className="cheats-setter__end" onClick={() => commit(max)}>{t('views-cheats:setter.max', { value: format(max) })}</Pressable>
       </Box>
     </Anchored>
   );

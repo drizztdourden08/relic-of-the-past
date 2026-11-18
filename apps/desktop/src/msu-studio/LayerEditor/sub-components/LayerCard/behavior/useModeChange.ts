@@ -1,7 +1,7 @@
 /* @layer renderer-components @kind hook */
 import { useCallback } from 'react';
+import { useT } from '@drizztdourden08/brock-react';
 import type { LayerPlayMode } from '@rotp/game-data';
-import { SINGLE_DISCARD_TITLE } from '../LayerCard.constants';
 import { singleDiscardMessage } from './single-discard-message';
 import type { ModeChangeParams } from './useModeChange.type';
 
@@ -10,6 +10,7 @@ const isSingle = (mode: LayerPlayMode): boolean => mode.kind === 'loop' && mode.
 const useModeChange = (params: ModeChangeParams) => {
   const { layer, onConfirm, onChange } = params;
   const { files, mode: current } = layer;
+  const t = useT();
 
   const changeMode = useCallback((mode: LayerPlayMode) => {
     const discards = isSingle(mode) && !isSingle(current) && files.length > 1;
@@ -18,11 +19,11 @@ const useModeChange = (params: ModeChangeParams) => {
       return;
     }
     onConfirm(
-      SINGLE_DISCARD_TITLE,
-      singleDiscardMessage(files),
+      t('msu-studio:layers.single.discard-title'),
+      singleDiscardMessage(t, files),
       () => onChange({ mode, files: files.slice(0, 1) }),
     );
-  }, [current, files, onConfirm, onChange]);
+  }, [t, current, files, onConfirm, onChange]);
 
   return { changeMode };
 };

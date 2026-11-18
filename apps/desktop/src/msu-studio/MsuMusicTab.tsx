@@ -1,25 +1,27 @@
 /* @layer renderer-components @kind component */
 import { useCallback, useMemo } from 'react';
 import { StudioLayout } from '@drizztdourden08/tessera/composites';
+import { useT } from '@drizztdourden08/brock-react';
 import { STUDIO_EDITOR_MIN_WIDTH, StudioPanelContent } from '@app/studio';
 import { sectionGroup } from './studio-frame/section-group';
 import { MsuTrackPanel } from './MsuTrackPanel';
 import { TrackDetail } from './TrackDetail';
 import { useTrackPreviewSwitch } from './behavior/useTrackPreviewSwitch';
-import { DETAILS_PANEL, EDITOR_LABELS } from './studio-frame/studio-frame.constants';
+import { DETAILS_PANEL } from './studio-frame/studio-frame.constants';
 import type { MsuMusicTabProps } from './MsuMusicTab.type';
 import type { TrackPreviewControls } from './msu.type';
 
 const MsuMusicTab = (props: MsuMusicTabProps) => {
   const { msu, pack, readOnly, tabs, packPanel, onDeleteConfirm } = props;
   const { handleDeleteFile, openTrack, selectTrack, onPreview, onStopPreview } = msu;
+  const t = useT();
   const { original, previewTrack, playOriginal } = useTrackPreviewSwitch({ onPreview, onStopPreview });
 
   const confirmDeleteFile = useCallback((fileName: string) => {
-    onDeleteConfirm('Delete Audio File', `Delete "${fileName}" from this pack? This cannot be undone.`, () => {
+    onDeleteConfirm(t('msu-studio:files.delete.title'), t('msu-studio:files.delete.message', { name: fileName }), () => {
       handleDeleteFile(fileName);
     });
-  }, [onDeleteConfirm, handleDeleteFile]);
+  }, [t, onDeleteConfirm, handleDeleteFile]);
 
   const controls = useMemo<TrackPreviewControls>(() => ({
     playing: msu.playing,
@@ -44,11 +46,11 @@ const MsuMusicTab = (props: MsuMusicTabProps) => {
 
   return (
     <StudioLayout
-      editorLabel={EDITOR_LABELS.music}
+      editorLabel={t('msu-studio:studio.editor.music')}
       compactToolbar
       editorMinWidth={STUDIO_EDITOR_MIN_WIDTH}
-      toolbar={[sectionGroup(tabs)]}
-      end={{ ...DETAILS_PANEL, content: <StudioPanelContent>{detail}</StudioPanelContent> }}
+      toolbar={[sectionGroup(t, tabs)]}
+      end={{ ...DETAILS_PANEL, title: t('msu-studio:studio.details.title'), content: <StudioPanelContent>{detail}</StudioPanelContent> }}
     >
       <MsuTrackPanel
         rows={msu.rows}

@@ -1,5 +1,6 @@
 /* @layer renderer-components @kind component */
 import { useCallback } from 'react';
+import { useText } from '@drizztdourden08/brock-react';
 import { Box, Callout, Text } from '@drizztdourden08/tessera/primitives';
 import { OptionGroup } from '@drizztdourden08/tessera/composites';
 import { RandomizerOptionRow } from '@app/compounds/RandomizerOptionRow';
@@ -13,6 +14,7 @@ import './DarkRoomsSection.css';
 
 const DarkRoomsSection = (props: DarkRoomsSectionProps) => {
   const { setting, impact, forced, onChange } = props;
+  const text = useText();
   const readOnly = onChange === undefined;
   const tiles = useDarkRoomLightTiles(setting.lights, forced);
   const reasons = tiles.filter((tile) => tile.reason !== undefined);
@@ -29,7 +31,7 @@ const DarkRoomsSection = (props: DarkRoomsSectionProps) => {
   );
 
   return (
-    <OptionGroup title={DARK_ROOMS_TITLE} tone="live" className="dark-rooms">
+    <OptionGroup title={text(DARK_ROOMS_TITLE)} tone="live" className="dark-rooms">
       {DARK_ROOM_REQUIRED_OPTION !== undefined && (
         <RandomizerOptionRow
           option={DARK_ROOM_REQUIRED_OPTION}
@@ -39,7 +41,7 @@ const DarkRoomsSection = (props: DarkRoomsSectionProps) => {
           onChange={readOnly ? undefined : changeRequirement}
         />
       )}
-      <Text className="dark-rooms__label">{LIGHTS_LABEL}</Text>
+      <Text className="dark-rooms__label">{text(LIGHTS_LABEL)}</Text>
       <Box className="dark-rooms__tiles">
         {tiles.map((tile) => (
           <DarkRoomLightTile
@@ -54,7 +56,7 @@ const DarkRoomsSection = (props: DarkRoomsSectionProps) => {
       {reasons.map((tile) => (
         <Text key={tile.field} className="dark-rooms__reason">{`${tile.name} ${tile.reason}`}</Text>
       ))}
-      {rolledBlind && <Callout tone="primary" className="dark-rooms__banner">{BLIND_NOTE}</Callout>}
+      {rolledBlind && <Callout tone="primary" className="dark-rooms__banner">{text(BLIND_NOTE)}</Callout>}
     </OptionGroup>
   );
 };

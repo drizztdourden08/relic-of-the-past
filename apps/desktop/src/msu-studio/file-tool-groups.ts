@@ -6,14 +6,18 @@ import { sectionGroup } from './studio-frame/section-group';
 import type { FileToolGroupsProps } from './file-tool-groups.type';
 
 const fileToolGroups = (props: FileToolGroupsProps): ToolGroup[] => {
-  const { tabs, filter, coveredCount, supersededOnly, onFilterChange, onSupersededOnlyChange } = props;
+  const { t, tabs, filter, coveredCount, supersededOnly, onFilterChange, onSupersededOnlyChange } = props;
   const groups: ToolGroup[] = [
-    sectionGroup(tabs),
+    sectionGroup(t, tabs),
     {
       id: 'find',
-      label: 'Find',
+      label: t('msu-studio:studio.toolbar.find'),
       content: createElement(SearchInput, {
-        grow: false, value: filter, onChange: onFilterChange, placeholder: 'intro, pcm...', 'aria-label': 'Find a file',
+        grow: false,
+        value: filter,
+        onChange: onFilterChange,
+        placeholder: t('msu-studio:files.find.placeholder'),
+        'aria-label': t('msu-studio:files.find.aria'),
       }),
     },
   ];
@@ -23,9 +27,11 @@ const fileToolGroups = (props: FileToolGroupsProps): ToolGroup[] => {
     ...groups,
     {
       id: 'show',
-      label: 'Show',
+      label: t('msu-studio:studio.toolbar.show'),
       content: createElement(Checkbox, {
-        checked: supersededOnly, label: `Superseded originals only (${coveredCount})`, onChange: onSupersededOnlyChange,
+        checked: supersededOnly,
+        label: t('msu-studio:files.superseded-only', { count: coveredCount }),
+        onChange: onSupersededOnlyChange,
       }),
     },
   ];

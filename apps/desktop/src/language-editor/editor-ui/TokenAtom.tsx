@@ -1,4 +1,5 @@
 /* @layer renderer-components @kind component */
+import { useT } from '@drizztdourden08/brock-react';
 import { atomFactsOf } from './atom-facts';
 import { GlyphAtom } from './sub-components/GlyphAtom';
 import { PlainAtom } from './sub-components/PlainAtom';
@@ -9,9 +10,10 @@ import './TokenAtom.css';
 
 const TokenAtom = (props: TokenAtomProps) => {
   const { node, selected, glyphNames, font } = props;
+  const t = useT();
 
   const attrs = node.attrs as DialogueTokenAttrs;
-  const facts = atomFactsOf(attrs);
+  const facts = atomFactsOf(t, attrs);
   const { name } = facts;
   const ring = selected ? ' token-atom--selected' : '';
 

@@ -1,4 +1,5 @@
 /* @layer renderer-components @kind component */
+import { useT } from '@drizztdourden08/brock-react';
 import { Box, Text } from '@drizztdourden08/tessera/primitives';
 import type { ScreenAnnotations } from '@rotp/navigation';
 import { styleForKind } from '@app/navigation-overlay/annotation-style';
@@ -6,13 +7,14 @@ import { CollapsiblePanel } from './CollapsiblePanel';
 import { useNavigationOverlayStore } from '@app/stores/navigation-overlay-store';
 
 const OverlayLegend = ({ annotations }: { annotations?: readonly ScreenAnnotations[] }) => {
+  const t = useT();
   const hiddenKinds = useNavigationOverlayStore((s) => s.hiddenKinds);
   const present = [...new Set((annotations ?? []).flatMap((s) => s.items).map((a) => a.kind))]
     .filter((k) => !styleForKind(k).panelOnly);
 
   return (
-    <CollapsiblePanel title="on this screen">
-      {present.length === 0 && <Text className="nav-legend__note">nothing detected yet. Run the flood</Text>}
+    <CollapsiblePanel title={t('views-game-layer:legend.screen.title')}>
+      {present.length === 0 && <Text className="nav-legend__note">{t('views-game-layer:legend.screen.empty')}</Text>}
       {present.map((kind) => {
         const off = hiddenKinds.has(kind);
         const style = styleForKind(kind);
@@ -20,7 +22,7 @@ const OverlayLegend = ({ annotations }: { annotations?: readonly ScreenAnnotatio
           <Box
             key={kind}
             className="nav-legend__row"
-            title={off ? 'Hidden. Re-enable it in the navigation widget.' : undefined}
+            title={off ? t('views-game-layer:legend.screen.hidden') : undefined}
           >
             <Text data-tone={style.tone} className={off ? 'nav-legend__glyph nav-legend__glyph--off' : 'nav-legend__glyph'}>
               {style.glyph}

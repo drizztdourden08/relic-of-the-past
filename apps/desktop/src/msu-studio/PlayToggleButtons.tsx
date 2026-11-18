@@ -1,10 +1,15 @@
 /* @layer renderer-components @kind component */
 import { Icon, IconButton } from '@drizztdourden08/tessera/primitives';
+import { useT } from '@drizztdourden08/brock-react';
 import type { PlayToggleButtonsProps } from './PlayToggleButtons.type';
 
 const PlayToggleButtons = (props: PlayToggleButtonsProps) => {
   const { subject, playLabel, hasReplacement, playing, playingOriginal, onPlay, onStop, onPlayOriginal } = props;
+  const t = useT();
   const stoppable = props.stoppable ?? playing;
+  const originalLabel = hasReplacement
+    ? t('msu-studio:play.original-compare', { subject })
+    : t('msu-studio:play.original', { subject });
 
   return (
     <>
@@ -12,7 +17,7 @@ const PlayToggleButtons = (props: PlayToggleButtonsProps) => {
         <IconButton
           variant="ghost"
           size="sm"
-          label={stoppable ? `Stop ${subject}` : playLabel}
+          label={stoppable ? t('msu-studio:play.stop', { subject }) : playLabel}
           active={playing}
           onClick={stoppable ? onStop : onPlay}
         >
@@ -22,9 +27,7 @@ const PlayToggleButtons = (props: PlayToggleButtonsProps) => {
       <IconButton
         variant="ghost"
         size="sm"
-        label={playingOriginal
-          ? `Stop ${subject}`
-          : `Play the sound chip's own ${subject}${hasReplacement ? ', to compare' : ''}`}
+        label={playingOriginal ? t('msu-studio:play.stop', { subject }) : originalLabel}
         active={playingOriginal}
         onClick={onPlayOriginal}
       >

@@ -4,7 +4,8 @@ import { GAME_ROM_LANGUAGE } from '@rotp/asset-extraction';
 import { keepRomLanguage } from '@rotp/languages';
 import type { ExtractedPack } from '@rotp/languages';
 import { runExtractStep } from '../extraction-client';
-import { NO_US_ROM_MESSAGE } from './asset-files.constants';
+import { LocalizedError } from '../localized-error';
+import { NO_US_ROM_TEXT } from './asset-files.constants';
 import { findUsRom } from './find-us-rom';
 import { romRelease } from './rom-release';
 
@@ -16,7 +17,7 @@ const gameRomBytes = async (files: FileStore, picked: Uint8Array): Promise<Uint8
   });
   await keepRomLanguage(files, pack);
   const usRom = await findUsRom(files);
-  if (usRom === null) throw new Error(NO_US_ROM_MESSAGE);
+  if (usRom === null) throw new LocalizedError(NO_US_ROM_TEXT);
   return usRom;
 };
 

@@ -1,4 +1,5 @@
 /* @layer renderer-widgets @kind component */
+import { useT } from '@drizztdourden08/brock-react';
 import { Icon, Text } from '@drizztdourden08/tessera/primitives';
 import { ListItemList, ListItemRow } from '@drizztdourden08/tessera/composites';
 import { checkTypeIcon } from '../behavior/check-type-icon';
@@ -8,14 +9,15 @@ import type { StopAtCheckListProps } from '../StopAtCheckPicker.type';
 
 const StopAtCheckList = (props: StopAtCheckListProps) => {
   const { checks, selectedId, statuses, onSelect } = props;
+  const t = useT();
   const statusOf = (id: string): CheckStatus => statuses.get(id) ?? 'blocked';
 
   return (
     <>
-      <ListItemList className="stop-picker__list" label="Stop at check" shape={LIST_SHAPE}>
+      <ListItemList className="stop-picker__list" label={t('views-simulator:controls.stop.at')} shape={LIST_SHAPE}>
         <ListItemRow
           icon={<Icon className="stop-picker__row-icon" name={NO_STOP_ICON} />}
-          name="No stop (full run)"
+          name={t('views-simulator:picker.none')}
           selected={selectedId === ''}
           onClick={() => onSelect('')}
         />
@@ -32,7 +34,7 @@ const StopAtCheckList = (props: StopAtCheckListProps) => {
         ))}
       </ListItemList>
       {checks.length === 0 && (
-        <Text className="stop-picker__empty">No checks match these filters.</Text>
+        <Text className="stop-picker__empty">{t('views-simulator:picker.empty')}</Text>
       )}
     </>
   );

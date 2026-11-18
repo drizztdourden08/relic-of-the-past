@@ -1,5 +1,6 @@
 /* @layer renderer-components @kind component */
 import { Box, Pressable, Text } from '@drizztdourden08/tessera/primitives';
+import { useT } from '@drizztdourden08/brock-react';
 import { SoundBadges } from './SoundBadges';
 import { SoundPlayButtons } from './SoundPlayButtons';
 import { soundChannelPort, soundChannelTag } from './sound-labels';
@@ -9,13 +10,14 @@ import type { SoundRowProps } from './msu.type';
 const SoundRow = (props: SoundRowProps) => {
   const { row, channel, showChannel = false, selected, chipAudible, onSelect } = props;
   const { soundId, hex, triggers, unlisted } = row;
-  const { name, under } = soundRowText(row);
+  const t = useT();
+  const { name, under } = soundRowText(t, row);
 
   return (
     <Box className={`track-list__item msu-sound-row${selected ? ' msu-sound-row--selected' : ''}`}>
       <Pressable className="msu-sound-row__main" aria-pressed={selected} onClick={() => onSelect(soundId)}>
         {showChannel && (
-          <Text as="span" className="msu-sound-row__channel" title={soundChannelPort(channel)}>
+          <Text as="span" className="msu-sound-row__channel" title={soundChannelPort(t, channel)}>
             {soundChannelTag(channel)}
           </Text>
         )}

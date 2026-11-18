@@ -1,5 +1,6 @@
 /* @layer renderer-widgets @kind component */
 import { useEffect, useRef } from 'react';
+import { useT, useText } from '@drizztdourden08/brock-react';
 import { Status, Box, ScrollArea, Text } from '@drizztdourden08/tessera/primitives';
 import { DateText } from '@drizztdourden08/tessera/composites';
 import type { MusicDebugEvent } from '@rotp/msu';
@@ -8,6 +9,8 @@ import './EventFeed.css';
 
 const EventFeed = (props: { events: MusicDebugEvent[] }) => {
   const { events } = props;
+  const t = useT();
+  const text = useText();
   const feedRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -19,13 +22,13 @@ const EventFeed = (props: { events: MusicDebugEvent[] }) => {
     <ScrollArea ref={feedRef} className="event-feed" fade={false}>
       {events.length === 0 && (
         <Box className="music-row event-feed__row" data-empty="yes">
-          <Text className="event-feed__detail">No sound events yet.</Text>
+          <Text className="event-feed__detail">{t('views-music:events.empty')}</Text>
         </Box>
       )}
       {events.map((event) => (
         <Box key={event.id} className="music-row event-feed__row">
           <Text tone="faint" className="event-feed__time"><DateText value={event.at} format="time" length="medium" /></Text>
-          <Box className="event-feed__owner"><Status tone={OWNER_VARIANTS[event.owner]}>{OWNER_LABELS[event.owner]}</Status></Box>
+          <Box className="event-feed__owner"><Status tone={OWNER_VARIANTS[event.owner]}>{text(OWNER_LABELS[event.owner])}</Status></Box>
           <Text className="event-feed__channel">{event.channel}</Text>
           <Text className="event-feed__detail" title={event.detail}>{event.detail}</Text>
         </Box>

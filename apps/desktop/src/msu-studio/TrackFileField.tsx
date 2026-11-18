@@ -1,17 +1,19 @@
 /* @layer renderer-components @kind component */
 import { Field, Select } from '@drizztdourden08/tessera/primitives';
 import { formatBytes } from '@drizztdourden08/brock-core';
+import { useT } from '@drizztdourden08/brock-react';
 import type { TrackFileFieldProps } from './TrackFileField.type';
 
 const TrackFileField = (props: TrackFileFieldProps) => {
   const { trackNum, fileName, fileSize, options, busy, readOnly, onAssign } = props;
+  const t = useT();
 
   return (
-    <Field label="File" hint={fileSize == null ? undefined : formatBytes(fileSize)}>
+    <Field label={t('msu-studio:track.file.label')} hint={fileSize == null ? undefined : formatBytes(fileSize)}>
       <Select
         value={fileName ?? ''}
         options={options}
-        placeholder="Select file..."
+        placeholder={t('msu-studio:track.file.placeholder')}
         searchable
         disabled={busy || readOnly}
         onChange={(value) => onAssign(trackNum, value)}

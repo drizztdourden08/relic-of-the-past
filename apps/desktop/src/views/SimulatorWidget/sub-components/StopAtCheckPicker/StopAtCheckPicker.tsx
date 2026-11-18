@@ -1,5 +1,6 @@
 /* @layer renderer-widgets @kind component */
 import { useCallback, useRef, useState } from 'react';
+import { useT } from '@drizztdourden08/brock-react';
 import { Anchored, Box, Button, Icon, Portal, Text, useEscapeStack } from '@drizztdourden08/tessera/primitives';
 import { getCheck } from '@rotp/game-data';
 import type { CheckId } from '@rotp/game-data';
@@ -13,6 +14,7 @@ import './StopAtCheckPicker.css';
 
 const StopAtCheckPicker = (props: StopAtCheckPickerProps) => {
   const { stopAtCheckId, onStopAtChange, disabled } = props;
+  const t = useT();
   const [open, setOpen] = useState(false);
   const anchorRef = useRef<HTMLButtonElement>(null);
   const { filter, setFilter, checks, statuses } = useStopAtChecks();
@@ -27,7 +29,7 @@ const StopAtCheckPicker = (props: StopAtCheckPickerProps) => {
 
   const selected = stopAtCheckId ? getCheck(stopAtCheckId) : undefined;
   const triggerIcon = selected ? checkTypeIcon(selected.kind) : NO_STOP_ICON;
-  const triggerLabel = selected?.name ?? 'No stop (full run)';
+  const triggerLabel = selected?.name ?? t('views-simulator:picker.none');
 
   return (
     <>

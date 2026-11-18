@@ -1,5 +1,6 @@
 /* @layer renderer-components @kind component */
 import { useCallback, useMemo, useState } from 'react';
+import { useT, useText } from '@drizztdourden08/brock-react';
 import { Box, Tabs, Text, Toggle } from '@drizztdourden08/tessera/primitives';
 import { ErrorBoundary, ValueTag, OptionGroup } from '@drizztdourden08/tessera/composites';
 import { POND_INSTANCES, pondCeilingsOf } from '@rotp/randomizer';
@@ -15,6 +16,8 @@ const WishingPondSection = (props: WishingPondSectionProps) => {
     profiles, capacity, share = false, demands, notes = NO_NOTES, readOnly = false,
     frozen = NO_FROZEN, onChange, onShareChange,
   } = props;
+  const t = useT();
+  const text = useText();
   const [tab, setTab] = useState<PondId>(() => firstPond().id);
   const ceilings = useMemo(() => pondCeilingsOf(capacity), [capacity]);
   const pond = POND_INSTANCES.find((entry) => entry.id === tab) ?? firstPond();
@@ -29,14 +32,14 @@ const WishingPondSection = (props: WishingPondSectionProps) => {
   );
 
   return (
-    <ErrorBoundary label={NOTICE} resetKey={profiles}>
-      <OptionGroup title="Fairy ponds" tone="live">
+    <ErrorBoundary label={text(NOTICE)} resetKey={profiles}>
+      <OptionGroup title={t('views-randomizer:ponds.title')} tone="live">
         <Box className="pond-section__head">
-          {readOnly ? <ValueTag label={SHARE_LABEL} value={share} /> : (
+          {readOnly ? <ValueTag label={text(SHARE_LABEL)} value={share} /> : (
             <Toggle
               checked={share}
               disabled={onShareChange === undefined}
-              label={SHARE_LABEL}
+              label={text(SHARE_LABEL)}
               onChange={handleShareChange}
             />
           )}

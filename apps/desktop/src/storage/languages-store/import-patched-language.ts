@@ -1,9 +1,10 @@
 /* @layer renderer-lib @kind logic */
+import { msg } from '@drizztdourden08/brock-core/i18n';
 import { languages, slugSetId } from '@rotp/languages';
 import type { PatchedLanguageOutput } from '@app/game/extract-steps';
 import { runExtractStep } from '../extraction-client';
 import { recompileAll } from '../assets-store';
-import { errorMessage } from '../error-message';
+import { errorText, failureLine } from '../localized-error';
 import { runImportJob } from '../import-job';
 import type { ImportReport } from '../import-job';
 import { platformFiles } from '../platform-files';
@@ -17,7 +18,7 @@ import { setFontReferences } from './set-font-references';
 const runImport = async (request: PatchedImportRequest, report: ImportReport): Promise<PatchedImportResult> => {
   const id = slugSetId(request.name);
   if (await getLanguageSet(id)) {
-    return { success: false, error: `A language set with the id "${id}" already exists. Pick another name.`, parts: [] };
+    return { success: false, error: msg('errors:language.exists', { id }), parts: [] };
   }
   report.phase('decode', 'Reading the patched ROM...');
   const romBytes = await resolveRomBytes(new Uint8Array(await request.file.arrayBuffer()));
@@ -43,10 +44,10 @@ const importPatchedLanguage = async (request: PatchedImportRequest): Promise<Pat
   try {
     return await runImportJob({
       kind: 'language', title: 'Importing a patched language', work: (report) => runImport(request, report),
-      failureOf: (result) => (result.success ? null : result.error),
+      failureOf: (result) => (result.success ? null : failureLine(result.error)),
     });
   } catch (err) {
-    return { success: false, error: errorMessage(err), parts: [] };
+    return { success: false, error: errorText(err), parts: [] };
   }
 };
 

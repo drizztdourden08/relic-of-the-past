@@ -16,10 +16,10 @@ const basedOnOf = (pack: InstalledPack): BasedOn => {
 };
 
 const duplicateInstalled = async (itemId: string): Promise<StoreDuplicateResult> => {
-  if (!isCatalogItemId(itemId)) throw new Error('That is not a Hookshop item.');
+  if (!isCatalogItemId(itemId)) throw new Error(mainText(msg('main:store.notHookshopItem')));
   const pack = (await installedPacks()).find((one) => one.itemId === itemId);
-  if (!pack) throw new Error('That item is not installed.');
-  if (isInstalling(itemId)) throw new Error('Wait for the install to finish first.');
+  if (!pack) throw new Error(mainText(msg('main:store.notInstalled')));
+  if (isInstalling(itemId)) throw new Error(mainText(msg('main:store.installRunning')));
   const refusal = copyRefusal(pack.origin.license);
   if (refusal) throw new Error(refusal);
 

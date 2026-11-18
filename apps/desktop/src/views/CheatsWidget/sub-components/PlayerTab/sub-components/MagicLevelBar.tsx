@@ -1,4 +1,7 @@
 /* @layer renderer-widgets @kind component */
+import { useT, useText } from '@drizztdourden08/brock-react';
+import { msg } from '@drizztdourden08/brock-core/i18n';
+import type { Message } from '@drizztdourden08/brock-core/i18n';
 import { useCallback, useRef, useState } from 'react';
 import { Box, Pressable, Text } from '@drizztdourden08/tessera/primitives';
 import { useCapacityLadder } from '../../../behavior/useCapacityLadder';
@@ -11,17 +14,20 @@ import {
 import { magicLevelTitle } from '../behavior/magic-level-title';
 import type { MagicLevelBarProps } from '../PlayerTab.type';
 
-const labelOfCap = (cap: number): string => MAGIC_LEVEL_LABELS[cap] ?? `Level ${cap}`;
+const labelOfCap = (text: (message: Message) => string, cap: number): string =>
+  text(MAGIC_LEVEL_LABELS[cap] ?? msg('views-cheats:magic.level', { cap }));
 
 const MagicLevelBar = ({ scale }: MagicLevelBarProps) => {
   const { ladder, rung, set, settable } = useCapacityLadder('magic');
+  const t = useT();
+  const text = useText();
   const inPlay = useInPlay();
   const [hovered, setHovered] = useState<number | null>(null);
   const live = settable && inPlay;
   const held = ladder.findIndex((r) => r.rung === rung);
   const heldRung = ladder[held];
-  const heldLabel = heldRung ? labelOfCap(heldRung.cap) : '';
-  const hint = usePointerHintTarget(`Magic level: ${heldLabel}`, MAGIC_LEVEL_HINTS);
+  const heldLabel = heldRung ? labelOfCap(text, heldRung.cap) : '';
+  const hint = usePointerHintTarget(t('views-cheats:magic.hintTitle', { level: heldLabel }), MAGIC_LEVEL_HINTS);
 
   const latest = useRef({ ladder, held, set, live });
   latest.current = { ladder, held, set, live };
@@ -42,7 +48,7 @@ const MagicLevelBar = ({ scale }: MagicLevelBarProps) => {
   const gap = LEVEL_GAP_PX * scale;
   const wellH = MAGIC_FRAME_ROWS * tile - 2 * inset;
   const stepH = (wellH - gap * (ladder.length - 1)) / ladder.length;
-  const title = magicLevelTitle(settable, inPlay);
+  const title = magicLevelTitle(t, settable, inPlay);
 
   return (
     <Box
@@ -64,12 +70,12 @@ const MagicLevelBar = ({ scale }: MagicLevelBarProps) => {
           data-preview={hovered !== null && index <= hovered ? '' : undefined}
           style={{ height: stepH, order: ladder.length - index }}
           disabled={!live}
-          aria-label={`Magic level ${labelOfCap(step.cap)}`}
+          aria-label={t('views-cheats:magic.levelAria', { label: labelOfCap(text, step.cap) })}
           aria-pressed={index === held}
           onMouseEnter={() => setHovered(index)}
           onClick={() => stepTo(index)}
         >
-          <Text className="cheats-player__level-label">{labelOfCap(step.cap)}</Text>
+          <Text className="cheats-player__level-label">{labelOfCap(text, step.cap)}</Text>
           <Box as="span" className="cheats-player__level-step" style={{ width: tile }} />
         </Pressable>
       ))}

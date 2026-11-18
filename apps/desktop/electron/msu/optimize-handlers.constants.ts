@@ -1,4 +1,5 @@
 /* @layer electron-main @kind constants */
-const TOOL_MISSING = 'The audio tool is not installed, so nothing can be measured or converted.';
+import { msg } from '@drizztdourden08/brock-core/i18n';
+const TOOL_MISSING = msg('main:msu.optimize.toolMissing');
 
 export { TOOL_MISSING };

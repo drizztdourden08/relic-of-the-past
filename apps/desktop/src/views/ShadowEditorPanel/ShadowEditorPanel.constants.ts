@@ -1,20 +1,15 @@
 /* @layer renderer-components @kind constants */
+import type { MessageKey } from '@drizztdourden08/brock-core/i18n';
 import type { EditorTool } from '@app/stores/shadow-editor-store';
 
-const TOOL_OPTIONS: { value: EditorTool; label: string }[] = [
-  { value: 'select', label: 'Select' },
-  { value: 'polygon', label: 'Shape' },
-  { value: 'freehand', label: 'Draw' },
-  { value: 'point-light', label: 'Light' },
-  { value: 'shape-light', label: 'Area' },
+const TOOL_OPTIONS: { value: EditorTool; key: MessageKey }[] = [
+  { value: 'select', key: 'views-shadow-editor:tool.select' },
+  { value: 'polygon', key: 'views-shadow-editor:tool.shape' },
+  { value: 'freehand', key: 'views-shadow-editor:tool.draw' },
+  { value: 'point-light', key: 'views-shadow-editor:tool.light' },
+  { value: 'shape-light', key: 'views-shadow-editor:tool.area' },
 ];
 
-const POLYGON_OPTIONS = [
-  { value: '3', label: '3', title: '3 sides' },
-  { value: '4', label: '4', title: '4 sides' },
-  { value: '5', label: '5', title: '5 sides' },
-  { value: '6', label: '6', title: '6 sides' },
-  { value: '8', label: '8', title: '8 sides' },
-];
+const POLYGON_SIDES = [3, 4, 5, 6, 8];
 
-export { TOOL_OPTIONS, POLYGON_OPTIONS };
+export { POLYGON_SIDES, TOOL_OPTIONS };

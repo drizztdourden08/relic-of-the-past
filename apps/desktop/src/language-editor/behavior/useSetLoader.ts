@@ -3,8 +3,10 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import type { LanguageSet } from '@rotp/languages';
 import { getLanguageSet } from '@app/storage/languages-store';
 import { errorMessage } from '@app/storage/error-message';
+import { useT } from '@drizztdourden08/brock-react';
 
 const useSetLoader = (id: string | null, reset: (loaded: LanguageSet | null) => void) => {
+  const t = useT();
   const [set, setSet] = useState<LanguageSet | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -25,7 +27,7 @@ const useSetLoader = (id: string | null, reset: (loaded: LanguageSet | null) => 
       .then((loaded) => {
         if (cancelled) return;
         adopt(loaded);
-        if (!loaded) setError(`Language set "${id}" was not found.`);
+        if (!loaded) setError(t('language-editor:load.not-found', { id }));
         setLoading(false);
       })
       .catch((err: unknown) => {
@@ -35,7 +37,7 @@ const useSetLoader = (id: string | null, reset: (loaded: LanguageSet | null) => 
         setLoading(false);
       });
     return () => { cancelled = true; };
-  }, [adopt, id]);
+  }, [adopt, id, t]);
 
   return { set, setSet, current, loading, error };
 };

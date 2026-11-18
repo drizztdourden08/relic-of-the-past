@@ -1,4 +1,5 @@
 /* @layer renderer-components @kind component */
+import { useT } from '@drizztdourden08/brock-react';
 import { Box, Text } from '@drizztdourden08/tessera/primitives';
 import { layerMeters } from '../behavior/layer-meters';
 import { MeterRow } from './MeterRow';
@@ -7,7 +8,8 @@ import './LayerMeter.css';
 
 const LayerMeter = (props: LayerMeterProps) => {
   const { report, showName = false } = props;
-  const meters = layerMeters(report);
+  const t = useT();
+  const meters = layerMeters(t, report);
 
   return (
     <Box className="layer-meter" data-sounding={report.sounding ? 'yes' : 'no'}>

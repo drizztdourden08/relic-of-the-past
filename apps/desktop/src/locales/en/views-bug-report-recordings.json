@@ -1,0 +1,8 @@
+{
+  "title": "Recordings to include",
+  "showSent": "Show sent",
+  "empty.new": "No new recordings. Show sent to see earlier ones.",
+  "empty.all": "No recordings yet.",
+  "sent": "Sent",
+  "include": "Include the recording from {name}"
+}

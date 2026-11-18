@@ -7,24 +7,28 @@ import { dialogueExtensions } from './editor-contract';
 import { glyphNamesOf } from './glyph-names';
 import { charAdvance } from './char-advance';
 import { langOfConfig } from './lang-of-config';
-import { LineEndMarkers } from './line-end-markers';
+import { lineEndMarkersFor } from './line-end-markers';
+import { useT } from '@drizztdourden08/brock-react';
+import type { I18n } from '@drizztdourden08/brock-core/i18n';
 import { withTokenNodeView } from './with-token-node-view';
 import { useDialogueEditor } from './behavior/useDialogueEditor';
 import { updateEditorRuntime } from '../editor/editor-runtime';
 import type { DialogueLineView } from '@rotp/languages';
 import type { GlyphFont } from './editor-ui.type';
-import { EMPTY_METRICS, PLACEHOLDER } from './DialogueEditor.constants';
+import { EMPTY_METRICS } from './DialogueEditor.constants';
 import type { DialogueEditorProps } from './DialogueEditor.type';
 import './DialogueEditor.css';
 
-const statusOf = (lines: DialogueLineView[], caretLine: number | null): { text: string; over: boolean } => {
+const statusOf = (t: I18n['t'], lines: DialogueLineView[], caretLine: number | null): { text: string; over: boolean } => {
   const line = caretLine === null ? undefined : lines[caretLine];
   if (line === undefined) {
     const boxes = lines.filter((l) => l.endsBox).length + (lines.length > 0 ? 1 : 0);
-    return { text: `${boxes} ${boxes === 1 ? 'box' : 'boxes'}`, over: false };
+    return { text: t('language-editor:editor.status.boxes', { count: boxes }), over: false };
   }
-  const fit = line.freePx < 0 ? `over by ${-line.freePx}px` : `${line.freePx}px left`;
-  return { text: `box ${line.box + 1} \u00b7 row ${line.row} \u00b7 ${fit}`, over: line.freePx < 0 };
+  const values = { box: line.box + 1, row: line.row, px: Math.abs(line.freePx) };
+  return line.freePx < 0
+    ? { text: t('language-editor:editor.status.over', values), over: true }
+    : { text: t('language-editor:editor.status.left', values), over: false };
 };
 
 const DialogueEditor = (props: DialogueEditorProps) => {
@@ -33,6 +37,7 @@ const DialogueEditor = (props: DialogueEditorProps) => {
     readOnly = false, onChange, onChangeStructureMode,
   } = props;
 
+  const t = useT();
   const glyphNames = useMemo(() => glyphNamesOf(cfg), [cfg]);
   const font = useMemo<GlyphFont>(() => ({ sheet, metrics }), [sheet, metrics]);
   const fontRef = useRef<GlyphFont>(font);
@@ -44,11 +49,11 @@ const DialogueEditor = (props: DialogueEditorProps) => {
   const fontReady = sheet !== null && metrics !== null;
   const extensions = useMemo(
     () => [
-      ...withTokenNodeView(dialogueExtensions({ placeholder: PLACEHOLDER }), glyphNames, fontRef),
+      ...withTokenNodeView(dialogueExtensions({ placeholder: t('language-editor:editor.placeholder') }), glyphNames, fontRef),
       charAdvance(fontRef),
-      LineEndMarkers,
+      lineEndMarkersFor(t),
     ],
-    [glyphKey, fontReady],
+    [glyphKey, fontReady, t],
   );
 
   const {
@@ -58,7 +63,7 @@ const DialogueEditor = (props: DialogueEditorProps) => {
     tokens, extensions, metrics: metrics ?? EMPTY_METRICS, glossary, readOnly, onChange,
   });
 
-  const status = useMemo(() => statusOf(lines, caretLine), [lines, caretLine]);
+  const status = useMemo(() => statusOf(t, lines, caretLine), [t, lines, caretLine]);
 
   return (
     <Box lang={langOfConfig(cfg)} className={`dialogue-editor${readOnly ? ' dialogue-editor--read-only' : ''}`}>

@@ -1,0 +1,13 @@
+{
+  "cheats.label": "Cheats",
+  "dataset.label": "Live Data Inspector",
+  "debug.label": "Game State",
+  "music.label": "Music Debugger",
+  "navigation.label": "Location & Navigation",
+  "shadow.drawing.label": "Shadow drawing",
+  "shadow.editor.kit.label": "Shadow Editor",
+  "shadow.editor.kit.requires": "Start a game to use the Shadow Editor.",
+  "shadow.editor.label": "Shadow Editor",
+  "shadow.elements.label": "Shadow Elements",
+  "simulator.label": "Simulator"
+}

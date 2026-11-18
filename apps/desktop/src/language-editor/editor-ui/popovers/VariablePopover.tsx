@@ -1,6 +1,7 @@
 /* @layer renderer-components @kind component */
 import { useCallback, useMemo, useState } from 'react';
 import { ScrollArea, Text, TextInput } from '@drizztdourden08/tessera/primitives';
+import { useT } from '@drizztdourden08/brock-react';
 import { PopoverShell } from './PopoverShell';
 import { VariableChoice } from './VariableChoice';
 import { filterVariables } from '@rotp/design/packs';
@@ -12,6 +13,7 @@ import './VariablePopover.css';
 
 const VariablePopover = (props: VariablePopoverProps) => {
   const { label, variables, onInsert } = props;
+  const t = useT();
   const [query, setQuery] = useState('');
 
   const rows = useMemo(() => filterVariables(variables, 'all', query), [variables, query]);
@@ -38,15 +40,15 @@ const VariablePopover = (props: VariablePopoverProps) => {
       <TextInput
         className="variable-popover__filter"
         value={query}
-        placeholder="Filter..."
-        aria-label="Filter variables"
+        placeholder={t('language-editor:variable-popover.filter')}
+        aria-label={t('language-editor:variable-popover.filter-label')}
         autoFocus
         onChange={handleQuery}
         onKeyDown={handleKeyDown}
       />
       <ScrollArea className="variable-popover__list">
         {rows.length === 0 ? (
-          <Text as="span" variant="caption" className="popover-shell__empty">No match</Text>
+          <Text as="span" variant="caption" className="popover-shell__empty">{t('language-editor:variable-popover.empty')}</Text>
         ) : null}
         {rows.map((variable) => (
           <VariableChoice key={variable.key} variable={variable} onPick={handlePick} />

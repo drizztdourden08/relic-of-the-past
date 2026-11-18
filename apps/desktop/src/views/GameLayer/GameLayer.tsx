@@ -1,5 +1,6 @@
 /* @layer renderer-components @kind component */
 import { useRef, useState } from 'react';
+import { useT } from '@drizztdourden08/brock-react';
 import { Box, Text } from '@drizztdourden08/tessera/primitives';
 import { useGameState } from './behavior/useGameState';
 import type { EdgeGlowRenderer, ShadowRenderer, ShadowCastingProject } from '@rotp/game-core';
@@ -19,6 +20,7 @@ import './GameLayer.css';
 import type { GameLayerProps } from './GameLayer.type';
 
 const GameLayer = (props: GameLayerProps) => {
+  const t = useT();
   const { assetData, configIni, profileId, stretch, pixelPerfect = false, edgeEffect = true, shadowCasting = false } = props;
   const containerRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -51,7 +53,7 @@ const GameLayer = (props: GameLayerProps) => {
     <Box className="game-layer" ref={containerRef} data-align={align}>
       {status === 'error' && (
         <Box className="game-layer__status-overlay">
-          <Text className="game-layer__status-text game-layer__status-text--error">Error: {error}</Text>
+          <Text className="game-layer__status-text game-layer__status-text--error">{t('views-game-layer:status.error', { error: String(error) })}</Text>
         </Box>
       )}
       <GameLayerCanvases

@@ -1,4 +1,5 @@
 /* @layer renderer-widgets @kind types */
+import type { I18n } from '@drizztdourden08/brock-core/i18n';
 import type { CSSProperties, MouseEvent, ReactNode } from 'react';
 import type { DungeonItemKind } from '@app/game';
 
@@ -128,6 +129,7 @@ type SlotCellProps = {
 };
 
 type OptionParams = {
+  t: I18n['t'];
   spec: SlotSpec;
   tier: TierOption;
   current: number;

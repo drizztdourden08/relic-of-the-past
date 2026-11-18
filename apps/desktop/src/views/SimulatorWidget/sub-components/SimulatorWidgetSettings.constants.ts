@@ -1,6 +1,7 @@
 /* @layer renderer-widgets @kind constants */
+import type { I18n } from '@drizztdourden08/brock-core/i18n';
 import type { Hint } from '@drizztdourden08/tessera/primitives';
 
-const SCREEN_LIMIT_HINT: Hint = { label: 'Screen limit', description: 'Blank runs without a limit' };
+const screenLimitHint = (t: I18n['t']): Hint => ({ label: t('views-simulator:settings.screen.limit.label'), description: t('views-simulator:settings.screen.limit.description') });
 
-export { SCREEN_LIMIT_HINT };
+export { screenLimitHint };

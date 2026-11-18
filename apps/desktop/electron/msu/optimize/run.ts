@@ -1,4 +1,6 @@
 /* @layer electron-main @kind logic */
+import { msg } from '@drizztdourden08/brock-core/i18n';
+import { mainText } from '../../lib/main-text';
 import { rm, stat } from 'fs/promises';
 import type { OptimizeConversion, OptimizeRunResult } from '@rotp/msu';
 import type { MsuPackManifest } from '@rotp/game-data';
@@ -33,7 +35,7 @@ const manifestToEdit = async (pack: string, names: string[]): Promise<MsuPackMan
   const tracks = names
     .map((fileName) => ({ fileName, trackNum: trackNumberOf(fileName) }))
     .filter((track): track is { fileName: string; trackNum: number } => track.trackNum !== null);
-  if (tracks.length === 0) throw new Error(NO_MANIFEST);
+  if (tracks.length === 0) throw new Error(mainText(NO_MANIFEST));
   return synthesizeClassicManifest(alttpMsuConfig, pack, tracks);
 };
 
@@ -61,7 +63,7 @@ const convertPack = async (request: RunRequest): Promise<OptimizeRunResult> => {
     const sourcePath = packFilePath(pack, name);
     const source = await describeSource(tools, sourcePath, name, sizes.get(name) ?? 0);
     if (source === null) {
-      failed.push({ name, reason: 'No decoder could read this file.' });
+      failed.push({ name, reason: mainText(msg('main:msu.optimize.noDecoder')) });
       continue;
     }
     const outputName = freeTargetName(name, taken);

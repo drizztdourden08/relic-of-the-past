@@ -1,9 +1,9 @@
 /* @layer renderer-widgets @kind logic */
-import { IN_PLAY_REASON } from '../../../CheatsWidget.constants';
+import type { I18n } from '@drizztdourden08/brock-core/i18n';
 
-const magicLevelTitle = (settable: boolean, inPlay: boolean): string | undefined => {
-  if (!settable) return 'Magic level: fixed on this file';
-  return inPlay ? undefined : `Magic level: ${IN_PLAY_REASON}`;
+const magicLevelTitle = (t: I18n['t'], settable: boolean, inPlay: boolean): string | undefined => {
+  if (!settable) return t('views-cheats:magic.fixed');
+  return inPlay ? undefined : t('views-cheats:magic.locked', { reason: t('views-cheats:inPlay.reason') });
 };
 
 export { magicLevelTitle };

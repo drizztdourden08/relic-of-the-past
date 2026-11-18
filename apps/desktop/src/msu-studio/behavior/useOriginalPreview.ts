@@ -1,10 +1,11 @@
 /* @layer renderer-components @kind hook */
 import { useCallback, useEffect, useState } from 'react';
+import { useT } from '@drizztdourden08/brock-react';
 import { playOriginalSound, stopOriginalSound } from '@app/game/original-sound';
 import type { PreviewTarget } from '@app/game/original-sound';
-import { NO_ASSETS } from './original-preview.constants';
 
 const useOriginalPreview = (target: PreviewTarget) => {
+  const t = useT();
   const [playing, setPlaying] = useState<number | null>(null);
   const [note, setNote] = useState<string | null>(null);
 
@@ -25,9 +26,9 @@ const useOriginalPreview = (target: PreviewTarget) => {
     }).then((outcome) => {
       if (outcome.started) return;
       setPlaying((current) => (current === soundId ? null : current));
-      setNote(outcome.silent ? 'The sound chip plays nothing for that one' : NO_ASSETS);
+      setNote(outcome.silent ? t('msu-studio:sound.original.silent') : t('msu-studio:sound.original.no-assets'));
     });
-  }, [target, playing, stop]);
+  }, [t, target, playing, stop]);
 
   useEffect(() => stop, [target, stop]);
 

@@ -1,4 +1,5 @@
 /* @layer renderer-widgets @kind constants */
+import type { I18n } from '@drizztdourden08/brock-core/i18n';
 import type { CheckKind, ItemFilter, StatusFilter } from '@rotp/game-data';
 import { CHECK_FACET_DEFS } from '@rotp/game-data';
 import type { ListItemShape } from '@drizztdourden08/tessera/composites';
@@ -21,17 +22,17 @@ const CHECK_TYPE_ICONS: Record<CheckKind, IconName> = {
 
 const NO_STOP_ICON: IconName = 'arrow-right-to-line';
 
-const ITEM_FILTERS: SegmentOption<ItemFilter>[] = [
-  { value: 'all', label: 'All' },
-  { value: 'rewards', label: 'Rewards' },
-  { value: 'non-rewards', label: 'Junk' },
+const itemFilters = (t: I18n['t']): SegmentOption<ItemFilter>[] => [
+  { value: 'all', label: t('views-simulator:filter.item.all') },
+  { value: 'rewards', label: t('views-simulator:filter.item.rewards') },
+  { value: 'non-rewards', label: t('views-simulator:filter.item.junk') },
 ];
 
-const STATUS_FILTERS: SegmentOption<StatusFilter>[] = [
-  { value: 'all', label: 'All', title: 'Any status' },
-  { value: 'reachable', icon: 'circle-dot', hint: { label: 'Reachable', description: 'Checks you can reach now' } },
-  { value: 'completed', icon: 'check', hint: { label: 'Completed', description: 'Checks already done' } },
-  { value: 'blocked', icon: 'circle', hint: { label: 'Blocked', description: 'Checks still out of reach' } },
+const statusFilters = (t: I18n['t']): SegmentOption<StatusFilter>[] => [
+  { value: 'all', label: t('views-simulator:filter.status.all'), title: t('views-simulator:filter.status.all.title') },
+  { value: 'reachable', icon: 'circle-dot', hint: { label: t('views-simulator:filter.status.reachable'), description: t('views-simulator:filter.status.reachable.description') } },
+  { value: 'completed', icon: 'check', hint: { label: t('views-simulator:filter.status.completed'), description: t('views-simulator:filter.status.completed.description') } },
+  { value: 'blocked', icon: 'circle', hint: { label: t('views-simulator:filter.status.blocked'), description: t('views-simulator:filter.status.blocked.description') } },
 ];
 
 const TAG_CATEGORIES = ['world', 'location', 'area', 'content'] as const;
@@ -43,4 +44,4 @@ const FACET_GROUPS: TagPickerGroup[] = TAG_CATEGORIES.map((category) => ({
 
 const LIST_SHAPE: ListItemShape = { icon: true, columns: 1, action: false };
 
-export { CHECK_TYPE_ICONS, FACET_GROUPS, ITEM_FILTERS, LIST_SHAPE, NO_STOP_ICON, STATUS_FILTERS };
+export { CHECK_TYPE_ICONS, FACET_GROUPS, itemFilters, LIST_SHAPE, NO_STOP_ICON, statusFilters };

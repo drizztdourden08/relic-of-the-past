@@ -1,5 +1,6 @@
 /* @layer renderer-components @kind component */
 import { useMemo } from 'react';
+import { useT } from '@drizztdourden08/brock-react';
 import { Box, EmptyState, Icon, Text } from '@drizztdourden08/tessera/primitives';
 import { formatBytes } from '@drizztdourden08/brock-core';
 import { previewTotals } from './behavior/preview-totals';
@@ -10,17 +11,18 @@ const netLabel = (net: number): string => (net < 0 ? `+${formatBytes(-net)}` : `
 
 const PreviewStep = (props: PreviewStepProps) => {
   const { analysis, convertibleCount } = props;
+  const t = useT();
   const totals = useMemo(() => previewTotals(analysis.candidates), [analysis.candidates]);
   const net = totals.currentBytes - totals.estimatedBytes;
 
   if (analysis.candidates.length === 0) {
-    return <EmptyState message="Every audio file in this pack is already in one format" />;
+    return <EmptyState message={t('msu-studio:optimize.empty')} />;
   }
 
   return (
     <Box className="msu-optimize__step">
       <Box className="detail-panel__grid">
-        <Text className="detail-panel__label">Measured</Text>
+        <Text className="detail-panel__label">{t('msu-studio:optimize.measured')}</Text>
         <Text className="detail-panel__value">
           {formatBytes(totals.currentBytes)} <Icon name="arrow-right" inline /> {formatBytes(totals.estimatedBytes)}
           {' · '}
@@ -29,28 +31,29 @@ const PreviewStep = (props: PreviewStepProps) => {
           </Text>
         </Text>
 
-        <Text className="detail-panel__label">Converts</Text>
+        <Text className="detail-panel__label">{t('msu-studio:optimize.converts')}</Text>
         <Text className="detail-panel__value">
-          {convertibleCount} file{convertibleCount === 1 ? '' : 's'}
-          {analysis.alreadyTargetCount > 0 && ` · ${analysis.alreadyTargetCount} already held in the target format`}
+          {analysis.alreadyTargetCount > 0
+            ? t('msu-studio:optimize.converts.value-target', { count: convertibleCount, already: analysis.alreadyTargetCount })
+            : t('msu-studio:optimize.converts.value', { count: convertibleCount })}
         </Text>
 
         {totals.growingCount > 0 && (
           <>
-            <Text className="detail-panel__label">Grows</Text>
+            <Text className="detail-panel__label">{t('msu-studio:optimize.grows')}</Text>
             <Text className="detail-panel__value">
-              {totals.growingCount} already-compressed file{totals.growingCount === 1 ? '' : 's'} gets
-              bigger. The audio is unchanged.
+              {t('msu-studio:optimize.grows.value', { count: totals.growingCount })}
             </Text>
           </>
         )}
 
         {(totals.unmeasuredCount > 0 || totals.excludedCount > 0) && (
           <>
-            <Text className="detail-panel__label">Unmeasured</Text>
+            <Text className="detail-panel__label">{t('msu-studio:optimize.unmeasured')}</Text>
             <Text className="detail-panel__value">
-              {totals.unmeasuredCount} with no measurable length
-              {totals.excludedCount > 0 && ` · ${totals.excludedCount} no decoder can read`}
+              {totals.excludedCount > 0
+                ? t('msu-studio:optimize.unmeasured.value-excluded', { count: totals.unmeasuredCount, excluded: totals.excludedCount })
+                : t('msu-studio:optimize.unmeasured.value', { count: totals.unmeasuredCount })}
             </Text>
           </>
         )}

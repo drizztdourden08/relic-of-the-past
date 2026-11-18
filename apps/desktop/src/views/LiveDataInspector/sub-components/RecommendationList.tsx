@@ -2,7 +2,7 @@
 import { useState } from 'react';
 import { Button, Disclosure, ScrollArea, Text } from '@drizztdourden08/tessera/primitives';
 import { certainOnly } from '@app/data-inspector/recommendations/accept-all-certain';
-import { useWidgetPref } from '@drizztdourden08/brock-react';
+import { useT, useWidgetPref } from '@drizztdourden08/brock-react';
 import { acceptAllCertainHere } from '../behavior/accept-all-certain-here';
 import { batchOutcomeMessage } from '../behavior/batch-outcome-message';
 import { useRecommendationFilter } from '../behavior/useRecommendationFilter';
@@ -14,6 +14,7 @@ import './RecommendationList.css';
 
 const RecommendationList = (props: RecommendationListProps) => {
   const { entries } = props;
+  const t = useT();
   const [collapsed, setCollapsed] = useWidgetPref<boolean>('dataset', 'recCollapsed', false);
   const [busy, setBusy] = useState(false);
   const [outcome, setOutcome] = useState<string | null>(null);
@@ -25,11 +26,11 @@ const RecommendationList = (props: RecommendationListProps) => {
   const acceptAll = async (): Promise<void> => {
     setBusy(true);
     setOutcome(null);
-    try { setOutcome(batchOutcomeMessage(await acceptAllCertainHere(filtered))); } finally { setBusy(false); }
+    try { setOutcome(batchOutcomeMessage(await acceptAllCertainHere(filtered), t)); } finally { setBusy(false); }
   };
 
   const summary = (
-    <Text className="live-rec-list__count">{`${entries.length} recommendation${entries.length === 1 ? '' : 's'} on this screen`}</Text>
+    <Text className="live-rec-list__count">{t('views-live-data-inspector:list.count', { count: entries.length })}</Text>
   );
 
   return (
@@ -43,7 +44,7 @@ const RecommendationList = (props: RecommendationListProps) => {
           loading={busy}
           onClick={() => void acceptAll()}
         >
-          {`Accept all certain in view (${certainCount})`}
+          {t('views-live-data-inspector:list.accept-all', { count: certainCount })}
         </Button>
       )}
       {outcome && <Text className="live-rec-list__outcome">{outcome}</Text>}

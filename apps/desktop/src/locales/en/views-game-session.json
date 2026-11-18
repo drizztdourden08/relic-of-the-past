@@ -1,0 +1,9 @@
+{
+  "delete.confirm": "Delete",
+  "deleteProfile.title": "Delete Profile",
+  "deleteProfile.message": "Delete \"{name}\"? Its save data will be lost. This cannot be undone.",
+  "deleteProfile.confirm": "Delete Profile",
+  "deleteRom.title": "Delete ROM",
+  "deleteRom.message": "This will remove \"{romFile}\" and all its extracted assets. Profiles using this ROM will also be deleted. This cannot be undone.",
+  "deleteRom.confirm": "Delete ROM"
+}

@@ -1,4 +1,5 @@
 /* @layer renderer-components @kind component */
+import { useT } from '@drizztdourden08/brock-react';
 import { StudioSection } from '@app/studio';
 import { CloseDetailButton } from './CloseDetailButton';
 import { LayerEditor } from './LayerEditor';
@@ -12,18 +13,19 @@ import type { TrackDetailProps } from './TrackDetail.type';
 const TrackDetail = (props: TrackDetailProps) => {
   const { msu, pack, row, readOnly, controls, onClose, onConfirm } = props;
   const { trackNum, description, fileName } = row;
-  const target = trackTarget(trackNum);
+  const t = useT();
+  const target = trackTarget(t, trackNum);
 
   return (
     <>
-      <StudioSection title={`#${trackNum} ${description}`} action={<CloseDetailButton label={`Close slot ${trackNum}`} onClose={onClose} />}>
+      <StudioSection title={`#${trackNum} ${description}`} action={<CloseDetailButton label={t('msu-studio:track.close', { number: trackNum })} onClose={onClose} />}>
         <TrackActions trackNum={trackNum} hasAudio={fileName !== null} controls={controls} />
         {controls.playing === trackNum && (
-          <PreviewReadout store={msu.reportStore} previewKey={trackPreviewKey(trackNum)} label={`slot ${trackNum}`} />
+          <PreviewReadout store={msu.reportStore} previewKey={trackPreviewKey(trackNum)} label={t('msu-studio:track.label', { number: trackNum })} />
         )}
       </StudioSection>
 
-      <StudioSection title="File">
+      <StudioSection title={t('msu-studio:track.file.label')}>
         <TrackFileField
           trackNum={trackNum}
           fileName={fileName}

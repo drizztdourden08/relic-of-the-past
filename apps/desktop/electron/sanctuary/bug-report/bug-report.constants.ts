@@ -1,13 +1,14 @@
 /* @layer electron-main @kind constants */
-const SIGNED_OUT_ERROR = 'Sign in to the Sanctuary in Settings, Contributing, to send a report from the app.';
+import { msg } from '@drizztdourden08/brock-core/i18n';
+const SIGNED_OUT_ERROR = msg('main:sanctuary.report.signedOut');
 
-const FILE_FAILED_ERROR = 'Could not file the report.';
+const FILE_FAILED_ERROR = msg('main:sanctuary.report.fileFailed');
 
-const BAD_CONTACT_ERROR = 'The contact email is not a valid address.';
+const BAD_CONTACT_ERROR = msg('main:sanctuary.report.badContact');
 
-const NO_UPLOAD_URL_ERROR = 'The upload could not start.';
+const NO_UPLOAD_URL_ERROR = msg('main:sanctuary.report.noUploadUrl');
 
-const TOO_LARGE_ERROR = 'The debug files were too large to attach.';
+const TOO_LARGE_ERROR = msg('main:sanctuary.report.tooLarge');
 
 const MAX_DEBUG_INFO_CHARS = 20000;
 

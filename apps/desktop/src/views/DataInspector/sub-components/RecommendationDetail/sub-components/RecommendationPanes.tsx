@@ -1,4 +1,5 @@
 /* @layer renderer-app @kind component */
+import { useText } from '@drizztdourden08/brock-react';
 import { Box } from '@drizztdourden08/tessera/primitives';
 import { highlightedLinesFor } from '@app/data-inspector/recommendations/comparison-lines';
 import { CURRENT_TITLE, NO_CURRENT, NO_PROPOSAL, PROPOSED_TITLE } from '../RecommendationDetail.constants';
@@ -10,15 +11,16 @@ const RecommendationPanes = (props: RecommendationPanesProps) => {
   const {
     kind, source, schema, current, proposed, paths, tab, onTabChange, onCommit, scroll,
   } = props;
+  const text = useText();
 
   return (
     <Box className="rec-detail__panes">
       <ComparisonPane
-        title={CURRENT_TITLE}
+        title={text(CURRENT_TITLE)}
         source={source}
         schema={schema}
         record={current}
-        emptyMessage={NO_CURRENT}
+        emptyMessage={text(NO_CURRENT)}
         tab={tab}
         onTabChange={onTabChange}
         highlightedLines={highlightedLinesFor(source, current, tab, paths)}
@@ -34,11 +36,11 @@ const RecommendationPanes = (props: RecommendationPanesProps) => {
         scroll={scroll.current}
       />
       <ComparisonPane
-        title={PROPOSED_TITLE}
+        title={text(PROPOSED_TITLE)}
         source={source}
         schema={schema}
         record={proposed}
-        emptyMessage={NO_PROPOSAL}
+        emptyMessage={text(NO_PROPOSAL)}
         tab={tab}
         onTabChange={onTabChange}
         highlightedLines={highlightedLinesFor(source, proposed, tab, paths)}

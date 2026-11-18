@@ -1,4 +1,5 @@
 /* @layer renderer-components @kind types */
+import type { I18n } from '@drizztdourden08/brock-core/i18n';
 import type { OutfitId, PlayerSheet } from '@rotp/game-data';
 import type { InstalledPack } from '@rotp/hub-contracts';
 import type { SpriteViewerModel, useWearing } from '@rotp/design/packs';
@@ -85,6 +86,7 @@ interface StudioGroupsParams {
   library: SpriteLibraryModel;
   exporter: SpriteExportModel;
   run: StudioTaskRunner;
+  t: I18n['t'];
 }
 
 interface SpriteWorkAreaProps {
@@ -103,6 +105,7 @@ interface SpriteWorkAreaProps {
 interface ViewerToolGroupsProps {
   wearing: WearingModel;
   viewer: SpriteViewerModel;
+  t: I18n['t'];
 }
 
 interface SpriteStatusProps {

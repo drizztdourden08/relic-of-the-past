@@ -1,5 +1,6 @@
 /* @layer renderer-components @kind hook */
 import { useCallback, useState } from 'react';
+import { useT } from '@drizztdourden08/brock-react';
 import * as msuStore from '@app/storage/msu-store';
 import { sanitizeFileName, uniqueFileName } from './track-file-name';
 import { failure } from './failure';
@@ -8,11 +9,12 @@ import type { SoundUploadParams } from './sound-upload.type';
 
 const useSoundUpload = (params: SoundUploadParams) => {
   const { pack, files, reload } = params;
+  const t = useT();
   const [busy, setBusy] = useState(false);
 
   const upload = useCallback(async (dropped: File[]): Promise<ActionResult> => {
-    if (!pack) return { success: false, message: 'No pack selected' };
-    if (dropped.length === 0) return { success: false, message: 'No audio file selected' };
+    if (!pack) return { success: false, message: t('msu-studio:pack.none-selected') };
+    if (dropped.length === 0) return { success: false, message: t('msu-studio:upload.none') };
 
     const taken = new Set(files.map((file) => file.name));
     setBusy(true);
@@ -24,15 +26,14 @@ const useSoundUpload = (params: SoundUploadParams) => {
         taken.add(name);
         written.push(name);
       }
-      const plural = written.length === 1 ? '' : 's';
-      return { success: true, message: `Added ${written.length} file${plural} to the pack` };
+      return { success: true, message: t('msu-studio:upload.added', { count: written.length }) };
     } catch (err) {
-      return failure(err, 'Could not add that audio');
+      return failure(err, t('msu-studio:upload.error'));
     } finally {
       setBusy(false);
       reload();
     }
-  }, [pack, files, reload]);
+  }, [t, pack, files, reload]);
 
   return { upload, uploading: busy };
 };

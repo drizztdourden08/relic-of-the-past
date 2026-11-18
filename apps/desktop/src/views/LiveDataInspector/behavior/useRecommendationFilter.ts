@@ -1,15 +1,16 @@
 /* @layer renderer-widgets @kind hook */
 import { useMemo } from 'react';
 import type { Recommendation } from '@rotp/navigation';
-import { useWidgetPref } from '@drizztdourden08/brock-react';
+import { useText, useWidgetPref } from '@drizztdourden08/brock-react';
 import { buildFilterTabs } from './build-filter-tabs';
 import { filterEntries } from './filter-entries';
 import type { RecommendationFilter, UseRecommendationFilterResult } from '../LiveDataInspector.type';
 
 const useRecommendationFilter = (entries: readonly Recommendation[]): UseRecommendationFilterResult => {
+  const text = useText();
   const [filter, setFilter] = useWidgetPref<RecommendationFilter>('dataset', 'recFilter', 'all');
 
-  const tabs = useMemo(() => buildFilterTabs(entries), [entries]);
+  const tabs = useMemo(() => buildFilterTabs(entries, text), [entries, text]);
 
   const activeCount = tabs.find(tab => tab.id === filter)?.count ?? 0;
   const effectiveFilter: RecommendationFilter = activeCount > 0 ? filter : 'all';

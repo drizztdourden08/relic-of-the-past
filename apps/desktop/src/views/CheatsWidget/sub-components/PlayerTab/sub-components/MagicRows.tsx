@@ -1,4 +1,5 @@
 /* @layer renderer-widgets @kind component */
+import { useT } from '@drizztdourden08/brock-react';
 import { Box, Pressable } from '@drizztdourden08/tessera/primitives';
 import { MAGIC_LEVELS } from '../PlayerTab.constants';
 import { magicPercentOf } from '../behavior/magic-percent-of';
@@ -6,6 +7,7 @@ import { writeMagicLevel } from '../behavior/write-magic-level';
 import type { MagicRowsProps } from '../PlayerTab.type';
 
 const MagicRows = ({ inset, held, onHoverLevel }: MagicRowsProps) => {
+  const t = useT();
   const rowsStyle = { inset, gridTemplateRows: `repeat(${MAGIC_LEVELS}, 1fr)` };
 
   return (
@@ -17,7 +19,7 @@ const MagicRows = ({ inset, held, onHoverLevel }: MagicRowsProps) => {
             key={level}
             className="cheats-player__magic-row"
             data-held={level <= held ? '' : undefined}
-            aria-label={`Magic ${magicPercentOf(level)}`}
+            aria-label={t('views-cheats:magic.rowAria', { percent: magicPercentOf(level) })}
             onMouseEnter={() => onHoverLevel(level)}
             onClick={() => writeMagicLevel(level)}
           />

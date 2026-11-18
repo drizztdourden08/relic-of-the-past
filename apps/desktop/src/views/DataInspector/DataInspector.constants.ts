@@ -12,10 +12,12 @@ import tagIcon from '@iconify-icons/lucide/tag';
 import boxesIcon from '@iconify-icons/lucide/boxes';
 import typeIcon from '@iconify-icons/lucide/type';
 import alertIcon from '@iconify-icons/lucide/alert-triangle';
+import { msg } from '@drizztdourden08/brock-core/i18n';
+import type { Message } from '@drizztdourden08/brock-core/i18n';
 import type { ConnectionPlacement, EntityKind } from '@rotp/game-data';
 import type { DetailTab, FieldDescriptor, TableColumn, TableState } from '@drizztdourden08/tessera/data';
 import type { IdRefTargetField, IdRefOption, NumberBounds } from '@drizztdourden08/tessera/composites';
-import type { IconName, TabItem } from '@drizztdourden08/tessera/primitives';
+import type { IconName } from '@drizztdourden08/tessera/primitives';
 import type { DeleteGuardDialogState, TableOrder } from './DataInspector.type';
 
 const ENTITY_KINDS: readonly EntityKind[] = [
@@ -25,22 +27,40 @@ const ENTITY_KINDS: readonly EntityKind[] = [
 
 const RECOMMENDATIONS_KIND = 'recommendations';
 
-const KIND_NAV_ITEMS: { id: EntityKind; icon: IconName; label: string }[] = [
-  { id: 'screen', icon: 'map', label: 'Screens' },
-  { id: 'connection', icon: 'link', label: 'Connections' },
-  { id: 'check', icon: 'pin', label: 'Checks' },
-  { id: 'item', icon: 'package', label: 'Items' },
-  { id: 'dungeon', icon: 'house', label: 'Dungeons' },
-  { id: 'area', icon: 'globe', label: 'Areas' },
-  { id: 'location', icon: 'flag', label: 'Locations' },
-  { id: 'actor', icon: 'bug', label: 'Actors' },
-  { id: 'tag', icon: 'tag', label: 'Tags' },
-  { id: 'item-group', icon: 'archive', label: 'Item Groups' },
-  { id: 'enumeration', icon: 'type', label: 'Enumerations' },
+const KIND_NAV_ITEMS: { id: EntityKind; icon: IconName; label: Message }[] = [
+  { id: 'screen', icon: 'map', label: msg('views-data-inspector:kind.screen.many') },
+  { id: 'connection', icon: 'link', label: msg('views-data-inspector:kind.connection.many') },
+  { id: 'check', icon: 'pin', label: msg('views-data-inspector:kind.check.many') },
+  { id: 'item', icon: 'package', label: msg('views-data-inspector:kind.item.many') },
+  { id: 'dungeon', icon: 'house', label: msg('views-data-inspector:kind.dungeon.many') },
+  { id: 'area', icon: 'globe', label: msg('views-data-inspector:kind.area.many') },
+  { id: 'location', icon: 'flag', label: msg('views-data-inspector:kind.location.many') },
+  { id: 'actor', icon: 'bug', label: msg('views-data-inspector:kind.actor.many') },
+  { id: 'tag', icon: 'tag', label: msg('views-data-inspector:kind.tag.many') },
+  { id: 'item-group', icon: 'archive', label: msg('views-data-inspector:kind.item-group.many') },
+  { id: 'enumeration', icon: 'type', label: msg('views-data-inspector:kind.enumeration.many') },
 ];
 
-const RECOMMENDATIONS_NAV_ITEM: { id: string; icon: IconName; label: string } = {
-  id: RECOMMENDATIONS_KIND, icon: 'triangle-alert', label: 'Recommendations',
+const RECOMMENDATIONS_NAV_ITEM: { id: string; icon: IconName; label: Message } = {
+  id: RECOMMENDATIONS_KIND, icon: 'triangle-alert', label: msg('views-data-inspector:kind.recommendations.many'),
+};
+
+const KIND_LABELS: Record<string, Message> = Object.fromEntries(
+  [...KIND_NAV_ITEMS, RECOMMENDATIONS_NAV_ITEM].map(item => [item.id, item.label]),
+);
+
+const KIND_SINGULARS: Record<string, Message> = {
+  'screen': msg('views-data-inspector:kind.screen.one'),
+  'connection': msg('views-data-inspector:kind.connection.one'),
+  'check': msg('views-data-inspector:kind.check.one'),
+  'item': msg('views-data-inspector:kind.item.one'),
+  'dungeon': msg('views-data-inspector:kind.dungeon.one'),
+  'area': msg('views-data-inspector:kind.area.one'),
+  'location': msg('views-data-inspector:kind.location.one'),
+  'actor': msg('views-data-inspector:kind.actor.one'),
+  'tag': msg('views-data-inspector:kind.tag.one'),
+  'item-group': msg('views-data-inspector:kind.item-group.one'),
+  'enumeration': msg('views-data-inspector:kind.enumeration.one'),
 };
 
 const NAV_ICONS: Record<string, IconData> = {
@@ -117,27 +137,27 @@ const CLOSED_DELETE_DIALOG: DeleteGuardDialogState = { open: false, hits: [] };
 
 const ID_REF_SELECTOR = '[data-id-ref]';
 
-const NOTHING_MATCHES = 'No records match these filters.';
-const NO_FINDINGS = 'No open findings.';
-const COMPARISON_TITLE = 'Comparison';
+const NOTHING_MATCHES = msg('views-data-inspector:list.empty');
+const NO_FINDINGS = msg('views-data-inspector:list.no-findings');
+const COMPARISON_TITLE = msg('views-data-inspector:comparison.title');
 
 const RECORD_LIST_RATIO = 0.63;
 const COMPARING_LIST_RATIO = 0.4;
 
-const DETAIL_TABS: TabItem[] = [
-  { id: 'json', label: 'JSON' },
-  { id: 'ts', label: 'TypeScript' },
-  { id: 'editor', label: 'Editor' },
+const DETAIL_TABS: { id: string; label: Message }[] = [
+  { id: 'json', label: msg('views-data-inspector:tabs.json') },
+  { id: 'ts', label: msg('views-data-inspector:tabs.ts') },
+  { id: 'editor', label: msg('views-data-inspector:tabs.editor') },
 ];
 
-const NOTHING_SELECTED = 'Select a record to inspect it.';
+const NOTHING_SELECTED = msg('views-data-inspector:detail.empty');
 
-const READ_ONLY_NOTE = 'This collection is read only.';
+const READ_ONLY_NOTE = msg('views-data-inspector:editor.read-only');
 
 export {
   AREA_FIELD, CLOSED_DELETE_DIALOG, COMPARING_LIST_RATIO, COMPARISON_TITLE, CONTAINER_KINDS, CREATE_ONLY_EXCLUDED,
   DEFAULT_KIND, DEFAULT_TAB, DETAIL_TABS, EMIT_FAILED, EMPTY_PLACEMENT, ENTITY_KINDS,
-  FALLBACK_NAV_ICON, ID_REF_SELECTOR, KIND_NAV_ITEMS, NAME_FIELD_BY_KIND, NARROWED_KIND, NAV_ICONS,
+  FALLBACK_NAV_ICON, ID_REF_SELECTOR, KIND_LABELS, KIND_NAV_ITEMS, KIND_SINGULARS, NAME_FIELD_BY_KIND, NARROWED_KIND, NAV_ICONS,
   NO_COLUMNS, NO_FINDINGS, NO_OPTIONS, NO_ORDER, NO_ROWS, NO_SCHEMA, NO_SERIALIZER, NO_SOURCE_FILE, NO_TABLE, NO_TAG_SUGGESTIONS,
   NO_TARGET_FIELDS, NOT_A_RECORD, NOTHING_MATCHES, NOTHING_SELECTED, OVERWORLD_GRID, OVERWORLD_KIND, READ_ONLY_NOTE,
   RECOMMENDATIONS_KIND, RECOMMENDATIONS_NAV_ITEM, RECORD_LIST_RATIO, ROOM_GRID, ROW_PAGE_SIZE, SCREEN_FLOOR, SCREEN_TILE,

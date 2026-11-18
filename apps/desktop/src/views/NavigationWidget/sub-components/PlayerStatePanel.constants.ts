@@ -1,7 +1,15 @@
 /* @layer renderer-widgets @kind constants */
-const COLLISION_NAMES: readonly string[] = ['One', 'Both', 'Both+Scroll', 'MovFloor', 'Swim'];
+import { msg } from '@drizztdourden08/brock-core/i18n';
+import type { Message } from '@drizztdourden08/brock-core/i18n';
+const COLLISION_NAMES: readonly Message[] = [
+  msg('views-navigation:collision.0'),
+  msg('views-navigation:collision.1'),
+  msg('views-navigation:collision.2'),
+  msg('views-navigation:collision.3'),
+  msg('views-navigation:collision.4'),
+];
 
-const STAIRCASE_NAMES: readonly string[] = ['IntraRoom', 'Layer', 'Blocked'];
+const STAIRCASE_NAMES: readonly Message[] = [msg('views-navigation:staircase.0'), msg('views-navigation:staircase.1'), msg('views-navigation:staircase.2')];
 
 const BLOCKED_STAIRCASE = 2;
 

@@ -1,18 +1,22 @@
 /* @layer renderer-components @kind component */
+import { useT } from '@drizztdourden08/brock-react';
 import { Box, Button } from '@drizztdourden08/tessera/primitives';
 import type { ReviewHeaderProps } from '../SpriteDebug.type';
 import { FilterBtns } from './FilterBtns';
 import { ReviewStats } from './ReviewStats';
 
-const ReviewHeader = ({ counts, total, filter, setFilter, onReset, tabs }: ReviewHeaderProps) => (
+const ReviewHeader = ({ counts, total, filter, setFilter, onReset, tabs }: ReviewHeaderProps) => {
+  const t = useT();
+  return (
   <Box className="sprite-debug-header">
     {tabs}
     <ReviewStats counts={counts} total={total} />
     <Box className="sprite-debug-header-buttons">
       <FilterBtns filter={filter} setFilter={setFilter} />
-      <Button variant="danger" size="xs" onClick={onReset}>Reset</Button>
+      <Button variant="danger" size="xs" onClick={onReset}>{t('views-sprite-debug:reset')}</Button>
     </Box>
   </Box>
-);
+  );
+};
 
 export { ReviewHeader };

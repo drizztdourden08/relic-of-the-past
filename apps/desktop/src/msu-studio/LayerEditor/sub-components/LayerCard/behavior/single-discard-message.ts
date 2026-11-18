@@ -1,9 +1,7 @@
 /* @layer renderer-components @kind logic */
-const singleDiscardMessage = (files: string[]): string => {
-  const dropped = files.length - 1;
-  const plural = dropped === 1 ? 'file' : 'files';
-  return `Single plays one track, repeating at its own loop point. "${files[0]}" is kept and the `
-    + `other ${dropped} ${plural} are removed from this layer. Nothing is written until you save.`;
-};
+import type { I18n } from '@drizztdourden08/brock-core/i18n';
+
+const singleDiscardMessage = (t: I18n['t'], files: string[]): string =>
+  t('msu-studio:layers.single.discard-message', { kept: files[0], count: files.length - 1 });
 
 export { singleDiscardMessage };

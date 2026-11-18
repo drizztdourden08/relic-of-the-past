@@ -1,16 +1,17 @@
 /* @layer renderer-app @kind component */
+import { useT } from '@drizztdourden08/brock-react';
 import { Button } from '@drizztdourden08/tessera/primitives';
 import { CreateRecordDialog } from '@drizztdourden08/tessera/composites';
 import type { CreateRecordButtonProps } from '../DataInspector.type';
 import { resolveIdRefOptionsFor } from '../behavior/id-ref-options';
 import { numberBoundsResolverFor } from '@app/data-inspector/number-bounds';
-import { singularLabel } from '../behavior/singular-label';
 import { tagCreatorFor } from '../behavior/tag-creator-for';
 import { tagSuggestionsResolverFor } from '@app/data-inspector/tag-suggestions';
 import { useCreateRecordDialog } from '../behavior/useCreateRecordDialog';
 
 const CreateRecordButton = (props: CreateRecordButtonProps) => {
   const { kind, label, schema, onCreated } = props;
+  const t = useT();
   const {
     open, openDialog, cancelDialog, handleCreated,
     createSchema, initialRecord, requiredPaths, onCreate,
@@ -20,10 +21,10 @@ const CreateRecordButton = (props: CreateRecordButtonProps) => {
 
   return (
     <>
-      <Button variant="secondary" size="sm" onClick={openDialog}>{`+ New ${singularLabel(label)}`}</Button>
+      <Button variant="secondary" size="sm" onClick={openDialog}>{t('views-data-inspector:create.button', { kind: label })}</Button>
       <CreateRecordDialog
         open={open}
-        title={`New ${singularLabel(label)}`}
+        title={t('views-data-inspector:create.title', { kind: label })}
         schema={createSchema}
         initialRecord={initialRecord}
         requiredPaths={requiredPaths}

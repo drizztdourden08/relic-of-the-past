@@ -1,10 +1,12 @@
 /* @layer renderer-components @kind component */
+import { useT } from '@drizztdourden08/brock-react';
 import { EmptyState, Stack, Text } from '@drizztdourden08/tessera/primitives';
 import type { StoreInstalledListProps } from '../Store.type';
 import { StoreInstalledRow } from './StoreInstalledRow';
 
 const StoreInstalledList = (props: StoreInstalledListProps) => {
   const { rows, emptyText, store } = props;
+  const t = useT();
   const { account, confirmUninstall } = store;
 
   return (
@@ -20,7 +22,7 @@ const StoreInstalledList = (props: StoreInstalledListProps) => {
         />
       ))}
       {rows.length > 0 && (
-        <Text as="p" className="store__hint">Uninstalling a pack a profile uses sets that profile back to the default first.</Text>
+        <Text as="p" className="store__hint">{t('views-store:installed.hint')}</Text>
       )}
     </Stack>
   );
