@@ -106,6 +106,6 @@ interface ScreenAddressTable {
 }
 
 export type {
-  CopyScreenSource, CreditsSource, EndingCaptionSource, FloorLabelTiles, PauseHeaderSource, PauseTable, ScreenAddressTable,
+  CopyScreenSource, FloorLabelTiles, PauseHeaderSource, PauseTable, ScreenAddressTable,
   ScreenPayload, SelectFileTable, SheetKind, SheetOverride, SheetPatch, SheetPatchSource, TableRegion, TilemapRebase,
 };
