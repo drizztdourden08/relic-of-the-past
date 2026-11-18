@@ -64,5 +64,7 @@
   "rec.reason.absent-in-game": "{label}: record {dataset}, afwezig in het spel.",
   "rec.reason.set-create": "{noun} {key}: in het spel, niet in de dataset.",
   "rec.reason.set-delete": "{noun} {key}: in de dataset, afwezig in het spel.",
-  "rec.reason.geography": "Locatie {location} ligt niet in dit gebied. {count, plural, =1 {Alleen {pick} wel.} other {{pick} is een gok uit {count}.}}"
+  "rec.reason.geography": "Locatie {location} ligt niet in dit gebied. {count, plural, =1 {Alleen {pick} wel.} other {{pick} is een gok uit {count}.}}",
+  "rec.reason.crossing-interior": "Overgang naar {label}: geen schermrecord, paleis onbekend.",
+  "rec.reason.crossing-screen": "Overgang naar {label}: geen schermrecord."
 }

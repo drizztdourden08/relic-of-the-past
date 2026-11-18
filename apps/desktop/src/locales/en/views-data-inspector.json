@@ -64,5 +64,7 @@
   "rec.reason.absent-in-game": "{label}: record {dataset}, absent in game.",
   "rec.reason.set-create": "{noun} {key}: in game, not in dataset.",
   "rec.reason.set-delete": "{noun} {key}: in dataset, absent in game.",
-  "rec.reason.geography": "Location {location} is not in this area. {count, plural, =1 {Only {pick} is.} other {{pick} is a guess of {count}.}}"
+  "rec.reason.geography": "Location {location} is not in this area. {count, plural, =1 {Only {pick} is.} other {{pick} is a guess of {count}.}}",
+  "rec.reason.crossing-interior": "Crossing to {label}: no screen record, palace unknown.",
+  "rec.reason.crossing-screen": "Crossing to {label}: no screen record."
 }

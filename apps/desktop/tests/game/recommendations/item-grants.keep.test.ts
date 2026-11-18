@@ -5,6 +5,7 @@ import type { ItemId, ItemRecord } from '@rotp/game-data';
 import { registerDetector, runDetection, detectorFromStrategy, itemStrategy } from '@rotp/navigation';
 import type { ChestObservation } from '@rotp/game-core';
 import type { DetectionContext, ScreenObservations } from '@rotp/navigation';
+import { i18n } from '../../hud/test-i18n';
 import { describeDataset } from '../../dataset-guard';
 import { required } from '@rotp/asset-extraction/testing';
 
@@ -142,7 +143,7 @@ describeDataset('item strategy on an alias mismatch', () => {
     expect(draft.detector).toBe('strategy:item');
     expect(draft.confidence).toBe('certain');
     expect((draft.proposed as ItemRecord).aliasOf).toBeUndefined();
-    expect(draft.reason).toContain(alias.name);
+    expect(i18n.text(draft.reason)).toContain(alias.name);
   });
 
   it('grades an alias mismatch sourced from a tracker delta only likely', { tags: ['critical'] }, () => {

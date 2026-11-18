@@ -64,5 +64,7 @@
   "rec.reason.absent-in-game": "{label}: rekord {dataset}, brak w grze.",
   "rec.reason.set-create": "{noun} {key}: w grze, brak w zbiorze danych.",
   "rec.reason.set-delete": "{noun} {key}: w zbiorze danych, brak w grze.",
-  "rec.reason.geography": "Lokacja {location} nie leży w tym obszarze. {count, plural, =1 {Tylko {pick} leży.} other {{pick} to domysł spośród {count}.}}"
+  "rec.reason.geography": "Lokacja {location} nie leży w tym obszarze. {count, plural, =1 {Tylko {pick} leży.} other {{pick} to domysł spośród {count}.}}",
+  "rec.reason.crossing-interior": "Przejście do {label}: brak rekordu ekranu, nieznany pałac.",
+  "rec.reason.crossing-screen": "Przejście do {label}: brak rekordu ekranu."
 }

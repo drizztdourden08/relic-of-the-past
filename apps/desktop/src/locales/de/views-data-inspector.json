@@ -64,5 +64,7 @@
   "rec.reason.absent-in-game": "{label}: Datensatz {dataset}, im Spiel nicht vorhanden.",
   "rec.reason.set-create": "{noun} {key}: im Spiel, nicht im Datensatz.",
   "rec.reason.set-delete": "{noun} {key}: im Datensatz, im Spiel nicht vorhanden.",
-  "rec.reason.geography": "Der Ort {location} liegt nicht in diesem Gebiet. {count, plural, =1 {Nur {pick} liegt darin.} other {{pick} ist eine Vermutung aus {count}.}}"
+  "rec.reason.geography": "Der Ort {location} liegt nicht in diesem Gebiet. {count, plural, =1 {Nur {pick} liegt darin.} other {{pick} ist eine Vermutung aus {count}.}}",
+  "rec.reason.crossing-interior": "Übergang nach {label}: kein Bildschirm-Datensatz, Palast unbekannt.",
+  "rec.reason.crossing-screen": "Übergang nach {label}: kein Bildschirm-Datensatz."
 }

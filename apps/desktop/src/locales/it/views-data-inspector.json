@@ -64,5 +64,7 @@
   "rec.reason.absent-in-game": "{label}: scheda {dataset}, assente nel gioco.",
   "rec.reason.set-create": "{noun} {key}: nel gioco, non nel dataset.",
   "rec.reason.set-delete": "{noun} {key}: nel dataset, assente nel gioco.",
-  "rec.reason.geography": "Il luogo {location} non è in quest'area. {count, plural, =1 {Solo {pick} lo è.} other {{pick} è un'ipotesi tra {count}.}}"
+  "rec.reason.geography": "Il luogo {location} non è in quest'area. {count, plural, =1 {Solo {pick} lo è.} other {{pick} è un'ipotesi tra {count}.}}",
+  "rec.reason.crossing-interior": "Passaggio verso {label}: nessuna scheda schermata, palazzo sconosciuto.",
+  "rec.reason.crossing-screen": "Passaggio verso {label}: nessuna scheda schermata."
 }

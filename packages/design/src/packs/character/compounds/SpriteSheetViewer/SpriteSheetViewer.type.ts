@@ -64,6 +64,6 @@ type ViewerStageProps = {
 };
 
 export type {
-  LabelsProp, PlaybackControlsProps, SheetView, SpriteSheetViewerProps, SpriteViewerModel, SpriteViewerParams, ViewerControlsProps,
+  PlaybackControlsProps, SheetView, SpriteSheetViewerProps, SpriteViewerModel, SpriteViewerParams, ViewerControlsProps,
   ViewerLabels, ViewerStageProps, ViewSwitchProps, ZoomControlProps,
 };

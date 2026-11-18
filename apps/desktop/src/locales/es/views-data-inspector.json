@@ -64,5 +64,7 @@
   "rec.reason.absent-in-game": "{label}: registro {dataset}, ausente en el juego.",
   "rec.reason.set-create": "{noun} {key}: en el juego, no en el conjunto de datos.",
   "rec.reason.set-delete": "{noun} {key}: en el conjunto de datos, ausente en el juego.",
-  "rec.reason.geography": "El lugar {location} no está en esta zona. {count, plural, =1 {Solo {pick} lo está.} other {{pick} es una suposición entre {count}.}}"
+  "rec.reason.geography": "El lugar {location} no está en esta zona. {count, plural, =1 {Solo {pick} lo está.} other {{pick} es una suposición entre {count}.}}",
+  "rec.reason.crossing-interior": "Cruce hacia {label}: sin registro de pantalla, palacio desconocido.",
+  "rec.reason.crossing-screen": "Cruce hacia {label}: sin registro de pantalla."
 }

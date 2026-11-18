@@ -1,6 +1,7 @@
 /* @layer test @kind test */
 import { describe, expect, it } from 'vitest';
 import { collectReflowWarnings, validateLayout } from '@rotp/hud';
+import { i18n } from '../test-i18n';
 import type { HudAnimation, HudLayout } from '@rotp/hud';
 
 describe('reflow warnings - structured data, not just a comment', { tags: ['critical'] }, () => {
@@ -32,7 +33,7 @@ describe('reflow warnings - structured data, not just a comment', { tags: ['crit
   it('warns when width/height animates inside a flow (row) container', () => {
     const { warnings, errors } = validateLayout(docWithAnimation('width', 'row'));
     expect(errors).toEqual([]);
-    expect(warnings.some((w) => w.includes('child') && w.includes("'width'") && w.includes('parent'))).toBe(true);
+    expect(warnings.some((w) => w.property === 'width' && i18n.text(w.message).includes("'width'"))).toBe(true);
   });
 
   it('does not warn for scale/opacity/x/y/rotate/tint - the six safe properties', () => {

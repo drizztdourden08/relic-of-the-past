@@ -64,5 +64,7 @@
   "rec.reason.absent-in-game": "{label}：レコード {dataset}、ゲームには存在しません。",
   "rec.reason.set-create": "{noun} {key}：ゲームにあり、データセットにはありません。",
   "rec.reason.set-delete": "{noun} {key}：データセットにあり、ゲームには存在しません。",
-  "rec.reason.geography": "場所「{location}」はこのエリアにありません。{count, plural, =1 {該当するのは「{pick}」だけです。} other {「{pick}」は{count}件からの推測です。}}"
+  "rec.reason.geography": "場所「{location}」はこのエリアにありません。{count, plural, =1 {該当するのは「{pick}」だけです。} other {「{pick}」は{count}件からの推測です。}}",
+  "rec.reason.crossing-interior": "{label}への移動：画面レコードがなく、宮殿も不明です。",
+  "rec.reason.crossing-screen": "{label}への移動：画面レコードがありません。"
 }

@@ -64,5 +64,7 @@
   "rec.reason.absent-in-game": "{label}: post {dataset}, saknas i spelet.",
   "rec.reason.set-create": "{noun} {key}: i spelet, inte i datasetet.",
   "rec.reason.set-delete": "{noun} {key}: i datasetet, saknas i spelet.",
-  "rec.reason.geography": "Platsen {location} ligger inte i det här området. {count, plural, =1 {Bara {pick} gör det.} other {{pick} är en gissning bland {count}.}}"
+  "rec.reason.geography": "Platsen {location} ligger inte i det här området. {count, plural, =1 {Bara {pick} gör det.} other {{pick} är en gissning bland {count}.}}",
+  "rec.reason.crossing-interior": "Övergång till {label}: ingen skärmpost, palats okänt.",
+  "rec.reason.crossing-screen": "Övergång till {label}: ingen skärmpost."
 }

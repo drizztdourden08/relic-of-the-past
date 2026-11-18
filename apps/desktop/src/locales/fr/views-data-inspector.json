@@ -64,5 +64,7 @@
   "rec.reason.absent-in-game": "{label} : fiche {dataset}, absent du jeu.",
   "rec.reason.set-create": "{noun} {key} : dans le jeu, absent du jeu de données.",
   "rec.reason.set-delete": "{noun} {key} : dans le jeu de données, absent du jeu.",
-  "rec.reason.geography": "Le lieu {location} n'est pas dans cette zone. {count, plural, =1 {Seul {pick} l'est.} other {{pick} est une supposition parmi {count}.}}"
+  "rec.reason.geography": "Le lieu {location} n'est pas dans cette zone. {count, plural, =1 {Seul {pick} l'est.} other {{pick} est une supposition parmi {count}.}}",
+  "rec.reason.crossing-interior": "Passage vers {label} : aucune fiche d'écran, palais inconnu.",
+  "rec.reason.crossing-screen": "Passage vers {label} : aucune fiche d'écran."
 }
