@@ -9,6 +9,7 @@ import portKitRenderer from '@drizztdourden08/brock-port-kit/renderer';
 import inputRenderer from '@drizztdourden08/brock-input/renderer';
 import mcpRenderer from '@drizztdourden08/brock-mcp/renderer';
 import randomizerRenderer from '@drizztdourden08/brock-randomizer/renderer';
+import i18nRenderer from '@drizztdourden08/brock-i18n/renderer';
 
 const rendererModules: RendererModule[] = [
   updaterRenderer,
@@ -20,6 +21,7 @@ const rendererModules: RendererModule[] = [
   inputRenderer,
   mcpRenderer,
   randomizerRenderer,
+  i18nRenderer,
 ];
 
 export { rendererModules };

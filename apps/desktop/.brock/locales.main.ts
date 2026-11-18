@@ -10,17 +10,7 @@ const baseLayers: readonly Layer[] = [
 const mainLocales: MainLocales = {
   base: 'en',
   layers: baseLayers,
-  loaders: {
-  'de': async () => [],
-  'es': async () => [],
-  'fr': async () => [],
-  'it': async () => [],
-  'ja': async () => [],
-  'nl': async () => [],
-  'pl': async () => [],
-  'pt': async () => [],
-  'sv': async () => [],
-  },
+  loaders: {},
 };
 
 export { mainLocales };

@@ -1,7 +1,0 @@
-{
-  "appLanguage.section": "App language",
-  "appLanguage.label": "Language",
-  "appLanguage.description": "The language of the menus and screens. The game's own text follows each profile's game language.",
-  "appLanguage.profile.label": "App language",
-  "appLanguage.useApp": "Use the app language"
-}

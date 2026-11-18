@@ -8,7 +8,8 @@ import { allActionDefs } from './action-defs';
 const touchActionLabel = (target: ListenTarget, t: I18n['t'], text: (text: Text) => string): string => {
   if (target.type === 'slot') return target.slot.label;
   if (target.type === 'verb') return coreVerbDefs(t).find((verb) => verb.id === target.id)?.label ?? target.id;
-  return allActionDefs(text).find((action) => action.id === target.id)?.label ?? target.id;
+  const label = allActionDefs(text).find((action) => action.id === target.id)?.label;
+  return label === undefined ? target.id : text(label);
 };
 
 export { touchActionLabel };

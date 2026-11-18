@@ -32,7 +32,6 @@ const APP_CHANNELS = defineChannels({
   stopLanDiscovery: invoke<RotpInvoke['lan:discovery:stop']>()('lan:discovery:stop'),
   getFirewallStatus: invoke<RotpInvoke['lan:firewall:status']>()('lan:firewall:status'),
   allowFirewall: invoke<RotpInvoke['lan:firewall:allow']>()('lan:firewall:allow'),
-  setAppLanguage: invoke<RotpInvoke['app:language:set']>()('app:language:set'),
   onMsuOptimizeProgress: event<RotpEvent['msu:optimize:progress']>()('msu:optimize:progress'),
   onLanSighting: event<RotpEvent['lan:sighting']>()('lan:sighting'),
 });

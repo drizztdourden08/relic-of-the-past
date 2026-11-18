@@ -9,7 +9,6 @@ declare global {
     created: number;
     lastPlayed: number;
     language?: string;
-    appLanguage?: string;
     msuPack?: string;
     automation?: boolean;
     randomizer?: ProfileRandomizerConfig;
