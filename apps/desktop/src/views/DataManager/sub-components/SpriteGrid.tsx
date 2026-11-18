@@ -1,4 +1,5 @@
 /* @layer renderer-components @kind component */
+import { useT } from '@drizztdourden08/brock-react';
 import { useState, useMemo } from 'react';
 import { Box, Tabs } from '@drizztdourden08/tessera/primitives';
 import type { TabItem } from '@drizztdourden08/tessera/primitives';
@@ -10,6 +11,7 @@ const countOf = (cat: CategoryFilter): number => SPRITE_MANIFEST.filter((s) => c
 
 const SpriteGrid = (props: SpriteGridProps) => {
   const { baseUrl } = props;
+  const t = useT();
   const [catFilter, setCatFilter] = useState<CategoryFilter>('all');
 
   const filtered = useMemo(
@@ -18,9 +20,9 @@ const SpriteGrid = (props: SpriteGridProps) => {
   );
 
   const tabs = useMemo((): TabItem[] => [
-    { id: 'all', label: 'All', badge: countOf('all') },
+    { id: 'all', label: t('data-manager:sprite-manager.all'), badge: countOf('all') },
     ...CATEGORY_ORDER.map((c) => ({ id: c, label: CATEGORY_LABELS[c], badge: countOf(c) })),
-  ], []);
+  ], [t]);
 
   return (
     <Box className="sprite-manager__panel">

@@ -1,4 +1,5 @@
 /* @layer renderer-components @kind component */
+import { useT } from '@drizztdourden08/brock-react';
 import { Box, Slider, Text } from '@drizztdourden08/tessera/primitives';
 import { ValueTag } from '@drizztdourden08/tessera/composites';
 import { LadderStepper } from '@app/composites/LadderStepper';
@@ -13,6 +14,7 @@ const itemsLabel = (count: number): string =>
   (count === 0 ? 'none, not a check' : `${count} item${count === 1 ? '' : 's'}`);
 
 const WishingPondRow = (props: WishingPondRowProps) => {
+  const t = useT();
   const { model, readOnly = false, readout = false, onChange } = props;
   const { label, modeLabel, caption, state, preview, offersItems, hasPrices, maxItems, walletNote } = model;
 
@@ -29,7 +31,7 @@ const WishingPondRow = (props: WishingPondRowProps) => {
         <Box className="pond-row__custom">
           <PondAskControls model={model} readOnly={readOnly} readout={readout} onChange={patch} />
           {hasPrices && <PondPriceControls model={model} readOnly={readOnly} readout={readout} onChange={patch} />}
-          <PondOptionLine label="pool items in the pond">
+          <PondOptionLine label={t('compounds:wishing-pond-row.pool-items-in-the-pond')}>
             {readout ? <ValueTag value={itemsLabel(Math.min(state.items, maxItems))} /> : (
               <Slider
                 value={Math.min(state.items, maxItems)}
@@ -46,7 +48,7 @@ const WishingPondRow = (props: WishingPondRowProps) => {
       )}
       <Box className="pond-row__preview">
         <Text tone="faint" className="pond-row__preview-title">throw prices</Text>
-        <LadderStepper label="throw prices" steps={preview.steps} size="compact" mediaPlacement="below" showLabels={false} />
+        <LadderStepper label={t('compounds:wishing-pond-row.throw-prices')} steps={preview.steps} size="compact" mediaPlacement="below" showLabels={false} />
         <Text className="pond-row__preview-note">{preview.note}</Text>
       </Box>
       {walletNote !== undefined && <Text className="pond-row__footnote">{walletNote}</Text>}

@@ -1,10 +1,12 @@
 /* @layer renderer-components @kind component */
+import { useT } from '@drizztdourden08/brock-react';
 import { Status, Button, Flex, Image, Stack, Text } from '@drizztdourden08/tessera/primitives';
 import { PROVIDER_LABELS } from '@rotp/hub-contracts';
 import type { SignedInStateProps } from '../HubAccountCard.type';
 import { ACCESS_VARIANT } from './SignedInState.constants';
 
 const SignedInState = (props: SignedInStateProps) => {
+  const t = useT();
   const { me, openSiteLabel, onOpenSite, onSignOut } = props;
   const { user, identities, deviceLabel } = me;
   const linked = identities.map((identity) => PROVIDER_LABELS[identity.provider]).join(', ');
@@ -29,7 +31,7 @@ const SignedInState = (props: SignedInStateProps) => {
       </Flex>
       <Flex gap="sm">
         <Button variant="secondary" onClick={onOpenSite}>{openSiteLabel}</Button>
-        <Button variant="tertiary" onClick={onSignOut}>Sign out</Button>
+        <Button variant="tertiary" onClick={onSignOut}>{t('compounds:hub-account-card.sign-out')}</Button>
       </Flex>
     </Flex>
   );

@@ -1,4 +1,5 @@
 /* @layer renderer-components @kind component */
+import { useT } from '@drizztdourden08/brock-react';
 import { Field } from '@drizztdourden08/tessera/primitives';
 import { officialRomStatuses } from '@rotp/roms';
 import { UploadField } from '@app/compounds/UploadField';
@@ -6,14 +7,16 @@ import { LANGUAGE_ROM_ACCEPT } from '../../../../language-manager.constants';
 import { checkPickedRom, romCheckStatus } from '../../../../../rom-check';
 import type { SourceFieldsProps } from '../DetailsStep.type';
 
-const RomFields = ({ values, update }: SourceFieldsProps) => (
-  <Field label="ROM file" hint="The language is read from the ROM. The ROM is not saved.">
+const RomFields = ({ values, update }: SourceFieldsProps) => {
+  const t = useT();
+  return (
+  <Field label={t('wizards:language.details.rom-file')} hint={t('wizards:language.details.the-language-is-read-from')}>
     <UploadField
       accept={[...LANGUAGE_ROM_ACCEPT]}
-      label="Drop a ROM file to extract its language"
-      status={romCheckStatus(values.romFile, values.romCheck)}
+      label={t('wizards:language.details.drop-a-rom-file-to')}
+      status={romCheckStatus(values.romFile, values.romCheck, t)}
       url={values.romUrl}
-      urlPlaceholder="Paste ROM download URL..."
+      urlPlaceholder={t('wizards:language.details.paste-rom-download-url')}
       roms={officialRomStatuses()}
       onFiles={(files) => checkPickedRom(files, 'official', 'snes-alttp',
         (romFile) => update({ romFile, romUrl: '', romCheck: null }), (romCheck) => update({ romCheck }))}
@@ -21,6 +24,7 @@ const RomFields = ({ values, update }: SourceFieldsProps) => (
       onModeChange={() => update({ romFile: null, romUrl: '', romCheck: null })}
     />
   </Field>
-);
+  );
+};
 
 export { RomFields };

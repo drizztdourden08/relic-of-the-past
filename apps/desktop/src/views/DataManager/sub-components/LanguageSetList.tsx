@@ -1,4 +1,5 @@
 /* @layer renderer-components @kind component */
+import { useT } from '@drizztdourden08/brock-react';
 import { HookshopChip } from '@app/compounds/HookshopChip';
 import { Icon, IconButton, EmptyState, Spinner, Stack } from '@drizztdourden08/tessera/primitives';
 import { ListItemRow } from '@drizztdourden08/tessera/composites';
@@ -6,12 +7,13 @@ import { LANGUAGE_ORIGIN_ICONS, LANGUAGE_ORIGIN_TAGS } from './language-origin-i
 import type { LanguageSetListProps } from './LanguageSetList.type';
 
 const LanguageSetList = (props: LanguageSetListProps) => {
+  const t = useT();
   const { sets, loading, selected, labelOf, isInstalled, onSelect, onDelete } = props;
 
   return (
     <Stack gap="xs">
       {loading && <Spinner />}
-      {!loading && sets.length === 0 && <EmptyState message="No languages extracted yet" />}
+      {!loading && sets.length === 0 && <EmptyState message={t('data-manager:language-set-list.no-languages-extracted-yet')} />}
       {sets.map((set) => (
         <ListItemRow
           key={set.id}

@@ -1,10 +1,10 @@
 /* @layer renderer-components @kind logic */
-import { NO_NAME_ERROR, NO_ROM_ERROR } from '../ProfileCreateWizard.constants';
+import type { I18n } from '@drizztdourden08/brock-core/i18n';
 import type { ProfileWizardValues } from '../ProfileCreateWizard.type';
 
-const profileProblem = (values: ProfileWizardValues): string | null => {
-  if (values.name.trim() === '') return NO_NAME_ERROR;
-  return values.rom === '' ? NO_ROM_ERROR : null;
+const profileProblem = (values: ProfileWizardValues, t: I18n['t']): string | null => {
+  if (values.name.trim() === '') return t('wizards:profile.problem.no-name');
+  return values.rom === '' ? t('wizards:profile.problem.no-rom') : null;
 };
 
 export { profileProblem };

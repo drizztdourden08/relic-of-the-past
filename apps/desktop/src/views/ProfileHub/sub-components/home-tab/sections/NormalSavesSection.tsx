@@ -4,7 +4,7 @@ import { ItemList } from '@drizztdourden08/tessera/composites';
 import type { ItemListCreate, ItemListRowState } from '@drizztdourden08/tessera/composites';
 import type { NormalSaveInfo } from '@rotp/game-core';
 import { SaveRowActions } from '@app/compounds/SaveRowActions';
-import { NO_GAME_REASON } from '../home-tab.constants';
+import { useT, useText } from '@drizztdourden08/brock-react';
 import type { HomeTabColumnsProps } from '../home-tab.type';
 import { useArmedRow } from '../useArmedRow';
 import { CreateSaveForm } from './CreateSaveForm';
@@ -15,6 +15,8 @@ const nameOf = (save: NormalSaveInfo) => save.name;
 
 const NormalSavesSection = (props: HomeTabColumnsProps) => {
   const { saves, isGameRunning } = props;
+  const t = useT();
+  const text = useText();
   const { normalSaves, normalScreenshots, busyNormal } = saves;
   const { handleCreateNormalSave, handleLoadNormal, handleOverwriteNormal, handleDeleteNormal, handleRenameNormal } = saves;
   const [selectedId, setSelectedId] = useState<string | null>(null);
@@ -25,20 +27,20 @@ const NormalSavesSection = (props: HomeTabColumnsProps) => {
     timestamp: save.timestamp,
     busy: busyNormal === save.id,
     armed: armedOf(save.id),
-  }), [normalScreenshots, busyNormal, armedOf]);
+  }, text), [normalScreenshots, busyNormal, armedOf, text]);
 
   const rowActions = useCallback((save: NormalSaveInfo, row: ItemListRowState) => (
     <SaveRowActions
       name={save.name}
       busy={busyNormal !== null}
       tabIndex={row.tabIndex}
-      overwriteDisabledReason={isGameRunning ? undefined : NO_GAME_REASON}
+      overwriteDisabledReason={isGameRunning ? undefined : t('profiles:home.saves.no-game')}
       onLoad={() => void handleLoadNormal(save.id)}
       onOverwrite={() => void handleOverwriteNormal(save.id)}
       onDelete={() => void handleDeleteNormal(save.id)}
       onArmedChange={(armed) => reportArmed(save.id, armed)}
     />
-  ), [busyNormal, isGameRunning, handleLoadNormal, handleOverwriteNormal, handleDeleteNormal, reportArmed]);
+  ), [busyNormal, isGameRunning, handleLoadNormal, handleOverwriteNormal, handleDeleteNormal, reportArmed, t]);
 
   const create = useCallback<ItemListCreate>((close) => {
     const handleCreate = (name: string) => {
@@ -54,7 +56,7 @@ const NormalSavesSection = (props: HomeTabColumnsProps) => {
 
   return (
     <ItemList
-      title="Saves"
+      title={t('profiles:home.saves.title')}
       items={normalSaves}
       getId={idOf}
       getName={nameOf}
@@ -63,13 +65,13 @@ const NormalSavesSection = (props: HomeTabColumnsProps) => {
       actionVisibility="always"
       maxRows={6}
       create={create}
-      newDisabled={isGameRunning ? false : NO_GAME_REASON}
-      createLabel="New save"
+      newDisabled={isGameRunning ? false : t('profiles:home.saves.no-game')}
+      createLabel={t('profiles:home.saves.new')}
       selectedId={selectedId}
       onSelect={setSelectedId}
       onRename={handleRename}
       renameInline
-      empty="No saves yet"
+      empty={t('profiles:home.saves.empty')}
     />
   );
 };

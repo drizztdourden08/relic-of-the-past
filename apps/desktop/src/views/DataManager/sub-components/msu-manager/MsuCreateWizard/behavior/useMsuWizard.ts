@@ -1,4 +1,5 @@
 /* @layer renderer-components @kind hook */
+import { useT } from '@drizztdourden08/brock-react';
 import { useCallback, useMemo } from 'react';
 import { useWizard } from '@drizztdourden08/tessera/composites';
 import { useImportProgress } from '@app/hooks/useImportProgress';
@@ -10,13 +11,14 @@ import { keepSelection } from './keep-selection';
 import { msuWizardSteps } from './msu-wizard-steps';
 
 const useMsuWizard = ({ refresh, isTaken, onCreated }: UseMsuWizardParams) => {
+  const t = useT();
   const progress = useImportProgress('msu');
   const { importMsul } = usePackImport({ refresh, onImported: keepSelection });
-  const steps = useMemo(() => msuWizardSteps(isTaken), [isTaken]);
+  const steps = useMemo(() => msuWizardSteps(isTaken, t), [isTaken, t]);
 
   const handleFinish = useCallback(
-    (values: MsuWizardValues) => finishPack(values, { refresh, importMsul }),
-    [refresh, importMsul],
+    (values: MsuWizardValues) => finishPack(values, { t, refresh, importMsul }),
+    [t, refresh, importMsul],
   );
 
   const wizard = useWizard({ steps, initialValues: INITIAL_VALUES, onFinish: handleFinish, onFinished: onCreated });

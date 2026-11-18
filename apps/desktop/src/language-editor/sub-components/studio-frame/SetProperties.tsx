@@ -1,15 +1,17 @@
 /* @layer renderer-components @kind component */
+import { useT } from '@drizztdourden08/brock-react';
 import { useMemo } from 'react';
 import { FactsPanel } from '@drizztdourden08/tessera/composites';
 import type { FactsPanelGroup } from '@drizztdourden08/tessera/composites';
 import { StudioSection } from '@app/studio';
 import { SOURCE_LABELS } from './studio-frame.constants';
-import { LANGUAGE_NAMES } from '../../../views/DataManager/sub-components/language-names.constants';
+import { languageLabel } from '../../../views/DataManager/sub-components/language-label';
 import type { SetPropertiesProps } from './studio-frame.type';
 
 const SetProperties = (props: SetPropertiesProps) => {
   const { set, warnings } = props;
-  const base = LANGUAGE_NAMES[set.base] ?? set.base;
+  const t = useT();
+  const base = languageLabel(set.base, t);
 
   const groups = useMemo<FactsPanelGroup[]>(() => [[
     { label: 'Name', value: set.name },

@@ -2,7 +2,7 @@
 import { Box, Slider, Toggle } from '@drizztdourden08/tessera/primitives';
 import { ValueTag } from '@drizztdourden08/tessera/composites';
 import { CAPACITY_BONUS_MAX, CAPACITY_BONUS_STEP } from '@rotp/randomizer';
-import { STEP_BASE_LABEL } from '../CapacityFamilyRow.constants';
+import { useT } from '@drizztdourden08/brock-react';
 import type { BonusLineProps } from '../CapacityFamilyRow.type';
 import { RowLine } from './RowLine';
 
@@ -10,18 +10,20 @@ const percentLabel = (percent: number): string => `${percent}%`;
 
 const BonusLine = (props: BonusLineProps) => {
   const { bonus, caption, readOnly, readout = false, onChange } = props;
+  const t = useT();
+  const stepBaseLabel = t('compounds:capacity.step-base');
 
   if (readout) {
     return (
-      <RowLine label="bonus" note={caption}>
+      <RowLine label={t('compounds:capacity.row.bonus')} note={caption}>
         <ValueTag value={percentLabel(bonus.percent)} />
-        <ValueTag label={STEP_BASE_LABEL} value={bonus.stepBase} />
+        <ValueTag label={stepBaseLabel} value={bonus.stepBase} />
       </RowLine>
     );
   }
 
   return (
-    <RowLine label="bonus" note={caption}>
+    <RowLine label={t('compounds:capacity.row.bonus')} note={caption}>
       <Box className="capacity-row__grow">
         <Slider
           value={bonus.percent}
@@ -34,7 +36,7 @@ const BonusLine = (props: BonusLineProps) => {
         />
       </Box>
       <Toggle
-        label={STEP_BASE_LABEL}
+        label={stepBaseLabel}
         checked={bonus.stepBase}
         disabled={readOnly}
         onChange={(stepBase) => onChange?.({ ...bonus, stepBase })}

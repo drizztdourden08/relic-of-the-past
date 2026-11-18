@@ -1,6 +1,7 @@
 /* @layer renderer-components @kind component */
 import { useCallback } from 'react';
 import type { ChangeEvent, KeyboardEvent } from 'react';
+import { Trans, useT } from '@drizztdourden08/brock-react';
 import { Dialog } from '@drizztdourden08/tessera/composites';
 import { TextInput, Text, Box, Icon } from '@drizztdourden08/tessera/primitives';
 import { IMPORT_CONFIRM_WORD } from '../home-tab.constants';
@@ -10,6 +11,7 @@ const ImportSramDialog = ({ saves }: HomeTabDialogProps) => {
   const {
     dialog, importConfirmText, setImportConfirmText, handleCancelImportSram, handleConfirmImportSram,
   } = saves;
+  const t = useT();
   const confirmWordTyped = importConfirmText.trim().toLowerCase() === IMPORT_CONFIRM_WORD;
 
   const handleConfirmChange = useCallback(
@@ -23,10 +25,10 @@ const ImportSramDialog = ({ saves }: HomeTabDialogProps) => {
   return (
     <Dialog
       open={dialog.type === 'import-sram'}
-      title="Import Save"
+      title={t('profiles:home.import-dialog.title')}
       message=""
-      confirmLabel="Import"
-      cancelLabel="Cancel"
+      confirmLabel={t('profiles:home.import-dialog.confirm')}
+      cancelLabel={t('profiles:home.import-dialog.cancel')}
       confirmDisabled={!confirmWordTyped}
       variant="danger"
       onConfirm={handleConfirmImportSram}
@@ -37,11 +39,10 @@ const ImportSramDialog = ({ saves }: HomeTabDialogProps) => {
         <Text as="span">{dialog.detail}</Text>
       </Box>
       <Text as="p" className="home-tab-dialogs__warning">
-        Replace this profile's save with <Text as="strong">"{dialog.targetName}"</Text>? The current
-        in-game save is overwritten and this cannot be undone.
+        <Trans k="profiles:home.import-dialog.warning" values={{ name: dialog.targetName ?? '' }} tags={{ strong: (chunks) => <Text as="strong">{chunks}</Text> }} />
       </Text>
       <Text as="p" className="home-tab-dialogs__hint">
-        Type <Text as="code" className="home-tab-dialogs__confirm-word">{IMPORT_CONFIRM_WORD}</Text> to confirm.
+        <Trans k="profiles:home.import-dialog.hint" values={{ word: IMPORT_CONFIRM_WORD }} tags={{ code: (chunks) => <Text as="code" className="home-tab-dialogs__confirm-word">{chunks}</Text> }} />
       </Text>
       <TextInput
         className="home-tab__import-confirm-input"

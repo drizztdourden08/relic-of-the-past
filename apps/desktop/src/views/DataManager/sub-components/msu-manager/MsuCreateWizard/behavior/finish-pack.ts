@@ -12,7 +12,7 @@ const settled = async (name: string, context: FinishContext, result: { success: 
 };
 
 const importedFile = async (name: string, file: File, context: FinishContext): Promise<CreateOutcome> => {
-  if (!isMsulName(file.name)) return settled(name, context, await msuStore.importMsuFile(name, file), 'Import failed');
+  if (!isMsulName(file.name)) return settled(name, context, await msuStore.importMsuFile(name, file), context.t('wizards:msu.failure.import'));
   const result = await context.importMsul(file, name);
   return result.success ? { success: true, id: name } : { success: false, error: result.message };
 };
@@ -20,13 +20,13 @@ const importedFile = async (name: string, file: File, context: FinishContext): P
 const finishPack = async (values: MsuWizardValues, context: FinishContext): Promise<CreateOutcome> => {
   const name = values.name.trim();
   try {
-    if (values.source === 'url') return await settled(name, context, await msuStore.importMsu(name, values.url.trim()), 'Download failed');
+    if (values.source === 'url') return await settled(name, context, await msuStore.importMsu(name, values.url.trim()), context.t('wizards:msu.failure.download'));
     if (values.source === 'file' && values.file !== null) return await importedFile(name, values.file, context);
     await msuStore.createMsuPack(name);
     await context.refresh();
     return { success: true, id: name };
   } catch (err) {
-    return { success: false, error: err instanceof Error ? err.message : 'Could not create the pack' };
+    return { success: false, error: err instanceof Error ? err.message : context.t('wizards:msu.failure.create') };
   }
 };
 

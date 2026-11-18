@@ -1,9 +1,11 @@
 /* @layer renderer-components @kind component */
+import { useT } from '@drizztdourden08/brock-react';
 import { smallKeyDoorsOf } from '@rotp/game-data';
 import { Button } from '@drizztdourden08/tessera/primitives';
 import type { TrackerLogicTogglesProps } from '../ChecksTracker.type';
 
 const TrackerLogicToggles = ({ filter, onFilterChange, run }: TrackerLogicTogglesProps) => {
+  const t = useT();
   const bigKeyDoors = filter.bigKeyDoors ?? true;
   const smallKeyDoors = smallKeyDoorsOf(filter, run);
   const darkRoomsNeedLight = filter.darkRoomsNeedLight ?? true;
@@ -15,38 +17,38 @@ const TrackerLogicToggles = ({ filter, onFilterChange, run }: TrackerLogicToggle
         variant="tertiary"
         size="sm"
         active={smallKeyDoors}
-        title="On: rows past a key door wait for the keys the logic counts. Off: every small key door reads as open"
+        title={t('compounds:tracker.logic.small-keys-title')}
         onClick={() => onFilterChange({ ...filter, smallKeyDoors: !smallKeyDoors })}
       >
-        Small Keys
+        {t('compounds:tracker.logic.small-keys')}
       </Button>
       <Button
         variant="tertiary"
         size="sm"
         active={bigKeyDoors}
-        title="On: rows past a Big Key door wait for the key. Off: every Big Key door reads as open"
+        title={t('compounds:tracker.logic.big-keys-title')}
         onClick={() => onFilterChange({ ...filter, bigKeyDoors: !bigKeyDoors })}
       >
-        Big Keys
+        {t('compounds:tracker.logic.big-keys')}
       </Button>
       <Button
         variant="tertiary"
         size="sm"
         active={darkRoomsNeedLight}
-        title="On: rows past an unlit room wait for a light. Off: unlit rooms read as walked in the dark"
+        title={t('compounds:tracker.logic.dark-rooms-title')}
         onClick={() => onFilterChange({ ...filter, darkRoomsNeedLight: !darkRoomsNeedLight })}
       >
-        Dark Rooms
+        {t('compounds:tracker.logic.dark-rooms')}
       </Button>
       {plainGame && (
         <Button
           variant="tertiary"
           size="sm"
           active={shopShelves}
-          title="On: every shop shelf is listed as a row. Off: a shelf is a shop item, not a check"
+          title={t('compounds:tracker.logic.shops-title')}
           onClick={() => onFilterChange({ ...filter, shopShelves: !shopShelves })}
         >
-          Shops
+          {t('compounds:tracker.logic.shops')}
         </Button>
       )}
     </>

@@ -1,5 +1,6 @@
 /* @layer renderer-components @kind constants */
 import { createElement } from 'react';
+import type { I18n } from '@drizztdourden08/brock-core/i18n';
 import type { StatusFilter } from '@rotp/game-data';
 import { Icon } from '@drizztdourden08/tessera/primitives';
 import type { SegmentOption } from '@drizztdourden08/tessera/primitives';
@@ -7,17 +8,17 @@ import { GRID_PATHS, LIST_DETAIL_PATHS, LIST_PATHS } from '../ChecksTracker.cons
 import type { ViewMode } from '../ChecksTracker.type';
 import { CheckStatusIcon } from './CheckStatusIcon';
 
-const VIEW_MODE_OPTIONS: SegmentOption<ViewMode>[] = [
-  { value: 'compact', label: createElement(Icon, { path: { d: LIST_PATHS }, size: 13 }), title: 'Compact rows' },
-  { value: 'detailed', label: createElement(Icon, { path: { d: LIST_DETAIL_PATHS }, size: 13 }), title: 'Rows with items' },
-  { value: 'visual', label: createElement(Icon, { path: { d: GRID_PATHS }, size: 13 }), title: 'Item cards' },
+const viewModeOptions = (t: I18n['t']): SegmentOption<ViewMode>[] => [
+  { value: 'compact', label: createElement(Icon, { path: { d: LIST_PATHS }, size: 13 }), title: t('compounds:tracker.view.compact') },
+  { value: 'detailed', label: createElement(Icon, { path: { d: LIST_DETAIL_PATHS }, size: 13 }), title: t('compounds:tracker.view.detailed') },
+  { value: 'visual', label: createElement(Icon, { path: { d: GRID_PATHS }, size: 13 }), title: t('compounds:tracker.view.visual') },
 ];
 
-const STATUS_OPTIONS: SegmentOption<StatusFilter>[] = [
-  { value: 'all', label: 'All', title: 'Every status' },
-  { value: 'completed', label: createElement(CheckStatusIcon, { status: 'completed' }), title: 'Taken' },
-  { value: 'reachable', label: createElement(CheckStatusIcon, { status: 'reachable' }), title: 'Available' },
-  { value: 'blocked', label: createElement(CheckStatusIcon, { status: 'blocked' }), title: 'Left' },
+const statusOptions = (t: I18n['t']): SegmentOption<StatusFilter>[] => [
+  { value: 'all', label: t('compounds:tracker.filter.all'), title: t('compounds:tracker.filter.all-title') },
+  { value: 'completed', label: createElement(CheckStatusIcon, { status: 'completed' }), title: t('compounds:tracker.filter.taken') },
+  { value: 'reachable', label: createElement(CheckStatusIcon, { status: 'reachable' }), title: t('compounds:tracker.filter.available') },
+  { value: 'blocked', label: createElement(CheckStatusIcon, { status: 'blocked' }), title: t('compounds:tracker.filter.left') },
 ];
 
-export { STATUS_OPTIONS, VIEW_MODE_OPTIONS };
+export { statusOptions, viewModeOptions };

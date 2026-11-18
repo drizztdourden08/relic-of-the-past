@@ -1,11 +1,13 @@
 /* @layer renderer-components @kind component */
+import { useT } from '@drizztdourden08/brock-react';
 import { Box, Button, Icon, SegmentedControl } from '@drizztdourden08/tessera/primitives';
-import { ITEM_FILTER_OPTIONS, NESTED_PATHS, TAG_PATHS } from '../ChecksTracker.constants';
+import { itemFilterOptions, NESTED_PATHS, TAG_PATHS } from '../ChecksTracker.constants';
 import type { FilterControlsProps } from '../ChecksTracker.type';
-import { STATUS_OPTIONS, VIEW_MODE_OPTIONS } from './TrackerFilters.constants';
+import { statusOptions, viewModeOptions } from './TrackerFilters.constants';
 import { TrackerLogicToggles } from './TrackerLogicToggles';
 
 const FilterControls = (props: FilterControlsProps) => {
+  const t = useT();
   const {
     filter, onFilterChange, grouping, viewMode, onViewModeChange, run, onToggleTags, onToggleGroupConfig,
   } = props;
@@ -14,17 +16,17 @@ const FilterControls = (props: FilterControlsProps) => {
 
   return (
     <Box className="tracker-filters__controls">
-      <SegmentedControl size="sm" value={viewMode} options={VIEW_MODE_OPTIONS} onChange={onViewModeChange} />
+      <SegmentedControl size="sm" value={viewMode} options={viewModeOptions(t)} onChange={onViewModeChange} />
       <SegmentedControl
         size="sm"
         value={statusFilter}
-        options={STATUS_OPTIONS}
+        options={statusOptions(t)}
         onChange={(value) => onFilterChange({ ...filter, statusFilter: value })}
       />
       <SegmentedControl
         size="sm"
         value={itemFilter}
-        options={ITEM_FILTER_OPTIONS}
+        options={itemFilterOptions(t)}
         onChange={(value) => onFilterChange({ ...filter, itemFilter: value })}
       />
       <Button
@@ -34,7 +36,9 @@ const FilterControls = (props: FilterControlsProps) => {
         icon={<Icon path={{ d: TAG_PATHS }} size={12} />}
         onClick={onToggleTags}
       >
-        Tags{filter.activeFacets.length > 0 ? ` (${filter.activeFacets.length})` : ''}
+        {filter.activeFacets.length > 0
+          ? t('compounds:tracker.controls.tags-count', { count: filter.activeFacets.length })
+          : t('compounds:tracker.controls.tags')}
       </Button>
       <Button
         variant="tertiary"
@@ -43,7 +47,9 @@ const FilterControls = (props: FilterControlsProps) => {
         icon={<Icon path={{ d: NESTED_PATHS }} size={12} />}
         onClick={onToggleGroupConfig}
       >
-        Group{grouping.length > 0 ? ` (${grouping.length})` : ''}
+        {grouping.length > 0
+          ? t('compounds:tracker.controls.group-count', { count: grouping.length })
+          : t('compounds:tracker.controls.group')}
       </Button>
       <TrackerLogicToggles filter={filter} onFilterChange={onFilterChange} run={run} />
     </Box>

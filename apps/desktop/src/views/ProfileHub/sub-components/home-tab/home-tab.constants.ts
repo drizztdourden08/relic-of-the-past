@@ -1,4 +1,6 @@
 /* @layer renderer-components @kind constants */
+import { msg } from '@drizztdourden08/brock-core/i18n';
+import type { Message } from '@drizztdourden08/brock-core/i18n';
 import type { RunKind } from '@rotp/game-data';
 import type { ArmedAction } from '@app/compounds/ArmedActionButton';
 import type { ProfileModeId } from '../../../../compounds/ModeBadge';
@@ -11,25 +13,11 @@ const SRAM_BYTES = 8192;
 const IMPORT_CONFIRM_WORD = 'import';
 const SRAM_EXTENSIONS = ['srm', 'sav', 'dat'];
 
-const AUTO_TRIGGER_LABELS = { timer: 'On timer', quit: 'On quit' } as const;
-
-const NO_GAME_REASON = 'Start the game to save';
-const MISSING_STATE_MESSAGE = 'This save could not be read.';
-const STALE_STATE_HINT = 'Save over it to use this slot again.';
-
-const ARMED_PROMPTS: Readonly<Record<ArmedAction, string>> = {
-  load: 'Click again to load',
-  save: 'Click again to overwrite',
-  delete: 'Click again to delete',
+const ARMED_PROMPTS: Readonly<Record<ArmedAction, Message>> = {
+  load: msg('profiles:home.armed.load'),
+  save: msg('profiles:home.armed.save'),
+  delete: msg('profiles:home.armed.delete'),
 };
-
-const STATUS_LABELS = {
-  idle: 'Idle',
-  starting: 'Starting...',
-  active: 'Active',
-  reconnecting: 'Reconnecting...',
-  error: 'Error',
-} as const;
 
 const RUN_OF_MODE: Readonly<Record<ProfileModeId, RunKind | null>> = {
   vanilla: 'normal',
@@ -40,7 +28,6 @@ const RUN_OF_MODE: Readonly<Record<ProfileModeId, RunKind | null>> = {
 };
 
 export {
-  ARMED_PROMPTS, AUTO_TRIGGER_LABELS, BOOT_WAIT_MS, IMPORT_CONFIRM_WORD, MISSING_STATE_MESSAGE, NO_GAME_REASON,
-  QUICK_SAVE_SLOTS, RUN_OF_MODE, SESSION_LIST_LIMIT, SRAM_BYTES, SRAM_EXTENSIONS, STALE_STATE_HINT, STATUS_LABELS,
-  TOAST_DURATION_MS,
+  ARMED_PROMPTS, BOOT_WAIT_MS, IMPORT_CONFIRM_WORD, QUICK_SAVE_SLOTS, RUN_OF_MODE, SESSION_LIST_LIMIT, SRAM_BYTES,
+  SRAM_EXTENSIONS, TOAST_DURATION_MS,
 };

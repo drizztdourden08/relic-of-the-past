@@ -1,6 +1,7 @@
 /* @layer renderer-views @kind view */
+import { useT } from '@drizztdourden08/brock-react';
 import { Wizard } from '@drizztdourden08/tessera/composites';
-import { STEP_IDS, WIZARD_TITLE } from './MsuCreateWizard.constants';
+import { STEP_IDS } from './MsuCreateWizard.constants';
 import type { MsuCreateWizardProps } from './MsuCreateWizard.type';
 import { useMsuWizard } from './behavior/useMsuWizard';
 import { DetailsStep } from './sub-components/DetailsStep';
@@ -9,6 +10,7 @@ import { SourceStep } from './sub-components/SourceStep';
 
 const MsuCreateWizard = (props: MsuCreateWizardProps) => {
   const { refresh, isTaken, onCancel, onCreated } = props;
+  const t = useT();
   const { wizard, progress } = useMsuWizard({ refresh, isTaken, onCreated });
   const { values, update } = wizard;
 
@@ -24,7 +26,7 @@ const MsuCreateWizard = (props: MsuCreateWizardProps) => {
   })();
 
   return (
-    <Wizard wizard={wizard} busy={wizard.busy} title={WIZARD_TITLE} orientation="vertical" stepperSize="sm" onExit={onCancel}>
+    <Wizard wizard={wizard} busy={wizard.busy} title={t('wizards:msu.title')} orientation="vertical" stepperSize="sm" onExit={onCancel}>
       {body}
     </Wizard>
   );

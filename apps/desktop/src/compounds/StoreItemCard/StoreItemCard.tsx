@@ -1,4 +1,5 @@
 /* @layer renderer-components @kind component */
+import { useT } from '@drizztdourden08/brock-react';
 import { useCallback } from 'react';
 import type { KeyboardEvent } from 'react';
 import { Icon as IconifyIcon } from '@iconify/react/offline';
@@ -9,6 +10,7 @@ import type { StoreItemCardProps } from './StoreItemCard.type';
 import './StoreItemCard.css';
 
 const StoreItemCard = (props: StoreItemCardProps) => {
+  const t = useT();
   const { item, imageUrl, status, selected, onSelect } = props;
   const handleClick = useCallback(() => onSelect(item.id), [onSelect, item.id]);
   const handleKey = useCallback((event: KeyboardEvent) => {
@@ -41,8 +43,8 @@ const StoreItemCard = (props: StoreItemCardProps) => {
         <Text as="span" className="store-item-card__byline">{byline}</Text>
         <Flex align="center" justify="between" gap="sm">
           <Rating value={item.ratingAverage} showValue size="sm" />
-          {status === 'installed' && <Status tone="success">installed</Status>}
-          {status === 'update' && <Status tone="warning">update</Status>}
+          {status === 'installed' && <Status tone="success">{t('compounds:store-item-card.installed')}</Status>}
+          {status === 'update' && <Status tone="warning">{t('compounds:store-item-card.update')}</Status>}
         </Flex>
       </Stack>
     </Card>

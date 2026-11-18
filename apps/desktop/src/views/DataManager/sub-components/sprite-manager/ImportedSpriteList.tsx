@@ -1,14 +1,16 @@
 /* @layer renderer-components @kind component */
+import { useT } from '@drizztdourden08/brock-react';
 import { EmptyState, Icon, IconButton, Stack } from '@drizztdourden08/tessera/primitives';
 import { ListItemRow } from '@drizztdourden08/tessera/composites';
 import type { ImportedSpriteListProps } from './sprite-manager.type';
 
 const ImportedSpriteList = (props: ImportedSpriteListProps) => {
+  const t = useT();
   const { importedRoms, extractedMap, selectedRom, onSelect, onDelete } = props;
 
   return (
     <Stack gap="xs">
-      {importedRoms.length === 0 && <EmptyState message="No sprites extracted yet" />}
+      {importedRoms.length === 0 && <EmptyState message={t('data-manager:sprite-manager.no-sprites-extracted-yet')} />}
       {importedRoms.map((r) => (
         <ListItemRow
           key={r.romFile}
@@ -18,7 +20,7 @@ const ImportedSpriteList = (props: ImportedSpriteListProps) => {
           onClick={() => onSelect(r.romFile)}
           meta={`${extractedMap[r.romFile]?.count ?? 0} sprite images`}
           action={
-            <IconButton variant="ghost" size="sm" label="Delete" onClick={(e) => { e.stopPropagation(); void onDelete(r.romFile); }}>
+            <IconButton variant="ghost" size="sm" label={t('data-manager:sprite-manager.delete')} onClick={(e) => { e.stopPropagation(); void onDelete(r.romFile); }}>
               <Icon name="x" />
             </IconButton>
           }

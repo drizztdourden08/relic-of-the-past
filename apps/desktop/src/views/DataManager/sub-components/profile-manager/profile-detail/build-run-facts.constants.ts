@@ -1,12 +1,11 @@
 /* @layer renderer-components @kind constants */
+import type { I18n } from '@drizztdourden08/brock-core/i18n';
 import type { ProfileRandomizerConfig } from '@app/profiles/types';
 
-const RUN_TYPE_LABELS: Readonly<Record<ProfileRandomizerConfig['mode'], string>> = {
-  local: 'Local',
-  online: 'Archipelago',
-  archipelia: 'Archipelia',
-};
+const runTypeLabels = (t: I18n['t']): Readonly<Record<ProfileRandomizerConfig['mode'], string>> => ({
+  local: t('data-manager:profile-detail.run.local'),
+  online: t('data-manager:profile-detail.run.online'),
+  archipelia: t('data-manager:profile-detail.run.archipelia'),
+});
 
-const NONE = 'None';
-
-export { NONE, RUN_TYPE_LABELS };
+export { runTypeLabels };

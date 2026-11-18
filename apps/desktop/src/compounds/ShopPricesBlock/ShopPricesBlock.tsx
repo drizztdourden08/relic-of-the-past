@@ -1,4 +1,5 @@
 /* @layer renderer-components @kind component */
+import { useT } from '@drizztdourden08/brock-react';
 import { Box } from '@drizztdourden08/tessera/primitives';
 import { OptionGroup } from '@drizztdourden08/tessera/composites';
 import { BottleContentRow, CurrencyPriceRow, currencyRowsOf } from '../CurrencyPriceRow';
@@ -14,6 +15,7 @@ const numberAt = (values: ShopPricesBlockProps['values'], key: string, fallback:
   (typeof values[key] === 'number' ? values[key] : fallback);
 
 const ShopPricesBlock = (props: ShopPricesBlockProps) => {
+  const t = useT();
   const { values, capacity, onChange, readout = false } = props;
   const currencyRows = currencyRowsOf(values, capacity, CURRENCY_ROWS, SHOP_CURRENCY_KEYS);
   const bottleRows = bottleContentRowsOf(values);
@@ -21,7 +23,7 @@ const ShopPricesBlock = (props: ShopPricesBlockProps) => {
   const countedOn = currencyRows.some((row) => row.checked);
 
   return (
-    <OptionGroup title="Shop prices" tone="live" className="shop-prices-block">
+    <OptionGroup title={t('compounds:shop-prices-block.shop-prices')} tone="live" className="shop-prices-block">
       <Box className="shop-prices-block__rows">
         {currencyRows.map((row) => (
           <CurrencyPriceRow
@@ -41,7 +43,7 @@ const ShopPricesBlock = (props: ShopPricesBlockProps) => {
           />
         ))}
         <CurrencyPriceRow
-          label="A bottle of something"
+          label={t('compounds:shop-prices-block.a-bottle-of-something')}
           enabled={bottleOn}
           readout={readout}
           onEnabledChange={onChange === undefined ? undefined : (next) => onChange({ [BOTTLE_KEY]: next })}
@@ -57,7 +59,7 @@ const ShopPricesBlock = (props: ShopPricesBlockProps) => {
           ))}
         </CurrencyPriceRow>
         <ShopPriceModifierRow
-          label="Price modifier"
+          label={t('compounds:shop-prices-block.price-modifier')}
           value={numberAt(values, SHOP_PRICE_MODIFIER_KEY, SHOP_PRICE_MODIFIER_DEFAULT)}
           min={SHOP_PRICE_MODIFIER_MIN}
           max={SHOP_PRICE_MODIFIER_MAX}

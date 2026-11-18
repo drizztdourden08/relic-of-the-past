@@ -1,4 +1,5 @@
 /* @layer renderer-components @kind component */
+import { useT } from '@drizztdourden08/brock-react';
 import { Select, Slider } from '@drizztdourden08/tessera/primitives';
 import { ValueTag } from '@drizztdourden08/tessera/composites';
 import { JumpChipsEditor } from '../../JumpChipsEditor';
@@ -9,6 +10,7 @@ import type { PondControlsProps, PondRowState } from '../WishingPondRow.type';
 const throwsLabel = (count: number): string => `${count} throw${count === 1 ? '' : 's'}`;
 
 const PondPriceControls = (props: PondControlsProps) => {
+  const t = useT();
   const { model, readOnly, readout = false, onChange } = props;
   const { state, curveOptions, maxThrows } = model;
   const [low, high] = state.range;
@@ -18,7 +20,7 @@ const PondPriceControls = (props: PondControlsProps) => {
 
   return (
     <>
-      <PondOptionLine label="throws the pond sells">
+      <PondOptionLine label={t('compounds:wishing-pond-row.throws-the-pond-sells')}>
         {readout ? <ValueTag value={throwsLabel(throws)} /> : (
           <Slider
             value={throws}
@@ -31,7 +33,7 @@ const PondPriceControls = (props: PondControlsProps) => {
           />
         )}
       </PondOptionLine>
-      <PondOptionLine label="price curve">
+      <PondOptionLine label={t('compounds:wishing-pond-row.price-curve')}>
         {readout ? <ValueTag value={curveLabel} /> : (
           <Select
             size="sm"
@@ -43,7 +45,7 @@ const PondPriceControls = (props: PondControlsProps) => {
         )}
       </PondOptionLine>
       {state.curve === 'free' && (
-        <PondOptionLine label="price steps">
+        <PondOptionLine label={t('compounds:wishing-pond-row.price-steps')}>
           {readout ? <ValueTag value={stepsLabelOf(state.jumps)} /> : (
             <JumpChipsEditor
               jumps={state.jumps}

@@ -3,7 +3,8 @@ import { useCallback, useMemo } from 'react';
 import { Box } from '@drizztdourden08/tessera/primitives';
 import { useRevealProfileFolder } from '@app/hooks/useRevealProfileFolder';
 import { SceneBackdrop } from '@app/title';
-import { MODE_BADGE_LABELS } from '@app/compounds/ModeBadge';
+import { useT, useText } from '@drizztdourden08/brock-react';
+import { MODE_BADGE_MESSAGES } from '@app/compounds/ModeBadge';
 import { factGroupOf } from '@app/compounds/ProfileHero/behavior/fact-group-of';
 import { heroArtSrc } from '@app/compounds/ProfileHero/behavior/hero-art-src';
 import { HeroLastSaveTile } from '@app/compounds/ProfileHero/sub-components/HeroLastSaveTile';
@@ -25,6 +26,8 @@ const backdrop = <SceneBackdrop />;
 const HomeHeroContent = (props: HomeHeroContentProps) => {
   const { slots, profile, isGameRunning, onStartGame, onStopGame, onResetGame, vanillaSafe } = props;
   const { Eyebrow, Title, Backdrop, Art, Actions, Tools, Facts, Aside, Panel } = slots;
+  const t = useT();
+  const text = useText();
   const { id: profileId, romFile, lastPlayed, created, randomizer } = profile;
   const saves = useHomeTabSaves({ profileId, isGameRunning, onStartGame });
   const { heroSave, normalScreenshots, busyNormal, handleLoadNormal, handleImportSram } = saves;
@@ -35,10 +38,10 @@ const HomeHeroContent = (props: HomeHeroContentProps) => {
   const art = heroArtSrc(mode);
 
   const facts = useMemo(() => {
-    const run = buildRandomizerFacts(randomizer, randomizerStatus);
-    const own = factGroupOf(buildProfileFacts({ romFile, lastPlayed, created }));
+    const run = buildRandomizerFacts(t, randomizer, randomizerStatus);
+    const own = factGroupOf(buildProfileFacts({ romFile, lastPlayed, created }, t));
     return run ? [own, factGroupOf(run)] : [own];
-  }, [romFile, lastPlayed, created, randomizer, randomizerStatus]);
+  }, [romFile, lastPlayed, created, randomizer, randomizerStatus, t]);
 
   const handleImportSramClick = useCallback(() => void handleImportSram(), [handleImportSram]);
 
@@ -52,8 +55,8 @@ const HomeHeroContent = (props: HomeHeroContentProps) => {
 
   return (
     <>
-      <Eyebrow>Mode</Eyebrow>
-      <Title>{MODE_BADGE_LABELS[mode]}</Title>
+      <Eyebrow>{t('profiles:home.mode')}</Eyebrow>
+      <Title>{text(MODE_BADGE_MESSAGES[mode])}</Title>
       <Backdrop kind="node" node={backdrop} />
       {art !== null && <Art kind="image" src={art} alt="" pixelated />}
       <Actions>

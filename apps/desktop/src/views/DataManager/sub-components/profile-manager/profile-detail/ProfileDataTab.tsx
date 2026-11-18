@@ -1,4 +1,5 @@
 /* @layer renderer-components @kind component */
+import { useT } from '@drizztdourden08/brock-react';
 import { Spinner, Stack } from '@drizztdourden08/tessera/primitives';
 import { buildControlFacts } from './build-control-facts';
 import { buildPlayFacts } from './build-play-facts';
@@ -8,14 +9,15 @@ import { useProfileData } from './useProfileData';
 import type { ProfileDataTabProps } from './profile-detail.type';
 
 const ProfileDataTab = ({ profile, settings }: ProfileDataTabProps) => {
+  const t = useT();
   const data = useProfileData(profile.id);
 
   if (data === null) return <Spinner size="md" />;
   return (
     <Stack gap="lg">
-      <FactsSection title="Saves" facts={[buildSaveFacts(data)]} />
-      <FactsSection title="Play" facts={[buildPlayFacts(data)]} />
-      <FactsSection title="Controls" facts={[buildControlFacts(data, settings)]} />
+      <FactsSection title={t('data-manager:profile-manager.profile-data-tab.saves')} facts={[buildSaveFacts(data, t)]} />
+      <FactsSection title={t('data-manager:profile-manager.profile-data-tab.play')} facts={[buildPlayFacts(data, t)]} />
+      <FactsSection title={t('data-manager:profile-manager.profile-data-tab.controls')} facts={[buildControlFacts(data, settings, t)]} />
     </Stack>
   );
 };

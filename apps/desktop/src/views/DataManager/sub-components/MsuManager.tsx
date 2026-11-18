@@ -1,4 +1,5 @@
 /* @layer renderer-components @kind component */
+import { useT } from '@drizztdourden08/brock-react';
 import { useCallback, useState } from 'react';
 import { EmptyState, Text } from '@drizztdourden08/tessera/primitives';
 import { ListDetailLayout } from '@drizztdourden08/tessera/composites';
@@ -11,11 +12,11 @@ import { useInstalledKind } from '@app/hooks/useInstalledKind';
 import { InstalledOriginBar, useConfirmUninstall } from '@app/views/InstalledOriginBar';
 import { useMsuManager } from '../../../msu-studio/useMsuManager';
 import { MsuStudio } from '../../../msu-studio/MsuStudio';
-import { NO_PACK_MESSAGE } from '../../../msu-studio/studio-frame/studio-frame.constants';
 import type { StudioTab } from '../../../msu-studio/sound-labels';
 import type { MsuManagerProps } from '../../../msu-studio/msu.type';
 
 const MsuManager = (props: MsuManagerProps) => {
+  const t = useT();
   const { onDeleteConfirm, onRefresh } = props;
   const msu = useMsuManager(onRefresh);
   const { selected, setSelected, refresh } = msu;
@@ -52,7 +53,7 @@ const MsuManager = (props: MsuManagerProps) => {
   const notice = uninstallError === null ? null : <Text variant="caption" tone="danger" role="alert">{uninstallError}</Text>;
 
   const list = (
-    <CreateListPane label="New MSU pack" creating={flow.creating} onCreate={flow.start} notice={notice}>
+    <CreateListPane label={t('data-manager:msu-manager.new-msu-pack')} creating={flow.creating} onCreate={flow.start} notice={notice}>
       <MsuListPane
         msu={msu}
         selected={flow.creating ? null : selected}
@@ -70,15 +71,15 @@ const MsuManager = (props: MsuManagerProps) => {
   return (
     <ListDetailLayout
       listShowTitle={false}
-      listContainers={[{ title: 'MSU packs', content: list }]}
+      listContainers={[{ title: t('data-manager:msu-manager.packs'), content: list }]}
       collapsed={flow.listCollapsed}
       onCollapsedChange={flow.setListCollapsed}
       detail={detail}
-      emptyDetail={<EmptyState message={NO_PACK_MESSAGE} />}
+      emptyDetail={<EmptyState message={t('data-manager:msu-manager.select-pack')} />}
       detailScroll={false}
       storageKey="msu-studio.list"
-      listLabel="MSU studio"
-      detailLabel="Music editor"
+      listLabel={t('data-manager:msu-manager.msu-studio')}
+      detailLabel={t('data-manager:msu-manager.editor')}
     />
   );
 };

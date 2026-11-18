@@ -1,4 +1,5 @@
 /* @layer renderer-components @kind component */
+import { useT } from '@drizztdourden08/brock-react';
 import { Box, Button } from '@drizztdourden08/tessera/primitives';
 import { UploadField } from '@app/compounds/UploadField';
 import { useImportForm } from './behavior/useImportForm';
@@ -7,7 +8,8 @@ import { ImportStatusLine } from './sub-components/ImportStatusLine';
 import type { ImportFormProps } from './ImportForm.type';
 
 const ImportForm = (props: ImportFormProps) => {
-  const { kind, placeholder, accept, dropLabel, dropHint, disabled, children, onUrlImport, onFileImport } = withImportDefaults(props);
+  const t = useT();
+  const { kind, placeholder, accept, dropLabel, dropHint, disabled, children, onUrlImport, onFileImport } = withImportDefaults(props, t);
   const form = useImportForm({ kind, disabled, onUrlImport, onFileImport });
   const { url, setUrl, status, busy, progress, isDisabled, handleDownload, handleDrop } = form;
 
@@ -23,7 +25,7 @@ const ImportForm = (props: ImportFormProps) => {
         urlPlaceholder={placeholder}
         urlAction={(
           <Button variant="primary" size="sm" onClick={handleDownload} loading={busy} disabled={isDisabled || !url.trim()}>
-            Download
+            {t('data-manager:import-form.download')}
           </Button>
         )}
         onFiles={handleDrop}

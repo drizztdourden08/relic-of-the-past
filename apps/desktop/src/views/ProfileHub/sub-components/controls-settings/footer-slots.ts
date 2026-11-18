@@ -1,14 +1,16 @@
 /* @layer renderer-components @kind logic */
 import { claimedPositions, effectiveSlots, resolveVerbBindings } from '@drizztdourden08/brock-input';
+import type { I18n } from '@drizztdourden08/brock-core/i18n';
 import type { ControlsContext } from '@drizztdourden08/brock-input/renderer';
-import { CORE_VERB_DEFS } from './core-verbs.constants';
+import { coreVerbDefs } from './core-verbs.constants';
 import { keyboardSlots } from './keyboard-slots';
 
-const footerSlots = ({ profile, controls }: ControlsContext) => {
+const footerSlots = ({ profile, controls }: ControlsContext, t: I18n['t']) => {
   const keyboard = profile?.deviceType === 'keyboard';
-  const verbs = resolveVerbBindings(CORE_VERB_DEFS, { stored: profile?.verbs, controls, keyboard });
+  const defs = coreVerbDefs(t);
+  const verbs = resolveVerbBindings(defs, { stored: profile?.verbs, controls, keyboard });
   const slots = effectiveSlots({
-    claimed: claimedPositions(verbs, CORE_VERB_DEFS),
+    claimed: claimedPositions(verbs, defs),
     controls,
     keyboard,
     stored: profile?.slots,

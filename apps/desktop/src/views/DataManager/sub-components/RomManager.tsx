@@ -1,4 +1,5 @@
 /* @layer renderer-components @kind component */
+import { useT } from '@drizztdourden08/brock-react';
 import { RomList } from './rom-manager/RomList';
 import { RomDetailPanel } from './rom-manager/RomDetailPanel';
 import { RomCreateWizard } from './rom-manager/RomCreateWizard';
@@ -11,6 +12,7 @@ import { useCreateFlow } from '@app/hooks/useCreateFlow';
 import type { RomManagerProps } from './RomManager.type';
 
 const RomManager = (props: RomManagerProps) => {
+  const t = useT();
   const { romStatuses, onExtractAssets, onDeleteRom, onRefresh } = props;
   const extraction = useRomExtraction({ onExtractAssets });
   const { extract } = extraction;
@@ -29,7 +31,7 @@ const RomManager = (props: RomManagerProps) => {
   };
 
   const list = (
-    <CreateListPane label="New ROM" creating={flow.creating} onCreate={flow.start}>
+    <CreateListPane label={t('data-manager:rom-manager.new-rom')} creating={flow.creating} onCreate={flow.start}>
       <RomList
         romStatuses={romStatuses}
         supplements={supplements}
@@ -57,9 +59,9 @@ const RomManager = (props: RomManagerProps) => {
       listContainers={[{ title: 'ROMs', content: list }]}
       collapsed={flow.listCollapsed}
       onCollapsedChange={flow.setListCollapsed}
-      listLabel="ROM manager"
+      listLabel={t('data-manager:rom-manager.rom-manager')}
       detail={detailPane}
-      emptyDetail={<EmptyState message="Select a ROM to view details" />}
+      emptyDetail={<EmptyState message={t('data-manager:rom-manager.select-a-rom-to-view')} />}
     />
   );
 };

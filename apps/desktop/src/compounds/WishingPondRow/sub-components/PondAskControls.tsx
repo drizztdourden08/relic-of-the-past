@@ -1,4 +1,5 @@
 /* @layer renderer-components @kind component */
+import { useT } from '@drizztdourden08/brock-react';
 import { Text } from '@drizztdourden08/tessera/primitives';
 import { BottleContentRow, CurrencyPriceRow } from '../../CurrencyPriceRow';
 import { askWithBottleTick } from '../behavior/ask-with-bottle-tick';
@@ -9,6 +10,7 @@ import { askWithRange } from '../behavior/ask-with-range';
 import type { PondControlsProps } from '../WishingPondRow.type';
 
 const PondAskControls = (props: PondControlsProps) => {
+  const t = useT();
   const { model, readOnly, readout = false, onChange } = props;
   const { askModel, state } = model;
   const { ask } = state;
@@ -36,7 +38,7 @@ const PondAskControls = (props: PondControlsProps) => {
         />
       ))}
       <CurrencyPriceRow
-        label="A bottle of something"
+        label={t('compounds:wishing-pond-row.a-bottle-of-something')}
         enabled={askModel.bottleChecked}
         stops={askModel.bottleStops}
         range={askModel.bottleRange}
@@ -59,7 +61,7 @@ const PondAskControls = (props: PondControlsProps) => {
         ))}
       </CurrencyPriceRow>
       <CurrencyPriceRow
-        label="An item, held up and handed back"
+        label={t('compounds:wishing-pond-row.an-item-held-up-and')}
         enabled={askModel.itemChecked}
         readout={readout}
         onEnabledChange={edit === undefined ? undefined : (next) => edit({ ask: askWithItemTick(ask, next) })}

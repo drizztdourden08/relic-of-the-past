@@ -1,5 +1,6 @@
 /* @layer renderer-components @kind component */
 import { useCallback, useMemo } from 'react';
+import { useT } from '@drizztdourden08/brock-react';
 import { DEFAULT_LAYOUT } from '@rotp/hud';
 import { AbsentAssignments } from './AbsentAssignments';
 import type { InputProfile } from '@drizztdourden08/brock-input';
@@ -13,8 +14,9 @@ import './SlotsFooter.css';
 
 const SlotsFooter = ({ context, assignments }: SlotsFooterProps) => {
   const { profile, updateProfile } = context;
+  const t = useT();
   const layouts = useHudLayouts();
-  const { verbs, slots, hasSlotSource } = useMemo(() => footerSlots(context), [context]);
+  const { verbs, slots, hasSlotSource } = useMemo(() => footerSlots(context, t), [context, t]);
   const absent = useMemo(() => findAbsentAssignments(assignments, slots), [assignments, slots]);
   const layoutId = (profile && profileLayoutId(profile)) ?? DEFAULT_LAYOUT.id;
 

@@ -1,4 +1,5 @@
 /* @layer renderer-components @kind types */
+import type { I18n } from '@drizztdourden08/brock-core/i18n';
 import type { WizardApi } from '@drizztdourden08/tessera/composites';
 import type { PatchedPartReport, RomLanguage } from '@rotp/asset-extraction';
 import type { LanguageSetSummary } from '@rotp/languages';
@@ -51,6 +52,7 @@ interface PatchedRun {
 }
 
 interface FinishContext {
+  t: I18n['t'];
   imported: string | null;
   onUrlImport: (url: string) => Promise<LanguageOutcome>;
   onFileImport: (files: File[]) => Promise<LanguageOutcome>;

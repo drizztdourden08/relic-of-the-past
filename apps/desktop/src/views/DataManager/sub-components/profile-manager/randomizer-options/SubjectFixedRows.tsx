@@ -1,17 +1,18 @@
 /* @layer renderer-components @kind component */
+import { useT } from '@drizztdourden08/brock-react';
 import { LockedRowsSection } from './LockedRowsSection';
-import { SUBJECT_FIXED_TITLE } from './option-tab-copy.constants';
 import { isSubjectFixedTab } from './is-subject-fixed-tab';
 import type { SubjectFixedRowsProps } from './SubjectFixedRows.type';
 
 const SubjectFixedRows = (props: SubjectFixedRowsProps) => {
   const { tab, lockedGroups, valueOf, cellOf, readout } = props;
+  const t = useT();
 
   if (!isSubjectFixedTab(tab)) return null;
 
   return (
     <LockedRowsSection
-      title={SUBJECT_FIXED_TITLE}
+      title={t('data-manager:option-tabs.fixed')}
       groups={lockedGroups[tab]}
       valueOf={valueOf}
       cellOf={cellOf}

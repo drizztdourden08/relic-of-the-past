@@ -1,18 +1,21 @@
 /* @layer renderer-components @kind component */
+import { useT } from '@drizztdourden08/brock-react';
 import { Box, Slider, Toggle } from '@drizztdourden08/tessera/primitives';
 import type { TouchOptionsTabProps } from './touch-options-tab.type';
 
 const percent = (value: number): string => `${Math.round(value * 100)}%`;
 
-const TouchOptionsTab = ({ touch, onChange }: TouchOptionsTabProps) => (
+const TouchOptionsTab = ({ touch, onChange }: TouchOptionsTabProps) => {
+  const t = useT();
+  return (
   <Box>
     <Toggle
-      label="Vibration"
+      label={t('profiles:controls.touch.vibration')}
       checked={touch.haptics}
       onChange={(haptics) => onChange({ touchControls: { ...touch, haptics } })}
     />
     <Slider
-      label="Vibration strength"
+      label={t('profiles:controls.touch.strength')}
       value={touch.hapticStrength}
       min={0.05}
       max={1}
@@ -23,6 +26,7 @@ const TouchOptionsTab = ({ touch, onChange }: TouchOptionsTabProps) => (
       onChange={(hapticStrength) => onChange({ touchControls: { ...touch, hapticStrength } })}
     />
   </Box>
-);
+  );
+};
 
 export { TouchOptionsTab };
