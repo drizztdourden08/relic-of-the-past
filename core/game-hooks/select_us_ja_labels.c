@@ -3,6 +3,8 @@
 // stripe it replaces (screen, top row, column, length in words) and where the Japanese set's own screens
 // draw the same words: a row of one of its select tilemaps (asset slots 7-9) or of one of its select
 // stripes. The Japanese line is read from the set at runtime, never stored here. See select_us_ja.h.
+// A centred label sits in the middle of its columns: the select header, in the box select_us_ja_frame.c
+// widens to columns 4-20.
 #include "game_hooks_internal.h"
 
 enum {
@@ -19,6 +21,8 @@ enum {
   kSlotErase = 9,
   kHeaderMin = 4,
   kHeaderEnd = 20,
+  kWideHeaderMin = 4,
+  kWideHeaderEnd = 21,
   kFrameMin = 3,
   kFrameEnd = 29,
   kBoxMin = 17,
@@ -29,10 +33,11 @@ typedef struct UsJaLabel {
   uint8 screen, row, col, len;
   int8 slot, table;
   uint8 src_row, min_col, max_end;
+  bool centred;
 } UsJaLabel;
 
 static const UsJaLabel kLabels[] = {
-  {kSelectScreen_Select, 3, 5, 14, kSlotSelect, kNone, 3, kHeaderMin, kHeaderEnd},
+  {kSelectScreen_Select, 3, 5, 14, kSlotSelect, kNone, 3, kWideHeaderMin, kWideHeaderEnd, true},
   {kSelectScreen_Select, 22, 6, 12, kSlotSelect, kNone, 21, kFrameMin, kFrameEnd},
   {kSelectScreen_Select, 24, 6, 12, kSlotSelect, kNone, 25, kFrameMin, kFrameEnd},
   {kSelectScreen_Copy, 3, 5, 12, kSlotCopy, kNone, 3, kHeaderMin, kHeaderEnd},
@@ -132,7 +137,7 @@ int SelectUsJa_Label(int screen, int row, int col, int len, uint16 *tiles, int *
   int count = Compose(top, n, bottom, bottom_n, row - e->row, room, tiles);
   if (count > room)
     count = room;
-  int at = e->col;
+  int at = e->centred ? e->min_col + (room - count) / 2 : e->col;
   if (at + count > e->max_end)
     at = e->max_end - count;
   *start = at < e->min_col ? e->min_col : at;

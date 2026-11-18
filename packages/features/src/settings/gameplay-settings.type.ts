@@ -4,10 +4,6 @@ interface GameplaySettings {
   prefillFileName: boolean;
   extendedLetters: boolean;
   languageScreens: boolean;
-  jaTitleScreen: boolean;
-  jaIntroGraphics: boolean;
-  jaHudGraphics: boolean;
-  jaCopyrightLine: boolean;
   jaFileSelectStyle: boolean;
   turnWhileDashing: boolean;
   allowDiving: boolean;

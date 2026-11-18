@@ -22,6 +22,7 @@ enum {
   kPadDown = 4,
   kPadVertical = 0xc,
   kSourceUpload = 1,
+  kTurnHoldFrames = kRowPx / 2,
 };
 
 bool SelectUsJaName_On(void) {
@@ -32,9 +33,14 @@ static uint8 BarY(void) {
   return (uint8)(kBarY0 + kRowPx * (selectfile_var5 % kRowsShown));
 }
 
+// Frames a page turn holds the next up or down move back: the bar jumps rather than slides, so without
+// it a press held as long as one row's slide would move on again at once.
+static uint8 g_turn_hold;
+
 // The page rows are redrawn with the next upload; one is asked for when nothing else is on its way.
 static void TurnPage(void) {
   selectfile_var7 = BarY();
+  g_turn_hold = kTurnHoldFrames;
   SelectUsJaName_TurnPage();
   if (nmi_load_bg_from_vram == 0) {
     BYTE(vram_upload_data[0]) = 0xff;
@@ -48,6 +54,8 @@ static void InputY(void) {
     selectfile_arr2[0] = 0;
     return;
   }
+  if (g_turn_hold != 0)
+    return;
   int span = SelectUsJaName_RowsShown();
   int step = a == kPadDown ? 1 : -1;
   int v = selectfile_var5;
@@ -67,6 +75,8 @@ static void InputY(void) {
 bool SelectUsJaName_Frame(void) {
   if (!SelectUsJaName_On())
     return false;
+  if (g_turn_hold != 0)
+    g_turn_hold--;
   NameGrid_ScrollX(kScrollX0);
   NameGrid_ScrollY(BarY, InputY);
   NameGrid_DrawSprites((uint8)(kCursorX0 + selectfile_var4 * kCursorStep), kCursorY);

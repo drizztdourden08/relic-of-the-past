@@ -176,9 +176,11 @@ void WasmLoadState(int slot) {
   // the assets until some in-game event happened to reload gear palettes. Re-push it here.
   if (PlayerSprite_HasCustom())
     PlayerSprite_RefreshPalette();
-  // Likewise the HUD tiles: a state saved under another set or HUD option carries that one's tiles,
-  // which the pause words of the selected one would name wrongly.
-  LanguageScreens_RefreshHudTiles();
+  // Likewise the language assets and the HUD tiles: the state restores the gate words, which the
+  // next frame's sync leaves alone when they match the wanted ones, so the assets are chosen again
+  // here against them, and a state saved under another set carries that one's HUD tiles, which the
+  // pause words of the selected one would name wrongly (LanguageScreensAssets_Apply refreshes them).
+  LanguageScreensAssets_Apply(LanguageScreens_On());
   printf("*** Load state: slot %d\n", slot);
 }
 

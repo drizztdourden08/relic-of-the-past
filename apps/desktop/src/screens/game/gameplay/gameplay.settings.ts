@@ -98,10 +98,6 @@ const sections: Section[] = [
         items: [
           { key: 'extendedLetters', label: 'Every Accented Letter', description: "Dialog shows every accented letter a translation or a name uses, drawn in the game's own font. Off shows the plain letter instead.", keywords: 'dialog accent accented letters latin translation language name font diacritic' },
           { key: 'languageScreens', label: 'Screens Follow the Language', description: 'Menus, pause text, ending and credits use the language too.', keywords: 'screens menu pause file select name ending credits language translation' },
-          { key: 'jaTitleScreen', label: 'Japanese title screen', description: 'The title screen uses the Japanese cartridge logo and triforce heights. Needs a Japanese ROM.', hint: 'Needs the original title screen.', keywords: 'japanese cartridge graphics title screen triforce intro' },
-          { key: 'jaIntroGraphics', label: 'Japanese intro graphics', description: 'The intro uses the Japanese cartridge pictures. Needs a Japanese ROM.', keywords: 'japanese cartridge graphics intro hud copyright file select style' },
-          { key: 'jaHudGraphics', label: 'Japanese HUD graphics', description: 'The heads-up display uses the Japanese cartridge pictures. Needs a Japanese ROM.', keywords: 'japanese cartridge graphics intro hud copyright file select style' },
-          { key: 'jaCopyrightLine', label: 'Japanese intro copyright line', description: 'The intro copyright line reads as on the Japanese cartridge. Needs a Japanese ROM.', keywords: 'japanese cartridge graphics intro hud copyright file select style' },
           { key: 'jaFileSelectStyle', label: 'Japanese file select style', description: 'The file select screen uses the Japanese cartridge layout. Text still follows the language. Needs a Japanese ROM.', keywords: 'japanese cartridge graphics intro hud copyright file select style' },
         ],
       },

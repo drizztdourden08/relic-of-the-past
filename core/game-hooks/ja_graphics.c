@@ -25,6 +25,7 @@ static const uint8 kHudTextTable[kHudTextCount] = {kLangTbl_HudAbility, kLangTbl
 
 static const uint8 kIntroSheets[] = {22, 23, 29, 30, 57, 64, 65};
 static const uint8 kHudSheets[] = {105, 106};
+enum { kHudSheetCount = countof(kHudSheets) };
 static const uint8 kCopyrightSheet = 8;
 
 static bool Listed(const uint8 *list, size_t count, int index) {
@@ -43,7 +44,7 @@ uint32 GameHook_ParityMask(int word) {
   return word == 2 ? kJaGfx_Title | kJaGfx_Intro | kJaGfx_Hud | kJaGfx_Copyright | kJaGfx_FileSelect : 0;
 }
 
-enum { kAllBits = kJaGfx_Title | kJaGfx_Intro | kJaGfx_Hud | kJaGfx_Copyright | kJaGfx_FileSelect };
+enum { kStyleBits = kJaGfx_FileSelect, kLanguageBits = kJaGfx_Title | kJaGfx_Intro | kJaGfx_Copyright };
 
 static uint32 g_latched_bits;
 static bool g_started;
@@ -59,10 +60,14 @@ static bool Following(void) {
   return !g_started || (main_module_index == kIntroModule && submodule_index <= 1);
 }
 
+// The style option (the file select layout) comes from the gate word; the pictures that carry the
+// language (the intro and title art with the triforce heights that fit its logo, the copyright line)
+// are on exactly while the set is Japanese, whatever the word holds.
 static uint32 Live(void) {
-  uint32 live = enhanced_features2 & kAllBits;
-  if (enhanced_features2 & kFeatures2_TitleOverride) return live & ~(uint32)kJaGfx_Title;
-  return (live & kJaGfx_Title) ? live | kJaGfx_Intro : live;
+  uint32 live = enhanced_features2 & kStyleBits;
+  if (SelectLayout_OfSet() == kSelectLayout_Ja) live |= kLanguageBits;
+  if (enhanced_features2 & kFeatures2_TitleOverride) live &= ~(uint32)kJaGfx_Title;
+  return live;
 }
 
 static void Refresh(void) {
@@ -91,10 +96,13 @@ static const uint8 *Taken(const Blob *blob, uint32 *size) {
 }
 
 // The HUD sheets differ from the US ones only in their glyphs (kana where the US sheets hold letters),
-// and the pause words are text, which follows the profile's language. So they are drawn only for a
-// Japanese set, and only with the pack's own words for them; otherwise the US sheets stay.
+// and the pause words are text, which follows the profile's language. So they are drawn for every
+// Japanese set, whatever the option says, and only with the pack's own words for them; any other set
+// keeps the US sheets.
 static bool HudPackDrawn(void) {
-  if (!JaGraphics_On(kJaGfx_Hud) || SelectLayout_OfSet() != kSelectLayout_Ja) return false;
+  if (SelectLayout_OfSet() != kSelectLayout_Ja) return false;
+  for (int i = 0; i < kHudSheetCount; i++)
+    if (g_sheets[kSprSheetKind][kHudSheets[i]].data == NULL) return false;
   for (int i = 0; i < kHudTextCount; i++)
     if (g_hud_text[i].data == NULL) return false;
   return true;
@@ -102,8 +110,8 @@ static bool HudPackDrawn(void) {
 
 const uint8 *JaGraphics_Sheet(int kind, int index, uint32 *size) {
   uint32 option = SheetOption(kind, index);
-  if (option == 0 || !JaGraphics_On(option) || index < 0 || index >= kLangSheetMax) return NULL;
-  if (option == kJaGfx_Hud && !HudPackDrawn()) return NULL;
+  if (option == 0 || index < 0 || index >= kLangSheetMax) return NULL;
+  if (option == kJaGfx_Hud ? !HudPackDrawn() : !JaGraphics_On(option)) return NULL;
   return Taken(&g_sheets[kind][index], size);
 }
 
@@ -177,7 +185,7 @@ bool GameHook_CopyrightAnimate(int k) {
 bool JaGraphics_SetSheetAllowed(int kind, int index) {
   uint32 option = SheetOption(kind, index);
   if (kind == kBgSheetKind && SelectLayout_ActiveOn(kSelectScreen_Select) == kSelectLayout_Ja) return true;
-  return option == 0 || SelectLayout_OfSet() != kSelectLayout_Ja || JaGraphics_On(option);
+  return option == 0 || option == kJaGfx_Hud || SelectLayout_OfSet() != kSelectLayout_Ja || JaGraphics_On(option);
 }
 
 bool JaGraphics_SetPatchAllowed(int index) {
@@ -185,7 +193,9 @@ bool JaGraphics_SetPatchAllowed(int index) {
 }
 
 bool JaGraphics_SetHudAllowed(void) {
-  return SelectLayout_OfSet() != kSelectLayout_Ja || JaGraphics_On(kJaGfx_Hud);
+  if (SelectLayout_OfSet() != kSelectLayout_Ja || HudPackDrawn()) return true;
+  return LanguageScreensAssets_SetSheet(kSprSheetKind, kHudSheets[0]) != NULL &&
+         LanguageScreensAssets_SetSheet(kSprSheetKind, kHudSheets[1]) != NULL;
 }
 
 bool JaGraphics_SetIntroAllowed(void) {
