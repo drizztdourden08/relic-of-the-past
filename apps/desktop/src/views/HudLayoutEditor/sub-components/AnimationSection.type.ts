@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind types */
-import type { HudAnimationLoop, HudNode } from '@rotp/hud';
+import type { HudAnimationLoop, HudNode, ReflowWarning } from '@rotp/hud';
 import type { Message } from '@drizztdourden08/brock-core/i18n';
 
 interface AnimationSectionProps {
@@ -7,7 +7,7 @@ interface AnimationSectionProps {
   onPatch: (patch: Partial<HudNode>) => void;
   scope: Readonly<Record<string, number>>;
   insideRepeat?: boolean;
-  warnings: readonly string[];
+  warnings: readonly ReflowWarning[];
   openIndex: number | null;
   onOpen: (index: number | null) => void;
 }

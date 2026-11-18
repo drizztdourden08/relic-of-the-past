@@ -1,6 +1,7 @@
 /* @layer shared-storage @kind logic */
 import { msg } from '@drizztdourden08/brock-core/i18n';
-import { fanTranslationRefusal, stripSmcHeader } from '@rotp/asset-extraction';
+import { stripSmcHeader } from '@rotp/asset-extraction';
+import { fanTranslationMessage } from './fan-translation-message';
 import { officialRomStatuses } from './official-roms';
 import { romBodyOf } from './rom-body-of';
 import { sha1Hex } from './sha1-hex';
@@ -14,8 +15,7 @@ const checkOfficialRom = async (fileName: string, bytes: Uint8Array, expected?: 
   const hash = await sha1Hex(stripSmcHeader(body));
   const match = officialRomStatuses().find((rom) => rom.sha1 === hash);
   if (!match) {
-    const refusal = fanTranslationRefusal(hash);
-    return { ok: false, message: refusal === null ? msg('roms:verdict.not-official', { hash }) : msg('roms:verdict.fan-translation', { reason: refusal }) };
+    return { ok: false, message: fanTranslationMessage(hash) ?? msg('roms:verdict.not-official', { hash }) };
   }
   if (expected !== undefined && match.kind !== expected) {
     return { ok: false, message: msg('roms:verdict.wrong-kind', { name: match.name, kind: match.kind, expected }) };

@@ -20,7 +20,7 @@ const ProgressiveTiersBlock = (props: ProgressiveTiersBlockProps) => {
   const { setting, modes, spritesAvailable = false, onChange, onModesChange } = props;
   const readOnly = onChange === undefined;
   const ladders = progressiveLaddersOf(setting, modes, spritesAvailable);
-  const consequences = progressiveTickConsequences(setting);
+  const consequences = progressiveTickConsequences(setting).map(({ term, detail }) => ({ term: text(term), detail: text(detail) }));
   const blocked = unrollableTickSetReasons(setting);
 
   return (

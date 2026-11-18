@@ -176,9 +176,9 @@ describe('the reflow warning lands on the property that caused it', { tags: ['cr
       }],
     };
     const warnings = collectReflowWarnings(row);
-    const mine = warnings.filter((w) => w.startsWith('heart:'));
+    const mine = warnings.filter((w) => w.nodeId === 'heart');
     expect(mine).toHaveLength(1);
-    expect(mine.find((w) => w.includes("animating 'width'"))).toBeDefined();
-    expect(mine.find((w) => w.includes("animating 'scale'"))).toBeUndefined();
+    expect(mine.find((w) => w.property === 'width')).toBeDefined();
+    expect(mine.find((w) => w.property === 'scale')).toBeUndefined();
   });
 });

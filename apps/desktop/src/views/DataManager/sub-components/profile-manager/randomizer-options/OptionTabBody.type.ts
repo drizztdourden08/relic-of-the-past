@@ -1,4 +1,5 @@
 /* @layer renderer-components @kind types */
+import type { Message } from '@drizztdourden08/brock-core/i18n';
 import type { ImpactCell } from '@app/compounds/PoolImpactCell';
 import type {
   LockedGroupsByTab, OptionTabId, UnlockedGroupsByTab,
@@ -54,7 +55,7 @@ interface ListView {
   groups: UnlockedGroupsByTab[keyof UnlockedGroupsByTab];
   valueOf: (option: OptionDef) => OptionValue;
   frozenKeys: ReadonlySet<string>;
-  notes: ReadonlyMap<string, string> | undefined;
+  notes: ReadonlyMap<string, Message> | undefined;
 }
 
 export type { ListView, OptionTabBodyProps, OptionTabContext, TabBlocksProps };

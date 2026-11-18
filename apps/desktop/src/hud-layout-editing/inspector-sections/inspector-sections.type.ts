@@ -1,7 +1,7 @@
 /* @layer renderer-components @kind types */
 import type { Scope } from '../formula-scope';
 import type { SectionKey as BoundSectionKey } from '../bound-values';
-import type { HudContainer } from '@rotp/hud';
+import type { HudContainer, ReflowWarning } from '@rotp/hud';
 
 interface InspectorContext {
   isScreen: boolean;
@@ -10,7 +10,7 @@ interface InspectorContext {
   insideRepeat: boolean;
   instances: readonly Scope[];
   counts: Partial<Record<BoundSectionKey, number>>;
-  warnings: string[];
+  warnings: ReflowWarning[];
 }
 
 export type { InspectorContext };

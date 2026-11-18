@@ -10,7 +10,7 @@ export {
   DOUBLE_HEADER_LENGTH, GAME_ROM_LANGUAGE, OFFICIAL_RELEASES, PATCHED_ROM_MAX_BYTES, PATCHED_ROM_MIN_BYTES, SMC_HEADER_BYTES,
   ZELDA3_SHA1, ZELDA3_SHA1_US,
 } from './rom/rom-loader/rom-loader.constants';
-export { fanTranslationRefusal } from './rom/rom-loader/fan-translation-refusal';
+export { fanTranslationLanguage, fanTranslationRefusal } from './rom/rom-loader/fan-translation-refusal';
 export { stripSmcHeader } from './rom/rom-loader/strip-smc-header';
 export { RomReader } from './rom/reader';
 

@@ -1,7 +1,7 @@
 /* @layer shared-game @kind types */
 import type { ItemId } from '@rotp/game-data';
 import type { ItemPowerSetting } from '@rotp/game-core';
-import type { OptionDetail } from '../option-description.type';
+import type { Message } from '@drizztdourden08/brock-core/i18n';
 
 type ProgressiveFamilyId = 'sword' | 'shield' | 'mail' | 'glove' | 'bow' | 'ocarina';
 
@@ -25,10 +25,15 @@ interface ProgressiveFamilyDef {
 
 type BladeCondition = 'noBlade' | 'noBeam';
 
+interface TickConsequenceLine {
+  term: Message;
+  detail: Message;
+}
+
 interface TickConsequence {
   field: keyof ItemPowerSetting;
   when: BladeCondition;
-  line: OptionDetail;
+  line: TickConsequenceLine;
 }
 
 interface RequiredRung {
@@ -39,5 +44,5 @@ interface RequiredRung {
 
 export type {
   BladeCondition, ProgressiveFamilyDef, ProgressiveFamilyId, ProgressiveFamilyMode, ProgressiveModeSetting,
-  ProgressiveSetting, ProgressiveTierTicks, RequiredRung, TickConsequence,
+  ProgressiveSetting, ProgressiveTierTicks, RequiredRung, TickConsequence, TickConsequenceLine,
 };

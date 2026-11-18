@@ -24,5 +24,6 @@
   "variable.rupee-current.note": "0 till rupee_max.",
   "variable.rupee-max.note": "Plånbokens nivå: 99, 999 eller 9999.",
   "variable.silver-arrows.note": "0 eller 1.",
-  "variable.slot-count.note": "Hur många platser det aktiva schemat har."
+  "variable.slot-count.note": "Hur många platser det aktiva schemat har.",
+  "warning.reflow": "{id}: att animera '{property}' kan flytta syskon i flödescontainern '{parent}' - de andra sex egenskaperna (scale, opacity, x, y, rotate, tint) kan aldrig det"
 }

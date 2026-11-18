@@ -24,5 +24,6 @@
   "variable.rupee-current.note": "0 tot rupee_max.",
   "variable.rupee-max.note": "Portemonneeniveau: 99, 999 of 9999.",
   "variable.silver-arrows.note": "0 of 1.",
-  "variable.slot-count.note": "Hoeveel slots het actieve schema heeft."
+  "variable.slot-count.note": "Hoeveel slots het actieve schema heeft.",
+  "warning.reflow": "{id}: het animeren van '{property}' kan naastliggende elementen in flowcontainer '{parent}' verschuiven - de andere zes eigenschappen (scale, opacity, x, y, rotate, tint) kunnen dat nooit"
 }

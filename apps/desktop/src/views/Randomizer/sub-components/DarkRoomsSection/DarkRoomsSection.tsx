@@ -54,7 +54,7 @@ const DarkRoomsSection = (props: DarkRoomsSectionProps) => {
         ))}
       </Box>
       {reasons.map((tile) => (
-        <Text key={tile.field} className="dark-rooms__reason">{`${tile.name} ${tile.reason}`}</Text>
+        <Text key={tile.field} className="dark-rooms__reason">{tile.reason === undefined ? '' : text(tile.reason)}</Text>
       ))}
       {rolledBlind && <Callout tone="primary" className="dark-rooms__banner">{text(BLIND_NOTE)}</Callout>}
     </OptionGroup>

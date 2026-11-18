@@ -1,7 +1,7 @@
 /* @layer renderer-components @kind types */
 import type { DropIntent } from '@app/hud-layout-editing/drop-intent';
 import type { GlyphPack } from '@rotp/input-mapping';
-import type { HudLayout, HudNode } from '@rotp/hud';
+import type { HudLayout, HudNode, ReflowWarning } from '@rotp/hud';
 
 interface NodeInspectorProps {
   node: HudNode | null;
@@ -12,7 +12,7 @@ interface NodeInspectorProps {
   selectedId: string | null;
   onSelectNode: (id: string) => void;
   onDrop: (ids: readonly string[], intent: DropIntent) => void;
-  reflowWarnings: readonly string[];
+  reflowWarnings: readonly ReflowWarning[];
 }
 
 type InspectorSectionKey = 'identity' | 'placement' | 'layout' | 'sizeBox' | 'appearance' | 'content' | 'data' | 'motion';

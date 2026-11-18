@@ -1,7 +1,7 @@
 {
   "verdict.archive": "Archiv, wird beim Import geprüft",
   "verdict.archive-empty": "Das Archiv enthält keine ROM-Datei.",
-  "verdict.fan-translation": "{reason}",
+  "verdict.fan-translation": "Das ist die {language, select, es {spanische} pl {polnische} pt {portugiesische} en-redux {englische Redux-} nl {niederländische} sv {schwedische} other {}} Fan-Übersetzung, also eine Sprache und keine Spiel-ROM. Importiere sie als Sprache: Sprachen > Neue Sprache > Von Fans gepatchte ROM.",
   "verdict.not-official": "Keine offizielle ROM (SHA-1 {hash}). Nutze eine aus der Liste unten.",
   "verdict.official-ok": "{name}",
   "verdict.patched-bad-size": "Diese Datei hat {bytes} Bytes, was nicht die Größe einer ROM von A Link to the Past ist.",
@@ -9,5 +9,7 @@
   "verdict.unsupported": "{name} ist eine offizielle ROM, wird aber noch nicht unterstützt.",
   "verdict.wrong-kind": "Das ist {name} ({kind, select, snes-alttp {Basismodul} gba-alttp {Zweites Modul} other {?}}). Erwartet: {expected, select, snes-alttp {Basismodul} gba-alttp {Zweites Modul} other {?}}.",
   "kind.snes-alttp": "Basismodul",
-  "kind.gba-alttp": "Zweites Modul"
+  "kind.gba-alttp": "Zweites Modul",
+  "refusal.unknown": "Kein bekanntes {label} (SHA-1 {hash}). Nur die unterstützte Revision kann verwendet werden.",
+  "refusal.invalid": "Die Datei ist kein gültiges {label} und kein Archiv"
 }

@@ -1,7 +1,7 @@
 {
   "verdict.archive": "Archive, vérifiée à l'importation",
   "verdict.archive-empty": "L'archive ne contient aucun fichier ROM.",
-  "verdict.fan-translation": "{reason}",
+  "verdict.fan-translation": "Ceci est la traduction de fans {language, select, es {espagnole} pl {polonaise} pt {portugaise} en-redux {anglaise Redux} nl {néerlandaise} sv {suédoise} other {}}, qui est une langue et non une ROM de jeu. Importez-la comme langue : Langues > Nouvelle langue > ROM patchée par des fans.",
   "verdict.not-official": "Ce n'est pas une ROM officielle (SHA-1 {hash}). Utilisez-en une de la liste ci-dessous.",
   "verdict.official-ok": "{name}",
   "verdict.patched-bad-size": "Ce fichier fait {bytes} octets, ce qui n'est pas la taille d'une ROM de A Link to the Past.",
@@ -9,5 +9,7 @@
   "verdict.unsupported": "{name} est une ROM officielle, mais elle n'est pas encore prise en charge.",
   "verdict.wrong-kind": "Ceci est {name} ({kind, select, snes-alttp {cartouche de base} gba-alttp {seconde cartouche} other {?}}). Attendu : {expected, select, snes-alttp {cartouche de base} gba-alttp {seconde cartouche} other {?}}.",
   "kind.snes-alttp": "Cartouche de base",
-  "kind.gba-alttp": "Seconde cartouche"
+  "kind.gba-alttp": "Seconde cartouche",
+  "refusal.unknown": "{label} non reconnu (SHA-1 {hash}). Seule la révision prise en charge peut être utilisée.",
+  "refusal.invalid": "Le fichier n'est pas un {label} ni une archive valide"
 }

@@ -24,5 +24,6 @@
   "variable.rupee-current.note": "0 bis rupee_max.",
   "variable.rupee-max.note": "Geldbörsenstufe: 99, 999 oder 9999.",
   "variable.silver-arrows.note": "0 oder 1.",
-  "variable.slot-count.note": "Wie viele Slots das aktive Schema hat."
+  "variable.slot-count.note": "Wie viele Slots das aktive Schema hat.",
+  "warning.reflow": "{id}: Das Animieren von '{property}' kann Geschwister im Flow-Container '{parent}' neu anordnen - die anderen sechs Eigenschaften (scale, opacity, x, y, rotate, tint) können das nie"
 }

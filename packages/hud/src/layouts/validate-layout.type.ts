@@ -1,10 +1,11 @@
 /* @layer shared-hud @kind types */
+import type { ReflowWarning } from './validate-motion-warnings';
 import type { HudClusterReveal, HudLayout } from '../types/hud-layout';
 
 interface ValidationResult {
   doc: HudLayout | null;
   errors: string[];
-  warnings: string[];
+  warnings: ReflowWarning[];
 }
 
 interface LayoutHeader {

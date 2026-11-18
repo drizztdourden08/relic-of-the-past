@@ -1,7 +1,7 @@
 {
   "verdict.archive": "アーカイブ。インポート時に確認されます",
   "verdict.archive-empty": "アーカイブにROMファイルがありません。",
-  "verdict.fan-translation": "{reason}",
+  "verdict.fan-translation": "これは{language, select, es {スペイン語} pl {ポーランド語} pt {ポルトガル語} en-redux {英語Redux} nl {オランダ語} sv {スウェーデン語} other {}}のファン翻訳で、ゲームROMではなく言語です。言語としてインポートしてください：言語 > 新しい言語 > ファンパッチ済みROM。",
   "verdict.not-official": "公式ROMではありません（SHA-1 {hash}）。下のリストにあるものを使ってください。",
   "verdict.official-ok": "{name}",
   "verdict.patched-bad-size": "このファイルは{bytes}バイトで、神々のトライフォースのROMのサイズではありません。",
@@ -9,5 +9,7 @@
   "verdict.unsupported": "{name}は公式ROMですが、まだサポートされていません。",
   "verdict.wrong-kind": "これは{name}（{kind, select, snes-alttp {ベースカートリッジ} gba-alttp {2本目のカートリッジ} other {?}}）です。必要なのは{expected, select, snes-alttp {ベースカートリッジ} gba-alttp {2本目のカートリッジ} other {?}}です。",
   "kind.snes-alttp": "ベースカートリッジ",
-  "kind.gba-alttp": "2本目のカートリッジ"
+  "kind.gba-alttp": "2本目のカートリッジ",
+  "refusal.unknown": "{label}として認識できません（SHA-1 {hash}）。対応しているリビジョンのみ使用できます。",
+  "refusal.invalid": "ファイルが有効な{label}またはアーカイブではありません"
 }

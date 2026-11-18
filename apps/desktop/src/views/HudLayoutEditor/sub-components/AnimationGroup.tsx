@@ -15,7 +15,7 @@ const AnimationGroup = (props: AnimationGroupProps) => {
   const t = useT();
   const text = useText();
   const { animation, duration, head, open, onToggle, onRemove, onChange, scope, insideRepeat, warnings } = props;
-  const reflow = warnings.find((w) => w.includes(`animating '${animation.property}'`));
+  const reflow = warnings.find((w) => w.property === animation.property);
 
   return (
     <SubsectionGroup

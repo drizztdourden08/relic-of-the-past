@@ -4,13 +4,14 @@ import { JumpChipsEditor } from '../../JumpChipsEditor';
 import { LadderRange } from './LadderRange';
 import { LadderReadout } from './LadderReadout';
 import { RowLine } from './RowLine';
-import { useT } from '@drizztdourden08/brock-react';
+import { useT, useText } from '@drizztdourden08/brock-react';
 import { itemsLabel } from '../behavior/items-label';
 import type { CapacityRowState, LadderControlsProps } from '../CapacityFamilyRow.type';
 
 const LadderControls = (props: LadderControlsProps) => {
   const { model, readOnly, readout = false, onChange } = props;
   const t = useT();
+  const text = useText();
   if (readout) return <LadderReadout model={model} />;
   const { state, span, minCount, maxCount, maxJump, hasCurve, curveOptions, problem } = model;
 
@@ -52,7 +53,7 @@ const LadderControls = (props: LadderControlsProps) => {
             jumps={state.jumps}
             span={span}
             maxJump={maxJump}
-            problem={problem}
+            problem={problem === undefined ? undefined : text(problem)}
             disabled={readOnly}
             onChange={(jumps) => onChange({ jumps })}
           />

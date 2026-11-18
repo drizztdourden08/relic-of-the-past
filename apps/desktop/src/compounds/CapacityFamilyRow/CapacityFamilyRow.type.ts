@@ -1,5 +1,6 @@
 /* @layer renderer-components @kind types */
 import type { ReactNode } from 'react';
+import type { Message } from '@drizztdourden08/brock-core/i18n';
 import type { SelectGroup } from '@drizztdourden08/tessera/primitives';
 import type { CapacityFamilyId, CapacityMode, CurveId, FamilyBonus, CurvePresetId, OptionDescription } from '@rotp/randomizer';
 import type { LadderStep } from '@app/composites/LadderStepper';
@@ -37,7 +38,7 @@ interface CapacityRowModel {
   curveOptions: readonly SelectGroup[];
   preview: CapacityPreviewModel;
   impact: ImpactCell;
-  problem?: string;
+  problem?: Message;
   footnote?: string;
   floorNote?: string;
   bonus?: FamilyBonus;

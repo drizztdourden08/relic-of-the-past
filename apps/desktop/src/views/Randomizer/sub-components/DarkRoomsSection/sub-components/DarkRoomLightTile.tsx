@@ -1,5 +1,6 @@
 /* @layer renderer-components @kind component */
 import { useCallback } from 'react';
+import { useText } from '@drizztdourden08/brock-react';
 import { Box, Checkbox, Image } from '@drizztdourden08/tessera/primitives';
 import { ValueTag } from '@drizztdourden08/tessera/composites';
 import type { DarkRoomLightTileProps } from './DarkRoomLightTile.type';
@@ -14,10 +15,11 @@ const tileStateOf = (disabled: boolean, forced: boolean, checked: boolean): stri
 };
 
 const DarkRoomLightTile = (props: DarkRoomLightTileProps) => {
+  const text = useText();
   const { tile, disabled, readout = false, onChange } = props;
   const { field, name, sprite, checked, reason } = tile;
   const forced = reason !== undefined;
-  const title = forced ? `${name} ${reason}` : name;
+  const title = reason === undefined ? name : text(reason);
   const handleChange = useCallback((next: boolean) => onChange?.(field, next), [onChange, field]);
   const art = sprite === undefined ? placeholderArt : (
     <Image className="dark-room-light__sprite" src={sprite} alt="" draggable={false} fallback={placeholderArt} />

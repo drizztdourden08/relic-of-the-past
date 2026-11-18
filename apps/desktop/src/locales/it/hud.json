@@ -24,5 +24,6 @@
   "variable.rupee-current.note": "Da 0 a rupee_max.",
   "variable.rupee-max.note": "Livello del portafoglio: 99, 999 o 9999.",
   "variable.silver-arrows.note": "0 o 1.",
-  "variable.slot-count.note": "Quanti slot ha lo schema attivo."
+  "variable.slot-count.note": "Quanti slot ha lo schema attivo.",
+  "warning.reflow": "{id}: animare '{property}' può spostare gli elementi vicini nel contenitore di flusso '{parent}' - le altre sei proprietà (scale, opacity, x, y, rotate, tint) non possono mai farlo"
 }
