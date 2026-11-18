@@ -9,25 +9,27 @@ import { SubsectionGroup } from './SubsectionGroup';
 import { ValueField } from './ValueField';
 import type { HudBorderStyle } from '@rotp/hud';
 import type { StyleGroupProps } from './StyleGroup.type';
+import { useT } from '@drizztdourden08/brock-react';
 
 const BorderGroup = (props: StyleGroupProps) => {
+  const t = useT();
   const { style, setStyle, open, onToggle, onEnable, scope, insideRepeat } = props;
   const { border } = style;
 
   return (
     <SubsectionGroup
-      title="Border" summary={borderSummary(border)} swatch={swatchOf(border?.color)}
+      title={t('hud-editor:border-group.title.border')} summary={borderSummary(border, t)} swatch={swatchOf(border?.color)}
       open={open} onToggle={onToggle} enabled={border !== undefined}
       onEnabledChange={(on) => onEnable(on, { border: on ? { width: 1, color: HUD_WHITE } : undefined })}
     >
       {border && (
         <>
-          <ValueField label="width" value={border.width} onChange={(width) => setStyle({ border: { ...border, width } })} scope={scope} insideRepeat={insideRepeat} min={0} />
-          <PaintField label="colour" value={border.color} onChange={(color) => setStyle({ border: { ...border, color } })} scope={scope} insideRepeat={insideRepeat} />
-          <Field size="sm" label="style">
+          <ValueField label={t('hud-editor:border-group.label.width')} value={border.width} onChange={(width) => setStyle({ border: { ...border, width } })} scope={scope} insideRepeat={insideRepeat} min={0} />
+          <PaintField label={t('hud-editor:border-group.label.colour')} value={border.color} onChange={(color) => setStyle({ border: { ...border, color } })} scope={scope} insideRepeat={insideRepeat} />
+          <Field size="sm" label={t('hud-editor:border-group.label.style')}>
             <Select size="sm" value={border.style ?? 'solid'} options={BORDER_STYLES.map((v) => ({ value: v, label: v }))} onChange={(v) => setStyle({ border: { ...border, style: v as HudBorderStyle } })} />
           </Field>
-          <SidesField label="sides" value={border.sides} onChange={(sides) => setStyle({ border: { ...border, sides } })} />
+          <SidesField label={t('hud-editor:border-group.label.sides')} value={border.sides} onChange={(sides) => setStyle({ border: { ...border, sides } })} />
         </>
       )}
     </SubsectionGroup>

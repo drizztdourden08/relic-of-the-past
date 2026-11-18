@@ -3,8 +3,10 @@ import { useState } from 'react';
 import { Anchored, Box, EmptyState, NumberInput, Pressable, Text } from '@drizztdourden08/tessera/primitives';
 import { SlotPickActions } from './SlotPickActions';
 import type { SlotPickerPanelProps } from './SlotPickerPanel.type';
+import { useT } from '@drizztdourden08/brock-react';
 
 const SlotPickerPanel = (props: SlotPickerPanelProps) => {
+  const t = useT();
   const { open, anchorRef, slotNumbers, onClose, onPickItem, onPickGlyph, onPickNumber } = props;
   const [manual, setManual] = useState(1);
 
@@ -21,7 +23,7 @@ const SlotPickerPanel = (props: SlotPickerPanelProps) => {
   return (
     <Anchored anchorRef={anchorRef} placement="bottom-start" layer="popover" className="sprite-picker" onDismiss={onClose}>
       <Box className="hud-slot-picker__manual">
-        <Text className="hud-slot-picker__label">Any slot</Text>
+        <Text className="hud-slot-picker__label">{t('hud-editor:slot-picker-panel.text.any-slot')}</Text>
         <NumberInput size="sm" className="hud-slot-picker__number" min={1} value={manual} onChange={setManual} />
         <SlotPickActions
           disabled={!manualValid}
@@ -32,7 +34,7 @@ const SlotPickerPanel = (props: SlotPickerPanelProps) => {
       </Box>
       <Box className="hud-slot-picker__rows">
         {numbers.length === 0 ? (
-          <EmptyState message="No scheme previewed. Type a slot number above." />
+          <EmptyState message={t('hud-editor:slot-picker-panel.message.no-scheme-previewed-type-a')} />
         ) : numbers.map((index) => (
           <Box key={index} className="hud-slot-picker__row">
             {onPickNumber ? (

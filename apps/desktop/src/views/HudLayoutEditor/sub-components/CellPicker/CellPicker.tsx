@@ -5,13 +5,15 @@ import { useGridSolve } from '@app/hud-layout-editing/grid-solve';
 import { GridLattice, covers, occupantsOf, rowCountFor } from '../GridLattice';
 import { shortcutPropsOf } from '../SelectionLegend';
 import { useCellPick } from './behavior/useCellPick';
-import { CELL_PICK_KEYS, CELL_STEP } from './CellPicker.constants';
+import { CELL_STEP, cellPickKeys } from './CellPicker.constants';
 import './CellPicker.css';
 import type { KeyboardEvent } from 'react';
 import type { CellRef, LatticeCellState } from '../GridLattice';
 import type { CellPickerProps } from './CellPicker.type';
+import { useT } from '@drizztdourden08/brock-react';
 
 const CellPicker = (props: CellPickerProps) => {
+  const t = useT();
   const { container, childId, place, onChange } = props;
   const solve = useGridSolve(container);
   const occupants = occupantsOf(container, childId);
@@ -41,7 +43,7 @@ const CellPicker = (props: CellPickerProps) => {
 
   return (
     <Box className="hud-cellpick">
-      <Text className="hud-cellpick__title">{`The cell where ${childId} sits in its parent's grid`}</Text>
+      <Text className="hud-cellpick__title">{t('hud-editor:cell-picker.title', { childId })}</Text>
       <GridLattice
         columns={container.columns}
         rows={container.rows}
@@ -53,14 +55,14 @@ const CellPicker = (props: CellPickerProps) => {
         cellState={cellState}
         trackOn={() => false}
         cursor={pick.cursor}
-        label={`Pick a cell for ${childId} in the ${container.columns.length} by ${rows} parent grid`}
+        label={t('hud-editor:cell-picker.label', { childId, columns: container.columns.length, rows })}
         onCellDown={pick.cellsDown}
         onCellEnter={pick.cellsEnter}
         onPointerUp={pick.endDrag}
         onKeyDown={onKeyDown}
       />
       <Box className="hud-cellpick__legend">
-        {CELL_PICK_KEYS.map((entry) => (
+        {cellPickKeys(t).map((entry) => (
           <Box key={entry.key} className="hud-grid__key">
             <Shortcut size="xs" {...shortcutPropsOf(entry.shortcut, os)} />
             <Text className="hud-grid__key-text">{entry.label}</Text>

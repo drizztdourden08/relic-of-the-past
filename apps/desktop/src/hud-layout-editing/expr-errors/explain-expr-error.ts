@@ -1,5 +1,6 @@
 /* @layer renderer-components @kind logic */
 import { MAX_EXPR_LENGTH } from '@rotp/hud';
+import { msg } from '@drizztdourden08/brock-core/i18n';
 import { DISABLED, TRAILING_VERB } from './expr-errors.constants';
 import type { ExprProblem } from './expr-errors.type';
 
@@ -27,15 +28,15 @@ const withProduct = (source: string): string | undefined => {
 const unfinished = (source: string): ExprProblem => {
   const trimmed = source.trimEnd();
   if (unclosedAt(trimmed) >= 0) {
-    return { message: `This opens ${openParenCall(trimmed)} and never closes it. Add a ).` };
+    return { message: msg('hud-editing:expr.unclosed', { call: openParenCall(trimmed) }) };
   }
   const last = trimmed.slice(-1);
-  const verb = TRAILING_VERB[last] ?? 'Add the value that comes next.';
-  return { message: `The formula stops after ${last}. ${verb}` };
+  const stops = TRAILING_VERB[last];
+  return { message: stops ? stops(last) : msg('hud-editing:expr.stops.default', { last }) };
 };
 
-const disabledFeature = (what: string): ExprProblem => ({
-  message: `${what} is not part of HUD formulas. ${DISABLED}`,
+const disabledFeature = (what: keyof typeof DISABLED): ExprProblem => ({
+  message: DISABLED[what],
 });
 
 const columnOf = (raw: string): number | undefined => {
@@ -44,12 +45,12 @@ const columnOf = (raw: string): number | undefined => {
 };
 
 const plainProblem = (source: string, raw: string): ExprProblem | null => {
-  if (raw.startsWith('random()')) return { message: raw };
+  if (raw.startsWith('random()')) return { message: msg('hud-editing:expr.raw', { raw }) };
   if (raw.startsWith('expression is empty')) {
-    return { message: 'Nothing to read yet. Type a name, or pick one from the ƒ menu.' };
+    return { message: msg('hud-editing:expr.empty') };
   }
   if (raw.includes('over the')) {
-    return { message: `A HUD formula is capped at ${MAX_EXPR_LENGTH} characters. This one is longer.` };
+    return { message: msg('hud-editing:expr.too-long', { max: MAX_EXPR_LENGTH }) };
   }
   if (raw.includes('unexpected TEOF')) return unfinished(source);
   return null;
@@ -58,40 +59,40 @@ const plainProblem = (source: string, raw: string): ExprProblem | null => {
 const wordOperatorProblem = (source: string, raw: string, column?: number): ExprProblem | null => {
   if (raw.includes('Unknown character "&"')) {
     return {
-      message: 'This language writes "and" as and, not &&.',
+      message: msg('hud-editing:expr.and'),
       column,
-      fix: { label: 'use and', expr: source.replace(/&&?/g, 'and') },
+      fix: { label: msg('hud-editing:expr.fix.and'), expr: source.replace(/&&?/g, 'and') },
     };
   }
   if (raw.includes('Unknown character "|"')) {
     return {
-      message: '|| joins text here; it is not "or". It reads as two numbers written next to each other.',
+      message: msg('hud-editing:expr.or'),
       column,
-      fix: { label: 'use or', expr: source.replace(/\|\|?/g, 'or') },
+      fix: { label: msg('hud-editing:expr.fix.or'), expr: source.replace(/\|\|?/g, 'or') },
     };
   }
   return null;
 };
 
 const trailingProblem = (source: string, column?: number): ExprProblem => {
-  if (/\bin\b/.test(source)) return { ...disabledFeature('The in operator'), column };
+  if (/\bin\b/.test(source)) return { ...disabledFeature('in'), column };
   const product = withProduct(source);
   return {
-    message: 'Two values with nothing between them.',
+    message: msg('hud-editing:expr.adjacent'),
     column,
-    suggestion: product && `Did you mean ${product}?`,
-    fix: product ? { label: 'multiply', expr: product } : undefined,
+    suggestion: product ? msg('hud-editing:expr.suggest', { suggestion: product }) : undefined,
+    fix: product ? { label: msg('hud-editing:expr.fix.multiply'), expr: product } : undefined,
   };
 };
 
 const syntaxProblem = (source: string, raw: string, column?: number): ExprProblem | null => {
   if (raw.includes('Expected )')) {
-    return { message: `This opens ${openParenCall(source)} and never closes it. Add a ).`, column };
+    return { message: msg('hud-editing:expr.unclosed', { call: openParenCall(source) }), column };
   }
   const word = wordOperatorProblem(source, raw, column);
   if (word) return word;
-  if (raw.includes('Unknown character "="')) return { ...disabledFeature('Assignment'), column };
-  if (raw.includes('Unknown character "["')) return { ...disabledFeature('A list'), column };
+  if (raw.includes('Unknown character "="')) return { ...disabledFeature('assignment'), column };
+  if (raw.includes('Unknown character "["')) return { ...disabledFeature('list'), column };
   if (raw.includes('Expected EOF')) return trailingProblem(source, column);
   return null;
 };
@@ -100,7 +101,7 @@ const explainExprError = (source: string, raw: string): ExprProblem => {
   const column = columnOf(raw);
   return plainProblem(source, raw)
     ?? syntaxProblem(source, raw, column)
-    ?? { message: `The formula parser said: ${raw}`, column };
+    ?? { message: msg('hud-editing:expr.parser', { raw }), column };
 };
 
 export { explainExprError };

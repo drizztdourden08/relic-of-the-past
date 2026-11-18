@@ -1,6 +1,8 @@
 /* @layer renderer-components @kind types */
+import type { Text } from '@drizztdourden08/brock-core/i18n';
+
 interface FormulaStarter {
-  title: string;
+  title: Text;
   expr: string;
   select?: string;
 }

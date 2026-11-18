@@ -1,46 +1,46 @@
 /* @layer renderer-components @kind constants */
+import { msg } from '@drizztdourden08/brock-core/i18n';
+import type { Message } from '@drizztdourden08/brock-core/i18n';
 import type { FormulaName } from './formula-catalog.type';
 
-const SCOPE_NOTES: Readonly<Record<'index' | 'count' | 'item', string>> = {
-  index: 'Which instance this is, from 0 to count−1.',
-  count: 'How many instances there are.',
-  item: "This instance's own value, from the repeat's item formula.",
+const SCOPE_NOTES: Readonly<Record<'index' | 'count' | 'item', Message>> = {
+  index: msg('hud-editing:catalog.scope.index'),
+  count: msg('hud-editing:catalog.scope.count'),
+  item: msg('hud-editing:catalog.scope.item'),
 };
 
-const OUTSIDE_REPEAT = 'Exists inside a repeat. This node is not in one.';
-const NOT_A_TRANSITION = "Exists on a transition's when. This field is not one.";
+const OUTSIDE_REPEAT = msg('hud-editing:catalog.outside-repeat');
+const NOT_A_TRANSITION = msg('hud-editing:catalog.not-a-transition');
 
-const DELTA_NOTE = 'How much the bound value just changed by.';
+const DELTA_NOTE = msg('hud-editing:catalog.delta');
 
 const OPERATORS: readonly FormulaName[] = [
-  { name: '+ − * / %', note: 'Arithmetic. ^ is power, not xor.' },
-  { name: '== != < <= > >=', note: 'Yields true/false, which reads back as 1/0. Every gate works this way.' },
-  { name: 'and', note: 'Both. Never &&, which is a parse error.' },
-  { name: 'or', note: 'Either. Never ||, which joins text and answers a wrong number.' },
-  { name: 'not', note: 'The opposite.' },
-  { name: 'if(test, then, else)', note: 'A choice. Reads better than ? : once nested.' },
+  { name: '+ − * / %', note: msg('hud-editing:catalog.op.arithmetic') },
+  { name: '== != < <= > >=', note: msg('hud-editing:catalog.op.compare') },
+  { name: 'and', note: msg('hud-editing:catalog.op.and') },
+  { name: 'or', note: msg('hud-editing:catalog.op.or') },
+  { name: 'not', note: msg('hud-editing:catalog.op.not') },
+  { name: 'if(test, then, else)', note: msg('hud-editing:catalog.op.if') },
 ];
 
 const FUNCTIONS: readonly FormulaName[] = [
-  { name: 'ceil', note: 'Up to the next whole number.' },
-  { name: 'floor', note: 'Down to the whole number below.' },
-  { name: 'round', note: 'To the nearest whole number.' },
-  { name: 'trunc', note: 'Drop the fraction, toward zero.' },
-  { name: 'roundTo(x, dp)', note: 'To a given number of decimal places.' },
-  { name: 'abs', note: 'Distance from zero.' },
-  { name: 'sign', note: '−1, 0 or 1.' },
-  { name: 'min(...)', note: 'The smallest. min(max(x, lo), hi) is the clamp idiom.' },
-  { name: 'max(...)', note: 'The largest.' },
-  { name: 'sqrt', note: 'Square root.' },
-  { name: 'pow(a, b)', note: 'a to the power b. Same as a ^ b.' },
+  { name: 'ceil', note: msg('hud-editing:catalog.fn.ceil') },
+  { name: 'floor', note: msg('hud-editing:catalog.fn.floor') },
+  { name: 'round', note: msg('hud-editing:catalog.fn.round') },
+  { name: 'trunc', note: msg('hud-editing:catalog.fn.trunc') },
+  { name: 'roundTo(x, dp)', note: msg('hud-editing:catalog.fn.round-to') },
+  { name: 'abs', note: msg('hud-editing:catalog.fn.abs') },
+  { name: 'sign', note: msg('hud-editing:catalog.fn.sign') },
+  { name: 'min(...)', note: msg('hud-editing:catalog.fn.min') },
+  { name: 'max(...)', note: msg('hud-editing:catalog.fn.max') },
+  { name: 'sqrt', note: msg('hud-editing:catalog.fn.sqrt') },
+  { name: 'pow(a, b)', note: msg('hud-editing:catalog.fn.pow') },
 ];
 
 const CONSTANTS: readonly FormulaName[] = [
-  { name: 'PI', note: 'Reserved. A variable may not be called PI.' },
-  { name: 'E', note: 'Reserved. A variable may not be called E.' },
-  { name: 'true / false', note: 'Reserved, and read back as 1 and 0.' },
+  { name: 'PI', note: msg('hud-editing:catalog.const.pi') },
+  { name: 'E', note: msg('hud-editing:catalog.const.e') },
+  { name: 'true / false', note: msg('hud-editing:catalog.const.bool') },
 ];
 
-export {
-  CONSTANTS, DELTA_NOTE, FUNCTIONS, NOT_A_TRANSITION, OPERATORS, OUTSIDE_REPEAT, SCOPE_NOTES,
-};
+export { CONSTANTS, DELTA_NOTE, FUNCTIONS, NOT_A_TRANSITION, OPERATORS, OUTSIDE_REPEAT, SCOPE_NOTES };

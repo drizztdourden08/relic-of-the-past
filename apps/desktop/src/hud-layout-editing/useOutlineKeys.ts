@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind hook */
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { usePlatform } from '@drizztdourden08/brock-react';
+import { usePlatform, useT } from '@drizztdourden08/brock-react';
 import { isPrimaryModifier } from '@rotp/input-mapping';
 import { STEP_KEYS, stepIntent } from './step-intent';
 import { announcementFor, ghostFor } from './drop-ghost';
@@ -10,6 +10,8 @@ import type { StepDirection } from './step-intent';
 import type { OutlineKeys, OutlineKeysInput } from './outline-keys.type';
 
 const useOutlineKeys = (input: OutlineKeysInput): OutlineKeys => {
+  const t = useT();
+  const t = useT();
   const { doc, onDrop } = input;
   const os = usePlatform().info.os;
   const [message, setMessage] = useState('');
@@ -29,9 +31,9 @@ const useOutlineKeys = (input: OutlineKeysInput): OutlineKeys => {
       timer.current = setTimeout(() => setShaking(null), SHAKE_MS);
       return;
     }
-    setMessage(announcementFor(ghostFor(current, [id], intent)));
+    setMessage(announcementFor(ghostFor(current, [id], intent, t), t));
     if (intent.kind !== 'refused') api.current.onDrop([id], intent);
-  }, []);
+  }, [t]);
 
   const onRowKeyDown = useCallback((id: string, event: ReactKeyboardEvent) => {
     if (event.altKey || event.shiftKey || !isPrimaryModifier(event, os)) return;

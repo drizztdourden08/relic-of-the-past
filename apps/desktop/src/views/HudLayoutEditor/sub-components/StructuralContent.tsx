@@ -5,8 +5,10 @@ import { CountdownContent } from './CountdownContent';
 import { RepeatContent } from './RepeatContent';
 import { SwitchContent } from './SwitchContent';
 import type { StructuralContentProps } from './ContentSection.type';
+import { useT } from '@drizztdourden08/brock-react';
 
 const StructuralContent = (props: StructuralContentProps) => {
+  const t = useT();
   const { element, onChange, scope, insideRepeat, glyphPacks, selectedId, onSelectNode } = props;
 
   switch (element.type) {
@@ -19,7 +21,7 @@ const StructuralContent = (props: StructuralContentProps) => {
     case 'switch':
       return <SwitchContent spec={element} onChange={onChange} scope={scope} insideRepeat={insideRepeat} glyphPacks={glyphPacks} selectedId={selectedId} onSelectNode={onSelectNode} />;
     case 'spacer':
-      return <Text className="hud-editor__hint">A spacer draws nothing.</Text>;
+      return <Text className="hud-editor__hint">{t('hud-editor:structural-content.text.a-spacer-draws-nothing')}</Text>;
   }
 };
 

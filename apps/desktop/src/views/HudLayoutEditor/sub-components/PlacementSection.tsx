@@ -6,16 +6,19 @@ import { OffsetField } from './OffsetField';
 import type { HudAlignSelf, HudContainer } from '@rotp/hud';
 import { FLEX_STANDIN, OPTIONS } from './PlacementSection.constants';
 import type { PlacementSectionProps } from './PlacementSection.type';
+import { useT } from '@drizztdourden08/brock-react';
+import type { Translate } from '@app/hud-layout-editing/translate.type';
 
-const engineOf = (parent: HudContainer): string =>
-  (parent.layout === 'grid' ? 'grid' : `flex ${parent.direction}`);
+const engineOf = (parent: HudContainer, t: Translate): string =>
+  (parent.layout === 'grid' ? t('hud-editor:placement.engine.grid') : t('hud-editor:placement.engine.flex', { direction: parent.direction }));
 
-const reasonOf = (parent: HudContainer | null): string =>
+const reasonOf = (parent: HudContainer | null, t: Translate): string =>
   (parent
-    ? `This parent is a ${engineOf(parent)}. Switch it to grid to place by cell.`
-    : 'The screen is the whole view.');
+    ? t('hud-editor:placement.reason.parent', { engine: engineOf(parent, t) })
+    : t('hud-editor:placement.reason.screen'));
 
 const PlacementSection = (props: PlacementSectionProps) => {
+  const t = useT();
   const { node, parent, onSelectNode, onPatch } = props;
   const isGrid = parent?.layout === 'grid';
   const openParent = parent && onSelectNode ? () => onSelectNode(parent.id) : undefined;
@@ -25,13 +28,13 @@ const PlacementSection = (props: PlacementSectionProps) => {
       <OffsetField
         value={node.margin}
         onChange={(margin) => onPatch({ margin })}
-        from="where the parent puts it"
+        from={t('hud-editor:placement-section.from.where-the-parent-puts-it')}
       />
 
       <DisabledReason
         active={!isGrid}
-        reason={reasonOf(parent)}
-        actionLabel={openParent ? "Open the parent's Layout" : undefined}
+        reason={reasonOf(parent, t)}
+        actionLabel={openParent ? t('hud-editor:placement.open-parent') : undefined}
         onAction={openParent}
       >
         <CellPicker
@@ -43,21 +46,21 @@ const PlacementSection = (props: PlacementSectionProps) => {
       </DisabledReason>
 
       <Box className="hud-inspect__row">
-        <Field size="sm" label={isGrid ? 'align down' : 'align self'} className="hud-inspect__extent">
+        <Field size="sm" label={isGrid ? t('hud-editor:placement.align-down') : t('hud-editor:placement.align-self')} className="hud-inspect__extent">
           <Select
             size="sm"
             value={node.alignSelf ?? ''}
-            placeholder="parent default"
+            placeholder={t('hud-editor:placement-section.placeholder.parent-default')}
             options={OPTIONS}
             onChange={(v) => onPatch({ alignSelf: (v || undefined) as HudAlignSelf | undefined })}
           />
         </Field>
         {isGrid && (
-          <Field size="sm" label="align across" className="hud-inspect__extent">
+          <Field size="sm" label={t('hud-editor:placement-section.label.align-across')} className="hud-inspect__extent">
             <Select
               size="sm"
               value={node.justifySelf ?? ''}
-              placeholder="follows down"
+              placeholder={t('hud-editor:placement-section.placeholder.follows-down')}
               options={OPTIONS}
               onChange={(v) => onPatch({ justifySelf: (v || undefined) as HudAlignSelf | undefined })}
             />

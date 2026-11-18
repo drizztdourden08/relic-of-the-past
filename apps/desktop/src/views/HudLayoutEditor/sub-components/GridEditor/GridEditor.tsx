@@ -18,8 +18,10 @@ import { SelectionLegend } from '../SelectionLegend';
 import { SelectionToolbar } from '../SelectionToolbar';
 import './GridEditor.css';
 import type { GridActionContext, GridEditorProps } from './GridEditor.type';
+import { useT } from '@drizztdourden08/brock-react';
 
 const GridEditor = (props: GridEditorProps) => {
+  const t = useT();
   const { container, onPatchContainer } = props;
   const solve = useGridSolve(container);
   const occupants = useMemo(() => occupantsOf(container), [container]);
@@ -34,6 +36,7 @@ const GridEditor = (props: GridEditorProps) => {
     occupants,
     rows,
     edits: { patchContainer: onPatchContainer, setSelection: grid.select, refuse: grid.refuse },
+    t,
   };
   const actions = gridActions(ctx);
   useGridEcho(container.id, grid.selection, columns, rows);
@@ -42,7 +45,7 @@ const GridEditor = (props: GridEditorProps) => {
 
   return (
     <Box className="hud-grid">
-      <SelectionToolbar chip={chipOf(grid.selection)} actions={contextualActions(ctx)} />
+      <SelectionToolbar chip={chipOf(grid.selection, t)} actions={contextualActions(ctx)} />
       <GridLattice
         columns={container.columns}
         rows={container.rows}
@@ -53,7 +56,7 @@ const GridEditor = (props: GridEditorProps) => {
         cellState={cellState}
         trackOn={trackOn}
         cursor={grid.cursor}
-        label={`${columns} by ${rows} grid. Selecting a cell edits nothing`}
+        label={t('hud-editor:grid.label', { columns, rows })}
         onCellDown={grid.cellsDown}
         onCellEnter={grid.cellsEnter}
         onPointerUp={grid.endDrag}
@@ -69,7 +72,7 @@ const GridEditor = (props: GridEditorProps) => {
       <SelectionLegend
         actions={actions}
         os={grid.os}
-        status={statusOf({ selection: grid.selection, occupants, columns, rows })}
+        status={statusOf({ t, selection: grid.selection, occupants, columns, rows })}
         refusal={grid.refusal}
       />
     </Box>

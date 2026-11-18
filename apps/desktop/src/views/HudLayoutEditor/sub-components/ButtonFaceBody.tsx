@@ -8,8 +8,10 @@ import { GlyphPickerGrid } from './GlyphPickerGrid';
 import { ReferenceField } from './ReferenceField';
 import { SpriteExtractionNotice } from './SpriteExtractionNotice';
 import type { ButtonFaceBodyProps } from './ButtonFaceBody.type';
+import { useT } from '@drizztdourden08/brock-react';
 
 const ButtonFaceBody = (props: ButtonFaceBodyProps) => {
+  const t = useT();
   const { state, face, art, glyphPacks, onChange } = props;
   const [pickerOpen, setPickerOpen] = useState<'sprite' | 'glyph' | null>(null);
   const anchorRef = useRef<HTMLButtonElement>(null);
@@ -19,7 +21,7 @@ const ButtonFaceBody = (props: ButtonFaceBodyProps) => {
       <SegmentedControl
         size="sm"
         value={face.from}
-        options={[{ value: 'glyph', label: 'glyph' }, { value: 'image', label: 'image' }]}
+        options={[{ value: 'glyph', label: t('hud-editor:button-face.glyph') }, { value: 'image', label: t('hud-editor:button-face.image') }]}
         onChange={(next) => onChange(next === 'image' ? { from: 'image', file: '' } : { from: 'glyph', pack: 'generic', glyph: 'A' })}
       />
       <ReferenceField
@@ -29,7 +31,7 @@ const ButtonFaceBody = (props: ButtonFaceBodyProps) => {
         kind={art.kind}
         onOpen={() => setPickerOpen(face.from === 'image' ? 'sprite' : 'glyph')}
         anchorRef={anchorRef}
-        aria-label={`${state} face: ${art.name}`}
+        aria-label={t('hud-editor:button-face.aria', { state, name: art.name })}
       >
         <SpritePicker
           open={pickerOpen === 'sprite'}

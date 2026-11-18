@@ -7,8 +7,10 @@ import { GlyphPickerGrid } from './GlyphPickerGrid';
 import { ReferenceField } from './ReferenceField';
 import { SlotRefField } from './SlotRefField';
 import type { GlyphContentProps } from './GlyphContent.type';
+import { useT } from '@drizztdourden08/brock-react';
 
 const GlyphContent = (props: GlyphContentProps) => {
+  const t = useT();
   const { spec, onChange, glyphPacks } = props;
   const bySlot = spec.slot !== undefined;
   const [open, setOpen] = useState(false);
@@ -17,17 +19,17 @@ const GlyphContent = (props: GlyphContentProps) => {
 
   return (
     <Box className="hud-inspect__group">
-      <Field size="sm" label="shows">
+      <Field size="sm" label={t('hud-editor:glyph-content.label.shows')}>
         <SegmentedControl
           size="sm"
           value={bySlot ? 'slot' : 'position'}
-          options={[{ value: 'position', label: 'a control' }, { value: 'slot', label: 'a slot' }]}
+          options={[{ value: 'position', label: t('hud-editor:glyph-content.shows.control') }, { value: 'slot', label: t('hud-editor:glyph-content.shows.slot') }]}
           onChange={(v) => onChange(v === 'slot' ? { slot: 1, position: undefined } : { slot: undefined, position: 'DPAD' })}
         />
       </Field>
       {bySlot ? (
         <SlotRefField
-          label="slot"
+          label={t('hud-editor:glyph-content.label.slot')}
           value={spec.slot ?? 1}
           onChange={(slot) => onChange({ slot })}
           slots={slots}
@@ -35,13 +37,13 @@ const GlyphContent = (props: GlyphContentProps) => {
         />
       ) : (
         <ReferenceField
-          label="control"
+          label={t('hud-editor:glyph-content.label.control')}
           src={glyphArtUrl(glyphPacks, spec.pack, spec.position ?? '')}
-          name={spec.position ?? '(none)'}
+          name={spec.position ?? t('hud-editor:glyph-content.none')}
           kind={spec.pack}
           onOpen={() => setOpen(true)}
           anchorRef={anchorRef}
-          aria-label={`Glyph: ${spec.position ?? 'none'}`}
+          aria-label={t('hud-editor:glyph-content.aria', { position: spec.position ?? t('hud-editor:glyph-content.none-short') })}
         >
           <GlyphPickerGrid
             open={open}

@@ -3,11 +3,14 @@ import { Box, Field, Flex, NumberInput, Select, Slider, Text } from '@drizztdour
 import { FAMILIES, FONT_VARS, GAME_DESIGN_SIZE } from './FontPicker.constants';
 import type { HudFontFamily } from '@rotp/hud';
 import type { FontPickerProps } from './FontPicker.type';
+import { useT, useText } from '@drizztdourden08/brock-react';
 
 const snap = (size: number, family: HudFontFamily): number =>
   (family === 'game' ? Math.max(GAME_DESIGN_SIZE, Math.round(size / GAME_DESIGN_SIZE) * GAME_DESIGN_SIZE) : size);
 
 const FontPicker = (props: FontPickerProps) => {
+  const t = useT();
+  const text = useText();
   const { family, size, weight, onChange } = props;
 
   return (
@@ -19,13 +22,13 @@ const FontPicker = (props: FontPickerProps) => {
         07 Ab
       </Text>
       <Box className="hud-inspect__row">
-        <Field size="sm" label="face" className="hud-inspect__extent">
-          <Select size="sm" value={family} options={FAMILIES.map((f) => ({ value: f.value, label: f.label }))} onChange={(next) => onChange(next as HudFontFamily, snap(size, next as HudFontFamily), weight)} />
+        <Field size="sm" label={t('hud-editor:font-picker.label.face')} className="hud-inspect__extent">
+          <Select size="sm" value={family} options={FAMILIES.map((f) => ({ value: f.value, label: text(f.label) }))} onChange={(next) => onChange(next as HudFontFamily, snap(size, next as HudFontFamily), weight)} />
         </Field>
-        <Field size="sm" label={`size${family === 'game' ? ` (×${GAME_DESIGN_SIZE})` : ''}`} className="hud-inspect__extent">
+        <Field size="sm" label={family === 'game' ? t('hud-editor:font-picker.label.size-game', { step: GAME_DESIGN_SIZE }) : t('hud-editor:font-picker.label.size')} className="hud-inspect__extent">
           <NumberInput
             size="sm"
-            aria-label="Font size"
+            aria-label={t('hud-editor:font-picker.aria.font-size')}
             value={size}
             min={family === 'game' ? GAME_DESIGN_SIZE : 6}
             step={family === 'game' ? GAME_DESIGN_SIZE : 1}
@@ -34,7 +37,7 @@ const FontPicker = (props: FontPickerProps) => {
         </Field>
       </Box>
       {family !== 'game' && (
-        <Field size="sm" label="weight" className="hud-bounded__slider">
+        <Field size="sm" label={t('hud-editor:font-picker.label.weight')} className="hud-bounded__slider">
           <Slider
             value={Math.min(900, Math.max(100, weight ?? 400))}
             min={100}

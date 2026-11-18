@@ -2,10 +2,13 @@
 import { nodeArtOf } from '@app/hud-layout-editing/node-art';
 import { ReferenceField } from './ReferenceField';
 import type { CaseBranchProps } from './CaseBranch.type';
+import { useT } from '@drizztdourden08/brock-react';
 
 const CaseBranch = (props: CaseBranchProps) => {
+  const t = useT();
+  const t = useT();
   const { node, label, glyphPacks, onSelectNode } = props;
-  const art = nodeArtOf(node, glyphPacks);
+  const art = nodeArtOf(node, glyphPacks, t);
 
   return (
     <ReferenceField
@@ -16,7 +19,7 @@ const CaseBranch = (props: CaseBranchProps) => {
       name={art.name}
       kind={art.kind}
       onOpen={() => onSelectNode(node.id)}
-      aria-label={`Go to ${label}: ${art.name}`}
+      aria-label={t('hud-editor:case-branch.go', { label, name: art.name })}
     />
   );
 };

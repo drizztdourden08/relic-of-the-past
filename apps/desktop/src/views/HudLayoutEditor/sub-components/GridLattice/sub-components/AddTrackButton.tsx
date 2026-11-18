@@ -1,11 +1,12 @@
 /* @layer renderer-components @kind component */
 import { Icon, Pressable } from '@drizztdourden08/tessera/primitives';
-import { WORD } from './AddTrackButton.constants';
+import { useText } from '@drizztdourden08/brock-react';
+import { ADD_LABEL } from './AddTrackButton.constants';
 import type { AddTrackButtonProps } from './AddTrackButton.type';
 
 const AddTrackButton = (props: AddTrackButtonProps) => {
   const { axis, at, onAdd } = props;
-  const label = `Add a ${WORD[axis]} at the end`;
+  const label = useText()(ADD_LABEL[axis]);
   return (
     <Pressable
       className={`hud-lattice__add hud-lattice__add--${axis}`}

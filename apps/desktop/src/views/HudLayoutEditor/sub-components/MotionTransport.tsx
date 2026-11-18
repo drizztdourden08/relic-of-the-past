@@ -3,8 +3,10 @@ import { useEffect } from 'react';
 import { Box, Icon, IconButton, Slider, Text, useEscapeStack } from '@drizztdourden08/tessera/primitives';
 import { useMotionPreview } from '@app/hud-layout-editing/motion-preview';
 import type { MotionTransportProps } from './MotionTransport.type';
+import { useT } from '@drizztdourden08/brock-react';
 
 const MotionTransport = (props: MotionTransportProps) => {
+  const t = useT();
   const { spanMs } = props;
   const preview = useMotionPreview();
   const setSpan = preview?.setSpan;
@@ -18,7 +20,7 @@ const MotionTransport = (props: MotionTransportProps) => {
   if (preview.disabled) {
     return (
       <Text className="hud-editor__hint">
-        Reduced motion is on, so animations are held at their rest pose.
+        {t('hud-editor:motion-transport.text.reduced-motion-is-on-so')}
       </Text>
     );
   }
@@ -29,7 +31,7 @@ const MotionTransport = (props: MotionTransportProps) => {
         variant="ghost"
         size="sm"
         active={preview.playing}
-        label={preview.playing ? 'Pause the stage' : 'Play on the stage'}
+        label={preview.playing ? t('hud-editor:motion-transport.pause') : t('hud-editor:motion-transport.play')}
         onClick={() => (preview.playing ? preview.pause() : preview.play())}
       >
 <Icon name={preview.playing ? 'pause' : 'play'} size={14} />

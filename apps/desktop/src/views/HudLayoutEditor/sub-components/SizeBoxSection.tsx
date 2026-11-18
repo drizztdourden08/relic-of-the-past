@@ -9,8 +9,11 @@ import { extentText } from '@app/hud-layout-editing/extent-text';
 import type { Extent } from '@rotp/hud';
 import { SCREEN_REASON } from './SizeBoxSection.constants';
 import type { SizeBoxSectionProps } from './SizeBoxSection.type';
+import { useT, useText } from '@drizztdourden08/brock-react';
 
 const SizeBoxSection = (props: SizeBoxSectionProps) => {
+  const t = useT();
+  const text = useText();
   const { node, onPatch, scope, insideRepeat, isScreen = false } = props;
 
   const setSize = (axis: 'w' | 'h', next: Extent | undefined): void => {
@@ -22,7 +25,7 @@ const SizeBoxSection = (props: SizeBoxSectionProps) => {
 
   return (
     <Box className="hud-inspect__group">
-      <DisabledReason active={isScreen} reason={SCREEN_REASON}>
+      <DisabledReason active={isScreen} reason={text(SCREEN_REASON)}>
         <Box className="hud-inspect__group">
           <Box className="hud-inspect__row">
             <ExtentField label="w" value={node.size?.w} onChange={(next) => setSize('w', next)} />
@@ -49,10 +52,10 @@ const SizeBoxSection = (props: SizeBoxSectionProps) => {
       />
 
       <ValueInput
-        label="scale"
+        label={t('hud-editor:size-box-section.label.scale')}
         value={node.scale ?? 1}
         readOnly={isScreen}
-        derivedFrom={isScreen ? SCREEN_REASON : undefined}
+        derivedFrom={isScreen ? text(SCREEN_REASON) : undefined}
         onChange={(scale) => onPatch({ scale: scale === 1 ? undefined : scale })}
         scope={scope}
         insideRepeat={insideRepeat}

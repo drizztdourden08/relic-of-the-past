@@ -2,8 +2,10 @@
 import { Box, Icon, Text } from '@drizztdourden08/tessera/primitives';
 import { ValueField } from './ValueField';
 import type { GapCellsProps } from './GapCells.type';
+import { useText } from '@drizztdourden08/brock-react';
 
 const GapCells = (props: GapCellsProps) => {
+  const text = useText();
   const { gap, onGap, scope, insideRepeat } = props;
 
   return (
@@ -14,7 +16,7 @@ const GapCells = (props: GapCellsProps) => {
             {cell.capIcon ? <Icon name={cell.capIcon} size={14} /> : cell.cap}
           </Text>
           <ValueField
-            aria-label={cell.label}
+            aria-label={text(cell.label)}
             value={cell.value}
             onChange={(next) => onGap(cell.axis, next)}
             scope={scope}

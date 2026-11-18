@@ -1,13 +1,20 @@
 /* @layer renderer-components @kind constants */
-const TRAILING_VERB: Readonly<Record<string, string>> = {
-  '+': 'Add the value it should add to.',
-  '-': 'Add the value it should subtract.',
-  '*': 'Add the value it should multiply by.',
-  '/': 'Add the value it should divide by.',
-  '%': 'Add the value it should divide by.',
-  '^': 'Add the power it should raise to.',
+import { msg } from '@drizztdourden08/brock-core/i18n';
+import type { Message } from '@drizztdourden08/brock-core/i18n';
+
+const TRAILING_VERB: Readonly<Record<string, (last: string) => Message>> = {
+  '+': (last) => msg('hud-editing:expr.stops.add', { last }),
+  '-': (last) => msg('hud-editing:expr.stops.subtract', { last }),
+  '*': (last) => msg('hud-editing:expr.stops.multiply', { last }),
+  '/': (last) => msg('hud-editing:expr.stops.divide', { last }),
+  '%': (last) => msg('hud-editing:expr.stops.divide', { last }),
+  '^': (last) => msg('hud-editing:expr.stops.power', { last }),
 };
 
-const DISABLED = 'A formula reads values and produces a number; it never sets anything, and it has no lists.';
+const DISABLED = {
+  in: msg('hud-editing:expr.disabled.in'),
+  assignment: msg('hud-editing:expr.disabled.assignment'),
+  list: msg('hud-editing:expr.disabled.list'),
+};
 
 export { DISABLED, TRAILING_VERB };

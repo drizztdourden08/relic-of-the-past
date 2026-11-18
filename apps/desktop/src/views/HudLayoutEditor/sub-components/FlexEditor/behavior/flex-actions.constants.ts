@@ -1,12 +1,11 @@
 /* @layer renderer-components @kind constants */
+import type { Translate } from '@app/hud-layout-editing/translate.type';
 import type { EditorAction } from '../FlexEditor.type';
 
-const GESTURES: EditorAction[] = [
-  { key: 'pick', kind: 'gesture', label: 'select', shortcut: { mouse: 'left' } },
-  { key: 'add-to', kind: 'gesture', label: 'add', shortcut: { keys: ['mod'], mouse: 'left' } },
-  { key: 'range', kind: 'gesture', label: 'range', shortcut: { keys: ['shift'], mouse: 'left' } },
+const gesturesOf = (t: Translate): EditorAction[] => [
+  { key: 'pick', kind: 'gesture', label: t('hud-editor:grid.gesture.select'), shortcut: { mouse: 'left' } },
+  { key: 'add-to', kind: 'gesture', label: t('hud-editor:grid.gesture.add'), shortcut: { keys: ['mod'], mouse: 'left' } },
+  { key: 'range', kind: 'gesture', label: t('hud-editor:grid.gesture.range'), shortcut: { keys: ['shift'], mouse: 'left' } },
 ];
 
-const MANY = 'Pick one child to move. A run has no single place to land.';
-
-export { GESTURES, MANY };
+export { gesturesOf };

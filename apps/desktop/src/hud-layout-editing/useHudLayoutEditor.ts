@@ -59,9 +59,9 @@ const useHudLayoutEditor = (props: HudLayoutEditorProps) => {
   );
 
   const createPack = useCallback(async () => {
-    const pack = await glyphs.createPack(`My glyphs ${glyphs.custom.length + 1}`);
+    const pack = await glyphs.createPack(t('hud-editing:glyph-pack.default-name', { n: glyphs.custom.length + 1 }));
     if (pack) draft.setGlyphPack(pack.id);
-  }, [draft, glyphs]);
+  }, [draft, glyphs, t]);
 
   const deletePack = useCallback(async (id: string) => {
     await glyphs.deletePack(id);

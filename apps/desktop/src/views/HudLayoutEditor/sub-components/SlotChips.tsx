@@ -2,8 +2,10 @@
 import { useState } from 'react';
 import { Box, Field, Flex, IconButton, NumberInput, Text } from '@drizztdourden08/tessera/primitives';
 import type { SlotChipsProps } from './SlotChips.type';
+import { useT } from '@drizztdourden08/brock-react';
 
 const SlotChips = (props: SlotChipsProps) => {
+  const t = useT();
   const { label, value, onChange, hint, readOnly } = props;
   const slots = value ?? [];
   const [draft, setDraft] = useState<number | null>(null);
@@ -26,22 +28,22 @@ const SlotChips = (props: SlotChipsProps) => {
           <Box key={slot} className="hud-slot-chips__chip">
             <Text className="hud-slot-chips__num">{slot}</Text>
             {!readOnly && (
-              <IconButton variant="ghost" size="sm" label={`Remove slot ${slot}`} onClick={() => remove(slot)}>
+              <IconButton variant="ghost" size="sm" label={t('hud-editor:slot-chips.remove', { slot })} onClick={() => remove(slot)}>
                 ✕
               </IconButton>
             )}
           </Box>
         ))}
-        {slots.length === 0 && <Text className="hud-slot-chips__empty">none</Text>}
+        {slots.length === 0 && <Text className="hud-slot-chips__empty">{t('hud-editor:slot-chips.text.none')}</Text>}
         {!readOnly && (
           <>
             <NumberInput
-              size="sm" className="hud-slot-chips__entry" aria-label={`Add a slot to ${label}`}
-              value={draft ?? ''} min={1} step={1} placeholder="slot"
+              size="sm" className="hud-slot-chips__entry" aria-label={t('hud-editor:slot-chips.add-to', { label })}
+              value={draft ?? ''} min={1} step={1} placeholder={t('hud-editor:slot-chips.placeholder.slot')}
               onChange={(n) => setDraft(Number.isFinite(n) ? n : null)}
               onKeyDown={(event) => { if (event.key === 'Enter') { event.preventDefault(); add(); } }}
             />
-            <IconButton variant="ghost" size="sm" label={`Add slot to ${label}`} onClick={add}>+</IconButton>
+            <IconButton variant="ghost" size="sm" label={t('hud-editor:slot-chips.add', { label })} onClick={add}>+</IconButton>
           </>
         )}
       </Flex>

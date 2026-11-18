@@ -15,8 +15,11 @@ import { useOutlineDrag } from '@app/hud-layout-editing/useOutlineDrag';
 import { useOutlineKeys } from '@app/hud-layout-editing/useOutlineKeys';
 import { useOutlineScroll } from '@app/hud-layout-editing/useOutlineScroll';
 import type { OutlinePanelProps } from './OutlinePanel.type';
+import { useT } from '@drizztdourden08/brock-react';
 
 const OutlinePanel = (props: OutlinePanelProps) => {
+  const t = useT();
+  const t = useT();
   const { doc, selectedId, slotNumbers, onSelect, onRemove, onDrop } = props;
   const rowsRef = useRef<HTMLDivElement>(null);
   const [menuId, setMenuId] = useState<string | null>(null);
@@ -35,7 +38,7 @@ const OutlinePanel = (props: OutlinePanelProps) => {
           <OutlineRow
             key={row.node.id}
             id={row.node.id}
-            label={row.isScreen ? `Screen · ${row.node.id}` : `${labelOf(row.node)} · ${row.node.id}`}
+            label={row.isScreen ? t('hud-editor:outline.screen', { id: row.node.id }) : t('hud-editor:outline.row', { label: labelOf(row.node, t), id: row.node.id })}
             depth={row.depth}
             kind={row.node.kind}
             cell={row.cell}

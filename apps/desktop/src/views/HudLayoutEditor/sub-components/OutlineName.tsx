@@ -1,8 +1,10 @@
 /* @layer renderer-components @kind component */
 import { Pressable, Text } from '@drizztdourden08/tessera/primitives';
 import type { OutlineNameProps } from './OutlineName.type';
+import { useT } from '@drizztdourden08/brock-react';
 
 const OutlineName = (props: OutlineNameProps) => {
+  const t = useT();
   const { kind, label, cell, locked, missingSlots, selected, onSelect } = props;
 
   return (
@@ -10,9 +12,9 @@ const OutlineName = (props: OutlineNameProps) => {
       <Text className="hud-outline__glyph" aria-hidden>{kind === 'container' ? '▤' : '◦'}</Text>
       <Text className="hud-outline__text">{label}</Text>
       {cell && <Text className="hud-outline__badge">{cell}</Text>}
-      {locked && <Text className="hud-outline__badge" title="Edit this from the case list or the repeat's Content section.">{locked}</Text>}
+      {locked && <Text className="hud-outline__badge" title={t('hud-editor:outline-name.title.edit-this-from-the-case')}>{locked}</Text>}
       {missingSlots.length > 0 && (
-        <Text className="hud-outline__note" title="Out of range for the scheme you are previewing. It still draws, just empty.">
+        <Text className="hud-outline__note" title={t('hud-editor:outline-name.title.out-of-range-for-the')}>
           slot {missingSlots.join(', ')} out of range
         </Text>
       )}

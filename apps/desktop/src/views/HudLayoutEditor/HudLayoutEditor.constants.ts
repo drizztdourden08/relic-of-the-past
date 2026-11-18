@@ -24,9 +24,9 @@ const GROUND_TILE = 32;
 const HUD_BLACK = '#000000';
 const HUD_WHITE = '#ffffff';
 
-const OUTLINE_PANEL = { title: 'Outline', storageKey: 'hud-editor.outline', width: 320, minWidth: 220, maxWidth: 480 };
+const OUTLINE_PANEL = { storageKey: 'hud-editor.outline', width: 320, minWidth: 220, maxWidth: 480 };
 
-const INSPECTOR_PANEL = { title: 'Inspector', storageKey: 'hud-editor.inspector', width: 320, minWidth: 220, maxWidth: 480 };
+const INSPECTOR_PANEL = { storageKey: 'hud-editor.inspector', width: 320, minWidth: 220, maxWidth: 480 };
 
 const COUNT_STEP = 1;
 const ANGLE_STEP = 15;

@@ -4,7 +4,7 @@ import type { GridActionContext, TrackAxis } from '../GridEditor.type';
 
 const removeRun = (ctx: GridActionContext, axis: TrackAxis, indices: readonly number[]) => (): void => {
   if (axis === 'columns' && ctx.container.columns.length - indices.length < 1) {
-    ctx.edits.refuse('A grid needs at least one column.');
+    ctx.edits.refuse(ctx.t('hud-editor:grid.refuse.last-column'));
     return;
   }
   let next = ctx.container;

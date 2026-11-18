@@ -1,11 +1,12 @@
 /* @layer renderer-components @kind constants */
+import type { Translate } from '@app/hud-layout-editing/translate.type';
 import type { LegendEntry } from '@app/hud-layout-editing/selection-bands.type';
 import type { CellRef } from '../GridLattice';
 
-const CELL_PICK_KEYS: readonly LegendEntry[] = [
-  { key: 'set', label: 'set the cell', shortcut: { mouse: 'left' } },
-  { key: 'span', label: 'span to here', shortcut: { keys: ['shift'], mouse: 'left' } },
-  { key: 'rectangle', label: 'span a rectangle', shortcut: { mouse: 'drag' } },
+const cellPickKeys = (t: Translate): readonly LegendEntry[] => [
+  { key: 'set', label: t('hud-editor:cell-picker.set'), shortcut: { mouse: 'left' } },
+  { key: 'span', label: t('hud-editor:cell-picker.span'), shortcut: { keys: ['shift'], mouse: 'left' } },
+  { key: 'rectangle', label: t('hud-editor:cell-picker.rectangle'), shortcut: { mouse: 'drag' } },
 ];
 
 const CELL_STEP: Readonly<Record<string, CellRef | undefined>> = {
@@ -15,4 +16,4 @@ const CELL_STEP: Readonly<Record<string, CellRef | undefined>> = {
   ArrowDown: { column: 0, row: 1 },
 };
 
-export { CELL_PICK_KEYS, CELL_STEP };
+export { CELL_STEP, cellPickKeys };

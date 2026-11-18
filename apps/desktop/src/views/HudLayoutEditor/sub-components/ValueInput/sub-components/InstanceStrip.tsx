@@ -5,8 +5,10 @@ import { resolveValue } from '@rotp/hud';
 import { summarise } from '../behavior/summarise';
 import { MAX_CELLS } from './InstanceStrip.constants';
 import type { InstanceStripProps } from './InstanceStrip.type';
+import { useT } from '@drizztdourden08/brock-react';
 
 const InstanceStrip = (props: InstanceStripProps) => {
+  const t = useT();
   const { expr, instances, previewIndex = 0 } = props;
   if (instances.length === 0) return null;
 
@@ -16,7 +18,7 @@ const InstanceStrip = (props: InstanceStripProps) => {
 
   return (
     <Box className="hud-instance-strip">
-      <Box className="hud-instance-strip__cells" aria-label={`Result across ${instances.length} instances`}>
+      <Box className="hud-instance-strip__cells" aria-label={t('hud-editor:instance-strip.result', { count: instances.length })}>
         {values.map((value, index) => (
           <Text
             key={index}
@@ -27,7 +29,7 @@ const InstanceStrip = (props: InstanceStripProps) => {
         ))}
       </Box>
       <Text className="hud-instance-strip__read">
-        {summarise(values)}{over > 0 ? ` · first ${MAX_CELLS} of ${instances.length}` : ''}
+        {summarise(values, t)}{over > 0 ? ` · ${t('hud-editor:instance-strip.first', { shown: MAX_CELLS, total: instances.length })}` : ''}
       </Text>
     </Box>
   );

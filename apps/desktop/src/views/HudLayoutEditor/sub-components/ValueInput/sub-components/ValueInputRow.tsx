@@ -3,11 +3,13 @@ import { Box, TextInput } from '@drizztdourden08/tessera/primitives';
 import { ValueChips } from './ValueChips';
 import { ValueSpin } from './ValueSpin';
 import type { ValueInputRowProps } from './ValueInputRow.type';
+import { useT } from '@drizztdourden08/brock-react';
 
 const nameOf = (ariaLabel: string | undefined, label: string | undefined, fallback: string): string =>
   ariaLabel ?? label ?? fallback;
 
 const ValueInputRow = (props: ValueInputRowProps) => {
+  const t = useT();
   const { field, label, ariaLabel, placeholder, readOnly, invalid } = props;
 
   return (
@@ -19,8 +21,8 @@ const ValueInputRow = (props: ValueInputRowProps) => {
         spellCheck={false}
         readOnly={readOnly}
         className={`hud-value-input__field${invalid ? ' is-invalid' : ''}`}
-        aria-label={nameOf(ariaLabel, label, 'Value')}
-        placeholder={placeholder ?? 'number, or = formula'}
+        aria-label={nameOf(ariaLabel, label, t('hud-editor:value-input.name'))}
+        placeholder={placeholder ?? t('hud-editor:value-input.placeholder')}
         value={field.text}
         onChange={(event) => field.handleChange(event.target.value, event.target.selectionStart ?? 0)}
         onFocus={field.handleFocus}

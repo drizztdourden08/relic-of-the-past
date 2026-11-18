@@ -14,8 +14,10 @@ import {
 import { engineSwitchPatch } from '@rotp/hud';
 import type { HudFlexContainer, HudGridContainer } from '@rotp/hud';
 import type { LayoutSectionProps } from './LayoutSection.type';
+import { useT } from '@drizztdourden08/brock-react';
 
 const LayoutSection = (props: LayoutSectionProps) => {
+  const t = useT();
   const { node, onPatch, onDrop, scope, insideRepeat } = props;
   const overlayOn = useHudEditorViewStore((s) => s.gridOverlayEnabled);
   const toggleOverlay = useHudEditorViewStore((s) => s.toggleGridOverlay);
@@ -57,14 +59,14 @@ const LayoutSection = (props: LayoutSectionProps) => {
         />
       )}
 
-      <SubSection title="Alignment">
+      <SubSection title={t('hud-editor:layout-section.title.alignment')}>
         <AlignmentTiles
           direction={isGrid ? 'row' : flex.direction}
           rows={isGrid ? gridAlignRows(grid, patchGrid) : flexAlignRows(flex, patchFlex)}
         />
       </SubSection>
 
-      <SubSection title={isGrid ? 'Grid manipulation' : 'Flex manipulation'}>
+      <SubSection title={isGrid ? t('hud-editor:layout.manipulation.grid') : t('hud-editor:layout.manipulation.flex')}>
         {isGrid
           ? <GridEditor container={grid} onPatchContainer={patchGrid} />
           : <FlexEditor container={flex} onDrop={onDrop} />}

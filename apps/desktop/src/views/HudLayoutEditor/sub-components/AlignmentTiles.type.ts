@@ -1,12 +1,13 @@
 /* @layer renderer-components @kind types */
 import type { IconName } from '@drizztdourden08/tessera/primitives';
 import type { AlignOption, AlignValue, FlowDirection } from '@app/hud-layout-editing/align-options';
+import type { Text } from '@drizztdourden08/brock-core/i18n';
 
 interface AlignRowSpec {
   key: string;
   cap: string;
   capIcon?: IconName;
-  label: string;
+  label: Text;
   engine: 'grid' | 'flex';
   axis: 'main' | 'cross';
   options: readonly AlignOption[];

@@ -5,8 +5,10 @@ import {
 } from '@app/hud-layout-editing/easing-curves';
 import { EasingCurveTile } from './EasingCurveTile';
 import type { EasingPickerProps } from './EasingPicker.type';
+import { useT } from '@drizztdourden08/brock-react';
 
 const EasingPicker = (props: EasingPickerProps) => {
+  const t = useT();
   const { label, value, onChange, allowDefault = false, unsetHint } = props;
   const steps = stepsCountOf(value);
   const stepsOn = steps !== null;
@@ -18,10 +20,10 @@ const EasingPicker = (props: EasingPickerProps) => {
           <Pressable
             className={`hud-easing__tile hud-easing__tile--word${value === undefined ? ' is-on' : ''}`}
             aria-pressed={value === undefined}
-            aria-label="default easing"
+            aria-label={t('hud-editor:easing-picker.aria.default-easing')}
             onClick={() => onChange(undefined)}
           >
-            <Text className="hud-easing__word">auto</Text>
+            <Text className="hud-easing__word">{t('hud-editor:easing-picker.text.auto')}</Text>
           </Pressable>
         )}
         {NAMED_EASINGS.map((name) => (
@@ -37,7 +39,7 @@ const EasingPicker = (props: EasingPickerProps) => {
       {stepsOn && (
         <NumberInput
           size="sm"
-          aria-label={`${label} step count`}
+          aria-label={t('hud-editor:easing-picker.step-count', { label })}
           value={steps}
           min={MIN_STEPS}
           step={1}

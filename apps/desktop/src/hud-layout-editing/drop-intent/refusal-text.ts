@@ -2,21 +2,23 @@
 import { MAX_EXPANDED_NODES } from '@rotp/hud';
 import { siteOf } from '../node-edits';
 import type { HudLayout } from '@rotp/hud';
+import type { Translate } from '../translate.type';
+import type { Translate } from '../translate.type';
 import type { DropIntent } from './drop-intent.type';
 
-const refusalText = (doc: HudLayout, ids: readonly string[], intent: DropIntent): string | null => {
+const refusalText = (doc: HudLayout, ids: readonly string[], intent: DropIntent, t: Translate): string | null => {
   if (intent.kind !== 'refused') return null;
-  const name = (id: string | null): string => (id && siteOf(doc, id) ? id : 'that');
+  const name = (id: string | null): string => (id && siteOf(doc, id) ? id : t('hud-editing:refusal.that'));
   const dragged = name(ids[0] ?? null);
   const other = name(intent.nodeId);
   switch (intent.reason) {
-    case 'self': return `can't drop ${dragged} into itself`;
-    case 'descendant': return `${other} is already inside ${dragged}`;
-    case 'not-a-container': return `${other} can't hold anything`;
-    case 'source-locked': return `${dragged} is set in Content, not by dragging`;
-    case 'target-locked': return `a repeat's child is set in Content`;
-    case 'grid-column': return `${other} has no such column`;
-    case 'budget': return `would expand past the ${MAX_EXPANDED_NODES}-node cap`;
+    case 'self': return t('hud-editing:refusal.self', { dragged });
+    case 'descendant': return t('hud-editing:refusal.descendant', { other, dragged });
+    case 'not-a-container': return t('hud-editing:refusal.not-a-container', { other });
+    case 'source-locked': return t('hud-editing:refusal.source-locked', { dragged });
+    case 'target-locked': return t('hud-editing:refusal.target-locked');
+    case 'grid-column': return t('hud-editing:refusal.grid-column', { other });
+    case 'budget': return t('hud-editing:refusal.budget', { max: MAX_EXPANDED_NODES });
   }
 };
 

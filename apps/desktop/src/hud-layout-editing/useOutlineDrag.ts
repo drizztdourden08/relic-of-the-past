@@ -1,5 +1,7 @@
 /* @layer renderer-components @kind hook */
 import { useRef } from 'react';
+import { useT } from '@drizztdourden08/brock-react';
+import { useT } from '@drizztdourden08/brock-react';
 import { ghostFor } from './drop-ghost';
 import { outlineIntent } from './drop-intent';
 import { rowUnder } from './row-under';
@@ -13,6 +15,8 @@ const samePreview = (a: DropPreview, b: DropPreview): boolean =>
   a.rowId === b.rowId && a.zone === b.zone && a.intent.kind === b.intent.kind;
 
 const useOutlineDrag = (input: OutlineDragInput) => {
+  const t = useT();
+  const t = useT();
   const { doc, onDrop, rowsRef } = input;
   const settle = useRef<((parentId: string | null) => void) | null>(null);
   const drag = useDragGesture<DropPreview>({
@@ -31,7 +35,7 @@ const useOutlineDrag = (input: OutlineDragInput) => {
   settle.current = spring.landed;
   useDragAutoScroll({ active: dragging, anchor: rowsRef });
   const preview = drag.payload && drag.payload.intent.kind !== 'refused' ? drag.payload : null;
-  const ghost = drag.sourceId && drag.payload ? ghostFor(doc, [drag.sourceId], drag.payload.intent) : null;
+  const ghost = drag.sourceId && drag.payload ? ghostFor(doc, [drag.sourceId], drag.payload.intent, t) : null;
 
   return { drag, spring, dragging, preview, ghost };
 };

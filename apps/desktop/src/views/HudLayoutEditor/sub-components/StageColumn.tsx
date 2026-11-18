@@ -21,7 +21,7 @@ const StageColumn = (props: StageColumnProps) => {
         onSelect={edits.select}
       />
       <Text className="hud-editor__hint">
-        {sample.live ? 'Showing sample items. Hearts and counters come from the running save.' : 'Showing sample items and counters.'}
+        {sample.live ? t('hud-editor:stage.sample-live') : t('hud-editor:stage.sample')}
       </Text>
       <EditorStepStrip step={editorStep} onStepChange={setEditorStep} />
     </Box>
