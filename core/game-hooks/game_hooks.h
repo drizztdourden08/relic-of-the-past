@@ -806,6 +806,9 @@ void HudOverride_SetWantedDialogHidden(bool on);
 
 // ─── Language screens (language_screens.c, language_screens_assets.c): language_screens.h ───
 #include "language_screens.h"
+// ─── Latin cartridges' pause headers and floor labels (language_screens_latin.c) ───
+#include "language_screens_latin.h"
+#include "language_screens_copy.h"
 // ─── Japanese file select and name entry (language_ja_*.c): language_ja_screens.h ───
 #include "language_ja_screens.h"
 // ─── Kana name grid parts shared by both layouts (name_grid_input.c): name_grid.h ───

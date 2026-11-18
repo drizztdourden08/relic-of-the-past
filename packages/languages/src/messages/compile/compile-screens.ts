@@ -1,9 +1,9 @@
 /* @layer shared-game @kind logic */
 import type { ScreenPayload, ScreenTable } from '@rotp/asset-extraction';
 import {
-  CREDITS_DIGITS_ID, CREDITS_MAP_ID, CREDITS_OFFSETS_ID, CREDITS_SCROLL_Y_ID, CREDITS_TEXT_ID, DUNGEON_MAP_LABELS_ID,
-  ENDING_CAPTION_DATA_ID, ENDING_CAPTION_OFFSETS_ID, NAME_GRID_ID, PAUSE_TABLES, SELECT_FILE_TABLES,
-  TILEMAP_FONT_DATA_ID, TILEMAP_FONT_ID, menuTilemapId, pauseTableId, selectFileTableId, sheetPatchTableId, sheetTableId,
+  COPY_SCREEN_ID, CREDITS_DIGITS_ID, CREDITS_MAP_ID, CREDITS_OFFSETS_ID, CREDITS_SCROLL_Y_ID, CREDITS_TEXT_ID, DUNGEON_MAP_LABELS_ID,
+  ENDING_CAPTION_DATA_ID, ENDING_CAPTION_OFFSETS_ID, FLOOR_LABELS_ID, NAME_GRID_ID, PAUSE_HEADERS_ID, PAUSE_TABLES,
+  SELECT_FILE_TABLES, TILEMAP_FONT_DATA_ID, TILEMAP_FONT_ID, menuTilemapId, pauseTableId, selectFileTableId, sheetPatchTableId, sheetTableId,
 } from '@rotp/asset-extraction';
 
 const bytesOfWords = (words: Uint16Array): Uint8Array =>
@@ -32,6 +32,12 @@ const fontTables = (screens: ScreenPayload): ScreenTable[] =>
 const scrollTables = (screens: ScreenPayload): ScreenTable[] =>
   screens.creditsScrollY ? [{ id: CREDITS_SCROLL_Y_ID, bytes: bytesOfWords(screens.creditsScrollY) }] : [];
 
+const latinTables = (screens: ScreenPayload): ScreenTable[] => [
+  ...(screens.pauseHeaders ? [{ id: PAUSE_HEADERS_ID, bytes: bytesOfWords(screens.pauseHeaders) }] : []),
+  ...(screens.floorLabels ? [{ id: FLOOR_LABELS_ID, bytes: screens.floorLabels }] : []),
+  ...(screens.copyScreen ? [{ id: COPY_SCREEN_ID, bytes: screens.copyScreen }] : []),
+];
+
 const compileScreens = (screens?: ScreenPayload): ScreenTable[] => {
   if (!screens) return [];
   return [
@@ -41,6 +47,7 @@ const compileScreens = (screens?: ScreenPayload): ScreenTable[] => {
     ...fixedTables(screens),
     ...fontTables(screens),
     ...scrollTables(screens),
+    ...latinTables(screens),
     ...screens.sheetPatches.map(patchTable),
     ...screens.sheets.map((sheet) => ({ id: sheetTableId(sheet.kind, sheet.index), bytes: sheet.data })),
   ];

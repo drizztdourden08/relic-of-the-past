@@ -1,6 +1,7 @@
 /* @layer shared-asset-extraction @kind barrel */
 import type { RomLanguage } from '../../rom/rom-types';
 import type { ScreenAddressTable } from '../screen-payload.type';
+import { DE_SCREEN_ADDRESSES } from './de';
 import { EN_SCREEN_ADDRESSES } from './en';
 import { FR_SCREEN_ADDRESSES } from './fr';
 import { FR_C_SCREEN_ADDRESSES } from './fr-c';
@@ -15,10 +16,11 @@ const kScreenAddresses: Readonly<Partial<Record<RomLanguage, ScreenAddressTable>
   en: EN_SCREEN_ADDRESSES,
   fr: FR_SCREEN_ADDRESSES,
   'fr-c': FR_C_SCREEN_ADDRESSES,
+  de: DE_SCREEN_ADDRESSES,
 };
 
 export type { JaScreenAddressTable };
 export {
-  EN_SCREEN_ADDRESSES, FR_C_SCREEN_ADDRESSES, FR_SCREEN_ADDRESSES, JA_REV1_SCREEN_ADDRESSES, JA_V1_0_SCREEN_ADDRESSES,
-  jaScreenAddressesOf, kScreenAddresses, US_SCREEN_ADDRESSES,
+  DE_SCREEN_ADDRESSES, EN_SCREEN_ADDRESSES, FR_C_SCREEN_ADDRESSES, FR_SCREEN_ADDRESSES, JA_REV1_SCREEN_ADDRESSES,
+  JA_V1_0_SCREEN_ADDRESSES, jaScreenAddressesOf, kScreenAddresses, US_SCREEN_ADDRESSES,
 };

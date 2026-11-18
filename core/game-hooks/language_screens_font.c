@@ -5,13 +5,15 @@
 // of the US font. The file select (main module 1) takes its first 0x1a00 bytes, tiles 0x000-0x19f,
 // whenever the set is ready (SelectLayout_JapaneseFont), in either layout: its names, labels and kana
 // grid draw from them, and the sprite sheet uploaded right after moves above them
-// (GameHook_FileSelectSheetVram). Otherwise the file select keeps the US font.
+// (GameHook_FileSelectSheetVram). A Latin set's font is the 256-tile font of its own cartridge, which
+// places the file select's letters and digits elsewhere than the US font: the file select takes all of
+// it, since its stripes name those places. Otherwise the file select keeps the US font.
 // Gate: kFeatures2_LanguageScreens. Off, with no font or outside a Japanese set, the original upload runs.
 #include "game_hooks_internal.h"
 #include "src/features.h"
 #include <stdlib.h>
 
-enum { kFontMaxBytes = 0x2000, kFileSelectFontBytes = 0x1a00, kJapaneseFlag = 4, kModuleFileSelect = 1, kModuleCredits = 0x1a };
+enum { kFontMaxBytes = 0x2000, kLatinFontBytes = 0x1000, kFileSelectFontBytes = 0x1a00, kJapaneseFlag = 4, kModuleFileSelect = 1, kModuleCredits = 0x1a };
 
 static uint8 *g_font;
 static int g_font_len;
@@ -39,7 +41,12 @@ bool LanguageScreensFont_Ready(void) {
 }
 
 bool GameHook_TransferTilemapFont(uint16 *dst) {
-  if (g_font_len != kFontMaxBytes || !LanguageScreens_On()) return false;
+  if (!LanguageScreens_On()) return false;
+  if (g_font_len == kLatinFontBytes && main_module_index == kModuleFileSelect) {
+    memcpy(dst, g_font, kLatinFontBytes);
+    return true;
+  }
+  if (g_font_len != kFontMaxBytes) return false;
   if (main_module_index == kModuleFileSelect && SelectLayout_JapaneseFont()) {
     memcpy(dst, g_font, kFileSelectFontBytes);
     return true;

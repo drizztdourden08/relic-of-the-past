@@ -464,7 +464,7 @@ void CopyFile_SelectionAndBlinker() {  // 8cd13f
     }
   }
   GameHook_CopySelectNamesJa();
-  FileSelect_DrawFairy(kCopyFile_SelectionAndBlinker_FaerieX[selectfile_R16], kCopyFile_SelectionAndBlinker_FaerieY[selectfile_R16]);
+  FileSelect_DrawFairy(GameHook_CopyFairyX(kCopyStep_Source, selectfile_R16, kCopyFile_SelectionAndBlinker_FaerieX[selectfile_R16]), kCopyFile_SelectionAndBlinker_FaerieY[selectfile_R16]);
 
   uint8 a = (filtered_joypad_L & 0xc0 | filtered_joypad_H) & 0xfc;
   if (a & 0x2c) {
@@ -497,6 +497,7 @@ void CopyFile_SelectionAndBlinker() {  // 8cd13f
       uint16 *dst = vram_upload_data + selectfile_R16 * 6;
       dst[26] = 0x2762;
       dst[29] = 0x4762;
+      GameHook_CopyBlinkColumn(kCopyStep_Source, dst);
     }
     GameHook_CopySelectBlinkJa();
     submodule_index++;
@@ -550,7 +551,7 @@ void CopyFile_TargetSelectionAndBlink() {  // 8cd27b
       continue;
 
     uint16 *dst = vram_upload_data + kCopyFile_TargetSelectionAndBlink_Dst[j++] / 2;
-    uint16 t = kCopyFile_TargetSelectionAndBlink_Tab1[k];
+    uint16 t = GameHook_CopyTargetDigit(k, kCopyFile_TargetSelectionAndBlink_Tab1[k]);
     dst[0] = t;
     dst[10] = t + 0x10;
     dst += 2;
@@ -568,7 +569,7 @@ void CopyFile_TargetSelectionAndBlink() {  // 8cd27b
   vram_upload_offset = 132;
   GameHook_CopyTargetNamesJa();
 
-  FileSelect_DrawFairy(kCopyFile_TargetSelectionAndBlink_FaerieX[selectfile_R16], kCopyFile_TargetSelectionAndBlink_FaerieY[selectfile_R16]);
+  FileSelect_DrawFairy(GameHook_CopyFairyX(kCopyStep_Target, selectfile_R16, kCopyFile_TargetSelectionAndBlink_FaerieX[selectfile_R16]), kCopyFile_TargetSelectionAndBlink_FaerieY[selectfile_R16]);
 
   uint8 a = (filtered_joypad_L & 0xc0 | filtered_joypad_H) & 0xfc;
   if (a & 0x2c) {
@@ -595,6 +596,7 @@ void CopyFile_TargetSelectionAndBlink() {  // 8cd27b
       uint16 *dst = vram_upload_data;
       dst[26] = 0x1462;
       dst[29] = 0x3462;
+      GameHook_CopyBlinkColumn(kCopyStep_Target, dst);
     }
     GameHook_CopyTargetBlinkJa();
     submodule_index++;

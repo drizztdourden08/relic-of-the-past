@@ -1012,6 +1012,7 @@ void Hud_DrawYButtonItems() {  // 8de3d9
   }
   dst[HUDXY(x + 2, 5)] = 0x246E;
   dst[HUDXY(x + 3, 5)] = 0x246F;
+  GameHook_PauseBoxHeader(dst, kPauseHeader_Items, x, 5);
 
   for (int i = 0; i < kHudItemCount; i++) {
     int j = hud_inventory_order[i];
@@ -1056,6 +1057,7 @@ void Hud_DrawAbilityBox() {  // 8de6b6
   // DO text
   dst[HUDXY(x + 2, 21)] = 0x2482;
   dst[HUDXY(x + 3, 21)] = 0x2483;
+  GameHook_PauseBoxHeader(dst, kPauseHeader_Ability, x, 21);
 
   Hud_DrawItem(dst + HUDXY(8, 27), &kHudItemGloves[link_item_gloves]);
   Hud_DrawItem(dst + HUDXY(4, 27), &kHudItemBoots[link_item_boots]);
@@ -1098,6 +1100,7 @@ void Hud_DrawProgressIcons_Pendants() {  // 8de9d3
   };
   uint16 *dst = uvram_screen.row[0].col + (kNewStyleInventory ? HUDXY(22, 11) : HUDXY(21, 11));
   Hud_DrawNxN(dst, kProgressIconPendantsBg, 10, 9);
+  GameHook_PauseProgressHeader(dst, false);
   Hud_DrawItem(dst + HUDXY(4, 3), &kHudPendants0[(link_which_pendants >> 0) & 1]);
   Hud_DrawItem(dst + HUDXY(2, 6), &kHudPendants1[(link_which_pendants >> 1) & 1]);
   Hud_DrawItem(dst + HUDXY(6, 6), &kHudPendants2[(link_which_pendants >> 2) & 1]);
@@ -1118,6 +1121,7 @@ void Hud_DrawProgressIcons_Crystals() {  // 8dea62
 
   uint16 *dst = uvram_screen.row[0].col + (kNewStyleInventory ? HUDXY(22, 11) : HUDXY(21, 11));
   Hud_DrawNxN(dst, kProgressIconCrystalsBg, 10, 9);
+  GameHook_PauseProgressHeader(dst, true);
 
   uint8 f = link_has_crystals;
   if (f & 1) {
