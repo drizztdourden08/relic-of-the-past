@@ -100,6 +100,12 @@ bool LanguageScreensFont_Ready(void);
 // core/wasm-build/emscripten_io.c: FindInAssetArray answers |p|/|size| for sheet |idx| of asset 64
 // (kSprGfx, |asset| 0) or 65 (kBgGfx, |asset| 1) in place of the baked one. NULL clears the override.
 void AssetSheet_SetOverride(int asset, int idx, const uint8 *p, uint32 size);
+// The baked sheet |idx| of the same assets, whatever override is set.
+const uint8 *AssetSheet_Baked(int asset, int idx);
+// The language set's own sheet |index| of |kind| as pushed, whether or not it is read now.
+const uint8 *LanguageScreensAssets_SetSheet(int kind, int index);
+// Puts the HUD sheets now chosen into VRAM where it holds another known HUD sheet (language_screens_hud_tiles.c).
+void LanguageScreens_RefreshHudTiles(void);
 enum { kLangSheetMax = 256 };
 
 // Whether an override of sheet kind |kind| (0 sprite, 1 background) is read this frame. The background

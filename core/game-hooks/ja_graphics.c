@@ -5,7 +5,7 @@
 #include "src/ending.h"
 #include <stdlib.h>
 
-enum { kSheetIdBase = 0x100, kPatchIdBase = 0x300, kIntroTilemapId = 0x45, kCopyrightOamId = 0x46, kTitleParamsId = 0x47, kTitleParamsBytes = 3, kOamHeaderBytes = 3, kOamEntryBytes = 8, kOamEntriesMax = 16, kBgSheetKind = 1, kSprSheetKind = 0, kIntroModule = 0 };
+enum { kSheetIdBase = 0x100, kPatchIdBase = 0x300, kIntroTilemapId = 0x45, kCopyrightOamId = 0x46, kTitleParamsId = 0x47, kTitleParamsBytes = 3, kOamHeaderBytes = 3, kOamEntryBytes = 8, kOamEntriesMax = 16, kBgSheetKind = 1, kSprSheetKind = 0, kIntroModule = 0, kHudTextIdBase = 0x50, kHudTextCount = 9 };
 
 typedef struct {
   uint8 *data;
@@ -17,6 +17,11 @@ static Blob g_patches[kLangSheetMax];
 static Blob g_intro_tilemap;
 static Blob g_copyright_oam;
 static Blob g_title_params;
+static Blob g_hud_text[kHudTextCount];
+
+// The language tables the pack's pause words stand in for, in the order the pack carries them.
+static const uint8 kHudTextTable[kHudTextCount] = {kLangTbl_HudAbility, kLangTbl_HudGloves, kLangTbl_HudBottles,
+    kLangTbl_HudMushroom, kLangTbl_HudFlute, kLangTbl_HudMirror, kLangTbl_HudBow, kLangTbl_HudItem, kLangTbl_HudEquipDungeon};
 
 static const uint8 kIntroSheets[] = {22, 23, 29, 30, 57, 64, 65};
 static const uint8 kHudSheets[] = {105, 106};
@@ -85,10 +90,33 @@ static const uint8 *Taken(const Blob *blob, uint32 *size) {
   return blob->data;
 }
 
+// The HUD sheets hold the pause words' glyphs in the Japanese order, so they are drawn only with the
+// pack's own words for them; a pack without the words keeps the US sheets.
+static bool HudTextComplete(void) {
+  for (int i = 0; i < kHudTextCount; i++)
+    if (g_hud_text[i].data == NULL) return false;
+  return true;
+}
+
 const uint8 *JaGraphics_Sheet(int kind, int index, uint32 *size) {
   uint32 option = SheetOption(kind, index);
   if (option == 0 || !JaGraphics_On(option) || index < 0 || index >= kLangSheetMax) return NULL;
+  if (option == kJaGfx_Hud && !HudTextComplete()) return NULL;
   return Taken(&g_sheets[kind][index], size);
+}
+
+const uint8 *JaGraphics_PackSheet(int kind, int index, uint32 *size) {
+  return index >= 0 && index < kLangSheetMax ? Taken(&g_sheets[kind][index], size) : NULL;
+}
+
+const uint8 *JaGraphics_HudText(int id, int *len) {
+  if (!JaGraphics_On(kJaGfx_Hud) || !HudTextComplete()) return NULL;
+  for (int i = 0; i < kHudTextCount; i++) {
+    if (kHudTextTable[i] != id) continue;
+    *len = (int)g_hud_text[i].size;
+    return g_hud_text[i].data;
+  }
+  return NULL;
 }
 
 const uint8 *JaGraphics_Patch(int index, uint32 *size) {
@@ -154,6 +182,10 @@ bool JaGraphics_SetPatchAllowed(int index) {
   return index != kCopyrightSheet || SelectLayout_OfSet() != kSelectLayout_Ja || JaGraphics_On(kJaGfx_Copyright);
 }
 
+bool JaGraphics_SetHudAllowed(void) {
+  return SelectLayout_OfSet() != kSelectLayout_Ja || JaGraphics_On(kJaGfx_Hud);
+}
+
 bool JaGraphics_SetIntroAllowed(void) {
   return SelectLayout_OfSet() != kSelectLayout_Ja || JaGraphics_On(kJaGfx_Intro);
 }
@@ -176,6 +208,7 @@ static Blob *SlotOf(int id) {
   if (id == kIntroTilemapId) return &g_intro_tilemap;
   if (id == kCopyrightOamId) return &g_copyright_oam;
   if (id == kTitleParamsId) return &g_title_params;
+  if (id >= kHudTextIdBase && id < kHudTextIdBase + kHudTextCount) return &g_hud_text[id - kHudTextIdBase];
   if (id >= kPatchIdBase && id < kPatchIdBase + kLangSheetMax) return &g_patches[id - kPatchIdBase];
   if (id >= kSheetIdBase && id < kSheetIdBase + 2 * kLangSheetMax)
     return &g_sheets[(id - kSheetIdBase) / kLangSheetMax][(id - kSheetIdBase) % kLangSheetMax];
@@ -183,7 +216,7 @@ static Blob *SlotOf(int id) {
 }
 
 // |id| is the language screens' own: 0x100 + index a sprite sheet, 0x200 + index a background sheet,
-// 0x300 + index a sprite sheet tile patch, 0x45 the intro tilemap. Returns 1 when taken.
+// 0x300 + index a sprite sheet tile patch, 0x45 the intro tilemap, 0x50 + n the n-th pause word table. Returns 1 when taken.
 EMSCRIPTEN_KEEPALIVE
 int WasmSetJapaneseGraphic(int id, const void *data, int len) {
   Blob *slot = SlotOf(id);
@@ -200,5 +233,6 @@ void WasmClearJapaneseGraphics(void) {
   Store(&g_intro_tilemap, NULL, 0);
   Store(&g_copyright_oam, NULL, 0);
   Store(&g_title_params, NULL, 0);
+  for (int i = 0; i < kHudTextCount; i++) Store(&g_hud_text[i], NULL, 0);
   LanguageScreensAssets_Apply(LanguageScreens_On());
 }

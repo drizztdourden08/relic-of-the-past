@@ -43,10 +43,12 @@ bool LanguageScreens_On(void) {
   return (enhanced_features2 & kFeatures2_LanguageScreens) != 0;
 }
 
-// The Japanese select-file set (its stripes and grid, told apart by a stripe of another length than
+// A Japanese set's pause menu tables name tiles of its own HUD sheets, read only with those sheets
+// (JaGraphics_SetHudAllowed). The Japanese select-file set (its stripes and grid, told apart by a stripe of another length than
 // the US one) is read only as a whole and only in Japanese mode: without it the US screens would write
 // US offsets into Japanese stripes, so they keep the vendored tables.
 static bool HeldBack(int id) {
+  if (id >= kLangTbl_HudAbility && id <= kLangTbl_HudEquipDungeon) return !JaGraphics_SetHudAllowed();
   if (id < kLangTbl_SelectFileFunc3 || id > kLangTbl_NameGrid) return false;
   const LanguageScreens *s = &g_language_screens;
   int func3 = kLangTbl_SelectFileFunc3;
@@ -59,11 +61,22 @@ static bool HostPicked(int id) {
          !HeldBack(id);
 }
 
+// The Japanese graphics pack's pause words go with its HUD sheets, whichever set is chosen, so they come
+// first; a table of the wrong size is not one the game can read and is passed over.
+static const void *PackText(int id) {
+  int len = 0;
+  const void *text = JaGraphics_HudText(id, &len);
+  return text != NULL && len == kTableBytes[id] ? text : NULL;
+}
+
 const void *LanguageScreens_Pick(int id, const void *orig) {
+  const void *pack = PackText(id);
+  if (pack != NULL) return pack;
   return HostPicked(id) ? g_language_screens.table[id] : orig;
 }
 
 int LanguageScreens_Len(int id, int orig_len) {
+  if (PackText(id) != NULL) return kTableBytes[id];
   return HostPicked(id) ? g_language_screens.length[id] : orig_len;
 }
 

@@ -41,10 +41,12 @@ enum {
 
 static uint8 g_out[kOutBytes];
 
-// The US text palette (6) moved to the one the Japanese screens draw their text with (7): a Japanese
-// glyph draws strokes in a colour palette 6 leaves dark. Other palettes (the hearts) stay.
-static uint16 JaPalette(uint16 w) {
-  return (w & kPaletteBits) == kUsTextPalette ? (uint16)((w & ~kPaletteBits) | kJaTextPalette) : w;
+// A Japanese glyph in the palette the US screens draw their text with (6): the Japanese screens draw
+// theirs in 7, which the US layout's palette set leaves green. Glyphs use colours 1 and 2 in both fonts,
+// so palette 6 gives the Japanese words the US outline and stroke. Other palettes (the hearts) stay.
+uint16 SelectUsJa_TextWord(uint16 w) {
+  bool glyph = (w & kTileMask) < kFontEnd;
+  return glyph && (w & kPaletteBits) == kJaTextPalette ? (uint16)((w & ~kPaletteBits) | kUsTextPalette) : w;
 }
 
 static uint16 FontTile(uint16 w) {
@@ -68,8 +70,7 @@ static uint16 FontTile(uint16 w) {
 }
 
 static uint16 TranslateTile(uint16 w) {
-  uint16 out = FontTile(w);
-  return (out & kTileMask) < kFontEnd ? JaPalette(out) : out;
+  return SelectUsJa_TextWord(FontTile(w));
 }
 
 static uint16 WordAt(const uint8 *p) {
@@ -114,11 +115,11 @@ static int Relabel(int screen, uint16 addr, const uint8 *p, int n, uint8 *out, i
   int bytes = (hi - lo) * 2;
   if (4 + bytes > room)
     return -1;
-  uint16 blank = JaPalette((uint16)((WordAt(p) & kHighBits) | kJaBlankTile));
+  uint16 blank = SelectUsJa_TextWord((uint16)((WordAt(p) & kHighBits) | kJaBlankTile));
   PutHeader(out, (uint16)(addr - col + lo), 0, bytes);
   for (int c = lo; c < hi; c++) {
     bool glyph = c >= start && c < start + count;
-    PutWord(out + 4 + 2 * (c - lo), glyph ? tiles[c - start] : blank);
+    PutWord(out + 4 + 2 * (c - lo), glyph ? SelectUsJa_TextWord(tiles[c - start]) : blank);
   }
   return 4 + bytes;
 }

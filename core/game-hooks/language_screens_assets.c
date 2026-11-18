@@ -130,6 +130,11 @@ void LanguageScreensAssets_Apply(bool on) {
   ApplyAssetSlots(on, held);
   ApplySheets(on, held);
   ApplyPatches(on);
+  LanguageScreens_RefreshHudTiles();
+}
+
+const uint8 *LanguageScreensAssets_SetSheet(int kind, int index) {
+  return kind >= 0 && kind < 2 && index >= 0 && index < kLangSheetMax ? g_sheets[kind][index].data : NULL;
 }
 
 // The language's background sheets are drawn for its intro tilemap (asset 99). The file select loads
