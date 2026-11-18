@@ -1,4 +1,5 @@
 /* @layer renderer-components @kind component */
+import { useT } from '@drizztdourden08/brock-react';
 import { EmptyState, Text } from '@drizztdourden08/tessera/primitives';
 import { ListDetailLayout } from '@drizztdourden08/tessera/composites';
 import { CreateListPane } from '@app/compounds/CreateListPane';
@@ -15,6 +16,8 @@ import { NO_SET_MESSAGE } from '../../../language-editor/sub-components/studio-f
 import { LanguageSetList } from './LanguageSetList';
 
 const LanguageManager = (props: LanguageManagerProps) => {
+  const t = useT();
+  const t = useT();
   const { onDeleteConfirm } = props;
   const { languages, loading, selected, setSelected, refresh, refreshThenSelect } = useLanguageSets();
   const flow = useCreateFlow({ onSelect: setSelected });
@@ -30,7 +33,7 @@ const LanguageManager = (props: LanguageManagerProps) => {
   const notice = uninstallError === null ? null : <Text variant="caption" tone="danger" role="alert">{uninstallError}</Text>;
 
   const list = (
-    <CreateListPane label="New language" creating={flow.creating} onCreate={flow.start} notice={notice}>
+    <CreateListPane label={t('data-manager:language-manager.new-language')} creating={flow.creating} onCreate={flow.start} notice={notice}>
       <LanguageSetList sets={languages} loading={loading} selected={flow.creating ? null : selected} labelOf={setLabel}
         isInstalled={isInstalled} onSelect={flow.select} onDelete={handleDelete} />
     </CreateListPane>
@@ -49,7 +52,7 @@ const LanguageManager = (props: LanguageManagerProps) => {
       emptyDetail={<EmptyState message={NO_SET_MESSAGE} />}
       detailScroll={false}
       storageKey="language-studio.list"
-      listLabel="Language studio"
+      listLabel={t('data-manager:language-manager.language-studio')}
       detailLabel="Language editor"
     />
   );

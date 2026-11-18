@@ -1,4 +1,5 @@
 /* @layer renderer-components @kind component */
+import { useT } from '@drizztdourden08/brock-react';
 import { EmptyState } from '@drizztdourden08/tessera/primitives';
 import { ListDetailLayout } from '@drizztdourden08/tessera/composites';
 import { useProfileManager } from './profile-manager/useProfileManager';
@@ -8,6 +9,7 @@ import { ProfileDetailPanel } from './profile-manager/profile-detail/ProfileDeta
 import type { ProfileManagerProps } from './ProfileManager.type';
 
 const ProfileManager = (props: ProfileManagerProps) => {
+  const t = useT();
   const { profiles, romStatuses, onSelectProfile, onCreateProfile, onDeleteProfile, onRefresh, loadingProfile } = props;
 
   const manager = useProfileManager({ profiles, romStatuses, onRefresh });
@@ -49,12 +51,12 @@ const ProfileManager = (props: ProfileManagerProps) => {
     <ListDetailLayout
       listShowTitle={false}
       listContainers={[{ title: 'Profiles', content: list }]}
-      listLabel="Profile manager"
+      listLabel={t('data-manager:profile-manager.profile-manager')}
       collapsed={listCollapsed}
       onCollapsedChange={manager.setListCollapsed}
       detailScroll={!creating}
       detail={detail}
-      emptyDetail={<EmptyState message="Select a profile. Double-click to open it." />}
+      emptyDetail={<EmptyState message={t('data-manager:profile-manager.select-a-profile-double-click')} />}
     />
   );
 };

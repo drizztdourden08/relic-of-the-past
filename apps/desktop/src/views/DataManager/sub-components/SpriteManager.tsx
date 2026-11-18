@@ -1,4 +1,5 @@
 /* @layer renderer-components @kind component */
+import { useT } from '@drizztdourden08/brock-react';
 import { EmptyState, Text } from '@drizztdourden08/tessera/primitives';
 import { ListDetailLayout } from '@drizztdourden08/tessera/composites';
 import { CreateListPane } from '@app/compounds/CreateListPane';
@@ -13,6 +14,7 @@ import type { SpriteManagerProps } from './SpriteManager.type';
 import './SpriteManager.css';
 
 const SpriteManager = (props: SpriteManagerProps) => {
+  const t = useT();
   const { romStatuses } = props;
   const library = useSpriteLibrary(romStatuses);
   const { extractedMap, selectedRom, setSelectedRom, romsWithAssets, importedRoms, refreshExtracted } = library;
@@ -23,7 +25,7 @@ const SpriteManager = (props: SpriteManagerProps) => {
   const notice = error === null ? null : <Text variant="caption" tone="danger" role="alert">{error}</Text>;
 
   const list = (
-    <CreateListPane label="New sprite set" creating={flow.creating} onCreate={flow.start} available={romsWithAssets.length > 0} notice={notice}>
+    <CreateListPane label={t('data-manager:sprite-manager.new-sprite-set')} creating={flow.creating} onCreate={flow.start} available={romsWithAssets.length > 0} notice={notice}>
       <ImportedSpriteList
         importedRoms={importedRoms}
         extractedMap={extractedMap}
@@ -50,12 +52,12 @@ const SpriteManager = (props: SpriteManagerProps) => {
   return (
     <ListDetailLayout
       listShowTitle={false}
-      listContainers={[{ title: 'Sprites', content: list }]}
+      listContainers={[{ title: t('data-manager:sprite-manager.title'), content: list }]}
       collapsed={flow.listCollapsed}
       onCollapsedChange={flow.setListCollapsed}
-      listLabel="Sprite manager"
+      listLabel={t('data-manager:sprite-manager.sprite-manager')}
       detail={detail}
-      emptyDetail={<EmptyState message="Select an imported ROM to view its sprites" />}
+      emptyDetail={<EmptyState message={t('data-manager:sprite-manager.select-an-imported-rom-to')} />}
     />
   );
 };

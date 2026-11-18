@@ -1,16 +1,17 @@
 /* @layer renderer-components @kind logic */
+import type { I18n } from '@drizztdourden08/brock-core/i18n';
 import type { RadioOption } from '@drizztdourden08/tessera/primitives';
-import { NO_OWN_SET_REASON, SOURCE_DESCRIPTIONS, SOURCE_LABELS, SOURCE_ORDER } from '../LanguageCreateWizard.constants';
+import { sourceDescriptions, sourceLabels, SOURCE_ORDER } from '../LanguageCreateWizard.constants';
 import type { LanguageSource } from '../LanguageCreateWizard.type';
 
 const needsOwnSet = (source: LanguageSource): boolean => source === 'copy' || source === 'blank';
 
-const sourceOptions = (hasOwnSets: boolean): RadioOption<LanguageSource>[] =>
+const sourceOptions = (hasOwnSets: boolean, t: I18n['t']): RadioOption<LanguageSource>[] =>
   SOURCE_ORDER.map((source) => ({
     value: source,
-    label: SOURCE_LABELS[source],
-    description: SOURCE_DESCRIPTIONS[source],
-    disabled: !hasOwnSets && needsOwnSet(source) ? NO_OWN_SET_REASON : false,
+    label: sourceLabels(t)[source],
+    description: sourceDescriptions(t)[source],
+    disabled: !hasOwnSets && needsOwnSet(source) ? t('wizards:language.source.no-own-set') : false,
   }));
 
 export { sourceOptions };

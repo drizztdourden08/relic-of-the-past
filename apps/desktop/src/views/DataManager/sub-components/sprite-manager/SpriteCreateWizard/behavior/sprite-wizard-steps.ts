@@ -1,20 +1,21 @@
 /* @layer renderer-components @kind logic */
+import type { I18n } from '@drizztdourden08/brock-core/i18n';
 import type { WizardStepDef } from '@drizztdourden08/tessera/composites';
-import { BUSY_HINT, EXTRACT_BUTTONS, NO_ROM_PROBLEM, STEP_IDS, STEP_LABELS } from '../SpriteCreateWizard.constants';
+import { STEP_IDS } from '../SpriteCreateWizard.constants';
 import type { SpriteWizardValues } from '../SpriteCreateWizard.type';
 
-const spriteWizardSteps: readonly WizardStepDef<SpriteWizardValues>[] = [
+const spriteWizardSteps = (t: I18n['t']): readonly WizardStepDef<SpriteWizardValues>[] => [
   {
     id: STEP_IDS.rom,
-    label: STEP_LABELS.rom,
-    validate: (values) => (values.romFile === '' ? NO_ROM_PROBLEM : null),
+    label: t('wizards:sprite.steps.rom'),
+    validate: (values) => (values.romFile === '' ? t('wizards:sprite.problem.no-rom') : null),
     summary: (values) => values.romFile,
   },
   {
     id: STEP_IDS.extract,
-    label: STEP_LABELS.extract,
-    busyHint: BUSY_HINT,
-    buttons: EXTRACT_BUTTONS,
+    label: t('wizards:sprite.steps.extract'),
+    busyHint: t('wizards:sprite.busy'),
+    buttons: { next: { label: t('wizards:sprite.buttons.extract') } },
   },
 ];
 

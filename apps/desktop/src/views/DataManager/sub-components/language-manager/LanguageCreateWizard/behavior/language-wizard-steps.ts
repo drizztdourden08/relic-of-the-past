@@ -1,7 +1,8 @@
 /* @layer renderer-components @kind logic */
+import type { I18n } from '@drizztdourden08/brock-core/i18n';
 import type { WizardStepDef } from '@drizztdourden08/tessera/composites';
 import {
-  BUSY_HINTS, CREATE_BUTTONS, EXTRACT_BUTTONS, IMPORTED_BUTTONS, IMPORT_BUTTONS, PROBLEMS, SOURCE_LABELS, STEP_IDS, STEP_LABELS,
+  busyHints, createButtons, extractButtons, importedButtons, importButtons, problems, sourceLabels, STEP_IDS, stepLabels,
 } from '../LanguageCreateWizard.constants';
 import type { LanguageSource, LanguageWizardValues, StepContext } from '../LanguageCreateWizard.type';
 import { stepBuilder } from '../../../wizard-step';
@@ -10,19 +11,22 @@ import { detailsSummary } from './details-summary';
 
 const sourceIs = (...sources: LanguageSource[]) => (values: LanguageWizardValues): boolean => sources.includes(values.source);
 
-const step = stepBuilder<LanguageWizardValues, keyof typeof STEP_IDS>(STEP_IDS, STEP_LABELS);
-
-const languageWizardSteps = (context: StepContext): readonly WizardStepDef<LanguageWizardValues>[] => [
-  step('source', { summary: (values) => SOURCE_LABELS[values.source] }),
-  step('details', { validate: (values) => detailsProblem(values, context), summary: detailsSummary }),
-  step('extract', { when: sourceIs('rom'), busyHint: BUSY_HINTS.extract, buttons: EXTRACT_BUTTONS }),
+const languageWizardSteps = (context: StepContext, t: I18n['t']): readonly WizardStepDef<LanguageWizardValues>[] => {
+  const step = stepBuilder<LanguageWizardValues, keyof typeof STEP_IDS>(STEP_IDS, stepLabels(t));
+  const hints = busyHints(t);
+  const issues = problems(t);
+  return [
+  step('source', { summary: (values) => sourceLabels(t)[values.source] }),
+  step('details', { validate: (values) => detailsProblem(values, context, t), summary: detailsSummary }),
+  step('extract', { when: sourceIs('rom'), busyHint: hints.extract, buttons: extractButtons(t) }),
   step('import', {
     when: sourceIs('patched'),
-    validate: () => (context.imported === null ? PROBLEMS.notImported : null),
-    busyHint: BUSY_HINTS.import,
-    buttons: context.imported === null ? IMPORT_BUTTONS : IMPORTED_BUTTONS,
+    validate: () => (context.imported === null ? issues.notImported : null),
+    busyHint: hints.import,
+    buttons: context.imported === null ? importButtons(t) : importedButtons(t),
   }),
-  step('create', { when: sourceIs('copy', 'blank'), busyHint: BUSY_HINTS.create, buttons: CREATE_BUTTONS }),
-];
+  step('create', { when: sourceIs('copy', 'blank'), busyHint: hints.create, buttons: createButtons(t) }),
+  ];
+};
 
 export { languageWizardSteps };

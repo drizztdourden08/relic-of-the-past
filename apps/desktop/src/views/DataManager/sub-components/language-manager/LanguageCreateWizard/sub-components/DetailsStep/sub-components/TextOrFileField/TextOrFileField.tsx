@@ -1,10 +1,12 @@
 /* @layer renderer-components @kind component */
+import { useT } from '@drizztdourden08/brock-react';
 import { Field, SegmentedControl, Stack, Textarea } from '@drizztdourden08/tessera/primitives';
 import { UploadField } from '@app/compounds/UploadField';
-import { EMPTY_TEXT_OR_FILE, LICENSE_ACCEPT, TEXT_OR_FILE_OPTIONS } from '../../../../LanguageCreateWizard.constants';
+import { EMPTY_TEXT_OR_FILE, LICENSE_ACCEPT, textOrFileOptions } from '../../../../LanguageCreateWizard.constants';
 import type { TextOrFileFieldProps } from './TextOrFileField.type';
 
 const TextOrFileField = ({ label, hint, dropLabel, value, onChange }: TextOrFileFieldProps) => {
+  const t = useT();
   const readFile = async (files: File[]) => {
     const file = files[0];
     if (file) onChange({ mode: 'file', text: await file.text(), fileName: file.name });
@@ -15,7 +17,7 @@ const TextOrFileField = ({ label, hint, dropLabel, value, onChange }: TextOrFile
         <SegmentedControl
           size="sm"
           value={value.mode}
-          options={[...TEXT_OR_FILE_OPTIONS]}
+          options={[...textOrFileOptions(t)]}
           onChange={(mode) => onChange({ ...EMPTY_TEXT_OR_FILE, mode })}
         />
         {value.mode === 'text' ? (

@@ -1,22 +1,24 @@
 /* @layer renderer-components @kind component */
+import { useT } from '@drizztdourden08/brock-react';
 import { Field } from '@drizztdourden08/tessera/primitives';
 import { officialRomStatuses } from '@rotp/roms';
 import { UploadField } from '@app/compounds/UploadField';
 import { checkPickedRom, romCheckStatus } from '../../../../rom-check';
-import { IMPORT_LANE_CONFIG } from '../../../import-lane-config.constants';
+import { importLaneConfig } from '../../../import-lane-config.constants';
 import type { FileStepProps } from './FileStep.type';
 
 const FileStep = ({ values, update }: FileStepProps) => {
-  const lane = IMPORT_LANE_CONFIG[values.kind];
+  const t = useT();
+  const lane = importLaneConfig(t)[values.kind];
   const roms = officialRomStatuses().filter((rom) => rom.kind === values.kind);
 
   return (
-    <Field label="ROM file">
+    <Field label={t('wizards:rom.file.rom-file')}>
       <UploadField
         accept={lane.accept}
         label={lane.dropLabel}
         hint={lane.dropHint}
-        status={romCheckStatus(values.file, values.check)}
+        status={romCheckStatus(values.file, values.check, t)}
         url={values.url}
         urlPlaceholder={lane.placeholder}
         roms={roms}

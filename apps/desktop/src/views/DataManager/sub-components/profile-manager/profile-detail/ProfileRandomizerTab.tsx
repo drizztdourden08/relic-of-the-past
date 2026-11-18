@@ -1,4 +1,5 @@
 /* @layer renderer-components @kind component */
+import { useT } from '@drizztdourden08/brock-react';
 import { useState } from 'react';
 import { Box, SegmentedControl, Stack, Text } from '@drizztdourden08/tessera/primitives';
 import { buildOptionFactGroups } from './build-option-facts';
@@ -10,13 +11,14 @@ import { SCOPE_OPTIONS, SCOPE_TITLES } from './ProfileRandomizerTab.constants';
 import type { ProfileRandomizerTabProps } from './profile-detail.type';
 
 const ProfileRandomizerTab = ({ randomizer }: ProfileRandomizerTabProps) => {
+  const t = useT();
   const [scope, setScope] = useState<OptionScope>('changed');
   const groups = buildOptionFactGroups(randomizer.options, scope);
   const changed = changedOptions(randomizer.options).length;
 
   return (
     <Stack gap="lg">
-      <FactsSection title="Run" facts={[buildRunFacts(randomizer)]} />
+      <FactsSection title={t('data-manager:profile-manager.profile-randomizer-tab.run')} facts={[buildRunFacts(randomizer)]} />
       <Stack gap="sm">
         <Text variant="subtitle">{SCOPE_TITLES[scope]}</Text>
         <Text variant="caption" tone="muted">

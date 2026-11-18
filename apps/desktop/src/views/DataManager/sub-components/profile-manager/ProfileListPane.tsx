@@ -1,4 +1,5 @@
 /* @layer renderer-components @kind component */
+import { useT } from '@drizztdourden08/brock-react';
 import { Spinner } from '@drizztdourden08/tessera/primitives';
 import { ListItemRow } from '@drizztdourden08/tessera/composites';
 import { CreateListPane } from '@app/compounds/CreateListPane';
@@ -6,6 +7,7 @@ import { ProfileRows } from './ProfileRows';
 import type { ProfileListPaneProps } from './profile-manager.type';
 
 const ProfileListPane = (props: ProfileListPaneProps) => {
+  const t = useT();
   const { manager, profiles, loadingProfile, onOpen, onDelete } = props;
   const { selected, select, creating, startCreating, readyRoms } = manager;
 
@@ -15,7 +17,7 @@ const ProfileListPane = (props: ProfileListPaneProps) => {
 
   return (
     <CreateListPane
-      label="New Profile"
+      label={t('data-manager:profile-manager.new-profile')}
       creating={creating}
       available={readyRoms.length > 0}
       notice={loadingRow}

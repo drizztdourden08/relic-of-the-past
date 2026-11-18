@@ -1,4 +1,5 @@
 /* @layer renderer-components @kind component */
+import { useT } from '@drizztdourden08/brock-react';
 import { Box, Text, formatDate } from '@drizztdourden08/tessera/primitives';
 import { formatBytes } from '@drizztdourden08/brock-core';
 import { AssetsRow } from './AssetsRow';
@@ -6,11 +7,12 @@ import { SupplementRow } from './SupplementRow';
 import type { RomDetailPanelProps } from './RomDetailPanel.type';
 
 const RomDetailPanel = (props: RomDetailPanelProps) => {
+  const t = useT();
   const { selected, loadingDetail, detail, selectedBase, selectedSupplement, onExtractAssets } = props;
 
-  if (!selected) return <Text>Select a ROM to view details</Text>;
-  if (loadingDetail) return <Text>Loading...</Text>;
-  if (!detail) return <Text>ROM info not available</Text>;
+  if (!selected) return <Text>{t('data-manager:rom-manager.select-a-rom-to-view')}</Text>;
+  if (loadingDetail) return <Text>{t('data-manager:rom-manager.loading')}</Text>;
+  if (!detail) return <Text>{t('data-manager:rom-manager.rom-info-not-available')}</Text>;
 
   return (
     <Box>

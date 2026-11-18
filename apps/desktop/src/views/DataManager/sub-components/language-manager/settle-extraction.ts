@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind logic */
-import { LANGUAGE_NAMES } from '../language-names.constants';
+import { languageLabel } from '../language-label';
 import type { LanguageOutcome, SettleExtractionParams } from './language-manager.type';
 
 const settleExtraction = async (params: SettleExtractionParams): Promise<LanguageOutcome> => {
@@ -7,7 +7,7 @@ const settleExtraction = async (params: SettleExtractionParams): Promise<Languag
   if (!result.success) return { success: false, message: result.error };
   await refresh();
   setSelected(result.code);
-  return { success: true, code: result.code, message: `Extracted ${LANGUAGE_NAMES[result.code] ?? result.code} language pack` };
+  return { success: true, code: result.code, message: params.t('data-manager:language-manager.extracted', { name: languageLabel(result.code, params.t) }) };
 };
 
 export { settleExtraction };

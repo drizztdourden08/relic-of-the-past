@@ -1,7 +1,8 @@
 /* @layer renderer-components @kind logic */
+import type { I18n } from '@drizztdourden08/brock-core/i18n';
 import type { CreateOutcome } from '@drizztdourden08/tessera/composites';
 import { slugSetId } from '@rotp/languages';
-import { PROBLEMS } from '../LanguageCreateWizard.constants';
+import { problems } from '../LanguageCreateWizard.constants';
 import type { FinishContext, LanguageWizardValues } from '../LanguageCreateWizard.type';
 
 const extracted = async (values: LanguageWizardValues, context: FinishContext): Promise<CreateOutcome> => {
@@ -19,12 +20,12 @@ const created = async (values: LanguageWizardValues, context: FinishContext): Pr
   return { success: true, id };
 };
 
-const importedOutcome = (imported: string | null): CreateOutcome =>
-  (imported === null ? { success: false, error: PROBLEMS.notImported } : { success: true, id: imported });
+const importedOutcome = (imported: string | null, t: I18n['t']): CreateOutcome =>
+  (imported === null ? { success: false, error: problems(t).notImported } : { success: true, id: imported });
 
 const finishLanguage = (values: LanguageWizardValues, context: FinishContext): Promise<CreateOutcome> => {
   if (values.source === 'rom') return extracted(values, context);
-  if (values.source === 'patched') return Promise.resolve(importedOutcome(context.imported));
+  if (values.source === 'patched') return Promise.resolve(importedOutcome(context.imported, context.t));
   return created(values, context);
 };
 

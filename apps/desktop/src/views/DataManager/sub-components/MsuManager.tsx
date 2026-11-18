@@ -1,4 +1,5 @@
 /* @layer renderer-components @kind component */
+import { useT } from '@drizztdourden08/brock-react';
 import { useCallback, useState } from 'react';
 import { EmptyState, Text } from '@drizztdourden08/tessera/primitives';
 import { ListDetailLayout } from '@drizztdourden08/tessera/composites';
@@ -16,6 +17,8 @@ import type { StudioTab } from '../../../msu-studio/sound-labels';
 import type { MsuManagerProps } from '../../../msu-studio/msu.type';
 
 const MsuManager = (props: MsuManagerProps) => {
+  const t = useT();
+  const t = useT();
   const { onDeleteConfirm, onRefresh } = props;
   const msu = useMsuManager(onRefresh);
   const { selected, setSelected, refresh } = msu;
@@ -52,7 +55,7 @@ const MsuManager = (props: MsuManagerProps) => {
   const notice = uninstallError === null ? null : <Text variant="caption" tone="danger" role="alert">{uninstallError}</Text>;
 
   const list = (
-    <CreateListPane label="New MSU pack" creating={flow.creating} onCreate={flow.start} notice={notice}>
+    <CreateListPane label={t('data-manager:msu-manager.new-msu-pack')} creating={flow.creating} onCreate={flow.start} notice={notice}>
       <MsuListPane
         msu={msu}
         selected={flow.creating ? null : selected}
@@ -77,7 +80,7 @@ const MsuManager = (props: MsuManagerProps) => {
       emptyDetail={<EmptyState message={NO_PACK_MESSAGE} />}
       detailScroll={false}
       storageKey="msu-studio.list"
-      listLabel="MSU studio"
+      listLabel={t('data-manager:msu-manager.msu-studio')}
       detailLabel="Music editor"
     />
   );

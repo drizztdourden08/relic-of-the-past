@@ -1,17 +1,19 @@
 /* @layer renderer-components @kind component */
+import { useT } from '@drizztdourden08/brock-react';
 import { Stack } from '@drizztdourden08/tessera/primitives';
 import { WizardReview } from '@drizztdourden08/tessera/composites';
 import { ImportProgress } from '../../../../ImportProgress';
 import { ExtractionOptions } from '../../../ExtractionOptions';
-import { STEP_IDS, STEP_LABELS } from '../../RomCreateWizard.constants';
+import { STEP_IDS, stepLabels } from '../../RomCreateWizard.constants';
 import type { ImportStepProps } from './ImportStep.type';
 
 const ImportStep = ({ wizard, extraction, progress }: ImportStepProps) => {
+  const t = useT();
   const { values } = wizard;
   const sections = [{
     stepId: STEP_IDS.file,
-    title: STEP_LABELS.file,
-    rows: [{ label: 'ROM', value: values.file?.name ?? values.url.trim() }],
+    title: stepLabels(t).file,
+    rows: [{ label: t('wizards:rom.review.rom'), value: values.file?.name ?? values.url.trim() }],
   }];
 
   return (
