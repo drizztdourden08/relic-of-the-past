@@ -10,7 +10,7 @@ interface DialogSettings {
   dialogBox: 'original' | 'enhanced';
   dialogButtonPrompts: boolean;
   dialogFont: 'original' | 'modern';
-  dialogFontScale: 1 | 1.25 | 1.5 | 2;
+  dialogFontScale: 0.6 | 0.8 | 1 | 1.25 | 1.5;
   dialogInkColor: string;
   dialogStrokeColor: string;
   dialogStrokeWidth: DialogStrokeWidth;
