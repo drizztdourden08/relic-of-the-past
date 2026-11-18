@@ -2,7 +2,7 @@
 import { rm, stat } from 'fs/promises';
 import { join } from 'path';
 import type { OptimizeCandidate } from '@rotp/msu';
-import { OPTIMIZE_SLICE_SECONDS } from '@rotp/msu';
+import { OPTIMIZE_SLICE_SECONDS } from '@rotp/msu/main';
 import type { AudioSource } from './audio-source';
 import { describeSource } from './audio-source';
 import { encodeToTarget } from './flac-encode';

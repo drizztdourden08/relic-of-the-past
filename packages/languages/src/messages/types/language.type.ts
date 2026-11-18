@@ -37,7 +37,7 @@ type LanguageSetMeta = {
   id: string;
   name: string;
   base: string;
-  origin: 'rom' | 'custom';
+  origin: 'rom' | 'patch' | 'custom';
   version: number;
   author?: string;
   basedOn?: BasedOn;

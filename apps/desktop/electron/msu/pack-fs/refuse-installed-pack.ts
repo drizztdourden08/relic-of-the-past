@@ -1,5 +1,5 @@
 /* @layer electron-main @kind logic */
-import { alttpMsuConfig, packDir } from '@rotp/msu';
+import { alttpMsuConfig, packDir } from '@rotp/msu/main';
 import { refuseInstalled } from '../../storage/installed-guard';
 import { safeName } from './safe-name';
 

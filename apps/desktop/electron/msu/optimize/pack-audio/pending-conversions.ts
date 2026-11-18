@@ -1,5 +1,5 @@
 /* @layer electron-main @kind logic */
-import { supersededMap } from '@rotp/msu';
+import { supersededMap } from '@rotp/msu/main';
 import { isTargetFormat } from './is-target-format';
 import type { PackAudioFile } from './pack-audio.type';
 
