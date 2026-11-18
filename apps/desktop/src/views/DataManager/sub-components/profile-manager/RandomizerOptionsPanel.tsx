@@ -1,4 +1,5 @@
 /* @layer renderer-components @kind component */
+import { useT } from '@drizztdourden08/brock-react';
 import { useRef, useState } from 'react';
 import { Box } from '@drizztdourden08/tessera/primitives';
 import { OptionsPanel } from '@drizztdourden08/tessera/composites';
@@ -7,7 +8,7 @@ import { useIsNarrow } from '@app/hooks/useIsNarrow';
 import { FIRST_OPTION_TAB } from './randomizer-options/option-tabs.constants';
 import { PanelBody } from './randomizer-options/PanelBody';
 import { usePanelModel } from './randomizer-options/usePanelModel';
-import { PANEL_TITLE, POOL_TAB, SPLIT_MIN_REM } from './RandomizerOptionsPanel.constants';
+import { POOL_TAB, SPLIT_MIN_REM } from './RandomizerOptionsPanel.constants';
 import type { PanelTab, RandomizerOptionsPanelProps } from './RandomizerOptionsPanel.type';
 import './RandomizerOptionsPanel.css';
 
@@ -22,6 +23,7 @@ const RandomizerOptionsPanel = (props: RandomizerOptionsPanelProps) => {
     setOwnTab(id as PanelTab);
     onTabChange?.(id as PanelTab);
   };
+  const t = useT();
   const model = usePanelModel(props, narrow);
   const { error, listing, totals, tabs } = model;
 
@@ -30,7 +32,7 @@ const RandomizerOptionsPanel = (props: RandomizerOptionsPanelProps) => {
   return (
     <Box ref={rootRef} className="randomizer-options__root">
       <OptionsPanel
-        title={PANEL_TITLE}
+        title={t('data-manager:option-tabs.panel')}
         tabs={tabs}
         activeTab={tab}
         onTabChange={handleTabChange}

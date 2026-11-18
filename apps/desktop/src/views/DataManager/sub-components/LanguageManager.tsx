@@ -12,11 +12,9 @@ import { useLanguageManagerDisplay } from './language-manager/useLanguageManager
 import { useLanguageSets } from './language-manager/useLanguageSets';
 import type { LanguageManagerProps } from './LanguageManager.type';
 import { LanguageEditor } from '../../../language-editor';
-import { NO_SET_MESSAGE } from '../../../language-editor/sub-components/studio-frame/studio-frame.constants';
 import { LanguageSetList } from './LanguageSetList';
 
 const LanguageManager = (props: LanguageManagerProps) => {
-  const t = useT();
   const t = useT();
   const { onDeleteConfirm } = props;
   const { languages, loading, selected, setSelected, refresh, refreshThenSelect } = useLanguageSets();
@@ -45,15 +43,15 @@ const LanguageManager = (props: LanguageManagerProps) => {
 
   return (
     <ListDetailLayout listShowTitle={false}
-      listContainers={[{ title: 'Language sets', content: list }]}
+      listContainers={[{ title: t('data-manager:language-manager.sets'), content: list }]}
       collapsed={flow.listCollapsed}
       onCollapsedChange={flow.setListCollapsed}
       detail={detail}
-      emptyDetail={<EmptyState message={NO_SET_MESSAGE} />}
+      emptyDetail={<EmptyState message={t('data-manager:language-manager.select-set')} />}
       detailScroll={false}
       storageKey="language-studio.list"
       listLabel={t('data-manager:language-manager.language-studio')}
-      detailLabel="Language editor"
+      detailLabel={t('data-manager:language-manager.editor')}
     />
   );
 };

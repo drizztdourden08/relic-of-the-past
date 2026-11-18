@@ -6,7 +6,6 @@ import type { ImportedSpriteListProps } from './sprite-manager.type';
 
 const ImportedSpriteList = (props: ImportedSpriteListProps) => {
   const t = useT();
-  const t = useT();
   const { importedRoms, extractedMap, selectedRom, onSelect, onDelete } = props;
 
   return (

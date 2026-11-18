@@ -1,11 +1,13 @@
 /* @layer renderer-components @kind component */
+import { useT } from '@drizztdourden08/brock-react';
 import { Box, Text, Spinner, ProgressBar } from '@drizztdourden08/tessera/primitives';
 import type { ImportProgressProps } from './ImportProgress.type';
 import './ImportProgress.css';
 
 const ImportProgress = (props: ImportProgressProps) => {
+  const t = useT();
   const { state, fallbackLabel } = props;
-  const label = state.label || (fallbackLabel ?? 'Working...');
+  const label = state.label || (fallbackLabel ?? t('data-manager:import.working'));
   const percent = state.percent;
 
   return (

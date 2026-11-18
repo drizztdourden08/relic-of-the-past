@@ -12,7 +12,7 @@ const ProfileListPane = (props: ProfileListPaneProps) => {
   const { selected, select, creating, startCreating, readyRoms } = manager;
 
   const loadingRow = loadingProfile
-    ? <ListItemRow selected icon={<Spinner size="sm" />} name={`Loading profile: ${loadingProfile}...`} />
+    ? <ListItemRow selected icon={<Spinner size="sm" />} name={t('data-manager:profile-manager.loading-profile', { name: loadingProfile })} />
     : null;
 
   return (

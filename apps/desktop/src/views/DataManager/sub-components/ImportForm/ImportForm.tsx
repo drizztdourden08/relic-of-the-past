@@ -9,7 +9,7 @@ import type { ImportFormProps } from './ImportForm.type';
 
 const ImportForm = (props: ImportFormProps) => {
   const t = useT();
-  const { kind, placeholder, accept, dropLabel, dropHint, disabled, children, onUrlImport, onFileImport } = withImportDefaults(props);
+  const { kind, placeholder, accept, dropLabel, dropHint, disabled, children, onUrlImport, onFileImport } = withImportDefaults(props, t);
   const form = useImportForm({ kind, disabled, onUrlImport, onFileImport });
   const { url, setUrl, status, busy, progress, isDisabled, handleDownload, handleDrop } = form;
 

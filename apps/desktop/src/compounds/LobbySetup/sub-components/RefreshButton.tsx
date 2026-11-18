@@ -1,8 +1,11 @@
 /* @layer renderer-components @kind component */
+import { useT } from '@drizztdourden08/brock-react';
 import { Button, Icon } from '@drizztdourden08/tessera/primitives';
 import type { RefreshButtonProps } from '../LobbySetup.type';
 
-const RefreshButton = ({ access, disabled }: RefreshButtonProps) => (
+const RefreshButton = ({ access, disabled }: RefreshButtonProps) => {
+  const t = useT();
+  return (
   <Button
     size="sm"
     variant="ghost"
@@ -11,8 +14,9 @@ const RefreshButton = ({ access, disabled }: RefreshButtonProps) => (
     disabled={disabled}
     onClick={access.onRefresh}
   >
-    Refresh
+    {t('compounds:lobby-setup.refresh')}
   </Button>
-);
+  );
+};
 
 export { RefreshButton };

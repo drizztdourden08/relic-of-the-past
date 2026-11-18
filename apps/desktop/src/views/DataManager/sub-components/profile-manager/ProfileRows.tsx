@@ -29,8 +29,8 @@ const ProfileRows = (props: ProfileRowsProps) => {
             }
             meta={
               <>
-                {(profile.romFile || 'No ROM selected').replace(/\.(sfc|smc)$/i, '')} ·{' '}
-                {profile.lastPlayed ? <DateText value={profile.lastPlayed} format="relative" /> : 'Never'}
+                {(profile.romFile || t('data-manager:profile-manager.no-rom')).replace(/\.(sfc|smc)$/i, '')} ·{' '}
+                {profile.lastPlayed ? <DateText value={profile.lastPlayed} format="relative" /> : t('data-manager:profile-manager.never')}
               </>
             }
             selected={selected === profile.id}

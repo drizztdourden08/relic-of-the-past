@@ -14,7 +14,6 @@ import { languageWizardSteps } from './language-wizard-steps';
 
 const useLanguageWizard = ({ sets, refresh, onCreated }: UseLanguageWizardParams) => {
   const t = useT();
-  const t = useT();
   const [imported, setImported] = useState<string | null>(null);
   const progress = useImportProgress('language');
   const { handleUrlImport, handleFileImport } = useLanguageExtraction({ refresh, setSelected: keepSelection });

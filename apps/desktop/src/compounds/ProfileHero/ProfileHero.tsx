@@ -1,4 +1,5 @@
 /* @layer renderer-components @kind component */
+import { useT } from '@drizztdourden08/brock-react';
 import { Hero } from '@drizztdourden08/tessera/composites';
 import { MODE_BADGE_LABELS } from '../ModeBadge';
 import { factGroupOf } from './behavior/fact-group-of';
@@ -9,12 +10,13 @@ import { HeroTools } from './sub-components/HeroTools';
 import type { ProfileHeroProps } from './ProfileHero.type';
 
 const ProfileHero = (props: ProfileHeroProps) => {
+  const t = useT();
   const { mode, backdrop, actions, facts, runFacts, progress, lastSave, canRevealFolder, onOpenFolder, onImportSram } = props;
   const art = heroArtSrc(mode);
 
   return (
     <Hero
-      label="Profile overview"
+      label={t('compounds:profile-hero.profile-overview')}
       className={`profile-hero profile-hero--${mode}`}
       eyebrow="Mode"
       title={MODE_BADGE_LABELS[mode]}

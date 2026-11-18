@@ -1,11 +1,11 @@
 /* @layer renderer-components @kind component */
+import { useT } from '@drizztdourden08/brock-react';
 import { CapacityTabBody } from './CapacityTabBody';
 import { OptionGroupList } from './OptionGroupList';
 import { SubjectFixedRows } from './SubjectFixedRows';
 import { TabLeadBlocks } from './TabLeadBlocks';
 import { TabTrailBlocks } from './TabTrailBlocks';
 import { UpcomingTabBody } from './UpcomingTabBody';
-import { UPCOMING_TITLE } from './option-tab-copy.constants';
 import { isUpcomingTab } from './is-upcoming-tab';
 import { listViewOf } from './list-view-of';
 import { optionTabContextOf } from './option-tab-context-of';
@@ -13,6 +13,7 @@ import type { OptionDef } from '@rotp/randomizer';
 import type { OptionTabBodyProps } from './OptionTabBody.type';
 
 const OptionTabBody = (props: OptionTabBodyProps) => {
+  const t = useT();
   const {
     tab, groups, lockedGroups, values, valueOf, cellOf, notes, fillerHeadroom, onRowChange, onChange,
   } = props;
@@ -38,7 +39,7 @@ const OptionTabBody = (props: OptionTabBodyProps) => {
   if (isUpcomingTab(tab)) {
     return (
       <UpcomingTabBody
-        title={UPCOMING_TITLE}
+        title={t('data-manager:option-tabs.upcoming')}
         groups={lockedGroups[tab]}
         valueOf={fixedValueOf}
         cellOf={cellOf}

@@ -1,8 +1,10 @@
 /* @layer renderer-components @kind component */
+import { useT } from '@drizztdourden08/brock-react';
 import { Flex, Spinner, Status, Text } from '@drizztdourden08/tessera/primitives';
 import type { LobbyLineProps } from '../LobbySetup.type';
 
 const LobbyLine = ({ state }: LobbyLineProps) => {
+  const t = useT();
   if (state.kind === 'checking') return <Spinner size="sm" />;
   if (state.kind !== 'ok') return null;
   return (
@@ -14,7 +16,7 @@ const LobbyLine = ({ state }: LobbyLineProps) => {
           {`Open seats ${state.open.free}/${state.open.total}`}
         </Status>
       )}
-      {state.approval && <Status tone="neutral" variant="pill">Host approval</Status>}
+      {state.approval && <Status tone="neutral" variant="pill">{t('compounds:lobby-setup.host-approval')}</Status>}
     </Flex>
   );
 };

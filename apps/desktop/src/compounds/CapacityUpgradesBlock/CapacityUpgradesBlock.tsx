@@ -1,4 +1,5 @@
 /* @layer renderer-components @kind component */
+import { useT } from '@drizztdourden08/brock-react';
 import { Box, Text } from '@drizztdourden08/tessera/primitives';
 import { OptionGroup } from '@drizztdourden08/tessera/composites';
 import { RandomizerOptionRow } from '../RandomizerOptionRow';
@@ -7,6 +8,7 @@ import { CapacityRows } from './sub-components/CapacityRows';
 import './CapacityUpgradesBlock.css';
 
 const CapacityUpgradesBlock = (props: CapacityUpgradesBlockProps) => {
+  const t = useT();
   const {
     rows, notes, enabledOption, enabled = true, progressiveOption, progressive = false, readOnly = false,
     onChange, onBonusChange, onEnabledChange, onProgressiveChange,
@@ -14,7 +16,7 @@ const CapacityUpgradesBlock = (props: CapacityUpgradesBlockProps) => {
   const frozen = readOnly || !enabled;
 
   return (
-    <OptionGroup title="Capacity upgrades" tone="live" className="capacity-block">
+    <OptionGroup title={t('compounds:capacity-upgrades-block.capacity-upgrades')} tone="live" className="capacity-block">
       {enabledOption !== undefined && (
         <RandomizerOptionRow
           option={enabledOption}

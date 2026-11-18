@@ -1,4 +1,5 @@
 /* @layer renderer-components @kind component */
+import { useT } from '@drizztdourden08/brock-react';
 import { useCallback, useState } from 'react';
 import { Icon as IconifyIcon } from '@iconify/react/offline';
 import externalLinkIcon from '@iconify-icons/lucide/external-link';
@@ -13,6 +14,7 @@ import { OriginFacts } from './sub-components/OriginFacts';
 import './InstalledOrigin.css';
 
 const InstalledOrigin = (props: InstalledOriginProps) => {
+  const t = useT();
   const {
     origin, semver, updateTo, copyRefusal, busy = false, error = null,
     onDuplicate, onUpdate, onOpenOnSite, onUninstall,
@@ -30,11 +32,11 @@ const InstalledOrigin = (props: InstalledOriginProps) => {
   return (
     <Card className="installed-origin">
       <Flex align="center" gap="sm" wrap>
-        <HookshopChip label="From the Hookshop" />
+        <HookshopChip label={t('compounds:installed-origin.from-the-hookshop')} />
         <Text as="span" className="installed-origin__name">{origin.name}</Text>
         <Box className="installed-origin__spacer" />
         <Button variant="ghost" size="sm" icon={<IconifyIcon icon={externalLinkIcon} />} onClick={onOpenOnSite}>
-          Open on the site
+          {t('compounds:installed-origin.open-on-the-site')}
         </Button>
       </Flex>
 
@@ -56,7 +58,7 @@ const InstalledOrigin = (props: InstalledOriginProps) => {
         open={confirming}
         title={uninstallTitle(origin.name)}
         message={uninstallMessage(origin.name)}
-        confirmLabel="Uninstall"
+        confirmLabel={t('compounds:installed-origin.uninstall')}
         variant="danger"
         onConfirm={confirmUninstall}
         onCancel={cancelUninstall}

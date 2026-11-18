@@ -1,4 +1,5 @@
 /* @layer renderer-components @kind component */
+import { useT } from '@drizztdourden08/brock-react';
 import { Box, Button, Text } from '@drizztdourden08/tessera/primitives';
 import type { FfmpegInstallStepProps } from './FfmpegInstallStep.type';
 import './FfmpegInstallStep.css';
@@ -9,6 +10,7 @@ const installLabel = (installing: boolean, error: string | null): string => {
 };
 
 const FfmpegInstallStep = (props: FfmpegInstallStepProps) => {
+  const t = useT();
   const { state, installing, error, onInstall } = props;
 
   if (state === null) return <Text className="ffmpeg-install-step__note">Checking for the tool...</Text>;
@@ -24,7 +26,7 @@ const FfmpegInstallStep = (props: FfmpegInstallStepProps) => {
   return (
     <Box className="ffmpeg-install-step">
       <Text className="ffmpeg-install-step__note">
-        This needs ffmpeg, which is not shipped with the app.
+        {t('compounds:ffmpeg-install-step.this-needs-ffmpeg-which-is')}
       </Text>
       <Text className="ffmpeg-install-step__note ffmpeg-install-step__note--faint">
         A one-time download of about 140 MB, checked against its published checksum and kept in the

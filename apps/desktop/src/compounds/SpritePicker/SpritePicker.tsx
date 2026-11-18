@@ -1,9 +1,11 @@
 /* @layer renderer-components @kind component */
+import { useT } from '@drizztdourden08/brock-react';
 import { useState } from 'react';
 import { Anchored, Box, EmptyState, Image, Pressable, Tabs, Text } from '@drizztdourden08/tessera/primitives';
 import type { SpritePickerProps } from './SpritePicker.type';
 
 const SpritePicker = (props: SpritePickerProps) => {
+  const t = useT();
   const { open, anchorRef, sprites, categories, categoryLabels, spriteUrl, onPick, onClose, notice } = props;
   const present = categories.filter((category) => sprites.some((sprite) => sprite.category === category));
   const [category, setCategory] = useState(present[0] ?? '');
@@ -16,7 +18,7 @@ const SpritePicker = (props: SpritePickerProps) => {
   return (
     <Anchored anchorRef={anchorRef} placement="bottom-start" layer="popover" className="sprite-picker" onDismiss={onClose}>
       {present.length === 0 ? (
-        <EmptyState message="No sprite definitions." />
+        <EmptyState message={t('compounds:sprite-picker.no-sprite-definitions')} />
       ) : (
         <>
           {notice}

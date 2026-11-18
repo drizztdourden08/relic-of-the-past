@@ -7,7 +7,6 @@ import { StepBody } from './sub-components/StepBody';
 
 const LanguageCreateWizard = (props: LanguageCreateWizardProps) => {
   const t = useT();
-  const t = useT();
   const { sets, baseSets, refresh, onCancel, onCreated } = props;
   const { wizard, progress, patched } = useLanguageWizard({ sets, refresh, onCreated });
 

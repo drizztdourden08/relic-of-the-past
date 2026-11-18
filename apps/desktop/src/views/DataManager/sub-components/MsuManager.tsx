@@ -12,12 +12,10 @@ import { useInstalledKind } from '@app/hooks/useInstalledKind';
 import { InstalledOriginBar, useConfirmUninstall } from '@app/views/InstalledOriginBar';
 import { useMsuManager } from '../../../msu-studio/useMsuManager';
 import { MsuStudio } from '../../../msu-studio/MsuStudio';
-import { NO_PACK_MESSAGE } from '../../../msu-studio/studio-frame/studio-frame.constants';
 import type { StudioTab } from '../../../msu-studio/sound-labels';
 import type { MsuManagerProps } from '../../../msu-studio/msu.type';
 
 const MsuManager = (props: MsuManagerProps) => {
-  const t = useT();
   const t = useT();
   const { onDeleteConfirm, onRefresh } = props;
   const msu = useMsuManager(onRefresh);
@@ -73,15 +71,15 @@ const MsuManager = (props: MsuManagerProps) => {
   return (
     <ListDetailLayout
       listShowTitle={false}
-      listContainers={[{ title: 'MSU packs', content: list }]}
+      listContainers={[{ title: t('data-manager:msu-manager.packs'), content: list }]}
       collapsed={flow.listCollapsed}
       onCollapsedChange={flow.setListCollapsed}
       detail={detail}
-      emptyDetail={<EmptyState message={NO_PACK_MESSAGE} />}
+      emptyDetail={<EmptyState message={t('data-manager:msu-manager.select-pack')} />}
       detailScroll={false}
       storageKey="msu-studio.list"
       listLabel={t('data-manager:msu-manager.msu-studio')}
-      detailLabel="Music editor"
+      detailLabel={t('data-manager:msu-manager.editor')}
     />
   );
 };

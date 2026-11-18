@@ -13,7 +13,6 @@ import type { RomManagerProps } from './RomManager.type';
 
 const RomManager = (props: RomManagerProps) => {
   const t = useT();
-  const t = useT();
   const { romStatuses, onExtractAssets, onDeleteRom, onRefresh } = props;
   const extraction = useRomExtraction({ onExtractAssets });
   const { extract } = extraction;

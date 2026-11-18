@@ -1,4 +1,5 @@
 /* @layer renderer-components @kind component */
+import { useT } from '@drizztdourden08/brock-react';
 import { Field, Flex, SectionHeader, Stack } from '@drizztdourden08/tessera/primitives';
 import { connectModeOf } from '@app/hooks/randomizer/lobby-setup';
 import type { ConnectionSectionProps } from '../LobbySetup.type';
@@ -10,12 +11,13 @@ import { RefreshButton } from './RefreshButton';
 import { RemoteAddress } from './RemoteAddress';
 
 const ConnectionSection = ({ value, onChange, lobbies, lobby, access, disabled }: ConnectionSectionProps) => {
+  const t = useT();
   const mode = connectModeOf(value);
 
   return (
     <Stack gap="sm" className="lobby-setup__connection">
       <SectionHeader
-        title="Connection"
+        title={t('compounds:lobby-setup.connection')}
         level={4}
         action={(
           <Flex gap="sm" align="center">
@@ -36,7 +38,7 @@ const ConnectionSection = ({ value, onChange, lobbies, lobby, access, disabled }
         </>
       ) : (
         <>
-          <Field label="Address">
+          <Field label={t('compounds:lobby-setup.address')}>
             <RemoteAddress value={value.address} disabled={disabled} onChange={(address) => onChange({ address })} />
           </Field>
           <LobbyCodeField
