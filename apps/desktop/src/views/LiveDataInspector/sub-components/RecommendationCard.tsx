@@ -21,7 +21,7 @@ const RecommendationCard = (props: RecommendationCardProps) => {
     >
       <Status tone={certain ? 'success' : 'warning'}>{certain ? t('views-live-data-inspector:confidence.certain') : t('views-live-data-inspector:confidence.likely')}</Status>
       <Text className="live-rec-card__claim">{t('views-live-data-inspector:card.claim', { action: text(ACTION_LABEL[entry.action]), kind: text(KIND_SINGULARS[entry.kind] ?? entry.kind) })}</Text>
-      <Text className="live-rec-card__reason">{entry.reason}</Text>
+      <Text className="live-rec-card__reason">{text(entry.reason)}</Text>
     </Pressable>
   );
 };

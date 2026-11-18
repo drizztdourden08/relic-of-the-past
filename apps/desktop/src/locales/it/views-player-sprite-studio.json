@@ -73,5 +73,15 @@
   "wizard.sourceLabel": "Origine dello sprite",
   "wizard.import.placeholder": "Incolla URL .zspr o .rsp...",
   "wizard.import.dropLabel": "Trascina qui uno sprite del giocatore",
-  "wizard.import.dropHint": ".zspr o .rsp"
+  "wizard.import.dropHint": ".zspr o .rsp",
+  "viewer.view-state": "Uno stato",
+  "viewer.view-contact": "Tutti gli stati",
+  "viewer.view-sheet": "Foglio di tessere",
+  "viewer.play": "Riproduci",
+  "viewer.pause": "Pausa",
+  "viewer.step": "Passo",
+  "viewer.fps-aria": "Fotogrammi al secondo",
+  "viewer.fps": "{fps} fps",
+  "viewer.zoom-aria": "Zoom",
+  "viewer.zoom": "Zoom {zoom}x"
 }

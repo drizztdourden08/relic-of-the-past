@@ -73,5 +73,15 @@
   "wizard.sourceLabel": "De dónde viene el sprite",
   "wizard.import.placeholder": "Pega la URL de un .zspr o .rsp...",
   "wizard.import.dropLabel": "Suelta aquí un sprite de jugador",
-  "wizard.import.dropHint": ".zspr o .rsp"
+  "wizard.import.dropHint": ".zspr o .rsp",
+  "viewer.view-state": "Un estado",
+  "viewer.view-contact": "Todos los estados",
+  "viewer.view-sheet": "Hoja de teselas",
+  "viewer.play": "Reproducir",
+  "viewer.pause": "Pausa",
+  "viewer.step": "Paso",
+  "viewer.fps-aria": "Fotogramas por segundo",
+  "viewer.fps": "{fps} fps",
+  "viewer.zoom-aria": "Zoom",
+  "viewer.zoom": "Zoom {zoom}x"
 }

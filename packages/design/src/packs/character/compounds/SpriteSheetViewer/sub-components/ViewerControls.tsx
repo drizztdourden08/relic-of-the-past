@@ -6,13 +6,13 @@ import { ViewSwitch } from './ViewSwitch';
 import { ZoomControl } from './ZoomControl';
 
 const ViewerControls = (props: ViewerControlsProps) => {
-  const { view, clock, scale, onView, onScale } = props;
+  const { view, clock, scale, onView, onScale, labels } = props;
 
   return (
     <Box className="sprite-viewer__controls">
-      <ViewSwitch view={view} onView={onView} />
-      <PlaybackControls clock={clock} />
-      <ZoomControl scale={scale} onScale={onScale} />
+      <ViewSwitch view={view} onView={onView} labels={labels} />
+      <PlaybackControls clock={clock} labels={labels} />
+      <ZoomControl scale={scale} onScale={onScale} labels={labels} />
     </Box>
   );
 };

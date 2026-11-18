@@ -1,5 +1,6 @@
 /* @layer renderer-app @kind logic */
 import type { Recommendation } from '@rotp/navigation';
+import { textOf } from '@app/shell/text-bridge';
 import type { RecommendationRow } from '../recommendations.type';
 import { stampOf } from './stamp-of';
 
@@ -8,7 +9,7 @@ const rowOf = (entry: Recommendation): RecommendationRow => ({
   kind: entry.kind,
   action: entry.action,
   targetId: entry.targetId ?? null,
-  reason: entry.reason,
+  reason: textOf(entry.reason),
   confidence: entry.confidence,
   screenId: entry.screenId ?? null,
   firstSeenAt: stampOf(entry.firstSeenAt),

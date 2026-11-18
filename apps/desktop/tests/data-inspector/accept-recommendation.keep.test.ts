@@ -34,7 +34,7 @@ const finding = (over: Partial<Recommendation> = {}): Recommendation => ({
   targetId: 'tag-001',
   current: { id: 'tag-001', value: 'cave' },
   proposed: { id: 'tag-001', value: 'cavern' },
-  reason: 'the vocabulary spells it differently',
+  reason: { key: 'views-data-inspector:rec.reason.set-create', values: { noun: 'x', key: 'the vocabulary spells it differently' } },
   detector: 'test',
   evidence: [],
   confidence: 'certain',

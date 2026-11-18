@@ -10,7 +10,7 @@ import type { SpriteSheetViewerProps } from './SpriteSheetViewer.type';
 import './SpriteSheetViewer.css';
 
 const SpriteSheetViewer = (props: SpriteSheetViewerProps) => {
-  const { sheet, wearing: given, aside, className } = props;
+  const { sheet, wearing: given, aside, className, labels } = props;
   const own = useWearing();
   const wearing = given ?? own;
   const viewer = useSpriteViewer({ setOutfit: wearing.setOutfit });
@@ -24,7 +24,7 @@ const SpriteSheetViewer = (props: SpriteSheetViewerProps) => {
         onOutfit={wearing.setOutfit}
         onGloves={wearing.setGloves}
       />
-      <ViewerControls view={view} clock={clock} scale={scale} onView={setView} onScale={setScale} />
+      <ViewerControls view={view} clock={clock} scale={scale} onView={setView} onScale={setScale} labels={labels} />
 
       <Box className="sprite-viewer__body">
         {view === 'state' && <StateList selected={action} onSelect={setAction} />}

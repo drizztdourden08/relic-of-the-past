@@ -58,5 +58,11 @@
   "kind.item-group.many": "アイテムグループ",
   "kind.item-group.one": "アイテムグループ",
   "kind.enumeration.many": "列挙",
-  "kind.enumeration.one": "列挙"
+  "kind.enumeration.one": "列挙",
+  "rec.reason.mismatch": "{label}：レコード {dataset}、ゲーム {live}。",
+  "rec.reason.missing-in-dataset": "{label}：ゲーム {live}、レコードは空です。",
+  "rec.reason.absent-in-game": "{label}：レコード {dataset}、ゲームには存在しません。",
+  "rec.reason.set-create": "{noun} {key}：ゲームにあり、データセットにはありません。",
+  "rec.reason.set-delete": "{noun} {key}：データセットにあり、ゲームには存在しません。",
+  "rec.reason.geography": "場所「{location}」はこのエリアにありません。{count, plural, =1 {該当するのは「{pick}」だけです。} other {「{pick}」は{count}件からの推測です。}}"
 }

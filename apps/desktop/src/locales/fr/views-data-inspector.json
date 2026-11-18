@@ -58,5 +58,11 @@
   "kind.item-group.many": "Groupes d'objets",
   "kind.item-group.one": "Groupe d'objets",
   "kind.enumeration.many": "Énumérations",
-  "kind.enumeration.one": "Énumération"
+  "kind.enumeration.one": "Énumération",
+  "rec.reason.mismatch": "{label} : fiche {dataset}, jeu {live}.",
+  "rec.reason.missing-in-dataset": "{label} : jeu {live}, fiche vide.",
+  "rec.reason.absent-in-game": "{label} : fiche {dataset}, absent du jeu.",
+  "rec.reason.set-create": "{noun} {key} : dans le jeu, absent du jeu de données.",
+  "rec.reason.set-delete": "{noun} {key} : dans le jeu de données, absent du jeu.",
+  "rec.reason.geography": "Le lieu {location} n'est pas dans cette zone. {count, plural, =1 {Seul {pick} l'est.} other {{pick} est une supposition parmi {count}.}}"
 }

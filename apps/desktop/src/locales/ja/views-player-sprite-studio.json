@@ -73,5 +73,15 @@
   "wizard.sourceLabel": "スプライトの入手元",
   "wizard.import.placeholder": ".zsprまたは.rspのURLを貼り付け...",
   "wizard.import.dropLabel": "プレイヤースプライトをここにドロップ",
-  "wizard.import.dropHint": ".zsprまたは.rsp"
+  "wizard.import.dropHint": ".zsprまたは.rsp",
+  "viewer.view-state": "1つの状態",
+  "viewer.view-contact": "すべての状態",
+  "viewer.view-sheet": "タイルシート",
+  "viewer.play": "再生",
+  "viewer.pause": "一時停止",
+  "viewer.step": "コマ送り",
+  "viewer.fps-aria": "毎秒フレーム数",
+  "viewer.fps": "{fps} fps",
+  "viewer.zoom-aria": "ズーム",
+  "viewer.zoom": "ズーム {zoom}x"
 }

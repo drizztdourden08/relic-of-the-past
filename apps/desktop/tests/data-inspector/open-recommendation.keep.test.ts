@@ -10,7 +10,7 @@ const finding = (id: string): Recommendation => ({
   targetId: 'tag-001',
   current: null,
   proposed: { id: 'tag-001' },
-  reason: 'the live game disagrees',
+  reason: { key: 'views-data-inspector:rec.reason.set-create', values: { noun: 'x', key: 'the live game disagrees' } },
   detector: 'test',
   evidence: [],
   confidence: 'certain',

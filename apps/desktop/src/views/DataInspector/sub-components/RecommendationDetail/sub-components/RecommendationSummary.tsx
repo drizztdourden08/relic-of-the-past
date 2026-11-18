@@ -32,7 +32,7 @@ const RecommendationSummary = (props: RecommendationSummaryProps) => {
         })}
         </Text>
       </Box>
-      <Text as="p" className="rec-summary__reason">{entry.reason}</Text>
+      <Text as="p" className="rec-summary__reason">{text(entry.reason)}</Text>
       {entry.evidence.length > 0 && (
         <Box as="ul" className="rec-summary__evidence">
           {entry.evidence.map((item, index) => (

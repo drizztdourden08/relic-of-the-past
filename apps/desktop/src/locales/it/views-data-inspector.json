@@ -58,5 +58,11 @@
   "kind.item-group.many": "Gruppi di oggetti",
   "kind.item-group.one": "Gruppo di oggetti",
   "kind.enumeration.many": "Enumerazioni",
-  "kind.enumeration.one": "Enumerazione"
+  "kind.enumeration.one": "Enumerazione",
+  "rec.reason.mismatch": "{label}: scheda {dataset}, gioco {live}.",
+  "rec.reason.missing-in-dataset": "{label}: gioco {live}, scheda vuota.",
+  "rec.reason.absent-in-game": "{label}: scheda {dataset}, assente nel gioco.",
+  "rec.reason.set-create": "{noun} {key}: nel gioco, non nel dataset.",
+  "rec.reason.set-delete": "{noun} {key}: nel dataset, assente nel gioco.",
+  "rec.reason.geography": "Il luogo {location} non è in quest'area. {count, plural, =1 {Solo {pick} lo è.} other {{pick} è un'ipotesi tra {count}.}}"
 }

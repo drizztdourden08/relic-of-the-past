@@ -73,5 +73,15 @@
   "wizard.sourceLabel": "Where the sprite comes from",
   "wizard.import.placeholder": "Paste .zspr or .rsp URL...",
   "wizard.import.dropLabel": "Drop a player sprite here",
-  "wizard.import.dropHint": ".zspr or .rsp"
+  "wizard.import.dropHint": ".zspr or .rsp",
+  "viewer.view-state": "One state",
+  "viewer.view-contact": "All states",
+  "viewer.view-sheet": "Tile sheet",
+  "viewer.play": "Play",
+  "viewer.pause": "Pause",
+  "viewer.step": "Step",
+  "viewer.fps-aria": "Frames per second",
+  "viewer.fps": "{fps} fps",
+  "viewer.zoom-aria": "Zoom",
+  "viewer.zoom": "Zoom {zoom}x"
 }

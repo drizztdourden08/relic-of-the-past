@@ -73,5 +73,15 @@
   "wizard.sourceLabel": "Varifrån spriten kommer",
   "wizard.import.placeholder": "Klistra in .zspr- eller .rsp-URL...",
   "wizard.import.dropLabel": "Släpp en spelarsprite här",
-  "wizard.import.dropHint": ".zspr eller .rsp"
+  "wizard.import.dropHint": ".zspr eller .rsp",
+  "viewer.view-state": "Ett tillstånd",
+  "viewer.view-contact": "Alla tillstånd",
+  "viewer.view-sheet": "Brickark",
+  "viewer.play": "Spela",
+  "viewer.pause": "Paus",
+  "viewer.step": "Steg",
+  "viewer.fps-aria": "Bilder per sekund",
+  "viewer.fps": "{fps} bps",
+  "viewer.zoom-aria": "Zoom",
+  "viewer.zoom": "Zoom {zoom}x"
 }

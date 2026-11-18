@@ -7,7 +7,22 @@ import type { useSpriteViewer } from './behavior/useSpriteViewer';
 
 type SheetView = 'state' | 'contact' | 'sheet';
 
-type SpriteSheetViewerProps = {
+type ViewerLabels = {
+  viewState: string;
+  viewContact: string;
+  viewSheet: string;
+  play: string;
+  pause: string;
+  step: string;
+  fpsAria: string;
+  fps: (fps: number) => string;
+  zoomAria: string;
+  zoom: (zoom: number) => string;
+};
+
+type LabelsProp = { labels?: Partial<ViewerLabels> };
+
+type SpriteSheetViewerProps = LabelsProp & {
   sheet: PlayerSheet;
   wearing?: WearingState;
   aside?: ReactNode;
@@ -20,7 +35,7 @@ type SpriteViewerParams = {
 
 type SpriteViewerModel = ReturnType<typeof useSpriteViewer>;
 
-type ViewerControlsProps = {
+type ViewerControlsProps = LabelsProp & {
   view: SheetView;
   clock: AnimationClock;
   scale: number;
@@ -28,16 +43,16 @@ type ViewerControlsProps = {
   onScale: (scale: number) => void;
 };
 
-type ViewSwitchProps = {
+type ViewSwitchProps = LabelsProp & {
   view: SheetView;
   onView: (view: SheetView) => void;
 };
 
-type PlaybackControlsProps = {
+type PlaybackControlsProps = LabelsProp & {
   clock: AnimationClock;
 };
 
-type ZoomControlProps = {
+type ZoomControlProps = LabelsProp & {
   scale: number;
   onScale: (scale: number) => void;
 };
@@ -49,6 +64,6 @@ type ViewerStageProps = {
 };
 
 export type {
-  PlaybackControlsProps, SheetView, SpriteSheetViewerProps, SpriteViewerModel, SpriteViewerParams, ViewerControlsProps,
-  ViewerStageProps, ViewSwitchProps, ZoomControlProps,
+  LabelsProp, PlaybackControlsProps, SheetView, SpriteSheetViewerProps, SpriteViewerModel, SpriteViewerParams, ViewerControlsProps,
+  ViewerLabels, ViewerStageProps, ViewSwitchProps, ZoomControlProps,
 };

@@ -73,5 +73,15 @@
   "wizard.sourceLabel": "Origine du sprite",
   "wizard.import.placeholder": "Collez l'URL .zspr ou .rsp...",
   "wizard.import.dropLabel": "Déposez un sprite de joueur ici",
-  "wizard.import.dropHint": ".zspr ou .rsp"
+  "wizard.import.dropHint": ".zspr ou .rsp",
+  "viewer.view-state": "Un état",
+  "viewer.view-contact": "Tous les états",
+  "viewer.view-sheet": "Planche de tuiles",
+  "viewer.play": "Lecture",
+  "viewer.pause": "Pause",
+  "viewer.step": "Pas",
+  "viewer.fps-aria": "Images par seconde",
+  "viewer.fps": "{fps} i/s",
+  "viewer.zoom-aria": "Zoom",
+  "viewer.zoom": "Zoom {zoom}x"
 }

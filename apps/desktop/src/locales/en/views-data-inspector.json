@@ -58,5 +58,11 @@
   "kind.item-group.many": "Item Groups",
   "kind.item-group.one": "Item Group",
   "kind.enumeration.many": "Enumerations",
-  "kind.enumeration.one": "Enumeration"
+  "kind.enumeration.one": "Enumeration",
+  "rec.reason.mismatch": "{label}: record {dataset}, game {live}.",
+  "rec.reason.missing-in-dataset": "{label}: game {live}, record empty.",
+  "rec.reason.absent-in-game": "{label}: record {dataset}, absent in game.",
+  "rec.reason.set-create": "{noun} {key}: in game, not in dataset.",
+  "rec.reason.set-delete": "{noun} {key}: in dataset, absent in game.",
+  "rec.reason.geography": "Location {location} is not in this area. {count, plural, =1 {Only {pick} is.} other {{pick} is a guess of {count}.}}"
 }

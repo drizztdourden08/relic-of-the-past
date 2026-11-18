@@ -58,5 +58,11 @@
   "kind.item-group.many": "Grupy przedmiotów",
   "kind.item-group.one": "Grupa przedmiotów",
   "kind.enumeration.many": "Wyliczenia",
-  "kind.enumeration.one": "Wyliczenie"
+  "kind.enumeration.one": "Wyliczenie",
+  "rec.reason.mismatch": "{label}: rekord {dataset}, gra {live}.",
+  "rec.reason.missing-in-dataset": "{label}: gra {live}, rekord pusty.",
+  "rec.reason.absent-in-game": "{label}: rekord {dataset}, brak w grze.",
+  "rec.reason.set-create": "{noun} {key}: w grze, brak w zbiorze danych.",
+  "rec.reason.set-delete": "{noun} {key}: w zbiorze danych, brak w grze.",
+  "rec.reason.geography": "Lokacja {location} nie leży w tym obszarze. {count, plural, =1 {Tylko {pick} leży.} other {{pick} to domysł spośród {count}.}}"
 }

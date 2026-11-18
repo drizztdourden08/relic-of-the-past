@@ -13,7 +13,7 @@ const entry = (over: Partial<Recommendation> = {}): Recommendation => ({
   targetId: 'connection-001',
   current: null,
   proposed: { id: 'connection-001' },
-  reason: 'the game exposes a crossing the dataset does not',
+  reason: { key: 'views-data-inspector:rec.reason.set-create', values: { noun: 'x', key: 'the game exposes a crossing the dataset does not' } },
   detector: 'connection-add',
   evidence: [],
   confidence: 'likely',

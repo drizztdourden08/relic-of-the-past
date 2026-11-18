@@ -7,7 +7,7 @@ export { PoseCanvas } from './character/compounds/PoseCanvas';
 export {
   PlaybackControls, SpriteSheetViewer, ViewSwitch, ViewerStage, ZoomControl, useSpriteViewer,
 } from './character/compounds/SpriteSheetViewer';
-export type { SpriteViewerModel } from './character/compounds/SpriteSheetViewer';
+export type { SpriteViewerModel, ViewerLabels } from './character/compounds/SpriteSheetViewer';
 export { StateList } from './character/compounds/StateList';
 export { WearingBar } from './character/compounds/WearingBar';
 export { countVariableUses, filterEntriesByHits } from './language/behavior/entry-selectors';

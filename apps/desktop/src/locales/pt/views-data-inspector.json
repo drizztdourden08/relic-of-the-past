@@ -58,5 +58,11 @@
   "kind.item-group.many": "Grupos de itens",
   "kind.item-group.one": "Grupo de itens",
   "kind.enumeration.many": "Enumerações",
-  "kind.enumeration.one": "Enumeração"
+  "kind.enumeration.one": "Enumeração",
+  "rec.reason.mismatch": "{label}: registro {dataset}, jogo {live}.",
+  "rec.reason.missing-in-dataset": "{label}: jogo {live}, registro vazio.",
+  "rec.reason.absent-in-game": "{label}: registro {dataset}, ausente no jogo.",
+  "rec.reason.set-create": "{noun} {key}: no jogo, não no conjunto de dados.",
+  "rec.reason.set-delete": "{noun} {key}: no conjunto de dados, ausente no jogo.",
+  "rec.reason.geography": "O local {location} não está nesta área. {count, plural, =1 {Só {pick} está.} other {{pick} é um palpite entre {count}.}}"
 }

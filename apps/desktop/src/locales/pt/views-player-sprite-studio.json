@@ -73,5 +73,15 @@
   "wizard.sourceLabel": "De onde vem o sprite",
   "wizard.import.placeholder": "Cole a URL do .zspr ou .rsp...",
   "wizard.import.dropLabel": "Solte um sprite de jogador aqui",
-  "wizard.import.dropHint": ".zspr ou .rsp"
+  "wizard.import.dropHint": ".zspr ou .rsp",
+  "viewer.view-state": "Um estado",
+  "viewer.view-contact": "Todos os estados",
+  "viewer.view-sheet": "Folha de blocos",
+  "viewer.play": "Reproduzir",
+  "viewer.pause": "Pausar",
+  "viewer.step": "Passo",
+  "viewer.fps-aria": "Quadros por segundo",
+  "viewer.fps": "{fps} fps",
+  "viewer.zoom-aria": "Zoom",
+  "viewer.zoom": "Zoom {zoom}x"
 }

@@ -58,5 +58,11 @@
   "kind.item-group.many": "Gegenstandsgruppen",
   "kind.item-group.one": "Gegenstandsgruppe",
   "kind.enumeration.many": "Aufzählungen",
-  "kind.enumeration.one": "Aufzählung"
+  "kind.enumeration.one": "Aufzählung",
+  "rec.reason.mismatch": "{label}: Datensatz {dataset}, Spiel {live}.",
+  "rec.reason.missing-in-dataset": "{label}: Spiel {live}, Datensatz leer.",
+  "rec.reason.absent-in-game": "{label}: Datensatz {dataset}, im Spiel nicht vorhanden.",
+  "rec.reason.set-create": "{noun} {key}: im Spiel, nicht im Datensatz.",
+  "rec.reason.set-delete": "{noun} {key}: im Datensatz, im Spiel nicht vorhanden.",
+  "rec.reason.geography": "Der Ort {location} liegt nicht in diesem Gebiet. {count, plural, =1 {Nur {pick} liegt darin.} other {{pick} ist eine Vermutung aus {count}.}}"
 }

@@ -73,5 +73,15 @@
   "wizard.sourceLabel": "Woher das Sprite stammt",
   "wizard.import.placeholder": ".zspr- oder .rsp-URL einfügen...",
   "wizard.import.dropLabel": "Spieler-Sprite hier ablegen",
-  "wizard.import.dropHint": ".zspr oder .rsp"
+  "wizard.import.dropHint": ".zspr oder .rsp",
+  "viewer.view-state": "Ein Zustand",
+  "viewer.view-contact": "Alle Zustände",
+  "viewer.view-sheet": "Kachelbogen",
+  "viewer.play": "Abspielen",
+  "viewer.pause": "Pause",
+  "viewer.step": "Einzelschritt",
+  "viewer.fps-aria": "Bilder pro Sekunde",
+  "viewer.fps": "{fps} B/s",
+  "viewer.zoom-aria": "Zoom",
+  "viewer.zoom": "Zoom {zoom}x"
 }

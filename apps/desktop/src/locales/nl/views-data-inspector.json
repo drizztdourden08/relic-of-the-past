@@ -58,5 +58,11 @@
   "kind.item-group.many": "Itemgroepen",
   "kind.item-group.one": "Itemgroep",
   "kind.enumeration.many": "Opsommingen",
-  "kind.enumeration.one": "Opsomming"
+  "kind.enumeration.one": "Opsomming",
+  "rec.reason.mismatch": "{label}: record {dataset}, spel {live}.",
+  "rec.reason.missing-in-dataset": "{label}: spel {live}, record leeg.",
+  "rec.reason.absent-in-game": "{label}: record {dataset}, afwezig in het spel.",
+  "rec.reason.set-create": "{noun} {key}: in het spel, niet in de dataset.",
+  "rec.reason.set-delete": "{noun} {key}: in de dataset, afwezig in het spel.",
+  "rec.reason.geography": "Locatie {location} ligt niet in dit gebied. {count, plural, =1 {Alleen {pick} wel.} other {{pick} is een gok uit {count}.}}"
 }

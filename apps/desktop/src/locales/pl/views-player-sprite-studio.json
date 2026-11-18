@@ -73,5 +73,15 @@
   "wizard.sourceLabel": "Skąd pochodzi sprite",
   "wizard.import.placeholder": "Wklej adres URL .zspr lub .rsp...",
   "wizard.import.dropLabel": "Upuść tutaj sprite gracza",
-  "wizard.import.dropHint": ".zspr lub .rsp"
+  "wizard.import.dropHint": ".zspr lub .rsp",
+  "viewer.view-state": "Jeden stan",
+  "viewer.view-contact": "Wszystkie stany",
+  "viewer.view-sheet": "Arkusz kafelków",
+  "viewer.play": "Odtwórz",
+  "viewer.pause": "Pauza",
+  "viewer.step": "Krok",
+  "viewer.fps-aria": "Klatki na sekundę",
+  "viewer.fps": "{fps} kl/s",
+  "viewer.zoom-aria": "Powiększenie",
+  "viewer.zoom": "Powiększenie {zoom}x"
 }
