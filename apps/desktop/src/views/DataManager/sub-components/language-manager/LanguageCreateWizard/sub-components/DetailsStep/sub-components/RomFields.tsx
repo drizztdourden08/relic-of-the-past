@@ -1,5 +1,7 @@
 /* @layer renderer-components @kind component */
 import { DropZone, Field, Stack, TextInput } from '@drizztdourden08/tessera/primitives';
+import { officialRomStatuses } from '@rotp/roms';
+import { OfficialRomList } from '@app/compounds/OfficialRomList';
 import { LANGUAGE_ROM_ACCEPT } from '../../../../language-manager.constants';
 import { chosenStatus } from '../../../behavior/chosen-status';
 import type { SourceFieldsProps } from '../DetailsStep.type';
@@ -16,6 +18,7 @@ const RomFields = ({ values, update }: SourceFieldsProps) => (
         onDrop={(files) => update({ romFile: files[0] ?? null, romUrl: '' })}
       />
     </Field>
+    <OfficialRomList roms={officialRomStatuses()} />
     <Field label="Or a download link">
       <TextInput
         type="text"
