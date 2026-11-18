@@ -1,4 +1,6 @@
 /* @layer shared @kind types */
+import type { Message } from '@drizztdourden08/brock-core/i18n';
+
 type FeatureKind =
   | 'features0-bit'
   | 'render-geometry'
@@ -23,9 +25,9 @@ type FeatureOrigin = 'snesrev' | 'relic';
 
 interface FeatureDef {
   id: string;
-  label: string;
+  label: Message;
   description: string;
-  userMessage: string;
+  userMessage: Message;
   group: FeatureGroup;
   kind: FeatureKind;
   origin: FeatureOrigin;

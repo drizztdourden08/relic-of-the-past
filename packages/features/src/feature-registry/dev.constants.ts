@@ -1,13 +1,13 @@
 /* @layer shared @kind data */
+import { msg } from '@drizztdourden08/brock-core/i18n';
 import type { FeatureDef } from '../feature.type';
 
 const DEV_FEATURES: FeatureDef[] = [
   {
     id: 'developerToolsEnabled',
-    label: 'Developer tools',
+    label: msg('features:feature.developerToolsEnabled.label'),
     description: 'Master gate for developer-only instrumentation hooks, such as the transition-settled event the Navigation widget subscribes to in auto mode.',
-    userMessage:
-      'Turns on developer-only instrumentation. Host-side and purely observational, so it never changes what the game computes. Off by default; leave off unless a feature you use says it needs this.',
+    userMessage: msg('features:feature.developerToolsEnabled.message'),
     group: 'Dev',
     kind: 'host-event',
     origin: 'relic',
@@ -20,10 +20,9 @@ const DEV_FEATURES: FeatureDef[] = [
   },
   {
     id: 'devNavigationData',
-    label: 'Navigation data reads',
+    label: msg('features:feature.devNavigationData.label'),
     description: 'Room/grid/sprite data reads that feed the Location & Navigation widget, the flood fill, and the simulator. Needs developer tools on as well (NavQueryGate checks both).',
-    userMessage:
-      'Feeds the Location & Navigation widget, the flood fill, and the simulator with room/grid/sprite reads. Requires developer tools. Host-side and purely observational, so it never changes what the game computes.',
+    userMessage: msg('features:feature.devNavigationData.message'),
     group: 'Dev',
     kind: 'host-event',
     origin: 'relic',

@@ -1,13 +1,13 @@
 /* @layer shared @kind data */
+import { msg } from '@drizztdourden08/brock-core/i18n';
 import type { FeatureDef } from '../feature.type';
 
 const HOST_QUERY_FEATURES: FeatureDef[] = [
   {
     id: 'trackerEnabled',
-    label: 'Checks tracker',
+    label: msg('features:feature.trackerEnabled.label'),
     description: 'Inventory and save-flag polling that drives the checks tracker widget.',
-    userMessage:
-      'Lets the checks tracker read inventory and save flags out of the running game. Turning it off stops that polling and the tracker stops updating. Host-side and purely observational, so it never changes what the game computes.',
+    userMessage: msg('features:feature.trackerEnabled.message'),
     group: 'Quality of life',
     kind: 'host-event',
     origin: 'relic',

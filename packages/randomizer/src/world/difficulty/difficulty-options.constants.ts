@@ -1,4 +1,5 @@
 /* @layer shared-game @kind constants */
+import { msg } from '@drizztdourden08/brock-core/i18n';
 import { PROGRESSIVE_FAMILIES } from '../progressive/progressive-families.constants';
 import { DEFAULT_HEART_CAP, MAX_HEART_CAP, STARTING_HEARTS } from './difficulty';
 import { HEART_CAP_KEY, difficultyCopiesKeyOf } from './difficulty-option-keys';
@@ -8,7 +9,7 @@ import type { OptionDescription } from '../option-description.type';
 
 const HEART_CAP_SEED: OptionSeed = {
   key: HEART_CAP_KEY,
-  displayName: 'Most hearts',
+  displayName: msg('randomizer:difficulty.heartCap.name'),
   group: 'items',
   kind: 'range',
   implementation: 'active',
