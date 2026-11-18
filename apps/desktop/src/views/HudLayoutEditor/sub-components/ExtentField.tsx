@@ -31,7 +31,7 @@ const ExtentField = (props: ExtentFieldProps) => {
         {hasNumber ? (
           <NumberCell
             className="hud-extent__field"
-            label={`${label} value`}
+            label={t('hud-editor:extent-field.value', { label })}
             placeholder={t('hud-editor:extent-field.placeholder.auto')}
             value={current}
             onChange={(next) => onChange(extentFromNumber(mode, next))}
@@ -41,7 +41,7 @@ const ExtentField = (props: ExtentFieldProps) => {
         )}
         <Pressable
           className="hud-extent__unit"
-          aria-label={`${label} unit is ${suffix}`}
+          aria-label={t('hud-editor:extent-field.unit', { label, suffix })}
           aria-haspopup="menu"
           onClick={() => setOpen((was) => !was)}
         >

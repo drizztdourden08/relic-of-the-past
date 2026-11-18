@@ -5,10 +5,12 @@ import { atFromPointer } from '@app/hud-layout-editing/keyframe-track';
 import type { PointerEvent as ReactPointerEvent } from 'react';
 import { NUDGE, NUDGE_COARSE } from './KeyRail.constants';
 import type { KeyRailProps, RailCapture } from './KeyRail.type';
+import { useT } from '@drizztdourden08/brock-react';
 
 const pct = (at: number): string => `${Math.min(100, Math.max(0, at * 100))}%`;
 
 const KeyRail = (props: KeyRailProps) => {
+  const t = useT();
   const { keyframes, selected, onSelect, onMove, onAdd, head, endLabel } = props;
   const railRef = useRef<HTMLElement>(null);
   const draggingRef = useRef<number | null>(null);
@@ -63,7 +65,7 @@ const KeyRail = (props: KeyRailProps) => {
             key={index}
             className={`hud-kftrack__key${index === selected ? ' is-selected' : ''}`}
             style={{ left: pct(keyframe.at) }}
-            aria-label={`Keyframe ${index + 1} at ${keyframe.at}`}
+            aria-label={t('hud-editor:keyframes.key', { n: index + 1, at: keyframe.at })}
             aria-pressed={index === selected}
             onPointerDown={(event) => startDrag(index, event)}
             onClick={(event) => { event.stopPropagation(); onSelect(index); }}

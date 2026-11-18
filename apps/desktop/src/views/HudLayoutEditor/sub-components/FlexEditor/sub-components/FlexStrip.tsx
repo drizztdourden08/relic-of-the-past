@@ -38,7 +38,7 @@ const FlexStrip = (props: FlexStripProps) => {
           data-index={index}
           data-state={cell.selected ? 'selected' : 'idle'}
           data-cursor={cursor === index ? 'true' : undefined}
-          title={`${cell.id} is item ${index + 1}`}
+          title={t('hud-editor:flex.item-title', { id: cell.id, n: index + 1 })}
           style={{ '--hud-flex-weight': weights[index] } as CSSProperties}
           onPointerDown={(event) => onCellDown(index, event)}
         >

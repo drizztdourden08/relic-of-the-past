@@ -141,5 +141,10 @@
   "extent.auto": "auto (as big as what is in it)",
   "extent.fill": "fill (the rest of the main axis)",
   "extent.px": "px (game pixels)",
-  "extent.pct": "% (of the parent)"
+  "extent.pct": "% (of the parent)",
+  "summary.off": "off",
+  "summary.none": "none",
+  "summary.no-sides": "no {sides}",
+  "summary.outline": "{width}px, ink",
+  "summary.shadows": "{count, plural, one {# shadow} other {# shadows}}"
 }

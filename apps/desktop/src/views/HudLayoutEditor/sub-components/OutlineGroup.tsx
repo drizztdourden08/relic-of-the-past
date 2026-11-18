@@ -15,7 +15,7 @@ const OutlineGroup = (props: StyleGroupProps) => {
 
   return (
     <SubsectionGroup
-      title={t('hud-editor:outline-group.title.outline')} summary={outlineSummary(outline)} swatch={swatchOf(outline?.color)}
+      title={t('hud-editor:outline-group.title.outline')} summary={outlineSummary(outline, t)} swatch={swatchOf(outline?.color)}
       open={open} onToggle={onToggle} enabled={outline !== undefined}
       onEnabledChange={(on) => onEnable(on, { outline: on ? { width: 1, color: HUD_WHITE } : undefined })}
     >

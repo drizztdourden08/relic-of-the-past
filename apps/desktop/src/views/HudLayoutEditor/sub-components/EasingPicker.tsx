@@ -39,7 +39,7 @@ const EasingPicker = (props: EasingPickerProps) => {
       {stepsOn && (
         <NumberInput
           size="sm"
-          aria-label={`${label} step count`}
+          aria-label={t('hud-editor:easing-picker.step-count', { label })}
           value={steps}
           min={MIN_STEPS}
           step={1}

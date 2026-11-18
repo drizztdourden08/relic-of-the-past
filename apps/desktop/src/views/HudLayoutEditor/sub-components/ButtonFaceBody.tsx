@@ -31,7 +31,7 @@ const ButtonFaceBody = (props: ButtonFaceBodyProps) => {
         kind={art.kind}
         onOpen={() => setPickerOpen(face.from === 'image' ? 'sprite' : 'glyph')}
         anchorRef={anchorRef}
-        aria-label={`${state} face: ${art.name}`}
+        aria-label={t('hud-editor:button-face.aria', { state, name: art.name })}
       >
         <SpritePicker
           open={pickerOpen === 'sprite'}

@@ -24,7 +24,7 @@ const PackOverridesPanel = (props: PackOverridesPanelProps) => {
         <IconButton
           variant="ghost"
           size="sm"
-          label={`Delete ${pack.name}`}
+          label={t('hud-editor:pack-overrides-panel.delete', { name: pack.name })}
           disabled={busy}
           onClick={() => onDeletePack(pack.id)}
         >
@@ -35,7 +35,7 @@ const PackOverridesPanel = (props: PackOverridesPanelProps) => {
       <UploadField
         variant="block"
         accept={GLYPH_IMAGE_TYPES}
-        label={target ? `Drop an image for ${target}` : 'No buttons to import for'}
+        label={target ? t('hud-editor:pack-overrides-panel.drop', { target }) : t('hud-editor:pack-overrides-panel.no-target')}
         hint={t('hud-editor:pack-overrides-panel.hint.png-svg-gif-jpeg-or')}
         disabled={busy || !target}
         onFiles={(files) => { if (target && files[0]) onImport(pack.id, target, files[0]); }}
@@ -49,7 +49,7 @@ const PackOverridesPanel = (props: PackOverridesPanelProps) => {
             <IconButton
               variant="ghost"
               size="sm"
-              label={`Remove ${p}`}
+              label={t('hud-editor:pack-overrides-panel.remove', { position: p })}
               disabled={busy}
               onClick={() => onRemove(pack.id, p)}
             >

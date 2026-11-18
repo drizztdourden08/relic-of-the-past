@@ -35,7 +35,7 @@ const InspectorSections = (props: InspectorSectionsProps) => {
           onPatch={onPatch}
         />
       ))}
-      {!isScreen && section('placement', 'Position & placement', undefined, (
+      {!isScreen && section('placement', t('hud-editor:inspector.section.placement'), undefined, (
         <PlacementSection
           node={node}
           parent={parent}
@@ -52,7 +52,7 @@ const InspectorSections = (props: InspectorSectionsProps) => {
           insideRepeat={insideRepeat}
         />
       ))}
-      {section('sizeBox', 'Size & Box', counts.sizeBox, <SizeBoxSection node={node} onPatch={onPatch} scope={scope} insideRepeat={insideRepeat} isScreen={isScreen} />)}
+      {section('sizeBox', t('hud-editor:inspector.section.size-box'), counts.sizeBox, <SizeBoxSection node={node} onPatch={onPatch} scope={scope} insideRepeat={insideRepeat} isScreen={isScreen} />)}
       {section('appearance', t('hud-editor:inspector.section.appearance'), counts.appearance, <AppearanceSection node={node} onPatch={onPatch} scope={scope} insideRepeat={insideRepeat} />)}
       {node.kind === 'element' && section('content', t('hud-editor:inspector.section.content'), counts.content, (
         <ContentSection

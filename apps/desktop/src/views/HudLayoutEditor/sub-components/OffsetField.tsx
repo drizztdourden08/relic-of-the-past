@@ -11,14 +11,14 @@ const numberOf = (slot: PatternSlotValue | undefined): number => (typeof slot ==
 
 const OffsetField = (props: OffsetFieldProps) => {
   const t = useT();
-  const { value, onChange, from = 'where the parent puts it' } = props;
+  const { value, onChange, from = t('hud-editor:offset-field.from-default') } = props;
   const slots: PatternValue = { ...offsetOf(value) };
 
   return (
     <Field
       size="sm"
       label={t('hud-editor:offset-field.label.offset')}
-      hint={`from ${from}. Dragging on the stage writes the same two numbers`}
+      hint={t('hud-editor:offset-field.hint', { from })}
     >
       <DynamicInput
         size="sm"

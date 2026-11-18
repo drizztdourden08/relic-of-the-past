@@ -13,7 +13,7 @@ const BackgroundGroup = (props: StyleGroupProps) => {
 
   return (
     <SubsectionGroup
-      title={t('hud-editor:background-group.title.background')} summary={background === undefined ? 'off' : paintText(background)}
+      title={t('hud-editor:background-group.title.background')} summary={background === undefined ? t('hud-editing:summary.off') : paintText(background, t)}
       swatch={swatchOf(background)} open={open} onToggle={onToggle}
       enabled={background !== undefined}
       onEnabledChange={(on) => onEnable(on, { background: on ? HUD_BLACK : undefined })}

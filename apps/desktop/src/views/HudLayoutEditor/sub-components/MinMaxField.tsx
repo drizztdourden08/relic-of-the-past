@@ -34,7 +34,7 @@ const MinMaxField = (props: MinMaxFieldProps) => {
               <ValueInput
                 key={bound.key}
                 className="hud-minmax__value"
-                aria-label={`${bound.key} ${axis}`}
+                aria-label={t('hud-editor:min-max-field.aria', { bound: bound.key, axis })}
                 placeholder={bound.key}
                 value={bound.value?.[axis]}
                 onChange={(next) => bound.set(compact({ ...bound.value, [axis]: next }))}

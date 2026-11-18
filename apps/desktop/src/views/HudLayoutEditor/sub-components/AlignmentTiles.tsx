@@ -5,7 +5,7 @@ import { BAR_THICKNESS, BARS, FOLD_ABOVE } from './AlignmentTiles.constants';
 import type { AlignValue, FlowDirection } from '@app/hud-layout-editing/align-options';
 import type { CSSProperties } from 'react';
 import type { AlignRowSpec, AlignmentTilesProps } from './AlignmentTiles.type';
-import { useText } from '@drizztdourden08/brock-react';
+import { useT, useText } from '@drizztdourden08/brock-react';
 
 const diagramStyle = (
   row: AlignRowSpec, value: AlignValue, direction: FlowDirection,
@@ -42,6 +42,7 @@ const barStyle = (
 };
 
 const AlignmentTiles = (props: AlignmentTilesProps) => {
+  const t = useT();
   const text = useText();
   const { direction, rows } = props;
   const columns = Math.max(...rows.map(
@@ -63,7 +64,7 @@ const AlignmentTiles = (props: AlignmentTilesProps) => {
                 variant="ghost"
                 size="sm"
                 active={row.value === option.value}
-                label={`${text(row.label)}. ${text(option.label)}`}
+                label={t('hud-editor:alignment-tiles.tile', { row: text(row.label), option: text(option.label) })}
                 title={text(option.label)}
                 data-align={`${row.key}:${option.value}`}
                 onClick={() => row.onChange(option.value)}

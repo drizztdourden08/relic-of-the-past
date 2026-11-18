@@ -65,7 +65,7 @@ const InspectorRail = (props: InspectorRailProps) => {
         onStartFrom={draft.startFrom}
         onRename={draft.rename}
         onSave={() => { void draft.save(); }}
-        onSaveAs={() => { void draft.saveAs(`${layout.name} copy`); }}
+        onSaveAs={() => { void draft.saveAs(t('hud-editor:inspector.copy-name', { name: layout.name })); }}
         onReset={draft.reset}
       />
     </>

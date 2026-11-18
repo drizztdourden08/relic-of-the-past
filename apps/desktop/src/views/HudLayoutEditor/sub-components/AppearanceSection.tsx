@@ -45,7 +45,7 @@ const AppearanceSection = (props: AppearanceSectionProps) => {
       <OutlineGroup {...groupProps('outline')} />
       <TintGroup {...groupProps('tint')} />
 
-      <Field size="sm" label={`shadows (${shadowListSummary(style.shadow ?? [])})`}>
+      <Field size="sm" label={t('hud-editor:appearance.shadows', { summary: shadowListSummary(style.shadow ?? [], t) })}>
         <ShadowListEditor value={style.shadow} onChange={(shadow) => setStyle({ shadow })} scope={scope} insideRepeat={insideRepeat} openKey={openKey} onToggleKey={toggle} />
       </Field>
 

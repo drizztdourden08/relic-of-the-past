@@ -18,7 +18,7 @@ const BorderGroup = (props: StyleGroupProps) => {
 
   return (
     <SubsectionGroup
-      title={t('hud-editor:border-group.title.border')} summary={borderSummary(border)} swatch={swatchOf(border?.color)}
+      title={t('hud-editor:border-group.title.border')} summary={borderSummary(border, t)} swatch={swatchOf(border?.color)}
       open={open} onToggle={onToggle} enabled={border !== undefined}
       onEnabledChange={(on) => onEnable(on, { border: on ? { width: 1, color: HUD_WHITE } : undefined })}
     >

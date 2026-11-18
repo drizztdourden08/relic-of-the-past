@@ -3,11 +3,12 @@ import { Box, Text } from '@drizztdourden08/tessera/primitives';
 import { ActionButtons } from './sub-components/ActionButtons';
 import { NO_SELECTION } from './SelectionToolbar.constants';
 import type { SelectionToolbarProps } from './SelectionToolbar.type';
-import { useT } from '@drizztdourden08/brock-react';
+import { useT, useText } from '@drizztdourden08/brock-react';
 
 const SelectionToolbar = (props: SelectionToolbarProps) => {
   const t = useT();
-  const { chip, actions, hint = NO_SELECTION } = props;
+  const text = useText();
+  const { chip, actions, hint = text(NO_SELECTION) } = props;
   return (
     <Box
       className="hud-toolbar hud-grid__bar"

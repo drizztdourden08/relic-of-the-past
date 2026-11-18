@@ -44,8 +44,8 @@ const CaseListEditor = (props: CaseListEditorProps) => {
                 <IconButton variant="ghost" size="sm" label={t('hud-editor:case-list-editor.label.delete-case')} disabled={cases.length <= 1} onClick={() => onChange({ cases: cases.filter((_unused, at) => at !== i) })}>✕</IconButton>
               </Flex>
             </Flex>
-            <ExpressionInput value={c.when} onChange={(when) => setCase(i, { when })} scope={scope} insideRepeat={insideRepeat} aria-label={`Case ${i + 1} condition`} />
-            <CaseBranch node={c.node} label={`case ${i + 1}`} glyphPacks={glyphPacks} onSelectNode={onSelectNode} />
+            <ExpressionInput value={c.when} onChange={(when) => setCase(i, { when })} scope={scope} insideRepeat={insideRepeat} aria-label={t('hud-editor:case-list.condition', { n: i + 1 })} />
+            <CaseBranch node={c.node} label={t('hud-editor:case-list.case', { n: i + 1 })} glyphPacks={glyphPacks} onSelectNode={onSelectNode} />
           </Flex>
         );
       })}
@@ -64,10 +64,10 @@ const CaseListEditor = (props: CaseListEditorProps) => {
         {otherwise ? (
           <>
             <CaseBranch node={otherwise} label={t('hud-editor:case-list-editor.label.otherwise')} glyphPacks={glyphPacks} onSelectNode={onSelectNode} />
-            <Button variant="ghost" size="sm" onClick={() => onChange({ otherwise: undefined })}>remove</Button>
+            <Button variant="ghost" size="sm" onClick={() => onChange({ otherwise: undefined })}>{t('hud-editor:case-list.remove')}</Button>
           </>
         ) : (
-          <Button variant="ghost" size="sm" onClick={() => onChange({ otherwise: placeholderChild() })}>+ add otherwise</Button>
+          <Button variant="ghost" size="sm" onClick={() => onChange({ otherwise: placeholderChild() })}>{t('hud-editor:case-list.add-otherwise')}</Button>
         )}
       </Flex>
       <Text className="hud-editor__hint">{t('hud-editor:case-list-editor.text.first-match-wins-top-to')}</Text>

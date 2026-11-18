@@ -16,7 +16,7 @@ const TintGroup = (props: StyleGroupProps) => {
 
   return (
     <SubsectionGroup
-      title={t('hud-editor:tint-group.title.tint')} summary={tintSummary(tint)} swatch={swatchOf(tint?.color)}
+      title={t('hud-editor:tint-group.title.tint')} summary={tintSummary(tint, t)} swatch={swatchOf(tint?.color)}
       open={open} onToggle={onToggle} enabled={tint !== undefined}
       onEnabledChange={(on) => onEnable(on, { tint: on ? { color: HUD_WHITE } : undefined })}
     >

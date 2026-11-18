@@ -20,7 +20,7 @@ const AnimationGroup = (props: AnimationGroupProps) => {
   return (
     <SubsectionGroup
       title={animation.property}
-      summary={`${duration}ms · ${animation.loop}${animation.when !== undefined ? ' · gated' : ''}`}
+      summary={`${duration}ms · ${animation.loop}${animation.when !== undefined ? ` · ${t('hud-editor:animation-group.gated')}` : ''}`}
       open={open}
       onToggle={onToggle}
       action={{ label: t('hud-editor:animation-group.remove', { property: animation.property }), icon: '✕', onClick: onRemove }}
@@ -36,7 +36,7 @@ const AnimationGroup = (props: AnimationGroupProps) => {
       {reflow !== undefined
         ? <Text className="hud-inspect__warning"><Icon name="triangle-alert" size={14} aria-hidden /> {reflow}</Text>
         : REFLOW.has(animation.property) && (
-          <Text className="hud-inspect__warning"><Icon name="triangle-alert" size={14} aria-hidden /> width and height can reflow siblings. The other six properties never can.</Text>
+          <Text className="hud-inspect__warning"><Icon name="triangle-alert" size={14} aria-hidden /> {t('hud-editor:animation-group.reflow')}</Text>
         )}
 
       <KeyframeTrack

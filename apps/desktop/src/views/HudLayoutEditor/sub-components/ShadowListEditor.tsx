@@ -28,8 +28,8 @@ const ShadowListEditor = (props: ShadowListEditorProps) => {
       {shadows.map((shadow, i) => (
         <SubsectionGroup
           key={i}
-          title={`Shadow ${i + 1}`}
-          summary={shadowSummary(shadow)}
+          title={t('hud-editor:shadow.title', { n: i + 1 })}
+          summary={shadowSummary(shadow, t)}
           swatch={swatchOf(shadow.color)}
           open={openKey === `shadow-${i}`}
           onToggle={() => onToggleKey(`shadow-${i}`)}
@@ -45,7 +45,7 @@ const ShadowListEditor = (props: ShadowListEditorProps) => {
           <Toggle size="sm" checked={shadow.inset === true} label={t('hud-editor:shadow-list-editor.label.inset')} onChange={(inset) => setShadow(i, { inset: inset ? true : undefined })} />
         </SubsectionGroup>
       ))}
-      <Button variant="ghost" size="sm" onClick={() => onChange([...shadows, BLANK_SHADOW])}>+ add shadow</Button>
+      <Button variant="ghost" size="sm" onClick={() => onChange([...shadows, BLANK_SHADOW])}>{t('hud-editor:shadow.add')}</Button>
     </Flex>
   );
 };

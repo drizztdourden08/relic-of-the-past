@@ -39,7 +39,7 @@ const KeyframeTrack = (props: KeyframeTrackProps) => {
         endLabel={endLabel}
       />
 
-      <Field size="sm" label={`at · key ${selected + 1} of ${keyframes.length}`}>
+      <Field size="sm" label={t('hud-editor:keyframes.at', { n: selected + 1, total: keyframes.length })}>
         <Slider
           value={key.at}
           min={0}

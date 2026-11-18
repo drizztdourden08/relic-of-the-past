@@ -1,8 +1,10 @@
 /* @layer renderer-components @kind component */
 import { Box, Checkbox, IconButton, Pressable, Text } from '@drizztdourden08/tessera/primitives';
 import type { SubsectionGroupProps } from './SubsectionGroup.type';
+import { useT } from '@drizztdourden08/brock-react';
 
 const SubsectionGroup = (props: SubsectionGroupProps) => {
+  const t = useT();
   const { title, summary, swatch, open, onToggle, enabled, onEnabledChange, action, children } = props;
   const togglable = onEnabledChange !== undefined;
   const on = !togglable || enabled === true;
@@ -15,7 +17,7 @@ const SubsectionGroup = (props: SubsectionGroupProps) => {
           <Checkbox
             size="sm"
             checked={enabled === true}
-            ariaLabel={`${title} on`}
+            ariaLabel={t('hud-editor:subsection.on', { title })}
             onChange={(next) => onEnabledChange(next)}
           />
         )}

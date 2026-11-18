@@ -7,8 +7,10 @@ import { spriteLabel, spriteUrl } from '@app/hud-layout-editing/node-art';
 import { ReferenceField } from './ReferenceField';
 import { SpriteExtractionNotice } from './SpriteExtractionNotice';
 import type { SpriteContentProps } from './SpriteContent.type';
+import { useT } from '@drizztdourden08/brock-react';
 
 const SpriteContent = (props: SpriteContentProps) => {
+  const t = useT();
   const { spec, onChange } = props;
   const [open, setOpen] = useState(false);
   const anchorRef = useRef<HTMLButtonElement>(null);
@@ -20,7 +22,7 @@ const SpriteContent = (props: SpriteContentProps) => {
         name={spriteLabel(spec.file)}
         onOpen={() => setOpen(true)}
         anchorRef={anchorRef}
-        aria-label={`Sprite: ${spriteLabel(spec.file)}`}
+        aria-label={t('hud-editor:sprite-content.aria', { name: spriteLabel(spec.file) })}
       >
         <SpritePicker
           open={open}

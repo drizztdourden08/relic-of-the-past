@@ -31,7 +31,7 @@ const SlotRefField = (props: SlotRefFieldProps) => {
       kind={position ?? (known ? t('hud-editor:slot-ref-field.no-glyph') : undefined)}
       onOpen={() => setOpen(true)}
       anchorRef={anchorRef}
-      aria-label={`${label} ${value}`}
+      aria-label={t('hud-editor:slot-ref-field.aria', { label, value })}
       hint={note ? <Text className="hud-slot-ref__note">{note}</Text> : undefined}
     >
       <SlotPickerPanel

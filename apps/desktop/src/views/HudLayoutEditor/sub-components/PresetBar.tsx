@@ -41,7 +41,7 @@ const PresetBar = (props: PresetBarProps) => {
 
       {invalid && (
         <Text className="hud-inspect__warning" title={errors.join('\n')}>
-          <Icon name="triangle-alert" size={14} aria-hidden /> {errors.length} issue{errors.length === 1 ? '' : 's'}. First: {errors[0]}
+          <Icon name="triangle-alert" size={14} aria-hidden /> {t('hud-editor:preset-bar.issues', { count: errors.length, first: errors[0] ?? '' })}
         </Text>
       )}
 

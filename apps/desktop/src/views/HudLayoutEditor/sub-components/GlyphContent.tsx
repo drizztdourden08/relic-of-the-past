@@ -39,11 +39,11 @@ const GlyphContent = (props: GlyphContentProps) => {
         <ReferenceField
           label={t('hud-editor:glyph-content.label.control')}
           src={glyphArtUrl(glyphPacks, spec.pack, spec.position ?? '')}
-          name={spec.position ?? '(none)'}
+          name={spec.position ?? t('hud-editor:glyph-content.none')}
           kind={spec.pack}
           onOpen={() => setOpen(true)}
           anchorRef={anchorRef}
-          aria-label={`Glyph: ${spec.position ?? 'none'}`}
+          aria-label={t('hud-editor:glyph-content.aria', { position: spec.position ?? t('hud-editor:glyph-content.none-short') })}
         >
           <GlyphPickerGrid
             open={open}
