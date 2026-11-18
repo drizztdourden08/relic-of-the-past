@@ -1,0 +1,23 @@
+/* @layer renderer-lib @kind logic */
+import type { FileStore } from '@drizztdourden08/brock-core';
+import { GAME_ROM_LANGUAGE } from '@rotp/asset-extraction';
+import { keepRomLanguage } from '@rotp/languages';
+import type { ExtractedPack } from '@rotp/languages';
+import { runExtractStep } from '../extraction-client';
+import { NO_US_ROM_MESSAGE } from './asset-files.constants';
+import { findUsRom } from './find-us-rom';
+import { romRelease } from './rom-release';
+
+const gameRomBytes = async (files: FileStore, picked: Uint8Array): Promise<Uint8Array> => {
+  const release = await romRelease(picked);
+  if (release === null || release.language === GAME_ROM_LANGUAGE) return picked;
+  const pack = await runExtractStep<'language', ExtractedPack>({
+    step: 'language', title: 'Reading the ROM language', subject: 'rom', romBytes: picked, input: undefined,
+  });
+  await keepRomLanguage(files, pack);
+  const usRom = await findUsRom(files);
+  if (usRom === null) throw new Error(NO_US_ROM_MESSAGE);
+  return usRom;
+};
+
+export { gameRomBytes };

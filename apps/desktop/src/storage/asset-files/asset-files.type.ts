@@ -1,6 +1,8 @@
 /* @layer renderer-lib @kind types */
-import type { AssetSourceId } from '@rotp/asset-extraction';
+import type { AssetSourceId, ZELDA3_SHA1 } from '@rotp/asset-extraction';
 import type { ExtractedPack, SetBakeInput } from '@rotp/languages';
+
+type RomRelease = (typeof ZELDA3_SHA1)[string];
 
 type SupplementRoms = Partial<Record<AssetSourceId, Uint8Array>>;
 
@@ -21,4 +23,6 @@ interface AssetsResult {
 
 type ExtractResult = { success: boolean; error?: string; failures?: AssetFailure[] };
 
-export type { AssetsResult, BakeInputs, ExtractResult, SupplementRoms };
+export type {
+  AssetsResult, BakeInputs, ExtractResult, RomRelease, SupplementRoms,
+};
