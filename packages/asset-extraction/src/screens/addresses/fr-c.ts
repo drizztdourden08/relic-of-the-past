@@ -1,9 +1,6 @@
 /* @layer shared-asset-extraction @kind data */
 import type { ScreenAddressTable } from '../screen-payload.type';
-import {
-  END_WORD_SHEET, END_WORD_TILES, FLOOR_LABELS_FR, FLOOR_LETTER_SHEET, FLOOR_LETTER_TILES_FR, LATIN_TILEMAP_REBASE,
-  PRESENTS_SHEET, PRESENTS_TILES_FR,
-} from '../screens.constants';
+import { FR_FAMILY_SELECT_FILE, FR_FAMILY_SHARED } from './latin-shared';
 
 const FR_C_SCREEN_ADDRESSES: ScreenAddressTable = {
   id: 'fr-c',
@@ -12,13 +9,10 @@ const FR_C_SCREEN_ADDRESSES: ScreenAddressTable = {
     gfx0: { address: 0x8ea0be, count: 248 },
     nameStripes: { address: 0x8ea293, count: 253 },
     copySelect: { address: 0x8ea5f7, count: 173 },
-    copyBlinker: { address: 0x8e8ff1, count: 73 },
+    ...FR_FAMILY_SELECT_FILE,
     copyTargetTab0: { address: 0x8ea6a4, count: 133 },
-    copyTargetTab2: { address: 0x8e913d, count: 61 },
     killTarget: { address: 0x8ea481, count: 253 },
-    killTargetTab2: { address: 0x8e932d, count: 73 },
   },
-  nameGrid: { address: 0x8e982c, count: 128 },
   pauseText: {
     ability: { address: 0x8df941, count: 80 },
     gloves: { address: 0x8df919, count: 20 },
@@ -44,19 +38,8 @@ const FR_C_SCREEN_ADDRESSES: ScreenAddressTable = {
     offsets: { address: 0x8ee624, count: 394 },
   },
   sheetPointers: { spr: 0xcf99, bg: 0xcf26 },
-  sheets: { spr: [105, 106, 107], bg: [] },
-  sheetPatches: [
-    { index: END_WORD_SHEET, tiles: END_WORD_TILES },
-    { index: PRESENTS_SHEET, tiles: PRESENTS_TILES_FR },
-    { index: FLOOR_LETTER_SHEET, tiles: FLOOR_LETTER_TILES_FR },
-  ],
-  tilemapRebase: LATIN_TILEMAP_REBASE,
   pauseHeaders: { pendantsRow: 0x8de85c, crystalsRow: 0x8de910 },
-  floorLabels: FLOOR_LABELS_FR,
-  copyScreen: {
-    sourceFairyX: 0x8e8fe9, targetFairyX: 0x8e917a, sourceBlankColumn: 0x8e9122, targetBlankColumn: 0x8e926a,
-    targetDigits: 0x8e9184,
-  },
+  ...FR_FAMILY_SHARED,
 };
 
 export { FR_C_SCREEN_ADDRESSES };

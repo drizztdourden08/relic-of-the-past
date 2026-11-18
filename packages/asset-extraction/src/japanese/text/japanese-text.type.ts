@@ -19,4 +19,4 @@ interface TokenRead {
 
 type ReadByte = (addr: number) => number;
 
-export type { CommandToken, GlyphToken, JapaneseToken, ReadByte, TokenRead };
+export type { JapaneseToken, ReadByte, TokenRead };

@@ -29,4 +29,4 @@ interface ExtractedJapaneseLanguage {
   readonly flags: number;
 }
 
-export type { ExtractedJapaneseLanguage, JapaneseEntryParams, JapaneseLine, JapanesePackedEntry };
+export type { ExtractedJapaneseLanguage, JapaneseEntryParams, JapanesePackedEntry };
