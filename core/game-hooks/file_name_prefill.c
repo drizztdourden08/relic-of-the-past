@@ -35,18 +35,53 @@ void GameHook_ArmFileNamePrefill(void) {
   g_prefill_armed = true;
 }
 
-/** Both tile rows of one name box, appended to the stripe list at |dst|. */
-static uint16 *AppendNameTile(uint16 *dst, int box, uint16 chr) {
+// The US name entry with a Japanese set (select_us_ja_naming.c) opens named リンク, the Japanese
+// cartridge's name for the hero: its katakana as name words (glyph 0x89, 0x5f, 0x5a with kJaNameMark),
+// parked on the first page's End cell. The Japanese layout's own grid still opens blank.
+static const uint16 kPrefillNameJa[6] = {0x0309, 0x02af, 0x02aa, 0x00a9, 0x00a9, 0x00a9};
+enum {
+  kJaControlRow = 3,
+  kJaGridCols = 32,
+  kJaScrollX0 = 0x1f0,
+  kJaColPx = 0x10,
+  kJaScrollMask = 0x1ff,
+  kJaNextLetterBox = 3,
+  kJaBoxPalette = 0x1c00,
+};
+
+/** Both tile rows of one name box, |top| its top tile word, appended to the stripe list at |dst|. */
+static uint16 *AppendNameTile(uint16 *dst, int box, uint16 top) {
   // select_file.c NameFile_DrawSelectedCharacter: the same two stripes it writes for a typed letter.
   static const uint16 kBoxVram[6] = {0x84, 0x86, 0x88, 0x8a, 0x8c, 0x8e};
   uint16 addr = kBoxVram[box] | 0x6100;
   dst[0] = swap16(addr);
   dst[1] = 0x100;
-  dst[2] = 0x1800 | chr;
+  dst[2] = top;
   dst[3] = swap16(addr + 0x20);
   dst[4] = 0x100;
-  dst[5] = (0x1800 | chr) + 0x10;
+  dst[5] = top + 0x10;
   return dst + 6;
+}
+
+static uint16 BoxTile(bool ja, uint16 w) {
+  return ja ? SelectUsJa_TextWord(LanguageJa_NameTile(w) | kJaBoxPalette) : (uint16)(0x1800 | w);
+}
+
+static int JaEndCol(void) {
+  for (int c = 0; c < kJaGridCols; c++) {
+    if (SelectUsJaName_Cell(kJaControlRow, c) == kNameCellEnd)
+      return c;
+  }
+  return -1;
+}
+
+static void ParkOnEnd(bool ja) {
+  int col = ja ? JaEndCol() : kEndCol;
+  selectfile_var3 = (uint8)col;
+  selectfile_var5 = ja ? kJaControlRow : kEndRow;
+  selectfile_var8 = ja ? (uint16)((kJaScrollX0 + kJaColPx * col) & kJaScrollMask) : kEndScrollX;
+  selectfile_var7 = kEndScrollY;
+  selectfile_var4 = ja ? kJaNextLetterBox : kNextLetterBox;
 }
 
 void GameHook_PrefillFileName(void) {
@@ -55,24 +90,21 @@ void GameHook_PrefillFileName(void) {
   g_prefill_armed = false;
   if (!(enhanced_features0 & kFeatures0_PrefillFileName))
     return;
-  // The prefilled name and its parked cell are the US grid's; a kana grid opens blank.
-  if (LanguageJa_On() || SelectUsJaName_On())
+  // The Japanese layout's kana grid opens blank; the US layout with a Japanese set gets リンク.
+  bool ja = SelectUsJaName_On();
+  if (LanguageJa_On() || (ja && JaEndCol() < 0))
     return;
 
   // NameFile_EraseSave leaves the file block's SRAM offset in attract_legend_ctr.
   uint8 *name = g_zenv.sram + attract_legend_ctr + kSrmOffs_Name;
+  const uint16 *words = ja ? kPrefillNameJa : kPrefillName;
   uint16 *dst = vram_upload_data;
   for (int i = 0; i < 6; i++) {
-    WORD(name[i * 2]) = kPrefillName[i];
-    if (kPrefillName[i] != kBlankNameWord)
-      dst = AppendNameTile(dst, i, kPrefillName[i]);
+    WORD(name[i * 2]) = words[i];
+    if (words[i] != kBlankNameWord)
+      dst = AppendNameTile(dst, i, BoxTile(ja, words[i]));
   }
   BYTE(dst[0]) = 0xff;
   nmi_load_bg_from_vram = 1;
-
-  selectfile_var3 = kEndCol;
-  selectfile_var5 = kEndRow;
-  selectfile_var8 = kEndScrollX;
-  selectfile_var7 = kEndScrollY;
-  selectfile_var4 = kNextLetterBox;
+  ParkOnEnd(ja);
 }

@@ -1,8 +1,11 @@
 /* @layer core-game-hooks @kind native */
 // The kana grid's pages in the US name entry: which grid row each of the four US rows shows, and the
-// BG3 stripes that draw them. The words come from the Japanese set's own name entry tilemap (asset slot
-// 6, extracted from the user's cartridge), the row's two tile rows moved from the Japanese grid's place
-// to the US grid's and shifted so each cell lands in the US grid's column. See select_us_ja.h.
+// BG3 stripes that draw them. The grid's rows run in order three to a page; the fourth US row of every
+// page holds the control row's control cells (back, forward, End) and nothing else, and those cells are
+// left empty where that row comes up in order. The words come from the Japanese set's own name entry
+// tilemap (asset slot 6, extracted from the user's cartridge), the row's two tile rows moved from the
+// Japanese grid's place to the US grid's and shifted so each cell lands in the US grid's column. See
+// select_us_ja.h.
 #include "game_hooks_internal.h"
 
 enum {
@@ -12,10 +15,11 @@ enum {
   kGridBytes = 320,
   kPageRows = 3,
   kRowsShown = 4,
-  kPages = (kGridRows - 1 + kPageRows - 1) / kPageRows,
+  kPages = (kGridRows + kPageRows - 1) / kPageRows,
   kJaTileRow0 = 7,
   kUsTileRow0 = 16,
   kColShift = 11,
+  kCellCol0 = 3,
   kMapCols = 64,
   kScreenCols = 32,
   kBg3First = 0x6000,
@@ -47,22 +51,27 @@ static int ControlRow(const uint8 *grid) {
   return -1;
 }
 
+static bool IsControl(uint8 cell) {
+  return cell == kNameCellBack || cell == kNameCellForward || cell == kNameCellEnd;
+}
+
+static bool ControlSlot(int v) {
+  return v % kRowsShown == kRowsShown - 1;
+}
+
 // The grid row virtual row |v| shows: page v / 4, the control row in the fourth US row, -1 past the end.
 static int GridRowOf(const uint8 *grid, int v) {
-  int control = ControlRow(grid);
-  int u = v % kRowsShown;
-  if (u == kRowsShown - 1)
-    return control;
-  int index = v / kRowsShown * kPageRows + u;
-  if (index >= kGridRows - 1)
-    return -1;
-  return index < control ? index : index + 1;
+  if (ControlSlot(v))
+    return ControlRow(grid);
+  int index = v / kRowsShown * kPageRows + v % kRowsShown;
+  return index < kGridRows ? index : -1;
 }
 
 uint8 SelectUsJaName_Cell(int v, int col) {
   const uint8 *grid = Grid();
   int row = grid != NULL ? GridRowOf(grid, v) : -1;
-  return row < 0 ? kNameCellNone : grid[row * kGridCols + (col & (kGridCols - 1))];
+  uint8 cell = row < 0 ? kNameCellNone : grid[row * kGridCols + (col & (kGridCols - 1))];
+  return ControlSlot(v) != IsControl(cell) ? kNameCellNone : cell;
 }
 
 int SelectUsJaName_RowsShown(void) {
@@ -100,8 +109,9 @@ static void PutHeader(uint8 *p, uint16 addr, int bytes) {
 }
 
 // US tile row |us_row| drawn with Japanese tile row |ja_row| (all blank when negative), as one stripe
-// per BG3 screen. Returns the bytes written, -1 when |room| is too small.
-static int AppendTileRow(uint8 *out, int room, int us_row, int ja_row) {
+// per BG3 screen, keeping only the columns whose cell in |cells| (the grid row) is a control cell when
+// |controls|, and only the others when not. Returns the bytes written, -1 when |room| is too small.
+static int AppendTileRow(uint8 *out, int room, int us_row, int ja_row, const uint8 *cells, bool controls) {
   int need = 2 * (4 + 2 * kScreenCols);
   if (need > room)
     return -1;
@@ -110,6 +120,10 @@ static int AppendTileRow(uint8 *out, int room, int us_row, int ja_row) {
     JaTileRow(ja_row, ja);
   else
     for (int c = 0; c < kMapCols; c++) ja[c] = kBlankWord;
+  for (int c = 0; c < kMapCols && cells != NULL; c++) {
+    if (IsControl(cells[((c + kMapCols - kCellCol0) & (kMapCols - 1)) >> 1]) != controls)
+      ja[c] = kBlankWord;
+  }
   for (int half = 0; half < 2; half++) {
     uint8 *p = out + half * (4 + 2 * kScreenCols);
     PutHeader(p, (uint16)((half ? kBg3Screen1 : kBg3First) + us_row * kScreenCols), 2 * kScreenCols);
@@ -130,14 +144,19 @@ int SelectUsJaName_AppendPage(uint8 *out, int room, bool controls) {
   int at = 0;
   for (int u = 0; u < (controls ? kRowsShown : kPageRows); u++) {
     int row = GridRowOf(grid, first + u);
+    const uint8 *cells = row >= 0 ? grid + row * kGridCols : NULL;
     for (int half = 0; half < 2; half++) {
       int ja_row = row < 0 ? -1 : kJaTileRow0 + 2 * row + half;
-      int n = AppendTileRow(out + at, room - at, kUsTileRow0 + 2 * u + half, ja_row);
+      int n = AppendTileRow(out + at, room - at, kUsTileRow0 + 2 * u + half, ja_row, cells, ControlSlot(first + u));
       if (n < 0)
         return -1;
       at += n;
     }
   }
+  int header = controls ? SelectUsJaName_AppendHeader(out + at, room - at) : 0;
+  if (header < 0)
+    return -1;
+  at += header;
   g_turn_pending = false;
   return at;
 }

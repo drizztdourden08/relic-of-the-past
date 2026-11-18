@@ -53,6 +53,11 @@ bool SelectUsJaName_Frame(void);
 // control row when |controls|). Returns the bytes written, -1 when |room| is too small.
 int SelectUsJaName_AppendPage(uint8 *out, int room, bool controls);
 
+// The Japanese cartridge's name entry title (select_us_ja_name_header.c), appended to |out| as a BG1
+// stripe centred in the US header box, its tiles put in VRAM. Returns the bytes written (0 when neither
+// the pack nor the set carries the sheet), -1 when |room| is too small.
+int SelectUsJaName_AppendHeader(uint8 *out, int room);
+
 // The name entry's upload stream |p|, with the page appended once a page turn asked for it.
 const uint8 *SelectUsJaName_Upload(const uint8 *p);
 
