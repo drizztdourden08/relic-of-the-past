@@ -1674,7 +1674,7 @@ declare module '@drizztdourden08/brock-core/augment' {
     'hud:variable.rupee-max.note': Record<never, never>;
     'hud:variable.silver-arrows.note': Record<never, never>;
     'hud:variable.slot-count.note': Record<never, never>;
-    'hud:warning.reflow': { id: string | number };
+    'hud:warning.reflow': { id: string | number; property: string | number; parent: string | number };
     'language-editor:actions.export.busy': Record<never, never>;
     'language-editor:actions.export.group': Record<never, never>;
     'language-editor:actions.export.rlang': Record<never, never>;
