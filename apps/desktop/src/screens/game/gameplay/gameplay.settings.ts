@@ -1,5 +1,6 @@
 /* @layer renderer-app @kind config */
-import type { ScreenMeta, Section } from '@drizztdourden08/brock-react';
+import { msg } from '@drizztdourden08/brock-core/i18n';
+import type { ScreenMeta, SectionDef } from '@drizztdourden08/brock-react';
 
 const meta: ScreenMeta = { title: 'Gameplay', icon: 'gamepad-2', order: 1, keywords: ['gameplay', 'auto save', 'turbo', 'dialog', 'cheats', 'vanilla safe'] };
 
@@ -9,132 +10,132 @@ const asMinutes = (seconds: number): string => (seconds >= 60 ? `${Math.floor(se
 const asCount = (value: number): string => String(value);
 const asSeconds = (value: number): string => `${value}s`;
 
-const sections: Section[] = [
+const sections: SectionDef[] = [
   {
     id: 'game-flow',
-    title: 'Game Flow',
+    title: msg('settings-gameplay:section.game-flow.title'),
     subsections: [
       {
         id: 'save-auto',
-        title: 'Auto-Save',
+        title: msg('settings-gameplay:section.save-auto.title'),
         items: [
-          { key: 'autoSaveEnabled', label: 'Enable Auto-Save', description: 'Automatically create save state snapshots at regular intervals during gameplay', keywords: 'auto save timer interval automatic' },
-          { key: 'autoSaveIntervalSeconds', label: 'Auto-Save Interval', description: 'How often to create an automatic save', hint: 'Needs Enable Auto-Save.', keywords: 'auto save interval time frequency', control: { kind: 'range', min: 60, max: 1800, step: 60, format: asMinutes } },
-          { key: 'autoSaveMaxEntries', label: 'Max Auto-Save Entries', description: 'Maximum number of auto-saves to keep (oldest are pruned)', keywords: 'auto save max limit entries prune', control: { kind: 'range', min: 1, max: 20, step: 1, format: asCount } },
-          { key: 'saveOnQuit', label: 'Save on Quit', description: 'Automatically create a save state when you stop the game or close the app', keywords: 'save quit close exit auto' },
+          { key: 'autoSaveEnabled', label: msg('settings-gameplay:auto-save-enabled.label'), description: msg('settings-gameplay:auto-save-enabled.description'), keywords: 'auto save timer interval automatic' },
+          { key: 'autoSaveIntervalSeconds', label: msg('settings-gameplay:auto-save-interval-seconds.label'), description: msg('settings-gameplay:auto-save-interval-seconds.description'), hint: msg('settings-gameplay:auto-save-interval-seconds.hint'), keywords: 'auto save interval time frequency', control: { kind: 'range', min: 60, max: 1800, step: 60, format: asMinutes } },
+          { key: 'autoSaveMaxEntries', label: msg('settings-gameplay:auto-save-max-entries.label'), description: msg('settings-gameplay:auto-save-max-entries.description'), keywords: 'auto save max limit entries prune', control: { kind: 'range', min: 1, max: 20, step: 1, format: asCount } },
+          { key: 'saveOnQuit', label: msg('settings-gameplay:save-on-quit.label'), description: msg('settings-gameplay:save-on-quit.description'), keywords: 'save quit close exit auto' },
         ],
       },
       {
         id: 'save-shortcuts',
-        title: 'Quick Save Shortcuts',
+        title: msg('settings-gameplay:section.save-shortcuts.title'),
         items: [
-          { key: 'enhancedSaveSlotShortcut', label: 'Enhanced Save Slot Shortcut', description: 'Opens the save slot menu on shortcut press instead of immediately saving/loading', keywords: 'save state slot shortcut enhanced menu overlay' },
-          { key: 'saveHoldDuration', label: 'Hold to Save Duration', description: 'How long to hold the key to save (seconds)', hint: 'Needs Enhanced Save Slot Shortcut.', keywords: 'save hold duration time seconds', control: { kind: 'range', min: 1, max: 5, step: 0.5, format: asSeconds } },
+          { key: 'enhancedSaveSlotShortcut', label: msg('settings-gameplay:enhanced-save-slot-shortcut.label'), description: msg('settings-gameplay:enhanced-save-slot-shortcut.description'), keywords: 'save state slot shortcut enhanced menu overlay' },
+          { key: 'saveHoldDuration', label: msg('settings-gameplay:save-hold-duration.label'), description: msg('settings-gameplay:save-hold-duration.description'), hint: msg('settings-gameplay:save-hold-duration.hint'), keywords: 'save hold duration time seconds', control: { kind: 'range', min: 1, max: 5, step: 0.5, format: asSeconds } },
         ],
       },
       {
         id: 'turbo',
-        title: 'Turbo',
+        title: msg('settings-gameplay:section.turbo.title'),
         items: [
-          { key: 'turboEnabled', label: 'Turbo', description: 'Runs the game faster while the Turbo shortcut is held. Music keeps its tempo.', keywords: turboKeywords },
-          { key: 'turboSpeed', label: 'Turbo Speed', description: 'How much faster the game runs while the shortcut is held, from 1.25x up to 10x.', hint: 'Needs Turbo on.', keywords: turboKeywords },
+          { key: 'turboEnabled', label: msg('settings-gameplay:turbo-enabled.label'), description: msg('settings-gameplay:turbo-enabled.description'), keywords: turboKeywords },
+          { key: 'turboSpeed', label: msg('settings-gameplay:turbo-speed.label'), description: msg('settings-gameplay:turbo-speed.description'), hint: msg('settings-gameplay:turbo-speed.hint'), keywords: turboKeywords },
         ],
       },
     ],
   },
   {
     id: 'received-items',
-    title: 'Received Items',
+    title: msg('settings-gameplay:section.received-items.title'),
     items: [
-      { key: 'quietRupees', label: 'Quiet Rupees', description: 'Randomizer rupees arrive without a message.', keywords: 'quiet rupees message received randomizer archipelago online hold up' },
-      { key: 'quietBombs', label: 'Quiet Bombs', description: 'Randomizer bombs arrive without a message.', keywords: 'quiet bombs message received randomizer archipelago online hold up' },
-      { key: 'quietArrows', label: 'Quiet Arrows', description: 'Randomizer arrows arrive without a message.', keywords: 'quiet arrows message received randomizer archipelago online hold up' },
+      { key: 'quietRupees', label: msg('settings-gameplay:quiet-rupees.label'), description: msg('settings-gameplay:quiet-rupees.description'), keywords: 'quiet rupees message received randomizer archipelago online hold up' },
+      { key: 'quietBombs', label: msg('settings-gameplay:quiet-bombs.label'), description: msg('settings-gameplay:quiet-bombs.description'), keywords: 'quiet bombs message received randomizer archipelago online hold up' },
+      { key: 'quietArrows', label: msg('settings-gameplay:quiet-arrows.label'), description: msg('settings-gameplay:quiet-arrows.description'), keywords: 'quiet arrows message received randomizer archipelago online hold up' },
     ],
   },
   {
     id: 'movement',
-    title: 'Movement',
+    title: msg('settings-gameplay:section.movement.title'),
     items: [
-      { key: 'turnWhileDashing', label: 'Turn While Dashing', description: 'Change direction while using the Pegasus Boots dash', keywords: 'dash turn pegasus boots direction' },
-      { key: 'mirrorToDarkworld', label: 'Mirror to Dark World', description: 'The Magic Mirror can warp you to the Dark World from the Light World', keywords: 'mirror warp dark world light world' },
-      { key: 'cancelBirdTravel', label: 'Cancel Bird Travel', description: 'Cancel duck flight in progress by pressing the X button', keywords: 'bird duck cancel fly' },
-      { key: 'allowDiving', label: 'Allow Diving with Flippers', description: 'Press B while swimming to duck under for a moment, out of reach of anything that would hit you.', keywords: 'dive diving swim underwater flippers b button dodge' },
+      { key: 'turnWhileDashing', label: msg('settings-gameplay:turn-while-dashing.label'), description: msg('settings-gameplay:turn-while-dashing.description'), keywords: 'dash turn pegasus boots direction' },
+      { key: 'mirrorToDarkworld', label: msg('settings-gameplay:mirror-to-darkworld.label'), description: msg('settings-gameplay:mirror-to-darkworld.description'), keywords: 'mirror warp dark world light world' },
+      { key: 'cancelBirdTravel', label: msg('settings-gameplay:cancel-bird-travel.label'), description: msg('settings-gameplay:cancel-bird-travel.description'), keywords: 'bird duck cancel fly' },
+      { key: 'allowDiving', label: msg('settings-gameplay:allow-diving.label'), description: msg('settings-gameplay:allow-diving.description'), keywords: 'dive diving swim underwater flippers b button dodge' },
     ],
   },
   {
     id: 'combat',
-    title: 'Combat',
+    title: msg('settings-gameplay:section.combat.title'),
     items: [
-      { key: 'collectItemsWithSword', label: 'Collect Items with Sword', description: 'Pick up hearts, rupees, and other items by slashing them with your sword', keywords: 'sword collect slash hearts items' },
-      { key: 'breakPotsWithSword', label: 'Break Pots with Sword', description: 'Level 2 or higher swords can break pots by slashing them', keywords: 'pots sword break level' },
-      { key: 'moreActiveBombs', label: 'More Active Bombs', description: 'Place up to 4 active bombs at once', keywords: 'bombs active limit' },
+      { key: 'collectItemsWithSword', label: msg('settings-gameplay:collect-items-with-sword.label'), description: msg('settings-gameplay:collect-items-with-sword.description'), keywords: 'sword collect slash hearts items' },
+      { key: 'breakPotsWithSword', label: msg('settings-gameplay:break-pots-with-sword.label'), description: msg('settings-gameplay:break-pots-with-sword.description'), keywords: 'pots sword break level' },
+      { key: 'moreActiveBombs', label: msg('settings-gameplay:more-active-bombs.label'), description: msg('settings-gameplay:more-active-bombs.description'), keywords: 'bombs active limit' },
     ],
   },
   {
     id: 'dialog',
-    title: 'Dialog',
+    title: msg('settings-gameplay:section.dialog.title'),
     subsections: [
       {
         id: 'dialog-pacing',
-        title: 'Pacing',
+        title: msg('settings-gameplay:section.dialog-pacing.title'),
         items: [
-          { key: 'dialogSpeed', label: 'Text Speed', description: 'How fast text, pauses and scrolling play out: below Original slows typed lines, above it speeds everything, Instant skips the wait', keywords: 'dialog text speed fast slow instant pacing multiplier' },
-          { key: 'dialogHoldToAccelerate', label: 'Hold A to Accelerate', description: 'While A is held, dialog plays at the speed on the right', keywords: 'dialog hold a accelerate fast forward speed button' },
-          { key: 'dialogFillOnB', label: 'B Completes the Box', description: 'One press writes the whole box; the next press advances', keywords: 'dialog b complete fill box skip typing advance' },
-          { key: 'dialogTypewriter', label: 'Type Letter by Letter', description: 'Lines the game shows all at once type out one letter at a time, so Text Speed sets the typing rate', keywords: 'dialog typewriter letter glyph typing rate slow text speed' },
+          { key: 'dialogSpeed', label: msg('settings-gameplay:dialog-speed.label'), description: msg('settings-gameplay:dialog-speed.description'), keywords: 'dialog text speed fast slow instant pacing multiplier' },
+          { key: 'dialogHoldToAccelerate', label: msg('settings-gameplay:dialog-hold-to-accelerate.label'), description: msg('settings-gameplay:dialog-hold-to-accelerate.description'), keywords: 'dialog hold a accelerate fast forward speed button' },
+          { key: 'dialogFillOnB', label: msg('settings-gameplay:dialog-fill-on-b.label'), description: msg('settings-gameplay:dialog-fill-on-b.description'), keywords: 'dialog b complete fill box skip typing advance' },
+          { key: 'dialogTypewriter', label: msg('settings-gameplay:dialog-typewriter.label'), description: msg('settings-gameplay:dialog-typewriter.description'), keywords: 'dialog typewriter letter glyph typing rate slow text speed' },
         ],
       },
       {
         id: 'dialog-skipping',
-        title: 'Skipping',
+        title: msg('settings-gameplay:section.dialog-skipping.title'),
         items: [
-          { key: 'autoSkipDialog', label: 'Auto-Skip Dialog', description: 'Show dialog text instantly and dismiss message boxes for you, including item-get text. Yes/no and shop prompts still wait for your answer.', keywords: 'dialog text skip fast auto advance message box speed instant' },
-          { key: 'disableTelepathy', label: 'Disable Telepathic Messages', description: "Suppress the princess's periodic telepathic pleas while walking to the castle in the rain", keywords: 'princess telepathy rain message annoying skip' },
+          { key: 'autoSkipDialog', label: msg('settings-gameplay:auto-skip-dialog.label'), description: msg('settings-gameplay:auto-skip-dialog.description'), keywords: 'dialog text skip fast auto advance message box speed instant' },
+          { key: 'disableTelepathy', label: msg('settings-gameplay:disable-telepathy.label'), description: msg('settings-gameplay:disable-telepathy.description'), keywords: 'princess telepathy rain message annoying skip' },
         ],
       },
       {
         id: 'dialog-letters',
-        title: 'Letters',
+        title: msg('settings-gameplay:section.dialog-letters.title'),
         items: [
-          { key: 'extendedLetters', label: 'Every Accented Letter', description: "Dialog shows every accented letter a translation or a name uses, drawn in the game's own font. Off shows the plain letter instead.", keywords: 'dialog accent accented letters latin translation language name font diacritic' },
-          { key: 'languageScreens', label: 'Screens Follow the Language', description: 'Menus, pause text, ending and credits use the language too.', keywords: 'screens menu pause file select name ending credits language translation' },
-          { key: 'jaFileSelectStyle', label: 'Japanese file select style', description: 'The file select screen uses the Japanese cartridge layout. Text still follows the language. Needs a Japanese ROM.', keywords: 'japanese cartridge graphics intro hud copyright file select style' },
+          { key: 'extendedLetters', label: msg('settings-gameplay:extended-letters.label'), description: msg('settings-gameplay:extended-letters.description'), keywords: 'dialog accent accented letters latin translation language name font diacritic' },
+          { key: 'languageScreens', label: msg('settings-gameplay:language-screens.label'), description: msg('settings-gameplay:language-screens.description'), keywords: 'screens menu pause file select name ending credits language translation' },
+          { key: 'jaFileSelectStyle', label: msg('settings-gameplay:ja-file-select-style.label'), description: msg('settings-gameplay:ja-file-select-style.description'), keywords: 'japanese cartridge graphics intro hud copyright file select style' },
         ],
       },
     ],
   },
   {
     id: 'qol',
-    title: 'Quality of Life',
+    title: msg('settings-gameplay:section.qol.title'),
     items: [
-      { key: 'disableLowHealthBeep', label: 'Disable Low Heart Beep', description: 'Silence the repeating warning beep when your health is low', keywords: 'beep heart health warning annoying' },
-      { key: 'skipIntroOnKeypress', label: 'Skip Intro on Keypress', description: 'Press any key to skip the intro and title screen sequence', keywords: 'intro skip key press' },
-      { key: 'showMaxItemsInYellow', label: 'Indicate Max Resources', description: "Highlight rupees, bombs, and arrows in yellow when you're carrying the maximum amount", keywords: 'max yellow rupees bombs arrows' },
-      { key: 'carryMoreRupees', label: 'Larger Wallet', description: 'Increase the maximum rupee capacity from 999 to 9999', keywords: 'rupees wallet money' },
-      { key: 'prefillFileName', label: 'Prefill File Name', description: 'New files start named Link, with the cursor on End.', keywords: 'name file link new save naming end default' },
-      { key: 'archeryNeedsBow', label: 'Archery Game Asks For A Bow', description: 'Stop the archery game from taking your money when you have nothing to shoot with; the owner tells you why instead.', keywords: 'archery shooting gallery target bow arrow minigame game refund fee rupees' },
-      { key: 'mapOnSelect', label: 'Open Map with Select', description: 'Press the select button to open the map without going through the pause menu. Classic controls only.', keywords: 'map select button shortcut' },
+      { key: 'disableLowHealthBeep', label: msg('settings-gameplay:disable-low-health-beep.label'), description: msg('settings-gameplay:disable-low-health-beep.description'), keywords: 'beep heart health warning annoying' },
+      { key: 'skipIntroOnKeypress', label: msg('settings-gameplay:skip-intro-on-keypress.label'), description: msg('settings-gameplay:skip-intro-on-keypress.description'), keywords: 'intro skip key press' },
+      { key: 'showMaxItemsInYellow', label: msg('settings-gameplay:show-max-items-in-yellow.label'), description: msg('settings-gameplay:show-max-items-in-yellow.description'), keywords: 'max yellow rupees bombs arrows' },
+      { key: 'carryMoreRupees', label: msg('settings-gameplay:carry-more-rupees.label'), description: msg('settings-gameplay:carry-more-rupees.description'), keywords: 'rupees wallet money' },
+      { key: 'prefillFileName', label: msg('settings-gameplay:prefill-file-name.label'), description: msg('settings-gameplay:prefill-file-name.description'), keywords: 'name file link new save naming end default' },
+      { key: 'archeryNeedsBow', label: msg('settings-gameplay:archery-needs-bow.label'), description: msg('settings-gameplay:archery-needs-bow.description'), keywords: 'archery shooting gallery target bow arrow minigame game refund fee rupees' },
+      { key: 'mapOnSelect', label: msg('settings-gameplay:map-on-select.label'), description: msg('settings-gameplay:map-on-select.description'), keywords: 'map select button shortcut' },
     ],
   },
   {
     id: 'cheats',
-    title: 'Cheats',
+    title: msg('settings-gameplay:section.cheats.title'),
     items: [
-      { key: 'cheatsEnabled', label: 'Enable Cheats', description: 'Master switch for every cheat: stats, items, combat and ignore collision.', keywords: 'cheat cheats enable master gate ignore collision walk through walls noclip kill enemies magic' },
+      { key: 'cheatsEnabled', label: msg('settings-gameplay:cheats-enabled.label'), description: msg('settings-gameplay:cheats-enabled.description'), keywords: 'cheat cheats enable master gate ignore collision walk through walls noclip kill enemies magic' },
     ],
   },
   {
     id: 'tracker',
-    title: 'Tracker',
+    title: msg('settings-gameplay:section.tracker.title'),
     items: [
-      { key: 'trackerEnabled', label: 'Enable Checks Tracker', description: 'Turning this off stops the checks tracker updating.', keywords: 'tracker checks inventory save flags poll widget' },
+      { key: 'trackerEnabled', label: msg('settings-gameplay:tracker-enabled.label'), description: msg('settings-gameplay:tracker-enabled.description'), keywords: 'tracker checks inventory save flags poll widget' },
     ],
   },
   {
     id: 'vanilla-safe',
-    title: 'Vanilla Safe',
+    title: msg('settings-gameplay:section.vanilla-safe.title'),
     items: [
-      { key: 'vanillaSafe', label: 'Vanilla Safe', description: 'Forces off every feature, quality-of-life flag, bug fix, cheat, item override, custom player sprite and HUD override, so the game matches the original cartridge exactly. Harmless, low-risk divergences are included too; there are no exemptions.', keywords: 'vanilla safe parity original cartridge stock speedrun race lock' },
+      { key: 'vanillaSafe', label: msg('settings-gameplay:vanilla-safe.label'), description: msg('settings-gameplay:vanilla-safe.description'), keywords: 'vanilla safe parity original cartridge stock speedrun race lock' },
     ],
   },
 ];

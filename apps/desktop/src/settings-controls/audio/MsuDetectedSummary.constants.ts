@@ -1,8 +1,10 @@
 /* @layer renderer-components @kind constants */
+import { msg } from '@drizztdourden08/brock-core/i18n';
+import type { Text } from '@drizztdourden08/brock-core/i18n';
 import type { GameSettings } from '@rotp/features';
 
-const MODE_LABELS: Record<GameSettings['enableMSU'], string> = {
-  false: 'Off',
+const MODE_LABELS: Record<GameSettings['enableMSU'], Text> = {
+  false: msg('settings-controls:audio.msu.off'),
   true: 'MSU',
   deluxe: 'Deluxe',
   opuz: 'OPUZ',
@@ -10,6 +12,4 @@ const MODE_LABELS: Record<GameSettings['enableMSU'], string> = {
   msul: 'MSUL',
 };
 
-const NO_PACK_LINE = 'None. No pack assigned to this profile. Assign one in Data Manager.';
-
-export { MODE_LABELS, NO_PACK_LINE };
+export { MODE_LABELS };

@@ -1,5 +1,6 @@
 /* @layer renderer-app @kind logic */
 import { createElement } from 'react';
+import { msg } from '@drizztdourden08/brock-core/i18n';
 import type { ReactNode } from 'react';
 import { DIALOG_SPEED_STOPS, formatDialogSpeed } from '@rotp/game-data';
 import type { DialogSpeedStop } from '@rotp/game-data';
@@ -36,8 +37,8 @@ const renderGameplayControl = (key: string, ctx: ControlContext): ReactNode | nu
       });
     case 'dialogHoldToAccelerate':
       return createElement(DialogHoldRow, {
-        label: 'Hold A to Accelerate',
-        description: 'While A is held, dialog plays at the speed on the right',
+        label: msg('settings-gameplay:dialog-hold-to-accelerate.label'),
+        description: msg('settings-gameplay:dialog-hold-to-accelerate.description'),
         enabled: settings.dialogHoldToAccelerate,
         speed: settings.dialogHoldSpeed,
         disabled,

@@ -1,11 +1,13 @@
 /* @layer renderer-components @kind component */
-import { useCallback, useEffect } from 'react';
+import { useCallback, useEffect, useMemo } from 'react';
+import { useT } from '@drizztdourden08/brock-react';
 import { useHubSessionStore } from '@app/stores/hub-session';
-import { SANCTUARY_SITE_URL } from '@rotp/hub-client';
+import { SANCTUARY_SITE_HOST, SANCTUARY_SITE_URL } from '@rotp/hub-client';
 import { HubAccountCard } from '@app/compounds/HubAccountCard';
-import { SANCTUARY_COPY } from './SanctuaryAccount.constants';
+import type { HubAccountCopy } from '@app/compounds/HubAccountCard';
 
 const SanctuaryAccount = () => {
+  const t = useT();
   const me = useHubSessionStore((s) => s.me);
   const state = useHubSessionStore((s) => s.state);
   const userCode = useHubSessionStore((s) => s.userCode);
@@ -16,6 +18,13 @@ const SanctuaryAccount = () => {
   const signOut = useHubSessionStore((s) => s.signOut);
 
   useEffect(() => { void refresh(); }, [refresh]);
+
+  const copy = useMemo<HubAccountCopy>(() => ({
+    signedOutLead: t('settings-controls:contributing.sanctuary.signed-out-lead'),
+    signInLabel: t('settings-controls:contributing.sanctuary.sign-in'),
+    openSiteLabel: t('settings-controls:contributing.sanctuary.open-site'),
+    siteHost: SANCTUARY_SITE_HOST,
+  }), [t]);
 
   const handleSignIn = useCallback(() => { void signIn(); }, [signIn]);
   const handleCancel = useCallback(() => { void cancel(); }, [cancel]);
@@ -28,7 +37,7 @@ const SanctuaryAccount = () => {
       me={me}
       userCode={userCode}
       lastError={lastError}
-      copy={SANCTUARY_COPY}
+      copy={copy}
       onSignIn={handleSignIn}
       onCancel={handleCancel}
       onSignOut={handleSignOut}

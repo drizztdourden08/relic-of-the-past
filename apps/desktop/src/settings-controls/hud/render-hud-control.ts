@@ -1,6 +1,8 @@
 /* @layer renderer-app @kind logic */
 import { createElement } from 'react';
 import type { ReactNode } from 'react';
+import { msg } from '@drizztdourden08/brock-core/i18n';
+import type { Text } from '@drizztdourden08/brock-core/i18n';
 import { DIALOG_FONT_SCALES, DIALOG_STROKE_WIDTHS } from '@rotp/game-data';
 import type { GameSettings } from '@rotp/features';
 import { HudStyleControl } from '../HudStyleControl';
@@ -13,7 +15,7 @@ import type { ControlContext } from '../settings-controls.type';
 import type { ColorKey } from './hud.type';
 
 const timesLabel = (stop: number): string => `${stop}x`;
-const strokeLabel = (stop: number): string => (stop === 0 ? 'None' : `${stop}px`);
+const strokeLabel = (stop: number): Text => (stop === 0 ? msg('settings-controls:hud.stroke.none') : `${stop}px`);
 const isColorKey = (key: string): key is ColorKey => (COLOR_KEYS as readonly string[]).includes(key);
 
 const styleRow = (ctx: ControlContext): ReactNode => createElement(HudStyleControl, {

@@ -1,65 +1,66 @@
 /* @layer renderer-app @kind config */
-import type { ScreenMeta, Section } from '@drizztdourden08/brock-react';
+import { msg } from '@drizztdourden08/brock-core/i18n';
+import type { ScreenMeta, SectionDef } from '@drizztdourden08/brock-react';
 
 const meta: ScreenMeta = { title: 'Graphics', icon: 'palette', order: 2, keywords: ['graphics', 'renderer', 'filter', 'sprite', 'mode 7', 'rupees'] };
 
-const sections: Section[] = [
+const sections: SectionDef[] = [
   {
     id: 'rendering',
-    title: 'Rendering',
+    title: msg('settings-graphics:section.rendering.title'),
     subsections: [
       {
         id: 'rendering-engine',
-        title: 'Engine',
+        title: msg('settings-graphics:section.rendering-engine.title'),
         items: [
-          { key: 'newRenderer', label: 'Optimized PPU', description: 'Uses a faster pixel processing unit. Looks identical and runs much faster', keywords: 'ppu renderer engine optimized fast' },
-          { key: 'enhancedMode7', label: 'Enhanced Mode 7', description: 'Render the world map and flying sequences at higher resolution with smooth rotation and scaling, replacing the original pixelated Mode 7 effect', keywords: 'mode7 map resolution hd smooth' },
-          { key: 'noSpriteLimits', label: 'No Sprite Limit', description: 'Lifts the limit of 8 sprites per line, so busy scenes stop flickering', keywords: 'sprite limit scanline flicker' },
+          { key: 'newRenderer', label: msg('settings-graphics:new-renderer.label'), description: msg('settings-graphics:new-renderer.description'), keywords: 'ppu renderer engine optimized fast' },
+          { key: 'enhancedMode7', label: msg('settings-graphics:enhanced-mode7.label'), description: msg('settings-graphics:enhanced-mode7.description'), keywords: 'mode7 map resolution hd smooth' },
+          { key: 'noSpriteLimits', label: msg('settings-graphics:no-sprite-limits.label'), description: msg('settings-graphics:no-sprite-limits.description'), keywords: 'sprite limit scanline flicker' },
         ],
       },
       {
         id: 'rendering-quality',
-        title: 'Quality',
+        title: msg('settings-graphics:section.rendering-quality.title'),
         items: [
-          { key: 'linearFiltering', label: 'Linear Filtering', description: 'Apply bilinear interpolation for smoother, less pixelated visuals. Turn it off for crisp pixel art', hint: 'Pixel Perfect turns it off.', keywords: 'filter smooth pixel crisp bilinear' },
-          { key: 'dimFlashes', label: 'Dim Flashes', description: 'Reduces the intensity of screen flashes (lightning, boss hits). Helps with photosensitivity', keywords: 'flash dim reduce epilepsy accessibility' },
+          { key: 'linearFiltering', label: msg('settings-graphics:linear-filtering.label'), description: msg('settings-graphics:linear-filtering.description'), hint: msg('settings-graphics:linear-filtering.hint'), keywords: 'filter smooth pixel crisp bilinear' },
+          { key: 'dimFlashes', label: msg('settings-graphics:dim-flashes.label'), description: msg('settings-graphics:dim-flashes.description'), keywords: 'flash dim reduce epilepsy accessibility' },
         ],
       },
     ],
   },
   {
     id: 'enhancements',
-    title: 'Enhancements',
+    title: msg('settings-graphics:section.enhancements.title'),
     subsections: [
       {
         id: 'enhancements-overworld',
-        title: 'Overworld',
+        title: msg('settings-graphics:section.enhancements-overworld.title'),
         items: [
-          { key: 'overworldEdgeEffect', label: 'Edge Effect', description: 'Fill black borders with a blurred mirror reflection and animated decay effect instead of solid black', keywords: 'edge glow mirror blur voronoi overworld widescreen border' },
+          { key: 'overworldEdgeEffect', label: msg('settings-graphics:overworld-edge-effect.label'), description: msg('settings-graphics:overworld-edge-effect.description'), keywords: 'edge glow mirror blur voronoi overworld widescreen border' },
         ],
       },
       {
         id: 'enhancements-items',
-        title: 'Items in the World',
+        title: msg('settings-graphics:section.enhancements-items.title'),
         items: [
-          { key: 'coloredRupees', label: 'Coloured Rupees', description: 'Show rupees waiting in the world as plain coloured gems, one colour per value, instead of the picture with the amount written beside it', keywords: 'rupee rupees colour color gem gold silver purple money drop' },
-          { key: 'itemSheen', label: 'Item Sheen', description: 'Let items waiting in the world catch the light every second or so, so a pickup on the floor stands out from the scenery', keywords: 'sheen shine glint sparkle shimmer highlight item drop' },
+          { key: 'coloredRupees', label: msg('settings-graphics:colored-rupees.label'), description: msg('settings-graphics:colored-rupees.description'), keywords: 'rupee rupees colour color gem gold silver purple money drop' },
+          { key: 'itemSheen', label: msg('settings-graphics:item-sheen.label'), description: msg('settings-graphics:item-sheen.description'), keywords: 'sheen shine glint sparkle shimmer highlight item drop' },
         ],
       },
       {
         id: 'enhancements-indoor',
-        title: 'Indoor / Dungeons',
+        title: msg('settings-graphics:section.enhancements-indoor.title'),
         items: [
-          { key: 'hideSpaceBeyondWalls', label: 'Hide Space Beyond Walls', description: 'Black out the space past the walls of a house, a cave or the sanctuary. The room itself and dungeons are untouched', keywords: 'hide space beyond walls backdrop background black indoor house cave sanctuary surround' },
+          { key: 'hideSpaceBeyondWalls', label: msg('settings-graphics:hide-space-beyond-walls.label'), description: msg('settings-graphics:hide-space-beyond-walls.description'), keywords: 'hide space beyond walls backdrop background black indoor house cave sanctuary surround' },
         ],
       },
     ],
   },
   {
     id: 'appearance',
-    title: 'Appearance',
+    title: msg('settings-graphics:section.appearance.title'),
     items: [
-      { key: 'linkSprite', label: 'Player Sprite', description: 'Choose a custom player sprite from your library.', keywords: 'player sprite character appearance custom zspr' },
+      { key: 'linkSprite', label: msg('settings-graphics:link-sprite.label'), description: msg('settings-graphics:link-sprite.description'), keywords: 'player sprite character appearance custom zspr' },
     ],
   },
 ];

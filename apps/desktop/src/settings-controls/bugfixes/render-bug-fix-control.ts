@@ -2,8 +2,7 @@
 import { createElement } from 'react';
 import type { ReactNode } from 'react';
 import { BUNDLE_FIXES } from '@rotp/features';
-import { KeyedControlRow } from '../KeyedControlRow';
-import { FIX_STATE_HINTS } from './bugfixes.constants';
+import { BugFixRow } from './BugFixRow';
 import { bundleMaster } from './bundle-master';
 import type { ControlContext } from '../settings-controls.type';
 
@@ -13,7 +12,7 @@ const renderBugFixControl = (key: string, ctx: ControlContext): ReactNode | null
   if (!fix) return null;
   const checked = settings.bugFixToggles?.[key] ?? bundleMaster(fix.bundleOrigin, settings);
   const toggle = (next: boolean) => onChange({ bugFixToggles: { ...settings.bugFixToggles, [key]: next } });
-  return createElement(KeyedControlRow, { settingKey: key, input: { kind: 'toggle', value: checked, onChange: toggle, hints: FIX_STATE_HINTS }, disabled });
+  return createElement(BugFixRow, { settingKey: key, checked, onToggle: toggle, disabled });
 };
 
 export { renderBugFixControl };

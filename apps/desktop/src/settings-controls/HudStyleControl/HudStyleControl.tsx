@@ -1,16 +1,17 @@
 /* @layer renderer-components @kind component */
 import { useCallback, useEffect, useMemo } from 'react';
+import { useT } from '@drizztdourden08/brock-react';
 import type { GameSettings } from '@rotp/features';
 import { experimentalFeaturesEnabled } from '@rotp/features';
 import { SegmentedControl, Button, Box, Text } from '@drizztdourden08/tessera/primitives';
 import { useSpriteExtraction } from '@app/hooks/useSpriteExtraction';
 import { enhancedAspectAllowed } from '@rotp/game-core';
 import * as spritesStore from '@app/storage/sprites-store';
-import { NO_SPRITES, STYLE_DESCRIPTION, TOO_NARROW } from './HudStyleControl.constants';
 import type { HudStyleControlProps } from './HudStyleControl.type';
 import './HudStyleControl.css';
 
 const HudStyleControl = ({ value, settings, onChange }: HudStyleControlProps) => {
+  const t = useT();
   const { available, romFile, extracting, extract: handleExtract, setAvailability } = useSpriteExtraction();
   const wideEnough = enhancedAspectAllowed(settings);
   const experimental = experimentalFeaturesEnabled(settings);
@@ -21,20 +22,20 @@ const HudStyleControl = ({ value, settings, onChange }: HudStyleControlProps) =>
   }, [romFile, setAvailability]);
 
   const options = useMemo(() => [
-    { value: 'vanilla' as const, label: 'Original', disabled: !available },
-    { value: 'modern' as const, label: 'Modern', disabled: !available || !wideEnough || !experimental },
-  ], [available, wideEnough, experimental]);
+    { value: 'vanilla' as const, label: t('settings-controls:hud.style.original'), disabled: !available },
+    { value: 'modern' as const, label: t('settings-controls:hud.style.modern'), disabled: !available || !wideEnough || !experimental },
+  ], [available, wideEnough, experimental, t]);
 
-  const tooNarrow = wideEnough ? null : TOO_NARROW;
-  const notice = available ? tooNarrow : NO_SPRITES;
+  const tooNarrow = wideEnough ? null : t('settings-controls:hud.style.too-narrow');
+  const notice = available ? tooNarrow : t('settings-controls:hud.style.no-sprites');
 
   const handleChange = useCallback((v: string) => onChange(v as GameSettings['hudStyle']), [onChange]);
 
   return (
     <Box className="hud-style-control">
       <SegmentedControl
-        label="Style"
-        description={STYLE_DESCRIPTION}
+        label={t('settings-controls:hud.style.label')}
+        description={t('settings-controls:hud.style.description')}
         value={value}
         options={options}
         onChange={handleChange}
@@ -44,7 +45,7 @@ const HudStyleControl = ({ value, settings, onChange }: HudStyleControlProps) =>
           <Text variant="caption" tone="dim">{notice}</Text>
           {!available && (
             <Button variant="secondary" size="sm" onClick={handleExtract} disabled={extracting || !romFile}>
-              {extracting ? 'Extracting...' : 'Extract sprites'}
+              {extracting ? t('settings-controls:hud.style.extracting') : t('settings-controls:hud.style.extract')}
             </Button>
           )}
         </Box>

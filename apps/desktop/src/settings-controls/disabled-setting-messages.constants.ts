@@ -1,14 +1,17 @@
 /* @layer renderer-components @kind data */
-const DISABLED_SETTING_MESSAGES: Record<string, string> = {
-  vanillaSafe: 'Disabled in Vanilla Safe mode',
-  randomizer: "Locked by this profile's randomizer",
-  cheatsEnabled: 'Cheats are disabled',
-  trackerEnabled: 'Tracker is disabled',
-  devNavigationData: 'Navigation data is disabled',
-  developerTools: 'Needs Developer Mode turned on',
-  onlineOnly: 'Only for online randomizer profiles.',
-  japaneseGraphics: 'Needs a Japanese ROM imported',
-  mobileOnly: 'Phone and tablet app only.',
+import { msg } from '@drizztdourden08/brock-core/i18n';
+import type { Message } from '@drizztdourden08/brock-core/i18n';
+
+const DISABLED_SETTING_MESSAGES: Record<string, Message> = {
+  vanillaSafe: msg('settings-controls:disabled.vanilla-safe'),
+  randomizer: msg('settings-controls:disabled.randomizer'),
+  cheatsEnabled: msg('settings-controls:disabled.cheats-enabled'),
+  trackerEnabled: msg('settings-controls:disabled.tracker-enabled'),
+  devNavigationData: msg('settings-controls:disabled.dev-navigation-data'),
+  developerTools: msg('settings-controls:disabled.developer-tools'),
+  onlineOnly: msg('settings-controls:disabled.online-only'),
+  japaneseGraphics: msg('settings-controls:disabled.japanese-graphics'),
+  mobileOnly: msg('settings-controls:disabled.mobile-only'),
 };
 
 export { DISABLED_SETTING_MESSAGES };

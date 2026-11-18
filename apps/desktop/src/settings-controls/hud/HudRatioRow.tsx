@@ -1,4 +1,5 @@
 /* @layer renderer-app @kind component */
+import { useT, useText } from '@drizztdourden08/brock-react';
 import { AspectRatioControl } from '@drizztdourden08/brock-display/renderer';
 import { ASPECT_LIMITS } from '@rotp/game-core';
 import { ratioPatch } from '../ratio-patch';
@@ -8,12 +9,14 @@ import type { ControlContext } from '../settings-controls.type';
 
 const HudRatioRow = (props: ControlContext) => {
   const { settings, onChange } = props;
+  const t = useT();
+  const text = useText();
   return (
     <AspectRatioControl
-      label="Aspect Ratio"
-      description="Match follows the game view. Fixed ratios pin the HUD to a narrower area."
+      label={t('settings-controls:hud.ratio.label')}
+      description={t('settings-controls:hud.ratio.description')}
       value={settings.hudRatio}
-      options={hudRatioOptions(settings)}
+      options={hudRatioOptions(settings, text)}
       customW={settings.customHudAspectW}
       customH={settings.customHudAspectH}
       limits={ASPECT_LIMITS}
