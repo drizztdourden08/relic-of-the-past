@@ -3,7 +3,7 @@ import { Field, Stack, TextInput } from '@drizztdourden08/tessera/primitives';
 import { officialRomStatuses } from '@rotp/roms';
 import { UploadField } from '@app/compounds/UploadField';
 import { PATCHED_ROM_ACCEPT } from '../../../LanguageCreateWizard.constants';
-import { chosenStatus } from '../../../behavior/chosen-status';
+import { checkPickedRom, romCheckStatus } from '../../../../../rom-check';
 import type { SourceFieldsProps } from '../DetailsStep.type';
 import { ReleaseSelect } from './ReleaseSelect';
 import { TextOrFileField } from './TextOrFileField';
@@ -35,9 +35,10 @@ const PatchedFields = ({ values, update }: SourceFieldsProps) => (
         accept={PATCHED_ROM_ACCEPT}
         label="Drop the patched ROM"
         hint="The ROM is read, never saved."
-        status={chosenStatus(values.patchedFile)}
+        status={romCheckStatus(values.patchedFile, values.patchedCheck)}
         roms={officialRomStatuses()}
-        onFiles={(files) => update({ patchedFile: files[0] ?? null })}
+        onFiles={(files) => checkPickedRom(files, 'patched', undefined,
+          (patchedFile) => update({ patchedFile, patchedCheck: null }), (patchedCheck) => update({ patchedCheck }))}
       />
     </Field>
   </Stack>

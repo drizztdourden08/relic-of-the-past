@@ -2,6 +2,7 @@
 import { Field } from '@drizztdourden08/tessera/primitives';
 import { officialRomStatuses } from '@rotp/roms';
 import { UploadField } from '@app/compounds/UploadField';
+import { checkPickedRom, romCheckStatus } from '../../../../rom-check';
 import { IMPORT_LANE_CONFIG } from '../../../import-lane-config.constants';
 import type { FileStepProps } from './FileStep.type';
 
@@ -15,13 +16,14 @@ const FileStep = ({ values, update }: FileStepProps) => {
         accept={lane.accept}
         label={lane.dropLabel}
         hint={lane.dropHint}
-        status={values.file === null ? undefined : { tone: 'success', message: values.file.name }}
+        status={romCheckStatus(values.file, values.check)}
         url={values.url}
         urlPlaceholder={lane.placeholder}
         roms={roms}
-        onFiles={(files) => update({ file: files[0] ?? null, url: '' })}
-        onUrlChange={(url) => update({ url, file: null })}
-        onModeChange={() => update({ file: null, url: '' })}
+        onFiles={(files) => checkPickedRom(files, 'official', values.kind,
+          (file) => update({ file, url: '', check: null }), (check) => update({ check }))}
+        onUrlChange={(url) => update({ url, file: null, check: null })}
+        onModeChange={() => update({ file: null, url: '', check: null })}
       />
     </Field>
   );
