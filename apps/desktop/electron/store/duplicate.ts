@@ -23,7 +23,7 @@ const duplicateInstalled = async (itemId: string): Promise<StoreDuplicateResult>
   if (!pack) throw new Error(mainText(msg('main:store.notInstalled')));
   if (isInstalling(itemId)) throw new Error(mainText(msg('main:store.installRunning')));
   const refusal = copyRefusal(pack.origin.license);
-  if (refusal) throw new Error(refusal);
+  if (refusal) throw new Error(mainText(refusal));
 
   const { name } = await selectDuplicate(pack.kind)(storeFiles, pack.installedName, basedOnOf(pack));
   if (pack.kind === 'language') await recompileAllAssets();

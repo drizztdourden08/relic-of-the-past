@@ -1,0 +1,11 @@
+{
+  "verdict.archive": "Archiv, wird beim Import geprüft",
+  "verdict.archive-empty": "Das Archiv enthält keine ROM-Datei.",
+  "verdict.fan-translation": "{reason}",
+  "verdict.not-official": "Keine offizielle ROM (SHA-1 {hash}). Nutze eine aus der Liste unten.",
+  "verdict.official-ok": "{name}",
+  "verdict.patched-bad-size": "Diese Datei hat {bytes} Bytes, was nicht die Größe einer ROM von A Link to the Past ist.",
+  "verdict.patched-ok": "Eine ROM mit {size} MB (SHA-1 {hash})",
+  "verdict.unsupported": "{name} ist eine offizielle ROM, wird aber noch nicht unterstützt.",
+  "verdict.wrong-kind": "Das ist {name}, eine {kind}, keine {expected}."
+}

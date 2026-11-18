@@ -1,0 +1,8 @@
+{
+  "title": "Registrazioni da includere",
+  "showSent": "Mostra inviate",
+  "empty.new": "Nessuna nuova registrazione. Mostra inviate per vedere quelle precedenti.",
+  "empty.all": "Ancora nessuna registrazione.",
+  "sent": "Inviata",
+  "include": "Includi la registrazione di {name}"
+}

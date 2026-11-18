@@ -1,0 +1,15 @@
+{
+  "view.label": "表示",
+  "view.list.label": "リスト",
+  "view.list.title": "コンパクトな行",
+  "view.detailed.label": "詳細",
+  "view.detailed.title": "アイテム付きの行",
+  "view.visual.label": "カード",
+  "view.visual.title": "アイテムカード",
+  "pin.label": "ヘッダーを固定",
+  "pin.description": "概要とフィルターをその場に残します",
+  "notify.label": "通知",
+  "notify.description": "チェックやイベントを達成するたびにゲーム上にカードを表示します",
+  "closed.label": "閉じている間",
+  "closed.description": "このトラッカーを閉じていても通知を続けます"
+}

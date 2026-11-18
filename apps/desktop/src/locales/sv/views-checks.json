@@ -1,0 +1,15 @@
+{
+  "view.label": "Vy",
+  "view.list.label": "Lista",
+  "view.list.title": "Kompakta rader",
+  "view.detailed.label": "Detaljerad",
+  "view.detailed.title": "Rader med föremål",
+  "view.visual.label": "Kort",
+  "view.visual.title": "Föremålskort",
+  "pin.label": "Fäst rubrik",
+  "pin.description": "Behåll sammanfattning och filter på plats",
+  "notify.label": "Aviseringar",
+  "notify.description": "Ett kort över spelet för varje klarad kontroll eller händelse",
+  "closed.label": "När stängd",
+  "closed.description": "Fortsätt avisera medan spåraren är stängd"
+}

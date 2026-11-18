@@ -1,0 +1,8 @@
+{
+  "section.camera.title": "Câmera",
+  "camera-lock-to-viewport.label": "Travar câmera na visão",
+  "camera-lock-to-viewport.description": "Prende a visão ao limite da área, sem espaço preto fora dela. Desligado mantém a câmera original.",
+  "camera-lock-to-viewport.hint": "Requer Renderização estendida, em Tela.",
+  "smooth-transitions.label": "Transições suaves",
+  "smooth-transitions.description": "Suaviza o deslocamento entre as junções de áreas. Requer Travar câmera na visão."
+}

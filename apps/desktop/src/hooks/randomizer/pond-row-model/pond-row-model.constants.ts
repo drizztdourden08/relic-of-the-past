@@ -1,13 +1,14 @@
 /* @layer renderer-hooks @kind constants */
-import type { Text } from '@drizztdourden08/brock-core/i18n';
+import { msg } from '@drizztdourden08/brock-core/i18n';
+import type { Message, Text } from '@drizztdourden08/brock-core/i18n';
 import { POND_PRICE_LADDER, CURVE_LABELS } from '@rotp/randomizer';
 import type { PondSetting } from '@rotp/randomizer';
 import type { PondLadderFields } from './pond-row-model.type';
 
-const MODE_LABELS: Readonly<Record<PondSetting['mode'], string>> = {
-  capacity: 'Vanilla grants',
-  'vanilla-cost': 'Vanilla cost',
-  custom: 'Custom',
+const MODE_LABELS: Readonly<Record<PondSetting['mode'], Message>> = {
+  capacity: msg('randomizer:pond-row.mode.capacity'),
+  'vanilla-cost': msg('randomizer:pond-row.mode.vanilla-cost'),
+  custom: msg('randomizer:pond-row.mode.custom'),
 };
 
 const PRICE_STOPS: readonly string[] = POND_PRICE_LADDER.map((price) => (price === 0 ? 'free' : String(price)));

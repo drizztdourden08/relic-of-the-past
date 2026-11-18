@@ -1,0 +1,8 @@
+{
+  "title": "Enregistrements à inclure",
+  "showSent": "Afficher les envoyés",
+  "empty.new": "Aucun nouvel enregistrement. Affichez les envoyés pour voir les précédents.",
+  "empty.all": "Aucun enregistrement.",
+  "sent": "Envoyé",
+  "include": "Inclure l'enregistrement de {name}"
+}

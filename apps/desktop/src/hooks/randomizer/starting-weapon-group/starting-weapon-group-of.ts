@@ -1,4 +1,5 @@
 /* @layer renderer-lib @kind logic */
+import type { I18n } from '@drizztdourden08/brock-core/i18n';
 import { getItemSprite } from '@rotp/game-data';
 import { uncleWeaponCandidates, isUnrecordedItem, itemKeyName } from '@rotp/randomizer';
 import type { ItemKey } from '@rotp/randomizer';
@@ -11,11 +12,11 @@ const spriteOf = (item: ItemKey): string | undefined =>
 const rowOf = (item: ItemKey, spritesAvailable: boolean): PoolListingRow =>
   ({ name: itemKeyName(item), count: 1, sprite: spritesAvailable ? spriteOf(item) : undefined });
 
-const startingWeaponGroupOf = (pool: readonly ItemKey[], spritesAvailable: boolean): PoolListingGroup => {
+const startingWeaponGroupOf = (pool: readonly ItemKey[], spritesAvailable: boolean, t: I18n['t']): PoolListingGroup => {
   const rows = uncleWeaponCandidates(pool)
     .sort((a, b) => REFERENCE_ORDER.indexOf(a) - REFERENCE_ORDER.indexOf(b))
     .map((item) => rowOf(item, spritesAvailable));
-  return { id: STARTING_WEAPON_GROUP_ID, label: 'Starting weapon (one of)', total: 1, rows };
+  return { id: STARTING_WEAPON_GROUP_ID, label: t('randomizer:pool-listing.starting-weapon-one-of'), total: 1, rows };
 };
 
 export { startingWeaponGroupOf };

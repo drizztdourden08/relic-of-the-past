@@ -1,0 +1,16 @@
+{
+  "option.viewport-modes.none.label": "Letterbox",
+  "option.viewport-modes.none.hint": "Zachowuje proporcje gry i wypełnia resztę okna czarnymi pasami.",
+  "option.viewport-modes.fit.label": "Dopasuj okno",
+  "option.viewport-modes.fit.hint": "Blokuje kształt okna na proporcjach gry podczas zmiany rozmiaru, więc pasy się nie pojawiają.",
+  "option.viewport-modes.fill.label": "Rozciągnij",
+  "option.viewport-modes.fill.hint": "Rozciąga obraz, by wypełnić całe okno.",
+  "section.window.title": "Okno",
+  "start-fullscreen.label": "Start na pełnym ekranie",
+  "start-fullscreen.description": "Automatycznie włącza pełny ekran po uruchomieniu gry",
+  "viewport-constraint.label": "Obszar widoku",
+  "viewport-constraint.description": "Określa, jak płótno gry odnosi się do okna",
+  "pixel-perfect.label": "Idealne piksele",
+  "pixel-perfect.description": "Skaluje obraz tylko o całkowite piksele źródłowe, więc każdy piksel ma dokładnie ten sam rozmiar. Usuwa migotanie płotów, ścian i innych prostych krawędzi podczas przewijania, kosztem nieco szerszych czarnych ramek. Wyłącza Filtrowanie liniowe, gdy jest aktywne.",
+  "pixel-perfect.hint": "Wymaga widoku Letterbox."
+}

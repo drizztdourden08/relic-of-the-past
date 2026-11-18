@@ -1,0 +1,12 @@
+{
+  "rom.usRequired": "Deze ROM levert alleen de taal van het spel; het spel zelf draait op de Amerikaanse ROM. Importeer de Amerikaanse ROM en pak daarna opnieuw uit.",
+  "rom.fontMissing": "Het basislettertype voor {languages, list} ontbreekt en deze ROM kan het niet leveren. Importeer eerst de ROM van die taal.",
+  "rom.notFound": "ROM-bestand niet gevonden: {file}",
+  "rom.zip.none": "Geen ROM-bestand (.sfc/.smc) gevonden in de bron",
+  "rom.zip.many": "Meerdere ROM-bestanden gevonden ({count}). Geef precies één ROM op.",
+  "language.exists": "Er bestaat al een taalset met de id \"{id}\". Kies een andere naam.",
+  "language.patched.failed": "De gepatchte ROM kon niet worden geïmporteerd. Het rapport hieronder zegt welke onderdelen mislukten.",
+  "sprite.unreadablePack": "Geen leesbaar spritepakket.",
+  "sprite.invalidZspr": "Geen geldig ZSPR-spritebestand.",
+  "msu.trackNotFound": "Track niet gevonden: {file}"
+}

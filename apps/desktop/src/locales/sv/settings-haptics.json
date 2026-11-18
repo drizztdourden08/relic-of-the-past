@@ -1,0 +1,23 @@
+{
+  "section.haptics-general.title": "Vibration",
+  "haptics.enabled.label": "Aktivera haptisk återkoppling",
+  "haptics.enabled.description": "Aktivera handkontrollens vibration för spelhändelser. Kräver en kompatibel handkontroll (Xbox, Switch Pro, DualSense).",
+  "haptics.intensity.label": "Vibrationsstyrka",
+  "haptics.intensity.description": "Global styrkemultiplikator för all haptisk återkoppling",
+  "section.haptics-combat.title": "Strid",
+  "haptics.sword-swing.label": "Svärdssvingning",
+  "haptics.sword-swing.description": "Mycket svag vibration när spelaren svingar svärdet",
+  "haptics.sword-hit-enemy.label": "Svärdsträff på fiende",
+  "haptics.sword-hit-enemy.description": "Normal vibration när svärdet träffar en fiende",
+  "haptics.sword-clink.label": "Svärdsklang",
+  "haptics.sword-clink.description": "Svag vibration när svärdet klingar mot en osårbar yta eller sköld",
+  "haptics.damage-taken.label": "Tagen skada",
+  "haptics.damage-taken.description": "Vibration som skalas efter skadans storlek när spelaren skadas (starkare för mer skada)",
+  "section.haptics-actions.title": "Föremål och rörelse",
+  "haptics.item-use.label": "Föremålsanvändning",
+  "haptics.item-use.description": "Vibration när föremål används (hammare, hookshot, bomber, medaljonger, spön osv.)",
+  "haptics.dash-vibration.label": "Språngvibration",
+  "haptics.dash-vibration.description": "Rytmisk stegvibration vid löpning med Pegasusstövlarna",
+  "haptics.environmental-effects.label": "Miljöeffekter",
+  "haptics.environmental-effects.description": "Vibration för världshändelser: att falla i hål, landa från avsatser, gå i vatten, spegelförflyttning, kistöppningar, bombexplosioner"
+}

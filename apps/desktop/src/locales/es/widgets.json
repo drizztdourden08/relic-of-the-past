@@ -1,0 +1,13 @@
+{
+  "cheats.label": "Trucos",
+  "dataset.label": "Inspector de datos en vivo",
+  "debug.label": "Estado del juego",
+  "music.label": "Depurador de música",
+  "navigation.label": "Ubicación y navegación",
+  "shadow.drawing.label": "Dibujo de sombras",
+  "shadow.editor.kit.label": "Editor de sombras",
+  "shadow.editor.kit.requires": "Inicia una partida para usar el Editor de sombras.",
+  "shadow.editor.label": "Editor de sombras",
+  "shadow.elements.label": "Elementos de sombra",
+  "simulator.label": "Simulador"
+}

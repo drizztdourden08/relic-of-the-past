@@ -1,5 +1,6 @@
 /* @layer renderer-components @kind component */
 import { useCallback } from 'react';
+import { useText } from '@drizztdourden08/brock-react';
 import { copyRefusal } from '@rotp/hub-contracts';
 import { storeItemUrl } from '@rotp/hub-client';
 import { useInstalledActions } from '@app/hooks/useInstalledActions';
@@ -10,7 +11,9 @@ import type { InstalledOriginBarProps } from './InstalledOriginBar.type';
 const InstalledOriginBar = (props: InstalledOriginBarProps) => {
   const { pack, onDuplicated, onUpdateInstalled, onUninstalled } = props;
   const { busy, error, uninstall, duplicate, update } = useInstalledActions();
+  const text = useText();
   const updateTo = useUpdateTo(pack);
+  const refusal = copyRefusal(pack.origin.license);
 
   const handleDuplicate = useCallback(() => {
     void duplicate(pack).then((name) => { if (name !== null) onDuplicated(name); });
@@ -33,7 +36,7 @@ const InstalledOriginBar = (props: InstalledOriginBarProps) => {
       origin={pack.origin}
       semver={pack.semver}
       updateTo={updateTo}
-      copyRefusal={copyRefusal(pack.origin.license)}
+      copyRefusal={refusal === null ? null : text(refusal)}
       busy={busy}
       error={error}
       onDuplicate={handleDuplicate}

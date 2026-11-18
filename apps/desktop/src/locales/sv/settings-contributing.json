@@ -1,0 +1,17 @@
+{
+  "section.developer-instrumentation.title": "Instrumentering",
+  "developer-tools-enabled.label": "Utvecklarläge",
+  "developer-tools-enabled.description": "Slår på utvecklarverktyg.",
+  "experimental-features-enabled.label": "Experimentella funktioner",
+  "experimental-features-enabled.description": "Aktiverar ofärdiga funktioner: HUD-layoutredigeraren, modern HUD och kontroller, GBA-inställningar och onlinespel med Archipelago. Att stänga av detta stänger också av modern HUD och den extra grottan.",
+  "experimental-features-enabled.hint": "Kräver utvecklarläge.",
+  "dev-navigation-data.label": "Navigeringsdata",
+  "dev-navigation-data.description": "Rums-, rutnäts- och spritedata för widgeten Plats och navigering, översvämningsfyllningen och simulatorn.",
+  "dev-navigation-data.hint": "Kräver utvecklarläge.",
+  "section.developer-sanctuary.title": "Sanctuary-konto",
+  "sanctuary-account.label": "Sanctuary-konto",
+  "sanctuary-account.description": "Logga in så att buggrapporter bär ditt namn och visas på hubben.",
+  "section.developer-debug-reporting.title": "Felsökningsrapportering",
+  "allow-debug-logging.label": "Tillåt spårning av felsökningsloggar",
+  "allow-debug-logging.description": "Sparar detaljerade loggar och lägger till en fångstknapp i titelraden (Tab) och en flytande knapp för att skicka en felsökningsrapport."
+}

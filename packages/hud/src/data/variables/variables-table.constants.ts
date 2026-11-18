@@ -1,25 +1,26 @@
 /* @layer shared-hud @kind data */
+import { msg } from '@drizztdourden08/brock-core/i18n';
 import type { HudCountdownSource, HudVariableDef } from './variables.type';
 
 const HUD_VARIABLES: readonly HudVariableDef[] = [
-  { name: 'life_current', note: 'Eighths - one heart is 8. 0 to life_max.' },
-  { name: 'life_max', note: 'Capacity, also in eighths. 8-160 (20 containers = 160).' },
-  { name: 'magic_current', note: 'Raw magic power. 0-128, a full bar.' },
-  { name: 'magic_max', note: 'Constant 128 today; present so a layout never hard-codes it.' },
-  { name: 'half_magic', note: '0 or 1 - the upgrade is owned.' },
-  { name: 'armor', note: '0-2 - green, blue, red. Drives the heart tint.' },
-  { name: 'arrow_current', note: '0 to arrow_max.' },
-  { name: 'arrow_max', note: '30-70.' },
-  { name: 'bomb_current', note: '0 to bomb_max.' },
-  { name: 'bomb_max', note: '10-50.' },
-  { name: 'key_current', note: 'Small keys for the current dungeon. 0-99.' },
-  { name: 'rupee_current', note: '0 to rupee_max.' },
-  { name: 'rupee_max', note: 'Wallet tier: 99, 999 or 9999.' },
-  { name: 'silver_arrows', note: '0 or 1.' },
-  { name: 'slot_count', note: 'How many slots the active scheme has.' },
-  { name: 'countdown_active', note: '0 or 1 - the digging game or a Super Bomb is counting down.' },
-  { name: 'countdown_seconds', note: 'Whole seconds left on the countdown. 0 while none runs.' },
-  { name: 'countdown_frames', note: 'Frames left inside the current second, 0-61. 0 while none runs.' },
+  { name: 'life_current', note: msg('hud:variable.life-current.note') },
+  { name: 'life_max', note: msg('hud:variable.life-max.note') },
+  { name: 'magic_current', note: msg('hud:variable.magic-current.note') },
+  { name: 'magic_max', note: msg('hud:variable.magic-max.note') },
+  { name: 'half_magic', note: msg('hud:variable.half-magic.note') },
+  { name: 'armor', note: msg('hud:variable.armor.note') },
+  { name: 'arrow_current', note: msg('hud:variable.arrow-current.note') },
+  { name: 'arrow_max', note: msg('hud:variable.arrow-max.note') },
+  { name: 'bomb_current', note: msg('hud:variable.bomb-current.note') },
+  { name: 'bomb_max', note: msg('hud:variable.bomb-max.note') },
+  { name: 'key_current', note: msg('hud:variable.key-current.note') },
+  { name: 'rupee_current', note: msg('hud:variable.rupee-current.note') },
+  { name: 'rupee_max', note: msg('hud:variable.rupee-max.note') },
+  { name: 'silver_arrows', note: msg('hud:variable.silver-arrows.note') },
+  { name: 'slot_count', note: msg('hud:variable.slot-count.note') },
+  { name: 'countdown_active', note: msg('hud:variable.countdown-active.note') },
+  { name: 'countdown_seconds', note: msg('hud:variable.countdown-seconds.note') },
+  { name: 'countdown_frames', note: msg('hud:variable.countdown-frames.note') },
 ];
 
 const HUD_SCOPE_EXTRAS = ['index', 'count', 'item'] as const;

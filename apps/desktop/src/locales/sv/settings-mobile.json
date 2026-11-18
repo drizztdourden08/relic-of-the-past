@@ -1,0 +1,8 @@
+{
+  "section.mobile.title": "Skärm",
+  "render-into-notch.label": "Rita under kameraurtaget",
+  "render-into-notch.description": "På: spelet och gränssnittet använder hela skärmen, även under kameraurtaget. Av: allt hålls inom den användbara skärmytan.",
+  "section.mobile-behavior.title": "Beteende",
+  "pause-when-away.label": "Pausa när appen är i bakgrunden",
+  "pause-when-away.description": "Pausa spelet och ljudet när du byter app eller stänger av skärmen."
+}

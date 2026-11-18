@@ -1,0 +1,13 @@
+{
+  "section.bugfixes.title": "Correções de bugs",
+  "section.bugfixes-bundles.title": "Ativar em massa",
+  "section.bugfixes-misc.title": "Correções gerais",
+  "section.bugfixes-gamechanging.title": "Correções que alteram a jogabilidade",
+  "misc-bug-fixes.label": "Todas as correções gerais",
+  "misc-bug-fixes.description": "Liga de uma vez todas as correções gerais abaixo. Os botões individuais abaixo têm prioridade.",
+  "game-changing-bug-fixes.label": "Todas as correções que alteram a jogabilidade",
+  "game-changing-bug-fixes.description": "Liga correções que mudam o comportamento do jogo de formas que speedrunners podem notar. Os botões individuais têm prioridade.",
+  "game-changing-bug-fixes.hint": "Quem compara com o jogo original deve deixar desligado.",
+  "state.on": "O jogo usa o comportamento corrigido.",
+  "state.off": "Mantém o bug original."
+}

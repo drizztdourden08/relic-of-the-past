@@ -1,0 +1,17 @@
+{
+  "section.developer-instrumentation.title": "Strumentazione",
+  "developer-tools-enabled.label": "Modalità sviluppatore",
+  "developer-tools-enabled.description": "Attiva gli strumenti per sviluppatori.",
+  "experimental-features-enabled.label": "Funzioni sperimentali",
+  "experimental-features-enabled.description": "Attiva funzioni incompiute: l'Editor layout HUD, HUD e comandi moderni, impostazioni GBA e gioco online Archipelago. Disattivandola si disattivano anche l'HUD moderno e il sotterraneo extra.",
+  "experimental-features-enabled.hint": "Richiede la Modalità sviluppatore.",
+  "dev-navigation-data.label": "Dati di navigazione",
+  "dev-navigation-data.description": "Dati di stanze, griglie e sprite per il widget Posizione e navigazione, il riempimento e il simulatore.",
+  "dev-navigation-data.hint": "Richiede la Modalità sviluppatore.",
+  "section.developer-sanctuary.title": "Account Sanctuary",
+  "sanctuary-account.label": "Account Sanctuary",
+  "sanctuary-account.description": "Accedi perché le segnalazioni di bug riportino il tuo nome e compaiano nell'hub.",
+  "section.developer-debug-reporting.title": "Segnalazione debug",
+  "allow-debug-logging.label": "Consenti registro di debug",
+  "allow-debug-logging.description": "Conserva registri dettagliati e aggiunge un pulsante di cattura nella barra del titolo (Tab) e un pulsante mobile per inviare un rapporto di debug."
+}

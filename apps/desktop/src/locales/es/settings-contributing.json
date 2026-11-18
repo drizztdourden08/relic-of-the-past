@@ -1,0 +1,17 @@
+{
+  "section.developer-instrumentation.title": "Instrumentación",
+  "developer-tools-enabled.label": "Modo desarrollador",
+  "developer-tools-enabled.description": "Activa las herramientas de desarrollo.",
+  "experimental-features-enabled.label": "Funciones experimentales",
+  "experimental-features-enabled.description": "Activa funciones sin terminar: el editor de diseño del HUD, el HUD y los controles modernos, los ajustes de GBA y el juego en línea de Archipelago. Al desactivarlo también se desactivan el HUD moderno y la mazmorra extra.",
+  "experimental-features-enabled.hint": "Requiere Modo desarrollador.",
+  "dev-navigation-data.label": "Datos de navegación",
+  "dev-navigation-data.description": "Datos de salas, cuadrículas y sprites para el widget Ubicación y navegación, el relleno de inundación y el simulador.",
+  "dev-navigation-data.hint": "Requiere Modo desarrollador.",
+  "section.developer-sanctuary.title": "Cuenta de Sanctuary",
+  "sanctuary-account.label": "Cuenta de Sanctuary",
+  "sanctuary-account.description": "Inicia sesión para que los informes de errores lleven tu nombre y aparezcan en el hub.",
+  "section.developer-debug-reporting.title": "Informes de depuración",
+  "allow-debug-logging.label": "Permitir el registro de depuración",
+  "allow-debug-logging.description": "Guarda registros detallados y añade un botón de captura en la barra de título (Tab) y un botón flotante para enviar un informe de depuración."
+}

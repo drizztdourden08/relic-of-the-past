@@ -1,0 +1,9 @@
+{
+  "delete.confirm": "Supprimer",
+  "deleteProfile.title": "Supprimer le profil",
+  "deleteProfile.message": "Supprimer « {name} » ? Ses données de sauvegarde seront perdues. Cette action est irréversible.",
+  "deleteProfile.confirm": "Supprimer le profil",
+  "deleteRom.title": "Supprimer la ROM",
+  "deleteRom.message": "Cela supprimera « {romFile} » et toutes ses ressources extraites. Les profils utilisant cette ROM seront aussi supprimés. Cette action est irréversible.",
+  "deleteRom.confirm": "Supprimer la ROM"
+}

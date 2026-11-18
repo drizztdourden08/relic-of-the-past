@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind component */
-import { useT } from '@drizztdourden08/brock-react';
+import { useT, useText } from '@drizztdourden08/brock-react';
 import { Field } from '@drizztdourden08/tessera/primitives';
 import { officialRomStatuses } from '@rotp/roms';
 import { UploadField } from '@app/compounds/UploadField';
@@ -9,6 +9,7 @@ import type { SourceFieldsProps } from '../DetailsStep.type';
 
 const RomFields = ({ values, update }: SourceFieldsProps) => {
   const t = useT();
+  const text = useText();
   return (
   <Field label={t('wizards:language.details.rom-file')} hint={t('wizards:language.details.the-language-is-read-from')}>
     <UploadField
@@ -18,7 +19,7 @@ const RomFields = ({ values, update }: SourceFieldsProps) => {
       url={values.romUrl}
       urlPlaceholder={t('wizards:language.details.paste-rom-download-url')}
       roms={officialRomStatuses()}
-      onFiles={(files) => checkPickedRom(files, 'official', 'snes-alttp', {
+      onFiles={(files) => checkPickedRom(files, 'official', 'snes-alttp', text, {
         file: (romFile) => update({ romFile, romUrl: '', romCheck: null }), check: (romCheck) => update({ romCheck }),
       })}
       onUrlChange={(romUrl) => update({ romUrl, romFile: null, romCheck: null })}

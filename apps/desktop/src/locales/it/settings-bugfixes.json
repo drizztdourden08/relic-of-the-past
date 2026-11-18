@@ -1,0 +1,13 @@
+{
+  "section.bugfixes.title": "Correzioni di bug",
+  "section.bugfixes-bundles.title": "Attiva in blocco",
+  "section.bugfixes-misc.title": "Correzioni generali",
+  "section.bugfixes-gamechanging.title": "Correzioni che alterano il gioco",
+  "misc-bug-fixes.label": "Tutte le correzioni generali",
+  "misc-bug-fixes.description": "Attiva in una volta tutte le correzioni generali qui sotto. Gli interruttori singoli hanno la precedenza.",
+  "game-changing-bug-fixes.label": "Tutte le correzioni che alterano il gioco",
+  "game-changing-bug-fixes.description": "Attiva le correzioni che cambiano il comportamento del gioco in modi che interessano agli speedrunner. Gli interruttori singoli hanno la precedenza.",
+  "game-changing-bug-fixes.hint": "Le partite da confrontare con il gioco originale dovrebbero lasciarla disattivata.",
+  "state.on": "Il gioco usa il comportamento corretto.",
+  "state.off": "Mantiene il bug originale."
+}

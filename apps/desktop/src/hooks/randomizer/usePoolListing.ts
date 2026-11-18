@@ -1,5 +1,6 @@
 /* @layer renderer-lib @kind hook */
 import { useMemo } from 'react';
+import { useT } from '@drizztdourden08/brock-react';
 import { buildFillWorld, fillOptionsFromSnapshot, UNCLE_LOCATION } from '@rotp/randomizer';
 import { useSpriteAvailability } from '../useSpriteAvailability';
 import { useSpriteRevision } from '../useSpriteRevision';
@@ -13,18 +14,19 @@ import { NO_GROUPS } from './use-pool-listing.constants';
 const usePoolListing = (
   snapshot: RandomizerOptionsSnapshot, romFile: string | null, seed = '',
 ): readonly PoolListingGroup[] => {
+  const t = useT();
   const spritesAvailable = useSpriteAvailability(romFile);
   const spriteRevision = useSpriteRevision();
   return useMemo(() => {
     try {
       const fillWorld = buildFillWorld(fillOptionsFromSnapshot(snapshot, deliverableSets(), {}, seed));
-      const groups = poolListingGroupsOf(fillWorld.pool, spritesAvailable);
+      const groups = poolListingGroupsOf(fillWorld.pool, spritesAvailable, t);
       if (fillWorld.lockedVanilla.has(UNCLE_LOCATION)) return groups;
-      return withStartingWeaponGroup(groups, startingWeaponGroupOf(fillWorld.pool.pool, spritesAvailable));
+      return withStartingWeaponGroup(groups, startingWeaponGroupOf(fillWorld.pool.pool, spritesAvailable, t));
     } catch {
       return NO_GROUPS;
     }
-  }, [snapshot, seed, spritesAvailable, spriteRevision]);
+  }, [snapshot, seed, spritesAvailable, spriteRevision, t]);
 };
 
 export { usePoolListing };

@@ -1,0 +1,13 @@
+{
+  "section.bugfixes.title": "Corrección de errores",
+  "section.bugfixes-bundles.title": "Activar en bloque",
+  "section.bugfixes-misc.title": "Correcciones generales",
+  "section.bugfixes-gamechanging.title": "Correcciones que alteran la jugabilidad",
+  "misc-bug-fixes.label": "Todas las correcciones generales",
+  "misc-bug-fixes.description": "Activa de una vez todas las correcciones generales de abajo. Los interruptores individuales tienen prioridad.",
+  "game-changing-bug-fixes.label": "Todas las correcciones que alteran la jugabilidad",
+  "game-changing-bug-fixes.description": "Activa correcciones que cambian el comportamiento del juego de maneras que pueden importar a los speedrunners. Los interruptores individuales tienen prioridad.",
+  "game-changing-bug-fixes.hint": "Las partidas que se comparan con el juego original deben dejarlo desactivado.",
+  "state.on": "El juego usa el comportamiento corregido.",
+  "state.off": "Mantiene el error original."
+}

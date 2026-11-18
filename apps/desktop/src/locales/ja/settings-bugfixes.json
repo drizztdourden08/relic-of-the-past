@@ -1,0 +1,13 @@
+{
+  "section.bugfixes.title": "バグ修正",
+  "section.bugfixes-bundles.title": "まとめて有効化",
+  "section.bugfixes-misc.title": "一般的な修正",
+  "section.bugfixes-gamechanging.title": "ゲームプレイが変わるバグ修正",
+  "misc-bug-fixes.label": "すべての一般的なバグ修正",
+  "misc-bug-fixes.description": "下の一般的な修正をすべて一度にオンにします。下の個別の切り替えが優先されます。",
+  "game-changing-bug-fixes.label": "ゲームプレイが変わるすべてのバグ修正",
+  "game-changing-bug-fixes.description": "スピードランナーが気にしそうな形でゲームの挙動を変える修正をオンにします。個別の切り替えが優先されます。",
+  "game-changing-bug-fixes.hint": "元のゲームと比較するランではオフにしてください。",
+  "state.on": "ゲームは修正後の挙動になります。",
+  "state.off": "元のバグがそのまま残ります。"
+}

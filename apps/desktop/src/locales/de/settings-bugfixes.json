@@ -1,0 +1,13 @@
+{
+  "section.bugfixes.title": "Fehlerbehebungen",
+  "section.bugfixes-bundles.title": "Gesammelt aktivieren",
+  "section.bugfixes-misc.title": "Allgemeine Korrekturen",
+  "section.bugfixes-gamechanging.title": "Spielverändernde Fehlerbehebungen",
+  "misc-bug-fixes.label": "Alle allgemeinen Fehlerbehebungen",
+  "misc-bug-fixes.description": "Schaltet alle allgemeinen Korrekturen unten auf einmal ein. Einzelne Schalter unten haben Vorrang.",
+  "game-changing-bug-fixes.label": "Alle spielverändernden Fehlerbehebungen",
+  "game-changing-bug-fixes.description": "Aktiviert Korrekturen, die das Spielverhalten so ändern, dass es Speedrunner betreffen kann. Einzelne Schalter haben Vorrang.",
+  "game-changing-bug-fixes.hint": "Läufe im Vergleich zum Originalspiel sollten es ausgeschaltet lassen.",
+  "state.on": "Das Spiel nutzt das korrigierte Verhalten.",
+  "state.off": "Der ursprüngliche Fehler bleibt erhalten."
+}

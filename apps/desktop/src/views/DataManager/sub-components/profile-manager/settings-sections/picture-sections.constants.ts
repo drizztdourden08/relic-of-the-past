@@ -1,54 +1,55 @@
 /* @layer renderer-components @kind constants */
+import { msg } from '@drizztdourden08/brock-core/i18n';
 import { capitalizeSetting } from './capitalize-setting';
 import type { SettingsSection } from './settings-sections.type';
 
 const DISPLAY_SECTION: SettingsSection = {
-  title: 'Display',
+  title: msg('data-manager:settings-sections.title.display'),
   keys: [
-    { key: 'aspectRatio', label: 'Aspect ratio' },
-    { key: 'extendY', label: 'Extend Y' },
-    { key: 'cameraLockToViewport', label: 'Lock camera to view' },
-    { key: 'widescreenSprites', label: 'Widescreen sprites' },
-    { key: 'widescreenVisualFixes', label: 'Widescreen fixes' },
-    { key: 'windowMode', label: 'Window mode', format: (v) => capitalizeSetting(v, 'windowed') },
-    { key: 'displayMonitor', label: 'Screen', format: (v) => (v ? String(v) : 'Current') },
-    { key: 'startFullscreen', label: 'Start fullscreen' },
-    { key: 'viewportConstraint', label: 'Viewport constraint', format: (v) => capitalizeSetting(v, 'none') },
-    { key: 'pixelPerfect', label: 'Pixel perfect' },
-    { key: 'syncedRateInFullscreen', label: 'Synced refresh rate (fullscreen)' },
-    { key: 'syncedRateTargetHz', label: 'Target refresh rate', format: (v) => (Number(v) > 0 ? `${v} Hz` : 'Highest') },
+    { key: 'aspectRatio', label: msg('data-manager:settings-sections.label.aspect-ratio') },
+    { key: 'extendY', label: msg('data-manager:settings-sections.label.extend-y') },
+    { key: 'cameraLockToViewport', label: msg('data-manager:settings-sections.label.camera-lock-to-viewport') },
+    { key: 'widescreenSprites', label: msg('data-manager:settings-sections.label.widescreen-sprites') },
+    { key: 'widescreenVisualFixes', label: msg('data-manager:settings-sections.label.widescreen-visual-fixes') },
+    { key: 'windowMode', label: msg('data-manager:settings-sections.label.window-mode'), format: (v) => capitalizeSetting(v, 'windowed') },
+    { key: 'displayMonitor', label: msg('data-manager:settings-sections.label.display-monitor'), format: (v, t) => (v ? String(v) : t('data-manager:settings-sections.value.current')) },
+    { key: 'startFullscreen', label: msg('data-manager:settings-sections.label.start-fullscreen') },
+    { key: 'viewportConstraint', label: msg('data-manager:settings-sections.label.viewport-constraint'), format: (v) => capitalizeSetting(v, 'none') },
+    { key: 'pixelPerfect', label: msg('data-manager:settings-sections.label.pixel-perfect') },
+    { key: 'syncedRateInFullscreen', label: msg('data-manager:settings-sections.label.synced-rate-in-fullscreen') },
+    { key: 'syncedRateTargetHz', label: msg('data-manager:settings-sections.label.synced-rate-target-hz'), format: (v, t) => (Number(v) > 0 ? `${v} Hz` : t('data-manager:settings-sections.value.highest')) },
   ],
 };
 
 const GRAPHICS_SECTION: SettingsSection = {
-  title: 'Graphics',
+  title: msg('data-manager:settings-sections.title.graphics'),
   keys: [
-    { key: 'newRenderer', label: 'New renderer' },
-    { key: 'enhancedMode7', label: 'HD Mode 7' },
-    { key: 'noSpriteLimits', label: 'No sprite limits' },
-    { key: 'linearFiltering', label: 'Linear filtering' },
-    { key: 'dimFlashes', label: 'Dim flashes' },
-    { key: 'postProcessingShadows', label: 'Shadows' },
-    { key: 'coloredRupees', label: 'Colored rupees' },
-    { key: 'itemSheen', label: 'Item sheen' },
-    { key: 'hideSpaceBeyondWalls', label: 'Hide space beyond walls' },
-    { key: 'linkSprite', label: 'Link sprite', format: (v) => (v ? String(v) : 'Original') },
+    { key: 'newRenderer', label: msg('data-manager:settings-sections.label.new-renderer') },
+    { key: 'enhancedMode7', label: msg('data-manager:settings-sections.label.enhanced-mode7') },
+    { key: 'noSpriteLimits', label: msg('data-manager:settings-sections.label.no-sprite-limits') },
+    { key: 'linearFiltering', label: msg('data-manager:settings-sections.label.linear-filtering') },
+    { key: 'dimFlashes', label: msg('data-manager:settings-sections.label.dim-flashes') },
+    { key: 'postProcessingShadows', label: msg('data-manager:settings-sections.label.post-processing-shadows') },
+    { key: 'coloredRupees', label: msg('data-manager:settings-sections.label.colored-rupees') },
+    { key: 'itemSheen', label: msg('data-manager:settings-sections.label.item-sheen') },
+    { key: 'hideSpaceBeyondWalls', label: msg('data-manager:settings-sections.label.hide-space-beyond-walls') },
+    { key: 'linkSprite', label: msg('data-manager:settings-sections.label.link-sprite'), format: (v, t) => (v ? String(v) : t('data-manager:settings-sections.value.original')) },
   ],
 };
 
 const HUD_SECTION: SettingsSection = {
-  title: 'HUD and title screen',
+  title: msg('data-manager:settings-sections.title.hud-and-title-screen'),
   keys: [
-    { key: 'hudMode', label: 'HUD', format: (v) => capitalizeSetting(v, 'original') },
-    { key: 'hudStyle', label: 'HUD style', format: (v) => capitalizeSetting(v, 'vanilla') },
-    { key: 'hudRatio', label: 'HUD ratio', format: (v) => capitalizeSetting(v, 'match') },
-    { key: 'hudHeartMode', label: 'Hearts', format: (v) => capitalizeSetting(v, 'original') },
-    { key: 'hudMagicMode', label: 'Magic meter', format: (v) => capitalizeSetting(v, 'original') },
-    { key: 'hudCountLayout', label: 'Counter layout', format: (v) => capitalizeSetting(v, 'centered') },
-    { key: 'hudCountdownStyle', label: 'Countdown style', format: (v) => capitalizeSetting(v, 'pixel') },
-    { key: 'titleScreen', label: 'Title screen', format: (v) => capitalizeSetting(v, 'original') },
-    { key: 'titleMotion', label: 'Title motion', format: (v) => capitalizeSetting(v, 'still') },
-    { key: 'titleFollowsProgress', label: 'Title follows progress' },
+    { key: 'hudMode', label: msg('data-manager:settings-sections.label.hud-mode'), format: (v) => capitalizeSetting(v, 'original') },
+    { key: 'hudStyle', label: msg('data-manager:settings-sections.label.hud-style'), format: (v) => capitalizeSetting(v, 'vanilla') },
+    { key: 'hudRatio', label: msg('data-manager:settings-sections.label.hud-ratio'), format: (v) => capitalizeSetting(v, 'match') },
+    { key: 'hudHeartMode', label: msg('data-manager:settings-sections.label.hud-heart-mode'), format: (v) => capitalizeSetting(v, 'original') },
+    { key: 'hudMagicMode', label: msg('data-manager:settings-sections.label.hud-magic-mode'), format: (v) => capitalizeSetting(v, 'original') },
+    { key: 'hudCountLayout', label: msg('data-manager:settings-sections.label.hud-count-layout'), format: (v) => capitalizeSetting(v, 'centered') },
+    { key: 'hudCountdownStyle', label: msg('data-manager:settings-sections.label.hud-countdown-style'), format: (v) => capitalizeSetting(v, 'pixel') },
+    { key: 'titleScreen', label: msg('data-manager:settings-sections.label.title-screen'), format: (v) => capitalizeSetting(v, 'original') },
+    { key: 'titleMotion', label: msg('data-manager:settings-sections.label.title-motion'), format: (v) => capitalizeSetting(v, 'still') },
+    { key: 'titleFollowsProgress', label: msg('data-manager:settings-sections.label.title-follows-progress') },
   ],
 };
 

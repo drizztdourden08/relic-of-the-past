@@ -1,8 +1,9 @@
 /* @layer shared-hud @kind logic */
+import type { Message } from '@drizztdourden08/brock-core/i18n';
 import { validateNode } from '../layouts/validate-node';
 import type { HudPreset } from './presets.type';
 
-const readPreset = (id: string, name: string, icon: string, json: unknown): HudPreset => {
+const readPreset = (id: string, name: Message, icon: string, json: unknown): HudPreset => {
   const issues: string[] = [];
   const node = validateNode(json, `presets/${id}.json`, { issues, seen: new Set(), insideRepeat: false });
   if (!node) {

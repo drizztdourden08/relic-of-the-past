@@ -21,7 +21,7 @@ const pondRowModelOf = (
   const stops = PRICE_STOPS.slice(0, pondCeilingRungOf(ceilings.rupees) + 1);
   return {
     label: pond.label,
-    modeLabel: MODE_LABELS[setting.mode],
+    modeLabel: text(MODE_LABELS[setting.mode]),
     state,
     stops,
     askModel: pondAskModelOf({

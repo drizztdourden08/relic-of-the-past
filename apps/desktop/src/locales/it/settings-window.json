@@ -1,0 +1,16 @@
+{
+  "option.viewport-modes.none.label": "Bande nere",
+  "option.viewport-modes.none.hint": "Mantiene le proporzioni del gioco e riempie il resto della finestra con bande nere.",
+  "option.viewport-modes.fit.label": "Adatta alla finestra",
+  "option.viewport-modes.fit.hint": "Blocca la forma della finestra sulle proporzioni del gioco mentre la ridimensioni, così non compaiono bande.",
+  "option.viewport-modes.fill.label": "Estendi",
+  "option.viewport-modes.fill.hint": "Estende l'immagine per riempire tutta la finestra.",
+  "section.window.title": "Finestra",
+  "start-fullscreen.label": "Avvia a schermo intero",
+  "start-fullscreen.description": "Passa automaticamente a schermo intero all'avvio del gioco",
+  "viewport-constraint.label": "Area di visualizzazione",
+  "viewport-constraint.description": "Controlla il rapporto tra l'area di gioco e la finestra",
+  "pixel-perfect.label": "Pixel perfetti",
+  "pixel-perfect.description": "Ingrandisce l'immagine solo per pixel sorgente interi, così ogni pixel ha esattamente la stessa dimensione. Elimina lo sfarfallio su recinti, muri e altri bordi dritti durante lo scorrimento, al costo di bordi neri un po' più larghi. Disattiva il filtro lineare finché è attivo.",
+  "pixel-perfect.hint": "Richiede l'area con bande nere."
+}

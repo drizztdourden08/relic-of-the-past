@@ -1,0 +1,13 @@
+{
+  "section.bugfixes.title": "Bugfixes",
+  "section.bugfixes-bundles.title": "Alles tegelijk inschakelen",
+  "section.bugfixes-misc.title": "Algemene fixes",
+  "section.bugfixes-gamechanging.title": "Bugfixes die het spel veranderen",
+  "misc-bug-fixes.label": "Alle algemene bugfixes",
+  "misc-bug-fixes.description": "Zet alle algemene fixes hieronder in één keer aan. Losse schakelaars hieronder hebben voorrang.",
+  "game-changing-bug-fixes.label": "Alle bugfixes die het spel veranderen",
+  "game-changing-bug-fixes.description": "Zet fixes aan die het spelgedrag veranderen op manieren waar speedrunners om geven. Losse schakelaars hebben voorrang.",
+  "game-changing-bug-fixes.hint": "Runs die met het originele spel vergeleken worden, laten dit uit.",
+  "state.on": "Het spel gebruikt het gecorrigeerde gedrag.",
+  "state.off": "De originele bug blijft."
+}

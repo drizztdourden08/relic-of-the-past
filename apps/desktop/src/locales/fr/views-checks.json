@@ -1,0 +1,15 @@
+{
+  "view.label": "Vue",
+  "view.list.label": "Liste",
+  "view.list.title": "Lignes compactes",
+  "view.detailed.label": "Détaillée",
+  "view.detailed.title": "Lignes avec objets",
+  "view.visual.label": "Cartes",
+  "view.visual.title": "Cartes d'objets",
+  "pin.label": "Épingler l'en-tête",
+  "pin.description": "Garde le résumé et les filtres en place",
+  "notify.label": "Notifications",
+  "notify.description": "Une carte sur le jeu pour chaque check ou événement accompli",
+  "closed.label": "Une fois fermé",
+  "closed.description": "Continuer à notifier quand ce suivi est fermé"
+}

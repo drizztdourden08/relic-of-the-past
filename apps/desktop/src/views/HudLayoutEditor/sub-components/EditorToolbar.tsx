@@ -7,10 +7,11 @@ import { RatioPicker } from './RatioPicker';
 import { TOOLBAR_ICONS, buildToolbarGroups, presetItems, subtreePresetItems, useToolbarMenu } from '@app/hud-layout-editing/toolbar-menus';
 import { useHudEditorViewStore } from '@app/stores/hud-editor-view-store';
 import type { EditorToolbarProps } from './EditorToolbar.type';
-import { useT } from '@drizztdourden08/brock-react';
+import { useT, useText } from '@drizztdourden08/brock-react';
 
 const EditorToolbar = (props: EditorToolbarProps) => {
   const t = useT();
+  const text = useText();
   const {
     insert, layouts, draftId, onStartFrom, slotNumbers, glyphPacks,
     ratio, onRatioChange, ground, onGroundChange, targetLabel,
@@ -48,7 +49,7 @@ const EditorToolbar = (props: EditorToolbarProps) => {
 
       <ToolbarMenu
         icon={TOOLBAR_ICONS.preset} label={t('hud-editor:editor-toolbar.label.preset')}
-        items={[...subtreePresetItems({ insert, t }), { separator: true }, ...presetItems(layouts, draftId, onStartFrom)]}
+        items={[...subtreePresetItems({ insert, t }, text), { separator: true }, ...presetItems(layouts, draftId, onStartFrom)]}
         open={openKey === 'preset'} onToggle={() => toggle('preset')} onClose={close}
       />
 

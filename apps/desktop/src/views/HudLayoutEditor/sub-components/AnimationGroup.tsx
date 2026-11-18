@@ -33,11 +33,9 @@ const AnimationGroup = (props: AnimationGroupProps) => {
           onChange={(property) => onChange({ property: property as HudAnimatableProperty })}
         />
       </Field>
-      {reflow !== undefined
-        ? <Text className="hud-inspect__warning"><Icon name="triangle-alert" size={14} aria-hidden /> {reflow}</Text>
-        : REFLOW.has(animation.property) && (
-          <Text className="hud-inspect__warning"><Icon name="triangle-alert" size={14} aria-hidden /> {t('hud-editor:animation-group.reflow')}</Text>
-        )}
+      {(reflow !== undefined || REFLOW.has(animation.property)) && (
+        <Text className="hud-inspect__warning"><Icon name="triangle-alert" size={14} aria-hidden /> {t('hud-editor:animation-group.reflow')}</Text>
+      )}
 
       <KeyframeTrack
         keyframes={animation.keyframes}

@@ -1,0 +1,4 @@
+{
+  "copy-refusal.known": "Dess licens, {id}, tillåter inte kopior.",
+  "copy-refusal.unknown": "Dess licens är inte en som appen känner till, så den tillåter inte kopior."
+}

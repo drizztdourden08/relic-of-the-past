@@ -1,0 +1,8 @@
+{
+  "title": "Inspelningar att ta med",
+  "showSent": "Visa skickade",
+  "empty.new": "Inga nya inspelningar. Visa skickade för att se tidigare.",
+  "empty.all": "Inga inspelningar än.",
+  "sent": "Skickad",
+  "include": "Ta med inspelningen från {name}"
+}

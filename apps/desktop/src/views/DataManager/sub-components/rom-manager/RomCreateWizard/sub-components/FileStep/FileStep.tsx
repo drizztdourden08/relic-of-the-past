@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind component */
-import { useT } from '@drizztdourden08/brock-react';
+import { useT, useText } from '@drizztdourden08/brock-react';
 import { Field } from '@drizztdourden08/tessera/primitives';
 import { officialRomStatuses } from '@rotp/roms';
 import { UploadField } from '@app/compounds/UploadField';
@@ -9,6 +9,7 @@ import type { FileStepProps } from './FileStep.type';
 
 const FileStep = ({ values, update }: FileStepProps) => {
   const t = useT();
+  const text = useText();
   const lane = importLaneConfig(t)[values.kind];
   const roms = officialRomStatuses().filter((rom) => rom.kind === values.kind);
 
@@ -22,7 +23,7 @@ const FileStep = ({ values, update }: FileStepProps) => {
         url={values.url}
         urlPlaceholder={lane.placeholder}
         roms={roms}
-        onFiles={(files) => checkPickedRom(files, 'official', values.kind, {
+        onFiles={(files) => checkPickedRom(files, 'official', values.kind, text, {
           file: (file) => update({ file, url: '', check: null }), check: (check) => update({ check }),
         })}
         onUrlChange={(url) => update({ url, file: null, check: null })}

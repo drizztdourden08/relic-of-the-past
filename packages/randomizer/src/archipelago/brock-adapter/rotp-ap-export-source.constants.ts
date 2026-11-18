@@ -5,6 +5,7 @@ import { AP_ITEM_IDS, AP_ITEM_NAMES, AP_LOCATION_IDS, AP_LOCATION_NAMES } from '
 import { widestRuledWorld } from '../export/widest-ruled-world';
 import { GOAL_EVENT } from '../../world/events';
 import { optionCatalog } from '../../world/options';
+import { optionText } from '../../world/options/option-text';
 import { HELPER_REGISTRY } from '../../world/rules/helpers-registry/helper-registry.constants';
 import { PRIMITIVE_HELPERS } from '../../world/rules/primitive-helpers.constants';
 import { baselineItemClassOf } from './baseline-item-class-of';
@@ -28,7 +29,9 @@ const ROTP_AP_EXPORT_SOURCE: ApExportSource<RotpKeys> = {
   isPrize: isLocationPrize,
   requires: locationRequiresOf,
   eventName: (key) => getCheck(key).name,
-  options: optionCatalog,
+  get options() {
+    return optionCatalog.map((option) => ({ ...option, displayName: optionText(option.displayName) }));
+  },
 };
 
 export { ROTP_AP_EXPORT_SOURCE };

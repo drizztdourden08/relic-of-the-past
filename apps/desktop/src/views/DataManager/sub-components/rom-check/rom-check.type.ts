@@ -1,7 +1,8 @@
 /* @layer renderer-components @kind types */
 import type { RomVerdict } from '@rotp/roms';
 
-interface RomCheck extends RomVerdict {
+interface RomCheck extends Omit<RomVerdict, 'message'> {
+  message: string;
   file: File;
 }
 

@@ -1,0 +1,23 @@
+{
+  "section.haptics-general.title": "Vibration",
+  "haptics.enabled.label": "Activer le retour haptique",
+  "haptics.enabled.description": "Active la vibration de la manette pour les événements du jeu. Nécessite une manette compatible (Xbox, Switch Pro, DualSense).",
+  "haptics.intensity.label": "Intensité des vibrations",
+  "haptics.intensity.description": "Multiplicateur global de l'intensité de tout le retour haptique",
+  "section.haptics-combat.title": "Combat",
+  "haptics.sword-swing.label": "Coup d'épée",
+  "haptics.sword-swing.description": "Très légère vibration quand le joueur manie l'épée",
+  "haptics.sword-hit-enemy.label": "Épée touchant un ennemi",
+  "haptics.sword-hit-enemy.description": "Vibration normale quand l'épée touche un ennemi",
+  "haptics.sword-clink.label": "Choc d'épée",
+  "haptics.sword-clink.description": "Légère vibration quand l'épée heurte une surface invulnérable ou un bouclier",
+  "haptics.damage-taken.label": "Dégâts subis",
+  "haptics.damage-taken.description": "Vibration proportionnelle aux dégâts quand le joueur est blessé (plus forte pour plus de dégâts)",
+  "section.haptics-actions.title": "Objets et déplacements",
+  "haptics.item-use.label": "Utilisation d'objet",
+  "haptics.item-use.description": "Vibration à l'utilisation d'objets (marteau, grappin, bombes, médaillons, bâtons, etc.)",
+  "haptics.dash-vibration.label": "Vibration de course",
+  "haptics.dash-vibration.description": "Vibration rythmée des pas pendant la course avec les bottes de Pégase",
+  "haptics.environmental-effects.label": "Effets d'environnement",
+  "haptics.environmental-effects.description": "Vibration pour les événements du monde : chute dans un trou, réception depuis un rebord, entrée dans l'eau, téléportation du miroir, ouverture de coffre, explosion de bombe"
+}

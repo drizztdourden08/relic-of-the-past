@@ -1,0 +1,8 @@
+{
+  "section.mobile.title": "Anzeige",
+  "render-into-notch.label": "Unter Kameraausschnitt darstellen",
+  "render-into-notch.description": "An: Spiel und Oberfläche nutzen den ganzen Bildschirm, auch unter der Kamera-Aussparung. Aus: Alles bleibt im nutzbaren Bildschirmbereich.",
+  "section.mobile-behavior.title": "Verhalten",
+  "pause-when-away.label": "Pausieren, wenn die App im Hintergrund ist",
+  "pause-when-away.description": "Pausiert Spiel und Ton, wenn du die App wechselst oder den Bildschirm ausschaltest."
+}

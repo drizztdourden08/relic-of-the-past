@@ -1,0 +1,8 @@
+{
+  "section.camera.title": "Kamera",
+  "camera-lock-to-viewport.label": "Lås kameran till vyn",
+  "camera-lock-to-viewport.description": "Fäster vyn vid områdets gräns så att inget svart syns utanför. Av behåller originalkameran.",
+  "camera-lock-to-viewport.hint": "Kräver utökad rendering, under Skärm.",
+  "smooth-transitions.label": "Mjuka övergångar",
+  "smooth-transitions.description": "Mjukar upp panoreringen över områdesskarvar. Kräver Lås kameran till vyn."
+}

@@ -1,0 +1,9 @@
+{
+  "delete.confirm": "Löschen",
+  "deleteProfile.title": "Profil löschen",
+  "deleteProfile.message": "\"{name}\" löschen? Die Spielstände gehen verloren. Das kann nicht rückgängig gemacht werden.",
+  "deleteProfile.confirm": "Profil löschen",
+  "deleteRom.title": "ROM löschen",
+  "deleteRom.message": "Dadurch werden \"{romFile}\" und alle extrahierten Assets entfernt. Profile mit dieser ROM werden ebenfalls gelöscht. Das kann nicht rückgängig gemacht werden.",
+  "deleteRom.confirm": "ROM löschen"
+}

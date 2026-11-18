@@ -1,0 +1,8 @@
+{
+  "section.mobile.title": "Pantalla",
+  "render-into-notch.label": "Dibujar bajo el recorte de la cámara",
+  "render-into-notch.description": "Activado: el juego y la interfaz usan toda la pantalla, también bajo la muesca de la cámara. Desactivado: todo queda dentro del área útil de la pantalla.",
+  "section.mobile-behavior.title": "Comportamiento",
+  "pause-when-away.label": "Pausar cuando la app está en segundo plano",
+  "pause-when-away.description": "Pausa el juego y su sonido al cambiar de app o apagar la pantalla."
+}

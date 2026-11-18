@@ -1,0 +1,15 @@
+{
+  "view.label": "Weergave",
+  "view.list.label": "Lijst",
+  "view.list.title": "Compacte rijen",
+  "view.detailed.label": "Gedetailleerd",
+  "view.detailed.title": "Rijen met items",
+  "view.visual.label": "Kaarten",
+  "view.visual.title": "Itemkaarten",
+  "pin.label": "Kop vastzetten",
+  "pin.description": "Houd het overzicht en de filters op hun plaats",
+  "notify.label": "Meldingen",
+  "notify.description": "Een kaart over het spel bij elke voltooide check of gebeurtenis",
+  "closed.label": "Als gesloten",
+  "closed.description": "Blijf melden terwijl deze tracker gesloten is"
+}

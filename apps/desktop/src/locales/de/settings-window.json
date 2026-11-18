@@ -1,0 +1,16 @@
+{
+  "option.viewport-modes.none.label": "Letterbox",
+  "option.viewport-modes.none.hint": "Behält das Spielseitenverhältnis und füllt den Rest des Fensters mit schwarzen Balken.",
+  "option.viewport-modes.fit.label": "Fenster anpassen",
+  "option.viewport-modes.fit.hint": "Sperrt die Fensterform beim Ändern der Größe auf das Spielseitenverhältnis, sodass keine Balken erscheinen.",
+  "option.viewport-modes.fill.label": "Strecken",
+  "option.viewport-modes.fill.hint": "Streckt das Bild über das ganze Fenster.",
+  "section.window.title": "Fenster",
+  "start-fullscreen.label": "Im Vollbild starten",
+  "start-fullscreen.description": "Beim Spielstart automatisch in den Vollbildmodus wechseln",
+  "viewport-constraint.label": "Ansichtsbereich",
+  "viewport-constraint.description": "Legt fest, wie die Spielfläche zum Fenster steht",
+  "pixel-perfect.label": "Pixelgenau",
+  "pixel-perfect.description": "Skaliert das Bild nur in ganzen Quellpixeln, sodass jedes Pixel exakt gleich groß ist. Beseitigt das Flimmern an Zäunen, Mauern und anderen geraden Kanten beim Scrollen, auf Kosten etwas breiterer schwarzer Ränder. Schaltet Lineare Filterung aus, solange aktiv.",
+  "pixel-perfect.hint": "Benötigt den Ansichtsbereich Letterbox."
+}

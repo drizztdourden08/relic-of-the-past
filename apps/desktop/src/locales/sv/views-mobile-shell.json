@@ -1,0 +1,14 @@
+{
+  "menu.home": "Hem",
+  "menu.game": "Spel",
+  "menu.profiles": "Profiler",
+  "menu.widgets": "Widgets",
+  "menu.about": "Om",
+  "menu.touchEdit": "Redigera pekplacering",
+  "hint.home": "Hem",
+  "hint.menu": "Meny",
+  "drawer.label": "Alternativ",
+  "fps": "{fps} FPS",
+  "volume.mute": "Ljud av",
+  "volume.unmute": "Ljud på"
+}

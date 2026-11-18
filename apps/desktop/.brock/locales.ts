@@ -5,12 +5,15 @@ import app_en_compounds from '../src/locales/en/compounds.json';
 import app_en_data_manager from '../src/locales/en/data-manager.json';
 import app_en_errors from '../src/locales/en/errors.json';
 import app_en_features from '../src/locales/en/features.json';
+import app_en_hub_contracts from '../src/locales/en/hub-contracts.json';
 import app_en_hud_editing from '../src/locales/en/hud-editing.json';
 import app_en_hud_editor from '../src/locales/en/hud-editor.json';
+import app_en_hud from '../src/locales/en/hud.json';
 import app_en_language_editor from '../src/locales/en/language-editor.json';
 import app_en_msu_studio from '../src/locales/en/msu-studio.json';
 import app_en_profiles from '../src/locales/en/profiles.json';
 import app_en_randomizer from '../src/locales/en/randomizer.json';
+import app_en_roms from '../src/locales/en/roms.json';
 import app_en_settings_audio from '../src/locales/en/settings-audio.json';
 import app_en_settings_bugfixes from '../src/locales/en/settings-bugfixes.json';
 import app_en_settings_camera from '../src/locales/en/settings-camera.json';
@@ -52,12 +55,15 @@ const baseLayers: readonly Layer[] = [
   { locale: 'en', namespace: 'data-manager', kind: 'app', messages: app_en_data_manager },
   { locale: 'en', namespace: 'errors', kind: 'app', messages: app_en_errors },
   { locale: 'en', namespace: 'features', kind: 'app', messages: app_en_features },
+  { locale: 'en', namespace: 'hub-contracts', kind: 'app', messages: app_en_hub_contracts },
   { locale: 'en', namespace: 'hud-editing', kind: 'app', messages: app_en_hud_editing },
   { locale: 'en', namespace: 'hud-editor', kind: 'app', messages: app_en_hud_editor },
+  { locale: 'en', namespace: 'hud', kind: 'app', messages: app_en_hud },
   { locale: 'en', namespace: 'language-editor', kind: 'app', messages: app_en_language_editor },
   { locale: 'en', namespace: 'msu-studio', kind: 'app', messages: app_en_msu_studio },
   { locale: 'en', namespace: 'profiles', kind: 'app', messages: app_en_profiles },
   { locale: 'en', namespace: 'randomizer', kind: 'app', messages: app_en_randomizer },
+  { locale: 'en', namespace: 'roms', kind: 'app', messages: app_en_roms },
   { locale: 'en', namespace: 'settings-audio', kind: 'app', messages: app_en_settings_audio },
   { locale: 'en', namespace: 'settings-bugfixes', kind: 'app', messages: app_en_settings_bugfixes },
   { locale: 'en', namespace: 'settings-camera', kind: 'app', messages: app_en_settings_camera },

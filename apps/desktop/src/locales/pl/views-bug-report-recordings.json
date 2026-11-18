@@ -1,0 +1,8 @@
+{
+  "title": "Nagrania do dołączenia",
+  "showSent": "Pokaż wysłane",
+  "empty.new": "Brak nowych nagrań. Pokaż wysłane, aby zobaczyć wcześniejsze.",
+  "empty.all": "Brak nagrań.",
+  "sent": "Wysłane",
+  "include": "Dołącz nagranie z {name}"
+}

@@ -1,0 +1,23 @@
+{
+  "section.haptics-general.title": "Vibrazione",
+  "haptics.enabled.label": "Attiva feedback tattile",
+  "haptics.enabled.description": "Attiva la vibrazione del controller per gli eventi di gioco. Richiede un controller compatibile (Xbox, Switch Pro, DualSense).",
+  "haptics.intensity.label": "Intensità vibrazione",
+  "haptics.intensity.description": "Moltiplicatore globale dell'intensità di tutto il feedback tattile",
+  "section.haptics-combat.title": "Combattimento",
+  "haptics.sword-swing.label": "Colpo di spada",
+  "haptics.sword-swing.description": "Vibrazione molto debole quando il giocatore sferra un colpo di spada",
+  "haptics.sword-hit-enemy.label": "Spada contro nemico",
+  "haptics.sword-hit-enemy.description": "Vibrazione normale quando la spada colpisce un nemico",
+  "haptics.sword-clink.label": "Tintinnio della spada",
+  "haptics.sword-clink.description": "Vibrazione debole quando la spada tintinna contro una superficie invulnerabile o uno scudo",
+  "haptics.damage-taken.label": "Danno subito",
+  "haptics.damage-taken.description": "Vibrazione proporzionale al danno quando il giocatore viene ferito (più forte per più danno)",
+  "section.haptics-actions.title": "Oggetti e movimento",
+  "haptics.item-use.label": "Uso oggetti",
+  "haptics.item-use.description": "Vibrazione quando si usano oggetti (martello, rampino, bombe, medaglioni, bacchette, ecc.)",
+  "haptics.dash-vibration.label": "Vibrazione dello scatto",
+  "haptics.dash-vibration.description": "Vibrazione ritmica dei passi durante la corsa con gli Stivali di Pegaso",
+  "haptics.environmental-effects.label": "Effetti ambientali",
+  "haptics.environmental-effects.description": "Vibrazione per gli eventi del mondo: cadute in un buco, atterraggi da un dislivello, ingresso in acqua, teletrasporto con lo specchio, apertura di forzieri, esplosioni di bombe"
+}

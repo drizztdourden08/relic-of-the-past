@@ -10,10 +10,10 @@ const LobbyLine = ({ state }: LobbyLineProps) => {
   return (
     <Flex gap="sm" align="center" wrap className="lobby-setup__line">
       <Text weight={600}>{state.name}</Text>
-      <Status tone="success" variant="pill">{`Archipelago ${state.ap}`}</Status>
+      <Status tone="success" variant="pill">{t('compounds:lobby-setup.archipelago-version', { version: state.ap })}</Status>
       {state.open !== undefined && (
         <Status tone={state.open.free > 0 ? 'success' : 'neutral'} variant="pill">
-          {`Open seats ${state.open.free}/${state.open.total}`}
+          {t('compounds:lobby-setup.open-seats', { free: state.open.free, total: state.open.total })}
         </Status>
       )}
       {state.approval && <Status tone="neutral" variant="pill">{t('compounds:lobby-setup.host-approval')}</Status>}

@@ -1,6 +1,8 @@
 /* @layer renderer-lib @kind hook */
 import { useCallback } from 'react';
+import { msg } from '@drizztdourden08/brock-core/i18n';
 import { loadProfile } from '@drizztdourden08/brock-react';
+import { LocalizedError } from '@app/storage/localized-error';
 import { updateProfile } from '@app/storage/profile-store';
 import { reconnectProfileSession } from '@app/game/randomizer-client';
 import { useProfileConnectionStore } from '@app/stores/profile-connection-store';
@@ -15,12 +17,12 @@ const useProfileConnection = (profile: Profile | null): ProfileConnection => {
   const config = saved ?? profile?.randomizer ?? null;
 
   const saveConnection = useCallback(async (patch: RandomizerConnectionPatch) => {
-    if (profileId === null) throw new Error('No profile is open.');
+    if (profileId === null) throw new LocalizedError(msg('randomizer:profile-connection.no-profile'));
     const stored = await loadProfile(profileId);
-    if (!stored) throw new Error('The profile is gone.');
+    if (!stored) throw new LocalizedError(msg('randomizer:profile-connection.profile-gone'));
     const randomizer = applyConnectionPatch(stored.randomizer, patch);
     const updated = await updateProfile(profileId, { randomizer });
-    if (!updated?.randomizer) throw new Error('The profile is gone.');
+    if (!updated?.randomizer) throw new LocalizedError(msg('randomizer:profile-connection.profile-gone'));
     setSaved(profileId, updated.randomizer);
     reconnectProfileSession(profileId, updated.randomizer);
   }, [profileId, setSaved]);

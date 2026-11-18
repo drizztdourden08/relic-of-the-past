@@ -1,0 +1,9 @@
+{
+  "delete.confirm": "Eliminar",
+  "deleteProfile.title": "Eliminar perfil",
+  "deleteProfile.message": "¿Eliminar \"{name}\"? Se perderán sus datos de guardado. No se puede deshacer.",
+  "deleteProfile.confirm": "Eliminar perfil",
+  "deleteRom.title": "Eliminar ROM",
+  "deleteRom.message": "Se quitará \"{romFile}\" y todos sus recursos extraídos. Los perfiles que usen esta ROM también se eliminarán. No se puede deshacer.",
+  "deleteRom.confirm": "Eliminar ROM"
+}

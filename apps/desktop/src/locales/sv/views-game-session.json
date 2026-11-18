@@ -1,0 +1,9 @@
+{
+  "delete.confirm": "Ta bort",
+  "deleteProfile.title": "Ta bort profil",
+  "deleteProfile.message": "Ta bort \"{name}\"? Dess sparfiler går förlorade. Det går inte att ångra.",
+  "deleteProfile.confirm": "Ta bort profil",
+  "deleteRom.title": "Ta bort ROM",
+  "deleteRom.message": "Detta tar bort \"{romFile}\" och alla extraherade resurser. Profiler som använder denna ROM tas också bort. Det går inte att ångra.",
+  "deleteRom.confirm": "Ta bort ROM"
+}

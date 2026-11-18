@@ -1,0 +1,17 @@
+{
+  "section.developer-instrumentation.title": "Instrumentação",
+  "developer-tools-enabled.label": "Modo desenvolvedor",
+  "developer-tools-enabled.description": "Ativa as ferramentas de desenvolvedor.",
+  "experimental-features-enabled.label": "Recursos experimentais",
+  "experimental-features-enabled.description": "Ativa recursos inacabados: o Editor de layout do HUD, o HUD e os controles modernos, as configurações de GBA e o jogo online do Archipelago. Desligar isto também desliga o HUD moderno e a masmorra extra.",
+  "experimental-features-enabled.hint": "Requer Modo desenvolvedor.",
+  "dev-navigation-data.label": "Dados de navegação",
+  "dev-navigation-data.description": "Dados de salas, grade e sprites para o widget Local e navegação, o preenchimento por inundação e o simulador.",
+  "dev-navigation-data.hint": "Requer Modo desenvolvedor.",
+  "section.developer-sanctuary.title": "Conta do Sanctuary",
+  "sanctuary-account.label": "Conta do Sanctuary",
+  "sanctuary-account.description": "Entre para que os relatórios de bug levem seu nome e apareçam no hub.",
+  "section.developer-debug-reporting.title": "Relatórios de depuração",
+  "allow-debug-logging.label": "Permitir rastreamento de logs de depuração",
+  "allow-debug-logging.description": "Guarda logs detalhados e adiciona um botão de captura na barra de título (Tab) e um botão flutuante para enviar um relatório de depuração."
+}

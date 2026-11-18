@@ -1,0 +1,17 @@
+{
+  "section.developer-instrumentation.title": "Instrumentatie",
+  "developer-tools-enabled.label": "Ontwikkelaarsmodus",
+  "developer-tools-enabled.description": "Schakelt ontwikkelaarstools in.",
+  "experimental-features-enabled.label": "Experimentele functies",
+  "experimental-features-enabled.description": "Schakelt onafgewerkte functies in: de HUD-indelingseditor, moderne HUD en besturing, GBA-instellingen en online spelen met Archipelago. Uitzetten schakelt ook de moderne HUD en de extra kerker uit.",
+  "experimental-features-enabled.hint": "Vereist Ontwikkelaarsmodus.",
+  "dev-navigation-data.label": "Navigatiegegevens",
+  "dev-navigation-data.description": "Kamer-, raster- en spritegegevens voor de widget Locatie en navigatie, de flood fill en de simulator.",
+  "dev-navigation-data.hint": "Vereist Ontwikkelaarsmodus.",
+  "section.developer-sanctuary.title": "Sanctuary-account",
+  "sanctuary-account.label": "Sanctuary-account",
+  "sanctuary-account.description": "Log in zodat bugrapporten je naam dragen en op de hub verschijnen.",
+  "section.developer-debug-reporting.title": "Debugrapportage",
+  "allow-debug-logging.label": "Bijhouden van debuglogs toestaan",
+  "allow-debug-logging.description": "Bewaart gedetailleerde logs en voegt een opnameknop in de titelbalk (Tab) en een zwevende knop voor het versturen van een debugrapport toe."
+}

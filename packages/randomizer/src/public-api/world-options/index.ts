@@ -20,7 +20,7 @@ export type { DifficultySetting } from '../../world/difficulty/difficulty.type';
 export { FINAL_FIGHT_SILVER_HITS } from '../../world/final-fight';
 export type { OptionDescription } from '../../world/option-description.type';
 export { detailsOf, plainTextOf } from '../../world/option-description';
-export { MEDALLION_OPTION_KEYS, OPTION_GROUPS, baselineValues, optionByKey, optionCatalog } from '../../world/options';
+export { MEDALLION_OPTION_KEYS, OPTION_GROUPS, baselineValues, optionByKey, optionCatalog, optionText, setOptionTextResolver } from '../../world/options';
 export type { OptionDef, OptionGroup, OptionValue, RandomizerOptionsSnapshot } from '../../world/options.type';
 export { POTION_CAULDRONS, blockedContentNote, blockedContentsOf, potionPriceOverrides, potionPriceStateOfValues, reconcilePotionPrices } from '../../world/potion-price';
 export { RETRO_BOW_KEY, RETRO_QUIVER_ITEM, RETRO_QUIVER_PRICE, RETRO_SILVER_COST_KEY, RETRO_WOOD_COST_KEY } from '../../world/retro/retro-bow.constants';

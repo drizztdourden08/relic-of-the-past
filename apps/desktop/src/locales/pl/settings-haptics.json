@@ -1,0 +1,23 @@
+{
+  "section.haptics-general.title": "Wibracje",
+  "haptics.enabled.label": "Włącz wibracje",
+  "haptics.enabled.description": "Włącza wibracje kontrolera dla zdarzeń w grze. Wymaga zgodnego kontrolera (Xbox, Switch Pro, DualSense).",
+  "haptics.intensity.label": "Siła wibracji",
+  "haptics.intensity.description": "Globalny mnożnik siły całej wibracji",
+  "section.haptics-combat.title": "Walka",
+  "haptics.sword-swing.label": "Zamach mieczem",
+  "haptics.sword-swing.description": "Bardzo słaba wibracja przy zamachu mieczem",
+  "haptics.sword-hit-enemy.label": "Trafienie wroga mieczem",
+  "haptics.sword-hit-enemy.description": "Normalna wibracja, gdy miecz trafia wroga",
+  "haptics.sword-clink.label": "Szczęk miecza",
+  "haptics.sword-clink.description": "Słaba wibracja, gdy miecz szczęka o niezniszczalną powierzchnię lub tarczę",
+  "haptics.damage-taken.label": "Otrzymane obrażenia",
+  "haptics.damage-taken.description": "Wibracja proporcjonalna do obrażeń, gdy gracz zostaje zraniony (mocniejsza przy większych obrażeniach)",
+  "section.haptics-actions.title": "Przedmioty i ruch",
+  "haptics.item-use.label": "Użycie przedmiotu",
+  "haptics.item-use.description": "Wibracja przy użyciu przedmiotów (młot, hakostrzał, bomby, medaliony, różdżki itd.)",
+  "haptics.dash-vibration.label": "Wibracja biegu",
+  "haptics.dash-vibration.description": "Rytmiczna wibracja kroków podczas biegu w Butach Pegaza",
+  "haptics.environmental-effects.label": "Efekty otoczenia",
+  "haptics.environmental-effects.description": "Wibracja dla zdarzeń w świecie: upadek w dziurę, lądowanie z półki, wejście do wody, teleport lustrem, otwarcie skrzyni, wybuchy bomb"
+}

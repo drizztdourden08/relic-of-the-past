@@ -1,0 +1,14 @@
+{
+  "menu.home": "Start",
+  "menu.game": "Spel",
+  "menu.profiles": "Profielen",
+  "menu.widgets": "Widgets",
+  "menu.about": "Info",
+  "menu.touchEdit": "Aanraakindeling bewerken",
+  "hint.home": "Start",
+  "hint.menu": "Menu",
+  "drawer.label": "Opties",
+  "fps": "{fps} FPS",
+  "volume.mute": "Dempen",
+  "volume.unmute": "Dempen opheffen"
+}

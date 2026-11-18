@@ -1,0 +1,8 @@
+{
+  "section.camera.title": "Telecamera",
+  "camera-lock-to-viewport.label": "Blocca telecamera sulla vista",
+  "camera-lock-to-viewport.description": "Fissa la vista al confine dell'area, così non compare spazio nero all'esterno. Se disattivato, resta la telecamera originale.",
+  "camera-lock-to-viewport.hint": "Richiede il Rendering esteso, in Schermo.",
+  "smooth-transitions.label": "Transizioni fluide",
+  "smooth-transitions.description": "Rende fluido lo scorrimento sui bordi tra le aree. Richiede Blocca telecamera sulla vista."
+}

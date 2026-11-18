@@ -1,0 +1,8 @@
+{
+  "section.mobile.title": "Schermo",
+  "render-into-notch.label": "Disegna sotto il foro della fotocamera",
+  "render-into-notch.description": "Attivo: il gioco e l'interfaccia usano tutto lo schermo, anche sotto il notch della fotocamera. Disattivo: tutto resta nell'area utilizzabile dello schermo.",
+  "section.mobile-behavior.title": "Comportamento",
+  "pause-when-away.label": "Pausa quando l'app è in secondo piano",
+  "pause-when-away.description": "Mette in pausa il gioco e l'audio quando cambi app o spegni lo schermo."
+}

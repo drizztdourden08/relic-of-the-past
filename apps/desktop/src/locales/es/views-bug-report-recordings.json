@@ -1,0 +1,8 @@
+{
+  "title": "Grabaciones a incluir",
+  "showSent": "Mostrar enviadas",
+  "empty.new": "No hay grabaciones nuevas. Pulsa Mostrar enviadas para ver las anteriores.",
+  "empty.all": "Aún no hay grabaciones.",
+  "sent": "Enviada",
+  "include": "Incluir la grabación de {name}"
+}

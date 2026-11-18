@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind component */
-import { useT } from '@drizztdourden08/brock-react';
+import { useT, useText } from '@drizztdourden08/brock-react';
 import { Field, Stack, TextInput } from '@drizztdourden08/tessera/primitives';
 import { officialRomStatuses } from '@rotp/roms';
 import { UploadField } from '@app/compounds/UploadField';
@@ -11,6 +11,7 @@ import { TextOrFileField } from './TextOrFileField';
 
 const PatchedFields = ({ values, update }: SourceFieldsProps) => {
   const t = useT();
+  const text = useText();
   return (
   <Stack gap="md">
     <Field label={t('wizards:language.details.name')} hint={t('wizards:language.details.type-the-language-this-rom')}>
@@ -40,7 +41,7 @@ const PatchedFields = ({ values, update }: SourceFieldsProps) => {
         hint={t('wizards:language.details.the-rom-is-read-never')}
         status={romCheckStatus(values.patchedFile, values.patchedCheck, t)}
         roms={officialRomStatuses()}
-        onFiles={(files) => checkPickedRom(files, 'patched', undefined, {
+        onFiles={(files) => checkPickedRom(files, 'patched', undefined, text, {
           file: (patchedFile) => update({ patchedFile, patchedCheck: null }), check: (patchedCheck) => update({ patchedCheck }),
         })}
       />

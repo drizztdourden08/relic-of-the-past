@@ -1,0 +1,9 @@
+{
+  "delete.confirm": "Verwijderen",
+  "deleteProfile.title": "Profiel verwijderen",
+  "deleteProfile.message": "\"{name}\" verwijderen? De opgeslagen gegevens gaan verloren. Dit kan niet ongedaan worden gemaakt.",
+  "deleteProfile.confirm": "Profiel verwijderen",
+  "deleteRom.title": "ROM verwijderen",
+  "deleteRom.message": "Hiermee worden \"{romFile}\" en alle uitgepakte assets verwijderd. Profielen die deze ROM gebruiken worden ook verwijderd. Dit kan niet ongedaan worden gemaakt.",
+  "deleteRom.confirm": "ROM verwijderen"
+}

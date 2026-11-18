@@ -1,0 +1,4 @@
+{
+  "copy-refusal.known": "Jego licencja, {id}, nie zezwala na kopie.",
+  "copy-refusal.unknown": "Jego licencja nie jest jedną z tych, które zna aplikacja, więc nie zezwala na kopie."
+}

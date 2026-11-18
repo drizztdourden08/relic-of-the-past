@@ -27,7 +27,7 @@ const capacityRowModelOf = (input: CapacityRowInput): CapacityRowModel => {
   const isWallet = id === 'wallet';
   return {
     id,
-    label: FAMILY_LABEL[id],
+    label: input.text(FAMILY_LABEL[id]),
     caption: captionOf.mode(id),
     stops: stopsOf(capacityFamily),
     offersInPool: !isWallet,
@@ -39,11 +39,11 @@ const capacityRowModelOf = (input: CapacityRowInput): CapacityRowModel => {
     maxCount: Math.max(minCount, Math.min(span, headroom)),
     maxJump,
     curveOptions: curveOptionsOf(capacityFamily, input.t, input.text),
-    preview: previewOf(capacityFamily, setting, plan),
+    preview: previewOf(capacityFamily, setting, plan, input.t, input.text),
     impact: familyImpactCell(plan.spotIsCheck, inPool),
     problem: problemOf(setting, span, maxJump),
-    footnote: footnoteOf(id, setting),
-    floorNote: floorNoteOf(capacityFamily, setting, walletFloor),
+    footnote: footnoteOf(id, setting, input.t),
+    floorNote: floorNoteOf(capacityFamily, setting, walletFloor, input.t),
     bonus: bonusOf(id, setting, input.bonus),
     bonusCaption: captionOf.bonus(id),
     forced,

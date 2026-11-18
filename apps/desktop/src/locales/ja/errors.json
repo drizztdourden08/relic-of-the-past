@@ -1,0 +1,12 @@
+{
+  "rom.usRequired": "このROMはゲームの言語のみを提供します。ゲーム本体はUSA版ROMで動きます。USA版ROMをインポートしてから、もう一度抽出してください。",
+  "rom.fontMissing": "{languages, list}の基本フォントがなく、このROMでは補えません。先にその言語のROMをインポートしてください。",
+  "rom.notFound": "ROMファイルが見つかりません：{file}",
+  "rom.zip.none": "ソースにROMファイル（.sfc/.smc）が見つかりません",
+  "rom.zip.many": "複数のROMファイルが見つかりました（{count}）。ROMは1つだけ指定してください。",
+  "language.exists": "ID「{id}」の言語セットはすでにあります。別の名前を選んでください。",
+  "language.patched.failed": "パッチ済みROMをインポートできませんでした。下のレポートに失敗した部分が示されています。",
+  "sprite.unreadablePack": "読み取れるスプライトパックではありません。",
+  "sprite.invalidZspr": "有効なZSPRスプライトファイルではありません。",
+  "msu.trackNotFound": "トラックが見つかりません：{file}"
+}

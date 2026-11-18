@@ -1,0 +1,13 @@
+{
+  "cheats.label": "Trucchi",
+  "dataset.label": "Ispettore dati in tempo reale",
+  "debug.label": "Stato del gioco",
+  "music.label": "Debug musica",
+  "navigation.label": "Posizione e navigazione",
+  "shadow.drawing.label": "Disegno ombre",
+  "shadow.editor.kit.label": "Editor ombre",
+  "shadow.editor.kit.requires": "Avvia una partita per usare l'Editor ombre.",
+  "shadow.editor.label": "Editor ombre",
+  "shadow.elements.label": "Elementi ombra",
+  "simulator.label": "Simulatore"
+}

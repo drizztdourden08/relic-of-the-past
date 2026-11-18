@@ -1,0 +1,8 @@
+{
+  "section.camera.title": "Cámara",
+  "camera-lock-to-viewport.label": "Fijar cámara a la vista",
+  "camera-lock-to-viewport.description": "Ancla la vista al límite de la zona, para que no se vea espacio negro fuera. Desactivado mantiene la cámara original.",
+  "camera-lock-to-viewport.hint": "Requiere Renderizado extendido, en Pantalla.",
+  "smooth-transitions.label": "Transiciones suaves",
+  "smooth-transitions.description": "Suaviza el desplazamiento entre zonas. Requiere Fijar cámara a la vista."
+}

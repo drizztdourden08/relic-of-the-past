@@ -1,0 +1,8 @@
+{
+  "title": "Aufnahmen zum Mitsenden",
+  "showSent": "Gesendete zeigen",
+  "empty.new": "Keine neuen Aufnahmen. Zeige gesendete, um frühere zu sehen.",
+  "empty.all": "Noch keine Aufnahmen.",
+  "sent": "Gesendet",
+  "include": "Aufnahme von {name} mitsenden"
+}

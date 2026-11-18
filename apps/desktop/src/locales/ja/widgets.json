@@ -1,0 +1,13 @@
+{
+  "cheats.label": "チート",
+  "dataset.label": "ライブデータインスペクター",
+  "debug.label": "ゲーム状態",
+  "music.label": "ミュージックデバッガー",
+  "navigation.label": "現在地とナビゲーション",
+  "shadow.drawing.label": "影の描画",
+  "shadow.editor.kit.label": "影エディター",
+  "shadow.editor.kit.requires": "影エディターを使うにはゲームを開始してください。",
+  "shadow.editor.label": "影エディター",
+  "shadow.elements.label": "影の要素",
+  "simulator.label": "シミュレーター"
+}

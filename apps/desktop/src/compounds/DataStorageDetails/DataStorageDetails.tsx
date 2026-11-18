@@ -14,7 +14,7 @@ const DataStorageDetails = (props: DataStorageDetailsProps) => {
 
   return (
     <Stack gap="md">
-      <FactsPanel layout="rows" align="end" label={t('compounds:data-storage-details.data-folder')} groups={locationFacts(summary.location)} />
+      <FactsPanel layout="rows" align="end" label={t('compounds:data-storage-details.data-folder')} groups={locationFacts(summary.location, { location: t('compounds:data-storage-details.location'), folder: t('compounds:data-storage-details.folder') })} />
       <DomainTiles domains={summary.domains} />
     </Stack>
   );
