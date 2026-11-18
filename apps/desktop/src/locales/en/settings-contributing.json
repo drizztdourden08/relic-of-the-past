@@ -1,0 +1,17 @@
+{
+  "section.developer-instrumentation.title": "Instrumentation",
+  "developer-tools-enabled.label": "Developer Mode",
+  "developer-tools-enabled.description": "Turns on developer tools.",
+  "experimental-features-enabled.label": "Experimental Features",
+  "experimental-features-enabled.description": "Enables unfinished features: the HUD Layout Editor, Modern HUD and controls, GBA settings, and Archipelago online play. Turning this off also turns off Modern HUD and the extra dungeon.",
+  "experimental-features-enabled.hint": "Needs Developer Mode.",
+  "dev-navigation-data.label": "Navigation Data",
+  "dev-navigation-data.description": "Room, grid and sprite data for the Location & Navigation widget, the flood fill and the simulator.",
+  "dev-navigation-data.hint": "Needs Developer Mode.",
+  "section.developer-sanctuary.title": "Sanctuary account",
+  "sanctuary-account.label": "Sanctuary account",
+  "sanctuary-account.description": "Sign in so bug reports carry your name and appear on the hub.",
+  "section.developer-debug-reporting.title": "Debug Reporting",
+  "allow-debug-logging.label": "Allow debugging logs tracking",
+  "allow-debug-logging.description": "Keeps detailed logs and adds a titlebar capture button (Tab) and a floating button for sending a debug report."
+}

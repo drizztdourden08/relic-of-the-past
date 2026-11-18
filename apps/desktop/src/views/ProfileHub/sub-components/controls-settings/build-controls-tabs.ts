@@ -3,7 +3,6 @@ import { createElement } from 'react';
 import type { ControlsTabDef } from '@drizztdourden08/brock-input/renderer';
 import { remapAssignments } from '@rotp/input-mapping';
 import { openSetting } from '@app/settings-nav/open-setting';
-import { DISABLED_SETTING_MESSAGES } from '@app/settings-controls/disabled-setting-messages.constants';
 import { assignmentLabel } from './assignment-label';
 import { CHEAT_ACTION_DEFS, SHORTCUT_ACTION_DEFS, SNES_ACTIONS } from './action-defs.constants';
 import { MODERN_ONLY, VANILLA_ONLY } from './controls-tabs.constants';
@@ -30,7 +29,7 @@ const modernTab = ({ assignments, onChange }: BuildControlsTabsArgs, disabledRea
 });
 
 const buildControlsTabs = (args: BuildControlsTabsArgs): readonly ControlsTabDef[] => {
-  const { scheme, experimental, cheatsEnabled, hapticsEnabled, touch, mobile, onChange } = args;
+  const { scheme, experimental, cheatsEnabled, hapticsEnabled, touch, mobile, onChange, cheatsOffMessage } = args;
   return [
     {
       id: 'controls',
@@ -59,7 +58,7 @@ const buildControlsTabs = (args: BuildControlsTabsArgs): readonly ControlsTabDef
       scope: 'global',
       title: 'Cheat Bindings',
       actions: CHEAT_ACTION_DEFS,
-      gate: { active: !cheatsEnabled, message: DISABLED_SETTING_MESSAGES.cheatsEnabled ?? '', onOpenSettings: openCheatsSettings },
+      gate: { active: !cheatsEnabled, message: cheatsOffMessage, onOpenSettings: openCheatsSettings },
     },
     {
       id: 'options',

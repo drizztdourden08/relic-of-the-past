@@ -12,6 +12,7 @@ interface BuildControlsTabsArgs {
   mobile: boolean;
   assignments: Readonly<Record<SlotIndex, SlotAssignment>>;
   onChange: SettingsChange;
+  cheatsOffMessage: string;
 }
 
 export type { BuildControlsTabsArgs };

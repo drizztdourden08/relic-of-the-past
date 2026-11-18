@@ -1,5 +1,6 @@
 /* @layer renderer-components @kind component */
 import { useCallback } from 'react';
+import { useText } from '@drizztdourden08/brock-react';
 import { DIALOG_HOLD_STOPS } from '@rotp/game-data';
 import type { DialogHoldStop } from '@rotp/game-data';
 import { Box, Flex, Toggle } from '@drizztdourden08/tessera/primitives';
@@ -8,6 +9,7 @@ import type { DialogHoldRowProps } from './gameplay.type';
 import './DialogHoldRow.css';
 
 const DialogHoldRow = (props: DialogHoldRowProps) => {
+  const text = useText();
   const { label, description, enabled, speed, disabled, onChange } = props;
   const handleToggle = useCallback((v: boolean) => onChange({ dialogHoldToAccelerate: v }), [onChange]);
   const handleSpeed = useCallback(
@@ -18,8 +20,8 @@ const DialogHoldRow = (props: DialogHoldRowProps) => {
     <Flex className="dialog-hold-row" align="center" gap="lg">
       <Box className="dialog-hold-row__cell">
         <Toggle
-          label={label}
-          description={description}
+          label={text(label)}
+          description={text(description)}
           checked={enabled}
           onChange={handleToggle}
           disabled={disabled}

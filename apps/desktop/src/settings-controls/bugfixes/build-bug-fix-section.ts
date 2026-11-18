@@ -1,9 +1,10 @@
 /* @layer renderer-app @kind logic */
-import type { Section } from '@drizztdourden08/brock-react';
+import { msg } from '@drizztdourden08/brock-core/i18n';
+import type { SectionDef } from '@drizztdourden08/brock-react';
 import { BUNDLE_FIXES } from '@rotp/features';
 import { BUNDLE_GROUPS } from './bugfixes.constants';
 
-const buildBugFixSection = (): Section => {
+const buildBugFixSection = (): SectionDef => {
   const groups = BUNDLE_GROUPS.map((g) => ({
     id: g.id,
     title: g.title,
@@ -17,19 +18,19 @@ const buildBugFixSection = (): Section => {
 
   return {
     id: 'bugfixes',
-    title: 'Bug Fixes',
+    title: msg('settings-bugfixes:section.bugfixes.title'),
     subsections: [
       {
         id: 'bugfixes-bundles',
-        title: 'Enable in bulk',
+        title: msg('settings-bugfixes:section.bugfixes-bundles.title'),
         items: [
           {
-            key: 'miscBugFixes', label: 'All general bug fixes', description: 'Turn on every general fix below at once. Individual toggles below override this.',
+            key: 'miscBugFixes', label: msg('settings-bugfixes:misc-bug-fixes.label'), description: msg('settings-bugfixes:misc-bug-fixes.description'),
             keywords: 'misc bug fixes all bundle', link: 'https://github.com/snesrev/zelda3/wiki/Bug-Fixes-:-Misc.',
           },
           {
-            key: 'gameChangingBugFixes', label: 'All gameplay-altering bug fixes', description: 'Turn on fixes that change game behavior in ways speedrunners may care about. Individual toggles override this.',
-            hint: 'Runs that compare against the original game should leave it off.', keywords: 'game changing fixes all bundle', link: 'https://github.com/snesrev/zelda3/wiki/Bug-Fixes-:-Game-Changing',
+            key: 'gameChangingBugFixes', label: msg('settings-bugfixes:game-changing-bug-fixes.label'), description: msg('settings-bugfixes:game-changing-bug-fixes.description'),
+            hint: msg('settings-bugfixes:game-changing-bug-fixes.hint'), keywords: 'game changing fixes all bundle', link: 'https://github.com/snesrev/zelda3/wiki/Bug-Fixes-:-Game-Changing',
           },
         ],
       },

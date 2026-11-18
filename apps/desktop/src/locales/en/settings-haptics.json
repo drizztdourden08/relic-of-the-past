@@ -1,0 +1,23 @@
+{
+  "section.haptics-general.title": "Vibration",
+  "haptics.enabled.label": "Enable Haptic Feedback",
+  "haptics.enabled.description": "Enable controller vibration/rumble for game events. Requires a compatible controller (Xbox, Switch Pro, DualSense).",
+  "haptics.intensity.label": "Vibration Intensity",
+  "haptics.intensity.description": "Global intensity multiplier for all haptic feedback",
+  "section.haptics-combat.title": "Combat",
+  "haptics.sword-swing.label": "Sword Swing",
+  "haptics.sword-swing.description": "Very faint vibration when the player swings the sword",
+  "haptics.sword-hit-enemy.label": "Sword Hit Enemy",
+  "haptics.sword-hit-enemy.description": "Normal vibration when the sword connects with an enemy",
+  "haptics.sword-clink.label": "Sword Clink",
+  "haptics.sword-clink.description": "Faint vibration when the sword clinks against an invulnerable surface or shield",
+  "haptics.damage-taken.label": "Damage Taken",
+  "haptics.damage-taken.description": "Vibration scaled to damage amount when the player gets hurt (stronger for more damage)",
+  "section.haptics-actions.title": "Items and Movement",
+  "haptics.item-use.label": "Item Use",
+  "haptics.item-use.description": "Vibration when using items (hammer, hookshot, bombs, medallions, rods, etc.)",
+  "haptics.dash-vibration.label": "Dash Vibration",
+  "haptics.dash-vibration.description": "Rhythmic step vibration while running with the Pegasus Boots",
+  "haptics.environmental-effects.label": "Environmental Effects",
+  "haptics.environmental-effects.description": "Vibration for world events: falling into pits, landing from ledges, entering water, mirror warp, chest opens, bomb explosions"
+}

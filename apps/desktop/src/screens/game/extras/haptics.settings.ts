@@ -1,34 +1,35 @@
 /* @layer renderer-app @kind config */
-import type { ScreenMeta, Section } from '@drizztdourden08/brock-react';
+import { msg } from '@drizztdourden08/brock-core/i18n';
+import type { ScreenMeta, SectionDef } from '@drizztdourden08/brock-react';
 
 const meta: ScreenMeta = { title: 'Haptics', icon: 'vibrate', order: 2, keywords: ['haptics', 'rumble', 'vibration', 'controller'] };
 
-const sections: Section[] = [
+const sections: SectionDef[] = [
   {
     id: 'haptics-general',
-    title: 'Vibration',
+    title: msg('settings-haptics:section.haptics-general.title'),
     items: [
-      { key: 'haptics.enabled', label: 'Enable Haptic Feedback', description: 'Enable controller vibration/rumble for game events. Requires a compatible controller (Xbox, Switch Pro, DualSense).', keywords: 'vibration rumble haptic feedback controller' },
-      { key: 'haptics.intensity', label: 'Vibration Intensity', description: 'Global intensity multiplier for all haptic feedback', keywords: 'vibration intensity strength level' },
+      { key: 'haptics.enabled', label: msg('settings-haptics:haptics.enabled.label'), description: msg('settings-haptics:haptics.enabled.description'), keywords: 'vibration rumble haptic feedback controller' },
+      { key: 'haptics.intensity', label: msg('settings-haptics:haptics.intensity.label'), description: msg('settings-haptics:haptics.intensity.description'), keywords: 'vibration intensity strength level' },
     ],
   },
   {
     id: 'haptics-combat',
-    title: 'Combat',
+    title: msg('settings-haptics:section.haptics-combat.title'),
     items: [
-      { key: 'haptics.swordSwing', label: 'Sword Swing', description: 'Very faint vibration when the player swings the sword', keywords: 'sword swing slash attack' },
-      { key: 'haptics.swordHitEnemy', label: 'Sword Hit Enemy', description: 'Normal vibration when the sword connects with an enemy', keywords: 'sword hit enemy damage' },
-      { key: 'haptics.swordClink', label: 'Sword Clink', description: 'Faint vibration when the sword clinks against an invulnerable surface or shield', keywords: 'sword clink deflect shield bounce' },
-      { key: 'haptics.damageTaken', label: 'Damage Taken', description: 'Vibration scaled to damage amount when the player gets hurt (stronger for more damage)', keywords: 'damage hurt health hearts' },
+      { key: 'haptics.swordSwing', label: msg('settings-haptics:haptics.sword-swing.label'), description: msg('settings-haptics:haptics.sword-swing.description'), keywords: 'sword swing slash attack' },
+      { key: 'haptics.swordHitEnemy', label: msg('settings-haptics:haptics.sword-hit-enemy.label'), description: msg('settings-haptics:haptics.sword-hit-enemy.description'), keywords: 'sword hit enemy damage' },
+      { key: 'haptics.swordClink', label: msg('settings-haptics:haptics.sword-clink.label'), description: msg('settings-haptics:haptics.sword-clink.description'), keywords: 'sword clink deflect shield bounce' },
+      { key: 'haptics.damageTaken', label: msg('settings-haptics:haptics.damage-taken.label'), description: msg('settings-haptics:haptics.damage-taken.description'), keywords: 'damage hurt health hearts' },
     ],
   },
   {
     id: 'haptics-actions',
-    title: 'Items and Movement',
+    title: msg('settings-haptics:section.haptics-actions.title'),
     items: [
-      { key: 'haptics.itemUse', label: 'Item Use', description: 'Vibration when using items (hammer, hookshot, bombs, medallions, rods, etc.)', keywords: 'item use bomb hookshot hammer rod medallion' },
-      { key: 'haptics.dashVibration', label: 'Dash Vibration', description: 'Rhythmic step vibration while running with the Pegasus Boots', keywords: 'dash run boots pegasus step rhythm' },
-      { key: 'haptics.environmentalEffects', label: 'Environmental Effects', description: 'Vibration for world events: falling into pits, landing from ledges, entering water, mirror warp, chest opens, bomb explosions', keywords: 'environment fall pit ledge water mirror chest' },
+      { key: 'haptics.itemUse', label: msg('settings-haptics:haptics.item-use.label'), description: msg('settings-haptics:haptics.item-use.description'), keywords: 'item use bomb hookshot hammer rod medallion' },
+      { key: 'haptics.dashVibration', label: msg('settings-haptics:haptics.dash-vibration.label'), description: msg('settings-haptics:haptics.dash-vibration.description'), keywords: 'dash run boots pegasus step rhythm' },
+      { key: 'haptics.environmentalEffects', label: msg('settings-haptics:haptics.environmental-effects.label'), description: msg('settings-haptics:haptics.environmental-effects.description'), keywords: 'environment fall pit ledge water mirror chest' },
     ],
   },
 ];
