@@ -1,5 +1,6 @@
 /* @layer renderer-components @kind component */
-import { DropZone, Text } from '@drizztdourden08/tessera/primitives';
+import { Text } from '@drizztdourden08/tessera/primitives';
+import { UploadField } from '@app/compounds/UploadField';
 import { StudioSection } from '@app/studio';
 import { SoundGroupField } from './SoundGroupField';
 import { syncGroupOf } from './behavior/sound-manifest';
@@ -17,12 +18,13 @@ const SoundAudioSection = (props: SoundAudioSectionProps) => {
           This sound plays from the sound chip. Add a layer with audio and save to replace it.
         </Text>
       )}
-      <DropZone
+      <UploadField
+        variant="block"
         accept={AUDIO_ACCEPT}
         label={sound.uploading ? 'Adding audio...' : 'Drop audio into this pack'}
         hint={AUDIO_ACCEPT_HINT}
         disabled={sound.uploading || readOnly}
-        onDrop={sound.handleUpload}
+        onFiles={sound.handleUpload}
       />
       {!unclaimed && (
         <SoundGroupField

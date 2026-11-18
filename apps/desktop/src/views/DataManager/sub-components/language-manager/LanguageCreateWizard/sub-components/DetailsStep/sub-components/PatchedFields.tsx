@@ -1,5 +1,7 @@
 /* @layer renderer-components @kind component */
-import { DropZone, Field, Stack, TextInput } from '@drizztdourden08/tessera/primitives';
+import { Field, Stack, TextInput } from '@drizztdourden08/tessera/primitives';
+import { officialRomStatuses } from '@rotp/roms';
+import { UploadField } from '@app/compounds/UploadField';
 import { PATCHED_ROM_ACCEPT } from '../../../LanguageCreateWizard.constants';
 import { chosenStatus } from '../../../behavior/chosen-status';
 import type { SourceFieldsProps } from '../DetailsStep.type';
@@ -29,13 +31,13 @@ const PatchedFields = ({ values, update }: SourceFieldsProps) => (
       onChange={(credits) => update({ credits })}
     />
     <Field label="ROM file">
-      <DropZone
+      <UploadField
         accept={PATCHED_ROM_ACCEPT}
-        variant="inline"
         label="Drop the patched ROM"
         hint="The ROM is read, never saved."
         status={chosenStatus(values.patchedFile)}
-        onDrop={(files) => update({ patchedFile: files[0] ?? null })}
+        roms={officialRomStatuses()}
+        onFiles={(files) => update({ patchedFile: files[0] ?? null })}
       />
     </Field>
   </Stack>

@@ -1,5 +1,6 @@
 /* @layer renderer-components @kind component */
-import { Box, DropZone, IconButton, Select, Text } from '@drizztdourden08/tessera/primitives';
+import { Box, IconButton, Select, Text } from '@drizztdourden08/tessera/primitives';
+import { UploadField } from '@app/compounds/UploadField';
 import { GLYPH_IMAGE_TYPES } from '../HudLayoutEditor.constants';
 import type { GlyphPosition } from '@app/hud/custom-glyph-store';
 import type { PackOverridesPanelProps } from './PackOverridesPanel.type';
@@ -29,12 +30,13 @@ const PackOverridesPanel = (props: PackOverridesPanelProps) => {
         </IconButton>
       </Box>
 
-      <DropZone
+      <UploadField
+        variant="block"
         accept={GLYPH_IMAGE_TYPES}
         label={target ? `Drop an image for ${target}` : 'No buttons to import for'}
         hint="PNG, SVG, GIF, JPEG or WebP. Drawn at 16x16 game pixels"
         disabled={busy || !target}
-        onDrop={(files) => { if (target && files[0]) onImport(pack.id, target, files[0]); }}
+        onFiles={(files) => { if (target && files[0]) onImport(pack.id, target, files[0]); }}
       />
 
       <Box className="hud-editor-packs__row">

@@ -1,8 +1,8 @@
 /* @layer renderer-components @kind types */
 import type { OfficialRomStatus } from '@rotp/roms';
 
-interface OfficialRomListProps {
+interface RomTableProps {
   roms: readonly OfficialRomStatus[];
 }
 
-export type { OfficialRomListProps };
+export type { RomTableProps };
