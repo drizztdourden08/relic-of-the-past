@@ -1,14 +1,13 @@
 /* @layer renderer-components @kind hook */
 import { useT, useText } from '@drizztdourden08/brock-react';
-import type { I18n, Text } from '@drizztdourden08/brock-core/i18n';
 import { useState, useEffect, useCallback } from 'react';
 import type { RomKind, SupplementStatus } from '@rotp/roms';
 import { ROM_KINDS } from '@rotp/roms';
 import * as romsStore from '@app/storage/roms-store';
 import type { RomDetail } from './rom-detail.type';
-import type { RomImportOutcome, UseRomManagerParams } from './rom-manager.type';
+import type { ImportMessageParams, RomImportOutcome, UseRomManagerParams } from './rom-manager.type';
 
-const importMessage = (kind: RomKind, romFile: string, alreadyExists: boolean, t: I18n['t'], text: (value: Text) => string): string =>
+const importMessage = ({ kind, romFile, alreadyExists, t, text }: ImportMessageParams): string =>
   alreadyExists ? t('data-manager:rom-manager.already-imported', { kind: text(ROM_KINDS[kind].label) }) : t('data-manager:rom-manager.imported', { name: romFile });
 
 const useRomManager = (params: UseRomManagerParams) => {
@@ -48,7 +47,7 @@ const useRomManager = (params: UseRomManagerParams) => {
     if (!result.success) return { success: false, message: result.error ?? failure };
     onRefresh();
     if (!result.alreadyExists) triggerRebuild(activeKind, result.romFile);
-    return { success: true, id: result.romFile, message: importMessage(activeKind, result.romFile, Boolean(result.alreadyExists), t, text) };
+    return { success: true, id: result.romFile, message: importMessage({ kind: activeKind, romFile: result.romFile, alreadyExists: Boolean(result.alreadyExists), t, text }) };
   }, [activeKind, onRefresh, triggerRebuild, t, text]);
 
   const handleUrlImport = useCallback(async (url: string) =>

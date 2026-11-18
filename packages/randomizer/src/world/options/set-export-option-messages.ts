@@ -1,7 +1,6 @@
 /* @layer shared-game @kind logic */
 import { exportOptionTextHolder } from './export-option-text-holder';
-
-const NAMESPACE_PREFIX = 'randomizer:';
+import { NAMESPACE_PREFIX } from './set-export-option-messages.constants';
 
 const setExportOptionMessages = (english: Readonly<Record<string, string>>): void => {
   exportOptionTextHolder.resolve = (text) => {

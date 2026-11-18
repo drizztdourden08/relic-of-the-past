@@ -54,14 +54,14 @@ describe('the seven translated errors, fed the parser\'s own words', { tags: ['c
   it('2 · a call that is never closed, with its column', () => {
     expect(raw('ceil(life_max / 8')).toBe('parse error [1:18]: Expected )');
     const problem = explainExprError('ceil(life_max / 8', raw('ceil(life_max / 8'));
-    expect(problem.message).toBe('This opens ceil( and never closes it. Add a ).');
+    expect(text(problem.message)).toBe('This opens ceil( and never closes it. Add a ).');
     expect(problem.column).toBe(18);
   });
 
   it('3 · a name this HUD does not know, with the did-you-mean intact', () => {
     const reading = readExpr('lifecurrent', { insideRepeat: false });
-    expect(reading.problem?.message).toBe('lifecurrent is not a name this HUD knows.');
-    expect(reading.problem?.suggestion).toBe('Did you mean life_current?');
+    expect(text(reading.problem?.message ?? '')).toBe('lifecurrent is not a name this HUD knows.');
+    expect(text(reading.problem?.suggestion ?? '')).toBe('Did you mean life_current?');
     expect(explainUnknownName('lifecurrent + 1', 'lifecurrent', 'life_current').fix?.expr)
       .toBe('life_current + 1');
   });
@@ -69,16 +69,16 @@ describe('the seven translated errors, fed the parser\'s own words', { tags: ['c
   it('4 · && , which every author arriving from JavaScript writes once', () => {
     expect(raw('life_current && 1')).toBe('parse error [1:14]: Unknown character "&"');
     const problem = explainExprError('life_current && 1', raw('life_current && 1'));
-    expect(problem.message).toBe('This language writes "and" as and, not &&.');
+    expect(text(problem.message)).toBe('This language writes "and" as and, not &&.');
     expect(problem.column).toBe(14);
-    expect(problem.fix).toEqual({ label: 'use and', expr: 'life_current and 1' });
+    expect({ label: text(problem.fix?.label ?? ''), expr: problem.fix?.expr }).toEqual({ label: 'use and', expr: 'life_current and 1' });
   });
 
   it('5 · || , which was a SILENT wrong number until concatenate: false', () => {
     expect(raw('life_current || 0')).toBe('parse error [1:14]: Unknown character "|"');
     const problem = explainExprError('life_current || 0', raw('life_current || 0'));
-    expect(problem.message).toContain('it is not "or"');
-    expect(problem.fix).toEqual({ label: 'use or', expr: 'life_current or 0' });
+    expect(text(problem.message)).toContain('it is not "or"');
+    expect({ label: text(problem.fix?.label ?? ''), expr: problem.fix?.expr }).toEqual({ label: 'use or', expr: 'life_current or 0' });
   });
 });
 
@@ -86,8 +86,8 @@ describe('the seven translated errors, fed the parser\'s own words', { tags: ['c
   it('6 ·two values with no operator between them', () => {
     expect(raw('life_current 8')).toBe('parse error [1:15]: Expected EOF');
     const problem = explainExprError('life_current 8', raw('life_current 8'));
-    expect(problem.message).toBe('Two values with nothing between them.');
-    expect(problem.suggestion).toBe('Did you mean life_current * 8?');
+    expect(text(problem.message)).toBe('Two values with nothing between them.');
+    expect(text(problem.suggestion ?? '')).toBe('Did you mean life_current * 8?');
   });
 
   it('7 · the three features compile-expr.ts disables on purpose', () => {
