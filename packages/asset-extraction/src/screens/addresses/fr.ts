@@ -1,6 +1,6 @@
 /* @layer shared-asset-extraction @kind data */
 import type { ScreenAddressTable } from '../screen-payload.type';
-import { END_WORD_SHEET, END_WORD_TILES } from '../screens.constants';
+import { END_WORD_SHEET, END_WORD_TILES, PRESENTS_SHEET, PRESENTS_TILES_FR } from '../screens.constants';
 
 const FR_SCREEN_ADDRESSES: ScreenAddressTable = {
   id: 'fr',
@@ -42,7 +42,7 @@ const FR_SCREEN_ADDRESSES: ScreenAddressTable = {
   },
   sheetPointers: { spr: 0xcf73, bg: 0xcf00 },
   sheets: { spr: [105, 106, 107], bg: [] },
-  sheetPatches: [{ index: END_WORD_SHEET, tiles: END_WORD_TILES }],
+  sheetPatches: [{ index: END_WORD_SHEET, tiles: END_WORD_TILES }, { index: PRESENTS_SHEET, tiles: PRESENTS_TILES_FR }],
 };
 
 export { FR_SCREEN_ADDRESSES };
