@@ -5,8 +5,7 @@ import type { PatternLists, PatternSlotConfigs } from '@drizztdourden08/tessera/
 import { HOST_NAME } from '@app/hooks/randomizer/lobby-setup';
 import type { LobbyConnect, LobbyLocation } from '@app/hooks/randomizer/lobby-setup';
 import { LOBBY_CODE_ALPHABET } from '@drizztdourden08/brock-randomizer/archipelago';
-
-type TextOf = (message: Message) => string;
+import type { TextOf } from './LobbySetup.type';
 
 const LOCATION_OPTIONS: { value: LobbyLocation; label: Message }[] = [
   { value: 'local', label: msg('compounds:lobby-setup.location.local') },
@@ -73,4 +72,3 @@ const addressSlots = (text: TextOf): PatternSlotConfigs => ({
 export {
   ANY_SEAT, ANY_SEAT_LABEL, CODE_PATTERN, CONNECT_OPTIONS, HOST_PATTERN, IP_PATTERN, LOCATION_OPTIONS, NO_LOBBIES_HINT, REMOTE_NEEDS_ADDRESS, addressLists, addressSlots, codeSlots,
 };
-export type { TextOf };

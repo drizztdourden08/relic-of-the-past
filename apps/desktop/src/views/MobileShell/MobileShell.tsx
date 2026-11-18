@@ -1,6 +1,6 @@
 /* @layer renderer-app @kind component */
 import { useCallback, useMemo } from 'react';
-import { useBrock, useT, useVolumeStore, useWidgetMenuEntries } from '@drizztdourden08/brock-react';
+import { useBrock, useMenuHooks, useT, useVolumeStore, useWidgetMenuEntries } from '@drizztdourden08/brock-react';
 import type { MenuEntry } from '@drizztdourden08/brock-react';
 import { Drawer } from '@drizztdourden08/tessera/composites';
 import { EdgeSwipeHint } from '@app/compounds/EdgeSwipeHint';
@@ -16,7 +16,8 @@ import './MobileShell.css';
 
 const MobileShell = () => {
   const t = useT();
-  const { menu, homeScreen } = useBrock();
+  const { menu: menuDefs, homeScreen } = useBrock();
+  const menu = useMenuHooks(menuDefs);
   const widgetEntries = useWidgetMenuEntries();
   const { game, display } = useGameSession();
   const { value, muted, toggleMute } = useVolumeStore();

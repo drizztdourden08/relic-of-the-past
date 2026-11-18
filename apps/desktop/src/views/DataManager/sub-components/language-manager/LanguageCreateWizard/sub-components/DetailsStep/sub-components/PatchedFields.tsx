@@ -41,8 +41,9 @@ const PatchedFields = ({ values, update }: SourceFieldsProps) => {
         hint={t('wizards:language.details.the-rom-is-read-never')}
         status={romCheckStatus(values.patchedFile, values.patchedCheck, t)}
         roms={officialRomStatuses()}
-        onFiles={(files) => checkPickedRom(files, 'patched', undefined, text, {
-          file: (patchedFile) => update({ patchedFile, patchedCheck: null }), check: (patchedCheck) => update({ patchedCheck }),
+        onFiles={(files) => checkPickedRom({
+          files, mode: 'patched', expected: undefined, text,
+          on: { file: (patchedFile) => update({ patchedFile, patchedCheck: null }), check: (patchedCheck) => update({ patchedCheck }) },
         })}
       />
     </Field>

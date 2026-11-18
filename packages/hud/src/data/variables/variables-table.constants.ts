@@ -1,26 +1,25 @@
 /* @layer shared-hud @kind data */
-import { msg } from '@drizztdourden08/brock-core/i18n';
 import type { HudCountdownSource, HudVariableDef } from './variables.type';
 
 const HUD_VARIABLES: readonly HudVariableDef[] = [
-  { name: 'life_current', note: msg('hud:variable.life-current.note') },
-  { name: 'life_max', note: msg('hud:variable.life-max.note') },
-  { name: 'magic_current', note: msg('hud:variable.magic-current.note') },
-  { name: 'magic_max', note: msg('hud:variable.magic-max.note') },
-  { name: 'half_magic', note: msg('hud:variable.half-magic.note') },
-  { name: 'armor', note: msg('hud:variable.armor.note') },
-  { name: 'arrow_current', note: msg('hud:variable.arrow-current.note') },
-  { name: 'arrow_max', note: msg('hud:variable.arrow-max.note') },
-  { name: 'bomb_current', note: msg('hud:variable.bomb-current.note') },
-  { name: 'bomb_max', note: msg('hud:variable.bomb-max.note') },
-  { name: 'key_current', note: msg('hud:variable.key-current.note') },
-  { name: 'rupee_current', note: msg('hud:variable.rupee-current.note') },
-  { name: 'rupee_max', note: msg('hud:variable.rupee-max.note') },
-  { name: 'silver_arrows', note: msg('hud:variable.silver-arrows.note') },
-  { name: 'slot_count', note: msg('hud:variable.slot-count.note') },
-  { name: 'countdown_active', note: msg('hud:variable.countdown-active.note') },
-  { name: 'countdown_seconds', note: msg('hud:variable.countdown-seconds.note') },
-  { name: 'countdown_frames', note: msg('hud:variable.countdown-frames.note') },
+  { name: 'life_current', note: { key: 'hud:variable.life-current.note' } },
+  { name: 'life_max', note: { key: 'hud:variable.life-max.note' } },
+  { name: 'magic_current', note: { key: 'hud:variable.magic-current.note' } },
+  { name: 'magic_max', note: { key: 'hud:variable.magic-max.note' } },
+  { name: 'half_magic', note: { key: 'hud:variable.half-magic.note' } },
+  { name: 'armor', note: { key: 'hud:variable.armor.note' } },
+  { name: 'arrow_current', note: { key: 'hud:variable.arrow-current.note' } },
+  { name: 'arrow_max', note: { key: 'hud:variable.arrow-max.note' } },
+  { name: 'bomb_current', note: { key: 'hud:variable.bomb-current.note' } },
+  { name: 'bomb_max', note: { key: 'hud:variable.bomb-max.note' } },
+  { name: 'key_current', note: { key: 'hud:variable.key-current.note' } },
+  { name: 'rupee_current', note: { key: 'hud:variable.rupee-current.note' } },
+  { name: 'rupee_max', note: { key: 'hud:variable.rupee-max.note' } },
+  { name: 'silver_arrows', note: { key: 'hud:variable.silver-arrows.note' } },
+  { name: 'slot_count', note: { key: 'hud:variable.slot-count.note' } },
+  { name: 'countdown_active', note: { key: 'hud:variable.countdown-active.note' } },
+  { name: 'countdown_seconds', note: { key: 'hud:variable.countdown-seconds.note' } },
+  { name: 'countdown_frames', note: { key: 'hud:variable.countdown-frames.note' } },
 ];
 
 const HUD_SCOPE_EXTRAS = ['index', 'count', 'item'] as const;

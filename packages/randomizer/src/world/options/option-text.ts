@@ -1,16 +1,7 @@
 /* @layer shared-game @kind logic */
 import type { Text } from '@drizztdourden08/brock-core/i18n';
+import { optionTextHolder } from './option-text-holder';
 
-type OptionTextResolver = (text: Text) => string;
+const optionText = (text: Text): string => optionTextHolder.resolve(text);
 
-const keyOf: OptionTextResolver = (text) => (typeof text === 'string' ? text : text.key);
-
-let resolver: OptionTextResolver = keyOf;
-
-const setOptionTextResolver = (next: OptionTextResolver): void => {
-  resolver = next;
-};
-
-const optionText = (text: Text): string => resolver(text);
-
-export { optionText, setOptionTextResolver };
+export { optionText };

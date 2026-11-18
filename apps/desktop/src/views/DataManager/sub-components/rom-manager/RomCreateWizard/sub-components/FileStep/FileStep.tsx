@@ -23,8 +23,9 @@ const FileStep = ({ values, update }: FileStepProps) => {
         url={values.url}
         urlPlaceholder={lane.placeholder}
         roms={roms}
-        onFiles={(files) => checkPickedRom(files, 'official', values.kind, text, {
-          file: (file) => update({ file, url: '', check: null }), check: (check) => update({ check }),
+        onFiles={(files) => checkPickedRom({
+          files, mode: 'official', expected: values.kind, text,
+          on: { file: (file) => update({ file, url: '', check: null }), check: (check) => update({ check }) },
         })}
         onUrlChange={(url) => update({ url, file: null, check: null })}
         onModeChange={() => update({ file: null, url: '', check: null })}

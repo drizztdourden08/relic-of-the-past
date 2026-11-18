@@ -10,6 +10,7 @@ const floorNoteOf = (
   const reason = maxFloorReasonOf(capacityFamily, walletFloor);
   if (reason === undefined) return undefined;
   const floor = capacityFamily.ladder[maxRungFloorOf(capacityFamily, walletFloor)];
+  if (floor === undefined) return undefined;
   return t('randomizer:capacity-row.floor-note', { reason, floor });
 };
 

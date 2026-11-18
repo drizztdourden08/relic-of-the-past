@@ -19,8 +19,9 @@ const RomFields = ({ values, update }: SourceFieldsProps) => {
       url={values.romUrl}
       urlPlaceholder={t('wizards:language.details.paste-rom-download-url')}
       roms={officialRomStatuses()}
-      onFiles={(files) => checkPickedRom(files, 'official', 'snes-alttp', text, {
-        file: (romFile) => update({ romFile, romUrl: '', romCheck: null }), check: (romCheck) => update({ romCheck }),
+      onFiles={(files) => checkPickedRom({
+        files, mode: 'official', expected: 'snes-alttp', text,
+        on: { file: (romFile) => update({ romFile, romUrl: '', romCheck: null }), check: (romCheck) => update({ romCheck }) },
       })}
       onUrlChange={(romUrl) => update({ romUrl, romFile: null, romCheck: null })}
       onModeChange={() => update({ romFile: null, romUrl: '', romCheck: null })}

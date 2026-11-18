@@ -1,5 +1,6 @@
 /* @layer renderer-components @kind types */
-import type { RomVerdict } from '@rotp/roms';
+import type { Text } from '@drizztdourden08/brock-core/i18n';
+import type { RomKind, RomVerdict } from '@rotp/roms';
 
 interface RomCheck extends Omit<RomVerdict, 'message'> {
   message: string;
@@ -8,4 +9,12 @@ interface RomCheck extends Omit<RomVerdict, 'message'> {
 
 type RomCheckMode = 'official' | 'patched';
 
-export type { RomCheck, RomCheckMode };
+interface PickedRom {
+  files: File[];
+  mode: RomCheckMode;
+  expected: RomKind | undefined;
+  text: (text: Text) => string;
+  on: { file: (file: File | null) => void; check: (check: RomCheck) => void };
+}
+
+export type { PickedRom, RomCheck, RomCheckMode };

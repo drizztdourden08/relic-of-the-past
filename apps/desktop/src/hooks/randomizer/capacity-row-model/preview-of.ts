@@ -2,8 +2,9 @@
 import type { I18n, Text } from '@drizztdourden08/brock-core/i18n';
 import { getCapacityUpgradeSprite } from '@rotp/game-data';
 import { ladderClamps, planOf } from '@rotp/randomizer';
-import type { CapacityFamily, FamilyPlan, FamilySetting } from '@rotp/randomizer';
+import type { FamilyPlan, FamilySetting } from '@rotp/randomizer';
 import type { CapacityPreviewModel } from '@app/compounds/CapacityFamilyRow';
+import type { PreviewInput } from './preview-of.type';
 import { JUMP_LABEL, PROGRESSIVE_NOTE, VANILLA_NOTE } from './capacity-row-model.constants';
 import { itemAt } from '@app/checked-access';
 import { START_LABEL, SURPLUS_LABEL } from './preview-of.constants';
@@ -15,9 +16,8 @@ const noteOf = (setting: FamilySetting, plan: FamilyPlan, t: I18n['t'], text: (t
   return plan.progressive && count > 0 ? text(PROGRESSIVE_NOTE) : undefined;
 };
 
-const previewOf = (
-  capacityFamily: CapacityFamily, setting: FamilySetting, plan: FamilyPlan, t: I18n['t'], text: (text: Text) => string,
-): CapacityPreviewModel => {
+const previewOf = (input: PreviewInput): CapacityPreviewModel => {
+  const { capacityFamily, setting, plan, t, text } = input;
   const stops = stopsOf(capacityFamily);
   const sprite = getCapacityUpgradeSprite(capacityFamily.id);
   const stepsOf = (ladder: readonly number[], jumps: readonly number[], active: boolean, surplus: boolean) =>

@@ -39,7 +39,7 @@ const capacityRowModelOf = (input: CapacityRowInput): CapacityRowModel => {
     maxCount: Math.max(minCount, Math.min(span, headroom)),
     maxJump,
     curveOptions: curveOptionsOf(capacityFamily, input.t, input.text),
-    preview: previewOf(capacityFamily, setting, plan, input.t, input.text),
+    preview: previewOf({ capacityFamily, setting, plan, t: input.t, text: input.text }),
     impact: familyImpactCell(plan.spotIsCheck, inPool),
     problem: problemOf(setting, span, maxJump),
     footnote: footnoteOf(id, setting, input.t),
