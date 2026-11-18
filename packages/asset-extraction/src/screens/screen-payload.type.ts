@@ -39,6 +39,9 @@ interface ScreenPayload {
   readonly sheetPatches: readonly SheetPatch[];
   readonly tilemapFont: number;
   readonly tilemapFontData?: Uint8Array;
+  readonly pauseHeaders?: Uint16Array;
+  readonly floorLabels?: Uint8Array;
+  readonly copyScreen?: Uint8Array;
 }
 
 interface TableRegion {
@@ -59,6 +62,30 @@ type CreditsSource =
   | { readonly kind: 'bytes'; readonly text: TableRegion; readonly offsets: TableRegion; readonly map: TableRegion }
   | { readonly kind: 'words'; readonly text: TableRegion; readonly offsets: TableRegion };
 
+interface TilemapRebase {
+  readonly from: number;
+  readonly to: number;
+}
+
+interface PauseHeaderSource {
+  readonly pendantsRow: number;
+  readonly crystalsRow: number;
+}
+
+interface FloorLabelTiles {
+  readonly basementPrefix: number;
+  readonly upperSuffix: number;
+  readonly ground: readonly [number, number];
+}
+
+interface CopyScreenSource {
+  readonly sourceFairyX: number;
+  readonly targetFairyX: number;
+  readonly sourceBlankColumn: number;
+  readonly targetBlankColumn: number;
+  readonly targetDigits: number;
+}
+
 interface ScreenAddressTable {
   readonly id: 'us' | 'de' | 'fr' | 'fr-c' | 'en' | 'ja-v1.0' | 'ja-rev1';
   readonly menuTilemaps: readonly number[];
@@ -72,9 +99,13 @@ interface ScreenAddressTable {
   readonly sheetPointers: { readonly spr: number; readonly bg: number };
   readonly sheets: { readonly spr: readonly number[]; readonly bg: readonly number[] };
   readonly sheetPatches: readonly SheetPatchSource[];
+  readonly tilemapRebase?: TilemapRebase;
+  readonly pauseHeaders?: PauseHeaderSource;
+  readonly floorLabels?: FloorLabelTiles;
+  readonly copyScreen?: CopyScreenSource;
 }
 
 export type {
-  CreditsSource, EndingCaptionSource, PauseTable, ScreenAddressTable, ScreenPayload, SelectFileTable, SheetKind,
-  SheetOverride, SheetPatch, SheetPatchSource, TableRegion,
+  CopyScreenSource, CreditsSource, EndingCaptionSource, FloorLabelTiles, PauseHeaderSource, PauseTable, ScreenAddressTable,
+  ScreenPayload, SelectFileTable, SheetKind, SheetOverride, SheetPatch, SheetPatchSource, TableRegion, TilemapRebase,
 };

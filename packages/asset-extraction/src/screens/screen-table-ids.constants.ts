@@ -30,6 +30,12 @@ const CREDITS_DIGITS_ID = 32;
 
 const CREDITS_SCROLL_Y_ID = 33;
 
+const PAUSE_HEADERS_ID = 34;
+
+const FLOOR_LABELS_ID = 35;
+
+const COPY_SCREEN_ID = 36;
+
 const SHEET_PATCH_BASE = 0x300;
 
 const SHEET_BASE: Readonly<Record<SheetKind, number>> = { spr: 0x100, bg: 0x200 };
@@ -45,7 +51,7 @@ const sheetPatchTableId = (index: number): number => SHEET_PATCH_BASE + index;
 const sheetTableId = (kind: SheetKind, index: number): number => SHEET_BASE[kind] + index;
 
 export {
-  CREDITS_DIGITS_ID, CREDITS_MAP_ID, CREDITS_OFFSETS_ID, CREDITS_SCROLL_Y_ID, CREDITS_TEXT_ID, DUNGEON_MAP_LABELS_ID,
-  ENDING_CAPTION_DATA_ID, ENDING_CAPTION_OFFSETS_ID, NAME_GRID_ID, TILEMAP_FONT_DATA_ID, TILEMAP_FONT_ID,
-  menuTilemapId, pauseTableId, selectFileTableId, sheetPatchTableId, sheetTableId,
+  COPY_SCREEN_ID, CREDITS_DIGITS_ID, CREDITS_MAP_ID, CREDITS_OFFSETS_ID, CREDITS_SCROLL_Y_ID, CREDITS_TEXT_ID, DUNGEON_MAP_LABELS_ID,
+  ENDING_CAPTION_DATA_ID, ENDING_CAPTION_OFFSETS_ID, FLOOR_LABELS_ID, NAME_GRID_ID, PAUSE_HEADERS_ID, TILEMAP_FONT_DATA_ID,
+  TILEMAP_FONT_ID, menuTilemapId, pauseTableId, selectFileTableId, sheetPatchTableId, sheetTableId,
 };

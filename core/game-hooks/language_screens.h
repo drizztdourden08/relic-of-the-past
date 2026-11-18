@@ -35,6 +35,9 @@ enum {
   kLangTbl_DungMapTab23,       // messaging.c kDungMap_Tab23   uint16[744]
   kLangTbl_CreditsDigits,      // ending.c kEnding_Credits_DigitChar uint16[2]
   kLangTbl_CreditsScrollY,     // ending.c kEnding_Digits_ScrollY uint16[14]
+  kLangTbl_PauseHeaders,       // language_screens_latin.c pause box headers uint16[24]
+  kLangTbl_FloorLabels,        // language_screens_latin.c floor label tiles uint8[4]
+  kLangTbl_CopyScreen,         // language_screens_copy.c copy screen columns and digits uint8[15]
   kLangTbl_Count
 };
 

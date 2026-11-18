@@ -1709,6 +1709,7 @@ void DungeonMap_DrawFloorNumbersByRoom(uint16 pd, uint16 r8) {  // 8ae4f9
   uint16 q2 = (dungmap_cur_floor & 0x80) ? kDungMap_Tab16[(uint8)~dungmap_cur_floor] : 0x1F1D;
   messaging_buf[t+0] = q1 & r8;
   messaging_buf[t+1] = q2 & r8;
+  GameHook_FloorLabelCells(&messaging_buf[t], r8);
 }
 
 void DungeonMap_DrawDungeonLayout(int pd) {  // 8ae579
@@ -1995,6 +1996,7 @@ int DungeonMap_DrawFloorNumberObjects(int spr_pos) {  // 8aec0a
   do {
     SetOamPlain(&oam_buf[spr_pos + 0], 0x30, r4, sign8(r2) ? 0x1c : kDungMap_Tab34[r2], 0x3d, 0);
     SetOamPlain(&oam_buf[spr_pos + 1], 0x38, r4, sign8(r2) ? kDungMap_Tab34[r2 ^ 0xff] : 0x1d, 0x3d, 0);
+    GameHook_FloorLabelSprites(&oam_buf[spr_pos], (int8)r2);
     r4 += 16;
   } while (spr_pos += 2, r2-- != r3);
   return spr_pos;

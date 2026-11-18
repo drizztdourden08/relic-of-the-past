@@ -1,6 +1,9 @@
 /* @layer shared-asset-extraction @kind data */
 import type { ScreenAddressTable } from '../screen-payload.type';
-import { END_WORD_SHEET, END_WORD_TILES, PRESENTS_SHEET, PRESENTS_TILES_FR } from '../screens.constants';
+import {
+  END_WORD_SHEET, END_WORD_TILES, FLOOR_LABELS_FR, FLOOR_LETTER_SHEET, FLOOR_LETTER_TILES_FR, LATIN_TILEMAP_REBASE,
+  PRESENTS_SHEET, PRESENTS_TILES_FR,
+} from '../screens.constants';
 
 const FR_C_SCREEN_ADDRESSES: ScreenAddressTable = {
   id: 'fr-c',
@@ -42,7 +45,18 @@ const FR_C_SCREEN_ADDRESSES: ScreenAddressTable = {
   },
   sheetPointers: { spr: 0xcf99, bg: 0xcf26 },
   sheets: { spr: [105, 106, 107], bg: [] },
-  sheetPatches: [{ index: END_WORD_SHEET, tiles: END_WORD_TILES }, { index: PRESENTS_SHEET, tiles: PRESENTS_TILES_FR }],
+  sheetPatches: [
+    { index: END_WORD_SHEET, tiles: END_WORD_TILES },
+    { index: PRESENTS_SHEET, tiles: PRESENTS_TILES_FR },
+    { index: FLOOR_LETTER_SHEET, tiles: FLOOR_LETTER_TILES_FR },
+  ],
+  tilemapRebase: LATIN_TILEMAP_REBASE,
+  pauseHeaders: { pendantsRow: 0x8de85c, crystalsRow: 0x8de910 },
+  floorLabels: FLOOR_LABELS_FR,
+  copyScreen: {
+    sourceFairyX: 0x8e8fe9, targetFairyX: 0x8e917a, sourceBlankColumn: 0x8e9122, targetBlankColumn: 0x8e926a,
+    targetDigits: 0x8e9184,
+  },
 };
 
 export { FR_C_SCREEN_ADDRESSES };
