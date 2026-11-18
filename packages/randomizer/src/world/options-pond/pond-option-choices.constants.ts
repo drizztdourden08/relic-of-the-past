@@ -1,12 +1,13 @@
 /* @layer shared-game @kind constants */
+import { msg } from '@drizztdourden08/brock-core/i18n';
 import { CURVE_LABELS } from '../capacity/curves/curve-ids.constants';
 import { POND_PRICE_LADDER } from '../pond/pond-ladder.constants';
 import type { OptionChoice } from '../options.type';
 
 const POND_MODE_CHOICES: readonly OptionChoice[] = [
-  { value: 'capacity', sourceValue: 0, label: 'Vanilla grants' },
-  { value: 'vanilla-cost', sourceValue: 1, label: 'Vanilla cost' },
-  { value: 'custom', sourceValue: 2, label: 'Custom' },
+  { value: 'capacity', sourceValue: 0, label: msg('randomizer:pondMode.capacity') },
+  { value: 'vanilla-cost', sourceValue: 1, label: msg('randomizer:pondMode.vanillaCost') },
+  { value: 'custom', sourceValue: 2, label: msg('randomizer:pondMode.custom') },
 ];
 
 const POND_CURVE_CHOICES: readonly OptionChoice[] = (

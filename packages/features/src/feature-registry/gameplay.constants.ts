@@ -1,13 +1,13 @@
 /* @layer shared @kind data */
+import { msg } from '@drizztdourden08/brock-core/i18n';
 import type { FeatureDef } from '../feature.type';
 
 const GAMEPLAY_FEATURES: FeatureDef[] = [
   {
     id: 'allowDiving',
-    label: 'Allow diving with flippers',
+    label: msg('features:feature.allowDiving.label'),
     description: 'Press B while swimming to duck under the surface for a moment, as the handheld port allows.',
-    userMessage:
-      'Lets you duck under anything that would hit you while swimming. Turned on automatically by the extra dungeon, whose water room is built around it.',
+    userMessage: msg('features:feature.allowDiving.message'),
     group: 'Quality of life',
     kind: 'features0-bit',
     origin: 'relic',
@@ -21,10 +21,9 @@ const GAMEPLAY_FEATURES: FeatureDef[] = [
   },
   {
     id: 'turnWhileDashing',
-    label: 'Turn while dashing',
+    label: msg('features:feature.turnWhileDashing.label'),
     description: 'Allows the player character to change direction while dashing.',
-    userMessage:
-      'Lets you turn while dashing instead of committing to the initial direction. Changes how movement feels, so leave off for vanilla parity.',
+    userMessage: msg('features:feature.turnWhileDashing.message'),
     group: 'Quality of life',
     kind: 'features0-bit',
     origin: 'snesrev',
@@ -37,10 +36,9 @@ const GAMEPLAY_FEATURES: FeatureDef[] = [
   },
   {
     id: 'mirrorToDarkworld',
-    label: 'Mirror warping to the dark world',
+    label: msg('features:feature.mirrorToDarkworld.label'),
     description: 'Allows the player character to use mirrors to warp between the light and dark worlds.',
-    userMessage:
-      'Lets you warp between the light and dark worlds via the mirror (normally unavailable). Changes dungeon progression, so leave off for vanilla parity.',
+    userMessage: msg('features:feature.mirrorToDarkworld.message'),
     group: 'Quality of life',
     kind: 'features0-bit',
     origin: 'snesrev',
@@ -53,10 +51,9 @@ const GAMEPLAY_FEATURES: FeatureDef[] = [
   },
   {
     id: 'cancelBirdTravel',
-    label: 'Cancel bird travel',
+    label: msg('features:feature.cancelBirdTravel.label'),
     description: 'Press a button to cancel arrival travel instead of watching the full animation.',
-    userMessage:
-      'Lets you cancel bird arrival animations with a button press. Not in the original game, so leave off for vanilla parity.',
+    userMessage: msg('features:feature.cancelBirdTravel.message'),
     group: 'Quality of life',
     kind: 'features0-bit',
     origin: 'snesrev',
@@ -69,10 +66,9 @@ const GAMEPLAY_FEATURES: FeatureDef[] = [
   },
   {
     id: 'collectItemsWithSword',
-    label: 'Collect items with sword',
+    label: msg('features:feature.collectItemsWithSword.label'),
     description: 'Allows the player character to pick up items by slashing them instead of standing still.',
-    userMessage:
-      'Lets you collect items (rupees, ammo, etc.) by slashing them with your sword. Changes combat flow, so leave off for vanilla parity.',
+    userMessage: msg('features:feature.collectItemsWithSword.message'),
     group: 'Quality of life',
     kind: 'features0-bit',
     origin: 'snesrev',
@@ -85,10 +81,9 @@ const GAMEPLAY_FEATURES: FeatureDef[] = [
   },
   {
     id: 'breakPotsWithSword',
-    label: 'Break pots with sword',
+    label: msg('features:feature.breakPotsWithSword.label'),
     description: 'Allows the player character to break pots by slashing them instead of only by reading the contents.',
-    userMessage:
-      'Lets you slash pots to break them and get their contents, instead of examining them. Speeds up item collection, so leave off for vanilla parity.',
+    userMessage: msg('features:feature.breakPotsWithSword.message'),
     group: 'Quality of life',
     kind: 'features0-bit',
     origin: 'snesrev',
@@ -101,10 +96,9 @@ const GAMEPLAY_FEATURES: FeatureDef[] = [
   },
   {
     id: 'moreActiveBombs',
-    label: 'More active bombs',
+    label: msg('features:feature.moreActiveBombs.label'),
     description: 'Increases the maximum number of bombs that can be active at once.',
-    userMessage:
-      'Increases the bomb count limit so more bombs can explode at once. Not in the original game, so leave off for vanilla parity.',
+    userMessage: msg('features:feature.moreActiveBombs.message'),
     group: 'Quality of life',
     kind: 'features0-bit',
     origin: 'snesrev',
@@ -117,10 +111,9 @@ const GAMEPLAY_FEATURES: FeatureDef[] = [
   },
   {
     id: 'disableLowHealthBeep',
-    label: 'Disable low health beep',
+    label: msg('features:feature.disableLowHealthBeep.label'),
     description: 'Stops the warning beep that plays when health is low.',
-    userMessage:
-      'Turns off the warning beep when your health is low. Removes an audio cue, so leave off for vanilla parity.',
+    userMessage: msg('features:feature.disableLowHealthBeep.message'),
     group: 'Quality of life',
     kind: 'features0-bit',
     origin: 'snesrev',
@@ -133,10 +126,9 @@ const GAMEPLAY_FEATURES: FeatureDef[] = [
   },
   {
     id: 'skipIntroOnKeypress',
-    label: 'Skip intro on keypress',
+    label: msg('features:feature.skipIntroOnKeypress.label'),
     description: 'Allows skipping the opening story sequence by pressing any button.',
-    userMessage:
-      'Lets you skip the opening story sequence with any button press. Speeds up fresh game starts, so leave off for vanilla parity.',
+    userMessage: msg('features:feature.skipIntroOnKeypress.message'),
     group: 'Quality of life',
     kind: 'features0-bit',
     origin: 'snesrev',
@@ -149,10 +141,9 @@ const GAMEPLAY_FEATURES: FeatureDef[] = [
   },
   {
     id: 'disableTelepathy',
-    label: 'Disable telepathy',
+    label: msg('features:feature.disableTelepathy.label'),
     description: 'Stops the sage thoughts that interrupt exploration and dungeon progression.',
-    userMessage:
-      'Disables the sage messages that pop up at key story points. Changes pacing, so leave off for vanilla parity.',
+    userMessage: msg('features:feature.disableTelepathy.message'),
     group: 'Dialog',
     kind: 'features0-bit',
     origin: 'snesrev',
@@ -165,10 +156,9 @@ const GAMEPLAY_FEATURES: FeatureDef[] = [
   },
   {
     id: 'carryMoreRupees',
-    label: 'Carry more rupees',
+    label: msg('features:feature.carryMoreRupees.label'),
     description: 'Increases the maximum rupee carrying capacity.',
-    userMessage:
-      'Lets you carry more rupees (up to 9999). Changes economy limits, so leave off for vanilla parity.',
+    userMessage: msg('features:feature.carryMoreRupees.message'),
     group: 'Quality of life',
     kind: 'features0-bit',
     origin: 'snesrev',
@@ -181,11 +171,10 @@ const GAMEPLAY_FEATURES: FeatureDef[] = [
   },
   {
     id: 'capacityProfile',
-    label: 'Randomizer capacity profile',
+    label: msg('features:feature.capacityProfile.label'),
     description:
       'Starting tiers for a new file, the tier a counted family may reach, and the wallet ladder cap, armed by a randomizer session from its seed, never a user toggle.',
-    userMessage:
-      'Set by a randomized profile: a new file starts at the chosen capacity tiers and the pond and wallet stop at the chosen maximums. Changes save bytes and economy limits, so Vanilla Safe strips it.',
+    userMessage: msg('features:feature.capacityProfile.message'),
     group: 'Quality of life',
     kind: 'host-event',
     origin: 'relic',
@@ -198,11 +187,10 @@ const GAMEPLAY_FEATURES: FeatureDef[] = [
   },
   {
     id: 'prizeShuffle',
-    label: 'Randomizer dungeon prize shuffle',
+    label: msg('features:feature.prizeShuffle.label'),
     description:
       "A boss's falling reward can be any item: the room reads a hook-owned \"reward claimed\" save bit alongside its own reward bit, so the reward stops respawning and the arena door still opens, and an assigned crystal banks the one the seed named instead of the one the room index names. Armed by a randomizer session from its seed, never a user toggle.",
-    userMessage:
-      'Set by a randomized profile whose dungeon rewards are shuffled: a boss can hand over any item, and the pendants and crystals are placed like everything else. Changes save bytes and dungeon progress, so Vanilla Safe strips it.',
+    userMessage: msg('features:feature.prizeShuffle.message'),
     group: 'Quality of life',
     kind: 'host-event',
     origin: 'relic',
@@ -215,11 +203,10 @@ const GAMEPLAY_FEATURES: FeatureDef[] = [
   },
   {
     id: 'dungeonItemGrants',
-    label: 'Randomizer dungeon-item grants',
+    label: msg('features:feature.dungeonItemGrants.label'),
     description:
       "The four dungeon-flavoured families share one receive id each and the game credits whichever dungeon is loaded, so a key or a map found elsewhere would land on the wrong one. The assigned id names its dungeon instead: the receipt adds a small key to that dungeon's own earned count, and sets that dungeon's compass, big-key or map bit. Armed by a randomizer session from its seed, never a user toggle.",
-    userMessage:
-      'Set by a randomized profile whose keys, maps or compasses may leave their dungeons: one found elsewhere still counts for the dungeon it belongs to. Changes save bytes, so Vanilla Safe strips it.',
+    userMessage: msg('features:feature.dungeonItemGrants.message'),
     group: 'Quality of life',
     kind: 'host-event',
     origin: 'relic',
@@ -232,11 +219,10 @@ const GAMEPLAY_FEATURES: FeatureDef[] = [
   },
   {
     id: 'retroBow',
-    label: 'Randomizer retro bow',
+    label: msg('features:feature.retroBow.label'),
     description:
       'The bow stops eating ammunition and starts eating money: the shot branch of the bow handler pays for each shot out of the wallet at the moment it is fired (one cost for a plain shot, a dearer one for a silver shot), and refuses the shot outright when the wallet cannot pay, spending nothing. No save byte: the two costs are session state. Armed by a randomizer session from its seed, never a user toggle.',
-    userMessage:
-      'Set by a randomized profile playing retro: arrows are never found or carried, and every shot costs rupees. Changes what firing the bow does, so Vanilla Safe strips it.',
+    userMessage: msg('features:feature.retroBow.message'),
     group: 'Quality of life',
     kind: 'host-event',
     origin: 'relic',
@@ -249,11 +235,10 @@ const GAMEPLAY_FEATURES: FeatureDef[] = [
   },
   {
     id: 'pondPlan',
-    label: 'Randomizer wishing-pond plan',
+    label: msg('features:feature.pondPlan.label'),
     description:
       'The rupee pond sells a planned sequence of throws instead of its native purchase loop: the plan says what each throw costs, the whole price is paid in one toss (drawn as the gems that add up to it), and what comes back is the seed\'s next item, a consolation or a capacity level. Keeps one hook-owned save byte counting the throws taken. Armed by a randomizer session from its seed, never a user toggle.',
-    userMessage:
-      'Set by a randomized profile whose pond is part of the shuffle: the pond charges its own prices and can hand over any item. Changes save bytes and the pond\'s economy, so Vanilla Safe strips it.',
+    userMessage: msg('features:feature.pondPlan.message'),
     group: 'Quality of life',
     kind: 'host-event',
     origin: 'relic',
@@ -266,11 +251,10 @@ const GAMEPLAY_FEATURES: FeatureDef[] = [
   },
   {
     id: 'archeryNeedsBow',
-    label: 'Archery game asks for a bow',
+    label: msg('features:feature.archeryNeedsBow.label'),
     description:
       "The archery host refuses the fee when the five shots it buys could not be fired: no bow in the slot, or, in a retro seed, the bow's first purchase still unmade. He says so in his own message box instead of taking the money. Nothing else in the minigame moves, and the refusal spends nothing either way.",
-    userMessage:
-      'Stops the archery game from taking your money when you have nothing to shoot with. The owner tells you why instead. Not in the original game, which lets you pay and shoot nothing, so leave off for vanilla parity.',
+    userMessage: msg('features:feature.archeryNeedsBow.message'),
     group: 'Quality of life',
     kind: 'features0-bit',
     origin: 'relic',
@@ -283,11 +267,10 @@ const GAMEPLAY_FEATURES: FeatureDef[] = [
   },
   {
     id: 'coloredRupees',
-    label: 'Coloured rupees',
+    label: msg('features:feature.coloredRupees.label'),
     description:
       'A rupee reward lying in the world draws as the plain coloured gem, one colour per value, instead of the numbered hold-up picture. Draw-only: the same gem art, a different palette row, no new graphics and no palette written.',
-    userMessage:
-      'Shows rupees waiting in the world as plain coloured gems, a colour for each value, instead of the picture with the amount written beside it. Only changes how they look, never what you get. On by default; not in the original game, so turn it off for vanilla parity.',
+    userMessage: msg('features:feature.coloredRupees.message'),
     group: 'Quality of life',
     kind: 'features0-bit',
     origin: 'relic',
@@ -300,11 +283,10 @@ const GAMEPLAY_FEATURES: FeatureDef[] = [
   },
   {
     id: 'itemSheen',
-    label: 'Item sheen',
+    label: msg('features:feature.itemSheen.label'),
     description:
       'Sweeps a one-pixel bright diagonal across a drawn world item, and across the item held up on receipt, roughly once a second, in the lightest colour of the palette row it drew with. Repaints the decode slot only, with no extra sprite entry, no shadow or palette change.',
-    userMessage:
-      'Makes items waiting in the world catch the light every second or so, so a pickup on the floor stands out from the scenery. Purely a visual effect. Not in the original game, so leave off for vanilla parity.',
+    userMessage: msg('features:feature.itemSheen.message'),
     group: 'Quality of life',
     kind: 'features0-bit',
     origin: 'relic',
@@ -317,10 +299,9 @@ const GAMEPLAY_FEATURES: FeatureDef[] = [
   },
   {
     id: 'showMaxItemsInYellow',
-    label: 'Show max items in yellow',
+    label: msg('features:feature.showMaxItemsInYellow.label'),
     description: 'Colors the item count in yellow when carrying the maximum amount.',
-    userMessage:
-      'Shows item counts in yellow when you have the max of that item. This only changes HUD color and does not affect gameplay.',
+    userMessage: msg('features:feature.showMaxItemsInYellow.message'),
     group: 'Display / HUD',
     kind: 'features0-bit',
     origin: 'snesrev',
@@ -333,10 +314,9 @@ const GAMEPLAY_FEATURES: FeatureDef[] = [
   },
   {
     id: 'autoSkipDialog',
-    label: 'Auto-skip dialog',
+    label: msg('features:feature.autoSkipDialog.label'),
     description: 'Renders dialog text instantly and auto-advances message-box waits; interactive choice prompts still wait for you.',
-    userMessage:
-      'Shows dialog text at once and dismisses message boxes for you, including item-get text, without skipping anything that happens when a dialog ends. Yes/no and shop prompts still wait for your answer. Not in the original game, so leave off for vanilla parity.',
+    userMessage: msg('features:feature.autoSkipDialog.message'),
     group: 'Dialog',
     kind: 'features0-bit',
     origin: 'relic',
@@ -349,11 +329,10 @@ const GAMEPLAY_FEATURES: FeatureDef[] = [
   },
   {
     id: 'dialogControls',
-    label: 'Dialog pacing controls',
+    label: msg('features:feature.dialogControls.label'),
     description:
       'Runs the text engine more than once per frame by a text speed multiplier, with instant as the top stop; while A is held the hold multiplier applies instead, and a press of B writes the rest of the current box so the next press advances it. Off, the engine takes one step per frame and the buttons keep their stock meaning.',
-    userMessage:
-      'Speeds up dialog by a multiplier, lets you hold A to go faster still, and lets B finish the current box in one press. Not in the original game, so leave off for vanilla parity.',
+    userMessage: msg('features:feature.dialogControls.message'),
     group: 'Dialog',
     kind: 'features0-bit',
     origin: 'relic',
@@ -366,11 +345,10 @@ const GAMEPLAY_FEATURES: FeatureDef[] = [
   },
   {
     id: 'extendedLetters',
-    label: 'Every accented letter',
+    label: msg('features:feature.extendedLetters.label'),
     description:
       'Letters the dialogue font lacks, every accented Latin letter among them, are drawn from the font\'s own letters and written into free font slots as a line shows them. Off, each draws its plain letter.',
-    userMessage:
-      'Dialog shows every accented letter a translation or a name uses, drawn in the game\'s own font. Off shows the plain letter instead.',
+    userMessage: msg('features:feature.extendedLetters.message'),
     group: 'Dialog',
     kind: 'features0-bit',
     origin: 'relic',
@@ -384,10 +362,10 @@ const GAMEPLAY_FEATURES: FeatureDef[] = [
   },
   {
     id: 'languageScreens',
-    label: 'Screens follow the language',
+    label: msg('features:feature.languageScreens.label'),
     description:
       'The file select, name grid, pause text, dungeon map labels, ending, credits and menu pictures read the active language\'s own data. Off, they read the original English ones.',
-    userMessage: 'Every screen shows the language\'s own text, not only the dialog.',
+    userMessage: msg('features:feature.languageScreens.message'),
     group: 'Dialog',
     kind: 'features0-bit',
     origin: 'relic',
@@ -401,9 +379,9 @@ const GAMEPLAY_FEATURES: FeatureDef[] = [
   },
   {
     id: 'jaFileSelectStyle',
-    label: 'Japanese file select style',
+    label: msg('features:feature.jaFileSelectStyle.label'),
     description: 'The file select screen uses the Japanese cartridge layout. Text still follows the language. Needs a Japanese ROM.',
-    userMessage: 'The file select uses the Japanese layout.',
+    userMessage: msg('features:feature.jaFileSelectStyle.message'),
     group: 'Dialog',
     kind: 'features0-bit',
     origin: 'relic',
@@ -417,9 +395,9 @@ const GAMEPLAY_FEATURES: FeatureDef[] = [
   },
   {
     id: 'prefillFileName',
-    label: 'Prefill file name',
+    label: msg('features:feature.prefillFileName.label'),
     description: 'A new file opens its naming screen named Link, with the character strip parked on End.',
-    userMessage: 'New files start named Link, with the cursor on End.',
+    userMessage: msg('features:feature.prefillFileName.message'),
     group: 'Quality of life',
     kind: 'features0-bit',
     origin: 'relic',
