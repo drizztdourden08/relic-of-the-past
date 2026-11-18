@@ -1,20 +1,20 @@
 /* @layer core-game-hooks @kind native */
-// The Japanese cartridge's graphics as opt-in options (ja_graphics.c). Included from game_hooks.h.
+// The Japanese cartridge's graphics (ja_graphics.c). Included from game_hooks.h.
 //
-// Four independent options, each a features2 bit the host sets from a setting; off is the US graphics:
-//   kJaGfx_FileSelect  the file select screens run the Japanese layout (select_layout.c) where the
-//                      language set carries text for it. The text still follows the set.
+// The pictures that carry the language follow the language set: with a Japanese set they are drawn, with
+// any other set never, and no setting switches them. The bits below are latched values; only
+// kJaGfx_FileSelect is still read from the host's features2 word, the rest are set from the set:
+//   kJaGfx_FileSelect  option (layout, no language): the file select screens run the Japanese layout
+//                      (select_layout.c) where the language set carries text for it. The text still follows the set.
 //   kJaGfx_Intro       the intro's background sheets and its tilemap (asset 99). The Japanese file select
-//                      layout reads the same sheets itself, whatever this option says.
-//   kJaGfx_Hud         no longer read: the two HUD sprite sheets (105, 106) carry the pause words, which
-//                      follow the language, so a Japanese set always draws them and no other set does.
+//                      layout reads the same sheets itself.
+//   kJaGfx_Title       the triforce pieces stop at the Japanese cartridge's heights (the pack's title
+//                      parameters), which fit its logo. Never applies while kFeatures2_TitleOverride is on.
 //   kJaGfx_Copyright   the tile patch on sprite sheet 8 that draws the Japanese copyright line.
+//   kJaGfx_Hud         never set: the two HUD sprite sheets (105, 106) carry the pause words, which a
+//                      Japanese set always draws (HudPackDrawn) and no other set does.
 // The pictures come from the host's Japanese graphics pack (WasmSetJapaneseGraphic), extracted from a
-// Japanese cartridge, so they apply with any language set. A Japanese set also carries the same
-// pictures; its copy is used only while the option is on, its HUD sheets always (JaGraphics_SetSheetAllowed).
-//   kJaGfx_Title      the Japanese title sequence: the intro art as kJaGfx_Intro, and the triforce pieces stop
-//                      at the Japanese cartridge's heights (the pack's title parameters). Never applies while
-//                      kFeatures2_TitleOverride is on.
+// Japanese cartridge. A Japanese set also carries the same pictures, used where the pack lacks them.
 // The bits sit at 19 to 23, below kFeatures2_HandAuthoredFloor. gen-bundle-flags.mjs refuses to allocate
 // a generated word-2 bit at 19 or above, so the generated bug-fix flags never reach them.
 #pragma once

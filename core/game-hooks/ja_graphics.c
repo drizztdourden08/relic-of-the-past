@@ -44,7 +44,7 @@ uint32 GameHook_ParityMask(int word) {
   return word == 2 ? kJaGfx_Title | kJaGfx_Intro | kJaGfx_Hud | kJaGfx_Copyright | kJaGfx_FileSelect : 0;
 }
 
-enum { kAllBits = kJaGfx_Title | kJaGfx_Intro | kJaGfx_Hud | kJaGfx_Copyright | kJaGfx_FileSelect };
+enum { kStyleBits = kJaGfx_FileSelect, kLanguageBits = kJaGfx_Title | kJaGfx_Intro | kJaGfx_Copyright };
 
 static uint32 g_latched_bits;
 static bool g_started;
@@ -60,10 +60,14 @@ static bool Following(void) {
   return !g_started || (main_module_index == kIntroModule && submodule_index <= 1);
 }
 
+// The style option (the file select layout) comes from the gate word; the pictures that carry the
+// language (the intro and title art with the triforce heights that fit its logo, the copyright line)
+// are on exactly while the set is Japanese, whatever the word holds.
 static uint32 Live(void) {
-  uint32 live = enhanced_features2 & kAllBits;
-  if (enhanced_features2 & kFeatures2_TitleOverride) return live & ~(uint32)kJaGfx_Title;
-  return (live & kJaGfx_Title) ? live | kJaGfx_Intro : live;
+  uint32 live = enhanced_features2 & kStyleBits;
+  if (SelectLayout_OfSet() == kSelectLayout_Ja) live |= kLanguageBits;
+  if (enhanced_features2 & kFeatures2_TitleOverride) live &= ~(uint32)kJaGfx_Title;
+  return live;
 }
 
 static void Refresh(void) {

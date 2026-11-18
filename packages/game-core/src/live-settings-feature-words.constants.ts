@@ -1,9 +1,5 @@
 /* @layer bridge-wasm @kind constants */
 const FEATURES2_FLAGS = {
-  jaTitleScreen: 1 << 19,
-  jaIntroGraphics: 1 << 20,
-  jaHudGraphics: 1 << 21,
-  jaCopyrightLine: 1 << 22,
   jaFileSelectStyle: 1 << 23,
   widescreenPlayArea: 1 << 24,
   widescreenIdleEnemies: 1 << 25,
@@ -17,6 +13,6 @@ const FEATURES2_FLAGS = {
 
 const BUG_FIX_WORD_FEATURES2 = 2;
 
-const JA_GRAPHICS_KEYS = ['jaTitleScreen', 'jaIntroGraphics', 'jaHudGraphics', 'jaCopyrightLine', 'jaFileSelectStyle'] as const;
+const JA_GRAPHICS_KEYS = ['jaFileSelectStyle'] as const;
 
 export { BUG_FIX_WORD_FEATURES2, FEATURES2_FLAGS, JA_GRAPHICS_KEYS };

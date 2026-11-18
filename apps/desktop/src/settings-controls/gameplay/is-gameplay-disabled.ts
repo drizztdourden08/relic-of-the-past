@@ -7,7 +7,6 @@ const isGameplaySettingDisabled = (key: string, settings: GameSettings): boolean
   if (key === 'autoSaveIntervalSeconds') return !settings.autoSaveEnabled;
   if (key === 'autoSaveMaxEntries') return !settings.autoSaveEnabled;
   if (key === 'turboSpeed') return !settings.turboEnabled;
-  if (key === 'jaTitleScreen') return settings.titleScreen === 'reimagined';
   if (key === 'mapOnSelect') return controlSchemeOf(settings) === 'modern';
   return false;
 };
