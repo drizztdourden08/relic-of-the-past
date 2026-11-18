@@ -6,11 +6,13 @@ import { EnterExitEditor } from './EnterExitEditor';
 import { AnimationSection } from './AnimationSection';
 import { TransitionsSection } from './TransitionsSection';
 import type { MotionBlock, MotionSectionProps } from './MotionSection.type';
+import { useT } from '@drizztdourden08/brock-react';
 
 const countLabel = (n: number, one: string, many: string): string =>
   (n === 0 ? 'none' : `${n} ${n === 1 ? one : many}`);
 
 const MotionSection = (props: MotionSectionProps) => {
+  const t = useT();
   const { node, onPatch, scope, insideRepeat, warnings } = props;
   const animations = node.animation ?? [];
   const transition = node.transition;
@@ -23,7 +25,7 @@ const MotionSection = (props: MotionSectionProps) => {
   return (
     <Box className="hud-inspect__group">
       <SubsectionGroup
-        title="animations"
+        title={t('hud-editor:motion-section.title.animations')}
         summary={countLabel(animations.length, 'animation', 'animations')}
         open={open === 'animations'}
         onToggle={toggle('animations')}
@@ -40,7 +42,7 @@ const MotionSection = (props: MotionSectionProps) => {
       </SubsectionGroup>
 
       <SubsectionGroup
-        title="transitions"
+        title={t('hud-editor:motion-section.title.transitions')}
         summary={countLabel(transition?.properties.length ?? 0, 'property', 'properties')}
         open={open === 'transitions'}
         onToggle={toggle('transitions')}
@@ -49,7 +51,7 @@ const MotionSection = (props: MotionSectionProps) => {
       </SubsectionGroup>
 
       <SubsectionGroup
-        title="enter & exit"
+        title={t('hud-editor:motion-section.title.enter-exit')}
         summary={enterExit.length === 0 ? 'none' : enterExit.join(' + ')}
         open={open === 'enterExit'}
         onToggle={toggle('enterExit')}

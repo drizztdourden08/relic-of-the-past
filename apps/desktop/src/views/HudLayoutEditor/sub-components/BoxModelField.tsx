@@ -6,6 +6,7 @@ import { compactEdges } from '@app/hud-layout-editing/offset';
 import { OFFSET_SIDES, SIDES } from './BoxModelField.constants';
 import type { Edges } from '@rotp/hud';
 import type { BoxModelFieldProps, Side } from './BoxModelField.type';
+import { useT } from '@drizztdourden08/brock-react';
 
 const edgeWith = (edges: Edges | undefined, side: Side, next: number | undefined): Edges | undefined => {
   const merged: Edges = { ...edges };
@@ -14,6 +15,7 @@ const edgeWith = (edges: Edges | undefined, side: Side, next: number | undefined
 };
 
 const BoxModelField = (props: BoxModelFieldProps) => {
+  const t = useT();
   const { margin, padding, onMargin, onPadding, centre, marginLocked = false } = props;
   const [linked, setLinked] = useState(false);
 
@@ -28,9 +30,9 @@ const BoxModelField = (props: BoxModelFieldProps) => {
     : 'left and top are this node\'s offset. They show here and are edited in Position.';
 
   return (
-    <Field size="sm" label="box" hint={marginNote} className="hud-box-model">
+    <Field size="sm" label={t('hud-editor:box-model-field.label.box')} hint={marginNote} className="hud-box-model">
       <Box className="hud-box-model__ring hud-box-model__ring--margin">
-        <Text className="hud-box-model__tag">margin</Text>
+        <Text className="hud-box-model__tag">{t('hud-editor:box-model-field.text.margin')}</Text>
         {SIDES.map((side) => (
           <NumberCell
             key={side}
@@ -44,7 +46,7 @@ const BoxModelField = (props: BoxModelFieldProps) => {
         ))}
 
         <Box className="hud-box-model__ring hud-box-model__ring--padding">
-          <Text className="hud-box-model__tag">padding</Text>
+          <Text className="hud-box-model__tag">{t('hud-editor:box-model-field.text.padding')}</Text>
           {SIDES.map((side) => (
             <NumberCell
               key={side}
@@ -60,8 +62,8 @@ const BoxModelField = (props: BoxModelFieldProps) => {
         <Pressable
           className={`hud-box-model__link${linked ? ' is-on' : ''}`}
           aria-pressed={linked}
-          aria-label="Link the four padding edges"
-          title="Type one number into any padding edge and all four follow."
+          aria-label={t('hud-editor:box-model-field.aria.link-the-four-padding-edges')}
+          title={t('hud-editor:box-model-field.title.type-one-number-into-any')}
           onClick={() => setLinked((was) => !was)}
         >
           <Icon name="link" size={12} aria-hidden />

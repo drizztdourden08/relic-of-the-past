@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react';
 import { Box, Field, Text, TextInput } from '@drizztdourden08/tessera/primitives';
 import type { KeyboardEvent } from 'react';
 import type { IdentitySectionProps } from './IdentitySection.type';
+import { useT } from '@drizztdourden08/brock-react';
 
 const errorFor = (draft: string, otherIds: readonly string[]): string | null => {
   const id = draft.trim();
@@ -12,6 +13,7 @@ const errorFor = (draft: string, otherIds: readonly string[]): string | null => 
 };
 
 const IdentitySection = (props: IdentitySectionProps) => {
+  const t = useT();
   const { node, breadcrumb, otherIds, onPatch } = props;
   const [draft, setDraft] = useState(node.id);
 
@@ -32,10 +34,10 @@ const IdentitySection = (props: IdentitySectionProps) => {
 
   return (
     <Box className="hud-inspect__group">
-      <Field size="sm" label="id" error={error}>
+      <Field size="sm" label={t('hud-editor:identity-section.label.id')} error={error}>
         <TextInput
           size="sm"
-          aria-label="Node id"
+          aria-label={t('hud-editor:identity-section.aria.node-id')}
           aria-invalid={error ? true : undefined}
           className={error ? 'hud-inspect__id-field is-invalid' : 'hud-inspect__id-field'}
           value={draft}

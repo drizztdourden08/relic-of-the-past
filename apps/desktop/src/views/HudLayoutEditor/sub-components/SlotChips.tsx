@@ -2,8 +2,10 @@
 import { useState } from 'react';
 import { Box, Field, Flex, IconButton, NumberInput, Text } from '@drizztdourden08/tessera/primitives';
 import type { SlotChipsProps } from './SlotChips.type';
+import { useT } from '@drizztdourden08/brock-react';
 
 const SlotChips = (props: SlotChipsProps) => {
+  const t = useT();
   const { label, value, onChange, hint, readOnly } = props;
   const slots = value ?? [];
   const [draft, setDraft] = useState<number | null>(null);
@@ -32,12 +34,12 @@ const SlotChips = (props: SlotChipsProps) => {
             )}
           </Box>
         ))}
-        {slots.length === 0 && <Text className="hud-slot-chips__empty">none</Text>}
+        {slots.length === 0 && <Text className="hud-slot-chips__empty">{t('hud-editor:slot-chips.text.none')}</Text>}
         {!readOnly && (
           <>
             <NumberInput
               size="sm" className="hud-slot-chips__entry" aria-label={`Add a slot to ${label}`}
-              value={draft ?? ''} min={1} step={1} placeholder="slot"
+              value={draft ?? ''} min={1} step={1} placeholder={t('hud-editor:slot-chips.placeholder.slot')}
               onChange={(n) => setDraft(Number.isFinite(n) ? n : null)}
               onKeyDown={(event) => { if (event.key === 'Enter') { event.preventDefault(); add(); } }}
             />

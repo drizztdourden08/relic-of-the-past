@@ -5,6 +5,7 @@ import type { Paint } from '@rotp/hud';
 import { HUD_BLACK } from '../HudLayoutEditor.constants';
 import { HEX_RE, KINDS } from './PaintField.constants';
 import type { PaintFieldProps, PaintMode } from './PaintField.type';
+import { useT } from '@drizztdourden08/brock-react';
 
 const modeOf = (paint: Paint): PaintMode => {
   if (typeof paint === 'string') return 'color';
@@ -14,6 +15,7 @@ const modeOf = (paint: Paint): PaintMode => {
 const hexOf = (paint: Paint): string => (typeof paint === 'string' && HEX_RE.test(paint) ? paint : HUD_BLACK);
 
 const PaintField = (props: PaintFieldProps) => {
+  const t = useT();
   const { label, value, onChange, scope, insideRepeat, kinds } = props;
   const mode = modeOf(value);
   const showKinds = kinds === true || typeof value !== 'string';
@@ -29,8 +31,8 @@ const PaintField = (props: PaintFieldProps) => {
   return (
     <Flex direction="column" gap="2xs" className="hud-paint">
       {showKinds && (
-        <Field size="sm" label="paint">
-          <Box className="hud-icon-choice" role="group" aria-label="paint kind">
+        <Field size="sm" label={t('hud-editor:paint-field.label.paint')}>
+          <Box className="hud-icon-choice" role="group" aria-label={t('hud-editor:paint-field.aria.paint-kind')}>
             {KINDS.map((kind) => (
               <IconButton
                 key={kind.value} variant="ghost" size="sm" title={kind.label} label={kind.label}

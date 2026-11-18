@@ -9,8 +9,10 @@ import { HUD_WHITE } from '../HudLayoutEditor.constants';
 import { ALIGNS } from './TextContent.constants';
 import type { HudTextAlign } from '@rotp/hud';
 import type { TextContentProps } from './TextContent.type';
+import { useT } from '@drizztdourden08/brock-react';
 
 const TextContent = (props: TextContentProps) => {
+  const t = useT();
   const { spec, onChange, scope, insideRepeat } = props;
 
   return (
@@ -21,16 +23,16 @@ const TextContent = (props: TextContentProps) => {
 
       <TextFaceFields spec={spec} onChange={onChange} />
 
-      <PaintField label="colour" value={spec.color ?? HUD_WHITE} onChange={(color) => onChange({ color })} scope={scope} insideRepeat={insideRepeat} />
+      <PaintField label={t('hud-editor:text-content.label.colour')} value={spec.color ?? HUD_WHITE} onChange={(color) => onChange({ color })} scope={scope} insideRepeat={insideRepeat} />
 
       <TextStrokeFields spec={spec} onChange={onChange} scope={scope} insideRepeat={insideRepeat} />
 
       <Box className="hud-inspect__row">
-        <Field size="sm" label="align" className="hud-inspect__extent">
+        <Field size="sm" label={t('hud-editor:text-content.label.align')} className="hud-inspect__extent">
           <Select size="sm" value={spec.align ?? 'start'} options={ALIGNS.map((a) => ({ value: a, label: a }))} onChange={(align) => onChange({ align: align as HudTextAlign })} />
         </Field>
-        <Field size="sm" label="tracking" className="hud-inspect__extent">
-          <NumberInput size="sm" aria-label="Tracking" step={1} disabled={spec.face.from === 'sprite'} value={spec.tracking ?? 0} onChange={(tracking) => onChange({ tracking: tracking === 0 ? undefined : tracking })} />
+        <Field size="sm" label={t('hud-editor:text-content.label.tracking')} className="hud-inspect__extent">
+          <NumberInput size="sm" aria-label={t('hud-editor:text-content.aria.tracking')} step={1} disabled={spec.face.from === 'sprite'} value={spec.tracking ?? 0} onChange={(tracking) => onChange({ tracking: tracking === 0 ? undefined : tracking })} />
         </Field>
       </Box>
     </Box>

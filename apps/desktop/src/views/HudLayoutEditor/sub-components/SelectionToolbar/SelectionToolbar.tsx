@@ -3,15 +3,17 @@ import { Box, Text } from '@drizztdourden08/tessera/primitives';
 import { ActionButtons } from './sub-components/ActionButtons';
 import { NO_SELECTION } from './SelectionToolbar.constants';
 import type { SelectionToolbarProps } from './SelectionToolbar.type';
+import { useT } from '@drizztdourden08/brock-react';
 
 const SelectionToolbar = (props: SelectionToolbarProps) => {
+  const t = useT();
   const { chip, actions, hint = NO_SELECTION } = props;
   return (
     <Box
       className="hud-toolbar hud-grid__bar"
       role="toolbar"
       aria-live="polite"
-      aria-label="Actions on the selection"
+      aria-label={t('hud-editor:selection-toolbar.aria.actions-on-the-selection')}
     >
       {chip === null ? (
         <Text className="hud-grid__bar-hint">{hint}</Text>

@@ -6,6 +6,7 @@ import { OffsetField } from './OffsetField';
 import type { HudAlignSelf, HudContainer } from '@rotp/hud';
 import { FLEX_STANDIN, OPTIONS } from './PlacementSection.constants';
 import type { PlacementSectionProps } from './PlacementSection.type';
+import { useT } from '@drizztdourden08/brock-react';
 
 const engineOf = (parent: HudContainer): string =>
   (parent.layout === 'grid' ? 'grid' : `flex ${parent.direction}`);
@@ -16,6 +17,7 @@ const reasonOf = (parent: HudContainer | null): string =>
     : 'The screen is the whole view.');
 
 const PlacementSection = (props: PlacementSectionProps) => {
+  const t = useT();
   const { node, parent, onSelectNode, onPatch } = props;
   const isGrid = parent?.layout === 'grid';
   const openParent = parent && onSelectNode ? () => onSelectNode(parent.id) : undefined;
@@ -25,7 +27,7 @@ const PlacementSection = (props: PlacementSectionProps) => {
       <OffsetField
         value={node.margin}
         onChange={(margin) => onPatch({ margin })}
-        from="where the parent puts it"
+        from={t('hud-editor:placement-section.from.where-the-parent-puts-it')}
       />
 
       <DisabledReason
@@ -47,17 +49,17 @@ const PlacementSection = (props: PlacementSectionProps) => {
           <Select
             size="sm"
             value={node.alignSelf ?? ''}
-            placeholder="parent default"
+            placeholder={t('hud-editor:placement-section.placeholder.parent-default')}
             options={OPTIONS}
             onChange={(v) => onPatch({ alignSelf: (v || undefined) as HudAlignSelf | undefined })}
           />
         </Field>
         {isGrid && (
-          <Field size="sm" label="align across" className="hud-inspect__extent">
+          <Field size="sm" label={t('hud-editor:placement-section.label.align-across')} className="hud-inspect__extent">
             <Select
               size="sm"
               value={node.justifySelf ?? ''}
-              placeholder="follows down"
+              placeholder={t('hud-editor:placement-section.placeholder.follows-down')}
               options={OPTIONS}
               onChange={(v) => onPatch({ justifySelf: (v || undefined) as HudAlignSelf | undefined })}
             />

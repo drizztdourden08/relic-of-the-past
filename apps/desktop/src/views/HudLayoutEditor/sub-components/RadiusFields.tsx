@@ -4,6 +4,7 @@ import { CORNERS } from './AppearanceSection.constants';
 import { ValueField } from './ValueField';
 import type { HudRadius, Value } from '@rotp/hud';
 import type { Corners, RadiusFieldsProps } from './RadiusFields.type';
+import { useT } from '@drizztdourden08/brock-react';
 
 const radiusIsSplit = (r: HudRadius | undefined): r is Corners => Array.isArray(r);
 
@@ -14,12 +15,13 @@ const cornerValue = (radius: readonly Value[], i: number): Value => {
 };
 
 const RadiusFields = (props: RadiusFieldsProps) => {
+  const t = useT();
   const { boxStyle, setStyle, scope, insideRepeat } = props;
   const { radius } = boxStyle;
 
   return (
     <>
-      <Field size="sm" label="radius">
+      <Field size="sm" label={t('hud-editor:radius-fields.label.radius')}>
         <SegmentedControl size="sm" value={radiusIsSplit(radius) ? 'split' : 'uniform'} options={[{ value: 'uniform', label: 'uniform' }, { value: 'split', label: 'per corner' }]}
           onChange={(v) => setStyle({ radius: v === 'split' ? [0, 0, 0, 0] : 0 })} />
       </Field>

@@ -6,8 +6,10 @@ import { slotInScheme, slotPositionOf } from '@app/hud-layout-editing/slot-schem
 import { ReferenceField } from './ReferenceField';
 import { SlotPickerPanel } from './SlotPickerPanel';
 import type { SlotRefFieldProps } from './SlotRefField.type';
+import { useT } from '@drizztdourden08/brock-react';
 
 const SlotRefField = (props: SlotRefFieldProps) => {
+  const t = useT();
   const { label = 'slot', value, onChange, slots, glyphPacks, className = '' } = props;
   const [open, setOpen] = useState(false);
   const anchorRef = useRef<HTMLButtonElement>(null);
@@ -24,7 +26,7 @@ const SlotRefField = (props: SlotRefFieldProps) => {
       label={label}
       className={`hud-slot-ref ${className}`}
       src={position ? glyphArtUrl(glyphPacks, undefined, position) : undefined}
-      placeholder="square"
+      placeholder={t('hud-editor:slot-ref-field.placeholder.square')}
       name={`Slot ${value}`}
       kind={position ?? (known ? 'no glyph' : undefined)}
       onOpen={() => setOpen(true)}

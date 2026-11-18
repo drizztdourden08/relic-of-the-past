@@ -17,8 +17,10 @@ import { FlexStrip } from './sub-components/FlexStrip';
 import './FlexEditor.css';
 import type { KeyboardEvent } from 'react';
 import type { FlexActionContext, FlexEditorProps } from './FlexEditor.type';
+import { useT } from '@drizztdourden08/brock-react';
 
 const FlexEditor = (props: FlexEditorProps) => {
+  const t = useT();
   const { container, onDrop } = props;
   const slots = useFlexSlots(container);
   const flex = useFlexSelection(container.id, container.children.length);
@@ -60,7 +62,7 @@ const FlexEditor = (props: FlexEditorProps) => {
       <SelectionToolbar
         chip={chipOf(flex.selection)}
         actions={contextualActions(ctx)}
-        hint="select a child to reorder it"
+        hint={t('hud-editor:flex-editor.hint.select-a-child-to-reorder')}
       />
       <FlexStrip
         cells={cellsOf(container, slots, flex.selection)}

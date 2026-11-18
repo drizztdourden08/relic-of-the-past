@@ -3,14 +3,16 @@ import { Box, Pressable, Text } from '@drizztdourden08/tessera/primitives';
 import { getSpritesBase } from '@rotp/game-data';
 import { EDITOR_GROUNDS } from '../HudLayoutEditor.constants';
 import type { GroundPickerProps } from './GroundPicker.type';
+import { useT } from '@drizztdourden08/brock-react';
 
 const GroundPicker = (props: GroundPickerProps) => {
+  const t = useT();
   const { value, onChange } = props;
   const base = getSpritesBase();
 
   return (
     <Box className="hud-toolbar__field">
-      <Text className="hud-toolbar__field-label">Ground</Text>
+      <Text className="hud-toolbar__field-label">{t('hud-editor:ground-picker.text.ground')}</Text>
       <Box className="hud-toolbar__chips">
         {EDITOR_GROUNDS.map((ground) => (
           <Pressable

@@ -4,6 +4,7 @@ import { Anchored, Box, Pressable, Text, TextInput } from '@drizztdourden08/tess
 import { formulaGroups } from '@app/hud-layout-editing/formula-catalog';
 import { formulaStarters } from '@app/hud-layout-editing/formula-starters';
 import type { FormulaMenuProps } from './FormulaMenu.type';
+import { useT } from '@drizztdourden08/brock-react';
 
 const matches = (name: string, filter: string): boolean =>
   filter.length === 0 || name.toLowerCase().includes(filter.toLowerCase());
@@ -12,6 +13,7 @@ const reading = (name: string, scope: Readonly<Record<string, number>>): string 
   (name in scope ? String(scope[name]) : '');
 
 const FormulaMenu = (props: FormulaMenuProps) => {
+  const t = useT();
   const { open, anchorRef, filter, role, insideRepeat, extraNames, scope, onClose, onInsert } = props;
 
   if (!open) return null;
@@ -25,7 +27,7 @@ const FormulaMenu = (props: FormulaMenuProps) => {
     <Anchored anchorRef={anchorRef} placement="bottom-start" layer="popover" className="hud-formula-menu" onDismiss={onClose}>
         {filter.length > 0 && (
           <Box className="hud-formula-menu__filter">
-            <TextInput size="sm" value={filter} readOnly aria-label="Filtering formula names" />
+            <TextInput size="sm" value={filter} readOnly aria-label={t('hud-editor:formula-menu.aria.filtering-formula-names')} />
           </Box>
         )}
 

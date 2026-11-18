@@ -6,8 +6,10 @@ import { NumberCell } from './NumberCell';
 import { EXTENT_MODES as MODES, extentFromNumber, extentNumberOf, modeOf, modeSuffixOf } from '@app/hud-layout-editing/track-extents';
 import type { ExtentMode } from '@app/hud-layout-editing/track-extents';
 import type { ExtentFieldProps } from './ExtentField.type';
+import { useT } from '@drizztdourden08/brock-react';
 
 const ExtentField = (props: ExtentFieldProps) => {
+  const t = useT();
   const { label, value, onChange, bare = false } = props;
   const anchor = useRef<HTMLDivElement>(null);
   const [open, setOpen] = useState(false);
@@ -30,7 +32,7 @@ const ExtentField = (props: ExtentFieldProps) => {
           <NumberCell
             className="hud-extent__field"
             label={`${label} value`}
-            placeholder="auto"
+            placeholder={t('hud-editor:extent-field.placeholder.auto')}
             value={current}
             onChange={(next) => onChange(extentFromNumber(mode, next))}
           />

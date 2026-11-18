@@ -4,10 +4,12 @@ import { weightsOf } from '../behavior/weights-of';
 import './FlexStrip.css';
 import type { CSSProperties } from 'react';
 import type { FlexStripProps } from './FlexStrip.type';
+import { useT } from '@drizztdourden08/brock-react';
 
 const idOf = (index: number): string => `hud-flex-cell-${index}`;
 
 const FlexStrip = (props: FlexStripProps) => {
+  const t = useT();
   const { cells, direction, wrap, cursor, label, onCellDown, onKeyDown } = props;
   const weights = weightsOf(cells);
 
@@ -24,7 +26,7 @@ const FlexStrip = (props: FlexStripProps) => {
       onKeyDown={onKeyDown}
     >
       {cells.length === 0 && (
-        <Text className="hud-flex-strip__empty">no children yet</Text>
+        <Text className="hud-flex-strip__empty">{t('hud-editor:flex-strip.text.no-children-yet')}</Text>
       )}
       {cells.map((cell, index) => (
         <Box

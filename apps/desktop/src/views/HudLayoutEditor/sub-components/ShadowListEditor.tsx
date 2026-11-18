@@ -7,8 +7,10 @@ import { shadowSummary, swatchOf } from '@app/hud-layout-editing/appearance-summ
 import { BLANK_SHADOW } from './ShadowListEditor.constants';
 import type { HudShadow } from '@rotp/hud';
 import type { ShadowListEditorProps } from './ShadowListEditor.type';
+import { useT } from '@drizztdourden08/brock-react';
 
 const ShadowListEditor = (props: ShadowListEditorProps) => {
+  const t = useT();
   const { value, onChange, scope, insideRepeat, openKey, onToggleKey } = props;
   const shadows = value ?? [];
 
@@ -36,11 +38,11 @@ const ShadowListEditor = (props: ShadowListEditorProps) => {
           <Grid columns={2} gap="2xs">
             <ValueField label="x" value={shadow.x} onChange={(x) => setShadow(i, { x })} scope={scope} insideRepeat={insideRepeat} />
             <ValueField label="y" value={shadow.y} onChange={(y) => setShadow(i, { y })} scope={scope} insideRepeat={insideRepeat} />
-            <ValueField label="blur" value={shadow.blur} onChange={(blur) => setShadow(i, { blur })} scope={scope} insideRepeat={insideRepeat} min={0} />
-            <ValueField label="spread" value={shadow.spread ?? 0} onChange={(spread) => setShadow(i, { spread })} scope={scope} insideRepeat={insideRepeat} />
+            <ValueField label={t('hud-editor:shadow-list-editor.label.blur')} value={shadow.blur} onChange={(blur) => setShadow(i, { blur })} scope={scope} insideRepeat={insideRepeat} min={0} />
+            <ValueField label={t('hud-editor:shadow-list-editor.label.spread')} value={shadow.spread ?? 0} onChange={(spread) => setShadow(i, { spread })} scope={scope} insideRepeat={insideRepeat} />
           </Grid>
-          <PaintField label="colour" value={shadow.color} onChange={(color) => setShadow(i, { color })} scope={scope} insideRepeat={insideRepeat} />
-          <Toggle size="sm" checked={shadow.inset === true} label="Inset" onChange={(inset) => setShadow(i, { inset: inset ? true : undefined })} />
+          <PaintField label={t('hud-editor:shadow-list-editor.label.colour')} value={shadow.color} onChange={(color) => setShadow(i, { color })} scope={scope} insideRepeat={insideRepeat} />
+          <Toggle size="sm" checked={shadow.inset === true} label={t('hud-editor:shadow-list-editor.label.inset')} onChange={(inset) => setShadow(i, { inset: inset ? true : undefined })} />
         </SubsectionGroup>
       ))}
       <Button variant="ghost" size="sm" onClick={() => onChange([...shadows, BLANK_SHADOW])}>+ add shadow</Button>

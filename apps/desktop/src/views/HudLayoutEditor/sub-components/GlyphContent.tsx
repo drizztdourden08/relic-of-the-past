@@ -7,8 +7,10 @@ import { GlyphPickerGrid } from './GlyphPickerGrid';
 import { ReferenceField } from './ReferenceField';
 import { SlotRefField } from './SlotRefField';
 import type { GlyphContentProps } from './GlyphContent.type';
+import { useT } from '@drizztdourden08/brock-react';
 
 const GlyphContent = (props: GlyphContentProps) => {
+  const t = useT();
   const { spec, onChange, glyphPacks } = props;
   const bySlot = spec.slot !== undefined;
   const [open, setOpen] = useState(false);
@@ -17,7 +19,7 @@ const GlyphContent = (props: GlyphContentProps) => {
 
   return (
     <Box className="hud-inspect__group">
-      <Field size="sm" label="shows">
+      <Field size="sm" label={t('hud-editor:glyph-content.label.shows')}>
         <SegmentedControl
           size="sm"
           value={bySlot ? 'slot' : 'position'}
@@ -27,7 +29,7 @@ const GlyphContent = (props: GlyphContentProps) => {
       </Field>
       {bySlot ? (
         <SlotRefField
-          label="slot"
+          label={t('hud-editor:glyph-content.label.slot')}
           value={spec.slot ?? 1}
           onChange={(slot) => onChange({ slot })}
           slots={slots}
@@ -35,7 +37,7 @@ const GlyphContent = (props: GlyphContentProps) => {
         />
       ) : (
         <ReferenceField
-          label="control"
+          label={t('hud-editor:glyph-content.label.control')}
           src={glyphArtUrl(glyphPacks, spec.pack, spec.position ?? '')}
           name={spec.position ?? '(none)'}
           kind={spec.pack}
