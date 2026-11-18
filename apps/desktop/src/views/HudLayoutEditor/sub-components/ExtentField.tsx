@@ -57,7 +57,7 @@ const ExtentField = (props: ExtentFieldProps) => {
             id: 'modes',
             items: MODES.map((entry) => ({
               id: entry.mode,
-              label: entry.label,
+              label: text(entry.label),
               kind: 'radio' as const,
               checked: entry.mode === mode,
               onSelect: () => setMode(entry.mode),

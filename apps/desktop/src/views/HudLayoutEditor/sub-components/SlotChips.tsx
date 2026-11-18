@@ -28,7 +28,7 @@ const SlotChips = (props: SlotChipsProps) => {
           <Box key={slot} className="hud-slot-chips__chip">
             <Text className="hud-slot-chips__num">{slot}</Text>
             {!readOnly && (
-              <IconButton variant="ghost" size="sm" label={`Remove slot ${slot}`} onClick={() => remove(slot)}>
+              <IconButton variant="ghost" size="sm" label={t('hud-editor:slot-chips.remove', { slot })} onClick={() => remove(slot)}>
                 ✕
               </IconButton>
             )}
@@ -38,12 +38,12 @@ const SlotChips = (props: SlotChipsProps) => {
         {!readOnly && (
           <>
             <NumberInput
-              size="sm" className="hud-slot-chips__entry" aria-label={`Add a slot to ${label}`}
+              size="sm" className="hud-slot-chips__entry" aria-label={t('hud-editor:slot-chips.add-to', { label })}
               value={draft ?? ''} min={1} step={1} placeholder={t('hud-editor:slot-chips.placeholder.slot')}
               onChange={(n) => setDraft(Number.isFinite(n) ? n : null)}
               onKeyDown={(event) => { if (event.key === 'Enter') { event.preventDefault(); add(); } }}
             />
-            <IconButton variant="ghost" size="sm" label={`Add slot to ${label}`} onClick={add}>+</IconButton>
+            <IconButton variant="ghost" size="sm" label={t('hud-editor:slot-chips.add', { label })} onClick={add}>+</IconButton>
           </>
         )}
       </Flex>

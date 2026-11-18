@@ -11,7 +11,7 @@ import { useT } from '@drizztdourden08/brock-react';
 const RepeatContent = (props: RepeatContentProps) => {
   const t = useT();
   const { spec, onChange, scope, insideRepeat, glyphPacks, onSelectNode } = props;
-  const child = nodeArtOf(spec.child, glyphPacks);
+  const child = nodeArtOf(spec.child, glyphPacks, t);
   return (
     <Box className="hud-inspect__group">
       <ValueField label={t('hud-editor:repeat-content.label.count')} value={spec.count} onChange={(count) => onChange({ count })} scope={scope} insideRepeat={insideRepeat} min={0} step={COUNT_STEP} />
@@ -32,7 +32,7 @@ const RepeatContent = (props: RepeatContentProps) => {
         name={child.name}
         kind={child.kind}
         onOpen={() => onSelectNode(spec.child.id)}
-        aria-label={`Go to the repeated child: ${child.name}`}
+        aria-label={t('hud-editor:repeat-content.go', { name: child.name })}
       />
     </Box>
   );

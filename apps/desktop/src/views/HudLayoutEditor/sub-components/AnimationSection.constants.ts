@@ -4,7 +4,9 @@ import type { LoopOption } from './AnimationSection.type';
 
 const PROPERTIES: readonly HudAnimatableProperty[] = ['scale', 'opacity', 'x', 'y', 'rotate', 'tint', 'width', 'height'];
 const LOOPS: readonly LoopOption[] = [
-  { value: 'none', label: 'none' }, { value: 'loop', label: 'loop' }, { value: 'ping-pong', label: 'ping' },
+  { value: 'none', label: 'hud-editor:animation.loop.none' },
+  { value: 'loop', label: 'hud-editor:animation.loop.loop' },
+  { value: 'ping-pong', label: 'hud-editor:animation.loop.ping' },
 ];
 const REFLOW = new Set<HudAnimatableProperty>(['width', 'height']);
 

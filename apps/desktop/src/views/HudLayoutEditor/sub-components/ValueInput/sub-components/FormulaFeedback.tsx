@@ -4,6 +4,7 @@ import { MAX_SAFE_RESULT } from '@rotp/hud';
 import { InstanceStrip } from './InstanceStrip';
 import { CEILING } from './FormulaFeedback.constants';
 import type { FormulaFeedbackProps } from './FormulaFeedback.type';
+import { useT, useText } from '@drizztdourden08/brock-react';
 
 const format = (n: number): string => String(Math.round(n * 1000) / 1000);
 
@@ -13,15 +14,17 @@ const readValue = (scope: FormulaFeedbackProps['scope'], name: string): string =
 };
 
 const FormulaFeedback = (props: FormulaFeedbackProps) => {
+  const t = useT();
+  const text = useText();
   const { expr, reads, scope, instances, result, outOfRange } = props;
   const atCeiling = result !== null && Math.abs(result) === MAX_SAFE_RESULT;
-  const warning = atCeiling ? CEILING : outOfRange;
+  const warning = atCeiling ? text(CEILING) : outOfRange;
 
   return (
     <Box className="hud-value-input__feedback">
       <Text className="hud-value-input__result">
         {result === null
-          ? '... not finished'
+          ? t('hud-editor:formula-feedback.unfinished')
           : <><Icon name="arrow-right" size={12} aria-hidden /> {format(result)}</>}
       </Text>
       {instances.length > 0 && <InstanceStrip expr={expr} instances={instances} />}

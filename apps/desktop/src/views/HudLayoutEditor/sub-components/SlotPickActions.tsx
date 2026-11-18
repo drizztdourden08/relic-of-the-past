@@ -6,8 +6,8 @@ import { useT } from '@drizztdourden08/brock-react';
 const SlotPickActions = (props: SlotPickActionsProps) => {
   const t = useT();
   const { index, disabled = false, onPickNumber, onPickItem, onPickGlyph } = props;
-  const itemLabel = index === undefined ? 'Item placeholder' : `Item placeholder for slot ${index}`;
-  const glyphLabel = index === undefined ? 'Glyph of this slot' : `Glyph of slot ${index}`;
+  const itemLabel = index === undefined ? t('hud-editor:slot-pick.item') : t('hud-editor:slot-pick.item-for', { index });
+  const glyphLabel = index === undefined ? t('hud-editor:slot-pick.glyph') : t('hud-editor:slot-pick.glyph-of', { index });
 
   if (onPickNumber) {
     return (

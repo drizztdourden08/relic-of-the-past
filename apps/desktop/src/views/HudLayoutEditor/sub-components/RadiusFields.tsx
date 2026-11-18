@@ -22,7 +22,7 @@ const RadiusFields = (props: RadiusFieldsProps) => {
   return (
     <>
       <Field size="sm" label={t('hud-editor:radius-fields.label.radius')}>
-        <SegmentedControl size="sm" value={radiusIsSplit(radius) ? 'split' : 'uniform'} options={[{ value: 'uniform', label: 'uniform' }, { value: 'split', label: 'per corner' }]}
+        <SegmentedControl size="sm" value={radiusIsSplit(radius) ? 'split' : 'uniform'} options={[{ value: 'uniform', label: t('hud-editor:radius.uniform') }, { value: 'split', label: t('hud-editor:radius.per-corner') }]}
           onChange={(v) => setStyle({ radius: v === 'split' ? [0, 0, 0, 0] : 0 })} />
       </Field>
       {radiusIsSplit(radius) ? (

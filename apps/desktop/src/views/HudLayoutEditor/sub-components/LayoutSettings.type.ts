@@ -2,6 +2,7 @@
 import type { ReactNode } from 'react';
 import type { IconName } from '@drizztdourden08/tessera/primitives';
 import type { Value } from '@rotp/hud';
+import type { Text } from '@drizztdourden08/brock-core/i18n';
 
 type GapAxis = 'x' | 'y';
 
@@ -9,7 +10,7 @@ interface GapCell {
   axis: GapAxis;
   cap: string;
   capIcon?: IconName;
-  label: string;
+  label: Text;
   value: Value;
 }
 

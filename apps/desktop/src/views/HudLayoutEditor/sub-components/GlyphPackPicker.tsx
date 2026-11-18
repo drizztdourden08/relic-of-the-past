@@ -12,8 +12,8 @@ const GlyphPackPicker = (props: GlyphPackPickerProps) => {
   const { value, packs, custom, positions, busy, onChange, onCreatePack, onDeletePack, onImport, onRemove } = props;
   const [position, setPosition] = useState<GlyphPosition | ''>('');
   const packOptions = useMemo(
-    () => [{ value: AUTO_PACK_ID, label: 'Auto' }, ...packs.map((pack) => ({ value: pack.id, label: pack.name }))],
-    [packs],
+    () => [{ value: AUTO_PACK_ID, label: t('hud-editor:glyph-pack.auto') }, ...packs.map((pack) => ({ value: pack.id, label: pack.name }))],
+    [packs, t],
   );
 
   const selectedCustom = custom.find((pack) => pack.id === value) ?? null;

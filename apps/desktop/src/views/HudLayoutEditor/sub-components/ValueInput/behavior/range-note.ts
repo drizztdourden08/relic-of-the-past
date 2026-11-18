@@ -1,7 +1,9 @@
 /* @layer renderer-components @kind logic */
-const rangeNote = (n: number, min?: number, max?: number): string | undefined => {
-  if (min !== undefined && n < min) return `Valid, but below this field's ${min}.`;
-  if (max !== undefined && n > max) return `Valid, but above this field's ${max}.`;
+import type { Translate } from '@app/hud-layout-editing/translate.type';
+
+const rangeNote = (n: number, min: number | undefined, max: number | undefined, t: Translate): string | undefined => {
+  if (min !== undefined && n < min) return t('hud-editor:range.below', { min });
+  if (max !== undefined && n > max) return t('hud-editor:range.above', { max });
   return undefined;
 };
 

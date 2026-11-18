@@ -4,10 +4,11 @@ import { FontPicker } from './FontPicker';
 import { SPRITE_SETS } from './TextContent.constants';
 import type { HudTextSpriteSet } from '@rotp/hud';
 import type { TextFaceFieldsProps } from './TextFaceFields.type';
-import { useT } from '@drizztdourden08/brock-react';
+import { useT, useText } from '@drizztdourden08/brock-react';
 
 const TextFaceFields = (props: TextFaceFieldsProps) => {
   const t = useT();
+  const text = useText();
   const { spec, onChange } = props;
   const { face } = spec;
   const set = face.from === 'sprite' ? SPRITE_SETS.find((entry) => entry.value === face.set) : undefined;
@@ -18,15 +19,15 @@ const TextFaceFields = (props: TextFaceFieldsProps) => {
         <SegmentedControl
           size="sm"
           value={face.from}
-          options={[{ value: 'sprite', label: 'game sprite' }, { value: 'font', label: 'font' }]}
+          options={[{ value: 'sprite', label: t('hud-editor:text-face-fields.from.sprite') }, { value: 'font', label: t('hud-editor:text-face-fields.from.font') }]}
           onChange={(v) => onChange({ face: v === 'sprite' ? { from: 'sprite', set: 'hud-digits' } : { from: 'font', family: 'sans', size: 16 } })}
         />
       </Field>
       {face.from === 'sprite' ? (
-        <Field size="sm" label={t('hud-editor:text-face-fields.label.sprite-set')} hint={set?.warn ? <Text className="hud-text-face__warn">{set.warn}</Text> : undefined}>
+        <Field size="sm" label={t('hud-editor:text-face-fields.label.sprite-set')} hint={set?.warn ? <Text className="hud-text-face__warn">{text(set.warn)}</Text> : undefined}>
           <Flex gap="2xs" align="center">
             <Text className="hud-ref-field__specimen">{set?.specimen ?? '??'}</Text>
-            <Select size="sm" value={face.set} options={SPRITE_SETS.map((s) => ({ value: s.value, label: s.label }))} onChange={(next) => onChange({ face: { from: 'sprite', set: next as HudTextSpriteSet } })} />
+            <Select size="sm" value={face.set} options={SPRITE_SETS.map((s) => ({ value: s.value, label: text(s.label) }))} onChange={(next) => onChange({ face: { from: 'sprite', set: next as HudTextSpriteSet } })} />
           </Flex>
         </Field>
       ) : (

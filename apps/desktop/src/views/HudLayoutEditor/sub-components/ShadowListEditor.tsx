@@ -33,7 +33,7 @@ const ShadowListEditor = (props: ShadowListEditorProps) => {
           swatch={swatchOf(shadow.color)}
           open={openKey === `shadow-${i}`}
           onToggle={() => onToggleKey(`shadow-${i}`)}
-          action={{ label: `Remove shadow ${i + 1}`, icon: '✕', onClick: () => remove(i) }}
+          action={{ label: t('hud-editor:shadow.remove', { n: i + 1 }), icon: '✕', onClick: () => remove(i) }}
         >
           <Grid columns={2} gap="2xs">
             <ValueField label="x" value={shadow.x} onChange={(x) => setShadow(i, { x })} scope={scope} insideRepeat={insideRepeat} />

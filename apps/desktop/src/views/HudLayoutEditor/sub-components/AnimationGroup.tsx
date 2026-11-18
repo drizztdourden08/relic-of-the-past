@@ -9,10 +9,11 @@ import type { HudAnimatableProperty } from '@rotp/hud';
 import { MS_STEP } from '../HudLayoutEditor.constants';
 import { LOOPS, PROPERTIES, REFLOW } from './AnimationSection.constants';
 import type { AnimationGroupProps } from './AnimationGroup.type';
-import { useT } from '@drizztdourden08/brock-react';
+import { useT, useText } from '@drizztdourden08/brock-react';
 
 const AnimationGroup = (props: AnimationGroupProps) => {
   const t = useT();
+  const text = useText();
   const { animation, duration, head, open, onToggle, onRemove, onChange, scope, insideRepeat, warnings } = props;
   const reflow = warnings.find((w) => w.includes(`animating '${animation.property}'`));
 
@@ -22,7 +23,7 @@ const AnimationGroup = (props: AnimationGroupProps) => {
       summary={`${duration}ms · ${animation.loop}${animation.when !== undefined ? ' · gated' : ''}`}
       open={open}
       onToggle={onToggle}
-      action={{ label: `Remove the ${animation.property} animation`, icon: '✕', onClick: onRemove }}
+      action={{ label: t('hud-editor:animation-group.remove', { property: animation.property }), icon: '✕', onClick: onRemove }}
     >
       <Field size="sm" label={t('hud-editor:animation-group.label.property')}>
         <Select
@@ -53,7 +54,7 @@ const AnimationGroup = (props: AnimationGroupProps) => {
         <ValueField label={t('hud-editor:animation-group.label.delay-ms')} value={animation.delay ?? 0} onChange={(next) => onChange({ delay: next === 0 ? undefined : next })} scope={scope} insideRepeat={insideRepeat} step={MS_STEP} />
       </Box>
       <Field size="sm" label={t('hud-editor:animation-group.label.loop')}>
-        <SegmentedControl size="sm" value={animation.loop} options={[...LOOPS]} onChange={(loop) => onChange({ loop })} />
+        <SegmentedControl size="sm" value={animation.loop} options={LOOPS.map((loop) => ({ value: loop.value, label: text(loop.label) }))} onChange={(loop) => onChange({ loop })} />
       </Field>
       <EasingPicker label={t('hud-editor:animation-group.label.easing')} value={animation.easing} onChange={(easing) => onChange({ easing })} />
 

@@ -31,7 +31,7 @@ const MotionTransport = (props: MotionTransportProps) => {
         variant="ghost"
         size="sm"
         active={preview.playing}
-        label={preview.playing ? 'Pause the stage' : 'Play on the stage'}
+        label={preview.playing ? t('hud-editor:motion-transport.pause') : t('hud-editor:motion-transport.play')}
         onClick={() => (preview.playing ? preview.pause() : preview.play())}
       >
 <Icon name={preview.playing ? 'pause' : 'play'} size={14} />

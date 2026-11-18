@@ -9,8 +9,10 @@ import { FormulaMenu } from './sub-components/FormulaMenu';
 import { ValueInputFeedback } from './sub-components/ValueInputFeedback';
 import { ValueInputRow } from './sub-components/ValueInputRow';
 import type { ValueInputProps } from './ValueInput.type';
+import { useText } from '@drizztdourden08/brock-react';
 
 const ValueInput = (props: ValueInputProps) => {
+  const text = useText();
   const {
     label, value, onChange, onClear, scope, insideRepeat = false, extraNames, role = 'number',
     min, max, step = 1, placeholder, hint, readOnly = false, derivedFrom,
@@ -20,7 +22,8 @@ const ValueInput = (props: ValueInputProps) => {
   const field = useValueInput({ value, onChange, onClear, step, min, max });
   const reading = readFormula({ expr: field.expr, scope, insideRepeat, extraNames });
   const promote = usePromoteOverlay(field.focused, field.formula, field.inputRef);
-  const error = valueErrorOf(reading, field);
+  const problem = valueErrorOf(reading, field);
+  const error = problem === undefined ? undefined : text(problem);
 
   return (
     <Field

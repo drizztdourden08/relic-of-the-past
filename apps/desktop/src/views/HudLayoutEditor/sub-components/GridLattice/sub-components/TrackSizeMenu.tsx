@@ -15,7 +15,7 @@ const TrackSizeMenu = (props: TrackSizeMenuProps) => {
         id: 'modes',
         items: EXTENT_MODES.map((entry) => ({
           id: entry.mode,
-          label: entry.label,
+          label: text(entry.label),
           kind: 'radio' as const,
           checked: entry.mode === mode,
           onSelect: () => { onClose(); onSize?.(extentFor(entry.mode, extent)); },

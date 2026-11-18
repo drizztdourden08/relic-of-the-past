@@ -3,6 +3,7 @@ import type { ShortcutKey } from '@drizztdourden08/tessera/primitives';
 import type { EditorAction } from '@app/hud-layout-editing/selection-bands.type';
 import type { IndexRun } from '@app/hud-layout-editing/index-selection';
 import type { DropIntent } from '@app/hud-layout-editing/drop-intent';
+import type { Translate } from '@app/hud-layout-editing/translate.type';
 import type { HudFlexContainer } from '@rotp/hud';
 
 type FlexSelection = { kind: 'none' } | ({ kind: 'items' } & IndexRun);
@@ -17,6 +18,7 @@ interface FlexActionContext {
   container: HudFlexContainer;
   selection: FlexSelection;
   edits: FlexEditorEdits;
+  t: Translate;
 }
 
 interface FlexEditorProps {
@@ -27,7 +29,7 @@ interface FlexEditorProps {
 interface MoveSpec {
   key: string;
   icon: EditorAction['icon'];
-  label: string;
+  label: MoveLabelKey;
   can: boolean;
   from: number;
   to: number;

@@ -4,11 +4,12 @@ import { Box, Field, Text, TextInput } from '@drizztdourden08/tessera/primitives
 import type { KeyboardEvent } from 'react';
 import type { IdentitySectionProps } from './IdentitySection.type';
 import { useT } from '@drizztdourden08/brock-react';
+import type { Translate } from '@app/hud-layout-editing/translate.type';
 
-const errorFor = (draft: string, otherIds: readonly string[]): string | null => {
+const errorFor = (draft: string, otherIds: readonly string[], t: Translate): string | null => {
   const id = draft.trim();
-  if (!id) return 'An id cannot be empty.';
-  if (otherIds.includes(id)) return `Another node already uses "${id}".`;
+  if (!id) return t('hud-editor:identity-section.error.empty');
+  if (otherIds.includes(id)) return t('hud-editor:identity-section.error.taken', { id });
   return null;
 };
 
@@ -19,7 +20,7 @@ const IdentitySection = (props: IdentitySectionProps) => {
 
   useEffect(() => { setDraft(node.id); }, [node.id]);
 
-  const error = errorFor(draft, otherIds);
+  const error = errorFor(draft, otherIds, t);
 
   const commit = (): void => {
     const id = draft.trim();

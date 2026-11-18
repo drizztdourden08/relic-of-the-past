@@ -30,10 +30,10 @@ const PaintBody = (props: PaintBodyProps) => {
         <TextInput size="sm" aria-label={t('hud-editor:paint-body.aria.image-file')} value={value.image} placeholder={t('hud-editor:paint-body.placeholder.file-png')} onChange={(event) => onChange({ ...value, image: event.target.value })} />
       </Field>
       <Field size="sm" label={t('hud-editor:paint-body.label.size')}>
-        <Select size="sm" value={value.size ?? 'contain'} options={[{ value: 'contain', label: 'contain' }, { value: 'cover', label: 'cover' }, { value: 'tile', label: 'tile' }]} onChange={(size) => onChange({ ...value, size: size as 'contain' | 'cover' | 'tile' })} />
+        <Select size="sm" value={value.size ?? 'contain'} options={[{ value: 'contain', label: t('hud-editor:paint.size.contain') }, { value: 'cover', label: t('hud-editor:paint.size.cover') }, { value: 'tile', label: t('hud-editor:paint.size.tile') }]} onChange={(size) => onChange({ ...value, size: size as 'contain' | 'cover' | 'tile' })} />
       </Field>
       <Field size="sm" label={t('hud-editor:paint-body.label.repeat')}>
-        <Select size="sm" value={value.repeat ?? 'none'} options={[{ value: 'none', label: 'no repeat' }, { value: 'repeat', label: 'repeat' }, { value: 'repeat-x', label: 'repeat-x' }, { value: 'repeat-y', label: 'repeat-y' }]} onChange={(repeat) => onChange({ ...value, repeat: repeat as 'none' | 'repeat' | 'repeat-x' | 'repeat-y' })} />
+        <Select size="sm" value={value.repeat ?? 'none'} options={[{ value: 'none', label: t('hud-editor:paint.repeat.none') }, { value: 'repeat', label: t('hud-editor:paint.repeat.both') }, { value: 'repeat-x', label: t('hud-editor:paint.repeat.x') }, { value: 'repeat-y', label: t('hud-editor:paint.repeat.y') }]} onChange={(repeat) => onChange({ ...value, repeat: repeat as 'none' | 'repeat' | 'repeat-x' | 'repeat-y' })} />
       </Field>
     </>
   );

@@ -9,10 +9,11 @@ import { SubSection } from './SubSection';
 import { TOOLBAR_ICONS } from '@app/hud-layout-editing/toolbar-menus';
 import { OVERLAY_LABEL } from './LayoutSettings.constants';
 import type { LayoutSettingsProps } from './LayoutSettings.type';
-import { useT } from '@drizztdourden08/brock-react';
+import { useT, useText } from '@drizztdourden08/brock-react';
 
 const LayoutSettings = (props: LayoutSettingsProps) => {
   const t = useT();
+  const text = useText();
   const { engine, onSetEngine, overlay, gap, onGap, scope, insideRepeat } = props;
   const [open, setOpen] = useState(false);
   const anchorRef = useRef<HTMLDivElement>(null);
@@ -37,8 +38,8 @@ const LayoutSettings = (props: LayoutSettingsProps) => {
               variant="ghost"
               size="sm"
               active={overlay.overlayOn}
-              label={OVERLAY_LABEL}
-              title={OVERLAY_LABEL}
+              label={text(OVERLAY_LABEL)}
+              title={text(OVERLAY_LABEL)}
               data-action="grid-overlay"
               onClick={overlay.onToggleOverlay}
             >

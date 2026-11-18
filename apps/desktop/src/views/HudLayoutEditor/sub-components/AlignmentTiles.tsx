@@ -5,6 +5,7 @@ import { BAR_THICKNESS, BARS, FOLD_ABOVE } from './AlignmentTiles.constants';
 import type { AlignValue, FlowDirection } from '@app/hud-layout-editing/align-options';
 import type { CSSProperties } from 'react';
 import type { AlignRowSpec, AlignmentTilesProps } from './AlignmentTiles.type';
+import { useText } from '@drizztdourden08/brock-react';
 
 const diagramStyle = (
   row: AlignRowSpec, value: AlignValue, direction: FlowDirection,
@@ -41,6 +42,7 @@ const barStyle = (
 };
 
 const AlignmentTiles = (props: AlignmentTilesProps) => {
+  const text = useText();
   const { direction, rows } = props;
   const columns = Math.max(...rows.map(
     (row) => (row.options.length > FOLD_ABOVE ? Math.ceil(row.options.length / 2) : row.options.length),
@@ -49,8 +51,8 @@ const AlignmentTiles = (props: AlignmentTilesProps) => {
   return (
     <Box className="hud-align" style={{ '--hud-align-cols': columns } as CSSProperties}>
       {rows.map((row) => (
-        <Box key={row.key} className="hud-align__row" role="group" aria-label={row.label}>
-          <Text className="hud-align__cap" title={row.label}>
+        <Box key={row.key} className="hud-align__row" role="group" aria-label={text(row.label)}>
+          <Text className="hud-align__cap" title={text(row.label)}>
             {row.capIcon ? <Icon name={row.capIcon} size={14} aria-hidden /> : row.cap}
           </Text>
           <Box className="hud-align__tiles">
@@ -61,8 +63,8 @@ const AlignmentTiles = (props: AlignmentTilesProps) => {
                 variant="ghost"
                 size="sm"
                 active={row.value === option.value}
-                label={`${row.label}. ${option.label}`}
-                title={option.label}
+                label={`${text(row.label)}. ${text(option.label)}`}
+                title={text(option.label)}
                 data-align={`${row.key}:${option.value}`}
                 onClick={() => row.onChange(option.value)}
               >

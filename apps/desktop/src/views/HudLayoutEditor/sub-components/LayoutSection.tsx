@@ -66,7 +66,7 @@ const LayoutSection = (props: LayoutSectionProps) => {
         />
       </SubSection>
 
-      <SubSection title={isGrid ? 'Grid manipulation' : 'Flex manipulation'}>
+      <SubSection title={isGrid ? t('hud-editor:layout.manipulation.grid') : t('hud-editor:layout.manipulation.flex')}>
         {isGrid
           ? <GridEditor container={grid} onPatchContainer={patchGrid} />
           : <FlexEditor container={flex} onDrop={onDrop} />}

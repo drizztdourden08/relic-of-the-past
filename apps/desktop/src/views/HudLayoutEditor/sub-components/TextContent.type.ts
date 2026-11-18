@@ -1,5 +1,6 @@
 /* @layer renderer-components @kind types */
 import type { HudElementSpec, HudTextSpriteSet } from '@rotp/hud';
+import type { Message } from '@drizztdourden08/brock-core/i18n';
 
 type TextSpec = Extract<HudElementSpec, { type: 'text' }>;
 
@@ -10,6 +11,6 @@ interface TextContentProps {
   insideRepeat?: boolean;
 }
 
-interface SpriteSetOption { value: HudTextSpriteSet; label: string; specimen: string; warn?: string }
+interface SpriteSetOption { value: HudTextSpriteSet; label: Message; specimen: string; warn?: Message }
 
 export type { SpriteSetOption, TextContentProps, TextSpec };

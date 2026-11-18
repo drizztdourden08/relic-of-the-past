@@ -18,7 +18,7 @@ const EditorToolbar = (props: EditorToolbarProps) => {
   const { bar, openKey, close, toggle } = useToolbarMenu();
   const snapping = useHudEditorViewStore((s) => s.snappingEnabled);
   const toggleSnapping = useHudEditorViewStore((s) => s.toggleSnapping);
-  const groups = buildToolbarGroups({ insert });
+  const groups = buildToolbarGroups({ insert, t });
   const groupItems = (key: string) => groups.find((group) => group.key === key)?.items ?? [];
 
   return (
@@ -48,7 +48,7 @@ const EditorToolbar = (props: EditorToolbarProps) => {
 
       <ToolbarMenu
         icon={TOOLBAR_ICONS.preset} label={t('hud-editor:editor-toolbar.label.preset')}
-        items={[...subtreePresetItems({ insert }), { separator: true }, ...presetItems(layouts, draftId, onStartFrom)]}
+        items={[...subtreePresetItems({ insert, t }), { separator: true }, ...presetItems(layouts, draftId, onStartFrom)]}
         open={openKey === 'preset'} onToggle={() => toggle('preset')} onClose={close}
       />
 

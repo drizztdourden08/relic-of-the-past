@@ -1,5 +1,6 @@
 /* @layer renderer-components @kind types */
 import type { HudAnimationLoop, HudNode } from '@rotp/hud';
+import type { Message } from '@drizztdourden08/brock-core/i18n';
 
 interface AnimationSectionProps {
   node: HudNode;
@@ -11,6 +12,6 @@ interface AnimationSectionProps {
   onOpen: (index: number | null) => void;
 }
 
-interface LoopOption { value: HudAnimationLoop; label: string }
+interface LoopOption { value: HudAnimationLoop; label: Message }
 
 export type { AnimationSectionProps, LoopOption };

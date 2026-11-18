@@ -54,16 +54,16 @@ const GradientRamp = (props: GradientRampProps) => {
 
       <Flex gap="2xs" align="center" className="hud-ramp__tools">
         <IconButton variant="ghost" size="sm" label={t('hud-editor:gradient-ramp.label.add-a-stop')} onClick={() => addStop(0.5)}>+</IconButton>
-        <IconButton variant="ghost" size="sm" label={`Remove stop ${index + 1}`} disabled={stops.length <= 2} onClick={removeSelected}>✕</IconButton>
+        <IconButton variant="ghost" size="sm" label={t('hud-editor:gradient-ramp.remove', { n: index + 1 })} disabled={stops.length <= 2} onClick={removeSelected}>✕</IconButton>
       </Flex>
 
       {stop && (
-        <ColorField label={`stop ${index + 1}`} value={stop.color} onChange={(color) => setStop({ color })} />
+        <ColorField label={t('hud-editor:gradient-ramp.stop', { n: index + 1 })} value={stop.color} onChange={(color) => setStop({ color })} />
       )}
       {stop && (
         <Field size="sm" label={t('hud-editor:gradient-ramp.label.at')}>
           <NumberInput
-            size="sm" aria-label={`Stop ${index + 1} position`}
+            size="sm" aria-label={t('hud-editor:gradient-ramp.position', { n: index + 1 })}
             value={stop.at} min={0} max={1} step={0.05}
             onChange={(at) => setStop({ at: Number.isFinite(at) ? clamp01(at) : 0 })}
           />

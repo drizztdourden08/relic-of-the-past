@@ -3,8 +3,10 @@ import { Button, Field, Icon, Text } from '@drizztdourden08/tessera/primitives';
 import { ReferenceThumb } from './ReferenceThumb';
 import { CARET, CARET_ICON_SIZE } from './ReferenceField.constants';
 import type { ReferenceFieldProps } from './ReferenceField.type';
+import { useT } from '@drizztdourden08/brock-react';
 
 const ReferenceField = (props: ReferenceFieldProps) => {
+  const t = useT();
   const {
     label, hint, src, placeholder, specimen, name, kind, action = 'pick',
     compact = false, onOpen, anchorRef, children, className = '', 'aria-label': ariaLabel,
@@ -17,7 +19,7 @@ const ReferenceField = (props: ReferenceFieldProps) => {
         variant="ghost"
         size={compact ? 'xs' : 'sm'}
         className={`hud-ref-field${compact ? ' hud-ref-field--compact' : ''}`}
-        aria-label={ariaLabel ?? `${label ?? 'Reference'}: ${name}`}
+        aria-label={ariaLabel ?? t('hud-editor:reference.aria', { label: label ?? t('hud-editor:reference.default-label'), name })}
         onClick={onOpen}
       >
         <ReferenceThumb src={src} placeholder={placeholder} specimen={specimen} />

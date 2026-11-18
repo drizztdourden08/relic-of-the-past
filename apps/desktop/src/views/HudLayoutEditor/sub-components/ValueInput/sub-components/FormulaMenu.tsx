@@ -4,7 +4,7 @@ import { Anchored, Box, Pressable, Text, TextInput } from '@drizztdourden08/tess
 import { formulaGroups } from '@app/hud-layout-editing/formula-catalog';
 import { formulaStarters } from '@app/hud-layout-editing/formula-starters';
 import type { FormulaMenuProps } from './FormulaMenu.type';
-import { useT } from '@drizztdourden08/brock-react';
+import { useT, useText } from '@drizztdourden08/brock-react';
 
 const matches = (name: string, filter: string): boolean =>
   filter.length === 0 || name.toLowerCase().includes(filter.toLowerCase());
@@ -14,11 +14,12 @@ const reading = (name: string, scope: Readonly<Record<string, number>>): string 
 
 const FormulaMenu = (props: FormulaMenuProps) => {
   const t = useT();
+  const text = useText();
   const { open, anchorRef, filter, role, insideRepeat, extraNames, scope, onClose, onInsert } = props;
 
   if (!open) return null;
 
-  const starters = formulaStarters({ role, insideRepeat }).filter((s) => matches(s.title, filter));
+  const starters = formulaStarters({ role, insideRepeat }).filter((s) => matches(text(s.title), filter));
   const groups = formulaGroups({ insideRepeat, extraNames })
     .map((group) => ({ ...group, items: group.items.filter((item) => matches(item.name, filter)) }))
     .filter((group) => group.items.length > 0);
@@ -33,14 +34,14 @@ const FormulaMenu = (props: FormulaMenuProps) => {
 
         {starters.length > 0 && (
           <Box className="hud-formula-menu__group">
-            <Text className="hud-formula-menu__head">{role === 'gate' ? 'Only when...' : 'Drive this from the game...'}</Text>
+            <Text className="hud-formula-menu__head">{role === 'gate' ? t('hud-editor:formula-menu.head.gate') : t('hud-editor:formula-menu.head.number')}</Text>
             {starters.map((starter) => (
               <Pressable
                 key={starter.expr}
                 className="hud-formula-menu__row"
                 onClick={() => onInsert(starter.expr, starter.select)}
               >
-                <Text className="hud-formula-menu__title">{starter.title}</Text>
+                <Text className="hud-formula-menu__title">{text(starter.title)}</Text>
                 <Text className="hud-formula-menu__expr">{starter.expr}</Text>
               </Pressable>
             ))}
@@ -48,25 +49,25 @@ const FormulaMenu = (props: FormulaMenuProps) => {
         )}
 
         {groups.map((group) => (
-          <Box key={group.title} className="hud-formula-menu__group">
-            <Text className="hud-formula-menu__head">{group.title}</Text>
+          <Box key={text(group.title)} className="hud-formula-menu__group">
+            <Text className="hud-formula-menu__head">{text(group.title)}</Text>
             {group.items.map((item) => (
               <Pressable
                 key={item.name}
                 disabled={item.unavailable !== undefined}
                 className={`hud-formula-menu__row${item.unavailable ? ' is-unavailable' : ''}`}
-                title={item.unavailable ?? item.note}
+                title={text(item.unavailable ?? item.note)}
                 onClick={() => onInsert(item.name)}
               >
                 <Text className="hud-formula-menu__title">{item.name}</Text>
-                <Text className="hud-formula-menu__expr">{item.unavailable ?? (reading(item.name, scope) || item.note)}</Text>
+                <Text className="hud-formula-menu__expr">{item.unavailable === undefined ? (reading(item.name, scope) || text(item.note)) : text(item.unavailable)}</Text>
               </Pressable>
             ))}
           </Box>
         ))}
 
         {starters.length === 0 && groups.length === 0 && (
-          <Text className="hud-formula-menu__head">Nothing here is called &quot;{filter}&quot;.</Text>
+          <Text className="hud-formula-menu__head">{t('hud-editor:formula-menu.empty', { filter })}</Text>
         )}
     </Anchored>
   );

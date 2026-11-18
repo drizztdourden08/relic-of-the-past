@@ -1,5 +1,6 @@
 /* @layer renderer-components @kind logic */
 import { HUD_VARIABLES } from '@rotp/hud';
+import { msg } from '@drizztdourden08/brock-core/i18n';
 import type { FormulaStarter } from './formula-starters.type';
 
 const pairedNames = (): readonly string[] => HUD_VARIABLES
@@ -9,7 +10,7 @@ const pairedNames = (): readonly string[] => HUD_VARIABLES
   .filter((stem) => HUD_VARIABLES.some((entry) => entry.name === `${stem}_max`));
 
 const fractionStarters = (): readonly FormulaStarter[] => pairedNames().map((stem) => ({
-  title: `${stem} as a fraction of its maximum`,
+  title: msg('hud-editing:starter.fraction', { stem }),
   expr: `${stem}_current / ${stem}_max`,
   select: `${stem}_current`,
 }));

@@ -1,13 +1,15 @@
 /* @layer renderer-components @kind types */
+import type { Text } from '@drizztdourden08/brock-core/i18n';
+
 interface ExprFix {
-  label: string;
+  label: Text;
   expr: string;
 }
 
 interface ExprProblem {
-  message: string;
+  message: Text;
   column?: number;
-  suggestion?: string;
+  suggestion?: Text;
   fix?: ExprFix;
 }
 

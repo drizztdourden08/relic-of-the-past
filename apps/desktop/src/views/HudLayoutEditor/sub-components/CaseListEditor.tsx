@@ -32,11 +32,11 @@ const CaseListEditor = (props: CaseListEditorProps) => {
   return (
     <Flex direction="column" gap="2xs" className="hud-case-list">
       {cases.map((c, i) => {
-        const live = matchLabel(matches.wins[i] ?? 0, matches.total);
+        const live = matchLabel(matches.wins[i] ?? 0, matches.total, t);
         return (
           <Flex key={c.node.id} direction="column" gap="2xs" className={`hud-case-list__row${c.node.id === selectedId ? ' is-selected' : ''}${live ? ' is-live' : ''}`}>
             <Flex align="center" className="hud-case-list__head">
-              <Text className="hud-inspect__sub">case {i + 1}</Text>
+              <Text className="hud-inspect__sub">{t('hud-editor:case-list.case', { n: i + 1 })}</Text>
               {live && <Text className="hud-case-list__live">{live}</Text>}
               <Flex gap="2xs" className="hud-case-list__tools">
                 <IconButton variant="ghost" size="sm" label={t('hud-editor:case-list-editor.label.move-up')} disabled={i === 0} onClick={() => onChange({ cases: move(cases, i, i - 1) })}>↑</IconButton>
@@ -57,8 +57,8 @@ const CaseListEditor = (props: CaseListEditorProps) => {
       <Flex direction="column" gap="2xs" className={`hud-case-list__row hud-case-list__row--otherwise${otherwise?.id === selectedId ? ' is-selected' : ''}${matches.otherwise > 0 ? ' is-live' : ''}`}>
         <Flex align="center" className="hud-case-list__head">
           <Text className="hud-inspect__sub">{t('hud-editor:case-list-editor.text.otherwise')}</Text>
-          {matchLabel(matches.otherwise, matches.total) !== null && (
-            <Text className="hud-case-list__live">{matchLabel(matches.otherwise, matches.total)}</Text>
+          {matchLabel(matches.otherwise, matches.total, t) !== null && (
+            <Text className="hud-case-list__live">{matchLabel(matches.otherwise, matches.total, t)}</Text>
           )}
         </Flex>
         {otherwise ? (

@@ -12,8 +12,10 @@ import { SectionAccordion } from './SectionAccordion';
 import type { ReactNode } from 'react';
 import type { InspectorSectionKey as SectionKey } from './NodeInspector.type';
 import type { InspectorSectionsProps } from './InspectorSections.type';
+import { useT } from '@drizztdourden08/brock-react';
 
 const InspectorSections = (props: InspectorSectionsProps) => {
+  const t = useT();
   const { node, doc, context, isOpen, onToggle, inspector } = props;
   const { onPatch, onDrop, scope, glyphPacks, selectedId, onSelectNode } = inspector;
   const { isScreen, otherIds, parent, insideRepeat, counts, warnings } = context;
@@ -25,10 +27,10 @@ const InspectorSections = (props: InspectorSectionsProps) => {
 
   return (
     <>
-      {section('identity', 'Identity', undefined, (
+      {section('identity', t('hud-editor:inspector.section.identity'), undefined, (
         <IdentitySection
           node={node}
-          breadcrumb={breadcrumbOf(doc, node.id)}
+          breadcrumb={breadcrumbOf(doc, node.id, t)}
           otherIds={otherIds}
           onPatch={onPatch}
         />
@@ -41,7 +43,7 @@ const InspectorSections = (props: InspectorSectionsProps) => {
           onPatch={onPatch}
         />
       ))}
-      {node.kind === 'container' && section('layout', 'Layout', counts.layout, (
+      {node.kind === 'container' && section('layout', t('hud-editor:inspector.section.layout'), counts.layout, (
         <LayoutSection
           node={node}
           onPatch={(patch) => onPatch(patch)}
@@ -51,8 +53,8 @@ const InspectorSections = (props: InspectorSectionsProps) => {
         />
       ))}
       {section('sizeBox', 'Size & Box', counts.sizeBox, <SizeBoxSection node={node} onPatch={onPatch} scope={scope} insideRepeat={insideRepeat} isScreen={isScreen} />)}
-      {section('appearance', 'Appearance', counts.appearance, <AppearanceSection node={node} onPatch={onPatch} scope={scope} insideRepeat={insideRepeat} />)}
-      {node.kind === 'element' && section('content', 'Content', counts.content, (
+      {section('appearance', t('hud-editor:inspector.section.appearance'), counts.appearance, <AppearanceSection node={node} onPatch={onPatch} scope={scope} insideRepeat={insideRepeat} />)}
+      {node.kind === 'element' && section('content', t('hud-editor:inspector.section.content'), counts.content, (
         <ContentSection
           node={node}
           onPatch={(patch) => onPatch(patch)}
@@ -63,8 +65,8 @@ const InspectorSections = (props: InspectorSectionsProps) => {
           onSelectNode={onSelectNode}
         />
       ))}
-      {section('data', 'Data', undefined, <DataSection node={node} scope={scope} />)}
-      {section('motion', 'Motion', (counts.animation ?? 0) + (counts.transitions ?? 0) || undefined, (
+      {section('data', t('hud-editor:inspector.section.data'), undefined, <DataSection node={node} scope={scope} />)}
+      {section('motion', t('hud-editor:inspector.section.motion'), (counts.animation ?? 0) + (counts.transitions ?? 0) || undefined, (
         <MotionSection node={node} onPatch={onPatch} scope={scope} insideRepeat={insideRepeat} warnings={warnings} />
       ))}
     </>

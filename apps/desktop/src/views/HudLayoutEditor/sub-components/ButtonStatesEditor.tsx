@@ -21,7 +21,7 @@ const ButtonStatesEditor = (props: ButtonStatesEditorProps) => {
   return (
     <Box className="hud-inspect__group">
       <Field size="sm" label={t('hud-editor:button-states-editor.label.binds-to')}>
-        <SegmentedControl size="sm" value={bind.kind} options={[{ value: 'verb', label: 'verb' }, { value: 'slot', label: 'slot' }]} onChange={setBindKind} />
+        <SegmentedControl size="sm" value={bind.kind} options={[{ value: 'verb', label: t('hud-editor:button-states.bind.verb') }, { value: 'slot', label: t('hud-editor:button-states.bind.slot') }]} onChange={setBindKind} />
       </Field>
       {bind.kind === 'verb' ? (
         <Field size="sm" label={t('hud-editor:button-states-editor.label.verb')}>

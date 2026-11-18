@@ -33,7 +33,7 @@ const PresetBar = (props: PresetBarProps) => {
 
       <Box className="hud-editor-presets__actions">
         <Button variant="primary" size="sm" disabled={busy || invalid || (!dirty && !draft.builtIn)} onClick={onSave}>
-          {draft.builtIn ? 'Save a copy' : 'Save'}
+          {draft.builtIn ? t('hud-editor:preset-bar.text.save-a-copy') : t('hud-editor:preset-bar.text.save')}
         </Button>
         <Button variant="secondary" size="sm" disabled={busy || invalid} onClick={onSaveAs}>{t('hud-editor:preset-bar.text.save-as')}</Button>
         <Button variant="ghost" size="sm" disabled={busy || !dirty} onClick={onReset}>{t('hud-editor:preset-bar.text.reset')}</Button>

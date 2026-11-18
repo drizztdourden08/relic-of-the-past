@@ -1,14 +1,16 @@
 /* @layer renderer-components @kind constants */
+import { msg } from '@drizztdourden08/brock-core/i18n';
+import type { Message } from '@drizztdourden08/brock-core/i18n';
 import type { AlignValue } from './align-options.type';
 
-const OPTION: Readonly<Record<AlignValue, string>> = {
-  start: 'start puts children at the beginning of the axis',
-  center: 'center puts children in the middle of the axis',
-  end: 'end puts children at the end of the axis',
-  stretch: 'stretch makes children fill their cell along this axis',
-  between: 'between puts the free space between the children, none at the ends',
-  around: 'around gives each child an equal share, half of it at each side',
-  evenly: 'evenly makes every gap the same, the two at the ends included',
+const OPTION: Readonly<Record<AlignValue, Message>> = {
+  start: msg('hud-editing:align.start'),
+  center: msg('hud-editing:align.center'),
+  end: msg('hud-editing:align.end'),
+  stretch: msg('hud-editing:align.stretch'),
+  between: msg('hud-editing:align.between'),
+  around: msg('hud-editing:align.around'),
+  evenly: msg('hud-editing:align.evenly'),
 };
 
 const CSS_POSITION: Readonly<Record<AlignValue, string>> = {

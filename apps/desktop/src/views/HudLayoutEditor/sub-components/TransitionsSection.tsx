@@ -33,7 +33,7 @@ const TransitionsSection = (props: TransitionsSectionProps) => {
         <Box key={key} className="hud-transition-row">
           <Checkbox size="sm" label={key} checked={properties.includes(key)} onChange={(on) => toggle(key, on)} />
           {!driven.has(key) && properties.includes(key) && (
-            <Text className="hud-editor__hint">Nothing currently drives {key} on this node, so it will not move.</Text>
+            <Text className="hud-editor__hint">{t('hud-editor:transitions-section.undriven', { key })}</Text>
           )}
         </Box>
       ))}

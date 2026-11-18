@@ -11,7 +11,7 @@ const ShapeContent = (props: ShapeContentProps) => {
   return (
     <Box className="hud-inspect__group">
       <Field size="sm" label={t('hud-editor:shape-content.label.shape')}>
-        <Select size="sm" value={spec.shape} options={[{ value: 'heart', label: 'heart' }, { value: 'magic-bar', label: 'magic-bar' }]} onChange={(shape) => onChange({ shape: shape as HudShapeKind })} />
+        <Select size="sm" value={spec.shape} options={[{ value: 'heart', label: t('hud-editor:shape.heart') }, { value: 'magic-bar', label: t('hud-editor:shape.magic-bar') }]} onChange={(shape) => onChange({ shape: shape as HudShapeKind })} />
       </Field>
       <BoundedValueField label={t('hud-editor:shape-content.label.fill')} value={spec.fill} onChange={(fill) => onChange({ fill })} scope={scope} insideRepeat={insideRepeat} min={0} max={1} step={0.05} />
       {spec.shape === 'heart' && (

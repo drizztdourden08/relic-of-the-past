@@ -23,7 +23,7 @@ const GlyphContent = (props: GlyphContentProps) => {
         <SegmentedControl
           size="sm"
           value={bySlot ? 'slot' : 'position'}
-          options={[{ value: 'position', label: 'a control' }, { value: 'slot', label: 'a slot' }]}
+          options={[{ value: 'position', label: t('hud-editor:glyph-content.shows.control') }, { value: 'slot', label: t('hud-editor:glyph-content.shows.slot') }]}
           onChange={(v) => onChange(v === 'slot' ? { slot: 1, position: undefined } : { slot: undefined, position: 'DPAD' })}
         />
       </Field>

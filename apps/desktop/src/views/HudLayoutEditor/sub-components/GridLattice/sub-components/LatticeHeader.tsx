@@ -6,8 +6,10 @@ import { headTitle } from '../behavior/head-title';
 import { AddTrackButton } from './AddTrackButton';
 import { TrackHead } from './TrackHead';
 import type { LatticeHeaderProps } from './LatticeHeader.type';
+import { useT } from '@drizztdourden08/brock-react';
 
 const LatticeHeader = (props: LatticeHeaderProps) => {
+  const t = useT();
   const { columns, colSizes, trackOn, onCornerDown, onTrackDown, onSizeTrack, onAddTrack, extentOf } = props;
 
   return (
@@ -15,7 +17,7 @@ const LatticeHeader = (props: LatticeHeaderProps) => {
       <Box
         className="hud-lattice__corner"
         role="columnheader"
-        aria-label={onCornerDown ? 'Select every cell' : 'Grid'}
+        aria-label={onCornerDown ? t('hud-editor:lattice.select-all') : t('hud-editor:lattice.grid')}
         data-inert={onCornerDown ? undefined : 'true'}
         onPointerDown={onCornerDown}
       />

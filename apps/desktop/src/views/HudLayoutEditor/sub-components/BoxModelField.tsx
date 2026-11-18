@@ -26,8 +26,8 @@ const BoxModelField = (props: BoxModelFieldProps) => {
 
   const readOnlyMargin = (side: Side): boolean => marginLocked || OFFSET_SIDES.includes(side);
   const marginNote = marginLocked
-    ? 'The screen has no margin.'
-    : 'left and top are this node\'s offset. They show here and are edited in Position.';
+    ? t('hud-editor:box-model-field.note.screen')
+    : t('hud-editor:box-model-field.note.offset');
 
   return (
     <Field size="sm" label={t('hud-editor:box-model-field.label.box')} hint={marginNote} className="hud-box-model">
@@ -37,7 +37,7 @@ const BoxModelField = (props: BoxModelFieldProps) => {
           <NumberCell
             key={side}
             className={`hud-box-model__edge hud-box-model__edge--${side}`}
-            label={`margin ${side}`}
+            label={t('hud-editor:box-model-field.cell.margin', { side })}
             value={margin?.[side]}
             readOnly={readOnlyMargin(side)}
             title={readOnlyMargin(side) ? marginNote : undefined}
@@ -51,7 +51,7 @@ const BoxModelField = (props: BoxModelFieldProps) => {
             <NumberCell
               key={side}
               className={`hud-box-model__edge hud-box-model__edge--${side}`}
-              label={`padding ${side}`}
+              label={t('hud-editor:box-model-field.cell.padding', { side })}
               value={padding?.[side]}
               onChange={(next) => setPad(side, next)}
             />

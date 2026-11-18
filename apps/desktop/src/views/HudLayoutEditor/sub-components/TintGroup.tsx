@@ -24,7 +24,7 @@ const TintGroup = (props: StyleGroupProps) => {
         <>
           <PaintField label={t('hud-editor:tint-group.label.colour')} value={tint.color} onChange={(color) => setStyle({ tint: { ...tint, color } })} scope={scope} insideRepeat={insideRepeat} />
           <Field size="sm" label={t('hud-editor:tint-group.label.mode')}>
-            <Select size="sm" value={tint.mode ?? 'multiply'} options={[{ value: 'multiply', label: 'multiply' }, { value: 'replace', label: 'replace' }]} onChange={(mode) => setStyle({ tint: { ...tint, mode: mode as HudTintMode } })} />
+            <Select size="sm" value={tint.mode ?? 'multiply'} options={[{ value: 'multiply', label: t('hud-editor:tint.multiply') }, { value: 'replace', label: t('hud-editor:tint.replace') }]} onChange={(mode) => setStyle({ tint: { ...tint, mode: mode as HudTintMode } })} />
           </Field>
           <ValueField label={t('hud-editor:tint-group.label.amount')} value={tint.amount ?? 1} onChange={(amount) => setStyle({ tint: { ...tint, amount } })} scope={scope} insideRepeat={insideRepeat} min={0} max={1} step={0.05} />
         </>

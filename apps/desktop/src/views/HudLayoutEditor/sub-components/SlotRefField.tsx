@@ -10,7 +10,7 @@ import { useT } from '@drizztdourden08/brock-react';
 
 const SlotRefField = (props: SlotRefFieldProps) => {
   const t = useT();
-  const { label = 'slot', value, onChange, slots, glyphPacks, className = '' } = props;
+  const { label = t('hud-editor:slot-ref-field.default-label'), value, onChange, slots, glyphPacks, className = '' } = props;
   const [open, setOpen] = useState(false);
   const anchorRef = useRef<HTMLButtonElement>(null);
 
@@ -18,7 +18,7 @@ const SlotRefField = (props: SlotRefFieldProps) => {
   const known = slotInScheme(slots, value);
   const highest = slots.reduce((top, slot) => Math.max(top, slot.index), 0);
   const note = slots.length > 0 && !known
-    ? `The previewed scheme reaches slot ${highest}, so this draws nothing here.`
+    ? t('hud-editor:slot-ref-field.note', { highest })
     : undefined;
 
   return (
@@ -27,8 +27,8 @@ const SlotRefField = (props: SlotRefFieldProps) => {
       className={`hud-slot-ref ${className}`}
       src={position ? glyphArtUrl(glyphPacks, undefined, position) : undefined}
       placeholder={t('hud-editor:slot-ref-field.placeholder.square')}
-      name={`Slot ${value}`}
-      kind={position ?? (known ? 'no glyph' : undefined)}
+      name={t('hud-editor:slot-ref-field.name', { value })}
+      kind={position ?? (known ? t('hud-editor:slot-ref-field.no-glyph') : undefined)}
       onOpen={() => setOpen(true)}
       anchorRef={anchorRef}
       aria-label={`${label} ${value}`}
