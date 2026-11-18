@@ -6,6 +6,7 @@ import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 import { BrockApp } from '@drizztdourden08/brock-react';
 import { rendererModules } from '../.brock/modules.renderer';
+import { appLocales } from '../.brock/locales';
 import { rendererBootTasks } from '../.brock/boot.renderer';
 import { screenTree } from '../.brock/screens';
 import { appWidgetLayout, appWidgets } from '../.brock/widgets';
@@ -57,6 +58,7 @@ const App = () => {
   const inputProfileMenu = useInputProfileMenu();
   return (
     <BrockApp<AppSettings>
+      locales={appLocales}
       product={product}
       restoreNavigation={false}
       settings={SETTINGS}
