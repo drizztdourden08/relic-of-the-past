@@ -1,7 +1,8 @@
 /* @layer renderer-components @kind component */
+import { useT } from '@drizztdourden08/brock-react';
 import { useState } from 'react';
 import { Box, SegmentedControl } from '@drizztdourden08/tessera/primitives';
-import { CLOSED_PANELS, SHOW_MODE_OPTIONS } from '../ChecksTracker.constants';
+import { CLOSED_PANELS, showModeOptions } from '../ChecksTracker.constants';
 import type { TrackerFiltersProps, TrackerPanels } from '../ChecksTracker.type';
 import { activeFilterCount } from '../behavior/active-filter-count';
 import { FilterControls } from './FilterControls';
@@ -10,6 +11,7 @@ import { TrackerFilterPanels } from './TrackerFilterPanels';
 import './TrackerFilters.css';
 
 const TrackerFilters = (props: TrackerFiltersProps) => {
+  const t = useT();
   const { filter, onFilterChange, grouping, onGroupingChange, viewMode, onViewModeChange, dimensions, panels, onPanelsChange, run } = props;
   const [localPanels, setLocalPanels] = useState<TrackerPanels>(CLOSED_PANELS);
   const open = panels ?? localPanels;
@@ -32,7 +34,7 @@ const TrackerFilters = (props: TrackerFiltersProps) => {
       <Box className="tracker-filters__show-mode">
         <SegmentedControl
           value={filter.showMode ?? 'items'}
-          options={SHOW_MODE_OPTIONS}
+          options={showModeOptions(t)}
           onChange={(value) => onFilterChange({ ...filter, showMode: value })}
         />
       </Box>

@@ -1,13 +1,15 @@
 /* @layer renderer-components @kind component */
+import { useT } from '@drizztdourden08/brock-react';
 import { useCallback, useMemo } from 'react';
 import type { GroupDimension } from '@rotp/game-data';
 import { GROUP_DIMENSIONS } from '@rotp/game-data';
 import { Box, Button, Card, Icon, IconButton, SegmentedControl, Text, TagPicker } from '@drizztdourden08/tessera/primitives';
-import { CLOSE_PATHS, MAX_DIMENSIONS, TAG_GROUPS, TAG_MODE_OPTIONS } from '../ChecksTracker.constants';
+import { CLOSE_PATHS, MAX_DIMENSIONS, TAG_GROUPS, tagModeOptions } from '../ChecksTracker.constants';
 import type { TrackerFilterPanelsProps } from '../ChecksTracker.type';
 import './TrackerFilterPanels.css';
 
 const TrackerFilterPanels = (props: TrackerFilterPanelsProps) => {
+  const t = useT();
   const {
     filter, onFilterChange, grouping, onGroupingChange, showTagFilter, showGroupConfig,
     dimensions = GROUP_DIMENSIONS,
@@ -33,7 +35,7 @@ const TrackerFilterPanels = (props: TrackerFilterPanelsProps) => {
         <Card className="tracker-filters__panel">
           <SegmentedControl
             value={filter.tagMode}
-            options={TAG_MODE_OPTIONS}
+            options={tagModeOptions(t)}
             onChange={(tagMode) => onFilterChange({ ...filter, tagMode })}
           />
           <TagPicker value={filter.activeFacets} groups={TAG_GROUPS} onChange={setFacets} />
@@ -43,14 +45,14 @@ const TrackerFilterPanels = (props: TrackerFilterPanelsProps) => {
       {showGroupConfig && (
         <Card className="tracker-filters__panel">
           <Box className="tracker-filters__group-current">
-            {grouping.length === 0 && <Text className="tracker-filters__group-empty">No grouping (flat list)</Text>}
+            {grouping.length === 0 && <Text className="tracker-filters__group-empty">{t('compounds:tracker.panels.flat')}</Text>}
             {grouping.map((dim, i) => (
               <Box key={dim} className="tracker-filters__group-chip">
                 <Text>{i + 1}. {dimensions.find(d => d.id === dim)?.label}</Text>
                 <IconButton
                   variant="ghost"
                   size="sm"
-                  label={`Remove ${dim} grouping`}
+                  label={t('compounds:tracker.panels.remove', { name: dim })}
                   className="tracker-filters__group-remove"
                   onClick={() => removeDimension(i)}
                 >

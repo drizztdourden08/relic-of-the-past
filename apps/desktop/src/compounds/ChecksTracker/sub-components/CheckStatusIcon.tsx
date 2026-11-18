@@ -1,10 +1,12 @@
 /* @layer renderer-components @kind component */
+import { useT } from '@drizztdourden08/brock-react';
 import { Icon } from '@drizztdourden08/tessera/primitives';
-import { STATUS_LABELS, STATUS_SHAPES } from '../ChecksTracker.constants';
+import { statusLabels, STATUS_SHAPES } from '../ChecksTracker.constants';
 import type { CheckStatusIconProps } from '../ChecksTracker.type';
 import './CheckStatusIcon.css';
 
 const CheckStatusIcon = (props: CheckStatusIconProps) => {
+  const t = useT();
   const { status, size = 12 } = props;
   return (
     <Icon
@@ -12,7 +14,7 @@ const CheckStatusIcon = (props: CheckStatusIconProps) => {
       className={`tracker-status-icon tracker-status-icon--${status}`}
       size={size}
       role="img"
-      aria-label={STATUS_LABELS[status]}
+      aria-label={statusLabels(t)[status]}
     />
   );
 };

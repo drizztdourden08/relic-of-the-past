@@ -6,8 +6,7 @@ import { openSetting } from '@app/settings-nav/open-setting';
 import { DISABLED_SETTING_MESSAGES } from '@app/settings-controls/disabled-setting-messages.constants';
 import { assignmentLabel } from './assignment-label';
 import { CHEAT_ACTION_DEFS, SHORTCUT_ACTION_DEFS, SNES_ACTIONS } from './action-defs.constants';
-import { MODERN_ONLY, VANILLA_ONLY } from './controls-tabs.constants';
-import { CORE_VERB_GROUPS } from './core-verbs.constants';
+import { coreVerbGroups } from './core-verbs.constants';
 import { keyboardSlots } from './keyboard-slots';
 import { SlotsFooter } from './SlotsFooter';
 import { touchTab } from './touch-tab';
@@ -15,14 +14,14 @@ import type { BuildControlsTabsArgs } from './build-controls-tabs.type';
 
 const openCheatsSettings = () => openSetting('cheatsEnabled');
 
-const modernTab = ({ assignments, onChange }: BuildControlsTabsArgs, disabledReason: string | null): ControlsTabDef => ({
+const modernTab = ({ assignments, onChange, t }: BuildControlsTabsArgs, disabledReason: string | null): ControlsTabDef => ({
   id: 'modern',
-  label: 'Modern Controls',
+  label: t('profiles:controls.tabs.modern'),
   kind: 'verbs',
   disabledReason,
-  groups: CORE_VERB_GROUPS,
+  groups: coreVerbGroups(t),
   slots: {
-    assignmentLabel: (index) => assignmentLabel(assignments[index]),
+    assignmentLabel: (index) => assignmentLabel(assignments[index], t),
     onRenumber: (renumber) => onChange({ modernScheme: { assignments: remapAssignments(assignments, renumber) } }),
     keyboardSlots,
     footer: (context) => createElement(SlotsFooter, { context, assignments }),
@@ -30,44 +29,44 @@ const modernTab = ({ assignments, onChange }: BuildControlsTabsArgs, disabledRea
 });
 
 const buildControlsTabs = (args: BuildControlsTabsArgs): readonly ControlsTabDef[] => {
-  const { scheme, experimental, cheatsEnabled, hapticsEnabled, touch, mobile, onChange } = args;
+  const { scheme, experimental, cheatsEnabled, hapticsEnabled, touch, mobile, onChange, t } = args;
   return [
     {
       id: 'controls',
-      label: 'Vanilla Controls',
+      label: t('profiles:controls.tabs.vanilla'),
       kind: 'actions',
       scope: 'profile',
       actions: SNES_ACTIONS,
-      middleLabel: 'SNES',
+      middleLabel: t('profiles:controls.tabs.snes'),
       acceptsDeviceDrop: true,
-      disabledReason: scheme === 'modern' ? VANILLA_ONLY : null,
+      disabledReason: scheme === 'modern' ? t('profiles:controls.tabs.vanilla-only') : null,
     },
-    ...(experimental ? [modernTab(args, scheme === 'classic' ? MODERN_ONLY : null)] : []),
+    ...(experimental ? [modernTab(args, scheme === 'classic' ? t('profiles:controls.tabs.modern-only') : null)] : []),
     {
       id: 'shortcuts',
-      label: 'Shortcuts & Functions',
+      label: t('profiles:controls.tabs.shortcuts'),
       kind: 'actions',
       scope: 'global',
-      title: 'Keyboard Shortcuts',
+      title: t('profiles:controls.tabs.shortcuts-title'),
       actions: SHORTCUT_ACTION_DEFS,
-      reserved: [{ label: 'Open Menu', bindingLabel: 'Esc', glyph: 'kb-escape' }],
+      reserved: [{ label: t('profiles:controls.tabs.open-menu'), bindingLabel: 'Esc', glyph: 'kb-escape' }],
     },
     {
       id: 'cheats',
-      label: 'Cheats',
+      label: t('profiles:controls.tabs.cheats'),
       kind: 'actions',
       scope: 'global',
-      title: 'Cheat Bindings',
+      title: t('profiles:controls.tabs.cheats-title'),
       actions: CHEAT_ACTION_DEFS,
       gate: { active: !cheatsEnabled, message: DISABLED_SETTING_MESSAGES.cheatsEnabled ?? '', onOpenSettings: openCheatsSettings },
     },
     {
       id: 'options',
-      label: 'Options',
+      label: t('profiles:controls.tabs.options'),
       kind: 'options',
       haptics: { enabled: hapticsEnabled, onChange: (enabled) => onChange({ hapticsEnabled: enabled }) },
     },
-    ...(mobile ? [touchTab({ touch, onChange })] : []),
+    ...(mobile ? [touchTab({ touch, onChange }, t)] : []),
   ];
 };
 

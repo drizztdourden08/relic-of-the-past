@@ -1,10 +1,11 @@
 /* @layer renderer-components @kind constants */
+import type { I18n } from '@drizztdourden08/brock-core/i18n';
 import type { ControlsGame } from '@drizztdourden08/brock-input/renderer';
 
-const CONTROLS_LABELS: NonNullable<ControlsGame['labels']> = {
-  verbsHeader: 'Core Verbs',
-  groupHeader: 'Group',
-  slotsHint: 'Add as many slots as your device has controls. What a slot fires is chosen in the pause menu.',
-};
+const controlsLabels = (t: I18n['t']): NonNullable<ControlsGame['labels']> => ({
+  verbsHeader: t('profiles:controls.labels.verbs-header'),
+  groupHeader: t('profiles:controls.labels.group-header'),
+  slotsHint: t('profiles:controls.labels.slots-hint'),
+});
 
-export { CONTROLS_LABELS };
+export { controlsLabels };

@@ -1,4 +1,5 @@
 /* @layer renderer-components @kind constants */
+import type { I18n } from '@drizztdourden08/brock-core/i18n';
 import { CHECK_FACET_DEFS } from '@rotp/game-data';
 import type { ItemFilter, ShowMode } from '@rotp/game-data';
 import type { IconPath, SegmentOption, TagPickerGroup } from '@drizztdourden08/tessera/primitives';
@@ -49,16 +50,16 @@ const CLOSE_PATHS = [
 
 const CLOSED_PANELS: TrackerPanels = { filters: false, groupConfig: false, tags: false };
 
-const SHOW_MODE_OPTIONS: SegmentOption<ShowMode>[] = [
-  { value: 'items', label: 'Items', title: 'The item checks' },
-  { value: 'events', label: 'Events', title: 'Story, dungeon, fairy and area events' },
-  { value: 'both', label: 'Both', title: 'Everything' },
+const showModeOptions = (t: I18n['t']): SegmentOption<ShowMode>[] => [
+  { value: 'items', label: t('compounds:tracker.show.items'), title: t('compounds:tracker.show.items-title') },
+  { value: 'events', label: t('compounds:tracker.show.events'), title: t('compounds:tracker.show.events-title') },
+  { value: 'both', label: t('compounds:tracker.show.both'), title: t('compounds:tracker.show.both-title') },
 ];
 
-const ITEM_FILTER_OPTIONS: SegmentOption<ItemFilter>[] = [
-  { value: 'all', label: 'All' },
-  { value: 'rewards', label: 'Rewards' },
-  { value: 'non-rewards', label: 'Non-rewards' },
+const itemFilterOptions = (t: I18n['t']): SegmentOption<ItemFilter>[] => [
+  { value: 'all', label: t('compounds:tracker.items.all') },
+  { value: 'rewards', label: t('compounds:tracker.items.rewards') },
+  { value: 'non-rewards', label: t('compounds:tracker.items.non-rewards') },
 ];
 
 const TAG_CATEGORIES = ['world', 'location', 'area', 'content'] as const;
@@ -69,19 +70,19 @@ const TAG_GROUPS: TagPickerGroup[] = TAG_CATEGORIES.map((category) => ({
   options: CHECK_FACET_DEFS.filter(t => t.category === category).map(t => ({ value: t.id, label: t.label })),
 }));
 
-const TAG_MODE_OPTIONS: SegmentOption<'any' | 'all'>[] = [
-  { value: 'any', label: 'Any', title: 'Match any active tag' },
-  { value: 'all', label: 'All', title: 'Match every active tag' },
+const tagModeOptions = (t: I18n['t']): SegmentOption<'any' | 'all'>[] => [
+  { value: 'any', label: t('compounds:tracker.tags.any'), title: t('compounds:tracker.tags.any-title') },
+  { value: 'all', label: t('compounds:tracker.tags.all'), title: t('compounds:tracker.tags.all-title') },
 ];
 
 const MAX_DIMENSIONS = 5;
 
-const STATUS_LABELS: Record<StatusKey, string> = {
-  completed: 'Already collected',
-  reachable: 'Reachable right now',
-  blocked: 'Still out of reach',
-  total: 'Every check',
-};
+const statusLabels = (t: I18n['t']): Record<StatusKey, string> => ({
+  completed: t('compounds:tracker.status.completed'),
+  reachable: t('compounds:tracker.status.reachable'),
+  blocked: t('compounds:tracker.status.blocked'),
+  total: t('compounds:tracker.status.total'),
+});
 
 const STATUS_SHAPES: Record<StatusKey, IconPath> = {
   completed: { d: CHECK_PATHS },
@@ -90,17 +91,17 @@ const STATUS_SHAPES: Record<StatusKey, IconPath> = {
   total: { d: STACK_PATHS },
 };
 
-const SUMMARY_STATS: { key: StatusKey; label: string }[] = [
-  { key: 'completed', label: 'taken' },
-  { key: 'reachable', label: 'available' },
-  { key: 'blocked', label: 'left' },
-  { key: 'total', label: 'total' },
+const summaryStats = (t: I18n['t']): { key: StatusKey; label: string }[] => [
+  { key: 'completed', label: t('compounds:tracker.summary.taken') },
+  { key: 'reachable', label: t('compounds:tracker.summary.available') },
+  { key: 'blocked', label: t('compounds:tracker.summary.left') },
+  { key: 'total', label: t('compounds:tracker.summary.total') },
 ];
 
 const EVENT_MARK = './logos/logo/logo-128.png';
 
 export {
-  CLOSED_PANELS, CLOSE_PATHS, EVENT_MARK, FUNNEL_PATHS, GRID_PATHS, ITEM_FILTER_OPTIONS,
-  LIST_DETAIL_PATHS, LIST_PATHS, MAX_DIMENSIONS, NESTED_PATHS, SHOW_MODE_OPTIONS,
-  STATUS_LABELS, STATUS_SHAPES, SUMMARY_STATS, TAG_GROUPS, TAG_MODE_OPTIONS, TAG_PATHS,
+  CLOSED_PANELS, CLOSE_PATHS, EVENT_MARK, FUNNEL_PATHS, GRID_PATHS, itemFilterOptions,
+  LIST_DETAIL_PATHS, LIST_PATHS, MAX_DIMENSIONS, NESTED_PATHS, showModeOptions,
+  statusLabels, STATUS_SHAPES, summaryStats, TAG_GROUPS, tagModeOptions, TAG_PATHS,
 };

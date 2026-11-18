@@ -1,14 +1,13 @@
 /* @layer renderer-components @kind constants */
+import type { I18n } from '@drizztdourden08/brock-core/i18n';
 import type { SelectOption } from '@drizztdourden08/tessera/primitives';
 
-const MODE_OPTIONS: readonly SelectOption[] = [
-  { value: 'vanilla', label: 'Vanilla' },
-  { value: 'vanilla-in-pool', label: 'Vanilla in pool' },
-  { value: 'custom', label: 'Custom' },
+const modeOptions = (t: I18n['t']): readonly SelectOption[] => [
+  { value: 'vanilla', label: t('compounds:capacity.mode.vanilla') },
+  { value: 'vanilla-in-pool', label: t('compounds:capacity.mode.vanilla-in-pool') },
+  { value: 'custom', label: t('compounds:capacity.mode.custom') },
 ];
 
-const WALLET_MODE_OPTIONS: readonly SelectOption[] = MODE_OPTIONS.filter((option) => option.value !== 'vanilla-in-pool');
+const walletModeOptions = (t: I18n['t']): readonly SelectOption[] => modeOptions(t).filter((option) => option.value !== 'vanilla-in-pool');
 
-const STEP_BASE_LABEL = 'of the gain';
-
-export { MODE_OPTIONS, STEP_BASE_LABEL, WALLET_MODE_OPTIONS };
+export { modeOptions, walletModeOptions };

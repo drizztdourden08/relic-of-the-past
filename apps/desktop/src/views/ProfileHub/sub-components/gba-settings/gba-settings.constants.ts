@@ -1,11 +1,10 @@
 /* @layer renderer-components @kind constants */
+import type { I18n } from '@drizztdourden08/brock-core/i18n';
 import { GBA_DIFFERENCES } from '@rotp/features';
 import type { GbaGroup } from '@rotp/features';
 import { buildSchema } from '@drizztdourden08/tessera/data';
 import type { SchemaConfig, TableColumn } from '@drizztdourden08/tessera/data';
 import type { GbaAvailability } from './gba-settings.type';
-
-const EXTRA_DUNGEON_DESCRIPTION = 'Adds the optional post-game dungeon and its overworld entrance. Requires the second cartridge.';
 
 const GBA_GROUP_ORDER: GbaGroup[] = [
   'Extra content',
@@ -20,22 +19,27 @@ const GBA_GROUP_ORDER: GbaGroup[] = [
   'Removed',
 ];
 
-const GBA_SCHEMA_CONFIG: SchemaConfig = {
+const gbaSchemaConfig = (t: I18n['t']): SchemaConfig => ({
   order: ['label', 'group', 'status', 'detail'],
-  labels: { label: 'Feature', group: 'Group', status: 'Status', detail: 'Notes' },
+  labels: {
+    label: t('profiles:gba.column.feature'),
+    group: t('profiles:gba.column.group'),
+    status: t('profiles:gba.column.status'),
+    detail: t('profiles:gba.column.notes'),
+  },
   hidden: ['id'],
   kinds: { label: 'string', detail: 'string' },
   options: {
     group: GBA_GROUP_ORDER,
     status: [
-      { value: 'in-progress', label: 'In progress' },
-      { value: 'not-started', label: 'Not started' },
-      { value: 'excluded', label: 'Excluded' },
+      { value: 'in-progress', label: t('profiles:gba.status.in-progress') },
+      { value: 'not-started', label: t('profiles:gba.status.not-started') },
+      { value: 'excluded', label: t('profiles:gba.status.excluded') },
     ],
   },
-};
+});
 
-const GBA_SCHEMA = buildSchema(GBA_DIFFERENCES, GBA_SCHEMA_CONFIG);
+const gbaSchema = (t: I18n['t']) => buildSchema(GBA_DIFFERENCES, gbaSchemaConfig(t));
 
 const GBA_TABLE_COLUMNS: readonly TableColumn[] = [
   { path: 'label', fit: true },
@@ -44,12 +48,9 @@ const GBA_TABLE_COLUMNS: readonly TableColumn[] = [
   { path: 'detail', grow: true },
 ];
 
-const GBA_COUNT_LABEL = ['difference', 'differences'] as const;
-
-const GBA_SEARCH_PLACEHOLDER = 'Search differences...';
-
+const gbaCountLabel = (t: I18n['t']) => [t('profiles:gba.count.one'), t('profiles:gba.count.other')] as const;
 const NO_SUPPLEMENT: GbaAvailability = { hasSupplement: false, supplementFile: null };
 
 export {
-  EXTRA_DUNGEON_DESCRIPTION, GBA_COUNT_LABEL, GBA_SCHEMA, GBA_SEARCH_PLACEHOLDER, GBA_TABLE_COLUMNS, NO_SUPPLEMENT,
+  GBA_TABLE_COLUMNS, NO_SUPPLEMENT, gbaCountLabel, gbaSchema,
 };

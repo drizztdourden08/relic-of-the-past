@@ -2,14 +2,14 @@
 import { useCallback } from 'react';
 import { Box, Toggle } from '@drizztdourden08/tessera/primitives';
 import { SettingsSection } from '@drizztdourden08/tessera/composites';
-import { SearchAnchor } from '@drizztdourden08/brock-react';
+import { SearchAnchor, useT } from '@drizztdourden08/brock-react';
 import { GbaDifferenceTable } from './GbaDifferenceTable';
 import { useGbaAvailability } from './behavior/useGbaAvailability';
-import { EXTRA_DUNGEON_DESCRIPTION } from './gba-settings.constants';
 import type { GbaSettingsProps } from './gba-settings.type';
 import './GbaSettings.css';
 
 const GbaSettings = ({ settings, onChange }: GbaSettingsProps) => {
+  const t = useT();
   const { hasSupplement } = useGbaAvailability();
 
   const handleExtraDungeonChange = useCallback(
@@ -18,15 +18,15 @@ const GbaSettings = ({ settings, onChange }: GbaSettingsProps) => {
   );
 
   const extraDungeonDescription = hasSupplement
-    ? EXTRA_DUNGEON_DESCRIPTION
-    : `${EXTRA_DUNGEON_DESCRIPTION} Import the second cartridge before this can be turned on.`;
+    ? t('profiles:gba.extra-dungeon.description')
+    : t('profiles:gba.extra-dungeon.description-missing');
 
   return (
     <Box className="gba-settings">
-      <SettingsSection title="Enable">
+      <SettingsSection title={t('profiles:gba.enable')}>
         <SearchAnchor anchor="extraDungeon">
           <Toggle
-            label="Extra Dungeon"
+            label={t('profiles:gba.extra-dungeon.label')}
             description={extraDungeonDescription}
             checked={settings.extraDungeon}
             onChange={handleExtraDungeonChange}
@@ -36,7 +36,7 @@ const GbaSettings = ({ settings, onChange }: GbaSettingsProps) => {
       </SettingsSection>
 
       <SearchAnchor anchor="gba-differences">
-        <SettingsSection title="Advancement tracker">
+        <SettingsSection title={t('profiles:gba.tracker')}>
           <GbaDifferenceTable />
         </SettingsSection>
       </SearchAnchor>

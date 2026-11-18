@@ -1,5 +1,6 @@
 /* @layer renderer-components @kind hook */
 import { useState, useCallback } from 'react';
+import { useT } from '@drizztdourden08/brock-react';
 import * as savesStore from '@app/storage/saves-store';
 import { log } from '../../../../log-bus';
 import { validSramSlots } from '@rotp/game-core';
@@ -9,6 +10,7 @@ import type { UseHomeTabSramImportParams } from './home-tab.type';
 
 const useHomeTabSramImport = (params: UseHomeTabSramImportParams) => {
   const { profileId, filePicker, dialog, setDialog } = params;
+  const t = useT();
   const [importConfirmText, setImportConfirmText] = useState('');
 
   const handleImportSram = useCallback(async () => {
@@ -19,7 +21,7 @@ const useHomeTabSramImport = (params: UseHomeTabSramImportParams) => {
       setDialog({
         type: 'import-sram-invalid',
         targetName: picked.name,
-        detail: `"${picked.name}" is ${picked.bytes.byteLength} bytes. A raw SRAM save is always exactly ${SRAM_BYTES} bytes.`,
+        detail: t('profiles:home.import.wrong-size', { name: picked.name, bytes: picked.bytes.byteLength, expected: SRAM_BYTES }),
       });
       return;
     }
@@ -29,7 +31,7 @@ const useHomeTabSramImport = (params: UseHomeTabSramImportParams) => {
       setDialog({
         type: 'import-sram-invalid',
         targetName: picked.name,
-        detail: `"${picked.name}" is the right size, but none of its 3 save slots pass the game's own checksum, so this isn't a valid save file for the game.`,
+        detail: t('profiles:home.import.bad-checksum', { name: picked.name }),
       });
       return;
     }
@@ -39,9 +41,9 @@ const useHomeTabSramImport = (params: UseHomeTabSramImportParams) => {
       type: 'import-sram',
       targetName: picked.name,
       pendingBytes: picked.bytes,
-      detail: `Verified: ${validSlots.length} of 3 save slot(s) pass the game's checksum.`,
+      detail: t('profiles:home.import.verified', { count: validSlots.length }),
     });
-  }, [filePicker, setDialog]);
+  }, [filePicker, setDialog, t]);
 
   const handleCancelImportSram = useCallback(() => {
     setDialog({ type: null });
@@ -55,8 +57,8 @@ const useHomeTabSramImport = (params: UseHomeTabSramImportParams) => {
     if (!pendingBytes) return;
     await savesStore.writeSram(profileId, pendingBytes.buffer as ArrayBuffer);
     log.app(`Imported SRAM save from "${targetName}". It takes effect next time this profile loads`);
-    toast({ message: `Save imported from "${targetName}"`, variant: 'success', duration: TOAST_DURATION_MS });
-  }, [profileId, dialog, setDialog]);
+    toast({ message: t('profiles:home.import.done', { name: targetName ?? '' }), variant: 'success', duration: TOAST_DURATION_MS });
+  }, [profileId, dialog, setDialog, t]);
 
   return {
     importConfirmText, setImportConfirmText, handleImportSram, handleCancelImportSram, handleConfirmImportSram,

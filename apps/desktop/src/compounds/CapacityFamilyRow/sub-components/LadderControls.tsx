@@ -4,18 +4,20 @@ import { JumpChipsEditor } from '../../JumpChipsEditor';
 import { LadderRange } from './LadderRange';
 import { LadderReadout } from './LadderReadout';
 import { RowLine } from './RowLine';
+import { useT } from '@drizztdourden08/brock-react';
 import { itemsLabel } from '../behavior/items-label';
 import type { CapacityRowState, LadderControlsProps } from '../CapacityFamilyRow.type';
 
 const LadderControls = (props: LadderControlsProps) => {
   const { model, readOnly, readout = false, onChange } = props;
+  const t = useT();
   if (readout) return <LadderReadout model={model} />;
   const { state, span, minCount, maxCount, maxJump, hasCurve, curveOptions, problem } = model;
 
   return (
     <>
       <LadderRange model={model} readOnly={readOnly} onChange={onChange} />
-      <RowLine label="items">
+      <RowLine label={t('compounds:capacity.row.items')}>
         {maxCount > minCount ? (
           <Box className="capacity-row__grow">
             <Slider
@@ -24,12 +26,12 @@ const LadderControls = (props: LadderControlsProps) => {
               max={maxCount}
               step={1}
               disabled={readOnly}
-              formatValue={itemsLabel}
+              formatValue={(count) => itemsLabel(count, t)}
               onChange={(count) => onChange({ count })}
             />
           </Box>
         ) : (
-          <Text className="capacity-row__readout">{itemsLabel(Math.min(minCount, span))}</Text>
+          <Text className="capacity-row__readout">{itemsLabel(Math.min(minCount, span), t)}</Text>
         )}
         {hasCurve ? (
           <Select
@@ -41,11 +43,11 @@ const LadderControls = (props: LadderControlsProps) => {
             onChange={(curve) => onChange({ curve: curve as CapacityRowState['curve'] })}
           />
         ) : (
-          <Text className="capacity-row__aside">one level per item</Text>
+          <Text className="capacity-row__aside">{t('compounds:capacity.one-level')}</Text>
         )}
       </RowLine>
       {hasCurve && state.curve === 'free' && (
-        <RowLine label="jumps">
+        <RowLine label={t('compounds:capacity.row.jumps')}>
           <JumpChipsEditor
             jumps={state.jumps}
             span={span}

@@ -1,4 +1,5 @@
 /* @layer renderer-components @kind component */
+import { useT } from '@drizztdourden08/brock-react';
 import { useCallback, useMemo } from 'react';
 import { Box } from '@drizztdourden08/tessera/primitives';
 import { GroupTree } from '@drizztdourden08/tessera/composites';
@@ -25,6 +26,7 @@ const toggledKeys = (before: readonly string[], after: readonly string[]): strin
 ];
 
 const TrackerGroupTree = (props: TrackerGroupTreeProps) => {
+  const t = useT();
   const { node, statuses, eventStatus, viewMode, run, expandedGroups, onToggleGroup } = props;
 
   const root = useMemo(() => toTreeNode(node), [node]);
@@ -43,7 +45,7 @@ const TrackerGroupTree = (props: TrackerGroupTreeProps) => {
         getItemKey={batchKey}
         renderItem={renderItem}
         showCounts={false}
-        emptyLabel="No checks match."
+        emptyLabel={t('compounds:tracker.tree.empty')}
         expandedKeys={expandedGroups}
         onExpandedChange={expandedGroups === undefined ? undefined : handleExpanded}
       />
