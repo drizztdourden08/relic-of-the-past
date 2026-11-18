@@ -77,7 +77,7 @@ const sections: Section[] = [
         title: 'Text',
         items: [
           { key: 'dialogFont', label: 'Font', description: "Original uses the game's glyphs. Modern uses the app's dialogue font.", keywords: 'dialog font glyph modern original text', control: { kind: 'choice', options: fonts } },
-          { key: 'dialogFontScale', label: 'Font Size', description: 'How large the modern font draws.', keywords: 'dialog font size scale large small text' },
+          { key: 'dialogFontScale', label: 'Font Size', description: 'How large the text draws. Smaller fits more in the box.', keywords: 'dialog font size scale large small text' },
           { key: 'dialogInkColor', label: 'Ink Color', description: 'The colour the modern font is written in.', keywords: 'dialog ink color colour text font' },
           { key: 'dialogStrokeColor', label: 'Stroke Color', description: 'The outline colour around each modern glyph.', keywords: 'dialog stroke outline color colour text font' },
           { key: 'dialogStrokeWidth', label: 'Stroke Width', description: 'How thick the outline is, in game pixels.', keywords: 'dialog stroke outline width thickness text font' },
