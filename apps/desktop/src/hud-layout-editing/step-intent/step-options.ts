@@ -4,7 +4,6 @@ import { previousContainer } from './previous-container';
 import { stepIntent } from './step-intent';
 import type { HudLayout } from '@rotp/hud';
 import type { Translate } from '../translate.type';
-import type { Translate } from '../translate.type';
 import type { StepDirection, StepOption } from './step-intent.type';
 
 const stepOptions = (doc: HudLayout, id: string, t: Translate): StepOption[] => {

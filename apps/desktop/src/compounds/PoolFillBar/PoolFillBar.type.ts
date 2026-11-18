@@ -1,4 +1,5 @@
 /* @layer renderer-components @kind types */
+import type { Text } from '@drizztdourden08/brock-core/i18n';
 import type { StackedBarColor } from '@drizztdourden08/tessera/primitives';
 
 interface PoolFillTotals {
@@ -19,8 +20,8 @@ type Segment = keyof PoolFillTotals;
 
 interface SegmentEntry {
   key: Segment;
-  label: string;
-  description: string;
+  label: Text;
+  description: Text;
   color: StackedBarColor;
 }
 

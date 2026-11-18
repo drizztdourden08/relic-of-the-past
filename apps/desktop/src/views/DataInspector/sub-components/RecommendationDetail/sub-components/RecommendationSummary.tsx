@@ -20,7 +20,7 @@ const RecommendationSummary = (props: RecommendationSummaryProps) => {
         <Text className="rec-summary__claim">
           {t('views-data-inspector:rec.claim', {
             action: text(ACTION_LABEL[entry.action]),
-            kind: text(KIND_SINGULARS[entry.kind]),
+            kind: text(KIND_SINGULARS[entry.kind] ?? entry.kind),
             target: entry.targetId ?? t('views-data-inspector:rec.new-record'),
           })}
         </Text>

@@ -1,4 +1,4 @@
-/* @layer renderer-widgets @kind data */
+/* @layer renderer-widgets @kind constants */
 import type { I18n } from '@drizztdourden08/brock-core/i18n';
 import type { SegmentOption } from '@drizztdourden08/tessera/primitives';
 import type { NavMode } from '../../../stores/navigation-overlay-store';

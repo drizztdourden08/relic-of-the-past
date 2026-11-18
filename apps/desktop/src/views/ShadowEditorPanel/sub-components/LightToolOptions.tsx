@@ -1,7 +1,6 @@
 /* @layer renderer-components @kind component */
 import { useT } from '@drizztdourden08/brock-react';
 import { useShadowEditorStore } from '@app/stores/shadow-editor-store';
-import { useT } from '@drizztdourden08/brock-react';
 import { Box, Slider } from '@drizztdourden08/tessera/primitives';
 
 const LightToolOptions = () => {

@@ -1,11 +1,6 @@
 /* @layer renderer-components @kind constants */
 import { msg } from '@drizztdourden08/brock-core/i18n';
-import type { Message } from '@drizztdourden08/brock-core/i18n';
-
-interface FileColumn {
-  id: string;
-  label: Message | null;
-}
+import type { FileColumn } from './MsuFilePanel.type';
 
 const NO_USES: string[] = [];
 
@@ -21,4 +16,3 @@ const COLUMNS: FileColumn[] = [
 ];
 
 export { COLUMNS, NO_USES };
-export type { FileColumn };

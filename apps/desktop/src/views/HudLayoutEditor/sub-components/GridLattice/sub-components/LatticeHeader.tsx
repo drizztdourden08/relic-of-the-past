@@ -30,7 +30,7 @@ const LatticeHeader = (props: LatticeHeaderProps) => {
           extent={extentOf?.('columns', index)}
           selected={trackOn('columns', index)}
           empty={emptyOn(colSizes, index)}
-          title={headTitle('column', index + 1, trackText(track), emptyOn(colSizes, index), t)}
+          title={headTitle('column', { index: index + 1, text: trackText(track), empty: emptyOn(colSizes, index) }, t)}
           onPointerDown={onTrackDown ? (event) => onTrackDown('columns', index, event) : undefined}
           onSize={onSizeTrack ? (extent) => onSizeTrack('columns', index, extent) : undefined}
         />

@@ -1,4 +1,4 @@
-/* @layer shared-game @kind data */
+/* @layer shared-game @kind constants */
 import { msg } from '@drizztdourden08/brock-core/i18n';
 import { DEFAULT_STORY_GATES as D } from './story-gates.constants';
 import { STORY_GATE_KEY as K } from './story-gate-option-keys/story-gate-option-keys.constants';

@@ -7,28 +7,30 @@ import { outlineIntent } from '@app/hud-layout-editing/drop-intent';
 import { DOC } from './ghost-doc.constants';
 import { childrenOf, gridOf } from '../hud-node-guards';
 import { required } from '@rotp/asset-extraction/testing';
+import { i18n } from '../test-i18n';
+const { t } = i18n;
 
 describe('line 1 states the KIND, in §42\'s vocabulary and no other', { tags: ['critical'] }, () => {
   it('says row, column, grid n×m, overlap and screen but never stack', () => {
     const kind = (id: string): string => {
       const found = [DOC.screen, ...DOC.screen.children].find((n) => n.id === id);
-      return containerKind(found ?? null, id === 'screen');
+      return containerKind(found ?? null, id === 'screen', t);
     };
     expect(kind('hud')).toBe('column');
     expect(kind('badge')).toBe('grid 3×2');
     expect(kind('overlay')).toBe('overlap');
     expect(kind('screen')).toBe('screen');
     const hearts = required(childrenOf(DOC.screen.children[0], 'the hud column')[0], 'the hearts row');
-    expect(containerKind(hearts, false)).toBe('row');
+    expect(containerKind(hearts, false, t)).toBe('row');
     const badge = gridOf(DOC.screen.children[1], 'the badge');
     const single = { ...badge, children: [required(badge.children[0], 'the first badge child')] };
-    expect(containerKind(single, false)).toBe('grid 3×1');
+    expect(containerKind(single, false, t)).toBe('grid 3×1');
   });
 });
 
 describe('the four states', { tags: ['critical'] }, () => {
   it('FLEX names a position among the children it would have', () => {
-    const ghost = ghostFor(DOC, ['magic-bar'], { kind: 'flex', parentId: 'hud', index: 1 });
+    const ghost = ghostFor(DOC, ['magic-bar'], { kind: 'flex', parentId: 'hud', index: 1 }, t);
     expect(ghost).toMatchObject({ tone: 'move', chip: 'magic-bar', kind: 'into column' });
     expect(ghost.position).toBe('position 2 of 2');
     expect(ghost.path).toBe('screen › hud');
@@ -37,7 +39,7 @@ describe('the four states', { tags: ['critical'] }, () => {
   it('an empty GRID cell names the cell and the word `empty`', () => {
     const ghost = ghostFor(DOC, ['hearts'], {
       kind: 'grid', parentId: 'screen', place: { column: 3, row: 1 }, onto: null,
-    });
+    }, t);
     expect(ghost.kind).toBe('into screen');
     expect(ghost.position).toBe('cell 3,1 · empty');
     expect(ghost.path).toBe('screen');
@@ -46,14 +48,14 @@ describe('the four states', { tags: ['critical'] }, () => {
   it('a co-placed GRID cell says `with`, which is the whole difference', () => {
     const ghost = ghostFor(DOC, ['glyph'], {
       kind: 'grid', parentId: 'badge', place: { column: 1, row: 1 }, onto: 'life_pip',
-    });
+    }, t);
     expect(ghost.position).toBe('cell 1,1 · with life_pip');
     expect(ghost.tone).toBe('move');
   });
 
   it('REFUSED turns the whole card, and line 2 names BOTH nodes', () => {
     const intent = outlineIntent(DOC, 'pip1', 'inside-start', ['hearts']);
-    const ghost = ghostFor(DOC, ['hearts'], intent);
+    const ghost = ghostFor(DOC, ['hearts'], intent, t);
     expect(ghost.tone).toBe('refused');
     expect(ghost.kind).toBe('refused');
     expect(ghost.position).toContain('hearts');
@@ -65,7 +67,7 @@ describe('the four states', { tags: ['critical'] }, () => {
 
 describe('line 3 carries the one thing no other surface says', { tags: ['critical'] }, () => {
   it('warns that the drop lands in a template drawn N times', () => {
-    const ghost = ghostFor(DOC, ['magic-bar'], { kind: 'flex', parentId: 'heart', index: 0 });
+    const ghost = ghostFor(DOC, ['magic-bar'], { kind: 'flex', parentId: 'heart', index: 0 }, t);
     expect(ghost.path).toBe('inside repeat ×8');
     expect(ghost.warn).toBe(true);
   });

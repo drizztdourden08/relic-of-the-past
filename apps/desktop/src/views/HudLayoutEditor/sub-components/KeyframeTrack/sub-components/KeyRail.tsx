@@ -54,9 +54,7 @@ const KeyRail = (props: KeyRailProps) => {
         ref={railRef}
         className="hud-kftrack__rail"
         onPointerDown={(event) => { if (draggingRef.current === null) onAdd(atOf(event.clientX)); }}
-        onPointerMove={drag}
-        onPointerUp={endDrag}
-        onPointerCancel={endDrag}
+        onPointerMove={drag} onPointerUp={endDrag} onPointerCancel={endDrag}
       >
         <Box className="hud-kftrack__line" />
         {head !== null && <Box className="hud-kftrack__head" style={{ left: pct(head) }} />}

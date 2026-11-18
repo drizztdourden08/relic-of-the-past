@@ -4,6 +4,8 @@ import { compileExpr, validateValue } from '@rotp/hud';
 import { explainExprError, explainUnknownName } from '@app/hud-layout-editing/expr-errors';
 import { readExpr } from '@app/hud-layout-editing/check-expr';
 import { isFormulaText, stepsAsNumber, textOf, valueOf } from '@app/hud-layout-editing/value-text';
+import { i18n } from '../test-i18n';
+const { text } = i18n;
 
 const raw = (source: string): string => {
   const compiled = compileExpr(source);
@@ -11,7 +13,7 @@ const raw = (source: string): string => {
   return compiled.message;
 };
 
-const said = (source: string): string => explainExprError(source, raw(source)).message;
+const said = (source: string): string => text(explainExprError(source, raw(source)).message);
 
 describe('the leading = discriminates, and is never stored', { tags: ['critical'] }, () => {
   it('keeps a bare numeral a number and a marked one an expression', () => {

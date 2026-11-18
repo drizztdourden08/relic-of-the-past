@@ -1,16 +1,13 @@
 /* @layer renderer-components @kind constants */
+import { msg } from '@drizztdourden08/brock-core/i18n';
 import type { SegmentEntry } from './PoolFillBar.type';
 
 const SEGMENTS: readonly SegmentEntry[] = [
-  { key: 'items', color: 'secondary', label: 'items in pool', description: 'Items the shuffle places that are neither a capacity upgrade nor filler' },
-  { key: 'upgrades', color: 'violet', label: 'upgrades', description: "Capacity upgrade items, each in a filler's place" },
-  { key: 'filler', color: 'warning', label: 'filler', description: 'Balance filler still in the pool' },
-  { key: 'fixed', color: 'danger', label: 'fixed', description: 'Spots settled before the shuffle' },
-  { key: 'prizes', color: 'info', label: 'prizes', description: 'The ten boss-reward slots, pre-placed from their own fixed pool' },
+  { key: 'items', color: 'secondary', label: msg('compounds:pool-fill-bar.items.label'), description: msg('compounds:pool-fill-bar.items.description') },
+  { key: 'upgrades', color: 'violet', label: msg('compounds:pool-fill-bar.upgrades.label'), description: msg('compounds:pool-fill-bar.upgrades.description') },
+  { key: 'filler', color: 'warning', label: msg('compounds:pool-fill-bar.filler.label'), description: msg('compounds:pool-fill-bar.filler.description') },
+  { key: 'fixed', color: 'danger', label: msg('compounds:pool-fill-bar.fixed.label'), description: msg('compounds:pool-fill-bar.fixed.description') },
+  { key: 'prizes', color: 'info', label: msg('compounds:pool-fill-bar.prizes.label'), description: msg('compounds:pool-fill-bar.prizes.description') },
 ];
 
-const TOTAL_TITLE = 'Every location this seed generates';
-
-const BAR_LABEL = 'Item pool';
-
-export { BAR_LABEL, SEGMENTS, TOTAL_TITLE };
+export { SEGMENTS };

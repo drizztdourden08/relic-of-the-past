@@ -27,13 +27,13 @@ const useControlsGame = ({ settings, onChange }: UseControlsArgs): ControlsGame 
   const assignments = settings.modernScheme.assignments;
 
   return useMemo(() => ({
-    tabs: buildControlsTabs({ scheme, experimental, cheatsEnabled, hapticsEnabled, touch, mobile, assignments, onChange, cheatsOffMessage, t }),
+    tabs: buildControlsTabs({ scheme, experimental, cheatsEnabled, hapticsEnabled, touch, mobile, assignments, onChange, cheatsOffMessage, t, text }),
     verbs: coreVerbDefs(t),
     labels: controlsLabels(t),
     keyboardDefaults: KEYBOARD_DEFAULTS,
     defaultBindings: presetBindings,
     decoratePreset: decoratePreset(scheme),
-    listenerExtra: mobile ? touchListenerExtra(t) : undefined,
+    listenerExtra: mobile ? touchListenerExtra(t, text) : undefined,
     listenerFullscreen: mobile ? touchListenerFullscreen : undefined,
     extraDevices: mobile ? touchExtraDevices(t) : undefined,
   }), [scheme, experimental, cheatsEnabled, hapticsEnabled, touch, mobile, assignments, onChange, cheatsOffMessage, t]);

@@ -1,7 +1,6 @@
 /* @layer renderer-components @kind component */
 import { useT } from '@drizztdourden08/brock-react';
 import { Box, Icon, IconButton, TextInput, NumberInput } from '@drizztdourden08/tessera/primitives';
-import { useT } from '@drizztdourden08/brock-react';
 import { HeightSwatch } from './HeightSwatch';
 import type { HeightLevelRowProps } from './HeightLevelRow.type';
 

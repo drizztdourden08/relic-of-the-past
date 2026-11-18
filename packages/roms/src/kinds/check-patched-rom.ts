@@ -2,11 +2,10 @@
 import {
   DOUBLE_HEADER_LENGTH, PATCHED_ROM_MAX_BYTES, PATCHED_ROM_MIN_BYTES, SMC_HEADER_BYTES, stripSmcHeader,
 } from '@rotp/asset-extraction';
+import { MEGABYTE } from './check-patched-rom.constants';
 import { romBodyOf } from './rom-body-of';
 import { sha1Hex } from './sha1-hex';
 import type { RomVerdict } from './rom-verdict.type';
-
-const MEGABYTE = 1024 * 1024;
 
 const checkPatchedRom = async (fileName: string, bytes: Uint8Array): Promise<RomVerdict> => {
   const body = await romBodyOf(fileName, bytes);

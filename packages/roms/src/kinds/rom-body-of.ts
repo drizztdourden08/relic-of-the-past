@@ -1,8 +1,7 @@
 /* @layer shared-storage @kind logic */
 import { isZip, unzip } from '../archive';
 import { kindOfFile } from './kind-of-file';
-
-const UNREADABLE_ARCHIVE = /\.(7z|rar)$/i;
+import { UNREADABLE_ARCHIVE } from './rom-body-of.constants';
 
 const romBodyOf = async (fileName: string, bytes: Uint8Array): Promise<Uint8Array | null | 'archive'> => {
   if (UNREADABLE_ARCHIVE.test(fileName)) return 'archive';

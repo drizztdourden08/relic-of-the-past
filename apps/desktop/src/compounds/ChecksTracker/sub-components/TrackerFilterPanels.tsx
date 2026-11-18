@@ -10,10 +10,7 @@ import './TrackerFilterPanels.css';
 
 const TrackerFilterPanels = (props: TrackerFilterPanelsProps) => {
   const t = useT();
-  const {
-    filter, onFilterChange, grouping, onGroupingChange, showTagFilter, showGroupConfig,
-    dimensions = GROUP_DIMENSIONS,
-  } = props;
+  const { filter, onFilterChange, grouping, onGroupingChange, showTagFilter, showGroupConfig, dimensions = GROUP_DIMENSIONS } = props;
 
   const setFacets = useCallback((activeFacets: string[]) => {
     onFilterChange({ ...filter, activeFacets });
@@ -23,9 +20,7 @@ const TrackerFilterPanels = (props: TrackerFilterPanelsProps) => {
     if (grouping.length < MAX_DIMENSIONS && !grouping.includes(dim)) onGroupingChange([...grouping, dim]);
   }, [grouping, onGroupingChange]);
 
-  const removeDimension = useCallback((idx: number) => {
-    onGroupingChange(grouping.filter((_, i) => i !== idx));
-  }, [grouping, onGroupingChange]);
+  const removeDimension = useCallback((idx: number) => onGroupingChange(grouping.filter((_, i) => i !== idx)), [grouping, onGroupingChange]);
 
   const unused = useMemo(() => dimensions.filter(d => !grouping.includes(d.id)), [dimensions, grouping]);
 

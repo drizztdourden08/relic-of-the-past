@@ -29,7 +29,7 @@ const InstanceStrip = (props: InstanceStripProps) => {
         ))}
       </Box>
       <Text className="hud-instance-strip__read">
-        {summarise(values, t)}{over > 0 ? ` · ${t('hud-editor:instance-strip.first', { shown: MAX_CELLS, total: instances.length })}` : ''}
+        {over > 0 ? t('hud-editor:instance-strip.read-first', { summary: summarise(values, t), shown: MAX_CELLS, total: instances.length }) : summarise(values, t)}
       </Text>
     </Box>
   );

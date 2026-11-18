@@ -11,7 +11,6 @@ import type { OutlineKeys, OutlineKeysInput } from './outline-keys.type';
 
 const useOutlineKeys = (input: OutlineKeysInput): OutlineKeys => {
   const t = useT();
-  const t = useT();
   const { doc, onDrop } = input;
   const os = usePlatform().info.os;
   const [message, setMessage] = useState('');

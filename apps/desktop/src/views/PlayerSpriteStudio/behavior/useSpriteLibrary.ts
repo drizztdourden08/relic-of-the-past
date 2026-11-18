@@ -1,5 +1,5 @@
 /* @layer renderer-hooks @kind logic */
-import { useT } from '@drizztdourden08/brock-react';
+import { useT, useText } from '@drizztdourden08/brock-react';
 import { useState, useEffect, useCallback } from 'react';
 import { listLinkSprites, importLinkSprite } from '@app/storage/link-sprites-store';
 import { spriteStem, renderThumbnail, isRspName } from '@rotp/packs';
@@ -11,6 +11,7 @@ import type { LibraryEntry } from '../PlayerSpriteStudio.type';
 
 const useSpriteLibrary = () => {
   const t = useT();
+  const text = useText();
   const [entries, setEntries] = useState<LibraryEntry[]>([]);
   const [stockPreview, setStockPreview] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
@@ -42,20 +43,20 @@ const useSpriteLibrary = () => {
     for (const file of fileList) {
       const bytes = new Uint8Array(await file.arrayBuffer());
       const result = await importLinkSprite(file.name, bytes);
-      if (!result.success) return { success: false, message: result.error ?? t('views-player-sprite-studio:import.failed') };
+      if (!result.success) return { success: false, message: result.error === undefined ? t('views-player-sprite-studio:import.failed') : text(result.error) };
       lastName = result.name ?? file.name;
       last = spriteStem(lastName);
     }
     await refresh();
     return { success: true, message: t('views-player-sprite-studio:import.done', { name: last }), name: lastName };
-  }, [refresh, t]);
+  }, [refresh, t, text]);
 
   const importBytes = useCallback(async (name: string, bytes: Uint8Array) => {
     const result = await importLinkSprite(name, bytes);
-    if (!result.success) return { success: false, message: result.error ?? t('views-player-sprite-studio:import.failed') };
+    if (!result.success) return { success: false, message: result.error === undefined ? t('views-player-sprite-studio:import.failed') : text(result.error) };
     await refresh();
     return { success: true, message: t('views-player-sprite-studio:import.done', { name: spriteStem(result.name ?? name) }), name: result.name ?? name };
-  }, [refresh, t]);
+  }, [refresh, t, text]);
 
   const remove = useCallback(async (name: string) => {
     await deleteSprite(name);

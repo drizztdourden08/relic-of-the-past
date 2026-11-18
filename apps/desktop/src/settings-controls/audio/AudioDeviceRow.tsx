@@ -14,7 +14,7 @@ const AudioDeviceRow = (props: AudioDeviceRowProps) => {
   const { title, hint } = useSettingItemText(settingKey);
   const text = useText();
   const pack = useActiveMsuPack();
-  const { input, description } = deviceRowLook(settingKey, settings, resolveAudioConfig(settings, pack), onChange, text);
+  const { input, description } = deviceRowLook(settingKey, { settings, resolved: resolveAudioConfig(settings, pack), onChange }, text);
   const mismatch = settingKey === 'audioFreq' ? detectMsuMismatch(settings) : null;
   return (
     <Stack gap="xs">

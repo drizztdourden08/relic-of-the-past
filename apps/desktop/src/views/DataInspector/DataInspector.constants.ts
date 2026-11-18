@@ -1,4 +1,4 @@
-/* @layer renderer-app @kind data */
+/* @layer renderer-app @kind constants */
 import type { IconifyIcon as IconData } from '@iconify/react/offline';
 import mapIcon from '@iconify-icons/lucide/map';
 import linkIcon from '@iconify-icons/lucide/link';

@@ -19,7 +19,6 @@ import { useT } from '@drizztdourden08/brock-react';
 
 const OutlinePanel = (props: OutlinePanelProps) => {
   const t = useT();
-  const t = useT();
   const { doc, selectedId, slotNumbers, onSelect, onRemove, onDrop } = props;
   const rowsRef = useRef<HTMLDivElement>(null);
   const [menuId, setMenuId] = useState<string | null>(null);

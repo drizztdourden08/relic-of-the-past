@@ -6,7 +6,6 @@ import { useT } from '@drizztdourden08/brock-react';
 
 const CaseBranch = (props: CaseBranchProps) => {
   const t = useT();
-  const t = useT();
   const { node, label, glyphPacks, onSelectNode } = props;
   const art = nodeArtOf(node, glyphPacks, t);
 

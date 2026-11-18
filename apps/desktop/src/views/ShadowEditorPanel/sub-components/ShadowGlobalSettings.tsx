@@ -1,11 +1,8 @@
 /* @layer renderer-components @kind component */
 import { useT } from '@drizztdourden08/brock-react';
 import { SettingsSection } from '@drizztdourden08/tessera/composites';
-import { useT } from '@drizztdourden08/brock-react';
 import { AtmosphereSection } from './AtmosphereSection';
-import { useT } from '@drizztdourden08/brock-react';
 import { HeightLevelEditor } from './HeightLevelEditor';
-import { useT } from '@drizztdourden08/brock-react';
 import { SunSection } from './SunSection';
 import type { ShadowGlobalSettingsProps } from './ShadowGlobalSettings.type';
 

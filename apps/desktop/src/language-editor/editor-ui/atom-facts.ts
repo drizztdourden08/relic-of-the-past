@@ -21,12 +21,10 @@ const valueOf = (attrs: DialogueTokenAttrs): number | null => {
 const labelOf = (attrs: DialogueTokenAttrs, name: string | null, info: CodeInfo | null): string =>
   attrs.kind === 'ref' ? (attrs.key ?? '') : (info?.label ?? name ?? '');
 
-const descriptionOf = (t: I18n['t'], attrs: DialogueTokenAttrs, label: string, info: CodeInfo | null): string =>
-  attrs.kind === 'ref'
-    ? t('language-editor:atom.glossary-term', { label })
-    : info?.description
-      ? t('language-editor:atom.described', { label, description: info.description })
-      : label;
+const descriptionOf = (t: I18n['t'], attrs: DialogueTokenAttrs, label: string, info: CodeInfo | null): string => {
+  if (attrs.kind === 'ref') return t('language-editor:atom.glossary-term', { label });
+  return info?.description ? t('language-editor:atom.described', { label, description: info.description }) : label;
+};
 
 const atomFactsOf = (t: I18n['t'], attrs: DialogueTokenAttrs): AtomFacts => {
   const name = codeNameOf(attrs);

@@ -16,6 +16,5 @@ const APP_LANGUAGES: readonly AppLanguageChoice[] = [
 
 const DEFAULT_APP_LANGUAGE = 'en';
 const APP_LANGUAGE_FILE = 'app-language.json';
-const APP_LANGUAGE_CHANNEL = 'app:language:set';
 
-export { APP_LANGUAGE_CHANNEL, APP_LANGUAGE_FILE, APP_LANGUAGES, DEFAULT_APP_LANGUAGE };
+export { APP_LANGUAGE_FILE, APP_LANGUAGES, DEFAULT_APP_LANGUAGE };

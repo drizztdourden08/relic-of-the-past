@@ -12,7 +12,10 @@ const bufferToStep = (value: number): number => {
 
 const stepToBuffer = (step: number): number => BUFFER_STEPS[step] ?? DEFAULT_BUFFER_SIZE;
 
-const deviceRowLook = (key: DeviceKey, settings: GameSettings, resolved: ResolvedAudioConfig, onChange: SettingsPatch, text: TextOf): DeviceRowLook => {
+const deviceRowLook = (
+  key: DeviceKey, scope: { settings: GameSettings; resolved: ResolvedAudioConfig; onChange: SettingsPatch }, text: TextOf,
+): DeviceRowLook => {
+  const { settings, resolved, onChange } = scope;
   const description = text(DEVICE_DESCRIPTIONS[key][settings.msuConfigMode === 'auto' ? 'auto' : 'manual']);
   switch (key) {
     case 'audioFreq':

@@ -52,8 +52,7 @@ const LayerFileList = (props: LayerFileListProps) => {
               options={options}
               placeholder={options.length > 0 ? t('msu-studio:layers.files.add-placeholder') : t('msu-studio:layers.files.none-available')}
               disabled={disabled || options.length === 0}
-              searchable
-              size="sm"
+              searchable size="sm"
               onChange={setPicked}
             />
           </Box>

@@ -13,7 +13,10 @@ const rotpLocaleSource: LocaleSource = {
     tellMainLanguage(tag);
     return tag;
   },
-  set: async (pref) => useAppLanguageStore.getState().setLanguage(pref),
+  set: (pref) => {
+    useAppLanguageStore.getState().setLanguage(pref);
+    return Promise.resolve();
+  },
   subscribe: (listener) => {
     let last = effectiveAppLanguage();
     const notify = (): void => {

@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind component */
-import { useT } from '@drizztdourden08/brock-react';
+import { useT, useText } from '@drizztdourden08/brock-react';
 import { useState } from 'react';
 import { Box, SegmentedControl, Stack, Text } from '@drizztdourden08/tessera/primitives';
 import { buildOptionFactGroups } from './build-option-facts';
@@ -12,8 +12,9 @@ import type { ProfileRandomizerTabProps } from './profile-detail.type';
 
 const ProfileRandomizerTab = ({ randomizer }: ProfileRandomizerTabProps) => {
   const t = useT();
+  const text = useText();
   const [scope, setScope] = useState<OptionScope>('changed');
-  const groups = buildOptionFactGroups(randomizer.options, scope);
+  const groups = buildOptionFactGroups(randomizer.options, t, text, scope);
   const changed = changedOptions(randomizer.options).length;
 
   return (

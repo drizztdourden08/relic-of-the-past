@@ -7,7 +7,6 @@ import { useT } from '@drizztdourden08/brock-react';
 
 const ButtonStateRow = (props: ButtonStateRowProps) => {
   const t = useT();
-  const t = useT();
   const { state, required, face, glyphPacks, onChange } = props;
   const art = faceArtOf(face, glyphPacks, t);
 

@@ -1,4 +1,5 @@
-/* @layer shared-game @kind data */
+/* @layer shared-game @kind constants */
+import { msg } from '@drizztdourden08/brock-core/i18n';
 import type { Message } from '@drizztdourden08/brock-core/i18n';
 import type { CurveId } from '../capacity-profile.type';
 

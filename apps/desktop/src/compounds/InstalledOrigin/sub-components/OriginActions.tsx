@@ -25,7 +25,7 @@ const OriginActions = (props: OriginActionsProps) => {
       {copyRefusal !== null && <Text as="span" className="installed-origin__refusal">{copyRefusal}</Text>}
       {updateTo !== null && (
         <Button variant="primary" size="sm" icon={<IconifyIcon icon={refreshIcon} />} disabled={busy} onClick={onUpdate}>
-          {`Update to v${updateTo}`}
+          {t('compounds:installed-origin.update-to', { version: updateTo })}
         </Button>
       )}
       <Box className="installed-origin__spacer" />

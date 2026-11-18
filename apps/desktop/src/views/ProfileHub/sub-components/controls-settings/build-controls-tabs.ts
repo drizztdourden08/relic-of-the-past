@@ -4,7 +4,9 @@ import type { ControlsTabDef } from '@drizztdourden08/brock-input/renderer';
 import { remapAssignments } from '@rotp/input-mapping';
 import { openSetting } from '@app/settings-nav/open-setting';
 import { assignmentLabel } from './assignment-label';
-import { CHEAT_ACTION_DEFS, SHORTCUT_ACTION_DEFS, SNES_ACTIONS } from './action-defs.constants';
+import { SNES_ACTIONS } from './action-defs.constants';
+import { cheatActionDefs } from './cheat-action-defs';
+import { shortcutActionDefs } from './shortcut-action-defs';
 import { coreVerbGroups } from './core-verbs.constants';
 import { keyboardSlots } from './keyboard-slots';
 import { SlotsFooter } from './SlotsFooter';
@@ -28,7 +30,7 @@ const modernTab = ({ assignments, onChange, t }: BuildControlsTabsArgs, disabled
 });
 
 const buildControlsTabs = (args: BuildControlsTabsArgs): readonly ControlsTabDef[] => {
-  const { scheme, experimental, cheatsEnabled, hapticsEnabled, touch, mobile, onChange, cheatsOffMessage, t } = args;
+  const { scheme, experimental, cheatsEnabled, hapticsEnabled, touch, mobile, onChange, cheatsOffMessage, t, text } = args;
   return [
     {
       id: 'controls',
@@ -47,7 +49,7 @@ const buildControlsTabs = (args: BuildControlsTabsArgs): readonly ControlsTabDef
       kind: 'actions',
       scope: 'global',
       title: t('profiles:controls.tabs.shortcuts-title'),
-      actions: SHORTCUT_ACTION_DEFS,
+      actions: shortcutActionDefs(text),
       reserved: [{ label: t('profiles:controls.tabs.open-menu'), bindingLabel: 'Esc', glyph: 'kb-escape' }],
     },
     {
@@ -56,7 +58,7 @@ const buildControlsTabs = (args: BuildControlsTabsArgs): readonly ControlsTabDef
       kind: 'actions',
       scope: 'global',
       title: t('profiles:controls.tabs.cheats-title'),
-      actions: CHEAT_ACTION_DEFS,
+      actions: cheatActionDefs(text),
       gate: { active: !cheatsEnabled, message: cheatsOffMessage, onOpenSettings: openCheatsSettings },
     },
     {

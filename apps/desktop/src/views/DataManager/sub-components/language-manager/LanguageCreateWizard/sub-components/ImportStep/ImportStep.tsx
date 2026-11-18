@@ -15,7 +15,7 @@ const ImportStep = ({ wizard, sets, progress, patched }: ImportStepProps) => {
   return (
     <Stack gap="md">
       <WizardReview
-        sections={reviewSections(wizard.values, sets)}
+        sections={reviewSections(wizard.values, sets, t)}
         disabled={busy || done}
         onEdit={(stepId) => wizard.goTo(stepId)}
       />

@@ -2,9 +2,99 @@
 import type { AppLocales } from '@drizztdourden08/brock-react';
 import type { Layer } from '@drizztdourden08/brock-core/i18n';
 import app_en_common from '../src/locales/en/common.json';
+import app_en_compounds from '../src/locales/en/compounds.json';
+import app_en_data_manager from '../src/locales/en/data-manager.json';
+import app_en_errors from '../src/locales/en/errors.json';
+import app_en_features from '../src/locales/en/features.json';
+import app_en_hud_editing from '../src/locales/en/hud-editing.json';
+import app_en_hud_editor from '../src/locales/en/hud-editor.json';
+import app_en_language_editor from '../src/locales/en/language-editor.json';
+import app_en_msu_studio from '../src/locales/en/msu-studio.json';
+import app_en_profiles from '../src/locales/en/profiles.json';
+import app_en_randomizer from '../src/locales/en/randomizer.json';
+import app_en_settings_audio from '../src/locales/en/settings-audio.json';
+import app_en_settings_bugfixes from '../src/locales/en/settings-bugfixes.json';
+import app_en_settings_camera from '../src/locales/en/settings-camera.json';
+import app_en_settings_contributing from '../src/locales/en/settings-contributing.json';
+import app_en_settings_controls from '../src/locales/en/settings-controls.json';
+import app_en_settings_gameplay from '../src/locales/en/settings-gameplay.json';
+import app_en_settings_graphics from '../src/locales/en/settings-graphics.json';
+import app_en_settings_haptics from '../src/locales/en/settings-haptics.json';
+import app_en_settings_hud from '../src/locales/en/settings-hud.json';
+import app_en_settings_mobile from '../src/locales/en/settings-mobile.json';
+import app_en_settings_online from '../src/locales/en/settings-online.json';
+import app_en_settings_picture from '../src/locales/en/settings-picture.json';
+import app_en_settings_window from '../src/locales/en/settings-window.json';
+import app_en_views_bug_report_recordings from '../src/locales/en/views-bug-report-recordings.json';
+import app_en_views_cheats from '../src/locales/en/views-cheats.json';
+import app_en_views_checks from '../src/locales/en/views-checks.json';
+import app_en_views_data_home from '../src/locales/en/views-data-home.json';
+import app_en_views_data_inspector from '../src/locales/en/views-data-inspector.json';
+import app_en_views_debug from '../src/locales/en/views-debug.json';
+import app_en_views_game_layer from '../src/locales/en/views-game-layer.json';
+import app_en_views_game_session from '../src/locales/en/views-game-session.json';
+import app_en_views_input_tester from '../src/locales/en/views-input-tester.json';
+import app_en_views_live_data_inspector from '../src/locales/en/views-live-data-inspector.json';
+import app_en_views_mobile_shell from '../src/locales/en/views-mobile-shell.json';
+import app_en_views_music from '../src/locales/en/views-music.json';
+import app_en_views_navigation from '../src/locales/en/views-navigation.json';
+import app_en_views_player_sprite_studio from '../src/locales/en/views-player-sprite-studio.json';
+import app_en_views_randomizer from '../src/locales/en/views-randomizer.json';
+import app_en_views_shadow_editor from '../src/locales/en/views-shadow-editor.json';
+import app_en_views_simulator from '../src/locales/en/views-simulator.json';
+import app_en_views_sprite_debug from '../src/locales/en/views-sprite-debug.json';
+import app_en_views_store from '../src/locales/en/views-store.json';
+import app_en_views_touch_controls from '../src/locales/en/views-touch-controls.json';
+import app_en_widgets from '../src/locales/en/widgets.json';
+import app_en_wizards from '../src/locales/en/wizards.json';
 
 const baseLayers: readonly Layer[] = [
   { locale: 'en', namespace: 'common', kind: 'app', messages: app_en_common },
+  { locale: 'en', namespace: 'compounds', kind: 'app', messages: app_en_compounds },
+  { locale: 'en', namespace: 'data-manager', kind: 'app', messages: app_en_data_manager },
+  { locale: 'en', namespace: 'errors', kind: 'app', messages: app_en_errors },
+  { locale: 'en', namespace: 'features', kind: 'app', messages: app_en_features },
+  { locale: 'en', namespace: 'hud-editing', kind: 'app', messages: app_en_hud_editing },
+  { locale: 'en', namespace: 'hud-editor', kind: 'app', messages: app_en_hud_editor },
+  { locale: 'en', namespace: 'language-editor', kind: 'app', messages: app_en_language_editor },
+  { locale: 'en', namespace: 'msu-studio', kind: 'app', messages: app_en_msu_studio },
+  { locale: 'en', namespace: 'profiles', kind: 'app', messages: app_en_profiles },
+  { locale: 'en', namespace: 'randomizer', kind: 'app', messages: app_en_randomizer },
+  { locale: 'en', namespace: 'settings-audio', kind: 'app', messages: app_en_settings_audio },
+  { locale: 'en', namespace: 'settings-bugfixes', kind: 'app', messages: app_en_settings_bugfixes },
+  { locale: 'en', namespace: 'settings-camera', kind: 'app', messages: app_en_settings_camera },
+  { locale: 'en', namespace: 'settings-contributing', kind: 'app', messages: app_en_settings_contributing },
+  { locale: 'en', namespace: 'settings-controls', kind: 'app', messages: app_en_settings_controls },
+  { locale: 'en', namespace: 'settings-gameplay', kind: 'app', messages: app_en_settings_gameplay },
+  { locale: 'en', namespace: 'settings-graphics', kind: 'app', messages: app_en_settings_graphics },
+  { locale: 'en', namespace: 'settings-haptics', kind: 'app', messages: app_en_settings_haptics },
+  { locale: 'en', namespace: 'settings-hud', kind: 'app', messages: app_en_settings_hud },
+  { locale: 'en', namespace: 'settings-mobile', kind: 'app', messages: app_en_settings_mobile },
+  { locale: 'en', namespace: 'settings-online', kind: 'app', messages: app_en_settings_online },
+  { locale: 'en', namespace: 'settings-picture', kind: 'app', messages: app_en_settings_picture },
+  { locale: 'en', namespace: 'settings-window', kind: 'app', messages: app_en_settings_window },
+  { locale: 'en', namespace: 'views-bug-report-recordings', kind: 'app', messages: app_en_views_bug_report_recordings },
+  { locale: 'en', namespace: 'views-cheats', kind: 'app', messages: app_en_views_cheats },
+  { locale: 'en', namespace: 'views-checks', kind: 'app', messages: app_en_views_checks },
+  { locale: 'en', namespace: 'views-data-home', kind: 'app', messages: app_en_views_data_home },
+  { locale: 'en', namespace: 'views-data-inspector', kind: 'app', messages: app_en_views_data_inspector },
+  { locale: 'en', namespace: 'views-debug', kind: 'app', messages: app_en_views_debug },
+  { locale: 'en', namespace: 'views-game-layer', kind: 'app', messages: app_en_views_game_layer },
+  { locale: 'en', namespace: 'views-game-session', kind: 'app', messages: app_en_views_game_session },
+  { locale: 'en', namespace: 'views-input-tester', kind: 'app', messages: app_en_views_input_tester },
+  { locale: 'en', namespace: 'views-live-data-inspector', kind: 'app', messages: app_en_views_live_data_inspector },
+  { locale: 'en', namespace: 'views-mobile-shell', kind: 'app', messages: app_en_views_mobile_shell },
+  { locale: 'en', namespace: 'views-music', kind: 'app', messages: app_en_views_music },
+  { locale: 'en', namespace: 'views-navigation', kind: 'app', messages: app_en_views_navigation },
+  { locale: 'en', namespace: 'views-player-sprite-studio', kind: 'app', messages: app_en_views_player_sprite_studio },
+  { locale: 'en', namespace: 'views-randomizer', kind: 'app', messages: app_en_views_randomizer },
+  { locale: 'en', namespace: 'views-shadow-editor', kind: 'app', messages: app_en_views_shadow_editor },
+  { locale: 'en', namespace: 'views-simulator', kind: 'app', messages: app_en_views_simulator },
+  { locale: 'en', namespace: 'views-sprite-debug', kind: 'app', messages: app_en_views_sprite_debug },
+  { locale: 'en', namespace: 'views-store', kind: 'app', messages: app_en_views_store },
+  { locale: 'en', namespace: 'views-touch-controls', kind: 'app', messages: app_en_views_touch_controls },
+  { locale: 'en', namespace: 'widgets', kind: 'app', messages: app_en_widgets },
+  { locale: 'en', namespace: 'wizards', kind: 'app', messages: app_en_wizards },
 ];
 
 const chunks: Record<string, () => Promise<{ default: readonly Layer[] }>> = {

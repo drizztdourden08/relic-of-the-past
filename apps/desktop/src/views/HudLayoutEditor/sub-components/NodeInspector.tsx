@@ -11,7 +11,6 @@ import { useT } from '@drizztdourden08/brock-react';
 
 const NodeInspector = (props: NodeInspectorProps) => {
   const t = useT();
-  const t = useT();
   const {
     node, doc, onPatch, onDrop, scope, glyphPacks, selectedId, onSelectNode, reflowWarnings,
   } = props;

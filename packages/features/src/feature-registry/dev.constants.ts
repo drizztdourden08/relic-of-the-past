@@ -1,4 +1,4 @@
-/* @layer shared @kind data */
+/* @layer shared @kind constants */
 import { msg } from '@drizztdourden08/brock-core/i18n';
 import type { FeatureDef } from '../feature.type';
 

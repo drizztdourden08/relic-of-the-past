@@ -1,13 +1,9 @@
 /* @layer renderer-components @kind component */
 import { useT } from '@drizztdourden08/brock-react';
 import { useCallback } from 'react';
-import { useT } from '@drizztdourden08/brock-react';
 import { useShadowEditorStore } from '@app/stores/shadow-editor-store';
-import { useT } from '@drizztdourden08/brock-react';
 import { Box, Text, SegmentedControl, Slider } from '@drizztdourden08/tessera/primitives';
-import { useT } from '@drizztdourden08/brock-react';
 import { HeightLevelPicker } from './HeightLevelPicker';
-import { useT } from '@drizztdourden08/brock-react';
 import { POLYGON_SIDES } from '../ShadowEditorPanel.constants';
 
 const ShapeToolOptions = () => {

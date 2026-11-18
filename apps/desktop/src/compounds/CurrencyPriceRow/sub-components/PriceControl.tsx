@@ -1,10 +1,12 @@
 /* @layer renderer-components @kind component */
+import { useT } from '@drizztdourden08/brock-react';
 import { Slider, Text } from '@drizztdourden08/tessera/primitives';
 import { ValueTag } from '@drizztdourden08/tessera/composites';
 import { rangeLabelOf } from '@app/hooks/randomizer/option-labels';
 import type { PriceControlProps } from '../CurrencyPriceRow.type';
 
 const PriceControl = (props: PriceControlProps) => {
+  const t = useT();
   const { label, enabled, readOnly, blocked, note, stops, range, readout, onRangeChange } = props;
 
   if (blocked && note !== '') return <Text className="currency-price-row__note">{note}</Text>;
@@ -17,9 +19,9 @@ const PriceControl = (props: PriceControlProps) => {
       stops={stops}
       value={range}
       disabled={readOnly || !enabled}
-      labels={`every ${Math.max(1, Math.floor(stops.length / 5))}`}
+      labels={t('compounds:price-control.every', { step: Math.max(1, Math.floor(stops.length / 5)) })}
       showValue={false}
-      aria-label={`${label} price range`}
+      aria-label={t('compounds:price-control.range-aria', { label })}
       onChange={(next) => onRangeChange?.(next)}
     />
   );

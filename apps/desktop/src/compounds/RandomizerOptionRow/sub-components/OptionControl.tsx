@@ -1,5 +1,6 @@
 /* @layer renderer-components @kind component */
 import { useMemo } from 'react';
+import { useText } from '@drizztdourden08/brock-react';
 import { Select, Slider, TextInput, Toggle } from '@drizztdourden08/tessera/primitives';
 import { ValueTag } from '@drizztdourden08/tessera/composites';
 import { readoutOf } from '../behavior/readout-of';
@@ -8,13 +9,14 @@ import type { OptionControlProps } from '../RandomizerOptionRow.type';
 
 const OptionControl = (props: OptionControlProps) => {
   const { option, value, frozen, readout, onChange } = props;
+  const text = useText();
 
   const selectOptions = useMemo(
-    () => (option.choices ?? EMPTY_CHOICES).map((c) => ({ value: c.value, label: c.label })),
-    [option.choices],
+    () => (option.choices ?? EMPTY_CHOICES).map((c) => ({ value: c.value, label: text(c.label) })),
+    [option.choices, text],
   );
 
-  if (readout) return <ValueTag value={readoutOf(option, value)} />;
+  if (readout) return <ValueTag value={readoutOf(option, value, text)} />;
   if (option.kind === 'toggle') {
     return <Toggle checked={Boolean(value)} onChange={(checked) => onChange?.(checked)} disabled={frozen} />;
   }

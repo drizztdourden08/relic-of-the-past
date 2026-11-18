@@ -3,10 +3,11 @@ import { Box, Field, Pressable, TextInput } from '@drizztdourden08/tessera/primi
 import { useTextValue } from '@app/hud-layout-editing/useTextValue';
 import { ValueInputFeedback, readFormula, usePromoteOverlay } from './ValueInput';
 import type { TextValueFieldProps } from './TextValueField.type';
-import { useT } from '@drizztdourden08/brock-react';
+import { useT, useText } from '@drizztdourden08/brock-react';
 
 const TextValueField = (props: TextValueFieldProps) => {
   const t = useT();
+  const text = useText();
   const { value, onChange, scope, insideRepeat = false } = props;
   const field = useTextValue({ value, onChange });
   const promote = usePromoteOverlay(field.focused, field.formula, field.inputRef);
@@ -17,7 +18,7 @@ const TextValueField = (props: TextValueFieldProps) => {
     <Field
       size="sm"
       label={t('hud-editor:text-value-field.label.value')}
-      error={problem?.message}
+      error={problem ? text(problem.message) : undefined}
       className={`hud-value-field${promote.className}`}
     >
       <Box className="hud-value-input hud-value-field__row" data-formula={field.formula ? 'true' : undefined}>

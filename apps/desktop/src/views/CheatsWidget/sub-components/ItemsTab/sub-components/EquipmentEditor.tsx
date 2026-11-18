@@ -65,10 +65,7 @@ const EquipmentEditor = ({ specs, scale, spritesBase, onHover, onOpen }: SlotPan
         <DungeonItemsRow scale={scale} spritesBase={spritesBase} />
       ) : (
         <SlotCell
-          size={tile * 2}
-          owned
-          menu={false}
-          ghost={null}
+          size={tile * 2} owned menu={false} ghost={null}
           title={t('views-cheats:items.heartPieces', { count: equipment.heartPieces, max: HEART_PIECE_MAX + 1 })}
           style={{ position: 'absolute', top: tile * EQUIP_PANEL.bottomRow, left: tile * HEART_PIECE_COLUMN }}
           onClick={() => cheatSetInventorySlot(CheatSlot.HeartPieces, nextHeartPieces)}

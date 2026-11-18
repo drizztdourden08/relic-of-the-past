@@ -7,7 +7,6 @@ import { pathTo } from './path-to';
 import type { DropIntent } from '../drop-intent';
 import type { HudLayout } from '@rotp/hud';
 import type { Translate } from '../translate.type';
-import type { Translate } from '../translate.type';
 import type { GhostModel } from './drop-ghost.type';
 
 const repeatWarning = (doc: HudLayout, id: string, t: Translate): string | null => {
@@ -18,7 +17,8 @@ const repeatWarning = (doc: HudLayout, id: string, t: Translate): string | null 
     : t('hud-editing:ghost.inside-repeat');
 };
 
-const flexPosition = (doc: HudLayout, parentId: string, index: number, ids: readonly string[], t: Translate): string => {
+const flexPosition = (doc: HudLayout, at: { parentId: string; index: number }, ids: readonly string[], t: Translate): string => {
+  const { parentId, index } = at;
   const target = siteOf(doc, parentId)?.node;
   const children = target?.kind === 'container' ? target.children : [];
   const leaving = ids.filter((id) => children.some((child) => child.id === id)).length;
@@ -50,7 +50,7 @@ const ghostFor = (doc: HudLayout, ids: readonly string[], intent: DropIntent, t:
     chip,
     kind: t('hud-editing:ghost.into', { kind }),
     position: intent.kind === 'flex'
-      ? flexPosition(doc, intent.parentId, intent.index, ids, t)
+      ? flexPosition(doc, intent, ids, t)
       : gridPosition(intent.place, intent.onto, t),
     path: warning ?? pathTo(doc, intent.parentId),
     warn: warning !== null,

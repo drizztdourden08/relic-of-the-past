@@ -6,6 +6,12 @@ import { removeRun } from './remove-run';
 import { shiftRun } from './shift-run';
 import { tracksOf } from './tracks-of';
 import type { GridAction, GridActionContext } from '../GridEditor.type';
+import type { Translate } from '@app/hud-layout-editing/translate.type';
+
+const insertLabel = (t: Translate, isColumns: boolean, side: 'before' | 'after', n: number): string => {
+  if (isColumns) return side === 'before' ? t('hud-editor:grid.insert.column.before', { n }) : t('hud-editor:grid.insert.column.after', { n });
+  return side === 'before' ? t('hud-editor:grid.insert.row.before', { n }) : t('hud-editor:grid.insert.row.after', { n });
+};
 
 const trackActions = (ctx: GridActionContext): GridAction[] => {
   if (ctx.selection.kind !== 'track') return [];
@@ -34,16 +40,12 @@ const trackActions = (ctx: GridActionContext): GridAction[] => {
     {
       key: 'insert-before', kind: 'button', group: 'insert',
       icon: axis === 'columns' ? GRID_ICONS.insertColumnBefore : GRID_ICONS.insertRowBefore,
-      label: isColumns
-        ? t('hud-editor:grid.insert.column.before', { n: first + 1 })
-        : t('hud-editor:grid.insert.row.before', { n: first + 1 }), run: insertRun(ctx, axis, first),
+      label: insertLabel(t, isColumns, 'before', first + 1), run: insertRun(ctx, axis, first),
     },
     {
       key: 'insert-after', kind: 'button', group: 'insert',
       icon: axis === 'columns' ? GRID_ICONS.insertColumnAfter : GRID_ICONS.insertRowAfter,
-      label: isColumns
-        ? t('hud-editor:grid.insert.column.after', { n: last + 1 })
-        : t('hud-editor:grid.insert.row.after', { n: last + 1 }), run: insertRun(ctx, axis, last + 1),
+      label: insertLabel(t, isColumns, 'after', last + 1), run: insertRun(ctx, axis, last + 1),
     },
     {
       key: 'remove', kind: 'button', icon: GRID_ICONS.remove, group: 'remove',

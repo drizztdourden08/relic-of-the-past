@@ -1,7 +1,6 @@
 /* @layer renderer-components @kind hook */
 import { useRef } from 'react';
 import { useT } from '@drizztdourden08/brock-react';
-import { useT } from '@drizztdourden08/brock-react';
 import { ghostFor } from './drop-ghost';
 import { outlineIntent } from './drop-intent';
 import { rowUnder } from './row-under';
@@ -15,7 +14,6 @@ const samePreview = (a: DropPreview, b: DropPreview): boolean =>
   a.rowId === b.rowId && a.zone === b.zone && a.intent.kind === b.intent.kind;
 
 const useOutlineDrag = (input: OutlineDragInput) => {
-  const t = useT();
   const t = useT();
   const { doc, onDrop, rowsRef } = input;
   const settle = useRef<((parentId: string | null) => void) | null>(null);

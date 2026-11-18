@@ -20,7 +20,7 @@ const useProfileWizard = ({ onCreateProfile, onCreated }: UseProfileWizardParams
   const moduleSteps = useModuleWizardSteps();
   const [optionTab, setOptionTab] = useState<PanelTab>(FIRST_OPTION_TAB);
   const joining = useRollProgress((state) => state.fraction);
-  const modules = useMemo(() => moduleSteps.map(withStepFacts), [moduleSteps]);
+  const modules = useMemo(() => moduleSteps.map(withStepFacts(t)), [moduleSteps, t]);
   const [initialValues] = useState(() => initialProfileValues(modules));
   const steps = useMemo(() => profileWizardSteps({ joining, modules, t }), [joining, modules, t]);
 

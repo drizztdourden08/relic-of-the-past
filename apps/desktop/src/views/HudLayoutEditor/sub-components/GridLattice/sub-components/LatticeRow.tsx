@@ -28,7 +28,7 @@ const LatticeRow = (props: LatticeRowProps) => {
         extent={extentOf?.('rows', row - 1)}
         selected={trackOn('rows', row - 1)}
         empty={empty}
-        title={headTitle('row', row, trackText(track), empty, t)}
+        title={headTitle('row', { index: row, text: trackText(track), empty }, t)}
         onPointerDown={onTrackDown ? (event) => onTrackDown('rows', row - 1, event) : undefined}
         onSize={onSizeTrack ? (extent) => onSizeTrack('rows', row - 1, extent) : undefined}
       />

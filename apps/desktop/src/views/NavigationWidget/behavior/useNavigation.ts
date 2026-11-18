@@ -36,7 +36,7 @@ const useNavigation = () => {
 
   const detectedScreen = useScreenDetection(debugTick)?.screen ?? null;
   const screenId = detectedScreen?.id ?? null;
-  const screenName = screenNameOf(t, detectedScreen, isIndoors, roomIndex, overworldScreenIndex);
+  const screenName = screenNameOf(t, detectedScreen, { isIndoors, roomIndex, overworldScreenIndex });
   const displayedVariant = displayedVariantOf(isIndoors, result, variant);
   const renderResults = overlayStore.results;
   const reachableSum = renderResults.reduce((sum, r) => sum + r.reachableCount, 0);

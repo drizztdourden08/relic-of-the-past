@@ -5,7 +5,6 @@ import { spriteUrl } from './sprite-url';
 import type { GlyphPack } from '@rotp/input-mapping';
 import type { HudButtonFace } from '@rotp/hud';
 import type { Translate } from '../translate.type';
-import type { Translate } from '../translate.type';
 import type { FaceArt } from './node-art.type';
 
 const faceArtOf = (face: HudButtonFace | undefined, packs: readonly GlyphPack[], t: Translate): FaceArt | null => {

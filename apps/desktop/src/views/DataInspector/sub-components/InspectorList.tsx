@@ -46,10 +46,10 @@ const InspectorList = (props: InspectorListProps) => {
           searchLabel={t('views-data-inspector:list.search.label')}
         />
         {isCollection && !loading && (
-          <CreateRecordButton kind={kind} label={text(KIND_SINGULARS[kind])} schema={schema} onCreated={onSelect} />
+          <CreateRecordButton kind={kind} label={text(KIND_SINGULARS[kind] ?? kind)} schema={schema} onCreated={onSelect} />
         )}
       </Box>
-      {loading ? <ListLoading label={t('views-data-inspector:list.loading', { label: text(KIND_LABELS[kind]) })} /> : (
+      {loading ? <ListLoading label={t('views-data-inspector:list.loading', { label: text(KIND_LABELS[kind] ?? kind) })} /> : (
         <>
           <DataTable
             rows={rowWindow.shown}

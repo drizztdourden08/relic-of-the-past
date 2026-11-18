@@ -178,5 +178,9 @@
   "sprite-manager.no-sprites-extracted-yet": "No sprites extracted yet",
   "sprite-manager.select-an-imported-rom-to": "Select an imported ROM to view its sprites",
   "sprite-manager.sprite-manager": "Sprite manager",
-  "sprite-manager.title": "Sprites"
+  "sprite-manager.title": "Sprites",
+  "profile-wizard.randomizer-summary": "{type}, {seed}",
+  "profile-wizard.random-seed": "Random",
+  "profile-wizard.options-defaults": "Defaults",
+  "profile-wizard.options-changed": "{count} changed"
 }

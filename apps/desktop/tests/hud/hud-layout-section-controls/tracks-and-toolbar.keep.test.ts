@@ -9,6 +9,8 @@ import type { Extent, HudGridContainer, HudLayout, HudNode } from '@rotp/hud';
 import { VIEW } from './section-controls.constants';
 import { boxCell as cell } from './box-cell';
 import { docOf } from './doc-of';
+import { i18n } from '../test-i18n';
+const { t } = i18n;
 
 const menuItems = (nodes: readonly MenuNode[]): MenuItem[] =>
   nodes.filter((node): node is MenuItem => !('separator' in node));
@@ -70,7 +72,7 @@ describe('a track list survives the document it is written to', { tags: ['critic
 describe('a grid is insertable from the toolbar, and so is an overlay', { tags: ['critical'] }, () => {
   it('offers Grid and Overlay beside Row and Column - there is no Stack (§42)', () => {
     const inserted: HudNode[] = [];
-    const groups = buildToolbarGroups({ insert: (node) => inserted.push(node) });
+    const groups = buildToolbarGroups({ insert: (node) => inserted.push(node), t });
     const container = menuItems(groups.find((g) => g.key === 'container')?.items ?? []);
     expect(container.map((i) => i.id)).toEqual(['row', 'column', 'overlay', 'grid']);
     container.find((i) => i.id === 'grid')?.onSelect?.();
@@ -79,7 +81,7 @@ describe('a grid is insertable from the toolbar, and so is an overlay', { tags: 
 
   it('the Overlay preset is a 1x1 grid that hugs instead of stretching', () => {
     const inserted: HudNode[] = [];
-    const groups = buildToolbarGroups({ insert: (node) => inserted.push(node) });
+    const groups = buildToolbarGroups({ insert: (node) => inserted.push(node), t });
     menuItems(groups.find((g) => g.key === 'container')?.items ?? []).find((i) => i.id === 'overlay')?.onSelect?.();
     expect(inserted[0]).toMatchObject({
       kind: 'container', layout: 'grid', columns: ['auto'], rows: ['auto'],

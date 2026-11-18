@@ -1,4 +1,4 @@
-/* @layer renderer-app @kind data */
+/* @layer renderer-app @kind constants */
 import { msg } from '@drizztdourden08/brock-core/i18n';
 import type { Message } from '@drizztdourden08/brock-core/i18n';
 import type { Recommendation } from '@rotp/navigation';

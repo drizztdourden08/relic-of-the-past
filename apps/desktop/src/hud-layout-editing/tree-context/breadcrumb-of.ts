@@ -1,7 +1,6 @@
 /* @layer renderer-components @kind logic */
 import { labelOf } from '../new-node';
 import type { Translate } from '../translate.type';
-import type { Translate } from '../translate.type';
 import { embeddedOf } from '../node-edits';
 import { childrenOf } from './children-of';
 import { rootsOf } from './roots-of';

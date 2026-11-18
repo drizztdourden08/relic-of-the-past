@@ -1,13 +1,9 @@
 /* @layer renderer-components @kind component */
 import { useT } from '@drizztdourden08/brock-react';
 import { useMemo } from 'react';
-import { useT } from '@drizztdourden08/brock-react';
 import { Box, Text, Button } from '@drizztdourden08/tessera/primitives';
-import { useT } from '@drizztdourden08/brock-react';
 import { SettingsSection } from '@drizztdourden08/tessera/composites';
-import { useT } from '@drizztdourden08/brock-react';
 import { NumberField } from './NumberField';
-import { useT } from '@drizztdourden08/brock-react';
 import { HeightLevelPicker } from './HeightLevelPicker';
 import type { ShadowShapeInspectorProps } from './ShadowShapeInspector.type';
 

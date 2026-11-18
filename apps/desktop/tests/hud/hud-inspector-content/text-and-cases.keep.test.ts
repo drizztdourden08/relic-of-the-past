@@ -25,6 +25,8 @@ import type { HudContainer, HudNode, HudSwitchSpec } from '@rotp/hud';
 import { required } from '@rotp/asset-extraction/testing';
 import { PACKS, SCOPE } from './content-fixtures.constants';
 import { installDomHarness } from './install-dom-harness';
+import { i18n } from '../test-i18n';
+const { t } = i18n;
 
 const { mount, one } = installDomHarness();
 
@@ -103,7 +105,7 @@ describe('the live-match marker is the engine own answer', { tags: ['standard'] 
     const counted = caseMatches(cases, instances);
     expect(counted.wins).toEqual([12, 4]);
     expect(counted.otherwise).toBe(4);
-    expect(matchLabel(required(counted.wins[1], 'the second case count'), counted.total)).toBe('matches 4 of 20');
-    expect(matchLabel(0, 20)).toBeNull();
+    expect(matchLabel(required(counted.wins[1], 'the second case count'), counted.total, t)).toBe('matches 4 of 20');
+    expect(matchLabel(0, 20, t)).toBeNull();
   });
 });

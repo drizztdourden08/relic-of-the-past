@@ -1,4 +1,4 @@
-/* @layer renderer-components @kind data */
+/* @layer renderer-components @kind constants */
 import { msg } from '@drizztdourden08/brock-core/i18n';
 import type { Message } from '@drizztdourden08/brock-core/i18n';
 

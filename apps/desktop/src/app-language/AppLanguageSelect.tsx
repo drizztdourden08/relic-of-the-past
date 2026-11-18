@@ -2,14 +2,8 @@
 import { useT } from '@drizztdourden08/brock-react';
 import { Select } from '@drizztdourden08/tessera/primitives';
 import { APP_LANGUAGES } from './app-language.constants';
-
-const INHERIT = '';
-
-interface AppLanguageSelectProps {
-  value: string;
-  onChange: (tag: string) => void;
-  inherit?: boolean;
-}
+import { INHERIT } from './AppLanguageSelect.constants';
+import type { AppLanguageSelectProps } from './AppLanguageSelect.type';
 
 const AppLanguageSelect = ({ value, onChange, inherit = false }: AppLanguageSelectProps) => {
   const t = useT();

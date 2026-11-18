@@ -12,7 +12,7 @@
   "dialogue.empty": "This set has no dialogue",
   "dialogue.empty-search": "No line matches",
   "dialogue.unknown-base": "This set names a base language the app does not know, so editing is unavailable.",
-  "editor.placeholder": "Type the line…",
+  "editor.placeholder": "Type the line...",
   "editor.status.boxes": "{count, plural, one {# box} other {# boxes}}",
   "editor.status.left": "box {box} · row {row} · {px}px left",
   "editor.status.over": "box {box} · row {row} · over by {px}px",

@@ -24,7 +24,7 @@ const LadderRange = (props: LadderControlsProps) => {
         aria-label={label}
         onChange={(range) => onChange({ range })}
       />
-      <Text className="capacity-row__readout">{t('compounds:capacity.range-to', { from: stops[start], to: stops[max] })}</Text>
+      <Text className="capacity-row__readout">{t('compounds:capacity.range-to', { from: stops[start] ?? '', to: stops[max] ?? '' })}</Text>
     </RowLine>
   );
 };

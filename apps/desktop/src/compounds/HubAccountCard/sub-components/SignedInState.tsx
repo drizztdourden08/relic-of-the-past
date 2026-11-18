@@ -25,7 +25,7 @@ const SignedInState = (props: SignedInStateProps) => {
             {user.access && <Status tone={ACCESS_VARIANT[user.access.state]}>{user.access.state}</Status>}
           </Flex>
           <Text as="p" className="hub-account__detail">
-            {linked ? `${linked} linked` : 'No sign-in method linked'} · this device: {deviceLabel}
+            {t('compounds:hub-account-card.detail', { linked: linked ? t('compounds:hub-account-card.linked', { providers: linked }) : t('compounds:hub-account-card.no-method'), device: deviceLabel })}
           </Text>
         </Stack>
       </Flex>

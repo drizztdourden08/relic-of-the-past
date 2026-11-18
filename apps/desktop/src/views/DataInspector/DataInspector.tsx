@@ -22,23 +22,15 @@ const DataInspector = () => {
   const t = useT();
   const text = useText();
   const nav = useMemo(() => dataInspectorNav(text), [text]);
-  const label = text(KIND_LABELS[kind]);
+  const label = text(KIND_LABELS[kind] ?? kind);
   const { handleIdRefClickCapture } = useIdRefNavigation(openIdRef);
   const isCollection = isEntityKind(kind);
 
   const list = (
     <InspectorList
-      kind={kind}
-      loading={loading}
-      source={source}
-      schema={schema}
-      rows={rows}
-      clauses={clauses}
-      onClausesChange={setClauses}
-      search={search}
-      onSearchChange={setSearch}
-      selectedId={selectedId}
-      onSelect={selectRecord}
+      kind={kind} loading={loading} source={source} schema={schema} rows={rows}
+      clauses={clauses} onClausesChange={setClauses} search={search} onSearchChange={setSearch}
+      selectedId={selectedId} onSelect={selectRecord}
     />
   );
 

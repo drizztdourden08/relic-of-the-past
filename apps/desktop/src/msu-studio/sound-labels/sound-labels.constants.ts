@@ -1,13 +1,7 @@
 /* @layer renderer-components @kind constants */
 import { msg } from '@drizztdourden08/brock-core/i18n';
-import type { Message } from '@drizztdourden08/brock-core/i18n';
 import type { SoundChannel } from '@rotp/game-data';
-import { SOUND_CHANNEL_LABELS } from '@rotp/design/packs';
-
-interface StudioTabItem {
-  id: string;
-  label: Message;
-}
+import type { StudioTabItem } from './sound-labels.type';
 
 const SOUND_CHANNEL_TAGS: Record<SoundChannel, string> = {
   ambient: 'AMB', sfx1: 'SFX1', sfx2: 'SFX2',

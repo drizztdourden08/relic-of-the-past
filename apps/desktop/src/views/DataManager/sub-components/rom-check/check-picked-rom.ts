@@ -7,12 +7,11 @@ const checkPickedRom = (
   files: File[],
   mode: RomCheckMode,
   expected: RomKind | undefined,
-  onFile: (file: File | null) => void,
-  onCheck: (check: RomCheck) => void,
+  on: { file: (file: File | null) => void; check: (check: RomCheck) => void },
 ): void => {
   const file = files[0] ?? null;
-  onFile(file);
-  if (file !== null) void verifyRomFile(file, mode, expected).then(onCheck);
+  on.file(file);
+  if (file !== null) void verifyRomFile(file, mode, expected).then(on.check);
 };
 
 export { checkPickedRom };

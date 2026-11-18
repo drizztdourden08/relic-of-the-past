@@ -1,11 +1,8 @@
 /* @layer renderer-components @kind component */
 import { useT } from '@drizztdourden08/brock-react';
 import { useMemo } from 'react';
-import { useT } from '@drizztdourden08/brock-react';
 import { Slider, Toggle, Button, Box } from '@drizztdourden08/tessera/primitives';
-import { useT } from '@drizztdourden08/brock-react';
 import { SettingsSection } from '@drizztdourden08/tessera/composites';
-import { useT } from '@drizztdourden08/brock-react';
 import { NumberField } from './NumberField';
 import type { ShadowLightInspectorProps } from './ShadowLightInspector.type';
 

@@ -1,7 +1,13 @@
 /* @layer renderer-components @kind types */
 import type { ReactNode } from 'react';
+import type { Message } from '@drizztdourden08/brock-core/i18n';
 import type { MsuPackManifest } from '@rotp/game-data';
 import type { MsuFile } from './msu.type';
+
+interface FileColumn {
+  id: string;
+  label: Message | null;
+}
 
 interface MsuFilePanelProps {
   pack: string;
@@ -15,4 +21,4 @@ interface MsuFilePanelProps {
   onReload: () => void;
 }
 
-export type { MsuFilePanelProps };
+export type { MsuFilePanelProps, FileColumn };

@@ -70,5 +70,8 @@
   "pondMode.custom": "Custom",
   "capacityMode.vanilla": "Vanilla",
   "capacityMode.vanillaInPool": "Vanilla in pool",
-  "capacityMode.custom": "Custom"
+  "capacityMode.custom": "Custom",
+  "curve.group.curves": "Curves",
+  "curve.group.presets": "Presets",
+  "curve.preset": "Preset · {name}"
 }

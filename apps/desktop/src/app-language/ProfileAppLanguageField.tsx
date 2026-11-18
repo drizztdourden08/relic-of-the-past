@@ -3,11 +3,7 @@ import { useT } from '@drizztdourden08/brock-react';
 import { Field } from '@drizztdourden08/tessera/primitives';
 import { updateProfile } from '@app/storage/profile-store';
 import { AppLanguageSelect } from './AppLanguageSelect';
-
-interface ProfileAppLanguageFieldProps {
-  profile: Profile;
-  onRefresh: () => void;
-}
+import type { ProfileAppLanguageFieldProps } from './ProfileAppLanguageField.type';
 
 const ProfileAppLanguageField = ({ profile, onRefresh }: ProfileAppLanguageFieldProps) => {
   const t = useT();

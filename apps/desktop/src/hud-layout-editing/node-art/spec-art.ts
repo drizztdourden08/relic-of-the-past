@@ -9,8 +9,6 @@ import type { HudElementSpec } from '@rotp/hud';
 import type { SpecOf } from '../element-spec.type';
 import { typeName } from '../new-node/type-name';
 import type { Translate } from '../translate.type';
-import { typeName } from '../new-node/type-name';
-import type { Translate } from '../translate.type';
 import type { NodeArt } from './node-art.type';
 import type { PlainSpec } from './spec-art.type';
 

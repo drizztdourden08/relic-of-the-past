@@ -1,11 +1,8 @@
 /* @layer renderer-components @kind component */
 import { useT } from '@drizztdourden08/brock-react';
 import { useState } from 'react';
-import { useT } from '@drizztdourden08/brock-react';
 import { Box, Icon, IconButton, TextInput } from '@drizztdourden08/tessera/primitives';
-import { useT } from '@drizztdourden08/brock-react';
 import { useShadowEditorStore } from '@app/stores/shadow-editor-store';
-import { useT } from '@drizztdourden08/brock-react';
 import { HeightLevelRow } from './HeightLevelRow';
 import './HeightLevelEditor.css';
 

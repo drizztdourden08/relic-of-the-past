@@ -1,4 +1,4 @@
-/* @layer shared-game @kind data */
+/* @layer shared-game @kind constants */
 import { msg } from '@drizztdourden08/brock-core/i18n';
 import type { OptionGroup } from '../options.type';
 

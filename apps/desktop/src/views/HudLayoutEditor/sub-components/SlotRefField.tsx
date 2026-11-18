@@ -26,7 +26,7 @@ const SlotRefField = (props: SlotRefFieldProps) => {
       label={label}
       className={`hud-slot-ref ${className}`}
       src={position ? glyphArtUrl(glyphPacks, undefined, position) : undefined}
-      placeholder={t('hud-editor:slot-ref-field.placeholder.square')}
+      placeholder="square"
       name={t('hud-editor:slot-ref-field.name', { value })}
       kind={position ?? (known ? t('hud-editor:slot-ref-field.no-glyph') : undefined)}
       onOpen={() => setOpen(true)}

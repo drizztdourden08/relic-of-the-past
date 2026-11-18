@@ -30,7 +30,7 @@ const JumpChipsEditor = (props: JumpChipsEditorProps) => {
               step={1}
               sizeToContent
               disabled={disabled}
-              aria-label={`jump ${index + 1}`}
+              aria-label={t('compounds:jump-chips-editor.jump-n', { n: index + 1 })}
               onChange={(next) => setJump(index, next)}
             />
             <IconButton variant="ghost" size="sm" label={t('compounds:jump-chips-editor.remove-jump')} disabled={disabled} onClick={() => removeJump(index)}>
@@ -41,7 +41,7 @@ const JumpChipsEditor = (props: JumpChipsEditorProps) => {
         <Button variant="ghost" size="sm" disabled={!canAdd} onClick={addJump}>{t('compounds:jump-chips-editor.jump')}</Button>
       </Box>
       <Text className={`jump-chips__sum${problem === undefined ? '' : ' jump-chips__sum--invalid'}`}>
-        {`Σ ${sum} / ${span}${problem === undefined ? '' : ` · ${problem}`}`}
+        {problem === undefined ? t('compounds:jump-chips-editor.sum', { sum, span }) : t('compounds:jump-chips-editor.sum-problem', { sum, span, problem })}
       </Text>
     </Box>
   );

@@ -7,7 +7,6 @@ import { Box, Button, Card, Flex, Text } from '@drizztdourden08/tessera/primitiv
 import { Dialog } from '@drizztdourden08/tessera/composites';
 import { licenseById } from '@rotp/hub-contracts';
 import { HookshopChip } from '../HookshopChip';
-import { READ_ONLY_NOTE, uninstallMessage, uninstallTitle } from './InstalledOrigin.constants';
 import type { InstalledOriginProps } from './InstalledOrigin.type';
 import { OriginActions } from './sub-components/OriginActions';
 import { OriginFacts } from './sub-components/OriginFacts';
@@ -51,13 +50,13 @@ const InstalledOrigin = (props: InstalledOriginProps) => {
         onAskUninstall={askUninstall}
       />
 
-      <Text as="p" variant="caption" className="installed-origin__note">{READ_ONLY_NOTE}</Text>
+      <Text as="p" variant="caption" className="installed-origin__note">{t('compounds:installed-origin.read-only-note')}</Text>
       {error !== null && <Text as="p" className="installed-origin__error">{error}</Text>}
 
       <Dialog
         open={confirming}
-        title={uninstallTitle(origin.name)}
-        message={uninstallMessage(origin.name)}
+        title={t('compounds:installed-origin.uninstall-title', { name: origin.name })}
+        message={t('compounds:installed-origin.uninstall-message', { name: origin.name })}
         confirmLabel={t('compounds:installed-origin.uninstall')}
         variant="danger"
         onConfirm={confirmUninstall}

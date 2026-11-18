@@ -29,7 +29,7 @@ interface FlexEditorProps {
 interface MoveSpec {
   key: string;
   icon: EditorAction['icon'];
-  label: MoveLabelKey;
+  label: 'hud-editor:flex.move.start' | 'hud-editor:flex.move.earlier' | 'hud-editor:flex.move.later' | 'hud-editor:flex.move.end';
   can: boolean;
   from: number;
   to: number;

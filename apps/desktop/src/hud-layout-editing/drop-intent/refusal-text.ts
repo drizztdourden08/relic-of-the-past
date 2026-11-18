@@ -3,7 +3,6 @@ import { MAX_EXPANDED_NODES } from '@rotp/hud';
 import { siteOf } from '../node-edits';
 import type { HudLayout } from '@rotp/hud';
 import type { Translate } from '../translate.type';
-import type { Translate } from '../translate.type';
 import type { DropIntent } from './drop-intent.type';
 
 const refusalText = (doc: HudLayout, ids: readonly string[], intent: DropIntent, t: Translate): string | null => {

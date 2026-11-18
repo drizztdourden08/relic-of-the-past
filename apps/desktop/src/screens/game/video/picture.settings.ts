@@ -33,7 +33,7 @@ const sections: SectionDef[] = [
       { key: 'widescreenVisualFixes', label: msg('settings-picture:widescreen-visual-fixes.label'), description: msg('settings-picture:widescreen-visual-fixes.description'), keywords: 'visual fixes widescreen tall tiles edges transitions iris link hide' },
       { key: 'widescreenSprites', label: msg('settings-picture:widescreen-sprites.label'), description: msg('settings-picture:widescreen-sprites.description'), hint: msg('settings-picture:widescreen-sprites.hint'), keywords: 'sprites widescreen spawn despawn ranges' },
       { key: 'widescreenPlayArea', label: msg('settings-picture:widescreen-play-area.label'), description: msg('settings-picture:widescreen-play-area.description'), keywords: 'play area hazards spawns room clear widescreen gameplay' },
-      { key: 'offscreenAI', label: msg('settings-picture:offscreen-ai.label'), description: msg('settings-picture:offscreen-ai.description'), keywords: 'sprite AI pause idle freeze off screen wide guard enemy alarm', control: { kind: 'choice', options: offscreenOptions } },
+      { key: 'offscreenAI', label: msg('settings-picture:offscreen-behavior.label'), description: msg('settings-picture:offscreen-behavior.description'), keywords: 'sprite behavior pause idle freeze off screen wide guard enemy alarm', control: { kind: 'choice', options: offscreenOptions } },
     ],
   },
   {

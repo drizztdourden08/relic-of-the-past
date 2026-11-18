@@ -8,7 +8,7 @@ import './HookshopChip.css';
 
 const HookshopChip = (props: HookshopChipProps) => {
   const t = useT();
-  const { label = 'Hookshop' } = props;
+  const { label = t('compounds:hookshop-chip.label') } = props;
 
   return (
     <Status tone="neutral" className="hookshop-chip" title={t('compounds:hookshop-chip.installed-from-the-hookshop-read')}>

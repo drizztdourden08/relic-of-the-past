@@ -31,8 +31,9 @@ const progressLabel = (t: I18n['t'], voice: ReportedVoice): string => {
 };
 
 const voiceRow = (
-  t: I18n['t'], voice: ReportedVoice, index: number, caption: string, title: string | null,
+  t: I18n['t'], voice: ReportedVoice, index: number, name: { caption: string; title: string | null },
 ): LayerMeterRow => {
+  const { caption, title } = name;
   const { positionSeconds, durationSeconds, loopSeconds } = voice;
   const measured = durationSeconds > 0;
   const intro = loopSeconds !== null && loopSeconds > 0 && loopSeconds < durationSeconds;
@@ -64,7 +65,7 @@ const voiceRows = (t: I18n['t'], report: LayerReport, hasGap: boolean): LayerMet
     return report.voices.map((voice, index) => {
       const label = captions[index];
       if (label === undefined) throw new Error('voiceCaptions returned fewer captions than voices');
-      return voiceRow(t, voice, index, label.caption, label.title);
+      return voiceRow(t, voice, index, label);
     });
   }
   return hasGap ? [] : [silentRow(t, report)];

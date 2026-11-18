@@ -4,6 +4,8 @@ import { stepIntent, stepOptions } from '@app/hud-layout-editing/step-intent';
 import { announcementFor, ghostFor } from '@app/hud-layout-editing/drop-ghost';
 import type { HudLayout } from '@rotp/hud';
 import { DOC } from './keyboard-move.constants';
+import { i18n } from '../test-i18n';
+const { t } = i18n;
 
 describe('four directions, computed from the tree', { tags: ['critical'] }, () => {
   it('reorders among siblings', () => {
@@ -50,8 +52,8 @@ describe('THE ANNOUNCEMENT IS THE GHOST\'S OWN WORDS, flattened', { tags: ['crit
   const say = (id: string, direction: 'up' | 'down' | 'out' | 'in'): { said: string; model: ReturnType<typeof ghostFor> } => {
     const intent = stepIntent(DOC, id, direction);
     if (!intent) throw new Error('no intent');
-    const model = ghostFor(DOC, [id], intent);
-    return { said: announcementFor(model), model };
+    const model = ghostFor(DOC, [id], intent, t);
+    return { said: announcementFor(model, t), model };
   };
 
   it('carries every part of the card the card put there, and invents none', () => {
@@ -65,15 +67,15 @@ describe('THE ANNOUNCEMENT IS THE GHOST\'S OWN WORDS, flattened', { tags: ['crit
   it('says what is wrong instead of that something is, when a drop is refused', () => {
     const model = ghostFor(DOC, ['hud'], {
       kind: 'refused', reason: 'descendant', parentId: 'hearts', nodeId: 'hearts',
-    });
-    expect(announcementFor(model)).toBe("can't move hud. hearts is already inside hud");
-    expect(announcementFor(model)).toContain(model.position);
+    }, t);
+    expect(announcementFor(model, t)).toBe("can't move hud. hearts is already inside hud");
+    expect(announcementFor(model, t)).toContain(model.position);
   });
 });
 
 describe('the menu names its own preconditions instead of hiding items', { tags: ['critical'] }, () => {
   it('offers all four, and dims the ones that cannot happen', () => {
-    const options = stepOptions(DOC, 'hud');
+    const options = stepOptions(DOC, 'hud', t);
     expect(options.map((o) => o.direction)).toEqual(['up', 'down', 'out', 'in']);
     expect(options.find((o) => o.direction === 'out')).toMatchObject({
       label: 'Move out of screen', enabled: false,
@@ -83,7 +85,7 @@ describe('the menu names its own preconditions instead of hiding items', { tags:
   });
 
   it('names the container an `in` would land in, once there is one', () => {
-    expect(stepOptions(DOC, 'loose').find((o) => o.direction === 'in')).toMatchObject({
+    expect(stepOptions(DOC, 'loose', t).find((o) => o.direction === 'in')).toMatchObject({
       label: 'Move into vault', enabled: true,
     });
   });

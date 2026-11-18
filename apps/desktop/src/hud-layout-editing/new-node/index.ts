@@ -1,7 +1,6 @@
 /* @layer renderer-components @kind barrel */
 export { labelOf } from './label-of';
 export { typeName } from './type-name';
-export { typeName } from './type-name';
 export { newButton } from './new-button';
 export { newContainer } from './new-container';
 export { newCountdown } from './new-countdown';

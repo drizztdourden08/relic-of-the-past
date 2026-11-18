@@ -4,6 +4,7 @@ import { AUTO_PACK_ID } from '@rotp/input-mapping';
 import { DEFAULT_LAYOUT, validateLayout } from '@rotp/hud';
 import { usePlacedLayout } from '@app/views/HudLayoutView';
 import { useHudLayoutStore } from '@app/stores/hud-layout-store';
+import { useT } from '@drizztdourden08/brock-react';
 import { useGlyphPacks } from './useGlyphPacks';
 import { useLayoutDraft } from './useLayoutDraft';
 import { useNodeEdits } from './useNodeEdits';
@@ -18,6 +19,7 @@ import type { HudLayout } from '@rotp/hud';
 import type { HudLayoutEditorProps } from '@app/views/HudLayoutEditor/HudLayoutEditor.type';
 
 const useHudLayoutEditor = (props: HudLayoutEditorProps) => {
+  const t = useT();
   const { layoutId, onCommitted } = props;
 
   const glyphs = useGlyphPacks();
