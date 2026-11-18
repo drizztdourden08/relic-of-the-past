@@ -9,6 +9,7 @@ import { renderGraphicsControl } from './graphics/render-graphics-control';
 import { renderHapticsControl } from './haptics/render-haptics-control';
 import { renderHudControl } from './hud/render-hud-control';
 import { renderContributingControl } from './contributing/render-contributing-control';
+import { renderLanguageControl } from './language/render-language-control';
 import { renderOnlineControl } from './online/render-online-control';
 import { isSettingDisabled } from './is-setting-disabled';
 import type { SettingsPatch } from './settings-controls.type';
@@ -23,7 +24,8 @@ const renderSettingControl = (key: string, settings: GameSettings, onChange: Set
     ?? renderHapticsControl(key, ctx)
     ?? renderBugFixControl(key, ctx)
     ?? renderOnlineControl(key, ctx)
-    ?? renderContributingControl(key);
+    ?? renderContributingControl(key)
+    ?? renderLanguageControl(key);
 };
 
 export { renderSettingControl };
