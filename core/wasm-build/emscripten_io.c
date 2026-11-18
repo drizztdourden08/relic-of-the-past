@@ -111,6 +111,11 @@ void AssetSheet_SetOverride(int asset, int idx, const uint8 *p, uint32 size) {
   g_sheet_override[asset][idx] = (MemBlk) { p, p ? size : 0 };
 }
 
+const uint8 *AssetSheet_Baked(int asset, int idx) {
+  if (asset < 0 || asset > 1 || g_asset_ptrs[64 + asset] == NULL) return NULL;
+  return FindIndexInMemblk((MemBlk) { g_asset_ptrs[64 + asset], g_asset_sizes[64 + asset] }, idx).ptr;
+}
+
 MemBlk FindInAssetArray(int asset, int idx) {
   if ((asset == 64 || asset == 65) && idx >= 0 && idx < kLangSheetMax && g_sheet_override[asset - 64][idx].ptr != NULL &&
       LanguageScreens_SheetLive(asset - 64))
@@ -171,6 +176,9 @@ void WasmLoadState(int slot) {
   // the assets until some in-game event happened to reload gear palettes. Re-push it here.
   if (PlayerSprite_HasCustom())
     PlayerSprite_RefreshPalette();
+  // Likewise the HUD tiles: a state saved under another set or HUD option carries that one's tiles,
+  // which the pause words of the selected one would name wrongly.
+  LanguageScreens_RefreshHudTiles();
   printf("*** Load state: slot %d\n", slot);
 }
 

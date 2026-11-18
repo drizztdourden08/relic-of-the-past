@@ -22,6 +22,9 @@ bool SelectUsJa_Ready(void);
 // and its first column into |start|. Returns the tile count (0 for a label with no Japanese words), or -1 when no label sits there.
 int SelectUsJa_Label(int screen, int row, int col, int len, uint16 *tiles, int *start);
 
+// BG3 word |w| with a Japanese glyph's palette (7) moved to the US text palette (6); others unchanged.
+uint16 SelectUsJa_TextWord(uint16 w);
+
 // Called by the NMI with the stripe stream |p| it is about to draw for nmi_load_bg_from_vram |source|.
 // Returns the stream to draw: |p| itself, or the translated copy on the US layout with Japanese words.
 const uint8 *GameHook_SelectStripes(const uint8 *p, int source);

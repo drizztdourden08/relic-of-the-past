@@ -5,9 +5,10 @@ import type { JaScreenAddressTable } from '../screens/addresses/ja.type';
 import { readSheet } from '../screens/read-sheet';
 import { readSheetPatch } from '../screens/read-sheet-patch';
 import { readStripeTable } from '../screens/read-stripe-table';
+import { PAUSE_TABLES } from '../screens/screens.constants';
 import { JA_COPYRIGHT_SHEET, JA_COPYRIGHT_TILES } from '../screens/japanese/japanese-screens.constants';
 import {
-  JA_GFX_BG_BASE, JA_GFX_COPYRIGHT_OAM_ID, JA_GFX_HUD_SPR_SHEETS, JA_GFX_INTRO_BG_SHEETS, JA_GFX_INTRO_TILEMAP_ID, JA_GFX_OAM_ENTRY_BYTES,
+  JA_GFX_BG_BASE, JA_GFX_COPYRIGHT_OAM_ID, JA_GFX_HUD_SPR_SHEETS, JA_GFX_HUD_TEXT_BASE, JA_GFX_INTRO_BG_SHEETS, JA_GFX_INTRO_TILEMAP_ID, JA_GFX_OAM_ENTRY_BYTES,
   JA_GFX_PATCH_BASE,
   JA_GFX_SPR_BASE,
   JA_GFX_TITLE_PARAMS_BYTES,
@@ -29,6 +30,12 @@ const copyrightOam = (rom: RomData, table: JaScreenAddressTable): JapaneseGraphi
   };
 };
 
+const pauseWordsOfHudSheets = (rom: RomData, table: JaScreenAddressTable): JapaneseGraphicEntry[] =>
+  PAUSE_TABLES.map((name, i) => {
+    const region = table.pauseText[name];
+    return { id: JA_GFX_HUD_TEXT_BASE + i, bytes: Uint8Array.from(rom.getBytes(region.address, region.count * 2)) };
+  });
+
 const titleParams = (rom: RomData, table: JaScreenAddressTable): JapaneseGraphicEntry => ({
   id: JA_GFX_TITLE_PARAMS_ID,
   bytes: rom.getBytes(table.titleYLimit, JA_GFX_TITLE_PARAMS_BYTES),
@@ -47,6 +54,7 @@ const compileJapaneseGraphics = (rom: RomData): JapaneseGraphicEntry[] => {
       id: JA_GFX_SPR_BASE + index,
       bytes: readSheet(rom, table, 'spr', index).data,
     })),
+    ...pauseWordsOfHudSheets(rom, table),
     copyrightPatch(rom, table),
     copyrightOam(rom, table),
     titleParams(rom, table),

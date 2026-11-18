@@ -44,6 +44,8 @@ bool JaGraphics_On(uint32 bit);
 // The pack's copy of background (|kind| 1) or sprite (|kind| 0) sheet |index|, NULL unless the option
 // that owns it is on and the pack has it.
 const uint8 *JaGraphics_Sheet(int kind, int index, uint32 *size);
+// The pack's sheet |index| of |kind| whether or not its option is on: what may sit in VRAM from before.
+const uint8 *JaGraphics_PackSheet(int kind, int index, uint32 *size);
 
 // The pack's patch for sprite sheet |index| (same layout as a set's: count, tile indices, tiles), NULL
 // unless the Copyright option is on and the pack has it.
@@ -57,6 +59,15 @@ const uint8 *JaGraphics_IntroTilemap(uint32 *size);
 bool JaGraphics_SetSheetAllowed(int kind, int index);
 bool JaGraphics_SetPatchAllowed(int index);
 bool JaGraphics_SetIntroAllowed(void);
+
+// Whether a Japanese set's own pause menu text tables are read: they name tiles of its HUD sheets
+// (105, 106), so they go with those sheets and are read only while kJaGfx_Hud draws them.
+bool JaGraphics_SetHudAllowed(void);
+
+// The pack's own pause words for language table |id| (a kLangTbl_Hud* id), drawn with its HUD sheets, and
+// their byte length in |len|. NULL unless kJaGfx_Hud is on, the set is Japanese and the pack carries
+// every pause table.
+const uint8 *JaGraphics_HudText(int id, int *len);
 
 // The Japanese copyright line's own sprite layout (its start position and objects differ from the US
 // line), read from the pack. Called first in ending.c's InitializeSceneSprite_Copyright and

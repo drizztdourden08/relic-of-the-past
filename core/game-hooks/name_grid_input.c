@@ -81,6 +81,8 @@ void NameGrid_DrawSprites(uint8 cursor_x, uint8 cursor_y) {
 static void DrawBox(uint16 addr, uint16 w) {
   uint16 *dst = vram_upload_data;
   uint16 tile = LanguageJa_NameTile(w) | kBoxPalette;
+  if (SelectUsJaName_On())
+    tile = SelectUsJa_TextWord(tile);
   dst[0] = swap16(addr);
   dst[1] = 0x100;
   dst[2] = tile;

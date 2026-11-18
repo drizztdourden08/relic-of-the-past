@@ -114,7 +114,7 @@ static int AppendTileRow(uint8 *out, int room, int us_row, int ja_row) {
     uint8 *p = out + half * (4 + 2 * kScreenCols);
     PutHeader(p, (uint16)((half ? kBg3Screen1 : kBg3First) + us_row * kScreenCols), 2 * kScreenCols);
     for (int c = 0; c < kScreenCols; c++) {
-      uint16 w = ja[(half * kScreenCols + c + kMapCols - kColShift) & (kMapCols - 1)];
+      uint16 w = SelectUsJa_TextWord(ja[(half * kScreenCols + c + kMapCols - kColShift) & (kMapCols - 1)]);
       p[4 + 2 * c] = (uint8)w;
       p[5 + 2 * c] = (uint8)(w >> 8);
     }
