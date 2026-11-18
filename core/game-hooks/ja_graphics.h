@@ -6,11 +6,12 @@
 //                      language set carries text for it. The text still follows the set.
 //   kJaGfx_Intro       the intro's background sheets and its tilemap (asset 99). The Japanese file select
 //                      layout reads the same sheets itself, whatever this option says.
-//   kJaGfx_Hud         the two HUD sprite sheets (105, 106).
+//   kJaGfx_Hud         no longer read: the two HUD sprite sheets (105, 106) carry the pause words, which
+//                      follow the language, so a Japanese set always draws them and no other set does.
 //   kJaGfx_Copyright   the tile patch on sprite sheet 8 that draws the Japanese copyright line.
 // The pictures come from the host's Japanese graphics pack (WasmSetJapaneseGraphic), extracted from a
 // Japanese cartridge, so they apply with any language set. A Japanese set also carries the same
-// pictures; its copy is used only while the option is on (JaGraphics_SetSheetAllowed).
+// pictures; its copy is used only while the option is on, its HUD sheets always (JaGraphics_SetSheetAllowed).
 //   kJaGfx_Title      the Japanese title sequence: the intro art as kJaGfx_Intro, and the triforce pieces stop
 //                      at the Japanese cartridge's heights (the pack's title parameters). Never applies while
 //                      kFeatures2_TitleOverride is on.
@@ -60,12 +61,12 @@ bool JaGraphics_SetSheetAllowed(int kind, int index);
 bool JaGraphics_SetPatchAllowed(int index);
 bool JaGraphics_SetIntroAllowed(void);
 
-// Whether a Japanese set's own pause menu text tables are read: they name tiles of its HUD sheets
-// (105, 106), so they go with those sheets and are read only while kJaGfx_Hud draws them.
+// Whether a set's own pause menu text tables are read. A Japanese set's name tiles of its HUD sheets
+// (105, 106), so they are read only while those sheets are drawn: the pack's, or the set's own copy.
 bool JaGraphics_SetHudAllowed(void);
 
 // The pack's own pause words for language table |id| (a kLangTbl_Hud* id), drawn with its HUD sheets, and
-// their byte length in |len|. NULL unless kJaGfx_Hud is on, the set is Japanese and the pack carries
+// their byte length in |len|. NULL unless the set is Japanese and the pack carries both HUD sheets and
 // every pause table.
 const uint8 *JaGraphics_HudText(int id, int *len);
 

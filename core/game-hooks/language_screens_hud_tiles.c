@@ -15,7 +15,7 @@ enum { kSprKind = 0, kTileBytes = 2048, kDecompBytes = 0x4000 };
 static const struct {
   uint8 sheet;
   uint16 vram;
-} kHudTiles[] = {{0x6a, 0x7000}, {0x69, 0x7800}};
+} kHudTiles[] = {{0x6a, 0x7000}, {0x6b, 0x7400}, {0x69, 0x7800}};
 
 static uint8 g_known[kDecompBytes];
 static uint8 g_chosen[kDecompBytes];

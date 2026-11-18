@@ -25,6 +25,7 @@ static const uint8 kHudTextTable[kHudTextCount] = {kLangTbl_HudAbility, kLangTbl
 
 static const uint8 kIntroSheets[] = {22, 23, 29, 30, 57, 64, 65};
 static const uint8 kHudSheets[] = {105, 106};
+enum { kHudSheetCount = countof(kHudSheets) };
 static const uint8 kCopyrightSheet = 8;
 
 static bool Listed(const uint8 *list, size_t count, int index) {
@@ -91,10 +92,13 @@ static const uint8 *Taken(const Blob *blob, uint32 *size) {
 }
 
 // The HUD sheets differ from the US ones only in their glyphs (kana where the US sheets hold letters),
-// and the pause words are text, which follows the profile's language. So they are drawn only for a
-// Japanese set, and only with the pack's own words for them; otherwise the US sheets stay.
+// and the pause words are text, which follows the profile's language. So they are drawn for every
+// Japanese set, whatever the option says, and only with the pack's own words for them; any other set
+// keeps the US sheets.
 static bool HudPackDrawn(void) {
-  if (!JaGraphics_On(kJaGfx_Hud) || SelectLayout_OfSet() != kSelectLayout_Ja) return false;
+  if (SelectLayout_OfSet() != kSelectLayout_Ja) return false;
+  for (int i = 0; i < kHudSheetCount; i++)
+    if (g_sheets[kSprSheetKind][kHudSheets[i]].data == NULL) return false;
   for (int i = 0; i < kHudTextCount; i++)
     if (g_hud_text[i].data == NULL) return false;
   return true;
@@ -102,8 +106,8 @@ static bool HudPackDrawn(void) {
 
 const uint8 *JaGraphics_Sheet(int kind, int index, uint32 *size) {
   uint32 option = SheetOption(kind, index);
-  if (option == 0 || !JaGraphics_On(option) || index < 0 || index >= kLangSheetMax) return NULL;
-  if (option == kJaGfx_Hud && !HudPackDrawn()) return NULL;
+  if (option == 0 || index < 0 || index >= kLangSheetMax) return NULL;
+  if (option == kJaGfx_Hud ? !HudPackDrawn() : !JaGraphics_On(option)) return NULL;
   return Taken(&g_sheets[kind][index], size);
 }
 
@@ -177,7 +181,7 @@ bool GameHook_CopyrightAnimate(int k) {
 bool JaGraphics_SetSheetAllowed(int kind, int index) {
   uint32 option = SheetOption(kind, index);
   if (kind == kBgSheetKind && SelectLayout_ActiveOn(kSelectScreen_Select) == kSelectLayout_Ja) return true;
-  return option == 0 || SelectLayout_OfSet() != kSelectLayout_Ja || JaGraphics_On(option);
+  return option == 0 || option == kJaGfx_Hud || SelectLayout_OfSet() != kSelectLayout_Ja || JaGraphics_On(option);
 }
 
 bool JaGraphics_SetPatchAllowed(int index) {
@@ -185,7 +189,9 @@ bool JaGraphics_SetPatchAllowed(int index) {
 }
 
 bool JaGraphics_SetHudAllowed(void) {
-  return SelectLayout_OfSet() != kSelectLayout_Ja || JaGraphics_On(kJaGfx_Hud);
+  if (SelectLayout_OfSet() != kSelectLayout_Ja || HudPackDrawn()) return true;
+  return LanguageScreensAssets_SetSheet(kSprSheetKind, kHudSheets[0]) != NULL &&
+         LanguageScreensAssets_SetSheet(kSprSheetKind, kHudSheets[1]) != NULL;
 }
 
 bool JaGraphics_SetIntroAllowed(void) {
