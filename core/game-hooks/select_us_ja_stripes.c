@@ -130,8 +130,8 @@ static bool UsGridRow(int screen, uint16 addr) {
   return screen == kSelectScreen_Name && row >= kGridTileRow0 && row < kGridTileRowEnd;
 }
 
-// Copies the stripe at |p| into |out|, its BG3 tiles translated and its label relabelled. Returns the
-// bytes written (|*used| the bytes read), or -1 when |room| is too small.
+// Copies the stripe at |p| into |out|: BG3 tiles translated and labels relabelled, the others through
+// SelectUsJa_FrameStripe. Returns the bytes written (|*used| the bytes read), -1 when |room| is too small.
 static int Stripe(int screen, const uint8 *p, uint8 *out, int room, int *used) {
   uint16 addr = (uint16)(p[0] << 8 | p[1]);
   uint8 flags = p[2];
@@ -146,13 +146,13 @@ static int Stripe(int screen, const uint8 *p, uint8 *out, int room, int *used) {
     if (written != 0)
       return written;
   }
+  if (!bg3)
+    return SelectUsJa_FrameStripe(screen, p, out, room);
   if (4 + payload > room)
     return -1;
   memcpy(out, p, (size_t)(4 + payload));
-  if (bg3) {
-    for (int i = 0; i + 1 < payload; i += 2)
-      PutWord(out + 4 + i, TranslateTile(WordAt(p + 4 + i)));
-  }
+  for (int i = 0; i + 1 < payload; i += 2)
+    PutWord(out + 4 + i, TranslateTile(WordAt(p + 4 + i)));
   return 4 + payload;
 }
 

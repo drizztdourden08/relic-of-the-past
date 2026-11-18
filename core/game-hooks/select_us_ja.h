@@ -1,6 +1,6 @@
 /* @layer core-game-hooks @kind native */
 // The US file select layout drawn with a Japanese set's words (select_us_ja_labels.c,
-// select_us_ja_stripes.c, and the name entry's select_us_ja_naming.c, select_us_ja_name_grid.c).
+// select_us_ja_stripes.c, select_us_ja_frame.c, and the name entry's select_us_ja_naming.c, select_us_ja_name_grid.c).
 // Included from game_hooks.h.
 //
 // The select, copy and erase screens keep the vendored US tilemaps, frame and stripes. Every BG3 stripe
@@ -21,6 +21,10 @@ bool SelectUsJa_Ready(void);
 // on |screen| (kSelectScreen_*): its tilemap words, in the palette the set draws them with, into |tiles|
 // and its first column into |start|. Returns the tile count (0 for a label with no Japanese words), or -1 when no label sits there.
 int SelectUsJa_Label(int screen, int row, int col, int len, uint16 *tiles, int *start);
+
+// The non-BG3 stripe at |p| copied into |out|, the select screen's header frame widened by one tile on
+// its right (select_us_ja_frame.c). Returns the bytes written, -1 when |room| is too small.
+int SelectUsJa_FrameStripe(int screen, const uint8 *p, uint8 *out, int room);
 
 // BG3 word |w| with a Japanese glyph's palette (7) moved to the US text palette (6); others unchanged.
 uint16 SelectUsJa_TextWord(uint16 w);
