@@ -780,6 +780,9 @@ importers:
 
   packages/features:
     dependencies:
+      '@drizztdourden08/brock-core':
+        specifier: ^0.122.0
+        version: 0.122.0
       '@rotp/game-data':
         specifier: workspace:*
         version: link:../game-data
