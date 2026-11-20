@@ -1,0 +1,72 @@
+/* @layer renderer-app @kind constants */
+import { msg } from '@drizztdourden08/brock-core/i18n';
+import type { Message } from '@drizztdourden08/brock-core/i18n';
+
+const crystal = (n: number): Message => msg('views-randomizer:inventory.slot.crystal', { n });
+
+const INVENTORY_CATEGORY_TEXT: Readonly<Record<string, Message>> = {
+  Weapons: msg('views-randomizer:inventory.category.weapons'),
+  'Rods & Magic': msg('views-randomizer:inventory.category.rods-magic'),
+  Equipment: msg('views-randomizer:inventory.category.equipment'),
+  Items: msg('views-randomizer:inventory.category.items'),
+  Progress: msg('views-randomizer:inventory.category.progress'),
+};
+
+const INVENTORY_SLOT_TEXT: Readonly<Record<string, Message>> = {
+  Armor: msg('views-randomizer:inventory.slot.armor'),
+  'Blue Mail': msg('views-randomizer:inventory.slot.blue-mail'),
+  'Red Mail': msg('views-randomizer:inventory.slot.red-mail'),
+  'Green Pendant': msg('views-randomizer:inventory.slot.green-pendant'),
+  'Red Pendant': msg('views-randomizer:inventory.slot.red-pendant'),
+  'Blue Pendant': msg('views-randomizer:inventory.slot.blue-pendant'),
+  'Crystal 1': crystal(1),
+  'Crystal 2': crystal(2),
+  'Crystal 3': crystal(3),
+  'Crystal 4': crystal(4),
+  'Crystal 5': crystal(5),
+  'Crystal 6': crystal(6),
+  'Crystal 7': crystal(7),
+  Blue: msg('views-randomizer:inventory.slot.blue'),
+  Red: msg('views-randomizer:inventory.slot.red'),
+  Bombos: msg('views-randomizer:inventory.slot.bombos'),
+  Bombs: msg('views-randomizer:inventory.slot.bombs'),
+  Book: msg('views-randomizer:inventory.slot.book'),
+  Boomerang: msg('views-randomizer:inventory.slot.boomerang'),
+  Boots: msg('views-randomizer:inventory.slot.boots'),
+  Bottle: msg('views-randomizer:inventory.slot.bottle'),
+  Bow: msg('views-randomizer:inventory.slot.bow'),
+  'Bug Net': msg('views-randomizer:inventory.slot.bug-net'),
+  Net: msg('views-randomizer:inventory.slot.net'),
+  'Cane of Byrna': msg('views-randomizer:inventory.slot.cane-of-byrna'),
+  Byrna: msg('views-randomizer:inventory.slot.byrna'),
+  'Cane of Somaria': msg('views-randomizer:inventory.slot.cane-of-somaria'),
+  Somaria: msg('views-randomizer:inventory.slot.somaria'),
+  Cape: msg('views-randomizer:inventory.slot.cape'),
+  Ether: msg('views-randomizer:inventory.slot.ether'),
+  Quake: msg('views-randomizer:inventory.slot.quake'),
+  Fighter: msg('views-randomizer:inventory.slot.fighter'),
+  Master: msg('views-randomizer:inventory.slot.master'),
+  Tempered: msg('views-randomizer:inventory.slot.tempered'),
+  Golden: msg('views-randomizer:inventory.slot.golden'),
+  'Fire Rod': msg('views-randomizer:inventory.slot.fire-rod'),
+  'Ice Rod': msg('views-randomizer:inventory.slot.ice-rod'),
+  Fire: msg('views-randomizer:inventory.slot.fire'),
+  Flippers: msg('views-randomizer:inventory.slot.flippers'),
+  Flute: msg('views-randomizer:inventory.slot.flute'),
+  Glove: msg('views-randomizer:inventory.slot.glove'),
+  Gloves: msg('views-randomizer:inventory.slot.gloves'),
+  Mitts: msg('views-randomizer:inventory.slot.mitts'),
+  Hammer: msg('views-randomizer:inventory.slot.hammer'),
+  Hookshot: msg('views-randomizer:inventory.slot.hookshot'),
+  Lamp: msg('views-randomizer:inventory.slot.lamp'),
+  Mirror: msg('views-randomizer:inventory.slot.mirror'),
+  'Moon Pearl': msg('views-randomizer:inventory.slot.moon-pearl'),
+  Pearl: msg('views-randomizer:inventory.slot.pearl'),
+  Mushroom: msg('views-randomizer:inventory.slot.mushroom'),
+  Powder: msg('views-randomizer:inventory.slot.powder'),
+  Shield: msg('views-randomizer:inventory.slot.shield'),
+  Silver: msg('views-randomizer:inventory.slot.silver'),
+  Sword: msg('views-randomizer:inventory.slot.sword'),
+};
+
+export { INVENTORY_CATEGORY_TEXT, INVENTORY_SLOT_TEXT };
