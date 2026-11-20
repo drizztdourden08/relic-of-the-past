@@ -5,8 +5,9 @@ import { extractEndText } from '../end-text/extract-end-text';
 import { readByteRegion } from '../read-byte-region';
 import { readStripeTable } from '../read-stripe-table';
 import { readWordRegion } from '../read-word-region';
-import type { PauseTable, ScreenPayload, SelectFileTable } from '../screen-payload.type';
-import { OWN_FONT_INDEX, PAUSE_TABLES, SELECT_FILE_TABLES } from '../screens.constants';
+import { readWordTables } from '../read-word-tables';
+import type { ScreenPayload, SelectFileTable } from '../screen-payload.type';
+import { OWN_FONT_INDEX, SELECT_FILE_TABLES } from '../screens.constants';
 import { JA_MENU_TILEMAP_SLOTS, JA_NAME_GRID_BYTES } from './japanese-screens.constants';
 
 const menuTilemaps = (rom: RomData, table: JaScreenAddressTable): Uint8Array[] =>
@@ -26,11 +27,7 @@ const extractJapaneseScreens = (rom: RomData, table: JaScreenAddressTable): Scre
   menuTilemaps: menuTilemaps(rom, table),
   selectFileStripes: selectFileStripes(rom, table),
   nameGrid: readByteRegion(rom, { address: table.nameGridAddress, count: JA_NAME_GRID_BYTES }),
-  pauseText: Object.fromEntries(
-    PAUSE_TABLES.map((id) => [id, readWordRegion(rom, table.pauseText[id])]),
-  ) as Record<PauseTable, Uint16Array>,
-  dungeonMapLabels: readWordRegion(rom, table.dungeonMapLabels),
-  creditsDigits: readWordRegion(rom, table.creditsDigits),
+  ...readWordTables(rom, table),
   creditsScrollY: readWordRegion(rom, table.creditsScrollY),
   ...extractEndText(rom, table),
   sheets: [],

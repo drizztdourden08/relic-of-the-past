@@ -1,11 +1,11 @@
 /* @layer renderer-components @kind component */
 import { useT } from '@drizztdourden08/brock-react';
-import { EmptyState, Text } from '@drizztdourden08/tessera/primitives';
+import { EmptyState } from '@drizztdourden08/tessera/primitives';
 import { ListDetailLayout } from '@drizztdourden08/tessera/composites';
 import { CreateListPane } from '@app/compounds/CreateListPane';
 import { useCreateFlow } from '@app/hooks/useCreateFlow';
 import { useInstalledKind } from '@app/hooks/useInstalledKind';
-import { InstalledOriginBar, useConfirmUninstall } from '@app/views/InstalledOriginBar';
+import { installedOriginOf, uninstallNoticeOf, useConfirmUninstall } from '@app/views/InstalledOriginBar';
 import { LanguageCreateWizard } from './language-manager/LanguageCreateWizard';
 import { useLanguageDelete } from './language-manager/useLanguageDelete';
 import { useLanguageManagerDisplay } from './language-manager/useLanguageManagerDisplay';
@@ -27,8 +27,8 @@ const LanguageManager = (props: LanguageManagerProps) => {
 
   const { setLabel, isInstalled, ownSets } = useLanguageManagerDisplay({ languages, packFor });
 
-  const origin = installed === null ? null : <InstalledOriginBar pack={installed} onDuplicated={refreshThenSelect} onUpdateInstalled={refreshThenSelect} onUninstalled={handleUninstalled} />;
-  const notice = uninstallError === null ? null : <Text variant="caption" tone="danger" role="alert">{uninstallError}</Text>;
+  const origin = installedOriginOf(installed, refreshThenSelect, handleUninstalled);
+  const notice = uninstallNoticeOf(uninstallError);
 
   const list = (
     <CreateListPane label={t('data-manager:language-manager.new-language')} creating={flow.creating} onCreate={flow.start} notice={notice}>

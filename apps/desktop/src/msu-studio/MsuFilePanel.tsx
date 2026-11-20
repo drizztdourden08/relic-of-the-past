@@ -2,16 +2,14 @@
 import { useState } from 'react';
 import { Box, Text } from '@drizztdourden08/tessera/primitives';
 import { UploadField } from '@app/compounds/UploadField';
-import { StudioLayout } from '@drizztdourden08/tessera/composites';
 import { useT } from '@drizztdourden08/brock-react';
-import { STUDIO_EDITOR_MIN_WIDTH, StudioPanelContent } from '@app/studio';
 import { fileToolGroups } from './file-tool-groups';
 import { FileList } from './FileList';
 import { FilesSummary } from './FilesSummary';
+import { StudioDetailsLayout } from './StudioDetailsLayout';
 import { OptimizeDialog } from './OptimizeDialog';
 import { useFilePanelModel } from './behavior/useFilePanelModel';
 import { AUDIO_ACCEPT } from './msu.constants';
-import { DETAILS_PANEL } from './studio-frame/studio-frame.constants';
 import type { MsuFilePanelProps } from './MsuFilePanel.type';
 
 const MsuFilePanel = (props: MsuFilePanelProps) => {
@@ -34,13 +32,7 @@ const MsuFilePanel = (props: MsuFilePanelProps) => {
   const detail = <><FilesSummary model={model} readOnly={readOnly} onOptimize={() => setOptimizing(true)} />{packPanel}</>;
 
   return (
-    <StudioLayout
-      editorLabel={t('msu-studio:studio.editor.files')}
-      compactToolbar
-      editorMinWidth={STUDIO_EDITOR_MIN_WIDTH}
-      toolbar={toolbar}
-      end={{ ...DETAILS_PANEL, title: t('msu-studio:studio.details.title'), content: <StudioPanelContent>{detail}</StudioPanelContent> }}
-    >
+    <StudioDetailsLayout editorLabel={t('msu-studio:studio.editor.files')} toolbar={toolbar} detail={detail}>
       <Box className="msu-panel">
         <UploadField
           variant="block"
@@ -68,7 +60,7 @@ const MsuFilePanel = (props: MsuFilePanelProps) => {
         />
       </Box>
       <OptimizeDialog open={optimizing} pack={pack} onClose={() => setOptimizing(false)} onConverted={onReload} />
-    </StudioLayout>
+    </StudioDetailsLayout>
   );
 };
 

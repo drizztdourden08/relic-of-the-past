@@ -1,5 +1,6 @@
 /* @layer shared-asset-extraction @kind data */
 import type { ScreenAddressTable } from '../screen-payload.type';
+import { US_EN_SHARED } from './us-en-shared';
 
 const US_SCREEN_ADDRESSES: ScreenAddressTable = {
   id: 'us',
@@ -15,18 +16,7 @@ const US_SCREEN_ADDRESSES: ScreenAddressTable = {
     killTargetTab2: { address: 0x8cd41e, count: 101 },
   },
   nameGrid: { address: 0x8cd935, count: 128 },
-  pauseText: {
-    ability: { address: 0x8df959, count: 80 },
-    gloves: { address: 0x8df931, count: 20 },
-    bottles: { address: 0x8df449, count: 128 },
-    mushroom: { address: 0x8df549, count: 16 },
-    flute: { address: 0x8df569, count: 32 },
-    mirror: { address: 0x8df5a9, count: 16 },
-    bow: { address: 0x8df5c9, count: 48 },
-    items: { address: 0x8df1c9, count: 320 },
-    dungeonItems: { address: 0x8ded09, count: 16 },
-  },
-  dungeonMapLabels: { address: 0x8af009, count: 744 },
+  ...US_EN_SHARED,
   creditsDigits: { address: 0x8ebe04, count: 2 },
   endingCaptions: {
     kind: 'bytes',
@@ -39,7 +29,6 @@ const US_SCREEN_ADDRESSES: ScreenAddressTable = {
     offsets: { address: 0x8eb93d, count: 394 },
     map: { address: 0x8eb038, count: 160 },
   },
-  sheetPointers: { spr: 0x00cff3, bg: 0x00cf80 },
   sheets: { spr: [105, 106, 107], bg: [] },
   sheetPatches: [],
 };

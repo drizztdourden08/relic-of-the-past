@@ -1,9 +1,10 @@
 /* @layer renderer-components @kind component */
 import { useT } from '@drizztdourden08/brock-react';
 import { useMemo } from 'react';
-import { Slider, Toggle, Button, Box } from '@drizztdourden08/tessera/primitives';
+import { Slider, Toggle, Button } from '@drizztdourden08/tessera/primitives';
 import { SettingsSection } from '@drizztdourden08/tessera/composites';
 import { NumberField } from './NumberField';
+import { PositionFields } from './PositionFields';
 import type { ShadowLightInspectorProps } from './ShadowLightInspector.type';
 
 const ShadowLightInspector = ({ screenId, selectedLight, updateLight, handleDelete }: ShadowLightInspectorProps) => {
@@ -18,10 +19,7 @@ const ShadowLightInspector = ({ screenId, selectedLight, updateLight, handleDele
 
   return (
     <SettingsSection title={t('views-shadow-editor:light.title')}>
-      <Box className="shadow-editor-panel__field-row">
-        <NumberField icon="X" value={selectedLight.x} step={1} onChange={setters.x} />
-        <NumberField icon="Y" value={selectedLight.y} step={1} onChange={setters.y} />
-      </Box>
+      <PositionFields x={selectedLight.x} y={selectedLight.y} onX={setters.x} onY={setters.y} />
 
       <NumberField icon="R" value={selectedLight.radius} step={4} min={4} max={512} onChange={setters.radius} />
       <Slider

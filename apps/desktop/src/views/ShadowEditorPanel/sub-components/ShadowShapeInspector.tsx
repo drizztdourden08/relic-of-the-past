@@ -4,6 +4,7 @@ import { useMemo } from 'react';
 import { Box, Text, Button } from '@drizztdourden08/tessera/primitives';
 import { SettingsSection } from '@drizztdourden08/tessera/composites';
 import { NumberField } from './NumberField';
+import { PositionFields } from './PositionFields';
 import { HeightLevelPicker } from './HeightLevelPicker';
 import type { ShadowShapeInspectorProps } from './ShadowShapeInspector.type';
 
@@ -26,10 +27,7 @@ const ShadowShapeInspector = ({ screenId, selectedHm, updateHeightmapElement, ha
 
   return (
     <SettingsSection title={t('views-shadow-editor:shape.title')}>
-      <Box className="shadow-editor-panel__field-row">
-        <NumberField icon="X" value={selectedHm.shape.x} step={1} onChange={setters.x} />
-        <NumberField icon="Y" value={selectedHm.shape.y} step={1} onChange={setters.y} />
-      </Box>
+      <PositionFields x={selectedHm.shape.x} y={selectedHm.shape.y} onX={setters.x} onY={setters.y} />
 
       <Box className="shadow-editor-panel__field-row">
         <NumberField icon="W" value={selectedHm.shape.width} step={1} min={1} onChange={setters.width} />

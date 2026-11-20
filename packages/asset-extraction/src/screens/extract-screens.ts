@@ -10,8 +10,9 @@ import { readPauseHeaders } from './read-pause-headers';
 import { readSheetPatch } from './read-sheet-patch';
 import { readStripeTable } from './read-stripe-table';
 import { rebaseStripes } from './rebase-stripes';
-import type { FloorLabelTiles, PauseTable, ScreenAddressTable, ScreenPayload, SelectFileTable } from './screen-payload.type';
-import { OWN_FONT_INDEX, PAUSE_TABLES, SELECT_FILE_TABLES, TILEMAP_FONT_BYTES } from './screens.constants';
+import { readWordTables } from './read-word-tables';
+import type { FloorLabelTiles, ScreenAddressTable, ScreenPayload, SelectFileTable } from './screen-payload.type';
+import { OWN_FONT_INDEX, SELECT_FILE_TABLES, TILEMAP_FONT_BYTES } from './screens.constants';
 
 const readSheets = (rom: RomData, table: ScreenAddressTable): ScreenPayload['sheets'] => [
   ...table.sheets.spr.map((index) => readSheet(rom, table, 'spr', index)),
@@ -32,11 +33,7 @@ const extractScreens = (rom: RomData, table: ScreenAddressTable): ScreenPayload 
     SELECT_FILE_TABLES.map((id) => [id, rebaseStripes(readByteRegion(rom, table.selectFile[id]), table.tilemapRebase)]),
   ) as Record<SelectFileTable, Uint8Array>,
   nameGrid: readByteRegion(rom, table.nameGrid),
-  pauseText: Object.fromEntries(
-    PAUSE_TABLES.map((id) => [id, readWordRegion(rom, table.pauseText[id])]),
-  ) as Record<PauseTable, Uint16Array>,
-  dungeonMapLabels: readWordRegion(rom, table.dungeonMapLabels),
-  creditsDigits: readWordRegion(rom, table.creditsDigits),
+  ...readWordTables(rom, table),
   ...extractEndText(rom, table),
   sheets: readSheets(rom, table),
   sheetPatches: table.sheetPatches.map((source) => readSheetPatch(rom, table, source)),

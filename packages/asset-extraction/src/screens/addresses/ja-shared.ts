@@ -1,5 +1,6 @@
 /* @layer shared-asset-extraction @kind data */
 import { JA_COPYRIGHT_SHEET, JA_COPYRIGHT_TILES } from '../japanese/japanese-screens.constants';
+import { PAUSE_TEXT_COMMON } from './pause-text-common';
 import type { JaScreenAddressTable } from './ja.type';
 
 const JA_SHARED_ADDRESSES: Pick<
@@ -8,15 +9,10 @@ const JA_SHARED_ADDRESSES: Pick<
   | 'sheetPatches' | 'sheetPointers' | 'sheets' | 'titlePalettes'
 > = {
   pauseText: {
+    ...PAUSE_TEXT_COMMON,
     ability: { address: 0x8df979, count: 80 },
     gloves: { address: 0x8df951, count: 20 },
-    bottles: { address: 0x8df449, count: 128 },
-    mushroom: { address: 0x8df549, count: 16 },
-    flute: { address: 0x8df569, count: 32 },
-    mirror: { address: 0x8df5a9, count: 16 },
     bow: { address: 0x8df5e9, count: 48 },
-    items: { address: 0x8df1c9, count: 320 },
-    dungeonItems: { address: 0x8ded09, count: 16 },
   },
   dungeonMapLabels: { address: 0x8af019, count: 744 },
   creditsDigits: { address: 0x8ee7dc, count: 2 },

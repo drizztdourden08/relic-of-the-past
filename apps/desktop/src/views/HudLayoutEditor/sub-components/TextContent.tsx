@@ -1,5 +1,6 @@
 /* @layer renderer-components @kind component */
-import { Box, Field, NumberInput, Select } from '@drizztdourden08/tessera/primitives';
+import { Box, NumberInput, Select } from '@drizztdourden08/tessera/primitives';
+import { InspectField } from './InspectField';
 import { PaintField } from './PaintField';
 import { TextFaceFields } from './TextFaceFields';
 import { TextFormatFields } from './TextFormatFields';
@@ -28,12 +29,12 @@ const TextContent = (props: TextContentProps) => {
       <TextStrokeFields spec={spec} onChange={onChange} scope={scope} insideRepeat={insideRepeat} />
 
       <Box className="hud-inspect__row">
-        <Field size="sm" label={t('hud-editor:text-content.label.align')} className="hud-inspect__extent">
+        <InspectField label={t('hud-editor:text-content.label.align')}>
           <Select size="sm" value={spec.align ?? 'start'} options={ALIGNS.map((a) => ({ value: a, label: a }))} onChange={(align) => onChange({ align: align as HudTextAlign })} />
-        </Field>
-        <Field size="sm" label={t('hud-editor:text-content.label.tracking')} className="hud-inspect__extent">
+        </InspectField>
+        <InspectField label={t('hud-editor:text-content.label.tracking')}>
           <NumberInput size="sm" aria-label={t('hud-editor:text-content.aria.tracking')} step={1} disabled={spec.face.from === 'sprite'} value={spec.tracking ?? 0} onChange={(tracking) => onChange({ tracking: tracking === 0 ? undefined : tracking })} />
-        </Field>
+        </InspectField>
       </Box>
     </Box>
   );

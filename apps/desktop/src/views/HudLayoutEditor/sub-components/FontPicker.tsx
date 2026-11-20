@@ -1,5 +1,6 @@
 /* @layer renderer-components @kind component */
 import { Box, Field, Flex, NumberInput, Select, Slider, Text } from '@drizztdourden08/tessera/primitives';
+import { InspectField } from './InspectField';
 import { FAMILIES, FONT_VARS, GAME_DESIGN_SIZE } from './FontPicker.constants';
 import type { HudFontFamily } from '@rotp/hud';
 import type { FontPickerProps } from './FontPicker.type';
@@ -22,10 +23,10 @@ const FontPicker = (props: FontPickerProps) => {
         07 Ab
       </Text>
       <Box className="hud-inspect__row">
-        <Field size="sm" label={t('hud-editor:font-picker.label.face')} className="hud-inspect__extent">
+        <InspectField label={t('hud-editor:font-picker.label.face')}>
           <Select size="sm" value={family} options={FAMILIES.map((f) => ({ value: f.value, label: text(f.label) }))} onChange={(next) => onChange(next as HudFontFamily, snap(size, next as HudFontFamily), weight)} />
-        </Field>
-        <Field size="sm" label={family === 'game' ? t('hud-editor:font-picker.label.size-game', { step: GAME_DESIGN_SIZE }) : t('hud-editor:font-picker.label.size')} className="hud-inspect__extent">
+        </InspectField>
+        <InspectField label={family === 'game' ? t('hud-editor:font-picker.label.size-game', { step: GAME_DESIGN_SIZE }) : t('hud-editor:font-picker.label.size')}>
           <NumberInput
             size="sm"
             aria-label={t('hud-editor:font-picker.aria.font-size')}
@@ -34,7 +35,7 @@ const FontPicker = (props: FontPickerProps) => {
             step={family === 'game' ? GAME_DESIGN_SIZE : 1}
             onChange={(next) => onChange(family, snap(next, family), weight)}
           />
-        </Field>
+        </InspectField>
       </Box>
       {family !== 'game' && (
         <Field size="sm" label={t('hud-editor:font-picker.label.weight')} className="hud-bounded__slider">
