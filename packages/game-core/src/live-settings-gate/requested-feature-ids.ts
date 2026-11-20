@@ -10,6 +10,7 @@ const derivedFeatureIds = (s: GameSettings): string[] => {
   if (offscreenEnemyMode(s) === 'idle') ids.push('offscreenAI');
   if (offscreenEnemyMode(s) === 'paused') ids.push('pauseOffscreenAI');
   if (s.titleScreen === 'reimagined') ids.push('titleOverride');
+  if (s.titleScreen === 'original' && s.originalTitle === 'ja') ids.push('jaTitleScreen');
   if (s.widescreenPlayArea === true) ids.push('widescreenPlayArea');
   return ids;
 };

@@ -87,6 +87,8 @@
   "feature.languageScreens.message": "Varje skärm visar språkets egen text, inte bara dialogen.",
   "feature.jaFileSelectStyle.label": "Japansk filvalsstil",
   "feature.jaFileSelectStyle.message": "Filvalet använder den japanska layouten.",
+  "feature.jaTitleScreen.label": "Japansk titelskärm",
+  "feature.jaTitleScreen.message": "Originaltiteln använder den japanska sekvensen.",
   "feature.prefillFileName.label": "Förifyll filnamn",
   "feature.prefillFileName.message": "Nya filer får namnet Link, med markören på End.",
   "feature.trackerEnabled.label": "Kontrollspårare",

@@ -87,6 +87,8 @@
   "feature.languageScreens.message": "Chaque écran affiche le texte propre à la langue, pas seulement les dialogues.",
   "feature.jaFileSelectStyle.label": "Style de sélection de fichier japonais",
   "feature.jaFileSelectStyle.message": "La sélection de fichier utilise la disposition japonaise.",
+  "feature.jaTitleScreen.label": "Écran-titre japonais",
+  "feature.jaTitleScreen.message": "Le titre original utilise la séquence japonaise.",
   "feature.prefillFileName.label": "Préremplir le nom du fichier",
   "feature.prefillFileName.message": "Les nouveaux fichiers s'appellent Link, avec le curseur sur Fin.",
   "feature.trackerEnabled.label": "Suivi des checks",

@@ -46,12 +46,12 @@ bool LanguageScreens_On(void) {
   return (enhanced_features2 & kFeatures2_LanguageScreens) != 0;
 }
 
-// A Japanese set's pause menu tables name tiles of its own HUD sheets, read only with those sheets
-// (JaGraphics_SetHudAllowed). The Japanese select-file set (its stripes and grid, told apart by a stripe of another length than
+// A Japanese set's pause menu tables name tiles of the Japanese HUD sheets, which come only from the
+// Japanese graphics pack, and the pack carries its own pause words (PackText), so a Japanese set's are never read. The Japanese select-file set (its stripes and grid, told apart by a stripe of another length than
 // the US one) is read only as a whole and only in Japanese mode: without it the US screens would write
 // US offsets into Japanese stripes, so they keep the vendored tables.
 static bool HeldBack(int id) {
-  if (id >= kLangTbl_HudAbility && id <= kLangTbl_HudEquipDungeon) return !JaGraphics_SetHudAllowed();
+  if (id >= kLangTbl_HudAbility && id <= kLangTbl_HudEquipDungeon) return SelectLayout_OfSet() == kSelectLayout_Ja;
   if (id < kLangTbl_SelectFileFunc3 || id > kLangTbl_NameGrid) return false;
   const LanguageScreens *s = &g_language_screens;
   int func3 = kLangTbl_SelectFileFunc3;

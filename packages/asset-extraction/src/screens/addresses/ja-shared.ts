@@ -5,7 +5,7 @@ import type { JaScreenAddressTable } from './ja.type';
 const JA_SHARED_ADDRESSES: Pick<
   JaScreenAddressTable,
   | 'credits' | 'creditsDigits' | 'creditsScrollY' | 'dungeonMapLabels' | 'endingCaptions' | 'pauseText'
-  | 'sheetPatches' | 'sheetPointers' | 'sheets'
+  | 'sheetPatches' | 'sheetPointers' | 'sheets' | 'titlePalettes'
 > = {
   pauseText: {
     ability: { address: 0x8df979, count: 80 },
@@ -35,6 +35,12 @@ const JA_SHARED_ADDRESSES: Pick<
   sheetPointers: { spr: 0xd033, bg: 0xcfc0 },
   sheets: { spr: [105, 106], bg: [22, 23, 29, 30, 57, 64, 65] },
   sheetPatches: [{ index: JA_COPYRIGHT_SHEET, tiles: JA_COPYRIGHT_TILES }],
+  titlePalettes: [
+    { address: 0x9be826, count: 35 },
+    { address: 0x9be8ea, count: 21 },
+    { address: 0x9be604, count: 7 },
+    { address: 0x9bd438, count: 7 },
+  ],
 };
 
 export { JA_SHARED_ADDRESSES };

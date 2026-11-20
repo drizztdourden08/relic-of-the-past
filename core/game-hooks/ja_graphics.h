@@ -1,20 +1,19 @@
 /* @layer core-game-hooks @kind native */
 // The Japanese cartridge's graphics (ja_graphics.c). Included from game_hooks.h.
 //
-// The pictures that carry the language follow the language set: with a Japanese set they are drawn, with
-// any other set never, and no setting switches them. The bits below are latched values; only
-// kJaGfx_FileSelect is still read from the host's features2 word, the rest are set from the set:
+// The Japanese cartridge's pictures come ONLY from the host's Japanese graphics pack (WasmSetJapaneseGraphic),
+// imported from a Japanese cartridge; a language set carries text only and none of them is ever filled
+// from it. Without the pack no Japanese picture is drawn. The bits below are latched values (Live):
 //   kJaGfx_FileSelect  option (layout, no language): the file select screens run the Japanese layout
 //                      (select_layout.c) where the language set carries text for it. The text still follows the set.
+//   kJaGfx_Title       option: the title is the Japanese cartridge's (title_ja.c): its logo, copyright line,
+//                      triforce heights, subtitle plate, palettes and sequence. Latched on only while the pack
+//                      holds all of it and kFeatures2_TitleOverride is off; it brings the two bits below.
 //   kJaGfx_Intro       the intro's background sheets and its tilemap (asset 99). The Japanese file select
 //                      layout reads the same sheets itself.
-//   kJaGfx_Title       the triforce pieces stop at the Japanese cartridge's heights (the pack's title
-//                      parameters), which fit its logo. Never applies while kFeatures2_TitleOverride is on.
 //   kJaGfx_Copyright   the tile patch on sprite sheet 8 that draws the Japanese copyright line.
 //   kJaGfx_Hud         never set: the two HUD sprite sheets (105, 106) carry the pause words, which a
-//                      Japanese set always draws (HudPackDrawn) and no other set does.
-// The pictures come from the host's Japanese graphics pack (WasmSetJapaneseGraphic), extracted from a
-// Japanese cartridge. A Japanese set also carries the same pictures, used where the pack lacks them.
+//                      Japanese set draws with the pack (HudPackDrawn) and no other set does.
 // The bits sit at 19 to 23, below kFeatures2_HandAuthoredFloor. gen-bundle-flags.mjs refuses to allocate
 // a generated word-2 bit at 19 or above, so the generated bug-fix flags never reach them.
 #pragma once
@@ -55,16 +54,6 @@ const uint8 *JaGraphics_Patch(int index, uint32 *size);
 // The pack's intro tilemap, NULL unless the Intro option is on and the pack has it.
 const uint8 *JaGraphics_IntroTilemap(uint32 *size);
 
-// Whether a Japanese language set's own copy of a sheet, patch or the intro tilemap is drawn: always
-// for what no option owns or for a set that is not Japanese, otherwise only with the owning option on.
-bool JaGraphics_SetSheetAllowed(int kind, int index);
-bool JaGraphics_SetPatchAllowed(int index);
-bool JaGraphics_SetIntroAllowed(void);
-
-// Whether a set's own pause menu text tables are read. A Japanese set's name tiles of its HUD sheets
-// (105, 106), so they are read only while those sheets are drawn: the pack's, or the set's own copy.
-bool JaGraphics_SetHudAllowed(void);
-
 // The pack's own pause words for language table |id| (a kLangTbl_Hud* id), drawn with its HUD sheets, and
 // their byte length in |len|. NULL unless the set is Japanese and the pack carries both HUD sheets and
 // every pause table.
@@ -76,6 +65,11 @@ const uint8 *JaGraphics_HudText(int id, int *len);
 // off or no pack entry) to leave the US routine untouched.
 bool GameHook_CopyrightInit(int k);
 bool GameHook_CopyrightAnimate(int k);
+
+// The subtitle plate's sprite layout (count, start x, start y, then 8 byte records) and the title's palette
+// words, NULL unless the title is Japanese (kJaGfx_Title latched).
+const uint8 *JaGraphics_PlateOam(int *count);
+const uint16 *JaGraphics_TitlePalettes(void);
 
 // The triforce piece |k|'s resting height: the pack's Japanese value while the Title option is on and the
 // pack has it, else |us_limit|. Called by ending.c's Intro_SpriteType_B_0.

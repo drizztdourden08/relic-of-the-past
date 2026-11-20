@@ -144,6 +144,7 @@ const DEFAULT_SETTINGS: GameSettings = {
   hudCountdownStyle: 'pixel',
 
   titleScreen: 'reimagined',
+  originalTitle: 'us',
   titleMotion: 'drifting',
   titleFollowsProgress: true,
   titleSword: 'progress',

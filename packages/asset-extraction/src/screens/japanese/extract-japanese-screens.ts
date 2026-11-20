@@ -4,8 +4,6 @@ import type { RomData } from '../../rom/rom-types';
 import type { JaScreenAddressTable } from '../addresses/ja.type';
 import { extractEndText } from '../end-text/extract-end-text';
 import { readByteRegion } from '../read-byte-region';
-import { readSheet } from '../read-sheet';
-import { readSheetPatch } from '../read-sheet-patch';
 import { readStripeTable } from '../read-stripe-table';
 import { readWordRegion } from '../read-word-region';
 import type { PauseTable, ScreenPayload, SelectFileTable } from '../screen-payload.type';
@@ -26,6 +24,8 @@ const selectFileStripes = (rom: RomData, table: JaScreenAddressTable): Record<Se
     }),
   ) as Record<SelectFileTable, Uint8Array>;
 
+// A Japanese set carries text and screen layouts only: the cartridge's pictures (the intro and HUD sheets,
+// the copyright patch, the title's tilemap) come from the Japanese graphics pack (compileJapaneseGraphics).
 const extractJapaneseScreens = (rom: RomData, table: JaScreenAddressTable): ScreenPayload => ({
   menuTilemaps: menuTilemaps(rom, table),
   selectFileStripes: selectFileStripes(rom, table),
@@ -37,11 +37,8 @@ const extractJapaneseScreens = (rom: RomData, table: JaScreenAddressTable): Scre
   creditsDigits: readWordRegion(rom, table.creditsDigits),
   creditsScrollY: readWordRegion(rom, table.creditsScrollY),
   ...extractEndText(rom, table),
-  sheets: [
-    ...table.sheets.spr.map((index) => readSheet(rom, table, 'spr', index)),
-    ...table.sheets.bg.map((index) => readSheet(rom, table, 'bg', index)),
-  ],
-  sheetPatches: table.sheetPatches.map((source) => readSheetPatch(rom, table, source)),
+  sheets: [],
+  sheetPatches: [],
   tilemapFont: OWN_FONT_INDEX,
   tilemapFontData: buildJapaneseTilemapFont(extractJapaneseFont(rom).sheet),
 });

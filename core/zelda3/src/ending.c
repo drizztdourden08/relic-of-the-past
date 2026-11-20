@@ -512,6 +512,7 @@ void Module00_Intro() {  // 8cc120
   // WRAM and the tileset load both finish as submodule 1 ends. Vanilla waits for 8 instead, by
   // which point the whole logo animation has played out.
   uint8 skip_at = skip_early ? 2 : 8;
+  skip_at = GameHook_TitleJaSkipAt(skip_at);
   // The host's title takes the press itself from the frame the pieces exist (title_skip.c).
   GameHook_TitleRestart();
   int title_skip_floor = GameHook_TitleSkipFloor();
@@ -534,6 +535,7 @@ void Module00_Intro() {  // 8cc120
     FadeMusicAndResetSRAMMirror();
     return;
   }
+  if (!GameHook_TitleJaSubmodule())
   switch (submodule_index) {
   case 0: Intro_Init(); break;
   case 1: Intro_Init_Continue(); break;
@@ -949,7 +951,7 @@ void Intro_CopySpriteType4ToOam(int k) {  // 8cc82f
 }
 
 void EXIT_0CCA90(int k) {  // 8cc84f
-  // empty
+  GameHook_TitlePlate(k);
 }
 
 void InitializeSceneSprite_Copyright(int k) {  // 8cc850

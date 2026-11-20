@@ -15,7 +15,7 @@ typedef struct {
 
 // Ids 0x300 + index: a tile patch for sprite sheet |index| (see ApplyPatch).
 enum { kAssetIdBase = 0x40, kSheetIdBase = 0x100, kPatchIdBase = 0x300, kSheetBytes = 0x600, kTileBytes = 24, kFirstMenuSlot = 5 };
-enum { kFirstSelectSlot = 6, kLastSelectSlot = 9, kBgSheetKind = 1, kModuleIntro = 0, kIntroSlot = 5 };
+enum { kFirstSelectSlot = 6, kLastSelectSlot = 9, kBgSheetKind = 1, kModuleIntro = 0, kModuleAttract = 0x14, kIntroTheme = 35, kIntroSlot = 5 };
 
 // The asset number of each slot, in kLangAsset_* order.
 static const uint8 kSlotAsset[kLangAsset_Count] = {74, 75, 76, 77, 78, 99, 100, 101, 102, 103, 104};
@@ -40,7 +40,7 @@ static void TakeOriginals(void) {
 // The baked sprite sheet |idx| with the host's tiles written over it, kept in g_patched[idx]. Lets a
 // language replace only the tiles of one word and keep the rest of the sheet (the ending sheet also
 // carries sprites the language has no copy of). NULL when there is no patch or the sheet is not raw-sized.
-// The patch is the Japanese graphics pack's while its option is on, else the set's (ApplyPatches).
+// The patch is the Japanese graphics pack's while its option is on, else a set's that is not Japanese (ApplyPatches).
 static const uint8 *ApplyPatch(int idx, const uint8 *pdata, uint32 psize) {
   Blob *out = &g_patched[idx];
   AssetSheet_SetOverride(0, idx, NULL, 0);
@@ -80,12 +80,18 @@ const uint8 *LanguageScreensAssets_Host(int slot, int *size) {
   return g_assets[slot].data;
 }
 
+// A Japanese set carries text only: its pictures come from the Japanese graphics pack alone (ja_graphics.c),
+// so a Japanese set's own copy of a sheet, a patch or the intro tilemap is never drawn. Other sets keep theirs.
+static bool SetPicturesDrawn(void) {
+  return SelectLayout_OfSet() != kSelectLayout_Ja;
+}
+
 static void ApplyAssetSlots(bool on, bool held) {
   for (int i = 0; i < kLangAsset_Count; i++) {
     uint32 pack_size = 0;
     const uint8 *pack = i == kIntroSlot ? JaGraphics_IntroTilemap(&pack_size) : NULL;
     bool host = on && g_assets[i].data != NULL && !(held && i >= kFirstMenuSlot) && !SelectSlotOff(i) &&
-                (i != kIntroSlot || JaGraphics_SetIntroAllowed());
+                (i != kIntroSlot || SetPicturesDrawn());
     if (pack != NULL) {
       g_asset_ptrs[kSlotAsset[i]] = pack;
       g_asset_sizes[kSlotAsset[i]] = pack_size;
@@ -102,7 +108,7 @@ static void ApplySheets(bool on, bool held) {
       const Blob *b = &g_sheets[kind][i];
       uint32 pack_size = 0;
       const uint8 *pack = JaGraphics_Sheet(kind, i, &pack_size);
-      bool use = on && b->data != NULL && !(held && kind == 1) && JaGraphics_SetSheetAllowed(kind, i);
+      bool use = on && b->data != NULL && !(held && kind == 1) && SetPicturesDrawn();
       if (pack != NULL) AssetSheet_SetOverride(kind, i, pack, pack_size);
       else AssetSheet_SetOverride(kind, i, use ? b->data : NULL, b->size);
     }
@@ -117,7 +123,7 @@ static void ApplyPatches(bool on) {
     const uint8 *pack = JaGraphics_Patch(i, &pack_size);
     const uint8 *patched = NULL;
     if (pack != NULL) patched = ApplyPatch(i, pack, pack_size);
-    else if (on && JaGraphics_SetPatchAllowed(i)) patched = ApplyPatch(i, g_patches[i].data, g_patches[i].size);
+    else if (on && SetPicturesDrawn()) patched = ApplyPatch(i, g_patches[i].data, g_patches[i].size);
     if (patched != NULL) AssetSheet_SetOverride(0, i, patched, kSheetBytes);
     else AssetSheet_SetOverride(0, i, NULL, 0);
   }
@@ -139,13 +145,18 @@ const uint8 *LanguageScreensAssets_SetSheet(int kind, int index) {
 
 // The language's background sheets are drawn for its intro tilemap (asset 99). The file select loads
 // the same sheets (tileset 35/81) under a frame, kSelectFile_Gfx0, drawn for the US sheets, and the
-// overworld and the triforce room share some of them, so they are read only during the intro, and on
-// the file select only by the Japanese layout's own sheet load.
+// overworld and the triforce room share some of them, so they are read only while the title's tileset
+// loads: during the intro, and as the attract sequence ends and reloads it (attract.c's Death_Func31)
+// before handing back to the intro; on the file select only by the Japanese layout's own sheet load.
 static bool g_select_sheets;
+
+static bool TitleTilesetLoading(void) {
+  return main_module_index == kModuleIntro || (main_module_index == kModuleAttract && main_tile_theme_index == kIntroTheme);
+}
 
 bool LanguageScreens_SheetLive(int kind) {
   if (kind != kBgSheetKind || g_select_sheets) return true;
-  return main_module_index == kModuleIntro && (SelectLayout_OfSet() != kSelectLayout_Ja || JaGraphics_On(kJaGfx_Intro));
+  return TitleTilesetLoading() && (SelectLayout_OfSet() != kSelectLayout_Ja || JaGraphics_On(kJaGfx_Intro));
 }
 
 void LanguageScreens_SelectSheets(bool on) {

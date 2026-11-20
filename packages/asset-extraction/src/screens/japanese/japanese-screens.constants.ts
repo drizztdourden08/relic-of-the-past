@@ -13,7 +13,7 @@ const BOTTOM_LEFT_TILE = 1;
 
 const JA_NAME_GRID_BYTES = 320;
 
-const JA_MENU_TILEMAP_SLOTS: readonly number[] = [0, 1, 2, 3, 4];
+const JA_MENU_TILEMAP_SLOTS: readonly number[] = [1, 2, 3, 4];
 
 const JA_COPYRIGHT_SHEET = 8;
 
