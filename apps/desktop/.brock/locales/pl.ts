@@ -24,6 +24,7 @@ import app_pl_profiles from '../../src/locales/pl/profiles.json';
 import app_pl_randomizer from '../../src/locales/pl/randomizer.json';
 import app_pl_rom_loader from '../../src/locales/pl/rom-loader.json';
 import app_pl_roms from '../../src/locales/pl/roms.json';
+import app_pl_screen_editor from '../../src/locales/pl/screen-editor.json';
 import app_pl_settings_audio from '../../src/locales/pl/settings-audio.json';
 import app_pl_settings_bugfixes from '../../src/locales/pl/settings-bugfixes.json';
 import app_pl_settings_camera from '../../src/locales/pl/settings-camera.json';
@@ -86,6 +87,7 @@ const layers: readonly Layer[] = [
   { locale: 'pl', namespace: 'randomizer', kind: 'app', messages: app_pl_randomizer },
   { locale: 'pl', namespace: 'rom-loader', kind: 'app', messages: app_pl_rom_loader },
   { locale: 'pl', namespace: 'roms', kind: 'app', messages: app_pl_roms },
+  { locale: 'pl', namespace: 'screen-editor', kind: 'app', messages: app_pl_screen_editor },
   { locale: 'pl', namespace: 'settings-audio', kind: 'app', messages: app_pl_settings_audio },
   { locale: 'pl', namespace: 'settings-bugfixes', kind: 'app', messages: app_pl_settings_bugfixes },
   { locale: 'pl', namespace: 'settings-camera', kind: 'app', messages: app_pl_settings_camera },

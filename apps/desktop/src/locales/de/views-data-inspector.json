@@ -66,5 +66,19 @@
   "rec.reason.set-delete": "{noun} {key}: im Datensatz, im Spiel nicht vorhanden.",
   "rec.reason.geography": "Der Ort {location} liegt nicht in diesem Gebiet. {count, plural, =1 {Nur {pick} liegt darin.} other {{pick} ist eine Vermutung aus {count}.}}",
   "rec.reason.crossing-interior": "Übergang nach {label}: kein Bildschirm-Datensatz, Palast unbekannt.",
-  "rec.reason.crossing-screen": "Übergang nach {label}: kein Bildschirm-Datensatz."
+  "rec.reason.crossing-screen": "Übergang nach {label}: kein Bildschirm-Datensatz.",
+  "err.noSourceFile": "Für diesen Datensatz konnte keine Quelldatei abgeleitet werden.",
+  "err.notARecord": "Diese Zeile ist kein gespeicherter Datensatz: Sie hat keine ID.",
+  "err.tagNameMismatch": "Der Name eines Tags muss Namensraum:Wert lauten und zu seinem eigenen Namensraum und Wert passen.",
+  "err.tagNotConvention": "Tags müssen die Form Namensraum:Wert haben.",
+  "err.tagNoScope": "Diese Sammlung hat keine Tags.",
+  "err.noSerializer": "// Diese Sammlung hat keinen Quellcode-Ausgeber.",
+  "err.emitFailed": "// konnte nicht ausgegeben werden: {message}",
+  "err.findingNoTarget": "Dieser Befund nennt keinen Datensatz, der geändert werden könnte.",
+  "err.writeFailed": "Das Schreiben ist fehlgeschlagen.",
+  "err.needsForm": "Dieser Vorschlag braucht noch {blockers}. Fülle diese aus und akzeptiere dann.",
+  "err.noPath.create": "Die Sammlung {kind} unterstützt das Erstellen nicht.",
+  "err.noPath.delete": "Die Sammlung {kind} unterstützt das Löschen nicht.",
+  "err.noPath.write": "Die Sammlung {kind} unterstützt das Schreiben nicht.",
+  "err.screenNeeds": "Dieser Bildschirm braucht {issue}."
 }

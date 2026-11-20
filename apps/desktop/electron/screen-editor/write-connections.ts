@@ -1,4 +1,6 @@
 /* @layer electron-main @kind logic */
+import { msg } from '@drizztdourden08/brock-core/i18n';
+import { mainText } from '../lib/main-text';
 import { serializeConnectionRecord } from '@rotp/game-data';
 import type { ConnectionRecord } from '@rotp/game-data';
 import type { WriteConnectionsArgs, WriteRecordResult } from '@app/ipc/screen-editor-contract';
@@ -27,7 +29,7 @@ const writeConnections = (args: WriteConnectionsArgs): Promise<WriteRecordResult
     return editSourceFile(path, content => replaceById(content, args.connectionId, serializeConnectionRecord(record)), [args.connectionId]);
   }
   const records = args.records;
-  if (records.length === 0) return Promise.resolve({ success: false, error: 'insert needs at least one record' });
+  if (records.length === 0) return Promise.resolve({ success: false, error: mainText(msg('screen-editor:connections.needsRecord')) });
   return withAllocatedIds(root, 'connection', records.length, async (ids) => {
     const code = records
       .map((record, i) => serializeConnectionRecord({ id: allocatedId(ids, i) as ConnectionRecord['id'], ...record }))

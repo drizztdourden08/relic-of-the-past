@@ -1,5 +1,6 @@
 /* @layer bridge-wasm @kind logic */
 import type { CheckRecord } from '@rotp/game-data';
+import type { I18n } from '@drizztdourden08/brock-core/i18n';
 import { log } from '../../log-bus';
 import { getSessionState } from '../randomizer-client/session-store';
 import { suppressLocationReport } from '../randomizer-client/location-poller';
@@ -9,8 +10,8 @@ import { cheatItemGrantAllowed } from '@rotp/game-core';
 import type { CheckGrantPlan } from '@rotp/randomizer';
 import { planCheckGrant } from './plan-check-grant';
 
-const grantFromCheck = (check: CheckRecord): CheckGrantPlan => {
-  const plan = planCheckGrant(check);
+const grantFromCheck = (check: CheckRecord, t: I18n['t']): CheckGrantPlan => {
+  const plan = planCheckGrant(check, t);
   if (plan.kind === 'blocked') return plan;
   if (plan.kind === 'vanilla') {
     grantVanilla(check);

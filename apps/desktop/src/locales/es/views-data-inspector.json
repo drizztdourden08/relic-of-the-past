@@ -66,5 +66,19 @@
   "rec.reason.set-delete": "{noun} {key}: en el conjunto de datos, ausente en el juego.",
   "rec.reason.geography": "El lugar {location} no está en esta zona. {count, plural, =1 {Solo {pick} lo está.} other {{pick} es una suposición entre {count}.}}",
   "rec.reason.crossing-interior": "Cruce hacia {label}: sin registro de pantalla, palacio desconocido.",
-  "rec.reason.crossing-screen": "Cruce hacia {label}: sin registro de pantalla."
+  "rec.reason.crossing-screen": "Cruce hacia {label}: sin registro de pantalla.",
+  "err.noSourceFile": "No se pudo determinar un archivo de origen para este registro.",
+  "err.notARecord": "Esta fila no es un registro guardado: no tiene id.",
+  "err.tagNameMismatch": "El nombre de una etiqueta debe tener la forma espacio:valor, coincidiendo con su propio espacio y valor.",
+  "err.tagNotConvention": "Las etiquetas deben tener la forma espacio:valor.",
+  "err.tagNoScope": "Esta colección no tiene etiquetas.",
+  "err.noSerializer": "// Esta colección no tiene emisor de código fuente.",
+  "err.emitFailed": "// no se pudo emitir: {message}",
+  "err.findingNoTarget": "Este hallazgo no indica ningún registro que cambiar.",
+  "err.writeFailed": "Falló la escritura.",
+  "err.needsForm": "Esta propuesta aún necesita {blockers}. Complétalos y luego acepta.",
+  "err.noPath.create": "La colección {kind} no admite la creación.",
+  "err.noPath.delete": "La colección {kind} no admite la eliminación.",
+  "err.noPath.write": "La colección {kind} no admite la escritura.",
+  "err.screenNeeds": "Esta pantalla necesita {issue}."
 }

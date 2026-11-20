@@ -1,6 +1,6 @@
 /* @layer renderer-widgets @kind component */
 import { useCallback, useMemo } from 'react';
-import { useT } from '@drizztdourden08/brock-react';
+import { useT, useText } from '@drizztdourden08/brock-react';
 import { DialogShell, LogPanel } from '@drizztdourden08/tessera/composites';
 import { eventsToText } from '../behavior/events-to-text';
 import { toLogRows } from '../behavior/to-log-rows';
@@ -11,8 +11,9 @@ import './LogDialog.css';
 const LogDialog = (props: LogDialogProps) => {
   const { open, onClose, events } = props;
   const t = useT();
-  const rows = useMemo(() => toLogRows(events), [events]);
-  const copyText = useCallback(() => eventsToText(events), [events]);
+  const text = useText();
+  const rows = useMemo(() => toLogRows(events, text), [events, text]);
+  const copyText = useCallback(() => eventsToText(events, text), [events, text]);
 
   return (
     <DialogShell open={open} onClose={onClose} title={t('views-simulator:log.title')} className="sim-log-dialog">

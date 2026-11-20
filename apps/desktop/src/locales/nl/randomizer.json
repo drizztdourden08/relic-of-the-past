@@ -120,5 +120,9 @@
   "free-sequence.max-jump": "geen voorwerp draagt meer dan {max}",
   "free-sequence.sum": "de som {sum} is niet de spanwijdte {span}",
   "capacity-row.floor-note.wallet": "{label} kan {need} ineens vragen, dus het uiteindelijke maximum komt niet onder {floor}",
-  "capacity-row.floor-note.projectiles": "Het einde vergt {hits} zilveren schoten achter elkaar, dus het uiteindelijke maximum komt niet onder {floor}"
+  "capacity-row.floor-note.projectiles": "Het einde vergt {hits} zilveren schoten achter elkaar, dus het uiteindelijke maximum komt niet onder {floor}",
+  "impact.locUpgrades": "{loc} loc. · {upgrades, plural, one {# upgrade} other {# upgrades}}",
+  "impact.locItems": "{loc} loc. · {items} items",
+  "impact.note.unused": "niet gebruikt",
+  "impact.note.unshuffled": "niet geschud"
 }

@@ -66,5 +66,19 @@
   "rec.reason.set-delete": "{noun} {key}: in de dataset, afwezig in het spel.",
   "rec.reason.geography": "Locatie {location} ligt niet in dit gebied. {count, plural, =1 {Alleen {pick} wel.} other {{pick} is een gok uit {count}.}}",
   "rec.reason.crossing-interior": "Overgang naar {label}: geen schermrecord, paleis onbekend.",
-  "rec.reason.crossing-screen": "Overgang naar {label}: geen schermrecord."
+  "rec.reason.crossing-screen": "Overgang naar {label}: geen schermrecord.",
+  "err.noSourceFile": "Er kon geen bronbestand voor dit record worden afgeleid.",
+  "err.notARecord": "Deze rij is geen opgeslagen record: hij heeft geen id.",
+  "err.tagNameMismatch": "De naam van een tag moet naamruimte:waarde luiden, passend bij de eigen naamruimte en waarde.",
+  "err.tagNotConvention": "Tags moeten de vorm naamruimte:waarde hebben.",
+  "err.tagNoScope": "Deze collectie heeft geen tags.",
+  "err.noSerializer": "// Deze collectie heeft geen broncode-uitvoer.",
+  "err.emitFailed": "// kon niet worden uitgevoerd: {message}",
+  "err.findingNoTarget": "Deze bevinding wijst geen record aan om te wijzigen.",
+  "err.writeFailed": "Schrijven is mislukt.",
+  "err.needsForm": "Dit voorstel heeft nog {blockers} nodig. Vul die in en accepteer daarna.",
+  "err.noPath.create": "De collectie {kind} ondersteunt aanmaken niet.",
+  "err.noPath.delete": "De collectie {kind} ondersteunt verwijderen niet.",
+  "err.noPath.write": "De collectie {kind} ondersteunt schrijven niet.",
+  "err.screenNeeds": "Dit scherm heeft {issue} nodig."
 }

@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind component */
-import { useT } from '@drizztdourden08/brock-react';
+import { useT, useText } from '@drizztdourden08/brock-react';
 import { Box, Text } from '@drizztdourden08/tessera/primitives';
 import type { ScreenAnnotations } from '@rotp/navigation';
 import { styleForKind } from '@app/navigation-overlay/annotation-style';
@@ -8,6 +8,7 @@ import { useNavigationOverlayStore } from '@app/stores/navigation-overlay-store'
 
 const OverlayLegend = ({ annotations }: { annotations?: readonly ScreenAnnotations[] }) => {
   const t = useT();
+  const text = useText();
   const hiddenKinds = useNavigationOverlayStore((s) => s.hiddenKinds);
   const present = [...new Set((annotations ?? []).flatMap((s) => s.items).map((a) => a.kind))]
     .filter((k) => !styleForKind(k).panelOnly);
@@ -27,7 +28,7 @@ const OverlayLegend = ({ annotations }: { annotations?: readonly ScreenAnnotatio
             <Text data-tone={style.tone} className={off ? 'nav-legend__glyph nav-legend__glyph--off' : 'nav-legend__glyph'}>
               {style.glyph}
             </Text>
-            <Text className={off ? 'nav-legend__off' : 'nav-legend__dim'}>{style.legend}</Text>
+            <Text className={off ? 'nav-legend__off' : 'nav-legend__dim'}>{text(style.legend)}</Text>
           </Box>
         );
       })}

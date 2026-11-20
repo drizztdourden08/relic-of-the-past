@@ -66,5 +66,19 @@
   "rec.reason.set-delete": "{noun} {key}: w zbiorze danych, brak w grze.",
   "rec.reason.geography": "Lokacja {location} nie leży w tym obszarze. {count, plural, =1 {Tylko {pick} leży.} other {{pick} to domysł spośród {count}.}}",
   "rec.reason.crossing-interior": "Przejście do {label}: brak rekordu ekranu, nieznany pałac.",
-  "rec.reason.crossing-screen": "Przejście do {label}: brak rekordu ekranu."
+  "rec.reason.crossing-screen": "Przejście do {label}: brak rekordu ekranu.",
+  "err.noSourceFile": "Nie udało się ustalić pliku źródłowego dla tego rekordu.",
+  "err.notARecord": "Ten wiersz nie jest zapisanym rekordem: nie ma identyfikatora.",
+  "err.tagNameMismatch": "Nazwa tagu musi mieć postać przestrzeń:wartość i zgadzać się z jego własną przestrzenią i wartością.",
+  "err.tagNotConvention": "Tagi muszą mieć postać przestrzeń:wartość.",
+  "err.tagNoScope": "Ta kolekcja nie ma tagów.",
+  "err.noSerializer": "// Ta kolekcja nie ma generatora kodu źródłowego.",
+  "err.emitFailed": "// nie udało się wygenerować: {message}",
+  "err.findingNoTarget": "To ustalenie nie wskazuje rekordu do zmiany.",
+  "err.writeFailed": "Zapis nie powiódł się.",
+  "err.needsForm": "Ta propozycja nadal wymaga: {blockers}. Uzupełnij je, a potem zaakceptuj.",
+  "err.noPath.create": "Kolekcja {kind} nie obsługuje tworzenia.",
+  "err.noPath.delete": "Kolekcja {kind} nie obsługuje usuwania.",
+  "err.noPath.write": "Kolekcja {kind} nie obsługuje zapisu.",
+  "err.screenNeeds": "Ten ekran wymaga: {issue}."
 }

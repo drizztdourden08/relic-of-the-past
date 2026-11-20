@@ -111,5 +111,10 @@
   "bottle.contents.blue-potion": "青いクスリ",
   "bottle.contents.fairy": "妖精",
   "bottle.contents.bee": "ハチ",
-  "bottle.contents.good-bee": "金のハチ"
+  "bottle.contents.good-bee": "金のハチ",
+  "grant.blocked.online": "オンラインセッションではアイテムを 1 つずつ確認するため、この場所の中身はここではわかりません。ゲーム内で入手するか、サーバーに解放を依頼してください。",
+  "grant.blocked.noTrigger": "このチェックにはコンソールから使える通常のトリガーがありません",
+  "grant.blocked.cannotClear": "ここでは達成済みにできません。理由: {reason}",
+  "grant.blocked.nothingPlaced": "このシードではこの場所に何も配置されていません",
+  "grant.blocked.noDirect": "「{item}」は直接渡せません"
 }

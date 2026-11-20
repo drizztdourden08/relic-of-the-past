@@ -2,14 +2,15 @@
 import { readFile, writeFile } from 'fs/promises';
 import { serializeConnectionRecord } from '@rotp/game-data';
 import type { ConnectionRecord } from '@rotp/game-data';
+import { msg as text } from '@drizztdourden08/brock-core/i18n';
+import { mainText } from '../../lib/main-text';
 import type { WriteConnectionPairArgs, WriteConnectionPairResult } from '@app/ipc/screen-editor-contract';
 import { resolveSourceFile } from '../resolve-source-file';
 import { insertBeforeArrayClose, removeById } from '../source-writers';
 import { withAllocatedIds } from '../id-allocator';
 
-const rolledBack = (msg: string): string => `The partner half failed to write (${msg}); the first half was rolled back.`;
-const notRolledBack = (msg: string): string =>
-  `The partner half failed to write (${msg}), and the first half could NOT be rolled back. Check the connections data for a dangling id.`;
+const rolledBack = (message: string): string => mainText(text('screen-editor:pair.rolledBack', { message }));
+const notRolledBack = (message: string): string => mainText(text('screen-editor:pair.notRolledBack', { message }));
 
 const writeBothHalvesToOneFile = async (
   path: string, nearCode: string, farCode: string, ids: { nearId: ConnectionRecord['id']; farId: ConnectionRecord['id'] },
@@ -44,15 +45,15 @@ const writeConnectionPair = (root: string, args: WriteConnectionPairArgs): Promi
     try {
       await writeFile(farPath, farEdit.content, 'utf-8');
     } catch (e: unknown) {
-      const msg = e instanceof Error ? e.message : 'unknown error';
+      const failure = e instanceof Error ? e.message : mainText(text('screen-editor:error.unknown'));
       const rollback = removeById(nearEdit.content, near.id);
-      if (rollback.error) return { success: false, error: notRolledBack(msg) };
+      if (rollback.error) return { success: false, error: notRolledBack(failure) };
       try {
         await writeFile(nearPath, rollback.content, 'utf-8');
       } catch {
-        return { success: false, error: notRolledBack(msg) };
+        return { success: false, error: notRolledBack(failure) };
       }
-      return { success: false, error: rolledBack(msg) };
+      return { success: false, error: rolledBack(failure) };
     }
     return { success: true, nearId: near.id, farId: far.id };
   });

@@ -40,7 +40,7 @@ const capacityRowModelOf = (input: CapacityRowInput): CapacityRowModel => {
     maxJump,
     curveOptions: curveOptionsOf(capacityFamily, input.t, input.text),
     preview: previewOf({ capacityFamily, setting, plan, t: input.t, text: input.text }),
-    impact: familyImpactCell(plan.spotIsCheck, inPool),
+    impact: familyImpactCell(plan.spotIsCheck, inPool, input.text),
     problem: problemOf(setting, span, maxJump),
     footnote: footnoteOf(id, setting, input.t),
     floorNote: floorNoteOf(capacityFamily, setting, walletFloor, input.t),

@@ -111,5 +111,10 @@
   "bottle.contents.blue-potion": "Blauer Trank",
   "bottle.contents.fairy": "Fee",
   "bottle.contents.bee": "Biene",
-  "bottle.contents.good-bee": "Gute Biene"
+  "bottle.contents.good-bee": "Gute Biene",
+  "grant.blocked.online": "Eine Online-Sitzung erkundet ihre Gegenstände einzeln, daher ist hier nicht bekannt, was dieser Ort enthält. Sammle ihn im Spiel ein oder bitte den Server, ihn freizugeben.",
+  "grant.blocked.noTrigger": "Die Konsole hat keinen Originalauslöser für diesen Check",
+  "grant.blocked.cannotClear": "Er kann hier nicht abgehakt werden, weil {reason}",
+  "grant.blocked.nothingPlaced": "Dieser Seed hat an diesem Ort nichts platziert",
+  "grant.blocked.noDirect": "„{item}“ kann nicht direkt übergeben werden"
 }

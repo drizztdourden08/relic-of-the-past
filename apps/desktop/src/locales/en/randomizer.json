@@ -120,5 +120,9 @@
   "free-sequence.max-jump": "no item carries more than {max}",
   "free-sequence.sum": "sum {sum} is not the span {span}",
   "capacity-row.floor-note.wallet": "{label} can ask for {need} at once, so the final max stops no lower than {floor}",
-  "capacity-row.floor-note.projectiles": "The ending takes {hits} silver shots back to back, so the final max stops no lower than {floor}"
+  "capacity-row.floor-note.projectiles": "The ending takes {hits} silver shots back to back, so the final max stops no lower than {floor}",
+  "impact.locUpgrades": "{loc} loc · {upgrades, plural, one {# upgrade} other {# upgrades}}",
+  "impact.locItems": "{loc} loc · {items} items",
+  "impact.note.unused": "not used",
+  "impact.note.unshuffled": "not shuffled"
 }

@@ -120,5 +120,9 @@
   "free-sequence.max-jump": "{max}を超えて持てるアイテムはありません",
   "free-sequence.sum": "合計{sum}が範囲{span}と一致しません",
   "capacity-row.floor-note.wallet": "{label}は一度に{need}を要求することがあるため、最終最大値は{floor}を下回りません",
-  "capacity-row.floor-note.projectiles": "エンディングでは銀の矢を{hits}発連続で撃つため、最終最大値は{floor}を下回りません"
+  "capacity-row.floor-note.projectiles": "エンディングでは銀の矢を{hits}発連続で撃つため、最終最大値は{floor}を下回りません",
+  "impact.locUpgrades": "{loc} か所 · アップグレード {upgrades} 個",
+  "impact.locItems": "{loc} か所 · アイテム {items} 個",
+  "impact.note.unused": "未使用",
+  "impact.note.unshuffled": "シャッフルなし"
 }

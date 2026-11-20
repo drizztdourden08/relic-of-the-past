@@ -66,5 +66,19 @@
   "rec.reason.set-delete": "{noun} {key}：データセットにあり、ゲームには存在しません。",
   "rec.reason.geography": "場所「{location}」はこのエリアにありません。{count, plural, =1 {該当するのは「{pick}」だけです。} other {「{pick}」は{count}件からの推測です。}}",
   "rec.reason.crossing-interior": "{label}への移動：画面レコードがなく、宮殿も不明です。",
-  "rec.reason.crossing-screen": "{label}への移動：画面レコードがありません。"
+  "rec.reason.crossing-screen": "{label}への移動：画面レコードがありません。",
+  "err.noSourceFile": "このレコードのソースファイルを特定できませんでした。",
+  "err.notARecord": "この行は保存済みのレコードではありません。ID がありません。",
+  "err.tagNameMismatch": "タグ名は「名前空間:値」の形式で、そのタグ自身の名前空間と値に一致している必要があります。",
+  "err.tagNotConvention": "タグは「名前空間:値」の形式にしてください。",
+  "err.tagNoScope": "このコレクションにはタグがありません。",
+  "err.noSerializer": "// このコレクションにはソース出力機能がありません。",
+  "err.emitFailed": "// 出力できませんでした: {message}",
+  "err.findingNoTarget": "この検出結果には変更するレコードが指定されていません。",
+  "err.writeFailed": "書き込みに失敗しました。",
+  "err.needsForm": "この提案にはまだ {blockers} が必要です。入力してから承認してください。",
+  "err.noPath.create": "{kind} コレクションは作成に対応していません。",
+  "err.noPath.delete": "{kind} コレクションは削除に対応していません。",
+  "err.noPath.write": "{kind} コレクションは書き込みに対応していません。",
+  "err.screenNeeds": "この画面には {issue} が必要です。"
 }

@@ -120,5 +120,9 @@
   "free-sequence.max-jump": "inget föremål rymmer mer än {max}",
   "free-sequence.sum": "summan {sum} är inte spannet {span}",
   "capacity-row.floor-note.wallet": "{label} kan kräva {need} på en gång, så slutmaxet går inte under {floor}",
-  "capacity-row.floor-note.projectiles": "Slutet kräver {hits} silverskott i följd, så slutmaxet går inte under {floor}"
+  "capacity-row.floor-note.projectiles": "Slutet kräver {hits} silverskott i följd, så slutmaxet går inte under {floor}",
+  "impact.locUpgrades": "{loc} plats. · {upgrades, plural, one {# uppgradering} other {# uppgraderingar}}",
+  "impact.locItems": "{loc} plats. · {items} föremål",
+  "impact.note.unused": "används inte",
+  "impact.note.unshuffled": "inte blandat"
 }

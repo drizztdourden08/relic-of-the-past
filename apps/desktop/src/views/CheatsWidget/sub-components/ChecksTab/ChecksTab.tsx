@@ -36,8 +36,8 @@ const ChecksTab = ({ gates }: CheatTabProps) => {
   }, [search, allChecks]);
 
   const plans = useMemo(
-    () => new Map(filteredChecks.map((check) => [check.id, planCheckGrant(check)] as const)),
-    [filteredChecks, sessionState],
+    () => new Map(filteredChecks.map((check) => [check.id, planCheckGrant(check, t)] as const)),
+    [filteredChecks, sessionState, t],
   );
   return (
     <DisabledOverlay active={!gates.allowed.items} message={gates.reason('items')} contained className="cheats-fill">

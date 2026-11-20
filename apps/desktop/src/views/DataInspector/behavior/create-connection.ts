@@ -2,6 +2,7 @@
 import { requireHostApi } from '@drizztdourden08/brock-react';
 import { pendingPartnerId, pendingPartnerScreenId, registerRecord, connectionRecordFile } from '@rotp/game-data';
 import type { ConnectionKind, ConnectionRecord, ScreenId, PendingConnectionRecord } from '@rotp/game-data';
+import { optionText } from '@rotp/randomizer';
 import { EMPTY_PLACEMENT, NO_SOURCE_FILE } from '../DataInspector.constants';
 import { draftOf } from './draft-of';
 import { isConnectionId } from './is-connection-id';
@@ -47,7 +48,7 @@ const insertPair = async (
   near: PendingConnectionRecord, nearPath: string, farScreenId: ScreenId,
 ): Promise<CreateOutcome> => {
   const farTarget = connectionRecordFile(farScreenId);
-  if (!farTarget.relativePath) return { success: false, error: farTarget.unresolved ?? NO_SOURCE_FILE };
+  if (!farTarget.relativePath) return { success: false, error: farTarget.unresolved ?? optionText(NO_SOURCE_FILE) };
   const far = buildFarHalf(near, farScreenId);
 
   const result = await requireHostApi().screenEditor.writeConnectionPair({
@@ -64,7 +65,7 @@ const insertPair = async (
 const createConnection: RecordCreator = async (draft) => {
   const near = draftOf<PendingConnectionRecord>(draft);
   const target = connectionRecordFile(near.screenId);
-  if (!target.relativePath) return { success: false, error: target.unresolved ?? NO_SOURCE_FILE };
+  if (!target.relativePath) return { success: false, error: target.unresolved ?? optionText(NO_SOURCE_FILE) };
 
   const farScreenId = pendingPartnerScreenId(near.toConnectionId);
   return farScreenId

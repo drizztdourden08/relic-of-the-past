@@ -111,5 +111,10 @@
   "bottle.contents.blue-potion": "Blauw drankje",
   "bottle.contents.fairy": "Fee",
   "bottle.contents.bee": "Bij",
-  "bottle.contents.good-bee": "Goede bij"
+  "bottle.contents.good-bee": "Goede bij",
+  "grant.blocked.online": "een onlinesessie verkent haar items één voor één, dus wat deze locatie bevat is hier niet bekend. Verzamel het in het spel of vraag de server om het vrij te geven.",
+  "grant.blocked.noTrigger": "de console heeft geen originele trigger voor deze check",
+  "grant.blocked.cannotClear": "het kan hier niet worden afgerond, omdat {reason}",
+  "grant.blocked.nothingPlaced": "deze seed heeft niets op deze locatie geplaatst",
+  "grant.blocked.noDirect": "\"{item}\" kan niet rechtstreeks worden overhandigd"
 }

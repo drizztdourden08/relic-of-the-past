@@ -111,5 +111,10 @@
   "bottle.contents.blue-potion": "Poción azul",
   "bottle.contents.fairy": "Hada",
   "bottle.contents.bee": "Abeja",
-  "bottle.contents.good-bee": "Abeja buena"
+  "bottle.contents.good-bee": "Abeja buena",
+  "grant.blocked.online": "una sesión en línea explora sus objetos de uno en uno, así que aquí no se sabe qué contiene esta ubicación. Recógelo en el juego o pide al servidor que lo libere.",
+  "grant.blocked.noTrigger": "la consola no tiene un disparador original para este check",
+  "grant.blocked.cannotClear": "no se puede completar aquí, porque {reason}",
+  "grant.blocked.nothingPlaced": "esta semilla no colocó nada en esta ubicación",
+  "grant.blocked.noDirect": "«{item}» no se puede entregar directamente"
 }
