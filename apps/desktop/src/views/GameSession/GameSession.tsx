@@ -2,7 +2,7 @@
 import { useWindowKind } from '@drizztdourden08/brock-react';
 import { ViewStorageProvider } from '@drizztdourden08/tessera/data';
 import { useOptionTextBridge } from '@app/shell/option-text-bridge';
-import { useTextBridge } from '@app/shell/text-bridge';
+import { useTextBridge } from '@app/shell/text-bridge-hook';
 import { MainWindowSession } from './sub-components/MainWindowSession';
 import { DATA_VIEW_STORAGE } from './GameSession.constants';
 import type { GameSessionProps } from './GameSession.type';
