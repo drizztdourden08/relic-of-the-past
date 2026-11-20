@@ -1,5 +1,5 @@
 {
-  "option.config-modes.auto.label": "Auto",
+  "option.config-modes.auto.label": "Automatisch",
   "option.config-modes.auto.hint": "Liest das zugewiesene Paket und stellt Format, Abtastrate, Kanäle und Puffer für dich ein.",
   "option.config-modes.manual.label": "Manuell",
   "option.config-modes.manual.hint": "Du stellst jeden Wert von Hand ein.",

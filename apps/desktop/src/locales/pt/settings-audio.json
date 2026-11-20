@@ -1,5 +1,5 @@
 {
-  "option.config-modes.auto.label": "Auto",
+  "option.config-modes.auto.label": "Automático",
   "option.config-modes.auto.hint": "Lê o pacote atribuído e define formato, taxa de amostragem, canais e buffer.",
   "option.config-modes.manual.label": "Manual",
   "option.config-modes.manual.hint": "Permite definir cada um deles à mão.",

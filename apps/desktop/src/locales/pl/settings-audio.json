@@ -1,5 +1,5 @@
 {
-  "option.config-modes.auto.label": "Auto",
+  "option.config-modes.auto.label": "Automatyczne",
   "option.config-modes.auto.hint": "Odczytuje przypisaną paczkę i sam ustawia format, częstotliwość próbkowania, kanały i bufor.",
   "option.config-modes.manual.label": "Ręcznie",
   "option.config-modes.manual.hint": "Pozwala ustawić każdy z nich samodzielnie.",

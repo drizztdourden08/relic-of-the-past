@@ -29,7 +29,7 @@
   "display.aspect.recommended": "Idéal pour la plupart des configurations.",
   "display.aspect.locked": "Activez le rendu étendu pour choisir un format autre que 4:3.",
   "display.aspect.original": "D'origine",
-  "display.aspect.auto": "Auto",
+  "display.aspect.auto": "Automatique",
   "display.aspect.screen": "Écran",
   "display.aspect.wide": "Large",
   "display.aspect.tall": "Haut",
