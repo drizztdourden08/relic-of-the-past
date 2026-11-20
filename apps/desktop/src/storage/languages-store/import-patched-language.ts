@@ -20,7 +20,7 @@ const runImport = async (request: PatchedImportRequest, report: ImportReport): P
   if (await getLanguageSet(id)) {
     return { success: false, error: msg('errors:language.exists', { id }), parts: [] };
   }
-  report.phase('decode', 'Reading the patched ROM...');
+  report.phase('decode', msg('data-manager:jobs.line.readPatchedRom'));
   const romBytes = await resolveRomBytes(new Uint8Array(await request.file.arrayBuffer()));
   const input = { base: request.base, libraryRoms: await libraryRomBytes(), references: await setFontReferences(request.base) };
   const found = await runExtractStep<'patched-language', PatchedLanguageOutput>({
@@ -35,7 +35,7 @@ const runImport = async (request: PatchedImportRequest, report: ImportReport): P
     text: { menu: found.menu, credits: found.credits },
     ...(found.screens ? { screens: found.screens } : {}),
   });
-  report.phase('extract', 'Baking into assets...');
+  report.phase('extract', msg('data-manager:jobs.line.bakeAssets'));
   await recompileAll();
   return { success: true, code: id, parts: found.parts };
 };

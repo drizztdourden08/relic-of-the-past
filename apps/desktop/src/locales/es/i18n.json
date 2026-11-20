@@ -1,0 +1,13 @@
+{
+  "tab.label": "Idioma",
+  "section.app.title": "Idioma de la aplicación",
+  "section.profile.title": "Este perfil",
+  "row.appLocale.label": "Idioma de la aplicación",
+  "row.appLocale.description": "El idioma de la aplicación. También fija la pantalla de inicio, la bandeja y el selector de perfil.",
+  "row.locale.label": "Idioma",
+  "row.locale.description": "El idioma de este perfil. Al cambiar al perfil cambia el idioma sin recargar.",
+  "option.system.label": "Igual que el sistema",
+  "option.system.hint": "Ahora {language}",
+  "option.app.label": "Igual que la aplicación",
+  "option.app.hint": "Ahora {language}"
+}

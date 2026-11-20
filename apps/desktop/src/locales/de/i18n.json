@@ -1,0 +1,13 @@
+{
+  "tab.label": "Sprache",
+  "section.app.title": "App-Sprache",
+  "section.profile.title": "Dieses Profil",
+  "row.appLocale.label": "App-Sprache",
+  "row.appLocale.description": "Die Sprache der App. Sie bestimmt auch den Startbildschirm, das Tray-Symbol und die Profilauswahl.",
+  "row.locale.label": "Sprache",
+  "row.locale.description": "Die Sprache dieses Profils. Beim Wechsel zum Profil wechselt die Sprache ohne Neuladen.",
+  "option.system.label": "Wie das System",
+  "option.system.hint": "Aktuell {language}",
+  "option.app.label": "Wie die App",
+  "option.app.hint": "Aktuell {language}"
+}

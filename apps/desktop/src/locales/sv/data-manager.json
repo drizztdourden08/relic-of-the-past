@@ -336,5 +336,18 @@
   "jobs.import-language": "Importerar ett språk",
   "jobs.add-player-sprite": "Lägger till en spelarsprite",
   "jobs.import-music-pack": "Importerar ett musikpaket",
-  "jobs.import-rom": "Importerar en ROM"
+  "jobs.import-rom": "Importerar en ROM",
+  "jobs.line.download": "Laddar ned...",
+  "jobs.line.extract": "Packar upp...",
+  "jobs.line.copy": "Kopierar...",
+  "jobs.line.decode": "Bearbetar...",
+  "jobs.line.downloadSize": "Laddar ned {loaded} / {total}",
+  "jobs.line.downloadLoaded": "Laddar ned {loaded}",
+  "jobs.line.extractCount": "Packar upp {loaded} / {total}",
+  "jobs.line.copyCount": "Kopierar {loaded} / {total}",
+  "jobs.line.decodeCount": "Bearbetar {loaded} / {total}",
+  "jobs.line.decodeDialogue": "Avkodar dialog...",
+  "jobs.line.bakeAssets": "Bygger in i resurserna...",
+  "jobs.line.readPatchedRom": "Läser den patchade ROM:en...",
+  "jobs.line.extractSprites": "Packar upp sprites..."
 }

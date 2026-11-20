@@ -336,5 +336,18 @@
   "jobs.import-language": "言語をインポート中",
   "jobs.add-player-sprite": "プレイヤースプライトを追加中",
   "jobs.import-music-pack": "音楽パックをインポート中",
-  "jobs.import-rom": "ROMをインポート中"
+  "jobs.import-rom": "ROMをインポート中",
+  "jobs.line.download": "ダウンロード中...",
+  "jobs.line.extract": "展開中...",
+  "jobs.line.copy": "コピー中...",
+  "jobs.line.decode": "処理中...",
+  "jobs.line.downloadSize": "ダウンロード中 {loaded} / {total}",
+  "jobs.line.downloadLoaded": "ダウンロード中 {loaded}",
+  "jobs.line.extractCount": "展開中 {loaded} / {total}",
+  "jobs.line.copyCount": "コピー中 {loaded} / {total}",
+  "jobs.line.decodeCount": "処理中 {loaded} / {total}",
+  "jobs.line.decodeDialogue": "ダイアログをデコード中...",
+  "jobs.line.bakeAssets": "アセットに組み込み中...",
+  "jobs.line.readPatchedRom": "パッチ済みROMを読み込み中...",
+  "jobs.line.extractSprites": "スプライトを抽出中..."
 }

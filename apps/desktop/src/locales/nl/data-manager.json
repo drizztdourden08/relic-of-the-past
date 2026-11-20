@@ -336,5 +336,18 @@
   "jobs.import-language": "Taal importeren",
   "jobs.add-player-sprite": "Spelersprite toevoegen",
   "jobs.import-music-pack": "Muziekpakket importeren",
-  "jobs.import-rom": "ROM importeren"
+  "jobs.import-rom": "ROM importeren",
+  "jobs.line.download": "Downloaden...",
+  "jobs.line.extract": "Uitpakken...",
+  "jobs.line.copy": "Kopiëren...",
+  "jobs.line.decode": "Verwerken...",
+  "jobs.line.downloadSize": "Downloaden {loaded} / {total}",
+  "jobs.line.downloadLoaded": "Downloaden {loaded}",
+  "jobs.line.extractCount": "Uitpakken {loaded} / {total}",
+  "jobs.line.copyCount": "Kopiëren {loaded} / {total}",
+  "jobs.line.decodeCount": "Verwerken {loaded} / {total}",
+  "jobs.line.decodeDialogue": "Dialoog decoderen...",
+  "jobs.line.bakeAssets": "In de assets verwerken...",
+  "jobs.line.readPatchedRom": "De gepatchte ROM lezen...",
+  "jobs.line.extractSprites": "Sprites uitpakken..."
 }

@@ -336,5 +336,18 @@
   "jobs.import-language": "Importazione di una lingua",
   "jobs.add-player-sprite": "Aggiunta di uno sprite del giocatore",
   "jobs.import-music-pack": "Importazione di un pacchetto musicale",
-  "jobs.import-rom": "Importazione di una ROM"
+  "jobs.import-rom": "Importazione di una ROM",
+  "jobs.line.download": "Download...",
+  "jobs.line.extract": "Estrazione...",
+  "jobs.line.copy": "Copia...",
+  "jobs.line.decode": "Elaborazione...",
+  "jobs.line.downloadSize": "Download {loaded} / {total}",
+  "jobs.line.downloadLoaded": "Download {loaded}",
+  "jobs.line.extractCount": "Estrazione {loaded} / {total}",
+  "jobs.line.copyCount": "Copia {loaded} / {total}",
+  "jobs.line.decodeCount": "Elaborazione {loaded} / {total}",
+  "jobs.line.decodeDialogue": "Decodifica dei dialoghi...",
+  "jobs.line.bakeAssets": "Integrazione nelle risorse...",
+  "jobs.line.readPatchedRom": "Lettura della ROM con patch...",
+  "jobs.line.extractSprites": "Estrazione degli sprite..."
 }

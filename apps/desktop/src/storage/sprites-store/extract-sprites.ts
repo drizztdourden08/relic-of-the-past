@@ -19,7 +19,7 @@ const extractSprites = async (romFile: string): Promise<{ success: boolean; coun
       kind: 'sprite',
       title: msg('data-manager:jobs.extract-sprites', { rom: romFile }),
       work: async (report) => {
-        report.phase('decode', 'Extracting sprites...');
+        report.phase('decode', msg('data-manager:jobs.line.extractSprites'));
         const result = await runExtractStep<'sprites', SpritesResult>({
           step: 'sprites', title: msg('data-manager:jobs.extract-sprites', { rom: romFile }), subject: romFile, romBytes, input: { defs: SPRITE_DEFS },
         });

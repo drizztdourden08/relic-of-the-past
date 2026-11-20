@@ -1,0 +1,22 @@
+{
+  "tray.show": "Mostra {name}",
+  "tray.quit": "Esci",
+  "edit.menu": "Modifica",
+  "edit.undo": "Annulla",
+  "edit.redo": "Ripeti",
+  "edit.cut": "Taglia",
+  "edit.copy": "Copia",
+  "edit.paste": "Incolla",
+  "edit.selectAll": "Seleziona tutto",
+  "dialog.ok": "OK",
+  "dialog.cancel": "Annulla",
+  "boot.modules": "Avvio dei moduli",
+  "boot.window": "Ripristino della finestra",
+  "splash.starting": "Avvio",
+  "splash.loading": "Caricamento",
+  "splash.retry": "Riprova",
+  "splash.openLogs": "Apri i log",
+  "splash.quit": "Esci",
+  "splash.timedOut": "{label} ha impiegato troppo tempo",
+  "splash.failed": "{label} non è riuscito"
+}

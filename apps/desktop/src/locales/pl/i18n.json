@@ -1,0 +1,13 @@
+{
+  "tab.label": "Język",
+  "section.app.title": "Język aplikacji",
+  "section.profile.title": "Ten profil",
+  "row.appLocale.label": "Język aplikacji",
+  "row.appLocale.description": "Język aplikacji. Ustawia też ekran startowy, ikonę w zasobniku i wybór profilu.",
+  "row.locale.label": "Język",
+  "row.locale.description": "Język tego profilu. Przełączenie na profil zmienia język bez przeładowania.",
+  "option.system.label": "Jak w systemie",
+  "option.system.hint": "Teraz: {language}",
+  "option.app.label": "Jak w aplikacji",
+  "option.app.hint": "Teraz: {language}"
+}

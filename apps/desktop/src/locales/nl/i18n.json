@@ -1,0 +1,13 @@
+{
+  "tab.label": "Taal",
+  "section.app.title": "Taal van de app",
+  "section.profile.title": "Dit profiel",
+  "row.appLocale.label": "Taal van de app",
+  "row.appLocale.description": "De taal van de app. Bepaalt ook het opstartscherm, het systeemvak en de profielkiezer.",
+  "row.locale.label": "Taal",
+  "row.locale.description": "De taal van dit profiel. Wisselen naar het profiel wisselt de taal zonder opnieuw te laden.",
+  "option.system.label": "Zoals het systeem",
+  "option.system.hint": "Nu {language}",
+  "option.app.label": "Zoals de app",
+  "option.app.hint": "Nu {language}"
+}

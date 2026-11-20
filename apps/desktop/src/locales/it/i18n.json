@@ -1,0 +1,13 @@
+{
+  "tab.label": "Lingua",
+  "section.app.title": "Lingua dell'app",
+  "section.profile.title": "Questo profilo",
+  "row.appLocale.label": "Lingua dell'app",
+  "row.appLocale.description": "La lingua dell'app. Imposta anche la schermata iniziale, l'icona nell'area di notifica e la scelta del profilo.",
+  "row.locale.label": "Lingua",
+  "row.locale.description": "La lingua di questo profilo. Passando al profilo la lingua cambia senza ricaricare.",
+  "option.system.label": "Come il sistema",
+  "option.system.hint": "Ora {language}",
+  "option.app.label": "Come l'app",
+  "option.app.hint": "Ora {language}"
+}
