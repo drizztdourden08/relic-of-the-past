@@ -1,5 +1,4 @@
 /* @layer shared-game @kind data */
-import { msg } from '@drizztdourden08/brock-core/i18n';
 import type { Message } from '@drizztdourden08/brock-core/i18n';
 import type { ShopShuffleMode } from '../shop-scope.type';
 
@@ -11,10 +10,10 @@ const DEFAULT_SHOP_SHUFFLE_MODE: ShopShuffleMode = 'custom';
 const DEFAULT_SHOP_SLOT_DEPTH = 2;
 
 const SHOP_MODE_LABELS: Readonly<Record<string, Message>> = {
-  vanilla: msg('randomizer-world:choice.shop.vanilla'),
-  sequential: msg('randomizer-world:choice.shop.sequential'),
-  random: msg('randomizer-world:choice.shop.random'),
-  custom: msg('randomizer-world:choice.shop.custom'),
+  vanilla: { key: 'randomizer-world:choice.shop.vanilla' },
+  sequential: { key: 'randomizer-world:choice.shop.sequential' },
+  random: { key: 'randomizer-world:choice.shop.random' },
+  custom: { key: 'randomizer-world:choice.shop.custom' },
 };
 
 

@@ -26,7 +26,10 @@ const install = async (pack: string, tracks: MsuTrackEntry[], report: ImportRepo
   return { success: true, fileCount: tracks.length };
 };
 
-const failureOf = (result: MsuResult): string | null => (result.success ? null : (result.error === undefined ? null : failureLine(result.error)));
+const failureOf = (result: MsuResult): string | null => {
+  if (result.success || result.error === undefined) return null;
+  return failureLine(result.error);
+};
 
 const installMsuTracks = async (pack: string, read: (report: ImportReport) => Promise<{ bytes: Uint8Array; name: string }>): Promise<MsuResult> => {
   try {

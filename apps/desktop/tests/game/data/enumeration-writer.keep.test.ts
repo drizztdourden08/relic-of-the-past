@@ -48,14 +48,14 @@ describe('allocateEnumeration', () => {
 
   it('refuses a blank value instead of minting an id', { tags: ['critical'] }, async () => {
     const result = await allocateEnumeration(root, { category: 'world', value: '  ', label: 'x', appliesTo: ['screen'] });
-    expect(result).toEqual({ success: false, error: 'An enumeration entry needs a value.' });
+    expect(result).toEqual({ success: false, error: 'screen-editor:enum.needsValue' });
   });
 
   it('refuses an entry with no collection to apply to', { tags: ['critical'] }, async () => {
     const result = await allocateEnumeration(root, { category: 'world', value: 'both', label: 'Both', appliesTo: [] });
     expect(result).toEqual({
       success: false,
-      error: 'An enumeration entry has to apply to at least one collection.',
+      error: 'screen-editor:enum.needsCollection',
     });
   });
 

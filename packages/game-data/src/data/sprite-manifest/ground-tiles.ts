@@ -1,5 +1,4 @@
 /* @layer shared-game @kind data */
-import { msg } from '@drizztdourden08/brock-core/i18n';
 import type { SpriteDefinition } from './manifest';
 
 const OUTDOOR_SHEETS = [58, 59, 60, 61, 83, 77, 62, 91];
@@ -13,7 +12,7 @@ const INDOOR_UPPER = [0, 1, 2, 3];
 const GROUND_TILE_SPRITE_DEFINITIONS: readonly SpriteDefinition[] = [
   {
     file: 'ground-grass',
-    label: msg('game-labels:sprite.grass'),
+    label: { key: 'game-labels:sprite.grass' },
     category: 'ground',
     extract: {
       method: 'bg-tile', sheets: OUTDOOR_SHEETS, upper: OUTDOOR_UPPER, tiles: [0x488b, 0x08aa, 0x088b, 0x488b],
@@ -22,7 +21,7 @@ const GROUND_TILE_SPRITE_DEFINITIONS: readonly SpriteDefinition[] = [
   },
   {
     file: 'ground-floor',
-    label: msg('game-labels:sprite.indoorFloor'),
+    label: { key: 'game-labels:sprite.indoorFloor' },
     category: 'ground',
     extract: {
       method: 'bg-tile', sheets: INDOOR_SHEETS, upper: INDOOR_UPPER,
@@ -32,7 +31,7 @@ const GROUND_TILE_SPRITE_DEFINITIONS: readonly SpriteDefinition[] = [
   },
   {
     file: 'ground-sand',
-    label: msg('game-labels:sprite.sand'),
+    label: { key: 'game-labels:sprite.sand' },
     category: 'ground',
     extract: {
       method: 'bg-tile', sheets: OUTDOOR_SHEETS, upper: OUTDOOR_UPPER, tiles: [0x0caa, 0x0caa, 0x0c8c, 0x0c9e],
@@ -41,7 +40,7 @@ const GROUND_TILE_SPRITE_DEFINITIONS: readonly SpriteDefinition[] = [
   },
   {
     file: 'ground-water-shallow',
-    label: msg('game-labels:sprite.shallowWater'),
+    label: { key: 'game-labels:sprite.shallowWater' },
     category: 'ground',
     extract: {
       method: 'bg-tile', sheets: OUTDOOR_SHEETS, upper: OUTDOOR_UPPER, tiles: [0x1db4, 0x1dd7, 0x1dd7, 0x1db4],
@@ -50,7 +49,7 @@ const GROUND_TILE_SPRITE_DEFINITIONS: readonly SpriteDefinition[] = [
   },
   {
     file: 'ground-water-deep',
-    label: msg('game-labels:sprite.deepWater'),
+    label: { key: 'game-labels:sprite.deepWater' },
     category: 'ground',
     extract: {
       method: 'bg-tile', sheets: OUTDOOR_SHEETS, upper: OUTDOOR_UPPER, tiles: [0x1dcd, 0x5dcd, 0x1dc9, 0x5dc9],

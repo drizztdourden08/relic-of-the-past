@@ -1,43 +1,55 @@
 /* @layer shared-game @kind data */
-import { msg } from '@drizztdourden08/brock-core/i18n';
 import type { SpriteDefinition } from './manifest';
-
-const legendSprite = (n: 1 | 2 | 3 | 4): SpriteDefinition => ({
-  file: `story-legend-${n}`,
-  label: msg('game-labels:sprite.storyLegend', { n }),
-  category: 'title',
-  extract: { method: 'story-legend', legend: n - 1 },
-});
 
 const TITLE_SPRITE_DEFINITIONS: readonly SpriteDefinition[] = [
   {
     file: 'title-logo',
-    label: msg('game-labels:sprite.titleLogo'),
+    label: { key: 'game-labels:sprite.titleLogo' },
     category: 'title',
     extract: { method: 'title-screen', part: 'logo' },
   },
   {
     file: 'title-sword',
-    label: msg('game-labels:sprite.titleSword'),
+    label: { key: 'game-labels:sprite.titleSword' },
     category: 'title',
     extract: { method: 'title-screen', part: 'sword' },
   },
   {
     file: 'title-triforce',
-    label: msg('game-labels:sprite.titleTriforce'),
+    label: { key: 'game-labels:sprite.titleTriforce' },
     category: 'title',
     extract: { method: 'title-screen', part: 'triforce' },
   },
   {
     file: 'title-background',
-    label: msg('game-labels:sprite.titleBackground'),
+    label: { key: 'game-labels:sprite.titleBackground' },
     category: 'title',
     extract: { method: 'title-screen', part: 'background' },
   },
-  legendSprite(1),
-  legendSprite(2),
-  legendSprite(3),
-  legendSprite(4),
+  {
+    file: 'story-legend-1',
+    label: { key: 'game-labels:sprite.storyLegend', values: { n: 1 } },
+    category: 'title',
+    extract: { method: 'story-legend', legend: 0 },
+  },
+  {
+    file: 'story-legend-2',
+    label: { key: 'game-labels:sprite.storyLegend', values: { n: 2 } },
+    category: 'title',
+    extract: { method: 'story-legend', legend: 1 },
+  },
+  {
+    file: 'story-legend-3',
+    label: { key: 'game-labels:sprite.storyLegend', values: { n: 3 } },
+    category: 'title',
+    extract: { method: 'story-legend', legend: 2 },
+  },
+  {
+    file: 'story-legend-4',
+    label: { key: 'game-labels:sprite.storyLegend', values: { n: 4 } },
+    category: 'title',
+    extract: { method: 'story-legend', legend: 3 },
+  },
 ];
 
 export { TITLE_SPRITE_DEFINITIONS };

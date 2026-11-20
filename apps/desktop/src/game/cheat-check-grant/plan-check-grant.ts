@@ -1,6 +1,5 @@
 /* @layer bridge-wasm @kind logic */
 import type { CheckRecord } from '@rotp/game-data';
-import { msg } from '@drizztdourden08/brock-core/i18n';
 import type { I18n } from '@drizztdourden08/brock-core/i18n';
 import { itemKeyName, locationKeyOfCheck, standardCheckName, resolveLocalItemId, isWritable, markPlanOf, canGrantVanilla, vanillaItemLabelOf } from '@rotp/randomizer';
 import { currentRun } from '../randomizer-client/run-kind';

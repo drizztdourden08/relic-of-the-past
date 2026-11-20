@@ -3,7 +3,7 @@ import type { Text } from '@drizztdourden08/brock-core/i18n';
 import type { SimEvent } from '@rotp/navigation';
 import type { LogRow } from '@drizztdourden08/tessera/composites';
 import { classifyEvent } from './classify-event';
-import { startTileOf } from './coded-event';
+import { startTileOf } from './start-tile-of';
 import { computeIndents } from './compute-indents';
 
 const messageOf = (event: SimEvent, kind: string): string => {

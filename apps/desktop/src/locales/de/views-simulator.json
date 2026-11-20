@@ -96,7 +96,7 @@
   "log.tag.info": "INFO",
   "event.sequence": "Sequenz {label}",
   "event.run-config": "Lauf-Konfiguration: Bildschirmlimit {limit}",
-  "event.run-config.stop": "Lauf-Konfiguration: Stopp bei „{check}“, Bildschirmlimit {limit}",
+  "event.run-config.stop": "Lauf-Konfiguration: Stopp bei \"{check}\", Bildschirmlimit {limit}",
   "event.limit.unlimited": "unbegrenzt",
   "event.area": "Bereich {label} ({size, plural, one {# Teilbild} other {# Teilbilder}})",
   "event.screen": "Bildschirm {label}",

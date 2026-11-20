@@ -1,7 +1,7 @@
 /* @layer renderer-widgets @kind logic */
 import { recordTransition } from '@rotp/navigation';
 import type { RunContext, RunCursor, RunStepResult } from '../SimulatorWidget.type';
-import { sequenceLabelOf } from './coded-event';
+import { sequenceLabelOf } from './sequence-label-of';
 import { computeProgress } from './compute-progress';
 import { fanOutEvents } from './fan-out-events';
 import { frontierEvents } from './frontier-events';

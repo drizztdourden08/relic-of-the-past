@@ -1,5 +1,6 @@
 /* @layer renderer-components @kind hook */
 import { useState, useCallback, useRef, useEffect } from 'react';
+import type { Text } from '@drizztdourden08/brock-core/i18n';
 import {
   startGame,
   getGameState,
@@ -9,7 +10,7 @@ import {
 
 const useGameState = () => {
   const [status, setStatus] = useState<GameStatus>(() => getGameState().status);
-  const [error, setError] = useState<string | null>(() => getGameState().error);
+  const [error, setError] = useState<Text | null>(() => getGameState().error);
   const startedRef = useRef(false);
 
   useEffect(() => {

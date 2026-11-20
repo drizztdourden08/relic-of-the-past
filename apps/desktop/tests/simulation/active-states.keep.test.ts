@@ -1,8 +1,12 @@
 /* @layer tests @kind test */
 import { describe, it, expect } from 'vitest';
+import { createI18n } from '@drizztdourden08/brock-core/i18n';
 import { activeStates, SLOT } from '@rotp/game-core';
 import type { StateSnapshot } from '@rotp/game-core';
 import { required } from '@rotp/asset-extraction/testing';
+import { appLocales } from '../../.brock/locales';
+
+const english = createI18n({ base: appLocales.base, locale: appLocales.base, layers: appLocales.layers });
 
 const snap = (over: Partial<Record<number, number>> = {}, follower = 0): StateSnapshot => {
   const progress = new Array(16).fill(0);
@@ -12,7 +16,7 @@ const snap = (over: Partial<Record<number, number>> = {}, follower = 0): StateSn
 };
 
 const ids = (s: StateSnapshot): string[] => activeStates(s).map((a) => a.id);
-const labels = (s: StateSnapshot): string[] => activeStates(s).map((a) => a.label);
+const labels = (s: StateSnapshot): string[] => activeStates(s).map((a) => english.text(a.label));
 
 describe('active game states', { tags: ['critical'] }, () => {
   it('reports nothing when nothing notable holds', () => {
@@ -21,8 +25,8 @@ describe('active game states', { tags: ['critical'] }, () => {
 
   it('reports an unmapped tagalong id by number instead of guessing', () => {
     const state = required(activeStates(snap({}, 200))[0], 'first active state');
-    expect(state.label).toBe('Follower #200 following');
-    expect(state.detail).toBe('unmapped tagalong id');
+    expect(english.text(state.label)).toBe('Follower #200 following');
+    expect(english.text(required(state.detail, 'detail'))).toBe('unmapped tagalong id');
   });
 
   it('holds several states at once, which is the whole point of a list', () => {

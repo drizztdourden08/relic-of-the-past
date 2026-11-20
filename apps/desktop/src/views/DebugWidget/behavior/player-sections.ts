@@ -8,6 +8,12 @@ import { formatHearts } from './format-hearts';
 import { hex } from './hex';
 import { yn } from './yes-no';
 
+const bottleName = (text: I18n['text'], value: number): string => {
+  if (value <= 0) return '-';
+  const name = BOTTLE_NAMES[value];
+  return name ? text(name) : `?${value}`;
+};
+
 const playerSections = (t: I18n['t'], text: I18n['text'], state: GameUIState): StateSectionData[] => {
   const { hud, inventory, equipment, dungeonProgress } = state;
   return [
@@ -32,7 +38,7 @@ const playerSections = (t: I18n['t'], text: I18n['text'], state: GameUIState): S
       ...inventory.items
         .map((v, i) => ({ label: ITEM_NAMES[i] ? text(ITEM_NAMES[i]) : t('views-debug:inventory.item', { index: i }), value: String(v) }))
         .filter((_, i) => (inventory.items[i] ?? 0) > 0),
-      { label: t('views-debug:row.bottles'), value: inventory.bottles.map((v) => (v > 0 ? (BOTTLE_NAMES[v] ? text(BOTTLE_NAMES[v]) : `?${v}`) : '-')).join(', ') },
+      { label: t('views-debug:row.bottles'), value: inventory.bottles.map((v) => bottleName(text, v)).join(', ') },
     ] },
     { title: t('views-debug:section.dungeon.progress'), rows: [
       { label: t('views-debug:row.pendants'), value: bin(dungeonProgress.pendants, 3), mono: true },
