@@ -7,7 +7,6 @@ import { decodeJapaneseMessages } from '../text/decode-japanese-messages';
 import { formatMessage } from '../text/format-message';
 import type { ExtractedJapaneseLanguage } from './japanese-entry.type';
 
-// The text only: the glyphs that draw it are the Japanese graphics pack's (compileJapaneseGraphics).
 const extractJapaneseLanguage = (rom: RomData): ExtractedJapaneseLanguage => {
   const texts = japaneseToUsMessages(decodeJapaneseMessages(rom).map(formatMessage));
   return {

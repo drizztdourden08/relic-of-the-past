@@ -5,8 +5,6 @@ import type { LanguageSet } from '../types';
 import { bakedTexts } from './baked-texts';
 import { compileScreens } from './compile-screens';
 
-// A Japanese set bakes text and layouts only: its glyphs (dialogue and tilemap fonts) are the Japanese
-// graphics pack's, so a font a set file still holds is never baked.
 const textOnly = (screens: ScreenPayload | undefined): ScreenPayload | undefined =>
   screens ? { ...screens, tilemapFontData: undefined } : undefined;
 

@@ -3,7 +3,6 @@ import { extractJapaneseLanguage, extractJapaneseScreens, jaScreenAddressesOf } 
 import type { RomData } from '@rotp/asset-extraction';
 import type { ExtractedPack } from '../types';
 
-// Text and layouts only: a Japanese set's glyphs are the Japanese graphics pack's, imported in Data > Sprites.
 const extractJapanesePack = (rom: RomData): ExtractedPack => {
   const entry = extractJapaneseLanguage(rom);
   return {

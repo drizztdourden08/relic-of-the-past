@@ -3,10 +3,8 @@ import type { FileStore } from '@drizztdourden08/brock-core';
 import type { LanguageSet, SetBakeInput } from '../messages';
 import type { RomFontBytes } from '../sets';
 import { getRomFont, getSet, list as listSets } from '../sets';
+import { NO_FONT } from './read-language-sets.constants';
 
-const NO_FONT: RomFontBytes = { fontData: new Uint8Array(0), fontWidth: new Uint8Array(0) };
-
-// A Japanese set bakes without a font: the core draws its glyphs from the Japanese graphics pack.
 const fontOf = async (files: FileStore, set: LanguageSet): Promise<RomFontBytes | null> =>
   set.script === 'japanese' ? NO_FONT : getRomFont(files, set.base);
 

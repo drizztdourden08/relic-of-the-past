@@ -22,9 +22,6 @@ const selectFileStripes = (rom: RomData, table: JaScreenAddressTable): Record<Se
     }),
   ) as Record<SelectFileTable, Uint8Array>;
 
-// A Japanese set carries text and screen layouts only: the cartridge's pictures (the intro and HUD sheets,
-// the copyright patch, the title's tilemap) and its glyphs (the dialogue and tilemap fonts) come from the
-// Japanese graphics pack (compileJapaneseGraphics).
 const extractJapaneseScreens = (rom: RomData, table: JaScreenAddressTable): ScreenPayload => ({
   menuTilemaps: menuTilemaps(rom, table),
   selectFileStripes: selectFileStripes(rom, table),

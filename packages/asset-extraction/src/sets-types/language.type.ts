@@ -22,7 +22,6 @@ interface LanguageSummary {
   code: string;
   glyphCount: number;
   lineCount: number;
-  /** Its glyphs are the Japanese font, which only the Japanese graphics pack carries. */
   needsJapaneseFont: boolean;
 }
 

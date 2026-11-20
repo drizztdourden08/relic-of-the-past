@@ -6,8 +6,6 @@ import { encodeForCore } from '../text/encode-for-core';
 import type { JapaneseEntryParams, JapanesePackedEntry } from './japanese-entry.type';
 import { JAPANESE_RANDOMIZER_TEMPLATES } from './japanese-templates.constants';
 
-// The font slot stays empty: the core draws a Japanese set's glyphs from the Japanese graphics pack
-// (JaGraphics_DialogueFontSync), never from the asset blob.
 const buildJapaneseEntry = ({ code, texts }: JapaneseEntryParams): JapanesePackedEntry => {
   if (texts.length !== US_MESSAGE_COUNT) {
     throw new Error(`buildJapaneseEntry: expected ${US_MESSAGE_COUNT} dialogue lines for "${code}", got ${texts.length}`);
