@@ -229,5 +229,6 @@
   "sprite-category.drop": "Soltables",
   "sprite-category.randomizer": "Aleatorizador",
   "sprite-category.title": "Título e historia",
-  "sprite-category.ground": "Suelo"
+  "sprite-category.ground": "Suelo",
+  "button-prompt.hold": "Mantén"
 }

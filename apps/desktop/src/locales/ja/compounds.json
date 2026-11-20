@@ -229,5 +229,6 @@
   "sprite-category.drop": "ドロップ",
   "sprite-category.randomizer": "ランダマイザー",
   "sprite-category.title": "タイトルとストーリー",
-  "sprite-category.ground": "地面"
+  "sprite-category.ground": "地面",
+  "button-prompt.hold": "長押し"
 }

@@ -1,4 +1,5 @@
 /* @layer renderer-hud @kind component */
+import { useT } from '@drizztdourden08/brock-react';
 import { PROMPT_START_H, PROMPT_START_Y, PROMPT_STORY_H, PROMPT_STORY_Y, FRAME_W } from '@rotp/game-data';
 import { HudBox } from '../../../primitives/HudBox';
 import { ButtonPrompt } from '../../../primitives/ButtonPrompt';
@@ -9,16 +10,17 @@ import './TitlePrompts.css';
 
 const TitlePrompts = ({ geometry, scale }: TitlePromptsProps) => {
   const { glyphsFor } = useButtonGlyphs();
+  const t = useT();
   const left = geometry.frameX * scale;
   const width = FRAME_W * scale;
   const row = (y: number, h: number) => ({ position: 'absolute', left, width, top: (geometry.frameY + y) * scale, height: Math.round(h * scale), display: 'flex', justifyContent: 'center', alignItems: 'center' } as const);
   return (
     <>
       <HudBox className="title-prompt title-prompt--start" style={row(PROMPT_START_Y, PROMPT_START_H)}>
-        <ButtonPrompt glyphs={glyphsFor(['a'])} label="Start" height={Math.round(PROMPT_START_H * scale)} ink={PROMPT_INK} stroke={PROMPT_STROKE} />
+        <ButtonPrompt glyphs={glyphsFor(['a'])} label={t('views-game-layer:title.start')} height={Math.round(PROMPT_START_H * scale)} ink={PROMPT_INK} stroke={PROMPT_STROKE} />
       </HudBox>
       <HudBox className="title-prompt" style={row(PROMPT_STORY_Y, PROMPT_STORY_H)}>
-        <ButtonPrompt glyphs={glyphsFor(['b'])} label="Story" height={Math.round(PROMPT_STORY_H * scale)} ink={PROMPT_INK} stroke={PROMPT_STROKE} />
+        <ButtonPrompt glyphs={glyphsFor(['b'])} label={t('views-game-layer:title.story')} height={Math.round(PROMPT_STORY_H * scale)} ink={PROMPT_INK} stroke={PROMPT_STROKE} />
       </HudBox>
     </>
   );

@@ -229,5 +229,6 @@
   "sprite-category.drop": "Fundstücke",
   "sprite-category.randomizer": "Randomizer",
   "sprite-category.title": "Titel & Story",
-  "sprite-category.ground": "Boden"
+  "sprite-category.ground": "Boden",
+  "button-prompt.hold": "Halten"
 }

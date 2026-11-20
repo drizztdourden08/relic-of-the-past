@@ -229,5 +229,6 @@
   "sprite-category.drop": "Zrzucane",
   "sprite-category.randomizer": "Randomizer",
   "sprite-category.title": "Tytuł i fabuła",
-  "sprite-category.ground": "Podłoże"
+  "sprite-category.ground": "Podłoże",
+  "button-prompt.hold": "Przytrzymaj"
 }
