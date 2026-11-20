@@ -1,4 +1,5 @@
 /* @layer renderer-lib @kind logic */
+import { msg } from '@drizztdourden08/brock-core/i18n';
 import { isZip, unzip } from '@rotp/roms';
 import type { MsuResult } from '@app/ipc/msu-contract';
 import { platformFiles } from '../platform-files';
@@ -30,7 +31,7 @@ const installMsuTracks = async (pack: string, read: (report: ImportReport) => Pr
   try {
     return await runImportJob({
       kind: 'msu',
-      title: 'Importing a music pack',
+      title: msg('data-manager:jobs.import-music-pack'),
       work: async (report) => {
         const { bytes, name } = await read(report);
         return install(pack, await resolveTracks(bytes, name), report);

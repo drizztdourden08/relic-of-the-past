@@ -314,5 +314,18 @@
   "settings-sections.enum.pixel": "Pixel",
   "settings-sections.enum.reimagined": "Reimagined",
   "settings-sections.enum.still": "Still",
-  "settings-sections.enum.drifting": "Drifting"
+  "settings-sections.enum.drifting": "Drifting",
+  "jobs.extract-sprites": "Extracting sprites from {rom}",
+  "jobs.read-japanese-graphics": "Reading the Japanese graphics from {rom}",
+  "jobs.read-base-fonts": "Reading the base fonts",
+  "jobs.read-rom-language": "Reading the ROM language",
+  "jobs.build-assets": "Building the game assets",
+  "jobs.extract-dialogue": "Extracting the dialogue",
+  "jobs.read-patched-rom": "Reading a patched ROM",
+  "jobs.read-menu-text": "Reading the menu text",
+  "jobs.import-patched-language": "Importing a patched language",
+  "jobs.import-language": "Importing a language",
+  "jobs.add-player-sprite": "Adding a player sprite",
+  "jobs.import-music-pack": "Importing a music pack",
+  "jobs.import-rom": "Importing a ROM"
 }

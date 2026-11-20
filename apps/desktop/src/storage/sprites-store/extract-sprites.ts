@@ -17,11 +17,11 @@ const extractSprites = async (romFile: string): Promise<{ success: boolean; coun
     if (!romBytes) return { success: false, error: msg('errors:rom.notFound', { file: romFile }) };
     const buffers = await runImportJob({
       kind: 'sprite',
-      title: `Extracting sprites from ${romFile}`,
+      title: msg('data-manager:jobs.extract-sprites', { rom: romFile }),
       work: async (report) => {
         report.phase('decode', 'Extracting sprites...');
         const result = await runExtractStep<'sprites', SpritesResult>({
-          step: 'sprites', title: `Extracting sprites from ${romFile}`, subject: romFile, romBytes, input: { defs: SPRITE_DEFS },
+          step: 'sprites', title: msg('data-manager:jobs.extract-sprites', { rom: romFile }), subject: romFile, romBytes, input: { defs: SPRITE_DEFS },
         });
         const extracted = await usSpriteFallback(romFile, romBytes, result);
         await sprites.writeSprites(platformFiles(), romFile, extracted);

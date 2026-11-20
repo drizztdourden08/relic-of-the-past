@@ -314,5 +314,18 @@
   "settings-sections.enum.pixel": "ドット",
   "settings-sections.enum.reimagined": "リイマジン",
   "settings-sections.enum.still": "静止",
-  "settings-sections.enum.drifting": "ゆっくり移動"
+  "settings-sections.enum.drifting": "ゆっくり移動",
+  "jobs.extract-sprites": "{rom} からスプライトを抽出中",
+  "jobs.read-japanese-graphics": "{rom} から日本語グラフィックを読み込み中",
+  "jobs.read-base-fonts": "基本フォントを読み込み中",
+  "jobs.read-rom-language": "ROMの言語を読み込み中",
+  "jobs.build-assets": "ゲームアセットを構築中",
+  "jobs.extract-dialogue": "会話テキストを抽出中",
+  "jobs.read-patched-rom": "パッチ済みROMを読み込み中",
+  "jobs.read-menu-text": "メニューテキストを読み込み中",
+  "jobs.import-patched-language": "パッチ済み言語をインポート中",
+  "jobs.import-language": "言語をインポート中",
+  "jobs.add-player-sprite": "プレイヤースプライトを追加中",
+  "jobs.import-music-pack": "音楽パックをインポート中",
+  "jobs.import-rom": "ROMをインポート中"
 }

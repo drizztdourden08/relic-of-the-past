@@ -314,5 +314,18 @@
   "settings-sections.enum.pixel": "Pikselowy",
   "settings-sections.enum.reimagined": "Odmieniony",
   "settings-sections.enum.still": "Nieruchomy",
-  "settings-sections.enum.drifting": "Dryfujący"
+  "settings-sections.enum.drifting": "Dryfujący",
+  "jobs.extract-sprites": "Wyodrębnianie sprite'ów z {rom}",
+  "jobs.read-japanese-graphics": "Odczyt japońskiej grafiki z {rom}",
+  "jobs.read-base-fonts": "Odczyt podstawowych czcionek",
+  "jobs.read-rom-language": "Odczyt języka ROM-u",
+  "jobs.build-assets": "Tworzenie zasobów gry",
+  "jobs.extract-dialogue": "Wyodrębnianie dialogów",
+  "jobs.read-patched-rom": "Odczyt spatchowanego ROM-u",
+  "jobs.read-menu-text": "Odczyt tekstu menu",
+  "jobs.import-patched-language": "Importowanie spatchowanego języka",
+  "jobs.import-language": "Importowanie języka",
+  "jobs.add-player-sprite": "Dodawanie sprite'a gracza",
+  "jobs.import-music-pack": "Importowanie pakietu muzycznego",
+  "jobs.import-rom": "Importowanie ROM-u"
 }

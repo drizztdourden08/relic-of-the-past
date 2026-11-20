@@ -13,7 +13,7 @@ const StepBody = (props: StepBodyProps) => {
     case STEP_IDS.profile:
       return <ProfileStep values={values} update={update} readyRoms={readyRoms} languages={languages} msuPacks={msuPacks} />;
     case STEP_IDS.review:
-      return <ReviewStep wizard={wizard} />;
+      return <ReviewStep wizard={wizard} languages={languages} />;
     default:
       return <ModuleStep stepId={wizard.current.id} modules={modules} values={values} update={update} />;
   }

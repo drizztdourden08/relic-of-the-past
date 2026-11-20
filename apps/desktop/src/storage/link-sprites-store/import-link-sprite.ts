@@ -20,7 +20,7 @@ const storeLinkSprite = async (name: string, bytes: Uint8Array): Promise<ImportR
 const importLinkSprite = (name: string, bytes: Uint8Array): Promise<ImportResult> =>
   runImportJob({
     kind: 'linkSprite',
-    title: 'Adding a player sprite',
+    title: msg('data-manager:jobs.add-player-sprite'),
     work: () => storeLinkSprite(name, bytes),
     failureOf: (result) => (result.success ? null : failureLine(result.error ?? 'Import failed')),
   });

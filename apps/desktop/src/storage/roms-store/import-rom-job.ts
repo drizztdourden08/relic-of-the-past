@@ -1,4 +1,5 @@
 /* @layer renderer-lib @kind logic */
+import { msg } from '@drizztdourden08/brock-core/i18n';
 import type { RomBytes, RomImportResult, RomKind } from '@rotp/roms';
 import { importRomBytes } from '../rom-files';
 import { platformFiles } from '../platform-files';
@@ -10,7 +11,7 @@ const failureOf = (result: RomImportResult): string | null => (result.success ? 
 const importRomJob = (kind: RomKind, work: (report: ImportReport) => Promise<RomBytes>): Promise<RomImportResult> =>
   runImportJob({
     kind: 'rom',
-    title: 'Importing a ROM',
+    title: msg('data-manager:jobs.import-rom'),
     work: async (report) => importRomBytes(platformFiles(), await work(report), kind, (phase) => report.phase(phase)),
     failureOf,
   });

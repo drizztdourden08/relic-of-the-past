@@ -13,7 +13,7 @@ const extractAssets = async (romFile: string): Promise<ExtractResult> => {
     if (!inputs) return { success: false, error: msg('errors:rom.notFound', { file: romFile }) };
     const { romBytes, supplementRoms, languages } = inputs;
     const result = await runExtractStep<'assets', AssetsResult>({
-      step: 'assets', title: 'Building the game assets', subject: romFile, romBytes, input: { supplementRoms, languages },
+      step: 'assets', title: msg('data-manager:jobs.build-assets'), subject: romFile, romBytes, input: { supplementRoms, languages },
     });
     const stored = await storeAssetSet(platformFiles(), romFile, inputs.supplementRoms, result);
     markAssetsBaked();

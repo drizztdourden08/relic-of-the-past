@@ -1,4 +1,5 @@
 /* @layer renderer-lib @kind logic */
+import { msg } from '@drizztdourden08/brock-core/i18n';
 import { assets } from '@rotp/roms';
 import { listRomsWithStatus } from './roms-store';
 import { runExtractStep } from './extraction-client';
@@ -10,7 +11,7 @@ const cache = new Map<string, DecodedText>();
 const decodeRom = async (romFile: string, romBytes: Uint8Array): Promise<DecodedText | null> => {
   try {
     return await runExtractStep<'menu-text', DecodedText>({
-      step: 'menu-text', title: 'Reading the menu text', subject: romFile, romBytes, input: undefined,
+      step: 'menu-text', title: msg('data-manager:jobs.read-menu-text'), subject: romFile, romBytes, input: undefined,
     });
   } catch {
     return null;

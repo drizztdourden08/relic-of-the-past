@@ -4,11 +4,11 @@ import { WizardReview } from '@drizztdourden08/tessera/composites';
 import { reviewSections } from '../../behavior/review-sections';
 import type { ReviewStepProps } from './ReviewStep.type';
 
-const ReviewStep = ({ wizard }: ReviewStepProps) => {
+const ReviewStep = ({ wizard, languages }: ReviewStepProps) => {
   const t = useT();
   return (
     <WizardReview
-      sections={reviewSections(wizard.values, t)}
+      sections={reviewSections(wizard.values, languages, t)}
       disabled={wizard.busy}
       onEdit={(stepId) => wizard.goTo(stepId)}
     />
