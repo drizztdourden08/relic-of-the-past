@@ -18,6 +18,7 @@ import app_de_language_editor from '../../src/locales/de/language-editor.json';
 import app_de_msu_studio from '../../src/locales/de/msu-studio.json';
 import app_de_nav_labels from '../../src/locales/de/nav-labels.json';
 import app_de_profiles from '../../src/locales/de/profiles.json';
+import app_de_randomizer_world from '../../src/locales/de/randomizer-world.json';
 import app_de_randomizer from '../../src/locales/de/randomizer.json';
 import app_de_rom_loader from '../../src/locales/de/rom-loader.json';
 import app_de_roms from '../../src/locales/de/roms.json';
@@ -78,6 +79,7 @@ const layers: readonly Layer[] = [
   { locale: 'de', namespace: 'msu-studio', kind: 'app', messages: app_de_msu_studio },
   { locale: 'de', namespace: 'nav-labels', kind: 'app', messages: app_de_nav_labels },
   { locale: 'de', namespace: 'profiles', kind: 'app', messages: app_de_profiles },
+  { locale: 'de', namespace: 'randomizer-world', kind: 'app', messages: app_de_randomizer_world },
   { locale: 'de', namespace: 'randomizer', kind: 'app', messages: app_de_randomizer },
   { locale: 'de', namespace: 'rom-loader', kind: 'app', messages: app_de_rom_loader },
   { locale: 'de', namespace: 'roms', kind: 'app', messages: app_de_roms },
