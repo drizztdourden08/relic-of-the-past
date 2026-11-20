@@ -910,6 +910,8 @@ declare module '@drizztdourden08/brock-core/augment' {
     'data-manager:jobs.line.bakeAssets': Record<never, never>;
     'data-manager:jobs.line.readPatchedRom': Record<never, never>;
     'data-manager:jobs.line.extractSprites': Record<never, never>;
+    'data-manager:jobs.line.compileAssets': Record<never, never>;
+    'data-manager:jobs.line.readJapaneseGraphics': Record<never, never>;
     'errors:rom.usRequired': Record<never, never>;
     'errors:rom.fontMissing': { languages: readonly string[] };
     'errors:rom.notFound': { file: string | number };

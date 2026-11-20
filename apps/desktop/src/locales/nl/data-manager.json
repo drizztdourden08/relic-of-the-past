@@ -349,5 +349,7 @@
   "jobs.line.decodeDialogue": "Dialoog decoderen...",
   "jobs.line.bakeAssets": "In de assets verwerken...",
   "jobs.line.readPatchedRom": "De gepatchte ROM lezen...",
-  "jobs.line.extractSprites": "Sprites uitpakken..."
+  "jobs.line.extractSprites": "Sprites uitpakken...",
+  "jobs.line.compileAssets": "Resourceset compileren...",
+  "jobs.line.readJapaneseGraphics": "Japanse graphics lezen..."
 }

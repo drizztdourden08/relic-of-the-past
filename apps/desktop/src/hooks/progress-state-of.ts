@@ -7,7 +7,7 @@ import type { ImportProgressState } from './use-import-progress.type';
 const progressStateOf = (job: JobSnapshot | null, text: (value: Text) => string): ImportProgressState => {
   if (job?.state !== 'running') return IDLE;
   const percent = job.stepProgress > 0 ? Math.min(100, job.stepProgress * 100) : null;
-  return { active: true, percent, label: job.line ?? text(job.title) };
+  return { active: true, percent, label: text(job.line ?? job.title) };
 };
 
 export { progressStateOf };

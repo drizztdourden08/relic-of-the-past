@@ -349,5 +349,7 @@
   "jobs.line.decodeDialogue": "Avkodar dialog...",
   "jobs.line.bakeAssets": "Bygger in i resurserna...",
   "jobs.line.readPatchedRom": "Läser den patchade ROM:en...",
-  "jobs.line.extractSprites": "Packar upp sprites..."
+  "jobs.line.extractSprites": "Packar upp sprites...",
+  "jobs.line.compileAssets": "Kompilerar resursuppsättningen...",
+  "jobs.line.readJapaneseGraphics": "Läser den japanska grafiken..."
 }

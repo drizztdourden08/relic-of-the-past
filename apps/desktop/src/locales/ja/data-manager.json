@@ -349,5 +349,7 @@
   "jobs.line.decodeDialogue": "ダイアログをデコード中...",
   "jobs.line.bakeAssets": "アセットに組み込み中...",
   "jobs.line.readPatchedRom": "パッチ済みROMを読み込み中...",
-  "jobs.line.extractSprites": "スプライトを抽出中..."
+  "jobs.line.extractSprites": "スプライトを抽出中...",
+  "jobs.line.compileAssets": "アセットセットをコンパイル中...",
+  "jobs.line.readJapaneseGraphics": "日本語グラフィックを読み込み中..."
 }

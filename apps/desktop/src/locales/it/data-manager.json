@@ -349,5 +349,7 @@
   "jobs.line.decodeDialogue": "Decodifica dei dialoghi...",
   "jobs.line.bakeAssets": "Integrazione nelle risorse...",
   "jobs.line.readPatchedRom": "Lettura della ROM con patch...",
-  "jobs.line.extractSprites": "Estrazione degli sprite..."
+  "jobs.line.extractSprites": "Estrazione degli sprite...",
+  "jobs.line.compileAssets": "Compilazione del set di risorse...",
+  "jobs.line.readJapaneseGraphics": "Lettura della grafica giapponese..."
 }

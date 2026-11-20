@@ -1,4 +1,5 @@
 /* @layer bridge-wasm @kind logic */
+import { msg } from '@drizztdourden08/brock-core/i18n';
 import { buildLangData, dialogueFlags, kFontTypes, kLanguages } from '@rotp/asset-extraction';
 import type { PatchedLanguage, PatchedPartReport } from '@rotp/asset-extraction';
 import { extractPatchedLanguage, loadPatchedRomFromBuffer } from '@rotp/asset-extraction/buffer';
@@ -19,7 +20,7 @@ const encodeCheck = (found: PatchedLanguage, base: string): { flags: number; fai
 };
 
 const patchedLanguageStep = defineStep<'patched-language'>((input, { romBytes }, report): PatchedLanguageOutput => {
-  report.line('Reading the patched ROM...');
+  report.line(msg('data-manager:jobs.line.readPatchedRom'));
   const patched = loadPatchedRomFromBuffer(Buffer.from(romBytes), input.base);
   const library = libraryReferences(input.libraryRoms, input.base);
   const found = extractPatchedLanguage({
