@@ -446,5 +446,8 @@
   "appearance.shadows": "shadows ({summary})",
   "screen.title": "HUD Layout Editor",
   "value-input.increment": "Increment {name}",
-  "value-input.decrement": "Decrement {name}"
+  "value-input.decrement": "Decrement {name}",
+  "glyph-pack.name.keyboard": "Keyboard",
+  "glyph-pack.name.snes": "Console",
+  "glyph-pack.name.generic": "Generic"
 }

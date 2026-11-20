@@ -3,6 +3,7 @@ import { useMemo, useState } from 'react';
 import { Box, Button, SegmentedControl, Text } from '@drizztdourden08/tessera/primitives';
 import { AUTO_PACK_ID } from '@rotp/input-mapping';
 import { PackOverridesPanel } from './PackOverridesPanel';
+import { glyphPackLabel } from './glyph-pack-label';
 import type { GlyphPosition } from '@app/hud/custom-glyph-store';
 import type { GlyphPackPickerProps } from './GlyphPackPicker.type';
 import { useT } from '@drizztdourden08/brock-react';
@@ -12,7 +13,7 @@ const GlyphPackPicker = (props: GlyphPackPickerProps) => {
   const { value, packs, custom, positions, busy, onChange, onCreatePack, onDeletePack, onImport, onRemove } = props;
   const [position, setPosition] = useState<GlyphPosition | ''>('');
   const packOptions = useMemo(
-    () => [{ value: AUTO_PACK_ID, label: t('hud-editor:glyph-pack.auto') }, ...packs.map((pack) => ({ value: pack.id, label: pack.name }))],
+    () => [{ value: AUTO_PACK_ID, label: t('hud-editor:glyph-pack.auto') }, ...packs.map((pack) => ({ value: pack.id, label: glyphPackLabel(pack, t) }))],
     [packs, t],
   );
 

@@ -446,5 +446,8 @@
   "appearance.shadows": "ombre ({summary})",
   "screen.title": "Editor layout HUD",
   "value-input.increment": "Aumenta {name}",
-  "value-input.decrement": "Diminuisci {name}"
+  "value-input.decrement": "Diminuisci {name}",
+  "glyph-pack.name.keyboard": "Tastiera",
+  "glyph-pack.name.snes": "Console",
+  "glyph-pack.name.generic": "Generico"
 }

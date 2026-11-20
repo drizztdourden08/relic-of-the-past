@@ -24,5 +24,13 @@
   "hero.eyebrow": "Dados",
   "hero.title": "Sua biblioteca",
   "hero.open-folder": "Abrir pasta de dados",
-  "hero.refresh": "Atualizar"
+  "hero.refresh": "Atualizar",
+  "domain.profiles": "Perfis",
+  "domain.roms": "ROMs",
+  "domain.assets": "Recursos",
+  "domain.sprites": "Sprites",
+  "domain.link-sprites": "Sprites de personagem",
+  "domain.msu": "Pacotes MSU",
+  "domain.logs": "Registos",
+  "domain.languages": "Estúdio de idiomas"
 }

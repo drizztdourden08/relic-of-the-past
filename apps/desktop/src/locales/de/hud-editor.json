@@ -446,5 +446,8 @@
   "appearance.shadows": "Schatten ({summary})",
   "screen.title": "HUD-Layout-Editor",
   "value-input.increment": "{name} erhöhen",
-  "value-input.decrement": "{name} verringern"
+  "value-input.decrement": "{name} verringern",
+  "glyph-pack.name.keyboard": "Tastatur",
+  "glyph-pack.name.snes": "Konsole",
+  "glyph-pack.name.generic": "Allgemein"
 }

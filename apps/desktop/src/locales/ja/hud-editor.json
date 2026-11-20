@@ -446,5 +446,8 @@
   "appearance.shadows": "影（{summary}）",
   "screen.title": "HUDレイアウトエディター",
   "value-input.increment": "{name}を増やす",
-  "value-input.decrement": "{name}を減らす"
+  "value-input.decrement": "{name}を減らす",
+  "glyph-pack.name.keyboard": "キーボード",
+  "glyph-pack.name.snes": "コンソール",
+  "glyph-pack.name.generic": "汎用"
 }

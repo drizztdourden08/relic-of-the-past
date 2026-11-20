@@ -3,6 +3,7 @@ import type { ActionBinding, InputProfile as BrockProfile } from '@drizztdourden
 import { SNES_BUTTONS } from '@rotp/game-data';
 import type { ButtonMapping, ModernBindings } from '@rotp/game-data';
 import type { InputProfile } from '@rotp/input-mapping';
+import { storedProfileName } from '@app/input/profile-name/profile-name';
 import { coreFromVerbs } from './core-from-verbs';
 import { profileLayoutId } from './profile-layout-id';
 
@@ -18,7 +19,7 @@ const toButtonMapping = (entry: ActionBinding): ButtonMapping[] => {
   }];
 };
 
-const toRotpProfile = (profile: BrockProfile): InputProfile => {
+const toRotpProfile = (profile: BrockProfile, keyboardName: string): InputProfile => {
   const layoutId = profileLayoutId(profile);
   const core = profile.verbs ? coreFromVerbs(profile.verbs) : undefined;
   const modern: ModernBindings | undefined = core && (profile.slots || layoutId)
@@ -26,7 +27,7 @@ const toRotpProfile = (profile: BrockProfile): InputProfile => {
     : undefined;
   return {
     id: profile.id,
-    name: profile.name,
+    name: storedProfileName(profile, keyboardName),
     deviceType: profile.deviceType,
     deviceFamily: profile.deviceFamily,
     mappings: profile.mappings.flatMap(toButtonMapping),

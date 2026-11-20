@@ -446,5 +446,8 @@
   "appearance.shadows": "cienie ({summary})",
   "screen.title": "Edytor układu HUD",
   "value-input.increment": "Zwiększ {name}",
-  "value-input.decrement": "Zmniejsz {name}"
+  "value-input.decrement": "Zmniejsz {name}",
+  "glyph-pack.name.keyboard": "Klawiatura",
+  "glyph-pack.name.snes": "Konsola",
+  "glyph-pack.name.generic": "Ogólny"
 }

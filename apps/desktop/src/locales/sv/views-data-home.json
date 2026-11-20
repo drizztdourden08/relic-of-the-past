@@ -24,5 +24,13 @@
   "hero.eyebrow": "Data",
   "hero.title": "Ditt bibliotek",
   "hero.open-folder": "Öppna datamappen",
-  "hero.refresh": "Uppdatera"
+  "hero.refresh": "Uppdatera",
+  "domain.profiles": "Profiler",
+  "domain.roms": "ROM-filer",
+  "domain.assets": "Resurser",
+  "domain.sprites": "Sprites",
+  "domain.link-sprites": "Karaktärssprites",
+  "domain.msu": "MSU-paket",
+  "domain.logs": "Loggar",
+  "domain.languages": "Språkstudio"
 }

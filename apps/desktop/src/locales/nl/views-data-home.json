@@ -24,5 +24,13 @@
   "hero.eyebrow": "Gegevens",
   "hero.title": "Je bibliotheek",
   "hero.open-folder": "Gegevensmap openen",
-  "hero.refresh": "Vernieuwen"
+  "hero.refresh": "Vernieuwen",
+  "domain.profiles": "Profielen",
+  "domain.roms": "ROM's",
+  "domain.assets": "Bronbestanden",
+  "domain.sprites": "Sprites",
+  "domain.link-sprites": "Personagesprites",
+  "domain.msu": "MSU-pakketten",
+  "domain.logs": "Logboeken",
+  "domain.languages": "Taalstudio"
 }

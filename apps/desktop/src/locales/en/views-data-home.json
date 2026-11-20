@@ -24,5 +24,13 @@
   "hero.eyebrow": "Data",
   "hero.title": "Your library",
   "hero.open-folder": "Open data folder",
-  "hero.refresh": "Refresh"
+  "hero.refresh": "Refresh",
+  "domain.profiles": "Profiles",
+  "domain.roms": "ROMs",
+  "domain.assets": "Assets",
+  "domain.sprites": "Sprites",
+  "domain.link-sprites": "Character sprites",
+  "domain.msu": "MSU packs",
+  "domain.logs": "Logs",
+  "domain.languages": "Language Studio"
 }

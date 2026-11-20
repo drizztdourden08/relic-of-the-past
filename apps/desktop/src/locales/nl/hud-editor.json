@@ -446,5 +446,8 @@
   "appearance.shadows": "schaduwen ({summary})",
   "screen.title": "HUD-indeling bewerken",
   "value-input.increment": "{name} verhogen",
-  "value-input.decrement": "{name} verlagen"
+  "value-input.decrement": "{name} verlagen",
+  "glyph-pack.name.keyboard": "Toetsenbord",
+  "glyph-pack.name.snes": "Console",
+  "glyph-pack.name.generic": "Algemeen"
 }

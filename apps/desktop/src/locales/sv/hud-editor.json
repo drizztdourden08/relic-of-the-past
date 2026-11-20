@@ -446,5 +446,8 @@
   "appearance.shadows": "skuggor ({summary})",
   "screen.title": "HUD-layoutredigerare",
   "value-input.increment": "Öka {name}",
-  "value-input.decrement": "Minska {name}"
+  "value-input.decrement": "Minska {name}",
+  "glyph-pack.name.keyboard": "Tangentbord",
+  "glyph-pack.name.snes": "Konsol",
+  "glyph-pack.name.generic": "Generisk"
 }

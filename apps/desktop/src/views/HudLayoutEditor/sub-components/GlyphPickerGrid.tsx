@@ -5,6 +5,7 @@ import { AUTO_PACK_ID, GENERIC_PACK_ID, findGlyphPack } from '@rotp/input-mappin
 import { GLYPH_POSITIONS } from '@app/hud-layout-editing/toolbar-menus';
 import { glyphSourceFor, glyphUrlOf } from '@app/hud-layout-editing/glyph-art';
 import type { HudGlyphPosition } from '@rotp/hud';
+import { glyphPackLabel } from './glyph-pack-label';
 import type { GlyphPickerGridProps } from './GlyphPickerGrid.type';
 import { useT } from '@drizztdourden08/brock-react';
 
@@ -26,7 +27,7 @@ const GlyphPickerGrid = (props: GlyphPickerGridProps) => {
     <Anchored anchorRef={anchorRef} placement="bottom-start" layer="popover" className="sprite-picker" onDismiss={onClose}>
       <Box className="sprite-picker__tabs">
         <Tabs
-          tabs={[{ id: AUTO_PACK_ID, label: t('hud-editor:glyph-pack.auto') }, ...packs.map((pack) => ({ id: pack.id, label: pack.name }))]}
+          tabs={[{ id: AUTO_PACK_ID, label: t('hud-editor:glyph-pack.auto') }, ...packs.map((pack) => ({ id: pack.id, label: glyphPackLabel(pack, t) }))]}
           activeTab={packId}
           onTabChange={setPackId}
         />

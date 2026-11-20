@@ -24,5 +24,13 @@
   "hero.eyebrow": "データ",
   "hero.title": "ライブラリ",
   "hero.open-folder": "データフォルダーを開く",
-  "hero.refresh": "更新"
+  "hero.refresh": "更新",
+  "domain.profiles": "プロファイル",
+  "domain.roms": "ROM",
+  "domain.assets": "アセット",
+  "domain.sprites": "スプライト",
+  "domain.link-sprites": "キャラクタースプライト",
+  "domain.msu": "MSUパック",
+  "domain.logs": "ログ",
+  "domain.languages": "言語スタジオ"
 }
