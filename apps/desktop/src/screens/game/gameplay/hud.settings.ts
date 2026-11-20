@@ -7,6 +7,7 @@ const meta: ScreenMeta = { title: 'HUD', icon: 'layout-grid', order: 3, keywords
 const drawChoices = [{ value: 'original', label: msg('settings-hud:option.draw-choices.original.label') }, { value: 'enhanced', label: msg('settings-hud:option.draw-choices.enhanced.label') }];
 const enhancedParts = [{ value: 'main', label: msg('settings-hud:option.enhanced-parts.main.label') }, { value: 'pause', label: msg('settings-hud:option.enhanced-parts.pause.label') }];
 const titleScreens = [{ value: 'original', label: msg('settings-hud:option.title-screens.original.label') }, { value: 'reimagined', label: msg('settings-hud:option.title-screens.reimagined.label') }];
+const originalTitles = [{ value: 'us', label: msg('settings-hud:option.original-titles.us.label') }, { value: 'ja', label: msg('settings-hud:option.original-titles.ja.label') }];
 const titleMotions = [{ value: 'still', label: msg('settings-hud:option.title-motions.still.label') }, { value: 'drifting', label: msg('settings-hud:option.title-motions.drifting.label') }];
 const heartModes = [{ value: 'original', label: msg('settings-hud:option.heart-modes.original.label') }, { value: 'smooth', label: msg('settings-hud:option.heart-modes.smooth.label') }];
 const magicModes = [{ value: 'original', label: msg('settings-hud:option.magic-modes.original.label') }, { value: 'accurate', label: msg('settings-hud:option.magic-modes.accurate.label') }];
@@ -35,6 +36,7 @@ const sections: SectionDef[] = [
     title: msg('settings-hud:section.hud-title.title'),
     items: [
       { key: 'titleScreen', label: msg('settings-hud:title-screen.label'), description: msg('settings-hud:title-screen.description'), hint: msg('settings-hud:title-screen.hint'), keywords: 'title screen intro reimagined original scene logo sword', control: { kind: 'choice', options: titleScreens } },
+      { key: 'originalTitle', label: msg('settings-hud:original-title.label'), description: msg('settings-hud:original-title.description'), keywords: 'title screen original japanese us cartridge logo plate', control: { kind: 'choice', options: originalTitles } },
       { key: 'titleMotion', label: msg('settings-hud:title-motion.label'), description: msg('settings-hud:title-motion.description'), keywords: 'title motion parallax drift clouds still', control: { kind: 'choice', options: titleMotions } },
       { key: 'titleSword', label: msg('settings-hud:title-sword.label'), description: msg('settings-hud:title-sword.description'), hint: msg('settings-hud:title-sword.hint'), keywords: 'title sword fighter master tempered golden progress' },
       { key: 'titleFollowsProgress', label: msg('settings-hud:title-follows-progress.label'), description: msg('settings-hud:title-follows-progress.description'), keywords: 'title progress save sword tier dark world' },

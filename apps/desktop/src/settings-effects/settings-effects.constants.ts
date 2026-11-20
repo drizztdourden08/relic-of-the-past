@@ -22,7 +22,7 @@ const DIALOG_BOX_KEYS = [
   'autoSkipDialog', 'vanillaSafe',
 ] as const;
 
-const TITLE_KEYS = ['titleScreen', 'titleMotion', 'titleFollowsProgress', 'titleSword', 'dimFlashes', 'vanillaSafe'] as const;
+const TITLE_KEYS = ['titleScreen', 'originalTitle', 'titleMotion', 'titleFollowsProgress', 'titleSword', 'dimFlashes', 'vanillaSafe'] as const;
 
 const RESTART_TOAST_ID = 'restart-required';
 

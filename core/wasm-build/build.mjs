@@ -47,7 +47,7 @@ const hookSrcs = [
   'view_gates', 'attract_view', 'spotlight_growth', 'attract_sprites', 'iris_wide', 'hide_space_beyond_walls', 'fixed_picture_edges',
   'room_clear_reach', 'sprite_room_reach', 'world_scroll_carry',
   'cheat_lighting', 'cheat_wallet', 'cheat_unblock', 'cheat_check_mark', 'cheat_inventory', 'cheat_capacity', 'dev_frame_dump',
-  'title_override', 'title_mirror', 'title_skip',
+  'title_override', 'title_mirror', 'title_skip', 'title_ja',
   'host_menu', 'host_menu_gear',
   'gba_alttp', 'gba_dungeon_room', 'gba_dungeon_gfx', 'gba_pyramid_entrance', 'gba_save_bank', 'gba_camera_bounds', 'gba_baked_room',
   'gba_teleport_arrival', 'gba_torches', 'gba_dive_tint', 'gba_water_room',

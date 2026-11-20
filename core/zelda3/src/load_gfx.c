@@ -1768,6 +1768,7 @@ void Overworld_LoadAllPalettes() {  // 82c5b2
 
   for (int i = 0; i < 8; i++)
     main_palette_buffer[0x1b0 / 2 + i] = aux_palette_buffer[0x1d0 / 2 + i];
+  GameHook_TitleJaPalettes();
 }
 
 void Dungeon_LoadPalettes() {  // 82c630

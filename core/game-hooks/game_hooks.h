@@ -819,6 +819,8 @@ void HudOverride_SetWantedDialogHidden(bool on);
 #include "select_us_ja.h"
 // ─── The Japanese cartridge's graphics as options (ja_graphics.c): ja_graphics.h ───
 #include "ja_graphics.h"
+// ─── The Japanese cartridge's title sequence (title_ja.c): title_ja.h ───
+#include "title_ja.h"
 
 // ─── Dark-room lighting cheat (cheat_lighting.c) ───
 

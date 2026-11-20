@@ -87,6 +87,8 @@
   "feature.languageScreens.message": "会話だけでなく、すべての画面でその言語のテキストを表示します。",
   "feature.jaFileSelectStyle.label": "日本版のファイル選択スタイル",
   "feature.jaFileSelectStyle.message": "ファイル選択で日本版のレイアウトを使います。",
+  "feature.jaTitleScreen.label": "日本版のタイトル画面",
+  "feature.jaTitleScreen.message": "オリジナルのタイトルは日本版の流れになります。",
   "feature.prefillFileName.label": "ファイル名を事前入力",
   "feature.prefillFileName.message": "新規ファイルは「Link」という名前で始まり、カーソルは「End」にあります。",
   "feature.trackerEnabled.label": "チェックトラッカー",

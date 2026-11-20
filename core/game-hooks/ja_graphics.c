@@ -5,7 +5,7 @@
 #include "src/ending.h"
 #include <stdlib.h>
 
-enum { kSheetIdBase = 0x100, kPatchIdBase = 0x300, kIntroTilemapId = 0x45, kCopyrightOamId = 0x46, kTitleParamsId = 0x47, kTitleParamsBytes = 3, kOamHeaderBytes = 3, kOamEntryBytes = 8, kOamEntriesMax = 16, kBgSheetKind = 1, kSprSheetKind = 0, kIntroModule = 0, kHudTextIdBase = 0x50, kHudTextCount = 9 };
+enum { kSheetIdBase = 0x100, kPatchIdBase = 0x300, kIntroTilemapId = 0x45, kCopyrightOamId = 0x46, kTitleParamsId = 0x47, kTitleParamsBytes = 3, kPlateOamId = 0x48, kTitlePalettesId = 0x49, kTitlePaletteWords = 70, kOamHeaderBytes = 3, kOamEntryBytes = 8, kOamEntriesMax = 16, kBgSheetKind = 1, kSprSheetKind = 0, kIntroModule = 0, kHudTextIdBase = 0x50, kHudTextCount = 9 };
 
 typedef struct {
   uint8 *data;
@@ -17,6 +17,8 @@ static Blob g_patches[kLangSheetMax];
 static Blob g_intro_tilemap;
 static Blob g_copyright_oam;
 static Blob g_title_params;
+static Blob g_plate_oam;
+static Blob g_title_palettes;
 static Blob g_hud_text[kHudTextCount];
 
 // The language tables the pack's pause words stand in for, in the order the pack carries them.
@@ -44,7 +46,7 @@ uint32 GameHook_ParityMask(int word) {
   return word == 2 ? kJaGfx_Title | kJaGfx_Intro | kJaGfx_Hud | kJaGfx_Copyright | kJaGfx_FileSelect : 0;
 }
 
-enum { kStyleBits = kJaGfx_FileSelect, kLanguageBits = kJaGfx_Title | kJaGfx_Intro | kJaGfx_Copyright };
+enum { kStyleBits = kJaGfx_FileSelect, kTitleBits = kJaGfx_Title | kJaGfx_Intro | kJaGfx_Copyright };
 
 static uint32 g_latched_bits;
 static bool g_started;
@@ -60,13 +62,22 @@ static bool Following(void) {
   return !g_started || (main_module_index == kIntroModule && submodule_index <= 1);
 }
 
-// The style option (the file select layout) comes from the gate word; the pictures that carry the
-// language (the intro and title art with the triforce heights that fit its logo, the copyright line)
-// are on exactly while the set is Japanese, whatever the word holds.
+// The pack holds every piece the Japanese title draws: its logo (the intro tilemap and background sheets),
+// the copyright patch and layout, the triforce heights, the subtitle plate and the title's palettes.
+static bool TitlePackComplete(void) {
+  for (size_t i = 0; i < countof(kIntroSheets); i++)
+    if (g_sheets[kBgSheetKind][kIntroSheets[i]].data == NULL) return false;
+  return g_intro_tilemap.data != NULL && g_patches[kCopyrightSheet].data != NULL && g_copyright_oam.data != NULL &&
+         g_title_params.size >= kTitleParamsBytes && g_plate_oam.data != NULL && g_title_palettes.size == kTitlePaletteWords * 2;
+}
+
+// Both options come from the gate word: the file select layout, and the title choice (US or Japanese),
+// which brings the Japanese logo, copyright line and title sequence together. The title is Japanese only
+// while the pack holds all of it and the host's own title (kFeatures2_TitleOverride) is off.
 static uint32 Live(void) {
   uint32 live = enhanced_features2 & kStyleBits;
-  if (SelectLayout_OfSet() == kSelectLayout_Ja) live |= kLanguageBits;
-  if (enhanced_features2 & kFeatures2_TitleOverride) live &= ~(uint32)kJaGfx_Title;
+  if ((enhanced_features2 & kJaGfx_Title) && !(enhanced_features2 & kFeatures2_TitleOverride) && TitlePackComplete())
+    live |= kTitleBits;
   return live;
 }
 
@@ -108,10 +119,16 @@ static bool HudPackDrawn(void) {
   return true;
 }
 
+// The Japanese file select layout draws its frame and name grid from the intro's background sheets, read
+// only during its own sheet load (LanguageScreens_SheetLive), so the pack's copy stands ready for it too.
+static bool SelectSheetsDrawn(void) {
+  return SelectLayout_ActiveOn(kSelectScreen_Select) == kSelectLayout_Ja;
+}
+
 const uint8 *JaGraphics_Sheet(int kind, int index, uint32 *size) {
   uint32 option = SheetOption(kind, index);
   if (option == 0 || index < 0 || index >= kLangSheetMax) return NULL;
-  if (option == kJaGfx_Hud ? !HudPackDrawn() : !JaGraphics_On(option)) return NULL;
+  if (option == kJaGfx_Hud ? !HudPackDrawn() : !JaGraphics_On(option) && !SelectSheetsDrawn()) return NULL;
   return Taken(&g_sheets[kind][index], size);
 }
 
@@ -139,7 +156,7 @@ const uint8 *JaGraphics_IntroTilemap(uint32 *size) {
 }
 
 // The copyright line's sprite layout from the pack: count, start x, start y, then count 8 byte records
-// (x word, y word, character, flags, extension word). NULL unless the option is on and the pack has it.
+// (x word, y word, character, flags, extension word whose high byte is the size bit). NULL unless the option is on and the pack has it.
 static const uint8 *CopyrightOam(int *count) {
   uint32 size;
   if (!JaGraphics_On(kJaGfx_Copyright)) return NULL;
@@ -176,30 +193,30 @@ bool GameHook_CopyrightAnimate(int k) {
   IntroSpriteEnt ents[kOamEntriesMax];
   for (int i = 0; i < count; i++) {
     const uint8 *rec = data + kOamHeaderBytes + i * kOamEntryBytes;
-    ents[i] = (IntroSpriteEnt){(int8)rec[0], (int8)rec[2], rec[4], rec[5], rec[6]};
+    ents[i] = (IntroSpriteEnt){(int8)rec[0], (int8)rec[2], rec[4], rec[5], rec[7]};
   }
   AnimateSceneSprite_AddObjectsToOamBuffer(k, ents, count);
   return true;
 }
 
-bool JaGraphics_SetSheetAllowed(int kind, int index) {
-  uint32 option = SheetOption(kind, index);
-  if (kind == kBgSheetKind && SelectLayout_ActiveOn(kSelectScreen_Select) == kSelectLayout_Ja) return true;
-  return option == 0 || option == kJaGfx_Hud || SelectLayout_OfSet() != kSelectLayout_Ja || JaGraphics_On(option);
+// The subtitle plate's sprite layout from the pack, in the copyright line's format. NULL unless the title is
+// Japanese and the pack has it.
+const uint8 *JaGraphics_PlateOam(int *count) {
+  uint32 size;
+  if (!JaGraphics_On(kJaGfx_Title)) return NULL;
+  const uint8 *data = Taken(&g_plate_oam, &size);
+  if (data == NULL || size < kOamHeaderBytes) return NULL;
+  *count = data[0];
+  if (*count == 0 || *count > kOamEntriesMax || size < kOamHeaderBytes + (uint32)*count * kOamEntryBytes) return NULL;
+  return data;
 }
 
-bool JaGraphics_SetPatchAllowed(int index) {
-  return index != kCopyrightSheet || SelectLayout_OfSet() != kSelectLayout_Ja || JaGraphics_On(kJaGfx_Copyright);
-}
-
-bool JaGraphics_SetHudAllowed(void) {
-  if (SelectLayout_OfSet() != kSelectLayout_Ja || HudPackDrawn()) return true;
-  return LanguageScreensAssets_SetSheet(kSprSheetKind, kHudSheets[0]) != NULL &&
-         LanguageScreensAssets_SetSheet(kSprSheetKind, kHudSheets[1]) != NULL;
-}
-
-bool JaGraphics_SetIntroAllowed(void) {
-  return SelectLayout_OfSet() != kSelectLayout_Ja || JaGraphics_On(kJaGfx_Intro);
+// The Japanese title's palette words (JaTitlePalettes order), NULL unless the title is Japanese.
+const uint16 *JaGraphics_TitlePalettes(void) {
+  uint32 size;
+  if (!JaGraphics_On(kJaGfx_Title)) return NULL;
+  const uint8 *data = Taken(&g_title_palettes, &size);
+  return data != NULL && size == kTitlePaletteWords * 2 ? (const uint16 *)data : NULL;
 }
 
 static bool Store(Blob *slot, const void *data, int len) {
@@ -220,6 +237,8 @@ static Blob *SlotOf(int id) {
   if (id == kIntroTilemapId) return &g_intro_tilemap;
   if (id == kCopyrightOamId) return &g_copyright_oam;
   if (id == kTitleParamsId) return &g_title_params;
+  if (id == kPlateOamId) return &g_plate_oam;
+  if (id == kTitlePalettesId) return &g_title_palettes;
   if (id >= kHudTextIdBase && id < kHudTextIdBase + kHudTextCount) return &g_hud_text[id - kHudTextIdBase];
   if (id >= kPatchIdBase && id < kPatchIdBase + kLangSheetMax) return &g_patches[id - kPatchIdBase];
   if (id >= kSheetIdBase && id < kSheetIdBase + 2 * kLangSheetMax)
@@ -228,7 +247,8 @@ static Blob *SlotOf(int id) {
 }
 
 // |id| is the language screens' own: 0x100 + index a sprite sheet, 0x200 + index a background sheet,
-// 0x300 + index a sprite sheet tile patch, 0x45 the intro tilemap, 0x50 + n the n-th pause word table. Returns 1 when taken.
+// 0x300 + index a sprite sheet tile patch, 0x45 the intro tilemap, 0x46 the copyright layout, 0x47 the triforce
+// heights, 0x48 the subtitle plate layout, 0x49 the title palettes, 0x50 + n the n-th pause word table. Returns 1 when taken.
 EMSCRIPTEN_KEEPALIVE
 int WasmSetJapaneseGraphic(int id, const void *data, int len) {
   Blob *slot = SlotOf(id);
@@ -245,6 +265,8 @@ void WasmClearJapaneseGraphics(void) {
   Store(&g_intro_tilemap, NULL, 0);
   Store(&g_copyright_oam, NULL, 0);
   Store(&g_title_params, NULL, 0);
+  Store(&g_plate_oam, NULL, 0);
+  Store(&g_title_palettes, NULL, 0);
   for (int i = 0; i < kHudTextCount; i++) Store(&g_hud_text[i], NULL, 0);
   LanguageScreensAssets_Apply(LanguageScreens_On());
 }

@@ -72,6 +72,7 @@ const LIVE_SETTING_KEYS = [
   'dialogTextureScatter',
   'dialogGroundColor',
   'titleScreen',
+  'originalTitle',
   'titleMotion',
   'titleFollowsProgress',
   'titleSword',

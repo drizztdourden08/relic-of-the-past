@@ -1,9 +1,9 @@
 /* @layer core-game-hooks @kind native */
 // The header of the US name entry with a Japanese set: the Japanese cartridge's own 名前登録 title, eight
-// tiles wide and two high, drawn centred in the US header box. Its tiles are background sheet 57's (the
-// host's Japanese graphics pack, else the set's own copy, both extracted from a Japanese cartridge),
-// tiles 6 to 13 over 22 to 29, put in VRAM at the tile numbers the Japanese screen gives them, which
-// the US name entry leaves unused. With neither copy the box stays empty. See select_us_ja.h.
+// tiles wide and two high, drawn centred in the US header box. Its tiles are background sheet 57's, from
+// the host's Japanese graphics pack only (extracted from a Japanese cartridge), tiles 6 to 13 over 22 to
+// 29, put in VRAM at the tile numbers the Japanese screen gives them, which the US name entry leaves
+// unused. Without the pack the box stays empty. See select_us_ja.h.
 #include "game_hooks_internal.h"
 #include "src/load_gfx.h"
 
@@ -31,8 +31,6 @@ static uint8 g_sheet[kDecompBytes];
 static const uint8 *Sheet(void) {
   uint32 size = 0;
   const uint8 *compressed = JaGraphics_PackSheet(kBgKind, kSheet, &size);
-  if (compressed == NULL)
-    compressed = LanguageScreensAssets_SetSheet(kBgKind, kSheet);
   bool whole = compressed != NULL && Decompress(g_sheet, compressed) >= (kBottomFirst + kTiles) * kTile3bpp;
   return whole ? g_sheet : NULL;
 }

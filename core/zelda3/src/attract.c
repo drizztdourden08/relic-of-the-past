@@ -397,10 +397,12 @@ void Module14_Attract() {  // 8cedad
 }
 
 void Attract_Fade() {  // 8cede6
+  if (!GameHook_TitleJaAttractStill()) {
   Intro_HandleAllTriforceAnimations();
   intro_did_run_step = 0;
   is_nmi_thread_active = 0;
   Intro_PeriodicSwordAndIntroFlash();
+  }
   if (INIDISP_copy) {
     INIDISP_copy--;
     return;

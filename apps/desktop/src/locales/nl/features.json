@@ -87,6 +87,8 @@
   "feature.languageScreens.message": "Elk scherm toont de eigen tekst van de taal, niet alleen de dialoog.",
   "feature.jaFileSelectStyle.label": "Japanse bestandskeuzestijl",
   "feature.jaFileSelectStyle.message": "De bestandskeuze gebruikt de Japanse indeling.",
+  "feature.jaTitleScreen.label": "Japans titelscherm",
+  "feature.jaTitleScreen.message": "De originele titel gebruikt de Japanse reeks.",
   "feature.prefillFileName.label": "Bestandsnaam vooraf invullen",
   "feature.prefillFileName.message": "Nieuwe bestanden beginnen met de naam Link, met de cursor op Einde.",
   "feature.trackerEnabled.label": "Checktracker",

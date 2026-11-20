@@ -944,6 +944,8 @@ declare module '@drizztdourden08/brock-core/augment' {
     'features:feature.languageScreens.message': Record<never, never>;
     'features:feature.jaFileSelectStyle.label': Record<never, never>;
     'features:feature.jaFileSelectStyle.message': Record<never, never>;
+    'features:feature.jaTitleScreen.label': Record<never, never>;
+    'features:feature.jaTitleScreen.message': Record<never, never>;
     'features:feature.prefillFileName.label': Record<never, never>;
     'features:feature.prefillFileName.message': Record<never, never>;
     'features:feature.trackerEnabled.label': Record<never, never>;
@@ -2688,6 +2690,8 @@ declare module '@drizztdourden08/brock-core/augment' {
     'settings-hud:option.enhanced-parts.pause.label': Record<never, never>;
     'settings-hud:option.title-screens.original.label': Record<never, never>;
     'settings-hud:option.title-screens.reimagined.label': Record<never, never>;
+    'settings-hud:option.original-titles.us.label': Record<never, never>;
+    'settings-hud:option.original-titles.ja.label': Record<never, never>;
     'settings-hud:option.title-motions.still.label': Record<never, never>;
     'settings-hud:option.title-motions.drifting.label': Record<never, never>;
     'settings-hud:option.heart-modes.original.label': Record<never, never>;
@@ -2735,6 +2739,8 @@ declare module '@drizztdourden08/brock-core/augment' {
     'settings-hud:title-screen.label': Record<never, never>;
     'settings-hud:title-screen.description': Record<never, never>;
     'settings-hud:title-screen.hint': Record<never, never>;
+    'settings-hud:original-title.label': Record<never, never>;
+    'settings-hud:original-title.description': Record<never, never>;
     'settings-hud:title-motion.label': Record<never, never>;
     'settings-hud:title-motion.description': Record<never, never>;
     'settings-hud:title-sword.label': Record<never, never>;

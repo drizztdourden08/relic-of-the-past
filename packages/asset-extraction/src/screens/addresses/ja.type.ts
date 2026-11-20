@@ -1,7 +1,7 @@
 /* @layer shared-asset-extraction @kind types */
 import type { ScreenAddressTable, SelectFileTable, TableRegion } from '../screen-payload.type';
 
-interface JaCopyrightOamSource {
+interface JaSpriteLayoutSource {
   readonly table: TableRegion;
   readonly startX: number;
   readonly startY: number;
@@ -12,8 +12,10 @@ interface JaScreenAddressTable extends Omit<ScreenAddressTable, 'id' | 'nameGrid
   readonly selectFile: Readonly<Partial<Record<SelectFileTable, TableRegion>>>;
   readonly nameGridAddress: number;
   readonly creditsScrollY: TableRegion;
-  readonly copyrightOam: JaCopyrightOamSource;
+  readonly copyrightOam: JaSpriteLayoutSource;
+  readonly plateOam: JaSpriteLayoutSource;
   readonly titleYLimit: number;
+  readonly titlePalettes: readonly TableRegion[];
 }
 
-export type { JaScreenAddressTable };
+export type { JaScreenAddressTable, JaSpriteLayoutSource };
