@@ -120,5 +120,9 @@
   "free-sequence.max-jump": "nenhum item carrega mais de {max}",
   "free-sequence.sum": "a soma {sum} não é o intervalo {span}",
   "capacity-row.floor-note.wallet": "{label} pode pedir {need} de uma vez, então o máximo final não fica abaixo de {floor}",
-  "capacity-row.floor-note.projectiles": "O final exige {hits} disparos de prata seguidos, então o máximo final não fica abaixo de {floor}"
+  "capacity-row.floor-note.projectiles": "O final exige {hits} disparos de prata seguidos, então o máximo final não fica abaixo de {floor}",
+  "impact.locUpgrades": "{loc} locais · {upgrades, plural, one {# melhoria} other {# melhorias}}",
+  "impact.locItems": "{loc} locais · {items} itens",
+  "impact.note.unused": "não usado",
+  "impact.note.unshuffled": "não embaralhado"
 }

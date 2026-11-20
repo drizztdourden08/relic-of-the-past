@@ -120,5 +120,9 @@
   "free-sequence.max-jump": "kein Gegenstand fasst mehr als {max}",
   "free-sequence.sum": "die Summe {sum} ist nicht die Spanne {span}",
   "capacity-row.floor-note.wallet": "{label} kann {need} auf einmal verlangen, daher liegt das endgültige Maximum nicht unter {floor}",
-  "capacity-row.floor-note.projectiles": "Das Ende verlangt {hits} Silberschüsse hintereinander, daher liegt das endgültige Maximum nicht unter {floor}"
+  "capacity-row.floor-note.projectiles": "Das Ende verlangt {hits} Silberschüsse hintereinander, daher liegt das endgültige Maximum nicht unter {floor}",
+  "impact.locUpgrades": "{loc} Orte · {upgrades, plural, one {# Upgrade} other {# Upgrades}}",
+  "impact.locItems": "{loc} Orte · {items} Gegenstände",
+  "impact.note.unused": "nicht verwendet",
+  "impact.note.unshuffled": "nicht gemischt"
 }

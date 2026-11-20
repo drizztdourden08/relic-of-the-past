@@ -111,5 +111,10 @@
   "bottle.contents.blue-potion": "Pozione blu",
   "bottle.contents.fairy": "Fata",
   "bottle.contents.bee": "Ape",
-  "bottle.contents.good-bee": "Ape buona"
+  "bottle.contents.good-bee": "Ape buona",
+  "grant.blocked.online": "una sessione online esplora gli oggetti uno alla volta, quindi qui non si sa cosa contenga questa posizione. Raccoglilo in gioco o chiedi al server di rilasciarlo.",
+  "grant.blocked.noTrigger": "la console non ha un innesco originale per questo check",
+  "grant.blocked.cannotClear": "non può essere completato qui, perché {reason}",
+  "grant.blocked.nothingPlaced": "questo seed non ha piazzato nulla in questa posizione",
+  "grant.blocked.noDirect": "«{item}» non può essere consegnato direttamente"
 }

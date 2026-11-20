@@ -2,6 +2,7 @@
 import { requireHostApi } from '@drizztdourden08/brock-react';
 import { isTagKey, registerTag } from '@rotp/game-data';
 import type { TagRecord } from '@rotp/game-data';
+import { optionText } from '@rotp/randomizer';
 import { TAG_NOT_CONVENTION } from '@app/views/DataInspector/DataInspector.constants';
 import type { RecordCreator } from '@app/views/DataInspector/behavior/record-creators.type';
 import { settleCreatedRecord } from '@app/views/DataInspector/behavior/settle-created-record';
@@ -11,7 +12,7 @@ const createTagRecord: RecordCreator = async (draft) => {
   const namespace = String(draft.namespace ?? '').trim();
   const value = String(draft.value ?? '').trim();
   const key = `${namespace}:${value}`;
-  if (!isTagKey(key)) return { success: false, error: TAG_NOT_CONVENTION };
+  if (!isTagKey(key)) return { success: false, error: optionText(TAG_NOT_CONVENTION) };
   const result = await requireHostApi().screenEditor.allocateTag({
     key,
     appliesTo: (draft.appliesTo ?? []) as TagRecord['appliesTo'],

@@ -120,5 +120,9 @@
   "free-sequence.max-jump": "żaden przedmiot nie mieści więcej niż {max}",
   "free-sequence.sum": "suma {sum} nie jest zakresem {span}",
   "capacity-row.floor-note.wallet": "{label} może zażądać {need} naraz, więc końcowe maksimum nie spada poniżej {floor}",
-  "capacity-row.floor-note.projectiles": "Zakończenie wymaga {hits} srebrnych strzałów pod rząd, więc końcowe maksimum nie spada poniżej {floor}"
+  "capacity-row.floor-note.projectiles": "Zakończenie wymaga {hits} srebrnych strzałów pod rząd, więc końcowe maksimum nie spada poniżej {floor}",
+  "impact.locUpgrades": "{loc} lok. · {upgrades, plural, one {# ulepszenie} few {# ulepszenia} many {# ulepszeń} other {# ulepszenia}}",
+  "impact.locItems": "{loc} lok. · {items} przedm.",
+  "impact.note.unused": "nieużywane",
+  "impact.note.unshuffled": "nie tasowane"
 }

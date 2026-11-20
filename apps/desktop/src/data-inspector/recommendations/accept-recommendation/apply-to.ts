@@ -1,4 +1,5 @@
 /* @layer renderer-app @kind logic */
+import { optionText } from '@rotp/randomizer';
 import type { Recommendation } from '@rotp/navigation';
 import type { InspectorRow } from '@app/views/DataInspector/DataInspector.type';
 import { FINDING_NO_TARGET } from '../recommendations.constants';
@@ -14,7 +15,7 @@ const applyTo = (
 ): Promise<AcceptOutcome> => {
   const kind = entry.kind;
   if (entry.action === 'create') return createProposed(kind, proposed);
-  if (!entry.targetId) return Promise.resolve(refused(FINDING_NO_TARGET));
+  if (!entry.targetId) return Promise.resolve(refused(optionText(FINDING_NO_TARGET)));
   if (entry.action === 'delete') return removeTarget(kind, entry.targetId);
   return updateTarget(kind, entry.targetId, proposed);
 };

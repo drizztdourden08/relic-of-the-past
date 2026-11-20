@@ -1,4 +1,5 @@
 /* @layer renderer-app @kind constants */
+import { msg } from '@drizztdourden08/brock-core/i18n';
 import type { IconifyIcon as IconData } from '@iconify/react/offline';
 import mapIcon from '@iconify-icons/lucide/map';
 import linkIcon from '@iconify-icons/lucide/link';
@@ -80,11 +81,11 @@ const NAV_ICONS: Record<string, IconData> = {
 
 const FALLBACK_NAV_ICON: IconData = typeIcon;
 
-const NO_SOURCE_FILE = 'No source file could be derived for this record.';
-const NOT_A_RECORD = 'This row is not a saved record: it has no id.';
-const TAG_NAME_MISMATCH = "A tag's name must read namespace:value, matching its own namespace and value.";
-const TAG_NOT_CONVENTION = 'Tags must be in the form namespace:value.';
-const TAG_NO_SCOPE = 'This collection has no tags.';
+const NO_SOURCE_FILE = msg('views-data-inspector:err.noSourceFile');
+const NOT_A_RECORD = msg('views-data-inspector:err.notARecord');
+const TAG_NAME_MISMATCH = msg('views-data-inspector:err.tagNameMismatch');
+const TAG_NOT_CONVENTION = msg('views-data-inspector:err.tagNotConvention');
+const TAG_NO_SCOPE = msg('views-data-inspector:err.tagNoScope');
 
 const EMPTY_PLACEMENT: ConnectionPlacement = { form: 'area', rect: { x: 0, y: 0, w: 0, h: 0 }, tiles: [] };
 
@@ -121,8 +122,7 @@ const ROOM_GRID = { x: { min: 0, max: 15 }, y: { min: 0, max: 14 } };
 const SCREEN_FLOOR: NumberBounds = { min: -7, max: 6 };
 const SCREEN_TILE: NumberBounds = { min: 0, max: 63 };
 
-const NO_SERIALIZER = '// This collection has no source emitter.';
-const EMIT_FAILED = 'could not be emitted';
+const NO_SERIALIZER = msg('views-data-inspector:err.noSerializer');
 
 const DEFAULT_KIND: EntityKind = 'screen';
 const DEFAULT_TAB: DetailTab = 'json';
@@ -156,7 +156,7 @@ const READ_ONLY_NOTE = msg('views-data-inspector:editor.read-only');
 
 export {
   AREA_FIELD, CLOSED_DELETE_DIALOG, COMPARING_LIST_RATIO, COMPARISON_TITLE, CONTAINER_KINDS, CREATE_ONLY_EXCLUDED,
-  DEFAULT_KIND, DEFAULT_TAB, DETAIL_TABS, EMIT_FAILED, EMPTY_PLACEMENT, ENTITY_KINDS,
+  DEFAULT_KIND, DEFAULT_TAB, DETAIL_TABS, EMPTY_PLACEMENT, ENTITY_KINDS,
   FALLBACK_NAV_ICON, ID_REF_SELECTOR, KIND_LABELS, KIND_NAV_ITEMS, KIND_SINGULARS, NAME_FIELD_BY_KIND, NARROWED_KIND, NAV_ICONS,
   NO_COLUMNS, NO_FINDINGS, NO_OPTIONS, NO_ORDER, NO_ROWS, NO_SCHEMA, NO_SERIALIZER, NO_SOURCE_FILE, NO_TABLE, NO_TAG_SUGGESTIONS,
   NO_TARGET_FIELDS, NOT_A_RECORD, NOTHING_MATCHES, NOTHING_SELECTED, OVERWORLD_GRID, OVERWORLD_KIND, READ_ONLY_NOTE,

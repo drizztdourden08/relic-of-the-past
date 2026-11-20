@@ -17,6 +17,7 @@ import app_sv_msu_studio from '../../src/locales/sv/msu-studio.json';
 import app_sv_profiles from '../../src/locales/sv/profiles.json';
 import app_sv_randomizer from '../../src/locales/sv/randomizer.json';
 import app_sv_roms from '../../src/locales/sv/roms.json';
+import app_sv_screen_editor from '../../src/locales/sv/screen-editor.json';
 import app_sv_settings_audio from '../../src/locales/sv/settings-audio.json';
 import app_sv_settings_bugfixes from '../../src/locales/sv/settings-bugfixes.json';
 import app_sv_settings_camera from '../../src/locales/sv/settings-camera.json';
@@ -72,6 +73,7 @@ const layers: readonly Layer[] = [
   { locale: 'sv', namespace: 'profiles', kind: 'app', messages: app_sv_profiles },
   { locale: 'sv', namespace: 'randomizer', kind: 'app', messages: app_sv_randomizer },
   { locale: 'sv', namespace: 'roms', kind: 'app', messages: app_sv_roms },
+  { locale: 'sv', namespace: 'screen-editor', kind: 'app', messages: app_sv_screen_editor },
   { locale: 'sv', namespace: 'settings-audio', kind: 'app', messages: app_sv_settings_audio },
   { locale: 'sv', namespace: 'settings-bugfixes', kind: 'app', messages: app_sv_settings_bugfixes },
   { locale: 'sv', namespace: 'settings-camera', kind: 'app', messages: app_sv_settings_camera },

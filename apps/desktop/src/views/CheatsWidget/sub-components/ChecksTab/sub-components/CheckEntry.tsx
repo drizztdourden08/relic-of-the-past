@@ -26,7 +26,7 @@ const CheckEntry = ({ check, done, plan }: CheckEntryProps) => {
         className="cheats-checks__grant-btn"
         disabled={done || blocked}
         title={detail}
-        onClick={() => grantFromCheck(check)}
+        onClick={() => grantFromCheck(check, t)}
       >
         {t('views-cheats:checks.grant')}
       </Button>

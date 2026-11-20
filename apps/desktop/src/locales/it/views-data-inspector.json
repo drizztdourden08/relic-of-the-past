@@ -66,5 +66,19 @@
   "rec.reason.set-delete": "{noun} {key}: nel dataset, assente nel gioco.",
   "rec.reason.geography": "Il luogo {location} non è in quest'area. {count, plural, =1 {Solo {pick} lo è.} other {{pick} è un'ipotesi tra {count}.}}",
   "rec.reason.crossing-interior": "Passaggio verso {label}: nessuna scheda schermata, palazzo sconosciuto.",
-  "rec.reason.crossing-screen": "Passaggio verso {label}: nessuna scheda schermata."
+  "rec.reason.crossing-screen": "Passaggio verso {label}: nessuna scheda schermata.",
+  "err.noSourceFile": "Impossibile ricavare un file sorgente per questo record.",
+  "err.notARecord": "Questa riga non è un record salvato: non ha un id.",
+  "err.tagNameMismatch": "Il nome di un tag deve avere la forma spazio-dei-nomi:valore, coerente con il proprio spazio dei nomi e valore.",
+  "err.tagNotConvention": "I tag devono avere la forma spazio-dei-nomi:valore.",
+  "err.tagNoScope": "Questa raccolta non ha tag.",
+  "err.noSerializer": "// Questa raccolta non ha un emettitore di sorgente.",
+  "err.emitFailed": "// non è stato possibile emetterlo: {message}",
+  "err.findingNoTarget": "Questo rilevamento non indica alcun record da modificare.",
+  "err.writeFailed": "Scrittura non riuscita.",
+  "err.needsForm": "Questa proposta richiede ancora {blockers}. Compilali, poi accetta.",
+  "err.noPath.create": "La raccolta {kind} non supporta la creazione.",
+  "err.noPath.delete": "La raccolta {kind} non supporta l'eliminazione.",
+  "err.noPath.write": "La raccolta {kind} non supporta la scrittura.",
+  "err.screenNeeds": "Questa schermata richiede {issue}."
 }

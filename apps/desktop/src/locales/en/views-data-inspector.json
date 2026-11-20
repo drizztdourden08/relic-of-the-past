@@ -66,5 +66,19 @@
   "rec.reason.set-delete": "{noun} {key}: in dataset, absent in game.",
   "rec.reason.geography": "Location {location} is not in this area. {count, plural, =1 {Only {pick} is.} other {{pick} is a guess of {count}.}}",
   "rec.reason.crossing-interior": "Crossing to {label}: no screen record, palace unknown.",
-  "rec.reason.crossing-screen": "Crossing to {label}: no screen record."
+  "rec.reason.crossing-screen": "Crossing to {label}: no screen record.",
+  "err.noSourceFile": "No source file could be derived for this record.",
+  "err.notARecord": "This row is not a saved record: it has no id.",
+  "err.tagNameMismatch": "A tag's name must read namespace:value, matching its own namespace and value.",
+  "err.tagNotConvention": "Tags must be in the form namespace:value.",
+  "err.tagNoScope": "This collection has no tags.",
+  "err.noSerializer": "// This collection has no source emitter.",
+  "err.emitFailed": "// could not be emitted: {message}",
+  "err.findingNoTarget": "This finding names no record to change.",
+  "err.writeFailed": "The write failed.",
+  "err.needsForm": "This proposal still needs {blockers}. Fill those in, then accept.",
+  "err.noPath.create": "The {kind} collection does not support create.",
+  "err.noPath.delete": "The {kind} collection does not support delete.",
+  "err.noPath.write": "The {kind} collection does not support write.",
+  "err.screenNeeds": "This screen needs {issue}."
 }

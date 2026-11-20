@@ -111,5 +111,10 @@
   "bottle.contents.blue-potion": "Blå dryck",
   "bottle.contents.fairy": "Fe",
   "bottle.contents.bee": "Bi",
-  "bottle.contents.good-bee": "Snäll bi"
+  "bottle.contents.good-bee": "Snäll bi",
+  "grant.blocked.online": "en onlinesession spanar in sina föremål ett i taget, så vad den här platsen innehåller är inte känt här. Samla det i spelet eller be servern släppa det.",
+  "grant.blocked.noTrigger": "konsolen har ingen ursprunglig utlösare för den här checken",
+  "grant.blocked.cannotClear": "den kan inte klaras av här, eftersom {reason}",
+  "grant.blocked.nothingPlaced": "den här seeden placerade inget på den här platsen",
+  "grant.blocked.noDirect": "”{item}” kan inte lämnas över direkt"
 }

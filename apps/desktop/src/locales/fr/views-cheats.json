@@ -111,5 +111,10 @@
   "bottle.contents.blue-potion": "Potion bleue",
   "bottle.contents.fairy": "Fée",
   "bottle.contents.bee": "Abeille",
-  "bottle.contents.good-bee": "Bonne abeille"
+  "bottle.contents.good-bee": "Bonne abeille",
+  "grant.blocked.online": "une session en ligne repère ses objets un par un : le contenu de cet emplacement est donc inconnu ici. Récupérez-le en jeu ou demandez au serveur de le libérer.",
+  "grant.blocked.noTrigger": "la console n'a pas de déclencheur d'origine pour ce check",
+  "grant.blocked.cannotClear": "il ne peut pas être validé ici, car {reason}",
+  "grant.blocked.nothingPlaced": "cette seed n'a rien placé à cet emplacement",
+  "grant.blocked.noDirect": "« {item} » ne peut pas être remis directement"
 }

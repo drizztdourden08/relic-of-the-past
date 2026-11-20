@@ -17,6 +17,7 @@ import app_it_msu_studio from '../../src/locales/it/msu-studio.json';
 import app_it_profiles from '../../src/locales/it/profiles.json';
 import app_it_randomizer from '../../src/locales/it/randomizer.json';
 import app_it_roms from '../../src/locales/it/roms.json';
+import app_it_screen_editor from '../../src/locales/it/screen-editor.json';
 import app_it_settings_audio from '../../src/locales/it/settings-audio.json';
 import app_it_settings_bugfixes from '../../src/locales/it/settings-bugfixes.json';
 import app_it_settings_camera from '../../src/locales/it/settings-camera.json';
@@ -72,6 +73,7 @@ const layers: readonly Layer[] = [
   { locale: 'it', namespace: 'profiles', kind: 'app', messages: app_it_profiles },
   { locale: 'it', namespace: 'randomizer', kind: 'app', messages: app_it_randomizer },
   { locale: 'it', namespace: 'roms', kind: 'app', messages: app_it_roms },
+  { locale: 'it', namespace: 'screen-editor', kind: 'app', messages: app_it_screen_editor },
   { locale: 'it', namespace: 'settings-audio', kind: 'app', messages: app_it_settings_audio },
   { locale: 'it', namespace: 'settings-bugfixes', kind: 'app', messages: app_it_settings_bugfixes },
   { locale: 'it', namespace: 'settings-camera', kind: 'app', messages: app_it_settings_camera },

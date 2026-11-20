@@ -66,5 +66,19 @@
   "rec.reason.set-delete": "{noun} {key} : dans le jeu de données, absent du jeu.",
   "rec.reason.geography": "Le lieu {location} n'est pas dans cette zone. {count, plural, =1 {Seul {pick} l'est.} other {{pick} est une supposition parmi {count}.}}",
   "rec.reason.crossing-interior": "Passage vers {label} : aucune fiche d'écran, palais inconnu.",
-  "rec.reason.crossing-screen": "Passage vers {label} : aucune fiche d'écran."
+  "rec.reason.crossing-screen": "Passage vers {label} : aucune fiche d'écran.",
+  "err.noSourceFile": "Impossible de déduire un fichier source pour cet enregistrement.",
+  "err.notARecord": "Cette ligne n'est pas un enregistrement sauvegardé : elle n'a pas d'identifiant.",
+  "err.tagNameMismatch": "Le nom d'un tag doit s'écrire espace-de-noms:valeur, en accord avec son propre espace de noms et sa valeur.",
+  "err.tagNotConvention": "Les tags doivent avoir la forme espace-de-noms:valeur.",
+  "err.tagNoScope": "Cette collection n'a pas de tags.",
+  "err.noSerializer": "// Cette collection n'a pas d'émetteur de source.",
+  "err.emitFailed": "// n'a pas pu être émis : {message}",
+  "err.findingNoTarget": "Ce constat ne désigne aucun enregistrement à modifier.",
+  "err.writeFailed": "L'écriture a échoué.",
+  "err.needsForm": "Cette proposition nécessite encore {blockers}. Renseignez-les, puis acceptez.",
+  "err.noPath.create": "La collection {kind} ne prend pas en charge la création.",
+  "err.noPath.delete": "La collection {kind} ne prend pas en charge la suppression.",
+  "err.noPath.write": "La collection {kind} ne prend pas en charge l'écriture.",
+  "err.screenNeeds": "Cet écran nécessite {issue}."
 }

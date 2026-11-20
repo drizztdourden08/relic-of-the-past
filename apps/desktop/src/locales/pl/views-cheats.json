@@ -111,5 +111,10 @@
   "bottle.contents.blue-potion": "Niebieska mikstura",
   "bottle.contents.fairy": "Wróżka",
   "bottle.contents.bee": "Pszczoła",
-  "bottle.contents.good-bee": "Dobra pszczoła"
+  "bottle.contents.good-bee": "Dobra pszczoła",
+  "grant.blocked.online": "sesja online sprawdza swoje przedmioty pojedynczo, więc tutaj nie wiadomo, co kryje to miejsce. Zbierz go w grze albo poproś serwer o jego wydanie.",
+  "grant.blocked.noTrigger": "konsola nie ma oryginalnego wyzwalacza dla tego checku",
+  "grant.blocked.cannotClear": "nie można go tu zaliczyć, ponieważ {reason}",
+  "grant.blocked.nothingPlaced": "ten seed nie umieścił nic w tym miejscu",
+  "grant.blocked.noDirect": "„{item}” nie może zostać przekazany bezpośrednio"
 }

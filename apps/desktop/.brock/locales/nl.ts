@@ -17,6 +17,7 @@ import app_nl_msu_studio from '../../src/locales/nl/msu-studio.json';
 import app_nl_profiles from '../../src/locales/nl/profiles.json';
 import app_nl_randomizer from '../../src/locales/nl/randomizer.json';
 import app_nl_roms from '../../src/locales/nl/roms.json';
+import app_nl_screen_editor from '../../src/locales/nl/screen-editor.json';
 import app_nl_settings_audio from '../../src/locales/nl/settings-audio.json';
 import app_nl_settings_bugfixes from '../../src/locales/nl/settings-bugfixes.json';
 import app_nl_settings_camera from '../../src/locales/nl/settings-camera.json';
@@ -72,6 +73,7 @@ const layers: readonly Layer[] = [
   { locale: 'nl', namespace: 'profiles', kind: 'app', messages: app_nl_profiles },
   { locale: 'nl', namespace: 'randomizer', kind: 'app', messages: app_nl_randomizer },
   { locale: 'nl', namespace: 'roms', kind: 'app', messages: app_nl_roms },
+  { locale: 'nl', namespace: 'screen-editor', kind: 'app', messages: app_nl_screen_editor },
   { locale: 'nl', namespace: 'settings-audio', kind: 'app', messages: app_nl_settings_audio },
   { locale: 'nl', namespace: 'settings-bugfixes', kind: 'app', messages: app_nl_settings_bugfixes },
   { locale: 'nl', namespace: 'settings-camera', kind: 'app', messages: app_nl_settings_camera },
