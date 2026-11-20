@@ -1,9 +1,9 @@
 /* @layer core-game-hooks @kind native */
 // The Japanese cartridge's graphics (ja_graphics.c). Included from game_hooks.h.
 //
-// The Japanese cartridge's pictures come ONLY from the host's Japanese graphics pack (WasmSetJapaneseGraphic),
-// imported from a Japanese cartridge; a language set carries text only and none of them is ever filled
-// from it. Without the pack no Japanese picture is drawn. The bits below are latched values (Live):
+// The Japanese cartridge's pictures and glyphs (its dialogue font and its tilemap font) come ONLY from the
+// host's Japanese graphics pack (WasmSetJapaneseGraphic), imported from a Japanese cartridge; a language set
+// carries text only and none of them is ever filled from it. Without the pack no Japanese picture is drawn. The bits below are latched values (Live):
 //   kJaGfx_FileSelect  option (layout, no language): the file select screens run the Japanese layout
 //                      (select_layout.c) where the language set carries text for it. The text still follows the set.
 //   kJaGfx_Title       option: the title is the Japanese cartridge's (title_ja.c): its logo, copyright line,
@@ -53,6 +53,14 @@ const uint8 *JaGraphics_Patch(int index, uint32 *size);
 
 // The pack's intro tilemap, NULL unless the Intro option is on and the pack has it.
 const uint8 *JaGraphics_IntroTilemap(uint32 *size);
+
+// The Japanese glyphs, drawn only from the pack (a set carries none). The 512-tile tilemap font the credits
+// and the Japanese file select upload (language_screens_font.c), NULL when the pack has none.
+const uint8 *JaGraphics_TilemapFont(uint32 *size);
+// Points g_zenv.dialogue_font_blk at the pack's dialogue font while a Japanese set is loaded (an empty
+// block without the pack, so its glyphs draw blank). Called as the language is set (GameHook_LanguageScreens)
+// and whenever the pack changes.
+void JaGraphics_DialogueFontSync(void);
 
 // The pack's own pause words for language table |id| (a kLangTbl_Hud* id), drawn with its HUD sheets, and
 // their byte length in |len|. NULL unless the set is Japanese and the pack carries both HUD sheets and

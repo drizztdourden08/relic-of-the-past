@@ -22,6 +22,7 @@
   "disabled.developer-tools": "Vereist dat Ontwikkelaarsmodus aan staat",
   "disabled.online-only": "Alleen voor online randomizerprofielen.",
   "disabled.japanese-graphics": "Vereist een geïmporteerde Japanse ROM",
+  "disabled.japanese-font": "Vereist de Japanse sprites, geïmporteerd via Gegevens > Sprites",
   "disabled.mobile-only": "Alleen in de telefoon- en tablet-app.",
   "disabled.setting-off": "Uitgeschakeld: {setting} staat uit",
   "display.aspect.label": "Beeldverhouding",

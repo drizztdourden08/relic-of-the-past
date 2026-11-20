@@ -22,6 +22,7 @@
   "disabled.developer-tools": "開発者モードをオンにする必要があります",
   "disabled.online-only": "オンラインのランダマイザープロフィール専用です。",
   "disabled.japanese-graphics": "日本版ROMのインポートが必要です",
+  "disabled.japanese-font": "データ > スプライトで日本版スプライトのインポートが必要です",
   "disabled.mobile-only": "スマートフォンとタブレットのアプリ専用です。",
   "disabled.setting-off": "無効：{setting}がオフです",
   "display.aspect.label": "アスペクト比",

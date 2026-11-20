@@ -22,6 +22,7 @@
   "disabled.developer-tools": "Richiede la Modalità sviluppatore attiva",
   "disabled.online-only": "Solo per i profili randomizzatore online.",
   "disabled.japanese-graphics": "Richiede una ROM giapponese importata",
+  "disabled.japanese-font": "Richiede gli sprite giapponesi importati in Dati > Sprite",
   "disabled.mobile-only": "Solo per l'app su telefono e tablet.",
   "disabled.setting-off": "Disattivato: {setting} è disattivato",
   "display.aspect.label": "Proporzioni",

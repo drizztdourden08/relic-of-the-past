@@ -22,6 +22,7 @@
   "disabled.developer-tools": "Benötigt eingeschalteten Entwicklermodus",
   "disabled.online-only": "Nur für Online-Randomizer-Profile.",
   "disabled.japanese-graphics": "Benötigt eine importierte japanische ROM",
+  "disabled.japanese-font": "Benötigt die japanischen Sprites, importiert unter Daten > Sprites",
   "disabled.mobile-only": "Nur in der Smartphone- und Tablet-App.",
   "disabled.setting-off": "Deaktiviert: {setting} ist aus",
   "display.aspect.label": "Seitenverhältnis",

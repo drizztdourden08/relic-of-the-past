@@ -13,8 +13,9 @@
 //   Name    a single byte below the first command is a US letter code (the player's name, a [Number]
 //           digit, a session line): it is drawn as the matching Japanese glyph.
 //
-// Sheet: 64 bytes per glyph, four 2bpp 8x8 tiles in the order left-top, left-bottom, right-top,
-// right-bottom. The right tiles hold columns 8-10 in their three high bits, so each half draws exactly
+// Sheet: the Japanese graphics pack's dialogue font (JaGraphics_DialogueFontSync points the dialogue font
+// block at it; a set carries no glyphs, so without the pack nothing is drawn and the pen still advances).
+// 64 bytes per glyph, four 2bpp 8x8 tiles in the order left-top, left-bottom, right-top, right-bottom. The right tiles hold columns 8-10 in their three high bits, so each half draws exactly
 // like a vanilla glyph of width 8 and of width 3.
 //
 // A name of six letters is 66 px wide, so it fits the 168 px line on its own. A glyph whose 11 px would

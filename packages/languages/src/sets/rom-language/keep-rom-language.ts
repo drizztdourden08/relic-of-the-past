@@ -9,7 +9,8 @@ import { romSetInput } from './rom-set-input';
 
 const keepRomLanguage = async (files: FileStore, pack: ExtractedPack): Promise<void> => {
   if (await readPayloadMeta(files, pack.code) === null) await writeExtractionPayload(files, pack);
-  if (await getRomFont(files, pack.code) === null) {
+  // A Japanese set has no ROM font: its glyphs are the Japanese graphics pack's.
+  if (pack.script !== 'japanese' && await getRomFont(files, pack.code) === null) {
     await writeRomFont(files, pack.code, { fontData: pack.fontData, fontWidth: pack.fontWidth });
   }
   const { set } = romSetInput(pack);

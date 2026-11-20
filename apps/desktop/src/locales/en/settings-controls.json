@@ -22,6 +22,7 @@
   "disabled.developer-tools": "Needs Developer Mode turned on",
   "disabled.online-only": "Only for online randomizer profiles.",
   "disabled.japanese-graphics": "Needs a Japanese ROM imported",
+  "disabled.japanese-font": "Needs the Japanese sprites imported in Data > Sprites",
   "disabled.mobile-only": "Phone and tablet app only.",
   "disabled.setting-off": "Disabled: {setting} is off",
   "display.aspect.label": "Aspect Ratio",

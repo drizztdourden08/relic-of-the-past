@@ -3,6 +3,7 @@ export type { RomData, RomLanguage, RomIdentEntry, RomRevision } from './rom/rom
 export { extractJapaneseLanguage } from './japanese/entry/extract-japanese-language';
 export { buildJapaneseEntry } from './japanese/entry/build-japanese-entry';
 export { glyphToChar } from './japanese/text/glyph-to-char';
+export { JAPANESE_TEXT_FLAG } from './japanese/text/core-encoding.constants';
 export { GLYPH_LIMIT as JAPANESE_GLYPH_LIMIT } from './japanese/text/japanese-charset.constants';
 export type { ExtractedJapaneseLanguage, JapanesePackedEntry } from './japanese/entry/japanese-entry.type';
 export { snesToLinear, advanceAddress, advanceAddressWord } from './rom/snes-address';
@@ -88,7 +89,7 @@ export { compressStrings } from './text/dialogue-encoder/compress-strings';
 export { extractScreens } from './screens/extract-screens';
 export { extractJapaneseScreens } from './screens/japanese/extract-japanese-screens';
 export { jaScreenAddressesOf, kScreenAddresses, US_SCREEN_ADDRESSES } from './screens/addresses';
-export { compileJapaneseGraphics, decodeJapaneseGraphicsPack, encodeJapaneseGraphicsPack } from './japanese-graphics';
+export { compileJapaneseGraphics, decodeJapaneseGraphicsPack, encodeJapaneseGraphicsPack, hasJapaneseFont } from './japanese-graphics';
 export type { JapaneseGraphicEntry } from './japanese-graphics';
 export { readSheetPointer } from './screens/read-sheet-pointers';
 export { PAUSE_TABLES, SELECT_FILE_TABLES } from './screens/screens.constants';

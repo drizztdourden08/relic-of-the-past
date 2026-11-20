@@ -10,7 +10,7 @@ import { compileScreens } from './compile-screens';
 import { NON_BASE_INDEX } from './compile.constants';
 
 const compileSet = (set: LanguageSet, font: SetFont): PackedLangEntry => {
-  if (set.script === 'japanese') return compileJapaneseSet(set, font);
+  if (set.script === 'japanese') return compileJapaneseSet(set);
   const cfg = kLanguages[set.base];
   if (!cfg) throw new Error(`compileSet: unknown base language "${set.base}" for set "${set.id}"`);
 

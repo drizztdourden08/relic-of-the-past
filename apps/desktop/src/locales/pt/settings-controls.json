@@ -22,6 +22,7 @@
   "disabled.developer-tools": "Requer o Modo desenvolvedor ligado",
   "disabled.online-only": "Apenas para perfis de randomizador online.",
   "disabled.japanese-graphics": "Requer uma ROM japonesa importada",
+  "disabled.japanese-font": "Requer os sprites japoneses importados em Dados > Sprites",
   "disabled.mobile-only": "Apenas no app de celular e tablet.",
   "disabled.setting-off": "Desativado: {setting} está desligado",
   "display.aspect.label": "Proporção",
