@@ -449,5 +449,12 @@
   "value-input.decrement": "{name} verlagen",
   "glyph-pack.name.keyboard": "Toetsenbord",
   "glyph-pack.name.snes": "Console",
-  "glyph-pack.name.generic": "Algemeen"
+  "glyph-pack.name.generic": "Algemeen",
+  "layout.name.default": "Standaard",
+  "layout.name.compact": "Compact",
+  "layout.name.bottom-right": "Knoppen rechtsonder",
+  "preset-bar.meta.built-in": "ingebouwd",
+  "preset-bar.meta.custom": "aangepast",
+  "editor-toolbar.text.into": "in {target}",
+  "outline-name.text.slots-out-of-range": "slot {slots} buiten bereik"
 }

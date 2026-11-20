@@ -449,5 +449,12 @@
   "value-input.decrement": "Decrement {name}",
   "glyph-pack.name.keyboard": "Keyboard",
   "glyph-pack.name.snes": "Console",
-  "glyph-pack.name.generic": "Generic"
+  "glyph-pack.name.generic": "Generic",
+  "layout.name.default": "Default",
+  "layout.name.compact": "Compact",
+  "layout.name.bottom-right": "Buttons bottom right",
+  "preset-bar.meta.built-in": "built-in",
+  "preset-bar.meta.custom": "custom",
+  "editor-toolbar.text.into": "into {target}",
+  "outline-name.text.slots-out-of-range": "slot {slots} out of range"
 }

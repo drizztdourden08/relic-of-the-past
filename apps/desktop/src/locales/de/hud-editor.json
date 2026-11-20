@@ -449,5 +449,12 @@
   "value-input.decrement": "{name} verringern",
   "glyph-pack.name.keyboard": "Tastatur",
   "glyph-pack.name.snes": "Konsole",
-  "glyph-pack.name.generic": "Allgemein"
+  "glyph-pack.name.generic": "Allgemein",
+  "layout.name.default": "Standard",
+  "layout.name.compact": "Kompakt",
+  "layout.name.bottom-right": "Tasten unten rechts",
+  "preset-bar.meta.built-in": "integriert",
+  "preset-bar.meta.custom": "benutzerdefiniert",
+  "editor-toolbar.text.into": "in {target}",
+  "outline-name.text.slots-out-of-range": "Slot {slots} außerhalb des Bereichs"
 }

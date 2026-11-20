@@ -449,5 +449,12 @@
   "value-input.decrement": "Minska {name}",
   "glyph-pack.name.keyboard": "Tangentbord",
   "glyph-pack.name.snes": "Konsol",
-  "glyph-pack.name.generic": "Generisk"
+  "glyph-pack.name.generic": "Generisk",
+  "layout.name.default": "Standard",
+  "layout.name.compact": "Kompakt",
+  "layout.name.bottom-right": "Knappar nere till höger",
+  "preset-bar.meta.built-in": "inbyggd",
+  "preset-bar.meta.custom": "anpassad",
+  "editor-toolbar.text.into": "i {target}",
+  "outline-name.text.slots-out-of-range": "plats {slots} utanför intervallet"
 }

@@ -1,5 +1,6 @@
 /* @layer renderer-hud @kind hook */
 import { useCallback, useEffect, useState } from 'react';
+import { useT } from '@drizztdourden08/brock-react';
 import type { PromptButton } from '@rotp/game-data';
 import { getInputManager } from '@app/input/input-manager/get-input-manager';
 import { snesButtonGlyph } from '../../../input/snes-button-glyph';
@@ -7,6 +8,7 @@ import type { ButtonGlyph } from '../../../input/snes-button-glyph';
 import { SNES_OF } from '../DialogView.constants';
 
 const useButtonGlyphs = () => {
+  const t = useT();
   const [version, setVersion] = useState(0);
 
   useEffect(() => {
@@ -21,8 +23,8 @@ const useButtonGlyphs = () => {
     const manager = getInputManager();
     const profile = manager.getProfile();
     const devices = manager.getDevices();
-    return buttons.map((button) => snesButtonGlyph(profile, SNES_OF[button], devices));
-  }, [version]);
+    return buttons.map((button) => snesButtonGlyph(profile, SNES_OF[button], devices, t));
+  }, [version, t]);
 
   return { glyphsFor };
 };

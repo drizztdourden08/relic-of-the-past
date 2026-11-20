@@ -449,5 +449,12 @@
   "value-input.decrement": "{name}を減らす",
   "glyph-pack.name.keyboard": "キーボード",
   "glyph-pack.name.snes": "コンソール",
-  "glyph-pack.name.generic": "汎用"
+  "glyph-pack.name.generic": "汎用",
+  "layout.name.default": "デフォルト",
+  "layout.name.compact": "コンパクト",
+  "layout.name.bottom-right": "ボタンを右下に配置",
+  "preset-bar.meta.built-in": "内蔵",
+  "preset-bar.meta.custom": "カスタム",
+  "editor-toolbar.text.into": "{target} の中へ",
+  "outline-name.text.slots-out-of-range": "スロット {slots} は範囲外"
 }

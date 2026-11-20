@@ -449,5 +449,12 @@
   "value-input.decrement": "Zmniejsz {name}",
   "glyph-pack.name.keyboard": "Klawiatura",
   "glyph-pack.name.snes": "Konsola",
-  "glyph-pack.name.generic": "Ogólny"
+  "glyph-pack.name.generic": "Ogólny",
+  "layout.name.default": "Domyślny",
+  "layout.name.compact": "Kompaktowy",
+  "layout.name.bottom-right": "Przyciski w prawym dolnym rogu",
+  "preset-bar.meta.built-in": "wbudowany",
+  "preset-bar.meta.custom": "własny",
+  "editor-toolbar.text.into": "do {target}",
+  "outline-name.text.slots-out-of-range": "slot {slots} poza zakresem"
 }

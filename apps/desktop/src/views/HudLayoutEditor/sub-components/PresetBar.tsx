@@ -1,6 +1,7 @@
 /* @layer renderer-components @kind component */
 import { Box, Button, Icon, Text, TextInput } from '@drizztdourden08/tessera/primitives';
 import { ListItemList, ListItemRow } from '@drizztdourden08/tessera/composites';
+import { layoutLabel } from '@app/hud-layout-editing/layout-label';
 import type { PresetBarProps } from './PresetBar.type';
 import { useT } from '@drizztdourden08/brock-react';
 
@@ -16,8 +17,8 @@ const PresetBar = (props: PresetBarProps) => {
         {layouts.map((layout) => (
           <ListItemRow
             key={layout.id}
-            name={layout.name}
-            meta={layout.builtIn ? 'built-in' : 'custom'}
+            name={layoutLabel(layout, t)}
+            meta={layout.builtIn ? t('hud-editor:preset-bar.meta.built-in') : t('hud-editor:preset-bar.meta.custom')}
             selected={layout.id === draft.id}
             onClick={busy ? undefined : () => onStartFrom(layout)}
           />

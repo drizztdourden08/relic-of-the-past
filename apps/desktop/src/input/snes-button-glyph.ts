@@ -4,6 +4,8 @@ import type { SnesButton } from '@rotp/game-data';
 import { getBindingIconUrl } from '@app/input/binding-display/get-binding-icon-url';
 import { getBindingLabel, padHex, resolveIconByVidPid } from '@rotp/input-mapping';
 import { getSnesIconUrl } from '@app/input/button-icons/get-snes-icon-url';
+import type { I18n } from '@drizztdourden08/brock-core/i18n';
+import { translateKeyLabel } from '@app/input/key-label';
 import type { ProfileMapping } from './snes-button-glyph.type';
 
 const liveSdlType = (vid: string, pid: string, devices: DetectedDevice[]): string | null =>
@@ -16,11 +18,11 @@ const mappingIcon = (mapping: ProfileMapping, binding: ProfileMapping['binding']
   return vid && pid ? resolveIconByVidPid(vid, pid, binding, liveSdlType(vid, pid, devices)) : mapping.icon;
 };
 
-const snesButtonGlyph = (profile: InputProfile | null, snes: SnesButton, devices: DetectedDevice[]): ButtonGlyph => {
+const snesButtonGlyph = (profile: InputProfile | null, snes: SnesButton, devices: DetectedDevice[], t: I18n['t']): ButtonGlyph => {
   const mapping = profile?.mappings.find((m) => m.snesButton === snes);
   const binding = mapping?.binding;
   if (!mapping || !binding || binding.type === 'none') return { src: getSnesIconUrl(snes), label: snes };
-  if (binding.type === 'keyboard') return { src: getBindingIconUrl(binding), label: getBindingLabel(binding) };
+  if (binding.type === 'keyboard') return { src: getBindingIconUrl(binding), label: translateKeyLabel(getBindingLabel(binding), t) };
   const icon = mappingIcon(mapping, binding, devices);
   return { src: getBindingIconUrl(binding, icon), label: getBindingLabel(binding, icon) };
 };

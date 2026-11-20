@@ -50,7 +50,7 @@ const buildControlsTabs = (args: BuildControlsTabsArgs): readonly ControlsTabDef
       scope: 'global',
       title: t('profiles:controls.tabs.shortcuts-title'),
       actions: shortcutActionDefs(text),
-      reserved: [{ label: t('profiles:controls.tabs.open-menu'), bindingLabel: 'Esc', glyph: 'kb-escape' }],
+      reserved: [{ label: t('profiles:controls.tabs.open-menu'), bindingLabel: t('profiles:key-label.escape'), glyph: 'kb-escape' }],
     },
     {
       id: 'cheats',

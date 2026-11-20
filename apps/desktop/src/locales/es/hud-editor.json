@@ -449,5 +449,12 @@
   "value-input.decrement": "Disminuir {name}",
   "glyph-pack.name.keyboard": "Teclado",
   "glyph-pack.name.snes": "Consola",
-  "glyph-pack.name.generic": "Genérico"
+  "glyph-pack.name.generic": "Genérico",
+  "layout.name.default": "Predeterminado",
+  "layout.name.compact": "Compacto",
+  "layout.name.bottom-right": "Botones abajo a la derecha",
+  "preset-bar.meta.built-in": "integrado",
+  "preset-bar.meta.custom": "personalizado",
+  "editor-toolbar.text.into": "en {target}",
+  "outline-name.text.slots-out-of-range": "ranura {slots} fuera de rango"
 }

@@ -15,7 +15,7 @@ const OutlineName = (props: OutlineNameProps) => {
       {locked && <Text className="hud-outline__badge" title={t('hud-editor:outline-name.title.edit-this-from-the-case')}>{locked}</Text>}
       {missingSlots.length > 0 && (
         <Text className="hud-outline__note" title={t('hud-editor:outline-name.title.out-of-range-for-the')}>
-          slot {missingSlots.join(', ')} out of range
+          {t('hud-editor:outline-name.text.slots-out-of-range', { slots: missingSlots.join(', ') })}
         </Text>
       )}
     </Pressable>

@@ -49,7 +49,7 @@ const EditorToolbar = (props: EditorToolbarProps) => {
 
       <ToolbarMenu
         icon={TOOLBAR_ICONS.preset} label={t('hud-editor:editor-toolbar.label.preset')}
-        items={[...subtreePresetItems({ insert, t }, text), { separator: true }, ...presetItems(layouts, draftId, onStartFrom)]}
+        items={[...subtreePresetItems({ insert, t }, text), { separator: true }, ...presetItems(layouts, draftId, onStartFrom, t)]}
         open={openKey === 'preset'} onToggle={() => toggle('preset')} onClose={close}
       />
 
@@ -66,7 +66,7 @@ const EditorToolbar = (props: EditorToolbarProps) => {
       </IconButton>
 
       <Text className="hud-toolbar__target" title={t('hud-editor:editor-toolbar.title.where-the-next-insert-lands')}>
-        into {targetLabel}
+        {t('hud-editor:editor-toolbar.text.into', { target: targetLabel })}
       </Text>
 
       <Box className="hud-toolbar__spacer" />
