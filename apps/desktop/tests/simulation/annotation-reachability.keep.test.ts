@@ -44,13 +44,14 @@ describe('annotation reachability', { tags: ['critical'] }, () => {
     const item = at('key-door', 18, 5, { state: 'shut' });
     markUnreachable([item], gridBlockedBelow(10));
     expect(item.state).toBe('shut');
-    expect(item.detail).toBe('unreachable');
+    expect(item.unreachable).toBe(true);
   });
 
-  it('appends to an existing detail instead of replacing it', () => {
+  it('keeps an existing detail and flags the lock unreachable beside it', () => {
     const item = at('shutter', 18, 5, { state: 'shut', detail: 'closes behind Link' });
     markUnreachable([item], gridBlockedBelow(10));
-    expect(item.detail).toBe('closes behind Link · unreachable');
+    expect(item.detail).toBe('closes behind Link');
+    expect(item.unreachable).toBe(true);
   });
 
   it('is a no-op with no flood, so a pre-flood panel makes no false claims', () => {

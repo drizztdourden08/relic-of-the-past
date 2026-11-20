@@ -3,7 +3,7 @@ import type { ActionBinding, InputProfile as BrockProfile } from '@drizztdourden
 import { SNES_BUTTONS } from '@rotp/game-data';
 import type { ButtonMapping, ModernBindings } from '@rotp/game-data';
 import type { InputProfile } from '@rotp/input-mapping';
-import { storedProfileName } from '@app/input/profile-name/profile-name';
+import { storedProfileName } from '@app/input/profile-name/stored-profile-name';
 import { coreFromVerbs } from './core-from-verbs';
 import { profileLayoutId } from './profile-layout-id';
 
