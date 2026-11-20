@@ -146,5 +146,14 @@
   "summary.none": "geen",
   "summary.no-sides": "geen {sides}",
   "summary.outline": "{width}px, inkt",
-  "summary.shadows": "{count, plural, one {# schaduw} other {# schaduwen}}"
+  "summary.shadows": "{count, plural, one {# schaduw} other {# schaduwen}}",
+  "new.text": "Tekst",
+  "sample.north": "Noord",
+  "sample.west": "West",
+  "sample.east": "Oost",
+  "sample.south": "Zuid",
+  "sample.up": "Omhoog",
+  "sample.left": "Links",
+  "sample.right": "Rechts",
+  "sample.down": "Omlaag"
 }

@@ -109,7 +109,7 @@
   "structure.off": "Desactivada",
   "structure.off.note": "No se reestructura nada; tú colocas cada salto de la entrada.",
   "studio.editor-label": "Editor de idiomas",
-  "studio.label": "Language Studio",
+  "studio.label": "Estudio de idiomas",
   "studio.no-set": "Selecciona un conjunto de idioma para editar",
   "studio.properties": "Propiedades",
   "studio.unreadable": "No se pudo leer ese conjunto de idioma",
@@ -130,5 +130,6 @@
   "toolbar.undo": "Deshacer",
   "variable-popover.empty": "Sin coincidencias",
   "variable-popover.filter": "Filtrar...",
-  "variable-popover.filter-label": "Filtrar variables"
+  "variable-popover.filter-label": "Filtrar variables",
+  "gutter.over": "{px} de más"
 }

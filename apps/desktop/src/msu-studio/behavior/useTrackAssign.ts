@@ -53,7 +53,7 @@ const useTrackAssign = (params: TrackAssignParams) => {
     setBusy(true);
     try {
       if (format === 'layered') {
-        await msuStore.writeMsuManifest(pack, withTrackFile(manifest, trackNum, fileName || null));
+        await msuStore.writeMsuManifest(pack, withTrackFile(manifest, trackNum, fileName || null, t('msu-studio:track.default-name', { number: trackNum })));
         return {
           success: true,
           message: fileName

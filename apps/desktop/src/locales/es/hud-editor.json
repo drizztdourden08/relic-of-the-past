@@ -444,5 +444,7 @@
   "inspector.section.placement": "Posición y colocación",
   "inspector.section.size-box": "Tamaño y caja",
   "appearance.shadows": "sombras ({summary})",
-  "screen.title": "Editor de diseño del HUD"
+  "screen.title": "Editor de diseño del HUD",
+  "value-input.increment": "Aumentar {name}",
+  "value-input.decrement": "Disminuir {name}"
 }

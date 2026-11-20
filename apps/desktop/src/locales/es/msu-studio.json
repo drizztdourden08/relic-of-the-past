@@ -320,5 +320,6 @@
   "layers.loop.from-file": "El archivo declara {where}, así que la intro suena una vez y luego se repite desde ahí",
   "layers.loop.intro": "La intro suena una vez y luego se repite desde {where}",
   "studio.tabs.ambient": "Ambiente",
-  "packs.meta.summary": "{files} · {size}"
+  "packs.meta.summary": "{files} · {size}",
+  "layers.default-name": "Capa {number}"
 }

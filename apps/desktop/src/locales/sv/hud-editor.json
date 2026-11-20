@@ -2,7 +2,7 @@
   "animation-group.label.property": "egenskap",
   "animation-group.label.duration-ms": "varaktighet (ms)",
   "animation-group.label.delay-ms": "fördröjning (ms)",
-  "animation-group.label.loop": "loop",
+  "animation-group.label.loop": "slinga",
   "animation-group.label.easing": "acceleration",
   "animation-group.label.only-when": "endast när",
   "animation-group.aria.animation-gate": "Animationsvillkor",
@@ -263,8 +263,8 @@
   "editor.target.nothing": "ingenting",
   "animation-group.remove": "Ta bort animationen {property}",
   "animation.loop.none": "ingen",
-  "animation.loop.loop": "loop",
-  "animation.loop.ping": "ping",
+  "animation.loop.loop": "slinga",
+  "animation.loop.ping": "pendel",
   "button-face.glyph": "tecken",
   "button-face.image": "bild",
   "button-states.bind.verb": "verb",
@@ -444,5 +444,7 @@
   "inspector.section.placement": "Position och placering",
   "inspector.section.size-box": "Storlek och ruta",
   "appearance.shadows": "skuggor ({summary})",
-  "screen.title": "HUD-layoutredigerare"
+  "screen.title": "HUD-layoutredigerare",
+  "value-input.increment": "Öka {name}",
+  "value-input.decrement": "Minska {name}"
 }

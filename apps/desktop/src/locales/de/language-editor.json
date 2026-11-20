@@ -130,5 +130,6 @@
   "toolbar.undo": "Rückgängig",
   "variable-popover.empty": "Keine Treffer",
   "variable-popover.filter": "Filtern...",
-  "variable-popover.filter-label": "Variablen filtern"
+  "variable-popover.filter-label": "Variablen filtern",
+  "gutter.over": "{px} zu viel"
 }

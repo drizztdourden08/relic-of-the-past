@@ -1,7 +1,4 @@
 /* @layer renderer-components @kind constants */
-import { sampleSlot } from './sample-slot';
-import type { ModernSlot } from '@rotp/game-data';
-
 const SAMPLE_HEALTH_CAPACITY = 20 * 8;
 const SAMPLE_HEALTH_CURRENT = 14 * 8;
 const SAMPLE_MAGIC = 64;
@@ -26,17 +23,6 @@ const SAMPLE_ITEMS: readonly [number, ...number[]] = [3, 1, 1, 1, 1, 1, 1, 1, 1,
 const SAMPLE_BOTTLES: readonly number[] = [2, 2, 0, 0];
 const SAMPLE_SWORD_TIER = 2;
 
-const SAMPLE_SLOTS: readonly ModernSlot[] = [
-  sampleSlot(1, 'NORTH', 'North'),
-  sampleSlot(2, 'WEST', 'West'),
-  sampleSlot(3, 'EAST', 'East'),
-  sampleSlot(4, 'SOUTH', 'South'),
-  sampleSlot(5, 'DPAD_UP', 'Up'),
-  sampleSlot(6, 'DPAD_LEFT', 'Left'),
-  sampleSlot(7, 'DPAD_RIGHT', 'Right'),
-  sampleSlot(8, 'DPAD_DOWN', 'Down'),
-];
-
 const SAMPLE_ITEM_POOL: readonly number[] = [1, 2, 3, 4, 5, 6, 8, 9, 11, 13, 15, 17, 18, 21];
 
 export {
@@ -45,6 +31,5 @@ export {
   SAMPLE_HUD,
   SAMPLE_ITEMS,
   SAMPLE_ITEM_POOL,
-  SAMPLE_SLOTS,
   SAMPLE_SWORD_TIER,
 };

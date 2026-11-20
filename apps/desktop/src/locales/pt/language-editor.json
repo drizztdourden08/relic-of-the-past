@@ -130,5 +130,6 @@
   "toolbar.undo": "Desfazer",
   "variable-popover.empty": "Nenhuma correspondência",
   "variable-popover.filter": "Filtrar...",
-  "variable-popover.filter-label": "Filtrar variáveis"
+  "variable-popover.filter-label": "Filtrar variáveis",
+  "gutter.over": "{px} a mais"
 }

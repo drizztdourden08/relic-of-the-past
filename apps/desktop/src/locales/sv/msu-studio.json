@@ -242,7 +242,7 @@
   "layers.validate.interval": "{name}: ett intervalllager behöver minst en tid.",
   "layers.mode.label": "Spelläge",
   "layers.mode.once": "En gång",
-  "layers.mode.loop": "Loop",
+  "layers.mode.loop": "Slinga",
   "layers.mode.random": "Slump",
   "layers.mode.interval": "Intervall",
   "layers.mode.once-hint": "Spelas igenom en gång och stannar.",
@@ -320,5 +320,6 @@
   "layers.loop.from-file": "Filen anger {where}, så introt spelas en gång och upprepas sedan därifrån",
   "layers.loop.intro": "Introt spelas en gång och upprepas sedan från {where}",
   "studio.tabs.ambient": "Omgivning",
-  "packs.meta.summary": "{files} · {size}"
+  "packs.meta.summary": "{files} · {size}",
+  "layers.default-name": "Lager {number}"
 }

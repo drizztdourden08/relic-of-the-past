@@ -146,5 +146,14 @@
   "summary.none": "brak",
   "summary.no-sides": "bez {sides}",
   "summary.outline": "{width}px, tusz",
-  "summary.shadows": "{count, plural, one {# cień} few {# cienie} many {# cieni} other {# cienia}}"
+  "summary.shadows": "{count, plural, one {# cień} few {# cienie} many {# cieni} other {# cienia}}",
+  "new.text": "Tekst",
+  "sample.north": "Północ",
+  "sample.west": "Zachód",
+  "sample.east": "Wschód",
+  "sample.south": "Południe",
+  "sample.up": "Góra",
+  "sample.left": "Lewo",
+  "sample.right": "Prawo",
+  "sample.down": "Dół"
 }

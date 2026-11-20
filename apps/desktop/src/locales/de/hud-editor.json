@@ -364,7 +364,7 @@
   "identity-section.error.taken": "Ein anderer Knoten nutzt bereits \"{id}\".",
   "layout-settings.overlay": "Zeigt die Container-Überlagerung, die die eigenen Zelllinien eines Rasters oder die Kind-Slots eines Flex-Containers in der Hilfslinienfarbe über die Vorschau zeichnet. Nur im Editor.",
   "size-box.screen-reason": "Der Bildschirm entspricht immer der Ansicht.",
-  "placement.engine.grid": "grid",
+  "placement.engine.grid": "Raster",
   "placement.engine.flex": "flex {direction}",
   "placement.reason.parent": "Layout des übergeordneten Elements: {engine}. Stelle es auf Raster um, um nach Zelle zu platzieren.",
   "placement.reason.screen": "Der Bildschirm ist die ganze Ansicht.",
@@ -444,5 +444,7 @@
   "inspector.section.placement": "Position und Platzierung",
   "inspector.section.size-box": "Größe und Box",
   "appearance.shadows": "Schatten ({summary})",
-  "screen.title": "HUD-Layout-Editor"
+  "screen.title": "HUD-Layout-Editor",
+  "value-input.increment": "{name} erhöhen",
+  "value-input.decrement": "{name} verringern"
 }

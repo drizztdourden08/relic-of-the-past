@@ -153,7 +153,7 @@
   "sound.badge.replaced": "Vervangen",
   "sound.badge.native": "Origineel",
   "sound.badge.silent": "Stil",
-  "sound.role.bed": "Bed",
+  "sound.role.bed": "Ondergrond",
   "sound.role.control": "Besturing",
   "sound.role.cue": "Signaal",
   "sound.role.bed-hint": "Start een herhalend bed, dat speelt tot een ander omgevings-id het vervangt",
@@ -251,7 +251,7 @@
   "layers.mode.interval-hint": "Speelt af op vaste tijden, gemeten vanaf het begin van het slot.",
   "layers.order.label": "Volgorde",
   "layers.order.sequential": "Op volgorde",
-  "layers.order.random": "Shuffle",
+  "layers.order.random": "Willekeurig",
   "layers.order.single": "Enkel",
   "layers.order.sequential-hint": "Speelt de bestanden af in de getoonde volgorde en begint dan opnieuw.",
   "layers.order.random-hint": "Kiest elke ronde een ander bestand.",
@@ -320,5 +320,6 @@
   "layers.loop.from-file": "Het bestand geeft {where} aan, dus de intro speelt één keer en herhaalt dan vanaf daar",
   "layers.loop.intro": "Intro speelt één keer, herhaalt dan vanaf {where}",
   "studio.tabs.ambient": "Omgeving",
-  "packs.meta.summary": "{files} · {size}"
+  "packs.meta.summary": "{files} · {size}",
+  "layers.default-name": "Laag {number}"
 }

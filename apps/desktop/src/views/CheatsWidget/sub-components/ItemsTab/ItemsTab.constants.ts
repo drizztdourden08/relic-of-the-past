@@ -1,5 +1,6 @@
 /* @layer renderer-widgets @kind constants */
 import { msg } from '@drizztdourden08/brock-core/i18n';
+import type { Message } from '@drizztdourden08/brock-core/i18n';
 import { CheatSlot } from '@app/game';
 import { ABILITY_GRID } from '@app/compounds/PauseAbilitiesPanel/PauseAbilitiesPanel.constants';
 import type { ControlHint } from '../ControlHint.type';
@@ -7,12 +8,15 @@ import type { DungeonItem, EquipmentBytes, GearSlot, SlotName } from './ItemsTab
 
 const ITEMS_TILES_WIDE = 21;
 
-const RAW_VALUE_LABELS: Record<number, Record<number, string>> = {
-  0: { 1: 'Bow', 2: 'Bow & Arrows', 3: 'Silver Bow', 4: 'Silver Bow & Arrows' },
-  12: { 3: 'Flute (active)' },
-  19: { 1: 'Magic Scroll' },
-  [CheatSlot.Armor]: { 0: 'Green Mail' },
-  [CheatSlot.Shield]: { 1: 'Fighters Shield', 2: 'Fire Shield' },
+const RAW_VALUE_LABELS: Record<number, Record<number, Message>> = {
+  0: {
+    1: msg('views-cheats:item.bow'), 2: msg('views-cheats:item.bow-arrows'),
+    3: msg('views-cheats:item.silver-bow'), 4: msg('views-cheats:item.silver-bow-arrows'),
+  },
+  12: { 3: msg('views-cheats:item.flute-active') },
+  19: { 1: msg('views-cheats:item.magic-scroll') },
+  [CheatSlot.Armor]: { 0: msg('views-cheats:item.mail-green') },
+  [CheatSlot.Shield]: { 1: msg('views-cheats:item.shield-fighter'), 2: msg('views-cheats:item.shield-fire') },
 };
 
 const BOW_RUNG_VALUES = [1, 3];
@@ -35,9 +39,9 @@ const NOT_IN_DUNGEON = 0xff;
 
 const PROGRESS_PANEL = { cols: 7, rows: 7 };
 const PENDANT_SPOTS = [
-  { bit: 4, x: 2.5, y: 2, variant: 'green', name: 'Pendant of Courage' },
-  { bit: 2, x: 0.5, y: 5, variant: 'blue', name: 'Pendant of Wisdom' },
-  { bit: 1, x: 4.5, y: 5, variant: 'red', name: 'Pendant of Power' },
+  { bit: 4, x: 2.5, y: 2, variant: 'green', name: msg('views-cheats:item.pendant-courage') },
+  { bit: 2, x: 0.5, y: 5, variant: 'blue', name: msg('views-cheats:item.pendant-wisdom') },
+  { bit: 1, x: 4.5, y: 5, variant: 'red', name: msg('views-cheats:item.pendant-power') },
 ] as const;
 const CRYSTAL_SPOTS = [
   { x: 1.5, y: 2 }, { x: 3.5, y: 2 },

@@ -130,5 +130,6 @@
   "toolbar.undo": "Cofnij",
   "variable-popover.empty": "Brak dopasowań",
   "variable-popover.filter": "Filtruj...",
-  "variable-popover.filter-label": "Filtruj zmienne"
+  "variable-popover.filter-label": "Filtruj zmienne",
+  "gutter.over": "{px} za dużo"
 }

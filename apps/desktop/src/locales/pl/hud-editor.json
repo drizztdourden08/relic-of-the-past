@@ -444,5 +444,7 @@
   "inspector.section.placement": "Pozycja i rozmieszczenie",
   "inspector.section.size-box": "Rozmiar i ramka",
   "appearance.shadows": "cienie ({summary})",
-  "screen.title": "Edytor układu HUD"
+  "screen.title": "Edytor układu HUD",
+  "value-input.increment": "Zwiększ {name}",
+  "value-input.decrement": "Zmniejsz {name}"
 }

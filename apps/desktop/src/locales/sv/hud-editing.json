@@ -146,5 +146,14 @@
   "summary.none": "inga",
   "summary.no-sides": "inga {sides}",
   "summary.outline": "{width}px, bläck",
-  "summary.shadows": "{count, plural, one {# skugga} other {# skuggor}}"
+  "summary.shadows": "{count, plural, one {# skugga} other {# skuggor}}",
+  "new.text": "Text",
+  "sample.north": "Norr",
+  "sample.west": "Väst",
+  "sample.east": "Öst",
+  "sample.south": "Söder",
+  "sample.up": "Upp",
+  "sample.left": "Vänster",
+  "sample.right": "Höger",
+  "sample.down": "Ner"
 }

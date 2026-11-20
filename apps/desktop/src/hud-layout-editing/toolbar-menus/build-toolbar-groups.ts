@@ -26,7 +26,7 @@ const containerItems = (deps: MenuDeps): MenuNode[] => ([
 ]);
 
 const dynamicsItems = (deps: MenuDeps): MenuNode[] => ([
-  { id: 'text', icon: menuIcon(typeIcon), label: deps.t('hud-editing:toolbar.text'), onSelect: () => deps.insert(newText()) },
+  { id: 'text', icon: menuIcon(typeIcon), label: deps.t('hud-editing:toolbar.text'), onSelect: () => deps.insert(newText(deps.t('hud-editing:new.text'))) },
   { id: 'button', icon: menuIcon(circleDotIcon), label: deps.t('hud-editing:toolbar.button'), onSelect: () => deps.insert(newButton()) },
   { id: 'repeat', icon: menuIcon(repeatIcon), label: deps.t('hud-editing:toolbar.repeat'), onSelect: () => deps.insert(newRepeat()) },
   { id: 'switch', icon: menuIcon(gitBranchIcon), label: deps.t('hud-editing:toolbar.switch'), onSelect: () => deps.insert(newSwitch()) },

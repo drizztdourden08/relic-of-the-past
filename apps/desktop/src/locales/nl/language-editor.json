@@ -130,5 +130,6 @@
   "toolbar.undo": "Ongedaan maken",
   "variable-popover.empty": "Geen resultaat",
   "variable-popover.filter": "Filteren...",
-  "variable-popover.filter-label": "Variabelen filteren"
+  "variable-popover.filter-label": "Variabelen filteren",
+  "gutter.over": "{px} te veel"
 }

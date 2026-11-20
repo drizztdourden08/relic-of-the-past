@@ -146,5 +146,14 @@
   "summary.none": "なし",
   "summary.no-sides": "{sides}なし",
   "summary.outline": "{width}px、インク",
-  "summary.shadows": "{count, plural, other {影#個}}"
+  "summary.shadows": "{count, plural, other {影#個}}",
+  "new.text": "テキスト",
+  "sample.north": "北",
+  "sample.west": "西",
+  "sample.east": "東",
+  "sample.south": "南",
+  "sample.up": "上",
+  "sample.left": "左",
+  "sample.right": "右",
+  "sample.down": "下"
 }

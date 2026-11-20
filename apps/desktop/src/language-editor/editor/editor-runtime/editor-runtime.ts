@@ -5,6 +5,7 @@ const editorRuntime: EditorRuntime = {
   metrics: null,
   glossary: [],
   mode: 'continuous',
+  overBy: (px) => String(px),
 };
 
 export { editorRuntime };

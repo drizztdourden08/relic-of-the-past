@@ -3,9 +3,9 @@ import type { MsuLayer } from '@rotp/game-data';
 import { newId } from '@drizztdourden08/brock-core';
 import { DEFAULT_MODES } from './layer-ops.constants';
 
-const createLayer = (existing: MsuLayer[], oneShot = false): MsuLayer => ({
+const createLayer = (existing: MsuLayer[], name: string, oneShot = false): MsuLayer => ({
   id: newId(),
-  name: `Layer ${existing.length + 1}`,
+  name,
   files: [],
   mode: oneShot ? DEFAULT_MODES.once : DEFAULT_MODES.loop,
   volume: 100,

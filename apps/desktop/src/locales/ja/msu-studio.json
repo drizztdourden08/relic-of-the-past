@@ -320,5 +320,6 @@
   "layers.loop.from-file": "ファイルが{where}を指定しているため、イントロは1回再生され、そこから繰り返します",
   "layers.loop.intro": "イントロは1回再生され、{where}から繰り返します",
   "studio.tabs.ambient": "環境音",
-  "packs.meta.summary": "{files} · {size}"
+  "packs.meta.summary": "{files} · {size}",
+  "layers.default-name": "レイヤー {number}"
 }
