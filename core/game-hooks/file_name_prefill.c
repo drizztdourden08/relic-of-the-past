@@ -13,20 +13,28 @@
 #include "src/features.h"
 #include "src/load_gfx.h"
 
-// select_file.c NameFile_DoTheNaming stores a cell's table byte t as (t & 0xf0) * 2 + (t & 0xf).
-// Table bytes 0x0b, 0x60, 0x27, 0x24 are L, i, n, k; 0x59 is the blank cell, stored as 0xa9.
-static const uint16 kPrefillName[6] = {0x000b, 0x00c0, 0x0047, 0x0044, 0x00a9, 0x00a9};
-enum { kBlankNameWord = 0xa9 };
+// select_file.c NameFile_DoTheNaming stores a cell's table byte t as (t & 0xf0) * 2 + (t & 0xf),
+// and that byte is a tile of the menu font, which is the dialogue font. L, i, n, k are tiles 0x0b,
+// 0x22, 0x27, 0x24 in every Latin font. The US grid types a narrow i, tile 0x60, which a European
+// font draws as another letter (o circumflex, sharp s), so 0x60 is written only where the active
+// grid types it and has no 0x22. The blank cell is stored as 0xa9.
+static const uint8 kPrefillLetters[4][2] = {{0x0b, 0x0b}, {0x22, 0x60}, {0x27, 0x27}, {0x24, 0x24}};
+enum { kPrefillLength = 4, kBlankNameWord = 0xa9 };
 
-// select_file.c kNamePlayer_Tab3[2 + 3 * 0x20] is the End cell of the uppercase section.
-// kNamePlayer_Tab0[2] and kNamePlayer_Tab2[3] are where the strip settles for that cell, so
-// writing the live scroll with its target means no scroll plays on entry.
+// The grid is 4 rows of 0x20 cells (kNamePlayer_Tab3, or the set's kLangTbl_NameGrid); byte 0x6f
+// is End. kNamePlayer_Tab0[col] and kNamePlayer_Tab2[row] are where the strip settles for a cell,
+// so writing the live scroll with its target means no scroll plays on entry.
 enum {
-  kEndCol = 2,
-  kEndRow = 3,
-  kEndScrollX = 0x10,
-  kEndScrollY = 179,
-  kNextLetterBox = 4,
+  kGridCols = 0x20,
+  kGridCells = 0x80,
+  kGridEnd = 0x6f,
+  kUsEndCell = 2 + 3 * kGridCols,
+  kScrollX0 = 0x1f0,
+  kColPx = 0x10,
+  kScrollMask = 0x1ff,
+  kRowScrollY0 = 131,
+  kRowPx = 16,
+  kNextLetterBox = kPrefillLength,
 };
 
 static bool g_prefill_armed;
@@ -41,10 +49,6 @@ void GameHook_ArmFileNamePrefill(void) {
 static const uint16 kPrefillNameJa[6] = {0x0309, 0x02af, 0x02aa, 0x00a9, 0x00a9, 0x00a9};
 enum {
   kJaControlRow = 3,
-  kJaGridCols = 32,
-  kJaScrollX0 = 0x1f0,
-  kJaColPx = 0x10,
-  kJaScrollMask = 0x1ff,
   kJaNextLetterBox = 3,
   kJaBoxPalette = 0x1c00,
 };
@@ -68,19 +72,63 @@ static uint16 BoxTile(bool ja, uint16 w) {
 }
 
 static int JaEndCol(void) {
-  for (int c = 0; c < kJaGridCols; c++) {
+  for (int c = 0; c < kGridCols; c++) {
     if (SelectUsJaName_Cell(kJaControlRow, c) == kNameCellEnd)
       return c;
   }
   return -1;
 }
 
+/** The set's own name grid and its cell count, or NULL while select_file.c's US grid is used. */
+static const int8 *HostGrid(int *cells) {
+  int len = LanguageScreens_Len(kLangTbl_NameGrid, 0);
+  *cells = len < kGridCells ? len : kGridCells;
+  return LANG_PICK(int8, kLangTbl_NameGrid, NULL);
+}
+
+static bool GridHas(const int8 *grid, int cells, uint8 tile) {
+  for (int i = 0; i < cells; i++) {
+    if ((uint8)grid[i] == tile)
+      return true;
+  }
+  return false;
+}
+
+/** The tile of prefill letter |k| as the active grid types it. */
+static uint8 LetterTile(int k) {
+  int cells;
+  const int8 *grid = HostGrid(&cells);
+  uint8 font = kPrefillLetters[k][0], us = kPrefillLetters[k][1];
+  if (grid == NULL || (GridHas(grid, cells, us) && !GridHas(grid, cells, font)))
+    return us;
+  return font;
+}
+
+/** The first End cell of the active grid. */
+static int LatinEndCell(void) {
+  int cells;
+  const int8 *grid = HostGrid(&cells);
+  for (int i = 0; grid != NULL && i < cells; i++) {
+    if ((uint8)grid[i] == kGridEnd)
+      return i;
+  }
+  return kUsEndCell;
+}
+
+static void LatinName(uint16 *words) {
+  for (int i = 0; i < 6; i++) {
+    uint8 t = i < kPrefillLength ? LetterTile(i) : 0;
+    words[i] = i < kPrefillLength ? (uint16)((t & 0xf0) * 2 + (t & 0xf)) : kBlankNameWord;
+  }
+}
+
 static void ParkOnEnd(bool ja) {
-  int col = ja ? JaEndCol() : kEndCol;
+  int cell = ja ? JaEndCol() + kJaControlRow * kGridCols : LatinEndCell();
+  int col = cell % kGridCols, row = cell / kGridCols;
   selectfile_var3 = (uint8)col;
-  selectfile_var5 = ja ? kJaControlRow : kEndRow;
-  selectfile_var8 = ja ? (uint16)((kJaScrollX0 + kJaColPx * col) & kJaScrollMask) : kEndScrollX;
-  selectfile_var7 = kEndScrollY;
+  selectfile_var5 = (uint8)row;
+  selectfile_var8 = (uint16)((kScrollX0 + kColPx * col) & kScrollMask);
+  selectfile_var7 = (uint8)(kRowScrollY0 + kRowPx * row);
   selectfile_var4 = ja ? kJaNextLetterBox : kNextLetterBox;
 }
 
@@ -97,7 +145,9 @@ void GameHook_PrefillFileName(void) {
 
   // NameFile_EraseSave leaves the file block's SRAM offset in attract_legend_ctr.
   uint8 *name = g_zenv.sram + attract_legend_ctr + kSrmOffs_Name;
-  const uint16 *words = ja ? kPrefillNameJa : kPrefillName;
+  uint16 latin[6];
+  LatinName(latin);
+  const uint16 *words = ja ? kPrefillNameJa : latin;
   uint16 *dst = vram_upload_data;
   for (int i = 0; i < 6; i++) {
     WORD(name[i * 2]) = words[i];
