@@ -1,4 +1,6 @@
 /* @layer bridge-wasm @kind constants */
+import { msg } from '@drizztdourden08/brock-core/i18n';
+import type { Message } from '@drizztdourden08/brock-core/i18n';
 import type { ProgressBit } from './player-state-rules.type';
 
 const PlayerState = {
@@ -22,32 +24,32 @@ const PlayerState = {
   spinAttackMotion: 30,
 } as const;
 
-const HANDLER_LABELS: Readonly<Record<number, string>> = {
-  [PlayerState.fallingIntoHole]: 'Falling into a hole',
-  [PlayerState.recoilWall]: 'Knocked back by a wall',
-  [PlayerState.spinAttacking]: 'Spin attacking',
-  [PlayerState.swimming]: 'Swimming',
-  [PlayerState.recoilOther]: 'Knocked back',
-  [PlayerState.fallOffLedge]: 'Falling off a ledge',
-  [PlayerState.jumpOffLedgeDiag]: 'Hopping a ledge',
-  [PlayerState.startDash]: 'Starting a dash',
-  [PlayerState.stopDash]: 'Ending a dash',
-  [PlayerState.hookshot]: 'Using the hookshot',
-  [PlayerState.mirror]: 'Using the mirror',
-  [PlayerState.holdUpItem]: 'Holding an item overhead',
-  [PlayerState.asleepInBed]: 'Asleep in bed',
-  [PlayerState.permaBunny]: 'Bunny form',
-  [PlayerState.tempBunny]: 'Bunny form (temporary)',
-  [PlayerState.pullForRupees]: 'Pulling for rupees',
-  [PlayerState.spinAttackMotion]: 'Spin attack follow-through',
+const HANDLER_LABELS: Readonly<Record<number, Message>> = {
+  [PlayerState.fallingIntoHole]: msg('game-states:handler.fallingIntoHole'),
+  [PlayerState.recoilWall]: msg('game-states:handler.recoilWall'),
+  [PlayerState.spinAttacking]: msg('game-states:handler.spinAttacking'),
+  [PlayerState.swimming]: msg('game-states:handler.swimming'),
+  [PlayerState.recoilOther]: msg('game-states:handler.recoilOther'),
+  [PlayerState.fallOffLedge]: msg('game-states:handler.fallOffLedge'),
+  [PlayerState.jumpOffLedgeDiag]: msg('game-states:handler.jumpOffLedgeDiag'),
+  [PlayerState.startDash]: msg('game-states:handler.startDash'),
+  [PlayerState.stopDash]: msg('game-states:handler.stopDash'),
+  [PlayerState.hookshot]: msg('game-states:handler.hookshot'),
+  [PlayerState.mirror]: msg('game-states:handler.mirror'),
+  [PlayerState.holdUpItem]: msg('game-states:handler.holdUpItem'),
+  [PlayerState.asleepInBed]: msg('game-states:handler.asleepInBed'),
+  [PlayerState.permaBunny]: msg('game-states:handler.permaBunny'),
+  [PlayerState.tempBunny]: msg('game-states:handler.tempBunny'),
+  [PlayerState.pullForRupees]: msg('game-states:handler.pullForRupees'),
+  [PlayerState.spinAttackMotion]: msg('game-states:handler.spinAttackMotion'),
 };
 
 const PROGRESS_BITS: ReadonlyArray<ProgressBit> = [
-  { mask: 0x01, label: 'Uncle gave the sword' },
-  { mask: 0x02, label: 'Sanctuary priest scene seen' },
-  { mask: 0x04, label: 'Uncle left for the castle' },
-  { mask: 0x10, label: "Uncle's house scene done" },
-  { mask: 0x20, label: 'Desert sage spoken to' },
+  { mask: 0x01, label: msg('game-states:progress.uncleSword') },
+  { mask: 0x02, label: msg('game-states:progress.sanctuary') },
+  { mask: 0x04, label: msg('game-states:progress.uncleLeft') },
+  { mask: 0x10, label: msg('game-states:progress.uncleHouse') },
+  { mask: 0x20, label: msg('game-states:progress.desertSage') },
 ];
 
 export { PlayerState, HANDLER_LABELS, PROGRESS_BITS };

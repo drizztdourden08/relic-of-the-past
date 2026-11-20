@@ -1,4 +1,5 @@
 /* @layer shared-asset-extraction @kind logic */
+import { msg } from '@drizztdourden08/brock-core/i18n';
 import type { DecodedLine } from '../../menu-text/menu-text.type';
 import type { PatchedPartReport, PatchedWork } from '../patched-language.type';
 import { changedLines } from './changed-lines';
@@ -19,8 +20,8 @@ const screenTextPart = (read: ScreenTextRead, work: PatchedWork): PatchedPartRep
   const changed = changedLines(lines, before);
   read.keep(work, changed);
   const count = Object.keys(changed).length;
-  if (before === null) return { part: read.part, status: 'ok', detail: `${count} lines read.` };
-  return { part: read.part, status: 'ok', detail: `${count} of ${lines.length} lines differ from the release.` };
+  if (before === null) return { part: read.part, status: 'ok', detail: msg('rom-loader:patched.screenText.read', { count }) };
+  return { part: read.part, status: 'ok', detail: msg('rom-loader:patched.screenText.differ', { count, total: lines.length }) };
 };
 
 export { screenTextPart };

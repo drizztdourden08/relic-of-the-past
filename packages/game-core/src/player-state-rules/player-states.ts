@@ -1,4 +1,5 @@
 /* @layer bridge-wasm @kind logic */
+import { msg } from '@drizztdourden08/brock-core/i18n';
 import type { PlayerStateInfo } from '../bridge/player-state';
 import type { ActiveState } from '../active-states';
 import { HANDLER_LABELS, PROGRESS_BITS, PlayerState } from './player-state-rules.constants';
@@ -8,8 +9,8 @@ const playerActivity = (info: PlayerStateInfo): ActiveState | null => {
     const waking = info.sleepStep > 0;
     return {
       id: 'asleep',
-      label: waking ? 'Waking up in bed' : 'Asleep in bed',
-      ...(waking ? { detail: `wake step ${info.sleepStep}` } : {}),
+      label: waking ? msg('game-states:state.waking') : msg('game-states:state.asleep'),
+      ...(waking ? { detail: msg('game-states:state.wakeStep', { step: info.sleepStep }) } : {}),
     };
   }
   const label = HANDLER_LABELS[info.handlerState];
@@ -18,29 +19,29 @@ const playerActivity = (info: PlayerStateInfo): ActiveState | null => {
 };
 
 const dashState = (info: PlayerStateInfo): ActiveState | null => (info.isRunning
-  ? { id: 'dashing', label: 'Dashing (boots)', gating: true }
+  ? { id: 'dashing', label: msg('game-states:state.dashing'), gating: true }
   : null);
 
 const bunnyState = (info: PlayerStateInfo): ActiveState | null => (info.isBunny
-  ? { id: 'bunny', label: 'Bunny - cannot use items', gating: true }
+  ? { id: 'bunny', label: msg('game-states:state.bunny'), gating: true }
   : null);
 
 const waterState = (info: PlayerStateInfo): ActiveState | null => (info.inDeepWater
-  ? { id: 'deep-water', label: 'In deep water', gating: true }
+  ? { id: 'deep-water', label: msg('game-states:state.deepWater'), gating: true }
   : null);
 
 const wallState = (info: PlayerStateInfo): ActiveState | null => (info.grabbingWall
-  ? { id: 'grabbing-wall', label: 'Grabbing a wall' }
+  ? { id: 'grabbing-wall', label: msg('game-states:state.wall') }
   : null);
 
 const stunnedState = (info: PlayerStateInfo): ActiveState | null => (info.incapacitated
-  ? { id: 'stunned', label: 'Stunned' }
+  ? { id: 'stunned', label: msg('game-states:state.stunned') }
   : null);
 
 const progressBitStates = (info: PlayerStateInfo): ActiveState[] =>
   PROGRESS_BITS
     .filter((bit) => (info.progressFlags & bit.mask) !== 0)
-    .map((bit) => ({ id: `progress-flag-${bit.mask}`, label: bit.label, hint: `sram_progress_flags 0x${bit.mask.toString(16).padStart(2, '0')}` }));
+    .map((bit) => ({ id: `progress-flag-${bit.mask}`, label: bit.label, hint: msg('game-states:state.progressHint', { mask: `0x${bit.mask.toString(16).padStart(2, '0')}` }) }));
 
 const playerStates = (info: PlayerStateInfo | null): ActiveState[] => {
   if (!info) return [];

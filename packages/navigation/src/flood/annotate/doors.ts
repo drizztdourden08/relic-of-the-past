@@ -1,14 +1,15 @@
 /* @layer bridge-wasm @kind logic */
+import { msg } from '@drizztdourden08/brock-core/i18n';
 import type { ScreenAnnotation, SimDoor } from '../../simulation';
-import { DOOR_KIND, REQUIRES, THRONE_DOOR } from './doors.constants';
+import { DOOR_KIND, DOOR_LABELS, REQUIRES, THRONE_DOOR } from './doors.constants';
 import type { DoorContext } from './doors.type';
 
 const throneGate = (ctx: DoorContext): Pick<ScreenAnnotation, 'kind' | 'label' | 'state' | 'detail'> => (ctx.followerReady
-  ? { kind: 'follower-gate', label: 'throne passage', state: 'open' }
-  : { kind: 'follower-gate', label: 'throne passage', state: 'shut', detail: 'needs the follower in tow' });
+  ? { kind: 'follower-gate', label: msg('nav-labels:label.throne'), state: 'open' }
+  : { kind: 'follower-gate', label: msg('nav-labels:label.throne'), state: 'shut', detail: msg('nav-labels:detail.throne') });
 
 const cellLock = (door: SimDoor): Pick<ScreenAnnotation, 'kind' | 'label' | 'state' | 'requires'> =>
-  ({ kind: 'cell-lock', label: `cell lock #${door.index}`, state: door.opened ? 'open' : 'shut', requires: ['bigkey:*'] });
+  ({ kind: 'cell-lock', label: msg('nav-labels:label.cellLock', { index: door.index }), state: door.opened ? 'open' : 'shut', requires: ['bigkey:*'] });
 
 const doorAnnotation = (door: SimDoor, ctx: DoorContext): ScreenAnnotation | null => {
   const tile = door.tiles[0];
@@ -22,10 +23,10 @@ const doorAnnotation = (door: SimDoor, ctx: DoorContext): ScreenAnnotation | nul
   const requires = REQUIRES[kind];
   const trap = kind === 'shutter' && ctx.killGated;
   return {
-    ...base, kind, label: `${kind.replace('-', ' ')} #${door.index}`,
+    ...base, kind, label: DOOR_LABELS[kind]?.(door.index) ?? kind,
     state: door.opened ? 'open' : 'shut',
     ...(requires ? { requires } : {}),
-    ...(trap ? { detail: 'closes behind you, clear the room to reopen' } : {}),
+    ...(trap ? { detail: msg('nav-labels:detail.trap') } : {}),
   };
 };
 

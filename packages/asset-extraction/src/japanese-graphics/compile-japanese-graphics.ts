@@ -1,4 +1,6 @@
 /* @layer shared-asset-extraction @kind logic */
+import { msg } from '@drizztdourden08/brock-core/i18n';
+import { RomLoadError } from '../rom/rom-loader/rom-load-error';
 import type { RomData } from '../rom/rom-types';
 import { jaScreenAddressesOf } from '../screens/addresses';
 import type { JaScreenAddressTable, JaSpriteLayoutSource } from '../screens/addresses/ja.type';
@@ -47,7 +49,7 @@ const titleParams = (rom: RomData, table: JaScreenAddressTable): JapaneseGraphic
 });
 
 const compileJapaneseGraphics = (rom: RomData): JapaneseGraphicEntry[] => {
-  if (rom.language !== 'ja') throw new Error('Japanese graphics come from a Japanese ROM.');
+  if (rom.language !== 'ja') throw new RomLoadError(msg('rom-loader:error.needsJapanese'), 'Japanese graphics come from a Japanese ROM.');
   const table = jaScreenAddressesOf(rom.revision);
   return [
     { id: JA_GFX_INTRO_TILEMAP_ID, bytes: Uint8Array.from(readStripeTable(rom, table.menuTilemaps[0] ?? 0)) },
