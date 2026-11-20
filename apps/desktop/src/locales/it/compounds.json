@@ -229,5 +229,6 @@
   "sprite-category.drop": "Rilasciabili",
   "sprite-category.randomizer": "Randomizer",
   "sprite-category.title": "Titolo e storia",
-  "sprite-category.ground": "Terreno"
+  "sprite-category.ground": "Terreno",
+  "button-prompt.hold": "Tieni"
 }

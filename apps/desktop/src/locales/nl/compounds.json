@@ -229,5 +229,6 @@
   "sprite-category.drop": "Buit",
   "sprite-category.randomizer": "Randomizer",
   "sprite-category.title": "Titel & verhaal",
-  "sprite-category.ground": "Grond"
+  "sprite-category.ground": "Grond",
+  "button-prompt.hold": "Vasthouden"
 }

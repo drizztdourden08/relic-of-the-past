@@ -229,5 +229,6 @@
   "sprite-category.drop": "Butin",
   "sprite-category.randomizer": "Randomiseur",
   "sprite-category.title": "Titre et histoire",
-  "sprite-category.ground": "Sol"
+  "sprite-category.ground": "Sol",
+  "button-prompt.hold": "Maintenir"
 }

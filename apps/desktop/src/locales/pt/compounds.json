@@ -229,5 +229,6 @@
   "sprite-category.drop": "Itens soltos",
   "sprite-category.randomizer": "Randomizador",
   "sprite-category.title": "Título e história",
-  "sprite-category.ground": "Chão"
+  "sprite-category.ground": "Chão",
+  "button-prompt.hold": "Segure"
 }

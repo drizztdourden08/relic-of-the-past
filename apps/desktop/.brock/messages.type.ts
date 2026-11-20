@@ -529,6 +529,7 @@ declare module '@drizztdourden08/brock-core/augment' {
     'compounds:sprite-category.randomizer': Record<never, never>;
     'compounds:sprite-category.title': Record<never, never>;
     'compounds:sprite-category.ground': Record<never, never>;
+    'compounds:button-prompt.hold': Record<never, never>;
     'data-manager:import-form.download': Record<never, never>;
     'data-manager:import.downloading': Record<never, never>;
     'data-manager:import.drop-label': Record<never, never>;
@@ -3245,6 +3246,29 @@ declare module '@drizztdourden08/brock-core/augment' {
     'views-game-layer:profileSwitcher.title': Record<never, never>;
     'views-game-layer:profileSwitcher.switch': Record<never, never>;
     'views-game-layer:status.error': { error: string | number };
+    'views-game-layer:prompt.choose': Record<never, never>;
+    'views-game-layer:prompt.confirm': Record<never, never>;
+    'views-game-layer:prompt.next': Record<never, never>;
+    'views-game-layer:prompt.close': Record<never, never>;
+    'views-game-layer:prompt.faster': Record<never, never>;
+    'views-game-layer:prompt.complete': Record<never, never>;
+    'views-game-layer:title.start': Record<never, never>;
+    'views-game-layer:title.story': Record<never, never>;
+    'views-game-layer:controller.title': Record<never, never>;
+    'views-game-layer:controller.message': { name: string | number };
+    'views-game-layer:controller.reconnect': Record<never, never>;
+    'views-game-layer:controller.doubleClick': Record<never, never>;
+    'views-game-layer:controller.resume': Record<never, never>;
+    'views-game-layer:controller.switchProfile': Record<never, never>;
+    'views-game-layer:notice.dismiss': Record<never, never>;
+    'views-game-layer:queue.incoming': Record<never, never>;
+    'views-game-layer:queue.more': { count: number };
+    'views-game-layer:hudUnavailable.headline': Record<never, never>;
+    'views-game-layer:hudUnavailable.caption': Record<never, never>;
+    'views-game-layer:saveHint.tapLoad': Record<never, never>;
+    'views-game-layer:saveHint.holdSave': Record<never, never>;
+    'views-game-layer:saveHint.holdingSave': Record<never, never>;
+    'views-game-layer:saveHint.cancel': Record<never, never>;
     'views-game-session:delete.confirm': Record<never, never>;
     'views-game-session:deleteProfile.title': Record<never, never>;
     'views-game-session:deleteProfile.message': { name: string | number };
@@ -3994,6 +4018,7 @@ declare module '@drizztdourden08/brock-core/augment' {
 type AppMessageTags = {
   'profiles:home.import-dialog.hint': 'code';
   'profiles:home.import-dialog.warning': 'strong';
+  'views-game-layer:controller.message': 'strong';
 };
 
 export type { AppMessageTags };

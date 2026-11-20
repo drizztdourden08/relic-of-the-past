@@ -7,7 +7,7 @@ export { strokeWidthsOf } from './box-style/stroke-widths-of';
 export { textureSpeedFactor } from './box-style/texture-speed-factor';
 export type { DialogCell, DialogFrame, DialogWait } from './dialog-frame.types/dialog-frame.type';
 export { kindOf } from './dialog-kind/kind-of';
-export type { PromptButton, PromptControls } from './dialog-prompts/dialog-prompts.type';
+export type { PromptAction, PromptButton, PromptControls } from './dialog-prompts/dialog-prompts.type';
 export { promptsFor } from './dialog-prompts/prompts-for';
 export { waitOf } from './dialog-wait';
 export { alphabetChars } from './dialogue-charset/alphabet-chars';

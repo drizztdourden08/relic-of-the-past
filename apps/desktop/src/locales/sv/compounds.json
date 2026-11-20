@@ -229,5 +229,6 @@
   "sprite-category.drop": "Tappbara",
   "sprite-category.randomizer": "Randomizer",
   "sprite-category.title": "Titel & berättelse",
-  "sprite-category.ground": "Mark"
+  "sprite-category.ground": "Mark",
+  "button-prompt.hold": "Håll"
 }

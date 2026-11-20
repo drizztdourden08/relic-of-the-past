@@ -10,8 +10,8 @@ const promptsFor = (frame: DialogFrame, controls: PromptControls): DialogPrompt[
   if (kind === 'menu') return [CHOOSE_VERTICAL, CONFIRM];
   if (wait === 'choice') return [CHOOSE_VERTICAL, CONFIRM];
   if (wait === 'item') return [CHOOSE_ITEM, CONFIRM];
-  if (wait === 'key') return [{ buttons: ['a'], label: 'Next' }];
-  if (wait === 'end') return [{ buttons: ['a'], label: 'Close' }];
+  if (wait === 'key') return [{ buttons: ['a'], action: 'next' }];
+  if (wait === 'end') return [{ buttons: ['a'], action: 'close' }];
   return renderState === TYPING_RENDER_STATE ? typingPrompts(controls) : [];
 };
 

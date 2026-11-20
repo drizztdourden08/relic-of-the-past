@@ -229,5 +229,6 @@
   "sprite-category.drop": "Droppable",
   "sprite-category.randomizer": "Randomizer",
   "sprite-category.title": "Title & Story",
-  "sprite-category.ground": "Ground"
+  "sprite-category.ground": "Ground",
+  "button-prompt.hold": "Hold"
 }
