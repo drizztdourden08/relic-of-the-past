@@ -20,6 +20,10 @@ import app_es_nav_labels from '../../src/locales/es/nav-labels.json';
 import app_es_profiles from '../../src/locales/es/profiles.json';
 import app_es_randomizer_world from '../../src/locales/es/randomizer-world.json';
 import app_es_randomizer from '../../src/locales/es/randomizer.json';
+import app_es_record_checks from '../../src/locales/es/record-checks.json';
+import app_es_record_items from '../../src/locales/es/record-items.json';
+import app_es_record_places from '../../src/locales/es/record-places.json';
+import app_es_record_screens from '../../src/locales/es/record-screens.json';
 import app_es_rom_loader from '../../src/locales/es/rom-loader.json';
 import app_es_roms from '../../src/locales/es/roms.json';
 import app_es_screen_editor from '../../src/locales/es/screen-editor.json';
@@ -81,6 +85,10 @@ const layers: readonly Layer[] = [
   { locale: 'es', namespace: 'profiles', kind: 'app', messages: app_es_profiles },
   { locale: 'es', namespace: 'randomizer-world', kind: 'app', messages: app_es_randomizer_world },
   { locale: 'es', namespace: 'randomizer', kind: 'app', messages: app_es_randomizer },
+  { locale: 'es', namespace: 'record-checks', kind: 'app', messages: app_es_record_checks },
+  { locale: 'es', namespace: 'record-items', kind: 'app', messages: app_es_record_items },
+  { locale: 'es', namespace: 'record-places', kind: 'app', messages: app_es_record_places },
+  { locale: 'es', namespace: 'record-screens', kind: 'app', messages: app_es_record_screens },
   { locale: 'es', namespace: 'rom-loader', kind: 'app', messages: app_es_rom_loader },
   { locale: 'es', namespace: 'roms', kind: 'app', messages: app_es_roms },
   { locale: 'es', namespace: 'screen-editor', kind: 'app', messages: app_es_screen_editor },

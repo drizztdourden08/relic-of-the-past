@@ -20,6 +20,10 @@ import app_sv_nav_labels from '../../src/locales/sv/nav-labels.json';
 import app_sv_profiles from '../../src/locales/sv/profiles.json';
 import app_sv_randomizer_world from '../../src/locales/sv/randomizer-world.json';
 import app_sv_randomizer from '../../src/locales/sv/randomizer.json';
+import app_sv_record_checks from '../../src/locales/sv/record-checks.json';
+import app_sv_record_items from '../../src/locales/sv/record-items.json';
+import app_sv_record_places from '../../src/locales/sv/record-places.json';
+import app_sv_record_screens from '../../src/locales/sv/record-screens.json';
 import app_sv_rom_loader from '../../src/locales/sv/rom-loader.json';
 import app_sv_roms from '../../src/locales/sv/roms.json';
 import app_sv_screen_editor from '../../src/locales/sv/screen-editor.json';
@@ -81,6 +85,10 @@ const layers: readonly Layer[] = [
   { locale: 'sv', namespace: 'profiles', kind: 'app', messages: app_sv_profiles },
   { locale: 'sv', namespace: 'randomizer-world', kind: 'app', messages: app_sv_randomizer_world },
   { locale: 'sv', namespace: 'randomizer', kind: 'app', messages: app_sv_randomizer },
+  { locale: 'sv', namespace: 'record-checks', kind: 'app', messages: app_sv_record_checks },
+  { locale: 'sv', namespace: 'record-items', kind: 'app', messages: app_sv_record_items },
+  { locale: 'sv', namespace: 'record-places', kind: 'app', messages: app_sv_record_places },
+  { locale: 'sv', namespace: 'record-screens', kind: 'app', messages: app_sv_record_screens },
   { locale: 'sv', namespace: 'rom-loader', kind: 'app', messages: app_sv_rom_loader },
   { locale: 'sv', namespace: 'roms', kind: 'app', messages: app_sv_roms },
   { locale: 'sv', namespace: 'screen-editor', kind: 'app', messages: app_sv_screen_editor },
