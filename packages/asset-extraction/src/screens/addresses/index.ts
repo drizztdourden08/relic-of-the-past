@@ -5,8 +5,6 @@ import { DE_SCREEN_ADDRESSES } from './de';
 import { EN_SCREEN_ADDRESSES } from './en';
 import { FR_SCREEN_ADDRESSES } from './fr';
 import { FR_C_SCREEN_ADDRESSES } from './fr-c';
-import { JA_REV1_SCREEN_ADDRESSES } from './ja-rev1';
-import { JA_V1_0_SCREEN_ADDRESSES } from './ja-v1.0';
 import { jaScreenAddressesOf } from './ja-of-revision';
 import { US_SCREEN_ADDRESSES } from './us';
 

@@ -1,7 +1,8 @@
 /* @layer renderer-app @kind logic */
 import { getLocation, getScreenLookup } from '@rotp/game-data';
 import type { ScreenBundleGrid } from '@rotp/game-data';
-import { placeName, screenName } from './record-names';
+import { placeName } from './place-name';
+import { screenName } from './screen-name';
 
 const localizeBundle = (bundle: ScreenBundleGrid): ScreenBundleGrid => {
   const byScreen = getScreenLookup().byOverworldScreen;

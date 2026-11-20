@@ -191,4 +191,4 @@ const kLanguages: Record<string, LanguageConfig> = {
   en: langEN,
 };
 
-export { kLanguages };
+export { kLanguages, kText_CommandNames_US };

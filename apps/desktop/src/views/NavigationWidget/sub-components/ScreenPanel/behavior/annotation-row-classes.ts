@@ -1,5 +1,5 @@
 /* @layer renderer-widgets @kind logic */
-const SETTLED_STATES: readonly (string | undefined)[] = ['open', 'done'];
+import { SETTLED_STATES } from './annotation-row-classes.constants';
 
 const annotationRowClasses = (state: string | undefined, off: boolean) => {
   const settled = SETTLED_STATES.includes(state);

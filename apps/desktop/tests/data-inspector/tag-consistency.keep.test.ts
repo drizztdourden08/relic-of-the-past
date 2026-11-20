@@ -34,13 +34,13 @@ describe('writeTag enforces the namespace:value convention on every edit', { tag
 
   it('rejects a value edit that leaves name out of step with namespace:value', async () => {
     const mismatched = { ...baseTag, value: 'indoor' };
-    await expect(writeTag()(mismatched)).rejects.toThrow(/namespace:value/);
+    await expect(writeTag()(mismatched)).rejects.toThrow(/err.tagNameMismatch/);
     expect(writeTagApi).not.toHaveBeenCalled();
   });
 
   it('rejects a name with no separator at all, even if it matches neither half', async () => {
     const mismatched = { ...baseTag, name: 'env-outdoor' };
-    await expect(writeTag()(mismatched)).rejects.toThrow(/namespace:value/);
+    await expect(writeTag()(mismatched)).rejects.toThrow(/err.tagNameMismatch/);
     expect(writeTagApi).not.toHaveBeenCalled();
   });
 

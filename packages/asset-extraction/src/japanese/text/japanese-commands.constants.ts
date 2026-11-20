@@ -1,9 +1,9 @@
 /* @layer shared-asset-extraction @kind constants */
-import { kLanguages } from '../../text/data/language-data/language-data.constants';
+import { kText_CommandNames_US } from '../../text/data/language-data/language-data.constants';
 
 const US_COMMAND_START = 0x67;
 
-const US_COMMAND_NAMES: readonly string[] = kLanguages.us.commandNames;
+const US_COMMAND_NAMES: readonly string[] = kText_CommandNames_US;
 
 const US_PARAM_COMMANDS: ReadonlySet<number> = new Set([0x6b, 0x6c, 0x6d, 0x6e, 0x77, 0x78, 0x79, 0x7a]);
 

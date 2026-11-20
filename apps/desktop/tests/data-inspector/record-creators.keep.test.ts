@@ -32,7 +32,7 @@ describe('createTagRecord', { tags: ['critical'] }, () => {
 
   it('refuses a namespace/value pair that would not read namespace:value', async () => {
     const result = await creator({ namespace: '', value: 'outdoor', appliesTo: ['screen'] });
-    const namespaceError: unknown = expect.stringContaining('namespace:value');
+    const namespaceError: unknown = expect.stringContaining('err.tagNotConvention');
     expect(result).toEqual({ success: false, error: namespaceError });
     expect(api.allocateTag).not.toHaveBeenCalled();
   });
