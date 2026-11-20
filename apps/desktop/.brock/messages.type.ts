@@ -2064,6 +2064,9 @@ declare module '@drizztdourden08/brock-core/augment' {
     'hud-editor:screen.title': Record<never, never>;
     'hud-editor:value-input.increment': { name: string | number };
     'hud-editor:value-input.decrement': { name: string | number };
+    'hud-editor:glyph-pack.name.keyboard': Record<never, never>;
+    'hud-editor:glyph-pack.name.snes': Record<never, never>;
+    'hud-editor:glyph-pack.name.generic': Record<never, never>;
     'hud:preset.arrow-indicator.name': Record<never, never>;
     'hud:preset.bomb-indicator.name': Record<never, never>;
     'hud:preset.dpad-group.name': Record<never, never>;
@@ -5584,6 +5587,14 @@ declare module '@drizztdourden08/brock-core/augment' {
     'views-data-home:hero.title': Record<never, never>;
     'views-data-home:hero.open-folder': Record<never, never>;
     'views-data-home:hero.refresh': Record<never, never>;
+    'views-data-home:domain.profiles': Record<never, never>;
+    'views-data-home:domain.roms': Record<never, never>;
+    'views-data-home:domain.assets': Record<never, never>;
+    'views-data-home:domain.sprites': Record<never, never>;
+    'views-data-home:domain.link-sprites': Record<never, never>;
+    'views-data-home:domain.msu': Record<never, never>;
+    'views-data-home:domain.logs': Record<never, never>;
+    'views-data-home:domain.languages': Record<never, never>;
     'views-data-inspector:nav.records': Record<never, never>;
     'views-data-inspector:nav.review': Record<never, never>;
     'views-data-inspector:list.title': Record<never, never>;
