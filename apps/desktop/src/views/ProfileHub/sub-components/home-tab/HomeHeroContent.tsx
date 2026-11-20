@@ -1,6 +1,7 @@
 /* @layer renderer-components @kind component */
 import { useCallback, useMemo } from 'react';
 import { Box } from '@drizztdourden08/tessera/primitives';
+import { useDateFormatOptions } from '@app/hooks/useDateFormatOptions';
 import { useRevealProfileFolder } from '@app/hooks/useRevealProfileFolder';
 import { SceneBackdrop } from '@app/title';
 import { useT, useText } from '@drizztdourden08/brock-react';
@@ -28,6 +29,7 @@ const HomeHeroContent = (props: HomeHeroContentProps) => {
   const { Eyebrow, Title, Backdrop, Art, Actions, Tools, Facts, Aside, Panel } = slots;
   const t = useT();
   const text = useText();
+  const dates = useDateFormatOptions();
   const { id: profileId, romFile, lastPlayed, created, randomizer } = profile;
   const saves = useHomeTabSaves({ profileId, isGameRunning, onStartGame });
   const { heroSave, normalScreenshots, busyNormal, handleLoadNormal, handleImportSram } = saves;
@@ -39,9 +41,9 @@ const HomeHeroContent = (props: HomeHeroContentProps) => {
 
   const facts = useMemo(() => {
     const run = buildRandomizerFacts(t, randomizer, randomizerStatus);
-    const own = factGroupOf(buildProfileFacts({ romFile, lastPlayed, created }, t));
+    const own = factGroupOf(buildProfileFacts({ romFile, lastPlayed, created }, t, dates));
     return run ? [own, factGroupOf(run)] : [own];
-  }, [romFile, lastPlayed, created, randomizer, randomizerStatus, t]);
+  }, [romFile, lastPlayed, created, randomizer, randomizerStatus, t, dates]);
 
   const handleImportSramClick = useCallback(() => void handleImportSram(), [handleImportSram]);
 
