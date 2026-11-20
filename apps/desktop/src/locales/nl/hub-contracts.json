@@ -1,4 +1,9 @@
 {
   "copy-refusal.known": "De licentie, {id}, staat geen kopieën toe.",
-  "copy-refusal.unknown": "De licentie is er een die de app niet kent, dus kopieën zijn niet toegestaan."
+  "copy-refusal.unknown": "De licentie is er een die de app niet kent, dus kopieën zijn niet toegestaan.",
+  "license.ccBy": "Iedereen mag het delen en aanpassen, met vermelding van jou.",
+  "license.ccBySa": "Hetzelfde, en wijzigingen behouden deze licentie.",
+  "license.ccByNc": "Vermelding van jou, en nooit verkocht.",
+  "license.cc0": "Geen rechten voorbehouden.",
+  "license.allRightsReserved": "Spelers mogen het installeren, meer niet."
 }

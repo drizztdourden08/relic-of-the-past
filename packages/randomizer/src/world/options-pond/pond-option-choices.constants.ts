@@ -17,7 +17,7 @@ const POND_CURVE_CHOICES: readonly OptionChoice[] = (
 const POND_PRICE_CHOICES: readonly OptionChoice[] = POND_PRICE_LADDER.map((value) => ({
   value: String(value),
   sourceValue: value,
-  label: value === 0 ? 'free' : `${value} rupees`,
+  label: value === 0 ? msg('randomizer-world:choice.free') : msg('randomizer-world:choice.rupees', { count: value }),
 }));
 
 export { POND_CURVE_CHOICES, POND_MODE_CHOICES, POND_PRICE_CHOICES };

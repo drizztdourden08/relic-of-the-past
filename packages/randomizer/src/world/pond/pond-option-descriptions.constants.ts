@@ -3,9 +3,9 @@ import { POND_INSTANCES } from './pond-instances';
 import { POND_SHARE_KEY } from './pond-share';
 import { POND_SHARE_DESCRIPTION } from './pond-description-lines.constants';
 import { pondDescriptionsOf } from './pond-descriptions-of';
-import type { OptionDescription } from '../option-description.type';
+import type { OptionDescriptionSource } from '../option-description.type';
 
-const POND_OPTION_DESCRIPTIONS: Readonly<Record<string, OptionDescription>> = Object.fromEntries([
+const POND_OPTION_DESCRIPTIONS: Readonly<Record<string, OptionDescriptionSource>> = Object.fromEntries([
   [POND_SHARE_KEY, POND_SHARE_DESCRIPTION],
   ...POND_INSTANCES.flatMap(pondDescriptionsOf),
 ]);

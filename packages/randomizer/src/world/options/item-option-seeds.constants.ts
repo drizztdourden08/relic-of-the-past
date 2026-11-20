@@ -1,4 +1,5 @@
 /* @layer shared-game @kind constants */
+import { msg } from '@drizztdourden08/brock-core/i18n';
 import { CAPACITY_OPTION_SEEDS } from '../options-capacity/options-capacity.constants';
 import { CAPACITY_BONUS_OPTION_SEEDS } from '../capacity/bonus/capacity-bonus-options.constants';
 import { DIFFICULTY_OPTION_SEEDS } from '../difficulty/difficulty-options.constants';
@@ -24,14 +25,14 @@ import type { OptionSeed } from '../options.type';
 const ITEM_OPTION_SEEDS: readonly OptionSeed[] = [
   ...DIFFICULTY_OPTION_SEEDS,
   ...ITEM_POWER_OPTION_SEEDS,
-  lockedChoice({ key: 'enemy_health', displayName: 'Enemy Health', group: 'enemies', implementation: 'not-implemented' }, ENEMY_TIER_CHOICES, 'default'),
-  lockedChoice({ key: 'enemy_damage', displayName: 'Enemy Damage', group: 'enemies', implementation: 'not-implemented' },
+  lockedChoice({ key: 'enemy_health', displayName: msg('randomizer-world:option.enemy_health'), group: 'enemies', implementation: 'not-implemented' }, ENEMY_TIER_CHOICES, 'default'),
+  lockedChoice({ key: 'enemy_damage', displayName: msg('randomizer-world:option.enemy_damage'), group: 'enemies', implementation: 'not-implemented' },
     optionChoices(['default', 0], ['shuffled', 2], ['chaos', 3]), 'default'),
   ...PROGRESSIVE_OPTION_SEEDS,
   ...PROGRESSIVE_MODE_OPTION_SEEDS,
   {
     key: 'retro_bow',
-    displayName: 'Retro Bow',
+    displayName: msg('randomizer-world:option.retro_bow'),
     group: 'items',
     kind: 'toggle',
     implementation: 'active',
@@ -40,20 +41,20 @@ const ITEM_OPTION_SEEDS: readonly OptionSeed[] = [
     locked: false,
   },
   ...RETRO_OPTION_SEEDS,
-  lockedToggle({ key: 'retro_caves', displayName: 'Retro Caves', group: 'world', implementation: 'vanilla-fixed' }),
-  lockedChoice({ key: 'hints', displayName: 'Hints', group: 'other', implementation: 'not-implemented' },
+  lockedToggle({ key: 'retro_caves', displayName: msg('randomizer-world:option.retro_caves'), group: 'world', implementation: 'vanilla-fixed' }),
+  lockedChoice({ key: 'hints', displayName: msg('randomizer-world:option.hints'), group: 'other', implementation: 'not-implemented' },
     optionChoices(['off', 0], ['on', 2], ['full', 3]), 'on', 'off'),
-  lockedChoice({ key: 'scams', displayName: 'Scams', group: 'shops', implementation: 'not-implemented' },
+  lockedChoice({ key: 'scams', displayName: msg('randomizer-world:option.scams'), group: 'shops', implementation: 'not-implemented' },
     optionChoices(['off', 0], ['king_zora', 1], ['bottle_merchant', 2], ['all', 3]), 'off'),
-  lockedChoice({ key: 'boss_shuffle', displayName: 'Boss Shuffle', group: 'enemies', implementation: 'not-implemented' },
+  lockedChoice({ key: 'boss_shuffle', displayName: msg('randomizer-world:option.boss_shuffle'), group: 'enemies', implementation: 'not-implemented' },
     optionChoices(['none', 0], ['basic', 1], ['full', 2], ['chaos', 3], ['singularity', 4]), 'none'),
-  lockedToggle({ key: 'pot_shuffle', displayName: 'Pot Shuffle', group: 'enemies', implementation: 'not-implemented' }),
-  lockedToggle({ key: 'enemy_shuffle', displayName: 'Enemy Shuffle', group: 'enemies', implementation: 'not-implemented' }),
-  lockedToggle({ key: 'killable_thieves', displayName: 'Killable Thieves', group: 'enemies', implementation: 'not-implemented' }),
-  lockedToggle({ key: 'bush_shuffle', displayName: 'Bush Shuffle', group: 'enemies', implementation: 'not-implemented' }),
+  lockedToggle({ key: 'pot_shuffle', displayName: msg('randomizer-world:option.pot_shuffle'), group: 'enemies', implementation: 'not-implemented' }),
+  lockedToggle({ key: 'enemy_shuffle', displayName: msg('randomizer-world:option.enemy_shuffle'), group: 'enemies', implementation: 'not-implemented' }),
+  lockedToggle({ key: 'killable_thieves', displayName: msg('randomizer-world:option.killable_thieves'), group: 'enemies', implementation: 'not-implemented' }),
+  lockedToggle({ key: 'bush_shuffle', displayName: msg('randomizer-world:option.bush_shuffle'), group: 'enemies', implementation: 'not-implemented' }),
   {
     key: 'shop_item_slots',
-    displayName: 'Available Shop Slots',
+    displayName: msg('randomizer-world:option.shop_item_slots'),
     group: 'shops',
     kind: 'range',
     implementation: 'active',
@@ -65,7 +66,7 @@ const ITEM_OPTION_SEEDS: readonly OptionSeed[] = [
   SHOP_SLOT_DEPTH_SEED,
   ...SHOP_SLOT_OPTION_SEEDS,
   ...SHOP_PRICE_OPTION_SEEDS,
-  unlocked(lockedRange({ key: 'shop_price_modifier', displayName: 'Shop Price Modifier', group: 'shops', implementation: 'active' },
+  unlocked(lockedRange({ key: 'shop_price_modifier', displayName: msg('randomizer-world:option.shop_price_modifier'), group: 'shops', implementation: 'active' },
     { min: SHOP_PRICE_MODIFIER_MIN, max: SHOP_PRICE_MODIFIER_MAX }, SHOP_PRICE_MODIFIER_DEFAULT)),
   ...CAPACITY_OPTION_SEEDS,
   ...CAPACITY_BONUS_OPTION_SEEDS,

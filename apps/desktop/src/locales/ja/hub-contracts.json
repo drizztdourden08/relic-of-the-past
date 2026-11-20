@@ -1,4 +1,9 @@
 {
   "copy-refusal.known": "ライセンス{id}ではコピーが許可されていません。",
-  "copy-refusal.unknown": "アプリが把握していないライセンスのため、コピーは許可されません。"
+  "copy-refusal.unknown": "アプリが把握していないライセンスのため、コピーは許可されません。",
+  "license.ccBy": "誰でもあなたの名前を示せば、共有も改変もできます。",
+  "license.ccBySa": "同じ条件で、改変にもこのライセンスが引き継がれます。",
+  "license.ccByNc": "あなたの名前を示すことが条件で、販売は一切できません。",
+  "license.cc0": "権利は一切保持されません。",
+  "license.allRightsReserved": "プレイヤーはインストールできますが、それ以上は認められません。"
 }

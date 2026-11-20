@@ -1,4 +1,5 @@
 /* @layer shared-game @kind logic */
+import { msg } from '@drizztdourden08/brock-core/i18n';
 import { entryOf } from '../../checked-access';
 import { POND_MAX_ITEMS, POND_MAX_THROWS } from '../pond/pond-ladder.constants';
 import { pondKeyOf } from '../pond/pond-option-keys';
@@ -15,13 +16,13 @@ const pondFieldSeedOf = (pond: PondInstance, field: PondField, rows: OptionValue
     case 'mode':
       return { ...base, displayName: pond.label, kind: 'choice', choices: POND_MODE_CHOICES };
     case 'throws':
-      return { ...base, displayName: `${pond.label} throws`, kind: 'range', range: { min: 1, max: POND_MAX_THROWS } };
+      return { ...base, displayName: msg('randomizer-world:tpl.pond.throws', { pond: pond.label }), kind: 'range', range: { min: 1, max: POND_MAX_THROWS } };
     case 'items':
-      return { ...base, displayName: `${pond.label} pool items`, kind: 'range', range: { min: 0, max: POND_MAX_ITEMS } };
+      return { ...base, displayName: msg('randomizer-world:tpl.pond.items', { pond: pond.label }), kind: 'range', range: { min: 0, max: POND_MAX_ITEMS } };
     case 'curve':
-      return { ...base, displayName: `${pond.label} price curve`, kind: 'choice', choices: POND_CURVE_CHOICES };
+      return { ...base, displayName: msg('randomizer-world:tpl.pond.curve', { pond: pond.label }), kind: 'choice', choices: POND_CURVE_CHOICES };
     case 'jumps':
-      return { ...base, displayName: `${pond.label} price jumps`, kind: 'text' };
+      return { ...base, displayName: msg('randomizer-world:tpl.pond.jumps', { pond: pond.label }), kind: 'text' };
   }
 };
 

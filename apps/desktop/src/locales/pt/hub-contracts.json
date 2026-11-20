@@ -1,4 +1,9 @@
 {
   "copy-refusal.known": "A licença, {id}, não permite cópias.",
-  "copy-refusal.unknown": "A licença não é uma que o app conheça, então não permite cópias."
+  "copy-refusal.unknown": "A licença não é uma que o app conheça, então não permite cópias.",
+  "license.ccBy": "Qualquer pessoa pode compartilhar e alterar, citando você.",
+  "license.ccBySa": "O mesmo, e as alterações mantêm esta licença.",
+  "license.ccByNc": "Citar você, e nunca vendido.",
+  "license.cc0": "Nenhum direito reservado.",
+  "license.allRightsReserved": "Os jogadores podem instalar, nada mais."
 }
