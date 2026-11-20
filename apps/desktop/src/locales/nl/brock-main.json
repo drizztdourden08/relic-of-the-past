@@ -1,0 +1,22 @@
+{
+  "tray.show": "{name} tonen",
+  "tray.quit": "Afsluiten",
+  "edit.menu": "Bewerken",
+  "edit.undo": "Ongedaan maken",
+  "edit.redo": "Opnieuw",
+  "edit.cut": "Knippen",
+  "edit.copy": "Kopiëren",
+  "edit.paste": "Plakken",
+  "edit.selectAll": "Alles selecteren",
+  "dialog.ok": "OK",
+  "dialog.cancel": "Annuleren",
+  "boot.modules": "Modules starten",
+  "boot.window": "Het venster herstellen",
+  "splash.starting": "Starten",
+  "splash.loading": "Laden",
+  "splash.retry": "Opnieuw proberen",
+  "splash.openLogs": "Logboeken openen",
+  "splash.quit": "Afsluiten",
+  "splash.timedOut": "{label} duurde te lang",
+  "splash.failed": "{label} is mislukt"
+}

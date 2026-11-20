@@ -1,0 +1,13 @@
+{
+  "tab.label": "言語",
+  "section.app.title": "アプリの言語",
+  "section.profile.title": "このプロフィール",
+  "row.appLocale.label": "アプリの言語",
+  "row.appLocale.description": "アプリの言語です。スプラッシュ画面、トレイ、プロフィール選択にも反映されます。",
+  "row.locale.label": "言語",
+  "row.locale.description": "このプロフィールの言語です。プロフィールに切り替えると、再読み込みなしで言語が切り替わります。",
+  "option.system.label": "システムに合わせる",
+  "option.system.hint": "現在は{language}",
+  "option.app.label": "アプリと同じ",
+  "option.app.hint": "現在は{language}"
+}

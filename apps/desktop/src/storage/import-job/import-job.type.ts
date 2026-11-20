@@ -5,7 +5,7 @@ type ImportKind = 'rom' | 'msu' | 'language' | 'sprite' | 'linkSprite';
 type ImportPhase = 'download' | 'extract' | 'copy' | 'decode';
 
 interface ImportReport {
-  phase: (phase: ImportPhase, message?: string) => void;
+  phase: (phase: ImportPhase, message?: Text) => void;
   count: (phase: ImportPhase, loaded: number, total?: number) => void;
 }
 
