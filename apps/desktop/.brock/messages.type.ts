@@ -3225,6 +3225,7 @@ declare module '@drizztdourden08/brock-core/augment' {
     'randomizer:impact.locItems': { loc: string | number; items: string | number };
     'randomizer:impact.note.unused': Record<never, never>;
     'randomizer:impact.note.unshuffled': Record<never, never>;
+    'randomizer:archipelago.not-allowed': Record<never, never>;
     'rom-loader:error.fanTranslation': { name: string | number };
     'rom-loader:error.unknownRelease': { hash: string | number };
     'rom-loader:error.usRomRequired': { hash: string | number };
@@ -3255,6 +3256,7 @@ declare module '@drizztdourden08/brock-core/augment' {
     'rom-loader:patched.letters.unchecked': Record<never, never>;
     'rom-loader:patched.letters.release': Record<never, never>;
     'rom-loader:patched.letters.identified': { named: number; builtCount: number; builtList: readonly string[]; unknownCount: number; unknownIds: string | number };
+    'rom-loader:patched.dialogue.writeBack': { error: string | number };
     'roms:verdict.archive': Record<never, never>;
     'roms:verdict.archive-empty': Record<never, never>;
     'roms:verdict.fan-translation': { language: 'es' | 'pl' | 'pt' | 'en-redux' | 'nl' | 'sv' | (string & {}) };
@@ -4283,6 +4285,9 @@ declare module '@drizztdourden08/brock-core/augment' {
     'views-game-layer:boot.screenshot-hold': Record<never, never>;
     'views-game-layer:boot.test-hooks': Record<never, never>;
     'views-game-layer:boot.game-core': Record<never, never>;
+    'views-game-layer:crash.wasm': { message: string | number };
+    'views-game-layer:crash.coreNotStarted': Record<never, never>;
+    'views-game-layer:overlay.tiles-copied': { count: number };
     'views-game-session:delete.confirm': Record<never, never>;
     'views-game-session:deleteProfile.title': Record<never, never>;
     'views-game-session:deleteProfile.message': { name: string | number };
