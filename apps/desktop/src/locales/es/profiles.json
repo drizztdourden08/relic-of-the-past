@@ -178,5 +178,7 @@
   "home.session.reconnecting": "Reconectando...",
   "home.session.starting": "Iniciando...",
   "home.sessions.empty": "Aún no hay sesiones de juego",
-  "home.sessions.title": "Sesiones de juego"
+  "home.sessions.title": "Sesiones de juego",
+  "menu.controller-profile": "Perfil de mando",
+  "menu.controller-profile-description": "Cambia el perfil de mando activo."
 }

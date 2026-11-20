@@ -60,5 +60,15 @@
   "saveHint.holdSave": "Maintenir pour sauvegarder",
   "saveHint.holdingSave": "Sauvegarde...",
   "saveHint.cancel": "Annuler",
-  "screen.title": "Vue du jeu"
+  "screen.title": "Vue du jeu",
+  "menu.save-states": "États de sauvegarde",
+  "menu.save-states-description": "Ouvrez les emplacements d'état de sauvegarde pendant la partie.",
+  "title-bar.frame-rate": "Fréquence d'images",
+  "title-bar.refresh-rate-hint": "La fréquence de rafraîchissement de cet écran n'est pas un multiple de 60 : le jeu ne peut pas s'afficher de façon régulière. Ouvrez les réglages d'affichage.",
+  "title-bar.refresh-rate-status": "Fréquence de rafraîchissement incompatible",
+  "boot.controller-pages": "Enregistrement des pages de manette",
+  "boot.randomizer": "Enregistrement du randomizer",
+  "boot.screenshot-hold": "Conservation de la capture pour la première image",
+  "boot.test-hooks": "Préparation des points d'accroche de test",
+  "boot.game-core": "Chargement du cœur du jeu"
 }

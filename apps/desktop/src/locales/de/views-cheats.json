@@ -100,5 +100,16 @@
   "rung.reduction": "-{n}%",
   "rung.ohko": "OHKO",
   "rung.full": "Voll",
-  "rung.none": "Keine"
+  "rung.none": "Keine",
+  "dungeon.map": "Karte",
+  "dungeon.compass": "Kompass",
+  "dungeon.big-key": "Großer Schlüssel",
+  "bottle.contents.none": "Keine",
+  "bottle.contents.empty": "Leer",
+  "bottle.contents.red-potion": "Roter Trank",
+  "bottle.contents.green-potion": "Grüner Trank",
+  "bottle.contents.blue-potion": "Blauer Trank",
+  "bottle.contents.fairy": "Fee",
+  "bottle.contents.bee": "Biene",
+  "bottle.contents.good-bee": "Gute Biene"
 }

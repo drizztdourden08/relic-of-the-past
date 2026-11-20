@@ -60,5 +60,15 @@
   "saveHint.holdSave": "Halten zum Speichern",
   "saveHint.holdingSave": "Speichern...",
   "saveHint.cancel": "Abbrechen",
-  "screen.title": "Spielansicht"
+  "screen.title": "Spielansicht",
+  "menu.save-states": "Spielstände",
+  "menu.save-states-description": "Öffne die Spielstand-Plätze, während das Spiel läuft.",
+  "title-bar.frame-rate": "Bildrate",
+  "title-bar.refresh-rate-hint": "Die Bildwiederholrate dieses Bildschirms ist kein Vielfaches von 60, daher läuft das Spiel nicht gleichmäßig. Öffne die Anzeigeeinstellungen.",
+  "title-bar.refresh-rate-status": "Inkompatible Bildwiederholrate",
+  "boot.controller-pages": "Controller-Seiten werden registriert",
+  "boot.randomizer": "Randomizer wird registriert",
+  "boot.screenshot-hold": "Screenshot wird für das erste Bild gehalten",
+  "boot.test-hooks": "Test-Hooks werden vorbereitet",
+  "boot.game-core": "Spielkern wird geladen"
 }

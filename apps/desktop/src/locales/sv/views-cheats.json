@@ -100,5 +100,16 @@
   "rung.reduction": "-{n}%",
   "rung.ohko": "OHKO",
   "rung.full": "Full",
-  "rung.none": "Ingen"
+  "rung.none": "Ingen",
+  "dungeon.map": "Karta",
+  "dungeon.compass": "Kompass",
+  "dungeon.big-key": "Stor nyckel",
+  "bottle.contents.none": "Ingen",
+  "bottle.contents.empty": "Tom",
+  "bottle.contents.red-potion": "Röd dryck",
+  "bottle.contents.green-potion": "Grön dryck",
+  "bottle.contents.blue-potion": "Blå dryck",
+  "bottle.contents.fairy": "Fe",
+  "bottle.contents.bee": "Bi",
+  "bottle.contents.good-bee": "Snäll bi"
 }

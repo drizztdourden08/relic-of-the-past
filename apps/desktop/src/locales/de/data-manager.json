@@ -317,5 +317,11 @@
   "settings-sections.enum.drifting": "Driftend",
   "language-set-list.meta": "{count, plural, one {# Zeile} other {# Zeilen}} · Basis {base}{origin, select, patch { · gepatchtes ROM} custom { · eigene} other {}}",
   "language-set-list.uninstall": "Deinstallieren",
-  "language-set-list.delete": "Löschen"
+  "language-set-list.delete": "Löschen",
+  "rom-manager.detail.size": "Größe",
+  "rom-manager.detail.hash": "Hash",
+  "rom-manager.detail.added": "Hinzugefügt",
+  "rom-manager.detail.modified": "Geändert",
+  "rom-manager.detail.attached": "Angehängt",
+  "rom-manager.detail.assets": "Assets"
 }

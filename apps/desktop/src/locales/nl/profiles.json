@@ -178,5 +178,7 @@
   "home.session.reconnecting": "Opnieuw verbinden...",
   "home.session.starting": "Starten...",
   "home.sessions.empty": "Nog geen speelsessies",
-  "home.sessions.title": "Speelsessies"
+  "home.sessions.title": "Speelsessies",
+  "menu.controller-profile": "Controllerprofiel",
+  "menu.controller-profile-description": "Wissel van actief controllerprofiel."
 }

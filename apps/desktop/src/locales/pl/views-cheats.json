@@ -100,5 +100,16 @@
   "rung.reduction": "-{n}%",
   "rung.ohko": "OHKO",
   "rung.full": "Pełne",
-  "rung.none": "Brak"
+  "rung.none": "Brak",
+  "dungeon.map": "Mapa",
+  "dungeon.compass": "Kompas",
+  "dungeon.big-key": "Wielki klucz",
+  "bottle.contents.none": "Brak",
+  "bottle.contents.empty": "Pusta",
+  "bottle.contents.red-potion": "Czerwona mikstura",
+  "bottle.contents.green-potion": "Zielona mikstura",
+  "bottle.contents.blue-potion": "Niebieska mikstura",
+  "bottle.contents.fairy": "Wróżka",
+  "bottle.contents.bee": "Pszczoła",
+  "bottle.contents.good-bee": "Dobra pszczoła"
 }

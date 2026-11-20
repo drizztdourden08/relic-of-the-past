@@ -38,5 +38,6 @@
   "spoiler.unplaced.both": "{locations, plural, one {# lieu placé n'a} other {# lieux placés n'ont}} pas de check ici · {items, plural, one {# objet placé n'a} other {# objets placés n'ont}} pas d'enregistrement ici, non affichés ci-dessous.",
   "spoiler.noPlacement": "Aucun placement chargé.",
   "aside.pool": "Réserve",
-  "lobby.no-lobby": "Choisissez un salon que RotP peut rejoindre."
+  "lobby.no-lobby": "Choisissez un salon que RotP peut rejoindre.",
+  "run.show-all-options": "Afficher toutes les options"
 }

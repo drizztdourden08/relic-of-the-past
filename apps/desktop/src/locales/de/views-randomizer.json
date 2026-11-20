@@ -38,5 +38,6 @@
   "spoiler.unplaced.both": "{locations, plural, one {# platzierter Ort hat} other {# platzierte Orte haben}} hier keinen Check · {items, plural, one {# platzierter Gegenstand hat} other {# platzierte Gegenstände haben}} hier keinen Eintrag, unten nicht angezeigt.",
   "spoiler.noPlacement": "Keine Platzierung geladen.",
   "aside.pool": "Pool",
-  "lobby.no-lobby": "Wähle eine Lobby, der RotP beitreten kann."
+  "lobby.no-lobby": "Wähle eine Lobby, der RotP beitreten kann.",
+  "run.show-all-options": "Alle Optionen anzeigen"
 }

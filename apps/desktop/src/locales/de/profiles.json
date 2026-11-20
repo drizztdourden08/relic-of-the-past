@@ -178,5 +178,7 @@
   "home.session.reconnecting": "Verbindung wird wiederhergestellt...",
   "home.session.starting": "Startet...",
   "home.sessions.empty": "Noch keine Spielsitzungen",
-  "home.sessions.title": "Spielsitzungen"
+  "home.sessions.title": "Spielsitzungen",
+  "menu.controller-profile": "Controller-Profil",
+  "menu.controller-profile-description": "Wechsle das aktive Controller-Profil."
 }

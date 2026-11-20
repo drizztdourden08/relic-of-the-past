@@ -178,5 +178,7 @@
   "home.session.reconnecting": "Återansluter...",
   "home.session.starting": "Startar...",
   "home.sessions.empty": "Inga speltillfällen än",
-  "home.sessions.title": "Speltillfällen"
+  "home.sessions.title": "Speltillfällen",
+  "menu.controller-profile": "Kontrollprofil",
+  "menu.controller-profile-description": "Byt aktiv kontrollprofil."
 }

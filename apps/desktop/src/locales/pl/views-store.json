@@ -30,5 +30,8 @@
   "screen.music": "Paczki muzyki",
   "screen.installed": "Zainstalowane",
   "screen.updates": "Aktualizacje",
-  "hero.eyebrow": "Paczki społeczności"
+  "hero.eyebrow": "Paczki społeczności",
+  "kind.music": "Pakiet muzyczny",
+  "kind.character": "Postać",
+  "kind.language": "Język"
 }

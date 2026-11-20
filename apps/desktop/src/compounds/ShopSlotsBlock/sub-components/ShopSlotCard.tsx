@@ -1,7 +1,7 @@
 /* @layer renderer-components @kind component */
+import { useT } from '@drizztdourden08/brock-react';
 import { Status, Box, Checkbox, Text } from '@drizztdourden08/tessera/primitives';
 import { ValueTag } from '@drizztdourden08/tessera/composites';
-import { OFF_BY_DEFAULT_LABEL } from '../ShopSlotsBlock.constants';
 import type { ShopSlotCardProps } from '../ShopSlotsBlock.type';
 import './ShopSlotCard.css';
 
@@ -13,6 +13,7 @@ const stateOf = (disabled: boolean, noneOn: boolean): string => {
 const ShopSlotCard = (props: ShopSlotCardProps) => {
   const { card, disabled, readout = false, onSlotChange } = props;
   const { name, stock, offByDefault, slots, noneOn } = card;
+  const t = useT();
 
   return (
     <Box
@@ -24,7 +25,7 @@ const ShopSlotCard = (props: ShopSlotCardProps) => {
       <Box className="shop-slot-card__head">
         <Text className="shop-slot-card__title">{name}</Text>
         {offByDefault && (
-          <Status className="shop-slot-card__badge">{OFF_BY_DEFAULT_LABEL}</Status>
+          <Status className="shop-slot-card__badge">{t('compounds:shop-slots-block.off-by-default')}</Status>
         )}
       </Box>
       <Text className="shop-slot-card__stock">{stock}</Text>

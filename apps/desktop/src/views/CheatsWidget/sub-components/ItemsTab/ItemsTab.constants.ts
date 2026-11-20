@@ -71,9 +71,9 @@ const GEAR: GearSlot[] = [
 ];
 
 const DUNGEON_ITEMS: DungeonItem[] = [
-  { kind: 'map', type: 'dungeonMap', col: DUNGEON_ITEM_COLUMNS.map, label: 'Map' },
-  { kind: 'compass', type: 'compass', col: DUNGEON_ITEM_COLUMNS.compass, label: 'Compass' },
-  { kind: 'bigKey', type: 'bigKey', col: DUNGEON_ITEM_COLUMNS.bigKey, label: 'Big Key' },
+  { kind: 'map', type: 'dungeonMap', col: DUNGEON_ITEM_COLUMNS.map, label: msg('views-cheats:dungeon.map') },
+  { kind: 'compass', type: 'compass', col: DUNGEON_ITEM_COLUMNS.compass, label: msg('views-cheats:dungeon.compass') },
+  { kind: 'bigKey', type: 'bigKey', col: DUNGEON_ITEM_COLUMNS.bigKey, label: msg('views-cheats:dungeon.big-key') },
 ];
 
 const EMPTY_NAME: SlotName = { lines: [''], sprite: null, owned: false };

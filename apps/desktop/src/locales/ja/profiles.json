@@ -178,5 +178,7 @@
   "home.session.reconnecting": "再接続中...",
   "home.session.starting": "開始中...",
   "home.sessions.empty": "プレイセッションはまだありません",
-  "home.sessions.title": "プレイセッション"
+  "home.sessions.title": "プレイセッション",
+  "menu.controller-profile": "コントローラープロフィール",
+  "menu.controller-profile-description": "使用中のコントローラープロフィールを切り替えます。"
 }

@@ -178,5 +178,7 @@
   "home.session.reconnecting": "Reconnexion...",
   "home.session.starting": "Démarrage...",
   "home.sessions.empty": "Aucune session de jeu",
-  "home.sessions.title": "Sessions de jeu"
+  "home.sessions.title": "Sessions de jeu",
+  "menu.controller-profile": "Profil de manette",
+  "menu.controller-profile-description": "Changez le profil de manette actif."
 }

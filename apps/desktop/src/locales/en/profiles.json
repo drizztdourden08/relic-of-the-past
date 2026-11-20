@@ -178,5 +178,7 @@
   "home.session.reconnecting": "Reconnecting...",
   "home.session.starting": "Starting...",
   "home.sessions.empty": "No play sessions yet",
-  "home.sessions.title": "Play Sessions"
+  "home.sessions.title": "Play Sessions",
+  "menu.controller-profile": "Controller Profile",
+  "menu.controller-profile-description": "Switch the active controller profile."
 }

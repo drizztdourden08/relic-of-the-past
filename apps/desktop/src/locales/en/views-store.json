@@ -30,5 +30,8 @@
   "screen.music": "Music packs",
   "screen.installed": "Installed",
   "screen.updates": "Updates",
-  "hero.eyebrow": "Community packs"
+  "hero.eyebrow": "Community packs",
+  "kind.music": "Music pack",
+  "kind.character": "Character",
+  "kind.language": "Language"
 }

@@ -30,5 +30,8 @@
   "screen.music": "音楽パック",
   "screen.installed": "インストール済み",
   "screen.updates": "アップデート",
-  "hero.eyebrow": "コミュニティパック"
+  "hero.eyebrow": "コミュニティパック",
+  "kind.music": "音楽パック",
+  "kind.character": "キャラクター",
+  "kind.language": "言語"
 }

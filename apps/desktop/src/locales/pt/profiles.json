@@ -178,5 +178,7 @@
   "home.session.reconnecting": "Reconectando...",
   "home.session.starting": "Iniciando...",
   "home.sessions.empty": "Nenhuma sessão de jogo ainda",
-  "home.sessions.title": "Sessões de jogo"
+  "home.sessions.title": "Sessões de jogo",
+  "menu.controller-profile": "Perfil de controle",
+  "menu.controller-profile-description": "Troque o perfil de controle ativo."
 }

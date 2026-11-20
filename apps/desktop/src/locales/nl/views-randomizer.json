@@ -38,5 +38,6 @@
   "spoiler.unplaced.both": "{locations, plural, one {# geplaatste locatie heeft} other {# geplaatste locaties hebben}} hier geen check · {items, plural, one {# geplaatst item heeft} other {# geplaatste items hebben}} hier geen record, hieronder niet getoond.",
   "spoiler.noPlacement": "Geen plaatsing geladen.",
   "aside.pool": "Pool",
-  "lobby.no-lobby": "Kies een lobby waar RotP aan kan deelnemen."
+  "lobby.no-lobby": "Kies een lobby waar RotP aan kan deelnemen.",
+  "run.show-all-options": "Alle opties tonen"
 }

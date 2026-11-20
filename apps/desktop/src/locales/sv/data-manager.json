@@ -317,5 +317,11 @@
   "settings-sections.enum.drifting": "Drivande",
   "language-set-list.meta": "{count, plural, one {# rad} other {# rader}} · bas {base}{origin, select, patch { · patchad ROM} custom { · egen} other {}}",
   "language-set-list.uninstall": "Avinstallera",
-  "language-set-list.delete": "Ta bort"
+  "language-set-list.delete": "Ta bort",
+  "rom-manager.detail.size": "Storlek",
+  "rom-manager.detail.hash": "Hash",
+  "rom-manager.detail.added": "Tillagd",
+  "rom-manager.detail.modified": "Ändrad",
+  "rom-manager.detail.attached": "Kopplad",
+  "rom-manager.detail.assets": "Resurser"
 }

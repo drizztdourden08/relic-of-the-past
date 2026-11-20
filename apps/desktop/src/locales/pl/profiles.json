@@ -178,5 +178,7 @@
   "home.session.reconnecting": "Ponowne łączenie...",
   "home.session.starting": "Uruchamianie...",
   "home.sessions.empty": "Brak sesji gry",
-  "home.sessions.title": "Sesje gry"
+  "home.sessions.title": "Sesje gry",
+  "menu.controller-profile": "Profil kontrolera",
+  "menu.controller-profile-description": "Przełącz aktywny profil kontrolera."
 }

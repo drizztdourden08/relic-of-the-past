@@ -100,5 +100,16 @@
   "rung.reduction": "-{n} %",
   "rung.ohko": "OHKO",
   "rung.full": "Total",
-  "rung.none": "Aucun"
+  "rung.none": "Aucun",
+  "dungeon.map": "Carte",
+  "dungeon.compass": "Boussole",
+  "dungeon.big-key": "Grande clé",
+  "bottle.contents.none": "Aucune",
+  "bottle.contents.empty": "Vide",
+  "bottle.contents.red-potion": "Potion rouge",
+  "bottle.contents.green-potion": "Potion verte",
+  "bottle.contents.blue-potion": "Potion bleue",
+  "bottle.contents.fairy": "Fée",
+  "bottle.contents.bee": "Abeille",
+  "bottle.contents.good-bee": "Bonne abeille"
 }

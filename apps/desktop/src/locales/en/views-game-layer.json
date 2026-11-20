@@ -60,5 +60,15 @@
   "saveHint.holdSave": "Hold to save",
   "saveHint.holdingSave": "Saving...",
   "saveHint.cancel": "Cancel",
-  "screen.title": "Game view"
+  "screen.title": "Game view",
+  "menu.save-states": "Save States",
+  "menu.save-states-description": "Open the save state slots while the game runs.",
+  "title-bar.frame-rate": "Frame rate",
+  "title-bar.refresh-rate-hint": "This display's refresh rate is not a multiple of 60, so the game cannot be shown evenly. Open display settings.",
+  "title-bar.refresh-rate-status": "Incompatible refresh rate",
+  "boot.controller-pages": "Registering the controller pages",
+  "boot.randomizer": "Registering the randomizer",
+  "boot.screenshot-hold": "Holding the screenshot for the first picture",
+  "boot.test-hooks": "Preparing the test hooks",
+  "boot.game-core": "Loading the game core"
 }

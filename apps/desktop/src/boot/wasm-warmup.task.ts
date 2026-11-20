@@ -1,10 +1,11 @@
 /* @layer renderer-app @kind logic */
+import { msg } from '@drizztdourden08/brock-core/i18n';
 import { defineBootTask } from '@drizztdourden08/brock-react';
 import { warmWasmCore } from '@app/game/wasm-warmup';
 import { WASM_WARMUP_TIMEOUT_MS } from './wasm-warmup.task.constants';
 
 export default defineBootTask({
-  label: 'Loading the game core',
+  label: msg('views-game-layer:boot.game-core'),
   weight: 3,
   timeoutMs: WASM_WARMUP_TIMEOUT_MS,
   run: ({ report }) => warmWasmCore((patch) => {

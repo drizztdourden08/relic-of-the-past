@@ -30,5 +30,8 @@
   "screen.music": "Muziekpakketten",
   "screen.installed": "Geïnstalleerd",
   "screen.updates": "Updates",
-  "hero.eyebrow": "Communitypakketten"
+  "hero.eyebrow": "Communitypakketten",
+  "kind.music": "Muziekpakket",
+  "kind.character": "Personage",
+  "kind.language": "Taal"
 }

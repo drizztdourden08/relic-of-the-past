@@ -100,5 +100,16 @@
   "rung.reduction": "-{n}%",
   "rung.ohko": "一撃死",
   "rung.full": "満タン",
-  "rung.none": "なし"
+  "rung.none": "なし",
+  "dungeon.map": "マップ",
+  "dungeon.compass": "コンパス",
+  "dungeon.big-key": "ボスのかぎ",
+  "bottle.contents.none": "なし",
+  "bottle.contents.empty": "空き",
+  "bottle.contents.red-potion": "赤いクスリ",
+  "bottle.contents.green-potion": "緑のクスリ",
+  "bottle.contents.blue-potion": "青いクスリ",
+  "bottle.contents.fairy": "妖精",
+  "bottle.contents.bee": "ハチ",
+  "bottle.contents.good-bee": "金のハチ"
 }

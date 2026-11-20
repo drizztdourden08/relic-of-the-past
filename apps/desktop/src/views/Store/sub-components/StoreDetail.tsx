@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind component */
-import { useT } from '@drizztdourden08/brock-react';
+import { useT, useText } from '@drizztdourden08/brock-react';
 import { Icon as IconifyIcon } from '@iconify/react/offline';
 import { CatalogInstallBar } from '@drizztdourden08/brock-catalog/renderer';
 import { Box, Button, Flex, Image, Stack, Text } from '@drizztdourden08/tessera/primitives';
@@ -15,6 +15,7 @@ const StoreDetail = (props: StoreDetailProps) => {
   const { detail, pack, bar, onOpenSite } = props;
   const { item } = detail;
   const t = useT();
+  const text = useText();
   const live = liveVersionOf(item);
   const icon = <Text as="span" className="store-detail__icon"><IconifyIcon icon={KIND_ICONS[item.kind]} /></Text>;
 
@@ -25,7 +26,7 @@ const StoreDetail = (props: StoreDetailProps) => {
       <Text as="p" className="store__lead">{item.summary}</Text>
       <Box className="store-detail__facts">
         <Text as="span" className="store__label">{t('views-store:detail.kind')}</Text>
-        <Text as="span">{KIND_LABELS[item.kind]}</Text>
+        <Text as="span">{text(KIND_LABELS[item.kind])}</Text>
         <Text as="span" className="store__label">{t('views-store:detail.author')}</Text>
         <Text as="span">{item.author.displayName}</Text>
         <Text as="span" className="store__label">{t('views-store:detail.version')}</Text>

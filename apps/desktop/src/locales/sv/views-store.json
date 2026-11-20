@@ -30,5 +30,8 @@
   "screen.music": "Musikpaket",
   "screen.installed": "Installerade",
   "screen.updates": "Uppdateringar",
-  "hero.eyebrow": "Gemenskapspaket"
+  "hero.eyebrow": "Gemenskapspaket",
+  "kind.music": "Musikpaket",
+  "kind.character": "Figur",
+  "kind.language": "Språk"
 }

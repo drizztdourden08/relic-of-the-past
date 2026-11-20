@@ -15,11 +15,11 @@ const HeroLastSaveTile = (props: { save: HeroLastSave }) => {
         src={save.screenshotUrl ?? undefined}
         alt={save.name}
         className="profile-hero__save-thumb"
-        fallback={<Text className="profile-hero__save-empty">No screenshot</Text>}
+        fallback={<Text className="profile-hero__save-empty">{t('compounds:profile-hero.no-screenshot')}</Text>}
       />
       <Box className="profile-hero__save-body">
         <Box className="profile-hero__save-text">
-          <Text className="hero__eyebrow">Last save</Text>
+          <Text className="hero__eyebrow">{t('compounds:profile-hero.last-save')}</Text>
           <Text className="profile-hero__save-name" title={save.name}>{save.name}</Text>
           <Text className="profile-hero__save-time"><DateText value={save.timestamp} format="calendar" /></Text>
         </Box>

@@ -60,5 +60,15 @@
   "saveHint.holdSave": "Segure para salvar",
   "saveHint.holdingSave": "Salvando...",
   "saveHint.cancel": "Cancelar",
-  "screen.title": "Tela do jogo"
+  "screen.title": "Tela do jogo",
+  "menu.save-states": "Estados salvos",
+  "menu.save-states-description": "Abra os slots de estados salvos durante o jogo.",
+  "title-bar.frame-rate": "Taxa de quadros",
+  "title-bar.refresh-rate-hint": "A taxa de atualização desta tela não é múltipla de 60, então o jogo não pode ser exibido de forma uniforme. Abra as configurações de tela.",
+  "title-bar.refresh-rate-status": "Taxa de atualização incompatível",
+  "boot.controller-pages": "Registrando as páginas do controle",
+  "boot.randomizer": "Registrando o randomizer",
+  "boot.screenshot-hold": "Mantendo a captura para a primeira imagem",
+  "boot.test-hooks": "Preparando os hooks de teste",
+  "boot.game-core": "Carregando o núcleo do jogo"
 }

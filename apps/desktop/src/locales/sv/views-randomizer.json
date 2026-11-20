@@ -38,5 +38,6 @@
   "spoiler.unplaced.both": "{locations, plural, one {# placerad plats saknar} other {# placerade platser saknar}} kontroll här · {items, plural, one {# placerat föremål saknar} other {# placerade föremål saknar}} post här, visas inte nedan.",
   "spoiler.noPlacement": "Ingen placering inläst.",
   "aside.pool": "Pool",
-  "lobby.no-lobby": "Välj en lobby som RotP kan gå med i."
+  "lobby.no-lobby": "Välj en lobby som RotP kan gå med i.",
+  "run.show-all-options": "Visa alla alternativ"
 }

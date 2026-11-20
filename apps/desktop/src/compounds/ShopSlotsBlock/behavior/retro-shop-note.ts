@@ -1,4 +1,5 @@
 /* @layer renderer-components @kind logic */
+import type { I18n } from '@drizztdourden08/brock-core/i18n';
 import { ARROW_SLOT_INDEXES, RETRO_QUIVER_SLOT_INDEX, RETRO_QUIVER_PRICE, RETRO_REFILL_ITEM, CANONICAL_SLOTS } from '@rotp/randomizer';
 import type { ShopSlotFacts, RetroBowSetting, ShopScope } from '@rotp/randomizer';
 import { retroShuffledNote } from './retro-shuffled-note';
@@ -13,7 +14,7 @@ const canonicalSlotAt = (index: number): ShopSlotFacts => {
   return slot;
 };
 
-const retroShopNoteOf = (scope: ShopScope, setting: RetroBowSetting | undefined): string | null => {
+const retroShopNoteOf = (scope: ShopScope, setting: RetroBowSetting | undefined, t: I18n['t']): string | null => {
   if (!setting?.enabled) return null;
   const quiver = canonicalSlotAt(RETRO_QUIVER_SLOT_INDEX);
   const others = ARROW_SLOT_INDEXES
@@ -26,7 +27,7 @@ const retroShopNoteOf = (scope: ShopScope, setting: RetroBowSetting | undefined)
     refillPrice: quiver.price,
     otherShelves: others,
   };
-  return scope.mode === 'vanilla' ? retroVanillaNote(shelf) : retroShuffledNote(shelf);
+  return scope.mode === 'vanilla' ? retroVanillaNote(shelf, t) : retroShuffledNote(shelf, t);
 };
 
 export { retroShopNoteOf };

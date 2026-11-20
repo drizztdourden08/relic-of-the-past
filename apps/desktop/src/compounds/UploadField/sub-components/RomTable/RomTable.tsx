@@ -9,14 +9,14 @@ const RomTable = ({ roms }: RomTableProps) => {
   const t = useT();
   return (
   <Stack gap="xs">
-    <Text className="rom-table__title">Valid official ROMs</Text>
+    <Text className="rom-table__title">{t('compounds:upload-field.valid-official-roms')}</Text>
     <Table striped aria-label={t('compounds:upload-field.valid-official-roms')}>
       <TableSection head>
         <TableRow>
-          <TableCell header className="rom-table__cell">Name</TableCell>
-          <TableCell header className="rom-table__cell">Kind</TableCell>
+          <TableCell header className="rom-table__cell">{t('compounds:upload-field.columns.name')}</TableCell>
+          <TableCell header className="rom-table__cell">{t('compounds:upload-field.columns.kind')}</TableCell>
           <TableCell header className="rom-table__cell">SHA-1</TableCell>
-          <TableCell header align="center" className="rom-table__cell">Usable</TableCell>
+          <TableCell header align="center" className="rom-table__cell">{t('compounds:upload-field.usable')}</TableCell>
         </TableRow>
       </TableSection>
       <TableSection>
