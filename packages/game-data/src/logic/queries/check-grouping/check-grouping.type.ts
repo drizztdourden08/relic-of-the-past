@@ -1,4 +1,5 @@
 /* @layer shared-game @kind types */
+import type { Message, Text } from '@drizztdourden08/brock-core/i18n';
 import type { CheckRecord, ItemId, ScreenRecord } from '../../../data';
 import type { CheckStatus } from '../../check-status.type';
 import type { RunKind } from '../../run-kind.type';
@@ -23,8 +24,8 @@ interface GroupingPass {
 
 interface GroupDimensionDef {
   id: GroupDimension;
-  label: string;
-  description: string;
+  label: Message;
+  description: Message;
 }
 
 interface GroupNode {
@@ -56,7 +57,7 @@ type CheckFacetCategory = 'world' | 'location' | 'area' | 'content';
 
 interface CheckFacetDef {
   id: string;
-  label: string;
+  label: Text;
   category: CheckFacetCategory;
 }
 

@@ -1,58 +1,30 @@
 /* @layer shared-game @kind data */
+import { msg } from '@drizztdourden08/brock-core/i18n';
 import type { SpriteDefinition } from './manifest';
 
+const poolSprite = (art: string, game: string): SpriteDefinition => ({
+  file: art,
+  label: msg('game-labels:sprite.pool', { game }),
+  category: 'randomizer',
+  extract: { method: 'art-badge', art, badge: 'archipelago-badge' },
+});
+
 const POOL_SPRITE_DEFINITIONS: readonly SpriteDefinition[] = [
-  {
-    file: 'pool-zelda-1', label: 'Pool: The Legend of Zelda', category: 'randomizer',
-    extract: { method: 'art-badge', art: 'pool-zelda-1', badge: 'archipelago-badge' },
-  },
-  {
-    file: 'pool-zelda-2', label: 'Pool: Zelda II', category: 'randomizer',
-    extract: { method: 'art-badge', art: 'pool-zelda-2', badge: 'archipelago-badge' },
-  },
-  {
-    file: 'pool-links-awakening', label: "Pool: Link's Awakening", category: 'randomizer',
-    extract: { method: 'art-badge', art: 'pool-links-awakening', badge: 'archipelago-badge' },
-  },
-  {
-    file: 'pool-ocarina-of-time', label: 'Pool: Ocarina of Time', category: 'randomizer',
-    extract: { method: 'art-badge', art: 'pool-ocarina-of-time', badge: 'archipelago-badge' },
-  },
-  {
-    file: 'pool-majoras-mask', label: "Pool: Majora's Mask", category: 'randomizer',
-    extract: { method: 'art-badge', art: 'pool-majoras-mask', badge: 'archipelago-badge' },
-  },
-  {
-    file: 'pool-oracle-of-ages', label: 'Pool: Oracle of Ages', category: 'randomizer',
-    extract: { method: 'art-badge', art: 'pool-oracle-of-ages', badge: 'archipelago-badge' },
-  },
-  {
-    file: 'pool-oracle-of-seasons', label: 'Pool: Oracle of Seasons', category: 'randomizer',
-    extract: { method: 'art-badge', art: 'pool-oracle-of-seasons', badge: 'archipelago-badge' },
-  },
-  {
-    file: 'pool-minish-cap', label: 'Pool: The Minish Cap', category: 'randomizer',
-    extract: { method: 'art-badge', art: 'pool-minish-cap', badge: 'archipelago-badge' },
-  },
-  {
-    file: 'pool-wind-waker', label: 'Pool: The Wind Waker', category: 'randomizer',
-    extract: { method: 'art-badge', art: 'pool-wind-waker', badge: 'archipelago-badge' },
-  },
-  {
-    file: 'pool-twilight-princess', label: 'Pool: Twilight Princess', category: 'randomizer',
-    extract: { method: 'art-badge', art: 'pool-twilight-princess', badge: 'archipelago-badge' },
-  },
-  {
-    file: 'pool-skyward-sword', label: 'Pool: Skyward Sword', category: 'randomizer',
-    extract: { method: 'art-badge', art: 'pool-skyward-sword', badge: 'archipelago-badge' },
-  },
-  {
-    file: 'pool-a-link-between-worlds', label: 'Pool: A Link Between Worlds', category: 'randomizer',
-    extract: { method: 'art-badge', art: 'pool-a-link-between-worlds', badge: 'archipelago-badge' },
-  },
+  poolSprite('pool-zelda-1', 'The Legend of Zelda'),
+  poolSprite('pool-zelda-2', 'Zelda II'),
+  poolSprite('pool-links-awakening', "Link's Awakening"),
+  poolSprite('pool-ocarina-of-time', 'Ocarina of Time'),
+  poolSprite('pool-majoras-mask', "Majora's Mask"),
+  poolSprite('pool-oracle-of-ages', 'Oracle of Ages'),
+  poolSprite('pool-oracle-of-seasons', 'Oracle of Seasons'),
+  poolSprite('pool-minish-cap', 'The Minish Cap'),
+  poolSprite('pool-wind-waker', 'The Wind Waker'),
+  poolSprite('pool-twilight-princess', 'Twilight Princess'),
+  poolSprite('pool-skyward-sword', 'Skyward Sword'),
+  poolSprite('pool-a-link-between-worlds', 'A Link Between Worlds'),
   {
     file: 'pool-archipelago',
-    label: 'Pool: any other game',
+    label: msg('game-labels:sprite.poolOther'),
     category: 'randomizer',
     extract: { method: 'art', art: 'pool-archipelago' },
   },

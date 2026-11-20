@@ -820,6 +820,9 @@ importers:
 
   packages/game-data:
     dependencies:
+      '@drizztdourden08/brock-core':
+        specifier: ^0.122.0
+        version: 0.122.0
       '@rotp/asset-extraction':
         specifier: workspace:*
         version: link:../asset-extraction

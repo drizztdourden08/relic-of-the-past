@@ -7,7 +7,11 @@ import app_fr_compounds from '../../src/locales/fr/compounds.json';
 import app_fr_data_manager from '../../src/locales/fr/data-manager.json';
 import app_fr_errors from '../../src/locales/fr/errors.json';
 import app_fr_features from '../../src/locales/fr/features.json';
+<<<<<<< HEAD
 import app_fr_game_states from '../../src/locales/fr/game-states.json';
+=======
+import app_fr_game_labels from '../../src/locales/fr/game-labels.json';
+>>>>>>> agent/i18n-pkg-labels
 import app_fr_hub_contracts from '../../src/locales/fr/hub-contracts.json';
 import app_fr_hud_editing from '../../src/locales/fr/hud-editing.json';
 import app_fr_hud_editor from '../../src/locales/fr/hud-editor.json';
@@ -65,7 +69,11 @@ const layers: readonly Layer[] = [
   { locale: 'fr', namespace: 'data-manager', kind: 'app', messages: app_fr_data_manager },
   { locale: 'fr', namespace: 'errors', kind: 'app', messages: app_fr_errors },
   { locale: 'fr', namespace: 'features', kind: 'app', messages: app_fr_features },
+<<<<<<< HEAD
   { locale: 'fr', namespace: 'game-states', kind: 'app', messages: app_fr_game_states },
+=======
+  { locale: 'fr', namespace: 'game-labels', kind: 'app', messages: app_fr_game_labels },
+>>>>>>> agent/i18n-pkg-labels
   { locale: 'fr', namespace: 'hub-contracts', kind: 'app', messages: app_fr_hub_contracts },
   { locale: 'fr', namespace: 'hud-editing', kind: 'app', messages: app_fr_hud_editing },
   { locale: 'fr', namespace: 'hud-editor', kind: 'app', messages: app_fr_hud_editor },

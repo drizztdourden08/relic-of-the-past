@@ -7,7 +7,11 @@ import app_sv_compounds from '../../src/locales/sv/compounds.json';
 import app_sv_data_manager from '../../src/locales/sv/data-manager.json';
 import app_sv_errors from '../../src/locales/sv/errors.json';
 import app_sv_features from '../../src/locales/sv/features.json';
+<<<<<<< HEAD
 import app_sv_game_states from '../../src/locales/sv/game-states.json';
+=======
+import app_sv_game_labels from '../../src/locales/sv/game-labels.json';
+>>>>>>> agent/i18n-pkg-labels
 import app_sv_hub_contracts from '../../src/locales/sv/hub-contracts.json';
 import app_sv_hud_editing from '../../src/locales/sv/hud-editing.json';
 import app_sv_hud_editor from '../../src/locales/sv/hud-editor.json';
@@ -65,7 +69,11 @@ const layers: readonly Layer[] = [
   { locale: 'sv', namespace: 'data-manager', kind: 'app', messages: app_sv_data_manager },
   { locale: 'sv', namespace: 'errors', kind: 'app', messages: app_sv_errors },
   { locale: 'sv', namespace: 'features', kind: 'app', messages: app_sv_features },
+<<<<<<< HEAD
   { locale: 'sv', namespace: 'game-states', kind: 'app', messages: app_sv_game_states },
+=======
+  { locale: 'sv', namespace: 'game-labels', kind: 'app', messages: app_sv_game_labels },
+>>>>>>> agent/i18n-pkg-labels
   { locale: 'sv', namespace: 'hub-contracts', kind: 'app', messages: app_sv_hub_contracts },
   { locale: 'sv', namespace: 'hud-editing', kind: 'app', messages: app_sv_hud_editing },
   { locale: 'sv', namespace: 'hud-editor', kind: 'app', messages: app_sv_hud_editor },
