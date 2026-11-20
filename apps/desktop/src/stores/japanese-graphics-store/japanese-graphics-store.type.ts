@@ -8,4 +8,4 @@ interface JapaneseGraphicsStore extends JapaneseGraphicsStatus {
   setStatus: (status: JapaneseGraphicsStatus) => void;
 }
 
-export type { JapaneseGraphicsStatus, JapaneseGraphicsStore };
+export type { JapaneseGraphicsStore };

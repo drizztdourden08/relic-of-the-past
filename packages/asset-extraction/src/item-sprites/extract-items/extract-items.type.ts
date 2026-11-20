@@ -1,4 +1,5 @@
 /* @layer shared-asset-extraction @kind types */
+import type { Text } from '@drizztdourden08/brock-core/i18n';
 import type { RomData } from '../../rom/rom-types';
 import type { ImageBuffer } from '../../graphics/png-writer';
 import type { RGBA } from '../../graphics/palette';
@@ -36,7 +37,7 @@ interface SpriteExtractDef {
 
 interface SpriteDef {
   file: string;
-  label: string;
+  label: Text;
   category: 'hud' | 'hud-pause' | 'hud-item' | 'fonts' | 'receipt' | 'drop' | 'randomizer' | 'title' | 'ground';
   extract: SpriteExtractDef;
 }

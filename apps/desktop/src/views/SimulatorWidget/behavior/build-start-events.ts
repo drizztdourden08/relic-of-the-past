@@ -7,7 +7,8 @@ import { optionText } from '@rotp/randomizer';
 import { screenAreaInfo } from '@app/game/simulator';
 import type { DetectCache } from '@app/game/simulator/observe';
 import type { RunCursor } from '../SimulatorWidget.type';
-import { codedEvent, sequenceLabelOf } from './coded-event';
+import { codedEvent } from './coded-event';
+import { sequenceLabelOf } from './sequence-label-of';
 import { frontierEvents } from './frontier-events';
 import { sequenceEvent } from './sequence-event';
 

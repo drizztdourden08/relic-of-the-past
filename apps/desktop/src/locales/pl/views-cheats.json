@@ -116,7 +116,7 @@
   "grant.blocked.noTrigger": "konsola nie ma oryginalnego wyzwalacza dla tego checku",
   "grant.blocked.cannotClear": "nie można go tu zaliczyć, ponieważ {reason}",
   "grant.blocked.nothingPlaced": "ten seed nie umieścił nic w tym miejscu",
-  "grant.blocked.noDirect": "„{item}” nie może zostać przekazany bezpośrednio",
+  "grant.blocked.noDirect": "\"{item}\" nie może zostać przekazany bezpośrednio",
   "item.bow": "Łuk",
   "item.bow-arrows": "Łuk i strzały",
   "item.silver-bow": "Srebrny łuk",

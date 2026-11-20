@@ -1,6 +1,7 @@
 /* @layer renderer-app @kind logic */
 import { getItem, getItemSprite, getSpritesBase, resolveItemSprite } from '@rotp/game-data';
 import type { ItemId } from '@rotp/game-data';
+import { textOf } from '@app/shell/text-bridge';
 import { EVENT_MARK } from '@app/compounds/ChecksTracker/ChecksTracker.constants';
 import { trackerCheckOf } from './rotp-tracker-check-of';
 import { TRACKER_EVENT_KIND } from './rotp-tracker.constants';
@@ -14,7 +15,7 @@ const tierArt = (key: string): string | null => {
 };
 
 const slotArt = (key: string): string | null => {
-  const slot = SLOTS.find((candidate) => candidate.displayName.toLowerCase() === key.toLowerCase());
+  const slot = SLOTS.find((candidate) => textOf(candidate.displayName).toLowerCase() === key.toLowerCase());
   return slot === undefined ? null : spriteUrlOf(resolveItemSprite(slot, NOTHING_HELD).sprite);
 };
 

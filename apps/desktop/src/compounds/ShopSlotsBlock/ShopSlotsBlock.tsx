@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind component */
-import { useT } from '@drizztdourden08/brock-react';
+import { useT, useText } from '@drizztdourden08/brock-react';
 import { Box, Select, Slider, Text } from '@drizztdourden08/tessera/primitives';
 import { ValueTag, OptionGroup } from '@drizztdourden08/tessera/composites';
 import { choiceLabelOf } from '@app/hooks/randomizer/option-labels';
@@ -13,7 +13,7 @@ import { withDepth } from './behavior/with-depth';
 import { withMode } from './behavior/with-mode';
 import { withSlotCount } from './behavior/with-slot-count';
 import { withSlotTicked } from './behavior/with-slot-ticked';
-import { MODE_OPTIONS } from './ShopSlotsBlock.constants';
+import { modeOptionsOf } from './behavior/mode-options-of';
 import { MAX_SHOP_SLOT_DEPTH, MIN_SHOP_SLOT_DEPTH } from '@rotp/randomizer';
 import type { ShopShuffleMode } from '@rotp/randomizer';
 import type { ShopSlotsBlockProps } from './ShopSlotsBlock.type';
@@ -22,6 +22,8 @@ import './ShopSlotsBlock.css';
 const ShopSlotsBlock = (props: ShopSlotsBlockProps) => {
   const { scope, retroBow, onChange } = props;
   const t = useT();
+  const text = useText();
+  const modeOptions = modeOptionsOf(text);
   const summary = summaryOf(scope);
   const depthLabel = t('compounds:shop-slots-block.depth-label');
   const readOnly = onChange === undefined;
@@ -33,10 +35,10 @@ const ShopSlotsBlock = (props: ShopSlotsBlockProps) => {
     <Box className="shop-slots-block">
       <OptionGroup title={t('compounds:shop-slots-block.mode-title')} tone="live" className="shop-slots-block__mode">
         <Box className="shop-slots-block__mode-control">
-          {readOnly ? <ValueTag value={choiceLabelOf(MODE_OPTIONS, scope.mode)} /> : (
+          {readOnly ? <ValueTag value={choiceLabelOf(modeOptions, scope.mode)} /> : (
             <Select
               value={scope.mode}
-              options={MODE_OPTIONS}
+              options={modeOptions}
               onChange={(next) => onChange(withMode(scope, next as ShopShuffleMode))}
             />
           )}

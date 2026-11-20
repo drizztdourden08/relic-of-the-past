@@ -1,4 +1,4 @@
-/* @layer renderer-app @kind data */
+/* @layer renderer-app @kind constants */
 import { msg } from '@drizztdourden08/brock-core/i18n';
 import type { SchemaConfig } from '@drizztdourden08/tessera/data';
 import type { Confidence, Recommendation } from '@rotp/navigation';

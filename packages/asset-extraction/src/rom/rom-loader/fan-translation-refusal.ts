@@ -7,7 +7,7 @@ import { RomLoadError } from './rom-load-error';
 const fanTranslationRefusal = (hash: string): RomLoadError | null => {
   const language = fanTranslationLanguage(hash);
   if (language === null) return null;
-  const name = FAN_TRANSLATION_NAMES[language];
+  const name = FAN_TRANSLATION_NAMES[language] ?? language;
   return new RomLoadError(
     msg('rom-loader:error.fanTranslation', { name }),
     `This is ${name}, which is a language, not a game ROM. Import it as a language: Languages > New language > Fan-patched ROM.`,

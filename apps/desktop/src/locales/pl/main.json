@@ -30,7 +30,7 @@
   "sanctuary.report.linkIssue": "Zgłoszenie na GitHubie",
   "sanctuary.report.filed": "Zgłoszenie {id} wysłane",
   "sanctuary.report.filedNoDebug": "Zgłoszenie {id} wysłane, bez plików debugowania: {error}",
-  "storage.installedLocked": "„{name}” jest zainstalowany z Hookshopu i działa tylko do odczytu. Zduplikuj go, aby go zmienić.",
+  "storage.installedLocked": "\"{name}\" jest zainstalowany z Hookshopu i działa tylko do odczytu. Zduplikuj go, aby go zmienić.",
   "ffmpeg.lookupFailed": "Nie udało się sprawdzić wydania ffmpeg (HTTP {status}).",
   "ffmpeg.assetMissing": "Wydanie ffmpeg nie udostępnia już {asset}.",
   "ffmpeg.digestMissing": "Nie opublikowano sumy sha256 dla {asset}."

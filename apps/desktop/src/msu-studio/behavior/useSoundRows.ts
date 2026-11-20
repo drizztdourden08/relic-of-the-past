@@ -1,13 +1,9 @@
 /* @layer renderer-components @kind hook */
 import { useMemo } from 'react';
 import { useText } from '@drizztdourden08/brock-react';
-import type { Message } from '@drizztdourden08/brock-core/i18n';
 import type { MsuPackManifest, SoundChannel } from '@rotp/game-data';
-import { soundsOfChannel, soundName, ambientRole, isAmbientReachable } from '@rotp/game-data';
-import { SOUND_ID_COUNT } from '@rotp/hub-contracts';
 import { soundDefsOfChannel } from './sound-manifest';
-import { soundHexId } from '../sound-labels';
-import { FIRST_PLAYABLE_ID } from './sound-rows.constants';
+import { buildSoundRows } from './build-sound-rows';
 import type { SoundRowData } from '../msu.type';
 
 const matches = (row: SoundRowData, query: string): boolean =>
@@ -15,11 +11,6 @@ const matches = (row: SoundRowData, query: string): boolean =>
   || String(row.soundId).includes(query)
   || (row.label ?? '').toLowerCase().includes(query)
   || row.triggers.some((trigger) => trigger.toLowerCase().includes(query));
-
-const reachOf = (channel: SoundChannel, soundId: number) => ({
-  role: channel === 'ambient' ? ambientRole(soundId) : null,
-  unreachable: channel === 'ambient' && !isAmbientReachable(soundId),
-});
 
 const useSoundRows = (
   manifest: MsuPackManifest,
@@ -33,35 +24,10 @@ const useSoundRows = (
     [manifest, channel],
   );
 
-  const all = useMemo((): SoundRowData[] => {
-    const text_ = (value: Message | null): string | null => (value === null ? null : text(value));
-    const named = soundsOfChannel(channel).map((sound): SoundRowData => ({
-      soundId: sound.id,
-      hex: soundHexId(sound.id),
-      label: text_(sound.label),
-      triggers: sound.triggers,
-      sites: sound.sites,
-      layerCount: byId.get(sound.id)?.layers.length ?? 0,
-      unlisted: false,
-      ...reachOf(channel, sound.id),
-    }));
-    const known = new Set(named.map((row) => row.soundId));
-    const rest: SoundRowData[] = [];
-    for (let id = FIRST_PLAYABLE_ID; id < SOUND_ID_COUNT; id++) {
-      if (known.has(id)) continue;
-      rest.push({
-        soundId: id,
-        hex: soundHexId(id),
-        label: text_(soundName(channel, id)),
-        triggers: [],
-        sites: 0,
-        layerCount: byId.get(id)?.layers.length ?? 0,
-        unlisted: true,
-        ...reachOf(channel, id),
-      });
-    }
-    return [...named, ...rest];
-  }, [channel, byId, text]);
+  const all = useMemo(
+    () => buildSoundRows(channel, (soundId) => byId.get(soundId)?.layers.length ?? 0, text),
+    [channel, byId, text],
+  );
 
   const listed = useMemo(
     () => (includeUnreachable

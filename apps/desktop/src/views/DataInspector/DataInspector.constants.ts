@@ -1,5 +1,4 @@
 /* @layer renderer-app @kind constants */
-import { msg } from '@drizztdourden08/brock-core/i18n';
 import type { IconifyIcon as IconData } from '@iconify/react/offline';
 import mapIcon from '@iconify-icons/lucide/map';
 import linkIcon from '@iconify-icons/lucide/link';

@@ -1,4 +1,4 @@
-/* @layer shared-other @kind data */
+/* @layer shared-other @kind constants */
 import { msg } from '@drizztdourden08/brock-core/i18n';
 import type { CreditCategory, UsageLevel } from './credits.type';
 import type { Message } from '@drizztdourden08/brock-core/i18n';

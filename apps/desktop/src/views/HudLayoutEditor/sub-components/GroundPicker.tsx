@@ -3,10 +3,11 @@ import { Box, Pressable, Text } from '@drizztdourden08/tessera/primitives';
 import { getSpritesBase } from '@rotp/game-data';
 import { EDITOR_GROUNDS } from '../HudLayoutEditor.constants';
 import type { GroundPickerProps } from './GroundPicker.type';
-import { useT } from '@drizztdourden08/brock-react';
+import { useT, useText } from '@drizztdourden08/brock-react';
 
 const GroundPicker = (props: GroundPickerProps) => {
   const t = useT();
+  const text = useText();
   const { value, onChange } = props;
   const base = getSpritesBase();
 
@@ -19,8 +20,8 @@ const GroundPicker = (props: GroundPickerProps) => {
             key={ground.file}
             className={`hud-ground__swatch${ground.file === value ? ' is-selected' : ''}`}
             aria-pressed={ground.file === value}
-            aria-label={ground.label}
-            title={ground.label}
+            aria-label={text(ground.label)}
+            title={text(ground.label)}
             style={{ backgroundImage: `url("${base}${ground.file}.png")` }}
             onClick={() => onChange(ground.file)}
           />

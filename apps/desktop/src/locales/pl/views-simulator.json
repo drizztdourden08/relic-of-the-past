@@ -96,7 +96,7 @@
   "log.tag.info": "INFO",
   "event.sequence": "Sekwencja {label}",
   "event.run-config": "Konfiguracja: limit ekranów {limit}",
-  "event.run-config.stop": "Konfiguracja: zatrzymanie na „{check}”, limit ekranów {limit}",
+  "event.run-config.stop": "Konfiguracja: zatrzymanie na \"{check}\", limit ekranów {limit}",
   "event.limit.unlimited": "bez limitu",
   "event.area": "Obszar {label} ({size, plural, one {# podekran} few {# podekrany} many {# podekranów} other {# podekranu}})",
   "event.screen": "Ekran {label}",

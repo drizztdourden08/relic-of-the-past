@@ -1,16 +1,14 @@
 /* @layer renderer-widgets @kind logic */
 import { msg } from '@drizztdourden08/brock-core/i18n';
-import type { Text } from '@drizztdourden08/brock-core/i18n';
 import { getItemByGameId } from '@rotp/game-data';
 import { BY_VALUE, LADDERS, MIRROR, SIMPLE } from '@rotp/navigation';
 import { CheatSlot } from '@app/game';
 import { getSlotSprite } from '@app/composites/PauseItemSlot';
 import { EQUIP_SPRITES } from '@app/composites/PauseEquipSlot';
 import { BOTTLE_SLOT_INDEX, BOW_RUNG_VALUES, BOW_TOP_VALUE, MIRROR_SLOT_INDEX, RAW_VALUE_LABELS } from '../ItemsTab.constants';
-import { ITEM_NAME_BY_ID } from './item-name-messages';
+import { ITEM_NAME_BY_ID } from './item-name-messages.constants';
 import type { FlagSpecParams, LadderSpecParams, SlotSpec, SpriteOf, TierOption } from '../ItemsTab.type';
-
-type TextOf = (value: Text) => string;
+import type { ByValueSpecParams, SlotArt, TextOf } from './build-slot-specs.type';
 
 const gridSprite = (slot: number): SpriteOf => (value) => getSlotSprite(slot, value);
 const equipSprite = (type: string): SpriteOf => (value) => EQUIP_SPRITES[type]?.[value] ?? null;
@@ -28,12 +26,12 @@ const noneTier = (text: TextOf, slot: number, sprite: SpriteOf): TierOption => (
   value: 0, label: text(RAW_VALUE_LABELS[slot]?.[0] ?? msg('views-cheats:tier.none')), sprite: sprite(0),
 });
 
-const tier = (text: TextOf, slot: number, value: number, sprite: SpriteOf, receiveItemId?: number): TierOption =>
-  ({ value, label: labelOf(text, slot, value, receiveItemId), sprite: sprite(value), receiveItemId });
+const tier = (text: TextOf, art: SlotArt, value: number, receiveItemId?: number): TierOption =>
+  ({ value, label: labelOf(text, art.slot, value, receiveItemId), sprite: art.sprite(value), receiveItemId });
 
 const flagSpec = (text: TextOf, params: FlagSpecParams): SlotSpec => {
   const { slot, nameKey, place, receiveItemId, sprite } = params;
-  return { slot, kind: 'flag', nameKey, place, tiers: [noneTier(text, slot, sprite), tier(text, slot, 1, sprite, receiveItemId)] };
+  return { slot, kind: 'flag', nameKey, place, tiers: [noneTier(text, slot, sprite), tier(text, { slot, sprite }, 1, receiveItemId)] };
 };
 
 const ladderSpec = (text: TextOf, params: LadderSpecParams): SlotSpec => {
@@ -42,18 +40,21 @@ const ladderSpec = (text: TextOf, params: LadderSpecParams): SlotSpec => {
   const last = topValue ?? ladder.length;
   for (let value = 1; value <= last; value++) {
     const rung = rungValues ? rungValues.indexOf(value) : value - 1;
-    tiers.push(tier(text, slot, value, sprite, rung >= 0 ? ladder[rung] : undefined));
+    tiers.push(tier(text, { slot, sprite }, value, rung >= 0 ? ladder[rung] : undefined));
   }
   return { slot, kind: 'ladder', nameKey, place, tiers };
 };
 
-const byValueSpec = (text: TextOf, slot: number, nameKey: string, table: Readonly<Record<number, number>>, sprite: SpriteOf): SlotSpec => ({
-  slot, kind: 'byValue', nameKey, place: 'grid',
-  tiers: [
-    noneTier(text, slot, sprite),
-    ...Object.entries(table).map(([value, receiveItemId]) => tier(text, slot, Number(value), sprite, receiveItemId)),
-  ],
-});
+const byValueSpec = (text: TextOf, params: ByValueSpecParams): SlotSpec => {
+  const { slot, nameKey, table, sprite } = params;
+  return {
+    slot, kind: 'byValue', nameKey, place: 'grid',
+    tiers: [
+      noneTier(text, slot, sprite),
+      ...Object.entries(table).map(([value, receiveItemId]) => tier(text, { slot, sprite }, Number(value), receiveItemId)),
+    ],
+  };
+};
 
 const gridFlag = (text: TextOf, slot: number, nameKey: keyof typeof SIMPLE): SlotSpec =>
   flagSpec(text, { slot, nameKey, place: 'grid', receiveItemId: SIMPLE[nameKey], sprite: gridSprite(slot) });
@@ -63,9 +64,10 @@ const abilityFlag = (text: TextOf, slot: number, nameKey: keyof typeof SIMPLE, t
 
 const mirrorSpec = (text: TextOf): SlotSpec => {
   const sprite = gridSprite(MIRROR_SLOT_INDEX);
+  const art = { slot: MIRROR_SLOT_INDEX, sprite };
   return {
     slot: MIRROR_SLOT_INDEX, kind: 'ladder', nameKey: 'mirror', place: 'grid',
-    tiers: [noneTier(text, MIRROR_SLOT_INDEX, sprite), tier(text, MIRROR_SLOT_INDEX, 1, sprite), tier(text, MIRROR_SLOT_INDEX, 2, sprite, MIRROR)],
+    tiers: [noneTier(text, MIRROR_SLOT_INDEX, sprite), tier(text, art, 1), tier(text, art, 2, MIRROR)],
   };
 };
 
@@ -77,10 +79,10 @@ const buildSlotSpecs = (text: TextOf): SlotSpec[] => [
   ladderSpec(text, {
     slot: 0, nameKey: 'bow', place: 'grid', ladder: LADDERS.bow, sprite: gridSprite(0), rungValues: BOW_RUNG_VALUES, topValue: BOW_TOP_VALUE,
   }),
-  byValueSpec(text, 1, 'boomerang', BY_VALUE.boomerang, gridSprite(1)),
+  byValueSpec(text, { slot: 1, nameKey: 'boomerang', table: BY_VALUE.boomerang, sprite: gridSprite(1) }),
   gridFlag(text, 2, 'hookshot'),
   gridFlag(text, 3, 'bombs'),
-  byValueSpec(text, 4, 'mushroom', BY_VALUE.mushroom, gridSprite(4)),
+  byValueSpec(text, { slot: 4, nameKey: 'mushroom', table: BY_VALUE.mushroom, sprite: gridSprite(4) }),
   gridFlag(text, 5, 'fireRod'),
   gridFlag(text, 6, 'iceRod'),
   gridFlag(text, 7, 'bombos'),
@@ -88,7 +90,7 @@ const buildSlotSpecs = (text: TextOf): SlotSpec[] => [
   gridFlag(text, 9, 'quake'),
   gridFlag(text, 10, 'lamp'),
   gridFlag(text, 11, 'hammer'),
-  byValueSpec(text, 12, 'flute', BY_VALUE.flute, gridSprite(12)),
+  byValueSpec(text, { slot: 12, nameKey: 'flute', table: BY_VALUE.flute, sprite: gridSprite(12) }),
   gridFlag(text, 13, 'bugNet'),
   gridFlag(text, 14, 'book'),
   bottleSpec(),

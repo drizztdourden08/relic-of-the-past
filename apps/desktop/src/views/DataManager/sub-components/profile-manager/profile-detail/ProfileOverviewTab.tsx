@@ -1,6 +1,7 @@
 /* @layer renderer-components @kind component */
 import { useT, useText } from '@drizztdourden08/brock-react';
 import { Stack } from '@drizztdourden08/tessera/primitives';
+import { MODE_BADGE_MESSAGES } from '@app/compounds/ModeBadge';
 import { useDateFormatOptions } from '@app/hooks/useDateFormatOptions';
 import { buildProfileFacts } from './build-profile-facts';
 import { FactsSection } from './FactsSection';
@@ -16,7 +17,7 @@ const ProfileOverviewTab = (props: ProfileOverviewTabProps) => {
   return (
     <Stack gap="lg">
       <ProfileEditSection profile={profile} languages={languages} msuPacks={msuPacks} onRefresh={onRefresh} />
-      <FactsSection title={t('data-manager:profile-manager.profile-overview-tab.details')} facts={[buildProfileFacts(profile, mode, t, text, dates)]} />
+      <FactsSection title={t('data-manager:profile-manager.profile-overview-tab.details')} facts={[buildProfileFacts(profile, text(MODE_BADGE_MESSAGES[mode]), t, dates)]} />
     </Stack>
   );
 };

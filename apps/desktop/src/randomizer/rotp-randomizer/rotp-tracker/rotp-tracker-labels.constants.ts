@@ -1,11 +1,7 @@
 /* @layer renderer-app @kind constants */
 import { msg } from '@drizztdourden08/brock-core/i18n';
 import type { Message } from '@drizztdourden08/brock-core/i18n';
-
-interface GroupingText {
-  label: Message;
-  description: Message;
-}
+import type { GroupingText } from './rotp-tracker-labels.type';
 
 const GROUPING_TEXT: Readonly<Record<string, GroupingText>> = {
   world: {
@@ -55,4 +51,3 @@ const FACET_TEXT: Readonly<Record<string, Message>> = {
 };
 
 export { FACET_CATEGORY_TEXT, FACET_TEXT, GROUPING_TEXT };
-export type { GroupingText };

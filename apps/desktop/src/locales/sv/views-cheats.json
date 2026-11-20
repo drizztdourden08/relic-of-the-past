@@ -116,7 +116,7 @@
   "grant.blocked.noTrigger": "konsolen har ingen ursprunglig utlösare för den här checken",
   "grant.blocked.cannotClear": "den kan inte klaras av här, eftersom {reason}",
   "grant.blocked.nothingPlaced": "den här seeden placerade inget på den här platsen",
-  "grant.blocked.noDirect": "”{item}” kan inte lämnas över direkt",
+  "grant.blocked.noDirect": "\"{item}\" kan inte lämnas över direkt",
   "item.bow": "Båge",
   "item.bow-arrows": "Båge och pilar",
   "item.silver-bow": "Silverbåge",
