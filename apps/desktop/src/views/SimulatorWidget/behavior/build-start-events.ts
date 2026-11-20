@@ -1,9 +1,9 @@
 /* @layer renderer-widgets @kind logic */
 import { msg } from '@drizztdourden08/brock-core/i18n';
 import type { SimConfig, SimEvent } from '@rotp/navigation';
-import { screenLabel } from '@rotp/navigation';
 import { getCheck } from '@rotp/game-data';
 import { optionText } from '@rotp/randomizer';
+import { checkName, screenLabel } from '@app/game/record-text';
 import { screenAreaInfo } from '@app/game/simulator';
 import type { DetectCache } from '@app/game/simulator/observe';
 import type { RunCursor } from '../SimulatorWidget.type';
@@ -16,7 +16,7 @@ const runConfigMessage = (config: SimConfig) => {
     ? optionText(msg('views-simulator:event.limit.unlimited'))
     : String(config.screenLimit);
   return config.stopAtCheckId
-    ? msg('views-simulator:event.run-config.stop', { check: getCheck(config.stopAtCheckId).name, limit })
+    ? msg('views-simulator:event.run-config.stop', { check: checkName(getCheck(config.stopAtCheckId)), limit })
     : msg('views-simulator:event.run-config', { limit });
 };
 

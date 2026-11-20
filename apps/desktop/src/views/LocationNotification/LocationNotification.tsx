@@ -1,5 +1,6 @@
 /* @layer renderer-hud @kind component */
 import { getLocation } from '@rotp/game-data';
+import { placeName, screenName } from '@app/game/record-text';
 import { HudBox } from '../../primitives/HudBox';
 import { useLocationNotificationStore } from '../../stores/location-notification-store';
 import { SCREEN_DISMISS_MS, TRANSITION_DISMISS_MS } from '../../hooks/hooks.constants';
@@ -14,8 +15,8 @@ const LocationNotification = () => {
       {screen && (
         <NotificationBanner
           key={`screen-${screen.timestamp}`}
-          title={getLocation(screen.screen.locationId).name}
-          subtitle={screen.screen.name}
+          title={placeName(getLocation(screen.screen.locationId))}
+          subtitle={screenName(screen.screen)}
           dismissMs={SCREEN_DISMISS_MS}
           variant="screen"
         />

@@ -3,6 +3,7 @@ import { useCallback, useRef, useState } from 'react';
 import { useT } from '@drizztdourden08/brock-react';
 import { Anchored, Box, Button, Icon, Portal, Text, useEscapeStack } from '@drizztdourden08/tessera/primitives';
 import { getCheck } from '@rotp/game-data';
+import { checkName } from '@app/game/record-text';
 import type { CheckId } from '@rotp/game-data';
 import { useStopAtChecks } from '../../behavior/useStopAtChecks';
 import { StopAtCheckFilters } from './sub-components/StopAtCheckFilters';
@@ -29,7 +30,7 @@ const StopAtCheckPicker = (props: StopAtCheckPickerProps) => {
 
   const selected = stopAtCheckId ? getCheck(stopAtCheckId) : undefined;
   const triggerIcon = selected ? checkTypeIcon(selected.kind) : NO_STOP_ICON;
-  const triggerLabel = selected?.name ?? t('views-simulator:picker.none');
+  const triggerLabel = (selected ? checkName(selected) : undefined) ?? t('views-simulator:picker.none');
 
   return (
     <>

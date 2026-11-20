@@ -2,6 +2,7 @@
 import { useT } from '@drizztdourden08/brock-react';
 import { Box, Button, Text } from '@drizztdourden08/tessera/primitives';
 import { grantFromCheck } from '@app/game';
+import { checkName } from '@app/game/record-text';
 import { detailOf } from '../behavior/detail-of';
 import { screenLabelOf } from '../behavior/screen-label-of';
 import type { CheckEntryProps } from '../ChecksTab.type';
@@ -15,7 +16,7 @@ const CheckEntry = ({ check, done, plan }: CheckEntryProps) => {
     <Box className={`cheats-checks__entry ${done ? 'cheats-checks__entry--completed' : ''}`}>
       <Box className="cheats-checks__text">
         <Text className="cheats-checks__name" title={`${screenLabelOf(check)} - ${check.kind}`}>
-          {check.name}
+          {checkName(check)}
         </Text>
         <Text className={`cheats-checks__gives ${blocked ? 'cheats-checks__gives--blocked' : ''}`}>
           {detail}

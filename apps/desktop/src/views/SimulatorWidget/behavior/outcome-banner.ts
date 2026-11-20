@@ -3,10 +3,11 @@ import type { I18n } from '@drizztdourden08/brock-core/i18n';
 import type { SimOutcome } from '@rotp/navigation';
 import { getCheck } from '@rotp/game-data';
 import type { CheckId } from '@rotp/game-data';
+import { checkName } from '@app/game/record-text';
 import type { OutcomeBanner } from '../SimulatorWidget.type';
 
 const resolveStopName = (t: I18n['t'], stopAtCheckId: CheckId | ''): string =>
-  stopAtCheckId ? getCheck(stopAtCheckId).name : t('views-simulator:outcome.stop.fallback');
+  stopAtCheckId ? checkName(getCheck(stopAtCheckId)) : t('views-simulator:outcome.stop.fallback');
 
 const outcomeBanner = (t: I18n['t'], outcome: SimOutcome, stopAtCheckId: CheckId | ''): OutcomeBanner => {
   switch (outcome) {

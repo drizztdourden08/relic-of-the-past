@@ -1,6 +1,7 @@
 /* @layer renderer-widgets @kind logic */
 import { screenForRoomIndex } from '@rotp/game-data';
 import type { DetectedConnection, DetectionInput } from '../../views/NavigationWidget/NavigationWidget.type';
+import { screenName } from '@app/game/record-text';
 import { hexLabel } from './hex-label';
 
 const stairConnection = (stair: DetectionInput['detectedStairs'][number]): DetectedConnection => {
@@ -10,7 +11,7 @@ const stairConnection = (stair: DetectionInput['detectedStairs'][number]): Detec
     targetRoomOrScreen: stair.destRoom,
     toScreenId: screen?.id ?? null,
     isExit: false,
-    label: `${screen ? screen.name : hexLabel('Room', stair.destRoom)} (${stair.direction})`,
+    label: `${screen ? screenName(screen) : hexLabel('Room', stair.destRoom)} (${stair.direction})`,
   };
 };
 
