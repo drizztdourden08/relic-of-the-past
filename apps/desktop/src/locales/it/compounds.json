@@ -259,5 +259,20 @@
   "shop-slots-block.retro-shuffled": "Arco retrò: la faretra è nel pool di oggetti, quindi {quiverShelf} si apre sempre come slot mescolato.",
   "shop-slots-block.retro-shuffled-with": "Arco retrò: la faretra è nel pool di oggetti, quindi {quiverShelf} si apre sempre come slot mescolato, così come {others}.",
   "shop-slots-block.retro-vanilla": "Arco retrò: {quiverShelf} vende la faretra a {quiverPrice} rupie, poi {refill} a {refillPrice}.",
-  "shop-slots-block.retro-vanilla-with": "Arco retrò: {quiverShelf} vende la faretra a {quiverPrice} rupie, poi {refill} a {refillPrice}; {others} vendono la stessa ricarica."
+  "shop-slots-block.retro-vanilla-with": "Arco retrò: {quiverShelf} vende la faretra a {quiverPrice} rupie, poi {refill} a {refillPrice}; {others} vendono la stessa ricarica.",
+  "checks-tracker.showing": "Mostrati {total} controlli:",
+  "checks-tracker.taken": "{count} ottenuti",
+  "checks-tracker.available": "{count} disponibili",
+  "checks-tracker.left": "{count} rimasti",
+  "hub-account-card.waiting": "Il browser ha aperto {siteHost}. Conferma lì questo dispositivo. Codice valido 10 min.",
+  "pond-status-note.title": "cosa farà lo stagno",
+  "reporting-as-line.label": "segnalazione come",
+  "save-row-actions.load": "Carica {name}",
+  "save-row-actions.overwrite": "Sovrascrivi {name}",
+  "save-row-actions.delete": "Elimina {name}",
+  "save-slot.load": "Carica slot {slotNumber}",
+  "save-slot.save": "Salva nello slot {slotNumber}",
+  "save-slot.slot": "Slot {slotNumber}",
+  "wishing-pond-row.may-ask-for": "cosa può chiedere",
+  "capacity.ladder": "scala"
 }

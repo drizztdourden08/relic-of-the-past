@@ -351,5 +351,8 @@
   "jobs.line.readPatchedRom": "Odczytywanie ROM-u z łatką...",
   "jobs.line.extractSprites": "Wyodrębnianie sprite'ów...",
   "jobs.line.compileAssets": "Kompilowanie zestawu zasobów...",
-  "jobs.line.readJapaneseGraphics": "Odczytywanie japońskiej grafiki..."
+  "jobs.line.readJapaneseGraphics": "Odczytywanie japońskiej grafiki...",
+  "rom-manager.extracted": "Wyodrębniono",
+  "rom-manager.attached-to": "Dołączono do {bases}",
+  "rom-manager.roms-title": "ROM-y"
 }

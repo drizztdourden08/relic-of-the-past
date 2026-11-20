@@ -1,12 +1,18 @@
 /* @layer renderer-components @kind logic */
 import type { CreateOutcome } from '@drizztdourden08/tessera/composites';
+import type { Text } from '@drizztdourden08/brock-core/i18n';
 import * as msuStore from '@app/storage/msu-store';
 import { isMsulName } from '../../../../../../msu-studio/behavior/is-msul-name';
 import type { MsuWizardValues } from '../MsuCreateWizard.type';
 import type { FinishContext } from './finish-pack.type';
 
-const settled = async (name: string, context: FinishContext, result: { success: boolean; error?: string }, failure: string): Promise<CreateOutcome> => {
-  if (!result.success) return { success: false, error: result.error ?? failure };
+const errorOf = (error: Text | undefined, context: FinishContext, failure: string): string => {
+  if (error === undefined) return failure;
+  return typeof error === 'string' ? error : context.t(error.key);
+};
+
+const settled = async (name: string, context: FinishContext, result: { success: boolean; error?: Text }, failure: string): Promise<CreateOutcome> => {
+  if (!result.success) return { success: false, error: errorOf(result.error, context, failure) };
   await context.refresh();
   return { success: true, id: name };
 };

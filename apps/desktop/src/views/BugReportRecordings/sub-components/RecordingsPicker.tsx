@@ -7,6 +7,7 @@ import type { ItemListRowState } from '@drizztdourden08/tessera/composites';
 import type { DebugCaptureSessionSummary } from '@app/debug-report';
 import { RecordingPreview } from '@app/compounds/RecordingPreview';
 import { recordingId } from '../behavior/recording-id';
+import { useDateFormatOptions } from '@app/hooks/useDateFormatOptions';
 import { recordingName } from '../behavior/recording-name';
 import { useRecordings } from '../behavior/useRecordings';
 import { NONE_MESSAGE, NONE_NEW_MESSAGE, SENT_LABEL, SHOW_SENT_LABEL, TITLE, UNDO_MS } from '../BugReportRecordings.constants';
@@ -16,22 +17,25 @@ import type { RecordingsPickerProps } from './RecordingsPicker.type';
 const RecordingsPicker = (props: RecordingsPickerProps) => {
   const { profileId, setExtras, disabled } = props;
   const text = useText();
+  const dates = useDateFormatOptions();
   const { sessions, loading, selected, showSent, error, toggleSession, toggleShowSent, deleteSession } = useRecordings(profileId, setExtras);
 
   const render = useCallback((session: DebugCaptureSessionSummary) => ({
-    icon: <RecordingPreview session={session} label={recordingName(session)} />,
+    icon: <RecordingPreview session={session} label={recordingName(session, dates)} />,
     meta: session.sentAt === null ? undefined : <Tag>{text(SENT_LABEL)}</Tag>,
-  }), [text]);
+  }), [text, dates]);
+
+  const getName = useCallback((session: DebugCaptureSessionSummary) => recordingName(session, dates), [dates]);
 
   const rowActions = useCallback((session: DebugCaptureSessionSummary, row: ItemListRowState) => (
     <IncludeButton
       included={selected.has(session.sessionKey)}
-      name={recordingName(session)}
+      name={recordingName(session, dates)}
       disabled={disabled}
       tabIndex={row.tabIndex}
       onToggle={() => toggleSession(session.sessionKey)}
     />
-  ), [selected, disabled, toggleSession]);
+  ), [selected, disabled, toggleSession, dates]);
 
   return (
     <Stack gap="sm" className="bug-report-recordings">
@@ -44,7 +48,7 @@ const RecordingsPicker = (props: RecordingsPickerProps) => {
           title={text(TITLE)}
           items={sessions}
           getId={recordingId}
-          getName={recordingName}
+          getName={getName}
           render={render}
           rowActions={rowActions}
           actionVisibility="always"

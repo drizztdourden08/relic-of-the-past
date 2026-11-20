@@ -5,5 +5,7 @@
   "deleteProfile.confirm": "Ta bort profil",
   "deleteRom.title": "Ta bort ROM",
   "deleteRom.message": "Detta tar bort \"{romFile}\" och alla extraherade resurser. Profiler som använder denna ROM tas också bort. Det går inte att ångra.",
-  "deleteRom.confirm": "Ta bort ROM"
+  "deleteRom.confirm": "Ta bort ROM",
+  "toast.restartNeeded": "Vissa ändringar kräver att spelet startas om för att börja gälla",
+  "toast.enhancedFallback": "Den moderna HUD-stilen kräver en skärm i 16:9 eller bredare, så stilen har återgått till Original"
 }

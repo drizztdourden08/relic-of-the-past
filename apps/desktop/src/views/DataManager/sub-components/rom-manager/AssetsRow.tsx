@@ -7,7 +7,7 @@ import type { AssetsRowProps } from './RomDetailPanel.type';
 const AssetsRow = ({ base, onExtractAssets }: AssetsRowProps) => {
   const t = useT();
   if (base.extractionStatus === 'ready') {
-    return <Text tone="secondary"><Icon name="check" inline /> Extracted{base.assetSize ? ` (${formatBytes(base.assetSize)})` : ''}</Text>;
+    return <Text tone="secondary"><Icon name="check" inline /> {t('data-manager:rom-manager.extracted')}{base.assetSize ? ` (${formatBytes(base.assetSize)})` : ''}</Text>;
   }
   if (base.extractionStatus === 'extracting') return <Text tone="primary"><Icon name="refresh-cw" inline />{t('data-manager:rom-manager.extracting')}</Text>;
   return (

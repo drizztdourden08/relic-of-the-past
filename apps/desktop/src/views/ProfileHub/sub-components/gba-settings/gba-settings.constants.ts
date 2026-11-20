@@ -19,6 +19,19 @@ const GBA_GROUP_ORDER: GbaGroup[] = [
   'Removed',
 ];
 
+const GBA_GROUP_KEYS = {
+  'Extra content': 'profiles:gba.group.extra-content',
+  'Combat & items': 'profiles:gba.group.combat-items',
+  'World & exploration': 'profiles:gba.group.world-exploration',
+  'Enemies & bosses': 'profiles:gba.group.enemies-bosses',
+  'Presentation': 'profiles:gba.group.presentation',
+  'Audio & voice': 'profiles:gba.group.audio-voice',
+  'Text & naming': 'profiles:gba.group.text-naming',
+  'Save & meta': 'profiles:gba.group.save-meta',
+  'Fixes': 'profiles:gba.group.fixes',
+  'Removed': 'profiles:gba.group.removed',
+} as const satisfies Record<GbaGroup, string>;
+
 const gbaSchemaConfig = (t: I18n['t']): SchemaConfig => ({
   order: ['label', 'group', 'status', 'detail'],
   labels: {
@@ -30,7 +43,7 @@ const gbaSchemaConfig = (t: I18n['t']): SchemaConfig => ({
   hidden: ['id'],
   kinds: { label: 'string', detail: 'string' },
   options: {
-    group: GBA_GROUP_ORDER,
+    group: GBA_GROUP_ORDER.map((group) => ({ value: group, label: t(GBA_GROUP_KEYS[group]) })),
     status: [
       { value: 'in-progress', label: t('profiles:gba.status.in-progress') },
       { value: 'not-started', label: t('profiles:gba.status.not-started') },

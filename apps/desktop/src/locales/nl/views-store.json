@@ -33,5 +33,6 @@
   "hero.eyebrow": "Communitypakketten",
   "kind.music": "Muziekpakket",
   "kind.character": "Personage",
-  "kind.language": "Taal"
+  "kind.language": "Taal",
+  "account.lookupFailed": "Je Sanctuary-account kon niet worden opgezocht."
 }

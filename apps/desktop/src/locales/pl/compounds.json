@@ -259,5 +259,20 @@
   "shop-slots-block.retro-shuffled": "Łuk retro: kołczan jest w puli przedmiotów, więc {quiverShelf} zawsze otwiera się jako tasowane miejsce.",
   "shop-slots-block.retro-shuffled-with": "Łuk retro: kołczan jest w puli przedmiotów, więc {quiverShelf} zawsze otwiera się jako tasowane miejsce, podobnie jak {others}.",
   "shop-slots-block.retro-vanilla": "Łuk retro: {quiverShelf} sprzedaje kołczan za {quiverPrice} rupii, a potem {refill} za {refillPrice}.",
-  "shop-slots-block.retro-vanilla-with": "Łuk retro: {quiverShelf} sprzedaje kołczan za {quiverPrice} rupii, a potem {refill} za {refillPrice}; {others} sprzedają to samo uzupełnienie."
+  "shop-slots-block.retro-vanilla-with": "Łuk retro: {quiverShelf} sprzedaje kołczan za {quiverPrice} rupii, a potem {refill} za {refillPrice}; {others} sprzedają to samo uzupełnienie.",
+  "checks-tracker.showing": "Pokazano {total} sprawdzeń:",
+  "checks-tracker.taken": "{count} zdobyte",
+  "checks-tracker.available": "{count} dostępne",
+  "checks-tracker.left": "{count} pozostało",
+  "hub-account-card.waiting": "Przeglądarka otworzyła {siteHost}. Potwierdź tam to urządzenie. Kod ważny 10 min.",
+  "pond-status-note.title": "co zrobi staw",
+  "reporting-as-line.label": "zgłaszasz jako",
+  "save-row-actions.load": "Wczytaj {name}",
+  "save-row-actions.overwrite": "Nadpisz {name}",
+  "save-row-actions.delete": "Usuń {name}",
+  "save-slot.load": "Wczytaj slot {slotNumber}",
+  "save-slot.save": "Zapisz w slocie {slotNumber}",
+  "save-slot.slot": "Slot {slotNumber}",
+  "wishing-pond-row.may-ask-for": "czego może zażądać",
+  "capacity.ladder": "drabina"
 }

@@ -259,5 +259,20 @@
   "shop-slots-block.retro-shuffled": "レトロ弓：矢筒がアイテムプールにあるため、{quiverShelf}は常にシャッフル枠として開きます。",
   "shop-slots-block.retro-shuffled-with": "レトロ弓：矢筒がアイテムプールにあるため、{quiverShelf}は{others}と同じく常にシャッフル枠として開きます。",
   "shop-slots-block.retro-vanilla": "レトロ弓：{quiverShelf}は矢筒を{quiverPrice}ルピーで売り、その後は{refill}を{refillPrice}で売ります。",
-  "shop-slots-block.retro-vanilla-with": "レトロ弓：{quiverShelf}は矢筒を{quiverPrice}ルピーで売り、その後は{refill}を{refillPrice}で売ります。{others}も同じ補充を売ります。"
+  "shop-slots-block.retro-vanilla-with": "レトロ弓：{quiverShelf}は矢筒を{quiverPrice}ルピーで売り、その後は{refill}を{refillPrice}で売ります。{others}も同じ補充を売ります。",
+  "checks-tracker.showing": "{total} 件のチェックを表示中:",
+  "checks-tracker.taken": "{count} 件取得",
+  "checks-tracker.available": "{count} 件到達可能",
+  "checks-tracker.left": "{count} 件残り",
+  "hub-account-card.waiting": "ブラウザーで {siteHost} が開きました。そこでこのデバイスを承認してください。コードの有効期間は10分です。",
+  "pond-status-note.title": "泉がすること",
+  "reporting-as-line.label": "報告者",
+  "save-row-actions.load": "{name} をロード",
+  "save-row-actions.overwrite": "{name} を上書き",
+  "save-row-actions.delete": "{name} を削除",
+  "save-slot.load": "スロット {slotNumber} をロード",
+  "save-slot.save": "スロット {slotNumber} にセーブ",
+  "save-slot.slot": "スロット {slotNumber}",
+  "wishing-pond-row.may-ask-for": "彼女が求められるもの",
+  "capacity.ladder": "段階"
 }

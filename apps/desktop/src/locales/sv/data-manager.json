@@ -351,5 +351,8 @@
   "jobs.line.readPatchedRom": "Läser den patchade ROM:en...",
   "jobs.line.extractSprites": "Packar upp sprites...",
   "jobs.line.compileAssets": "Kompilerar resursuppsättningen...",
-  "jobs.line.readJapaneseGraphics": "Läser den japanska grafiken..."
+  "jobs.line.readJapaneseGraphics": "Läser den japanska grafiken...",
+  "rom-manager.extracted": "Extraherad",
+  "rom-manager.attached-to": "Kopplad till {bases}",
+  "rom-manager.roms-title": "ROM-filer"
 }

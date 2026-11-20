@@ -259,5 +259,20 @@
   "shop-slots-block.retro-shuffled": "Retroboog: de pijlkoker zit in de itempool, dus {quiverShelf} opent altijd als geschudde plek.",
   "shop-slots-block.retro-shuffled-with": "Retroboog: de pijlkoker zit in de itempool, dus {quiverShelf} opent altijd als geschudde plek, net als {others}.",
   "shop-slots-block.retro-vanilla": "Retroboog: {quiverShelf} verkoopt de pijlkoker voor {quiverPrice} rupees, daarna {refill} voor {refillPrice}.",
-  "shop-slots-block.retro-vanilla-with": "Retroboog: {quiverShelf} verkoopt de pijlkoker voor {quiverPrice} rupees, daarna {refill} voor {refillPrice}; {others} verkopen dezelfde aanvulling."
+  "shop-slots-block.retro-vanilla-with": "Retroboog: {quiverShelf} verkoopt de pijlkoker voor {quiverPrice} rupees, daarna {refill} voor {refillPrice}; {others} verkopen dezelfde aanvulling.",
+  "checks-tracker.showing": "{total} checks getoond:",
+  "checks-tracker.taken": "{count} gepakt",
+  "checks-tracker.available": "{count} beschikbaar",
+  "checks-tracker.left": "{count} over",
+  "hub-account-card.waiting": "Je browser heeft {siteHost} geopend. Bevestig daar dit apparaat. Code 10 min. geldig.",
+  "pond-status-note.title": "wat de vijver zal doen",
+  "reporting-as-line.label": "melden als",
+  "save-row-actions.load": "{name} laden",
+  "save-row-actions.overwrite": "{name} overschrijven",
+  "save-row-actions.delete": "{name} verwijderen",
+  "save-slot.load": "Slot {slotNumber} laden",
+  "save-slot.save": "Opslaan in slot {slotNumber}",
+  "save-slot.slot": "Slot {slotNumber}",
+  "wishing-pond-row.may-ask-for": "waar ze om mag vragen",
+  "capacity.ladder": "ladder"
 }

@@ -351,5 +351,8 @@
   "jobs.line.readPatchedRom": "Lendo a ROM com patch...",
   "jobs.line.extractSprites": "Extraindo sprites...",
   "jobs.line.compileAssets": "Compilando o conjunto de recursos...",
-  "jobs.line.readJapaneseGraphics": "Lendo os gráficos japoneses..."
+  "jobs.line.readJapaneseGraphics": "Lendo os gráficos japoneses...",
+  "rom-manager.extracted": "Extraído",
+  "rom-manager.attached-to": "Associado a {bases}",
+  "rom-manager.roms-title": "ROMs"
 }

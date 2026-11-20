@@ -25,5 +25,13 @@
   "hookshop.siteSignedOut": "Dieses Gerät wurde auf der Website abgemeldet. Melde dich erneut an.",
   "hookshop.grantRefused": "Der Hookshop hat ohne Art, Autor oder Lizenz des Pakets geantwortet.",
   "hookshop.answerUnreadable": "Der Hookshop hat mit etwas geantwortet, das diese App nicht lesen kann.",
-  "boot.ffmpeg": "Medienwerkzeug wird angemeldet"
+  "boot.ffmpeg": "Medienwerkzeug wird angemeldet",
+  "sanctuary.report.linkSanctuary": "Sanctuary-Bericht",
+  "sanctuary.report.linkIssue": "GitHub-Issue",
+  "sanctuary.report.filed": "Bericht {id} eingereicht",
+  "sanctuary.report.filedNoDebug": "Bericht {id} eingereicht, ohne Debug-Dateien: {error}",
+  "storage.installedLocked": "„{name}“ stammt aus dem Hookshop und ist schreibgeschützt. Dupliziere es, um es zu ändern.",
+  "ffmpeg.lookupFailed": "Die ffmpeg-Version konnte nicht abgefragt werden (HTTP {status}).",
+  "ffmpeg.assetMissing": "Die ffmpeg-Version veröffentlicht {asset} nicht mehr.",
+  "ffmpeg.digestMissing": "Für {asset} wurde keine sha256-Prüfsumme veröffentlicht."
 }

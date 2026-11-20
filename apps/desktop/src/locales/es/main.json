@@ -25,5 +25,13 @@
   "hookshop.siteSignedOut": "Este dispositivo se desconectó en el sitio. Inicia sesión de nuevo.",
   "hookshop.grantRefused": "Hookshop respondió sin el tipo, el autor ni la licencia del pack.",
   "hookshop.answerUnreadable": "Hookshop respondió con algo que esta app no puede leer.",
-  "boot.ffmpeg": "Declarando la herramienta multimedia"
+  "boot.ffmpeg": "Declarando la herramienta multimedia",
+  "sanctuary.report.linkSanctuary": "Informe de Sanctuary",
+  "sanctuary.report.linkIssue": "Incidencia de GitHub",
+  "sanctuary.report.filed": "Informe {id} enviado",
+  "sanctuary.report.filedNoDebug": "Informe {id} enviado, sin sus archivos de depuración: {error}",
+  "storage.installedLocked": "«{name}» está instalado desde el Hookshop y es de solo lectura. Duplícalo para cambiarlo.",
+  "ffmpeg.lookupFailed": "No se pudo consultar la versión de ffmpeg (HTTP {status}).",
+  "ffmpeg.assetMissing": "La versión de ffmpeg ya no publica {asset}.",
+  "ffmpeg.digestMissing": "No hay un resumen sha256 publicado para {asset}."
 }

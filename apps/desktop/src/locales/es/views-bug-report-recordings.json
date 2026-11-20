@@ -4,5 +4,8 @@
   "empty.new": "No hay grabaciones nuevas. Pulsa Mostrar enviadas para ver las anteriores.",
   "empty.all": "Aún no hay grabaciones.",
   "sent": "Enviada",
-  "include": "Incluir la grabación de {name}"
+  "include": "Incluir la grabación de {name}",
+  "github.label": "Abrir una incidencia en GitHub",
+  "github.opened": "Se abrió una incidencia de GitHub rellenada. Inicia sesión en el Sanctuary para enviar informes desde la aplicación con tus partidas adjuntas.",
+  "github.noRepo": "Inicia sesión en el Sanctuary para enviar un informe."
 }

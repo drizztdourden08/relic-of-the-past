@@ -259,5 +259,20 @@
   "shop-slots-block.retro-shuffled": "Arco retro: el carcaj está en el pool de objetos, así que {quiverShelf} siempre se abre como hueco mezclado.",
   "shop-slots-block.retro-shuffled-with": "Arco retro: el carcaj está en el pool de objetos, así que {quiverShelf} siempre se abre como hueco mezclado, igual que {others}.",
   "shop-slots-block.retro-vanilla": "Arco retro: {quiverShelf} vende el carcaj por {quiverPrice} rupias y después {refill} a {refillPrice}.",
-  "shop-slots-block.retro-vanilla-with": "Arco retro: {quiverShelf} vende el carcaj por {quiverPrice} rupias y después {refill} a {refillPrice}; {others} venden la misma recarga."
+  "shop-slots-block.retro-vanilla-with": "Arco retro: {quiverShelf} vende el carcaj por {quiverPrice} rupias y después {refill} a {refillPrice}; {others} venden la misma recarga.",
+  "checks-tracker.showing": "Mostrando {total} comprobaciones:",
+  "checks-tracker.taken": "{count} obtenidos",
+  "checks-tracker.available": "{count} disponibles",
+  "checks-tracker.left": "{count} restantes",
+  "hub-account-card.waiting": "Tu navegador abrió {siteHost}. Confirma allí este dispositivo. Código válido 10 min.",
+  "pond-status-note.title": "lo que hará el estanque",
+  "reporting-as-line.label": "informando como",
+  "save-row-actions.load": "Cargar {name}",
+  "save-row-actions.overwrite": "Sobrescribir {name}",
+  "save-row-actions.delete": "Eliminar {name}",
+  "save-slot.load": "Cargar ranura {slotNumber}",
+  "save-slot.save": "Guardar en la ranura {slotNumber}",
+  "save-slot.slot": "Ranura {slotNumber}",
+  "wishing-pond-row.may-ask-for": "lo que puede pedir",
+  "capacity.ladder": "escalera"
 }

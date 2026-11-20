@@ -33,5 +33,6 @@
   "hero.eyebrow": "Community-Pakete",
   "kind.music": "Musikpaket",
   "kind.character": "Figur",
-  "kind.language": "Sprache"
+  "kind.language": "Sprache",
+  "account.lookupFailed": "Dein Sanctuary-Konto konnte nicht abgefragt werden."
 }

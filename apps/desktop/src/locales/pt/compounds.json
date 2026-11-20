@@ -259,5 +259,20 @@
   "shop-slots-block.retro-shuffled": "Arco retrô: a aljava está no conjunto de itens, então {quiverShelf} sempre abre como espaço embaralhado.",
   "shop-slots-block.retro-shuffled-with": "Arco retrô: a aljava está no conjunto de itens, então {quiverShelf} sempre abre como espaço embaralhado, assim como {others}.",
   "shop-slots-block.retro-vanilla": "Arco retrô: {quiverShelf} vende a aljava por {quiverPrice} rupias e depois {refill} por {refillPrice}.",
-  "shop-slots-block.retro-vanilla-with": "Arco retrô: {quiverShelf} vende a aljava por {quiverPrice} rupias e depois {refill} por {refillPrice}; {others} vendem a mesma recarga."
+  "shop-slots-block.retro-vanilla-with": "Arco retrô: {quiverShelf} vende a aljava por {quiverPrice} rupias e depois {refill} por {refillPrice}; {others} vendem a mesma recarga.",
+  "checks-tracker.showing": "A mostrar {total} verificações:",
+  "checks-tracker.taken": "{count} obtidos",
+  "checks-tracker.available": "{count} disponíveis",
+  "checks-tracker.left": "{count} restantes",
+  "hub-account-card.waiting": "O seu navegador abriu {siteHost}. Confirme aí este dispositivo. Código válido durante 10 min.",
+  "pond-status-note.title": "o que o lago fará",
+  "reporting-as-line.label": "a reportar como",
+  "save-row-actions.load": "Carregar {name}",
+  "save-row-actions.overwrite": "Substituir {name}",
+  "save-row-actions.delete": "Eliminar {name}",
+  "save-slot.load": "Carregar ranhura {slotNumber}",
+  "save-slot.save": "Guardar na ranhura {slotNumber}",
+  "save-slot.slot": "Ranhura {slotNumber}",
+  "wishing-pond-row.may-ask-for": "o que ela pode pedir",
+  "capacity.ladder": "escada"
 }

@@ -8,5 +8,7 @@
   "language.patched.failed": "パッチ済みROMをインポートできませんでした。下のレポートに失敗した部分が示されています。",
   "sprite.unreadablePack": "読み取れるスプライトパックではありません。",
   "sprite.invalidZspr": "有効なZSPRスプライトファイルではありません。",
-  "msu.trackNotFound": "トラックが見つかりません：{file}"
+  "msu.trackNotFound": "トラックが見つかりません：{file}",
+  "msu.noTracks": "インストールするトラックが見つかりませんでした。",
+  "import.failed": "インポートに失敗しました。"
 }

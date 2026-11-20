@@ -18,9 +18,9 @@ const AUTO_SAVES_IN_REPORT = 2;
 
 const ZIP_PREFIX = 'rotp-report-';
 
-const SANCTUARY_LINK_LABEL = 'Sanctuary report';
+const SANCTUARY_LINK_LABEL = msg('main:sanctuary.report.linkSanctuary');
 
-const ISSUE_LINK_LABEL = 'GitHub issue';
+const ISSUE_LINK_LABEL = msg('main:sanctuary.report.linkIssue');
 
 export {
   SIGNED_OUT_ERROR, FILE_FAILED_ERROR, BAD_CONTACT_ERROR, NO_UPLOAD_URL_ERROR, TOO_LARGE_ERROR,

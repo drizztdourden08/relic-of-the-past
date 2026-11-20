@@ -4,5 +4,8 @@
   "empty.new": "No new recordings. Show sent to see earlier ones.",
   "empty.all": "No recordings yet.",
   "sent": "Sent",
-  "include": "Include the recording from {name}"
+  "include": "Include the recording from {name}",
+  "github.label": "Open a GitHub issue",
+  "github.opened": "Opened a prefilled GitHub issue. Sign in to the Sanctuary to send reports from the app with your saves attached.",
+  "github.noRepo": "Sign in to the Sanctuary to send a report."
 }

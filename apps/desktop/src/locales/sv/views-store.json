@@ -33,5 +33,6 @@
   "hero.eyebrow": "Gemenskapspaket",
   "kind.music": "Musikpaket",
   "kind.character": "Figur",
-  "kind.language": "Språk"
+  "kind.language": "Språk",
+  "account.lookupFailed": "Det gick inte att slå upp ditt Sanctuary-konto."
 }

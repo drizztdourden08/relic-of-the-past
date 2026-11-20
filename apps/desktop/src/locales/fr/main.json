@@ -25,5 +25,13 @@
   "hookshop.siteSignedOut": "Cet appareil a été déconnecté sur le site. Reconnectez-vous.",
   "hookshop.grantRefused": "Le Hookshop a répondu sans le type, l'auteur ou la licence du pack.",
   "hookshop.answerUnreadable": "Le Hookshop a répondu par quelque chose que l'application ne peut pas lire.",
-  "boot.ffmpeg": "Déclaration de l'outil multimédia"
+  "boot.ffmpeg": "Déclaration de l'outil multimédia",
+  "sanctuary.report.linkSanctuary": "Rapport Sanctuary",
+  "sanctuary.report.linkIssue": "Ticket GitHub",
+  "sanctuary.report.filed": "Rapport {id} envoyé",
+  "sanctuary.report.filedNoDebug": "Rapport {id} envoyé, sans ses fichiers de débogage : {error}",
+  "storage.installedLocked": "« {name} » est installé depuis le Hookshop et en lecture seule. Dupliquez-le pour le modifier.",
+  "ffmpeg.lookupFailed": "Impossible de consulter la version de ffmpeg (HTTP {status}).",
+  "ffmpeg.assetMissing": "La version de ffmpeg ne publie plus {asset}.",
+  "ffmpeg.digestMissing": "Aucune empreinte sha256 publiée pour {asset}."
 }

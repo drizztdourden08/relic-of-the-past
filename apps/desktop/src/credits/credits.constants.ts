@@ -1,60 +1,64 @@
 /* @layer shared-other @kind data */
+import { msg } from '@drizztdourden08/brock-core/i18n';
 import type { CreditCategory, UsageLevel } from './credits.type';
+import type { Message } from '@drizztdourden08/brock-core/i18n';
 
-const USAGE_LABELS: Record<UsageLevel, string> = {
-  'original-work': 'Original Work',
-  'core-dependency': 'Core Dependency',
-  'data-direct': 'Data Used Directly',
-  'assets-direct': 'Assets Used Directly',
-  'assets-modified': 'Assets Modified',
-  'logic-port': 'Logic Ported',
-  'logic-reference': 'Logic Reference',
-  'reference': 'Reference',
-  'inspiration': 'Inspiration',
+const FONT_GLYPHS = '# $ % & * + / ; = @ [ \\ ] ^ _ ` { } ~';
+
+const USAGE_LABELS: Record<UsageLevel, Message> = {
+  'original-work': msg('profiles:credits.usage.original-work'),
+  'core-dependency': msg('profiles:credits.usage.core-dependency'),
+  'data-direct': msg('profiles:credits.usage.data-direct'),
+  'assets-direct': msg('profiles:credits.usage.assets-direct'),
+  'assets-modified': msg('profiles:credits.usage.assets-modified'),
+  'logic-port': msg('profiles:credits.usage.logic-port'),
+  'logic-reference': msg('profiles:credits.usage.logic-reference'),
+  reference: msg('profiles:credits.usage.reference'),
+  inspiration: msg('profiles:credits.usage.inspiration'),
 };
 
 const CREDITS: CreditCategory[] = [
   {
     id: 'game',
-    title: 'Game & Core Engine',
+    title: msg('profiles:credits.cat.game'),
     entries: [
       {
         name: 'snesrev',
         project: 'zelda3',
-        description: 'A reverse-engineered C reimplementation of A Link to the Past (~70k+ lines of C).',
+        description: msg('profiles:credits.e.0-0.d'),
         usage: 'core-dependency',
-        usageNote: 'Vendored C codebase compiled to WebAssembly; the game engine itself.',
+        usageNote: msg('profiles:credits.e.0-0.n'),
         url: 'https://github.com/snesrev/zelda3',
         license: 'MIT',
       },
       {
         name: 'elzo-d',
         project: 'LakeSnes',
-        description: 'SNES emulator providing PPU and DSP implementation, used within zelda3 with speed optimizations.',
+        description: msg('profiles:credits.e.0-1.d'),
         usage: 'core-dependency',
-        usageNote: 'PPU/DSP code included within snesrev/zelda3.',
+        usageNote: msg('profiles:credits.e.0-1.n'),
         url: 'https://github.com/elzo-d/LakeSnes',
         license: 'MIT',
       },
       {
         name: 'spannerism',
         project: 'Zelda 3 JP Disassembly',
-        description: 'Community disassembly documenting function names and variables used during the decompilation effort.',
+        description: msg('profiles:credits.e.0-2.d'),
         usage: 'reference',
-        usageNote: 'Function and variable naming reference used by snesrev.',
+        usageNote: msg('profiles:credits.e.0-2.n'),
       },
     ],
   },
   {
     id: 'launcher',
-    title: 'Launcher Inspiration',
+    title: msg('profiles:credits.cat.launcher'),
     entries: [
       {
         name: 'RadzPrower',
         project: 'Zelda-3-Launcher',
-        description: 'An all-purpose GUI tool to download, extract, compile, and launch zelda3 on PC.',
+        description: msg('profiles:credits.e.1-0.d'),
         usage: 'inspiration',
-        usageNote: 'UI/UX concept inspiration for wrapping zelda3 in a launcher; no code used.',
+        usageNote: msg('profiles:credits.e.1-0.n'),
         url: 'https://github.com/RadzPrower/Zelda-3-Launcher',
         license: 'MIT',
       },
@@ -62,77 +66,77 @@ const CREDITS: CreditCategory[] = [
   },
   {
     id: 'controllers',
-    title: 'Controller Support',
+    title: msg('profiles:credits.cat.controllers'),
     entries: [
       {
         name: 'Sam Lantinga + contributors',
         project: 'SDL',
-        description: 'Cross-platform library that handles controller input, rumble and motion sensors.',
+        description: msg('profiles:credits.e.2-0.d'),
         usage: 'core-dependency',
-        usageNote: 'The entire controller layer on every platform. Built from SDL\'s official released source: linked as a shared library on desktop, and compiled into the mobile plugin along with SDL\'s own Java classes, which are taken from that same pinned release at build time instead of being copied into this repository.',
+        usageNote: msg('profiles:credits.e.2-0.n'),
         url: 'https://github.com/libsdl-org/SDL',
         license: 'Zlib',
       },
       {
         name: 'mdqinc + contributors',
         project: 'SDL_GameControllerDB',
-        description: 'A community-sourced database of game controller mappings for SDL.',
+        description: msg('profiles:credits.e.2-1.d'),
         usage: 'data-direct',
-        usageNote: 'Controller mapping database vendored and parsed into TypeScript controller list.',
+        usageNote: msg('profiles:credits.e.2-1.n'),
         url: 'https://github.com/mdqinc/SDL_GameControllerDB',
         license: 'Zlib',
       },
       {
         name: 'HandHeldLegend',
         project: 'procon2tool',
-        description: 'Open-source utility to enable the Switch Pro Controller 2 on Windows/Android.',
+        description: msg('profiles:credits.e.2-2.d'),
         usage: 'reference',
-        usageNote: 'USB init sequence and haptic patterns studied and reimplemented in TypeScript; no code copied directly.',
+        usageNote: msg('profiles:credits.e.2-2.n'),
         url: 'https://handheldlegend.github.io/procon2tool',
       },
       {
         name: 'RyanCopley',
         project: 'NSO-GameCube-Controller-Pairing-App',
-        description: 'Tool to use the NSO GameCube controller on Windows/macOS/Linux.',
+        description: msg('profiles:credits.e.2-3.d'),
         usage: 'reference',
-        usageNote: 'Studied to understand NSO GameCube controller pairing protocol; no code taken, used as debugging reference.',
+        usageNote: msg('profiles:credits.e.2-3.n'),
         url: 'https://github.com/RyanCopley/NSO-GameCube-Controller-Pairing-App',
       },
     ],
   },
   {
     id: 'icons',
-    title: 'Button & Controller Icons',
+    title: msg('profiles:credits.cat.icons'),
     entries: [
       {
         name: 'Kenney',
         project: 'Input Prompts',
-        description: 'Free game asset pack with 1500+ controller button/stick/key SVG icons (64×64).',
+        description: msg('profiles:credits.e.3-0.d'),
         usage: 'assets-direct',
-        usageNote: 'Switch, Xbox, PlayStation, GameCube, Keyboard, and Generic SVG icons used as-is for button prompts.',
+        usageNote: msg('profiles:credits.e.3-0.n'),
         url: 'https://kenney.nl/assets/input-prompts',
         license: 'CC0',
       },
       {
         name: 'Tiago Alexander',
         project: 'SNES Controller in Sketch',
-        description: 'High-fidelity SNES controller design in Sketch format.',
+        description: msg('profiles:credits.e.3-1.d'),
         usage: 'assets-modified',
-        usageNote: 'Sketch file converted to Figma, individual button SVGs exported and heavily modified for SNES button prompts.',
+        usageNote: msg('profiles:credits.e.3-1.n'),
         url: 'https://www.sketchappsources.com/free-source/4788-snes-controller-sketch-freebie-resource.html',
       },
     ],
   },
   {
     id: 'map-icons',
-    title: 'Map & Entrance Icons',
+    title: msg('profiles:credits.cat.map-icons'),
     entries: [
       {
         name: 'Lorc, Delapouite & contributors',
         project: 'game-icons.net',
-        description: 'Open icon set; door, cave, dungeon, fairy, shop and other entrance/map markers.',
+        description: msg('profiles:credits.e.4-0.d'),
         usage: 'assets-direct',
-        usageNote: 'SVG icons used via @iconify-icons/game-icons for navigation/minimap entrance markers. Attribution required by license.',
+        usageNote: msg('profiles:credits.e.4-0.n'),
         url: 'https://game-icons.net',
         license: 'CC BY 3.0',
       },
@@ -140,14 +144,14 @@ const CREDITS: CreditCategory[] = [
   },
   {
     id: 'fonts',
-    title: 'Fonts',
+    title: msg('profiles:credits.cat.fonts'),
     entries: [
       {
         name: 'Patrick H. Lauke',
         project: 'The Legend of Zelda: A Link to the Past (Ext)',
-        description: 'A FontStruct recreation of the game\'s dialogue face, extended with accented characters.',
+        description: msg('profiles:credits.e.5-0.d'),
         usage: 'assets-modified',
-        usageNote: 'Modified and adapted for this project: glyphs added for # $ % & * + / ; = @ [ \\ ] ^ _ ` { } ~, drawn on the face\'s own pixel grid. Used wherever the app shows text the game will display, so a line is written in the shape it takes on screen. Attribution required by license; the font ships with its own LICENSE.txt and README.txt, and CHANGES.txt lists the changes.',
+        usageNote: msg('profiles:credits.e.5-0.n', { glyphs: FONT_GLYPHS }),
         url: 'https://fontstruct.com/fontstructions/show/1534358',
         license: 'CC BY 3.0',
       },
@@ -155,14 +159,14 @@ const CREDITS: CreditCategory[] = [
   },
   {
     id: 'randomizer',
-    title: 'Randomizer Logic',
+    title: msg('profiles:credits.cat.randomizer'),
     entries: [
       {
         name: 'Archipelago',
         project: 'Archipelago Multiworld',
-        description: 'Cross-game randomizer and multiworld system with ALttP support.',
+        description: msg('profiles:credits.e.6-0.d'),
         usage: 'logic-port',
-        usageNote: 'Randomizer logic (regions, access rules, item pool, fill validity) ported to TypeScript from the MIT-licensed ALttP world implementation; location and item naming follows its conventions. Generated seeds are validated against spoiler logs produced by the original.',
+        usageNote: msg('profiles:credits.e.6-0.n'),
         url: 'https://archipelago.gg',
         license: 'MIT',
       },
@@ -170,15 +174,14 @@ const CREDITS: CreditCategory[] = [
   },
   {
     id: 'randomizer-art',
-    title: 'Randomizer Item Icons',
+    title: msg('profiles:credits.cat.randomizer-art'),
     entries: [
       {
         name: 'Efracrafting',
         project: 'Randomizer Item Icons',
-        description: 'Pixel artist contributing custom item icons for the randomizer.',
+        description: msg('profiles:credits.e.7-0.d'),
         usage: 'original-work',
-        usageNote:
-          'Drew the quiver receipt\'s held-item icon, in the game\'s own sprite palette, and the pool icons: one per game a multiworld pool can hold, plus the badge stamped on them.',
+        usageNote: msg('profiles:credits.e.7-0.n'),
       },
     ],
   },

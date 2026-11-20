@@ -259,5 +259,20 @@
   "shop-slots-block.retro-shuffled": "Retrobåge: kogret finns i föremålspoolen, så {quiverShelf} öppnas alltid som en blandad plats.",
   "shop-slots-block.retro-shuffled-with": "Retrobåge: kogret finns i föremålspoolen, så {quiverShelf} öppnas alltid som en blandad plats, liksom {others}.",
   "shop-slots-block.retro-vanilla": "Retrobåge: {quiverShelf} säljer kogret för {quiverPrice} rupier, sedan {refill} för {refillPrice}.",
-  "shop-slots-block.retro-vanilla-with": "Retrobåge: {quiverShelf} säljer kogret för {quiverPrice} rupier, sedan {refill} för {refillPrice}; {others} säljer samma påfyllning."
+  "shop-slots-block.retro-vanilla-with": "Retrobåge: {quiverShelf} säljer kogret för {quiverPrice} rupier, sedan {refill} för {refillPrice}; {others} säljer samma påfyllning.",
+  "checks-tracker.showing": "Visar {total} kontroller:",
+  "checks-tracker.taken": "{count} tagna",
+  "checks-tracker.available": "{count} tillgängliga",
+  "checks-tracker.left": "{count} kvar",
+  "hub-account-card.waiting": "Din webbläsare öppnade {siteHost}. Bekräfta den här enheten där. Koden gäller i 10 min.",
+  "pond-status-note.title": "vad dammen kommer att göra",
+  "reporting-as-line.label": "rapporterar som",
+  "save-row-actions.load": "Läs in {name}",
+  "save-row-actions.overwrite": "Skriv över {name}",
+  "save-row-actions.delete": "Ta bort {name}",
+  "save-slot.load": "Läs in plats {slotNumber}",
+  "save-slot.save": "Spara på plats {slotNumber}",
+  "save-slot.slot": "Plats {slotNumber}",
+  "wishing-pond-row.may-ask-for": "vad hon får be om",
+  "capacity.ladder": "stege"
 }

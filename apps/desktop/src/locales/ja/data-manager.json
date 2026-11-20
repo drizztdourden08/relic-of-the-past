@@ -351,5 +351,8 @@
   "jobs.line.readPatchedRom": "パッチ済みROMを読み込み中...",
   "jobs.line.extractSprites": "スプライトを抽出中...",
   "jobs.line.compileAssets": "アセットセットをコンパイル中...",
-  "jobs.line.readJapaneseGraphics": "日本語グラフィックを読み込み中..."
+  "jobs.line.readJapaneseGraphics": "日本語グラフィックを読み込み中...",
+  "rom-manager.extracted": "抽出済み",
+  "rom-manager.attached-to": "{bases} に関連付け済み",
+  "rom-manager.roms-title": "ROM"
 }

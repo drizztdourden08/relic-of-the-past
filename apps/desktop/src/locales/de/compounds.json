@@ -259,5 +259,20 @@
   "shop-slots-block.retro-shuffled": "Retro-Bogen: Der Köcher ist im Gegenstandspool, daher öffnet sich {quiverShelf} immer als gemischter Platz.",
   "shop-slots-block.retro-shuffled-with": "Retro-Bogen: Der Köcher ist im Gegenstandspool, daher öffnet sich {quiverShelf} immer als gemischter Platz, ebenso wie {others}.",
   "shop-slots-block.retro-vanilla": "Retro-Bogen: {quiverShelf} verkauft den Köcher für {quiverPrice} Rubine, danach {refill} für {refillPrice}.",
-  "shop-slots-block.retro-vanilla-with": "Retro-Bogen: {quiverShelf} verkauft den Köcher für {quiverPrice} Rubine, danach {refill} für {refillPrice}; {others} verkaufen dieselbe Nachfüllung."
+  "shop-slots-block.retro-vanilla-with": "Retro-Bogen: {quiverShelf} verkauft den Köcher für {quiverPrice} Rubine, danach {refill} für {refillPrice}; {others} verkaufen dieselbe Nachfüllung.",
+  "checks-tracker.showing": "{total} Checks angezeigt:",
+  "checks-tracker.taken": "{count} erledigt",
+  "checks-tracker.available": "{count} verfügbar",
+  "checks-tracker.left": "{count} übrig",
+  "hub-account-card.waiting": "Dein Browser hat {siteHost} geöffnet. Bestätige dort dieses Gerät. Code 10 Min. gültig.",
+  "pond-status-note.title": "was der Teich tun wird",
+  "reporting-as-line.label": "Bericht als",
+  "save-row-actions.load": "{name} laden",
+  "save-row-actions.overwrite": "{name} überschreiben",
+  "save-row-actions.delete": "{name} löschen",
+  "save-slot.load": "Slot {slotNumber} laden",
+  "save-slot.save": "In Slot {slotNumber} speichern",
+  "save-slot.slot": "Slot {slotNumber}",
+  "wishing-pond-row.may-ask-for": "was sie verlangen darf",
+  "capacity.ladder": "Stufenfolge"
 }
