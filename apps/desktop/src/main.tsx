@@ -30,6 +30,7 @@ import { product } from './product';
 import { APP_PROFILE_MODES } from './profile-modes';
 import { useHubShowFlags } from './stores/hub-session';
 import { useInputProfileMenu } from './shell/useInputProfileMenu';
+import { useLiveSettings } from './settings-controls/lock-causes';
 import type { AppSettings } from './settings.type';
 import './log-bus';
 import './hud/hud.css';
@@ -56,12 +57,13 @@ if (!root) throw new Error('index.html has no #root element');
 const App = () => {
   const showFlags = useHubShowFlags();
   const inputProfileMenu = useInputProfileMenu();
+  const settings = useLiveSettings(SETTINGS);
   return (
     <BrockApp<AppSettings>
       locales={appLocales}
       product={product}
       restoreNavigation={false}
-      settings={SETTINGS}
+      settings={settings}
       profileModes={APP_PROFILE_MODES}
       volume={VOLUME}
       developerTools={DEVELOPER_TOOLS}

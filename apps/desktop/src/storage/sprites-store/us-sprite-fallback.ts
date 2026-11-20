@@ -1,4 +1,5 @@
 /* @layer renderer-lib @kind logic */
+import { msg } from '@drizztdourden08/brock-core/i18n';
 import type { SpriteBuffer } from '@rotp/asset-extraction';
 import { GAME_ROM_LANGUAGE } from '@rotp/asset-extraction';
 import { findUsRom, romRelease } from '../asset-files';
@@ -13,7 +14,7 @@ const usSpriteFallback = async (romFile: string, romBytes: Uint8Array, result: S
   const usRom = await findUsRom(platformFiles());
   if (usRom === null) return result.buffers;
   const us = await runExtractStep<'sprites', SpritesResult>({
-    step: 'sprites', title: 'Extracting sprites from the USA ROM', subject: romFile, romBytes: usRom, input: { defs },
+    step: 'sprites', title: msg('data-manager:jobs.extract-sprites', { rom: romFile }), subject: romFile, romBytes: usRom, input: { defs },
   });
   const added = us.buffers.filter((buffer) => [...failed].some((file) => buffer.name.startsWith(file)));
   const replaced = new Set(added.map((buffer) => buffer.name));

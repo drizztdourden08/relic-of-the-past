@@ -323,5 +323,18 @@
   "rom-manager.detail.added": "Hinzugefügt",
   "rom-manager.detail.modified": "Geändert",
   "rom-manager.detail.attached": "Angehängt",
-  "rom-manager.detail.assets": "Assets"
+  "rom-manager.detail.assets": "Assets",
+  "jobs.extract-sprites": "Sprites werden aus {rom} extrahiert",
+  "jobs.read-japanese-graphics": "Japanische Grafiken werden aus {rom} gelesen",
+  "jobs.read-base-fonts": "Basisschriften werden gelesen",
+  "jobs.read-rom-language": "ROM-Sprache wird gelesen",
+  "jobs.build-assets": "Spielressourcen werden erstellt",
+  "jobs.extract-dialogue": "Dialoge werden extrahiert",
+  "jobs.read-patched-rom": "Gepatchte ROM wird gelesen",
+  "jobs.read-menu-text": "Menütext wird gelesen",
+  "jobs.import-patched-language": "Gepatchte Sprache wird importiert",
+  "jobs.import-language": "Sprache wird importiert",
+  "jobs.add-player-sprite": "Spielersprite wird hinzugefügt",
+  "jobs.import-music-pack": "Musikpaket wird importiert",
+  "jobs.import-rom": "ROM wird importiert"
 }

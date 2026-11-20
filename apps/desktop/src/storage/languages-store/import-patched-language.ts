@@ -24,7 +24,7 @@ const runImport = async (request: PatchedImportRequest, report: ImportReport): P
   const romBytes = await resolveRomBytes(new Uint8Array(await request.file.arrayBuffer()));
   const input = { base: request.base, libraryRoms: await libraryRomBytes(), references: await setFontReferences(request.base) };
   const found = await runExtractStep<'patched-language', PatchedLanguageOutput>({
-    step: 'patched-language', title: 'Reading a patched ROM', subject: id, romBytes, input,
+    step: 'patched-language', title: msg('data-manager:jobs.read-patched-rom'), subject: id, romBytes, input,
   });
   if (!found.success) return { success: false, error: FAILED_PATCHED_IMPORT, parts: found.parts };
   const { description, dialogue, glyphCount, lineCount, encoder, flags } = found;
@@ -43,7 +43,7 @@ const runImport = async (request: PatchedImportRequest, report: ImportReport): P
 const importPatchedLanguage = async (request: PatchedImportRequest): Promise<PatchedImportResult> => {
   try {
     return await runImportJob({
-      kind: 'language', title: 'Importing a patched language', work: (report) => runImport(request, report),
+      kind: 'language', title: msg('data-manager:jobs.import-patched-language'), work: (report) => runImport(request, report),
       failureOf: (result) => (result.success ? null : failureLine(result.error)),
     });
   } catch (err) {

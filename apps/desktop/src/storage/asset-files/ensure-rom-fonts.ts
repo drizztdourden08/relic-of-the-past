@@ -10,7 +10,7 @@ const ensureRomFonts = async (files: FileStore, romBytes: Uint8Array): Promise<v
   const missing = await languages.missingRomFonts(files);
   if (missing.length === 0) return;
   const pack = await runExtractStep<'language', ExtractedPack>({
-    step: 'language', title: 'Reading the base fonts', subject: 'rom', romBytes, input: undefined,
+    step: 'language', title: msg('data-manager:jobs.read-base-fonts'), subject: 'rom', romBytes, input: undefined,
   });
   await languages.writeRomFont(files, pack.code, { fontData: pack.fontData, fontWidth: pack.fontWidth });
   const lacking = missing.filter((base) => base !== pack.code);

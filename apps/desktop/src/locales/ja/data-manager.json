@@ -323,5 +323,18 @@
   "rom-manager.detail.added": "追加日",
   "rom-manager.detail.modified": "更新日",
   "rom-manager.detail.attached": "添付先",
-  "rom-manager.detail.assets": "アセット"
+  "rom-manager.detail.assets": "アセット",
+  "jobs.extract-sprites": "{rom} からスプライトを抽出中",
+  "jobs.read-japanese-graphics": "{rom} から日本語グラフィックを読み込み中",
+  "jobs.read-base-fonts": "基本フォントを読み込み中",
+  "jobs.read-rom-language": "ROMの言語を読み込み中",
+  "jobs.build-assets": "ゲームアセットを構築中",
+  "jobs.extract-dialogue": "会話テキストを抽出中",
+  "jobs.read-patched-rom": "パッチ済みROMを読み込み中",
+  "jobs.read-menu-text": "メニューテキストを読み込み中",
+  "jobs.import-patched-language": "パッチ済み言語をインポート中",
+  "jobs.import-language": "言語をインポート中",
+  "jobs.add-player-sprite": "プレイヤースプライトを追加中",
+  "jobs.import-music-pack": "音楽パックをインポート中",
+  "jobs.import-rom": "ROMをインポート中"
 }

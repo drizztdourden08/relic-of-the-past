@@ -1,4 +1,6 @@
 /* @layer shared-asset-extraction @kind types */
+import type { LanguageConfig } from '../../text/data/language-data/language-data.type';
+
 interface GlyphToken {
   readonly kind: 'glyph';
   readonly glyph: number;
@@ -19,4 +21,6 @@ interface TokenRead {
 
 type ReadByte = (addr: number) => number;
 
-export type { JapaneseToken, ReadByte, TokenRead };
+type JapaneseConfigFields = Omit<LanguageConfig, 'id' | 'alphabet' | 'commandLengths' | 'commandNames' | 'commandStart'>;
+
+export type { JapaneseConfigFields, JapaneseToken, ReadByte, TokenRead };

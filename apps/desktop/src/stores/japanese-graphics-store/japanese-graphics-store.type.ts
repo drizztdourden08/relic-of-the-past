@@ -1,7 +1,11 @@
 /* @layer renderer-stores @kind types */
-interface JapaneseGraphicsStore {
+interface JapaneseGraphicsStatus {
   available: boolean;
-  setAvailable: (available: boolean) => void;
+  fontImported: boolean;
 }
 
-export type { JapaneseGraphicsStore };
+interface JapaneseGraphicsStore extends JapaneseGraphicsStatus {
+  setStatus: (status: JapaneseGraphicsStatus) => void;
+}
+
+export type { JapaneseGraphicsStatus, JapaneseGraphicsStore };

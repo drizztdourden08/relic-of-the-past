@@ -1,4 +1,5 @@
 /* @layer renderer-lib @kind types */
+import type { Text } from '@drizztdourden08/brock-core/i18n';
 type ImportKind = 'rom' | 'msu' | 'language' | 'sprite' | 'linkSprite';
 
 type ImportPhase = 'download' | 'extract' | 'copy' | 'decode';
@@ -10,7 +11,7 @@ interface ImportReport {
 
 interface ImportJobParams<Result> {
   kind: ImportKind;
-  title: string;
+  title: Text;
   work: (report: ImportReport) => Promise<Result>;
   failureOf?: (result: Result) => string | null;
 }

@@ -4,7 +4,8 @@ import type { JapaneseGraphicsStore } from './japanese-graphics-store.type';
 
 const useJapaneseGraphicsStore = create<JapaneseGraphicsStore>()((set) => ({
   available: false,
-  setAvailable: (available) => set({ available }),
+  fontImported: false,
+  setStatus: ({ available, fontImported }) => set({ available, fontImported }),
 }));
 
 export { useJapaneseGraphicsStore };

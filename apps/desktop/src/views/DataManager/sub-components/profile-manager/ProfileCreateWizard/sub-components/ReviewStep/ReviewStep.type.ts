@@ -1,7 +1,7 @@
 /* @layer renderer-components @kind types */
-import type { ProfileWizardApi } from '../../ProfileCreateWizard.type';
+import type { ProfileCreateWizardProps, ProfileWizardApi } from '../../ProfileCreateWizard.type';
 
-interface ReviewStepProps {
+interface ReviewStepProps extends Pick<ProfileCreateWizardProps, 'languages'> {
   wizard: ProfileWizardApi;
 }
 

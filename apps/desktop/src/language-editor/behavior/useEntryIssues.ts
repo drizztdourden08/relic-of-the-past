@@ -2,7 +2,7 @@
 import { useMemo, useRef } from 'react';
 import type { GlossaryTerm, LanguageSet } from '@rotp/languages';
 import { validateEntry } from '@rotp/languages';
-import { kLanguages } from '@rotp/asset-extraction';
+import { languageConfigOf } from '@rotp/asset-extraction';
 import { NO_ISSUES } from './entry-issues.constants';
 import type { EntryIssueMap } from '../language-editor.type';
 import type { CacheRow } from './entry-issues.type';
@@ -16,7 +16,7 @@ const useEntryIssues = (set: LanguageSet | null, terms: GlossaryTerm[]): EntryIs
 
   const refKeys = useMemo(() => new Set(terms.map((term) => term.key)), [terms]);
 
-  const config = useMemo(() => (base ? kLanguages[base] ?? null : null), [base]);
+  const config = useMemo(() => (base ? languageConfigOf(base) : null), [base]);
 
   return useMemo(() => {
     if (!dialogue || !config) return NO_ISSUES;

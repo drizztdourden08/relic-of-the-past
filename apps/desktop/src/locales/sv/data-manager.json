@@ -323,5 +323,18 @@
   "rom-manager.detail.added": "Tillagd",
   "rom-manager.detail.modified": "Ändrad",
   "rom-manager.detail.attached": "Kopplad",
-  "rom-manager.detail.assets": "Resurser"
+  "rom-manager.detail.assets": "Resurser",
+  "jobs.extract-sprites": "Extraherar sprites från {rom}",
+  "jobs.read-japanese-graphics": "Läser japansk grafik från {rom}",
+  "jobs.read-base-fonts": "Läser grundtypsnitten",
+  "jobs.read-rom-language": "Läser ROM-språket",
+  "jobs.build-assets": "Bygger spelresurserna",
+  "jobs.extract-dialogue": "Extraherar dialogen",
+  "jobs.read-patched-rom": "Läser en patchad ROM",
+  "jobs.read-menu-text": "Läser menytexten",
+  "jobs.import-patched-language": "Importerar ett patchat språk",
+  "jobs.import-language": "Importerar ett språk",
+  "jobs.add-player-sprite": "Lägger till en spelarsprite",
+  "jobs.import-music-pack": "Importerar ett musikpaket",
+  "jobs.import-rom": "Importerar en ROM"
 }
