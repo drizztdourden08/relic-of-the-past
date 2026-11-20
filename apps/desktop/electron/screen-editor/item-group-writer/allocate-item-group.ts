@@ -1,6 +1,8 @@
 /* @layer electron-main @kind logic */
 import { readFile, writeFile } from 'fs/promises';
 import { join } from 'path';
+import { msg } from '@drizztdourden08/brock-core/i18n';
+import { mainText } from '../../lib/main-text';
 import { serializeItemGroupRecord } from '@rotp/game-data';
 import type { ItemGroupRecord } from '@rotp/game-data';
 import type { Allocated, AllocateItemGroupArgs, AllocateItemGroupResult } from '@app/ipc/screen-editor-contract';
@@ -13,11 +15,11 @@ const alreadyPresent = (content: string, label: string): boolean =>
 
 const allocateItemGroup = async (root: string, args: AllocateItemGroupArgs): Promise<AllocateItemGroupResult> => {
   const label = args.label.trim();
-  if (!label) return { success: false, error: 'An item group needs a label.' };
+  if (!label) return { success: false, error: mainText(msg('screen-editor:group.needsLabel')) };
 
   const path = join(root, ...ITEM_GROUPS_FILE);
   const content = await readFile(path, 'utf-8');
-  if (alreadyPresent(content, label)) return { success: false, error: `An item group named ${label} already exists.` };
+  if (alreadyPresent(content, label)) return { success: false, error: mainText(msg('screen-editor:group.exists', { label })) };
 
   return withAllocatedIds(root, 'item-group', 1, async ([id]) => {
     const record: ItemGroupRecord = {

@@ -1,6 +1,8 @@
 /* @layer electron-main @kind logic */
 import { readFile, writeFile } from 'fs/promises';
 import { join } from 'path';
+import { msg } from '@drizztdourden08/brock-core/i18n';
+import { mainText } from '../../lib/main-text';
 import { serializeEnumerationRecord } from '@rotp/game-data';
 import type { EnumerationEntry } from '@rotp/game-data';
 import type {
@@ -22,16 +24,16 @@ const alreadyPresent = (content: string, category: string, value: string): boole
 const allocateEnumeration = async (root: string, args: AllocateEnumerationArgs): Promise<AllocateEnumerationResult> => {
   const value = args.value.trim();
   const label = args.label.trim();
-  if (!value) return { success: false, error: 'An enumeration entry needs a value.' };
-  if (!label) return { success: false, error: 'An enumeration entry needs a label.' };
+  if (!value) return { success: false, error: mainText(msg('screen-editor:enum.needsValue')) };
+  if (!label) return { success: false, error: mainText(msg('screen-editor:enum.needsLabel')) };
   if (args.appliesTo.length === 0) {
-    return { success: false, error: 'An enumeration entry has to apply to at least one collection.' };
+    return { success: false, error: mainText(msg('screen-editor:enum.needsCollection')) };
   }
 
   const path = join(root, ...ENUMERATION_FILE);
   const content = await readFile(path, 'utf-8');
   if (alreadyPresent(content, args.category, value)) {
-    return { success: false, error: `An entry for ${args.category}:${value} already exists.` };
+    return { success: false, error: mainText(msg('screen-editor:enum.exists', { category: args.category, value })) };
   }
 
   return withAllocatedIds(root, 'enumeration', 1, async ([id]) => {

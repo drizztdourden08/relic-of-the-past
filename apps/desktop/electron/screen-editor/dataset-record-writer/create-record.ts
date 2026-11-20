@@ -16,13 +16,13 @@ const createRecord = async <T extends { id: string }>(
   record: Unnumbered<T>,
 ): Promise<AllocateRecordResult<T>> => {
   const target = spec.target(record);
-  if (!target.relativePath) return { success: false, error: target.unresolved ?? NO_TARGET };
+  if (!target.relativePath) return { success: false, error: target.unresolved ?? NO_TARGET() };
   const path = resolveSourceFile(root, target.relativePath, 'data');
   const started = await startRecordFile(path, target.relativePath, spec.recordType);
   if (started) return { success: false, error: started };
 
   return withAllocatedIds(root, spec.kind, 1, async ([id]) => {
-    if (id === undefined) return { success: false, error: NO_ID };
+    if (id === undefined) return { success: false, error: NO_ID() };
     const full = numberRecord<T>(id, record);
     const error = await editRecordFile(path, content => insertBeforeArrayClose(content, spec.serialize(full)));
     if (error) return { success: false, error };
