@@ -1,14 +1,15 @@
 /* @layer shared-game @kind types */
+import type { Message } from '@drizztdourden08/brock-core/i18n';
 import type { ItemId } from '../ids';
 
 interface InventorySlot {
-  displayName: string;
+  displayName: Message;
   trackerItemIds: ItemId[];
   sprite: string;
 }
 
 interface InventoryCategory {
-  label: string;
+  label: Message;
   items: InventorySlot[];
 }
 

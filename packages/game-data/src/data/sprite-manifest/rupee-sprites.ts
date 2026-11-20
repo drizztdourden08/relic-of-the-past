@@ -1,4 +1,5 @@
 /* @layer shared-game @kind data */
+import { msg } from '@drizztdourden08/brock-core/i18n';
 import type { SpriteDefinition } from './manifest';
 
 const GREEN_LIGHT = '#9cd673';
@@ -7,7 +8,7 @@ const GREEN_DARK = '#4a9431';
 const RUPEE_SPRITE_DEFINITIONS: readonly SpriteDefinition[] = [
   {
     file: 'receipt-rupee-purple',
-    label: 'Rupee (purple)',
+    label: msg('game-labels:sprite.rupeePurple'),
     category: 'receipt',
     extract: {
       method: 'palette-swap',
@@ -17,7 +18,7 @@ const RUPEE_SPRITE_DEFINITIONS: readonly SpriteDefinition[] = [
   },
   {
     file: 'receipt-rupee-silver',
-    label: 'Rupee (silver)',
+    label: msg('game-labels:sprite.rupeeSilver'),
     category: 'receipt',
     extract: {
       method: 'palette-swap',
@@ -27,7 +28,7 @@ const RUPEE_SPRITE_DEFINITIONS: readonly SpriteDefinition[] = [
   },
   {
     file: 'receipt-rupee-gold',
-    label: 'Rupee (gold)',
+    label: msg('game-labels:sprite.rupeeGold'),
     category: 'receipt',
     extract: {
       method: 'palette-swap',

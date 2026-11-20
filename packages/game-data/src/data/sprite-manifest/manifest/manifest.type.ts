@@ -1,11 +1,12 @@
 /* @layer shared-game @kind types */
+import type { Text } from '@drizztdourden08/brock-core/i18n';
 import type { SpriteBox } from '../sprite-box';
 
 type SpriteCategory = 'hud' | 'hud-pause' | 'hud-item' | 'fonts' | 'receipt' | 'drop' | 'randomizer' | 'title' | 'ground';
 
 interface SpriteManifestEntry {
   file: string;
-  label: string;
+  label: Text;
   category: SpriteCategory;
   box?: SpriteBox;
 }

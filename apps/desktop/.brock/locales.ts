@@ -5,6 +5,7 @@ import app_en_compounds from '../src/locales/en/compounds.json';
 import app_en_data_manager from '../src/locales/en/data-manager.json';
 import app_en_errors from '../src/locales/en/errors.json';
 import app_en_features from '../src/locales/en/features.json';
+import app_en_game_labels from '../src/locales/en/game-labels.json';
 import app_en_hub_contracts from '../src/locales/en/hub-contracts.json';
 import app_en_hud_editing from '../src/locales/en/hud-editing.json';
 import app_en_hud_editor from '../src/locales/en/hud-editor.json';
@@ -55,6 +56,7 @@ const baseLayers: readonly Layer[] = [
   { locale: 'en', namespace: 'data-manager', kind: 'app', messages: app_en_data_manager },
   { locale: 'en', namespace: 'errors', kind: 'app', messages: app_en_errors },
   { locale: 'en', namespace: 'features', kind: 'app', messages: app_en_features },
+  { locale: 'en', namespace: 'game-labels', kind: 'app', messages: app_en_game_labels },
   { locale: 'en', namespace: 'hub-contracts', kind: 'app', messages: app_en_hub_contracts },
   { locale: 'en', namespace: 'hud-editing', kind: 'app', messages: app_en_hud_editing },
   { locale: 'en', namespace: 'hud-editor', kind: 'app', messages: app_en_hud_editor },
