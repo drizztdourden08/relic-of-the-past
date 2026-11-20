@@ -1,9 +1,12 @@
 /* @layer renderer-app @kind constants */
+import { msg } from '@drizztdourden08/brock-core/i18n';
 import { GROUP_DIMENSIONS } from '@rotp/game-data';
 import { BIG_KEY_DOORS, DARK_ROOMS_NEED_LIGHT, SMALL_KEY_DOORS } from '@rotp/randomizer';
 import type {
   TrackerAssumption, TrackerGrouping,
 } from '@drizztdourden08/brock-randomizer/tracker';
+import { textOf } from '@app/shell/text-bridge';
+import { GROUPING_TEXT } from './rotp-tracker-labels.constants';
 
 const ROTP_ASSUMPTIONS: readonly TrackerAssumption[] = [
   {
@@ -21,19 +24,23 @@ const ROTP_ASSUMPTIONS: readonly TrackerAssumption[] = [
 ];
 
 const ROTP_GROUPINGS: readonly TrackerGrouping[] = GROUP_DIMENSIONS.map((dimension) => ({
-  id: dimension.id, label: dimension.label, description: dimension.description,
+  id: dimension.id,
+  get label() {
+    const text = GROUPING_TEXT[dimension.id];
+    return text === undefined ? dimension.label : textOf(text.label);
+  },
+  get description() {
+    const text = GROUPING_TEXT[dimension.id];
+    return text === undefined ? dimension.description : textOf(text.description);
+  },
 }));
 
-const FACET_CATEGORY_LABELS: Readonly<Record<string, string>> = {
-  world: 'World', location: 'Location', area: 'Area', content: 'Content',
-};
-
-const UNGROUPED = 'Other';
+const UNGROUPED = msg('views-randomizer:tracker.group.other');
 const SWAP_BADGE_ID = 'swap';
 const NOW_BADGE_ID = 'now';
 const TRACKER_EVENT_KIND = 'event';
 
 export {
-  FACET_CATEGORY_LABELS, NOW_BADGE_ID, ROTP_ASSUMPTIONS, ROTP_GROUPINGS,
+  NOW_BADGE_ID, ROTP_ASSUMPTIONS, ROTP_GROUPINGS,
   SWAP_BADGE_ID, TRACKER_EVENT_KIND, UNGROUPED,
 };
