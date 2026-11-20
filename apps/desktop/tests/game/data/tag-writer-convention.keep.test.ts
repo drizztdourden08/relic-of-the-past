@@ -11,7 +11,7 @@ describe('a term the writer will not file', () => {
   it('refuses a bare word with no namespace', { tags: ['critical'] }, async () => {
     await expect(refuse('outdoor')).resolves.toEqual({
       success: false,
-      error: 'A tag reads namespace:value. Both parts are required.',
+      error: 'screen-editor:tag.convention',
     });
   });
 

@@ -117,7 +117,7 @@ describe('acceptRecommendation closing out', { tags: ['critical'] }, () => {
   it('refuses a collection with no write path instead of failing silently', async () => {
     const outcome = await acceptRecommendation(finding({ kind: 'screen' }), { id: 'screen-001' });
     expect(outcome.success).toBe(false);
-    expect(errorOf(outcome)).toContain('screen');
+    expect(errorOf(outcome)).toContain('err.noPath.write');
     expect(mocks.decide).not.toHaveBeenCalled();
   });
 });
