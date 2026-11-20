@@ -181,6 +181,7 @@ void WasmLoadState(int slot) {
   // here against them, and a state saved under another set carries that one's HUD tiles, which the
   // pause words of the selected one would name wrongly (LanguageScreensAssets_Apply refreshes them).
   LanguageScreensAssets_Apply(LanguageScreens_On());
+  SelectLayout_ReopenAfterLoad();
   printf("*** Load state: slot %d\n", slot);
 }
 

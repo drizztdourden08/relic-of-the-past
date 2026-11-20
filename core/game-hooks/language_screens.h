@@ -38,6 +38,7 @@ enum {
   kLangTbl_PauseHeaders,       // language_screens_latin.c pause box headers uint16[24]
   kLangTbl_FloorLabels,        // language_screens_latin.c floor label tiles uint8[4]
   kLangTbl_CopyScreen,         // language_screens_copy.c copy screen columns and digits uint8[15]
+  kLangTbl_HudLifeRow,         // language_screens_latin.c the HUD's label above the hearts uint16[6]
   kLangTbl_Count
 };
 

@@ -95,7 +95,8 @@ export { readSheetPointer } from './screens/read-sheet-pointers';
 export { PAUSE_TABLES, SELECT_FILE_TABLES } from './screens/screens.constants';
 export {
   COPY_SCREEN_ID, CREDITS_DIGITS_ID, CREDITS_MAP_ID, CREDITS_OFFSETS_ID, CREDITS_SCROLL_Y_ID, CREDITS_TEXT_ID,
-  DUNGEON_MAP_LABELS_ID, ENDING_CAPTION_DATA_ID, ENDING_CAPTION_OFFSETS_ID, FLOOR_LABELS_ID, NAME_GRID_ID, PAUSE_HEADERS_ID, TILEMAP_FONT_DATA_ID,
+  DUNGEON_MAP_LABELS_ID, ENDING_CAPTION_DATA_ID, ENDING_CAPTION_OFFSETS_ID, FLOOR_LABELS_ID, HUD_LIFE_ROW_ID, NAME_GRID_ID, PAUSE_HEADERS_ID,
+  TILEMAP_FONT_DATA_ID,
   TILEMAP_FONT_ID, menuTilemapId, pauseTableId, selectFileTableId, sheetPatchTableId, sheetTableId,
 } from './screens/screen-table-ids.constants';
 export type { ScreenTable } from './screens/screen-table.type';

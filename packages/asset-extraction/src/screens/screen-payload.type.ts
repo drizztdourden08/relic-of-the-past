@@ -42,6 +42,7 @@ interface ScreenPayload {
   readonly pauseHeaders?: Uint16Array;
   readonly floorLabels?: Uint8Array;
   readonly copyScreen?: Uint8Array;
+  readonly hudLifeRow?: Uint16Array;
 }
 
 interface TableRegion {
@@ -103,6 +104,7 @@ interface ScreenAddressTable {
   readonly pauseHeaders?: PauseHeaderSource;
   readonly floorLabels?: FloorLabelTiles;
   readonly copyScreen?: CopyScreenSource;
+  readonly hudLifeRow?: TableRegion;
 }
 
 export type {

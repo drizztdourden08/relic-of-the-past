@@ -14,6 +14,7 @@ const FR_SCREEN_ADDRESSES: ScreenAddressTable = {
     killTarget: { address: 0x8ea486, count: 253 },
   },
   ...FR_DE_PAUSE,
+  hudLifeRow: { address: 0x8dfdcb, count: 6 },
   dungeonMapLabels: { address: 0x8af026, count: 744 },
   creditsDigits: { address: 0x8aab90, count: 2 },
   endingCaptions: {

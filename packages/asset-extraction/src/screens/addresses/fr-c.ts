@@ -39,6 +39,7 @@ const FR_C_SCREEN_ADDRESSES: ScreenAddressTable = {
   },
   sheetPointers: { spr: 0xcf99, bg: 0xcf26 },
   pauseHeaders: { pendantsRow: 0x8de85c, crystalsRow: 0x8de910 },
+  hudLifeRow: { address: 0x8dfe8b, count: 6 },
   ...FR_FAMILY_SHARED,
 };
 

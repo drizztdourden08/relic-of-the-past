@@ -53,6 +53,14 @@ int SelectLayout_Active(void);
 // Whether the file select uploads the Japanese set's tilemap font (and moves the sprite sheet above it).
 bool SelectLayout_JapaneseFont(void);
 
+// Called by WasmLoadState. A state saved on a file select screen carries that screen's tilemap, font
+// and sheets as they were drawn for the layout, set and pack live when it was saved, while the screen's
+// stripes are drawn for the current ones, so a mismatch shows wrong tiles. With the language screens on,
+// the file select reopens from its first step (Module_SelectFile_0), which reloads every sheet and
+// redraws the screen for the current layout and set; a copy, erase or name entry in progress goes
+// back to the file list. Does nothing on any other screen.
+void SelectLayout_ReopenAfterLoad(void);
+
 // Called from FileSelect_EraseTriforce as each file select screen opens, under force blank: for a
 // Japanese set, the background sheets, BG3 blank and frame palette of the layout the screen runs, and
 // the name grid's scroll back to 0 (select_screen_gfx.c). Does nothing otherwise.

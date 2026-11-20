@@ -45,6 +45,7 @@ const extractScreens = (rom: RomData, table: ScreenAddressTable): ScreenPayload 
   pauseHeaders: readPauseHeaders(rom, table.pauseHeaders),
   floorLabels: floorLabelBytes(table.floorLabels),
   copyScreen: readCopyScreen(rom, table.copyScreen),
+  hudLifeRow: table.hudLifeRow ? readWordRegion(rom, table.hudLifeRow) : undefined,
 });
 
 export { extractScreens };
