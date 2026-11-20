@@ -28,7 +28,7 @@ describe('a term the writer will not file', () => {
 
   it('refuses a term that belongs to no collection', { tags: ['critical'] }, async () => {
     const result = await allocateTag(NO_ROOT, { key: 'env:cavern', appliesTo: [] });
-    expect(result).toEqual({ success: false, error: 'A tag has to apply to at least one collection.' });
+    expect(result).toEqual({ success: false, error: 'screen-editor:tag.noScope' });
   });
 });
 
