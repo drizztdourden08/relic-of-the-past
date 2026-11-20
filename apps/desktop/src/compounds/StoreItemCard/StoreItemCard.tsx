@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind component */
-import { useT } from '@drizztdourden08/brock-react';
+import { useT, useText } from '@drizztdourden08/brock-react';
 import { useCallback } from 'react';
 import type { KeyboardEvent } from 'react';
 import { Icon as IconifyIcon } from '@iconify/react/offline';
@@ -11,6 +11,7 @@ import './StoreItemCard.css';
 
 const StoreItemCard = (props: StoreItemCardProps) => {
   const t = useT();
+  const text = useText();
   const { item, imageUrl, status, selected, onSelect } = props;
   const handleClick = useCallback(() => onSelect(item.id), [onSelect, item.id]);
   const handleKey = useCallback((event: KeyboardEvent) => {
@@ -38,7 +39,7 @@ const StoreItemCard = (props: StoreItemCardProps) => {
         fallback={<Text as="span" className="store-item-card__icon"><IconifyIcon icon={KIND_ICONS[item.kind]} /></Text>}
       />
       <Stack gap="xs" className="store-item-card__body">
-        <Text as="span" className="store-item-card__kind">{KIND_LABELS[item.kind]}</Text>
+        <Text as="span" className="store-item-card__kind">{text(KIND_LABELS[item.kind])}</Text>
         <Text as="span" className="store-item-card__name">{item.name}</Text>
         <Text as="span" className="store-item-card__byline">{byline}</Text>
         <Flex align="center" justify="between" gap="sm">

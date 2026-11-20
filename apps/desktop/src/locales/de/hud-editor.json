@@ -443,5 +443,6 @@
   "shadow.add": "+ Schatten hinzufügen",
   "inspector.section.placement": "Position und Platzierung",
   "inspector.section.size-box": "Größe und Box",
-  "appearance.shadows": "Schatten ({summary})"
+  "appearance.shadows": "Schatten ({summary})",
+  "screen.title": "HUD-Layout-Editor"
 }

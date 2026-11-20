@@ -50,7 +50,7 @@ const ProfileManager = (props: ProfileManagerProps) => {
   return (
     <ListDetailLayout
       listShowTitle={false}
-      listContainers={[{ title: 'Profiles', content: list }]}
+      listContainers={[{ title: t('views-data-home:library.profiles.title'), content: list }]}
       listLabel={t('data-manager:profile-manager.profile-manager')}
       collapsed={listCollapsed}
       onCollapsedChange={manager.setListCollapsed}

@@ -23,5 +23,15 @@
   "home.featured": "Utvalda",
   "home.popular": "Populära denna månad",
   "home.welcome": "Välkommen tillbaka, {name}",
-  "home.updates": "{count, plural, one {# uppdatering för ett paket du installerat} other {# uppdateringar för paket du installerat}}"
+  "home.updates": "{count, plural, one {# uppdatering för ett paket du installerat} other {# uppdateringar för paket du installerat}}",
+  "screen.browse": "Bläddra",
+  "screen.characters": "Figurer",
+  "screen.languages": "Språk",
+  "screen.music": "Musikpaket",
+  "screen.installed": "Installerade",
+  "screen.updates": "Uppdateringar",
+  "hero.eyebrow": "Gemenskapspaket",
+  "kind.music": "Musikpaket",
+  "kind.character": "Figur",
+  "kind.language": "Språk"
 }

@@ -13,5 +13,6 @@
   "sanctuary-account.description": "サインインすると、バグレポートに名前が付き、ハブに表示されます。",
   "section.developer-debug-reporting.title": "デバッグレポート",
   "allow-debug-logging.label": "デバッグログの記録を許可",
-  "allow-debug-logging.description": "詳細なログを保持し、タイトルバーにキャプチャボタン（Tab）と、デバッグレポートを送る浮動ボタンを追加します。"
+  "allow-debug-logging.description": "詳細なログを保持し、タイトルバーにキャプチャボタン（Tab）と、デバッグレポートを送る浮動ボタンを追加します。",
+  "screen.title": "協力"
 }

@@ -38,5 +38,6 @@
   "spoiler.unplaced.both": "{locations, plural, one {# luogo piazzato non ha} other {# luoghi piazzati non hanno}} un controllo qui · {items, plural, one {# oggetto piazzato non ha} other {# oggetti piazzati non hanno}} un record qui, non mostrati sotto.",
   "spoiler.noPlacement": "Nessun piazzamento caricato.",
   "aside.pool": "Pool",
-  "lobby.no-lobby": "Scegli una lobby a cui RotP può unirsi."
+  "lobby.no-lobby": "Scegli una lobby a cui RotP può unirsi.",
+  "run.show-all-options": "Mostra tutte le opzioni"
 }

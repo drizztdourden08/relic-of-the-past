@@ -2,7 +2,7 @@
 import { msg } from '@drizztdourden08/brock-core/i18n';
 import type { ScreenMeta, SectionDef } from '@drizztdourden08/brock-react';
 
-const meta: ScreenMeta = { title: 'Graphics', icon: 'palette', order: 2, keywords: ['graphics', 'renderer', 'filter', 'sprite', 'mode 7', 'rupees'] };
+const meta: ScreenMeta = { title: msg('data-manager:settings-sections.title.graphics'), icon: 'palette', order: 2, keywords: ['graphics', 'renderer', 'filter', 'sprite', 'mode 7', 'rupees'] };
 
 const sections: SectionDef[] = [
   {

@@ -2,7 +2,7 @@
 import { msg } from '@drizztdourden08/brock-core/i18n';
 import type { ScreenMeta, SectionDef } from '@drizztdourden08/brock-react';
 
-const meta: ScreenMeta = { title: 'Mobile', icon: 'maximize-2', order: 6, hosts: ['capacitor'], keywords: ['mobile', 'phone', 'tablet', 'notch', 'cutout'] };
+const meta: ScreenMeta = { title: msg('settings-mobile:screen.title'), icon: 'maximize-2', order: 6, hosts: ['capacitor'], keywords: ['mobile', 'phone', 'tablet', 'notch', 'cutout'] };
 
 const mobile: SectionDef[] = [
   {

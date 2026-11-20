@@ -443,5 +443,6 @@
   "shadow.add": "+ adicionar sombra",
   "inspector.section.placement": "Posição e colocação",
   "inspector.section.size-box": "Tamanho e caixa",
-  "appearance.shadows": "sombras ({summary})"
+  "appearance.shadows": "sombras ({summary})",
+  "screen.title": "Editor de layout do HUD"
 }

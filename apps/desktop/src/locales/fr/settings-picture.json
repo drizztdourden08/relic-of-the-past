@@ -45,7 +45,7 @@
   "section.performance.title": "Performances",
   "display-perf-in-title.label": "Afficher les FPS",
   "display-perf-in-title.description": "Affiche les images par seconde actuelles et la fréquence de rafraîchissement de votre écran dans la barre de titre pendant le jeu",
-  "vsync.label": "V-Sync",
+  "vsync.label": "Synchro verticale",
   "vsync.description": "Cadence le jeu sur la fréquence de rafraîchissement de l'écran plutôt que sur un minuteur interne, ce qui adoucit le défilement.",
   "vsync.hint": "La vitesse du jeu reste la même dans les deux cas."
 }

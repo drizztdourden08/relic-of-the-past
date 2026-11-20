@@ -314,5 +314,14 @@
   "settings-sections.enum.pixel": "Píxel",
   "settings-sections.enum.reimagined": "Reimaginado",
   "settings-sections.enum.still": "Fijo",
-  "settings-sections.enum.drifting": "A la deriva"
+  "settings-sections.enum.drifting": "A la deriva",
+  "language-set-list.meta": "{count, plural, one {# línea} other {# líneas}} · base {base}{origin, select, patch { · ROM parcheada} custom { · personalizada} other {}}",
+  "language-set-list.uninstall": "Desinstalar",
+  "language-set-list.delete": "Eliminar",
+  "rom-manager.detail.size": "Tamaño",
+  "rom-manager.detail.hash": "Hash",
+  "rom-manager.detail.added": "Añadida",
+  "rom-manager.detail.modified": "Modificada",
+  "rom-manager.detail.attached": "Adjunta",
+  "rom-manager.detail.assets": "Recursos"
 }

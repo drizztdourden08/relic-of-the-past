@@ -38,5 +38,6 @@
   "spoiler.unplaced.both": "{locations, plural, one {# ubicación colocada no tiene} other {# ubicaciones colocadas no tienen}} check aquí · {items, plural, one {# objeto colocado no tiene} other {# objetos colocados no tienen}} registro aquí, no se muestran abajo.",
   "spoiler.noPlacement": "No se cargó ninguna colocación.",
   "aside.pool": "Reserva",
-  "lobby.no-lobby": "Elige una sala a la que RotP pueda unirse."
+  "lobby.no-lobby": "Elige una sala a la que RotP pueda unirse.",
+  "run.show-all-options": "Mostrar todas las opciones"
 }

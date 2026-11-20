@@ -1,5 +1,5 @@
 {
-  "option.viewport-modes.none.label": "Letterbox",
+  "option.viewport-modes.none.label": "Svarta kanter",
   "option.viewport-modes.none.hint": "Behåller spelets bildformat och fyller resten av fönstret med svarta fält.",
   "option.viewport-modes.fit.label": "Anpassa fönster",
   "option.viewport-modes.fit.hint": "Låser fönstrets form till spelets bildformat när du ändrar storlek, så inga fält syns.",

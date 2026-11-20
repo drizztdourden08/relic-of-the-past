@@ -4,9 +4,9 @@ import type { ControlsTabDef } from '@drizztdourden08/brock-input/renderer';
 import { remapAssignments } from '@rotp/input-mapping';
 import { openSetting } from '@app/settings-nav/open-setting';
 import { assignmentLabel } from './assignment-label';
-import { SNES_ACTIONS } from './action-defs.constants';
 import { cheatActionDefs } from './cheat-action-defs';
 import { shortcutActionDefs } from './shortcut-action-defs';
+import { snesActionDefs } from './snes-action-defs';
 import { coreVerbGroups } from './core-verbs.constants';
 import { keyboardSlots } from './keyboard-slots';
 import { SlotsFooter } from './SlotsFooter';
@@ -37,7 +37,7 @@ const buildControlsTabs = (args: BuildControlsTabsArgs): readonly ControlsTabDef
       label: t('profiles:controls.tabs.vanilla'),
       kind: 'actions',
       scope: 'profile',
-      actions: SNES_ACTIONS,
+      actions: snesActionDefs(text),
       middleLabel: t('profiles:controls.tabs.snes'),
       acceptsDeviceDrop: true,
       disabledReason: scheme === 'modern' ? t('profiles:controls.tabs.vanilla-only') : null,

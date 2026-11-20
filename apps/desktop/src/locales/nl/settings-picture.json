@@ -45,7 +45,7 @@
   "section.performance.title": "Prestaties",
   "display-perf-in-title.label": "FPS tonen",
   "display-perf-in-title.description": "Toon de huidige frames per seconde en de verversingssnelheid van je scherm in de titelbalk terwijl het spel draait",
-  "vsync.label": "V-Sync",
+  "vsync.label": "Verticale synchronisatie",
   "vsync.description": "Stemt het spel af op de verversingssnelheid van het scherm in plaats van een interne timer, wat scrollen vloeiender maakt.",
   "vsync.hint": "De spelsnelheid blijft in beide gevallen gelijk."
 }

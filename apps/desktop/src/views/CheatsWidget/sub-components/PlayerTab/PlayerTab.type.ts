@@ -18,7 +18,7 @@ type BottleSlot = 0 | 1 | 2 | 3;
 
 type BottleOption = {
   value: BottleContentsValue;
-  label: string;
+  label: Message;
   tone: ChoiceTone;
 };
 

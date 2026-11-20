@@ -23,5 +23,15 @@
   "home.featured": "Featured",
   "home.popular": "Popular this month",
   "home.welcome": "Welcome back, {name}",
-  "home.updates": "{count, plural, one {# update for a pack you installed} other {# updates for packs you installed}}"
+  "home.updates": "{count, plural, one {# update for a pack you installed} other {# updates for packs you installed}}",
+  "screen.browse": "Browse",
+  "screen.characters": "Characters",
+  "screen.languages": "Languages",
+  "screen.music": "Music packs",
+  "screen.installed": "Installed",
+  "screen.updates": "Updates",
+  "hero.eyebrow": "Community packs",
+  "kind.music": "Music pack",
+  "kind.character": "Character",
+  "kind.language": "Language"
 }

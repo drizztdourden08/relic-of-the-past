@@ -443,5 +443,6 @@
   "shadow.add": "+ 影を追加",
   "inspector.section.placement": "位置と配置",
   "inspector.section.size-box": "サイズとボックス",
-  "appearance.shadows": "影（{summary}）"
+  "appearance.shadows": "影（{summary}）",
+  "screen.title": "HUDレイアウトエディター"
 }

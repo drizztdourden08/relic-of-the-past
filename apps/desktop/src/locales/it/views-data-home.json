@@ -20,5 +20,9 @@
   "folder.storage.description": "Vedi le dimensioni delle cartelle, pulisci i file vecchi ed esporta o importa i tuoi dati.",
   "facts.disk": "Su disco",
   "facts.profiles": "Profili",
-  "facts.roms": "ROM"
+  "facts.roms": "ROM",
+  "hero.eyebrow": "Dati",
+  "hero.title": "La tua libreria",
+  "hero.open-folder": "Apri cartella dati",
+  "hero.refresh": "Aggiorna"
 }

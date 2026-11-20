@@ -1,4 +1,5 @@
 /* @layer renderer-components @kind component */
+import { useT } from '@drizztdourden08/brock-react';
 import { Box, Select, Slider, Text } from '@drizztdourden08/tessera/primitives';
 import { ValueTag, OptionGroup } from '@drizztdourden08/tessera/composites';
 import { choiceLabelOf } from '@app/hooks/randomizer/option-labels';
@@ -12,7 +13,7 @@ import { withDepth } from './behavior/with-depth';
 import { withMode } from './behavior/with-mode';
 import { withSlotCount } from './behavior/with-slot-count';
 import { withSlotTicked } from './behavior/with-slot-ticked';
-import { DEPTH_LABEL, MODE_OPTIONS, MODE_TITLE, SLOTS_TITLE } from './ShopSlotsBlock.constants';
+import { MODE_OPTIONS } from './ShopSlotsBlock.constants';
 import { MAX_SHOP_SLOT_DEPTH, MIN_SHOP_SLOT_DEPTH } from '@rotp/randomizer';
 import type { ShopShuffleMode } from '@rotp/randomizer';
 import type { ShopSlotsBlockProps } from './ShopSlotsBlock.type';
@@ -20,15 +21,17 @@ import './ShopSlotsBlock.css';
 
 const ShopSlotsBlock = (props: ShopSlotsBlockProps) => {
   const { scope, retroBow, onChange } = props;
+  const t = useT();
   const summary = summaryOf(scope);
+  const depthLabel = t('compounds:shop-slots-block.depth-label');
   const readOnly = onChange === undefined;
   const inert = readOnly || !summary.active;
   const sections = shopSectionsOf(scope);
-  const retroNote = retroShopNoteOf(scope, retroBow);
+  const retroNote = retroShopNoteOf(scope, retroBow, t);
 
   return (
     <Box className="shop-slots-block">
-      <OptionGroup title={MODE_TITLE} tone="live" className="shop-slots-block__mode">
+      <OptionGroup title={t('compounds:shop-slots-block.mode-title')} tone="live" className="shop-slots-block__mode">
         <Box className="shop-slots-block__mode-control">
           {readOnly ? <ValueTag value={choiceLabelOf(MODE_OPTIONS, scope.mode)} /> : (
             <Select
@@ -41,7 +44,7 @@ const ShopSlotsBlock = (props: ShopSlotsBlockProps) => {
         {retroNote !== null && <Text className="shop-slots-block__note">{retroNote}</Text>}
       </OptionGroup>
 
-      <OptionGroup title={SLOTS_TITLE} tone="live" className="shop-slots-block__slots">
+      <OptionGroup title={t('compounds:shop-slots-block.slots-title')} tone="live" className="shop-slots-block__slots">
         {sections.map((section) => (
           <ShopSlotSection
             key={section.world}
@@ -61,9 +64,9 @@ const ShopSlotsBlock = (props: ShopSlotsBlockProps) => {
           readout={readOnly}
           onChange={readOnly ? undefined : (next) => onChange(withSlotCount(scope, next))}
         />
-        {readOnly ? <ValueTag label={DEPTH_LABEL} value={summary.depth} /> : (
+        {readOnly ? <ValueTag label={depthLabel} value={summary.depth} /> : (
           <Slider
-            label={DEPTH_LABEL}
+            label={depthLabel}
             value={summary.depth}
             min={MIN_SHOP_SLOT_DEPTH}
             max={MAX_SHOP_SLOT_DEPTH}
@@ -71,7 +74,7 @@ const ShopSlotsBlock = (props: ShopSlotsBlockProps) => {
             onChange={(next) => onChange(withDepth(scope, next))}
           />
         )}
-        <Text className="shop-slots-block__total">{shopTotalTextOf(summary)}</Text>
+        <Text className="shop-slots-block__total">{shopTotalTextOf(summary, t)}</Text>
       </Box>
     </Box>
   );

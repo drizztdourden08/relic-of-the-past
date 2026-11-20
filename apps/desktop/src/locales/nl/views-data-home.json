@@ -20,5 +20,9 @@
   "folder.storage.description": "Bekijk mapgroottes, ruim oude bestanden op en exporteer of importeer je gegevens.",
   "facts.disk": "Op schijf",
   "facts.profiles": "Profielen",
-  "facts.roms": "ROM's"
+  "facts.roms": "ROM's",
+  "hero.eyebrow": "Gegevens",
+  "hero.title": "Je bibliotheek",
+  "hero.open-folder": "Gegevensmap openen",
+  "hero.refresh": "Vernieuwen"
 }

@@ -59,5 +59,16 @@
   "saveHint.tapLoad": "タップでロード",
   "saveHint.holdSave": "長押しでセーブ",
   "saveHint.holdingSave": "セーブ中...",
-  "saveHint.cancel": "キャンセル"
+  "saveHint.cancel": "キャンセル",
+  "screen.title": "ゲーム画面",
+  "menu.save-states": "ステートセーブ",
+  "menu.save-states-description": "ゲーム中にステートセーブのスロットを開きます。",
+  "title-bar.frame-rate": "フレームレート",
+  "title-bar.refresh-rate-hint": "このディスプレイのリフレッシュレートは60の倍数ではないため、ゲームを均等に表示できません。ディスプレイ設定を開いてください。",
+  "title-bar.refresh-rate-status": "非対応のリフレッシュレート",
+  "boot.controller-pages": "コントローラーページを登録中",
+  "boot.randomizer": "ランダマイザーを登録中",
+  "boot.screenshot-hold": "最初の画像用にスクリーンショットを保持中",
+  "boot.test-hooks": "テストフックを準備中",
+  "boot.game-core": "ゲームコアを読み込み中"
 }

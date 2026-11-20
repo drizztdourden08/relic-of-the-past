@@ -2,7 +2,7 @@
 import { msg } from '@drizztdourden08/brock-core/i18n';
 import type { ScreenMeta, SectionDef } from '@drizztdourden08/brock-react';
 
-const meta: ScreenMeta = { title: 'Contributing', icon: 'braces', order: 1, keywords: ['developer', 'debug', 'logs', 'sanctuary', 'account', 'contributor'] };
+const meta: ScreenMeta = { title: msg('settings-contributing:screen.title'), icon: 'braces', order: 1, keywords: ['developer', 'debug', 'logs', 'sanctuary', 'account', 'contributor'] };
 
 const sections: SectionDef[] = [
   {

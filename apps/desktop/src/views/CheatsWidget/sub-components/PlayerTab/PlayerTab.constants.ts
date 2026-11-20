@@ -33,14 +33,14 @@ const BOTTLE_SLOTS: readonly BottleSlot[] = [0, 1, 2, 3];
 const BOTTLE_ITEM_SLOT = 15;
 
 const BOTTLE_OPTIONS: readonly BottleOption[] = [
-  { value: BottleContents.None, label: 'None', tone: 'remove' },
-  { value: BottleContents.Empty, label: 'Empty', tone: 'set' },
-  { value: BottleContents.RedPotion, label: 'Red potion', tone: 'set' },
-  { value: BottleContents.GreenPotion, label: 'Green potion', tone: 'set' },
-  { value: BottleContents.BluePotion, label: 'Blue potion', tone: 'set' },
-  { value: BottleContents.Fairy, label: 'Fairy', tone: 'set' },
-  { value: BottleContents.Bee, label: 'Bee', tone: 'set' },
-  { value: BottleContents.GoodBee, label: 'Good bee', tone: 'set' },
+  { value: BottleContents.None, label: msg('views-cheats:bottle.contents.none'), tone: 'remove' },
+  { value: BottleContents.Empty, label: msg('views-cheats:bottle.contents.empty'), tone: 'set' },
+  { value: BottleContents.RedPotion, label: msg('views-cheats:bottle.contents.red-potion'), tone: 'set' },
+  { value: BottleContents.GreenPotion, label: msg('views-cheats:bottle.contents.green-potion'), tone: 'set' },
+  { value: BottleContents.BluePotion, label: msg('views-cheats:bottle.contents.blue-potion'), tone: 'set' },
+  { value: BottleContents.Fairy, label: msg('views-cheats:bottle.contents.fairy'), tone: 'set' },
+  { value: BottleContents.Bee, label: msg('views-cheats:bottle.contents.bee'), tone: 'set' },
+  { value: BottleContents.GoodBee, label: msg('views-cheats:bottle.contents.good-bee'), tone: 'set' },
 ];
 
 const LIFE_HINTS: readonly ControlHint[] = [

@@ -20,5 +20,9 @@
   "folder.storage.description": "Ordnergrößen ansehen, alte Dateien aufräumen und Daten exportieren oder importieren.",
   "facts.disk": "Auf dem Datenträger",
   "facts.profiles": "Profile",
-  "facts.roms": "ROMs"
+  "facts.roms": "ROMs",
+  "hero.eyebrow": "Daten",
+  "hero.title": "Deine Bibliothek",
+  "hero.open-folder": "Datenordner öffnen",
+  "hero.refresh": "Aktualisieren"
 }

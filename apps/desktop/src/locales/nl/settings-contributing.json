@@ -13,5 +13,6 @@
   "sanctuary-account.description": "Log in zodat bugrapporten je naam dragen en op de hub verschijnen.",
   "section.developer-debug-reporting.title": "Debugrapportage",
   "allow-debug-logging.label": "Bijhouden van debuglogs toestaan",
-  "allow-debug-logging.description": "Bewaart gedetailleerde logs en voegt een opnameknop in de titelbalk (Tab) en een zwevende knop voor het versturen van een debugrapport toe."
+  "allow-debug-logging.description": "Bewaart gedetailleerde logs en voegt een opnameknop in de titelbalk (Tab) en een zwevende knop voor het versturen van een debugrapport toe.",
+  "screen.title": "Bijdragen"
 }

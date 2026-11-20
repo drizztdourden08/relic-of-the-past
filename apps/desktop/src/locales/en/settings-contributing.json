@@ -13,5 +13,6 @@
   "sanctuary-account.description": "Sign in so bug reports carry your name and appear on the hub.",
   "section.developer-debug-reporting.title": "Debug Reporting",
   "allow-debug-logging.label": "Allow debugging logs tracking",
-  "allow-debug-logging.description": "Keeps detailed logs and adds a titlebar capture button (Tab) and a floating button for sending a debug report."
+  "allow-debug-logging.description": "Keeps detailed logs and adds a titlebar capture button (Tab) and a floating button for sending a debug report.",
+  "screen.title": "Contributing"
 }

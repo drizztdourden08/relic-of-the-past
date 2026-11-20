@@ -443,5 +443,6 @@
   "shadow.add": "+ dodaj cień",
   "inspector.section.placement": "Pozycja i rozmieszczenie",
   "inspector.section.size-box": "Rozmiar i ramka",
-  "appearance.shadows": "cienie ({summary})"
+  "appearance.shadows": "cienie ({summary})",
+  "screen.title": "Edytor układu HUD"
 }

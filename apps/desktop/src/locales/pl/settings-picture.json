@@ -45,7 +45,7 @@
   "section.performance.title": "Wydajność",
   "display-perf-in-title.label": "Pokaż FPS",
   "display-perf-in-title.description": "Wyświetla bieżące klatki na sekundę i częstotliwość odświeżania ekranu na pasku tytułu podczas działania gry",
-  "vsync.label": "V-Sync",
+  "vsync.label": "Synchronizacja pionowa",
   "vsync.description": "Taktuje grę według częstotliwości odświeżania ekranu zamiast wewnętrznego zegara, co wygładza przewijanie.",
   "vsync.hint": "Prędkość gry pozostaje taka sama w obu przypadkach."
 }

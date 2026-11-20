@@ -100,5 +100,16 @@
   "rung.reduction": "-{n}%",
   "rung.ohko": "OHKO",
   "rung.full": "Full",
-  "rung.none": "None"
+  "rung.none": "None",
+  "dungeon.map": "Map",
+  "dungeon.compass": "Compass",
+  "dungeon.big-key": "Big Key",
+  "bottle.contents.none": "None",
+  "bottle.contents.empty": "Empty",
+  "bottle.contents.red-potion": "Red potion",
+  "bottle.contents.green-potion": "Green potion",
+  "bottle.contents.blue-potion": "Blue potion",
+  "bottle.contents.fairy": "Fairy",
+  "bottle.contents.bee": "Bee",
+  "bottle.contents.good-bee": "Good bee"
 }

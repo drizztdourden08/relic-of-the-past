@@ -38,5 +38,6 @@
   "spoiler.unplaced.both": "{locations, plural, one {# umieszczona lokacja nie ma} few {# umieszczone lokacje nie mają} many {# umieszczonych lokacji nie ma} other {# umieszczonej lokacji nie ma}} tu kontroli · {items, plural, one {# umieszczony przedmiot nie ma} few {# umieszczone przedmioty nie mają} many {# umieszczonych przedmiotów nie ma} other {# umieszczonego przedmiotu nie ma}} tu rekordu, nie pokazano poniżej.",
   "spoiler.noPlacement": "Nie wczytano rozmieszczenia.",
   "aside.pool": "Pula",
-  "lobby.no-lobby": "Wybierz lobby, do którego RotP może dołączyć."
+  "lobby.no-lobby": "Wybierz lobby, do którego RotP może dołączyć.",
+  "run.show-all-options": "Pokaż wszystkie opcje"
 }

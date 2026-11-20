@@ -59,5 +59,16 @@
   "saveHint.tapLoad": "Tocca per caricare",
   "saveHint.holdSave": "Tieni premuto per salvare",
   "saveHint.holdingSave": "Salvataggio...",
-  "saveHint.cancel": "Annulla"
+  "saveHint.cancel": "Annulla",
+  "screen.title": "Vista di gioco",
+  "menu.save-states": "Stati di salvataggio",
+  "menu.save-states-description": "Apri gli slot degli stati di salvataggio durante il gioco.",
+  "title-bar.frame-rate": "Frequenza fotogrammi",
+  "title-bar.refresh-rate-hint": "La frequenza di aggiornamento di questo schermo non è un multiplo di 60, quindi il gioco non può essere mostrato in modo uniforme. Apri le impostazioni dello schermo.",
+  "title-bar.refresh-rate-status": "Frequenza di aggiornamento incompatibile",
+  "boot.controller-pages": "Registrazione delle pagine del controller",
+  "boot.randomizer": "Registrazione del randomizer",
+  "boot.screenshot-hold": "Mantenimento dello screenshot per la prima immagine",
+  "boot.test-hooks": "Preparazione degli hook di test",
+  "boot.game-core": "Caricamento del core di gioco"
 }

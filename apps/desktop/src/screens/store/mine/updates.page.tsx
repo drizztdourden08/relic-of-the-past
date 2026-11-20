@@ -1,9 +1,10 @@
 /* @layer renderer-app @kind component */
+import { msg } from '@drizztdourden08/brock-core/i18n';
 import type { ScreenMeta } from '@drizztdourden08/brock-react';
 import { isSignedIn } from '@app/shell/show-rules';
 import { StoreInstalledView } from '@app/views/Store/sub-components/StoreInstalledView';
 
-const meta: ScreenMeta = { title: 'Updates', icon: 'refresh-cw', showHeader: true, order: 2, fill: true, when: isSignedIn, keywords: ['update', 'new version', 'outdated'] };
+const meta: ScreenMeta = { title: msg('views-store:screen.updates'), icon: 'refresh-cw', showHeader: true, order: 2, fill: true, when: isSignedIn, keywords: ['update', 'new version', 'outdated'] };
 
 const UpdatesPage = () => <StoreInstalledView mode="updates" />;
 

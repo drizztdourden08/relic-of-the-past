@@ -2,7 +2,7 @@
 import { msg } from '@drizztdourden08/brock-core/i18n';
 import type { ScreenMeta, SectionDef } from '@drizztdourden08/brock-react';
 
-const meta: ScreenMeta = { title: 'Gameplay', icon: 'gamepad-2', order: 1, keywords: ['gameplay', 'auto save', 'turbo', 'dialog', 'cheats', 'vanilla safe'] };
+const meta: ScreenMeta = { title: msg('data-manager:settings-sections.title.gameplay'), icon: 'gamepad-2', order: 1, keywords: ['gameplay', 'auto save', 'turbo', 'dialog', 'cheats', 'vanilla safe'] };
 
 const turboKeywords = 'turbo fast forward speed up faster skip hold multiplier speedrun grind';
 

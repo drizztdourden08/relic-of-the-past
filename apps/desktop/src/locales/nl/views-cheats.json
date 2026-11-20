@@ -100,5 +100,16 @@
   "rung.reduction": "-{n}%",
   "rung.ohko": "OHKO",
   "rung.full": "Vol",
-  "rung.none": "Geen"
+  "rung.none": "Geen",
+  "dungeon.map": "Kaart",
+  "dungeon.compass": "Kompas",
+  "dungeon.big-key": "Grote sleutel",
+  "bottle.contents.none": "Geen",
+  "bottle.contents.empty": "Leeg",
+  "bottle.contents.red-potion": "Rood drankje",
+  "bottle.contents.green-potion": "Groen drankje",
+  "bottle.contents.blue-potion": "Blauw drankje",
+  "bottle.contents.fairy": "Fee",
+  "bottle.contents.bee": "Bij",
+  "bottle.contents.good-bee": "Goede bij"
 }

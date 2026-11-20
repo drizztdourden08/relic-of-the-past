@@ -18,19 +18,19 @@ const RomDetailPanel = (props: RomDetailPanelProps) => {
     <Box>
       <Text as="h3" className="detail-panel__title">{detail.name}</Text>
       <Box className="detail-panel__grid">
-        <Text className="detail-panel__label">Size</Text>
+        <Text className="detail-panel__label">{t('data-manager:rom-manager.detail.size')}</Text>
         <Text className="detail-panel__value">{formatBytes(detail.size)}</Text>
 
-        <Text className="detail-panel__label">Hash</Text>
+        <Text className="detail-panel__label">{t('data-manager:rom-manager.detail.hash')}</Text>
         <Text className="detail-panel__value" mono>{detail.hash}</Text>
 
-        <Text className="detail-panel__label">Added</Text>
+        <Text className="detail-panel__label">{t('data-manager:rom-manager.detail.added')}</Text>
         <Text className="detail-panel__value">{formatDate(detail.created, 'date')}</Text>
 
-        <Text className="detail-panel__label">Modified</Text>
+        <Text className="detail-panel__label">{t('data-manager:rom-manager.detail.modified')}</Text>
         <Text className="detail-panel__value">{formatDate(detail.modified, 'date')}</Text>
 
-        <Text className="detail-panel__label">{selectedSupplement ? 'Attached' : 'Assets'}</Text>
+        <Text className="detail-panel__label">{selectedSupplement ? t('data-manager:rom-manager.detail.attached') : t('data-manager:rom-manager.detail.assets')}</Text>
         <Text className="detail-panel__value">
           {selectedSupplement
             ? <SupplementRow supplement={selectedSupplement} />

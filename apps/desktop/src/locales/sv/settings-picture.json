@@ -45,7 +45,7 @@
   "section.performance.title": "Prestanda",
   "display-perf-in-title.label": "Visa FPS",
   "display-perf-in-title.description": "Visa aktuell bildfrekvens och skärmens uppdateringsfrekvens i titelraden medan spelet körs",
-  "vsync.label": "V-Sync",
+  "vsync.label": "Vertikal synk",
   "vsync.description": "Takt spelet efter skärmens uppdateringsfrekvens i stället för en intern timer, vilket mjukar upp scrollningen.",
   "vsync.hint": "Spelhastigheten är densamma oavsett."
 }

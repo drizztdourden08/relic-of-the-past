@@ -59,5 +59,16 @@
   "saveHint.tapLoad": "Dotknij, aby wczytać",
   "saveHint.holdSave": "Przytrzymaj, aby zapisać",
   "saveHint.holdingSave": "Zapisywanie...",
-  "saveHint.cancel": "Anuluj"
+  "saveHint.cancel": "Anuluj",
+  "screen.title": "Widok gry",
+  "menu.save-states": "Stany zapisu",
+  "menu.save-states-description": "Otwórz sloty stanów zapisu podczas gry.",
+  "title-bar.frame-rate": "Liczba klatek",
+  "title-bar.refresh-rate-hint": "Częstotliwość odświeżania tego ekranu nie jest wielokrotnością 60, więc gra nie może być wyświetlana równomiernie. Otwórz ustawienia ekranu.",
+  "title-bar.refresh-rate-status": "Niezgodna częstotliwość odświeżania",
+  "boot.controller-pages": "Rejestrowanie stron kontrolera",
+  "boot.randomizer": "Rejestrowanie randomizera",
+  "boot.screenshot-hold": "Zatrzymywanie zrzutu dla pierwszego obrazu",
+  "boot.test-hooks": "Przygotowywanie haków testowych",
+  "boot.game-core": "Ładowanie rdzenia gry"
 }

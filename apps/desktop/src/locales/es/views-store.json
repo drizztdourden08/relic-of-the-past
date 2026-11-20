@@ -23,5 +23,15 @@
   "home.featured": "Destacados",
   "home.popular": "Populares este mes",
   "home.welcome": "Te damos la bienvenida, {name}",
-  "home.updates": "{count, plural, one {# actualización de un pack que instalaste} other {# actualizaciones de packs que instalaste}}"
+  "home.updates": "{count, plural, one {# actualización de un pack que instalaste} other {# actualizaciones de packs que instalaste}}",
+  "screen.browse": "Explorar",
+  "screen.characters": "Personajes",
+  "screen.languages": "Idiomas",
+  "screen.music": "Packs de música",
+  "screen.installed": "Instalados",
+  "screen.updates": "Actualizaciones",
+  "hero.eyebrow": "Packs de la comunidad",
+  "kind.music": "Paquete de música",
+  "kind.character": "Personaje",
+  "kind.language": "Idioma"
 }

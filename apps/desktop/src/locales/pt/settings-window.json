@@ -1,5 +1,5 @@
 {
-  "option.viewport-modes.none.label": "Letterbox",
+  "option.viewport-modes.none.label": "Faixas pretas",
   "option.viewport-modes.none.hint": "Mantém a proporção do jogo e preenche o resto da janela com barras pretas.",
   "option.viewport-modes.fit.label": "Ajustar à janela",
   "option.viewport-modes.fit.hint": "Trava o formato da janela na proporção do jogo ao redimensionar, sem barras.",

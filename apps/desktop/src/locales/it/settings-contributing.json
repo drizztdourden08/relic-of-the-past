@@ -13,5 +13,6 @@
   "sanctuary-account.description": "Accedi perché le segnalazioni di bug riportino il tuo nome e compaiano nell'hub.",
   "section.developer-debug-reporting.title": "Segnalazione debug",
   "allow-debug-logging.label": "Consenti registro di debug",
-  "allow-debug-logging.description": "Conserva registri dettagliati e aggiunge un pulsante di cattura nella barra del titolo (Tab) e un pulsante mobile per inviare un rapporto di debug."
+  "allow-debug-logging.description": "Conserva registri dettagliati e aggiunge un pulsante di cattura nella barra del titolo (Tab) e un pulsante mobile per inviare un rapporto di debug.",
+  "screen.title": "Contribuire"
 }

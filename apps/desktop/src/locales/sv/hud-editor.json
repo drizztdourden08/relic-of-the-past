@@ -443,5 +443,6 @@
   "shadow.add": "+ lägg till skugga",
   "inspector.section.placement": "Position och placering",
   "inspector.section.size-box": "Storlek och ruta",
-  "appearance.shadows": "skuggor ({summary})"
+  "appearance.shadows": "skuggor ({summary})",
+  "screen.title": "HUD-layoutredigerare"
 }

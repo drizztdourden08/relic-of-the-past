@@ -13,5 +13,6 @@
   "sanctuary-account.description": "Melde dich an, damit Fehlerberichte deinen Namen tragen und im Hub erscheinen.",
   "section.developer-debug-reporting.title": "Debug-Berichte",
   "allow-debug-logging.label": "Debug-Protokollierung erlauben",
-  "allow-debug-logging.description": "Führt detaillierte Protokolle und fügt eine Aufnahmetaste in der Titelleiste (Tab) sowie eine schwebende Taste zum Senden eines Debug-Berichts hinzu."
+  "allow-debug-logging.description": "Führt detaillierte Protokolle und fügt eine Aufnahmetaste in der Titelleiste (Tab) sowie eine schwebende Taste zum Senden eines Debug-Berichts hinzu.",
+  "screen.title": "Mitwirken"
 }

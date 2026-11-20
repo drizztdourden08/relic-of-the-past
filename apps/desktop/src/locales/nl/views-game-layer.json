@@ -59,5 +59,16 @@
   "saveHint.tapLoad": "Tik om te laden",
   "saveHint.holdSave": "Houd vast om op te slaan",
   "saveHint.holdingSave": "Opslaan...",
-  "saveHint.cancel": "Annuleren"
+  "saveHint.cancel": "Annuleren",
+  "screen.title": "Spelweergave",
+  "menu.save-states": "Savestates",
+  "menu.save-states-description": "Open de savestate-slots terwijl het spel loopt.",
+  "title-bar.frame-rate": "Framerate",
+  "title-bar.refresh-rate-hint": "De verversingsfrequentie van dit scherm is geen veelvoud van 60, dus het spel kan niet gelijkmatig worden getoond. Open de scherminstellingen.",
+  "title-bar.refresh-rate-status": "Incompatibele verversingsfrequentie",
+  "boot.controller-pages": "Controllerpagina's registreren",
+  "boot.randomizer": "Randomizer registreren",
+  "boot.screenshot-hold": "Screenshot vasthouden voor het eerste beeld",
+  "boot.test-hooks": "Testhooks voorbereiden",
+  "boot.game-core": "Spelkern laden"
 }

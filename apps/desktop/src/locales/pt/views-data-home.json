@@ -20,5 +20,9 @@
   "folder.storage.description": "Veja o tamanho das pastas, limpe arquivos antigos e exporte ou importe seus dados.",
   "facts.disk": "No disco",
   "facts.profiles": "Perfis",
-  "facts.roms": "ROMs"
+  "facts.roms": "ROMs",
+  "hero.eyebrow": "Dados",
+  "hero.title": "Sua biblioteca",
+  "hero.open-folder": "Abrir pasta de dados",
+  "hero.refresh": "Atualizar"
 }

@@ -1,20 +1,21 @@
 /* @layer renderer-app @kind hook */
 import { useMemo } from 'react';
-import type { MenuEntry } from '@drizztdourden08/brock-react';
+import { msg } from '@drizztdourden08/brock-core/i18n';
+import type { MenuEntryDef } from '@drizztdourden08/brock-react';
 import { getInputManager } from '@app/input/input-manager/get-input-manager';
 import { useProfileMenuState } from './behavior/useProfileMenuState';
 
-const useInputProfileMenu = (): MenuEntry[] => {
+const useInputProfileMenu = (): MenuEntryDef[] => {
   const { choices, activeId } = useProfileMenuState();
-  return useMemo((): MenuEntry[] => {
+  return useMemo((): MenuEntryDef[] => {
     if (choices.length === 0) return [];
-    const children: MenuEntry[] = choices.map((choice) => ({
+    const children: MenuEntryDef[] = choices.map((choice) => ({
       key: `input-profile-${choice.id}`,
       label: choice.name,
       checked: choice.id === activeId,
       onClick: () => getInputManager().switchProfile(choice.id),
     }));
-    return [{ key: 'input-profile', label: 'Controller Profile', icon: 'gamepad-2', description: 'Switch the active controller profile.', children }];
+    return [{ key: 'input-profile', label: msg('profiles:menu.controller-profile'), icon: 'gamepad-2', description: msg('profiles:menu.controller-profile-description'), children }];
   }, [choices, activeId]);
 };
 

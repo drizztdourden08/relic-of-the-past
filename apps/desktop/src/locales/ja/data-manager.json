@@ -314,5 +314,14 @@
   "settings-sections.enum.pixel": "ドット",
   "settings-sections.enum.reimagined": "リイマジン",
   "settings-sections.enum.still": "静止",
-  "settings-sections.enum.drifting": "ゆっくり移動"
+  "settings-sections.enum.drifting": "ゆっくり移動",
+  "language-set-list.meta": "{count, plural, other {#行}} · ベース {base}{origin, select, patch { · パッチ済みROM} custom { · カスタム} other {}}",
+  "language-set-list.uninstall": "アンインストール",
+  "language-set-list.delete": "削除",
+  "rom-manager.detail.size": "サイズ",
+  "rom-manager.detail.hash": "ハッシュ",
+  "rom-manager.detail.added": "追加日",
+  "rom-manager.detail.modified": "更新日",
+  "rom-manager.detail.attached": "添付先",
+  "rom-manager.detail.assets": "アセット"
 }

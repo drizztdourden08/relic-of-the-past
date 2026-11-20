@@ -100,5 +100,16 @@
   "rung.reduction": "-{n}%",
   "rung.ohko": "OHKO",
   "rung.full": "Total",
-  "rung.none": "Ninguno"
+  "rung.none": "Ninguno",
+  "dungeon.map": "Mapa",
+  "dungeon.compass": "Brújula",
+  "dungeon.big-key": "Llave maestra",
+  "bottle.contents.none": "Ninguna",
+  "bottle.contents.empty": "Vacía",
+  "bottle.contents.red-potion": "Poción roja",
+  "bottle.contents.green-potion": "Poción verde",
+  "bottle.contents.blue-potion": "Poción azul",
+  "bottle.contents.fairy": "Hada",
+  "bottle.contents.bee": "Abeja",
+  "bottle.contents.good-bee": "Abeja buena"
 }

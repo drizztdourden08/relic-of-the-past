@@ -45,7 +45,7 @@
   "section.performance.title": "Rendimiento",
   "display-perf-in-title.label": "Mostrar FPS",
   "display-perf-in-title.description": "Muestra los fotogramas por segundo actuales, y la frecuencia de actualización de tu pantalla, en la barra de título mientras el juego funciona",
-  "vsync.label": "V-Sync",
+  "vsync.label": "Sincronización vertical",
   "vsync.description": "Sincroniza el juego con la frecuencia de actualización de la pantalla en vez de un temporizador interno, lo que suaviza el desplazamiento.",
   "vsync.hint": "La velocidad del juego es la misma en ambos casos."
 }

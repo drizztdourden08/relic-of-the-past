@@ -1,5 +1,7 @@
 /* @layer renderer-widgets @kind component */
-import { useT } from '@drizztdourden08/brock-react';
+import { useT, useText } from '@drizztdourden08/brock-react';
+import { msg } from '@drizztdourden08/brock-core/i18n';
+import type { Message } from '@drizztdourden08/brock-core/i18n';
 import { useCallback, useState } from 'react';
 import { Box, Image, Pressable } from '@drizztdourden08/tessera/primitives';
 import { PauseBorderBox } from '@app/hud';
@@ -21,7 +23,7 @@ const spriteUrlOf = (spritesBase: string, value: number): string | null => {
   return file ? `${spritesBase}${file}.png` : null;
 };
 
-const labelOf = (value: number): string => BOTTLE_OPTIONS.find((o) => o.value === value)?.label ?? 'None';
+const labelOf = (value: number): Message => BOTTLE_OPTIONS.find((o) => o.value === value)?.label ?? msg('views-cheats:bottle.contents.none');
 
 const writeAll = (value: BottleContentsValue): void => {
   for (const slot of BOTTLE_SLOTS) cheatSetBottle(slot, value);
@@ -32,6 +34,7 @@ const BottleRack = ({ scale, spritesBase }: HudPieceProps) => {
   const [open, setOpen] = useState<OpenBottle | null>(null);
   const close = useCallback(() => setOpen(null), []);
   const t = useT();
+  const text = useText();
   const hint = usePointerHintTarget(t('views-cheats:title.bottles'), BOTTLE_HINTS);
   const inPlay = useInPlay();
 
@@ -40,7 +43,7 @@ const BottleRack = ({ scale, spritesBase }: HudPieceProps) => {
 
   const optionsFor = (slot: BottleSlot): ChoiceOption[] => BOTTLE_OPTIONS.map((option) => ({
     key: String(option.value),
-    label: option.label,
+    label: text(option.label),
     sprite: spriteUrlOf(spritesBase, option.value),
     current: bottles[slot] === option.value,
     tone: option.tone,
@@ -62,7 +65,7 @@ const BottleRack = ({ scale, spritesBase }: HudPieceProps) => {
               key={slot}
               className={`cheats-player__bottle${isGhost ? ' cheats-player__bottle--ghost' : ''}`}
               style={style}
-              title={t('views-cheats:bottle.slotTitle', { n: slot + 1, contents: labelOf(value) })}
+              title={t('views-cheats:bottle.slotTitle', { n: slot + 1, contents: text(labelOf(value)) })}
               aria-haspopup="menu"
               aria-expanded={open?.slot === slot}
               disabled={!inPlay}
