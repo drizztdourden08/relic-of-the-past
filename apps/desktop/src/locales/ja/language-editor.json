@@ -130,5 +130,6 @@
   "toolbar.undo": "元に戻す",
   "variable-popover.empty": "一致なし",
   "variable-popover.filter": "絞り込み...",
-  "variable-popover.filter-label": "変数を絞り込む"
+  "variable-popover.filter-label": "変数を絞り込む",
+  "gutter.over": "{px} 超過"
 }

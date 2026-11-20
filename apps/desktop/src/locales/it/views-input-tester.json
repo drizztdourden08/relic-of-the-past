@@ -32,7 +32,7 @@
   "intro.walkthrough": "Questa procedura guida la segnalazione di un controller che non funziona bene. Servono quattro brevi passaggi: una breve spiegazione (questo), i tuoi dati di contatto, un giro guidato degli input del controller (Diagnostica gamepad) e una revisione finale prima di inviare qualsiasi cosa.",
   "intro.contents": "La segnalazione include il modello di controller rilevato, la corrispondenza più vicina nel nostro database di controller noti, il tipo di connessione rilevato, i dati HID grezzi letti dal dispositivo e il rapporto di diagnostica catturato nel passaggio successivo, tutto visibile prima dell'invio.",
   "body.thanks": "Grazie, la tua segnalazione è stata inviata.",
-  "user.email": "Email",
+  "user.email": "E-mail",
   "user.emailInvalid": "Inserisci un'email valida",
   "user.emailPlaceholder": "tu@esempio.com",
   "user.name": "Nome",

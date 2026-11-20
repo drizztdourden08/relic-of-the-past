@@ -6,9 +6,9 @@ import { playerSections } from './player-sections';
 import { systemSections } from './system-sections';
 import { worldSections } from './world-sections';
 
-const buildStateSections = (t: I18n['t'], state: GameUIState, fps?: number): StateSectionData[] => [
+const buildStateSections = (t: I18n['t'], text: I18n['text'], state: GameUIState, fps?: number): StateSectionData[] => [
   ...worldSections(t, state, fps),
-  ...playerSections(t, state),
+  ...playerSections(t, text, state),
   ...systemSections(t, state),
 ];
 

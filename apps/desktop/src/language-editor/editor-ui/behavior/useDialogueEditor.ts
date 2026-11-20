@@ -1,5 +1,6 @@
 /* @layer renderer-components @kind hook */
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { useT } from '@drizztdourden08/brock-react';
 import { useEditor } from '@tiptap/react';
 import { redoDepth, undoDepth } from '@tiptap/pm/history';
 import { joinLines } from '@rotp/languages';
@@ -13,6 +14,7 @@ import type { DialogueLineView } from '@rotp/languages';
 import type { UseDialogueEditorParams } from './dialogue-editor.type';
 
 const useDialogueEditor = (params: UseDialogueEditorParams) => {
+  const t = useT();
   const { tokens, extensions, metrics, glossary, readOnly, onChange } = params;
 
   const emittedRef = useRef<string>(signatureOf(tokens));
@@ -57,10 +59,10 @@ const useDialogueEditor = (params: UseDialogueEditorParams) => {
   }, [extensions, readOnly]);
 
   useEffect(() => {
-    updateEditorRuntime({ metrics, glossary });
+    updateEditorRuntime({ metrics, glossary, overBy: (px) => t('language-editor:gutter.over', { px }) });
     const { view } = editor;
     view.dispatch(view.state.tr);
-  }, [editor, metrics, glossary]);
+  }, [editor, metrics, glossary, t]);
 
   useTokenSync({ editor, tokens, emittedRef, metrics, glossary, onLines: setLines });
 

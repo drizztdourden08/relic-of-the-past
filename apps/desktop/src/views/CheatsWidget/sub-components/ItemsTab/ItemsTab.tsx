@@ -1,5 +1,5 @@
 /* @layer renderer-widgets @kind component */
-import { useT } from '@drizztdourden08/brock-react';
+import { useT, useText } from '@drizztdourden08/brock-react';
 import { useCallback, useMemo, useState } from 'react';
 import { Box } from '@drizztdourden08/tessera/primitives';
 import { DisabledOverlay } from '@drizztdourden08/tessera/composites';
@@ -25,8 +25,9 @@ import './ItemsTab.css';
 const ItemsTab = ({ gates }: CheatTabProps) => {
   const { ref, scale } = useConsoleScale(ITEMS_TILES_WIDE);
   const t = useT();
+  const text = useText();
   const spritesBase = getSpritesBase();
-  const specs = useMemo(() => specBySlot(buildSlotSpecs()), []);
+  const specs = useMemo(() => specBySlot(buildSlotSpecs(text)), [text]);
   const inPlay = useInPlay();
   const [hovered, setHovered] = useState<number | null>(null);
   const [open, setOpen] = useState<OpenSlot | null>(null);

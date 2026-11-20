@@ -15,12 +15,13 @@ const AnimationGroup = (props: AnimationGroupProps) => {
   const t = useT();
   const text = useText();
   const { animation, duration, head, open, onToggle, onRemove, onChange, scope, insideRepeat, warnings } = props;
+  const loopLabel = LOOPS.find((loop) => loop.value === animation.loop)?.label;
   const reflow = warnings.find((w) => w.property === animation.property);
 
   return (
     <SubsectionGroup
       title={animation.property}
-      summary={`${duration}ms · ${animation.loop}${animation.when !== undefined ? ` · ${t('hud-editor:animation-group.gated')}` : ''}`}
+      summary={`${duration}ms · ${loopLabel ? text(loopLabel) : animation.loop}${animation.when !== undefined ? ` · ${t('hud-editor:animation-group.gated')}` : ''}`}
       open={open}
       onToggle={onToggle}
       action={{ label: t('hud-editor:animation-group.remove', { property: animation.property }), icon: '✕', onClick: onRemove }}

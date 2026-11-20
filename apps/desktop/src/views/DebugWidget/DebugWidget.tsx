@@ -1,5 +1,5 @@
 /* @layer renderer-widgets @kind component */
-import { useT } from '@drizztdourden08/brock-react';
+import { useT, useText } from '@drizztdourden08/brock-react';
 import { Box, Button } from '@drizztdourden08/tessera/primitives';
 import { useGameUIStore } from '../../stores/game-ui-store';
 import { useHudSettingsStore } from '../../stores/hud-settings-store';
@@ -11,9 +11,10 @@ import './DebugWidget.css';
 
 const DebugWidgetContent = () => {
   const t = useT();
+  const text = useText();
   const state = useGameUIStore();
   const hudSettings = useHudSettingsStore();
-  const sections = buildStateSections(t, state, getFps());
+  const sections = buildStateSections(t, text, state, getFps());
 
   const parts = hudSettings.enhancedParts;
   const mainOn = parts.includes('main');

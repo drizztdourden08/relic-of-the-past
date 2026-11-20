@@ -320,5 +320,6 @@
   "layers.loop.from-file": "Il file dichiara {where}, quindi l'intro suona una volta e poi si ripete da lì",
   "layers.loop.intro": "L'intro suona una volta, poi si ripete da {where}",
   "studio.tabs.ambient": "Ambiente",
-  "packs.meta.summary": "{files} · {size}"
+  "packs.meta.summary": "{files} · {size}",
+  "layers.default-name": "Livello {number}"
 }

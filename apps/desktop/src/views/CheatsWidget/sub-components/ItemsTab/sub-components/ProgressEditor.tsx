@@ -1,5 +1,5 @@
 /* @layer renderer-widgets @kind component */
-import { useT } from '@drizztdourden08/brock-react';
+import { useT, useText } from '@drizztdourden08/brock-react';
 import { useState } from 'react';
 import { Pressable } from '@drizztdourden08/tessera/primitives';
 import { cheatSetInventorySlot, CheatSlot } from '@app/game';
@@ -13,6 +13,7 @@ const noHover = (): void => undefined;
 
 const ProgressEditor = ({ scale, spritesBase }: PanelProps) => {
   const t = useT();
+  const text = useText();
   const pendants = useGameUIStore((s) => s.dungeonProgress.pendants);
   const crystals = useGameUIStore((s) => s.dungeonProgress.crystals);
   const progressIndicator = useGameUIStore((s) => s.saveMenu.progressIndicator);
@@ -36,7 +37,7 @@ const ProgressEditor = ({ scale, spritesBase }: PanelProps) => {
             owned={held}
             menu={false}
             ghost={`${spritesBase}pause-pendant-${variant}.png`}
-            title={t('views-cheats:items.toggle', { name, action: held ? 'take' : 'give' })}
+            title={t('views-cheats:items.toggle', { name: text(name), action: held ? 'take' : 'give' })}
             style={{ position: 'absolute', left: tile * x, top: tile * y }}
             onClick={() => cheatSetInventorySlot(CheatSlot.Pendants, pendants ^ bit)}
             onHover={noHover}

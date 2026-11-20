@@ -146,5 +146,14 @@
   "summary.none": "aucun",
   "summary.no-sides": "pas de {sides}",
   "summary.outline": "{width}px, encre",
-  "summary.shadows": "{count, plural, one {# ombre} other {# ombres}}"
+  "summary.shadows": "{count, plural, one {# ombre} other {# ombres}}",
+  "new.text": "Texte",
+  "sample.north": "Nord",
+  "sample.west": "Ouest",
+  "sample.east": "Est",
+  "sample.south": "Sud",
+  "sample.up": "Haut",
+  "sample.left": "Gauche",
+  "sample.right": "Droite",
+  "sample.down": "Bas"
 }

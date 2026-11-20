@@ -13,7 +13,7 @@ const paintGutter = (root: HTMLElement, node: PmNode, lineNo: number | null): vo
   const [num, meter, px, ch] = Array.from(root.children) as HTMLElement[];
   if (num === undefined || meter === undefined || px === undefined || ch === undefined) throw new Error('the line gutter is missing one of its four cells');
   const fill = meter.firstElementChild as HTMLElement;
-  const { metrics, glossary } = editorRuntime;
+  const { metrics, glossary, overBy } = editorRuntime;
 
   if (lineNo !== null) num.textContent = String(lineNo);
 
@@ -30,7 +30,7 @@ const paintGutter = (root: HTMLElement, node: PmNode, lineNo: number | null): vo
   const free = ROW_WIDTH_PX - widthPx;
   const share = widthPx / ROW_WIDTH_PX;
   fill.style.width = `${Math.min(100, Math.round(share * 100))}%`;
-  px.textContent = free < 0 ? `${-free} over` : `${free} px`;
+  px.textContent = free < 0 ? overBy(-free) : `${free} px`;
   root.classList.toggle('line-gutter--over', free < 0);
   root.classList.toggle('line-gutter--tight', free >= 0 && share >= TIGHT_FROM);
 };

@@ -146,5 +146,14 @@
   "summary.none": "nenhum",
   "summary.no-sides": "sem {sides}",
   "summary.outline": "{width}px, tinta",
-  "summary.shadows": "{count, plural, one {# sombra} other {# sombras}}"
+  "summary.shadows": "{count, plural, one {# sombra} other {# sombras}}",
+  "new.text": "Texto",
+  "sample.north": "Norte",
+  "sample.west": "Oeste",
+  "sample.east": "Leste",
+  "sample.south": "Sul",
+  "sample.up": "Cima",
+  "sample.left": "Esquerda",
+  "sample.right": "Direita",
+  "sample.down": "Baixo"
 }

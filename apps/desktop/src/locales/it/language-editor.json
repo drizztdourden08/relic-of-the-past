@@ -130,5 +130,6 @@
   "toolbar.undo": "Annulla",
   "variable-popover.empty": "Nessuna corrispondenza",
   "variable-popover.filter": "Filtra...",
-  "variable-popover.filter-label": "Filtra variabili"
+  "variable-popover.filter-label": "Filtra variabili",
+  "gutter.over": "{px} in eccesso"
 }

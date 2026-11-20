@@ -444,5 +444,7 @@
   "inspector.section.placement": "位置と配置",
   "inspector.section.size-box": "サイズとボックス",
   "appearance.shadows": "影（{summary}）",
-  "screen.title": "HUDレイアウトエディター"
+  "screen.title": "HUDレイアウトエディター",
+  "value-input.increment": "{name}を増やす",
+  "value-input.decrement": "{name}を減らす"
 }

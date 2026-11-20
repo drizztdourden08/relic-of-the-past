@@ -130,5 +130,6 @@
   "toolbar.undo": "Ångra",
   "variable-popover.empty": "Ingen träff",
   "variable-popover.filter": "Filtrera...",
-  "variable-popover.filter-label": "Filtrera variabler"
+  "variable-popover.filter-label": "Filtrera variabler",
+  "gutter.over": "{px} för mycket"
 }

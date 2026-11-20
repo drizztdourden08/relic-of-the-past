@@ -24,8 +24,8 @@ const useLayerEditor = (params: LayerEditorState) => {
   }, []);
 
   const addLayer = useCallback(() => {
-    mutate((current) => [...current, createLayer(current, target.oneShot)]);
-  }, [mutate, target.oneShot]);
+    mutate((current) => [...current, createLayer(current, t('msu-studio:layers.default-name', { number: current.length + 1 }), target.oneShot)]);
+  }, [mutate, t, target.oneShot]);
 
   const removeLayer = useCallback((id: string) => {
     mutate((current) => current.filter((layer) => layer.id !== id));
