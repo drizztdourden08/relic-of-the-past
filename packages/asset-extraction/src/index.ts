@@ -13,6 +13,7 @@ export {
 } from './rom/rom-loader/rom-loader.constants';
 export { fanTranslationLanguage } from './rom/rom-loader/fan-translation-language';
 export { fanTranslationRefusal } from './rom/rom-loader/fan-translation-refusal';
+export { RomLoadError } from './rom/rom-loader/rom-load-error';
 export { stripSmcHeader } from './rom/rom-loader/strip-smc-header';
 export { RomReader } from './rom/reader';
 

@@ -1,4 +1,5 @@
 /* @layer bridge-wasm @kind logic */
+import { msg } from '@drizztdourden08/brock-core/i18n';
 import type { ScreenAnnotation, ScreenAnnotations, ScreenTag, SimLocation } from '../simulation';
 import type { ReachState } from '@rotp/game-core';
 import { roomTagName } from '../simulation';
@@ -28,8 +29,8 @@ const annotateRoom = (roomId: number, items: ScreenAnnotation[], completed: Read
   const killGated = tags.some(isKillGateTag);
   if (killGated) {
     items.push({ kind: 'kill-trigger', tile: { row: 0, col: 0 },
-      label: 'clear the room to open its doors',
-      detail: `tags ${tags.filter((t) => t !== 0).map((t) => `0x${hex(t)}`).join(', ')}` });
+      label: msg('nav-labels:label.clearRoom'),
+      detail: msg('nav-labels:detail.tags', { tags: tags.filter((t) => t !== 0).map((t) => `0x${hex(t)}`).join(', ') }) });
   }
 
   const doors = getRoomDoors(roomId);

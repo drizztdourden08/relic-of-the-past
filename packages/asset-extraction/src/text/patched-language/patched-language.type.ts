@@ -1,4 +1,5 @@
 /* @layer shared-asset-extraction @kind types */
+import type { Text } from '@drizztdourden08/brock-core/i18n';
 import type { RomData, RomLanguage } from '../../rom/rom-types';
 import type { ScreenPayload } from '../../screens/screen-payload.type';
 import type { LanguageConfig } from '../data/language-data';
@@ -13,7 +14,7 @@ type PatchedPartStatus = 'ok' | 'recovered' | 'failed';
 interface PatchedPartReport {
   part: PatchedPartId;
   status: PatchedPartStatus;
-  detail: string;
+  detail: Text;
 }
 
 interface PatchedLanguageInput {

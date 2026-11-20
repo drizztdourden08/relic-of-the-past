@@ -7,6 +7,7 @@ import app_sv_compounds from '../../src/locales/sv/compounds.json';
 import app_sv_data_manager from '../../src/locales/sv/data-manager.json';
 import app_sv_errors from '../../src/locales/sv/errors.json';
 import app_sv_features from '../../src/locales/sv/features.json';
+import app_sv_game_states from '../../src/locales/sv/game-states.json';
 import app_sv_hub_contracts from '../../src/locales/sv/hub-contracts.json';
 import app_sv_hud_editing from '../../src/locales/sv/hud-editing.json';
 import app_sv_hud_editor from '../../src/locales/sv/hud-editor.json';
@@ -14,8 +15,10 @@ import app_sv_hud from '../../src/locales/sv/hud.json';
 import app_sv_i18n from '../../src/locales/sv/i18n.json';
 import app_sv_language_editor from '../../src/locales/sv/language-editor.json';
 import app_sv_msu_studio from '../../src/locales/sv/msu-studio.json';
+import app_sv_nav_labels from '../../src/locales/sv/nav-labels.json';
 import app_sv_profiles from '../../src/locales/sv/profiles.json';
 import app_sv_randomizer from '../../src/locales/sv/randomizer.json';
+import app_sv_rom_loader from '../../src/locales/sv/rom-loader.json';
 import app_sv_roms from '../../src/locales/sv/roms.json';
 import app_sv_settings_audio from '../../src/locales/sv/settings-audio.json';
 import app_sv_settings_bugfixes from '../../src/locales/sv/settings-bugfixes.json';
@@ -62,6 +65,7 @@ const layers: readonly Layer[] = [
   { locale: 'sv', namespace: 'data-manager', kind: 'app', messages: app_sv_data_manager },
   { locale: 'sv', namespace: 'errors', kind: 'app', messages: app_sv_errors },
   { locale: 'sv', namespace: 'features', kind: 'app', messages: app_sv_features },
+  { locale: 'sv', namespace: 'game-states', kind: 'app', messages: app_sv_game_states },
   { locale: 'sv', namespace: 'hub-contracts', kind: 'app', messages: app_sv_hub_contracts },
   { locale: 'sv', namespace: 'hud-editing', kind: 'app', messages: app_sv_hud_editing },
   { locale: 'sv', namespace: 'hud-editor', kind: 'app', messages: app_sv_hud_editor },
@@ -69,8 +73,10 @@ const layers: readonly Layer[] = [
   { locale: 'sv', namespace: 'i18n', kind: 'app', messages: app_sv_i18n },
   { locale: 'sv', namespace: 'language-editor', kind: 'app', messages: app_sv_language_editor },
   { locale: 'sv', namespace: 'msu-studio', kind: 'app', messages: app_sv_msu_studio },
+  { locale: 'sv', namespace: 'nav-labels', kind: 'app', messages: app_sv_nav_labels },
   { locale: 'sv', namespace: 'profiles', kind: 'app', messages: app_sv_profiles },
   { locale: 'sv', namespace: 'randomizer', kind: 'app', messages: app_sv_randomizer },
+  { locale: 'sv', namespace: 'rom-loader', kind: 'app', messages: app_sv_rom_loader },
   { locale: 'sv', namespace: 'roms', kind: 'app', messages: app_sv_roms },
   { locale: 'sv', namespace: 'settings-audio', kind: 'app', messages: app_sv_settings_audio },
   { locale: 'sv', namespace: 'settings-bugfixes', kind: 'app', messages: app_sv_settings_bugfixes },

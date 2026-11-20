@@ -1,4 +1,5 @@
 /* @layer shared-game @kind types */
+import type { Text } from '@drizztdourden08/brock-core/i18n';
 import type { GridPos } from '@rotp/game-core';
 import type { CheckId } from '@rotp/game-data';
 
@@ -19,10 +20,11 @@ interface ScreenAnnotation {
   tile: GridPos;
   layer?: 0 | 1;
   direction?: 'n' | 's' | 'e' | 'w';
-  label: string;
+  label: Text;
   checkId?: CheckId;
   state?: AnnotationState;
-  detail?: string;
+  detail?: Text;
+  unreachable?: boolean;
   requires?: string[];
 }
 

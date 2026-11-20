@@ -7,6 +7,7 @@ import app_ja_compounds from '../../src/locales/ja/compounds.json';
 import app_ja_data_manager from '../../src/locales/ja/data-manager.json';
 import app_ja_errors from '../../src/locales/ja/errors.json';
 import app_ja_features from '../../src/locales/ja/features.json';
+import app_ja_game_states from '../../src/locales/ja/game-states.json';
 import app_ja_hub_contracts from '../../src/locales/ja/hub-contracts.json';
 import app_ja_hud_editing from '../../src/locales/ja/hud-editing.json';
 import app_ja_hud_editor from '../../src/locales/ja/hud-editor.json';
@@ -14,8 +15,10 @@ import app_ja_hud from '../../src/locales/ja/hud.json';
 import app_ja_i18n from '../../src/locales/ja/i18n.json';
 import app_ja_language_editor from '../../src/locales/ja/language-editor.json';
 import app_ja_msu_studio from '../../src/locales/ja/msu-studio.json';
+import app_ja_nav_labels from '../../src/locales/ja/nav-labels.json';
 import app_ja_profiles from '../../src/locales/ja/profiles.json';
 import app_ja_randomizer from '../../src/locales/ja/randomizer.json';
+import app_ja_rom_loader from '../../src/locales/ja/rom-loader.json';
 import app_ja_roms from '../../src/locales/ja/roms.json';
 import app_ja_settings_audio from '../../src/locales/ja/settings-audio.json';
 import app_ja_settings_bugfixes from '../../src/locales/ja/settings-bugfixes.json';
@@ -62,6 +65,7 @@ const layers: readonly Layer[] = [
   { locale: 'ja', namespace: 'data-manager', kind: 'app', messages: app_ja_data_manager },
   { locale: 'ja', namespace: 'errors', kind: 'app', messages: app_ja_errors },
   { locale: 'ja', namespace: 'features', kind: 'app', messages: app_ja_features },
+  { locale: 'ja', namespace: 'game-states', kind: 'app', messages: app_ja_game_states },
   { locale: 'ja', namespace: 'hub-contracts', kind: 'app', messages: app_ja_hub_contracts },
   { locale: 'ja', namespace: 'hud-editing', kind: 'app', messages: app_ja_hud_editing },
   { locale: 'ja', namespace: 'hud-editor', kind: 'app', messages: app_ja_hud_editor },
@@ -69,8 +73,10 @@ const layers: readonly Layer[] = [
   { locale: 'ja', namespace: 'i18n', kind: 'app', messages: app_ja_i18n },
   { locale: 'ja', namespace: 'language-editor', kind: 'app', messages: app_ja_language_editor },
   { locale: 'ja', namespace: 'msu-studio', kind: 'app', messages: app_ja_msu_studio },
+  { locale: 'ja', namespace: 'nav-labels', kind: 'app', messages: app_ja_nav_labels },
   { locale: 'ja', namespace: 'profiles', kind: 'app', messages: app_ja_profiles },
   { locale: 'ja', namespace: 'randomizer', kind: 'app', messages: app_ja_randomizer },
+  { locale: 'ja', namespace: 'rom-loader', kind: 'app', messages: app_ja_rom_loader },
   { locale: 'ja', namespace: 'roms', kind: 'app', messages: app_ja_roms },
   { locale: 'ja', namespace: 'settings-audio', kind: 'app', messages: app_ja_settings_audio },
   { locale: 'ja', namespace: 'settings-bugfixes', kind: 'app', messages: app_ja_settings_bugfixes },

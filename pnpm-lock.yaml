@@ -715,6 +715,9 @@ importers:
 
   packages/asset-extraction:
     dependencies:
+      '@drizztdourden08/brock-core':
+        specifier: ^0.122.0
+        version: 0.122.0
       js-yaml:
         specifier: ^4.1.1
         version: 4.2.0
