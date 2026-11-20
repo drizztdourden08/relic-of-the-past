@@ -1,5 +1,5 @@
 {
-  "option.config-modes.auto.label": "Auto",
+  "option.config-modes.auto.label": "Automatisk",
   "option.config-modes.auto.hint": "Läser det tilldelade paketet och ställer in format, samplingsfrekvens, kanaler och buffert åt dig.",
   "option.config-modes.manual.label": "Manuell",
   "option.config-modes.manual.hint": "Låter dig ställa in var och en för hand.",

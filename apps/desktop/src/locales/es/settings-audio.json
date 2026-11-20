@@ -1,5 +1,5 @@
 {
-  "option.config-modes.auto.label": "Auto",
+  "option.config-modes.auto.label": "Automático",
   "option.config-modes.auto.hint": "Lee el pack asignado y ajusta formato, frecuencia, canales y búfer.",
   "option.config-modes.manual.label": "Manual",
   "option.config-modes.manual.hint": "Permite ajustar cada uno a mano.",

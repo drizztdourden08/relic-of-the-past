@@ -122,7 +122,7 @@
   "screens.settings": "Configurações",
   "screens.search": "Pesquisar em {title}",
   "tours.menu": "Fazer o tour",
-  "tours.group": "Tours",
+  "tours.group": "Visitas guiadas",
   "tours.action": "Fazer o tour: {title}",
   "perf.snapshot": "Instantâneo de desempenho",
   "perf.section.renderer": "Renderizador",

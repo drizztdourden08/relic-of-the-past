@@ -1,5 +1,5 @@
 {
-  "option.config-modes.auto.label": "Auto",
+  "option.config-modes.auto.label": "Automatique",
   "option.config-modes.auto.hint": "Lit le pack assigné et règle pour vous le format, la fréquence d'échantillonnage, les canaux et le tampon.",
   "option.config-modes.manual.label": "Manuel",
   "option.config-modes.manual.hint": "Permet de régler chacun d'eux à la main.",
