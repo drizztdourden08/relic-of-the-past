@@ -1,4 +1,6 @@
 /* @layer shared-game @kind constants */
+import { msg } from '@drizztdourden08/brock-core/i18n';
+import type { Message } from '@drizztdourden08/brock-core/i18n';
 import { entryOf } from '../../../checked-access';
 import { CANONICAL_SLOTS } from '../shop-slot-facts';
 import { MAX_SHOP_SLOT_DEPTH, MIN_SHOP_SLOT_DEPTH } from '../shop-slots';
@@ -25,7 +27,7 @@ const SHOP_SLOT_ROWS: readonly ShopSlotRow[] = CANONICAL_SLOTS.map((slot) => ({
 
 const SHOP_MODE_SEED: OptionSeed = {
   key: SHOP_MODE_KEY,
-  displayName: 'Shop Shuffle',
+  displayName: msg('randomizer-world:option.shop_shuffle_mode'),
   group: 'shops',
   kind: 'choice',
   implementation: 'active',
@@ -38,7 +40,7 @@ const SHOP_MODE_SEED: OptionSeed = {
 
 const SHOP_SLOT_DEPTH_SEED: OptionSeed = {
   key: SHOP_SLOT_DEPTH_KEY,
-  displayName: 'Items Per Shop Slot',
+  displayName: msg('randomizer-world:option.shop_slot_depth'),
   group: 'shops',
   kind: 'range',
   implementation: 'active',
@@ -54,7 +56,7 @@ const SHOP_SLOT_OPTION_SEEDS: readonly OptionSeed[] = [
   ...SHOP_SLOT_ROWS.map(({ slot, key, label }) => shopToggleSeed(key, label, isShopOnByDefault(slot))),
 ];
 
-const SHOP_SLOT_DESCRIPTIONS: Readonly<Record<string, string>> = Object.fromEntries(
+const SHOP_SLOT_DESCRIPTIONS: Readonly<Record<string, Message>> = Object.fromEntries(
   SHOP_SLOT_ROWS.map(({ slot, key }) => [key, shopSlotDescriptionOf(slot)]),
 );
 

@@ -1,12 +1,16 @@
 /* @layer shared-game @kind logic */
 import { exportOptionTextHolder } from './export-option-text-holder';
-import { NAMESPACE_PREFIX } from './set-export-option-messages.constants';
+import { NAMESPACE_PREFIXES } from './set-export-option-messages.constants';
+
+const bareKeyOf = (key: string): string => {
+  const prefix = NAMESPACE_PREFIXES.find((candidate) => key.startsWith(candidate));
+  return prefix === undefined ? key : key.slice(prefix.length);
+};
 
 const setExportOptionMessages = (english: Readonly<Record<string, string>>): void => {
   exportOptionTextHolder.resolve = (text) => {
     if (typeof text === 'string') return text;
-    const bare = text.key.startsWith(NAMESPACE_PREFIX) ? text.key.slice(NAMESPACE_PREFIX.length) : text.key;
-    return english[bare] ?? text.key;
+    return english[bareKeyOf(text.key)] ?? text.key;
   };
 };
 

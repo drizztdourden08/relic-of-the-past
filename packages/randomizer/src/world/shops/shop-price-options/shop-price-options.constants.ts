@@ -1,4 +1,5 @@
 /* @layer shared-game @kind constants */
+import { msg } from '@drizztdourden08/brock-core/i18n';
 import { itemKeyName } from '../../display-names/item-key-name';
 import { ITEM } from '../../item-ids';
 import {
@@ -22,14 +23,14 @@ const BOTTLE_CONTENTS: readonly BottleContentRow[] = [
 ];
 
 const SHOP_PRICE_OPTION_SEEDS: readonly OptionSeed[] = [
-  ...CURRENCY_ROWS.flatMap(({ currency, label, max, defaultMin, defaultMax }) => [
-    shopToggleSeed(currencyKeyOf(currency), `${label} prices`, ROLLED_BY_DEFAULT),
-    shopPriceRangeSeed(currencyMinKeyOf(currency), `${label} price minimum`, max, defaultMin),
-    shopPriceRangeSeed(currencyMaxKeyOf(currency), `${label} price maximum`, max, defaultMax),
+  ...CURRENCY_ROWS.flatMap(({ currency, max, defaultMin, defaultMax }) => [
+    shopToggleSeed(currencyKeyOf(currency), msg('randomizer-world:tpl.shop.price', { currency }), ROLLED_BY_DEFAULT),
+    shopPriceRangeSeed(currencyMinKeyOf(currency), msg('randomizer-world:tpl.shop.min', { currency }), max, defaultMin),
+    shopPriceRangeSeed(currencyMaxKeyOf(currency), msg('randomizer-world:tpl.shop.max', { currency }), max, defaultMax),
   ]),
-  shopToggleSeed(BOTTLE_KEY, 'Bottle prices', ROLLED_BY_DEFAULT),
-  ...BOTTLE_CONTENTS.map(({ content, label }) =>
-    shopToggleSeed(bottleContentKeyOf(content), `${label} as a price`, true)),
+  shopToggleSeed(BOTTLE_KEY, msg('randomizer-world:tpl.shop.bottle'), ROLLED_BY_DEFAULT),
+  ...BOTTLE_CONTENTS.map(({ content }) =>
+    shopToggleSeed(bottleContentKeyOf(content), msg('randomizer-world:tpl.shop.content', { content }), true)),
 ];
 
 const SHOP_PRICE_OPTION_KEYS: readonly string[] = SHOP_PRICE_OPTION_SEEDS.map((seed) => seed.key);

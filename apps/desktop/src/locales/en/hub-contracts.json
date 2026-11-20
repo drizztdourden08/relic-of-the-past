@@ -1,4 +1,9 @@
 {
   "copy-refusal.known": "Its license, {id}, does not allow copies.",
-  "copy-refusal.unknown": "Its license is not one the app knows, so it does not allow copies."
+  "copy-refusal.unknown": "Its license is not one the app knows, so it does not allow copies.",
+  "license.ccBy": "Anyone may share and change it, crediting you.",
+  "license.ccBySa": "The same, and changes keep this licence.",
+  "license.ccByNc": "Credit you, and never sold.",
+  "license.cc0": "No rights kept.",
+  "license.allRightsReserved": "Players may install it, nothing more."
 }

@@ -1,9 +1,9 @@
 /* @layer shared-game @kind logic */
 import { ACTIVATED_FLUTE_DESCRIPTION, TIER_DESCRIPTION } from './progressive-tier-row.constants';
-import type { OptionDescription } from '../option-description.type';
+import type { OptionDescriptionSource } from '../option-description.type';
 import type { ProgressiveFamilyDef } from './progressive.type';
 
-const progressiveTierDescriptionOf = (family: ProgressiveFamilyDef, index: number): OptionDescription =>
+const progressiveTierDescriptionOf = (family: ProgressiveFamilyDef, index: number): OptionDescriptionSource =>
   (family.id === 'ocarina' && index === 1 ? ACTIVATED_FLUTE_DESCRIPTION : TIER_DESCRIPTION);
 
 export { progressiveTierDescriptionOf };

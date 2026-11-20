@@ -5,7 +5,7 @@ import { DEFAULT_HEART_CAP, MAX_HEART_CAP, STARTING_HEARTS } from './difficulty'
 import { HEART_CAP_KEY, difficultyCopiesKeyOf } from './difficulty-option-keys';
 import { difficultyCopiesSeed } from './difficulty-copies-seed';
 import type { OptionSeed } from '../options.type';
-import type { OptionDescription } from '../option-description.type';
+import type { OptionDescriptionSource } from '../option-description.type';
 
 const HEART_CAP_SEED: OptionSeed = {
   key: HEART_CAP_KEY,
@@ -25,11 +25,11 @@ const DIFFICULTY_OPTION_SEEDS: readonly OptionSeed[] = [
   HEART_CAP_SEED,
 ];
 
-const COPIES_DESCRIPTION = 'Extra copies are more of the same item; one past the top rung gives rupees instead.';
+const COPIES_DESCRIPTION = msg('randomizer-world:desc.copies');
 
-const DIFFICULTY_OPTION_DESCRIPTIONS: Readonly<Record<string, OptionDescription>> = {
+const DIFFICULTY_OPTION_DESCRIPTIONS: Readonly<Record<string, OptionDescriptionSource>> = {
   ...Object.fromEntries(PROGRESSIVE_FAMILIES.map((family) => [difficultyCopiesKeyOf(family.id), COPIES_DESCRIPTION])),
-  [HEART_CAP_KEY]: 'Hearts a lower ceiling takes out of the seed come back as rupee pickups.',
+  [HEART_CAP_KEY]: msg('randomizer-world:desc.heart_cap'),
 };
 
 export { DIFFICULTY_OPTION_DESCRIPTIONS, DIFFICULTY_OPTION_SEEDS };

@@ -6,7 +6,7 @@ import { describeOption } from './describe-option';
 import type { OptionDef, OptionValue } from '../options.type';
 
 const optionCatalog: readonly OptionDef[] = [...WORLD_OPTION_SEEDS, ...ITEM_OPTION_SEEDS, ...SESSION_OPTION_SEEDS]
-  .map((seed) => ({ ...seed, ...describeOption(seed.key) }));
+  .map(describeOption);
 
 const optionByKey: ReadonlyMap<string, OptionDef> =
   new Map(optionCatalog.map((option) => [option.key, option]));

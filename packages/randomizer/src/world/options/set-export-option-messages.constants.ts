@@ -1,4 +1,4 @@
 /* @layer shared-game @kind data */
-const NAMESPACE_PREFIX = 'randomizer:';
+const NAMESPACE_PREFIXES: readonly string[] = ['randomizer:', 'randomizer-world:'];
 
-export { NAMESPACE_PREFIX };
+export { NAMESPACE_PREFIXES };

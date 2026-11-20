@@ -1,7 +1,11 @@
 /* @layer shared-game @kind logic */
-import type { OptionDescription, OptionDetail } from '../option-description.type';
+import { optionText } from '../options/option-text';
+import type { OptionDescriptionSource, OptionDetail, OptionDetailSource } from '../option-description.type';
 
-const detailsOf = (description: OptionDescription): readonly OptionDetail[] | undefined =>
-  (typeof description === 'string' ? undefined : description);
+const detailsOf = (description: OptionDescriptionSource): readonly OptionDetail[] | undefined =>
+  (Array.isArray(description)
+    ? (description as readonly OptionDetailSource[])
+      .map(({ term, detail }) => ({ term: optionText(term), detail: optionText(detail) }))
+    : undefined);
 
 export { detailsOf };

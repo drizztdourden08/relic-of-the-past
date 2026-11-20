@@ -3,10 +3,10 @@ import { pondKeyOf } from './pond-option-keys';
 import {
   CAPACITY_POND_MODE_DESCRIPTION, POND_ITEMS_DESCRIPTION, POND_JUMPS_DESCRIPTION, WISH_POND_MODE_DESCRIPTION,
 } from './pond-description-lines.constants';
-import type { OptionDescription } from '../option-description.type';
+import type { OptionDescriptionSource } from '../option-description.type';
 import type { PondInstance } from './pond-instance.type';
 
-const pondDescriptionsOf = (pond: PondInstance): [string, OptionDescription][] => [
+const pondDescriptionsOf = (pond: PondInstance): [string, OptionDescriptionSource][] => [
   [pondKeyOf(pond, 'mode'), pond.id === 'capacity' ? CAPACITY_POND_MODE_DESCRIPTION : WISH_POND_MODE_DESCRIPTION],
   [pondKeyOf(pond, 'items'), POND_ITEMS_DESCRIPTION],
   [pondKeyOf(pond, 'jumps'), POND_JUMPS_DESCRIPTION],

@@ -2,6 +2,7 @@
 import { optionByKey } from '../../options';
 import { accountingOf } from '../pool-accounting';
 import { familyImpactOf } from './family-impact-of';
+import { optionText } from '../../options/option-text';
 import { LOCKED_NOTE, NEUTRAL_VALUE, NO_IMPACT } from './pool-impact.constants';
 import type { DeliverableSets } from '../../fill/fill-options-from-snapshot';
 import type { RandomizerOptionsSnapshot } from '../../options.type';
@@ -12,7 +13,7 @@ const poolImpactOf = (
 ): PoolImpact => {
   const option = optionByKey.get(key);
   if (option === undefined || option.locked) {
-    return { ...NO_IMPACT, note: LOCKED_NOTE[option?.implementation ?? 'not-applicable'] };
+    return { ...NO_IMPACT, note: optionText(LOCKED_NOTE[option?.implementation ?? 'not-applicable']) };
   }
   const family = familyImpactOf(key, snapshot);
   if (family !== undefined) return family;
