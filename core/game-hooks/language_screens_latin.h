@@ -24,3 +24,8 @@ void GameHook_FloorLabelCells(uint16 *cells, uint16 mask);
 
 // messaging.c DungeonMap_DrawFloorNumberObjects, after the two label sprites of floor |floor| are set.
 void GameHook_FloorLabelSprites(OamEnt *oam, int floor);
+
+// The HUD row above the hearts (kLangTbl_HudLifeRow, uint16[6]): HUD columns 22-27 of row 0, where the
+// US cartridge draws its dashes and word. hud.c Hud_Rebuild passes kHudTilemapRightPart (12x5 words,
+// from column 20) and draws what this returns: a copy with that row's six words replaced, or |orig|.
+const uint16 *GameHook_HudRightPart(const uint16 *orig);

@@ -25,6 +25,7 @@ static const uint16 kTableBytes[kLangTbl_Count] = {
   48,                                         // pause box headers
   4,                                          // floor label tiles
   15,                                         // copy screen columns and digits
+  12,                                         // HUD label above the hearts
 };
 
 // Largest byte length the host may give a variable table (0 = the length must match kTableBytes). The

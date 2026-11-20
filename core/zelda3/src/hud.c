@@ -1509,7 +1509,7 @@ void Hud_Rebuild() {  // 8dfa70
     0x207f, 0x207f, 0x207f, 0x207f, 0x207f, 0x207f, 0x207f, 0x207f, 0x207f, 0x207f, 0x207f, 0x207f,
     0x207f, 0x207f, 0x207f, 0x207f, 0x207f, 0x207f, 0x207f, 0x207f, 0x207f, 0x207f, 0x207f, 0x207f,
   };
-  DrawHudComponents(&hud_tile_indices_buffer[HUDXY(20, 0)], kHudTilemapRightPart, 12, 5);
+  DrawHudComponents(&hud_tile_indices_buffer[HUDXY(20, 0)], GameHook_HudRightPart(kHudTilemapRightPart), 12, 5);
 
 
   Hud_Update_Hearts();

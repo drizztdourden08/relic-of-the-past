@@ -1,8 +1,8 @@
 /* @layer bridge-wasm @kind constants */
 import {
   COPY_SCREEN_ID, CREDITS_DIGITS_ID, CREDITS_MAP_ID, CREDITS_OFFSETS_ID, CREDITS_SCROLL_Y_ID, CREDITS_TEXT_ID, DUNGEON_MAP_LABELS_ID,
-  ENDING_CAPTION_DATA_ID, ENDING_CAPTION_OFFSETS_ID, FLOOR_LABELS_ID, NAME_GRID_ID, PAUSE_HEADERS_ID, PAUSE_TABLES,
-  SELECT_FILE_TABLES, TILEMAP_FONT_DATA_ID, menuTilemapId, pauseTableId, selectFileTableId,
+  ENDING_CAPTION_DATA_ID, ENDING_CAPTION_OFFSETS_ID, FLOOR_LABELS_ID, HUD_LIFE_ROW_ID, NAME_GRID_ID, PAUSE_HEADERS_ID,
+  PAUSE_TABLES, SELECT_FILE_TABLES, TILEMAP_FONT_DATA_ID, menuTilemapId, pauseTableId, selectFileTableId,
 } from '@rotp/asset-extraction';
 import type { PauseTable } from '@rotp/asset-extraction';
 
@@ -23,6 +23,8 @@ const C_PAUSE_HEADERS = 22;
 const C_FLOOR_LABELS = 23;
 
 const C_COPY_SCREEN = 24;
+
+const C_HUD_LIFE_ROW = 25;
 
 const C_TILEMAP_FONT_DATA = 0x80;
 
@@ -47,6 +49,7 @@ const buildTableIds = (): ReadonlyMap<number, number> => {
     [PAUSE_HEADERS_ID, C_PAUSE_HEADERS],
     [FLOOR_LABELS_ID, C_FLOOR_LABELS],
     [COPY_SCREEN_ID, C_COPY_SCREEN],
+    [HUD_LIFE_ROW_ID, C_HUD_LIFE_ROW],
     [TILEMAP_FONT_DATA_ID, C_TILEMAP_FONT_DATA],
     [CREDITS_TEXT_ID, cAssetId(0)],
     [CREDITS_OFFSETS_ID, cAssetId(1)],

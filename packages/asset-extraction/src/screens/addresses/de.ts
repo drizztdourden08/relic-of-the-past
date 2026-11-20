@@ -20,6 +20,7 @@ const DE_SCREEN_ADDRESSES: ScreenAddressTable = {
   },
   nameGrid: { address: 0x8e9838, count: 128 },
   ...FR_DE_PAUSE,
+  hudLifeRow: { address: 0x8dfdcb, count: 6 },
   dungeonMapLabels: { address: 0x8af024, count: 744 },
   creditsDigits: { address: 0x8eebbb, count: 2 },
   endingCaptions: {
