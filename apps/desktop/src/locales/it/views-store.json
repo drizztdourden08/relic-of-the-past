@@ -23,5 +23,12 @@
   "home.featured": "In evidenza",
   "home.popular": "Popolari questo mese",
   "home.welcome": "Bentornato, {name}",
-  "home.updates": "{count, plural, one {# aggiornamento per un pacchetto installato} other {# aggiornamenti per pacchetti installati}}"
+  "home.updates": "{count, plural, one {# aggiornamento per un pacchetto installato} other {# aggiornamenti per pacchetti installati}}",
+  "screen.browse": "Sfoglia",
+  "screen.characters": "Personaggi",
+  "screen.languages": "Lingue",
+  "screen.music": "Pacchetti musicali",
+  "screen.installed": "Installati",
+  "screen.updates": "Aggiornamenti",
+  "hero.eyebrow": "Pacchetti della community"
 }

@@ -92,5 +92,5 @@
   "vanilla-safe.label": "Original sécurisé",
   "vanilla-safe.description": "Désactive de force toute fonction, tout réglage de confort, correctif de bug, triche, remplacement d'objet, sprite de joueur personnalisé et remplacement de HUD, pour que le jeu corresponde exactement à la cartouche d'origine. Les écarts inoffensifs et sans risque sont aussi inclus ; il n'y a aucune exception.",
   "dialog-speed.instant": "Instantané",
-  "dialog-speed.original": "Original"
+  "dialog-speed.original": "D'origine"
 }

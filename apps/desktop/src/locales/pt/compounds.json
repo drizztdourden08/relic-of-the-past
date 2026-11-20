@@ -230,5 +230,6 @@
   "sprite-category.randomizer": "Randomizador",
   "sprite-category.title": "Título e história",
   "sprite-category.ground": "Chão",
-  "button-prompt.hold": "Segure"
+  "button-prompt.hold": "Segure",
+  "credits.screen.title": "Créditos"
 }

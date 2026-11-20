@@ -230,5 +230,6 @@
   "sprite-category.randomizer": "Randomizer",
   "sprite-category.title": "Title & Story",
   "sprite-category.ground": "Ground",
-  "button-prompt.hold": "Hold"
+  "button-prompt.hold": "Hold",
+  "credits.screen.title": "Credits"
 }

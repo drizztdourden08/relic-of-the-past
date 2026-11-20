@@ -13,5 +13,6 @@
   "sanctuary-account.description": "Logga in så att buggrapporter bär ditt namn och visas på hubben.",
   "section.developer-debug-reporting.title": "Felsökningsrapportering",
   "allow-debug-logging.label": "Tillåt spårning av felsökningsloggar",
-  "allow-debug-logging.description": "Sparar detaljerade loggar och lägger till en fångstknapp i titelraden (Tab) och en flytande knapp för att skicka en felsökningsrapport."
+  "allow-debug-logging.description": "Sparar detaljerade loggar och lägger till en fångstknapp i titelraden (Tab) och en flytande knapp för att skicka en felsökningsrapport.",
+  "screen.title": "Bidra"
 }

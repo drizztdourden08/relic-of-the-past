@@ -1,5 +1,5 @@
 {
-  "option.viewport-modes.none.label": "Letterbox",
+  "option.viewport-modes.none.label": "Czarne pasy",
   "option.viewport-modes.none.hint": "Zachowuje proporcje gry i wypełnia resztę okna czarnymi pasami.",
   "option.viewport-modes.fit.label": "Dopasuj okno",
   "option.viewport-modes.fit.hint": "Blokuje kształt okna na proporcjach gry podczas zmiany rozmiaru, więc pasy się nie pojawiają.",

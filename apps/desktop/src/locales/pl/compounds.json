@@ -230,5 +230,6 @@
   "sprite-category.randomizer": "Randomizer",
   "sprite-category.title": "Tytuł i fabuła",
   "sprite-category.ground": "Podłoże",
-  "button-prompt.hold": "Przytrzymaj"
+  "button-prompt.hold": "Przytrzymaj",
+  "credits.screen.title": "Twórcy"
 }

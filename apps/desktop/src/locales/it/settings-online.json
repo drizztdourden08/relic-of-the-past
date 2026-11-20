@@ -30,5 +30,6 @@
   "ap-notify-death-link.label": "Morti",
   "ap-notify-death-link.description": "Una morte DeathLink, ricevuta o inviata.",
   "ap-notify-chat.label": "Chat",
-  "ap-notify-chat.description": "Messaggi dei giocatori e del server."
+  "ap-notify-chat.description": "Messaggi dei giocatori e del server.",
+  "screen.title": "Online"
 }

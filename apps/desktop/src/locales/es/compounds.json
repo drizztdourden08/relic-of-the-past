@@ -230,5 +230,6 @@
   "sprite-category.randomizer": "Aleatorizador",
   "sprite-category.title": "Título e historia",
   "sprite-category.ground": "Suelo",
-  "button-prompt.hold": "Mantén"
+  "button-prompt.hold": "Mantén",
+  "credits.screen.title": "Créditos"
 }

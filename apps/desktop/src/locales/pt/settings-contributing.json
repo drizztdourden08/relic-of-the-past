@@ -13,5 +13,6 @@
   "sanctuary-account.description": "Entre para que os relatórios de bug levem seu nome e apareçam no hub.",
   "section.developer-debug-reporting.title": "Relatórios de depuração",
   "allow-debug-logging.label": "Permitir rastreamento de logs de depuração",
-  "allow-debug-logging.description": "Guarda logs detalhados e adiciona um botão de captura na barra de título (Tab) e um botão flutuante para enviar um relatório de depuração."
+  "allow-debug-logging.description": "Guarda logs detalhados e adiciona um botão de captura na barra de título (Tab) e um botão flutuante para enviar um relatório de depuração.",
+  "screen.title": "Contribuir"
 }

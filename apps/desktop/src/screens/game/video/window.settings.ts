@@ -2,7 +2,7 @@
 import { msg } from '@drizztdourden08/brock-core/i18n';
 import type { ScreenMeta, SectionDef } from '@drizztdourden08/brock-react';
 
-const meta: ScreenMeta = { title: 'Window', icon: 'app-window', order: 4, keywords: ['window', 'fullscreen', 'viewport', 'pixel perfect'] };
+const meta: ScreenMeta = { title: msg('settings-window:section.window.title'), icon: 'app-window', order: 4, keywords: ['window', 'fullscreen', 'viewport', 'pixel perfect'] };
 
 const viewportModes = [
   { value: 'none', label: msg('settings-window:option.viewport-modes.none.label'), hint: msg('settings-window:option.viewport-modes.none.hint') },

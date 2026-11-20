@@ -59,5 +59,6 @@
   "saveHint.tapLoad": "Dotknij, aby wczytać",
   "saveHint.holdSave": "Przytrzymaj, aby zapisać",
   "saveHint.holdingSave": "Zapisywanie...",
-  "saveHint.cancel": "Anuluj"
+  "saveHint.cancel": "Anuluj",
+  "screen.title": "Widok gry"
 }

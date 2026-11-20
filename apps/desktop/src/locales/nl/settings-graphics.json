@@ -1,6 +1,6 @@
 {
   "section.rendering.title": "Weergave",
-  "section.rendering-engine.title": "Engine",
+  "section.rendering-engine.title": "Render-engine",
   "new-renderer.label": "Geoptimaliseerde PPU",
   "new-renderer.description": "Gebruikt een snellere pixelverwerkingseenheid. Ziet er identiek uit en draait veel sneller",
   "enhanced-mode7.label": "Verbeterde Mode 7",

@@ -20,5 +20,9 @@
   "folder.storage.description": "Se mappstorlekar, rensa gamla filer samt exportera eller importera dina data.",
   "facts.disk": "På disk",
   "facts.profiles": "Profiler",
-  "facts.roms": "ROM:ar"
+  "facts.roms": "ROM:ar",
+  "hero.eyebrow": "Data",
+  "hero.title": "Ditt bibliotek",
+  "hero.open-folder": "Öppna datamappen",
+  "hero.refresh": "Uppdatera"
 }

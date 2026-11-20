@@ -443,5 +443,6 @@
   "shadow.add": "+ add shadow",
   "inspector.section.placement": "Position & placement",
   "inspector.section.size-box": "Size & Box",
-  "appearance.shadows": "shadows ({summary})"
+  "appearance.shadows": "shadows ({summary})",
+  "screen.title": "HUD Layout Editor"
 }

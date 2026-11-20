@@ -23,5 +23,12 @@
   "home.featured": "À la une",
   "home.popular": "Populaires ce mois-ci",
   "home.welcome": "Bon retour, {name}",
-  "home.updates": "{count, plural, one {# mise à jour pour un pack installé} other {# mises à jour pour des packs installés}}"
+  "home.updates": "{count, plural, one {# mise à jour pour un pack installé} other {# mises à jour pour des packs installés}}",
+  "screen.browse": "Parcourir",
+  "screen.characters": "Personnages",
+  "screen.languages": "Langues",
+  "screen.music": "Packs de musique",
+  "screen.installed": "Installés",
+  "screen.updates": "Mises à jour",
+  "hero.eyebrow": "Packs de la communauté"
 }

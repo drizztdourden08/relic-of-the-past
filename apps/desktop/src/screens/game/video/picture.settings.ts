@@ -2,7 +2,7 @@
 import { msg } from '@drizztdourden08/brock-core/i18n';
 import type { ScreenMeta, SectionDef } from '@drizztdourden08/brock-react';
 
-const meta: ScreenMeta = { title: 'Picture', icon: 'image', order: 1, keywords: ['picture', 'widescreen', 'aspect ratio', 'fps', 'vsync'] };
+const meta: ScreenMeta = { title: msg('settings-picture:section.picture.title'), icon: 'image', order: 1, keywords: ['picture', 'widescreen', 'aspect ratio', 'fps', 'vsync'] };
 
 const offscreenOptions = [
   { value: 'idle', label: msg('settings-picture:option.offscreen-options.idle.label'), hint: msg('settings-picture:option.offscreen-options.idle.hint') },

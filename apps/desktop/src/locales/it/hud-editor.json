@@ -443,5 +443,6 @@
   "shadow.add": "+ aggiungi ombra",
   "inspector.section.placement": "Posizione e collocazione",
   "inspector.section.size-box": "Dimensione e riquadro",
-  "appearance.shadows": "ombre ({summary})"
+  "appearance.shadows": "ombre ({summary})",
+  "screen.title": "Editor layout HUD"
 }

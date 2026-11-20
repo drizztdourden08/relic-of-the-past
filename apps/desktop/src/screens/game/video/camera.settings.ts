@@ -2,7 +2,7 @@
 import { msg } from '@drizztdourden08/brock-core/i18n';
 import type { ScreenMeta, SectionDef } from '@drizztdourden08/brock-react';
 
-const meta: ScreenMeta = { title: 'Camera', icon: 'image', order: 3, keywords: ['camera', 'scroll', 'lock', 'transition'] };
+const meta: ScreenMeta = { title: msg('settings-camera:section.camera.title'), icon: 'image', order: 3, keywords: ['camera', 'scroll', 'lock', 'transition'] };
 
 const sections: SectionDef[] = [
   {

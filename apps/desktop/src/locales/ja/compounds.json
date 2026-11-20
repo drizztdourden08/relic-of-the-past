@@ -230,5 +230,6 @@
   "sprite-category.randomizer": "ランダマイザー",
   "sprite-category.title": "タイトルとストーリー",
   "sprite-category.ground": "地面",
-  "button-prompt.hold": "長押し"
+  "button-prompt.hold": "長押し",
+  "credits.screen.title": "クレジット"
 }

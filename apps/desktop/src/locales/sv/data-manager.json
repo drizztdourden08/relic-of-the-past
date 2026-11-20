@@ -314,5 +314,8 @@
   "settings-sections.enum.pixel": "Pixel",
   "settings-sections.enum.reimagined": "Nytolkad",
   "settings-sections.enum.still": "Stilla",
-  "settings-sections.enum.drifting": "Drivande"
+  "settings-sections.enum.drifting": "Drivande",
+  "language-set-list.meta": "{count, plural, one {# rad} other {# rader}} · bas {base}{origin, select, patch { · patchad ROM} custom { · egen} other {}}",
+  "language-set-list.uninstall": "Avinstallera",
+  "language-set-list.delete": "Ta bort"
 }

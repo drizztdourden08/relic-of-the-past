@@ -1,6 +1,6 @@
 {
-  "section.rendering.title": "Rendering",
-  "section.rendering-engine.title": "Engine",
+  "section.rendering.title": "Darstellung",
+  "section.rendering-engine.title": "Render-Engine",
   "new-renderer.label": "Optimierte PPU",
   "new-renderer.description": "Nutzt eine schnellere Pixelverarbeitungseinheit. Sieht identisch aus und läuft deutlich schneller",
   "enhanced-mode7.label": "Erweiterter Mode 7",

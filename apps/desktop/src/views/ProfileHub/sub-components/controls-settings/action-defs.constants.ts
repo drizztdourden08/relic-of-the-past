@@ -1,13 +1,36 @@
 /* @layer renderer-components @kind constants */
-import type { ActionDef } from '@drizztdourden08/brock-input/renderer';
-import { SNES_ACTION_LABELS, SNES_BUTTONS, SNES_BUTTON_LABELS } from '@rotp/game-data';
-import { SNES_ICON_MAP } from '@rotp/input-mapping';
+import { msg } from '@drizztdourden08/brock-core/i18n';
+import type { Message } from '@drizztdourden08/brock-core/i18n';
+import type { SnesButton } from '@rotp/game-data';
 
-const SNES_ACTIONS: readonly ActionDef[] = SNES_BUTTONS.map((button) => ({
-  id: button,
-  label: SNES_ACTION_LABELS[button],
-  middleLabel: SNES_BUTTON_LABELS[button],
-  glyph: SNES_ICON_MAP[button],
-}));
+const SNES_ACTION_MESSAGES: Readonly<Record<SnesButton, Message>> = {
+  A: msg('profiles:controls.snes.action.a'),
+  B: msg('profiles:controls.snes.action.b'),
+  X: msg('profiles:controls.snes.action.x'),
+  Y: msg('profiles:controls.snes.action.y'),
+  L: msg('profiles:controls.snes.action.l'),
+  R: msg('profiles:controls.snes.action.r'),
+  Start: msg('profiles:controls.snes.action.start'),
+  Select: msg('profiles:controls.snes.action.select'),
+  Up: msg('profiles:controls.snes.action.up'),
+  Down: msg('profiles:controls.snes.action.down'),
+  Left: msg('profiles:controls.snes.action.left'),
+  Right: msg('profiles:controls.snes.action.right'),
+};
 
-export { SNES_ACTIONS };
+const SNES_BUTTON_MESSAGES: Readonly<Record<SnesButton, Message>> = {
+  A: msg('profiles:controls.snes.button.a'),
+  B: msg('profiles:controls.snes.button.b'),
+  X: msg('profiles:controls.snes.button.x'),
+  Y: msg('profiles:controls.snes.button.y'),
+  L: msg('profiles:controls.snes.button.l'),
+  R: msg('profiles:controls.snes.button.r'),
+  Start: msg('profiles:controls.snes.button.start'),
+  Select: msg('profiles:controls.snes.button.select'),
+  Up: msg('profiles:controls.snes.button.up'),
+  Down: msg('profiles:controls.snes.button.down'),
+  Left: msg('profiles:controls.snes.button.left'),
+  Right: msg('profiles:controls.snes.button.right'),
+};
+
+export { SNES_ACTION_MESSAGES, SNES_BUTTON_MESSAGES };

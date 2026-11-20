@@ -59,5 +59,6 @@
   "saveHint.tapLoad": "Tik om te laden",
   "saveHint.holdSave": "Houd vast om op te slaan",
   "saveHint.holdingSave": "Opslaan...",
-  "saveHint.cancel": "Annuleren"
+  "saveHint.cancel": "Annuleren",
+  "screen.title": "Spelweergave"
 }

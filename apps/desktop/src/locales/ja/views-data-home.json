@@ -20,5 +20,9 @@
   "folder.storage.description": "フォルダーのサイズ確認、古いファイルの整理、データのエクスポートとインポート。",
   "facts.disk": "ディスク使用量",
   "facts.profiles": "プロフィール",
-  "facts.roms": "ROM"
+  "facts.roms": "ROM",
+  "hero.eyebrow": "データ",
+  "hero.title": "ライブラリ",
+  "hero.open-folder": "データフォルダーを開く",
+  "hero.refresh": "更新"
 }

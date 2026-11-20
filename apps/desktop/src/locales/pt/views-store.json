@@ -23,5 +23,12 @@
   "home.featured": "Destaques",
   "home.popular": "Popular neste mês",
   "home.welcome": "Bem-vindo de volta, {name}",
-  "home.updates": "{count, plural, one {# atualização para um pacote instalado} other {# atualizações para pacotes instalados}}"
+  "home.updates": "{count, plural, one {# atualização para um pacote instalado} other {# atualizações para pacotes instalados}}",
+  "screen.browse": "Explorar",
+  "screen.characters": "Personagens",
+  "screen.languages": "Idiomas",
+  "screen.music": "Pacotes de música",
+  "screen.installed": "Instalados",
+  "screen.updates": "Atualizações",
+  "hero.eyebrow": "Pacotes da comunidade"
 }

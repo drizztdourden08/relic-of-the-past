@@ -23,5 +23,12 @@
   "home.featured": "Uitgelicht",
   "home.popular": "Populair deze maand",
   "home.welcome": "Welkom terug, {name}",
-  "home.updates": "{count, plural, one {# update voor een geïnstalleerd pakket} other {# updates voor geïnstalleerde pakketten}}"
+  "home.updates": "{count, plural, one {# update voor een geïnstalleerd pakket} other {# updates voor geïnstalleerde pakketten}}",
+  "screen.browse": "Bladeren",
+  "screen.characters": "Personages",
+  "screen.languages": "Talen",
+  "screen.music": "Muziekpakketten",
+  "screen.installed": "Geïnstalleerd",
+  "screen.updates": "Updates",
+  "hero.eyebrow": "Communitypakketten"
 }

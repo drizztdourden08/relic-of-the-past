@@ -1,5 +1,5 @@
 {
-  "section.rendering.title": "Rendering",
+  "section.rendering.title": "Resa grafica",
   "section.rendering-engine.title": "Motore",
   "new-renderer.label": "PPU ottimizzata",
   "new-renderer.description": "Usa un'unità di elaborazione dei pixel più veloce. Aspetto identico e molto più veloce",

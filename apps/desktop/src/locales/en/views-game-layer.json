@@ -59,5 +59,6 @@
   "saveHint.tapLoad": "Tap to load",
   "saveHint.holdSave": "Hold to save",
   "saveHint.holdingSave": "Saving...",
-  "saveHint.cancel": "Cancel"
+  "saveHint.cancel": "Cancel",
+  "screen.title": "Game view"
 }

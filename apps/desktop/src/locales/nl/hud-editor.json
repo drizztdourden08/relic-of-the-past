@@ -443,5 +443,6 @@
   "shadow.add": "+ schaduw toevoegen",
   "inspector.section.placement": "Positie en plaatsing",
   "inspector.section.size-box": "Grootte en vak",
-  "appearance.shadows": "schaduwen ({summary})"
+  "appearance.shadows": "schaduwen ({summary})",
+  "screen.title": "HUD-indeling bewerken"
 }

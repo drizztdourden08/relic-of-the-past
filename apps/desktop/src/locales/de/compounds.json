@@ -230,5 +230,6 @@
   "sprite-category.randomizer": "Randomizer",
   "sprite-category.title": "Titel & Story",
   "sprite-category.ground": "Boden",
-  "button-prompt.hold": "Halten"
+  "button-prompt.hold": "Halten",
+  "credits.screen.title": "Mitwirkende"
 }

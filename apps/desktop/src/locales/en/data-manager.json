@@ -314,5 +314,8 @@
   "settings-sections.enum.pixel": "Pixel",
   "settings-sections.enum.reimagined": "Reimagined",
   "settings-sections.enum.still": "Still",
-  "settings-sections.enum.drifting": "Drifting"
+  "settings-sections.enum.drifting": "Drifting",
+  "language-set-list.meta": "{count, plural, one {# line} other {# lines}} · base {base}{origin, select, patch { · patched ROM} custom { · custom} other {}}",
+  "language-set-list.uninstall": "Uninstall",
+  "language-set-list.delete": "Delete"
 }

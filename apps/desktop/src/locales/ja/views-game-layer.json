@@ -59,5 +59,6 @@
   "saveHint.tapLoad": "タップでロード",
   "saveHint.holdSave": "長押しでセーブ",
   "saveHint.holdingSave": "セーブ中...",
-  "saveHint.cancel": "キャンセル"
+  "saveHint.cancel": "キャンセル",
+  "screen.title": "ゲーム画面"
 }

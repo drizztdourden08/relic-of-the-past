@@ -20,5 +20,9 @@
   "folder.storage.description": "Zobacz rozmiary folderów, wyczyść stare pliki oraz eksportuj lub importuj swoje dane.",
   "facts.disk": "Na dysku",
   "facts.profiles": "Profile",
-  "facts.roms": "ROM-y"
+  "facts.roms": "ROM-y",
+  "hero.eyebrow": "Dane",
+  "hero.title": "Twoja biblioteka",
+  "hero.open-folder": "Otwórz folder danych",
+  "hero.refresh": "Odśwież"
 }

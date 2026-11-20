@@ -59,5 +59,6 @@
   "saveHint.tapLoad": "Tippen zum Laden",
   "saveHint.holdSave": "Halten zum Speichern",
   "saveHint.holdingSave": "Speichern...",
-  "saveHint.cancel": "Abbrechen"
+  "saveHint.cancel": "Abbrechen",
+  "screen.title": "Spielansicht"
 }

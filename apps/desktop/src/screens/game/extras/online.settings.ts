@@ -3,7 +3,7 @@ import { msg } from '@drizztdourden08/brock-core/i18n';
 import type { ScreenMeta, SectionDef } from '@drizztdourden08/brock-react';
 import { isOnlineExperimental } from '@app/shell/show-rules';
 
-const meta: ScreenMeta = { title: 'Online', icon: 'globe', order: 3, when: isOnlineExperimental, keywords: ['online', 'archipelago', 'multiworld', 'deathlink', 'notifications'] };
+const meta: ScreenMeta = { title: msg('settings-online:screen.title'), icon: 'globe', order: 3, when: isOnlineExperimental, keywords: ['online', 'archipelago', 'multiworld', 'deathlink', 'notifications'] };
 
 const noticeWords = 'notification toast online archipelago';
 

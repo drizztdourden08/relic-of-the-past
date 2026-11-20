@@ -2,7 +2,7 @@
 import { msg } from '@drizztdourden08/brock-core/i18n';
 import type { ScreenMeta, SectionDef } from '@drizztdourden08/brock-react';
 
-const meta: ScreenMeta = { title: 'Audio', icon: 'volume-2', order: 2, keywords: ['audio', 'volume', 'music', 'msu', 'pack', 'sound'] };
+const meta: ScreenMeta = { title: msg('data-manager:settings-sections.title.audio'), icon: 'volume-2', order: 2, keywords: ['audio', 'volume', 'music', 'msu', 'pack', 'sound'] };
 
 const configModes = [
   { value: 'auto', label: msg('settings-audio:option.config-modes.auto.label'), hint: msg('settings-audio:option.config-modes.auto.hint') },

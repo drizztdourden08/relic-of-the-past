@@ -59,5 +59,6 @@
   "saveHint.tapLoad": "Tryck för att läsa in",
   "saveHint.holdSave": "Håll för att spara",
   "saveHint.holdingSave": "Sparar...",
-  "saveHint.cancel": "Avbryt"
+  "saveHint.cancel": "Avbryt",
+  "screen.title": "Spelvy"
 }

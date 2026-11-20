@@ -314,5 +314,8 @@
   "settings-sections.enum.pixel": "Pixel",
   "settings-sections.enum.reimagined": "Reimaginada",
   "settings-sections.enum.still": "Parada",
-  "settings-sections.enum.drifting": "À deriva"
+  "settings-sections.enum.drifting": "À deriva",
+  "language-set-list.meta": "{count, plural, one {# linha} other {# linhas}} · base {base}{origin, select, patch { · ROM com patch} custom { · personalizado} other {}}",
+  "language-set-list.uninstall": "Desinstalar",
+  "language-set-list.delete": "Excluir"
 }

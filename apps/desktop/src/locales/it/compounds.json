@@ -230,5 +230,6 @@
   "sprite-category.randomizer": "Randomizer",
   "sprite-category.title": "Titolo e storia",
   "sprite-category.ground": "Terreno",
-  "button-prompt.hold": "Tieni"
+  "button-prompt.hold": "Tieni",
+  "credits.screen.title": "Riconoscimenti"
 }

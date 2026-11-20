@@ -2,7 +2,7 @@
 import { msg } from '@drizztdourden08/brock-core/i18n';
 import type { ScreenMeta, SectionDef } from '@drizztdourden08/brock-react';
 
-const meta: ScreenMeta = { title: 'Haptics', icon: 'vibrate', order: 2, keywords: ['haptics', 'rumble', 'vibration', 'controller'] };
+const meta: ScreenMeta = { title: msg('views-touch-controls:layer.haptics'), icon: 'vibrate', order: 2, keywords: ['haptics', 'rumble', 'vibration', 'controller'] };
 
 const sections: SectionDef[] = [
   {

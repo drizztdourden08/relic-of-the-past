@@ -20,5 +20,9 @@
   "folder.storage.description": "Voir la taille des dossiers, nettoyer les anciens fichiers, exporter ou importer vos données.",
   "facts.disk": "Sur le disque",
   "facts.profiles": "Profils",
-  "facts.roms": "ROM"
+  "facts.roms": "ROM",
+  "hero.eyebrow": "Données",
+  "hero.title": "Votre bibliothèque",
+  "hero.open-folder": "Ouvrir le dossier des données",
+  "hero.refresh": "Actualiser"
 }

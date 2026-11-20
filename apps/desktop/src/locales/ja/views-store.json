@@ -23,5 +23,12 @@
   "home.featured": "注目",
   "home.popular": "今月の人気",
   "home.welcome": "おかえりなさい、{name}",
-  "home.updates": "{count, plural, other {インストール済みのパックに#件の更新があります}}"
+  "home.updates": "{count, plural, other {インストール済みのパックに#件の更新があります}}",
+  "screen.browse": "一覧",
+  "screen.characters": "キャラクター",
+  "screen.languages": "言語",
+  "screen.music": "音楽パック",
+  "screen.installed": "インストール済み",
+  "screen.updates": "アップデート",
+  "hero.eyebrow": "コミュニティパック"
 }
