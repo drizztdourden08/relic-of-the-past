@@ -34,7 +34,6 @@ const useLoadProfileForGame = ({ onGameClear, onProfileLoaded, setActiveProfile,
     await loadInputProfile(profile.id, settings);
     await loadMsuPack(profile, settings);
     await loadPlayerSprite(settings);
-    await loadLanguageScreens(profile.language);
     await loadJapaneseGraphics();
 
     const ini = serializeToIni(settings, undefined, profile.language);
@@ -52,6 +51,7 @@ const useLoadProfileForGame = ({ onGameClear, onProfileLoaded, setActiveProfile,
       setLoadingProfile(null);
       return;
     }
+    await loadLanguageScreens(profile.language);
 
     resetSession();
 

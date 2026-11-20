@@ -5,6 +5,7 @@ import { readPayloadMeta } from '../pack/read-payload-meta';
 import { getRomFont, getSet } from '../read';
 import type { ExtractedPack } from '../types';
 import { saveSet, writeRomFont } from '../write';
+import { refreshRomScreens } from './refresh-rom-screens';
 import { romSetInput } from './rom-set-input';
 
 const keepRomLanguage = async (files: FileStore, pack: ExtractedPack): Promise<void> => {
@@ -13,7 +14,9 @@ const keepRomLanguage = async (files: FileStore, pack: ExtractedPack): Promise<v
     await writeRomFont(files, pack.code, { fontData: pack.fontData, fontWidth: pack.fontWidth });
   }
   const { set } = romSetInput(pack);
-  if (await getSet(files, set.id) === null) await saveSet(files, set);
+  const stored = await getSet(files, set.id);
+  if (stored === null) await saveSet(files, set);
+  else await refreshRomScreens(files, stored, set);
 };
 
 export { keepRomLanguage };
