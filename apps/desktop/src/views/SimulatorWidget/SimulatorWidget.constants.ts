@@ -7,8 +7,6 @@ import type { LogKind } from './SimulatorWidget.type';
 const SAFETY_CAP = 50_000;
 const PAUSED_POLL_MS = 120;
 const FEATURES_LATCH_WAIT_MS = 500;
-const SEQUENCE_PREFIX = 'Sequence ';
-
 
 const EMPTY_FILTER: FilterState = {
   searchQuery: '',
@@ -63,5 +61,4 @@ const logKinds = (t: I18n['t']): LogKindDef[] => {
 
 export {
   EMPTY_FILTER, FEATURES_LATCH_WAIT_MS, logKinds, PAUSED_POLL_MS, SAFETY_CAP,
-  SEQUENCE_PREFIX,
 };

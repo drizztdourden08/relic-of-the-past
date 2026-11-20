@@ -1,4 +1,5 @@
 /* @layer renderer-widgets @kind types */
+import type { Message } from '@drizztdourden08/brock-core/i18n';
 import type { RefObject } from 'react';
 import type { createEngine, DatasetSuggestion, EngineState, RecorderState, SimConfig, SimEvent, SimOutcome, SimulatorPort, SoftlockReport, TriggerAction } from '@rotp/navigation';
 import type { CheckId, ItemId } from '@rotp/game-data';
@@ -75,9 +76,11 @@ type EditorWithOptionalCheck = Omit<ScreenEditorApi, 'writeCheck'> & { writeChec
 
 type LogKind = 'seq' | 'area' | 'screen' | 'pos' | 'backtrack' | 'flood' | 'reset' | 'check' | 'item' | 'move' | 'unlock' | 'outcome' | 'discover' | 'info' | 'debug';
 
+type LogCode = 'run-config' | 'sequence' | 'area' | 'screen' | 'start' | 'flood' | 'exits';
+
 interface LogStyle {
   kind: LogKind;
-  tag: string;
+  tag: Message;
 }
 
 interface LogRule {
@@ -154,6 +157,6 @@ interface SuggestionCardProps {
 type ApplyState = 'idle' | 'applying' | 'applied' | 'error';
 
 export type {
-  ApplyResult, ApplyState, DriveParams, EditorWithOptionalCheck, EventLogProps, LogDialogProps, LogKind, LogRule, LogStyle, OutcomeBanner, ProgressSummaryProps,
+  ApplyResult, ApplyState, DriveParams, EditorWithOptionalCheck, EventLogProps, LogCode, LogDialogProps, LogKind, LogRule, LogStyle, OutcomeBanner, ProgressSummaryProps,
   ResultsPanelProps, RunButtonsProps, RunContext, RunControl, RunControlsProps, RunCursor, RunRefs, RunResults, RunStepResult, RunTrailProps, SimLogSink, SoftlockSummaryProps, StartParams, SuggestionCardProps,
 };

@@ -1,4 +1,6 @@
 /* @layer renderer-components @kind logic */
+import { msg } from '@drizztdourden08/brock-core/i18n';
+import { optionText } from '@rotp/randomizer';
 import { SPRITE_TILE_LIMIT, TILE_PX } from './tile-inspector-tooltip.constants';
 import type { SpriteInfoParams } from './tile-inspector-tooltip.type';
 
@@ -17,9 +19,10 @@ const buildSpriteInfo = (params: SpriteInfoParams): string[] => {
     })
     .filter(x => x.r0 >= -1 && x.r0 < SPRITE_TILE_LIMIT && x.c0 >= -1 && x.c0 < SPRITE_TILE_LIMIT && x.dist === 0)
     .sort((a, b) => a.s.slot - b.s.slot)
-    .map(({ s, r0, c0, dist }) => {
-      const near = dist === 0 ? 'on' : `d${dist}`;
-      return `#${s.slot} type 0x${hexByte(s.type)} st 0x${hexByte(s.state)} sub ${s.subtype}/${s.subtype2} e${s.e} @${c0},${r0} ${near}`;
+    .map(({ s, r0, c0 }) => {
+      return optionText(msg('views-navigation:overlay.sprite.info', {
+        slot: s.slot, type: hexByte(s.type), state: hexByte(s.state), subtype: s.subtype, subtype2: s.subtype2, e: s.e, col: c0, row: r0,
+      }));
     });
 };
 
