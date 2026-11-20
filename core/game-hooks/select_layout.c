@@ -3,7 +3,7 @@
 // layouts the language set carries text for. See select_layout.h.
 #include "game_hooks_internal.h"
 
-enum { kJapaneseFlag = 4, kModuleCopy = 2, kModuleErase = 3, kModuleName = 4 };
+enum { kJapaneseFlag = 4, kModuleSelect = 1, kModuleCopy = 2, kModuleErase = 3, kModuleName = 4 };
 
 static bool JapaneseSet(void) {
   return LanguageScreens_On() && (g_zenv.dialogue_flags & kJapaneseFlag) != 0;
@@ -55,4 +55,12 @@ int SelectLayout_Active(void) {
 
 bool SelectLayout_JapaneseFont(void) {
   return LanguageJa_LayoutReady();
+}
+
+void SelectLayout_ReopenAfterLoad(void) {
+  if (!LanguageScreens_On() || main_module_index < kModuleSelect || main_module_index > kModuleName)
+    return;
+  main_module_index = kModuleSelect;
+  submodule_index = 0;
+  subsubmodule_index = 0;
 }
