@@ -109,6 +109,7 @@ export type { DecodedLine } from './text/menu-text/menu-text.type';
 export { dialogueTexts } from './text/parse-dialogue-text/dialogue-texts';
 export { parseDialogueText } from './text/parse-dialogue-text/parse-dialogue-text';
 export { kLanguages } from './text/data/language-data/language-data.constants';
+export { languageConfigOf } from './text/data/language-data/language-config-of';
 export type { LanguageConfig } from './text/data/language-data/language-data.type';
 export type { GlyphMap } from './text/glyph-map';
 export { decodeLetterList } from './text/letter-list';

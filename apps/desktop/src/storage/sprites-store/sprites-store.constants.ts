@@ -5,4 +5,6 @@ import { toSpriteDefs } from './to-sprite-defs';
 
 const SPRITE_DEFS: SpriteDef[] = toSpriteDefs(SPRITE_DEFINITIONS);
 
-export { SPRITE_DEFS };
+const JAPANESE_ROM_LANGUAGE = 'ja';
+
+export { JAPANESE_ROM_LANGUAGE, SPRITE_DEFS };

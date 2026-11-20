@@ -5,6 +5,7 @@ export { load } from './load';
 export { readJapaneseGraphics } from './read-japanese-graphics';
 export { readRomBytes } from './read-rom-bytes';
 export { readSupplementRoms } from './read-supplement-roms';
+export { removeJapaneseGraphics } from './remove-japanese-graphics';
 export { removeSidecar } from './remove-sidecar';
 export { sidecarName } from './sidecar-name';
 export { supplementRomFile } from './supplement-rom-file';
