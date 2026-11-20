@@ -30,6 +30,7 @@ import app_it_settings_mobile from '../../src/locales/it/settings-mobile.json';
 import app_it_settings_online from '../../src/locales/it/settings-online.json';
 import app_it_settings_picture from '../../src/locales/it/settings-picture.json';
 import app_it_settings_window from '../../src/locales/it/settings-window.json';
+import app_it_tessera from '../../src/locales/it/tessera.json';
 import app_it_views_bug_report_recordings from '../../src/locales/it/views-bug-report-recordings.json';
 import app_it_views_cheats from '../../src/locales/it/views-cheats.json';
 import app_it_views_checks from '../../src/locales/it/views-checks.json';
@@ -84,6 +85,7 @@ const layers: readonly Layer[] = [
   { locale: 'it', namespace: 'settings-online', kind: 'app', messages: app_it_settings_online },
   { locale: 'it', namespace: 'settings-picture', kind: 'app', messages: app_it_settings_picture },
   { locale: 'it', namespace: 'settings-window', kind: 'app', messages: app_it_settings_window },
+  { locale: 'it', namespace: 'tessera', kind: 'app', messages: app_it_tessera },
   { locale: 'it', namespace: 'views-bug-report-recordings', kind: 'app', messages: app_it_views_bug_report_recordings },
   { locale: 'it', namespace: 'views-cheats', kind: 'app', messages: app_it_views_cheats },
   { locale: 'it', namespace: 'views-checks', kind: 'app', messages: app_it_views_checks },

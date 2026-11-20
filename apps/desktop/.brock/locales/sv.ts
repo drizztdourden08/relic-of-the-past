@@ -30,6 +30,7 @@ import app_sv_settings_mobile from '../../src/locales/sv/settings-mobile.json';
 import app_sv_settings_online from '../../src/locales/sv/settings-online.json';
 import app_sv_settings_picture from '../../src/locales/sv/settings-picture.json';
 import app_sv_settings_window from '../../src/locales/sv/settings-window.json';
+import app_sv_tessera from '../../src/locales/sv/tessera.json';
 import app_sv_views_bug_report_recordings from '../../src/locales/sv/views-bug-report-recordings.json';
 import app_sv_views_cheats from '../../src/locales/sv/views-cheats.json';
 import app_sv_views_checks from '../../src/locales/sv/views-checks.json';
@@ -84,6 +85,7 @@ const layers: readonly Layer[] = [
   { locale: 'sv', namespace: 'settings-online', kind: 'app', messages: app_sv_settings_online },
   { locale: 'sv', namespace: 'settings-picture', kind: 'app', messages: app_sv_settings_picture },
   { locale: 'sv', namespace: 'settings-window', kind: 'app', messages: app_sv_settings_window },
+  { locale: 'sv', namespace: 'tessera', kind: 'app', messages: app_sv_tessera },
   { locale: 'sv', namespace: 'views-bug-report-recordings', kind: 'app', messages: app_sv_views_bug_report_recordings },
   { locale: 'sv', namespace: 'views-cheats', kind: 'app', messages: app_sv_views_cheats },
   { locale: 'sv', namespace: 'views-checks', kind: 'app', messages: app_sv_views_checks },
