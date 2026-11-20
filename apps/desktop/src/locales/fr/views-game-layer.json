@@ -70,5 +70,8 @@
   "boot.randomizer": "Enregistrement du randomizer",
   "boot.screenshot-hold": "Conservation de la capture pour la première image",
   "boot.test-hooks": "Préparation des points d'accroche de test",
-  "boot.game-core": "Chargement du cœur du jeu"
+  "boot.game-core": "Chargement du cœur du jeu",
+  "crash.wasm": "Le cœur du jeu a planté : {message}",
+  "crash.coreNotStarted": "Le cœur du jeu n'a pas démarré.",
+  "overlay.tiles-copied": "Données des tuiles copiées dans le presse-papiers ({count, plural, one {# tuile} other {# tuiles}})"
 }

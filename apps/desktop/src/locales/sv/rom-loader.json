@@ -28,5 +28,6 @@
   "patched.letters.restyled": "Patchen ritar om {count} tecken i sin egen stil; de behåller originalutgåvans bokstäver.",
   "patched.letters.unchecked": "Inget originaltypsnitt fanns att tillgå, så bokstäverna kunde inte kontrolleras; de läses som i originalutgåvan.",
   "patched.letters.release": "Bokstäverna är originalutgåvans.",
-  "patched.letters.identified": "Identifierade omritade bokstäver: {named}.{builtCount, plural, =0 {} other { Bokstäver byggda av en känd bokstav och ett tecken: {builtCount} ({builtList, list}).}}{unknownCount, plural, =0 {} other { Omritade tecken som inte är bokstäver som importen kan namnge: {unknownCount} ({unknownIds}); de behåller originalutgåvans bokstäver.}}"
+  "patched.letters.identified": "Identifierade omritade bokstäver: {named}.{builtCount, plural, =0 {} other { Bokstäver byggda av en känd bokstav och ett tecken: {builtCount} ({builtList, list}).}}{unknownCount, plural, =0 {} other { Omritade tecken som inte är bokstäver som importen kan namnge: {unknownCount} ({unknownIds}); de behåller originalutgåvans bokstäver.}}",
+  "patched.dialogue.writeBack": "Texten går att läsa men kan inte skrivas tillbaka: {error}"
 }

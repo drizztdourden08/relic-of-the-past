@@ -1,5 +1,6 @@
 /* @layer renderer-components @kind constants */
-import type { I18n } from '@drizztdourden08/brock-core/i18n';
+import { msg } from '@drizztdourden08/brock-core/i18n';
+import type { I18n, Message, Text } from '@drizztdourden08/brock-core/i18n';
 import { CHECK_FACET_DEFS } from '@rotp/game-data';
 import type { ItemFilter, ShowMode } from '@rotp/game-data';
 import type { IconPath, SegmentOption, TagPickerGroup } from '@drizztdourden08/tessera/primitives';
@@ -64,10 +65,17 @@ const itemFilterOptions = (t: I18n['t']): SegmentOption<ItemFilter>[] => [
 
 const TAG_CATEGORIES = ['world', 'location', 'area', 'content'] as const;
 
-const TAG_GROUPS: TagPickerGroup[] = TAG_CATEGORIES.map((category) => ({
+const TAG_CATEGORY_TEXT: Record<(typeof TAG_CATEGORIES)[number], Message> = {
+  world: msg('views-randomizer:tracker.facet-category.world'),
+  location: msg('views-randomizer:tracker.facet-category.location'),
+  area: msg('views-randomizer:tracker.facet-category.area'),
+  content: msg('views-randomizer:tracker.facet-category.content'),
+};
+
+const tagGroups = (text: (value: Text) => string): TagPickerGroup[] => TAG_CATEGORIES.map((category) => ({
   id: category,
-  label: category,
-  options: CHECK_FACET_DEFS.filter(t => t.category === category).map(t => ({ value: t.id, label: t.label })),
+  label: text(TAG_CATEGORY_TEXT[category]),
+  options: CHECK_FACET_DEFS.filter((def) => def.category === category).map((def) => ({ value: def.id, label: text(def.label) })),
 }));
 
 const tagModeOptions = (t: I18n['t']): SegmentOption<'any' | 'all'>[] => [
@@ -103,5 +111,5 @@ const EVENT_MARK = './logos/logo/logo-128.png';
 export {
   CLOSED_PANELS, CLOSE_PATHS, EVENT_MARK, FUNNEL_PATHS, GRID_PATHS, itemFilterOptions,
   LIST_DETAIL_PATHS, LIST_PATHS, MAX_DIMENSIONS, NESTED_PATHS, showModeOptions,
-  statusLabels, STATUS_SHAPES, summaryStats, TAG_GROUPS, tagModeOptions, TAG_PATHS,
+  statusLabels, STATUS_SHAPES, summaryStats, tagGroups, tagModeOptions, TAG_PATHS,
 };

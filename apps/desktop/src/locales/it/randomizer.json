@@ -124,5 +124,6 @@
   "impact.locUpgrades": "{loc} pos. · {upgrades, plural, one {# potenziamento} other {# potenziamenti}}",
   "impact.locItems": "{loc} pos. · {items} oggetti",
   "impact.note.unused": "non usato",
-  "impact.note.unshuffled": "non mescolato"
+  "impact.note.unshuffled": "non mescolato",
+  "archipelago.not-allowed": "Archipelago richiede le funzioni sperimentali nelle impostazioni di contribuzione"
 }

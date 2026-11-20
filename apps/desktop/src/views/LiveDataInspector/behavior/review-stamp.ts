@@ -4,7 +4,7 @@ import { formatDate } from '@drizztdourden08/tessera/primitives';
 import type { ReviewMark } from '@rotp/game-data';
 import { REVIEW_NEVER } from '../LiveDataInspector.constants';
 
-const reviewStamp = (mark: ReviewMark | undefined, text: (value: Message) => string): string =>
-  (mark === undefined ? text(REVIEW_NEVER) : formatDate(mark.at, 'date'));
+const reviewStamp = (mark: ReviewMark | undefined, text: (value: Message) => string, locale: string): string =>
+  (mark === undefined ? text(REVIEW_NEVER) : formatDate(mark.at, 'date', { locale }));
 
 export { reviewStamp };

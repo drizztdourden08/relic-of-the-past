@@ -70,5 +70,8 @@
   "boot.randomizer": "Randomizer wird registriert",
   "boot.screenshot-hold": "Screenshot wird für das erste Bild gehalten",
   "boot.test-hooks": "Test-Hooks werden vorbereitet",
-  "boot.game-core": "Spielkern wird geladen"
+  "boot.game-core": "Spielkern wird geladen",
+  "crash.wasm": "Der Spielkern ist abgestürzt: {message}",
+  "crash.coreNotStarted": "Der Spielkern wurde nicht gestartet.",
+  "overlay.tiles-copied": "Kacheldaten in die Zwischenablage kopiert ({count, plural, one {# Kachel} other {# Kacheln}})"
 }

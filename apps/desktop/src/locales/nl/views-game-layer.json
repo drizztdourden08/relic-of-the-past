@@ -70,5 +70,8 @@
   "boot.randomizer": "Randomizer registreren",
   "boot.screenshot-hold": "Screenshot vasthouden voor het eerste beeld",
   "boot.test-hooks": "Testhooks voorbereiden",
-  "boot.game-core": "Spelkern laden"
+  "boot.game-core": "Spelkern laden",
+  "crash.wasm": "De spelkern is gecrasht: {message}",
+  "crash.coreNotStarted": "De spelkern is niet gestart.",
+  "overlay.tiles-copied": "Tegelgegevens naar het klembord gekopieerd ({count, plural, one {# tegel} other {# tegels}})"
 }

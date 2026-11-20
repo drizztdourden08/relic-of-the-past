@@ -28,5 +28,6 @@
   "patched.letters.restyled": "Der Patch zeichnet {count} Zeichen in eigenem Stil neu; sie behalten die Buchstaben der Originalversion.",
   "patched.letters.unchecked": "Es stand keine Originalschrift bereit, daher konnten die Buchstaben nicht geprüft werden; sie werden wie in der Originalversion gelesen.",
   "patched.letters.release": "Die Buchstaben sind die der Originalversion.",
-  "patched.letters.identified": "Neu gezeichnete Buchstaben erkannt: {named}.{builtCount, plural, =0 {} other { Aus einem bekannten Buchstaben und einem Zeichen zusammengesetzte Buchstaben: {builtCount} ({builtList, list}).}}{unknownCount, plural, =0 {} other { Neu gezeichnete Zeichen, die keine vom Import benennbaren Buchstaben sind: {unknownCount} ({unknownIds}); sie behalten die Buchstaben der Originalversion.}}"
+  "patched.letters.identified": "Neu gezeichnete Buchstaben erkannt: {named}.{builtCount, plural, =0 {} other { Aus einem bekannten Buchstaben und einem Zeichen zusammengesetzte Buchstaben: {builtCount} ({builtList, list}).}}{unknownCount, plural, =0 {} other { Neu gezeichnete Zeichen, die keine vom Import benennbaren Buchstaben sind: {unknownCount} ({unknownIds}); sie behalten die Buchstaben der Originalversion.}}",
+  "patched.dialogue.writeBack": "Der Text lässt sich lesen, aber nicht zurückschreiben: {error}"
 }

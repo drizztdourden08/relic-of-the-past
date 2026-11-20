@@ -124,5 +124,6 @@
   "impact.locUpgrades": "{loc} Orte · {upgrades, plural, one {# Upgrade} other {# Upgrades}}",
   "impact.locItems": "{loc} Orte · {items} Gegenstände",
   "impact.note.unused": "nicht verwendet",
-  "impact.note.unshuffled": "nicht gemischt"
+  "impact.note.unshuffled": "nicht gemischt",
+  "archipelago.not-allowed": "Archipelago erfordert die experimentellen Funktionen in den Beitragseinstellungen"
 }

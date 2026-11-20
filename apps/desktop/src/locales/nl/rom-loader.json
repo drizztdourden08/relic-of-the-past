@@ -28,5 +28,6 @@
   "patched.letters.restyled": "De patch tekent {count} tekens in een eigen stijl opnieuw; ze behouden de letters van de oorspronkelijke uitgave.",
   "patched.letters.unchecked": "Er was geen oorspronkelijk lettertype, dus de letters konden niet worden gecontroleerd; ze worden gelezen zoals in de oorspronkelijke uitgave.",
   "patched.letters.release": "De letters zijn die van de oorspronkelijke uitgave.",
-  "patched.letters.identified": "Opnieuw getekende letters herkend: {named}.{builtCount, plural, =0 {} other { Letters opgebouwd uit een bekende letter en een teken: {builtCount} ({builtList, list}).}}{unknownCount, plural, =0 {} other { Opnieuw getekende tekens die geen letters zijn die de import kan benoemen: {unknownCount} ({unknownIds}); ze behouden de letters van de oorspronkelijke uitgave.}}"
+  "patched.letters.identified": "Opnieuw getekende letters herkend: {named}.{builtCount, plural, =0 {} other { Letters opgebouwd uit een bekende letter en een teken: {builtCount} ({builtList, list}).}}{unknownCount, plural, =0 {} other { Opnieuw getekende tekens die geen letters zijn die de import kan benoemen: {unknownCount} ({unknownIds}); ze behouden de letters van de oorspronkelijke uitgave.}}",
+  "patched.dialogue.writeBack": "De tekst is te lezen, maar kan niet worden teruggeschreven: {error}"
 }

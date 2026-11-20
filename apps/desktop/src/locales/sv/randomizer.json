@@ -124,5 +124,6 @@
   "impact.locUpgrades": "{loc} plats. · {upgrades, plural, one {# uppgradering} other {# uppgraderingar}}",
   "impact.locItems": "{loc} plats. · {items} föremål",
   "impact.note.unused": "används inte",
-  "impact.note.unshuffled": "inte blandat"
+  "impact.note.unshuffled": "inte blandat",
+  "archipelago.not-allowed": "Archipelago kräver experimentella funktioner i bidragsinställningarna"
 }

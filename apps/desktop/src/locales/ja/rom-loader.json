@@ -28,5 +28,6 @@
   "patched.letters.restyled": "パッチが{count}個の文字を独自のスタイルで描き直しています。文字自体はオリジナル版のものを使います。",
   "patched.letters.unchecked": "確認用のオリジナルフォントがなかったため文字を確認できませんでした。オリジナル版と同じものとして読み込みます。",
   "patched.letters.release": "文字はオリジナル版のものです。",
-  "patched.letters.identified": "描き直された文字を{named}個特定しました。{builtCount, plural, =0 {} other {既知の文字と記号から組み立てた文字：{builtCount}個（{builtList, list}）。}}{unknownCount, plural, =0 {} other {インポートで名前を付けられない描き直された文字：{unknownCount}個（{unknownIds}）。これらはオリジナル版の文字のままです。}}"
+  "patched.letters.identified": "描き直された文字を{named}個特定しました。{builtCount, plural, =0 {} other {既知の文字と記号から組み立てた文字：{builtCount}個（{builtList, list}）。}}{unknownCount, plural, =0 {} other {インポートで名前を付けられない描き直された文字：{unknownCount}個（{unknownIds}）。これらはオリジナル版の文字のままです。}}",
+  "patched.dialogue.writeBack": "テキストは読み取れますが、書き戻すことができません: {error}"
 }

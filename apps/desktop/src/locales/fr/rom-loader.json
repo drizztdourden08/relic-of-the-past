@@ -28,5 +28,6 @@
   "patched.letters.restyled": "Le patch redessine {count} glyphes dans son propre style ; ils conservent les lettres de la version d'origine.",
   "patched.letters.unchecked": "Aucune police d'origine n'était disponible, les lettres n'ont donc pas pu être vérifiées ; elles sont lues comme dans la version d'origine.",
   "patched.letters.release": "Les lettres sont celles de la version d'origine.",
-  "patched.letters.identified": "Lettres redessinées identifiées : {named}.{builtCount, plural, =0 {} other { Lettres construites à partir d'une lettre connue et d'un signe : {builtCount} ({builtList, list}).}}{unknownCount, plural, =0 {} other { Glyphes redessinés qui ne sont pas des lettres que l'import sait nommer : {unknownCount} ({unknownIds}) ; ils conservent les lettres de la version d'origine.}}"
+  "patched.letters.identified": "Lettres redessinées identifiées : {named}.{builtCount, plural, =0 {} other { Lettres construites à partir d'une lettre connue et d'un signe : {builtCount} ({builtList, list}).}}{unknownCount, plural, =0 {} other { Glyphes redessinés qui ne sont pas des lettres que l'import sait nommer : {unknownCount} ({unknownIds}) ; ils conservent les lettres de la version d'origine.}}",
+  "patched.dialogue.writeBack": "Le texte se lit mais ne peut pas être réécrit : {error}"
 }

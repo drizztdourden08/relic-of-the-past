@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind component */
-import { useT } from '@drizztdourden08/brock-react';
+import { useT, useText } from '@drizztdourden08/brock-react';
 import { useState, useMemo } from 'react';
 import { SPRITE_MANIFEST, CATEGORY_LABELS, CATEGORY_ORDER } from '@rotp/game-data';
 import type { SpriteCategory } from '@rotp/game-data';
@@ -13,6 +13,7 @@ import { loadSpriteReview, saveSpriteReview } from '@app/storage/sprites-store';
 
 const SpriteReviewPanel = ({ baseUrl }: { baseUrl: string }) => {
   const t = useT();
+  const text = useText();
   const { data, loaded, setStatus, setComment, reset } = useReviewData({ load: loadSpriteReview, save: saveSpriteReview });
   const [filter, setFilter] = useState<'all' | ReviewStatus>('all');
   const [catFilter, setCatFilter] = useState<'all' | SpriteCategory>('all');
@@ -26,9 +27,9 @@ const SpriteReviewPanel = ({ baseUrl }: { baseUrl: string }) => {
   const catTabs = useMemo((): TabItem[] => [
     { id: 'all', label: t('views-sprite-debug:filter.all'), badge: SPRITE_MANIFEST.length },
     ...CATEGORY_ORDER.map((c) => ({
-      id: c, label: CATEGORY_LABELS[c], badge: SPRITE_MANIFEST.filter((s) => s.category === c).length,
+      id: c, label: text(CATEGORY_LABELS[c]), badge: SPRITE_MANIFEST.filter((s) => s.category === c).length,
     })),
-  ], [t]);
+  ], [t, text]);
 
   const filtered = useMemo(() => SPRITE_MANIFEST.filter(s => {
     if (catFilter !== 'all' && s.category !== catFilter) return false;

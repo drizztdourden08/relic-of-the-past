@@ -28,5 +28,6 @@
   "patched.letters.restyled": "La patch ridisegna {count} glifi nel proprio stile; mantengono le lettere della versione originale.",
   "patched.letters.unchecked": "Non era disponibile alcun font originale, quindi le lettere non sono state verificate; vengono lette come nella versione originale.",
   "patched.letters.release": "Le lettere sono quelle della versione originale.",
-  "patched.letters.identified": "Lettere ridisegnate identificate: {named}.{builtCount, plural, =0 {} other { Lettere costruite da una lettera nota e un segno: {builtCount} ({builtList, list}).}}{unknownCount, plural, =0 {} other { Glifi ridisegnati che non sono lettere nominabili dall'importazione: {unknownCount} ({unknownIds}); mantengono le lettere della versione originale.}}"
+  "patched.letters.identified": "Lettere ridisegnate identificate: {named}.{builtCount, plural, =0 {} other { Lettere costruite da una lettera nota e un segno: {builtCount} ({builtList, list}).}}{unknownCount, plural, =0 {} other { Glifi ridisegnati che non sono lettere nominabili dall'importazione: {unknownCount} ({unknownIds}); mantengono le lettere della versione originale.}}",
+  "patched.dialogue.writeBack": "Il testo si legge ma non può essere riscritto: {error}"
 }

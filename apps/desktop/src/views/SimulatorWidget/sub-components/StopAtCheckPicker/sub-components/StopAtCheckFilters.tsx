@@ -1,12 +1,15 @@
 /* @layer renderer-widgets @kind component */
-import { useT } from '@drizztdourden08/brock-react';
+import { useMemo } from 'react';
+import { useT, useText } from '@drizztdourden08/brock-react';
 import { Box, Disclosure, SearchInput, SegmentedControl, TagPicker } from '@drizztdourden08/tessera/primitives';
-import { FACET_GROUPS, itemFilters, statusFilters } from '../StopAtCheckPicker.constants';
+import { facetGroups, itemFilters, statusFilters } from '../StopAtCheckPicker.constants';
 import type { StopAtCheckFiltersProps } from '../StopAtCheckPicker.type';
 
 const StopAtCheckFilters = (props: StopAtCheckFiltersProps) => {
   const { filter, onFilterChange } = props;
   const t = useT();
+  const text = useText();
+  const groups = useMemo(() => facetGroups(text), [text]);
   const tagCount = filter.activeFacets.length;
 
   return (
@@ -39,7 +42,7 @@ const StopAtCheckFilters = (props: StopAtCheckFiltersProps) => {
             size="sm"
             aria-label={t('views-simulator:picker.tags')}
             value={filter.activeFacets}
-            groups={FACET_GROUPS}
+            groups={groups}
             onChange={(activeFacets) => onFilterChange({ ...filter, activeFacets })}
           />
         </Box>

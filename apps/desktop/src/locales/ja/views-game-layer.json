@@ -70,5 +70,8 @@
   "boot.randomizer": "ランダマイザーを登録中",
   "boot.screenshot-hold": "最初の画像用にスクリーンショットを保持中",
   "boot.test-hooks": "テストフックを準備中",
-  "boot.game-core": "ゲームコアを読み込み中"
+  "boot.game-core": "ゲームコアを読み込み中",
+  "crash.wasm": "ゲームコアがクラッシュしました: {message}",
+  "crash.coreNotStarted": "ゲームコアが起動しませんでした。",
+  "overlay.tiles-copied": "タイルデータをクリップボードにコピーしました（{count, plural, other {#タイル}}）"
 }

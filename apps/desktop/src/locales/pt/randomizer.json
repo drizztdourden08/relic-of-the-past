@@ -124,5 +124,6 @@
   "impact.locUpgrades": "{loc} locais · {upgrades, plural, one {# melhoria} other {# melhorias}}",
   "impact.locItems": "{loc} locais · {items} itens",
   "impact.note.unused": "não usado",
-  "impact.note.unshuffled": "não embaralhado"
+  "impact.note.unshuffled": "não embaralhado",
+  "archipelago.not-allowed": "O Archipelago exige os recursos experimentais nas configurações de contribuição"
 }

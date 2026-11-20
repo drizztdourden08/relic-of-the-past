@@ -70,5 +70,8 @@
   "boot.randomizer": "Rejestrowanie randomizera",
   "boot.screenshot-hold": "Zatrzymywanie zrzutu dla pierwszego obrazu",
   "boot.test-hooks": "Przygotowywanie haków testowych",
-  "boot.game-core": "Ładowanie rdzenia gry"
+  "boot.game-core": "Ładowanie rdzenia gry",
+  "crash.wasm": "Rdzeń gry uległ awarii: {message}",
+  "crash.coreNotStarted": "Rdzeń gry nie został uruchomiony.",
+  "overlay.tiles-copied": "Dane kafelków skopiowano do schowka ({count, plural, one {# kafelek} few {# kafelki} many {# kafelków} other {# kafelka}})"
 }

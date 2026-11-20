@@ -70,5 +70,8 @@
   "boot.randomizer": "Registrazione del randomizer",
   "boot.screenshot-hold": "Mantenimento dello screenshot per la prima immagine",
   "boot.test-hooks": "Preparazione degli hook di test",
-  "boot.game-core": "Caricamento del core di gioco"
+  "boot.game-core": "Caricamento del core di gioco",
+  "crash.wasm": "Il nucleo del gioco si è arrestato in modo anomalo: {message}",
+  "crash.coreNotStarted": "Il nucleo del gioco non si è avviato.",
+  "overlay.tiles-copied": "Dati delle tessere copiati negli appunti ({count, plural, one {# tessera} other {# tessere}})"
 }

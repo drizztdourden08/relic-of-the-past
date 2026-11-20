@@ -70,5 +70,8 @@
   "boot.randomizer": "Registrando o randomizer",
   "boot.screenshot-hold": "Mantendo a captura para a primeira imagem",
   "boot.test-hooks": "Preparando os hooks de teste",
-  "boot.game-core": "Carregando o núcleo do jogo"
+  "boot.game-core": "Carregando o núcleo do jogo",
+  "crash.wasm": "O núcleo do jogo falhou: {message}",
+  "crash.coreNotStarted": "O núcleo do jogo não foi iniciado.",
+  "overlay.tiles-copied": "Dados dos blocos copiados para a área de transferência ({count, plural, one {# bloco} other {# blocos}})"
 }

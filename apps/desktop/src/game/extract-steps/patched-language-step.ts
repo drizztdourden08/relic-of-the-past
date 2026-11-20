@@ -14,7 +14,7 @@ const encodeCheck = (found: PatchedLanguage, base: string): { flags: number; fai
     buildLangData(table.texts, base, table.glyphs, table.letters);
     return { flags: dialogueFlags(base, 1), failure: null };
   } catch (err) {
-    const detail = `The text reads but cannot be written back: ${err instanceof Error ? err.message : String(err)}`;
+    const detail = msg('rom-loader:patched.dialogue.writeBack', { error: err instanceof Error ? err.message : String(err) });
     return { flags: 0, failure: { part: 'dialogue', status: 'failed', detail } };
   }
 };

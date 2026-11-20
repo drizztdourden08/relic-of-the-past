@@ -25,7 +25,7 @@ const PatchedImportReport = (props: PatchedImportReportProps) => {
             <Text className="patched-report__part">{text(PART_LABELS[part])}</Text>
             <Status map={statuses} value={status} size="sm" />
           </Box>
-          <Text className="patched-report__detail">{detail}</Text>
+          <Text className="patched-report__detail">{text(detail)}</Text>
         </Box>
       ))}
     </Box>

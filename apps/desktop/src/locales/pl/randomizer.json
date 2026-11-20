@@ -124,5 +124,6 @@
   "impact.locUpgrades": "{loc} lok. · {upgrades, plural, one {# ulepszenie} few {# ulepszenia} many {# ulepszeń} other {# ulepszenia}}",
   "impact.locItems": "{loc} lok. · {items} przedm.",
   "impact.note.unused": "nieużywane",
-  "impact.note.unshuffled": "nie tasowane"
+  "impact.note.unshuffled": "nie tasowane",
+  "archipelago.not-allowed": "Archipelago wymaga funkcji eksperymentalnych w ustawieniach współtworzenia"
 }

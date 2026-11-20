@@ -28,5 +28,6 @@
   "patched.letters.restyled": "O patch redesenha {count} glifos no seu próprio estilo; eles mantêm as letras da versão original.",
   "patched.letters.unchecked": "Não havia fonte original disponível, então as letras não puderam ser verificadas; elas são lidas como na versão original.",
   "patched.letters.release": "As letras são as da versão original.",
-  "patched.letters.identified": "Letras redesenhadas identificadas: {named}.{builtCount, plural, =0 {} other { Letras construídas a partir de uma letra conhecida e um sinal: {builtCount} ({builtList, list}).}}{unknownCount, plural, =0 {} other { Glifos redesenhados que não são letras que a importação saiba nomear: {unknownCount} ({unknownIds}); eles mantêm as letras da versão original.}}"
+  "patched.letters.identified": "Letras redesenhadas identificadas: {named}.{builtCount, plural, =0 {} other { Letras construídas a partir de uma letra conhecida e um sinal: {builtCount} ({builtList, list}).}}{unknownCount, plural, =0 {} other { Glifos redesenhados que não são letras que a importação saiba nomear: {unknownCount} ({unknownIds}); eles mantêm as letras da versão original.}}",
+  "patched.dialogue.writeBack": "O texto é lido, mas não pode ser gravado de volta: {error}"
 }

@@ -1,5 +1,5 @@
 /* @layer renderer-widgets @kind component */
-import { useT } from '@drizztdourden08/brock-react';
+import { useT, useText } from '@drizztdourden08/brock-react';
 import { Box, Icon, Text } from '@drizztdourden08/tessera/primitives';
 import { useNavigationOverlayStore } from '../../../stores/navigation-overlay-store';
 import { ANNOTATION_STYLES } from '@app/navigation-overlay/annotation-style';
@@ -9,6 +9,7 @@ import './AnnotationLayer.css';
 const AnnotationLayer = ({ annotations, cellLeft, cellTop, cellW, cellH }: AnnotationLayerProps) => {
   const hiddenKinds = useNavigationOverlayStore((s) => s.hiddenKinds);
   const t = useT();
+  const text = useText();
   if (!annotations) return null;
   const { done, available } = annotations.checks;
   const size = Math.max(3, (cellW * 3) / 64);
@@ -22,7 +23,7 @@ const AnnotationLayer = ({ annotations, cellLeft, cellTop, cellW, cellH }: Annot
         return (
           <Box
             key={`anno-${i}-${item.kind}`}
-            title={item.detail ? t('views-navigation:annotation.marker.detail', { label: item.label, detail: item.detail }) : item.label}
+            title={item.detail ? t('views-navigation:annotation.marker.detail', { label: text(item.label), detail: text(item.detail) }) : text(item.label)}
             style={{ left: cellLeft + (item.tile.col / 64) * cellW - size / 2, top: cellTop + (item.tile.row / 64) * cellH - size / 2, width: size, height: size, background: style.color, opacity: settled ? 0.35 : 0.9, boxShadow: settled ? 'none' : '0 0 2px #000' }} className="nav-annotation-layer__marker"
           />
         );

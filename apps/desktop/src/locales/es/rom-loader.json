@@ -28,5 +28,6 @@
   "patched.letters.restyled": "El parche redibuja {count} glifos con su propio estilo; conservan las letras de la versión original.",
   "patched.letters.unchecked": "No había una fuente original a mano, así que no se pudieron comprobar las letras; se leen como en la versión original.",
   "patched.letters.release": "Las letras son las de la versión original.",
-  "patched.letters.identified": "Letras redibujadas identificadas: {named}.{builtCount, plural, =0 {} other { Letras construidas a partir de una letra conocida y una marca: {builtCount} ({builtList, list}).}}{unknownCount, plural, =0 {} other { Glifos redibujados que no son letras que la importación sepa nombrar: {unknownCount} ({unknownIds}); conservan las letras de la versión original.}}"
+  "patched.letters.identified": "Letras redibujadas identificadas: {named}.{builtCount, plural, =0 {} other { Letras construidas a partir de una letra conocida y una marca: {builtCount} ({builtList, list}).}}{unknownCount, plural, =0 {} other { Glifos redibujados que no son letras que la importación sepa nombrar: {unknownCount} ({unknownIds}); conservan las letras de la versión original.}}",
+  "patched.dialogue.writeBack": "El texto se lee, pero no se puede volver a escribir: {error}"
 }

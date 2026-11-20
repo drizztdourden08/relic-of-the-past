@@ -124,5 +124,6 @@
   "impact.locUpgrades": "{loc} ubic. · {upgrades, plural, one {# mejora} other {# mejoras}}",
   "impact.locItems": "{loc} ubic. · {items} objetos",
   "impact.note.unused": "sin usar",
-  "impact.note.unshuffled": "sin mezclar"
+  "impact.note.unshuffled": "sin mezclar",
+  "archipelago.not-allowed": "Archipelago requiere las funciones experimentales en los ajustes de colaboración"
 }

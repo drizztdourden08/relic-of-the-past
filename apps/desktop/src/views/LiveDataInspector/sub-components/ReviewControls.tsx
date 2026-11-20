@@ -1,6 +1,6 @@
 /* @layer renderer-widgets @kind component */
 import { useState } from 'react';
-import { useT, useText } from '@drizztdourden08/brock-react';
+import { useLocale, useT, useText } from '@drizztdourden08/brock-react';
 import { Box, Select, Text, Textarea } from '@drizztdourden08/tessera/primitives';
 import { RECORD_WRITERS } from '@app/data-inspector/record-writers';
 import type { ReviewMark, ReviewStatus } from '@rotp/game-data';
@@ -13,6 +13,7 @@ const ReviewControls = (props: ReviewControlsProps) => {
   const { kind, recordId, record } = props;
   const t = useT();
   const text = useText();
+  const { locale } = useLocale();
   const mark = record.review;
   const [note, setNote] = useState(mark?.note ?? '');
   const [error, setError] = useState<string | null>(null);
@@ -44,7 +45,7 @@ const ReviewControls = (props: ReviewControlsProps) => {
       <Text as="span" className="live-review__label">{text(REVIEW_TITLE)}</Text>
       <Box className="live-review__meta">
         <Text as="span" className="live-review__id" title={recordId}>{recordId}</Text>
-        <Text className="live-review__stamp">{t('views-live-data-inspector:review.stamp', { date: reviewStamp(mark, text) })}</Text>
+        <Text className="live-review__stamp">{t('views-live-data-inspector:review.stamp', { date: reviewStamp(mark, text, locale) })}</Text>
       </Box>
       <Select
         value={mark?.status ?? REVIEW_UNTOUCHED}

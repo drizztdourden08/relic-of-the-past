@@ -70,5 +70,8 @@
   "boot.randomizer": "Registering the randomizer",
   "boot.screenshot-hold": "Holding the screenshot for the first picture",
   "boot.test-hooks": "Preparing the test hooks",
-  "boot.game-core": "Loading the game core"
+  "boot.game-core": "Loading the game core",
+  "crash.wasm": "The game core crashed: {message}",
+  "crash.coreNotStarted": "The game core did not start.",
+  "overlay.tiles-copied": "Tile data copied to clipboard ({count, plural, one {# tile} other {# tiles}})"
 }

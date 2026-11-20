@@ -18,8 +18,8 @@ const AnnotationRow = ({ item, tone, off, onToggle }: AnnotationRowProps) => {
       title={item.layer !== undefined ? t('views-navigation:annotation.row.layer', { kind: item.kind, row: item.tile.row, col: item.tile.col, layer: item.layer, off: off ? 'yes' : 'no' }) : t('views-navigation:annotation.row.title', { kind: item.kind, row: item.tile.row, col: item.tile.col, off: off ? 'yes' : 'no' })}
     >
       <Text data-tone={tone} className={settled ? 'nav-screen-panel__glyph nav-screen-panel__glyph--settled' : 'nav-screen-panel__glyph'}>{style.glyph}</Text>
-      <Text className={settled ? 'nav-screen-panel__label nav-screen-panel__label--settled' : 'nav-screen-panel__label'}>{item.label}</Text>
-      {item.detail && <Text className="nav-screen-panel__detail">{item.detail}</Text>}
+      <Text className={settled ? 'nav-screen-panel__label nav-screen-panel__label--settled' : 'nav-screen-panel__label'}>{text(item.label)}</Text>
+      {(item.detail || item.unreachable) && <Text className="nav-screen-panel__detail">{[item.detail && text(item.detail), item.unreachable && t('nav-labels:detail.unreachable')].filter(Boolean).join(' · ')}</Text>}
       {item.state && (
         <Text className={annotationStateClass(item.state, settled)}>
           {text(STATE_TEXT[item.state])}

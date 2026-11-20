@@ -1,8 +1,14 @@
 /* @layer tests @kind test */
 import { describe, it, expect } from 'vitest';
+import { createI18n } from '@drizztdourden08/brock-core/i18n';
+import type { Text } from '@drizztdourden08/brock-core/i18n';
 import { playerStates, PlayerState } from '@rotp/game-core';
 import type { PlayerStateInfo } from '@rotp/game-core';
 import { required } from '@rotp/asset-extraction/testing';
+import { appLocales } from '../../.brock/locales';
+
+const english = createI18n({ base: appLocales.base, locale: appLocales.base, layers: appLocales.layers });
+const say = (value: Text | undefined): string | undefined => (value === undefined ? undefined : english.text(value));
 
 const info = (over: Partial<PlayerStateInfo> = {}): PlayerStateInfo => ({
   handlerState: PlayerState.ground,
@@ -16,7 +22,7 @@ const info = (over: Partial<PlayerStateInfo> = {}): PlayerStateInfo => ({
   ...over,
 });
 
-const labels = (i: PlayerStateInfo | null): string[] => playerStates(i).map((s) => s.label);
+const labels = (i: PlayerStateInfo | null): string[] => playerStates(i).map((s) => english.text(s.label));
 
 describe('player activity states', { tags: ['critical'] }, () => {
   it('says nothing while Link just stands on the ground', () => {
@@ -29,8 +35,8 @@ describe('player activity states', { tags: ['critical'] }, () => {
 
   it('distinguishes waking up from being asleep', () => {
     const first = required(playerStates(info({ handlerState: PlayerState.asleepInBed, sleepStep: 3 }))[0], 'first state');
-    expect(first.label).toBe('Waking up in bed');
-    expect(first.detail).toBe('wake step 3');
+    expect(say(first.label)).toBe('Waking up in bed');
+    expect(say(first.detail)).toBe('wake step 3');
   });
 
   it('does NOT claim asleep just because the step counter is set', () => {
@@ -51,7 +57,7 @@ describe('player activity states', { tags: ['critical'] }, () => {
 describe('traversal-affecting states', { tags: ['critical'] }, () => {
   it('reports dashing, and flags it as affecting reach', () => {
     const first = required(playerStates(info({ isRunning: true }))[0], 'first state');
-    expect(first.label).toBe('Dashing (boots)');
+    expect(say(first.label)).toBe('Dashing (boots)');
     expect(first.gating).toBe(true);
   });
 
@@ -68,9 +74,9 @@ describe('traversal-affecting states', { tags: ['critical'] }, () => {
 describe('progress flag bits', { tags: ['critical'] }, () => {
   it('names each set bit and shows its mask so a label can be checked', () => {
     const first = required(playerStates(info({ progressFlags: 0x01 }))[0], 'first state');
-    expect(first.label).toBe('Uncle gave the sword');
-    expect(first.hint).toBe('sram_progress_flags 0x01');
-    expect(first.detail).toBeUndefined();
+    expect(say(first.label)).toBe('Uncle gave the sword');
+    expect(say(first.hint)).toBe('sram_progress_flags 0x01');
+    expect(say(first.detail)).toBeUndefined();
   });
 
   it('reports every set bit, not just the first', () => {

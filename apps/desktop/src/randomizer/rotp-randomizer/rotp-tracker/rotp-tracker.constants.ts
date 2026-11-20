@@ -26,12 +26,10 @@ const ROTP_ASSUMPTIONS: readonly TrackerAssumption[] = [
 const ROTP_GROUPINGS: readonly TrackerGrouping[] = GROUP_DIMENSIONS.map((dimension) => ({
   id: dimension.id,
   get label() {
-    const text = GROUPING_TEXT[dimension.id];
-    return text === undefined ? dimension.label : textOf(text.label);
+    return textOf(GROUPING_TEXT[dimension.id]?.label ?? dimension.label);
   },
   get description() {
-    const text = GROUPING_TEXT[dimension.id];
-    return text === undefined ? dimension.description : textOf(text.description);
+    return textOf(GROUPING_TEXT[dimension.id]?.description ?? dimension.description);
   },
 }));
 

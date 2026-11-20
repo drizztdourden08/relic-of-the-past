@@ -28,5 +28,6 @@
   "patched.letters.restyled": "Łatka przerysowuje {count} glifów we własnym stylu; zachowują one litery z oryginalnego wydania.",
   "patched.letters.unchecked": "Nie było oryginalnej czcionki, więc liter nie można było sprawdzić; odczytano je tak jak w oryginalnym wydaniu.",
   "patched.letters.release": "Litery są takie jak w oryginalnym wydaniu.",
-  "patched.letters.identified": "Zidentyfikowane przerysowane litery: {named}.{builtCount, plural, =0 {} other { Litery zbudowane ze znanej litery i znaku: {builtCount} ({builtList, list}).}}{unknownCount, plural, =0 {} other { Przerysowane glify, które nie są literami możliwymi do nazwania przez import: {unknownCount} ({unknownIds}); zachowują litery z oryginalnego wydania.}}"
+  "patched.letters.identified": "Zidentyfikowane przerysowane litery: {named}.{builtCount, plural, =0 {} other { Litery zbudowane ze znanej litery i znaku: {builtCount} ({builtList, list}).}}{unknownCount, plural, =0 {} other { Przerysowane glify, które nie są literami możliwymi do nazwania przez import: {unknownCount} ({unknownIds}); zachowują litery z oryginalnego wydania.}}",
+  "patched.dialogue.writeBack": "Tekst da się odczytać, ale nie można go zapisać z powrotem: {error}"
 }

@@ -1,5 +1,6 @@
 /* @layer bridge-wasm @kind logic */
 import { log } from '../../log-bus';
+import { errorText } from '../../storage/localized-error';
 import { reassertHostGates, getGameState, loadBakedLetters, pushPendingJapaneseGraphics, pushPendingLanguageScreens, setModule, setProfileId, setState, exposeDebugHandles } from '@rotp/game-core';
 import { bootGameModule } from './boot-game-module';
 import { readProfileSram } from './read-profile-sram';
@@ -35,7 +36,7 @@ const startGame = async (canvas: HTMLCanvasElement, assetData: Uint8Array, confi
   } catch (err) {
     const msg = err instanceof Error ? err.message : String(err);
     log.error(`WASM failed: ${msg}`);
-    setState({ status: 'error', error: msg });
+    setState({ status: 'error', error: errorText(err) });
   }
 };
 

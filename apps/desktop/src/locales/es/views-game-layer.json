@@ -70,5 +70,8 @@
   "boot.randomizer": "Registrando el randomizer",
   "boot.screenshot-hold": "Reteniendo la captura para la primera imagen",
   "boot.test-hooks": "Preparando los hooks de prueba",
-  "boot.game-core": "Cargando el núcleo del juego"
+  "boot.game-core": "Cargando el núcleo del juego",
+  "crash.wasm": "El núcleo del juego se ha bloqueado: {message}",
+  "crash.coreNotStarted": "El núcleo del juego no se ha iniciado.",
+  "overlay.tiles-copied": "Datos de las casillas copiados al portapapeles ({count, plural, one {# casilla} other {# casillas}})"
 }

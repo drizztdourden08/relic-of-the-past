@@ -70,5 +70,8 @@
   "boot.randomizer": "Registrerar randomizern",
   "boot.screenshot-hold": "Håller skärmbilden för första bilden",
   "boot.test-hooks": "Förbereder testkrokarna",
-  "boot.game-core": "Laddar spelkärnan"
+  "boot.game-core": "Laddar spelkärnan",
+  "crash.wasm": "Spelkärnan kraschade: {message}",
+  "crash.coreNotStarted": "Spelkärnan startade inte.",
+  "overlay.tiles-copied": "Brickdata kopierad till urklipp ({count, plural, one {# bricka} other {# brickor}})"
 }

@@ -1,5 +1,5 @@
 /* @layer renderer-widgets @kind constants */
-import type { I18n } from '@drizztdourden08/brock-core/i18n';
+import type { I18n, Text } from '@drizztdourden08/brock-core/i18n';
 import type { CheckKind, ItemFilter, StatusFilter } from '@rotp/game-data';
 import { CHECK_FACET_DEFS } from '@rotp/game-data';
 import type { ListItemShape } from '@drizztdourden08/tessera/composites';
@@ -37,11 +37,11 @@ const statusFilters = (t: I18n['t']): SegmentOption<StatusFilter>[] => [
 
 const TAG_CATEGORIES = ['world', 'location', 'area', 'content'] as const;
 
-const FACET_GROUPS: TagPickerGroup[] = TAG_CATEGORIES.map((category) => ({
+const facetGroups = (text: (value: Text) => string): TagPickerGroup[] => TAG_CATEGORIES.map((category) => ({
   id: category,
-  options: CHECK_FACET_DEFS.filter((facet) => facet.category === category).map((facet) => ({ value: facet.id, label: facet.label })),
+  options: CHECK_FACET_DEFS.filter((facet) => facet.category === category).map((facet) => ({ value: facet.id, label: text(facet.label) })),
 }));
 
 const LIST_SHAPE: ListItemShape = { icon: true, columns: 1, action: false };
 
-export { CHECK_TYPE_ICONS, FACET_GROUPS, itemFilters, LIST_SHAPE, NO_STOP_ICON, statusFilters };
+export { CHECK_TYPE_ICONS, facetGroups, itemFilters, LIST_SHAPE, NO_STOP_ICON, statusFilters };

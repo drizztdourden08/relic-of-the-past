@@ -124,5 +124,6 @@
   "impact.locUpgrades": "{loc} loc. · {upgrades, plural, one {# upgrade} other {# upgrades}}",
   "impact.locItems": "{loc} loc. · {items} items",
   "impact.note.unused": "niet gebruikt",
-  "impact.note.unshuffled": "niet geschud"
+  "impact.note.unshuffled": "niet geschud",
+  "archipelago.not-allowed": "Archipelago vereist experimentele functies in de bijdrage-instellingen"
 }

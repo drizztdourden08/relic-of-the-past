@@ -1,5 +1,7 @@
 /* @layer renderer-components @kind hook */
 import { useMemo } from 'react';
+import { useText } from '@drizztdourden08/brock-react';
+import type { Message } from '@drizztdourden08/brock-core/i18n';
 import type { MsuPackManifest, SoundChannel } from '@rotp/game-data';
 import { soundsOfChannel, soundName, ambientRole, isAmbientReachable } from '@rotp/game-data';
 import { SOUND_ID_COUNT } from '@rotp/hub-contracts';
@@ -25,16 +27,18 @@ const useSoundRows = (
   filter: string,
   includeUnreachable = false,
 ) => {
+  const text = useText();
   const byId = useMemo(
     () => new Map(soundDefsOfChannel(manifest, channel).map((def) => [def.soundId, def])),
     [manifest, channel],
   );
 
   const all = useMemo((): SoundRowData[] => {
+    const text_ = (value: Message | null): string | null => (value === null ? null : text(value));
     const named = soundsOfChannel(channel).map((sound): SoundRowData => ({
       soundId: sound.id,
       hex: soundHexId(sound.id),
-      label: sound.label ?? null,
+      label: text_(sound.label),
       triggers: sound.triggers,
       sites: sound.sites,
       layerCount: byId.get(sound.id)?.layers.length ?? 0,
@@ -48,7 +52,7 @@ const useSoundRows = (
       rest.push({
         soundId: id,
         hex: soundHexId(id),
-        label: soundName(channel, id),
+        label: text_(soundName(channel, id)),
         triggers: [],
         sites: 0,
         layerCount: byId.get(id)?.layers.length ?? 0,
@@ -57,7 +61,7 @@ const useSoundRows = (
       });
     }
     return [...named, ...rest];
-  }, [channel, byId]);
+  }, [channel, byId, text]);
 
   const listed = useMemo(
     () => (includeUnreachable

@@ -124,5 +124,6 @@
   "impact.locUpgrades": "{loc} か所 · アップグレード {upgrades} 個",
   "impact.locItems": "{loc} か所 · アイテム {items} 個",
   "impact.note.unused": "未使用",
-  "impact.note.unshuffled": "シャッフルなし"
+  "impact.note.unshuffled": "シャッフルなし",
+  "archipelago.not-allowed": "Archipelago を使うには、コントリビュート設定で試験的機能を有効にする必要があります"
 }

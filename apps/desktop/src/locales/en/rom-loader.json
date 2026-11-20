@@ -28,5 +28,6 @@
   "patched.letters.restyled": "The patch redraws {count} glyphs in its own style; they keep the release letters.",
   "patched.letters.unchecked": "No release font was at hand, so the letters could not be checked; they are read as the release has them.",
   "patched.letters.release": "The letters are those of the release.",
-  "patched.letters.identified": "{named, plural, one {# redrawn letter identified.} other {# redrawn letters identified.}}{builtCount, plural, =0 {} other { {builtCount} letters built from a known letter and a mark: {builtList, list}.}}{unknownCount, plural, =0 {} other { {unknownCount} redrawn glyphs are not letters the import can name ({unknownIds}); they keep the release letters.}}"
+  "patched.letters.identified": "{named, plural, one {# redrawn letter identified.} other {# redrawn letters identified.}}{builtCount, plural, =0 {} other { {builtCount} letters built from a known letter and a mark: {builtList, list}.}}{unknownCount, plural, =0 {} other { {unknownCount} redrawn glyphs are not letters the import can name ({unknownIds}); they keep the release letters.}}",
+  "patched.dialogue.writeBack": "The text reads but cannot be written back: {error}"
 }

@@ -16,8 +16,7 @@ const ROTP_FACETS: readonly TrackerFacetGroup[] = [...new Set(CHECK_FACET_DEFS.m
     options: CHECK_FACET_DEFS.filter((def) => def.category === category).map(({ id, label }) => ({
       id,
       get label() {
-        const text = FACET_TEXT[id];
-        return text === undefined ? label : textOf(text);
+        return textOf(FACET_TEXT[id] ?? label);
       },
     })),
   }));
