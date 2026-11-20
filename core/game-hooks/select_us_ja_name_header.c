@@ -18,7 +18,7 @@ enum {
   kChrBase = 0x2000,
   kTopTile = 0x86,
   kBottomTile = 0x96,
-  kPalette = 0x0800,
+  kPalette = 0x0400,
   kMapBase = 0x1000,
   kRow = 5,
   kCol = 11,
@@ -50,16 +50,28 @@ static void PutRow(uint8 *p, int half) {
   }
 }
 
-// Tiles |count| from sheet tile |first| into VRAM at tile |tile|, their colour 1 (the Japanese box's own
-// dark fill) made transparent so the glyphs sit on the US box's black like its other text.
+// Recolours one row of a 4bpp tile for palette 1, whose colours 9 and 10 are the US name grid's text
+// outline and body: colour 1 (the Japanese box's dark fill) becomes transparent, the drop shadow
+// (colours 2 to 4) becomes the outline colour 9, and the glyph body becomes colour 10.
+static void RecolourRow(uint8 *row) {
+  uint8 p0 = row[0], p1 = row[1], p2 = row[16], p3 = row[17];
+  uint8 fill = (uint8)(p0 & ~p1 & ~p2 & ~p3);
+  uint8 shadow = (uint8)((~p0 & p1 & ~p2 & ~p3) | (p0 & p1 & ~p2 & ~p3) | (~p0 & ~p1 & p2 & ~p3));
+  uint8 body = (uint8)((p0 | p1 | p2 | p3) & ~fill & ~shadow);
+  row[0] = shadow;
+  row[1] = body;
+  row[16] = 0;
+  row[17] = (uint8)(shadow | body);
+}
+
+// Tiles |count| from sheet tile |first| into VRAM at tile |tile|, recoloured to the grid's text colours
+// so the title sits on the US box's black like its other text.
 static void Upload(const uint8 *sheet, int first, int tile) {
   uint8 *dst = (uint8 *)&g_zenv.vram[kChrBase + tile * kTileWords];
   Do3To4Low16Bit(dst, sheet + first * kTile3bpp, kTiles);
   for (int t = 0; t < kTiles; t++, dst += 2 * kTileWords) {
-    for (int y = 0; y < 8; y++) {
-      uint8 fill = (uint8)(dst[2 * y] & ~dst[2 * y + 1] & ~dst[16 + 2 * y] & ~dst[17 + 2 * y]);
-      dst[2 * y] &= (uint8)~fill;
-    }
+    for (int y = 0; y < 8; y++)
+      RecolourRow(dst + 2 * y);
   }
 }
 
