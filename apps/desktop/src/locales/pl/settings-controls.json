@@ -22,6 +22,7 @@
   "disabled.developer-tools": "Wymaga włączonego Trybu deweloperskiego",
   "disabled.online-only": "Tylko dla profili randomizera online.",
   "disabled.japanese-graphics": "Wymaga zaimportowanego japońskiego ROM-u",
+  "disabled.japanese-font": "Wymaga japońskich sprite'ów zaimportowanych w Dane > Sprite'y",
   "disabled.mobile-only": "Tylko w aplikacji na telefon i tablet.",
   "disabled.setting-off": "Wyłączone: {setting} jest wyłączone",
   "display.aspect.label": "Proporcje obrazu",

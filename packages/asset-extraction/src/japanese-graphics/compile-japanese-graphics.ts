@@ -7,6 +7,7 @@ import { readSheetPatch } from '../screens/read-sheet-patch';
 import { readStripeTable } from '../screens/read-stripe-table';
 import { PAUSE_TABLES } from '../screens/screens.constants';
 import { JA_COPYRIGHT_SHEET, JA_COPYRIGHT_TILES } from '../screens/japanese/japanese-screens.constants';
+import { japaneseFontEntries } from './japanese-font-entries';
 import {
   JA_GFX_BG_BASE, JA_GFX_COPYRIGHT_OAM_ID, JA_GFX_HUD_SPR_SHEETS, JA_GFX_HUD_TEXT_BASE, JA_GFX_INTRO_BG_SHEETS, JA_GFX_INTRO_TILEMAP_ID, JA_GFX_OAM_ENTRY_BYTES,
   JA_GFX_PATCH_BASE,
@@ -64,6 +65,7 @@ const compileJapaneseGraphics = (rom: RomData): JapaneseGraphicEntry[] => {
     spriteLayout(rom, JA_GFX_PLATE_OAM_ID, table.plateOam),
     titleParams(rom, table),
     titlePalettes(rom, table),
+    ...japaneseFontEntries(rom),
   ];
 };
 

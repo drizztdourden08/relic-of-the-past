@@ -23,7 +23,8 @@ enum { kCellWidthMask = 0x0f,
        kCellHighlightShift = 4,
        kCellGlyphBitShift = 7,
        kWideGlyphMask = 0x1ff,
-       kNarrowGlyphMask = 0x7f };
+       kNarrowGlyphMask = 0x7f,
+       kWideUnknownWidth = 11 };
 
 typedef struct DialogCell {
   uint8 glyph, x, w;
@@ -149,7 +150,9 @@ uint32 Text_DecodeCmd(uint8 a, const uint8 *src);
 
 void GameHook_DialogMeasure(void) {
   if (!DialogMirror_Recording()) return;
-  const uint8 *widths = FindIndexInMemblk(g_zenv.dialogue_font_blk, 1).ptr;
+  // A Japanese set without the Japanese graphics pack has no font at all (JaGraphics_DialogueFontSync):
+  // its letters advance the pen as far as the blank glyphs the draw leaves (dialog_wide_glyphs.c).
+  MemBlk widths = FindIndexInMemblk(g_zenv.dialogue_font_blk, 1);
   const uint8 *buf = messaging_text_buffer;
   int pos = 0, line = 0, rows = 1, widest = 0;
   int pen[kDialogRows] = {0, 0, 0};
@@ -160,7 +163,8 @@ void GameHook_DialogMeasure(void) {
     if (cmd == kCmd_IsLetter) {
       int c = ParamOf(packed);
       bool wide = (g_zenv.dialogue_flags & 4) != 0;
-      pen[line] += widths[c & (wide ? kWideGlyphMask : kNarrowGlyphMask)];
+      size_t glyph = (size_t)(c & (wide ? kWideGlyphMask : kNarrowGlyphMask));
+      pen[line] += glyph < widths.size ? widths.ptr[glyph] : (wide ? kWideUnknownWidth : 0);
       if (pen[line] > widest) widest = pen[line];
     } else if (cmd >= kCmd_Line1 && cmd <= kCmd_Line3) {
       line = cmd - kCmd_Line1;

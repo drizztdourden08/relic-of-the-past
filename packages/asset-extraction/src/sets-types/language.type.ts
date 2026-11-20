@@ -22,6 +22,7 @@ interface LanguageSummary {
   code: string;
   glyphCount: number;
   lineCount: number;
+  needsJapaneseFont: boolean;
 }
 
 export type { LanguageMeta, DialogueLine, LanguagePack, LanguageSummary };

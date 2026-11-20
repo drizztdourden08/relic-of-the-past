@@ -8,6 +8,7 @@ type LanguageSetSummary = {
   base: string;
   origin: 'rom' | 'patch' | 'custom';
   lineCount: number;
+  script?: LanguageScript;
 };
 
 type RomFontBytes = {

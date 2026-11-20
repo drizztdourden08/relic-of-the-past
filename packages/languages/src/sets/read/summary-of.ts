@@ -7,8 +7,10 @@ import { readSetMeta } from './read-set-meta';
 const summaryOf = async (files: FileStore, id: string): Promise<LanguageSetSummary | null> => {
   const meta = await readSetMeta(files, id);
   if (!meta) return null;
-  const { name, base, origin } = meta;
-  return { id: meta.id, name, base, origin, lineCount: (await readDialogue(files, id)).length };
+  const { name, base, origin, script } = meta;
+  return {
+    id: meta.id, name, base, origin, lineCount: (await readDialogue(files, id)).length, ...(script ? { script } : {}),
+  };
 };
 
 export { summaryOf };

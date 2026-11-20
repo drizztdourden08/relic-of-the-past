@@ -104,6 +104,7 @@ int GameHook_TilemapFont(void) {
 
 void GameHook_LanguageScreens(const char *language) {
   (void)language;
+  JaGraphics_DialogueFontSync();
   LanguageScreensAssets_Apply(LanguageScreens_On());
 }
 

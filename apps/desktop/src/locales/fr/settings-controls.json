@@ -22,6 +22,7 @@
   "disabled.developer-tools": "Nécessite le mode développeur activé",
   "disabled.online-only": "Réservé aux profils randomizer en ligne.",
   "disabled.japanese-graphics": "Nécessite l'importation d'une ROM japonaise",
+  "disabled.japanese-font": "Nécessite les sprites japonais importés dans Données > Sprites",
   "disabled.mobile-only": "Uniquement dans l'appli pour téléphone et tablette.",
   "disabled.setting-off": "Désactivé : {setting} est désactivé",
   "display.aspect.label": "Format d'image",

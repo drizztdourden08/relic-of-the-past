@@ -97,7 +97,8 @@ const uint8 *LanguageScreensAssets_Host(int slot, int *size);
 void LanguageScreensAssets_Clear(void);
 bool LanguageScreensFont_Set(const void *data, int len);
 void LanguageScreensFont_Clear(void);
-// Whether the host's whole 512-tile font is present.
+// The host's set font is a Latin cartridge's 256-tile font or nothing. Whether the Japanese 512-tile font
+// is present, which only the Japanese graphics pack supplies (JaGraphics_TilemapFont).
 bool LanguageScreensFont_Ready(void);
 
 // core/wasm-build/emscripten_io.c: FindInAssetArray answers |p|/|size| for sheet |idx| of asset 64

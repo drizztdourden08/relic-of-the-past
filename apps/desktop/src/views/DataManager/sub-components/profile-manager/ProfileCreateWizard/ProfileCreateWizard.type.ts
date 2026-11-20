@@ -4,6 +4,7 @@ import type { WizardApi } from '@drizztdourden08/tessera/composites';
 import type { ProfileWizardStepDef } from '@drizztdourden08/brock-react';
 import type { CreateProfileOptions, CreateProfileResult } from '@app/profiles/types';
 import type { ProfilePresetId } from '../profile-presets';
+import type { ProfileLanguage } from '../../profile-language.type';
 
 type ProfileWizardValues = Record<string, unknown> & {
   name: string;
@@ -31,7 +32,7 @@ interface CreateContext {
 
 interface ProfileCreateWizardProps {
   readyRoms: RomDisplayInfo[];
-  languages: Array<{ code: string }>;
+  languages: ProfileLanguage[];
   msuPacks: Array<{ name: string }>;
   onCreateProfile: (opts: CreateProfileOptions) => Promise<CreateProfileResult>;
   onCancel: () => void;

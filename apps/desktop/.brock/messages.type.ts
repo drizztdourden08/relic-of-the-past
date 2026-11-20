@@ -2506,6 +2506,7 @@ declare module '@drizztdourden08/brock-core/augment' {
     'settings-controls:disabled.developer-tools': Record<never, never>;
     'settings-controls:disabled.online-only': Record<never, never>;
     'settings-controls:disabled.japanese-graphics': Record<never, never>;
+    'settings-controls:disabled.japanese-font': Record<never, never>;
     'settings-controls:disabled.mobile-only': Record<never, never>;
     'settings-controls:disabled.setting-off': { setting: string | number };
     'settings-controls:display.aspect.label': Record<never, never>;

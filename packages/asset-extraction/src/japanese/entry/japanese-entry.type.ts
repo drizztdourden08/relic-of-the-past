@@ -2,8 +2,6 @@
 interface JapaneseEntryParams {
   readonly code: string;
   readonly texts: readonly string[];
-  readonly fontData: Uint8Array;
-  readonly fontWidth: Uint8Array;
 }
 
 interface JapanesePackedEntry {
@@ -22,8 +20,6 @@ interface JapaneseLine {
 interface ExtractedJapaneseLanguage {
   readonly code: string;
   readonly lines: readonly JapaneseLine[];
-  readonly fontData: Uint8Array;
-  readonly fontWidth: Uint8Array;
   readonly glyphCount: number;
   readonly lineCount: number;
   readonly flags: number;

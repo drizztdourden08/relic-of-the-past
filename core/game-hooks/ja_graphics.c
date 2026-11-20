@@ -5,7 +5,7 @@
 #include "src/ending.h"
 #include <stdlib.h>
 
-enum { kSheetIdBase = 0x100, kPatchIdBase = 0x300, kIntroTilemapId = 0x45, kCopyrightOamId = 0x46, kTitleParamsId = 0x47, kTitleParamsBytes = 3, kPlateOamId = 0x48, kTitlePalettesId = 0x49, kTitlePaletteWords = 70, kOamHeaderBytes = 3, kOamEntryBytes = 8, kOamEntriesMax = 16, kBgSheetKind = 1, kSprSheetKind = 0, kIntroModule = 0, kHudTextIdBase = 0x50, kHudTextCount = 9 };
+enum { kSheetIdBase = 0x100, kPatchIdBase = 0x300, kIntroTilemapId = 0x45, kCopyrightOamId = 0x46, kTitleParamsId = 0x47, kTitleParamsBytes = 3, kPlateOamId = 0x48, kTitlePalettesId = 0x49, kTitlePaletteWords = 70, kOamHeaderBytes = 3, kOamEntryBytes = 8, kOamEntriesMax = 16, kBgSheetKind = 1, kSprSheetKind = 0, kIntroModule = 0, kHudTextIdBase = 0x50, kHudTextCount = 9, kDialogueFontId = 0x4a, kTilemapFontId = 0x4b, kJapaneseFlag = 4 };
 
 typedef struct {
   uint8 *data;
@@ -20,6 +20,8 @@ static Blob g_title_params;
 static Blob g_plate_oam;
 static Blob g_title_palettes;
 static Blob g_hud_text[kHudTextCount];
+static Blob g_dialogue_font;
+static Blob g_tilemap_font;
 
 // The language tables the pack's pause words stand in for, in the order the pack carries them.
 static const uint8 kHudTextTable[kHudTextCount] = {kLangTbl_HudAbility, kLangTbl_HudGloves, kLangTbl_HudBottles,
@@ -233,7 +235,21 @@ static bool Store(Blob *slot, const void *data, int len) {
   return true;
 }
 
+const uint8 *JaGraphics_TilemapFont(uint32 *size) {
+  return Taken(&g_tilemap_font, size);
+}
+
+// A Japanese set's own font slot in the asset blob is empty: its glyphs are the pack's, so the dialogue
+// font block points at the pack's [sheet, widths] blob (the asset blob's layout), or at nothing when the
+// pack has none, which leaves every glyph blank. Any other set keeps the block ZeldaSetLanguage gave it.
+void JaGraphics_DialogueFontSync(void) {
+  if ((g_zenv.dialogue_flags & kJapaneseFlag) == 0) return;
+  g_zenv.dialogue_font_blk = (MemBlk){g_dialogue_font.data, g_dialogue_font.size};
+}
+
 static Blob *SlotOf(int id) {
+  if (id == kDialogueFontId) return &g_dialogue_font;
+  if (id == kTilemapFontId) return &g_tilemap_font;
   if (id == kIntroTilemapId) return &g_intro_tilemap;
   if (id == kCopyrightOamId) return &g_copyright_oam;
   if (id == kTitleParamsId) return &g_title_params;
@@ -248,11 +264,13 @@ static Blob *SlotOf(int id) {
 
 // |id| is the language screens' own: 0x100 + index a sprite sheet, 0x200 + index a background sheet,
 // 0x300 + index a sprite sheet tile patch, 0x45 the intro tilemap, 0x46 the copyright layout, 0x47 the triforce
-// heights, 0x48 the subtitle plate layout, 0x49 the title palettes, 0x50 + n the n-th pause word table. Returns 1 when taken.
+// heights, 0x48 the subtitle plate layout, 0x49 the title palettes, 0x4a the dialogue font ([sheet, widths]),
+// 0x4b the 512-tile tilemap font, 0x50 + n the n-th pause word table. Returns 1 when taken.
 EMSCRIPTEN_KEEPALIVE
 int WasmSetJapaneseGraphic(int id, const void *data, int len) {
   Blob *slot = SlotOf(id);
   if (slot == NULL || len < 0 || !Store(slot, data, len)) return 0;
+  JaGraphics_DialogueFontSync();
   LanguageScreensAssets_Apply(LanguageScreens_On());
   return 1;
 }
@@ -268,5 +286,8 @@ void WasmClearJapaneseGraphics(void) {
   Store(&g_plate_oam, NULL, 0);
   Store(&g_title_palettes, NULL, 0);
   for (int i = 0; i < kHudTextCount; i++) Store(&g_hud_text[i], NULL, 0);
+  Store(&g_dialogue_font, NULL, 0);
+  Store(&g_tilemap_font, NULL, 0);
+  JaGraphics_DialogueFontSync();
   LanguageScreensAssets_Apply(LanguageScreens_On());
 }

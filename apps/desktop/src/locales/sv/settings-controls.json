@@ -22,6 +22,7 @@
   "disabled.developer-tools": "Kräver att utvecklarläge är på",
   "disabled.online-only": "Endast för slumpprofiler online.",
   "disabled.japanese-graphics": "Kräver en importerad japansk ROM",
+  "disabled.japanese-font": "Kräver japanska sprites importerade under Data > Sprites",
   "disabled.mobile-only": "Endast i mobil- och surfplatteappen.",
   "disabled.setting-off": "Avstängt: {setting} är av",
   "display.aspect.label": "Bildformat",
