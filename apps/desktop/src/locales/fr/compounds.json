@@ -273,5 +273,6 @@
   "save-slot.load": "Charger l'emplacement {slotNumber}",
   "save-slot.save": "Sauvegarder dans l'emplacement {slotNumber}",
   "save-slot.slot": "Emplacement {slotNumber}",
-  "wishing-pond-row.may-ask-for": "ce qu'elle peut demander"
+  "wishing-pond-row.may-ask-for": "ce qu'elle peut demander",
+  "capacity.ladder": "échelle"
 }

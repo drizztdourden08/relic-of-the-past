@@ -273,5 +273,6 @@
   "save-slot.load": "スロット {slotNumber} をロード",
   "save-slot.save": "スロット {slotNumber} にセーブ",
   "save-slot.slot": "スロット {slotNumber}",
-  "wishing-pond-row.may-ask-for": "彼女が求められるもの"
+  "wishing-pond-row.may-ask-for": "彼女が求められるもの",
+  "capacity.ladder": "段階"
 }

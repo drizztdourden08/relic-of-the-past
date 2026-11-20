@@ -273,5 +273,6 @@
   "save-slot.load": "Load slot {slotNumber}",
   "save-slot.save": "Save to slot {slotNumber}",
   "save-slot.slot": "Slot {slotNumber}",
-  "wishing-pond-row.may-ask-for": "what she may ask for"
+  "wishing-pond-row.may-ask-for": "what she may ask for",
+  "capacity.ladder": "ladder"
 }

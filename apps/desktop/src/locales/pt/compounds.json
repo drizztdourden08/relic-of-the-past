@@ -273,5 +273,6 @@
   "save-slot.load": "Carregar ranhura {slotNumber}",
   "save-slot.save": "Guardar na ranhura {slotNumber}",
   "save-slot.slot": "Ranhura {slotNumber}",
-  "wishing-pond-row.may-ask-for": "o que ela pode pedir"
+  "wishing-pond-row.may-ask-for": "o que ela pode pedir",
+  "capacity.ladder": "escada"
 }

@@ -273,5 +273,6 @@
   "save-slot.load": "Slot {slotNumber} laden",
   "save-slot.save": "In Slot {slotNumber} speichern",
   "save-slot.slot": "Slot {slotNumber}",
-  "wishing-pond-row.may-ask-for": "was sie verlangen darf"
+  "wishing-pond-row.may-ask-for": "was sie verlangen darf",
+  "capacity.ladder": "Stufenfolge"
 }

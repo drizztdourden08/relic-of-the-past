@@ -273,5 +273,6 @@
   "save-slot.load": "Carica slot {slotNumber}",
   "save-slot.save": "Salva nello slot {slotNumber}",
   "save-slot.slot": "Slot {slotNumber}",
-  "wishing-pond-row.may-ask-for": "cosa può chiedere"
+  "wishing-pond-row.may-ask-for": "cosa può chiedere",
+  "capacity.ladder": "scala"
 }
