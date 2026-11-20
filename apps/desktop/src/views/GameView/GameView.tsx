@@ -18,7 +18,7 @@ const GameView = () => {
   return (
     <Box className="game-view">
       {!game.isRunning && <Image className="game-view__bg-logo" src={BACKGROUND_LOGO} alt="" />}
-      <I18nProvider i18n={gameI18n}>
+      <I18nProvider i18n={gameI18n} document={false}>
         <GameLayer
           assetData={game.assetData}
           configIni={game.configIni}
