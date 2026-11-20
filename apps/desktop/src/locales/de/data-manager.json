@@ -351,5 +351,8 @@
   "jobs.line.readPatchedRom": "Die gepatchte ROM wird gelesen...",
   "jobs.line.extractSprites": "Sprites werden extrahiert...",
   "jobs.line.compileAssets": "Ressourcensatz wird kompiliert...",
-  "jobs.line.readJapaneseGraphics": "Japanische Grafiken werden gelesen..."
+  "jobs.line.readJapaneseGraphics": "Japanische Grafiken werden gelesen...",
+  "rom-manager.extracted": "Extrahiert",
+  "rom-manager.attached-to": "Zugeordnet zu {bases}",
+  "rom-manager.roms-title": "ROMs"
 }

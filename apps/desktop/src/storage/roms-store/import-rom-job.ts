@@ -1,12 +1,13 @@
 /* @layer renderer-lib @kind logic */
 import { msg } from '@drizztdourden08/brock-core/i18n';
 import type { RomBytes, RomImportResult, RomKind } from '@rotp/roms';
+import { failureLine } from '../localized-error';
 import { importRomBytes } from '../rom-files';
 import { platformFiles } from '../platform-files';
 import { runImportJob } from '../import-job';
 import type { ImportReport } from '../import-job';
 
-const failureOf = (result: RomImportResult): string | null => (result.success ? null : (result.error ?? 'Import failed'));
+const failureOf = (result: RomImportResult): string | null => (result.success ? null : (result.error ?? failureLine(msg('errors:import.failed'))));
 
 const importRomJob = (kind: RomKind, work: (report: ImportReport) => Promise<RomBytes>): Promise<RomImportResult> =>
   runImportJob({

@@ -8,5 +8,7 @@
   "language.patched.failed": "The patched ROM could not be imported. The report below says which parts failed.",
   "sprite.unreadablePack": "Not a readable sprite pack.",
   "sprite.invalidZspr": "Not a valid ZSPR sprite file.",
-  "msu.trackNotFound": "Track not found: {file}"
+  "msu.trackNotFound": "Track not found: {file}",
+  "msu.noTracks": "No tracks were found to install.",
+  "import.failed": "The import failed."
 }

@@ -4,6 +4,7 @@ import { isZip, unzip } from '@rotp/roms';
 import type { MsuResult } from '@app/ipc/msu-contract';
 import { platformFiles } from '../platform-files';
 import { errorMessage } from '../error-message';
+import { failureLine } from '../localized-error';
 import { runImportJob } from '../import-job';
 import type { ImportReport } from '../import-job';
 import type { MsuTrackEntry } from './msu-store.type';
@@ -25,7 +26,7 @@ const install = async (pack: string, tracks: MsuTrackEntry[], report: ImportRepo
   return { success: true, fileCount: tracks.length };
 };
 
-const failureOf = (result: MsuResult): string | null => (result.success ? null : (result.error ?? null));
+const failureOf = (result: MsuResult): string | null => (result.success ? null : (result.error === undefined ? null : failureLine(result.error)));
 
 const installMsuTracks = async (pack: string, read: (report: ImportReport) => Promise<{ bytes: Uint8Array; name: string }>): Promise<MsuResult> => {
   try {

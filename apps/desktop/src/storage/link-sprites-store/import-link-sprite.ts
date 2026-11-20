@@ -22,7 +22,7 @@ const importLinkSprite = (name: string, bytes: Uint8Array): Promise<ImportResult
     kind: 'linkSprite',
     title: msg('data-manager:jobs.add-player-sprite'),
     work: () => storeLinkSprite(name, bytes),
-    failureOf: (result) => (result.success ? null : failureLine(result.error ?? 'Import failed')),
+    failureOf: (result) => (result.success ? null : failureLine(result.error ?? msg('errors:import.failed'))),
   });
 
 export { importLinkSprite };

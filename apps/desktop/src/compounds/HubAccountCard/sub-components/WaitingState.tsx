@@ -12,7 +12,7 @@ const WaitingState = (props: WaitingStateProps) => {
       <Stack gap="sm" align="start">
         <Text as="p" className="hub-account__code">{userCode ?? '...'}</Text>
         <Text as="p" className="hub-account__lead">
-          Your browser opened {siteHost}. Confirm this device there. Code valid 10 min.
+          {t('compounds:hub-account-card.waiting', { siteHost })}
         </Text>
         <Button variant="secondary" onClick={onCancel}>{t('compounds:hub-account-card.cancel')}</Button>
       </Stack>

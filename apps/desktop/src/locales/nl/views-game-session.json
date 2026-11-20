@@ -5,5 +5,7 @@
   "deleteProfile.confirm": "Profiel verwijderen",
   "deleteRom.title": "ROM verwijderen",
   "deleteRom.message": "Hiermee worden \"{romFile}\" en alle uitgepakte assets verwijderd. Profielen die deze ROM gebruiken worden ook verwijderd. Dit kan niet ongedaan worden gemaakt.",
-  "deleteRom.confirm": "ROM verwijderen"
+  "deleteRom.confirm": "ROM verwijderen",
+  "toast.restartNeeded": "Voor sommige wijzigingen moet het spel opnieuw worden gestart",
+  "toast.enhancedFallback": "De moderne HUD-stijl vereist een scherm van 16:9 of breder, dus de stijl is teruggezet naar Origineel"
 }

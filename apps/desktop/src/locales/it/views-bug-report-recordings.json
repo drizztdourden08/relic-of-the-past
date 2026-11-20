@@ -4,5 +4,8 @@
   "empty.new": "Nessuna nuova registrazione. Mostra inviate per vedere quelle precedenti.",
   "empty.all": "Ancora nessuna registrazione.",
   "sent": "Inviata",
-  "include": "Includi la registrazione di {name}"
+  "include": "Includi la registrazione di {name}",
+  "github.label": "Apri un issue su GitHub",
+  "github.opened": "È stato aperto un issue GitHub precompilato. Accedi al Sanctuary per inviare le segnalazioni dall'app con i salvataggi allegati.",
+  "github.noRepo": "Accedi al Sanctuary per inviare una segnalazione."
 }

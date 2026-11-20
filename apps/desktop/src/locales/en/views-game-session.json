@@ -5,5 +5,7 @@
   "deleteProfile.confirm": "Delete Profile",
   "deleteRom.title": "Delete ROM",
   "deleteRom.message": "This will remove \"{romFile}\" and all its extracted assets. Profiles using this ROM will also be deleted. This cannot be undone.",
-  "deleteRom.confirm": "Delete ROM"
+  "deleteRom.confirm": "Delete ROM",
+  "toast.restartNeeded": "Some changes require a game restart to take effect",
+  "toast.enhancedFallback": "The Modern HUD style needs a 16:9 or wider display, so the style is back to Original"
 }

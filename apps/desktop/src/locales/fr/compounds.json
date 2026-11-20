@@ -259,5 +259,19 @@
   "shop-slots-block.retro-shuffled": "Arc rétro : le carquois est dans la réserve d'objets, donc {quiverShelf} s'ouvre toujours comme emplacement mélangé.",
   "shop-slots-block.retro-shuffled-with": "Arc rétro : le carquois est dans la réserve d'objets, donc {quiverShelf} s'ouvre toujours comme emplacement mélangé, tout comme {others}.",
   "shop-slots-block.retro-vanilla": "Arc rétro : {quiverShelf} vend le carquois pour {quiverPrice} rubis, puis {refill} à {refillPrice}.",
-  "shop-slots-block.retro-vanilla-with": "Arc rétro : {quiverShelf} vend le carquois pour {quiverPrice} rubis, puis {refill} à {refillPrice} ; {others} vendent la même recharge."
+  "shop-slots-block.retro-vanilla-with": "Arc rétro : {quiverShelf} vend le carquois pour {quiverPrice} rubis, puis {refill} à {refillPrice} ; {others} vendent la même recharge.",
+  "checks-tracker.showing": "{total} vérifications affichées :",
+  "checks-tracker.taken": "{count} obtenues",
+  "checks-tracker.available": "{count} disponibles",
+  "checks-tracker.left": "{count} restantes",
+  "hub-account-card.waiting": "Votre navigateur a ouvert {siteHost}. Confirmez cet appareil à cet endroit. Code valable 10 min.",
+  "pond-status-note.title": "ce que fera l'étang",
+  "reporting-as-line.label": "signalé en tant que",
+  "save-row-actions.load": "Charger {name}",
+  "save-row-actions.overwrite": "Écraser {name}",
+  "save-row-actions.delete": "Supprimer {name}",
+  "save-slot.load": "Charger l'emplacement {slotNumber}",
+  "save-slot.save": "Sauvegarder dans l'emplacement {slotNumber}",
+  "save-slot.slot": "Emplacement {slotNumber}",
+  "wishing-pond-row.may-ask-for": "ce qu'elle peut demander"
 }

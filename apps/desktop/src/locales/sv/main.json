@@ -25,5 +25,13 @@
   "hookshop.siteSignedOut": "Den här enheten loggades ut på webbplatsen. Logga in igen.",
   "hookshop.grantRefused": "Hookshop svarade utan paketets typ, upphovsperson eller licens.",
   "hookshop.answerUnreadable": "Hookshop svarade med något som appen inte kan läsa.",
-  "boot.ffmpeg": "Deklarerar mediaverktyget"
+  "boot.ffmpeg": "Deklarerar mediaverktyget",
+  "sanctuary.report.linkSanctuary": "Sanctuary-rapport",
+  "sanctuary.report.linkIssue": "GitHub-ärende",
+  "sanctuary.report.filed": "Rapport {id} inskickad",
+  "sanctuary.report.filedNoDebug": "Rapport {id} inskickad, utan felsökningsfiler: {error}",
+  "storage.installedLocked": "\"{name}\" är installerad från Hookshop och skrivskyddad. Duplicera den för att ändra den.",
+  "ffmpeg.lookupFailed": "Det gick inte att slå upp ffmpeg-utgåvan (HTTP {status}).",
+  "ffmpeg.assetMissing": "ffmpeg-utgåvan publicerar inte längre {asset}.",
+  "ffmpeg.digestMissing": "Ingen sha256-kontrollsumma har publicerats för {asset}."
 }

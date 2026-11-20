@@ -25,5 +25,13 @@
   "hookshop.siteSignedOut": "この端末はサイト側でサインアウトされました。もう一度サインインしてください。",
   "hookshop.grantRefused": "Hookshopの応答にパックの種類、作者、ライセンスが含まれていません。",
   "hookshop.answerUnreadable": "Hookshopから、このアプリが読めない応答が返されました。",
-  "boot.ffmpeg": "メディアツールを確認中"
+  "boot.ffmpeg": "メディアツールを確認中",
+  "sanctuary.report.linkSanctuary": "Sanctuary のレポート",
+  "sanctuary.report.linkIssue": "GitHub の Issue",
+  "sanctuary.report.filed": "レポート {id} を送信しました",
+  "sanctuary.report.filedNoDebug": "レポート {id} を送信しました(デバッグファイルは添付されていません: {error})",
+  "storage.installedLocked": "「{name}」は Hookshop からインストールされた読み取り専用です。変更するには複製してください。",
+  "ffmpeg.lookupFailed": "ffmpeg のリリースを確認できませんでした(HTTP {status})。",
+  "ffmpeg.assetMissing": "ffmpeg のリリースに {asset} が含まれなくなりました。",
+  "ffmpeg.digestMissing": "{asset} の sha256 ダイジェストが公開されていません。"
 }

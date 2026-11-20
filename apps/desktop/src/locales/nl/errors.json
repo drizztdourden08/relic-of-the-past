@@ -8,5 +8,7 @@
   "language.patched.failed": "De gepatchte ROM kon niet worden geïmporteerd. Het rapport hieronder zegt welke onderdelen mislukten.",
   "sprite.unreadablePack": "Geen leesbaar spritepakket.",
   "sprite.invalidZspr": "Geen geldig ZSPR-spritebestand.",
-  "msu.trackNotFound": "Track niet gevonden: {file}"
+  "msu.trackNotFound": "Track niet gevonden: {file}",
+  "msu.noTracks": "Er zijn geen nummers gevonden om te installeren.",
+  "import.failed": "De import is mislukt."
 }

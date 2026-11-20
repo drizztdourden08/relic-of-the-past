@@ -4,5 +4,8 @@
   "empty.new": "Brak nowych nagrań. Pokaż wysłane, aby zobaczyć wcześniejsze.",
   "empty.all": "Brak nagrań.",
   "sent": "Wysłane",
-  "include": "Dołącz nagranie z {name}"
+  "include": "Dołącz nagranie z {name}",
+  "github.label": "Otwórz zgłoszenie na GitHubie",
+  "github.opened": "Otwarto wstępnie wypełnione zgłoszenie na GitHubie. Zaloguj się w Sanctuary, aby wysyłać zgłoszenia z aplikacji wraz z zapisami gry.",
+  "github.noRepo": "Zaloguj się w Sanctuary, aby wysłać zgłoszenie."
 }

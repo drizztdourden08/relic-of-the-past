@@ -1,10 +1,11 @@
 /* @layer shared-ipc @kind types */
+import type { Text } from '@drizztdourden08/brock-core/i18n';
 import type { OptimizeAnalysis, OptimizeRunResult } from '@rotp/msu';
 
 type MsuResult = {
   success: boolean;
   fileCount?: number;
-  error?: string;
+  error?: Text;
   skippedNested?: number;
   skippedDuplicate?: number;
 };

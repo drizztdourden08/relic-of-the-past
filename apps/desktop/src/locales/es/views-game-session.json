@@ -5,5 +5,7 @@
   "deleteProfile.confirm": "Eliminar perfil",
   "deleteRom.title": "Eliminar ROM",
   "deleteRom.message": "Se quitará \"{romFile}\" y todos sus recursos extraídos. Los perfiles que usen esta ROM también se eliminarán. No se puede deshacer.",
-  "deleteRom.confirm": "Eliminar ROM"
+  "deleteRom.confirm": "Eliminar ROM",
+  "toast.restartNeeded": "Algunos cambios requieren reiniciar el juego para aplicarse",
+  "toast.enhancedFallback": "El estilo de HUD Moderno necesita una pantalla 16:9 o más ancha, así que el estilo vuelve a Original"
 }

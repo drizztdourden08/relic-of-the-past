@@ -56,7 +56,7 @@ const RomManager = (props: RomManagerProps) => {
   return (
     <ListDetailLayout
       listShowTitle={false}
-      listContainers={[{ title: 'ROMs', content: list }]}
+      listContainers={[{ title: t('data-manager:rom-manager.roms-title'), content: list }]}
       collapsed={flow.listCollapsed}
       onCollapsedChange={flow.setListCollapsed}
       listLabel={t('data-manager:rom-manager.rom-manager')}

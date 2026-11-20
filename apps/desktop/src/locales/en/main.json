@@ -25,5 +25,13 @@
   "hookshop.siteSignedOut": "This device was signed out on the site. Sign in again.",
   "hookshop.grantRefused": "The Hookshop answered without the pack's kind, author or license.",
   "hookshop.answerUnreadable": "The Hookshop answered with something this app cannot read.",
-  "boot.ffmpeg": "Declaring the media tool"
+  "boot.ffmpeg": "Declaring the media tool",
+  "sanctuary.report.linkSanctuary": "Sanctuary report",
+  "sanctuary.report.linkIssue": "GitHub issue",
+  "sanctuary.report.filed": "Report {id} filed",
+  "sanctuary.report.filedNoDebug": "Report {id} filed, without its debug files: {error}",
+  "storage.installedLocked": "\"{name}\" is installed from the Hookshop and read only. Duplicate it to change it.",
+  "ffmpeg.lookupFailed": "Could not look up the ffmpeg release (HTTP {status}).",
+  "ffmpeg.assetMissing": "The ffmpeg release no longer publishes {asset}.",
+  "ffmpeg.digestMissing": "No sha256 digest published for {asset}."
 }

@@ -8,5 +8,7 @@
   "language.patched.failed": "Nie udało się zaimportować załatanego ROM-u. Poniższy raport mówi, które części zawiodły.",
   "sprite.unreadablePack": "To nie jest czytelna paczka sprite'ów.",
   "sprite.invalidZspr": "To nie jest prawidłowy plik sprite'a ZSPR.",
-  "msu.trackNotFound": "Nie znaleziono utworu: {file}"
+  "msu.trackNotFound": "Nie znaleziono utworu: {file}",
+  "msu.noTracks": "Nie znaleziono utworów do zainstalowania.",
+  "import.failed": "Import nie powiódł się."
 }

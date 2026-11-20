@@ -351,5 +351,8 @@
   "jobs.line.readPatchedRom": "De gepatchte ROM lezen...",
   "jobs.line.extractSprites": "Sprites uitpakken...",
   "jobs.line.compileAssets": "Resourceset compileren...",
-  "jobs.line.readJapaneseGraphics": "Japanse graphics lezen..."
+  "jobs.line.readJapaneseGraphics": "Japanse graphics lezen...",
+  "rom-manager.extracted": "Uitgepakt",
+  "rom-manager.attached-to": "Gekoppeld aan {bases}",
+  "rom-manager.roms-title": "ROM's"
 }

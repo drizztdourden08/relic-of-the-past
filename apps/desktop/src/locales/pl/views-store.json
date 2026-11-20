@@ -33,5 +33,6 @@
   "hero.eyebrow": "Paczki społeczności",
   "kind.music": "Pakiet muzyczny",
   "kind.character": "Postać",
-  "kind.language": "Język"
+  "kind.language": "Język",
+  "account.lookupFailed": "Nie udało się sprawdzić Twojego konta Sanctuary."
 }

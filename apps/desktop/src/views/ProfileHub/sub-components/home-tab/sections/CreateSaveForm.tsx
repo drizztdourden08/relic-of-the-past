@@ -4,6 +4,7 @@ import type { FocusEvent } from 'react';
 import { Box } from '@drizztdourden08/tessera/primitives';
 import { InlineCreateForm } from '@drizztdourden08/tessera/composites';
 import { useT } from '@drizztdourden08/brock-react';
+import { useDateFormatOptions } from '@app/hooks/useDateFormatOptions';
 import { defaultSaveName } from '../default-save-name';
 import type { CreateSaveFormProps } from '../home-tab.type';
 
@@ -13,7 +14,8 @@ const selectTyped = (event: FocusEvent<HTMLElement>) => {
 
 const CreateSaveForm = ({ onCreate, onCancel }: CreateSaveFormProps) => {
   const t = useT();
-  const name = useMemo(() => defaultSaveName(t), [t]);
+  const dates = useDateFormatOptions();
+  const name = useMemo(() => defaultSaveName(t, dates), [t, dates]);
   return (
     <Box onFocus={selectTyped}>
       <InlineCreateForm compact size="sm" defaultValue={name} label={t('profiles:home.create.name')} submitLabel={t('profiles:home.create.submit')} onCreate={onCreate} onCancel={onCancel} />

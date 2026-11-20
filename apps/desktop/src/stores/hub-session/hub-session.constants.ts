@@ -1,4 +1,6 @@
 /* @layer renderer-stores @kind constants */
-const LOOKUP_FAILED = 'Signed in, but the site could not be reached to load your account.';
+import { msg } from '@drizztdourden08/brock-core/i18n';
+
+const LOOKUP_FAILED = msg('views-store:account.lookupFailed');
 
 export { LOOKUP_FAILED };

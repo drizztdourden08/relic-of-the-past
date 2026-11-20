@@ -259,5 +259,19 @@
   "shop-slots-block.retro-shuffled": "Retro bow: the quiver is in the item pool, so {quiverShelf} always opens as a shuffled slot.",
   "shop-slots-block.retro-shuffled-with": "Retro bow: the quiver is in the item pool, so {quiverShelf} always opens as a shuffled slot with {others}.",
   "shop-slots-block.retro-vanilla": "Retro bow: {quiverShelf} sells the quiver for {quiverPrice} rupees, then {refill} refills at {refillPrice}.",
-  "shop-slots-block.retro-vanilla-with": "Retro bow: {quiverShelf} sells the quiver for {quiverPrice} rupees, then {refill} refills at {refillPrice}, and {others} the same refill."
+  "shop-slots-block.retro-vanilla-with": "Retro bow: {quiverShelf} sells the quiver for {quiverPrice} rupees, then {refill} refills at {refillPrice}, and {others} the same refill.",
+  "checks-tracker.showing": "Showing {total} checks:",
+  "checks-tracker.taken": "{count} taken",
+  "checks-tracker.available": "{count} available",
+  "checks-tracker.left": "{count} left",
+  "hub-account-card.waiting": "Your browser opened {siteHost}. Confirm this device there. Code valid 10 min.",
+  "pond-status-note.title": "what the pond will do",
+  "reporting-as-line.label": "reporting as",
+  "save-row-actions.load": "Load {name}",
+  "save-row-actions.overwrite": "Overwrite {name}",
+  "save-row-actions.delete": "Delete {name}",
+  "save-slot.load": "Load slot {slotNumber}",
+  "save-slot.save": "Save to slot {slotNumber}",
+  "save-slot.slot": "Slot {slotNumber}",
+  "wishing-pond-row.may-ask-for": "what she may ask for"
 }

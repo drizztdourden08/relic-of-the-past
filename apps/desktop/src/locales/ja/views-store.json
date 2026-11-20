@@ -33,5 +33,6 @@
   "hero.eyebrow": "コミュニティパック",
   "kind.music": "音楽パック",
   "kind.character": "キャラクター",
-  "kind.language": "言語"
+  "kind.language": "言語",
+  "account.lookupFailed": "Sanctuary アカウントを確認できませんでした。"
 }

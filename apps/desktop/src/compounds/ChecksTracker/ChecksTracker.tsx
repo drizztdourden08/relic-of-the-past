@@ -1,4 +1,5 @@
 /* @layer renderer-components @kind component */
+import { useT } from '@drizztdourden08/brock-react';
 import { Box, Text } from '@drizztdourden08/tessera/primitives';
 import { TrackerSummary } from './sub-components/TrackerSummary';
 import { TrackerFilters } from './sub-components/TrackerFilters';
@@ -13,6 +14,7 @@ const isNarrowed = (filter: ChecksTrackerProps['filter']): boolean =>
   || (filter.statusFilter !== undefined && filter.statusFilter !== 'all');
 
 const ChecksTracker = (props: ChecksTrackerProps) => {
+  const t = useT();
   const {
     stats, filter, onFilterChange, grouping, onGroupingChange, viewMode, onViewModeChange,
     groupTree, statuses, eventStatus, run, dimensions, notice, stickyHeader = true, className,
@@ -37,10 +39,10 @@ const ChecksTracker = (props: ChecksTrackerProps) => {
         />
         {isNarrowed(filter) && (
           <Box className="checks-tracker__subtotal">
-            Showing {groupTree.stats.total} checks:
-            <Text className="tracker-summary__stat--completed"> {groupTree.stats.completed} taken</Text>,
-            <Text className="tracker-summary__stat--reachable"> {groupTree.stats.reachable} available</Text>,
-            <Text className="tracker-summary__stat--blocked"> {groupTree.stats.blocked} left</Text>
+            {t('compounds:checks-tracker.showing', { total: groupTree.stats.total })}
+            <Text className="tracker-summary__stat--completed"> {t('compounds:checks-tracker.taken', { count: groupTree.stats.completed })}</Text>,
+            <Text className="tracker-summary__stat--reachable"> {t('compounds:checks-tracker.available', { count: groupTree.stats.reachable })}</Text>,
+            <Text className="tracker-summary__stat--blocked"> {t('compounds:checks-tracker.left', { count: groupTree.stats.blocked })}</Text>
           </Box>
         )}
         {notice}

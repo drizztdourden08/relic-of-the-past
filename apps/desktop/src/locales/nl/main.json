@@ -25,5 +25,13 @@
   "hookshop.siteSignedOut": "Dit apparaat is op de site uitgelogd. Log opnieuw in.",
   "hookshop.grantRefused": "De Hookshop antwoordde zonder soort, auteur of licentie van het pakket.",
   "hookshop.answerUnreadable": "De Hookshop antwoordde met iets wat deze app niet kan lezen.",
-  "boot.ffmpeg": "Mediatool aanmelden"
+  "boot.ffmpeg": "Mediatool aanmelden",
+  "sanctuary.report.linkSanctuary": "Sanctuary-melding",
+  "sanctuary.report.linkIssue": "GitHub-issue",
+  "sanctuary.report.filed": "Melding {id} ingediend",
+  "sanctuary.report.filedNoDebug": "Melding {id} ingediend, zonder debugbestanden: {error}",
+  "storage.installedLocked": "\"{name}\" is geïnstalleerd vanuit de Hookshop en is alleen-lezen. Dupliceer het om het te wijzigen.",
+  "ffmpeg.lookupFailed": "De ffmpeg-release kon niet worden opgezocht (HTTP {status}).",
+  "ffmpeg.assetMissing": "De ffmpeg-release publiceert {asset} niet meer.",
+  "ffmpeg.digestMissing": "Er is geen sha256-digest gepubliceerd voor {asset}."
 }

@@ -8,5 +8,7 @@
   "language.patched.failed": "Den patchade ROM:en kunde inte importeras. Rapporten nedan visar vilka delar som misslyckades.",
   "sprite.unreadablePack": "Inte ett läsbart spritepaket.",
   "sprite.invalidZspr": "Inte en giltig ZSPR-spritefil.",
-  "msu.trackNotFound": "Spåret hittades inte: {file}"
+  "msu.trackNotFound": "Spåret hittades inte: {file}",
+  "msu.noTracks": "Inga spår hittades att installera.",
+  "import.failed": "Importen misslyckades."
 }

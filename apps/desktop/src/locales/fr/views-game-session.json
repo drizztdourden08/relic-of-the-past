@@ -5,5 +5,7 @@
   "deleteProfile.confirm": "Supprimer le profil",
   "deleteRom.title": "Supprimer la ROM",
   "deleteRom.message": "Cela supprimera « {romFile} » et toutes ses ressources extraites. Les profils utilisant cette ROM seront aussi supprimés. Cette action est irréversible.",
-  "deleteRom.confirm": "Supprimer la ROM"
+  "deleteRom.confirm": "Supprimer la ROM",
+  "toast.restartNeeded": "Certaines modifications nécessitent de redémarrer le jeu pour prendre effet",
+  "toast.enhancedFallback": "Le style d'ATH Moderne nécessite un écran 16:9 ou plus large, le style est donc revenu à Original"
 }

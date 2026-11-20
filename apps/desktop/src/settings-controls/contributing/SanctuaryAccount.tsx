@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind component */
 import { useCallback, useEffect, useMemo } from 'react';
-import { useT } from '@drizztdourden08/brock-react';
+import { useT, useText } from '@drizztdourden08/brock-react';
 import { useHubSessionStore } from '@app/stores/hub-session';
 import { SANCTUARY_SITE_HOST, SANCTUARY_SITE_URL } from '@rotp/hub-client';
 import { HubAccountCard } from '@app/compounds/HubAccountCard';
@@ -8,6 +8,7 @@ import type { HubAccountCopy } from '@app/compounds/HubAccountCard';
 
 const SanctuaryAccount = () => {
   const t = useT();
+  const text = useText();
   const me = useHubSessionStore((s) => s.me);
   const state = useHubSessionStore((s) => s.state);
   const userCode = useHubSessionStore((s) => s.userCode);
@@ -36,7 +37,7 @@ const SanctuaryAccount = () => {
       state={state}
       me={me}
       userCode={userCode}
-      lastError={lastError}
+      lastError={lastError === null ? null : text(lastError)}
       copy={copy}
       onSignIn={handleSignIn}
       onCancel={handleCancel}

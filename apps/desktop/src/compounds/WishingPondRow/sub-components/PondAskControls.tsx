@@ -18,7 +18,7 @@ const PondAskControls = (props: PondControlsProps) => {
 
   return (
     <>
-      <Text className="pond-row__group-caption">what she may ask for</Text>
+      <Text className="pond-row__group-caption">{t('compounds:wishing-pond-row.may-ask-for')}</Text>
       {askModel.counted.map((row) => (
         <CurrencyPriceRow
           key={row.currency}

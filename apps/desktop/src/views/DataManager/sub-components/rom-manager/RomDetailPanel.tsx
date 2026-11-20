@@ -2,12 +2,14 @@
 import { useT } from '@drizztdourden08/brock-react';
 import { Box, Text, formatDate } from '@drizztdourden08/tessera/primitives';
 import { formatBytes } from '@drizztdourden08/brock-core';
+import { useDateFormatOptions } from '@app/hooks/useDateFormatOptions';
 import { AssetsRow } from './AssetsRow';
 import { SupplementRow } from './SupplementRow';
 import type { RomDetailPanelProps } from './RomDetailPanel.type';
 
 const RomDetailPanel = (props: RomDetailPanelProps) => {
   const t = useT();
+  const dates = useDateFormatOptions();
   const { selected, loadingDetail, detail, selectedBase, selectedSupplement, onExtractAssets } = props;
 
   if (!selected) return <Text>{t('data-manager:rom-manager.select-a-rom-to-view')}</Text>;
@@ -25,10 +27,10 @@ const RomDetailPanel = (props: RomDetailPanelProps) => {
         <Text className="detail-panel__value" mono>{detail.hash}</Text>
 
         <Text className="detail-panel__label">{t('data-manager:rom-manager.detail.added')}</Text>
-        <Text className="detail-panel__value">{formatDate(detail.created, 'date')}</Text>
+        <Text className="detail-panel__value">{formatDate(detail.created, 'date', dates)}</Text>
 
         <Text className="detail-panel__label">{t('data-manager:rom-manager.detail.modified')}</Text>
-        <Text className="detail-panel__value">{formatDate(detail.modified, 'date')}</Text>
+        <Text className="detail-panel__value">{formatDate(detail.modified, 'date', dates)}</Text>
 
         <Text className="detail-panel__label">{selectedSupplement ? t('data-manager:rom-manager.detail.attached') : t('data-manager:rom-manager.detail.assets')}</Text>
         <Text className="detail-panel__value">
