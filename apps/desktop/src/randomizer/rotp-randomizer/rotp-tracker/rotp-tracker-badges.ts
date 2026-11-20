@@ -3,6 +3,7 @@ import { msg } from '@drizztdourden08/brock-core/i18n';
 import { chestSwapOf, getItem } from '@rotp/game-data';
 import type { CheckId, CheckRecord } from '@rotp/game-data';
 import type { TrackerBadge } from '@drizztdourden08/brock-randomizer/tracker';
+import { itemName } from '@app/game/record-text';
 import { getCompletedChecks, getEventStatus } from '@app/game/tracker';
 import { textOf } from '@app/shell/text-bridge';
 import { trackerCheckOf } from './rotp-tracker-check-of';
@@ -12,7 +13,7 @@ import { NO_BADGES } from './rotp-tracker-badges.constants';
 const swapBadge = (check: CheckRecord, item: string | null): TrackerBadge[] => {
   const swap = chestSwapOf(check);
   if (swap === null) return [];
-  const values = { primary: getItem(swap.primary).name, standIn: getItem(swap.standIn).name };
+  const values = { primary: itemName(getItem(swap.primary)), standIn: itemName(getItem(swap.standIn)) };
   const swapped = item === swap.standIn;
   const title = textOf(swapped ? msg('views-randomizer:tracker.swap.already', values) : msg('views-randomizer:tracker.swap.pending', values));
   return [{ id: SWAP_BADGE_ID, label: textOf(msg('views-randomizer:tracker.badge.swap')), tone: swapped ? 'warning' : 'neutral', title }];

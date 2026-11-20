@@ -5,6 +5,7 @@ import { find } from '@rotp/game-data';
 import type { CheckId } from '@rotp/game-data';
 import { getCompletedChecks, onCompletedChecksChanged, planCheckGrant } from '@app/game';
 import { trackerCheckRecords } from '@rotp/navigation';
+import { recordNameMatches } from '@app/game/record-text';
 import { getSessionState, subscribeSessionStore } from '@app/game/randomizer-client';
 import { useT, useWidgetPref } from '@drizztdourden08/brock-react';
 import { DisabledOverlay } from '@drizztdourden08/tessera/composites';
@@ -31,7 +32,7 @@ const ChecksTab = ({ gates }: CheatTabProps) => {
   const filteredChecks = useMemo(() => {
     if (!search) return allChecks;
     const q = search.toLowerCase();
-    return allChecks.filter((c) => c.name.toLowerCase().includes(q)
+    return allChecks.filter((c) => recordNameMatches('check', c, q)
       || screenLabelOf(c).toLowerCase().includes(q));
   }, [search, allChecks]);
 

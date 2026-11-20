@@ -2,6 +2,7 @@
 import { useT } from '@drizztdourden08/brock-react';
 import { Icon, Text } from '@drizztdourden08/tessera/primitives';
 import { ListItemList, ListItemRow } from '@drizztdourden08/tessera/composites';
+import { checkName } from '@app/game/record-text';
 import { checkTypeIcon } from '../behavior/check-type-icon';
 import { LIST_SHAPE, NO_STOP_ICON } from '../StopAtCheckPicker.constants';
 import type { CheckStatus } from '@rotp/game-data';
@@ -26,7 +27,7 @@ const StopAtCheckList = (props: StopAtCheckListProps) => {
             key={check.id}
             className={`stop-picker__row--${statusOf(check.id)}`}
             icon={<Icon className="stop-picker__row-icon" name={checkTypeIcon(check.kind)} label={check.kind} />}
-            name={<Text className={`stop-picker__row-name stop-picker__row-name--${statusOf(check.id)}`}>{check.name}</Text>}
+            name={<Text className={`stop-picker__row-name stop-picker__row-name--${statusOf(check.id)}`}>{checkName(check)}</Text>}
             columns={[{ primary: <Text className="stop-picker__row-id">{check.id}</Text>, align: 'end' }]}
             selected={selectedId === check.id}
             onClick={() => onSelect(check.id)}
