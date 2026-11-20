@@ -12,6 +12,7 @@ const loadJapaneseGraphics = async (): Promise<void> => {
     const pack = await assets.readJapaneseGraphics(platformFiles());
     const entries = pack ? decodeJapaneseGraphicsPack(pack) : [];
     setJapaneseGraphics(entries);
+    log.app(`[JapaneseGraphics] ${entries.length > 0 ? `${entries.length} pictures loaded` : 'no Japanese sprites imported'}`);
     setStatus({ available: entries.length > 0, fontImported: hasJapaneseFont(entries) });
   } catch (err) {
     log.error(`[JapaneseGraphics] Failed to read the pack: ${err instanceof Error ? err.message : err}`);
