@@ -1,7 +1,5 @@
 /* @layer renderer-components @kind data */
-import type { ViewerLabels } from '../SpriteSheetViewer.type';
-
-type ViewerText = Pick<ViewerLabels, 'viewState' | 'viewContact' | 'viewSheet' | 'play' | 'pause' | 'step' | 'fpsAria' | 'zoomAria'>;
+import type { ViewerText } from './viewer-labels-of.type';
 
 const DEFAULT_VIEWER_TEXT: ViewerText = {
   viewState: 'One state',

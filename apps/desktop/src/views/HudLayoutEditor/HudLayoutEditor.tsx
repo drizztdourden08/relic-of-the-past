@@ -4,7 +4,7 @@ import { SidePanel } from '@drizztdourden08/tessera/composites';
 import { useReducedMotion } from '@app/compounds/HudNodeRenderer';
 import { MotionPreviewContext, useMotionPreviewState } from '@app/hud-layout-editing/motion-preview';
 import { useHudLayoutEditor } from '@app/hud-layout-editing/useHudLayoutEditor';
-import { nodeName } from '@app/hud-layout-editing/node-name';
+import { targetLabel } from '@app/hud-layout-editing/node-name';
 import { EDITOR_GROUNDS, INSPECTOR_PANEL, OUTLINE_PANEL } from './HudLayoutEditor.constants';
 import { EditorToolbar } from './sub-components/EditorToolbar';
 import { InspectorRail } from './sub-components/InspectorRail';
@@ -37,7 +37,7 @@ const HudLayoutEditor = (props: HudLayoutEditorProps) => {
                 onRatioChange={setRatioId}
                 ground={EDITOR_GROUNDS.find((entry) => entry.file === ground) ?? null}
                 onGroundChange={setGround}
-                targetLabel={target === layout.screen.id ? t('hud-editor:editor.target.screen') : target ? nodeName(target, t) : t('hud-editor:editor.target.nothing')}
+                targetLabel={targetLabel(target, layout.screen.id, t)}
               />
 
               <Box className="hud-editor__body">

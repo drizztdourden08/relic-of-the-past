@@ -7,8 +7,8 @@ import { DragGhost } from './DragGhost';
 import { OutlineHint } from './OutlineHint';
 import { OutlineRow } from './OutlineRow';
 import { OutlineMenuHost } from './OutlineMenuHost';
-import { labelOf, slotsOf } from '@app/hud-layout-editing/new-node';
-import { builtInNodeName, nodeName } from '@app/hud-layout-editing/node-name';
+import { slotsOf } from '@app/hud-layout-editing/new-node';
+import { outlineRowLabel } from '@app/hud-layout-editing/node-name';
 import { outlineRows } from '@app/hud-layout-editing/outline-rows';
 import { rowRefFor } from '@app/hud-layout-editing/row-ref-for';
 import { useOutlineCollapse } from '@app/hud-layout-editing/useOutlineCollapse';
@@ -38,9 +38,7 @@ const OutlinePanel = (props: OutlinePanelProps) => {
           <OutlineRow
             key={row.node.id}
             id={row.node.id}
-            label={row.isScreen
-              ? builtInNodeName(row.node.id, t) ?? t('hud-editor:outline.screen', { id: row.node.id })
-              : t('hud-editor:outline.row', { label: labelOf(row.node, t), id: nodeName(row.node.id, t) })}
+            label={outlineRowLabel(row, t)}
             depth={row.depth}
             kind={row.node.kind}
             cell={row.cell}

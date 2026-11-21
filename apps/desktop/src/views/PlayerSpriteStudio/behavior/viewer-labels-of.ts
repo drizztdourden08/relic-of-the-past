@@ -21,7 +21,7 @@ const viewerLabelsOf = (t: I18n['t']): ViewerLabels => ({
   stateName: (action) => (STATE_LABELS.some((s) => s.action === action)
     ? t(`views-player-sprite-studio:state.${hexOf(action)}` as MessageKey)
     : t('views-player-sprite-studio:viewer.action-id', { hex: hexOf(action) })),
-  groupName: (group) => t(`views-player-sprite-studio:group.${group}` as MessageKey),
+  groupName: (group) => t(`views-player-sprite-studio:group.${group}`),
   facingName: (facing) => t(`views-player-sprite-studio:facing.${FACING_KEYS[facing]}` as MessageKey),
   allFacings: t('views-player-sprite-studio:viewer.all-facings'),
   noFacingVariation: t('views-player-sprite-studio:viewer.no-facing-variation'),
