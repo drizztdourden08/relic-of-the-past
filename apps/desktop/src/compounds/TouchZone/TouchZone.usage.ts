@@ -13,7 +13,7 @@ import { TouchZone } from '@app/compounds/TouchZone';
 
 const Mounted = (props: ComponentProps<typeof TouchZone>) => <TouchZone {...props} />;
 `,
-  propsHash: '',
+  propsHash: '70659fc663409a5d',
 } satisfies ComponentUsage;
 
 export { usage };

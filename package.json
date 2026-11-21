@@ -81,7 +81,7 @@
     "@drizztdourden08/brock-lint-config": "catalog:",
     "@drizztdourden08/brock-plugin-snes": "catalog:",
     "@drizztdourden08/brock-thread": "catalog:",
-    "@drizztdourden08/standards": "^0.14.2",
+    "@drizztdourden08/standards": "^0.15.0",
     "@drizztdourden08/tessera": "catalog:",
     "@playwright/test": "^1.60.0",
     "@rotp/game-core": "workspace:*",
@@ -105,7 +105,7 @@
     "vitest": "catalog:"
   },
   "brock": {
-    "version": "0.120.1",
+    "version": "0.122.0",
     "tessera": "0.93.2"
   },
   "bin": {

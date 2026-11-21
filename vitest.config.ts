@@ -1,8 +1,8 @@
 /* @layer root-config @kind config */
-import { defineStandardsVitest } from '@drizztdourden08/standards/vitest';
+import { defineStandardsVitest, withPrebundledDeps } from '@drizztdourden08/standards/vitest';
 import { resolve } from 'path';
 
-export default defineStandardsVitest({
+const config = defineStandardsVitest({
   test: {
     include: [
       'apps/desktop/tests/**/*.test.{ts,tsx}',
@@ -23,4 +23,10 @@ export default defineStandardsVitest({
       { find: /^@drizztdourden08\/brock-core$/, replacement: resolve(__dirname, 'apps/desktop/node_modules/@drizztdourden08/brock-core/src/index.ts') },
     ],
   },
+});
+
+export default withPrebundledDeps(config, {
+  root: __dirname,
+  appDir: resolve(__dirname, 'apps/desktop'),
+  packages: ['@drizztdourden08/tessera'],
 });

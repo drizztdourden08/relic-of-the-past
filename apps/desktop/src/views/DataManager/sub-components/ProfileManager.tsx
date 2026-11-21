@@ -4,7 +4,7 @@ import { EmptyState } from '@drizztdourden08/tessera/primitives';
 import { ListDetailLayout } from '@drizztdourden08/tessera/composites';
 import { useProfileManager } from './profile-manager/useProfileManager';
 import { ProfileListPane } from './profile-manager/ProfileListPane';
-import { ProfileCreateWizard } from './profile-manager/ProfileCreateWizard';
+import { ProfileCreateWizard } from '@app/views/ProfileCreateWizard';
 import { ProfileDetailPanel } from './profile-manager/profile-detail/ProfileDetailPanel';
 import type { ProfileManagerProps } from './ProfileManager.type';
 

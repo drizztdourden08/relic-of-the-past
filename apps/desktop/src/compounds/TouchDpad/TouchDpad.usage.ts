@@ -13,7 +13,7 @@ import { TouchDpad } from '@app/compounds/TouchDpad';
 
 const Mounted = (props: ComponentProps<typeof TouchDpad>) => <TouchDpad {...props} />;
 `,
-  propsHash: '',
+  propsHash: '0a87a72ef9a7028c',
 } satisfies ComponentUsage;
 
 export { usage };

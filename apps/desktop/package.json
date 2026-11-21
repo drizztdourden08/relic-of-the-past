@@ -129,8 +129,8 @@
     "vitest": "catalog:"
   },
   "brock": {
-    "version": "0.120.1",
-    "tessera": "0.93.2"
+    "version": "0.122.0",
+    "tessera": "0.129.0"
   },
   "portKit": {
     "wasm": {

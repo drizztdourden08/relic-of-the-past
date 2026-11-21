@@ -14,7 +14,7 @@ import { optionValuesOf } from '@app/randomizer/options/option-values-of';
 import { groupsForMode } from '@app/views/DataManager/sub-components/profile-manager/randomizer-options/groups-for-mode';
 import { choicesAfterRow } from '@app/views/DataManager/sub-components/profile-manager/randomizer-options/choices-after-row';
 import { valueFor } from '@app/views/DataManager/sub-components/profile-manager/randomizer-options/value-for';
-import type { RotpOptionModel } from './useRotpOptionModel.type';
+import type { RotpOptionModel } from './use-rotp-option-model.type';
 
 const useRotpOptionModel = (props: OptionTabProps): RotpOptionModel => {
   const { overrides, seed, frozen, onChange, mode } = props;

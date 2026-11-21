@@ -8,7 +8,7 @@ const usage = {
   rules: ['Pass the view that useSurfaceView returns and the schema the table uses.'],
   a11y: ['The search field is labelled by the label prop; the saved views menu is a menu button.'],
   buildingBlock: true,
-  example: `import { SurfaceFilterBar } from '@rotp/design';\n\nconst Bar = () => <SurfaceFilterBar schema={schema} view={view} placeholder="Search..." label="Search rows" />;\n`,
+  example: `import type { ComponentProps } from 'react';\nimport { SurfaceFilterBar } from '@rotp/design';\n\nconst Bar = (props: ComponentProps<typeof SurfaceFilterBar>) => <SurfaceFilterBar {...props} />;\n`,
   propsHash: '123202a053df9df4',
 } satisfies ComponentUsage;
 

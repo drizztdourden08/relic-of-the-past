@@ -2,7 +2,7 @@
 import { useEffect, useState } from 'react';
 import { getInputManager } from '@app/input/input-manager/get-input-manager';
 import type { ProfileMenuState } from '../input-profile-menu.type';
-import { NO_PROFILES } from './useProfileMenuState.constants';
+import { NO_PROFILES } from './use-profile-menu-state.constants';
 
 const readState = (): ProfileMenuState => {
   const manager = getInputManager();

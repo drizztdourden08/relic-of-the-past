@@ -8,7 +8,7 @@ import { useEditHold } from '../../behavior/useEditHold';
 import { useOverlayBox } from '../../behavior/useOverlayBox';
 import { useTouchHaptics } from '../../behavior/useTouchHaptics';
 import { useTouchPointers } from '../../behavior/useTouchPointers';
-import { TouchLayoutEditor } from '../TouchLayoutEditor';
+import { TouchLayoutEditor } from '@app/views/TouchLayoutEditor';
 import { TouchPlayLayer } from '../TouchPlayLayer';
 import type { TouchSurfaceProps } from './TouchSurface.type';
 

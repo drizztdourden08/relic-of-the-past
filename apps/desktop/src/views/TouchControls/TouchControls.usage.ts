@@ -9,7 +9,7 @@ const usage = {
   a11y: ['It is a touch surface over the game picture; the layout editor opens by a hold on empty space or from the side menu.'],
   tree: { path: ['navigation', 'between a few modes, from a floating switch'], rule: 'The game input on hosts with no keyboard.' },
   example: `import { TouchControls } from '@app/views/TouchControls';\n\nconst Mobile = () => <TouchControls />;\n`,
-  propsHash: '',
+  propsHash: '69a6789bb8733db8',
 } satisfies ComponentUsage;
 
 export { usage };

@@ -1,7 +1,12 @@
 /* @layer renderer-components @kind types */
 import type { GlyphPosition } from '@app/hud/custom-glyph-store';
 import type { GlyphPack } from '@rotp/input-mapping';
-import type { GlyphOverrideActions } from './glyph-overrides.type';
+
+interface GlyphOverrideActions {
+  onDeletePack: (packId: string) => void;
+  onImport: (packId: string, position: GlyphPosition, file: File) => void;
+  onRemove: (packId: string, position: GlyphPosition) => void;
+}
 
 interface GlyphPackPickerProps extends GlyphOverrideActions {
   value: string;
@@ -13,4 +18,4 @@ interface GlyphPackPickerProps extends GlyphOverrideActions {
   onCreatePack: () => void;
 }
 
-export type { GlyphPackPickerProps };
+export type { GlyphOverrideActions, GlyphPackPickerProps };

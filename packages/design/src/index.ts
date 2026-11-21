@@ -12,6 +12,7 @@ export { NameDialog } from './compounds/NameDialog/NameDialog';
 export { NoteBox } from './compounds/NoteBox/NoteBox';
 export { ProviderButton } from './compounds/ProviderButton/ProviderButton';
 export { Redirect } from './compounds/Redirect/Redirect';
+export { PlacedPart } from './compounds/PlacedPart';
 export { RoleName } from './compounds/RoleName/RoleName';
 export { RouteGuard } from './compounds/RouteGuard/RouteGuard';
 export { SavedViewsMenu } from './compounds/SavedViewsMenu/SavedViewsMenu';

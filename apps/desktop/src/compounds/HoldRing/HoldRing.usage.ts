@@ -13,7 +13,7 @@ import { HoldRing } from '@app/compounds/HoldRing';
 
 const Mounted = (props: ComponentProps<typeof HoldRing>) => <HoldRing {...props} />;
 `,
-  propsHash: '',
+  propsHash: 'f6dea0df2b508455',
 } satisfies ComponentUsage;
 
 export { usage };
