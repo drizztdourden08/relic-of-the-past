@@ -50,6 +50,7 @@ bool LanguageScreensFont_Ready(void) {
 }
 
 bool GameHook_TransferTilemapFont(uint16 *dst) {
+  if (main_module_index == kModuleFileSelect) LanguageScreens_HoldMenus();
   if (!LanguageScreens_On()) return false;
   bool menus = LanguageScreens_PieceOn(kLangGfx_Menus);
   if (menus && g_font_len == kLatinFontBytes && main_module_index == kModuleFileSelect) {

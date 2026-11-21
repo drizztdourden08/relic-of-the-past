@@ -102,8 +102,11 @@ bool GameHook_TransferTilemapFont(uint16 *dst);
 
 // Shared with language_screens_assets.c and language_screens_font.c.
 bool LanguageScreens_On(void);
-// Whether |piece| (one kLangGfx_* bit) is live: LanguageScreens_On() and its own bit.
+// Whether |piece| (one kLangGfx_* bit) is live: LanguageScreens_On() and its own bit. Inside the file
+// select family the menus piece answers with the value held at the last file select load.
 bool LanguageScreens_PieceOn(uint32 piece);
+// The file select font upload: the menus piece takes its current value for this load.
+void LanguageScreens_HoldMenus(void);
 // The piece (kLangGfx_*) that owns language table |id| (kLangTbl_*).
 uint32 LanguageScreens_PieceOfTable(int id);
 void LanguageScreensAssets_Apply(bool on);

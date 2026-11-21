@@ -47,8 +47,28 @@ bool LanguageScreens_On(void) {
   return (enhanced_features2 & kFeatures2_LanguageScreens) != 0;
 }
 
+// While the file select family runs (main modules 1 to 4) the menus piece keeps the value its graphics were
+// loaded under, so a switch made there never draws the next screen with the other font; the next file
+// select load takes the new value (LanguageScreens_HoldMenus). -1 until the first load.
+static int8 g_menus_held = -1;
+
+static bool InFileSelect(void) {
+  return main_module_index >= 1 && main_module_index <= 4;
+}
+
 bool LanguageScreens_PieceOn(uint32 piece) {
+  if (piece == kLangGfx_Menus && g_menus_held >= 0 && InFileSelect()) return g_menus_held != 0;
   return LanguageScreens_On() && (enhanced_features2 & piece) != 0;
+}
+
+static bool AnyPieceOn(void) {
+  return LanguageScreens_On() || LanguageScreens_PieceOn(kLangGfx_Menus);
+}
+
+void LanguageScreens_HoldMenus(void) {
+  bool was = LanguageScreens_PieceOn(kLangGfx_Menus);
+  g_menus_held = LanguageScreens_On() && (enhanced_features2 & kLangGfx_Menus) != 0;
+  if (was != (g_menus_held != 0)) LanguageScreensAssets_Apply(AnyPieceOn());
 }
 
 uint32 LanguageScreens_PieceOfTable(int id) {
@@ -117,12 +137,12 @@ int GameHook_TilemapFont(void) {
 void GameHook_LanguageScreens(const char *language) {
   (void)language;
   JaGraphics_DialogueFontSync();
-  LanguageScreensAssets_Apply(LanguageScreens_On());
+  LanguageScreensAssets_Apply(AnyPieceOn());
 }
 
 void GameHook_LanguageScreensGate(bool on) {
   JaGraphics_Gate();
-  LanguageScreensAssets_Apply(on);
+  LanguageScreensAssets_Apply(on || LanguageScreens_PieceOn(kLangGfx_Menus));
 }
 
 static bool SetTable(int id, const void *data, int len) {
