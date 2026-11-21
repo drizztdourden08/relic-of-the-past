@@ -260,7 +260,7 @@
   "panel.inspector": "Inspektor",
   "panel.layers": "Warstwy i sloty",
   "panel.selected": "Wybrany element",
-  "editor.target.nothing": "nic",
+  "editor.target.nothing": "niczego",
   "animation-group.remove": "Usuń animację {property}",
   "animation.loop.none": "brak",
   "animation.loop.loop": "pętla",
@@ -457,7 +457,7 @@
   "preset-bar.meta.custom": "własny",
   "editor-toolbar.text.into": "do {target}",
   "outline-name.text.slots-out-of-range": "slot {slots} poza zakresem",
-  "editor.target.screen": "ekran",
+  "editor.target.screen": "ekranu",
   "outline.locked.repeat-child": "powtarzane dziecko",
   "outline.locked.case": "przypadek {n}",
   "outline.locked.otherwise": "w przeciwnym razie"
