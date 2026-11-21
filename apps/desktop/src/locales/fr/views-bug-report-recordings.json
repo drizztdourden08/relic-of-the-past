@@ -1,0 +1,11 @@
+{
+  "title": "Enregistrements à inclure",
+  "showSent": "Afficher les envoyés",
+  "empty.new": "Aucun nouvel enregistrement. Affichez les envoyés pour voir les précédents.",
+  "empty.all": "Aucun enregistrement.",
+  "sent": "Envoyé",
+  "include": "Inclure l'enregistrement de {name}",
+  "github.label": "Ouvrir un ticket GitHub",
+  "github.opened": "Un ticket GitHub prérempli a été ouvert. Connectez-vous au Sanctuary pour envoyer des rapports depuis l'application avec vos sauvegardes jointes.",
+  "github.noRepo": "Connectez-vous au Sanctuary pour envoyer un rapport."
+}

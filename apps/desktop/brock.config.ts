@@ -78,10 +78,17 @@ export default defineBrockConfig({
     schemes: [{ scheme: 'app-sprite', dir: 'sprites' }, { scheme: 'app-debug-capture', stream: true }],
   },
   targets: ['desktop', 'android', 'web'],
-  modules: ['updater', 'secrets', 'display', 'tools', 'catalog', 'port-kit', 'input', 'mcp', 'randomizer'],
+  modules: ['updater', 'secrets', 'display', 'tools', 'catalog', 'port-kit', 'input', 'mcp', 'randomizer', 'i18n'],
   build: {
     nodePolyfills: { globals: { Buffer: true, process: true } },
-    optimizeDeps: { worker: ['fs', 'crypto', 'path', 'js-yaml'] },
+    optimizeDeps: {
+      include: [
+        'vite-plugin-node-polyfills/shims/buffer',
+        'vite-plugin-node-polyfills/shims/process',
+        'vite-plugin-node-polyfills/shims/global',
+      ],
+      worker: ['fs', 'crypto', 'path', 'js-yaml'],
+    },
   },
   packaging: {
     fileAssociations: {

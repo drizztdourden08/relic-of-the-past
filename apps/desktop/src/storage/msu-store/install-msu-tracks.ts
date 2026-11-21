@@ -1,8 +1,10 @@
 /* @layer renderer-lib @kind logic */
+import { msg } from '@drizztdourden08/brock-core/i18n';
 import { isZip, unzip } from '@rotp/roms';
 import type { MsuResult } from '@app/ipc/msu-contract';
 import { platformFiles } from '../platform-files';
 import { errorMessage } from '../error-message';
+import { failureLine } from '../localized-error';
 import { runImportJob } from '../import-job';
 import type { ImportReport } from '../import-job';
 import type { MsuTrackEntry } from './msu-store.type';
@@ -24,13 +26,16 @@ const install = async (pack: string, tracks: MsuTrackEntry[], report: ImportRepo
   return { success: true, fileCount: tracks.length };
 };
 
-const failureOf = (result: MsuResult): string | null => (result.success ? null : (result.error ?? null));
+const failureOf = (result: MsuResult): string | null => {
+  if (result.success || result.error === undefined) return null;
+  return failureLine(result.error);
+};
 
 const installMsuTracks = async (pack: string, read: (report: ImportReport) => Promise<{ bytes: Uint8Array; name: string }>): Promise<MsuResult> => {
   try {
     return await runImportJob({
       kind: 'msu',
-      title: 'Importing a music pack',
+      title: msg('data-manager:jobs.import-music-pack'),
       work: async (report) => {
         const { bytes, name } = await read(report);
         return install(pack, await resolveTracks(bytes, name), report);

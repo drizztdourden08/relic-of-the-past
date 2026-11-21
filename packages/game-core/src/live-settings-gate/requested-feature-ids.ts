@@ -3,6 +3,7 @@ import type { GameSettings } from '@rotp/features';
 import { BUNDLE_FIXES } from '@rotp/features';
 import { offscreenEnemyMode } from '../settings';
 import { rendersExtended } from '../ratio-capability';
+import { LANG_GRAPHICS_KEYS } from '../live-settings-feature-words.constants';
 import { GAME_CHANGING_FIX_BUNDLE, RAW_FEATURE_KEYS, WIDESCREEN_FIX_BUNDLE } from './live-settings-gate.constants';
 
 const derivedFeatureIds = (s: GameSettings): string[] => {
@@ -10,6 +11,8 @@ const derivedFeatureIds = (s: GameSettings): string[] => {
   if (offscreenEnemyMode(s) === 'idle') ids.push('offscreenAI');
   if (offscreenEnemyMode(s) === 'paused') ids.push('pauseOffscreenAI');
   if (s.titleScreen === 'reimagined') ids.push('titleOverride');
+  if (s.titleScreen === 'original' && s.originalTitle === 'ja') ids.push('jaTitleScreen');
+  if (LANG_GRAPHICS_KEYS.some((key) => s[key] === true)) ids.push('languageScreens');
   if (s.widescreenPlayArea === true) ids.push('widescreenPlayArea');
   return ids;
 };

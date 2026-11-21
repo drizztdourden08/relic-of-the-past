@@ -1,12 +1,13 @@
 /* @layer renderer-app @kind component */
 import { useCallback } from 'react';
+import { msg } from '@drizztdourden08/brock-core/i18n';
 import { useSettings } from '@drizztdourden08/brock-react';
 import type { HeroProps, ScreenMeta } from '@drizztdourden08/brock-react';
 import { useGameSession } from '@app/hooks/useGameSession';
 import type { AppSettings } from '@app/settings.type';
 import { HomeHeroContent } from '@app/views/ProfileHub/sub-components/home-tab/HomeHeroContent';
 
-const meta: ScreenMeta = { title: 'Home', icon: 'house', keywords: ['play', 'start', 'stop', 'reset', 'saves', 'quick save', 'auto save', 'play sessions', 'progress', 'import save'], hero: { size: 'compact' } };
+const meta: ScreenMeta = { title: msg('views-mobile-shell:menu.home'), icon: 'house', keywords: ['play', 'start', 'stop', 'reset', 'saves', 'quick save', 'auto save', 'play sessions', 'progress', 'import save'], hero: { size: 'compact' } };
 
 const GameHome = (props: HeroProps) => {
   const { slots } = props;

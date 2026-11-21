@@ -1,5 +1,5 @@
 /* @layer shared-asset-extraction @kind constants */
-const CURRENT_BAKE_VERSION = 5;
+const CURRENT_BAKE_VERSION = 6;
 
 const STAMP_OFFSET = 48;
 const STAMP_MAGIC = 'RPBK';

@@ -1,0 +1,11 @@
+{
+  "delete.confirm": "削除",
+  "deleteProfile.title": "プロフィールを削除",
+  "deleteProfile.message": "「{name}」を削除しますか？ セーブデータは失われます。この操作は取り消せません。",
+  "deleteProfile.confirm": "プロフィールを削除",
+  "deleteRom.title": "ROMを削除",
+  "deleteRom.message": "「{romFile}」と抽出済みのアセットをすべて削除します。このROMを使うプロフィールも削除されます。この操作は取り消せません。",
+  "deleteRom.confirm": "ROMを削除",
+  "toast.restartNeeded": "一部の変更は、ゲームを再起動すると反映されます",
+  "toast.enhancedFallback": "モダンステータス表示スタイルには16:9以上のワイドな画面が必要なため、スタイルをオリジナルに戻しました"
+}

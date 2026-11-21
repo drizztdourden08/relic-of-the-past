@@ -1,0 +1,8 @@
+{
+  "section.camera.title": "Camera",
+  "camera-lock-to-viewport.label": "Lock Camera to View",
+  "camera-lock-to-viewport.description": "Pins the view to the area boundary, so no black space shows outside it. Off keeps the original camera.",
+  "camera-lock-to-viewport.hint": "Needs Extended Rendering, in Display.",
+  "smooth-transitions.label": "Smooth Transitions",
+  "smooth-transitions.description": "Smooths panning across area seams. Needs Lock Camera to View."
+}

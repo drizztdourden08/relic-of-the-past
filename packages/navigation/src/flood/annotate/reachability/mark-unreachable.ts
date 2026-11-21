@@ -10,7 +10,7 @@ const markUnreachable = (items: ScreenAnnotation[], reachable?: readonly ReachSt
     if (item.state === 'done' || SCREEN_WIDE.has(item.kind)) continue;
     if (reachableNear(reachable, item.tile.row, item.tile.col)) continue;
     if (PHYSICAL.has(item.kind)) {
-      item.detail = item.detail ? `${item.detail} · unreachable` : 'unreachable';
+      item.unreachable = true;
       continue;
     }
     item.state = 'blocked';

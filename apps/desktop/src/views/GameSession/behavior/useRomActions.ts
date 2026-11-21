@@ -5,6 +5,7 @@ import * as romsStore from '@app/storage/roms-store';
 import * as assetsStore from '@app/storage/assets-store';
 import type { RomActionsDeps } from './useProfileManagement.type';
 import { useDeleteRom } from './useDeleteRom';
+import { failureLine } from '@app/storage/localized-error';
 
 const useRomActions = (deps: RomActionsDeps) => {
   const { refreshProfilesAndRoms } = deps;
@@ -17,7 +18,7 @@ const useRomActions = (deps: RomActionsDeps) => {
 
     setImportingRom(true);
     if (!result.success) {
-      log.error(`Failed to import ROM: ${result.error}`);
+      log.error(`Failed to import ROM: ${failureLine(result.error ?? '')}`);
       setImportingRom(false);
       return;
     }
@@ -30,7 +31,7 @@ const useRomActions = (deps: RomActionsDeps) => {
 
     const extractResult = await assetsStore.extractAssets(result.romFile);
     if (!extractResult.success) {
-      log.error(`Extraction failed: ${extractResult.error}`);
+      log.error(`Extraction failed: ${failureLine(extractResult.error ?? '')}`);
       setExtractionStates((prev) => ({ ...prev, [result.romFile]: 'failed' }));
     } else {
       setExtractionStates((prev) => ({ ...prev, [result.romFile]: 'ready' }));
@@ -44,7 +45,7 @@ const useRomActions = (deps: RomActionsDeps) => {
     setExtractionStates((prev) => ({ ...prev, [romFile]: 'extracting' }));
     const result = await assetsStore.extractAssets(romFile);
     if (!result.success) {
-      log.error(`Extraction failed: ${result.error}`);
+      log.error(`Extraction failed: ${failureLine(result.error ?? '')}`);
       setExtractionStates((prev) => ({ ...prev, [romFile]: 'failed' }));
     } else {
       setExtractionStates((prev) => ({ ...prev, [romFile]: 'ready' }));

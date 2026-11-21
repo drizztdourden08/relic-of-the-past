@@ -1,0 +1,37 @@
+/* @layer shared-asset-extraction @kind constants */
+const FONT_DATA_ADDR = 0x8e8000;
+
+const FONT_MASK_ADDR = 0x8eb844;
+
+const GLYPH_COUNT = 512;
+
+const MASK_BYTES = 5;
+
+const MASK_BITS = 40;
+
+const GLYPH_BYTES = 44;
+
+const GLYPH_DATA_OFFSET = 4;
+
+const HALF_BYTES = 22;
+
+const TILE_SIZE = 8;
+
+const TILE_BYTES = 16;
+
+const COLUMN_PAIRS_OFFSET = 16;
+
+const GLYPH_WIDTH = 11;
+
+const GLYPH_HEIGHT = 16;
+
+const GLYPH_PIXELS = GLYPH_WIDTH * GLYPH_HEIGHT;
+
+const SHEET_GLYPH_BYTES = 4 * TILE_BYTES;
+
+const TILE_ORIGINS: readonly (readonly [number, number])[] = [[0, 0], [0, TILE_SIZE], [TILE_SIZE, 0], [TILE_SIZE, TILE_SIZE]];
+
+export {
+  COLUMN_PAIRS_OFFSET, FONT_DATA_ADDR, FONT_MASK_ADDR, GLYPH_BYTES, GLYPH_COUNT, GLYPH_DATA_OFFSET, GLYPH_HEIGHT,
+  GLYPH_PIXELS, GLYPH_WIDTH, HALF_BYTES, MASK_BITS, MASK_BYTES, SHEET_GLYPH_BYTES, TILE_BYTES, TILE_ORIGINS, TILE_SIZE,
+};

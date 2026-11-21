@@ -1,0 +1,11 @@
+{
+  "delete.confirm": "Excluir",
+  "deleteProfile.title": "Excluir perfil",
+  "deleteProfile.message": "Excluir \"{name}\"? Os dados salvos dele serão perdidos. Isso não pode ser desfeito.",
+  "deleteProfile.confirm": "Excluir perfil",
+  "deleteRom.title": "Excluir ROM",
+  "deleteRom.message": "Isso removerá \"{romFile}\" e todos os seus recursos extraídos. Os perfis que usam esta ROM também serão excluídos. Isso não pode ser desfeito.",
+  "deleteRom.confirm": "Excluir ROM",
+  "toast.restartNeeded": "Algumas alterações requerem reiniciar o jogo para ter efeito",
+  "toast.enhancedFallback": "O estilo de HUD Moderno requer um ecrã 16:9 ou mais largo, por isso o estilo voltou a Original"
+}

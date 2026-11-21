@@ -1,4 +1,5 @@
-/* @layer renderer-app @kind data */
+/* @layer renderer-app @kind constants */
+import { msg } from '@drizztdourden08/brock-core/i18n';
 import type { SchemaConfig } from '@drizztdourden08/tessera/data';
 import type { Confidence, Recommendation } from '@rotp/navigation';
 import type { ProposalDraft } from './recommendations.type';
@@ -28,8 +29,8 @@ const RECOMMENDATION_SCHEMA: SchemaConfig = {
 
 const NO_DRAFT: ProposalDraft = { forId: null, record: null };
 
-const FINDING_NO_TARGET = 'This finding names no record to change.';
-const WRITE_FAILED = 'The write failed.';
+const FINDING_NO_TARGET = msg('views-data-inspector:err.findingNoTarget');
+const WRITE_FAILED = msg('views-data-inspector:err.writeFailed');
 
 export {
   CONFIDENCE_RANK, FINDING_NO_TARGET, NO_DRAFT, NO_LINES, NO_RECOMMENDATIONS, RECOMMENDATION_GROUP_BY,

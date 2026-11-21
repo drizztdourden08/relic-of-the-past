@@ -1,5 +1,6 @@
 /* @layer renderer-widgets @kind logic */
 import type { DetectedConnection } from '../../views/NavigationWidget/NavigationWidget.type';
+import { screenName } from '@app/game/record-text';
 import { hexLabel } from './hex-label';
 import { overworldScreen } from './overworld-screen';
 
@@ -10,7 +11,7 @@ const entranceConnection = (index: number, isExit: boolean): DetectedConnection 
     targetRoomOrScreen: index,
     toScreenId: screen?.id ?? null,
     isExit,
-    label: screen ? screen.name : hexLabel('OW', index),
+    label: screen ? screenName(screen) : hexLabel('OW', index),
   };
 };
 

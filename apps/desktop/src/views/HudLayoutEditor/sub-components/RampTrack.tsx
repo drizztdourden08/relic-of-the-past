@@ -5,8 +5,10 @@ import { swatchOf } from '@app/hud-layout-editing/appearance-summary';
 import type { PointerEvent as ReactPointerEvent } from 'react';
 import type { RampTrackProps } from './RampTrack.type';
 import { clamp01, round2 } from '@app/hud-layout-editing/keyframe-track';
+import { useT } from '@drizztdourden08/brock-react';
 
 const RampTrack = (props: RampTrackProps) => {
+  const t = useT();
   const { stops, kind, index, onSelect, onCommit, onAddAt, onNudge } = props;
   const rampRef = useRef<HTMLDivElement>(null);
 
@@ -44,7 +46,7 @@ const RampTrack = (props: RampTrackProps) => {
         <Pressable
           key={i}
           className="hud-ramp__stop"
-          aria-label={`Stop ${i + 1} at ${s.at}`}
+          aria-label={t('hud-editor:gradient-ramp.stop-at', { n: i + 1, at: s.at })}
           aria-pressed={i === index}
           style={{ left: `${s.at * 100}%`, background: s.color }}
           onPointerDown={(event) => drag(event, i)}

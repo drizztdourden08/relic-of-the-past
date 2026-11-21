@@ -1,4 +1,6 @@
 /* @layer shared-game @kind logic */
+import { msg } from '@drizztdourden08/brock-core/i18n';
+import { optionText } from '../../options/option-text';
 import { familyById } from '../../capacity/capacity-family';
 import { familyOfOptionKey } from '../../capacity/capacity-option-keys';
 import { capacityProfileFromSnapshot } from '../../capacity/capacity-profile-from-snapshot';
@@ -14,7 +16,9 @@ const familyImpactOf = (key: string, snapshot: RandomizerOptionsSnapshot): PoolI
   return {
     locations: plan.spotIsCheck ? 1 : 0,
     items: count,
-    note: count > 0 ? `${count} upgrade${count === 1 ? '' : 's'}, replacing filler` : 'vanilla',
+    note: optionText(count > 0
+      ? msg('randomizer-world:pool.upgrades', { count })
+      : msg('randomizer-world:pool.vanilla')),
   };
 };
 

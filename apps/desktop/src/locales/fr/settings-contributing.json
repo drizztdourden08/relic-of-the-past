@@ -1,0 +1,18 @@
+{
+  "section.developer-instrumentation.title": "Instrumentation",
+  "developer-tools-enabled.label": "Mode développeur",
+  "developer-tools-enabled.description": "Active les outils de développement.",
+  "experimental-features-enabled.label": "Fonctions expérimentales",
+  "experimental-features-enabled.description": "Active les fonctions inachevées : l'éditeur de disposition du HUD, le HUD et les commandes modernes, les réglages GBA et le jeu en ligne Archipelago. Les désactiver désactive aussi le HUD moderne et le donjon supplémentaire.",
+  "experimental-features-enabled.hint": "Nécessite le mode développeur.",
+  "dev-navigation-data.label": "Données de navigation",
+  "dev-navigation-data.description": "Données de salles, de grille et de sprites pour le widget Position et navigation, le remplissage et le simulateur.",
+  "dev-navigation-data.hint": "Nécessite le mode développeur.",
+  "section.developer-sanctuary.title": "Compte Sanctuary",
+  "sanctuary-account.label": "Compte Sanctuary",
+  "sanctuary-account.description": "Connectez-vous pour que les rapports de bug portent votre nom et apparaissent sur le hub.",
+  "section.developer-debug-reporting.title": "Rapports de débogage",
+  "allow-debug-logging.label": "Autoriser le suivi des journaux de débogage",
+  "allow-debug-logging.description": "Conserve des journaux détaillés et ajoute un bouton de capture dans la barre de titre (Tab) et un bouton flottant pour envoyer un rapport de débogage.",
+  "screen.title": "Contribuer"
+}

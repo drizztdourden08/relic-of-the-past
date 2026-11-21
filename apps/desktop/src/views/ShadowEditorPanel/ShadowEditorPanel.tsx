@@ -1,4 +1,5 @@
 /* @layer renderer-components @kind component */
+import { useT } from '@drizztdourden08/brock-react';
 import { useCallback } from 'react';
 import { Box, SegmentedControl } from '@drizztdourden08/tessera/primitives';
 import { useEnsureShadowProject, useShadowScreenId } from '@app/shadow-editor';
@@ -10,6 +11,7 @@ import { TOOL_OPTIONS } from './ShadowEditorPanel.constants';
 import './ShadowEditorPanel.css';
 
 const ShadowEditorPanel = () => {
+  const t = useT();
   const {
     activeTool,
     setActiveTool,
@@ -38,7 +40,7 @@ const ShadowEditorPanel = () => {
   return (
     <Box className="shadow-editor-panel">
       <Box className="shadow-editor-panel__toolbar">
-        <SegmentedControl value={activeTool} options={TOOL_OPTIONS} onChange={handleToolChange} />
+        <SegmentedControl value={activeTool} options={TOOL_OPTIONS.map((o) => ({ value: o.value, label: t(o.key) }))} onChange={handleToolChange} />
       </Box>
 
       <ShadowToolOptions activeTool={activeTool} hasSelection={hasSelection} />
@@ -54,7 +56,7 @@ const ShadowEditorPanel = () => {
       </Box>
 
       <Box className="shadow-editor-panel__footer">
-        Screen #{screenId} · {screenData.heightmap.length} shapes · {screenData.lights.length} lights
+        {t('views-shadow-editor:footer', { screen: screenId, shapes: screenData.heightmap.length, lights: screenData.lights.length })}
       </Box>
     </Box>
   );

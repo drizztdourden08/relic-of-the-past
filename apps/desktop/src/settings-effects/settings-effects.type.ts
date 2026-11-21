@@ -17,6 +17,7 @@ interface SettingsEffectDeps extends ParentCallbacks {
   isGameRunning: boolean;
   changedKeys: (keyof GameSettings)[];
   restartToastShownRef: React.RefObject<boolean>;
+  restartMessage: string;
   setFullscreen: (on: boolean) => void;
 }
 

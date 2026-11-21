@@ -110,6 +110,7 @@ export { filterChecks } from './logic/queries/check-grouping/filter-checks';
 export { isListedRow } from './logic/queries/check-grouping/is-listed-row';
 export { smallKeyDoorsOf } from './logic/queries/check-grouping/small-key-doors-of';
 export { getGroupValue } from './logic/queries/check-grouping/get-group-value';
+export { groupValueLabel } from './logic/queries/check-grouping/group-value-label';
 export { matchesFacet } from './logic/queries/check-grouping/matches-facet';
 export { chestSwapOf } from './logic/queries/chest-stand-ins/chest-swap-of';
 export { liveChestItems } from './logic/queries/chest-stand-ins/live-chest-items';

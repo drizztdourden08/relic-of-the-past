@@ -7,8 +7,11 @@ import { RatioPicker } from './RatioPicker';
 import { TOOLBAR_ICONS, buildToolbarGroups, presetItems, subtreePresetItems, useToolbarMenu } from '@app/hud-layout-editing/toolbar-menus';
 import { useHudEditorViewStore } from '@app/stores/hud-editor-view-store';
 import type { EditorToolbarProps } from './EditorToolbar.type';
+import { useT, useText } from '@drizztdourden08/brock-react';
 
 const EditorToolbar = (props: EditorToolbarProps) => {
+  const t = useT();
+  const text = useText();
   const {
     insert, layouts, draftId, onStartFrom, slotNumbers, glyphPacks,
     ratio, onRatioChange, ground, onGroundChange, targetLabel,
@@ -16,12 +19,12 @@ const EditorToolbar = (props: EditorToolbarProps) => {
   const { bar, openKey, close, toggle } = useToolbarMenu();
   const snapping = useHudEditorViewStore((s) => s.snappingEnabled);
   const toggleSnapping = useHudEditorViewStore((s) => s.toggleSnapping);
-  const groups = buildToolbarGroups({ insert });
+  const groups = buildToolbarGroups({ insert, t });
   const groupItems = (key: string) => groups.find((group) => group.key === key)?.items ?? [];
 
   return (
-    <Box ref={bar} className="hud-toolbar" role="toolbar" aria-label="Insert">
-      <ToolbarMenu icon={TOOLBAR_ICONS.container} label="Container" items={groupItems('container')}
+    <Box ref={bar} className="hud-toolbar" role="toolbar" aria-label={t('hud-editor:editor-toolbar.aria.insert')}>
+      <ToolbarMenu icon={TOOLBAR_ICONS.container} label={t('hud-editor:editor-toolbar.label.container')} items={groupItems('container')}
         open={openKey === 'container'} onToggle={() => toggle('container')} onClose={close} />
 
       <Box className="hud-toolbar__sep" />
@@ -34,19 +37,19 @@ const EditorToolbar = (props: EditorToolbarProps) => {
         onToggle={toggle}
         onClose={close}
       />
-      <ToolbarMenu icon={TOOLBAR_ICONS.spacer} label="Spacer" items={groupItems('spacer')}
+      <ToolbarMenu icon={TOOLBAR_ICONS.spacer} label={t('hud-editor:editor-toolbar.label.spacer')} items={groupItems('spacer')}
         open={openKey === 'spacer'} onToggle={() => toggle('spacer')} onClose={close} />
 
       <Box className="hud-toolbar__sep" />
 
-      <ToolbarMenu icon={TOOLBAR_ICONS.dynamics} label="Dynamics" items={groupItems('dynamics')}
+      <ToolbarMenu icon={TOOLBAR_ICONS.dynamics} label={t('hud-editor:editor-toolbar.label.dynamics')} items={groupItems('dynamics')}
         open={openKey === 'dynamics'} onToggle={() => toggle('dynamics')} onClose={close} />
 
       <Box className="hud-toolbar__sep" />
 
       <ToolbarMenu
-        icon={TOOLBAR_ICONS.preset} label="Preset"
-        items={[...subtreePresetItems({ insert }), { separator: true }, ...presetItems(layouts, draftId, onStartFrom)]}
+        icon={TOOLBAR_ICONS.preset} label={t('hud-editor:editor-toolbar.label.preset')}
+        items={[...subtreePresetItems({ insert, t }, text), { separator: true }, ...presetItems(layouts, draftId, onStartFrom, t)]}
         open={openKey === 'preset'} onToggle={() => toggle('preset')} onClose={close}
       />
 
@@ -55,15 +58,15 @@ const EditorToolbar = (props: EditorToolbarProps) => {
       <IconButton
         variant="ghost"
         active={snapping}
-        label="Snapping"
-        title="Snap resize to the 8px game grid and to sibling edges, with an alignment guide"
+        label={t('hud-editor:editor-toolbar.label.snapping')}
+        title={t('hud-editor:editor-toolbar.title.snap-resize-to-the-8px')}
         onClick={toggleSnapping}
       >
         <Icon icon={TOOLBAR_ICONS.snapping} size={16} aria-hidden />
       </IconButton>
 
-      <Text className="hud-toolbar__target" title="Where the next insert lands">
-        into {targetLabel}
+      <Text className="hud-toolbar__target" title={t('hud-editor:editor-toolbar.title.where-the-next-insert-lands')}>
+        {t('hud-editor:editor-toolbar.text.into', { target: targetLabel })}
       </Text>
 
       <Box className="hud-toolbar__spacer" />

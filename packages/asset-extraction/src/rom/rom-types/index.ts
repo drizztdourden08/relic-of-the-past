@@ -1,2 +1,2 @@
 /* @layer shared-asset-extraction @kind barrel */
-export type { RomData, RomHashTable, RomIdentEntry, RomLanguage } from './rom-types.type';
+export type { RomData, RomHashTable, RomIdentEntry, RomLanguage, RomRevision } from './rom-types.type';

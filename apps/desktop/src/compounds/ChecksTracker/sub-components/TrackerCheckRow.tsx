@@ -1,5 +1,6 @@
 /* @layer renderer-components @kind component */
 import { Box, Text } from '@drizztdourden08/tessera/primitives';
+import { checkName } from '@app/game/record-text';
 import { displayItemOf } from '../behavior/display-item';
 import type { TrackerCheckRowProps } from '../ChecksTracker.type';
 import { CheckStatusIcon } from './CheckStatusIcon';
@@ -13,7 +14,7 @@ const TrackerCheckRow = (props: TrackerCheckRowProps) => {
   return (
     <Box className={`tracker-check tracker-check--${status}`}>
       <CheckStatusIcon status={status} size={11} />
-      <Text className="tracker-check__name">{check.name}</Text>
+      <Text className="tracker-check__name">{checkName(check)}</Text>
       {detailed && (
         <Text className="tracker-check__item">{name ?? '-'}</Text>
       )}

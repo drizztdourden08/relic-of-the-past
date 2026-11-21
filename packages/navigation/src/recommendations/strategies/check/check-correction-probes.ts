@@ -17,7 +17,7 @@ const currentScreenId = (observations: ScreenObservations): ScreenId | null => o
 
 const kindProbe: FieldProbe<'check'> = {
   path: 'kind',
-  label: 'Kind',
+  label: 'kind',
   source: ROOM_CHESTS_SOURCE,
   confidence: 'certain',
   applies: (observations, record) => chestFor(observations, record) != null,
@@ -26,7 +26,7 @@ const kindProbe: FieldProbe<'check'> = {
 
 const screenIdProbe: FieldProbe<'check'> = {
   path: 'screenId',
-  label: 'Screen',
+  label: 'screen',
   source: ROOM_CHESTS_SOURCE,
   confidence: 'certain',
   applies: (observations, record) => {

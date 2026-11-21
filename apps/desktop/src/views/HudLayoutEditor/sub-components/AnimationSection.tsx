@@ -7,6 +7,7 @@ import { MotionTransport } from './MotionTransport';
 import type { HudAnimation } from '@rotp/hud';
 import { BLANK } from './AnimationSection.constants';
 import type { AnimationSectionProps } from './AnimationSection.type';
+import { useT } from '@drizztdourden08/brock-react';
 
 const msOf = (animation: HudAnimation, scope: Readonly<Record<string, number>>): { delay: number; duration: number } => ({
   delay: animation.delay === undefined ? 0 : resolveValue(animation.delay, scope),
@@ -14,6 +15,7 @@ const msOf = (animation: HudAnimation, scope: Readonly<Record<string, number>>):
 });
 
 const AnimationSection = (props: AnimationSectionProps) => {
+  const t = useT();
   const { node, onPatch, scope, insideRepeat, warnings, openIndex, onOpen } = props;
   const animations = node.animation ?? [];
   const preview = useMotionPreview();
@@ -53,7 +55,7 @@ const AnimationSection = (props: AnimationSectionProps) => {
         );
       })}
       <Button variant="ghost" size="sm" onClick={() => { onPatch({ animation: [...animations, BLANK] }); onOpen(animations.length); }}>
-        + add animation
+        {t('hud-editor:animation-section.text.add-animation')}
       </Button>
     </Box>
   );

@@ -1,0 +1,11 @@
+{
+  "install.hint": "Zainstaluj {label} i upewnij się, że jest w PATH.",
+  "install.unsupported": "{label} nie ma pliku do pobrania dla tego systemu",
+  "install.title": "Instalowanie {label}",
+  "install.step.download": "Pobierz",
+  "install.step.verify": "Sprawdź",
+  "install.step.extract": "Rozpakuj",
+  "install.downloading": "Pobieranie {label}",
+  "install.checking": "Sprawdzanie sumy kontrolnej",
+  "install.unpacking": "Rozpakowywanie {label}"
+}

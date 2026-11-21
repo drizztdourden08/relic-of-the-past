@@ -1,0 +1,11 @@
+{
+  "title": "Inspelningar att ta med",
+  "showSent": "Visa skickade",
+  "empty.new": "Inga nya inspelningar. Visa skickade för att se tidigare.",
+  "empty.all": "Inga inspelningar än.",
+  "sent": "Skickad",
+  "include": "Ta med inspelningen från {name}",
+  "github.label": "Öppna ett GitHub-ärende",
+  "github.opened": "Ett förifyllt GitHub-ärende öppnades. Logga in på Sanctuary för att skicka rapporter från appen med dina sparfiler bifogade.",
+  "github.noRepo": "Logga in på Sanctuary för att skicka en rapport."
+}

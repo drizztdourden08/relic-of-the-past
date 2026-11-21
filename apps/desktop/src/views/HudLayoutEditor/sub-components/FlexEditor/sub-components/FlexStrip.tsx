@@ -1,13 +1,16 @@
 /* @layer renderer-components @kind component */
 import { Box, Text } from '@drizztdourden08/tessera/primitives';
 import { weightsOf } from '../behavior/weights-of';
+import { nodeName } from '@app/hud-layout-editing/node-name';
 import './FlexStrip.css';
 import type { CSSProperties } from 'react';
 import type { FlexStripProps } from './FlexStrip.type';
+import { useT } from '@drizztdourden08/brock-react';
 
 const idOf = (index: number): string => `hud-flex-cell-${index}`;
 
 const FlexStrip = (props: FlexStripProps) => {
+  const t = useT();
   const { cells, direction, wrap, cursor, label, onCellDown, onKeyDown } = props;
   const weights = weightsOf(cells);
 
@@ -24,7 +27,7 @@ const FlexStrip = (props: FlexStripProps) => {
       onKeyDown={onKeyDown}
     >
       {cells.length === 0 && (
-        <Text className="hud-flex-strip__empty">no children yet</Text>
+        <Text className="hud-flex-strip__empty">{t('hud-editor:flex-strip.text.no-children-yet')}</Text>
       )}
       {cells.map((cell, index) => (
         <Box
@@ -36,11 +39,11 @@ const FlexStrip = (props: FlexStripProps) => {
           data-index={index}
           data-state={cell.selected ? 'selected' : 'idle'}
           data-cursor={cursor === index ? 'true' : undefined}
-          title={`${cell.id} is item ${index + 1}`}
+          title={t('hud-editor:flex.item-title', { id: nodeName(cell.id, t), n: index + 1 })}
           style={{ '--hud-flex-weight': weights[index] } as CSSProperties}
           onPointerDown={(event) => onCellDown(index, event)}
         >
-          <Text className="hud-cell-label hud-flex-strip__label">{cell.id}</Text>
+          <Text className="hud-cell-label hud-flex-strip__label">{nodeName(cell.id, t)}</Text>
         </Box>
       ))}
     </Box>

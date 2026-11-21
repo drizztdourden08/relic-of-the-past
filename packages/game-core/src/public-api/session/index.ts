@@ -10,6 +10,10 @@ export { lifecycleState } from '../../lifecycle/lifecycle-state';
 export type { AutoSaveConfig } from '../../lifecycle/lifecycle.type';
 export { setAutoSaveConfig } from '../../lifecycle/set-auto-save-config';
 export { setLinkSpriteData } from '../../lifecycle/set-link-sprite-data';
+export { setLanguageScreens } from '../../lifecycle/set-language-screens';
+export { pushPendingLanguageScreens } from '../../lifecycle/push-pending-language-screens';
+export { setJapaneseGraphics } from '../../lifecycle/set-japanese-graphics';
+export { pushPendingJapaneseGraphics } from '../../lifecycle/push-pending-japanese-graphics';
 export { numArgs } from '../../num-args';
 export { previewCoreState } from '../../preview-core/preview-core-state';
 export { previewModuleNow } from '../../preview-core/preview-module-now';
@@ -18,6 +22,7 @@ export { ARRIVAL_SLOTS, releaseSlot, takeSlot } from '../../session-dialogue/arr
 export { toDialogueText } from '../../session-dialogue/dialogue-text';
 export { sessionCharset } from '../../session-dialogue/extra-glyphs';
 export { compressMarkedStrings } from '../../session-dialogue/highlight-bytes';
+export { loadBakedLetters } from '../../session-dialogue/letter-bank';
 export { baseChunksOf } from '../../session-dialogue/session-dialogue/base-chunks-of';
 export { clearSessionDialogue } from '../../session-dialogue/session-dialogue/clear-session-dialogue';
 export { encodeLines } from '../../session-dialogue/session-dialogue/encode-lines';

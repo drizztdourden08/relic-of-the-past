@@ -1,6 +1,6 @@
 /* @layer renderer-appshell @kind hook */
 import { useEffect, useRef } from 'react';
-import { usePlatform, useProfilesStore, useSettingsStore } from '@drizztdourden08/brock-react';
+import { usePlatform, useProfilesStore, useSettingsStore, useT } from '@drizztdourden08/brock-react';
 import { toast } from '@drizztdourden08/tessera/composites';
 import type { GameSettings } from '@rotp/features';
 import { pushLiveSettings, LIVE_SETTINGS } from '@app/game';
@@ -25,6 +25,7 @@ const announce = (patch: Partial<GameSettings>, isGameRunning: boolean): void =>
 
 const useSettingsBridge = (deps: SettingsBridgeDeps): void => {
   const { isGameRunning } = deps;
+  const t = useT();
   const store = useSettingsStore<AppSettings>();
   const hydrated = store((s) => s.hydrated);
   const profileId = useProfilesStore((s) => s.active?.id ?? null);
@@ -55,9 +56,10 @@ const useSettingsBridge = (deps: SettingsBridgeDeps): void => {
       isGameRunning: running,
       changedKeys: Object.keys(patch) as (keyof GameSettings)[],
       restartToastShownRef,
+      restartMessage: t('views-game-session:toast.restartNeeded'),
       setFullscreen: win.setFullscreen,
     });
-  }), [store, win]);
+  }), [store, win, t]);
 
   useEffect(() => {
     if (!wasRunningRef.current && isGameRunning) pushLiveSettings(store.getState().settings);
@@ -68,7 +70,7 @@ const useSettingsBridge = (deps: SettingsBridgeDeps): void => {
     wasRunningRef.current = isGameRunning;
   }, [isGameRunning, store]);
 
-  useSettingsWindowEvents(store);
+  useSettingsWindowEvents(store, t('views-game-session:toast.enhancedFallback'));
 };
 
 export { useSettingsBridge };

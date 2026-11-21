@@ -1,11 +1,12 @@
 /* @layer renderer-widgets @kind logic */
+import type { I18n } from '@drizztdourden08/brock-core/i18n';
 import type { ScreenRecord } from '@rotp/game-data';
+import { screenName } from '@app/game/record-text';
 
-const hexName = (prefix: string, value: number, width: number): string =>
-  `${prefix} 0x${value.toString(16).toUpperCase().padStart(width, '0')}`;
+const hexId = (value: number, width: number): string => value.toString(16).toUpperCase().padStart(width, '0');
 
 const screenNameOf = (
-  detected: ScreenRecord | null, isIndoors: boolean, roomIndex: number, overworldScreenIndex: number,
-): string => detected?.name ?? (isIndoors ? hexName('Room', roomIndex, 4) : hexName('Screen', overworldScreenIndex, 2));
+  t: I18n['t'], detected: ScreenRecord | null, at: { isIndoors: boolean; roomIndex: number; overworldScreenIndex: number },
+): string => (detected ? screenName(detected) : undefined) ?? (at.isIndoors ? t('views-navigation:name.room', { id: hexId(at.roomIndex, 4) }) : t('views-navigation:name.screen', { id: hexId(at.overworldScreenIndex, 2) }));
 
 export { screenNameOf };

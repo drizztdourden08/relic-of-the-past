@@ -1,14 +1,14 @@
-/* @layer shared @kind data */
+/* @layer shared @kind constants */
+import { msg } from '@drizztdourden08/brock-core/i18n';
 import type { FeatureDef } from '../feature.type';
 
 const BUG_FIXES_FEATURES: FeatureDef[] = [
   {
     id: 'miscBugFixes',
-    label: 'Misc bug fixes',
+    label: msg('features:feature.miscBugFixes.label'),
     description:
       'Master switch for the miscellaneous bug fixes. Each fix has its own features1/2 gate, and a per-fix toggle overrides this one.',
-    userMessage:
-      'Turns on every miscellaneous bug fix at once. Individual toggles override it.',
+    userMessage: msg('features:feature.miscBugFixes.message'),
     group: 'Bug fixes',
     kind: 'features0-bit',
     origin: 'snesrev',
@@ -21,11 +21,10 @@ const BUG_FIXES_FEATURES: FeatureDef[] = [
   },
   {
     id: 'gameChangingBugFixes',
-    label: 'Gameplay-altering bug fixes',
+    label: msg('features:feature.gameChangingBugFixes.label'),
     description:
       'Master switch for the bug fixes that change gameplay behavior. Each fix has its own features1/2 gate, and a per-fix toggle overrides this one.',
-    userMessage:
-      'Turns on every bug fix that changes how the game plays. Individual toggles override it.',
+    userMessage: msg('features:feature.gameChangingBugFixes.message'),
     group: 'Bug fixes',
     kind: 'features0-bit',
     origin: 'snesrev',

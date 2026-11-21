@@ -505,11 +505,6 @@ Clearing removes every occurrence, so the engine default applies.
 Names the consequence, because `too long` sounds like the text will be trimmed or wrapped.
 It returns an empty string when every row fits.
 
-## apps/desktop/src/language-editor/sub-components/SetCreateForm.tsx
-
-Starts a new set from a base language or as a copy of an existing set.
-It stays collapsed until asked for, so the set list remains the first thing in the pane.
-
 ## apps/desktop/src/language-editor/sub-components/StaleGameNotice.css
 
 A warning strip, not a card, carried by the warning tone over a light fill.

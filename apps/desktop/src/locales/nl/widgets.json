@@ -1,0 +1,13 @@
+{
+  "cheats.label": "Cheats",
+  "dataset.label": "Livegegevensinspecteur",
+  "debug.label": "Spelstatus",
+  "music.label": "Muziekdebugger",
+  "navigation.label": "Locatie en navigatie",
+  "shadow.drawing.label": "Schaduwtekening",
+  "shadow.editor.kit.label": "Schaduweditor",
+  "shadow.editor.kit.requires": "Start een spel om de Schaduweditor te gebruiken.",
+  "shadow.editor.label": "Schaduweditor",
+  "shadow.elements.label": "Schaduwelementen",
+  "simulator.label": "Simulator"
+}

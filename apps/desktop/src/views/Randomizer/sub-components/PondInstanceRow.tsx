@@ -1,5 +1,6 @@
 /* @layer renderer-components @kind component */
 import { useCallback, useMemo, useState } from 'react';
+import { useText } from '@drizztdourden08/brock-react';
 import { Text } from '@drizztdourden08/tessera/primitives';
 import { PondImportControl } from '@app/compounds/PondImportControl';
 import { WishingPondRow } from '@app/compounds/WishingPondRow';
@@ -14,11 +15,12 @@ const PondInstanceRow = (props: PondInstanceRowProps) => {
     pond, setting, ceilings, demands = NO_POND_DEMANDS, sources = NO_SOURCES,
     readOnly = false, readout = false, onChange, onImport,
   } = props;
+  const text = useText();
   const [source, setSource] = useState('');
   const walletTop = ceilings.rupees;
   const held = useMemo(() => holdPondToWallet(setting, walletTop, pond), [setting, walletTop, pond]);
   const model = useMemo(
-    () => pondRowModelOf(held.setting, ceilings, pond, demands), [held, ceilings, pond, demands],
+    () => pondRowModelOf(held.setting, { ceilings, pond, demands }, text), [held, ceilings, pond, demands, text],
   );
 
   const handleHeldChange = useCallback(

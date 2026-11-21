@@ -1,22 +1,26 @@
 /* @layer renderer-components @kind component */
+import { useT, useText } from '@drizztdourden08/brock-react';
 import { Box, Button, Text } from '@drizztdourden08/tessera/primitives';
+import type { I18n } from '@drizztdourden08/brock-core/i18n';
 import type { FfmpegInstallStepProps } from './FfmpegInstallStep.type';
 import './FfmpegInstallStep.css';
 
-const installLabel = (installing: boolean, error: string | null): string => {
-  if (installing) return 'Fetching...';
-  return error === null ? 'Get the tool' : 'Try the download again';
+const installLabel = (installing: boolean, error: string | null, t: I18n['t']): string => {
+  if (installing) return t('compounds:ffmpeg-install-step.fetching');
+  return error === null ? t('compounds:ffmpeg-install-step.get') : t('compounds:ffmpeg-install-step.retry');
 };
 
 const FfmpegInstallStep = (props: FfmpegInstallStepProps) => {
+  const t = useT();
+  const text = useText();
   const { state, installing, error, onInstall } = props;
 
-  if (state === null) return <Text className="ffmpeg-install-step__note">Checking for the tool...</Text>;
+  if (state === null) return <Text className="ffmpeg-install-step__note">{t('compounds:ffmpeg-install-step.checking')}</Text>;
 
   if (state.status === 'unavailable') {
     return (
       <Box className="ffmpeg-install-step">
-        <Text className="ffmpeg-install-step__note">{state.hint}</Text>
+        <Text className="ffmpeg-install-step__note">{state.hint === null ? null : text(state.hint)}</Text>
       </Box>
     );
   }
@@ -24,17 +28,16 @@ const FfmpegInstallStep = (props: FfmpegInstallStepProps) => {
   return (
     <Box className="ffmpeg-install-step">
       <Text className="ffmpeg-install-step__note">
-        This needs ffmpeg, which is not shipped with the app.
+        {t('compounds:ffmpeg-install-step.this-needs-ffmpeg-which-is')}
       </Text>
       <Text className="ffmpeg-install-step__note ffmpeg-install-step__note--faint">
-        A one-time download of about 140 MB, checked against its published checksum and kept in the
-        app&apos;s data folder.
+        {t('compounds:ffmpeg-install-step.download-note')}
       </Text>
       {error !== null && (
         <Text className="ffmpeg-install-step__note ffmpeg-install-step__note--bad">{error}</Text>
       )}
       <Button variant="primary" disabled={installing} onClick={onInstall}>
-        {installLabel(installing, error)}
+        {installLabel(installing, error, t)}
       </Button>
     </Box>
   );

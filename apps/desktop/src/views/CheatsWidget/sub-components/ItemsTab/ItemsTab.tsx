@@ -1,4 +1,5 @@
 /* @layer renderer-widgets @kind component */
+import { useT, useText } from '@drizztdourden08/brock-react';
 import { useCallback, useMemo, useState } from 'react';
 import { Box } from '@drizztdourden08/tessera/primitives';
 import { DisabledOverlay } from '@drizztdourden08/tessera/composites';
@@ -6,7 +7,6 @@ import { getSpritesBase } from '@rotp/game-data';
 import { useConsoleScale } from '../../behavior/useConsoleScale';
 import { PointerHintProvider } from '../PointerHintProvider';
 import { useInPlay } from '../../behavior/useInPlay';
-import { IN_PLAY_REASON } from '../../CheatsWidget.constants';
 import type { CheatTabProps } from '../../CheatsWidget.type';
 import { buildSlotSpecs } from './behavior/build-slot-specs';
 import { specBySlot } from './behavior/spec-by-slot';
@@ -24,8 +24,10 @@ import './ItemsTab.css';
 
 const ItemsTab = ({ gates }: CheatTabProps) => {
   const { ref, scale } = useConsoleScale(ITEMS_TILES_WIDE);
+  const t = useT();
+  const text = useText();
   const spritesBase = getSpritesBase();
-  const specs = useMemo(() => specBySlot(buildSlotSpecs()), []);
+  const specs = useMemo(() => specBySlot(buildSlotSpecs(text)), [text]);
   const inPlay = useInPlay();
   const [hovered, setHovered] = useState<number | null>(null);
   const [open, setOpen] = useState<OpenSlot | null>(null);
@@ -38,7 +40,7 @@ const ItemsTab = ({ gates }: CheatTabProps) => {
   return (
     <DisabledOverlay
       active={!gates.allowed.items || !inPlay}
-      message={gates.allowed.items ? IN_PLAY_REASON : gates.reason('items')}
+      message={gates.allowed.items ? t('views-cheats:inPlay.reason') : gates.reason('items')}
       contained
     >
       <Box ref={ref} className="cheats-items">

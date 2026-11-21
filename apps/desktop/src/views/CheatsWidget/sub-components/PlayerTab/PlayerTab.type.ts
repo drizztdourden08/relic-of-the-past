@@ -1,12 +1,13 @@
 /* @layer renderer-widgets @kind types */
 import type { BottleContentsValue, CapacityKind } from '@app/game';
+import type { Message } from '@drizztdourden08/brock-core/i18n';
 import type { ChoiceTone } from '../ChoicePopover.type';
 
 type CounterKind = 'rupees' | 'bombs' | 'arrows' | 'keys';
 
 type CounterSpec = {
   kind: CounterKind;
-  label: string;
+  label: Message;
   iconWidth: 8 | 16;
   digits: number;
   steps: readonly number[];
@@ -17,7 +18,7 @@ type BottleSlot = 0 | 1 | 2 | 3;
 
 type BottleOption = {
   value: BottleContentsValue;
-  label: string;
+  label: Message;
   tone: ChoiceTone;
 };
 

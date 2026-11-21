@@ -1,4 +1,5 @@
 /* @layer renderer-widgets @kind component */
+import { useT, useText } from '@drizztdourden08/brock-react';
 import { Box, Button } from '@drizztdourden08/tessera/primitives';
 import { useGameUIStore } from '../../stores/game-ui-store';
 import { useHudSettingsStore } from '../../stores/hud-settings-store';
@@ -9,9 +10,11 @@ import type { HudPart } from './DebugWidget.type';
 import './DebugWidget.css';
 
 const DebugWidgetContent = () => {
+  const t = useT();
+  const text = useText();
   const state = useGameUIStore();
   const hudSettings = useHudSettingsStore();
-  const sections = buildStateSections(state, getFps());
+  const sections = buildStateSections(t, text, state, getFps());
 
   const parts = hudSettings.enhancedParts;
   const mainOn = parts.includes('main');
@@ -26,10 +29,10 @@ const DebugWidgetContent = () => {
     <Box className="game-state">
       <Box className="game-state__toolbar">
         <Button size="sm" variant={mainOn ? 'primary' : 'tertiary'} onClick={() => toggle('main', mainOn)}>
-          Main HUD: {mainOn ? 'Enhanced' : 'Original'}
+          {mainOn ? t('views-debug:toolbar.main.enhanced') : t('views-debug:toolbar.main.original')}
         </Button>
         <Button size="sm" variant={pauseOn ? 'primary' : 'tertiary'} onClick={() => toggle('pause', pauseOn)}>
-          Pause: {pauseOn ? 'Enhanced' : 'Original'}
+          {pauseOn ? t('views-debug:toolbar.pause.enhanced') : t('views-debug:toolbar.pause.original')}
         </Button>
       </Box>
       {sections.map(s => <StateSection key={s.title} title={s.title} rows={s.rows} />)}

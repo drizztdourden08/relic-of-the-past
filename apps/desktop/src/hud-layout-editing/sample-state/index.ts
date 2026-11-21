@@ -4,8 +4,8 @@ export {
   SAMPLE_COUNTDOWN,
   SAMPLE_HUD,
   SAMPLE_ITEMS,
-  SAMPLE_SLOTS,
   SAMPLE_SWORD_TIER,
 } from './sample-state.constants';
+export { sampleSlots } from './sample-slots';
 export { sampleSlotAssignments } from './sample-slot-assignments';
 export { sampleVitals } from './sample-vitals';

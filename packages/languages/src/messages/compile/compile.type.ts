@@ -1,4 +1,5 @@
 /* @layer shared-game @kind types */
+import type { PackedLangEntry } from '@rotp/asset-extraction';
 import type { LanguageSet } from '../types';
 
 type SetFont = {
@@ -12,4 +13,9 @@ type SetBakeInput = {
   fontWidth: Uint8Array;
 };
 
-export type { SetBakeInput, SetFont };
+type BakedLanguages = {
+  baseLanguage: PackedLangEntry;
+  extraLanguages: PackedLangEntry[];
+};
+
+export type { BakedLanguages, SetBakeInput, SetFont };

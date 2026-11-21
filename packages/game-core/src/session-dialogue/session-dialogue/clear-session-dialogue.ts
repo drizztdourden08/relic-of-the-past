@@ -2,6 +2,7 @@
 import { getModule } from '../../wasm-bridge';
 import { createArrivalRing } from '../arrival-ring';
 import { clearExtraGlyphs } from '../extra-glyphs';
+import { loadBakedLetters } from '../letter-bank';
 import { sessionPool } from './session-pool';
 
 const clearSessionDialogue = (): void => {
@@ -12,6 +13,7 @@ const clearSessionDialogue = (): void => {
   sessionPool.encoded.clear();
   const mod = getModule();
   clearExtraGlyphs(mod);
+  loadBakedLetters(mod);
   if (mod) mod.ccall('WasmClearSessionDialogue', null, [], []);
 };
 

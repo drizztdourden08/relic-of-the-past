@@ -1,11 +1,13 @@
 /* @layer electron-main @kind logic */
 import { isCatalogItemId } from '@drizztdourden08/brock-catalog/main';
+import { msg } from '@drizztdourden08/brock-core/i18n';
 import type { StoreDuplicateResult } from '@app/ipc';
 import type { BasedOn } from '@rotp/game-data';
 import type { InstalledPack } from '@rotp/hub-contracts';
 import { copyRefusal } from '@rotp/hub-contracts';
 import { selectDuplicate } from '@rotp/packs';
 import { recompileAllAssets } from '../assets/compile-rom-assets';
+import { mainText } from '../lib/main-text';
 import { logToRenderer } from '../lib/renderer-log';
 import { installedPacks, isInstalling } from './hookshop';
 import { storeFiles } from './store-files';
@@ -16,12 +18,12 @@ const basedOnOf = (pack: InstalledPack): BasedOn => {
 };
 
 const duplicateInstalled = async (itemId: string): Promise<StoreDuplicateResult> => {
-  if (!isCatalogItemId(itemId)) throw new Error('That is not a Hookshop item.');
+  if (!isCatalogItemId(itemId)) throw new Error(mainText(msg('main:store.notHookshopItem')));
   const pack = (await installedPacks()).find((one) => one.itemId === itemId);
-  if (!pack) throw new Error('That item is not installed.');
-  if (isInstalling(itemId)) throw new Error('Wait for the install to finish first.');
+  if (!pack) throw new Error(mainText(msg('main:store.notInstalled')));
+  if (isInstalling(itemId)) throw new Error(mainText(msg('main:store.installRunning')));
   const refusal = copyRefusal(pack.origin.license);
-  if (refusal) throw new Error(refusal);
+  if (refusal) throw new Error(mainText(refusal));
 
   const { name } = await selectDuplicate(pack.kind)(storeFiles, pack.installedName, basedOnOf(pack));
   if (pack.kind === 'language') await recompileAllAssets();

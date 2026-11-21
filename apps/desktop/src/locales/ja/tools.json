@@ -1,0 +1,11 @@
+{
+  "install.hint": "{label}をインストールし、PATHに通してください。",
+  "install.unsupported": "{label}はこのシステム向けのダウンロードがありません",
+  "install.title": "{label}をインストール中",
+  "install.step.download": "ダウンロード",
+  "install.step.verify": "検証",
+  "install.step.extract": "展開",
+  "install.downloading": "{label}をダウンロード中",
+  "install.checking": "チェックサムを確認中",
+  "install.unpacking": "{label}を展開中"
+}

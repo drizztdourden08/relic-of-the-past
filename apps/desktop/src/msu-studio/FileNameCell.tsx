@@ -1,9 +1,11 @@
 /* @layer renderer-components @kind component */
 import { Box, Text, TextInput } from '@drizztdourden08/tessera/primitives';
+import { useT } from '@drizztdourden08/brock-react';
 import type { FileNameCellProps } from './FileNameCell.type';
 
 const FileNameCell = (props: FileNameCellProps) => {
   const { name, busy, readOnly, rename } = props;
+  const t = useT();
   const { editing, setEditing, draft, setDraft, handleBlur, handleKeyDown } = rename;
 
   if (editing) {
@@ -12,7 +14,7 @@ const FileNameCell = (props: FileNameCellProps) => {
         <TextInput
           type="text"
           value={draft}
-          aria-label={`Name of ${name}`}
+          aria-label={t('msu-studio:files.name.aria', { name })}
           autoFocus
           disabled={busy}
           onChange={(event) => setDraft(event.target.value)}
@@ -25,7 +27,7 @@ const FileNameCell = (props: FileNameCellProps) => {
   return (
     <Text
       className="msu-file-row__name"
-      title={readOnly ? name : `${name} (click to rename)`}
+      title={readOnly ? name : t('msu-studio:files.name.rename-tooltip', { name })}
       onClick={readOnly ? undefined : () => setEditing(true)}
     >
       {name}

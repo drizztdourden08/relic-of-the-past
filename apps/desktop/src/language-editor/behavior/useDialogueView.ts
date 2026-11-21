@@ -1,7 +1,7 @@
 /* @layer renderer-components @kind hook */
 import { useMemo, useState } from 'react';
 import { buildVariableIndex } from '@rotp/languages';
-import { kLanguages } from '@rotp/asset-extraction';
+import { languageConfigOf } from '@rotp/asset-extraction';
 import { useTranslationSearch, useEntryLayout, filterEntriesByHits } from '@rotp/design/packs';
 import type { EntryFilter } from '../sub-components/DialogueTab.type';
 import { NO_ENTRIES } from '../LanguageEditor.constants';
@@ -12,17 +12,17 @@ import { useEntryOpen } from './useEntryOpen';
 import { useSetFont } from './useSetFont';
 
 const useDialogueView = (params: DialogueViewParams) => {
-  const { id, set, issues, variables, terms, setEntryTokens } = params;
+  const { set, issues, variables, terms, setEntryTokens } = params;
   const [query, setQuery] = useState('');
   const [filter, setFilter] = useState<EntryFilter>('all');
 
   const dialogue = set?.dialogue ?? NO_ENTRIES;
   const search = useTranslationSearch(set, query);
-  const { metrics, sheet } = useSetFont(id, set?.base);
+  const { metrics, sheet } = useSetFont(set?.base);
   const layout = useEntryLayout(metrics, terms);
   const { view, draft, selected, open, close, setMode } = useEntryOpen(dialogue, setEntryTokens);
 
-  const cfg = useMemo(() => (set ? kLanguages[set.base] ?? null : null), [set]);
+  const cfg = useMemo(() => (set ? languageConfigOf(set.base) : null), [set]);
   const variableIndex = useMemo(() => buildVariableIndex(variables), [variables]);
 
   const entries = useMemo(() => selectEntries({

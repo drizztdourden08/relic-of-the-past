@@ -1,0 +1,16 @@
+{
+  "option.viewport-modes.none.label": "Letterbox",
+  "option.viewport-modes.none.hint": "Keeps the game ratio and fills the rest of the window with black bars.",
+  "option.viewport-modes.fit.label": "Fit Window",
+  "option.viewport-modes.fit.hint": "Locks the window shape to the game ratio while you resize it, so no bars show.",
+  "option.viewport-modes.fill.label": "Stretch",
+  "option.viewport-modes.fill.hint": "Stretches the picture to fill the whole window.",
+  "section.window.title": "Window",
+  "start-fullscreen.label": "Start in Fullscreen",
+  "start-fullscreen.description": "Automatically enter fullscreen when the game starts",
+  "viewport-constraint.label": "Viewport",
+  "viewport-constraint.description": "Controls how the game canvas relates to the window",
+  "pixel-perfect.label": "Pixel Perfect",
+  "pixel-perfect.description": "Scale the picture by whole source pixels only, so every pixel is exactly the same size. Removes the shimmer on fences, walls and other straight edges while scrolling, at the cost of slightly wider black borders. Turns Linear Filtering off while active.",
+  "pixel-perfect.hint": "Needs the Letterbox viewport."
+}

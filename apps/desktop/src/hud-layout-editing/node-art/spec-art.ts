@@ -7,17 +7,19 @@ import { spriteUrl } from './sprite-url';
 import type { GlyphPack } from '@rotp/input-mapping';
 import type { HudElementSpec } from '@rotp/hud';
 import type { SpecOf } from '../element-spec.type';
+import { typeName } from '../new-node/type-name';
+import type { Translate } from '../translate.type';
 import type { NodeArt } from './node-art.type';
 import type { PlainSpec } from './spec-art.type';
 
 const isPlain = (spec: HudElementSpec): spec is PlainSpec => PLAIN_TYPES.has(spec.type);
 
-const glyphArt = (spec: SpecOf<'glyph'>, packs: readonly GlyphPack[]): NodeArt => {
-  if (spec.slot !== undefined) return { icon: PLACEHOLDERS.slot ?? BLANK_ART, name: `glyph of slot ${spec.slot}` };
+const glyphArt = (spec: SpecOf<'glyph'>, packs: readonly GlyphPack[], t: Translate): NodeArt => {
+  if (spec.slot !== undefined) return { icon: PLACEHOLDERS.slot ?? BLANK_ART, name: t('hud-editing:art.glyph-slot', { slot: spec.slot }) };
   return {
     src: glyphArtUrl(packs, spec.pack, spec.position ?? ''),
     icon: UNKNOWN_ART,
-    name: spec.position ?? '(none)',
+    name: spec.position ?? t('hud-editing:art.none'),
   };
 };
 
@@ -29,17 +31,17 @@ const buttonArt = (spec: SpecOf<'button'>, packs: readonly GlyphPack[]): NodeArt
   return { ...art, icon: PLACEHOLDERS.button ?? BLANK_ART };
 };
 
-const specArt = (spec: HudElementSpec, packs: readonly GlyphPack[]): NodeArt => {
-  if (isPlain(spec)) return { icon: PLACEHOLDERS[spec.type] ?? BLANK_ART, name: spec.type };
+const specArt = (spec: HudElementSpec, packs: readonly GlyphPack[], t: Translate): NodeArt => {
+  if (isPlain(spec)) return { icon: PLACEHOLDERS[spec.type] ?? BLANK_ART, name: typeName(t, spec.type) };
   switch (spec.type) {
     case 'sprite':
       return { src: spriteUrl(spec.file), icon: UNKNOWN_ART, name: spriteLabel(spec.file) };
-    case 'glyph': return glyphArt(spec, packs);
+    case 'glyph': return glyphArt(spec, packs, t);
     case 'button': return buttonArt(spec, packs);
     case 'shape':
       return { icon: spec.shape === 'heart' ? 'heart' : 'square', name: spec.shape };
     case 'slot':
-      return { icon: PLACEHOLDERS.slot ?? BLANK_ART, name: `slot ${spec.index}` };
+      return { icon: PLACEHOLDERS.slot ?? BLANK_ART, name: t('hud-editing:label.slot', { index: spec.index }) };
   }
 };
 

@@ -512,6 +512,7 @@ void Module00_Intro() {  // 8cc120
   // WRAM and the tileset load both finish as submodule 1 ends. Vanilla waits for 8 instead, by
   // which point the whole logo animation has played out.
   uint8 skip_at = skip_early ? 2 : 8;
+  skip_at = GameHook_TitleJaSkipAt(skip_at);
   // The host's title takes the press itself from the frame the pieces exist (title_skip.c).
   GameHook_TitleRestart();
   int title_skip_floor = GameHook_TitleSkipFloor();
@@ -534,6 +535,7 @@ void Module00_Intro() {  // 8cc120
     FadeMusicAndResetSRAMMirror();
     return;
   }
+  if (!GameHook_TitleJaSubmodule())
   switch (submodule_index) {
   case 0: Intro_Init(); break;
   case 1: Intro_Init_Continue(); break;
@@ -860,7 +862,7 @@ void Intro_SpriteType_B_0(int k) {  // 8cc5b1
     }
     if (intro_x_lo[k] == kIntroSprite0_XLimit[k])
       intro_x_vel[k] = 0;
-    if (intro_y_lo[k] == kIntroSprite0_YLimit[k])
+    if (intro_y_lo[k] == GameHook_TitleYLimit(k, kIntroSprite0_YLimit[k]))
       intro_y_vel[k] = 0;
   } else {
     intro_x_vel[k] = 0;
@@ -949,10 +951,11 @@ void Intro_CopySpriteType4ToOam(int k) {  // 8cc82f
 }
 
 void EXIT_0CCA90(int k) {  // 8cc84f
-  // empty
+  GameHook_TitlePlate(k);
 }
 
 void InitializeSceneSprite_Copyright(int k) {  // 8cc850
+  if (GameHook_CopyrightInit(k)) return;
   intro_x_lo[k] = 76;
   intro_x_hi[k] = 0;
   intro_y_lo[k] = 184;
@@ -961,6 +964,7 @@ void InitializeSceneSprite_Copyright(int k) {  // 8cc850
 }
 
 void AnimateSceneSprite_Copyright(int k) {  // 8cc864
+  if (GameHook_CopyrightAnimate(k)) return;
   static const IntroSpriteEnt kIntroSprite2_Ents[13] = {
     { 0, 0, 0x40, 0x0a, 0},
     { 8, 0, 0x41, 0x0a, 0},
@@ -2545,6 +2549,8 @@ void Credits_AddNextAttribution() {  // 8ebe24
   static const uint8 kEnding_Func9_Tab2[14] = { 1, 0, 2, 3, 10, 6, 5, 8, 11, 9, 7, 12, 13, 15 };
   static const uint16 kEnding_Digits_ScrollY[14] = { 0x290, 0x298, 0x2a0, 0x2a8, 0x2b0, 0x2ba, 0x2c2, 0x2ca, 0x2d2, 0x2da, 0x2e2, 0x2ea, 0x2f2, 0x310 };
   static const uint16 kEnding_Credits_DigitChar[2] = { 0x3ce6, 0x3cf6 };
+#define kEnding_Credits_DigitChar LANG_PICK(uint16, kLangTbl_CreditsDigits, kEnding_Credits_DigitChar)
+#define kEnding_Digits_ScrollY LANG_PICK(uint16, kLangTbl_CreditsScrollY, kEnding_Digits_ScrollY)
 
   uint16 *dst = vram_upload_data + (vram_upload_offset >> 1);
 
@@ -2553,7 +2559,7 @@ void Credits_AddNextAttribution() {  // 8ebe24
   dst[2] = kEnding_MapData[159];
   dst += 3;
 
-  if (R18 < 394) {
+  if (R18 < LanguageScreens_AssetLen(kLangAsset_CreditsOffs, 394 * 2) / 2) {
     const uint8 *src = &kEnding_Credits_Text[kEnding_Credits_Offs[R18]];
     if (*src != 0xff) {
       *dst++ = swap16(R16 + *src++);

@@ -4,11 +4,12 @@ import type { SubmitReportResult } from '@rotp/hub-contracts';
 import type { BuiltReportZip } from './bug-report.type';
 import { attachmentHold } from './held-attachment';
 import { receiptOf } from './receipt-of';
+import { mainText } from '../../lib/main-text';
 import { RETRY_GONE_ERROR } from './retry-upload.constants';
 import { uploadAttachment } from './upload-attachment';
 
 const retryUpload = (filed: SubmitReportResult, built: BuiltReportZip): NonNullable<BugReportReceipt['retry']> => async () => {
-  if (!attachmentHold.isHeld(built)) return { success: false, error: RETRY_GONE_ERROR };
+  if (!attachmentHold.isHeld(built)) return { success: false, error: mainText(RETRY_GONE_ERROR) };
   const error = await uploadAttachment(filed, built);
   if (error) return { success: false, error };
   await attachmentHold.release();

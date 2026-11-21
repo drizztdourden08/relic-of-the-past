@@ -1,11 +1,13 @@
 /* @layer renderer-components @kind component */
+import { useT } from '@drizztdourden08/brock-react';
 import { Box, Icon, Image } from '@drizztdourden08/tessera/primitives';
 import { NO_SCREENSHOT_CANCEL, NO_SCREENSHOT_FRAME } from '../SaveSlot.constants';
 import type { SlotScreenshotProps } from '../SaveSlot.type';
 
 const SlotScreenshot = ({ screenshotUrl, isEmpty, slotNumber }: SlotScreenshotProps) => {
+  const t = useT();
   if (screenshotUrl) {
-    return <Image src={screenshotUrl} alt={`Slot ${slotNumber}`} className="save-slot__img" />;
+    return <Image src={screenshotUrl} alt={t('compounds:save-slot.slot', { slotNumber })} className="save-slot__img" />;
   }
   if (isEmpty) return null;
 

@@ -1,0 +1,9 @@
+{
+  "section.mobile.title": "Tela",
+  "render-into-notch.label": "Renderizar sob o recorte da câmera",
+  "render-into-notch.description": "Ligado: o jogo e a interface usam a tela inteira, até sob o recorte da câmera. Desligado: tudo fica dentro da área útil da tela.",
+  "section.mobile-behavior.title": "Comportamento",
+  "pause-when-away.label": "Pausar quando o app estiver em segundo plano",
+  "pause-when-away.description": "Pausa o jogo e o som ao trocar de app ou apagar a tela.",
+  "screen.title": "Celular"
+}

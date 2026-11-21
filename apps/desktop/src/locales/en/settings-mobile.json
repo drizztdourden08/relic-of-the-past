@@ -1,0 +1,9 @@
+{
+  "section.mobile.title": "Display",
+  "render-into-notch.label": "Render under camera cutout",
+  "render-into-notch.description": "On: the game and UI use the full screen, extending under the camera notch. Off: keep everything inside the usable screen area.",
+  "section.mobile-behavior.title": "Behavior",
+  "pause-when-away.label": "Pause when the app is away",
+  "pause-when-away.description": "Pause the game and its sound when you switch apps or turn the screen off.",
+  "screen.title": "Mobile"
+}

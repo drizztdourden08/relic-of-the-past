@@ -1,10 +1,11 @@
 /* @layer renderer-components @kind constants */
+import { msg } from '@drizztdourden08/brock-core/i18n';
 import { POND_INSTANCES } from '@rotp/randomizer';
 import type { PondId } from '@rotp/randomizer';
 
-const NOTICE = 'The fairy ponds could not be planned from these settings.';
+const NOTICE = msg('views-randomizer:ponds.notice');
 
-const SHARE_LABEL = 'One set of settings for all three ponds';
+const SHARE_LABEL = msg('views-randomizer:ponds.share');
 
 const NO_FROZEN: readonly PondId[] = [];
 

@@ -1,5 +1,6 @@
 /* @layer renderer-components @kind types */
 import type { EditorAction } from '@app/hud-layout-editing/selection-bands.type';
+import type { Translate } from '@app/hud-layout-editing/translate.type';
 import type { HudGridContainer } from '@rotp/hud';
 import type { OsKind } from '@drizztdourden08/brock-core';
 import type { CellRef, Occupant, TrackAxis } from '../GridLattice';
@@ -25,6 +26,7 @@ interface GridActionContext {
   occupants: readonly Occupant[];
   rows: number;
   edits: GridEditorEdits;
+  t: Translate;
 }
 
 interface GridEditorProps {
@@ -46,6 +48,7 @@ interface GridKeyParams {
 interface ArrowStep { dx: number; dy: number }
 
 interface StatusParams {
+  t: Translate;
   selection: GridSelection;
   occupants: readonly Occupant[];
   columns: number;

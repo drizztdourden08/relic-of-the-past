@@ -4,6 +4,7 @@ import { SidePanel } from '@drizztdourden08/tessera/composites';
 import { useReducedMotion } from '@app/compounds/HudNodeRenderer';
 import { MotionPreviewContext, useMotionPreviewState } from '@app/hud-layout-editing/motion-preview';
 import { useHudLayoutEditor } from '@app/hud-layout-editing/useHudLayoutEditor';
+import { targetLabel } from '@app/hud-layout-editing/node-name';
 import { EDITOR_GROUNDS, INSPECTOR_PANEL, OUTLINE_PANEL } from './HudLayoutEditor.constants';
 import { EditorToolbar } from './sub-components/EditorToolbar';
 import { InspectorRail } from './sub-components/InspectorRail';
@@ -11,8 +12,10 @@ import { OutlinePanel } from './sub-components/OutlinePanel';
 import { StageColumn } from './sub-components/StageColumn';
 import './HudLayoutEditor.css';
 import type { HudLayoutEditorProps } from './HudLayoutEditor.type';
+import { useT } from '@drizztdourden08/brock-react';
 
 const HudLayoutEditor = (props: HudLayoutEditorProps) => {
+  const t = useT();
   const editor = useHudLayoutEditor(props);
   const { glyphs, draft, edits, setRatioId, ground, setGround, layout, ratio, slots, target } = editor;
 
@@ -34,14 +37,15 @@ const HudLayoutEditor = (props: HudLayoutEditorProps) => {
                 onRatioChange={setRatioId}
                 ground={EDITOR_GROUNDS.find((entry) => entry.file === ground) ?? null}
                 onGroundChange={setGround}
-                targetLabel={target ?? 'nothing'}
+                targetLabel={targetLabel(target, layout.screen.id, t)}
               />
 
               <Box className="hud-editor__body">
                 <SidePanel
                   {...OUTLINE_PANEL}
+                  title={t('hud-editor:panel.outline')}
                   containers={[{
-                    title: 'Layers and slots',
+                    title: t('hud-editor:panel.layers'),
                     content: (
                       <OutlinePanel
                         doc={layout}
@@ -60,8 +64,9 @@ const HudLayoutEditor = (props: HudLayoutEditorProps) => {
                 <SidePanel
                   side="end"
                   {...INSPECTOR_PANEL}
+                  title={t('hud-editor:panel.inspector')}
                   containers={[{
-                    title: 'Selected item',
+                    title: t('hud-editor:panel.selected'),
                     content: <InspectorRail editor={editor} />,
                   }]}
                 />

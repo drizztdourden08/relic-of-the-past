@@ -1,0 +1,23 @@
+{
+  "section.haptics-general.title": "Trilling",
+  "haptics.enabled.label": "Haptische feedback inschakelen",
+  "haptics.enabled.description": "Schakel controllertrilling in voor spelgebeurtenissen. Vereist een compatibele controller (Xbox, Switch Pro, DualSense).",
+  "haptics.intensity.label": "Trillingssterkte",
+  "haptics.intensity.description": "Algemene sterktevermenigvuldiger voor alle haptische feedback",
+  "section.haptics-combat.title": "Gevecht",
+  "haptics.sword-swing.label": "Zwaardzwaai",
+  "haptics.sword-swing.description": "Zeer zwakke trilling als de speler het zwaard zwaait",
+  "haptics.sword-hit-enemy.label": "Zwaard raakt vijand",
+  "haptics.sword-hit-enemy.description": "Normale trilling als het zwaard een vijand raakt",
+  "haptics.sword-clink.label": "Zwaardgeklank",
+  "haptics.sword-clink.description": "Zwakke trilling als het zwaard tegen een onkwetsbaar oppervlak of schild kletst",
+  "haptics.damage-taken.label": "Schade opgelopen",
+  "haptics.damage-taken.description": "Trilling die meeschaalt met de schade als de speler gewond raakt (sterker bij meer schade)",
+  "section.haptics-actions.title": "Items en beweging",
+  "haptics.item-use.label": "Itemgebruik",
+  "haptics.item-use.description": "Trilling bij het gebruik van items (hamer, hookshot, bommen, medaillons, staven, enz.)",
+  "haptics.dash-vibration.label": "Sprinttrilling",
+  "haptics.dash-vibration.description": "Ritmische stapttrilling tijdens het rennen met de Pegasus-laarzen",
+  "haptics.environmental-effects.label": "Omgevingseffecten",
+  "haptics.environmental-effects.description": "Trilling bij gebeurtenissen in de wereld: in gaten vallen, van randen landen, water in gaan, spiegelwarp, kisten openen, bomexplosies"
+}

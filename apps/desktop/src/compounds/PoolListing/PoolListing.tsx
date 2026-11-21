@@ -1,4 +1,5 @@
 /* @layer renderer-components @kind component */
+import { useT } from '@drizztdourden08/brock-react';
 import { Box, ScrollArea, Text } from '@drizztdourden08/tessera/primitives';
 import { PoolFillBar } from '../PoolFillBar';
 import { PoolListingItem } from './sub-components/PoolListingItem';
@@ -7,11 +8,12 @@ import './PoolListing.css';
 
 const PoolListing = (props: PoolListingProps) => {
   const { groups, totals, error, titled = true, className = '' } = props;
+  const t = useT();
 
   return (
     <Box className={`pool-listing${className ? ` ${className}` : ''}`}>
       <Box className="pool-listing__header">
-        {titled && <Text className="pool-listing__title">Item pool</Text>}
+        {titled && <Text className="pool-listing__title">{t('compounds:pool-listing.title')}</Text>}
         <PoolFillBar totals={totals} error={error} />
       </Box>
       <ScrollArea className="pool-listing__body">

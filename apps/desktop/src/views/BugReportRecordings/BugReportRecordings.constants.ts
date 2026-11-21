@@ -1,13 +1,15 @@
 /* @layer renderer-app @kind constants */
-const TITLE = 'Recordings to include';
+import { msg } from '@drizztdourden08/brock-core/i18n';
 
-const SHOW_SENT_LABEL = 'Show sent';
+const TITLE = msg('views-bug-report-recordings:title');
 
-const NONE_NEW_MESSAGE = 'No new recordings. Show sent to see earlier ones.';
+const SHOW_SENT_LABEL = msg('views-bug-report-recordings:showSent');
 
-const NONE_MESSAGE = 'No recordings yet.';
+const NONE_NEW_MESSAGE = msg('views-bug-report-recordings:empty.new');
 
-const SENT_LABEL = 'Sent';
+const NONE_MESSAGE = msg('views-bug-report-recordings:empty.all');
+
+const SENT_LABEL = msg('views-bug-report-recordings:sent');
 
 const UNDO_MS = 8000;
 

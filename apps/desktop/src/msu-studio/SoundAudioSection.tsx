@@ -1,28 +1,32 @@
 /* @layer renderer-components @kind component */
-import { DropZone, Text } from '@drizztdourden08/tessera/primitives';
+import { Text } from '@drizztdourden08/tessera/primitives';
+import { useT } from '@drizztdourden08/brock-react';
+import { UploadField } from '@app/compounds/UploadField';
 import { StudioSection } from '@app/studio';
 import { SoundGroupField } from './SoundGroupField';
 import { syncGroupOf } from './behavior/sound-manifest';
-import { AUDIO_ACCEPT, AUDIO_ACCEPT_HINT } from './msu.constants';
+import { AUDIO_ACCEPT } from './msu.constants';
 import type { SoundAudioSectionProps } from './SoundAudioSection.type';
 
 const SoundAudioSection = (props: SoundAudioSectionProps) => {
   const { pack, channel, row, sound, manifest, saveBase, readOnly, onReload } = props;
+  const t = useT();
   const unclaimed = row.layerCount === 0;
 
   return (
-    <StudioSection title="Audio">
+    <StudioSection title={t('msu-studio:sound.audio.title')}>
       {unclaimed && !readOnly && (
         <Text variant="caption" tone="muted">
-          This sound plays from the sound chip. Add a layer with audio and save to replace it.
+          {t('msu-studio:sound.audio.unclaimed')}
         </Text>
       )}
-      <DropZone
+      <UploadField
+        variant="block"
         accept={AUDIO_ACCEPT}
-        label={sound.uploading ? 'Adding audio...' : 'Drop audio into this pack'}
-        hint={AUDIO_ACCEPT_HINT}
+        label={sound.uploading ? t('msu-studio:sound.audio.adding') : t('msu-studio:sound.audio.drop')}
+        hint={t('msu-studio:files.accept-hint')}
         disabled={sound.uploading || readOnly}
-        onDrop={sound.handleUpload}
+        onFiles={sound.handleUpload}
       />
       {!unclaimed && (
         <SoundGroupField

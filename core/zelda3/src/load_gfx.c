@@ -962,7 +962,8 @@ void Graphics_LoadChrHalfSlot() {  // 80e3fa
 }
 
 void TransferFontToVRAM() {  // 80e556
-  memcpy(&g_zenv.vram[0x7000], FindIndexInMemblk(kDialogueFont(0), 0).ptr, 0x800 * sizeof(uint16));
+  if (GameHook_TransferTilemapFont(&g_zenv.vram[0x7000])) return;
+  memcpy(&g_zenv.vram[0x7000], FindIndexInMemblk(kDialogueFont(GameHook_TilemapFont()), 0).ptr, 0x800 * sizeof(uint16));
 }
 
 void Do3To4High(uint16 *vram_ptr, const uint8 *decomp_addr) {  // 80e5af
@@ -1767,6 +1768,7 @@ void Overworld_LoadAllPalettes() {  // 82c5b2
 
   for (int i = 0; i < 8; i++)
     main_palette_buffer[0x1b0 / 2 + i] = aux_palette_buffer[0x1d0 / 2 + i];
+  GameHook_TitleJaPalettes();
 }
 
 void Dungeon_LoadPalettes() {  // 82c630

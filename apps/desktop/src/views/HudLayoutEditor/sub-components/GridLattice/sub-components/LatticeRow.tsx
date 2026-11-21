@@ -8,8 +8,10 @@ import { occupantsAt } from '../behavior/occupants-at';
 import { series } from '../behavior/series';
 import { TrackHead } from './TrackHead';
 import type { LatticeRowProps } from './LatticeRow.type';
+import { useT } from '@drizztdourden08/brock-react';
 
 const LatticeRow = (props: LatticeRowProps) => {
+  const t = useT();
   const {
     row, columns, rows, rowSizes, occupants, cellState, trackOn, cursor,
     extentOf, onTrackDown, onSizeTrack, onCellDown, onCellEnter,
@@ -26,7 +28,7 @@ const LatticeRow = (props: LatticeRowProps) => {
         extent={extentOf?.('rows', row - 1)}
         selected={trackOn('rows', row - 1)}
         empty={empty}
-        title={headTitle('row', row, trackText(track), empty)}
+        title={headTitle('row', { index: row, text: trackText(track), empty }, t)}
         onPointerDown={onTrackDown ? (event) => onTrackDown('rows', row - 1, event) : undefined}
         onSize={onSizeTrack ? (extent) => onSizeTrack('rows', row - 1, extent) : undefined}
       />
@@ -46,8 +48,8 @@ const LatticeRow = (props: LatticeRowProps) => {
             data-cursor={cursor.column === column && cursor.row === row ? 'true' : undefined}
             aria-selected={state === 'selected' || state === 'occupied-selected'}
             aria-label={here.length > 0
-              ? `column ${column}, row ${row} with ${here.join(', ')}`
-              : `column ${column}, row ${row}, empty`}
+              ? t('hud-editor:lattice.cell-with', { column, row, items: here.join(', ') })
+              : t('hud-editor:lattice.cell-empty', { column, row })}
             style={{ gridColumn: column + 1, gridRow: row + 1 }}
             onPointerDown={(event) => onCellDown(cell, event)}
             onPointerEnter={() => onCellEnter(cell)}

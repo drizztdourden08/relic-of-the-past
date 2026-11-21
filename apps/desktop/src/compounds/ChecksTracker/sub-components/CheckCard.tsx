@@ -1,5 +1,6 @@
 /* @layer renderer-components @kind component */
 import { Box, Image, Text } from '@drizztdourden08/tessera/primitives';
+import { checkName } from '@app/game/record-text';
 import { cardSpriteOf } from '../behavior/card-sprite';
 import { displayItemOf } from '../behavior/display-item';
 import type { CheckCardProps } from '../ChecksTracker.type';
@@ -19,8 +20,8 @@ const CheckCard = ({ check, status, item, foreignItem, now }: CheckCardProps) =>
         ? <Image className="tracker-card__sprite" src={sprite} alt={name ?? ''} draggable={false} fallback={<CardSpritePlaceholder />} />
         : <CardSpritePlaceholder />}
       <Box className="tracker-card__text">
-        <Text className="tracker-card__item-name">{isEvent ? check.name : (name ?? '???')}</Text>
-        <Text className="tracker-card__check-name">{isEvent ? 'Event' : check.name}</Text>
+        <Text className="tracker-card__item-name">{isEvent ? checkName(check) : (name ?? '???')}</Text>
+        <Text className="tracker-card__check-name">{isEvent ? 'Event' : checkName(check)}</Text>
       </Box>
       <NowPill className="tracker-card__now" now={now} status={status} />
       <SwapBadge check={check} shown={shownId} />

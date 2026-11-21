@@ -4,8 +4,10 @@ import { SIDES } from './EdgesField.constants';
 import type { HudBorderSides } from '@rotp/hud';
 import type { BorderSide } from './EdgesField.type';
 import type { SidesFieldProps } from './SidesField.type';
+import { useT } from '@drizztdourden08/brock-react';
 
 const SidesField = (props: SidesFieldProps) => {
+  const t = useT();
   const { label, value, onChange } = props;
   const isOn = (side: BorderSide): boolean => (value ? value[side] !== false : true);
 
@@ -22,7 +24,7 @@ const SidesField = (props: SidesFieldProps) => {
           <Pressable
             key={side}
             className={`hud-sides__edge hud-sides__edge--${side}`}
-            aria-label={`${label} ${side}`}
+            aria-label={t('hud-editor:sides.edge', { label, side })}
             aria-pressed={isOn(side)}
             onClick={() => setSide(side, !isOn(side))}
           />

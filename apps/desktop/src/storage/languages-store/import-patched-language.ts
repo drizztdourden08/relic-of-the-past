@@ -1,0 +1,54 @@
+/* @layer renderer-lib @kind logic */
+import { msg } from '@drizztdourden08/brock-core/i18n';
+import { languages, slugSetId } from '@rotp/languages';
+import type { PatchedLanguageOutput } from '@app/game/extract-steps';
+import { runExtractStep } from '../extraction-client';
+import { recompileAll } from '../assets-store';
+import { errorText, failureLine } from '../localized-error';
+import { runImportJob } from '../import-job';
+import type { ImportReport } from '../import-job';
+import { platformFiles } from '../platform-files';
+import { getLanguageSet } from './get-language-set';
+import { libraryRomBytes } from './library-rom-bytes';
+import type { PatchedImportRequest, PatchedImportResult } from './patched-import.type';
+import { FAILED_PATCHED_IMPORT } from './languages-store.constants';
+import { resolveRomBytes } from './resolve-rom-bytes';
+import { setFontReferences } from './set-font-references';
+
+const runImport = async (request: PatchedImportRequest, report: ImportReport): Promise<PatchedImportResult> => {
+  const id = slugSetId(request.name);
+  if (await getLanguageSet(id)) {
+    return { success: false, error: msg('errors:language.exists', { id }), parts: [] };
+  }
+  report.phase('decode', msg('data-manager:jobs.line.readPatchedRom'));
+  const romBytes = await resolveRomBytes(new Uint8Array(await request.file.arrayBuffer()));
+  const input = { base: request.base, libraryRoms: await libraryRomBytes(), references: await setFontReferences(request.base) };
+  const found = await runExtractStep<'patched-language', PatchedLanguageOutput>({
+    step: 'patched-language', title: msg('data-manager:jobs.read-patched-rom'), subject: id, romBytes, input,
+  });
+  if (!found.success) return { success: false, error: FAILED_PATCHED_IMPORT, parts: found.parts };
+  const { description, dialogue, glyphCount, lineCount, encoder, flags } = found;
+  await languages.writePatchedPack(platformFiles(), {
+    code: id, description, dialogue, glyphCount, lineCount, encoder, flags,
+    name: request.name.trim(), base: request.base,
+    credits: request.credits, license: request.license,
+    text: { menu: found.menu, credits: found.credits },
+    ...(found.screens ? { screens: found.screens } : {}),
+  });
+  report.phase('extract', msg('data-manager:jobs.line.bakeAssets'));
+  await recompileAll();
+  return { success: true, code: id, parts: found.parts };
+};
+
+const importPatchedLanguage = async (request: PatchedImportRequest): Promise<PatchedImportResult> => {
+  try {
+    return await runImportJob({
+      kind: 'language', title: msg('data-manager:jobs.import-patched-language'), work: (report) => runImport(request, report),
+      failureOf: (result) => (result.success ? null : failureLine(result.error)),
+    });
+  } catch (err) {
+    return { success: false, error: errorText(err), parts: [] };
+  }
+};
+
+export { importPatchedLanguage };

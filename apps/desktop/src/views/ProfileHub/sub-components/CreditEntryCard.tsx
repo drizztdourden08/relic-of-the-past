@@ -2,10 +2,12 @@
 import { useCallback } from 'react';
 import type { MouseEvent } from 'react';
 import { getUsageLabel } from '@app/credits';
+import { useText } from '@drizztdourden08/brock-react';
 import { Box, Link, Text } from '@drizztdourden08/tessera/primitives';
 import type { CreditEntryCardProps } from './CreditsTab.type';
 
 const CreditEntryCard = ({ entry }: CreditEntryCardProps) => {
+  const text = useText();
   const { url } = entry;
   const handleLinkClick = useCallback((e: MouseEvent) => { e.preventDefault(); window.open(url); }, [url]);
 
@@ -26,12 +28,12 @@ const CreditEntryCard = ({ entry }: CreditEntryCardProps) => {
           <Text className="credits-tab__entry-license">{entry.license}</Text>
         )}
       </Box>
-      <Text as="p" className="credits-tab__entry-description">{entry.description}</Text>
+      <Text as="p" className="credits-tab__entry-description">{text(entry.description)}</Text>
       <Box className="credits-tab__entry-usage">
         <Text className="credits-tab__usage-badge" data-level={entry.usage}>
-          {getUsageLabel(entry.usage)}
+          {text(getUsageLabel(entry.usage))}
         </Text>
-        <Text className="credits-tab__usage-note">{entry.usageNote}</Text>
+        <Text className="credits-tab__usage-note">{text(entry.usageNote)}</Text>
       </Box>
     </Box>
   );

@@ -1,9 +1,12 @@
 /* @layer renderer-components @kind component */
+import { useT } from '@drizztdourden08/brock-react';
 import { Box, Icon, IconButton, TextInput, NumberInput } from '@drizztdourden08/tessera/primitives';
 import { HeightSwatch } from './HeightSwatch';
 import type { HeightLevelRowProps } from './HeightLevelRow.type';
 
-const HeightLevelRow = ({ index, label, value, onUpdate, onRemove }: HeightLevelRowProps) => (
+const HeightLevelRow = ({ index, label, value, onUpdate, onRemove }: HeightLevelRowProps) => {
+  const t = useT();
+  return (
   <Box className="height-level-editor__item">
     <HeightSwatch className="height-level-editor__swatch" level={value} />
     <TextInput
@@ -21,10 +24,11 @@ const HeightLevelRow = ({ index, label, value, onUpdate, onRemove }: HeightLevel
         if (!isNaN(v)) onUpdate(index, { value: Math.min(1, Math.max(0, v)) });
       }}
     />
-    <IconButton variant="ghost" tone="danger" size="xs" label="Remove" onClick={() => onRemove(index)}>
+    <IconButton variant="ghost" tone="danger" size="xs" label={t('views-shadow-editor:heightLevels.remove')} onClick={() => onRemove(index)}>
       <Icon name="x" />
     </IconButton>
   </Box>
-);
+  );
+};
 
 export { HeightLevelRow };

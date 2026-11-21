@@ -1,10 +1,12 @@
 /* @layer electron-main @kind logic */
 import { readFile, stat } from 'fs/promises';
 import { basename } from 'path';
+import { msg } from '@drizztdourden08/brock-core/i18n';
 import { CONTAINER_KIND, STORE_LIMITS } from '@rotp/hub-contracts';
 import { selectInstaller } from '@rotp/packs';
 import { recompileAllAssets } from '../assets/compile-rom-assets';
 import { createNodeFileStore } from '../lib/node-file-store';
+import { mainText } from '../lib/main-text';
 import { logToRenderer } from '../lib/renderer-log';
 import type { OpenedContainer } from './import-document.type';
 
@@ -12,7 +14,7 @@ const files = createNodeFileStore();
 
 const importDocument = async (path: string, container: OpenedContainer): Promise<void> => {
   const { size } = await stat(path);
-  if (size > STORE_LIMITS.packBytes[CONTAINER_KIND[container]]) throw new Error('the file is larger than a pack may be');
+  if (size > STORE_LIMITS.packBytes[CONTAINER_KIND[container]]) throw new Error(mainText(msg('main:documents.tooLarge')));
   const bytes = new Uint8Array(await readFile(path));
   const { installedName } = await selectInstaller(container).install(bytes, files, () => undefined);
   if (container === 'rlang') await recompileAllAssets();

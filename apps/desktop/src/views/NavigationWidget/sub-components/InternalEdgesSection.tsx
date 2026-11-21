@@ -1,4 +1,5 @@
 /* @layer renderer-widgets @kind component */
+import { useT } from '@drizztdourden08/brock-react';
 import type { ConnectionInfo } from '@rotp/game-core';
 import { Box, Text } from '@drizztdourden08/tessera/primitives';
 import { InternalEdgeSvg } from './InternalEdgeSvg';
@@ -8,6 +9,7 @@ import './InternalEdgesSection.css';
 
 const InternalEdgesSection = (props: InternalEdgesSectionProps) => {
   const { internalConnections, screenBundle } = props;
+  const t = useT();
   if (internalConnections.length === 0) return null;
 
   const opposites: Record<string, string> = { north: 'south', south: 'north', east: 'west', west: 'east' };
@@ -32,7 +34,7 @@ const InternalEdgesSection = (props: InternalEdgesSectionProps) => {
   const count = cards.length;
   return (
     <>
-      <Box className="nav-internal-edges-section__meta">Internal ({count})</Box>
+      <Box className="nav-internal-edges-section__meta">{t('views-navigation:internal.title', { count })}</Box>
       <Box className="nav-internal-edges-section__wrap-row">
         {cards.map(({ conn, paired }, i) => {
           if (screenBundle?.isMulti && !conn.isIntraRoom) {
@@ -44,7 +46,7 @@ const InternalEdgesSection = (props: InternalEdgesSectionProps) => {
                   <InternalEdgeSvg edge={conn.edge} fromName={fromName} toName={toName} />
                 </Box>
                 <Text className={conn.layerToggle ? 'nav-internal-edges-section__layer nav-val-info' : 'nav-internal-edges-section__layer nav-val-green'}>
-                  {conn.layerToggle ? '▲▼ Toggle' : '═ Same'}
+                  {conn.layerToggle ? t('views-navigation:internal.toggle') : t('views-navigation:internal.same')}
                 </Text>
               </Box>
             );
@@ -57,7 +59,7 @@ const InternalEdgesSection = (props: InternalEdgesSectionProps) => {
                 <InternalEdgeSvg edge={conn.edge} fromName={fromCount} toName={toCount} />
               </Box>
               <Text className="nav-internal-edges-section__same">
-                ═ Same
+                {t('views-navigation:internal.same')}
               </Text>
             </Box>
           );

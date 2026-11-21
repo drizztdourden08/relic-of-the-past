@@ -1,6 +1,8 @@
 /* @layer electron-main @kind logic */
 import { readFile, writeFile } from 'fs/promises';
 import { join } from 'path';
+import { msg } from '@drizztdourden08/brock-core/i18n';
+import { mainText } from '../../lib/main-text';
 import { serializeAreaRecord, serializeLocationRecord, areaRecordFile, locationRecordFile } from '@rotp/game-data';
 import type { FileTarget, AreaRecord, LocationRecord } from '@rotp/game-data';
 import type { Allocated, AllocateGeographyArgs, AllocateGeographyResult } from '@app/ipc/screen-editor-contract';
@@ -22,7 +24,7 @@ const append = async (path: string, code: string): Promise<string | null> => {
 
 const allocateGeography = async (root: string, args: AllocateGeographyArgs): Promise<AllocateGeographyResult> => {
   const name = args.name.trim();
-  if (!name) return { success: false, error: 'A display name is required' };
+  if (!name) return { success: false, error: mainText(msg('screen-editor:geography.needsName')) };
 
   if (args.kind === 'area') {
     return withAllocatedIds(root, 'area', 1, async ([id]) => {

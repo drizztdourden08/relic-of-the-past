@@ -1,4 +1,5 @@
 /* @layer renderer-components @kind component */
+import { useT } from '@drizztdourden08/brock-react';
 import { useState } from 'react';
 import { Button, Flex, ProgressBar, Spinner, Stack, Text } from '@drizztdourden08/tessera/primitives';
 import { FactsPanel } from '@drizztdourden08/tessera/composites';
@@ -9,11 +10,12 @@ import { lobbyStatusLine } from './lobby-status-line';
 import type { ProfileLobbyStatusProps } from './lobby-status-line.type';
 
 const ProfileLobbyStatus = ({ profile }: ProfileLobbyStatusProps) => {
+  const t = useT();
   const membership = useLobbyStatusStore((state) => state.members[profile.id]);
   const live = useLobbyStatusStore((state) => state.live[profile.id]);
   const [converting, setConverting] = useState(false);
   if (membership === undefined) return null;
-  const line = lobbyStatusLine(membership, live);
+  const line = lobbyStatusLine(membership, live, t);
 
   const changeToLocal = () => {
     setConverting(true);
@@ -28,10 +30,10 @@ const ProfileLobbyStatus = ({ profile }: ProfileLobbyStatusProps) => {
         {line.why !== undefined && line.why !== '' && <Text tone="muted">{line.why}</Text>}
         {line.progress !== undefined && <ProgressBar value={line.progress} max={1} showValue />}
         {line.final && (
-          <Button variant="secondary" size="sm" loading={converting} onClick={changeToLocal}>Change to Local</Button>
+          <Button variant="secondary" size="sm" loading={converting} onClick={changeToLocal}>{t('data-manager:profile-manager.profile-lobby-status.change-to-local')}</Button>
         )}
       </Flex>
-      <FactsPanel groups={[buildLobbyFacts(membership, profile.randomizer?.slotName ?? '')]} />
+      <FactsPanel groups={[buildLobbyFacts(membership, profile.randomizer?.slotName ?? '', t)]} />
     </Stack>
   );
 };

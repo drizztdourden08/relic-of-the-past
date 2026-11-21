@@ -1,11 +1,11 @@
 /* @layer shared-asset-extraction @kind logic */
 import { snesToRgba, TRANSPARENT } from '../../graphics/palette';
-import { ADDR_HUD_PALETTE } from '../../data/constants';
-import type { RomData } from '../../rom/rom-types';
+import type { SpriteSource } from '../sources';
+import { HUD_PALETTE_WORDS } from './hud-decoder.constants';
 import type { RGBA } from '../../graphics/palette';
 
-const loadHudPalette = (rom: RomData): Map<number, RGBA> => {
-  const words = rom.getWords(ADDR_HUD_PALETTE, 64);
+const loadHudPalette = (source: SpriteSource): Map<number, RGBA> => {
+  const words = source.readPaletteWords('hud', 0, HUD_PALETTE_WORDS);
   const palette = new Map<number, RGBA>();
   for (const [key, w] of words.entries()) {
     palette.set(key, w === 0 ? TRANSPARENT : snesToRgba(w));

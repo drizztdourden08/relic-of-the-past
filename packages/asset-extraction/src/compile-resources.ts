@@ -23,7 +23,7 @@ const compileResources = (rom: RomData, options: CompileOptions = {}): Buffer =>
   buildSpriteGfx(rom, A);
   buildBgGfx(rom, A);
   buildMisc(rom, A);
-  if (!options.skipDialogue) buildDialogue(rom, A, options.extraLanguages);
+  if (!options.skipDialogue) buildDialogue(rom, A, options);
   buildDungeonMap(rom, A);
   buildTilemaps(rom, A);
   buildOverworldCompressed(rom, A);

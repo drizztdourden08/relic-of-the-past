@@ -1,4 +1,5 @@
 /* @layer renderer-widgets @kind logic */
+import { msg } from '@drizztdourden08/brock-core/i18n';
 import { gameIdLabel } from '@rotp/game-data';
 import type { ObservedTransition } from '@rotp/game-core';
 import type { UnresolvableMapper } from '@rotp/navigation';
@@ -31,8 +32,8 @@ const onUnresolvableConnection: UnresolvableMapper<'connection'> = (difference, 
     current: null,
     proposed,
     reason: ambiguous
-      ? `Crossing to ${label}: no screen record, palace unknown.`
-      : `Crossing to ${label}: no screen record.`,
+      ? msg('views-data-inspector:rec.reason.crossing-interior', { label })
+      : msg('views-data-inspector:rec.reason.crossing-screen', { label }),
     detector: 'strategy:connection',
     evidence: [{ source: 'native:room-transitions', detail: `unresolved destination ${difference.key}` }],
     confidence: ambiguous ? 'likely' : 'certain',

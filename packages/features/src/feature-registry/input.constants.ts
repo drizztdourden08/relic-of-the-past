@@ -1,14 +1,14 @@
-/* @layer shared @kind data */
+/* @layer shared @kind constants */
+import { msg } from '@drizztdourden08/brock-core/i18n';
 import type { FeatureDef } from '../feature.type';
 
 const INPUT_FEATURES: FeatureDef[] = [
   {
     id: 'hostMenu',
-    label: 'Host-owned pause menu',
+    label: msg('features:feature.hostMenu.label'),
     description:
       'Hands the pause menu to the host: the core stops drawing and running its own menu, and the 24-slot item table is used instead of the 20-slot one.',
-    userMessage:
-      'Lets the app draw and run the pause menu itself, which is what makes the enhanced menu (gear tiers, the full item grid, bottle slots) possible. The Modern HUD style turns it on for you, so there is nothing to switch here. It replaces the original menu, so leave that style off for vanilla parity.',
+    userMessage: msg('features:feature.hostMenu.message'),
     group: 'HUD',
     kind: 'features0-bit',
     origin: 'relic',
@@ -22,11 +22,10 @@ const INPUT_FEATURES: FeatureDef[] = [
   },
   {
     id: 'modernControls',
-    label: 'Modern control scheme',
+    label: msg('features:feature.modernControls.label'),
     description:
       'Lets the host write the equipped-item register every frame, so any button can fire any item instead of only Y.',
-    userMessage:
-      'Lets you put any item on any button instead of only Y, by having the app set the equipped item as you press. The Modern HUD style turns it on for you, and that style is where your bindings are shown, so there is nothing to switch here. Not in the original game, so leave it off for vanilla parity.',
+    userMessage: msg('features:feature.modernControls.message'),
     group: 'Input',
     kind: 'features0-bit',
     origin: 'relic',
@@ -40,10 +39,9 @@ const INPUT_FEATURES: FeatureDef[] = [
   },
   {
     id: 'haptics',
-    label: 'Controller vibration',
+    label: msg('features:feature.haptics.label'),
     description: 'Emits rumble/haptic events to the host on game events (damage, pickups, etc.).',
-    userMessage:
-      'Vibrates supported controllers and devices on in-game events. It does not change what the game computes, but the notify calls are inserted directly into the vendored game code, so Vanilla Safe forces this off along with everything else that touches it.',
+    userMessage: msg('features:feature.haptics.message'),
     group: 'Input',
     kind: 'host-event',
     origin: 'relic',

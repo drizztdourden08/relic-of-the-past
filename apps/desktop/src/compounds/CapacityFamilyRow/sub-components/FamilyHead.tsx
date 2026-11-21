@@ -4,11 +4,13 @@ import { ValueTag } from '@drizztdourden08/tessera/composites';
 import { OptionDescription } from '../../OptionDescription';
 import { choiceLabelOf } from '@app/hooks/randomizer/option-labels';
 import { PoolImpactCell } from '../../PoolImpactCell';
-import { MODE_OPTIONS, WALLET_MODE_OPTIONS } from '../CapacityFamilyRow.constants';
+import { useT } from '@drizztdourden08/brock-react';
+import { modeOptions, walletModeOptions } from '../CapacityFamilyRow.constants';
 import type { CapacityRowState, FamilyHeadProps } from '../CapacityFamilyRow.type';
 
 const FamilyHead = ({ model, readout, disabled, onPick }: FamilyHeadProps) => {
   const { label, caption, offersInPool, state, impact } = model;
+  const t = useT();
 
   return (
     <Box className="capacity-row__head">
@@ -17,11 +19,11 @@ const FamilyHead = ({ model, readout, disabled, onPick }: FamilyHeadProps) => {
         {caption !== undefined && <OptionDescription className="capacity-row__caption" description={caption} />}
       </Box>
       <Box className="capacity-row__mode">
-        {readout ? <ValueTag value={choiceLabelOf(MODE_OPTIONS, state.mode)} /> : (
+        {readout ? <ValueTag value={choiceLabelOf(modeOptions(t), state.mode)} /> : (
           <Select
             size="sm"
             value={state.mode}
-            options={(offersInPool ? MODE_OPTIONS : WALLET_MODE_OPTIONS)}
+            options={(offersInPool ? modeOptions(t) : walletModeOptions(t))}
             onChange={(mode) => onPick(mode as CapacityRowState['mode'])}
             disabled={disabled}
           />

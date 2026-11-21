@@ -1,5 +1,7 @@
 /* @layer shared-asset-extraction @kind logic */
+import { msg } from '@drizztdourden08/brock-core/i18n';
 import { BinaryReader } from '../binary-reader';
+import { RomLoadError } from '../rom-loader/rom-load-error';
 import { gbaAddressToOffset } from './gba-address-to-offset';
 import { ALTTP_GBA_US_SHA256 } from './gba-rom.constants';
 
@@ -10,7 +12,10 @@ class GbaRomReader extends BinaryReader {
     super(bytes);
     this.sha256 = this.hash('sha256');
     if (validate && this.sha256 !== ALTTP_GBA_US_SHA256) {
-      throw new Error(`Unsupported ALttP GBA ROM SHA-256 ${this.sha256}`);
+      throw new RomLoadError(
+        msg('rom-loader:error.unsupportedGba'),
+        `Unsupported ALttP GBA ROM SHA-256 ${this.sha256}`,
+      );
     }
   }
 

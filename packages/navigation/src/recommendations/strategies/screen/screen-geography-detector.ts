@@ -1,4 +1,6 @@
 /* @layer shared-game @kind logic */
+import { msg } from '@drizztdourden08/brock-core/i18n';
+import type { Message } from '@drizztdourden08/brock-core/i18n';
 import { findOne, getArea, getLocation, PLACEHOLDER_AREA_ID, PLACEHOLDER_LOCATION_ID, areaOfLocation, locationsInArea } from '@rotp/game-data';
 import type { AreaId, AreaRecord, LocationRecord, ScreenRecord } from '@rotp/game-data';
 import type { DetectionContext, RecommendationDetector } from '../../detection-types';
@@ -15,10 +17,12 @@ const candidateFor = (areaId: AreaId): Candidate => {
   return { pick: named ?? candidates[0], count: candidates.length };
 };
 
-const reasonFor = (screen: ScreenRecord, pick: LocationRecord, count: number): string => {
-  const fault = `Location ${nameOf(getLocation(screen.locationId))} is not in this area.`;
-  return count === 1 ? `${fault} Only ${nameOf(pick)} is.` : `${fault} ${nameOf(pick)} is a guess of ${count}.`;
-};
+const reasonFor = (screen: ScreenRecord, pick: LocationRecord, count: number): Message =>
+  msg('views-data-inspector:rec.reason.geography', {
+    location: nameOf(getLocation(screen.locationId)),
+    pick: nameOf(pick),
+    count,
+  });
 
 const draftFor = (
   screen: ScreenRecord,

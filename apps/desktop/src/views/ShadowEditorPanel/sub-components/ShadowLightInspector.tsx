@@ -1,11 +1,14 @@
 /* @layer renderer-components @kind component */
+import { useT } from '@drizztdourden08/brock-react';
 import { useMemo } from 'react';
-import { Slider, Toggle, Button, Box } from '@drizztdourden08/tessera/primitives';
+import { Slider, Toggle, Button } from '@drizztdourden08/tessera/primitives';
 import { SettingsSection } from '@drizztdourden08/tessera/composites';
 import { NumberField } from './NumberField';
+import { PositionFields } from './PositionFields';
 import type { ShadowLightInspectorProps } from './ShadowLightInspector.type';
 
 const ShadowLightInspector = ({ screenId, selectedLight, updateLight, handleDelete }: ShadowLightInspectorProps) => {
+  const t = useT();
   const setters = useMemo(() => ({
     x: (v: number) => updateLight(screenId, selectedLight.id, { x: v }),
     y: (v: number) => updateLight(screenId, selectedLight.id, { y: v }),
@@ -15,11 +18,8 @@ const ShadowLightInspector = ({ screenId, selectedLight, updateLight, handleDele
   }), [screenId, selectedLight.id, updateLight]);
 
   return (
-    <SettingsSection title="Light">
-      <Box className="shadow-editor-panel__field-row">
-        <NumberField icon="X" value={selectedLight.x} step={1} onChange={setters.x} />
-        <NumberField icon="Y" value={selectedLight.y} step={1} onChange={setters.y} />
-      </Box>
+    <SettingsSection title={t('views-shadow-editor:light.title')}>
+      <PositionFields x={selectedLight.x} y={selectedLight.y} onX={setters.x} onY={setters.y} />
 
       <NumberField icon="R" value={selectedLight.radius} step={4} min={4} max={512} onChange={setters.radius} />
       <Slider
@@ -27,16 +27,16 @@ const ShadowLightInspector = ({ screenId, selectedLight, updateLight, handleDele
         min={0}
         max={2}
         step={0.05}
-        label="Intensity"
+        label={t('views-shadow-editor:intensity')}
         onChange={setters.intensity}
         showValue
       />
       <Toggle
         checked={selectedLight.castShadows}
         onChange={setters.castShadows}
-        label="Cast Shadows"
+        label={t('views-shadow-editor:light.castShadows')}
       />
-      <Button size="sm" variant="danger" onClick={handleDelete}>Delete Light</Button>
+      <Button size="sm" variant="danger" onClick={handleDelete}>{t('views-shadow-editor:light.delete')}</Button>
     </SettingsSection>
   );
 };

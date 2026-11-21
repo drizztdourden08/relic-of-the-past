@@ -1,7 +1,9 @@
 /* @layer renderer-app @kind constants */
+import { msg } from '@drizztdourden08/brock-core/i18n';
+
 const CHANNEL_OPTIONS = [
-  { value: '1', label: 'Mono' },
-  { value: '2', label: 'Stereo' },
+  { value: '1', label: msg('settings-controls:audio.channels.mono') },
+  { value: '2', label: msg('settings-controls:audio.channels.stereo') },
 ];
 
 const FREQ_OPTIONS = [
@@ -12,7 +14,7 @@ const FREQ_OPTIONS = [
 ];
 
 const MSU_OPTIONS = [
-  { value: 'false', label: 'Off' },
+  { value: 'false', label: msg('settings-controls:audio.msu.off') },
   { value: 'true', label: 'MSU' },
   { value: 'deluxe', label: 'Deluxe' },
   { value: 'opuz', label: 'OPUZ' },
@@ -24,20 +26,18 @@ const BUFFER_STEPS = [512, 1024, 2048, 4096];
 const DEFAULT_BUFFER_STEP = 2;
 const DEFAULT_BUFFER_SIZE = 2048;
 
-const AUTO_NOTE = 'Set automatically from the assigned pack. Switch Configuration to Manual to change it.';
-
 const DEVICE_DESCRIPTIONS = {
   audioFreq: {
-    auto: `MSU packs are 44100 Hz, OPUZ packs 48000 Hz. ${AUTO_NOTE}`,
-    manual: 'Must match the pack format: 44100 Hz for MSU/Deluxe, 48000 Hz for OPUZ/Deluxe OPUZ.',
+    auto: msg('settings-controls:audio.device.freq.auto'),
+    manual: msg('settings-controls:audio.device.freq.manual'),
   },
   audioChannels: {
-    auto: `Replacement music is always stereo. ${AUTO_NOTE}`,
-    manual: 'Mono collapses the output to one channel; Stereo keeps left and right separate.',
+    auto: msg('settings-controls:audio.device.channels.auto'),
+    manual: msg('settings-controls:audio.device.channels.manual'),
   },
   audioSamples: {
-    auto: AUTO_NOTE,
-    manual: 'Smaller buffers reduce latency but may crackle; larger ones are steadier but add delay.',
+    auto: msg('settings-controls:audio.device.samples.auto'),
+    manual: msg('settings-controls:audio.device.samples.manual'),
   },
 } as const;
 

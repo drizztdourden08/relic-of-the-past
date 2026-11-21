@@ -1,6 +1,7 @@
 /* @layer renderer-components @kind component */
 import { useCallback } from 'react';
 import { Box, ProgressBar, Text, TextInput } from '@drizztdourden08/tessera/primitives';
+import { useT, useText } from '@drizztdourden08/brock-react';
 import { fitOf } from './fit-of';
 import { offAlphabet } from './off-alphabet';
 import { ALPHABET_CAUTION } from './TextSlotRow.constants';
@@ -10,12 +11,14 @@ import './TextSlotRow.css';
 
 const TextSlotRow = (props: TextSlotRowProps) => {
   const { slot, value, readOnly = false, onChangeValue } = props;
+  const t = useT();
+  const text = useText();
 
   const handleChange = useCallback((event: ChangeEvent<HTMLInputElement>) => {
     onChangeValue(slot.key, event.currentTarget.value);
   }, [slot.key, onChangeValue]);
 
-  const fit = fitOf(slot.limit, value);
+  const fit = fitOf(t, slot.limit, value);
   const overAlphabet = offAlphabet(slot, value);
 
   return (
@@ -53,13 +56,13 @@ const TextSlotRow = (props: TextSlotRowProps) => {
       />
 
       {value.length > 0 && (
-        <Text as="span" className="text-slot-row__fallback" title="The original words">
+        <Text as="span" className="text-slot-row__fallback" title={t('language-editor:slot.original')}>
           {slot.fallback}
         </Text>
       )}
 
       {overAlphabet && (
-        <Text as="span" className="text-slot-row__caution">{ALPHABET_CAUTION}</Text>
+        <Text as="span" className="text-slot-row__caution">{text(ALPHABET_CAUTION)}</Text>
       )}
 
       {slot.note && <Text as="span" className="text-slot-row__note">{slot.note}</Text>}

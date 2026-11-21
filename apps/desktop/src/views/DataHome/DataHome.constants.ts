@@ -1,69 +1,37 @@
 /* @layer renderer-components @kind constants */
+import type { I18n } from '@drizztdourden08/brock-core/i18n';
 import type { DataSectionGroup } from '@app/compounds/DataSections';
 
 const DATA_BUCKET = 'data';
 
-const DATA_SECTION_GROUPS: readonly DataSectionGroup[] = [
-  {
-    id: 'library',
-    label: 'Library',
-    items: [
-      {
-        id: 'profiles',
-        title: 'Profiles',
-        icon: 'users',
-        description: 'Create, open and delete profiles.',
-      },
-      {
-        id: 'roms',
-        title: 'ROMs',
-        icon: 'gamepad-2',
-        description: 'Import a ROM and extract its assets.',
-      },
-      {
-        id: 'sprites',
-        title: 'Sprites',
-        icon: 'image',
-        description: 'Browse the extracted HUD, item and menu pictures.',
-      },
-    ],
-  },
-  {
-    id: 'studios',
-    label: 'Studios',
-    items: [
-      {
-        id: 'characters',
-        title: 'Character Studio',
-        icon: 'user',
-        description: 'Import, create and edit player sprites.',
-      },
-      {
-        id: 'languages',
-        title: 'Language Studio',
-        icon: 'globe',
-        description: 'Edit the game dialogue and text.',
-      },
-      {
-        id: 'msu',
-        title: 'MSU Studio',
-        icon: 'headphones',
-        description: 'Create, import and edit music packs.',
-      },
-    ],
-  },
-  {
-    id: 'folder',
-    label: 'Data folder',
-    items: [
-      {
-        id: 'storage',
-        title: 'Storage',
-        icon: 'hard-drive',
-        description: 'See folder sizes, clean up old files, and export or import your data.',
-      },
-    ],
-  },
-];
+const library = (t: I18n['t']): DataSectionGroup => ({
+  id: 'library',
+  label: t('views-data-home:library.label'),
+  items: [
+    { id: 'profiles', title: t('views-data-home:library.profiles.title'), icon: 'users', description: t('views-data-home:library.profiles.description') },
+    { id: 'roms', title: t('views-data-home:library.roms.title'), icon: 'gamepad-2', description: t('views-data-home:library.roms.description') },
+    { id: 'sprites', title: t('views-data-home:library.sprites.title'), icon: 'image', description: t('views-data-home:library.sprites.description') },
+  ],
+});
 
-export { DATA_BUCKET, DATA_SECTION_GROUPS };
+const studios = (t: I18n['t']): DataSectionGroup => ({
+  id: 'studios',
+  label: t('views-data-home:studios.label'),
+  items: [
+    { id: 'characters', title: t('views-data-home:studios.characters.title'), icon: 'user', description: t('views-data-home:studios.characters.description') },
+    { id: 'languages', title: t('views-data-home:studios.languages.title'), icon: 'globe', description: t('views-data-home:studios.languages.description') },
+    { id: 'msu', title: t('views-data-home:studios.msu.title'), icon: 'headphones', description: t('views-data-home:studios.msu.description') },
+  ],
+});
+
+const folder = (t: I18n['t']): DataSectionGroup => ({
+  id: 'folder',
+  label: t('views-data-home:folder.label'),
+  items: [
+    { id: 'storage', title: t('views-data-home:folder.storage.title'), icon: 'hard-drive', description: t('views-data-home:folder.storage.description') },
+  ],
+});
+
+const dataSectionGroups = (t: I18n['t']): readonly DataSectionGroup[] => [library(t), studios(t), folder(t)];
+
+export { DATA_BUCKET, dataSectionGroups };

@@ -1,9 +1,11 @@
 /* @layer renderer-components @kind component */
 import { Box, Button, Text } from '@drizztdourden08/tessera/primitives';
+import { useT } from '@drizztdourden08/brock-react';
 import { useAssetsOutOfDate, useGameAssetsStore } from '@app/stores/game-assets-store';
 import './StaleGameNotice.css';
 
 const StaleGameNotice = () => {
+  const t = useT();
   const outOfDate = useAssetsOutOfDate();
   const canReload = useGameAssetsStore((state) => state.canReload);
   const profileName = useGameAssetsStore((state) => state.runningProfileName);
@@ -15,16 +17,15 @@ const StaleGameNotice = () => {
     <Box className="stale-game-notice" role="alert">
       <Box className="stale-game-notice__body">
         <Text as="span" className="stale-game-notice__title">
-          The running game is still on the text it started with
+          {t('language-editor:stale-game.title')}
         </Text>
         <Text as="span" variant="caption" className="stale-game-notice__detail">
           {profileName === null
-            ? 'Your saved changes are on disk. Reload to play with them.'
-            : `Your saved changes are on disk. Reload ${profileName} to play with them.`}
-          {' '}Reloading restarts the game, so save your position first.
+            ? t('language-editor:stale-game.detail')
+            : t('language-editor:stale-game.detail-profile', { profile: profileName })}
         </Text>
       </Box>
-      <Button size="sm" onClick={reload}>Reload game</Button>
+      <Button size="sm" onClick={reload}>{t('language-editor:stale-game.reload')}</Button>
     </Box>
   );
 };

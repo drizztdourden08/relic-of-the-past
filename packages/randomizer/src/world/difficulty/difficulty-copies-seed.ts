@@ -1,4 +1,5 @@
 /* @layer shared-game @kind logic */
+import { msg } from '@drizztdourden08/brock-core/i18n';
 import { itemAt } from '../../checked-access';
 import { PROGRESSIVE_FAMILIES } from '../progressive/progressive-families.constants';
 import { progressiveFamilyName } from '../progressive/progressive-display-names';
@@ -10,7 +11,7 @@ const difficultyCopiesSeed = (index: number): OptionSeed => {
   const family = itemAt(PROGRESSIVE_FAMILIES, index);
   return {
     key: difficultyCopiesKeyOf(family.id),
-    displayName: `${progressiveFamilyName(family)}: copies`,
+    displayName: msg('randomizer-world:tpl.progressive.copies', { family: progressiveFamilyName(family) }),
     group: 'items',
     kind: 'range',
     implementation: 'active',

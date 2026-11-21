@@ -1,4 +1,5 @@
 /* @layer shared-game @kind logic */
+import { msg } from '@drizztdourden08/brock-core/i18n';
 import { DEFAULT_PROGRESSIVE_SETTING } from './progressive-families.constants';
 import { progressiveTierKeyOf } from './progressive-option-keys';
 import { progressiveFamilyName, progressiveTierName } from './progressive-display-names';
@@ -13,7 +14,7 @@ const progressiveTierSeed = (family: ProgressiveFamilyDef, index: number): Optio
     sourceDefault: ticked,
     baseline: ticked,
     key: progressiveTierKeyOf(family.id, index),
-    displayName: `${progressiveFamilyName(family)}: ${progressiveTierName(family, index)}`,
+    displayName: msg('randomizer-world:tpl.progressive.tier', { family: progressiveFamilyName(family), tier: progressiveTierName(family, index) }),
   };
 };
 

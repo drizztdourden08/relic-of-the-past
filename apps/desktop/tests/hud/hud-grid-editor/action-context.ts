@@ -4,6 +4,8 @@ import type { HudGridContainer } from '@rotp/hud';
 import type {
   GridActionContext, GridSelection,
 } from '@app/views/HudLayoutEditor/sub-components/GridEditor/GridEditor.type';
+import { i18n } from '../test-i18n';
+const { t } = i18n;
 
 const ignore = (): void => {};
 
@@ -14,6 +16,7 @@ const actionContext = (selection: GridSelection, container: HudGridContainer): G
   occupants: occupantsOf(container),
   rows: 3,
   edits: { patchContainer: ignore, setSelection: ignore, refuse: ignore },
+  t,
 });
 
 export { actionContext };

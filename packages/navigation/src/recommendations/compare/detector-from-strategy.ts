@@ -1,4 +1,6 @@
 /* @layer shared-game @kind logic */
+import { msg } from '@drizztdourden08/brock-core/i18n';
+import type { Message } from '@drizztdourden08/brock-core/i18n';
 import type { EntityKind, EntityRecordMap } from '@rotp/game-data';
 import type { DetectionContext, RecommendationDetector } from '../detection-types';
 import type { DraftRecommendation } from '../types';
@@ -10,11 +12,11 @@ import { runComparison } from './run-comparison';
 
 const detectorIdOf = (kind: EntityKind): string => `strategy:${kind}`;
 
-const reasonForField = (difference: Difference): string => {
+const reasonForField = (difference: Difference): Message => {
   const { label, shown } = difference;
-  if (difference.status === 'mismatch') return `${label}: record ${shown.dataset}, game ${shown.live}.`;
-  if (difference.status === 'missing-in-dataset') return `${label}: game ${shown.live}, record empty.`;
-  return `${label}: record ${shown.dataset}, absent in game.`;
+  if (difference.status === 'mismatch') return msg('views-data-inspector:rec.reason.mismatch', { label, dataset: shown.dataset, live: shown.live });
+  if (difference.status === 'missing-in-dataset') return msg('views-data-inspector:rec.reason.missing-in-dataset', { label, live: shown.live });
+  return msg('views-data-inspector:rec.reason.absent-in-game', { label, dataset: shown.dataset });
 };
 
 const draftForField = <K extends EntityKind>(
@@ -48,7 +50,7 @@ const setDraft = <K extends EntityKind>(
   if (difference.status === 'missing-in-dataset') {
     return {
       kind, action: 'create', targetId: null, current: null, proposed: difference.proposed,
-      reason: `${difference.noun} ${difference.key}: in game, not in dataset.`,
+      reason: msg('views-data-inspector:rec.reason.set-create', { noun: difference.noun, key: difference.key }),
       detector,
       evidence: [{ source: probe.source, detail: `live ${difference.noun} key ${difference.key} has no dataset match` }],
       confidence: probe.confidence, screenId: context.screenId, origin: context.origin, key,
@@ -58,7 +60,7 @@ const setDraft = <K extends EntityKind>(
     return {
       kind, action: 'delete', targetId: difference.record.id, current: difference.record,
       proposed: difference.record,
-      reason: `${difference.noun} ${difference.key}: in dataset, absent in game.`,
+      reason: msg('views-data-inspector:rec.reason.set-delete', { noun: difference.noun, key: difference.key }),
       detector,
       evidence: [{ source: probe.source, detail: `dataset ${difference.noun} key ${difference.key} has no live match` }],
       confidence: probe.removalConfidence ?? probe.confidence,

@@ -1,9 +1,10 @@
 /* @layer store-site @kind constants */
 import type { SelectOption } from '@drizztdourden08/tessera/primitives';
 import { CONTAINERS, LICENSES } from '@rotp/hub-contracts';
+import { licenseText } from './license-text';
 import type { PublishMode } from './Publish.type';
 
-const LICENSE_OPTIONS: SelectOption[] = LICENSES.map(({ id, label, description }) => ({ value: id, label, description }));
+const LICENSE_OPTIONS: SelectOption[] = LICENSES.map(({ id, label, description }) => ({ value: id, label, description: licenseText(description) }));
 
 const DEFAULT_LICENSE = 'CC-BY-4.0';
 

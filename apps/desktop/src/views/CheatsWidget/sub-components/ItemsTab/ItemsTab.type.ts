@@ -1,4 +1,5 @@
 /* @layer renderer-widgets @kind types */
+import type { I18n, Message } from '@drizztdourden08/brock-core/i18n';
 import type { CSSProperties, MouseEvent, ReactNode } from 'react';
 import type { DungeonItemKind } from '@app/game';
 
@@ -101,7 +102,7 @@ type ItemGridCellProps = {
   onHover: (slot: number | null) => void;
 };
 
-type DungeonItem = { kind: DungeonItemKind; type: string; col: number; label: string };
+type DungeonItem = { kind: DungeonItemKind; type: string; col: number; label: Message };
 
 type GearSlot = { slot: number; type: string; col: number };
 
@@ -128,6 +129,7 @@ type SlotCellProps = {
 };
 
 type OptionParams = {
+  t: I18n['t'];
   spec: SlotSpec;
   tier: TierOption;
   current: number;

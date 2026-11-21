@@ -2,6 +2,8 @@
 interface GameplaySettings {
   autoSkipDialog: boolean;
   prefillFileName: boolean;
+  extendedLetters: boolean;
+  jaFileSelectStyle: boolean;
   turnWhileDashing: boolean;
   allowDiving: boolean;
   mirrorToDarkworld: boolean;

@@ -4,7 +4,7 @@ import type { SpriteDefinition } from './manifest';
 const HUD_WALLET_SPRITE_DEFINITIONS: readonly SpriteDefinition[] = [
   {
     file: 'hud-wallet',
-    label: 'Wallet',
+    label: { key: 'game-labels:sprite.wallet' },
     category: 'hud',
     extract: { method: 'art', art: 'wallet' },
   },

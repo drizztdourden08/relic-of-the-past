@@ -21,7 +21,16 @@ void GameHook_DialogMeasure(void);
 // Observers of the text engine, so the host can draw the box itself. All no-ops unless the host may
 // hide the native box (kFeatures3_HudOverride) or pace it (kFeatures3_DialogControls).
 // A glyph |c| of width |w| px was drawn on visible row |line| (0..2) at pen x |x| px.
-void GameHook_DialogGlyph(uint8 c, uint8 line, uint8 x, uint8 w);
+void GameHook_DialogGlyph(uint16 c, uint8 line, uint8 x, uint8 w);
+// Japanese dialogue (dialog_wide_glyphs.c), all no-ops without the Japanese flag. Load: the loader meets
+// byte |c|; a two-byte glyph is copied whole (true). Decode: the packed letter for a glyph pair or a US
+// letter code, 0 otherwise. Glyph: VWF_RenderSingle drew glyph |c| entirely (true).
+bool GameHook_DialogWideLoad(uint8 c, const uint8 **src, const uint8 *src_end, uint8 **dst);
+uint32 GameHook_DialogWideDecode(uint8 a, const uint8 *src);
+bool GameHook_DialogWideGlyph(int c);
+// The Japanese glyph that stands for US letter code |code| (0xff, the space, for one with no picture).
+// The Japanese file select draws a US-letter name with it too.
+int DialogWide_GlyphOfUsLetter(uint8 code);
 // A [Scroll] finished: every row moved up one.
 void GameHook_DialogScrolled(void);
 // A message started: the glyph bitmap was cleared and the parsed buffer loaded.
@@ -54,6 +63,20 @@ void GameHook_DialogGlyphDrawn(void);
 // Text_DecodeCmd asks this second: the letter an extra-glyph escape draws (dialog_extra_glyphs.c), or 0
 // for any other byte and whenever the gate is down.
 uint32 GameHook_DialogExtraGlyphDecode(uint8 a, const uint8 *src);
+// The font copy dialog_extra_glyphs.c keeps, shared with the letter bank: the copy's tile sheet (built
+// and put in on demand, NULL when it cannot stand in), the first slot past the language's own glyphs,
+// whether a slot holds a fixed extra glyph, and a write of one [width, top tile, bottom tile] glyph.
+uint8 *DialogFont_Copy(void);
+int DialogFont_FirstFreeSlot(void);
+bool DialogFont_FixedSlot(uint8 slot);
+void DialogFont_WriteGlyph(uint8 slot, const uint8 *entry);
+// The letter bank (dialog_letter_bank.c): the letter a letter escape draws, or 0 for any other byte;
+// whether the bank wants the font copy in; and the copy's slots forgotten when the copy goes.
+uint32 DialogLetterBank_Decode(uint8 a, const uint8 *src);
+bool DialogLetterBank_Wanted(void);
+void DialogLetterBank_Forget(void);
+// True while a cell on the mirror's rows shows |glyph|, so its slot must keep its picture.
+bool DialogMirror_ShowsGlyph(uint8 glyph);
 // ZeldaDrawPpuFrame brackets its draw with these.
 void GameHook_DialogHighlightDrawBegin(void);
 void GameHook_DialogHighlightDrawEnd(void);

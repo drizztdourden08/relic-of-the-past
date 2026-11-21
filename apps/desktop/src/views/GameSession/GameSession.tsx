@@ -1,12 +1,20 @@
 /* @layer renderer-app @kind component */
 import { useWindowKind } from '@drizztdourden08/brock-react';
 import { ViewStorageProvider } from '@drizztdourden08/tessera/data';
+import { useOptionTextBridge } from '@app/shell/option-text-bridge';
+import { useTextBridge } from '@app/shell/text-bridge-hook';
+import { useJapaneseGraphicsRefresh } from '@app/hooks/useJapaneseGraphicsRefresh';
+import { useLanguageGraphicsRefresh } from '@app/hooks/useLanguageGraphicsRefresh';
 import { MainWindowSession } from './sub-components/MainWindowSession';
 import { DATA_VIEW_STORAGE } from './GameSession.constants';
 import type { GameSessionProps } from './GameSession.type';
 
 const GameSession = (props: GameSessionProps) => {
   const { children } = props;
+  useOptionTextBridge();
+  useTextBridge();
+  useJapaneseGraphicsRefresh();
+  useLanguageGraphicsRefresh();
   const kind = useWindowKind();
   return (
     <ViewStorageProvider value={DATA_VIEW_STORAGE}>

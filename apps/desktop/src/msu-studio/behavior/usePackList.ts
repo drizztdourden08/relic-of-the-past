@@ -1,10 +1,12 @@
 /* @layer renderer-components @kind hook */
 import { useCallback, useEffect, useState } from 'react';
+import { useT } from '@drizztdourden08/brock-react';
 import * as msuStore from '@app/storage/msu-store';
 import { failure } from './failure';
 import type { ActionResult, MsuPackRow } from '../msu.type';
 
 const usePackList = (onRefresh: () => void) => {
+  const t = useT();
   const [packs, setPacks] = useState<MsuPackRow[]>([]);
   const [selected, setSelected] = useState<string | null>(null);
   const [loadingPacks, setLoadingPacks] = useState(true);
@@ -28,30 +30,19 @@ const usePackList = (onRefresh: () => void) => {
     void refresh().catch(() => undefined).finally(() => { setLoadingPacks(false); });
   }, [refresh]);
 
-  const createPack = useCallback(async (name: string): Promise<ActionResult> => {
-    const trimmed = name.trim();
-    if (!trimmed) return { success: false, message: 'Give the pack a name first.' };
-    try {
-      await msuStore.createMsuPack(trimmed);
-      await refresh();
-      setSelected(trimmed);
-      return { success: true, message: `Created empty pack "${trimmed}"` };
-    } catch (err) { return failure(err, 'Could not create the pack'); }
-  }, [refresh]);
-
   const renamePack = useCallback(async (from: string, to: string): Promise<ActionResult> => {
     const trimmed = to.trim();
-    if (!trimmed) return { success: false, message: 'Give the pack a name first.' };
-    if (trimmed === from) return { success: true, message: 'Name unchanged' };
+    if (!trimmed) return { success: false, message: t('msu-studio:pack.rename.empty') };
+    if (trimmed === from) return { success: true, message: t('msu-studio:pack.rename.unchanged') };
     try {
       await msuStore.renameMsuPack(from, trimmed);
       await refresh();
       setSelected(trimmed);
-      return { success: true, message: `Renamed to "${trimmed}"` };
-    } catch (err) { return failure(err, 'Could not rename the pack'); }
-  }, [refresh]);
+      return { success: true, message: t('msu-studio:status.renamed', { name: trimmed }) };
+    } catch (err) { return failure(err, t('msu-studio:pack.rename.error')); }
+  }, [t, refresh]);
 
-  return { packs, loadingPacks, selected, setSelected, refresh, createPack, renamePack };
+  return { packs, loadingPacks, selected, setSelected, refresh, renamePack };
 };
 
 export { usePackList };

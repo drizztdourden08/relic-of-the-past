@@ -103,7 +103,23 @@ void LoadAssets(void) {
   }
 }
 
+// Sheet overrides for assets 64 (kSprGfx) and 65 (kBgGfx), filled by the language screens hook.
+static MemBlk g_sheet_override[2][kLangSheetMax];
+
+void AssetSheet_SetOverride(int asset, int idx, const uint8 *p, uint32 size) {
+  if (asset < 0 || asset > 1 || idx < 0 || idx >= kLangSheetMax) return;
+  g_sheet_override[asset][idx] = (MemBlk) { p, p ? size : 0 };
+}
+
+const uint8 *AssetSheet_Baked(int asset, int idx) {
+  if (asset < 0 || asset > 1 || g_asset_ptrs[64 + asset] == NULL) return NULL;
+  return FindIndexInMemblk((MemBlk) { g_asset_ptrs[64 + asset], g_asset_sizes[64 + asset] }, idx).ptr;
+}
+
 MemBlk FindInAssetArray(int asset, int idx) {
+  if ((asset == 64 || asset == 65) && idx >= 0 && idx < kLangSheetMax && g_sheet_override[asset - 64][idx].ptr != NULL &&
+      LanguageScreens_SheetLive(asset - 64))
+    return g_sheet_override[asset - 64][idx];
   return FindIndexInMemblk((MemBlk) { g_asset_ptrs[asset], g_asset_sizes[asset] }, idx);
 }
 
@@ -160,6 +176,12 @@ void WasmLoadState(int slot) {
   // the assets until some in-game event happened to reload gear palettes. Re-push it here.
   if (PlayerSprite_HasCustom())
     PlayerSprite_RefreshPalette();
+  // Likewise the language assets and the HUD tiles: the state restores the gate words, which the
+  // next frame's sync leaves alone when they match the wanted ones, so the assets are chosen again
+  // here against them, and a state saved under another set carries that one's HUD tiles, which the
+  // pause words of the selected one would name wrongly (LanguageScreensAssets_Apply refreshes them).
+  LanguageScreensAssets_Apply(LanguageScreens_On());
+  SelectLayout_ReopenAfterLoad();
   printf("*** Load state: slot %d\n", slot);
 }
 

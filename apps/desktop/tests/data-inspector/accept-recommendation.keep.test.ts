@@ -34,7 +34,7 @@ const finding = (over: Partial<Recommendation> = {}): Recommendation => ({
   targetId: 'tag-001',
   current: { id: 'tag-001', value: 'cave' },
   proposed: { id: 'tag-001', value: 'cavern' },
-  reason: 'the vocabulary spells it differently',
+  reason: { key: 'views-data-inspector:rec.reason.set-create', values: { noun: 'x', key: 'the vocabulary spells it differently' } },
   detector: 'test',
   evidence: [],
   confidence: 'certain',
@@ -117,7 +117,7 @@ describe('acceptRecommendation closing out', { tags: ['critical'] }, () => {
   it('refuses a collection with no write path instead of failing silently', async () => {
     const outcome = await acceptRecommendation(finding({ kind: 'screen' }), { id: 'screen-001' });
     expect(outcome.success).toBe(false);
-    expect(errorOf(outcome)).toContain('screen');
+    expect(errorOf(outcome)).toContain('err.noPath.write');
     expect(mocks.decide).not.toHaveBeenCalled();
   });
 });

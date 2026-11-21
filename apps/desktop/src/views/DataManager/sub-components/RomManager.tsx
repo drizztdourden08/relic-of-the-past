@@ -1,75 +1,67 @@
 /* @layer renderer-components @kind component */
-import { ImportForm } from './ImportForm';
-import { RomKindTabs } from './RomKindTabs';
+import { useT } from '@drizztdourden08/brock-react';
 import { RomList } from './rom-manager/RomList';
 import { RomDetailPanel } from './rom-manager/RomDetailPanel';
+import { RomCreateWizard } from './rom-manager/RomCreateWizard';
 import { useRomManager } from './rom-manager/useRomManager';
 import { useRomExtraction } from './rom-manager/useRomExtraction';
-import { ExtractionOptions } from './rom-manager/ExtractionOptions';
-import { EmptyState, Field } from '@drizztdourden08/tessera/primitives';
+import { EmptyState } from '@drizztdourden08/tessera/primitives';
 import { ListDetailLayout } from '@drizztdourden08/tessera/composites';
-import { IMPORT_LANE_CONFIG } from './rom-manager/import-lane-config.constants';
+import { CreateListPane } from '@app/compounds/CreateListPane';
+import { useCreateFlow } from '@app/hooks/useCreateFlow';
 import type { RomManagerProps } from './RomManager.type';
 
 const RomManager = (props: RomManagerProps) => {
+  const t = useT();
   const { romStatuses, onExtractAssets, onDeleteRom, onRefresh } = props;
   const extraction = useRomExtraction({ onExtractAssets });
   const { extract } = extraction;
   const {
-    activeKind, setActiveKind,
+    setActiveKind,
     supplements,
     selected, setSelected,
     detail, loadingDetail,
     handleUrlImport, handleFileImport,
   } = useRomManager({ romStatuses, onRefresh, onExtractAssets: extract });
+  const flow = useCreateFlow({ onSelect: setSelected });
 
-  const laneConfig = IMPORT_LANE_CONFIG[activeKind];
   const selectedDetails = {
     selectedBase: romStatuses.find((rom) => rom.romFile === selected),
     selectedSupplement: supplements.find((s) => s.romFile === selected),
   };
 
+  const list = (
+    <CreateListPane label={t('data-manager:rom-manager.new-rom')} creating={flow.creating} onCreate={flow.start}>
+      <RomList
+        romStatuses={romStatuses}
+        supplements={supplements}
+        selected={flow.creating ? null : selected}
+        onSelect={flow.select}
+        onDelete={onDeleteRom}
+      />
+    </CreateListPane>
+  );
+
+  const detailPane =flow.creating ? (
+    <RomCreateWizard
+      extraction={extraction}
+      onKindChange={setActiveKind}
+      onUrlImport={handleUrlImport}
+      onFileImport={handleFileImport}
+      onCancel={flow.cancel}
+      onCreated={flow.select}
+    />
+  ) : selected && <RomDetailPanel selected={selected} loadingDetail={loadingDetail} detail={detail} {...selectedDetails} onExtractAssets={extract} />;
+
   return (
     <ListDetailLayout
       listShowTitle={false}
-      listContainers={[
-        {
-          title: 'Import ROMs',
-          content: (
-            <>
-              <Field hint={laneConfig.description} width="full">
-                <RomKindTabs value={activeKind} onChange={setActiveKind} />
-              </Field>
-              <ImportForm
-                kind="rom"
-                placeholder={laneConfig.placeholder}
-                accept={laneConfig.accept}
-                dropLabel={laneConfig.dropLabel}
-                dropHint={laneConfig.dropHint}
-                onUrlImport={handleUrlImport}
-                onFileImport={handleFileImport}
-              >
-                <ExtractionOptions extraction={extraction} />
-              </ImportForm>
-            </>
-          ),
-        },
-        {
-          title: 'Imported ROMs and supplements',
-          content: (
-            <RomList
-              romStatuses={romStatuses}
-              supplements={supplements}
-              selected={selected}
-              onSelect={setSelected}
-              onDelete={onDeleteRom}
-            />
-          ),
-        },
-      ]}
-      listLabel="ROM manager"
-      detail={selected ? <RomDetailPanel selected={selected} loadingDetail={loadingDetail} detail={detail} {...selectedDetails} onExtractAssets={extract} /> : null}
-      emptyDetail={<EmptyState message="Select a ROM to view details" />}
+      listContainers={[{ title: t('data-manager:rom-manager.roms-title'), content: list }]}
+      collapsed={flow.listCollapsed}
+      onCollapsedChange={flow.setListCollapsed}
+      listLabel={t('data-manager:rom-manager.rom-manager')}
+      detail={detailPane}
+      emptyDetail={<EmptyState message={t('data-manager:rom-manager.select-a-rom-to-view')} />}
     />
   );
 };

@@ -1,0 +1,14 @@
+{
+  "menu.home": "Home",
+  "menu.game": "Game",
+  "menu.profiles": "Profiles",
+  "menu.widgets": "Widgets",
+  "menu.about": "About",
+  "menu.touchEdit": "Edit touch layout",
+  "hint.home": "Home",
+  "hint.menu": "Menu",
+  "drawer.label": "Options",
+  "fps": "{fps} FPS",
+  "volume.mute": "Mute",
+  "volume.unmute": "Unmute"
+}

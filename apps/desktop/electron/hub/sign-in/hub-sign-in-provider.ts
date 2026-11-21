@@ -1,4 +1,5 @@
 /* @layer electron-main @kind logic */
+import { mainText } from '../../lib/main-text';
 import { HUB_LIMITS, HUB_ROUTES } from '@rotp/hub-contracts';
 import type { SiteId } from '@rotp/hub-contracts';
 import type { SignInBegin, SignInPoll, SignInProvider } from '@drizztdourden08/brock-secrets/main';
@@ -13,7 +14,7 @@ const hubSignInProvider = (site: SiteId): SignInProvider => {
   const api = SITE_APIS[site];
 
   const begin = async (): Promise<SignInBegin> => {
-    if (!canStore()) throw new Error(CANNOT_STORE_ERROR);
+    if (!canStore()) throw new Error(mainText(CANNOT_STORE_ERROR));
     const begun = await callApi<BeginResponse>(api, {
       route: HUB_ROUTES.deviceBegin,
       body: { label: deviceLabel(), platform: devicePlatform() },

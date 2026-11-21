@@ -1,13 +1,14 @@
 /* @layer renderer-widgets @kind logic */
 import { buildScreenBundle } from '@rotp/game-data';
 import type { ScreenBundleGrid, TileReq } from '@rotp/game-data';
+import { localizeBundle } from '@app/game/record-text';
 import { computeBigScreenGroup } from '../widget-helpers';
 import { propagateArea } from '../../game/flood';
 import type { PropagateCtx, ScreenResponse } from './nav-flood.type';
 
 const propagateScreens = (ctx: PropagateCtx): { responses: ScreenResponse[]; overworldBundle: ScreenBundleGrid | null } => {
   const { isIndoors, primaryScreenIndex, startPos, items, allEntrances, intraEdges } = ctx;
-  const overworldBundle = isIndoors ? null : buildScreenBundle(computeBigScreenGroup(primaryScreenIndex));
+  const overworldBundle = isIndoors ? null : localizeBundle(buildScreenBundle(computeBigScreenGroup(primaryScreenIndex)));
   const screens = propagateArea({
     isIndoors,
     primaryScreenIndex,

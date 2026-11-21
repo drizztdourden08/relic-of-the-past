@@ -1,8 +1,10 @@
 /* @layer shared-asset-extraction @kind types */
+import type { Text } from '@drizztdourden08/brock-core/i18n';
 import type { RomData } from '../../rom/rom-types';
 import type { ImageBuffer } from '../../graphics/png-writer';
 import type { RGBA } from '../../graphics/palette';
 import type { SpritePalettes } from '../receipt-palettes';
+import type { SpriteSource } from '../sources';
 import type { ReceiptSheets } from '../receipt-decoder/receipt-decoder.type';
 import type { DropSheets } from '../drop-sprite-assembly';
 import type { ColorSwap } from '../palette-swap';
@@ -35,19 +37,20 @@ interface SpriteExtractDef {
 
 interface SpriteDef {
   file: string;
-  label: string;
+  label: Text;
   category: 'hud' | 'hud-pause' | 'hud-item' | 'fonts' | 'receipt' | 'drop' | 'randomizer' | 'title' | 'ground';
   extract: SpriteExtractDef;
 }
 
 interface ExtractionContext {
   rom: RomData;
+  source: SpriteSource;
   hudSheets: Buffer[];
   hudPalette: Map<number, RGBA>;
   spritePalettes: SpritePalettes;
   receiptSheets: ReceiptSheets;
   dropSheets: DropSheets;
-  dialogueFont: Buffer;
+  dialogueFont: Buffer | null;
   byFile: ReadonlyMap<string, SpriteExtractDef>;
   resolving: Set<string>;
   resolveFile: (file: string) => ImageBuffer | null;

@@ -1,22 +1,23 @@
 /* @layer renderer-components @kind constants */
+import type { I18n } from '@drizztdourden08/brock-core/i18n';
 import type { RomKind } from '@rotp/roms';
 import type { ImportLaneConfig } from './import-lane-config.type';
 
-const IMPORT_LANE_CONFIG: Record<RomKind, ImportLaneConfig> = {
+const importLaneConfig = (t: I18n['t']): Record<RomKind, ImportLaneConfig> => ({
   'snes-alttp': {
-    description: 'The SNES version. Required.',
-    placeholder: 'Paste ROM download URL...',
+    description: t('wizards:rom.lane.snes-description'),
+    placeholder: t('wizards:rom.lane.snes-placeholder'),
     accept: ['.sfc', '.smc', '.zip', '.7z', '.rar'],
-    dropLabel: 'Drop ROM file here',
-    dropHint: '.sfc, .smc, or compressed archive (.zip, .7z, .rar)',
+    dropLabel: t('wizards:rom.lane.snes-drop-label'),
+    dropHint: t('wizards:rom.lane.snes-drop-hint'),
   },
   'gba-alttp': {
-    description: 'The Game Boy Advance version. Optional; adds the extra dungeon.',
-    placeholder: 'Paste supplement download URL...',
+    description: t('wizards:rom.lane.gba-description'),
+    placeholder: t('wizards:rom.lane.gba-placeholder'),
     accept: ['.gba', '.zip', '.7z', '.rar'],
-    dropLabel: 'Drop supplement file here',
-    dropHint: '.gba, or compressed archive (.zip, .7z, .rar)',
+    dropLabel: t('wizards:rom.lane.gba-drop-label'),
+    dropHint: t('wizards:rom.lane.gba-drop-hint'),
   },
-};
+});
 
-export { IMPORT_LANE_CONFIG };
+export { importLaneConfig };

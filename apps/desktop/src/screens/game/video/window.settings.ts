@@ -1,22 +1,23 @@
 /* @layer renderer-app @kind config */
-import type { ScreenMeta, Section } from '@drizztdourden08/brock-react';
+import { msg } from '@drizztdourden08/brock-core/i18n';
+import type { ScreenMeta, SectionDef } from '@drizztdourden08/brock-react';
 
-const meta: ScreenMeta = { title: 'Window', icon: 'app-window', order: 4, keywords: ['window', 'fullscreen', 'viewport', 'pixel perfect'] };
+const meta: ScreenMeta = { title: msg('settings-window:section.window.title'), icon: 'app-window', order: 4, keywords: ['window', 'fullscreen', 'viewport', 'pixel perfect'] };
 
 const viewportModes = [
-  { value: 'none', label: 'Letterbox', hint: 'Keeps the game ratio and fills the rest of the window with black bars.' },
-  { value: 'fit', label: 'Fit Window', hint: 'Locks the window shape to the game ratio while you resize it, so no bars show.' },
-  { value: 'fill', label: 'Stretch', hint: 'Stretches the picture to fill the whole window.' },
+  { value: 'none', label: msg('settings-window:option.viewport-modes.none.label'), hint: msg('settings-window:option.viewport-modes.none.hint') },
+  { value: 'fit', label: msg('settings-window:option.viewport-modes.fit.label'), hint: msg('settings-window:option.viewport-modes.fit.hint') },
+  { value: 'fill', label: msg('settings-window:option.viewport-modes.fill.label'), hint: msg('settings-window:option.viewport-modes.fill.hint') },
 ];
 
-const sections: Section[] = [
+const sections: SectionDef[] = [
   {
     id: 'window',
-    title: 'Window',
+    title: msg('settings-window:section.window.title'),
     items: [
-      { key: 'startFullscreen', label: 'Start in Fullscreen', description: 'Automatically enter fullscreen when the game starts', keywords: 'fullscreen launch start' },
-      { key: 'viewportConstraint', label: 'Viewport', description: 'Controls how the game canvas relates to the window', keywords: 'ratio lock constrain aspect black bars stretch fill fit viewport', control: { kind: 'choice', options: viewportModes } },
-      { key: 'pixelPerfect', label: 'Pixel Perfect', description: 'Scale the picture by whole source pixels only, so every pixel is exactly the same size. Removes the shimmer on fences, walls and other straight edges while scrolling, at the cost of slightly wider black borders. Turns Linear Filtering off while active.', hint: 'Needs the Letterbox viewport.', keywords: 'pixel perfect integer scale scaling sharp crisp shimmer wobble ripple tearing nearest' },
+      { key: 'startFullscreen', label: msg('settings-window:start-fullscreen.label'), description: msg('settings-window:start-fullscreen.description'), keywords: 'fullscreen launch start' },
+      { key: 'viewportConstraint', label: msg('settings-window:viewport-constraint.label'), description: msg('settings-window:viewport-constraint.description'), keywords: 'ratio lock constrain aspect black bars stretch fill fit viewport', control: { kind: 'choice', options: viewportModes } },
+      { key: 'pixelPerfect', label: msg('settings-window:pixel-perfect.label'), description: msg('settings-window:pixel-perfect.description'), hint: msg('settings-window:pixel-perfect.hint'), keywords: 'pixel perfect integer scale scaling sharp crisp shimmer wobble ripple tearing nearest' },
     ],
   },
 ];

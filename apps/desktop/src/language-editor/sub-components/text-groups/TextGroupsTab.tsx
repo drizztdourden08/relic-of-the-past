@@ -1,5 +1,6 @@
 /* @layer renderer-components @kind component */
 import { Box, Checkbox, EmptyState, ScrollArea, SectionHeader, Text, TextInput } from '@drizztdourden08/tessera/primitives';
+import { useT } from '@drizztdourden08/brock-react';
 import { TextGroupRail } from './TextGroupRail';
 import { TextSlotRow } from './TextSlotRow';
 import { useTextSlots } from './useTextSlots';
@@ -8,6 +9,7 @@ import './TextGroupsTab.css';
 
 const TextGroupsTab = (props: TextGroupsTabProps) => {
   const { groups, activeGroup, values, readOnly = false, onSelectGroup, onChangeValue } = props;
+  const t = useT();
   const slots = useTextSlots({ groups, activeGroup, values });
   const { group, matched, drawn, query, handleQuery, untranslatedOnly, setUntranslatedOnly, total, hidden, empty } = slots;
 
@@ -15,8 +17,8 @@ const TextGroupsTab = (props: TextGroupsTabProps) => {
     <TextInput
       value={query}
       onChange={handleQuery}
-      placeholder="Search name, key or original..."
-      aria-label="Search text slots"
+      placeholder={t('language-editor:groups.search-placeholder')}
+      aria-label={t('language-editor:groups.search-label')}
     />
   );
 
@@ -30,7 +32,7 @@ const TextGroupsTab = (props: TextGroupsTabProps) => {
       />
 
       <Box className="text-groups-tab__panel">
-        <SectionHeader title={`Showing ${matched.length} of ${total}`} action={search} />
+        <SectionHeader title={t('language-editor:groups.showing', { shown: matched.length, total })} action={search} />
 
         {group?.note && (
           <Text as="p" variant="caption" className="text-groups-tab__note">{group.note}</Text>
@@ -40,13 +42,13 @@ const TextGroupsTab = (props: TextGroupsTabProps) => {
           <Checkbox
             checked={untranslatedOnly}
             onChange={setUntranslatedOnly}
-            label="Untranslated only"
+            label={t('language-editor:groups.untranslated-only')}
           />
         </Box>
 
         <ScrollArea className="text-groups-tab__rows">
-          {empty && <EmptyState message="This group has no text to translate" />}
-          {!empty && matched.length === 0 && <EmptyState message="No slot matches" />}
+          {empty && <EmptyState message={t('language-editor:groups.empty')} />}
+          {!empty && matched.length === 0 && <EmptyState message={t('language-editor:groups.no-match')} />}
 
           {drawn.map((slot) => (
             <TextSlotRow
@@ -60,7 +62,7 @@ const TextGroupsTab = (props: TextGroupsTabProps) => {
 
           {hidden > 0 && (
             <Text as="span" className="text-groups-tab__capped">
-              {`${hidden} more match but are not drawn. Search to narrow the list down to them.`}
+              {t('language-editor:groups.capped', { count: hidden })}
             </Text>
           )}
         </ScrollArea>

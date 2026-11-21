@@ -1,11 +1,12 @@
 /* @layer electron-main @kind constants */
+import { msg } from '@drizztdourden08/brock-core/i18n';
 const HOOKSHOP_LABEL = 'The Hookshop';
 const INSTALL_JOB_PREFIX = 'catalog-install:';
 const UNAUTHORIZED = 401;
-const SIGNED_OUT_MESSAGE = 'Sign in to use the Hookshop.';
-const SITE_SIGNED_OUT_MESSAGE = 'This device was signed out on the site. Sign in again.';
-const GRANT_REFUSED = 'The Hookshop answered without the pack\'s kind, author or licence.';
-const ANSWER_UNREADABLE = 'The Hookshop answered with something this app cannot read.';
+const SIGNED_OUT_MESSAGE = msg('main:hookshop.signedOut');
+const SITE_SIGNED_OUT_MESSAGE = msg('main:hookshop.siteSignedOut');
+const GRANT_REFUSED = msg('main:hookshop.grantRefused');
+const ANSWER_UNREADABLE = msg('main:hookshop.answerUnreadable');
 const HOME_SHELVES = ['featured', 'popular', 'topRated', 'fresh'] as const;
 
 export {

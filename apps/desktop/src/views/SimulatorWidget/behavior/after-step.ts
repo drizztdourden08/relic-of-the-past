@@ -1,7 +1,7 @@
 /* @layer renderer-widgets @kind logic */
 import { recordTransition } from '@rotp/navigation';
 import type { RunContext, RunCursor, RunStepResult } from '../SimulatorWidget.type';
-import { SEQUENCE_PREFIX } from '../SimulatorWidget.constants';
+import { sequenceLabelOf } from './sequence-label-of';
 import { computeProgress } from './compute-progress';
 import { fanOutEvents } from './fan-out-events';
 import { frontierEvents } from './frontier-events';
@@ -15,7 +15,7 @@ const afterStep = (ctx: RunContext, cursor: RunCursor, previous: { screenId: str
 
   const seqChange = sequenceEvent(cursor.sequenceLabel, nextState.step);
   if (seqChange) {
-    cursor.sequenceLabel = seqChange.msg.slice(SEQUENCE_PREFIX.length);
+    cursor.sequenceLabel = sequenceLabelOf(seqChange);
     fanOutEvents([seqChange], writer, store.pushEvents, recorder);
   }
   if (isFrontierReseeded(previous.screenId, previous.epoch, nextState)) {

@@ -794,7 +794,7 @@ void ZeldaDrawPpuFrame(uint8 *pixel_buffer, size_t pitch, uint32 render_flags) {
   }
 
   for (int i = 0; i <= height; i++) {
-    if (i == 128 + topBudget && irq_flag) {  // file-select BG3 split fires at content line 128 (shifted down by the top budget)
+    if (irq_flag && i == GameHook_FileSelectSplitLine() + topBudget) {  // file-select BG3 split, content line shifted down by the top budget
       zelda_ppu_write(BG3HOFS, selectfile_var8);
       zelda_ppu_write(BG3HOFS, selectfile_var8 >> 8);
       zelda_ppu_write(BG3VOFS, 0);
@@ -1335,7 +1335,7 @@ static const uint32 kGateWordParityMask[kGateWordCount] = {
   kFeatures2_WidescreenLinkHideViaOffscreenY | kFeatures2_SaveMenuLockoutAfterMedallionFix |
   kFeatures2_FixBunnyPaletteAfterMap |
   kFeatures2_WidescreenPlayArea | kFeatures2_WidescreenIdleAI | kFeatures2_TitleOverride |
-  kFeatures2_HostMenu | kFeatures2_ModernControls,
+  kFeatures2_HostMenu | kFeatures2_ModernControls | kFeatures2_LanguageScreens,
 
   // features3: cheats (the master + all four per-category permission bits), the randomizer item-override
   // table, tracker notifications, the custom player sprite/palette, and the HUD override all diverge
@@ -1399,6 +1399,9 @@ static void GateWordSideEffects(int i, uint32 wanted) {
   // time this runs.
   if (i == 2 && !(wanted & kFeatures2_HostMenu))
     HostMenu_Restore();
+
+  if (i == 2)
+    GameHook_LanguageScreensGate((wanted & kFeatures2_LanguageScreens) != 0);
 }
 
 // Undo for bits that are about to CLEAR, run while the OLD word is still in WRAM, i.e. while the gate
@@ -1464,7 +1467,7 @@ static void SyncGateWords(void) {
     uint32 *word = (uint32 *)(g_ram + kGateWordRamAddr[i]);
     uint32 wanted = g_wanted_gate_words[i];
     if (vanillaSafe)
-      wanted &= ~kGateWordParityMask[i];
+      wanted &= ~(kGateWordParityMask[i] | GameHook_ParityMask(i));
     if (*word == wanted)
       continue;
     GateWordTeardown(i, *word, wanted);
@@ -1568,6 +1571,7 @@ void ZeldaSetLanguage(const char *language) {
   g_zenv.dialogue_blk = kDialogue(found.ptr[0]);
   g_zenv.dialogue_font_blk = kDialogueFont(found.ptr[1]);
   g_zenv.dialogue_flags = found.ptr[2];
+  GameHook_LanguageScreens(language);
 }
 
 

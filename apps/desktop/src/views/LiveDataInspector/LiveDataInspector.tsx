@@ -8,7 +8,7 @@ import { openInPassOrder, useRecommendations } from '@app/data-inspector/recomme
 import { defaultIdRefDisplay } from '@app/data-inspector/record-links';
 import { useIdRefNavigation } from '@app/views/DataInspector/behavior/useIdRefNavigation';
 import { useDataViewStore } from '@app/stores/data-view-store';
-import { useWidgetPref } from '@drizztdourden08/brock-react';
+import { useText, useWidgetPref } from '@drizztdourden08/brock-react';
 import type { EntityKind, ScreenRecord } from '@rotp/game-data';
 import { DEFAULT_KIND, NO_RECORDS_MESSAGE, SPAWNS_PATH } from './LiveDataInspector.constants';
 import type { LiveRecord } from './LiveDataInspector.type';
@@ -29,6 +29,7 @@ const idOf = (record: unknown): string | null => {
 
 const LiveDataInspectorContent = () => {
   const context = useLiveContext();
+  const text = useText();
   useDetectionPass(context);
   const diffsByRecord = useComparison(context);
 
@@ -60,7 +61,7 @@ const LiveDataInspectorContent = () => {
       <RecommendationList entries={screenEntries} />
       <CollectionTabs selected={kind} onSelect={setKind} />
       <ScrollArea className="live-data-inspector__record" onClickCapture={handleIdRefClickCapture}>
-        {records.length === 0 && <EmptyState message={NO_RECORDS_MESSAGE} />}
+        {records.length === 0 && <EmptyState message={text(NO_RECORDS_MESSAGE)} />}
         {records.map((record) => {
           const id = idOf(record);
           if (!id) return null;

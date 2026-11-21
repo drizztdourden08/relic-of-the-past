@@ -15,7 +15,7 @@ const readCombat = (observations: ScreenObservations, record: ActorRecord): Prob
 
 const combatProbe: FieldProbe<'actor'> = {
   path: 'combat',
-  label: 'Combat profile',
+  label: 'combatProfile',
   source: 'native:combat-table',
   confidence: 'certain',
   applies: (_observations, record) => record.gameId.spriteType != null,

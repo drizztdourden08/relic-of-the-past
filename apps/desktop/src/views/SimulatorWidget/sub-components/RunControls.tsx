@@ -1,4 +1,5 @@
 /* @layer renderer-widgets @kind component */
+import { useT } from '@drizztdourden08/brock-react';
 import { Box, Field, NumberInput } from '@drizztdourden08/tessera/primitives';
 import { StopAtCheckPicker } from './StopAtCheckPicker';
 import { RunButtons } from './RunButtons';
@@ -7,6 +8,7 @@ import type { RunControlsProps } from '../SimulatorWidget.type';
 const RunControls = (props: RunControlsProps) => {
   const { status, stopAtCheckId, onStopAtChange, screenLimit, onScreenLimitChange, canRestore, onStart, onPause, onResume, onStop, onRestore } = props;
 
+  const t = useT();
   const idle = status === 'idle' || status === 'done';
 
   const handleScreenLimit = (value: number) => {
@@ -15,17 +17,17 @@ const RunControls = (props: RunControlsProps) => {
 
   return (
     <Box className="simulator__controls">
-      <Field label="Stop at check">
+      <Field label={t('views-simulator:controls.stop.at')}>
         <StopAtCheckPicker
           stopAtCheckId={stopAtCheckId}
           onStopAtChange={onStopAtChange}
           disabled={!idle}
         />
       </Field>
-      <Field label="Max screens" hint="blank = unlimited">
+      <Field label={t('views-simulator:controls.max.screens')} hint={t('views-simulator:controls.max.screens.hint')}>
         <NumberInput
           min={1}
-          placeholder="unlimited"
+          placeholder={t('views-simulator:controls.unlimited')}
           value={screenLimit ?? ''}
           onChange={handleScreenLimit}
           disabled={!idle}

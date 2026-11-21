@@ -1,6 +1,7 @@
 /* @layer renderer-appshell @kind logic */
 import * as assetsStore from '@app/storage/assets-store';
 import { log } from '@app/log-bus';
+import { failureLine } from '@app/storage/localized-error';
 
 const ensureProfileAssets = async (romFile: string): Promise<ArrayBuffer | null> => {
   const hasAssets = await assetsStore.checkAssets(romFile);
@@ -8,14 +9,14 @@ const ensureProfileAssets = async (romFile: string): Promise<ArrayBuffer | null>
     log.app(`No cached assets for ${romFile}, extracting...`);
     const result = await assetsStore.extractAssets(romFile);
     if (!result.success) {
-      log.error(`Extraction failed: ${result.error}`);
+      log.error(`Extraction failed: ${failureLine(result.error ?? '')}`);
       return null;
     }
   } else if (await assetsStore.checkAssetsStale(romFile)) {
     log.app(`Cached assets for ${romFile} predate the current bake format, recompiling...`);
     const result = await assetsStore.extractAssets(romFile);
     if (!result.success) {
-      log.error(`Asset recompile failed: ${result.error}. Keeping the previous cached assets`);
+      log.error(`Asset recompile failed: ${failureLine(result.error ?? '')}. Keeping the previous cached assets`);
     } else {
       log.app(`Assets recompiled for ${romFile}`);
     }

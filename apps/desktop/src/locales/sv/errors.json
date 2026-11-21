@@ -1,0 +1,14 @@
+{
+  "rom.usRequired": "Denna ROM ger bara spelet dess språk; själva spelet körs på den amerikanska ROM:en. Importera den amerikanska ROM:en och extrahera igen.",
+  "rom.fontMissing": "Grundtypsnittet för {languages, list} saknas och denna ROM kan inte tillhandahålla det. Importera det språkets ROM först.",
+  "rom.notFound": "ROM-filen hittades inte: {file}",
+  "rom.zip.none": "Ingen ROM-fil (.sfc/.smc) hittades i källan",
+  "rom.zip.many": "Flera ROM-filer hittades ({count}). Ange exakt en ROM.",
+  "language.exists": "En språkuppsättning med id \"{id}\" finns redan. Välj ett annat namn.",
+  "language.patched.failed": "Den patchade ROM:en kunde inte importeras. Rapporten nedan visar vilka delar som misslyckades.",
+  "sprite.unreadablePack": "Inte ett läsbart spritepaket.",
+  "sprite.invalidZspr": "Inte en giltig ZSPR-spritefil.",
+  "msu.trackNotFound": "Spåret hittades inte: {file}",
+  "msu.noTracks": "Inga spår hittades att installera.",
+  "import.failed": "Importen misslyckades."
+}

@@ -1,0 +1,9 @@
+{
+  "section.mobile.title": "Affichage",
+  "render-into-notch.label": "Afficher sous l'encoche caméra",
+  "render-into-notch.description": "Activé : le jeu et l'interface utilisent tout l'écran, y compris sous l'encoche. Désactivé : tout reste dans la zone d'écran utilisable.",
+  "section.mobile-behavior.title": "Comportement",
+  "pause-when-away.label": "Mettre en pause en arrière-plan",
+  "pause-when-away.description": "Met le jeu et son son en pause quand vous changez d'application ou éteignez l'écran.",
+  "screen.title": "Mobile"
+}

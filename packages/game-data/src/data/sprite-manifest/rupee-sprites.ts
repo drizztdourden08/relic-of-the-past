@@ -7,7 +7,7 @@ const GREEN_DARK = '#4a9431';
 const RUPEE_SPRITE_DEFINITIONS: readonly SpriteDefinition[] = [
   {
     file: 'receipt-rupee-purple',
-    label: 'Rupee (purple)',
+    label: { key: 'game-labels:sprite.rupeePurple' },
     category: 'receipt',
     extract: {
       method: 'palette-swap',
@@ -17,7 +17,7 @@ const RUPEE_SPRITE_DEFINITIONS: readonly SpriteDefinition[] = [
   },
   {
     file: 'receipt-rupee-silver',
-    label: 'Rupee (silver)',
+    label: { key: 'game-labels:sprite.rupeeSilver' },
     category: 'receipt',
     extract: {
       method: 'palette-swap',
@@ -27,7 +27,7 @@ const RUPEE_SPRITE_DEFINITIONS: readonly SpriteDefinition[] = [
   },
   {
     file: 'receipt-rupee-gold',
-    label: 'Rupee (gold)',
+    label: { key: 'game-labels:sprite.rupeeGold' },
     category: 'receipt',
     extract: {
       method: 'palette-swap',

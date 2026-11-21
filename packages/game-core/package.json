@@ -13,14 +13,15 @@
   ],
   "exports": {
     ".": "./src/index.ts",
+    "./snes-color": "./src/snes-color/index.ts",
     "./mem-file-store": "./src/mem-file-store/index.ts",
     "./save-paths": "./src/save-paths/index.ts",
     "./shadow-casting-types": "./src/shadow-casting-types/index.ts",
     "./package.json": "./package.json"
   },
   "dependencies": {
-    "@drizztdourden08/brock-core": "^0.122.0",
-    "@drizztdourden08/brock-display": "^0.122.0",
+    "@drizztdourden08/brock-core": "^0.123.0",
+    "@drizztdourden08/brock-display": "^0.123.0",
     "@rotp/asset-extraction": "workspace:*",
     "@rotp/features": "workspace:*",
     "@rotp/game-data": "workspace:*",

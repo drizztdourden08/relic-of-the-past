@@ -1,4 +1,5 @@
 /* @layer electron-main @kind constants */
-const NO_MANIFEST = 'Nothing in this pack is wired to a slot, so there is nothing to convert.';
+import { msg } from '@drizztdourden08/brock-core/i18n';
+const NO_MANIFEST = msg('main:msu.optimize.noManifest');
 
 export { NO_MANIFEST };

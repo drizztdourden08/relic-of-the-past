@@ -1,0 +1,8 @@
+{
+  "section.camera.title": "Kamera",
+  "camera-lock-to-viewport.label": "Zablokuj kamerę w widoku",
+  "camera-lock-to-viewport.description": "Przypina widok do granicy obszaru, by poza nią nie było czarnej przestrzeni. Wyłączone zachowuje oryginalną kamerę.",
+  "camera-lock-to-viewport.hint": "Wymaga Rozszerzonego renderowania w Wyświetlaniu.",
+  "smooth-transitions.label": "Płynne przejścia",
+  "smooth-transitions.description": "Wygładza przesuwanie przez szwy obszarów. Wymaga Zablokuj kamerę w widoku."
+}

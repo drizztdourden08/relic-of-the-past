@@ -1,4 +1,5 @@
 /* @layer renderer-lib @kind types */
+import type { I18n, Text } from '@drizztdourden08/brock-core/i18n';
 import type { CapacityFamily, FamilyBonus, FamilySetting, WalletFloor } from '@rotp/randomizer';
 
 interface CapacityRowInput {
@@ -9,6 +10,8 @@ interface CapacityRowInput {
   forced?: string;
   walletFloor?: WalletFloor;
   bonus?: FamilyBonus;
+  t: I18n['t'];
+  text: (text: Text) => string;
 }
 
 export type { CapacityRowInput };

@@ -1,12 +1,15 @@
 /* @layer renderer-components @kind component */
+import { useT } from '@drizztdourden08/brock-react';
 import { useMemo } from 'react';
 import { Box, Text, Button } from '@drizztdourden08/tessera/primitives';
 import { SettingsSection } from '@drizztdourden08/tessera/composites';
 import { NumberField } from './NumberField';
+import { PositionFields } from './PositionFields';
 import { HeightLevelPicker } from './HeightLevelPicker';
 import type { ShadowShapeInspectorProps } from './ShadowShapeInspector.type';
 
 const ShadowShapeInspector = ({ screenId, selectedHm, updateHeightmapElement, handleDelete }: ShadowShapeInspectorProps) => {
+  const t = useT();
   const setters = useMemo(() => {
     const setShape = (patch: Partial<typeof selectedHm.shape>) =>
       updateHeightmapElement(screenId, selectedHm.id, { shape: { ...selectedHm.shape, ...patch } });
@@ -23,11 +26,8 @@ const ShadowShapeInspector = ({ screenId, selectedHm, updateHeightmapElement, ha
   }, [screenId, selectedHm, updateHeightmapElement]);
 
   return (
-    <SettingsSection title="Shape">
-      <Box className="shadow-editor-panel__field-row">
-        <NumberField icon="X" value={selectedHm.shape.x} step={1} onChange={setters.x} />
-        <NumberField icon="Y" value={selectedHm.shape.y} step={1} onChange={setters.y} />
-      </Box>
+    <SettingsSection title={t('views-shadow-editor:shape.title')}>
+      <PositionFields x={selectedHm.shape.x} y={selectedHm.shape.y} onX={setters.x} onY={setters.y} />
 
       <Box className="shadow-editor-panel__field-row">
         <NumberField icon="W" value={selectedHm.shape.width} step={1} min={1} onChange={setters.width} />
@@ -44,11 +44,11 @@ const ShadowShapeInspector = ({ screenId, selectedHm, updateHeightmapElement, ha
       )}
 
       <Box className="shadow-editor-panel__subsection">
-        <Text className="shadow-editor-panel__sublabel">Height</Text>
+        <Text className="shadow-editor-panel__sublabel">{t('views-shadow-editor:height')}</Text>
         <HeightLevelPicker value={selectedHm.height} onChange={setters.level} />
       </Box>
 
-      <Button size="sm" variant="danger" onClick={handleDelete}>Delete Shape</Button>
+      <Button size="sm" variant="danger" onClick={handleDelete}>{t('views-shadow-editor:shape.delete')}</Button>
     </SettingsSection>
   );
 };

@@ -1,4 +1,5 @@
 /* @layer renderer-components @kind component */
+import { useT } from '@drizztdourden08/brock-react';
 import { Box, Text } from '@drizztdourden08/tessera/primitives';
 import { LadderStepper } from '@app/composites/LadderStepper';
 import type { FamilyLinesProps } from '../CapacityFamilyRow.type';
@@ -7,6 +8,7 @@ import { LadderControls } from './LadderControls';
 import { RowLine } from './RowLine';
 
 const FamilyLines = ({ model, inert, readout, onChange, onBonusChange }: FamilyLinesProps) => {
+  const t = useT();
   const { state, label, preview, bonus, bonusCaption } = model;
 
   return (
@@ -21,7 +23,7 @@ const FamilyLines = ({ model, inert, readout, onChange, onBonusChange }: FamilyL
           onChange={inert ? undefined : onBonusChange}
         />
       )}
-      <RowLine label="ladder" className="capacity-row__ladder">
+      <RowLine label={t('compounds:capacity.ladder')} className="capacity-row__ladder">
         <Box className="capacity-row__preview">
           <LadderStepper label={label} steps={preview.steps} size="compact" mediaPlacement="below" showLabels={false} />
           {preview.note !== undefined && <Text className="capacity-row__preview-note">{preview.note}</Text>}

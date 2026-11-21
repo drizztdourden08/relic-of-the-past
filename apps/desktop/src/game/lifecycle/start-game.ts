@@ -1,6 +1,7 @@
 /* @layer bridge-wasm @kind logic */
 import { log } from '../../log-bus';
-import { reassertHostGates, getGameState, setModule, setProfileId, setState, exposeDebugHandles } from '@rotp/game-core';
+import { errorText } from '../../storage/localized-error';
+import { reassertHostGates, getGameState, loadBakedLetters, pushPendingJapaneseGraphics, pushPendingLanguageScreens, setModule, setProfileId, setState, exposeDebugHandles } from '@rotp/game-core';
 import { bootGameModule } from './boot-game-module';
 import { readProfileSram } from './read-profile-sram';
 import { rotpCore } from './rotp-core';
@@ -20,6 +21,11 @@ const startGame = async (canvas: HTMLCanvasElement, assetData: Uint8Array, confi
     const module = await bootGameModule(canvas, assetData, configIni, sramData);
     if (!module) return;
     setModule(module);
+    loadBakedLetters(module);
+    const refused = pushPendingLanguageScreens(module);
+    if (refused.length > 0) log.wasm(`The core refused language screen tables: ${refused.join(', ')}`);
+    const refusedGraphics = pushPendingJapaneseGraphics(module);
+    if (refusedGraphics.length > 0) log.wasm(`The core refused Japanese graphics: ${refusedGraphics.join(', ')}`);
     setProfileId(profileId ?? null);
     exposeDebugHandles(module);
     setState({ status: 'running', error: null });
@@ -30,7 +36,7 @@ const startGame = async (canvas: HTMLCanvasElement, assetData: Uint8Array, confi
   } catch (err) {
     const msg = err instanceof Error ? err.message : String(err);
     log.error(`WASM failed: ${msg}`);
-    setState({ status: 'error', error: msg });
+    setState({ status: 'error', error: errorText(err) });
   }
 };
 

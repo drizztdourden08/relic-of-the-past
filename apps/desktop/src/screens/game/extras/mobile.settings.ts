@@ -1,26 +1,27 @@
 /* @layer renderer-app @kind config */
-import type { ScreenMeta, Section } from '@drizztdourden08/brock-react';
+import { msg } from '@drizztdourden08/brock-core/i18n';
+import type { ScreenMeta, SectionDef } from '@drizztdourden08/brock-react';
 
-const meta: ScreenMeta = { title: 'Mobile', icon: 'maximize-2', order: 6, hosts: ['capacitor'], keywords: ['mobile', 'phone', 'tablet', 'notch', 'cutout'] };
+const meta: ScreenMeta = { title: msg('settings-mobile:screen.title'), icon: 'maximize-2', order: 6, hosts: ['capacitor'], keywords: ['mobile', 'phone', 'tablet', 'notch', 'cutout'] };
 
-const mobile: Section[] = [
+const mobile: SectionDef[] = [
   {
     id: 'mobile',
-    title: 'Display',
+    title: msg('settings-mobile:section.mobile.title'),
     items: [
-      { key: 'renderIntoNotch', label: 'Render under camera cutout', description: 'On: the game and UI use the full screen, extending under the camera notch. Off: keep everything inside the usable screen area.', keywords: 'notch cutout camera safe area fullscreen mobile display edge' },
+      { key: 'renderIntoNotch', label: msg('settings-mobile:render-into-notch.label'), description: msg('settings-mobile:render-into-notch.description'), keywords: 'notch cutout camera safe area fullscreen mobile display edge' },
     ],
   },
   {
     id: 'mobile-behavior',
-    title: 'Behavior',
+    title: msg('settings-mobile:section.mobile-behavior.title'),
     items: [
-      { key: 'pauseWhenAway', label: 'Pause when the app is away', description: 'Pause the game and its sound when you switch apps or turn the screen off.', keywords: 'pause background focus away minimize sound mobile' },
+      { key: 'pauseWhenAway', label: msg('settings-mobile:pause-when-away.label'), description: msg('settings-mobile:pause-when-away.description'), keywords: 'pause background focus away minimize sound mobile' },
     ],
   },
 ];
 
-const sections = (): Section[] => mobile;
+const sections = (): SectionDef[] => mobile;
 
 export default sections;
 export { meta };

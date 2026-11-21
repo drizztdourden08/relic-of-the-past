@@ -1,4 +1,6 @@
 /* @layer renderer-components @kind constants */
-const NOTICE = 'The capacity upgrades could not be planned from these settings.';
+import { msg } from '@drizztdourden08/brock-core/i18n';
+
+const NOTICE = msg('views-randomizer:capacity.notice');
 
 export { NOTICE };

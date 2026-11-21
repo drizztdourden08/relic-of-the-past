@@ -7,4 +7,9 @@ interface AspectChoices {
   tallPresets?: SegmentOption[];
 }
 
-export type { AspectChoices };
+interface RefreshAdvisory {
+  hz: number;
+  target: number;
+}
+
+export type { AspectChoices, RefreshAdvisory };

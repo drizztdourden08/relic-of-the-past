@@ -5,11 +5,13 @@ import { OutlineName } from './OutlineName';
 import { CARET_ICON, DROP_CLASS } from './OutlineRow.constants';
 import type { KeyboardEvent as ReactKeyboardEvent } from 'react';
 import type { OutlineRowProps } from './OutlineRow.type';
+import { useT } from '@drizztdourden08/brock-react';
 
 const isMenuKey = (event: ReactKeyboardEvent): boolean =>
   event.key === 'ContextMenu' || (event.key === 'F10' && event.shiftKey);
 
 const OutlineRow = (props: OutlineRowProps) => {
+  const t = useT();
   const {
     id, label, depth, kind, cell, locked, isScreen, hasChildren, collapsed, selected, dragging,
     dropZone, missingSlots, rowRef, onSelect, onToggleCollapse, onRemove, onDragPointerDown,
@@ -45,7 +47,7 @@ const OutlineRow = (props: OutlineRowProps) => {
           variant="ghost"
           size="sm"
           className={caret}
-          label={collapsed ? `Expand ${label}` : `Collapse ${label}`}
+          label={collapsed ? t('hud-editor:outline.expand', { label }) : t('hud-editor:outline.collapse', { label })}
           onClick={(event) => { event.stopPropagation(); onToggleCollapse(); }}
         >
           <Icon className="hud-outline__caret-mark" path={CARET_ICON} size={12} aria-hidden />
@@ -54,7 +56,7 @@ const OutlineRow = (props: OutlineRowProps) => {
         <Box className="hud-outline__caret-spacer" aria-hidden />
       )}
       <OutlineName kind={kind} label={label} cell={cell} locked={locked} missingSlots={missingSlots} selected={selected} onSelect={onSelect} />
-      {!locked && !isScreen && <IconButton variant="ghost" size="sm" label={`Remove ${label}`} onClick={onRemove}>✕</IconButton>}
+      {!locked && !isScreen && <IconButton variant="ghost" size="sm" label={t('hud-editor:outline.remove', { label })} onClick={onRemove}>✕</IconButton>}
     </Box>
   );
 };

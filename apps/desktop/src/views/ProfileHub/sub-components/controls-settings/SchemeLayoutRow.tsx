@@ -1,33 +1,36 @@
 /* @layer renderer-components @kind component */
 import { useMemo } from 'react';
+import { useT } from '@drizztdourden08/brock-react';
 import { Box, Field, Select, Text } from '@drizztdourden08/tessera/primitives';
+import { layoutLabel } from '@app/hud-layout-editing/layout-label';
 import type { SchemeLayoutRowProps } from './slots-footer.type';
 
 const SchemeLayoutRow = (props: SchemeLayoutRowProps) => {
   const { value, layouts, disabled = false, onChange } = props;
+  const t = useT();
 
   const options = useMemo(() => layouts.map((layout) => ({
     value: layout.id,
-    label: layout.builtIn ? layout.name : `${layout.name} (custom)`,
-  })), [layouts]);
+    label: layout.builtIn ? layoutLabel(layout, t) : t('profiles:controls.layout.custom', { name: layout.name }),
+  })), [layouts, t]);
 
   return (
     <Box className="modern-tab__layout">
       <Field
-        label="HUD layout"
-        hint="Switching control profile switches the layout too."
+        label={t('profiles:controls.layout.label')}
+        hint={t('profiles:controls.layout.hint')}
       >
         <Select
           value={value}
           options={options}
-          placeholder="Default"
+          placeholder={t('profiles:controls.layout.placeholder')}
           disabled={disabled || options.length === 0}
           onChange={onChange}
         />
       </Field>
       {disabled && (
         <Text variant="caption" className="modern-tab__slots-hint">
-          Assign a device to this profile first. A scheme with no slots has no HUD to arrange.
+          {t('profiles:controls.layout.no-device')}
         </Text>
       )}
     </Box>

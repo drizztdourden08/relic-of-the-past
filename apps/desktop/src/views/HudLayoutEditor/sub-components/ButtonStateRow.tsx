@@ -3,10 +3,12 @@ import { Flex, Text, Toggle } from '@drizztdourden08/tessera/primitives';
 import { faceArtOf } from '@app/hud-layout-editing/node-art';
 import { ButtonFaceBody } from './ButtonFaceBody';
 import type { ButtonStateRowProps } from './ButtonStateRow.type';
+import { useT } from '@drizztdourden08/brock-react';
 
 const ButtonStateRow = (props: ButtonStateRowProps) => {
+  const t = useT();
   const { state, required, face, glyphPacks, onChange } = props;
-  const art = faceArtOf(face, glyphPacks);
+  const art = faceArtOf(face, glyphPacks, t);
 
   return (
     <Flex direction="column" gap="2xs" className={`hud-button-state${face ? ' is-set' : ''}`}>
@@ -16,7 +18,7 @@ const ButtonStateRow = (props: ButtonStateRowProps) => {
           <Toggle
             size="sm"
             checked={face !== undefined}
-            label={face ? '' : 'falls back to idle'}
+            label={face ? '' : t('hud-editor:button-state.falls-back')}
             onChange={(on) => onChange(on ? { from: 'glyph', pack: 'generic', glyph: 'A' } : undefined)}
           />
         )}

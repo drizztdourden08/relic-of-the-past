@@ -1,4 +1,6 @@
 /* @layer renderer-components @kind constants */
+import { msg } from '@drizztdourden08/brock-core/i18n';
+import type { Message } from '@drizztdourden08/brock-core/i18n';
 import { loadState, saveState } from '../../game';
 import type { HintAction, SlotActionSpec } from './SaveStateOverlay.type';
 
@@ -12,11 +14,11 @@ const SLOT_ACTIONS: readonly SlotActionSpec[] = [
   { prefix: 'save-state', label: 'SaveState', verb: 'Saving', run: saveState },
 ];
 
-const HINT_LABELS: Record<HintAction, string> = {
-  'tap-load': 'Tap to load',
-  'hold-save': 'Hold to save',
-  'holding-save': 'Saving...',
-  'esc-cancel': 'Cancel',
+const HINT_LABELS: Record<HintAction, Message> = {
+  'tap-load': msg('views-game-layer:saveHint.tapLoad'),
+  'hold-save': msg('views-game-layer:saveHint.holdSave'),
+  'holding-save': msg('views-game-layer:saveHint.holdingSave'),
+  'esc-cancel': msg('views-game-layer:saveHint.cancel'),
 };
 
 export { HINT_LABELS, SLOT_COUNT, SHORTCUT_KEYS, ANIM_MS, TAP_THRESHOLD_MS, SLOT_ACTIONS };

@@ -16,6 +16,7 @@ interface DialogRowsProps {
   atlas: HTMLCanvasElement | null;
   highlight: DialogHighlight;
   alphabet: readonly string[];
+  lang: string | undefined;
   ink: string;
   stroke: string;
   strokeWidth: number;

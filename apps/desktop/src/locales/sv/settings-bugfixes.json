@@ -1,0 +1,13 @@
+{
+  "section.bugfixes.title": "Buggfixar",
+  "section.bugfixes-bundles.title": "Aktivera i bulk",
+  "section.bugfixes-misc.title": "Allmänna fixar",
+  "section.bugfixes-gamechanging.title": "Buggfixar som ändrar spelet",
+  "misc-bug-fixes.label": "Alla allmänna buggfixar",
+  "misc-bug-fixes.description": "Slå på alla allmänna fixar nedan på en gång. Enskilda reglage nedan har företräde.",
+  "game-changing-bug-fixes.label": "Alla buggfixar som ändrar spelet",
+  "game-changing-bug-fixes.description": "Slå på fixar som ändrar spelets beteende på sätt som speedrunners kan bry sig om. Enskilda reglage har företräde.",
+  "game-changing-bug-fixes.hint": "Rundor som jämförs med originalspelet bör lämna den av.",
+  "state.on": "Spelet använder det fixade beteendet.",
+  "state.off": "Den ursprungliga buggen behålls."
+}

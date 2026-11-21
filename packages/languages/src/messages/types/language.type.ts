@@ -1,4 +1,5 @@
 /* @layer shared-game @kind types */
+import type { ScreenPayload } from '@rotp/asset-extraction';
 import type { BasedOn } from '@rotp/game-data';
 import type { TextOverrides } from '../text/types';
 import type { Variable } from '../variables/types';
@@ -30,14 +31,18 @@ type NameTable = {
   labels: Record<PauseLabelKey, string>;
 };
 
+type LanguageScript = 'latin' | 'japanese';
+
 type LanguageSetMeta = {
   id: string;
   name: string;
   base: string;
-  origin: 'rom' | 'custom';
+  origin: 'rom' | 'patch' | 'custom';
   version: number;
   author?: string;
   basedOn?: BasedOn;
+  credits?: string;
+  script?: LanguageScript;
 };
 
 type SetStructure = 'continuous' | 'block' | 'off';
@@ -49,9 +54,10 @@ type LanguageSet = LanguageSetMeta & {
   variables?: Variable[];
   structure?: SetStructure;
   text?: TextOverrides;
+  screens?: ScreenPayload;
 };
 
 export type {
-  DialogueEntry, GlossaryTerm, LanguageSet, LanguageSetMeta, NameTable, PauseLabelKey,
+  DialogueEntry, GlossaryTerm, LanguageScript, LanguageSet, LanguageSetMeta, NameTable, PauseLabelKey,
   SetStructure, Token,
 };

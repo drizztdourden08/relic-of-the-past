@@ -1,4 +1,5 @@
 /* @layer renderer-widgets @kind constants */
+import type { I18n } from '@drizztdourden08/brock-core/i18n';
 import type { LogKindDef } from '@drizztdourden08/tessera/composites';
 import type { FilterState } from '@rotp/game-data';
 import type { LogKind } from './SimulatorWidget.type';
@@ -6,10 +7,6 @@ import type { LogKind } from './SimulatorWidget.type';
 const SAFETY_CAP = 50_000;
 const PAUSED_POLL_MS = 120;
 const FEATURES_LATCH_WAIT_MS = 500;
-const SEQUENCE_PREFIX = 'Sequence ';
-
-const RECORD_REQUIRED = 'Apply this suggestion from the Dataset widget.';
-const CHECK_DISABLED_HINT = 'Check writing is not available.';
 
 const EMPTY_FILTER: FilterState = {
   searchQuery: '',
@@ -21,23 +18,23 @@ const EMPTY_FILTER: FilterState = {
 
 const ALL_KINDS: LogKind[] = ['seq', 'area', 'screen', 'pos', 'backtrack', 'flood', 'reset', 'check', 'item', 'discover', 'move', 'unlock', 'outcome', 'info', 'debug'];
 
-const KIND_LABEL: Record<LogKind, string> = {
-  seq: 'Sequences',
-  area: 'Areas',
-  screen: 'Screens',
-  pos: 'Positions',
-  backtrack: 'Backtracks',
-  flood: 'Flood',
-  reset: 'Resets',
-  check: 'Checks',
-  item: 'Items',
-  discover: 'Discoveries',
-  move: 'Moves',
-  unlock: 'Unlocks',
-  outcome: 'Outcome',
-  info: 'Info',
-  debug: 'Debug',
-};
+const kindLabel = (t: I18n['t']): Record<LogKind, string> => ({
+  seq: t('views-simulator:log.kind.seq'),
+  area: t('views-simulator:log.kind.area'),
+  screen: t('views-simulator:log.kind.screen'),
+  pos: t('views-simulator:log.kind.pos'),
+  backtrack: t('views-simulator:log.kind.backtrack'),
+  flood: t('views-simulator:log.kind.flood'),
+  reset: t('views-simulator:log.kind.reset'),
+  check: t('views-simulator:log.kind.check'),
+  item: t('views-simulator:log.kind.item'),
+  discover: t('views-simulator:log.kind.discover'),
+  move: t('views-simulator:log.kind.move'),
+  unlock: t('views-simulator:log.kind.unlock'),
+  outcome: t('views-simulator:log.kind.outcome'),
+  info: t('views-simulator:log.kind.info'),
+  debug: t('views-simulator:log.kind.debug'),
+});
 
 const KIND_LOOK: Record<LogKind, Omit<LogKindDef, 'id' | 'label'>> = {
   seq: { tone: 'primary', toneMessage: true, strong: true, uppercase: true },
@@ -57,9 +54,11 @@ const KIND_LOOK: Record<LogKind, Omit<LogKindDef, 'id' | 'label'>> = {
   debug: { tone: 'muted', toneMessage: true },
 };
 
-const LOG_KINDS: LogKindDef[] = ALL_KINDS.map((kind) => ({ id: kind, label: KIND_LABEL[kind], ...KIND_LOOK[kind] }));
+const logKinds = (t: I18n['t']): LogKindDef[] => {
+  const labels = kindLabel(t);
+  return ALL_KINDS.map((kind) => ({ id: kind, label: labels[kind], ...KIND_LOOK[kind] }));
+};
 
 export {
-  CHECK_DISABLED_HINT, EMPTY_FILTER, FEATURES_LATCH_WAIT_MS, LOG_KINDS, PAUSED_POLL_MS, RECORD_REQUIRED, SAFETY_CAP,
-  SEQUENCE_PREFIX,
+  EMPTY_FILTER, FEATURES_LATCH_WAIT_MS, logKinds, PAUSED_POLL_MS, SAFETY_CAP,
 };

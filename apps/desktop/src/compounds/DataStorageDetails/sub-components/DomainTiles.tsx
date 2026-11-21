@@ -2,18 +2,25 @@
 import { Grid, Icon } from '@drizztdourden08/tessera/primitives';
 import { StatTile } from '@drizztdourden08/tessera/composites';
 import { formatBytes } from '@drizztdourden08/brock-core';
-import { DOMAIN_ICONS } from './DomainTiles.constants';
+import { useText } from '@drizztdourden08/brock-react';
+import type { Text } from '@drizztdourden08/brock-core/i18n';
+import { DOMAIN_ICONS, DOMAIN_LABELS } from './DomainTiles.constants';
 import type { DomainTilesProps } from './DomainTiles.type';
 
 const DomainTiles = (props: DomainTilesProps) => {
   const { domains } = props;
+  const text = useText();
+  const labelOf = (domain: string, fallback: Text): string => {
+    const message = DOMAIN_LABELS[domain];
+    return text(message ?? fallback);
+  };
 
   return (
     <Grid minColWidth={140} gap="sm">
       {domains.map((d) => (
         <StatTile
           key={d.domain}
-          label={<><Icon name={DOMAIN_ICONS[d.domain] ?? 'folder'} inline /> {d.label}</>}
+          label={<><Icon name={DOMAIN_ICONS[d.domain] ?? 'folder'} inline /> {labelOf(d.domain, d.label)}</>}
           value={d.count}
           delta={formatBytes(d.bytes)}
           deltaTone="neutral"

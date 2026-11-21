@@ -1,0 +1,11 @@
+{
+  "delete.confirm": "Usuń",
+  "deleteProfile.title": "Usuń profil",
+  "deleteProfile.message": "Usunąć \"{name}\"? Jego zapisy zostaną utracone. Tej operacji nie można cofnąć.",
+  "deleteProfile.confirm": "Usuń profil",
+  "deleteRom.title": "Usuń ROM",
+  "deleteRom.message": "To usunie \"{romFile}\" i wszystkie wyodrębnione z niego zasoby. Profile używające tego ROM-u również zostaną usunięte. Tej operacji nie można cofnąć.",
+  "deleteRom.confirm": "Usuń ROM",
+  "toast.restartNeeded": "Niektóre zmiany wymagają ponownego uruchomienia gry, aby zaczęły działać",
+  "toast.enhancedFallback": "Nowoczesny styl HUD wymaga ekranu 16:9 lub szerszego, więc styl wrócił do Oryginalnego"
+}

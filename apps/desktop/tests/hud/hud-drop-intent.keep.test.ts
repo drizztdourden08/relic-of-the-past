@@ -5,6 +5,8 @@ import {
 } from '@app/hud-layout-editing/drop-intent';
 import { siteOf } from '@app/hud-layout-editing/node-edits';
 import type { HudLayout, HudNode } from '@rotp/hud';
+import { i18n } from './test-i18n';
+const { t } = i18n;
 
 const leaf = (id: string, extra: Partial<HudNode> = {}): HudNode =>
   ({ id, kind: 'element', element: { type: 'spacer' }, ...extra }) as HudNode;
@@ -122,7 +124,7 @@ describe('the seven refusals, each naming both nodes', { tags: ['critical'] }, (
 
   it('says it as a sentence, and refuses to write anything', () => {
     const intent = outlineIntent(d, 'pip1', 'after', ['hud']);
-    expect(refusalText(d, ['hud'], intent)).toBe('hearts is already inside hud');
+    expect(refusalText(d, ['hud'], intent, t)).toBe('Hearts is already inside hud');
     expect(applyDrop(d, ['hud'], intent)).toBe(d);
   });
 });

@@ -1,0 +1,23 @@
+{
+  "section.haptics-general.title": "Vibration",
+  "haptics.enabled.label": "Haptisches Feedback aktivieren",
+  "haptics.enabled.description": "Aktiviert Controller-Vibration bei Spielereignissen. Benötigt einen kompatiblen Controller (Xbox, Switch Pro, DualSense).",
+  "haptics.intensity.label": "Vibrationsstärke",
+  "haptics.intensity.description": "Globaler Stärkefaktor für alle haptischen Rückmeldungen",
+  "section.haptics-combat.title": "Kampf",
+  "haptics.sword-swing.label": "Schwertschwung",
+  "haptics.sword-swing.description": "Sehr schwache Vibration, wenn der Spieler das Schwert schwingt",
+  "haptics.sword-hit-enemy.label": "Schwerttreffer",
+  "haptics.sword-hit-enemy.description": "Normale Vibration, wenn das Schwert einen Gegner trifft",
+  "haptics.sword-clink.label": "Schwertklirren",
+  "haptics.sword-clink.description": "Schwache Vibration, wenn das Schwert an einer unverwundbaren Fläche oder einem Schild klirrt",
+  "haptics.damage-taken.label": "Erlittener Schaden",
+  "haptics.damage-taken.description": "Vibration je nach Schadenshöhe, wenn der Spieler verletzt wird (stärker bei mehr Schaden)",
+  "section.haptics-actions.title": "Gegenstände und Bewegung",
+  "haptics.item-use.label": "Gegenstandsnutzung",
+  "haptics.item-use.description": "Vibration beim Benutzen von Gegenständen (Hammer, Enterhaken, Bomben, Medaillons, Stäbe usw.)",
+  "haptics.dash-vibration.label": "Sprint-Vibration",
+  "haptics.dash-vibration.description": "Rhythmische Schrittvibration beim Laufen mit den Pegasus-Stiefeln",
+  "haptics.environmental-effects.label": "Umgebungseffekte",
+  "haptics.environmental-effects.description": "Vibration bei Weltereignissen: Fallen in Gruben, Landen von Absätzen, Betreten von Wasser, Spiegelsprung, Truhenöffnen, Bombenexplosionen"
+}

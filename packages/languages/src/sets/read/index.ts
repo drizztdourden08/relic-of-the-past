@@ -1,4 +1,5 @@
 /* @layer shared-storage @kind barrel */
 export { getSet } from './get-set';
-export { getSetFont } from './get-set-font';
+export { getRomFont } from './get-rom-font';
 export { list } from './list';
+export { missingRomFonts } from './missing-rom-fonts';

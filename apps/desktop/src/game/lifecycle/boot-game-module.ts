@@ -1,7 +1,9 @@
 /* @layer bridge-wasm @kind logic */
+import { msg } from '@drizztdourden08/brock-core/i18n';
 import { lifecycleState, restoreLostContext } from '@rotp/game-core';
 import type { EmscriptenModule } from '@rotp/game-core';
 import { log } from '../../log-bus';
+import { LocalizedError } from '../../storage/localized-error';
 import { coreConfigIni } from '../core-config-ini';
 import { LINK_SPRITE_FILE } from '../port';
 import { loadGlueScript } from '../wasm-warmup';
@@ -31,7 +33,7 @@ const bootGameModule = async (
   const { status, error } = rotpCore.state();
   if (status === 'idle') return null;
   const mod = rotpCore.module();
-  if (status !== 'running' || !isGameModule(mod)) throw new Error(error ?? 'The core did not start.');
+  if (status !== 'running' || !isGameModule(mod)) throw error ? new Error(error) : new LocalizedError(msg('views-game-layer:crash.coreNotStarted'));
   return mod;
 };
 

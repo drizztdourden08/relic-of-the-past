@@ -4,8 +4,10 @@ import { Box, Pressable, Text } from '@drizztdourden08/tessera/primitives';
 import { modeOf, modeSuffixOf } from '@app/hud-layout-editing/track-extents';
 import { TrackSizeMenu } from './TrackSizeMenu';
 import type { TrackHeadProps } from './TrackHead.type';
+import { useT } from '@drizztdourden08/brock-react';
 
 const TrackHead = (props: TrackHeadProps) => {
+  const t = useT();
   const { axis, index, text, extent, selected, empty, title, onPointerDown, onSize } = props;
   const anchor = useRef<HTMLDivElement>(null);
   const [open, setOpen] = useState(false);
@@ -33,7 +35,7 @@ const TrackHead = (props: TrackHeadProps) => {
       {sizing ? (
         <Pressable
           className="hud-lattice__size"
-          aria-label={`${title}. Change its size`}
+          aria-label={t('hud-editor:lattice.change-size', { title })}
           aria-haspopup="menu"
           data-action="size"
           onPointerDown={(event) => event.stopPropagation()}

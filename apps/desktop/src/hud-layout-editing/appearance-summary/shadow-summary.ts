@@ -2,11 +2,12 @@
 import { paintText } from './paint-text';
 import { summaryNumber } from './summary-number';
 import type { HudShadow } from '@rotp/hud';
+import type { Translate } from '../translate.type';
 
-const shadowSummary = (shadow: HudShadow): string => {
+const shadowSummary = (shadow: HudShadow, t: Translate): string => {
   const spread = shadow.spread !== undefined && shadow.spread !== 0 ? ` ${summaryNumber(shadow.spread)}` : '';
   const inset = shadow.inset === true ? ' inset' : '';
-  return `${summaryNumber(shadow.x)} ${summaryNumber(shadow.y)} ${summaryNumber(shadow.blur)}${spread} ${paintText(shadow.color)}${inset}`;
+  return `${summaryNumber(shadow.x)} ${summaryNumber(shadow.y)} ${summaryNumber(shadow.blur)}${spread} ${paintText(shadow.color, t)}${inset}`;
 };
 
 export { shadowSummary };

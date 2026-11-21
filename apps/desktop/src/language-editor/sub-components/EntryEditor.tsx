@@ -1,5 +1,6 @@
 /* @layer renderer-components @kind component */
 import { Box, Text, Button } from '@drizztdourden08/tessera/primitives';
+import { useT } from '@drizztdourden08/brock-react';
 import { DialogueEditor } from '../editor-ui';
 import { overflowReason } from './overflow-reason';
 import type { EntryEditorProps } from './EntryEditor.type';
@@ -11,7 +12,8 @@ const EntryEditor = (props: EntryEditorProps) => {
     onChangeTokens, onSave, onCancel, onChangeStructureMode,
   } = props;
 
-  const blocked = overflowReason(rows);
+  const t = useT();
+  const blocked = overflowReason(t, rows);
 
   return (
     <Box className="entry-editor">
@@ -33,8 +35,8 @@ const EntryEditor = (props: EntryEditorProps) => {
       )}
 
       <Box className="entry-editor__actions">
-        {!readOnly && <Button size="sm" disabled={Boolean(blocked) || !dirty} onClick={onSave}>Save</Button>}
-        <Button variant="ghost" size="sm" onClick={onCancel}>{readOnly ? 'Close' : 'Cancel'}</Button>
+        {!readOnly && <Button size="sm" disabled={Boolean(blocked) || !dirty} onClick={onSave}>{t('language-editor:entry.save')}</Button>}
+        <Button variant="ghost" size="sm" onClick={onCancel}>{readOnly ? t('language-editor:entry.close') : t('language-editor:entry.cancel')}</Button>
       </Box>
     </Box>
   );

@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind component */
 import { SpritePicker } from '@app/compounds/SpritePicker';
-import { getSpritesBase, CATEGORY_LABELS, CATEGORY_ORDER, SPRITE_MANIFEST } from '@rotp/game-data';
+import { getSpritesBase, CATEGORY_ORDER, SPRITE_MANIFEST } from '@rotp/game-data';
 import { ToolbarMenu } from './ToolbarMenu';
 import { GlyphPickerGrid } from './GlyphPickerGrid';
 import { SlotPickerPanel } from './SlotPickerPanel';
@@ -8,15 +8,19 @@ import { SpriteExtractionNotice } from './SpriteExtractionNotice';
 import { TOOLBAR_ICONS } from '@app/hud-layout-editing/toolbar-menus';
 import { newElement } from '@app/hud-layout-editing/new-node';
 import type { InsertMenusProps } from './InsertMenus.type';
+import { useT } from '@drizztdourden08/brock-react';
+import { useSpriteCategoryLabels } from '@app/hooks/sprite-category-labels';
 
 const spriteUrl = (file: string): string => `${getSpritesBase()}${file}.png`;
 
 const InsertMenus = (props: InsertMenusProps) => {
+  const t = useT();
+  const categoryLabels = useSpriteCategoryLabels();
   const { insert, slotNumbers, glyphPacks, openKey, onToggle, onClose } = props;
 
   return (
     <>
-      <ToolbarMenu icon={TOOLBAR_ICONS.glyph} label="Glyph" open={openKey === 'glyph'} onToggle={() => onToggle('glyph')} onClose={onClose}
+      <ToolbarMenu icon={TOOLBAR_ICONS.glyph} label={t('hud-editor:insert-menus.label.glyph')} open={openKey === 'glyph'} onToggle={() => onToggle('glyph')} onClose={onClose}
         panel={(anchorRef) => (
           <GlyphPickerGrid
             open
@@ -26,7 +30,7 @@ const InsertMenus = (props: InsertMenusProps) => {
             onPick={(picked) => insert(newElement({ type: 'glyph', ...picked }))}
           />
         )} />
-      <ToolbarMenu icon={TOOLBAR_ICONS.slot} label="Slot" open={openKey === 'slot'} onToggle={() => onToggle('slot')} onClose={onClose}
+      <ToolbarMenu icon={TOOLBAR_ICONS.slot} label={t('hud-editor:insert-menus.label.slot')} open={openKey === 'slot'} onToggle={() => onToggle('slot')} onClose={onClose}
         panel={(anchorRef) => (
           <SlotPickerPanel
             open
@@ -37,14 +41,14 @@ const InsertMenus = (props: InsertMenusProps) => {
             onPickGlyph={(index) => insert(newElement({ type: 'glyph', slot: index }))}
           />
         )} />
-      <ToolbarMenu icon={TOOLBAR_ICONS.sprite} label="Sprite" open={openKey === 'sprite'} onToggle={() => onToggle('sprite')} onClose={onClose}
+      <ToolbarMenu icon={TOOLBAR_ICONS.sprite} label={t('hud-editor:insert-menus.label.sprite')} open={openKey === 'sprite'} onToggle={() => onToggle('sprite')} onClose={onClose}
         panel={(anchorRef) => (
           <SpritePicker
             open
             anchorRef={anchorRef}
             sprites={SPRITE_MANIFEST}
             categories={CATEGORY_ORDER}
-            categoryLabels={CATEGORY_LABELS}
+            categoryLabels={categoryLabels}
             spriteUrl={spriteUrl}
             onClose={onClose}
             onPick={(file) => insert(newElement({ type: 'sprite', file }))}

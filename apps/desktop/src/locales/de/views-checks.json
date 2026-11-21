@@ -1,0 +1,15 @@
+{
+  "view.label": "Ansicht",
+  "view.list.label": "Liste",
+  "view.list.title": "Kompakte Zeilen",
+  "view.detailed.label": "Detailliert",
+  "view.detailed.title": "Zeilen mit Gegenständen",
+  "view.visual.label": "Karten",
+  "view.visual.title": "Gegenstandskarten",
+  "pin.label": "Kopfzeile fixieren",
+  "pin.description": "Zusammenfassung und Filter bleiben an Ort und Stelle",
+  "notify.label": "Benachrichtigungen",
+  "notify.description": "Eine Karte über dem Spiel für jeden abgeschlossenen Check oder jedes Ereignis",
+  "closed.label": "Wenn geschlossen",
+  "closed.description": "Weiter benachrichtigen, auch wenn dieser Tracker geschlossen ist"
+}

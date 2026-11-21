@@ -4,10 +4,9 @@ import type { FeatureDef } from '../feature.type';
 const DISPLAY_FEATURES: FeatureDef[] = [
   {
     id: 'extendedRendering',
-    label: 'Extended rendering',
+    label: { key: 'features:feature.extendedRendering.label' },
     description: 'Master opt-in for every wide/tall/camera enhancement. Off => the core renders pure 4:3 vanilla.',
-    userMessage:
-      'Unlocks the widescreen, tall, and camera options below. Off keeps the original fixed 4:3 view, which is pixel- and timing-identical to the cartridge, so leave it off for vanilla/speedrun parity.',
+    userMessage: { key: 'features:feature.extendedRendering.message' },
     group: 'Display / Aspect',
     kind: 'features0-bit',
     origin: 'relic',
@@ -21,10 +20,9 @@ const DISPLAY_FEATURES: FeatureDef[] = [
   },
   {
     id: 'linearWorldTilemap',
-    label: 'Linear world tilemap',
+    label: { key: 'features:feature.linearWorldTilemap.label' },
     description: 'Replaces the wrapping 512px SNES BG fetch with a clamped linear read so the view can extend past one screen without tile garbage.',
-    userMessage:
-      'Lets the view go beyond ~16:10 (and enables tall views) by rendering a contiguous world tilemap instead of the wrapping background. Required before ultrawide or tall.',
+    userMessage: { key: 'features:feature.linearWorldTilemap.message' },
     group: 'Display / Aspect',
     kind: 'features0-bit',
     origin: 'relic',
@@ -37,10 +35,9 @@ const DISPLAY_FEATURES: FeatureDef[] = [
   },
   {
     id: 'ultrawideRendering',
-    label: 'Ultrawide',
+    label: { key: 'features:feature.ultrawideRendering.label' },
     description: 'Raises the horizontal budget cap from ~19:9 up to the engine maximum (~32:9).',
-    userMessage:
-      'Allows aspect ratios beyond ~19:9, up to ~32:9. Requires the linear world tilemap. Changes a lot of what is on-screen, so leave off for vanilla parity.',
+    userMessage: { key: 'features:feature.ultrawideRendering.message' },
     group: 'Display / Aspect',
     kind: 'features0-bit',
     origin: 'relic',
@@ -53,10 +50,9 @@ const DISPLAY_FEATURES: FeatureDef[] = [
   },
   {
     id: 'tallRendering',
-    label: 'Tall view',
+    label: { key: 'features:feature.tallRendering.label' },
     description: 'Adds vertical render budget (extended_aspect_ratio_vertical) above/below the stock 224 rows.',
-    userMessage:
-      'Shows more of the map vertically (taller-than-4:3). Requires the linear world tilemap. Changes the on-screen area, so leave off for vanilla parity.',
+    userMessage: { key: 'features:feature.tallRendering.message' },
     group: 'Display / Aspect',
     kind: 'features0-bit',
     origin: 'relic',
@@ -69,10 +65,9 @@ const DISPLAY_FEATURES: FeatureDef[] = [
   },
   {
     id: 'aspectRatio',
-    label: 'Aspect ratio',
+    label: { key: 'features:feature.aspectRatio.label' },
     description: 'The chosen screen ratio (extended_aspect_ratio[_vertical]); range is bounded by the capabilities above.',
-    userMessage:
-      'Pick Original for the game width, or choose a fixed, detected or custom screen ratio.',
+    userMessage: { key: 'features:feature.aspectRatio.message' },
     group: 'Display / Aspect',
     kind: 'render-geometry',
     origin: 'relic',
@@ -83,10 +78,9 @@ const DISPLAY_FEATURES: FeatureDef[] = [
   },
   {
     id: 'extendY',
-    label: 'Extend Y (240 lines)',
+    label: { key: 'features:feature.extendY.label' },
     description: 'Renders 240 scanlines instead of the stock 224 (overscan reveal).',
-    userMessage:
-      'In Original mode, shows 240 lines instead of the stock 224. Other ratios always use 240 lines.',
+    userMessage: { key: 'features:feature.extendY.message' },
     group: 'Display / Aspect',
     kind: 'ppu-render-flag',
     origin: 'snesrev',
@@ -97,10 +91,9 @@ const DISPLAY_FEATURES: FeatureDef[] = [
   },
   {
     id: 'widescreenSprites',
-    label: 'Widescreen sprites',
+    label: { key: 'features:feature.widescreenSprites.label' },
     description: 'Extends sprite spawn/despawn ranges so off-screen-in-4:3 sprites are present for the wider view.',
-    userMessage:
-      'Extends sprite spawn ranges so enemies and objects behave as intended in the wider view. On by default when a wide ratio is active.',
+    userMessage: { key: 'features:feature.widescreenSprites.message' },
     group: 'Display / Aspect',
     kind: 'features0-bit',
     origin: 'snesrev',
@@ -113,10 +106,9 @@ const DISPLAY_FEATURES: FeatureDef[] = [
   },
   {
     id: 'widescreenVisualFixes',
-    label: 'Widescreen fixes',
+    label: { key: 'features:feature.widescreenVisualFixes.label' },
     description: 'Corrections for a view wider or taller than the original: transitions, effects and sprites drawn for the 4:3 screen.',
-    userMessage:
-      'Corrects transitions, effects and sprites that were drawn for the 4:3 screen, in a wide or a tall view. On by default with extended rendering.',
+    userMessage: { key: 'features:feature.widescreenVisualFixes.message' },
     group: 'Display / Aspect',
     kind: 'features0-bit',
     origin: 'snesrev',
@@ -129,11 +121,10 @@ const DISPLAY_FEATURES: FeatureDef[] = [
   },
   {
     id: 'cameraLockToViewport',
-    label: 'Lock camera to the wide view',
+    label: { key: 'features:feature.cameraLockToViewport.label' },
     description:
       'Stops the camera at the area boundary so the wide/tall view shows real map to its edges instead of an out-of-area black band.',
-    userMessage:
-      'Removes the black band at area edges in widescreen by resting the view edge on the map boundary. Shifts the rendered camera, which can affect glitch/speedrun timing. Needs extended rendering.',
+    userMessage: { key: 'features:feature.cameraLockToViewport.message' },
     group: 'Display / Aspect',
     kind: 'features0-bit',
     origin: 'relic',
@@ -146,10 +137,9 @@ const DISPLAY_FEATURES: FeatureDef[] = [
   },
   {
     id: 'smoothTransitions',
-    label: 'Smooth area transitions',
+    label: { key: 'features:feature.smoothTransitions.label' },
     description: 'Pans through area seams via a 2-area tilemap instead of the wrapped-edge slice at screen boundaries.',
-    userMessage:
-      'Removes the wrapped-edge slice at area boundaries by panning through a 2-area tilemap. Requires camera lock.',
+    userMessage: { key: 'features:feature.smoothTransitions.message' },
     group: 'Display / Aspect',
     kind: 'features0-bit',
     origin: 'relic',
@@ -162,11 +152,10 @@ const DISPLAY_FEATURES: FeatureDef[] = [
   },
   {
     id: 'widescreenPlayArea',
-    label: 'Extend the play area to the full view',
+    label: { key: 'features:feature.widescreenPlayArea.label' },
     description:
       'Extends hazards, enemy spawns and "room cleared" checks to the whole widescreen picture instead of just the original 4:3 area.',
-    userMessage:
-      'Extends game activity to the whole widescreen picture instead of only the original 4:3 area: where hazards and enemies spawn, how long enemy spawners stay active, and how much of the view a "room cleared" check considers. Off, the extra width you can see stays inactive. This changes gameplay, so leave it off for vanilla parity.',
+    userMessage: { key: 'features:feature.widescreenPlayArea.message' },
     group: 'Display / Aspect',
     kind: 'features0-bit',
     origin: 'relic',
@@ -180,10 +169,9 @@ const DISPLAY_FEATURES: FeatureDef[] = [
   },
   {
     id: 'titleOverride',
-    label: 'Title screen: reimagined',
+    label: { key: 'features:feature.titleOverride.label' },
     description: 'Keeps the native title screen off the picture while the app draws its own over the running intro.',
-    userMessage:
-      'The app draws the title screen itself, from its own scene art, on the same frames as the original. Off keeps the game\'s own title.',
+    userMessage: { key: 'features:feature.titleOverride.message' },
     group: 'HUD',
     kind: 'features0-bit',
     origin: 'relic',
@@ -197,11 +185,10 @@ const DISPLAY_FEATURES: FeatureDef[] = [
   },
   {
     id: 'offscreenAI',
-    label: 'Off-screen enemy AI',
+    label: { key: 'features:feature.offscreenAI.label' },
     description:
       'Controls how sprites in the wide/tall extra band behave before reaching the stock 256px screen: idle, full behavior, or frozen.',
-    userMessage:
-      'Idle: enemies the wider view reveals walk and animate, but will not chase or attack until they reach the original 4:3 screen. Act normally: full behaviour, including attacking you from the edge of a wide view; this is the vanilla-parity option. Freeze: they stop completely until they reach the 4:3 screen. Needs extended rendering.',
+    userMessage: { key: 'features:feature.offscreenAI.message' },
     group: 'Display / Aspect',
     kind: 'features0-bit',
     origin: 'relic',
@@ -215,10 +202,9 @@ const DISPLAY_FEATURES: FeatureDef[] = [
   },
   {
     id: 'dimFlashes',
-    label: 'Dim flashes',
+    label: { key: 'features:feature.dimFlashes.label' },
     description: 'Reduces the intensity of bright flashes to ease eye strain and improve accessibility.',
-    userMessage:
-      'Dims bright flashes in the game to reduce eye strain. An accessibility option that does not change gameplay.',
+    userMessage: { key: 'features:feature.dimFlashes.message' },
     group: 'Quality of life',
     kind: 'features0-bit',
     origin: 'snesrev',

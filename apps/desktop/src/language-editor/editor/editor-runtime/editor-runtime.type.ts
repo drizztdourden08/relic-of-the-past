@@ -5,6 +5,7 @@ type EditorRuntime = {
   metrics: GlyphMetrics | null;
   glossary: GlossaryTerm[];
   mode: SetStructure;
+  overBy: (px: number) => string;
 };
 
 export type { EditorRuntime };

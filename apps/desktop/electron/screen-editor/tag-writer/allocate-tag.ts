@@ -1,6 +1,8 @@
 /* @layer electron-main @kind logic */
 import { readFile, writeFile } from 'fs/promises';
 import { join } from 'path';
+import { msg } from '@drizztdourden08/brock-core/i18n';
+import { mainText } from '../../lib/main-text';
 import { serializeTagRecord, splitTagKey } from '@rotp/game-data';
 import type { TagRecord } from '@rotp/game-data';
 import type { Allocated, AllocateTagArgs, AllocateTagResult } from '@app/ipc/screen-editor-contract';
@@ -17,12 +19,12 @@ const filledOr = (text: string | undefined, fallback: string): string =>
 const allocateTag = async (root: string, args: AllocateTagArgs): Promise<AllocateTagResult> => {
   const key = args.key.trim();
   const parts = splitTagKey(key);
-  if (!parts) return { success: false, error: CONVENTION };
-  if (args.appliesTo.length === 0) return { success: false, error: NO_SCOPE };
+  if (!parts) return { success: false, error: CONVENTION() };
+  if (args.appliesTo.length === 0) return { success: false, error: NO_SCOPE() };
 
   const path = join(root, ...TAGS_FILE);
   const content = await readFile(path, 'utf-8');
-  if (alreadyPresent(content, key)) return { success: false, error: `The tag ${key} already exists.` };
+  if (alreadyPresent(content, key)) return { success: false, error: mainText(msg('screen-editor:tag.exists', { key })) };
 
   return withAllocatedIds(root, 'tag', 1, async ([id]) => {
     const record: TagRecord = {

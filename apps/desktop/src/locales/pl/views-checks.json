@@ -1,0 +1,15 @@
+{
+  "view.label": "Widok",
+  "view.list.label": "Lista",
+  "view.list.title": "Zwarte wiersze",
+  "view.detailed.label": "Szczegółowy",
+  "view.detailed.title": "Wiersze z przedmiotami",
+  "view.visual.label": "Karty",
+  "view.visual.title": "Karty przedmiotów",
+  "pin.label": "Przypnij nagłówek",
+  "pin.description": "Zachowaj podsumowanie i filtry na miejscu",
+  "notify.label": "Powiadomienia",
+  "notify.description": "Karta nad grą za każdą ukończoną kontrolę lub zdarzenie",
+  "closed.label": "Przy zamknięciu",
+  "closed.description": "Powiadamiaj dalej, gdy ten tracker jest zamknięty"
+}

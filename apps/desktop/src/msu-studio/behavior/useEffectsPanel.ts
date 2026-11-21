@@ -1,5 +1,6 @@
 /* @layer renderer-components @kind hook */
 import { useCallback, useMemo, useState } from 'react';
+import { useT } from '@drizztdourden08/brock-react';
 import type { SoundChannel } from '@rotp/game-data';
 import { EFFECT_CHANNELS, soundTitle } from '../sound-labels';
 import type { MsuEffectsPanelProps } from '../msu.type';
@@ -12,6 +13,7 @@ const [FIRST, SECOND] = EFFECT_CHANNELS;
 
 const useEffectsPanel = (props: MsuEffectsPanelProps) => {
   const { pack, manifest, saveBase, files, onDeleteConfirm, onReload } = props;
+  const t = useT();
   const [filter, setFilter] = useState('');
   const query = parseEffectQuery(filter);
   const shared = {
@@ -53,11 +55,11 @@ const useEffectsPanel = (props: MsuEffectsPanelProps) => {
 
   const confirmStopReplacing = useCallback((channel: SoundChannel, soundId: number) => {
     onDeleteConfirm(
-      'Stop Replacing Sound',
-      `Remove this pack's layers for ${soundTitle(channel, soundId)}? It will play from the sound chip again.`,
+      t('msu-studio:sound.stop-replacing.title'),
+      t('msu-studio:sound.stop-replacing.message', { sound: soundTitle(channel, soundId) }),
       () => { void panelOf(channel).stopReplacing(soundId); },
     );
-  }, [onDeleteConfirm, panelOf]);
+  }, [t, onDeleteConfirm, panelOf]);
 
   return {
     filter, setFilter, first, second, panelOf, rows, open, play, playOriginal, toggleLayers, stopAll, confirmStopReplacing,

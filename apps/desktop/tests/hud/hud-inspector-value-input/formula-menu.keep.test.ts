@@ -5,6 +5,8 @@ import { readExpr } from '@app/hud-layout-editing/check-expr';
 import { formulaGroups } from '@app/hud-layout-editing/formula-catalog';
 import { formulaStarters } from '@app/hud-layout-editing/formula-starters';
 import { instanceScopes } from '@app/hud-layout-editing/formula-scope';
+import { i18n } from '../test-i18n';
+const { text } = i18n;
 
 const scope = { life_current: 112, life_max: 160 };
 
@@ -15,7 +17,7 @@ describe('the menu knows what is in scope, and says so where it is not', { tags:
   it('offers index / count / item only inside a repeat and never hides them', () => {
     const outside = names(false).filter((n) => ['index', 'count', 'item'].includes(n.name));
     expect(outside).toHaveLength(3);
-    for (const entry of outside) expect(entry.unavailable).toBe('Exists inside a repeat. This node is not in one.');
+    for (const entry of outside) expect(text(entry.unavailable ?? '')).toBe('Exists inside a repeat. This node is not in one.');
     for (const entry of names(true).filter((n) => ['index', 'count', 'item'].includes(n.name))) {
       expect(entry.unavailable).toBeUndefined();
     }

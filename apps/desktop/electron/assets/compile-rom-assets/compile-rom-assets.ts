@@ -1,9 +1,11 @@
 /* @layer electron-main @kind logic */
 import { writeFile, access } from 'fs/promises';
+import { msg } from '@drizztdourden08/brock-core/i18n';
 import { compileResources } from '@rotp/asset-extraction/buffer';
 import { loadRom } from '@rotp/asset-extraction/node';
 import { getUserDataPath } from '@drizztdourden08/brock-electron/main';
 import { datName } from '@rotp/roms';
+import { mainText } from '../../lib/main-text';
 import { logToRenderer } from '../../lib/renderer-log';
 import { loadCompiledLanguages } from '../load-compiled-languages';
 import { errMessage } from '../../lib/result';
@@ -14,17 +16,18 @@ const compileRomAssets = async (romFile: string): Promise<CompileResult> => {
   try {
     await access(localRomPath);
   } catch {
-    return { success: false, error: `ROM file not found: ${romFile}` };
+    return { success: false, error: mainText(msg('main:assets.romNotFound', { file: romFile })) };
   }
 
   try {
     const rom = loadRom(localRomPath);
-    const extraLanguages = await loadCompiledLanguages();
+    const baked = await loadCompiledLanguages(rom);
+    const { extraLanguages } = baked;
     logToRenderer('core', 'info', `ROM loaded: ${rom.language} (${rom.description})`);
     if (extraLanguages.length > 0) {
       logToRenderer('app', 'info', `Baking ${extraLanguages.length} language set(s): ${extraLanguages.map((e) => e.code).join(', ')}`);
     }
-    const dat = compileResources(rom, { extraLanguages });
+    const dat = compileResources(rom, baked);
     const assetFile = datName(romFile);
     await writeFile(getUserDataPath('assets', assetFile), dat);
     logToRenderer('app', 'info', `Assets cached as ${assetFile} (${(dat.length / 1024).toFixed(0)} KB)`);

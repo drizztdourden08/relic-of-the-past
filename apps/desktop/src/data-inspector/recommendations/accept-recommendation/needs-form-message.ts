@@ -1,5 +1,7 @@
 /* @layer renderer-app @kind logic */
+import { msg } from '@drizztdourden08/brock-core/i18n';
+import { optionText } from '@rotp/randomizer';
 const needsFormMessage = (blockers: readonly string[]): string =>
-  `This proposal still needs ${blockers.join(', ')}. Fill those in, then accept.`;
+  optionText(msg('views-data-inspector:err.needsForm', { blockers: blockers.join(', ') }));
 
 export { needsFormMessage };

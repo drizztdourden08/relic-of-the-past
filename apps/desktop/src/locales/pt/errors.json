@@ -1,0 +1,14 @@
+{
+  "rom.usRequired": "Esta ROM fornece apenas o idioma do jogo; o jogo em si roda na ROM dos EUA. Importe a ROM dos EUA e extraia de novo.",
+  "rom.fontMissing": "A fonte base de {languages, list} está ausente e esta ROM não consegue fornecê-la. Importe primeiro a ROM desse idioma.",
+  "rom.notFound": "Arquivo da ROM não encontrado: {file}",
+  "rom.zip.none": "Nenhum arquivo de ROM (.sfc/.smc) encontrado na origem",
+  "rom.zip.many": "Vários arquivos de ROM encontrados ({count}). Informe exatamente uma ROM.",
+  "language.exists": "Já existe um conjunto de idioma com o id \"{id}\". Escolha outro nome.",
+  "language.patched.failed": "Não foi possível importar a ROM com patch. O relatório abaixo diz quais partes falharam.",
+  "sprite.unreadablePack": "Não é um pacote de sprites legível.",
+  "sprite.invalidZspr": "Não é um arquivo de sprite ZSPR válido.",
+  "msu.trackNotFound": "Faixa não encontrada: {file}",
+  "msu.noTracks": "Não foram encontradas faixas para instalar.",
+  "import.failed": "A importação falhou."
+}

@@ -11,6 +11,7 @@ import { GROUND_TILE } from '../HudLayoutEditor.constants';
 import { TILE } from './EditorStage.constants';
 import type { HudContainer, PlacedNode } from '@rotp/hud';
 import type { EditorStageProps } from './EditorStage.type';
+import { useT } from '@drizztdourden08/brock-react';
 
 const isContainer = (node: PlacedNode['node'] | undefined): node is HudContainer =>
   node?.kind === 'container';
@@ -23,6 +24,7 @@ const overlayTargetFor = (placed: readonly PlacedNode[], selectedId: string | nu
 };
 
 const EditorStage = (props: EditorStageProps) => {
+  const t = useT();
   const {
     placed, sample, ground, selectedId, onSelect,
   } = props;
@@ -76,7 +78,7 @@ const EditorStage = (props: EditorStageProps) => {
         selectedId={selectedId}
         onSelect={onSelect}
       />
-      <Text className="hud-editor-stage__stamp">sample content</Text>
+      <Text className="hud-editor-stage__stamp">{t('hud-editor:editor-stage.text.sample-content')}</Text>
     </Box>
   );
 };

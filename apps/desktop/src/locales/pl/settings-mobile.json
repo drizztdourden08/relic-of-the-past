@@ -1,0 +1,9 @@
+{
+  "section.mobile.title": "Wyświetlanie",
+  "render-into-notch.label": "Rysuj pod wycięciem kamery",
+  "render-into-notch.description": "Włączone: gra i interfejs używają całego ekranu, także pod wycięciem kamery. Wyłączone: wszystko mieści się w użytecznym obszarze ekranu.",
+  "section.mobile-behavior.title": "Zachowanie",
+  "pause-when-away.label": "Pauza, gdy aplikacja jest w tle",
+  "pause-when-away.description": "Wstrzymuje grę i jej dźwięk po przełączeniu aplikacji lub wyłączeniu ekranu.",
+  "screen.title": "Mobilne"
+}

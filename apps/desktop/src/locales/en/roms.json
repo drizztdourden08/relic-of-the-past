@@ -1,0 +1,15 @@
+{
+  "verdict.archive": "Archive, checked when it is imported",
+  "verdict.archive-empty": "The archive holds no ROM file.",
+  "verdict.fan-translation": "This is the {language, select, es {Spanish} pl {Polish} pt {Portuguese} en-redux {English Redux} nl {Dutch} sv {Swedish} other {fan}} fan translation, which is a language, not a game ROM. Import it as a language: Languages > New language > Fan-patched ROM.",
+  "verdict.not-official": "Not an official ROM (SHA-1 {hash}). Use one from the list below.",
+  "verdict.official-ok": "{name}",
+  "verdict.patched-bad-size": "This file is {bytes} bytes, which is not the size of an A Link to the Past ROM.",
+  "verdict.patched-ok": "A ROM of {size} MB (SHA-1 {hash})",
+  "verdict.unsupported": "{name} is an official ROM, but it is not supported yet.",
+  "verdict.wrong-kind": "This is {name} ({kind, select, snes-alttp {base cartridge} gba-alttp {second cartridge} other {?}}). Expected: {expected, select, snes-alttp {base cartridge} gba-alttp {second cartridge} other {?}}.",
+  "kind.snes-alttp": "Base cartridge",
+  "kind.gba-alttp": "Second cartridge",
+  "refusal.unknown": "Not a recognised {label} (SHA-1 {hash}). Only the supported revision can be used.",
+  "refusal.invalid": "File is not a valid {label} or archive"
+}

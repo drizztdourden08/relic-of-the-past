@@ -1,4 +1,5 @@
 /* @layer renderer-components @kind types */
+import type { LanguageSummary } from '@rotp/asset-extraction';
 import type { useProfileManager } from './useProfileManager';
 
 interface UseProfileManagerParams {
@@ -25,4 +26,8 @@ interface ProfileRowsProps {
   onDelete: (id: string) => void;
 }
 
-export type { ProfileListPaneProps, ProfileRowsProps, UseProfileManagerParams };
+interface NamedLanguage extends LanguageSummary {
+  name: string;
+}
+
+export type { NamedLanguage, ProfileListPaneProps, ProfileRowsProps, UseProfileManagerParams };

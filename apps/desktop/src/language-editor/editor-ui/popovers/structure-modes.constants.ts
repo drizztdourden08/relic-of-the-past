@@ -1,23 +1,18 @@
 /* @layer renderer-components @kind constants */
-import { STRUCTURE_MODES } from '@rotp/languages';
+import { msg } from '@drizztdourden08/brock-core/i18n';
+import type { Message } from '@drizztdourden08/brock-core/i18n';
 import type { StructureMode } from '@rotp/languages';
-import type { SegmentOption } from '@drizztdourden08/tessera/primitives';
 
-const STRUCTURE_WORDS: Record<StructureMode, string> = {
-  continuous: 'Continuous',
-  block: 'In block',
-  off: 'Off',
+const STRUCTURE_WORDS: Record<StructureMode, Message> = {
+  continuous: msg('language-editor:structure.continuous'),
+  block: msg('language-editor:structure.block'),
+  off: msg('language-editor:structure.off'),
 };
 
-const STRUCTURE_NOTES: Record<StructureMode, string> = {
-  continuous: 'Lines flow through the whole entry; breaks and scrolls follow on their own.',
-  block: 'Your boxes stay as they are; a line opens only where its box has a free row.',
-  off: 'Nothing is restructured; every break in the entry is yours to place.',
+const STRUCTURE_NOTES: Record<StructureMode, Message> = {
+  continuous: msg('language-editor:structure.continuous.note'),
+  block: msg('language-editor:structure.block.note'),
+  off: msg('language-editor:structure.off.note'),
 };
 
-const STRUCTURE_OPTIONS: SegmentOption<StructureMode>[] = STRUCTURE_MODES.map((mode) => ({
-  value: mode,
-  label: STRUCTURE_WORDS[mode],
-}));
-
-export { STRUCTURE_NOTES, STRUCTURE_OPTIONS };
+export { STRUCTURE_NOTES, STRUCTURE_WORDS };

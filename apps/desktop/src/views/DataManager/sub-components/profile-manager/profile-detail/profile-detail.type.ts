@@ -2,13 +2,14 @@
 import type { FactsPanelFact } from '@drizztdourden08/tessera/composites';
 import type { ProfileModeId } from '@app/compounds/ModeBadge';
 import type { ProfileRandomizerConfig } from '@app/profiles/types';
+import type { ProfileLanguage } from '../../profile-language.type';
 
 type ProfileSettings = Record<string, unknown> | null;
 
 interface ProfileDetailPanelProps {
   profile: Profile;
   settings: ProfileSettings;
-  languages: Array<{ code: string }>;
+  languages: ProfileLanguage[];
   msuPacks: Array<{ name: string }>;
   onSelectProfile: (profile: Profile) => void;
   onDeleteProfile: (id: string) => void;
@@ -24,7 +25,7 @@ interface ProfileDetailHeaderProps {
 
 interface ProfileOverviewTabProps {
   profile: Profile;
-  languages: Array<{ code: string }>;
+  languages: ProfileLanguage[];
   msuPacks: Array<{ name: string }>;
   mode: ProfileModeId;
   onRefresh: () => void;
@@ -32,7 +33,7 @@ interface ProfileOverviewTabProps {
 
 interface ProfileEditSectionProps {
   profile: Profile;
-  languages: Array<{ code: string }>;
+  languages: ProfileLanguage[];
   msuPacks: Array<{ name: string }>;
   onRefresh: () => void;
 }

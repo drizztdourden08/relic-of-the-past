@@ -4,15 +4,16 @@ import type { AlignPos, AlignValue } from '../align-options';
 import type { AlignRowSpec } from '@app/views/HudLayoutEditor/sub-components/AlignmentTiles';
 import type { HudFlexContainer } from '@rotp/hud';
 import type { PatchFlex } from './layout-sides.type';
+import { msg } from '@drizztdourden08/brock-core/i18n';
 
 const flexAlignRows = (node: HudFlexContainer, onPatch: PatchFlex): AlignRowSpec[] => [
   {
-    key: 'justify', cap: 'main', label: 'along the main axis', engine: 'flex', axis: 'main',
+    key: 'justify', cap: 'main', label: msg('hud-editing:layout.main-axis'), engine: 'flex', axis: 'main',
     options: FLEX_JUSTIFY, value: node.justify ?? 'start',
     onChange: (next: AlignValue) => onPatch({ justify: next as HudFlexContainer['justify'] }),
   },
   {
-    key: 'align', cap: 'cross', label: 'across the cross axis', engine: 'flex', axis: 'cross',
+    key: 'align', cap: 'cross', label: msg('hud-editing:layout.cross-axis'), engine: 'flex', axis: 'cross',
     options: FLEX_ALIGN, value: node.align ?? 'start',
     onChange: (next: AlignValue) => onPatch({ align: next as AlignPos }),
   },

@@ -1,10 +1,10 @@
 /* @layer renderer-widgets @kind logic */
-import { IN_PLAY_REASON } from '../../../CheatsWidget.constants';
+import type { I18n } from '@drizztdourden08/brock-core/i18n';
 import type { CounterKind } from '../PlayerTab.type';
 
-const counterLocks = (kind: CounterKind, inPlay: boolean): { held: string | undefined; max: string | undefined } => ({
-  held: kind === 'keys' && !inPlay ? IN_PLAY_REASON : undefined,
-  max: inPlay ? undefined : IN_PLAY_REASON,
-});
+const counterLocks = (t: I18n['t'], kind: CounterKind, inPlay: boolean): { held: string | undefined; max: string | undefined } => {
+  const reason = t('views-cheats:inPlay.reason');
+  return { held: kind === 'keys' && !inPlay ? reason : undefined, max: inPlay ? undefined : reason };
+};
 
 export { counterLocks };

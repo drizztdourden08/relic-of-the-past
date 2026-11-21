@@ -1,4 +1,5 @@
 /* @layer renderer-lib @kind logic */
+import { msg } from '@drizztdourden08/brock-core/i18n';
 import { languages } from '@rotp/languages';
 import type { ExtractedPack } from '@rotp/languages';
 import { runExtractStep } from '../extraction-client';
@@ -8,12 +9,12 @@ import type { ImportReport } from '../import-job';
 import type { LanguageResult } from './languages-store.type';
 
 const extractPack = async (romBytes: Uint8Array, report: ImportReport): Promise<LanguageResult> => {
-  report.phase('decode', 'Decoding dialogue...');
+  report.phase('decode', msg('data-manager:jobs.line.decodeDialogue'));
   const pack = await runExtractStep<'language', ExtractedPack>({
-    step: 'language', title: 'Extracting the dialogue', subject: 'rom', romBytes, input: undefined,
+    step: 'language', title: msg('data-manager:jobs.extract-dialogue'), subject: 'rom', romBytes, input: undefined,
   });
   await languages.writePack(platformFiles(), pack);
-  report.phase('extract', 'Baking into assets...');
+  report.phase('extract', msg('data-manager:jobs.line.bakeAssets'));
   await recompileAll();
   return { success: true, code: pack.code };
 };

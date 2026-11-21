@@ -4,6 +4,7 @@ import type { PackedLangEntry } from './text/build-language-entry';
 interface CompileOptions {
   skipDialogue?: boolean;
   skipMusic?: boolean;
+  baseLanguage?: PackedLangEntry;
   extraLanguages?: PackedLangEntry[];
 }
 

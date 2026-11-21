@@ -12,7 +12,7 @@ const finding = (over: Partial<Recommendation> = {}): Recommendation => ({
   targetId: 'tag-001',
   current: null,
   proposed: { id: 'tag-001' },
-  reason: 'the dataset disagrees',
+  reason: { key: 'views-data-inspector:rec.reason.set-create', values: { noun: 'x', key: 'the dataset disagrees' } },
   detector: 'test',
   evidence: [],
   confidence: 'certain',

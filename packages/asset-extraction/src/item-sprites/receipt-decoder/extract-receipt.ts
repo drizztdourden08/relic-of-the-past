@@ -10,7 +10,7 @@ import {
 } from './receipt-decoder.constants';
 import type { ImageBuffer } from '../../graphics/png-writer';
 import type { RGBA } from '../../graphics/palette';
-import type { RomData } from '../../rom/rom-types';
+import type { SpriteSource } from '../sources';
 import type { SpritePalettes } from '../receipt-palettes';
 import type { ReceiptSheets } from './receipt-decoder.type';
 
@@ -20,7 +20,7 @@ const crystalPalette = (spritePalettes: SpritePalettes): RGBA[] => {
   return palette;
 };
 
-const extractReceipt = (receiptId: number, rom: RomData, sheets: ReceiptSheets, spritePalettes: SpritePalettes): ImageBuffer | null => {
+const extractReceipt = (receiptId: number, source: SpriteSource, sheets: ReceiptSheets, spritePalettes: SpritePalettes): ImageBuffer | null => {
   const gfx = itemAt(kReceiveItemGfx, receiptId, 'Receipt graphic');
   const offset = kDecodeTab[gfx];
   if (offset === undefined) return null;
@@ -32,7 +32,7 @@ const extractReceipt = (receiptId: number, rom: RomData, sheets: ReceiptSheets, 
   const gearTypes = PAL5_CONFIG[receiptId];
   if (palIdx === GEAR_PALETTE_ROW && gearTypes) {
     const [sw, sh] = gearTypes;
-    palette = buildPal5(rom, palette, sw, sh);
+    palette = buildPal5(source, palette, sw, sh);
   }
   if (receiptId === CRYSTAL_RECEIPT_ID) palette = crystalPalette(spritePalettes);
 

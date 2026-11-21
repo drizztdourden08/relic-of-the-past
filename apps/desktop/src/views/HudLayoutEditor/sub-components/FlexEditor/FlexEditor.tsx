@@ -17,8 +17,10 @@ import { FlexStrip } from './sub-components/FlexStrip';
 import './FlexEditor.css';
 import type { KeyboardEvent } from 'react';
 import type { FlexActionContext, FlexEditorProps } from './FlexEditor.type';
+import { useT } from '@drizztdourden08/brock-react';
 
 const FlexEditor = (props: FlexEditorProps) => {
+  const t = useT();
   const { container, onDrop } = props;
   const slots = useFlexSlots(container);
   const flex = useFlexSelection(container.id, container.children.length);
@@ -26,14 +28,15 @@ const FlexEditor = (props: FlexEditorProps) => {
   const move = useCallback((from: number, to: number): void => {
     const id = container.children[from]?.id;
     if (!id) return;
-    if (!onDrop) { flex.refuse('This mount cannot reorder because no editor is attached.'); return; }
+    if (!onDrop) { flex.refuse(t('hud-editor:flex.refuse.no-editor')); return; }
     onDrop([id], { kind: 'flex', parentId: container.id, index: to });
-  }, [container, flex, onDrop]);
+  }, [container, flex, onDrop, t]);
 
   const ctx: FlexActionContext = {
     container,
     selection: flex.selection,
     edits: { move, setSelection: flex.select, refuse: flex.refuse },
+    t,
   };
   const actions = flexActions(ctx);
   useFlexEcho(container, flex.selection);
@@ -58,16 +61,16 @@ const FlexEditor = (props: FlexEditorProps) => {
   return (
     <Box className="hud-flex">
       <SelectionToolbar
-        chip={chipOf(flex.selection)}
+        chip={chipOf(flex.selection, t)}
         actions={contextualActions(ctx)}
-        hint="select a child to reorder it"
+        hint={t('hud-editor:flex-editor.hint.select-a-child-to-reorder')}
       />
       <FlexStrip
         cells={cellsOf(container, slots, flex.selection)}
         direction={container.direction}
         wrap={container.wrap === true}
         cursor={flex.cursor}
-        label={`${container.children.length} children in flow order. Selecting one edits nothing`}
+        label={t('hud-editor:flex.label', { count: container.children.length })}
         onCellDown={flex.pick}
         onKeyDown={onKeyDown}
       />

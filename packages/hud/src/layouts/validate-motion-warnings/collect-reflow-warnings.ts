@@ -1,6 +1,8 @@
 /* @layer shared-hud @kind logic */
+import { msg } from '@drizztdourden08/brock-core/i18n';
 import { isOverlay } from './is-overlay';
 import { REFLOW_PROPERTIES } from './validate-motion-warnings.constants';
+import type { ReflowWarning } from './reflow-warning.type';
 import type { HudContainer, HudNode } from '../../types/hud-node';
 
 const isFlowContainer = (node: HudNode): boolean => (
@@ -8,14 +10,16 @@ const isFlowContainer = (node: HudNode): boolean => (
   && (node.layout !== 'grid' || !isOverlay(node))
 );
 
-const walk = (node: HudNode, parentId: string | null, parentIsFlow: boolean, warnings: string[]): void => {
+const walk = (node: HudNode, parentId: string | null, parentIsFlow: boolean, warnings: ReflowWarning[]): void => {
   if (parentId !== null && parentIsFlow) {
     (node.animation ?? []).forEach((animation) => {
       if (REFLOW_PROPERTIES.has(animation.property)) {
-        warnings.push(
-          `${node.id}: animating '${animation.property}' can reflow siblings in flow container '${parentId}' - `
-          + "the other six properties (scale, opacity, x, y, rotate, tint) never can",
-        );
+        warnings.push({
+          nodeId: node.id,
+          property: animation.property,
+          parentId,
+          message: msg('hud:warning.reflow', { id: node.id, property: animation.property, parent: parentId }),
+        });
       }
     });
   }
@@ -34,8 +38,8 @@ const walk = (node: HudNode, parentId: string | null, parentIsFlow: boolean, war
   }
 };
 
-const collectReflowWarnings = (screen: HudContainer): string[] => {
-  const warnings: string[] = [];
+const collectReflowWarnings = (screen: HudContainer): ReflowWarning[] => {
+  const warnings: ReflowWarning[] = [];
   walk(screen, null, false, warnings);
   return warnings;
 };

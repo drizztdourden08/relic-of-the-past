@@ -1,12 +1,14 @@
 /* @layer renderer-app @kind types */
 type SessionSwitchKey = 'session.deathLink' | 'session.trackOtherPlayers';
 
+import type { Message } from '@drizztdourden08/brock-core/i18n';
+
 interface SessionSwitch {
   field: 'deathLink' | 'trackOtherPlayers';
   fallback: boolean;
-  label: string;
-  description: string;
-  hint: string;
+  label: Message;
+  description: Message;
+  hint: Message;
 }
 
 interface OnlineSessionToggleProps {

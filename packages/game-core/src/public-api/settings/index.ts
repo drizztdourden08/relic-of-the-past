@@ -7,7 +7,7 @@ export { DEFAULT_ZELDA3_INI } from '../../config.constants';
 export { darkRoomLightWordOf } from '../../dark-room-lights';
 export { createEdgeGlowRenderer } from '../../edge-glow';
 export type { EdgeGlowRenderer } from '../../edge-glow';
-export { ENHANCED_FALLBACK_EVENT, ENHANCED_FALLBACK_MESSAGE, ENHANCED_FALLBACK_TOAST_ID, requestEnhancedFallback } from '../../enhanced-fallback';
+export { ENHANCED_FALLBACK_EVENT, ENHANCED_FALLBACK_TOAST_ID, requestEnhancedFallback } from '../../enhanced-fallback';
 export { getFps } from '../../fps';
 export { closeHostMenu, initHostMenu, reassertActiveItem, reassertAfterSaveLoad, reassertHostMenu, reconcileHostMenu, saveAndQuitHostMenu, setActiveItem, setGear, setTakeover, wantedActiveItem } from '../../host-menu';
 export { buildFeatureFlags, buildFeatureWord3, buildFeatureWords, buildPpuFlags, setAutoSkipDialogOverride, setCapacityProfileActive, setDeveloperToolsOverride, setDropOverridesActive, setDungeonItemGrantsActive, setGearArtActive, setItemOverridesActive, setNpcOverridesActive, setPondPlanActive, setPrizeShuffleActive, setReceiptGrantsActive, setRetroBowActive, setScriptedGrantsActive, setShopOverridesActive, setStandingOverridesActive } from '../../live-settings-flags';

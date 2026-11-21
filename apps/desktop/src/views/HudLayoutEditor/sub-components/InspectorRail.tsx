@@ -1,6 +1,7 @@
 /* @layer renderer-components @kind component */
 import { Text } from '@drizztdourden08/tessera/primitives';
 import { useHudEditorViewStore } from '@app/stores/hud-editor-view-store';
+import { layoutLabel } from '@app/hud-layout-editing/layout-label';
 import { EditorStepContext } from '@app/hud-layout-editing/editor-step';
 import { GridSolveContext } from '@app/hud-layout-editing/grid-solve';
 import { SlotSchemeContext } from '@app/hud-layout-editing/slot-scheme';
@@ -9,8 +10,10 @@ import { GlyphPackPicker } from './GlyphPackPicker';
 import { NodeInspector } from './NodeInspector';
 import { PresetBar } from './PresetBar';
 import type { InspectorRailProps } from './InspectorRail.type';
+import { useT } from '@drizztdourden08/brock-react';
 
 const InspectorRail = (props: InspectorRailProps) => {
+  const t = useT();
   const { editor } = props;
   const {
     glyphs, draft, edits, layout, packId, sample, gridSolve, flexSlots, positions,
@@ -40,7 +43,7 @@ const InspectorRail = (props: InspectorRailProps) => {
         </SlotSchemeContext.Provider>
       </EditorStepContext.Provider>
 
-      <Text className="hud-editor__label">Glyphs</Text>
+      <Text className="hud-editor__label">{t('hud-editor:inspector-rail.text.glyphs')}</Text>
       <GlyphPackPicker
         value={packId}
         packs={glyphs.packs}
@@ -63,7 +66,7 @@ const InspectorRail = (props: InspectorRailProps) => {
         onStartFrom={draft.startFrom}
         onRename={draft.rename}
         onSave={() => { void draft.save(); }}
-        onSaveAs={() => { void draft.saveAs(`${layout.name} copy`); }}
+        onSaveAs={() => { void draft.saveAs(t('hud-editor:inspector.copy-name', { name: layoutLabel(layout, t) })); }}
         onReset={draft.reset}
       />
     </>

@@ -1,11 +1,17 @@
 /* @layer shared-asset-extraction @kind logic */
-import type { RomData, RomLanguage } from '../rom-types';
+import type { RomData, RomLanguage, RomRevision } from '../rom-types';
 import { snesToLinear } from '../snes-address';
 
-const createRomData = (bytes: Buffer, language: RomLanguage, description: string): RomData => {
+const createRomData = (
+  bytes: Buffer,
+  language: RomLanguage,
+  revision: RomRevision,
+  description: string,
+): RomData => {
   return {
     bytes,
     language,
+    revision,
     description,
 
     getByte(ea: number): number {

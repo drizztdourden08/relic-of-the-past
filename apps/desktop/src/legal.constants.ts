@@ -1,4 +1,7 @@
 /* @layer renderer-app @kind constants */
-const LEGAL_TEXT = 'This is an unofficial fan-made, open-source project. It is not affiliated with, endorsed by, sponsored by, or approved by Nintendo. Nintendo, The Legend of Zelda, and related names, characters, music, artwork, and assets are trademarks and/or copyrights of Nintendo. No Nintendo-owned game assets are included in this repository.';
+import { msg } from '@drizztdourden08/brock-core/i18n';
+import type { Text } from '@drizztdourden08/brock-core/i18n';
+
+const LEGAL_TEXT: Text = msg('compounds:credits.legal-notice');
 
 export { LEGAL_TEXT };

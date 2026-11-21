@@ -1,0 +1,9 @@
+{
+  "section.mobile.title": "Beeldscherm",
+  "render-into-notch.label": "Onder cameragat weergeven",
+  "render-into-notch.description": "Aan: het spel en de interface gebruiken het hele scherm, ook onder de cameranotch. Uit: alles blijft binnen het bruikbare schermgebied.",
+  "section.mobile-behavior.title": "Gedrag",
+  "pause-when-away.label": "Pauzeren als de app weg is",
+  "pause-when-away.description": "Pauzeer het spel en het geluid bij het wisselen van app of het uitzetten van het scherm.",
+  "screen.title": "Mobiel"
+}

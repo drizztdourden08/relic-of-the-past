@@ -1,6 +1,7 @@
 /* @layer renderer-lib @kind logic */
 import { log } from '../log-bus';
 import * as spritesStore from '../storage/sprites-store';
+import { failureLine } from '@app/storage/localized-error';
 
 const inFlight = new Map<string, Promise<boolean>>();
 const attempted = new Set<string>();
@@ -9,7 +10,7 @@ const runExtraction = async (romFile: string, reason: string): Promise<boolean> 
   log.app(`${reason} for ${romFile}, extracting sprites...`);
   const result = await spritesStore.extractSprites(romFile);
   if (!result.success) {
-    log.error(`Sprite extraction failed: ${result.error}`);
+    log.error(`Sprite extraction failed: ${failureLine(result.error ?? '')}`);
     return false;
   }
   log.app(`Sprites extracted for ${romFile} (${result.count ?? 0} files)`);

@@ -5,6 +5,8 @@ export { setMetaPath } from './set-meta-path';
 export { dialoguePath } from './dialogue-path';
 export { textPath } from './text-path';
 export { variablesPath } from './variables-path';
+export { screensPath } from './screens-path';
+export { licensePath } from './license-path';
 export { fontPath } from './font-path';
 export { fontWidthPath } from './font-width-path';
 export { payloadDialoguePath } from './payload-dialogue-path';

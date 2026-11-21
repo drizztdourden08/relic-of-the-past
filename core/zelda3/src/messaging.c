@@ -76,6 +76,7 @@ static const uint16 kDungMap_Tab23[744] = {
   0x13a4, 0xb00, 0x138e, 0xb00, 0xb00, 0x5393, 0xb00, 0x574e, 0x4b7d, 0xb00, 0x8b7d, 0x139f, 0x97aa, 0x13a4, 0x13a9, 0x53a9, 0x13a5, 0x13a6, 0x93a5, 0xd3a5, 0xd38e, 0x938e, 0x13a4, 0x13aa, 0xb00, 0x13a6, 0xb00, 0x8b5f, 0x139b, 0x13a6, 0x139c, 0x53a2,
   0xb00, 0xb00, 0x138c, 0xb00, 0x9394, 0x139e, 0xb00, 0xb00,
 };
+#define kDungMap_Tab23 LANG_PICK(uint16, kLangTbl_DungMapTab23, kDungMap_Tab23)
 static const uint16 kDungMap_Tab21[3] = {137, 167, 79};
 static const uint16 kDungMap_Tab22[3] = {169, 119, 190};
 static const uint16 kDungMap_Tab24[2] = {0x1f, 0x7f};
@@ -1708,6 +1709,7 @@ void DungeonMap_DrawFloorNumbersByRoom(uint16 pd, uint16 r8) {  // 8ae4f9
   uint16 q2 = (dungmap_cur_floor & 0x80) ? kDungMap_Tab16[(uint8)~dungmap_cur_floor] : 0x1F1D;
   messaging_buf[t+0] = q1 & r8;
   messaging_buf[t+1] = q2 & r8;
+  GameHook_FloorLabelCells(&messaging_buf[t], r8);
 }
 
 void DungeonMap_DrawDungeonLayout(int pd) {  // 8ae579
@@ -1994,6 +1996,7 @@ int DungeonMap_DrawFloorNumberObjects(int spr_pos) {  // 8aec0a
   do {
     SetOamPlain(&oam_buf[spr_pos + 0], 0x30, r4, sign8(r2) ? 0x1c : kDungMap_Tab34[r2], 0x3d, 0);
     SetOamPlain(&oam_buf[spr_pos + 1], 0x38, r4, sign8(r2) ? kDungMap_Tab34[r2 ^ 0xff] : 0x1d, 0x3d, 0);
+    GameHook_FloorLabelSprites(&oam_buf[spr_pos], (int8)r2);
     r4 += 16;
   } while (spr_pos += 2, r2-- != r3);
   return spr_pos;
@@ -2245,6 +2248,7 @@ enum {
 #define TEXTCMD_MK(c, x, m) ((c) << 6 | (x) << 1 | (m))
 
 uint32 Text_DecodeCmd(uint8 a, const uint8 *src) {
+  { uint32 wide = GameHook_DialogWideDecode(a, src); if (wide) return wide; }
   { uint32 highlight = GameHook_DialogHighlightDecode(a, src); if (highlight) return highlight; }
   { uint32 extra = GameHook_DialogExtraGlyphDecode(a, src); if (extra) return extra; }
   if ((g_zenv.dialogue_flags & 1) == 0) {
@@ -2313,6 +2317,7 @@ void Text_LoadCharacterBuffer() {  // 8ec4e2
   uint8 *dst = messaging_text_buffer;
   while (src < src_end) {
     uint8 c = *src++;
+    if (GameHook_DialogWideLoad(c, &src, src_end, &dst)) continue;
     if (c >= kTextDictBase) {
       MemBlk blk = FindIndexInMemblk(dictionary, c - kTextDictBase);
       memcpy(dst, blk.ptr, blk.size);
@@ -2353,6 +2358,7 @@ void Text_LoadCharacterBuffer() {  // 8ec4e2
 }
 
 uint8 *Text_WritePlayerName(uint8 *p) {  // 8ec5b3
+  if (GameHook_WritePlayerNameWide(&p)) return p;
   uint8 slot = srm_var1;
   int offs = ((slot>>1) - 1) * 0x500;
   for (int i = 0; i < 6; i++) {
@@ -2593,6 +2599,7 @@ void RenderText_Draw_Finish() {  // 8eca35
 }
 
 void VWF_RenderSingle(int c) {  // 8ecab8
+  if (GameHook_DialogWideGlyph(c)) return;
   if (c != 0x59)
     sound_effect_2 = 12;
   vwf_line_speed_cur = vwf_line_speed;

@@ -1,46 +1,47 @@
 /* @layer renderer-app @kind config */
-import type { ScreenMeta, Section } from '@drizztdourden08/brock-react';
+import { msg } from '@drizztdourden08/brock-core/i18n';
+import type { ScreenMeta, SectionDef } from '@drizztdourden08/brock-react';
 
-const meta: ScreenMeta = { title: 'Picture', icon: 'image', order: 1, keywords: ['picture', 'widescreen', 'aspect ratio', 'fps', 'vsync'] };
+const meta: ScreenMeta = { title: msg('settings-picture:section.picture.title'), icon: 'image', order: 1, keywords: ['picture', 'widescreen', 'aspect ratio', 'fps', 'vsync'] };
 
 const offscreenOptions = [
-  { value: 'idle', label: 'Idle', hint: 'Enemies in the extra width walk and animate normally, but will not chase, shoot or hurt you until they reach the original 4:3 screen. You can still hit them.' },
-  { value: 'vanilla', label: 'Act normally', hint: 'Enemies behave fully everywhere, including chasing, shooting and hurting you from the extra width you can see but the original game could not. Matches the original game.' },
-  { value: 'paused', label: 'Freeze', hint: 'Enemies in the extra width stop completely, mid-step, until they reach the original 4:3 screen. No movement, no animation, and no shadow.' },
+  { value: 'idle', label: msg('settings-picture:option.offscreen-options.idle.label'), hint: msg('settings-picture:option.offscreen-options.idle.hint') },
+  { value: 'vanilla', label: msg('settings-picture:option.offscreen-options.vanilla.label'), hint: msg('settings-picture:option.offscreen-options.vanilla.hint') },
+  { value: 'paused', label: msg('settings-picture:option.offscreen-options.paused.label'), hint: msg('settings-picture:option.offscreen-options.paused.hint') },
 ];
 
 const alignOptions = [
-  { value: 'center', label: 'Center', hint: 'The picture fills as much of the screen as it can, centered both ways.' },
-  { value: 'top', label: 'Top', hint: 'The picture sits against the top edge, leaving the free space below it.' },
-  { value: 'bottom', label: 'Bottom', hint: 'The picture sits against the bottom edge, leaving the free space above it.' },
-  { value: 'left', label: 'Left', hint: 'The picture sits against the left edge, leaving the free space on the right.' },
-  { value: 'right', label: 'Right', hint: 'The picture sits against the right edge, leaving the free space on the left.' },
+  { value: 'center', label: msg('settings-picture:option.align-options.center.label'), hint: msg('settings-picture:option.align-options.center.hint') },
+  { value: 'top', label: msg('settings-picture:option.align-options.top.label'), hint: msg('settings-picture:option.align-options.top.hint') },
+  { value: 'bottom', label: msg('settings-picture:option.align-options.bottom.label'), hint: msg('settings-picture:option.align-options.bottom.hint') },
+  { value: 'left', label: msg('settings-picture:option.align-options.left.label'), hint: msg('settings-picture:option.align-options.left.hint') },
+  { value: 'right', label: msg('settings-picture:option.align-options.right.label'), hint: msg('settings-picture:option.align-options.right.hint') },
 ];
 
-const sections: Section[] = [
+const sections: SectionDef[] = [
   {
     id: 'picture',
-    title: 'Picture',
+    title: msg('settings-picture:section.picture.title'),
     items: [
-      { key: 'extendedRendering', label: 'Extended Rendering', description: 'Enables widescreen, tall and camera enhancements. Off is fixed 4:3.', keywords: 'widescreen wide tall ultrawide extended aspect ratio ppu resolution vanilla' },
-      { key: 'linearWorldTilemap', label: 'Linear World Tilemap', description: 'Clean rendering above 19:9. Unlocks the 21:9 wide preset.', hint: 'Turning it off drops any ratio wider than 16:9 and switches Ultrawide and Tall off. Needs Extended Rendering.', keywords: 'linear tilemap world bg wrap 21:9 ultrawide memory overworld' },
-      { key: 'ultrawideRendering', label: 'Ultrawide', description: 'Unlocks ratios above 19:9 up to 32:9. Requires Linear World Tilemap.', hint: 'Turning it off moves a 32:9 picture back to 21:9.', keywords: 'ultrawide 32:9 super ultrawide' },
-      { key: 'tallRendering', label: 'Tall Rendering', description: 'Adds extra rows above and below, which enables tall presets in the picker. Separate from widescreen.', hint: 'Turning it off puts a tall picture back to 4:3.', keywords: 'tall portrait vertical aspect ratio height rows' },
-      { key: 'aspectRatio', label: 'Aspect Ratio', description: 'Original uses the game width. Wide, Tall, Auto, Screen and Custom use 240 lines.', keywords: 'original widescreen 4:3 16:9 16:10 21:9 32:9 tall 3:4 custom auto detect' },
-      { key: 'pictureAlign', label: 'Alignment', description: 'Where the picture and its overlays sit when the screen has room to spare, such as a portrait phone with the touch controls below.', keywords: 'align alignment position top bottom left right center portrait vertical touch controls', control: { kind: 'choice', options: alignOptions, look: 'select' } },
-      { key: 'extendY', label: 'Extend Y', description: 'In Original mode, show 240 lines instead of 224.', keywords: 'height resolution vertical 240' },
-      { key: 'widescreenVisualFixes', label: 'Widescreen Fixes', description: 'Corrections for a view wider or taller than the original: transitions, effects and sprites drawn for the 4:3 screen. One switch; on by default.', keywords: 'visual fixes widescreen tall tiles edges transitions iris link hide' },
-      { key: 'widescreenSprites', label: 'Widescreen Sprites', description: 'Extend sprite spawn ranges so enemies and objects behave as intended in the wider view.', hint: 'Needs a ratio wider than 4:3.', keywords: 'sprites widescreen spawn despawn ranges' },
-      { key: 'widescreenPlayArea', label: 'Extend Play Area', description: 'Extends game activity to the whole widescreen picture: where hazards and enemies spawn and stay active. Off, the extra width you can see stays inactive. Changes gameplay.', keywords: 'play area hazards spawns room clear widescreen gameplay' },
-      { key: 'offscreenAI', label: 'Off-Screen AI', description: 'How enemies in the wide/tall extra band behave before reaching the original screen.', keywords: 'sprite AI pause idle freeze off screen wide guard enemy alarm', control: { kind: 'choice', options: offscreenOptions } },
+      { key: 'extendedRendering', label: msg('settings-picture:extended-rendering.label'), description: msg('settings-picture:extended-rendering.description'), keywords: 'widescreen wide tall ultrawide extended aspect ratio ppu resolution vanilla' },
+      { key: 'linearWorldTilemap', label: msg('settings-picture:linear-world-tilemap.label'), description: msg('settings-picture:linear-world-tilemap.description'), hint: msg('settings-picture:linear-world-tilemap.hint'), keywords: 'linear tilemap world bg wrap 21:9 ultrawide memory overworld' },
+      { key: 'ultrawideRendering', label: msg('settings-picture:ultrawide-rendering.label'), description: msg('settings-picture:ultrawide-rendering.description'), hint: msg('settings-picture:ultrawide-rendering.hint'), keywords: 'ultrawide 32:9 super ultrawide' },
+      { key: 'tallRendering', label: msg('settings-picture:tall-rendering.label'), description: msg('settings-picture:tall-rendering.description'), hint: msg('settings-picture:tall-rendering.hint'), keywords: 'tall portrait vertical aspect ratio height rows' },
+      { key: 'aspectRatio', label: msg('settings-picture:aspect-ratio.label'), description: msg('settings-picture:aspect-ratio.description'), keywords: 'original widescreen 4:3 16:9 16:10 21:9 32:9 tall 3:4 custom auto detect' },
+      { key: 'pictureAlign', label: msg('settings-picture:picture-align.label'), description: msg('settings-picture:picture-align.description'), keywords: 'align alignment position top bottom left right center portrait vertical touch controls', control: { kind: 'choice', options: alignOptions, look: 'select' } },
+      { key: 'extendY', label: msg('settings-picture:extend-y.label'), description: msg('settings-picture:extend-y.description'), keywords: 'height resolution vertical 240' },
+      { key: 'widescreenVisualFixes', label: msg('settings-picture:widescreen-visual-fixes.label'), description: msg('settings-picture:widescreen-visual-fixes.description'), keywords: 'visual fixes widescreen tall tiles edges transitions iris link hide' },
+      { key: 'widescreenSprites', label: msg('settings-picture:widescreen-sprites.label'), description: msg('settings-picture:widescreen-sprites.description'), hint: msg('settings-picture:widescreen-sprites.hint'), keywords: 'sprites widescreen spawn despawn ranges' },
+      { key: 'widescreenPlayArea', label: msg('settings-picture:widescreen-play-area.label'), description: msg('settings-picture:widescreen-play-area.description'), keywords: 'play area hazards spawns room clear widescreen gameplay' },
+      { key: 'offscreenAI', label: msg('settings-picture:offscreen-behavior.label'), description: msg('settings-picture:offscreen-behavior.description'), keywords: 'sprite behavior pause idle freeze off screen wide guard enemy alarm', control: { kind: 'choice', options: offscreenOptions } },
     ],
   },
   {
     id: 'performance',
-    title: 'Performance',
+    title: msg('settings-picture:section.performance.title'),
     items: [
-      { key: 'displayPerfInTitle', label: 'Show FPS', description: 'Display the current frames per second, and the refresh rate of your display, in the title bar while the game is running', keywords: 'fps performance frame rate counter refresh rate hz' },
-      { key: 'vsync', label: 'V-Sync', description: 'Paces the game against the display refresh rate instead of an internal timer, which smooths scrolling.', hint: 'Game speed stays the same either way.', keywords: 'vsync v-sync tearing judder stutter frame pacing refresh rate smooth scrolling 60hz' },
+      { key: 'displayPerfInTitle', label: msg('settings-picture:display-perf-in-title.label'), description: msg('settings-picture:display-perf-in-title.description'), keywords: 'fps performance frame rate counter refresh rate hz' },
+      { key: 'vsync', label: msg('settings-picture:vsync.label'), description: msg('settings-picture:vsync.description'), hint: msg('settings-picture:vsync.hint'), keywords: 'vsync v-sync tearing judder stutter frame pacing refresh rate smooth scrolling 60hz' },
     ],
   },
 ];

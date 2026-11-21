@@ -1,6 +1,7 @@
 /* @layer renderer-appshell @kind hook */
 import { useCallback } from 'react';
 import { log } from '@app/log-bus';
+import { textOf } from '@app/shell/text-bridge';
 import { resetGame, setAutoSaveConfig } from '@app/game';
 import { serializeToIni, mergeSettings } from '@rotp/game-core';
 import { experimentalFeaturesEnabled } from '@rotp/features';
@@ -14,6 +15,8 @@ import type { LoadProfileForGameDeps } from './useProfileManagement.type';
 import { ensureProfileAssets } from './ensure-profile-assets';
 import { loadInputProfile } from './load-input-profile';
 import { loadPlayerSprite } from './load-player-sprite';
+import { loadLanguageScreens } from './load-language-screens';
+import { loadJapaneseGraphics } from './load-japanese-graphics';
 
 const useLoadProfileForGame = ({ onGameClear, onProfileLoaded, setActiveProfile, setLoadingProfile }: LoadProfileForGameDeps) =>
   useCallback(async (staleProfile: Profile) => {
@@ -32,6 +35,7 @@ const useLoadProfileForGame = ({ onGameClear, onProfileLoaded, setActiveProfile,
     await loadInputProfile(profile.id, settings);
     await loadMsuPack(profile, settings);
     await loadPlayerSprite(settings);
+    await loadJapaneseGraphics();
 
     const ini = serializeToIni(settings, undefined, profile.language);
     log.app(`Loaded profile settings (aspect: ${settings.aspectRatio}, viewport: ${settings.viewportConstraint}, renderer: ${settings.newRenderer ? 'new' : 'old'}, language: ${profile.language ?? 'us'})`);
@@ -48,6 +52,7 @@ const useLoadProfileForGame = ({ onGameClear, onProfileLoaded, setActiveProfile,
       setLoadingProfile(null);
       return;
     }
+    await loadLanguageScreens(profile.language);
 
     resetSession();
 
@@ -57,7 +62,7 @@ const useLoadProfileForGame = ({ onGameClear, onProfileLoaded, setActiveProfile,
       onlineSlotName.current = profile.randomizer.slotName ?? DEFAULT_SLOT_NAME;
       const gate = await gateRandomizerBoot(profile.id, profile.randomizer);
       if (!gate.ok) {
-        log.error(gate.detail);
+        log.error(textOf(gate.detail));
         setLoadingProfile(null);
         return;
       }

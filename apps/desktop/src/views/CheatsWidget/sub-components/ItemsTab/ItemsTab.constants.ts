@@ -1,4 +1,6 @@
 /* @layer renderer-widgets @kind constants */
+import { msg } from '@drizztdourden08/brock-core/i18n';
+import type { Message } from '@drizztdourden08/brock-core/i18n';
 import { CheatSlot } from '@app/game';
 import { ABILITY_GRID } from '@app/compounds/PauseAbilitiesPanel/PauseAbilitiesPanel.constants';
 import type { ControlHint } from '../ControlHint.type';
@@ -6,12 +8,15 @@ import type { DungeonItem, EquipmentBytes, GearSlot, SlotName } from './ItemsTab
 
 const ITEMS_TILES_WIDE = 21;
 
-const RAW_VALUE_LABELS: Record<number, Record<number, string>> = {
-  0: { 1: 'Bow', 2: 'Bow & Arrows', 3: 'Silver Bow', 4: 'Silver Bow & Arrows' },
-  12: { 3: 'Flute (active)' },
-  19: { 1: 'Magic Scroll' },
-  [CheatSlot.Armor]: { 0: 'Green Mail' },
-  [CheatSlot.Shield]: { 1: 'Fighters Shield', 2: 'Fire Shield' },
+const RAW_VALUE_LABELS: Record<number, Record<number, Message>> = {
+  0: {
+    1: msg('views-cheats:item.bow'), 2: msg('views-cheats:item.bow-arrows'),
+    3: msg('views-cheats:item.silver-bow'), 4: msg('views-cheats:item.silver-bow-arrows'),
+  },
+  12: { 3: msg('views-cheats:item.flute-active') },
+  19: { 1: msg('views-cheats:item.magic-scroll') },
+  [CheatSlot.Armor]: { 0: msg('views-cheats:item.mail-green') },
+  [CheatSlot.Shield]: { 1: msg('views-cheats:item.shield-fighter'), 2: msg('views-cheats:item.shield-fire') },
 };
 
 const BOW_RUNG_VALUES = [1, 3];
@@ -20,7 +25,6 @@ const MIRROR_SLOT_INDEX = 19;
 const BOOK_SLOT_INDEX = 14;
 
 const BOTTLE_SLOT_INDEX = 15;
-const BOTTLE_NOTICE = 'Bottles are on the Player tab';
 const EMPTY_BOTTLE = 2;
 
 const ITEM_GRID = { cols: 17, rows: 13, gridCols: 5, gridRows: 4, top: 1, left: 2 };
@@ -35,9 +39,9 @@ const NOT_IN_DUNGEON = 0xff;
 
 const PROGRESS_PANEL = { cols: 7, rows: 7 };
 const PENDANT_SPOTS = [
-  { bit: 4, x: 2.5, y: 2, variant: 'green', name: 'Pendant of Courage' },
-  { bit: 2, x: 0.5, y: 5, variant: 'blue', name: 'Pendant of Wisdom' },
-  { bit: 1, x: 4.5, y: 5, variant: 'red', name: 'Pendant of Power' },
+  { bit: 4, x: 2.5, y: 2, variant: 'green', name: msg('views-cheats:item.pendant-courage') },
+  { bit: 2, x: 0.5, y: 5, variant: 'blue', name: msg('views-cheats:item.pendant-wisdom') },
+  { bit: 1, x: 4.5, y: 5, variant: 'red', name: msg('views-cheats:item.pendant-power') },
 ] as const;
 const CRYSTAL_SPOTS = [
   { x: 1.5, y: 2 }, { x: 3.5, y: 2 },
@@ -71,23 +75,23 @@ const GEAR: GearSlot[] = [
 ];
 
 const DUNGEON_ITEMS: DungeonItem[] = [
-  { kind: 'map', type: 'dungeonMap', col: DUNGEON_ITEM_COLUMNS.map, label: 'Map' },
-  { kind: 'compass', type: 'compass', col: DUNGEON_ITEM_COLUMNS.compass, label: 'Compass' },
-  { kind: 'bigKey', type: 'bigKey', col: DUNGEON_ITEM_COLUMNS.bigKey, label: 'Big Key' },
+  { kind: 'map', type: 'dungeonMap', col: DUNGEON_ITEM_COLUMNS.map, label: msg('views-cheats:dungeon.map') },
+  { kind: 'compass', type: 'compass', col: DUNGEON_ITEM_COLUMNS.compass, label: msg('views-cheats:dungeon.compass') },
+  { kind: 'bigKey', type: 'bigKey', col: DUNGEON_ITEM_COLUMNS.bigKey, label: msg('views-cheats:dungeon.big-key') },
 ];
 
 const EMPTY_NAME: SlotName = { lines: [''], sprite: null, owned: false };
 
 const CHEAT_SOURCE = 'cheat';
 
-const PICK_ROW: ControlHint = { glyph: 'mouse-right', label: 'pick a tier' };
-const GIVE_HINT: readonly ControlHint[] = [{ glyph: 'mouse-left', label: 'give it' }, PICK_ROW];
-const TIERS_HINT: readonly ControlHint[] = [{ glyph: 'mouse-left', label: 'open its tiers' }, PICK_ROW];
-const TOGGLE_HINT: readonly ControlHint[] = [{ glyph: 'mouse-left', label: 'toggle it' }];
+const PICK_ROW: ControlHint = { glyph: 'mouse-right', label: msg('views-cheats:hint.items.pick') };
+const GIVE_HINT: readonly ControlHint[] = [{ glyph: 'mouse-left', label: msg('views-cheats:hint.items.give') }, PICK_ROW];
+const TIERS_HINT: readonly ControlHint[] = [{ glyph: 'mouse-left', label: msg('views-cheats:hint.items.tiers') }, PICK_ROW];
+const TOGGLE_HINT: readonly ControlHint[] = [{ glyph: 'mouse-left', label: msg('views-cheats:hint.items.toggle') }];
 
 export {
   ABILITY_EQUIP_TYPE, ABILITY_FLAG_LIFT, ABILITY_FLAG_PULL, ABILITY_FLAG_READ_TALK, ABILITY_FLAG_RUN, ABILITY_FLAG_SWIM, ABILITY_PANEL,
-  ABILITY_SLOT_ORDER, ABILITY_WORDS, BOOK_SLOT_INDEX, BOTTLE_NOTICE, BOTTLE_SLOT_INDEX, BOW_RUNG_VALUES, BOW_TOP_VALUE, CHEAT_SOURCE,
+  ABILITY_SLOT_ORDER, ABILITY_WORDS, BOOK_SLOT_INDEX, BOTTLE_SLOT_INDEX, BOW_RUNG_VALUES, BOW_TOP_VALUE, CHEAT_SOURCE,
   CRYSTAL_SPOTS, CRYSTALS_FROM_PROGRESS, DUNGEON_ITEMS, EMPTY_BOTTLE, EMPTY_NAME, EQUIP_PANEL,
   EQUIPMENT_KEY, GEAR, GIVE_HINT, HEART_PIECE_COLUMN, HEART_PIECE_MAX, ITEM_GRID, ITEM_SLOT_COUNT, ITEMS_TILES_WIDE, MIRROR_SLOT_INDEX,
   NOT_IN_DUNGEON, PENDANT_SPOTS, PROGRESS_PANEL, RAW_VALUE_LABELS, TIERS_HINT, TOGGLE_HINT,

@@ -7,8 +7,10 @@ import { ValueInput } from '../ValueInput';
 import { KeyRail } from './sub-components/KeyRail';
 import { KeyTools } from './sub-components/KeyTools';
 import type { KeyframeTrackProps } from './KeyframeTrack.type';
+import { useT } from '@drizztdourden08/brock-react';
 
 const KeyframeTrack = (props: KeyframeTrackProps) => {
+  const t = useT();
   const { keyframes, onChange, scope, insideRepeat, easing, endLabel, head } = props;
   const [rawSelected, setSelected] = useState(0);
   const selected = Math.min(rawSelected, keyframes.length - 1);
@@ -37,7 +39,7 @@ const KeyframeTrack = (props: KeyframeTrackProps) => {
         endLabel={endLabel}
       />
 
-      <Field size="sm" label={`at · key ${selected + 1} of ${keyframes.length}`}>
+      <Field size="sm" label={t('hud-editor:keyframes.at', { n: selected + 1, total: keyframes.length })}>
         <Slider
           value={key.at}
           min={0}
@@ -49,8 +51,8 @@ const KeyframeTrack = (props: KeyframeTrackProps) => {
       </Field>
 
       <ValueInput
-        label="value"
-        aria-label="Value"
+        label={t('hud-editor:keyframe-track.label.value')}
+        aria-label={t('hud-editor:keyframe-track.aria.value')}
         role="number"
         value={key.value}
         onChange={(value) => onChange(keyframes.map((k, i) => (i === selected ? { ...k, value } : k)))}
@@ -59,9 +61,9 @@ const KeyframeTrack = (props: KeyframeTrackProps) => {
       />
 
       <EasingPicker
-        label="ease out"
+        label={t('hud-editor:keyframe-track.label.ease-out')}
         allowDefault
-        unsetHint="inherits this animation's own easing"
+        unsetHint={t('hud-editor:keyframe-track.unsetHint.inherits-this-animation-s-own')}
         value={key.easing}
         onChange={(next) => onChange(keyframes.map((k, i) => {
           if (i !== selected) return k;

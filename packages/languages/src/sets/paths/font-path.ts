@@ -1,7 +1,6 @@
 /* @layer shared-storage @kind logic */
-import { SET_FILES } from '@rotp/hub-contracts';
-import { setFilePath } from './set-file-path';
+import { ROM_FONT_FILES } from '@rotp/hub-contracts';
 
-const fontPath = (id: string): string => setFilePath(id, SET_FILES.font);
+const fontPath = (code: string): string => `rom-fonts/${code}/${ROM_FONT_FILES.font}`;
 
 export { fontPath };

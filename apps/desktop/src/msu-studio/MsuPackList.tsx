@@ -2,12 +2,14 @@
 import { useCallback } from 'react';
 import { Center, Icon, Status, IconButton, EmptyState, Spinner, Stack } from '@drizztdourden08/tessera/primitives';
 import { ListItemRow } from '@drizztdourden08/tessera/composites';
+import { useT } from '@drizztdourden08/brock-react';
 import { formatBytes } from '@drizztdourden08/brock-core';
 import { HookshopChip } from '@app/compounds/HookshopChip';
 import type { MsuPackListProps } from './MsuPackList.type';
 
 const MsuPackList = (props: MsuPackListProps) => {
   const { loading, packs, selected, isInstalled, onSelect, onDelete } = props;
+  const t = useT();
 
   const handleDeleteClick = useCallback((e: React.MouseEvent, name: string) => {
     e.stopPropagation();
@@ -19,7 +21,7 @@ const MsuPackList = (props: MsuPackListProps) => {
   if (packs.length === 0) {
     return (
       <Stack gap="xs">
-        <EmptyState message="No music packs yet. Create an empty one or import a pack" />
+        <EmptyState message={t('msu-studio:packs.empty')} />
       </Stack>
     );
   }
@@ -33,9 +35,13 @@ const MsuPackList = (props: MsuPackListProps) => {
           name={pack.name}
           meta={
             <>
-              {`${pack.fileCount} file${pack.fileCount !== 1 ? 's' : ''} · ${formatBytes(pack.totalSize)} · `}
+              {t('msu-studio:packs.meta.summary', {
+                files: t('msu-studio:packs.meta.files', { count: pack.fileCount }),
+                size: formatBytes(pack.totalSize),
+              })}
+              {' · '}
               <Status tone={pack.format === 'layered' ? 'success' : 'neutral'}>
-                {pack.format === 'layered' ? 'Layered' : 'Classic'}
+                {pack.format === 'layered' ? t('msu-studio:pack.format.layered') : t('msu-studio:pack.format.classic')}
               </Status>
             </>
           }
@@ -46,7 +52,7 @@ const MsuPackList = (props: MsuPackListProps) => {
             <IconButton
               variant="ghost"
               size="sm"
-              label={isInstalled(pack.name) ? 'Uninstall' : 'Delete'}
+              label={isInstalled(pack.name) ? t('msu-studio:packs.uninstall') : t('msu-studio:packs.delete')}
               onClick={(e) => handleDeleteClick(e, pack.name)}
             >
               <Icon name="x" />

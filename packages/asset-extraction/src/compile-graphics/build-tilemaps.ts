@@ -2,19 +2,12 @@
 import type { RomData } from '../rom/rom-types';
 import type { AssetBuilder } from '../asset-builder';
 import { bufToArr } from '../asset-builder';
+import { US_SCREEN_ADDRESSES } from '../screens/addresses/us';
+import { readStripeTable } from '../screens/read-stripe-table';
 
 const buildTilemaps = (rom: RomData, A: AssetBuilder): void => {
-  const kSrcs = [0xcdd6d, 0xce7bf, 0xce2a8, 0xce63c, 0xce456, 0xeda9c];
-  for (const [i, pOrg] of kSrcs.entries()) {
-    let p = pOrg;
-    while (!(rom.getByte(p) & 0x80)) {
-      const isMemset = rom.getByte(p + 2) & 0x40;
-      const len = ((rom.getByte(p + 2) * 256 + rom.getByte(p + 3)) & 0x3fff) + 1;
-      p += 4;
-      p += isMemset ? 2 : len;
-    }
-    const totalLen = p - pOrg + 1;
-    A.addUint8(`kBgTilemap_${i}`, bufToArr(rom.getBytes(pOrg, totalLen)));
+  for (const [i, address] of US_SCREEN_ADDRESSES.menuTilemaps.entries()) {
+    A.addUint8(`kBgTilemap_${i}`, bufToArr(readStripeTable(rom, address)));
   }
 };
 

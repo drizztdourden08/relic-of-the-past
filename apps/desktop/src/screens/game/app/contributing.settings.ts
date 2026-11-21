@@ -1,30 +1,31 @@
 /* @layer renderer-app @kind config */
-import type { ScreenMeta, Section } from '@drizztdourden08/brock-react';
+import { msg } from '@drizztdourden08/brock-core/i18n';
+import type { ScreenMeta, SectionDef } from '@drizztdourden08/brock-react';
 
-const meta: ScreenMeta = { title: 'Contributing', icon: 'braces', order: 1, keywords: ['developer', 'debug', 'logs', 'sanctuary', 'account', 'contributor'] };
+const meta: ScreenMeta = { title: msg('settings-contributing:screen.title'), icon: 'braces', order: 1, keywords: ['developer', 'debug', 'logs', 'sanctuary', 'account', 'contributor'] };
 
-const sections: Section[] = [
+const sections: SectionDef[] = [
   {
     id: 'developer-instrumentation',
-    title: 'Instrumentation',
+    title: msg('settings-contributing:section.developer-instrumentation.title'),
     items: [
-      { key: 'developerToolsEnabled', label: 'Developer Mode', description: "Turns on developer tools.", keywords: 'developer mode debug instrumentation transition event hook navigation auto flood' },
-      { key: 'experimentalFeaturesEnabled', label: 'Experimental Features', description: 'Enables unfinished features: the HUD Layout Editor, Modern HUD and controls, GBA settings, and Archipelago online play. Turning this off also turns off Modern HUD and the extra dungeon.', hint: 'Needs Developer Mode.', keywords: 'experimental unfinished hud layout modern gba archipelago online' },
-      { key: 'devNavigationData', label: 'Navigation Data', description: 'Room, grid and sprite data for the Location & Navigation widget, the flood fill and the simulator.', hint: 'Needs Developer Mode.', keywords: 'navigation room grid sprite flood fill simulator data reads widget' },
+      { key: 'developerToolsEnabled', label: msg('settings-contributing:developer-tools-enabled.label'), description: msg('settings-contributing:developer-tools-enabled.description'), keywords: 'developer mode debug instrumentation transition event hook navigation auto flood' },
+      { key: 'experimentalFeaturesEnabled', label: msg('settings-contributing:experimental-features-enabled.label'), description: msg('settings-contributing:experimental-features-enabled.description'), hint: msg('settings-contributing:experimental-features-enabled.hint'), keywords: 'experimental unfinished hud layout modern gba archipelago online' },
+      { key: 'devNavigationData', label: msg('settings-contributing:dev-navigation-data.label'), description: msg('settings-contributing:dev-navigation-data.description'), hint: msg('settings-contributing:dev-navigation-data.hint'), keywords: 'navigation room grid sprite flood fill simulator data reads widget' },
     ],
   },
   {
     id: 'developer-sanctuary',
-    title: 'Sanctuary account',
+    title: msg('settings-contributing:section.developer-sanctuary.title'),
     items: [
-      { key: 'sanctuaryAccount', label: 'Sanctuary account', description: 'Sign in so bug reports carry your name and appear on the hub.', keywords: 'sanctuary account sign in hub contributor device code reports' },
+      { key: 'sanctuaryAccount', label: msg('settings-contributing:sanctuary-account.label'), description: msg('settings-contributing:sanctuary-account.description'), keywords: 'sanctuary account sign in hub contributor device code reports' },
     ],
   },
   {
     id: 'developer-debug-reporting',
-    title: 'Debug Reporting',
+    title: msg('settings-contributing:section.developer-debug-reporting.title'),
     items: [
-      { key: 'allowDebugLogging', label: 'Allow debugging logs tracking', description: 'Keeps detailed logs and adds a titlebar capture button (Tab) and a floating button for sending a debug report.', keywords: 'debug logs tracking report crash performance capture titlebar floating button contributor' },
+      { key: 'allowDebugLogging', label: msg('settings-contributing:allow-debug-logging.label'), description: msg('settings-contributing:allow-debug-logging.description'), keywords: 'debug logs tracking report crash performance capture titlebar floating button contributor' },
     ],
   },
 ];

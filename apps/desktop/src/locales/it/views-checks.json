@@ -1,0 +1,15 @@
+{
+  "view.label": "Vista",
+  "view.list.label": "Elenco",
+  "view.list.title": "Righe compatte",
+  "view.detailed.label": "Dettagliata",
+  "view.detailed.title": "Righe con oggetti",
+  "view.visual.label": "Schede",
+  "view.visual.title": "Schede degli oggetti",
+  "pin.label": "Fissa intestazione",
+  "pin.description": "Tiene fissi riepilogo e filtri",
+  "notify.label": "Notifiche",
+  "notify.description": "Una scheda sopra il gioco per ogni controllo o evento completato",
+  "closed.label": "Da chiuso",
+  "closed.description": "Continua a notificare mentre questo tracker è chiuso"
+}

@@ -1,4 +1,5 @@
 /* @layer electron-main @kind logic */
+import { mainText } from '../lib/main-text';
 import type { MainContext } from '@drizztdourden08/brock-electron/main';
 import type { ToolsMain } from '@drizztdourden08/brock-tools/main';
 import type { OptimizeProgress } from '@rotp/msu';
@@ -17,7 +18,7 @@ const reportProgress = (progress: OptimizeProgress): void => {
 const requireEncoder = async (ctx: MainContext): Promise<ToolsMain> => {
   const tools = getTools(ctx);
   const state = await tools.state(FFMPEG_TOOL_ID);
-  if (state?.status !== 'ready') throw new Error(TOOL_MISSING);
+  if (state?.status !== 'ready') throw new Error(mainText(TOOL_MISSING));
   return tools;
 };
 

@@ -1,15 +1,18 @@
 /* @layer renderer-components @kind constants */
-const LANGUAGE_NAMES: Record<string, string> = {
-  en: 'English',
-  de: 'German (Deutsch)',
-  fr: 'French (Français)',
-  'fr-c': 'French Canadian',
-  es: 'Spanish (Español)',
-  pl: 'Polish (Polski)',
-  pt: 'Portuguese (Português)',
-  nl: 'Dutch (Nederlands)',
-  sv: 'Swedish (Svenska)',
-  redux: 'Redux',
-};
+import type { I18n } from '@drizztdourden08/brock-core/i18n';
 
-export { LANGUAGE_NAMES };
+const languageNames = (t: I18n['t']): Record<string, string> => ({
+  us: t('data-manager:language.us'),
+  en: t('data-manager:language.en'),
+  de: t('data-manager:language.de'),
+  fr: t('data-manager:language.fr'),
+  'fr-c': t('data-manager:language.fr-c'),
+  es: t('data-manager:language.es'),
+  pl: t('data-manager:language.pl'),
+  pt: t('data-manager:language.pt'),
+  nl: t('data-manager:language.nl'),
+  sv: t('data-manager:language.sv'),
+  ja: t('data-manager:language.ja'),
+});
+
+export { languageNames };

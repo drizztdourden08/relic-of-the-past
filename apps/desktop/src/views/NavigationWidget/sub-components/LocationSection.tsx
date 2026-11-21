@@ -1,4 +1,5 @@
 /* @layer renderer-widgets @kind component */
+import { useT } from '@drizztdourden08/brock-react';
 import { Box } from '@drizztdourden08/tessera/primitives';
 import { hexLabelOf } from '../behavior/hex-label-of';
 import { playerMapPosOf } from '../behavior/player-map-pos-of';
@@ -12,12 +13,13 @@ const LocationSection = (props: LocationSectionProps) => {
     screenBundle, screenName, screenId, isIndoors, roomIndex, isDarkWorld, overworldScreenIndex,
     externalConnections, renderResults, playerDebug,
   } = props;
+  const t = useT();
 
   return (
     <Box className="nav-section">
       <LocationName screenBundle={screenBundle} screenName={screenName} isIndoors={isIndoors} />
       <Box className="nav-meta">
-        {screenId ?? 'unmapped'} · {hexLabelOf(isIndoors ? roomIndex : overworldScreenIndex, 0)} · {worldTag(isIndoors, isDarkWorld)}
+        {screenId ?? t('views-navigation:location.unmapped')} · {hexLabelOf(isIndoors ? roomIndex : overworldScreenIndex, 0)} · {worldTag(t, isIndoors, isDarkWorld)}
         {!isIndoors && ` · R${(overworldScreenIndex >> 3) & 7} C${overworldScreenIndex & 7}`}
       </Box>
 

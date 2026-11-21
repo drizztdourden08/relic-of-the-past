@@ -1,0 +1,14 @@
+{
+  "menu.home": "ホーム",
+  "menu.game": "ゲーム",
+  "menu.profiles": "プロフィール",
+  "menu.widgets": "ウィジェット",
+  "menu.about": "情報",
+  "menu.touchEdit": "タッチ配置を編集",
+  "hint.home": "ホーム",
+  "hint.menu": "メニュー",
+  "drawer.label": "オプション",
+  "fps": "{fps} FPS",
+  "volume.mute": "ミュート",
+  "volume.unmute": "ミュート解除"
+}

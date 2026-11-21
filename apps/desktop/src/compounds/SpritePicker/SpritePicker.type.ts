@@ -1,9 +1,10 @@
 /* @layer renderer-components @kind types */
+import type { Text } from '@drizztdourden08/brock-core/i18n';
 import type { ReactNode, RefObject } from 'react';
 
 interface SpritePickerTile {
   file: string;
-  label: string;
+  label: Text;
   category: string;
 }
 

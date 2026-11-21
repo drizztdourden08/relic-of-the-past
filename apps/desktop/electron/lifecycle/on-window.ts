@@ -1,5 +1,6 @@
 /* @layer electron-main @kind logic */
 import type { BrowserWindow } from 'electron';
+import { rotpAutomationFlags } from '../automation/rotp-automation-flags';
 import { registerDevicePermissions } from '../input';
 
 const forwardDumpLayersConsole = (win: BrowserWindow): void => {
@@ -9,7 +10,13 @@ const forwardDumpLayersConsole = (win: BrowserWindow): void => {
   });
 };
 
+const silenceHiddenLaunch = (win: BrowserWindow): void => {
+  if (!rotpAutomationFlags.isHeadlessLaunch() || process.argv.includes('--sound')) return;
+  win.webContents.setAudioMuted(true);
+};
+
 const onWindow = (win: BrowserWindow): void => {
+  silenceHiddenLaunch(win);
   forwardDumpLayersConsole(win);
   registerDevicePermissions(win);
 };

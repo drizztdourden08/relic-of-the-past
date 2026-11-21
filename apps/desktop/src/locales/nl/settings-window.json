@@ -1,0 +1,16 @@
+{
+  "option.viewport-modes.none.label": "Zwarte balken",
+  "option.viewport-modes.none.hint": "Behoudt de beeldverhouding van het spel en vult de rest van het venster met zwarte balken.",
+  "option.viewport-modes.fit.label": "Venster aanpassen",
+  "option.viewport-modes.fit.hint": "Houdt de vorm van het venster op de beeldverhouding van het spel tijdens het schalen, zodat er geen balken zijn.",
+  "option.viewport-modes.fill.label": "Uitrekken",
+  "option.viewport-modes.fill.hint": "Rekt het beeld uit over het hele venster.",
+  "section.window.title": "Venster",
+  "start-fullscreen.label": "Op volledig scherm starten",
+  "start-fullscreen.description": "Ga automatisch naar volledig scherm als het spel start",
+  "viewport-constraint.label": "Kijkvenster",
+  "viewport-constraint.description": "Bepaalt hoe het spelvlak zich tot het venster verhoudt",
+  "pixel-perfect.label": "Pixelperfect",
+  "pixel-perfect.description": "Schaal het beeld alleen met hele bronpixels, zodat elke pixel exact even groot is. Haalt het flikkeren van hekken, muren en andere rechte randen tijdens het scrollen weg, ten koste van iets bredere zwarte randen. Zet Lineaire filtering uit zolang het actief is.",
+  "pixel-perfect.hint": "Vereist het Letterbox-kijkvenster."
+}

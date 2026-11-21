@@ -13,9 +13,14 @@ interface HudSettings {
   hudCountLayout: 'centered' | 'original';
   hudCountdownStyle: 'pixel' | 'smooth';
   titleScreen: 'original' | 'reimagined';
+  originalTitle: 'us' | 'ja';
   titleMotion: 'still' | 'drifting';
   titleFollowsProgress: boolean;
   titleSword: TitleSword;
+  langMenuScreens: boolean;
+  langPauseWords: boolean;
+  langMapLabels: boolean;
+  langEndingCredits: boolean;
 }
 
 export type { HudSettings };

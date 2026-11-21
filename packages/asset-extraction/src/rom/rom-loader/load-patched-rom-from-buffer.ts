@@ -1,0 +1,34 @@
+/* @layer shared-asset-extraction @kind logic */
+import { msg } from '@drizztdourden08/brock-core/i18n';
+import type { RomData, RomIdentEntry, RomLanguage } from '../rom-types';
+import { createRomData } from './create-rom-data';
+import {
+  DOUBLE_HEADER_LENGTH, PATCHED_ROM_MAX_BYTES, PATCHED_ROM_MIN_BYTES, SMC_HEADER_BYTES, ZELDA3_SHA1,
+} from './rom-loader.constants';
+import { RomLoadError } from './rom-load-error';
+import { stripSmcHeader } from './strip-smc-header';
+
+const releaseOf = (base: RomLanguage): RomIdentEntry => {
+  const entry = Object.values(ZELDA3_SHA1).find((candidate) => candidate.language === base);
+  if (!entry) throw new Error(`"${base}" is not a known release of A Link to the Past.`);
+  return entry;
+};
+
+const romBodyOf = (buffer: Buffer): Buffer => {
+  const romBytes = stripSmcHeader(buffer);
+  return romBytes.length === DOUBLE_HEADER_LENGTH ? romBytes.subarray(SMC_HEADER_BYTES) : romBytes;
+};
+
+const loadPatchedRomFromBuffer = (buffer: Buffer, base: RomLanguage): RomData => {
+  const release = releaseOf(base);
+  const romBytes = romBodyOf(buffer);
+  if (romBytes.length < PATCHED_ROM_MIN_BYTES || romBytes.length > PATCHED_ROM_MAX_BYTES) {
+    throw new RomLoadError(
+      msg('rom-loader:error.wrongSize', { bytes: romBytes.length }),
+      `This file is ${romBytes.length} bytes, which is not the size of an A Link to the Past ROM.`,
+    );
+  }
+  return createRomData(romBytes, base, release.revision, `Fan patch of ${release.description}`);
+};
+
+export { loadPatchedRomFromBuffer };

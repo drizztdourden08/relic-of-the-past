@@ -1,5 +1,7 @@
 /* @layer renderer-hud @kind constants */
-import type { SnesButton, PromptButton, EquipmentState } from '@rotp/game-data';
+import { msg } from '@drizztdourden08/brock-core/i18n';
+import type { Message } from '@drizztdourden08/brock-core/i18n';
+import type { SnesButton, PromptAction, PromptButton, EquipmentState } from '@rotp/game-data';
 import type { DialogScale } from './DialogView.type';
 
 const STORY_LEGEND_MESSAGE = 0x112;
@@ -26,6 +28,15 @@ const SNES_OF: Record<PromptButton, SnesButton> = {
   a: 'A', b: 'B', up: 'Up', down: 'Down', left: 'Left', right: 'Right',
 };
 
+const PROMPT_TEXT: Record<PromptAction, Message> = {
+  choose: msg('views-game-layer:prompt.choose'),
+  confirm: msg('views-game-layer:prompt.confirm'),
+  next: msg('views-game-layer:prompt.next'),
+  close: msg('views-game-layer:prompt.close'),
+  faster: msg('views-game-layer:prompt.faster'),
+  complete: msg('views-game-layer:prompt.complete'),
+};
+
 const SCANLINE_LEAD = 1;
 
 const INITIAL_DIALOG_SCALE: DialogScale = { height: 0, scale: 2, offsetX: 0, offsetY: 0 };
@@ -36,5 +47,5 @@ const NO_ATLASES: readonly (HTMLCanvasElement | null)[] = [null, null];
 
 export {
   BOMBS_SLOT, BOTTLE_CONTENTS_SLOT, BOTTLES, EQUIPMENT_AT, FADE_MS, FIRST_BOTTLE, INITIAL_DIALOG_SCALE,
-  INTRO_TELEPATHY_MESSAGES, ITEM_SLOTS, NO_ATLASES, SCANLINE_LEAD, SNES_OF, SPAWN_PICKER_MESSAGES, STORY_LEGEND_MESSAGE,
+  INTRO_TELEPATHY_MESSAGES, ITEM_SLOTS, NO_ATLASES, PROMPT_TEXT, SCANLINE_LEAD, SNES_OF, SPAWN_PICKER_MESSAGES, STORY_LEGEND_MESSAGE,
 };

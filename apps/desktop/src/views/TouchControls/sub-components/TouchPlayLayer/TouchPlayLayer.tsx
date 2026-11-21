@@ -1,4 +1,5 @@
 /* @layer renderer-app @kind component */
+import { useT } from '@drizztdourden08/brock-react';
 import { toPx } from '@rotp/input-mapping';
 import { layerGeometry } from '../../behavior/layer-geometry';
 import { HoldRing } from '@app/compounds/HoldRing';
@@ -8,6 +9,7 @@ import { TouchStick } from '@app/compounds/TouchStick';
 import type { TouchPlayLayerProps } from './TouchPlayLayer.type';
 
 const TouchPlayLayer = (props: TouchPlayLayerProps) => {
+  const t = useT();
   const { layout, box, strength, view, ring } = props;
   const { size, radius, fixedBase } = layerGeometry(layout, box);
   const { movementType, movements } = layout;
@@ -30,7 +32,7 @@ const TouchPlayLayer = (props: TouchPlayLayerProps) => {
       {movementType === 'dpad' && (
         <TouchDpad center={toPx(movements.dpad.at, box)} radiusPx={radius} pressed={view.dpad} strength={strength} />
       )}
-      {ring && <HoldRing center={ring.center} progress={ring.progress} label="Edit layout" />}
+      {ring && <HoldRing center={ring.center} progress={ring.progress} label={t('views-touch-controls:play.editLayout')} />}
     </>
   );
 };

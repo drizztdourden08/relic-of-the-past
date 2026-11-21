@@ -1,40 +1,38 @@
 /* @layer renderer-components @kind hook */
+import { useT, useText } from '@drizztdourden08/brock-react';
 import { useState, useCallback } from 'react';
+import type { CreateOutcome } from '@drizztdourden08/tessera/composites';
 import * as spritesStore from '@app/storage/sprites-store';
-import type { SpriteActionsParams, SpriteMessage } from './sprite-manager.type';
+import type { SpriteActionsParams } from './sprite-manager.type';
 
 const useSpriteActions = (params: SpriteActionsParams) => {
-  const { toExtract, setToExtract, setSelectedRom, refreshExtracted } = params;
+  const { refreshExtracted } = params;
+  const t = useT();
+  const text = useText();
   const [busy, setBusy] = useState(false);
-  const [message, setMessage] = useState<SpriteMessage | null>(null);
+  const [error, setError] = useState<string | null>(null);
 
-  const handleExtract = useCallback(async () => {
-    if (!toExtract) return;
-    setBusy(true); setMessage(null);
-    const result = await spritesStore.extractSprites(toExtract);
+  const handleExtract = useCallback(async (romFile: string): Promise<CreateOutcome> => {
+    setBusy(true); setError(null);
+    const result = await spritesStore.extractSprites(romFile);
     setBusy(false);
-    if (result.success) {
-      setMessage({ type: 'success', text: `Extracted ${result.count ?? 0} sprites` });
-      await refreshExtracted();
-      setSelectedRom(toExtract);
-      setToExtract('');
-    } else {
-      setMessage({ type: 'error', text: result.error ?? 'Extraction failed' });
-    }
-  }, [toExtract, refreshExtracted, setSelectedRom, setToExtract]);
+    if (!result.success) return { success: false, error: result.error === undefined ? t('data-manager:sprite-manager.extract-failed') : text(result.error) };
+    await refreshExtracted();
+    return { success: true, id: romFile };
+  }, [refreshExtracted, t, text]);
 
   const handleDelete = useCallback(async (romFile: string) => {
-    setBusy(true); setMessage(null);
+    setBusy(true); setError(null);
     const result = await spritesStore.deleteSprites(romFile);
     setBusy(false);
     if (result.success) {
       await refreshExtracted();
     } else {
-      setMessage({ type: 'error', text: result.error ?? 'Delete failed' });
+      setError(result.error === undefined ? t('data-manager:sprite-manager.delete-failed') : text(result.error));
     }
-  }, [refreshExtracted]);
+  }, [refreshExtracted, t, text]);
 
-  return { busy, message, handleExtract, handleDelete };
+  return { busy, error, handleExtract, handleDelete };
 };
 
 export { useSpriteActions };

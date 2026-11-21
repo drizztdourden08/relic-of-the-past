@@ -1,24 +1,20 @@
 /* @layer renderer-components @kind logic */
 import { setFontAssets } from '@rotp/design/packs';
 import type { SetFontAssets } from '@rotp/design/packs';
-import { getLanguageSet, getLanguageSetFont } from '@app/storage/languages-store';
+import { getLanguageRomFont } from '@app/storage/languages-store';
 
-const assetsBySetId = new Map<string, Promise<SetFontAssets | null>>();
+const assetsByBase = new Map<string, Promise<SetFontAssets | null>>();
 
-const resolveBase = async (setId: string, base?: string): Promise<string | null> =>
-  base ?? (await getLanguageSet(setId))?.base ?? null;
-
-const read = async (setId: string, base?: string): Promise<SetFontAssets | null> => {
-  const font = await getLanguageSetFont(setId);
-  if (!font) return null;
-  return setFontAssets(font, await resolveBase(setId, base));
+const read = async (base: string): Promise<SetFontAssets | null> => {
+  const font = await getLanguageRomFont(base);
+  return font ? setFontAssets(font, base) : null;
 };
 
-const loadSetFont = (setId: string, base?: string): Promise<SetFontAssets | null> => {
-  const cached = assetsBySetId.get(setId);
+const loadSetFont = (base: string): Promise<SetFontAssets | null> => {
+  const cached = assetsByBase.get(base);
   if (cached) return cached;
-  const pending = read(setId, base).catch(() => null);
-  assetsBySetId.set(setId, pending);
+  const pending = read(base).catch(() => null);
+  assetsByBase.set(base, pending);
   return pending;
 };
 

@@ -1,4 +1,5 @@
 /* @layer renderer-widgets @kind component */
+import { useT } from '@drizztdourden08/brock-react';
 import { useCallback, useState } from 'react';
 import type { MouseEvent } from 'react';
 import { Box, Text } from '@drizztdourden08/tessera/primitives';
@@ -22,7 +23,8 @@ const MagicEditor = ({ scale, spritesBase }: HudPieceProps) => {
   const halfMagic = useGameUIStore((s) => s.hud.halfMagic);
   const [hoverLevel, setHoverLevel] = useState<number | null>(null);
   const [setterAnchor, setSetterAnchor] = useState<HTMLElement | null>(null);
-  const hint = usePointerHintTarget('Magic', MAGIC_HINTS);
+  const t = useT();
+  const hint = usePointerHintTarget(t('views-cheats:title.magic'), MAGIC_HINTS);
   const held = magicLevelOf(magicPower);
   const tile = SNES_TILE * scale;
   const wheelRef = useWheel<HTMLDivElement>((dir) => writeMagicLevel(Math.min(MAGIC_LEVELS, Math.max(0, held + dir))));
@@ -50,7 +52,7 @@ const MagicEditor = ({ scale, spritesBase }: HudPieceProps) => {
       </Text>
       {setterAnchor && (
         <NumberSetter
-          title="Magic"
+          title={t('views-cheats:title.magic')}
           value={held}
           min={0}
           max={MAGIC_LEVELS}

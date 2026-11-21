@@ -1,26 +1,29 @@
 /* @layer renderer-widgets @kind component */
 import { useCallback, useMemo } from 'react';
+import { useT, useText } from '@drizztdourden08/brock-react';
 import { DialogShell, LogPanel } from '@drizztdourden08/tessera/composites';
 import { eventsToText } from '../behavior/events-to-text';
 import { toLogRows } from '../behavior/to-log-rows';
-import { LOG_KINDS } from '../SimulatorWidget.constants';
+import { logKinds } from '../SimulatorWidget.constants';
 import type { LogDialogProps } from '../SimulatorWidget.type';
 import './LogDialog.css';
 
 const LogDialog = (props: LogDialogProps) => {
   const { open, onClose, events } = props;
-  const rows = useMemo(() => toLogRows(events), [events]);
-  const copyText = useCallback(() => eventsToText(events), [events]);
+  const t = useT();
+  const text = useText();
+  const rows = useMemo(() => toLogRows(events, text), [events, text]);
+  const copyText = useCallback(() => eventsToText(events, text), [events, text]);
 
   return (
-    <DialogShell open={open} onClose={onClose} title="Simulation Log" className="sim-log-dialog">
+    <DialogShell open={open} onClose={onClose} title={t('views-simulator:log.title')} className="sim-log-dialog">
       <LogPanel
         height="fill"
         rows={rows}
-        kinds={LOG_KINDS}
+        kinds={logKinds(t)}
         copyText={copyText}
-        countLabel="events"
-        emptyLabel="No events."
+        countLabel={t('views-simulator:log.count')}
+        emptyLabel={t('views-simulator:log.empty')}
       />
     </DialogShell>
   );

@@ -1,0 +1,13 @@
+{
+  "tab.label": "Språk",
+  "section.app.title": "Appens språk",
+  "section.profile.title": "Den här profilen",
+  "row.appLocale.label": "Appens språk",
+  "row.appLocale.description": "Appens språk. Det styr även startskärmen, systemfältet och profilväljaren.",
+  "row.locale.label": "Språk",
+  "row.locale.description": "Den här profilens språk. När du byter till profilen byts språket utan omladdning.",
+  "option.system.label": "Som systemet",
+  "option.system.hint": "Nu {language}",
+  "option.app.label": "Som appen",
+  "option.app.hint": "Nu {language}"
+}

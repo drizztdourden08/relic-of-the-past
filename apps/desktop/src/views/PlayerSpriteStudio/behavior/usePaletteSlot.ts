@@ -1,17 +1,19 @@
 /* @layer renderer-hooks @kind logic */
+import { useT } from '@drizztdourden08/brock-react';
 import { useState, useMemo, useCallback, useRef } from 'react';
 import type { SwatchGroup } from '@drizztdourden08/tessera/color-picker';
 import { OUTFIT_IDS } from '@rotp/game-data';
 import { bgr555ToHex, hexToBgr555 } from '@rotp/game-core';
 import { flattenPalette } from '@rotp/packs';
-import { OUTFIT_LABELS } from '@rotp/design/packs';
 import type { PaletteEditorProps, Slot } from '../PlayerSpriteStudio.type';
 import { colorAt } from './color-at';
+import { outfitName } from './outfit-name';
 import { gloveSlot } from './glove-slot';
 import { slotTitle } from './slot-title';
 
 const usePaletteSlot = (params: PaletteEditorProps) => {
   const { sheet, outfit, readOnly = false, onColor, onGloveColor, onReset } = params;
+  const t = useT();
   const [slot, setSlot] = useState<Slot>(null);
   const anchorRef = useRef<HTMLElement | null>(null);
 
@@ -50,13 +52,13 @@ const usePaletteSlot = (params: PaletteEditorProps) => {
     const originalHex = bgr555ToHex(originalOf(slot));
     const thisColour = currentHex === originalHex ? [currentHex] : [currentHex, originalHex];
     return [
-      { label: 'This colour', colors: thisColour },
-      ...OUTFIT_IDS.map((id) => ({ label: `${OUTFIT_LABELS[id]} palette`, colors: live.outfits[id].map(bgr555ToHex) })),
-      { label: 'Gloves', colors: live.gloves.map(bgr555ToHex) },
+      { label: t('views-player-sprite-studio:palette.thisColour'), colors: thisColour },
+      ...OUTFIT_IDS.map((id) => ({ label: t('views-player-sprite-studio:palette.outfit', { outfit: outfitName(id, t) }), colors: live.outfits[id].map(bgr555ToHex) })),
+      { label: t('views-player-sprite-studio:palette.gloves'), colors: live.gloves.map(bgr555ToHex) },
     ];
-  }, [slot, live, wordOf, originalOf]);
+  }, [slot, live, wordOf, originalOf, t]);
 
-  return { slot, setSlot, anchorRef, live, colors, originals, openAt, wordOf, originalOf, change, reset, swatchGroups, title: slotTitle(slot, outfit) };
+  return { slot, setSlot, anchorRef, live, colors, originals, openAt, wordOf, originalOf, change, reset, swatchGroups, title: slotTitle(slot, outfit, t) };
 };
 
 export { usePaletteSlot };

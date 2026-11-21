@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind types */
-import type { HudAnimation } from '@rotp/hud';
+import type { HudAnimation, ReflowWarning } from '@rotp/hud';
 
 interface AnimationGroupProps {
   animation: HudAnimation;
@@ -11,7 +11,7 @@ interface AnimationGroupProps {
   onChange: (patch: Partial<HudAnimation>) => void;
   scope: Readonly<Record<string, number>>;
   insideRepeat?: boolean;
-  warnings: readonly string[];
+  warnings: readonly ReflowWarning[];
 }
 
 export type { AnimationGroupProps };

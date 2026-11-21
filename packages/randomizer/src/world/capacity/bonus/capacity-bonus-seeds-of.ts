@@ -1,4 +1,5 @@
 /* @layer shared-game @kind logic */
+import { msg } from '@drizztdourden08/brock-core/i18n';
 import { CAPACITY_BONUS_MAX, DEFAULT_CAPACITY_BONUS } from './capacity-bonus.constants';
 import { capacityBonusBaseKeyOf } from './capacity-bonus-base-key-of';
 import { capacityBonusKeyOf } from './capacity-bonus-key-of';
@@ -7,15 +8,15 @@ import type { OptionSeed } from '../../options.type';
 import type { CapacityFamily } from '../capacity-family';
 
 const capacityBonusSeedsOf = (capacityFamily: CapacityFamily): OptionSeed[] => {
-  const { id, label } = capacityFamily;
+  const { id } = capacityFamily;
   const { percent, stepBase } = DEFAULT_CAPACITY_BONUS[id];
   return [
     {
-      ...CAPACITY_BONUS_ROW, key: capacityBonusKeyOf(id), displayName: `${label} pickup bonus`, kind: 'range',
+      ...CAPACITY_BONUS_ROW, key: capacityBonusKeyOf(id), displayName: msg('randomizer-world:tpl.capacity.bonus', { family: id }), kind: 'range',
       range: { min: 0, max: CAPACITY_BONUS_MAX }, sourceDefault: percent, baseline: percent,
     },
     {
-      ...CAPACITY_BONUS_ROW, key: capacityBonusBaseKeyOf(id), displayName: `${label} bonus of the gain`, kind: 'toggle',
+      ...CAPACITY_BONUS_ROW, key: capacityBonusBaseKeyOf(id), displayName: msg('randomizer-world:tpl.capacity.bonusBase', { family: id }), kind: 'toggle',
       sourceDefault: stepBase, baseline: stepBase,
     },
   ];

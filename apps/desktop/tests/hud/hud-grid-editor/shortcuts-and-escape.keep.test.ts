@@ -37,7 +37,7 @@ describe('every shortcut does what the legend draws', { tags: ['standard'] }, ()
     const patch = patchSpy();
     mountGrid(patch);
     down(header('column 1'));
-    expect(status()).toBe('column 1 of 3 holds vitals, wallet');
+    expect(status()).toBe('column 1 of 3 holds Vitals, Rupees');
     press('Delete');
     expect(patch).toHaveBeenCalledTimes(1);
     const written = firstPatch(patch);

@@ -1,14 +1,17 @@
 /* @layer bridge-wasm @kind constants */
-const TAGALONG_NAMES: Readonly<Record<number, string>> = {
-  1: 'Princess',
-  4: 'Old Man',
-  5: 'Uncle',
-  6: 'Crystal Maiden',
-  7: "Blacksmith's frog",
-  9: 'Locksmith',
-  10: 'Kiki',
-  12: 'Purple Chest',
-  13: 'Super Bomb',
+import { msg } from '@drizztdourden08/brock-core/i18n';
+import type { Message } from '@drizztdourden08/brock-core/i18n';
+
+const TAGALONG_LABELS: Readonly<Record<number, Message>> = {
+  1: msg('game-states:follower.princess'),
+  4: msg('game-states:follower.oldMan'),
+  5: msg('game-states:follower.uncle'),
+  6: msg('game-states:follower.crystalMaiden'),
+  7: msg('game-states:follower.frog'),
+  9: msg('game-states:follower.locksmith'),
+  10: msg('game-states:follower.kiki'),
+  12: msg('game-states:follower.purpleChest'),
+  13: msg('game-states:follower.superBomb'),
 };
 
 const SLOT = {
@@ -23,4 +26,4 @@ const NO_KEY_COUNT = 0xff;
 
 const FIRST_REPORTED_TIER = 1;
 
-export { TAGALONG_NAMES, SLOT, NO_KEY_COUNT, FIRST_REPORTED_TIER };
+export { TAGALONG_LABELS, SLOT, NO_KEY_COUNT, FIRST_REPORTED_TIER };

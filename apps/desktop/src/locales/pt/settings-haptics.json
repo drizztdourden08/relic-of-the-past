@@ -1,0 +1,23 @@
+{
+  "section.haptics-general.title": "Vibração",
+  "haptics.enabled.label": "Ativar resposta háptica",
+  "haptics.enabled.description": "Ativa a vibração do controle para eventos do jogo. Requer um controle compatível (Xbox, Switch Pro, DualSense).",
+  "haptics.intensity.label": "Intensidade da vibração",
+  "haptics.intensity.description": "Multiplicador global de intensidade de toda a resposta háptica",
+  "section.haptics-combat.title": "Combate",
+  "haptics.sword-swing.label": "Golpe de espada",
+  "haptics.sword-swing.description": "Vibração bem fraca quando o jogador golpeia com a espada",
+  "haptics.sword-hit-enemy.label": "Espada acerta inimigo",
+  "haptics.sword-hit-enemy.description": "Vibração normal quando a espada atinge um inimigo",
+  "haptics.sword-clink.label": "Tilintar da espada",
+  "haptics.sword-clink.description": "Vibração fraca quando a espada bate em uma superfície invulnerável ou em um escudo",
+  "haptics.damage-taken.label": "Dano sofrido",
+  "haptics.damage-taken.description": "Vibração proporcional ao dano quando o jogador se fere (mais forte com mais dano)",
+  "section.haptics-actions.title": "Itens e movimento",
+  "haptics.item-use.label": "Uso de item",
+  "haptics.item-use.description": "Vibração ao usar itens (martelo, hookshot, bombas, medalhões, varinhas etc.)",
+  "haptics.dash-vibration.label": "Vibração da corrida",
+  "haptics.dash-vibration.description": "Vibração rítmica dos passos ao correr com as Botas de Pégaso",
+  "haptics.environmental-effects.label": "Efeitos do ambiente",
+  "haptics.environmental-effects.description": "Vibração para eventos do mundo: cair em buracos, pousar de degraus, entrar na água, teletransporte do espelho, abrir baús, explosões de bombas"
+}

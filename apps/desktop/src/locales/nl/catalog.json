@@ -1,0 +1,13 @@
+{
+  "bar.install": "Installeren",
+  "bar.update": "Bijwerken",
+  "bar.uninstall": "Verwijderen",
+  "bar.cancel": "Annuleren",
+  "bar.installed": "Geïnstalleerd",
+  "bar.installing": "Installeren",
+  "job.title": "{label}: installeren",
+  "job.step.grant": "Toestemming voor de download vragen",
+  "job.step.download": "Downloaden",
+  "job.step.verify": "De download controleren",
+  "job.step.unpack": "Installeren"
+}

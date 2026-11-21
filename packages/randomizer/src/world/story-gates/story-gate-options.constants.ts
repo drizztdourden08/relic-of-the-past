@@ -1,4 +1,5 @@
-/* @layer shared-game @kind data */
+/* @layer shared-game @kind constants */
+import { msg } from '@drizztdourden08/brock-core/i18n';
 import { DEFAULT_STORY_GATES as D } from './story-gates.constants';
 import { STORY_GATE_KEY as K } from './story-gate-option-keys/story-gate-option-keys.constants';
 import type { OptionChoice, OptionSeed } from '../options.type';
@@ -6,23 +7,23 @@ import type { OptionChoice, OptionSeed } from '../options.type';
 const STORY_GATE_ROW = { group: 'goal' as const, implementation: 'active' as const, locked: false, synthetic: true };
 
 const COUNT_KIND_CHOICES: readonly OptionChoice[] = [
-  { value: 'crystals', sourceValue: 'crystals', label: 'Crystals held' },
-  { value: 'darkWorldDungeons', sourceValue: 'darkWorldDungeons', label: 'Dark World dungeons cleared' },
+  { value: 'crystals', sourceValue: 'crystals', label: msg('randomizer:storyGate.countKind.choice.crystals') },
+  { value: 'darkWorldDungeons', sourceValue: 'darkWorldDungeons', label: msg('randomizer:storyGate.countKind.choice.darkWorldDungeons') },
 ];
 
 const STORY_GATE_OPTION_SEEDS: readonly OptionSeed[] = [
   {
     ...STORY_GATE_ROW,
     key: K.pedestal,
-    displayName: 'Master Sword pedestal opens with',
+    displayName: msg('randomizer:storyGate.pedestal.name'),
     kind: 'choice',
     choices: [
-      { value: 'pendants', sourceValue: 'pendants', label: 'All pendants held' },
-      { value: 'lightWorldDungeons', sourceValue: 'lightWorldDungeons', label: 'Light World dungeons cleared' },
-      { value: 'anyThreeDungeons', sourceValue: 'anyThreeDungeons', label: 'Any three dungeons cleared' },
-      { value: 'onePendant', sourceValue: 'onePendant', label: 'One pendant held' },
-      { value: 'twoPendants', sourceValue: 'twoPendants', label: 'Two pendants held' },
-      { value: 'open', sourceValue: 'open', label: 'Always open' },
+      { value: 'pendants', sourceValue: 'pendants', label: msg('randomizer:storyGate.pedestal.choice.pendants') },
+      { value: 'lightWorldDungeons', sourceValue: 'lightWorldDungeons', label: msg('randomizer:storyGate.pedestal.choice.lightWorldDungeons') },
+      { value: 'anyThreeDungeons', sourceValue: 'anyThreeDungeons', label: msg('randomizer:storyGate.pedestal.choice.anyThreeDungeons') },
+      { value: 'onePendant', sourceValue: 'onePendant', label: msg('randomizer:storyGate.pedestal.choice.onePendant') },
+      { value: 'twoPendants', sourceValue: 'twoPendants', label: msg('randomizer:storyGate.pedestal.choice.twoPendants') },
+      { value: 'open', sourceValue: 'open', label: msg('randomizer:storyGate.pedestal.choice.open') },
     ],
     sourceDefault: D.pedestal,
     baseline: D.pedestal,
@@ -30,7 +31,7 @@ const STORY_GATE_OPTION_SEEDS: readonly OptionSeed[] = [
   {
     ...STORY_GATE_ROW,
     key: K.pedestalScenes,
-    displayName: 'Scenes follow the pedestal, never the sword',
+    displayName: msg('randomizer:storyGate.pedestalScenes.name'),
     kind: 'toggle',
     sourceDefault: D.pedestalScenes,
     baseline: D.pedestalScenes,
@@ -38,11 +39,11 @@ const STORY_GATE_OPTION_SEEDS: readonly OptionSeed[] = [
   {
     ...STORY_GATE_ROW,
     key: K.sahasrahla,
-    displayName: "Sahasrahla's trial is passed with",
+    displayName: msg('randomizer:storyGate.sahasrahla.name'),
     kind: 'choice',
     choices: [
-      { value: 'pendant', sourceValue: 'pendant', label: 'The Pendant of Courage' },
-      { value: 'easternPalace', sourceValue: 'easternPalace', label: 'Eastern Palace cleared' },
+      { value: 'pendant', sourceValue: 'pendant', label: msg('randomizer:storyGate.sahasrahla.choice.pendant') },
+      { value: 'easternPalace', sourceValue: 'easternPalace', label: msg('randomizer:storyGate.sahasrahla.choice.easternPalace') },
     ],
     sourceDefault: D.sahasrahla,
     baseline: D.sahasrahla,
@@ -50,13 +51,13 @@ const STORY_GATE_OPTION_SEEDS: readonly OptionSeed[] = [
   {
     ...STORY_GATE_ROW,
     key: K.barrier,
-    displayName: 'Castle barrier falls to',
+    displayName: msg('randomizer:storyGate.barrier.name'),
     kind: 'choice',
     choices: [
-      { value: 'sword', sourceValue: 'sword', label: 'A sword that cuts it' },
-      { value: 'pedestal', sourceValue: 'pedestal', label: 'Master Sword pulled' },
-      { value: 'pendants', sourceValue: 'pendants', label: 'All pendants held' },
-      { value: 'lightWorldDungeons', sourceValue: 'lightWorldDungeons', label: 'Light World dungeons cleared' },
+      { value: 'sword', sourceValue: 'sword', label: msg('randomizer:storyGate.barrier.choice.sword') },
+      { value: 'pedestal', sourceValue: 'pedestal', label: msg('randomizer:storyGate.barrier.choice.pedestal') },
+      { value: 'pendants', sourceValue: 'pendants', label: msg('randomizer:storyGate.barrier.choice.pendants') },
+      { value: 'lightWorldDungeons', sourceValue: 'lightWorldDungeons', label: msg('randomizer:storyGate.barrier.choice.lightWorldDungeons') },
     ],
     sourceDefault: D.barrier,
     baseline: D.barrier,
@@ -64,12 +65,12 @@ const STORY_GATE_OPTION_SEEDS: readonly OptionSeed[] = [
   {
     ...STORY_GATE_ROW,
     key: K.bombShop,
-    displayName: 'Big Bomb goes on sale after',
+    displayName: msg('randomizer:storyGate.bombShop.name'),
     kind: 'choice',
     choices: [
-      { value: 'crystals', sourceValue: 'crystals', label: 'Crystals 5 and 6' },
-      { value: 'iceAndMire', sourceValue: 'iceAndMire', label: 'Ice Palace and Misery Mire cleared' },
-      { value: 'towerCount', sourceValue: 'towerCount', label: 'The tower count' },
+      { value: 'crystals', sourceValue: 'crystals', label: msg('randomizer:storyGate.bombShop.choice.crystals') },
+      { value: 'iceAndMire', sourceValue: 'iceAndMire', label: msg('randomizer:storyGate.bombShop.choice.iceAndMire') },
+      { value: 'towerCount', sourceValue: 'towerCount', label: msg('randomizer:storyGate.bombShop.choice.towerCount') },
     ],
     sourceDefault: D.bombShop,
     baseline: D.bombShop,
@@ -77,7 +78,7 @@ const STORY_GATE_OPTION_SEEDS: readonly OptionSeed[] = [
   {
     ...STORY_GATE_ROW,
     key: K.bombShopAsksSmiths,
-    displayName: 'Big Bomb also needs the Smiths reunited',
+    displayName: msg('randomizer:storyGate.bombShopAsksSmiths.name'),
     kind: 'toggle',
     sourceDefault: D.bombShopAsksSmiths,
     baseline: D.bombShopAsksSmiths,
@@ -85,7 +86,7 @@ const STORY_GATE_OPTION_SEEDS: readonly OptionSeed[] = [
   {
     ...STORY_GATE_ROW,
     key: K.towerKind,
-    displayName: "Ganon's Tower counts",
+    displayName: msg('randomizer:storyGate.towerKind.name'),
     kind: 'choice',
     choices: COUNT_KIND_CHOICES,
     sourceDefault: D.tower.kind,
@@ -94,7 +95,7 @@ const STORY_GATE_OPTION_SEEDS: readonly OptionSeed[] = [
   {
     ...STORY_GATE_ROW,
     key: K.towerCount,
-    displayName: "Ganon's Tower needs",
+    displayName: msg('randomizer:storyGate.towerCount.name'),
     kind: 'range',
     range: { min: 0, max: 7 },
     sourceDefault: D.tower.count,
@@ -103,7 +104,7 @@ const STORY_GATE_OPTION_SEEDS: readonly OptionSeed[] = [
   {
     ...STORY_GATE_ROW,
     key: K.ganonKind,
-    displayName: 'Ganon takes damage counting',
+    displayName: msg('randomizer:storyGate.ganonKind.name'),
     kind: 'choice',
     choices: COUNT_KIND_CHOICES,
     sourceDefault: D.ganon.kind,
@@ -112,7 +113,7 @@ const STORY_GATE_OPTION_SEEDS: readonly OptionSeed[] = [
   {
     ...STORY_GATE_ROW,
     key: K.ganonCount,
-    displayName: 'Ganon takes damage after',
+    displayName: msg('randomizer:storyGate.ganonCount.name'),
     kind: 'range',
     range: { min: 0, max: 7 },
     sourceDefault: D.ganon.count,
@@ -121,12 +122,12 @@ const STORY_GATE_OPTION_SEEDS: readonly OptionSeed[] = [
   {
     ...STORY_GATE_ROW,
     key: K.pyramidHole,
-    displayName: 'Pyramid hole opens',
+    displayName: msg('randomizer:storyGate.pyramidHole.name'),
     kind: 'choice',
     choices: [
-      { value: 'goal', sourceValue: 'goal', label: 'After Agahnim 2' },
-      { value: 'open', sourceValue: 'open', label: 'From the start' },
-      { value: 'auto', sourceValue: 'auto', label: 'With the tower count' },
+      { value: 'goal', sourceValue: 'goal', label: msg('randomizer:storyGate.pyramidHole.choice.goal') },
+      { value: 'open', sourceValue: 'open', label: msg('randomizer:storyGate.pyramidHole.choice.open') },
+      { value: 'auto', sourceValue: 'auto', label: msg('randomizer:storyGate.pyramidHole.choice.auto') },
     ],
     sourceDefault: 'goal',
     baseline: 'goal',
@@ -134,7 +135,7 @@ const STORY_GATE_OPTION_SEEDS: readonly OptionSeed[] = [
   {
     ...STORY_GATE_ROW,
     key: K.heraMusic,
-    displayName: 'Tower of Hera music follows Moldorm',
+    displayName: msg('randomizer:storyGate.heraMusic.name'),
     kind: 'toggle',
     sourceDefault: D.heraMusic,
     baseline: D.heraMusic,
@@ -142,7 +143,7 @@ const STORY_GATE_OPTION_SEEDS: readonly OptionSeed[] = [
   {
     ...STORY_GATE_ROW,
     key: K.vaneScene,
-    displayName: 'Weathervane and Stumpy follow the weathervane',
+    displayName: msg('randomizer:storyGate.vaneScene.name'),
     kind: 'toggle',
     sourceDefault: D.vaneScene,
     baseline: D.vaneScene,
@@ -150,7 +151,7 @@ const STORY_GATE_OPTION_SEEDS: readonly OptionSeed[] = [
   {
     ...STORY_GATE_ROW,
     key: K.mountainRespawn,
-    displayName: 'Death Mountain respawn follows the Old Man',
+    displayName: msg('randomizer:storyGate.mountainRespawn.name'),
     kind: 'toggle',
     sourceDefault: D.mountainRespawn,
     baseline: D.mountainRespawn,

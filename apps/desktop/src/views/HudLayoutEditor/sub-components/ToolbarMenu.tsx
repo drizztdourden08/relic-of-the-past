@@ -3,8 +3,10 @@ import { useRef } from 'react';
 import { Box, Icon, Pressable } from '@drizztdourden08/tessera/primitives';
 import { DropdownMenu } from '@drizztdourden08/tessera/composites';
 import type { ToolbarMenuProps } from './ToolbarMenu.type';
+import { useT } from '@drizztdourden08/brock-react';
 
 const ToolbarMenu = (props: ToolbarMenuProps) => {
+  const t = useT();
   const { icon, label, items, panel, open, disabled = false, onToggle, onClose } = props;
   const anchor = useRef<HTMLDivElement>(null);
   const empty = !panel && (items?.length ?? 0) === 0;
@@ -15,8 +17,8 @@ const ToolbarMenu = (props: ToolbarMenuProps) => {
         className={`hud-toolbar__button${open ? ' is-open' : ''}`}
         aria-haspopup="menu"
         aria-expanded={open}
-        aria-label={`Insert ${label}`}
-        title={`Insert ${label}`}
+        aria-label={t('hud-editor:toolbar.insert', { label })}
+        title={t('hud-editor:toolbar.insert', { label })}
         disabled={disabled || empty}
         onClick={onToggle}
       >

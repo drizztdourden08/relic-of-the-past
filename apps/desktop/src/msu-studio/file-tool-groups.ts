@@ -1,34 +1,26 @@
 /* @layer renderer-components @kind logic */
-import { createElement } from 'react';
-import { Checkbox, SearchInput } from '@drizztdourden08/tessera/primitives';
 import type { ToolGroup } from '@drizztdourden08/tessera/primitives';
-import { sectionGroup } from './studio-frame/section-group';
+import { findShowGroups } from './find-show-groups';
 import type { FileToolGroupsProps } from './file-tool-groups.type';
 
 const fileToolGroups = (props: FileToolGroupsProps): ToolGroup[] => {
-  const { tabs, filter, coveredCount, supersededOnly, onFilterChange, onSupersededOnlyChange } = props;
-  const groups: ToolGroup[] = [
-    sectionGroup(tabs),
-    {
-      id: 'find',
-      label: 'Find',
-      content: createElement(SearchInput, {
-        grow: false, value: filter, onChange: onFilterChange, placeholder: 'intro, pcm...', 'aria-label': 'Find a file',
-      }),
+  const { t, tabs, filter, coveredCount, supersededOnly, onFilterChange, onSupersededOnlyChange } = props;
+  return findShowGroups({
+    t,
+    tabs,
+    find: {
+      value: filter,
+      onChange: onFilterChange,
+      placeholder: t('msu-studio:files.find.placeholder'),
+      ariaLabel: t('msu-studio:files.find.aria'),
     },
-  ];
-  if (coveredCount === 0) return groups;
-
-  return [
-    ...groups,
-    {
-      id: 'show',
-      label: 'Show',
-      content: createElement(Checkbox, {
-        checked: supersededOnly, label: `Superseded originals only (${coveredCount})`, onChange: onSupersededOnlyChange,
-      }),
+    show: {
+      count: coveredCount,
+      checked: supersededOnly,
+      onChange: onSupersededOnlyChange,
+      label: t('msu-studio:files.superseded-only', { count: coveredCount }),
     },
-  ];
+  });
 };
 
 export { fileToolGroups };

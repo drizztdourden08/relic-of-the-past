@@ -1,4 +1,6 @@
 /* @layer bridge-wasm @kind types */
+import type { Text } from '@drizztdourden08/brock-core/i18n';
+
 interface StateSnapshot {
   follower: number;
   progress: ArrayLike<number>;
@@ -6,9 +8,9 @@ interface StateSnapshot {
 
 interface ActiveState {
   id: string;
-  label: string;
-  detail?: string;
-  hint?: string;
+  label: Text;
+  detail?: Text;
+  hint?: Text;
   gating?: boolean;
 }
 

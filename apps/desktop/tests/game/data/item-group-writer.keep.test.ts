@@ -59,7 +59,7 @@ describe('allocateItemGroup', () => {
 
   it('refuses a blank label instead of minting an id', { tags: ['critical'] }, async () => {
     const result = await allocateItemGroup(root, { label: '   ', memberIds: [] });
-    expect(result).toEqual({ success: false, error: 'An item group needs a label.' });
+    expect(result).toEqual({ success: false, error: 'screen-editor:group.needsLabel' });
     expect(await sourceOf()).not.toContain('ig-003');
   });
 

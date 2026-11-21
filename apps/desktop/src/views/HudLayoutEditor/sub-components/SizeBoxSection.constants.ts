@@ -1,4 +1,6 @@
 /* @layer renderer-components @kind constants */
-const SCREEN_REASON = 'The screen always matches the view.';
+import { msg } from '@drizztdourden08/brock-core/i18n';
+
+const SCREEN_REASON = msg('hud-editor:size-box.screen-reason');
 
 export { SCREEN_REASON };

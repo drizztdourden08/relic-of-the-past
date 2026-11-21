@@ -6,6 +6,7 @@ export { expectedSpritesVersion } from './expected-sprites-version';
 export { getSpritesBaseUrl } from './get-sprites-base-url';
 export { extractSprites } from './extract-sprites';
 export { hasSpriteDefinitions } from './has-sprite-definitions';
+export { refreshJapaneseGraphics } from './refresh-japanese-graphics';
 export { loadSpriteDebug } from './load-sprite-debug';
 export { readCapacityIcons } from './read-capacity-icons';
 export { readCurrencySymbols } from './read-currency-symbols';

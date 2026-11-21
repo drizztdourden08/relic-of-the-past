@@ -1,0 +1,11 @@
+{
+  "delete.confirm": "Elimina",
+  "deleteProfile.title": "Elimina profilo",
+  "deleteProfile.message": "Eliminare \"{name}\"? I suoi dati di salvataggio andranno persi. Non si può annullare.",
+  "deleteProfile.confirm": "Elimina profilo",
+  "deleteRom.title": "Elimina ROM",
+  "deleteRom.message": "Verranno rimossi \"{romFile}\" e tutte le sue risorse estratte. Verranno eliminati anche i profili che usano questa ROM. Non si può annullare.",
+  "deleteRom.confirm": "Elimina ROM",
+  "toast.restartNeeded": "Alcune modifiche richiedono il riavvio del gioco per avere effetto",
+  "toast.enhancedFallback": "Lo stile HUD Moderno richiede uno schermo 16:9 o più largo, quindi lo stile è tornato a Originale"
+}

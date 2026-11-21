@@ -15,6 +15,7 @@ import { useOnlineNoticeToasts } from './behavior/useOnlineNoticeToasts';
 import { OnlineNoticeToast } from './sub-components/OnlineNoticeToast';
 import { PlayAreaNotice } from './sub-components/PlayAreaNotice';
 import type { PlayAreaNoticeItem } from './sub-components/PlayAreaNotice.type';
+import { checkName } from '@app/game/record-text';
 import { TOAST_DURATION_MS } from './CheckToasts.constants';
 import type { CheckToastsProps } from './CheckToasts.type';
 import './CheckToasts.css';
@@ -36,7 +37,7 @@ const CheckToasts = ({ width, height }: CheckToastsProps) => {
     if (check.statusOnly) return [];
     return [{
       id,
-      label: check.name,
+      label: checkName(check),
       content: (
         <Box className="check-toast">
           <CheckCard

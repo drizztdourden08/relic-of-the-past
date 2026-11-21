@@ -1,4 +1,5 @@
 /* @layer renderer-app @kind types */
+import type { Text } from '@drizztdourden08/brock-core/i18n';
 import type { SettingsPatch } from '../settings-controls.type';
 
 interface DialogStopSliderProps {
@@ -12,8 +13,8 @@ interface DialogStopSliderProps {
 }
 
 interface DialogHoldRowProps {
-  label: string;
-  description: string;
+  label: Text;
+  description: Text;
   enabled: boolean;
   speed: number;
   disabled: boolean;

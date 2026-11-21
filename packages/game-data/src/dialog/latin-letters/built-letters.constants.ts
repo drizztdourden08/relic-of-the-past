@@ -1,0 +1,40 @@
+/* @layer shared-game @kind data */
+import type { BuiltOp } from './latin-letters.type';
+
+const BUILT_LETTERS: readonly (readonly [string, string, BuiltOp])[] = [
+  ['Ø', 'O', 'slash'], ['ø', 'o', 'slash'],
+  ['Ⱥ', 'A', 'slash'], ['ⱥ', 'a', 'slash'],
+  ['Ȼ', 'C', 'slash'], ['ȼ', 'c', 'slash'],
+  ['Ɇ', 'E', 'slash'], ['ɇ', 'e', 'slash'],
+  ['Ⱦ', 'T', 'slash'], ['ⱦ', 't', 'slash'],
+  ['Ł', 'L', 'stroke'], ['ł', 'l', 'stroke'],
+  ['đ', 'd', 'barAscender'], ['ħ', 'h', 'barAscender'], ['ƀ', 'b', 'barAscender'], ['Ħ', 'H', 'barAscender'],
+  ['Đ', 'D', 'barLeftStem'], ['Ð', 'D', 'barLeftStem'], ['Ɖ', 'D', 'barLeftStem'],
+  ['Ƀ', 'B', 'barLeftStem'], ['Ɍ', 'R', 'barLeftStem'], ['ɍ', 'r', 'barLeftStem'],
+  ['Ŧ', 'T', 'barStem'], ['ŧ', 't', 'barStem'],
+  ['Ɨ', 'I', 'barStem'], ['ɨ', 'i', 'barStem'],
+  ['Ƚ', 'L', 'barStem'], ['ƚ', 'l', 'barStem'],
+  ['Ɉ', 'J', 'barStem'], ['ɉ', 'j', 'barStem'],
+  ['Ƶ', 'Z', 'barCenter'], ['ƶ', 'z', 'barCenter'],
+  ['Ʉ', 'U', 'barCenter'], ['ʉ', 'u', 'barCenter'],
+  ['Ɏ', 'Y', 'barCenter'], ['ɏ', 'y', 'barCenter'],
+  ['Ǥ', 'G', 'barRight'], ['ǥ', 'g', 'barRight'],
+  ['Ŀ', 'L', 'middleDot'], ['ŀ', 'l', 'middleDot'],
+  ['ŉ', 'n', 'apostropheLeft'],
+  ['ı', 'i', 'dotless'], ['ȷ', 'j', 'dotless'],
+  ['Ƈ', 'C', 'horn'], ['ƈ', 'c', 'horn'],
+  ['Ƙ', 'K', 'horn'], ['ƙ', 'k', 'horn'],
+  ['Ƥ', 'P', 'horn'], ['ƥ', 'p', 'horn'],
+  ['ƭ', 't', 'horn'], ['Ƴ', 'Y', 'horn'], ['ƴ', 'y', 'horn'],
+  ['ɓ', 'b', 'horn'], ['ɗ', 'd', 'horn'], ['Ɠ', 'G', 'horn'],
+  ['Ɓ', 'B', 'hookTopLeft'], ['Ɗ', 'D', 'hookTopLeft'], ['Ƭ', 'T', 'hookTopLeft'],
+  ['Ŋ', 'N', 'hookBelowRight'], ['ŋ', 'n', 'hookBelowRight'],
+  ['ɖ', 'd', 'hookBelowRight'], ['Ȥ', 'Z', 'hookBelowRight'], ['ȥ', 'z', 'hookBelowRight'],
+  ['Ɲ', 'N', 'hookBelowLeft'], ['ɲ', 'n', 'hookBelowLeft'],
+  ['Ǝ', 'E', 'mirror'], ['Ɔ', 'C', 'mirror'], ['ɔ', 'c', 'mirror'], ['Ƨ', 'S', 'mirror'], ['ƨ', 's', 'mirror'],
+  ['Ƹ', 'Ʒ', 'mirror'], ['ƹ', 'ʒ', 'mirror'],
+  ['ǝ', 'e', 'turn'], ['ə', 'e', 'turn'], ['Ɯ', 'M', 'turn'], ['ɯ', 'm', 'turn'],
+  ['Ʌ', 'V', 'turn'], ['ʌ', 'v', 'turn'], ['ɐ', 'a', 'turn'], ['ɹ', 'r', 'turn'],
+];
+
+export { BUILT_LETTERS };

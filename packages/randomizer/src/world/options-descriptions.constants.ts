@@ -1,21 +1,21 @@
 /* @layer shared-game @kind data */
+import type { Message } from '@drizztdourden08/brock-core/i18n';
 import { DIFFICULTY_OPTION_DESCRIPTIONS } from './difficulty/difficulty-options.constants';
 import { POND_OPTION_DESCRIPTIONS } from './pond/pond-option-descriptions.constants';
 import { PROGRESSIVE_TIER_DESCRIPTIONS } from './progressive/progressive-options.constants';
 import { PROGRESSIVE_MODE_DESCRIPTIONS } from './progressive/progressive-mode-options.constants';
 import { RETRO_OPTION_DESCRIPTIONS } from './retro/retro-options';
 import { SHOP_SLOT_DESCRIPTIONS } from './shops/shop-slot-options';
-import type { OptionDescription } from './option-description.type';
+import type { OptionDescriptionSource } from './option-description.type';
 
-const PLACEMENT = 'Own dungeons: any dungeon. Own world and Any world: anywhere. Different world and Start '
-  + 'with roll as Original dungeon.';
+const PLACEMENT: Message = { key: 'randomizer-world:desc.placement' };
 
-const JUMPS = 'Comma separated steps adding up to the whole climb; read only with the Free sequence curve.';
+const JUMPS: Message = { key: 'randomizer-world:desc.jumps' };
 
-const BONUS = 'Handed over with the upgrade, never past the new maximum; at 0 only the maximum rises.';
-const BONUS_BASE = 'On, a share of what the upgrade added; off, of the new maximum.';
+const BONUS: Message = { key: 'randomizer-world:desc.bonus' };
+const BONUS_BASE: Message = { key: 'randomizer-world:desc.bonusBase' };
 
-const OPTION_DESCRIPTIONS: Readonly<Record<string, OptionDescription>> = {
+const OPTION_DESCRIPTIONS: Readonly<Record<string, OptionDescriptionSource>> = {
   ...SHOP_SLOT_DESCRIPTIONS,
   ...DIFFICULTY_OPTION_DESCRIPTIONS,
   ...PROGRESSIVE_TIER_DESCRIPTIONS,
@@ -23,112 +23,102 @@ const OPTION_DESCRIPTIONS: Readonly<Record<string, OptionDescription>> = {
   ...RETRO_OPTION_DESCRIPTIONS,
   ...POND_OPTION_DESCRIPTIONS,
 
-  include_npc_checks: 'Rewards from characters, bosses and story events join the shuffle.',
-  include_world_items: 'Ledge and island items, dig and dash prizes, the tablets, the pedestal and the keys '
-    + 'standing on dungeon floors.',
-  dungeon_prize_shuffle: 'Pendants and crystals move between dungeons.',
+  include_npc_checks: { key: 'randomizer-world:desc.include_npc_checks' },
+  include_world_items: { key: 'randomizer-world:desc.include_world_items' },
+  dungeon_prize_shuffle: { key: 'randomizer-world:desc.dungeon_prize_shuffle' },
   accessibility: [
-    { term: 'Full', detail: 'every location can be reached.' },
-    { term: 'Items', detail: 'every item can be collected; some locations may stay shut.' },
-    { term: 'Minimal', detail: 'only what finishing needs is guaranteed.' },
+    { term: { key: 'randomizer-world:choice.full' }, detail: { key: 'randomizer-world:detail.accessibility.full' } },
+    { term: { key: 'randomizer-world:choice.items' }, detail: { key: 'randomizer-world:detail.accessibility.items' } },
+    { term: { key: 'randomizer-world:choice.minimal' }, detail: { key: 'randomizer-world:detail.accessibility.minimal' } },
   ],
 
   dark_room_light_required: [
-    { term: 'On', detail: 'a dark room counts as passable only with a ticked light.' },
-    { term: 'Off', detail: 'dark rooms count as passable without one.' },
+    { term: { key: 'randomizer-world:choice.on' }, detail: { key: 'randomizer-world:detail.darkRoom.on' } },
+    { term: { key: 'randomizer-world:choice.off' }, detail: { key: 'randomizer-world:detail.darkRoom.off' } },
   ],
 
   big_key_shuffle: PLACEMENT,
-  small_key_shuffle: 'Own dungeons: any dungeon. Own world and Any world: anywhere. Different world, Start '
-    + 'with and Universal roll as Original dungeon.',
-  key_drop_shuffle: 'Adds the keys enemies drop and the keys hidden under pots to the shuffle.',
+  small_key_shuffle: { key: 'randomizer-world:desc.small_key_shuffle' },
+  key_drop_shuffle: { key: 'randomizer-world:desc.key_drop_shuffle' },
   compass_shuffle: PLACEMENT,
   map_shuffle: PLACEMENT,
 
-  item_power_byrna_barrier: 'The blue barrier makes you invulnerable while it is up.',
-  item_power_silver_arrows_anywhere: 'Silver arrows do full damage to every enemy, not only the final boss.',
-  item_power_powder_fairy: 'Magic powder can turn an enemy into a fairy.',
-  item_power_hammer_tablets: 'The hammer can read the tablets in place of a sword.',
+  item_power_byrna_barrier: { key: 'randomizer-world:desc.item_power_byrna_barrier' },
+  item_power_silver_arrows_anywhere: { key: 'randomizer-world:desc.item_power_silver_arrows_anywhere' },
+  item_power_powder_fairy: { key: 'randomizer-world:desc.item_power_powder_fairy' },
+  item_power_hammer_tablets: { key: 'randomizer-world:desc.item_power_hammer_tablets' },
 
-  retro_bow: 'Arrows are no longer found or carried; every shot costs rupees.',
+  retro_bow: { key: 'randomizer-world:desc.retro_bow' },
 
-  shop_item_slots: 'How many of the ticked slots hold a shuffled item; read by Sequential and Random only.',
-  shop_slot_depth: 'Above one, a slot restocks with another shuffled item after each purchase.',
-  shop_price_arrows: 'Off while retro bow is on.',
-  shop_price_hearts: 'Paying costs health on the spot; the range stops one heart under the heart ceiling on '
-    + 'the Items tab.',
-  shop_price_hearts_max: 'Stops one heart under the heart ceiling on the Items tab.',
-  shop_price_bottle: 'The shelf takes what is in the bottle and hands the empty bottle back.',
-  shop_price_modifier: 'Scales every rolled price by this percentage; a price still never passes what you '
-    + 'can hold.',
+  shop_item_slots: { key: 'randomizer-world:desc.shop_item_slots' },
+  shop_slot_depth: { key: 'randomizer-world:desc.shop_slot_depth' },
+  shop_price_arrows: { key: 'randomizer-world:desc.shop_price_arrows' },
+  shop_price_hearts: { key: 'randomizer-world:desc.shop_price_hearts' },
+  shop_price_hearts_max: { key: 'randomizer-world:desc.shop_price_hearts_max' },
+  shop_price_bottle: { key: 'randomizer-world:desc.shop_price_bottle' },
+  shop_price_modifier: { key: 'randomizer-world:desc.shop_price_modifier' },
 
-  capacity_upgrades_enabled: 'Off: no capacity changes, and the pond sells its upgrades as usual.',
-  capacity_explosives_mode: 'Vanilla in pool: the upgrades become items to find anywhere, and the pond '
-    + 'becomes a check.',
+  capacity_upgrades_enabled: { key: 'randomizer-world:desc.capacity_upgrades_enabled' },
+  capacity_explosives_mode: { key: 'randomizer-world:desc.capacity_explosives_mode' },
   capacity_explosives_jumps: JUMPS,
-  capacity_projectiles_mode: 'Vanilla in pool: the upgrades become items to find anywhere, and the pond '
-    + 'becomes a check.',
+  capacity_projectiles_mode: { key: 'randomizer-world:desc.capacity_projectiles_mode' },
   capacity_projectiles_jumps: JUMPS,
-  capacity_meter_mode: 'An upgrade lowers what each use costs; the bar never grows. Vanilla in pool: the '
-    + 'upgrade becomes an item to find, and its spot a check.',
-  capacity_wallet_jumps: 'Comma separated steps in hundreds of rupees adding up to the whole climb; read '
-    + 'only with the Free sequence curve.',
-  capacity_progressive: 'On, upgrades climb the ladder in the order found; off, each carries a fixed step '
-    + 'and can be found in any order.',
+  capacity_meter_mode: { key: 'randomizer-world:desc.capacity_meter_mode' },
+  capacity_wallet_jumps: { key: 'randomizer-world:desc.capacity_wallet_jumps' },
+  capacity_progressive: { key: 'randomizer-world:desc.capacity_progressive' },
   capacity_explosives_bonus: BONUS,
   capacity_explosives_bonus_step: BONUS_BASE,
   capacity_projectiles_bonus: BONUS,
   capacity_projectiles_bonus_step: BONUS_BASE,
   capacity_meter_bonus: BONUS,
-  capacity_meter_bonus_step: 'On, a share of what the upgrade added to the bar, which is nothing past the '
-    + 'empty tier; off, of the full bar.',
+  capacity_meter_bonus_step: { key: 'randomizer-world:desc.capacity_meter_bonus_step' },
   capacity_wallet_bonus: BONUS,
   capacity_wallet_bonus_step: BONUS_BASE,
 
-  plando_connections: 'Hand-written entrance connections, set before the seed rolls.',
-  start_inventory_from_pool: 'Items you begin with are taken out of the pool instead of added to it.',
-  goal: 'What ends the seed and what it asks of you first.',
+  plando_connections: { key: 'randomizer-world:desc.plando_connections' },
+  start_inventory_from_pool: { key: 'randomizer-world:desc.start_inventory_from_pool' },
+  goal: { key: 'randomizer-world:desc.goal' },
   mode: [
-    { term: 'Standard', detail: 'the seed opens with the rescue.' },
-    { term: 'Open', detail: 'you start free, with the castle already behind you.' },
-    { term: 'Inverted', detail: 'the two worlds swap: you begin in the dark one.' },
+    { term: { key: 'randomizer-world:choice.standard' }, detail: { key: 'randomizer-world:detail.mode.standard' } },
+    { term: { key: 'randomizer-world:choice.open' }, detail: { key: 'randomizer-world:detail.mode.open' } },
+    { term: { key: 'randomizer-world:choice.inverted' }, detail: { key: 'randomizer-world:detail.mode.inverted' } },
   ],
-  glitches_required: 'How much trick knowledge the seed may expect before it calls something reachable.',
-  open_pyramid: 'Whether the hole in the pyramid is open before you earn your way in.',
-  crystals_needed_for_gt: 'Fewer crystals means a shorter seed.',
-  crystals_needed_for_ganon: 'Fewer crystals means a shorter ending.',
-  triforce_pieces_mode: 'How the number of pieces to collect is decided.',
-  triforce_pieces_percentage: 'Pieces placed, as a percentage of the number you must collect.',
-  triforce_pieces_required: 'How many pieces you must collect to finish.',
-  triforce_pieces_available: 'How many pieces exist in the seed.',
-  triforce_pieces_extra: 'Pieces placed beyond the number you must collect.',
-  entrance_shuffle: 'Where the doorways lead, from dungeon doors alone up to every door in both worlds.',
-  entrance_shuffle_seed: 'The seed the doorway shuffle is drawn from.',
-  restrict_dungeon_item_on_boss: 'Keeps the map, compass and keys of a dungeon off its own boss.',
-  enemy_health: 'How much punishment enemies take.',
-  enemy_damage: 'How hard enemies hit.',
-  retro_caves: 'Adds the extra caves and the old-style take-any choices to the world.',
-  hints: 'Whether telepathic tiles and stones tell you where things are.',
-  scams: 'Whether the merchants who sell you something unseen can lie about what it is.',
-  boss_shuffle: 'Which boss stands at the end of which dungeon.',
-  pot_shuffle: 'Shuffles what is hidden under the pots.',
-  enemy_shuffle: 'Which enemy stands where.',
-  killable_thieves: 'Lets the thieves that normally shrug off every hit be killed.',
-  bush_shuffle: 'Shuffles what a pulled bush hides.',
-  shuffle_prizes: 'Shuffles the drops enemies leave and what falls from a bonked tree.',
-  tile_shuffle: 'Shuffles the rooms whose floor tiles fly at you.',
-  misery_mire_medallion: 'The medallion that opens this dungeon.',
-  turtle_rock_medallion: 'The medallion that opens this dungeon.',
-  glitch_boots: 'Starts you with the boots when the glitch setting needs them.',
-  beemizer_total_chance: 'How often a filler pickup becomes bees instead.',
-  beemizer_trap_chance: 'How often those bees are the hostile kind.',
-  timer: 'Playing against a clock, counting up or down, or a race a single hit ends.',
-  countdown_start_time: 'Minutes on the clock when a countdown starts.',
-  red_clock_time: 'Minutes a red clock adds or takes away.',
-  blue_clock_time: 'Minutes a blue clock adds or takes away.',
-  green_clock_time: 'Minutes a green clock adds or takes away.',
-  death_link: 'Dying sends everyone else in the session to their death too.',
-  allow_collect: 'Lets a check holding an item for someone else open itself when they collect it.',
+  glitches_required: { key: 'randomizer-world:desc.glitches_required' },
+  open_pyramid: { key: 'randomizer-world:desc.open_pyramid' },
+  crystals_needed_for_gt: { key: 'randomizer-world:desc.crystals_needed_for_gt' },
+  crystals_needed_for_ganon: { key: 'randomizer-world:desc.crystals_needed_for_ganon' },
+  triforce_pieces_mode: { key: 'randomizer-world:desc.triforce_pieces_mode' },
+  triforce_pieces_percentage: { key: 'randomizer-world:desc.triforce_pieces_percentage' },
+  triforce_pieces_required: { key: 'randomizer-world:desc.triforce_pieces_required' },
+  triforce_pieces_available: { key: 'randomizer-world:desc.triforce_pieces_available' },
+  triforce_pieces_extra: { key: 'randomizer-world:desc.triforce_pieces_extra' },
+  entrance_shuffle: { key: 'randomizer-world:desc.entrance_shuffle' },
+  entrance_shuffle_seed: { key: 'randomizer-world:desc.entrance_shuffle_seed' },
+  restrict_dungeon_item_on_boss: { key: 'randomizer-world:desc.restrict_dungeon_item_on_boss' },
+  enemy_health: { key: 'randomizer-world:desc.enemy_health' },
+  enemy_damage: { key: 'randomizer-world:desc.enemy_damage' },
+  retro_caves: { key: 'randomizer-world:desc.retro_caves' },
+  hints: { key: 'randomizer-world:desc.hints' },
+  scams: { key: 'randomizer-world:desc.scams' },
+  boss_shuffle: { key: 'randomizer-world:desc.boss_shuffle' },
+  pot_shuffle: { key: 'randomizer-world:desc.pot_shuffle' },
+  enemy_shuffle: { key: 'randomizer-world:desc.enemy_shuffle' },
+  killable_thieves: { key: 'randomizer-world:desc.killable_thieves' },
+  bush_shuffle: { key: 'randomizer-world:desc.bush_shuffle' },
+  shuffle_prizes: { key: 'randomizer-world:desc.shuffle_prizes' },
+  tile_shuffle: { key: 'randomizer-world:desc.tile_shuffle' },
+  misery_mire_medallion: { key: 'randomizer-world:desc.misery_mire_medallion' },
+  turtle_rock_medallion: { key: 'randomizer-world:desc.turtle_rock_medallion' },
+  glitch_boots: { key: 'randomizer-world:desc.glitch_boots' },
+  beemizer_total_chance: { key: 'randomizer-world:desc.beemizer_total_chance' },
+  beemizer_trap_chance: { key: 'randomizer-world:desc.beemizer_trap_chance' },
+  timer: { key: 'randomizer-world:desc.timer' },
+  countdown_start_time: { key: 'randomizer-world:desc.countdown_start_time' },
+  red_clock_time: { key: 'randomizer-world:desc.red_clock_time' },
+  blue_clock_time: { key: 'randomizer-world:desc.blue_clock_time' },
+  green_clock_time: { key: 'randomizer-world:desc.green_clock_time' },
+  death_link: { key: 'randomizer-world:desc.death_link' },
+  allow_collect: { key: 'randomizer-world:desc.allow_collect' },
 };
 
 export { OPTION_DESCRIPTIONS };

@@ -1,5 +1,6 @@
 /* @layer renderer-components @kind component */
 import { Box, Center, EmptyState, Spinner, Text } from '@drizztdourden08/tessera/primitives';
+import { useT, useText } from '@drizztdourden08/brock-react';
 import { emptyFilesMessage } from './empty-files-message';
 import { FileRow } from './FileRow';
 import { COLUMNS, NO_USES } from './MsuFilePanel.constants';
@@ -7,16 +8,18 @@ import type { FileListProps } from './FileList.type';
 
 const FileList = (props: FileListProps) => {
   const { ready, shown, fileCount, supersededOnly, filter, usage, audition, busy, readOnly, onRename, onDelete } = props;
+  const t = useT();
+  const text = useText();
 
   if (!ready) return <Center><Spinner /></Center>;
-  if (shown.length === 0) return <EmptyState message={emptyFilesMessage(fileCount, supersededOnly, filter)} />;
+  if (shown.length === 0) return <EmptyState message={emptyFilesMessage(t, fileCount, supersededOnly, filter)} />;
 
   return (
     <Box className="msu-file-grid">
       <Box className="msu-file-grid__head" aria-hidden>
-        {COLUMNS.map((label, index) => (
-          <Text key={label === '' ? `actions-${index}` : label} className="msu-file-grid__label">
-            {label}
+        {COLUMNS.map((column) => (
+          <Text key={column.id} className="msu-file-grid__label">
+            {column.label === null ? '' : text(column.label)}
           </Text>
         ))}
       </Box>

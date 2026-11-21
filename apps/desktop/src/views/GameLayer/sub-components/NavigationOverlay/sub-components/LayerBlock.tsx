@@ -1,17 +1,19 @@
 /* @layer renderer-components @kind component */
+import { useT } from '@drizztdourden08/brock-react';
 import { Box, Text } from '@drizztdourden08/tessera/primitives';
 import type { LayerBlockProps } from '@app/navigation-overlay/tooltip/tooltip.type';
 import { ClassificationRows } from './ClassificationRows';
 import { reachStatusFor } from '@app/navigation-overlay/tooltip/reach-status';
 
 const LayerBlock = ({ name, nameTone, data, locked }: LayerBlockProps) => {
+  const t = useT();
   const status = reachStatusFor(data.reach, data.classification.collision, data.isAboveLayer);
   return (
     <Box className="nav-tip__col">
       <Box className="nav-tip__layer-head">
         <Text data-tone={nameTone}>
           {name}
-          {locked && <Text className="nav-tip__locked-tag"> LOCKED</Text>}
+          {locked && <Text className="nav-tip__locked-tag">{' '}{t('views-game-layer:layer.locked')}</Text>}
         </Text>
         <Text data-tone={status.tone}>{status.label}</Text>
       </Box>

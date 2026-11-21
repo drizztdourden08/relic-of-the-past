@@ -1,0 +1,18 @@
+{
+  "section.developer-instrumentation.title": "Instrumentierung",
+  "developer-tools-enabled.label": "Entwicklermodus",
+  "developer-tools-enabled.description": "Schaltet Entwicklerwerkzeuge ein.",
+  "experimental-features-enabled.label": "Experimentelle Funktionen",
+  "experimental-features-enabled.description": "Aktiviert unfertige Funktionen: den HUD-Layout-Editor, Modernes HUD und Steuerung, GBA-Einstellungen und Archipelago-Online-Spiel. Das Ausschalten deaktiviert auch Modernes HUD und den zusätzlichen Dungeon.",
+  "experimental-features-enabled.hint": "Benötigt den Entwicklermodus.",
+  "dev-navigation-data.label": "Navigationsdaten",
+  "dev-navigation-data.description": "Raum-, Raster- und Sprite-Daten für das Widget Ort & Navigation, die Flutfüllung und den Simulator.",
+  "dev-navigation-data.hint": "Benötigt den Entwicklermodus.",
+  "section.developer-sanctuary.title": "Sanctuary-Konto",
+  "sanctuary-account.label": "Sanctuary-Konto",
+  "sanctuary-account.description": "Melde dich an, damit Fehlerberichte deinen Namen tragen und im Hub erscheinen.",
+  "section.developer-debug-reporting.title": "Debug-Berichte",
+  "allow-debug-logging.label": "Debug-Protokollierung erlauben",
+  "allow-debug-logging.description": "Führt detaillierte Protokolle und fügt eine Aufnahmetaste in der Titelleiste (Tab) sowie eine schwebende Taste zum Senden eines Debug-Berichts hinzu.",
+  "screen.title": "Mitwirken"
+}

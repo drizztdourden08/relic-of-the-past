@@ -1,6 +1,8 @@
 /* @layer renderer-components @kind logic */
-const caseMissNote = (misses: number): string => (
-  misses === 0 ? '' : `${misses} differ in case and stay as they are`
+import type { I18n } from '@drizztdourden08/brock-core/i18n';
+
+const caseMissNote = (t: I18n['t'], misses: number): string => (
+  misses === 0 ? '' : t('language-editor:hardcoded.case-misses', { count: misses })
 );
 
 export { caseMissNote };

@@ -7,7 +7,7 @@ import type { CreateProfileStoreArgs } from './controls-settings.type';
 import { toBrockProfile } from './to-brock-profile';
 import { toRotpProfile } from './to-rotp-profile';
 
-const createProfileStore = ({ profileId, latest }: CreateProfileStoreArgs): InputProfileStore => {
+const createProfileStore = ({ profileId, latest, keyboardName }: CreateProfileStoreArgs): InputProfileStore => {
   const rememberActive = (id: string) => {
     const { settings, onChange } = latest.current;
     if (settings.activeInputProfileId !== id) onChange({ activeInputProfileId: id });
@@ -21,10 +21,10 @@ const createProfileStore = ({ profileId, latest }: CreateProfileStoreArgs): Inpu
         await writeInputProfiles(profileId, loaded);
       }
       getInputManager().setProfiles(loaded);
-      return loaded.map(toBrockProfile);
+      return loaded.map((profile) => toBrockProfile(profile, keyboardName));
     },
     save: async (profiles) => {
-      const converted = profiles.map(toRotpProfile);
+      const converted = profiles.map((profile) => toRotpProfile(profile, keyboardName));
       getInputManager().setProfiles(converted);
       await writeInputProfiles(profileId, converted);
     },
@@ -32,11 +32,11 @@ const createProfileStore = ({ profileId, latest }: CreateProfileStoreArgs): Inpu
       return latest.current.settings.activeInputProfileId;
     },
     activate: (profile) => {
-      getInputManager().setProfile(toRotpProfile(profile));
+      getInputManager().setProfile(toRotpProfile(profile, keyboardName));
       rememberActive(profile.id);
     },
     onActiveChange: (listener) => getInputManager().onActiveProfileChange((profile) => {
-      listener(toBrockProfile(profile));
+      listener(toBrockProfile(profile, keyboardName));
       rememberActive(profile.id);
     }),
   };

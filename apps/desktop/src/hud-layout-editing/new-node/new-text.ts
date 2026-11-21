@@ -2,8 +2,8 @@
 import { newElement } from './new-element';
 import type { HudElement } from '@rotp/hud';
 
-const newText = (): HudElement => newElement({
-  type: 'text', value: 'Text', face: { from: 'font', family: 'sans', size: 16 },
+const newText = (value: string): HudElement => newElement({
+  type: 'text', value, face: { from: 'font', family: 'sans', size: 16 },
 });
 
 export { newText };

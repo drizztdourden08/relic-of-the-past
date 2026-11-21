@@ -1,137 +1,151 @@
 /* @layer renderer-app @kind config */
-import type { ScreenMeta, Section } from '@drizztdourden08/brock-react';
+import { msg } from '@drizztdourden08/brock-core/i18n';
+import type { ScreenMeta, SectionDef } from '@drizztdourden08/brock-react';
 
-const meta: ScreenMeta = { title: 'HUD', icon: 'layout-grid', order: 3, keywords: ['hud', 'hearts', 'magic', 'dialog box', 'title screen', 'overlay'] };
+const meta: ScreenMeta = { title: msg('settings-hud:screen.title'), icon: 'layout-grid', order: 3, keywords: ['hud', 'hearts', 'magic', 'dialog box', 'title screen', 'overlay'] };
 
-const drawChoices = [{ value: 'original', label: 'Original' }, { value: 'enhanced', label: 'Enhanced' }];
-const enhancedParts = [{ value: 'main', label: 'Main' }, { value: 'pause', label: 'Pause' }];
-const titleScreens = [{ value: 'original', label: 'Original' }, { value: 'reimagined', label: 'Reimagined' }];
-const titleMotions = [{ value: 'still', label: 'Still' }, { value: 'drifting', label: 'Drifting' }];
-const heartModes = [{ value: 'original', label: 'Original' }, { value: 'smooth', label: 'Smooth' }];
-const magicModes = [{ value: 'original', label: 'Original' }, { value: 'accurate', label: 'Accurate' }];
-const countLayouts = [{ value: 'centered', label: 'Centered' }, { value: 'original', label: 'Original' }];
-const countdownStyles = [{ value: 'pixel', label: 'Pixel' }, { value: 'smooth', label: 'Smooth' }];
-const boxFits = [{ value: 'full', label: 'Full' }, { value: 'message', label: 'Message' }, { value: 'fit', label: 'Fit' }];
-const fonts = [{ value: 'original', label: 'Original' }, { value: 'modern', label: 'Modern' }];
-const borders = [{ value: 'original', label: 'Original' }, { value: 'none', label: 'None' }, { value: 'single', label: 'Single' }, { value: 'double', label: 'Double' }];
-const thicknesses = [{ value: 'thin', label: 'Thin' }, { value: 'medium', label: 'Medium' }, { value: 'thick', label: 'Thick' }];
-const corners = [{ value: 'square', label: 'Square' }, { value: 'rounded', label: 'Rounded' }, { value: 'chamfered', label: 'Chamfered' }];
-const marks = [{ value: 'none', label: 'None' }, { value: 'circle', label: 'Circle' }, { value: 'square', label: 'Square' }, { value: 'triforce', label: 'Triforce' }];
+const drawChoices = [{ value: 'original', label: msg('settings-hud:option.draw-choices.original.label') }, { value: 'enhanced', label: msg('settings-hud:option.draw-choices.enhanced.label') }];
+const enhancedParts = [{ value: 'main', label: msg('settings-hud:option.enhanced-parts.main.label') }, { value: 'pause', label: msg('settings-hud:option.enhanced-parts.pause.label') }];
+const titleScreens = [{ value: 'original', label: msg('settings-hud:option.title-screens.original.label') }, { value: 'reimagined', label: msg('settings-hud:option.title-screens.reimagined.label') }];
+const originalTitles = [{ value: 'us', label: msg('settings-hud:option.original-titles.us.label') }, { value: 'ja', label: msg('settings-hud:option.original-titles.ja.label') }];
+const titleMotions = [{ value: 'still', label: msg('settings-hud:option.title-motions.still.label') }, { value: 'drifting', label: msg('settings-hud:option.title-motions.drifting.label') }];
+const heartModes = [{ value: 'original', label: msg('settings-hud:option.heart-modes.original.label') }, { value: 'smooth', label: msg('settings-hud:option.heart-modes.smooth.label') }];
+const magicModes = [{ value: 'original', label: msg('settings-hud:option.magic-modes.original.label') }, { value: 'accurate', label: msg('settings-hud:option.magic-modes.accurate.label') }];
+const countLayouts = [{ value: 'centered', label: msg('settings-hud:option.count-layouts.centered.label') }, { value: 'original', label: msg('settings-hud:option.count-layouts.original.label') }];
+const countdownStyles = [{ value: 'pixel', label: msg('settings-hud:option.countdown-styles.pixel.label') }, { value: 'smooth', label: msg('settings-hud:option.countdown-styles.smooth.label') }];
+const boxFits = [{ value: 'full', label: msg('settings-hud:option.box-fits.full.label') }, { value: 'message', label: msg('settings-hud:option.box-fits.message.label') }, { value: 'fit', label: msg('settings-hud:option.box-fits.fit.label') }];
+const fonts = [{ value: 'original', label: msg('settings-hud:option.fonts.original.label') }, { value: 'modern', label: msg('settings-hud:option.fonts.modern.label') }];
+const borders = [{ value: 'original', label: msg('settings-hud:option.borders.original.label') }, { value: 'none', label: msg('settings-hud:option.borders.none.label') }, { value: 'single', label: msg('settings-hud:option.borders.single.label') }, { value: 'double', label: msg('settings-hud:option.borders.double.label') }];
+const thicknesses = [{ value: 'thin', label: msg('settings-hud:option.thicknesses.thin.label') }, { value: 'medium', label: msg('settings-hud:option.thicknesses.medium.label') }, { value: 'thick', label: msg('settings-hud:option.thicknesses.thick.label') }];
+const corners = [{ value: 'square', label: msg('settings-hud:option.corners.square.label') }, { value: 'rounded', label: msg('settings-hud:option.corners.rounded.label') }, { value: 'chamfered', label: msg('settings-hud:option.corners.chamfered.label') }];
+const marks = [{ value: 'none', label: msg('settings-hud:option.marks.none.label') }, { value: 'circle', label: msg('settings-hud:option.marks.circle.label') }, { value: 'square', label: msg('settings-hud:option.marks.square.label') }, { value: 'triforce', label: msg('settings-hud:option.marks.triforce.label') }];
 const textures = [
-  { value: 'none', label: 'None' }, { value: 'triforce-outline', label: 'Triforce' }, { value: 'triforce-filled', label: 'Triforce Filled' },
-  { value: 'hex', label: 'Hex' }, { value: 'scanlines', label: 'Scanlines' }, { value: 'stripes', label: 'Stripes' },
+  { value: 'none', label: msg('settings-hud:option.textures.none.label') }, { value: 'triforce-outline', label: msg('settings-hud:option.textures.triforce-outline.label') }, { value: 'triforce-filled', label: msg('settings-hud:option.textures.triforce-filled.label') },
+  { value: 'hex', label: msg('settings-hud:option.textures.hex.label') }, { value: 'scanlines', label: msg('settings-hud:option.textures.scanlines.label') }, { value: 'stripes', label: msg('settings-hud:option.textures.stripes.label') },
 ];
-const animations = [{ value: 'none', label: 'Still' }, { value: 'scroll', label: 'Scroll' }, { value: 'drift', label: 'Drift' }, { value: 'twinkle', label: 'Twinkle' }, { value: 'pulse', label: 'Pulse' }];
-const speeds = [{ value: 'slow', label: 'Slow' }, { value: 'normal', label: 'Normal' }, { value: 'fast', label: 'Fast' }];
+const animations = [{ value: 'none', label: msg('settings-hud:option.animations.none.label') }, { value: 'scroll', label: msg('settings-hud:option.animations.scroll.label') }, { value: 'drift', label: msg('settings-hud:option.animations.drift.label') }, { value: 'twinkle', label: msg('settings-hud:option.animations.twinkle.label') }, { value: 'pulse', label: msg('settings-hud:option.animations.pulse.label') }];
+const speeds = [{ value: 'slow', label: msg('settings-hud:option.speeds.slow.label') }, { value: 'normal', label: msg('settings-hud:option.speeds.normal.label') }, { value: 'fast', label: msg('settings-hud:option.speeds.fast.label') }];
 
 const percent = (value: number): string => `${Math.round(value * 100)}%`;
 const wholePercent = (value: number): string => `${value}%`;
 const degrees = (value: number): string => `${value} deg`;
 
-const sections: Section[] = [
+const sections: SectionDef[] = [
   {
     id: 'hud-title',
-    title: 'Title Screen',
+    title: msg('settings-hud:section.hud-title.title'),
     items: [
-      { key: 'titleScreen', label: 'Title Screen', description: "Original keeps the game's title. Reimagined draws a wider scene over the same sequence.", hint: 'Reimagined unlocks the options below.', keywords: 'title screen intro reimagined original scene logo sword', control: { kind: 'choice', options: titleScreens } },
-      { key: 'titleMotion', label: 'Motion', description: 'Drifting moves the scene and the clouds slowly while the title waits.', keywords: 'title motion parallax drift clouds still', control: { kind: 'choice', options: titleMotions } },
-      { key: 'titleSword', label: 'Sword', description: 'The sword planted in the title. Progress picks it from the most advanced save.', hint: 'Press to step to the next sword shown in the title.', keywords: 'title sword fighter master tempered golden progress' },
-      { key: 'titleFollowsProgress', label: 'Follows Progress', description: 'The world, and the sword set to Progress, come from the most advanced save.', keywords: 'title progress save sword tier dark world' },
+      { key: 'titleScreen', label: msg('settings-hud:title-screen.label'), description: msg('settings-hud:title-screen.description'), hint: msg('settings-hud:title-screen.hint'), keywords: 'title screen intro reimagined original scene logo sword', control: { kind: 'choice', options: titleScreens } },
+      { key: 'originalTitle', label: msg('settings-hud:original-title.label'), description: msg('settings-hud:original-title.description'), keywords: 'title screen original japanese us cartridge logo plate', control: { kind: 'choice', options: originalTitles } },
+      { key: 'titleMotion', label: msg('settings-hud:title-motion.label'), description: msg('settings-hud:title-motion.description'), keywords: 'title motion parallax drift clouds still', control: { kind: 'choice', options: titleMotions } },
+      { key: 'titleSword', label: msg('settings-hud:title-sword.label'), description: msg('settings-hud:title-sword.description'), hint: msg('settings-hud:title-sword.hint'), keywords: 'title sword fighter master tempered golden progress' },
+      { key: 'titleFollowsProgress', label: msg('settings-hud:title-follows-progress.label'), description: msg('settings-hud:title-follows-progress.description'), keywords: 'title progress save sword tier dark world' },
+    ],
+  },
+  {
+    id: 'hud-language',
+    title: msg('settings-hud:section.hud-language.title'),
+    items: [
+      { key: 'langMenuScreens', label: msg('settings-hud:lang-menu-screens.label'), description: msg('settings-hud:lang-menu-screens.description'), keywords: 'language file select name entry copy erase menu screens translation graphics' },
+      { key: 'jaFileSelectStyle', label: msg('settings-hud:ja-file-select-style.label'), description: msg('settings-hud:ja-file-select-style.description'), keywords: 'japanese cartridge graphics intro hud copyright file select style' },
+      { key: 'langPauseWords', label: msg('settings-hud:lang-pause-words.label'), description: msg('settings-hud:lang-pause-words.description'), keywords: 'language pause menu words text translation graphics' },
+      { key: 'langMapLabels', label: msg('settings-hud:lang-map-labels.label'), description: msg('settings-hud:lang-map-labels.description'), keywords: 'language map dungeon floor labels translation graphics' },
+      { key: 'langEndingCredits', label: msg('settings-hud:lang-ending-credits.label'), description: msg('settings-hud:lang-ending-credits.description'), keywords: 'language ending credits captions translation graphics' },
     ],
   },
   {
     id: 'hud-display',
-    title: 'Display',
+    title: msg('settings-hud:section.hud-display.title'),
     items: [
-      { key: 'hudMode', label: 'HUD Mode', description: 'Original renders the HUD on the game canvas. Enhanced replaces selected parts with a high-quality overlay that supports widescreen and smooth animations.', keywords: 'hud mode original enhanced overlay', control: { kind: 'choice', options: drawChoices } },
-      { key: 'hudEnhancedParts', label: 'Enhanced Parts', description: 'Choose which HUD components are replaced by the enhanced overlay. Parts not selected will continue using the original game rendering.', keywords: 'hud parts main pause enhanced toggle', control: { kind: 'multi', options: enhancedParts } },
-      { key: 'hudStyle', label: 'Style', description: "Original is the game's own HUD. Modern hands the HUD and the pause menu to the app and adds the modern control scheme. It needs a 16:9 or wider display.", keywords: 'hud style original modern theme sprites widescreen pause menu control scheme slots' },
-      { key: 'hudRatio', label: 'Aspect Ratio', description: 'Aspect ratio for the enhanced overlay. Match keeps it in sync with the game viewport.', keywords: 'hud ratio aspect match widescreen' },
+      { key: 'hudMode', label: msg('settings-hud:hud-mode.label'), description: msg('settings-hud:hud-mode.description'), keywords: 'hud mode original enhanced overlay', control: { kind: 'choice', options: drawChoices } },
+      { key: 'hudEnhancedParts', label: msg('settings-hud:hud-enhanced-parts.label'), description: msg('settings-hud:hud-enhanced-parts.description'), keywords: 'hud parts main pause enhanced toggle', control: { kind: 'multi', options: enhancedParts } },
+      { key: 'hudStyle', label: msg('settings-hud:hud-style.label'), description: msg('settings-hud:hud-style.description'), keywords: 'hud style original modern theme sprites widescreen pause menu control scheme slots' },
+      { key: 'hudRatio', label: msg('settings-hud:hud-ratio.label'), description: msg('settings-hud:hud-ratio.description'), keywords: 'hud ratio aspect match widescreen' },
     ],
   },
   {
     id: 'hud-main',
-    title: 'Main HUD',
+    title: msg('settings-hud:section.hud-main.title'),
     items: [
-      { key: 'hudHeartMode', label: 'Heart Style', description: 'How life hearts are drawn. Smooth fills fractional hearts gradually instead of in 4 steps.', keywords: 'heart life health style smooth', control: { kind: 'choice', options: heartModes } },
-      { key: 'hudMagicMode', label: 'Magic Meter', description: 'How the magic power bar is rendered. Accurate shows the true value instead of rounding to 1/8ths.', keywords: 'magic meter style bar accurate', control: { kind: 'choice', options: magicModes } },
-      { key: 'hudCountLayout', label: 'Counter Layout', description: 'Position of the rupee, bomb, arrow, and key counters relative to the screen.', keywords: 'counter layout position center original rupee bomb arrow key', control: { kind: 'choice', options: countLayouts } },
-      { key: 'hudCountdownStyle', label: 'Countdown Timer', description: 'How the countdown for timed events, such as the digging game or the super bomb, is drawn.', keywords: 'countdown timer pie pixel smooth digging super bomb', control: { kind: 'choice', options: countdownStyles } },
+      { key: 'hudHeartMode', label: msg('settings-hud:hud-heart-mode.label'), description: msg('settings-hud:hud-heart-mode.description'), keywords: 'heart life health style smooth', control: { kind: 'choice', options: heartModes } },
+      { key: 'hudMagicMode', label: msg('settings-hud:hud-magic-mode.label'), description: msg('settings-hud:hud-magic-mode.description'), keywords: 'magic meter style bar accurate', control: { kind: 'choice', options: magicModes } },
+      { key: 'hudCountLayout', label: msg('settings-hud:hud-count-layout.label'), description: msg('settings-hud:hud-count-layout.description'), keywords: 'counter layout position center original rupee bomb arrow key', control: { kind: 'choice', options: countLayouts } },
+      { key: 'hudCountdownStyle', label: msg('settings-hud:hud-countdown-style.label'), description: msg('settings-hud:hud-countdown-style.description'), keywords: 'countdown timer pie pixel smooth digging super bomb', control: { kind: 'choice', options: countdownStyles } },
     ],
   },
   {
     id: 'hud-dialog',
-    title: 'Dialog Box',
+    title: msg('settings-hud:section.hud-dialog.title'),
     subsections: [
       {
         id: 'hud-dialog-box',
-        title: 'Box',
+        title: msg('settings-hud:section.hud-dialog-box.title'),
         items: [
-          { key: 'dialogBox', label: 'Box', description: "Original keeps the game's box. Enhanced draws it as an overlay you can style.", keywords: 'dialog box message text overlay enhanced original', control: { kind: 'choice', options: drawChoices } },
-          { key: 'dialogBoxFit', label: 'Size', description: 'Full keeps the original size. Message sizes the box once to the whole message. Fit follows the text as it types.', keywords: 'dialog box frame fit full message width shrink size', control: { kind: 'choice', options: boxFits } },
-          { key: 'dialogButtonPrompts', label: 'Button Prompts', description: 'Shows the buttons that act on a message under its box: choose, confirm, next, complete and faster.', keywords: 'dialog box button prompts controls hints legend guide' },
+          { key: 'dialogBox', label: msg('settings-hud:dialog-box.label'), description: msg('settings-hud:dialog-box.description'), keywords: 'dialog box message text overlay enhanced original', control: { kind: 'choice', options: drawChoices } },
+          { key: 'dialogBoxFit', label: msg('settings-hud:dialog-box-fit.label'), description: msg('settings-hud:dialog-box-fit.description'), keywords: 'dialog box frame fit full message width shrink size', control: { kind: 'choice', options: boxFits } },
+          { key: 'dialogButtonPrompts', label: msg('settings-hud:dialog-button-prompts.label'), description: msg('settings-hud:dialog-button-prompts.description'), keywords: 'dialog box button prompts controls hints legend guide' },
         ],
       },
       {
         id: 'hud-dialog-text',
-        title: 'Text',
+        title: msg('settings-hud:section.hud-dialog-text.title'),
         items: [
-          { key: 'dialogFont', label: 'Font', description: "Original uses the game's glyphs. Modern uses the app's dialogue font.", keywords: 'dialog font glyph modern original text', control: { kind: 'choice', options: fonts } },
-          { key: 'dialogFontScale', label: 'Font Size', description: 'How large the modern font draws.', keywords: 'dialog font size scale large small text' },
-          { key: 'dialogInkColor', label: 'Ink Color', description: 'The colour the modern font is written in.', keywords: 'dialog ink color colour text font' },
-          { key: 'dialogStrokeColor', label: 'Stroke Color', description: 'The outline colour around each modern glyph.', keywords: 'dialog stroke outline color colour text font' },
-          { key: 'dialogStrokeWidth', label: 'Stroke Width', description: 'How thick the outline is, in game pixels.', keywords: 'dialog stroke outline width thickness text font' },
+          { key: 'dialogFont', label: msg('settings-hud:dialog-font.label'), description: msg('settings-hud:dialog-font.description'), keywords: 'dialog font glyph modern original text', control: { kind: 'choice', options: fonts } },
+          { key: 'dialogFontScale', label: msg('settings-hud:dialog-font-scale.label'), description: msg('settings-hud:dialog-font-scale.description'), keywords: 'dialog font size scale large small text' },
+          { key: 'dialogInkColor', label: msg('settings-hud:dialog-ink-color.label'), description: msg('settings-hud:dialog-ink-color.description'), keywords: 'dialog ink color colour text font' },
+          { key: 'dialogStrokeColor', label: msg('settings-hud:dialog-stroke-color.label'), description: msg('settings-hud:dialog-stroke-color.description'), keywords: 'dialog stroke outline color colour text font' },
+          { key: 'dialogStrokeWidth', label: msg('settings-hud:dialog-stroke-width.label'), description: msg('settings-hud:dialog-stroke-width.description'), keywords: 'dialog stroke outline width thickness text font' },
         ],
       },
       {
         id: 'hud-dialog-highlight',
-        title: 'Highlights',
+        title: msg('settings-hud:section.hud-dialog-highlight.title'),
         items: [
-          { key: 'hudHighlightPrimary', label: 'Highlight Primary', description: 'Item names in randomizer messages.', keywords: 'dialog highlight primary color colour item name randomizer message gold' },
-          { key: 'hudHighlightSecondary', label: 'Highlight Secondary', description: 'Player names in randomizer messages.', keywords: 'dialog highlight secondary color colour player name randomizer multiworld message green' },
+          { key: 'hudHighlightPrimary', label: msg('settings-hud:hud-highlight-primary.label'), description: msg('settings-hud:hud-highlight-primary.description'), keywords: 'dialog highlight primary color colour item name randomizer message gold' },
+          { key: 'hudHighlightSecondary', label: msg('settings-hud:hud-highlight-secondary.label'), description: msg('settings-hud:hud-highlight-secondary.description'), keywords: 'dialog highlight secondary color colour player name randomizer multiworld message green' },
         ],
       },
       {
         id: 'hud-dialog-border',
-        title: 'Border',
+        title: msg('settings-hud:section.hud-dialog-border.title'),
         items: [
-          { key: 'dialogBorder', label: 'Border', description: "The game's tiles, no border, one line, or a thin line inside a thicker one.", hint: 'Single and Double unlock the line options.', keywords: 'dialog box border frame single double none original', control: { kind: 'choice', options: borders } },
-          { key: 'dialogBorderThickness', label: 'Thickness', description: 'How heavy the drawn line is.', keywords: 'dialog box border thickness thin thick', control: { kind: 'choice', options: thicknesses } },
-          { key: 'dialogBorderColor', label: 'Border Color', description: 'The colour of the drawn line and the corner marks.', keywords: 'dialog box border color colour' },
-          { key: 'dialogCorner', label: 'Corners', description: 'Square, rounded, or cut at a diagonal.', keywords: 'dialog box corner square rounded chamfered chamfer', control: { kind: 'choice', options: corners } },
-          { key: 'dialogCornerMark', label: 'Corner Marks', description: 'A small mark inside each corner.', keywords: 'dialog box corner mark decoration circle square triforce', control: { kind: 'choice', options: marks } },
-          { key: 'dialogCornerMarkAngle', label: 'Mark Angle', description: 'Turns the marks; each corner mirrors the top-left one.', keywords: 'dialog box corner mark angle rotate rotation', control: { kind: 'range', min: 0, max: 345, step: 15, format: degrees } },
+          { key: 'dialogBorder', label: msg('settings-hud:dialog-border.label'), description: msg('settings-hud:dialog-border.description'), hint: msg('settings-hud:dialog-border.hint'), keywords: 'dialog box border frame single double none original', control: { kind: 'choice', options: borders } },
+          { key: 'dialogBorderThickness', label: msg('settings-hud:dialog-border-thickness.label'), description: msg('settings-hud:dialog-border-thickness.description'), keywords: 'dialog box border thickness thin thick', control: { kind: 'choice', options: thicknesses } },
+          { key: 'dialogBorderColor', label: msg('settings-hud:dialog-border-color.label'), description: msg('settings-hud:dialog-border-color.description'), keywords: 'dialog box border color colour' },
+          { key: 'dialogCorner', label: msg('settings-hud:dialog-corner.label'), description: msg('settings-hud:dialog-corner.description'), keywords: 'dialog box corner square rounded chamfered chamfer', control: { kind: 'choice', options: corners } },
+          { key: 'dialogCornerMark', label: msg('settings-hud:dialog-corner-mark.label'), description: msg('settings-hud:dialog-corner-mark.description'), keywords: 'dialog box corner mark decoration circle square triforce', control: { kind: 'choice', options: marks } },
+          { key: 'dialogCornerMarkAngle', label: msg('settings-hud:dialog-corner-mark-angle.label'), description: msg('settings-hud:dialog-corner-mark-angle.description'), keywords: 'dialog box corner mark angle rotate rotation', control: { kind: 'range', min: 0, max: 345, step: 15, format: degrees } },
         ],
       },
       {
         id: 'hud-dialog-background',
-        title: 'Background',
+        title: msg('settings-hud:section.hud-dialog-background.title'),
         items: [
-          { key: 'dialogGroundColor', label: 'Background Color', description: 'The ground behind the text.', keywords: 'dialog box background color colour ground' },
-          { key: 'dialogBoxOpacity', label: 'Background Opacity', description: 'How solid the ground is, from clear to solid.', keywords: 'dialog box background opacity translucent transparent', control: { kind: 'range', min: 0, max: 1, step: 0.05, format: percent } },
-          { key: 'dialogGroundFade', label: 'Fade Edges', description: 'Fades the background out toward its edges. Only without a border.', keywords: 'dialog box background fade feather soft edges vignette' },
-          { key: 'dialogFloatingGround', label: 'Behind Telepathy', description: 'Also draws the background behind borderless messages, such as telepathy.', keywords: 'dialog box background telepathy floating borderless zelda' },
-          { key: 'dialogIntroTelepathyGround', label: 'Behind Intro Telepathy', description: 'Draws it behind the first telepathic call of the intro, while the hero is still in bed.', keywords: 'dialog box background telepathy intro opening bed zelda link house' },
+          { key: 'dialogGroundColor', label: msg('settings-hud:dialog-ground-color.label'), description: msg('settings-hud:dialog-ground-color.description'), keywords: 'dialog box background color colour ground' },
+          { key: 'dialogBoxOpacity', label: msg('settings-hud:dialog-box-opacity.label'), description: msg('settings-hud:dialog-box-opacity.description'), keywords: 'dialog box background opacity translucent transparent', control: { kind: 'range', min: 0, max: 1, step: 0.05, format: percent } },
+          { key: 'dialogGroundFade', label: msg('settings-hud:dialog-ground-fade.label'), description: msg('settings-hud:dialog-ground-fade.description'), keywords: 'dialog box background fade feather soft edges vignette' },
+          { key: 'dialogFloatingGround', label: msg('settings-hud:dialog-floating-ground.label'), description: msg('settings-hud:dialog-floating-ground.description'), keywords: 'dialog box background telepathy floating borderless zelda' },
+          { key: 'dialogIntroTelepathyGround', label: msg('settings-hud:dialog-intro-telepathy-ground.label'), description: msg('settings-hud:dialog-intro-telepathy-ground.description'), keywords: 'dialog box background telepathy intro opening bed zelda link house' },
         ],
       },
       {
         id: 'hud-dialog-texture',
-        title: 'Texture',
+        title: msg('settings-hud:section.hud-dialog-texture.title'),
         items: [
-          { key: 'dialogTexture', label: 'Pattern', description: 'A repeating pattern on the ground behind the text.', hint: 'None turns the pattern options off.', keywords: 'dialog box texture pattern triforce hex scanlines stripes', control: { kind: 'choice', options: textures } },
-          { key: 'dialogTextureColor', label: 'Pattern Color', description: 'The colour the pattern is drawn in.', keywords: 'dialog box texture pattern color colour' },
-          { key: 'dialogTextureOpacity', label: 'Pattern Opacity', description: 'How visible the pattern is.', keywords: 'dialog box texture pattern opacity', control: { kind: 'range', min: 0, max: 1, step: 0.05, format: percent } },
-          { key: 'dialogTextureAnimation', label: 'Animation', description: 'Still, sliding, drifting, appearing at random, or breathing.', keywords: 'dialog box texture animation scroll drift twinkle pulse still', control: { kind: 'choice', options: animations } },
-          { key: 'dialogTextureSpeed', label: 'Animation Speed', description: 'How fast the pattern moves.', keywords: 'dialog box texture animation speed slow fast', control: { kind: 'choice', options: speeds } },
+          { key: 'dialogTexture', label: msg('settings-hud:dialog-texture.label'), description: msg('settings-hud:dialog-texture.description'), hint: msg('settings-hud:dialog-texture.hint'), keywords: 'dialog box texture pattern triforce hex scanlines stripes', control: { kind: 'choice', options: textures } },
+          { key: 'dialogTextureColor', label: msg('settings-hud:dialog-texture-color.label'), description: msg('settings-hud:dialog-texture-color.description'), keywords: 'dialog box texture pattern color colour' },
+          { key: 'dialogTextureOpacity', label: msg('settings-hud:dialog-texture-opacity.label'), description: msg('settings-hud:dialog-texture-opacity.description'), keywords: 'dialog box texture pattern opacity', control: { kind: 'range', min: 0, max: 1, step: 0.05, format: percent } },
+          { key: 'dialogTextureAnimation', label: msg('settings-hud:dialog-texture-animation.label'), description: msg('settings-hud:dialog-texture-animation.description'), keywords: 'dialog box texture animation scroll drift twinkle pulse still', control: { kind: 'choice', options: animations } },
+          { key: 'dialogTextureSpeed', label: msg('settings-hud:dialog-texture-speed.label'), description: msg('settings-hud:dialog-texture-speed.description'), keywords: 'dialog box texture animation speed slow fast', control: { kind: 'choice', options: speeds } },
         ],
       },
       {
         id: 'hud-dialog-pattern',
-        title: 'Pattern Layout',
+        title: msg('settings-hud:section.hud-dialog-pattern.title'),
         items: [
-          { key: 'dialogTextureScale', label: 'Size', description: 'How large each cell of the pattern draws.', keywords: 'dialog box texture pattern size scale' },
-          { key: 'dialogTextureDensity', label: 'Density', description: 'How close the cells sit.', keywords: 'dialog box texture pattern density spacing gap', control: { kind: 'range', min: 0, max: 100, step: 5, format: wholePercent } },
-          { key: 'dialogTextureScatter', label: 'Scatter', description: 'How far cells stray from the grid; at zero they line up.', keywords: 'dialog box texture pattern scatter random jitter loose tight', control: { kind: 'range', min: 0, max: 100, step: 5, format: wholePercent } },
+          { key: 'dialogTextureScale', label: msg('settings-hud:dialog-texture-scale.label'), description: msg('settings-hud:dialog-texture-scale.description'), keywords: 'dialog box texture pattern size scale' },
+          { key: 'dialogTextureDensity', label: msg('settings-hud:dialog-texture-density.label'), description: msg('settings-hud:dialog-texture-density.description'), keywords: 'dialog box texture pattern density spacing gap', control: { kind: 'range', min: 0, max: 100, step: 5, format: wholePercent } },
+          { key: 'dialogTextureScatter', label: msg('settings-hud:dialog-texture-scatter.label'), description: msg('settings-hud:dialog-texture-scatter.description'), keywords: 'dialog box texture pattern scatter random jitter loose tight', control: { kind: 'range', min: 0, max: 100, step: 5, format: wholePercent } },
         ],
       },
     ],

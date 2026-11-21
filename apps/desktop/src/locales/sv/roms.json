@@ -1,0 +1,15 @@
+{
+  "verdict.archive": "Arkiv, kontrolleras vid import",
+  "verdict.archive-empty": "Arkivet innehåller ingen ROM-fil.",
+  "verdict.fan-translation": "Det här är den {language, select, es {spanska} pl {polska} pt {portugisiska} en-redux {engelska Redux-} nl {nederländska} sv {svenska} other {}} fanöversättningen, som är ett språk och inte en spel-ROM. Importera den som språk: Språk > Nytt språk > Fanpatchad ROM.",
+  "verdict.not-official": "Inte en officiell ROM (SHA-1 {hash}). Använd en från listan nedan.",
+  "verdict.official-ok": "{name}",
+  "verdict.patched-bad-size": "Filen är {bytes} byte, vilket inte är storleken på en A Link to the Past-ROM.",
+  "verdict.patched-ok": "En ROM på {size} MB (SHA-1 {hash})",
+  "verdict.unsupported": "{name} är en officiell ROM, men stöds inte än.",
+  "verdict.wrong-kind": "Detta är {name} ({kind, select, snes-alttp {baskassett} gba-alttp {andra kassetten} other {?}}). Förväntat: {expected, select, snes-alttp {baskassett} gba-alttp {andra kassetten} other {?}}.",
+  "kind.snes-alttp": "Baskassett",
+  "kind.gba-alttp": "Andra kassetten",
+  "refusal.unknown": "Okänd {label} (SHA-1 {hash}). Bara den stödda revisionen kan användas.",
+  "refusal.invalid": "Filen är varken en giltig {label} eller ett arkiv"
+}

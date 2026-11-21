@@ -1,9 +1,11 @@
 /* @layer renderer-components @kind hook */
 import { useState, useCallback } from 'react';
+import { useT } from '@drizztdourden08/brock-react';
 import { captureStateBuffer } from '@app/game';
 import { saveMusicPosition } from '@app/game/msu-save-glue';
 import { log } from '@app/log-bus';
 import * as savesStore from '@app/storage/saves-store';
+import { useDateFormatOptions } from '@app/hooks/useDateFormatOptions';
 import { captureCanvasScreenshot } from './capture-canvas-screenshot';
 import { defaultSaveName } from './default-save-name';
 import { loadStoredSave } from './load-stored-save';
@@ -13,25 +15,27 @@ import type { UseNormalSaveActionsParams } from './home-tab.type';
 
 const useNormalSaveActions = (params: UseNormalSaveActionsParams) => {
   const { profileId, isGameRunning, onStartGame, loadNormalSaves } = params;
+  const t = useT();
+  const dates = useDateFormatOptions();
   const [busyNormal, setBusyNormal] = useState<string | null>(null);
 
   const handleCreateNormalSave = useCallback(async (typed: string): Promise<string | null> => {
     const state = captureStateBuffer();
     if (!state) return null;
-    const name = typed.trim() || defaultSaveName();
+    const name = typed.trim() || defaultSaveName(t, dates);
     log.app(`Creating normal save: "${name}"`);
     const created = await savesStore.createNormalSave(profileId, name, state, await captureCanvasScreenshot());
     await saveMusicPosition(profileId, 'normal', created.id);
     await loadNormalSaves();
     return created.id;
-  }, [profileId, loadNormalSaves]);
+  }, [profileId, loadNormalSaves, t, dates]);
 
   const handleLoadNormal = useCallback(async (id: string) => {
     setBusyNormal(id);
     const buffer = await STORED_SAVE_READERS.normal(profileId, id);
-    if (await startForLoad(buffer, isGameRunning, onStartGame) && buffer) await loadStoredSave(profileId, 'normal', id, buffer);
+    if (await startForLoad(buffer, isGameRunning, onStartGame, t) && buffer) await loadStoredSave(profileId, 'normal', id, buffer);
     setBusyNormal(null);
-  }, [profileId, isGameRunning, onStartGame]);
+  }, [profileId, isGameRunning, onStartGame, t]);
 
   const handleOverwriteNormal = useCallback(async (id: string) => {
     const state = captureStateBuffer();

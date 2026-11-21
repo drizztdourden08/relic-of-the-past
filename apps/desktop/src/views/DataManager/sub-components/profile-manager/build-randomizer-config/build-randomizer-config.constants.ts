@@ -1,5 +1,6 @@
 /* @layer renderer-components @kind constants */
 import { DEFAULT_CAPACITY_BONUS, DEFAULT_CAPACITY_PROFILE, DEFAULT_POND_PROFILES, defaultShopScope, DEFAULT_DARK_ROOM_SETTING, defaultDifficulty, DEFAULT_ITEM_POWER, defaultProgressiveSetting, defaultProgressiveModes, defaultRetroBow, DEFAULT_ACCESSIBILITY, INCLUDE_NPC_CHECKS_KEY, INCLUDE_WORLD_ITEMS_KEY, DEFAULT_DUNGEON_ITEM_SETTING, DEFAULT_STORY_GATES, DEATH_LINK_KEY } from '@rotp/randomizer';
+import { msg } from '@drizztdourden08/brock-core/i18n';
 import { EMPTY_LOBBY_DRAFT } from '@app/hooks/randomizer/lobby-setup';
 import { baselineSwitch } from './baseline-switch';
 import type { RandomizerFormState } from './build-randomizer-config.type';
@@ -37,6 +38,6 @@ const EMPTY_RANDOMIZER_FORM: RandomizerFormState = {
 };
 
 
-const NO_LOBBY_ERROR = 'Pick a lobby RotP can join.';
+const NO_LOBBY_MESSAGE = msg('data-manager:build-randomizer-config.no-lobby');
 
-export { EMPTY_RANDOMIZER_FORM, NO_LOBBY_ERROR };
+export { EMPTY_RANDOMIZER_FORM, NO_LOBBY_MESSAGE };

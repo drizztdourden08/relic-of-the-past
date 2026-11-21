@@ -1,5 +1,6 @@
 /* @layer renderer-app @kind component */
 import { useCallback, useMemo } from 'react';
+import { useText } from '@drizztdourden08/brock-react';
 import { changedPaths } from '@rotp/navigation';
 import { buildSchema } from '@drizztdourden08/tessera/data';
 import { Box } from '@drizztdourden08/tessera/primitives';
@@ -17,6 +18,7 @@ import './RecommendationDetail.css';
 
 const RecommendationDetail = (props: RecommendationDetailProps) => {
   const { entries, selectedId, onSelect, tab, onTabChange } = props;
+  const text = useText();
 
   const review = useRecommendationReview({ entries, selectedId, onSelect });
   const scroll = useComparisonScroll();
@@ -35,7 +37,7 @@ const RecommendationDetail = (props: RecommendationDetailProps) => {
 
   const certainCount = useMemo(() => certainOnly(review.order).length, [review.order]);
 
-  if (!selected || !proposed) return <Box className="data-inspector__empty">{NOTHING_OPEN}</Box>;
+  if (!selected || !proposed) return <Box className="data-inspector__empty">{text(NOTHING_OPEN)}</Box>;
 
   return (
     <Box className="rec-detail__body">

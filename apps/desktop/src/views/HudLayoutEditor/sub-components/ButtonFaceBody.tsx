@@ -2,14 +2,18 @@
 import { useRef, useState } from 'react';
 import { Flex, SegmentedControl } from '@drizztdourden08/tessera/primitives';
 import { SpritePicker } from '@app/compounds/SpritePicker';
-import { CATEGORY_LABELS, CATEGORY_ORDER, SPRITE_MANIFEST } from '@rotp/game-data';
+import { CATEGORY_ORDER, SPRITE_MANIFEST } from '@rotp/game-data';
 import { spriteUrl } from '@app/hud-layout-editing/node-art';
 import { GlyphPickerGrid } from './GlyphPickerGrid';
 import { ReferenceField } from './ReferenceField';
 import { SpriteExtractionNotice } from './SpriteExtractionNotice';
 import type { ButtonFaceBodyProps } from './ButtonFaceBody.type';
+import { useT } from '@drizztdourden08/brock-react';
+import { useSpriteCategoryLabels } from '@app/hooks/sprite-category-labels';
 
 const ButtonFaceBody = (props: ButtonFaceBodyProps) => {
+  const t = useT();
+  const categoryLabels = useSpriteCategoryLabels();
   const { state, face, art, glyphPacks, onChange } = props;
   const [pickerOpen, setPickerOpen] = useState<'sprite' | 'glyph' | null>(null);
   const anchorRef = useRef<HTMLButtonElement>(null);
@@ -19,7 +23,7 @@ const ButtonFaceBody = (props: ButtonFaceBodyProps) => {
       <SegmentedControl
         size="sm"
         value={face.from}
-        options={[{ value: 'glyph', label: 'glyph' }, { value: 'image', label: 'image' }]}
+        options={[{ value: 'glyph', label: t('hud-editor:button-face.glyph') }, { value: 'image', label: t('hud-editor:button-face.image') }]}
         onChange={(next) => onChange(next === 'image' ? { from: 'image', file: '' } : { from: 'glyph', pack: 'generic', glyph: 'A' })}
       />
       <ReferenceField
@@ -29,14 +33,14 @@ const ButtonFaceBody = (props: ButtonFaceBodyProps) => {
         kind={art.kind}
         onOpen={() => setPickerOpen(face.from === 'image' ? 'sprite' : 'glyph')}
         anchorRef={anchorRef}
-        aria-label={`${state} face: ${art.name}`}
+        aria-label={t('hud-editor:button-face.aria', { state, name: art.name })}
       >
         <SpritePicker
           open={pickerOpen === 'sprite'}
           anchorRef={anchorRef}
           sprites={SPRITE_MANIFEST}
           categories={CATEGORY_ORDER}
-          categoryLabels={CATEGORY_LABELS}
+          categoryLabels={categoryLabels}
           spriteUrl={spriteUrl}
           onClose={() => setPickerOpen(null)}
           onPick={(file) => onChange({ from: 'image', file })}

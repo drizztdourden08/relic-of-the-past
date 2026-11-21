@@ -1,11 +1,13 @@
 /* @layer renderer-widgets @kind component */
+import { useT } from '@drizztdourden08/brock-react';
 import { Box, Button, Icon, SegmentedControl, StatRow } from '@drizztdourden08/tessera/primitives';
 import { TileRecorderBtn } from './TileRecorderBtn';
 import { PathCopyBtn } from './PathCopyBtn';
 import type { FunctionsPanelProps } from './FunctionsPanel.type';
-import { MODE_OPTIONS } from './FunctionsPanel.constants';
+import { modeOptions } from './FunctionsPanel.constants';
 
 const FunctionsPanel = (props: FunctionsPanelProps) => {
+  const t = useT();
   const {
     mode, setMode, running, handleRun, handleClear, result, overworldScreenIndex,
     reachableSum, totalTilesSum, entranceSum, externalConnections, internalConnections,
@@ -13,17 +15,17 @@ const FunctionsPanel = (props: FunctionsPanelProps) => {
 
   return (
     <Box className="nav-section">
-      <Box className="nav-section-title">Functions</Box>
+      <Box className="nav-section-title">{t('views-navigation:functions.title')}</Box>
 
-      <SegmentedControl value={mode} options={MODE_OPTIONS} onChange={setMode} />
+      <SegmentedControl value={mode} options={modeOptions(t)} onChange={setMode} />
 
       {mode === 'manual' && (
         <Box className="nav-fn-row-top">
           <Button variant="secondary" size="xs" data-testid="nav-flood-btn" loading={running} icon={<Icon name="play" />} onClick={handleRun}>
-            Flood Fill
+            {t('views-navigation:functions.flood')}
           </Button>
           <Button variant="secondary" size="xs" data-testid="nav-clear-btn" icon={<Icon name="x" />} onClick={handleClear} disabled={!result}>
-            Clear
+            {t('views-navigation:functions.clear')}
           </Button>
         </Box>
       )}
@@ -35,9 +37,9 @@ const FunctionsPanel = (props: FunctionsPanelProps) => {
 
       {result && (
         <Box>
-          <StatRow label="Reachable" value={`${reachableSum}/${totalTilesSum} (${totalTilesSum > 0 ? (reachableSum / totalTilesSum * 100).toFixed(0) : '0'}%)`} mono />
-          <StatRow label="Entrances" value={entranceSum} mono />
-          <StatRow label="Edges" value={`${externalConnections.length}${internalConnections.length > 0 ? ` + ${internalConnections.filter(c => !c.isIntraRoom || c.edge === 'south' || c.edge === 'east').length} int` : ''}`} mono />
+          <StatRow label={t('views-navigation:functions.reachable')} value={t('views-navigation:functions.reachable.value', { reachable: reachableSum, total: totalTilesSum, percent: totalTilesSum > 0 ? (reachableSum / totalTilesSum * 100).toFixed(0) : '0' })} mono />
+          <StatRow label={t('views-navigation:functions.entrances')} value={entranceSum} mono />
+          <StatRow label={t('views-navigation:functions.edges')} value={internalConnections.length > 0 ? t('views-navigation:functions.edges.withinternal', { external: externalConnections.length, internal: internalConnections.filter(c => !c.isIntraRoom || c.edge === 'south' || c.edge === 'east').length }) : t('views-navigation:functions.edges.value', { external: externalConnections.length })} mono />
         </Box>
       )}
     </Box>

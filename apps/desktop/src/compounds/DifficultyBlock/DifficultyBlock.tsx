@@ -1,26 +1,25 @@
 /* @layer renderer-components @kind component */
 import { Box, Slider, Text } from '@drizztdourden08/tessera/primitives';
+import { useT, useText } from '@drizztdourden08/brock-react';
 import { OptionGroup, OptionRow, ValueTag } from '@drizztdourden08/tessera/composites';
 import { COPY_MULTIPLIER_LABELS, MAX_HEART_CAP, STARTING_HEARTS, asCopyMultiplier, HEART_CAP_KEY, difficultyCopiesKeyOf, PROGRESSIVE_FAMILIES, progressiveFamilyName, tickedCountOf, optionByKey } from '@rotp/randomizer';
 import { OptionDescription } from '../OptionDescription';
-import {
-  DIFFICULTY_COPIES_HEADING, DIFFICULTY_HEARTS_HEADING, DIFFICULTY_TITLE, FIRST_STEP, LAST_STEP,
-  NO_RUNGS_NOTE,
-} from './DifficultyBlock.constants';
+import { FIRST_STEP, LAST_STEP } from './DifficultyBlock.constants';
 import type { DifficultyBlockProps } from './DifficultyBlock.type';
 import './DifficultyBlock.css';
 
 const descriptionOf = (key: string) => optionByKey.get(key)?.description ?? '';
 const multipleLabel = (value: number): string => COPY_MULTIPLIER_LABELS[asCopyMultiplier(value)];
-const heartLabel = (value: number): string => `${value} hearts`;
-
 const DifficultyBlock = (props: DifficultyBlockProps) => {
+  const t = useT();
+  const text = useText();
   const { setting, tiers, onChange } = props;
+  const heartLabel = (count: number): string => t('compounds:difficulty-block.hearts', { count });
   const readOnly = onChange === undefined;
 
   return (
-    <OptionGroup title={DIFFICULTY_TITLE} tone="live" className="difficulty-block">
-      <Text className="difficulty-block__heading">{DIFFICULTY_COPIES_HEADING}</Text>
+    <OptionGroup title={t('compounds:difficulty-block.title')} tone="live" className="difficulty-block">
+      <Text className="difficulty-block__heading">{t('compounds:difficulty-block.copies-heading')}</Text>
       <Box className="difficulty-block__copies">
         {PROGRESSIVE_FAMILIES.map((family) => {
           const rungs = tickedCountOf(tiers, family.id);
@@ -29,7 +28,7 @@ const DifficultyBlock = (props: DifficultyBlockProps) => {
               key={family.id}
               label={progressiveFamilyName(family)}
               description={<OptionDescription description={rungs === 0
-                ? NO_RUNGS_NOTE
+                ? t('compounds:difficulty-block.no-rungs')
                 : descriptionOf(difficultyCopiesKeyOf(family.id))} />}
               control={readOnly ? <ValueTag value={multipleLabel(setting.copies[family.id])} /> : (
                 <Slider
@@ -49,9 +48,9 @@ const DifficultyBlock = (props: DifficultyBlockProps) => {
           );
         })}
       </Box>
-      <Text className="difficulty-block__heading">{DIFFICULTY_HEARTS_HEADING}</Text>
+      <Text className="difficulty-block__heading">{t('compounds:difficulty-block.hearts-heading')}</Text>
       <OptionRow
-        label={optionByKey.get(HEART_CAP_KEY)?.displayName ?? HEART_CAP_KEY}
+        label={text(optionByKey.get(HEART_CAP_KEY)?.displayName ?? HEART_CAP_KEY)}
         description={<OptionDescription description={descriptionOf(HEART_CAP_KEY)} />}
         control={readOnly ? <ValueTag value={heartLabel(setting.heartCap)} /> : (
           <Slider

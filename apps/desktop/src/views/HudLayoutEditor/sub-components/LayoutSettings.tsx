@@ -9,34 +9,37 @@ import { SubSection } from './SubSection';
 import { TOOLBAR_ICONS } from '@app/hud-layout-editing/toolbar-menus';
 import { OVERLAY_LABEL } from './LayoutSettings.constants';
 import type { LayoutSettingsProps } from './LayoutSettings.type';
+import { useT, useText } from '@drizztdourden08/brock-react';
 
 const LayoutSettings = (props: LayoutSettingsProps) => {
+  const t = useT();
+  const text = useText();
   const { engine, onSetEngine, overlay, gap, onGap, scope, insideRepeat } = props;
   const [open, setOpen] = useState(false);
   const anchorRef = useRef<HTMLDivElement>(null);
 
   return (
-    <SubSection title="Container">
+    <SubSection title={t('hud-editor:layout-settings.title.container')}>
       <Box className="hud-layout-set">
-        <LayoutSettingsPiece label="Type">
+        <LayoutSettingsPiece label={t('hud-editor:layout-settings.label.type')}>
           <EngineToggle value={engine} onChange={onSetEngine} />
         </LayoutSettingsPiece>
 
-        <LayoutSettingsPiece label="Overlay">
+        <LayoutSettingsPiece label={t('hud-editor:layout-settings.label.overlay')}>
           <Box ref={anchorRef} className="hud-layout-set__overlay">
             <ColorSwatch
               size="sm"
               color={overlay.guide}
-              aria-label="Open the guide colour picker"
-              title="Guide colour for this container's own overlay, in the preview and in this panel"
+              aria-label={t('hud-editor:layout-settings.aria.open-the-guide-colour-picker')}
+              title={t('hud-editor:layout-settings.title.guide-colour-for-this-container')}
               onClick={() => setOpen(true)}
             />
             <IconButton
               variant="ghost"
               size="sm"
               active={overlay.overlayOn}
-              label={OVERLAY_LABEL}
-              title={OVERLAY_LABEL}
+              label={text(OVERLAY_LABEL)}
+              title={text(OVERLAY_LABEL)}
               data-action="grid-overlay"
               onClick={overlay.onToggleOverlay}
             >
@@ -52,7 +55,7 @@ const LayoutSettings = (props: LayoutSettingsProps) => {
           </Box>
         </LayoutSettingsPiece>
 
-        <LayoutSettingsPiece label="Gap" grow>
+        <LayoutSettingsPiece label={t('hud-editor:layout-settings.label.gap')} grow>
           <GapCells gap={gap} onGap={onGap} scope={scope} insideRepeat={insideRepeat} />
         </LayoutSettingsPiece>
       </Box>

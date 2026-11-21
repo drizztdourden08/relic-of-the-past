@@ -1,4 +1,6 @@
 /* @layer renderer-components @kind constants */
-const CEILING = 'That is the safety ceiling, not your number. Something here divides by zero.';
+import { msg } from '@drizztdourden08/brock-core/i18n';
+
+const CEILING = msg('hud-editor:formula-feedback.ceiling');
 
 export { CEILING };

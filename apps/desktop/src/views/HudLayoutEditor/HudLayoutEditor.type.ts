@@ -1,4 +1,5 @@
 /* @layer renderer-components @kind types */
+import type { Text } from '@drizztdourden08/brock-core/i18n';
 import type { useHudLayoutEditor } from '@app/hud-layout-editing/useHudLayoutEditor';
 import type { HudLayout, Size } from '@rotp/hud';
 
@@ -15,7 +16,7 @@ interface EditorRatio {
 
 interface EditorGround {
   file: string;
-  label: string;
+  label: Text;
 }
 
 type HudLayoutEditorState = ReturnType<typeof useHudLayoutEditor>;

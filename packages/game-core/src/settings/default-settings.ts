@@ -49,6 +49,12 @@ const DEFAULT_SETTINGS: GameSettings = {
 
   autoSkipDialog: false,
   prefillFileName: false,
+  extendedLetters: true,
+  jaFileSelectStyle: false,
+  langMenuScreens: true,
+  langPauseWords: true,
+  langMapLabels: true,
+  langEndingCredits: true,
   turnWhileDashing: false,
   allowDiving: false,
   mirrorToDarkworld: false,
@@ -141,6 +147,7 @@ const DEFAULT_SETTINGS: GameSettings = {
   hudCountdownStyle: 'pixel',
 
   titleScreen: 'reimagined',
+  originalTitle: 'us',
   titleMotion: 'drifting',
   titleFollowsProgress: true,
   titleSword: 'progress',

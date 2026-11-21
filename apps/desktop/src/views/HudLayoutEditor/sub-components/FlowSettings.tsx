@@ -5,18 +5,20 @@ import { DirectionControl } from './DirectionControl';
 import { SubSection } from './SubSection';
 import { WRAP_LABEL } from './FlowSettings.constants';
 import type { FlowSettingsProps } from './FlowSettings.type';
+import { useT } from '@drizztdourden08/brock-react';
 
 const FlowSettings = (props: FlowSettingsProps) => {
+  const t = useT();
   const { direction, onDirection, wrap, onWrap } = props;
   return (
-    <SubSection title="Flow">
+    <SubSection title={t('hud-editor:flow-settings.title.flow')}>
       <Box className="hud-engine-row">
         <Box className="hud-layout-set__piece">
-          <Text className="hud-layout-set__label">Direction</Text>
+          <Text className="hud-layout-set__label">{t('hud-editor:flow-settings.text.direction')}</Text>
           <DirectionControl variant="bare" value={direction} onChange={onDirection} />
         </Box>
         <Box className="hud-layout-set__piece">
-          <Text className="hud-layout-set__label">Wrap</Text>
+          <Text className="hud-layout-set__label">{t('hud-editor:flow-settings.text.wrap')}</Text>
           <IconButton
             variant="ghost"
             size="sm"

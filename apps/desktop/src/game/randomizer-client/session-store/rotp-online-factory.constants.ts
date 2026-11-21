@@ -1,4 +1,6 @@
 /* @layer bridge-wasm @kind constants */
-const NOT_ALLOWED = 'Archipelago requires Experimental Features in Contributing settings';
+import { msg } from '@drizztdourden08/brock-core/i18n';
+
+const NOT_ALLOWED = msg('randomizer:archipelago.not-allowed');
 
 export { NOT_ALLOWED };

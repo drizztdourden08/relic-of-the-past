@@ -1,9 +1,10 @@
 /* @layer shared-hud @kind types */
+import type { Message } from '@drizztdourden08/brock-core/i18n';
 import type { HUD_SCOPE_EXTRAS } from './variables-table.constants';
 
 interface HudVariableDef {
   name: string;
-  note: string;
+  note: Message;
 }
 
 type HudScopeExtra = (typeof HUD_SCOPE_EXTRAS)[number];

@@ -1,0 +1,15 @@
+{
+  "view.label": "Vista",
+  "view.list.label": "Lista",
+  "view.list.title": "Filas compactas",
+  "view.detailed.label": "Detallada",
+  "view.detailed.title": "Filas con objetos",
+  "view.visual.label": "Tarjetas",
+  "view.visual.title": "Tarjetas de objetos",
+  "pin.label": "Fijar cabecera",
+  "pin.description": "Mantiene el resumen y los filtros en su sitio",
+  "notify.label": "Notificaciones",
+  "notify.description": "Una tarjeta sobre el juego por cada check o evento que completes",
+  "closed.label": "Con el tracker cerrado",
+  "closed.description": "Sigue notificando mientras este tracker está cerrado"
+}

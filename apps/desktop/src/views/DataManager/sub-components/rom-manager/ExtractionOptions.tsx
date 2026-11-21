@@ -1,17 +1,18 @@
 /* @layer renderer-components @kind component */
+import { useT } from '@drizztdourden08/brock-react';
 import { Callout, Checkbox } from '@drizztdourden08/tessera/primitives';
 import { ImportProgress } from '../ImportProgress';
-import { SPRITES_TOO_LABEL } from './rom-extraction.constants';
 import type { ExtractionOptionsProps } from './rom-extraction.type';
 
 const ExtractionOptions = (props: ExtractionOptionsProps) => {
   const { extraction } = props;
+  const t = useT();
   const { withSprites, setWithSprites, spriteProgress, spriteError } = extraction;
 
   return (
     <>
-      <Checkbox checked={withSprites} onChange={setWithSprites} label={SPRITES_TOO_LABEL} />
-      {spriteProgress.active && <ImportProgress state={spriteProgress} fallbackLabel="Extracting sprites..." />}
+      <Checkbox checked={withSprites} onChange={setWithSprites} label={t('data-manager:rom-manager.sprites-too')} />
+      {spriteProgress.active && <ImportProgress state={spriteProgress} fallbackLabel={t('data-manager:rom-manager.extracting-sprites')} />}
       {spriteError && <Callout tone="danger">{spriteError}</Callout>}
     </>
   );

@@ -23,7 +23,7 @@ const aliasContradicted = (record: ItemRecord, grant: GrantedItemObservation | u
 
 const aliasNativeProbe: FieldProbe<'item'> = {
   path: 'aliasOf',
-  label: 'Alias rule',
+  label: 'aliasRule',
   source: 'native:receive-count',
   confidence: 'certain',
   format: formatAlias,
@@ -36,7 +36,7 @@ const aliasNativeProbe: FieldProbe<'item'> = {
 
 const aliasDeltaProbe: FieldProbe<'item'> = {
   path: 'aliasOf',
-  label: 'Alias rule',
+  label: 'aliasRule',
   source: 'tracker:inventory-delta',
   confidence: 'likely',
   format: formatAlias,

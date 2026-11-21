@@ -1,4 +1,5 @@
 /* @layer renderer-widgets @kind component */
+import { useT, useText } from '@drizztdourden08/brock-react';
 import { Box, Text } from '@drizztdourden08/tessera/primitives';
 import { HudSprite } from '@app/hud';
 import { useGameUIStore } from '@app/stores/game-ui-store';
@@ -14,7 +15,10 @@ import { shownDigitsOf } from '../behavior/shown-digits-of';
 import type { CounterEditorProps } from '../PlayerTab.type';
 
 const CounterEditor = ({ spec, scale, spritesBase }: CounterEditorProps) => {
-  const { kind, label, iconWidth, digits, steps, capacity } = spec;
+  const { kind, iconWidth, digits, steps, capacity } = spec;
+  const t = useT();
+  const text = useText();
+  const label = text(spec.label);
   const hud = useGameUIStore((s) => s.hud);
   const hasSilverArrows = useGameUIStore((s) => (s.inventory.items[0] ?? 0) >= SILVER_BOW);
   const showMaxInYellow = useHudSettingsStore((s) => s.showMaxInYellow);
@@ -30,7 +34,7 @@ const CounterEditor = ({ spec, scale, spritesBase }: CounterEditorProps) => {
 
   const caps = ladder.map((r) => r.cap);
   const maxWrite = maxWriterOf(ladder, set, capacity !== undefined && settable);
-  const locks = counterLocks(kind, inPlay);
+  const locks = counterLocks(t, kind, inPlay);
 
   return (
     <Box className="cheats-player__counter" aria-label={label}>
@@ -50,7 +54,7 @@ const CounterEditor = ({ spec, scale, spritesBase }: CounterEditorProps) => {
         />
         <Text className="cheats-player__slash" style={{ fontSize: tile }}>/</Text>
         <NumberCell
-          label={`${label} max`}
+          label={t('views-cheats:counter.max', { label })}
           value={max}
           min={caps[0] ?? 0}
           max={caps[caps.length - 1] ?? max}

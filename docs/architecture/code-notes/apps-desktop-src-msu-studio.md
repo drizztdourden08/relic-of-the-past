@@ -283,10 +283,6 @@ The pack as files, not slots. The drop zone and the format conversion live here 
 
 Deleting a file a slot still names leaves that slot silent, so the confirmation names the slots. Superseded originals are normally orphans; one still named by a slot is re-pointed to its converted file first. A spinner shows until the first metadata read settles, because an empty state would claim the pack has no files.
 
-## apps/desktop/src/msu-studio/MsuPackToolbar.tsx
-
-One name field serves both a new empty pack and an import, because two fields invite filling in the wrong one. `nameInstalled` is true when the name is a pack installed from the Hookshop, which nothing may write into.
-
 ## apps/desktop/src/msu-studio/MsuSoundPanel.tsx
 
 One sound channel on its own tab. The filter is owned here, not in the hook, because a list built from more than one channel has to put one query across all of them. `showUnreachable` is off by default: the ids it reveals are ones nothing in the game can raise. `hasHidden` is only true where a reachable set exists to hide anything, which is the ambient channel.

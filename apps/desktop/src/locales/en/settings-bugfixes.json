@@ -1,0 +1,13 @@
+{
+  "section.bugfixes.title": "Bug Fixes",
+  "section.bugfixes-bundles.title": "Enable in bulk",
+  "section.bugfixes-misc.title": "General fixes",
+  "section.bugfixes-gamechanging.title": "Gameplay-altering bug fixes",
+  "misc-bug-fixes.label": "All general bug fixes",
+  "misc-bug-fixes.description": "Turn on every general fix below at once. Individual toggles below override this.",
+  "game-changing-bug-fixes.label": "All gameplay-altering bug fixes",
+  "game-changing-bug-fixes.description": "Turn on fixes that change game behavior in ways speedrunners may care about. Individual toggles override this.",
+  "game-changing-bug-fixes.hint": "Runs that compare against the original game should leave it off.",
+  "state.on": "The game uses the fixed behavior.",
+  "state.off": "It keeps the original bug."
+}

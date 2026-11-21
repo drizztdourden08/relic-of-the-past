@@ -1,0 +1,13 @@
+{
+  "cheats.label": "Kody",
+  "dataset.label": "Inspektor danych na żywo",
+  "debug.label": "Stan gry",
+  "music.label": "Debugger muzyki",
+  "navigation.label": "Lokacja i nawigacja",
+  "shadow.drawing.label": "Rysowanie cieni",
+  "shadow.editor.kit.label": "Edytor cieni",
+  "shadow.editor.kit.requires": "Rozpocznij grę, aby użyć Edytora cieni.",
+  "shadow.editor.label": "Edytor cieni",
+  "shadow.elements.label": "Elementy cieni",
+  "simulator.label": "Symulator"
+}

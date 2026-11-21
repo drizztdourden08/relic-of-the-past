@@ -804,6 +804,24 @@ void HudOverride_SetWantedDialogHidden(bool on);
 // ─── Host-owned pause menu (host_menu.c, host_menu_gear.c): host_menu_hooks.h ───
 #include "host_menu_hooks.h"
 
+// ─── Language screens (language_screens.c, language_screens_assets.c): language_screens.h ───
+#include "language_screens.h"
+// ─── Latin cartridges' pause headers and floor labels (language_screens_latin.c) ───
+#include "language_screens_latin.h"
+#include "language_screens_copy.h"
+// ─── Japanese file select and name entry (language_ja_*.c): language_ja_screens.h ───
+#include "language_ja_screens.h"
+// ─── Kana name grid parts shared by both layouts (name_grid_input.c): name_grid.h ───
+#include "name_grid.h"
+// ─── File select layout strategy, US or Japanese (select_layout.c): select_layout.h ───
+#include "select_layout.h"
+// ─── US file select layout with a Japanese set's words (select_us_ja_*.c): select_us_ja.h ───
+#include "select_us_ja.h"
+// ─── The Japanese cartridge's graphics as options (ja_graphics.c): ja_graphics.h ───
+#include "ja_graphics.h"
+// ─── The Japanese cartridge's title sequence (title_ja.c): title_ja.h ───
+#include "title_ja.h"
+
 // ─── Dark-room lighting cheat (cheat_lighting.c) ───
 
 // Re-assert (or take back down) the lamp cone in a dark room the player has no lamp for. Runs every

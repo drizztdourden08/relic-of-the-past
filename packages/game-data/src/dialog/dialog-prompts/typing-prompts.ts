@@ -7,8 +7,8 @@ const holdHelps = ({ holdToAccelerate, speed, holdSpeed }: PromptControls): bool
 
 const typingPrompts = (controls: PromptControls): DialogPrompt[] => {
   const prompts: DialogPrompt[] = [];
-  if (holdHelps(controls)) prompts.push({ buttons: ['a'], label: 'Faster', hold: true });
-  if (controls.fillOnB) prompts.push({ buttons: ['b'], label: 'Complete' });
+  if (holdHelps(controls)) prompts.push({ buttons: ['a'], action: 'faster', hold: true });
+  if (controls.fillOnB) prompts.push({ buttons: ['b'], action: 'complete' });
   return prompts;
 };
 

@@ -1,0 +1,16 @@
+{
+  "option.viewport-modes.none.label": "Svarta kanter",
+  "option.viewport-modes.none.hint": "Behåller spelets bildformat och fyller resten av fönstret med svarta fält.",
+  "option.viewport-modes.fit.label": "Anpassa fönster",
+  "option.viewport-modes.fit.hint": "Låser fönstrets form till spelets bildformat när du ändrar storlek, så inga fält syns.",
+  "option.viewport-modes.fill.label": "Sträck ut",
+  "option.viewport-modes.fill.hint": "Sträcker bilden så att den fyller hela fönstret.",
+  "section.window.title": "Fönster",
+  "start-fullscreen.label": "Starta i helskärm",
+  "start-fullscreen.description": "Gå automatiskt till helskärm när spelet startar",
+  "viewport-constraint.label": "Vyport",
+  "viewport-constraint.description": "Styr hur spelytan förhåller sig till fönstret",
+  "pixel-perfect.label": "Pixelperfekt",
+  "pixel-perfect.description": "Skala bilden endast med hela källpixlar, så att varje pixel är exakt lika stor. Tar bort flimret på staket, väggar och andra raka kanter vid scrollning, på bekostnad av något bredare svarta kanter. Stänger av linjär filtrering medan det är aktivt.",
+  "pixel-perfect.hint": "Kräver vyporten Letterbox."
+}

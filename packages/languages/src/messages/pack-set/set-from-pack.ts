@@ -1,15 +1,15 @@
 /* @layer shared-game @kind logic */
-import type { LanguagePack } from '@rotp/asset-extraction';
-import type { DialogueEntry, LanguageSet } from '../types';
+import type { LanguagePack, ScreenPayload } from '@rotp/asset-extraction';
+import type { DialogueEntry, LanguageScript, LanguageSet } from '../types';
 import { parseTokens } from '../tokens/parse-tokens';
-import { emptyNameTable } from './empty-name-table';
+import { namesFromScreens } from './names-from-screens';
 
 const dialogueEntryFromLine = (line: LanguagePack['lines'][number]): DialogueEntry => ({
   id: line.id,
   tokens: parseTokens(line.content),
 });
 
-const setFromPack = (pack: LanguagePack): LanguageSet => ({
+const setFromPack = (pack: LanguagePack, screens?: ScreenPayload, script: LanguageScript = 'latin'): LanguageSet => ({
   id: pack.meta.code,
   name: pack.meta.code,
   base: pack.meta.code,
@@ -17,7 +17,9 @@ const setFromPack = (pack: LanguagePack): LanguageSet => ({
   version: 1,
   dialogue: pack.lines.map(dialogueEntryFromLine),
   glossary: [],
-  names: emptyNameTable(),
+  names: namesFromScreens(script === 'latin' ? screens : undefined),
+  script,
+  ...(screens ? { screens } : {}),
 });
 
 export { setFromPack };

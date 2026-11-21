@@ -5,7 +5,7 @@ import { payloadNames } from './payload-names';
 const RLANG_EXTENSION = 'rlang';
 const RLANG_HEADER_ENTRY = SET_FILES.meta;
 
-const REQUIRED_PAYLOAD: readonly string[] = [SET_FILES.dialogue, SET_FILES.font, SET_FILES.fontWidth];
+const REQUIRED_PAYLOAD: readonly string[] = [SET_FILES.dialogue];
 
 const ACCEPTED_PAYLOAD: ReadonlySet<string> = new Set(payloadNames());
 

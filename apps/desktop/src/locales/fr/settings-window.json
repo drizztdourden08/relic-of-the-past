@@ -1,0 +1,16 @@
+{
+  "option.viewport-modes.none.label": "Bandes noires",
+  "option.viewport-modes.none.hint": "Conserve le ratio du jeu et remplit le reste de la fenêtre de bandes noires.",
+  "option.viewport-modes.fit.label": "Ajuster la fenêtre",
+  "option.viewport-modes.fit.hint": "Verrouille la forme de la fenêtre sur le ratio du jeu pendant le redimensionnement, sans bandes.",
+  "option.viewport-modes.fill.label": "Étirer",
+  "option.viewport-modes.fill.hint": "Étire l'image pour remplir toute la fenêtre.",
+  "section.window.title": "Fenêtre",
+  "start-fullscreen.label": "Démarrer en plein écran",
+  "start-fullscreen.description": "Passe automatiquement en plein écran au lancement du jeu",
+  "viewport-constraint.label": "Zone d'affichage",
+  "viewport-constraint.description": "Définit le rapport entre le canevas du jeu et la fenêtre",
+  "pixel-perfect.label": "Pixel parfait",
+  "pixel-perfect.description": "Agrandit l'image par pixels source entiers uniquement, pour que chaque pixel ait exactement la même taille. Supprime le scintillement des clôtures, murs et autres bords droits pendant le défilement, au prix de bordures noires un peu plus larges. Désactive le filtrage linéaire tant qu'il est actif.",
+  "pixel-perfect.hint": "Nécessite la zone d'affichage à bandes noires."
+}

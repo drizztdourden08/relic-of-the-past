@@ -9,8 +9,10 @@ import type { GradientStop } from '@rotp/hud';
 import { NUDGE_FINE, NUDGE_COARSE, NUDGE_KEYS } from './GradientRamp.constants';
 import type { GradientRampProps } from './GradientRamp.type';
 import { clamp01, round2 } from '@app/hud-layout-editing/keyframe-track';
+import { useT } from '@drizztdourden08/brock-react';
 
 const GradientRamp = (props: GradientRampProps) => {
+  const t = useT();
   const { stops, onChange, kind } = props;
   const [selected, setSelected] = useState(0);
   const index = Math.min(selected, stops.length - 1);
@@ -51,17 +53,17 @@ const GradientRamp = (props: GradientRampProps) => {
       <RampTrack stops={stops} kind={kind} index={index} onSelect={setSelected} onCommit={commit} onAddAt={addStop} onNudge={nudge} />
 
       <Flex gap="2xs" align="center" className="hud-ramp__tools">
-        <IconButton variant="ghost" size="sm" label="Add a stop" onClick={() => addStop(0.5)}>+</IconButton>
-        <IconButton variant="ghost" size="sm" label={`Remove stop ${index + 1}`} disabled={stops.length <= 2} onClick={removeSelected}>✕</IconButton>
+        <IconButton variant="ghost" size="sm" label={t('hud-editor:gradient-ramp.label.add-a-stop')} onClick={() => addStop(0.5)}>+</IconButton>
+        <IconButton variant="ghost" size="sm" label={t('hud-editor:gradient-ramp.remove', { n: index + 1 })} disabled={stops.length <= 2} onClick={removeSelected}>✕</IconButton>
       </Flex>
 
       {stop && (
-        <ColorField label={`stop ${index + 1}`} value={stop.color} onChange={(color) => setStop({ color })} />
+        <ColorField label={t('hud-editor:gradient-ramp.stop', { n: index + 1 })} value={stop.color} onChange={(color) => setStop({ color })} />
       )}
       {stop && (
-        <Field size="sm" label="at">
+        <Field size="sm" label={t('hud-editor:gradient-ramp.label.at')}>
           <NumberInput
-            size="sm" aria-label={`Stop ${index + 1} position`}
+            size="sm" aria-label={t('hud-editor:gradient-ramp.position', { n: index + 1 })}
             value={stop.at} min={0} max={1} step={0.05}
             onChange={(at) => setStop({ at: Number.isFinite(at) ? clamp01(at) : 0 })}
           />

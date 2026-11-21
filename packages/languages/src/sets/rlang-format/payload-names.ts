@@ -5,8 +5,8 @@ const payloadNames = (): string[] => [
   SET_FILES.dialogue,
   SET_FILES.text,
   SET_FILES.variables,
-  SET_FILES.font,
-  SET_FILES.fontWidth,
+  SET_FILES.screens,
+  SET_FILES.license,
 ];
 
 export { payloadNames };

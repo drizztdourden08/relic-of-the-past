@@ -1,0 +1,13 @@
+{
+  "section.bugfixes.title": "Poprawki błędów",
+  "section.bugfixes-bundles.title": "Włącz zbiorczo",
+  "section.bugfixes-misc.title": "Poprawki ogólne",
+  "section.bugfixes-gamechanging.title": "Poprawki zmieniające rozgrywkę",
+  "misc-bug-fixes.label": "Wszystkie poprawki ogólne",
+  "misc-bug-fixes.description": "Włącza naraz każdą poprawkę ogólną poniżej. Pojedyncze przełączniki poniżej mają pierwszeństwo.",
+  "game-changing-bug-fixes.label": "Wszystkie poprawki zmieniające rozgrywkę",
+  "game-changing-bug-fixes.description": "Włącza poprawki zmieniające zachowanie gry w sposób ważny dla speedrunnerów. Pojedyncze przełączniki mają pierwszeństwo.",
+  "game-changing-bug-fixes.hint": "Przebiegi porównywane z oryginalną grą powinny zostawić to wyłączone.",
+  "state.on": "Gra używa poprawionego zachowania.",
+  "state.off": "Zachowuje oryginalny błąd."
+}

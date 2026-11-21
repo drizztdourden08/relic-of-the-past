@@ -1,0 +1,13 @@
+{
+  "cheats.label": "Fusk",
+  "dataset.label": "Live-datainspektör",
+  "debug.label": "Spelstatus",
+  "music.label": "Musikfelsökare",
+  "navigation.label": "Plats och navigering",
+  "shadow.drawing.label": "Skuggritning",
+  "shadow.editor.kit.label": "Skuggredigerare",
+  "shadow.editor.kit.requires": "Starta ett spel för att använda skuggredigeraren.",
+  "shadow.editor.label": "Skuggredigerare",
+  "shadow.elements.label": "Skuggelement",
+  "simulator.label": "Simulator"
+}

@@ -1,10 +1,11 @@
 /* @layer renderer-widgets @kind types */
 import type { CheatCategory } from '@app/game';
+import type { Message } from '@drizztdourden08/brock-core/i18n';
 
 type TileSpec = {
   id: string;
-  label: string;
-  name: string;
+  label: Message;
+  name: Message;
   sprite: string;
   category: CheatCategory;
 };
@@ -16,7 +17,7 @@ type RuleTileSpec = TileSpec & {
 
 type Rung = {
   value: number;
-  label: string;
+  label: Message;
 };
 
 type RungTileSpec = TileSpec & {

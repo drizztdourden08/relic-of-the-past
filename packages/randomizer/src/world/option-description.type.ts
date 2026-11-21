@@ -1,4 +1,6 @@
 /* @layer shared-game @kind types */
+import type { Text } from '@drizztdourden08/brock-core/i18n';
+
 interface OptionDetail {
   term: string;
   detail: string;
@@ -6,4 +8,11 @@ interface OptionDetail {
 
 type OptionDescription = string | readonly OptionDetail[];
 
-export type { OptionDescription, OptionDetail };
+interface OptionDetailSource {
+  term: Text;
+  detail: Text;
+}
+
+type OptionDescriptionSource = Text | readonly OptionDetailSource[];
+
+export type { OptionDescription, OptionDescriptionSource, OptionDetail, OptionDetailSource };

@@ -1,18 +1,20 @@
 /* @layer renderer-components @kind component */
 import { Status, Box, Text } from '@drizztdourden08/tessera/primitives';
+import { useT } from '@drizztdourden08/brock-react';
 import type { LockedEntryCardProps } from './LockedEntryCard.type';
 import '@rotp/design';
 
 const LockedEntryCard = (props: LockedEntryCardProps) => {
   const { id, reason } = props;
+  const t = useT();
 
   return (
     <Box className="entry-row entry-row--locked" title={reason}>
       <Text as="span" className="entry-row__caret" aria-hidden="true">·</Text>
       <Text as="span" className="entry-row__id">{`#${String(id).padStart(3, '0')}`}</Text>
-      <Text as="span" className="entry-row__who entry-row__who--unknown">engine scaffolding</Text>
+      <Text as="span" className="entry-row__who entry-row__who--unknown">{t('language-editor:locked.who')}</Text>
       <Text as="span" className="entry-row__slot">
-        <Status tone="warning" className="entry-row__trigger">locked</Status>
+        <Status tone="warning" className="entry-row__trigger">{t('language-editor:locked.badge')}</Status>
       </Text>
       <Text as="span" className="entry-row__size" />
       <Text as="span" className="entry-row__choice" />

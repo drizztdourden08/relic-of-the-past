@@ -1,4 +1,5 @@
 /* @layer shared-game @kind types */
+import type { Message } from '@drizztdourden08/brock-core/i18n';
 import type { EntityKind, EntityRecordMap, ScreenId } from '@rotp/game-data';
 
 type EntityIdOf<K extends EntityKind> = EntityRecordMap[K]['id'];
@@ -25,7 +26,7 @@ interface Recommendation<K extends EntityKind = EntityKind> {
   targetId: EntityIdOf<K> | null;
   current: EntityRecordMap[K] | null;
   proposed: ProposedRecord<K>;
-  reason: string;
+  reason: Message;
   detector: string;
   evidence: readonly Evidence[];
   confidence: Confidence;

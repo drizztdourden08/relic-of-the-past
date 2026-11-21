@@ -1,12 +1,14 @@
 /* @layer renderer-components @kind constants */
-const SCOPE_OPTIONS = [
-  { value: 'changed', label: 'Changed' },
-  { value: 'all', label: 'All' },
+import type { I18n } from '@drizztdourden08/brock-core/i18n';
+
+const scopeOptions = (t: I18n['t']) => [
+  { value: 'changed', label: t('data-manager:profile-detail.randomizer.scope-changed') },
+  { value: 'all', label: t('data-manager:profile-detail.randomizer.scope-all') },
 ];
 
-const SCOPE_TITLES = {
-  changed: 'Options changed from the default',
-  all: 'Every option',
-} as const;
+const scopeTitles = (t: I18n['t']) => ({
+  changed: t('data-manager:profile-detail.randomizer.title-changed'),
+  all: t('data-manager:profile-detail.randomizer.title-all'),
+}) as const;
 
-export { SCOPE_OPTIONS, SCOPE_TITLES };
+export { scopeOptions, scopeTitles };

@@ -7,16 +7,14 @@ import { useTrackAssign } from './behavior/useTrackAssign';
 import { useTrackPreview } from './behavior/useTrackPreview';
 import { usePackExport } from './behavior/usePackExport';
 import { useFileDeletion } from './behavior/useFileDeletion';
-import { usePackImports } from './behavior/usePackImports';
 import { managerStatus } from './behavior/manager-status';
 import type { ActionResult, PackFormat } from './msu.type';
 
 const useMsuManager = (onRefresh: () => void) => {
-  const { packs, loadingPacks, selected, setSelected, refresh, createPack, renamePack } = usePackList(onRefresh);
+  const { packs, loadingPacks, selected, setSelected, refresh, renamePack } = usePackList(onRefresh);
   const { files, trackInfos, manifest, resolved, totalSize, loaded, reload } = usePackContents(selected);
   const format: PackFormat = manifest ? 'layered' : 'classic';
 
-  const [newPackName, setNewPackName] = useState('');
   const [status, setStatus] = useState<ActionResult | null>(null);
   const [openTrack, setOpenTrack] = useState<number | null>(null);
 
@@ -25,7 +23,6 @@ const useMsuManager = (onRefresh: () => void) => {
   const { assign, assigning } = useTrackAssign(shared);
   const { playing, previewError, play, stop, reportStore } = useTrackPreview(selected, resolved);
   const { exporting, exportProgress, runExport } = usePackExport(selected, resolved);
-  const { handleUrlImport, handleFileImport } = usePackImports({ newPackName, setNewPackName, refresh, setSelected });
 
   const report = useCallback(async (action: Promise<ActionResult>): Promise<ActionResult> => {
     const result = await action;
@@ -40,11 +37,6 @@ const useMsuManager = (onRefresh: () => void) => {
   const handleExport = useCallback((target: 'msul' | 'msu1') => {
     void report(runExport(target));
   }, [runExport, report]);
-
-  const handleCreatePack = useCallback(async () => {
-    const result = await report(createPack(newPackName));
-    if (result.success) setNewPackName('');
-  }, [createPack, newPackName, report]);
 
   const handleRenamePack = useCallback((to: string) => {
     if (selected) void report(renamePack(selected, to));
@@ -61,13 +53,12 @@ const useMsuManager = (onRefresh: () => void) => {
   return {
     packs, loadingPacks, selected, setSelected, refresh,
     files, trackInfos, manifest, resolved, totalSize, loadingFiles: !loaded, reload, format,
-    newPackName, setNewPackName,
     rows, unusedFiles, fileOptions, isDeluxe, hasOpuz,
     status, ...managerStatus({ previewError, exportProgress, status }),
     busy: assigning || exporting !== null,
     openTrack, playing, reportStore,
     handleTrackAssign, handleToggleTrack, selectTrack: setOpenTrack, handleExport, handleDeleteFile,
-    handleCreatePack, handleRenamePack, handleUrlImport, handleFileImport,
+    handleRenamePack,
     onPreview: play, onStopPreview: stop,
     exporting,
   };

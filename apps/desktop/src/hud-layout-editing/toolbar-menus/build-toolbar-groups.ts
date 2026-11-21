@@ -19,31 +19,31 @@ import type { MenuNode } from '@drizztdourden08/tessera/composites';
 import type { MenuDeps, ToolbarGroup } from './toolbar-menus.type';
 
 const containerItems = (deps: MenuDeps): MenuNode[] => ([
-  { id: 'row', icon: menuIcon(columnsIcon), label: 'Row', onSelect: () => deps.insert(newContainer('row')) },
-  { id: 'column', icon: menuIcon(rowsIcon), label: 'Column', onSelect: () => deps.insert(newContainer('column')) },
-  { id: 'overlay', icon: menuIcon(layersIcon), label: 'Overlay', onSelect: () => deps.insert(newOverlap()) },
-  { id: 'grid', icon: menuIcon(gridIcon), label: 'Grid', onSelect: () => deps.insert(newGrid()) },
+  { id: 'row', icon: menuIcon(columnsIcon), label: deps.t('hud-editing:toolbar.row'), onSelect: () => deps.insert(newContainer('row')) },
+  { id: 'column', icon: menuIcon(rowsIcon), label: deps.t('hud-editing:toolbar.column'), onSelect: () => deps.insert(newContainer('column')) },
+  { id: 'overlay', icon: menuIcon(layersIcon), label: deps.t('hud-editing:toolbar.overlay'), onSelect: () => deps.insert(newOverlap()) },
+  { id: 'grid', icon: menuIcon(gridIcon), label: deps.t('hud-editing:toolbar.grid'), onSelect: () => deps.insert(newGrid()) },
 ]);
 
 const dynamicsItems = (deps: MenuDeps): MenuNode[] => ([
-  { id: 'text', icon: menuIcon(typeIcon), label: 'Text', onSelect: () => deps.insert(newText()) },
-  { id: 'button', icon: menuIcon(circleDotIcon), label: 'Button', onSelect: () => deps.insert(newButton()) },
-  { id: 'repeat', icon: menuIcon(repeatIcon), label: 'Repeat', onSelect: () => deps.insert(newRepeat()) },
-  { id: 'switch', icon: menuIcon(gitBranchIcon), label: 'Switch', onSelect: () => deps.insert(newSwitch()) },
-  { id: 'countdown', icon: menuIcon(timerIcon), label: 'Countdown', onSelect: () => deps.insert(newCountdown()) },
+  { id: 'text', icon: menuIcon(typeIcon), label: deps.t('hud-editing:toolbar.text'), onSelect: () => deps.insert(newText(deps.t('hud-editing:new.text'))) },
+  { id: 'button', icon: menuIcon(circleDotIcon), label: deps.t('hud-editing:toolbar.button'), onSelect: () => deps.insert(newButton()) },
+  { id: 'repeat', icon: menuIcon(repeatIcon), label: deps.t('hud-editing:toolbar.repeat'), onSelect: () => deps.insert(newRepeat()) },
+  { id: 'switch', icon: menuIcon(gitBranchIcon), label: deps.t('hud-editing:toolbar.switch'), onSelect: () => deps.insert(newSwitch()) },
+  { id: 'countdown', icon: menuIcon(timerIcon), label: deps.t('hud-editing:toolbar.countdown'), onSelect: () => deps.insert(newCountdown()) },
 ]);
 
 const buildToolbarGroups = (deps: MenuDeps): ToolbarGroup[] => [
-  { key: 'container', icon: layoutIcon, label: 'Container', items: containerItems(deps) },
+  { key: 'container', icon: layoutIcon, label: deps.t('hud-editing:toolbar.container'), items: containerItems(deps) },
   {
     key: 'spacer',
     icon: moveHorizontalIcon,
-    label: 'Spacer',
+    label: deps.t('hud-editing:toolbar.spacer'),
     items: [{
-      id: 'spacer', icon: menuIcon(moveHorizontalIcon), label: 'Spacer', onSelect: () => deps.insert(newElement({ type: 'spacer' })),
+      id: 'spacer', icon: menuIcon(moveHorizontalIcon), label: deps.t('hud-editing:toolbar.spacer'), onSelect: () => deps.insert(newElement({ type: 'spacer' })),
     }],
   },
-  { key: 'dynamics', icon: zapIcon, label: 'Dynamics', items: dynamicsItems(deps) },
+  { key: 'dynamics', icon: zapIcon, label: deps.t('hud-editing:toolbar.dynamics'), items: dynamicsItems(deps) },
 ];
 
 export { buildToolbarGroups };

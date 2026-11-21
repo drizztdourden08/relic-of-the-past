@@ -2,6 +2,7 @@
 import { useMemo, useState } from 'react';
 import { Center, EmptyState, Spinner } from '@drizztdourden08/tessera/primitives';
 import { StudioLayout } from '@drizztdourden08/tessera/composites';
+import { useT } from '@drizztdourden08/brock-react';
 import { STUDIO_EDITOR_MIN_WIDTH, StudioPane, StudioPanelContent } from '@app/studio';
 import { useLanguageEditor } from './behavior/useLanguageEditor';
 import { useDialogueView } from './behavior/useDialogueView';
@@ -15,13 +16,14 @@ import { StaleGameNotice } from './sub-components/StaleGameNotice';
 import { LanguageProperties } from './sub-components/studio-frame/LanguageProperties';
 import { sectionToolGroups } from './sub-components/studio-frame/section-tool-groups';
 import { StudioStatus } from './sub-components/studio-frame/StudioStatus';
-import { EDITOR_LABEL, PROPERTIES_PANEL, STUDIO_LABEL, UNREADABLE_SET } from './sub-components/studio-frame/studio-frame.constants';
+import { PROPERTIES_PANEL } from './sub-components/studio-frame/studio-frame.constants';
 import { FindHardcodedDialog } from './sub-components/variables';
 import type { LanguageEditorProps } from './LanguageEditor.type';
 import './LanguageEditor.css';
 
 const LanguageEditor = (props: LanguageEditorProps) => {
   const { id, readOnly = false, origin = null } = props;
+  const t = useT();
   const editor = useLanguageEditor(id, readOnly);
   const { set, loading, error, dirty, saving, saveError, issues, variables, terms, saveNow } = editor;
 
@@ -35,7 +37,7 @@ const LanguageEditor = (props: LanguageEditorProps) => {
   const actions = useStudioActions({ readOnly, dirty, saving, exporting, onSave: saveNow, onExport: exportSet });
 
   if (loading) return <Center><Spinner /></Center>;
-  if (error || !set) return <EmptyState message={error ?? UNREADABLE_SET} />;
+  if (error || !set) return <EmptyState message={error ?? t('language-editor:studio.unreadable')} />;
 
   const properties = (
     <LanguageProperties
@@ -49,17 +51,17 @@ const LanguageEditor = (props: LanguageEditorProps) => {
 
   return (
     <StudioPane
-      label={STUDIO_LABEL}
+      label={t('language-editor:studio.label')}
       actions={actions}
       status={<StudioStatus exportStatus={exportStatus} saveError={saveError} readOnly={readOnly} saving={saving} dirty={dirty} />}
       banner={<><StaleGameNotice />{origin}</>}
       className="language-studio"
     >
       <StudioLayout
-        editorLabel={EDITOR_LABEL}
+        editorLabel={t('language-editor:studio.editor-label')}
         compactToolbar
         editorMinWidth={STUDIO_EDITOR_MIN_WIDTH}
-        toolbar={sectionToolGroups({
+        toolbar={sectionToolGroups(t, {
           tabs,
           tab,
           query: find.query,
@@ -68,7 +70,7 @@ const LanguageEditor = (props: LanguageEditorProps) => {
           onQueryChange: find.setQuery,
           onFilterChange: find.setFilter,
         })}
-        end={{ ...PROPERTIES_PANEL, content: <StudioPanelContent>{properties}</StudioPanelContent> }}
+        end={{ ...PROPERTIES_PANEL, title: t('language-editor:studio.properties'), content: <StudioPanelContent>{properties}</StudioPanelContent> }}
       >
         <EditorPanes tab={tab} readOnly={readOnly} editor={editor} dialogue={tabProps} variablesTab={variablesTab} text={text} />
       </StudioLayout>

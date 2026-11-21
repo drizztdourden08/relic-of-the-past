@@ -1,14 +1,27 @@
 /* @layer renderer-components @kind logic */
+import type { I18n } from '@drizztdourden08/brock-core/i18n';
 import type { FactsPanelFact } from '@drizztdourden08/tessera/composites';
-import { DEFAULT_LANGUAGE_LABEL, NO_MSU_LABEL, PRESET_OPTIONS } from '../ProfileCreateWizard.constants';
+import { languageLabel } from '@app/views/DataManager/sub-components/language-label';
+import { shownLanguage } from '@app/views/DataManager/sub-components/shown-language';
+import { presetOptions } from '../ProfileCreateWizard.constants';
+import type { ProfileLanguage } from '@app/views/DataManager/sub-components/profile-language.type';
 import type { ProfileWizardValues } from '../ProfileCreateWizard.type';
 
-const profileRows = ({ name, rom, preset, language, msuPack }: ProfileWizardValues): FactsPanelFact[] => [
-  { label: 'Profile Name', value: name.trim() },
-  { label: 'ROM', value: rom, title: rom },
-  { label: 'Preset', value: PRESET_OPTIONS.find((option) => option.value === preset)?.label ?? preset },
-  { label: 'Language', value: language || DEFAULT_LANGUAGE_LABEL },
-  { label: 'MSU Pack', value: msuPack || NO_MSU_LABEL },
+const languageValue = (language: string | null | undefined, languages: ReadonlyArray<ProfileLanguage>, t: I18n['t']): string => {
+  const code = shownLanguage(language);
+  return languageLabel(code, t, languages.find((entry) => entry.code === code)?.name);
+};
+
+const profileRows = (
+  { name, rom, preset, language, msuPack }: ProfileWizardValues,
+  languages: ReadonlyArray<ProfileLanguage>,
+  t: I18n['t'],
+): FactsPanelFact[] => [
+  { label: t('wizards:profile.rows.name'), value: name.trim() },
+  { label: t('wizards:profile.rows.rom'), value: rom, title: rom },
+  { label: t('wizards:profile.rows.preset'), value: presetOptions(t).find((option) => option.value === preset)?.label ?? preset },
+  { label: t('wizards:profile.rows.language'), value: languageValue(language, languages, t) },
+  { label: t('wizards:profile.rows.msu'), value: msuPack || t('wizards:profile.none') },
 ];
 
 export { profileRows };

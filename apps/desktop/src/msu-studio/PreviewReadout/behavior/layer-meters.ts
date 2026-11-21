@@ -1,4 +1,5 @@
 /* @layer renderer-components @kind logic */
+import type { I18n } from '@drizztdourden08/brock-core/i18n';
 import type { LayerReport } from '@rotp/msu';
 import { clock } from '@rotp/design/packs';
 import { voiceCaptions } from './voice-captions';
@@ -8,22 +9,31 @@ import type { FadeMeter, LayerMeterRow, LayerMeters, ReportedVoice } from '../Pr
 
 const clamp01 = (value: number): number => Math.max(0, Math.min(1, value));
 
-const fadeMeter = (fade: ReportedVoice['fade']): FadeMeter | null => {
+const fadeMeter = (t: I18n['t'], fade: ReportedVoice['fade']): FadeMeter | null => {
   if (fade === null) return null;
   const { kind, remainingSeconds, totalSeconds } = fade;
   return {
     kind,
     fill: totalSeconds > 0 ? clamp01(1 - remainingSeconds / totalSeconds) : 1,
-    label: `${kind === 'in' ? 'fade in' : 'fade out'} ${remainingSeconds.toFixed(1)}s`,
+    label: t(kind === 'in' ? 'msu-studio:meter.fade-in' : 'msu-studio:meter.fade-out', {
+      seconds: remainingSeconds.toFixed(1),
+    }),
   };
 };
 
-const loopNote = (loopSeconds: number | null, durationSeconds: number): string =>
-  loopSeconds !== null && loopSeconds > 0 && loopSeconds < durationSeconds
-    ? ` · repeats from ${clock(loopSeconds)}`
-    : '';
+const progressLabel = (t: I18n['t'], voice: ReportedVoice): string => {
+  const { positionSeconds, durationSeconds, loopSeconds } = voice;
+  const position = clock(positionSeconds);
+  const duration = clock(durationSeconds);
+  return loopSeconds !== null && loopSeconds > 0 && loopSeconds < durationSeconds
+    ? t('msu-studio:meter.progress-loop', { position, duration, loop: clock(loopSeconds) })
+    : t('msu-studio:meter.progress', { position, duration });
+};
 
-const voiceRow = (voice: ReportedVoice, index: number, caption: string, title: string | null): LayerMeterRow => {
+const voiceRow = (
+  t: I18n['t'], voice: ReportedVoice, index: number, name: { caption: string; title: string | null },
+): LayerMeterRow => {
+  const { caption, title } = name;
   const { positionSeconds, durationSeconds, loopSeconds } = voice;
   const measured = durationSeconds > 0;
   const intro = loopSeconds !== null && loopSeconds > 0 && loopSeconds < durationSeconds;
@@ -33,55 +43,53 @@ const voiceRow = (voice: ReportedVoice, index: number, caption: string, title: s
     caption,
     title,
     fill: measured ? clamp01(positionSeconds / durationSeconds) : null,
-    label: measured
-      ? `${clock(positionSeconds)} / ${clock(durationSeconds)}${loopNote(loopSeconds, durationSeconds)}`
-      : 'playing',
-    fade: fadeMeter(voice.fade),
+    label: measured ? progressLabel(t, voice) : t('msu-studio:meter.playing'),
+    fade: fadeMeter(t, voice.fade),
     introFill: measured && intro ? clamp01(loopSeconds / durationSeconds) : null,
   };
 };
 
-const silentRow = (report: LayerReport): LayerMeterRow => ({
+const silentRow = (t: I18n['t'], report: LayerReport): LayerMeterRow => ({
   id: 'voice-silent',
   kind: 'voice',
   caption: report.fileName === null ? '-' : shortName(report.fileName),
   title: report.fileName,
   fill: null,
-  label: report.fileName === null ? 'idle' : 'ended',
+  label: report.fileName === null ? t('msu-studio:meter.idle') : t('msu-studio:meter.ended'),
   fade: null,
 });
 
-const voiceRows = (report: LayerReport, hasGap: boolean): LayerMeterRow[] => {
-  const captions = voiceCaptions(report.voices);
+const voiceRows = (t: I18n['t'], report: LayerReport, hasGap: boolean): LayerMeterRow[] => {
+  const captions = voiceCaptions(t, report.voices);
   if (report.voices.length > 0) {
     return report.voices.map((voice, index) => {
       const label = captions[index];
       if (label === undefined) throw new Error('voiceCaptions returned fewer captions than voices');
-      return voiceRow(voice, index, label.caption, label.title);
+      return voiceRow(t, voice, index, label);
     });
   }
-  return hasGap ? [] : [silentRow(report)];
+  return hasGap ? [] : [silentRow(t, report)];
 };
 
-const nextRow = (report: LayerReport, hasGap: boolean): LayerMeterRow | null => {
+const nextRow = (t: I18n['t'], report: LayerReport, hasGap: boolean): LayerMeterRow | null => {
   const { nextEventInSeconds, waitSeconds, sounding } = report;
-  const row = { id: 'next', kind: 'next' as const, caption: 'next', title: null, fade: null };
+  const row = { id: 'next', kind: 'next' as const, caption: t('msu-studio:meter.next'), title: null, fade: null };
 
   if (!hasGap) return null;
   if (nextEventInSeconds !== null) {
     return {
       ...row,
       fill: waitSeconds !== null && waitSeconds > 0 ? clamp01(1 - nextEventInSeconds / waitSeconds) : null,
-      label: `next in ${nextEventInSeconds.toFixed(1)}s`,
+      label: t('msu-studio:meter.next-in', { seconds: nextEventInSeconds.toFixed(1) }),
     };
   }
-  if (sounding) return { ...row, fill: null, label: 'waiting for this sound to finish' };
-  return { ...row, fill: null, label: 'idle' };
+  if (sounding) return { ...row, fill: null, label: t('msu-studio:meter.waiting') };
+  return { ...row, fill: null, label: t('msu-studio:meter.idle') };
 };
 
-const layerMeters = (report: LayerReport): LayerMeters => {
+const layerMeters = (t: I18n['t'], report: LayerReport): LayerMeters => {
   const hasGap = GAP_MODES.includes(report.modeKind);
-  return { voices: voiceRows(report, hasGap), next: nextRow(report, hasGap) };
+  return { voices: voiceRows(t, report, hasGap), next: nextRow(t, report, hasGap) };
 };
 
 export { layerMeters };

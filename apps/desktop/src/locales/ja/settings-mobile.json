@@ -1,0 +1,9 @@
+{
+  "section.mobile.title": "表示",
+  "render-into-notch.label": "カメラの切り欠きの下にも描画",
+  "render-into-notch.description": "オン：ゲームとUIが画面全体を使い、カメラの切り欠きの下まで広がります。オフ：すべて使用可能な画面領域の内側に収めます。",
+  "section.mobile-behavior.title": "動作",
+  "pause-when-away.label": "アプリを離れたら一時停止",
+  "pause-when-away.description": "他のアプリに切り替えたり画面を消したりすると、ゲームと音を一時停止します。",
+  "screen.title": "モバイル"
+}

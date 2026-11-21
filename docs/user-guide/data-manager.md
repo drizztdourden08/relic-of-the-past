@@ -17,6 +17,10 @@ Import a ROM from a file or URL, view its info such as filename, size, hash, and
 [asset extraction](../getting-started/importing-a-rom.md), and delete ROMs. Extraction status is shown
 per ROM.
 
+Importing a ROM also adds its own language to the Languages tab, so a profile on the default language
+shows the text through that set. A fan translation ROM is refused here: it is a language, imported from
+**Languages > New language > Fan-patched ROM**.
+
 ### Sprites
 
 Per-ROM sprite extraction and management. Extract and cache sprite PNGs, review individual sprites, and
@@ -26,6 +30,34 @@ inspect the item-to-sprite mapping. See [Sprite Tools](sprite-tools.md).
 
 Extract translations from a ROM, a file, or a URL and manage language packs such as English and French.
 The selected language drives in-game dialogue.
+
+#### Importing a fan translation
+
+A fan translation is a patch applied to one of the official releases. To bring one in, open
+**Import patched ROM** in the Languages tab and fill in:
+
+- **Name**: the name of the new set. Its id is made from the name, and a name already in use is refused.
+- **Based on**: the release the patch was made for. US English is the default.
+- **Credits**: optional, who made the translation.
+- **ROM file**: the patched ROM, as `.sfc`, `.smc` or a `.zip` holding one. The ROM is read, never saved.
+
+The import reads the dialogue, the font pictures, the letter widths, the dictionary, the menu and caption
+text and the credits one by one. A report then lists each part as Ok, Recovered (found at a new place
+or rebuilt) or Failed, with the reason. The set is saved when the dialogue and the font are read; otherwise
+nothing is saved and the report says what went wrong.
+
+Letters the patch adds to the font are kept. The import compares each new picture with the fonts of the
+releases in your ROM library. A letter with an accent, such as é, ñ or ç, is read as its plain letter plus the
+mark; marks are learned from the release fonts that have them, and a tilde or a missing mark is told by its
+shape. The upside down ¡ and ¿ are found from ! and ?. The report says how each new letter was found.
+
+When the import cannot tell which letter a new picture is, it names it with a placeholder such as `[Glyph4F]`
+and lists it in the report. If more than a quarter of the letters the text uses are placeholders, the report
+says that most letters still need naming. Open the set in the Language Studio and use the **Name the letters**
+tab: it shows each unnamed picture from the set's own font, how many times it is used, and a field for its
+letter. Saving puts the letters into the dialogue, the names and the other texts of the set. Keeping the
+original release in your ROM library helps the import recognise moved or redrawn parts, but it is not
+required.
 
 ### MSU Studio
 

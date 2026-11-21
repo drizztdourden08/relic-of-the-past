@@ -1,5 +1,6 @@
 /* @layer bridge-wasm @kind constants */
 const FALLBACK_CODE = 'us';
+const JAPANESE_CODE = 'ja';
 const INI_PATH = '/zelda3.ini';
 
-export { FALLBACK_CODE, INI_PATH };
+export { FALLBACK_CODE, INI_PATH, JAPANESE_CODE };

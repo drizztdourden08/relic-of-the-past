@@ -1,0 +1,8 @@
+{
+  "section.camera.title": "カメラ",
+  "camera-lock-to-viewport.label": "カメラを画面に固定",
+  "camera-lock-to-viewport.description": "視点をエリアの境界に固定し、外側に黒い余白が出ないようにします。オフでは元のカメラのままです。",
+  "camera-lock-to-viewport.hint": "表示の拡張描画が必要です。",
+  "smooth-transitions.label": "なめらかな切り替え",
+  "smooth-transitions.description": "エリアの継ぎ目でのスクロールをなめらかにします。「カメラを画面に固定」が必要です。"
+}

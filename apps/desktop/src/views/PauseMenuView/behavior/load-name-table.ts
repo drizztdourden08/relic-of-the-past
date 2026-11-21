@@ -1,4 +1,5 @@
 /* @layer renderer-hud @kind logic */
+import { GAME_ROM_LANGUAGE } from '@rotp/asset-extraction';
 import type { NameTable } from '@rotp/languages';
 import { listProfiles } from '@app/storage/profile-store';
 import { getLanguageSet } from '@app/storage/languages-store';
@@ -10,7 +11,7 @@ const readLanguageId = (profileId: string): Promise<string | null> => {
   const cached = languageIdByProfile.get(profileId);
   if (cached) return cached;
   const pending = listProfiles()
-    .then((profiles) => profiles.find((profile) => profile.id === profileId)?.language ?? null)
+    .then((profiles) => profiles.find((profile) => profile.id === profileId)?.language ?? GAME_ROM_LANGUAGE)
     .catch(() => null);
   languageIdByProfile.set(profileId, pending);
   return pending;

@@ -1,4 +1,5 @@
 /* @layer renderer-widgets @kind component */
+import { useText } from '@drizztdourden08/brock-react';
 import { Box, Checkbox, Image, Text } from '@drizztdourden08/tessera/primitives';
 import { spriteUrlOf } from '@rotp/game-data';
 import { SpritePlaceholder } from './SpritePlaceholder';
@@ -11,7 +12,10 @@ const stateOf = (disabled: boolean, checked: boolean): TileState => {
 
 const RuleTile = (props: RuleTileProps) => {
   const { spec, checked, reason, onChange } = props;
-  const { label, name, sprite } = spec;
+  const { sprite } = spec;
+  const text = useText();
+  const label = text(spec.label);
+  const name = text(spec.name);
   const disabled = reason !== undefined;
   const title = reason ?? label;
 

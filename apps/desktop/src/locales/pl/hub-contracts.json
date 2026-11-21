@@ -1,0 +1,9 @@
+{
+  "copy-refusal.known": "Jego licencja, {id}, nie zezwala na kopie.",
+  "copy-refusal.unknown": "Jego licencja nie jest jedną z tych, które zna aplikacja, więc nie zezwala na kopie.",
+  "license.ccBy": "Każdy może to udostępniać i zmieniać, podając twoje imię.",
+  "license.ccBySa": "To samo, a zmiany zachowują tę licencję.",
+  "license.ccByNc": "Podanie twojego imienia i zakaz sprzedaży.",
+  "license.cc0": "Żadne prawa nie są zastrzeżone.",
+  "license.allRightsReserved": "Gracze mogą to zainstalować, nic więcej."
+}

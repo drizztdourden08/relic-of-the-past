@@ -1,9 +1,11 @@
 /* @layer renderer-widgets @kind component */
+import { useT } from '@drizztdourden08/brock-react';
 import { useState, useEffect, useRef } from 'react';
 import { Button, Icon } from '@drizztdourden08/tessera/primitives';
 import { wasmGetViewportInfo } from '../../../game';
 
 const TileRecorderBtn = ({ attrGrid, overworldScreenIndex }: { attrGrid: number[][] | null; overworldScreenIndex: number }) => {
+  const t = useT();
   const [recording, setRecording] = useState(false);
   const [tiles, setTiles] = useState<Array<{ row: number; col: number; attr: number }>>([]);
   const lastTile = useRef<string>('');
@@ -44,11 +46,11 @@ const TileRecorderBtn = ({ attrGrid, overworldScreenIndex }: { attrGrid: number[
   return (
     <>
       <Button variant="secondary" size="xs" active={recording} icon={<Icon name={recording ? 'square' : 'circle-dot'} />} onClick={toggle} disabled={!attrGrid}>
-        Rec
+        {t('views-navigation:recorder.rec')}
       </Button>
       {tiles.length > 0 && !recording && (
-        <Button variant="secondary" size="xs" icon={<Icon name="copy" />} onClick={() => navigator.clipboard.writeText(tiles.map(t => `[${t.row},${t.col}] 0x${t.attr.toString(16).padStart(2, '0')}`).join('\n'))}>
-          Tiles
+        <Button variant="secondary" size="xs" icon={<Icon name="copy" />} onClick={() => navigator.clipboard.writeText(tiles.map(tile => `[${tile.row},${tile.col}] 0x${tile.attr.toString(16).padStart(2, '0')}`).join('\n'))}>
+          {t('views-navigation:recorder.tiles')}
         </Button>
       )}
     </>

@@ -1,4 +1,5 @@
 /* @layer renderer-app @kind constants */
+import { msg } from '@drizztdourden08/brock-core/i18n';
 import type { RatioKeys } from '../ratio-patch.type';
 
 const ASPECT_OPTIONS = [
@@ -6,7 +7,7 @@ const ASPECT_OPTIONS = [
   { value: '3:2', label: '3:2' },
   { value: '16:9', label: '16:9' },
   { value: '16:10', label: '16:10' },
-  { value: 'custom', label: 'Custom' },
+  { value: 'custom', label: msg('settings-controls:display.aspect.custom') },
 ];
 
 const HUD_RATIO_KEYS: RatioKeys = { ratio: 'hudRatio', w: 'customHudAspectW', h: 'customHudAspectH' };

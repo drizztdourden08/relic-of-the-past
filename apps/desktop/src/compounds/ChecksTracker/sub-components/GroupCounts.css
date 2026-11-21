@@ -3,6 +3,7 @@
 .tracker-group__counts {
   display: inline-flex;
   align-items: baseline;
+  gap: var(--space-sm);
   white-space: nowrap;
   font-variant-numeric: tabular-nums;
 }

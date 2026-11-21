@@ -1,4 +1,5 @@
 /* @layer renderer-widgets @kind component */
+import { useT } from '@drizztdourden08/brock-react';
 import { Box, Button, Text } from '@drizztdourden08/tessera/primitives';
 import { DisabledOverlay } from '@drizztdourden08/tessera/composites';
 import { getSpritesBase } from '@rotp/game-data';
@@ -17,6 +18,7 @@ import './PlayerTab.css';
 
 const PlayerTab = ({ gates }: CheatTabProps) => {
   const { ref, scale } = useConsoleScale(PLAYER_TILES_WIDE);
+  const t = useT();
   const spritesBase = getSpritesBase();
   const healthCurrent = useGameUIStore((s) => s.hud.healthCurrent);
   const healthCapacity = useGameUIStore((s) => s.hud.healthCapacity);
@@ -32,11 +34,11 @@ const PlayerTab = ({ gates }: CheatTabProps) => {
             <Box className="cheats-player__block">
               <LifeEditor scale={scale} spritesBase={spritesBase} />
               <Box className="cheats-player__life-side">
-                <Text className="cheats-player__readout" title="Health / containers, in hearts">
+                <Text className="cheats-player__readout" title={t('views-cheats:player.healthTitle')}>
                   {healthCurrent / HEART_UNITS} / {healthCapacity / HEART_UNITS}
                 </Text>
-                <Button variant="danger" size="sm" title="Set health to zero" onClick={() => cheatSetHealth(0)}>
-                  Kill
+                <Button variant="danger" size="sm" title={t('views-cheats:player.killTitle')} onClick={() => cheatSetHealth(0)}>
+                  {t('views-cheats:player.kill')}
                 </Button>
               </Box>
             </Box>

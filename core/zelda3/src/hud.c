@@ -1012,6 +1012,7 @@ void Hud_DrawYButtonItems() {  // 8de3d9
   }
   dst[HUDXY(x + 2, 5)] = 0x246E;
   dst[HUDXY(x + 3, 5)] = 0x246F;
+  GameHook_PauseBoxHeader(dst, kPauseHeader_Items, x, 5);
 
   for (int i = 0; i < kHudItemCount; i++) {
     int j = hud_inventory_order[i];
@@ -1030,10 +1031,12 @@ void Hud_DrawAbilityBox() {  // 8de6b6
     0x2cf5, 0x2cf5, 0x2cf5, 0x2cf5, 0x2cf5, 0x2cf5, 0x2d62, 0x2d66, 0x2d58, 0x2d5c,
     0x2cf5, 0x2cf5, 0x2cf5, 0x207f, 0x207f, 0x2c01, 0x2c18, 0x2c28, 0x207f, 0x207f,
   };
+#define kHudAbilityText LANG_PICK(uint16, kLangTbl_HudAbility, kHudAbilityText)
   static const uint16 kHudGlovesText[20] = {
     0x2cf5, 0x2cf5, 0x2cf5, 0x2cf5, 0x2cf5, 0x2d5b, 0x2d58, 0x2d55, 0x2d63, 0x2d28,
     0x2cf5, 0x2cf5, 0x2cf5, 0x2cf5, 0x2cf5, 0x2d5b, 0x2d58, 0x2d55, 0x2d63, 0x2d29,
   };
+#define kHudGlovesText LANG_PICK(uint16, kLangTbl_HudGloves, kHudGlovesText)
   uint16 *dst = uvram_screen.row[0].col;
   int x = kNewStyleInventory ? 0 : 1;
 
@@ -1054,6 +1057,7 @@ void Hud_DrawAbilityBox() {  // 8de6b6
   // DO text
   dst[HUDXY(x + 2, 21)] = 0x2482;
   dst[HUDXY(x + 3, 21)] = 0x2483;
+  GameHook_PauseBoxHeader(dst, kPauseHeader_Ability, x, 21);
 
   Hud_DrawItem(dst + HUDXY(8, 27), &kHudItemGloves[link_item_gloves]);
   Hud_DrawItem(dst + HUDXY(4, 27), &kHudItemBoots[link_item_boots]);
@@ -1096,6 +1100,7 @@ void Hud_DrawProgressIcons_Pendants() {  // 8de9d3
   };
   uint16 *dst = uvram_screen.row[0].col + (kNewStyleInventory ? HUDXY(22, 11) : HUDXY(21, 11));
   Hud_DrawNxN(dst, kProgressIconPendantsBg, 10, 9);
+  GameHook_PauseProgressHeader(dst, false);
   Hud_DrawItem(dst + HUDXY(4, 3), &kHudPendants0[(link_which_pendants >> 0) & 1]);
   Hud_DrawItem(dst + HUDXY(2, 6), &kHudPendants1[(link_which_pendants >> 1) & 1]);
   Hud_DrawItem(dst + HUDXY(6, 6), &kHudPendants2[(link_which_pendants >> 2) & 1]);
@@ -1116,6 +1121,7 @@ void Hud_DrawProgressIcons_Crystals() {  // 8dea62
 
   uint16 *dst = uvram_screen.row[0].col + (kNewStyleInventory ? HUDXY(22, 11) : HUDXY(21, 11));
   Hud_DrawNxN(dst, kProgressIconCrystalsBg, 10, 9);
+  GameHook_PauseProgressHeader(dst, true);
 
   uint8 f = link_has_crystals;
   if (f & 1) {
@@ -1159,23 +1165,28 @@ void Hud_DrawSelectedYButtonItem() {  // 8deb3a
     0x24f5, 0x24f5, 0x24f5, 0x24f5, 0x24f5, 0x24f5, 0x24f5, 0x24f5, 0x2551, 0x2554, 0x2554, 0x24f5, 0x24f5, 0x24f5, 0x24f5, 0x24f5,
     0x24f5, 0x24f5, 0x24f5, 0x24f5, 0x24f5, 0x24f5, 0x24f5, 0x24f5, 0x2556, 0x255e, 0x255e, 0x2553, 0x24f5, 0x2551, 0x2554, 0x2554,
   };
+#define kHudBottlesItemText LANG_PICK(uint16, kLangTbl_HudBottles, kHudBottlesItemText)
   static const uint16 kHudMushroomItemText[16] = {
     0x255c, 0x2550, 0x2556, 0x2558, 0x2552, 0x24f5, 0x24f5, 0x24f5,
     0x24f5, 0x255f, 0x255e, 0x2566, 0x2553, 0x2554, 0x2561, 0x24f5,
   };
+#define kHudMushroomItemText LANG_PICK(uint16, kLangTbl_HudMushroom, kHudMushroomItemText)
   static const uint16 kHudFluteItemText[32] = {
     0x24f5, 0x24f5, 0x24f5, 0x24f5, 0x24f5, 0x24f5, 0x24f5, 0x24f5, 0x2555, 0x255b, 0x2564, 0x2563, 0x2554, 0x24f5, 0x24f5, 0x24f5,
     0x24f5, 0x24f5, 0x24f5, 0x24f5, 0x24f5, 0x24f5, 0x24f5, 0x24f5, 0x2555, 0x255b, 0x2564, 0x2563, 0x2554, 0x24f5, 0x24f5, 0x24f5
   };
+#define kHudFluteItemText LANG_PICK(uint16, kLangTbl_HudFlute, kHudFluteItemText)
   static const uint16 kHudMirrorItemText[16] = {
     0x255c, 0x2550, 0x2556, 0x2558, 0x2552, 0x24f5, 0x24f5, 0x24f5,
     0x24f5, 0x24f5, 0x255c, 0x2558, 0x2561, 0x2561, 0x255e, 0x2561
   };
+#define kHudMirrorItemText LANG_PICK(uint16, kLangTbl_HudMirror, kHudMirrorItemText)
   static const uint16 kHudBowItemText[48] = {
     0x24f5, 0x24f5, 0x24f5, 0x24f5, 0x24f5, 0x24f5, 0x24f5, 0x24f5, 0x256b, 0x256c, 0x256e, 0x256f, 0x257c, 0x257d, 0x257e, 0x257f,
     0x24f5, 0x24f5, 0x24f5, 0x24f5, 0x24f5, 0x24f5, 0x24f5, 0x24f5, 0x256b, 0x256c, 0x24f5, 0x24f5, 0x24f5, 0x24f5, 0x24f5, 0x24f5,
     0x256b, 0x256c, 0x24f5, 0x256e, 0x256f, 0x24f5, 0x24f5, 0x24f5, 0x2578, 0x2579, 0x257a, 0x257b, 0x257c, 0x257d, 0x257e, 0x257f,
   };
+#define kHudBowItemText LANG_PICK(uint16, kLangTbl_HudBow, kHudBowItemText)
   static const uint16 kHudItemText[320] = {
     0x24f5, 0x24f5, 0x24f5, 0x24f5, 0x24f5, 0x24f5, 0x24f5, 0x24f5, 0x256b, 0x256c, 0x24f5, 0x24f5, 0x24f5, 0x24f5, 0x24f5, 0x24f5,
     0x24f5, 0x24f5, 0x24f5, 0x24f5, 0x24f5, 0x24f5, 0x24f5, 0x24f5, 0x2570, 0x2571, 0x2572, 0x2573, 0x2574, 0x2575, 0x2576, 0x2577,
@@ -1199,6 +1210,7 @@ void Hud_DrawSelectedYButtonItem() {  // 8deb3a
     0x255c, 0x2550, 0x2556, 0x2558, 0x2552, 0x24f5, 0x24f5, 0x24f5, 0x24f5, 0x24f5, 0x24f5, 0x2552, 0x2550, 0x255f, 0x2554, 0x24f5,
     0x24f5, 0x24f5, 0x24f5, 0x24f5, 0x24f5, 0x24f5, 0x24f5, 0x24f5, 0x24f5, 0x24f5, 0x24f5, 0x24f5, 0x24f5, 0x24f5, 0x24f5, 0x24f5,
   };
+#define kHudItemText LANG_PICK(uint16, kLangTbl_HudItem, kHudItemText)
 
 #define L(x) (x == ' ' ? 0x24f5 : 0x2550 + x - 'A')
   const uint16 kNotAssignedItemText[16] = {
@@ -1206,6 +1218,7 @@ void Hud_DrawSelectedYButtonItem() {  // 8deb3a
     L('A'), L('S'), L('S'), L('I'), L('G'), L('N'), L('E'), L('D'),
   };
 #undef L
+#define kNotAssignedItemText LANG_PICK(uint16, kLangTbl_HudNotAssigned, kNotAssignedItemText)
 
   uint16 *dst_org = uvram_screen.row[0].col;
   uint16 *dst_box = dst_org + (kNewStyleInventory ? 1 : 0);
@@ -1259,6 +1272,7 @@ void Hud_DrawEquipmentBox() {  // 8ded29
     0x2479, 0x247a, 0x247b, 0x247c, 0x248c, 0x24f5, 0x24f5, 0x24f5,
     0x2469, 0x246a, 0x246b, 0x246c, 0x246d, 0x246e, 0x246f, 0x24f5,
   };
+#define kHudEquipmentDungeonItemText LANG_PICK(uint16, kLangTbl_HudEquipDungeon, kHudEquipmentDungeonItemText)
   memcpy(dst + HUDXY(22, 22), &kHudEquipmentDungeonItemText[0], 8 * sizeof(uint16));
   memcpy(dst + HUDXY(22, 26), &kHudEquipmentDungeonItemText[8], 8 * sizeof(uint16));
 
@@ -1495,7 +1509,7 @@ void Hud_Rebuild() {  // 8dfa70
     0x207f, 0x207f, 0x207f, 0x207f, 0x207f, 0x207f, 0x207f, 0x207f, 0x207f, 0x207f, 0x207f, 0x207f,
     0x207f, 0x207f, 0x207f, 0x207f, 0x207f, 0x207f, 0x207f, 0x207f, 0x207f, 0x207f, 0x207f, 0x207f,
   };
-  DrawHudComponents(&hud_tile_indices_buffer[HUDXY(20, 0)], kHudTilemapRightPart, 12, 5);
+  DrawHudComponents(&hud_tile_indices_buffer[HUDXY(20, 0)], GameHook_HudRightPart(kHudTilemapRightPart), 12, 5);
 
 
   Hud_Update_Hearts();

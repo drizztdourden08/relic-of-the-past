@@ -1,0 +1,8 @@
+{
+  "section.camera.title": "Kamera",
+  "camera-lock-to-viewport.label": "Kamera an Ansicht binden",
+  "camera-lock-to-viewport.description": "Fixiert die Ansicht an der Gebietsgrenze, sodass außerhalb kein schwarzer Bereich erscheint. Aus behält die Originalkamera.",
+  "camera-lock-to-viewport.hint": "Benötigt Erweitertes Rendering unter Anzeige.",
+  "smooth-transitions.label": "Weiche Übergänge",
+  "smooth-transitions.description": "Glättet das Schwenken über Gebietsnähte. Benötigt Kamera an Ansicht binden."
+}

@@ -1,0 +1,15 @@
+{
+  "view.label": "Visualização",
+  "view.list.label": "Lista",
+  "view.list.title": "Linhas compactas",
+  "view.detailed.label": "Detalhada",
+  "view.detailed.title": "Linhas com itens",
+  "view.visual.label": "Cartões",
+  "view.visual.title": "Cartões de itens",
+  "pin.label": "Fixar cabeçalho",
+  "pin.description": "Mantém o resumo e os filtros no lugar",
+  "notify.label": "Notificações",
+  "notify.description": "Um cartão sobre o jogo a cada check ou evento concluído",
+  "closed.label": "Quando fechado",
+  "closed.description": "Continuar notificando com este rastreador fechado"
+}

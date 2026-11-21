@@ -14,7 +14,7 @@ A profile is a self-contained setup for the game. Each one keeps its own:
 1. Open the title-bar menu, then **Data**, then **Profiles**.
 2. Choose **Create Profile** and give it a name.
 3. Pick a ROM (import one first if you haven't).
-4. Choose a language.
+4. Choose a language. The ROM's own language, such as English (US), is selected at first; it is added to the Languages tab when the ROM is imported.
 
 ## Using a different profile
 

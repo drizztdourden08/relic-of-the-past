@@ -1,4 +1,5 @@
 /* @layer shared-game @kind types */
+import type { Text } from '@drizztdourden08/brock-core/i18n';
 import type { OptionDetail } from './option-description.type';
 
 type OptionKind = 'choice' | 'range' | 'toggle' | 'text';
@@ -9,7 +10,7 @@ type OptionValue = string | number | boolean;
 
 interface OptionChoice {
   value: string;
-  label: string;
+  label: Text;
   sourceValue: number | string;
 }
 
@@ -32,12 +33,12 @@ type OptionGroupId =
 
 interface OptionGroup {
   id: OptionGroupId;
-  label: string;
+  label: Text;
 }
 
 interface OptionDef {
   key: string;
-  displayName: string;
+  displayName: Text;
   group: OptionGroupId;
   kind: OptionKind;
   choices?: readonly OptionChoice[];

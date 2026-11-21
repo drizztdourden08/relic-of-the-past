@@ -1,43 +1,48 @@
 /* @layer renderer-components @kind component */
+import { useT } from '@drizztdourden08/brock-react';
 import { Field, Grid, SegmentedControl, Select, Stack, TextInput } from '@drizztdourden08/tessera/primitives';
-import { DEFAULT_LANGUAGE_LABEL, NO_MSU_LABEL, PRESET_OPTIONS } from '../../ProfileCreateWizard.constants';
+import { languageOptions } from '@app/views/DataManager/sub-components/language-options';
+import { shownLanguage } from '@app/views/DataManager/sub-components/shown-language';
+import { presetOptions } from '../../ProfileCreateWizard.constants';
 import type { ProfileStepProps } from './ProfileStep.type';
 
-const ProfileStep = ({ values, update, readyRoms, languages, msuPacks }: ProfileStepProps) => (
+const ProfileStep = ({ values, update, readyRoms, languages, msuPacks }: ProfileStepProps) => {
+  const t = useT();
+  return (
   <Stack gap="md">
     <Grid columns={2} gap="md">
-      <Field label="Profile Name">
-        <TextInput type="text" placeholder="My Profile" value={values.name} onChange={(e) => update({ name: e.target.value })} />
+      <Field label={t('wizards:profile.profile.profile-name')}>
+        <TextInput type="text" placeholder={t('wizards:profile.profile.my-profile')} value={values.name} onChange={(e) => update({ name: e.target.value })} />
       </Field>
-      <Field label="ROM">
+      <Field label={t('wizards:profile.profile.rom')}>
         <Select
           value={values.rom}
           onChange={(rom) => update({ rom })}
           options={readyRoms.map((r) => ({ value: r.romFile, label: r.romFile }))}
-          placeholder="Select ROM..."
+          placeholder={t('wizards:profile.profile.select-rom')}
         />
       </Field>
     </Grid>
-    <SegmentedControl label="Preset" value={values.preset} options={PRESET_OPTIONS} onChange={(preset) => update({ preset })} />
+    <SegmentedControl label={t('wizards:profile.profile.preset')} value={values.preset} options={presetOptions(t)} onChange={(preset) => update({ preset })} />
     <Grid columns={2} gap="md">
-      <Field label="Language">
+      <Field label={t('wizards:profile.profile.language')}>
         <Select
-          value={values.language}
+          value={shownLanguage(values.language)}
           onChange={(language) => update({ language })}
-          options={[{ value: '', label: DEFAULT_LANGUAGE_LABEL }, ...languages.map((l) => ({ value: l.code, label: l.code }))]}
-          placeholder={DEFAULT_LANGUAGE_LABEL}
+          options={languageOptions(languages, t)}
         />
       </Field>
-      <Field label="MSU Pack">
+      <Field label={t('wizards:profile.profile.msu-pack')}>
         <Select
           value={values.msuPack}
           onChange={(msuPack) => update({ msuPack })}
-          options={[{ value: '', label: NO_MSU_LABEL }, ...msuPacks.map((p) => ({ value: p.name, label: p.name }))]}
-          placeholder={NO_MSU_LABEL}
+          options={[{ value: '', label: t('wizards:profile.none') }, ...msuPacks.map((p) => ({ value: p.name, label: p.name }))]}
+          placeholder={t('wizards:profile.none')}
         />
       </Field>
     </Grid>
   </Stack>
-);
+  );
+};
 
 export { ProfileStep };

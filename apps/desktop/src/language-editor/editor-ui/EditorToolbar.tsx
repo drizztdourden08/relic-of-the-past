@@ -3,6 +3,7 @@ import listEndIcon from '@iconify-icons/lucide/list-end';
 import redoIcon from '@iconify-icons/lucide/redo-2';
 import undoIcon from '@iconify-icons/lucide/undo-2';
 import { Box, Divider } from '@drizztdourden08/tessera/primitives';
+import { useT } from '@drizztdourden08/brock-react';
 import { useToolbarState } from './behavior/useToolbarState';
 import { ToolbarButton } from './ToolbarButton';
 import { ToolbarInserts } from './ToolbarInserts';
@@ -16,6 +17,7 @@ const EditorToolbar = (props: EditorToolbarProps) => {
     cfg, variables, font, settingsTokens, structureMode, canUndo, canRedo, disabled = false,
     onUndo, onRedo, onInsert, onEndBox, onChangeSettings, onChangeStructureMode,
   } = props;
+  const t = useT();
   const { rootRef, open, handlePress, handleInsert, handleKeyDown } = useToolbarState({ onUndo, onRedo, onEndBox, onInsert });
 
   return (
@@ -23,11 +25,11 @@ const EditorToolbar = (props: EditorToolbarProps) => {
       ref={rootRef}
       className="editor-toolbar"
       role="toolbar"
-      aria-label="Editing actions"
+      aria-label={t('language-editor:toolbar.actions')}
       onKeyDown={handleKeyDown}
     >
-      <ToolbarButton id={UNDO} icon={undoIcon} label="Undo" disabled={disabled || !canUndo} onPress={handlePress} />
-      <ToolbarButton id={REDO} icon={redoIcon} label="Redo" disabled={disabled || !canRedo} onPress={handlePress} />
+      <ToolbarButton id={UNDO} icon={undoIcon} label={t('language-editor:toolbar.undo')} disabled={disabled || !canUndo} onPress={handlePress} />
+      <ToolbarButton id={REDO} icon={redoIcon} label={t('language-editor:toolbar.redo')} disabled={disabled || !canRedo} onPress={handlePress} />
 
       <Divider orientation="vertical" className="editor-toolbar__split" />
 
@@ -43,7 +45,7 @@ const EditorToolbar = (props: EditorToolbarProps) => {
 
       <Divider orientation="vertical" className="editor-toolbar__split" />
 
-      <ToolbarButton id={END_BOX} icon={listEndIcon} label="End the box here" disabled={disabled} onPress={handlePress} />
+      <ToolbarButton id={END_BOX} icon={listEndIcon} label={t('language-editor:toolbar.end-box')} disabled={disabled} onPress={handlePress} />
 
       <Divider orientation="vertical" className="editor-toolbar__split" />
 

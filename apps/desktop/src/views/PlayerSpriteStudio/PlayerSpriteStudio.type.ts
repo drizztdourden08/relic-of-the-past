@@ -1,10 +1,13 @@
 /* @layer renderer-components @kind types */
+import type { I18n } from '@drizztdourden08/brock-core/i18n';
 import type { OutfitId, PlayerSheet } from '@rotp/game-data';
 import type { InstalledPack } from '@rotp/hub-contracts';
 import type { SpriteViewerModel, useWearing } from '@rotp/design/packs';
 import type { StatusTone } from '@drizztdourden08/tessera/primitives';
 import type { RomDisplayInfo } from '@app/views/GameSession/GameSession.type';
 import type { ConfirmRequest } from '../InstalledOriginBar/InstalledOriginBar.type';
+import type { useCreateFlow } from '@app/hooks/useCreateFlow';
+import type { useStudioActions } from './behavior/useStudioActions';
 import type { useSpriteDraft } from './behavior/useSpriteDraft';
 import type { useSpriteLibrary } from './behavior/useSpriteLibrary';
 import type { useSpriteExport } from './behavior/useSpriteExport';
@@ -43,15 +46,18 @@ interface SpriteLibraryListProps {
   entries: LibraryEntry[];
   loading: boolean;
   selected: string | null;
-  canCreate: boolean;
-  busy: boolean;
   error: string | null;
   isInstalled: (name: string) => boolean;
   onSelect: (name: string) => void;
-  onCreate: () => void;
   onDelete: (name: string) => void;
-  onUrlImport: (url: string) => Promise<{ success: boolean; message: string }>;
-  onFileImport: (files: File[]) => Promise<{ success: boolean; message: string }>;
+}
+
+interface SpriteListPaneProps {
+  flow: Pick<ReturnType<typeof useCreateFlow>, 'creating' | 'start' | 'select'>;
+  library: Pick<SpriteLibraryModel, 'entries' | 'loading'>;
+  actions: Pick<ReturnType<typeof useStudioActions>, 'isInstalled' | 'handleDelete'>;
+  selected: string | null;
+  error: string | null;
 }
 
 type SpriteDraftModel = ReturnType<typeof useSpriteDraft>;
@@ -80,6 +86,7 @@ interface StudioGroupsParams {
   library: SpriteLibraryModel;
   exporter: SpriteExportModel;
   run: StudioTaskRunner;
+  t: I18n['t'];
 }
 
 interface SpriteWorkAreaProps {
@@ -98,6 +105,7 @@ interface SpriteWorkAreaProps {
 interface ViewerToolGroupsProps {
   wearing: WearingModel;
   viewer: SpriteViewerModel;
+  t: I18n['t'];
 }
 
 interface SpriteStatusProps {
@@ -137,6 +145,6 @@ interface GloveSwatchGridProps {
 
 export type {
   Container, GloveSwatchGridProps, LibraryEntry, OpenDraft, OutfitSwatchGridProps, PaletteEditorProps,
-  PlayerSpriteStudioProps, Slot, SpriteLibraryListProps, SpritePropertiesProps, SpriteStatusLine, SpriteStatusProps,
+  PlayerSpriteStudioProps, Slot, SpriteLibraryListProps, SpriteListPaneProps, SpritePropertiesProps, SpriteStatusLine, SpriteStatusProps,
   SpriteWorkAreaProps, StudioActionsParams, StudioGroupsParams, ViewerToolGroupsProps,
 };

@@ -16,3 +16,4 @@ export { worstCaseNodeCount } from './validate-expand-budget';
 export { validateLayout } from './validate-layout';
 export { validateValue } from './validate-value';
 export { collectReflowWarnings, isOverlay } from './validate-motion-warnings';
+export type { ReflowWarning } from './validate-motion-warnings';

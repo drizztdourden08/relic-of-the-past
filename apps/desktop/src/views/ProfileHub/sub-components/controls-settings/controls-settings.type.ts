@@ -21,6 +21,7 @@ interface LatestSettings {
 interface CreateProfileStoreArgs {
   profileId: string;
   latest: RefObject<LatestSettings>;
+  keyboardName: string;
 }
 
 export type { CreateProfileStoreArgs,SettingsChange, UseControlsArgs, UseProfileStoreArgs };

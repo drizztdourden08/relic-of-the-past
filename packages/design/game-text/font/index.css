@@ -1,0 +1,3 @@
+/* @layer renderer-components @kind style */
+@import url('./latin/game-font.css');
+@import url('./japanese/game-font-ja.css');

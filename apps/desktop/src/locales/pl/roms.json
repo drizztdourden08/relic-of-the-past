@@ -1,0 +1,15 @@
+{
+  "verdict.archive": "Archiwum, sprawdzane przy imporcie",
+  "verdict.archive-empty": "Archiwum nie zawiera pliku ROM.",
+  "verdict.fan-translation": "To fanowskie tłumaczenie ({language, select, es {hiszpańskie} pl {polskie} pt {portugalskie} en-redux {angielskie Redux} nl {niderlandzkie} sv {szwedzkie} other {}}), czyli język, a nie ROM gry. Zaimportuj je jako język: Języki > Nowy język > ROM z łatką fanów.",
+  "verdict.not-official": "To nie jest oficjalny ROM (SHA-1 {hash}). Użyj jednego z listy poniżej.",
+  "verdict.official-ok": "{name}",
+  "verdict.patched-bad-size": "Ten plik ma {bytes} bajtów, co nie jest rozmiarem ROM-u A Link to the Past.",
+  "verdict.patched-ok": "ROM o rozmiarze {size} MB (SHA-1 {hash})",
+  "verdict.unsupported": "{name} to oficjalny ROM, ale nie jest jeszcze obsługiwany.",
+  "verdict.wrong-kind": "To jest {name} ({kind, select, snes-alttp {kartridż podstawowy} gba-alttp {drugi kartridż} other {?}}). Oczekiwano: {expected, select, snes-alttp {kartridż podstawowy} gba-alttp {drugi kartridż} other {?}}.",
+  "kind.snes-alttp": "Kartridż podstawowy",
+  "kind.gba-alttp": "Drugi kartridż",
+  "refusal.unknown": "Nierozpoznany plik: {label} (SHA-1 {hash}). Można użyć tylko obsługiwanej wersji.",
+  "refusal.invalid": "Plik nie jest prawidłowym plikiem: {label} ani archiwum"
+}

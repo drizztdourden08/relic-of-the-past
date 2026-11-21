@@ -1,4 +1,5 @@
 /* @layer renderer-components @kind hook */
+import { useT } from '@drizztdourden08/brock-react';
 import { useMemo } from 'react';
 import type { TabItem } from '@drizztdourden08/tessera/primitives';
 import { catalogByLock } from '@app/compounds/RandomizerOptionRow';
@@ -19,6 +20,7 @@ import type { RandomizerOptionsPanelProps } from '../RandomizerOptionsPanel.type
 
 const usePanelModel = (props: RandomizerOptionsPanelProps, narrow: boolean) => {
   const { romFile, seed, value, onChange, frozen, mode } = props;
+  const t = useT();
   const { unlockedGroups, lockedGroups } = catalogByLock;
 
   const snapshot = useMemo(() => frozen ?? snapshotOfChoices(value), [frozen, value]);
@@ -30,10 +32,10 @@ const usePanelModel = (props: RandomizerOptionsPanelProps, narrow: boolean) => {
 
   const groups = useMemo(() => splitUnlockedGroups(groupsForMode(unlockedGroups, mode)), [unlockedGroups, mode]);
   const fixed = useMemo(() => splitLockedGroups(lockedGroups), [lockedGroups]);
-  const optionTabs = useMemo(() => optionTabsOf(changedCountsOf(snapshot.values)), [snapshot]);
+  const optionTabs = useMemo(() => optionTabsOf(changedCountsOf(snapshot.values), t), [snapshot, t]);
   const tabs = useMemo<TabItem[]>(
-    () => (narrow ? [...optionTabs, { id: POOL_TAB, label: 'Item pool', badge: accounting?.items }] : optionTabs),
-    [narrow, optionTabs, accounting],
+    () => (narrow ? [...optionTabs, { id: POOL_TAB, label: t('data-manager:option-tabs.pool'), badge: accounting?.items }] : optionTabs),
+    [narrow, optionTabs, accounting, t],
   );
   const valueOf = (option: OptionDef): OptionValue => (frozen === undefined
     ? valueFor(option, value, snapshot.values)

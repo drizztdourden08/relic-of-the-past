@@ -19,7 +19,7 @@ type MusicFacts = {
   deluxe: boolean;
 };
 type CharacterFacts = { kind: 'character'; title: string; author: string };
-type LanguageFacts = { kind: 'language'; title: string; base: string; origin: 'rom' | 'custom' };
+type LanguageFacts = { kind: 'language'; title: string; base: string; origin: 'rom' | 'patch' | 'custom' };
 type KindFacts = MusicFacts | CharacterFacts | LanguageFacts;
 
 type RemovalReason = 'deleted' | 'rejected-expired' | 'ready-expired' | 'pruned';

@@ -1,10 +1,11 @@
 /* @layer shared-asset-extraction @kind types */
-type RomLanguage =
-  | 'us' | 'de' | 'fr' | 'fr-c' | 'en'
-  | 'es' | 'pl' | 'pt' | 'redux' | 'nl' | 'sv';
+type RomLanguage = 'us' | 'de' | 'fr' | 'fr-c' | 'en' | 'ja';
+
+type RomRevision = 0 | 1 | 2;
 
 interface RomIdentEntry {
   language: RomLanguage;
+  revision: RomRevision;
   description: string;
 }
 
@@ -13,6 +14,7 @@ type RomHashTable = Record<string, RomIdentEntry>;
 interface RomData {
   readonly bytes: Buffer;
   readonly language: RomLanguage;
+  readonly revision: RomRevision;
   readonly description: string;
 
   getByte(ea: number): number;
@@ -28,5 +30,6 @@ export type {
   RomData,
   RomHashTable,
   RomIdentEntry,
-  RomLanguage
+  RomLanguage,
+  RomRevision,
 };

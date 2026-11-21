@@ -1,4 +1,5 @@
 /* @layer renderer-widgets @kind component */
+import { useT } from '@drizztdourden08/brock-react';
 import { Anchored, Box, Image, Pressable, Text } from '@drizztdourden08/tessera/primitives';
 import { useAnchorRef } from '../behavior/useAnchorRef';
 import type { ChoiceOption, ChoicePopoverProps } from './ChoicePopover.type';
@@ -8,6 +9,7 @@ const toneClass = (option: ChoiceOption): string =>
 
 const ChoicePopover = (props: ChoicePopoverProps) => {
   const { title, options, anchor, onClose, allLabel } = props;
+  const t = useT();
   const anchorRef = useAnchorRef(anchor);
 
   return (
@@ -26,7 +28,7 @@ const ChoicePopover = (props: ChoicePopoverProps) => {
             ? <Image className="cheats-popover__sprite" src={option.sprite} alt="" draggable={false} />
             : <Box className="cheats-popover__sprite cheats-popover__sprite--none" />}
           <Text className="cheats-popover__label">{option.label}</Text>
-          {option.current && <Text className="cheats-popover__current">current</Text>}
+          {option.current && <Text className="cheats-popover__current">{t('views-cheats:popover.current')}</Text>}
           {option.onPickAll && allLabel && (
             <Text
               as="span"

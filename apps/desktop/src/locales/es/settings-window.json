@@ -1,0 +1,16 @@
+{
+  "option.viewport-modes.none.label": "Bandas negras",
+  "option.viewport-modes.none.hint": "Mantiene la proporción del juego y rellena el resto de la ventana con barras negras.",
+  "option.viewport-modes.fit.label": "Ajustar ventana",
+  "option.viewport-modes.fit.hint": "Bloquea la forma de la ventana a la proporción del juego al redimensionarla, para que no aparezcan barras.",
+  "option.viewport-modes.fill.label": "Estirar",
+  "option.viewport-modes.fill.hint": "Estira la imagen para llenar toda la ventana.",
+  "section.window.title": "Ventana",
+  "start-fullscreen.label": "Iniciar en pantalla completa",
+  "start-fullscreen.description": "Entra automáticamente en pantalla completa al iniciar el juego",
+  "viewport-constraint.label": "Área de visión",
+  "viewport-constraint.description": "Controla cómo se relaciona el lienzo del juego con la ventana",
+  "pixel-perfect.label": "Píxel perfecto",
+  "pixel-perfect.description": "Escala la imagen solo por píxeles enteros del origen, de modo que cada píxel tenga exactamente el mismo tamaño. Elimina el parpadeo en vallas, muros y otros bordes rectos al desplazarse, a costa de bordes negros algo más anchos. Desactiva el Filtrado lineal mientras está activo.",
+  "pixel-perfect.hint": "Requiere el área de visión Bandas negras."
+}

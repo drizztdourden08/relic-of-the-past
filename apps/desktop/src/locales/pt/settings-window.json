@@ -1,0 +1,16 @@
+{
+  "option.viewport-modes.none.label": "Faixas pretas",
+  "option.viewport-modes.none.hint": "Mantém a proporção do jogo e preenche o resto da janela com barras pretas.",
+  "option.viewport-modes.fit.label": "Ajustar à janela",
+  "option.viewport-modes.fit.hint": "Trava o formato da janela na proporção do jogo ao redimensionar, sem barras.",
+  "option.viewport-modes.fill.label": "Esticar",
+  "option.viewport-modes.fill.hint": "Estica a imagem para preencher toda a janela.",
+  "section.window.title": "Janela",
+  "start-fullscreen.label": "Iniciar em tela cheia",
+  "start-fullscreen.description": "Entra automaticamente em tela cheia quando o jogo inicia",
+  "viewport-constraint.label": "Área de exibição",
+  "viewport-constraint.description": "Controla como a tela do jogo se relaciona com a janela",
+  "pixel-perfect.label": "Pixel perfeito",
+  "pixel-perfect.description": "Escala a imagem apenas por pixels inteiros da origem, para que todo pixel tenha exatamente o mesmo tamanho. Remove a cintilação em cercas, paredes e outras bordas retas durante a rolagem, ao custo de bordas pretas um pouco maiores. Desliga o Filtro linear enquanto ativo.",
+  "pixel-perfect.hint": "Requer a área de exibição Letterbox."
+}

@@ -1,14 +1,15 @@
 /* @layer renderer-components @kind component */
 import { Text } from '@drizztdourden08/tessera/primitives';
 import type { OutlineHintProps } from './OutlineHint.type';
+import { useT } from '@drizztdourden08/brock-react';
 
 const OutlineHint = (props: OutlineHintProps) => {
+  const t = useT();
   const { modifier } = props;
 
   return (
     <Text className="hud-editor__hint">
-      Drag a row to move it, or move the focused row with {modifier} and the arrow keys. The
-      screen itself cannot be moved.
+      {t('hud-editor:outline-hint.text.drag', { modifier })}
     </Text>
   );
 };

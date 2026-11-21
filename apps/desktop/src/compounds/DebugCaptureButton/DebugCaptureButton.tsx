@@ -1,4 +1,5 @@
 /* @layer renderer-components @kind component */
+import { useT } from '@drizztdourden08/brock-react';
 import { Icon as IconifyIcon } from '@iconify/react/offline';
 import play from '@iconify-icons/lucide/play';
 import square from '@iconify-icons/lucide/square';
@@ -11,6 +12,7 @@ import type { DebugCaptureButtonProps } from './DebugCaptureButton.type';
 import './DebugCaptureButton.css';
 
 const DebugCaptureButton = ({ profileId, onPointerDown, onPointerMove, onPointerUp }: DebugCaptureButtonProps) => {
+  const t = useT();
   const startedAt = useDebugCaptureStore((s) => s.startedAt);
   const { isCapturing, handleClick, showFfmpegPrompt, resolveFfmpegPrompt } = useDebugCapture(profileId);
 
@@ -24,8 +26,8 @@ const DebugCaptureButton = ({ profileId, onPointerDown, onPointerMove, onPointer
         onPointerMove={onPointerMove}
         onPointerUp={onPointerUp}
         onClick={() => { void handleClick(); }}
-        title={isCapturing ? 'Stop debug capture' : 'Start debug capture'}
-        aria-label={isCapturing ? 'Stop debug capture' : 'Start debug capture'}
+        title={isCapturing ? t('compounds:debug-capture-button.stop') : t('compounds:debug-capture-button.start')}
+        aria-label={isCapturing ? t('compounds:debug-capture-button.stop') : t('compounds:debug-capture-button.start')}
       >
         <IconifyIcon icon={isCapturing ? square : play} width={14} height={14} />
       </Pressable>

@@ -1,0 +1,8 @@
+{
+  "section.camera.title": "Caméra",
+  "camera-lock-to-viewport.label": "Verrouiller la caméra sur la vue",
+  "camera-lock-to-viewport.description": "Fixe la vue sur les limites de la zone, sans espace noir à l'extérieur. Désactivé, la caméra d'origine est conservée.",
+  "camera-lock-to-viewport.hint": "Nécessite le rendu étendu, dans Affichage.",
+  "smooth-transitions.label": "Transitions fluides",
+  "smooth-transitions.description": "Adoucit le défilement aux jonctions de zones. Nécessite Verrouiller la caméra sur la vue."
+}

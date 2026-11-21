@@ -1,0 +1,15 @@
+{
+  "verdict.archive": "Archief, gecontroleerd bij het importeren",
+  "verdict.archive-empty": "Het archief bevat geen ROM-bestand.",
+  "verdict.fan-translation": "Dit is de {language, select, es {Spaanse} pl {Poolse} pt {Portugese} en-redux {Engelse Redux-} nl {Nederlandse} sv {Zweedse} other {}} fanvertaling, een taal en geen spel-ROM. Importeer hem als taal: Talen > Nieuwe taal > Door fans gepatchte ROM.",
+  "verdict.not-official": "Geen officiële ROM (SHA-1 {hash}). Gebruik er een uit de lijst hieronder.",
+  "verdict.official-ok": "{name}",
+  "verdict.patched-bad-size": "Dit bestand is {bytes} bytes, wat niet de grootte van een A Link to the Past-ROM is.",
+  "verdict.patched-ok": "Een ROM van {size} MB (SHA-1 {hash})",
+  "verdict.unsupported": "{name} is een officiële ROM, maar wordt nog niet ondersteund.",
+  "verdict.wrong-kind": "Dit is {name} ({kind, select, snes-alttp {basiscartridge} gba-alttp {tweede cartridge} other {?}}). Verwacht: {expected, select, snes-alttp {basiscartridge} gba-alttp {tweede cartridge} other {?}}.",
+  "kind.snes-alttp": "Basiscartridge",
+  "kind.gba-alttp": "Tweede cartridge",
+  "refusal.unknown": "Geen herkende {label} (SHA-1 {hash}). Alleen de ondersteunde revisie kan worden gebruikt.",
+  "refusal.invalid": "Het bestand is geen geldige {label} of archief"
+}

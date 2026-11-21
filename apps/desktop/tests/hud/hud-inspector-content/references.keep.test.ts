@@ -28,6 +28,8 @@ import { PACKS, SCOPE } from './content-fixtures.constants';
 import { installDomHarness } from './install-dom-harness';
 import { roundTrips } from './round-trips';
 import { required } from '@rotp/asset-extraction/testing';
+import { i18n } from '../test-i18n';
+const { t } = i18n;
 
 const { mount, one, click } = installDomHarness();
 
@@ -72,7 +74,7 @@ describe('a reference shows the referent, and picking one round-trips', { tags: 
 
   it('names a switch case and a repeat child by what they are, and jumps to them', () => {
     const sprite = { kind: 'element', id: 'sprite-3f21', element: { type: 'sprite', file: 'hud-heart-full' } } as HudNode;
-    const art = nodeArtOf(sprite, PACKS);
+    const art = nodeArtOf(sprite, PACKS, t);
     expect(art.kind).toBe('sprite');
     expect(art.name).not.toBe('hud-heart-full');
     expect(art.src).toContain('hud-heart-full.png');

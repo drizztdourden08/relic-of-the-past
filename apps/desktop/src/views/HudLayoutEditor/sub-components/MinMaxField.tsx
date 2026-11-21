@@ -5,6 +5,7 @@ import { ValueInput } from './ValueInput';
 import { AXES } from './MinMaxField.constants';
 import type { Value } from '@rotp/hud';
 import type { Limits, MinMaxFieldProps } from './MinMaxField.type';
+import { useT } from '@drizztdourden08/brock-react';
 
 const compact = (next: { w?: Value; h?: Value }): Limits => {
   const out: { w?: Value; h?: Value } = {};
@@ -14,6 +15,7 @@ const compact = (next: { w?: Value; h?: Value }): Limits => {
 };
 
 const MinMaxField = (props: MinMaxFieldProps) => {
+  const t = useT();
   const { min, max, onMin, onMax, scope, insideRepeat } = props;
   const step = useEditorStep();
 
@@ -23,7 +25,7 @@ const MinMaxField = (props: MinMaxFieldProps) => {
   ];
 
   return (
-    <Field size="sm" label="limits" hint="Leave a field blank for no limit.">
+    <Field size="sm" label={t('hud-editor:min-max-field.label.limits')} hint={t('hud-editor:min-max-field.hint.leave-a-field-blank-for')}>
       <Stack gap="2xs">
         {AXES.map((axis) => (
           <Box key={axis} className="hud-minmax__row">
@@ -32,7 +34,7 @@ const MinMaxField = (props: MinMaxFieldProps) => {
               <ValueInput
                 key={bound.key}
                 className="hud-minmax__value"
-                aria-label={`${bound.key} ${axis}`}
+                aria-label={t('hud-editor:min-max-field.aria', { bound: bound.key, axis })}
                 placeholder={bound.key}
                 value={bound.value?.[axis]}
                 onChange={(next) => bound.set(compact({ ...bound.value, [axis]: next }))}

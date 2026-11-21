@@ -6,7 +6,7 @@ const ALTTP_GBA_US_SHA1 = 'A272055ABBBF6C26B0CD54C87395D01699589161';
 const ROM_KINDS: Record<RomKind, RomKindSpec> = {
   'snes-alttp': {
     kind: 'snes-alttp',
-    label: 'Base cartridge',
+    label: { key: 'roms:kind.snes-alttp' },
     pattern: /\.(sfc|smc)$/i,
     pickExtensions: ['sfc', 'smc', 'zip'],
     maxBytes: 8 * 1024 * 1024,
@@ -16,7 +16,7 @@ const ROM_KINDS: Record<RomKind, RomKindSpec> = {
   },
   'gba-alttp': {
     kind: 'gba-alttp',
-    label: 'Second cartridge',
+    label: { key: 'roms:kind.gba-alttp' },
     pattern: /\.gba$/i,
     pickExtensions: ['gba', 'zip'],
     maxBytes: 32 * 1024 * 1024,

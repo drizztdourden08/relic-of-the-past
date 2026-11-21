@@ -1,11 +1,6 @@
 /* @layer shared-asset-extraction @kind logic */
-import { kFontTypes, FONT_TILE_BYTES } from '../../text/data/font-data';
-import type { RomData } from '../../rom/rom-types';
+import type { SpriteSource } from '../sources';
 
-const loadDialogueFont = (rom: RomData): Buffer => {
-  const source = kFontTypes[rom.language] ?? kFontTypes.us;
-  if (!source) throw new Error(`No font source for language: ${rom.language}`);
-  return rom.getBytes(source.tileAddr, FONT_TILE_BYTES);
-};
+const loadDialogueFont = (source: SpriteSource): Buffer | null => source.readDialogueFont();
 
 export { loadDialogueFont };

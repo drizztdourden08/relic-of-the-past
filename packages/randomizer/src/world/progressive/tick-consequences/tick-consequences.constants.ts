@@ -1,46 +1,31 @@
-/* @layer shared-game @kind constants */
+/* @layer shared-game @kind data */
 import type { TickConsequence } from '../progressive.type';
 
 const TICK_CONSEQUENCES: readonly TickConsequence[] = [
   {
     field: 'pullableCurtains',
     when: 'noBlade',
-    line: {
-      term: 'Hanging cloth doors',
-      detail: 'nothing can cut one down, so it comes down by facing it, taking hold with A and pulling away.',
-    },
+    line: { term: { key: 'randomizer:tick.pullable-curtains.term' }, detail: { key: 'randomizer:tick.pullable-curtains.detail' } },
   },
   {
     field: 'swordlessMedallions',
     when: 'noBlade',
-    line: {
-      term: 'Medallion doors',
-      detail: 'no blade is in the pool at all, so the medallion alone opens each of the two.',
-    },
+    line: { term: { key: 'randomizer:tick.swordless-medallions.term' }, detail: { key: 'randomizer:tick.swordless-medallions.detail' } },
   },
   {
     field: 'hammerTablets',
     when: 'noBeam',
-    line: {
-      term: 'Tablets',
-      detail: 'no blade in the pool throws a beam, so they wake for the hammer instead.',
-    },
+    line: { term: { key: 'randomizer:tick.hammer-tablets.term' }, detail: { key: 'randomizer:tick.hammer-tablets.detail' } },
   },
   {
     field: 'hammerTowerSeal',
     when: 'noBeam',
-    line: {
-      term: 'The tower seal',
-      detail: 'it throws back anything less than a beam, so with none in the seed a hammer breaks it.',
-    },
+    line: { term: { key: 'randomizer:tick.hammer-tower-seal.term' }, detail: { key: 'randomizer:tick.hammer-tower-seal.detail' } },
   },
   {
     field: 'hammerLastFight',
     when: 'noBeam',
-    line: {
-      term: 'The last fight',
-      detail: 'no beam can reach it, so the hammer lands where it is otherwise refused outright.',
-    },
+    line: { term: { key: 'randomizer:tick.hammer-last-fight.term' }, detail: { key: 'randomizer:tick.hammer-last-fight.detail' } },
   },
 ];
 

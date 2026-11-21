@@ -1,0 +1,11 @@
+{
+  "title": "含める録画",
+  "showSent": "送信済みを表示",
+  "empty.new": "新しい録画はありません。送信済みを表示すると以前の録画が見られます。",
+  "empty.all": "録画はまだありません。",
+  "sent": "送信済み",
+  "include": "{name}の録画を含める",
+  "github.label": "GitHubの問題報告 を開く",
+  "github.opened": "入力済みの GitHubの問題報告 を開きました。Sanctuary にサインインすると、セーブデータを添付してアプリからレポートを送れます。",
+  "github.noRepo": "レポートを送るには Sanctuary にサインインしてください。"
+}

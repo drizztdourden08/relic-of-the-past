@@ -9,7 +9,7 @@ export type { PreviewTarget } from '../../bridge/sound-preview';
 export { linesAbovePicture, viewOrigin } from '../../bridge/view-origin';
 export { voidCall } from '../../bridge/wasm-call';
 export { paintTexture } from '../../dialog-texture/paint-texture';
-export { activeAlphabet } from '../../dialog/active-alphabet';
+export { activeAlphabet, activeTextLang } from '../../dialog/active-alphabet';
 export { initDialogBridge, pollDialogFrame, resyncDialogFrames, stopDialogBridge } from '../../dialog/dialog-bridge';
 export { clearGlyphAtlas, getGlyphAtlas } from '../../dialog/glyph-atlas';
 export { INACTIVE_FRAME } from '../../dialog/parse-dialog-state';

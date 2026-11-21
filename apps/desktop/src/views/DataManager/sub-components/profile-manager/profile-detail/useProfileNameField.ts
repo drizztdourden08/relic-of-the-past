@@ -1,8 +1,10 @@
 /* @layer renderer-components @kind hook */
+import { useT } from '@drizztdourden08/brock-react';
 import { useCallback, useEffect, useState } from 'react';
 import { updateProfile } from '@app/storage/profile-store';
 
 const useProfileNameField = (profile: Profile, onRefresh: () => void) => {
+  const t = useT();
   const [draft, setDraft] = useState(profile.name);
   const [error, setError] = useState<string | null>(null);
   const dirty = draft.trim() !== profile.name;
@@ -18,7 +20,7 @@ const useProfileNameField = (profile: Profile, onRefresh: () => void) => {
     const name = draft.trim();
     if (name === profile.name) return;
     if (name === '') {
-      setError('Enter a name.');
+      setError(t('data-manager:profile-detail.name-required'));
       return;
     }
     try {
@@ -28,7 +30,7 @@ const useProfileNameField = (profile: Profile, onRefresh: () => void) => {
     } catch (failure) {
       setError(failure instanceof Error ? failure.message : String(failure));
     }
-  }, [draft, profile.id, profile.name, onRefresh]);
+  }, [draft, profile.id, profile.name, onRefresh, t]);
 
   return { draft, setDraft, error, dirty, commit, revert };
 };

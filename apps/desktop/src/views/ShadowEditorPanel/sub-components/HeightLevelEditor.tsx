@@ -1,4 +1,5 @@
 /* @layer renderer-components @kind component */
+import { useT } from '@drizztdourden08/brock-react';
 import { useState } from 'react';
 import { Box, Icon, IconButton, TextInput } from '@drizztdourden08/tessera/primitives';
 import { useShadowEditorStore } from '@app/stores/shadow-editor-store';
@@ -6,6 +7,7 @@ import { HeightLevelRow } from './HeightLevelRow';
 import './HeightLevelEditor.css';
 
 const HeightLevelEditor = () => {
+  const t = useT();
   const { heightLevels, addHeightLevel, removeHeightLevel, updateHeightLevel } = useShadowEditorStore();
   const [newLabel, setNewLabel] = useState('');
   const [newValue, setNewValue] = useState('0.5');
@@ -29,7 +31,7 @@ const HeightLevelEditor = () => {
       <Box className="height-level-editor__add">
         <TextInput
           className="shadow-field-box height-level-editor__name"
-          placeholder="Label"
+          placeholder={t('views-shadow-editor:heightLevels.label')}
           value={newLabel}
           onChange={(e) => setNewLabel(e.target.value)}
         />
@@ -43,7 +45,7 @@ const HeightLevelEditor = () => {
           step={0.05}
           onChange={(e) => setNewValue(e.target.value)}
         />
-        <IconButton variant="ghost" size="xs" label="Add level" onClick={handleAdd}>
+        <IconButton variant="ghost" size="xs" label={t('views-shadow-editor:heightLevels.add')} onClick={handleAdd}>
           <Icon name="plus" />
         </IconButton>
       </Box>

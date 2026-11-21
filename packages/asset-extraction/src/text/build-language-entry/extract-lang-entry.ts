@@ -22,6 +22,7 @@ const extractLangEntry = (rom: RomData, code: string, index: number): ExtractedL
 
   return {
     code,
+    base: code,
     langData: buildLangData(texts, code),
     fontPacked: buildFontPacked(fontData, fontWidth),
     flags: dialogueFlags(code, index),

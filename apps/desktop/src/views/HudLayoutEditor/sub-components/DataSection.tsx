@@ -3,15 +3,17 @@ import { resolveValue } from '@rotp/hud';
 import { Box, EmptyState, Field, Flex, Icon, Text } from '@drizztdourden08/tessera/primitives';
 import { collectBoundValues } from '@app/hud-layout-editing/bound-values';
 import type { DataSectionProps } from './DataSection.type';
+import { useT } from '@drizztdourden08/brock-react';
 
 const round = (n: number): number => Math.round(n * 1000) / 1000;
 
 const DataSection = (props: DataSectionProps) => {
+  const t = useT();
   const { node, scope } = props;
   const bound = collectBoundValues(node);
 
   if (bound.length === 0) {
-    return <EmptyState size="sm" message="Nothing on this node is driven by the game yet. Type = in any number here to drive it." />;
+    return <EmptyState size="sm" message={t('hud-editor:data-section.message.nothing-on-this-node-is')} />;
   }
 
   return (

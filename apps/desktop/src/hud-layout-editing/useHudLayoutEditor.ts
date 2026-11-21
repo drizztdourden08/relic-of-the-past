@@ -4,6 +4,7 @@ import { AUTO_PACK_ID } from '@rotp/input-mapping';
 import { DEFAULT_LAYOUT, validateLayout } from '@rotp/hud';
 import { usePlacedLayout } from '@app/views/HudLayoutView';
 import { useHudLayoutStore } from '@app/stores/hud-layout-store';
+import { useT } from '@drizztdourden08/brock-react';
 import { useGlyphPacks } from './useGlyphPacks';
 import { useLayoutDraft } from './useLayoutDraft';
 import { useNodeEdits } from './useNodeEdits';
@@ -18,6 +19,7 @@ import type { HudLayout } from '@rotp/hud';
 import type { HudLayoutEditorProps } from '@app/views/HudLayoutEditor/HudLayoutEditor.type';
 
 const useHudLayoutEditor = (props: HudLayoutEditorProps) => {
+  const t = useT();
   const { layoutId, onCommitted } = props;
 
   const glyphs = useGlyphPacks();
@@ -59,9 +61,9 @@ const useHudLayoutEditor = (props: HudLayoutEditorProps) => {
   );
 
   const createPack = useCallback(async () => {
-    const pack = await glyphs.createPack(`My glyphs ${glyphs.custom.length + 1}`);
+    const pack = await glyphs.createPack(t('hud-editing:glyph-pack.default-name', { n: glyphs.custom.length + 1 }));
     if (pack) draft.setGlyphPack(pack.id);
-  }, [draft, glyphs]);
+  }, [draft, glyphs, t]);
 
   const deletePack = useCallback(async (id: string) => {
     await glyphs.deletePack(id);

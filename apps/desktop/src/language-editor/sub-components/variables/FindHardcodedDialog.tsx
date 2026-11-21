@@ -2,6 +2,7 @@
 import { useCallback, useMemo, useState } from 'react';
 import { Box, Button, EmptyState, Text } from '@drizztdourden08/tessera/primitives';
 import { DialogShell } from '@drizztdourden08/tessera/composites';
+import { useT, useText } from '@drizztdourden08/brock-react';
 import { HardcodedGroupRow } from './HardcodedGroupRow';
 import { NOTHING_FOUND } from './FindHardcodedDialog.constants';
 import type { FindHardcodedDialogProps } from './FindHardcodedDialog.type';
@@ -9,6 +10,8 @@ import './FindHardcodedDialog.css';
 
 const FindHardcodedDialog = (props: FindHardcodedDialogProps) => {
   const { open, groups, onApply, onClose } = props;
+  const t = useT();
+  const text = useText();
 
   const [chosen, setChosen] = useState<ReadonlySet<string>>(() => new Set<string>());
 
@@ -35,22 +38,21 @@ const FindHardcodedDialog = (props: FindHardcodedDialogProps) => {
 
   const actions = (
     <>
-      <Button variant="tertiary" onClick={onClose}>Close</Button>
+      <Button variant="tertiary" onClick={onClose}>{t('language-editor:hardcoded.close')}</Button>
       <Button variant="primary" disabled={total === 0} onClick={handleApply}>
-        {total === 0 ? 'Retag' : `Retag ${total}`}
+        {total === 0 ? t('language-editor:hardcoded.retag-none') : t('language-editor:hardcoded.retag', { count: total })}
       </Button>
     </>
   );
 
   return (
-    <DialogShell open={open} onClose={onClose} title="Find hardcoded names" actions={actions}>
+    <DialogShell open={open} onClose={onClose} title={t('language-editor:hardcoded.title')} actions={actions}>
       {groups.length === 0 ? (
-        <EmptyState message={NOTHING_FOUND} />
+        <EmptyState message={text(NOTHING_FOUND)} />
       ) : (
         <Box className="hardcoded-dialog">
           <Text as="p" variant="caption" className="hardcoded-dialog__lead">
-            Each name below is written out as plain text. Retagging makes those lines reference
-            the variable, so a later rename reaches all of them.
+            {t('language-editor:hardcoded.lead')}
           </Text>
           <Box className="hardcoded-dialog__rows">
             {groups.map((group) => (

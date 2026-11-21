@@ -1,27 +1,43 @@
 /* @layer shared-storage @kind types */
+import type { ScreenPayload } from '@rotp/asset-extraction';
+import type { LanguageScript, TextOverrides } from '../../messages';
+
 type LanguageSetSummary = {
   id: string;
   name: string;
   base: string;
-  origin: 'rom' | 'custom';
+  origin: 'rom' | 'patch' | 'custom';
   lineCount: number;
+  script?: LanguageScript;
 };
 
-type SetFontBytes = {
+type RomFontBytes = {
   fontData: Uint8Array;
   fontWidth: Uint8Array;
 };
 
-interface ExtractedPack {
+interface ExtractedPayload {
   code: string;
   description: string;
   dialogue: string;
-  fontData: Uint8Array;
-  fontWidth: Uint8Array;
   glyphCount: number;
   lineCount: number;
   encoder: 'org' | 'new';
   flags: number;
+  script?: LanguageScript;
 }
 
-export type { ExtractedPack, LanguageSetSummary, SetFontBytes };
+interface ExtractedPack extends ExtractedPayload, RomFontBytes {
+  screens?: ScreenPayload;
+}
+
+interface PatchedPack extends ExtractedPayload {
+  name: string;
+  base: string;
+  credits: string;
+  license: string;
+  text: TextOverrides;
+  screens?: ScreenPayload;
+}
+
+export type { ExtractedPack, ExtractedPayload, LanguageSetSummary, PatchedPack, RomFontBytes };

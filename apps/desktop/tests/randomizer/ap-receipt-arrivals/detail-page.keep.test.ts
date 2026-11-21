@@ -50,6 +50,8 @@ vi.mock('../../../../../packages/game-core/src/session-dialogue/active-dialogue'
     dictPacked: packPackedBytes([new Uint8Array([1])]),
     lineChunks: Array.from({ length: RANDOMIZER_MSG_BASE + 64 }, () => new Uint8Array([0x7f])),
     fontWidths: new Uint8Array(256).fill(6),
+    fontSheet: new Uint8Array(0),
+    bakedLetters: [],
   }),
 }));
 

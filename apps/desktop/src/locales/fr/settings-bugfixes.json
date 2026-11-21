@@ -1,0 +1,13 @@
+{
+  "section.bugfixes.title": "Correctifs de bugs",
+  "section.bugfixes-bundles.title": "Activer en lot",
+  "section.bugfixes-misc.title": "Correctifs généraux",
+  "section.bugfixes-gamechanging.title": "Correctifs modifiant le gameplay",
+  "misc-bug-fixes.label": "Tous les correctifs généraux",
+  "misc-bug-fixes.description": "Active d'un coup tous les correctifs généraux ci-dessous. Les options individuelles ont priorité.",
+  "game-changing-bug-fixes.label": "Tous les correctifs modifiant le gameplay",
+  "game-changing-bug-fixes.description": "Active les correctifs qui changent le comportement du jeu d'une façon qui peut importer aux speedrunners. Les options individuelles ont priorité.",
+  "game-changing-bug-fixes.hint": "Les parties comparées au jeu d'origine devraient le laisser désactivé.",
+  "state.on": "Le jeu utilise le comportement corrigé.",
+  "state.off": "Le bug d'origine est conservé."
+}

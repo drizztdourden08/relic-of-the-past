@@ -1,9 +1,10 @@
 /* @layer renderer-widgets @kind component */
 import type { WidgetMeta } from '@drizztdourden08/brock-react';
+import { msg } from '@drizztdourden08/brock-core/i18n';
 import { NavigationWidgetContent, NavigationWidgetSettings } from '@app/views/NavigationWidget';
 
 const meta: WidgetMeta = {
-  label: 'Location & Navigation',
+  label: msg('widgets:navigation.label'),
   padding: 'none',
   icon: 'compass',
   order: 5,

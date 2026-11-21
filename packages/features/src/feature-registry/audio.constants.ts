@@ -1,13 +1,13 @@
-/* @layer shared @kind data */
+/* @layer shared @kind constants */
+import { msg } from '@drizztdourden08/brock-core/i18n';
 import type { FeatureDef } from '../feature.type';
 
 const AUDIO_FEATURES: FeatureDef[] = [
   {
     id: 'perGroupVolume',
-    label: 'Independent music / SFX volume',
+    label: msg('features:feature.perGroupVolume.label'),
     description: 'Per-group sub-volume scaling in the DSP so music and sound effects can be mixed separately.',
-    userMessage:
-      'Lets you set music and sound-effect volumes independently. When off, the emulated audio mix is bit-identical to the original. Turn on to use the separate volume sliders.',
+    userMessage: msg('features:feature.perGroupVolume.message'),
     group: 'Audio',
     kind: 'features0-bit',
     origin: 'relic',

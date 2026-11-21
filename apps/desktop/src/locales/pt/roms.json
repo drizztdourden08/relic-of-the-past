@@ -1,0 +1,15 @@
+{
+  "verdict.archive": "Arquivo compactado, verificado ao ser importado",
+  "verdict.archive-empty": "O arquivo compactado não contém nenhuma ROM.",
+  "verdict.fan-translation": "Esta é a tradução de fãs {language, select, es {para o espanhol} pl {para o polonês} pt {para o português} en-redux {para o inglês Redux} nl {para o holandês} sv {para o sueco} other {}}, que é um idioma e não uma ROM de jogo. Importe-a como idioma: Idiomas > Novo idioma > ROM com patch de fãs.",
+  "verdict.not-official": "Não é uma ROM oficial (SHA-1 {hash}). Use uma da lista abaixo.",
+  "verdict.official-ok": "{name}",
+  "verdict.patched-bad-size": "Este arquivo tem {bytes} bytes, que não é o tamanho de uma ROM de A Link to the Past.",
+  "verdict.patched-ok": "Uma ROM de {size} MB (SHA-1 {hash})",
+  "verdict.unsupported": "{name} é uma ROM oficial, mas ainda não é compatível.",
+  "verdict.wrong-kind": "Este é {name} ({kind, select, snes-alttp {cartucho base} gba-alttp {segundo cartucho} other {?}}). Esperado: {expected, select, snes-alttp {cartucho base} gba-alttp {segundo cartucho} other {?}}.",
+  "kind.snes-alttp": "Cartucho base",
+  "kind.gba-alttp": "Segundo cartucho",
+  "refusal.unknown": "{label} não reconhecido (SHA-1 {hash}). Só a revisão compatível pode ser usada.",
+  "refusal.invalid": "O arquivo não é um {label} válido nem um arquivo compactado"
+}

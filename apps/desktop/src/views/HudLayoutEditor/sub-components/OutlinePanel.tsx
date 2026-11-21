@@ -7,7 +7,8 @@ import { DragGhost } from './DragGhost';
 import { OutlineHint } from './OutlineHint';
 import { OutlineRow } from './OutlineRow';
 import { OutlineMenuHost } from './OutlineMenuHost';
-import { labelOf, slotsOf } from '@app/hud-layout-editing/new-node';
+import { slotsOf } from '@app/hud-layout-editing/new-node';
+import { outlineRowLabel } from '@app/hud-layout-editing/node-name';
 import { outlineRows } from '@app/hud-layout-editing/outline-rows';
 import { rowRefFor } from '@app/hud-layout-editing/row-ref-for';
 import { useOutlineCollapse } from '@app/hud-layout-editing/useOutlineCollapse';
@@ -15,8 +16,10 @@ import { useOutlineDrag } from '@app/hud-layout-editing/useOutlineDrag';
 import { useOutlineKeys } from '@app/hud-layout-editing/useOutlineKeys';
 import { useOutlineScroll } from '@app/hud-layout-editing/useOutlineScroll';
 import type { OutlinePanelProps } from './OutlinePanel.type';
+import { useT } from '@drizztdourden08/brock-react';
 
 const OutlinePanel = (props: OutlinePanelProps) => {
+  const t = useT();
   const { doc, selectedId, slotNumbers, onSelect, onRemove, onDrop } = props;
   const rowsRef = useRef<HTMLDivElement>(null);
   const [menuId, setMenuId] = useState<string | null>(null);
@@ -35,7 +38,7 @@ const OutlinePanel = (props: OutlinePanelProps) => {
           <OutlineRow
             key={row.node.id}
             id={row.node.id}
-            label={row.isScreen ? `Screen · ${row.node.id}` : `${labelOf(row.node)} · ${row.node.id}`}
+            label={outlineRowLabel(row, t)}
             depth={row.depth}
             kind={row.node.kind}
             cell={row.cell}

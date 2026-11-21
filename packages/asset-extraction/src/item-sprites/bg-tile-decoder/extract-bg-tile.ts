@@ -1,24 +1,19 @@
 /* @layer shared-asset-extraction @kind logic */
-import { decompress } from '../../compression/lz-decompress';
 import { ImageBuffer } from '../../graphics/png-writer';
 import { dungeonBgPalette, overworldBgPalette } from '../bg-palettes';
 import { decodeBgTile } from './decode-bg-tile';
 import {
   FLIP_X_BIT, FLIP_Y_BIT, PALETTE_ROW_SHIFT, QUADRANTS, TILE_NUMBER_MASK, TILES_PER_SHEET,
 } from './bg-tile-decoder.constants';
-import type { RomData } from '../../rom/rom-types';
 import { itemAt } from '../../checked-read';
+import type { SpriteSource } from '../sources';
 import type { BgPaletteRows } from '../bg-palettes';
 import type { BgQuadrant, BgTileRequest } from './bg-tile-decoder.type';
-import { bgSheetAddress } from '../../data/bg-sheet-address';
 
-const loadSheet = (rom: RomData, id: number): Buffer =>
-  decompress(bgSheetAddress(id), (addr) => rom.getByte(addr), false);
-
-const paletteFor = (rom: RomData, req: BgTileRequest): BgPaletteRows => {
-  if (req.paletteSet === 'dungeon') return dungeonBgPalette(rom, req.paletteIndex);
+const paletteFor = (source: SpriteSource, req: BgTileRequest): BgPaletteRows => {
+  if (req.paletteSet === 'dungeon') return dungeonBgPalette(source, req.paletteIndex);
   const [aux1 = 0, aux2 = 0, aux3 = 0] = req.paletteAux;
-  return overworldBgPalette(rom, { mode: req.paletteIndex, aux1, aux2, aux3 });
+  return overworldBgPalette(source, { mode: req.paletteIndex, aux1, aux2, aux3 });
 };
 
 const pasteQuadrant = (img: ImageBuffer, quadrant: BgQuadrant): void => {
@@ -34,8 +29,8 @@ const pasteQuadrant = (img: ImageBuffer, quadrant: BgQuadrant): void => {
   }
 };
 
-const extractBgTile = (rom: RomData, req: BgTileRequest): ImageBuffer | null => {
-  const palette = paletteFor(rom, req);
+const extractBgTile = (source: SpriteSource, req: BgTileRequest): ImageBuffer | null => {
+  const palette = paletteFor(source, req);
   const upper = new Set(req.upper);
   const sheets = new Map<number, Buffer>();
   const img = new ImageBuffer(16, 16);
@@ -46,7 +41,7 @@ const extractBgTile = (rom: RomData, req: BgTileRequest): ImageBuffer | null => 
     const slot = (number / TILES_PER_SHEET) | 0;
     const sheetId = req.sheets[slot];
     if (sheetId === undefined) return null;
-    const sheet = sheets.get(slot) ?? loadSheet(rom, sheetId);
+    const sheet = sheets.get(slot) ?? source.readSheet('bg', sheetId);
     sheets.set(slot, sheet);
     const pixels = decodeBgTile(sheet, number % TILES_PER_SHEET);
     const row = itemAt(palette, (word >>> PALETTE_ROW_SHIFT) & 7, 'BG palette row');

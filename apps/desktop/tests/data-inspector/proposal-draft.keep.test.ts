@@ -23,7 +23,7 @@ const finding = (id: string, proposed: TagRecord): Recommendation => ({
   targetId: 'tag-001',
   current: tagRecord('tag-001', 'cave'),
   proposed,
-  reason: 'the vocabulary spells it differently',
+  reason: { key: 'views-data-inspector:rec.reason.set-create', values: { noun: 'x', key: 'the vocabulary spells it differently' } },
   detector: 'test',
   evidence: [],
   confidence: 'certain',

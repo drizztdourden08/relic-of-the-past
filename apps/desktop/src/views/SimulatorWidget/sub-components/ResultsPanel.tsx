@@ -1,4 +1,5 @@
 /* @layer renderer-widgets @kind component */
+import { useT } from '@drizztdourden08/brock-react';
 import { Box, Button, Icon, Text } from '@drizztdourden08/tessera/primitives';
 import { SuggestionCard } from './SuggestionCard';
 import { SoftlockSummary } from './SoftlockSummary';
@@ -7,9 +8,10 @@ import type { ResultsPanelProps } from '../SimulatorWidget.type';
 
 const ResultsPanel = (props: ResultsPanelProps) => {
   const { outcome, stopAtCheckId, softlockReport, suggestions, canApplyCheck, onOpenLog, onApply } = props;
+  const t = useT();
   if (!outcome) return null;
 
-  const banner = outcomeBanner(outcome, stopAtCheckId);
+  const banner = outcomeBanner(t, outcome, stopAtCheckId);
 
   return (
     <Box className="simulator__results">
@@ -21,15 +23,15 @@ const ResultsPanel = (props: ResultsPanelProps) => {
             <Text className="simulator__banner-detail">{banner.detail}</Text>
           </Box>
         </Box>
-        <Button size="sm" variant="tertiary" onClick={onOpenLog}>Reveal log file</Button>
+        <Button size="sm" variant="tertiary" onClick={onOpenLog}>{t('views-simulator:results.reveal.log')}</Button>
       </Box>
 
       {outcome === 'not-completable' && softlockReport && <SoftlockSummary report={softlockReport} />}
 
       <Box className="simulator__suggestions">
-        <Text className="simulator__suggestions-title">Suggested updates ({suggestions.length})</Text>
+        <Text className="simulator__suggestions-title">{t('views-simulator:results.suggestions.title', { count: suggestions.length })}</Text>
         {suggestions.length === 0 && (
-          <Text className="simulator__suggestions-empty">No dataset changes suggested.</Text>
+          <Text className="simulator__suggestions-empty">{t('views-simulator:results.suggestions.empty')}</Text>
         )}
         {suggestions.map((suggestion, i) => (
           <SuggestionCard

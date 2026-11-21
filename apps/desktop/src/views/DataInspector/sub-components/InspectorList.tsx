@@ -1,8 +1,9 @@
 /* @layer renderer-app @kind component */
 import { useMemo } from 'react';
+import { useT, useText } from '@drizztdourden08/brock-react';
 import { Box } from '@drizztdourden08/tessera/primitives';
 import { DataTable, FilterBar } from '@drizztdourden08/tessera/composites';
-import { NO_FINDINGS, NOTHING_MATCHES } from '../DataInspector.constants';
+import { KIND_LABELS, KIND_SINGULARS, NO_FINDINGS, NOTHING_MATCHES } from '../DataInspector.constants';
 import type { InspectorListProps } from '../DataInspector.type';
 import { buildDefaultColumns } from '../behavior/default-table-columns';
 import { isEntityKind } from '../behavior/is-entity-kind';
@@ -20,6 +21,8 @@ const InspectorList = (props: InspectorListProps) => {
   const {
     kind, loading, source, schema, rows, clauses, onClausesChange, search, onSearchChange, selectedId, onSelect,
   } = props;
+  const t = useT();
+  const text = useText();
   const isCollection = isEntityKind(kind);
   const { order, storage } = useTableOrder(kind);
   const rowWindow = useWindowedRows({ rows, schema, order, selectedId, getId: source.getId, enabled: isCollection });
@@ -39,14 +42,14 @@ const InspectorList = (props: InspectorListProps) => {
           onChange={onClausesChange}
           search={search}
           onSearchChange={onSearchChange}
-          searchPlaceholder="Search records..."
-          searchLabel="Search records"
+          searchPlaceholder={t('views-data-inspector:list.search.placeholder')}
+          searchLabel={t('views-data-inspector:list.search.label')}
         />
         {isCollection && !loading && (
-          <CreateRecordButton kind={kind} label={source.label} schema={schema} onCreated={onSelect} />
+          <CreateRecordButton kind={kind} label={text(KIND_SINGULARS[kind] ?? kind)} schema={schema} onCreated={onSelect} />
         )}
       </Box>
-      {loading ? <ListLoading label={`Loading ${source.label}...`} /> : (
+      {loading ? <ListLoading label={t('views-data-inspector:list.loading', { label: text(KIND_LABELS[kind] ?? kind) })} /> : (
         <>
           <DataTable
             rows={rowWindow.shown}
@@ -58,7 +61,7 @@ const InspectorList = (props: InspectorListProps) => {
             fallbackGroupBy={isCollection ? undefined : RECOMMENDATION_GROUP_BY}
             selectedId={selectedId}
             onSelect={onSelect}
-            emptyMessage={isCollection ? NOTHING_MATCHES : NO_FINDINGS}
+            emptyMessage={text(isCollection ? NOTHING_MATCHES : NO_FINDINGS)}
             resolveTargetFields={resolveIdRefTargetFields}
             resolveIdRefDisplay={resolveIdRefDisplayValue}
             resolveIdRefDefault={defaultIdRefDisplay}

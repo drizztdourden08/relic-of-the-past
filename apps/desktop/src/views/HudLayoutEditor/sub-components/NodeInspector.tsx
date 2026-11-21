@@ -7,8 +7,10 @@ import { InspectorEmpty } from './InspectorEmpty';
 import { InspectorSections } from './InspectorSections';
 import { useSectionOpen } from '@app/hud-layout-editing/useSectionOpen';
 import type { NodeInspectorProps } from './NodeInspector.type';
+import { useT } from '@drizztdourden08/brock-react';
 
 const NodeInspector = (props: NodeInspectorProps) => {
+  const t = useT();
   const {
     node, doc, onPatch, onDrop, scope, glyphPacks, selectedId, onSelectNode, reflowWarnings,
   } = props;
@@ -22,7 +24,7 @@ const NodeInspector = (props: NodeInspectorProps) => {
     <FormulaScopeContext.Provider value={context.instances}>
       <Box className="hud-inspect">
         <Box className="hud-inspect__head">
-          <Text className="hud-inspect__name">{labelOf(node)}</Text>
+          <Text className="hud-inspect__name">{labelOf(node, t)}</Text>
           <Text className="hud-inspect__id">{node.id}</Text>
         </Box>
         <InspectorSections

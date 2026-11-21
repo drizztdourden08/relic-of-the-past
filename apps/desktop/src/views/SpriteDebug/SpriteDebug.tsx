@@ -1,14 +1,16 @@
 /* @layer renderer-components @kind component */
+import { useT } from '@drizztdourden08/brock-react';
 import { useState, useEffect } from 'react';
 import { Text, Tabs } from '@drizztdourden08/tessera/primitives';
 import type { SpriteDebugProps, ReviewMode } from './SpriteDebug.type';
 import { SpriteReviewPanel } from './sub-components/SpriteReviewPanel';
 import { ItemReviewPanel } from './sub-components/ItemReviewPanel';
-import { MODES } from './SpriteDebug.constants';
+import { modesOf } from './SpriteDebug.constants';
 import { getSpritesBaseUrl } from '@app/storage/sprites-store';
 import './SpriteDebug.css';
 
 const SpriteDebug = (props: SpriteDebugProps) => {
+  const t = useT();
   const { romFile } = props;
   const [mode, setMode] = useState<ReviewMode>('sprites');
   const [baseUrl, setBaseUrl] = useState('');
@@ -21,11 +23,11 @@ const SpriteDebug = (props: SpriteDebugProps) => {
 
   return (
     <>
-      <Tabs tabs={MODES} activeTab={mode} onTabChange={(id) => setMode(id as ReviewMode)} />
+      <Tabs tabs={modesOf(t)} activeTab={mode} onTabChange={(id) => setMode(id as ReviewMode)} />
       <Text className="sprite-debug-mode-hint">
         {mode === 'sprites'
-          ? 'Does each extracted image look correct?'
-          : 'Is each item mapped to the right sprite?'}
+          ? t('views-sprite-debug:hint.sprites')
+          : t('views-sprite-debug:hint.items')}
       </Text>
       {mode === 'sprites' ? <SpriteReviewPanel baseUrl={baseUrl} /> : <ItemReviewPanel baseUrl={baseUrl} />}
     </>

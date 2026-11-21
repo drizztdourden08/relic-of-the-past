@@ -1,4 +1,5 @@
 /* @layer renderer-components @kind hook */
+import { useT } from '@drizztdourden08/brock-react';
 import { useState, useCallback } from 'react';
 import { useImportProgress } from '@app/hooks/useImportProgress';
 import { NO_STATUS } from '../ImportForm.constants';
@@ -11,6 +12,7 @@ const statusOf = (result: ImportResult): ImportStatus => ({
 
 const useImportForm = (params: UseImportFormParams) => {
   const { kind, disabled, onUrlImport, onFileImport } = params;
+  const t = useT();
   const [url, setUrl] = useState('');
   const [status, setStatus] = useState<ImportStatus>(NO_STATUS);
   const [busy, setBusy] = useState(false);
@@ -22,11 +24,11 @@ const useImportForm = (params: UseImportFormParams) => {
     const trimmed = url.trim();
     if (!trimmed) return;
     try { new URL(trimmed); } catch {
-      setStatus({ message: 'Invalid URL', variant: 'error' });
+      setStatus({ message: t('data-manager:import.invalid-url'), variant: 'error' });
       return;
     }
     setBusy(true);
-    setStatus({ message: 'Downloading...', variant: '' });
+    setStatus({ message: t('data-manager:import.downloading'), variant: '' });
     try {
       const result = await onUrlImport(trimmed);
       setStatus(statusOf(result));
@@ -36,12 +38,12 @@ const useImportForm = (params: UseImportFormParams) => {
     } finally {
       setBusy(false);
     }
-  }, [url, onUrlImport]);
+  }, [url, onUrlImport, t]);
 
   const handleDrop = useCallback(async (files: File[]) => {
     if (files.length === 0) return;
     setBusy(true);
-    setStatus({ message: 'Importing...', variant: '' });
+    setStatus({ message: t('data-manager:import.importing'), variant: '' });
     try {
       setStatus(statusOf(await onFileImport(files)));
     } catch (e) {
@@ -49,13 +51,9 @@ const useImportForm = (params: UseImportFormParams) => {
     } finally {
       setBusy(false);
     }
-  }, [onFileImport]);
+  }, [onFileImport, t]);
 
-  const handleKeyDown = (e: React.KeyboardEvent) => {
-    if (e.key === 'Enter' && !isDisabled) void handleDownload();
-  };
-
-  return { url, setUrl, status, busy, progress, isDisabled, handleDownload, handleDrop, handleKeyDown };
+  return { url, setUrl, status, busy, progress, isDisabled, handleDownload, handleDrop };
 };
 
 export { useImportForm };

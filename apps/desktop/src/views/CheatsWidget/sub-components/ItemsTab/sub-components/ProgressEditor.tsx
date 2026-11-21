@@ -1,4 +1,5 @@
 /* @layer renderer-widgets @kind component */
+import { useT, useText } from '@drizztdourden08/brock-react';
 import { useState } from 'react';
 import { Pressable } from '@drizztdourden08/tessera/primitives';
 import { cheatSetInventorySlot, CheatSlot } from '@app/game';
@@ -11,6 +12,8 @@ import type { PanelProps, ProgressView } from '../ItemsTab.type';
 const noHover = (): void => undefined;
 
 const ProgressEditor = ({ scale, spritesBase }: PanelProps) => {
+  const t = useT();
+  const text = useText();
   const pendants = useGameUIStore((s) => s.dungeonProgress.pendants);
   const crystals = useGameUIStore((s) => s.dungeonProgress.crystals);
   const progressIndicator = useGameUIStore((s) => s.saveMenu.progressIndicator);
@@ -21,7 +24,7 @@ const ProgressEditor = ({ scale, spritesBase }: PanelProps) => {
 
   return (
     <PauseBorderBox color="yellow" cols={PROGRESS_PANEL.cols} rows={PROGRESS_PANEL.rows} scale={scale} spritesBase={spritesBase}>
-      <Pressable className="cheats-items__toggle" title={`Show ${other}`} onClick={() => setChosen(other)}>
+      <Pressable className="cheats-items__toggle" title={t('views-cheats:items.show', { view: other })} onClick={() => setChosen(other)}>
         <PauseLabel name={view} tiles={5} scale={scale} spritesBase={spritesBase} />
       </Pressable>
 
@@ -34,7 +37,7 @@ const ProgressEditor = ({ scale, spritesBase }: PanelProps) => {
             owned={held}
             menu={false}
             ghost={`${spritesBase}pause-pendant-${variant}.png`}
-            title={`${name}: click to ${held ? 'take away' : 'give'}`}
+            title={t('views-cheats:items.toggle', { name: text(name), action: held ? 'take' : 'give' })}
             style={{ position: 'absolute', left: tile * x, top: tile * y }}
             onClick={() => cheatSetInventorySlot(CheatSlot.Pendants, pendants ^ bit)}
             onHover={noHover}
@@ -55,7 +58,7 @@ const ProgressEditor = ({ scale, spritesBase }: PanelProps) => {
             owned={held}
             menu={false}
             ghost={`${spritesBase}pause-crystal-filled.png`}
-            title={`Crystal ${index + 1}: click to ${held ? 'take away' : 'give'}`}
+            title={t('views-cheats:items.toggle', { name: t('views-cheats:items.crystal', { n: index + 1 }), action: held ? 'take' : 'give' })}
             style={{ position: 'absolute', left: tile * x, top: tile * y }}
             onClick={() => cheatSetInventorySlot(CheatSlot.Crystals, crystals ^ bit)}
             onHover={noHover}

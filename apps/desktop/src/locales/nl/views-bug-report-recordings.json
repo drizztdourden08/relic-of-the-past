@@ -1,0 +1,11 @@
+{
+  "title": "Op te nemen opnames",
+  "showSent": "Verzonden tonen",
+  "empty.new": "Geen nieuwe opnames. Toon verzonden om eerdere te zien.",
+  "empty.all": "Nog geen opnames.",
+  "sent": "Verzonden",
+  "include": "De opname van {name} bijvoegen",
+  "github.label": "Een GitHub-issue openen",
+  "github.opened": "Er is een vooraf ingevulde GitHub-issue geopend. Meld je aan bij de Sanctuary om meldingen vanuit de app te versturen met je saves erbij.",
+  "github.noRepo": "Meld je aan bij de Sanctuary om een melding te versturen."
+}

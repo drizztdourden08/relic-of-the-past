@@ -1,5 +1,8 @@
 /* @layer shared-asset-extraction @kind barrel */
 export { loadRomFromBuffer } from '../rom/rom-loader/load-rom-from-buffer';
+export { RomLoadError } from '../rom/rom-loader/rom-load-error';
+export { loadPatchedRomFromBuffer } from '../rom/rom-loader/load-patched-rom-from-buffer';
+export { extractPatchedLanguage, fontReferenceOfRom } from '../text/patched-language';
 export { GbaRomReader } from '../rom/gba-rom/gba-rom-reader';
 export { loadGbaAlttpRomFromBuffer } from '../rom/gba-rom/load-gba-alttp-rom-from-buffer';
 export { GbaAlttpDungeonSource } from '../sources/gba-alttp/dungeon-source/gba-alttp-dungeon-source';

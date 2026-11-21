@@ -1,0 +1,11 @@
+{
+  "title": "Gravações a incluir",
+  "showSent": "Mostrar enviadas",
+  "empty.new": "Nenhuma gravação nova. Use Mostrar enviadas para ver as anteriores.",
+  "empty.all": "Nenhuma gravação ainda.",
+  "sent": "Enviada",
+  "include": "Incluir a gravação de {name}",
+  "github.label": "Abrir um issue no GitHub",
+  "github.opened": "Foi aberto um issue do GitHub pré-preenchido. Inicie sessão no Sanctuary para enviar relatórios a partir da aplicação com os seus jogos guardados anexados.",
+  "github.noRepo": "Inicie sessão no Sanctuary para enviar um relatório."
+}

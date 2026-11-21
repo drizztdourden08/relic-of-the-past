@@ -1,8 +1,11 @@
 /* @layer renderer-components @kind component */
 import { Text } from '@drizztdourden08/tessera/primitives';
+import { nodeName } from '@app/hud-layout-editing/node-name';
 import type { LatticeOccupantsProps } from './LatticeOccupants.type';
+import { useT } from '@drizztdourden08/brock-react';
 
 const LatticeOccupants = (props: LatticeOccupantsProps) => {
+  const t = useT();
   const { occupants, activeChildId } = props;
 
   return (
@@ -18,7 +21,7 @@ const LatticeOccupants = (props: LatticeOccupantsProps) => {
             gridRow: `${occupant.row + 1} / span ${occupant.rowSpan}`,
           }}
         >
-          {occupant.id}
+          {nodeName(occupant.id, t)}
         </Text>
       ))}
     </>

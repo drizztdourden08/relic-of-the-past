@@ -1,4 +1,5 @@
 /* @layer renderer-components @kind component */
+import { useT } from '@drizztdourden08/brock-react';
 import { Box, Button, EmptyState, SectionHeader, Text } from '@drizztdourden08/tessera/primitives';
 import { useLayerEditor } from './behavior/useLayerEditor';
 import { LayerCard } from './sub-components/LayerCard';
@@ -16,6 +17,7 @@ const LayerEditor = (props: LayerEditorProps) => {
   const {
     layers, dirty, saving, error, addLayer, removeLayer, moveLayer, updateLayer, save, revert,
   } = useLayerEditor({ pack, target, manifest, saveBase, onSaved });
+  const t = useT();
   const locked = saving || readOnly;
   const fileLoopSamples = useFileLoopSamples(
     pack, [...new Set(layers.map((layer) => layer.files[0]).filter((name) => name !== undefined))],
@@ -24,15 +26,15 @@ const LayerEditor = (props: LayerEditorProps) => {
   return (
     <Box className="layer-editor">
       <SectionHeader
-        title={`Layers - ${target.label}`}
-        subtitle={isLayered || readOnly ? undefined : 'This pack has no manifest yet. Saving writes one.'}
+        title={t('msu-studio:layers.title', { target: target.label })}
+        subtitle={isLayered || readOnly ? undefined : t('msu-studio:layers.subtitle.no-manifest')}
         action={
-          <Button variant="secondary" size="sm" disabled={locked} onClick={addLayer}>Add layer</Button>
+          <Button variant="secondary" size="sm" disabled={locked} onClick={addLayer}>{t('msu-studio:layers.add')}</Button>
         }
       />
 
       {layers.length === 0 ? (
-        <EmptyState message="No layers yet." />
+        <EmptyState message={t('msu-studio:layers.empty')} />
       ) : (
         layers.map((layer, index) => (
           <LayerCard

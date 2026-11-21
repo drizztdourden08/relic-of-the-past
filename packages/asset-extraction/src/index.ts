@@ -1,7 +1,20 @@
 /* @layer shared-asset-extraction @kind logic */
-export type { RomData, RomLanguage, RomIdentEntry } from './rom/rom-types';
+export type { RomData, RomLanguage, RomIdentEntry, RomRevision } from './rom/rom-types';
+export { extractJapaneseLanguage } from './japanese/entry/extract-japanese-language';
+export { buildJapaneseEntry } from './japanese/entry/build-japanese-entry';
+export { glyphToChar } from './japanese/text/glyph-to-char';
+export { JAPANESE_TEXT_FLAG } from './japanese/text/core-encoding.constants';
+export { GLYPH_LIMIT as JAPANESE_GLYPH_LIMIT } from './japanese/text/japanese-charset.constants';
+export type { ExtractedJapaneseLanguage, JapanesePackedEntry } from './japanese/entry/japanese-entry.type';
 export { snesToLinear, advanceAddress, advanceAddressWord } from './rom/snes-address';
-export { ZELDA3_SHA1, ZELDA3_SHA1_US } from './rom/rom-loader/rom-loader.constants';
+export {
+  DOUBLE_HEADER_LENGTH, GAME_ROM_LANGUAGE, OFFICIAL_RELEASES, PATCHED_ROM_MAX_BYTES, PATCHED_ROM_MIN_BYTES, SMC_HEADER_BYTES,
+  ZELDA3_SHA1, ZELDA3_SHA1_US,
+} from './rom/rom-loader/rom-loader.constants';
+export { fanTranslationLanguage } from './rom/rom-loader/fan-translation-language';
+export { fanTranslationRefusal } from './rom/rom-loader/fan-translation-refusal';
+export { RomLoadError } from './rom/rom-loader/rom-load-error';
+export { stripSmcHeader } from './rom/rom-loader/strip-smc-header';
 export { RomReader } from './rom/reader';
 
 export {
@@ -63,6 +76,8 @@ export { SUPPLEMENT_IDS } from './sources/source-ids';
 export type { AssetSourceId } from './sources/source-ids.type';
 export type { PackedLangEntry } from './text/build-language-entry/build-language-entry.type';
 export { buildPackedEntry } from './text/build-language-entry/build-packed-entry';
+export { buildLangData } from './text/build-language-entry/build-lang-data';
+export { dialogueFlags } from './text/build-language-entry/dialogue-flags';
 export { extractLangEntry } from './text/build-language-entry/extract-lang-entry';
 export { kFontTypes } from './text/data/font-data';
 export { GLYPH_RAMP } from './text/data/glyph-ramp';
@@ -72,6 +87,23 @@ export { RANDOMIZER_MSG_BASE, RANDOMIZER_RECEIPT_MSG } from './text/data/randomi
 export { formatDialogueText } from './text/dialogue-decoder/format-dialogue-text';
 export { kCmdInfo } from './text/dialogue-encoder/cmd-info';
 export { compressStrings } from './text/dialogue-encoder/compress-strings';
+export { extractScreens } from './screens/extract-screens';
+export { extractJapaneseScreens } from './screens/japanese/extract-japanese-screens';
+export { jaScreenAddressesOf, kScreenAddresses, US_SCREEN_ADDRESSES } from './screens/addresses';
+export { compileJapaneseGraphics, decodeJapaneseGraphicsPack, encodeJapaneseGraphicsPack, hasJapaneseFont } from './japanese-graphics';
+export type { JapaneseGraphicEntry } from './japanese-graphics';
+export { readSheetPointer } from './screens/read-sheet-pointers';
+export { PAUSE_TABLES, SELECT_FILE_TABLES } from './screens/screens.constants';
+export {
+  COPY_SCREEN_ID, CREDITS_DIGITS_ID, CREDITS_MAP_ID, CREDITS_OFFSETS_ID, CREDITS_SCROLL_Y_ID, CREDITS_TEXT_ID,
+  DUNGEON_MAP_LABELS_ID, ENDING_CAPTION_DATA_ID, ENDING_CAPTION_OFFSETS_ID, FLOOR_LABELS_ID, HUD_LIFE_ROW_ID, NAME_GRID_ID, PAUSE_HEADERS_ID,
+  TILEMAP_FONT_DATA_ID,
+  TILEMAP_FONT_ID, menuTilemapId, pauseTableId, selectFileTableId, sheetPatchTableId, sheetTableId,
+} from './screens/screen-table-ids.constants';
+export type { ScreenTable } from './screens/screen-table.type';
+export type {
+  PauseTable, ScreenAddressTable, ScreenPayload, SelectFileTable, SheetKind, SheetOverride, TableRegion,
+} from './screens/screen-payload.type';
 export { decodeEndingCaptions } from './text/menu-text/decode-captions';
 export { decodeCredits } from './text/menu-text/decode-credits';
 export { decodeMenuText } from './text/menu-text/decode-stripe-text';
@@ -79,4 +111,12 @@ export type { DecodedLine } from './text/menu-text/menu-text.type';
 export { dialogueTexts } from './text/parse-dialogue-text/dialogue-texts';
 export { parseDialogueText } from './text/parse-dialogue-text/parse-dialogue-text';
 export { kLanguages } from './text/data/language-data/language-data.constants';
+export { languageConfigOf } from './text/data/language-data/language-config-of';
 export type { LanguageConfig } from './text/data/language-data/language-data.type';
+export type { GlyphMap } from './text/glyph-map';
+export { decodeLetterList } from './text/letter-list';
+export { glyphPixelGrid } from './text/patched-language/font/glyph-pixel-grid';
+export type {
+  FontReference, GlyphHow, GlyphNaming, PatchedLanguage, PatchedLanguageInput, PatchedPartId, PatchedPartReport,
+  PatchedPartStatus,
+} from './text/patched-language';

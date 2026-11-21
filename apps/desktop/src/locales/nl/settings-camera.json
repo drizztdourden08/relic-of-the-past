@@ -1,0 +1,8 @@
+{
+  "section.camera.title": "Camera",
+  "camera-lock-to-viewport.label": "Camera aan beeld vergrendelen",
+  "camera-lock-to-viewport.description": "Zet het beeld vast op de gebiedsgrens, zodat er geen zwarte ruimte buiten zichtbaar is. Uit behoudt de originele camera.",
+  "camera-lock-to-viewport.hint": "Vereist Uitgebreide weergave, bij Beeldscherm.",
+  "smooth-transitions.label": "Vloeiende overgangen",
+  "smooth-transitions.description": "Maakt het schuiven over gebiedsnaden vloeiender. Vereist Camera aan beeld vergrendelen."
+}

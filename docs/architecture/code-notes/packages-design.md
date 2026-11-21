@@ -3,7 +3,7 @@
 
 Facts about `packages/design` that the code cannot say on its own. Each heading names a file or folder by its path from the repository root.
 
-## packages/design/game-text/font/game-font.css
+## packages/design/game-text/font/latin/game-font.css
 
 The dialogue face is a community recreation of the game's font by Patrick H. Lauke, under Creative Commons Attribution 3.0. It is close to the font a language pack carries but not identical. A surface that measures a line reads the pack's width table, which holds the game's own numbers, while it draws with this face. Measured against one pack's table, 67 of the 73 characters checked advance by the same amount. Six differ, in game pixels:
 

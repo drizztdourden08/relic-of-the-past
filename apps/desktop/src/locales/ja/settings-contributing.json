@@ -1,0 +1,18 @@
+{
+  "section.developer-instrumentation.title": "計測",
+  "developer-tools-enabled.label": "開発者モード",
+  "developer-tools-enabled.description": "開発者ツールをオンにします。",
+  "experimental-features-enabled.label": "試験的機能",
+  "experimental-features-enabled.description": "未完成の機能を有効にします：ステータス表示レイアウトエディター、モダンステータス表示と操作、GBA設定、Archipelagoオンラインプレイ。オフにするとモダンステータス表示と追加ダンジョンもオフになります。",
+  "experimental-features-enabled.hint": "開発者モードが必要です。",
+  "dev-navigation-data.label": "ナビゲーションデータ",
+  "dev-navigation-data.description": "現在地とナビゲーションのウィジェット、フラッドフィル、シミュレーターが使う部屋、グリッド、スプライトのデータ。",
+  "dev-navigation-data.hint": "開発者モードが必要です。",
+  "section.developer-sanctuary.title": "Sanctuaryアカウント",
+  "sanctuary-account.label": "Sanctuaryアカウント",
+  "sanctuary-account.description": "サインインすると、バグレポートに名前が付き、ハブに表示されます。",
+  "section.developer-debug-reporting.title": "デバッグレポート",
+  "allow-debug-logging.label": "デバッグログの記録を許可",
+  "allow-debug-logging.description": "詳細なログを保持し、タイトルバーにキャプチャボタン（Tab）と、デバッグレポートを送る浮動ボタンを追加します。",
+  "screen.title": "協力"
+}

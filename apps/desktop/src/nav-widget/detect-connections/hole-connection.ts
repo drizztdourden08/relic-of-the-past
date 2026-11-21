@@ -1,6 +1,7 @@
 /* @layer renderer-widgets @kind logic */
 import { screenForRoomIndex } from '@rotp/game-data';
 import type { DetectedConnection } from '../../views/NavigationWidget/NavigationWidget.type';
+import { screenName } from '@app/game/record-text';
 import { hexLabel } from './hex-label';
 
 const holeConnection = (room: number): DetectedConnection => {
@@ -10,7 +11,7 @@ const holeConnection = (room: number): DetectedConnection => {
     targetRoomOrScreen: room,
     toScreenId: screen?.id ?? null,
     isExit: false,
-    label: `Hole -> ${screen ? screen.name : hexLabel('room', room)}`,
+    label: `Hole -> ${screen ? screenName(screen) : hexLabel('room', room)}`,
   };
 };
 

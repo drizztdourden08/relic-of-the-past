@@ -2,10 +2,12 @@
 import { useEffect, useState } from 'react';
 import { menuTextFor } from '@app/storage/menu-text-store';
 import type { DecodedText } from '@app/storage/menu-text-store';
+import { useT } from '@drizztdourden08/brock-react';
 import { decodedNoteOf } from './decoded-note-of';
 import { NO_LINES } from './text-groups.constants';
 
 const useDecodedMenu = (base: string | null) => {
+  const t = useT();
   const [decoded, setDecoded] = useState<DecodedText | null>(null);
 
   useEffect(() => {
@@ -19,7 +21,7 @@ const useDecodedMenu = (base: string | null) => {
   return {
     menu: decoded?.menu ?? NO_LINES,
     credits: decoded?.credits ?? NO_LINES,
-    decodedNote: decodedNoteOf(decoded, base),
+    decodedNote: decodedNoteOf(t, decoded, base),
   };
 };
 

@@ -1,4 +1,6 @@
 /* @layer renderer-app @kind constants */
+import { msg } from '@drizztdourden08/brock-core/i18n';
+import type { Message } from '@drizztdourden08/brock-core/i18n';
 import type { RatioKeys } from '../ratio-patch.type';
 
 const REQUIRES_LINEAR = new Set(['21:9']);
@@ -15,13 +17,13 @@ const TALL_PRESETS = [
   { value: '9:21', label: '9:21' },
 ];
 
-const ASPECT_DESCRIPTIONS: Record<string, string> = {
-  original: 'Use the original 256-pixel width. Extend Y chooses 224 or 240 lines.',
-  auto: 'Matches the window size.',
-  screen: 'Matches the full physical screen ratio.',
-  wide: 'Choose a fixed ratio, including true 4:3. Uses 240 lines.',
-  tall: 'Choose a tall (portrait-style) preset.',
-  custom: 'Set an exact width : height ratio.',
+const ASPECT_DESCRIPTIONS: Record<string, Message> = {
+  original: msg('settings-controls:display.aspect.description.original'),
+  auto: msg('settings-controls:display.aspect.description.auto'),
+  screen: msg('settings-controls:display.aspect.description.screen'),
+  wide: msg('settings-controls:display.aspect.description.wide'),
+  tall: msg('settings-controls:display.aspect.description.tall'),
+  custom: msg('settings-controls:display.aspect.description.custom'),
 };
 
 const EXTENDED_ONLY_KEYS = new Set([
@@ -31,7 +33,7 @@ const EXTENDED_ONLY_KEYS = new Set([
 
 const ASPECT_KEYS: RatioKeys = { ratio: 'aspectRatio', w: 'customAspectW', h: 'customAspectH' };
 
-const ASPECT_LOCKED_MESSAGE = 'Turn on Extended Rendering to pick a ratio other than 4:3.';
+const ASPECT_LOCKED_MESSAGE = msg('settings-controls:display.aspect.locked');
 
 export {
   ASPECT_DESCRIPTIONS, ASPECT_KEYS, ASPECT_LOCKED_MESSAGE, EXTENDED_ONLY_KEYS, REQUIRES_LINEAR, REQUIRES_ULTRAWIDE, TALL_PRESETS, TALL_PRESET_VALUES,

@@ -1,4 +1,5 @@
 /* @layer renderer-widgets @kind component */
+import { useT } from '@drizztdourden08/brock-react';
 import { useEffect, useReducer } from 'react';
 import { Box, Text } from '@drizztdourden08/tessera/primitives';
 import type { CheatCategory } from '@app/game';
@@ -14,6 +15,7 @@ const bump = (tick: number): number => tick + 1;
 
 const RulesTab = (props: CheatTabProps) => {
   const { gates } = props;
+  const t = useT();
   const [, rerender] = useReducer(bump, 0);
   useEffect(() => onCheatRulesRestored(rerender), []);
   const reasonFor = (category: CheatCategory): string | undefined =>
@@ -21,7 +23,7 @@ const RulesTab = (props: CheatTabProps) => {
 
   return (
     <Box className="cheats-rules">
-      <Text as="h3" className="cheats-section__title">States</Text>
+      <Text as="h3" className="cheats-section__title">{t('views-cheats:rules.states')}</Text>
       <Box className="cheats-rules__grid">
         {RULE_TILES.map((spec) => (
           <RuleTile
@@ -34,7 +36,7 @@ const RulesTab = (props: CheatTabProps) => {
         ))}
       </Box>
 
-      <Text as="h3" className="cheats-section__title">Combat</Text>
+      <Text as="h3" className="cheats-section__title">{t('views-cheats:rules.combat')}</Text>
       <Box className="cheats-rules__ladders">
         {RUNG_TILES.map((spec) => (
           <RungTile
@@ -47,7 +49,7 @@ const RulesTab = (props: CheatTabProps) => {
         ))}
       </Box>
 
-      <Text as="h3" className="cheats-section__title">Actions</Text>
+      <Text as="h3" className="cheats-section__title">{t('views-cheats:rules.actions')}</Text>
       <Box className="cheats-rules__grid">
         {ACTION_TILES.map((spec) => (
           <ActionTile key={spec.id} spec={spec} reason={reasonFor(spec.category)} />

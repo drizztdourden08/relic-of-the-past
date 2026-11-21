@@ -1,8 +1,11 @@
 /* @layer renderer-app @kind logic */
+import { msg } from '@drizztdourden08/brock-core/i18n';
 import { chestSwapOf, getItem } from '@rotp/game-data';
 import type { CheckId, CheckRecord } from '@rotp/game-data';
 import type { TrackerBadge } from '@drizztdourden08/brock-randomizer/tracker';
+import { itemName } from '@app/game/record-text';
 import { getCompletedChecks, getEventStatus } from '@app/game/tracker';
+import { textOf } from '@app/shell/text-bridge';
 import { trackerCheckOf } from './rotp-tracker-check-of';
 import { NOW_BADGE_ID, SWAP_BADGE_ID } from './rotp-tracker.constants';
 import { NO_BADGES } from './rotp-tracker-badges.constants';
@@ -10,20 +13,19 @@ import { NO_BADGES } from './rotp-tracker-badges.constants';
 const swapBadge = (check: CheckRecord, item: string | null): TrackerBadge[] => {
   const swap = chestSwapOf(check);
   if (swap === null) return [];
-  const primary = getItem(swap.primary).name;
-  const standIn = getItem(swap.standIn).name;
+  const values = { primary: itemName(getItem(swap.primary)), standIn: itemName(getItem(swap.standIn)) };
   const swapped = item === swap.standIn;
-  const title = swapped
-    ? `This chest holds the ${primary}. You already have one, so it pays ${standIn}.`
-    : `This chest holds the ${primary}. Once you have one it pays ${standIn} instead.`;
-  return [{ id: SWAP_BADGE_ID, label: 'swap', tone: swapped ? 'warning' : 'neutral', title }];
+  const title = textOf(swapped ? msg('views-randomizer:tracker.swap.already', values) : msg('views-randomizer:tracker.swap.pending', values));
+  return [{ id: SWAP_BADGE_ID, label: textOf(msg('views-randomizer:tracker.badge.swap')), tone: swapped ? 'warning' : 'neutral', title }];
 };
 
 const presenceBadge = (checkId: string): TrackerBadge[] => {
   const now = getEventStatus().get(checkId as CheckId);
   if (now === undefined) return [];
-  if (now) return [{ id: NOW_BADGE_ID, label: 'now', tone: 'success' }];
-  return getCompletedChecks().has(checkId as CheckId) ? [{ id: NOW_BADGE_ID, label: 'not now', tone: 'neutral' }] : [];
+  if (now) return [{ id: NOW_BADGE_ID, label: textOf(msg('views-randomizer:tracker.badge.now')), tone: 'success' }];
+  return getCompletedChecks().has(checkId as CheckId)
+    ? [{ id: NOW_BADGE_ID, label: textOf(msg('views-randomizer:tracker.badge.not-now')), tone: 'neutral' }]
+    : [];
 };
 
 const rotpBadgesOf = (location: string, item: string | null): readonly TrackerBadge[] => {

@@ -1,9 +1,10 @@
 /* @layer renderer-widgets @kind component */
 import type { WidgetMeta } from '@drizztdourden08/brock-react';
+import { msg } from '@drizztdourden08/brock-core/i18n';
 import { DebugWidgetContent } from '@app/views/DebugWidget';
 
 const meta: WidgetMeta = {
-  label: 'Game State',
+  label: msg('widgets:debug.label'),
   padding: 'none',
   icon: 'radio',
   order: 4,

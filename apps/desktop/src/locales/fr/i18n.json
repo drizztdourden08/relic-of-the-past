@@ -1,0 +1,13 @@
+{
+  "tab.label": "Langue",
+  "section.app.title": "Langue de l'appli",
+  "section.profile.title": "Ce profil",
+  "row.appLocale.label": "Langue de l'appli",
+  "row.appLocale.description": "La langue de l'appli. Elle règle aussi l'écran de démarrage, la zone de notification et le sélecteur de profil.",
+  "row.locale.label": "Langue",
+  "row.locale.description": "La langue de ce profil. Passer à ce profil change la langue sans rechargement.",
+  "option.system.label": "Suivre le système",
+  "option.system.hint": "Actuellement {language}",
+  "option.app.label": "Comme l'appli",
+  "option.app.hint": "Actuellement {language}"
+}

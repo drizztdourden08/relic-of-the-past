@@ -1,26 +1,24 @@
-/* @layer renderer-app @kind data */
+/* @layer renderer-app @kind constants */
+import { msg } from '@drizztdourden08/brock-core/i18n';
+import type { Message } from '@drizztdourden08/brock-core/i18n';
 import type { Recommendation } from '@rotp/navigation';
 
-const CURRENT_TITLE = 'Current';
-const PROPOSED_TITLE = 'Proposed';
-const NO_CURRENT = 'This record does not exist yet.';
-const NO_PROPOSAL = 'This finding carries no proposal.';
-const NOTHING_OPEN = 'Select a finding.';
+const CURRENT_TITLE = msg('views-data-inspector:rec.current');
+const PROPOSED_TITLE = msg('views-data-inspector:rec.proposed');
+const NO_CURRENT = msg('views-data-inspector:rec.no-current');
+const NO_PROPOSAL = msg('views-data-inspector:rec.no-proposal');
+const NOTHING_OPEN = msg('views-data-inspector:rec.nothing-open');
 
-const ACCEPT_LABEL = 'Accept';
-const REJECT_LABEL = 'Reject';
-const REVERT_LABEL = 'Revert edits';
-const ACCEPT_ALL_LABEL = 'Accept all certain';
+const ACCEPT_LABEL = msg('views-data-inspector:rec.accept');
+const REJECT_LABEL = msg('views-data-inspector:rec.reject');
+const REVERT_LABEL = msg('views-data-inspector:rec.revert');
 
-const ACTION_LABEL: Record<Recommendation['action'], string> = {
-  create: 'Add',
-  update: 'Change',
-  delete: 'Remove',
+const ACTION_LABEL: Record<Recommendation['action'], Message> = {
+  create: msg('views-data-inspector:rec.action.create'),
+  update: msg('views-data-inspector:rec.action.update'),
+  delete: msg('views-data-inspector:rec.action.delete'),
 };
 
-const NOWHERE = 'no screen';
-
 export {
-  ACCEPT_ALL_LABEL, ACCEPT_LABEL, ACTION_LABEL, CURRENT_TITLE, NO_CURRENT, NO_PROPOSAL, NOTHING_OPEN, NOWHERE,
-  PROPOSED_TITLE, REJECT_LABEL, REVERT_LABEL,
+  ACCEPT_LABEL, ACTION_LABEL, CURRENT_TITLE, NO_CURRENT, NO_PROPOSAL, NOTHING_OPEN, PROPOSED_TITLE, REJECT_LABEL, REVERT_LABEL,
 };

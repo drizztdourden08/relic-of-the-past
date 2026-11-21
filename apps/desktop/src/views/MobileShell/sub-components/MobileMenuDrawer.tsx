@@ -1,5 +1,6 @@
 /* @layer renderer-app @kind component */
 import { useState } from 'react';
+import { useT } from '@drizztdourden08/brock-react';
 import type { MenuItem } from '@drizztdourden08/brock-react';
 import { Box, Button, Icon, IconButton, Image, Text } from '@drizztdourden08/tessera/primitives';
 import { menuGroupsOf } from '../behavior/menu-groups-of';
@@ -9,6 +10,7 @@ import { MobileMenuRow } from './MobileMenuRow';
 
 const MobileMenuDrawer = (props: MobileMenuDrawerProps) => {
   const { entries, fps, isMuted, onToggleMute, onPick } = props;
+  const t = useT();
   const [trail, setTrail] = useState<MenuItem[]>([]);
   const parent = trail.at(-1);
   const shown = parent ? (parent.children ?? NO_ENTRIES) : entries;
@@ -22,8 +24,8 @@ const MobileMenuDrawer = (props: MobileMenuDrawerProps) => {
       <Box className="mobile-menu__header">
         <Image className="mobile-menu__logo" src={MOBILE_LOGO} alt="" />
         <Text className="mobile-menu__title">{MOBILE_TITLE}</Text>
-        {fps > 0 ? <Text className="mobile-menu__fps">{fps} FPS</Text> : null}
-        <IconButton variant="ghost" label={isMuted ? 'Unmute' : 'Mute'} active={isMuted} onClick={onToggleMute}>
+        {fps > 0 ? <Text className="mobile-menu__fps">{t('views-mobile-shell:fps', { fps })}</Text> : null}
+        <IconButton variant="ghost" label={isMuted ? t('views-mobile-shell:volume.unmute') : t('views-mobile-shell:volume.mute')} active={isMuted} onClick={onToggleMute}>
           <Icon name={isMuted ? 'volume-x' : 'volume-2'} />
         </IconButton>
       </Box>

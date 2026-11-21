@@ -1,4 +1,5 @@
 /* @layer renderer-components @kind types */
+import type { Message } from '@drizztdourden08/brock-core/i18n';
 import type { PatternValue } from '@drizztdourden08/tessera/composites';
 import type { LobbyConnect, LobbyDraft, LobbyLocation } from '@app/hooks/randomizer/lobby-setup';
 
@@ -90,7 +91,9 @@ interface LobbyLineProps {
   state: LobbyLineState;
 }
 
+type TextOf = (message: Message) => string;
+
 export type {
   ConnectModeProps, ConnectionSectionProps, LobbyCodeFieldProps, LobbyLineProps, LobbyLineState, LobbyRow, LobbyRowsProps, LobbySetupProps,
-  NetworkWarningProps, RefreshButtonProps, RemoteAddressProps, SeatFieldProps,
+  NetworkWarningProps, RefreshButtonProps, RemoteAddressProps, SeatFieldProps, TextOf,
 };

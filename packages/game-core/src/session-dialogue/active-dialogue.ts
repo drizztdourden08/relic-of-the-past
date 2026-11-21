@@ -1,5 +1,6 @@
 /* @layer bridge-wasm @kind logic */
-import { findDatAsset, unpackPackedBytes } from '@rotp/asset-extraction';
+import { decodeLetterList, findDatAsset, unpackPackedBytes } from '@rotp/asset-extraction';
+import { dialogueMapEntryOf } from './dialogue-map-entry';
 import type { EmscriptenModule } from '../types';
 import type { ActiveDialogue } from './active-dialogue.type';
 
@@ -12,39 +13,43 @@ const activeLanguageCode = (mod: EmscriptenModule): string => {
   }
 };
 
-const dialogueIndexOf = (dialogueMap: Uint8Array, code: string): number => {
-  for (const entry of unpackPackedBytes(dialogueMap)) {
-    const [codeBytes, conf] = unpackPackedBytes(entry);
-    const dialogueIndex = conf?.[0];
-    if (codeBytes === undefined || conf === undefined || conf.length < 3 || dialogueIndex === undefined) continue;
-    if (new TextDecoder().decode(codeBytes) === code) return dialogueIndex;
-  }
-  return 0;
-};
-
-const readActiveDialogue = (mod: EmscriptenModule): ActiveDialogue | null => {
-  let dat: Uint8Array;
+const readAssetFile = (mod: EmscriptenModule): Uint8Array | null => {
   try {
-    dat = mod.FS.readFile('/zelda3_assets.dat');
+    return mod.FS.readFile('/zelda3_assets.dat');
   } catch {
     return null;
   }
+};
+
+const languageParts = (
+  dialogueAsset: Uint8Array,
+  fontAsset: Uint8Array,
+  index: number,
+): Omit<ActiveDialogue, 'code'> | null => {
+  const langData = unpackPackedBytes(dialogueAsset)[index];
+  const fontPacked = unpackPackedBytes(fontAsset)[index];
+  if (langData === undefined || fontPacked === undefined) return null;
+
+  const [dictPacked, dialoguePacked, lettersPacked] = unpackPackedBytes(langData);
+  const [fontSheet, fontWidths] = unpackPackedBytes(fontPacked);
+  if (dictPacked === undefined || dialoguePacked === undefined) return null;
+  if (fontSheet === undefined || fontWidths === undefined) return null;
+
+  const bakedLetters = decodeLetterList(lettersPacked);
+  return { dictPacked, lineChunks: unpackPackedBytes(dialoguePacked), fontSheet, fontWidths, bakedLetters };
+};
+
+const readActiveDialogue = (mod: EmscriptenModule): ActiveDialogue | null => {
+  const dat = readAssetFile(mod);
+  if (dat === null) return null;
   const dialogueAsset = findDatAsset(dat, 'kDialogue');
   const mapAsset = findDatAsset(dat, 'kDialogueMap');
   const fontAsset = findDatAsset(dat, 'kDialogueFont');
   if (dialogueAsset === undefined || mapAsset === undefined || fontAsset === undefined) return null;
 
-  const code = activeLanguageCode(mod);
-  const index = dialogueIndexOf(mapAsset, code);
-  const langData = unpackPackedBytes(dialogueAsset)[index];
-  const fontPacked = unpackPackedBytes(fontAsset)[index];
-  if (langData === undefined || fontPacked === undefined) return null;
-
-  const [dictPacked, dialoguePacked] = unpackPackedBytes(langData);
-  const fontWidths = unpackPackedBytes(fontPacked)[1];
-  if (dictPacked === undefined || dialoguePacked === undefined || fontWidths === undefined) return null;
-
-  return { code, dictPacked, lineChunks: unpackPackedBytes(dialoguePacked), fontWidths };
+  const { index, base } = dialogueMapEntryOf(mapAsset, activeLanguageCode(mod));
+  const parts = languageParts(dialogueAsset, fontAsset, index);
+  return parts === null ? null : { code: base, ...parts };
 };
 
 export { readActiveDialogue };

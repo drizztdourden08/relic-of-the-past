@@ -1,8 +1,10 @@
 /* @layer renderer-components @kind types */
+import type { I18n, Text } from '@drizztdourden08/brock-core/i18n';
 import type { WizardApi } from '@drizztdourden08/tessera/composites';
 import type { ProfileWizardStepDef } from '@drizztdourden08/brock-react';
 import type { CreateProfileOptions, CreateProfileResult } from '@app/profiles/types';
 import type { ProfilePresetId } from '@app/views/DataManager/sub-components/profile-manager/profile-presets';
+import type { ProfileLanguage } from '@app/views/DataManager/sub-components/profile-language.type';
 
 type ProfileWizardValues = Record<string, unknown> & {
   name: string;
@@ -17,6 +19,8 @@ type ProfileWizardApi = WizardApi<ProfileWizardValues>;
 type UpdateValues = (patch: Partial<ProfileWizardValues>) => void;
 
 interface StepContext {
+  t: I18n['t'];
+  text: (value: Text) => string;
   joining: number | null;
   modules: readonly ProfileWizardStepDef[];
 }
@@ -29,7 +33,7 @@ interface CreateContext {
 
 interface ProfileCreateWizardProps {
   readyRoms: RomDisplayInfo[];
-  languages: Array<{ code: string }>;
+  languages: ProfileLanguage[];
   msuPacks: Array<{ name: string }>;
   onCreateProfile: (opts: CreateProfileOptions) => Promise<CreateProfileResult>;
   onCancel: () => void;

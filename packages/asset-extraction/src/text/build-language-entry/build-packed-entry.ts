@@ -5,10 +5,11 @@ import { buildLangData } from './build-lang-data';
 import { dialogueFlags } from './dialogue-flags';
 
 const buildPackedEntry = (params: PackedEntryParams): PackedLangEntry => {
-  const { code, texts, fontData, fontWidth, index } = params;
+  const { code, texts, fontData, fontWidth, index, glyphs, letters } = params;
   return {
     code,
-    langData: buildLangData(texts, code),
+    base: code,
+    langData: buildLangData(texts, code, glyphs, letters),
     fontPacked: buildFontPacked(fontData, fontWidth),
     flags: dialogueFlags(code, index),
   };

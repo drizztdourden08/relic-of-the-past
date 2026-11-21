@@ -5,12 +5,15 @@ import { withSlotTicked } from '@app/compounds/ShopSlotsBlock/behavior/with-slot
 import { shopTotalTextOf } from '@app/compounds/ShopSlotsBlock/behavior/shop-total-text';
 import { shopSectionsOf } from '@app/compounds/ShopSlotsBlock/behavior/shop-sections';
 import { shopCountControlOf } from '@app/compounds/ShopSlotsBlock/behavior/shop-count-control';
-import { VANILLA_TOTAL } from '@app/compounds/ShopSlotsBlock/ShopSlotsBlock.constants';
 import { defaultShopScope, SHOP_IDS, STANDARD_SHOP_SLOT_COUNT, DEFAULT_OFF_SHOPS, SHOP_SLOT_ROWS, normalizeRandomizerOptions, shopScopeOfValues } from '@rotp/randomizer';
 import { EMPTY_RANDOMIZER_FORM } from '@app/views/DataManager/sub-components/profile-manager/build-randomizer-config';
 import { snapshotOfChoices } from '@app/hooks/randomizer/randomizer-choices';
 import type { ShopScope } from '@rotp/randomizer';
 import { required } from '@rotp/asset-extraction/testing';
+import { i18n } from '../hud/test-i18n';
+
+const { t } = i18n;
+const VANILLA_TOTAL = t('compounds:shop-slots-block.vanilla-total');
 
 const STALE_COUNT = 12;
 
@@ -27,7 +30,7 @@ describe('the count control and the total read the opened set', { tags: ['critic
     expect(summary.opened).toBe(summary.ticked);
     expect(summary.opened).not.toBe(STALE_COUNT);
     expect(summary.locations).toBe(summary.opened * 2);
-    expect(shopTotalTextOf(summary)).toContain(`${summary.opened} slots × 2 items`);
+    expect(shopTotalTextOf(summary, t)).toContain(`${summary.opened} slots × 2 items`);
   });
 
   it('drops both the count and the total when a slot is unticked', () => {
@@ -36,7 +39,7 @@ describe('the count control and the total read the opened set', { tags: ['critic
     const [a, b] = [summaryOf(before), summaryOf(after)];
     expect(b.opened).toBe(a.opened - 1);
     expect(b.locations).toBe(a.locations - before.depth);
-    expect(shopTotalTextOf(b)).not.toBe(shopTotalTextOf(a));
+    expect(shopTotalTextOf(b, t)).not.toBe(shopTotalTextOf(a, t));
   });
 
   it('never lets the shown count climb as the ticked ceiling falls', () => {
@@ -65,7 +68,7 @@ describe('the count control and the total read the opened set', { tags: ['critic
     const summary = summaryOf(scopeOf({ mode: 'vanilla' }));
     expect(summary.opened).toBe(0);
     expect(summary.active).toBe(false);
-    expect(shopTotalTextOf(summary)).toBe(VANILLA_TOTAL);
+    expect(shopTotalTextOf(summary, t)).toBe(VANILLA_TOTAL);
   });
 });
 
@@ -99,14 +102,14 @@ describe('the count is drawn as whatever it honestly is', { tags: ['critical'] }
 
   it('reads out instead of sliding in the modes the ticks alone decide', () => {
     for (const mode of ['custom', 'vanilla'] as const) {
-      const control = shopCountControlOf(summaryOf(scopeOf({ mode })));
+      const control = shopCountControlOf(summaryOf(scopeOf({ mode })), t);
       expect(control.kind, mode).toBe('readout');
     }
   });
 
   it('keeps the slider where the count is a choice inside the ticked ceiling', () => {
     const summary = summaryOf(scopeOf({ mode: 'sequential' }));
-    const control = shopCountControlOf(summary);
+    const control = shopCountControlOf(summary, t);
     expect(control.kind).toBe('slider');
     if (control.kind !== 'slider') return;
     expect(control.value).toBe(summary.opened);
@@ -118,7 +121,7 @@ describe('the count is drawn as whatever it honestly is', { tags: ['critical'] }
     let scope = scopeOf({ mode: 'custom' });
     for (const index of scope.enabled.slice(0, 4)) {
       scope = withSlotTicked(scope, index, false);
-      const control = shopCountControlOf(summaryOf(scope));
+      const control = shopCountControlOf(summaryOf(scope), t);
       expect(control.kind).toBe('readout');
       if (control.kind !== 'readout') return;
       expect(control.value).toContain(String(summaryOf(scope).opened));

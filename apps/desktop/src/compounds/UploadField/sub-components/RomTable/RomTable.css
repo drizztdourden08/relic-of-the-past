@@ -1,0 +1,26 @@
+/* @layer renderer-components @kind style */
+
+.rom-table__title {
+  font-size: var(--text-xs);
+  color: var(--c-text-muted);
+  text-transform: uppercase;
+}
+
+.rom-table__cell {
+  padding: var(--space-2xs) var(--space-xs);
+  font-size: var(--text-xs);
+  color: var(--c-text-dim);
+}
+
+.rom-table__cell[data-supported='true'] {
+  color: var(--c-text);
+}
+
+.rom-table__hash {
+  font-family: var(--font-mono);
+  overflow-wrap: anywhere;
+}
+
+.rom-table__mark {
+  color: var(--c-success);
+}

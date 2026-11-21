@@ -1,6 +1,6 @@
 /* @layer renderer-app @kind component */
 import { useCallback, useMemo } from 'react';
-import { useBrock, useVolumeStore, useWidgetMenuEntries } from '@drizztdourden08/brock-react';
+import { useBrock, useMenuHooks, useT, useVolumeStore, useWidgetMenuEntries } from '@drizztdourden08/brock-react';
 import type { MenuEntry } from '@drizztdourden08/brock-react';
 import { Drawer } from '@drizztdourden08/tessera/composites';
 import { EdgeSwipeHint } from '@app/compounds/EdgeSwipeHint';
@@ -15,7 +15,9 @@ import { ABOUT_ENTRY, GAME_ENTRY, PROFILES_ENTRY } from './MobileShell.constants
 import './MobileShell.css';
 
 const MobileShell = () => {
-  const { menu, homeScreen } = useBrock();
+  const t = useT();
+  const { menu: menuDefs, homeScreen } = useBrock();
+  const menu = useMenuHooks(menuDefs);
   const widgetEntries = useWidgetMenuEntries();
   const { game, display } = useGameSession();
   const { value, muted, toggleMute } = useVolumeStore();
@@ -23,17 +25,17 @@ const MobileShell = () => {
   const touchEntries = useTouchMenuEntries();
   const { fps } = useFpsReadout(open && display.showFps, game.isRunning);
   const entries = useMemo((): MenuEntry[] => [
-    { key: 'home', label: 'Home', icon: 'house', screen: homeScreen, fresh: true },
-    GAME_ENTRY,
-    PROFILES_ENTRY,
+    { key: 'home', label: t('views-mobile-shell:menu.home'), icon: 'house', screen: homeScreen, fresh: true },
+    { ...GAME_ENTRY, label: t('views-mobile-shell:menu.game') },
+    { ...PROFILES_ENTRY, label: t('views-mobile-shell:menu.profiles') },
     'separator',
     ...menu,
     'separator',
     ...touchEntries,
-    { key: 'widgets', label: 'Widgets', icon: 'layout-grid', children: [...widgetEntries] },
+    { key: 'widgets', label: t('views-mobile-shell:menu.widgets'), icon: 'layout-grid', children: [...widgetEntries] },
     'separator',
-    ABOUT_ENTRY,
-  ], [homeScreen, menu, touchEntries, widgetEntries]);
+    { ...ABOUT_ENTRY, label: t('views-mobile-shell:menu.about') },
+  ], [t, homeScreen, menu, touchEntries, widgetEntries]);
   const showHint = useEdgeHint(game.isRunning, open);
   const pick = useCallback((entry: MenuEntry) => {
     close();
@@ -42,8 +44,8 @@ const MobileShell = () => {
 
   return (
     <>
-      {showHint ? <EdgeSwipeHint startLabel="Home" endLabel="Menu" /> : null}
-      <Drawer open={open} onClose={close} side="right" label="Options">
+      {showHint ? <EdgeSwipeHint startLabel={t('views-mobile-shell:hint.home')} endLabel={t('views-mobile-shell:hint.menu')} /> : null}
+      <Drawer open={open} onClose={close} side="right" label={t('views-mobile-shell:drawer.label')}>
         <MobileMenuDrawer key={String(open)} entries={entries} fps={fps} isMuted={muted || value <= 0} onToggleMute={toggleMute} onPick={pick} />
       </Drawer>
     </>

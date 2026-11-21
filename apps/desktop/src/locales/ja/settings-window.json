@@ -1,0 +1,16 @@
+{
+  "option.viewport-modes.none.label": "レターボックス",
+  "option.viewport-modes.none.hint": "ゲームの比率を保ち、ウィンドウの残りを黒帯で埋めます。",
+  "option.viewport-modes.fit.label": "ウィンドウに合わせる",
+  "option.viewport-modes.fit.hint": "サイズ変更中もウィンドウの形をゲームの比率に固定し、黒帯が出ないようにします。",
+  "option.viewport-modes.fill.label": "引き伸ばし",
+  "option.viewport-modes.fill.hint": "ウィンドウ全体を埋めるように映像を引き伸ばします。",
+  "section.window.title": "ウィンドウ",
+  "start-fullscreen.label": "全画面で開始",
+  "start-fullscreen.description": "ゲーム開始時に自動で全画面にします",
+  "viewport-constraint.label": "ビューポート",
+  "viewport-constraint.description": "ゲームキャンバスとウィンドウの関係を設定します",
+  "pixel-perfect.label": "ピクセルパーフェクト",
+  "pixel-perfect.description": "元のピクセル単位の整数倍でのみ拡大し、すべてのピクセルを同じ大きさにします。スクロール中の柵や壁などの直線のちらつきがなくなる代わりに、黒い縁がやや広くなります。有効な間はリニアフィルタリングがオフになります。",
+  "pixel-perfect.hint": "レターボックスのビューポートが必要です。"
+}

@@ -1,24 +1,26 @@
 /* @layer renderer-components @kind component */
 import { useState } from 'react';
-import { Box, DropZone, Text } from '@drizztdourden08/tessera/primitives';
-import { StudioLayout } from '@drizztdourden08/tessera/composites';
-import { STUDIO_EDITOR_MIN_WIDTH, StudioPanelContent } from '@app/studio';
+import { Box, Text } from '@drizztdourden08/tessera/primitives';
+import { UploadField } from '@app/compounds/UploadField';
+import { useT } from '@drizztdourden08/brock-react';
 import { fileToolGroups } from './file-tool-groups';
 import { FileList } from './FileList';
 import { FilesSummary } from './FilesSummary';
+import { StudioDetailsLayout } from './StudioDetailsLayout';
 import { OptimizeDialog } from './OptimizeDialog';
 import { useFilePanelModel } from './behavior/useFilePanelModel';
-import { AUDIO_ACCEPT, AUDIO_ACCEPT_HINT } from './msu.constants';
-import { DETAILS_PANEL, EDITOR_LABELS } from './studio-frame/studio-frame.constants';
+import { AUDIO_ACCEPT } from './msu.constants';
 import type { MsuFilePanelProps } from './MsuFilePanel.type';
 
 const MsuFilePanel = (props: MsuFilePanelProps) => {
   const { pack, readOnly, tabs, packPanel, onReload } = props;
+  const t = useT();
   const model = useFilePanelModel(props);
   const { panel, covered, usage, supersededOnly } = model;
   const [optimizing, setOptimizing] = useState(false);
 
   const toolbar = fileToolGroups({
+    t,
     tabs,
     filter: panel.filter,
     coveredCount: covered.count,
@@ -30,20 +32,15 @@ const MsuFilePanel = (props: MsuFilePanelProps) => {
   const detail = <><FilesSummary model={model} readOnly={readOnly} onOptimize={() => setOptimizing(true)} />{packPanel}</>;
 
   return (
-    <StudioLayout
-      editorLabel={EDITOR_LABELS.files}
-      compactToolbar
-      editorMinWidth={STUDIO_EDITOR_MIN_WIDTH}
-      toolbar={toolbar}
-      end={{ ...DETAILS_PANEL, content: <StudioPanelContent>{detail}</StudioPanelContent> }}
-    >
+    <StudioDetailsLayout editorLabel={t('msu-studio:studio.editor.files')} toolbar={toolbar} detail={detail}>
       <Box className="msu-panel">
-        <DropZone
+        <UploadField
+          variant="block"
           accept={AUDIO_ACCEPT}
-          label="Drop audio here to add it to the pack"
-          hint={AUDIO_ACCEPT_HINT}
+          label={t('msu-studio:files.drop')}
+          hint={t('msu-studio:files.accept-hint')}
           disabled={panel.busy || readOnly}
-          onDrop={panel.handleUpload}
+          onFiles={panel.handleUpload}
         />
         {panel.statusMessage != null && (
           <Text className={`msu-status${panel.statusOk ? '' : ' msu-status--error'}`}>{panel.statusMessage}</Text>
@@ -63,7 +60,7 @@ const MsuFilePanel = (props: MsuFilePanelProps) => {
         />
       </Box>
       <OptimizeDialog open={optimizing} pack={pack} onClose={() => setOptimizing(false)} onConverted={onReload} />
-    </StudioLayout>
+    </StudioDetailsLayout>
   );
 };
 

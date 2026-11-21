@@ -1,0 +1,23 @@
+{
+  "section.haptics-general.title": "振動",
+  "haptics.enabled.label": "触覚フィードバックを有効にする",
+  "haptics.enabled.description": "ゲームのイベントでコントローラーを振動させます。対応コントローラー（Xbox、Switch Proコントローラー、DualSense）が必要です。",
+  "haptics.intensity.label": "振動の強さ",
+  "haptics.intensity.description": "すべての触覚フィードバックにかかる全体の強さの倍率",
+  "section.haptics-combat.title": "戦闘",
+  "haptics.sword-swing.label": "剣を振る",
+  "haptics.sword-swing.description": "剣を振ったときのごく弱い振動",
+  "haptics.sword-hit-enemy.label": "剣が敵に命中",
+  "haptics.sword-hit-enemy.description": "剣が敵に当たったときの通常の振動",
+  "haptics.sword-clink.label": "剣がはじかれる",
+  "haptics.sword-clink.description": "剣が無敵の面や盾にはじかれたときの弱い振動",
+  "haptics.damage-taken.label": "ダメージを受ける",
+  "haptics.damage-taken.description": "ダメージを受けたとき、ダメージ量に応じた振動（大きいほど強く）",
+  "section.haptics-actions.title": "アイテムと移動",
+  "haptics.item-use.label": "アイテム使用",
+  "haptics.item-use.description": "アイテム（ハンマー、フックショット、ばくだん、メダル、ロッドなど）を使ったときの振動",
+  "haptics.dash-vibration.label": "ダッシュの振動",
+  "haptics.dash-vibration.description": "ペガサスのくつで走っている間の、リズムのある足音の振動",
+  "haptics.environmental-effects.label": "環境効果",
+  "haptics.environmental-effects.description": "世界のイベントでの振動：穴に落ちる、段差から着地する、水に入る、鏡のワープ、宝箱を開ける、爆弾の爆発"
+}

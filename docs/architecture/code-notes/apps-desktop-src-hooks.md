@@ -226,6 +226,10 @@ A profile's randomizer config as the screens show it, with the latest connection
 
 Fetches the app version through IPC. It lives in the renderer hooks layer, which may use `window.api`, so presentational components receive the version as a prop.
 
+## apps/desktop/src/hooks/useCreateFlow.ts
+
+The open and close state of a data screen's creation wizard, shared so every screen behaves the same. Starting collapses the list so the wizard gets the width; cancelling reopens it and leaves the selection as it was. Finishing goes through `select`, which selects the new item and closes the wizard in one step, so selection only ever changes on success.
+
 ## apps/desktop/src/hooks/useCanvasFit.ts
 
 `bufW` and `bufH` are the canvas backing store size: twice the source resolution, because the core presents at 2x (`BUFFER_OVERSAMPLE`). `stretch` fills the container outright and ignores the source proportions. `pixelPerfect` snaps to a whole number of source pixels so none of them come out a different size.

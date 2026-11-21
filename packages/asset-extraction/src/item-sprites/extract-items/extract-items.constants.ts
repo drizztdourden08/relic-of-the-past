@@ -30,9 +30,10 @@ const EXTRACTORS: Partial<Record<string, Extractor>> = {
     extractHudSingle(itemAt(need(def, 'tiles'), 0, 'hud-single tiles'), ctx.hudSheets, ctx.hudPalette),
   'hud-strip': (def, ctx) => extractHudStrip(need(def, 'tiles'), ctx.hudSheets, ctx.hudPalette, def.width),
   'hud-vstrip': (def, ctx) => extractHudVStrip(need(def, 'tiles'), ctx.hudSheets, ctx.hudPalette),
-  'dialogue-glyph': (def, ctx) => extractDialogueGlyph(need(def, 'glyph'), def.glyphRight, ctx.dialogueFont),
+  'dialogue-glyph': (def, ctx) =>
+    ctx.dialogueFont ? extractDialogueGlyph(need(def, 'glyph'), def.glyphRight, ctx.dialogueFont) : null,
   'receipt': (def, ctx) =>
-    extractReceipt(need(def, 'receiptId'), ctx.rom, ctx.receiptSheets, ctx.spritePalettes),
+    extractReceipt(need(def, 'receiptId'), ctx.source, ctx.receiptSheets, ctx.spritePalettes),
   'receipt-recolor': (def, ctx) => extractReceiptRecolor(
     need(def, 'receiptId'), need(def, 'palette'), ctx.receiptSheets, ctx.spritePalettes,
   ),
@@ -49,16 +50,16 @@ const EXTRACTORS: Partial<Record<string, Extractor>> = {
   'drop-shield-fire': (def, ctx) => extractDropShieldFire(
     { sheetId: need(def, 'sheet'), tileIds: need(def, 'tiles') }, need(def, 'palette'), ctx.spritePalettes, ctx.dropSheets,
   ),
-  'follower-bomb': (def, ctx) => extractFollowerBomb(need(def, 'palette'), ctx.rom, ctx.spritePalettes),
+  'follower-bomb': (def, ctx) => extractFollowerBomb(need(def, 'palette'), ctx.source, ctx.spritePalettes),
   'art': (def) => artImage(need(def, 'art')),
   'art-badge': (def) => extractArtBadge({ art: need(def, 'art'), badge: need(def, 'badge') }),
   'upgrade-composite': (def, ctx) =>
     extractUpgradeComposite({ baseFile: def.baseFile, art: def.art, badge: need(def, 'badge') }, ctx.resolveFile),
   'title-screen': (def, ctx) => extractTitlePart(need(def, 'part'), ctx.titleSource()),
-  'story-legend': (def, ctx) => extractLegend(ctx.rom, ctx.legendSource(), need(def, 'legend')),
+  'story-legend': (def, ctx) => extractLegend(ctx.source, ctx.legendSource(), need(def, 'legend')),
   'palette-swap': (def, ctx) =>
     extractPaletteSwap({ baseFile: need(def, 'baseFile'), colors: need(def, 'colors') }, ctx.resolveFile),
-  'bg-tile': (def, ctx) => extractBgTile(ctx.rom, {
+  'bg-tile': (def, ctx) => extractBgTile(ctx.source, {
     sheets: need(def, 'sheets'), upper: def.upper ?? [], tiles: need(def, 'tiles'),
     paletteSet: def.paletteSet ?? 'overworld', paletteIndex: def.palette ?? 0,
     paletteAux: def.paletteAux ?? [],

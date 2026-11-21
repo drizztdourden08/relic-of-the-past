@@ -9,7 +9,7 @@ const withSwordTicks = (ticks: readonly boolean[]): ProgressiveSetting => ({
 });
 
 const termsOf = (setting: ProgressiveSetting): readonly string[] =>
-  progressiveTickConsequences(setting).map(({ term }) => term);
+  progressiveTickConsequences(setting).map(({ term }) => term.key);
 
 const maskedFieldsOf = (setting: ProgressiveSetting): readonly string[] => {
   const derived = derivedItemPower(
@@ -20,7 +20,7 @@ const maskedFieldsOf = (setting: ProgressiveSetting): readonly string[] => {
 
 const shownFieldsOf = (setting: ProgressiveSetting): readonly string[] => {
   const shown = new Set(termsOf(setting));
-  return TICK_CONSEQUENCES.filter(({ line }) => shown.has(line.term)).map(({ field }) => field);
+  return TICK_CONSEQUENCES.filter(({ line }) => shown.has(line.term.key)).map(({ field }) => field);
 };
 
 const NO_BLADE = withSwordTicks([false, false, false, false]);
@@ -38,12 +38,15 @@ describe('progressive tick consequences', { tags: ['critical'] }, () => {
 
   it('names all five rules when no blade is in the pool', () => {
     expect(termsOf(NO_BLADE)).toEqual([
-      'Hanging cloth doors', 'Medallion doors', 'Tablets', 'The tower seal', 'The last fight',
+      'randomizer:tick.pullable-curtains.term', 'randomizer:tick.swordless-medallions.term', 'randomizer:tick.hammer-tablets.term',
+      'randomizer:tick.hammer-tower-seal.term', 'randomizer:tick.hammer-last-fight.term',
     ]);
   });
 
   it('names only the beam three when the first rung alone is ticked', () => {
-    expect(termsOf(FIRST_RUNG_ONLY)).toEqual(['Tablets', 'The tower seal', 'The last fight']);
+    expect(termsOf(FIRST_RUNG_ONLY)).toEqual([
+      'randomizer:tick.hammer-tablets.term', 'randomizer:tick.hammer-tower-seal.term', 'randomizer:tick.hammer-last-fight.term',
+    ]);
   });
 
   it('stays in lockstep with the item-power derivation', () => {

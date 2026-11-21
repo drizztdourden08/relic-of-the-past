@@ -2,6 +2,7 @@
 import { requireHostApi } from '@drizztdourden08/brock-react';
 import { registerRecord, screenRecordFile } from '@rotp/game-data';
 import type { ScreenHome, PendingScreenRecord } from '@rotp/game-data';
+import { optionText } from '@rotp/randomizer';
 import { NO_SOURCE_FILE } from '@app/views/DataInspector/DataInspector.constants';
 import { draftOf } from '@app/views/DataInspector/behavior/draft-of';
 import type { RecordCreator } from '@app/views/DataInspector/behavior/record-creators.type';
@@ -14,7 +15,7 @@ const createScreen: RecordCreator = async (draft) => {
   const covered = coveringScreen(pending.gameId);
   if (covered) return { success: false, error: alreadyCoveredMessage(covered.id), needsReview: true };
   const target = screenRecordFile(pending);
-  if (!target.relativePath) return { success: false, error: target.unresolved ?? NO_SOURCE_FILE };
+  if (!target.relativePath) return { success: false, error: target.unresolved ?? optionText(NO_SOURCE_FILE) };
   const result = await requireHostApi().screenEditor.writeScreen({
     filePath: target.relativePath,
     record: pending,

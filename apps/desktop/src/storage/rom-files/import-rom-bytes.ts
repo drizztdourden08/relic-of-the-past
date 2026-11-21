@@ -5,6 +5,7 @@ import type { ImportPhase, RomBytes, RomImportResult, RomKind } from '@rotp/roms
 import { errorMessage } from '../error-message';
 import { importNameOf } from './import-name-of';
 import { refusalMessage } from './refusal-message';
+import { refuseFanTranslation } from './refuse-fan-translation';
 import { romStoreOf } from './rom-store-of';
 
 const importRomBytes = async (files: FileStore, rom: RomBytes, kind: RomKind = 'snes-alttp', onPhase?: ImportPhase): Promise<RomImportResult> => {
@@ -13,8 +14,11 @@ const importRomBytes = async (files: FileStore, rom: RomBytes, kind: RomKind = '
   if (isZip(bytes)) onPhase?.('extract');
   onPhase?.('copy');
   try {
-    const imported = await romStoreOf(files, kind).importRom(importNameOf(fileName, bytes, spec), bytes);
+    const store = romStoreOf(files, kind);
+    const imported = await store.importRom(importNameOf(fileName, bytes, spec), bytes);
     if (!imported.ok) return { success: false, romFile: '', error: refusalMessage(imported, spec) };
+    const fanTranslation = await refuseFanTranslation(store, imported);
+    if (fanTranslation !== null) return { success: false, romFile: '', error: fanTranslation };
     return { success: true, romFile: imported.file ?? '', alreadyExists: imported.existed ?? false };
   } catch (err) {
     return { success: false, romFile: '', error: errorMessage(err) };

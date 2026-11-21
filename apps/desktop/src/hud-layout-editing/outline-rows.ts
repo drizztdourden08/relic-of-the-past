@@ -1,4 +1,5 @@
 /* @layer renderer-components @kind logic */
+import { msg } from '@drizztdourden08/brock-core/i18n';
 import type { HudLayout, HudNode } from '@rotp/hud';
 import type { OutlineRowModel } from '@app/views/HudLayoutEditor/sub-components/OutlinePanel.type';
 
@@ -14,7 +15,7 @@ const cellLabel = (node: HudNode): string | undefined => {
 
 const outlineRows = (doc: HudLayout, collapsedIds: ReadonlySet<string>): OutlineRowModel[] => {
   const rows: OutlineRowModel[] = [];
-  const visit = (node: HudNode, depth: number, cell?: string, locked?: string): void => {
+  const visit = (node: HudNode, depth: number, cell?: string, locked?: OutlineRowModel['locked']): void => {
     const hasChildren = hasSubtree(node);
     const collapsed = hasChildren && collapsedIds.has(node.id);
     rows.push({
@@ -23,10 +24,10 @@ const outlineRows = (doc: HudLayout, collapsedIds: ReadonlySet<string>): Outline
     if (collapsed) return;
     if (node.kind === 'container') { node.children.forEach((child) => visit(child, depth + 1)); return; }
     const { element } = node;
-    if (element.type === 'repeat') visit(element.child, depth + 1, undefined, 'repeat child');
+    if (element.type === 'repeat') visit(element.child, depth + 1, undefined, msg('hud-editor:outline.locked.repeat-child'));
     else if (element.type === 'switch') {
-      element.cases.forEach((c, i) => visit(c.node, depth + 1, undefined, `case ${i + 1}`));
-      if (element.otherwise) visit(element.otherwise, depth + 1, undefined, 'otherwise');
+      element.cases.forEach((c, i) => visit(c.node, depth + 1, undefined, msg('hud-editor:outline.locked.case', { n: i + 1 })));
+      if (element.otherwise) visit(element.otherwise, depth + 1, undefined, msg('hud-editor:outline.locked.otherwise'));
     }
   };
   const screenHasChildren = doc.screen.children.length > 0;

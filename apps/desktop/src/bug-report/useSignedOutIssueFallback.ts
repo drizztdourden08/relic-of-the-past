@@ -1,6 +1,6 @@
 /* @layer renderer-app @kind hook */
 import { useEffect } from 'react';
-import { useBugReportStore, useProduct } from '@drizztdourden08/brock-react';
+import { useBugReportStore, useProduct, useText } from '@drizztdourden08/brock-react';
 import { useHubSessionStore } from '@app/stores/hub-session';
 import { GITHUB_LABEL } from './bug-report.constants';
 import { openIssueInstead } from './open-issue-instead';
@@ -8,6 +8,7 @@ import { rotpBugReport } from './rotp-bug-report';
 
 const useSignedOutIssueFallback = (): void => {
   const { repo } = useProduct();
+  const text = useText();
   const signedIn = useHubSessionStore((s) => s.me !== null);
   const refresh = useHubSessionStore((s) => s.refresh);
 
@@ -15,9 +16,9 @@ const useSignedOutIssueFallback = (): void => {
 
   useEffect(() => {
     if (signedIn || !repo) return undefined;
-    useBugReportStore.getState().setAppTransport({ transport: (payload) => Promise.resolve(openIssueInstead(repo, payload)), label: GITHUB_LABEL });
+    useBugReportStore.getState().setAppTransport({ transport: (payload) => Promise.resolve(openIssueInstead(repo, payload, text)), label: text(GITHUB_LABEL) });
     return () => useBugReportStore.getState().setAppTransport(rotpBugReport);
-  }, [signedIn, repo]);
+  }, [signedIn, repo, text]);
 };
 
 export { useSignedOutIssueFallback };

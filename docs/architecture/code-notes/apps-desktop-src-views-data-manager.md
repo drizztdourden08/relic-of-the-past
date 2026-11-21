@@ -11,9 +11,7 @@ The gap on `.data-manager__body` leaves room for the round toggle of the side na
 
 ## apps/desktop/src/views/DataManager/sub-components/LanguageManager.tsx
 
-The Language Studio: a `ListDetailLayout` like every other list screen, with ROM extraction, the new set form and the set list on the left (kept under `language-studio.list`) and the open set's editor as the detail. The editor is keyed by the set, so switching sets flushes the old one's pending write and starts the new one with nothing selected.
-
-Creating or duplicating a set rebakes the asset blobs, so `busy` locks the list while one runs.
+The Language Studio: a `ListDetailLayout` like every other list screen, with the New language button and the set list on the left (`CreateListPane`, kept under `language-studio.list`) and the open set's editor as the detail. The editor is keyed by the set, so switching sets flushes the old one's pending write and starts the new one with nothing selected. It is the worked example of the shared creation shape: `useCreateFlow` holds the wizard state, the wizard replaces the detail while it is open, and its `onCreated` is the flow's `select`.
 
 Deleting a set installed from the Hookshop uninstalls it the way the Hookshop tab does, so its install record goes too.
 
@@ -21,13 +19,21 @@ The duplicate source list leaves installed sets out. An installed set is copied 
 
 `refreshThenSelect` rereads the list first, because after a duplicate or an update the set to show may be one the list has not read yet.
 
+## apps/desktop/src/views/DataManager/sub-components/language-manager/LanguageCreateWizard/
+
+Four ways to make a set: extract an official ROM, import a fan-patched ROM, copy an own set, or start blank from a base language. The name of a patched set is typed by the user, because nothing in a patched ROM says reliably what language it carries. The base is one of the five official releases, listed with its ROM name and SHA-1 taken from the asset-extraction hash table. The license and the notes or credits are each typed or dropped as a file, and both are kept as written.
+
+The patched import runs inside its own step rather than at finish, so its report, including the letters it could not name, is read before the wizard closes. Once it has run, Back and Cancel go away: the set already exists and running it again would make a second one. The new set's id counts as taken after the refresh, so the name check lets that one id through or the final re-validation would refuse the set it just made.
+
+Copying or creating a set rebakes the asset blobs, which is why that step shows the import progress. The extraction and creation hooks are given a no-op `setSelected`; selection happens only through the flow on success.
+
 ## apps/desktop/src/views/DataManager/sub-components/language-manager/useLanguageExtraction.ts
 
 The language is read from the ROM, never picked. `loadRomFromBuffer` hashes the ROM (SHA-1, after the copier header is stripped) and looks it up in `ZELDA3_SHA1` in `packages/asset-extraction/src/rom/rom-loader/rom-loader.constants.ts`, which names the release and its language code. A hash that is not in the table is refused with a message and there is no manual choice: the font and the text encoder come from the release, so extraction cannot run without a known hash.
 
 ## apps/desktop/src/views/DataManager/sub-components/MsuManager.tsx
 
-The MSU Studio: a `ListDetailLayout` like every other list screen, with the new pack form, the import form and the pack list on the left (`MsuListPane`, kept under `msu-studio.list`) and the open pack's studio as the detail.
+The MSU Studio: a `ListDetailLayout` like every other list screen, with one New MSU pack button over the pack list on the left (`MsuListPane` inside `CreateListPane`, kept under `msu-studio.list`) and the open pack's studio as the detail, or the `MsuCreateWizard` (source, details, create) while creating. The wizard asks for the pack name up front, because the new pack is selected by it when the wizard ends.
 
 A pack installed from the Hookshop is read only: its row carries the lock, its studio opens under the origin bar, and Delete uninstalls it the way the Hookshop tab does.
 

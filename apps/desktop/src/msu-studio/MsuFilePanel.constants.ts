@@ -1,8 +1,18 @@
 /* @layer renderer-components @kind constants */
-const EMPTY_PACK = 'Add some audio to this pack first.';
+import { msg } from '@drizztdourden08/brock-core/i18n';
+import type { FileColumn } from './MsuFilePanel.type';
 
 const NO_USES: string[] = [];
 
-const COLUMNS = ['Name', 'Format', 'Size', 'Length', 'Rate', 'Repeats', 'Played by', ''];
+const COLUMNS: FileColumn[] = [
+  { id: 'name', label: msg('msu-studio:files.columns.name') },
+  { id: 'format', label: msg('msu-studio:files.columns.format') },
+  { id: 'size', label: msg('msu-studio:files.columns.size') },
+  { id: 'length', label: msg('msu-studio:files.columns.length') },
+  { id: 'rate', label: msg('msu-studio:files.columns.rate') },
+  { id: 'repeats', label: msg('msu-studio:files.columns.repeats') },
+  { id: 'played-by', label: msg('msu-studio:files.columns.played-by') },
+  { id: 'actions', label: null },
+];
 
-export { COLUMNS, EMPTY_PACK, NO_USES };
+export { COLUMNS, NO_USES };

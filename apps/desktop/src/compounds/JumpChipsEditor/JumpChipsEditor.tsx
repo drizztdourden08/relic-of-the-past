@@ -1,10 +1,12 @@
 /* @layer renderer-components @kind component */
+import { useT } from '@drizztdourden08/brock-react';
 import { Box, Button, IconButton, NumberInput, Text } from '@drizztdourden08/tessera/primitives';
 import { clampJump } from './behavior/clamp-jump';
 import type { JumpChipsEditorProps } from './JumpChipsEditor.type';
 import './JumpChipsEditor.css';
 
 const JumpChipsEditor = (props: JumpChipsEditorProps) => {
+  const t = useT();
   const { jumps, span, maxJump = span, problem, disabled = false, onChange, className = '' } = props;
   const sum = jumps.reduce((total, jump) => total + jump, 0);
   const chipMax = Math.max(1, Math.min(span, maxJump));
@@ -28,18 +30,18 @@ const JumpChipsEditor = (props: JumpChipsEditorProps) => {
               step={1}
               sizeToContent
               disabled={disabled}
-              aria-label={`jump ${index + 1}`}
+              aria-label={t('compounds:jump-chips-editor.jump-n', { n: index + 1 })}
               onChange={(next) => setJump(index, next)}
             />
-            <IconButton variant="ghost" size="sm" label="Remove jump" disabled={disabled} onClick={() => removeJump(index)}>
+            <IconButton variant="ghost" size="sm" label={t('compounds:jump-chips-editor.remove-jump')} disabled={disabled} onClick={() => removeJump(index)}>
               ✕
             </IconButton>
           </Box>
         ))}
-        <Button variant="ghost" size="sm" disabled={!canAdd} onClick={addJump}>+ jump</Button>
+        <Button variant="ghost" size="sm" disabled={!canAdd} onClick={addJump}>{t('compounds:jump-chips-editor.jump')}</Button>
       </Box>
       <Text className={`jump-chips__sum${problem === undefined ? '' : ' jump-chips__sum--invalid'}`}>
-        {`Σ ${sum} / ${span}${problem === undefined ? '' : ` · ${problem}`}`}
+        {problem === undefined ? t('compounds:jump-chips-editor.sum', { sum, span }) : t('compounds:jump-chips-editor.sum-problem', { sum, span, problem })}
       </Text>
     </Box>
   );

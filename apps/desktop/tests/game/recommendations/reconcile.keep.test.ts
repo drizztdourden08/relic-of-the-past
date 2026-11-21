@@ -1,9 +1,12 @@
 /* @layer test @kind test */
 import { describe, it, expect } from 'vitest';
+import { msg } from '@drizztdourden08/brock-core/i18n';
 import type { ScreenRecord } from '@rotp/game-data';
 import { reconcile, scopedToPass, recommendationId } from '@rotp/navigation';
 import type { DraftRecommendation, Recommendation } from '@rotp/navigation';
 import { required } from '@rotp/asset-extraction/testing';
+
+const reasonOf = (key: string) => msg('views-data-inspector:rec.reason.set-create', { noun: 'screen', key });
 
 const SCREEN_100: ScreenRecord = {
   id: 'screen-100',
@@ -26,7 +29,7 @@ const draft = (overrides: Partial<DraftRecommendation<'screen'>> = {}): DraftRec
   targetId: 'screen-100',
   current: null,
   proposed: SCREEN_100,
-  reason: 'palace index disagrees',
+  reason: reasonOf('palace index disagrees'),
   detector: 'screen-identity',
   evidence: [],
   confidence: 'certain',
@@ -80,9 +83,9 @@ describe('reconcile', () => {
 
   it('refreshes the payload of a finding that still reproduces', { tags: ['critical'] }, () => {
     const previous = [entryFrom(draft())];
-    const next = reconcile(previous, [draft({ reason: 'a better explanation' })], { now: 2000 });
+    const next = reconcile(previous, [draft({ reason: reasonOf('a better explanation') })], { now: 2000 });
 
-    expect(firstOf(next).reason).toBe('a better explanation');
+    expect(firstOf(next).reason).toEqual(reasonOf('a better explanation'));
   });
 
   it('resolves an open finding that no longer reproduces', { tags: ['critical'] }, () => {

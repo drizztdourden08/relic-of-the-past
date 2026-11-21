@@ -1,0 +1,11 @@
+{
+  "title": "Aufnahmen zum Mitsenden",
+  "showSent": "Gesendete zeigen",
+  "empty.new": "Keine neuen Aufnahmen. Zeige gesendete, um frühere zu sehen.",
+  "empty.all": "Noch keine Aufnahmen.",
+  "sent": "Gesendet",
+  "include": "Aufnahme von {name} mitsenden",
+  "github.label": "GitHub-Issue öffnen",
+  "github.opened": "Eine vorausgefüllte GitHub-Issue wurde geöffnet. Melde dich im Sanctuary an, um Berichte direkt aus der App mit angehängten Spielständen zu senden.",
+  "github.noRepo": "Melde dich im Sanctuary an, um einen Bericht zu senden."
+}

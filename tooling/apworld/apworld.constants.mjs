@@ -14,7 +14,8 @@ const THUMBNAIL = path.join(RELEASE_ASSETS_DIR, 'archipelia-thumbnail.png');
 const DESCRIPTION = path.join(RELEASE_ASSETS_DIR, 'archipelia-description.md');
 
 const AUTHORS = ['Relic of the Past'];
+const EN_RANDOMIZER_MESSAGES = path.join(ROOT, 'apps', 'desktop', 'src', 'locales', 'en', 'randomizer.json');
 
 export {
-  APP_PACKAGE_JSON, AUTHORS, DESCRIPTION, MODULE_NAME, OUT_DIR, PACKAGE_DIR, PUBLIC_DIR, RELEASE_ASSETS_DIR, ROOT, THUMBNAIL,
+  APP_PACKAGE_JSON, AUTHORS, DESCRIPTION, EN_RANDOMIZER_MESSAGES, MODULE_NAME, OUT_DIR, PACKAGE_DIR, PUBLIC_DIR, RELEASE_ASSETS_DIR, ROOT, THUMBNAIL,
 };
