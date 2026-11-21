@@ -2,6 +2,7 @@
 import { boundsOf, originsIn } from '../../GridLattice';
 import { sizeOf } from './size-of';
 import { anchorName } from './anchor-name';
+import { nodeName } from '@app/hud-layout-editing/node-name';
 import type { StatusParams } from '../GridEditor.type';
 
 const trackName = (params: StatusParams, indices: readonly number[], isColumns: boolean): string => {
@@ -29,12 +30,12 @@ const statusOf = (params: StatusParams): string => {
       : { c0: 1, c1: columns, r0: Math.min(...selection.indices) + 1, r1: Math.max(...selection.indices) + 1 });
     const name = trackName(params, selection.indices, isColumns);
     return held.length > 0
-      ? t('hud-editor:grid.status.track.holds', { name, ids: held.map((o) => o.id).join(', ') })
+      ? t('hud-editor:grid.status.track.holds', { name, ids: held.map((o) => nodeName(o.id, t)).join(', ') })
       : t('hud-editor:grid.status.track.empty', { name });
   }
 
   const bounds = boundsOf(selection.cells);
-  const held = originsIn(occupants, bounds).map((o) => o.id);
+  const held = originsIn(occupants, bounds).map((o) => nodeName(o.id, t));
   const ids = held.join(', ');
   if (selection.cells.length === 1) {
     const anchor = anchorName(t, { columns, rows }, bounds.c0, bounds.r0);

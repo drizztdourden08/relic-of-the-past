@@ -1,6 +1,7 @@
 /* @layer renderer-components @kind logic */
 import { refusalText } from '../drop-intent';
 import { siteOf } from '../node-edits';
+import { nodeName } from '../node-name';
 import { enclosingRepeatOf } from '../tree-context';
 import { containerKind } from './container-kind';
 import { pathTo } from './path-to';
@@ -27,18 +28,18 @@ const flexPosition = (doc: HudLayout, at: { parentId: string; index: number }, i
 
 const gridPosition = (place: { column?: number; row?: number }, onto: string | null, t: Translate): string =>
   (onto
-    ? t('hud-editing:ghost.cell-with', { column: place.column ?? 1, row: place.row ?? 1, onto })
+    ? t('hud-editing:ghost.cell-with', { column: place.column ?? 1, row: place.row ?? 1, onto: nodeName(onto, t) })
     : t('hud-editing:ghost.cell-empty', { column: place.column ?? 1, row: place.row ?? 1 }));
 
 const ghostFor = (doc: HudLayout, ids: readonly string[], intent: DropIntent, t: Translate): GhostModel => {
-  const chip = ids[0] ?? '';
+  const chip = ids[0] ? nodeName(ids[0], t) : '';
   if (intent.kind === 'refused') {
     return {
       tone: 'refused',
       chip,
       kind: t('hud-editing:ghost.refused-kind'),
       position: refusalText(doc, ids, intent, t) ?? t('hud-editing:ghost.refused-kind'),
-      path: intent.parentId ? pathTo(doc, intent.parentId) : '',
+      path: intent.parentId ? pathTo(doc, intent.parentId, t) : '',
       warn: false,
     };
   }
@@ -52,7 +53,7 @@ const ghostFor = (doc: HudLayout, ids: readonly string[], intent: DropIntent, t:
     position: intent.kind === 'flex'
       ? flexPosition(doc, intent, ids, t)
       : gridPosition(intent.place, intent.onto, t),
-    path: warning ?? pathTo(doc, intent.parentId),
+    path: warning ?? pathTo(doc, intent.parentId, t),
     warn: warning !== null,
   };
 };

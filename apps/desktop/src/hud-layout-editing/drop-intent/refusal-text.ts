@@ -1,13 +1,14 @@
 /* @layer renderer-components @kind logic */
 import { MAX_EXPANDED_NODES } from '@rotp/hud';
 import { siteOf } from '../node-edits';
+import { nodeName } from '../node-name';
 import type { HudLayout } from '@rotp/hud';
 import type { Translate } from '../translate.type';
 import type { DropIntent } from './drop-intent.type';
 
 const refusalText = (doc: HudLayout, ids: readonly string[], intent: DropIntent, t: Translate): string | null => {
   if (intent.kind !== 'refused') return null;
-  const name = (id: string | null): string => (id && siteOf(doc, id) ? id : t('hud-editing:refusal.that'));
+  const name = (id: string | null): string => (id && siteOf(doc, id) ? nodeName(id, t) : t('hud-editing:refusal.that'));
   const dragged = name(ids[0] ?? null);
   const other = name(intent.nodeId);
   switch (intent.reason) {

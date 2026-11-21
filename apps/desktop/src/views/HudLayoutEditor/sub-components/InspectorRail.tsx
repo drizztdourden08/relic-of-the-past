@@ -1,6 +1,7 @@
 /* @layer renderer-components @kind component */
 import { Text } from '@drizztdourden08/tessera/primitives';
 import { useHudEditorViewStore } from '@app/stores/hud-editor-view-store';
+import { layoutLabel } from '@app/hud-layout-editing/layout-label';
 import { EditorStepContext } from '@app/hud-layout-editing/editor-step';
 import { GridSolveContext } from '@app/hud-layout-editing/grid-solve';
 import { SlotSchemeContext } from '@app/hud-layout-editing/slot-scheme';
@@ -65,7 +66,7 @@ const InspectorRail = (props: InspectorRailProps) => {
         onStartFrom={draft.startFrom}
         onRename={draft.rename}
         onSave={() => { void draft.save(); }}
-        onSaveAs={() => { void draft.saveAs(t('hud-editor:inspector.copy-name', { name: layout.name })); }}
+        onSaveAs={() => { void draft.saveAs(t('hud-editor:inspector.copy-name', { name: layoutLabel(layout, t) })); }}
         onReset={draft.reset}
       />
     </>

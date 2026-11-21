@@ -4,6 +4,7 @@ import { ExpressionInput } from './ExpressionInput';
 import { ReferenceField } from './ReferenceField';
 import { ValueField } from './ValueField';
 import { nodeArtOf } from '@app/hud-layout-editing/node-art';
+import { builtInNodeName } from '@app/hud-layout-editing/node-name';
 import { COUNT_STEP } from '../HudLayoutEditor.constants';
 import type { RepeatContentProps } from './RepeatContent.type';
 import { useT } from '@drizztdourden08/brock-react';
@@ -12,6 +13,7 @@ const RepeatContent = (props: RepeatContentProps) => {
   const t = useT();
   const { spec, onChange, scope, insideRepeat, glyphPacks, onSelectNode } = props;
   const child = nodeArtOf(spec.child, glyphPacks, t);
+  const childName = builtInNodeName(spec.child.id, t) ?? child.name;
   return (
     <Box className="hud-inspect__group">
       <ValueField label={t('hud-editor:repeat-content.label.count')} value={spec.count} onChange={(count) => onChange({ count })} scope={scope} insideRepeat={insideRepeat} min={0} step={COUNT_STEP} />
@@ -29,10 +31,10 @@ const RepeatContent = (props: RepeatContentProps) => {
         action="go"
         src={child.src}
         placeholder={child.icon}
-        name={child.name}
+        name={childName}
         kind={child.kind}
         onOpen={() => onSelectNode(spec.child.id)}
-        aria-label={t('hud-editor:repeat-content.go', { name: child.name })}
+        aria-label={t('hud-editor:repeat-content.go', { name: childName })}
       />
     </Box>
   );

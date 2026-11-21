@@ -68,7 +68,7 @@ describe('THE ANNOUNCEMENT IS THE GHOST\'S OWN WORDS, flattened', { tags: ['crit
     const model = ghostFor(DOC, ['hud'], {
       kind: 'refused', reason: 'descendant', parentId: 'hearts', nodeId: 'hearts',
     }, t);
-    expect(announcementFor(model, t)).toBe("can't move hud. hearts is already inside hud");
+    expect(announcementFor(model, t)).toBe("can't move hud. Hearts is already inside hud");
     expect(announcementFor(model, t)).toContain(model.position);
   });
 });
@@ -78,7 +78,7 @@ describe('the menu names its own preconditions instead of hiding items', { tags:
     const options = stepOptions(DOC, 'hud', t);
     expect(options.map((o) => o.direction)).toEqual(['up', 'down', 'out', 'in']);
     expect(options.find((o) => o.direction === 'out')).toMatchObject({
-      label: 'Move out of screen', enabled: false,
+      label: 'Move out of Screen', enabled: false,
     });
     expect(options.find((o) => o.direction === 'in')).toMatchObject({ label: 'Move into...', enabled: false });
     expect(options.find((o) => o.direction === 'down')).toMatchObject({ enabled: true });

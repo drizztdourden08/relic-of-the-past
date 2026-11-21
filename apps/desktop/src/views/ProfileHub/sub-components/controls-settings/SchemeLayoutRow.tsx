@@ -2,6 +2,7 @@
 import { useMemo } from 'react';
 import { useT } from '@drizztdourden08/brock-react';
 import { Box, Field, Select, Text } from '@drizztdourden08/tessera/primitives';
+import { layoutLabel } from '@app/hud-layout-editing/layout-label';
 import type { SchemeLayoutRowProps } from './slots-footer.type';
 
 const SchemeLayoutRow = (props: SchemeLayoutRowProps) => {
@@ -10,7 +11,7 @@ const SchemeLayoutRow = (props: SchemeLayoutRowProps) => {
 
   const options = useMemo(() => layouts.map((layout) => ({
     value: layout.id,
-    label: layout.builtIn ? layout.name : t('profiles:controls.layout.custom', { name: layout.name }),
+    label: layout.builtIn ? layoutLabel(layout, t) : t('profiles:controls.layout.custom', { name: layout.name }),
   })), [layouts, t]);
 
   return (

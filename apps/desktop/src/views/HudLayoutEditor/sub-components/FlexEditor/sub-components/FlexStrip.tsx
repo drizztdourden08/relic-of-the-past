@@ -1,6 +1,7 @@
 /* @layer renderer-components @kind component */
 import { Box, Text } from '@drizztdourden08/tessera/primitives';
 import { weightsOf } from '../behavior/weights-of';
+import { nodeName } from '@app/hud-layout-editing/node-name';
 import './FlexStrip.css';
 import type { CSSProperties } from 'react';
 import type { FlexStripProps } from './FlexStrip.type';
@@ -38,11 +39,11 @@ const FlexStrip = (props: FlexStripProps) => {
           data-index={index}
           data-state={cell.selected ? 'selected' : 'idle'}
           data-cursor={cursor === index ? 'true' : undefined}
-          title={t('hud-editor:flex.item-title', { id: cell.id, n: index + 1 })}
+          title={t('hud-editor:flex.item-title', { id: nodeName(cell.id, t), n: index + 1 })}
           style={{ '--hud-flex-weight': weights[index] } as CSSProperties}
           onPointerDown={(event) => onCellDown(index, event)}
         >
-          <Text className="hud-cell-label hud-flex-strip__label">{cell.id}</Text>
+          <Text className="hud-cell-label hud-flex-strip__label">{nodeName(cell.id, t)}</Text>
         </Box>
       ))}
     </Box>

@@ -1,16 +1,19 @@
 /* @layer renderer-components @kind logic */
 import { labelOf } from '../new-node';
+import { builtInNodeName } from '../node-name';
 import type { Translate } from '../translate.type';
 import { embeddedOf } from '../node-edits';
 import { childrenOf } from './children-of';
 import { rootsOf } from './roots-of';
 import type { HudLayout, HudNode } from '@rotp/hud';
 
+const crumbOf = (node: HudNode, t: Translate): string => builtInNodeName(node.id, t) ?? labelOf(node, t);
+
 const crumbsTo = (node: HudNode, id: string, t: Translate): string[] | null => {
-  if (node.id === id) return [labelOf(node, t)];
+  if (node.id === id) return [crumbOf(node, t)];
   for (const child of [...childrenOf(node), ...embeddedOf(node)]) {
     const below = crumbsTo(child, id, t);
-    if (below) return [labelOf(node, t), ...below];
+    if (below) return [crumbOf(node, t), ...below];
   }
   return null;
 };

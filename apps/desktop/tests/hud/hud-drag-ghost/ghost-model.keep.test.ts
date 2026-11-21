@@ -31,9 +31,9 @@ describe('line 1 states the KIND, in §42\'s vocabulary and no other', { tags: [
 describe('the four states', { tags: ['critical'] }, () => {
   it('FLEX names a position among the children it would have', () => {
     const ghost = ghostFor(DOC, ['magic-bar'], { kind: 'flex', parentId: 'hud', index: 1 }, t);
-    expect(ghost).toMatchObject({ tone: 'move', chip: 'magic-bar', kind: 'into column' });
+    expect(ghost).toMatchObject({ tone: 'move', chip: 'Magic meter', kind: 'into column' });
     expect(ghost.position).toBe('position 2 of 2');
-    expect(ghost.path).toBe('screen › hud');
+    expect(ghost.path).toBe('Screen › hud');
   });
 
   it('an empty GRID cell names the cell and the word `empty`', () => {
@@ -42,7 +42,7 @@ describe('the four states', { tags: ['critical'] }, () => {
     }, t);
     expect(ghost.kind).toBe('into screen');
     expect(ghost.position).toBe('cell 3,1 · empty');
-    expect(ghost.path).toBe('screen');
+    expect(ghost.path).toBe('Screen');
   });
 
   it('a co-placed GRID cell says `with`, which is the whole difference', () => {
@@ -58,9 +58,9 @@ describe('the four states', { tags: ['critical'] }, () => {
     const ghost = ghostFor(DOC, ['hearts'], intent, t);
     expect(ghost.tone).toBe('refused');
     expect(ghost.kind).toBe('refused');
-    expect(ghost.position).toContain('hearts');
+    expect(ghost.position).toContain('Hearts');
     expect(ghost.position).toContain('pip1');
-    expect(ghost.path).toBe('screen › hud › hearts › pip1');
+    expect(ghost.path).toBe('Screen › hud › Hearts › pip1');
   });
 
 });
