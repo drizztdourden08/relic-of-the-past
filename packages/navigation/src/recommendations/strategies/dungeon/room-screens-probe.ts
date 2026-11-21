@@ -15,7 +15,7 @@ const readRoomScreenIds = (observations: ScreenObservations, record: DungeonReco
 
 const roomScreensProbe: FieldProbe<'dungeon'> = {
   path: 'roomScreenIds',
-  label: 'Room screens',
+  label: 'roomScreens',
   source: 'native:room-identity',
   confidence: 'certain',
   read: readRoomScreenIds,

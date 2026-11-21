@@ -3,9 +3,9 @@ import { useT } from '@drizztdourden08/brock-react';
 import { Text } from '@drizztdourden08/tessera/primitives';
 import { ColorPickerPopover } from '@drizztdourden08/tessera/color-picker-popover';
 import { bgr555ToHex, isExactColor } from '@rotp/game-core';
-import { OUTFIT_LABELS } from '@rotp/design/packs';
 import { StudioSection } from '@app/studio';
 import type { PaletteEditorProps } from '../PlayerSpriteStudio.type';
+import { outfitName } from '../behavior/outfit-name';
 import { usePaletteSlot } from '../behavior/usePaletteSlot';
 import { OutfitSwatchGrid } from './OutfitSwatchGrid';
 import { GloveSwatchGrid } from './GloveSwatchGrid';
@@ -18,7 +18,7 @@ const PaletteEditor = (props: PaletteEditorProps) => {
 
   return (
     <>
-      <StudioSection title={t('views-player-sprite-studio:palette.outfit', { outfit: OUTFIT_LABELS[outfit] })}>
+      <StudioSection title={t('views-player-sprite-studio:palette.outfit', { outfit: outfitName(outfit, t) })}>
         <OutfitSwatchGrid colors={colors} originals={originals} slot={slot} onOpen={openAt} />
         <Text variant="caption" tone="muted">{t('views-player-sprite-studio:palette.transparentNote')}</Text>
       </StudioSection>

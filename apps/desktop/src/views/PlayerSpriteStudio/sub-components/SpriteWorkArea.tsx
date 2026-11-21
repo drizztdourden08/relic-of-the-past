@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind component */
 import { useT } from '@drizztdourden08/brock-react';
-import { useCallback } from 'react';
+import { useCallback, useMemo } from 'react';
 import { StateList, ViewerStage, useSpriteViewer, useWearing } from '@rotp/design/packs';
 import { StudioLayout } from '@drizztdourden08/tessera/composites';
 import { STUDIO_EDITOR_MIN_WIDTH, StudioPane, StudioPanelContent } from '@app/studio';
@@ -11,10 +11,12 @@ import type { SpriteWorkAreaProps } from '../PlayerSpriteStudio.type';
 import { SpriteProperties } from './SpriteProperties';
 import { SpriteStatus } from './SpriteStatus';
 import { viewerToolGroups } from '../behavior/viewer-tool-groups';
+import { viewerLabelsOf } from '../behavior/viewer-labels-of';
 
 const SpriteWorkArea = (props: SpriteWorkAreaProps) => {
   const { sheet, installed, busy, error, draft, library, exporter, run, onOpenAfter, onUninstalled } = props;
   const t = useT();
+  const labels = useMemo(() => viewerLabelsOf(t), [t]);
   const wearing = useWearing();
   const viewer = useSpriteViewer({ setOutfit: wearing.setOutfit });
   const { setAction, setView } = viewer;
@@ -44,7 +46,7 @@ const SpriteWorkArea = (props: SpriteWorkAreaProps) => {
         compactToolbar
         editorMinWidth={STUDIO_EDITOR_MIN_WIDTH}
         toolbar={viewerToolGroups({ wearing, viewer, t })}
-        start={{ ...STATES_PANEL, title: t('views-player-sprite-studio:panel.states'), content: <StudioPanelContent><StateList fill selected={viewer.action} onSelect={selectState} /></StudioPanelContent> }}
+        start={{ ...STATES_PANEL, title: t('views-player-sprite-studio:panel.states'), content: <StudioPanelContent><StateList fill selected={viewer.action} onSelect={selectState} labels={labels} /></StudioPanelContent> }}
         end={{
           ...PROPERTIES_PANEL,
           title: t('views-player-sprite-studio:panel.properties'),
@@ -55,7 +57,7 @@ const SpriteWorkArea = (props: SpriteWorkAreaProps) => {
           ),
         }}
       >
-        <ViewerStage sheet={sheet} wearing={wearing} viewer={viewer} />
+        <ViewerStage sheet={sheet} wearing={wearing} viewer={viewer} labels={labels} />
       </StudioLayout>
     </StudioPane>
   );

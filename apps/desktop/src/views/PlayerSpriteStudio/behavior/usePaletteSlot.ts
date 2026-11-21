@@ -5,9 +5,9 @@ import type { SwatchGroup } from '@drizztdourden08/tessera/color-picker';
 import { OUTFIT_IDS } from '@rotp/game-data';
 import { bgr555ToHex, hexToBgr555 } from '@rotp/game-core';
 import { flattenPalette } from '@rotp/packs';
-import { OUTFIT_LABELS } from '@rotp/design/packs';
 import type { PaletteEditorProps, Slot } from '../PlayerSpriteStudio.type';
 import { colorAt } from './color-at';
+import { outfitName } from './outfit-name';
 import { gloveSlot } from './glove-slot';
 import { slotTitle } from './slot-title';
 
@@ -53,7 +53,7 @@ const usePaletteSlot = (params: PaletteEditorProps) => {
     const thisColour = currentHex === originalHex ? [currentHex] : [currentHex, originalHex];
     return [
       { label: t('views-player-sprite-studio:palette.thisColour'), colors: thisColour },
-      ...OUTFIT_IDS.map((id) => ({ label: t('views-player-sprite-studio:palette.outfit', { outfit: OUTFIT_LABELS[id] }), colors: live.outfits[id].map(bgr555ToHex) })),
+      ...OUTFIT_IDS.map((id) => ({ label: t('views-player-sprite-studio:palette.outfit', { outfit: outfitName(id, t) }), colors: live.outfits[id].map(bgr555ToHex) })),
       { label: t('views-player-sprite-studio:palette.gloves'), colors: live.gloves.map(bgr555ToHex) },
     ];
   }, [slot, live, wordOf, originalOf, t]);

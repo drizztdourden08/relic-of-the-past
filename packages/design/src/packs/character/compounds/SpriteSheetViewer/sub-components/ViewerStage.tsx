@@ -8,7 +8,7 @@ import { SheetBrowser } from '../../SheetBrowser';
 import type { ViewerStageProps } from '../SpriteSheetViewer.type';
 
 const ViewerStage = (props: ViewerStageProps) => {
-  const { sheet, wearing, viewer } = props;
+  const { sheet, wearing, viewer, labels } = props;
   const { view, action, scale, clock, setAction, setView } = viewer;
   const state = useMemo(() => stateFor(action), [action]);
   const row = useMemo(() => resolvePalette(sheet, wearing.wearing), [sheet, wearing.wearing]);
@@ -16,7 +16,7 @@ const ViewerStage = (props: ViewerStageProps) => {
   return (
     <>
       {view === 'state' && state && (
-        <StatePreview sheet={sheet} row={row} state={state} tick={clock.tick} scale={scale} />
+        <StatePreview sheet={sheet} row={row} state={state} tick={clock.tick} scale={scale} labels={labels} />
       )}
       {view === 'contact' && (
         <ContactSheet
@@ -24,10 +24,11 @@ const ViewerStage = (props: ViewerStageProps) => {
           row={row}
           tick={clock.tick}
           scale={scale}
+          labels={labels}
           onSelect={(next) => { setAction(next); setView('state'); }}
         />
       )}
-      {view === 'sheet' && <SheetBrowser sheet={sheet} wearing={wearing.wearing} scale={scale} />}
+      {view === 'sheet' && <SheetBrowser sheet={sheet} wearing={wearing.wearing} scale={scale} labels={labels} />}
     </>
   );
 };

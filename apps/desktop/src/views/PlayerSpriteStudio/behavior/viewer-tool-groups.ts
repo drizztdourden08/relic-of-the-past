@@ -30,6 +30,7 @@ const viewerToolGroups = (props: ViewerToolGroupsProps): ToolGroup[] => {
         gloves: wearing.gloves,
         onOutfit: wearing.setOutfit,
         onGloves: wearing.setGloves,
+        labels,
       }),
     },
   ];

@@ -23,13 +23,14 @@ const SpriteSheetViewer = (props: SpriteSheetViewerProps) => {
         gloves={wearing.gloves}
         onOutfit={wearing.setOutfit}
         onGloves={wearing.setGloves}
+        labels={labels}
       />
       <ViewerControls view={view} clock={clock} scale={scale} onView={setView} onScale={setScale} labels={labels} />
 
       <Box className="sprite-viewer__body">
-        {view === 'state' && <StateList selected={action} onSelect={setAction} />}
+        {view === 'state' && <StateList selected={action} onSelect={setAction} labels={labels} />}
         <Box className="sprite-viewer__stage">
-          <ViewerStage sheet={sheet} wearing={wearing} viewer={viewer} />
+          <ViewerStage sheet={sheet} wearing={wearing} viewer={viewer} labels={labels} />
         </Box>
         {aside}
       </Box>

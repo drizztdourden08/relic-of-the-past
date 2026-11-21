@@ -5,7 +5,7 @@ import { isCurrentScreen } from './is-current-screen';
 
 const kindProbe: FieldProbe<'screen'> = {
   path: 'kind',
-  label: 'Kind',
+  label: 'kind',
   source: 'native:room-identity',
   confidence: 'certain',
   applies: () => true,

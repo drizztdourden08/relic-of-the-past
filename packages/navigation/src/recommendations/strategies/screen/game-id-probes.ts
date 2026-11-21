@@ -18,7 +18,7 @@ const palaceReading = (value: number | undefined): Probe<number | undefined> =>
 
 const roomIndexProbe: FieldProbe<'screen'> = {
   path: 'gameId.roomIndex',
-  label: 'Room',
+  label: 'room',
   format: hex4,
   source: 'native:room-identity',
   confidence: 'certain',
@@ -28,7 +28,7 @@ const roomIndexProbe: FieldProbe<'screen'> = {
 
 const overworldIndexProbe: FieldProbe<'screen'> = {
   path: 'gameId.overworldIndex',
-  label: 'OW screen',
+  label: 'owScreen',
   format: hex2,
   source: 'native:room-identity',
   confidence: 'certain',
@@ -38,7 +38,7 @@ const overworldIndexProbe: FieldProbe<'screen'> = {
 
 const palaceIndexProbe: FieldProbe<'screen'> = {
   path: 'gameId.palaceIndex',
-  label: 'Palace',
+  label: 'palace',
   format: hex2,
   source: 'native:room-identity',
   confidence: 'certain',
@@ -54,7 +54,7 @@ const palaceIndexProbe: FieldProbe<'screen'> = {
 
 const entranceIdProbe: FieldProbe<'screen'> = {
   path: 'gameId.entranceId',
-  label: 'Entrance',
+  label: 'entrance',
   format: hex2,
   source: 'native:ram-010E',
   confidence: 'certain',

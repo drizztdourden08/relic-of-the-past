@@ -10,6 +10,7 @@ import { UPGRADE_SPRITE_DEFINITIONS } from '../upgrade-sprites';
 import { GROUND_TILE_SPRITE_DEFINITIONS } from '../ground-tiles';
 import { HUD_WALLET_SPRITE_DEFINITIONS } from '../hud-wallet';
 import { boxForExtract } from '../sprite-box';
+import { spriteNameOf } from './sprite-name-of';
 import type { SpriteBox } from '../sprite-box';
 import type { SpriteCategory, SpriteDefinition, SpriteManifestEntry } from './manifest.type';
 
@@ -30,7 +31,7 @@ const SPRITE_DEFINITIONS: readonly SpriteDefinition[] =
 
 const SPRITE_MANIFEST: SpriteManifestEntry[] = SPRITE_DEFINITIONS.map(sprite => ({
   file: sprite.file,
-  label: sprite.label,
+  label: spriteNameOf(sprite.file, sprite.label),
   category: sprite.category,
   box: boxForExtract(sprite.extract),
 }));

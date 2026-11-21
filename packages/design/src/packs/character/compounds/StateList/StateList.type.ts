@@ -1,5 +1,7 @@
 /* @layer renderer-components @kind types */
-interface StateListProps {
+import type { PoseLabelsProp } from '../../behavior/pose-labels';
+
+interface StateListProps extends PoseLabelsProp {
   selected: number;
   onSelect: (action: number) => void;
   fill?: boolean;

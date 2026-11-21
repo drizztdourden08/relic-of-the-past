@@ -3,11 +3,12 @@ import type { ReactNode } from 'react';
 import type { OutfitId, PlayerSheet } from '@rotp/game-data';
 import type { WearingState } from '../../behavior/useWearing';
 import type { AnimationClock } from '../../behavior/animation-clock.type';
+import type { PoseLabels } from '../../behavior/pose-labels';
 import type { useSpriteViewer } from './behavior/useSpriteViewer';
 
 type SheetView = 'state' | 'contact' | 'sheet';
 
-type ViewerLabels = {
+type ViewerLabels = PoseLabels & {
   viewState: string;
   viewContact: string;
   viewSheet: string;
@@ -57,7 +58,7 @@ type ZoomControlProps = LabelsProp & {
   onScale: (scale: number) => void;
 };
 
-type ViewerStageProps = {
+type ViewerStageProps = LabelsProp & {
   sheet: PlayerSheet;
   wearing: WearingState;
   viewer: SpriteViewerModel;

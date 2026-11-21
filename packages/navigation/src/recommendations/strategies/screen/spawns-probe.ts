@@ -40,7 +40,7 @@ const readSpawns = (observations: ScreenObservations, record: ScreenRecord): Pro
 
 const spawnsProbe: FieldProbe<'screen'> = {
   path: 'spawns',
-  label: 'Spawns',
+  label: 'spawns',
   source: 'native:sprite-spawns',
   confidence: 'certain',
   applies: (observations, record) => isCurrentScreen(observations, record),
