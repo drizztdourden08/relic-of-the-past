@@ -174,6 +174,7 @@
   "sprite-manager.delete": "Elimina",
   "sprite-manager.delete-failed": "Eliminazione non riuscita",
   "sprite-manager.extract-failed": "Estrazione non riuscita",
+  "sprite-manager.image-count": "{count, plural, one {# immagine sprite} other {# immagini sprite}}",
   "sprite-manager.new-sprite-set": "Nuovo set di sprite",
   "sprite-manager.no-sprites-extracted-yet": "Ancora nessuno sprite estratto",
   "sprite-manager.select-an-imported-rom-to": "Seleziona una ROM importata per vederne gli sprite",

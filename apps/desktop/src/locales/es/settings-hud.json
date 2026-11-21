@@ -148,5 +148,6 @@
   "dialog-texture-density.label": "Densidad",
   "dialog-texture-density.description": "Qué tan juntas están las celdas.",
   "dialog-texture-scatter.label": "Dispersión",
-  "dialog-texture-scatter.description": "Cuánto se desvían las celdas de la cuadrícula; a cero quedan alineadas."
+  "dialog-texture-scatter.description": "Cuánto se desvían las celdas de la cuadrícula; a cero quedan alineadas.",
+  "screen.title": "HUD"
 }

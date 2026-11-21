@@ -148,5 +148,6 @@
   "dialog-texture-density.label": "Density",
   "dialog-texture-density.description": "How close the cells sit.",
   "dialog-texture-scatter.label": "Scatter",
-  "dialog-texture-scatter.description": "How far cells stray from the grid; at zero they line up."
+  "dialog-texture-scatter.description": "How far cells stray from the grid; at zero they line up.",
+  "screen.title": "HUD"
 }

@@ -148,5 +148,6 @@
   "dialog-texture-density.label": "密度",
   "dialog-texture-density.description": "セルの間隔の近さです。",
   "dialog-texture-scatter.label": "ばらつき",
-  "dialog-texture-scatter.description": "セルがグリッドからどれだけ外れるか。0なら整列します。"
+  "dialog-texture-scatter.description": "セルがグリッドからどれだけ外れるか。0なら整列します。",
+  "screen.title": "ステータス表示"
 }

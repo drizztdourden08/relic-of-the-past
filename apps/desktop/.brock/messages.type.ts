@@ -749,6 +749,7 @@ declare module '@drizztdourden08/brock-core/augment' {
     'data-manager:sprite-manager.delete': Record<never, never>;
     'data-manager:sprite-manager.delete-failed': Record<never, never>;
     'data-manager:sprite-manager.extract-failed': Record<never, never>;
+    'data-manager:sprite-manager.image-count': { count: number };
     'data-manager:sprite-manager.new-sprite-set': Record<never, never>;
     'data-manager:sprite-manager.no-sprites-extracted-yet': Record<never, never>;
     'data-manager:sprite-manager.select-an-imported-rom-to': Record<never, never>;
@@ -5637,6 +5638,7 @@ declare module '@drizztdourden08/brock-core/augment' {
     'settings-hud:dialog-texture-density.description': Record<never, never>;
     'settings-hud:dialog-texture-scatter.label': Record<never, never>;
     'settings-hud:dialog-texture-scatter.description': Record<never, never>;
+    'settings-hud:screen.title': Record<never, never>;
     'settings-mobile:section.mobile.title': Record<never, never>;
     'settings-mobile:render-into-notch.label': Record<never, never>;
     'settings-mobile:render-into-notch.description': Record<never, never>;

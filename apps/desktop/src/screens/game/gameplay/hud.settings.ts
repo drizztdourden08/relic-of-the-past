@@ -2,7 +2,7 @@
 import { msg } from '@drizztdourden08/brock-core/i18n';
 import type { ScreenMeta, SectionDef } from '@drizztdourden08/brock-react';
 
-const meta: ScreenMeta = { title: 'HUD', icon: 'layout-grid', order: 3, keywords: ['hud', 'hearts', 'magic', 'dialog box', 'title screen', 'overlay'] };
+const meta: ScreenMeta = { title: msg('settings-hud:screen.title'), icon: 'layout-grid', order: 3, keywords: ['hud', 'hearts', 'magic', 'dialog box', 'title screen', 'overlay'] };
 
 const drawChoices = [{ value: 'original', label: msg('settings-hud:option.draw-choices.original.label') }, { value: 'enhanced', label: msg('settings-hud:option.draw-choices.enhanced.label') }];
 const enhancedParts = [{ value: 'main', label: msg('settings-hud:option.enhanced-parts.main.label') }, { value: 'pause', label: msg('settings-hud:option.enhanced-parts.pause.label') }];

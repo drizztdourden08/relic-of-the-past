@@ -148,5 +148,6 @@
   "dialog-texture-density.label": "Gęstość",
   "dialog-texture-density.description": "Jak blisko siebie leżą komórki.",
   "dialog-texture-scatter.label": "Rozrzut",
-  "dialog-texture-scatter.description": "Jak daleko komórki odchodzą od siatki; przy zerze są w jednej linii."
+  "dialog-texture-scatter.description": "Jak daleko komórki odchodzą od siatki; przy zerze są w jednej linii.",
+  "screen.title": "HUD"
 }

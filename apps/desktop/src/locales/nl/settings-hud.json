@@ -148,5 +148,6 @@
   "dialog-texture-density.label": "Dichtheid",
   "dialog-texture-density.description": "Hoe dicht de cellen op elkaar zitten.",
   "dialog-texture-scatter.label": "Spreiding",
-  "dialog-texture-scatter.description": "Hoe ver cellen van het raster afdwalen; op nul liggen ze op één lijn."
+  "dialog-texture-scatter.description": "Hoe ver cellen van het raster afdwalen; op nul liggen ze op één lijn.",
+  "screen.title": "HUD"
 }

@@ -174,6 +174,7 @@
   "sprite-manager.delete": "Verwijderen",
   "sprite-manager.delete-failed": "Verwijderen mislukt",
   "sprite-manager.extract-failed": "Uitpakken mislukt",
+  "sprite-manager.image-count": "{count, plural, one {# sprite-afbeelding} other {# sprite-afbeeldingen}}",
   "sprite-manager.new-sprite-set": "Nieuwe spriteset",
   "sprite-manager.no-sprites-extracted-yet": "Nog geen sprites uitgepakt",
   "sprite-manager.select-an-imported-rom-to": "Kies een geïmporteerde ROM om de sprites te zien",

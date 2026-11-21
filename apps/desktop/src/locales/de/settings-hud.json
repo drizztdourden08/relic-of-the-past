@@ -148,5 +148,6 @@
   "dialog-texture-density.label": "Dichte",
   "dialog-texture-density.description": "Wie dicht die Zellen sitzen.",
   "dialog-texture-scatter.label": "Streuung",
-  "dialog-texture-scatter.description": "Wie weit Zellen vom Raster abweichen; bei null liegen sie in Reihe."
+  "dialog-texture-scatter.description": "Wie weit Zellen vom Raster abweichen; bei null liegen sie in Reihe.",
+  "screen.title": "HUD"
 }

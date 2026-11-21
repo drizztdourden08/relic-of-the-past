@@ -18,7 +18,7 @@ const ImportedSpriteList = (props: ImportedSpriteListProps) => {
           name={r.romFile}
           selected={selectedRom === r.romFile}
           onClick={() => onSelect(r.romFile)}
-          meta={`${extractedMap[r.romFile]?.count ?? 0} sprite images`}
+          meta={t('data-manager:sprite-manager.image-count', { count: extractedMap[r.romFile]?.count ?? 0 })}
           action={
             <IconButton variant="ghost" size="sm" label={t('data-manager:sprite-manager.delete')} onClick={(e) => { e.stopPropagation(); void onDelete(r.romFile); }}>
               <Icon name="x" />

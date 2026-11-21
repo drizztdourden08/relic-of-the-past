@@ -148,5 +148,6 @@
   "dialog-texture-density.label": "Täthet",
   "dialog-texture-density.description": "Hur tätt cellerna ligger.",
   "dialog-texture-scatter.label": "Spridning",
-  "dialog-texture-scatter.description": "Hur långt celler avviker från rutnätet; vid noll ligger de på rad."
+  "dialog-texture-scatter.description": "Hur långt celler avviker från rutnätet; vid noll ligger de på rad.",
+  "screen.title": "HUD"
 }

@@ -148,5 +148,6 @@
   "dialog-texture-density.label": "Densité",
   "dialog-texture-density.description": "Proximité des cellules.",
   "dialog-texture-scatter.label": "Dispersion",
-  "dialog-texture-scatter.description": "Distance dont les cellules s'écartent de la grille ; à zéro, elles sont alignées."
+  "dialog-texture-scatter.description": "Distance dont les cellules s'écartent de la grille ; à zéro, elles sont alignées.",
+  "screen.title": "HUD"
 }
