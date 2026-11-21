@@ -7,7 +7,7 @@
   "library.roms.title": "ROM",
   "library.roms.description": "ROMをインポートしてアセットを抽出。",
   "library.sprites.title": "スプライト",
-  "library.sprites.description": "抽出したHUD、アイテム、メニューの画像を閲覧。",
+  "library.sprites.description": "抽出したステータス表示、アイテム、メニューの画像を閲覧。",
   "studios.label": "スタジオ",
   "studios.characters.title": "キャラクタースタジオ",
   "studios.characters.description": "プレイヤースプライトのインポート、作成、編集。",

@@ -3,7 +3,7 @@
   "developer-tools-enabled.label": "開発者モード",
   "developer-tools-enabled.description": "開発者ツールをオンにします。",
   "experimental-features-enabled.label": "試験的機能",
-  "experimental-features-enabled.description": "未完成の機能を有効にします：HUDレイアウトエディター、モダンHUDと操作、GBA設定、Archipelagoオンラインプレイ。オフにするとモダンHUDと追加ダンジョンもオフになります。",
+  "experimental-features-enabled.description": "未完成の機能を有効にします：ステータス表示レイアウトエディター、モダンステータス表示と操作、GBA設定、Archipelagoオンラインプレイ。オフにするとモダンステータス表示と追加ダンジョンもオフになります。",
   "experimental-features-enabled.hint": "開発者モードが必要です。",
   "dev-navigation-data.label": "ナビゲーションデータ",
   "dev-navigation-data.description": "現在地とナビゲーションのウィジェット、フラッドフィル、シミュレーターが使う部屋、グリッド、スプライトのデータ。",

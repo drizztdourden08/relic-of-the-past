@@ -7,5 +7,5 @@
   "deleteRom.message": "「{romFile}」と抽出済みのアセットをすべて削除します。このROMを使うプロフィールも削除されます。この操作は取り消せません。",
   "deleteRom.confirm": "ROMを削除",
   "toast.restartNeeded": "一部の変更は、ゲームを再起動すると反映されます",
-  "toast.enhancedFallback": "モダンHUDスタイルには16:9以上のワイドな画面が必要なため、スタイルをオリジナルに戻しました"
+  "toast.enhancedFallback": "モダンステータス表示スタイルには16:9以上のワイドな画面が必要なため、スタイルをオリジナルに戻しました"
 }
