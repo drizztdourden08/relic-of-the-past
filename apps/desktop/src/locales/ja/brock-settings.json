@@ -7,6 +7,7 @@
   "commands.reason.hidden": "このコマンドはここでは使えません。",
   "commands.reason.noArgs": "このコマンドは引数を取りません。",
   "commands.reason.unknown": "そのようなコマンドはありません。",
+  "group.app": "アプリ",
   "hub.search.empty": "「{query}」に一致する設定はありません。",
   "hub.search.idle": "入力してすべての設定を検索します。",
   "hub.search.summary": "{count, plural, other {「{query}」に一致する設定は#件です}}",

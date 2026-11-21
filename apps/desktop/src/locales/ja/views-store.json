@@ -34,5 +34,7 @@
   "kind.music": "音楽パック",
   "kind.character": "キャラクター",
   "kind.language": "言語",
-  "account.lookupFailed": "Sanctuary アカウントを確認できませんでした。"
+  "account.lookupFailed": "Sanctuary アカウントを確認できませんでした。",
+  "screen.group.catalogue": "カタログ",
+  "screen.group.mine": "このコンピューター"
 }

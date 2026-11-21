@@ -274,5 +274,6 @@
   "save-slot.save": "Zapisz w slocie {slotNumber}",
   "save-slot.slot": "Slot {slotNumber}",
   "wishing-pond-row.may-ask-for": "czego może zażądać",
-  "capacity.ladder": "drabina"
+  "capacity.ladder": "drabina",
+  "credits.legal-notice": "To nieoficjalny projekt open source tworzony przez fanów. Nie jest powiązany z firmą Nintendo ani przez nią wspierany, sponsorowany czy zatwierdzony. Nintendo, The Legend of Zelda oraz powiązane nazwy, postacie, muzyka, grafiki i zasoby są znakami towarowymi i/lub prawami autorskimi firmy Nintendo. To repozytorium nie zawiera żadnych zasobów gry należących do Nintendo."
 }

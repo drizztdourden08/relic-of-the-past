@@ -274,5 +274,6 @@
   "save-slot.save": "Spara på plats {slotNumber}",
   "save-slot.slot": "Plats {slotNumber}",
   "wishing-pond-row.may-ask-for": "vad hon får be om",
-  "capacity.ladder": "stege"
+  "capacity.ladder": "stege",
+  "credits.legal-notice": "Det här är ett inofficiellt open source-projekt skapat av fans. Det är inte anslutet till, godkänt, sponsrat eller stött av Nintendo. Nintendo, The Legend of Zelda och relaterade namn, karaktärer, musik, grafik och resurser är varumärken och/eller upphovsrätt som tillhör Nintendo. Inga spelresurser som ägs av Nintendo ingår i det här förrådet."
 }

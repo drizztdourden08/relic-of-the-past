@@ -10,7 +10,7 @@ import { profileSummary } from './profile-summary';
 const busyHintOf = (joining: number | null, t: I18n['t']): string =>
   (joining === null ? t('wizards:profile.busy.creating') : t('wizards:profile.busy.joining', { percent: Math.round(joining * 100) }));
 
-const profileWizardSteps = ({ joining, modules, t }: StepContext): readonly WizardStepDef<ProfileWizardValues>[] =>
+const profileWizardSteps = ({ joining, modules, t, text }: StepContext): readonly WizardStepDef<ProfileWizardValues>[] =>
   placeWizardSteps<ProfileWizardValues>(
     [
       {
@@ -27,6 +27,7 @@ const profileWizardSteps = ({ joining, modules, t }: StepContext): readonly Wiza
       },
     ],
     modules,
+    text,
   );
 
 export { profileWizardSteps };

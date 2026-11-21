@@ -274,5 +274,6 @@
   "save-slot.save": "Sauvegarder dans l'emplacement {slotNumber}",
   "save-slot.slot": "Emplacement {slotNumber}",
   "wishing-pond-row.may-ask-for": "ce qu'elle peut demander",
-  "capacity.ladder": "échelle"
+  "capacity.ladder": "échelle",
+  "credits.legal-notice": "Ceci est un projet de fans, non officiel et open source. Il n'est ni affilié à Nintendo, ni approuvé, parrainé ou validé par Nintendo. Nintendo, The Legend of Zelda ainsi que les noms, personnages, musiques, illustrations et ressources associés sont des marques et/ou des droits d'auteur de Nintendo. Aucune ressource de jeu appartenant à Nintendo n'est incluse dans ce dépôt."
 }

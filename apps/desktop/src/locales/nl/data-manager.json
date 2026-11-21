@@ -355,5 +355,22 @@
   "jobs.line.readJapaneseGraphics": "Japanse graphics lezen...",
   "rom-manager.extracted": "Uitgepakt",
   "rom-manager.attached-to": "Gekoppeld aan {bases}",
-  "rom-manager.roms-title": "ROM's"
+  "rom-manager.roms-title": "ROM's",
+  "settings-sections.title.video": "Video",
+  "settings-sections.title.extras": "Extra's",
+  "settings-sections.title.app": "App",
+  "settings-search.input-profiles.label": "Invoerprofielen",
+  "settings-search.input-profiles.description": "Sets toewijzingen waartussen je kunt wisselen",
+  "settings-search.game-controls.label": "Spelbesturing",
+  "settings-search.game-controls.description": "De SNES-knoppen op je toetsenbord of controller",
+  "settings-search.shortcuts.label": "Sneltoetsen en functies",
+  "settings-search.shortcuts.description": "App-sneltoetsen zoals snel opslaan en Turbo",
+  "settings-search.cheat-bindings.label": "Cheat-toewijzingen",
+  "settings-search.cheat-bindings.description": "Toetsen die cheats activeren",
+  "settings-search.controllers.label": "Controllers",
+  "settings-search.controllers.description": "Aangesloten controllers en hun presets",
+  "settings-search.extra-dungeon.label": "Extra dungeon",
+  "settings-search.extra-dungeon.description": "De optionele dungeon na het spel van de tweede cartridge",
+  "settings-search.gba-tracker.label": "GBA-voortgangstracker",
+  "settings-search.gba-tracker.description": "Hoe ver elk verschil met de Game Boy Advance is"
 }

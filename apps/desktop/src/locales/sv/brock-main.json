@@ -18,5 +18,8 @@
   "splash.openLogs": "Öppna loggar",
   "splash.quit": "Avsluta",
   "splash.timedOut": "{label} tog för lång tid",
-  "splash.failed": "{label} misslyckades"
+  "splash.failed": "{label} misslyckades",
+  "storage.os.win32": "Windows (AppData)",
+  "storage.os.darwin": "macOS (Application Support)",
+  "storage.os.linux": "Linux (~/.config)"
 }

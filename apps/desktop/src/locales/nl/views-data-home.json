@@ -32,5 +32,13 @@
   "domain.link-sprites": "Personagesprites",
   "domain.msu": "MSU-pakketten",
   "domain.logs": "Logboeken",
-  "domain.languages": "Taalstudio"
+  "domain.languages": "Taalstudio",
+  "domain-description.profiles": "Elk profiel met zijn instellingen, opslagbestanden en tracker.",
+  "domain-description.roms": "De spel-ROM's die je hebt geïmporteerd.",
+  "domain-description.assets": "Spelbronnen uit elke ROM gehaald; op verzoek opnieuw uitgepakt.",
+  "domain-description.sprites": "Menu-, HUD- en voorwerpsprites uit elke ROM gehaald.",
+  "domain-description.link-sprites": "Eigen spelersprites in de Karakterstudio.",
+  "domain-description.languages": "Uitgepakte talen en je taalsets.",
+  "domain-description.msu": "MSU-1-muziekpakketten en de werkbestanden van de MSU Studio.",
+  "domain-description.logs": "Sessie- en consolelogboeken en debugopnamen."
 }

@@ -34,5 +34,7 @@
   "kind.music": "Musikpaket",
   "kind.character": "Figur",
   "kind.language": "Sprache",
-  "account.lookupFailed": "Dein Sanctuary-Konto konnte nicht abgefragt werden."
+  "account.lookupFailed": "Dein Sanctuary-Konto konnte nicht abgefragt werden.",
+  "screen.group.catalogue": "Katalog",
+  "screen.group.mine": "Auf diesem Computer"
 }

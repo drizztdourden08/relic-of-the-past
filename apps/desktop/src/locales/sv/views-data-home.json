@@ -32,5 +32,13 @@
   "domain.link-sprites": "Karaktärssprites",
   "domain.msu": "MSU-paket",
   "domain.logs": "Loggar",
-  "domain.languages": "Språkstudio"
+  "domain.languages": "Språkstudio",
+  "domain-description.profiles": "Varje profil med sina inställningar, sparfiler och spårare.",
+  "domain-description.roms": "Spel-ROM-filerna du har importerat.",
+  "domain-description.assets": "Spelresurser som extraherats från varje ROM; extraheras på nytt vid behov.",
+  "domain-description.sprites": "Meny-, HUD- och föremålssprites som extraherats från varje ROM.",
+  "domain-description.link-sprites": "Egna spelarsprites i Karaktärsstudion.",
+  "domain-description.languages": "Extraherade språk och dina språkuppsättningar.",
+  "domain-description.msu": "MSU-1-musikpaket och MSU-studions arbetsfiler.",
+  "domain-description.logs": "Session- och konsolloggar samt felsökningsinspelningar."
 }

@@ -34,5 +34,7 @@
   "kind.music": "Musikpaket",
   "kind.character": "Figur",
   "kind.language": "Språk",
-  "account.lookupFailed": "Det gick inte att slå upp ditt Sanctuary-konto."
+  "account.lookupFailed": "Det gick inte att slå upp ditt Sanctuary-konto.",
+  "screen.group.catalogue": "Katalog",
+  "screen.group.mine": "På den här datorn"
 }

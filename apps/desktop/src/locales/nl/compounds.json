@@ -274,5 +274,6 @@
   "save-slot.save": "Opslaan in slot {slotNumber}",
   "save-slot.slot": "Slot {slotNumber}",
   "wishing-pond-row.may-ask-for": "waar ze om mag vragen",
-  "capacity.ladder": "ladder"
+  "capacity.ladder": "ladder",
+  "credits.legal-notice": "Dit is een onofficieel open-sourceproject, gemaakt door fans. Het is niet gelieerd aan Nintendo en wordt niet door Nintendo goedgekeurd, gesponsord of ondersteund. Nintendo, The Legend of Zelda en gerelateerde namen, personages, muziek, illustraties en materialen zijn handelsmerken en/of auteursrechten van Nintendo. Deze repository bevat geen spelmateriaal dat eigendom is van Nintendo."
 }

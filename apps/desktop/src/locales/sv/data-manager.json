@@ -355,5 +355,22 @@
   "jobs.line.readJapaneseGraphics": "Läser den japanska grafiken...",
   "rom-manager.extracted": "Extraherad",
   "rom-manager.attached-to": "Kopplad till {bases}",
-  "rom-manager.roms-title": "ROM-filer"
+  "rom-manager.roms-title": "ROM-filer",
+  "settings-sections.title.video": "Video",
+  "settings-sections.title.extras": "Extra",
+  "settings-sections.title.app": "App",
+  "settings-search.input-profiles.label": "Inmatningsprofiler",
+  "settings-search.input-profiles.description": "Uppsättningar av knapptilldelningar som du kan växla mellan",
+  "settings-search.game-controls.label": "Spelkontroller",
+  "settings-search.game-controls.description": "SNES-knapparna på ditt tangentbord eller din handkontroll",
+  "settings-search.shortcuts.label": "Genvägar och funktioner",
+  "settings-search.shortcuts.description": "Appgenvägar som snabbspara och Turbo",
+  "settings-search.cheat-bindings.label": "Fusktilldelningar",
+  "settings-search.cheat-bindings.description": "Tangenter som utlöser fusk",
+  "settings-search.controllers.label": "Handkontroller",
+  "settings-search.controllers.description": "Anslutna handkontroller och deras förinställningar",
+  "settings-search.extra-dungeon.label": "Extra fängelsehåla",
+  "settings-search.extra-dungeon.description": "Den valfria fängelsehålan efter spelets slut från den andra kassetten",
+  "settings-search.gba-tracker.label": "GBA-framstegsspårare",
+  "settings-search.gba-tracker.description": "Hur långt varje skillnad i Game Boy Advance har kommit"
 }

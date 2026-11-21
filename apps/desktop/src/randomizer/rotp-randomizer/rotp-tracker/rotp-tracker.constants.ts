@@ -10,16 +10,16 @@ import { GROUPING_TEXT } from './rotp-tracker-labels.constants';
 
 const ROTP_ASSUMPTIONS: readonly TrackerAssumption[] = [
   {
-    id: SMALL_KEY_DOORS, label: 'Small Keys', initial: true,
-    hint: 'On: rows past a key door wait for the keys the logic counts. Off: every small key door reads as open',
+    id: SMALL_KEY_DOORS, label: msg('compounds:tracker.logic.small-keys'), initial: true,
+    hint: msg('compounds:tracker.logic.small-keys-title'),
   },
   {
-    id: BIG_KEY_DOORS, label: 'Big Keys', initial: true,
-    hint: 'On: rows past a Big Key door wait for the key. Off: every Big Key door reads as open',
+    id: BIG_KEY_DOORS, label: msg('compounds:tracker.logic.big-keys'), initial: true,
+    hint: msg('compounds:tracker.logic.big-keys-title'),
   },
   {
-    id: DARK_ROOMS_NEED_LIGHT, label: 'Dark Rooms', initial: true,
-    hint: 'On: rows past an unlit room wait for a light. Off: unlit rooms read as walked in the dark',
+    id: DARK_ROOMS_NEED_LIGHT, label: msg('compounds:tracker.logic.dark-rooms'), initial: true,
+    hint: msg('compounds:tracker.logic.dark-rooms-title'),
   },
 ];
 

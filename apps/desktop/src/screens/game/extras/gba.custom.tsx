@@ -1,4 +1,5 @@
 /* @layer renderer-app @kind component */
+import { msg } from '@drizztdourden08/brock-core/i18n';
 import { useSettings } from '@drizztdourden08/brock-react';
 import type { ScreenMeta, SearchEntrySeed } from '@drizztdourden08/brock-react';
 import type { AppSettings } from '@app/settings.type';
@@ -8,8 +9,8 @@ import { isExperimental } from '@app/shell/show-rules';
 const meta: ScreenMeta = { title: 'GBA', icon: 'puzzle', showHeader: true, order: 5, when: isExperimental, keywords: ['gba', 'game boy advance', 'second cartridge', 'four swords', 'extra dungeon'] };
 
 const searchEntries: SearchEntrySeed[] = [
-  { label: 'Extra Dungeon', keywords: ['post game', 'second cartridge', 'supplement', 'extra dungeon'], anchor: 'extraDungeon', description: 'The optional post-game dungeon from the second cartridge' },
-  { label: 'GBA advancement tracker', keywords: ['differences', 'changes', 'catalogue', 'progress', 'in progress', 'tracker'], anchor: 'gba-differences', description: 'How far each Game Boy Advance difference has got' },
+  { label: msg('data-manager:settings-search.extra-dungeon.label'), keywords: ['post game', 'second cartridge', 'supplement', 'extra dungeon'], anchor: 'extraDungeon', description: msg('data-manager:settings-search.extra-dungeon.description') },
+  { label: msg('data-manager:settings-search.gba-tracker.label'), keywords: ['differences', 'changes', 'catalogue', 'progress', 'in progress', 'tracker'], anchor: 'gba-differences', description: msg('data-manager:settings-search.gba-tracker.description') },
 ];
 
 const GbaPage = () => {

@@ -3,8 +3,10 @@ import type { Layer } from '@drizztdourden08/brock-core/i18n';
 import app_sv_brock_app from '../../src/locales/sv/brock-app.json';
 import app_sv_brock_settings from '../../src/locales/sv/brock-settings.json';
 import app_sv_brock_shell from '../../src/locales/sv/brock-shell.json';
+import app_sv_catalog from '../../src/locales/sv/catalog.json';
 import app_sv_compounds from '../../src/locales/sv/compounds.json';
 import app_sv_data_manager from '../../src/locales/sv/data-manager.json';
+import app_sv_display from '../../src/locales/sv/display.json';
 import app_sv_errors from '../../src/locales/sv/errors.json';
 import app_sv_features from '../../src/locales/sv/features.json';
 import app_sv_game_labels from '../../src/locales/sv/game-labels.json';
@@ -14,8 +16,10 @@ import app_sv_hud_editing from '../../src/locales/sv/hud-editing.json';
 import app_sv_hud_editor from '../../src/locales/sv/hud-editor.json';
 import app_sv_hud from '../../src/locales/sv/hud.json';
 import app_sv_i18n from '../../src/locales/sv/i18n.json';
+import app_sv_input from '../../src/locales/sv/input.json';
 import app_sv_language_editor from '../../src/locales/sv/language-editor.json';
 import app_sv_msu_studio from '../../src/locales/sv/msu-studio.json';
+import app_sv_msu from '../../src/locales/sv/msu.json';
 import app_sv_nav_labels from '../../src/locales/sv/nav-labels.json';
 import app_sv_profiles from '../../src/locales/sv/profiles.json';
 import app_sv_randomizer_world from '../../src/locales/sv/randomizer-world.json';
@@ -27,6 +31,7 @@ import app_sv_record_screens from '../../src/locales/sv/record-screens.json';
 import app_sv_rom_loader from '../../src/locales/sv/rom-loader.json';
 import app_sv_roms from '../../src/locales/sv/roms.json';
 import app_sv_screen_editor from '../../src/locales/sv/screen-editor.json';
+import app_sv_secrets from '../../src/locales/sv/secrets.json';
 import app_sv_settings_audio from '../../src/locales/sv/settings-audio.json';
 import app_sv_settings_bugfixes from '../../src/locales/sv/settings-bugfixes.json';
 import app_sv_settings_camera from '../../src/locales/sv/settings-camera.json';
@@ -41,6 +46,8 @@ import app_sv_settings_online from '../../src/locales/sv/settings-online.json';
 import app_sv_settings_picture from '../../src/locales/sv/settings-picture.json';
 import app_sv_settings_window from '../../src/locales/sv/settings-window.json';
 import app_sv_tessera from '../../src/locales/sv/tessera.json';
+import app_sv_tools from '../../src/locales/sv/tools.json';
+import app_sv_updater from '../../src/locales/sv/updater.json';
 import app_sv_views_bug_report_recordings from '../../src/locales/sv/views-bug-report-recordings.json';
 import app_sv_views_cheats from '../../src/locales/sv/views-cheats.json';
 import app_sv_views_checks from '../../src/locales/sv/views-checks.json';
@@ -68,8 +75,10 @@ const layers: readonly Layer[] = [
   { locale: 'sv', namespace: 'brock-app', kind: 'app', messages: app_sv_brock_app },
   { locale: 'sv', namespace: 'brock-settings', kind: 'app', messages: app_sv_brock_settings },
   { locale: 'sv', namespace: 'brock-shell', kind: 'app', messages: app_sv_brock_shell },
+  { locale: 'sv', namespace: 'catalog', kind: 'app', messages: app_sv_catalog },
   { locale: 'sv', namespace: 'compounds', kind: 'app', messages: app_sv_compounds },
   { locale: 'sv', namespace: 'data-manager', kind: 'app', messages: app_sv_data_manager },
+  { locale: 'sv', namespace: 'display', kind: 'app', messages: app_sv_display },
   { locale: 'sv', namespace: 'errors', kind: 'app', messages: app_sv_errors },
   { locale: 'sv', namespace: 'features', kind: 'app', messages: app_sv_features },
   { locale: 'sv', namespace: 'game-labels', kind: 'app', messages: app_sv_game_labels },
@@ -79,8 +88,10 @@ const layers: readonly Layer[] = [
   { locale: 'sv', namespace: 'hud-editor', kind: 'app', messages: app_sv_hud_editor },
   { locale: 'sv', namespace: 'hud', kind: 'app', messages: app_sv_hud },
   { locale: 'sv', namespace: 'i18n', kind: 'app', messages: app_sv_i18n },
+  { locale: 'sv', namespace: 'input', kind: 'app', messages: app_sv_input },
   { locale: 'sv', namespace: 'language-editor', kind: 'app', messages: app_sv_language_editor },
   { locale: 'sv', namespace: 'msu-studio', kind: 'app', messages: app_sv_msu_studio },
+  { locale: 'sv', namespace: 'msu', kind: 'app', messages: app_sv_msu },
   { locale: 'sv', namespace: 'nav-labels', kind: 'app', messages: app_sv_nav_labels },
   { locale: 'sv', namespace: 'profiles', kind: 'app', messages: app_sv_profiles },
   { locale: 'sv', namespace: 'randomizer-world', kind: 'app', messages: app_sv_randomizer_world },
@@ -92,6 +103,7 @@ const layers: readonly Layer[] = [
   { locale: 'sv', namespace: 'rom-loader', kind: 'app', messages: app_sv_rom_loader },
   { locale: 'sv', namespace: 'roms', kind: 'app', messages: app_sv_roms },
   { locale: 'sv', namespace: 'screen-editor', kind: 'app', messages: app_sv_screen_editor },
+  { locale: 'sv', namespace: 'secrets', kind: 'app', messages: app_sv_secrets },
   { locale: 'sv', namespace: 'settings-audio', kind: 'app', messages: app_sv_settings_audio },
   { locale: 'sv', namespace: 'settings-bugfixes', kind: 'app', messages: app_sv_settings_bugfixes },
   { locale: 'sv', namespace: 'settings-camera', kind: 'app', messages: app_sv_settings_camera },
@@ -106,6 +118,8 @@ const layers: readonly Layer[] = [
   { locale: 'sv', namespace: 'settings-picture', kind: 'app', messages: app_sv_settings_picture },
   { locale: 'sv', namespace: 'settings-window', kind: 'app', messages: app_sv_settings_window },
   { locale: 'sv', namespace: 'tessera', kind: 'app', messages: app_sv_tessera },
+  { locale: 'sv', namespace: 'tools', kind: 'app', messages: app_sv_tools },
+  { locale: 'sv', namespace: 'updater', kind: 'app', messages: app_sv_updater },
   { locale: 'sv', namespace: 'views-bug-report-recordings', kind: 'app', messages: app_sv_views_bug_report_recordings },
   { locale: 'sv', namespace: 'views-cheats', kind: 'app', messages: app_sv_views_cheats },
   { locale: 'sv', namespace: 'views-checks', kind: 'app', messages: app_sv_views_checks },

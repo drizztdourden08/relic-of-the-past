@@ -355,5 +355,22 @@
   "jobs.line.readJapaneseGraphics": "Reading the Japanese graphics...",
   "rom-manager.extracted": "Extracted",
   "rom-manager.attached-to": "Attached to {bases}",
-  "rom-manager.roms-title": "ROMs"
+  "rom-manager.roms-title": "ROMs",
+  "settings-sections.title.video": "Video",
+  "settings-sections.title.extras": "Extras",
+  "settings-sections.title.app": "App",
+  "settings-search.input-profiles.label": "Input profiles",
+  "settings-search.input-profiles.description": "Sets of bindings you can switch between",
+  "settings-search.game-controls.label": "Game controls",
+  "settings-search.game-controls.description": "The SNES buttons on your keyboard or pad",
+  "settings-search.shortcuts.label": "Shortcuts and functions",
+  "settings-search.shortcuts.description": "App shortcuts such as quick save and Turbo",
+  "settings-search.cheat-bindings.label": "Cheat bindings",
+  "settings-search.cheat-bindings.description": "Keys that trigger cheats",
+  "settings-search.controllers.label": "Controllers",
+  "settings-search.controllers.description": "Connected controllers and their presets",
+  "settings-search.extra-dungeon.label": "Extra Dungeon",
+  "settings-search.extra-dungeon.description": "The optional post-game dungeon from the second cartridge",
+  "settings-search.gba-tracker.label": "GBA advancement tracker",
+  "settings-search.gba-tracker.description": "How far each Game Boy Advance difference has got"
 }

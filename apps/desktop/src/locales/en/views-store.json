@@ -34,5 +34,7 @@
   "kind.music": "Music pack",
   "kind.character": "Character",
   "kind.language": "Language",
-  "account.lookupFailed": "Could not look up your Sanctuary account."
+  "account.lookupFailed": "Could not look up your Sanctuary account.",
+  "screen.group.catalogue": "Catalogue",
+  "screen.group.mine": "On this computer"
 }

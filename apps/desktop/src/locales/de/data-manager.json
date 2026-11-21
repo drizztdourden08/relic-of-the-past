@@ -355,5 +355,22 @@
   "jobs.line.readJapaneseGraphics": "Japanische Grafiken werden gelesen...",
   "rom-manager.extracted": "Extrahiert",
   "rom-manager.attached-to": "Zugeordnet zu {bases}",
-  "rom-manager.roms-title": "ROMs"
+  "rom-manager.roms-title": "ROMs",
+  "settings-sections.title.video": "Video",
+  "settings-sections.title.extras": "Extras",
+  "settings-sections.title.app": "App",
+  "settings-search.input-profiles.label": "Eingabeprofile",
+  "settings-search.input-profiles.description": "Belegungssätze, zwischen denen du wechseln kannst",
+  "settings-search.game-controls.label": "Spielsteuerung",
+  "settings-search.game-controls.description": "Die SNES-Tasten auf deiner Tastatur oder deinem Controller",
+  "settings-search.shortcuts.label": "Tastenkürzel und Funktionen",
+  "settings-search.shortcuts.description": "App-Tastenkürzel wie Schnellspeichern und Turbo",
+  "settings-search.cheat-bindings.label": "Cheat-Belegung",
+  "settings-search.cheat-bindings.description": "Tasten, die Cheats auslösen",
+  "settings-search.controllers.label": "Controller",
+  "settings-search.controllers.description": "Angeschlossene Controller und ihre Voreinstellungen",
+  "settings-search.extra-dungeon.label": "Zusatz-Dungeon",
+  "settings-search.extra-dungeon.description": "Der optionale Dungeon nach dem Spielende aus dem zweiten Modul",
+  "settings-search.gba-tracker.label": "GBA-Fortschrittstracker",
+  "settings-search.gba-tracker.description": "Wie weit jeder Unterschied der Game Boy Advance Version ist"
 }

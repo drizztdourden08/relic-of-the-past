@@ -355,5 +355,22 @@
   "jobs.line.readJapaneseGraphics": "Odczytywanie japońskiej grafiki...",
   "rom-manager.extracted": "Wyodrębniono",
   "rom-manager.attached-to": "Dołączono do {bases}",
-  "rom-manager.roms-title": "ROM-y"
+  "rom-manager.roms-title": "ROM-y",
+  "settings-sections.title.video": "Obraz",
+  "settings-sections.title.extras": "Dodatki",
+  "settings-sections.title.app": "Aplikacja",
+  "settings-search.input-profiles.label": "Profile sterowania",
+  "settings-search.input-profiles.description": "Zestawy przypisań, między którymi możesz się przełączać",
+  "settings-search.game-controls.label": "Sterowanie w grze",
+  "settings-search.game-controls.description": "Przyciski SNES na klawiaturze lub padzie",
+  "settings-search.shortcuts.label": "Skróty i funkcje",
+  "settings-search.shortcuts.description": "Skróty aplikacji, takie jak szybki zapis i Turbo",
+  "settings-search.cheat-bindings.label": "Przypisania cheatów",
+  "settings-search.cheat-bindings.description": "Klawisze uruchamiające cheaty",
+  "settings-search.controllers.label": "Kontrolery",
+  "settings-search.controllers.description": "Podłączone kontrolery i ich ustawienia wstępne",
+  "settings-search.extra-dungeon.label": "Dodatkowy loch",
+  "settings-search.extra-dungeon.description": "Opcjonalny loch po ukończeniu gry z drugiego kartridża",
+  "settings-search.gba-tracker.label": "Tracker postępów GBA",
+  "settings-search.gba-tracker.description": "Jak daleko zaszła każda różnica wersji Game Boy Advance"
 }

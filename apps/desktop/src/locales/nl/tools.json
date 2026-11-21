@@ -1,0 +1,11 @@
+{
+  "install.hint": "Installeer {label} en zorg dat het in PATH staat.",
+  "install.unsupported": "{label} heeft geen download voor dit systeem",
+  "install.title": "{label} installeren",
+  "install.step.download": "Downloaden",
+  "install.step.verify": "Controleren",
+  "install.step.extract": "Uitpakken",
+  "install.downloading": "{label} downloaden",
+  "install.checking": "De checksum controleren",
+  "install.unpacking": "{label} uitpakken"
+}

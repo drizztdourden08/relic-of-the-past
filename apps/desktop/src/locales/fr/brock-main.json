@@ -18,5 +18,8 @@
   "splash.openLogs": "Ouvrir les journaux",
   "splash.quit": "Quitter",
   "splash.timedOut": "{label} a pris trop de temps",
-  "splash.failed": "{label} a échoué"
+  "splash.failed": "{label} a échoué",
+  "storage.os.win32": "Windows (AppData)",
+  "storage.os.darwin": "macOS (Application Support)",
+  "storage.os.linux": "Linux (~/.config)"
 }

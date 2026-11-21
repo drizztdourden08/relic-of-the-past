@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind component */
-import { useT } from '@drizztdourden08/brock-react';
+import { useT, useText } from '@drizztdourden08/brock-react';
 import { Box, Button, Text } from '@drizztdourden08/tessera/primitives';
 import type { I18n } from '@drizztdourden08/brock-core/i18n';
 import type { FfmpegInstallStepProps } from './FfmpegInstallStep.type';
@@ -12,6 +12,7 @@ const installLabel = (installing: boolean, error: string | null, t: I18n['t']): 
 
 const FfmpegInstallStep = (props: FfmpegInstallStepProps) => {
   const t = useT();
+  const text = useText();
   const { state, installing, error, onInstall } = props;
 
   if (state === null) return <Text className="ffmpeg-install-step__note">{t('compounds:ffmpeg-install-step.checking')}</Text>;
@@ -19,7 +20,7 @@ const FfmpegInstallStep = (props: FfmpegInstallStepProps) => {
   if (state.status === 'unavailable') {
     return (
       <Box className="ffmpeg-install-step">
-        <Text className="ffmpeg-install-step__note">{state.hint}</Text>
+        <Text className="ffmpeg-install-step__note">{state.hint === null ? null : text(state.hint)}</Text>
       </Box>
     );
   }

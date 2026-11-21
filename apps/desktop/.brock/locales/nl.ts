@@ -3,8 +3,10 @@ import type { Layer } from '@drizztdourden08/brock-core/i18n';
 import app_nl_brock_app from '../../src/locales/nl/brock-app.json';
 import app_nl_brock_settings from '../../src/locales/nl/brock-settings.json';
 import app_nl_brock_shell from '../../src/locales/nl/brock-shell.json';
+import app_nl_catalog from '../../src/locales/nl/catalog.json';
 import app_nl_compounds from '../../src/locales/nl/compounds.json';
 import app_nl_data_manager from '../../src/locales/nl/data-manager.json';
+import app_nl_display from '../../src/locales/nl/display.json';
 import app_nl_errors from '../../src/locales/nl/errors.json';
 import app_nl_features from '../../src/locales/nl/features.json';
 import app_nl_game_labels from '../../src/locales/nl/game-labels.json';
@@ -14,8 +16,10 @@ import app_nl_hud_editing from '../../src/locales/nl/hud-editing.json';
 import app_nl_hud_editor from '../../src/locales/nl/hud-editor.json';
 import app_nl_hud from '../../src/locales/nl/hud.json';
 import app_nl_i18n from '../../src/locales/nl/i18n.json';
+import app_nl_input from '../../src/locales/nl/input.json';
 import app_nl_language_editor from '../../src/locales/nl/language-editor.json';
 import app_nl_msu_studio from '../../src/locales/nl/msu-studio.json';
+import app_nl_msu from '../../src/locales/nl/msu.json';
 import app_nl_nav_labels from '../../src/locales/nl/nav-labels.json';
 import app_nl_profiles from '../../src/locales/nl/profiles.json';
 import app_nl_randomizer_world from '../../src/locales/nl/randomizer-world.json';
@@ -27,6 +31,7 @@ import app_nl_record_screens from '../../src/locales/nl/record-screens.json';
 import app_nl_rom_loader from '../../src/locales/nl/rom-loader.json';
 import app_nl_roms from '../../src/locales/nl/roms.json';
 import app_nl_screen_editor from '../../src/locales/nl/screen-editor.json';
+import app_nl_secrets from '../../src/locales/nl/secrets.json';
 import app_nl_settings_audio from '../../src/locales/nl/settings-audio.json';
 import app_nl_settings_bugfixes from '../../src/locales/nl/settings-bugfixes.json';
 import app_nl_settings_camera from '../../src/locales/nl/settings-camera.json';
@@ -41,6 +46,8 @@ import app_nl_settings_online from '../../src/locales/nl/settings-online.json';
 import app_nl_settings_picture from '../../src/locales/nl/settings-picture.json';
 import app_nl_settings_window from '../../src/locales/nl/settings-window.json';
 import app_nl_tessera from '../../src/locales/nl/tessera.json';
+import app_nl_tools from '../../src/locales/nl/tools.json';
+import app_nl_updater from '../../src/locales/nl/updater.json';
 import app_nl_views_bug_report_recordings from '../../src/locales/nl/views-bug-report-recordings.json';
 import app_nl_views_cheats from '../../src/locales/nl/views-cheats.json';
 import app_nl_views_checks from '../../src/locales/nl/views-checks.json';
@@ -68,8 +75,10 @@ const layers: readonly Layer[] = [
   { locale: 'nl', namespace: 'brock-app', kind: 'app', messages: app_nl_brock_app },
   { locale: 'nl', namespace: 'brock-settings', kind: 'app', messages: app_nl_brock_settings },
   { locale: 'nl', namespace: 'brock-shell', kind: 'app', messages: app_nl_brock_shell },
+  { locale: 'nl', namespace: 'catalog', kind: 'app', messages: app_nl_catalog },
   { locale: 'nl', namespace: 'compounds', kind: 'app', messages: app_nl_compounds },
   { locale: 'nl', namespace: 'data-manager', kind: 'app', messages: app_nl_data_manager },
+  { locale: 'nl', namespace: 'display', kind: 'app', messages: app_nl_display },
   { locale: 'nl', namespace: 'errors', kind: 'app', messages: app_nl_errors },
   { locale: 'nl', namespace: 'features', kind: 'app', messages: app_nl_features },
   { locale: 'nl', namespace: 'game-labels', kind: 'app', messages: app_nl_game_labels },
@@ -79,8 +88,10 @@ const layers: readonly Layer[] = [
   { locale: 'nl', namespace: 'hud-editor', kind: 'app', messages: app_nl_hud_editor },
   { locale: 'nl', namespace: 'hud', kind: 'app', messages: app_nl_hud },
   { locale: 'nl', namespace: 'i18n', kind: 'app', messages: app_nl_i18n },
+  { locale: 'nl', namespace: 'input', kind: 'app', messages: app_nl_input },
   { locale: 'nl', namespace: 'language-editor', kind: 'app', messages: app_nl_language_editor },
   { locale: 'nl', namespace: 'msu-studio', kind: 'app', messages: app_nl_msu_studio },
+  { locale: 'nl', namespace: 'msu', kind: 'app', messages: app_nl_msu },
   { locale: 'nl', namespace: 'nav-labels', kind: 'app', messages: app_nl_nav_labels },
   { locale: 'nl', namespace: 'profiles', kind: 'app', messages: app_nl_profiles },
   { locale: 'nl', namespace: 'randomizer-world', kind: 'app', messages: app_nl_randomizer_world },
@@ -92,6 +103,7 @@ const layers: readonly Layer[] = [
   { locale: 'nl', namespace: 'rom-loader', kind: 'app', messages: app_nl_rom_loader },
   { locale: 'nl', namespace: 'roms', kind: 'app', messages: app_nl_roms },
   { locale: 'nl', namespace: 'screen-editor', kind: 'app', messages: app_nl_screen_editor },
+  { locale: 'nl', namespace: 'secrets', kind: 'app', messages: app_nl_secrets },
   { locale: 'nl', namespace: 'settings-audio', kind: 'app', messages: app_nl_settings_audio },
   { locale: 'nl', namespace: 'settings-bugfixes', kind: 'app', messages: app_nl_settings_bugfixes },
   { locale: 'nl', namespace: 'settings-camera', kind: 'app', messages: app_nl_settings_camera },
@@ -106,6 +118,8 @@ const layers: readonly Layer[] = [
   { locale: 'nl', namespace: 'settings-picture', kind: 'app', messages: app_nl_settings_picture },
   { locale: 'nl', namespace: 'settings-window', kind: 'app', messages: app_nl_settings_window },
   { locale: 'nl', namespace: 'tessera', kind: 'app', messages: app_nl_tessera },
+  { locale: 'nl', namespace: 'tools', kind: 'app', messages: app_nl_tools },
+  { locale: 'nl', namespace: 'updater', kind: 'app', messages: app_nl_updater },
   { locale: 'nl', namespace: 'views-bug-report-recordings', kind: 'app', messages: app_nl_views_bug_report_recordings },
   { locale: 'nl', namespace: 'views-cheats', kind: 'app', messages: app_nl_views_cheats },
   { locale: 'nl', namespace: 'views-checks', kind: 'app', messages: app_nl_views_checks },

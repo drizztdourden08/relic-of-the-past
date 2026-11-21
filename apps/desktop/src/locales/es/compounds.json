@@ -274,5 +274,6 @@
   "save-slot.save": "Guardar en la ranura {slotNumber}",
   "save-slot.slot": "Ranura {slotNumber}",
   "wishing-pond-row.may-ask-for": "lo que puede pedir",
-  "capacity.ladder": "escalera"
+  "capacity.ladder": "escalera",
+  "credits.legal-notice": "Este es un proyecto de código abierto no oficial, creado por aficionados. No está afiliado a Nintendo ni cuenta con su respaldo, patrocinio o aprobación. Nintendo, The Legend of Zelda y los nombres, personajes, música, ilustraciones y recursos relacionados son marcas y/o derechos de autor de Nintendo. Este repositorio no incluye ningún recurso de juego propiedad de Nintendo."
 }

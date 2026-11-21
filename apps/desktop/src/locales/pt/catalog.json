@@ -1,0 +1,13 @@
+{
+  "bar.install": "Instalar",
+  "bar.update": "Atualizar",
+  "bar.uninstall": "Desinstalar",
+  "bar.cancel": "Cancelar",
+  "bar.installed": "Instalado",
+  "bar.installing": "Instalando",
+  "job.title": "{label}: instalando",
+  "job.step.grant": "Pedindo o download",
+  "job.step.download": "Baixando",
+  "job.step.verify": "Verificando o download",
+  "job.step.unpack": "Instalando"
+}

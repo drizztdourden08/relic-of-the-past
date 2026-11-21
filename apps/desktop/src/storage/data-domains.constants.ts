@@ -1,15 +1,16 @@
 /* @layer renderer-app @kind constants */
+import { msg } from '@drizztdourden08/brock-core/i18n';
 import type { DataDomainDef } from '@drizztdourden08/brock-core';
 
 const ROTP_DATA_DOMAINS: DataDomainDef[] = [
-  { domain: 'profiles', label: 'Profiles', dir: 'profiles', description: 'Each profile with its settings, saves and tracker.', clearable: false },
-  { domain: 'roms', label: 'ROMs', dir: 'roms', description: 'The game ROMs you imported.', clearable: false },
-  { domain: 'assets', label: 'Assets', dir: 'assets', description: 'Game assets extracted from each ROM; extracted again on demand.' },
-  { domain: 'sprites', label: 'Sprites', dir: 'sprites', description: 'Menu, HUD and item sprites extracted from each ROM.' },
-  { domain: 'linkSprites', label: 'Character sprites', dir: 'link-sprites', description: 'Custom player sprites in the Character Studio.' },
-  { domain: 'languages', label: 'Language Studio', dir: 'languages', description: 'Extracted languages and your language sets.' },
-  { domain: 'msu', label: 'MSU packs', dir: 'msu', description: 'MSU-1 music packs and the MSU Studio work files.' },
-  { domain: 'logs', label: 'Logs', dir: 'debug', description: 'Session and console logs, and debug captures.', cleanOlderThanDays: [7, 30], portable: false },
+  { domain: 'profiles', label: msg('views-data-home:domain.profiles'), dir: 'profiles', description: msg('views-data-home:domain-description.profiles'), clearable: false },
+  { domain: 'roms', label: msg('views-data-home:domain.roms'), dir: 'roms', description: msg('views-data-home:domain-description.roms'), clearable: false },
+  { domain: 'assets', label: msg('views-data-home:domain.assets'), dir: 'assets', description: msg('views-data-home:domain-description.assets') },
+  { domain: 'sprites', label: msg('views-data-home:domain.sprites'), dir: 'sprites', description: msg('views-data-home:domain-description.sprites') },
+  { domain: 'linkSprites', label: msg('views-data-home:domain.link-sprites'), dir: 'link-sprites', description: msg('views-data-home:domain-description.link-sprites') },
+  { domain: 'languages', label: msg('views-data-home:domain.languages'), dir: 'languages', description: msg('views-data-home:domain-description.languages') },
+  { domain: 'msu', label: msg('views-data-home:domain.msu'), dir: 'msu', description: msg('views-data-home:domain-description.msu') },
+  { domain: 'logs', label: msg('views-data-home:domain.logs'), dir: 'debug', description: msg('views-data-home:domain-description.logs'), cleanOlderThanDays: [7, 30], portable: false },
 ];
 
 export { ROTP_DATA_DOMAINS };

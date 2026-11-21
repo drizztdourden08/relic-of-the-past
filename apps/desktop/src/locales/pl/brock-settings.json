@@ -7,6 +7,7 @@
   "commands.reason.hidden": "To polecenie nie ma tu zastosowania.",
   "commands.reason.noArgs": "To polecenie nie przyjmuje argumentów.",
   "commands.reason.unknown": "Nie ma takiego polecenia.",
+  "group.app": "Aplikacja",
   "hub.search.empty": "Żadne ustawienie nie pasuje do \"{query}\".",
   "hub.search.idle": "Zacznij pisać, aby przeszukać wszystkie ustawienia.",
   "hub.search.summary": "{count, plural, one {# ustawienie pasuje do \"{query}\"} few {# ustawienia pasują do \"{query}\"} many {# ustawień pasuje do \"{query}\"} other {# ustawienia pasuje do \"{query}\"}}",

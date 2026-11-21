@@ -355,5 +355,22 @@
   "jobs.line.readJapaneseGraphics": "Lecture des graphismes japonais...",
   "rom-manager.extracted": "Extrait",
   "rom-manager.attached-to": "Rattaché à {bases}",
-  "rom-manager.roms-title": "ROM"
+  "rom-manager.roms-title": "ROM",
+  "settings-sections.title.video": "Vidéo",
+  "settings-sections.title.extras": "Extras",
+  "settings-sections.title.app": "Application",
+  "settings-search.input-profiles.label": "Profils d'entrée",
+  "settings-search.input-profiles.description": "Jeux de commandes entre lesquels vous pouvez basculer",
+  "settings-search.game-controls.label": "Commandes du jeu",
+  "settings-search.game-controls.description": "Les boutons de la SNES sur votre clavier ou votre manette",
+  "settings-search.shortcuts.label": "Raccourcis et fonctions",
+  "settings-search.shortcuts.description": "Raccourcis de l'application, comme la sauvegarde rapide et le Turbo",
+  "settings-search.cheat-bindings.label": "Commandes des cheats",
+  "settings-search.cheat-bindings.description": "Touches qui déclenchent des cheats",
+  "settings-search.controllers.label": "Manettes",
+  "settings-search.controllers.description": "Manettes connectées et leurs préréglages",
+  "settings-search.extra-dungeon.label": "Donjon supplémentaire",
+  "settings-search.extra-dungeon.description": "Le donjon facultatif de fin de jeu issu de la seconde cartouche",
+  "settings-search.gba-tracker.label": "Suivi d'avancement GBA",
+  "settings-search.gba-tracker.description": "Où en est chaque différence de la Game Boy Advance"
 }

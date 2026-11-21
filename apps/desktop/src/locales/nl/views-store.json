@@ -34,5 +34,7 @@
   "kind.music": "Muziekpakket",
   "kind.character": "Personage",
   "kind.language": "Taal",
-  "account.lookupFailed": "Je Sanctuary-account kon niet worden opgezocht."
+  "account.lookupFailed": "Je Sanctuary-account kon niet worden opgezocht.",
+  "screen.group.catalogue": "Catalogus",
+  "screen.group.mine": "Op deze computer"
 }

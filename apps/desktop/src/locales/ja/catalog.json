@@ -1,0 +1,13 @@
+{
+  "bar.install": "インストール",
+  "bar.update": "アップデート",
+  "bar.uninstall": "アンインストール",
+  "bar.cancel": "キャンセル",
+  "bar.installed": "インストール済み",
+  "bar.installing": "インストール中",
+  "job.title": "{label}：インストール中",
+  "job.step.grant": "ダウンロードを要求中",
+  "job.step.download": "ダウンロード中",
+  "job.step.verify": "ダウンロードを確認中",
+  "job.step.unpack": "インストール中"
+}

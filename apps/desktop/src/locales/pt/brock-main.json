@@ -18,5 +18,8 @@
   "splash.openLogs": "Abrir registros",
   "splash.quit": "Sair",
   "splash.timedOut": "{label} demorou demais",
-  "splash.failed": "{label} falhou"
+  "splash.failed": "{label} falhou",
+  "storage.os.win32": "Windows (AppData)",
+  "storage.os.darwin": "macOS (Application Support)",
+  "storage.os.linux": "Linux (~/.config)"
 }

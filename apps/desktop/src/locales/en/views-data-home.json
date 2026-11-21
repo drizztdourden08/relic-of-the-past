@@ -32,5 +32,13 @@
   "domain.link-sprites": "Character sprites",
   "domain.msu": "MSU packs",
   "domain.logs": "Logs",
-  "domain.languages": "Language Studio"
+  "domain.languages": "Language Studio",
+  "domain-description.profiles": "Each profile with its settings, saves and tracker.",
+  "domain-description.roms": "The game ROMs you imported.",
+  "domain-description.assets": "Game assets extracted from each ROM; extracted again on demand.",
+  "domain-description.sprites": "Menu, HUD and item sprites extracted from each ROM.",
+  "domain-description.link-sprites": "Custom player sprites in the Character Studio.",
+  "domain-description.languages": "Extracted languages and your language sets.",
+  "domain-description.msu": "MSU-1 music packs and the MSU Studio work files.",
+  "domain-description.logs": "Session and console logs, and debug captures."
 }

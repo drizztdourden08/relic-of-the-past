@@ -355,5 +355,22 @@
   "jobs.line.readJapaneseGraphics": "Leyendo los gráficos japoneses...",
   "rom-manager.extracted": "Extraído",
   "rom-manager.attached-to": "Asociado a {bases}",
-  "rom-manager.roms-title": "ROM"
+  "rom-manager.roms-title": "ROM",
+  "settings-sections.title.video": "Vídeo",
+  "settings-sections.title.extras": "Extras",
+  "settings-sections.title.app": "Aplicación",
+  "settings-search.input-profiles.label": "Perfiles de entrada",
+  "settings-search.input-profiles.description": "Conjuntos de asignaciones entre los que puedes cambiar",
+  "settings-search.game-controls.label": "Controles del juego",
+  "settings-search.game-controls.description": "Los botones de la SNES en tu teclado o mando",
+  "settings-search.shortcuts.label": "Atajos y funciones",
+  "settings-search.shortcuts.description": "Atajos de la aplicación, como el guardado rápido y el Turbo",
+  "settings-search.cheat-bindings.label": "Asignaciones de trucos",
+  "settings-search.cheat-bindings.description": "Teclas que activan trucos",
+  "settings-search.controllers.label": "Mandos",
+  "settings-search.controllers.description": "Mandos conectados y sus ajustes preestablecidos",
+  "settings-search.extra-dungeon.label": "Mazmorra extra",
+  "settings-search.extra-dungeon.description": "La mazmorra opcional posterior al final del segundo cartucho",
+  "settings-search.gba-tracker.label": "Seguimiento de avance GBA",
+  "settings-search.gba-tracker.description": "Cuánto ha avanzado cada diferencia de Game Boy Advance"
 }

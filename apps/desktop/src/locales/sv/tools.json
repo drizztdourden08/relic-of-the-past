@@ -1,0 +1,11 @@
+{
+  "install.hint": "Installera {label} och se till att det finns i PATH.",
+  "install.unsupported": "{label} har ingen nedladdning för det här systemet",
+  "install.title": "Installerar {label}",
+  "install.step.download": "Hämta",
+  "install.step.verify": "Verifiera",
+  "install.step.extract": "Packa upp",
+  "install.downloading": "Hämtar {label}",
+  "install.checking": "Kontrollerar kontrollsumman",
+  "install.unpacking": "Packar upp {label}"
+}

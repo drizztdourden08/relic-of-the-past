@@ -18,5 +18,8 @@
   "splash.openLogs": "Protokolle öffnen",
   "splash.quit": "Beenden",
   "splash.timedOut": "{label} hat zu lange gedauert",
-  "splash.failed": "{label} ist fehlgeschlagen"
+  "splash.failed": "{label} ist fehlgeschlagen",
+  "storage.os.win32": "Windows (AppData)",
+  "storage.os.darwin": "macOS (Application Support)",
+  "storage.os.linux": "Linux (~/.config)"
 }

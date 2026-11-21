@@ -7,6 +7,7 @@
   "commands.reason.hidden": "Dieser Befehl gilt hier nicht.",
   "commands.reason.noArgs": "Dieser Befehl nimmt keine Argumente.",
   "commands.reason.unknown": "Kein solcher Befehl.",
+  "group.app": "App",
   "hub.search.empty": "Keine Einstellung passt zu \"{query}\".",
   "hub.search.idle": "Tippe, um alle Einstellungen zu durchsuchen.",
   "hub.search.summary": "{count, plural, one {# Einstellung passt zu \"{query}\"} other {# Einstellungen passen zu \"{query}\"}}",

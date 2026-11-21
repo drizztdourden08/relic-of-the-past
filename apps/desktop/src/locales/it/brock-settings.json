@@ -7,6 +7,7 @@
   "commands.reason.hidden": "Questo comando non si applica qui.",
   "commands.reason.noArgs": "Questo comando non accetta argomenti.",
   "commands.reason.unknown": "Comando inesistente.",
+  "group.app": "App",
   "hub.search.empty": "Nessuna impostazione corrisponde a \"{query}\".",
   "hub.search.idle": "Scrivi per cercare in tutte le impostazioni.",
   "hub.search.summary": "{count, plural, one {# impostazione corrisponde a \"{query}\"} other {# impostazioni corrispondono a \"{query}\"}}",

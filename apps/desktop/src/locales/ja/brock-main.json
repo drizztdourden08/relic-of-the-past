@@ -18,5 +18,8 @@
   "splash.openLogs": "ログを開く",
   "splash.quit": "終了",
   "splash.timedOut": "{label}に時間がかかりすぎました",
-  "splash.failed": "{label}に失敗しました"
+  "splash.failed": "{label}に失敗しました",
+  "storage.os.win32": "Windows（AppData）",
+  "storage.os.darwin": "macOS（Application Support）",
+  "storage.os.linux": "Linux（~/.config）"
 }

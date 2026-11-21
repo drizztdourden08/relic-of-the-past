@@ -274,5 +274,6 @@
   "save-slot.save": "スロット {slotNumber} にセーブ",
   "save-slot.slot": "スロット {slotNumber}",
   "wishing-pond-row.may-ask-for": "彼女が求められるもの",
-  "capacity.ladder": "段階"
+  "capacity.ladder": "段階",
+  "credits.legal-notice": "これは非公式のファン制作によるオープンソースプロジェクトです。任天堂とは提携しておらず、任天堂による承認、後援、認可も受けていません。任天堂、ゼルダの伝説、および関連する名称、キャラクター、音楽、アートワーク、アセットは任天堂の商標および/または著作物です。このリポジトリには任天堂が権利を持つゲームアセットは含まれていません。"
 }

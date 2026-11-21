@@ -274,5 +274,6 @@
   "save-slot.save": "In Slot {slotNumber} speichern",
   "save-slot.slot": "Slot {slotNumber}",
   "wishing-pond-row.may-ask-for": "was sie verlangen darf",
-  "capacity.ladder": "Stufenfolge"
+  "capacity.ladder": "Stufenfolge",
+  "credits.legal-notice": "Dies ist ein inoffizielles, von Fans erstelltes Open-Source-Projekt. Es steht in keiner Verbindung zu Nintendo und wird von Nintendo weder unterstützt, gesponsert noch genehmigt. Nintendo, The Legend of Zelda sowie zugehörige Namen, Figuren, Musik, Grafiken und Ressourcen sind Marken und/oder urheberrechtlich geschützte Werke von Nintendo. In diesem Repository sind keine Spielressourcen von Nintendo enthalten."
 }

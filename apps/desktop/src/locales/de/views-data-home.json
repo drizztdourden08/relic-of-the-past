@@ -32,5 +32,13 @@
   "domain.link-sprites": "Charakter-Sprites",
   "domain.msu": "MSU-Pakete",
   "domain.logs": "Protokolle",
-  "domain.languages": "Sprach-Studio"
+  "domain.languages": "Sprach-Studio",
+  "domain-description.profiles": "Jedes Profil mit seinen Einstellungen, Spielständen und dem Tracker.",
+  "domain-description.roms": "Die ROMs, die du importiert hast.",
+  "domain-description.assets": "Aus jeder ROM extrahierte Spielressourcen; bei Bedarf erneut extrahiert.",
+  "domain-description.sprites": "Aus jeder ROM extrahierte Menü-, HUD- und Item-Sprites.",
+  "domain-description.link-sprites": "Eigene Spieler-Sprites im Charakter-Studio.",
+  "domain-description.languages": "Extrahierte Sprachen und deine Sprachsätze.",
+  "domain-description.msu": "MSU-1-Musikpakete und die Arbeitsdateien des MSU-Studios.",
+  "domain-description.logs": "Sitzungs- und Konsolenprotokolle sowie Debug-Aufnahmen."
 }

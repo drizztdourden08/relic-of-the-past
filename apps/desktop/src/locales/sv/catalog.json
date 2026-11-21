@@ -1,0 +1,13 @@
+{
+  "bar.install": "Installera",
+  "bar.update": "Uppdatera",
+  "bar.uninstall": "Avinstallera",
+  "bar.cancel": "Avbryt",
+  "bar.installed": "Installerad",
+  "bar.installing": "Installerar",
+  "job.title": "{label}: installerar",
+  "job.step.grant": "Ber om nedladdningen",
+  "job.step.download": "Hämtar",
+  "job.step.verify": "Kontrollerar nedladdningen",
+  "job.step.unpack": "Installerar"
+}

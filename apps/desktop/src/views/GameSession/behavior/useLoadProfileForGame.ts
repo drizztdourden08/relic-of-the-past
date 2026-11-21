@@ -1,6 +1,7 @@
 /* @layer renderer-appshell @kind hook */
 import { useCallback } from 'react';
 import { log } from '@app/log-bus';
+import { textOf } from '@app/shell/text-bridge';
 import { resetGame, setAutoSaveConfig } from '@app/game';
 import { serializeToIni, mergeSettings } from '@rotp/game-core';
 import { experimentalFeaturesEnabled } from '@rotp/features';
@@ -61,7 +62,7 @@ const useLoadProfileForGame = ({ onGameClear, onProfileLoaded, setActiveProfile,
       onlineSlotName.current = profile.randomizer.slotName ?? DEFAULT_SLOT_NAME;
       const gate = await gateRandomizerBoot(profile.id, profile.randomizer);
       if (!gate.ok) {
-        log.error(gate.detail);
+        log.error(textOf(gate.detail));
         setLoadingProfile(null);
         return;
       }

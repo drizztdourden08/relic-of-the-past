@@ -34,5 +34,7 @@
   "kind.music": "Pacchetto musicale",
   "kind.character": "Personaggio",
   "kind.language": "Lingua",
-  "account.lookupFailed": "Impossibile consultare il tuo account Sanctuary."
+  "account.lookupFailed": "Impossibile consultare il tuo account Sanctuary.",
+  "screen.group.catalogue": "Catalogo",
+  "screen.group.mine": "Su questo computer"
 }

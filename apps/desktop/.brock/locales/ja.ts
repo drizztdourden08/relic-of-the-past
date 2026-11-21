@@ -3,8 +3,10 @@ import type { Layer } from '@drizztdourden08/brock-core/i18n';
 import app_ja_brock_app from '../../src/locales/ja/brock-app.json';
 import app_ja_brock_settings from '../../src/locales/ja/brock-settings.json';
 import app_ja_brock_shell from '../../src/locales/ja/brock-shell.json';
+import app_ja_catalog from '../../src/locales/ja/catalog.json';
 import app_ja_compounds from '../../src/locales/ja/compounds.json';
 import app_ja_data_manager from '../../src/locales/ja/data-manager.json';
+import app_ja_display from '../../src/locales/ja/display.json';
 import app_ja_errors from '../../src/locales/ja/errors.json';
 import app_ja_features from '../../src/locales/ja/features.json';
 import app_ja_game_labels from '../../src/locales/ja/game-labels.json';
@@ -14,8 +16,10 @@ import app_ja_hud_editing from '../../src/locales/ja/hud-editing.json';
 import app_ja_hud_editor from '../../src/locales/ja/hud-editor.json';
 import app_ja_hud from '../../src/locales/ja/hud.json';
 import app_ja_i18n from '../../src/locales/ja/i18n.json';
+import app_ja_input from '../../src/locales/ja/input.json';
 import app_ja_language_editor from '../../src/locales/ja/language-editor.json';
 import app_ja_msu_studio from '../../src/locales/ja/msu-studio.json';
+import app_ja_msu from '../../src/locales/ja/msu.json';
 import app_ja_nav_labels from '../../src/locales/ja/nav-labels.json';
 import app_ja_profiles from '../../src/locales/ja/profiles.json';
 import app_ja_randomizer_world from '../../src/locales/ja/randomizer-world.json';
@@ -27,6 +31,7 @@ import app_ja_record_screens from '../../src/locales/ja/record-screens.json';
 import app_ja_rom_loader from '../../src/locales/ja/rom-loader.json';
 import app_ja_roms from '../../src/locales/ja/roms.json';
 import app_ja_screen_editor from '../../src/locales/ja/screen-editor.json';
+import app_ja_secrets from '../../src/locales/ja/secrets.json';
 import app_ja_settings_audio from '../../src/locales/ja/settings-audio.json';
 import app_ja_settings_bugfixes from '../../src/locales/ja/settings-bugfixes.json';
 import app_ja_settings_camera from '../../src/locales/ja/settings-camera.json';
@@ -41,6 +46,8 @@ import app_ja_settings_online from '../../src/locales/ja/settings-online.json';
 import app_ja_settings_picture from '../../src/locales/ja/settings-picture.json';
 import app_ja_settings_window from '../../src/locales/ja/settings-window.json';
 import app_ja_tessera from '../../src/locales/ja/tessera.json';
+import app_ja_tools from '../../src/locales/ja/tools.json';
+import app_ja_updater from '../../src/locales/ja/updater.json';
 import app_ja_views_bug_report_recordings from '../../src/locales/ja/views-bug-report-recordings.json';
 import app_ja_views_cheats from '../../src/locales/ja/views-cheats.json';
 import app_ja_views_checks from '../../src/locales/ja/views-checks.json';
@@ -68,8 +75,10 @@ const layers: readonly Layer[] = [
   { locale: 'ja', namespace: 'brock-app', kind: 'app', messages: app_ja_brock_app },
   { locale: 'ja', namespace: 'brock-settings', kind: 'app', messages: app_ja_brock_settings },
   { locale: 'ja', namespace: 'brock-shell', kind: 'app', messages: app_ja_brock_shell },
+  { locale: 'ja', namespace: 'catalog', kind: 'app', messages: app_ja_catalog },
   { locale: 'ja', namespace: 'compounds', kind: 'app', messages: app_ja_compounds },
   { locale: 'ja', namespace: 'data-manager', kind: 'app', messages: app_ja_data_manager },
+  { locale: 'ja', namespace: 'display', kind: 'app', messages: app_ja_display },
   { locale: 'ja', namespace: 'errors', kind: 'app', messages: app_ja_errors },
   { locale: 'ja', namespace: 'features', kind: 'app', messages: app_ja_features },
   { locale: 'ja', namespace: 'game-labels', kind: 'app', messages: app_ja_game_labels },
@@ -79,8 +88,10 @@ const layers: readonly Layer[] = [
   { locale: 'ja', namespace: 'hud-editor', kind: 'app', messages: app_ja_hud_editor },
   { locale: 'ja', namespace: 'hud', kind: 'app', messages: app_ja_hud },
   { locale: 'ja', namespace: 'i18n', kind: 'app', messages: app_ja_i18n },
+  { locale: 'ja', namespace: 'input', kind: 'app', messages: app_ja_input },
   { locale: 'ja', namespace: 'language-editor', kind: 'app', messages: app_ja_language_editor },
   { locale: 'ja', namespace: 'msu-studio', kind: 'app', messages: app_ja_msu_studio },
+  { locale: 'ja', namespace: 'msu', kind: 'app', messages: app_ja_msu },
   { locale: 'ja', namespace: 'nav-labels', kind: 'app', messages: app_ja_nav_labels },
   { locale: 'ja', namespace: 'profiles', kind: 'app', messages: app_ja_profiles },
   { locale: 'ja', namespace: 'randomizer-world', kind: 'app', messages: app_ja_randomizer_world },
@@ -92,6 +103,7 @@ const layers: readonly Layer[] = [
   { locale: 'ja', namespace: 'rom-loader', kind: 'app', messages: app_ja_rom_loader },
   { locale: 'ja', namespace: 'roms', kind: 'app', messages: app_ja_roms },
   { locale: 'ja', namespace: 'screen-editor', kind: 'app', messages: app_ja_screen_editor },
+  { locale: 'ja', namespace: 'secrets', kind: 'app', messages: app_ja_secrets },
   { locale: 'ja', namespace: 'settings-audio', kind: 'app', messages: app_ja_settings_audio },
   { locale: 'ja', namespace: 'settings-bugfixes', kind: 'app', messages: app_ja_settings_bugfixes },
   { locale: 'ja', namespace: 'settings-camera', kind: 'app', messages: app_ja_settings_camera },
@@ -106,6 +118,8 @@ const layers: readonly Layer[] = [
   { locale: 'ja', namespace: 'settings-picture', kind: 'app', messages: app_ja_settings_picture },
   { locale: 'ja', namespace: 'settings-window', kind: 'app', messages: app_ja_settings_window },
   { locale: 'ja', namespace: 'tessera', kind: 'app', messages: app_ja_tessera },
+  { locale: 'ja', namespace: 'tools', kind: 'app', messages: app_ja_tools },
+  { locale: 'ja', namespace: 'updater', kind: 'app', messages: app_ja_updater },
   { locale: 'ja', namespace: 'views-bug-report-recordings', kind: 'app', messages: app_ja_views_bug_report_recordings },
   { locale: 'ja', namespace: 'views-cheats', kind: 'app', messages: app_ja_views_cheats },
   { locale: 'ja', namespace: 'views-checks', kind: 'app', messages: app_ja_views_checks },

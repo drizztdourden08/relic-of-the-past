@@ -18,7 +18,7 @@ const StoreHomeHero = (props: HeroProps) => {
     <>
       <Art kind="none" />
       <Eyebrow>{t('views-store:hero.eyebrow')}</Eyebrow>
-      <Title>Hookshop</Title>
+      <Title>{t('compounds:hookshop-chip.label')}</Title>
       <StoreHomeView />
     </>
   );

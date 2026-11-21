@@ -355,5 +355,22 @@
   "jobs.line.readJapaneseGraphics": "日本語グラフィックを読み込み中...",
   "rom-manager.extracted": "抽出済み",
   "rom-manager.attached-to": "{bases} に関連付け済み",
-  "rom-manager.roms-title": "ROM"
+  "rom-manager.roms-title": "ROM",
+  "settings-sections.title.video": "ビデオ",
+  "settings-sections.title.extras": "エクストラ",
+  "settings-sections.title.app": "アプリ",
+  "settings-search.input-profiles.label": "入力プロファイル",
+  "settings-search.input-profiles.description": "切り替えて使えるキー割り当てのセット",
+  "settings-search.game-controls.label": "ゲーム操作",
+  "settings-search.game-controls.description": "キーボードやパッドに割り当てるスーパーファミコンのボタン",
+  "settings-search.shortcuts.label": "ショートカットと機能",
+  "settings-search.shortcuts.description": "クイックセーブやターボなどのアプリのショートカット",
+  "settings-search.cheat-bindings.label": "チートの割り当て",
+  "settings-search.cheat-bindings.description": "チートを発動するキー",
+  "settings-search.controllers.label": "コントローラー",
+  "settings-search.controllers.description": "接続中のコントローラーとそのプリセット",
+  "settings-search.extra-dungeon.label": "エクストラダンジョン",
+  "settings-search.extra-dungeon.description": "2本目のカートリッジに入っている、クリア後のオプションダンジョン",
+  "settings-search.gba-tracker.label": "GBA進行トラッカー",
+  "settings-search.gba-tracker.description": "ゲームボーイアドバンス版の各違いの進み具合"
 }

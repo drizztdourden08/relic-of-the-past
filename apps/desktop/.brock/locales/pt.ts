@@ -3,8 +3,10 @@ import type { Layer } from '@drizztdourden08/brock-core/i18n';
 import app_pt_brock_app from '../../src/locales/pt/brock-app.json';
 import app_pt_brock_settings from '../../src/locales/pt/brock-settings.json';
 import app_pt_brock_shell from '../../src/locales/pt/brock-shell.json';
+import app_pt_catalog from '../../src/locales/pt/catalog.json';
 import app_pt_compounds from '../../src/locales/pt/compounds.json';
 import app_pt_data_manager from '../../src/locales/pt/data-manager.json';
+import app_pt_display from '../../src/locales/pt/display.json';
 import app_pt_errors from '../../src/locales/pt/errors.json';
 import app_pt_features from '../../src/locales/pt/features.json';
 import app_pt_game_labels from '../../src/locales/pt/game-labels.json';
@@ -14,8 +16,10 @@ import app_pt_hud_editing from '../../src/locales/pt/hud-editing.json';
 import app_pt_hud_editor from '../../src/locales/pt/hud-editor.json';
 import app_pt_hud from '../../src/locales/pt/hud.json';
 import app_pt_i18n from '../../src/locales/pt/i18n.json';
+import app_pt_input from '../../src/locales/pt/input.json';
 import app_pt_language_editor from '../../src/locales/pt/language-editor.json';
 import app_pt_msu_studio from '../../src/locales/pt/msu-studio.json';
+import app_pt_msu from '../../src/locales/pt/msu.json';
 import app_pt_nav_labels from '../../src/locales/pt/nav-labels.json';
 import app_pt_profiles from '../../src/locales/pt/profiles.json';
 import app_pt_randomizer_world from '../../src/locales/pt/randomizer-world.json';
@@ -27,6 +31,7 @@ import app_pt_record_screens from '../../src/locales/pt/record-screens.json';
 import app_pt_rom_loader from '../../src/locales/pt/rom-loader.json';
 import app_pt_roms from '../../src/locales/pt/roms.json';
 import app_pt_screen_editor from '../../src/locales/pt/screen-editor.json';
+import app_pt_secrets from '../../src/locales/pt/secrets.json';
 import app_pt_settings_audio from '../../src/locales/pt/settings-audio.json';
 import app_pt_settings_bugfixes from '../../src/locales/pt/settings-bugfixes.json';
 import app_pt_settings_camera from '../../src/locales/pt/settings-camera.json';
@@ -41,6 +46,8 @@ import app_pt_settings_online from '../../src/locales/pt/settings-online.json';
 import app_pt_settings_picture from '../../src/locales/pt/settings-picture.json';
 import app_pt_settings_window from '../../src/locales/pt/settings-window.json';
 import app_pt_tessera from '../../src/locales/pt/tessera.json';
+import app_pt_tools from '../../src/locales/pt/tools.json';
+import app_pt_updater from '../../src/locales/pt/updater.json';
 import app_pt_views_bug_report_recordings from '../../src/locales/pt/views-bug-report-recordings.json';
 import app_pt_views_cheats from '../../src/locales/pt/views-cheats.json';
 import app_pt_views_checks from '../../src/locales/pt/views-checks.json';
@@ -68,8 +75,10 @@ const layers: readonly Layer[] = [
   { locale: 'pt', namespace: 'brock-app', kind: 'app', messages: app_pt_brock_app },
   { locale: 'pt', namespace: 'brock-settings', kind: 'app', messages: app_pt_brock_settings },
   { locale: 'pt', namespace: 'brock-shell', kind: 'app', messages: app_pt_brock_shell },
+  { locale: 'pt', namespace: 'catalog', kind: 'app', messages: app_pt_catalog },
   { locale: 'pt', namespace: 'compounds', kind: 'app', messages: app_pt_compounds },
   { locale: 'pt', namespace: 'data-manager', kind: 'app', messages: app_pt_data_manager },
+  { locale: 'pt', namespace: 'display', kind: 'app', messages: app_pt_display },
   { locale: 'pt', namespace: 'errors', kind: 'app', messages: app_pt_errors },
   { locale: 'pt', namespace: 'features', kind: 'app', messages: app_pt_features },
   { locale: 'pt', namespace: 'game-labels', kind: 'app', messages: app_pt_game_labels },
@@ -79,8 +88,10 @@ const layers: readonly Layer[] = [
   { locale: 'pt', namespace: 'hud-editor', kind: 'app', messages: app_pt_hud_editor },
   { locale: 'pt', namespace: 'hud', kind: 'app', messages: app_pt_hud },
   { locale: 'pt', namespace: 'i18n', kind: 'app', messages: app_pt_i18n },
+  { locale: 'pt', namespace: 'input', kind: 'app', messages: app_pt_input },
   { locale: 'pt', namespace: 'language-editor', kind: 'app', messages: app_pt_language_editor },
   { locale: 'pt', namespace: 'msu-studio', kind: 'app', messages: app_pt_msu_studio },
+  { locale: 'pt', namespace: 'msu', kind: 'app', messages: app_pt_msu },
   { locale: 'pt', namespace: 'nav-labels', kind: 'app', messages: app_pt_nav_labels },
   { locale: 'pt', namespace: 'profiles', kind: 'app', messages: app_pt_profiles },
   { locale: 'pt', namespace: 'randomizer-world', kind: 'app', messages: app_pt_randomizer_world },
@@ -92,6 +103,7 @@ const layers: readonly Layer[] = [
   { locale: 'pt', namespace: 'rom-loader', kind: 'app', messages: app_pt_rom_loader },
   { locale: 'pt', namespace: 'roms', kind: 'app', messages: app_pt_roms },
   { locale: 'pt', namespace: 'screen-editor', kind: 'app', messages: app_pt_screen_editor },
+  { locale: 'pt', namespace: 'secrets', kind: 'app', messages: app_pt_secrets },
   { locale: 'pt', namespace: 'settings-audio', kind: 'app', messages: app_pt_settings_audio },
   { locale: 'pt', namespace: 'settings-bugfixes', kind: 'app', messages: app_pt_settings_bugfixes },
   { locale: 'pt', namespace: 'settings-camera', kind: 'app', messages: app_pt_settings_camera },
@@ -106,6 +118,8 @@ const layers: readonly Layer[] = [
   { locale: 'pt', namespace: 'settings-picture', kind: 'app', messages: app_pt_settings_picture },
   { locale: 'pt', namespace: 'settings-window', kind: 'app', messages: app_pt_settings_window },
   { locale: 'pt', namespace: 'tessera', kind: 'app', messages: app_pt_tessera },
+  { locale: 'pt', namespace: 'tools', kind: 'app', messages: app_pt_tools },
+  { locale: 'pt', namespace: 'updater', kind: 'app', messages: app_pt_updater },
   { locale: 'pt', namespace: 'views-bug-report-recordings', kind: 'app', messages: app_pt_views_bug_report_recordings },
   { locale: 'pt', namespace: 'views-cheats', kind: 'app', messages: app_pt_views_cheats },
   { locale: 'pt', namespace: 'views-checks', kind: 'app', messages: app_pt_views_checks },

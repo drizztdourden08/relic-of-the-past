@@ -1,7 +1,7 @@
 /* @layer renderer-components @kind hook */
 import { useCallback, useMemo, useState } from 'react';
 import { OPTIONS_STEP_ID, useRollProgress } from '@drizztdourden08/brock-randomizer/renderer';
-import { useModuleWizardSteps, useSettings, useT } from '@drizztdourden08/brock-react';
+import { useModuleWizardSteps, useSettings, useT, useText } from '@drizztdourden08/brock-react';
 import { useWizard } from '@drizztdourden08/tessera/composites';
 import { experimentalFeaturesEnabled } from '@rotp/features';
 import type { AppSettings } from '@app/settings.type';
@@ -22,7 +22,8 @@ const useProfileWizard = ({ onCreateProfile, onCreated }: UseProfileWizardParams
   const joining = useRollProgress((state) => state.fraction);
   const modules = useMemo(() => moduleSteps.map(withStepFacts(t)), [moduleSteps, t]);
   const [initialValues] = useState(() => initialProfileValues(modules));
-  const steps = useMemo(() => profileWizardSteps({ joining, modules, t }), [joining, modules, t]);
+  const text = useText();
+  const steps = useMemo(() => profileWizardSteps({ joining, modules, t, text }), [joining, modules, t, text]);
 
   const handleFinish = useCallback(async (values: ProfileWizardValues) => {
     try {
