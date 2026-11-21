@@ -43,6 +43,17 @@ const sections: SectionDef[] = [
     ],
   },
   {
+    id: 'hud-language',
+    title: msg('settings-hud:section.hud-language.title'),
+    items: [
+      { key: 'langMenuScreens', label: msg('settings-hud:lang-menu-screens.label'), description: msg('settings-hud:lang-menu-screens.description'), keywords: 'language file select name entry copy erase menu screens translation graphics' },
+      { key: 'jaFileSelectStyle', label: msg('settings-hud:ja-file-select-style.label'), description: msg('settings-hud:ja-file-select-style.description'), keywords: 'japanese cartridge graphics intro hud copyright file select style' },
+      { key: 'langPauseWords', label: msg('settings-hud:lang-pause-words.label'), description: msg('settings-hud:lang-pause-words.description'), keywords: 'language pause menu words text translation graphics' },
+      { key: 'langMapLabels', label: msg('settings-hud:lang-map-labels.label'), description: msg('settings-hud:lang-map-labels.description'), keywords: 'language map dungeon floor labels translation graphics' },
+      { key: 'langEndingCredits', label: msg('settings-hud:lang-ending-credits.label'), description: msg('settings-hud:lang-ending-credits.description'), keywords: 'language ending credits captions translation graphics' },
+    ],
+  },
+  {
     id: 'hud-display',
     title: msg('settings-hud:section.hud-display.title'),
     items: [

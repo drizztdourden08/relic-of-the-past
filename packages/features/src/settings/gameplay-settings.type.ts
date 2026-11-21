@@ -3,7 +3,6 @@ interface GameplaySettings {
   autoSkipDialog: boolean;
   prefillFileName: boolean;
   extendedLetters: boolean;
-  languageScreens: boolean;
   jaFileSelectStyle: boolean;
   turnWhileDashing: boolean;
   allowDiving: boolean;

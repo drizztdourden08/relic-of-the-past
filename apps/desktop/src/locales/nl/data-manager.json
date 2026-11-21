@@ -237,7 +237,6 @@
   "settings-sections.label.hud-style": "HUD-stijl",
   "settings-sections.label.item-sheen": "Itemglans",
   "settings-sections.label.ja-file-select-style": "Japanse bestandskeuzestijl",
-  "settings-sections.label.language-screens": "Schermen volgen de taal",
   "settings-sections.label.linear-filtering": "Lineaire filtering",
   "settings-sections.label.link-sprite": "Link-sprite",
   "settings-sections.label.map-on-select": "Kaart met Select",
@@ -372,5 +371,9 @@
   "settings-search.extra-dungeon.label": "Extra dungeon",
   "settings-search.extra-dungeon.description": "De optionele dungeon na het spel van de tweede cartridge",
   "settings-search.gba-tracker.label": "GBA-voortgangstracker",
-  "settings-search.gba-tracker.description": "Hoe ver elk verschil met de Game Boy Advance is"
+  "settings-search.gba-tracker.description": "Hoe ver elk verschil met de Game Boy Advance is",
+  "settings-sections.label.lang-menu-screens": "Bestandskeuzeschermen",
+  "settings-sections.label.lang-pause-words": "HUD- en pauzewoorden",
+  "settings-sections.label.lang-map-labels": "Kaartlabels",
+  "settings-sections.label.lang-ending-credits": "Einde en aftiteling"
 }

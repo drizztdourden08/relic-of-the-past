@@ -237,7 +237,6 @@
   "settings-sections.label.hud-style": "HUD-stil",
   "settings-sections.label.item-sheen": "Föremålsglans",
   "settings-sections.label.ja-file-select-style": "Japansk filvalsstil",
-  "settings-sections.label.language-screens": "Skärmar följer språket",
   "settings-sections.label.linear-filtering": "Linjär filtrering",
   "settings-sections.label.link-sprite": "Links sprite",
   "settings-sections.label.map-on-select": "Karta på Select",
@@ -372,5 +371,9 @@
   "settings-search.extra-dungeon.label": "Extra fängelsehåla",
   "settings-search.extra-dungeon.description": "Den valfria fängelsehålan efter spelets slut från den andra kassetten",
   "settings-search.gba-tracker.label": "GBA-framstegsspårare",
-  "settings-search.gba-tracker.description": "Hur långt varje skillnad i Game Boy Advance har kommit"
+  "settings-search.gba-tracker.description": "Hur långt varje skillnad i Game Boy Advance har kommit",
+  "settings-sections.label.lang-menu-screens": "Filvalsskärmar",
+  "settings-sections.label.lang-pause-words": "Ord i HUD och paus",
+  "settings-sections.label.lang-map-labels": "Kartetiketter",
+  "settings-sections.label.lang-ending-credits": "Slut och eftertexter"
 }

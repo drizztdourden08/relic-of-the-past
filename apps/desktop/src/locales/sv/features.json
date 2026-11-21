@@ -198,5 +198,13 @@
   "controls.function.cheatMaxHealth": "Höj maxhälsa",
   "controls.function.cheatIgnoreCollision": "Ignorera rörelsebegränsning/kollision",
   "controls.function.cheatKillEnemies": "Döda alla fiender",
-  "controls.function.cheatRestoreMagic": "Återställ all magi"
+  "controls.function.cheatRestoreMagic": "Återställ all magi",
+  "feature.langMenuScreens.label": "Filvalsskärmar",
+  "feature.langMenuScreens.message": "Filval, namninmatning, kopiering och radering på språket. Av visar USA-grafiken.",
+  "feature.langPauseWords.label": "Ord i HUD och paus",
+  "feature.langPauseWords.message": "Orden i pausmenyn, rutornas rubriker och etiketten ovanför hjärtana. Av visar USA-grafiken.",
+  "feature.langMapLabels.label": "Kartetiketter",
+  "feature.langMapLabels.message": "Etiketter på dungeonkartan och våningarna på språket. Av visar USA-grafiken.",
+  "feature.langEndingCredits.label": "Slut och eftertexter",
+  "feature.langEndingCredits.message": "Bildtexter i slutet och eftertexter på språket. Av visar USA-grafiken."
 }

@@ -55,7 +55,7 @@ const DIALOG_LANGUAGE_FEATURES: FeatureDef[] = [
     id: 'languageScreens',
     label: msg('features:feature.languageScreens.label'),
     description:
-      'The file select, name grid, pause text, dungeon map labels, ending, credits and menu pictures read the active language\'s own data. Off, they read the original English ones.',
+      'On while any language graphic (menu screens, pause words, life label, map labels, ending and credits) is on; derived, not a setting. Off, all of them read the original English ones.',
     userMessage: msg('features:feature.languageScreens.message'),
     group: 'Dialog',
     kind: 'features0-bit',

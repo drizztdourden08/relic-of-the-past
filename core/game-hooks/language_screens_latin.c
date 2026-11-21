@@ -5,8 +5,9 @@
 // and "-1", "-2" below it. Their sheets draw the word above the hearts in other tiles than the US one,
 // laid out by their own HUD row. The words and tiles come from the host (kLangTbl_PauseHeaders,
 // kLangTbl_FloorLabels, kLangTbl_HudLifeRow, read from the cartridge); the label tiles themselves are the cartridge's own
-// sprite sheet tiles (a sheet patch). Gate: kFeatures2_LanguageScreens. Off, or with no table, every
-// hook leaves the vanilla write as it is.
+// sprite sheet tiles (a sheet patch). Gate: kLangGfx_Pause (headers), kLangGfx_Maps (floor labels) and
+// kLangGfx_Pause (life label), applied by LANG_PICK per table. Off, or with no table, every hook leaves the
+// vanilla write as it is.
 #include "game_hooks_internal.h"
 
 enum {

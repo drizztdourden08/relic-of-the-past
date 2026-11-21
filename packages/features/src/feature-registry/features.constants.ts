@@ -5,6 +5,7 @@ import { AUDIO_FEATURES } from './audio.constants';
 import { BUG_FIXES_FEATURES } from './bug-fixes.constants';
 import { DEV_FEATURES } from './dev.constants';
 import { DIALOG_LANGUAGE_FEATURES } from './dialog-language.constants';
+import { LANGUAGE_GRAPHICS_FEATURES } from './language-graphics.constants';
 import { DISPLAY_FEATURES } from './display.constants';
 import { GAMEPLAY_FEATURES } from './gameplay.constants';
 import { HOST_QUERY_FEATURES } from './host-query.constants';
@@ -18,6 +19,7 @@ const FEATURES: FeatureDef[] = [
   ...GAMEPLAY_FEATURES,
   ...REWARD_RULE_FEATURES,
   ...DIALOG_LANGUAGE_FEATURES,
+  ...LANGUAGE_GRAPHICS_FEATURES,
   ...BUG_FIXES_FEATURES,
   ...DEV_FEATURES,
   ...HOST_QUERY_FEATURES,

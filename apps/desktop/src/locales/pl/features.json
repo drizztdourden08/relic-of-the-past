@@ -198,5 +198,13 @@
   "controls.function.cheatMaxHealth": "Zwiększ maksymalne zdrowie",
   "controls.function.cheatIgnoreCollision": "Ignoruj ograniczenia ruchu/kolizje",
   "controls.function.cheatKillEnemies": "Zabij wszystkich wrogów",
-  "controls.function.cheatRestoreMagic": "Przywróć całą magię"
+  "controls.function.cheatRestoreMagic": "Przywróć całą magię",
+  "feature.langMenuScreens.label": "Ekrany wyboru pliku",
+  "feature.langMenuScreens.message": "Wybór pliku, wpisywanie imienia, kopiowanie i usuwanie w danym języku. Wyłączone pokazuje grafiki US.",
+  "feature.langPauseWords.label": "Słowa w HUD i pauzie",
+  "feature.langPauseWords.message": "Słowa w menu pauzy, nagłówki okien i podpis nad sercami. Wyłączone pokazuje grafiki US.",
+  "feature.langMapLabels.label": "Podpisy map",
+  "feature.langMapLabels.message": "Podpisy map lochów i pięter w danym języku. Wyłączone pokazuje grafiki US.",
+  "feature.langEndingCredits.label": "Zakończenie i napisy końcowe",
+  "feature.langEndingCredits.message": "Podpisy zakończenia i napisy końcowe w danym języku. Wyłączone pokazuje grafiki US."
 }

@@ -37,7 +37,7 @@ static const FaerieScreen kFaerie[] = {
 };
 
 bool LanguageJa_LayoutReady(void) {
-  if (!LanguageScreens_On() || (g_zenv.dialogue_flags & kJapaneseFlag) == 0 || !LanguageScreensFont_Ready())
+  if (!LanguageScreens_PieceOn(kLangGfx_Menus) || (g_zenv.dialogue_flags & kJapaneseFlag) == 0 || !LanguageScreensFont_Ready())
     return false;
   for (size_t i = 0; i < countof(kJaTables); i++) {
     int id = kJaTables[i].id;

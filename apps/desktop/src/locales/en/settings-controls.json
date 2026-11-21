@@ -56,5 +56,6 @@
   "sprite.title": "Player Sprite",
   "sprite.original": "Original",
   "sprite.hint": "Manage sprites in Data > Character Studio. Applies right away.",
-  "sprite.loading": "Loading sprites..."
+  "sprite.loading": "Loading sprites...",
+  "disabled.language-graphics": "Needs a ROM in this language imported"
 }

@@ -149,5 +149,16 @@
   "dialog-texture-density.description": "Hoe dicht de cellen op elkaar zitten.",
   "dialog-texture-scatter.label": "Spreiding",
   "dialog-texture-scatter.description": "Hoe ver cellen van het raster afdwalen; op nul liggen ze op één lijn.",
-  "screen.title": "HUD"
+  "screen.title": "HUD",
+  "section.hud-language.title": "Taal",
+  "lang-menu-screens.label": "Bestandskeuzeschermen",
+  "lang-menu-screens.description": "Bestandskeuze, naam invoeren, kopiëren en wissen in de taal. Uit toont de US-graphics.",
+  "ja-file-select-style.label": "Japanse bestandskeuzestijl",
+  "ja-file-select-style.description": "Het bestandskeuzescherm gebruikt de Japanse cartridge-indeling. De tekst volgt nog steeds de taal. Vereist een Japanse ROM.",
+  "lang-pause-words.label": "HUD- en pauzewoorden",
+  "lang-pause-words.description": "De woorden in het pauzemenu, de kaderkoppen en het label boven de harten. Uit toont de US-graphics.",
+  "lang-map-labels.label": "Kaartlabels",
+  "lang-map-labels.description": "Labels van de dungeonkaart en de verdiepingen in de taal. Uit toont de US-graphics.",
+  "lang-ending-credits.label": "Einde en aftiteling",
+  "lang-ending-credits.description": "Onderschriften van het einde en de aftiteling in de taal. Uit toont de US-graphics."
 }

@@ -50,6 +50,11 @@ const HUD_SECTION: SettingsSection = {
     { key: 'titleScreen', label: msg('data-manager:settings-sections.label.title-screen'), format: (v, t) => capitalizeSetting(v, 'original', t) },
     { key: 'titleMotion', label: msg('data-manager:settings-sections.label.title-motion'), format: (v, t) => capitalizeSetting(v, 'still', t) },
     { key: 'titleFollowsProgress', label: msg('data-manager:settings-sections.label.title-follows-progress') },
+    { key: 'langMenuScreens', label: msg('data-manager:settings-sections.label.lang-menu-screens') },
+    { key: 'jaFileSelectStyle', label: msg('data-manager:settings-sections.label.ja-file-select-style') },
+    { key: 'langPauseWords', label: msg('data-manager:settings-sections.label.lang-pause-words') },
+    { key: 'langMapLabels', label: msg('data-manager:settings-sections.label.lang-map-labels') },
+    { key: 'langEndingCredits', label: msg('data-manager:settings-sections.label.lang-ending-credits') },
   ],
 };
 

@@ -4,7 +4,7 @@ import { decodeJapaneseGraphicsPack, hasJapaneseFont } from '@rotp/asset-extract
 import { assets } from '@rotp/roms';
 import { log } from '@app/log-bus';
 import { platformFiles } from '@app/storage/platform-files';
-import { useJapaneseGraphicsStore } from '@app/stores/japanese-graphics-store';
+import { japanesePiecesOf, useJapaneseGraphicsStore } from '@app/stores/japanese-graphics-store';
 
 const loadJapaneseGraphics = async (): Promise<void> => {
   const { setStatus } = useJapaneseGraphicsStore.getState();
@@ -13,11 +13,11 @@ const loadJapaneseGraphics = async (): Promise<void> => {
     const entries = pack ? decodeJapaneseGraphicsPack(pack) : [];
     setJapaneseGraphics(entries);
     log.app(`[JapaneseGraphics] ${entries.length > 0 ? `${entries.length} pictures loaded` : 'no Japanese sprites imported'}`);
-    setStatus({ available: entries.length > 0, fontImported: hasJapaneseFont(entries) });
+    setStatus({ available: entries.length > 0, fontImported: hasJapaneseFont(entries), ...japanesePiecesOf(entries) });
   } catch (err) {
     log.error(`[JapaneseGraphics] Failed to read the pack: ${err instanceof Error ? err.message : err}`);
     setJapaneseGraphics([]);
-    setStatus({ available: false, fontImported: false });
+    setStatus({ available: false, fontImported: false, menus: false, pause: false, ending: false });
   }
 };
 

@@ -198,5 +198,13 @@
   "controls.function.cheatMaxHealth": "Augmenter la santé maximale",
   "controls.function.cheatIgnoreCollision": "Ignorer les restrictions de déplacement et les collisions",
   "controls.function.cheatKillEnemies": "Tuer tous les ennemis",
-  "controls.function.cheatRestoreMagic": "Restaurer toute la magie"
+  "controls.function.cheatRestoreMagic": "Restaurer toute la magie",
+  "feature.langMenuScreens.label": "Écrans de sélection de fichier",
+  "feature.langMenuScreens.message": "Sélection de fichier, saisie du nom, copie et effacement dans la langue. Désactivé, les graphismes US s'affichent.",
+  "feature.langPauseWords.label": "Mots du HUD et de la pause",
+  "feature.langPauseWords.message": "Les mots du menu pause, les titres des cadres et le libellé au-dessus des coeurs. Désactivé, les graphismes US s'affichent.",
+  "feature.langMapLabels.label": "Libellés des cartes",
+  "feature.langMapLabels.message": "Libellés des cartes de donjon et des étages dans la langue. Désactivé, les graphismes US s'affichent.",
+  "feature.langEndingCredits.label": "Fin et générique",
+  "feature.langEndingCredits.message": "Légendes de fin et générique dans la langue. Désactivé, les graphismes US s'affichent."
 }

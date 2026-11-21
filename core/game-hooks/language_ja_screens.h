@@ -2,7 +2,7 @@
 // The Japanese file select and name entry (language_ja_*.c). Included from game_hooks.h.
 //
 // These hooks are the Japanese layout strategy of select_layout.h. It is ready (LanguageJa_LayoutReady)
-// with kFeatures2_LanguageScreens on, a Japanese dialogue set loaded (dialogue_flags bit 2), the host's
+// with kLangGfx_Menus on, a Japanese dialogue set loaded (dialogue_flags bit 2), the host's
 // 512-tile font and every Japanese file-select table present at its Japanese length, and it runs
 // (LanguageJa_On) while it is the active layout. Off, every hook below returns at once and the vendored
 // US screens run unchanged.

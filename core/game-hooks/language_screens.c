@@ -1,8 +1,8 @@
 /* @layer core-game-hooks @kind native */
 // A language's screens: the static tables the vendored screens read, owned here so the host can
-// supply a language's own. Gate: kFeatures2_LanguageScreens. Off, every LANG_PICK answers the
-// vendored table, the tilemap font is the US one and no asset or sheet is repointed, which is the
-// game exactly as it shipped. The assets and sheets half is language_screens_assets.c.
+// supply a language's own. Gate: per piece (kLangGfx_*, language_screens.h) under kFeatures2_LanguageScreens.
+// A piece off answers its LANG_PICK reads with the vendored table, leaves its fonts, assets and sheets
+// on the US ones, which is the game exactly as it shipped. The assets and sheets half is language_screens_assets.c.
 //
 // Host flow: WasmClearLanguageScreens, WasmSetLanguageScreenTable for each table the language has,
 // then ZeldaSetLanguage (or WasmApplyLanguageScreens when only the data changed). A table that was
@@ -47,6 +47,17 @@ bool LanguageScreens_On(void) {
   return (enhanced_features2 & kFeatures2_LanguageScreens) != 0;
 }
 
+bool LanguageScreens_PieceOn(uint32 piece) {
+  return LanguageScreens_On() && (enhanced_features2 & piece) != 0;
+}
+
+uint32 LanguageScreens_PieceOfTable(int id) {
+  if (id == kLangTbl_PauseHeaders || id == kLangTbl_HudLifeRow || id <= kLangTbl_HudEquipDungeon) return kLangGfx_Pause;
+  if (id == kLangTbl_DungMapTab23 || id == kLangTbl_FloorLabels) return kLangGfx_Maps;
+  if (id == kLangTbl_CreditsDigits || id == kLangTbl_CreditsScrollY) return kLangGfx_Ending;
+  return kLangGfx_Menus;
+}
+
 // A Japanese set's pause menu tables name tiles of the Japanese HUD sheets, which come only from the
 // Japanese graphics pack, and the pack carries its own pause words (PackText), so a Japanese set's are never read. The Japanese select-file set (its stripes and grid, told apart by a stripe of another length than
 // the US one) is read only as a whole and only in Japanese mode: without it the US screens would write
@@ -61,8 +72,8 @@ static bool HeldBack(int id) {
 }
 
 static bool HostPicked(int id) {
-  return id >= 0 && id < kLangTbl_Count && g_language_screens.table[id] != NULL && LanguageScreens_On() &&
-         !HeldBack(id);
+  return id >= 0 && id < kLangTbl_Count && g_language_screens.table[id] != NULL &&
+         LanguageScreens_PieceOn(LanguageScreens_PieceOfTable(id)) && !HeldBack(id);
 }
 
 // The Japanese graphics pack's pause words go with its HUD sheets, whichever set is chosen, so they come
@@ -99,7 +110,7 @@ int LanguageScreens_Len(int id, int orig_len) {
 
 int GameHook_TilemapFont(void) {
   int font = g_language_screens.tilemap_font;
-  if (!LanguageScreens_On() || font <= 0) return 0;
+  if (!(LanguageScreens_PieceOn(kLangGfx_Menus) || LanguageScreens_PieceOn(kLangGfx_Ending)) || font <= 0) return 0;
   return kDialogueFont(font).ptr != NULL ? font : 0;
 }
 

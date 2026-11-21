@@ -56,5 +56,6 @@
   "sprite.title": "Sprite gracza",
   "sprite.original": "Oryginalny",
   "sprite.hint": "Zarządzaj sprite'ami w Dane > Studio postaci. Działa od razu.",
-  "sprite.loading": "Wczytywanie sprite'ów..."
+  "sprite.loading": "Wczytywanie sprite'ów...",
+  "disabled.language-graphics": "Wymaga zaimportowanego ROM-u w tym języku"
 }

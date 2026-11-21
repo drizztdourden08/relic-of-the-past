@@ -56,5 +56,6 @@
   "sprite.title": "Spelarsprite",
   "sprite.original": "Original",
   "sprite.hint": "Hantera sprites i Data > Karaktärsstudio. Tillämpas direkt.",
-  "sprite.loading": "Läser in sprites..."
+  "sprite.loading": "Läser in sprites...",
+  "disabled.language-graphics": "Kräver en importerad ROM på detta språk"
 }

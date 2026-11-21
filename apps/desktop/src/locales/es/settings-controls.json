@@ -56,5 +56,6 @@
   "sprite.title": "Sprite del jugador",
   "sprite.original": "Original",
   "sprite.hint": "Gestiona los sprites en Datos > Estudio de personaje. Se aplica al instante.",
-  "sprite.loading": "Cargando sprites..."
+  "sprite.loading": "Cargando sprites...",
+  "disabled.language-graphics": "Requiere una ROM en este idioma importada"
 }

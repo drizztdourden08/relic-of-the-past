@@ -4,6 +4,7 @@ import type { GameSettings } from '@rotp/features';
 import { developerLockProvider } from './developer-lock-provider';
 import { hostLockProvider } from './host-lock-provider';
 import { japaneseGraphicsLockProvider } from './japanese-graphics-lock-provider';
+import { languageGraphicsLockProvider } from './language-graphics-lock-provider';
 import { vanillaSafeLockProvider } from './vanilla-safe-lock-provider';
 
 const LOCK_CAUSE_PROVIDERS: readonly LockCauseProvider<GameSettings>[] = [
@@ -11,6 +12,7 @@ const LOCK_CAUSE_PROVIDERS: readonly LockCauseProvider<GameSettings>[] = [
   developerLockProvider,
   vanillaSafeLockProvider,
   japaneseGraphicsLockProvider,
+  languageGraphicsLockProvider,
 ];
 
 export { LOCK_CAUSE_PROVIDERS };

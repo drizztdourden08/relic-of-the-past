@@ -1,8 +1,8 @@
 /* @layer core-game-hooks @kind native */
 // The asset half of the language screens: assets 74-78 (ending, credits) and 99-104 (menu tilemaps)
 // are repointed in g_asset_ptrs, and sheets of kSprGfx / kBgGfx are overridden through
-// core/wasm-build/emscripten_io.c. Applied only while kFeatures2_LanguageScreens is on; turned off
-// (or cleared) the original pointers go back, so the baked US data is what the game reads.
+// core/wasm-build/emscripten_io.c. Each is applied only while its piece (kLangGfx_*, SlotPiece and SheetPiece)
+// is live; turned off (or cleared) the original pointers go back, so the baked US data is what the game reads.
 #include "game_hooks_internal.h"
 #include "src/features.h"
 #include "src/load_gfx.h"
@@ -15,10 +15,27 @@ typedef struct {
 
 // Ids 0x300 + index: a tile patch for sprite sheet |index| (see ApplyPatch).
 enum { kAssetIdBase = 0x40, kSheetIdBase = 0x100, kPatchIdBase = 0x300, kSheetBytes = 0x600, kTileBytes = 24, kFirstMenuSlot = 5 };
+enum { kEndWordSheet = 45, kFloorLetterSheet = 97, kFirstHudSheet = 105, kLastHudSheet = 107 };
 enum { kFirstSelectSlot = 6, kLastSelectSlot = 9, kBgSheetKind = 1, kModuleIntro = 0, kModuleAttract = 0x14, kIntroTheme = 35, kIntroSlot = 5 };
 
 // The asset number of each slot, in kLangAsset_* order.
 static const uint8 kSlotAsset[kLangAsset_Count] = {74, 75, 76, 77, 78, 99, 100, 101, 102, 103, 104};
+
+// The piece that owns asset slot |slot|: the ending and credits assets (74-78) or the menu tilemaps (99-104).
+static uint32 SlotPiece(int slot) {
+  return slot < kFirstMenuSlot ? kLangGfx_Ending : kLangGfx_Menus;
+}
+
+// The piece that owns sheet |index| of |kind| (0 sprite, 1 background), for an override or a patch: the
+// ending word sheet, the floor letter sheet and the HUD sheets have their own; every other sheet
+// (the background sheets of the intro and file select, the title's presents sheet) belongs to the menus.
+static uint32 SheetPiece(int kind, int index) {
+  if (kind != 0) return kLangGfx_Menus;
+  if (index == kEndWordSheet) return kLangGfx_Ending;
+  if (index == kFloorLetterSheet) return kLangGfx_Maps;
+  if (index >= kFirstHudSheet && index <= kLastHudSheet) return kLangGfx_Pause;
+  return kLangGfx_Menus;
+}
 
 static Blob g_assets[kLangAsset_Count];
 static Blob g_sheets[2][kLangSheetMax];
@@ -90,7 +107,7 @@ static void ApplyAssetSlots(bool on, bool held) {
   for (int i = 0; i < kLangAsset_Count; i++) {
     uint32 pack_size = 0;
     const uint8 *pack = i == kIntroSlot ? JaGraphics_IntroTilemap(&pack_size) : NULL;
-    bool host = on && g_assets[i].data != NULL && !(held && i >= kFirstMenuSlot) && !SelectSlotOff(i) &&
+    bool host = on && g_assets[i].data != NULL && LanguageScreens_PieceOn(SlotPiece(i)) && !(held && i >= kFirstMenuSlot) && !SelectSlotOff(i) &&
                 (i != kIntroSlot || SetPicturesDrawn());
     if (pack != NULL) {
       g_asset_ptrs[kSlotAsset[i]] = pack;
@@ -108,7 +125,8 @@ static void ApplySheets(bool on, bool held) {
       const Blob *b = &g_sheets[kind][i];
       uint32 pack_size = 0;
       const uint8 *pack = JaGraphics_Sheet(kind, i, &pack_size);
-      bool use = on && b->data != NULL && !(held && kind == 1) && SetPicturesDrawn();
+      bool use = on && b->data != NULL && !(held && kind == 1) && SetPicturesDrawn() &&
+                 LanguageScreens_PieceOn(SheetPiece(kind, i));
       if (pack != NULL) AssetSheet_SetOverride(kind, i, pack, pack_size);
       else AssetSheet_SetOverride(kind, i, use ? b->data : NULL, b->size);
     }
@@ -123,7 +141,7 @@ static void ApplyPatches(bool on) {
     const uint8 *pack = JaGraphics_Patch(i, &pack_size);
     const uint8 *patched = NULL;
     if (pack != NULL) patched = ApplyPatch(i, pack, pack_size);
-    else if (on && SetPicturesDrawn()) patched = ApplyPatch(i, g_patches[i].data, g_patches[i].size);
+    else if (on && SetPicturesDrawn() && LanguageScreens_PieceOn(SheetPiece(0, i))) patched = ApplyPatch(i, g_patches[i].data, g_patches[i].size);
     if (patched != NULL) AssetSheet_SetOverride(0, i, patched, kSheetBytes);
     else AssetSheet_SetOverride(0, i, NULL, 0);
   }
@@ -164,7 +182,8 @@ void LanguageScreens_SelectSheets(bool on) {
 }
 
 int LanguageScreens_AssetLen(int slot, int orig_len) {
-  bool host = slot >= 0 && slot < kLangAsset_Count && g_assets[slot].data != NULL && LanguageScreens_On();
+  bool host = slot >= 0 && slot < kLangAsset_Count && g_assets[slot].data != NULL &&
+              LanguageScreens_PieceOn(SlotPiece(slot));
   return host ? (int)g_assets[slot].size : orig_len;
 }
 

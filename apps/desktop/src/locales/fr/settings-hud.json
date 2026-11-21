@@ -149,5 +149,16 @@
   "dialog-texture-density.description": "Proximité des cellules.",
   "dialog-texture-scatter.label": "Dispersion",
   "dialog-texture-scatter.description": "Distance dont les cellules s'écartent de la grille ; à zéro, elles sont alignées.",
-  "screen.title": "HUD"
+  "screen.title": "HUD",
+  "section.hud-language.title": "Langue",
+  "lang-menu-screens.label": "Écrans de sélection de fichier",
+  "lang-menu-screens.description": "Sélection de fichier, saisie du nom, copie et effacement dans la langue. Désactivé, les graphismes US s'affichent.",
+  "ja-file-select-style.label": "Style de sélection de fichier japonais",
+  "ja-file-select-style.description": "L'écran de sélection de fichier utilise la disposition de la cartouche japonaise. Le texte suit toujours la langue. Nécessite une ROM japonaise.",
+  "lang-pause-words.label": "Mots du HUD et de la pause",
+  "lang-pause-words.description": "Les mots du menu pause, les titres des cadres et le libellé au-dessus des coeurs. Désactivé, les graphismes US s'affichent.",
+  "lang-map-labels.label": "Libellés des cartes",
+  "lang-map-labels.description": "Libellés des cartes de donjon et des étages dans la langue. Désactivé, les graphismes US s'affichent.",
+  "lang-ending-credits.label": "Fin et générique",
+  "lang-ending-credits.description": "Légendes de fin et générique dans la langue. Désactivé, les graphismes US s'affichent."
 }

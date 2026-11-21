@@ -198,5 +198,13 @@
   "controls.function.cheatMaxHealth": "Maximaal leven verhogen",
   "controls.function.cheatIgnoreCollision": "Bewegingsbeperking/botsing negeren",
   "controls.function.cheatKillEnemies": "Alle vijanden doden",
-  "controls.function.cheatRestoreMagic": "Alle magie herstellen"
+  "controls.function.cheatRestoreMagic": "Alle magie herstellen",
+  "feature.langMenuScreens.label": "Bestandskeuzeschermen",
+  "feature.langMenuScreens.message": "Bestandskeuze, naam invoeren, kopiëren en wissen in de taal. Uit toont de US-graphics.",
+  "feature.langPauseWords.label": "HUD- en pauzewoorden",
+  "feature.langPauseWords.message": "De woorden in het pauzemenu, de kaderkoppen en het label boven de harten. Uit toont de US-graphics.",
+  "feature.langMapLabels.label": "Kaartlabels",
+  "feature.langMapLabels.message": "Labels van de dungeonkaart en de verdiepingen in de taal. Uit toont de US-graphics.",
+  "feature.langEndingCredits.label": "Einde en aftiteling",
+  "feature.langEndingCredits.message": "Onderschriften van het einde en de aftiteling in de taal. Uit toont de US-graphics."
 }

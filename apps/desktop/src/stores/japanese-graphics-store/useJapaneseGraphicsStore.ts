@@ -5,7 +5,10 @@ import type { JapaneseGraphicsStore } from './japanese-graphics-store.type';
 const useJapaneseGraphicsStore = create<JapaneseGraphicsStore>()((set) => ({
   available: false,
   fontImported: false,
-  setStatus: ({ available, fontImported }) => set({ available, fontImported }),
+  menus: false,
+  pause: false,
+  ending: false,
+  setStatus: (status) => set(status),
 }));
 
 export { useJapaneseGraphicsStore };

@@ -5,9 +5,10 @@ const RAW_FEATURE_KEYS = [
   'extendedRendering', 'linearWorldTilemap', 'ultrawideRendering', 'tallRendering',
   'widescreenSprites', 'widescreenVisualFixes', 'cameraLockToViewport', 'smoothTransitions',
   'perGroupVolume', 'autoSkipDialog',
-  'prefillFileName', 'extendedLetters', 'languageScreens',
+  'prefillFileName', 'extendedLetters',
   'coloredRupees', 'itemSheen', 'archeryNeedsBow',
   'jaFileSelectStyle',
+  'langMenuScreens', 'langPauseWords', 'langMapLabels', 'langEndingCredits',
 ] as const satisfies readonly (keyof GameSettings)[];
 
 const WIDESCREEN_FIX_BUNDLE = 'WidescreenVisualFixes';

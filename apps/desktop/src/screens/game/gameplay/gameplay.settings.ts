@@ -98,8 +98,6 @@ const sections: SectionDef[] = [
         title: msg('settings-gameplay:section.dialog-letters.title'),
         items: [
           { key: 'extendedLetters', label: msg('settings-gameplay:extended-letters.label'), description: msg('settings-gameplay:extended-letters.description'), keywords: 'dialog accent accented letters latin translation language name font diacritic' },
-          { key: 'languageScreens', label: msg('settings-gameplay:language-screens.label'), description: msg('settings-gameplay:language-screens.description'), keywords: 'screens menu pause file select name ending credits language translation' },
-          { key: 'jaFileSelectStyle', label: msg('settings-gameplay:ja-file-select-style.label'), description: msg('settings-gameplay:ja-file-select-style.description'), keywords: 'japanese cartridge graphics intro hud copyright file select style' },
         ],
       },
     ],

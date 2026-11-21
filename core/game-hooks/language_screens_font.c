@@ -10,7 +10,8 @@
 // the 256-tile font of its own cartridge, which places the file select's letters and digits elsewhere than
 // the US font: the file select takes all of it, since its stripes name those places. A set's font can only
 // be that 256-tile one. Otherwise the file select keeps the US font.
-// Gate: kFeatures2_LanguageScreens. Off, with no font or outside a Japanese set, the original upload runs.
+// Gate: kLangGfx_Menus for the file select fonts, kLangGfx_Ending for the credits font. Off, with no font or
+// outside a Japanese set, the original upload runs.
 #include "game_hooks_internal.h"
 #include "src/features.h"
 #include <stdlib.h>
@@ -50,17 +51,20 @@ bool LanguageScreensFont_Ready(void) {
 
 bool GameHook_TransferTilemapFont(uint16 *dst) {
   if (!LanguageScreens_On()) return false;
-  if (g_font_len == kLatinFontBytes && main_module_index == kModuleFileSelect) {
+  bool menus = LanguageScreens_PieceOn(kLangGfx_Menus);
+  if (menus && g_font_len == kLatinFontBytes && main_module_index == kModuleFileSelect) {
     memcpy(dst, g_font, kLatinFontBytes);
     return true;
   }
   const uint8 *font = JapaneseFont();
   if (font == NULL) return false;
-  if (main_module_index == kModuleFileSelect && SelectLayout_JapaneseFont()) {
+  if (menus && main_module_index == kModuleFileSelect && SelectLayout_JapaneseFont()) {
     memcpy(dst, font, kFileSelectFontBytes);
     return true;
   }
-  if ((g_zenv.dialogue_flags & kJapaneseFlag) == 0 || main_module_index != kModuleCredits) return false;
+  if (!LanguageScreens_PieceOn(kLangGfx_Ending) || (g_zenv.dialogue_flags & kJapaneseFlag) == 0 ||
+      main_module_index != kModuleCredits)
+    return false;
   memcpy(dst, font, kFontMaxBytes);
   return true;
 }

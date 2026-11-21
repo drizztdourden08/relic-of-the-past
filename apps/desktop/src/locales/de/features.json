@@ -198,5 +198,13 @@
   "controls.function.cheatMaxHealth": "Maximale Gesundheit erhöhen",
   "controls.function.cheatIgnoreCollision": "Bewegungsbeschränkung/Kollision ignorieren",
   "controls.function.cheatKillEnemies": "Alle Gegner besiegen",
-  "controls.function.cheatRestoreMagic": "Ganze Magie wiederherstellen"
+  "controls.function.cheatRestoreMagic": "Ganze Magie wiederherstellen",
+  "feature.langMenuScreens.label": "Dateiauswahl-Bildschirme",
+  "feature.langMenuScreens.message": "Dateiauswahl, Namenseingabe, Kopieren und Löschen in der Sprache. Aus zeigt die US-Grafiken.",
+  "feature.langPauseWords.label": "HUD- und Pausenwörter",
+  "feature.langPauseWords.message": "Die Wörter im Pausenmenü, die Kastentitel und die Beschriftung über den Herzen. Aus zeigt die US-Grafiken.",
+  "feature.langMapLabels.label": "Kartenbeschriftungen",
+  "feature.langMapLabels.message": "Beschriftungen der Dungeonkarte und der Etagen in der Sprache. Aus zeigt die US-Grafiken.",
+  "feature.langEndingCredits.label": "Abspann und Credits",
+  "feature.langEndingCredits.message": "Abspanntexte und Credits in der Sprache. Aus zeigt die US-Grafiken."
 }

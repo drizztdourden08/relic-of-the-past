@@ -62,8 +62,6 @@ const DIALOG_SECTION: SettingsSection = {
     { key: 'autoSkipDialog', label: msg('data-manager:settings-sections.label.auto-skip-dialog') },
     { key: 'disableTelepathy', label: msg('data-manager:settings-sections.label.disable-telepathy') },
     { key: 'extendedLetters', label: msg('data-manager:settings-sections.label.extended-letters') },
-    { key: 'languageScreens', label: msg('data-manager:settings-sections.label.language-screens') },
-    { key: 'jaFileSelectStyle', label: msg('data-manager:settings-sections.label.ja-file-select-style') },
     { key: 'dialogBox', label: msg('data-manager:settings-sections.label.dialog-box'), format: (v, t) => capitalizeSetting(v, 'original', t) },
     { key: 'dialogFont', label: msg('data-manager:settings-sections.label.dialog-font'), format: (v, t) => capitalizeSetting(v, 'original', t) },
     { key: 'dialogFontScale', label: msg('data-manager:settings-sections.label.dialog-font-scale'), format: (v) => `${v ?? 1}x` },

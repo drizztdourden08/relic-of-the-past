@@ -149,5 +149,16 @@
   "dialog-texture-density.description": "Hur tätt cellerna ligger.",
   "dialog-texture-scatter.label": "Spridning",
   "dialog-texture-scatter.description": "Hur långt celler avviker från rutnätet; vid noll ligger de på rad.",
-  "screen.title": "HUD"
+  "screen.title": "HUD",
+  "section.hud-language.title": "Språk",
+  "lang-menu-screens.label": "Filvalsskärmar",
+  "lang-menu-screens.description": "Filval, namninmatning, kopiering och radering på språket. Av visar USA-grafiken.",
+  "ja-file-select-style.label": "Japansk filvalsstil",
+  "ja-file-select-style.description": "Filvalsskärmen använder den japanska kassettlayouten. Texten följer fortfarande språket. Kräver en japansk ROM.",
+  "lang-pause-words.label": "Ord i HUD och paus",
+  "lang-pause-words.description": "Orden i pausmenyn, rutornas rubriker och etiketten ovanför hjärtana. Av visar USA-grafiken.",
+  "lang-map-labels.label": "Kartetiketter",
+  "lang-map-labels.description": "Etiketter på dungeonkartan och våningarna på språket. Av visar USA-grafiken.",
+  "lang-ending-credits.label": "Slut och eftertexter",
+  "lang-ending-credits.description": "Bildtexter i slutet och eftertexter på språket. Av visar USA-grafiken."
 }

@@ -198,5 +198,13 @@
   "controls.function.cheatMaxHealth": "Subir la vida máxima",
   "controls.function.cheatIgnoreCollision": "Ignorar restricción de movimiento/colisión",
   "controls.function.cheatKillEnemies": "Matar a todos los enemigos",
-  "controls.function.cheatRestoreMagic": "Restaurar toda la magia"
+  "controls.function.cheatRestoreMagic": "Restaurar toda la magia",
+  "feature.langMenuScreens.label": "Pantallas de selección de archivo",
+  "feature.langMenuScreens.message": "Selección de archivo, nombre, copia y borrado en el idioma. Desactivado muestra los gráficos de EE. UU.",
+  "feature.langPauseWords.label": "Palabras del HUD y la pausa",
+  "feature.langPauseWords.message": "Las palabras del menú de pausa, los títulos de los cuadros y la etiqueta sobre los corazones. Desactivado muestra los gráficos de EE. UU.",
+  "feature.langMapLabels.label": "Etiquetas de mapas",
+  "feature.langMapLabels.message": "Etiquetas del mapa de la mazmorra y de las plantas en el idioma. Desactivado muestra los gráficos de EE. UU.",
+  "feature.langEndingCredits.label": "Final y créditos",
+  "feature.langEndingCredits.message": "Textos del final y créditos en el idioma. Desactivado muestra los gráficos de EE. UU."
 }

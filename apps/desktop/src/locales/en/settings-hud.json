@@ -149,5 +149,16 @@
   "dialog-texture-density.description": "How close the cells sit.",
   "dialog-texture-scatter.label": "Scatter",
   "dialog-texture-scatter.description": "How far cells stray from the grid; at zero they line up.",
-  "screen.title": "HUD"
+  "screen.title": "HUD",
+  "section.hud-language.title": "Language",
+  "lang-menu-screens.label": "File Select Screens",
+  "lang-menu-screens.description": "File select, name entry, copy and erase screens in the language. Off shows the US graphics.",
+  "ja-file-select-style.label": "Japanese file select style",
+  "ja-file-select-style.description": "The file select screen uses the Japanese cartridge layout. Text still follows the language. Needs a Japanese ROM.",
+  "lang-pause-words.label": "HUD and Pause Words",
+  "lang-pause-words.description": "The pause menu words, box headers and the label above the hearts. Off shows the US ones.",
+  "lang-map-labels.label": "Map Labels",
+  "lang-map-labels.description": "Dungeon map and floor labels in the language. Off shows the US graphics.",
+  "lang-ending-credits.label": "Ending and Credits",
+  "lang-ending-credits.description": "Ending captions and credits in the language. Off shows the US graphics."
 }

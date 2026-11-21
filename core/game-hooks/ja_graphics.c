@@ -45,7 +45,9 @@ static uint32 SheetOption(int kind, int index) {
 }
 
 uint32 GameHook_ParityMask(int word) {
-  return word == 2 ? kJaGfx_Title | kJaGfx_Intro | kJaGfx_Hud | kJaGfx_Copyright | kJaGfx_FileSelect : 0;
+  return word == 2 ? kJaGfx_Title | kJaGfx_Intro | kJaGfx_Hud | kJaGfx_Copyright | kJaGfx_FileSelect | kLangGfx_Menus |
+                         kLangGfx_Pause | kLangGfx_Maps | kLangGfx_Ending
+                   : 0;
 }
 
 enum { kStyleBits = kJaGfx_FileSelect, kTitleBits = kJaGfx_Title | kJaGfx_Intro | kJaGfx_Copyright };
@@ -111,9 +113,9 @@ static const uint8 *Taken(const Blob *blob, uint32 *size) {
 // The HUD sheets differ from the US ones only in their glyphs (kana where the US sheets hold letters),
 // and the pause words are text, which follows the profile's language. So they are drawn for every
 // Japanese set, whatever the option says, and only with the pack's own words for them; any other set
-// keeps the US sheets.
+// keeps the US sheets. Gate: kLangGfx_Pause.
 static bool HudPackDrawn(void) {
-  if (SelectLayout_OfSet() != kSelectLayout_Ja) return false;
+  if (!LanguageScreens_PieceOn(kLangGfx_Pause) || SelectLayout_OfSet() != kSelectLayout_Ja) return false;
   for (int i = 0; i < kHudSheetCount; i++)
     if (g_sheets[kSprSheetKind][kHudSheets[i]].data == NULL) return false;
   for (int i = 0; i < kHudTextCount; i++)

@@ -56,5 +56,6 @@
   "sprite.title": "Spieler-Sprite",
   "sprite.original": "Original",
   "sprite.hint": "Verwalte Sprites unter Daten > Charakter-Studio. Wirkt sofort.",
-  "sprite.loading": "Sprites werden geladen..."
+  "sprite.loading": "Sprites werden geladen...",
+  "disabled.language-graphics": "Benötigt eine importierte ROM in dieser Sprache"
 }

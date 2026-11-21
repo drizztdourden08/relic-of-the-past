@@ -149,5 +149,16 @@
   "dialog-texture-density.description": "Quanto sono vicine le celle.",
   "dialog-texture-scatter.label": "Dispersione",
   "dialog-texture-scatter.description": "Quanto le celle si discostano dalla griglia; a zero sono allineate.",
-  "screen.title": "HUD"
+  "screen.title": "HUD",
+  "section.hud-language.title": "Lingua",
+  "lang-menu-screens.label": "Schermate di selezione file",
+  "lang-menu-screens.description": "Selezione file, inserimento nome, copia e cancellazione nella lingua. Se disattivato, mostra la grafica US.",
+  "ja-file-select-style.label": "Stile selezione file giapponese",
+  "ja-file-select-style.description": "La schermata di selezione file usa il layout della cartuccia giapponese. Il testo segue comunque la lingua. Richiede una ROM giapponese.",
+  "lang-pause-words.label": "Parole di HUD e pausa",
+  "lang-pause-words.description": "Le parole del menu di pausa, i titoli dei riquadri e l'etichetta sopra i cuori. Se disattivato, mostra la grafica US.",
+  "lang-map-labels.label": "Etichette delle mappe",
+  "lang-map-labels.description": "Etichette della mappa del dungeon e dei piani nella lingua. Se disattivato, mostra la grafica US.",
+  "lang-ending-credits.label": "Finale e titoli di coda",
+  "lang-ending-credits.description": "Didascalie del finale e titoli di coda nella lingua. Se disattivato, mostra la grafica US."
 }

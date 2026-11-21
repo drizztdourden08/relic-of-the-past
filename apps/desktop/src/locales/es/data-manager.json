@@ -237,7 +237,6 @@
   "settings-sections.label.hud-style": "Estilo del HUD",
   "settings-sections.label.item-sheen": "Brillo de objetos",
   "settings-sections.label.ja-file-select-style": "Estilo japonés de selección de archivo",
-  "settings-sections.label.language-screens": "Pantallas según el idioma",
   "settings-sections.label.linear-filtering": "Filtrado lineal",
   "settings-sections.label.link-sprite": "Sprite de Link",
   "settings-sections.label.map-on-select": "Mapa con Select",
@@ -372,5 +371,9 @@
   "settings-search.extra-dungeon.label": "Mazmorra extra",
   "settings-search.extra-dungeon.description": "La mazmorra opcional posterior al final del segundo cartucho",
   "settings-search.gba-tracker.label": "Seguimiento de avance GBA",
-  "settings-search.gba-tracker.description": "Cuánto ha avanzado cada diferencia de Game Boy Advance"
+  "settings-search.gba-tracker.description": "Cuánto ha avanzado cada diferencia de Game Boy Advance",
+  "settings-sections.label.lang-menu-screens": "Pantallas de selección de archivo",
+  "settings-sections.label.lang-pause-words": "Palabras del HUD y la pausa",
+  "settings-sections.label.lang-map-labels": "Etiquetas de mapas",
+  "settings-sections.label.lang-ending-credits": "Final y créditos"
 }

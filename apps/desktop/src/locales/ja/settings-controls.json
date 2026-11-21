@@ -56,5 +56,6 @@
   "sprite.title": "プレイヤースプライト",
   "sprite.original": "オリジナル",
   "sprite.hint": "スプライトはデータ > キャラクタースタジオで管理します。すぐに反映されます。",
-  "sprite.loading": "スプライトを読み込み中..."
+  "sprite.loading": "スプライトを読み込み中...",
+  "disabled.language-graphics": "この言語のROMのインポートが必要です"
 }

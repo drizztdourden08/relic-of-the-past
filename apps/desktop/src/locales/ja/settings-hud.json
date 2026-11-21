@@ -149,5 +149,16 @@
   "dialog-texture-density.description": "セルの間隔の近さです。",
   "dialog-texture-scatter.label": "ばらつき",
   "dialog-texture-scatter.description": "セルがグリッドからどれだけ外れるか。0なら整列します。",
-  "screen.title": "ステータス表示"
+  "screen.title": "ステータス表示",
+  "section.hud-language.title": "言語",
+  "lang-menu-screens.label": "ファイル選択画面",
+  "lang-menu-screens.description": "ファイル選択、名前入力、コピー、消去の画面が言語に合います。オフにすると米国版の画像になります。",
+  "ja-file-select-style.label": "日本版のファイル選択スタイル",
+  "ja-file-select-style.description": "ファイル選択画面で日本版カートリッジのレイアウトを使います。テキストは引き続き言語に従います。日本版ROMが必要です。",
+  "lang-pause-words.label": "HUDとポーズの文字",
+  "lang-pause-words.description": "ポーズメニューの文字、枠の見出し、ハートの上の表示が言語に合います。オフにすると米国版の画像になります。",
+  "lang-map-labels.label": "マップの表示",
+  "lang-map-labels.description": "ダンジョンマップと階数の表示が言語に合います。オフにすると米国版の画像になります。",
+  "lang-ending-credits.label": "エンディングとスタッフロール",
+  "lang-ending-credits.description": "エンディングの字幕とスタッフロールが言語に合います。オフにすると米国版の画像になります。"
 }

@@ -56,5 +56,6 @@
   "sprite.title": "Spelersprite",
   "sprite.original": "Origineel",
   "sprite.hint": "Beheer sprites in Gegevens > Karakterstudio. Geldt direct.",
-  "sprite.loading": "Sprites laden..."
+  "sprite.loading": "Sprites laden...",
+  "disabled.language-graphics": "Vereist een geïmporteerde ROM in deze taal"
 }

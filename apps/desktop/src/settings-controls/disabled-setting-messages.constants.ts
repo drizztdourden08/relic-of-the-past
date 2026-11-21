@@ -11,6 +11,7 @@ const DISABLED_SETTING_MESSAGES: Record<string, Message> = {
   developerTools: msg('settings-controls:disabled.developer-tools'),
   onlineOnly: msg('settings-controls:disabled.online-only'),
   japaneseGraphics: msg('settings-controls:disabled.japanese-graphics'),
+  languageGraphics: msg('settings-controls:disabled.language-graphics'),
   mobileOnly: msg('settings-controls:disabled.mobile-only'),
 };
 

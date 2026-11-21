@@ -237,7 +237,6 @@
   "settings-sections.label.hud-style": "HUD-Stil",
   "settings-sections.label.item-sheen": "Gegenstandsglanz",
   "settings-sections.label.ja-file-select-style": "Japanischer Dateiauswahlstil",
-  "settings-sections.label.language-screens": "Bildschirme folgen der Sprache",
   "settings-sections.label.linear-filtering": "Lineare Filterung",
   "settings-sections.label.link-sprite": "Link-Sprite",
   "settings-sections.label.map-on-select": "Karte mit Select",
@@ -372,5 +371,9 @@
   "settings-search.extra-dungeon.label": "Zusatz-Dungeon",
   "settings-search.extra-dungeon.description": "Der optionale Dungeon nach dem Spielende aus dem zweiten Modul",
   "settings-search.gba-tracker.label": "GBA-Fortschrittstracker",
-  "settings-search.gba-tracker.description": "Wie weit jeder Unterschied der Game Boy Advance Version ist"
+  "settings-search.gba-tracker.description": "Wie weit jeder Unterschied der Game Boy Advance Version ist",
+  "settings-sections.label.lang-menu-screens": "Dateiauswahl-Bildschirme",
+  "settings-sections.label.lang-pause-words": "HUD- und Pausenwörter",
+  "settings-sections.label.lang-map-labels": "Kartenbeschriftungen",
+  "settings-sections.label.lang-ending-credits": "Abspann und Credits"
 }

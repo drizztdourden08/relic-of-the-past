@@ -3,11 +3,22 @@
 // dungeon map, the ending and menu tilemaps, and the sheets and font the tilemap screens draw with
 // (language_screens.c, language_screens_assets.c). Included from game_hooks.h.
 //
-// Every table is read through LANG_PICK: the host's copy while kFeatures2_LanguageScreens is on and
-// the host supplied that table, the vendored table otherwise. A table the host never sent therefore
-// falls back to the original, and the gate off leaves every read on the original.
+// Every table is read through LANG_PICK: the host's copy while the table's piece (kLangGfx_*, below) is
+// live and the host supplied that table, the vendored table otherwise. A table the host never sent
+// therefore falls back to the original, and a piece off leaves its reads on the original.
 #pragma once
 #include "src/types.h"
+
+// The per-piece gates, bits of gate word 2 (enhanced_features2) below the Japanese graphics bits
+// (ja_graphics.h). A piece is live only while LanguageScreens_On() (kFeatures2_LanguageScreens, derived
+// by the host: on when any piece is on) and its own bit are both set. Every reader of a piece's tables,
+// assets, sheets, patches and fonts goes through LanguageScreens_PieceOn.
+enum {
+  kLangGfx_Menus = 1u << 14,   // file select, name entry, copy and erase: stripes, name grid, copy columns and digits, menu tilemaps (assets 99-104), file-select font, Japanese menu layout, background sheets
+  kLangGfx_Pause = 1u << 15,   // pause menu words (every kLangTbl_Hud* table), pause box headers, the HUD label above the hearts (kLangTbl_HudLifeRow), the HUD sheets 105-107, the Japanese pause words
+  kLangGfx_Maps = 1u << 17,    // dungeon map labels (kLangTbl_DungMapTab23), floor labels (kLangTbl_FloorLabels) and the floor letter sheet
+  kLangGfx_Ending = 1u << 18,  // ending captions and credits (assets 74-78, credits digits, scroll Y, line offsets), the credits font, the ending word sheet
+};
 
 // One id per hook-owned table. The byte length of each is the vendored table's own (a size-checked
 // copy is what the setter keeps), except the select-file stripes and the name grid, which keep the
@@ -73,8 +84,8 @@ int LanguageScreens_Len(int id, int orig_len);
 // screen data (asset pointers, sheet overrides, font) for the current gate.
 void GameHook_LanguageScreens(const char *language);
 
-// Called from the gate-word side effects when features2 changes, so a live toggle swaps the asset
-// pointers and sheets in or out at once.
+// Called from the gate-word side effects whenever gate word 2 changes (the derived gate or any kLangGfx_*
+// bit), so a live toggle of a piece swaps its asset pointers and sheets in or out at once.
 void GameHook_LanguageScreensGate(bool on);
 
 // The kDialogueFont index TransferFontToVRAM uploads: 0 (the US font) with the gate off.
@@ -91,6 +102,10 @@ bool GameHook_TransferTilemapFont(uint16 *dst);
 
 // Shared with language_screens_assets.c and language_screens_font.c.
 bool LanguageScreens_On(void);
+// Whether |piece| (one kLangGfx_* bit) is live: LanguageScreens_On() and its own bit.
+bool LanguageScreens_PieceOn(uint32 piece);
+// The piece (kLangGfx_*) that owns language table |id| (kLangTbl_*).
+uint32 LanguageScreens_PieceOfTable(int id);
 void LanguageScreensAssets_Apply(bool on);
 bool LanguageScreensAssets_Set(int id, const void *data, int len);
 // The host's blob for asset slot |slot| (kLangAsset_* order) and its byte size, NULL when none was sent.

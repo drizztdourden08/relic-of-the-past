@@ -198,5 +198,13 @@
   "controls.function.cheatMaxHealth": "最大体力を上げる",
   "controls.function.cheatIgnoreCollision": "移動制限と当たり判定を無視",
   "controls.function.cheatKillEnemies": "すべての敵を倒す",
-  "controls.function.cheatRestoreMagic": "魔力を全回復"
+  "controls.function.cheatRestoreMagic": "魔力を全回復",
+  "feature.langMenuScreens.label": "ファイル選択画面",
+  "feature.langMenuScreens.message": "ファイル選択、名前入力、コピー、消去の画面が言語に合います。オフにすると米国版の画像になります。",
+  "feature.langPauseWords.label": "HUDとポーズの文字",
+  "feature.langPauseWords.message": "ポーズメニューの文字、枠の見出し、ハートの上の表示が言語に合います。オフにすると米国版の画像になります。",
+  "feature.langMapLabels.label": "マップの表示",
+  "feature.langMapLabels.message": "ダンジョンマップと階数の表示が言語に合います。オフにすると米国版の画像になります。",
+  "feature.langEndingCredits.label": "エンディングとスタッフロール",
+  "feature.langEndingCredits.message": "エンディングの字幕とスタッフロールが言語に合います。オフにすると米国版の画像になります。"
 }

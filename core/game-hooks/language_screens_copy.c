@@ -3,7 +3,7 @@
 // column further left than the US ones, so the cartridge's own code sets the fairy, blanks the chosen
 // file's rows and writes the target file numbers in its own columns and with its own font's digits.
 // The values come from the host (kLangTbl_CopyScreen, read from the cartridge's code).
-// Gate: kFeatures2_LanguageScreens. Off, or with no table, the vanilla values stay.
+// Gate: kLangGfx_Menus (kLangTbl_CopyScreen, through LANG_PICK). Off, or with no table, the vanilla values stay.
 #include "game_hooks_internal.h"
 
 enum {

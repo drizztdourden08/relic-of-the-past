@@ -149,5 +149,16 @@
   "dialog-texture-density.description": "Wie dicht die Zellen sitzen.",
   "dialog-texture-scatter.label": "Streuung",
   "dialog-texture-scatter.description": "Wie weit Zellen vom Raster abweichen; bei null liegen sie in Reihe.",
-  "screen.title": "HUD"
+  "screen.title": "HUD",
+  "section.hud-language.title": "Sprache",
+  "lang-menu-screens.label": "Dateiauswahl-Bildschirme",
+  "lang-menu-screens.description": "Dateiauswahl, Namenseingabe, Kopieren und Löschen in der Sprache. Aus zeigt die US-Grafiken.",
+  "ja-file-select-style.label": "Japanischer Dateiauswahlstil",
+  "ja-file-select-style.description": "Die Dateiauswahl nutzt das Layout des japanischen Moduls. Der Text folgt weiter der Sprache. Benötigt eine japanische ROM.",
+  "lang-pause-words.label": "HUD- und Pausenwörter",
+  "lang-pause-words.description": "Die Wörter im Pausenmenü, die Kastentitel und die Beschriftung über den Herzen. Aus zeigt die US-Grafiken.",
+  "lang-map-labels.label": "Kartenbeschriftungen",
+  "lang-map-labels.description": "Beschriftungen der Dungeonkarte und der Etagen in der Sprache. Aus zeigt die US-Grafiken.",
+  "lang-ending-credits.label": "Abspann und Credits",
+  "lang-ending-credits.description": "Abspanntexte und Credits in der Sprache. Aus zeigt die US-Grafiken."
 }

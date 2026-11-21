@@ -149,5 +149,16 @@
   "dialog-texture-density.description": "Quão próximas ficam as células.",
   "dialog-texture-scatter.label": "Dispersão",
   "dialog-texture-scatter.description": "Quanto as células se afastam da grade; em zero ficam alinhadas.",
-  "screen.title": "HUD"
+  "screen.title": "HUD",
+  "section.hud-language.title": "Idioma",
+  "lang-menu-screens.label": "Telas de seleção de arquivo",
+  "lang-menu-screens.description": "Seleção de arquivo, nome, cópia e apagamento no idioma. Desativado mostra os gráficos dos EUA.",
+  "ja-file-select-style.label": "Estilo japonês de seleção de arquivo",
+  "ja-file-select-style.description": "A tela de seleção de arquivo usa o layout do cartucho japonês. O texto ainda segue o idioma. Requer uma ROM japonesa.",
+  "lang-pause-words.label": "Palavras do HUD e da pausa",
+  "lang-pause-words.description": "As palavras do menu de pausa, os títulos das caixas e o rótulo acima dos corações. Desativado mostra os gráficos dos EUA.",
+  "lang-map-labels.label": "Rótulos de mapas",
+  "lang-map-labels.description": "Rótulos do mapa da masmorra e dos andares no idioma. Desativado mostra os gráficos dos EUA.",
+  "lang-ending-credits.label": "Final e créditos",
+  "lang-ending-credits.description": "Legendas do final e créditos no idioma. Desativado mostra os gráficos dos EUA."
 }

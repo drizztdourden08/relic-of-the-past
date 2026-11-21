@@ -4,7 +4,7 @@ import { BUNDLE_FIXES, controlSchemeOf, hostDrawnHud } from '@rotp/features';
 import { effectiveFeatureIds } from './live-settings-gate';
 import { rendersWide } from './ratio-capability';
 import { offscreenEnemyMode } from './settings';
-import { BUG_FIX_WORD_FEATURES2, FEATURES2_FLAGS, JA_GRAPHICS_KEYS } from './live-settings-feature-words.constants';
+import { BUG_FIX_WORD_FEATURES2, FEATURES2_FLAGS, JA_GRAPHICS_KEYS, LANG_GRAPHICS_KEYS } from './live-settings-feature-words.constants';
 
 const modernControlsWanted = (s: GameSettings): boolean =>
   controlSchemeOf(s) === 'modern' && !s.vanillaSafe;
@@ -32,8 +32,8 @@ const wideViewBits = (s: GameSettings, effective: Set<string>): number => {
   return bits;
 };
 
-const jaGraphicsBits = (effective: Set<string>): number =>
-  JA_GRAPHICS_KEYS.reduce((bits, key) => (effective.has(key) ? bits | FEATURES2_FLAGS[key] : bits), 0);
+const graphicsBits = (effective: Set<string>): number =>
+  [...JA_GRAPHICS_KEYS, ...LANG_GRAPHICS_KEYS].reduce((bits, key) => (effective.has(key) ? bits | FEATURES2_FLAGS[key] : bits), 0);
 
 const buildFeatureWords = (s: GameSettings): { features1: number; features2: number } => {
   const effective = effectiveFeatureIds(s);
@@ -45,7 +45,7 @@ const buildFeatureWords = (s: GameSettings): { features1: number; features2: num
   if (s.allowDiving || s.extraDungeon) f2 |= FEATURES2_FLAGS.allowDiving;
   if (effective.has('extendedLetters')) f2 |= FEATURES2_FLAGS.extendedLetters;
   if (effective.has('languageScreens')) f2 |= FEATURES2_FLAGS.languageScreens;
-  return { features1, features2: f2 | jaGraphicsBits(effective) };
+  return { features1, features2: f2 | graphicsBits(effective) };
 };
 
 export { buildFeatureWords };

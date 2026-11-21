@@ -56,5 +56,6 @@
   "sprite.title": "Sprite do jogador",
   "sprite.original": "Original",
   "sprite.hint": "Gerencie sprites em Dados > Estúdio de personagens. Vale na hora.",
-  "sprite.loading": "Carregando sprites..."
+  "sprite.loading": "Carregando sprites...",
+  "disabled.language-graphics": "Requer uma ROM neste idioma importada"
 }

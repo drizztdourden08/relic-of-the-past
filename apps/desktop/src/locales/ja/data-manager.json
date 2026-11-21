@@ -237,7 +237,6 @@
   "settings-sections.label.hud-style": "ステータス表示スタイル",
   "settings-sections.label.item-sheen": "アイテムの輝き",
   "settings-sections.label.ja-file-select-style": "日本版のファイル選択スタイル",
-  "settings-sections.label.language-screens": "画面も言語に合わせる",
   "settings-sections.label.linear-filtering": "リニアフィルタリング",
   "settings-sections.label.link-sprite": "リンクのスプライト",
   "settings-sections.label.map-on-select": "セレクトでマップ",
@@ -372,5 +371,9 @@
   "settings-search.extra-dungeon.label": "エクストラダンジョン",
   "settings-search.extra-dungeon.description": "2本目のカートリッジに入っている、クリア後のオプションダンジョン",
   "settings-search.gba-tracker.label": "GBA進行トラッカー",
-  "settings-search.gba-tracker.description": "ゲームボーイアドバンス版の各違いの進み具合"
+  "settings-search.gba-tracker.description": "ゲームボーイアドバンス版の各違いの進み具合",
+  "settings-sections.label.lang-menu-screens": "ファイル選択画面",
+  "settings-sections.label.lang-pause-words": "HUDとポーズの文字",
+  "settings-sections.label.lang-map-labels": "マップの表示",
+  "settings-sections.label.lang-ending-credits": "エンディングとスタッフロール"
 }

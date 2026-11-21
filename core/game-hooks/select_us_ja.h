@@ -8,7 +8,7 @@
 // the Japanese line the set's own screens draw (read at runtime from its tilemaps and stripes, extracted
 // from the user's Japanese cartridge), placed at the US label's spot and pulled in to fit the US plate,
 // and every other tile is moved onto the Japanese tilemap font (names, digits, blanks, hearts).
-// Gate: kFeatures2_LanguageScreens with a ready Japanese set and the US layout active on the screen.
+// Gate: kLangGfx_Menus with a ready Japanese set and the US layout active on the screen.
 #pragma once
 #include "src/types.h"
 

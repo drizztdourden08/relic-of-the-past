@@ -198,5 +198,13 @@
   "controls.function.cheatMaxHealth": "Raise Maximum Health",
   "controls.function.cheatIgnoreCollision": "Ignore movement restriction/collision",
   "controls.function.cheatKillEnemies": "Kill All Enemies",
-  "controls.function.cheatRestoreMagic": "Restore All Magic"
+  "controls.function.cheatRestoreMagic": "Restore All Magic",
+  "feature.langMenuScreens.label": "File Select Screens",
+  "feature.langMenuScreens.message": "File select, name entry, copy and erase screens in the language. Off shows the US graphics.",
+  "feature.langPauseWords.label": "HUD and Pause Words",
+  "feature.langPauseWords.message": "The pause menu words, box headers and the label above the hearts. Off shows the US ones.",
+  "feature.langMapLabels.label": "Map Labels",
+  "feature.langMapLabels.message": "Dungeon map and floor labels in the language. Off shows the US graphics.",
+  "feature.langEndingCredits.label": "Ending and Credits",
+  "feature.langEndingCredits.message": "Ending captions and credits in the language. Off shows the US graphics."
 }

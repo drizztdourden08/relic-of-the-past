@@ -149,5 +149,16 @@
   "dialog-texture-density.description": "Jak blisko siebie leżą komórki.",
   "dialog-texture-scatter.label": "Rozrzut",
   "dialog-texture-scatter.description": "Jak daleko komórki odchodzą od siatki; przy zerze są w jednej linii.",
-  "screen.title": "HUD"
+  "screen.title": "HUD",
+  "section.hud-language.title": "Język",
+  "lang-menu-screens.label": "Ekrany wyboru pliku",
+  "lang-menu-screens.description": "Wybór pliku, wpisywanie imienia, kopiowanie i usuwanie w danym języku. Wyłączone pokazuje grafiki US.",
+  "ja-file-select-style.label": "Styl japońskiego wyboru pliku",
+  "ja-file-select-style.description": "Ekran wyboru pliku używa układu japońskiego cartridge'a. Tekst nadal podąża za językiem. Wymaga japońskiego ROM-u.",
+  "lang-pause-words.label": "Słowa w HUD i pauzie",
+  "lang-pause-words.description": "Słowa w menu pauzy, nagłówki okien i podpis nad sercami. Wyłączone pokazuje grafiki US.",
+  "lang-map-labels.label": "Podpisy map",
+  "lang-map-labels.description": "Podpisy map lochów i pięter w danym języku. Wyłączone pokazuje grafiki US.",
+  "lang-ending-credits.label": "Zakończenie i napisy końcowe",
+  "lang-ending-credits.description": "Podpisy zakończenia i napisy końcowe w danym języku. Wyłączone pokazuje grafiki US."
 }

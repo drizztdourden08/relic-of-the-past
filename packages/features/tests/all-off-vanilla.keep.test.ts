@@ -43,6 +43,15 @@ describe('all-off == vanilla (bridge boundary)', { tags: ['critical'] }, () => {
     expect(features2).toBe(0);
   });
 
+  it('the four language graphics bits reach word 2 and derive the languageScreens bit', () => {
+    const one = buildFeatureWords({ ...allOff, langMenuScreens: true }).features2;
+    expect(one >>> 0).toBe(((1 << 14) | (1 << 31)) >>> 0);
+    const all = buildFeatureWords({
+      ...allOff, langMenuScreens: true, langPauseWords: true, langMapLabels: true, langEndingCredits: true,
+    }).features2;
+    expect(all >>> 0).toBe((0x6c000 | (1 << 31)) >>> 0);
+  });
+
   it('does not request the 240-line render budget unless extended rendering is on', () => {
     const HEIGHT240 = 4;
     expect(buildPpuFlags({ ...allOff, extendY: true, extendedRendering: false }) & HEIGHT240).toBe(0);

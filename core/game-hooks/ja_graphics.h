@@ -14,8 +14,9 @@
 //   kJaGfx_Copyright   the tile patch on sprite sheet 8 that draws the Japanese copyright line.
 //   kJaGfx_Hud         never set: the two HUD sprite sheets (105, 106) carry the pause words, which a
 //                      Japanese set draws with the pack (HudPackDrawn) and no other set does.
-// The bits sit at 19 to 23, below kFeatures2_HandAuthoredFloor. gen-bundle-flags.mjs refuses to allocate
-// a generated word-2 bit at 19 or above, so the generated bug-fix flags never reach them.
+// The bits sit at 19 to 23, below kFeatures2_HandAuthoredFloor, above the language graphics bits 14 to 18
+// (kLangGfx_*, language_screens.h). gen-bundle-flags.mjs refuses to allocate a generated word-2 bit at 14
+// or above, so the generated bug-fix flags never reach either set.
 #pragma once
 #include "src/types.h"
 

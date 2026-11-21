@@ -17,6 +17,10 @@ interface HudSettings {
   titleMotion: 'still' | 'drifting';
   titleFollowsProgress: boolean;
   titleSword: TitleSword;
+  langMenuScreens: boolean;
+  langPauseWords: boolean;
+  langMapLabels: boolean;
+  langEndingCredits: boolean;
 }
 
 export type { HudSettings };

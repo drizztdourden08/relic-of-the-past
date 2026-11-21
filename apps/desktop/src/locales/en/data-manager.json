@@ -237,7 +237,6 @@
   "settings-sections.label.hud-style": "HUD style",
   "settings-sections.label.item-sheen": "Item sheen",
   "settings-sections.label.ja-file-select-style": "Japanese file select style",
-  "settings-sections.label.language-screens": "Screens follow the language",
   "settings-sections.label.linear-filtering": "Linear filtering",
   "settings-sections.label.link-sprite": "Link sprite",
   "settings-sections.label.map-on-select": "Map on Select",
@@ -372,5 +371,9 @@
   "settings-search.extra-dungeon.label": "Extra Dungeon",
   "settings-search.extra-dungeon.description": "The optional post-game dungeon from the second cartridge",
   "settings-search.gba-tracker.label": "GBA advancement tracker",
-  "settings-search.gba-tracker.description": "How far each Game Boy Advance difference has got"
+  "settings-search.gba-tracker.description": "How far each Game Boy Advance difference has got",
+  "settings-sections.label.lang-menu-screens": "File Select Screens",
+  "settings-sections.label.lang-pause-words": "HUD and Pause Words",
+  "settings-sections.label.lang-map-labels": "Map Labels",
+  "settings-sections.label.lang-ending-credits": "Ending and Credits"
 }

@@ -198,5 +198,13 @@
   "controls.function.cheatMaxHealth": "Aumenta i cuori massimi",
   "controls.function.cheatIgnoreCollision": "Ignora limiti di movimento e collisioni",
   "controls.function.cheatKillEnemies": "Elimina tutti i nemici",
-  "controls.function.cheatRestoreMagic": "Ripristina tutta la magia"
+  "controls.function.cheatRestoreMagic": "Ripristina tutta la magia",
+  "feature.langMenuScreens.label": "Schermate di selezione file",
+  "feature.langMenuScreens.message": "Selezione file, inserimento nome, copia e cancellazione nella lingua. Se disattivato, mostra la grafica US.",
+  "feature.langPauseWords.label": "Parole di HUD e pausa",
+  "feature.langPauseWords.message": "Le parole del menu di pausa, i titoli dei riquadri e l'etichetta sopra i cuori. Se disattivato, mostra la grafica US.",
+  "feature.langMapLabels.label": "Etichette delle mappe",
+  "feature.langMapLabels.message": "Etichette della mappa del dungeon e dei piani nella lingua. Se disattivato, mostra la grafica US.",
+  "feature.langEndingCredits.label": "Finale e titoli di coda",
+  "feature.langEndingCredits.message": "Didascalie del finale e titoli di coda nella lingua. Se disattivato, mostra la grafica US."
 }

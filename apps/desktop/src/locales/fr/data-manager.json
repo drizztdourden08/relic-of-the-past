@@ -237,7 +237,6 @@
   "settings-sections.label.hud-style": "Style du HUD",
   "settings-sections.label.item-sheen": "Reflet des objets",
   "settings-sections.label.ja-file-select-style": "Style de sélection de fichier japonais",
-  "settings-sections.label.language-screens": "Écrans suivant la langue",
   "settings-sections.label.linear-filtering": "Filtrage linéaire",
   "settings-sections.label.link-sprite": "Sprite de Link",
   "settings-sections.label.map-on-select": "Carte avec Select",
@@ -372,5 +371,9 @@
   "settings-search.extra-dungeon.label": "Donjon supplémentaire",
   "settings-search.extra-dungeon.description": "Le donjon facultatif de fin de jeu issu de la seconde cartouche",
   "settings-search.gba-tracker.label": "Suivi d'avancement GBA",
-  "settings-search.gba-tracker.description": "Où en est chaque différence de la Game Boy Advance"
+  "settings-search.gba-tracker.description": "Où en est chaque différence de la Game Boy Advance",
+  "settings-sections.label.lang-menu-screens": "Écrans de sélection de fichier",
+  "settings-sections.label.lang-pause-words": "Mots du HUD et de la pause",
+  "settings-sections.label.lang-map-labels": "Libellés des cartes",
+  "settings-sections.label.lang-ending-credits": "Fin et générique"
 }
