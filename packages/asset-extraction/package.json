@@ -13,7 +13,7 @@
     "./package.json": "./package.json"
   },
   "dependencies": {
-    "@drizztdourden08/brock-core": "^0.122.0",
+    "@drizztdourden08/brock-core": "^0.123.0",
     "js-yaml": "^4.1.1",
     "pngjs": "catalog:"
   },
