@@ -36,7 +36,7 @@ const HudLayoutEditor = (props: HudLayoutEditorProps) => {
                 onRatioChange={setRatioId}
                 ground={EDITOR_GROUNDS.find((entry) => entry.file === ground) ?? null}
                 onGroundChange={setGround}
-                targetLabel={target ?? t('hud-editor:editor.target.nothing')}
+                targetLabel={target === layout.screen.id ? t('hud-editor:editor.target.screen') : target ?? t('hud-editor:editor.target.nothing')}
               />
 
               <Box className="hud-editor__body">

@@ -456,5 +456,9 @@
   "preset-bar.meta.built-in": "ingebouwd",
   "preset-bar.meta.custom": "aangepast",
   "editor-toolbar.text.into": "in {target}",
-  "outline-name.text.slots-out-of-range": "slot {slots} buiten bereik"
+  "outline-name.text.slots-out-of-range": "slot {slots} buiten bereik",
+  "editor.target.screen": "het scherm",
+  "outline.locked.repeat-child": "herhaald kind",
+  "outline.locked.case": "geval {n}",
+  "outline.locked.otherwise": "anders"
 }

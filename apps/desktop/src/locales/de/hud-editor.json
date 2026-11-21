@@ -456,5 +456,9 @@
   "preset-bar.meta.built-in": "integriert",
   "preset-bar.meta.custom": "benutzerdefiniert",
   "editor-toolbar.text.into": "in {target}",
-  "outline-name.text.slots-out-of-range": "Slot {slots} außerhalb des Bereichs"
+  "outline-name.text.slots-out-of-range": "Slot {slots} außerhalb des Bereichs",
+  "editor.target.screen": "den Bildschirm",
+  "outline.locked.repeat-child": "Wiederholtes Kind",
+  "outline.locked.case": "Fall {n}",
+  "outline.locked.otherwise": "sonst"
 }

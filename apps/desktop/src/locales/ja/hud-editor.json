@@ -456,5 +456,9 @@
   "preset-bar.meta.built-in": "内蔵",
   "preset-bar.meta.custom": "カスタム",
   "editor-toolbar.text.into": "{target} の中へ",
-  "outline-name.text.slots-out-of-range": "スロット {slots} は範囲外"
+  "outline-name.text.slots-out-of-range": "スロット {slots} は範囲外",
+  "editor.target.screen": "画面",
+  "outline.locked.repeat-child": "繰り返しの子",
+  "outline.locked.case": "ケース {n}",
+  "outline.locked.otherwise": "それ以外"
 }

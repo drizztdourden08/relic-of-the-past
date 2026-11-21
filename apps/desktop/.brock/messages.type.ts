@@ -2074,6 +2074,10 @@ declare module '@drizztdourden08/brock-core/augment' {
     'hud-editor:preset-bar.meta.custom': Record<never, never>;
     'hud-editor:editor-toolbar.text.into': { target: string | number };
     'hud-editor:outline-name.text.slots-out-of-range': { slots: string | number };
+    'hud-editor:editor.target.screen': Record<never, never>;
+    'hud-editor:outline.locked.repeat-child': Record<never, never>;
+    'hud-editor:outline.locked.case': { n: string | number };
+    'hud-editor:outline.locked.otherwise': Record<never, never>;
     'hud:preset.arrow-indicator.name': Record<never, never>;
     'hud:preset.bomb-indicator.name': Record<never, never>;
     'hud:preset.dpad-group.name': Record<never, never>;

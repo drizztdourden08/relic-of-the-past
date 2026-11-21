@@ -456,5 +456,9 @@
   "preset-bar.meta.built-in": "integrato",
   "preset-bar.meta.custom": "personalizzato",
   "editor-toolbar.text.into": "in {target}",
-  "outline-name.text.slots-out-of-range": "slot {slots} fuori intervallo"
+  "outline-name.text.slots-out-of-range": "slot {slots} fuori intervallo",
+  "editor.target.screen": "lo schermo",
+  "outline.locked.repeat-child": "figlio ripetuto",
+  "outline.locked.case": "caso {n}",
+  "outline.locked.otherwise": "altrimenti"
 }

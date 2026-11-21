@@ -1,4 +1,5 @@
 /* @layer renderer-components @kind types */
+import type { Text } from '@drizztdourden08/brock-core/i18n';
 import type { KeyboardEvent as ReactKeyboardEvent, PointerEvent as ReactPointerEvent } from 'react';
 import type { DropZone } from '@app/hud-layout-editing/drop-intent';
 
@@ -8,7 +9,7 @@ interface OutlineRowProps {
   depth: number;
   kind: 'container' | 'element';
   cell?: string;
-  locked?: string;
+  locked?: Text;
   isScreen?: boolean;
   hasChildren: boolean;
   collapsed: boolean;

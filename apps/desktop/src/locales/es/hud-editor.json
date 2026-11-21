@@ -456,5 +456,9 @@
   "preset-bar.meta.built-in": "integrado",
   "preset-bar.meta.custom": "personalizado",
   "editor-toolbar.text.into": "en {target}",
-  "outline-name.text.slots-out-of-range": "ranura {slots} fuera de rango"
+  "outline-name.text.slots-out-of-range": "ranura {slots} fuera de rango",
+  "editor.target.screen": "la pantalla",
+  "outline.locked.repeat-child": "hijo repetido",
+  "outline.locked.case": "caso {n}",
+  "outline.locked.otherwise": "si no"
 }

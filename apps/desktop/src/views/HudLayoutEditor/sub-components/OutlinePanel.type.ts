@@ -1,4 +1,5 @@
 /* @layer renderer-components @kind types */
+import type { Text } from '@drizztdourden08/brock-core/i18n';
 import type { DropIntent, DropZone } from '@app/hud-layout-editing/drop-intent';
 import type { HudLayout, HudNode } from '@rotp/hud';
 
@@ -6,7 +7,7 @@ interface OutlineRowModel {
   node: HudNode;
   depth: number;
   cell?: string;
-  locked?: string;
+  locked?: Text;
   isScreen?: boolean;
   hasChildren: boolean;
   collapsed: boolean;
