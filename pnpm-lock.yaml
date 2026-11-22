@@ -161,13 +161,13 @@ importers:
         version: 0.123.0(@types/node@24.19.1)(eslint@10.4.1(jiti@2.7.0))(markdownlint-cli2@0.22.1)(stylelint@17.13.0(typescript@6.0.3))(typescript@6.0.3)(vitest@4.1.8(@opentelemetry/api@1.9.1)(@types/node@24.19.1)(jsdom@29.1.1(@noble/hashes@2.2.0))(vite@7.3.5(@types/node@24.19.1)(jiti@2.7.0)(tsx@4.23.12)(yaml@2.9.1)))
       '@drizztdourden08/brock-plugin-snes':
         specifier: 'catalog:'
-        version: 0.123.0(@drizztdourden08/tessera@0.132.0(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(typescript@6.0.3))(@types/node@24.19.1)(electron@42.4.0)(eslint@10.4.1(jiti@2.7.0))(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(stylelint@17.13.0(typescript@6.0.3))(typescript@6.0.3)(vitest@4.1.8(@opentelemetry/api@1.9.1)(@types/node@24.19.1)(jsdom@29.1.1(@noble/hashes@2.2.0))(vite@7.3.5(@types/node@24.19.1)(jiti@2.7.0)(tsx@4.23.12)(yaml@2.9.1)))(zustand@5.0.14(@types/react@19.2.17)(react@19.2.7)(use-sync-external-store@1.6.0(react@19.2.7)))
+        version: 0.123.0(@drizztdourden08/tessera@0.132.0(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(typescript@6.0.3))(@types/node@24.19.1)(electron@42.4.0)(eslint@10.4.1(jiti@2.7.0))(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(stylelint@17.13.0(typescript@6.0.3))(typescript@6.0.3)(vitest@4.1.8(@opentelemetry/api@1.9.1)(@types/node@24.19.1)(jsdom@29.1.1(@noble/hashes@2.2.0))(vite@7.3.5(@types/node@24.19.1)(jiti@2.7.0)(tsx@4.23.12)(yaml@2.9.1)))
       '@drizztdourden08/brock-thread':
         specifier: 'catalog:'
         version: 0.123.0(@types/node@24.19.1)(eslint@10.4.1(jiti@2.7.0))(stylelint@17.13.0(typescript@6.0.3))(typescript@6.0.3)(vitest@4.1.8(@opentelemetry/api@1.9.1)(@types/node@24.19.1)(jsdom@29.1.1(@noble/hashes@2.2.0))(vite@7.3.5(@types/node@24.19.1)(jiti@2.7.0)(tsx@4.23.12)(yaml@2.9.1)))
       '@drizztdourden08/standards':
-        specifier: ^0.15.0
-        version: 0.15.0(@types/node@24.19.1)(eslint@10.4.1(jiti@2.7.0))(stylelint@17.13.0(typescript@6.0.3))(typescript@6.0.3)(vitest@4.1.8(@opentelemetry/api@1.9.1)(@types/node@24.19.1)(jsdom@29.1.1(@noble/hashes@2.2.0))(vite@7.3.5(@types/node@24.19.1)(jiti@2.7.0)(tsx@4.23.12)(yaml@2.9.1)))
+        specifier: ^0.16.0
+        version: 0.16.0(@types/node@24.19.1)(eslint@10.4.1(jiti@2.7.0))(stylelint@17.13.0(typescript@6.0.3))(typescript@6.0.3)(vitest@4.1.8(@opentelemetry/api@1.9.1)(@types/node@24.19.1)(jsdom@29.1.1(@noble/hashes@2.2.0))(vite@7.3.5(@types/node@24.19.1)(jiti@2.7.0)(tsx@4.23.12)(yaml@2.9.1)))
       '@drizztdourden08/tessera':
         specifier: 'catalog:'
         version: 0.132.0(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(typescript@6.0.3)
@@ -1461,6 +1461,11 @@ packages:
       electron-builder: '>=26'
       electron-vite: '>=5'
       playwright-core: '>=1.40'
+    peerDependenciesMeta:
+      electron-builder:
+        optional: true
+      playwright-core:
+        optional: true
 
   '@drizztdourden08/brock-catalog@0.123.0':
     resolution: {integrity: sha512-mgk+zc1CUCyPpQgJeBwGpYoN6JJqJeAs0Zb83kn/eAqMhr6JPc47S1j7hfpF5rk4vB9up3uIDzRc49D65ENTCw==, tarball: https://npm.pkg.github.com/download/@drizztdourden08/brock-catalog/0.123.0/9f4b7ebe008c1edea2e8fb0563b331e630ce2283}
@@ -1484,6 +1489,9 @@ packages:
       koffi: ^2.9.0 || ^3.0.0
       react: ^19.0.0
       zustand: ^5.0.0
+    peerDependenciesMeta:
+      koffi:
+        optional: true
 
   '@drizztdourden08/brock-electron@0.123.0':
     resolution: {integrity: sha512-GfntGp4A/dFx/eHe7WhLRmC775T6fbiY052PHcXIIxmzv1fP1loTifakYmLxMs6V8NHcjGRWYzOf+TVcfXoJjA==, tarball: https://npm.pkg.github.com/download/@drizztdourden08/brock-electron/0.123.0/e89a50a4304d7eb504dff069b0dcd14eaf7c888b}
@@ -1516,6 +1524,11 @@ packages:
       eslint: ^10.0.0
       markdownlint-cli2: ^0.22.0
       stylelint: ^17.0.0
+    peerDependenciesMeta:
+      markdownlint-cli2:
+        optional: true
+      stylelint:
+        optional: true
 
   '@drizztdourden08/brock-mcp@0.123.0':
     resolution: {integrity: sha512-ocCKZmFvhnI19GfUnDTy+TT5tPBhV9Jg00gd8YPDvT9MX/l4KEKwusjPKBJZAQuRQGHvfKQ5n6CiMucs7VfgUg==, tarball: https://npm.pkg.github.com/download/@drizztdourden08/brock-mcp/0.123.0/b9b5c4179b95302e8370b55775c8e5d3fc46fa56}
@@ -1607,6 +1620,23 @@ packages:
       stylelint: ^17.0.0
       typescript: ^6.0.0
       vitest: ^4.1.0
+    peerDependenciesMeta:
+      stylelint:
+        optional: true
+      typescript:
+        optional: true
+      vitest:
+        optional: true
+
+  '@drizztdourden08/standards@0.16.0':
+    resolution: {integrity: sha512-i2ee2ceQD6Oxs9VFmF7bjSGzSyZqu8tw40BFemwn9U0eO7MTKt+3XBNBKk2oijPaeTlfPLbJsLef5uUkl8eISA==, tarball: https://npm.pkg.github.com/download/@drizztdourden08/standards/0.16.0/234502bec6aec5f74a102aaaf42f2634d95d664d}
+    engines: {node: '>=24'}
+    hasBin: true
+    peerDependencies:
+      eslint: ^10.0.0
+      stylelint: ^17.0.0
+      typescript: ^6.0.0
+      vitest: ^4.1.0
 
   '@drizztdourden08/tessera@0.132.0':
     resolution: {integrity: sha512-gxHjIURMWD7szQ4Hx6Hh4dD4GEmeLSe2K0t6WUEb3CJyoa+0/aFjho+Cn+QNbafcAdz+1qV4rRWI/UFxUuWTBg==, tarball: https://npm.pkg.github.com/download/@drizztdourden08/tessera/0.132.0/55db3e4e32b26f70b2c563217a0a052cc7cc08ee}
@@ -1616,6 +1646,9 @@ packages:
       react: ^19.0.0
       react-dom: ^19.0.0
       typescript: '>=5.0'
+    peerDependenciesMeta:
+      typescript:
+        optional: true
 
   '@electron-internal/extract-zip@1.0.2':
     resolution: {integrity: sha512-VJuNETNPEhrmQEZezeTZO5TZMV+dobBRyJ7zHjGJWIhMS7m7W1UeClt69u4hkUxv9ZZVxuli/E9Yvc4gDNHGsg==}
@@ -8128,11 +8161,12 @@ snapshots:
       '@resvg/resvg-js': 2.6.2
       '@vitejs/plugin-react': 5.2.0(vite@7.3.5(@types/node@24.19.1)(jiti@2.7.0)(tsx@4.23.12)(yaml@2.9.1))
       electron: 42.4.0
-      electron-builder: 26.15.2(electron-builder-squirrel-windows@26.15.2(dmg-builder@26.15.2))
       electron-vite: 5.0.0(vite@7.3.5(@types/node@24.19.1)(jiti@2.7.0)(tsx@4.23.12)(yaml@2.9.1))
-      playwright-core: 1.60.0
       pngjs: 7.0.0
       rcedit: 5.0.2
+    optionalDependencies:
+      electron-builder: 26.15.2(electron-builder-squirrel-windows@26.15.2(dmg-builder@26.15.2))
+      playwright-core: 1.60.0
     transitivePeerDependencies:
       - '@types/node'
       - eslint
@@ -8163,9 +8197,10 @@ snapshots:
       '@drizztdourden08/brock-react': 0.123.0(@drizztdourden08/tessera@0.132.0(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(typescript@6.0.3))(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(zustand@5.0.14(@types/react@19.2.17)(react@19.2.7)(use-sync-external-store@1.6.0(react@19.2.7)))
       '@drizztdourden08/tessera': 0.132.0(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(typescript@6.0.3)
       electron: 42.4.0
-      koffi: 3.1.2
       react: 19.2.7
       zustand: 5.0.14(@types/react@19.2.17)(react@19.2.7)(use-sync-external-store@1.6.0(react@19.2.7))
+    optionalDependencies:
+      koffi: 3.1.2
     transitivePeerDependencies:
       - react-dom
 
@@ -8208,6 +8243,7 @@ snapshots:
     dependencies:
       '@drizztdourden08/standards': 0.15.0(@types/node@24.19.1)(eslint@10.4.1(jiti@2.7.0))(stylelint@17.13.0(typescript@6.0.3))(typescript@6.0.3)(vitest@4.1.8(@opentelemetry/api@1.9.1)(@types/node@24.19.1)(jsdom@29.1.1(@noble/hashes@2.2.0))(vite@7.3.5(@types/node@24.19.1)(jiti@2.7.0)(tsx@4.23.12)(yaml@2.9.1)))
       eslint: 10.4.1(jiti@2.7.0)
+    optionalDependencies:
       markdownlint-cli2: 0.22.1
       stylelint: 17.13.0(typescript@6.0.3)
     transitivePeerDependencies:
@@ -8246,7 +8282,7 @@ snapshots:
       - react-dom
       - zustand
 
-  '@drizztdourden08/brock-plugin-snes@0.123.0(@drizztdourden08/tessera@0.132.0(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(typescript@6.0.3))(@types/node@24.19.1)(electron@42.4.0)(eslint@10.4.1(jiti@2.7.0))(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(stylelint@17.13.0(typescript@6.0.3))(typescript@6.0.3)(vitest@4.1.8(@opentelemetry/api@1.9.1)(@types/node@24.19.1)(jsdom@29.1.1(@noble/hashes@2.2.0))(vite@7.3.5(@types/node@24.19.1)(jiti@2.7.0)(tsx@4.23.12)(yaml@2.9.1)))(zustand@5.0.14(@types/react@19.2.17)(react@19.2.7)(use-sync-external-store@1.6.0(react@19.2.7)))':
+  '@drizztdourden08/brock-plugin-snes@0.123.0(@drizztdourden08/tessera@0.132.0(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(typescript@6.0.3))(@types/node@24.19.1)(electron@42.4.0)(eslint@10.4.1(jiti@2.7.0))(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(stylelint@17.13.0(typescript@6.0.3))(typescript@6.0.3)(vitest@4.1.8(@opentelemetry/api@1.9.1)(@types/node@24.19.1)(jsdom@29.1.1(@noble/hashes@2.2.0))(vite@7.3.5(@types/node@24.19.1)(jiti@2.7.0)(tsx@4.23.12)(yaml@2.9.1)))':
     dependencies:
       '@drizztdourden08/brock-port-kit': 0.123.0(@drizztdourden08/tessera@0.132.0(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(typescript@6.0.3))(electron@42.4.0)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(zustand@5.0.14(@types/react@19.2.17)(react@19.2.7)(use-sync-external-store@1.6.0(react@19.2.7)))
       '@drizztdourden08/brock-thread': 0.123.0(@types/node@24.19.1)(eslint@10.4.1(jiti@2.7.0))(stylelint@17.13.0(typescript@6.0.3))(typescript@6.0.3)(vitest@4.1.8(@opentelemetry/api@1.9.1)(@types/node@24.19.1)(jsdom@29.1.1(@noble/hashes@2.2.0))(vite@7.3.5(@types/node@24.19.1)(jiti@2.7.0)(tsx@4.23.12)(yaml@2.9.1)))
@@ -8372,10 +8408,11 @@ snapshots:
       jscpd: 4.3.0
       knip: 5.88.1(@types/node@24.19.1)(typescript@6.0.3)
       markdownlint-cli2: 0.22.1
-      stylelint: 17.13.0(typescript@6.0.3)
       stylelint-config-standard: 40.0.0(stylelint@17.13.0(typescript@6.0.3))
-      typescript: 6.0.3
       typescript-eslint: 8.61.0(eslint@10.4.1(jiti@2.7.0))(typescript@6.0.3)
+    optionalDependencies:
+      stylelint: 17.13.0(typescript@6.0.3)
+      typescript: 6.0.3
       vitest: 4.1.8(@opentelemetry/api@1.9.1)(@types/node@24.19.1)(jsdom@29.1.1(@noble/hashes@2.2.0))(vite@7.3.5(@types/node@24.19.1)(jiti@2.7.0)(tsx@4.23.12)(yaml@2.9.1))
     transitivePeerDependencies:
       - '@types/node'
@@ -8389,11 +8426,29 @@ snapshots:
       jscpd: 4.3.0
       knip: 5.88.1(@types/node@25.9.2)(typescript@6.0.3)
       markdownlint-cli2: 0.22.1
+      stylelint-config-standard: 40.0.0(stylelint@17.13.0(typescript@6.0.3))
+      typescript-eslint: 8.61.0(eslint@10.4.1(jiti@2.7.0))(typescript@6.0.3)
+    optionalDependencies:
+      stylelint: 17.13.0(typescript@6.0.3)
+      typescript: 6.0.3
+      vitest: 4.1.8(@opentelemetry/api@1.9.1)(@types/node@25.9.2)(jsdom@29.1.1(@noble/hashes@2.2.0))(vite@7.3.5(@types/node@25.9.2)(jiti@2.7.0)(tsx@4.23.12)(yaml@2.9.1))
+    transitivePeerDependencies:
+      - '@types/node'
+      - supports-color
+
+  '@drizztdourden08/standards@0.16.0(@types/node@24.19.1)(eslint@10.4.1(jiti@2.7.0))(stylelint@17.13.0(typescript@6.0.3))(typescript@6.0.3)(vitest@4.1.8(@opentelemetry/api@1.9.1)(@types/node@24.19.1)(jsdom@29.1.1(@noble/hashes@2.2.0))(vite@7.3.5(@types/node@24.19.1)(jiti@2.7.0)(tsx@4.23.12)(yaml@2.9.1)))':
+    dependencies:
+      '@eslint/js': 10.0.1(eslint@10.4.1(jiti@2.7.0))
+      eslint: 10.4.1(jiti@2.7.0)
+      eslint-plugin-react-hooks: 7.1.1(eslint@10.4.1(jiti@2.7.0))
+      jscpd: 4.3.0
+      knip: 5.88.1(@types/node@24.19.1)(typescript@6.0.3)
+      markdownlint-cli2: 0.22.1
       stylelint: 17.13.0(typescript@6.0.3)
       stylelint-config-standard: 40.0.0(stylelint@17.13.0(typescript@6.0.3))
       typescript: 6.0.3
       typescript-eslint: 8.61.0(eslint@10.4.1(jiti@2.7.0))(typescript@6.0.3)
-      vitest: 4.1.8(@opentelemetry/api@1.9.1)(@types/node@25.9.2)(jsdom@29.1.1(@noble/hashes@2.2.0))(vite@7.3.5(@types/node@25.9.2)(jiti@2.7.0)(tsx@4.23.12)(yaml@2.9.1))
+      vitest: 4.1.8(@opentelemetry/api@1.9.1)(@types/node@24.19.1)(jsdom@29.1.1(@noble/hashes@2.2.0))(vite@7.3.5(@types/node@24.19.1)(jiti@2.7.0)(tsx@4.23.12)(yaml@2.9.1))
     transitivePeerDependencies:
       - '@types/node'
       - supports-color
@@ -8411,6 +8466,7 @@ snapshots:
       react-dom: 19.2.7(react@19.2.7)
       react-markdown: 10.1.0(@types/react@19.2.17)(react@19.2.7)
       remark-gfm: 4.0.1
+    optionalDependencies:
       typescript: 6.0.3
     transitivePeerDependencies:
       - '@types/react'
