@@ -83,3 +83,18 @@ const uint16 *JaGraphics_TitlePalettes(void);
 // The triforce piece |k|'s resting height: the pack's Japanese value while the Title option is on and the
 // pack has it, else |us_limit|. Called by ending.c's Intro_SpriteType_B_0.
 uint8 GameHook_TitleYLimit(int k, uint8 us_limit);
+
+// The pack's title entries (WasmSetJapaneseGraphic ids) and their fixed sizes. The title pieces above
+// (ja_graphics_title.c) read them through JaGraphics_Entry.
+enum {
+  kJaPack_IntroTilemap = 0x45,
+  kJaPack_CopyrightOam = 0x46,
+  kJaPack_TitleParams = 0x47,
+  kJaPack_PlateOam = 0x48,
+  kJaPack_TitlePalettes = 0x49,
+  kJaPack_TitleParamsBytes = 3,
+  kJaPack_TitlePaletteWords = 70,
+};
+
+// The pack's entry |id| as stored, whatever the options say, and its byte size in |size|; NULL when empty.
+const uint8 *JaGraphics_Entry(int id, uint32 *size);

@@ -178,6 +178,8 @@ uint8 DialogMirror_LastCommand(void);
 bool DialogMirror_IsKeyWaitCommand(uint8 cmd);
 // The mirror records while either the box may be hidden or paced.
 bool DialogMirror_Recording(void);
+// The message extent GameHook_DialogMeasure (dialog_measure.c) finds as a message loads.
+void DialogMirror_SetExtent(uint8 width, uint8 rows);
 // Paged receipts (receipt_pages.c): the receipt's line and the detail page that follows it, joined
 // when the engine loads the first. Clear drops a chain a newer arm made stale.
 void ReceiptPages_Chain(int head_msg, int detail_msg);

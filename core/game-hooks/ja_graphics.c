@@ -2,10 +2,9 @@
 // The Japanese graphics pack and the option bits that switch it in. See ja_graphics.h.
 #include "game_hooks_internal.h"
 #include "src/features.h"
-#include "src/ending.h"
 #include <stdlib.h>
 
-enum { kSheetIdBase = 0x100, kPatchIdBase = 0x300, kIntroTilemapId = 0x45, kCopyrightOamId = 0x46, kTitleParamsId = 0x47, kTitleParamsBytes = 3, kPlateOamId = 0x48, kTitlePalettesId = 0x49, kTitlePaletteWords = 70, kOamHeaderBytes = 3, kOamEntryBytes = 8, kOamEntriesMax = 16, kBgSheetKind = 1, kSprSheetKind = 0, kIntroModule = 0, kHudTextIdBase = 0x50, kHudTextCount = 9, kDialogueFontId = 0x4a, kTilemapFontId = 0x4b, kJapaneseFlag = 4 };
+enum { kSheetIdBase = 0x100, kPatchIdBase = 0x300, kBgSheetKind = 1, kSprSheetKind = 0, kIntroModule = 0, kHudTextIdBase = 0x50, kHudTextCount = 9, kDialogueFontId = 0x4a, kTilemapFontId = 0x4b, kJapaneseFlag = 4 };
 
 typedef struct {
   uint8 *data;
@@ -72,7 +71,7 @@ static bool TitlePackComplete(void) {
   for (size_t i = 0; i < countof(kIntroSheets); i++)
     if (g_sheets[kBgSheetKind][kIntroSheets[i]].data == NULL) return false;
   return g_intro_tilemap.data != NULL && g_patches[kCopyrightSheet].data != NULL && g_copyright_oam.data != NULL &&
-         g_title_params.size >= kTitleParamsBytes && g_plate_oam.data != NULL && g_title_palettes.size == kTitlePaletteWords * 2;
+         g_title_params.size >= kJaPack_TitleParamsBytes && g_plate_oam.data != NULL && g_title_palettes.size == kJaPack_TitlePaletteWords * 2;
 }
 
 // Both options come from the gate word: the file select layout, and the title choice (US or Japanese),
@@ -159,70 +158,6 @@ const uint8 *JaGraphics_IntroTilemap(uint32 *size) {
   return JaGraphics_On(kJaGfx_Intro) ? Taken(&g_intro_tilemap, size) : NULL;
 }
 
-// The copyright line's sprite layout from the pack: count, start x, start y, then count 8 byte records
-// (x word, y word, character, flags, extension word whose high byte is the size bit). NULL unless the option is on and the pack has it.
-static const uint8 *CopyrightOam(int *count) {
-  uint32 size;
-  if (!JaGraphics_On(kJaGfx_Copyright)) return NULL;
-  const uint8 *data = Taken(&g_copyright_oam, &size);
-  if (data == NULL || size < kOamHeaderBytes) return NULL;
-  *count = data[0];
-  if (*count == 0 || *count > kOamEntriesMax || size < kOamHeaderBytes + (uint32)*count * kOamEntryBytes) return NULL;
-  return data;
-}
-
-uint8 GameHook_TitleYLimit(int k, uint8 us_limit) {
-  uint32 size;
-  if (!JaGraphics_On(kJaGfx_Title) || (enhanced_features2 & kFeatures2_TitleOverride)) return us_limit;
-  const uint8 *data = Taken(&g_title_params, &size);
-  return (data != NULL && size >= kTitleParamsBytes && k >= 0 && k < kTitleParamsBytes) ? data[k] : us_limit;
-}
-
-bool GameHook_CopyrightInit(int k) {
-  int count;
-  const uint8 *data = CopyrightOam(&count);
-  if (data == NULL) return false;
-  intro_x_lo[k] = data[1];
-  intro_x_hi[k] = 0;
-  intro_y_lo[k] = data[2];
-  intro_y_hi[k] = 0;
-  intro_sprite_isinited[k]++;
-  return true;
-}
-
-bool GameHook_CopyrightAnimate(int k) {
-  int count;
-  const uint8 *data = CopyrightOam(&count);
-  if (data == NULL) return false;
-  IntroSpriteEnt ents[kOamEntriesMax];
-  for (int i = 0; i < count; i++) {
-    const uint8 *rec = data + kOamHeaderBytes + i * kOamEntryBytes;
-    ents[i] = (IntroSpriteEnt){(int8)rec[0], (int8)rec[2], rec[4], rec[5], rec[7]};
-  }
-  AnimateSceneSprite_AddObjectsToOamBuffer(k, ents, count);
-  return true;
-}
-
-// The subtitle plate's sprite layout from the pack, in the copyright line's format. NULL unless the title is
-// Japanese and the pack has it.
-const uint8 *JaGraphics_PlateOam(int *count) {
-  uint32 size;
-  if (!JaGraphics_On(kJaGfx_Title)) return NULL;
-  const uint8 *data = Taken(&g_plate_oam, &size);
-  if (data == NULL || size < kOamHeaderBytes) return NULL;
-  *count = data[0];
-  if (*count == 0 || *count > kOamEntriesMax || size < kOamHeaderBytes + (uint32)*count * kOamEntryBytes) return NULL;
-  return data;
-}
-
-// The Japanese title's palette words (JaTitlePalettes order), NULL unless the title is Japanese.
-const uint16 *JaGraphics_TitlePalettes(void) {
-  uint32 size;
-  if (!JaGraphics_On(kJaGfx_Title)) return NULL;
-  const uint8 *data = Taken(&g_title_palettes, &size);
-  return data != NULL && size == kTitlePaletteWords * 2 ? (const uint16 *)data : NULL;
-}
-
 static bool Store(Blob *slot, const void *data, int len) {
   uint8 *copy = NULL;
   if (len > 0) {
@@ -252,16 +187,21 @@ void JaGraphics_DialogueFontSync(void) {
 static Blob *SlotOf(int id) {
   if (id == kDialogueFontId) return &g_dialogue_font;
   if (id == kTilemapFontId) return &g_tilemap_font;
-  if (id == kIntroTilemapId) return &g_intro_tilemap;
-  if (id == kCopyrightOamId) return &g_copyright_oam;
-  if (id == kTitleParamsId) return &g_title_params;
-  if (id == kPlateOamId) return &g_plate_oam;
-  if (id == kTitlePalettesId) return &g_title_palettes;
+  if (id == kJaPack_IntroTilemap) return &g_intro_tilemap;
+  if (id == kJaPack_CopyrightOam) return &g_copyright_oam;
+  if (id == kJaPack_TitleParams) return &g_title_params;
+  if (id == kJaPack_PlateOam) return &g_plate_oam;
+  if (id == kJaPack_TitlePalettes) return &g_title_palettes;
   if (id >= kHudTextIdBase && id < kHudTextIdBase + kHudTextCount) return &g_hud_text[id - kHudTextIdBase];
   if (id >= kPatchIdBase && id < kPatchIdBase + kLangSheetMax) return &g_patches[id - kPatchIdBase];
   if (id >= kSheetIdBase && id < kSheetIdBase + 2 * kLangSheetMax)
     return &g_sheets[(id - kSheetIdBase) / kLangSheetMax][(id - kSheetIdBase) % kLangSheetMax];
   return NULL;
+}
+
+const uint8 *JaGraphics_Entry(int id, uint32 *size) {
+  Blob *slot = SlotOf(id);
+  return slot != NULL ? Taken(slot, size) : NULL;
 }
 
 // |id| is the language screens' own: 0x100 + index a sprite sheet, 0x200 + index a background sheet,
